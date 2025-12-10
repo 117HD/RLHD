@@ -6049,6 +6049,12 @@
     ]
   },
   {
+    "name": "KOUREND_LEGLESS_FAUN_BLENDING_FIX",
+    "aabbs": [
+      [ 1765, 3676, 1782, 3689 ]
+    ]
+  },
+  {
     "name": "ZEAH_SNOWY_NORTHERN_REGION",
     "aabbs": [
       [ 1400, 3885, 1438, 3902 ],

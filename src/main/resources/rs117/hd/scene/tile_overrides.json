@@ -3984,6 +3984,15 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
+    "name": "KOUREND_LEGLESS_FAUN_BLENDING_FIX",
+    "area": "KOUREND_LEGLESS_FAUN_BLENDING_FIX",
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "blended": false,
+    "overlayIds": [
+      134
+    ]
+  },
+  {
     "name": "KOUREND_CASTLE_UNDER_STATUE_FIX",
     "area": "GREAT_KOUREND_STATUE",
     "overlayIds": [
