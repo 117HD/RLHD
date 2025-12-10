@@ -43160,5 +43160,22 @@
     "objectIds": [
       "XMAS24_PUB01_FIREPLACE01"
     ]
+  },
+  {
+    "description": "XMAS_2025_TABLE_CANDLE",
+    "offset": [ -1, 200, 22 ],
+    "radius": 85,
+    "strength": 16.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS25_TABLE01_EMPTY01"
+    ]
   }
 ]

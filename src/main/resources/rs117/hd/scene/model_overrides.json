@@ -43342,7 +43342,7 @@
     "colorOverrides": [
       {
         "description": "Red cloth",
-        "colors": "h == 0 && s == 7",
+        "colors": "h == 0 && s == 7 || h > 34",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.75,
@@ -43351,21 +43351,22 @@
       {
         "description": "White Cushion",
         "colors": "h == 0 && s == 0",
-        "baseMaterial": "MARBLE",
+        "baseMaterial": "MARBLE_1",
         "uvType": "MODEL_XZ",
-        "uvScale": 0.75,
+        "uvScale": 0.3,
         "uvOrientation": 256
       },
       {
         "description": "Gold Trim",
-        "colors": "h == 7 && s == 7",
+        "colors": "h == 7 && s == 7 || h == 34",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvOrientation": 89
       }
     ],
     "objectIds": [
-      "GZ_BOARDGAMES_TABLE"
+      "GZ_BOARDGAMES_TABLE",
+      "GZ_BOARDGAMES_TABLE_BLUE"
     ]
   },
   {
@@ -70495,6 +70496,71 @@
       "XMAS22_PUB01_RUGMIDDLE01",
       "XMAS22_PUB01_RUGSIDE01",
       "XMAS22_PUB01_RUGCORNER01"
+    ]
+  },
+  {
+    "description": "Xmas 2025 - Bar",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "XMAS25_BLUE_INN_BAR_LEFT",
+      "XMAS25_BLUE_INN_BAR_MIDDLE2",
+      "XMAS25_BLUE_INN_BAR_MIDDLE",
+      "XMAS25_BLUE_INN_BAR_MIDDLE3",
+      "XMAS25_BLUE_INN_BAR_RIGHT",
+      "XMAS25_BLUE_INN_DRINKS_BAR_RIGHT",
+      "XMAS25_BLUE_INN_DRINKS_BAR_MIDDLE2",
+      "XMAS25_BLUE_INN_DRINKS_BAR_MIDDLE",
+      "XMAS25_BLUE_INN_DRINKS_BAR_LEFT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 5 || h == 7 && s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0 || h == 7 && s == 3",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.55
+      }
+    ]
+  },
+  {
+    "description": "Xmas 2025 - Table",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "XMAS25_TABLE01_EMPTY01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 5 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Xmas 2025 - Stool",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "npcIds": [
+      "XMAS25_STOOL_EMPTY"
+    ],
+    "objectIds": [
+      "XMAS22_PUB01_BARSTOOL01_TALL01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "depthBias": 1
+      }
     ]
   }
 ]
