@@ -1086,8 +1086,10 @@ public class ZoneRenderer implements Renderer {
 			int zz = (gameObject.getY() >> 10) + offset;
 			Zone zone = ctx.zones[zx][zz];
 
+			boolean isSubScene = !sceneManager.isRoot(ctx);
+
 			GenericJob shadowUploadTask = null;
-			if (zone.inShadowFrustum) {
+			if (isSubScene || zone.inShadowFrustum) {
 				final VAO o = vaoShadow.get(size, ctx.vboM);
 
 				shadowUploadTask = GenericJob
@@ -1104,11 +1106,11 @@ public class ZoneRenderer implements Renderer {
 							o.vbo.vb
 						);
 					})
-					.setExecuteAsync(!sceneManager.isRoot(ctx) || zone.inSceneFrustum)
+					.setExecuteAsync(isSubScene || zone.inSceneFrustum)
 					.queue(true);
 			}
 
-			if (!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {
+			if (isSubScene || zone.inSceneFrustum) {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
