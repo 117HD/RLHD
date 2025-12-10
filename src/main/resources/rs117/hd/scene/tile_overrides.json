@@ -4254,7 +4254,7 @@
   {
     "name": "PRIFDDINAS_GRASS",
     "area": "PRIFDDINAS",
-    "underlayIds": [ 48, 67, 143 ],
+    "underlayIds": [ 48, 50, 67, 143 ],
     "groundMaterial": "OVERWORLD_GRASS_1"
   },
   {
@@ -6878,7 +6878,7 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "TROLLHEIM_DIRT",
+    "name": "TROLLHEIM_GARDEN_DIRT",
     "area": "TROLL_COUNTRY",
     "underlayIds": [
       63,
