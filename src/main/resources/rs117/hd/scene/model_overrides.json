@@ -7050,7 +7050,8 @@
       "DRAGON_SLAYER_QIP_SMALL_ROCKS",
       "DRAGON_SLAYER_QIP_SMALL_ROCKS2",
       "DRAGON_SLAYER_QIP_ROCKSLIDE",
-      "DRAGON_SLAYER_QIP_ROCKSLIDE2"
+      "DRAGON_SLAYER_QIP_ROCKSLIDE2",
+      "STONEDISC_DARKBROWN"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.25
@@ -17408,18 +17409,20 @@
     "uvType": "BOX"
   },
   {
-    "description": "Ground Decoration - Sticks - Small",
+    "description": "Ground Decoration - Bark - Sticks - Small",
     "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
     "objectIds": [
       "FULL_TWIG",
       "BROKEN_TWIG",
       "BROKEN_TWIG_DARK",
       "FULL_TWIG_LIGHT",
       "BROKEN_TWIG_LIGHT",
-      "GROUNDCOVER_STRANGLER01_TWIGS04"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.4
+      "GROUNDCOVER_STRANGLER01_TWIGS04",
+      "TWIG_SAVANNAH_FULL01"
+    ]
   },
   {
     "description": "Walls - Double Rope Rails",
@@ -18763,7 +18766,9 @@
   },
   {
     "description": "Kharidian Fern Cactus",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS4"
@@ -18791,8 +18796,10 @@
   },
   {
     "description": "Kharidian Sophmena Cactus",
-    "baseMaterial": "PLANT_GRUNGE_1",
+    "baseMaterial": "PLANT_GRUNGE_2",
     "windDisplacementMode": "VERTEX",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "PLANT_CACTUS_01",
       "PLANT_CACTUS_02",
@@ -19813,7 +19820,7 @@
       {
         "description": "Leaves",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-        "baseMaterial": "LEAF_VEINS",
+        "baseMaterial": "LEAF_VEINS_PALM",
         "colors": "h > 10"
       }
     ],
@@ -24492,7 +24499,12 @@
       "FERN2",
       "AREA_SANGUINE_OUTER_WALL_PLANT",
       "FAIRY2_PLANT_2",
-      "FAIRY2_PLANT_4"
+      "FAIRY2_PLANT_4",
+      "TLATI_PLANT_FERN01",
+      "PLANT_FERN_TLATI01",
+      "PLANT_FERN_TLATI02",
+      "PLANT_FERN_TLATI04",
+      "TLATI_PLANT_CLUSTER01_DEFAULT02"
     ]
   },
   {
@@ -28993,7 +29005,8 @@
       "CORPSE3_BURNT",
       "TAPO_SKELETON01",
       "TAPO_SKELETON02",
-      "TOBQUEST_SKELETON_OP"
+      "TOBQUEST_SKELETON_OP",
+      "LASSAR_CHURCH01_SKELETON01_CORPSE03"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -37337,7 +37350,8 @@
       "HOLLOWLOG",
       "HOLLOWLOGSMALLER",
       "HOLLOWLOG_VERYSMALL",
-      "HOLLOWLOG_WILDERNESS"
+      "HOLLOWLOG_WILDERNESS",
+      "CONTACT_HOLLOWLOGSMALLER"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -68453,12 +68467,6 @@
     "baseMaterial": "LIGHT_BARK",
     "uvScale": 0.65,
     "uvType": "BOX",
-    "objectIds": [
-      "TREE_MANGROVE02_DEFAULT01",
-      "TREE_MANGROVE01_DEFAULT02",
-      "TREE_MANGROVE02_DEFAULT02",
-      "TREE_MANGROVE01_DEFAULT01"
-    ],
     "colorOverrides": [
       {
         "colors": "h > 10",
@@ -68466,6 +68474,22 @@
         "uvType": "BOX",
         "uvScale": 0.35
       }
+    ],
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+      }
+    },
+    "objectIds": [
+      "TREE_MANGROVE02_DEFAULT01",
+      "TREE_MANGROVE01_DEFAULT02",
+      "TREE_MANGROVE02_DEFAULT02",
+      "TREE_MANGROVE01_DEFAULT01"
     ]
   },
   {
@@ -69571,14 +69595,16 @@
     ]
   },
   {
-    "description": "The Great Conch - Grunge - Shells",
+    "description": "The Great Conch - Tropical Islands - Grunge - Shells",
     "baseMaterial": "GRUNGE_2_MATTE",
-    "uvType": "BOX",
+    "uvType": "MODEL_XZ",
     "uvScale": 0.5,
     "uvOrientation": -128,
     "objectIds": [
       "SHELL1BIG",
-      "SHELL1"
+      "SHELL1",
+      "VIKING_SHELL1",
+      "HORROR_SHELL1"
     ]
   },
   {
@@ -70004,6 +70030,86 @@
     "uvType": "BOX",
     "objectIds": [
       "DRAGON_SLAYER_QIP_RUIN_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Tropical Islands - Starfish",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "STARFISH",
+      "STARFISHBIG"
+    ]
+  },
+  {
+    "description": "Broken biten up rowboat",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "STRANGLER_CAMPSITE_BOAT01"
+    ]
+  },
+  {
+    "description": "Charting - Rock - Collasped Gem Crab Burrow",
+    "baseMaterial": "ROCK_5",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.8,
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_CRAB_HOLE"
+    ]
+  },
+  {
+    "description": "Tlati - Mossy Rocks",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h < 23 && s >= 3",
+        "baseMaterial": "GRASS_1",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "TLATI_ROCK01_1X1A",
+      "TLATI_ROCK02_1X1A"
+    ]
+  },
+  {
+    "description": "Tlati - Mossy Rocks with plants",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h == 23 && s >= 3",
+        "baseMaterial": "GRASS_1",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 16 || h == 19",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "windDisplacementMode": "VERTEX"
+      }
+    ],
+    "objectIds": [
+      "TLATI_ROCK01_2X2A",
+      "TLATI_ROCK02_2X2A"
     ]
   }
 ]
