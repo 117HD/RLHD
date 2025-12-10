@@ -227,13 +227,6 @@
     ]
   },
   {
-    "name": "Al Kharid to Varrock Gate Grass Fix",
-    "aabbs": [
-      [ 3271, 3328, 3274, 3329 ],
-      [ 3289, 3324 ]
-    ]
-  },
-  {
     "name": "LUMBRIDGE_RIVER_DIRT_FIX",
     "aabbs": [
       [ 3231, 3268, 3231, 3271 ],
@@ -389,12 +382,6 @@
     "name": "VARROCK_JULIETS_FAMILY_CRYPT",
     "regions": [
       9288
-    ]
-  },
-  {
-    "name": "VARROCK_HALLOWEEN_EVENT_DIRT",
-    "aabbs": [
-      [ 3194, 3433, 3198, 3437 ]
     ]
   },
   {
