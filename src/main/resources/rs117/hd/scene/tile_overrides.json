@@ -9677,16 +9677,6 @@
     "maxLightness": 75
   },
   {
-    "name": "OVERLAY_SAND",
-    "area": "ALL",
-    "overlayIds": [
-      25,
-      26,
-      76
-    ],
-    "groundMaterial": "SAND"
-  },
-  {
     "name": "OVERLAY_DIRT",
     "area": "ALL",
     "overlayIds": [
