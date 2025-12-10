@@ -69920,5 +69920,18 @@
     "objectIds": [
       "GREAT_CONCH_SHRINE"
     ]
+  },
+  {
+    "description": "Xmas 2025 - Grass",
+    "baseMaterial": "GRAY_80",
+    "flatNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "objectIds": [
+      "GRASS_SHORT_SNOW_1",
+      "GRASS_SHORT_SNOW_2",
+      "GRASS_SHORT_SNOW_3",
+      "GRASS_SHORT_SNOW_4"
+    ]
   }
 ]
