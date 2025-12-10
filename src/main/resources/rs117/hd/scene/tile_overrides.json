@@ -6826,7 +6826,7 @@
         "h >= 10 && s >= 2"
       ],
       "SEASONAL_DIRT": "h <= 8 && s >= 4 && l <= 71",
-      "DEFAULT_SAND": true
+      "SEASONAL_SAND": true
     }
   },
   {
@@ -8742,26 +8742,21 @@
       0,
       2,
       3,
+      10,
+      17,
       21,
       23,
       24,
-      27
+      27,
+      49,
+      72,
+      73,
+      95
     ],
     "groundMaterial": "DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "ARCEUUS_GRASS",
-    "area": "ARCEUUS",
-    "underlayIds": [
-      17,
-      95
-    ],
-    "groundMaterial": "GRASSY_DIRT",
-    "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+      "SEASONAL_GRASS": "h >= 12 && s >= 2 && h < 30",
+      "SEASONAL_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -9432,6 +9427,7 @@
       10,
       12,
       13,
+      17,
       25,
       26,
       48,
@@ -9466,6 +9462,7 @@
       94,
       96,
       97,
+      98,
       112,
       113,
       125,
@@ -9748,6 +9745,7 @@
       115,
       123,
       132,
+      162,
       172,
       173,
       227
