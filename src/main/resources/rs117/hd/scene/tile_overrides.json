@@ -9331,14 +9331,14 @@
   },
   {
     "name": "XMAS_2025_VARROCK_SNOW_BLENDING",
-    "area": "XMAS_2025_VARROCK",
+    "area": "XMAS_2025_SNOW",
     "groundMaterial": "SNOW_1",
     "underlayIds": [
       58,
       59,
       124
     ],
-    "minLightness": 60,
+    "minLightness": 70,
     "setHue": 5,
     "setSaturation": 0,
     "replacements": {
@@ -9347,14 +9347,14 @@
   },
   {
     "name": "XMAS_2025_VARROCK_SNOW_NO_BLENDING",
-    "area": "XMAS_2025_VARROCK",
+    "area": "XMAS_2025_SNOW",
     "groundMaterial": "SNOW_1",
     "underlayIds": [
       58,
       59,
       124
     ],
-    "maxLightness": 65,
+    "maxLightness": 75,
     "setHue": 5,
     "setSaturation": 0
   },

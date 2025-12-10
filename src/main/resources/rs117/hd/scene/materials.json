@@ -1144,6 +1144,11 @@
     "specularGloss": 20.0
   },
   {
+    "name": "SNOW_2_SEMI_DARK",
+    "parent": "SNOW_2",
+    "brightness": 0.85
+  },
+  {
     "name": "SNOW_2_DARK",
     "parent": "SNOW_2",
     "brightness": 0.735

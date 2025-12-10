@@ -69933,5 +69933,24 @@
       "GRASS_SHORT_SNOW_3",
       "GRASS_SHORT_SNOW_4"
     ]
+  },
+  {
+    "description": "Xmas 2025 - Bush",
+    "baseMaterial": "SNOW_4_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "XMAS22_BUSH01"
+    ]
+  },
+  {
+    "description": "Xmas 2025 - Snow Piles",
+    "baseMaterial": "SNOW_4_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "XMAS22_SNOWGAME01_SNOW03",
+      "XMAS22_SNOWGAME01_SNOW05",
+      "XMAS22_GENERIC_BLOCK_1X1",
+      "XMAS22_GENERIC_BLOCK_2X2"
+    ]
   }
 ]
