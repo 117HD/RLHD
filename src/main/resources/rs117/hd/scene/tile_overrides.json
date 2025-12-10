@@ -719,6 +719,7 @@
     "name": "VARROCK_GUARD_POSTS",
     "area": "VARROCK_GUARD_POSTS",
     "overlayIds": [
+      22,
       171
     ],
     "groundMaterial": "VARROCK_PATHS"
@@ -740,12 +741,12 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "VARROCK_HOUSE_1",
-    "area": "VARROCK_HOUSE_1",
+    "name": "VARROCK_HAIRDRESSER",
+    "area": "VARROCK_HAIRDRESSER",
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS"
   },
   {
     "name": "VARROCK_HOUSE_2",
@@ -764,12 +765,32 @@
     "groundMaterial": "TILE_SMALL"
   },
   {
-    "name": "VARROCK_BLUE_MOON_INN",
-    "area": "VARROCK_BLUE_MOON_INN",
+    "name": "VARROCK_BLUE_MOON_INN_FLOOR",
+    "area": "VARROCK_MOON_INN_FLOOR",
+    "overlayIds": [
+      22
+    ],
+    "groundMaterial": "CARPET",
+    "shiftLightness": 3,
+    "blended": false
+  },
+  {
+    "name": "VARROCK_BLUE_MOON_INN_KITCHEN",
+    "area": "VARROCK_BLUE_MOON_INN_KITCHEN",
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILE_SMALL_2",
+    "blended": false
+  },
+  {
+    "name": "VARROCK_BLUE_MOON_INN",
+    "area": "VARROCK_MOON_INN_FLOOR",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "CARPET",
+    "uvScale": 1.5
   },
   {
     "name": "VARROCK_MUSEUM_FLOOR",
@@ -965,7 +986,11 @@
       4
     ],
     "groundMaterial": "WOOD_PLANKS_1",
-    "blended": false
+    "blended": false,
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "VARROCK_PLANT_PATCHES",
