@@ -8315,7 +8315,8 @@
       "LEDGER_TABLE_ICON_PIER",
       "CONCH_FARMING_ENTRANCE",
       "CONCH_FARMING_EXIT",
-      "SHIPWRIGHT_ICON_SERIM_PIER"
+      "SHIPWRIGHT_ICON_SERIM_PIER",
+      "SHIPWRIGHT_ICON_PIER"
     ],
     "uvType": "BOX"
   },
@@ -19736,7 +19737,8 @@
       "AVIUM_TREE_2",
       "AVIUM_TREE_ORANGE",
       "AVIUM_TREE_DARK",
-      "KHARAZI_JUNGLE_TREE1"
+      "KHARAZI_JUNGLE_TREE1",
+      "XBOWS_BEACH_TO_ISLAND_TREE_BASIC"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.25,
@@ -26988,7 +26990,8 @@
       "BANKTABLE",
       "BANKTABLE2",
       "BANKTABLE2_INACTIVE",
-      "BANKTABLE_INACTIVE"
+      "BANKTABLE_INACTIVE",
+      "CURRENT_AFFAIRS_DESK"
     ],
     "colorOverrides": [
       {
@@ -36927,11 +36930,37 @@
     "description": "Wooden Cabinet Empty",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "DWARF_KELDAGRIM_BEER_EMPTY"
+      "DWARF_KELDAGRIM_BEER_EMPTY",
+      "CURRENT_AFFAIRS_CABINET"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 2022
+  },
+  {
+    "description": "Catherby - Pet Fish Pool",
+    "baseMaterial": "WOOD_GRAIN",
+    "objectIds": [
+      "AQUARIUM_FLOOR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Catherby - Pet Fish Pool",
+    "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT",
+    "objectIds": [
+      "HARRYSFISHINGSIGN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
   },
   {
     "description": "Keldagrim - Shayzien - Wooden Cabinet Beer glasses",
@@ -42306,6 +42335,8 @@
     "description": "Window with solid white for glass",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
     "objectIds": [
       "WINDOW",
       "POSHWINDOW",
@@ -42313,6 +42344,7 @@
       "POSHBIGWINDOW",
       "SHUTTERWINDOW2",
       "SHUTTERWINDOW3",
+      "SHUTTERWINDOW3_OFFSET",
       "FARM_PLANT_BOX"
     ],
     "colorOverrides": [
@@ -68895,6 +68927,26 @@
         "uvType": "MODEL_XZ",
         "uvScale": 0.45
       }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Catherby shelves poking through a wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "areas": [ "CATHERBY_DEPTH_BIAS_FIX" ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "depthBias": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX",
+        "depthBias": 100
+      }
+    ],
+    "objectIds": [
+      "TIMBERWALL"
     ]
   },
   {
