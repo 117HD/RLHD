@@ -1490,6 +1490,15 @@
     "shiftSaturation": 1
   },
   {
+    "name": "WEISS_FIREPIT_FIX",
+    "area": "WEISS_FIRE_PIT",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
     "name": "TAG - FIXES - END"
   },
   {
@@ -2855,15 +2864,6 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
-    "name": "WEISS_FIREPIT_FIX",
-    "area": "WEISS_FIRE_PIT",
-    "overlayIds": [
-      171
-    ],
-    "groundMaterial": "DIRT",
-    "blended": false
-  },
-  {
     "name": "WEISS_TENT_INTERIOR",
     "area": "INTERIOR_WEISS_THRONE_TENT",
     "overlayIds": [
@@ -3984,14 +3984,6 @@
       "DEFAULT_DIRT": "h > 7 && s > 1"
     },
     "underlayIds": [ 92, 93, 94, 96]
-  },
-  {
-    "name": "SLEPE_PATHS",
-    "area": "SLEPE",
-    "overlayIds": [
-      11
-    ],
-    "groundMaterial": "GRAVEL"
   },
   {
     "name": "DARKMEYER_PATH_UPPER",
