@@ -9317,8 +9317,8 @@
     ]
   },
   {
-    "name": "VARROCK_XMAS_FOUNTAIN_FIX",
-    "area": "VARROCK_XMAS_FOUNTAIN_FIX",
+    "name": "XMAS_2025_FOUNTAIN_FIX",
+    "area": "XMAS_2025_FOUNTAIN_FIX",
     "groundMaterial": "NONE",
     "underlayIds": [
       0,
@@ -9328,6 +9328,35 @@
     "shiftLightness": -10,
     "shiftHue": 26,
     "setSaturation": 2
+  },
+  {
+    "name": "XMAS_2025_VARROCK_SNOW_BLENDING",
+    "area": "XMAS_2025_VARROCK",
+    "groundMaterial": "SNOW_1",
+    "underlayIds": [
+      58,
+      59,
+      124
+    ],
+    "minLightness": 60,
+    "setHue": 5,
+    "setSaturation": 0,
+    "replacements": {
+      "XMAS_2025_VARROCK_SNOW_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "XMAS_2025_VARROCK_SNOW_NO_BLENDING",
+    "area": "XMAS_2025_VARROCK",
+    "groundMaterial": "SNOW_1",
+    "underlayIds": [
+      58,
+      59,
+      124
+    ],
+    "maxLightness": 65,
+    "setHue": 5,
+    "setSaturation": 0
   },
   {
     "name": "WARM_REGION_COMPLEX_TILES",
