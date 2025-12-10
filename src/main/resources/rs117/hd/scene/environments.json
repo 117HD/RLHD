@@ -98,7 +98,7 @@
     "windStrength": 40
   },
   {
-    "area": "WILDERNESS",
+    "area": "WILDERNESS_MID",
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,
     "directionalColor": "#c5b8b6",
