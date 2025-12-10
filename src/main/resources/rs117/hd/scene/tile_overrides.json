@@ -696,6 +696,7 @@
     "name": "VARROCK_GUARD_POSTS",
     "area": "VARROCK_GUARD_POSTS",
     "overlayIds": [
+      22,
       171
     ],
     "groundMaterial": "VARROCK_PATHS"
@@ -741,12 +742,30 @@
     "groundMaterial": "TILE_SMALL"
   },
   {
-    "name": "VARROCK_BLUE_MOON_INN",
-    "area": "VARROCK_BLUE_MOON_INN",
+    "name": "VARROCK_BLUE_MOON_INN_FLOOR",
+    "area": "VARROCK_MOON_INN_FLOOR",
+    "overlayIds": [
+      22
+    ],
+    "groundMaterial": "CARPET",
+    "shiftLightness": 3
+  },
+  {
+    "name": "VARROCK_BLUE_MOON_INN_KITCHEN",
+    "area": "VARROCK_BLUE_MOON_INN_KITCHEN",
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILE_SMALL_2"
+  },
+  {
+    "name": "VARROCK_BLUE_MOON_INN",
+    "area": "VARROCK_MOON_INN_FLOOR",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "CARPET",
+    "uvScale": 1.5
   },
   {
     "name": "VARROCK_MUSEUM_FLOOR",
