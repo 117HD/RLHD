@@ -6047,7 +6047,7 @@
     "shiftLightness": 27,
     "maxLightness": 93,
     "replacements": {
-      "OVERWORLD_GRASS_UNDERLAY": "l < 15 || s > 0",
+      "SEASONAL_GRASS": "l < 15 || s > 0",
       "Ralos Rise Snow No Blending" : "!blending"
     }
   },
@@ -9555,10 +9555,7 @@
       254
     ],
     "groundMaterial": "SNOW_1",
-    "maxLightness": 90,
-    "replacements": {
-      "OVERLAY_SNOW_NO_BLENDING": "!blending"
-    }
+    "maxLightness": 90
   },
   {
     "name": "OVERLAY_SAND_BRICK",
