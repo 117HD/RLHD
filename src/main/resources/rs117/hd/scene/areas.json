@@ -8862,6 +8862,18 @@
     ]
   },
   {
+    "name": "EAGLES_PEAK",
+    "aabbs": [
+      [ 2323, 3464, 2343, 3507 ],
+      [ 2316, 3459, 2322, 3502 ],
+      [ 2312, 3459, 2315, 3497 ],
+      [ 2307, 3460, 2311, 3492 ],
+      [ 2312, 3458, 2316, 3458 ],
+      [ 2344, 3467, 2352, 3503 ],
+      [ 2344, 3466, 2348, 3466 ]
+    ]
+  },
+  {
     "name": "Eagles Peak nest",
     "regions": [ 8013 ],
     "hideOtherAreas": true
@@ -10459,7 +10471,8 @@
       "VARLAMORE_SNOWY_MOUNTAINS_LOWER",
       "VARLAMORE_SNOWY_MOUNTAINS_UPPER",
       "WEISS_REGION",
-      "RALOS_RISE"
+      "RALOS_RISE",
+      "EAGLES_PEAK"
     ]
   },
   {
