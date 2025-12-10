@@ -3101,6 +3101,7 @@
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",
       "GRASS_LIGHT_3",
+      "GRASS_LIGHT_4",
       "GRASS_2"
     ]
   },
@@ -70561,6 +70562,27 @@
         "uvScale": 0.3,
         "depthBias": 1
       }
+    ]
+  },
+  {
+    "description": "Farming patch border rocks",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": -256,
+    "objectIds": [
+      "FARMING_BORDER_STRAIGHT_NORTH"
+    ]
+  },
+  {
+    "description": "Etceteria - Gardening patch borders",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "FARMING_BORDER_STRAIGHT_LIGHT",
+      "FARMING_GARDENINGPATCH_BORDER_LIGHT"
     ]
   }
 ]
