@@ -9596,7 +9596,7 @@
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER",
+      "SEASONAL_SNOW": "season == SeasonalTheme.WINTER",
       "UNDERLAY_SNOW_NO_BLENDING": "!blending"
     }
   },
