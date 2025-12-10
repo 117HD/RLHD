@@ -771,7 +771,8 @@
       22
     ],
     "groundMaterial": "CARPET",
-    "shiftLightness": 3
+    "shiftLightness": 3,
+    "blended": false
   },
   {
     "name": "VARROCK_BLUE_MOON_INN_KITCHEN",
@@ -779,7 +780,8 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "TILE_SMALL_2"
+    "groundMaterial": "TILE_SMALL_2",
+    "blended": false
   },
   {
     "name": "VARROCK_BLUE_MOON_INN",
