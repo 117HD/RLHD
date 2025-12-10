@@ -9564,6 +9564,12 @@
     ]
   },
   {
+    "name": "VARROCK_XMAS_FOUNTAIN_FIX",
+    "aabbs": [
+      [ 3210, 3426, 3215, 3431 ]
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",

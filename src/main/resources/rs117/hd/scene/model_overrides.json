@@ -3675,6 +3675,7 @@
   {
     "description": "Varrock Fountain Railing and Statues",
     "baseMaterial": "STONE_NORMALED",
+    "depthBias": 100,
     "objectIds": [
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE01",
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE01",
@@ -3688,6 +3689,7 @@
   {
     "description": "Varrock Fountain Rocks with Water",
     "baseMaterial": "STONE_NORMALED",
+    "depthBias": 255,
     "objectIds": [
       "FAI_VARROCK_CENTRAL_SQUARE01"
     ],
@@ -3696,7 +3698,8 @@
       {
         "colors": "h >= 34",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
-        "uvType": "MODEL_XZ"
+        "uvType": "MODEL_XZ",
+        "depthBias": 255
       },
       {
         "colors": "h == 5",

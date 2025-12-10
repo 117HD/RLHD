@@ -9317,6 +9317,19 @@
     ]
   },
   {
+    "name": "VARROCK_XMAS_FOUNTAIN_FIX",
+    "area": "VARROCK_XMAS_FOUNTAIN_FIX",
+    "groundMaterial": "NONE",
+    "underlayIds": [
+      0,
+      61,
+      124
+    ],
+    "shiftLightness": -10,
+    "shiftHue": 26,
+    "setSaturation": 2
+  },
+  {
     "name": "WARM_REGION_COMPLEX_TILES",
     "area": "WARM_REGIONS",
     "underlayIds": [
