@@ -91,13 +91,25 @@ public final class JobSystem {
 		return workQueue.size();
 	}
 
+	private void cancelAllWork(BlockingDeque<JobHandle> queue) {
+		JobHandle handle;
+		while ((handle = queue.poll()) != null) {
+			try {
+				handle.cancel(false);
+				handle.setCompleted();
+			} catch (InterruptedException e) {
+				log.warn("Interrupted while shutting down worker", e);
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
 	public void destroy() {
 		active = false;
-		workQueue.clear();
+		cancelAllWork(workQueue);
 
 		for (Worker worker : workers) {
-			worker.localWorkQueue.clear();
-			worker.thread.interrupt();
+			cancelAllWork(worker.localWorkQueue);
 			if (worker.handle != null) {
 				try {
 					worker.handle.cancel(true);
@@ -106,6 +118,7 @@ public final class JobSystem {
 					throw new RuntimeException(e);
 				}
 			}
+			worker.thread.interrupt();
 		}
 
 		int workerShutdownCount = 0;
