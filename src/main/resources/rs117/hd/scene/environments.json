@@ -774,7 +774,7 @@
     "fogDepth": 50
   },
   {
-    "area": "RELLEKKA_SNOWY_REGION",
+    "area": "RELLEKKA_HUNTER_REGION",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1,
     "directionalColor": "#f4e5c9",
