@@ -9305,6 +9305,7 @@
       55,
       58,
       59,
+      60,
       92
     ],
     "groundMaterial": "SNOW_1",
@@ -9357,18 +9358,10 @@
       33,
       34,
       40,
-      48,
-      49,
-      50,
-      51,
-      53,
-      54,
       67,
       70,
       71,
       75,
-      93,
-      97,
       99,
       100,
       103,
@@ -9387,8 +9380,6 @@
     "area": "OVERWORLD",
     "underlayIds": [
       19,
-      56,
-      57,
       66,
       80,
       111,
@@ -9403,21 +9394,6 @@
     "groundMaterial": "DIRT",
     "replacements": {
       "WINTER_DIRT": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "UNDERLAY_OVERWORLD_GRUNGE",
-    "area": "OVERWORLD",
-    "underlayIds": [
-      8,
-      10,
-      58,
-      60,
-      92
-    ],
-    "groundMaterial": "GRUNGE",
-    "replacements": {
-      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -9445,11 +9421,24 @@
     "area": "OVERWORLD",
     "underlayIds": [
       5,
+      8,
+      10,
+      12,
       13,
       25,
       26,
+      48,
+      49,
+      50,
+      51,
       52,
+      53,
+      54,
       55,
+      56,
+      57,
+      58,
+      60,
       61,
       62,
       63,
@@ -9460,8 +9449,11 @@
       72,
       73,
       77,
+      93,
+      92,
       94,
       96,
+      97,
       112,
       113,
       125,
@@ -9478,7 +9470,7 @@
         "h == 9 && l <= 38",
         "h >= 10 && s >= 2",
         "h == 8 && s == 5 && l >= 15",
-        "h == 8 && s >= 6 && l >= 2"
+        "h == 8 && s >= 6 && l >= 20"
       ],
       "SEASONAL_DIRT": [
         "h == 8 && s <= 4 && l <= 71",
