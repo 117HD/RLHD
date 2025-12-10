@@ -4623,14 +4623,6 @@
     "blended": false
   },
   {
-    "name": "CRANDOR_GROUND_1",
-    "area": "CRANDOR",
-    "overlayIds": [
-      11
-    ],
-    "groundMaterial": "GRAVEL"
-  },
-  {
     "name": "FISHING_TRAWLER_BOAT_PORT_KHAZARD_FIX",
     "area": "FISHING_TRAWLER_BOAT_PORT_KHAZARD",
     "overlayIds": [
@@ -5380,19 +5372,6 @@
     ],
     "groundMaterial": "PACKED_EARTH",
     "uvScale": 1.1
-  },
-  {
-    "name": "VARROCK_PATHS",
-    "area": "OVERWORLD",
-    "overlayIds": [
-      11,
-      171,
-      179
-    ],
-    "groundMaterial": "VARROCK_PATHS",
-    "replacements": {
-      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
-    }
   },
   {
     "name": "SOUL_WARS_DIRT_PATH",
@@ -6621,16 +6600,6 @@
     "shiftLightness": -4
   },
   {
-    "name": "OVERLAY_SAND",
-    "area": "ALL",
-    "overlayIds": [
-      25,
-      26,
-      76
-    ],
-    "groundMaterial": "SAND"
-  },
-  {
     "name": "OVERLAY_BRICK_BROWN",
     "area": "ALL",
     "overlayIds": [
@@ -7743,16 +7712,52 @@
     }
   },
   {
-    "name": "CRANDOR_SAND",
+    "name": "CRANDOR_GROUND_1",
     "area": "CRANDOR",
-    "underlayIds": [
-      146
+    "overlayIds": [
+      11,
+      92
     ],
-    "groundMaterial": "SAND",
-    "minHue": 6,
-    "maxHue": 6,
-    "minSaturation": 3,
-    "maxSaturation": 3
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "CRANDOR_COMPLEX_TILES",
+    "area": "CRANDOR",
+    "overlayIds": [
+      26
+    ],
+    "underlayIds": [
+      1,
+      52,
+      53,
+      56,
+      57,
+      62,
+      68,
+      72,
+      92,
+      94,
+      98,
+      111,
+      113,
+      126,
+      145,
+      146,
+      148,
+      147,
+      149,
+      150
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": [
+        "h >= 10 && s >= 2",
+        "h == 9 && s >= 3",
+        "h == 8 && s > 5 && l >= 30"
+      ],
+      "DEFAULT_SAND": "h == 8 && s == 3 && l >= 30",
+      "DEFAULT_ROCKY_GROUND": "s <= 0 && l <= 40",
+      "DEFAULT_DIRT": true
+    }
   },
   {
     "name": "GOD_WARS_DUNGEON_SNOW_1",
@@ -9416,6 +9421,19 @@
     }
   },
   {
+    "name": "COBBLESTONE_PATHS",
+    "area": "OVERWORLD",
+    "overlayIds": [
+      11,
+      171,
+      179
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
@@ -9612,6 +9630,16 @@
     "replacements": {
       "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
+  },
+  {
+    "name": "OVERLAY_SAND",
+    "area": "ALL",
+    "overlayIds": [
+      25,
+      26,
+      76
+    ],
+    "groundMaterial": "SAND"
   },
   {
     "name": "UNDERLAY_GRUNGE",
