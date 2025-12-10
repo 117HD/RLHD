@@ -16868,11 +16868,19 @@
   },
   {
     "description": "Player Killing - Loot Key Chest",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX"
+      }
+    ],
     "objectIds": [
       "WILDY_HUB_LOOT_CHEST_CLOSED"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
     "description": "Objects - Wooden - Rocking Chair",
