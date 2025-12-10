@@ -942,7 +942,11 @@
       4
     ],
     "groundMaterial": "WOOD_PLANKS_1",
-    "blended": false
+    "blended": false,
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "VARROCK_PLANT_PATCHES",
