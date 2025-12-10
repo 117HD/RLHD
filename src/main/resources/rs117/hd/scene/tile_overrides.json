@@ -717,12 +717,12 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "VARROCK_HOUSE_1",
-    "area": "VARROCK_HOUSE_1",
+    "name": "VARROCK_HAIRDRESSER",
+    "area": "VARROCK_HAIRDRESSER",
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS"
   },
   {
     "name": "VARROCK_HOUSE_2",
