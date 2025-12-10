@@ -5887,8 +5887,10 @@
     "uvOrientation": 117,
     "objectIds": [
       "SHAYZIEN_BANK_BARS_DOOR",
+      "FAI_VARROCK_BANK_BARS",
       "FAI_VARROCK_BANK_BARS_END",
-      "FAI_VARROCK_BANK_BARS_END_MIRROR"
+      "FAI_VARROCK_BANK_BARS_END_MIRROR",
+      "FAI_VARROCK_BANK_BARS_DOOR"
     ]
   },
   {
