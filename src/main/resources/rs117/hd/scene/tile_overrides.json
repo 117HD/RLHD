@@ -8117,6 +8117,14 @@
     }
   },
   {
+    "name": "Etcetera Castle Upstairs",
+    "area": "ETCETERIA_CASTLE_FLOOR",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "underlayIds": [
+      67
+    ]
+  },
+  {
     "name": "Miscellania and Etcetera Complex Tiles",
     "area": "FREMENNIK_COLONIES",
     "underlayIds": [

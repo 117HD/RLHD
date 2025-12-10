@@ -12400,7 +12400,9 @@
       "KR_POSHDOOROPEN",
       "POSHDOOR_NOOP",
       "POSHDOOR_REVERSE",
-      "POSHDOOROPEN_REVERSE"
+      "POSHDOOROPEN_REVERSE",
+      "CASTLEDOOR",
+      "OPENCASTLEDOOR"
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -12539,7 +12541,8 @@
       "ELID_GENIE_DOOR",
       "ELID_GENIE_DOOR_OPEN",
       "SLUG2_VILLAGE_POORDOOR",
-      "PEST_POORDOOROPEN"
+      "PEST_POORDOOROPEN",
+      "MISC_BANK_DOOR"
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
