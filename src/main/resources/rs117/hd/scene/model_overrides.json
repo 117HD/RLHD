@@ -69948,9 +69948,60 @@
     "uvType": "BOX",
     "objectIds": [
       "XMAS22_SNOWGAME01_SNOW03",
+      "XMAS22_SNOWGAME01_SMALL03",
       "XMAS22_SNOWGAME01_SNOW05",
+      "XMAS22_SNOWGAME01_SNOW01",
       "XMAS22_GENERIC_BLOCK_1X1",
       "XMAS22_GENERIC_BLOCK_2X2"
+    ]
+  },
+  {
+    "description": "Xmas 2025 - Snow Piles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.67,
+    "uvOrientationY": 50,
+    "objectIds": [
+      "XMAS22_PUB01_OUTDOORTABLE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Xmas 2025 - Fireplace",
+    "baseMaterial": "GRUNGE_3",
+    "depthBias": 2,
+    "objectIds": [
+      "XMAS24_PUB01_FIREPLACE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Xmas 2025 - Rug",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "XMAS22_PUB01_RUGMIDDLE01",
+      "XMAS22_PUB01_RUGSIDE01",
+      "XMAS22_PUB01_RUGCORNER01"
     ]
   }
 ]

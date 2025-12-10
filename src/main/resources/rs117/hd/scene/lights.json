@@ -43109,5 +43109,56 @@
     "objectIds": [
       "HIDEOUT_LANTERN01_DEFAULT01"
     ]
+  },
+  {
+    "description": "XMAS_2025_FIREPLACE_HEARTH_OUTSIDE",
+    "offset": [ 50, 60, -15 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS24_PUB01_FIREPLACE01"
+    ]
+  },
+  {
+    "description": "XMAS_2025_FIREPLACE_HEARTH_INSIDE",
+    "offset": [ 0, 60, -15 ],
+    "radius": 75,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS24_PUB01_FIREPLACE01"
+    ]
+  },
+  {
+    "description": "XMAS_2025_FIREPLACE_CANDLE",
+    "offset": [ -10, 165, -10 ],
+    "radius": 100,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS24_PUB01_FIREPLACE01"
+    ]
   }
 ]
