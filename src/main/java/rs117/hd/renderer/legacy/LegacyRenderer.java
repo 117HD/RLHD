@@ -962,28 +962,6 @@ public class LegacyRenderer implements Renderer {
 			return;
 		}
 
-		if (plugin.lastFrameTimeMillis > 0) {
-			plugin.deltaTime = (float) ((System.currentTimeMillis() - plugin.lastFrameTimeMillis) / 1000.);
-
-			// Restart the plugin to avoid potential buffer corruption if the computer has likely resumed from suspension
-			if (plugin.deltaTime > 300) {
-				log.debug("Restarting the plugin after probable OS suspend ({} second delta)", plugin.deltaTime);
-				plugin.restartPlugin();
-				return;
-			}
-
-			// If system time changes between frames, clamp the delta to a more sensible value
-			if (abs(plugin.deltaTime) > 10)
-				plugin.deltaTime = 1 / 60.f;
-			plugin.elapsedTime += plugin.deltaTime;
-			plugin.windOffset += plugin.deltaTime * environmentManager.currentWindSpeed;
-
-			// The client delta doesn't need clamping
-			plugin.deltaClientTime = (float) (plugin.elapsedClientTime - plugin.lastFrameClientTime);
-		}
-		plugin.lastFrameTimeMillis = System.currentTimeMillis();
-		plugin.lastFrameClientTime = plugin.elapsedClientTime;
-
 		try {
 			plugin.prepareInterfaceTexture();
 		} catch (Exception ex) {
@@ -1312,8 +1290,8 @@ public class LegacyRenderer implements Renderer {
 
 		int expandedChunks = plugin.getExpandedMapLoadingChunks();
 		if (HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			// Reload once the POH is done loading
-			if (!plugin.isInHouse)
+			// Reload once the POH is done loading, upon first entering the POH
+			if (sceneContext == null || !sceneContext.isInHouse)
 				reloadSceneIn(2);
 		} else if (plugin.skipScene != scene && HDUtils.sceneIntersects(
 			scene,
@@ -1417,11 +1395,11 @@ public class LegacyRenderer implements Renderer {
 		sceneContext.stagingBufferNormals.clear();
 
 		if (sceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			plugin.isInHouse = true;
-			plugin.isInChambersOfXeric = false;
+			sceneContext.isInHouse = true;
+			sceneContext.isInChambersOfXeric = false;
 		} else {
-			plugin.isInHouse = false;
-			plugin.isInChambersOfXeric = sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
+			sceneContext.isInHouse = false;
+			sceneContext.isInChambersOfXeric = sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
 		}
 	}
 

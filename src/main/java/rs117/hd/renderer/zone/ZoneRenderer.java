@@ -197,6 +197,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void waitUntilIdle() {
+		sceneManager.completeAllStreaming();
 		glFinish();
 	}
 
@@ -523,28 +524,6 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
 			}
 		}
-
-		if (plugin.lastFrameTimeMillis > 0) {
-			plugin.deltaTime = (float) ((System.currentTimeMillis() - plugin.lastFrameTimeMillis) / 1000.);
-
-			// Restart the plugin to avoid potential buffer corruption if the computer has likely resumed from suspension
-			if (plugin.deltaTime > 300) {
-				log.debug("Restarting the plugin after probable OS suspend ({} second delta)", plugin.deltaTime);
-				plugin.restartPlugin();
-				return;
-			}
-
-			// If system time changes between frames, clamp the delta to a more sensible value
-			if (abs(plugin.deltaTime) > 10)
-				plugin.deltaTime = 1 / 60.f;
-			plugin.elapsedTime += plugin.deltaTime;
-			plugin.windOffset += plugin.deltaTime * environmentManager.currentWindSpeed;
-
-			// The client delta doesn't need clamping
-			plugin.deltaClientTime = (float) (plugin.elapsedClientTime - plugin.lastFrameClientTime);
-		}
-		plugin.lastFrameTimeMillis = System.currentTimeMillis();
-		plugin.lastFrameClientTime = plugin.elapsedClientTime;
 
 		// Upon logging in, the client will draw some frames with zero geometry before it hides the login screen
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
@@ -1107,8 +1086,10 @@ public class ZoneRenderer implements Renderer {
 			int zz = (gameObject.getY() >> 10) + offset;
 			Zone zone = ctx.zones[zx][zz];
 
+			boolean isSubScene = !sceneManager.isRoot(ctx);
+
 			GenericJob shadowUploadTask = null;
-			if (zone.inShadowFrustum) {
+			if (isSubScene || zone.inShadowFrustum) {
 				final VAO o = vaoShadow.get(size, ctx.vboM);
 
 				shadowUploadTask = GenericJob
@@ -1125,11 +1106,11 @@ public class ZoneRenderer implements Renderer {
 							o.vbo.vb
 						);
 					})
-					.setExecuteAsync(!sceneManager.isRoot(ctx) || zone.inSceneFrustum)
+					.setExecuteAsync(isSubScene || zone.inSceneFrustum)
 					.queue(true);
 			}
 
-			if (!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {
+			if (isSubScene || zone.inSceneFrustum) {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
