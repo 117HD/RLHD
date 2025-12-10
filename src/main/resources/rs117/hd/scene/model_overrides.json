@@ -2540,7 +2540,6 @@
     "description": "FARMING_PATCH_2",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "FARMING_BORDER_STRAIGHT_LIGHT",
       "FARMING_BORDER_CORNER_LIGHT",
       "FARMING_DIRTPATCH_DARK"
     ],
@@ -12645,6 +12644,25 @@
       "FAI_VARROCK_FLOORBOARD_OVERHANG"
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Varrock - Agiliy course floor with footprints",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "MODEL_XZ",
+    "colorOverrides": [
+      {
+        "description": "Footprints",
+        "baseMaterial": "GRUNGE_1",
+        "colors": "h == 8",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5,
+        "castShadows": false,
+        "receiveShadows": false
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_FLOORBOARD_FOOTPRINT_SAND"
+    ]
   },
   {
     "description": "Varrock Wall ivy",
