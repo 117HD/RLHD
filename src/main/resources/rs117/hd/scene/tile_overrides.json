@@ -9496,6 +9496,48 @@
     ]
   },
   {
+    "name": "XMAS_2025_FOUNTAIN_FIX",
+    "area": "XMAS_2025_FOUNTAIN_FIX",
+    "groundMaterial": "NONE",
+    "underlayIds": [
+      0,
+      61,
+      124
+    ],
+    "shiftLightness": -10,
+    "shiftHue": 26,
+    "setSaturation": 2
+  },
+  {
+    "name": "XMAS_2025_VARROCK_SNOW_BLENDING",
+    "area": "XMAS_2025_SNOW",
+    "groundMaterial": "SNOW_1",
+    "underlayIds": [
+      58,
+      59,
+      124
+    ],
+    "minLightness": 70,
+    "setHue": 5,
+    "setSaturation": 0,
+    "replacements": {
+      "XMAS_2025_VARROCK_SNOW_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "XMAS_2025_VARROCK_SNOW_NO_BLENDING",
+    "area": "XMAS_2025_SNOW",
+    "groundMaterial": "SNOW_1",
+    "underlayIds": [
+      58,
+      59,
+      124
+    ],
+    "maxLightness": 75,
+    "setHue": 5,
+    "setSaturation": 0
+  },
+  {
     "name": "WARM_REGION_COMPLEX_TILES",
     "area": "WARM_REGIONS",
     "underlayIds": [
