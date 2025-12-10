@@ -69754,6 +69754,27 @@
     ]
   },
   {
+    "description": "Varrock - Underground - Basement Walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FAI_VARROCK_UNDERGROUND"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 1 && l == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
     "description": "The Great Conch - Object - Crab Apple Tree",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
@@ -70510,14 +70531,26 @@
       "XMAS25_BLUE_INN_DRINKS_BAR_RIGHT",
       "XMAS25_BLUE_INN_DRINKS_BAR_MIDDLE2",
       "XMAS25_BLUE_INN_DRINKS_BAR_MIDDLE",
-      "XMAS25_BLUE_INN_DRINKS_BAR_LEFT"
+      "XMAS25_BLUE_INN_DRINKS_BAR_LEFT",
+      "XMAS25_BLUE_INN_BAR_MIDDLE2_INTERACT",
+      "XMAS25_BLUE_INN_DRINKS_BAR_LEFT_INTERACT",
+      "XMAS25_BLUE_INN_DRINKS_BAR_MIDDLE_INTERACT",
+      "XMAS25_BLUE_INN_DRINKS_BAR_MIDDLE2_INTERACT",
+      "XMAS25_BLUE_INN_DRINKS_BAR_RIGHT_INTERACT",
+      "XMAS25_BLUE_INN_BAR_MIDDLE_INTERACT",
+      "XMAS25_BLUE_INN_BAR_MIDDLE3_INTERACT",
+      "XMAS22_PUB01_DININGTABLE01"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 6 && s == 5 || h == 7 && s > 3",
+        "colors": "h == 6 && s == 5 || h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.6
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       },
       {
         "colors": "h == 0 || h == 7 && s == 3",
@@ -70531,7 +70564,10 @@
     "description": "Xmas 2025 - Table",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "XMAS25_TABLE01_EMPTY01"
+      "XMAS25_TABLE01_EMPTY01",
+      "XMAS25_TABLE01_EMPTY01_OP1",
+      "XMAS25_TABLE01_DRINK01",
+      "XMAS25_TABLE01_FOOD01"
     ],
     "colorOverrides": [
       {
@@ -70558,8 +70594,63 @@
         "colors": "h == 6 || h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.3,
-        "depthBias": 1
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Xmas 2025 - Crate",
+    "objectIds": [
+      "XMAS25_CRATE01_MEAT01",
+      "XMAS25_CRATE01_FRUIT01",
+      "XMAS25_CRATE01_BROCCOLI01",
+      "XMAS25_CRATE01_VEGETABLE01",
+      "XMAS25_CRATE01_FISH01",
+      "XMAS25_CRATE01_TOMATO01",
+      "XMAS25_CRATE01_CARROT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvOrientationZ": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Xmas 2025 - Veg Table",
+    "objectIds": [
+      "XMAS25_TABLE01_VEGETABLE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Xmas 2025 - Basement Ladder",
+    "objectIds": [
+      "FAI_VARROCK_LADDER_DEEP",
+      "FAI_VARROCK_LADDER_FROM_CELLAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5111
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
       }
     ]
   }
