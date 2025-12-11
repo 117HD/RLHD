@@ -172,6 +172,8 @@ public class SceneUploader {
 		zone.roofEnd = new int[4][roofIds.size()];
 
 		for (int z = 0; z <= 3; ++z) {
+			this.level = z;
+
 			if (z == 0) {
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab);
@@ -239,7 +241,6 @@ public class SceneUploader {
 		GpuIntBuffer vb,
 		GpuIntBuffer ab
 	) {
-		this.level = level;
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
