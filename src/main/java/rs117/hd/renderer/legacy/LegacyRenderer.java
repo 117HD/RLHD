@@ -967,28 +967,6 @@ public class LegacyRenderer implements Renderer {
 			return;
 		}
 
-		if (plugin.lastFrameTimeMillis > 0) {
-			plugin.deltaTime = (float) ((System.currentTimeMillis() - plugin.lastFrameTimeMillis) / 1000.);
-
-			// Restart the plugin to avoid potential buffer corruption if the computer has likely resumed from suspension
-			if (plugin.deltaTime > 300) {
-				log.debug("Restarting the plugin after probable OS suspend ({} second delta)", plugin.deltaTime);
-				plugin.restartPlugin();
-				return;
-			}
-
-			// If system time changes between frames, clamp the delta to a more sensible value
-			if (abs(plugin.deltaTime) > 10)
-				plugin.deltaTime = 1 / 60.f;
-			plugin.elapsedTime += plugin.deltaTime;
-			plugin.windOffset += plugin.deltaTime * environmentManager.currentWindSpeed;
-
-			// The client delta doesn't need clamping
-			plugin.deltaClientTime = (float) (plugin.elapsedClientTime - plugin.lastFrameClientTime);
-		}
-		plugin.lastFrameTimeMillis = System.currentTimeMillis();
-		plugin.lastFrameClientTime = plugin.elapsedClientTime;
-
 		try {
 			plugin.prepareInterfaceTexture();
 		} catch (Exception ex) {

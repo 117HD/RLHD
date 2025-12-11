@@ -429,8 +429,8 @@ public class HdPlugin extends Plugin {
 	public double elapsedClientTime;
 	public float deltaTime;
 	public float deltaClientTime;
-	public long lastFrameTimeMillis;
-	public double lastFrameClientTime;
+	private long lastFrameTimeMillis;
+	private double lastFrameClientTime;
 	public float windOffset;
 	public long colorFilterChangedAt;
 
@@ -1853,9 +1853,26 @@ public class HdPlugin extends Plugin {
 	public void onBeforeRender(BeforeRender beforeRender) {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 
-		// Upload the UI which we began copying during the previous frame
-		if (configAsyncUICopy)
-			asyncUICopy.complete();
+		if (lastFrameTimeMillis > 0) {
+			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
+
+			// Restart the to avoid potential buffer corruption if the computer has likely resumed from suspension
+			if (deltaTime > 300) {
+				log.debug("Restarting the after probable OS suspend ({} second delta)", deltaTime);
+				restartPlugin();
+			}
+
+			// If system time changes between frames, clamp the delta to a more sensible value
+			if (abs(deltaTime) > 10)
+				deltaTime = 1 / 60.f;
+			// The client delta doesn't need clamping
+			deltaClientTime = (float) (elapsedClientTime - lastFrameClientTime);
+
+			elapsedTime += deltaTime;
+			windOffset += deltaTime * environmentManager.currentWindSpeed;
+		}
+		lastFrameTimeMillis = System.currentTimeMillis();
+		lastFrameClientTime = elapsedClientTime;
 
 		// The game runs significantly slower with lower planes in Chambers of Xeric
 		var ctx = getSceneContext();

@@ -178,6 +178,8 @@ public class SceneUploader {
 		modelDataSlice = zone.modelDataSlice;
 
 		for (int z = 0; z <= 3; ++z) {
+			this.level = z;
+
 			if (z == 0) {
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab);
@@ -245,7 +247,6 @@ public class SceneUploader {
 		GpuIntBuffer vb,
 		GpuIntBuffer ab
 	) {
-		this.level = level;
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
@@ -277,7 +278,7 @@ public class SceneUploader {
 					if (t != null) {
 						this.rid = rid;
 						onBeforeProcessTile(t, false);
-						uploadZoneTile(ctx, zone, t, false, vb, ab);
+						uploadZoneTile(ctx, zone, t, false, false, vb, ab);
 					}
 				}
 			}
@@ -296,7 +297,7 @@ public class SceneUploader {
 					Tile t = tiles[level][msx][msz];
 					if (t != null) {
 						onBeforeProcessTile(t, false);
-						uploadZoneTile(ctx, zone, t, true, vb, null);
+						uploadZoneTile(ctx, zone, t, false, true, vb, null);
 					}
 				}
 			}
@@ -400,15 +401,15 @@ public class SceneUploader {
 		}
 
 		Tile bridge = t.getBridge();
-		if (bridge != null) {
+		if (bridge != null)
 			estimateZoneTileSize(ctx, z, bridge);
-		}
 	}
 
 	private void uploadZoneTile(
 		ZoneSceneContext ctx,
 		Zone zone,
 		Tile t,
+		boolean isBridge,
 		boolean onlyWaterSurface,
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer
@@ -419,7 +420,7 @@ public class SceneUploader {
 		int tileZ = t.getRenderLevel();
 		ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane(), worldPos);
 
-		if (ctx.currentArea != null && !ctx.currentArea.containsPoint(worldPos))
+		if (ctx.currentArea != null && !isBridge && !ctx.currentArea.containsPoint(worldPos))
 			return;
 
 		boolean drawTile = renderCallbackManager.drawTile(ctx.scene, t);
@@ -446,7 +447,7 @@ public class SceneUploader {
 
 		Tile bridge = t.getBridge();
 		if (bridge != null)
-			uploadZoneTile(ctx, zone, bridge, onlyWaterSurface, vertexBuffer, alphaBuffer);
+			uploadZoneTile(ctx, zone, bridge, true, onlyWaterSurface, vertexBuffer, alphaBuffer);
 	}
 
 	private void uploadZoneTileRenderables(

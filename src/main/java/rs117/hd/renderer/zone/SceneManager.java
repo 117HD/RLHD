@@ -285,7 +285,8 @@ public class SceneManager {
 	public void completeAllStreaming() {
 		root.sceneLoadGroup.complete();
 		root.streamingGroup.complete();
-		root.invalidationGroup.complete();
+
+		root.completeInvalidation();
 
 		WorldView wv = client.getTopLevelWorldView();
 		if (wv != null) {
@@ -294,7 +295,8 @@ public class SceneManager {
 				if (ctx != null) {
 					ctx.sceneLoadGroup.complete();
 					ctx.streamingGroup.complete();
-					ctx.invalidationGroup.complete();
+
+					ctx.completeInvalidation();
 				}
 			}
 		}

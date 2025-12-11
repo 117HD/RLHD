@@ -25,7 +25,7 @@ import rs117.hd.utils.VariableSupplier;
 
 import static rs117.hd.utils.ExpressionParser.asExpression;
 import static rs117.hd.utils.ExpressionParser.parseExpression;
-import static rs117.hd.utils.MathUtils.*;
+import static rs117.hd.utils.MathUtils.clamp;
 
 @Slf4j
 @NoArgsConstructor
@@ -70,6 +70,7 @@ public class TileOverride {
 	public transient int index;
 	public transient int[] ids;
 	public transient boolean queriedAsOverlay;
+	public transient TileOverride replacement;
 	@Nonnull
 	private transient List<Map.Entry<ExpressionPredicate, TileOverride>> replacements = Collections.emptyList();
 
@@ -199,20 +200,19 @@ public class TileOverride {
 
 	public TileOverride resolveConstantReplacements() {
 		// Check if the override always resolves to the same replacement override
-		for (var entry : replacements) {
+		var override = this;
+		// Enhanced for loop here causes the original iterator to be used without replacements
+		for (int i = 0; i < override.replacements.size(); i++) {
+			var entry = override.replacements.get(i);
 			var predicate = entry.getKey();
 			// Stop on the first non-constant predicate
 			if (predicate != ExpressionPredicate.TRUE)
 				break;
 
-			if (predicate.test()) {
-				return entry.getValue();
-			} else {
-				assert false : "Constant false expressions should be filtered out by this point";
-			}
+			override = entry.getValue();
 		}
 
-		return this;
+		return override;
 	}
 
 	public TileOverride resolveReplacements(VariableSupplier vars) {

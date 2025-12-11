@@ -164,6 +164,12 @@
     ]
   },
   {
+    "name": "TILE_SMALL_2",
+    "materials": [
+      "TILE_SMALL_2"
+    ]
+  },
+  {
     "name": "CARPET",
     "materials": [
       "CARPET"

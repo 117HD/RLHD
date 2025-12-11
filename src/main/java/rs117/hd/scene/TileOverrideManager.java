@@ -52,8 +52,8 @@ public class TileOverrideManager {
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 	private boolean trackReplacements;
-	private List<Map.Entry<Area, TileOverride>> anyMatchOverrides;
-	private ListMultimap<Integer, Map.Entry<Area, TileOverride>> idMatchOverrides;
+	private List<TileOverride> anyMatchOverrides;
+	private ListMultimap<Integer, TileOverride> idMatchOverrides;
 
 	public void startUp() {
 		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> reload(!first)));
@@ -90,8 +90,8 @@ public class TileOverrideManager {
 
 			checkForReplacementLoops(allOverrides);
 
-			List<Map.Entry<Area, TileOverride>> anyMatch = new ArrayList<>();
-			ListMultimap<Integer, Map.Entry<Area, TileOverride>> idMatch = ArrayListMultimap.create();
+			List<TileOverride> anyMatch = new ArrayList<>();
+			ListMultimap<Integer, TileOverride> idMatch = ArrayListMultimap.create();
 
 			var tileOverrideVars = plugin.vars.aliases(Map.of(
 				"textures", "groundTextures"
@@ -110,13 +110,12 @@ public class TileOverrideManager {
 				if (override.area == Area.NONE)
 					continue;
 
-				var replacement = trackReplacements ? override : override.resolveConstantReplacements();
-				var entry = Map.entry(override.area, replacement);
+				override.replacement = trackReplacements ? override : override.resolveConstantReplacements();
 				if (override.ids != null) {
 					for (int id : override.ids)
-						idMatch.put(id, entry);
+						idMatch.put(id, override);
 				} else {
-					anyMatch.add(entry);
+					anyMatch.add(override);
 				}
 			}
 
@@ -247,6 +246,7 @@ public class TileOverrideManager {
 	@Nonnull
 	public TileOverride getOverrideBeforeReplacements(@Nonnull int[] worldPos, int... ids) {
 		var match = TileOverride.NONE;
+		int index = match.index;
 
 		outer:
 		for (int id : ids) {
@@ -255,9 +255,9 @@ public class TileOverrideManager {
 			// noinspection ForLoopReplaceableByForEach
 			for (int i = 0; i < entries.size(); i++) {
 				final var entry = entries.get(i);
-				final var area = entry.getKey();
-				if (area.containsPoint(worldPos)) {
-					match = entry.getValue();
+				if (entry.area.containsPoint(worldPos)) {
+					index = entry.index;
+					match = entry.replacement;
 					match.queriedAsOverlay = (id & OVERLAY_FLAG) != 0;
 					break outer;
 				}
@@ -265,12 +265,10 @@ public class TileOverrideManager {
 		}
 
 		for (var entry : anyMatchOverrides) {
-			var anyMatch = entry.getValue();
-			if (anyMatch.index > match.index)
+			if (entry.index > index)
 				break;
-			var area = entry.getKey();
-			if (area.containsPoint(worldPos)) {
-				match = anyMatch;
+			if (entry.area.containsPoint(worldPos)) {
+				match = entry.replacement;
 				break;
 			}
 		}
