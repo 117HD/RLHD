@@ -1133,6 +1133,7 @@ public class HdPlugin extends Plugin {
 		checkGLErrors();
 
 		uboGlobal.tiledLightingResolution.set(tiledLightingResolution);
+		uboGlobal.upload(); // Ensure this is up to date with rendering
 	}
 
 	private void destroyTiledLightingFbo() {
@@ -1205,6 +1206,7 @@ public class HdPlugin extends Plugin {
 		float resolutionScale = config.sceneResolutionScale() / 100f;
 		sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
 		uboGlobal.sceneResolution.set(sceneResolution);
+		uboGlobal.upload(); // Ensure this is up to date with rendering
 
 		// Create and bind the FBO
 		fboScene = glGenFramebuffers();
