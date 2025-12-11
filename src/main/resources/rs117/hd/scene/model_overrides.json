@@ -29371,25 +29371,28 @@
   },
   {
     "description": "Weiss Salt Rocks",
-    "baseMaterial": "ROCK_5",
-    "objectIds": [ "MY2ARM_SALTROCK_BLUE", "MY2ARM_SALTROCK_SPECIAL" ],
-    "uvType": "BOX"
-  },
-  {
-    "description": "Weiss Salt Rocks",
-    "baseMaterial": "ROCK_5",
-    "objectIds": [ "MY2ARM_SALTROCK_GREEN", "MY2ARM_SALTROCK_RED" ],
-    "uvType": "BOX"
-  },
-  {
-    "description": "Weiss Empty Rock",
-    "baseMaterial": "ROCK_5",
-    "objectIds": [ "MY2ARM_SALTROCK_EMPTY" ],
-    "uvType": "BOX"
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "MY2ARM_SALTROCK_BLUE",
+      "MY2ARM_SALTROCK_SPECIAL",
+      "MY2ARM_SALTROCK_GREEN",
+      "MY2ARM_SALTROCK_RED",
+      "MY2ARM_SALTROCK_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Weiss Saltmine Walls",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "objectIds": [
       "MY2ARM_MINE_WALL",
       "MY2ARM_MINE_WALL_SNOWTOP",
@@ -29400,39 +29403,60 @@
       "DECOKIT_TILES_BROKEN02",
       "DECOKIT_TILES_BROKEN03",
       "DECOKIT_TILES_DEFAULT01",
+      "MY2ARM_MINE_WALL_3WIDE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128
+  },
+  {
+    "description": "Weiss Saltmine Walls",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "objectIds": [
       "MY2ARM_MINE_WALL_TOP_FALLOFF_STRAIGHT",
       "MY2ARM_MINE_WALL_TOP_FALLOFF_STRAIGHT_SNOW",
       "MY2ARM_MINE_WALL_TOP_FALLOFF_INSIDE_CORNER",
       "MY2ARM_MINE_WALL_TOP_FALLOFF_INSIDE_CORNER_SNOW",
       "MY2ARM_MINE_WALL_TOP_FALLOFF_OUTSIDE_CORNER",
-      "MY2ARM_MINE_WALL_TOP_FALLOFF_OUTSIDE_CORNER_SNOW",
-      "MY2ARM_MINE_WALL_3WIDE"
+      "MY2ARM_MINE_WALL_TOP_FALLOFF_OUTSIDE_CORNER_SNOW"
     ],
     "uvType": "BOX",
-    "uvScale": 0.45,
-    "uvOrientation": 128
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Weiss Saltmine to Ghorrock Dungeon Cave",
-    "baseMaterial": "ROCK_4_DARK",
+    "baseMaterial": "ROCK_3_DARK",
     "objectIds": [ "MY2ARM_MINE_WALL_CAVE_EXIT_02_VIS" ],
     "uvType": "BOX",
-    "uvScale": 0.45,
     "uvOrientation": 612
   },
   {
     "description": "Weiss Saltmine Stairs",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "objectIds": [ "MY2ARM_MINE_STEPS" ],
     "uvType": "BOX",
-    "uvScale": 0.45,
-    "uvOrientation": 384
+    "uvOrientation": 128
   },
   {
     "description": "Ghorrock Dungeon - Wall",
     "baseMaterial": "GRUNGE_3_LIGHT",
-    "objectIds": [ "GHORROCK_DUNGEON_CAVE_ENTRY", "GHORROCK_STONE01", "GHORROCK_STONE01_SNOW01", "GHORROCK_STONE01_SNOW01_TRANSITION", "GHORROCK_STONE01_SNOW01_TRANSITION_MIRROR", "GHORROCK_STONE01_SNOW01_PILLAR", "GHORROCK_STONE01_PILLAR02", "GHORROCK_STONE01_DECORATIVE01", "GHORROCK_STONE01_ALCOVE01", "GHORROCK_STONE01_ALCOVE02_CAGE", "GHORROCK_STONE01_ALCOVE02_DOOR", "GHORROCK_STONE01_ALCOVE02_PLAQUE", "GHORROCK_WALLTOP_SNOW_STRAIGHT", "GHORROCK_WALLTOP_SNOW_OUTSIDE_CORNER", "GHORROCK_WALLTOP_SNOW_INSIDE_CORNER", "GHORROCK_GATEWAY01_LEFT_LVL0", "GHORROCK_GATEWAY01_RIGHT_LVL0", "GHORROCK_GATEWAY01_LEFT_LVL1", "GHORROCK_GATEWAY01_RIGHT_LVL1", "GHORROCK_GATEWAY01_MIDDLE_LVL1", "GHORROCK_METAL_GATE_CLOSED", "GHORROCK_METAL_GATE_OPEN", "GHORROCK_METAL_GATE_PADLOCK_CLOSED", "GHORROCK_METAL_GATE_PADLOCK_OPEN", "GHORROCK_ICE01", "GHORROCK_ICE02", "GHORROCK_SNOW01_ICE01_TRANS", "GHORROCK_SNOW01_ICE01_TRANS_MIRROR", "GHORROCK_DUNGEON_EXIT", "ANCIENT_ESSENCE_ROCK_ACTIVE", "ANCIENT_ESSENCE_ROCK_EMPTY", "DT2_GHORROCK_ENTRY_NOOP" ],
-    "uvType": "BOX"
+    "objectIds": [
+      "GHORROCK_DUNGEON_CAVE_ENTRY", "GHORROCK_STONE01", "GHORROCK_STONE01_SNOW01", "GHORROCK_STONE01_SNOW01_TRANSITION", "GHORROCK_STONE01_SNOW01_TRANSITION_MIRROR", "GHORROCK_STONE01_SNOW01_PILLAR", "GHORROCK_STONE01_PILLAR02", "GHORROCK_STONE01_DECORATIVE01", "GHORROCK_STONE01_ALCOVE01", "GHORROCK_STONE01_ALCOVE02_CAGE", "GHORROCK_STONE01_ALCOVE02_DOOR", "GHORROCK_STONE01_ALCOVE02_PLAQUE", "GHORROCK_WALLTOP_SNOW_STRAIGHT", "GHORROCK_WALLTOP_SNOW_OUTSIDE_CORNER", "GHORROCK_WALLTOP_SNOW_INSIDE_CORNER", "GHORROCK_GATEWAY01_LEFT_LVL0", "GHORROCK_GATEWAY01_RIGHT_LVL0", "GHORROCK_GATEWAY01_LEFT_LVL1", "GHORROCK_GATEWAY01_RIGHT_LVL1", "GHORROCK_GATEWAY01_MIDDLE_LVL1", "GHORROCK_METAL_GATE_CLOSED", "GHORROCK_METAL_GATE_OPEN", "GHORROCK_METAL_GATE_PADLOCK_CLOSED", "GHORROCK_METAL_GATE_PADLOCK_OPEN", "GHORROCK_ICE01", "GHORROCK_ICE02", "GHORROCK_SNOW01_ICE01_TRANS", "GHORROCK_SNOW01_ICE01_TRANS_MIRROR", "GHORROCK_DUNGEON_EXIT", "ANCIENT_ESSENCE_ROCK_ACTIVE", "ANCIENT_ESSENCE_ROCK_EMPTY", "DT2_GHORROCK_ENTRY_NOOP",
+      "GHORROCK_DUNGEON_CAVE_EXIT"],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h > 36",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Ghorrock Dungeon - Snow - Trim",
@@ -29503,12 +29527,18 @@
   },
   {
     "description": "Ghorrock Dungeon - Wall - Candle",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "GHORROCK_WALL_CANDLE01"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.25
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "White Bed with pillow",

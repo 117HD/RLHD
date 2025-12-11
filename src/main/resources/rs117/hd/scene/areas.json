@@ -8253,7 +8253,8 @@
     "name": "WEISS_SALT_MINE",
     "regions": [
       11425
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "GHORROCK_DUNGEON",
@@ -8262,7 +8263,8 @@
     ],
     "regionBoxes": [
       [ 11619, 12132 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "GOBLIN_VILLAGE_ICE_CAVE",
