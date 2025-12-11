@@ -2540,7 +2540,6 @@
     "description": "FARMING_PATCH_2",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "FARMING_BORDER_STRAIGHT_LIGHT",
       "FARMING_BORDER_CORNER_LIGHT",
       "FARMING_DIRTPATCH_DARK"
     ],
@@ -3101,6 +3100,7 @@
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",
       "GRASS_LIGHT_3",
+      "GRASS_LIGHT_4",
       "GRASS_2"
     ]
   },
@@ -3499,6 +3499,7 @@
       "LONG_GRASS_3_CASTLE_EDGE",
       "LONG_GRASS_4_CASTLE_EDGE",
       "LONG_GRASS_4_CASTLE_EDGE2",
+      "LONG_GRASS_4_CASTLE_CORNER",
       "YELLOW_GRASS1",
       "YELLOW_GRASS2",
       "YELLOW_GRASS3",
@@ -5887,8 +5888,10 @@
     "uvOrientation": 117,
     "objectIds": [
       "SHAYZIEN_BANK_BARS_DOOR",
+      "FAI_VARROCK_BANK_BARS",
       "FAI_VARROCK_BANK_BARS_END",
-      "FAI_VARROCK_BANK_BARS_END_MIRROR"
+      "FAI_VARROCK_BANK_BARS_END_MIRROR",
+      "FAI_VARROCK_BANK_BARS_DOOR"
     ]
   },
   {
@@ -12399,7 +12402,9 @@
       "KR_POSHDOOROPEN",
       "POSHDOOR_NOOP",
       "POSHDOOR_REVERSE",
-      "POSHDOOROPEN_REVERSE"
+      "POSHDOOROPEN_REVERSE",
+      "CASTLEDOOR",
+      "OPENCASTLEDOOR"
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -12538,7 +12543,8 @@
       "ELID_GENIE_DOOR",
       "ELID_GENIE_DOOR_OPEN",
       "SLUG2_VILLAGE_POORDOOR",
-      "PEST_POORDOOROPEN"
+      "PEST_POORDOOROPEN",
+      "MISC_BANK_DOOR"
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -12641,6 +12647,25 @@
       "FAI_VARROCK_FLOORBOARD_OVERHANG"
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Varrock - Agiliy course floor with footprints",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "MODEL_XZ",
+    "colorOverrides": [
+      {
+        "description": "Footprints",
+        "baseMaterial": "GRUNGE_1",
+        "colors": "h == 8",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5,
+        "castShadows": false,
+        "receiveShadows": false
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_FLOORBOARD_FOOTPRINT_SAND"
+    ]
   },
   {
     "description": "Varrock Wall ivy",
@@ -16844,11 +16869,19 @@
   },
   {
     "description": "Player Killing - Loot Key Chest",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX"
+      }
+    ],
     "objectIds": [
       "WILDY_HUB_LOOT_CHEST_CLOSED"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
     "description": "Objects - Wooden - Rocking Chair",
@@ -70652,6 +70685,27 @@
         "colors": "l == 2",
         "baseMaterial": "PURE_BLACK"
       }
+    ]
+  },
+  {
+    "description": "Farming patch border rocks",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": -256,
+    "objectIds": [
+      "FARMING_BORDER_STRAIGHT_NORTH"
+    ]
+  },
+  {
+    "description": "Etceteria - Gardening patch borders",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "FARMING_BORDER_STRAIGHT_LIGHT",
+      "FARMING_GARDENINGPATCH_BORDER_LIGHT"
     ]
   }
 ]
