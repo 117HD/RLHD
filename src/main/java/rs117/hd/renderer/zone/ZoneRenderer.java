@@ -1134,11 +1134,13 @@ public class ZoneRenderer implements Renderer {
 				}
 				int end = a.vbo.vb.position();
 				if (end > start) {
+					// Fix rendering projectiles from boats with hide roofs enabled
+					int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
 					zone.addTempAlphaModel(
 						a.vao,
 						start,
 						end,
-						gameObject.getPlane(),
+						plane,
 						x & 1023,
 						y - renderable.getModelHeight() /* to render players over locs */,
 						z & 1023
