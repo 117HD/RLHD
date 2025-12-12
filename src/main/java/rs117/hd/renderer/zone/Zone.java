@@ -144,7 +144,7 @@ public class Zone {
 		}
 
 		if (uploadJob != null) {
-			uploadJob.release();
+			uploadJob.cancel();
 			uploadJob = null;
 		}
 
