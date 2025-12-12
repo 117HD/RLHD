@@ -1,4 +1,4 @@
-#version 330
+#include VERSION_HEADER
 
 uniform sampler2D shadowMap;
 

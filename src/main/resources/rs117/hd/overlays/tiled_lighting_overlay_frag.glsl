@@ -1,4 +1,4 @@
-#version 330
+#include VERSION_HEADER
 
 //#define DEBUG_LIGHT_RADIUS_PADDING
 

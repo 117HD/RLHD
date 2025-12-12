@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#include VERSION_HEADER
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
@@ -43,8 +43,11 @@ flat in vec3 gUv[3];
 flat in int gMaterialData[3];
 flat in int gCastShadow[3];
 flat in int gWorldViewId[3];
+flat in float gDetailFade[3];
 
 out vec3 fUvw;
+out float fDetailFade;
+
 flat out int fMaterialData;
 
 #if SHADOW_TRANSPARENCY
@@ -66,6 +69,7 @@ void main() {
     computeUvs(materialData, worldViewIndex, vec3[](gPosition[0], gPosition[1], gPosition[2]), uvw);
 
     fMaterialData = materialData;
+    fDetailFade = gDetailFade[0];
 
     for (int i = 0; i < 3; i++) {
         fUvw = vec3(uvw[i].xy, material.colorMap);

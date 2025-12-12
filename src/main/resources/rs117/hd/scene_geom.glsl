@@ -23,7 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#include VERSION_HEADER
 
 #include <uniforms/global.glsl>
 
@@ -43,6 +43,8 @@ in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
 in int gTerrainData[3];
 in int gWorldViewId[3];
+in vec3 gSceneOffset[3];
+in vec2 gFade[3];
 
 flat out int vWorldViewId;
 flat out ivec3 vAlphaBiasHsl;
@@ -56,10 +58,12 @@ out FragmentData {
     vec2 uv;
     vec3 normal;
     vec3 texBlend;
+    vec2 fFade;
 } OUT;
 
 void main() {
-    vWorldViewId = gWorldViewId[0];
+    if ((gFade[0].y + gFade[1].y + gFade[2].y) == 1.0)
+        return;
 
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
@@ -108,6 +112,8 @@ void main() {
         }
     #endif
 
+    vWorldViewId = gWorldViewId[0];
+
     for (int i = 0; i < 3; i++) {
         vec4 pos = vec4(gPosition[i], 1);
         // Flat normals must be applied separately per vertex
@@ -122,6 +128,7 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
+        OUT.fFade = gFade[i];
 
         pos = projectionMatrix * pos;
         #if ZONE_RENDERER

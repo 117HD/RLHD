@@ -2,8 +2,10 @@ package rs117.hd.utils;
 
 import java.nio.IntBuffer;
 import java.util.Arrays;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
+import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -11,6 +13,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.glDrawArraysIndirect;
 import static org.lwjgl.opengl.GL40.glDrawElementsIndirect;
 import static org.lwjgl.opengl.GL43.glMultiDrawArraysIndirect;
+import static rs117.hd.HdPlugin.checkGLErrors;
 
 @Slf4j
 public class CommandBuffer {
@@ -38,6 +41,8 @@ public class CommandBuffer {
 
 	private final Object[] objects = new Object[10];
 	private int objectCount = 0;
+	@Getter
+	private int drawCallCount = 0;
 
 	private final RenderState renderState;
 
@@ -97,20 +102,24 @@ public class CommandBuffer {
 
 		ensureCapacity(1 + offsets.length);
 		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_TYPE & 0xFF | mode << 8 | (long) offsets.length << 32;
-		for (int i = 0; i < offsets.length; i++)
+		for (int i = 0; i < offsets.length; i++) {
 			cmd[writeHead++] = (long) offsets[i] << 32 | counts[i] & INT_MASK;
+			drawCallCount++;
+		}
 	}
 
 	public void DrawElements(int mode, int vertexCount, long offset) {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_DRAW_ELEMENTS_TYPE & 0xFF | (mode & DRAW_MODE_MASK) << 8 | (long) vertexCount << 32;
 		cmd[writeHead++] = offset;
+		drawCallCount++;
 	}
 
 	public void DrawArrays(int mode, int offset, int vertexCount) {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_DRAW_ARRAYS_TYPE & 0xFF | (mode & DRAW_MODE_MASK) << 8;
 		cmd[writeHead++] = (long) offset << 32 | vertexCount & INT_MASK;
+		drawCallCount++;
 	}
 
 	public void DrawArraysIndirect(int mode, int vertexOffset, int vertexCount, GpuIntBuffer indirectBuffer) {
@@ -126,6 +135,7 @@ public class CommandBuffer {
 
 		cmd[writeHead++] = GL_DRAW_ARRAYS_INDIRECT_TYPE & 0xFF | (long) mode << 8;
 		cmd[writeHead++] = (long) indirectOffset * Integer.BYTES;
+		drawCallCount++;
 	}
 
 	public void DrawElementsIndirect(int mode, int indexCount, int indexOffset, GpuIntBuffer indirectBuffer) {
@@ -142,6 +152,7 @@ public class CommandBuffer {
 
 		cmd[writeHead++] = GL_DRAW_ELEMENTS_INDIRECT_TYPE & 0xFF | (long) mode << 8;
 		cmd[writeHead++] = (long) indirectOffset * Integer.BYTES;
+		drawCallCount++;
 	}
 
 	public void MultiDrawArraysIndirect(int mode, int[] vertexOffsets, int[] vertexCounts, GpuIntBuffer indirectBuffer) {
@@ -166,6 +177,7 @@ public class CommandBuffer {
 
 		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_INDIRECT_TYPE & 0xFF | (long) mode << 8 | (long) drawCount << 32;
 		cmd[writeHead++] = (long) indirectOffset * Integer.BYTES;
+		drawCallCount++;
 	}
 
 
@@ -191,8 +203,10 @@ public class CommandBuffer {
 				// Casting from long to int keeps the lower 32 bits
 				long data = cmd[readHead++];
 				int type = (int) data & 0xFF;
-				if (type < GL_DRAW_CALL_TYPE_COUNT)
+				if (type < GL_DRAW_CALL_TYPE_COUNT) {
 					renderState.apply();
+					checkGLErrors(() -> String.format("Render State:\n%s", renderState));
+				}
 
 				switch (type) {
 					case GL_DEPTH_MASK_TYPE: {
@@ -298,6 +312,9 @@ public class CommandBuffer {
 					default:
 						throw new IllegalArgumentException("Encountered an unknown DrawCall type: " + type);
 				}
+
+				if (type < GL_DRAW_CALL_TYPE_COUNT)
+					checkGLErrors(() -> String.format("DrawCall Type: %d\nRender State:\n%s", type, renderState));
 			}
 			renderState.apply();
 		}
@@ -314,7 +331,10 @@ public class CommandBuffer {
 	}
 
 	public void reset() {
+		Arrays.fill(objects, 0, objectCount, null);
+		objectCount = 0;
 		writeHead = 0;
+		drawCallCount = 0;
 		renderState.reset();
 	}
 }

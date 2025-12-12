@@ -11,7 +11,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.opengl.uniforms.UBOWaterTypes;
+import rs117.hd.opengl.buffer.uniforms.UBOWaterTypes;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.ColorUtils;

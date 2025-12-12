@@ -52,7 +52,7 @@ import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
-import rs117.hd.opengl.uniforms.UBOLights;
+import rs117.hd.opengl.buffer.uniforms.UBOLights;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
