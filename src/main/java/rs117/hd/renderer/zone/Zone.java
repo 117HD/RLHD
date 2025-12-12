@@ -432,6 +432,7 @@ public class Zone {
 
 	static class AlphaModel {
 		int id;
+		ModelOverride modelOverride;
 		int startpos, endpos;
 		short x, y, z; // local position
 		short rid;
@@ -477,6 +478,7 @@ public class Zone {
 	) {
 		AlphaModel m = new AlphaModel();
 		m.id = id;
+		m.modelOverride = modelOverride;
 		m.startpos = startpos;
 		m.endpos = endpos;
 		m.x = (short) x;
@@ -612,11 +614,12 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	void addTempAlphaModel(int vao, int startpos, int endpos, int level, int x, int y, int z) {
+	void addTempAlphaModel(ModelOverride modelOverride, int vao, int startpos, int endpos, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
 		m.id = -1;
+		m.modelOverride = modelOverride;
 		m.startpos = startpos;
 		m.endpos = endpos;
 		m.x = (short) x;
@@ -757,7 +760,7 @@ public class Zone {
 
 			byte[] faceRenderPriorities = m.renderPriorities;
 			final int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
-			if (faceRenderPriorities == null) {
+			if (faceRenderPriorities == null || m.modelOverride.disablePrioritySorting) {
 				for (int i = diameter - 1; i >= 0; --i) {
 					final int cnt = distanceFaceCount[i];
 					if (cnt > 0) {
@@ -887,6 +890,7 @@ public class Zone {
 				if (m2 == null)
 					m2 = new AlphaModel();
 				m2.id = m.id;
+				m2.modelOverride = m.modelOverride;
 				m2.startpos = m.startpos;
 				m2.endpos = m.endpos;
 				m2.x = m.x;

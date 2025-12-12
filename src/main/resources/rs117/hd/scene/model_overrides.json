@@ -2044,7 +2044,8 @@
       "IRONWOOD_TREE_UPDATE_STUMP"
     ],
     "uvType": "BOX",
-    "uvScale": 0.9
+    "uvScale": 0.9,
+    "disablePrioritySorting": true
   },
   {
     "description": "Objects - Trees - Tirannwn Tree - Stump",
