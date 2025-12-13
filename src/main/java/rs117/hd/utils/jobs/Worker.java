@@ -1,10 +1,9 @@
 package rs117.hd.utils.jobs;
 
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.utils.MPMCCircularBuffer;
 
 import static rs117.hd.utils.HDUtils.getThreadStackTrace;
 import static rs117.hd.utils.MathUtils.*;
@@ -20,7 +19,7 @@ public final class Worker {
 
 	final JobSystem jobSystem;
 	final int workerIdx;
-	final BlockingDeque<JobHandle> localWorkQueue = new LinkedBlockingDeque<>();
+	final MPMCCircularBuffer<JobHandle> localWorkQueue = new MPMCCircularBuffer<>(512);
 	final AtomicBoolean inflight = new AtomicBoolean();
 
 	boolean findNextStealTarget() {
@@ -50,17 +49,15 @@ public final class Worker {
 			while (handle == null) {
 				if (stealTargetIdx >= 0) {
 					final Worker victim = jobSystem.workers[stealTargetIdx];
-					int stealCount = max(1, victim.localWorkQueue.size() / jobSystem.workers.length);
+					int stealCount = clamp(victim.localWorkQueue.size() / jobSystem.workers.length, 1, 250);
 
 					JobHandle stolenHandle;
 					while (stealCount-- > 0 && (stolenHandle = victim.localWorkQueue.poll()) != null) {
 						if (handle == null) {
 							handle = stolenHandle;
 						} else {
-							if (handle.highPriority)
-								localWorkQueue.addFirst(stolenHandle);
-							else
-								localWorkQueue.addLast(stolenHandle);
+							if(!localWorkQueue.offer(stolenHandle))
+								break;
 						}
 					}
 				}
@@ -109,8 +106,9 @@ public final class Worker {
 		try {
 			workerHandleCancel();
 
-			if (handle.item != null && handle.setRunning(this)) {
+			if (handle.item != null) {
 				inflight.lazySet(true);
+				handle.setRunning(this);
 				handle.item.onRun();
 				handle.item.ranToCompletion.set(true);
 			}

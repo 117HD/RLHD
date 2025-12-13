@@ -187,17 +187,16 @@ public class SceneManager {
 			}
 		}
 
-		// TODO: Wait for zone invalidations without blocking other async loading
 		// Ensure any queued zone invalidations are now completed
-//		root.completeInvalidation();
-//
-//		if (wv != null) {
-//			for (WorldEntity we : wv.worldEntities()) {
-//				WorldViewContext ctx = getContext(we.getWorldView());
-//				if (ctx != null)
-//					ctx.completeInvalidation();
-//			}
-//		}
+		root.completeInvalidation();
+
+		if (wv != null) {
+			for (WorldEntity we : wv.worldEntities()) {
+				WorldViewContext ctx = getContext(we.getWorldView());
+				if (ctx != null)
+					ctx.completeInvalidation();
+			}
+		}
 	}
 
 	private void updateAreaHiding() {
@@ -273,6 +272,8 @@ public class SceneManager {
 		log.debug("Scene reload requested");
 	}
 
+	public boolean isClientThread() { return client.isClientThread(); }
+
 	public boolean isLoadingScene() { return nextSceneContext != null; }
 
 	public void completeAllStreaming() {
@@ -304,8 +305,8 @@ public class SceneManager {
 		if (zone.rebuild)
 			return;
 
-		zone.rebuild = true;
 		log.debug("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
+		ctx.invalidateZone(zx, zz);
 	}
 
 	private static boolean isEdgeTile(Zone[][] zones, int zx, int zz) {
