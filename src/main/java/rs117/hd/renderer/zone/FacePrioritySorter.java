@@ -38,6 +38,8 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.renderer.zone.SceneUploader.interpolateHSL;
+import static rs117.hd.renderer.zone.SceneUploader.undoVanillaShading;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
@@ -72,17 +74,6 @@ class FacePrioritySorter {
 	private static final int ZSORT_GROUP_SIZE = 1024; // was 512
 	private static final int MAX_FACES_PER_PRIORITY = 4000; // was 2500
 
-	private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
-	private static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
-	// subtracts the X lowest lightness levels from the formula.
-	// helps keep darker colors appropriately dark
-	private static final int IGNORE_LOW_LIGHTNESS = 3;
-	// multiplier applied to vertex' lightness value.
-	// results in greater lightening of lighter colors
-	private static final float LIGHTNESS_MULTIPLIER = 3;
-	// the minimum amount by which each color will be lightened
-	private static final int BASE_LIGHTEN = 10;
-
 	static {
 		distances = new int[MAX_VERTEX_COUNT];
 		distanceFaceCount = new char[MAX_DIAMETER];
@@ -104,9 +95,6 @@ class FacePrioritySorter {
 		eq11 = new int[MAX_FACES_PER_PRIORITY];
 		lt10 = new int[12];
 		orderedFaces = new int[12][MAX_FACES_PER_PRIORITY];
-
-		for (int i = 0; i < 8; i++)
-			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
 	}
 
 	@Inject
@@ -416,82 +404,16 @@ class FacePrioritySorter {
 			return 0;
 
 		if (plugin.configUndoVanillaShading && hasVertexNormals) {
-			int color1H = color1 >> 10 & 0x3F;
-			int color1S = color1 >> 7 & 0x7;
-			int color1L = color1 & 0x7F;
-			int color2H = color2 >> 10 & 0x3F;
-			int color2S = color2 >> 7 & 0x7;
-			int color2L = color2 & 0x7F;
-			int color3H = color3 >> 10 & 0x3F;
-			int color3S = color3 >> 7 & 0x7;
-			int color3L = color3 & 0x7F;
-
-			// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
-			// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
-			// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
-			// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
-			// low value for it to look acceptable in most cases.
-			float[] L = LIGHT_DIR_MODEL;
-			float color1Adjust =
-				BASE_LIGHTEN - color1L + (color1L < IGNORE_LOW_LIGHTNESS ? 0 : (color1L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
-			float color2Adjust =
-				BASE_LIGHTEN - color2L + (color2L < IGNORE_LOW_LIGHTNESS ? 0 : (color2L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
-			float color3Adjust =
-				BASE_LIGHTEN - color3L + (color3L < IGNORE_LOW_LIGHTNESS ? 0 : (color3L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
-
-			// Normals are currently unrotated, so we don't need to do any rotation for this
-			float nx, ny, nz, lightDotNormal;
-			nx = xVertexNormals[triangleA];
-			ny = yVertexNormals[triangleA];
-			nz = zVertexNormals[triangleA];
-			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
-			if (lightDotNormal > 0) {
-				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-				color1L += (int) (lightDotNormal * color1Adjust);
-			}
-
-			nx = xVertexNormals[triangleB];
-			ny = yVertexNormals[triangleB];
-			nz = zVertexNormals[triangleB];
-			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
-			if (lightDotNormal > 0) {
-				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-				color2L += (int) (lightDotNormal * color2Adjust);
-			}
-
-			nx = xVertexNormals[triangleC];
-			ny = yVertexNormals[triangleC];
-			nz = zVertexNormals[triangleC];
-			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
-			if (lightDotNormal > 0) {
-				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-				color3L += (int) (lightDotNormal * color3Adjust);
-			}
-
-			int maxBrightness1 = 55;
-			int maxBrightness2 = 55;
-			int maxBrightness3 = 55;
-			if (!plugin.configLegacyGreyColors) {
-				maxBrightness1 = MAX_BRIGHTNESS_LOOKUP_TABLE[color1S];
-				maxBrightness2 = MAX_BRIGHTNESS_LOOKUP_TABLE[color2S];
-				maxBrightness3 = MAX_BRIGHTNESS_LOOKUP_TABLE[color3S];
-			}
-
-			// Clamp brightness as detailed above
-			color1L = min(color1L, maxBrightness1);
-			color2L = min(color2L, maxBrightness2);
-			color3L = min(color3L, maxBrightness3);
-
-			color1 = color1H << 10 | color1S << 7 | color1L;
-			color2 = color2H << 10 | color2S << 7 | color2L;
-			color3 = color3H << 10 | color3S << 7 | color3L;
+			color1 = undoVanillaShading(model, triangleA, color1, plugin.configLegacyGreyColors);
+			color2 = undoVanillaShading(model, triangleB, color2, plugin.configLegacyGreyColors);
+			color3 = undoVanillaShading(model, triangleC, color3, plugin.configLegacyGreyColors);
 		}
 
 		// HSL override is not applied to textured faces
 		if (overrideAmount > 0 && textureId == -1) {
-			color1 = SceneUploader.interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color2 = SceneUploader.interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color3 = SceneUploader.interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color1 = interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color2 = interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
 		}
 
 		int texA, texB, texC;
