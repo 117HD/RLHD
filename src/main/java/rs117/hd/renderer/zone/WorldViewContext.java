@@ -146,11 +146,16 @@ public class WorldViewContext {
 		if (isLoading)
 			return;
 
-		invalidationGroup.complete();
+		final LinkedBlockingDeque<ZoneUploadJob> pendingInvalidationJobs = invalidationGroup.getPending();
+		for(ZoneUploadJob job : pendingInvalidationJobs) {
+			if(job.frameNumber == sceneManager.getFrameNumber())
+				continue; // Ignore invalidation jobs from the current frame to avoid stalling
 
-		for (int x = 0; x < sizeX; x++)
-			for (int z = 0; z < sizeZ; z++)
-				handleZoneSwap(-1.0f, x, z);
+			job.waitForCompletion();
+			pendingInvalidationJobs.remove(job);
+
+			handleZoneSwap(-1.0f, job.x, job.z);
+		}
 	}
 
 	void free() {
