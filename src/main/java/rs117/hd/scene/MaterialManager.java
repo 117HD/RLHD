@@ -311,6 +311,9 @@ public class MaterialManager {
 		var vanillaTextures = textureProvider.getTextures();
 		VANILLA_TEXTURE_MAPPING = new Material[vanillaTextures.length];
 
+		// Arbitrarily account for brightness increase from using unlit colors
+		Material.NONE.brightness = plugin.configUnlitFaceColors ? 0.8f : 1;
+
 		// Assemble the material map, accounting for replacements
 		MATERIAL_MAP.clear();
 		for (var original : parsedMaterials) {
