@@ -442,6 +442,7 @@ public class HdPlugin extends Plugin {
 	public double elapsedClientTime;
 	public float deltaTime;
 	public float deltaClientTime;
+	public long frameNumber;
 	private long lastFrameTimeMillis;
 	private double lastFrameClientTime;
 	public float windOffset;
@@ -1876,6 +1877,7 @@ public class HdPlugin extends Plugin {
 			// The client delta doesn't need clamping
 			deltaClientTime = (float) (elapsedClientTime - lastFrameClientTime);
 
+			frameNumber++;
 			elapsedTime += deltaTime;
 			windOffset += deltaTime * environmentManager.currentWindSpeed;
 		}

@@ -33,11 +33,6 @@ public abstract class Job {
 				handle.release();
 			}
 		}
-
-		if (group != null) {
-			group.pending.remove(this);
-			group = null;
-		}
 	}
 
 	public final boolean isQueued() {
@@ -76,6 +71,10 @@ public abstract class Job {
 		queued.set(false);
 		waitForCompletion();
 		onReleased();
+
+		if (group != null)
+			group.pending.remove(this);
+		group = null;
 	}
 
 	public final boolean isDone() {
