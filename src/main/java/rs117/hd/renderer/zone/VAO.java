@@ -12,6 +12,7 @@ import rs117.hd.utils.CommandBuffer;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 class VAO {
 	// Temp vertex format
@@ -29,13 +30,13 @@ class VAO {
 	static final int METADATA_SIZE = 4;
 
 	final VBO vbo;
-	final VBO vboF;
+	final RawTBO tboF;
 	int vao;
 	int vboMetadata;
 
 	VAO(int size) {
 		vbo = new VBO(size);
-		vboF = new VBO(size);
+		tboF = new RawTBO(size);
 	}
 
 	void initialize(int ebo, @Nullable VBO vboMetadata) {
@@ -54,29 +55,22 @@ class VAO {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(1, 2, GL_HALF_FLOAT, false, VERT_SIZE, 12);
 
 		// Normals
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 18);
 
-		vboF.initialize(GL_DYNAMIC_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, vboF.bufId);
-
-		// Alpha, bias & HSL
+		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
-		glVertexAttribDivisor(3, 3);
-		glVertexAttribIPointer(3, 3, GL_INT, TEXTURE_SIZE, 0);
-
-		// Material data
-		glEnableVertexAttribArray(4);
-		glVertexAttribDivisor(4, 3);
-		glVertexAttribIPointer(4, 3, GL_INT, TEXTURE_SIZE, 12);
+		glVertexAttribIPointer(3, 1, GL_SHORT, VERT_SIZE, 16);
 
 		bindMetadata(vboMetadata);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
+
+		tboF.initialize(GL_DYNAMIC_DRAW);
 	}
 
 	void bindMetadata(@Nullable VBO vboMetadata) {
@@ -97,7 +91,7 @@ class VAO {
 
 	void destroy() {
 		vbo.destroy();
-		vboF.destroy();
+		tboF.destroy();
 		glDeleteVertexArrays(vao);
 		vao = 0;
 	}
@@ -128,6 +122,7 @@ class VAO {
 		assert !vbo.mapped;
 
 		cmd.BindVertexArray(vao);
+		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.texId, TEXTURE_UNIT_TEXTURED_FACES);
 
 		int start = 0;
 		for (int i = 0; i < off; ++i) {
@@ -173,7 +168,7 @@ class VAO {
 				boolean wasMapped = vao.vbo.mapped;
 				if (!wasMapped) {
 					vao.vbo.map();
-					vao.vboF.map();
+					vao.tboF.map();
 				}
 
 				int rem = vao.vbo.vb.remaining() * Integer.BYTES;
@@ -193,7 +188,7 @@ class VAO {
 			VAO vao = new VAO(VAO_SIZE);
 			vao.initialize(eboAlpha, vboMetadata);
 			vao.vbo.map();
-			vao.vboF.map();
+			vao.tboF.map();
 			vaos.add(vao);
 			log.debug("Allocated VAO {} request {}", vao.vao, size);
 			return vao;
@@ -205,7 +200,7 @@ class VAO {
 				if (vao.vbo.mapped) {
 					++sz;
 					vao.vbo.unmap();
-					vao.vboF.unmap();
+					vao.tboF.unmap();
 				}
 			}
 			curIdx = 0;

@@ -264,11 +264,15 @@ public class Zone {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 6);
+		glVertexAttribPointer(1, 2, GL_HALF_FLOAT, false, VERT_SIZE, 6);
 
 		// Normals
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
+
+		// TextureFaceIdx
+		glEnableVertexAttribArray(3);
+		glVertexAttribIPointer(3, 1, GL_SHORT, VERT_SIZE, 10);
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 

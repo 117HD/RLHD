@@ -32,6 +32,8 @@ layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
 layout (location = 2) in vec3 vNormal;
 #if ZONE_RENDERER
+layout (location = 3) in int vTextureFaceIdx;
+
 layout (location = 6) in int vWorldViewId;
 layout (location = 7) in ivec2 vSceneBase;
 
@@ -59,10 +61,9 @@ void main() {
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
     mat4 worldViewProjection = getWorldViewProjection(vWorldViewId);
 
-    int textureFacesIdx = (gl_VertexID / 3) * 3;
-    fAlphaBiasHsl = texelFetch(textureFaces, textureFacesIdx).xyz;
-    fMaterialData = texelFetch(textureFaces, textureFacesIdx + 1).xyz;
-    fTerrainData = texelFetch(textureFaces, textureFacesIdx + 2).xyz;
+    fAlphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx).xyz;
+    fMaterialData = texelFetch(textureFaces, vTextureFaceIdx + 1).xyz;
+    fTerrainData = texelFetch(textureFaces, vTextureFaceIdx + 2).xyz;
     fWorldViewId = vWorldViewId;
 
     vec3 worldPosition = vec3(worldViewProjection * vec4(sceneOffset + vPosition, 1));

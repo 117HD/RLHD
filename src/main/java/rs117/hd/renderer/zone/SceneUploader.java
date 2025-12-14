@@ -954,49 +954,49 @@ public class SceneUploader {
 		uvx = fract(uvx * uvcos - uvy * uvsin);
 		uvy = fract(tmp * uvsin + uvy * uvcos);
 
-		fb.putFace(
+		int texturedFaceIdx = fb.putFace(
 			neColor, nwColor, seColor,
 			neMaterialData, nwMaterialData, seMaterialData,
 			neTerrainData, nwTerrainData, seTerrainData);
 
 		vb.putVertex(
 			lx2, neHeight, lz2,
-			uvx, uvy, 0,
+			uvx, uvy, texturedFaceIdx,
 			neNormals[0], neNormals[2], neNormals[1]
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3,
-			uvx - uvcos, uvy - uvsin, 0,
+			uvx - uvcos, uvy - uvsin, texturedFaceIdx,
 			nwNormals[0], nwNormals[2], nwNormals[1]
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1,
-			uvx + uvsin, uvy - uvcos, 0,
+			uvx + uvsin, uvy - uvcos, texturedFaceIdx,
 			seNormals[0], seNormals[2], seNormals[1]
 		);
 
-		fb.putFace(
+		texturedFaceIdx = fb.putFace(
 			swColor, seColor, nwColor,
 			swMaterialData, seMaterialData, nwMaterialData,
 			swTerrainData, seTerrainData, nwTerrainData);
 
 		vb.putVertex(
 			lx0, swHeight, lz0,
-			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
+			uvx - uvcos + uvsin, uvy - uvsin - uvcos, texturedFaceIdx,
 			swNormals[0], swNormals[2], swNormals[1]
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1,
-			uvx + uvsin, uvy - uvcos, 0,
+			uvx + uvsin, uvy - uvcos, texturedFaceIdx,
 			seNormals[0], seNormals[2], seNormals[1]
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3,
-			uvx - uvcos, uvy - uvsin, 0,
+			uvx - uvcos, uvy - uvsin, texturedFaceIdx,
 			nwNormals[0], nwNormals[2], nwNormals[1]
 		);
 	}
@@ -1255,26 +1255,26 @@ public class SceneUploader {
 			float uvCx = uvx + dx * uvcos - dz * uvsin;
 			float uvCy = uvy + dx * uvsin + dz * uvcos;
 
-			fb.putFace(
+			int texturedFaceIdx = fb.putFace(
 				colorA, colorB, colorC,
 				materialDataA, materialDataB, materialDataC,
 				terrainDataA, terrainDataB, terrainDataC);
 
 			vb.putVertex(
 				lx0, ly0, lz0,
-				uvAx, uvAy, 0,
+				uvAx, uvAy, texturedFaceIdx,
 				normalsA[0], normalsA[2], normalsA[1]
 			);
 
 			vb.putVertex(
 				lx1, ly1, lz1,
-				uvBx, uvBy, 0,
+				uvBx, uvBy, texturedFaceIdx,
 				normalsB[0], normalsB[2], normalsB[1]
 			);
 
 			vb.putVertex(
 				lx2, ly2, lz2,
-				uvCx, uvCy, 0,
+				uvCx, uvCy, texturedFaceIdx,
 				normalsC[0], normalsC[2], normalsC[1]
 			);
 		}
@@ -1802,7 +1802,7 @@ public class SceneUploader {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			textureBuffer.putFace(
+			int texturedFaceIdx = textureBuffer.putFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
 				0, 0, 0
@@ -1810,19 +1810,19 @@ public class SceneUploader {
 
 			vb.putVertex(
 				vx1, vy1, vz1,
-				modelUvs[0], modelUvs[1], modelUvs[2],
+				modelUvs[0], modelUvs[1], texturedFaceIdx,
 				faceNormals[0], faceNormals[1], faceNormals[2]
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2,
-				modelUvs[4], modelUvs[5], modelUvs[6],
+				modelUvs[4], modelUvs[5], texturedFaceIdx,
 				faceNormals[3], faceNormals[4], faceNormals[5]
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3,
-				modelUvs[8], modelUvs[9], modelUvs[10],
+				modelUvs[8], modelUvs[9], texturedFaceIdx,
 				faceNormals[6], faceNormals[7], faceNormals[8]
 			);
 
@@ -2045,26 +2045,26 @@ public class SceneUploader {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			GpuIntBuffer.putFace(textureBuffer,
+			int texturedFaceIdx = GpuIntBuffer.putFace(textureBuffer,
 				color1, color2, color3,
 				materialData, materialData, materialData);
 
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx1, vy1, vz1,
-				modelUvs[0], modelUvs[1], modelUvs[2],
+				modelUvs[0], modelUvs[1], texturedFaceIdx,
 				faceNormals[0], faceNormals[1], faceNormals[2]
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx2, vy2, vz2,
-				modelUvs[4], modelUvs[5], modelUvs[6],
+				modelUvs[4], modelUvs[5], texturedFaceIdx,
 				faceNormals[3], faceNormals[4], faceNormals[5]
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx3, vy3, vz3,
-				modelUvs[8], modelUvs[9], modelUvs[10],
+				modelUvs[8], modelUvs[9], texturedFaceIdx,
 				faceNormals[6], faceNormals[7], faceNormals[8]
 			);
 			len += 3;

@@ -130,10 +130,11 @@ public class GpuIntBuffer
 		buffer.put((normShort(nz) & 0xFFFF));
 	}
 
-	public void putFace(
+	public int putFace(
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC,
 		int terrainDataA,  int terrainDataB,  int terrainDataC ) {
+		final int textureFaceIdx = buffer.position() / 3;
 		buffer.put(alphaBiasHslA);
 		buffer.put(alphaBiasHslB);
 		buffer.put(alphaBiasHslC);
@@ -145,25 +146,27 @@ public class GpuIntBuffer
 		buffer.put(terrainDataA);
 		buffer.put(terrainDataB);
 		buffer.put(terrainDataC);
+		return textureFaceIdx;
 	}
 
 	public void putVertex(
 		int x, int y, int z,
-		float u, float v, float w,
+		float u, float v, int textureFaceIdx,
 		int nx, int ny, int nz
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put(float16(u) << 16 | z & 0xFFFF);
-		buffer.put(float16(w) << 16 | float16(v));
+		buffer.put(textureFaceIdx << 16 | float16(v));
 		// Unnormalized normals, assumed to be within short max
 		buffer.put((ny & 0xFFFF) << 16 | nx & 0xFFFF);
 		buffer.put(nz & 0xFFFF);
 	}
 
-	public static void putFace(
+	public static int putFace(
 		IntBuffer buffer,
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC) {
+		final int textureFaceIdx = buffer.position() / 3;
 		buffer.put(alphaBiasHslA);
 		buffer.put(alphaBiasHslB);
 		buffer.put(alphaBiasHslC);
@@ -171,19 +174,24 @@ public class GpuIntBuffer
 		buffer.put(materialDataA);
 		buffer.put(materialDataB);
 		buffer.put(materialDataC);
+
+		buffer.put(0); // TODO: Remove?
+		buffer.put(0);
+		buffer.put(0);
+		return textureFaceIdx;
 	}
 
 	public static void putFloatVertex(
 		IntBuffer buffer,
 		float x, float y, float z,
-		float u, float v, float w,
+		float u, float v, int textureFaceIdx,
 		int nx, int ny, int nz
 	) {
 		buffer.put(Float.floatToRawIntBits(x));
 		buffer.put(Float.floatToRawIntBits(y));
 		buffer.put(Float.floatToRawIntBits(z));
 		buffer.put(float16(v) << 16 | float16(u));
-		buffer.put((nx & 0xFFFF) << 16 | float16(w));
+		buffer.put((nx & 0xFFFF) << 16 | textureFaceIdx);
 		buffer.put((nz & 0xFFFF) << 16 | ny & 0xFFFF);
 	}
 
