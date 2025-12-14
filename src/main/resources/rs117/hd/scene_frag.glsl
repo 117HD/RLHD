@@ -150,11 +150,7 @@ void main() {
 
         // Set up tangent-space transformation matrix
         vec3 N = normalize(IN.normal);
-        #if 0
-        mat3 TBN = mat3(T, B, N * min(length(T), length(B)));
-        #else
         mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
-        #endif
 
         float selfShadowing = 0;
         vec3 fragPos = IN.position;
