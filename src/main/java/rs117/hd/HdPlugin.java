@@ -1759,17 +1759,15 @@ public class HdPlugin extends Plugin {
 						renderer.waitUntilIdle();
 
 					if (reloadTexturesAndMaterials) {
-						materialManager.reload(false);
+						materialManager.reload(reloadScene);
 						modelOverrideManager.reload();
 						recompilePrograms = true;
 					} else if (reloadModelOverrides) {
 						modelOverrideManager.reload();
 					}
 
-					if (reloadTileOverrides) {
-						tileOverrideManager.reload(false);
-						reloadScene = true;
-					}
+					if (reloadTileOverrides)
+						tileOverrideManager.reload(reloadScene);
 
 					if (recompilePrograms)
 						recompilePrograms();
