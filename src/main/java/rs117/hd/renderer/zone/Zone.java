@@ -39,10 +39,12 @@ public class Zone {
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	// alphaBiasHsl int
-	// materialData int
-	// terrainData int
-	public static final int VERT_SIZE = 32;
+	public static final int VERT_SIZE = 20;
+
+	// alphaBiasHsl ivec3
+	// materialData ivec3
+	// terrainData ivec3
+	public static final int TEXTURE_SIZE = 36;
 
 	// Metadata format
 	// worldViewIndex int int
@@ -60,9 +62,9 @@ public class Zone {
 	public int glVaoA;
 	public int bufLenA;
 
-	public int sizeO, sizeA;
+	public int sizeO, sizeA, sizeF;
 	@Nullable
-	public VBO vboO, vboA, vboM;
+	public VBO vboO, vboA, vboF, vboM;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
@@ -85,7 +87,7 @@ public class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	public void initialize(VBO o, VBO a, int eboShared) {
+	public void initialize(VBO o, VBO a, VBO f, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 
@@ -94,16 +96,18 @@ public class Zone {
 			vboM.initialize(GL_STATIC_DRAW);
 		}
 
-		if (o != null) {
+		if (o != null && f != null) {
 			vboO = o;
+			vboF = f;
 			glVao = glGenVertexArrays();
-			setupVao(glVao, o.bufId, vboM.bufId, eboShared);
+			setupVao(glVao, o.bufId, f.bufId, vboM.bufId, eboShared);
 		}
 
-		if (a != null) {
+		if (a != null && f != null) {
 			vboA = a;
+			vboF = f;
 			glVaoA = glGenVertexArrays();
-			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
+			setupVao(glVaoA, a.bufId, f.bufId, vboM.bufId, eboShared);
 		}
 	}
 
@@ -133,6 +137,11 @@ public class Zone {
 			vboM = null;
 		}
 
+		if(vboF != null) {
+			vboF.destroy();
+			vboF = null;
+		}
+
 		if (glVao != 0) {
 			glDeleteVertexArrays(glVao);
 			glVao = 0;
@@ -150,6 +159,7 @@ public class Zone {
 
 		sizeO = 0;
 		sizeA = 0;
+		sizeF = 0;
 		bufLen = 0;
 		bufLenA = 0;
 
@@ -226,6 +236,9 @@ public class Zone {
 		if (vboA != null) {
 			vboA.unmap();
 		}
+		if(vboF != null) {
+			vboF.unmap();
+		}
 
 		if (vboO != null) {
 			this.bufLen = vboO.len / (VERT_SIZE / 4);
@@ -236,7 +249,7 @@ public class Zone {
 		}
 	}
 
-	private void setupVao(int vao, int buffer, int metadata, int ebo) {
+	private void setupVao(int vao, int buffer, int metadata, int texture, int ebo) {
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
@@ -255,17 +268,22 @@ public class Zone {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
 
+		glBindBuffer(GL_ARRAY_BUFFER, texture);
+
 		// Alpha, bias & HSL
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 20);
+		glVertexAttribDivisor(3, 3);
+		glVertexAttribIPointer(3, 3, GL_INT, TEXTURE_SIZE, 0);
 
 		// Material data
 		glEnableVertexAttribArray(4);
-		glVertexAttribIPointer(4, 1, GL_INT, VERT_SIZE, 24);
+		glVertexAttribDivisor(4, 3);
+		glVertexAttribIPointer(4, 3, GL_INT, TEXTURE_SIZE, 12);
 
 		// Terrain data
 		glEnableVertexAttribArray(5);
-		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 28);
+		glVertexAttribDivisor(5, 3);
+		glVertexAttribIPointer(5, 3, GL_INT, TEXTURE_SIZE, 24);
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 

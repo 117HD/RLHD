@@ -18,21 +18,24 @@ class VAO {
 	// pos float vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	// alphaBiasHsl int
-	// materialData int
-	// terrainData int
-	static final int VERT_SIZE = 36;
+	static final int VERT_SIZE = 24;
+
+	// alphaBiasHsl ivec3
+	// materialData ivec3
+	static final int TEXTURE_SIZE = 24;
 
 	// Metadata format
 	// worldViewIndex int int
 	static final int METADATA_SIZE = 4;
 
 	final VBO vbo;
+	final VBO vboF;
 	int vao;
 	int vboMetadata;
 
 	VAO(int size) {
 		vbo = new VBO(size);
+		vboF = new VBO(size);
 	}
 
 	void initialize(int ebo, @Nullable VBO vboMetadata) {
@@ -57,17 +60,18 @@ class VAO {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 18);
 
+		vboF.initialize(GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, vboF.bufId);
+
 		// Alpha, bias & HSL
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+		glVertexAttribDivisor(3, 3);
+		glVertexAttribIPointer(3, 3, GL_INT, TEXTURE_SIZE, 0);
 
 		// Material data
 		glEnableVertexAttribArray(4);
-		glVertexAttribIPointer(4, 1, GL_INT, VERT_SIZE, 28);
-
-		// Terrain data
-		glEnableVertexAttribArray(5);
-		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 32);
+		glVertexAttribDivisor(4, 3);
+		glVertexAttribIPointer(4, 3, GL_INT, TEXTURE_SIZE, 12);
 
 		bindMetadata(vboMetadata);
 
@@ -93,6 +97,7 @@ class VAO {
 
 	void destroy() {
 		vbo.destroy();
+		vboF.destroy();
 		glDeleteVertexArrays(vao);
 		vao = 0;
 	}
@@ -166,8 +171,10 @@ class VAO {
 			while (curIdx < vaos.size()) {
 				VAO vao = vaos.get(curIdx);
 				boolean wasMapped = vao.vbo.mapped;
-				if (!wasMapped)
+				if (!wasMapped) {
 					vao.vbo.map();
+					vao.vboF.map();
+				}
 
 				int rem = vao.vbo.vb.remaining() * Integer.BYTES;
 				if (size <= rem) {
@@ -186,6 +193,7 @@ class VAO {
 			VAO vao = new VAO(VAO_SIZE);
 			vao.initialize(eboAlpha, vboMetadata);
 			vao.vbo.map();
+			vao.vboF.map();
 			vaos.add(vao);
 			log.debug("Allocated VAO {} request {}", vao.vao, size);
 			return vao;
@@ -197,6 +205,7 @@ class VAO {
 				if (vao.vbo.mapped) {
 					++sz;
 					vao.vbo.unmap();
+					vao.vboF.unmap();
 				}
 			}
 			curIdx = 0;

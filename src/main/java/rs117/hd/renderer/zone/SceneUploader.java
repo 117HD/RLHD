@@ -171,6 +171,8 @@ public class SceneUploader {
 	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		var vb = zone.vboO != null ? new GpuIntBuffer(zone.vboO.vb) : null;
 		var ab = zone.vboA != null ? new GpuIntBuffer(zone.vboA.vb) : null;
+		var fb = zone.vboF != null ? new GpuIntBuffer(zone.vboF.vb) : null;
+		assert fb != null;
 
 		roofIds.clear();
 		for (int level = 0; level <= 3; ++level) {
@@ -191,13 +193,13 @@ public class SceneUploader {
 			this.level = z;
 
 			if (z == 0) {
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, roofIds, vb, ab);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, roofIds, vb, ab);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, roofIds, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, roofIds, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, roofIds, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, roofIds, vb, ab, fb);
 			} else {
-				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab, fb);
 			}
 
 			if (zone.vboO != null) {
@@ -208,7 +210,7 @@ public class SceneUploader {
 
 		// Upload water surface tiles to be drawn after everything else
 		if (zone.hasWater && vb != null) {
-			uploadZoneWater(ctx, zone, mzx, mzz, vb);
+			uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 		}
 	}
@@ -222,7 +224,8 @@ public class SceneUploader {
 		boolean visbelow,
 		Set<Integer> roofIds,
 		GpuIntBuffer vb,
-		GpuIntBuffer ab
+		GpuIntBuffer ab,
+		GpuIntBuffer fb
 	) {
 		int ridx = 0;
 
@@ -230,7 +233,7 @@ public class SceneUploader {
 		for (int id : roofIds) {
 			int pos = zone.vboO != null ? zone.vboO.vb.position() : 0;
 
-			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, vb, ab);
+			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, vb, ab, fb);
 
 			int endpos = zone.vboO != null ? zone.vboO.vb.position() : 0;
 
@@ -243,7 +246,7 @@ public class SceneUploader {
 		}
 
 		// upload everything else
-		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, vb, ab);
+		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, vb, ab, fb);
 	}
 
 	private void uploadZoneLevelRoof(
@@ -255,7 +258,8 @@ public class SceneUploader {
 		int roofId,
 		boolean visbelow,
 		GpuIntBuffer vb,
-		GpuIntBuffer ab
+		GpuIntBuffer ab,
+		GpuIntBuffer fb
 	) {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
@@ -288,14 +292,14 @@ public class SceneUploader {
 					if (t != null) {
 						this.rid = rid;
 						onBeforeProcessTile(t, false);
-						uploadZoneTile(ctx, zone, t, false, false, vb, ab);
+						uploadZoneTile(ctx, zone, t, false, false, vb, ab, fb);
 					}
 				}
 			}
 		}
 	}
 
-	private void uploadZoneWater(ZoneSceneContext ctx, Zone zone, int mzx, int mzz, GpuIntBuffer vb) {
+	private void uploadZoneWater(ZoneSceneContext ctx, Zone zone, int mzx, int mzz, GpuIntBuffer vb, GpuIntBuffer fb) {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
@@ -307,7 +311,7 @@ public class SceneUploader {
 					Tile t = tiles[level][msx][msz];
 					if (t != null) {
 						onBeforeProcessTile(t, false);
-						uploadZoneTile(ctx, zone, t, false, true, vb, null);
+						uploadZoneTile(ctx, zone, t, false, true, vb, null, fb);
 					}
 				}
 			}
@@ -321,6 +325,7 @@ public class SceneUploader {
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && paint.getNeColor() != HIDDEN_HSL) {
 			z.sizeO += 2;
+			z.sizeF += 2;
 
 			TileOverride override = tileOverrideManager.getOverride(ctx, t, worldPos);
 			WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
@@ -330,6 +335,7 @@ public class SceneUploader {
 				// but we'll render them in the correct order without needing face sorting,
 				// so we might as well use the opaque buffer for simplicity
 				z.sizeO += 2;
+				z.sizeF += 2;
 			} else {
 				z.onlyWater = false;
 			}
@@ -339,6 +345,7 @@ public class SceneUploader {
 		if (model != null) {
 			int len = model.getFaceX().length;
 			z.sizeO += len;
+			z.sizeF += len;
 
 			int tileExX = tilePoint.getX() + ctx.sceneOffset;
 			int tileExY = tilePoint.getY() + ctx.sceneOffset;
@@ -365,6 +372,7 @@ public class SceneUploader {
 			if (isFallbackWater || isOverlayWater || isUnderlayWater) {
 				z.hasWater = true;
 				z.sizeO += len;
+				z.sizeF += len;
 			} else {
 				z.onlyWater = false;
 			}
@@ -422,7 +430,8 @@ public class SceneUploader {
 		boolean isBridge,
 		boolean onlyWaterSurface,
 		GpuIntBuffer vertexBuffer,
-		GpuIntBuffer alphaBuffer
+		GpuIntBuffer alphaBuffer,
+		GpuIntBuffer textureBuffer
 	) {
 		var tilePoint = t.getSceneLocation();
 		int tileExX = tilePoint.getX() + ctx.sceneOffset;
@@ -444,20 +453,21 @@ public class SceneUploader {
 				onlyWaterSurface,
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
+				textureBuffer,
 				tilePoint.getX() * 128 - basex, tilePoint.getY() * 128 - basez
 			);
 		}
 
 		SceneTileModel model = t.getSceneTileModel();
 		if (model != null && drawTile)
-			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer);
+			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
 
 		if (!onlyWaterSurface)
-			uploadZoneTileRenderables(ctx, zone, t, vertexBuffer, alphaBuffer);
+			uploadZoneTileRenderables(ctx, zone, t, vertexBuffer, alphaBuffer, textureBuffer);
 
 		Tile bridge = t.getBridge();
 		if (bridge != null)
-			uploadZoneTile(ctx, zone, bridge, true, onlyWaterSurface, vertexBuffer, alphaBuffer);
+			uploadZoneTile(ctx, zone, bridge, true, onlyWaterSurface, vertexBuffer, alphaBuffer, textureBuffer);
 	}
 
 	private void uploadZoneTileRenderables(
@@ -465,7 +475,8 @@ public class SceneUploader {
 		Zone zone,
 		Tile t,
 		GpuIntBuffer vertexBuffer,
-		GpuIntBuffer alphaBuffer
+		GpuIntBuffer alphaBuffer,
+		GpuIntBuffer textureBuffer
 	) {
 		WallObject wallObject = t.getWallObject();
 		if (wallObject != null && renderCallbackManager.drawObject(ctx.scene, wallObject)) {
@@ -488,7 +499,8 @@ public class SceneUploader {
 				-1,
 				wallObject.getId(),
 				vertexBuffer,
-				alphaBuffer
+				alphaBuffer,
+				textureBuffer
 			);
 
 			Renderable renderable2 = wallObject.getRenderable2();
@@ -509,7 +521,8 @@ public class SceneUploader {
 				-1,
 				wallObject.getId(),
 				vertexBuffer,
-				alphaBuffer
+				alphaBuffer,
+				textureBuffer
 			);
 		}
 
@@ -535,7 +548,8 @@ public class SceneUploader {
 				-1,
 				decorativeObject.getId(),
 				vertexBuffer,
-				alphaBuffer
+				alphaBuffer,
+				textureBuffer
 			);
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
@@ -556,7 +570,8 @@ public class SceneUploader {
 				-1,
 				decorativeObject.getId(),
 				vertexBuffer,
-				alphaBuffer
+				alphaBuffer,
+				textureBuffer
 			);
 		}
 
@@ -577,7 +592,8 @@ public class SceneUploader {
 				-1,
 				groundObject.getId(),
 				vertexBuffer,
-				alphaBuffer
+				alphaBuffer,
+				textureBuffer
 			);
 		}
 
@@ -609,7 +625,8 @@ public class SceneUploader {
 				max.getY(),
 				gameObject.getId(),
 				vertexBuffer,
-				alphaBuffer
+				alphaBuffer,
+				textureBuffer
 			);
 		}
 	}
@@ -633,9 +650,11 @@ public class SceneUploader {
 		short[] faceTextures = m.getFaceTextures();
 		if (transparencies == null && faceTextures == null && !mightHaveTransparency) {
 			z.sizeO += faceCount;
+			z.sizeF += faceCount;
 		} else {
 			z.sizeO += faceCount;
 			z.sizeA += faceCount;
+			z.sizeF += faceCount;
 		}
 	}
 
@@ -656,7 +675,8 @@ public class SceneUploader {
 		int uz,
 		int id,
 		GpuIntBuffer opaqueBuffer,
-		GpuIntBuffer alphaBuffer
+		GpuIntBuffer alphaBuffer,
+		GpuIntBuffer textureBuffer
 	) {
 		Model model = null;
 		if (r instanceof Model) {
@@ -682,7 +702,8 @@ public class SceneUploader {
 				preOrientation, orient,
 				x - basex, y, z - basez,
 				opaqueBuffer,
-				alphaBuffer
+				alphaBuffer,
+				textureBuffer
 			);
 		} catch (Throwable ex) {
 			log.warn(
@@ -741,6 +762,7 @@ public class SceneUploader {
 		boolean onlyWaterSurface,
 		int tileExX, int tileExY, int tileZ,
 		GpuIntBuffer vb,
+		GpuIntBuffer fb,
 		int lx,
 		int lz
 	) {
@@ -932,40 +954,50 @@ public class SceneUploader {
 		uvx = fract(uvx * uvcos - uvy * uvsin);
 		uvy = fract(tmp * uvsin + uvy * uvcos);
 
+		fb.putFace(
+			neColor, nwColor, seColor,
+			neMaterialData, nwMaterialData, seMaterialData,
+			neTerrainData, nwTerrainData, seTerrainData);
+
 		vb.putVertex(
-			lx2, neHeight, lz2, neColor,
-			uvx, uvy, 0, neMaterialData,
-			neNormals[0], neNormals[2], neNormals[1], neTerrainData
+			lx2, neHeight, lz2,
+			uvx, uvy, 0,
+			neNormals[0], neNormals[2], neNormals[1]
 		);
 
 		vb.putVertex(
-			lx3, nwHeight, lz3, nwColor,
-			uvx - uvcos, uvy - uvsin, 0, nwMaterialData,
-			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData
+			lx3, nwHeight, lz3,
+			uvx - uvcos, uvy - uvsin, 0,
+			nwNormals[0], nwNormals[2], nwNormals[1]
 		);
 
 		vb.putVertex(
-			lx1, seHeight, lz1, seColor,
-			uvx + uvsin, uvy - uvcos, 0, seMaterialData,
-			seNormals[0], seNormals[2], seNormals[1], seTerrainData
+			lx1, seHeight, lz1,
+			uvx + uvsin, uvy - uvcos, 0,
+			seNormals[0], seNormals[2], seNormals[1]
+		);
+
+		fb.putFace(
+			swColor, seColor, nwColor,
+			swMaterialData, seMaterialData, nwMaterialData,
+			swTerrainData, seTerrainData, nwTerrainData);
+
+		vb.putVertex(
+			lx0, swHeight, lz0,
+			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
+			swNormals[0], swNormals[2], swNormals[1]
 		);
 
 		vb.putVertex(
-			lx0, swHeight, lz0, swColor,
-			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0, swMaterialData,
-			swNormals[0], swNormals[2], swNormals[1], swTerrainData
+			lx1, seHeight, lz1,
+			uvx + uvsin, uvy - uvcos, 0,
+			seNormals[0], seNormals[2], seNormals[1]
 		);
 
 		vb.putVertex(
-			lx1, seHeight, lz1, seColor,
-			uvx + uvsin, uvy - uvcos, 0, seMaterialData,
-			seNormals[0], seNormals[2], seNormals[1], seTerrainData
-		);
-
-		vb.putVertex(
-			lx3, nwHeight, lz3, nwColor,
-			uvx - uvcos, uvy - uvsin, 0, nwMaterialData,
-			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData
+			lx3, nwHeight, lz3,
+			uvx - uvcos, uvy - uvsin, 0,
+			nwNormals[0], nwNormals[2], nwNormals[1]
 		);
 	}
 
@@ -976,7 +1008,8 @@ public class SceneUploader {
 		boolean onlyWaterSurface,
 		int tileExX, int tileExY, int tileZ,
 		int basex, int basez,
-		GpuIntBuffer vb
+		GpuIntBuffer vb,
+		GpuIntBuffer fb
 	) {
 		final int[] triangleTextures = model.getTriangleTextureId();
 		boolean isFallbackWater = false;
@@ -1222,22 +1255,27 @@ public class SceneUploader {
 			float uvCx = uvx + dx * uvcos - dz * uvsin;
 			float uvCy = uvy + dx * uvsin + dz * uvcos;
 
+			fb.putFace(
+				colorA, colorB, colorC,
+				materialDataA, materialDataB, materialDataC,
+				terrainDataA, terrainDataB, terrainDataC);
+
 			vb.putVertex(
-				lx0, ly0, lz0, colorA,
-				uvAx, uvAy, 0, materialDataA,
-				normalsA[0], normalsA[2], normalsA[1], terrainDataA
+				lx0, ly0, lz0,
+				uvAx, uvAy, 0,
+				normalsA[0], normalsA[2], normalsA[1]
 			);
 
 			vb.putVertex(
-				lx1, ly1, lz1, colorB,
-				uvBx, uvBy, 0, materialDataB,
-				normalsB[0], normalsB[2], normalsB[1], terrainDataB
+				lx1, ly1, lz1,
+				uvBx, uvBy, 0,
+				normalsB[0], normalsB[2], normalsB[1]
 			);
 
 			vb.putVertex(
-				lx2, ly2, lz2, colorC,
-				uvCx, uvCy, 0, materialDataC,
-				normalsC[0], normalsC[2], normalsC[1], terrainDataC
+				lx2, ly2, lz2,
+				uvCx, uvCy, 0,
+				normalsC[0], normalsC[2], normalsC[1]
 			);
 		}
 	}
@@ -1460,7 +1498,8 @@ public class SceneUploader {
 		int preOrientation, int orientation,
 		int x, int y, int z,
 		GpuIntBuffer opaqueBuffer,
-		GpuIntBuffer alphaBuffer
+		GpuIntBuffer alphaBuffer,
+		GpuIntBuffer textureBuffer
 	) {
 		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		final int triangleCount = model.getFaceCount();
@@ -1485,9 +1524,6 @@ public class SceneUploader {
 
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
-		final int[] texIndices1 = model.getTexIndices1();
-		final int[] texIndices2 = model.getTexIndices2();
-		final int[] texIndices3 = model.getTexIndices3();
 
 		final byte[] bias = model.getFaceBias();
 		final byte[] transparencies = model.getFaceTransparencies();
@@ -1761,22 +1797,33 @@ public class SceneUploader {
 			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
 			GpuIntBuffer vb = hasAlpha ? alphaBuffer : opaqueBuffer;
-			vb.putVertex(
-				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
-				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				faceNormals[0], faceNormals[1], faceNormals[2], 0
+
+			color1 |= packedAlphaBiasHsl;
+			color2 |= packedAlphaBiasHsl;
+			color3 |= packedAlphaBiasHsl;
+
+			textureBuffer.putFace(
+				color1, color2, color3,
+				materialData, materialData, materialData,
+				0, 0, 0
 			);
 
 			vb.putVertex(
-				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
-				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				faceNormals[3], faceNormals[4], faceNormals[5], 0
+				vx1, vy1, vz1,
+				modelUvs[0], modelUvs[1], modelUvs[2],
+				faceNormals[0], faceNormals[1], faceNormals[2]
 			);
 
 			vb.putVertex(
-				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
-				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				faceNormals[6], faceNormals[7], faceNormals[8], 0
+				vx2, vy2, vz2,
+				modelUvs[4], modelUvs[5], modelUvs[6],
+				faceNormals[3], faceNormals[4], faceNormals[5]
+			);
+
+			vb.putVertex(
+				vx3, vy3, vz3,
+				modelUvs[8], modelUvs[9], modelUvs[10],
+				faceNormals[6], faceNormals[7], faceNormals[8]
 			);
 
 			len += 3;
@@ -1795,7 +1842,8 @@ public class SceneUploader {
 		int y,
 		int z,
 		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer
+		IntBuffer alphaBuffer,
+		IntBuffer textureBuffer
 	) {
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
@@ -1819,9 +1867,6 @@ public class SceneUploader {
 
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
-		final int[] texIndices1 = model.getTexIndices1();
-		final int[] texIndices2 = model.getTexIndices2();
-		final int[] texIndices3 = model.getTexIndices3();
 
 		final byte[] bias = model.getFaceBias();
 		final byte[] transparencies = model.getFaceTransparencies();
@@ -1995,23 +2040,32 @@ public class SceneUploader {
 			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
 			IntBuffer vb = hasAlpha ? alphaBuffer : opaqueBuffer;
+
+			color1 |= packedAlphaBiasHsl;
+			color2 |= packedAlphaBiasHsl;
+			color3 |= packedAlphaBiasHsl;
+
+			GpuIntBuffer.putFace(textureBuffer,
+				color1, color2, color3,
+				materialData, materialData, materialData);
+
 			GpuIntBuffer.putFloatVertex(
 				vb,
-				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
-				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				faceNormals[0], faceNormals[1], faceNormals[2], 0
+				vx1, vy1, vz1,
+				modelUvs[0], modelUvs[1], modelUvs[2],
+				faceNormals[0], faceNormals[1], faceNormals[2]
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
-				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
-				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				faceNormals[3], faceNormals[4], faceNormals[5], 0
+				vx2, vy2, vz2,
+				modelUvs[4], modelUvs[5], modelUvs[6],
+				faceNormals[3], faceNormals[4], faceNormals[5]
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
-				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
-				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				faceNormals[6], faceNormals[7], faceNormals[8], 0
+				vx3, vy3, vz3,
+				modelUvs[8], modelUvs[9], modelUvs[10],
+				faceNormals[6], faceNormals[7], faceNormals[8]
 			);
 			len += 3;
 		}

@@ -113,7 +113,8 @@ class FacePrioritySorter {
 		int y,
 		int z,
 		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer
+		IntBuffer alphaBuffer,
+		IntBuffer textureBuffer
 	) {
 		final int vertexCount = model.getVerticesCount();
 		final float[] verticesX = model.getVerticesX();
@@ -208,7 +209,7 @@ class FacePrioritySorter {
 					final char[] faces = distanceToFaces[i];
 					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
 						final int face = faces[faceIdx];
-						len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+						len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer, textureBuffer);
 					}
 				}
 			}
@@ -264,7 +265,7 @@ class FacePrioritySorter {
 			for (int pri = 0; pri < 10; ++pri) {
 				while (pri == 0 && currFaceDistance > avg12) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer, textureBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -278,7 +279,7 @@ class FacePrioritySorter {
 
 				while (pri == 3 && currFaceDistance > avg34) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer, textureBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -292,7 +293,7 @@ class FacePrioritySorter {
 
 				while (pri == 5 && currFaceDistance > avg68) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer, textureBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -309,13 +310,13 @@ class FacePrioritySorter {
 
 				for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
 					final int face = priFaces[faceIdx];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer, textureBuffer);
 				}
 			}
 
 			while (currFaceDistance != -1000) {
 				final int face = dynFaces[drawnFaces++];
-				len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+				len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer, textureBuffer);
 
 				if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 					drawnFaces = 0;
@@ -337,7 +338,8 @@ class FacePrioritySorter {
 		int preOrientation,
 		int face,
 		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer
+		IntBuffer alphaBuffer,
+		IntBuffer textureBuffer
 	) {
 		final int[] indices1 = model.getFaceIndices1();
 		final int[] indices2 = model.getFaceIndices2();
@@ -517,23 +519,34 @@ class FacePrioritySorter {
 		int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 		boolean hasAlpha = material.hasTransparency || transparency != 0;
 		var vb = hasAlpha ? alphaBuffer : opaqueBuffer;
+
+		color1 |= packedAlphaBiasHsl;
+		color2 |= packedAlphaBiasHsl;
+		color3 |= packedAlphaBiasHsl;
+
+		GpuIntBuffer.putFace(
+			textureBuffer,
+			color1, color2, color3,
+			materialData, materialData, materialData
+		);
+
 		GpuIntBuffer.putFloatVertex(
 			vb,
-			vx1, vy1, vz1, packedAlphaBiasHsl | color1,
-			modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-			faceNormals[0], faceNormals[1], faceNormals[2], 0
+			vx1, vy1, vz1,
+			modelUvs[0], modelUvs[1], modelUvs[2],
+			faceNormals[0], faceNormals[1], faceNormals[2]
 		);
 		GpuIntBuffer.putFloatVertex(
 			vb,
-			vx2, vy2, vz2, packedAlphaBiasHsl | color2,
-			modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-			faceNormals[3], faceNormals[4], faceNormals[5], 0
+			vx2, vy2, vz2,
+			modelUvs[4], modelUvs[5], modelUvs[6],
+			faceNormals[3], faceNormals[4], faceNormals[5]
 		);
 		GpuIntBuffer.putFloatVertex(
 			vb,
-			vx3, vy3, vz3, packedAlphaBiasHsl | color3,
-			modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-			faceNormals[6], faceNormals[7], faceNormals[8], 0
+			vx3, vy3, vz3,
+			modelUvs[8], modelUvs[9], modelUvs[10],
+			faceNormals[6], faceNormals[7], faceNormals[8]
 		);
 		return 3;
 	}

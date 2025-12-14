@@ -1013,7 +1013,7 @@ public class ZoneRenderer implements Renderer {
 
 			if (zone.inSceneFrustum) {
 				try {
-					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb, o.vboF.vb);
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
 				}
@@ -1029,11 +1029,20 @@ public class ZoneRenderer implements Renderer {
 						orient,
 						x, y, z,
 						vao.vbo.vb,
-						vao.vbo.vb
+						vao.vbo.vb,
+						vao.vboF.vb
 					);
 				}
 			} else {
-				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+				sceneUploader.uploadTempModel(
+					m,
+					modelOverride,
+					preOrientation,
+					orient,
+					x, y, z,
+					o.vbo.vb,
+					a.vbo.vb,
+					o.vboF.vb);
 			}
 
 			int end = a.vbo.vb.position();
@@ -1045,7 +1054,15 @@ public class ZoneRenderer implements Renderer {
 				zone.addTempAlphaModel(modelOverride, a.vao, start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
+			sceneUploader.uploadTempModel(
+				m,
+				modelOverride,
+				preOrientation,
+				orient,
+				x, y, z,
+				o.vbo.vb,
+				o.vbo.vb,
+				o.vboF.vb);
 		}
 	}
 
@@ -1103,7 +1120,8 @@ public class ZoneRenderer implements Renderer {
 							orientation,
 							x, y, z,
 							o.vbo.vb,
-							o.vbo.vb
+							o.vbo.vb,
+							o.vboF.vb
 						);
 					})
 					.setExecuteAsync(isSubScene || zone.inSceneFrustum)
@@ -1127,7 +1145,8 @@ public class ZoneRenderer implements Renderer {
 						orientation,
 						x, y, z,
 						o.vbo.vb,
-						a.vbo.vb
+						a.vbo.vb,
+						o.vboF.vb
 					);
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
@@ -1162,7 +1181,8 @@ public class ZoneRenderer implements Renderer {
 				orientation,
 				x, y, z,
 				o.vbo.vb,
-				o.vbo.vb
+				o.vbo.vb,
+				o.vboF.vb
 			);
 		}
 	}
