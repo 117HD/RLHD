@@ -133,20 +133,6 @@ public class SceneUploader {
 		currentScene = null;
 	}
 
-	private boolean shouldDrawTile(Tile t) {
-		try {
-			return renderCallbackManager.drawTile(currentScene, t);
-		} catch (Throwable ignored) {}
-		return true;
-	}
-
-	private boolean shouldDrawObject(TileObject o) {
-		try {
-			return renderCallbackManager.drawObject(currentScene, o);
-		} catch (Throwable ignored) {}
-		return true;
-	}
-
 	protected void onBeforeProcessTile(Tile t, boolean isEstimate) {}
 
 	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
@@ -431,7 +417,7 @@ public class SceneUploader {
 		if (ctx.currentArea != null && !isBridge && !ctx.currentArea.containsPoint(worldPos))
 			return;
 
-		boolean drawTile = shouldDrawTile(t);
+		boolean drawTile = renderCallbackManager.drawTile(ctx.scene, t);
 
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && drawTile) {
@@ -466,7 +452,7 @@ public class SceneUploader {
 		GpuIntBuffer alphaBuffer
 	) {
 		WallObject wallObject = t.getWallObject();
-		if (wallObject != null && shouldDrawObject(wallObject)) {
+		if (wallObject != null && renderCallbackManager.drawObject(ctx.scene, wallObject)) {
 			int uuid = ModelHash.packUuid(ModelHash.TYPE_WALL_OBJECT, wallObject.getId());
 			Renderable renderable1 = wallObject.getRenderable1();
 			uploadZoneRenderable(
@@ -512,7 +498,7 @@ public class SceneUploader {
 		}
 
 		DecorativeObject decorativeObject = t.getDecorativeObject();
-		if (decorativeObject != null && shouldDrawObject(decorativeObject)) {
+		if (decorativeObject != null && renderCallbackManager.drawObject(ctx.scene, decorativeObject)) {
 			int uuid = ModelHash.packUuid(ModelHash.TYPE_DECORATIVE_OBJECT, decorativeObject.getId());
 			int preOrientation = HDUtils.getModelPreOrientation(decorativeObject.getConfig());
 			Renderable renderable = decorativeObject.getRenderable();
@@ -559,7 +545,7 @@ public class SceneUploader {
 		}
 
 		GroundObject groundObject = t.getGroundObject();
-		if (groundObject != null && shouldDrawObject(groundObject)) {
+		if (groundObject != null && renderCallbackManager.drawObject(ctx.scene, groundObject)) {
 			Renderable renderable = groundObject.getRenderable();
 			uploadZoneRenderable(
 				ctx,
@@ -581,7 +567,7 @@ public class SceneUploader {
 
 		GameObject[] gameObjects = t.getGameObjects();
 		for (GameObject gameObject : gameObjects) {
-			if (gameObject == null || !shouldDrawObject(gameObject))
+			if (gameObject == null || !renderCallbackManager.drawObject(ctx.scene, gameObject))
 				continue;
 
 			if (ModelHash.isTemporaryObject(gameObject.getHash()))
