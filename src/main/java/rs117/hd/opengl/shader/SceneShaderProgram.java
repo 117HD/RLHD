@@ -13,9 +13,18 @@ public class SceneShaderProgram extends ShaderProgram {
 	public SceneShaderProgram() {
 		super(t -> t
 			.add(GL_VERTEX_SHADER, "scene_vert.glsl")
-			//.add(GL_GEOMETRY_SHADER, "scene_geom.glsl")
+			.add(GL_GEOMETRY_SHADER, "scene_geom.glsl")
 			.add(GL_FRAGMENT_SHADER, "scene_frag.glsl"));
 		uniTiledLightingTextureArray.ignoreMissing = true;
+	}
+
+	public SceneShaderProgram useGeom(boolean useGeom) {
+		if (useGeom) {
+			shaderTemplate.add(GL_GEOMETRY_SHADER, "scene_geom.glsl");
+		} else {
+			shaderTemplate.remove(GL_GEOMETRY_SHADER);
+		}
+		return this;
 	}
 
 	@Override
