@@ -1079,7 +1079,7 @@ public class ZoneRenderer implements Renderer {
 				// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
 				int plane = Math.min(ctx.maxLevel, tileObject.getPlane());
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
-				zone.addTempAlphaModel(a.vao, start, end, plane, x & 1023, y, z & 1023);
+				zone.addTempAlphaModel(modelOverride, a.vao, start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
 			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, zone.zoneData.zoneIdx, modelDataOffset, o.vbo.vb, o.vbo.vb);
@@ -1180,11 +1180,14 @@ public class ZoneRenderer implements Renderer {
 				}
 				int end = a.vbo.vb.position();
 				if (end > start) {
+					// Fix rendering projectiles from boats with hide roofs enabled
+					int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
 					zone.addTempAlphaModel(
+						modelOverride,
 						a.vao,
 						start,
 						end,
-						gameObject.getPlane(),
+						plane,
 						x & 1023,
 						y - renderable.getModelHeight() /* to render players over locs */,
 						z & 1023
