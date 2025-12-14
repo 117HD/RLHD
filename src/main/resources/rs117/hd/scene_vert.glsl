@@ -61,9 +61,9 @@ void main() {
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
     mat4 worldViewProjection = getWorldViewProjection(vWorldViewId);
 
-    fAlphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx).xyz;
-    fMaterialData = texelFetch(textureFaces, vTextureFaceIdx + 1).xyz;
-    fTerrainData = texelFetch(textureFaces, vTextureFaceIdx + 2).xyz;
+    fAlphaBiasHsl = texelFetch(textureFaces, (vTextureFaceIdx * 3)).xyz;
+    fMaterialData = texelFetch(textureFaces, (vTextureFaceIdx * 3) + 1).xyz;
+    fTerrainData = texelFetch(textureFaces, (vTextureFaceIdx * 3) + 2).xyz;
     fWorldViewId = vWorldViewId;
 
     vec3 worldPosition = vec3(worldViewProjection * vec4(sceneOffset + vPosition, 1));

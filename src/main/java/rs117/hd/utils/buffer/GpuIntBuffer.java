@@ -26,11 +26,13 @@ package rs117.hd.utils.buffer;
 
 import java.nio.IntBuffer;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 
 import static rs117.hd.utils.MathUtils.*;
 
+@Slf4j
 public class GpuIntBuffer
 {
 	@Getter
@@ -134,7 +136,7 @@ public class GpuIntBuffer
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC,
 		int terrainDataA,  int terrainDataB,  int terrainDataC ) {
-		final int textureFaceIdx = buffer.position() / 3;
+		final int textureFaceIdx = (buffer.position() / 3) / 3;
 		buffer.put(alphaBiasHslA);
 		buffer.put(alphaBiasHslB);
 		buffer.put(alphaBiasHslC);
@@ -166,7 +168,7 @@ public class GpuIntBuffer
 		IntBuffer buffer,
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC) {
-		final int textureFaceIdx = buffer.position() / 3;
+		final int textureFaceIdx = (buffer.position() / 3) / 3;
 		buffer.put(alphaBiasHslA);
 		buffer.put(alphaBiasHslB);
 		buffer.put(alphaBiasHslC);
