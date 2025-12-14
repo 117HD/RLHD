@@ -961,20 +961,23 @@ public class SceneUploader {
 
 		vb.putVertex(
 			lx2, neHeight, lz2,
-			uvx, uvy, texturedFaceIdx,
-			neNormals[0], neNormals[2], neNormals[1]
+			uvx, uvy, 0,
+			neNormals[0], neNormals[2], neNormals[1],
+			texturedFaceIdx
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3,
-			uvx - uvcos, uvy - uvsin, texturedFaceIdx,
-			nwNormals[0], nwNormals[2], nwNormals[1]
+			uvx - uvcos, uvy - uvsin, 0,
+			nwNormals[0], nwNormals[2], nwNormals[1],
+			texturedFaceIdx
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1,
-			uvx + uvsin, uvy - uvcos, texturedFaceIdx,
-			seNormals[0], seNormals[2], seNormals[1]
+			uvx + uvsin, uvy - uvcos, 0,
+			seNormals[0], seNormals[2], seNormals[1],
+			texturedFaceIdx
 		);
 
 		texturedFaceIdx = fb.putFace(
@@ -984,20 +987,23 @@ public class SceneUploader {
 
 		vb.putVertex(
 			lx0, swHeight, lz0,
-			uvx - uvcos + uvsin, uvy - uvsin - uvcos, texturedFaceIdx,
-			swNormals[0], swNormals[2], swNormals[1]
+			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
+			swNormals[0], swNormals[2], swNormals[1],
+			texturedFaceIdx
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1,
-			uvx + uvsin, uvy - uvcos, texturedFaceIdx,
-			seNormals[0], seNormals[2], seNormals[1]
+			uvx + uvsin, uvy - uvcos, 0,
+			seNormals[0], seNormals[2], seNormals[1],
+			texturedFaceIdx
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3,
-			uvx - uvcos, uvy - uvsin, texturedFaceIdx,
-			nwNormals[0], nwNormals[2], nwNormals[1]
+			uvx - uvcos, uvy - uvsin, 0,
+			nwNormals[0], nwNormals[2], nwNormals[1],
+			texturedFaceIdx
 		);
 	}
 
@@ -1262,20 +1268,23 @@ public class SceneUploader {
 
 			vb.putVertex(
 				lx0, ly0, lz0,
-				uvAx, uvAy, texturedFaceIdx,
-				normalsA[0], normalsA[2], normalsA[1]
+				uvAx, uvAy, 0,
+				normalsA[0], normalsA[2], normalsA[1],
+				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				lx1, ly1, lz1,
-				uvBx, uvBy, texturedFaceIdx,
-				normalsB[0], normalsB[2], normalsB[1]
+				uvBx, uvBy, 0,
+				normalsB[0], normalsB[2], normalsB[1],
+				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				lx2, ly2, lz2,
-				uvCx, uvCy, texturedFaceIdx,
-				normalsC[0], normalsC[2], normalsC[1]
+				uvCx, uvCy, 0,
+				normalsC[0], normalsC[2], normalsC[1],
+				texturedFaceIdx
 			);
 		}
 	}
@@ -1810,20 +1819,23 @@ public class SceneUploader {
 
 			vb.putVertex(
 				vx1, vy1, vz1,
-				modelUvs[0], modelUvs[1], texturedFaceIdx,
-				faceNormals[0], faceNormals[1], faceNormals[2]
+				modelUvs[0], modelUvs[1], 0,
+				faceNormals[0], faceNormals[1], faceNormals[2],
+				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2,
-				modelUvs[4], modelUvs[5], texturedFaceIdx,
-				faceNormals[3], faceNormals[4], faceNormals[5]
+				modelUvs[4], modelUvs[5], 0,
+				faceNormals[3], faceNormals[4], faceNormals[5],
+				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3,
-				modelUvs[8], modelUvs[9], texturedFaceIdx,
-				faceNormals[6], faceNormals[7], faceNormals[8]
+				modelUvs[8], modelUvs[9], 0,
+				faceNormals[6], faceNormals[7], faceNormals[8],
+				texturedFaceIdx
 			);
 
 			len += 3;
@@ -2052,20 +2064,23 @@ public class SceneUploader {
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx1, vy1, vz1,
-				modelUvs[0], modelUvs[1], texturedFaceIdx,
-				faceNormals[0], faceNormals[1], faceNormals[2]
+				modelUvs[0], modelUvs[1], 0,
+				faceNormals[0], faceNormals[1], faceNormals[2],
+				texturedFaceIdx
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx2, vy2, vz2,
-				modelUvs[4], modelUvs[5], texturedFaceIdx,
-				faceNormals[3], faceNormals[4], faceNormals[5]
+				modelUvs[4], modelUvs[5], 0,
+				faceNormals[3], faceNormals[4], faceNormals[5],
+				texturedFaceIdx
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx3, vy3, vz3,
-				modelUvs[8], modelUvs[9], texturedFaceIdx,
-				faceNormals[6], faceNormals[7], faceNormals[8]
+				modelUvs[8], modelUvs[9], 0,
+				faceNormals[6], faceNormals[7], faceNormals[8],
+				texturedFaceIdx
 			);
 			len += 3;
 		}

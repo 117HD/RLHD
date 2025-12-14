@@ -524,7 +524,7 @@ class FacePrioritySorter {
 		color2 |= packedAlphaBiasHsl;
 		color3 |= packedAlphaBiasHsl;
 
-		int textureFaceIdx = GpuIntBuffer.putFace(
+		int texturedFaceIdx = GpuIntBuffer.putFace(
 			textureBuffer,
 			color1, color2, color3,
 			materialData, materialData, materialData
@@ -533,20 +533,23 @@ class FacePrioritySorter {
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx1, vy1, vz1,
-			modelUvs[0], modelUvs[1], textureFaceIdx,
-			faceNormals[0], faceNormals[1], faceNormals[2]
+			modelUvs[0], modelUvs[1], 0,
+			faceNormals[0], faceNormals[1], faceNormals[2],
+			texturedFaceIdx
 		);
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx2, vy2, vz2,
-			modelUvs[4], modelUvs[5], textureFaceIdx,
-			faceNormals[3], faceNormals[4], faceNormals[5]
+			modelUvs[4], modelUvs[5], 0,
+			faceNormals[3], faceNormals[4], faceNormals[5],
+			texturedFaceIdx
 		);
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx3, vy3, vz3,
-			modelUvs[8], modelUvs[9], textureFaceIdx,
-			faceNormals[6], faceNormals[7], faceNormals[8]
+			modelUvs[8], modelUvs[9], 0,
+			faceNormals[6], faceNormals[7], faceNormals[8],
+			texturedFaceIdx
 		);
 		return 3;
 	}

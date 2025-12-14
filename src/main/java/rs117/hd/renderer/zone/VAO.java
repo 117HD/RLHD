@@ -19,11 +19,7 @@ class VAO {
 	// pos float vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	static final int VERT_SIZE = 24;
-
-	// alphaBiasHsl ivec3
-	// materialData ivec3
-	static final int TEXTURE_SIZE = 24;
+	static final int VERT_SIZE = 28;
 
 	// Metadata format
 	// worldViewIndex int int
@@ -63,7 +59,7 @@ class VAO {
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_SHORT, VERT_SIZE, 16);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
 
 		bindMetadata(vboMetadata);
 

@@ -40,7 +40,7 @@ public class Zone {
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	public static final int VERT_SIZE = 20;
+	public static final int VERT_SIZE = 24;
 
 	// alphaBiasHsl ivec3
 	// materialData ivec3
@@ -272,7 +272,7 @@ public class Zone {
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_SHORT, VERT_SIZE, 10);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 20);
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
