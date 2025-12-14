@@ -1281,7 +1281,7 @@ public class SceneUploader {
 	}
 
 	// Writes UVs directly into modelUvs at indices:
-// [0,1], [4,5], [8,9]
+	// [0,1], [4,5], [8,9]
 	static void computeFaceUvsInline(
 		Model model,
 		int face,
