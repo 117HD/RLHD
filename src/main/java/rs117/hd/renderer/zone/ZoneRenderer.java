@@ -786,12 +786,60 @@ public class ZoneRenderer implements Renderer {
 			minY -= ProceduralGenerator.MAX_DEPTH;
 		}
 
-		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
-		if (zone.inSceneFrustum) {
-			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.VISIBILITY_CHECK);
-			return zone.inShadowFrustum = true;
+		int x = (((zx << 3) - ctx.sceneContext.sceneOffset) << 7) + 512 - (int) sceneCamera.getPositionX();
+		int z = (((zz << 3) - ctx.sceneContext.sceneOffset) << 7) + 512 - (int) sceneCamera.getPositionZ();
+		int y = maxY - (int) sceneCamera.getPositionY();
+		int zoneRadius = 724; // ~ 512 * sqrt(2)
+		int waterDepth = zone.hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
+
+		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
+		final int rightClip = client.getRasterizer3D_clipMidX2();
+		final int topClip = client.getRasterizer3D_clipNegativeMidY();
+		final int bottomClip = client.getRasterizer3D_clipMidY2();
+
+		final int cameraYawCos = Perspective.COSINE[sceneCamera.getFixedYaw()];
+		final int cameraYawSin = SINE[sceneCamera.getFixedYaw()];
+		final int cameraPitchCos = COSINE[sceneCamera.getFixedPitch()];
+		final int cameraPitchSin = SINE[sceneCamera.getFixedPitch()];
+		final int cameraZoom = (int) sceneCamera.getZoom();
+
+		// Check if the tile is within the near plane of the frustum
+		int transformedZ = z * cameraYawCos - x * cameraYawSin >> 16;
+		int depth = (y + waterDepth) * cameraPitchSin + (transformedZ + zoneRadius) * cameraPitchCos >> 16;
+		if (depth > NEAR_PLANE) {
+			// Check left bound
+			int transformedX = z * cameraYawSin + x * cameraYawCos >> 16;
+			int left = transformedX - zoneRadius;
+			if (left * cameraZoom < rightClip * depth) {
+				// Check right bound
+				int right = transformedX + zoneRadius;
+				if (right * cameraZoom > leftClip * depth) {
+					// Check top bound
+					int transformedY = y * cameraPitchCos - transformedZ * cameraPitchSin >> 16;
+					int transformedRadius = zoneRadius * cameraPitchSin >> 16;
+					int transformedWaterDepth = waterDepth * cameraPitchCos >> 16;
+					int bottom = transformedY + transformedRadius + transformedWaterDepth;
+					if (bottom * cameraZoom > topClip * depth) {
+						// Check bottom bound
+						int transformedZoneHeight = minY * cameraPitchCos >> 16;
+						int top = transformedY - transformedRadius + transformedZoneHeight;
+						if (top * cameraZoom < bottomClip * depth) {
+							if (plugin.enableDetailedTimers)
+								frameTimer.end(Timer.VISIBILITY_CHECK);
+							return zone.inSceneFrustum = zone.inShadowFrustum = true;
+						}
+					}
+				}
+			}
 		}
+
+		// TODO: This leads to objects that extend past the zone being culled, e.g. the platform pieces at Akkha
+//		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
+//		if (zone.inSceneFrustum) {
+//			if (plugin.enableDetailedTimers)
+//				frameTimer.end(Timer.VISIBILITY_CHECK);
+//			return zone.inShadowFrustum = true;
+//		}
 
 		if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
 			zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
@@ -1042,7 +1090,7 @@ public class ZoneRenderer implements Renderer {
 				// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
 				int plane = Math.min(ctx.maxLevel, tileObject.getPlane());
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
-				zone.addTempAlphaModel(a.vao, start, end, plane, x & 1023, y, z & 1023);
+				zone.addTempAlphaModel(modelOverride, a.vao, start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
 			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
@@ -1086,8 +1134,10 @@ public class ZoneRenderer implements Renderer {
 			int zz = (gameObject.getY() >> 10) + offset;
 			Zone zone = ctx.zones[zx][zz];
 
+			boolean isSubScene = !sceneManager.isRoot(ctx);
+
 			GenericJob shadowUploadTask = null;
-			if (zone.inShadowFrustum) {
+			if (isSubScene || zone.inShadowFrustum) {
 				final VAO o = vaoShadow.get(size, ctx.vboM);
 
 				shadowUploadTask = GenericJob
@@ -1104,11 +1154,11 @@ public class ZoneRenderer implements Renderer {
 							o.vbo.vb
 						);
 					})
-					.setExecuteAsync(!sceneManager.isRoot(ctx) || zone.inSceneFrustum)
+					.setExecuteAsync(isSubScene || zone.inSceneFrustum)
 					.queue(true);
 			}
 
-			if (!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {
+			if (isSubScene || zone.inSceneFrustum) {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
@@ -1132,11 +1182,14 @@ public class ZoneRenderer implements Renderer {
 				}
 				int end = a.vbo.vb.position();
 				if (end > start) {
+					// Fix rendering projectiles from boats with hide roofs enabled
+					int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
 					zone.addTempAlphaModel(
+						modelOverride,
 						a.vao,
 						start,
 						end,
-						gameObject.getPlane(),
+						plane,
 						x & 1023,
 						y - renderable.getModelHeight() /* to render players over locs */,
 						z & 1023

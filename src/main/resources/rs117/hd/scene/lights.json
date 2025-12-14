@@ -43109,5 +43109,163 @@
     "objectIds": [
       "HIDEOUT_LANTERN01_DEFAULT01"
     ]
+  },
+  {
+    "description": "XMAS_2025_FIREPLACE_HEARTH_OUTSIDE",
+    "offset": [ 50, 60, -15 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS24_PUB01_FIREPLACE01"
+    ]
+  },
+  {
+    "description": "XMAS_2025_FIREPLACE_HEARTH_INSIDE",
+    "offset": [ 0, 60, -15 ],
+    "radius": 75,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS24_PUB01_FIREPLACE01"
+    ]
+  },
+  {
+    "description": "XMAS_2025_FIREPLACE_CANDLE",
+    "offset": [ -10, 165, -10 ],
+    "radius": 100,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS24_PUB01_FIREPLACE01"
+    ]
+  },
+  {
+    "description": "XMAS_2025_TABLE_CANDLE",
+    "offset": [ -1, 200, 22 ],
+    "radius": 85,
+    "strength": 26.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS25_TABLE01_EMPTY01",
+      "XMAS25_TABLE01_EMPTY01_OP1",
+      "XMAS25_TABLE01_DRINK01",
+      "XMAS25_TABLE01_FOOD01"
+    ]
+  },
+  {
+    "description": "Varrock Blue Moon Inn Light 1",
+    "worldX": 3225,
+    "worldY": 3399,
+    "offset": [ 0, 300, 0 ],
+    "radius": 500,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Blue Moon Inn Light 2",
+    "worldX": 3230,
+    "worldY": 3400,
+    "offset": [ -50, 300, 50 ],
+    "radius": 425,
+    "strength": 12,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Blue Moon Inn Light 3",
+    "worldX": 3231,
+    "worldY": 3395,
+    "offset": [ 0, 250, 0 ],
+    "radius": 350,
+    "strength": 12,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "VARROCK_RANGE_1",
+    "offset": [ 0, 95, 60 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 5,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_RANGE_WITH_PIPE"
+    ]
+  },
+  {
+    "description": "VARROCK_RANGE_2",
+    "offset": [ 65, 50, -60 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 3,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_RANGE_WITH_PIPE"
+    ]
   }
 ]

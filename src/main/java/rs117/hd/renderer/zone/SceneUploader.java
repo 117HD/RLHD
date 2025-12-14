@@ -186,6 +186,8 @@ public class SceneUploader {
 		zone.roofEnd = new int[4][roofIds.size()];
 
 		for (int z = 0; z <= 3; ++z) {
+			this.level = z;
+
 			if (z == 0) {
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab);
@@ -253,7 +255,6 @@ public class SceneUploader {
 		GpuIntBuffer vb,
 		GpuIntBuffer ab
 	) {
-		this.level = level;
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
@@ -285,7 +286,7 @@ public class SceneUploader {
 					if (t != null) {
 						this.rid = rid;
 						onBeforeProcessTile(t, false);
-						uploadZoneTile(ctx, zone, t, false, vb, ab);
+						uploadZoneTile(ctx, zone, t, false, false, vb, ab);
 					}
 				}
 			}
@@ -304,7 +305,7 @@ public class SceneUploader {
 					Tile t = tiles[level][msx][msz];
 					if (t != null) {
 						onBeforeProcessTile(t, false);
-						uploadZoneTile(ctx, zone, t, true, vb, null);
+						uploadZoneTile(ctx, zone, t, false, true, vb, null);
 					}
 				}
 			}
@@ -408,15 +409,15 @@ public class SceneUploader {
 		}
 
 		Tile bridge = t.getBridge();
-		if (bridge != null) {
+		if (bridge != null)
 			estimateZoneTileSize(ctx, z, bridge);
-		}
 	}
 
 	private void uploadZoneTile(
 		ZoneSceneContext ctx,
 		Zone zone,
 		Tile t,
+		boolean isBridge,
 		boolean onlyWaterSurface,
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer
@@ -427,7 +428,7 @@ public class SceneUploader {
 		int tileZ = t.getRenderLevel();
 		ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane(), worldPos);
 
-		if (ctx.currentArea != null && !ctx.currentArea.containsPoint(worldPos))
+		if (ctx.currentArea != null && !isBridge && !ctx.currentArea.containsPoint(worldPos))
 			return;
 
 		boolean drawTile = shouldDrawTile(t);
@@ -454,7 +455,7 @@ public class SceneUploader {
 
 		Tile bridge = t.getBridge();
 		if (bridge != null)
-			uploadZoneTile(ctx, zone, bridge, onlyWaterSurface, vertexBuffer, alphaBuffer);
+			uploadZoneTile(ctx, zone, bridge, true, onlyWaterSurface, vertexBuffer, alphaBuffer);
 	}
 
 	private void uploadZoneTileRenderables(
@@ -683,8 +684,10 @@ public class SceneUploader {
 			);
 		} catch (Throwable ex) {
 			log.warn(
-				"Error uploading static {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
+				"Error uploading {} {} {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
+				r instanceof DynamicObject ? "dynamic" : "static",
 				ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
+				ModelHash.getUuidSubType(uuid),
 				gamevalManager.getObjectName(id),
 				id,
 				modelOverride.description,
@@ -717,8 +720,10 @@ public class SceneUploader {
 				);
 			} catch (Throwable ex) {
 				log.warn(
-					"Error adding alpha model for static {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
+					"Error adding alpha model for {} {} {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
+					r instanceof DynamicObject ? "dynamic" : "static",
 					ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
+					ModelHash.getUuidSubType(uuid),
 					gamevalManager.getObjectName(id),
 					id,
 					modelOverride.description,
@@ -1252,7 +1257,7 @@ public class SceneUploader {
 		GpuIntBuffer alphaBuffer
 	) {
 		final int[][][] tileHeights = ctx.scene.getTileHeights();
-		final int triangleCount = model.getFaceCount();
+		final int faceCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
 
 		final float[] vertexX = model.getVerticesX();
@@ -1263,6 +1268,7 @@ public class SceneUploader {
 		final int[] indices2 = model.getFaceIndices2();
 		final int[] indices3 = model.getFaceIndices3();
 
+		final short[] unlitFaceColors = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
 		final int[] color1s = model.getFaceColors1();
 		final int[] color2s = model.getFaceColors2();
 		final int[] color3s = model.getFaceColors3();
@@ -1338,7 +1344,7 @@ public class SceneUploader {
 		final Material textureMaterial = modelOverride.textureMaterial;
 
 		int len = 0;
-		for (int face = 0; face < triangleCount; ++face) {
+		for (int face = 0; face < faceCount; ++face) {
 			int color1 = color1s[face];
 			int color2 = color2s[face];
 			int color3 = color3s[face];
@@ -1348,6 +1354,9 @@ public class SceneUploader {
 			} else if (color3 == -2) {
 				continue;
 			}
+
+			if (unlitFaceColors != null)
+				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
 
 			int triangleA = indices1[face];
 			int triangleB = indices2[face];
@@ -1602,6 +1611,7 @@ public class SceneUploader {
 		final int[] indices2 = model.getFaceIndices2();
 		final int[] indices3 = model.getFaceIndices3();
 
+		final short[] unlitFaceColors = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
 		final int[] color1s = model.getFaceColors1();
 		final int[] color2s = model.getFaceColors2();
 		final int[] color3s = model.getFaceColors3();
@@ -1680,6 +1690,9 @@ public class SceneUploader {
 			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
 			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
 				continue;
+
+			if (unlitFaceColors != null)
+				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
 
 			// HSL override is not applied to textured faces
 			if (overrideAmount > 0 && (!isVanillaTextured || faceTextures[face] == -1)) {
