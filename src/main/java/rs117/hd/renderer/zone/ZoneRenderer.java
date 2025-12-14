@@ -85,6 +85,9 @@ import static rs117.hd.utils.MathUtils.*;
 public class ZoneRenderer implements Renderer {
 	private static final int ALPHA_ZSORT_CLOSE = 2048;
 
+	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
+	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
 

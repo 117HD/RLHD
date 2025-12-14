@@ -171,7 +171,7 @@ public class SceneUploader {
 	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		var vb = zone.vboO != null ? new GpuIntBuffer(zone.vboO.vb) : null;
 		var ab = zone.vboA != null ? new GpuIntBuffer(zone.vboA.vb) : null;
-		var fb = zone.vboF != null ? new GpuIntBuffer(zone.vboF.vb) : null;
+		var fb = zone.tboF != null ? new GpuIntBuffer(zone.tboF.tb) : null;
 		assert fb != null;
 
 		roofIds.clear();

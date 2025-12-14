@@ -27,11 +27,12 @@ public class CommandBuffer {
 	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 6;
 	private static final int GL_BIND_ELEMENTS_ARRAY_TYPE = 7;
 	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
-	private static final int GL_DEPTH_MASK_TYPE = 9;
-	private static final int GL_COLOR_MASK_TYPE = 10;
-	private static final int GL_USE_PROGRAM = 11;
+	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
+	private static final int GL_DEPTH_MASK_TYPE = 10;
+	private static final int GL_COLOR_MASK_TYPE = 11;
+	private static final int GL_USE_PROGRAM = 12;
 
-	private static final int GL_TOGGLE_TYPE = 12; // Combined glEnable & glDisable
+	private static final int GL_TOGGLE_TYPE = 13; // Combined glEnable & glDisable
 
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 	private static final int DRAW_MODE_MASK = 0xF;
@@ -66,6 +67,12 @@ public class CommandBuffer {
 	public void BindIndirectArray(int ido) {
 		ensureCapacity(1);
 		cmd[writeHead++] = GL_BIND_INDIRECT_ARRAY_TYPE & 0xFF | (long) ido << 8;
+	}
+
+	public void BindTextureUnit(int type, int texId, int bindingIndex) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_BIND_TEXTURE_UNIT_TYPE & 0xFF | (long) type << 8;
+		cmd[writeHead++] = texId | (long) bindingIndex << 32;
 	}
 
 	public void SetShader(ShaderProgram program) {
@@ -220,6 +227,17 @@ public class CommandBuffer {
 					}
 					case GL_BIND_INDIRECT_ARRAY_TYPE: {
 						renderState.ido.set((int) (data >> 8));
+						break;
+					}
+					case GL_BIND_TEXTURE_UNIT_TYPE: {
+						long packed = cmd[readHead++];
+						int texType = (int) (data >> 8);
+						int texUnit = (int) (packed >> 32);
+						int texId = (int) packed;
+
+						glActiveTexture(GL_TEXTURE0 + texUnit);
+						glBindTexture(texType, texId);
+						renderState.ido.set(texId);
 						break;
 					}
 					case GL_USE_PROGRAM: {

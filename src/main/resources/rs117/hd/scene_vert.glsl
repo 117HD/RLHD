@@ -32,12 +32,10 @@ layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
 layout (location = 2) in vec3 vNormal;
 #if ZONE_RENDERER
-layout (location = 3) in ivec3 vAlphaBiasHsl;
-layout (location = 4) in ivec3 vMaterialData;
-layout (location = 5) in ivec3 vTerrainData;
-
 layout (location = 6) in int vWorldViewId;
 layout (location = 7) in ivec2 vSceneBase;
+
+uniform isamplerBuffer textureFaces;
 #else
 layout (location = 3) in int vAlphaBiasHsl;
 layout (location = 4) in int vMaterialData;
@@ -61,15 +59,16 @@ void main() {
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
     mat4 worldViewProjection = getWorldViewProjection(vWorldViewId);
 
+    int textureFacesIdx = (gl_VertexID / 3) * 3;
+    fAlphaBiasHsl = texelFetch(textureFaces, textureFacesIdx).xyz;
+    fMaterialData = texelFetch(textureFaces, textureFacesIdx + 1).xyz;
+    fTerrainData = texelFetch(textureFaces, textureFacesIdx + 2).xyz;
     fWorldViewId = vWorldViewId;
-    fAlphaBiasHsl = vAlphaBiasHsl;
-    fMaterialData = vMaterialData;
-    fTerrainData = vTerrainData;
 
     vec3 worldPosition = vec3(worldViewProjection * vec4(sceneOffset + vPosition, 1));
 
     vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
-    int depthBias = (vAlphaBiasHsl[0] >> 16) & 0xff;
+    int depthBias = (fAlphaBiasHsl[0] >> 16) & 0xff;
     clipPosition.z += depthBias / 128.0;
 
     gl_Position = clipPosition;

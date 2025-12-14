@@ -63,7 +63,7 @@ public final class ZoneUploadJob extends Job {
 
 	private void mapZoneVertexBuffers() {
 		try {
-			VBO o = null, a = null, f = null;
+			VBO o = null, a = null;
 			int sz = zone.sizeO * Zone.VERT_SIZE * 3;
 			if (sz > 0) {
 				o = new VBO(sz);
@@ -78,9 +78,10 @@ public final class ZoneUploadJob extends Job {
 				a.map();
 			}
 
+			RawTBO f = null;
 			sz = zone.sizeF * Zone.TEXTURE_SIZE;
 			if (sz > 0) {
-				f = new VBO(sz);
+				f = new RawTBO(sz);
 				f.initialize(GL_STATIC_DRAW);
 				f.map();
 			}

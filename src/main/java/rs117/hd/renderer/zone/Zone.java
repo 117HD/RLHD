@@ -30,6 +30,7 @@ import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -64,7 +65,8 @@ public class Zone {
 
 	public int sizeO, sizeA, sizeF;
 	@Nullable
-	public VBO vboO, vboA, vboF, vboM;
+	public VBO vboO, vboA, vboM;
+	public RawTBO tboF;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
@@ -87,7 +89,7 @@ public class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	public void initialize(VBO o, VBO a, VBO f, int eboShared) {
+	public void initialize(VBO o, VBO a, RawTBO f, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 
@@ -98,17 +100,17 @@ public class Zone {
 
 		if (o != null && f != null) {
 			vboO = o;
-			vboF = f;
 			glVao = glGenVertexArrays();
-			setupVao(glVao, o.bufId, f.bufId, vboM.bufId, eboShared);
+			setupVao(glVao, o.bufId, vboM.bufId, eboShared);
 		}
 
 		if (a != null && f != null) {
 			vboA = a;
-			vboF = f;
 			glVaoA = glGenVertexArrays();
-			setupVao(glVaoA, a.bufId, f.bufId, vboM.bufId, eboShared);
+			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
 		}
+
+		tboF = f;
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -137,9 +139,9 @@ public class Zone {
 			vboM = null;
 		}
 
-		if(vboF != null) {
-			vboF.destroy();
-			vboF = null;
+		if(tboF != null) {
+			tboF.destroy();
+			tboF = null;
 		}
 
 		if (glVao != 0) {
@@ -236,8 +238,8 @@ public class Zone {
 		if (vboA != null) {
 			vboA.unmap();
 		}
-		if(vboF != null) {
-			vboF.unmap();
+		if(tboF != null) {
+			tboF.unmap();
 		}
 
 		if (vboO != null) {
@@ -249,7 +251,7 @@ public class Zone {
 		}
 	}
 
-	private void setupVao(int vao, int buffer, int metadata, int texture, int ebo) {
+	private void setupVao(int vao, int buffer, int metadata, int ebo) {
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
@@ -267,23 +269,6 @@ public class Zone {
 		// Normals
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
-
-		glBindBuffer(GL_ARRAY_BUFFER, texture);
-
-		// Alpha, bias & HSL
-		glEnableVertexAttribArray(3);
-		glVertexAttribDivisor(3, 3);
-		glVertexAttribIPointer(3, 3, GL_INT, TEXTURE_SIZE, 0);
-
-		// Material data
-		glEnableVertexAttribArray(4);
-		glVertexAttribDivisor(4, 3);
-		glVertexAttribIPointer(4, 3, GL_INT, TEXTURE_SIZE, 12);
-
-		// Terrain data
-		glEnableVertexAttribArray(5);
-		glVertexAttribDivisor(5, 3);
-		glVertexAttribIPointer(5, 3, GL_INT, TEXTURE_SIZE, 24);
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
@@ -838,6 +823,7 @@ public class Zone {
 				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
 				long byteOffset = 4L * (ZoneRenderer.eboAlphaStaging.position() - vertexCount);
 				cmd.BindVertexArray(lastVao);
+				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.texId, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
@@ -849,6 +835,7 @@ public class Zone {
 		} else if (drawIdx != 0) {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
+			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.texId, TEXTURE_UNIT_TEXTURED_FACES);
 			if (glDrawOffset.length == 1) {
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
