@@ -39,7 +39,7 @@ public class Zone {
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	public static final int VERT_SIZE = 18;
+	public static final int VERT_SIZE = 20;
 
 	// alphaBiasHsl ivec3
 	// materialData ivec3
