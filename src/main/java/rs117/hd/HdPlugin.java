@@ -811,7 +811,7 @@ public class HdPlugin extends Plugin {
 			else if (GL_CAPS.OpenGL42) versionHeader = "#version 420";
 			else if (GL_CAPS.OpenGL41) versionHeader = "#version 410";
 		}
-
+		log.debug("VersionHeader: {}", versionHeader);
 		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", versionHeader)
