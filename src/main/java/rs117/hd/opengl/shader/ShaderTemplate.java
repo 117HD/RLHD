@@ -64,6 +64,8 @@ public class ShaderTemplate
 				if (shader == 0)
 					throw new ShaderException("Unable to create shader of type " + entry.getKey());
 
+				includes.define("SHADER_TYPE", entry.getKey());
+
 				String source = includes.loadFile(entry.getValue());
 				glShaderSource(shader, source);
 				glCompileShader(shader);

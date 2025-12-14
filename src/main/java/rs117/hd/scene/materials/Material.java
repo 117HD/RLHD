@@ -180,7 +180,6 @@ public class Material {
 			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 12
 			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
 			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8
-			   | (modelOverride.undoVanillaShading && !isTextured ? 1 : 0) << 7
 			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			   | (!modelOverride.receiveShadows ? 1 : 0) << 5
 			   | (modelOverride.upwardsNormals ? 1 : 0) << 4

@@ -37,6 +37,44 @@ layout (location = 5) in int vTerrainData;
 layout (location = 6) in int vWorldViewId;
 layout (location = 7) in ivec2 vSceneBase;
 
+#if ZONE_RENDERER
+flat out int fWorldViewId;
+flat out ivec3 fAlphaBiasHsl;
+flat out ivec3 fMaterialData;
+flat out ivec3 fTerrainData;
+
+out FragmentData {
+    vec3 position;
+    vec2 uv;
+    vec3 normal;
+    vec3 texBlend;
+} OUT;
+
+void main() {
+    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
+    mat4 worldViewProjection = getWorldViewProjection(vWorldViewId);
+
+    fWorldViewId = vWorldViewId;
+
+    fAlphaBiasHsl[gl_VertexID % 3] = vAlphaBiasHsl;
+    fMaterialData[gl_VertexID % 3] = vMaterialData;
+    fTerrainData[gl_VertexID % 3] = vTerrainData;
+
+    vec3 worldPosition = vec3(worldViewProjection * vec4(sceneOffset + vPosition, 1));
+
+    vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
+    int depthBias = (vAlphaBiasHsl>> 16) & 0xff;
+    clipPosition.z += depthBias / 128.0;
+
+    gl_Position = clipPosition;
+
+    OUT.position = worldPosition;
+    OUT.uv = vUv.xy;
+    OUT.normal = mat3(worldViewProjection) * vNormal;
+    OUT.texBlend = vec3(0);
+    OUT.texBlend[gl_VertexID % 3] = 1;
+}
+#else
 out vec3 gPosition;
 out vec3 gUv;
 out vec3 gNormal;
@@ -56,3 +94,4 @@ void main() {
     gTerrainData = vTerrainData;
     gWorldViewId = vWorldViewId;
 }
+#endif
