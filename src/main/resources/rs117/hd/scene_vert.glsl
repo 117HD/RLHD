@@ -58,27 +58,41 @@ out FragmentData {
 } OUT;
 
 void main() {
+    int vertex = int(vUv.z);
+    bool isProvoking = vertex == 2;
+    int alphaBiasHsl = 0;
+
+    if(isProvoking) {
+        // Only the Provoking vertex needs to fetch the face data
+        fAlphaBiasHsl = texelFetch(textureFaces, (vTextureFaceIdx * 3)).xyz;
+        fMaterialData = texelFetch(textureFaces, (vTextureFaceIdx * 3) + 1).xyz;
+        fTerrainData  = texelFetch(textureFaces, (vTextureFaceIdx * 3) + 2).xyz;
+        fWorldViewId  = vWorldViewId;
+        alphaBiasHsl  = fAlphaBiasHsl[0];
+    } else {
+        alphaBiasHsl = texelFetch(textureFaces, (vTextureFaceIdx * 3)).x;
+    }
+
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-    mat4 worldViewProjection = getWorldViewProjection(vWorldViewId);
-
-    fAlphaBiasHsl = texelFetch(textureFaces, (vTextureFaceIdx * 3)).xyz;
-    fMaterialData = texelFetch(textureFaces, (vTextureFaceIdx * 3) + 1).xyz;
-    fTerrainData = texelFetch(textureFaces, (vTextureFaceIdx * 3) + 2).xyz;
-    fWorldViewId = vWorldViewId;
-
-    vec3 worldPosition = vec3(worldViewProjection * vec4(sceneOffset + vPosition, 1));
-
-    vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
-    int depthBias = (fAlphaBiasHsl[0] >> 16) & 0xff;
-    clipPosition.z += depthBias / 128.0;
-
-    gl_Position = clipPosition;
+    vec3 worldNormal = vNormal;
+    vec3 worldPosition = sceneOffset + vPosition;
+    if(vWorldViewId != -1) {
+        mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
+        worldPosition = worldViewProjection * vec4(worldPosition, 1.0);
+        worldNormal = mat3(worldViewProjection) * worldNormal;
+    }
 
     OUT.position = worldPosition;
     OUT.uv = vUv.xy;
-    OUT.normal = mat3(worldViewProjection) * vNormal;
+    OUT.normal = worldNormal;
     OUT.texBlend = vec3(0);
-    OUT.texBlend[gl_VertexID % 3] = 1;
+    OUT.texBlend[vertex] = 1.0;
+
+    vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
+    int depthBias = (alphaBiasHsl >> 16) & 0xff;
+    clipPosition.z += depthBias / 128.0;
+
+    gl_Position = clipPosition;
 }
 #else
 out vec3 gPosition;

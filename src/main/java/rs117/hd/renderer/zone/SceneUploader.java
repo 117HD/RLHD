@@ -968,14 +968,14 @@ public class SceneUploader {
 
 		vb.putVertex(
 			lx3, nwHeight, lz3,
-			uvx - uvcos, uvy - uvsin, 0,
+			uvx - uvcos, uvy - uvsin, 1,
 			nwNormals[0], nwNormals[2], nwNormals[1],
 			texturedFaceIdx
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1,
-			uvx + uvsin, uvy - uvcos, 0,
+			uvx + uvsin, uvy - uvcos, 2,
 			seNormals[0], seNormals[2], seNormals[1],
 			texturedFaceIdx
 		);
@@ -994,14 +994,14 @@ public class SceneUploader {
 
 		vb.putVertex(
 			lx1, seHeight, lz1,
-			uvx + uvsin, uvy - uvcos, 0,
+			uvx + uvsin, uvy - uvcos, 1,
 			seNormals[0], seNormals[2], seNormals[1],
 			texturedFaceIdx
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3,
-			uvx - uvcos, uvy - uvsin, 0,
+			uvx - uvcos, uvy - uvsin, 2,
 			nwNormals[0], nwNormals[2], nwNormals[1],
 			texturedFaceIdx
 		);
@@ -1275,14 +1275,14 @@ public class SceneUploader {
 
 			vb.putVertex(
 				lx1, ly1, lz1,
-				uvBx, uvBy, 0,
+				uvBx, uvBy, 1,
 				normalsB[0], normalsB[2], normalsB[1],
 				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				lx2, ly2, lz2,
-				uvCx, uvCy, 0,
+				uvCx, uvCy, 2,
 				normalsC[0], normalsC[2], normalsC[1],
 				texturedFaceIdx
 			);
@@ -1826,14 +1826,14 @@ public class SceneUploader {
 
 			vb.putVertex(
 				vx2, vy2, vz2,
-				modelUvs[4], modelUvs[5], 0,
+				modelUvs[4], modelUvs[5], 1,
 				faceNormals[3], faceNormals[4], faceNormals[5],
 				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3,
-				modelUvs[8], modelUvs[9], 0,
+				modelUvs[8], modelUvs[9], 2,
 				faceNormals[6], faceNormals[7], faceNormals[8],
 				texturedFaceIdx
 			);
@@ -2071,14 +2071,14 @@ public class SceneUploader {
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx2, vy2, vz2,
-				modelUvs[4], modelUvs[5], 0,
+				modelUvs[4], modelUvs[5], 1,
 				faceNormals[3], faceNormals[4], faceNormals[5],
 				texturedFaceIdx
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx3, vy3, vz3,
-				modelUvs[8], modelUvs[9], 0,
+				modelUvs[8], modelUvs[9], 2,
 				faceNormals[6], faceNormals[7], faceNormals[8],
 				texturedFaceIdx
 			);
