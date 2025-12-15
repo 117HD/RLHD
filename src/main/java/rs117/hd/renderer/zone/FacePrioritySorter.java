@@ -28,6 +28,7 @@ import java.nio.IntBuffer;
 import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.MaterialManager;
@@ -42,6 +43,7 @@ import static rs117.hd.renderer.zone.SceneUploader.interpolateHSL;
 import static rs117.hd.renderer.zone.SceneUploader.undoVanillaShading;
 import static rs117.hd.utils.MathUtils.*;
 
+@Slf4j
 @Singleton
 class FacePrioritySorter {
 	private static final int[] EMPTY_NORMALS = new int[9];
@@ -345,6 +347,7 @@ class FacePrioritySorter {
 		final int[] indices2 = model.getFaceIndices2();
 		final int[] indices3 = model.getFaceIndices3();
 
+		final short[] unlitFaceColors = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
 		final int[] faceColors1 = model.getFaceColors1();
 		final int[] faceColors2 = model.getFaceColors2();
 		final int[] faceColors3 = model.getFaceColors3();
@@ -405,7 +408,9 @@ class FacePrioritySorter {
 		if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
 			return 0;
 
-		if (plugin.configUndoVanillaShading && hasVertexNormals) {
+		if (unlitFaceColors != null) {
+			color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
+		} else if (plugin.configUndoVanillaShading && hasVertexNormals) {
 			color1 = undoVanillaShading(model, triangleA, color1, plugin.configLegacyGreyColors);
 			color2 = undoVanillaShading(model, triangleB, color2, plugin.configLegacyGreyColors);
 			color3 = undoVanillaShading(model, triangleC, color3, plugin.configLegacyGreyColors);
