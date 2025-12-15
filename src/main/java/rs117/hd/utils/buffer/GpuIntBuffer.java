@@ -134,6 +134,24 @@ public class GpuIntBuffer
 		buffer.put(textureFaceIdx);
 	}
 
+	public static long hashFace(
+		int a1, int a2, int a3,
+		int m1, int m2, int m3,
+		int t1, int t2, int t3) {
+
+		long h = 1469598103934665603L; // FNV-1a 64-bit offset
+		h = (h ^ a1) * 1099511628211L;
+		h = (h ^ a2) * 1099511628211L;
+		h = (h ^ a3) * 1099511628211L;
+		h = (h ^ m1) * 1099511628211L;
+		h = (h ^ m2) * 1099511628211L;
+		h = (h ^ m3) * 1099511628211L;
+		h = (h ^ t1) * 1099511628211L;
+		h = (h ^ t2) * 1099511628211L;
+		h = (h ^ t3) * 1099511628211L;
+		return h;
+	}
+
 	public int putFace(
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC,
