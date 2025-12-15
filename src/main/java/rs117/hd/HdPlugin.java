@@ -553,7 +553,7 @@ public class HdPlugin extends Plugin {
 					boolean isFallbackGpu = fallbackDevices.contains(glRenderer);
 					if (isFallbackGpu || !renderer.supportsGpu(GL_CAPS)) {
 						log.error("Unsupported GPU. Stopping the plugin...");
-						displayUnsupportedGpuMessage(isFallbackGpu, glRenderer);
+						displayUnsupportedGpuMessage(isFallbackGpu, glRenderer, renderer);
 						stopPlugin();
 						return true;
 					}
@@ -1971,7 +1971,7 @@ public class HdPlugin extends Plugin {
 //		);
 	}
 
-	private void displayUnsupportedGpuMessage(boolean isFallbackGpu, String glRenderer) {
+	private void displayUnsupportedGpuMessage(boolean isFallbackGpu, String glRenderer, Renderer renderer) {
 		String hint32Bit = "";
 		if (HDUtils.is32Bit()) {
 			hint32Bit =
@@ -1995,8 +1995,12 @@ public class HdPlugin extends Plugin {
 					+ "&nbsp;• Reinstall the drivers for <b>both</b> your processor's integrated graphics <b>and</b> your graphics card.<br>"
 				) :
 					(
-						"Your GPU is currently not supported by 117 HD.<br><br>GPU name: " + glRenderer + "<br>"
-						+ "<br>"
+						(
+							renderer instanceof LegacyRenderer && GL_CAPS.OpenGL31 ?
+								"The legacy renderer does not support your GPU. Try disabling it in the Legacy settings section." :
+								"Your GPU is currently not supported by 117 HD."
+						)
+						+ "<br><br>GPU name: " + glRenderer + "<br><br>"
 						+ "Your computer might not be letting RuneLite access your most powerful GPU.<br>"
 						+ "To find out if your system is supported, try the following steps:<br>"
 						+ "&nbsp;• Reinstall the drivers for your graphics card. You can find a link below.<br>"
