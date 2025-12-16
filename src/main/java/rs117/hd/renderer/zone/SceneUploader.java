@@ -1680,7 +1680,8 @@ public class SceneUploader {
 		int z,
 		IntBuffer opaqueBuffer,
 		IntBuffer alphaBuffer,
-		IntBuffer textureBuffer
+		IntBuffer opaqueTexBuffer,
+		IntBuffer alphaTexBuffer
 	) {
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
@@ -1891,6 +1892,7 @@ public class SceneUploader {
 			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
 			IntBuffer vb = hasAlpha ? alphaBuffer : opaqueBuffer;
+			IntBuffer tb = hasAlpha ? alphaTexBuffer : opaqueTexBuffer;
 
 			color1 |= packedAlphaBiasHsl;
 			color2 |= packedAlphaBiasHsl;
@@ -1906,7 +1908,7 @@ public class SceneUploader {
 			if(texturedFaceMap.containsKey(faceHash)) {
 				texturedFaceIdx = texturedFaceMap.get(faceHash);
 			} else {
-				texturedFaceIdx = GpuIntBuffer.putFace(textureBuffer,
+				texturedFaceIdx = GpuIntBuffer.putFace(tb,
 					color1, color2, color3,
 					materialData, materialData, materialData,
 					0, 0, 0
