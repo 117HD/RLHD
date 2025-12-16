@@ -69,7 +69,6 @@ public class SceneUploader {
 	};
 
 	private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
-	private static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
 	// subtracts the X lowest lightness levels from the formula.
 	// helps keep darker colors appropriately dark
 	private static final int IGNORE_LOW_LIGHTNESS = 3;
@@ -2081,23 +2080,21 @@ public class SceneUploader {
 		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
 		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
 		// low value for it to look acceptable in most cases.
-		final float[] L = LIGHT_DIR_MODEL;
-		final float color1Adjust =
-			BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0 : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
+		final float LIGHT_DIR_MODEL_X = 0.57735026f;
+		final float LIGHT_DIR_MODEL_Y = 0.57735026f;
+		final float LIGHT_DIR_MODEL_Z = 0.57735026f;
+
+		final float colorAdjust = BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0 : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
 
 		// Normals are currently unrotated, so we don't need to do any rotation for this
-		float lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
+		float lightDotNormal = nx * LIGHT_DIR_MODEL_X + ny * LIGHT_DIR_MODEL_Y + nz * LIGHT_DIR_MODEL_Z;
 		if (lightDotNormal > 0) {
 			lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-			l += (int) (lightDotNormal * color1Adjust);
+			l += (int) (lightDotNormal * colorAdjust);
 		}
 
-		int maxBrightness = 55;
-		if (!legacyGreyColors)
-			maxBrightness = MAX_BRIGHTNESS_LOOKUP_TABLE[s];
-
 		// Clamp brightness as detailed above
-		l = min(l, maxBrightness);
+		l = min(l, legacyGreyColors ? 55 : MAX_BRIGHTNESS_LOOKUP_TABLE[s]);
 
 		return h << 10 | s << 7 | l;
 	}
