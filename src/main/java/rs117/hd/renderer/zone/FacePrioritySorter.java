@@ -41,6 +41,7 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.renderer.zone.SceneUploader.calculateFaceNormal;
 import static rs117.hd.renderer.zone.SceneUploader.interpolateHSL;
 import static rs117.hd.renderer.zone.SceneUploader.undoVanillaShading;
 import static rs117.hd.utils.MathUtils.*;
@@ -497,32 +498,39 @@ class FacePrioritySorter {
 			faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 		}
 
-		final int[] faceNormals;
+		boolean shouldCalculateFaceNormal = false;
 		if (hasVertexNormals) {
 			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && faceColors3[face] == -1)) {
-				faceNormals = EMPTY_NORMALS;
+				shouldCalculateFaceNormal = true;
 			} else {
-				faceNormals = modelNormals;
-				faceNormals[0] = xVertexNormals[triangleA];
-				faceNormals[1] = yVertexNormals[triangleA];
-				faceNormals[2] = zVertexNormals[triangleA];
-				faceNormals[3] = xVertexNormals[triangleB];
-				faceNormals[4] = yVertexNormals[triangleB];
-				faceNormals[5] = zVertexNormals[triangleB];
-				faceNormals[6] = xVertexNormals[triangleC];
-				faceNormals[7] = yVertexNormals[triangleC];
-				faceNormals[8] = zVertexNormals[triangleC];
-
-				// Rotate normals
-				for (int i = 0; i < 9; i += 3) {
-					int x = modelNormals[i];
-					int z = modelNormals[i + 2];
-					modelNormals[i] = z * orientSin + x * orientCos >> 16;
-					modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
-				}
+				modelNormals[0] = xVertexNormals[triangleA];
+				modelNormals[1] = yVertexNormals[triangleA];
+				modelNormals[2] = zVertexNormals[triangleA];
+				modelNormals[3] = xVertexNormals[triangleB];
+				modelNormals[4] = yVertexNormals[triangleB];
+				modelNormals[5] = zVertexNormals[triangleB];
+				modelNormals[6] = xVertexNormals[triangleC];
+				modelNormals[7] = yVertexNormals[triangleC];
+				modelNormals[8] = zVertexNormals[triangleC];
 			}
 		} else {
-			faceNormals = EMPTY_NORMALS;
+			shouldCalculateFaceNormal = true;
+		}
+
+		if(shouldCalculateFaceNormal) {
+			calculateFaceNormal(
+				vx1, vy1, vz1,
+				vx2, vy2, vz2,
+				vx3, vy3, vz3,
+				modelNormals);
+		}
+
+		// Rotate normals
+		for (int i = 0; i < 9; i += 3) {
+			int x = modelNormals[i];
+			int z = modelNormals[i + 2];
+			modelNormals[i] = z * orientSin + x * orientCos >> 16;
+			modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
 		}
 
 		int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
@@ -557,21 +565,21 @@ class FacePrioritySorter {
 			vb,
 			vx1, vy1, vz1,
 			modelUvs[0], modelUvs[1], 0,
-			faceNormals[0], faceNormals[1], faceNormals[2],
+			modelNormals[0], modelNormals[1], modelNormals[2],
 			texturedFaceIdx
 		);
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx2, vy2, vz2,
 			modelUvs[4], modelUvs[5], 1,
-			faceNormals[3], faceNormals[4], faceNormals[5],
+			modelNormals[3], modelNormals[4], modelNormals[5],
 			texturedFaceIdx
 		);
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx3, vy3, vz3,
 			modelUvs[8], modelUvs[9], 2,
-			faceNormals[6], faceNormals[7], faceNormals[8],
+			modelNormals[6], modelNormals[7], modelNormals[8],
 			texturedFaceIdx
 		);
 		return 3;

@@ -120,6 +120,7 @@ public class SceneUploader {
 	private final int[] vertexKeys = new int[4];
 	private final float[] workingSpace = new float[9];
 	private final float[] modelUvs = new float[12];
+	private final float[] normal = new float[3];
 	private final int[] modelNormals = new int[9];
 
 	private final float[] modelLocalX = new float[MAX_VERTEX_COUNT];
@@ -1298,214 +1299,6 @@ public class SceneUploader {
 		}
 	}
 
-	// Writes UVs directly into modelUvs at indices:
-	// [0,1], [4,5], [8,9]
-	static void computeFaceUvsInline(
-		Model model,
-		int face,
-		float[] modelUvs
-	) {
-		final float[] vx = model.getVerticesX();
-		final float[] vy = model.getVerticesY();
-		final float[] vz = model.getVerticesZ();
-
-		final int[] i1 = model.getFaceIndices1();
-		final int[] i2 = model.getFaceIndices2();
-		final int[] i3 = model.getFaceIndices3();
-
-		final byte[] textureFaces = model.getTextureFaces();
-		final int[] ti1 = model.getTexIndices1();
-		final int[] ti2 = model.getTexIndices2();
-		final int[] ti3 = model.getTexIndices3();
-
-		if (textureFaces != null && textureFaces[face] != -1) {
-			// Triangle indices
-			final int a = i1[face];
-			final int b = i2[face];
-			final int c = i3[face];
-
-			// Texture triangle
-			final int t = textureFaces[face] & 0xFF;
-			final int ta = ti1[t];
-			final int tb = ti2[t];
-			final int tc = ti3[t];
-
-			// v1
-			final float v1x = vx[ta];
-			final float v1y = vy[ta];
-			final float v1z = vz[ta];
-
-			// v2, v3
-			final float v2x = vx[tb] - v1x;
-			final float v2y = vy[tb] - v1y;
-			final float v2z = vz[tb] - v1z;
-
-			final float v3x = vx[tc] - v1x;
-			final float v3y = vy[tc] - v1y;
-			final float v3z = vz[tc] - v1z;
-
-			// v4, v5, v6
-			final float v4x = vx[a] - v1x;
-			final float v4y = vy[a] - v1y;
-			final float v4z = vz[a] - v1z;
-
-			final float v5x = vx[b] - v1x;
-			final float v5y = vy[b] - v1y;
-			final float v5z = vz[b] - v1z;
-
-			final float v6x = vx[c] - v1x;
-			final float v6y = vy[c] - v1y;
-			final float v6z = vz[c] - v1z;
-
-			// v7 = v2 x v3
-			final float v7x = v2y * v3z - v2z * v3y;
-			final float v7y = v2z * v3x - v2x * v3z;
-			final float v7z = v2x * v3y - v2y * v3x;
-
-			// --- U axis ---
-			float px = v3y * v7z - v3z * v7y;
-			float py = v3z * v7x - v3x * v7z;
-			float pz = v3x * v7y - v3y * v7x;
-
-			float inv = 1.0f / (px * v2x + py * v2y + pz * v2z);
-
-			modelUvs[0] = (px * v4x + py * v4y + pz * v4z) * inv;
-			modelUvs[4] = (px * v5x + py * v5y + pz * v5z) * inv;
-			modelUvs[8] = (px * v6x + py * v6y + pz * v6z) * inv;
-
-			// --- V axis ---
-			px = v2y * v7z - v2z * v7y;
-			py = v2z * v7x - v2x * v7z;
-			pz = v2x * v7y - v2y * v7x;
-
-			inv = 1.0f / (px * v3x + py * v3y + pz * v3z);
-
-			modelUvs[1] = (px * v4x + py * v4y + pz * v4z) * inv;
-			modelUvs[5] = (px * v5x + py * v5y + pz * v5z) * inv;
-			modelUvs[9] = (px * v6x + py * v6y + pz * v6z) * inv;
-		} else {
-			// Reduced vanilla identity mapping
-			modelUvs[0] = 0f;
-			modelUvs[1] = 0f;
-			modelUvs[4] = 1f;
-			modelUvs[5] = 0f;
-			modelUvs[8] = 0f;
-			modelUvs[9] = 1f;
-		}
-
-		// Z unused
-		modelUvs[2] = 0f;
-		modelUvs[6] = 0f;
-		modelUvs[10] = 0f;
-	}
-
-	public static int undoVanillaShading(Model model, int triangle, int color, boolean legacyGreyColors) {
-		if(model == null || model.getVertexNormalsX() == null || model.getVertexNormalsY() == null || model.getVertexNormalsZ() == null)
-			return color;
-
-		int h = color >> 10 & 0x3F;
-		int s = color >> 7 & 0x7;
-		int l = color & 0x7F;
-
-		// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
-		// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
-		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
-		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
-		// low value for it to look acceptable in most cases.
-		float[] L = LIGHT_DIR_MODEL;
-		float color1Adjust =
-			BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0 : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
-
-		// Normals are currently unrotated, so we don't need to do any rotation for this
-		float nx = model.getVertexNormalsX()[triangle];
-		float ny = model.getVertexNormalsY()[triangle];
-		float nz = model.getVertexNormalsZ()[triangle];
-		float lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
-		if (lightDotNormal > 0) {
-			lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-			l += (int) (lightDotNormal * color1Adjust);
-		}
-
-		int maxBrightness = 55;
-		if (!legacyGreyColors)
-			maxBrightness = MAX_BRIGHTNESS_LOOKUP_TABLE[s];
-
-		// Clamp brightness as detailed above
-		l = min(l, maxBrightness);
-
-		return h << 10 | s << 7 | l;
-	}
-
-	static void computeWorldUvsInline(
-		float[] uv,
-		float x1, float y1, float z1,
-		float x2, float y2, float z2,
-		float x3, float y3, float z3
-	) {
-		// N = normalize(uvw[0])
-		float nx = uv[0];
-		float ny = uv[1];
-		float nz = uv[2];
-
-		float invNLen = 1.0f / (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
-		nx *= invNLen;
-		ny *= invNLen;
-		nz *= invNLen;
-
-		// C1 = (0,0,1) x N
-		float c1x = -ny;
-		float c1y = nx;
-		float c1z = 0f;
-
-		// C2 = (0,1,0) x N
-		float c2x = nz;
-		float c2y = 0f;
-		float c2z = -nx;
-
-		// Choose larger
-		float tx, ty, tz;
-		if ((c1x * c1x + c1y * c1y) > (c2x * c2x + c2z * c2z)) {
-			tx = c1x;
-			ty = c1y;
-			tz = c1z;
-		} else {
-			tx = c2x;
-			ty = c2y;
-			tz = c2z;
-		}
-
-		// Normalize T
-		float invTLen = 1.0f / (float) Math.sqrt(tx * tx + ty * ty + tz * tz);
-		tx *= invTLen;
-		ty *= invTLen;
-		tz *= invTLen;
-
-		// B = N x T
-		float bx = ny * tz - nz * ty;
-		float by = nz * tx - nx * tz;
-		float bz = nx * ty - ny * tx;
-
-		// scale = 1 / |uvw[0]|
-		float scale = invNLen / 128.0f;
-
-		// Vertex 1
-		uv[0] = (tx * x1 + ty * y1 + tz * z1) * scale;
-		uv[1] = (bx * x1 + by * y1 + bz * z1) * scale;
-
-		// Vertex 2
-		uv[4] = (tx * x2 + ty * y2 + tz * z2) * scale;
-		uv[5] = (bx * x2 + by * y2 + bz * z2) * scale;
-
-		// Vertex 3
-		uv[8] = (tx * x3 + ty * y3 + tz * z3) * scale;
-		uv[9] = (bx * x3 + by * y3 + bz * z3) * scale;
-
-		// Z unused
-		uv[2] = 0f;
-		uv[6] = 0f;
-		uv[10] = 0f;
-	}
-
 	// scene upload
 	private int uploadStaticModel(
 		ZoneSceneContext ctx,
@@ -1794,24 +1587,31 @@ public class SceneUploader {
 				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 			}
 
-			final int[] faceNormals;
+			boolean shouldCalculateFaceNormal = false;
 			if (modelHasNormals) {
 				if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
-					faceNormals = EMPTY_NORMALS;
+					shouldCalculateFaceNormal = true;
 				} else {
-					faceNormals = modelNormals;
-					faceNormals[0] = xVertexNormals[triangleA];
-					faceNormals[1] = yVertexNormals[triangleA];
-					faceNormals[2] = zVertexNormals[triangleA];
-					faceNormals[3] = xVertexNormals[triangleB];
-					faceNormals[4] = yVertexNormals[triangleB];
-					faceNormals[5] = zVertexNormals[triangleB];
-					faceNormals[6] = xVertexNormals[triangleC];
-					faceNormals[7] = yVertexNormals[triangleC];
-					faceNormals[8] = zVertexNormals[triangleC];
+					modelNormals[0] = xVertexNormals[triangleA];
+					modelNormals[1] = yVertexNormals[triangleA];
+					modelNormals[2] = zVertexNormals[triangleA];
+					modelNormals[3] = xVertexNormals[triangleB];
+					modelNormals[4] = yVertexNormals[triangleB];
+					modelNormals[5] = zVertexNormals[triangleB];
+					modelNormals[6] = xVertexNormals[triangleC];
+					modelNormals[7] = yVertexNormals[triangleC];
+					modelNormals[8] = zVertexNormals[triangleC];
 				}
 			} else {
-				faceNormals = EMPTY_NORMALS;
+				shouldCalculateFaceNormal = true;
+			}
+
+			if(shouldCalculateFaceNormal) {
+				calculateFaceNormal(
+					vx1, vy1, vz1,
+					vx2, vy2, vz2,
+					vx3, vy3, vz3,
+					modelNormals);
 			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
@@ -1845,21 +1645,21 @@ public class SceneUploader {
 			vb.putVertex(
 				vx1, vy1, vz1,
 				modelUvs[0], modelUvs[1], 0,
-				faceNormals[0], faceNormals[1], faceNormals[2],
+				modelNormals[0], modelNormals[1], modelNormals[2],
 				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2,
 				modelUvs[4], modelUvs[5], 1,
-				faceNormals[3], faceNormals[4], faceNormals[5],
+				modelNormals[3], modelNormals[4], modelNormals[5],
 				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3,
 				modelUvs[8], modelUvs[9], 2,
-				faceNormals[6], faceNormals[7], faceNormals[8],
+				modelNormals[6], modelNormals[7], modelNormals[8],
 				texturedFaceIdx
 			);
 
@@ -2059,24 +1859,31 @@ public class SceneUploader {
 				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 			}
 
-			final int[] faceNormals;
+			boolean shouldCalculateFaceNormal = false;
 			if (modelHasNormals) {
 				if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
-					faceNormals = EMPTY_NORMALS;
+					shouldCalculateFaceNormal = true;
 				} else {
-					faceNormals = modelNormals;
-					faceNormals[0] = xVertexNormals[triangleA];
-					faceNormals[1] = yVertexNormals[triangleA];
-					faceNormals[2] = zVertexNormals[triangleA];
-					faceNormals[3] = xVertexNormals[triangleB];
-					faceNormals[4] = yVertexNormals[triangleB];
-					faceNormals[5] = zVertexNormals[triangleB];
-					faceNormals[6] = xVertexNormals[triangleC];
-					faceNormals[7] = yVertexNormals[triangleC];
-					faceNormals[8] = zVertexNormals[triangleC];
+					modelNormals[0] = xVertexNormals[triangleA];
+					modelNormals[1] = yVertexNormals[triangleA];
+					modelNormals[2] = zVertexNormals[triangleA];
+					modelNormals[3] = xVertexNormals[triangleB];
+					modelNormals[4] = yVertexNormals[triangleB];
+					modelNormals[5] = zVertexNormals[triangleB];
+					modelNormals[6] = xVertexNormals[triangleC];
+					modelNormals[7] = yVertexNormals[triangleC];
+					modelNormals[8] = zVertexNormals[triangleC];
 				}
 			} else {
-				faceNormals = EMPTY_NORMALS;
+				shouldCalculateFaceNormal = true;
+			}
+
+			if(shouldCalculateFaceNormal) {
+				calculateFaceNormal(
+					vx1, vy1, vz1,
+					vx2, vy2, vz2,
+					vx3, vy3, vz3,
+					modelNormals);
 			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
@@ -2111,26 +1918,53 @@ public class SceneUploader {
 				vb,
 				vx1, vy1, vz1,
 				modelUvs[0], modelUvs[1], 0,
-				faceNormals[0], faceNormals[1], faceNormals[2],
+				modelNormals[0], modelNormals[1], modelNormals[2],
 				texturedFaceIdx
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx2, vy2, vz2,
 				modelUvs[4], modelUvs[5], 1,
-				faceNormals[3], faceNormals[4], faceNormals[5],
+				modelNormals[3], modelNormals[4], modelNormals[5],
 				texturedFaceIdx
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx3, vy3, vz3,
 				modelUvs[8], modelUvs[9], 2,
-				faceNormals[6], faceNormals[7], faceNormals[8],
+				modelNormals[6], modelNormals[7], modelNormals[8],
 				texturedFaceIdx
 			);
 			len += 3;
 		}
 		return len;
+	}
+
+	public static void calculateFaceNormal(
+		float vx1, float vy1, float vz1,
+		float vx2, float vy2, float vz2,
+		float vx3, float vy3, float vz3,
+		int[] modelNormals) {
+		float e0_x = vx2 - vx1;
+		float e0_y = vy2 - vy1;
+		float e0_z = vz2 - vz1;
+
+		float e1_x = vx3 - vx1;
+		float e1_y = vy3 - vy1;
+		float e1_z = vz3 - vz1;
+
+		float nx = e0_y * e1_z - e0_z * e1_y;
+		float ny = e0_z * e1_x - e0_x * e1_z;
+		float nz = e0_x * e1_y - e0_y * e1_x;
+
+		float length = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+		nx /= length;
+		ny /= length;
+		nz /= length;
+
+		modelNormals[0] = modelNormals[3] = modelNormals[6] = (int) (nx * 2048.0);
+		modelNormals[1] = modelNormals[4] = modelNormals[7] = (int) (ny * 2048.0);
+		modelNormals[2] = modelNormals[5] = modelNormals[8] = (int) (nz * 2048.0);
 	}
 
 	public static int interpolateHSL(int hsl, byte hue2, byte sat2, byte lum2, byte lerp) {
@@ -2145,5 +1979,213 @@ public class SceneUploader {
 		if (lum2 != -1)
 			lum += lerpInt * (lum2 - lum) >> 7;
 		return (hue << 10 | sat << 7 | lum) & 65535;
+	}
+
+	// Writes UVs directly into modelUvs at indices:
+	// [0,1], [4,5], [8,9]
+	static void computeFaceUvsInline(
+		Model model,
+		int face,
+		float[] modelUvs
+	) {
+		final float[] vx = model.getVerticesX();
+		final float[] vy = model.getVerticesY();
+		final float[] vz = model.getVerticesZ();
+
+		final int[] i1 = model.getFaceIndices1();
+		final int[] i2 = model.getFaceIndices2();
+		final int[] i3 = model.getFaceIndices3();
+
+		final byte[] textureFaces = model.getTextureFaces();
+		final int[] ti1 = model.getTexIndices1();
+		final int[] ti2 = model.getTexIndices2();
+		final int[] ti3 = model.getTexIndices3();
+
+		if (textureFaces != null && textureFaces[face] != -1) {
+			// Triangle indices
+			final int a = i1[face];
+			final int b = i2[face];
+			final int c = i3[face];
+
+			// Texture triangle
+			final int t = textureFaces[face] & 0xFF;
+			final int ta = ti1[t];
+			final int tb = ti2[t];
+			final int tc = ti3[t];
+
+			// v1
+			final float v1x = vx[ta];
+			final float v1y = vy[ta];
+			final float v1z = vz[ta];
+
+			// v2, v3
+			final float v2x = vx[tb] - v1x;
+			final float v2y = vy[tb] - v1y;
+			final float v2z = vz[tb] - v1z;
+
+			final float v3x = vx[tc] - v1x;
+			final float v3y = vy[tc] - v1y;
+			final float v3z = vz[tc] - v1z;
+
+			// v4, v5, v6
+			final float v4x = vx[a] - v1x;
+			final float v4y = vy[a] - v1y;
+			final float v4z = vz[a] - v1z;
+
+			final float v5x = vx[b] - v1x;
+			final float v5y = vy[b] - v1y;
+			final float v5z = vz[b] - v1z;
+
+			final float v6x = vx[c] - v1x;
+			final float v6y = vy[c] - v1y;
+			final float v6z = vz[c] - v1z;
+
+			// v7 = v2 x v3
+			final float v7x = v2y * v3z - v2z * v3y;
+			final float v7y = v2z * v3x - v2x * v3z;
+			final float v7z = v2x * v3y - v2y * v3x;
+
+			// --- U axis ---
+			float px = v3y * v7z - v3z * v7y;
+			float py = v3z * v7x - v3x * v7z;
+			float pz = v3x * v7y - v3y * v7x;
+
+			float inv = 1.0f / (px * v2x + py * v2y + pz * v2z);
+
+			modelUvs[0] = (px * v4x + py * v4y + pz * v4z) * inv;
+			modelUvs[4] = (px * v5x + py * v5y + pz * v5z) * inv;
+			modelUvs[8] = (px * v6x + py * v6y + pz * v6z) * inv;
+
+			// --- V axis ---
+			px = v2y * v7z - v2z * v7y;
+			py = v2z * v7x - v2x * v7z;
+			pz = v2x * v7y - v2y * v7x;
+
+			inv = 1.0f / (px * v3x + py * v3y + pz * v3z);
+
+			modelUvs[1] = (px * v4x + py * v4y + pz * v4z) * inv;
+			modelUvs[5] = (px * v5x + py * v5y + pz * v5z) * inv;
+			modelUvs[9] = (px * v6x + py * v6y + pz * v6z) * inv;
+		} else {
+			// Reduced vanilla identity mapping
+			modelUvs[0] = 0f;
+			modelUvs[1] = 0f;
+			modelUvs[4] = 1f;
+			modelUvs[5] = 0f;
+			modelUvs[8] = 0f;
+			modelUvs[9] = 1f;
+		}
+
+		// Z unused
+		modelUvs[2] = 0f;
+		modelUvs[6] = 0f;
+		modelUvs[10] = 0f;
+	}
+
+	public static int undoVanillaShading(Model model, int triangle, int color, boolean legacyGreyColors) {
+		if(model == null || model.getVertexNormalsX() == null || model.getVertexNormalsY() == null || model.getVertexNormalsZ() == null)
+			return color;
+
+		int h = color >> 10 & 0x3F;
+		int s = color >> 7 & 0x7;
+		int l = color & 0x7F;
+
+		// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
+		// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
+		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
+		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
+		// low value for it to look acceptable in most cases.
+		float[] L = LIGHT_DIR_MODEL;
+		float color1Adjust =
+			BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0 : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
+
+		// Normals are currently unrotated, so we don't need to do any rotation for this
+		float nx = model.getVertexNormalsX()[triangle];
+		float ny = model.getVertexNormalsY()[triangle];
+		float nz = model.getVertexNormalsZ()[triangle];
+		float lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
+		if (lightDotNormal > 0) {
+			lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
+			l += (int) (lightDotNormal * color1Adjust);
+		}
+
+		int maxBrightness = 55;
+		if (!legacyGreyColors)
+			maxBrightness = MAX_BRIGHTNESS_LOOKUP_TABLE[s];
+
+		// Clamp brightness as detailed above
+		l = min(l, maxBrightness);
+
+		return h << 10 | s << 7 | l;
+	}
+
+	static void computeWorldUvsInline(
+		float[] uv,
+		float x1, float y1, float z1,
+		float x2, float y2, float z2,
+		float x3, float y3, float z3
+	) {
+		// N = normalize(uvw[0])
+		float nx = uv[0];
+		float ny = uv[1];
+		float nz = uv[2];
+
+		float invNLen = 1.0f / (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
+		nx *= invNLen;
+		ny *= invNLen;
+		nz *= invNLen;
+
+		// C1 = (0,0,1) x N
+		float c1x = -ny;
+		float c1y = nx;
+		float c1z = 0f;
+
+		// C2 = (0,1,0) x N
+		float c2x = nz;
+		float c2y = 0f;
+		float c2z = -nx;
+
+		// Choose larger
+		float tx, ty, tz;
+		if ((c1x * c1x + c1y * c1y) > (c2x * c2x + c2z * c2z)) {
+			tx = c1x;
+			ty = c1y;
+			tz = c1z;
+		} else {
+			tx = c2x;
+			ty = c2y;
+			tz = c2z;
+		}
+
+		// Normalize T
+		float invTLen = 1.0f / (float) Math.sqrt(tx * tx + ty * ty + tz * tz);
+		tx *= invTLen;
+		ty *= invTLen;
+		tz *= invTLen;
+
+		// B = N x T
+		float bx = ny * tz - nz * ty;
+		float by = nz * tx - nx * tz;
+		float bz = nx * ty - ny * tx;
+
+		// scale = 1 / |uvw[0]|
+		float scale = invNLen / 128.0f;
+
+		// Vertex 1
+		uv[0] = (tx * x1 + ty * y1 + tz * z1) * scale;
+		uv[1] = (bx * x1 + by * y1 + bz * z1) * scale;
+
+		// Vertex 2
+		uv[4] = (tx * x2 + ty * y2 + tz * z2) * scale;
+		uv[5] = (bx * x2 + by * y2 + bz * z2) * scale;
+
+		// Vertex 3
+		uv[8] = (tx * x3 + ty * y3 + tz * z3) * scale;
+		uv[9] = (bx * x3 + by * y3 + bz * z3) * scale;
+
+		// Z unused
+		uv[2] = 0f;
+		uv[6] = 0f;
+		uv[10] = 0f;
 	}
 }
