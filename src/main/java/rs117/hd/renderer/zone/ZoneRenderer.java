@@ -1050,6 +1050,8 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
+		if (orient % 512 == 0)
+			orient += preOrientation % 512;
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		VAO o = vaoO.get(size, ctx.vboM);
