@@ -130,9 +130,6 @@ public class LegacySceneUploader {
 		if (client.isClientThread())
 			prepareBeforeSwap(sceneContext);
 
-		// Initialize array for counting the most prevalent water level
-		sceneContext.waterHeightCounters = new int[10000]; // Probably large enough
-
 		sceneContext.staticCustomTilesOffset = sceneContext.staticVertexCount;
 		var tiles = scene.getExtendedTiles();
 		for (int z = 0; z < MAX_Z; ++z) {
@@ -145,24 +142,6 @@ public class LegacySceneUploader {
 			}
 		}
 		sceneContext.staticCustomTilesVertexCount = sceneContext.staticVertexCount - sceneContext.staticCustomTilesOffset;
-
-		// Find the most prevalent water height
-		int mostPrevalentIndex = 0;
-		int mostPrevalentCount = 0;
-		for (int i = 0; i < sceneContext.waterHeightCounters.length; i++) {
-			int count = sceneContext.waterHeightCounters[i];
-			if (count > mostPrevalentCount) {
-				mostPrevalentIndex = i;
-				mostPrevalentCount = count;
-			}
-		}
-		if (mostPrevalentCount > 0) {
-			sceneContext.hasWater = true;
-			sceneContext.waterHeight = -mostPrevalentIndex;
-		} else {
-			sceneContext.hasWater = false;
-		}
-		sceneContext.waterHeightCounters = null;
 
 		stopwatch.stop();
 		log.debug(
@@ -737,15 +716,6 @@ public class LegacySceneUploader {
 					nwColor = 0;
 				if (sceneContext.vertexIsWater.containsKey(neVertexKey) && sceneContext.vertexIsLand.containsKey(neVertexKey))
 					neColor = 0;
-
-				// Increment the corresponding water height value in array which tracks frequency
-				int i = Math.abs(swHeight);
-				if (i >= sceneContext.waterHeightCounters.length && i < 1e6) {
-					// This probably won't happen, but if it does, grow the array
-					sceneContext.waterHeightCounters = slice(
-						sceneContext.waterHeightCounters, 0, sceneContext.waterHeightCounters.length * 2);
-				}
-				sceneContext.waterHeightCounters[i]++;
 			}
 
 			if (sceneContext.vertexIsOverlay.containsKey(neVertexKey) && sceneContext.vertexIsUnderlay.containsKey(neVertexKey))

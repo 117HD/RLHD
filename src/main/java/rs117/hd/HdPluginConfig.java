@@ -65,14 +65,14 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "General",
 		description = "General settings",
-		position = 0,
-		closedByDefault = true
+		position = 0
 	)
 	String generalSettings = "generalSettings";
 
 	@Range(
 		max = MAX_DISTANCE
 	)
+	@Units(" tiles")
 	@ConfigItem(
 		keyName = "drawDistance",
 		name = "Draw Distance",
@@ -89,6 +89,7 @@ public interface HdPluginConfig extends Config
 	@Range(
 		max = MAX_DISTANCE
 	)
+	@Units(" tiles")
 	@ConfigItem(
 		keyName = "detailDistance",
 		name = "Detail Distance",
@@ -106,6 +107,7 @@ public interface HdPluginConfig extends Config
 	@Range(
 		max = 5
 	)
+	@Units(" chunks")
 	@ConfigItem(
 		keyName = KEY_EXPANDED_MAP_LOADING_CHUNKS,
 		name = "Extended map loading",
@@ -119,6 +121,18 @@ public interface HdPluginConfig extends Config
 		return 3;
 	}
 
+	String KEY_HIDE_UNRELATED_AREAS = "hideUnrelatedAreas";
+	@ConfigItem(
+		keyName = KEY_HIDE_UNRELATED_AREAS,
+		name = "Hide unrelated areas",
+		description = "Hide unrelated areas which you shouldn't see from your current position.",
+		position = 4,
+		section = generalSettings
+	)
+	default boolean hideUnrelatedAreas() {
+		return true;
+	}
+
 	String KEY_ANTI_ALIASING_MODE = "antiAliasingMode";
 	@ConfigItem(
 		keyName = KEY_ANTI_ALIASING_MODE,
@@ -126,7 +140,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Improves pixelated edges at the cost of significantly higher GPU usage.<br>" +
 			"MSAA x16 is very expensive, so x8 is recommended if anti-aliasing is desired.",
-		position = 4,
+		position = 5,
 		section = generalSettings
 	)
 	default AntiAliasingMode antiAliasingMode()
@@ -141,7 +155,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Render the game at a different resolution and stretch it to fit the screen.<br>" +
 			"Reducing this can improve performance, particularly on very high resolution displays.",
-		position = 5,
+		position = 6,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -154,7 +168,7 @@ public interface HdPluginConfig extends Config
 		keyName = "sceneScalingMode",
 		name = "Game Scaling Mode",
 		description = "The sampling function to use when upscaling the above reduced game resolution.",
-		position = 6,
+		position = 7,
 		section = generalSettings
 	)
 	default SceneScalingMode sceneScalingMode()
@@ -169,7 +183,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The sampling function to use when the Stretched Mode plugin is enabled.<br>" +
 			"Affects how the UI looks with non-integer scaling.",
-		position = 7,
+		position = 8,
 		section = generalSettings
 	)
 	default UIScalingMode uiScalingMode() {
@@ -181,6 +195,7 @@ public interface HdPluginConfig extends Config
 		min = 0,
 		max = 16
 	)
+	@Units("x")
 	@ConfigItem(
 		keyName = KEY_ANISOTROPIC_FILTERING_LEVEL,
 		name = "Anisotropic Filtering",
@@ -189,7 +204,7 @@ public interface HdPluginConfig extends Config
 			"At zero, mipmapping is disabled and textures look the most pixelated.<br>" +
 			"At 1 through 16, mipmapping is enabled, and textures look more blurry and smoothed out.<br>" +
 			"The higher you go beyond 1, the less blurry textures will look, up to a certain extent.",
-		position = 8,
+		position = 9,
 		section = generalSettings
 	)
 	default int anisotropicFilteringLevel()
@@ -202,7 +217,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_UNLOCK_FPS,
 		name = "Unlock FPS",
 		description = "Removes the 50 FPS cap for some game content, such as camera movement and dynamic lighting.",
-		position = 9,
+		position = 10,
 		section = generalSettings
 	)
 	default boolean unlockFps()
@@ -228,7 +243,7 @@ public interface HdPluginConfig extends Config
 			"If set to 'on', the game will attempt to match your monitor's refresh rate <b>exactly</b>,<br>" +
 			"but if it can't keep up, FPS will be <u>halved until it catches up</u>. This option is rarely desired.<br>" +
 			"Note, GPUs that don't support Adaptive VSync will silently fall back to 'on'.",
-		position = 10,
+		position = 11,
 		section = generalSettings
 	)
 	default SyncMode syncMode()
@@ -243,7 +258,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the maximum number of frames per second.<br>" +
 			"This setting only applies if Unlock FPS is enabled, and VSync Mode is set to 'off'.",
-		position = 11,
+		position = 12,
 		section = generalSettings
 	)
 	@Range(
@@ -260,7 +275,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_COLOR_BLINDNESS,
 		name = "Color Blindness",
 		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
-		position = 12,
+		position = 13,
 		section = generalSettings
 	)
 	default ColorBlindMode colorBlindness()
@@ -272,7 +287,7 @@ public interface HdPluginConfig extends Config
 		keyName = "colorBlindnessIntensity",
 		name = "Blindness Intensity",
 		description = "Specifies how intense the color blindness adjustment should be.",
-		position = 13,
+		position = 14,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -286,7 +301,7 @@ public interface HdPluginConfig extends Config
 		keyName = "flashingEffects",
 		name = "Flashing Effects",
 		description = "Whether to show rapid flashing effects, such as lightning, in certain areas.",
-		position = 14,
+		position = 15,
 		section = generalSettings
 	)
 	default boolean flashingEffects()
@@ -299,7 +314,7 @@ public interface HdPluginConfig extends Config
 		name = "Saturation",
 		description = "Controls the saturation of the final rendered image.<br>" +
 			"Intended to be kept between 0% and 120%.",
-		position = 15,
+		position = 16,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -319,7 +334,7 @@ public interface HdPluginConfig extends Config
 		name = "Contrast",
 		description = "Controls the contrast of the final rendered image.<br>" +
 			"Intended to be kept between 90% and 110%.",
-		position = 16,
+		position = 17,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -346,7 +361,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the brightness of the game, excluding UI.<br>" +
 			"Adjust until the disk on the left is barely visible.",
-		position = 17,
+		position = 18,
 		section = generalSettings
 	)
 	default int brightness() {
@@ -495,6 +510,7 @@ public interface HdPluginConfig extends Config
 		position = 9,
 		section = lightingSettings
 	)
+	@Units(" tiles")
 	default ShadowDistance shadowDistance()
 	{
 		return ShadowDistance.DISTANCE_50;
@@ -607,6 +623,7 @@ public interface HdPluginConfig extends Config
 	@Range(
 		max = MAX_FOG_DEPTH
 	)
+	@Units(" tiles")
 	@ConfigItem(
 		keyName = "fogDepth",
 		name = "Static Fog Depth",
@@ -664,9 +681,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_MODEL_TEXTURES,
 		name = "Model Textures",
-		description =
-			"Adds new textures to most models. If disabled, the standard game textures will be used instead.<br>" +
-			"Note, this requires model caching in order to apply to animated models.",
+		description = "Adds new textures to most models. If disabled, the standard game textures will be used instead.",
 		position = 7,
 		section = environmentSettings
 	)
@@ -736,6 +751,7 @@ public interface HdPluginConfig extends Config
 	default boolean characterDisplacement() {
 		return true;
 	}
+
 
 	/*====== Water settings ======*/
 
@@ -835,65 +851,6 @@ public interface HdPluginConfig extends Config
 	}
 
 
-	/*====== Model caching settings ======*/
-
-	@ConfigSection(
-		name = "Model caching",
-		description = "Improve performance by reusing model data",
-		position = 4,
-		closedByDefault = true
-	)
-	String modelCachingSettings = "modelCachingSettings";
-
-	String KEY_MODEL_BATCHING = "useModelBatching";
-	@ConfigItem(
-		keyName = KEY_MODEL_BATCHING,
-		name = "Model Batching",
-		description =
-			"Model batching improves performance by reusing identical models within the same frame.<br>" +
-			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
-		position = 1,
-		section = modelCachingSettings
-	)
-	default boolean modelBatching() {return true;}
-
-	String KEY_MODEL_CACHING = "useModelCaching";
-	@ConfigItem(
-		keyName = KEY_MODEL_CACHING,
-		name = "Model Caching",
-		description =
-			"Model caching improves performance by saving and reusing model data from previous frames.<br>" +
-			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
-		position = 2,
-		section = modelCachingSettings
-	)
-	default boolean modelCaching() {return true;}
-
-	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiBv2";
-	@Range(
-		min = 64,
-		max = 16384
-	)
-	@ConfigItem(
-		keyName = KEY_MODEL_CACHE_SIZE,
-		name = "Cache Size (MiB)",
-		description =
-			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
-			"Generally, 512 MiB is plenty, with diminishing returns the higher you go.<br>" +
-			"Minimum=64 MiB, maximum=16384 MiB",
-		position = 3,
-		section = modelCachingSettings
-	)
-	default int modelCacheSizeMiB() {
-		return modelCacheSizeMiBv1() / 4;
-	}
-	@ConfigItem(keyName = "modelCacheSizeMiB", hidden = true, name = "", description = "")
-	default int modelCacheSizeMiBv1()
-	{
-		return 2048;
-	}
-
-
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(
@@ -907,7 +864,7 @@ public interface HdPluginConfig extends Config
 	String KEY_MACOS_INTEL_WORKAROUND = "macosIntelWorkaround";
 	@ConfigItem(
 		keyName = KEY_MACOS_INTEL_WORKAROUND,
-		name = "Fix white color issue on Macs",
+		name = "Fix broken colors on Intel Macs",
 		description = "Workaround for visual artifacts found on some Intel GPU drivers on macOS.",
 		warning =
 			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
@@ -1019,17 +976,6 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_HD_TZHAAR_RESKIN = "tzhaarHD";
-	@ConfigItem(
-		keyName = KEY_HD_TZHAAR_RESKIN,
-		name = "HD TzHaar Reskin",
-		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		section = miscellaneousSettings
-	)
-	default boolean hdTzHaarReskin() {
-		return true;
-	}
-
 
 	/*====== Legacy settings ======*/
 
@@ -1083,6 +1029,54 @@ public interface HdPluginConfig extends Config
 		return 20;
 	}
 
+	String KEY_MODEL_BATCHING = "useModelBatching";
+	@ConfigItem(
+		keyName = KEY_MODEL_BATCHING,
+		name = "Legacy model batching",
+		description =
+			"With the legacy renderer, model batching improves performance by reusing identical models within the same frame.<br>" +
+			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
+		position = -97,
+		section = legacySettings
+	)
+	default boolean modelBatching() { return true; }
+
+	String KEY_MODEL_CACHING = "useModelCaching";
+	@ConfigItem(
+		keyName = KEY_MODEL_CACHING,
+		name = "Legacy model caching",
+		description =
+			"With the legacy renderer, model caching improves performance by saving and reusing model data from previous frames.<br>" +
+			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
+		position = -96,
+		section = legacySettings
+	)
+	default boolean modelCaching() { return true; }
+
+	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiBv2";
+	@Range(
+		min = 64,
+		max = 16384
+	)
+	@Units(" MiB")
+	@ConfigItem(
+		keyName = KEY_MODEL_CACHE_SIZE,
+		name = "Legacy cache size",
+		description =
+			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+			"Generally, 512 MiB is plenty, with diminishing returns the higher you go.<br>" +
+			"Minimum=64 MiB, maximum=16384 MiB",
+		position = -95,
+		section = legacySettings
+	)
+	default int modelCacheSizeMiB() {
+		return modelCacheSizeMiBv1() / 4;
+	}
+	@ConfigItem(keyName = "modelCacheSizeMiB", hidden = true, name = "", description = "")
+	default int modelCacheSizeMiBv1() {
+		return 2048;
+	}
+
 	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure";
 	@ConfigItem(
 		keyName = KEY_LEGACY_GREY_COLORS,
@@ -1109,6 +1103,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_LEGACY_TZHAAR_RESKIN = "tzhaarHD";
+	@ConfigItem(
+		keyName = KEY_LEGACY_TZHAAR_RESKIN,
+		name = "Legacy TzHaar city reskin",
+		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
+		section = legacySettings
+	)
+	default boolean legacyTzHaarReskin() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 
@@ -1128,6 +1133,19 @@ public interface HdPluginConfig extends Config
 		section = experimentalSettings
 	)
 	default boolean fasterModelHashing() {
+		return true;
+	}
+
+	String KEY_ZONE_STREAMING = "experimentalZoneStreaming";
+	@ConfigItem(
+		keyName = KEY_ZONE_STREAMING,
+		name = "Zone streaming",
+		description =
+			"Load zones in parallel in the background, switching to new scenes almost instantly.<br>" +
+			"You will see zones appear when they are loaded, instead of having to wait for them all at once.",
+		section = experimentalSettings
+	)
+	default boolean zoneStreaming() {
 		return true;
 	}
 
@@ -1164,17 +1182,6 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean decoupleSkyAndWaterColor() {
 		return false;
-	}
-
-	String KEY_HIDE_UNRELATED_AREAS = "hideUnrelatedAreas";
-	@ConfigItem(
-		keyName = KEY_HIDE_UNRELATED_AREAS,
-		name = "Hide unrelated areas",
-		description = "Hide unrelated areas which you shouldn't see from your current position.",
-		section = experimentalSettings
-	)
-	default boolean hideUnrelatedAreas() {
-		return true;
 	}
 
 	String KEY_WIREFRAME = "wireframe";

@@ -17,11 +17,15 @@ public enum Timer {
 	MODEL_PUSHING_VERTEX,
 	MODEL_PUSHING_NORMAL,
 	MODEL_PUSHING_UV(false, "Model pushing UV"),
+	UPDATE_SCENE,
 	UPDATE_ENVIRONMENT,
 	UPDATE_LIGHTS,
+	UPDATE_AREA_HIDING,
 	IMPOSTOR_TRACKING,
 	REPLACE_FISHING_SPOTS,
 	CHARACTER_DISPLACEMENT,
+	SWAP_BUFFERS,
+	GARBAGE_COLLECTION,
 	MAP_UI_BUFFER(false, "Map UI Buffer"),
 	COPY_UI(false, "Copy UI"),
 	RENDER_FRAME(true, false),
@@ -35,7 +39,6 @@ public enum Timer {
 	REFLECTION_MIPMAPS(true),
 	RENDER_SCENE(true),
 	RENDER_UI(true, "Render UI"),
-	SWAP_BUFFERS,
 	;
 
 	public static final Timer[] TIMERS = values();
