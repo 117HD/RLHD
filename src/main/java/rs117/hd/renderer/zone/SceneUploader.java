@@ -1996,66 +1996,78 @@ public class SceneUploader {
 		final float[] vy = model.getVerticesY();
 		final float[] vz = model.getVerticesZ();
 
+		final int tf = textureFace & 0xFF;
+
 		// v1
-		int texFaceIdx = model.getTexIndices1()[textureFace & 0xFF];
-		final float v1x = vx[texFaceIdx];
-		final float v1y = vy[texFaceIdx];
-		final float v1z = vz[texFaceIdx];
+		int idx = model.getTexIndices1()[tf];
+		final float v1x = vx[idx];
+		final float v1y = vy[idx];
+		final float v1z = vz[idx];
 
-		// v2, v3
-		texFaceIdx = model.getTexIndices2()[textureFace & 0xFF];
-		final float v2x = vx[texFaceIdx] - v1x;
-		final float v2y = vy[texFaceIdx] - v1y;
-		final float v2z = vz[texFaceIdx] - v1z;
+		// v2
+		idx = model.getTexIndices2()[tf];
+		float v2x = vx[idx] - v1x;
+		float v2y = vy[idx] - v1y;
+		float v2z = vz[idx] - v1z;
 
-		texFaceIdx = model.getTexIndices3()[textureFace & 0xFF];
-		final float v3x = vx[texFaceIdx] - v1x;
-		final float v3y = vy[texFaceIdx] - v1y;
-		final float v3z = vz[texFaceIdx] - v1z;
-
-		// v4, v5, v6
-		final float v4x = vx[triangleA] - v1x;
-		final float v4y = vy[triangleA] - v1y;
-		final float v4z = vz[triangleA] - v1z;
-
-		final float v5x = vx[triangleB] - v1x;
-		final float v5y = vy[triangleB] - v1y;
-		final float v5z = vz[triangleB] - v1z;
-
-		final float v6x = vx[triangleC] - v1x;
-		final float v6y = vy[triangleC] - v1y;
-		final float v6z = vz[triangleC] - v1z;
+		// v3
+		idx = model.getTexIndices3()[tf];
+		float v3x = vx[idx] - v1x;
+		float v3y = vy[idx] - v1y;
+		float v3z = vz[idx] - v1z;
 
 		// v7 = v2 x v3
-		final float v7x = v2y * v3z - v2z * v3y;
-		final float v7y = v2z * v3x - v2x * v3z;
-		final float v7z = v2x * v3y - v2y * v3x;
+		float v7x = v2y * v3z - v2z * v3y;
+		float v7y = v2z * v3x - v2x * v3z;
+		float v7z = v2x * v3y - v2y * v3x;
 
-		// --- U axis ---
+		// ---------- U axis ----------
 		float px = v3y * v7z - v3z * v7y;
 		float py = v3z * v7x - v3x * v7z;
 		float pz = v3x * v7y - v3y * v7x;
 
 		float inv = 1.0f / (px * v2x + py * v2y + pz * v2z);
 
-		modelUvs[0] = (px * v4x + py * v4y + pz * v4z) * inv;
-		modelUvs[4] = (px * v5x + py * v5y + pz * v5z) * inv;
-		modelUvs[8] = (px * v6x + py * v6y + pz * v6z) * inv;
+		float dx = vx[triangleA] - v1x;
+		float dy = vy[triangleA] - v1y;
+		float dz = vz[triangleA] - v1z;
+		modelUvs[0] = (px * dx + py * dy + pz * dz) * inv;
 
-		// --- V axis ---
+		dx = vx[triangleB] - v1x;
+		dy = vy[triangleB] - v1y;
+		dz = vz[triangleB] - v1z;
+		modelUvs[4] = (px * dx + py * dy + pz * dz) * inv;
+
+		dx = vx[triangleC] - v1x;
+		dy = vy[triangleC] - v1y;
+		dz = vz[triangleC] - v1z;
+		modelUvs[8] = (px * dx + py * dy + pz * dz) * inv;
+
+		// ---------- V axis ----------
 		px = v2y * v7z - v2z * v7y;
 		py = v2z * v7x - v2x * v7z;
 		pz = v2x * v7y - v2y * v7x;
 
 		inv = 1.0f / (px * v3x + py * v3y + pz * v3z);
 
-		modelUvs[1] = (px * v4x + py * v4y + pz * v4z) * inv;
-		modelUvs[5] = (px * v5x + py * v5y + pz * v5z) * inv;
-		modelUvs[9] = (px * v6x + py * v6y + pz * v6z) * inv;
+		dx = vx[triangleA] - v1x;
+		dy = vy[triangleA] - v1y;
+		dz = vz[triangleA] - v1z;
+		modelUvs[1] = (px * dx + py * dy + pz * dz) * inv;
+
+		dx = vx[triangleB] - v1x;
+		dy = vy[triangleB] - v1y;
+		dz = vz[triangleB] - v1z;
+		modelUvs[5] = (px * dx + py * dy + pz * dz) * inv;
+
+		dx = vx[triangleC] - v1x;
+		dy = vy[triangleC] - v1y;
+		dz = vz[triangleC] - v1z;
+		modelUvs[9] = (px * dx + py * dy + pz * dz) * inv;
 
 		// Z unused
-		modelUvs[2] = 0f;
-		modelUvs[6] = 0f;
+		modelUvs[2]  = 0f;
+		modelUvs[6]  = 0f;
 		modelUvs[10] = 0f;
 	}
 
