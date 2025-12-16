@@ -2099,7 +2099,8 @@ public class SceneUploader {
 			} else {
 				texturedFaceIdx = GpuIntBuffer.putFace(textureBuffer,
 					color1, color2, color3,
-					materialData, materialData, materialData
+					materialData, materialData, materialData,
+					0, 0, 0
 				);
 				texturedFaceMap.put(faceHash, texturedFaceIdx);
 			}

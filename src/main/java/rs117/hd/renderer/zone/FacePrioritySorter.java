@@ -532,7 +532,8 @@ class FacePrioritySorter {
 		int texturedFaceIdx = GpuIntBuffer.putFace(
 			textureBuffer,
 			color1, color2, color3,
-			materialData, materialData, materialData
+			materialData, materialData, materialData,
+			0, 0, 0
 		);
 
 		GpuIntBuffer.putFloatVertex(

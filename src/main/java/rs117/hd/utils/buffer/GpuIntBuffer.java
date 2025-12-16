@@ -156,7 +156,7 @@ public class GpuIntBuffer
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC,
 		int terrainDataA,  int terrainDataB,  int terrainDataC ) {
-		final int textureFaceIdx = (buffer.position() / 3) / 3;
+		final int textureFaceIdx = buffer.position() / 3;
 		buffer.put(alphaBiasHslA);
 		buffer.put(alphaBiasHslB);
 		buffer.put(alphaBiasHslC);
@@ -189,8 +189,9 @@ public class GpuIntBuffer
 	public static int putFace(
 		IntBuffer buffer,
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
-		int materialDataA, int materialDataB, int materialDataC) {
-		final int textureFaceIdx = (buffer.position() / 3) / 3;
+		int materialDataA, int materialDataB, int materialDataC,
+		int terrainDataA, int terrainDataB, int terrainDataC) {
+		final int textureFaceIdx = buffer.position() / 3;
 		buffer.put(alphaBiasHslA);
 		buffer.put(alphaBiasHslB);
 		buffer.put(alphaBiasHslC);
@@ -199,9 +200,9 @@ public class GpuIntBuffer
 		buffer.put(materialDataB);
 		buffer.put(materialDataC);
 
-		buffer.put(0); // TODO: Remove?
-		buffer.put(0);
-		buffer.put(0);
+		buffer.put(terrainDataA); // TODO: Remove?
+		buffer.put(terrainDataB);
+		buffer.put(terrainDataC);
 		return textureFaceIdx;
 	}
 

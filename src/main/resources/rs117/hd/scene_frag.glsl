@@ -26,6 +26,11 @@
 #version 330
 
 #define DISPLAY_BASE_COLOR 0
+#define DISPLAY_UV 0
+#define DISPLAY_NORMAL 0
+#define DISPLAY_TANGENT 0
+#define DISPLAY_SHADOWS 0
+#define DISPLAY_LIGHTING 0
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
@@ -151,6 +156,27 @@ void main() {
         // Set up tangent-space transformation matrix
         vec3 N = normalize(IN.normal);
         mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
+
+        #if DISPLAY_UV
+        if (DISPLAY_UV == 1) { // Redundant, used for syntax highlighting in IntelliJ
+            FragColor = vec4(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z, 0.0, 1.0);
+            return;
+        }
+        #endif
+
+        #if DISPLAY_NORMAL
+        if (DISPLAY_NORMAL == 1) { // Redundant, used for syntax highlighting in IntelliJ
+            FragColor = vec4(N * 0.5 + 0.5, 1.0);
+            return;
+        }
+        #endif
+
+        #if DISPLAY_TANGENT
+        if (DISPLAY_TANGENT == 1) { // Redundant, used for syntax highlighting in IntelliJ
+            FragColor = vec4(TBN[0] * 0.5 + 0.5, 1.0);
+            return;
+        }
+        #endif
 
         float selfShadowing = 0;
         vec3 fragPos = IN.position;
@@ -308,7 +334,12 @@ void main() {
         shadow = max(shadow, selfShadowing);
         float inverseShadow = 1 - shadow;
 
-
+        #if DISPLAY_SHADOWS
+        if(DISPLAY_SHADOWS == 1) {
+            FragColor = vec4(inverseShadow, inverseShadow, inverseShadow, 1.0);
+            return;
+        }
+        #endif
 
         // specular
         vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
@@ -408,6 +439,13 @@ void main() {
         // apply lighting
         vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
         underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
+
+        #if DISPLAY_LIGHTING
+        if(DISPLAY_LIGHTING == 1) {
+            FragColor = vec4(compositeLight, 1.0);
+            return;
+        }
+        #endif
 
         float unlit = dot(IN.texBlend, vec3(
             getMaterialIsUnlit(material1),

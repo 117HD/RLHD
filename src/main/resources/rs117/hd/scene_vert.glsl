@@ -64,13 +64,13 @@ void main() {
 
     if(isProvoking) {
         // Only the Provoking vertex needs to fetch the face data
-        fAlphaBiasHsl = texelFetch(textureFaces, (vTextureFaceIdx * 3)).xyz;
-        fMaterialData = texelFetch(textureFaces, (vTextureFaceIdx * 3) + 1).xyz;
-        fTerrainData  = texelFetch(textureFaces, (vTextureFaceIdx * 3) + 2).xyz;
+        fAlphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx).xyz;
+        fMaterialData = texelFetch(textureFaces, vTextureFaceIdx + 1).xyz;
+        fTerrainData  = texelFetch(textureFaces, vTextureFaceIdx + 2).xyz;
         fWorldViewId  = vWorldViewId;
         alphaBiasHsl  = fAlphaBiasHsl[0];
     } else {
-        alphaBiasHsl = texelFetch(textureFaces, (vTextureFaceIdx * 3)).x;
+        alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx).x;
     }
 
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
