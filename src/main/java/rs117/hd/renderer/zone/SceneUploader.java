@@ -1830,6 +1830,7 @@ public class SceneUploader {
 				materialData, materialData, materialData,
 				0, 0, 0);
 
+			// Check if we can reuse already pushed face data, since this will result in the read coming from the cache
 			if(texturedFaceMap.containsKey(faceHash)) {
 				texturedFaceIdx = texturedFaceMap.get(faceHash);
 			} else {
@@ -2094,6 +2095,7 @@ public class SceneUploader {
 				materialData, materialData, materialData,
 				0, 0, 0);
 
+			// Check if we can reuse already pushed face data, since this will result in the read coming from the cache
 			if(texturedFaceMap.containsKey(faceHash)) {
 				texturedFaceIdx = texturedFaceMap.get(faceHash);
 			} else {

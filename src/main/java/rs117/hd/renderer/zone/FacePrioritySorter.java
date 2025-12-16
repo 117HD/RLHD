@@ -26,6 +26,8 @@ package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -75,6 +77,8 @@ class FacePrioritySorter {
 	private static final int MAX_DIAMETER = 6000;
 	private static final int ZSORT_GROUP_SIZE = 1024; // was 512
 	private static final int MAX_FACES_PER_PRIORITY = 4000; // was 2500
+
+	private static final Map<Long, Integer> texturedFaceMap = new HashMap<>();
 
 	static {
 		distances = new int[MAX_VERTEX_COUNT];
@@ -202,6 +206,8 @@ class FacePrioritySorter {
 			assert distance >= 0 && distance < diameter;
 			distanceToFaces[distance][distanceFaceCount[distance]++] = i;
 		}
+
+		texturedFaceMap.clear();
 
 		int len = 0;
 		if (faceRenderPriorities == null) {
@@ -529,12 +535,23 @@ class FacePrioritySorter {
 		color2 |= packedAlphaBiasHsl;
 		color3 |= packedAlphaBiasHsl;
 
-		int texturedFaceIdx = GpuIntBuffer.putFace(
-			textureBuffer,
+		final int texturedFaceIdx;
+		final long faceHash = GpuIntBuffer.hashFace(
 			color1, color2, color3,
 			materialData, materialData, materialData,
-			0, 0, 0
-		);
+			0, 0, 0);
+
+		// Check if we can reuse already pushed face data, since this will result in the read coming from the cache
+		if(texturedFaceMap.containsKey(faceHash)) {
+			texturedFaceIdx = texturedFaceMap.get(faceHash);
+		} else {
+			texturedFaceIdx = GpuIntBuffer.putFace(textureBuffer,
+				color1, color2, color3,
+				materialData, materialData, materialData,
+				0, 0, 0
+			);
+			texturedFaceMap.put(faceHash, texturedFaceIdx);
+		}
 
 		GpuIntBuffer.putFloatVertex(
 			vb,

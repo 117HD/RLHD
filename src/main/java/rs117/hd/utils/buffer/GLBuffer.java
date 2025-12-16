@@ -82,7 +82,11 @@ public class GLBuffer
 
 		numBytes = HDUtils.ceilPow2(numBytes);
 		if (log.isDebugEnabled() && numBytes > 1e6)
-			log.debug("Resizing buffer '{}'\t{}", name, String.format("%.2f MB -> %.2f MB", size / 1e6, numBytes / 1e6));
+			if(size > 0) {
+				log.debug("Resizing buffer '{}'\t{}", name, String.format("%.2f MB -> %.2f MB", size / 1e6, numBytes / 1e6));
+			} else {
+				log.debug("Creating buffer '{}'\t{}", name, String.format("%.2f MB -> %.2f MB", size / 1e6, numBytes / 1e6));
+			}
 
 		if (byteOffset > 0) {
 			// Create a new buffer and copy the old data to it
