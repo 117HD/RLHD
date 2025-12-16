@@ -706,7 +706,7 @@ public class ZoneRenderer implements Renderer {
 
 		boolean renderWaterReflections = plugin.configPlanarReflections && ctx.hasWater;
 		if (renderWaterReflections) {
-			sceneProgram.uniWaterHeight.set(ctx.mostPrevalentWaterLevel);
+			plugin.uboGlobal.mostPrevalentWaterLevel.set(ctx.mostPrevalentWaterLevel);
 
 			// Calculate water reflection projection matrix
 			float[] reflectionProjectionMatrix = Mat4.scale(1, -1, 1);

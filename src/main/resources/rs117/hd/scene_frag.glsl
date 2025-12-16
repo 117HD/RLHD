@@ -41,7 +41,6 @@ uniform sampler2D waterReflectionMap;
 uniform sampler2DArray waterNormalMaps;
 
 uniform int renderPass;
-uniform int waterHeight;
 uniform bool waterReflectionEnabled;
 uniform bool shorelineCaustics;
 uniform bool waterTransparency;
@@ -112,8 +111,13 @@ void main() {
     int waterTypeIndex = vTerrainData[0] >> 3 & 0xFF;
 
     bool isWater = waterTypeIndex > 0;
-    bool isUnderwaterTile = waterDepth != 0;
-    bool isWaterSurface = isWater && !isUnderwaterTile;
+    bool isUnderwater = waterDepth != 0;
+    bool isWaterSurface = isWater && !isUnderwater;
+
+    if (IN.position.y > mostPrevalentWaterLevel) {
+        isUnderwater = true;
+        waterDepth = IN.position.y - mostPrevalentWaterLevel;
+    }
 
     #ifdef DEVELOPMENT_WATER_TYPE
         if (isWater)
@@ -453,10 +457,10 @@ void main() {
                 outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
             }
 
-            if (isUnderwaterTile)
+            if (isUnderwater)
                 sampleLegacyUnderwater(outputColor.rgb, waterType.depthColor, waterDepth, lightDotNormals);
         #else
-            if (isUnderwaterTile) {
+            if (isUnderwater) {
                 sampleUnderwater(outputColor.rgb, waterTypeIndex, waterDepth);
             } else {
                 if (tint.w > 0) {
@@ -530,7 +534,7 @@ void main() {
     #endif
 
     // apply fog
-    if (!isUnderwaterTile) {
+    if (!isUnderwater) {
         // ground fog
         float distance = distance(IN.position, cameraPos);
         float closeFadeDistance = 1500;

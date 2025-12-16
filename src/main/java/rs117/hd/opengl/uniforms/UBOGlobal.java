@@ -37,6 +37,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property groundFogEnd = addProperty(PropertyType.Float, "groundFogEnd");
 	public Property groundFogOpacity = addProperty(PropertyType.Float, "groundFogOpacity");
 
+	public Property mostPrevalentWaterLevel = addProperty(PropertyType.Int, "mostPrevalentWaterLevel");
 	public Property underwaterEnvironment = addProperty(PropertyType.Int, "underwaterEnvironment");
 	public Property underwaterCaustics = addProperty(PropertyType.Int, "underwaterCaustics");
 	public Property underwaterCausticsColor = addProperty(PropertyType.FVec3, "underwaterCausticsColor");

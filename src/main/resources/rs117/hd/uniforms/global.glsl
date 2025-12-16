@@ -31,6 +31,7 @@ layout(std140) uniform UBOGlobal {
     float groundFogEnd;
     float groundFogOpacity;
 
+    int mostPrevalentWaterLevel;
     bool underwaterEnvironment;
     bool underwaterCaustics;
     vec3 underwaterCausticsColor;

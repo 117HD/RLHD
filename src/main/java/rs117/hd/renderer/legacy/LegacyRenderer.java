@@ -1132,7 +1132,7 @@ public class LegacyRenderer implements Renderer {
 
 			boolean renderWaterReflections = plugin.configPlanarReflections && sceneContext.hasWater;
 			if (renderWaterReflections) {
-				sceneProgram.uniWaterHeight.set(sceneContext.mostPrevalentWaterLevel);
+				plugin.uboGlobal.mostPrevalentWaterLevel.set(sceneContext.mostPrevalentWaterLevel);
 
 				// Calculate water reflection projection matrix
 				float[] reflectionProjectionMatrix = Mat4.scale(1, -1, 1);

@@ -28,7 +28,6 @@
 #include <uniforms/global.glsl>
 
 uniform int renderPass;
-uniform int waterHeight;
 
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
@@ -63,7 +62,7 @@ out FragmentData {
 } OUT;
 
 void displaceUnderwaterPosition(inout vec3 position, int waterDepth) {
-    if (waterDepth <= 1 || position.y < waterHeight)
+    if (waterDepth <= 1 || position.y < mostPrevalentWaterLevel)
         return;
 
     // Only displace underwater surfaces viewed from above
@@ -160,11 +159,11 @@ void main() {
                 return;
 
             // Hide underwater tiles from the reflection
-            if (isUnderwaterTile && waterHeight - minY <= WATER_REFLECTION_HEIGHT_THRESHOLD)
+            if (isUnderwaterTile && mostPrevalentWaterLevel - minY <= WATER_REFLECTION_HEIGHT_THRESHOLD)
                 return;
         } else {
             // Hide stuff which is under the water from the reflection
-            if (waterHeight - minY <= 0)
+            if (mostPrevalentWaterLevel - minY <= 0)
                 return;
         }
     }
