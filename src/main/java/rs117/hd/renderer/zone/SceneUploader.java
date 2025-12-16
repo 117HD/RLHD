@@ -62,7 +62,13 @@ public class SceneUploader {
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
 
-		private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
+	private static final float[] IDENTITY_UV = {
+		0, 0, 0, 0,
+		1, 0, 0, 0,
+		0, 1, 0, 0
+	};
+
+	private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
 	private static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
 	// subtracts the X lowest lightness levels from the formula.
 	// helps keep darker colors appropriately dark
@@ -1566,32 +1572,28 @@ public class SceneUploader {
 
 			int materialData = material.packMaterialData(faceOverride, uvType, false, false);
 
+			final float[] faceUVs;
 			if (uvType == UvType.VANILLA) {
 				if (uvType.worldUvs) {
 					computeWorldUvsInline(
-						modelUvs,
+						faceUVs = modelUvs,
 						vx1, vy1, vz1,
 						vx2, vy2, vz2,
 						vx3, vy3, vz3
 					);
 				} else {
 					if(textureId != -1) {
-						computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, modelUvs);
+						computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, faceUVs = modelUvs);
 					} else {
-						modelUvs[0] = 0f;
-						modelUvs[2] = 0f;
-						modelUvs[1] = 0f;
-						modelUvs[4] = 1f;
-						modelUvs[5] = 0f;
-						modelUvs[6] = 0f;
-						modelUvs[8] = 0f;
-						modelUvs[9] = 1f;
-						modelUvs[10] = 0f;
+						faceUVs = IDENTITY_UV;
 					}
 				}
-
 			} else {
-				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
+				if(uvType != UvType.GEOMETRY) {
+					faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
+				} else {
+					faceUVs = IDENTITY_UV;
+				}
 			}
 
 			boolean shouldCalculateFaceNormal = false;
@@ -1639,21 +1641,21 @@ public class SceneUploader {
 
 			vb.putVertex(
 				vx1, vy1, vz1,
-				modelUvs[0], modelUvs[1], 0,
+				faceUVs[0], faceUVs[1], 0,
 				modelNormals[0], modelNormals[1], modelNormals[2],
 				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2,
-				modelUvs[4], modelUvs[5], 1,
+				faceUVs[4], faceUVs[5], 1,
 				modelNormals[3], modelNormals[4], modelNormals[5],
 				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3,
-				modelUvs[8], modelUvs[9], 2,
+				faceUVs[8], faceUVs[9], 2,
 				modelNormals[6], modelNormals[7], modelNormals[8],
 				texturedFaceIdx
 			);
@@ -1839,31 +1841,28 @@ public class SceneUploader {
 
 			int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
 
+			final float[] faceUVs;
 			if (uvType == UvType.VANILLA) {
 				if (uvType.worldUvs) {
 					computeWorldUvsInline(
-						modelUvs,
+						faceUVs = modelUvs,
 						vx1, vy1, vz1,
 						vx2, vy2, vz2,
 						vx3, vy3, vz3
 					);
 				} else {
 					if(textureId != -1) {
-						computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, modelUvs);
+						computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, faceUVs = modelUvs);
 					} else {
-						modelUvs[0] = 0f;
-						modelUvs[2] = 0f;
-						modelUvs[1] = 0f;
-						modelUvs[4] = 1f;
-						modelUvs[5] = 0f;
-						modelUvs[6] = 0f;
-						modelUvs[8] = 0f;
-						modelUvs[9] = 1f;
-						modelUvs[10] = 0f;
+						faceUVs = IDENTITY_UV;
 					}
 				}
 			} else {
-				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
+				if(uvType != UvType.GEOMETRY) {
+					faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
+				} else {
+					faceUVs = IDENTITY_UV;
+				}
 			}
 
 			boolean shouldCalculateFaceNormal = false;
@@ -1913,21 +1912,21 @@ public class SceneUploader {
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx1, vy1, vz1,
-				modelUvs[0], modelUvs[1], 0,
+				faceUVs[0], faceUVs[1], 0,
 				modelNormals[0], modelNormals[1], modelNormals[2],
 				texturedFaceIdx
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx2, vy2, vz2,
-				modelUvs[4], modelUvs[5], 1,
+				faceUVs[4], faceUVs[5], 1,
 				modelNormals[3], modelNormals[4], modelNormals[5],
 				texturedFaceIdx
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx3, vy3, vz3,
-				modelUvs[8], modelUvs[9], 2,
+				faceUVs[8], faceUVs[9], 2,
 				modelNormals[6], modelNormals[7], modelNormals[8],
 				texturedFaceIdx
 			);
@@ -1977,7 +1976,7 @@ public class SceneUploader {
 		return (hue << 10 | sat << 7 | lum) & 65535;
 	}
 
-	static void computeFaceUvsInline(
+	public static void computeFaceUvsInline(
 		Model model,
 		int textureFace,
 		int triangleA,
@@ -2095,7 +2094,7 @@ public class SceneUploader {
 		return h << 10 | s << 7 | l;
 	}
 
-	static void computeWorldUvsInline(
+	public static void computeWorldUvsInline(
 		float[] uv,
 		float x1, float y1, float z1,
 		float x2, float y2, float z2,
