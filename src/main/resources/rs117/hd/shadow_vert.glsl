@@ -27,16 +27,88 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
+#include <uniforms/materials.glsl>
+
+#include <utils/constants.glsl>
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
-layout (location = 3) in int vAlphaBiasHsl;
-layout (location = 4) in int vMaterialData;
-layout (location = 5) in int vTerrainData;
+
+#if ZONE_RENDERER
+layout (location = 3) in int vTextureFaceIdx;
+
 layout (location = 6) in int vWorldViewId;
 layout (location = 7) in ivec2 vSceneBase;
 
-#include <utils/constants.glsl>
+uniform isamplerBuffer textureFaces;
+
+#if SHADOW_MODE == SHADOW_MODE_DETAILED
+    out vec3 fUvw;
+    flat out int fMaterialData;
+#endif
+
+#if SHADOW_TRANSPARENCY
+    // Pass to fragment shader
+    out float fOpacity;
+#endif
+
+void main() {
+    int vertex = int(vUv.z);
+    int alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
+    int materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
+    int terrainData = texelFetch(textureFaces, vTextureFaceIdx + 2)[vertex];
+
+    int waterTypeIndex = terrainData >> 3 & 0xFF;
+    float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
+
+    float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
+    if (opacityThreshold == 0)
+        opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
+
+    bool isTransparent = opacity <= opacityThreshold;
+    bool isGroundPlaneTile = (terrainData & 0xF) == 1; // plane == 0 && isTerrain
+    bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
+
+    bool isShadowDisabled =
+        isGroundPlaneTile ||
+        isWaterSurfaceOrUnderwaterTile ||
+        isTransparent;
+
+    if(!isShadowDisabled && vWorldViewId > 0) {
+        ivec4 tint = getWorldViewTint(vWorldViewId);
+        if(tint.x != -1 && tint.y != -1 && tint.z != -1) {
+            isShadowDisabled = true;
+        }
+    }
+
+#if SHADOW_MODE == SHADOW_MODE_DETAILED
+    if(!isShadowDisabled) {
+        Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+
+        fUvw = vec3(vUv.xy, material.colorMap);
+        // Scroll UVs
+        fUvw.xy += material.scrollDuration * elapsedTime;
+        // Scale from the center
+        fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
+    }
+    fMaterialData = materialData;
+#endif
+
+    int shouldCastShadow = isShadowDisabled ? 0 : 1;
+
+    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
+    vec3 pos = sceneOffset + vPosition;
+
+#if SHADOW_TRANSPARENCY
+    fOpacity = opacity;
+#endif
+    gl_Position = lightProjectionMatrix * getWorldViewProjection(vWorldViewId) * vec4(pos, shouldCastShadow);
+}
+#else
+
+layout (location = 3) in int vAlphaBiasHsl;
+layout (location = 4) in int vMaterialData;
+layout (location = 5) in int vTerrainData;
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     // Pass to geometry shader
@@ -72,15 +144,6 @@ void main() {
         isWaterSurfaceOrUnderwaterTile ||
         isTransparent;
 
-#if ZONE_RENDERER
-    if(!isShadowDisabled && vWorldViewId > 0) {
-        ivec4 tint = getWorldViewTint(vWorldViewId);
-        if(tint.x != -1 && tint.y != -1 && tint.z != -1) {
-            isShadowDisabled = true;
-        }
-    }
-#endif
-
     int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
@@ -102,3 +165,5 @@ void main() {
         #endif
     #endif
 }
+
+#endif

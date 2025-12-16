@@ -280,7 +280,7 @@ public class LegacyRenderer implements Renderer {
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
 
-		shadowProgram.setMode(plugin.configShadowMode);
+		shadowProgram.setMode(plugin.configShadowMode, true);
 		shadowProgram.compile(includes);
 
 		if (computeMode == ComputeMode.OPENCL) {

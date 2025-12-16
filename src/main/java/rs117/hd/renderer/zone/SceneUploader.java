@@ -25,9 +25,7 @@
 package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -113,8 +111,6 @@ public class SceneUploader {
 	private short[][][] underlayIds;
 	private int[][][] tileHeights;
 
-	private final Map<Long, Integer> texturedFaceMap = new HashMap<>();
-
 	private final int[] worldPos = new int[3];
 	private final int[][] vertices = new int[4][3];
 	private final int[] vertexKeys = new int[4];
@@ -152,7 +148,6 @@ public class SceneUploader {
 		underlayIds = null;
 		tileHeights = null;
 		currentScene = null;
-		texturedFaceMap.clear();
 	}
 
 	protected void onBeforeProcessTile(Tile t, boolean isEstimate) {}
@@ -1624,23 +1619,11 @@ public class SceneUploader {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			final int texturedFaceIdx;
-			final long faceHash = GpuIntBuffer.hashFace(
+			final int texturedFaceIdx = textureBuffer.putFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
-				0, 0, 0);
-
-			// Check if we can reuse already pushed face data, since this will result in the read coming from the cache
-			if(texturedFaceMap.containsKey(faceHash)) {
-				texturedFaceIdx = texturedFaceMap.get(faceHash);
-			} else {
-				texturedFaceIdx = textureBuffer.putFace(
-					color1, color2, color3,
-					materialData, materialData, materialData,
-					0, 0, 0
-				);
-				texturedFaceMap.put(faceHash, texturedFaceIdx);
-			}
+				0, 0, 0
+			);
 
 			vb.putVertex(
 				vx1, vy1, vz1,
@@ -1750,8 +1733,6 @@ public class SceneUploader {
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
-
-		texturedFaceMap.clear();
 
 		int len = 0;
 		for (int face = 0; face < triangleCount; ++face) {
@@ -1898,23 +1879,11 @@ public class SceneUploader {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			final int texturedFaceIdx;
-			final long faceHash = GpuIntBuffer.hashFace(
+			final int texturedFaceIdx = GpuIntBuffer.putFace(tb,
 				color1, color2, color3,
 				materialData, materialData, materialData,
-				0, 0, 0);
-
-			// Check if we can reuse already pushed face data, since this will result in the read coming from the cache
-			if(texturedFaceMap.containsKey(faceHash)) {
-				texturedFaceIdx = texturedFaceMap.get(faceHash);
-			} else {
-				texturedFaceIdx = GpuIntBuffer.putFace(tb,
-					color1, color2, color3,
-					materialData, materialData, materialData,
-					0, 0, 0
-				);
-				texturedFaceMap.put(faceHash, texturedFaceIdx);
-			}
+				0, 0, 0
+			);
 
 			GpuIntBuffer.putFloatVertex(
 				vb,

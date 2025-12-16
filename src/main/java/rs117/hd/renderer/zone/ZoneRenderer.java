@@ -134,7 +134,7 @@ public class ZoneRenderer implements Renderer {
 	private ShadowShaderProgram.Fast fastShadowProgram;
 
 	@Inject
-	private ShadowShaderProgram.Detailed detailedShadowProgram;
+	private ShadowShaderProgram.DetailedNoGeom detailedShadowProgram;
 
 	@Inject
 	private JobSystem jobSystem;
