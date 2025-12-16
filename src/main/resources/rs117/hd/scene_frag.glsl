@@ -50,6 +50,10 @@ flat in ivec3 fAlphaBiasHsl;
 flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
 
+#if FLAT_SHADING && ZONE_RENDERER
+flat in vec3 fFlatNormal;
+#endif
+
 in FragmentData {
     vec3 position;
     vec2 uv;
@@ -154,7 +158,12 @@ void main() {
         uv3 += uvFlow * flowMapStrength;
 
         // Set up tangent-space transformation matrix
+
+#if FLAT_SHADING && ZONE_RENDERER
+        vec3 N = normalize(fFlatNormal);
+#else
         vec3 N = normalize(IN.normal);
+#endif
         mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
 
         #if DISPLAY_UV

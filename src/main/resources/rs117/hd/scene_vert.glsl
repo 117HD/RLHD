@@ -50,6 +50,10 @@ flat out ivec3 fAlphaBiasHsl;
 flat out ivec3 fMaterialData;
 flat out ivec3 fTerrainData;
 
+#if FLAT_SHADING
+flat out vec3 fFlatNormal;
+#endif
+
 out FragmentData {
     vec3 position;
     vec2 uv;
@@ -87,6 +91,12 @@ void main() {
     OUT.normal = worldNormal;
     OUT.texBlend = vec3(0);
     OUT.texBlend[vertex] = 1.0;
+
+#if FLAT_SHADING
+    if(isProvoking) {
+        fFlatNormal = worldNormal;
+    }
+#endif
 
     vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
     int depthBias = (alphaBiasHsl >> 16) & 0xff;
