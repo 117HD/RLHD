@@ -61,9 +61,8 @@ import static rs117.hd.utils.MathUtils.*;
 public class SceneUploader {
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
-	private static final int[] EMPTY_NORMALS = new int[9];
 
-	private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
+		private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
 	private static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
 	// subtracts the X lowest lightness levels from the formula.
 	// helps keep darker colors appropriately dark
@@ -1386,7 +1385,7 @@ public class SceneUploader {
 		boolean isVanillaTextured = faceTextures != null;
 		boolean isVanillaUVMapped =
 			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
-			model.getTextureFaces() != null;
+			textureFaces != null;
 
 		final Material baseMaterial = modelOverride.baseMaterial;
 		final Material textureMaterial = modelOverride.textureMaterial;
@@ -1422,6 +1421,7 @@ public class SceneUploader {
 			int vy3 = modelLocalYI[triangleC];
 			int vz3 = modelLocalZI[triangleC];
 
+			int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			boolean isTextured = textureId != -1;
@@ -1561,7 +1561,7 @@ public class SceneUploader {
 			if (material != Material.NONE) {
 				uvType = faceOverride.uvType;
 				if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
-					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
 			int materialData = material.packMaterialData(faceOverride, uvType, false, false);
@@ -1575,7 +1575,19 @@ public class SceneUploader {
 						vx3, vy3, vz3
 					);
 				} else {
-					computeFaceUvsInline(model, face, modelUvs);
+					if(textureId != -1) {
+						computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, modelUvs);
+					} else {
+						modelUvs[0] = 0f;
+						modelUvs[2] = 0f;
+						modelUvs[1] = 0f;
+						modelUvs[4] = 1f;
+						modelUvs[5] = 0f;
+						modelUvs[6] = 0f;
+						modelUvs[8] = 0f;
+						modelUvs[9] = 1f;
+						modelUvs[10] = 0f;
+					}
 				}
 
 			} else {
@@ -1729,7 +1741,7 @@ public class SceneUploader {
 		boolean isVanillaTextured = faceTextures != null;
 		boolean isVanillaUVMapped =
 			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
-			model.getTextureFaces() != null;
+			textureFaces != null;
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
@@ -1787,6 +1799,7 @@ public class SceneUploader {
 			float vy3 = modelLocalY[triangleC];
 			float vz3 = modelLocalZ[triangleC];
 
+			int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			UvType uvType = UvType.GEOMETRY;
 			Material material = baseMaterial;
@@ -1821,7 +1834,7 @@ public class SceneUploader {
 			if (material != Material.NONE) {
 				uvType = faceOverride.uvType;
 				if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
-					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
 			int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
@@ -1835,7 +1848,19 @@ public class SceneUploader {
 						vx3, vy3, vz3
 					);
 				} else {
-					computeFaceUvsInline(model, face, modelUvs);
+					if(textureId != -1) {
+						computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, modelUvs);
+					} else {
+						modelUvs[0] = 0f;
+						modelUvs[2] = 0f;
+						modelUvs[1] = 0f;
+						modelUvs[4] = 1f;
+						modelUvs[5] = 0f;
+						modelUvs[6] = 0f;
+						modelUvs[8] = 0f;
+						modelUvs[9] = 1f;
+						modelUvs[10] = 0f;
+					}
 				}
 			} else {
 				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
@@ -1952,100 +1977,80 @@ public class SceneUploader {
 		return (hue << 10 | sat << 7 | lum) & 65535;
 	}
 
-	// Writes UVs directly into modelUvs at indices:
-	// [0,1], [4,5], [8,9]
 	static void computeFaceUvsInline(
 		Model model,
-		int face,
+		int textureFace,
+		int triangleA,
+		int triangleB,
+		int triangleC,
 		float[] modelUvs
 	) {
 		final float[] vx = model.getVerticesX();
 		final float[] vy = model.getVerticesY();
 		final float[] vz = model.getVerticesZ();
 
-		final int[] i1 = model.getFaceIndices1();
-		final int[] i2 = model.getFaceIndices2();
-		final int[] i3 = model.getFaceIndices3();
-
-		final byte[] textureFaces = model.getTextureFaces();
 		final int[] ti1 = model.getTexIndices1();
 		final int[] ti2 = model.getTexIndices2();
 		final int[] ti3 = model.getTexIndices3();
 
-		if (textureFaces != null && textureFaces[face] != -1) {
-			// Triangle indices
-			final int a = i1[face];
-			final int b = i2[face];
-			final int c = i3[face];
+		// Texture triangle
+		final int ta = ti1[textureFace & 0xFF];
+		final int tb = ti2[textureFace & 0xFF];
+		final int tc = ti3[textureFace & 0xFF];
 
-			// Texture triangle
-			final int t = textureFaces[face] & 0xFF;
-			final int ta = ti1[t];
-			final int tb = ti2[t];
-			final int tc = ti3[t];
+		// v1
+		final float v1x = vx[ta];
+		final float v1y = vy[ta];
+		final float v1z = vz[ta];
 
-			// v1
-			final float v1x = vx[ta];
-			final float v1y = vy[ta];
-			final float v1z = vz[ta];
+		// v2, v3
+		final float v2x = vx[tb] - v1x;
+		final float v2y = vy[tb] - v1y;
+		final float v2z = vz[tb] - v1z;
 
-			// v2, v3
-			final float v2x = vx[tb] - v1x;
-			final float v2y = vy[tb] - v1y;
-			final float v2z = vz[tb] - v1z;
+		final float v3x = vx[tc] - v1x;
+		final float v3y = vy[tc] - v1y;
+		final float v3z = vz[tc] - v1z;
 
-			final float v3x = vx[tc] - v1x;
-			final float v3y = vy[tc] - v1y;
-			final float v3z = vz[tc] - v1z;
+		// v4, v5, v6
+		final float v4x = vx[triangleA] - v1x;
+		final float v4y = vy[triangleA] - v1y;
+		final float v4z = vz[triangleA] - v1z;
 
-			// v4, v5, v6
-			final float v4x = vx[a] - v1x;
-			final float v4y = vy[a] - v1y;
-			final float v4z = vz[a] - v1z;
+		final float v5x = vx[triangleB] - v1x;
+		final float v5y = vy[triangleB] - v1y;
+		final float v5z = vz[triangleB] - v1z;
 
-			final float v5x = vx[b] - v1x;
-			final float v5y = vy[b] - v1y;
-			final float v5z = vz[b] - v1z;
+		final float v6x = vx[triangleC] - v1x;
+		final float v6y = vy[triangleC] - v1y;
+		final float v6z = vz[triangleC] - v1z;
 
-			final float v6x = vx[c] - v1x;
-			final float v6y = vy[c] - v1y;
-			final float v6z = vz[c] - v1z;
+		// v7 = v2 x v3
+		final float v7x = v2y * v3z - v2z * v3y;
+		final float v7y = v2z * v3x - v2x * v3z;
+		final float v7z = v2x * v3y - v2y * v3x;
 
-			// v7 = v2 x v3
-			final float v7x = v2y * v3z - v2z * v3y;
-			final float v7y = v2z * v3x - v2x * v3z;
-			final float v7z = v2x * v3y - v2y * v3x;
+		// --- U axis ---
+		float px = v3y * v7z - v3z * v7y;
+		float py = v3z * v7x - v3x * v7z;
+		float pz = v3x * v7y - v3y * v7x;
 
-			// --- U axis ---
-			float px = v3y * v7z - v3z * v7y;
-			float py = v3z * v7x - v3x * v7z;
-			float pz = v3x * v7y - v3y * v7x;
+		float inv = 1.0f / (px * v2x + py * v2y + pz * v2z);
 
-			float inv = 1.0f / (px * v2x + py * v2y + pz * v2z);
+		modelUvs[0] = (px * v4x + py * v4y + pz * v4z) * inv;
+		modelUvs[4] = (px * v5x + py * v5y + pz * v5z) * inv;
+		modelUvs[8] = (px * v6x + py * v6y + pz * v6z) * inv;
 
-			modelUvs[0] = (px * v4x + py * v4y + pz * v4z) * inv;
-			modelUvs[4] = (px * v5x + py * v5y + pz * v5z) * inv;
-			modelUvs[8] = (px * v6x + py * v6y + pz * v6z) * inv;
+		// --- V axis ---
+		px = v2y * v7z - v2z * v7y;
+		py = v2z * v7x - v2x * v7z;
+		pz = v2x * v7y - v2y * v7x;
 
-			// --- V axis ---
-			px = v2y * v7z - v2z * v7y;
-			py = v2z * v7x - v2x * v7z;
-			pz = v2x * v7y - v2y * v7x;
+		inv = 1.0f / (px * v3x + py * v3y + pz * v3z);
 
-			inv = 1.0f / (px * v3x + py * v3y + pz * v3z);
-
-			modelUvs[1] = (px * v4x + py * v4y + pz * v4z) * inv;
-			modelUvs[5] = (px * v5x + py * v5y + pz * v5z) * inv;
-			modelUvs[9] = (px * v6x + py * v6y + pz * v6z) * inv;
-		} else {
-			// Reduced vanilla identity mapping
-			modelUvs[0] = 0f;
-			modelUvs[1] = 0f;
-			modelUvs[4] = 1f;
-			modelUvs[5] = 0f;
-			modelUvs[8] = 0f;
-			modelUvs[9] = 1f;
-		}
+		modelUvs[1] = (px * v4x + py * v4y + pz * v4z) * inv;
+		modelUvs[5] = (px * v5x + py * v5y + pz * v5z) * inv;
+		modelUvs[9] = (px * v6x + py * v6y + pz * v6z) * inv;
 
 		// Z unused
 		modelUvs[2] = 0f;
