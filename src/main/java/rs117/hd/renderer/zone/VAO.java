@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.utils.buffer.GLRawBuffer;
 import rs117.hd.utils.CommandBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -26,13 +27,13 @@ class VAO {
 	static final int METADATA_SIZE = 4;
 
 	final VBO vbo;
-	final RawTBO tboF;
+	final GLRawBuffer tboF;
 	int vao;
 	int vboMetadata;
 
 	VAO(int size) {
 		vbo = new VBO(size);
-		tboF = new RawTBO(size);
+		tboF = new GLRawBuffer("Textured Faces", GL_DYNAMIC_DRAW);
 	}
 
 	void initialize(int ebo, @Nullable VBO vboMetadata) {
@@ -66,7 +67,7 @@ class VAO {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 
-		tboF.initialize(GL_DYNAMIC_DRAW);
+		tboF.initialize(VAOList.VAO_SIZE);
 	}
 
 	void bindMetadata(@Nullable VBO vboMetadata) {
@@ -118,7 +119,7 @@ class VAO {
 		assert !vbo.mapped;
 
 		cmd.BindVertexArray(vao);
-		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.texId, TEXTURE_UNIT_TEXTURED_FACES);
+		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
 
 		int start = 0;
 		for (int i = 0; i < off; ++i) {

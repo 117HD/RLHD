@@ -25,7 +25,9 @@
 package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -111,6 +113,8 @@ public class SceneUploader {
 	private short[][][] underlayIds;
 	private int[][][] tileHeights;
 
+	private final Map<Long, Integer> texturedFaceMap = new HashMap<>();
+
 	private final int[] worldPos = new int[3];
 	private final int[][] vertices = new int[4][3];
 	private final int[] vertexKeys = new int[4];
@@ -147,6 +151,7 @@ public class SceneUploader {
 		underlayIds = null;
 		tileHeights = null;
 		currentScene = null;
+		texturedFaceMap.clear();
 	}
 
 	protected void onBeforeProcessTile(Tile t, boolean isEstimate) {}
@@ -171,7 +176,7 @@ public class SceneUploader {
 	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		var vb = zone.vboO != null ? new GpuIntBuffer(zone.vboO.vb) : null;
 		var ab = zone.vboA != null ? new GpuIntBuffer(zone.vboA.vb) : null;
-		var fb = zone.tboF != null ? new GpuIntBuffer(zone.tboF.tb) : null;
+		var fb = zone.tboF != null ? new GpuIntBuffer(zone.tboF.getPixelBuffer()) : null;
 		assert fb != null;
 
 		roofIds.clear();
@@ -1819,11 +1824,22 @@ public class SceneUploader {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			int texturedFaceIdx = textureBuffer.putFace(
+			final int texturedFaceIdx;
+			final long faceHash = GpuIntBuffer.hashFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
-				0, 0, 0
-			);
+				0, 0, 0);
+
+			if(texturedFaceMap.containsKey(faceHash)) {
+				texturedFaceIdx = texturedFaceMap.get(faceHash);
+			} else {
+				texturedFaceIdx = textureBuffer.putFace(
+					color1, color2, color3,
+					materialData, materialData, materialData,
+					0, 0, 0
+				);
+				texturedFaceMap.put(faceHash, texturedFaceIdx);
+			}
 
 			vb.putVertex(
 				vx1, vy1, vz1,
@@ -1932,6 +1948,8 @@ public class SceneUploader {
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
+
+		texturedFaceMap.clear();
 
 		int len = 0;
 		for (int face = 0; face < triangleCount; ++face) {
@@ -2070,9 +2088,21 @@ public class SceneUploader {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			int texturedFaceIdx = GpuIntBuffer.putFace(textureBuffer,
+			final int texturedFaceIdx;
+			final long faceHash = GpuIntBuffer.hashFace(
 				color1, color2, color3,
-				materialData, materialData, materialData);
+				materialData, materialData, materialData,
+				0, 0, 0);
+
+			if(texturedFaceMap.containsKey(faceHash)) {
+				texturedFaceIdx = texturedFaceMap.get(faceHash);
+			} else {
+				texturedFaceIdx = GpuIntBuffer.putFace(textureBuffer,
+					color1, color2, color3,
+					materialData, materialData, materialData
+				);
+				texturedFaceMap.put(faceHash, texturedFaceIdx);
+			}
 
 			GpuIntBuffer.putFloatVertex(
 				vb,
@@ -2097,7 +2127,6 @@ public class SceneUploader {
 			);
 			len += 3;
 		}
-
 		return len;
 	}
 

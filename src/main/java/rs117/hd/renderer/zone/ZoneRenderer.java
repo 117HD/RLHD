@@ -1064,7 +1064,7 @@ public class ZoneRenderer implements Renderer {
 
 			if (zone.inSceneFrustum) {
 				try {
-					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb, o.tboF.tb);
+					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb, o.tboF.getPixelBuffer());
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
 				}
@@ -1081,7 +1081,7 @@ public class ZoneRenderer implements Renderer {
 						x, y, z,
 						vao.vbo.vb,
 						vao.vbo.vb,
-						vao.tboF.tb
+						vao.tboF.getPixelBuffer()
 					);
 				}
 			} else {
@@ -1093,7 +1093,7 @@ public class ZoneRenderer implements Renderer {
 					x, y, z,
 					o.vbo.vb,
 					a.vbo.vb,
-					o.tboF.tb);
+					o.tboF.getPixelBuffer());
 			}
 
 			int end = a.vbo.vb.position();
@@ -1113,7 +1113,7 @@ public class ZoneRenderer implements Renderer {
 				x, y, z,
 				o.vbo.vb,
 				o.vbo.vb,
-				o.tboF.tb);
+				o.tboF.getPixelBuffer());
 		}
 	}
 
@@ -1172,7 +1172,7 @@ public class ZoneRenderer implements Renderer {
 							x, y, z,
 							o.vbo.vb,
 							o.vbo.vb,
-							o.tboF.tb
+							o.tboF.getPixelBuffer()
 						);
 					})
 					.setExecuteAsync(isSubScene || zone.inSceneFrustum)
@@ -1197,7 +1197,7 @@ public class ZoneRenderer implements Renderer {
 						x, y, z,
 						o.vbo.vb,
 						a.vbo.vb,
-						o.tboF.tb
+						o.tboF.getPixelBuffer()
 					);
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
@@ -1233,7 +1233,7 @@ public class ZoneRenderer implements Renderer {
 				x, y, z,
 				o.vbo.vb,
 				o.vbo.vb,
-				o.tboF.tb
+				o.tboF.getPixelBuffer()
 			);
 		}
 	}

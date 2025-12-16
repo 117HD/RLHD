@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.utils.buffer.GLRawBuffer;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -66,7 +67,7 @@ public class Zone {
 	public int sizeO, sizeA, sizeF;
 	@Nullable
 	public VBO vboO, vboA, vboM;
-	public RawTBO tboF;
+	public GLRawBuffer tboF;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
@@ -89,7 +90,7 @@ public class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	public void initialize(VBO o, VBO a, RawTBO f, int eboShared) {
+	public void initialize(VBO o, VBO a, GLRawBuffer f, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 
@@ -828,7 +829,7 @@ public class Zone {
 				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
 				long byteOffset = 4L * (ZoneRenderer.eboAlphaStaging.position() - vertexCount);
 				cmd.BindVertexArray(lastVao);
-				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.texId, TEXTURE_UNIT_TEXTURED_FACES);
+				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
@@ -840,7 +841,7 @@ public class Zone {
 		} else if (drawIdx != 0) {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
-			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.texId, TEXTURE_UNIT_TEXTURED_FACES);
+			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
 			if (glDrawOffset.length == 1) {
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
