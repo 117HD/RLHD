@@ -742,7 +742,7 @@ public class SceneUploader {
 				zone.addAlphaModel(
 					plugin,
 					materialManager,
-					zone.glVaoA, model, modelOverride, alphaStart, alphaEnd,
+					zone.glVaoA, zone.tboF.getTexId(), model, modelOverride, alphaStart, alphaEnd,
 					x - basex, y, z - basez,
 					lx, lz, ux, uz,
 					rid, level, id

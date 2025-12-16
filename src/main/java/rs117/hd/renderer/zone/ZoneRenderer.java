@@ -1102,7 +1102,7 @@ public class ZoneRenderer implements Renderer {
 				// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
 				int plane = Math.min(ctx.maxLevel, tileObject.getPlane());
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
-				zone.addTempAlphaModel(modelOverride, a.vao, start, end, plane, x & 1023, y, z & 1023);
+				zone.addTempAlphaModel(modelOverride, a.vao, a.tboF.getTexId(), start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
 			sceneUploader.uploadTempModel(
@@ -1209,6 +1209,7 @@ public class ZoneRenderer implements Renderer {
 					zone.addTempAlphaModel(
 						modelOverride,
 						a.vao,
+						a.tboF.getTexId(),
 						start,
 						end,
 						plane,

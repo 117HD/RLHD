@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
-import rs117.hd.utils.buffer.GLRawBuffer;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -23,6 +22,7 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.buffer.GLRawBuffer;
 
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -41,6 +41,7 @@ public class Zone {
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
+	// texturedFaceIdx int
 	public static final int VERT_SIZE = 24;
 
 	// alphaBiasHsl ivec3
@@ -408,6 +409,7 @@ public class Zone {
 
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
+		lastTboF = tboF.getTexId();
 		flush(cmd);
 	}
 
@@ -421,6 +423,7 @@ public class Zone {
 
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
+		lastTboF = tboF.getTexId();
 		flush(cmd);
 	}
 
@@ -445,6 +448,7 @@ public class Zone {
 		short x, y, z; // local position
 		short rid;
 		int vao;
+		int tboF;
 		byte level;
 		byte lx, lz, ux, uz; // lower/upper zone coords
 		byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
@@ -469,6 +473,7 @@ public class Zone {
 		HdPlugin plugin,
 		MaterialManager materialManager,
 		int vao,
+		int tboF,
 		Model model,
 		ModelOverride modelOverride,
 		int startpos,
@@ -493,6 +498,7 @@ public class Zone {
 		m.y = (short) y;
 		m.z = (short) z;
 		m.vao = vao;
+		m.tboF = tboF;
 		m.rid = (short) rid;
 		m.level = (byte) level;
 		if (lx > -1) {
@@ -623,7 +629,7 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	void addTempAlphaModel(ModelOverride modelOverride, int vao, int startpos, int endpos, int level, int x, int y, int z) {
+	void addTempAlphaModel(ModelOverride modelOverride, int vao, int tboF, int startpos, int endpos, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
@@ -635,6 +641,7 @@ public class Zone {
 		m.y = (short) y;
 		m.z = (short) z;
 		m.vao = vao;
+		m.tboF = tboF;
 		m.rid = -1;
 		m.level = (byte) level;
 		m.lx = m.lz = m.ux = m.uz = -1;
@@ -662,6 +669,7 @@ public class Zone {
 
 	private static int lastDrawMode;
 	private static int lastVao;
+	private static int lastTboF;
 	private static int lastzx, lastzz;
 
 	private static final int[] numOfPriority = FacePrioritySorter.numOfPriority;
@@ -721,10 +729,11 @@ public class Zone {
 			if (level < ctx.minLevel || level > maxLevel || level > currentLevel && hiddenRoofIds.contains((int) m.rid))
 				continue;
 
-			if (lastVao != m.vao || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
+			if (lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
 				flush(cmd);
 
 			lastVao = m.vao;
+			lastTboF = m.tboF;
 			lastzx = zx - m.zofx;
 			lastzz = zz - m.zofz;
 
@@ -829,7 +838,7 @@ public class Zone {
 				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
 				long byteOffset = 4L * (ZoneRenderer.eboAlphaStaging.position() - vertexCount);
 				cmd.BindVertexArray(lastVao);
-				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
+				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
@@ -841,7 +850,7 @@ public class Zone {
 		} else if (drawIdx != 0) {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
-			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
+			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 			if (glDrawOffset.length == 1) {
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
@@ -908,6 +917,7 @@ public class Zone {
 				m2.y = m.y;
 				m2.z = m.z;
 				m2.vao = m.vao;
+				m2.tboF = m.tboF;
 				m2.rid = m.rid;
 				m2.level = m.level;
 				m2.lx = m.lx;

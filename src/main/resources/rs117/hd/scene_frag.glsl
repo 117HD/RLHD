@@ -25,7 +25,7 @@
  */
 #version 330
 
-#define DISPLAY_BASE_COLOR 1
+#define DISPLAY_BASE_COLOR 0
 #define DISPLAY_UV 0
 #define DISPLAY_NORMAL 0
 #define DISPLAY_TANGENT 0
