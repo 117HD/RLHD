@@ -1529,7 +1529,7 @@ public class SceneUploader {
 				}
 			}
 
-			if (plugin.configUndoVanillaShading && modelHasNormals && !keepShading && modelOverride.undoVanillaShading && unlitFaceColors == null) {
+			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && modelHasNormals && !keepShading) {
 				color1 = undoVanillaShading(model, triangleA, color1, plugin.configLegacyGreyColors);
 				color2 = undoVanillaShading(model, triangleB, color2, plugin.configLegacyGreyColors);
 				color3 = undoVanillaShading(model, triangleC, color3, plugin.configLegacyGreyColors);
