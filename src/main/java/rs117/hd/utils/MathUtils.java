@@ -204,7 +204,7 @@ public final class MathUtils {
 	 * Modulo which returns the answer with the same sign as the modulus.
 	 */
 	public static int mod(int v, int mod) {
-		return v - (v / mod) * mod;
+		return Math.floorMod(v, mod);
 	}
 
 	/**

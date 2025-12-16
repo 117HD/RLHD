@@ -87,6 +87,7 @@ public interface HdPluginConfig extends Config
 	}
 
 	@Range(
+		min = 25,
 		max = MAX_DISTANCE
 	)
 	@Units(" tiles")
