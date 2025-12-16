@@ -1529,7 +1529,7 @@ public class SceneUploader {
 				}
 			}
 
-			if (plugin.configUndoVanillaShading && !keepShading && !modelOverride.undoVanillaShading) {
+			if (plugin.configUndoVanillaShading && modelHasNormals && !keepShading && !modelOverride.undoVanillaShading) {
 				color1 = undoVanillaShading(model, triangleA, color1, plugin.configLegacyGreyColors);
 				color2 = undoVanillaShading(model, triangleB, color2, plugin.configLegacyGreyColors);
 				color3 = undoVanillaShading(model, triangleC, color3, plugin.configLegacyGreyColors);
@@ -1775,7 +1775,7 @@ public class SceneUploader {
 			if (plugin.configUndoVanillaShading) {
 				if (unlitFaceColors != null) {
 					color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
-				} else {
+				} else if (modelHasNormals){
 					color1 = undoVanillaShading(model, triangleA, color1, plugin.configLegacyGreyColors);
 					color2 = undoVanillaShading(model, triangleB, color2, plugin.configLegacyGreyColors);
 					color3 = undoVanillaShading(model, triangleC, color3, plugin.configLegacyGreyColors);
@@ -1988,28 +1988,22 @@ public class SceneUploader {
 		final float[] vy = model.getVerticesY();
 		final float[] vz = model.getVerticesZ();
 
-		final int[] ti1 = model.getTexIndices1();
-		final int[] ti2 = model.getTexIndices2();
-		final int[] ti3 = model.getTexIndices3();
-
-		// Texture triangle
-		final int ta = ti1[textureFace & 0xFF];
-		final int tb = ti2[textureFace & 0xFF];
-		final int tc = ti3[textureFace & 0xFF];
-
 		// v1
-		final float v1x = vx[ta];
-		final float v1y = vy[ta];
-		final float v1z = vz[ta];
+		int texFaceIdx = model.getTexIndices1()[textureFace & 0xFF];
+		final float v1x = vx[texFaceIdx];
+		final float v1y = vy[texFaceIdx];
+		final float v1z = vz[texFaceIdx];
 
 		// v2, v3
-		final float v2x = vx[tb] - v1x;
-		final float v2y = vy[tb] - v1y;
-		final float v2z = vz[tb] - v1z;
+		texFaceIdx = model.getTexIndices2()[textureFace & 0xFF];
+		final float v2x = vx[texFaceIdx] - v1x;
+		final float v2y = vy[texFaceIdx] - v1y;
+		final float v2z = vz[texFaceIdx] - v1z;
 
-		final float v3x = vx[tc] - v1x;
-		final float v3y = vy[tc] - v1y;
-		final float v3z = vz[tc] - v1z;
+		texFaceIdx = model.getTexIndices3()[textureFace & 0xFF];
+		final float v3x = vx[texFaceIdx] - v1x;
+		final float v3y = vy[texFaceIdx] - v1y;
+		final float v3z = vz[texFaceIdx] - v1z;
 
 		// v4, v5, v6
 		final float v4x = vx[triangleA] - v1x;
@@ -2058,9 +2052,6 @@ public class SceneUploader {
 	}
 
 	public static int undoVanillaShading(Model model, int triangle, int color, boolean legacyGreyColors) {
-		if(model == null || model.getVertexNormalsX() == null || model.getVertexNormalsY() == null || model.getVertexNormalsZ() == null)
-			return color;
-
 		int h = color >> 10 & 0x3F;
 		int s = color >> 7 & 0x7;
 		int l = color & 0x7F;
@@ -2070,14 +2061,14 @@ public class SceneUploader {
 		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
 		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
 		// low value for it to look acceptable in most cases.
-		float[] L = LIGHT_DIR_MODEL;
-		float color1Adjust =
+		final float[] L = LIGHT_DIR_MODEL;
+		final float color1Adjust =
 			BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0 : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
 
 		// Normals are currently unrotated, so we don't need to do any rotation for this
-		float nx = model.getVertexNormalsX()[triangle];
-		float ny = model.getVertexNormalsY()[triangle];
-		float nz = model.getVertexNormalsZ()[triangle];
+		final float nx = model.getVertexNormalsX()[triangle];
+		final float ny = model.getVertexNormalsY()[triangle];
+		final float nz = model.getVertexNormalsZ()[triangle];
 		float lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
 		if (lightDotNormal > 0) {
 			lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
