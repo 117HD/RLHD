@@ -411,20 +411,8 @@ class FacePrioritySorter {
 		if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
 			return 0;
 
-		if (unlitFaceColors != null) {
+		if (unlitFaceColors != null)
 			color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
-		} else if (plugin.configUndoVanillaShading && hasVertexNormals) {
-			color1 = undoVanillaShading(model, triangleA, color1, plugin.configLegacyGreyColors);
-			color2 = undoVanillaShading(model, triangleB, color2, plugin.configLegacyGreyColors);
-			color3 = undoVanillaShading(model, triangleC, color3, plugin.configLegacyGreyColors);
-		}
-
-		// HSL override is not applied to textured faces
-		if (overrideAmount > 0 && textureId == -1) {
-			color1 = interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color2 = interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
-		}
 
 		int texA, texB, texC;
 
@@ -494,7 +482,7 @@ class FacePrioritySorter {
 			faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 		}
 
-		boolean shouldCalculateFaceNormal = false;
+		final boolean shouldCalculateFaceNormal;
 		if (hasVertexNormals) {
 			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && faceColors3[face] == -1)) {
 				shouldCalculateFaceNormal = true;
@@ -508,6 +496,11 @@ class FacePrioritySorter {
 				modelNormals[6] = xVertexNormals[triangleC];
 				modelNormals[7] = yVertexNormals[triangleC];
 				modelNormals[8] = zVertexNormals[triangleC];
+
+				shouldCalculateFaceNormal =
+					modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
+					modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
+					modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
 			}
 		} else {
 			shouldCalculateFaceNormal = true;
@@ -519,6 +512,19 @@ class FacePrioritySorter {
 				vx2, vy2, vz2,
 				vx3, vy3, vz3,
 				modelNormals);
+		}
+
+		if (plugin.configUndoVanillaShading) {
+			color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
+			color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
+			color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
+		}
+
+		// HSL override is not applied to textured faces
+		if (overrideAmount > 0 && textureId == -1) {
+			color1 = interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color2 = interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
 		}
 
 		// Rotate normals

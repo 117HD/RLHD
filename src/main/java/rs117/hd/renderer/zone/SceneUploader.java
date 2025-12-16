@@ -1529,12 +1529,6 @@ public class SceneUploader {
 				}
 			}
 
-			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && modelHasNormals && !keepShading) {
-				color1 = undoVanillaShading(model, triangleA, color1, plugin.configLegacyGreyColors);
-				color2 = undoVanillaShading(model, triangleB, color2, plugin.configLegacyGreyColors);
-				color3 = undoVanillaShading(model, triangleC, color3, plugin.configLegacyGreyColors);
-			}
-
 			UvType uvType = UvType.GEOMETRY;
 			Material material = baseMaterial;
 			ModelOverride faceOverride = modelOverride;
@@ -1596,7 +1590,7 @@ public class SceneUploader {
 				}
 			}
 
-			boolean shouldCalculateFaceNormal = false;
+			final boolean shouldCalculateFaceNormal;
 			if (modelHasNormals) {
 				if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
 					shouldCalculateFaceNormal = true;
@@ -1610,6 +1604,11 @@ public class SceneUploader {
 					modelNormals[6] = xVertexNormals[triangleC];
 					modelNormals[7] = yVertexNormals[triangleC];
 					modelNormals[8] = zVertexNormals[triangleC];
+
+					shouldCalculateFaceNormal =
+						modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
+						modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
+						modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
 				}
 			} else {
 				shouldCalculateFaceNormal = true;
@@ -1621,6 +1620,12 @@ public class SceneUploader {
 					vx2, vy2, vz2,
 					vx3, vy3, vz3,
 					modelNormals);
+			}
+
+			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && !keepShading) {
+				color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
+				color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
+				color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
 			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
@@ -1768,26 +1773,12 @@ public class SceneUploader {
 			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
 				continue;
 
+			if (unlitFaceColors != null)
+				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
+
 			int triangleA = indices1[face];
 			int triangleB = indices2[face];
 			int triangleC = indices3[face];
-
-			if (plugin.configUndoVanillaShading) {
-				if (unlitFaceColors != null) {
-					color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
-				} else if (modelHasNormals){
-					color1 = undoVanillaShading(model, triangleA, color1, plugin.configLegacyGreyColors);
-					color2 = undoVanillaShading(model, triangleB, color2, plugin.configLegacyGreyColors);
-					color3 = undoVanillaShading(model, triangleC, color3, plugin.configLegacyGreyColors);
-				}
-			}
-
-			// HSL override is not applied to textured faces
-			if (overrideAmount > 0 && (!isVanillaTextured || faceTextures[face] == -1)) {
-				color1 = interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
-				color2 = interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
-				color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
-			}
 
 			float vx1 = modelLocalX[triangleA];
 			float vy1 = modelLocalY[triangleA];
@@ -1865,7 +1856,7 @@ public class SceneUploader {
 				}
 			}
 
-			boolean shouldCalculateFaceNormal = false;
+			final boolean shouldCalculateFaceNormal;
 			if (modelHasNormals) {
 				if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
 					shouldCalculateFaceNormal = true;
@@ -1879,6 +1870,10 @@ public class SceneUploader {
 					modelNormals[6] = xVertexNormals[triangleC];
 					modelNormals[7] = yVertexNormals[triangleC];
 					modelNormals[8] = zVertexNormals[triangleC];
+					shouldCalculateFaceNormal =
+						modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
+						modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
+						modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
 				}
 			} else {
 				shouldCalculateFaceNormal = true;
@@ -1890,6 +1885,19 @@ public class SceneUploader {
 					vx2, vy2, vz2,
 					vx3, vy3, vz3,
 					modelNormals);
+			}
+
+			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading) {
+				color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
+				color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
+				color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
+			}
+
+			// HSL override is not applied to textured faces
+			if (overrideAmount > 0 && (!isVanillaTextured || faceTextures[face] == -1)) {
+				color1 = interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
+				color2 = interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
+				color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
 			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
@@ -2051,7 +2059,7 @@ public class SceneUploader {
 		modelUvs[10] = 0f;
 	}
 
-	public static int undoVanillaShading(Model model, int triangle, int color, boolean legacyGreyColors) {
+	public static int undoVanillaShading(int color, boolean legacyGreyColors, float nx, float ny, float nz) {
 		int h = color >> 10 & 0x3F;
 		int s = color >> 7 & 0x7;
 		int l = color & 0x7F;
@@ -2066,9 +2074,6 @@ public class SceneUploader {
 			BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0 : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
 
 		// Normals are currently unrotated, so we don't need to do any rotation for this
-		final float nx = model.getVertexNormalsX()[triangle];
-		final float ny = model.getVertexNormalsY()[triangle];
-		final float nz = model.getVertexNormalsZ()[triangle];
 		float lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
 		if (lightDotNormal > 0) {
 			lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
