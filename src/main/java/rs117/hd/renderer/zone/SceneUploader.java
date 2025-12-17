@@ -2080,14 +2080,10 @@ public class SceneUploader {
 		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
 		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
 		// low value for it to look acceptable in most cases.
-		final float LIGHT_DIR_MODEL_X = 0.57735026f;
-		final float LIGHT_DIR_MODEL_Y = 0.57735026f;
-		final float LIGHT_DIR_MODEL_Z = 0.57735026f;
-
 		final float colorAdjust = BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0 : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
 
 		// Normals are currently unrotated, so we don't need to do any rotation for this
-		float lightDotNormal = nx * LIGHT_DIR_MODEL_X + ny * LIGHT_DIR_MODEL_Y + nz * LIGHT_DIR_MODEL_Z;
+		float lightDotNormal = (nx + ny + nz) * 0.57735026f;
 		if (lightDotNormal > 0) {
 			lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
 			l += (int) (lightDotNormal * colorAdjust);
