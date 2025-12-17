@@ -1672,6 +1672,10 @@ public class HdPlugin extends Plugin {
 							case KEY_COLOR_FILTER:
 								if (configColorFilter == ColorFilter.NONE || configColorFilterPrevious == ColorFilter.NONE)
 									recompilePrograms = true;
+								if (configColorFilter == ColorFilter.RS3_HIGH_CONTRAST || configColorFilterPrevious == ColorFilter.RS3_HIGH_CONTRAST) {
+									sceneManager.interactiveObjects.clear();
+									reloadScene = true;
+								}
 								if (configColorFilter == ColorFilter.CEL_SHADING || configColorFilterPrevious == ColorFilter.CEL_SHADING)
 									reloadScene = true;
 								break;

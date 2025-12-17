@@ -25,13 +25,16 @@
 package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.config.ColorFilter;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -67,7 +70,7 @@ public class SceneUploader {
 	private RenderCallbackManager renderCallbackManager;
 
 	@Inject
-	private HdPlugin plugin;
+	public HdPlugin plugin;
 
 	@Inject
 	public GamevalManager gamevalManager;
@@ -83,6 +86,9 @@ public class SceneUploader {
 
 	@Inject
 	public ProceduralGenerator proceduralGenerator;
+
+	@Inject
+	public SceneManager sceneManager;
 
 	private int basex, basez, rid, level;
 
@@ -649,9 +655,16 @@ public class SceneUploader {
 			var dynamic = (DynamicObject) r;
 			model = dynamic.getModelZbuf();
 			var composition = dynamic.getRecordedObjectComposition();
-			if (composition != null)
+			if (composition != null) {
 				uuid = ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, composition.getId());
+				if (plugin.configColorFilter == ColorFilter.RS3_HIGH_CONTRAST) {
+					sceneManager.interactiveObjects.add(composition.getId());
+				}
+			}
 		}
+
+		int category = ModelHash.getCategoryForUuid(ctx.client, r,-1, sceneManager.interactiveObjects.contains(ModelHash.getUuidId(uuid)), plugin.configColorFilter);
+
 		if (model == null)
 			return;
 
@@ -666,7 +679,8 @@ public class SceneUploader {
 				preOrientation, orient,
 				x - basex, y, z - basez,
 				opaqueBuffer,
-				alphaBuffer
+				alphaBuffer,
+				category
 			);
 		} catch (Throwable ex) {
 			log.warn(
@@ -1240,7 +1254,8 @@ public class SceneUploader {
 		int preOrientation, int orientation,
 		int x, int y, int z,
 		GpuIntBuffer opaqueBuffer,
-		GpuIntBuffer alphaBuffer
+		GpuIntBuffer alphaBuffer,
+		int category
 	) {
 		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		final int faceCount = model.getFaceCount();
@@ -1509,7 +1524,7 @@ public class SceneUploader {
 					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			int materialData = material.packMaterialData(faceOverride, uvType, false, keepShading);
+			int materialData = material.packMaterialData(faceOverride, uvType, false, keepShading, category);
 
 			if (uvType == UvType.VANILLA) {
 				modelUvs[0] = modelLocalXI[texA] - vx1;
@@ -1583,6 +1598,7 @@ public class SceneUploader {
 		int x,
 		int y,
 		int z,
+		int category,
 		IntBuffer opaqueBuffer,
 		IntBuffer alphaBuffer
 	) {
@@ -1754,7 +1770,7 @@ public class SceneUploader {
 					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
+			int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1, category);
 
 			if (uvType == UvType.VANILLA) {
 				modelUvs[0] = modelLocalX[texA] - vx1;

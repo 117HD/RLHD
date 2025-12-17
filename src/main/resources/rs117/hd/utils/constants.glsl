@@ -14,6 +14,8 @@
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
 #define MATERIAL_INDEX_SHIFT 21
 #define MATERIAL_INDEX_MASK ((1 << (32 - MATERIAL_INDEX_SHIFT)) - 1)
+#define MATERIAL_CATEGORY_SHIFT 17
+#define MATERIAL_CATEGORY_MASK 0xF
 #define MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT 15
 #define MATERIAL_FLAG_WIND_MODIFIER 12
 #define MATERIAL_FLAG_WIND_SWAYING 9

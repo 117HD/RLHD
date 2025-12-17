@@ -126,6 +126,7 @@ class FacePrioritySorter {
 		int x,
 		int y,
 		int z,
+		int category,
 		IntBuffer opaqueBuffer,
 		IntBuffer alphaBuffer
 	) {
@@ -222,7 +223,7 @@ class FacePrioritySorter {
 					final char[] faces = distanceToFaces[i];
 					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
 						final int face = faces[faceIdx];
-						len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+						len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
 					}
 				}
 			}
@@ -278,7 +279,7 @@ class FacePrioritySorter {
 			for (int pri = 0; pri < 10; ++pri) {
 				while (pri == 0 && currFaceDistance > avg12) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -292,7 +293,7 @@ class FacePrioritySorter {
 
 				while (pri == 3 && currFaceDistance > avg34) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -306,7 +307,7 @@ class FacePrioritySorter {
 
 				while (pri == 5 && currFaceDistance > avg68) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -323,13 +324,13 @@ class FacePrioritySorter {
 
 				for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
 					final int face = priFaces[faceIdx];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
 				}
 			}
 
 			while (currFaceDistance != -1000) {
 				final int face = dynFaces[drawnFaces++];
-				len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+				len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
 
 				if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 					drawnFaces = 0;
@@ -350,6 +351,7 @@ class FacePrioritySorter {
 		ModelOverride modelOverride,
 		int preOrientation,
 		int face,
+		int category,
 		IntBuffer opaqueBuffer,
 		IntBuffer alphaBuffer
 	) {
@@ -551,7 +553,7 @@ class FacePrioritySorter {
 		}
 
 		boolean keepShading = true; // Skip vanilla shading reversal in the shader, since we do it on the CPU
-		int materialData = material.packMaterialData(faceOverride, uvType, false, keepShading);
+		int materialData = material.packMaterialData(faceOverride, uvType, false, keepShading, category);
 
 		if (uvType == UvType.VANILLA) {
 			modelUvs[0] = modelLocalX[texA] - vx1;

@@ -5,8 +5,11 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -19,6 +22,7 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.ColorFilter;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -79,6 +83,8 @@ public class SceneManager {
 	private FrameTimer frameTimer;
 
 	private UBOWorldViews uboWorldViews;
+
+	public Set<Integer> interactiveObjects = new HashSet<>();
 
 	private final Map<Integer, Integer> nextRoofChanges = new HashMap<>();
 	@Getter
@@ -572,6 +578,43 @@ public class SceneManager {
 		}
 	}
 
+	public void addIfInteractive(@Nullable TileObject obj)
+	{
+		if (obj == null) {
+			return;
+		}
+
+		String[] actions = client.getObjectDefinition(obj.getId()).getActions();
+		for (String action : actions) {
+			if (action != null) {
+				interactiveObjects.add(obj.getId());
+				break;
+			}
+		}
+	}
+
+	private void buildInteractiveObjects(Scene scene) {
+		if (plugin.configColorFilter != ColorFilter.RS3_HIGH_CONTRAST) {
+			return;
+		}
+		Tile[][] tiles = scene.getTiles()[client.getTopLevelWorldView().getPlane()];
+
+		for (Tile[] row : tiles) {
+			for (Tile tile : row) {
+				if (tile == null) continue;
+
+				addIfInteractive(tile.getWallObject());
+				addIfInteractive(tile.getDecorativeObject());
+				addIfInteractive(tile.getGroundObject());
+
+				for (GameObject gameObject : tile.getGameObjects()) {
+					addIfInteractive(gameObject);
+				}
+			}
+		}
+
+	}
+
 	public void swapScene(Scene scene) {
 		if (!plugin.isActive() || plugin.skipScene == scene) {
 			plugin.redrawPreviousFrame = true;
@@ -590,6 +633,8 @@ public class SceneManager {
 
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
+		interactiveObjects.clear();
+		buildInteractiveObjects(scene);
 
 		boolean isFirst = root.sceneContext == null;
 		if (!isFirst)

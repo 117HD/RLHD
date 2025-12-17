@@ -14,8 +14,55 @@
 #define COLOR_FILTER_INVERT 5
 #define COLOR_FILTER_BLACK_AND_WHITE 6
 #define COLOR_FILTER_CEL_SHADING 7
+#define COLOR_FILTER_RS3_HIGH_CONTRAST 8
 
-vec3 applySingleColorFilter(int filterIndex, vec3 color) {
+
+#define ENTITY_PLAYER        0
+#define ENTITY_NPC_FRIENDLY  1
+#define ENTITY_HOSTILE   2
+#define ENTITY_OBJECT        3
+#define ENTITY_PROJECTILE    4
+#define ENTITY_GRAPHICS      5
+#define ENTITY_PLAYER_OTHER  6
+#define ENTITY_GROUND_ITEMS  7
+#define ENTITY_TERRAIN      15
+
+vec3 applyRs3HighContrast(int category, vec3 color) {
+    switch (category) {
+        case ENTITY_TERRAIN:
+            float l = dot(color, vec3(0.2126, 0.7152, 0.0722));
+            return mix(vec3(l), color, 0.08);
+
+        case ENTITY_PLAYER:
+            return mix(color, highContrastColors[0], 0.75);
+
+        case ENTITY_PLAYER_OTHER:
+            return mix(color, highContrastColors[6], 0.8);
+
+        case ENTITY_HOSTILE:
+            return mix(color, highContrastColors[2], 0.8);
+
+        case ENTITY_NPC_FRIENDLY:
+            return mix(color, highContrastColors[1], 0.65);
+
+        case ENTITY_OBJECT:
+            return mix(color, highContrastColors[3], 0.7);
+
+        case ENTITY_PROJECTILE:
+            return mix(color, highContrastColors[4], 0.75);
+
+        case ENTITY_GRAPHICS:
+            return mix(color, highContrastColors[5], 0.6);
+
+        case ENTITY_GROUND_ITEMS:
+           return mix(color, highContrastColors[7], 0.6);
+
+        default:
+            return color;
+    }
+}
+
+vec3 applySingleColorFilter(int filterIndex, vec3 color, int category) {
     switch (filterIndex) {
         case COLOR_FILTER_GREYSCALE:
             return vec3(dot(color, vec3(0.2126, 0.7152, 0.0722)));
@@ -49,14 +96,16 @@ vec3 applySingleColorFilter(int filterIndex, vec3 color) {
             float quantizedIntensity = floor(intensity * quantizationLevels) / quantizationLevels;
             return color * quantizedIntensity / intensity;
         }
+        case COLOR_FILTER_RS3_HIGH_CONTRAST:
+            return applyRs3HighContrast(category, color);
         default:
             return color;
     }
 }
 
-vec3 applyColorFilter(vec3 color) {
-    vec3 previous = applySingleColorFilter(colorFilterPrevious, color);
-    vec3 current = applySingleColorFilter(colorFilter, color);
+vec3 applyColorFilter(vec3 color, int category) {
+    vec3 previous = applySingleColorFilter(colorFilterPrevious, color, category);
+    vec3 current = applySingleColorFilter(colorFilter, color, category);
     // Fade smoothly between the previous and current filters
     return mix(previous, current, smoothstep(0, 1, colorFilterFade));
 }

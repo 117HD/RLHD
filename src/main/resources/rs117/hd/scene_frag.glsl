@@ -467,7 +467,13 @@ void main() {
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
     #if APPLY_COLOR_FILTER
-        outputColor.rgb = applyColorFilter(outputColor.rgb);
+        int category;
+        if (isTerrain) {
+            category = ENTITY_TERRAIN;
+        } else {
+            category = vMaterialData[0] >> MATERIAL_CATEGORY_SHIFT & MATERIAL_CATEGORY_MASK;
+        }
+        outputColor.rgb = applyColorFilter(outputColor.rgb, category);
     #endif
 
     #if WIREFRAME

@@ -25,6 +25,7 @@
  */
 package rs117.hd;
 
+import java.awt.Color;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -271,32 +272,6 @@ public interface HdPluginConfig extends Config
 		return 60;
 	}
 
-	String KEY_COLOR_BLINDNESS = "colorBlindMode";
-	@ConfigItem(
-		keyName = KEY_COLOR_BLINDNESS,
-		name = "Color Blindness",
-		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
-		position = 13,
-		section = generalSettings
-	)
-	default ColorBlindMode colorBlindness()
-	{
-		return ColorBlindMode.NONE;
-	}
-
-	@ConfigItem(
-		keyName = "colorBlindnessIntensity",
-		name = "Blindness Intensity",
-		description = "Specifies how intense the color blindness adjustment should be.",
-		position = 14,
-		section = generalSettings
-	)
-	@Units(Units.PERCENT)
-	@Range(max = 100)
-	default int colorBlindnessIntensity()
-	{
-		return 100;
-	}
 
 	@ConfigItem(
 		keyName = "flashingEffects",
@@ -765,6 +740,144 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	/*====== Accessibility settings ======*/
+
+	@ConfigSection(
+		name = "Accessibility",
+		description = "Accessibility settings",
+		position = 3,
+		closedByDefault = true
+	)
+	String accessibilitySettings = "accessibilitySettings";
+
+	String KEY_COLOR_BLINDNESS = "colorBlindMode";
+	@ConfigItem(
+		keyName = KEY_COLOR_BLINDNESS,
+		name = "Color Blindness",
+		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
+		position = 0,
+		section = accessibilitySettings
+	)
+	default ColorBlindMode colorBlindness()
+	{
+		return ColorBlindMode.NONE;
+	}
+
+	@ConfigItem(
+		keyName = "colorBlindnessIntensity",
+		name = "Blindness Intensity",
+		description = "Specifies how intense the color blindness adjustment should be.",
+		position = 1,
+		section = accessibilitySettings
+	)
+	@Units(Units.PERCENT)
+	@Range(max = 100)
+	default int colorBlindnessIntensity()
+	{
+		return 100;
+	}
+
+	String KEY_COLOR_FILTER = "colorFilter";
+	@ConfigItem(
+		keyName = KEY_COLOR_FILTER,
+		name = "Color Filter",
+		description = "Apply a color filter to the game as a post-processing effect.",
+		position = 2,
+		section = accessibilitySettings
+	)
+	default ColorFilter colorFilter() {
+		return ColorFilter.NONE;
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastPlayerColor",
+		name = "Player Color",
+		description = "Color used for your own player character when RS3 High Contrast filter is enabled.",
+		position = 3,
+		section = accessibilitySettings
+	)
+	default Color rs3HighContrastPlayerColor() {
+		return new Color(9, 44, 238);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastPlayerOtherColor",
+		name = "Other Player Color",
+		description = "Color used for other players when RS3 High Contrast filter is enabled.",
+		position = 4,
+		section = accessibilitySettings
+	)
+	default Color rs3HighContrastPlayerOtherColor() {
+		return new Color(192, 192, 192);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastNpcFriendlyColor",
+		name = "Friendly NPC Color",
+		description = "Color used for friendly NPCs when RS3 High Contrast filter is enabled.",
+		position = 5,
+		section = accessibilitySettings
+	)
+	default Color rs3HighContrastNpcFriendlyColor() {
+		return new Color(255, 211, 0);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastObjectColor",
+		name = "Object Color",
+		description = "Color used for objects when RS3 High Contrast filter is enabled.",
+		position = 6,
+		section = accessibilitySettings
+	)
+	default Color rs3HighContrastObjectColor() {
+		return new Color(0, 255, 255);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastProjectileColor",
+		name = "Projectile Color",
+		description = "Color used for projectiles when RS3 High Contrast filter is enabled.",
+		position = 7,
+		section = accessibilitySettings
+	)
+	default Color rs3HighContrastProjectileColor() {
+		return new Color(112, 54, 33);
+	}
+
+	@ConfigItem(
+		keyName = "rs3HighContrastGraphicsColor",
+		name = "Graphics Color",
+		description = "Color used for graphics objects when RS3 High Contrast filter is enabled.",
+		position = 8,
+		section = accessibilitySettings
+	)
+	default Color rs3HighContrastGraphicsColor() {
+		return new Color(238, 100, 0);
+	}
+
+
+	@ConfigItem(
+		keyName = "rs3HighContrastGroundItemColor",
+		name = "Ground Item Color",
+		description = "Color used for ground items when RS3 High Contrast filter is enabled.",
+		position = 9,
+		section = accessibilitySettings
+	)
+	default Color rs3HighContrastGroundItemColor() {
+		return new Color(94, 239, 19);
+	}
+
+
+	@ConfigItem(
+		keyName = "rs3HighContrastNpcHostileColor",
+		name = "Hostile Color",
+		description = "Color used for hostile NPCs and actions when RS3 High Contrast filter is enabled.",
+		position = 10,
+		section = accessibilitySettings
+	)
+	default Color rs3HighContrastHostileColor() {
+		return new Color(255, 13, 22);
+	}
 
 	/*====== Miscellaneous settings ======*/
 
@@ -831,16 +944,6 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_COLOR_FILTER = "colorFilter";
-	@ConfigItem(
-		keyName = KEY_COLOR_FILTER,
-		name = "Color Filter",
-		description = "Apply a color filter to the game as a post-processing effect.",
-		section = miscellaneousSettings
-	)
-	default ColorFilter colorFilter() {
-		return ColorFilter.NONE;
-	}
 
 	String KEY_REMOVE_VERTEX_SNAPPING = "removeVertexSnapping";
 	@ConfigItem(
