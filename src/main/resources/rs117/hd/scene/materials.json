@@ -2494,6 +2494,11 @@
     "normalMap": "STONE_N"
   },
   {
+    "name": "SMOOTH_STONE_SLIGHTLY_LIGHT",
+    "parent": "SMOOTH_STONE",
+    "brightness": 1.05
+  },
+  {
     "name": "SMOOTH_STONE_SEMI_DARK",
     "parent": "SMOOTH_STONE",
     "brightness": 0.95

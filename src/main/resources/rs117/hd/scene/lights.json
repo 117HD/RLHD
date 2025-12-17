@@ -43177,5 +43177,43 @@
     "objectIds": [
       "XMAS25_TABLE01_EMPTY01"
     ]
+  },
+  {
+    "description": "GRIMSTONE_FURNACE_BOTTOM",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ 0, 100, -250 ],
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "GRIMSTONE_FURNACE"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_FURNACE_TOP",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ 0, 375, -150 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "GRIMSTONE_FURNACE"
+    ]
   }
 ]

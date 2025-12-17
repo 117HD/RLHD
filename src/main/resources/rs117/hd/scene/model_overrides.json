@@ -70562,5 +70562,62 @@
         "depthBias": 1
       }
     ]
+  },
+  {
+    "description": "Grimstone Dungeon - Make Wall Filler Black",
+    "objectIds": [
+      "BCS_TOMB_WALLTOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Upper Floor",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 120,
+    "objectIds": [
+      "CAVEKIT_SNOW03_DEFAULT01_DARK02_WALLTOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Hide wall tops for performance",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GRIMSTONE_CAVE_WALL_UPPER",
+      "GRIMSTONE_CAVE_WALL_UPPER_CREVICE",
+      "CAVEKIT_SNOW03_DEFAULT01_DARK02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 32 || h == 42",
+        "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone - Hide wall tops for performance",
+    "areas": [ "GRIMSTONE_DUNGEON_PERFORMANCE_FIX" ],
+    "hide": true,
+    "objectIds": [
+      "BCS_TOMB_WALLTOP",
+      "CAVEKIT_SNOW03_DEFAULT01_DARK02_WALLTOP"
+    ]
   }
 ]
