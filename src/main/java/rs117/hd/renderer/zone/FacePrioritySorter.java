@@ -566,14 +566,14 @@ class FacePrioritySorter {
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx2, vy2, vz2,
-			modelUvs[4], modelUvs[5], 1,
+			modelUvs[4], modelUvs[5], 0,
 			modelNormals[3], modelNormals[4], modelNormals[5],
 			texturedFaceIdx
 		);
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx3, vy3, vz3,
-			modelUvs[8], modelUvs[9], 2,
+			modelUvs[8], modelUvs[9], 0,
 			modelNormals[6], modelNormals[7], modelNormals[8],
 			texturedFaceIdx
 		);

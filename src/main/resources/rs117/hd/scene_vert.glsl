@@ -62,7 +62,7 @@ out FragmentData {
 } OUT;
 
 void main() {
-    int vertex = int(vUv.z);
+    int vertex = gl_VertexID % 3;
     bool isProvoking = vertex == 2;
     int alphaBiasHsl = 0;
 
