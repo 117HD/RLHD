@@ -331,7 +331,10 @@ public class CommandBuffer {
 	}
 
 	public void reset() {
-		writeHead = 0;
+		Arrays.fill(objects, 0, objectCount, null);
 		renderState.reset();
+
+		writeHead = 0;
+		objectCount = 0;
 	}
 }
