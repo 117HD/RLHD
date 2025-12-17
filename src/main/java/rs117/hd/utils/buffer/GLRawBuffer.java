@@ -26,12 +26,12 @@ public class GLRawBuffer extends GLBuffer {
 
 		// Create texture
 		texId = glGenTextures();
-		glBindTexture(GL_TEXTURE_BUFFER, texId);
+		glBindTexture(target, texId);
 
 		// RGB32 signed integer texture buffer
-		glTexBuffer(GL_TEXTURE_BUFFER, GL_RGB32I, id);
+		glTexBuffer(target, GL_RGB32I, id);
 
-		glBindTexture(GL_TEXTURE_BUFFER, 0);
+		glBindTexture(target, 0);
 	}
 
 	@Override

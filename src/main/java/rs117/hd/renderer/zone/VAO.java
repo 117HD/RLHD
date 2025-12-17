@@ -7,8 +7,8 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.utils.buffer.GLRawBuffer;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.buffer.GLRawBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;

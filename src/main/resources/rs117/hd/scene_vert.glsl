@@ -74,7 +74,12 @@ void main() {
         fWorldViewId  = vWorldViewId;
         alphaBiasHsl  = fAlphaBiasHsl[0];
     } else {
-        alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx).x;
+        // All outputs must be written to for macOS compatibility
+        fAlphaBiasHsl = ivec3(0);
+        fMaterialData = ivec3(0);
+        fTerrainData  = ivec3(0);
+        fWorldViewId  = 0;
+        alphaBiasHsl = 0;
     }
 
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
@@ -93,9 +98,7 @@ void main() {
     OUT.texBlend[vertex] = 1.0;
 
 #if FLAT_SHADING
-    if(isProvoking) {
-        fFlatNormal = worldNormal;
-    }
+    fFlatNormal = worldNormal;
 #endif
 
     vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);

@@ -90,6 +90,9 @@ void main() {
         fUvw.xy += material.scrollDuration * elapsedTime;
         // Scale from the center
         fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
+    } else {
+        // All outputs must be written for Mac compatibility, even if unused
+        fUvw = vec3(0);
     }
     fMaterialData = materialData;
 #endif

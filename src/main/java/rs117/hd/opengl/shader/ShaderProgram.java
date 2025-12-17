@@ -144,6 +144,7 @@ public class ShaderProgram {
 		public void set(int textureUnit) {
 			assert textureUnit >= GL_TEXTURE0 : "Did you accidentally pass in an image unit?";
 			assert program.isActive();
+			assert uniformIndex != -1;
 			glUniform1i(uniformIndex, textureUnit - GL_TEXTURE0);
 		}
 	}
