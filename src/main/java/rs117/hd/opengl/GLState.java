@@ -25,11 +25,51 @@ public abstract class GLState<T> {
 
 	abstract void internalApply();
 
+	public abstract static class BooleanState<T> extends GLState<T> {
+		private boolean value;
+		private boolean appliedValue;
+
+		public final void set(boolean v) {
+			hasValue = true;
+			value = v;
+		}
+
+		@Override
+		void internalApply() {
+			if (!hasApplied || value != appliedValue) {
+				applyValue(value);
+				appliedValue = value;
+			}
+		}
+
+		protected abstract void applyValue(boolean value);
+	}
+
+	public abstract static class IntState<T> extends GLState<T> {
+		private int value;
+		private int appliedValue;
+
+		public final void set(int v) {
+			hasValue = true;
+			value = v;
+		}
+
+		@Override
+		void internalApply() {
+			if (!hasApplied || value != appliedValue) {
+				applyValue(value);
+				appliedValue = value;
+			}
+		}
+
+		protected abstract void applyValue(int value);
+	}
+
 	public abstract static class SingleState<T, K> extends GLState<T> {
 		private K value;
 		private K appliedValue;
 
-		public void set(K v) {
+		public final void set(K v) {
 			hasValue = true;
 			value = v;
 		}
@@ -45,16 +85,16 @@ public abstract class GLState<T> {
 		protected abstract void applyValue(K value);
 	}
 
-	public abstract static class PrimitiveArrayState<T, K> extends GLState<T> {
-		private final K[] value;
-		private final K[] appliedValue;
+	public abstract static class IntArrayState<T> extends GLState<T> {
+		private final int[] value;
+		private final int[] appliedValue;
 
-		protected PrimitiveArrayState(Supplier<K[]> supplier) {
-			this.value = supplier.get();
-			this.appliedValue = supplier.get();
+		protected IntArrayState(int size) {
+			this.value = new int[size];
+			this.appliedValue = new int[size];
 		}
 
-		public void set(K... v) {
+		public final void set(int... v) {
 			hasValue = true;
 			System.arraycopy(v, 0, value, 0, v.length);
 		}
@@ -67,7 +107,32 @@ public abstract class GLState<T> {
 			}
 		}
 
-		protected abstract void applyValues(K[] values);
+		protected abstract void applyValues(int[] values);
+	}
+
+	public abstract static class BooleanArrayState<T> extends GLState<T> {
+		private final boolean[] value;
+		private final boolean[] appliedValue;
+
+		protected BooleanArrayState(int size) {
+			this.value = new boolean[size];
+			this.appliedValue = new boolean[size];
+		}
+
+		public final void set(boolean... v) {
+			hasValue = true;
+			System.arraycopy(v, 0, value, 0, v.length);
+		}
+
+		@Override
+		void internalApply() {
+			if (!hasApplied || !Arrays.equals(value, appliedValue)) {
+				applyValues(value);
+				System.arraycopy(value, 0, appliedValue, 0, value.length);
+			}
+		}
+
+		protected abstract void applyValues(boolean[] values);
 	}
 
 	public abstract static class GLFlagSetState<T> extends GLState<T> {
