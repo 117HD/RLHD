@@ -3,7 +3,7 @@ package rs117.hd.renderer.zone;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -11,6 +11,7 @@ import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.buffer.GLRawBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
@@ -23,8 +24,9 @@ class VAO {
 	static final int VERT_SIZE = 28;
 
 	// Metadata format
-	// worldViewIndex int int
-	static final int METADATA_SIZE = 4;
+	// worldViewIndex int
+	// dummy sceneOffset ivec2 for macOS workaround
+	static final int METADATA_SIZE = 12;
 
 	final VBO vbo;
 	final GLRawBuffer tboF;
@@ -36,7 +38,7 @@ class VAO {
 		tboF = new GLRawBuffer("Textured Faces", GL_DYNAMIC_DRAW);
 	}
 
-	void initialize(int ebo, @Nullable VBO vboMetadata) {
+	void initialize(int ebo, @Nonnull VBO vboMetadata) {
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 
@@ -70,19 +72,21 @@ class VAO {
 		tboF.initialize(VAOList.VAO_SIZE);
 	}
 
-	void bindMetadata(@Nullable VBO vboMetadata) {
+	void bindMetadata(@Nonnull VBO vboMetadata) {
 		glBindVertexArray(vao);
-		if (vboMetadata == null) {
-			this.vboMetadata = 0;
-			glDisableVertexAttribArray(6);
-		} else {
-			this.vboMetadata = vboMetadata.bufId;
-			glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
+		this.vboMetadata = vboMetadata.bufId;
+		glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
 
-			// WorldView index (not ID)
-			glEnableVertexAttribArray(6);
-			glVertexAttribDivisor(6, 1);
-			glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
+		// WorldView index (not ID)
+		glEnableVertexAttribArray(6);
+		glVertexAttribDivisor(6, 1);
+		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
+
+		if (APPLE) {
+			// Workaround for disabled vertex attribs on macOS
+			glEnableVertexAttribArray(7);
+			glVertexAttribDivisor(7, 1);
+			glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
 		}
 	}
 
@@ -157,7 +161,7 @@ class VAO {
 		private final List<VAO> vaos = new ArrayList<>();
 		private final int eboAlpha;
 
-		VAO get(int size, @Nullable VBO vboMetadata) {
+		VAO get(int size, @Nonnull VBO vboMetadata) {
 			assert size <= VAO_SIZE;
 
 			while (curIdx < vaos.size()) {
@@ -170,7 +174,7 @@ class VAO {
 
 				int rem = vao.vbo.vb.remaining() * Integer.BYTES;
 				if (size <= rem) {
-					if (vao.vboMetadata == (vboMetadata == null ? 0 : vboMetadata.bufId))
+					if (vao.vboMetadata == vboMetadata.bufId)
 						return vao;
 
 					if (!wasMapped) {
