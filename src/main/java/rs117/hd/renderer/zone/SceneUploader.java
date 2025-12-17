@@ -25,9 +25,7 @@
 package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
