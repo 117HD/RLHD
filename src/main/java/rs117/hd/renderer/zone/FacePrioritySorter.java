@@ -497,6 +497,7 @@ class FacePrioritySorter {
 				modelNormals[7] = yVertexNormals[triangleC];
 				modelNormals[8] = zVertexNormals[triangleC];
 
+				// TODO: check if this is actually necessary
 				shouldCalculateFaceNormal =
 					modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
 					modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
@@ -514,7 +515,8 @@ class FacePrioritySorter {
 				modelNormals);
 		}
 
-		if (plugin.configUndoVanillaShading) {
+		if (plugin.configUndoVanillaShading && unlitFaceColors == null) {
+			// TODO: Decide whether this should be applied when normals are null
 			color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
 			color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
 			color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
@@ -528,11 +530,13 @@ class FacePrioritySorter {
 		}
 
 		// Rotate normals
-		for (int i = 0; i < 9; i += 3) {
-			int x = modelNormals[i];
-			int z = modelNormals[i + 2];
-			modelNormals[i] = z * orientSin + x * orientCos >> 16;
-			modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
+		if (!shouldCalculateFaceNormal) {
+			for (int i = 0; i < 9; i += 3) {
+				int x = modelNormals[i];
+				int z = modelNormals[i + 2];
+				modelNormals[i] = z * orientSin + x * orientCos >> 16;
+				modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
+			}
 		}
 
 		int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
