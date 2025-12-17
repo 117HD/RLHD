@@ -1138,12 +1138,10 @@ public class ZoneRenderer implements Renderer {
 
 		Renderable renderable = gameObject.getRenderable();
 		int uuid = ModelHash.generateUuid(client, gameObject.getHash(), renderable);
-		ModelOverride modelOverride = modelOverrideManager.getOverride(gameObject, worldPos);
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
-
-
-
+		
 		int category = ModelHash.getCategoryForUuid(client, renderable,gameObject.getHash(), plugin.configColorFilter);
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
