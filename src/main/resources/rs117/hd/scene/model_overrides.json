@@ -70591,7 +70591,7 @@
     ]
   },
   {
-    "description": "Grimstone Dungeon - Hide wall tops for performance",
+    "description": "Grimstone Dungeon - Walls",
     "baseMaterial": "ROCK_3_LIGHT",
     "uvType": "BOX",
     "objectIds": [
