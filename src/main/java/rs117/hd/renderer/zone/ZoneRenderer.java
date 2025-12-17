@@ -999,7 +999,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.processPendingClientCallbacks();
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
+		if (ctx == null || ctx.vboM == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -1134,7 +1134,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.processPendingClientCallbacks();
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !renderCallbackManager.drawObject(scene, gameObject))
+		if (ctx == null || ctx.vboM == null || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
 		ctx.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane(), worldPos);
