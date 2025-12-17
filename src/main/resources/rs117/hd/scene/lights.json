@@ -43179,8 +43179,22 @@
     ]
   },
   {
+    "description": "GRIMSTONE_EXIT_LIGHT",
+    "offset": [ -125, 100, -10 ],
+    "radius": 500,
+    "strength": 6,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GRIMSTONE_CAVE_EXIT"
+    ]
+  },
+  {
     "description": "GRIMSTONE_FURNACE_BOTTOM",
-    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "offset": [ 0, 100, -250 ],
     "alignment": "CENTER",
     "radius": 450,
@@ -43199,7 +43213,6 @@
   },
   {
     "description": "GRIMSTONE_FURNACE_TOP",
-    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "offset": [ 0, 375, -150 ],
     "alignment": "CENTER",
     "radius": 250,

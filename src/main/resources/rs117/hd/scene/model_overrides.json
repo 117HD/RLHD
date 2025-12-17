@@ -70614,6 +70614,26 @@
     ]
   },
   {
+    "description": "Grimstone Dungeon - Exit",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GRIMSTONE_CAVE_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32 || h == 42",
+        "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "l == 47" ,
+        "baseMaterial": "GRAY_85",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Grimstone - Hide wall tops for performance",
     "areas": [ "GRIMSTONE_DUNGEON_PERFORMANCE_FIX" ],
     "hide": true,
