@@ -2648,7 +2648,7 @@
   },
   {
     "name": "ICE_1",
-    "parent": "SNOW",
+    "parent": "SMOOTH_SNOW",
     "specularStrength": 1.1,
     "specularGloss": 200.0,
     "materialsToReplace": [
@@ -2665,7 +2665,7 @@
   },
   {
     "name": "ICE_2",
-    "parent": "SNOW",
+    "parent": "SMOOTH_SNOW",
     "specularStrength": 1.5,
     "specularGloss": 800.0
   },
