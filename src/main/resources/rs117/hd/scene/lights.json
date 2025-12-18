@@ -28277,6 +28277,24 @@
     ]
   },
   {
+    "description": "FIRE_WAVE",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIREWAVE_TRAVEL"
+    ]
+  },
+  {
     "description": "FIRE_WAVE_CAST",
     "offset": [ 0, 175, 50 ],
     "radius": 300,
@@ -28299,24 +28317,6 @@
     ]
   },
   {
-    "description": "FIRE_WAVE",
-    "radius": 300,
-    "strength": 10,
-    "color": [
-      255,
-      0,
-      0
-    ],
-    "type": "STATIC",
-    "duration": 0,
-    "range": 0,
-    "fadeInDuration": 200,
-    "fadeOutDuration": 250,
-    "projectileIds": [
-      "FIREWAVE_TRAVEL"
-    ]
-  },
-  {
     "description": "WIND_SURGE",
     "radius": 400,
     "strength": 10.6,
@@ -28332,6 +28332,72 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDSURGE_TRAVEL"
+    ]
+  },
+  {
+    "description": "WIND_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WIND_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WIND_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 275,
+    "strength": 13.8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSURGE_CASTING"
     ]
   },
   {
@@ -28353,6 +28419,72 @@
     ]
   },
   {
+    "description": "WATER_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WATER_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WATER_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 300,
+    "strength": 13.8,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSURGE_CASTING"
+    ]
+  },
+  {
     "description": "EARTH_SURGE",
     "radius": 400,
     "strength": 12.5,
@@ -28371,6 +28503,72 @@
     ]
   },
   {
+    "description": "EARTH_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "EARTH_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "EARTH_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 275,
+    "strength": 13.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSURGE_CASTING"
+    ]
+  },
+  {
     "description": "FIRE_SURGE",
     "radius": 400,
     "strength": 13.8,
@@ -28386,6 +28584,72 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIRESURGE_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 300,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
     ]
   },
   {
