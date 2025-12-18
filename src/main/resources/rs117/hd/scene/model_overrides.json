@@ -70595,11 +70595,25 @@
     "baseMaterial": "ROCK_3_LIGHT",
     "uvType": "BOX",
     "objectIds": [
-      "GRIMSTONE_CAVE_WALL_UPPER",
-      "GRIMSTONE_CAVE_WALL_UPPER_CREVICE",
       "CAVEKIT_SNOW03_DEFAULT01_DARK02",
       "GRIMSTONE_SHORTCUT_SOUTH",
       "GRIMSTONE_SHORTCUT_NORTH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32 || h == 42",
+        "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Walls - Top",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GRIMSTONE_CAVE_WALL_UPPER",
+      "GRIMSTONE_CAVE_WALL_UPPER_CREVICE"
     ],
     "colorOverrides": [
       {
@@ -70607,7 +70621,7 @@
         "baseMaterial": "PURE_BLACK"
       },
       {
-        "colors": "h == 32 || h == 42",
+        "colors": "h == 32",
         "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
         "uvType": "BOX"
       }
@@ -70628,7 +70642,7 @@
       },
       {
         "colors": "l == 47" ,
-        "baseMaterial": "GRAY_85",
+        "baseMaterial": "GRAY_75",
         "uvType": "BOX"
       }
     ]

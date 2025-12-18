@@ -9538,6 +9538,20 @@
     "setSaturation": 0
   },
   {
+    "name": "GRIMSTONE_DUNGEON_FLOOR",
+    "area": "GRIMSTONE_DUNGEON",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58,
+      159,
+      161
+    ],
+    "shiftLightness": 22,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "WARM_REGION_COMPLEX_TILES",
     "area": "WARM_REGIONS",
     "underlayIds": [

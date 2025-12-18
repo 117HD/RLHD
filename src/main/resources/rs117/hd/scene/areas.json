@@ -10421,7 +10421,9 @@
   },
   {
     "name": "GRIMSTONE_DUNGEON",
-    "regionBoxes": [ [ 11683, 11427 ] ],
+    "regionBoxes": [
+      [ 11683, 11427 ]
+    ],
     "hideOtherAreas": true
   },
   {

@@ -43179,10 +43179,25 @@
     ]
   },
   {
-    "description": "GRIMSTONE_EXIT_LIGHT",
-    "offset": [ -125, 100, -10 ],
-    "radius": 500,
-    "strength": 6,
+    "description": "GRIMSTONE_EXIT_LIGHT_SMALL",
+    "offset": [ -75, 85, -10 ],
+    "radius": 120,
+    "strength": 30,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GRIMSTONE_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_EXIT_LIGHT_LARGE",
+    "offset": [ -125, 115, -10 ],
+    "radius": 600,
+    "strength": 1.5,
     "color": [
       255,
       255,
