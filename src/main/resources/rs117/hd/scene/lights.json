@@ -27557,7 +27557,7 @@
     "alignment": "CENTER",
     "offset": [ 0, 20, 35 ],
     "radius": 170,
-    "strength": 30,
+    "strength": 22.5,
     "color": [
       252,
       148,
@@ -27568,8 +27568,9 @@
     "range": 30,
     "fadeInDuration": 50,
     "spawnDelay": 600,
-    "despawnDelay": 100,
-    "fadeOutDuration": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 550,
+    "fadeOutDuration": 250,
     "graphicsObjectIds": [
       "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
     ]
@@ -27581,7 +27582,7 @@
     "offset": [ 0, 20, 35 ],
     "radius": 170,
     "fixedDespawnTime": true,
-    "strength": 30,
+    "strength": 25,
     "color": [
       252,
       148,
