@@ -43198,7 +43198,8 @@
       }
     ],
     "objectIds": [
-      "DEADTREE2_SNOWY"
+      "DEADTREE2_SNOWY",
+      "DEADTREE2_SNOWY_NOOP"
     ]
   },
   {
@@ -70717,6 +70718,32 @@
         "baseMaterial": "GRAY_65"
       }
     ]
+  },
+  {
+    "description": "Grimstone - Dungeon Entrance",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "GRIMSTONE_CAVE_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone - Snowy Rocks",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      "ROCKSLIDE_SNOW01_LARGE02_LIGHTGREY",
+      "ROCKSLIDE_SNOW01_LARGE01_LIGHTGREY",
+      "ROCKSLIDE_SNOW01_SMALL01_LIGHTGREY",
+      "ROCKSLIDE_SNOW01_SMALL02_LIGHTGREY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Grimstone Dungeon - Hide wall tops for performance",

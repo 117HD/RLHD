@@ -9552,6 +9552,32 @@
     }
   },
   {
+    "name": "GRIMSTONE",
+    "area": "GRIMSTONE",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58
+    ],
+    "shiftLightness": 30,
+    "maxLightness": 105,
+    "replacements": {
+      "NONE": "!textures",
+      "GRIMSTONE_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "GRIMSTONE_NO_BLENDING",
+    "area": "GRIMSTONE",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58
+    ],
+    "maxLightness": 95,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "WARM_REGION_COMPLEX_TILES",
     "area": "WARM_REGIONS",
     "underlayIds": [

@@ -10427,6 +10427,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "GRIMSTONE",
+    "regions": [
+      11583
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
