@@ -334,6 +334,26 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			if (updateUniforms) {
+				if (ctx.sceneContext.scene == scene) {
+					try {
+						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+						environmentManager.update(ctx.sceneContext);
+						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+
+						frameTimer.begin(Timer.UPDATE_LIGHTS);
+						lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
+						frameTimer.end(Timer.UPDATE_LIGHTS);
+
+						frameTimer.begin(Timer.UPDATE_SCENE);
+						sceneManager.update();
+						frameTimer.end(Timer.UPDATE_SCENE);
+					} catch (Exception ex) {
+						log.error("Error while updating environment or lights:", ex);
+						plugin.stopPlugin();
+						return;
+					}
+				}
+
 				copyTo(plugin.cameraPosition, vec(cameraX, cameraY, cameraZ));
 				copyTo(plugin.cameraOrientation, vec(cameraYaw, cameraPitch));
 
@@ -429,26 +449,6 @@ public class ZoneRenderer implements Renderer {
 
 					plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
 					plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
-				}
-
-				if (ctx.sceneContext.scene == scene) {
-					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(ctx.sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
-
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
-
-						frameTimer.begin(Timer.UPDATE_SCENE);
-						sceneManager.update();
-						frameTimer.end(Timer.UPDATE_SCENE);
-					} catch (Exception ex) {
-						log.error("Error while updating environment or lights:", ex);
-						plugin.stopPlugin();
-						return;
-					}
 				}
 
 				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
