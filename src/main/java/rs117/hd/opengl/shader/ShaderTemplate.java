@@ -39,6 +39,13 @@ import static rs117.hd.opengl.shader.ShaderIncludes.SHADER_DUMP_PATH;
 @Slf4j
 public class ShaderTemplate
 {
+	private final static String SHADER_TYPE_DEFINE =
+		"#define VERTEX_SHADER " + GL_VERTEX_SHADER + '\n' +
+		"#define FRAGMENT_SHADER " + GL_FRAGMENT_SHADER + '\n' +
+		"#define GEOMETRY_SHADER " + GL_GEOMETRY_SHADER + '\n' +
+		"#define COMPUTE_SHADER " + GL43C.GL_COMPUTE_SHADER + '\n' +
+		"#define SHADER_TYPE ";
+
 	private final Map<Integer, String> shaderTypePaths = new HashMap<>();
 
 	public ShaderTemplate add(int type, String name) {
@@ -64,9 +71,9 @@ public class ShaderTemplate
 				if (shader == 0)
 					throw new ShaderException("Unable to create shader of type " + entry.getKey());
 
-				includes.define("SHADER_TYPE", entry.getKey());
-
-				String source = includes.loadFile(entry.getValue());
+				String source = includes
+					.addInclude("SHADER_TYPE", SHADER_TYPE_DEFINE + entry.getKey())
+					.loadFile(entry.getValue());
 				glShaderSource(shader, source);
 				glCompileShader(shader);
 
