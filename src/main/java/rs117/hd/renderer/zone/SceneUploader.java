@@ -1566,27 +1566,12 @@ public class SceneUploader {
 			int materialData = material.packMaterialData(faceOverride, uvType, false, false);
 
 			final float[] faceUVs;
-			if (uvType == UvType.VANILLA) {
-				if (uvType.worldUvs) {
-					computeWorldUvsInline(
-						faceUVs = modelUvs,
-						vx1, vy1, vz1,
-						vx2, vy2, vz2,
-						vx3, vy3, vz3
-					);
-				} else {
-					if(textureId != -1) {
-						computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, faceUVs = modelUvs);
-					} else {
-						faceUVs = IDENTITY_UV;
-					}
-				}
-			} else {
-				if(uvType != UvType.GEOMETRY) {
-					faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
-				} else {
-					faceUVs = IDENTITY_UV;
-				}
+			if (uvType == UvType.VANILLA && textureId != -1) {
+				computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, faceUVs = modelUvs);
+			} else if(uvType != UvType.GEOMETRY) {
+				faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
+			}else {
+				faceUVs = IDENTITY_UV;
 			}
 
 			final boolean shouldCalculateFaceNormal;
@@ -1832,27 +1817,12 @@ public class SceneUploader {
 			int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
 
 			final float[] faceUVs;
-			if (uvType == UvType.VANILLA) {
-				if (uvType.worldUvs) {
-					computeWorldUvsInline(
-						faceUVs = modelUvs,
-						vx1, vy1, vz1,
-						vx2, vy2, vz2,
-						vx3, vy3, vz3
-					);
-				} else {
-					if(textureId != -1) {
-						computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, faceUVs = modelUvs);
-					} else {
-						faceUVs = IDENTITY_UV;
-					}
-				}
-			} else {
-				if(uvType != UvType.GEOMETRY) {
-					faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
-				} else {
-					faceUVs = IDENTITY_UV;
-				}
+			if (uvType == UvType.VANILLA && textureId != -1) {
+				computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, faceUVs = modelUvs);
+			} else if(uvType != UvType.GEOMETRY) {
+				faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
+			}else {
+				faceUVs = IDENTITY_UV;
 			}
 
 			final boolean shouldCalculateFaceNormal;
@@ -2093,75 +2063,5 @@ public class SceneUploader {
 		l = min(l, legacyGreyColors ? 55 : MAX_BRIGHTNESS_LOOKUP_TABLE[s]);
 
 		return h << 10 | s << 7 | l;
-	}
-
-	public static void computeWorldUvsInline(
-		float[] uv,
-		float x1, float y1, float z1,
-		float x2, float y2, float z2,
-		float x3, float y3, float z3
-	) {
-		// N = normalize(uvw[0])
-		float nx = uv[0];
-		float ny = uv[1];
-		float nz = uv[2];
-
-		float invNLen = 1.0f / (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
-		nx *= invNLen;
-		ny *= invNLen;
-		nz *= invNLen;
-
-		// C1 = (0,0,1) x N
-		float c1x = -ny;
-		float c1y = nx;
-		float c1z = 0f;
-
-		// C2 = (0,1,0) x N
-		float c2x = nz;
-		float c2y = 0f;
-		float c2z = -nx;
-
-		// Choose larger
-		float tx, ty, tz;
-		if ((c1x * c1x + c1y * c1y) > (c2x * c2x + c2z * c2z)) {
-			tx = c1x;
-			ty = c1y;
-			tz = c1z;
-		} else {
-			tx = c2x;
-			ty = c2y;
-			tz = c2z;
-		}
-
-		// Normalize T
-		float invTLen = 1.0f / (float) Math.sqrt(tx * tx + ty * ty + tz * tz);
-		tx *= invTLen;
-		ty *= invTLen;
-		tz *= invTLen;
-
-		// B = N x T
-		float bx = ny * tz - nz * ty;
-		float by = nz * tx - nx * tz;
-		float bz = nx * ty - ny * tx;
-
-		// scale = 1 / |uvw[0]|
-		float scale = invNLen / 128.0f;
-
-		// Vertex 1
-		uv[0] = (tx * x1 + ty * y1 + tz * z1) * scale;
-		uv[1] = (bx * x1 + by * y1 + bz * z1) * scale;
-
-		// Vertex 2
-		uv[4] = (tx * x2 + ty * y2 + tz * z2) * scale;
-		uv[5] = (bx * x2 + by * y2 + bz * z2) * scale;
-
-		// Vertex 3
-		uv[8] = (tx * x3 + ty * y3 + tz * z3) * scale;
-		uv[9] = (bx * x3 + by * y3 + bz * z3) * scale;
-
-		// Z unused
-		uv[2] = 0f;
-		uv[6] = 0f;
-		uv[10] = 0f;
 	}
 }

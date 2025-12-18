@@ -42,7 +42,6 @@ in vec3 gNormal[3];
 in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
 in int gTerrainData[3];
-in int gWorldViewId[3];
 
 flat out int fWorldViewId;
 flat out ivec3 fAlphaBiasHsl;
@@ -57,7 +56,7 @@ out FragmentData {
 } OUT;
 
 void main() {
-    fWorldViewId = gWorldViewId[0];
+    fWorldViewId = -1;
 
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
@@ -71,7 +70,7 @@ void main() {
 
     int materialData = fMaterialData[0];
 
-    computeUvs(materialData, gWorldViewId[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+    computeUvs(materialData, -1, vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
 
     // Calculate tangent-space vectors
     mat2 triToUv = mat2(

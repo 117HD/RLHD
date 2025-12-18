@@ -153,20 +153,16 @@ void main() {
 
     int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
-    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-    vec3 pos = sceneOffset + vPosition;
-
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
-        gPosition = pos;
+        gPosition = vPosition;
         gUv = vUv;
         gMaterialData = vMaterialData;
         gCastShadow = shouldCastShadow;
-        gWorldViewId = vWorldViewId;
         #if SHADOW_TRANSPARENCY
             gOpacity = opacity;
         #endif
     #else
-        gl_Position = lightProjectionMatrix * getWorldViewProjection(vWorldViewId) * vec4(pos, shouldCastShadow);
+        gl_Position = lightProjectionMatrix * vec4(vPosition, shouldCastShadow);
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
         #endif

@@ -28,6 +28,9 @@
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 
+#include <utils/constants.glsl>
+#include <utils/uvs.glsl>
+
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
 layout (location = 2) in vec3 vNormal;
@@ -64,6 +67,7 @@ out FragmentData {
 void main() {
     int vertex = gl_VertexID % 3;
     bool isProvoking = vertex == 2;
+    int materialData = 0;
     int alphaBiasHsl = 0;
 
     if(isProvoking) {
@@ -72,14 +76,16 @@ void main() {
         fMaterialData = texelFetch(textureFaces, vTextureFaceIdx + 1).xyz;
         fTerrainData  = texelFetch(textureFaces, vTextureFaceIdx + 2).xyz;
         fWorldViewId  = vWorldViewId;
-        alphaBiasHsl  = fAlphaBiasHsl[0];
+        alphaBiasHsl  = fAlphaBiasHsl[vertex];
+        materialData  = fMaterialData[vertex];
     } else {
         // All outputs must be written to for macOS compatibility
         fAlphaBiasHsl = ivec3(0);
         fMaterialData = ivec3(0);
         fTerrainData  = ivec3(0);
         fWorldViewId  = 0;
-        alphaBiasHsl = 0;
+        alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
+        materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
     }
 
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
@@ -92,7 +98,7 @@ void main() {
     }
 
     OUT.position = worldPosition;
-    OUT.uv = vUv.xy;
+    OUT.uv = computeVertexUvs(materialData, worldPosition, vUv);
     OUT.normal = worldNormal;
     OUT.texBlend = vec3(0);
     OUT.texBlend[vertex] = 1.0;
@@ -114,17 +120,13 @@ out vec3 gNormal;
 out int gAlphaBiasHsl;
 out int gMaterialData;
 out int gTerrainData;
-out int gWorldViewId;
 
 void main() {
-    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-    mat4 worldViewProjection = getWorldViewProjection(vWorldViewId);
-    gPosition = vec3(worldViewProjection * vec4(sceneOffset + vPosition, 1));
+    gPosition = vPosition;
     gUv = vUv;
-    gNormal = mat3(worldViewProjection) * vNormal;
+    gNormal = vNormal;
     gAlphaBiasHsl = vAlphaBiasHsl;
     gMaterialData = vMaterialData;
     gTerrainData = vTerrainData;
-    gWorldViewId = vWorldViewId;
 }
 #endif
