@@ -28083,6 +28083,28 @@
     ]
   },
   {
+    "description": "WIND_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDWAVE_CASTING"
+    ]
+  },
+  {
     "description": "WATER_WAVE",
     "radius": 300,
     "strength": 10,
@@ -28098,6 +28120,28 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERWAVE_TRAVEL"
+    ]
+  },
+  {
+    "description": "WATER_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 300,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERWAVE_CASTING"
     ]
   },
   {
@@ -28119,6 +28163,50 @@
     ]
   },
   {
+    "description": "EARTH_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHWAVE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 300,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIREWAVE_CASTING"
+    ]
+  },
+  {
     "description": "FIRE_WAVE",
     "radius": 300,
     "strength": 10,
@@ -28131,7 +28219,6 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 200,
-    "fadeOutDuration": 250,
     "projectileIds": [
       "FIREWAVE_TRAVEL"
     ]
