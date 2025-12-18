@@ -144,7 +144,7 @@ public class Zone {
 		}
 
 		if (uploadJob != null) {
-			uploadJob.release();
+			uploadJob.cancel();
 			uploadJob = null;
 		}
 
@@ -432,6 +432,7 @@ public class Zone {
 
 	static class AlphaModel {
 		int id;
+		ModelOverride modelOverride;
 		int startpos, endpos;
 		short x, y, z; // local position
 		short rid;
@@ -477,6 +478,7 @@ public class Zone {
 	) {
 		AlphaModel m = new AlphaModel();
 		m.id = id;
+		m.modelOverride = modelOverride;
 		m.startpos = startpos;
 		m.endpos = endpos;
 		m.x = (short) x;
@@ -495,6 +497,7 @@ public class Zone {
 		}
 
 		int faceCount = model.getFaceCount();
+		short[] unlitColor = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
 		int[] color1 = model.getFaceColors1();
 		int[] color3 = model.getFaceColors3();
 		byte[] transparencies = model.getFaceTransparencies();
@@ -575,7 +578,7 @@ public class Zone {
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | color1[f];
+				int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
 				for (var override : modelOverride.colorOverrides) {
 					if (override.ahslCondition.test(ahsl)) {
 						material = override.baseMaterial;
@@ -612,11 +615,12 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	void addTempAlphaModel(int vao, int startpos, int endpos, int level, int x, int y, int z) {
+	void addTempAlphaModel(ModelOverride modelOverride, int vao, int startpos, int endpos, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
 		m.id = -1;
+		m.modelOverride = modelOverride;
 		m.startpos = startpos;
 		m.endpos = endpos;
 		m.x = (short) x;
@@ -757,7 +761,7 @@ public class Zone {
 
 			byte[] faceRenderPriorities = m.renderPriorities;
 			final int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
-			if (faceRenderPriorities == null) {
+			if (faceRenderPriorities == null || m.modelOverride.disablePrioritySorting) {
 				for (int i = diameter - 1; i >= 0; --i) {
 					final int cnt = distanceFaceCount[i];
 					if (cnt > 0) {
@@ -887,6 +891,7 @@ public class Zone {
 				if (m2 == null)
 					m2 = new AlphaModel();
 				m2.id = m.id;
+				m2.modelOverride = m.modelOverride;
 				m2.startpos = m.startpos;
 				m2.endpos = m.endpos;
 				m2.x = m.x;
