@@ -9321,7 +9321,8 @@
       "SEASONAL_DIRT": "s == 1",
       "SEASONAL_SNOW": "season == SeasonalTheme.WINTER",
       "UNDERLAY_SNOW_NO_BLENDING": "!blending"
-    }
+    },
+    "shiftLightness": 15
   },
   {
     "name": "UNDERLAY_SNOW_NO_BLENDING",
@@ -9339,7 +9340,7 @@
       "SEASONAL_DIRT": "s == 1",
       "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     },
-    "maxLightness": 75
+    "maxLightness": 77
   },
   {
     "name": "TAG - OVERWORLD - START"
