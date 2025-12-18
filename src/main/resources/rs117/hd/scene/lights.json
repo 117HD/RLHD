@@ -27849,6 +27849,25 @@
     ]
   },
   {
+    "description": "TELEGRAB_CAST",
+    "offset": [ 0, 150, 75 ],
+    "radius": 125,
+    "strength": 12,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "TELEGRAB_CASTING"
+    ]
+  },
+  {
     "description": "WIND_STRIKE",
     "radius": 250,
     "strength": 2.5,
