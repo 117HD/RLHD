@@ -1073,7 +1073,9 @@ public class LegacyRenderer implements Renderer {
 				plugin.uboGlobal.colorFilterPrevious.set(plugin.configColorFilterPrevious.ordinal());
 				long timeSinceChange = System.currentTimeMillis() - plugin.colorFilterChangedAt;
 				plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
+			}
 
+			if (plugin.configRs3HighContrast) {
 				float[][] rs3Colors = {
 					ColorUtils.rgb(config.rs3HighContrastPlayerColor().getRGB() & 0xFFFFFF),
 					ColorUtils.rgb(config.rs3HighContrastNpcFriendlyColor().getRGB() & 0xFFFFFF),

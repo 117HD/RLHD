@@ -777,16 +777,16 @@ public interface HdPluginConfig extends Config
 		return 100;
 	}
 
-	String KEY_COLOR_FILTER = "colorFilter";
+	String KEY_RS3_HIGH_CONTRAST = "rs3HighContrast";
 	@ConfigItem(
-		keyName = KEY_COLOR_FILTER,
-		name = "Color Filter",
-		description = "Apply a color filter to the game as a post-processing effect.",
+		keyName = KEY_RS3_HIGH_CONTRAST,
+		name = "RS3 High Contrast",
+		description = "Enable RS3-style high contrast mode that overrides color filters.",
 		position = 2,
 		section = accessibilitySettings
 	)
-	default ColorFilter colorFilter() {
-		return ColorFilter.NONE;
+	default boolean rs3HighContrast() {
+		return false;
 	}
 
 	@ConfigItem(
@@ -944,6 +944,16 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_COLOR_FILTER = "colorFilter";
+	@ConfigItem(
+		keyName = KEY_COLOR_FILTER,
+		name = "Color Filter",
+		description = "Apply a color filter to the game as a post-processing effect.",
+		section = miscellaneousSettings
+	)
+	default ColorFilter colorFilter() {
+		return ColorFilter.NONE;
+	}
 
 	String KEY_REMOVE_VERTEX_SNAPPING = "removeVertexSnapping";
 	@ConfigItem(

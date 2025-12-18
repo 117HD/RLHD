@@ -593,7 +593,7 @@ public class SceneManager {
 	}
 
 	private void buildInteractiveObjects(Scene scene) {
-		if (plugin.configColorFilter != ColorFilter.RS3_HIGH_CONTRAST) {
+		if (!plugin.configRs3HighContrast) {
 			return;
 		}
 		Tile[][] tiles = scene.getTiles()[client.getTopLevelWorldView().getPlane()];

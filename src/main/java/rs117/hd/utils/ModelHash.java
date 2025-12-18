@@ -3,7 +3,6 @@ package rs117.hd.utils;
 import java.util.Objects;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
-import rs117.hd.config.ColorFilter;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -178,15 +177,15 @@ public class ModelHash {
 	/**
 	 * Returns a category id (0-15) derived from the UUID type for coloring.
 	 */
-	public static int getCategoryForUuid(Client client,Renderable renderable, long hash, ColorFilter colorFilter) {
-		return getCategoryForUuid(client, renderable, hash, false, colorFilter);
+	public static int getCategoryForUuid(Client client,Renderable renderable, long hash, boolean rs3HighContrast) {
+		return getCategoryForUuid(client, renderable, hash, false, rs3HighContrast);
 	}
 
 	/**
 	 * Returns a small category id (0-15) derived from the UUID type for coloring.
 	 */
-	public static int getCategoryForUuid(Client client, Renderable renderable ,long hash, boolean hasActions, ColorFilter colorFilter) {
-		if (colorFilter != ColorFilter.RS3_HIGH_CONTRAST) {
+	public static int getCategoryForUuid(Client client, Renderable renderable ,long hash, boolean hasActions, boolean rs3HighContrast) {
+		if (!rs3HighContrast) {
 			return CATEGORY_UNKNOWN;
 		}
 

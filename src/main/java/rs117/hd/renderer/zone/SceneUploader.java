@@ -655,13 +655,13 @@ public class SceneUploader {
 			var composition = dynamic.getRecordedObjectComposition();
 			if (composition != null) {
 				uuid = ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, composition.getId());
-				if (plugin.configColorFilter == ColorFilter.RS3_HIGH_CONTRAST) {
+				if (plugin.configRs3HighContrast) {
 					sceneManager.interactiveObjects.add(composition.getId());
 				}
 			}
 		}
 
-		int category = ModelHash.getCategoryForUuid(ctx.client, r,-1, sceneManager.interactiveObjects.contains(ModelHash.getUuidId(uuid)), plugin.configColorFilter);
+		int category = ModelHash.getCategoryForUuid(ctx.client, r,-1, sceneManager.interactiveObjects.contains(ModelHash.getUuidId(uuid)), plugin.configRs3HighContrast);
 
 		if (model == null)
 			return;
