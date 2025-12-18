@@ -27810,8 +27810,8 @@
     "description": "SUPERHEAT_ITEM",
     "height": 200,
     "alignment": "CENTER",
-    "offset": [ 0, 0, 20 ],
-    "radius": 75,
+    "offset": [ 0, 20, 0 ],
+    "radius": 125,
     "fixedDespawnTime": true,
     "strength": 16.5,
     "color": [
@@ -27825,7 +27825,7 @@
     "fadeInDuration": 100,
     "spawnDelay": 355,
     "despawnDelay": 875,
-    "fadeOutDuration": 75,
+    "fadeOutDuration": 250,
     "graphicsObjectIds": [
       "SUPERHEATITEM_CASTING"
     ]
