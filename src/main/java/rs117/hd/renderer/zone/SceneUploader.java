@@ -2040,9 +2040,10 @@ public class SceneUploader {
 		modelUvs[10] = 0f;
 	}
 
-	public static int undoVanillaShading(int color, boolean legacyGreyColors, float nx, float ny, float nz) {
-		int h = color >> 10 & 0x3F;
-		int s = color >> 7 & 0x7;
+	public static int undoVanillaShading(int color, boolean legacyGreyColors,
+		float nx, float ny, float nz) {
+		//int h = color >> 10 & 0x3F; Unused only S & L need unpacking
+		int s = (color >> 7) & 0x7;
 		int l = color & 0x7F;
 
 		// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
@@ -2050,18 +2051,21 @@ public class SceneUploader {
 		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
 		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
 		// low value for it to look acceptable in most cases.
-		final float colorAdjust = BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0 : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
+		final float colorAdjust = BASE_LIGHTEN - l + (l < IGNORE_LOW_LIGHTNESS ? 0f : (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
 
 		// Normals are currently unrotated, so we don't need to do any rotation for this
-		float lightDotNormal = (nx + ny + nz) * 0.57735026f;
-		if (lightDotNormal > 0) {
-			lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-			l += (int) (lightDotNormal * colorAdjust);
+		final float len = nx * nx + ny * ny + nz * nz;
+		if (len > 0f) {
+			final float invLen = rcp(sqrt(len));
+			final float lightDotNormal = (nx + ny + nz) * 0.57735026f * invLen;
+			if (lightDotNormal > 0f)
+				l += (int)(lightDotNormal * colorAdjust);
 		}
 
 		// Clamp brightness as detailed above
 		l = min(l, legacyGreyColors ? 55 : MAX_BRIGHTNESS_LOOKUP_TABLE[s]);
 
-		return h << 10 | s << 7 | l;
+		// Preserve H, replace S & L
+		return (color & 0xFC00) | (s << 7) | l;
 	}
 }
