@@ -81,8 +81,8 @@ public class GLBuffer
 		}
 
 		numBytes = HDUtils.ceilPow2(numBytes);
-		if (log.isDebugEnabled() && numBytes > 1e6)
-			log.debug(
+		if (log.isTraceEnabled())
+			log.trace(
 				"{} buffer '{}'\t{}",
 				size > 0 ? "Resizing" : "Creating",
 				name,
