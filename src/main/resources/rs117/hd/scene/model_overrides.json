@@ -58814,6 +58814,8 @@
       "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN01",
       "TAPOYAUIK_TEMPLE_EXIT",
       "STALAGMITE_SNOW01_DEFAULT01",
+      "STALAGMITE_SNOW01_DEFAULT01B",
+      "STALAGMITE_SNOW01_DEFAULT02B",
       "VMQ3_RUINS_BLOCKAGE_START",
       "STALAGMITE_SNOW01_DEFAULT02",
       "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN02",
@@ -70648,7 +70650,76 @@
     ]
   },
   {
-    "description": "Grimstone - Hide wall tops for performance",
+    "description": "Grimstone Dungeon - Pillars & Ancient Mould",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DUNGEONKIT_IMCANDO_PILLAR02",
+      "GRIMSTONE_ANCIENT_MOULD"
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Cannonball Mould & Balls",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "GRIMSTONE_CANNONBALLS_NOOP",
+      "GRIMSTONE_CANNONBALL_MOULD"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 42" ,
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Furnace",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GRIMSTONE_FURNACE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255" ,
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "a == 255 && s > 4" ,
+        "baseMaterial": "GRAY_90",
+        "flatNormals": true
+      },
+      {
+        "colors": "h == 0 || h == 42" ,
+        "baseMaterial": "METALLIC_1_LIGHT_LOW_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "h == 5" ,
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Spear Wall",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "GRIMSTONE_SPEARWALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Hide wall tops for performance",
     "areas": [ "GRIMSTONE_DUNGEON_PERFORMANCE_FIX" ],
     "hide": true,
     "objectIds": [
