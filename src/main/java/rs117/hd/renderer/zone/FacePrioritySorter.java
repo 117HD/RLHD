@@ -70,7 +70,7 @@ class FacePrioritySorter {
 	private static final int[] lt10;
 	static final int[][] orderedFaces;
 
-	private static int orientSin, orientCos;
+	private static int orient, orientSin, orientCos;
 
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int MAX_DIAMETER = 6000;
@@ -133,7 +133,7 @@ class FacePrioritySorter {
 		final int[] faceColors3 = model.getFaceColors3();
 		final byte[] faceRenderPriorities = model.getFaceRenderPriorities();
 
-		orientation = mod(orientation, 2048);
+		orient = orientation = mod(orientation, 2048);
 		orientSin = SINE[orientation];
 		orientCos = COSINE[orientation];
 		float orientSinf = orientSin / 65536f;
@@ -482,10 +482,17 @@ class FacePrioritySorter {
 			faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 		}
 
-		final boolean shouldCalculateFaceNormal;
+		final boolean shouldRotateNormals;
 		if (!hasVertexNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && faceColors3[face] == -1)) {
-			shouldCalculateFaceNormal = true;
+			shouldRotateNormals = false;
+			calculateFaceNormal(
+				modelNormals,
+				vx1, vy1, vz1,
+				vx2, vy2, vz2,
+				vx3, vy3, vz3
+			);
 		} else {
+			shouldRotateNormals = orient != 0;
 			modelNormals[0] = xVertexNormals[triangleA];
 			modelNormals[1] = yVertexNormals[triangleA];
 			modelNormals[2] = zVertexNormals[triangleA];
@@ -495,21 +502,6 @@ class FacePrioritySorter {
 			modelNormals[6] = xVertexNormals[triangleC];
 			modelNormals[7] = yVertexNormals[triangleC];
 			modelNormals[8] = zVertexNormals[triangleC];
-
-			// TODO: check if this is actually necessary
-			shouldCalculateFaceNormal =
-				modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
-				modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
-				modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
-		}
-
-		if (shouldCalculateFaceNormal) {
-			calculateFaceNormal(
-				modelNormals,
-				vx1, vy1, vz1,
-				vx2, vy2, vz2,
-				vx3, vy3, vz3
-			);
 		}
 
 		if (plugin.configUndoVanillaShading) {
@@ -527,7 +519,7 @@ class FacePrioritySorter {
 		}
 
 		// Rotate normals
-		if (!shouldCalculateFaceNormal) {
+		if (shouldRotateNormals) {
 			for (int i = 0; i < 9; i += 3) {
 				int x = modelNormals[i];
 				int z = modelNormals[i + 2];

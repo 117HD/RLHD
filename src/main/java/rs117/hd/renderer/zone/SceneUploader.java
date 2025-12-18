@@ -1575,10 +1575,17 @@ public class SceneUploader {
 				faceUVs = IDENTITY_UV;
 			}
 
-			final boolean shouldCalculateFaceNormal;
+			final boolean shouldRotateNormals;
 			if (!modelHasNormals || faceOverride.flatNormals || !plugin.configPreserveVanillaNormals && color3s[face] == -1) {
-				shouldCalculateFaceNormal = true;
+				shouldRotateNormals = false;
+				calculateFaceNormal(
+					modelNormals,
+					vx1, vy1, vz1,
+					vx2, vy2, vz2,
+					vx3, vy3, vz3
+				);
 			} else {
+				shouldRotateNormals = orientation != 0;
 				modelNormals[0] = xVertexNormals[triangleA];
 				modelNormals[1] = yVertexNormals[triangleA];
 				modelNormals[2] = zVertexNormals[triangleA];
@@ -1588,26 +1595,21 @@ public class SceneUploader {
 				modelNormals[6] = xVertexNormals[triangleC];
 				modelNormals[7] = yVertexNormals[triangleC];
 				modelNormals[8] = zVertexNormals[triangleC];
-
-				shouldCalculateFaceNormal =
-					modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
-					modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
-					modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
-			}
-
-			if (shouldCalculateFaceNormal) {
-				calculateFaceNormal(
-					modelNormals,
-					vx1, vy1, vz1,
-					vx2, vy2, vz2,
-					vx3, vy3, vz3
-				);
 			}
 
 			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && !keepShading) {
 				color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
 				color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
 				color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
+			}
+
+			if (shouldRotateNormals) {
+				for (int i = 0; i < 9; i += 3) {
+					int nx = modelNormals[i];
+					int nz = modelNormals[i + 2];
+					modelNormals[i] = nz * orientSin + nx * orientCos >> 16;
+					modelNormals[i + 2] = nz * orientCos - nx * orientSin >> 16;
+				}
 			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
@@ -1699,12 +1701,12 @@ public class SceneUploader {
 		final byte overrideSat = model.getOverrideSaturation();
 		final byte overrideLum = model.getOverrideLuminance();
 
-		float orientSine = 0;
-		float orientCosine = 0;
+		float orientSinf = 0;
+		float orientCosf = 0;
 		if (orientation != 0) {
 			orientation = mod(orientation, 2048);
-			orientSine = SINE[orientation] / 65536f;
-			orientCosine = COSINE[orientation] / 65536f;
+			orientSinf = SINE[orientation] / 65536f;
+			orientCosf = COSINE[orientation] / 65536f;
 		}
 
 		for (int v = 0; v < vertexCount; ++v) {
@@ -1714,8 +1716,8 @@ public class SceneUploader {
 
 			if (orientation != 0) {
 				float x0 = vertexX;
-				vertexX = vertexZ * orientSine + x0 * orientCosine;
-				vertexZ = vertexZ * orientCosine - x0 * orientSine;
+				vertexX = vertexZ * orientSinf + x0 * orientCosf;
+				vertexZ = vertexZ * orientCosf - x0 * orientSinf;
 			}
 
 			vertexX += x;
@@ -1823,10 +1825,17 @@ public class SceneUploader {
 				faceUVs = IDENTITY_UV;
 			}
 
-			final boolean shouldCalculateFaceNormal;
+			final boolean shouldRotateNormals;
 			if (!modelHasNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
-				shouldCalculateFaceNormal = true;
+				shouldRotateNormals = false;
+				calculateFaceNormal(
+					modelNormals,
+					vx1, vy1, vz1,
+					vx2, vy2, vz2,
+					vx3, vy3, vz3
+				);
 			} else {
+				shouldRotateNormals = orientation != 0;
 				modelNormals[0] = xVertexNormals[triangleA];
 				modelNormals[1] = yVertexNormals[triangleA];
 				modelNormals[2] = zVertexNormals[triangleA];
@@ -1836,25 +1845,21 @@ public class SceneUploader {
 				modelNormals[6] = xVertexNormals[triangleC];
 				modelNormals[7] = yVertexNormals[triangleC];
 				modelNormals[8] = zVertexNormals[triangleC];
-				shouldCalculateFaceNormal =
-					modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
-					modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
-					modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
-			}
-
-			if (shouldCalculateFaceNormal) {
-				calculateFaceNormal(
-					modelNormals,
-					vx1, vy1, vz1,
-					vx2, vy2, vz2,
-					vx3, vy3, vz3
-				);
 			}
 
 			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading) {
 				color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
 				color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
 				color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
+			}
+
+			if (shouldRotateNormals) {
+				for (int i = 0; i < 9; i += 3) {
+					int nx = modelNormals[i];
+					int nz = modelNormals[i + 2];
+					modelNormals[i] = (int) (nz * orientSinf + nx * orientCosf);
+					modelNormals[i + 2] = (int) (nz * orientCosf - nx * orientSinf);
+				}
 			}
 
 			// HSL override is not applied to textured faces
