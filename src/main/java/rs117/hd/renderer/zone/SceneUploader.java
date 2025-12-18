@@ -1975,69 +1975,67 @@ public class SceneUploader {
 
 		// v2
 		idx = model.getTexIndices2()[tf];
-		float v2x = vx[idx] - v1x;
-		float v2y = vy[idx] - v1y;
-		float v2z = vz[idx] - v1z;
+		final float v2x = vx[idx] - v1x;
+		final float v2y = vy[idx] - v1y;
+		final float v2z = vz[idx] - v1z;
 
 		// v3
 		idx = model.getTexIndices3()[tf];
-		float v3x = vx[idx] - v1x;
-		float v3y = vy[idx] - v1y;
-		float v3z = vz[idx] - v1z;
+		final float v3x = vx[idx] - v1x;
+		final float v3y = vy[idx] - v1y;
+		final float v3z = vz[idx] - v1z;
 
-		// v7 = v2 x v3
-		float v7x = v2y * v3z - v2z * v3y;
-		float v7y = v2z * v3x - v2x * v3z;
-		float v7z = v2x * v3y - v2y * v3x;
+		// n = v2 x v3
+		final float px = v2y * v3z - v2z * v3y;
+		final float py = v2z * v3x - v2x * v3z;
+		final float pz = v2x * v3y - v2y * v3x;
 
 		// ---------- U axis ----------
-		float px = v3y * v7z - v3z * v7y;
-		float py = v3z * v7x - v3x * v7z;
-		float pz = v3x * v7y - v3y * v7x;
+		float tx = v3y * pz - v3z * py;
+		float ty = v3z * px - v3x * pz;
+		float tz = v3x * py - v3y * px;
 
-		float inv = 1.0f / (px * v2x + py * v2y + pz * v2z);
+		float inv = rcp(tx * v2x + ty * v2y + tz * v2z);
 
 		float dx = vx[triangleA] - v1x;
 		float dy = vy[triangleA] - v1y;
 		float dz = vz[triangleA] - v1z;
-		modelUvs[0] = (px * dx + py * dy + pz * dz) * inv;
+		modelUvs[0] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		dx = vx[triangleB] - v1x;
 		dy = vy[triangleB] - v1y;
 		dz = vz[triangleB] - v1z;
-		modelUvs[4] = (px * dx + py * dy + pz * dz) * inv;
+		modelUvs[4] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		dx = vx[triangleC] - v1x;
 		dy = vy[triangleC] - v1y;
 		dz = vz[triangleC] - v1z;
-		modelUvs[8] = (px * dx + py * dy + pz * dz) * inv;
+		modelUvs[8] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		// ---------- V axis ----------
-		px = v2y * v7z - v2z * v7y;
-		py = v2z * v7x - v2x * v7z;
-		pz = v2x * v7y - v2y * v7x;
+		tx = v2y * pz - v2z * py;
+		ty = v2z * px - v2x * pz;
+		tz = v2x * py - v2y * px;
 
-		inv = 1.0f / (px * v3x + py * v3y + pz * v3z);
+		inv = rcp(tx * v3x + ty * v3y + tz * v3z);
 
 		dx = vx[triangleA] - v1x;
 		dy = vy[triangleA] - v1y;
 		dz = vz[triangleA] - v1z;
-		modelUvs[1] = (px * dx + py * dy + pz * dz) * inv;
+		modelUvs[1] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		dx = vx[triangleB] - v1x;
 		dy = vy[triangleB] - v1y;
 		dz = vz[triangleB] - v1z;
-		modelUvs[5] = (px * dx + py * dy + pz * dz) * inv;
+		modelUvs[5] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		dx = vx[triangleC] - v1x;
 		dy = vy[triangleC] - v1y;
 		dz = vz[triangleC] - v1z;
-		modelUvs[9] = (px * dx + py * dy + pz * dz) * inv;
+		modelUvs[9] = (tx * dx + ty * dy + tz * dz) * inv;
 
-		// Z unused
-		modelUvs[2]  = 0f;
-		modelUvs[6]  = 0f;
-		modelUvs[10] = 0f;
+		// ---------- W axis Unused ----------
+		modelUvs[2] = modelUvs[6] = modelUvs[10] = 0f;
 	}
 
 	public static int undoVanillaShading(int color, boolean legacyGreyColors,
