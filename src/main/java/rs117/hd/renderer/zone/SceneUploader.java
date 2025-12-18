@@ -120,7 +120,6 @@ public class SceneUploader {
 	private final int[] vertexKeys = new int[4];
 	private final float[] workingSpace = new float[9];
 	private final float[] modelUvs = new float[12];
-	private final float[] normal = new float[3];
 	private final int[] modelNormals = new int[9];
 
 	private final float[] modelLocalX = new float[MAX_VERTEX_COUNT];
@@ -741,7 +740,9 @@ public class SceneUploader {
 				zone.addAlphaModel(
 					plugin,
 					materialManager,
-					zone.glVaoA, zone.tboF.getTexId(), model, modelOverride, alphaStart, alphaEnd,
+					zone.glVaoA,
+					zone.tboF.getTexId(),
+					model, modelOverride, alphaStart, alphaEnd,
 					x - basex, y, z - basez,
 					lx, lz, ux, uz,
 					rid, level, id
@@ -1567,43 +1568,40 @@ public class SceneUploader {
 
 			final float[] faceUVs;
 			if (uvType == UvType.VANILLA && textureId != -1) {
-				computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, faceUVs = modelUvs);
-			} else if(uvType != UvType.GEOMETRY) {
+				computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC);
+			} else if (uvType != UvType.GEOMETRY) {
 				faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
-			}else {
+			} else {
 				faceUVs = IDENTITY_UV;
 			}
 
 			final boolean shouldCalculateFaceNormal;
-			if (modelHasNormals) {
-				if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
-					shouldCalculateFaceNormal = true;
-				} else {
-					modelNormals[0] = xVertexNormals[triangleA];
-					modelNormals[1] = yVertexNormals[triangleA];
-					modelNormals[2] = zVertexNormals[triangleA];
-					modelNormals[3] = xVertexNormals[triangleB];
-					modelNormals[4] = yVertexNormals[triangleB];
-					modelNormals[5] = zVertexNormals[triangleB];
-					modelNormals[6] = xVertexNormals[triangleC];
-					modelNormals[7] = yVertexNormals[triangleC];
-					modelNormals[8] = zVertexNormals[triangleC];
-
-					shouldCalculateFaceNormal =
-						modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
-						modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
-						modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
-				}
-			} else {
+			if (!modelHasNormals || faceOverride.flatNormals || !plugin.configPreserveVanillaNormals && color3s[face] == -1) {
 				shouldCalculateFaceNormal = true;
+			} else {
+				modelNormals[0] = xVertexNormals[triangleA];
+				modelNormals[1] = yVertexNormals[triangleA];
+				modelNormals[2] = zVertexNormals[triangleA];
+				modelNormals[3] = xVertexNormals[triangleB];
+				modelNormals[4] = yVertexNormals[triangleB];
+				modelNormals[5] = zVertexNormals[triangleB];
+				modelNormals[6] = xVertexNormals[triangleC];
+				modelNormals[7] = yVertexNormals[triangleC];
+				modelNormals[8] = zVertexNormals[triangleC];
+
+				shouldCalculateFaceNormal =
+					modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
+					modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
+					modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
 			}
 
-			if(shouldCalculateFaceNormal) {
+			if (shouldCalculateFaceNormal) {
 				calculateFaceNormal(
+					modelNormals,
 					vx1, vy1, vz1,
 					vx2, vy2, vz2,
-					vx3, vy3, vz3,
-					modelNormals);
+					vx3, vy3, vz3
+				);
 			}
 
 			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && !keepShading) {
@@ -1818,42 +1816,39 @@ public class SceneUploader {
 
 			final float[] faceUVs;
 			if (uvType == UvType.VANILLA && textureId != -1) {
-				computeFaceUvsInline(model, textureFace, triangleA, triangleB, triangleC, faceUVs = modelUvs);
-			} else if(uvType != UvType.GEOMETRY) {
+				computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC);
+			} else if (uvType != UvType.GEOMETRY) {
 				faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
-			}else {
+			} else {
 				faceUVs = IDENTITY_UV;
 			}
 
 			final boolean shouldCalculateFaceNormal;
-			if (modelHasNormals) {
-				if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
-					shouldCalculateFaceNormal = true;
-				} else {
-					modelNormals[0] = xVertexNormals[triangleA];
-					modelNormals[1] = yVertexNormals[triangleA];
-					modelNormals[2] = zVertexNormals[triangleA];
-					modelNormals[3] = xVertexNormals[triangleB];
-					modelNormals[4] = yVertexNormals[triangleB];
-					modelNormals[5] = zVertexNormals[triangleB];
-					modelNormals[6] = xVertexNormals[triangleC];
-					modelNormals[7] = yVertexNormals[triangleC];
-					modelNormals[8] = zVertexNormals[triangleC];
-					shouldCalculateFaceNormal =
-						modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
-						modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
-						modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
-				}
-			} else {
+			if (!modelHasNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
 				shouldCalculateFaceNormal = true;
+			} else {
+				modelNormals[0] = xVertexNormals[triangleA];
+				modelNormals[1] = yVertexNormals[triangleA];
+				modelNormals[2] = zVertexNormals[triangleA];
+				modelNormals[3] = xVertexNormals[triangleB];
+				modelNormals[4] = yVertexNormals[triangleB];
+				modelNormals[5] = zVertexNormals[triangleB];
+				modelNormals[6] = xVertexNormals[triangleC];
+				modelNormals[7] = yVertexNormals[triangleC];
+				modelNormals[8] = zVertexNormals[triangleC];
+				shouldCalculateFaceNormal =
+					modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
+					modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
+					modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
 			}
 
-			if(shouldCalculateFaceNormal) {
+			if (shouldCalculateFaceNormal) {
 				calculateFaceNormal(
+					modelNormals,
 					vx1, vy1, vz1,
 					vx2, vy2, vz2,
-					vx3, vy3, vz3,
-					modelNormals);
+					vx3, vy3, vz3
+				);
 			}
 
 			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading) {
@@ -1880,7 +1875,8 @@ public class SceneUploader {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			final int texturedFaceIdx = GpuIntBuffer.putFace(tb,
+			final int texturedFaceIdx = GpuIntBuffer.putFace(
+				tb,
 				color1, color2, color3,
 				materialData, materialData, materialData,
 				0, 0, 0
@@ -1913,10 +1909,11 @@ public class SceneUploader {
 	}
 
 	public static void calculateFaceNormal(
+		int[] out,
 		float vx1, float vy1, float vz1,
 		float vx2, float vy2, float vz2,
-		float vx3, float vy3, float vz3,
-		int[] modelNormals) {
+		float vx3, float vy3, float vz3
+	) {
 		float e0_x = vx2 - vx1;
 		float e0_y = vy2 - vy1;
 		float e0_z = vz2 - vz1;
@@ -1934,9 +1931,9 @@ public class SceneUploader {
 		ny /= length;
 		nz /= length;
 
-		modelNormals[0] = modelNormals[3] = modelNormals[6] = (int) (nx * 2048.0);
-		modelNormals[1] = modelNormals[4] = modelNormals[7] = (int) (ny * 2048.0);
-		modelNormals[2] = modelNormals[5] = modelNormals[8] = (int) (nz * 2048.0);
+		out[0] = out[3] = out[6] = (int) (nx * 2048.0);
+		out[1] = out[4] = out[7] = (int) (ny * 2048.0);
+		out[2] = out[5] = out[8] = (int) (nz * 2048.0);
 	}
 
 	public static int interpolateHSL(int hsl, byte hue2, byte sat2, byte lum2, byte lerp) {
@@ -1954,12 +1951,12 @@ public class SceneUploader {
 	}
 
 	public static void computeFaceUvsInline(
+		float[] out,
 		Model model,
 		int textureFace,
 		int triangleA,
 		int triangleB,
-		int triangleC,
-		float[] modelUvs
+		int triangleC
 	) {
 		final float[] vx = model.getVerticesX();
 		final float[] vy = model.getVerticesY();
@@ -2000,17 +1997,17 @@ public class SceneUploader {
 		float dx = vx[triangleA] - v1x;
 		float dy = vy[triangleA] - v1y;
 		float dz = vz[triangleA] - v1z;
-		modelUvs[0] = (tx * dx + ty * dy + tz * dz) * inv;
+		out[0] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		dx = vx[triangleB] - v1x;
 		dy = vy[triangleB] - v1y;
 		dz = vz[triangleB] - v1z;
-		modelUvs[4] = (tx * dx + ty * dy + tz * dz) * inv;
+		out[4] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		dx = vx[triangleC] - v1x;
 		dy = vy[triangleC] - v1y;
 		dz = vz[triangleC] - v1z;
-		modelUvs[8] = (tx * dx + ty * dy + tz * dz) * inv;
+		out[8] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		// ---------- V axis ----------
 		tx = v2y * pz - v2z * py;
@@ -2022,24 +2019,26 @@ public class SceneUploader {
 		dx = vx[triangleA] - v1x;
 		dy = vy[triangleA] - v1y;
 		dz = vz[triangleA] - v1z;
-		modelUvs[1] = (tx * dx + ty * dy + tz * dz) * inv;
+		out[1] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		dx = vx[triangleB] - v1x;
 		dy = vy[triangleB] - v1y;
 		dz = vz[triangleB] - v1z;
-		modelUvs[5] = (tx * dx + ty * dy + tz * dz) * inv;
+		out[5] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		dx = vx[triangleC] - v1x;
 		dy = vy[triangleC] - v1y;
 		dz = vz[triangleC] - v1z;
-		modelUvs[9] = (tx * dx + ty * dy + tz * dz) * inv;
+		out[9] = (tx * dx + ty * dy + tz * dz) * inv;
 
 		// ---------- W axis Unused ----------
-		modelUvs[2] = modelUvs[6] = modelUvs[10] = 0f;
+		out[2] = out[6] = out[10] = 0f;
 	}
 
-	public static int undoVanillaShading(int color, boolean legacyGreyColors,
-		float nx, float ny, float nz) {
+	public static int undoVanillaShading(
+		int color, boolean legacyGreyColors,
+		float nx, float ny, float nz
+	) {
 		//int h = color >> 10 & 0x3F; Unused only S & L need unpacking
 		int s = (color >> 7) & 0x7;
 		int l = color & 0x7F;
@@ -2057,7 +2056,7 @@ public class SceneUploader {
 			final float invLen = rcp(sqrt(len));
 			final float lightDotNormal = (nx + ny + nz) * 0.57735026f * invLen;
 			if (lightDotNormal > 0f)
-				l += (int)(lightDotNormal * colorAdjust);
+				l += (int) (lightDotNormal * colorAdjust);
 		}
 
 		// Clamp brightness as detailed above

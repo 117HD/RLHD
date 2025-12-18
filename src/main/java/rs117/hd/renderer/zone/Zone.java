@@ -141,7 +141,7 @@ public class Zone {
 			vboM = null;
 		}
 
-		if(tboF != null) {
+		if (tboF != null) {
 			tboF.destroy();
 			tboF = null;
 		}
@@ -234,15 +234,12 @@ public class Zone {
 	}
 
 	public void unmap() {
-		if (vboO != null) {
+		if (vboO != null)
 			vboO.unmap();
-		}
-		if (vboA != null) {
+		if (vboA != null)
 			vboA.unmap();
-		}
-		if(tboF != null) {
+		if (tboF != null)
 			tboF.unmap();
-		}
 
 		if (vboO != null) {
 			this.bufLen = vboO.len / (VERT_SIZE / 4);

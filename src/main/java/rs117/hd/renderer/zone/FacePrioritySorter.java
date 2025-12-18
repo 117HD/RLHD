@@ -483,36 +483,33 @@ class FacePrioritySorter {
 		}
 
 		final boolean shouldCalculateFaceNormal;
-		if (hasVertexNormals) {
-			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && faceColors3[face] == -1)) {
-				shouldCalculateFaceNormal = true;
-			} else {
-				modelNormals[0] = xVertexNormals[triangleA];
-				modelNormals[1] = yVertexNormals[triangleA];
-				modelNormals[2] = zVertexNormals[triangleA];
-				modelNormals[3] = xVertexNormals[triangleB];
-				modelNormals[4] = yVertexNormals[triangleB];
-				modelNormals[5] = zVertexNormals[triangleB];
-				modelNormals[6] = xVertexNormals[triangleC];
-				modelNormals[7] = yVertexNormals[triangleC];
-				modelNormals[8] = zVertexNormals[triangleC];
-
-				// TODO: check if this is actually necessary
-				shouldCalculateFaceNormal =
-					modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
-					modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
-					modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
-			}
-		} else {
+		if (!hasVertexNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && faceColors3[face] == -1)) {
 			shouldCalculateFaceNormal = true;
+		} else {
+			modelNormals[0] = xVertexNormals[triangleA];
+			modelNormals[1] = yVertexNormals[triangleA];
+			modelNormals[2] = zVertexNormals[triangleA];
+			modelNormals[3] = xVertexNormals[triangleB];
+			modelNormals[4] = yVertexNormals[triangleB];
+			modelNormals[5] = zVertexNormals[triangleB];
+			modelNormals[6] = xVertexNormals[triangleC];
+			modelNormals[7] = yVertexNormals[triangleC];
+			modelNormals[8] = zVertexNormals[triangleC];
+
+			// TODO: check if this is actually necessary
+			shouldCalculateFaceNormal =
+				modelNormals[0] == 0 && modelNormals[1] == 0 && modelNormals[2] == 0 &&
+				modelNormals[3] == 0 && modelNormals[4] == 0 && modelNormals[5] == 0 &&
+				modelNormals[6] == 0 && modelNormals[7] == 0 && modelNormals[8] == 0;
 		}
 
-		if(shouldCalculateFaceNormal) {
+		if (shouldCalculateFaceNormal) {
 			calculateFaceNormal(
+				modelNormals,
 				vx1, vy1, vz1,
 				vx2, vy2, vz2,
-				vx3, vy3, vz3,
-				modelNormals);
+				vx3, vy3, vz3
+			);
 		}
 
 		if (plugin.configUndoVanillaShading) {
@@ -550,7 +547,8 @@ class FacePrioritySorter {
 		color2 |= packedAlphaBiasHsl;
 		color3 |= packedAlphaBiasHsl;
 
-		final int texturedFaceIdx = GpuIntBuffer.putFace(tb,
+		final int texturedFaceIdx = GpuIntBuffer.putFace(
+			tb,
 			color1, color2, color3,
 			materialData, materialData, materialData,
 			0, 0, 0

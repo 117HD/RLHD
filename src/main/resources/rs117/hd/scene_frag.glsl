@@ -51,7 +51,7 @@ flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
 
 #if FLAT_SHADING && ZONE_RENDERER
-flat in vec3 fFlatNormal;
+    flat in vec3 fFlatNormal;
 #endif
 
 in FragmentData {
@@ -159,32 +159,27 @@ void main() {
 
         // Set up tangent-space transformation matrix
 
-#if FLAT_SHADING && ZONE_RENDERER
-        vec3 N = normalize(fFlatNormal);
-#else
-        vec3 N = normalize(IN.normal);
-#endif
+        vec3 N;
+        #if FLAT_SHADING && ZONE_RENDERER
+            N = normalize(fFlatNormal);
+        #else
+            N = normalize(IN.normal);
+        #endif
         mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
 
         #if DISPLAY_UV
-        if (DISPLAY_UV == 1) { // Redundant, used for syntax highlighting in IntelliJ
             FragColor = vec4(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z, 0.0, 1.0);
-            return;
-        }
+            if (DISPLAY_UV == 1) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         #if DISPLAY_NORMAL
-        if (DISPLAY_NORMAL == 1) { // Redundant, used for syntax highlighting in IntelliJ
             FragColor = vec4(N * 0.5 + 0.5, 1.0);
-            return;
-        }
+            if (DISPLAY_NORMAL == 1) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         #if DISPLAY_TANGENT
-        if (DISPLAY_TANGENT == 1) { // Redundant, used for syntax highlighting in IntelliJ
             FragColor = vec4(TBN[0] * 0.5 + 0.5, 1.0);
-            return;
-        }
+            if (DISPLAY_TANGENT == 1) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         float selfShadowing = 0;
@@ -344,10 +339,8 @@ void main() {
         float inverseShadow = 1 - shadow;
 
         #if DISPLAY_SHADOWS
-        if(DISPLAY_SHADOWS == 1) {
             FragColor = vec4(inverseShadow, inverseShadow, inverseShadow, 1.0);
-            return;
-        }
+            if (DISPLAY_SHADOWS == 1) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         // specular
@@ -450,10 +443,8 @@ void main() {
         underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
 
         #if DISPLAY_LIGHTING
-        if(DISPLAY_LIGHTING == 1) {
             FragColor = vec4(compositeLight, 1.0);
-            return;
-        }
+            if (DISPLAY_LIGHTING == 1) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         float unlit = dot(IN.texBlend, vec3(

@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public abstract class GLState<T> {
 	public T owner;

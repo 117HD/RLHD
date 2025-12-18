@@ -98,13 +98,8 @@ public class GLRawBuffer extends GLBuffer {
 		int written = pixelBuffer.position();
 		glBindBuffer(target, id);
 
-		if (usage != GL_STATIC_DRAW) {
-			glFlushMappedBufferRange(
-				target,
-				0,
-				(long) written * Integer.BYTES
-			);
-		}
+		if (usage != GL_STATIC_DRAW)
+			glFlushMappedBufferRange(target, 0, (long) written * Integer.BYTES);
 
 		glUnmapBuffer(target);
 		glBindBuffer(target, 0);

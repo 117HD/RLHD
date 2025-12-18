@@ -155,20 +155,14 @@ public class GpuIntBuffer
 	public int putFace(
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC,
-		int terrainDataA,  int terrainDataB,  int terrainDataC ) {
-		final int textureFaceIdx = buffer.position() / 3;
-		buffer.put(alphaBiasHslA);
-		buffer.put(alphaBiasHslB);
-		buffer.put(alphaBiasHslC);
-
-		buffer.put(materialDataA);
-		buffer.put(materialDataB);
-		buffer.put(materialDataC);
-
-		buffer.put(terrainDataA);
-		buffer.put(terrainDataB);
-		buffer.put(terrainDataC);
-		return textureFaceIdx;
+		int terrainDataA, int terrainDataB, int terrainDataC
+	) {
+		return putFace(
+			buffer,
+			alphaBiasHslA, alphaBiasHslB, alphaBiasHslC,
+			materialDataA, materialDataB, materialDataC,
+			terrainDataA, terrainDataB, terrainDataC
+		);
 	}
 
 	public void putVertex(
@@ -190,7 +184,8 @@ public class GpuIntBuffer
 		IntBuffer buffer,
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC,
-		int terrainDataA, int terrainDataB, int terrainDataC) {
+		int terrainDataA, int terrainDataB, int terrainDataC
+	) {
 		final int textureFaceIdx = buffer.position() / 3;
 		buffer.put(alphaBiasHslA);
 		buffer.put(alphaBiasHslB);
