@@ -126,7 +126,7 @@ public class LegacyRenderer implements Renderer {
 	private FrameTimer frameTimer;
 
 	@Inject
-	public SceneShaderProgram sceneProgram;
+	public SceneShaderProgram.Legacy sceneProgram;
 
 	@Inject
 	public ModelPassthroughComputeProgram modelPassthroughComputeProgram;
@@ -280,7 +280,8 @@ public class LegacyRenderer implements Renderer {
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
 
-		shadowProgram.setMode(plugin.configShadowMode).compile(includes);
+		shadowProgram.setMode(plugin.configShadowMode);
+		shadowProgram.compile(includes);
 
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initializePrograms();

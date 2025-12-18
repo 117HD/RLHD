@@ -214,7 +214,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
-		sceneProgram.useGeom(false).compile(includes);
+		sceneProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
 	}
