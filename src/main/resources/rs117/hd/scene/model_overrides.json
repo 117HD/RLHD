@@ -70589,7 +70589,8 @@
     "colorOverrides": [
       {
         "colors": "l == 2",
-        "baseMaterial": "PURE_BLACK"
+        "baseMaterial": "PURE_BLACK",
+        "castShadows": false
       }
     ]
   },
