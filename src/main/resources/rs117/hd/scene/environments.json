@@ -839,6 +839,15 @@
     "windStrength": 60
   },
   {
+    "area": "RELLEKKA_COLD_WATER",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 15
+  },
+  {
     "area": "FREMENNIK_ISLES_MIDDLE",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
