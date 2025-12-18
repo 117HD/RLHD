@@ -27850,7 +27850,7 @@
   },
   {
     "description": "WIND_STRIKE",
-    "radius": 175,
+    "radius": 250,
     "strength": 2.5,
     "color": [
       255,
@@ -27867,9 +27867,32 @@
     ]
   },
   {
+    "description": "WIND_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 5.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSTRIKE_CASTING",
+      "WINDBOLT_CASTING",
+      "WINDBLAST_CASTING"
+    ]
+  },
+  {
     "description": "WATER_STRIKE",
-    "radius": 175,
-    "strength": 3.8,
+    "radius": 225,
+    "strength": 4.5,
     "color": [
       0,
       140,
@@ -27885,9 +27908,32 @@
     ]
   },
   {
+    "description": "WATER_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 5,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSTRIKE_CASTING",
+      "WATERBOLT_CASTING",
+      "WATERBLAST_CASTING"
+    ]
+  },
+  {
     "description": "EARTH_STRIKE",
-    "radius": 175,
-    "strength": 3.1,
+    "radius": 250,
+    "strength": 3.6,
     "color": [
       0,
       255,
@@ -27903,9 +27949,32 @@
     ]
   },
   {
+    "description": "EARTH_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSTRIKE_CASTING",
+      "EARTHBOLT_CASTING",
+      "EARTHBLAST_CASTING"
+    ]
+  },
+  {
     "description": "FIRE_STRIKE",
-    "radius": 175,
-    "strength": 3.8,
+    "radius": 250,
+    "strength": 4.2,
     "color": [
       255,
       0,
@@ -27921,8 +27990,31 @@
     ]
   },
   {
+    "description": "FIRE_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 5.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESTRIKE_CASTING",
+      "FIREBOLT_CASTING",
+      "FIREBLAST_CASTING"
+    ]
+  },
+  {
     "description": "WIND_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 3.8,
     "color": [
       255,
@@ -27940,7 +28032,7 @@
   },
   {
     "description": "WATER_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 6.3,
     "color": [
       0,
@@ -27958,7 +28050,7 @@
   },
   {
     "description": "EARTH_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 5.6,
     "color": [
       0,
@@ -27976,7 +28068,7 @@
   },
   {
     "description": "FIRE_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 6.3,
     "color": [
       255,
@@ -27994,7 +28086,7 @@
   },
   {
     "description": "WIND_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 5.6,
     "color": [
       255,
@@ -28012,7 +28104,7 @@
   },
   {
     "description": "WATER_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 8.8,
     "color": [
       0,
@@ -28030,7 +28122,7 @@
   },
   {
     "description": "EARTH_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 6.9,
     "color": [
       0,
@@ -28048,7 +28140,7 @@
   },
   {
     "description": "FIRE_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 8.8,
     "color": [
       255,
@@ -28219,6 +28311,7 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "FIREWAVE_TRAVEL"
     ]
@@ -40872,7 +40965,6 @@
     "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
-      "FIREWAVE_TRAVEL",
       "VFX_VMQ4_METZLI_RANGED_FIRE_PROJECTILE_ENRAGED_01"
     ]
   },
