@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
-import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PluginMessage;
@@ -34,9 +33,6 @@ public class MinimapManager {
 
 	@Inject
 	private EventBus eventBus;
-
-	@Inject
-	private ConfigManager configManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -75,15 +71,9 @@ public class MinimapManager {
 		sceneContext.minimapTilePaintColors = null;
 	}
 
-	public boolean HD117MapEnabled()
-	{
-		// TODO: Change to check with API for any minimap data subscribers
-		return "true".equals(configManager.getConfiguration("runelite", "hdminimapplugin"))
-			   && "HD117".equals(configManager.getConfiguration("hdminimap", "minimapStyle"));
-	}
 
 	public void prepareScene(SceneContext sceneContext) {
-		if (!HD117MapEnabled()) return;
+		if (!api.isSubscribed(HdEvent.EVENT_MINIMAP)) return;
 
 		if (sceneContext.minimapTilePaintColors == null) {
 			sceneContext.minimapTilePaintColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
@@ -383,7 +373,9 @@ public class MinimapManager {
 
 
 	public void applyLighting(SceneContext sceneContext) {
-		if (!HD117MapEnabled()) return;
+		if (!api.isSubscribed(HdEvent.EVENT_MINIMAP)) return;
+
+		System.out.println("Apply Lighting");
 
 		if (sceneContext.minimapTilePaintColors == null) {
 			sceneContext.minimapTilePaintColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
