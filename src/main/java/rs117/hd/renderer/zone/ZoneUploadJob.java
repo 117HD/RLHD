@@ -52,7 +52,7 @@ public final class ZoneUploadJob extends Job {
 				sceneUploader.uploadZone(sceneContext, zone, x, z);
 				workerHandleCancel();
 
-				if(shouldUnmap)
+				if (shouldUnmap)
 					invokeClientCallback(zone::unmap);
 			}
 			zone.initialized = true;
@@ -113,7 +113,14 @@ public final class ZoneUploadJob extends Job {
 		POOL.add(this);
 	}
 
-	public static ZoneUploadJob build(WorldViewContext viewContext, ZoneSceneContext sceneContext, Zone zone, boolean shouldUnmap, int x, int z) {
+	public static ZoneUploadJob build(
+		WorldViewContext viewContext,
+		ZoneSceneContext sceneContext,
+		Zone zone,
+		boolean shouldUnmap,
+		int x,
+		int z
+	) {
 		assert viewContext != null : "WorldViewContext cant be null";
 		assert sceneContext != null : "ZoneSceneContext cant be null";
 		assert zone != null : "Zone cant be null";
