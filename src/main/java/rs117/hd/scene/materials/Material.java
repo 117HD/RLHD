@@ -60,7 +60,6 @@ public class Material {
 	private float displacementScale = .1f;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
-	public float[] averageColor = { 0, 0, 0 };
 	private float specularStrength;
 	private float specularGloss;
 	private float[] scrollSpeed = { 0, 0 };
@@ -74,6 +73,7 @@ public class Material {
 	public transient boolean modifiesVanillaTexture;
 	public transient boolean isFallbackVanillaMaterial;
 	public transient boolean isValid = true;
+	public transient float[] averageColor = { 0, 0, 0 };
 
 	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 	public static final Material NONE = new Material().name("NONE");
