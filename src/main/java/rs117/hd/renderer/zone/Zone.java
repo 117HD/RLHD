@@ -144,7 +144,7 @@ public class Zone {
 		}
 
 		if (uploadJob != null) {
-			uploadJob.release();
+			uploadJob.cancel();
 			uploadJob = null;
 		}
 
@@ -497,6 +497,7 @@ public class Zone {
 		}
 
 		int faceCount = model.getFaceCount();
+		short[] unlitColor = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
 		int[] color1 = model.getFaceColors1();
 		int[] color3 = model.getFaceColors3();
 		byte[] transparencies = model.getFaceTransparencies();
@@ -577,7 +578,7 @@ public class Zone {
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | color1[f];
+				int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
 				for (var override : modelOverride.colorOverrides) {
 					if (override.ahslCondition.test(ahsl)) {
 						material = override.baseMaterial;

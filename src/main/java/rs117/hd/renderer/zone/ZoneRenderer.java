@@ -331,6 +331,26 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			if (updateUniforms) {
+				if (ctx.sceneContext.scene == scene) {
+					try {
+						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+						environmentManager.update(ctx.sceneContext);
+						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+
+						frameTimer.begin(Timer.UPDATE_LIGHTS);
+						lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
+						frameTimer.end(Timer.UPDATE_LIGHTS);
+
+						frameTimer.begin(Timer.UPDATE_SCENE);
+						sceneManager.update();
+						frameTimer.end(Timer.UPDATE_SCENE);
+					} catch (Exception ex) {
+						log.error("Error while updating environment or lights:", ex);
+						plugin.stopPlugin();
+						return;
+					}
+				}
+
 				copyTo(plugin.cameraPosition, vec(cameraX, cameraY, cameraZ));
 				copyTo(plugin.cameraOrientation, vec(cameraYaw, cameraPitch));
 
@@ -426,26 +446,6 @@ public class ZoneRenderer implements Renderer {
 
 					plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
 					plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
-				}
-
-				if (ctx.sceneContext.scene == scene) {
-					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(ctx.sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
-
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
-
-						frameTimer.begin(Timer.UPDATE_SCENE);
-						sceneManager.update();
-						frameTimer.end(Timer.UPDATE_SCENE);
-					} catch (Exception ex) {
-						log.error("Error while updating environment or lights:", ex);
-						plugin.stopPlugin();
-						return;
-					}
 				}
 
 				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
@@ -786,12 +786,60 @@ public class ZoneRenderer implements Renderer {
 			minY -= ProceduralGenerator.MAX_DEPTH;
 		}
 
-		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
-		if (zone.inSceneFrustum) {
-			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.VISIBILITY_CHECK);
-			return zone.inShadowFrustum = true;
+		int x = (((zx << 3) - ctx.sceneContext.sceneOffset) << 7) + 512 - (int) sceneCamera.getPositionX();
+		int z = (((zz << 3) - ctx.sceneContext.sceneOffset) << 7) + 512 - (int) sceneCamera.getPositionZ();
+		int y = maxY - (int) sceneCamera.getPositionY();
+		int zoneRadius = 724; // ~ 512 * sqrt(2)
+		int waterDepth = zone.hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
+
+		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
+		final int rightClip = client.getRasterizer3D_clipMidX2();
+		final int topClip = client.getRasterizer3D_clipNegativeMidY();
+		final int bottomClip = client.getRasterizer3D_clipMidY2();
+
+		final int cameraYawCos = Perspective.COSINE[sceneCamera.getFixedYaw()];
+		final int cameraYawSin = SINE[sceneCamera.getFixedYaw()];
+		final int cameraPitchCos = COSINE[sceneCamera.getFixedPitch()];
+		final int cameraPitchSin = SINE[sceneCamera.getFixedPitch()];
+		final int cameraZoom = (int) sceneCamera.getZoom();
+
+		// Check if the tile is within the near plane of the frustum
+		int transformedZ = z * cameraYawCos - x * cameraYawSin >> 16;
+		int depth = (y + waterDepth) * cameraPitchSin + (transformedZ + zoneRadius) * cameraPitchCos >> 16;
+		if (depth > NEAR_PLANE) {
+			// Check left bound
+			int transformedX = z * cameraYawSin + x * cameraYawCos >> 16;
+			int left = transformedX - zoneRadius;
+			if (left * cameraZoom < rightClip * depth) {
+				// Check right bound
+				int right = transformedX + zoneRadius;
+				if (right * cameraZoom > leftClip * depth) {
+					// Check top bound
+					int transformedY = y * cameraPitchCos - transformedZ * cameraPitchSin >> 16;
+					int transformedRadius = zoneRadius * cameraPitchSin >> 16;
+					int transformedWaterDepth = waterDepth * cameraPitchCos >> 16;
+					int bottom = transformedY + transformedRadius + transformedWaterDepth;
+					if (bottom * cameraZoom > topClip * depth) {
+						// Check bottom bound
+						int transformedZoneHeight = minY * cameraPitchCos >> 16;
+						int top = transformedY - transformedRadius + transformedZoneHeight;
+						if (top * cameraZoom < bottomClip * depth) {
+							if (plugin.enableDetailedTimers)
+								frameTimer.end(Timer.VISIBILITY_CHECK);
+							return zone.inSceneFrustum = zone.inShadowFrustum = true;
+						}
+					}
+				}
+			}
 		}
+
+		// TODO: This leads to objects that extend past the zone being culled, e.g. the platform pieces at Akkha
+//		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
+//		if (zone.inSceneFrustum) {
+//			if (plugin.enableDetailedTimers)
+//				frameTimer.end(Timer.VISIBILITY_CHECK);
+//			return zone.inShadowFrustum = true;
+//		}
 
 		if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
 			zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);

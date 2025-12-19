@@ -170,6 +170,7 @@ public class SceneManager {
 
 				root.sceneLoadGroup.complete();
 				root.streamingGroup.complete();
+				root.invalidationGroup.complete();
 			} finally {
 				loadingLock.unlock();
 				log.trace("loadingLock unlocked - holdCount: {}", loadingLock.getHoldCount());

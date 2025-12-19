@@ -174,7 +174,11 @@ public final class JobSystem {
 				item.onRun();
 				item.ranToCompletion.set(true);
 			} catch (Throwable ex) {
-				log.warn("Encountered an error whilst processing: {}", item.hashCode(), ex);
+				if (item.wasCancelled()) {
+					log.debug("Encountered an error whilst processing: {}", item.hashCode(), ex);
+				} else {
+					log.warn("Encountered an error whilst processing: {}", item.hashCode(), ex);
+				}
 			} finally {
 				item.done.set(true);
 			}
