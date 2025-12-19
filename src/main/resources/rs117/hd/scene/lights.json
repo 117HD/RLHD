@@ -38008,6 +38008,26 @@
     "spawnDelay": 950
   },
   {
+    "description": "FAIRY_RING_TELEPORT_ANIMATION",
+    "offset": [ 0, 60, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "spawnDelay": 1100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1900,
+    "color": [
+      222,
+      0,
+      255
+    ],
+    "fadeOutDuration": 400,
+    "fadeInDuration": 200,
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "FAIRY_FLOWER_RING"
+    ]
+  },
+  {
     "description": "Wilderness Mage Arena Bank Pool 1",
     "worldX": 2542,
     "worldY": 4720,
@@ -43574,20 +43594,19 @@
     ]
   },
   {
-    "description": "XMAS_2025_FIREPLACE_HEARTH_OUTSIDE",
-    "offset": [ 50, 60, -15 ],
-    "radius": 300,
-    "strength": 12.5,
+    "description": "Sailing - Island Hut Lantern",
+    "offset": [ 3.75, 155, 0 ],
+    "radius": 350,
+    "strength": 9,
     "color": [
       252,
       148,
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
+    "range": 15,
     "objectIds": [
-      "XMAS24_PUB01_FIREPLACE01"
+      "HIDEOUT_LANTERN01_DEFAULT01"
     ]
   },
   {
