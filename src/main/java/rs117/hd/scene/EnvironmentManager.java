@@ -378,6 +378,7 @@ public class EnvironmentManager {
 			if (abs(diff) > PI)
 				targetSunAngles[i] += TWO_PI * sign(diff);
 		}
+		minimapRenderer.prepareScene(plugin.getSceneContext());
 	}
 
 	public void updateTargetSkyColor() {
