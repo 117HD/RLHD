@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
 import org.lwjgl.opengl.*;
@@ -44,6 +45,7 @@ import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
+import rs117.hd.scene.MinimapManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.Area;
@@ -84,6 +86,9 @@ public class LegacyRenderer implements Renderer {
 	private Client client;
 
 	@Inject
+	private EventBus eventBus;
+
+	@Inject
 	private DrawManager drawManager;
 
 	@Inject
@@ -106,6 +111,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private MinimapManager minimapManager;
 
 	@Inject
 	private LegacySceneUploader sceneUploader;
@@ -212,10 +220,14 @@ public class LegacyRenderer implements Renderer {
 		initializeModelSortingBins(maxComputeThreadCount);
 
 		initializeBuffers();
+
+		eventBus.register(this);
 	}
 
 	@Override
 	public synchronized void destroy() {
+		eventBus.unregister(this);
+
 		modelPusher.shutDown();
 
 		if (vaoScene != 0)
@@ -1333,6 +1345,7 @@ public class LegacyRenderer implements Renderer {
 
 			environmentManager.loadSceneEnvironments(nextSceneContext);
 			sceneUploader.upload(nextSceneContext);
+			minimapManager.prepareScene(nextSceneContext);
 		} catch (OutOfMemoryError oom) {
 			log.error(
 				"Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",

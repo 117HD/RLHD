@@ -65,6 +65,10 @@ public class EnvironmentManager {
 	@Inject
 	private HdPluginConfig config;
 
+	// TODO: Move all minimap handling into the MinimapManager
+	@Inject
+	private MinimapManager minimapManager;
+
 	private static final float TRANSITION_DURATION = 3; // seconds
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
 	// walking across a loading line causes a movement of 40-41 tiles
@@ -281,9 +285,15 @@ public class EnvironmentManager {
 			currentWindSpeed = mix(startWindSpeed, targetWindSpeed, t);
 			currentWindStrength = mix(startWindStrength, targetWindStrength, t);
 			currentWindCeiling = mix(startWindCeiling, targetWindCeiling, t);
+			minimapManager.updateMinimapLighting = true;
 		}
 
 		updateLightning();
+
+		// TODO: Probably make minimap lighting updates a separate update call after environments
+		//       and only have it actually run whenever the parameters it reads change
+		if (minimapManager.updateMinimapLighting)
+			minimapManager.applyLighting(sceneContext);
 	}
 
 	/**
@@ -371,6 +381,7 @@ public class EnvironmentManager {
 			if (abs(diff) > PI)
 				targetSunAngles[i] += TWO_PI * sign(diff);
 		}
+		minimapManager.prepareScene(plugin.getSceneContext());
 	}
 
 	public void updateTargetSkyColor() {
@@ -411,6 +422,7 @@ public class EnvironmentManager {
 
 		// Fall back to the default environment
 		sceneContext.environments.add(Environment.DEFAULT);
+		minimapManager.updateMinimapLighting = true;
 	}
 
 	/* lightning */
