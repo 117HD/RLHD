@@ -8,11 +8,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PluginMessage;
 
 @Singleton
 @Slf4j
-public class RLHDAPI {
+public class HdApi {
 	private static final String NAMESPACE = "117hd";
 	private static final String SUBSCRIBE_PREFIX = "subscribe:";
 	private static final String UNSUBSCRIBE_PREFIX = "unsubscribe:";
@@ -27,7 +28,8 @@ public class RLHDAPI {
 	 * Handles incoming plugin messages for subscription management.
 	 * @param message The plugin message to process
 	 */
-	public void handlePluginMessage(PluginMessage message) {
+	@Subscribe
+	public void onPluginMessage(PluginMessage message) {
 		// Only handle messages for our namespace
 		if (!NAMESPACE.equals(message.getNamespace())) {
 			return;
@@ -115,7 +117,9 @@ public class RLHDAPI {
 	 * Notifies all active subscribers that 117 HD has started.
 	 * Sends a startup message to each subscribed event.
 	 */
-	public void startUp() {
+	public void initialize() {
+		eventBus.register(this);
+
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("startup", true);
 		payload.put("message", "117 HD has started");
@@ -131,7 +135,9 @@ public class RLHDAPI {
 	 * Notifies all active subscribers that 117 HD is shutting down.
 	 * Sends a shutdown message to each subscribed event.
 	 */
-	public void shutDown() {
+	public void destroy() {
+		eventBus.unregister(this);
+
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("shutdown", true);
 		payload.put("message", "117 HD is shutting down");

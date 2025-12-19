@@ -13,7 +13,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PluginMessage;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.api.RLHDAPI;
+import rs117.hd.api.HdApi;
 import rs117.hd.api.RLHDEvent;
 import rs117.hd.api.RLHDSubscribe;
 import rs117.hd.api.RLHDUnsubscribe;
@@ -64,7 +64,7 @@ public class MinimapRenderer {
 	private EventBus eventBus;
 
 	@Inject
-	private RLHDAPI rlhdAPI;
+	private HdApi rlhdAPI;
 
 	public boolean updateMinimapLighting;
 
@@ -74,9 +74,11 @@ public class MinimapRenderer {
 	public void startUp() {
 		minimapTilePaintColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
 		minimapTileModelColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
+		eventBus.register(this);
 	}
 
 	public void clear(SceneContext sceneContext) {
+		eventBus.unregister(this);
 		minimapTilePaintColorsLighting = null;
 		minimapTileModelColorsLighting = null;
 		sceneContext.minimapTileModelColors = null;

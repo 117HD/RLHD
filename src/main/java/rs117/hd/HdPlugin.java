@@ -60,7 +60,6 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.events.PluginMessage;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -75,10 +74,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
-import rs117.hd.api.RLHDAPI;
-import rs117.hd.api.RLHDEvent;
-import rs117.hd.api.RLHDSubscribe;
-import rs117.hd.api.RLHDUnsubscribe;
+import rs117.hd.api.HdApi;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.SeasonalHemisphere;
@@ -145,7 +141,6 @@ import static rs117.hd.utils.ResourcePath.path;
 @PluginDependency(EntityHiderPlugin.class)
 @Slf4j
 public class HdPlugin extends Plugin {
-
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
 
@@ -246,6 +241,9 @@ public class HdPlugin extends Plugin {
 	private HdPluginConfig config;
 
 	@Inject
+	private HdApi api;
+
+	@Inject
 	private GamevalManager gamevalManager;
 
 	@Inject
@@ -279,13 +277,10 @@ public class HdPlugin extends Plugin {
 	private AsyncUICopy asyncUICopy;
 
 	@Inject
-	private MinimapRenderer minimapRenderer;
-
-	@Inject
-	private RLHDAPI api;
-
-	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
+
+	@Inject
+	private MinimapRenderer minimapRenderer;
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
@@ -319,9 +314,6 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	public HDVariables vars;
-
-	@Inject
-	public ConfigManager configManager;
 
 	public Renderer renderer;
 
@@ -648,7 +640,6 @@ public class HdPlugin extends Plugin {
 				textureManager.startUp();
 				materialManager.startUp();
 				waterTypeManager.startUp();
-				minimapRenderer.startUp();
 
 				renderer.initialize();
 				eventBus.register(renderer);
@@ -679,6 +670,7 @@ public class HdPlugin extends Plugin {
 				lightManager.startUp();
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
+				minimapRenderer.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
 
@@ -687,7 +679,7 @@ public class HdPlugin extends Plugin {
 				redrawPreviousFrame = false;
 				skipScene = null;
 
-				api.startUp();
+				api.initialize();
 
 				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -723,7 +715,7 @@ public class HdPlugin extends Plugin {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
-			api.shutDown();
+			api.destroy();
 
 			if (renderer != null)
 				renderer.destroy();
@@ -1880,20 +1872,6 @@ public class HdPlugin extends Plugin {
 		return config.expandedMapLoadingChunks();
 	}
 
-	@Subscribe
-	public void onRLHDSubscribe(RLHDSubscribe event) {
-		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
-			minimapRenderer.onRLHDSubscribe(event);
-		}
-	}
-
-	@Subscribe
-	public void onRLHDUnsubscribe(RLHDUnsubscribe event) {
-		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
-			minimapRenderer.onRLHDUnsubscribe(event);
-		}
-	}
-
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
@@ -1939,11 +1917,6 @@ public class HdPlugin extends Plugin {
 			return;
 
 		fishingSpotReplacer.update();
-	}
-
-	@Subscribe
-	public void onPluginMessage(PluginMessage message) {
-		api.handlePluginMessage(message);
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")
