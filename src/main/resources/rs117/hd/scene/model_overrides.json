@@ -38484,24 +38484,29 @@
     ]
   },
   {
-    "description": "Lumbridge Castle - Standards",
+    "description": "Lumbridge Castle - Standards - Static",
     "baseMaterial": "CARPET_LIGHT",
     "uvType": "MODEL_XY",
-    "uvScale": 0.5,
+    "uvScale": 0.2,
     "objectIds": [
-      "STANDARD_BLUE3",
-      "FLAG_LUMBRIDGE_OVERHANG",
-      "FLAG_LUMBRIDGE",
-      "FLAG_LUMBRIDGE_OVERHANG_POLE"
+      "STANDARD_BLUE3"
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 5", "h == 6" ],
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientation": 512,
         "uvScale": 0.5
       }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Standards - Animated",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "FLAG_LUMBRIDGE_OVERHANG",
+      "FLAG_LUMBRIDGE",
+      "FLAG_LUMBRIDGE_OVERHANG_POLE"
     ]
   },
   {
