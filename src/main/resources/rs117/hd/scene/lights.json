@@ -28800,8 +28800,8 @@
   },
   {
     "description": "CRUMBLE_UNDEAD",
-    "radius": 200,
-    "strength": 5,
+    "radius": 225,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -28810,10 +28810,54 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 200,
+    "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "projectileIds": [
       "CRUMBLEUNDEAD_TRAVEL"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_CAST_RIGHT",
+    "offset": [ 40, 100, 50 ],
+    "radius": 175,
+    "strength": 6,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_CASTING"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_CAST_LEFT",
+    "offset": [ -40, 100, 50 ],
+    "radius": 175,
+    "strength": 6,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_CASTING"
     ]
   },
   {
