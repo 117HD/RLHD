@@ -9319,9 +9319,10 @@
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
-      "UNDERLAY_SNOW_NO_BLENDING": "!blending",
-      "SEASONAL_SNOW": true
-    }
+      "SEASONAL_SNOW": "season == SeasonalTheme.WINTER",
+      "UNDERLAY_SNOW_NO_BLENDING": "!blending"
+    },
+    "shiftLightness": 15
   },
   {
     "name": "UNDERLAY_SNOW_NO_BLENDING",
