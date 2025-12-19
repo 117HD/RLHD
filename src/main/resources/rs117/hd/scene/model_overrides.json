@@ -66803,17 +66803,45 @@
     "uvScale": 0.5,
     "terrainVertexSnap": true,
     "objectIds": [
-      "GODWARS_DEBRIS_TOWER",
       "GODWARS_DEBRIS_BALLANDCHAIN",
       "GODWARS_DEBRIS_BARRELS",
       "GODWARS_DEBRIS_BARRICADE_VARIOUS_WOOD",
-      "GODWARS_DEBRIS_BATTERINGRAM",
       "GODWARS_DEBRIS_WARRIORARM"
     ],
     "colorOverrides": [
       {
         "colors": "h == 33",
         "baseMaterial": "SMOOTH_SNOW_DIM",
+        "terrainVertexSnap": true
+      },
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 0 || h == 10 && s == 1 || h == 36 || h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Battering Ram",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "GODWARS_DEBRIS_BATTERINGRAM",
+      "GODWARS_DEBRIS_TOWER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 33",
+        "baseMaterial": "SMOOTH_SNOW_DARK",
         "terrainVertexSnap": true
       },
       {
@@ -66916,8 +66944,9 @@
     "colorOverrides": [
       {
         "colors": "h == 38 || h == 32 || h == 34",
-        "baseMaterial": "SMOOTH_SNOW_DIM",
-        "uvType": "BOX"
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
       },
       {
         "colors": "h == 0 && l == 2",
