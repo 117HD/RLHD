@@ -78,6 +78,11 @@ public class SceneUploader {
 	// the minimum amount by which each color will be lightened
 	private static final int BASE_LIGHTEN = 10;
 
+	private static final ThreadLocal<StagingFaceBuffer> localStagingOpaqueBuffer = ThreadLocal.withInitial(StagingFaceBuffer::new);
+	private static final ThreadLocal<StagingFaceBuffer> localStagingAlphaBuffer = ThreadLocal.withInitial(StagingFaceBuffer::new);
+	private static final ThreadLocal<StagingFaceBuffer> localStagingOpaqueTexBuffer = ThreadLocal.withInitial(StagingFaceBuffer::new);
+	private static final ThreadLocal<StagingFaceBuffer> localStagingAlphaTexBuffer = ThreadLocal.withInitial(StagingFaceBuffer::new);
+
 	static {
 		for (int i = 0; i < 8; i++)
 			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
@@ -1669,6 +1674,16 @@ public class SceneUploader {
 		IntBuffer opaqueTexBuffer,
 		IntBuffer alphaTexBuffer
 	) {
+		final StagingFaceBuffer stagingOpaqueBuffer = localStagingOpaqueBuffer.get();
+		final StagingFaceBuffer stagingAlphaBuffer = localStagingAlphaBuffer.get();
+		final StagingFaceBuffer stagingOpaqueTexBuffer = localStagingOpaqueTexBuffer.get();
+		final StagingFaceBuffer stagingAlphaTexBuffer = localStagingAlphaTexBuffer.get();
+
+		stagingOpaqueBuffer.set(opaqueBuffer);
+		stagingAlphaBuffer.set(alphaBuffer);
+		stagingOpaqueTexBuffer.set(opaqueTexBuffer);
+		stagingAlphaTexBuffer.set(alphaTexBuffer);
+
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
 
@@ -1873,36 +1888,32 @@ public class SceneUploader {
 				bias == null ? 0 : bias[face] & 0xFF;
 			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
-			IntBuffer vb = hasAlpha ? alphaBuffer : opaqueBuffer;
-			IntBuffer tb = hasAlpha ? alphaTexBuffer : opaqueTexBuffer;
+			var vb = hasAlpha ? stagingAlphaBuffer : stagingOpaqueBuffer;
+			var tb = hasAlpha ? stagingAlphaTexBuffer : stagingOpaqueTexBuffer;
 
 			color1 |= packedAlphaBiasHsl;
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			final int texturedFaceIdx = GpuIntBuffer.putFace(
-				tb,
+			final int texturedFaceIdx = tb.putFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
 				0, 0, 0
 			);
 
-			GpuIntBuffer.putFloatVertex(
-				vb,
+			vb.putVertex(
 				vx1, vy1, vz1,
 				faceUVs[0], faceUVs[1], 0,
 				modelNormals[0], modelNormals[1], modelNormals[2],
 				texturedFaceIdx
 			);
-			GpuIntBuffer.putFloatVertex(
-				vb,
+			vb.putVertex(
 				vx2, vy2, vz2,
 				faceUVs[4], faceUVs[5], 0,
 				modelNormals[3], modelNormals[4], modelNormals[5],
 				texturedFaceIdx
 			);
-			GpuIntBuffer.putFloatVertex(
-				vb,
+			vb.putVertex(
 				vx3, vy3, vz3,
 				faceUVs[8], faceUVs[9], 0,
 				modelNormals[6], modelNormals[7], modelNormals[8],
@@ -1910,6 +1921,12 @@ public class SceneUploader {
 			);
 			len += 3;
 		}
+
+		stagingOpaqueBuffer.flush();
+		stagingAlphaBuffer.flush();
+		stagingOpaqueTexBuffer.flush();
+		stagingAlphaTexBuffer.flush();
+
 		return len;
 	}
 
