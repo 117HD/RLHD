@@ -27837,6 +27837,7 @@
     "height": 20,
     "radius": 125,
     "strength": 12,
+    "fadeOutDuration": 600,
     "color": [
       170,
       20,
