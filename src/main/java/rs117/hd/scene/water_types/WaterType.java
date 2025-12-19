@@ -8,7 +8,6 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import javax.annotation.Nullable;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +35,7 @@ public class WaterType {
 	@Nullable
 	private Material normalMap;
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
-	@Getter
-	private float[] surfaceColor = { 1, 1, 1 };
+	public float[] surfaceColor = { 1, 1, 1 };
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
 	private float[] foamColor = rgb(176, 164, 146);
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)

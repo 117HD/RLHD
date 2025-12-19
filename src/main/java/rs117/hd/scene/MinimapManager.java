@@ -12,7 +12,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PluginMessage;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.api.HdApi;
 import rs117.hd.api.RLHDEvent;
 import rs117.hd.api.RLHDSubscribe;
@@ -29,27 +28,24 @@ import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
-public class MinimapRenderer {
+public class MinimapManager {
 	@Inject
-	ProceduralGenerator proceduralGenerator;
+	private ClientThread clientThread;
 
 	@Inject
-	private Client client;
+	private EventBus eventBus;
+
+	@Inject
+	private ConfigManager configManager;
 
 	@Inject
 	private HdPlugin plugin;
 
 	@Inject
-	private ClientThread clientThread;
-
-	@Inject
-	private HdPluginConfig config;
+	private HdApi api;
 
 	@Inject
 	private EnvironmentManager environmentManager;
-
-	@Inject
-	private TextureManager textureManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -58,13 +54,7 @@ public class MinimapRenderer {
 	private MaterialManager materialManager;
 
 	@Inject
-	private ConfigManager configManager;
-
-	@Inject
-	private EventBus eventBus;
-
-	@Inject
-	private HdApi rlhdAPI;
+	private ProceduralGenerator proceduralGenerator;
 
 	public boolean updateMinimapLighting;
 
@@ -212,7 +202,7 @@ public class MinimapRenderer {
 		}
 		else
 		{
-			Arrays.fill(colors, ColorUtils.srgbToPackedHsl(waterType.getSurfaceColor()));
+			Arrays.fill(colors, ColorUtils.srgbToPackedHsl(waterType.surfaceColor));
 			Arrays.fill(materials, getWater(waterType));
 		}
 
@@ -343,7 +333,7 @@ public class MinimapRenderer {
 					);
 				}
 			} else {
-				Arrays.fill(colors, ColorUtils.srgbToPackedHsl(waterType.getSurfaceColor()));
+				Arrays.fill(colors, ColorUtils.srgbToPackedHsl(waterType.surfaceColor));
 				Arrays.fill(materials, getWater(waterType));
 			}
 
@@ -490,7 +480,7 @@ public class MinimapRenderer {
 	}
 
 	public void sendApiMessage(int[][][][] minimapTilePaintColorsLighting, int[][][][][] minimapTileModelColorsLighting) {
-		if (!rlhdAPI.isSubscribed(RLHDEvent.EVENT_MINIMAP)) {
+		if (!api.isSubscribed(RLHDEvent.EVENT_MINIMAP)) {
 			return;
 		}
 

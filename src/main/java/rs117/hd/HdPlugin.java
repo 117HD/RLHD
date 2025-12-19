@@ -107,7 +107,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.MaterialManager;
-import rs117.hd.scene.MinimapRenderer;
+import rs117.hd.scene.MinimapManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -274,13 +274,13 @@ public class HdPlugin extends Plugin {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
+	private MinimapManager minimapManager;
+
+	@Inject
 	private AsyncUICopy asyncUICopy;
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
-
-	@Inject
-	private MinimapRenderer minimapRenderer;
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
@@ -670,7 +670,7 @@ public class HdPlugin extends Plugin {
 				lightManager.startUp();
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
-				minimapRenderer.startUp();
+				minimapManager.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
 
