@@ -279,7 +279,7 @@ public class HdPlugin extends Plugin {
 	private AsyncUICopy asyncUICopy;
 
 	@Inject
-	public MinimapRenderer minimapRenderer;
+	private MinimapRenderer minimapRenderer;
 
 	@Inject
 	private RLHDAPI api;

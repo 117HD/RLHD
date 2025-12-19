@@ -45,6 +45,7 @@ import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
+import rs117.hd.scene.MinimapRenderer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.Area;
@@ -140,6 +141,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private JobSystem jobSystem;
+
+	@Inject
+	private MinimapRenderer minimapRenderer;
 
 	private final ComputeMode computeMode = HdPlugin.APPLE ? ComputeMode.OPENCL : ComputeMode.OPENGL;
 	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
@@ -1341,7 +1345,7 @@ public class LegacyRenderer implements Renderer {
 
 			environmentManager.loadSceneEnvironments(nextSceneContext);
 			sceneUploader.upload(nextSceneContext);
-			plugin.minimapRenderer.prepareScene(nextSceneContext);
+			minimapRenderer.prepareScene(nextSceneContext);
 		} catch (OutOfMemoryError oom) {
 			log.error(
 				"Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
