@@ -226,7 +226,6 @@
       "SMALL_BAT",
       "FAIRY",
       "BAT",
-      "UNICORN",
       "BROWNBEAR",
       "DARKBEAR",
       "BLACK_UNICORN",
@@ -1071,6 +1070,14 @@
         "baseMaterial": "NONE",
         "castShadows": false
       }
+    ]
+  },
+  {
+    "description": "Unicorn Overbrightness and vanilla shadow removal Fix",
+    "hideVanillaShadows": true,
+    "baseMaterial": "GRAY_65",
+    "npcIds": [
+      "UNICORN"
     ]
   },
   {
