@@ -6911,7 +6911,7 @@
   },
   {
     "description": "GROUND_DECORATION_SNOW",
-    "baseMaterial": "SMOOTH_SNOW",
+    "baseMaterial": "SNOW_3",
     "objectIds": [
       "WYVERN_DUGUPSOIL_1",
       "WYVERN_DUGUPSOIL_3",
@@ -17840,7 +17840,8 @@
   },
   {
     "description": "Ground - Snow Piles - Tiny",
-    "baseMaterial": "SMOOTH_SNOW",
+    "baseMaterial": "SNOW_1",
+    "uvScale": 1.2,
     "castShadows": false,
     "objectIds": [
       "SNOW1",
@@ -17850,8 +17851,7 @@
       "PENG_AGILITY_SNOW01",
       "PENG_AGILITY_SNOW03"
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 2.0
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Ground - Snow Piles - Small",
@@ -39651,9 +39651,9 @@
   },
   {
     "description": "Camdozaal Entrance Sides",
-    "baseMaterial": "SMOOTH_SNOW",
+    "baseMaterial": "SNOW_3",
     "uvType": "BOX",
-    "uvScale": 1.25,
+    "uvScale": 0.33,
     "colorOverrides": [
       {
         "description": "Stone",
@@ -39671,9 +39671,9 @@
   },
   {
     "description": "Camdozaal Entrance",
-    "baseMaterial": "SMOOTH_SNOW",
+    "baseMaterial": "SNOW_3",
     "uvType": "BOX",
-    "uvScale": 1.25,
+    "uvScale": 0.33,
     "colorOverrides": [
       {
         "description": "Stone",
@@ -43255,10 +43255,10 @@
     "colorOverrides": [
       {
         "description": "Snow",
-        "baseMaterial": "SMOOTH_SNOW",
+        "baseMaterial": "SNOW_3",
         "colors": "s == 0",
         "uvType": "BOX",
-        "uvScale": 0.25
+        "uvScale": 0.5
       }
     ],
     "objectIds": [
