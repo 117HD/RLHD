@@ -28898,6 +28898,48 @@
     ]
   },
   {
+    "description": "IBAN_BLAST_CAST_START",
+    "offset": [ 0, 250, 80 ],
+    "radius": 350,
+    "strength": 9,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 150,
+    "graphicsObjectIds": [
+      "IBANBLAST_CASTING"
+    ]
+  },
+  {
+    "description": "IBAN_BLAST_CAST_END",
+    "offset": [ 0, 150, 120 ],
+    "radius": 300,
+    "spawnDelay": 1150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 450,
+    "strength": 8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "IBANBLAST_CASTING"
+    ]
+  },
+  {
     "description": "TELE_BLOCK",
     "radius": 200,
     "strength": 5,
