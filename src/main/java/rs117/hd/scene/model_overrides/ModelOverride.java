@@ -339,7 +339,7 @@ public class ModelOverride
 		if (combinedPredicate == null)
 			return ahsl -> false;
 
-		return combinedPredicate;
+		return new AhslPredicateCache(combinedPredicate);
 	}
 
 	public void computeModelUvw(float[] out, int i, float x, float y, float z, int orientation) {
