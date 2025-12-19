@@ -29802,6 +29802,26 @@
     "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
   },
   {
+    "description": "Dragonfire Breath - Frost Dragon",
+    "offset": [ 0, 150, 290 ],
+    "radius": 185,
+    "strength": 25,
+    "color": [
+      215,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [ "FROSTBREATH_ATTACK" ]
+  },
+  {
     "description": "UNDEAD_DRUID",
     "radius": 300,
     "strength": 10,
