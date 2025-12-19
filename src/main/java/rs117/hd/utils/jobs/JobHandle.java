@@ -249,7 +249,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 					long start = System.currentTimeMillis();
 					int seconds = 0;
 					while (!tryAcquireSharedNanos(0, TimeUnit.MILLISECONDS.toNanos(1))) {
-						JOB_SYSTEM.processPendingClientCallbacks(false);
+						JOB_SYSTEM.processPendingClientCallbacks();
 						long elapsed = System.currentTimeMillis() - start;
 						int newSeconds = (int) (elapsed / 1000);
 						if (newSeconds > seconds) {

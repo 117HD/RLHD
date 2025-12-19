@@ -2743,7 +2743,8 @@
     "name": "AGILITY_PYRAMID_TOP",
     "regions": [
       12105
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "SOPHANEM_TEMPLE_FLOORS",
@@ -8812,7 +8813,8 @@
     "regions": [
       10575,
       10831
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "THE_SCAR_MAIN_AREA",
@@ -10919,6 +10921,7 @@
       "BRAINDEATH_ISLAND",
       "CLAN_HALL",
       "CLAN_WARS_ARENAS_OVERWORLD",
+      "AGILITY_PYRAMID_TOP",
       "EVIL_BOB_ISLAND",
       "FISHER_KINGS_REALM",
       "LMS_ARENA_DESERTED_ISLAND",
