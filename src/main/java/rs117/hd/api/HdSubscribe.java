@@ -6,7 +6,6 @@ import lombok.Value;
  * Event posted when a plugin subscribes to an RLHD event.
  */
 @Value
-public class RLHDSubscribe {
-	RLHDEvent event;
+public class HdSubscribe {
+	HdEvent event;
 }
-

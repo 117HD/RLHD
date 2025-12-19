@@ -11,18 +11,48 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PluginMessage;
 
-@Singleton
 @Slf4j
+@Singleton
 public class HdApi {
 	private static final String NAMESPACE = "117hd";
-	private static final String SUBSCRIBE_PREFIX = "subscribe:";
-	private static final String UNSUBSCRIBE_PREFIX = "unsubscribe:";
-	private static final String RESPONSE_PREFIX = "response:";
+	private static final String PREFIX_SUBSCRIBE = "subscribe:";
+	private static final String PREFIX_UNSUBSCRIBE = "unsubscribe:";
+	private static final String PREFIX_RESPONSE = "response:";
 
 	@Inject
 	private EventBus eventBus;
 
-	private final Set<RLHDEvent> eventSubscriptions = ConcurrentHashMap.newKeySet();
+	private final Set<HdEvent> eventSubscriptions = ConcurrentHashMap.newKeySet();
+
+	public void initialize() {
+		eventBus.register(this);
+
+		Map<String, Object> payload = new HashMap<>();
+		payload.put("startup", true);
+		payload.put("message", "117 HD has started");
+
+		for (HdEvent event : HdEvent.values()) {
+			String eventName = event.getEventName();
+			eventBus.post(new PluginMessage(NAMESPACE, eventName, payload));
+			log.debug("Sent startup notification to subscribers of event: {}", eventName);
+		}
+	}
+
+	public void destroy() {
+		eventBus.unregister(this);
+
+		Map<String, Object> payload = new HashMap<>();
+		payload.put("shutdown", true);
+		payload.put("message", "117 HD is shutting down");
+
+		for (HdEvent event : HdEvent.values()) {
+			String eventName = event.getEventName();
+			eventBus.post(new PluginMessage(NAMESPACE, eventName, payload));
+			log.debug("Sent shutdown notification to subscribers of event: {}", eventName);
+		}
+
+		eventSubscriptions.clear();
+	}
 
 	/**
 	 * Handles incoming plugin messages for subscription management.
@@ -40,11 +70,11 @@ public class HdApi {
 			return;
 		}
 
-		if (name.startsWith(SUBSCRIBE_PREFIX)) {
-			String eventName = name.substring(SUBSCRIBE_PREFIX.length());
+		if (name.startsWith(PREFIX_SUBSCRIBE)) {
+			String eventName = name.substring(PREFIX_SUBSCRIBE.length());
 			handleSubscribe(eventName);
-		} else if (name.startsWith(UNSUBSCRIBE_PREFIX)) {
-			String eventName = name.substring(UNSUBSCRIBE_PREFIX.length());
+		} else if (name.startsWith(PREFIX_UNSUBSCRIBE)) {
+			String eventName = name.substring(PREFIX_UNSUBSCRIBE.length());
 			handleUnsubscribe(eventName);
 		}
 	}
@@ -54,7 +84,7 @@ public class HdApi {
 	 * @param eventName The event name to subscribe to
 	 */
 	private void handleSubscribe(String eventName) {
-		RLHDEvent event = RLHDEvent.fromName(eventName);
+		HdEvent event = HdEvent.fromName(eventName);
 		
 		if (event == null) {
 			sendResponse(eventName, false, "Event '" + eventName + "' is not available for subscription");
@@ -65,7 +95,7 @@ public class HdApi {
 		eventSubscriptions.add(event);
 
 		log.debug("Subscription added for event: {}", eventName);
-		eventBus.post(new RLHDSubscribe(event));
+		eventBus.post(new HdSubscribe(event));
 	}
 
 	/**
@@ -73,7 +103,7 @@ public class HdApi {
 	 * @param eventName The event name to unsubscribe from
 	 */
 	private void handleUnsubscribe(String eventName) {
-		RLHDEvent event = RLHDEvent.fromName(eventName);
+		HdEvent event = HdEvent.fromName(eventName);
 		
 		if (event == null) {
 			// Event not approved, but we'll still try to remove it (in case it was a typo)
@@ -85,7 +115,7 @@ public class HdApi {
 		eventSubscriptions.remove(event);
 
 		log.debug("Subscription removed for event: {}", eventName);
-		eventBus.post(new RLHDUnsubscribe(event));
+		eventBus.post(new HdUnsubscribe(event));
 	}
 
 	/**
@@ -99,56 +129,12 @@ public class HdApi {
 		payload.put("event", eventName);
 		payload.put("success", success);
 		payload.put("message", message);
-		
-		String responseName = RESPONSE_PREFIX + eventName;
+
+		String responseName = PREFIX_RESPONSE + eventName;
 		eventBus.post(new PluginMessage(NAMESPACE, responseName, payload));
 	}
 
-	/**
-	 * Checks if a specific event is currently subscribed.
-	 * @param event The event to check
-	 * @return true if subscribed, false otherwise
-	 */
-	public boolean isSubscribed(RLHDEvent event) {
+	public boolean isSubscribed(HdEvent event) {
 		return eventSubscriptions.contains(event);
 	}
-
-	/**
-	 * Notifies all active subscribers that 117 HD has started.
-	 * Sends a startup message to each subscribed event.
-	 */
-	public void initialize() {
-		eventBus.register(this);
-
-		Map<String, Object> payload = new HashMap<>();
-		payload.put("startup", true);
-		payload.put("message", "117 HD has started");
-
-		for (RLHDEvent event : RLHDEvent.values()) {
-			String eventName = event.getEventName();
-			eventBus.post(new PluginMessage(NAMESPACE, eventName, payload));
-			log.debug("Sent startup notification to subscribers of event: {}", eventName);
-		}
-	}
-
-	/**
-	 * Notifies all active subscribers that 117 HD is shutting down.
-	 * Sends a shutdown message to each subscribed event.
-	 */
-	public void destroy() {
-		eventBus.unregister(this);
-
-		Map<String, Object> payload = new HashMap<>();
-		payload.put("shutdown", true);
-		payload.put("message", "117 HD is shutting down");
-
-		for (RLHDEvent event : RLHDEvent.values()) {
-			String eventName = event.getEventName();
-			eventBus.post(new PluginMessage(NAMESPACE, eventName, payload));
-			log.debug("Sent shutdown notification to subscribers of event: {}", eventName);
-		}
-
-		eventSubscriptions.clear();
-	}
 }
-

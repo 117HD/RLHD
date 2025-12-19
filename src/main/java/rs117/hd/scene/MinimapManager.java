@@ -13,9 +13,9 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PluginMessage;
 import rs117.hd.HdPlugin;
 import rs117.hd.api.HdApi;
-import rs117.hd.api.RLHDEvent;
-import rs117.hd.api.RLHDSubscribe;
-import rs117.hd.api.RLHDUnsubscribe;
+import rs117.hd.api.HdEvent;
+import rs117.hd.api.HdSubscribe;
+import rs117.hd.api.HdUnsubscribe;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.water_types.WaterType;
@@ -480,19 +480,19 @@ public class MinimapManager {
 	}
 
 	public void sendApiMessage(int[][][][] minimapTilePaintColorsLighting, int[][][][][] minimapTileModelColorsLighting) {
-		if (!api.isSubscribed(RLHDEvent.EVENT_MINIMAP)) {
+		if (!api.isSubscribed(HdEvent.EVENT_MINIMAP)) {
 			return;
 		}
 
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("paintColors", minimapTilePaintColorsLighting);
 		payload.put("modelColors", minimapTileModelColorsLighting);
-		eventBus.post(new PluginMessage("117hd", RLHDEvent.EVENT_MINIMAP.getEventName(), payload));
+		eventBus.post(new PluginMessage("117hd", HdEvent.EVENT_MINIMAP.getEventName(), payload));
 	}
 
 	@Subscribe
-	public void onRLHDSubscribe(RLHDSubscribe event) {
-		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
+	public void onRLHDSubscribe(HdSubscribe event) {
+		if (event.getEvent() == HdEvent.EVENT_MINIMAP) {
 			clientThread.invoke(() -> {
 				startUp();
 				SceneContext sceneContext = plugin.getSceneContext();
@@ -505,8 +505,8 @@ public class MinimapManager {
 	}
 
 	@Subscribe
-	public void onRLHDUnsubscribe(RLHDUnsubscribe event) {
-		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
+	public void onRLHDUnsubscribe(HdUnsubscribe event) {
+		if (event.getEvent() == HdEvent.EVENT_MINIMAP) {
 			SceneContext sceneContext = plugin.getSceneContext();
 			if (sceneContext != null) {
 				clear(sceneContext);
