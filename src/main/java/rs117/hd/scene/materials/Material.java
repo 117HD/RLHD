@@ -60,7 +60,7 @@ public class Material {
 	private float displacementScale = .1f;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
-	public float[] averageColor = { 0.0f, 0.0f, 0.0f };
+	public float[] averageColor = { 0, 0, 0 };
 	private float specularStrength;
 	private float specularGloss;
 	private float[] scrollSpeed = { 0, 0 };

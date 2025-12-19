@@ -54,7 +54,6 @@ public class SceneContext {
 	public int[][][][] minimapTilePaintColors;
 	public int[][][][][] minimapTileModelColors;
 
-
 	// Statistics
 	public int uniqueModels;
 

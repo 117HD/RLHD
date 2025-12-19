@@ -49,6 +49,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.materials.Material;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDVariables;
@@ -489,7 +490,7 @@ public class MaterialManager {
 				continue;
 
 			try {
-				material.averageColor = textureManager.calculateAverageHSL(image);
+				material.averageColor = ColorUtils.averageSrgb(image);
 				if (!uploadedAnything) {
 					glActiveTexture(TEXTURE_UNIT_GAME);
 					glBindTexture(GL_TEXTURE_2D_ARRAY, texMaterialTextureArray);
