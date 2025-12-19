@@ -24,22 +24,14 @@
  */
 package rs117.hd.renderer.zone;
 
-import com.google.common.base.Stopwatch;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
-import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
-import net.runelite.client.callback.ClientThread;
 import net.runelite.client.callback.RenderCallbackManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
@@ -58,14 +50,11 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
-import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
-import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.areas.AABB;
-import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
@@ -74,13 +63,13 @@ import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
-import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.jobs.GenericJob;
+import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
@@ -96,17 +85,11 @@ import static rs117.hd.utils.MathUtils.*;
 public class ZoneRenderer implements Renderer {
 	private static final int ALPHA_ZSORT_CLOSE = 2048;
 
-	public static final int NUM_ZONES = EXTENDED_SCENE_SIZE >> 3;
-	public static final int MAX_WORLDVIEWS = 4096;
-
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
 
 	@Inject
 	private Client client;
-
-	@Inject
-	private ClientThread clientThread;
 
 	@Inject
 	private DrawManager drawManager;
@@ -121,9 +104,6 @@ public class ZoneRenderer implements Renderer {
 	private HdPluginConfig config;
 
 	@Inject
-	private AreaManager areaManager;
-
-	@Inject
 	private LightManager lightManager;
 
 	@Inject
@@ -133,22 +113,13 @@ public class ZoneRenderer implements Renderer {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
-	private ProceduralGenerator proceduralGenerator;
+	private SceneManager sceneManager;
 
 	@Inject
 	private SceneUploader sceneUploader;
 
 	@Inject
-	private SceneUploader asyncSceneUploader;
-
-	@Inject
 	private FacePrioritySorter facePrioritySorter;
-
-	@Inject
-	private FishingSpotReplacer fishingSpotReplacer;
-
-	@Inject
-	private NpcDisplacementCache npcDisplacementCache;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -163,14 +134,16 @@ public class ZoneRenderer implements Renderer {
 	private ShadowShaderProgram.Detailed detailedShadowProgram;
 
 	@Inject
+	private JobSystem jobSystem;
+
+	@Inject
 	private UBOWorldViews uboWorldViews;
 
 	private final Camera sceneCamera = new Camera();
 	private final Camera directionalCamera = new Camera().setOrthographic(true);
 	private final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
-	private int minLevel, level, maxLevel;
-	private Set<Integer> hideRoofIds;
+	private final int[] worldPos = new int[3];
 
 	private final RenderState renderState = new RenderState();
 	private final CommandBuffer sceneCmd = new CommandBuffer(renderState);
@@ -179,7 +152,7 @@ public class ZoneRenderer implements Renderer {
 	private VAO.VAOList vaoO;
 	private VAO.VAOList vaoA;
 	private VAO.VAOList vaoPO;
-	private VAO.VAOList vaoPOShadow;
+	private VAO.VAOList vaoShadow;
 
 	public static int indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -188,35 +161,8 @@ public class ZoneRenderer implements Renderer {
 	public static GpuIntBuffer eboAlphaStaging;
 	public static int alphaFaceCount;
 
-	WorldViewContext context(Scene scene) {
-		return context(scene.getWorldViewId());
-	}
-
-	WorldViewContext context(WorldView wv) {
-		return context(wv.getId());
-	}
-
-	WorldViewContext context(int worldViewId) {
-		if (worldViewId != -1)
-			return subs[worldViewId];
-		if (root.sceneContext == null)
-			return null;
-		return root;
-	}
-
 	private boolean sceneFboValid;
-	private boolean deferScenePass;
-
-	private final WorldViewContext root = new WorldViewContext(null, null, null);
-	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
-	private ZoneSceneContext nextSceneContext;
-	private Zone[][] nextZones;
-	private Map<Integer, Integer> nextRoofChanges;
-
-	@Nullable
-	public ZoneSceneContext getSceneContext() {
-		return root.sceneContext;
-	}
+	private boolean shouldRenderScene;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -235,32 +181,23 @@ public class ZoneRenderer implements Renderer {
 	public void initialize() {
 		initializeBuffers();
 
+		jobSystem.initialize();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
+		sceneManager.initialize(uboWorldViews);
 	}
 
 	@Override
 	public void destroy() {
-		root.free();
-
-		for (int i = 0; i < subs.length; i++) {
-			if (subs[i] != null)
-				subs[i].free();
-			subs[i] = null;
-		}
-
 		destroyBuffers();
-		uboWorldViews.destroy();
 
-		Zone.freeZones(nextZones);
-		nextZones = null;
-		nextRoofChanges = null;
-		if (nextSceneContext != null)
-			nextSceneContext.destroy();
-		nextSceneContext = null;
+		jobSystem.destroy();
+		sceneManager.destroy();
+		uboWorldViews.destroy();
 	}
 
 	@Override
 	public void waitUntilIdle() {
+		sceneManager.completeAllStreaming();
 		glFinish();
 	}
 
@@ -296,15 +233,15 @@ public class ZoneRenderer implements Renderer {
 		vaoO = new VAO.VAOList(eboAlpha);
 		vaoA = new VAO.VAOList(eboAlpha);
 		vaoPO = new VAO.VAOList(eboAlpha);
-		vaoPOShadow = new VAO.VAOList(eboAlpha);
+		vaoShadow = new VAO.VAOList(eboAlpha);
 	}
 
 	private void destroyBuffers() {
 		vaoO.free();
 		vaoA.free();
 		vaoPO.free();
-		vaoPOShadow.free();
-		vaoO = vaoA = vaoPO = vaoPOShadow = null;
+		vaoShadow.free();
+		vaoO = vaoA = vaoPO = vaoShadow = null;
 
 		if (eboAlpha != 0)
 			glDeleteBuffers(eboAlpha);
@@ -329,13 +266,16 @@ public class ZoneRenderer implements Renderer {
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw,
 		int minLevel, int level, int maxLevel, Set<Integer> hideRoofIds
 	) {
-		this.minLevel = minLevel;
-		this.level = level;
-		this.maxLevel = maxLevel;
-		this.hideRoofIds = hideRoofIds;
+		WorldViewContext ctx = sceneManager.getContext(scene);
+		if (ctx == null)
+			return;
 
-		WorldViewContext ctx = context(scene);
-		if (ctx != null && ctx.uboWorldViewStruct != null)
+		ctx.minLevel = minLevel;
+		ctx.level = level;
+		ctx.maxLevel = maxLevel;
+		ctx.hideRoofIds = hideRoofIds;
+
+		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.update();
 
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
@@ -344,7 +284,7 @@ public class ZoneRenderer implements Renderer {
 			Scene topLevel = client.getScene();
 			vaoO.addRange(topLevel);
 			vaoPO.addRange(topLevel);
-			vaoPOShadow.addRange(topLevel);
+			vaoShadow.addRange(topLevel);
 		}
 	}
 
@@ -352,18 +292,20 @@ public class ZoneRenderer implements Renderer {
 		Scene scene,
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw
 	) {
+		jobSystem.processPendingClientCallbacks();
+
 		scene.setDrawDistance(plugin.getDrawDistance());
 		plugin.updateSceneFbo();
 
-		if (root.sceneContext == null || plugin.sceneViewport == null)
+		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
+
+		WorldViewContext ctx = sceneManager.getContext(scene);
 
 		frameTimer.begin(Timer.DRAW_FRAME);
 		frameTimer.begin(Timer.DRAW_SCENE);
 
 		boolean updateUniforms = true;
-
-		updateAreaHiding();
 
 		if (!plugin.enableFreezeFrame) {
 			if (!plugin.redrawPreviousFrame) {
@@ -389,10 +331,30 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			if (updateUniforms) {
+				if (ctx.sceneContext.scene == scene) {
+					try {
+						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+						environmentManager.update(ctx.sceneContext);
+						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+
+						frameTimer.begin(Timer.UPDATE_LIGHTS);
+						lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
+						frameTimer.end(Timer.UPDATE_LIGHTS);
+
+						frameTimer.begin(Timer.UPDATE_SCENE);
+						sceneManager.update();
+						frameTimer.end(Timer.UPDATE_SCENE);
+					} catch (Exception ex) {
+						log.error("Error while updating environment or lights:", ex);
+						plugin.stopPlugin();
+						return;
+					}
+				}
+
 				copyTo(plugin.cameraPosition, vec(cameraX, cameraY, cameraZ));
 				copyTo(plugin.cameraOrientation, vec(cameraYaw, cameraPitch));
 
-				if (root.sceneContext.scene == scene) {
+				if (ctx.sceneContext.scene == scene) {
 					copyTo(plugin.cameraFocalPoint, ivec((int) client.getCameraFocalPointX(), (int) client.getCameraFocalPointZ()));
 					Arrays.fill(plugin.cameraShift, 0);
 				} else {
@@ -486,40 +448,24 @@ public class ZoneRenderer implements Renderer {
 					plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 				}
 
-				if (root.sceneContext.scene == scene) {
-					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(root.sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
-
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(root.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
-					} catch (Exception ex) {
-						log.error("Error while updating environment or lights:", ex);
-						plugin.stopPlugin();
-						return;
-					}
-				}
-
 				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
 				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
 				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
 				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
-				plugin.uboGlobal.pointLightsCount.set(root.sceneContext.numVisibleLights);
+				plugin.uboGlobal.pointLightsCount.set(ctx.sceneContext.numVisibleLights);
 				plugin.uboGlobal.upload();
 			}
 		}
 
-		if (plugin.configDynamicLights != DynamicLights.NONE && root.sceneContext.scene == scene && updateUniforms) {
+		if (plugin.configDynamicLights != DynamicLights.NONE && ctx.sceneContext.scene == scene) {
 			// Update lights UBO
-			assert root.sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
+			assert ctx.sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
 
 			frameTimer.begin(Timer.UPDATE_LIGHTS);
 			final float[] lightPosition = new float[4];
 			final float[] lightColor = new float[4];
-			for (int i = 0; i < root.sceneContext.numVisibleLights; i++) {
-				final Light light = root.sceneContext.lights.get(i);
+			for (int i = 0; i < ctx.sceneContext.numVisibleLights; i++) {
+				final Light light = ctx.sceneContext.lights.get(i);
 				final float lightRadiusSq = light.radius * light.radius;
 				lightPosition[0] = light.pos[0] + plugin.cameraShift[0];
 				lightPosition[1] = light.pos[1];
@@ -579,28 +525,6 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
-		if (plugin.lastFrameTimeMillis > 0) {
-			plugin.deltaTime = (float) ((System.currentTimeMillis() - plugin.lastFrameTimeMillis) / 1000.);
-
-			// Restart the plugin to avoid potential buffer corruption if the computer has likely resumed from suspension
-			if (plugin.deltaTime > 300) {
-				log.debug("Restarting the plugin after probable OS suspend ({} second delta)", plugin.deltaTime);
-				plugin.restartPlugin();
-				return;
-			}
-
-			// If system time changes between frames, clamp the delta to a more sensible value
-			if (abs(plugin.deltaTime) > 10)
-				plugin.deltaTime = 1 / 60.f;
-			plugin.elapsedTime += plugin.deltaTime;
-			plugin.windOffset += plugin.deltaTime * environmentManager.currentWindSpeed;
-
-			// The client delta doesn't need clamping
-			plugin.deltaClientTime = (float) (plugin.elapsedClientTime - plugin.lastFrameClientTime);
-		}
-		plugin.lastFrameTimeMillis = System.currentTimeMillis();
-		plugin.lastFrameClientTime = plugin.elapsedClientTime;
-
 		// Upon logging in, the client will draw some frames with zero geometry before it hides the login screen
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
@@ -620,7 +544,7 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
 
 		plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
-		plugin.uboGlobal.expandedMapLoadingChunks.set(root.sceneContext.expandedMapLoadingChunks);
+		plugin.uboGlobal.expandedMapLoadingChunks.set(ctx.sceneContext.expandedMapLoadingChunks);
 		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
 		float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
@@ -669,7 +593,7 @@ public class ZoneRenderer implements Renderer {
 			0);
 
 		// Lights & lightning
-		plugin.uboGlobal.pointLightsCount.set(root.sceneContext.numVisibleLights);
+		plugin.uboGlobal.pointLightsCount.set(ctx.sceneContext.numVisibleLights);
 		plugin.uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
 
 		plugin.uboGlobal.saturation.set(config.saturation() / 100f);
@@ -688,7 +612,6 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		plugin.uboGlobal.upload();
-		uboWorldViews.upload();
 
 		// Reset buffers for the next frame
 		eboAlphaStaging.clear();
@@ -700,68 +623,24 @@ public class ZoneRenderer implements Renderer {
 		checkGLErrors();
 	}
 
-	private void updateAreaHiding() {
-		Player localPlayer = client.getLocalPlayer();
-		var lp = localPlayer.getLocalLocation();
-		if (root.sceneContext.enableAreaHiding) {
-			var base = root.sceneContext.sceneBase;
-			assert base != null;
-			int[] worldPos = {
-				base[0] + lp.getSceneX(),
-				base[1] + lp.getSceneY(),
-				base[2] + client.getTopLevelWorldView().getPlane()
-			};
-
-			// We need to check all areas contained in the scene in the order they appear in the list,
-			// in order to ensure lower floors can take precedence over higher floors which include tiny
-			// portions of the floor beneath around stairs and ladders
-			Area newArea = null;
-			for (var area : root.sceneContext.possibleAreas) {
-				if (area.containsPoint(false, worldPos)) {
-					newArea = area;
-					break;
-				}
-			}
-
-			// Force a scene reload if the player is no longer in the same area
-			if (newArea != root.sceneContext.currentArea) {
-				if (plugin.justChangedArea) {
-					// Disable area hiding if it somehow gets stuck in a loop switching areas
-					root.sceneContext.enableAreaHiding = false;
-					log.error(
-						"Disabling area hiding after moving from {} to {} at {}",
-						root.sceneContext.currentArea,
-						newArea,
-						worldPos
-					);
-					newArea = null;
-				} else {
-					plugin.justChangedArea = true;
-					// This should happen very rarely, so we invalidate all zones for simplicity
-					root.invalidate();
-				}
-				root.sceneContext.currentArea = newArea;
-			} else {
-				plugin.justChangedArea = false;
-			}
-		} else {
-			plugin.justChangedArea = false;
-		}
-	}
-
 	@Override
 	public void postSceneDraw(Scene scene) {
+		jobSystem.processPendingClientCallbacks();
+
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 			postDrawTopLevel();
 	}
 
 	private void postDrawTopLevel() {
-		if (root.sceneContext == null || plugin.sceneViewport == null)
+		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
 
 		sceneFboValid = true;
 
 		vaoA.unmap();
+
+		// Upload world views before rendering
+		uboWorldViews.upload();
 
 		// Scene draw state to apply before all recorded commands
 		if (eboAlphaStaging.position() > 0) {
@@ -776,15 +655,13 @@ public class ZoneRenderer implements Renderer {
 			glBufferData(GL_DRAW_INDIRECT_BUFFER, indirectDrawCmdsStaging.getBuffer(), GL_STREAM_DRAW);
 		}
 
-		directionalShadowPass();
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 
-		if (!APPLE) {
-			scenePass();
-		} else {
-			deferScenePass = true;
-		}
+		// Space out GL calls on Apple, to minimize stalls from the command queue filling up
+		if (APPLE)
+			directionalShadowPass();
+		shouldRenderScene = true;
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
 		// but the compute shaders should still be executed in case the camera angle has changed.
@@ -802,32 +679,30 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void directionalShadowPass() {
-		if (plugin.configShadowsEnabled &&
-			plugin.fboShadowMap != 0 &&
-			environmentManager.currentDirectionalStrength > 0
-		) {
-			frameTimer.begin(Timer.RENDER_SHADOWS);
+		if (!plugin.configShadowsEnabled || plugin.fboShadowMap == 0 || environmentManager.currentDirectionalStrength <= 0)
+			return;
 
-			// Render to the shadow depth map
-			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
-			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
-			renderState.apply();
+		frameTimer.begin(Timer.RENDER_SHADOWS);
 
-			glClearDepth(1);
-			glClear(GL_DEPTH_BUFFER_BIT);
+		// Render to the shadow depth map
+		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
+		renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
+		renderState.apply();
 
-			renderState.enable.set(GL_DEPTH_TEST);
-			renderState.disable.set(GL_CULL_FACE);
-			renderState.depthFunc.set(GL_LEQUAL);
+		glClearDepth(1);
+		glClear(GL_DEPTH_BUFFER_BIT);
 
-			CommandBuffer.SKIP_DEPTH_MASKING = true;
-			directionalCmd.execute();
-			CommandBuffer.SKIP_DEPTH_MASKING = false;
+		renderState.enable.set(GL_DEPTH_TEST);
+		renderState.disable.set(GL_CULL_FACE);
+		renderState.depthFunc.set(GL_LEQUAL);
 
-			renderState.disable.set(GL_DEPTH_TEST);
+		CommandBuffer.SKIP_DEPTH_MASKING = true;
+		directionalCmd.execute();
+		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
-			frameTimer.end(Timer.RENDER_SHADOWS);
-		}
+		renderState.disable.set(GL_DEPTH_TEST);
+
+		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
 	private void scenePass() {
@@ -883,16 +758,17 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public boolean zoneInFrustum(int zx, int zz, int maxY, int minY) {
-		if (root.sceneContext == null)
+		if (!sceneManager.isTopLevelValid())
 			return false;
 
+		WorldViewContext ctx = sceneManager.getRoot();
 		if (plugin.enableDetailedTimers) frameTimer.begin(Timer.VISIBILITY_CHECK);
-		int minX = zx * CHUNK_SIZE - root.sceneContext.sceneOffset;
-		int minZ = zz * CHUNK_SIZE - root.sceneContext.sceneOffset;
-		if (root.sceneContext.currentArea != null) {
-			var base = root.sceneContext.sceneBase;
+		int minX = zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
+		int minZ = zz * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
+		if (ctx.sceneContext.currentArea != null) {
+			var base = ctx.sceneContext.sceneBase;
 			assert base != null;
-			boolean inArea = root.sceneContext.currentArea.intersects(
+			boolean inArea = ctx.sceneContext.currentArea.intersects(
 				true, base[0] + minX, base[1] + minZ, base[0] + minX + 7, base[1] + minZ + 7);
 			if (!inArea) {
 				if (plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
@@ -904,18 +780,66 @@ public class ZoneRenderer implements Renderer {
 		minZ *= LOCAL_TILE_SIZE;
 		int maxX = minX + CHUNK_SIZE * LOCAL_TILE_SIZE;
 		int maxZ = minZ + CHUNK_SIZE * LOCAL_TILE_SIZE;
-		Zone zone = root.zones[zx][zz];
+		Zone zone = ctx.zones[zx][zz];
 		if (zone.hasWater) {
 			maxY += ProceduralGenerator.MAX_DEPTH;
 			minY -= ProceduralGenerator.MAX_DEPTH;
 		}
 
-		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
-		if (zone.inSceneFrustum) {
-			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.VISIBILITY_CHECK);
-			return zone.inShadowFrustum = true;
+		int x = (((zx << 3) - ctx.sceneContext.sceneOffset) << 7) + 512 - (int) sceneCamera.getPositionX();
+		int z = (((zz << 3) - ctx.sceneContext.sceneOffset) << 7) + 512 - (int) sceneCamera.getPositionZ();
+		int y = maxY - (int) sceneCamera.getPositionY();
+		int zoneRadius = 724; // ~ 512 * sqrt(2)
+		int waterDepth = zone.hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
+
+		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
+		final int rightClip = client.getRasterizer3D_clipMidX2();
+		final int topClip = client.getRasterizer3D_clipNegativeMidY();
+		final int bottomClip = client.getRasterizer3D_clipMidY2();
+
+		final int cameraYawCos = Perspective.COSINE[sceneCamera.getFixedYaw()];
+		final int cameraYawSin = SINE[sceneCamera.getFixedYaw()];
+		final int cameraPitchCos = COSINE[sceneCamera.getFixedPitch()];
+		final int cameraPitchSin = SINE[sceneCamera.getFixedPitch()];
+		final int cameraZoom = (int) sceneCamera.getZoom();
+
+		// Check if the tile is within the near plane of the frustum
+		int transformedZ = z * cameraYawCos - x * cameraYawSin >> 16;
+		int depth = (y + waterDepth) * cameraPitchSin + (transformedZ + zoneRadius) * cameraPitchCos >> 16;
+		if (depth > NEAR_PLANE) {
+			// Check left bound
+			int transformedX = z * cameraYawSin + x * cameraYawCos >> 16;
+			int left = transformedX - zoneRadius;
+			if (left * cameraZoom < rightClip * depth) {
+				// Check right bound
+				int right = transformedX + zoneRadius;
+				if (right * cameraZoom > leftClip * depth) {
+					// Check top bound
+					int transformedY = y * cameraPitchCos - transformedZ * cameraPitchSin >> 16;
+					int transformedRadius = zoneRadius * cameraPitchSin >> 16;
+					int transformedWaterDepth = waterDepth * cameraPitchCos >> 16;
+					int bottom = transformedY + transformedRadius + transformedWaterDepth;
+					if (bottom * cameraZoom > topClip * depth) {
+						// Check bottom bound
+						int transformedZoneHeight = minY * cameraPitchCos >> 16;
+						int top = transformedY - transformedRadius + transformedZoneHeight;
+						if (top * cameraZoom < bottomClip * depth) {
+							if (plugin.enableDetailedTimers)
+								frameTimer.end(Timer.VISIBILITY_CHECK);
+							return zone.inSceneFrustum = zone.inShadowFrustum = true;
+						}
+					}
+				}
+			}
 		}
+
+		// TODO: This leads to objects that extend past the zone being culled, e.g. the platform pieces at Akkha
+//		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
+//		if (zone.inSceneFrustum) {
+//			if (plugin.enableDetailedTimers)
+//				frameTimer.end(Timer.VISIBILITY_CHECK);
+//			return zone.inShadowFrustum = true;
+//		}
 
 		if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
 			zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
@@ -940,7 +864,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
-		WorldViewContext ctx = context(scene);
+		jobSystem.processPendingClientCallbacks();
+
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null)
 			return;
 
@@ -948,18 +874,12 @@ public class ZoneRenderer implements Renderer {
 		if (!z.initialized || z.sizeO == 0)
 			return;
 
-		if (ctx != root || z.inSceneFrustum)
-			z.renderOpaque(sceneCmd, minLevel, level, maxLevel, hideRoofIds);
+		if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
+			z.renderOpaque(sceneCmd, ctx, false);
 
-		if (ctx != root || z.inShadowFrustum) {
+		if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
 			directionalCmd.SetShader(fastShadowProgram);
-			z.renderOpaque(
-				directionalCmd,
-				minLevel,
-				level,
-				plugin.configRoofShadows ? 3 : maxLevel,
-				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds
-			);
+			z.renderOpaque(directionalCmd, ctx, plugin.configRoofShadows);
 		}
 
 		checkGLErrors();
@@ -967,7 +887,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
-		WorldViewContext ctx = context(scene);
+		jobSystem.processPendingClientCallbacks();
+
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null)
 			return;
 
@@ -987,42 +909,20 @@ public class ZoneRenderer implements Renderer {
 		int dx = (int) plugin.cameraPosition[0] - ((zx - offset) << 10);
 		int dz = (int) plugin.cameraPosition[2] - ((zz - offset) << 10);
 		// If the zone is at sea, allow incorrect alpha ordering in the distance, for areas like north of Prifddinas
-		boolean useStaticUnsorted = z.onlyWater && dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
+		boolean skipSorting = z.onlyWater && dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
 
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, sceneCamera);
 			z.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
 		}
 
-		if (ctx != root || z.inSceneFrustum) {
-			z.renderAlpha(
-				sceneCmd,
-				zx - offset,
-				zz - offset,
-				minLevel,
-				this.level,
-				maxLevel,
-				level,
-				sceneCamera,
-				hideRoofIds,
-				useStaticUnsorted
-			);
+		if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+			z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, sceneCamera, false, skipSorting);
 		}
 
-		if (ctx != root || z.inShadowFrustum) {
+		if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
 			directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-			z.renderAlpha(
-				directionalCmd,
-				zx - offset,
-				zz - offset,
-				minLevel,
-				this.level,
-				plugin.configRoofShadows ? 3 : maxLevel,
-				level,
-				directionalCamera,
-				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds,
-				useStaticUnsorted
-			);
+			z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, directionalCamera, plugin.configRoofShadows, skipSorting);
 		}
 
 		checkGLErrors();
@@ -1030,7 +930,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawPass(Projection projection, Scene scene, int pass) {
-		WorldViewContext ctx = context(scene);
+		jobSystem.processPendingClientCallbacks();
+
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null)
 			return;
 
@@ -1038,7 +940,7 @@ public class ZoneRenderer implements Renderer {
 			case DrawCallbacks.PASS_OPAQUE:
 				vaoO.addRange(scene);
 				vaoPO.addRange(scene);
-				vaoPOShadow.addRange(scene);
+				vaoShadow.addRange(scene);
 
 				if (scene.getWorldViewId() == -1) {
 					directionalCmd.SetShader(fastShadowProgram);
@@ -1051,10 +953,10 @@ public class ZoneRenderer implements Renderer {
 
 					vaoPO.unmap();
 
-					// Draw player shadows
-					vaoPOShadow.unmap();
-					vaoPOShadow.drawAll(directionalCmd);
-					vaoPOShadow.resetAll();
+					// Draw shadow-only models
+					vaoShadow.unmap();
+					vaoShadow.drawAll(directionalCmd);
+					vaoShadow.resetAll();
 
 					// Draw players opaque, without depth writes
 					sceneCmd.DepthMask(false);
@@ -1075,12 +977,13 @@ public class ZoneRenderer implements Renderer {
 						ctx.zones[x][z].removeTemp();
 				break;
 		}
+
 		checkGLErrors();
 	}
 
 	@Override
 	public void drawDynamic(
-		Projection worldProjection,
+		Projection projection,
 		Scene scene,
 		TileObject tileObject,
 		Renderable r,
@@ -1090,36 +993,10 @@ public class ZoneRenderer implements Renderer {
 		int y,
 		int z
 	) {
-		WorldViewContext ctx = context(scene);
+		jobSystem.processPendingClientCallbacks();
+
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
-			return;
-
-		// Cull based on detail draw distance
-		if (ctx == root) {
-			float modelDist = distance(sceneCamera.getPosition(), new float[] { x, y, z });
-			float detailDrawDistanceTiles = config.detailDrawDistance() * LOCAL_TILE_SIZE;
-			if (modelDist > detailDrawDistanceTiles) {
-				return;
-			}
-		}
-
-		int[] worldPos = ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane());
-		// Hide everything outside the current area if area hiding is enabled
-		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == -1) {
-			var base = ctx.sceneContext.sceneBase;
-			assert base != null;
-			boolean inArea = ctx.sceneContext.currentArea.containsPoint(
-				base[0] + (x >> Perspective.LOCAL_COORD_BITS),
-				base[1] + (z >> Perspective.LOCAL_COORD_BITS),
-				base[2] + client.getTopLevelWorldView().getPlane()
-			);
-			if (!inArea)
-				return;
-		}
-
-		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
-		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-		if (modelOverride.hide)
 			return;
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -1127,52 +1004,108 @@ public class ZoneRenderer implements Renderer {
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
-		if (ctx == root) {
-			// Additional Culling checks to help reduce dynamic object perf impact when off screen
-			if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows) {
+		if (sceneManager.isRoot(ctx)) {
+			// Cull based on detail draw distance
+			float squaredDistance = sceneCamera.squaredDistanceTo(x, y, z);
+			int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
+			if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles)
 				return;
+
+			// Hide everything outside the current area if area hiding is enabled
+			if (ctx.sceneContext.currentArea != null) {
+				var base = ctx.sceneContext.sceneBase;
+				assert base != null;
+				boolean inArea = ctx.sceneContext.currentArea.containsPoint(
+					base[0] + (x >> Perspective.LOCAL_COORD_BITS),
+					base[1] + (z >> Perspective.LOCAL_COORD_BITS),
+					base[2] + client.getTopLevelWorldView().getPlane()
+				);
+				if (!inArea)
+					return;
 			}
 
-			if (zone.inSceneFrustum && !modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, m.getRadius())) {
+			if (!zone.initialized)
 				return;
-			}
+		}
 
-			if (!zone.inSceneFrustum &&
-				zone.inShadowFrustum &&
-				modelOverride.castShadows &&
-				!directionalShadowCasterVolume.intersectsPoint(x, y, z)
-			) {
-				return;
+		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), worldPos);
+		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+		if (modelOverride.hide)
+			return;
+
+		if (sceneManager.isRoot(ctx)) {
+			try (var ignored = frameTimer.begin(Timer.VISIBILITY_CHECK)) {
+				// Additional Culling checks to help reduce dynamic object perf impact when off screen
+				if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows)
+					return;
+
+				if (zone.inSceneFrustum && !modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, m.getRadius()))
+					return;
+
+				if (!zone.inSceneFrustum && zone.inShadowFrustum && modelOverride.castShadows &&
+					!directionalShadowCasterVolume.intersectsPoint(x, y, z))
+					return;
 			}
 		}
 
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
-		boolean hasAlpha = m.getFaceTransparencies() != null;
+		VAO o = vaoO.get(size, ctx.vboM);
+
+		boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
 		if (hasAlpha) {
-			VAO o = vaoO.get(size, ctx.vboM);
 			VAO a = vaoA.get(size, ctx.vboM);
 			int start = a.vbo.vb.position();
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+
+			if (zone.inSceneFrustum) {
+				try {
+					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+				} catch (Exception ex) {
+					log.debug("error drawing entity", ex);
+				}
+
+				if (plugin.configShadowsEnabled) {
+					// Since priority sorting of models includes back-face culling,
+					// we need to upload the entire model again for shadows
+					VAO vao = vaoShadow.get(size, ctx.vboM);
+					sceneUploader.uploadTempModel(
+						m,
+						modelOverride,
+						preOrientation,
+						orient,
+						x, y, z,
+						vao.vbo.vb,
+						vao.vbo.vb
+					);
+				}
+			} else {
+				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+			}
+
 			int end = a.vbo.vb.position();
 			if (end > start) {
+				// level is checked prior to this callback being run, in order to cull clickboxes, but
+				// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
+				int plane = Math.min(ctx.maxLevel, tileObject.getPlane());
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
-				zone.addTempAlphaModel(a.vao, start, end, tileObject.getPlane(), x & 1023, y, z & 1023);
+				zone.addTempAlphaModel(modelOverride, a.vao, start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
-			VAO o = vaoO.get(size, ctx.vboM);
 			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
 		}
 	}
 
 	@Override
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
-		WorldViewContext ctx = context(scene);
+		jobSystem.processPendingClientCallbacks();
+
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
-		int[] worldPos = root.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane());
+		ctx.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane(), worldPos);
 		// Hide everything outside the current area if area hiding is enabled
 		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == -1) {
 			var base = ctx.sceneContext.sceneBase;
@@ -1201,7 +1134,31 @@ public class ZoneRenderer implements Renderer {
 			int zz = (gameObject.getY() >> 10) + offset;
 			Zone zone = ctx.zones[zx][zz];
 
-			if (ctx != root || zone.inSceneFrustum) {
+			boolean isSubScene = !sceneManager.isRoot(ctx);
+
+			GenericJob shadowUploadTask = null;
+			if (isSubScene || zone.inShadowFrustum) {
+				final VAO o = vaoShadow.get(size, ctx.vboM);
+
+				shadowUploadTask = GenericJob
+					.build("uploadTempModel", t -> {
+						// Since priority sorting of models includes back-face culling,
+						// we need to upload the entire model again for shadows
+						sceneUploader.uploadTempModel(
+							m,
+							modelOverride,
+							preOrientation,
+							orientation,
+							x, y, z,
+							o.vbo.vb,
+							o.vbo.vb
+						);
+					})
+					.setExecuteAsync(isSubScene || zone.inSceneFrustum)
+					.queue(true);
+			}
+
+			if (isSubScene || zone.inSceneFrustum) {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
@@ -1209,7 +1166,6 @@ public class ZoneRenderer implements Renderer {
 				VAO a = vaoA.get(size, ctx.vboM);
 
 				int start = a.vbo.vb.position();
-				m.calculateBoundsCylinder();
 				try {
 					facePrioritySorter.uploadSortedModel(
 						worldProjection,
@@ -1226,11 +1182,14 @@ public class ZoneRenderer implements Renderer {
 				}
 				int end = a.vbo.vb.position();
 				if (end > start) {
+					// Fix rendering projectiles from boats with hide roofs enabled
+					int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
 					zone.addTempAlphaModel(
+						modelOverride,
 						a.vao,
 						start,
 						end,
-						gameObject.getPlane(),
+						plane,
 						x & 1023,
 						y - renderable.getModelHeight() /* to render players over locs */,
 						z & 1023
@@ -1238,19 +1197,9 @@ public class ZoneRenderer implements Renderer {
 				}
 			}
 
-			if (zone.inShadowFrustum) {
-				// Since priority sorting of models includes back-face culling,
-				// we need to upload the entire model again for shadows
-				VAO o = vaoPOShadow.get(size, ctx.vboM);
-				sceneUploader.uploadTempModel(
-					m,
-					modelOverride,
-					preOrientation,
-					orientation,
-					x, y, z,
-					o.vbo.vb,
-					o.vbo.vb
-				);
+			if (shadowUploadTask != null) {
+				shadowUploadTask.waitForCompletion();
+				shadowUploadTask.release();
 			}
 		} else {
 			VAO o = vaoO.get(size, ctx.vboM);
@@ -1267,84 +1216,11 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	@Override
-	public void invalidateZone(Scene scene, int zx, int zz) {
-		WorldViewContext ctx = context(scene);
-		Zone z = ctx.zones[zx][zz];
-		if (!z.invalidate) {
-			z.invalidate = true;
-			log.debug("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
-		}
-	}
-
-	@Subscribe
-	public void onPostClientTick(PostClientTick event) {
-		WorldView wv = client.getTopLevelWorldView();
-		if (wv == null || !plugin.isActive())
-			return;
-
-		rebuild(wv);
-		for (WorldEntity we : wv.worldEntities())
-			rebuild(we.getWorldView());
-	}
-
-	private void rebuild(WorldView wv) {
-		assert client.isClientThread();
-		WorldViewContext ctx = context(wv);
-		if (ctx == null || ctx.isLoading)
-			return;
-
-		for (int x = 0; x < ctx.sizeX; ++x) {
-			for (int z = 0; z < ctx.sizeZ; ++z) {
-				Zone zone = ctx.zones[x][z];
-				if (!zone.invalidate)
-					continue;
-
-				assert zone.initialized;
-				zone.free();
-				zone = ctx.zones[x][z] = new Zone();
-
-				sceneUploader.estimateZoneSize(ctx.sceneContext, zone, x, z);
-
-				VBO o = null, a = null;
-				int sz = zone.sizeO * Zone.VERT_SIZE * 3;
-				if (sz > 0) {
-					o = new VBO(sz);
-					o.initialize(GL_STATIC_DRAW);
-					o.map();
-				}
-
-				sz = zone.sizeA * Zone.VERT_SIZE * 3;
-				if (sz > 0) {
-					a = new VBO(sz);
-					a.initialize(GL_STATIC_DRAW);
-					a.map();
-				}
-
-				zone.initialize(o, a, eboAlpha);
-				zone.setMetadata(ctx, x, z);
-
-				sceneUploader.uploadZone(ctx.sceneContext, zone, x, z);
-
-				zone.unmap();
-				zone.initialized = true;
-				zone.dirty = true;
-
-				log.trace("Rebuilt zone wv={} x={} z={}", wv.getId(), x, z);
-			}
-		}
-	}
-
-	@Override
 	public void draw(int overlayColor) {
 		final GameState gameState = client.getGameState();
 		if (gameState == GameState.STARTING) {
 			frameTimer.end(Timer.DRAW_FRAME);
 			return;
-		}
-
-		if (deferScenePass) {
-			scenePass();
-			deferScenePass = false;
 		}
 
 		try {
@@ -1355,6 +1231,12 @@ public class ZoneRenderer implements Renderer {
 			log.warn("prepareInterfaceTexture exception", ex);
 			plugin.restartPlugin();
 			return;
+		}
+
+		if (shouldRenderScene) {
+			if (!APPLE)
+				directionalShadowPass();
+			scenePass();
 		}
 
 		if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
@@ -1392,6 +1274,8 @@ public class ZoneRenderer implements Renderer {
 
 		plugin.drawUi(overlayColor);
 
+		jobSystem.processPendingClientCallbacks(false);
+
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);
 			plugin.awtContext.swapBuffers();
@@ -1412,8 +1296,9 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
 		frameTimer.endFrameAndReset();
-//		frameModelInfoMap.clear();
 		checkGLErrors();
+
+		shouldRenderScene = false;
 	}
 
 	@Subscribe
@@ -1424,36 +1309,33 @@ public class ZoneRenderer implements Renderer {
 			// but keep it when doing >loading to loading
 			sceneFboValid = false;
 		}
-//		if (state == GameState.STARTING) {
-//			if (textureArrayId != -1) {
-//				textureManager.freeTextureArray(textureArrayId);
-//			}
-//			textureArrayId = -1;
-//			lastAnisotropicFilteringLevel = -1;
-//		}
+	}
+
+	@Override
+	public void invalidateZone(Scene scene, int zx, int zz) {
+		sceneManager.invalidateZone(scene, zx, zz);
 	}
 
 	@Override
 	public void reloadScene() {
-		if (client.getGameState().getState() < GameState.LOGGED_IN.getState() || root.sceneContext == null)
-			return;
+		if (sceneManager.isTopLevelValid() && client.getGameState().getState() >= GameState.LOGGED_IN.getState())
+			sceneManager.reloadScene();
+	}
 
-		proceduralGenerator.generateSceneData(root.sceneContext);
-		root.invalidate();
-		for (var sub : subs)
-			if (sub != null)
-				sub.invalidate();
+	@Override
+	public SceneContext getSceneContext() {
+		return sceneManager.getSceneContext();
 	}
 
 	@Override
 	public boolean isLoadingScene() {
-		return nextSceneContext != null;
+		return sceneManager.isLoadingScene();
 	}
 
 	@Override
 	public void loadScene(WorldView worldView, Scene scene) {
 		try {
-			loadSceneInternal(worldView, scene);
+			sceneManager.loadScene(worldView, scene);
 		} catch (OutOfMemoryError oom) {
 			log.error(
 				"Ran out of memory while generating scene data (32-bit: {}, low memory mode: {})",
@@ -1467,468 +1349,18 @@ public class ZoneRenderer implements Renderer {
 		}
 	}
 
-	private void loadSceneInternal(WorldView worldView, Scene scene) {
-		if (scene.getWorldViewId() > -1) {
-			loadSubScene(worldView, scene);
-			return;
-		}
-
-		assert scene.getWorldViewId() == -1;
-		if (nextZones != null)
-			throw new RuntimeException("Double zone load!"); // does this happen?
-
-		if (nextSceneContext != null)
-			nextSceneContext.destroy();
-		nextSceneContext = null;
-
-		nextSceneContext = new ZoneSceneContext(
-			client,
-			worldView,
-			scene,
-			plugin.getExpandedMapLoadingChunks(),
-			root.sceneContext
-		);
-		nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
-
-		environmentManager.loadSceneEnvironments(nextSceneContext);
-		proceduralGenerator.generateSceneData(nextSceneContext);
-
-		if (nextSceneContext.enableAreaHiding) {
-			nextSceneContext.possibleAreas = Arrays
-				.stream(areaManager.areasWithAreaHiding)
-				.filter(area -> nextSceneContext.sceneBounds.intersects(area.aabbs))
-				.toArray(Area[]::new);
-
-			if (log.isDebugEnabled() && nextSceneContext.possibleAreas.length > 0) {
-				log.debug(
-					"Area hiding areas: {}",
-					Arrays.stream(nextSceneContext.possibleAreas)
-						.distinct()
-						.map(Area::toString)
-						.collect(Collectors.joining(", "))
-				);
-			}
-
-			// If area hiding can be decided based on the central chunk, apply it early
-			var base = nextSceneContext.sceneBase;
-			assert base != null;
-			int centerOffset = SCENE_SIZE / 2 & ~7;
-			int centerX = base[0] + centerOffset;
-			int centerY = base[1] + centerOffset;
-			AABB centerChunk = new AABB(centerX, centerY, centerX + 7, centerY + 7);
-			for (Area possibleArea : nextSceneContext.possibleAreas) {
-				if (!possibleArea.intersects(centerChunk))
-					continue;
-
-				if (nextSceneContext.currentArea != null) {
-					// Multiple possible areas, so let's defer this until swapScene
-					nextSceneContext.currentArea = null;
-					break;
-				}
-				nextSceneContext.currentArea = possibleArea;
-			}
-		}
-
-		WorldViewContext ctx = root;
-		Scene prev = client.getTopLevelWorldView().getScene();
-
-		int dx = scene.getBaseX() - prev.getBaseX() >> 3;
-		int dy = scene.getBaseY() - prev.getBaseY() >> 3;
-
-		// Initially mark every zone as being no longer in use
-		for (int x = 0; x < NUM_ZONES; ++x)
-			for (int z = 0; z < NUM_ZONES; ++z)
-				ctx.zones[x][z].cull = true;
-
-		nextZones = new Zone[NUM_ZONES][NUM_ZONES];
-		if (ctx.sceneContext != null && ctx.sceneContext.currentArea == nextSceneContext.currentArea) {
-			// Find zones which overlap, and reuse them
-			if (prev.isInstance() == scene.isInstance() && prev.getRoofRemovalMode() == scene.getRoofRemovalMode()) {
-				int[][][] prevTemplates = prev.getInstanceTemplateChunks();
-				int[][][] curTemplates = scene.getInstanceTemplateChunks();
-
-				for (int x = 0; x < NUM_ZONES; ++x) {
-					next:
-					for (int z = 0; z < NUM_ZONES; ++z) {
-						int ox = x + dx;
-						int oz = z + dy;
-
-						// Reused the old zone if it is also in the new scene, except for the edges, to work around
-						// tile blending, (edge) shadows, sharelight, etc.
-						if (canReuse(ctx.zones, ox, oz)) {
-							if (scene.isInstance()) {
-								// Convert from modified chunk coordinates to Jagex chunk coordinates
-								int jx = x - nextSceneContext.sceneOffset / 8;
-								int jz = z - nextSceneContext.sceneOffset / 8;
-								int jox = ox - nextSceneContext.sceneOffset / 8;
-								int joz = oz - nextSceneContext.sceneOffset / 8;
-								// Check Jagex chunk coordinates are within the Jagex scene
-								if (jx >= 0 && jx < SCENE_SIZE / 8 && jz >= 0 && jz < SCENE_SIZE / 8) {
-									if (jox >= 0 && jox < SCENE_SIZE / 8 && joz >= 0 && joz < SCENE_SIZE / 8) {
-										for (int level = 0; level < 4; ++level) {
-											int prevTemplate = prevTemplates[level][jox][joz];
-											int curTemplate = curTemplates[level][jx][jz];
-											if (prevTemplate != curTemplate) {
-												// Does this ever happen?
-												log.warn("Instance template reuse mismatch! prev={} cur={}", prevTemplate, curTemplate);
-												continue next;
-											}
-										}
-									}
-								}
-							}
-
-							Zone old = ctx.zones[ox][oz];
-							assert old.initialized;
-
-							if (old.dirty)
-								continue;
-							assert old.sizeO > 0 || old.sizeA > 0;
-
-							assert old.cull;
-							old.cull = false;
-							old.metadataDirty = true;
-
-							nextZones[x][z] = old;
-						}
-					}
-				}
-			}
-		}
-
-		// Allocate new zones wherever we couldn't reuse old ones
-		for (int x = 0; x < NUM_ZONES; ++x)
-			for (int z = 0; z < NUM_ZONES; ++z)
-				if (nextZones[x][z] == null)
-					nextZones[x][z] = new Zone();
-
-		// Determine zone buffer requirements before uploading
-		Stopwatch sw = Stopwatch.createStarted();
-		int len = 0, lena = 0;
-		int reused = 0, newzones = 0;
-		for (int x = 0; x < NUM_ZONES; ++x) {
-			for (int z = 0; z < NUM_ZONES; ++z) {
-				Zone zone = nextZones[x][z];
-				if (!zone.initialized) {
-					assert zone.glVao == 0;
-					assert zone.glVaoA == 0;
-					asyncSceneUploader.estimateZoneSize(nextSceneContext, zone, x, z);
-					len += zone.sizeO;
-					lena += zone.sizeA;
-					newzones++;
-				} else {
-					reused++;
-				}
-			}
-		}
-		log.debug(
-			"Scene size time {} reused {} new {} len opaque {} size opaque {} KiB len alpha {} size alpha {} KiB",
-			sw, reused, newzones,
-			len, ((long) len * Zone.VERT_SIZE * 3) / KiB,
-			lena, ((long) lena * Zone.VERT_SIZE * 3) / KiB
-		);
-
-		// allocate buffers for zones which require upload
-		CountDownLatch latch = new CountDownLatch(1);
-		clientThread.invoke(() -> {
-			for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
-				for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
-					Zone zone = nextZones[x][z];
-					if (zone.initialized)
-						continue;
-
-					VBO o = null, a = null;
-					int sz = zone.sizeO * Zone.VERT_SIZE * 3;
-					if (sz > 0) {
-						o = new VBO(sz);
-						o.initialize(GL_STATIC_DRAW);
-						o.map();
-					}
-
-					sz = zone.sizeA * Zone.VERT_SIZE * 3;
-					if (sz > 0) {
-						a = new VBO(sz);
-						a.initialize(GL_STATIC_DRAW);
-						a.map();
-					}
-
-					zone.initialize(o, a, eboAlpha);
-				}
-			}
-
-			latch.countDown();
-		});
-		try {
-			latch.await();
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-
-		// Upload new zones
-		sw = Stopwatch.createStarted();
-		for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
-			for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
-				Zone zone = nextZones[x][z];
-				if (!zone.initialized)
-					asyncSceneUploader.uploadZone(nextSceneContext, zone, x, z);
-			}
-		}
-		plugin.minimapRenderer.prepareScene(nextSceneContext);
-		log.debug("Scene upload time {}", sw);
-
-		// Roof ids aren't consistent between scenes, so build a mapping of old -> new roof ids
-		Map<Integer, Integer> roofChanges;
-		{
-			int[][][] prids = prev.getRoofs();
-			int[][][] nrids = scene.getRoofs();
-			dx <<= 3;
-			dy <<= 3;
-			roofChanges = new HashMap<>();
-
-			sw = Stopwatch.createStarted();
-			for (int level = 0; level < 4; ++level) {
-				for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
-					for (int z = 0; z < EXTENDED_SCENE_SIZE; ++z) {
-						int ox = x + dx;
-						int oz = z + dy;
-
-						// old zone still in scene?
-						if (ox >= 0 && oz >= 0 && ox < EXTENDED_SCENE_SIZE && oz < EXTENDED_SCENE_SIZE) {
-							int prid = prids[level][ox][oz];
-							int nrid = nrids[level][x][z];
-							if (prid > 0 && nrid > 0 && prid != nrid) {
-								Integer old = roofChanges.putIfAbsent(prid, nrid);
-								if (old == null) {
-									log.trace("Roof change: {} -> {}", prid, nrid);
-								} else if (old != nrid) {
-									log.debug("Roof change mismatch: {} -> {} vs {}", prid, nrid, old);
-								}
-							}
-						}
-					}
-				}
-			}
-			sw.stop();
-
-			log.debug("Roof remapping time {}", sw);
-		}
-
-		nextRoofChanges = roofChanges;
-	}
-
-	private static boolean canReuse(Zone[][] zones, int zx, int zz) {
-		// For tile blending, sharelight, and shadows to work correctly, the zones surrounding
-		// the zone must be valid.
-		for (int x = zx - 1; x <= zx + 1; ++x) {
-			if (x < 0 || x >= NUM_ZONES)
-				return false;
-			for (int z = zz - 1; z <= zz + 1; ++z) {
-				if (z < 0 || z >= NUM_ZONES)
-					return false;
-				Zone zone = zones[x][z];
-				if (!zone.initialized)
-					return false;
-				if (zone.sizeO == 0 && zone.sizeA == 0)
-					return false;
-				if (zone.hasWater)
-					return false; // TODO: Regenerate underwater geometry instead of discarding entire zones
-			}
-		}
-		return true;
-	}
-
-	private void loadSubScene(WorldView worldView, Scene scene) {
-		int worldViewId = worldView.getId();
-		assert worldViewId != -1;
-
-		log.debug("Loading world view {}", worldViewId);
-
-		WorldViewContext prevCtx = subs[worldViewId];
-		if (prevCtx != null) {
-			log.error("Reload of an already loaded sub scene?");
-			prevCtx.free();
-		}
-		assert prevCtx == null;
-
-		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
-		proceduralGenerator.generateSceneData(sceneContext);
-
-		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
-		subs[worldViewId] = ctx;
-
-		for (int x = 0; x < ctx.sizeX; ++x)
-			for (int z = 0; z < ctx.sizeZ; ++z)
-				asyncSceneUploader.estimateZoneSize(sceneContext, ctx.zones[x][z], x, z);
-
-		// allocate buffers for zones which require upload
-		CountDownLatch latch = new CountDownLatch(1);
-		clientThread.invoke(() ->
-		{
-			ctx.initMetadata();
-
-			for (int x = 0; x < ctx.sizeX; ++x) {
-				for (int z = 0; z < ctx.sizeZ; ++z) {
-					Zone zone = ctx.zones[x][z];
-
-					VBO o = null, a = null;
-					int sz = zone.sizeO * Zone.VERT_SIZE * 3;
-					if (sz > 0) {
-						o = new VBO(sz);
-						o.initialize(GL_STATIC_DRAW);
-						o.map();
-					}
-
-					sz = zone.sizeA * Zone.VERT_SIZE * 3;
-					if (sz > 0) {
-						a = new VBO(sz);
-						a.initialize(GL_STATIC_DRAW);
-						a.map();
-					}
-
-					zone.initialize(o, a, eboAlpha);
-					zone.setMetadata(ctx, x, z);
-				}
-			}
-
-			latch.countDown();
-		});
-		try {
-			latch.await();
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-
-		for (int x = 0; x < ctx.sizeX; ++x)
-			for (int z = 0; z < ctx.sizeZ; ++z)
-				asyncSceneUploader.uploadZone(sceneContext, ctx.zones[x][z], x, z);
-	}
-
 	@Override
 	public void despawnWorldView(WorldView worldView) {
-		int worldViewId = worldView.getId();
-		if (worldViewId > -1) {
-			log.debug("WorldView despawn: {}", worldViewId);
-			if (subs[worldViewId] == null) {
-				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
-			} else {
-				subs[worldViewId].free();
-				subs[worldViewId] = null;
-			}
-		}
+		sceneManager.despawnWorldView(worldView);
 	}
 
 	@Override
 	public void swapScene(Scene scene) {
-		if (!plugin.isActive() || plugin.skipScene == scene) {
-			plugin.redrawPreviousFrame = true;
-			return;
+		try {
+			sceneManager.swapScene(scene);
+		} catch (Throwable ex) {
+			log.error("Error during swapScene:", ex);
+			plugin.stopPlugin();
 		}
-
-		if (scene.getWorldViewId() > -1) {
-			swapSubScene(scene);
-			return;
-		}
-
-		// If the scene wasn't loaded by a call to loadScene, load it synchronously instead
-		// TODO: Low memory mode
-		if (nextSceneContext == null) {
-//			loadSceneInternal(scene);
-//			if (nextSceneContext == null)
-				return; // Return early if scene loading failed
-		}
-
-		lightManager.loadSceneLights(nextSceneContext, root.sceneContext);
-		fishingSpotReplacer.despawnRuneLiteObjects();
-		npcDisplacementCache.clear();
-
-		boolean isFirst = root.sceneContext == null;
-		if (!isFirst)
-			root.sceneContext.destroy(); // Destroy the old context before replacing it
-		root.sceneContext = nextSceneContext;
-		nextSceneContext = null;
-
-		updateAreaHiding();
-
-		if (root.sceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			plugin.isInHouse = true;
-			plugin.isInChambersOfXeric = false;
-		} else {
-			plugin.isInHouse = false;
-			plugin.isInChambersOfXeric = root.sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
-		}
-
-		WorldViewContext ctx = root;
-		for (int x = 0; x < ctx.sizeX; ++x) {
-			for (int z = 0; z < ctx.sizeZ; ++z) {
-				Zone zone = ctx.zones[x][z];
-
-				if (zone.cull) {
-					zone.free();
-				} else {
-					// reused zone
-					zone.updateRoofs(nextRoofChanges);
-				}
-			}
-		}
-		nextRoofChanges = null;
-
-		ctx.zones = nextZones;
-		nextZones = null;
-
-		// setup vaos
-		for (int x = 0; x < ctx.zones.length; ++x) {
-			for (int z = 0; z < ctx.zones[0].length; ++z) {
-				Zone zone = ctx.zones[x][z];
-
-				if (!zone.initialized) {
-					zone.unmap();
-					zone.initialized = true;
-				}
-
-				zone.setMetadata(ctx, x, z);
-			}
-		}
-
-		root.isLoading = false;
-
-		if (isFirst) {
-			// Load all pre-existing sub scenes on the first scene load
-			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
-				WorldView sub = subEntity.getWorldView();
-				Scene subScene = sub.getScene();
-				log.debug(
-					"Loading worldview: id={}, sizeX={}, sizeZ={}",
-					sub.getId(),
-					sub.getSizeX(),
-					sub.getSizeY()
-				);
-				loadSubScene(sub, subScene);
-				swapSubScene(subScene);
-			}
-		}
-
-		checkGLErrors();
-	}
-
-	private void swapSubScene(Scene scene) {
-		WorldViewContext ctx = context(scene);
-		if (ctx == null)
-			return;
-
-		// setup vaos
-		for (int x = 0; x < ctx.sizeX; ++x) {
-			for (int z = 0; z < ctx.sizeZ; ++z) {
-				Zone zone = ctx.zones[x][z];
-
-				if (!zone.initialized) {
-					zone.unmap();
-					zone.initialized = true;
-				}
-
-				zone.setMetadata(ctx, x, z);
-			}
-		}
-		ctx.isLoading = false;
-		log.debug("WorldView ready: {}", scene.getWorldViewId());
 	}
 }

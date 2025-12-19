@@ -98,7 +98,7 @@
     "windStrength": 40
   },
   {
-    "area": "WILDERNESS",
+    "area": "WILDERNESS_MID",
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,
     "directionalColor": "#c5b8b6",
@@ -771,16 +771,16 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2.5,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
   },
   {
-    "area": "RELLEKKA_SNOWY_REGION",
+    "area": "RELLEKKA_HUNTER_REGION",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1,
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
   },
   {
     "area": "RELLEKKA_HUNTER_ICEBERG",
@@ -789,7 +789,7 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 1,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
   },
   {
     "area": "ICEBERG",
@@ -832,7 +832,7 @@
     "directionalColor": "#abc2d3",
     "directionalStrength": 2,
     "fogColor": "#969ca2",
-    "fogDepth": 40,
+    "fogDepth": 35,
     "groundFogEnd": -400,
     "groundFogOpacity": 0.3,
     "windSpeed": 17.5,
@@ -1021,6 +1021,14 @@
     "fogDepth": 50
   },
   {
+    "area": "BACKWATER_AND_BREAKBONE_STRAIT",
+    "ambientColor": "#c0dbad",
+    "directionalColor": "#adb08b",
+    "fogColor": "#BDD8E8",
+    "directionalStrength": 4,
+    "fogDepth": 15
+  },
+  {
     "area": "POISON_WASTE",
     "ambientColor": "#c0dbad",
     "directionalColor": "#adb08b",
@@ -1045,6 +1053,7 @@
     "area": "PRIFDDINAS",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
+    "waterColor": "#99d8c8",
     "fogColor": "#99d8c8",
     "fogDepth": 15
   },
@@ -1180,7 +1189,7 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 1.5,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
   },
   {
     "area": "WINTERTODT_ARENA",
@@ -1365,6 +1374,29 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "THE_STORM_TEMPOR_EDGE",
+    "ambientColor": "#a5acbd",
+    "ambientStrength": 3.5,
+    "directionalColor": "#707070",
+    "fogColor": "#99AECC",
+    "fogDepth": 10
+  },
+  {
+    "area": "THE_STORM_TEMPOR",
+    "ambientColor": "#a5acbd",
+    "ambientStrength": 3,
+    "directionalColor": "#707070",
+    "directionalStrength": 1,
+    "fogColor": "#4B505B",
+    "fogDepth": 20,
+    "windStrength": 65,
+    "windCeiling": 750,
+    "windSpeed": 20,
+    "groundFogStart": 0,
+    "groundFogEnd": -300,
+    "groundFogOpacity": 0.25
+  },
+  {
     "area": "TEMPLE_OF_THE_EYE",
     "isUnderwater": true,
     "directionalColor": "#e6f4ff",
@@ -1463,6 +1495,20 @@
       80,
       190
     ],
+    "fogColor": "#133156",
+    "fogDepth": 60,
+    "groundFogStart": -450,
+    "groundFogEnd": -700,
+    "groundFogOpacity": 0.65,
+    "waterCausticsStrength": 4
+  },
+  {
+    "area": "CORAL_NURSERY",
+    "isUnderwater": true,
+    "ambientColor": "#255590",
+    "ambientStrength": 1.5,
+    "directionalColor": "#71a3d0",
+    "directionalStrength": 3,
     "fogColor": "#133156",
     "fogDepth": 60,
     "groundFogStart": -450,
@@ -2067,6 +2113,15 @@
     "windSpeed": 8.5
   },
   {
+    "area": "XMAS_2025_ENVIRONMENT",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.2,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 25
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
@@ -2096,7 +2151,7 @@
       102
     ],
     "fogColor": "#fddcb4",
-    "fogDepth": 18,
+    "fogDepth": 15,
     "windAngle": 40,
     "windSpeed": 12,
     "windStrength": 55
@@ -2108,7 +2163,7 @@
     "directionalStrength": 1.5,
     "sunAngles": [ 52, 235 ],
     "fogColor": "#b8c5db",
-    "fogDepth": 35,
+    "fogDepth": 18,
     "windAngle": 40,
     "windSpeed": 10,
     "windStrength": 30

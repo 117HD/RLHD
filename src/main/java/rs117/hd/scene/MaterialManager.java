@@ -47,6 +47,7 @@ import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.uniforms.UBOMaterials;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.FileWatcher;
@@ -95,6 +96,9 @@ public class MaterialManager {
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
 
+	@Inject
+	private SceneManager sceneManager;
+
 	public UBOMaterials uboMaterials;
 
 	public static class TextureLayer {
@@ -113,7 +117,7 @@ public class MaterialManager {
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	public void startUp() {
-		fileWatcher = MATERIALS_PATH.watch((path, first) -> reload(first));
+		fileWatcher = MATERIALS_PATH.watch((path, isFirst) -> reload(isFirst));
 	}
 
 	public void shutDown() {
@@ -149,16 +153,23 @@ public class MaterialManager {
 		return VANILLA_TEXTURE_MAPPING[vanillaTextureId];
 	}
 
-	public void reload(boolean throwOnFailure) {
+	public void reload(boolean skipSceneReload) {
+		Material[] materials;
+		try {
+			materials = loadMaterials(MATERIALS_PATH);
+			log.debug("Loaded {} materials", materials.length);
+		} catch (IOException ex) {
+			throw new IllegalStateException("Failed to load materials:", ex);
+		}
+
 		clientThread.invoke(() -> {
 			try {
-				Material[] materials = loadMaterials(MATERIALS_PATH);
-				log.debug("Loaded {} materials", materials.length);
-				clientThread.invoke(() -> swapMaterials(materials));
-			} catch (IOException ex) {
-				log.error("Failed to load materials:", ex);
-				if (throwOnFailure)
-					throw new IllegalStateException(ex);
+				sceneManager.getLoadingLock().lock();
+				sceneManager.completeAllStreaming();
+				swapMaterials(materials, skipSceneReload);
+			} finally {
+				sceneManager.getLoadingLock().unlock();
+				log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 			}
 		});
 	}
@@ -288,7 +299,7 @@ public class MaterialManager {
 		return materials;
 	}
 
-	private void swapMaterials(Material[] parsedMaterials) {
+	private void swapMaterials(Material[] parsedMaterials, boolean skipSceneReload) {
 		assert client.isClientThread();
 		assert textureManager.vanillaTexturesAvailable();
 
@@ -296,6 +307,9 @@ public class MaterialManager {
 		var textureProvider = client.getTextureProvider();
 		var vanillaTextures = textureProvider.getTextures();
 		VANILLA_TEXTURE_MAPPING = new Material[vanillaTextures.length];
+
+		// Arbitrarily account for brightness increase from using unlit colors
+		Material.NONE.brightness = plugin.configUnlitFaceColors ? 0.8f : 1;
 
 		// Assemble the material map, accounting for replacements
 		MATERIAL_MAP.clear();
@@ -436,10 +450,10 @@ public class MaterialManager {
 		// Reload anything which depends on Material instances
 		waterTypeManager.restart();
 		groundMaterialManager.restart();
-		tileOverrideManager.reload(false);
+		tileOverrideManager.reload(true);
 		modelOverrideManager.reload();
 
-		if (materialOrderChanged) {
+		if (materialOrderChanged && !skipSceneReload) {
 			plugin.renderer.clearCaches();
 			plugin.renderer.reloadScene();
 			plugin.recompilePrograms();
