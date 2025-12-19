@@ -65,6 +65,7 @@ public class EnvironmentManager {
 	@Inject
 	private HdPluginConfig config;
 
+	// TODO: Move all minimap handling into the MinimapManager
 	@Inject
 	private MinimapManager minimapManager;
 
@@ -288,6 +289,9 @@ public class EnvironmentManager {
 		}
 
 		updateLightning();
+
+		// TODO: Probably make minimap lighting updates a separate update call after environments
+		//       and only have it actually run whenever the parameters it reads change
 		if (minimapManager.updateMinimapLighting)
 			minimapManager.applyLighting(sceneContext);
 	}

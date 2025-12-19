@@ -77,6 +77,7 @@ public class MinimapManager {
 
 	public boolean HD117MapEnabled()
 	{
+		// TODO: Change to check with API for any minimap data subscribers
 		return "true".equals(configManager.getConfiguration("runelite", "hdminimapplugin"))
 			   && "HD117".equals(configManager.getConfiguration("hdminimap", "minimapStyle"));
 	}
@@ -199,9 +200,11 @@ public class MinimapManager {
 				materials[2] = groundMaterial.getRandomMaterial(tileZ, baseX + tileX, baseY + tileY + 1);
 				materials[3] = groundMaterial.getRandomMaterial(tileZ, baseX + tileX + 1, baseY + tileY + 1);
 			}
+			// TODO: Combine the material into the color here
 		}
 		else
 		{
+			// TODO: Roughly match what the shader does with waterType parameters to produce the water color
 			Arrays.fill(colors, ColorUtils.srgbToPackedHsl(waterType.surfaceColor));
 			Arrays.fill(materials, getWater(waterType));
 		}

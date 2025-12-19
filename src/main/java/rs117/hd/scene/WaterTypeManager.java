@@ -114,6 +114,7 @@ public class WaterTypeManager {
 				WaterType.WATER = get("WATER");
 				WaterType.WATER_FLAT = get("WATER_FLAT");
 				WaterType.SWAMP_WATER_FLAT = get("SWAMP_WATER_FLAT");
+				// TODO: Remove these, after making minimap process water types directly
 				WaterType.SWAMP_WATER = get("SWAMP_WATER");
 				WaterType.ICE_FLAT = get("ICE_FLAT");
 				WaterType.ICE = get("ICE");
