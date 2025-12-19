@@ -37,25 +37,22 @@ public final class StagingFaceBuffer {
 		int materialDataA, int materialDataB, int materialDataC,
 		int terrainDataA, int terrainDataB, int terrainDataC
 	) {
-		final int faceSize = 9;
-		if(stagingPosition + faceSize > stagingSize)
+		if(stagingPosition + 9 > stagingSize)
 			grow();
 
 		final int textureFaceIdx = (buffer.position() + stagingPosition) / 3;
 
-		stagingBuffer[stagingPosition] = (alphaBiasHslA);
-		stagingBuffer[stagingPosition + 1] = (alphaBiasHslB);
-		stagingBuffer[stagingPosition + 2] = (alphaBiasHslC);
+		stagingBuffer[stagingPosition++] = (alphaBiasHslA);
+		stagingBuffer[stagingPosition++] = (alphaBiasHslB);
+		stagingBuffer[stagingPosition++] = (alphaBiasHslC);
 
-		stagingBuffer[stagingPosition + 3] = (materialDataA);
-		stagingBuffer[stagingPosition + 4] = (materialDataB);
-		stagingBuffer[stagingPosition + 5] = (materialDataC);
+		stagingBuffer[stagingPosition++] = (materialDataA);
+		stagingBuffer[stagingPosition++] = (materialDataB);
+		stagingBuffer[stagingPosition++] = (materialDataC);
 
-		stagingBuffer[stagingPosition + 6] = (terrainDataA); // TODO: Remove?
-		stagingBuffer[stagingPosition + 7] = (terrainDataB);
-		stagingBuffer[stagingPosition + 8] = (terrainDataC);
-
-		stagingPosition += faceSize;
+		stagingBuffer[stagingPosition++] = (terrainDataA); // TODO: Remove?
+		stagingBuffer[stagingPosition++] = (terrainDataB);
+		stagingBuffer[stagingPosition++] = (terrainDataC);
 
 		return textureFaceIdx;
 	}
@@ -66,19 +63,16 @@ public final class StagingFaceBuffer {
 		int nx, int ny, int nz,
 		int textureFaceIdx
 	) {
-		final int vertexSize = 7;
-		if(stagingPosition + vertexSize > stagingSize)
+		if(stagingPosition + 7 > stagingSize)
 			grow();
 
-		stagingBuffer[stagingPosition] = (Float.floatToRawIntBits(x));
-		stagingBuffer[stagingPosition + 1] = (Float.floatToRawIntBits(y));
-		stagingBuffer[stagingPosition + 2] = (Float.floatToRawIntBits(z));
-		stagingBuffer[stagingPosition + 3] = (float16(v) << 16 | float16(u));
-		stagingBuffer[stagingPosition + 4] = ((nx & 0xFFFF) << 16 | float16(w));
-		stagingBuffer[stagingPosition + 5] = ((nz & 0xFFFF) << 16 | ny & 0xFFFF);
-		stagingBuffer[stagingPosition + 6] = (textureFaceIdx);
-
-		stagingPosition += vertexSize;
+		stagingBuffer[stagingPosition++] = (Float.floatToRawIntBits(x));
+		stagingBuffer[stagingPosition++] = (Float.floatToRawIntBits(y));
+		stagingBuffer[stagingPosition++] = (Float.floatToRawIntBits(z));
+		stagingBuffer[stagingPosition++] = (float16(v) << 16 | float16(u));
+		stagingBuffer[stagingPosition++] = ((nx & 0xFFFF) << 16 | float16(w));
+		stagingBuffer[stagingPosition++] = ((nz & 0xFFFF) << 16 | ny & 0xFFFF);
+		stagingBuffer[stagingPosition++] = (textureFaceIdx);
 	}
 
 	public void flush() {
