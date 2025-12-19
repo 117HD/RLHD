@@ -25089,6 +25089,7 @@
   },
   {
     "description": "Ruins of Ullek Dungeon - Void",
+    "areas": [ "SCABARAS_DUNGEON_ULLEK" ],
     "baseMaterial": "GRAY_65",
     "objectIds": [
       "BCS_TOMB_WALLTOP"

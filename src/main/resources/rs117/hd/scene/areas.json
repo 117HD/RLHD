@@ -2829,6 +2829,12 @@
     ]
   },
   {
+    "name": "SCABARAS_DUNGEON_ULLEK",
+    "regionBoxes": [
+      [ 13456, 13712 ]
+    ]
+  },
+  {
     "name": "SOUTH_OF_RUINS_OF_ULLEK",
     "aabbs": [
       [ 3421, 2755, 3450, 2818 ],
