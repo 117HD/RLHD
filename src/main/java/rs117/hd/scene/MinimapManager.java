@@ -479,7 +479,7 @@ public class MinimapManager {
 		updateMinimapLighting = false;
 	}
 
-	public void sendApiMessage(int[][][][] minimapTilePaintColorsLighting, int[][][][][] minimapTileModelColorsLighting) {
+	private void sendApiMessage(int[][][][] minimapTilePaintColorsLighting, int[][][][][] minimapTileModelColorsLighting) {
 		if (!api.isSubscribed(HdEvent.EVENT_MINIMAP)) {
 			return;
 		}
@@ -491,7 +491,7 @@ public class MinimapManager {
 	}
 
 	@Subscribe
-	public void onRLHDSubscribe(HdSubscribe event) {
+	public void onHdSubscribe(HdSubscribe event) {
 		if (event.getEvent() == HdEvent.EVENT_MINIMAP) {
 			clientThread.invoke(() -> {
 				startUp();
@@ -505,7 +505,7 @@ public class MinimapManager {
 	}
 
 	@Subscribe
-	public void onRLHDUnsubscribe(HdUnsubscribe event) {
+	public void onHdUnsubscribe(HdUnsubscribe event) {
 		if (event.getEvent() == HdEvent.EVENT_MINIMAP) {
 			SceneContext sceneContext = plugin.getSceneContext();
 			if (sceneContext != null) {
