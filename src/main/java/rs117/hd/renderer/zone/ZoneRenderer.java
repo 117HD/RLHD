@@ -33,6 +33,7 @@ import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.callback.RenderCallbackManager;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
 import org.lwjgl.opengl.*;
@@ -90,6 +91,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private Client client;
+
+	@Inject
+	private EventBus eventBus;
 
 	@Inject
 	private DrawManager drawManager;
@@ -184,10 +188,14 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.initialize();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(uboWorldViews);
+
+		eventBus.register(this);
 	}
 
 	@Override
 	public void destroy() {
+		eventBus.unregister(this);
+
 		destroyBuffers();
 
 		jobSystem.destroy();

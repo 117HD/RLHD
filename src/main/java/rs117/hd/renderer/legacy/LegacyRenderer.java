@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
 import org.lwjgl.opengl.*;
@@ -82,6 +83,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private Client client;
+
+	@Inject
+	private EventBus eventBus;
 
 	@Inject
 	private DrawManager drawManager;
@@ -212,10 +216,14 @@ public class LegacyRenderer implements Renderer {
 		initializeModelSortingBins(maxComputeThreadCount);
 
 		initializeBuffers();
+
+		eventBus.register(this);
 	}
 
 	@Override
 	public synchronized void destroy() {
+		eventBus.unregister(this);
+
 		modelPusher.shutDown();
 
 		if (vaoScene != 0)

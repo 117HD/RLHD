@@ -115,7 +115,7 @@ public class RLHDAPI {
 	 * Notifies all active subscribers that 117 HD has started.
 	 * Sends a startup message to each subscribed event.
 	 */
-	public void notifyStartup() {
+	public void startUp() {
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("startup", true);
 		payload.put("message", "117 HD has started");
@@ -131,7 +131,7 @@ public class RLHDAPI {
 	 * Notifies all active subscribers that 117 HD is shutting down.
 	 * Sends a shutdown message to each subscribed event.
 	 */
-	public void notifyShutdown() {
+	public void shutDown() {
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("shutdown", true);
 		payload.put("message", "117 HD is shutting down");

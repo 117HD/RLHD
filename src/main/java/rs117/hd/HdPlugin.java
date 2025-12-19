@@ -61,7 +61,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.events.PluginMessage;
-import rs117.hd.api.RLHDAPI;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -76,6 +75,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
+import rs117.hd.api.RLHDAPI;
 import rs117.hd.api.RLHDEvent;
 import rs117.hd.api.RLHDSubscribe;
 import rs117.hd.api.RLHDUnsubscribe;
@@ -282,7 +282,7 @@ public class HdPlugin extends Plugin {
 	public MinimapRenderer minimapRenderer;
 
 	@Inject
-	private RLHDAPI rlhdAPI;
+	private RLHDAPI api;
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
@@ -531,6 +531,8 @@ public class HdPlugin extends Plugin {
 
 				SKIP_GL_ERROR_CHECKS = false;
 				GL_CAPS = GL.createCapabilities();
+				lwjglInitialized = true;
+
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
@@ -574,9 +576,6 @@ public class HdPlugin extends Plugin {
 						return true;
 					}
 				}
-
-				lwjglInitialized = true;
-				checkGLErrors();
 
 				MAX_TEXTURE_UNITS = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS); // Not the fixed pipeline MAX_TEXTURE_UNITS
 				if (MAX_TEXTURE_UNITS < TEXTURE_UNIT_COUNT)
@@ -649,7 +648,7 @@ public class HdPlugin extends Plugin {
 				textureManager.startUp();
 				materialManager.startUp();
 				waterTypeManager.startUp();
-				minimapRenderer.setUp();
+				minimapRenderer.startUp();
 
 				renderer.initialize();
 				eventBus.register(renderer);
@@ -688,14 +687,13 @@ public class HdPlugin extends Plugin {
 				redrawPreviousFrame = false;
 				skipScene = null;
 
+				api.startUp();
+
 				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
 					client.setGameState(GameState.LOADING);
 
 				checkGLErrors();
-
-				// Notify all subscribers that 117 HD has started
-				rlhdAPI.notifyStartup();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 			} catch (Throwable err) {
@@ -716,17 +714,23 @@ public class HdPlugin extends Plugin {
 			if (scene != null)
 				scene.setMinLevel(0);
 
+			asyncUICopy.complete();
+			if (renderer != null)
+				renderer.waitUntilIdle();
+
 			client.setGpuFlags(0);
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
-			asyncUICopy.complete();
+			api.shutDown();
+
+			if (renderer != null)
+				renderer.destroy();
+			renderer = null;
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
-				renderer.waitUntilIdle();
-
 				destroyUiTexture();
 				destroyShaders();
 				destroyVaos();
@@ -734,14 +738,6 @@ public class HdPlugin extends Plugin {
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
-
-				rlhdAPI.notifyShutdown();
-
-				if (renderer != null) {
-					eventBus.unregister(renderer);
-					renderer.destroy();
-				}
-				renderer = null;
 			}
 
 			developerTools.deactivate();
@@ -1947,7 +1943,7 @@ public class HdPlugin extends Plugin {
 
 	@Subscribe
 	public void onPluginMessage(PluginMessage message) {
-		rlhdAPI.handlePluginMessage(message);
+		api.handlePluginMessage(message);
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")

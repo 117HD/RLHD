@@ -30,7 +30,6 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
 public class MinimapRenderer {
-
 	@Inject
 	ProceduralGenerator proceduralGenerator;
 
@@ -72,7 +71,7 @@ public class MinimapRenderer {
 	public int[][][][] minimapTilePaintColorsLighting;
 	public int[][][][][] minimapTileModelColorsLighting;
 
-	public void setUp() {
+	public void startUp() {
 		minimapTilePaintColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
 		minimapTileModelColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
 	}
@@ -503,7 +502,7 @@ public class MinimapRenderer {
 	public void onRLHDSubscribe(RLHDSubscribe event) {
 		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
 			clientThread.invoke(() -> {
-				setUp();
+				startUp();
 				SceneContext sceneContext = plugin.getSceneContext();
 				if (sceneContext != null) {
 					prepareScene(sceneContext);
