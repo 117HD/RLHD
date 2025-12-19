@@ -73,7 +73,7 @@ public class Material {
 	public transient boolean modifiesVanillaTexture;
 	public transient boolean isFallbackVanillaMaterial;
 	public transient boolean isValid = true;
-	public transient float[] averageColor = { 0, 0, 0 };
+	public transient float[] averageColor = { 1, 1, 1 };
 
 	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 	public static final Material NONE = new Material().name("NONE");
