@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -26,6 +25,7 @@ import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.collection.Int2IntHashMap;
 import rs117.hd.utils.jobs.GenericJob;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -320,7 +320,7 @@ public class Zone {
 		}
 	}
 
-	void updateRoofs(Map<Integer, Integer> updates) {
+	void updateRoofs(Int2IntHashMap updates) {
 		for (int level = 0; level < 4; ++level) {
 			for (int i = 0; i < rids[level].length; ++i) {
 				rids[level][i] = updates.getOrDefault(rids[level][i], rids[level][i]);
@@ -328,7 +328,7 @@ public class Zone {
 		}
 
 		for (AlphaModel m : alphaModels) {
-			m.rid = (short) (int) updates.getOrDefault((int) m.rid, (int) m.rid);
+			m.rid = (short) updates.getOrDefault(m.rid, m.rid);
 		}
 	}
 
@@ -605,13 +605,10 @@ public class Zone {
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						material = override.baseMaterial;
-						break;
-					}
-				}
+				final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
+				final var ahslOverride = modelOverride.testColorOverrides( ahsl);
+				if(ahslOverride != null)
+					material = ahslOverride.baseMaterial;
 			}
 
 			boolean hasAlpha = material.hasTransparency || transparency != 0;

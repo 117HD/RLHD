@@ -2,7 +2,6 @@ package rs117.hd.scene;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -20,6 +19,8 @@ import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.collection.Int2ObjectHashMap;
+import rs117.hd.utils.collection.IntHashSet;
 
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -47,8 +48,8 @@ public class ModelOverrideManager {
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
 
-	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
-	private final HashSet<Integer> detailCullingBlacklist = new HashSet<>();
+	private final Int2ObjectHashMap<ModelOverride> modelOverrides = new Int2ObjectHashMap<>();
+	private final IntHashSet detailCullingBlacklist = new IntHashSet();
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
@@ -85,9 +86,9 @@ public class ModelOverrideManager {
 				addSailingCullingOverrides();
 
 				detailCullingBlacklist.clear();
-				for (var entry : modelOverrides.entrySet())
-					if (entry.getValue().disableDetailCulling)
-						detailCullingBlacklist.add(entry.getKey());
+				for (var entry : modelOverrides)
+					if (entry.value.disableDetailCulling)
+						detailCullingBlacklist.add(entry.key);
 
 				log.debug("Loaded {} model overrides", modelOverrides.size());
 

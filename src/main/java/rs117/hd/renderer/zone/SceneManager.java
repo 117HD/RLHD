@@ -5,9 +5,7 @@ import com.google.inject.Injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -32,6 +30,7 @@ import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
+import rs117.hd.utils.collection.Int2IntHashMap;
 import rs117.hd.utils.jobs.GenericJob;
 
 import static net.runelite.api.Constants.*;
@@ -86,14 +85,13 @@ public class SceneManager {
 	private RenderState renderState;
 	private UBOWorldViews uboWorldViews;
 
+	private final Int2IntHashMap nextRoofChanges = new Int2IntHashMap();
 	@Getter
 	private final WorldViewContext root = new WorldViewContext(null, null, null);
 	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
-
-	private final Map<Integer, Integer> nextRoofChanges = new HashMap<>();
+	private final List<SortedZone> sortedZones = new ArrayList<>();
 	private ZoneSceneContext nextSceneContext;
 	private Zone[][] nextZones;
-	private final List<SortedZone> sortedZones = new ArrayList<>();
 	private boolean reloadRequested;
 
 	public boolean isZoneStreamingEnabled() {
@@ -324,7 +322,7 @@ public class SceneManager {
 	@Getter
 	private final GenericJob generateSceneDataTask = GenericJob.build(
 		"ProceduralGenerator::generateSceneData",
-		(task) -> proceduralGenerator.generateSceneData(nextSceneContext != null ? nextSceneContext : root.sceneContext)
+		(task) -> proceduralGenerator.generateSceneData(nextSceneContext != null ? nextSceneContext : root.sceneContext, root.sceneContext)
 	);
 
 	@Getter
@@ -359,11 +357,14 @@ public class SceneManager {
 							int prid = prids[level][ox][oz];
 							int nrid = nrids[level][x][z];
 							if (prid > 0 && nrid > 0 && prid != nrid) {
-								Integer old = nextRoofChanges.putIfAbsent(prid, nrid);
-								if (old == null) {
+								boolean hasExisting = nextRoofChanges.putIfAbsent(prid, nrid);
+								if(hasExisting) {
+									int old = nextRoofChanges.getOrDefault(prid, nrid);
+									if (old != nrid) {
+										log.debug("Roof change mismatch: {} -> {} vs {}", prid, nrid, old);
+									}
+								} else {
 									log.trace("Roof change: {} -> {}", prid, nrid);
-								} else if (old != nrid) {
-									log.debug("Roof change mismatch: {} -> {} vs {}", prid, nrid, old);
 								}
 							}
 						}
@@ -704,7 +705,7 @@ public class SceneManager {
 		}
 
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
-		proceduralGenerator.generateSceneData(sceneContext);
+		proceduralGenerator.generateSceneData(sceneContext, null);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
 		ctx.initialize(renderState, injector);
