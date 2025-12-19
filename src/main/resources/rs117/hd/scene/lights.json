@@ -28401,7 +28401,7 @@
   {
     "description": "WIND_SURGE_CAST_MIDDLE",
     "offset": [ 0, 175, 100 ],
-    "spawnDelay": 600,
+    "spawnDelay": 700,
     "fixedDespawnTime": true,
     "despawnDelay": 600,
     "radius": 275,
@@ -28487,7 +28487,7 @@
     "offset": [ 0, 175, 100 ],
     "spawnDelay": 600,
     "fixedDespawnTime": true,
-    "despawnDelay": 600,
+    "despawnDelay": 700,
     "radius": 300,
     "strength": 13.8,
     "color": [
@@ -28571,7 +28571,7 @@
     "offset": [ 0, 175, 100 ],
     "spawnDelay": 600,
     "fixedDespawnTime": true,
-    "despawnDelay": 600,
+    "despawnDelay": 700,
     "radius": 275,
     "strength": 13.8,
     "color": [
@@ -28655,7 +28655,7 @@
     "offset": [ 0, 175, 100 ],
     "spawnDelay": 600,
     "fixedDespawnTime": true,
-    "despawnDelay": 600,
+    "despawnDelay": 700,
     "radius": 300,
     "strength": 13.8,
     "color": [
