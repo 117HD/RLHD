@@ -57786,7 +57786,8 @@
     "uvOrientationY": 512,
     "uvScale": 0.75,
     "objectIds": [
-      "PIANO_A"
+      "PIANO_A",
+      "PIANO_NORMAL"
     ]
   },
   {
