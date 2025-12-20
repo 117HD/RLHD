@@ -12567,7 +12567,8 @@
       "FAI_VARROCK_CASTLE_DOOR_OPEN",
       "FAI_VARROCK_CASTLE_DOOR",
       "DS2_VARROCK_DOOR_OPEN",
-      "DS2_VARROCK_DOOR"
+      "DS2_VARROCK_DOOR",
+      "VM_STORE_ROOM_DOOR"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -14122,7 +14123,9 @@
       "SLP_CRATE_NOOP",
       "SANCTUARY_CRATE",
       "MOTD_CRATE",
-      "DARKM_MIDDLE_CRATE_SINGLE"
+      "DARKM_MIDDLE_CRATE_SINGLE",
+      "EAA_LARGE_CRATE",
+      "EAA_LARGE_CRATES"
     ],
     "uvType": "BOX",
     "flatNormals": true
