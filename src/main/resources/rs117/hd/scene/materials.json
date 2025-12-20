@@ -2504,6 +2504,11 @@
     "brightness": 0.85
   },
   {
+    "name": "SMOOTH_STONE_VERY_LIGHT",
+    "parent": "SMOOTH_STONE",
+    "brightness": 1.6
+  },
+  {
     "name": "GEM_STONE",
     "normalMap": "METALLIC_2_N",
     "brightness": 1.1,

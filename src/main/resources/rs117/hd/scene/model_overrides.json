@@ -12025,10 +12025,19 @@
       "FAI_WIZTOWER_BRIDGE_FLOOR_WALL_CORNER",
       "FAI_WIZTOWER_BRIDGE_FLOOR_WALL_CORNER_MIRROR",
       "FAI_WIZTOWER_BRIDGE_EDGE_FLOOR",
-      "FAI_WIZTOWER_BRIDGE_CORNER_FLOOR",
-      "FAI_WIZTOWER_BRIDGE_CORNER_FLOOR_MIRROR",
       "FAI_WIZTOWER_INTERNAL_WALLS",
       "FAI_WIZTOWER_BRIDGE_WALLS"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wizard Tower - Walls and Bridge",
+    "baseMaterial": "SMOOTH_STONE_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_WIZTOWER_BRIDGE_CORNER_FLOOR_MIRROR",
+      "FAI_WIZTOWER_BRIDGE_CORNER_FLOOR"
     ],
     "flatNormals": true
   },
