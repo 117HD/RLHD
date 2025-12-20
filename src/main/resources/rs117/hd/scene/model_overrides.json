@@ -1162,7 +1162,6 @@
       "TREE4",
       "LEPRECHAUNTREE",
       "NEWBIETREE2",
-      "WOM_TREE",
       "MAPLETREE",
       "MAPLE_TREE_FULLYGROWN_2",
       "PEST_TREE2",
@@ -1193,6 +1192,34 @@
         "textureMaterial": "MAPLE_LEAVES"
       }
     }
+  },
+  {
+    "description": "Draynor tree with guard in it",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "WOM_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_YELLOW_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_YELLOW_TOP"
+      }
+    },
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 4",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND"
+      }
+    ]
   },
   {
     "description": "Ardougne Log Balance",
