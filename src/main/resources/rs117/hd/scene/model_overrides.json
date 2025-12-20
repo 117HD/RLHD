@@ -52119,23 +52119,23 @@
   },
   {
     "description": "Seers Village - Stone - Metallic - Grand Fireplace - DYNAMIC",
-    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
     "uvType": "BOX",
+    "uvScale": 0.1,
     "objectIds": [
       "GRANDFIREPLACE"
     ],
     "colorOverrides": [
       {
-        "description": "Stone",
-        "colors": "h == 0 && s == 0 && l < 70",
-        "baseMaterial": "STONE_NORMALED",
-        "uvType": "BOX",
-        "uvScale": 0.8
+        "description": "Flames",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150",
+        "upwardsNormals": true
       },
       {
-        "description": "Cloth",
-        "colors": "h == 21",
-        "baseMaterial": "CARPET",
+        "description": "Stone",
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
         "uvScale": 0.5
       }
