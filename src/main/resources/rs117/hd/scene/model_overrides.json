@@ -54205,6 +54205,7 @@
     "uvScale": 0.75,
     "objectIds": [
       "DRAGONMOUNTEDHEAD_RED",
+      "DRAGONMOUNTEDHEAD_RED3_OFFSET",
       "DRAGONMOUNTEDHEAD",
       "DRAGONMOUNTEDHEAD3"
     ],
@@ -54214,7 +54215,8 @@
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvType": "BOX",
         "uvOrientation": 512,
-        "uvScale": 0.5
+        "uvScale": 0.5,
+        "depthBias": 50
       },
       {
         "colors": "h == 5",
