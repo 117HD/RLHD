@@ -12055,9 +12055,9 @@
   },
   {
     "description": "Marble Staircase Spiral with wooden rails",
-    "baseMaterial": "MARBLE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvScale": 0.66,
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "(h == 7 && s > 2) || (h == 5 && s == 2)",
