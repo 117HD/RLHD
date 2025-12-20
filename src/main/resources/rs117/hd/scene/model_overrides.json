@@ -11556,11 +11556,21 @@
   },
   {
     "description": "MARBLE_STATUE_BUST",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
     "objectIds": [
       "BUST1",
       "BUST2",
       "BUST_LUMBRIDGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.15
+      }
     ]
   },
   {
