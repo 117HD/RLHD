@@ -11441,7 +11441,7 @@
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "colors": "h == 6",
         "uvType": "BOX",
-        "uvScale": 0.4,
+        "uvScale": 0.3,
         "uvOrientation": 512
       }
     ]
