@@ -11438,11 +11438,10 @@
     ],
     "colorOverrides": [
       {
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6 && s == 4",
         "uvType": "BOX",
-        "uvScale": 0.3,
-        "uvOrientation": 512
+        "uvScale": 0.35
       }
     ]
   },
@@ -38580,6 +38579,26 @@
     "uvType": "BOX",
     "objectIds": [
       "AIDE_BANKTABLE"
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Double Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "BIGBED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN"
+      },
+      {
+        "colors": [ "h == 8 && s == 7" ],
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT"
+      }
     ]
   },
   {
