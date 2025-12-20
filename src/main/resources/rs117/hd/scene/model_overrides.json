@@ -15621,7 +15621,14 @@
       "ZOGRE_STANDING_TORCH"
     ],
     "uvType": "BOX",
-    "uvScale": 1.1
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_110",
+        "receiveShadows": false
+      }
+    ]
   },
   {
     "description": "Objects - Stone - Stalagmites - Limestone",
