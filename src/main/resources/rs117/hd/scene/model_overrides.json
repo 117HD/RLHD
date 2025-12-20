@@ -38253,7 +38253,7 @@
     "objectIds": [ "QIP_SHEEP_SHEARER_FULLSTYLE", "QIP_SHEEP_SHEARER_FENCING", "QIP_SHEEP_SHEARER_FENCEGATE_L", "QIP_SHEEP_SHEARER_FENCEGATE_R", "QIP_SHEEP_SHEARER_OPENFENCEGATE_L", "QIP_SHEEP_SHEARER_OPENFENCEGATE_R" ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.5,
     "uvOrientation": 512
   },
   {
