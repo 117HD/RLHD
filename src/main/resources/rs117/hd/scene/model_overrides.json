@@ -3668,7 +3668,6 @@
   {
     "description": "LUMBRIDGE_CASTLE_WALLS",
     "objectIds": [
-      "CROSS_CASTLEEDGE",
       "CASTLEWALL",
       "BIGSTONE_CASTLEWALL",
       "CASTLEBATTLEMENTS",
@@ -3676,6 +3675,15 @@
       "CASTLECRUMBLY_R"
     ],
     "flatNormals": true
+  },
+  {
+    "description": "LUMBRIDGE_CASTLE_WALL_CROSS_TOPS",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "CROSS_CASTLEEDGE"
+    ]
   },
   {
     "description": "VARROCK_FOUNTAIN_FLOOR",
