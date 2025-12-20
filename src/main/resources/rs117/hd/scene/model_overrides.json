@@ -11673,7 +11673,7 @@
     "description": "CANNON 2",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.35,
     "uvOrientation": 512,
     "objectIds": [
       "CANNON"
@@ -11966,6 +11966,15 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true
+  },
+  {
+    "description": "Anvil 2",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "LUMBRIDGE_ANVIL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35
   },
   {
     "description": "Ground Hole Shortcuts",
@@ -14162,7 +14171,8 @@
     ],
     "uvType": "BOX",
     "flatNormals": true,
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "uvScale": 0.75
   },
   {
     "description": "Objects - Wooden - Crate",
@@ -15754,7 +15764,8 @@
       "QUEST_LUNAR_TABLE_SMALL",
       "POG_WOODEN_TABLE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "Objects - Wooden - Plank tables - Long",
@@ -38506,7 +38517,8 @@
     "objectIds": [
       "FLAG_LUMBRIDGE_OVERHANG",
       "FLAG_LUMBRIDGE",
-      "FLAG_LUMBRIDGE_OVERHANG_POLE"
+      "FLAG_LUMBRIDGE_OVERHANG_POLE",
+      "STANDARD_BLUE3_ANIMATING"
     ]
   },
   {
@@ -42504,7 +42516,7 @@
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvType": "BOX",
-        "uvScale": 0.5,
+        "uvScale": 0.35,
         "uvOrientation": 512
       },
       {
