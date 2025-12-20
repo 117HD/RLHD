@@ -38610,6 +38610,21 @@
     ]
   },
   {
+    "description": "Lumbridge Church - Small Round Window",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "ROUNDCHURCHWINDOW"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
     "description": "Wooden hat stand",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
