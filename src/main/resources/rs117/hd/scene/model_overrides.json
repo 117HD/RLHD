@@ -1119,10 +1119,6 @@
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
       "DRILL_TREE3",
-      "POH_SMALL_TREE2_5",
-      "POH_BIG_TREE5_4",
-      "POH_BIG_TREE2_4",
-      "POH_SMALL_TREE4_5",
       "TREE",
       "LIGHTTREE",
       "NEWBIETREE",
@@ -1169,11 +1165,7 @@
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
-      "DRILL_TREE3",
-      "POH_SMALL_TREE2_5",
-      "POH_BIG_TREE5_4",
-      "POH_BIG_TREE2_4",
-      "POH_SMALL_TREE4_5"
+      "DRILL_TREE3"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1269,8 +1261,7 @@
       "SPIRIT_TREE_FULLYGROWN",
       "SPIRIT_TREE_CLAIMXP",
       "SPIRITTREE_SMALL_1OP",
-      "SPIRITTREE_SMALL_2OPS",
-      "POH_SPIRIT_TREE"
+      "SPIRITTREE_SMALL_2OPS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1560,8 +1551,6 @@
     "terrainVertexSnap": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "POH_BIG_TREE6_4",
-      "POH_SMALL_TREE6_5",
       "YEW_TREE_SEEDLING",
       "YEW_TREE_1",
       "YEW_TREE_2",
@@ -1638,8 +1627,6 @@
     "terrainVertexSnap": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "POH_BIG_TREE6_4",
-      "POH_SMALL_TREE6_5",
       "YEW_TREE_SEEDLING",
       "YEW_TREE_1",
       "YEW_TREE_2",
@@ -29657,8 +29644,6 @@
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "terrainVertexSnap": true,
     "objectIds": [
-      "POH_BIG_TREE3_4",
-      "POH_SMALL_TREE3_5",
       "OAK_TREE_SEEDLING",
       "OAK_TREE_1",
       "OAK_TREE_2",
@@ -29694,8 +29679,6 @@
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "terrainVertexSnap": true,
     "objectIds": [
-      "POH_BIG_TREE3_4",
-      "POH_SMALL_TREE3_5",
       "OAK_TREE_SEEDLING",
       "OAK_TREE_1",
       "OAK_TREE_2",
@@ -29731,7 +29714,7 @@
     "terrainVertexSnap": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "POH_BIG_TREE7_4", "POH_SMALL_TREE7_5", "MAGIC_TREE_SEEDLING",
+      "MAGIC_TREE_SEEDLING",
       "MAGIC_TREE_1", "MAGIC_TREE_2", "MAGIC_TREE_3",
       "MAGIC_TREE_4", "MAGIC_TREE_5", "MAGIC_TREE_6",
       "MAGIC_TREE_7", "MAGIC_TREE_8", "MAGIC_TREE_9",
@@ -46500,6 +46483,111 @@
         "uvType": "MODEL_XZ",
         "castShadows": false,
         "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "PoH - Trees",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "POH_SMALL_TREE2_5",
+      "POH_BIG_TREE5_4",
+      "POH_BIG_TREE2_4",
+      "POH_SMALL_TREE4_5",
+      "POH_BIG_TREE3_4",
+      "POH_BIG_TREE6_4",
+      "POH_SMALL_TREE6_5",
+      "POH_BIG_TREE7_4",
+      "POH_SMALL_TREE7_5",
+      "POH_SMALL_TREE3_5",
+      "POH_SPIRIT_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_YELLOW_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_YELLOW_TOP"
+      },
+      "MAPLE_LEAVES": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "MAPLE_LEAVES"
+      }
+    }
+  },
+  {
+    "description": "Depth Bias Fix - Garden Rock",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "depthBias": 210,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_45",
+        "windDisplacementMode": "OBJECT",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "windDisplacementModifier": 1
+      }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Garden Fountain",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "depthBias": 210,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_45",
+        "windDisplacementMode": "OBJECT",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "windDisplacementModifier": 1
+      },
+      {
+        "colors": "h == 36 || h == 37",
+        "baseMaterial": "GRAY_90",
+        "depthBias": 210
+      }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Garden Pond",
+    "retainVanillaUvs": false,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_45",
+        "windDisplacementMode": "OBJECT",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "windDisplacementModifier": 1
+      },
+      {
+        "colors": "h == 7",
+        "retainVanillaUvs": false,
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -69262,25 +69350,6 @@
       "GG_DUSK_LIGHTNING_8"
     ],
     "depthBias": 255
-  },
-  {
-    "description": "Depth Bias Fix - Garden Ornaments",
-    "depthBias": 210,
-    "objectIds": [
-      "POH_CRUDE_GARDEN_CENTREPIECE3",
-      "POH_CRUDE_GARDEN_CENTREPIECE4",
-      "POH_CRUDE_GARDEN_CENTREPIECE2"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h == 13",
-        "baseMaterial": "GRAY_45",
-        "windDisplacementMode": "OBJECT",
-        "upwardsNormals": true,
-        "castShadows": false,
-        "windDisplacementModifier": 1
-      }
-    ]
   },
   {
     "description": "Depth Bias Fix - Mounted Glory/Digsite/Xeric",
