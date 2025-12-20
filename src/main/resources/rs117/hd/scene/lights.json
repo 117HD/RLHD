@@ -22972,6 +22972,21 @@
     ]
   },
   {
+    "description": "POH_OTHERWORLDY_MUSHROOM_LIGHT",
+    "offset": [ 0, 75, 0 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "POH_THEME_ZANARIS_HERO"
+    ]
+  },
+  {
     "description": "POH_PORTAL_ARCEUUS_LIBRARY",
     "height": 120,
     "alignment": "CENTER",
