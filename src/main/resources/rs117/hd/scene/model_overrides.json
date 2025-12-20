@@ -42855,19 +42855,22 @@
         "description": "Red books",
         "colors": "h == 4",
         "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.4
       },
       {
         "description": "Dark brown books",
         "colors": "h == 7 && s > 4",
         "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.4
       },
       {
         "description": "Light brown books",
         "colors": "h == 6 && s == 3",
         "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   },
