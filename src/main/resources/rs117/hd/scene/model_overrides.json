@@ -15627,7 +15627,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "STANDING_TORCH",
-      "ZOGRE_STANDING_TORCH"
+      "ZOGRE_STANDING_TORCH",
+      "FAI_BARBARIAN_TORCH"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
