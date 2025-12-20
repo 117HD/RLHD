@@ -12383,7 +12383,8 @@
       "LUC2_MOV_DOOR_OPEN"
     ],
     "uvType": "BOX",
-    "flatNormals": true
+    "flatNormals": true,
+    "uvScale": 0.65
   },
   {
     "description": "Wooden Door 2 - 4 Panel",
