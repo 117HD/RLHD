@@ -22692,7 +22692,7 @@
   },
   {
     "description": "POH_RESTORATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 3.5,
@@ -22701,9 +22701,7 @@
       0,
       85
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_RESTORATION",
       "XMAS20_POH_POOL_RESTORATION"
@@ -22730,7 +22728,7 @@
   },
   {
     "description": "POH_REVITALISATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 6,
@@ -22739,9 +22737,7 @@
       179,
       0
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_REVITALISATION",
       "XMAS20_POH_POOL_REVITALISATION"
@@ -22768,7 +22764,7 @@
   },
   {
     "description": "POH_REJUVENATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 3.5,
@@ -22777,9 +22773,7 @@
       225,
       255
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_REJUVENATION",
       "XMAS20_POH_POOL_REJUVENATION"
@@ -22815,9 +22809,7 @@
       0,
       179
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_RECOVERY",
       "XMAS20_POH_POOL_RECOVERY"
@@ -22844,7 +22836,7 @@
   },
   {
     "description": "POH_ORNATE_REJUVENATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 45,
@@ -22853,7 +22845,7 @@
       0,
       255
     ],
-    "type": "PULSE",
+    "type": "STATIC",
     "duration": 1250,
     "range": 20,
     "objectIds": [

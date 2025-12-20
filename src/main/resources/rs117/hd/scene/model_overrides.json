@@ -914,7 +914,6 @@
       "POH_TIPJAR",
       "POH_ADVENTURE_LOG_1",
       "POH_ADVENTURE_LOG_2",
-      "POH_THEME_ZANARIS_HERO",
       "RAIDS_LASERCRABS_BIGCRYSTAL_1",
       "RAIDS_LASERCRABS_BIGCRYSTAL_2",
       "RAIDS_LASERCRABS_BIGCRYSTAL_3",
@@ -46354,14 +46353,153 @@
     "description": "PoH - Superior Garden - Otherworldly - Ornament",
     "baseMaterial": "GRAY_70",
     "depthBias": 50,
+    "hideVanillaShadows": true,
     "objectIds": [
       "POH_THEME_ZANARIS_HERO"
+    ]
+  },
+  {
+    "description": "PoH - Restoration Pool",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "POH_POOL_RESTORATION",
+      "XMAS20_POH_POOL_RESTORATION"
     ],
+    "depthBias": 210,
     "colorOverrides": [
       {
-        "colors": "a == 105",
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "depthBias": 210
+      },
+      {
+        "colors": "s > 0 && s < 7",
+        "baseMaterial": "GRAY_70",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 210
+      }
+    ]
+  },
+  {
+    "description": "PoH - Rejuvenation and Revitalisation Pool",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "POH_POOL_REJUVENATION",
+      "XMAS20_POH_POOL_REJUVENATION",
+      "POH_POOL_REVITALISATION",
+      "XMAS20_POH_POOL_REVITALISATION"
+    ],
+    "depthBias": 210,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 || h > 25",
+        "baseMaterial": "GRAY_60",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 5 && s < 5",
         "baseMaterial": "GRAY_90",
-        "depthBias": 255
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 210
+      },
+      {
+        "colors": "s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "depthBias": 210
+      }
+    ]
+  },
+  {
+    "description": "PoH - Fancy Rejuvenation Pool",
+    "baseMaterial": "MARBLE_1_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "POH_POOL_RECOVERY",
+      "XMAS20_POH_POOL_RECOVERY"
+    ],
+    "depthBias": 210,
+    "colorOverrides": [
+      {
+        "colors": "h > 25",
+        "baseMaterial": "GRAY_80",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 210
+      }
+    ]
+  },
+  {
+    "description": "PoH - Ornate Rejuvenation Pool - Normal",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.375,
+    "objectIds": [
+      "POH_POOL_REGENERATION",
+      "XMAS20_POH_POOL_REGENERATION"
+    ],
+    "depthBias": 210,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 60",
+        "baseMaterial": "GRAY_125"
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 210
+      }
+    ]
+  },
+  {
+    "description": "PoH - Ornate Rejuvenation Pool - Fiery",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.375,
+    "objectIds": [
+      "LEAGUE_4_POH_POOL_REJUVENATION"
+    ],
+    "depthBias": 210,
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 0 && l < 10",
+        "baseMaterial": "SMOOTH_STONE",
+        "depthBias": 210,
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "a < 106",
+        "baseMaterial": "NONE",
+        "depthBias": 210,
+        "uvType": "MODEL_XZ",
+        "castShadows": false,
+        "receiveShadows": false
       }
     ]
   },
