@@ -55573,7 +55573,7 @@
       {
         "description": "Flames",
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_150"
       }
     ]
   },
