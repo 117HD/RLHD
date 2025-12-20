@@ -18317,18 +18317,6 @@
     "castShadows": false
   },
   {
-    "description": "POH superior garden zen theme carpet",
-    "objectIds": [
-      "POH_THEME_ZEN_PATH",
-      "POH_THEME_ZEN_PATH_CORNER",
-      "POH_THEME_ZEN_EDGE",
-      "POH_THEME_ZEN_INNER_CORNER",
-      "POH_THEME_ZEN_OUTER_CORNER"
-    ],
-    "flatNormals": true,
-    "castShadows": false
-  },
-  {
     "description": "POH basement filler objects",
     "objectIds": [
       "DUNGEON_RUBBLE_CORRIDORFILLER",
@@ -46348,7 +46336,7 @@
   {
     "description": "PoH - Superior Garden - Zen - Ornament",
     "baseMaterial": "GRUNGE_3_SMOOTH",
-    "depthBias": 76,
+    "depthBias": 151,
     "objectIds": [
       "POH_THEME_ZEN_HERO"
     ],
@@ -46358,14 +46346,14 @@
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.7,
-        "depthBias": 75
+        "depthBias": 150
       }
     ]
   },
   {
     "description": "PoH - Superior Garden - Otherworldly - Ornament",
     "baseMaterial": "GRAY_70",
-    "depthBias": 76,
+    "depthBias": 50,
     "objectIds": [
       "POH_THEME_ZANARIS_HERO"
     ],
@@ -69136,23 +69124,6 @@
       "GG_DUSK_LIGHTNING_8"
     ],
     "depthBias": 255
-  },
-  {
-    "description": "Depth Bias Fix - POH Restoration Pools",
-    "objectIds": [
-      "POH_POOL_REJUVENATION",
-      "POH_POOL_REGENERATION",
-      "LEAGUE_4_POH_POOL_REJUVENATION",
-      "XMAS20_POH_POOL_REJUVENATION",
-      "POH_POOL_RESTORATION",
-      "POH_POOL_REVITALISATION",
-      "POH_POOL_RECOVERY",
-      "XMAS20_POH_POOL_RESTORATION",
-      "XMAS20_POH_POOL_REVITALISATION",
-      "XMAS20_POH_POOL_RECOVERY",
-      "XMAS20_POH_POOL_REGENERATION"
-    ],
-    "depthBias": 210
   },
   {
     "description": "Depth Bias Fix - Garden Ornaments",
