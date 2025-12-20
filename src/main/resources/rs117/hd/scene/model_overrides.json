@@ -18299,7 +18299,7 @@
     ],
     "baseMaterial": "CARPET",
     "uvType": "WORLD_XZ",
-    "flatNormals": true,
+    "upwardsNormals": true,
     "castShadows": false
   },
   {
