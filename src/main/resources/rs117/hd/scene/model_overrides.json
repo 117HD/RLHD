@@ -13423,6 +13423,38 @@
     "uvScale": 0.8
   },
   {
+    "description": "Inconspicuous Rocks",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "HIDEY_UNBUILT_BUSH_EASY",
+      "HIDEY_BUSH_EASY",
+      "HIDEY_UNBUILT_BUSH_MEDIUM",
+      "HIDEY_BUSH_MEDIUM",
+      "HIDEY_UNBUILT_BUSH_HARD",
+      "HIDEY_BUSH_HARD",
+      "HIDEY_UNBUILT_BUSH_ELITE",
+      "HIDEY_BUSH_ELITE",
+      "HIDEY_UNBUILT_BUSH_MASTER",
+      "HIDEY_BUSH_MASTER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 150,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h > 6 && s < 4",
+        "baseMaterial": "METALLIC_1_SMOOTH"
+      }
+    ]
+  },
+  {
     "description": "Inconspicuous Crate",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -13437,7 +13469,14 @@
       "HIDEY_UNBUILT_CRATE_MASTER",
       "HIDEY_CRATE_MASTER"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "h > 6",
+        "baseMaterial": "METALLIC_1_SMOOTH"
+      }
+    ]
   },
   {
     "description": "Inconspicuous Hole",
