@@ -3636,7 +3636,7 @@
       "PVPA_ACCESS_GATE_L_CLOSED"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.5,
     "uvOrientation": 512,
     "flatNormals": true
   },
