@@ -11903,6 +11903,9 @@
   {
     "description": "Marble Fountain",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.55,
     "objectIds": [
       "FOUNTAIN"
     ]
