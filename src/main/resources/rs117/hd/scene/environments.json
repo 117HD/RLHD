@@ -2122,6 +2122,19 @@
     "fogDepth": 25
   },
   {
+    "area": "GRIMSTONE",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 0.75,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1,
+    "fogColor": "#aebde0",
+    "fogDepth": 50
+  },
+  {
+    "area": "GRIMSTONE_DUNGEON",
+    "waterColor": "#6D8AA8"
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
