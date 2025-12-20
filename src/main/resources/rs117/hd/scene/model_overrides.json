@@ -11993,8 +11993,10 @@
     ]
   },
   {
-    "description": "Wizard Tower and Bridge",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "description": "Wizard Tower - Walls and Bridge",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "FAI_WIZTOWER_WALLS",
       "FAI_WIZTOWER_WALLS_TERMINATOR_LEFT",
@@ -12003,8 +12005,6 @@
       "FAI_WIZTOWER_WALLS_L2_5_TERMINATOR_LFT",
       "FAI_WIZTOWER_WALLS_3_TERMINATOR",
       "FAI_WIZTOWER_WALLS_L2",
-      "FAI_WIZTOWER_WALLS_WINDOW",
-      "FAI_WIZTOWER_WALLS_L2_WINDOW",
       "FAI_WIZTOWER_BATTLEMENTS",
       "FAI_WIZTOWER_WALL_BATTLEMENTS",
       "FAI_WIZTOWER_WALL_BATTLEMENTS2",
@@ -12014,8 +12014,6 @@
       "FAI_WIZTOWER_UPPER_WALLS_L2_5_TERMINATOR_RHT",
       "FAI_WIZTOWER_UPPER_WALLS_L2_5_TERMINATOR_LFT",
       "FAI_WIZTOWER_UPPER_WALLS_3_TERMINATOR",
-      "FAI_WIZTOWER_UPPER_WALLS_WINDOW",
-      "FAI_WIZTOWER_UPPER_WALLS_L2_WINDOW",
       "FAI_WIZTOWER_BRIDGESUPPORT",
       "FAI_WIZTOWER_BRIDGE_LINK_UNDER_POLE",
       "FAI_WIZTOWER_BRIDGE_LINK_UNDER_POLE_MIRROR",
@@ -12033,6 +12031,27 @@
       "FAI_WIZTOWER_BRIDGE_WALLS"
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Wizard Tower - Windows",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_WIZTOWER_WALLS_WINDOW",
+      "FAI_WIZTOWER_WALLS_L2_WINDOW",
+      "FAI_WIZTOWER_UPPER_WALLS_WINDOW",
+      "FAI_WIZTOWER_UPPER_WALLS_L2_WINDOW"
+    ],
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
   },
   {
     "description": "Marble Staircase Spiral with wooden rails",
