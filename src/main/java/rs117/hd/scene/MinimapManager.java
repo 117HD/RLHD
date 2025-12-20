@@ -56,10 +56,12 @@ public class MinimapManager {
 
 	public int[][][][] minimapTilePaintColorsLighting;
 	public int[][][][][] minimapTileModelColorsLighting;
+	private float previousAmbientStrength = 0f;
+	private final float[] previousAmbientColor = new float[] { 0, 0, 0 };
+	private float previousDirectionalStrength = 0f;
+	private final float[] previousDirectionalColor = new float[] { 0, 0, 0 };
 
 	public void startUp() {
-		minimapTilePaintColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
-		minimapTileModelColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
 		eventBus.register(this);
 	}
 
@@ -69,6 +71,8 @@ public class MinimapManager {
 		minimapTileModelColorsLighting = null;
 		sceneContext.minimapTileModelColors = null;
 		sceneContext.minimapTilePaintColors = null;
+		previousAmbientStrength = -1f;
+		previousDirectionalStrength = -1f;
 	}
 
 
@@ -78,6 +82,8 @@ public class MinimapManager {
 		if (sceneContext.minimapTilePaintColors == null) {
 			sceneContext.minimapTilePaintColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
 			sceneContext.minimapTileModelColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
+			minimapTilePaintColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
+			minimapTileModelColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
 		}
 
 		final Scene scene = sceneContext.scene;
@@ -373,13 +379,11 @@ public class MinimapManager {
 
 
 	public void applyLighting(SceneContext sceneContext) {
-		if (!api.isSubscribed(HdEvent.EVENT_MINIMAP)) return;
-
-		System.out.println("Apply Lighting");
-
 		if (sceneContext.minimapTilePaintColors == null) {
 			sceneContext.minimapTilePaintColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
 			sceneContext.minimapTileModelColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
+			minimapTilePaintColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
+			minimapTileModelColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
 		}
 
 		for (int z = 0; z < MAX_Z; ++z) {
@@ -493,8 +497,9 @@ public class MinimapManager {
 				SceneContext sceneContext = plugin.getSceneContext();
 				if (sceneContext != null) {
 					prepareScene(sceneContext);
+					applyLighting(sceneContext);
+					updateMinimapLighting = true;
 				}
-				updateMinimapLighting = true;
 			});
 		}
 	}
@@ -518,6 +523,33 @@ public class MinimapManager {
 			rgb[i] = clamp(rgb[i], 0, 1);
 		}
 		return ColorUtils.srgbToPackedHsl(ColorUtils.linearToSrgb(rgb));
+	}
+
+	/**
+	 * Checks if lighting parameters have changed and updates minimap lighting if needed.
+	 * This should be called after environment updates.
+	 *
+	 * @param sceneContext the scene context
+	 */
+	public void updateMinimapLighting(SceneContext sceneContext) {
+		if (!api.isSubscribed(HdEvent.EVENT_MINIMAP)) return;
+
+		boolean ambientStrengthChanged = environmentManager.currentAmbientStrength != previousAmbientStrength;
+		boolean ambientColorChanged = !Arrays.equals(environmentManager.currentAmbientColor, previousAmbientColor);
+		boolean directionalStrengthChanged = environmentManager.currentDirectionalStrength != previousDirectionalStrength;
+		boolean directionalColorChanged = !Arrays.equals(environmentManager.currentDirectionalColor, previousDirectionalColor);
+
+		if (ambientStrengthChanged || ambientColorChanged || directionalStrengthChanged || directionalColorChanged) {
+			updateMinimapLighting = true;
+		}
+
+		if (updateMinimapLighting) {
+			applyLighting(sceneContext);
+			previousAmbientStrength = environmentManager.currentAmbientStrength;
+			System.arraycopy(environmentManager.currentAmbientColor, 0, previousAmbientColor, 0, 3);
+			previousDirectionalStrength = environmentManager.currentDirectionalStrength;
+			System.arraycopy(environmentManager.currentDirectionalColor, 0, previousDirectionalColor, 0, 3);
+		}
 	}
 
 }

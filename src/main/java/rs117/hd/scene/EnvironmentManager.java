@@ -38,6 +38,7 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.api.HdEvent;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.FileWatcher;
@@ -285,15 +286,10 @@ public class EnvironmentManager {
 			currentWindSpeed = mix(startWindSpeed, targetWindSpeed, t);
 			currentWindStrength = mix(startWindStrength, targetWindStrength, t);
 			currentWindCeiling = mix(startWindCeiling, targetWindCeiling, t);
-			minimapManager.updateMinimapLighting = true;
 		}
 
 		updateLightning();
-
-		// TODO: Probably make minimap lighting updates a separate update call after environments
-		//       and only have it actually run whenever the parameters it reads change
-		if (minimapManager.updateMinimapLighting)
-			minimapManager.applyLighting(sceneContext);
+		minimapManager.updateMinimapLighting(sceneContext);
 	}
 
 	/**
