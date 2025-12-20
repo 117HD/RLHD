@@ -45746,12 +45746,7 @@
       "VMQ4_CIVITAS_JANUS_WINDOW_DECOY_WITH_OP",
       "VMQ4_CIVITAS_JANUS_WINDOW_LOOSE",
       "VMQ4_CIVITAS_JANUS_WINDOW_OPEN",
-      "VMQ4_CIVITAS_JANUS_WINDOW_CLOSED",
-      "CIVITAS_PALACE_WALLKIT03",
-      "CIVITAS_PALACE_WALLKIT02",
-      "CIVITAS_PALACE_WALLKIT01",
-      "CIVITAS_PALACE_WALLKIT03_JOIN01",
-      "CIVITAS_PALACE_WALLKIT03_JOIN01_M"
+      "VMQ4_CIVITAS_JANUS_WINDOW_CLOSED"
     ],
     "colorOverrides": [
       {
@@ -45761,6 +45756,55 @@
         "uvType": "BOX",
         "uvScale": 0.8
       }
+    ]
+  },
+  {
+    "description": "Fortis - Marble - Palace Wall",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvOrientation": 256,
+    "uvScale": 1.15,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 1",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "CIVITAS_PALACE_WALLKIT03",
+      "CIVITAS_PALACE_WALLKIT02",
+      "CIVITAS_PALACE_WALLKIT01",
+      "CIVITAS_PALACE_WALLKIT03_JOIN01",
+      "CIVITAS_PALACE_WALLKIT03_JOIN01_M"
+    ]
+  },
+  {
+    "description": "Fortis - Palace Wall Fountain - DYNAMIC - ANIMATED",
+    "baseMaterial": "MARBLE_1_GLOSS",
+    "uvOrientation": 256,
+    "uvScale": 1.31,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "baseMaterial": "NONE",
+        "colors": "a < 255"
+      },
+      {
+        "description": "Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 1",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "CIVITAS_PALACE_WALLKIT01_FOUNTAIN"
     ]
   },
   {
@@ -45777,6 +45821,17 @@
       "WALLKIT_CIVITAS06_ARCH01_TALL_MID",
       "WALLKIT_CIVITAS06_ARCH02_TALL",
       "WALLKIT_CIVITAS06_ARCH03_TALL"
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Staircase",
+    "baseMaterial": "STONE_NORMALED",
+    "uvOrientation": -131,
+    "uvScale": 1.25,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      "CIVITAS_PALACE_STAIRS_UP"
     ]
   },
   {
@@ -56422,7 +56477,9 @@
       "PILLAR_CIVITAS01_CITY01_LOWER01",
       "PILLAR_CIVITAS01_CITY01_HIGHER01",
       "PILLAR_CIVITAS01_CITY01",
-      "PILLAR_CIVITAS01_CITY02_LOWER01"
+      "PILLAR_CIVITAS01_CITY02_LOWER01",
+      "PILLAR_CIVITAS01_MUSEUM01",
+      "PILLAR_CIVITAS01_MUSEUM03"
     ],
     "colorOverrides": [
       {
@@ -56553,11 +56610,16 @@
       "VARLAMORE_STATUE01_TAUR01_2X2",
       "VARLAMORE_STATUE01_ATLAZORA01_2X2",
       "VARLAMORE_STATUE01_DIZANA01_2X2",
+      "VARLAMORE_STATUE01_XERNA01",
       "STATUES_CIVITAS01_IMAFORE02",
       "CIVITAS_MUSEUM_STATUE_QUOATLOS",
       "CIVITAS_MUSEUM_STATUE_MARHUITZ",
       "CIVITAS_MUSEUM_STATUE_ATLAZORA",
       "CIVITAS_MUSEUM_STATUE_TAUR",
+      "VARLAMORE_STATUE01_TAUR01_1X1",
+      "STATUES_CIVITAS01_ITZLA01",
+      "STATUES_CIVITAS01_ZYANYI02",
+      "VARLAMORE_STATUE01_MARHUITZ01_1X1",
       "CIVITAS_MUSEUM_STATUE_XERNA",
       "CIVITAS_MUSEUM_STATUE_DIZANA",
       "CIVITAS_MUSEUM_STATUE_MAXIMUS"
@@ -56707,8 +56769,38 @@
       "ALDARIN_POTTED01_FAN01",
       "ALDARIN_POTTED01_FAN02",
       "ALDARIN_POTTED01_FAN03",
+      "CIVITAS_POTTED01_FAN01",
       "CIVITAS_POTTED01_FAN03",
-      "CIVITAS_POTTED01_FAN04"
+      "CIVITAS_POTTED01_FAN04",
+      "CIVITAS_POTTED01_FAN02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 10",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Stem",
+        "baseMaterial": "BARK",
+        "colors": "h <= 5 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Pottery - Plant - Fortis Fountain Potted Plant",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 240,
+    "objectIds": [
+      "CIVITAS_PALACE_WALLKIT01_FOUNTAIN_SPOUT"
     ],
     "colorOverrides": [
       {
