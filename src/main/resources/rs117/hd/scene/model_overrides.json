@@ -10004,7 +10004,8 @@
     "uvOrientation": 512,
     "flatNormals": true,
     "objectIds": [
-      "KR_BENCH"
+      "KR_BENCH",
+      "QIP_DIGSITE_BENCH"
     ]
   },
   {
