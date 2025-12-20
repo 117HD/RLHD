@@ -11502,10 +11502,13 @@
   },
   {
     "description": "STONE_WINDOWS",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "OLDCASTLEARROWSLIT",
-      "CASTLEARROWSLIT"
+      "CASTLEARROWSLIT",
+      "CASTLEARROWSLIT_DIAG"
     ]
   },
   {
