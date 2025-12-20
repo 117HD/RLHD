@@ -11950,6 +11950,7 @@
     "retainVanillaUvs": false,
     "uvType": "BOX",
     "uvScale": 0.55,
+    "terrainVertexSnap": true,
     "objectIds": [
       "FOUNTAIN"
     ]
