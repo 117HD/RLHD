@@ -54468,7 +54468,7 @@
   },
   {
     "description": "Varrock - Castle Tree",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
