@@ -4533,9 +4533,7 @@
   },
   {
     "description": "Falador - Stone - Agility course hand holds",
-    "baseMaterial": "METALLIC_1_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.6,
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
     "colorOverrides": [
       {
         "description": "Rope",
@@ -4550,7 +4548,10 @@
       "ROOFTOPS_FALADOR_TIGHTROPE_2",
       "ROOFTOPS_FALADOR_TIGHTROPE_3",
       "ROOFTOPS_FALADOR_TIGHTROPE_END",
-      "ROOFTOPS_FALADOR_TIGHTROPE_END_FORDIAGONAL"
+      "ROOFTOPS_FALADOR_TIGHTROPE_END_FORDIAGONAL",
+      "ROOFTOPS_DRAYNOR_TIGHTROPE_END",
+      "ROOFTOPS_DRAYNOR_TIGHTROPE_2",
+      "ROOFTOPS_DRAYNOR_TIGHTROPE_1"
     ]
   },
   {
