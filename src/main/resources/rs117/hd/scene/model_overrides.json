@@ -47111,6 +47111,7 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
+    "uvOrientation": 512,
     "colorOverrides": [
       {
         "description": "Pillow and sheet",
