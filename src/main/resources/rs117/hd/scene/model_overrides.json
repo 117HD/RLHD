@@ -37361,6 +37361,9 @@
   {
     "description": "Kourend - Hosidius - Tithe Farm - Water Barrel",
     "baseMaterial": "METALLIC_1_LIGHT",
+    "uvScale": 0.35,
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
     "objectIds": [
       "WATER_BARREL1"
     ],
