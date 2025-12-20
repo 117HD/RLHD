@@ -31112,9 +31112,17 @@
       "VIKING_SPINNINGWHEEL",
       "ELF_VILLAGE_SPINNING_WHEEL",
       "SW_SPINNINGWHEEL_BROKEN",
-      "SW_SPINNINGWHEEL_FIXED"
+      "SW_SPINNINGWHEEL_FIXED",
+      "SPINNINGWHEEL"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Loom",
