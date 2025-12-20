@@ -4480,21 +4480,25 @@
     ]
   },
   {
-    "description": "Falador - Wooden - Metallic - Shield Shop sign",
+    "description": "Falador & Lumbrdige - Wooden - Metallic - Shield & Axe Shop sign",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512,
     "uvType": "BOX",
     "uvScale": 0.75,
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "s == 0 && l < 40",
+        "colors": "h == 0",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
-        "uvOrientation": -606
+        "uvScale": 0.4,
+        "uvOrientation": 512
       }
     ],
     "objectIds": [
-      "FAI_FALADOR_SHIELD_SHOP_SIGN"
+      "FAI_FALADOR_SHIELD_SHOP_SIGN",
+      "AXESHOPSIGN_LUMBRIDGE"
     ]
   },
   {
