@@ -2061,6 +2061,7 @@
     "description": "Objects - Trees - Tirannwn Tree",
     "baseMaterial": "LIGHT_BARK",
     "terrainVertexSnap": true,
+    "disablePrioritySorting": true,
     "objectIds": [
       "REGICIDE_TREE_LARGE",
       "REGICIDE_TREE_LARGE2",
@@ -2242,7 +2243,6 @@
     "objectIds": [
       "REGICIDE_ROOTTREE"
     ],
-    "retainVanillaUvs": false,
     "colorOverrides": [
       {
         "colors": "h == 6",
@@ -2262,6 +2262,7 @@
       "REGICIDE_TREE_FALLEN"
     ],
     "retainVanillaUvs": false,
+    "terrainVertexSnap": true,
     "uvType": "BOX",
     "uvScale": 0.65,
     "colorOverrides": [
