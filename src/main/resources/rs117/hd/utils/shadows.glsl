@@ -76,7 +76,7 @@ vec4 fetchShadowTexel(vec3 worldPos, bool canSelfShadow, int i, ivec2 pixelCoord
     if(isGroundPlane && !canSelfShadow && shadow > 0.0) {
         vec3 shadowWorldPos = reconstructShadowWorldPos(pixelCoord, shadowDepth);
         float dist = distance(shadowWorldPos, worldPos);
-        if(dist < 170.0) {
+        if(dist < 128.0) {
             int shadowGroundTileXY = texelFetch(shadowGroundMask, pixelCoord, 0).r;
             if(shadowGroundTileXY != 0) {
                 int tileExX = int(worldPos.x / 128.0) % 255;
@@ -162,7 +162,7 @@ float sampleShadowMap(vec3 fragPos, vec3 fragNormal, vec2 distortion, float ligh
     shadowTexDDX.xy *= texelSize.x;
     shadowTexDDY.xy *= texelSize.y;
 
-    float receiverBias = abs(dot(shadowTexDDX, vec3(1.0))) + abs(dot(shadowTexDDY, vec3(1.0)));
+    float receiverBias = (abs(dot(shadowTexDDX, vec3(1.0))) + abs(dot(shadowTexDDY, vec3(1.0)))) * 4.0;
     float slopeBias = (1.0 - lightDotNormals) * SHADOW_SLOPE_BIAS;
 
     float shadowBias = SHADOW_CONSTANT_BIAS + slopeBias + receiverBias;
@@ -185,8 +185,6 @@ float sampleShadowMap(vec3 fragPos, vec3 fragNormal, vec2 distortion, float ligh
     #endif
 
     bool canSelfShadow = abs(dot(normalize(fragNormal), vec3(0.0, -1.0, 0.0))) < 0.96;
-
-    //return canSelfShadow ? 1.0 : 0.0;
 
     // Sample 4 corners first
     vec4 c00 = fetchShadowTexel(fragPos, canSelfShadow, 0, kernelOffset + ivec2(0, 0), fragDepth, isGroundPlane);
