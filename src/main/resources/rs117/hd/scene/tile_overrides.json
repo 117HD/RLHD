@@ -9212,6 +9212,46 @@
     "setLightness": 72
   },
   {
+    "name": "GRIMSTONE_DUNGEON_FLOOR",
+    "area": "GRIMSTONE_DUNGEON",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58,
+      159,
+      161
+    ],
+    "shiftLightness": 22,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "GRIMSTONE",
+    "area": "GRIMSTONE",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58
+    ],
+    "shiftLightness": 30,
+    "maxLightness": 105,
+    "replacements": {
+      "NONE": "!textures",
+      "GRIMSTONE_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "GRIMSTONE_NO_BLENDING",
+    "area": "GRIMSTONE",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58
+    ],
+    "maxLightness": 95,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {
