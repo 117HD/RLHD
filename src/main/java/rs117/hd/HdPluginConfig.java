@@ -579,6 +579,18 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean shadowCasterCulling() { return true; }
 
+	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
+	@ConfigItem(
+		keyName = KEY_ROOF_SHADOWS,
+		name = "Roof Shadows",
+		description = "Always cast shadows from roofs, even when they are hidden.",
+		section = shadowSettings,
+		position = 7
+	)
+	default boolean roofShadows() {
+		return false;
+	}
+
 	/*====== Environment settings ======*/
 
 	@ConfigSection(
@@ -1162,17 +1174,6 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean tiledLightingImageLoadStore() {
 		return true;
-	}
-
-	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
-	@ConfigItem(
-		keyName = KEY_ROOF_SHADOWS,
-		name = "Roof Shadows",
-		description = "Always cast shadows from roofs, even when they are hidden.",
-		section = experimentalSettings
-	)
-	default boolean roofShadows() {
-		return false;
 	}
 
 	String KEY_FORCE_INDIRECT_DRAW = "experimentalForceIndirectDraw";
