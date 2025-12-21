@@ -56,7 +56,7 @@ vec3 reconstructShadowWorldPos(ivec2 pixelCoord, float shadowDepth)
 }
 
 
-vec4 fetchShadowTexel(vec3 worldPos, int i, ivec2 pixelCoord, float fragDepth, bool isGroundPlane) {
+vec4 fetchShadowTexel(vec3 worldPos, bool canSelfShadow, int i, ivec2 pixelCoord, float fragDepth, bool isGroundPlane) {
 #if SHADOW_SHADING == SHADOW_DITHERED_SHADING
     int index = int(hash(vec4(floor(worldPos.xyz), i)) * float(POISSON_DISK_LENGTH)) % POISSON_DISK_LENGTH;
     pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
@@ -73,10 +73,10 @@ vec4 fetchShadowTexel(vec3 worldPos, int i, ivec2 pixelCoord, float fragDepth, b
     vec3 tint = vec3(0.0);
 
 #if ZONE_RENDERER && GROUND_SHADOWS
-    if(isGroundPlane && shadow > 0.0) {
+    if(isGroundPlane && !canSelfShadow && shadow > 0.0) {
         vec3 shadowWorldPos = reconstructShadowWorldPos(pixelCoord, shadowDepth);
         float dist = distance(shadowWorldPos, worldPos);
-        if(dist < 256.0) {
+        if(dist < 170.0) {
             int shadowGroundTileXY = texelFetch(shadowGroundMask, pixelCoord, 0).r;
             if(shadowGroundTileXY != 0) {
                 int tileExX = int(worldPos.x / 128.0) % 255;
@@ -85,8 +85,8 @@ vec4 fetchShadowTexel(vec3 worldPos, int i, ivec2 pixelCoord, float fragDepth, b
                 int shadowGroundTileExX = shadowGroundTileXY & 0xFF;
                 int shadowGroundTileExY = (shadowGroundTileXY >> 8) & 0xFF;
 
-                for(int x = -2; x < 3 && shadow > 0; x++) {
-                    for(int y = -2; y < 3 && shadow > 0; y++) {
+                for(int x = -1; x < 2 && shadow > 0; x++) {
+                    for(int y = -1; y < 2 && shadow > 0; y++) {
                         if(((tileExX + x) % 255) == shadowGroundTileExX && ((tileExY + y) % 255) == shadowGroundTileExY) {
                             shadow = 0; // Ignore Shadow, since its coming from a nearby tile
                         }
@@ -120,7 +120,7 @@ vec4 fetchShadowTexel(vec3 worldPos, int i, ivec2 pixelCoord, float fragDepth, b
     return vec4(shadow, tint);
 }
 
-float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals, bool isGroundPlane, out vec3 tint) {
+float sampleShadowMap(vec3 fragPos, vec3 fragNormal, vec2 distortion, float lightDotNormals, bool isGroundPlane, out vec3 tint) {
     vec4 shadowPos = directionalCamera.viewProj * vec4(fragPos, 1);
     shadowPos.xyz /= shadowPos.w;
 
@@ -184,11 +184,15 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals, bool
         vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
     #endif
 
+    bool canSelfShadow = abs(dot(normalize(fragNormal), vec3(0.0, -1.0, 0.0))) < 0.96;
+
+    //return canSelfShadow ? 1.0 : 0.0;
+
     // Sample 4 corners first
-    vec4 c00 = fetchShadowTexel(fragPos, 0, kernelOffset + ivec2(0, 0), fragDepth, isGroundPlane);
-    vec4 c02 = fetchShadowTexel(fragPos, 1, kernelOffset + ivec2(0, kernelSize - 1), fragDepth, isGroundPlane);
-    vec4 c20 = fetchShadowTexel(fragPos, 2, kernelOffset + ivec2(kernelSize - 1, 0), fragDepth, isGroundPlane);
-    vec4 c22 = fetchShadowTexel(fragPos, 3, kernelOffset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth, isGroundPlane);
+    vec4 c00 = fetchShadowTexel(fragPos, canSelfShadow, 0, kernelOffset + ivec2(0, 0), fragDepth, isGroundPlane);
+    vec4 c02 = fetchShadowTexel(fragPos, canSelfShadow, 1, kernelOffset + ivec2(0, kernelSize - 1), fragDepth, isGroundPlane);
+    vec4 c20 = fetchShadowTexel(fragPos, canSelfShadow, 2, kernelOffset + ivec2(kernelSize - 1, 0), fragDepth, isGroundPlane);
+    vec4 c22 = fetchShadowTexel(fragPos, canSelfShadow, 3, kernelOffset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth, isGroundPlane);
 
     // Early exit if all corners are the same (fully shadowed or fully lit)
     bool allShadowed = (c00.r == 0.0 && c02.r == 0.0 && c20.r == 0.0 && c22.r == 0.0);
@@ -199,11 +203,11 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals, bool
         combined = (c00 + c02 + c20 + c22) * 0.25;;
     } else {
         // Finish sampling the reset of the kernal
-        vec4 s01 = fetchShadowTexel(fragPos, 4, kernelOffset + ivec2(0, 1), fragDepth, isGroundPlane);
-        vec4 s10 = fetchShadowTexel(fragPos, 5, kernelOffset + ivec2(1, 0), fragDepth, isGroundPlane);
-        vec4 s11 = fetchShadowTexel(fragPos, 6, kernelOffset + ivec2(1, 1), fragDepth, isGroundPlane);
-        vec4 s12 = fetchShadowTexel(fragPos, 7, kernelOffset + ivec2(1, 2), fragDepth, isGroundPlane);
-        vec4 s21 = fetchShadowTexel(fragPos, 8, kernelOffset + ivec2(2, 1), fragDepth, isGroundPlane);
+        vec4 s01 = fetchShadowTexel(fragPos, canSelfShadow, 4, kernelOffset + ivec2(0, 1), fragDepth, isGroundPlane);
+        vec4 s10 = fetchShadowTexel(fragPos, canSelfShadow, 5, kernelOffset + ivec2(1, 0), fragDepth, isGroundPlane);
+        vec4 s11 = fetchShadowTexel(fragPos, canSelfShadow, 6, kernelOffset + ivec2(1, 1), fragDepth, isGroundPlane);
+        vec4 s12 = fetchShadowTexel(fragPos, canSelfShadow, 7, kernelOffset + ivec2(1, 2), fragDepth, isGroundPlane);
+        vec4 s21 = fetchShadowTexel(fragPos, canSelfShadow, 8, kernelOffset + ivec2(2, 1), fragDepth, isGroundPlane);
 
         #if SHADOW_SHADING == SHADOW_PIXELATED_SHADING
             combined =
