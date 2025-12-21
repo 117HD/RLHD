@@ -7886,7 +7886,6 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "SLAYER_DUNGEON_ENTRANCE",
-      "VIKING_TROLLCAVE_ENTRANCE",
       "TROLLROMANCE_STRONGHOLD_EXIT_TUNNEL",
       "ROUTE_CAVEWALLTUNNEL",
       "MDAUGHTER_CAVEEXIT",
@@ -7898,6 +7897,16 @@
       "FOSSIL_SHORTCUT_BASECAMP_A",
       "FOSSIL_SHORTCUT_BASECAMP_B",
       "MYQ5_WALL_CAVE_SHORTCUT_5"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Grunge Caves",
+    "baseMaterial": "GRUNGE_1",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "VIKING_TROLLCAVE_ENTRANCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
