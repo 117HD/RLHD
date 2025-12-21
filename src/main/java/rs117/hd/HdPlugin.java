@@ -1365,7 +1365,7 @@ public class HdPlugin extends Plugin {
 			glTexImage2D(
 				GL_TEXTURE_2D,
 				0,
-				configShadowTransparency == ShadowTransparency.EnabledWithTinting ? GL_RG16I : GL_R16I,
+				configShadowTransparency == ShadowTransparency.EnabledWithTinting ? GL_RG16UI : GL_R16UI,
 				shadowMapResolution,
 				shadowMapResolution,
 				0,
