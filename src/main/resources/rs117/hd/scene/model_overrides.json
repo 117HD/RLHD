@@ -24860,14 +24860,6 @@
     "uvScale": 0.5
   },
   {
-    "description": "Snow Heap",
-    "baseMaterial": "SNOW_4",
-    "objectIds": [
-      "HUNTING_POLAR_CAVEWALL_FACE1_SHORTER"
-    ],
-    "uvType": "BOX"
-  },
-  {
     "description": "Remove the shadow cast by objects that look weird with them",
     "baseMaterial": "GRAY_85",
     "objectIds": [
