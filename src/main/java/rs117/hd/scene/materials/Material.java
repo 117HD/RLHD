@@ -58,7 +58,7 @@ public class Material {
 	private boolean overrideBaseColor;
 	private boolean unlit;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
-	private float brightness = 1;
+	public float brightness = 1;
 	private float displacementScale = .1f;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };

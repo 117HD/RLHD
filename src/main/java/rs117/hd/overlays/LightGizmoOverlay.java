@@ -450,7 +450,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 				if (showDuplicationInfo) {
 					int newlines = (counter++ % 5) + 1;
 					info += "\n".repeat(newlines);
-					info += counter + ": " + l.hash;
+					info += counter + ": " + l.tileObjectId;
 					info += "\n".repeat(5 - newlines);
 				}
 				if (!hideInfo) {

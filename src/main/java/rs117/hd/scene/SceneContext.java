@@ -1,11 +1,8 @@
 package rs117.hd.scene;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
@@ -15,7 +12,6 @@ import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
-import rs117.hd.scene.lights.TileObjectImpostorTracker;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
@@ -39,6 +35,8 @@ public class SceneContext {
 	public boolean enableAreaHiding;
 	public boolean fillGaps;
 	public boolean isPrepared;
+	public boolean isInChambersOfXeric;
+	public boolean isInHouse;
 
 	@Nullable
 	public Area currentArea;
@@ -57,31 +55,29 @@ public class SceneContext {
 	public int uniqueModels;
 
 	// Terrain data
-	public Map<Integer, Integer> vertexTerrainColor;
-	public Map<Integer, Material> vertexTerrainTexture;
-	public Map<Integer, int[]> vertexTerrainNormals;
+	public HashMap<Integer, Integer> vertexTerrainColor;
+	public HashMap<Integer, Material> vertexTerrainTexture;
+	public HashMap<Integer, int[]> vertexTerrainNormals;
 	// Used for overriding potentially low quality vertex colors
 	public HashMap<Integer, Boolean> highPriorityColor;
 
 	// Water-related data
 	public boolean[][][] tileIsWater;
-	public Map<Integer, Boolean> vertexIsWater;
-	public Map<Integer, Boolean> vertexIsLand;
-	public Map<Integer, Boolean> vertexIsOverlay;
-	public Map<Integer, Boolean> vertexIsUnderlay;
+	public HashMap<Integer, Boolean> vertexIsWater;
+	public HashMap<Integer, Boolean> vertexIsLand;
+	public HashMap<Integer, Boolean> vertexIsOverlay;
+	public HashMap<Integer, Boolean> vertexIsUnderlay;
 	public boolean[][][] skipTile;
-	public Map<Integer, Integer> vertexUnderwaterDepth;
+	public HashMap<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
 	// Thread safe tile override variables
-	public final TileOverrideVariables tileOverrideVars = new TileOverrideVariables();
+	public final ThreadLocal<TileOverrideVariables> tileOverrideVars = ThreadLocal.withInitial(TileOverrideVariables::new);
 
 	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();
 	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
-	public final HashMap<TileObject, TileObjectImpostorTracker> trackedTileObjects = new HashMap<>();
-	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarps = ArrayListMultimap.create();
-	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarbits = ArrayListMultimap.create();
+	public final ArrayList<TileObject> lightSpawnsToHandleOnClientThread = new ArrayList<>();
 
 	// Model pusher arrays, to avoid simultaneous usage from different threads
 	public final int[] modelFaceVertices = new int[12];
@@ -115,6 +111,10 @@ public class SceneContext {
 		return localToWorld(localPoint.getX(), localPoint.getY(), plane);
 	}
 
+	public int[] localToWorld(LocalPoint localPoint, int plane, int[] result) {
+		return localToWorld(localPoint.getX(), localPoint.getY(), plane, result);
+	}
+
 	public int[] localToWorld(LocalPoint localPoint) {
 		return localToWorld(localPoint, client.getPlane());
 	}
@@ -127,14 +127,30 @@ public class SceneContext {
 		return sceneToWorld(localX >> LOCAL_COORD_BITS, localY >> LOCAL_COORD_BITS, plane);
 	}
 
+	public int[] localToWorld(int localX, int localY, int plane, int[] result) {
+		sceneToWorld(localX >> LOCAL_COORD_BITS, localY >> LOCAL_COORD_BITS, plane, result);
+		return result;
+	}
+
+	public void sceneToWorld(int sceneX, int sceneY, int plane, int[] result) {
+		if (sceneBase == null) {
+			HDUtils.sceneToWorld(scene, sceneX, sceneY, plane, result);
+			return;
+		}
+
+		result[0] = sceneBase[0] + sceneX;
+		result[1] = sceneBase[1] + sceneY;
+		result[2] = sceneBase[2] + plane;
+	}
+
 	public int[] sceneToWorld(int sceneX, int sceneY, int plane) {
-		if (sceneBase == null)
-			return HDUtils.sceneToWorld(scene, sceneX, sceneY, plane);
-		return ivec(
-			sceneBase[0] + sceneX,
-			sceneBase[1] + sceneY,
-			sceneBase[2] + plane
-		);
+		int[] result = new int[3];
+		sceneToWorld(sceneX, sceneY, plane, result);
+		return result;
+	}
+
+	public void extendedSceneToWorld(int sceneExX, int sceneExY, int plane, int[] result) {
+		sceneToWorld(sceneExX - sceneOffset, sceneExY - sceneOffset, plane, result);
 	}
 
 	public int[] extendedSceneToWorld(int sceneExX, int sceneExY, int plane) {

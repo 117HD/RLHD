@@ -18,10 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
-import net.runelite.client.callback.ClientThread;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.DrawManager;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
@@ -46,15 +43,9 @@ import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
-import rs117.hd.scene.GamevalManager;
-import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
-import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.TextureManager;
-import rs117.hd.scene.TileOverrideManager;
-import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -66,6 +57,7 @@ import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
+import rs117.hd.utils.jobs.JobSystem;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -92,16 +84,7 @@ public class LegacyRenderer implements Renderer {
 	private Client client;
 
 	@Inject
-	private ClientThread clientThread;
-
-	@Inject
-	private EventBus eventBus;
-
-	@Inject
 	private DrawManager drawManager;
-
-	@Inject
-	private PluginManager pluginManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -113,9 +96,6 @@ public class LegacyRenderer implements Renderer {
 	private OpenCLManager clManager;
 
 	@Inject
-	private GamevalManager gamevalManager;
-
-	@Inject
 	private AreaManager areaManager;
 
 	@Inject
@@ -125,25 +105,7 @@ public class LegacyRenderer implements Renderer {
 	private EnvironmentManager environmentManager;
 
 	@Inject
-	private TextureManager textureManager;
-
-	@Inject
-	private MaterialManager materialManager;
-
-	@Inject
-	private WaterTypeManager waterTypeManager;
-
-	@Inject
-	private GroundMaterialManager groundMaterialManager;
-
-	@Inject
-	private TileOverrideManager tileOverrideManager;
-
-	@Inject
 	private ModelOverrideManager modelOverrideManager;
-
-	@Inject
-	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
 	private LegacySceneUploader sceneUploader;
@@ -171,6 +133,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	public ShadowShaderProgram shadowProgram;
+
+	@Inject
+	private JobSystem jobSystem;
 
 	private final ComputeMode computeMode = HdPlugin.APPLE ? ComputeMode.OPENCL : ComputeMode.OPENGL;
 	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
@@ -228,6 +193,8 @@ public class LegacyRenderer implements Renderer {
 	public void initialize() {
 		modelPusher.startUp();
 
+		jobSystem.initialize();
+
 		renderBufferOffset = 0;
 		numPassthroughModels = 0;
 		numModelsToSort = null;
@@ -254,6 +221,8 @@ public class LegacyRenderer implements Renderer {
 		if (vaoScene != 0)
 			glDeleteVertexArrays(vaoScene);
 		vaoScene = 0;
+
+		jobSystem.destroy();
 
 		destroyBuffers();
 		destroyTileHeightMap();
@@ -993,28 +962,6 @@ public class LegacyRenderer implements Renderer {
 			return;
 		}
 
-		if (plugin.lastFrameTimeMillis > 0) {
-			plugin.deltaTime = (float) ((System.currentTimeMillis() - plugin.lastFrameTimeMillis) / 1000.);
-
-			// Restart the plugin to avoid potential buffer corruption if the computer has likely resumed from suspension
-			if (plugin.deltaTime > 300) {
-				log.debug("Restarting the plugin after probable OS suspend ({} second delta)", plugin.deltaTime);
-				plugin.restartPlugin();
-				return;
-			}
-
-			// If system time changes between frames, clamp the delta to a more sensible value
-			if (abs(plugin.deltaTime) > 10)
-				plugin.deltaTime = 1 / 60.f;
-			plugin.elapsedTime += plugin.deltaTime;
-			plugin.windOffset += plugin.deltaTime * environmentManager.currentWindSpeed;
-
-			// The client delta doesn't need clamping
-			plugin.deltaClientTime = (float) (plugin.elapsedClientTime - plugin.lastFrameClientTime);
-		}
-		plugin.lastFrameTimeMillis = System.currentTimeMillis();
-		plugin.lastFrameClientTime = plugin.elapsedClientTime;
-
 		try {
 			plugin.prepareInterfaceTexture();
 		} catch (Exception ex) {
@@ -1344,8 +1291,8 @@ public class LegacyRenderer implements Renderer {
 
 		int expandedChunks = plugin.getExpandedMapLoadingChunks();
 		if (HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			// Reload once the POH is done loading
-			if (!plugin.isInHouse)
+			// Reload once the POH is done loading, upon first entering the POH
+			if (sceneContext == null || !sceneContext.isInHouse)
 				reloadSceneIn(2);
 		} else if (plugin.skipScene != scene && HDUtils.sceneIntersects(
 			scene,
@@ -1449,11 +1396,11 @@ public class LegacyRenderer implements Renderer {
 		sceneContext.stagingBufferNormals.clear();
 
 		if (sceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			plugin.isInHouse = true;
-			plugin.isInChambersOfXeric = false;
+			sceneContext.isInHouse = true;
+			sceneContext.isInChambersOfXeric = false;
 		} else {
-			plugin.isInHouse = false;
-			plugin.isInChambersOfXeric = sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
+			sceneContext.isInHouse = false;
+			sceneContext.isInChambersOfXeric = sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
 		}
 	}
 

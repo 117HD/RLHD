@@ -98,6 +98,15 @@ void main() {
     isShadowDisabled = isShadowDisabled || isWaterSurfaceOrUnderwaterTile || isGroundPlaneTile;
     #endif
 
+#if ZONE_RENDERER
+    if(!isShadowDisabled && vWorldViewId > 0) {
+        ivec4 tint = getWorldViewTint(vWorldViewId);
+        if(tint.x != -1 && tint.y != -1 && tint.z != -1) {
+            isShadowDisabled = true;
+        }
+    }
+#endif
+
     int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED

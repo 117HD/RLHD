@@ -77,6 +77,7 @@ public class ModelOverride
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
 	public int depthBias = -1;
+	public boolean disablePrioritySorting = false;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -236,6 +237,7 @@ public class ModelOverride
 			windDisplacementModifier,
 			invertDisplacementStrength,
 			depthBias,
+			disablePrioritySorting,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
