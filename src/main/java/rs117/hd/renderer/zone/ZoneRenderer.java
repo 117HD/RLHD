@@ -1311,7 +1311,7 @@ public class ZoneRenderer implements Renderer {
 
 		plugin.drawUi(overlayColor);
 
-		jobSystem.processPendingClientCallbacks(false);
+		jobSystem.processPendingClientCallbacks();
 
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);
