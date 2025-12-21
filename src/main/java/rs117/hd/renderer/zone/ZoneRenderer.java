@@ -122,6 +122,9 @@ public class ZoneRenderer implements Renderer {
 	private SceneUploader sceneUploader;
 
 	@Inject
+	private SceneUploader asyncSceneUploader;
+
+	@Inject
 	private FacePrioritySorter facePrioritySorter;
 
 	@Inject
@@ -187,6 +190,8 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.initialize();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(uboWorldViews);
+
+		FacePrioritySorter.VERTEX_STAGING_COLLECTION = sceneUploader.vertexStagingCollection;
 	}
 
 	@Override
@@ -1176,7 +1181,7 @@ public class ZoneRenderer implements Renderer {
 					.build("uploadTempModel", t -> {
 						// Since priority sorting of models includes back-face culling,
 						// we need to upload the entire model again for shadows
-						sceneUploader.uploadTempModel(
+						asyncSceneUploader.uploadTempModel(
 							m,
 							modelOverride,
 							preOrientation,

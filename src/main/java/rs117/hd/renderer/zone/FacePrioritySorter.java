@@ -26,12 +26,13 @@ package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
 import java.util.Arrays;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.VertexStagingBuffer.VertexStagingCollection;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -75,15 +76,11 @@ class FacePrioritySorter {
 	private static final int ZSORT_GROUP_SIZE = 1024; // was 512
 	private static final int MAX_FACES_PER_PRIORITY = 4000; // was 2500
 
-	private static final int NUM_STAGING_BUFFERS = 4;
-	private static final int MAX_STAGING_CAPACITY = (int) (32 * MiB / NUM_STAGING_BUFFERS / Integer.BYTES); // 32 MB
-	private static final int INITIAL_STAGING_CAPACITY = (int) (32 * KiB / Integer.BYTES);
-	private static final Supplier<VertexStagingBuffer> STAGING_SUPPLIER =
-		() -> new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
-	private static final VertexStagingBuffer STAGING_BUFFER_OPAQUE = STAGING_SUPPLIER.get();
-	private static final VertexStagingBuffer STAGING_BUFFER_ALPHA = STAGING_SUPPLIER.get();
-	private static final VertexStagingBuffer STAGING_BUFFER_OPAQUE_TEX = STAGING_SUPPLIER.get();
-	private static final VertexStagingBuffer STAGING_BUFFER_ALPHA_TEX = STAGING_SUPPLIER.get();
+	public static VertexStagingCollection VERTEX_STAGING_COLLECTION;
+	private static VertexStagingBuffer STAGING_BUFFER_OPAQUE;
+	private static VertexStagingBuffer STAGING_BUFFER_ALPHA;
+	private static VertexStagingBuffer STAGING_BUFFER_OPAQUE_TEX;
+	private static VertexStagingBuffer STAGING_BUFFER_ALPHA_TEX;
 
 	static {
 		distances = new int[MAX_VERTEX_COUNT];
@@ -213,10 +210,10 @@ class FacePrioritySorter {
 			distanceToFaces[distance][distanceFaceCount[distance]++] = i;
 		}
 
-		STAGING_BUFFER_OPAQUE.set(opaqueBuffer);
-		STAGING_BUFFER_ALPHA.set(alphaBuffer);
-		STAGING_BUFFER_OPAQUE_TEX.set(opaqueTexBuffer);
-		STAGING_BUFFER_ALPHA_TEX.set(alphaTexBuffer);
+		STAGING_BUFFER_OPAQUE = VERTEX_STAGING_COLLECTION.getOpaqueBuffer(opaqueBuffer);
+		STAGING_BUFFER_ALPHA = VERTEX_STAGING_COLLECTION.getAlphaBuffer(alphaBuffer);
+		STAGING_BUFFER_OPAQUE_TEX = VERTEX_STAGING_COLLECTION.getOpaqueTexBuffer(opaqueTexBuffer);
+		STAGING_BUFFER_ALPHA_TEX = VERTEX_STAGING_COLLECTION.getAlphaTexBuffer(alphaTexBuffer);
 
 		int len = 0;
 		if (faceRenderPriorities == null) {

@@ -27,12 +27,12 @@ package rs117.hd.renderer.zone;
 import java.nio.IntBuffer;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Supplier;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.VertexStagingBuffer.VertexStagingCollection;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -88,11 +88,6 @@ public class SceneUploader {
 	private static final int MAX_STAGING_CAPACITY = (int) (MiB / NUM_STAGING_BUFFERS / Integer.BYTES); // 1 MB per thread
 	private static final int INITIAL_STAGING_CAPACITY = (int) (32 * KiB / Integer.BYTES);
 
-	private VertexStagingBuffer stagingOpaqueBuffer;
-	private VertexStagingBuffer stagingAlphaBuffer;
-	private VertexStagingBuffer stagingOpaqueTexBuffer;
-	private VertexStagingBuffer stagingAlphaTexBuffer;
-
 	@Inject
 	private RenderCallbackManager renderCallbackManager;
 
@@ -139,6 +134,8 @@ public class SceneUploader {
 	private final int[] modelLocalXI = new int[MAX_VERTEX_COUNT];
 	private final int[] modelLocalYI = new int[MAX_VERTEX_COUNT];
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
+
+	public final VertexStagingCollection vertexStagingCollection = new VertexStagingCollection();
 
 	public void setScene(Scene scene) {
 		if (scene == currentScene)
@@ -1678,21 +1675,10 @@ public class SceneUploader {
 		IntBuffer opaqueTexBuffer,
 		IntBuffer alphaTexBuffer
 	) {
-		if(stagingOpaqueBuffer == null)
-			stagingOpaqueBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
-		stagingOpaqueBuffer.set(opaqueBuffer);
-
-		if(stagingAlphaBuffer == null)
-			stagingAlphaBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
-		stagingAlphaBuffer.set(alphaBuffer);
-
-		if(stagingOpaqueTexBuffer == null)
-			stagingOpaqueTexBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
-		stagingOpaqueTexBuffer.set(opaqueTexBuffer);
-
-		if(stagingAlphaTexBuffer == null)
-			stagingAlphaTexBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
-		stagingAlphaTexBuffer.set(alphaTexBuffer);
+		final var stagingOpaqueBuffer = vertexStagingCollection.getOpaqueBuffer(opaqueBuffer);
+		final var stagingAlphaBuffer = vertexStagingCollection.getAlphaBuffer(alphaBuffer);
+		final var stagingOpaqueTexBuffer = vertexStagingCollection.getOpaqueTexBuffer(opaqueTexBuffer);
+		final var stagingAlphaTexBuffer = vertexStagingCollection.getAlphaTexBuffer(alphaTexBuffer);
 
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
