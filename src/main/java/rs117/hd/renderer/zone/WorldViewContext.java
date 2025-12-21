@@ -37,7 +37,7 @@ public class WorldViewContext {
 	final LinkedBlockingDeque<Zone> pendingCull = new LinkedBlockingDeque<>();
 	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, true);
 	final JobGroup<ZoneUploadJob> streamingGroup = new JobGroup<>(false, false);
-	final JobGroup<ZoneUploadJob> blockingInvalidationGroup = new JobGroup<>(false, false);
+	final JobGroup<ZoneUploadJob> blockingInvalidationGroup = new JobGroup<>(true, false);
 
 	WorldViewContext(
 		SceneManager sceneManager,
