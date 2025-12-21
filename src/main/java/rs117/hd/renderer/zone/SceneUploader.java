@@ -27,6 +27,7 @@ package rs117.hd.renderer.zone;
 import java.nio.IntBuffer;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -78,15 +79,20 @@ public class SceneUploader {
 	// the minimum amount by which each color will be lightened
 	private static final int BASE_LIGHTEN = 10;
 
-	private static final ThreadLocal<StagingFaceBuffer> localStagingOpaqueBuffer = ThreadLocal.withInitial(StagingFaceBuffer::new);
-	private static final ThreadLocal<StagingFaceBuffer> localStagingAlphaBuffer = ThreadLocal.withInitial(StagingFaceBuffer::new);
-	private static final ThreadLocal<StagingFaceBuffer> localStagingOpaqueTexBuffer = ThreadLocal.withInitial(StagingFaceBuffer::new);
-	private static final ThreadLocal<StagingFaceBuffer> localStagingAlphaTexBuffer = ThreadLocal.withInitial(StagingFaceBuffer::new);
-
 	static {
 		for (int i = 0; i < 8; i++)
 			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
 	}
+
+	private static final int NUM_STAGING_BUFFERS = 4;
+	private static final int MAX_STAGING_CAPACITY = (int) (MiB / NUM_STAGING_BUFFERS / Integer.BYTES); // 1 MB per thread
+	private static final int INITIAL_STAGING_CAPACITY = (int) (32 * KiB / Integer.BYTES);
+	private static final Supplier<VertexStagingBuffer> STAGING_SUPPLIER =
+		() -> new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
+	private static final ThreadLocal<VertexStagingBuffer> LOCAL_STAGING_BUFFER_OPAQUE = ThreadLocal.withInitial(STAGING_SUPPLIER);
+	private static final ThreadLocal<VertexStagingBuffer> LOCAL_STAGING_BUFFER_ALPHA = ThreadLocal.withInitial(STAGING_SUPPLIER);
+	private static final ThreadLocal<VertexStagingBuffer> LOCAL_STAGING_BUFFER_OPAQUE_TEX = ThreadLocal.withInitial(STAGING_SUPPLIER);
+	private static final ThreadLocal<VertexStagingBuffer> LOCAL_STAGING_BUFFER_ALPHA_TEX = ThreadLocal.withInitial(STAGING_SUPPLIER);
 
 	@Inject
 	private RenderCallbackManager renderCallbackManager;
@@ -1673,10 +1679,10 @@ public class SceneUploader {
 		IntBuffer opaqueTexBuffer,
 		IntBuffer alphaTexBuffer
 	) {
-		final StagingFaceBuffer stagingOpaqueBuffer = localStagingOpaqueBuffer.get();
-		final StagingFaceBuffer stagingAlphaBuffer = localStagingAlphaBuffer.get();
-		final StagingFaceBuffer stagingOpaqueTexBuffer = localStagingOpaqueTexBuffer.get();
-		final StagingFaceBuffer stagingAlphaTexBuffer = localStagingAlphaTexBuffer.get();
+		final VertexStagingBuffer stagingOpaqueBuffer = LOCAL_STAGING_BUFFER_OPAQUE.get();
+		final VertexStagingBuffer stagingAlphaBuffer = LOCAL_STAGING_BUFFER_ALPHA.get();
+		final VertexStagingBuffer stagingOpaqueTexBuffer = LOCAL_STAGING_BUFFER_OPAQUE_TEX.get();
+		final VertexStagingBuffer stagingAlphaTexBuffer = LOCAL_STAGING_BUFFER_ALPHA_TEX.get();
 
 		stagingOpaqueBuffer.set(opaqueBuffer);
 		stagingAlphaBuffer.set(alphaBuffer);
