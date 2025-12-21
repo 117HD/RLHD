@@ -11,8 +11,8 @@ import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.buffer.GLRawBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.GL_CAPS;
+import static rs117.hd.HdPlugin.NVIDIA_GPU;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
@@ -82,8 +82,8 @@ class VAO {
 		glVertexAttribDivisor(6, 1);
 		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
 
-		if (APPLE) {
-			// Workaround for disabled vertex attribs on macOS
+		if (!NVIDIA_GPU) {
+			// Workaround for incorrect implementations of disabled vertex attribs, particularly on macOS
 			glEnableVertexAttribArray(7);
 			glVertexAttribDivisor(7, 1);
 			glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
