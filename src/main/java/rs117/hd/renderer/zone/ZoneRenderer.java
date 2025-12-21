@@ -1097,7 +1097,7 @@ public class ZoneRenderer implements Renderer {
 			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
 		}
 
-		if(r instanceof GameObject)
+		if (r instanceof GameObject)
 			ctx.drawnDynamicGameObjects.add(((GameObject) r).getId());
 	}
 

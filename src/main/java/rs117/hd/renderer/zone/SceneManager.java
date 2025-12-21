@@ -93,8 +93,6 @@ public class SceneManager {
 		return plugin.configZoneStreaming;
 	}
 
-	public long getFrameNumber() { return plugin.frameNumber; }
-
 	@Getter
 	public final ReentrantLock loadingLock = new ReentrantLock();
 
@@ -308,11 +306,11 @@ public class SceneManager {
 
 		boolean shouldBlock = ctx.doesZoneContainPreviouslyDynamicGameObject(zx, zz);
 		log.debug("Zone invalidated: wx={} x={} z={} blocking={}", scene.getWorldViewId(), zx, zz, shouldBlock);
-		if(shouldBlock) {
+		if (shouldBlock) {
 			// Start the invalidation ASAP since we'll be blocking before drawing the next frame
 			ctx.invalidateZone(true, zx, zz);
 		} else {
-			// Since we're not blocking, use rebuild method since invaldiation will occur async
+			// If not blocking, flag the zone for rebuilding, such that duplicate invalidations will be ignored
 			zone.rebuild = true;
 		}
 	}

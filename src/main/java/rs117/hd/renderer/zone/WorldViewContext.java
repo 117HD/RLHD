@@ -10,6 +10,7 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.utils.jobs.JobGroup;
 
+import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 
@@ -150,11 +151,9 @@ public class WorldViewContext {
 			return;
 
 		final LinkedBlockingDeque<ZoneUploadJob> pendingInvalidationJobs = blockingInvalidationGroup.getPending();
-		for(ZoneUploadJob job : pendingInvalidationJobs) {
-
+		for (ZoneUploadJob job : pendingInvalidationJobs) {
 			job.waitForCompletion();
 			pendingInvalidationJobs.remove(job);
-
 			handleZoneSwap(-1.0f, job.x, job.z);
 		}
 	}
@@ -213,7 +212,6 @@ public class WorldViewContext {
 		Zone newZone = new Zone();
 		newZone.dirty = zones[zx][zz].dirty;
 
-
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
@@ -221,11 +219,11 @@ public class WorldViewContext {
 	}
 
 	boolean doesZoneContainPreviouslyDynamicGameObject(int mzx, int mzz) {
-		if(drawnDynamicGameObjects.isEmpty())
+		if (drawnDynamicGameObjects.isEmpty())
 			return false;
 
 		final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
-		for (int z = 3; z >= 0; --z) {
+		for (int z = 0; z < MAX_Z; ++z) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					Tile t = tiles[z][(mzx << 3) + xoff][(mzz << 3) + zoff];
