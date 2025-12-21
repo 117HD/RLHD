@@ -62,7 +62,7 @@ public class SceneUploader {
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
 
-	private static final float[] IDENTITY_UV = {
+	private static final float[] GEOMETRY_UVS = {
 		0, 0, 0, 0,
 		1, 0, 0, 0,
 		0, 1, 0, 0
@@ -659,12 +659,11 @@ public class SceneUploader {
 		short[] faceTextures = m.getFaceTextures();
 		if (transparencies == null && faceTextures == null && !mightHaveTransparency) {
 			z.sizeO += faceCount;
-			z.sizeF += faceCount;
 		} else {
 			z.sizeO += faceCount;
 			z.sizeA += faceCount;
-			z.sizeF += faceCount;
 		}
+		z.sizeF += faceCount;
 	}
 
 	private void uploadZoneRenderable(
@@ -1577,7 +1576,7 @@ public class SceneUploader {
 			} else if (uvType != UvType.GEOMETRY) {
 				faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
 			} else {
-				faceUVs = IDENTITY_UV;
+				faceUVs = GEOMETRY_UVS;
 			}
 
 			final boolean shouldRotateNormals;
@@ -1837,7 +1836,7 @@ public class SceneUploader {
 			} else if (uvType != UvType.GEOMETRY) {
 				faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
 			} else {
-				faceUVs = IDENTITY_UV;
+				faceUVs = GEOMETRY_UVS;
 			}
 
 			final boolean shouldRotateNormals;
@@ -1953,9 +1952,9 @@ public class SceneUploader {
 		ny /= length;
 		nz /= length;
 
-		out[0] = out[3] = out[6] = (int) (nx * 2048.0);
-		out[1] = out[4] = out[7] = (int) (ny * 2048.0);
-		out[2] = out[5] = out[8] = (int) (nz * 2048.0);
+		out[0] = out[3] = out[6] = (int) (nx * 2048);
+		out[1] = out[4] = out[7] = (int) (ny * 2048);
+		out[2] = out[5] = out[8] = (int) (nz * 2048);
 	}
 
 	public static int interpolateHSL(int hsl, byte hue2, byte sat2, byte lum2, byte lerp) {
