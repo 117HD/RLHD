@@ -154,6 +154,19 @@
     "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT_2"
   },
   {
+    "name": "WINTER_EAST_ARDOUGNE_BRIDGE",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "maxLightness": 53,
+    "replacements": {
+      "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND": "!blending"
+    }
+  },
+  {
+    "name": "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "maxLightness": 44
+  },
+  {
     "name": "WINTER_EDGEVILLE_PATH",
     "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT",
     "maxHue": 0,
@@ -3397,7 +3410,8 @@
     "minLightness": 33,
     "maxLightness": 33,
     "replacements": {
-      "NONE": "!textures"
+      "NONE": "!textures",
+      "WINTER_EAST_ARDOUGNE_BRIDGE": "season == SeasonalTheme.WINTER"
     }
   },
   {
