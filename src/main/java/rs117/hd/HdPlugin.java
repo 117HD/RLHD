@@ -1574,8 +1574,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-     * Convert the front framebuffer to an Image
-     */
+	 * Convert the front framebuffer to an Image
+	 */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
