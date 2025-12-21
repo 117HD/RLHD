@@ -172,7 +172,7 @@ public class SceneManager {
 
 				root.sceneLoadGroup.complete();
 				root.streamingGroup.complete();
-				root.invalidationGroup.complete();
+				root.blockingInvalidationGroup.complete();
 			} finally {
 				loadingLock.unlock();
 				log.trace("loadingLock unlocked - holdCount: {}", loadingLock.getHoldCount());
@@ -307,7 +307,14 @@ public class SceneManager {
 			return;
 
 		log.debug("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
-		ctx.invalidateZone(zx, zz);
+		boolean shouldBlock = ctx.doesZoneContainPreviouslyDynamicGameObject(zx, zz);
+		if(shouldBlock) {
+			// Start the invalidation ASAP since we'll be blocking before drawing the next frame
+			ctx.invalidateZone(true, zx, zz);
+		} else {
+			// Since we're not blocking, use rebuild method since invaldiation will occur async
+			zone.rebuild = true;
+		}
 	}
 
 	private static boolean isEdgeTile(Zone[][] zones, int zx, int zz) {
@@ -397,7 +404,7 @@ public class SceneManager {
 
 			root.sceneLoadGroup.complete();
 			root.streamingGroup.complete();
-			root.invalidationGroup.complete();
+			root.blockingInvalidationGroup.complete();
 
 			if (nextSceneContext != null)
 				nextSceneContext.destroy();

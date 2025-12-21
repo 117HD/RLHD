@@ -31,7 +31,6 @@ public final class ZoneUploadJob extends Job {
 	Zone zone;
 	int x, z;
 	float delay;
-	long frameNumber;
 	boolean shouldUnmap;
 
 	@Override
@@ -108,7 +107,6 @@ public final class ZoneUploadJob extends Job {
 	protected void onReleased() {
 		viewContext = null;
 		sceneContext = null;
-		frameNumber = 0;
 		zone = null;
 		delay = -1.0f;
 		assert !POOL.contains(this) : "Task is already in pool";
@@ -134,7 +132,6 @@ public final class ZoneUploadJob extends Job {
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
 		newTask.zone = zone;
-		newTask.frameNumber = viewContext.sceneManager.getFrameNumber();
 		newTask.shouldUnmap = shouldUnmap;
 		newTask.x = x;
 		newTask.z = z;

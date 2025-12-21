@@ -1,5 +1,6 @@
 package rs117.hd.renderer.zone;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
@@ -31,10 +32,11 @@ public class WorldViewContext {
 	public long uploadTime;
 	public long sceneSwapTime;
 
+	final HashSet<Integer> drawnDynamicGameObjects = new HashSet<>();
 	final LinkedBlockingDeque<Zone> pendingCull = new LinkedBlockingDeque<>();
 	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, true);
 	final JobGroup<ZoneUploadJob> streamingGroup = new JobGroup<>(false, false);
-	final JobGroup<ZoneUploadJob> invalidationGroup = new JobGroup<>(true, false);
+	final JobGroup<ZoneUploadJob> blockingInvalidationGroup = new JobGroup<>(false, false);
 
 	WorldViewContext(
 		SceneManager sceneManager,
@@ -134,7 +136,7 @@ public class WorldViewContext {
 
 				if (zones[x][z].rebuild) {
 					zones[x][z].rebuild = false;
-					invalidateZone(x, z);
+					invalidateZone(false, x, z);
 					queuedWork = true;
 				}
 			}
@@ -147,10 +149,8 @@ public class WorldViewContext {
 		if (isLoading)
 			return;
 
-		final LinkedBlockingDeque<ZoneUploadJob> pendingInvalidationJobs = invalidationGroup.getPending();
+		final LinkedBlockingDeque<ZoneUploadJob> pendingInvalidationJobs = blockingInvalidationGroup.getPending();
 		for(ZoneUploadJob job : pendingInvalidationJobs) {
-			if(job.frameNumber == sceneManager.getFrameNumber())
-				continue; // Ignore invalidation jobs from the current frame to avoid stalling
 
 			job.waitForCompletion();
 			pendingInvalidationJobs.remove(job);
@@ -190,10 +190,10 @@ public class WorldViewContext {
 		log.debug("invalidate all zones for worldViewId: [{}]", worldViewId);
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
-				invalidateZone(x, z);
+				invalidateZone(false, x, z);
 	}
 
-	void invalidateZone(int zx, int zz) {
+	void invalidateZone(boolean shouldBlock, int zx, int zz) {
 		Zone curZone = zones[zx][zz];
 		float prevUploadDelay = -1.0f;
 		if (curZone.uploadJob != null) {
@@ -213,9 +213,32 @@ public class WorldViewContext {
 		Zone newZone = new Zone();
 		newZone.dirty = zones[zx][zz].dirty;
 
+
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
-			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
+			curZone.uploadJob.queue(shouldBlock ? blockingInvalidationGroup : streamingGroup, sceneManager.getGenerateSceneDataTask());
+	}
+
+	boolean doesZoneContainPreviouslyDynamicGameObject(int mzx, int mzz) {
+		if(drawnDynamicGameObjects.isEmpty())
+			return false;
+
+		final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+		for (int z = 3; z >= 0; --z) {
+			for (int xoff = 0; xoff < 8; ++xoff) {
+				for (int zoff = 0; zoff < 8; ++zoff) {
+					Tile t = tiles[z][(mzx << 3) + xoff][(mzz << 3) + zoff];
+					if (t != null) {
+						for (GameObject gameObject : t.getGameObjects()) {
+							if (gameObject != null && drawnDynamicGameObjects.contains(gameObject.getId())) {
+								return true; // A dynamic object is present in this zone
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 }
