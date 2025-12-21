@@ -8,8 +8,8 @@ import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 public abstract class ShadowShaderProgram extends ShaderProgram {
-	private final UniformTexture uniShadowMap = addUniformTexture("textureArray");
-	private final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
+	protected final UniformTexture uniTextureArray = addUniformTexture("textureArray");
+	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
 
 	protected ShadowMode mode;
 
@@ -21,7 +21,7 @@ public abstract class ShadowShaderProgram extends ShaderProgram {
 
 	@Override
 	protected void initialize() {
-		uniShadowMap.set(TEXTURE_UNIT_GAME);
+		uniTextureArray.set(TEXTURE_UNIT_GAME);
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
 	}
 
@@ -33,6 +33,7 @@ public abstract class ShadowShaderProgram extends ShaderProgram {
 	public static class Fast extends ShadowShaderProgram {
 		public Fast() {
 			mode = ShadowMode.FAST;
+			uniTextureArray.ignoreMissing = true;
 		}
 	}
 
@@ -45,6 +46,7 @@ public abstract class ShadowShaderProgram extends ShaderProgram {
 	public static class Legacy extends ShadowShaderProgram {
 		public Legacy setMode(ShadowMode mode) {
 			this.mode = mode;
+			uniTextureArray.ignoreMissing = mode != ShadowMode.DETAILED;
 			return this;
 		}
 
