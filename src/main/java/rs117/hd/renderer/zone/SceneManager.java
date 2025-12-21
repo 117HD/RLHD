@@ -306,8 +306,8 @@ public class SceneManager {
 		if (zone.rebuild)
 			return;
 
-		log.debug("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
 		boolean shouldBlock = ctx.doesZoneContainPreviouslyDynamicGameObject(zx, zz);
+		log.debug("Zone invalidated: wx={} x={} z={} blocking={}", scene.getWorldViewId(), zx, zz, shouldBlock);
 		if(shouldBlock) {
 			// Start the invalidation ASAP since we'll be blocking before drawing the next frame
 			ctx.invalidateZone(true, zx, zz);
