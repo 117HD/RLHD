@@ -77,6 +77,8 @@ public class Zone {
 
 	ZoneUploadJob uploadJob;
 
+	public int numAnimatedDynamicObjects;
+
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
 
 	int[][] rids;

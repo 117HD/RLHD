@@ -1,6 +1,5 @@
 package rs117.hd.renderer.zone;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
@@ -10,7 +9,6 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.utils.jobs.JobGroup;
 
-import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 
@@ -33,7 +31,6 @@ public class WorldViewContext {
 	public long uploadTime;
 	public long sceneSwapTime;
 
-	final HashSet<Integer> drawnDynamicGameObjects = new HashSet<>();
 	final LinkedBlockingDeque<Zone> pendingCull = new LinkedBlockingDeque<>();
 	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, true);
 	final JobGroup<ZoneUploadJob> streamingGroup = new JobGroup<>(false, false);
@@ -216,27 +213,5 @@ public class WorldViewContext {
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
 			curZone.uploadJob.queue(shouldBlock ? blockingInvalidationGroup : streamingGroup, sceneManager.getGenerateSceneDataTask());
-	}
-
-	boolean doesZoneContainPreviouslyDynamicGameObject(int mzx, int mzz) {
-		if (drawnDynamicGameObjects.isEmpty())
-			return false;
-
-		final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
-		for (int z = 0; z < MAX_Z; ++z) {
-			for (int xoff = 0; xoff < 8; ++xoff) {
-				for (int zoff = 0; zoff < 8; ++zoff) {
-					Tile t = tiles[z][(mzx << 3) + xoff][(mzz << 3) + zoff];
-					if (t != null) {
-						for (GameObject gameObject : t.getGameObjects()) {
-							if (gameObject != null && drawnDynamicGameObjects.contains(gameObject.getId())) {
-								return true; // A dynamic object is present in this zone
-							}
-						}
-					}
-				}
-			}
-		}
-		return false;
 	}
 }

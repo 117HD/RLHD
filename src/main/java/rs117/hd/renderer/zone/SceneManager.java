@@ -188,7 +188,6 @@ public class SceneManager {
 			}
 		}
 
-		// Ensure any queued zone invalidations are now completed
 		root.completeInvalidation();
 
 		if (wv != null) {
@@ -301,10 +300,16 @@ public class SceneManager {
 			return;
 
 		Zone zone = ctx.zones[zx][zz];
-		if (zone.rebuild)
-			return;
+		boolean shouldBlock = ctx.sceneContext.isInHouse;
 
-		boolean shouldBlock = ctx.doesZoneContainPreviouslyDynamicGameObject(zx, zz);
+		// DynamicObjects without an animation are uploaded as static, thus whenever the animation state changes, it may be necessary to
+		// complete the invalidation of the zone before the next frame, to keep it in sync with RuneLite's calls to drawDynamic
+		int numAnimatedDynamicObjects = ctx.sceneContext.countAnimatedDynamicObjectsInZone(zx, zz);
+		if (numAnimatedDynamicObjects != zone.numAnimatedDynamicObjects) {
+			shouldBlock = true;
+			zone.numAnimatedDynamicObjects = numAnimatedDynamicObjects;
+		}
+
 		log.debug("Zone invalidated: wx={} x={} z={} blocking={}", scene.getWorldViewId(), zx, zz, shouldBlock);
 		if (shouldBlock) {
 			// Start the invalidation ASAP since we'll be blocking before drawing the next frame

@@ -606,6 +606,8 @@ public class SceneUploader {
 		} else if (r instanceof DynamicObject) {
 			var dynamic = (DynamicObject) r;
 			m = dynamic.getModelZbuf();
+			if (dynamic.getAnimation() != null)
+				z.numAnimatedDynamicObjects++;
 			if (dynamic.getRecordedObjectComposition() != null)
 				mightHaveTransparency = true;
 		}

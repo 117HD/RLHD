@@ -274,7 +274,6 @@ public class ZoneRenderer implements Renderer {
 		ctx.level = level;
 		ctx.maxLevel = maxLevel;
 		ctx.hideRoofIds = hideRoofIds;
-		ctx.drawnDynamicGameObjects.clear();
 
 		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.update();
@@ -1096,9 +1095,6 @@ public class ZoneRenderer implements Renderer {
 		} else {
 			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
 		}
-
-		if (r instanceof GameObject)
-			ctx.drawnDynamicGameObjects.add(((GameObject) r).getId());
 	}
 
 	@Override
