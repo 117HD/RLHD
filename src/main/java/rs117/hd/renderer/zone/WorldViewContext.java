@@ -92,7 +92,11 @@ public class WorldViewContext {
 				Zone PrevZone = curZone;
 				// Swap the zone out with the one we just uploaded
 				zones[zx][zz] = curZone = uploadTask.zone;
-				curZone.unmap();
+				if(sceneManager.client.isClientThread()) {
+					curZone.unmap();
+				} else {
+					sceneManager.clientThread.invoke(curZone::unmap);
+				}
 
 				if (PrevZone != curZone)
 					pendingCull.add(PrevZone);
