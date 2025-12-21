@@ -87,12 +87,11 @@ public class SceneUploader {
 	private static final int NUM_STAGING_BUFFERS = 4;
 	private static final int MAX_STAGING_CAPACITY = (int) (MiB / NUM_STAGING_BUFFERS / Integer.BYTES); // 1 MB per thread
 	private static final int INITIAL_STAGING_CAPACITY = (int) (32 * KiB / Integer.BYTES);
-	private static final Supplier<VertexStagingBuffer> STAGING_SUPPLIER =
-		() -> new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
-	private static final ThreadLocal<VertexStagingBuffer> LOCAL_STAGING_BUFFER_OPAQUE = ThreadLocal.withInitial(STAGING_SUPPLIER);
-	private static final ThreadLocal<VertexStagingBuffer> LOCAL_STAGING_BUFFER_ALPHA = ThreadLocal.withInitial(STAGING_SUPPLIER);
-	private static final ThreadLocal<VertexStagingBuffer> LOCAL_STAGING_BUFFER_OPAQUE_TEX = ThreadLocal.withInitial(STAGING_SUPPLIER);
-	private static final ThreadLocal<VertexStagingBuffer> LOCAL_STAGING_BUFFER_ALPHA_TEX = ThreadLocal.withInitial(STAGING_SUPPLIER);
+
+	private VertexStagingBuffer stagingOpaqueBuffer;
+	private VertexStagingBuffer stagingAlphaBuffer;
+	private VertexStagingBuffer stagingOpaqueTexBuffer;
+	private VertexStagingBuffer stagingAlphaTexBuffer;
 
 	@Inject
 	private RenderCallbackManager renderCallbackManager;
@@ -1679,14 +1678,20 @@ public class SceneUploader {
 		IntBuffer opaqueTexBuffer,
 		IntBuffer alphaTexBuffer
 	) {
-		final VertexStagingBuffer stagingOpaqueBuffer = LOCAL_STAGING_BUFFER_OPAQUE.get();
-		final VertexStagingBuffer stagingAlphaBuffer = LOCAL_STAGING_BUFFER_ALPHA.get();
-		final VertexStagingBuffer stagingOpaqueTexBuffer = LOCAL_STAGING_BUFFER_OPAQUE_TEX.get();
-		final VertexStagingBuffer stagingAlphaTexBuffer = LOCAL_STAGING_BUFFER_ALPHA_TEX.get();
-
+		if(stagingOpaqueBuffer == null)
+			stagingOpaqueBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
 		stagingOpaqueBuffer.set(opaqueBuffer);
+
+		if(stagingAlphaBuffer == null)
+			stagingAlphaBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
 		stagingAlphaBuffer.set(alphaBuffer);
+
+		if(stagingOpaqueTexBuffer == null)
+			stagingOpaqueTexBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
 		stagingOpaqueTexBuffer.set(opaqueTexBuffer);
+
+		if(stagingAlphaTexBuffer == null)
+			stagingAlphaTexBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
 		stagingAlphaTexBuffer.set(alphaTexBuffer);
 
 		final int triangleCount = model.getFaceCount();
