@@ -24860,14 +24860,6 @@
     "uvScale": 0.5
   },
   {
-    "description": "Snow Heap",
-    "baseMaterial": "SNOW_4",
-    "objectIds": [
-      "HUNTING_POLAR_CAVEWALL_FACE1_SHORTER"
-    ],
-    "uvType": "BOX"
-  },
-  {
     "description": "Remove the shadow cast by objects that look weird with them",
     "baseMaterial": "GRAY_85",
     "objectIds": [
@@ -70930,6 +70922,41 @@
     "objectIds": [
       "BCS_TOMB_WALLTOP",
       "CAVEKIT_SNOW03_DEFAULT01_DARK02_WALLTOP"
+    ]
+  },
+  {
+    "description": "Relleka Hunter Iceberg",
+    "baseMaterial": "SNOW_2_SEMI_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "HUNTING_POLAR_CAVEWALL_FACE1",
+      "HUNTING_POLAR_CAVEWALL_TOP",
+      "HUNTING_POLAR_CAVEWALL_FACE1_SHORTER",
+      "HUNTING_POLAR_SLOPE_MIRROR",
+      "HUNTING_POLAR_SLOPEFILL",
+      "HUNTING_POLAR_SLOPE",
+      "HUNTING_POLAR_CAVEWALL_TOP_LOWER",
+      "HUNTING_POLAR_ICE_ROCK3X3",
+      "HUNTING_POLAR_ICE_ROCK4X4",
+      "HUNTING_POLAR_ICE_ROCK",
+      "HUNTING_POLAR_ICE_ROCK2X2",
+      "HUNTING_TRAIL_CLUE8_1",
+      "HUNTING_TRAIL_CLUE8_5",
+      "HUNTING_TRAIL_CLUE8_2",
+      "HUNTING_TRAIL_END_POLAR",
+      "HUNTING_POLAR_SLOPEFILL",
+      "HUNTING_POLAR_ROCKSLIDE1",
+      "HUNTING_POLAR_ROCKSLIDE2",
+      "HUNTING_TRAIL_SPAWN_POLAR1",
+      "HUNTING_TRAIL_CLUE8_8",
+      "HUNTING_TRAIL_CLUE8_6",
+      "HUNTING_TRAIL_CLUE8_3",
+      "HUNTING_TRAIL_SPAWN_POLAR2",
+      "HUNTING_POLAR_STEPS_DOWN",
+      "HUNTING_POLAR_STEPS_UPWARDS",
+      "HUNTING_POLAR_WEDGE_MIRROR",
+      "HUNTING_POLAR_CAVEWALL_TOP_WEDGE",
+      "HUNTING_POLAR_WEDGE"
     ]
   }
 ]
