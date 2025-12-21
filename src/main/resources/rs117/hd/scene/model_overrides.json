@@ -1800,11 +1800,11 @@
     "areas": [ "WARM_REGIONS" ],
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "baseMaterial": "BARK_STONEPINE",
+    "disablePrioritySorting": true,
     "uvType": "BOX",
     "uvScale": 0.25,
     "uvOrientation": 42,
     "retainVanillaUvs": true,
-    "terrainVertexSnap": true,
     "objectIds": [
       "MAHOGANYTREE",
       "MAHOGANY_TREE_1",
@@ -1838,7 +1838,7 @@
     "uvScale": 0.25,
     "uvOrientation": 42,
     "retainVanillaUvs": true,
-    "terrainVertexSnap": true,
+    "disablePrioritySorting": true,
     "objectIds": [
       "MAHOGANYTREE"
     ]
@@ -1849,6 +1849,7 @@
     "uvType": "BOX",
     "uvScale": 0.25,
     "retainVanillaUvs": true,
+    "disablePrioritySorting": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "MAHOGANY_TREE_1",
@@ -1869,7 +1870,6 @@
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
-    "terrainVertexSnap": true,
     "uvScale": 0.66,
     "colorOverrides": [
       {
@@ -1891,7 +1891,6 @@
   {
     "description": "Objects - Tree - Teak - Stump",
     "baseMaterial": "BARK",
-    "terrainVertexSnap": true,
     "uvType": "BOX",
     "uvScale": 0.66,
     "objectIds": [
