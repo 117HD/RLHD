@@ -110,7 +110,7 @@ vec4 fetchShadowTexel(vec3 worldPos, bool canSelfShadow, int i, ivec2 pixelCoord
         {
             float alpha = float(encoded.r >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
         #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
-            tint += srgbToLinear(packedHslToSrgb(encoded.g));
+            tint += srgbToLinear(packedHslToSrgb(encoded.g)) * (1.0 - alpha);
         #endif
             shadow = alpha;
         }
