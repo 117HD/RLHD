@@ -7,10 +7,10 @@ import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 public class SceneShaderProgram extends ShaderProgram {
-	private final UniformTexture uniTextureArray = addUniformTexture("textureArray");
-	private final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
-	private final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
-	private final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
+	protected final UniformTexture uniTextureArray = addUniformTexture("textureArray");
+	protected final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
+	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
+	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
 
 	public SceneShaderProgram() {
 		super(t -> t
@@ -30,6 +30,7 @@ public class SceneShaderProgram extends ShaderProgram {
 	public static class Legacy extends SceneShaderProgram {
 		Legacy() {
 			shaderTemplate.add(GL_GEOMETRY_SHADER, "scene_geom.glsl");
+			uniTextureFaces.ignoreMissing = true;
 		}
 	}
 }
