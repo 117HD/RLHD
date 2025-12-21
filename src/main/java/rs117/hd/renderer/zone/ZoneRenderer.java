@@ -722,22 +722,22 @@ public class ZoneRenderer implements Renderer {
 		renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
 		renderState.apply();
 
-			glClearDepth(directionalCamera.getIsReverseZ() ? 0 : 1);
-			glClearColor(0, 0, 0, 0);
-			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glClearDepth(directionalCamera.getIsReverseZ() ? 0 : 1);
+		glClearColor(0, 0, 0, 0);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-			renderState.enable.set(GL_POLYGON_OFFSET_FILL);
+		renderState.enable.set(GL_POLYGON_OFFSET_FILL);
 		renderState.enable.set(GL_DEPTH_TEST);
-			renderState.enable.set(GL_CULL_FACE);
-			renderState.depthFunc.set(directionalCamera.getIsReverseZ() ? GL_GEQUAL : GL_LEQUAL);
-			renderState.polygonOffset.set(directionalCamera.getIsReverseZ() ? -1.3f : 1.3f, directionalCamera.getIsReverseZ() ? -2.3f : 2.3f);
+		renderState.enable.set(GL_CULL_FACE);
+		renderState.depthFunc.set(directionalCamera.getIsReverseZ() ? GL_GEQUAL : GL_LEQUAL);
+		renderState.polygonOffset.set(directionalCamera.getIsReverseZ() ? -1.3f : 1.3f, directionalCamera.getIsReverseZ() ? -2.3f : 2.3f);
 
 		CommandBuffer.SKIP_DEPTH_MASKING = true;
 		directionalCmd.execute();
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
 		renderState.disable.set(GL_DEPTH_TEST);
-			renderState.disable.set(GL_POLYGON_OFFSET_FILL);
+		renderState.disable.set(GL_POLYGON_OFFSET_FILL);
 
 		frameTimer.end(Timer.RENDER_SHADOWS);
 	}

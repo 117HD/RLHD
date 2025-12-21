@@ -52,7 +52,7 @@ flat out int fMaterialData;
     out float fOpacity;
     #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
         flat in vec3 gColor[3];
-        out vec3 fColor;
+        flat out vec3 fColor;
     #endif
 #endif
 

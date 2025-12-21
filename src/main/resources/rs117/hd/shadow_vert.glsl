@@ -61,7 +61,7 @@ layout (location = 7) in ivec2 vSceneBase;
         // Pass to fragment shader
         out float fOpacity;
         #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
-            out vec3 fColor;
+            flat out vec3 fColor;
         #endif
     #endif
 
@@ -118,7 +118,7 @@ void main() {
         #if SHADOW_TRANSPARENCY
             gOpacity = opacity;
             #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
-                gColor = packedHslToSrgb(vAlphaBiasHsl);
+                gColor = srgbToLinear(packedHslToSrgb(vAlphaBiasHsl));
             #endif
         #endif
     #else
@@ -130,7 +130,7 @@ void main() {
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
             #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
-                fColor = packedHslToSrgb(vAlphaBiasHsl);
+                fColor = srgbToLinear(packedHslToSrgb(vAlphaBiasHsl));
             #endif
         #endif
     #endif

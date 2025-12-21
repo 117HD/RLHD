@@ -41,7 +41,7 @@
     in float fOpacity;
 
     #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
-    in vec3 fColor;
+    flat in vec3 fColor;
     layout (location = 0) out ivec2 depthAlphaColorOutput;
     #else
     layout (location = 0) out int depthAlphaOutput;
@@ -118,7 +118,7 @@ void main() {
             int(depth * SHADOW_DEPTH_MAX);
 
         #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
-            depthAlphaColorOutput = ivec2(alphaDepth, srgbToPackedHsl(shadowTint));
+            depthAlphaColorOutput = ivec2(alphaDepth, srgbToPackedHsl(linearToSrgb(shadowTint)));
         #else
             depthAlphaOutput = alphaDepth;
         #endif
