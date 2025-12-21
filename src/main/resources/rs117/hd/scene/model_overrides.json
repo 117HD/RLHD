@@ -7306,7 +7306,7 @@
     "uvScale": 0.75,
     "objectIds": [
       "SLAYER_CAVE_TUNNEL_RIGHT",
-      "SLAYER_CAVE_TUNNEL_LEFT" ,
+      "SLAYER_CAVE_TUNNEL_LEFT",
       "EYEGLO_DUNGEON_EXIT_RIGHT",
       "EYEGLO_DUNGEON_EXIT_LEFT"
     ],
@@ -25089,6 +25089,7 @@
   },
   {
     "description": "Ruins of Ullek Dungeon - Void",
+    "areas": [ "SCABARAS_DUNGEON_ULLEK" ],
     "baseMaterial": "GRAY_65",
     "objectIds": [
       "BCS_TOMB_WALLTOP"
@@ -43262,7 +43263,8 @@
       }
     ],
     "objectIds": [
-      "DEADTREE2_SNOWY"
+      "DEADTREE2_SNOWY",
+      "DEADTREE2_SNOWY_NOOP"
     ]
   },
   {
@@ -57290,7 +57292,7 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientation": 172 ,
+    "uvOrientation": 172,
     "objectIds": [
       "AKD_SHAYZIEN_SINK"
     ],
@@ -57319,7 +57321,7 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientation": 172 ,
+    "uvOrientation": 172,
     "objectIds": [
       "BATH_ALDARIN01_TIN01"
     ],
@@ -58878,6 +58880,8 @@
       "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN01",
       "TAPOYAUIK_TEMPLE_EXIT",
       "STALAGMITE_SNOW01_DEFAULT01",
+      "STALAGMITE_SNOW01_DEFAULT01B",
+      "STALAGMITE_SNOW01_DEFAULT02B",
       "VMQ3_RUINS_BLOCKAGE_START",
       "STALAGMITE_SNOW01_DEFAULT02",
       "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN02",
@@ -68156,7 +68160,7 @@
         "uvType": "BOX"
       },
       {
-        "colors": "h > 4" ,
+        "colors": "h > 4",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvScale": 0.2,
         "uvType": "BOX",
@@ -68875,7 +68879,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 2 || h == 3" ,
+        "colors": "h == 2 || h == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.65,
@@ -68893,7 +68897,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 7 && s == 3" ,
+        "colors": "h == 7 && s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.5,
@@ -68912,7 +68916,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 7 && s == 3" ,
+        "colors": "h == 7 && s == 3",
         "baseMaterial": "WOOD_GRAIN_3_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.5,
@@ -70737,6 +70741,195 @@
     "objectIds": [
       "FARMING_BORDER_STRAIGHT_LIGHT",
       "FARMING_GARDENINGPATCH_BORDER_LIGHT"
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Make Wall Filler Black",
+    "objectIds": [
+      "BCS_TOMB_WALLTOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Upper Floor",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 120,
+    "objectIds": [
+      "CAVEKIT_SNOW03_DEFAULT01_DARK02_WALLTOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "castShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Walls",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "CAVEKIT_SNOW03_DEFAULT01_DARK02",
+      "GRIMSTONE_SHORTCUT_SOUTH",
+      "GRIMSTONE_SHORTCUT_NORTH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32 || h == 42",
+        "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Walls - Top",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GRIMSTONE_CAVE_WALL_UPPER",
+      "GRIMSTONE_CAVE_WALL_UPPER_CREVICE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Exit",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GRIMSTONE_CAVE_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32 || h == 42",
+        "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "l == 47",
+        "baseMaterial": "GRAY_75",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Pillars & Ancient Mould",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DUNGEONKIT_IMCANDO_PILLAR02",
+      "GRIMSTONE_ANCIENT_MOULD"
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Cannonball Mould & Balls",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "GRIMSTONE_CANNONBALLS_NOOP",
+      "GRIMSTONE_CANNONBALL_MOULD"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Furnace",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GRIMSTONE_FURNACE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "a == 255 && s > 4",
+        "baseMaterial": "GRAY_90",
+        "flatNormals": true
+      },
+      {
+        "colors": "h == 0 || h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT_LOW_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone Dungeon - Spear Wall",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "GRIMSTONE_SPEARWALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone - Dungeon Entrance",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "GRIMSTONE_CAVE_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Grimstone - Snowy Rocks",
+    "baseMaterial": "SNOW_4",
+    "objectIds": [
+      "ROCKSLIDE_SNOW01_LARGE02_LIGHTGREY",
+      "ROCKSLIDE_SNOW01_LARGE01_LIGHTGREY",
+      "ROCKSLIDE_SNOW01_SMALL01_LIGHTGREY",
+      "ROCKSLIDE_SNOW01_SMALL02_LIGHTGREY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Grimstone Dungeon - Hide wall tops for performance",
+    "areas": [ "GRIMSTONE_DUNGEON_PERFORMANCE_FIX" ],
+    "hide": true,
+    "objectIds": [
+      "BCS_TOMB_WALLTOP",
+      "CAVEKIT_SNOW03_DEFAULT01_DARK02_WALLTOP"
     ]
   }
 ]

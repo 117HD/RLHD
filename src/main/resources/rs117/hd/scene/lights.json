@@ -43267,5 +43267,71 @@
     "objectIds": [
       "FAI_VARROCK_RANGE_WITH_PIPE"
     ]
+  },
+  {
+    "description": "GRIMSTONE_EXIT_LIGHT_SMALL",
+    "offset": [ -75, 85, -10 ],
+    "radius": 120,
+    "strength": 30,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GRIMSTONE_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_EXIT_LIGHT_LARGE",
+    "offset": [ -125, 115, -10 ],
+    "radius": 600,
+    "strength": 1.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GRIMSTONE_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_FURNACE_BOTTOM",
+    "offset": [ 0, 100, -250 ],
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "GRIMSTONE_FURNACE"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_FURNACE_TOP",
+    "offset": [ 0, 375, -150 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "GRIMSTONE_FURNACE"
+    ]
   }
 ]

@@ -388,6 +388,7 @@ public class HdPlugin extends Plugin {
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
 	public boolean configZoneStreaming;
+	public boolean configUnlitFaceColors;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
 	public boolean configAsyncUICopy;
@@ -401,6 +402,7 @@ public class HdPlugin extends Plugin {
 	public SeasonalTheme configSeasonalTheme;
 	public SeasonalHemisphere configSeasonalHemisphere;
 	public VanillaShadowMode configVanillaShadowMode;
+	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
 
@@ -552,7 +554,7 @@ public class HdPlugin extends Plugin {
 					boolean isFallbackGpu = fallbackDevices.contains(glRenderer);
 					if (isFallbackGpu || !renderer.supportsGpu(GL_CAPS)) {
 						log.error("Unsupported GPU. Stopping the plugin...");
-						displayUnsupportedGpuMessage(isFallbackGpu, glRenderer);
+						displayUnsupportedGpuMessage(isFallbackGpu, glRenderer, renderer);
 						stopPlugin();
 						return true;
 					}
@@ -638,6 +640,8 @@ public class HdPlugin extends Plugin {
 				int gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
+				if (configShadingMode.unlitFaceColors)
+					gpuFlags |= DrawCallbacks.UNLIT_FACE_COLORS;
 
 				initializeShaders();
 				initializeShaderHotswapping();
@@ -842,9 +846,9 @@ public class HdPlugin extends Plugin {
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("PIXELATED_SHADOWS", config.pixelatedShadows())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
-			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
+			.define("UNDO_VANILLA_SHADING", configShadingMode.undoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
-			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
+			.define("DISABLE_DIRECTIONAL_SHADING", !configShadingMode.directionalShading)
 			.define("FLAT_SHADING", config.flatShading())
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
 			.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", WIND_DISPLACEMENT_NOISE_RESOLUTION)
@@ -1551,7 +1555,9 @@ public class HdPlugin extends Plugin {
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configZoneStreaming = config.zoneStreaming();
-		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
+		configShadingMode = config.shadingMode();
+		configUnlitFaceColors = configShadingMode.unlitFaceColors;
+		configUndoVanillaShading = configShadingMode.undoVanillaShading;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configAsyncUICopy = config.asyncUICopy();
 		configWindDisplacement = config.windDisplacement();
@@ -1654,6 +1660,7 @@ public class HdPlugin extends Plugin {
 							case KEY_REMOVE_VERTEX_SNAPPING:
 							case KEY_LEGACY_RENDERER:
 							case KEY_FORCE_INDIRECT_DRAW:
+							case KEY_SHADING_MODE:
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
 								return;
@@ -1753,17 +1760,15 @@ public class HdPlugin extends Plugin {
 						renderer.waitUntilIdle();
 
 					if (reloadTexturesAndMaterials) {
-						materialManager.reload(false);
+						materialManager.reload(reloadScene);
 						modelOverrideManager.reload();
 						recompilePrograms = true;
 					} else if (reloadModelOverrides) {
 						modelOverrideManager.reload();
 					}
 
-					if (reloadTileOverrides) {
-						tileOverrideManager.reload(false);
-						reloadScene = true;
-					}
+					if (reloadTileOverrides)
+						tileOverrideManager.reload(reloadScene);
 
 					if (recompilePrograms)
 						recompilePrograms();
@@ -1968,7 +1973,7 @@ public class HdPlugin extends Plugin {
 //		);
 	}
 
-	private void displayUnsupportedGpuMessage(boolean isFallbackGpu, String glRenderer) {
+	private void displayUnsupportedGpuMessage(boolean isFallbackGpu, String glRenderer, Renderer renderer) {
 		String hint32Bit = "";
 		if (HDUtils.is32Bit()) {
 			hint32Bit =
@@ -1992,8 +1997,12 @@ public class HdPlugin extends Plugin {
 					+ "&nbsp;• Reinstall the drivers for <b>both</b> your processor's integrated graphics <b>and</b> your graphics card.<br>"
 				) :
 					(
-						"Your GPU is currently not supported by 117 HD.<br><br>GPU name: " + glRenderer + "<br>"
-						+ "<br>"
+						(
+							renderer instanceof LegacyRenderer && GL_CAPS.OpenGL31 ?
+								"The legacy renderer does not support your GPU. Try disabling it in the Legacy settings section." :
+								"Your GPU is currently not supported by 117 HD."
+						)
+						+ "<br><br>GPU name: " + glRenderer + "<br><br>"
 						+ "Your computer might not be letting RuneLite access your most powerful GPU.<br>"
 						+ "To find out if your system is supported, try the following steps:<br>"
 						+ "&nbsp;• Reinstall the drivers for your graphics card. You can find a link below.<br>"
