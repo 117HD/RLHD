@@ -76,7 +76,7 @@ vec4 fetchShadowTexel(vec3 worldPos, bool canSelfShadow, int i, ivec2 pixelCoord
     if(isGroundPlane && !canSelfShadow && shadow > 0.0) {
         vec3 shadowWorldPos = reconstructShadowWorldPos(pixelCoord, shadowDepth);
         float dist = distance(shadowWorldPos, worldPos);
-        if(dist < 128.0) {
+        if(dist < 64.0) {
             int shadowGroundTileXY = texelFetch(shadowGroundMask, pixelCoord, 0).r;
             if(shadowGroundTileXY != 0) {
                 int tileExX = int(worldPos.x / 128.0) % 255;
@@ -85,8 +85,8 @@ vec4 fetchShadowTexel(vec3 worldPos, bool canSelfShadow, int i, ivec2 pixelCoord
                 int shadowGroundTileExX = shadowGroundTileXY & 0xFF;
                 int shadowGroundTileExY = (shadowGroundTileXY >> 8) & 0xFF;
 
-                for(int x = -1; x < 2 && shadow > 0; x++) {
-                    for(int y = -1; y < 2 && shadow > 0; y++) {
+                for(int x = -1; x <= 1 && shadow > 0; x++) {
+                    for(int y = -1; y <= 1 && shadow > 0; y++) {
                         if(((tileExX + x) % 255) == shadowGroundTileExX && ((tileExY + y) % 255) == shadowGroundTileExY) {
                             shadow = 0; // Ignore Shadow, since its coming from a nearby tile
                         }
@@ -184,7 +184,7 @@ float sampleShadowMap(vec3 fragPos, vec3 fragNormal, vec2 distortion, float ligh
         vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
     #endif
 
-    bool canSelfShadow = abs(dot(normalize(fragNormal), vec3(0.0, -1.0, 0.0))) < 0.96;
+    bool canSelfShadow = abs(dot(normalize(fragNormal), vec3(0.0, -1.0, 0.0))) < 0.75;
 
     // Sample 4 corners first
     vec4 c00 = fetchShadowTexel(fragPos, canSelfShadow, 0, kernelOffset + ivec2(0, 0), fragDepth, isGroundPlane);
