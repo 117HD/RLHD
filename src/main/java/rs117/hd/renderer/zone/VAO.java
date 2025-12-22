@@ -21,7 +21,7 @@ class VAO {
 	// alphaBiasHsl int
 	// materialData int
 	// terrainData int
-	// modelOffset int TODO: Make short
+	// packedZoneModelIdx int(12 bits zone idx, 20 bits model idx)
 	static final int VERT_SIZE = 40;
 
 	final VBO vbo;

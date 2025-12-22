@@ -57,7 +57,7 @@ void main() {
 
 #if ZONE_RENDERER
     int zoneIdx = vPackedZoneAndModelIdx & 0xFFF;
-    int modelIdx = vPackedZoneAndModelIdx >> 12;
+    int modelIdx = (vPackedZoneAndModelIdx >> 12) & 0xFFFFF;
 
     if(zoneIdx > 0) {
         worldViewId = getZoneWorldViewIdx(zoneIdx);

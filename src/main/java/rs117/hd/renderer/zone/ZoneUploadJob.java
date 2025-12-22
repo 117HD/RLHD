@@ -48,9 +48,9 @@ public final class ZoneUploadJob extends Job {
 			sceneUploader.setScene(sceneContext.scene);
 			sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
 
-		zone.zoneData = uboZoneData.acquire();
-		zone.zoneData.reveal.set(zone.revealTime > 0.0f ? 1.0f : 0.0f);
-		zone.setWorldViewAndOffset(viewContext, sceneContext, x, z);
+			zone.zoneData = uboZoneData.acquire();
+			zone.zoneData.reveal.set(zone.revealTime > 0.0f ? 1.0f : 0.0f);
+			zone.setWorldViewAndOffset(viewContext, sceneContext, x, z);
 
 			if (zone.sizeO > 0 || zone.sizeA > 0) {
 				workerHandleCancel();
