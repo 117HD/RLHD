@@ -503,7 +503,7 @@ void main() {
 
 #if FADE_TYPE == 0
     if(IN.fFade.x > 0.0) {
-        if(vWorldViewId == -1) {
+        if(vWorldViewId <= 0) {
             outputColor.rgb = mix(outputColor.rgb, fogColor, IN.fFade.x);
         } else {
             outputColor.a *= 1.0 - IN.fFade.x;
