@@ -70,7 +70,7 @@ class VAO {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 
-		tboF.initialize(VAOList.VAO_SIZE);
+		tboF.initialize(VAOList.TBO_SIZE);
 	}
 
 	void bindMetadata(@Nonnull VBO vboMetadata) {
@@ -156,6 +156,7 @@ class VAO {
 	static class VAOList {
 		// this needs to be larger than the largest single model
 		private static final int VAO_SIZE = (int) (4 * MiB);
+		private static final int TBO_SIZE = (VAO_SIZE / VERT_SIZE) * 9 * Integer.BYTES;
 
 		private int curIdx;
 		private int drawCount;
