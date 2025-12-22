@@ -953,10 +953,10 @@ public class SceneUploader {
 			neTerrainData = HDUtils.packTerrainData(true, max(1, neDepth), waterType, tileZ);
 		}
 
-		int swMaterialData = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay, true);
-		int seMaterialData = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay, true);
-		int nwMaterialData = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay, true);
-		int neMaterialData = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay, true);
+		int swMaterialData = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
+		int seMaterialData = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
+		int nwMaterialData = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
+		int neMaterialData = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
 
 		float uvcos = -uvScale, uvsin = 0;
 		if (uvOrientation % 2048 != 0) {
@@ -1249,9 +1249,9 @@ public class SceneUploader {
 			ly1 -= override.heightOffset;
 			ly2 -= override.heightOffset;
 
-			int materialDataA = materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay, true);
-			int materialDataB = materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay, true);
-			int materialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay, true);
+			int materialDataA = materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay);
+			int materialDataB = materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay);
+			int materialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay);
 
 			float uvcos = -uvScale, uvsin = 0;
 			if (uvOrientation % 2048 != 0) {
@@ -1570,7 +1570,7 @@ public class SceneUploader {
 					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			int materialData = material.packMaterialData(faceOverride, uvType, false, false);
+			int materialData = material.packMaterialData(faceOverride, uvType, false);
 
 			final float[] faceUVs;
 			if (uvType == UvType.VANILLA && textureId != -1) {
@@ -1825,7 +1825,7 @@ public class SceneUploader {
 					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
+			int materialData = material.packMaterialData(faceOverride, uvType, false);
 
 			final float[] faceUVs;
 			if (uvType == UvType.VANILLA && textureId != -1) {

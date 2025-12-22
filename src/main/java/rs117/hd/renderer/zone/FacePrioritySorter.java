@@ -28,7 +28,6 @@ import java.nio.IntBuffer;
 import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
@@ -477,7 +476,7 @@ class FacePrioritySorter {
 		}
 
 		boolean keepShading = true; // Skip vanilla shading reversal in the shader, since we do it on the CPU
-		int materialData = material.packMaterialData(faceOverride, uvType, false, keepShading);
+		int materialData = material.packMaterialData(faceOverride, uvType, false);
 
 		if (uvType == UvType.VANILLA) {
 			modelUvs[0] = modelLocalX[texA] - vx1;

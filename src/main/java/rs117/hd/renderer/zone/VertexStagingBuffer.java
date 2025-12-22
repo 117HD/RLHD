@@ -95,25 +95,25 @@ public final class VertexStagingBuffer {
 		private VertexStagingBuffer alphaTexBuffer;
 
 		public VertexStagingBuffer getOpaqueBuffer(IntBuffer mappedBuffer) {
-			if(opaqueBuffer == null) opaqueBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
+			if (opaqueBuffer == null) opaqueBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
 			opaqueBuffer.set(mappedBuffer);
 			return opaqueBuffer;
 		}
 
 		public VertexStagingBuffer getAlphaBuffer(IntBuffer mappedBuffer) {
-			if(alphaBuffer == null) alphaBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
+			if (alphaBuffer == null) alphaBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
 			alphaBuffer.set(mappedBuffer);
 			return alphaBuffer;
 		}
 
 		public VertexStagingBuffer getOpaqueTexBuffer(IntBuffer mappedBuffer) {
-			if(opaqueTexBuffer == null) opaqueTexBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
+			if (opaqueTexBuffer == null) opaqueTexBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
 			opaqueTexBuffer.set(mappedBuffer);
 			return opaqueTexBuffer;
 		}
 
 		public VertexStagingBuffer getAlphaTexBuffer(IntBuffer mappedBuffer) {
-			if(alphaTexBuffer == null) alphaTexBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
+			if (alphaTexBuffer == null) alphaTexBuffer = new VertexStagingBuffer(INITIAL_STAGING_CAPACITY, MAX_STAGING_CAPACITY);
 			alphaTexBuffer.set(mappedBuffer);
 			return alphaTexBuffer;
 		}
