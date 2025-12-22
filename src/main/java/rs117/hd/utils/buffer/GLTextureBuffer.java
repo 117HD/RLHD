@@ -6,7 +6,7 @@ import lombok.Getter;
 
 import static org.lwjgl.opengl.GL33C.*;
 
-public class GLRawBuffer extends GLBuffer {
+public class GLTextureBuffer extends GLBuffer {
 	@Getter
 	private int texId;
 
@@ -16,7 +16,7 @@ public class GLRawBuffer extends GLBuffer {
 	private ByteBuffer mappedBuffer;
 	private boolean mapped;
 
-	public GLRawBuffer(String name, int usage) {
+	public GLTextureBuffer(String name, int usage) {
 		super(name, GL_TEXTURE_BUFFER, usage);
 	}
 
@@ -87,7 +87,6 @@ public class GLRawBuffer extends GLBuffer {
 			pixelBuffer = mappedBuffer.asIntBuffer();
 		}
 
-		pixelBuffer.position(0);
 		glBindBuffer(target, 0);
 		mapped = true;
 	}

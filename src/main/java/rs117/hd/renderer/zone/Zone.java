@@ -22,7 +22,7 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
-import rs117.hd.utils.buffer.GLRawBuffer;
+import rs117.hd.utils.buffer.GLTextureBuffer;
 
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -68,7 +68,7 @@ public class Zone {
 	public int sizeO, sizeA, sizeF;
 	@Nullable
 	public VBO vboO, vboA, vboM;
-	public GLRawBuffer tboF;
+	public GLTextureBuffer tboF;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
@@ -91,7 +91,7 @@ public class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	public void initialize(VBO o, VBO a, GLRawBuffer f, int eboShared) {
+	public void initialize(VBO o, VBO a, GLTextureBuffer f, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 

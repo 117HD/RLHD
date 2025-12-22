@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.CommandBuffer;
-import rs117.hd.utils.buffer.GLRawBuffer;
+import rs117.hd.utils.buffer.GLTextureBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
@@ -29,13 +29,13 @@ class VAO {
 	static final int METADATA_SIZE = 12;
 
 	final VBO vbo;
-	final GLRawBuffer tboF;
+	final GLTextureBuffer tboF;
 	int vao;
 	int vboMetadata;
 
 	VAO(int size) {
 		vbo = new VBO(size);
-		tboF = new GLRawBuffer("Textured Faces", GL_DYNAMIC_DRAW);
+		tboF = new GLTextureBuffer("Textured Faces", GL_DYNAMIC_DRAW);
 	}
 
 	void initialize(int ebo, @Nonnull VBO vboMetadata) {
