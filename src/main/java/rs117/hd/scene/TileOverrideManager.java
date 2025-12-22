@@ -56,7 +56,7 @@ public class TileOverrideManager {
 	private ListMultimap<Integer, TileOverride> idMatchOverrides;
 
 	public void startUp() {
-		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> reload(!first)));
+		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> reload(first)));
 	}
 
 	public void shutDown() {
@@ -67,7 +67,7 @@ public class TileOverrideManager {
 		idMatchOverrides = null;
 	}
 
-	public void reload(boolean reloadScene) {
+	public void reload(boolean skipSceneReload) {
 		assert client.isClientThread();
 
 		try {
@@ -133,7 +133,7 @@ public class TileOverrideManager {
 		// Update the reference, since the underlying dirt materials may have changed
 		TileOverride.NONE.groundMaterial = GroundMaterial.DIRT;
 
-		if (reloadScene) {
+		if (!skipSceneReload) {
 			plugin.renderer.clearCaches();
 			plugin.renderer.reloadScene();
 		}
@@ -208,7 +208,7 @@ public class TileOverrideManager {
 		clientThread.invoke(() -> {
 			trackReplacements = shouldTrackReplacements;
 			if (plugin.isActive())
-				reload(true);
+				reload(false);
 		});
 	}
 

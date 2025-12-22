@@ -79,6 +79,7 @@ public class WorldViewContext {
 				Zone PrevZone = curZone;
 				// Swap the zone out with the one we just uploaded
 				zones[zx][zz] = curZone = uploadTask.zone;
+				curZone.unmap();
 
 				if (PrevZone != curZone)
 					pendingCull.add(PrevZone);
@@ -199,7 +200,7 @@ public class WorldViewContext {
 		newZone.dirty = zones[zx][zz].dirty;
 		newZone.revealTime = zones[zx][zz].revealTime;
 
-		curZone.uploadJob = ZoneUploadJob.build(sceneManager.uboZoneData, sceneManager.ssboModelData, this, sceneContext, newZone, zx, zz);
+		curZone.uploadJob = ZoneUploadJob.build(sceneManager.uboZoneData, sceneManager.ssboModelData, this, sceneContext, newZone, false, zx, zz);
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
 			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());

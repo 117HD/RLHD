@@ -36,6 +36,7 @@ public final class ZoneUploadJob extends Job {
 	Zone zone;
 	int x, z;
 	float delay;
+	boolean shouldUnmap;
 
 	@Override
 	protected void onRun() throws InterruptedException {
@@ -54,17 +55,16 @@ public final class ZoneUploadJob extends Job {
 			if (zone.sizeO > 0 || zone.sizeA > 0) {
 				workerHandleCancel();
 
-				invokeClientCallback(isHighPriority(), this::mapZoneVertexBuffers);
+				invokeClientCallback(this::mapZoneVertexBuffers);
 				workerHandleCancel();
 
 				sceneUploader.uploadZone(sceneContext, zone, x, z);
 				workerHandleCancel();
 
-				invokeClientCallback(isHighPriority(), this::unmapZoneVertexBuffers);
-			} else {
-				// The zone should not be left uninitialized, as this will prevent drawing anything within it
-				zone.initialized = true;
+				if (shouldUnmap)
+					invokeClientCallback(zone::unmap);
 			}
+			zone.initialized = true;
 		} finally {
 			sceneUploader.clear();
 		}
@@ -105,11 +105,6 @@ public final class ZoneUploadJob extends Job {
 		}
 	}
 
-	private void unmapZoneVertexBuffers() {
-		zone.unmap();
-		zone.initialized = true;
-	}
-
 	@Override
 	protected void onCancel() {
 		if (viewContext.zones[x][z] != zone)
@@ -130,7 +125,16 @@ public final class ZoneUploadJob extends Job {
 		POOL.add(this);
 	}
 
-	public static ZoneUploadJob build(UBOZoneData uboZoneData, SSBOModelData ssboModelData, WorldViewContext viewContext, ZoneSceneContext sceneContext, Zone zone, int x, int z) {
+	public static ZoneUploadJob build(
+		UBOZoneData uboZoneData, 
+		SSBOModelData ssboModelData,
+		WorldViewContext viewContext,
+		ZoneSceneContext sceneContext,
+		Zone zone,
+		boolean shouldUnmap,
+		int x,
+		int z
+	) {
 		assert viewContext != null : "WorldViewContext cant be null";
 		assert sceneContext != null : "ZoneSceneContext cant be null";
 		assert zone != null : "Zone cant be null";
@@ -144,6 +148,7 @@ public final class ZoneUploadJob extends Job {
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
 		newTask.zone = zone;
+		newTask.shouldUnmap = shouldUnmap;
 		newTask.x = x;
 		newTask.z = z;
 		newTask.isReleased = false;
