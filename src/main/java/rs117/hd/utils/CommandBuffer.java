@@ -70,7 +70,7 @@ public class CommandBuffer {
 	}
 
 	public void BindTextureUnit(int type, int texId, int bindingIndex) {
-		ensureCapacity(1);
+		ensureCapacity(2);
 		cmd[writeHead++] = GL_BIND_TEXTURE_UNIT_TYPE & 0xFF | (long) type << 8;
 		cmd[writeHead++] = texId | (long) bindingIndex << 32;
 	}
