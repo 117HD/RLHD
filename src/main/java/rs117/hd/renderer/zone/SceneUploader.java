@@ -1881,7 +1881,7 @@ public class SceneUploader {
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
 
 			VertexWriteCache vb, tb;
-			if (hasAlpha) {
+			if (hasAlpha && alphaBuffer != opaqueBuffer) {
 				vb = writeCache.alpha;
 				tb = writeCache.alphaTex;
 			} else {
