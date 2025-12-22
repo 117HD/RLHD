@@ -171,12 +171,18 @@ public class Material {
 	}
 
 	public int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay, boolean isTextured) {
+		return packMaterialData(modelOverride, uvType, isOverlay, isTextured, 0);
+	}
+
+	public int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay, boolean isTextured, int category) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		assert isValid : String.format("Material %s used after invalidation", this);
+		assert category >= 0 && category < 16 : "Category must fit in 4 bits";
 		int materialIndex = uboIndex;
 		assert materialIndex <= MAX_MATERIAL_INDEX;
 		return (materialIndex & MAX_MATERIAL_INDEX) << 21
-			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 15
+			   | ((category & 0xF) << 17)
+			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3) & 0x3) << 15
 			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 12
 			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
 			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8

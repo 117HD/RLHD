@@ -611,6 +611,23 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 		}
 
+		if (plugin.configRs3HighContrast) {
+			float[][] rs3Colors = {
+				ColorUtils.rgb(config.rs3HighContrastPlayerColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastNpcFriendlyColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastHostileColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastObjectColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastProjectileColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastGraphicsColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastPlayerOtherColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastGroundItemColor().getRGB() & 0xFFFFFF),
+			};
+
+			for (int i = 0; i < rs3Colors.length; i++) {
+				plugin.uboGlobal.highContrastColors[i].set(rs3Colors[i]);
+			}
+		}
+
 		plugin.uboGlobal.upload();
 
 		// Reset buffers for the next frame
@@ -1034,6 +1051,7 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
+		int category = ModelHash.getCategoryForUuid(client, r, tileObject.getHash(), plugin.configRs3HighContrast);
 		if (sceneManager.isRoot(ctx)) {
 			try (var ignored = frameTimer.begin(Timer.VISIBILITY_CHECK)) {
 				// Additional Culling checks to help reduce dynamic object perf impact when off screen
@@ -1061,7 +1079,7 @@ public class ZoneRenderer implements Renderer {
 
 			if (zone.inSceneFrustum) {
 				try {
-					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, category, o.vbo.vb, a.vbo.vb);
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
 				}
@@ -1076,12 +1094,13 @@ public class ZoneRenderer implements Renderer {
 						preOrientation,
 						orient,
 						x, y, z,
+						category,
 						vao.vbo.vb,
 						vao.vbo.vb
 					);
 				}
 			} else {
-				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, category, o.vbo.vb, a.vbo.vb);
 			}
 
 			int end = a.vbo.vb.position();
@@ -1093,7 +1112,7 @@ public class ZoneRenderer implements Renderer {
 				zone.addTempAlphaModel(modelOverride, a.vao, start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, category,o.vbo.vb, o.vbo.vb);
 		}
 	}
 
@@ -1124,7 +1143,8 @@ public class ZoneRenderer implements Renderer {
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
-
+		
+		int category = ModelHash.getCategoryForUuid(client, renderable,gameObject.getHash(), plugin.configRs3HighContrast);
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
@@ -1150,6 +1170,7 @@ public class ZoneRenderer implements Renderer {
 							preOrientation,
 							orientation,
 							x, y, z,
+							category,
 							o.vbo.vb,
 							o.vbo.vb
 						);
@@ -1174,6 +1195,7 @@ public class ZoneRenderer implements Renderer {
 						preOrientation,
 						orientation,
 						x, y, z,
+						category,
 						o.vbo.vb,
 						a.vbo.vb
 					);
@@ -1209,6 +1231,7 @@ public class ZoneRenderer implements Renderer {
 				preOrientation,
 				orientation,
 				x, y, z,
+				category,
 				o.vbo.vb,
 				o.vbo.vb
 			);
