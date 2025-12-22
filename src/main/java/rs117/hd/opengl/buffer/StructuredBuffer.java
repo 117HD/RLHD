@@ -64,7 +64,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			return true;
 		}
 
-		public final synchronized void set(int... values) {
+		public final void set(int... values) {
 			if (isUninitialized())
 				return;
 
@@ -83,11 +83,13 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataInt.position(offset).put(values);
-			owner.markWaterLine(position, type.size);
+			synchronized (owner) {
+				owner.dataInt.position(offset).put(values);
+				owner.markWaterLine(position, type.size);
+			}
 		}
 
-		public final synchronized void set(int x) {
+		public final void set(int x) {
 			if (isUninitialized())
 				return;
 
@@ -96,11 +98,13 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataInt.position(offset).put(x);
-			owner.markWaterLine(position, type.size);
+			synchronized (owner) {
+				owner.dataInt.position(offset).put(x);
+				owner.markWaterLine(position, type.size);
+			}
 		}
 
-		public final synchronized void set(int x, int y) {
+		public final void set(int x, int y) {
 			if (isUninitialized())
 				return;
 
@@ -109,11 +113,13 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataInt.position(offset).put(x).put(y);
-			owner.markWaterLine(position, type.size);
+			synchronized (owner) {
+				owner.dataInt.position(offset).put(x).put(y);
+				owner.markWaterLine(position, type.size);
+			}
 		}
 
-		public final synchronized void set(int x, int y, int z) {
+		public final void set(int x, int y, int z) {
 			if (isUninitialized())
 				return;
 
@@ -122,11 +128,13 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataInt.position(offset).put(x).put(y).put(z);
-			owner.markWaterLine(position, type.size);
+			synchronized (owner) {
+				owner.dataInt.position(offset).put(x).put(y).put(z);
+				owner.markWaterLine(position, type.size);
+			}
 		}
 
-		public final synchronized void set(int x, int y, int z, int w) {
+		public final void set(int x, int y, int z, int w) {
 			if (isUninitialized())
 				return;
 
@@ -135,11 +143,13 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataInt.position(offset).put(x).put(y).put(z).put(w);
-			owner.markWaterLine(position, type.size);
+			synchronized (owner) {
+				owner.dataInt.position(offset).put(x).put(y).put(z).put(w);
+				owner.markWaterLine(position, type.size);
+			}
 		}
 
-		public final synchronized void set(float... values) {
+		public final void set(float... values) {
 			if (isUninitialized())
 				return;
 
@@ -162,18 +172,20 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataFloat.position(offset);
-			if (type == PropertyType.Mat3) {
-				// Pad each column to a vec4
-				for (int i = 0; i < 3; i++)
-					owner.dataFloat.put(values, i * 3, 3).put(0);
-			} else {
-				owner.dataFloat.put(values);
+			synchronized (owner) {
+				owner.dataFloat.position(offset);
+				if (type == PropertyType.Mat3) {
+					// Pad each column to a vec4
+					for (int i = 0; i < 3; i++)
+						owner.dataFloat.put(values, i * 3, 3).put(0);
+				} else {
+					owner.dataFloat.put(values);
+				}
+				owner.markWaterLine(position, type.size);
 			}
-			owner.markWaterLine(position, type.size);
 		}
 
-		public final synchronized void set(float x) {
+		public final void set(float x) {
 			if (isUninitialized())
 				return;
 
@@ -182,8 +194,10 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataFloat.position(offset).put(x);
-			owner.markWaterLine(position, type.size);
+			synchronized (owner) {
+				owner.dataFloat.position(offset).put(x);
+				owner.markWaterLine(position, type.size);
+			}
 		}
 
 		public final void set(float x, float y) {
@@ -195,8 +209,10 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataFloat.position(offset).put(x).put(y);
-			owner.markWaterLine(position, type.size);
+			synchronized (owner) {
+				owner.dataFloat.position(offset).put(x).put(y);
+				owner.markWaterLine(position, type.size);
+			}
 		}
 
 		public final synchronized void set(float x, float y, float z) {
@@ -208,8 +224,10 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataFloat.position(offset).put(x).put(y).put(z);
-			owner.markWaterLine(position, type.size);
+			synchronized (owner) {
+				owner.dataFloat.position(offset).put(x).put(y).put(z);
+				owner.markWaterLine(position, type.size);
+			}
 		}
 
 		public final synchronized void set(float x, float y, float z, float w) {
@@ -221,8 +239,10 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataFloat.position(offset).put(x).put(y).put(z).put(w);
-			owner.markWaterLine(position, type.size);
+			synchronized (owner) {
+				owner.dataFloat.position(offset).put(x).put(y).put(z).put(w);
+				owner.markWaterLine(position, type.size);
+			}
 		}
 	}
 
@@ -360,6 +380,10 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 
 		for (Property prop : properties)
 			prop.offset = prop.position / 4;
+	}
+
+	public synchronized final void markDirty() {
+		markWaterLine(0, size);
 	}
 
 	public synchronized final void upload() {
