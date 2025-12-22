@@ -103,35 +103,8 @@ public class GpuIntBuffer
 		this.buffer.put(buffer);
 	}
 
-	public void putVertex(
-		int x, int y, int z,
-		int u, int v, int w,
-		int nx, int ny, int nz
-	) {
-		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
-		buffer.put((u & 0xFFFF) << 16 | z & 0xFFFF);
-		buffer.put((w & 0xFFFF) << 16 | v & 0xFFFF);
-		buffer.put((ny & 0xFFFF) << 16 | nx & 0xFFFF);
-		buffer.put(nz & 0xFFFF);
-	}
-
 	public static int normShort(float f) {
 		return round(clamp(f, -1, 1) * Short.MAX_VALUE);
-	}
-
-	public void putVertex(
-		int x, int y, int z,
-		float u, float v, float w,
-		float nx, float ny, float nz,
-		int textureFaceIdx
-	) {
-		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
-		buffer.put(float16(u) << 16 | z & 0xFFFF);
-		buffer.put(float16(w) << 16 | float16(v));
-		// This only works with normalized normals
-		buffer.put((normShort(ny) & 0xFFFF) << 16 | (normShort(nx) & 0xFFFF));
-		buffer.put((normShort(nz) & 0xFFFF));
-		buffer.put(textureFaceIdx);
 	}
 
 	public int putFace(
@@ -181,22 +154,6 @@ public class GpuIntBuffer
 		buffer.put(terrainDataB);
 		buffer.put(terrainDataC);
 		return textureFaceIdx;
-	}
-
-	public static void putFloatVertex(
-		IntBuffer buffer,
-		float x, float y, float z,
-		float u, float v, float w,
-		int nx, int ny, int nz,
-		int textureFaceIdx
-	) {
-		buffer.put(Float.floatToRawIntBits(x));
-		buffer.put(Float.floatToRawIntBits(y));
-		buffer.put(Float.floatToRawIntBits(z));
-		buffer.put(float16(v) << 16 | float16(u));
-		buffer.put((nx & 0xFFFF) << 16 | float16(w));
-		buffer.put((nz & 0xFFFF) << 16 | ny & 0xFFFF);
-		buffer.put(textureFaceIdx);
 	}
 
 	public int position()

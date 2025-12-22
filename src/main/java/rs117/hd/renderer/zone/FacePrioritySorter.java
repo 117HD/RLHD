@@ -465,7 +465,6 @@ class FacePrioritySorter {
 				uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 		}
 
-		boolean keepShading = true; // Skip vanilla shading reversal in the shader, since we do it on the CPU
 		int materialData = material.packMaterialData(faceOverride, uvType, false);
 
 		if (uvType == UvType.VANILLA) {
