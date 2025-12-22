@@ -94,19 +94,19 @@ public class Zone {
 	public void initialize(VBO o, VBO a, GLTextureBuffer f, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
+		if (o == null && a == null || f == null)
+			return;
 
-		if (o != null || a != null) {
-			vboM = new VBO(METADATA_SIZE);
-			vboM.initialize(GL_STATIC_DRAW);
-		}
+		vboM = new VBO(METADATA_SIZE);
+		vboM.initialize(GL_STATIC_DRAW);
 
-		if (o != null && f != null) {
+		if (o != null) {
 			vboO = o;
 			glVao = glGenVertexArrays();
 			setupVao(glVao, o.bufId, vboM.bufId, eboShared);
 		}
 
-		if (a != null && f != null) {
+		if (a != null) {
 			vboA = a;
 			glVaoA = glGenVertexArrays();
 			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
