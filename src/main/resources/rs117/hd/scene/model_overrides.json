@@ -11248,7 +11248,8 @@
       "FARMING_COUNTER_TABLE",
       "WILDY_HUB_BROKEN_TABLE",
       "TOURTRAP_QIP_DESERT_TABLE",
-      "MYQ3_HIDEOUT_LARGE_TABLE"
+      "MYQ3_HIDEOUT_LARGE_TABLE",
+      "TWOCATS_TABLE_BARE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -11624,7 +11625,9 @@
       "GRANDTREE_CHESTCLOSED",
       "SOTE_TRINKET_CHEST",
       "UPASSSHUTCHEST1",
-      "CAVEWITCHCHEST"
+      "CAVEWITCHCHEST",
+      "TWOCATS_CHEST",
+      "TWOCATS_CHEST_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -12412,7 +12415,9 @@
       "POSHDOOR_REVERSE",
       "POSHDOOROPEN_REVERSE",
       "CASTLEDOOR",
-      "OPENCASTLEDOOR"
+      "OPENCASTLEDOOR",
+      "DEATH_CASTLEDOOR",
+      "CASTLEDOOR_INACTIVE"
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -13294,7 +13299,8 @@
       "DOV_HUNTING_BOULDER1",
       "DOV_HUNTING_BOULDER1_OP",
       "DOV_HUNTING_BOULDER2",
-      "DOV_HUNTING_BOULDER2_OP"
+      "DOV_HUNTING_BOULDER2_OP",
+      "DS2_GRAVE_ROCKS"
     ],
     "uvType": "BOX",
     "uvScale": 0.32
@@ -38045,7 +38051,8 @@
     "description": "Object - Textured Brick Fireplace",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "FIREPLACE"
+      "FIREPLACE",
+      "TWOCATS_FIREPLACE_GONE_OUT"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -38069,7 +38076,8 @@
     "objectIds": [
       "BOOKCASE",
       "SPOOKYBOOKSHELVES",
-      "HORROR_BOOKCASE"
+      "HORROR_BOOKCASE",
+      "TWOCATS_BOOKCASE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -47261,6 +47269,30 @@
         "uvType": "MODEL_YZ",
         "uvOrientation": 512
       }
+    ]
+  },
+  {
+    "description": "Quest - Tale of Two Cates - Single bed with gray blanket",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Bed frame",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Golden trim on blanket",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_YZ",
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "TWOCATS_BED_UNMADE"
     ]
   },
   {
@@ -70725,10 +70757,11 @@
     "description": "Farming patch border rocks",
     "baseMaterial": "ROCK_1",
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": -256,
+    "uvScale": 0.5,
+    "uvOrientation": -89,
     "objectIds": [
-      "FARMING_BORDER_STRAIGHT_NORTH"
+      "FARMING_BORDER_STRAIGHT_NORTH",
+      "FARMING_BORDER_STRAIGHT_LIGHT"
     ]
   },
   {
@@ -70738,7 +70771,6 @@
     "uvScale": 0.6,
     "uvOrientation": 512,
     "objectIds": [
-      "FARMING_BORDER_STRAIGHT_LIGHT",
       "FARMING_GARDENINGPATCH_BORDER_LIGHT"
     ]
   },
