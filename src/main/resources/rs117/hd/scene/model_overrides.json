@@ -10547,7 +10547,9 @@
       "SLUG2_LADDER",
       "SLUG2_LADDERTOP",
       "SLUG2_BAITSHOP_LADDERTOP",
-      "ATJUN_MINE_LADDER"
+      "ATJUN_MINE_LADDER",
+      "CONTACT_LADDER",
+      "CONTACT_LADDER_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -11248,8 +11250,7 @@
       "FARMING_COUNTER_TABLE",
       "WILDY_HUB_BROKEN_TABLE",
       "TOURTRAP_QIP_DESERT_TABLE",
-      "MYQ3_HIDEOUT_LARGE_TABLE",
-      "TWOCATS_TABLE_BARE"
+      "MYQ3_HIDEOUT_LARGE_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -19841,13 +19842,22 @@
   },
   {
     "description": "Jungle Tree Small - Leafy",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h >= 15",
+        "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ],
     "objectIds": [
       "ICTHALARINS_BANANATREEEMPTY"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientation": 256
+    ]
   },
   {
     "description": "Jungle Tree Large",
@@ -20724,6 +20734,269 @@
     "uvType": "BOX",
     "objectIds": [
       "XMAS15_EMPTY_SOFA"
+    ]
+  },
+  {
+    "description": "Sophanem - Stalls - Empty",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Cloth Covering",
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "CONTACT_MARKET"
+    ]
+  },
+  {
+    "description": "Sophanem - Stalls - Weapons",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "description": "Cloth Covering",
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 256
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": [
+          "h == 0",
+          "h == 7 && s == 1",
+          "h == 8 && s == 7",
+          "h == 10 && s == 7"
+        ]
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "CONTACT_DAGGER_MARKET"
+    ]
+  },
+  {
+    "description": "Sophanem - Stalls - Silks",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Cloth Covering",
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": "h == 9",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "CONTACT_SILKMARKET"
+    ]
+  },
+  {
+    "description": "Sophanem - Stalls - Craft",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "description": "Cloth Covering",
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 256
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "CONTACT_CRAFT_MARKET"
+    ]
+  },
+  {
+    "description": "Sophanem - Stalls - Cooking",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "description": "Cloth Covering",
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 256
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0"
+      },
+      {
+        "colors": "h == 6 && s <=4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "CONTACT_BAKERYMARKET_VIS"
+    ]
+  },
+  {
+    "description": "Sophanem - Wooden Cart with Canopy",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 355,
+    "colorOverrides": [
+      {
+        "colors": [
+          "h == 5",
+          "h == 8"
+        ],
+        "baseMaterial": "CARPET",
+        "uvScale": 0.5,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "CONTACT_CART_DOME_ROOF"
+    ]
+  },
+  {
+    "description": "Sophanem - Wooden - Cloth - Clothes model",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 117,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "CONTACT_CLOTHESMODEL1"
+    ]
+  },
+  {
+    "description": "Sophanem - Wooden - Stump",
+    "baseMaterial": "BARK",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientationY": 720,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "CONTACT_LOG_WITHOUTAXE"
+    ]
+  },
+  {
+    "description": "Sophanem - Wooden - Stump",
+    "baseMaterial": "BARK",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvScale": 0.6,
+        "uvOrientationY": 720,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "CONTACT_BROKENLOGS"
+    ]
+  },
+  {
+    "description": "Sophanem - Wooden - Stump with axe",
+    "baseMaterial": "BARK",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "CONTACT_LOG_WITHAXE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientationY": 720,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 720,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h <= 5",
+        "baseMaterial": "METALLIC_NONE_GLOSS",
+        "flatNormals": true
+      }
     ]
   },
   {
@@ -28374,7 +28647,8 @@
     "objectIds": [
       "FAI_VARROCK_WORKBENCH",
       "FAI_DWARF_WORKBENCH",
-      "FAI_FALADOR_WORKBENCH"
+      "FAI_FALADOR_WORKBENCH",
+      "CONTACT_WORKBENCH"
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -31075,13 +31349,14 @@
   {
     "description": "Spinning Wheel",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
     "objectIds": [
       "VIKING_SPINNINGWHEEL",
       "ELF_VILLAGE_SPINNING_WHEEL",
       "SW_SPINNINGWHEEL_BROKEN",
-      "SW_SPINNINGWHEEL_FIXED"
-    ],
-    "uvType": "BOX"
+      "SW_SPINNINGWHEEL_FIXED",
+      "CONTACT_SPINNING_WHEEL"
+    ]
   },
   {
     "description": "Loom",
@@ -38048,15 +38323,26 @@
     ]
   },
   {
-    "description": "Object - Textured Brick Fireplace",
+    "description": "Object - Textured Brick Fireplace - ANIMATED",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      "FIREPLACE",
-      "TWOCATS_FIREPLACE_GONE_OUT"
-    ],
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientation": 42
+    "uvOrientation": 42,
+    "objectIds": [
+      "FIREPLACE",
+      "TWOCATS_FIREPLACE_GONE_OUT",
+      "TWOCATS_FIREPLACE_LIT"
+    ]
+  },
+  {
+    "description": "Quest - Tale of Two Cats - Object - Textured Brick Fireplace with Wood Logs - ANIMATED",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42,
+    "objectIds": [
+      "TWOCATS_FIREPLACE_GOT_WOOD"
+    ]
   },
   {
     "description": "Objects - Wooden - Hat Rack",
@@ -38373,7 +38659,8 @@
       "CANAFIS_COOKING_SHELVES",
       "LUNAR_MOONCLAN_SHELF_POTS",
       "FARM_COOKINGSHELF",
-      "FARM_COOKINGUTENSILS"
+      "FARM_COOKINGUTENSILS",
+      "CONTACT_COOKINGSHELF"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -38560,7 +38847,7 @@
   {
     "description": "Wooden shelf wall mounted",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "FAI_VARROCK_SHELF_EMPTY_LOW", "QIP_SHEEP_SHEARER_COOKINGSHELFEMPTY", "FAIRY_EMPTY_SHELF" ],
+    "objectIds": [ "FAI_VARROCK_SHELF_EMPTY_LOW", "QIP_SHEEP_SHEARER_COOKINGSHELFEMPTY", "FAIRY_EMPTY_SHELF", "CONTACT_COOKINGSHELFEMPTY" ],
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientationX": 512,
@@ -39310,9 +39597,12 @@
   {
     "description": "Wooden Cart - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "CART",
       "WHEEL_BARROW",
+      "CONTACT_WHEEL_BARROW",
       "FAI_VARROCK_CART",
       "AHOY_CART",
       "AHOY_WHEEL_BARROW",
@@ -39320,9 +39610,7 @@
       "BR_CART",
       "GRAB_EVIL_TWIN_BARROW_EMPTY",
       "CONTACT_CART"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.8
+    ]
   },
   {
     "description": "Wooden Cart - with textured Hay",
@@ -43963,7 +44251,8 @@
     "uvType": "BOX",
     "uvScale": 0.33,
     "objectIds": [
-      "LOGPILE"
+      "LOGPILE",
+      "CONTACT_LOGPILE"
     ],
     "colorOverrides": [
       {
@@ -47292,7 +47581,8 @@
       }
     ],
     "objectIds": [
-      "TWOCATS_BED_UNMADE"
+      "TWOCATS_BED_UNMADE",
+      "TWOCATS_BED_MADE"
     ]
   },
   {
@@ -51303,7 +51593,8 @@
     "uvScale": 0.4,
     "objectIds": [
       "FAI_VARROCK_FABRIC01",
-      "FAI_VARROCK_FABRIC02"
+      "FAI_VARROCK_FABRIC02",
+      "ICS_FLOOR_CLOTH"
     ],
     "colorOverrides": [
       {
@@ -51316,12 +51607,13 @@
     ]
   },
   {
-    "description": "East Varrock - Fancy Dress Shop - Self with thread",
+    "description": "East Varrock - Fancy Dress Shop - Sophanem - Shelf with thread",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
-      "CLOTHESEQUIP_SHELVES"
+      "CLOTHESEQUIP_SHELVES",
+      "CONTACT_CLOTHESEQUIP_SHELVES"
     ],
     "colorOverrides": [
       {
@@ -51358,12 +51650,13 @@
     ]
   },
   {
-    "description": "East Varrock - Fancy Dress Shop - Self with thread",
+    "description": "East Varrock - Fancy Dress Shop - Sophanem - Table with thread",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
-      "FAI_VARROCK_CLOTHES_TABLE"
+      "FAI_VARROCK_CLOTHES_TABLE",
+      "CONTACT_CLOTHES_TABLE"
     ],
     "colorOverrides": [
       {
@@ -70996,6 +71289,39 @@
       "HUNTING_POLAR_WEDGE_MIRROR",
       "HUNTING_POLAR_CAVEWALL_TOP_WEDGE",
       "HUNTING_POLAR_WEDGE"
+    ]
+  },
+  {
+    "description": "Quest - A Tale of Two Cats - Wooden - Plank - Unferths Table",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BASE_SEMIGLOSS"
+      },
+      {
+        "description": "Table",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 0.6
+      },
+      {
+        "description": "Table",
+        "colors": "h == 6",
+        "baseMaterial": "BASE_SEMIGLOSS"
+      }
+    ],
+    "objectIds": [
+      "TWOCATS_TABLE_BARE",
+      "TWOCATS_TABLE_EMPTY",
+      "TWOCATS_TABLE_MILK",
+      "TWOCATS_TABLE_CAKE",
+      "TWOCATS_TABLE_CAKE_MILK"
     ]
   }
 ]
