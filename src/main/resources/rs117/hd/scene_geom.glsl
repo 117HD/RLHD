@@ -123,7 +123,7 @@ void main() {
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
 
-        pos = projectionMatrix * pos;
+        pos = sceneCamera.viewProj * pos;
         #if ZONE_RENDERER
             int depthBias = (gAlphaBiasHsl[i] >> 16) & 0xff;
             pos.z += depthBias / 128.0;

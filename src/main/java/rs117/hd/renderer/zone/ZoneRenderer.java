@@ -73,6 +73,9 @@ import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
+import static org.lwjgl.opengl.GL45.GL_NEGATIVE_ONE_TO_ONE;
+import static org.lwjgl.opengl.GL45.GL_ZERO_TO_ONE;
+import static org.lwjgl.opengl.GL45.glClipControl;
 import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
@@ -139,8 +142,8 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
-	private final Camera sceneCamera = new Camera();
-	private final Camera directionalCamera = new Camera().setOrthographic(true);
+	private final Camera sceneCamera = new Camera().setReverseZ(true);
+	private final Camera directionalCamera = new Camera().setReverseZ(true).setOrthographic(true);
 	private final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
 	private final int[] worldPos = new int[3];
@@ -163,6 +166,7 @@ public class ZoneRenderer implements Renderer {
 
 	private boolean sceneFboValid;
 	private boolean shouldRenderScene;
+	private boolean drawRoofShadows;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -179,6 +183,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void initialize() {
+		if(HdPlugin.GL_CAPS.GL_ARB_clip_control)
+			glClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
+
 		initializeBuffers();
 
 		jobSystem.initialize();
@@ -188,6 +195,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void destroy() {
+		if(HdPlugin.GL_CAPS.GL_ARB_clip_control)
+			glClipControl(GL_LOWER_LEFT, GL_NEGATIVE_ONE_TO_ONE);
+
 		destroyBuffers();
 
 		jobSystem.destroy();
@@ -384,6 +394,8 @@ public class ZoneRenderer implements Renderer {
 				if (plugin.orthographicProjection)
 					zoom *= ORTHOGRAPHIC_ZOOM;
 
+				drawRoofShadows = plugin.configRoofShadows && environmentManager.isOverworld();
+
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
 				sceneCamera.setOrthographic(plugin.orthographicProjection);
 				sceneCamera.setPosition(plugin.cameraPosition);
@@ -408,6 +420,7 @@ public class ZoneRenderer implements Renderer {
 
 					// Define a Finite Plane before extracting corners
 					sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
+					sceneCamera.setReverseZ(false);
 
 					int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
 					final float[][] sceneFrustumCorners = sceneCamera.getFrustumCorners();
@@ -415,6 +428,7 @@ public class ZoneRenderer implements Renderer {
 
 					directionalShadowCasterVolume.build(sceneFrustumCorners);
 
+					sceneCamera.setReverseZ(true);
 					sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
 
 					final float[] sceneCenter = new float[3];
@@ -423,6 +437,7 @@ public class ZoneRenderer implements Renderer {
 					divide(sceneCenter, sceneCenter, (float) sceneFrustumCorners.length);
 
 					float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
+					float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
 					float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
 					float radius = 0f;
 					for (float[] corner : sceneFrustumCorners) {
@@ -433,25 +448,43 @@ public class ZoneRenderer implements Renderer {
 						minX = min(minX, corner[0]);
 						maxX = max(maxX, corner[0]);
 
+						minY = min(minY, corner[1]);
+						maxY = max(maxY, corner[1]);
+
 						minZ = min(minZ, corner[2]);
 						maxZ = max(maxZ, corner[2]);
 					}
-					int directionalSize = (int) max(abs(maxX - minX), abs(maxZ - minZ));
 
-					directionalCamera.setPosition(sceneCenter);
-					directionalCamera.setNearPlane(radius * 2.0f);
+					// Offset the Directional Camera by the radius of the scene
+					float[] directionalFwd = directionalCamera.getForwardDirection();
+					multiply(directionalFwd, directionalFwd, radius);
+					add(sceneCenter, sceneCenter, directionalFwd);
+
+					// Calculate directional size from the AABB of the scene frustum corners
+					// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
+					int directionalSize = (int) max(abs(maxY - minY), max(abs(maxX - minX), abs(maxZ - minZ)));
+					directionalSize = Math.round(directionalSize / (float)LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
+					directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
+					float texelSize = (float) directionalSize / plugin.shadowMapResolution;
+
+					// Snap Position to Shadow Texel Grid to prevent shimmering
+					directionalCamera.transformPoint(sceneCenter, sceneCenter);
+
+					sceneCenter[0] = (float)floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
+					sceneCenter[1] = (float)floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
+
+					directionalCamera.setPosition(directionalCamera.inverseTransformPoint(sceneCenter, sceneCenter));
+					directionalCamera.setNearPlane(Math.max(0.1f, radius * 0.05f));
+					directionalCamera.setFarPlane(radius * 2.0f);
 					directionalCamera.setZoom(1.0f);
 					directionalCamera.setViewportWidth(directionalSize);
 					directionalCamera.setViewportHeight(directionalSize);
 
 					plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
-					plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
+					plugin.uboGlobal.directionalCamera.set(directionalCamera);
 				}
 
-				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
-				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
-				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
-				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+				plugin.uboGlobal.sceneCamera.set(sceneCamera);
 				plugin.uboGlobal.pointLightsCount.set(ctx.sceneContext.numVisibleLights);
 				plugin.uboGlobal.upload();
 			}
@@ -689,18 +722,22 @@ public class ZoneRenderer implements Renderer {
 		renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
 		renderState.apply();
 
-		glClearDepth(1);
-		glClear(GL_DEPTH_BUFFER_BIT);
+		glClearDepth(directionalCamera.getIsReverseZ() ? 0 : 1);
+		glClearColor(0, 0, 0, 0);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
+		renderState.enable.set(GL_POLYGON_OFFSET_FILL);
 		renderState.enable.set(GL_DEPTH_TEST);
-		renderState.disable.set(GL_CULL_FACE);
-		renderState.depthFunc.set(GL_LEQUAL);
+		renderState.enable.set(GL_CULL_FACE);
+		renderState.depthFunc.set(directionalCamera.getIsReverseZ() ? GL_GEQUAL : GL_LEQUAL);
+		renderState.polygonOffset.set(directionalCamera.getIsReverseZ() ? -1.3f : 1.3f, directionalCamera.getIsReverseZ() ? -2.3f : 2.3f);
 
 		CommandBuffer.SKIP_DEPTH_MASKING = true;
 		directionalCmd.execute();
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.disable.set(GL_POLYGON_OFFSET_FILL);
 
 		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
@@ -729,7 +766,7 @@ public class ZoneRenderer implements Renderer {
 			gammaCorrectedFogColor[2],
 			1f
 		);
-		glClearDepth(0);
+		glClearDepth(sceneCamera.getIsReverseZ() ? 0 : 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		frameTimer.end(Timer.CLEAR_SCENE);
 
@@ -738,7 +775,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
-		renderState.depthFunc.set(GL_GEQUAL);
+		renderState.depthFunc.set(sceneCamera.getIsReverseZ() ? GL_GEQUAL : GL_LEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 		// Render the scene

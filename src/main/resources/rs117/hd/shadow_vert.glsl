@@ -30,6 +30,7 @@
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
+layout (location = 2) in vec3 vNormal;
 layout (location = 3) in int vAlphaBiasHsl;
 layout (location = 4) in int vMaterialData;
 layout (location = 5) in int vTerrainData;
@@ -37,6 +38,7 @@ layout (location = 6) in int vWorldViewId;
 layout (location = 7) in ivec2 vSceneBase;
 
 #include <utils/constants.glsl>
+#include <utils/color_utils.glsl>
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     // Pass to geometry shader
@@ -47,11 +49,25 @@ layout (location = 7) in ivec2 vSceneBase;
     flat out int gWorldViewId;
     #if SHADOW_TRANSPARENCY
         flat out float gOpacity;
+        #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+            flat out vec3 gColor;
+        #endif
+    #endif
+    #if ZONE_RENDERER && GROUND_SHADOWS
+        flat out float gGroundPlane;
     #endif
 #else
     #if SHADOW_TRANSPARENCY
         // Pass to fragment shader
         out float fOpacity;
+        #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+            flat out vec3 fColor;
+        #endif
+    #endif
+
+    #if ZONE_RENDERER && GROUND_SHADOWS
+        out vec3 fFragPos;
+        out float fGroundPlane;
     #endif
 #endif
 
@@ -63,14 +79,24 @@ void main() {
     if (opacityThreshold == 0)
         opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 
+    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
+    vec3 pos = sceneOffset + vPosition;
+
     bool isTransparent = opacity <= opacityThreshold;
     bool isGroundPlaneTile = (vTerrainData & 0xF) == 1; // plane == 0 && isTerrain
     bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
-    bool isShadowDisabled =
-        isGroundPlaneTile ||
-        isWaterSurfaceOrUnderwaterTile ||
-        isTransparent;
+    bool isShadowDisabled = isTransparent;
+
+    #if ZONE_RENDERER && GROUND_SHADOWS
+    #if SHADOW_MODE == SHADOW_MODE_DETAILED
+        gGroundPlane = isGroundPlaneTile ? 1.0 : 0.0;
+    #else
+        fGroundPlane = isGroundPlaneTile ? 1.0 : 0.0;
+    #endif
+    #else
+    isShadowDisabled = isShadowDisabled || isWaterSurfaceOrUnderwaterTile || isGroundPlaneTile;
+    #endif
 
 #if ZONE_RENDERER
     if(!isShadowDisabled && vWorldViewId > 0) {
@@ -83,9 +109,6 @@ void main() {
 
     int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
-    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-    vec3 pos = sceneOffset + vPosition;
-
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         gPosition = pos;
         gUv = vUv;
@@ -94,11 +117,21 @@ void main() {
         gWorldViewId = vWorldViewId;
         #if SHADOW_TRANSPARENCY
             gOpacity = opacity;
+            #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+                gColor = srgbToLinear(packedHslToSrgb(vAlphaBiasHsl));
+            #endif
         #endif
     #else
-        gl_Position = lightProjectionMatrix * getWorldViewProjection(vWorldViewId) * vec4(pos, shouldCastShadow);
+        pos = (getWorldViewProjection(vWorldViewId) * vec4(pos, 1.0)).xyz;
+        #if ZONE_RENDERER && GROUND_SHADOWS
+            fFragPos = pos.xyz;
+        #endif
+        gl_Position = directionalCamera.viewProj * vec4(pos, shouldCastShadow);
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
+            #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+                fColor = srgbToLinear(packedHslToSrgb(vAlphaBiasHsl));
+            #endif
         #endif
     #endif
 }

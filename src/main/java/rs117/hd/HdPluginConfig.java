@@ -46,6 +46,8 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
+import rs117.hd.config.ShadowShading;
+import rs117.hd.config.ShadowTransparency;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
@@ -445,108 +447,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_SHADOW_MODE = "shadowMode";
-	@ConfigItem(
-		keyName = KEY_SHADOW_MODE,
-		name = "Shadows",
-		description =
-			"Render fully dynamic shadows.<br>" +
-			"'Off' completely disables shadows.<br>" +
-			"'Fast' enables fast shadows without any texture detail.<br>" +
-			"'Detailed' enables slower shadows with support for texture detail.",
-		position = 5,
-		section = lightingSettings
-	)
-	default ShadowMode shadowMode()
-	{
-		return ShadowMode.DETAILED;
-	}
-
-	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
-	@ConfigItem(
-		keyName = KEY_SHADOW_TRANSPARENCY,
-		name = "Shadow Transparency",
-		description = "Enables partial support for shadows that take transparency into account.",
-		position = 6,
-		section = lightingSettings
-	)
-	default boolean enableShadowTransparency()
-	{
-		return true;
-	}
-
-	String KEY_PIXELATED_SHADOWS = "pixelatedShadows";
-	@ConfigItem(
-		keyName = KEY_PIXELATED_SHADOWS,
-		name = "Pixelated Shadows",
-		description = "Give shadows a slightly pixelated look.",
-		position = 7,
-		section = lightingSettings
-	)
-	default boolean pixelatedShadows() {
-		return false;
-	}
-
-	String KEY_SHADOW_RESOLUTION = "shadowResolution";
-	@ConfigItem(
-		keyName = KEY_SHADOW_RESOLUTION,
-		name = "Shadow Quality",
-		description =
-			"The resolution of the shadow map.<br>" +
-			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
-		position = 8,
-		section = lightingSettings
-	)
-	default ShadowResolution shadowResolution()
-	{
-		return ShadowResolution.RES_4096;
-	}
-
-	@ConfigItem(
-		keyName = "shadowDistance",
-		name = "Shadow Distance",
-		description =
-			"The maximum draw distance for shadows.<br>" +
-			"Shorter distances result in higher quality shadows.",
-		position = 9,
-		section = lightingSettings
-	)
-	@Units(" tiles")
-	default ShadowDistance shadowDistance()
-	{
-		return ShadowDistance.DISTANCE_50;
-	}
-
-	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
-	@ConfigItem(
-		keyName = KEY_EXPAND_SHADOW_DRAW,
-		name = "Expand Shadow Draw",
-		description =
-			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
-			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
-		position = 10,
-		section = lightingSettings
-	)
-	default boolean expandShadowDraw()
-	{
-		return false;
-	}
-
-	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
-	@ConfigItem(
-		keyName = KEY_VANILLA_SHADOW_MODE,
-		name = "Vanilla Shadows",
-		description =
-			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
-			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
-			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
-		position = 11,
-		section = lightingSettings
-	)
-	default VanillaShadowMode vanillaShadowMode() {
-		return VanillaShadowMode.SHOW_IN_PVM;
-	}
-
 	String KEY_NORMAL_MAPPING = "normalMapping";
 	@ConfigItem(
 		keyName = KEY_NORMAL_MAPPING,
@@ -571,13 +471,132 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	/*====== Shadow settings ======*/
+
+	@ConfigSection(
+		name = "Shadows",
+		description = "Shadow settings",
+		position = 2,
+		closedByDefault = true
+	)
+	String shadowSettings = "shadowSettings";
+
+	String KEY_SHADOW_MODE = "shadowMode";
+	@ConfigItem(
+		keyName = KEY_SHADOW_MODE,
+		name = "Shadows",
+		description =
+			"Render fully dynamic shadows.<br>" +
+			"'Off' completely disables shadows.<br>" +
+			"'Fast' enables fast shadows without any texture detail.<br>" +
+			"'Detailed' enables slower shadows with support for texture detail.",
+		position = 0,
+		section = shadowSettings
+	)
+	default ShadowMode shadowMode()
+	{
+		return ShadowMode.DETAILED;
+	}
+
+	String KEY_SHADOW_SHADING = "shadowShading";
+	@ConfigItem(
+		keyName = KEY_SHADOW_SHADING,
+		name = "Shadow Shading",
+		description =
+			"Shading technique used when sampling shadow map.<br>" +
+			"'Smooth' Smooths out the shadow pixels (PCF 3x3).<br>" +
+			"'Dithered' Further smoothens pixelation with dithering.<br>"+
+			"'Pixelated' Retains slightly pixelated shadows.",
+		section = shadowSettings,
+		position = 1
+	)
+	default ShadowShading shadowShading()
+	{
+		return ShadowShading.Dithered;
+	}
+
+	String KEY_SHADOW_RESOLUTION = "shadowResolution";
+	@ConfigItem(
+		keyName = KEY_SHADOW_RESOLUTION,
+		name = "Shadow Quality",
+		description =
+			"The resolution of the shadow map.<br>" +
+			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
+		section = shadowSettings,
+		position = 2
+	)
+	default ShadowResolution shadowResolution()
+	{
+		return ShadowResolution.RES_4096;
+	}
+
+	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
+	@ConfigItem(
+		keyName = KEY_VANILLA_SHADOW_MODE,
+		name = "Vanilla Shadows",
+		description =
+			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
+			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
+			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
+		section = shadowSettings,
+		position = 3
+	)
+	default VanillaShadowMode vanillaShadowMode() {
+		return VanillaShadowMode.SHOW_IN_PVM;
+	}
+
+	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
+	@ConfigItem(
+		keyName = KEY_SHADOW_TRANSPARENCY,
+		name = "Shadow Transparency",
+		description = "Enables partial support for shadows that take transparency into account.",
+		section = shadowSettings,
+		position = 4
+	)
+	default ShadowTransparency enableShadowTransparency()
+	{
+		return ShadowTransparency.EnabledWithTinting;
+	}
+
+	String KEY_GROUND_SHADOWS = "groundShadows";
+	@ConfigItem(
+		keyName = KEY_GROUND_SHADOWS,
+		name = "Ground Shadows",
+		description = "Enabled drawing of ground tile shadows, which can let mountains cast shadows.",
+		section = shadowSettings,
+		position = 5
+	)
+	default boolean enableGroundShadows() { return true; }
+
+	String KEY_SHADOW_CASTER_CULLING = "shadowCasterCulling";
+	@ConfigItem(
+		keyName = KEY_SHADOW_CASTER_CULLING,
+		name = "Shadow Caster Culling",
+		description = "Prevent shadow pop-in by including the minimal amount of screen geometry.<br>" +
+					  "(MacOs users might see a performance improvement disabling this)",
+		section = shadowSettings,
+		position = 6
+	)
+	default boolean shadowCasterCulling() { return true; }
+
+	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
+	@ConfigItem(
+		keyName = KEY_ROOF_SHADOWS,
+		name = "Roof Shadows",
+		description = "Always cast shadows from roofs, even when they are hidden.",
+		section = shadowSettings,
+		position = 7
+	)
+	default boolean roofShadows() {
+		return false;
+	}
 
 	/*====== Environment settings ======*/
 
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 2,
+		position = 3,
 		closedByDefault = true
 	)
 	String environmentSettings = "environmentSettings";
@@ -771,7 +790,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -897,7 +916,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
@@ -1029,13 +1048,38 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	@ConfigItem(
+		keyName = "shadowDistance",
+		name = "Legacy Shadow Distance",
+		description =
+			"The maximum draw distance for shadows.<br>" +
+			"Shorter distances result in higher quality shadows.",
+		section = legacySettings
+	)
+	default ShadowDistance shadowDistance()
+	{
+		return ShadowDistance.DISTANCE_50;
+	}
+
+	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
+	@ConfigItem(
+		keyName = KEY_EXPAND_SHADOW_DRAW,
+		name = "Expand Shadow Draw",
+		description =
+			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
+			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
+		section = legacySettings
+	)
+	default boolean expandShadowDraw() {
+		return false;
+	}
 
 	/*====== Experimental settings ======*/
 
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
-		position = 6,
+		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
@@ -1130,17 +1174,6 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean tiledLightingImageLoadStore() {
 		return true;
-	}
-
-	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
-	@ConfigItem(
-		keyName = KEY_ROOF_SHADOWS,
-		name = "Roof Shadows",
-		description = "Always cast shadows from roofs, even when they are hidden.",
-		section = experimentalSettings
-	)
-	default boolean roofShadows() {
-		return false;
 	}
 
 	String KEY_FORCE_INDIRECT_DRAW = "experimentalForceIndirectDraw";

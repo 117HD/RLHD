@@ -26,6 +26,7 @@
 #version 330
 
 #define DISPLAY_BASE_COLOR 0
+#define DISPLAY_SHADOW_TINT 0
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
@@ -35,7 +36,6 @@
 #include MATERIAL_CONSTANTS
 
 uniform sampler2DArray textureArray;
-uniform sampler2D shadowMap;
 uniform usampler2DArray tiledLightingArray;
 
 // general HD settings
@@ -78,13 +78,14 @@ vec2 worldUvs(float scale) {
 void main() {
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
-    vec3 viewDir = normalize(cameraPos - IN.position);
+    vec3 viewDir = normalize(sceneCamera.position - IN.position);
 
     Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
 
     // Water data
+    bool isGroundPlane = (vTerrainData[0] & 0xF) == 1;
     bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
     int waterDepth1 = vTerrainData[0] >> 11 & 0xFFF;
     int waterDepth2 = vTerrainData[1] >> 11 & 0xFFF;
@@ -304,13 +305,13 @@ void main() {
             lightDotNormals = .7;
         #endif
 
+        vec3 shadowTint = vec3(0);
         float shadow = 0;
         if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-            shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals);
+            shadow = sampleShadowMap(fragPos, N, vec2(0), lightDotNormals, isGroundPlane, shadowTint);
         shadow = max(shadow, selfShadowing);
+        shadowTint *= lightStrength * 18.0;
         float inverseShadow = 1 - shadow;
-
-
 
         // specular
         vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
@@ -369,8 +370,15 @@ void main() {
         // apply shadows
         dirLightColor *= inverseShadow;
 
-        vec3 lightColor = dirLightColor;
+        vec3 lightColor = mix(dirLightColor, shadowTint, shadow);
         vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
+
+        #if DISPLAY_SHADOW_TINT
+        outputColor.rgb += shadowTint;
+        outputColor.rgb = linearToSrgb(outputColor.rgb);
+        FragColor = outputColor;
+        return;
+        #endif
 
         // directional light specular
         vec3 lightReflectDir = reflect(-lightDir, normals);
@@ -437,7 +445,7 @@ void main() {
         }
     }
 
-    vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(cameraPos.xz / 128));
+    vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(sceneCamera.position.xz / 128));
     float maxDist = max(tiledist.x, tiledist.y);
     if (maxDist > drawDistance) {
         // Rapidly fade out any geometry that extends beyond the draw distance.
@@ -477,7 +485,7 @@ void main() {
     // apply fog
     if (!isUnderwater) {
         // ground fog
-        float distance = distance(IN.position, cameraPos);
+        float distance = distance(IN.position, sceneCamera.position);
         float closeFadeDistance = 1500;
         float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, groundFogOpacity, groundFog);
