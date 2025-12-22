@@ -191,7 +191,8 @@ public class ZoneRenderer implements Renderer {
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(uboWorldViews);
 
-		FacePrioritySorter.VERTEX_STAGING_COLLECTION = sceneUploader.vertexStagingCollection;
+		// Write caches used exclusively on the client thread can be shared
+		sceneUploader.writeCache = FacePrioritySorter.WRITE_CACHE;
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NVIDIA_GPU;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
+import static rs117.hd.utils.MathUtils.*;
 
 class VAO {
 	// Temp vertex format
@@ -154,7 +155,7 @@ class VAO {
 	@RequiredArgsConstructor
 	static class VAOList {
 		// this needs to be larger than the largest single model
-		private static final int VAO_SIZE = 4 * 1024 * 1024;
+		private static final int VAO_SIZE = (int) (4 * MiB);
 
 		private int curIdx;
 		private int drawCount;

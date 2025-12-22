@@ -31,7 +31,6 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
-import rs117.hd.renderer.zone.VertexStagingBuffer.VertexStagingCollection;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -75,11 +74,7 @@ class FacePrioritySorter {
 	private static final int ZSORT_GROUP_SIZE = 1024; // was 512
 	private static final int MAX_FACES_PER_PRIORITY = 4000; // was 2500
 
-	public static VertexStagingCollection VERTEX_STAGING_COLLECTION;
-	private static VertexStagingBuffer STAGING_BUFFER_OPAQUE;
-	private static VertexStagingBuffer STAGING_BUFFER_ALPHA;
-	private static VertexStagingBuffer STAGING_BUFFER_OPAQUE_TEX;
-	private static VertexStagingBuffer STAGING_BUFFER_ALPHA_TEX;
+	public static VertexWriteCache.Collection WRITE_CACHE = new VertexWriteCache.Collection();
 
 	static {
 		distances = new int[MAX_VERTEX_COUNT];
@@ -209,10 +204,7 @@ class FacePrioritySorter {
 			distanceToFaces[distance][distanceFaceCount[distance]++] = i;
 		}
 
-		STAGING_BUFFER_OPAQUE = VERTEX_STAGING_COLLECTION.getOpaqueBuffer(opaqueBuffer);
-		STAGING_BUFFER_ALPHA = VERTEX_STAGING_COLLECTION.getAlphaBuffer(alphaBuffer);
-		STAGING_BUFFER_OPAQUE_TEX = VERTEX_STAGING_COLLECTION.getOpaqueTexBuffer(opaqueTexBuffer);
-		STAGING_BUFFER_ALPHA_TEX = VERTEX_STAGING_COLLECTION.getAlphaTexBuffer(alphaTexBuffer);
+		WRITE_CACHE.setOutputBuffers(opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
 
 		int len = 0;
 		if (faceRenderPriorities == null) {
@@ -342,11 +334,7 @@ class FacePrioritySorter {
 			}
 		}
 
-		STAGING_BUFFER_OPAQUE.flush();
-		STAGING_BUFFER_ALPHA.flush();
-		STAGING_BUFFER_OPAQUE_TEX.flush();
-		STAGING_BUFFER_ALPHA_TEX.flush();
-
+		WRITE_CACHE.flush();
 		return len;
 	}
 
@@ -542,8 +530,15 @@ class FacePrioritySorter {
 			bias == null ? 0 : bias[face] & 0xFF;
 		int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 		boolean hasAlpha = material.hasTransparency || transparency != 0;
-		var vb = hasAlpha ? STAGING_BUFFER_ALPHA : STAGING_BUFFER_OPAQUE;
-		var tb = hasAlpha ? STAGING_BUFFER_ALPHA_TEX : STAGING_BUFFER_OPAQUE_TEX;
+
+		VertexWriteCache vb, tb;
+		if (hasAlpha) {
+			vb = WRITE_CACHE.alpha;
+			tb = WRITE_CACHE.alphaTex;
+		} else {
+			vb = WRITE_CACHE.opaque;
+			tb = WRITE_CACHE.opaqueTex;
+		}
 
 		color1 |= packedAlphaBiasHsl;
 		color2 |= packedAlphaBiasHsl;

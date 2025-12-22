@@ -32,7 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
-import rs117.hd.renderer.zone.VertexStagingBuffer.VertexStagingCollection;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -84,10 +83,6 @@ public class SceneUploader {
 			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
 	}
 
-	private static final int NUM_STAGING_BUFFERS = 4;
-	private static final int MAX_STAGING_CAPACITY = (int) (MiB / NUM_STAGING_BUFFERS / Integer.BYTES); // 1 MB per thread
-	private static final int INITIAL_STAGING_CAPACITY = (int) (32 * KiB / Integer.BYTES);
-
 	@Inject
 	private RenderCallbackManager renderCallbackManager;
 
@@ -135,7 +130,8 @@ public class SceneUploader {
 	private final int[] modelLocalYI = new int[MAX_VERTEX_COUNT];
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
-	public final VertexStagingCollection vertexStagingCollection = new VertexStagingCollection();
+	// Lazily initialized staging buffers, only used by uploadTempModel
+	public VertexWriteCache.Collection writeCache;
 
 	public void setScene(Scene scene) {
 		if (scene == currentScene)
@@ -1675,10 +1671,9 @@ public class SceneUploader {
 		IntBuffer opaqueTexBuffer,
 		IntBuffer alphaTexBuffer
 	) {
-		final var stagingOpaqueBuffer = vertexStagingCollection.getOpaqueBuffer(opaqueBuffer);
-		final var stagingAlphaBuffer = vertexStagingCollection.getAlphaBuffer(alphaBuffer);
-		final var stagingOpaqueTexBuffer = vertexStagingCollection.getOpaqueTexBuffer(opaqueTexBuffer);
-		final var stagingAlphaTexBuffer = vertexStagingCollection.getAlphaTexBuffer(alphaTexBuffer);
+		if (writeCache == null)
+			writeCache = new VertexWriteCache.Collection();
+		writeCache.setOutputBuffers(opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
 
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
@@ -1884,8 +1879,15 @@ public class SceneUploader {
 				bias == null ? 0 : bias[face] & 0xFF;
 			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
-			var vb = hasAlpha ? stagingAlphaBuffer : stagingOpaqueBuffer;
-			var tb = hasAlpha ? stagingAlphaTexBuffer : stagingOpaqueTexBuffer;
+
+			VertexWriteCache vb, tb;
+			if (hasAlpha) {
+				vb = writeCache.alpha;
+				tb = writeCache.alphaTex;
+			} else {
+				vb = writeCache.opaque;
+				tb = writeCache.opaqueTex;
+			}
 
 			color1 |= packedAlphaBiasHsl;
 			color2 |= packedAlphaBiasHsl;
@@ -1918,11 +1920,7 @@ public class SceneUploader {
 			len += 3;
 		}
 
-		stagingOpaqueBuffer.flush();
-		stagingAlphaBuffer.flush();
-		stagingOpaqueTexBuffer.flush();
-		stagingAlphaTexBuffer.flush();
-
+		writeCache.flush();
 		return len;
 	}
 
