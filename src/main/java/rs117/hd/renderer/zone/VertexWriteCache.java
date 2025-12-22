@@ -75,9 +75,6 @@ public final class VertexWriteCache {
 		if (stagingPosition == 0)
 			return;
 
-		if (outputBuffer.remaining() < stagingPosition) {
-			log.debug("Here we are...");
-		}
 		outputBuffer.put(stagingBuffer, 0, stagingPosition);
 		stagingPosition = 0;
 	}
