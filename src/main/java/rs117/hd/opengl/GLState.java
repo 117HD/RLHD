@@ -5,8 +5,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public abstract class GLState<T> {
-	public T owner;
+public abstract class GLState {
 	protected boolean hasValue;
 	protected boolean hasApplied;
 
@@ -24,7 +23,7 @@ public abstract class GLState<T> {
 
 	abstract void internalApply();
 
-	public abstract static class BooleanState<T> extends GLState<T> {
+	public abstract static class Bool extends GLState {
 		private boolean value;
 		private boolean appliedValue;
 
@@ -44,7 +43,7 @@ public abstract class GLState<T> {
 		protected abstract void applyValue(boolean value);
 	}
 
-	public abstract static class IntState<T> extends GLState<T> {
+	public abstract static class Int extends GLState {
 		private int value;
 		private int appliedValue;
 
@@ -64,11 +63,11 @@ public abstract class GLState<T> {
 		protected abstract void applyValue(int value);
 	}
 
-	public abstract static class SingleState<T, K> extends GLState<T> {
-		private K value;
-		private K appliedValue;
+	public abstract static class Object<T> extends GLState {
+		private T value;
+		private T appliedValue;
 
-		public final void set(K v) {
+		public final void set(T v) {
 			hasValue = true;
 			value = v;
 		}
@@ -81,16 +80,16 @@ public abstract class GLState<T> {
 			}
 		}
 
-		protected abstract void applyValue(K value);
+		protected abstract void applyValue(T value);
 	}
 
-	public abstract static class IntArrayState<T> extends GLState<T> {
+	public abstract static class IntArray extends GLState {
 		private final int[] value;
 		private final int[] appliedValue;
 
-		protected IntArrayState(int size) {
-			this.value = new int[size];
-			this.appliedValue = new int[size];
+		protected IntArray(int size) {
+			value = new int[size];
+			appliedValue = new int[size];
 		}
 
 		public final void set(int... v) {
@@ -109,13 +108,13 @@ public abstract class GLState<T> {
 		protected abstract void applyValues(int[] values);
 	}
 
-	public abstract static class BooleanArrayState<T> extends GLState<T> {
+	public abstract static class BoolArray extends GLState {
 		private final boolean[] value;
 		private final boolean[] appliedValue;
 
-		protected BooleanArrayState(int size) {
-			this.value = new boolean[size];
-			this.appliedValue = new boolean[size];
+		protected BoolArray(int size) {
+			value = new boolean[size];
+			appliedValue = new boolean[size];
 		}
 
 		public final void set(boolean... v) {
@@ -134,7 +133,7 @@ public abstract class GLState<T> {
 		protected abstract void applyValues(boolean[] values);
 	}
 
-	public abstract static class GLFlagSetState<T> extends GLState<T> {
+	public abstract static class IntSet extends GLState {
 		private final Set<Integer> targets = new HashSet<>();
 
 		public void add(int target) {
