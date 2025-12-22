@@ -5,28 +5,28 @@ import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.MathUtils.*;
 
-public final class Int2IntHashMap {
+public final class Int2ObjectHashMap<T> {
 	private static final int DEFAULT_CAPACITY = 16;
 	private static final float DEFAULT_GROWTH = 1.5f;
 	private static final int EMPTY = Integer.MIN_VALUE;
 
 	private int[] keys;
-	private int[] values;
+	private T[] values;
 	private int size;
 	private final float growthFactor;
 	private int mask;
 
-	public Int2IntHashMap() {
+	public Int2ObjectHashMap() {
 		this(DEFAULT_CAPACITY, DEFAULT_GROWTH);
 	}
 
-	public Int2IntHashMap(int initialCapacity) {
+	public Int2ObjectHashMap(int initialCapacity) {
 		this(initialCapacity, DEFAULT_GROWTH);
 	}
 
-	public Int2IntHashMap(int initialCapacity, float growthFactor) {
+	public Int2ObjectHashMap(int initialCapacity, float growthFactor) {
 		keys = new int[(int) HDUtils.ceilPow2(initialCapacity)];
-		values = new int[keys.length];
+		values = (T[]) new Object[keys.length];
 		Arrays.fill(keys, EMPTY);
 		this.growthFactor = growthFactor;
 		this.size = 0;
@@ -40,10 +40,10 @@ public final class Int2IntHashMap {
 	private void resize() {
 		int newCapacity = (int) HDUtils.ceilPow2(max((int)(keys.length * growthFactor), keys.length + 1));
 		int[] oldKeys = keys;
-		int[] oldValues = values;
+		T[] oldValues = values;
 
 		keys = new int[newCapacity];
-		values = new int[newCapacity];
+		values = (T[]) new Object[newCapacity];
 		Arrays.fill(keys, EMPTY);
 		size = 0;
 		mask = newCapacity - 1;
@@ -55,7 +55,7 @@ public final class Int2IntHashMap {
 		}
 	}
 
-	public boolean put(int key, int value) {
+	public boolean put(int key, T value) {
 		if (size >= keys.length * 0.75f) resize();
 
 		int idx = hash(key);
@@ -82,14 +82,17 @@ public final class Int2IntHashMap {
 		return -1;
 	}
 
-	public int getOrDefault(int key, int defaultValue) {
+	public T getOrDefault(int key, T defaultValue) {
 		int idx = findIndex(key);
 		return idx >= 0 ? values[idx] : defaultValue;
 	}
 
-	public int getValue(int idx) { return values[idx]; }
+	public T get(int key) {
+		int idx = findIndex(key);
+		return idx >= 0 ? values[idx] : null;
+	}
 
-	public void setValue(int idx, int value) { values[idx] = value; }
+	public void setValue(int idx, T value) { values[idx] = value; }
 
 	public boolean containsKey(int key) { return findIndex(key) >= 0; }
 
@@ -104,7 +107,7 @@ public final class Int2IntHashMap {
 	public void removeIndex(int idx) {
 		int lastIdx = idx;
 		keys[idx] = EMPTY;
-		values[idx] = 0;
+		values[idx] = null;
 		size--;
 
 		while (true) {
@@ -117,7 +120,7 @@ public final class Int2IntHashMap {
 				keys[lastIdx] = keys[nextIdx];
 				values[lastIdx] = values[nextIdx];
 				keys[nextIdx] = EMPTY;
-				values[nextIdx] = 0;
+				values[nextIdx] = null;
 				lastIdx = nextIdx;
 			} else {
 				break;
@@ -127,6 +130,7 @@ public final class Int2IntHashMap {
 
 	public void clear() {
 		Arrays.fill(keys, EMPTY);
+		Arrays.fill(values, null);
 		size = 0;
 	}
 
