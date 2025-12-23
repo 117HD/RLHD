@@ -32629,7 +32629,6 @@
       "INFERNO_CREATURE_SPLITTER_MELEE",
       "INFERNO_CREATURE_MELEE",
       "INFERNO_CREATURE_RANGER",
-      "INFERNO_CREATURE_MAGER",
       "INFERNO_JAD",
       "INFERNO_RANGER_FINALWAVE",
       "INFERNO_MAGER_FINALWAVE",
@@ -68998,6 +68997,15 @@
         "uvType": "MODEL_XZ",
         "uvScale": 0.45
       }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Inferno Magers - Flickering Vanilla Lighting Fix",
+    "hideVanillaShadows": true,
+    "retainVanillaShadowsInPvm": true,
+    "depthBias": 100,
+    "npcIds": [
+      "INFERNO_CREATURE_MAGER"
     ]
   },
   {
