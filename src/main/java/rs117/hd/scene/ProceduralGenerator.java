@@ -801,9 +801,9 @@ public class ProceduralGenerator {
 			for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
 				int vertexKey = faceVertexKeys[face][vertex];
 
-				int idx = sceneContext.vertexTerrainNormals.findIndex(vertexKey);
-				if (idx >= 0) {
-					add(sceneContext.vertexTerrainNormals.get(vertexKey), sceneContext.vertexTerrainNormals.get(vertexKey), vertexNormals);
+				final int[] terrainNormal = sceneContext.vertexTerrainNormals.getOrDefault(vertexKey, null);
+				if (terrainNormal != null) {
+					add(terrainNormal, terrainNormal, vertexNormals);
 				} else {
 					sceneContext.vertexTerrainNormals.put(vertexKey, vertexNormals);
 				}

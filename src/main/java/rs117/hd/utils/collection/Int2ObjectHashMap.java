@@ -129,6 +129,8 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 		return idx >= 0 ? values[idx] : null;
 	}
 
+	public T getValue(int idx) { return values[idx]; }
+
 	public void setValue(int idx, T value) { values[idx] = value; }
 
 	public boolean containsKey(int key) { return findIndex(key) >= 0; }
