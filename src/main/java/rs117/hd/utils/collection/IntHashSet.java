@@ -1,12 +1,14 @@
 package rs117.hd.utils.collection;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.HashUtil.murmurHash3;
 import static rs117.hd.utils.MathUtils.*;
 
-public final class IntHashSet {
+public final class IntHashSet implements Iterable<Integer> {
 	private static final int DEFAULT_CAPACITY = 16;
 	private static final float DEFAULT_GROWTH = 1.5f;
 	private static final int EMPTY = Integer.MIN_VALUE;
@@ -130,5 +132,34 @@ public final class IntHashSet {
 
 	public int size() {
 		return size;
+	}
+
+	@Override
+	public Iterator<Integer> iterator() {
+		return new Iterator<>() {
+			private int index = -1;
+			private int visited = 0;
+
+			@Override
+			public boolean hasNext() {
+				return visited < size;
+			}
+
+			@Override
+			public Integer next() {
+				if (!hasNext())
+					throw new NoSuchElementException();
+
+				while (++index < keys.length) {
+					int key = keys[index];
+					if (key != EMPTY) {
+						visited++;
+						return key;
+					}
+				}
+
+				throw new NoSuchElementException();
+			}
+		};
 	}
 }

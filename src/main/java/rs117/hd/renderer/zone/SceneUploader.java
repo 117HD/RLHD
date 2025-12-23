@@ -48,6 +48,7 @@ import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.collection.IntHashSet;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -86,7 +87,7 @@ public class SceneUploader {
 
 	private int basex, basez, rid, level;
 
-	private final Set<Integer> roofIds = new HashSet<>();
+	private final IntHashSet roofIds = new IntHashSet();
 	private Scene currentScene;
 	private Tile[][][] tiles;
 	private byte[][][] settings;
@@ -175,13 +176,13 @@ public class SceneUploader {
 			this.level = z;
 
 			if (z == 0) {
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, roofIds, vb, ab);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, roofIds, vb, ab);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, roofIds, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, vb, ab);
 			} else {
-				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, vb, ab);
 			}
 
 			if (zone.vboO != null) {
@@ -204,7 +205,6 @@ public class SceneUploader {
 		int mzz,
 		int level,
 		boolean visbelow,
-		Set<Integer> roofIds,
 		GpuIntBuffer vb,
 		GpuIntBuffer ab
 	) {
@@ -853,25 +853,25 @@ public class SceneUploader {
 				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
-			if (ctx.vertexIsOverlay.containsKey(neVertexKey) && ctx.vertexIsUnderlay.containsKey(neVertexKey))
+			if (ctx.vertexIsOverlay.contains(neVertexKey) && ctx.vertexIsUnderlay.contains(neVertexKey))
 				neVertexIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(nwVertexKey) && ctx.vertexIsUnderlay.containsKey(nwVertexKey))
+			if (ctx.vertexIsOverlay.contains(nwVertexKey) && ctx.vertexIsUnderlay.contains(nwVertexKey))
 				nwVertexIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(seVertexKey) && ctx.vertexIsUnderlay.containsKey(seVertexKey))
+			if (ctx.vertexIsOverlay.contains(seVertexKey) && ctx.vertexIsUnderlay.contains(seVertexKey))
 				seVertexIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(swVertexKey) && ctx.vertexIsUnderlay.containsKey(swVertexKey))
+			if (ctx.vertexIsOverlay.contains(swVertexKey) && ctx.vertexIsUnderlay.contains(swVertexKey))
 				swVertexIsOverlay = true;
 		} else if (onlyWaterSurface) {
 			// set colors for the shoreline to create a foam effect in the water shader
 			swColor = seColor = nwColor = neColor = 127;
 
-			if (ctx.vertexIsWater.containsKey(swVertexKey) && ctx.vertexIsLand.containsKey(swVertexKey))
+			if (ctx.vertexIsWater.contains(swVertexKey) && ctx.vertexIsLand.contains(swVertexKey))
 				swColor = 0;
-			if (ctx.vertexIsWater.containsKey(seVertexKey) && ctx.vertexIsLand.containsKey(seVertexKey))
+			if (ctx.vertexIsWater.contains(seVertexKey) && ctx.vertexIsLand.contains(seVertexKey))
 				seColor = 0;
-			if (ctx.vertexIsWater.containsKey(nwVertexKey) && ctx.vertexIsLand.containsKey(nwVertexKey))
+			if (ctx.vertexIsWater.contains(nwVertexKey) && ctx.vertexIsLand.contains(nwVertexKey))
 				nwColor = 0;
-			if (ctx.vertexIsWater.containsKey(neVertexKey) && ctx.vertexIsLand.containsKey(neVertexKey))
+			if (ctx.vertexIsWater.contains(neVertexKey) && ctx.vertexIsLand.contains(neVertexKey))
 				neColor = 0;
 
 			if (seColor == 0 && nwColor == 0 && (neColor == 0 || swColor == 0))
@@ -1128,11 +1128,11 @@ public class SceneUploader {
 			} else if (onlyWaterSurface) {
 				// set colors for the shoreline to create a foam effect in the water shader
 				colorA = colorB = colorC = 127;
-				if (ctx.vertexIsWater.containsKey(vertexKeyA) && ctx.vertexIsLand.containsKey(vertexKeyA))
+				if (ctx.vertexIsWater.contains(vertexKeyA) && ctx.vertexIsLand.contains(vertexKeyA))
 					colorA = 0;
-				if (ctx.vertexIsWater.containsKey(vertexKeyB) && ctx.vertexIsLand.containsKey(vertexKeyB))
+				if (ctx.vertexIsWater.contains(vertexKeyB) && ctx.vertexIsLand.contains(vertexKeyB))
 					colorB = 0;
-				if (ctx.vertexIsWater.containsKey(vertexKeyC) && ctx.vertexIsLand.containsKey(vertexKeyC))
+				if (ctx.vertexIsWater.contains(vertexKeyC) && ctx.vertexIsLand.contains(vertexKeyC))
 					colorC = 0;
 				if (colorA == 0 && colorB == 0 && colorC == 0)
 					colorA = colorB = colorC = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
@@ -1171,11 +1171,11 @@ public class SceneUploader {
 				terrainDataC = HDUtils.packTerrainData(true, max(1, depthC), waterType, tileZ);
 			}
 
-			if (ctx.vertexIsOverlay.containsKey(vertexKeyA) && ctx.vertexIsUnderlay.containsKey(vertexKeyA))
+			if (ctx.vertexIsOverlay.contains(vertexKeyA) && ctx.vertexIsUnderlay.contains(vertexKeyA))
 				vertexAIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(vertexKeyB) && ctx.vertexIsUnderlay.containsKey(vertexKeyB))
+			if (ctx.vertexIsOverlay.contains(vertexKeyB) && ctx.vertexIsUnderlay.contains(vertexKeyB))
 				vertexBIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(vertexKeyC) && ctx.vertexIsUnderlay.containsKey(vertexKeyC))
+			if (ctx.vertexIsOverlay.contains(vertexKeyC) && ctx.vertexIsUnderlay.contains(vertexKeyC))
 				vertexCIsOverlay = true;
 
 			ly0 -= override.heightOffset;

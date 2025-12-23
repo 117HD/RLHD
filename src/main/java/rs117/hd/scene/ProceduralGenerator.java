@@ -41,6 +41,7 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collection.Int2IntHashMap;
 import rs117.hd.utils.collection.Int2ObjectHashMap;
+import rs117.hd.utils.collection.IntHashSet;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -122,14 +123,14 @@ public class ProceduralGenerator {
 		sceneContext.vertexTerrainColor = new Int2IntHashMap(previousContext != null && previousContext.vertexTerrainColor != null ? previousContext.vertexTerrainColor.size() : 16);
 		// used for overriding potentially undesirable vertex colors
 		// for example, colors that aren't supposed to be visible
-		sceneContext.highPriorityColor = new Int2IntHashMap(previousContext != null && previousContext.highPriorityColor != null ? previousContext.highPriorityColor.size() : 16);
+		sceneContext.highPriorityColor = new IntHashSet(previousContext != null && previousContext.highPriorityColor != null ? previousContext.highPriorityColor.size() : 16);
 		sceneContext.vertexTerrainTexture = new Int2ObjectHashMap<>(previousContext != null && previousContext.vertexTerrainTexture != null ? previousContext.vertexTerrainTexture.size() : 16, Material[]::new);
 		// for faces without an overlay is set to true
-		sceneContext.vertexIsUnderlay = new Int2IntHashMap(previousContext != null && previousContext.vertexIsUnderlay != null ? previousContext.vertexIsUnderlay.size() : 16);
+		sceneContext.vertexIsUnderlay = new IntHashSet(previousContext != null && previousContext.vertexIsUnderlay != null ? previousContext.vertexIsUnderlay.size() : 16);
 		// for faces with an overlay is set to true
 		// the result of these maps can be used to determine the vertices
 		// between underlays and overlays for custom blending
-		sceneContext.vertexIsOverlay = new Int2IntHashMap(previousContext != null && previousContext.vertexIsOverlay != null ? previousContext.vertexIsOverlay.size() : 16);
+		sceneContext.vertexIsOverlay = new IntHashSet(previousContext != null && previousContext.vertexIsOverlay != null ? previousContext.vertexIsOverlay.size() : 16);
 
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int sizeX = sceneContext.sizeX;
@@ -317,7 +318,7 @@ public class ProceduralGenerator {
 			}
 
 			// add color and texture to hashmap
-			if ((!lowPriorityColor || !sceneContext.highPriorityColor.containsKey(vertexHashes[vertex])) && !vertexDefaultColor[vertex])
+			if ((!lowPriorityColor || !sceneContext.highPriorityColor.contains(vertexHashes[vertex])) && !vertexDefaultColor[vertex])
 			{
 				boolean shouldWrite = isOverlay || !sceneContext.vertexTerrainColor.containsKey(vertexHashes[vertex]);
 				if (shouldWrite || !sceneContext.vertexTerrainColor.containsKey(vertexHashes[vertex]))
@@ -344,10 +345,10 @@ public class ProceduralGenerator {
 		// true if a tile contains at least 1 face which qualifies as water
 		sceneContext.tileIsWater = new boolean[MAX_Z][sizeX][sizeY];
 		// true if a vertex is part of a face which qualifies as water; non-existent if not
-		sceneContext.vertexIsWater = new Int2IntHashMap(previousContext != null && sceneContext.vertexIsWater != null ? sceneContext.vertexIsWater.size() : 0);
+		sceneContext.vertexIsWater = new IntHashSet(previousContext != null && sceneContext.vertexIsWater != null ? sceneContext.vertexIsWater.size() : 0);
 		// true if a vertex is part of a face which qualifies as land; non-existent if not
 		// tiles along the shoreline will be true for both vertexIsWater and vertexIsLand
-		sceneContext.vertexIsLand = new Int2IntHashMap(previousContext != null && sceneContext.vertexIsLand != null ? sceneContext.vertexIsLand.size() : 0);
+		sceneContext.vertexIsLand = new IntHashSet(previousContext != null && sceneContext.vertexIsLand != null ? sceneContext.vertexIsLand.size() : 0);
 		// if true, the tile will be skipped when the scene is drawn
 		// this is due to certain edge cases with water on the same X/Y on different planes
 		sceneContext.skipTile = new boolean[MAX_Z][sizeX][sizeY];
@@ -676,7 +677,7 @@ public class ProceduralGenerator {
 									float southHeightOffset = mix(underwaterDepths[z][x][y], underwaterDepths[z][x + 1][y], lerpX);
 									int heightOffset = (int) mix(southHeightOffset, northHeightOffset, lerpY);
 
-									if (!sceneContext.vertexIsLand.containsKey(vertexKeys[vertex]))
+									if (!sceneContext.vertexIsLand.contains(vertexKeys[vertex]))
 										sceneContext.vertexUnderwaterDepth.put(vertexKeys[vertex], heightOffset);
 								}
 							}

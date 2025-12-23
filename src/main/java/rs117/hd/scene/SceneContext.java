@@ -17,6 +17,7 @@ import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.collection.Int2IntHashMap;
 import rs117.hd.utils.collection.Int2ObjectHashMap;
+import rs117.hd.utils.collection.IntHashSet;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -61,14 +62,14 @@ public class SceneContext {
 	public Int2ObjectHashMap<Material> vertexTerrainTexture;
 	public Int2ObjectHashMap<int[]> vertexTerrainNormals;
 	// Used for overriding potentially low quality vertex colors
-	public Int2IntHashMap highPriorityColor;
+	public IntHashSet highPriorityColor;
 
 	// Water-related data
 	public boolean[][][] tileIsWater;
-	public Int2IntHashMap vertexIsWater;
-	public Int2IntHashMap vertexIsLand;
-	public Int2IntHashMap vertexIsOverlay;
-	public Int2IntHashMap vertexIsUnderlay;
+	public IntHashSet vertexIsWater;
+	public IntHashSet vertexIsLand;
+	public IntHashSet vertexIsOverlay;
+	public IntHashSet vertexIsUnderlay;
 	public boolean[][][] skipTile;
 	public Int2IntHashMap vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
