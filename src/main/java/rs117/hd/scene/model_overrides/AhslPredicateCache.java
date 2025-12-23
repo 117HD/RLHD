@@ -1,5 +1,6 @@
 package rs117.hd.scene.model_overrides;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import rs117.hd.utils.collection.Int2IntHashMap;
@@ -12,13 +13,14 @@ public final class AhslPredicateCache implements ModelOverride.AhslPredicate {
 	private final ModelOverride.AhslPredicate predicate;
 
 	private int ageCounter = 0; // fits in 31 bits
-	private int lastAhsl = -1;
-	private boolean lastAhslResult;
 
-	private int getCachedResult(int ahsl) {
-		for (int r = 0; r < 100; r++) {
+	private int getCachedResult(final int ahsl) {
+		int i = 0;
+		while(true) {
 			final int s = seq.get();
 			if ((s & 1) != 0) {
+				if(i++ > 100) break; // Exceeded wait
+
 				Thread.onSpinWait();
 				continue;
 			}
@@ -79,17 +81,12 @@ public final class AhslPredicateCache implements ModelOverride.AhslPredicate {
 
 	@Override
 	public boolean test(int ahsl) {
-		if (ahsl == lastAhsl)
-			return lastAhslResult;
-
-		lastAhsl = ahsl;
-
-		int cached = getCachedResult(ahsl);
+		final int cached = getCachedResult(ahsl);
 		if (cached != -1)
-			return lastAhslResult = cached == 1;
+			return cached == 1;
 
-		boolean result = predicate.test(ahsl);
+		final boolean result = predicate.test(ahsl);
 		putCachedResult(ahsl, result);
-		return lastAhslResult = result;
+		return result;
 	}
 }
