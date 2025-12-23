@@ -18,6 +18,7 @@ public final class IntHashSet implements Iterable<Integer> {
 	private int[] keys;
 	private int size;
 	private int mask;
+	private volatile long lastRead; // high 32 bits = key, low 32 bits = idx
 
 	public IntHashSet() {
 		this(DEFAULT_CAPACITY, DEFAULT_GROWTH);
@@ -79,14 +80,23 @@ public final class IntHashSet implements Iterable<Integer> {
 	}
 
 	private int findIndex(int key) {
+		final long lastRead = this.lastRead;
+		if((lastRead & 0xFFFFFFFFL) == key)
+			return (int) (lastRead >> 32);
+
+		final int[] keys = this.keys;
+		final int mask = this.mask;
+
 		int idx = murmurHash3(key) & mask;
 		int currentKey;
-
 		while ((currentKey = keys[idx]) != EMPTY) {
-			if (currentKey == key)
+			if (currentKey == key) {
+				this.lastRead = ((long)idx << 32) | (key & 0xFFFFFFFFL);
 				return idx;
+			}
 			idx = (idx + 1) & mask;
 		}
+
 		return -1;
 	}
 
