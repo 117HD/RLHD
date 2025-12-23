@@ -25,7 +25,11 @@
 package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -95,6 +99,11 @@ public class SceneUploader {
 	private short[][][] underlayIds;
 	private int[][][] tileHeights;
 
+	// GameObject cache to prevent changes between estimate & upload
+	private final List<GameObject> gameObjectCache = new ArrayList<>();
+	private final Map<Tile, Long> tileToGameObjectsRange = new HashMap<>();
+	private final Map<Renderable, Model> renderableModelCache = new HashMap<>();
+
 	private final int[] worldPos = new int[3];
 	private final int[][] vertices = new int[4][3];
 	private final int[] vertexKeys = new int[4];
@@ -131,6 +140,10 @@ public class SceneUploader {
 		underlayIds = null;
 		tileHeights = null;
 		currentScene = null;
+
+		gameObjectCache.clear();
+		tileToGameObjectsRange.clear();
+		renderableModelCache.clear();
 	}
 
 	protected void onBeforeProcessTile(Tile t, boolean isEstimate) {}
@@ -379,6 +392,7 @@ public class SceneUploader {
 				estimateRenderableSize(z, groundObject.getRenderable(), modelOverride);
 		}
 
+		int gameObjectsCacheStart = gameObjectCache.size();
 		GameObject[] gameObjects = t.getGameObjects();
 		for (GameObject gameObject : gameObjects) {
 			if (gameObject == null || !gameObject.getSceneMinLocation().equals(t.getSceneLocation()))
@@ -391,8 +405,10 @@ public class SceneUploader {
 			if (modelOverride.hide)
 				continue;
 
-			estimateRenderableSize(z, gameObject.getRenderable(), modelOverride);
+			if(estimateRenderableSize(z, gameObject.getRenderable(), modelOverride))
+				gameObjectCache.add(gameObject);
 		}
+		tileToGameObjectsRange.put(t, gameObjectsCacheStart | ((long) gameObjectCache.size() << 32));
 
 		Tile bridge = t.getBridge();
 		if (bridge != null)
@@ -565,8 +581,11 @@ public class SceneUploader {
 			);
 		}
 
-		GameObject[] gameObjects = t.getGameObjects();
-		for (GameObject gameObject : gameObjects) {
+		long packedStartEnd = tileToGameObjectsRange.get(t);
+		int gameObjectsCacheStart = (int) packedStartEnd;
+		int gameObjectsCacheEnd = (int) (packedStartEnd >> 32);
+		for (int i = gameObjectsCacheStart; i < gameObjectsCacheEnd; i++) {
+			final GameObject gameObject = gameObjectCache.get(i);
 			if (gameObject == null || !renderCallbackManager.drawObject(ctx.scene, gameObject))
 				continue;
 
@@ -598,7 +617,7 @@ public class SceneUploader {
 		}
 	}
 
-	private void estimateRenderableSize(Zone z, Renderable r, ModelOverride modelOverride) {
+	private boolean estimateRenderableSize(Zone z, Renderable r, ModelOverride modelOverride) {
 		boolean mightHaveTransparency = modelOverride.mightHaveTransparency;
 		Model m = null;
 		if (r instanceof Model) {
@@ -610,7 +629,7 @@ public class SceneUploader {
 				mightHaveTransparency = true;
 		}
 		if (m == null)
-			return;
+			return false;
 
 		int faceCount = m.getFaceCount();
 		byte[] transparencies = m.getFaceTransparencies();
@@ -621,6 +640,8 @@ public class SceneUploader {
 			z.sizeO += faceCount;
 			z.sizeA += faceCount;
 		}
+		renderableModelCache.put(r, m);
+		return true;
 	}
 
 	private void uploadZoneRenderable(
@@ -642,16 +663,7 @@ public class SceneUploader {
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
-		Model model = null;
-		if (r instanceof Model) {
-			model = (Model) r;
-		} else if (r instanceof DynamicObject) {
-			var dynamic = (DynamicObject) r;
-			model = dynamic.getModelZbuf();
-			var composition = dynamic.getRecordedObjectComposition();
-			if (composition != null)
-				uuid = ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, composition.getId());
-		}
+		Model model = renderableModelCache.get(r);
 		if (model == null)
 			return;
 
