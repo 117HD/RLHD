@@ -23,10 +23,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#include VERSION_HEADER
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
+#include <uniforms/zone_data.glsl>
+#include <buffers/model_data.glsl>
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
@@ -34,25 +36,54 @@ layout (location = 2) in vec3 vNormal;
 layout (location = 3) in int vAlphaBiasHsl;
 layout (location = 4) in int vMaterialData;
 layout (location = 5) in int vTerrainData;
-layout (location = 6) in int vWorldViewId;
-layout (location = 7) in ivec2 vSceneBase;
+layout (location = 6) in int vPackedZoneAndModelIdx;
+
+#include <utils/misc.glsl>
 
 out vec3 gPosition;
 out vec3 gUv;
 out vec3 gNormal;
+out vec3 gSceneOffset;
 out int gAlphaBiasHsl;
 out int gMaterialData;
 out int gTerrainData;
 out int gWorldViewId;
+out vec2 gFade;
 
 void main() {
-    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-    mat4 worldViewProjection = getWorldViewProjection(vWorldViewId);
-    gPosition = vec3(worldViewProjection * vec4(sceneOffset + vPosition, 1));
+    int worldViewId = 0;
+    vec3 sceneOffset = vec3(0.0);
+    vec2 fade = vec2(0.0);
+
+#if ZONE_RENDERER
+    int zoneIdx = vPackedZoneAndModelIdx & 0xFFF;
+    int modelIdx = (vPackedZoneAndModelIdx >> 12) & 0xFFFFF;
+
+    if(zoneIdx > 0) {
+        worldViewId = getZoneWorldViewIdx(zoneIdx);
+        sceneOffset = getZoneSceneOffset(zoneIdx);
+        fade.x = getZoneReveal(zoneIdx);
+    }
+
+    if(modelIdx > 0) {
+        ModelData modelData = getModelData(modelIdx);
+        if(!isStaticModel(modelData)) {
+            sceneOffset = vec3(0.0);
+        }
+
+        if(isDetailModel(modelData)) {
+            getDetailCullingFade(modelData, sceneOffset, fade.y);
+        }
+    }
+#endif
+
+    gPosition = vec3(getWorldViewProjection(worldViewId) * vec4(sceneOffset + vPosition, 1));
     gUv = vUv;
-    gNormal = mat3(worldViewProjection) * vNormal;
+    gNormal = vNormal;
+    gSceneOffset = sceneOffset;
     gAlphaBiasHsl = vAlphaBiasHsl;
     gMaterialData = vMaterialData;
     gTerrainData = vTerrainData;
-    gWorldViewId = vWorldViewId;
+    gWorldViewId = worldViewId;
+    gFade = fade;
 }

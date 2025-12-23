@@ -51,7 +51,7 @@ void sampleDisplacementMap(
     const float minLayers = 1;
     const float maxLayers = 16;
     float cosView = normalize(tsViewDir).z;
-    float numLayers = mix(minLayers, maxLayers, 1 - clamp(cosView * cosView, 0, 1));
+    float numLayers = mix(minLayers, maxLayers, 1.0 - clamp(cosView * cosView, 0.0, 1.0));
     float heightPerLayer = 1. / numLayers;
 
     vec2 deltaXyPerZ = tsViewDir.xy / tsViewDir.z * scale;

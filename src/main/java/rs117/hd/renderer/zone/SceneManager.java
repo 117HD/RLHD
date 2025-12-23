@@ -19,7 +19,9 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.opengl.uniforms.UBOWorldViews;
+import rs117.hd.opengl.buffer.storage.SSBOModelData;
+import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
+import rs117.hd.opengl.buffer.uniforms.UBOZoneData;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
@@ -78,11 +80,13 @@ public class SceneManager {
 	@Inject
 	private FrameTimer frameTimer;
 
-	private UBOWorldViews uboWorldViews;
+	protected SSBOModelData ssboModelData;
+	protected UBOWorldViews uboWorldViews;
+	protected UBOZoneData uboZoneData;
 
 	private final Map<Integer, Integer> nextRoofChanges = new HashMap<>();
 	@Getter
-	private final WorldViewContext root = new WorldViewContext(this, null, null, null);
+	private final WorldViewContext root = new WorldViewContext(this, null, null);
 	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
 	private final List<SortedZone> sortedZones = new ArrayList<>();
 	private ZoneSceneContext nextSceneContext;
@@ -123,8 +127,10 @@ public class SceneManager {
 		return root;
 	}
 
-	public void initialize(UBOWorldViews uboWorldViews) {
+	public void initialize(SSBOModelData ssboModelData, UBOWorldViews uboWorldViews, UBOZoneData uboZoneData) {
+		this.ssboModelData = ssboModelData;
 		this.uboWorldViews = uboWorldViews;
+		this.uboZoneData = uboZoneData;
 	}
 
 	public void destroy() {
@@ -142,6 +148,7 @@ public class SceneManager {
 			nextSceneContext.destroy();
 		nextSceneContext = null;
 
+		uboZoneData = null;
 		uboWorldViews = null;
 	}
 
@@ -533,8 +540,9 @@ public class SceneManager {
 					if (!zone.initialized) {
 						float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 						if (!staggerLoad || dist < ZONE_DEFER_DIST_START) {
+							zone.revealTime = -1.0f;
 							ZoneUploadJob
-								.build(ctx, nextSceneContext, zone, true, x, z)
+								.build(uboZoneData, ssboModelData, ctx, nextSceneContext, zone, true, x, z)
 								.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 							nextSceneContext.totalMapZones++;
 						} else {
@@ -550,14 +558,15 @@ public class SceneManager {
 				newZone.dirty = sorted.zone.dirty;
 				if (staggerLoad) {
 					// Reuse the old zone while uploading a correct one
+					newZone.revealTime = sorted.zone.revealTime;
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
-						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z);
+						.build(uboZoneData, ssboModelData, ctx, nextSceneContext, newZone, false, sorted.x, sorted.z);
 					sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
-						.build(ctx, nextSceneContext, newZone, true, sorted.x, sorted.z)
+						.build(uboZoneData, ssboModelData, ctx, nextSceneContext, newZone, false, sorted.x, sorted.z)
 						.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 				}
 				sorted.free();
@@ -659,7 +668,7 @@ public class SceneManager {
 				if (preZone.cull)
 					root.pendingCull.add(preZone);
 
-				nextZone.setMetadata(ctx, nextSceneContext, x, z);
+				nextZone.setWorldViewAndOffset(ctx, nextSceneContext, x, z);
 			}
 		}
 
@@ -708,14 +717,15 @@ public class SceneManager {
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
 		proceduralGenerator.generateSceneData(sceneContext);
 
-		final WorldViewContext ctx = new WorldViewContext(this, worldView, sceneContext, uboWorldViews);
+		final WorldViewContext ctx = new WorldViewContext(this, worldView, sceneContext);
 		subs[worldViewId] = ctx;
 
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
 				ZoneUploadJob
-					.build(ctx, sceneContext, ctx.zones[x][z], true, x, z)
+					.build(uboZoneData, ssboModelData, ctx, sceneContext, ctx.zones[x][z], true, x, z)
 					.queue(ctx.sceneLoadGroup);
+
 
 		ctx.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 	}
@@ -728,7 +738,6 @@ public class SceneManager {
 		Stopwatch sw = Stopwatch.createStarted();
 		ctx.sceneLoadGroup.complete();
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
-		ctx.initMetadata();
 		ctx.isLoading = false;
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		log.debug("swapSubScene time {} WorldView ready: {}", ctx.sceneSwapTime, scene.getWorldViewId());

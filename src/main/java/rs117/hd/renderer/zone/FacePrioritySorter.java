@@ -50,6 +50,8 @@ class FacePrioritySorter {
 	static final char[] distanceFaceCount;
 	static final char[][] distanceToFaces;
 
+	private static final int[] STAGING_VERTEX_DATA = new int[30];
+
 	private static final float[] modelProjectedX;
 	private static final float[] modelProjectedY;
 
@@ -126,6 +128,8 @@ class FacePrioritySorter {
 		int x,
 		int y,
 		int z,
+		int zoneIdx,
+		int modelOffset,
 		IntBuffer opaqueBuffer,
 		IntBuffer alphaBuffer
 	) {
@@ -222,7 +226,7 @@ class FacePrioritySorter {
 					final char[] faces = distanceToFaces[i];
 					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
 						final int face = faces[faceIdx];
-						len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+						len += pushFace(model, modelOverride, preOrientation, face, zoneIdx, modelOffset, opaqueBuffer, alphaBuffer);
 					}
 				}
 			}
@@ -278,7 +282,7 @@ class FacePrioritySorter {
 			for (int pri = 0; pri < 10; ++pri) {
 				while (pri == 0 && currFaceDistance > avg12) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, zoneIdx, modelOffset, opaqueBuffer, alphaBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -292,7 +296,7 @@ class FacePrioritySorter {
 
 				while (pri == 3 && currFaceDistance > avg34) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, zoneIdx, modelOffset, opaqueBuffer, alphaBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -306,7 +310,7 @@ class FacePrioritySorter {
 
 				while (pri == 5 && currFaceDistance > avg68) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, zoneIdx, modelOffset, opaqueBuffer, alphaBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -323,13 +327,13 @@ class FacePrioritySorter {
 
 				for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
 					final int face = priFaces[faceIdx];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, zoneIdx, modelOffset, opaqueBuffer, alphaBuffer);
 				}
 			}
 
 			while (currFaceDistance != -1000) {
 				final int face = dynFaces[drawnFaces++];
-				len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+				len += pushFace(model, modelOverride, preOrientation, face, zoneIdx, modelOffset, opaqueBuffer, alphaBuffer);
 
 				if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 					drawnFaces = 0;
@@ -350,6 +354,8 @@ class FacePrioritySorter {
 		ModelOverride modelOverride,
 		int preOrientation,
 		int face,
+		int zoneIdx,
+		int modelOffset,
 		IntBuffer opaqueBuffer,
 		IntBuffer alphaBuffer
 	) {
@@ -585,10 +591,10 @@ class FacePrioritySorter {
 
 				// Rotate normals
 				for (int i = 0; i < 9; i += 3) {
-					int x = modelNormals[i];
-					int z = modelNormals[i + 2];
-					modelNormals[i] = z * orientSin + x * orientCos >> 16;
-					modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
+					int x = faceNormals[i];
+					int z = faceNormals[i + 2];
+					faceNormals[i] = z * orientSin + x * orientCos >> 16;
+					faceNormals[i + 2] = z * orientCos - x * orientSin >> 16;
 				}
 			}
 		} else {
@@ -599,24 +605,24 @@ class FacePrioritySorter {
 			bias == null ? 0 : bias[face] & 0xFF;
 		int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 		boolean hasAlpha = material.hasTransparency || transparency != 0;
-		var vb = hasAlpha ? alphaBuffer : opaqueBuffer;
+		IntBuffer vb = hasAlpha ? alphaBuffer : opaqueBuffer;
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 			modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-			faceNormals[0], faceNormals[1], faceNormals[2], 0
+			faceNormals[0], faceNormals[1], faceNormals[2], 0, zoneIdx, modelOffset
 		);
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 			modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-			faceNormals[3], faceNormals[4], faceNormals[5], 0
+			faceNormals[3], faceNormals[4], faceNormals[5], 0, zoneIdx, modelOffset
 		);
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 			modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-			faceNormals[6], faceNormals[7], faceNormals[8], 0
+			faceNormals[6], faceNormals[7], faceNormals[8], 0, zoneIdx, modelOffset
 		);
 		return 3;
 	}

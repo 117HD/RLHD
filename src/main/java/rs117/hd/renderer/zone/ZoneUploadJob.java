@@ -4,6 +4,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.opengl.buffer.storage.SSBOModelData;
+import rs117.hd.opengl.buffer.uniforms.UBOZoneData;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -15,6 +17,7 @@ public final class ZoneUploadJob extends Job {
 	private static final ThreadLocal<ZoneUploader> THREAD_LOCAL_SCENE_UPLOADER =
 		ThreadLocal.withInitial(() -> getInjector().getInstance(ZoneUploader.class));
 
+
 	private static class ZoneUploader extends SceneUploader {
 		ZoneUploadJob job;
 
@@ -25,6 +28,8 @@ public final class ZoneUploadJob extends Job {
 		}
 	}
 
+	private UBOZoneData uboZoneData;
+	private SSBOModelData ssboModelData;
 	private WorldViewContext viewContext;
 	private ZoneSceneContext sceneContext;
 
@@ -42,6 +47,10 @@ public final class ZoneUploadJob extends Job {
 			sceneUploader.job = this;
 			sceneUploader.setScene(sceneContext.scene);
 			sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
+
+			zone.zoneData = uboZoneData.acquire();
+			zone.zoneData.reveal.set(zone.revealTime > 0.0f ? 1.0f : 0.0f);
+			zone.setWorldViewAndOffset(viewContext, sceneContext, x, z);
 
 			if (zone.sizeO > 0 || zone.sizeA > 0) {
 				workerHandleCancel();
@@ -79,7 +88,10 @@ public final class ZoneUploadJob extends Job {
 			}
 
 			zone.initialize(o, a, eboAlpha);
-			zone.setMetadata(viewContext, sceneContext, x, z);
+
+			if (zone.modelCount > 0) {
+				zone.modelDataSlice = ssboModelData.obtainSlice(zone.modelCount);
+			}
 		} catch (Throwable ex) {
 			log.warn(
 				"Caught exception whilst processing zone [{}, {}] worldId [{}] group priority [{}] cancelling...\n",
@@ -114,6 +126,8 @@ public final class ZoneUploadJob extends Job {
 	}
 
 	public static ZoneUploadJob build(
+		UBOZoneData uboZoneData, 
+		SSBOModelData ssboModelData,
 		WorldViewContext viewContext,
 		ZoneSceneContext sceneContext,
 		Zone zone,
@@ -129,6 +143,8 @@ public final class ZoneUploadJob extends Job {
 		ZoneUploadJob newTask = POOL.poll();
 		if (newTask == null)
 			newTask = new ZoneUploadJob();
+		newTask.uboZoneData = uboZoneData;
+		newTask.ssboModelData = ssboModelData;
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
 		newTask.zone = zone;

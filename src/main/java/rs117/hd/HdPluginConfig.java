@@ -37,6 +37,7 @@ import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.FadeType;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
@@ -840,6 +841,17 @@ public interface HdPluginConfig extends Config
 	)
 	default ColorFilter colorFilter() {
 		return ColorFilter.NONE;
+	}
+
+	String KEY_FADE_TYPE = "fadeType";
+	@ConfigItem(
+		keyName = KEY_FADE_TYPE,
+		name = "Fade Type",
+		description = "",
+		section = miscellaneousSettings
+	)
+	default FadeType fadeType() {
+		return FadeType.ALPHA;
 	}
 
 	String KEY_REMOVE_VERTEX_SNAPPING = "removeVertexSnapping";

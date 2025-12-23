@@ -65,7 +65,7 @@ float3 applyCharacterDisplacement(
     float* offsetAccum
 );
 void applyWindDisplacement(
-    __constant struct UBOCompute *uni,
+    __constant struct UBODisplacement *uniDis,
     const struct ObjectWindSample windSample,
     int vertexFlags,
     float modelHeight,
@@ -84,6 +84,7 @@ void sort_and_insert(
   __global struct UVData *uvout,
   __global float4 *normalout,
   __constant struct UBOCompute *uni,
+  __constant struct UBODisplacement *uniDis,
   uint localId,
   struct ModelInfo minfo,
   int thisPriority,
@@ -387,7 +388,7 @@ float getModelWindDisplacementMod(int vertexFlags) {
 }
 
 void applyWindDisplacement(
-    __constant struct UBOCompute *uni,
+    __constant struct UBODisplacement *uniDis,
     const struct ObjectWindSample windSample,
     int vertexFlags,
     float modelHeight,
@@ -423,9 +424,9 @@ void applyWindDisplacement(
         float2 snappedB = (floor(vertB.xz / VertexSnapping + 0.5f) * VertexSnapping);
         float2 snappedC = (floor(vertC.xz / VertexSnapping + 0.5f) * VertexSnapping);
 
-        float windNoiseA = mix(-0.5f, 0.5f, noise((snappedA + (float2)(uni->windOffset, 0.0f)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-        float windNoiseB = mix(-0.5f, 0.5f, noise((snappedB + (float2)(uni->windOffset, 0.0f)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-        float windNoiseC = mix(-0.5f, 0.5f, noise((snappedC + (float2)(uni->windOffset, 0.0f)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseA = mix(-0.5f, 0.5f, noise((snappedA + (float2)(uniDis->windOffset, 0.0f)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseB = mix(-0.5f, 0.5f, noise((snappedB + (float2)(uniDis->windOffset, 0.0f)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseC = mix(-0.5f, 0.5f, noise((snappedC + (float2)(uniDis->windOffset, 0.0f)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
         if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND) {
             const float minDist = 50.0f;
@@ -487,10 +488,10 @@ void applyWindDisplacement(
         float2 worldVertC = (worldPos + vertC).xz;
 
         float fractAccum = 0.0f;
-        for (int i = 0; i < uni->characterPositionCount; i++) {
-            *displacementA += applyCharacterDisplacement(uni->characterPositions[i], worldVertA, modelHeight, strengthA, &fractAccum);
-            *displacementB += applyCharacterDisplacement(uni->characterPositions[i], worldVertB, modelHeight, strengthB, &fractAccum);
-            *displacementC += applyCharacterDisplacement(uni->characterPositions[i], worldVertC, modelHeight, strengthC, &fractAccum);
+        for (int i = 0; i < uniDis->characterPositionCount; i++) {
+            *displacementA += applyCharacterDisplacement(uniDis->characterPositions[i], worldVertA, modelHeight, strengthA, &fractAccum);
+            *displacementB += applyCharacterDisplacement(uniDis->characterPositions[i], worldVertB, modelHeight, strengthB, &fractAccum);
+            *displacementC += applyCharacterDisplacement(uniDis->characterPositions[i], worldVertC, modelHeight, strengthC, &fractAccum);
             if (fractAccum >= 2.0f) break;
         }
     }
@@ -507,6 +508,7 @@ void sort_and_insert(
   __global struct UVData *uvout,
   __global float4 *normalout,
   __constant struct UBOCompute *uni,
+  __constant struct UBODisplacement *uniDis,
   uint localId,
   struct ModelInfo minfo,
   int thisPriority,
@@ -557,7 +559,7 @@ void sort_and_insert(
     float3 displacementB = (float3)(0);
     float3 displacementC = (float3)(0);
 
-    applyWindDisplacement(uni, windSample, vertexFlags, modelHeight, pos.xyz,
+    applyWindDisplacement(uniDis, windSample, vertexFlags, modelHeight, pos.xyz,
         vertA.xyz, vertB.xyz, vertC.xyz,
         normA.xyz, normB.xyz, normC.xyz,
         &displacementA, &displacementB, &displacementC);

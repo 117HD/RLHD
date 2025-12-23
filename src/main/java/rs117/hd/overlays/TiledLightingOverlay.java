@@ -11,7 +11,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
+import static rs117.hd.opengl.GLBinding.BINDING_IMG_TILE_LIGHTING_MAP;
 
 @Slf4j
 @Singleton
@@ -25,7 +25,7 @@ public class TiledLightingOverlay extends ShaderOverlay<TiledLightingOverlay.Sha
 
 		@Override
 		protected void initialize() {
-			uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
+			uniTiledLightingTextureArray.set(BINDING_IMG_TILE_LIGHTING_MAP);
 		}
 	}
 
