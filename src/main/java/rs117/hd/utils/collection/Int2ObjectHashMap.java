@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 import lombok.Setter;
 import rs117.hd.utils.HDUtils;
 
+import static rs117.hd.utils.HashUtil.murmurHash3;
 import static rs117.hd.utils.MathUtils.*;
 
 public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.Entry<T>> {
@@ -53,10 +54,6 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 		this.mask = keys.length - 1;
 	}
 
-	private int hash(int key) {
-		return key & mask;
-	}
-
 	private void resize() {
 		int newCapacity = (int) HDUtils.ceilPow2(max((int)(keys.length * growthFactor), keys.length + 1));
 		int[] oldKeys = keys;
@@ -80,9 +77,10 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 	public boolean putIfAbsent(int key, T value) { return put(key, value, false); }
 
 	private boolean put(int key, T value, boolean overwrite) {
-		int idx = hash(key);
-		while (keys[idx] != EMPTY) {
-			if (keys[idx] == key) {
+		int idx = murmurHash3(key) & mask;
+		int currentKey;
+		while ((currentKey = keys[idx]) != EMPTY) {
+			if (currentKey == key) {
 				if(overwrite)
 					values[idx] = value;
 				return false;
@@ -100,9 +98,11 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 	}
 
 	public int findIndex(int key) {
-		int idx = hash(key);
-		while (keys[idx] != EMPTY) {
-			if (keys[idx] == key) return idx;
+		int idx = murmurHash3(key) & mask;
+		int currentKey;
+		while ((currentKey = keys[idx]) != EMPTY) {
+			if (currentKey == key)
+				return idx;
 			idx = (idx + 1) & mask;
 		}
 		return -1;
@@ -140,7 +140,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 			int nextIdx = (lastIdx + 1) & mask;
 			if (keys[nextIdx] == EMPTY) break;
 
-			int idealIdx = hash(keys[nextIdx]);
+			int idealIdx = murmurHash3(keys[nextIdx]) & mask;
 			if ((nextIdx > lastIdx && (idealIdx <= lastIdx || idealIdx > nextIdx)) ||
 				(nextIdx < lastIdx && (idealIdx <= lastIdx && idealIdx > nextIdx))) {
 				keys[lastIdx] = keys[nextIdx];

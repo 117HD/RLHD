@@ -3,6 +3,7 @@ package rs117.hd.utils.collection;
 import java.util.Arrays;
 import rs117.hd.utils.HDUtils;
 
+import static rs117.hd.utils.HashUtil.murmurHash3;
 import static rs117.hd.utils.MathUtils.*;
 
 public final class Int2IntHashMap {
@@ -10,10 +11,11 @@ public final class Int2IntHashMap {
 	private static final float DEFAULT_GROWTH = 1.5f;
 	private static final int EMPTY = Integer.MIN_VALUE;
 
+	private final float growthFactor;
+
 	private int[] keys;
 	private int[] values;
 	private int size;
-	private final float growthFactor;
 	private int mask;
 
 	public Int2IntHashMap() {
@@ -31,10 +33,6 @@ public final class Int2IntHashMap {
 		this.growthFactor = growthFactor;
 		this.size = 0;
 		this.mask = keys.length - 1;
-	}
-
-	private int hash(int key) {
-		return key & mask;
 	}
 
 	private void resize() {
@@ -62,9 +60,10 @@ public final class Int2IntHashMap {
 	public boolean putIfAbsent(int key, int value) { return put(key, value, false); }
 
 	private boolean put(int key, int value, boolean overwrite) {
-		int idx = hash(key);
-		while (keys[idx] != EMPTY) {
-			if (keys[idx] == key) {
+		int idx = murmurHash3(key) & mask;
+		int currentKey;
+		while ((currentKey = keys[idx]) != EMPTY) {
+			if (currentKey == key) {
 				if(overwrite)
 					values[idx] = value;
 				return false;
@@ -82,9 +81,11 @@ public final class Int2IntHashMap {
 	}
 
 	public int findIndex(int key) {
-		int idx = hash(key);
-		while (keys[idx] != EMPTY) {
-			if (keys[idx] == key) return idx;
+		int idx = murmurHash3(key) & mask;
+		int currentKey;
+		while ((currentKey = keys[idx]) != EMPTY) {
+			if (currentKey == key)
+				return idx;
 			idx = (idx + 1) & mask;
 		}
 		return -1;
@@ -119,7 +120,7 @@ public final class Int2IntHashMap {
 			int nextIdx = (lastIdx + 1) & mask;
 			if (keys[nextIdx] == EMPTY) break;
 
-			int idealIdx = hash(keys[nextIdx]);
+			int idealIdx = murmurHash3(keys[nextIdx]) & mask;
 			if ((nextIdx > lastIdx && (idealIdx <= lastIdx || idealIdx > nextIdx)) ||
 				(nextIdx < lastIdx && (idealIdx <= lastIdx && idealIdx > nextIdx))) {
 				keys[lastIdx] = keys[nextIdx];
