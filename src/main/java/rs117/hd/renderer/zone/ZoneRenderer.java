@@ -1050,26 +1050,16 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
-
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
-		VAO o = vaoO.get(size, ctx.vboM);
 
 		boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
 		if (hasAlpha) {
-			VAO a = vaoA.get(size, ctx.vboM);
-			int start = a.vbo.vb.position();
-
-			if (zone.inSceneFrustum) {
-				try {
-					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
-				} catch (Exception ex) {
-					log.debug("error drawing entity", ex);
-				}
-
-				if (plugin.configShadowsEnabled) {
+			GenericJob shadowUploadTask = null;
+			VAO vao = vaoShadow.get(size, ctx.vboM);
+			if(zone.inSceneFrustum && plugin.configShadowsEnabled) {
+				shadowUploadTask = GenericJob.build("uploadTempModel", (t) -> {
 					// Since priority sorting of models includes back-face culling,
 					// we need to upload the entire model again for shadows
-					VAO vao = vaoShadow.get(size, ctx.vboM);
 					sceneUploader.uploadTempModel(
 						m,
 						modelOverride,
@@ -1079,6 +1069,18 @@ public class ZoneRenderer implements Renderer {
 						vao.vbo.vb,
 						vao.vbo.vb
 					);
+				}).queue(true);
+			}
+
+			VAO o = vaoO.get(size, ctx.vboM);
+			VAO a = vaoA.get(size, ctx.vboM);
+			int start = a.vbo.vb.position();
+
+			if (zone.inSceneFrustum) {
+				try {
+					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+				} catch (Exception ex) {
+					log.debug("error drawing entity", ex);
 				}
 			} else {
 				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
@@ -1092,7 +1094,13 @@ public class ZoneRenderer implements Renderer {
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
 				zone.addTempAlphaModel(modelOverride, a.vao, start, end, plane, x & 1023, y, z & 1023);
 			}
+
+			if(shadowUploadTask != null) {
+				shadowUploadTask.waitForCompletion();
+				shadowUploadTask.release();
+			}
 		} else {
+			VAO o = vaoO.get(size, ctx.vboM);
 			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
 		}
 	}

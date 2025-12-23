@@ -2,9 +2,8 @@ package rs117.hd.utils.jobs;
 
 import com.google.inject.Injector;
 import java.util.HashMap;
+import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -14,6 +13,7 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimer;
+import rs117.hd.utils.MPMCCircularBuffer;
 
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.utils.MathUtils.*;
@@ -43,7 +43,7 @@ public final class JobSystem {
 
 	private final int workerCount = max(2, PROCESSOR_COUNT - 1);
 
-	final BlockingDeque<JobHandle> workQueue = new LinkedBlockingDeque<>();
+	final MPMCCircularBuffer<JobHandle> workQueue = new MPMCCircularBuffer<>(1024);
 	private final ArrayBlockingQueue<ClientCallbackJob> clientCallbacks = new ArrayBlockingQueue<>(workerCount);
 
 	private final HashMap<Thread, Worker> threadToWorker = new HashMap<>();
@@ -91,7 +91,7 @@ public final class JobSystem {
 		return workQueue.size();
 	}
 
-	private void cancelAllWork(BlockingDeque<JobHandle> queue) {
+	private void cancelAllWork(Queue<JobHandle> queue) {
 		JobHandle handle;
 		while ((handle = queue.poll()) != null) {
 			try {
@@ -204,13 +204,8 @@ public final class JobSystem {
 		item.ranToCompletion.set(false);
 
 		if (shouldQueue) {
-			newHandle.setInQueue();
 			if (VALIDATE) log.debug("Handle [{}] Added to queue (Dep Count: {{}})", newHandle, dependencies);
-			if (highPriority) {
-				workQueue.addFirst(newHandle);
-			} else {
-				workQueue.addLast(newHandle);
-			}
+			workQueue.offer(newHandle);
 		}
 
 		signalWorkAvailable(1);

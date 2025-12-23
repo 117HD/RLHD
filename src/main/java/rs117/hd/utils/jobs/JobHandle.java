@@ -19,10 +19,9 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	static JobSystem JOB_SYSTEM;
 
 	public static final int STATE_NONE = 0;
-	public static final int STATE_QUEUED = 1;
-	public static final int STATE_RUNNING = 2;
-	public static final int STATE_CANCELLED = 3;
-	public static final int STATE_COMPLETED = 4;
+	public static final int STATE_RUNNING = 1;
+	public static final int STATE_CANCELLED = 2;
+	public static final int STATE_COMPLETED = 3;
 
 	private static final String[] STATE_NAMES = { "NONE", "QUEUED", "RUNNING", "CANCELLED", "COMPLETED" };
 	private static final long DEADLOCK_TIMEOUT_SECONDS = 10;
@@ -123,18 +122,9 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		return false;
 	}
 
-	synchronized boolean setRunning(Worker worker) {
-		if (isInQueue()) {
-			setJobState(STATE_RUNNING);
-			this.worker = worker;
-			return true;
-		}
-		return false;
-	}
-
-	synchronized void setInQueue() {
-		assert isIdle() : "State should be NONE but is " + STATE_NAMES[jobState.getAcquire()];
-		setJobState(STATE_QUEUED);
+	synchronized void setRunning(Worker worker) {
+		setJobState(STATE_RUNNING);
+		this.worker = worker;
 	}
 
 	synchronized void setCompleted() throws InterruptedException {
@@ -161,15 +151,11 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 			}
 
 			if (dep.isIdle() && dep.depCount.decrementAndGet() == 0) {
-				dep.setInQueue();
 				if (VALIDATE)
 					log.debug("Handle [{}] Adding: [{}] to queue", this, dep);
 
-				if (dep.isHighPriority()) {
-					worker.localWorkQueue.addFirst(dep);
-				} else {
-					worker.localWorkQueue.addLast(dep);
-				}
+				if(!worker.localWorkQueue.offer(dep))
+					JOB_SYSTEM.workQueue.offer(dep);
 
 				queuedWork++;
 			}
@@ -221,7 +207,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 		if (VALIDATE) log.debug("Cancelling [{}] state: [{}]", this, STATE_NAMES[prevState]);
 
-		if (prevState == STATE_NONE || (prevState == STATE_QUEUED && JOB_SYSTEM.workQueue.remove(this))) {
+		if (prevState == STATE_NONE) {
 			setCompleted();
 			return;
 		}
@@ -235,7 +221,6 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 	boolean isReleased() { return isIdle() && refCounter.get() == 0; }
 	boolean isIdle() { return jobState.getAcquire() == STATE_NONE; }
-	boolean isInQueue() { return jobState.getAcquire() == STATE_QUEUED; }
 	boolean isCancelled() { return jobState.getAcquire() == STATE_CANCELLED; }
 	boolean isCompleted() { return jobState.getAcquire() == STATE_COMPLETED; }
 
