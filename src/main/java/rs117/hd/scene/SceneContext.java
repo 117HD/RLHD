@@ -15,6 +15,8 @@ import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.collection.Int2IntHashMap;
+import rs117.hd.utils.collection.Int2ObjectHashMap;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -55,20 +57,20 @@ public class SceneContext {
 	public int uniqueModels;
 
 	// Terrain data
-	public HashMap<Integer, Integer> vertexTerrainColor;
-	public HashMap<Integer, Material> vertexTerrainTexture;
-	public HashMap<Integer, int[]> vertexTerrainNormals;
+	public Int2IntHashMap vertexTerrainColor;
+	public Int2ObjectHashMap<Material> vertexTerrainTexture;
+	public Int2ObjectHashMap<int[]> vertexTerrainNormals;
 	// Used for overriding potentially low quality vertex colors
-	public HashMap<Integer, Boolean> highPriorityColor;
+	public Int2IntHashMap highPriorityColor;
 
 	// Water-related data
 	public boolean[][][] tileIsWater;
-	public HashMap<Integer, Boolean> vertexIsWater;
-	public HashMap<Integer, Boolean> vertexIsLand;
-	public HashMap<Integer, Boolean> vertexIsOverlay;
-	public HashMap<Integer, Boolean> vertexIsUnderlay;
+	public Int2IntHashMap vertexIsWater;
+	public Int2IntHashMap vertexIsLand;
+	public Int2IntHashMap vertexIsOverlay;
+	public Int2IntHashMap vertexIsUnderlay;
 	public boolean[][][] skipTile;
-	public HashMap<Integer, Integer> vertexUnderwaterDepth;
+	public Int2IntHashMap vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
 	// Thread safe tile override variables

@@ -25,7 +25,7 @@ public final class Int2IntHashMap {
 	}
 
 	public Int2IntHashMap(int initialCapacity, float growthFactor) {
-		keys = new int[(int) HDUtils.ceilPow2(initialCapacity)];
+		keys = new int[max((int) HDUtils.ceilPow2(initialCapacity), 16)];
 		values = new int[keys.length];
 		Arrays.fill(keys, EMPTY);
 		this.growthFactor = growthFactor;
@@ -55,17 +55,25 @@ public final class Int2IntHashMap {
 		}
 	}
 
-	public boolean put(int key, int value) {
-		if (size >= keys.length * 0.75f) resize();
+	public boolean add(int key) { return put(key, 1); }
 
+	public boolean put(int key, int value) { return put(key, value, true);}
+
+	public boolean putIfAbsent(int key, int value) { return put(key, value, false); }
+
+	private boolean put(int key, int value, boolean overwrite) {
 		int idx = hash(key);
 		while (keys[idx] != EMPTY) {
 			if (keys[idx] == key) {
-				values[idx] = value; // overwrite existing
+				if(overwrite)
+					values[idx] = value;
 				return false;
 			}
 			idx = (idx + 1) & mask; // fast wrap-around using bitmask
 		}
+
+		if ((size + 1) >= keys.length)
+			resize();
 
 		keys[idx] = key;
 		values[idx] = value;
@@ -130,7 +138,7 @@ public final class Int2IntHashMap {
 		size = 0;
 	}
 
-	public int size() {
-		return size;
-	}
+	public boolean isEmpty() { return size == 0;}
+
+	public int size() { return size; }
 }
