@@ -10160,6 +10160,16 @@
     "uvScale": 0.5
   },
   {
+    "description": "Icthlarins Cave",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "inheritTileColorType": "OVERLAY",
+    "objectIds": [
+      "ICTHAL_ENTRANCE_OPEN"
+    ]
+  },
+  {
     "description": "Motherlode Mine Water Wheel",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -20039,7 +20049,8 @@
       "ICTHALARINS_CITY_WALL",
       "ICTHALARINS_CITY_WALL_TABLET",
       "ICTHALARINS_CITY_WALL_LEV2",
-      "ICTHALARINS_CITY_WALL_TABLET_LEV2"
+      "ICTHALARINS_CITY_WALL_TABLET_LEV2",
+      "ICS_WALL_CRACK"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -24958,7 +24969,6 @@
     "description": "Ruins of Ullek - Walls - Pillars - Floors - Furnace - Well",
     "baseMaterial": "GRUNGE_3_LIGHT",
     "objectIds": [
-      "BCS_MAISA_CAMP_TENT_NOOP",
       "CLIFF_DESERT_WALLTOP",
       "CLIFF_DESERT_ROCK01",
       "CLIFF_DESERT_ROCK03",
@@ -24988,6 +24998,51 @@
       "BCS_PILLAR_EMBLEM_NOOP"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Ruins of Ullek - Camp Tent under stone roof",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wooden Posts",
+        "colors": "h == 7 ",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Tent",
+        "colors": "h >= 25 ",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Plant Stalk and leaves",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "BCS_MAISA_CAMP_TENT_NOOP"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek - Camp Barriers",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wooden Posts",
+        "colors": "h == 7 ",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "BCS_MAISA_CAMP_BARRIER_LONG",
+      "BCS_MAISA_CAMP_BARRIER_SHORT"
+    ]
   },
   {
     "description": "Ruins of Ullek - Ritual Pillar",
@@ -25157,22 +25212,34 @@
     "uvType": "BOX"
   },
   {
-
-    "description": "Maisa's Camp - Fire, Barriers, Spade, Table and Flowers",
+    "description": "Maisa's Camp - Fire, Spade, Table",
     "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
     "objectIds": [
-      "BCS_MAISA_CAMP_BARRIER_LONG",
-      "BCS_MAISA_CAMP_BARRIER_SHORT",
+      "BCS_MAISA_CAMP_TABLE",
+      "BCS_MAISA_CAMP_FIRE",
+      "BCS_SPADE"
+    ]
+  },
+  {
+    "description": "Maisa's Camp - Flowers",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Plant Stalk and leaves",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
       "PLANT_DESERT_MAISA_01",
       "PLANT_DESERT_MAISA_03",
       "PLANT_DESERT_MAISA_04",
       "PLANT_DESERT_MAISA_05",
-      "PLANT_DESERT_MAISA_06",
-      "BCS_MAISA_CAMP_TABLE",
-      "BCS_MAISA_CAMP_FIRE",
-      "BCS_SPADE"
-    ],
-    "uvType": "BOX"
+      "PLANT_DESERT_MAISA_06"
+    ]
   },
   {
     "description": "Rocks - Small",
