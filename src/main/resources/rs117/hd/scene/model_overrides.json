@@ -24968,15 +24968,9 @@
   {
     "description": "Ruins of Ullek - Walls - Pillars - Floors - Furnace - Well",
     "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
     "objectIds": [
       "CLIFF_DESERT_WALLTOP",
-      "CLIFF_DESERT_ROCK01",
-      "CLIFF_DESERT_ROCK03",
-      "OUTCROP_DESERT_ROCK1X103",
-      "OUTCROP_DESERT_ROCK1X102",
-      "OUTCROP_DESERT_ROCK1X1",
-      "OUTCROP_DESERT_ROCK2X202",
-      "OUTCROP_DESERT_ROCK2X2",
       "CLIFF_DESERT_ROCK01_NOTES",
       "CLIFF_DESERT_ROCK02",
       "CLIFF_DESERT_WALLTOP02",
@@ -24996,11 +24990,48 @@
       "CLIFF_DESERT_ROCK_DECORATIVE01",
       "BCS_FURNACE_LIT",
       "BCS_PILLAR_EMBLEM_NOOP"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
-    "description": "Ruins of Ullek - Camp Tent under stone roof",
+    "description": "Ruins of Ullek - Rocks with Sand",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h == 6",
+        "baseMaterial": "SAND_2",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "OUTCROP_DESERT_ROCK1X1",
+      "OUTCROP_DESERT_ROCK1X102",
+      "OUTCROP_DESERT_ROCK2X2",
+      "OUTCROP_DESERT_ROCK2X202",
+      "OUTCROP_DESERT_ROCK1X103"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek - Cliffs with Sand",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h == 6",
+        "baseMaterial": "SAND_2",
+        "uvType": "WORLD_XZ"
+      }
+    ],
+    "objectIds": [
+      "CLIFF_DESERT_ROCK01",
+      "CLIFF_DESERT_ROCK03"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek - Camp Tent under stone outcrop",
     "baseMaterial": "GRUNGE_3_LIGHT",
     "uvType": "BOX",
     "colorOverrides": [
@@ -25021,6 +25052,12 @@
         "colors": "h == 21",
         "baseMaterial": "LEAF_VEINS_LIGHT",
         "uvType": "BOX"
+      },
+      {
+        "description": "Sand",
+        "colors": "h == 6",
+        "baseMaterial": "SAND_2",
+        "uvType": "WORLD_XZ"
       }
     ],
     "objectIds": [
@@ -25235,6 +25272,7 @@
     ],
     "objectIds": [
       "PLANT_DESERT_MAISA_01",
+      "PLANT_DESERT_MAISA_02",
       "PLANT_DESERT_MAISA_03",
       "PLANT_DESERT_MAISA_04",
       "PLANT_DESERT_MAISA_05",
