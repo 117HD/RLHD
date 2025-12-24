@@ -156,7 +156,7 @@ class VAO {
 	static class VAOList {
 		// this needs to be larger than the largest single model
 		private static final int VAO_SIZE = (int) (4 * MiB);
-		private static final int TBO_SIZE = (VAO_SIZE / VERT_SIZE) * 9 * Integer.BYTES;
+		private static final int TBO_SIZE = ceil(VAO_SIZE / (float)VERT_SIZE / 3.0f) * 9 * Integer.BYTES;
 
 		private int curIdx;
 		private int drawCount;
