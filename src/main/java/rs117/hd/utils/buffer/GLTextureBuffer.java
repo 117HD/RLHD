@@ -86,6 +86,7 @@ public class GLTextureBuffer extends GLBuffer {
 			mappedBuffer = buf;
 			pixelBuffer = mappedBuffer.asIntBuffer();
 		}
+		pixelBuffer.position(0);
 
 		glBindBuffer(target, 0);
 		mapped = true;
