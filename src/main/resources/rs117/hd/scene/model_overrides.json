@@ -2324,7 +2324,7 @@
     ]
   },
   {
-    "description": "Tirannwn - Tents",
+    "description": "Tirannwn - Desert - Tents",
     "baseMaterial": "BURLAP",
     "objectIds": [
       "REGICIDE_DARKELF_TENTROOF",
@@ -2333,7 +2333,10 @@
       "REGICIDE_TENT_HUMAN",
       "REGICIDE_TENTROOF1_HUMAN",
       "REGICDE_TENTROOFCENTRE1",
-      "REGICIDE_TENTROOFCENTRE1"
+      "REGICIDE_TENTROOFCENTRE1",
+      "ICTHALARINS_TENTROOFCENTRE1",
+      "ICTHALARINS_TENTROOF1_HUMAN",
+      "ICTHALARINS_TENT_HUMAN"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -20739,10 +20742,48 @@
       "SOPHANEM_GATE_LEFT",
       "SOPHANEM_GATE_LEFT_INACTIVE",
       "SOPHANEM_GATE_RIGHT",
-      "SOPHANEM_GATE_RIGHT_INACTIVE"
+      "SOPHANEM_GATE_RIGHT_INACTIVE",
+      "CONTACT_METAL_RAIL"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Sophanem - Bank Table",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      "CONTACT_BANK_TABLE_01",
+      "CONTACT_BANK_TABLE_02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Sophanem - Bank Table",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 488,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "CONTACT_BANK_VAULT"
+    ]
   },
   {
     "description": "Necropolis ground objects - unused - none of these exist on the map",
@@ -24964,6 +25005,26 @@
       "DT_ANCIENT_LECTERN"
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Kharidian Dessert - Rocks with Sand",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h == 6",
+        "baseMaterial": "SAND_2",
+        "uvType": "WORLD_XZ",
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "ROCK_DESERT_09",
+      "ROCK_DESERT_10",
+      "ROCK_DESERT_11"
+    ]
   },
   {
     "description": "Ruins of Ullek - Walls - Pillars - Floors - Furnace - Well",
@@ -31653,7 +31714,8 @@
     "description": "Objects - Wooden - Private Bank Booth Destroyed",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "CONTACT_PRIVATE_BANK_BOOTH_BROKEN"
+      "CONTACT_PRIVATE_BANK_BOOTH_BROKEN",
+      "CONTACT_PRIVATE_BANK_BOOTH"
     ],
     "uvType": "BOX",
     "uvScale": 0.9,
