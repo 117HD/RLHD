@@ -1771,15 +1771,15 @@ public class SceneUploader {
 			int triangleC = indices3[face];
 
 			float vx1 = modelLocalX[triangleA];
-			float vy1 = modelLocalY[triangleA];
-			float vz1 = modelLocalZ[triangleA];
-
 			float vx2 = modelLocalX[triangleB];
-			float vy2 = modelLocalY[triangleB];
-			float vz2 = modelLocalZ[triangleB];
-
 			float vx3 = modelLocalX[triangleC];
+
+			float vy1 = modelLocalY[triangleA];
+			float vy2 = modelLocalY[triangleB];
 			float vy3 = modelLocalY[triangleC];
+
+			float vz1 = modelLocalZ[triangleA];
+			float vz2 = modelLocalZ[triangleB];
 			float vz3 = modelLocalZ[triangleC];
 
 			int textureFace = textureFaces != null ? textureFaces[face] : -1;
@@ -1843,13 +1843,15 @@ public class SceneUploader {
 			} else {
 				shouldRotateNormals = orientation != 0;
 				modelNormals[0] = xVertexNormals[triangleA];
-				modelNormals[1] = yVertexNormals[triangleA];
-				modelNormals[2] = zVertexNormals[triangleA];
 				modelNormals[3] = xVertexNormals[triangleB];
-				modelNormals[4] = yVertexNormals[triangleB];
-				modelNormals[5] = zVertexNormals[triangleB];
 				modelNormals[6] = xVertexNormals[triangleC];
+
+				modelNormals[1] = yVertexNormals[triangleA];
+				modelNormals[4] = yVertexNormals[triangleB];
 				modelNormals[7] = yVertexNormals[triangleC];
+
+				modelNormals[2] = zVertexNormals[triangleA];
+				modelNormals[5] = zVertexNormals[triangleB];
 				modelNormals[8] = zVertexNormals[triangleC];
 			}
 
