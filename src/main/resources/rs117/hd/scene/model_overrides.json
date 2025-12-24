@@ -9489,7 +9489,6 @@
       "DWARF_HUT_PIER_RAIL",
       "GOBLIN_OUTPOST_PIER_RAIL",
       "GOBLIN_OUTPOST_PIER_RAIL_BROKE",
-      "CONTACT_PIER_RAIL",
       "FAI_VARROCK_FENCE",
       "FAI_VARROCK_FENCE_JOIN",
       "FAI_VARROCK_FENCE_BROKEN",
@@ -9512,6 +9511,26 @@
     "flatNormals": true,
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Single row fences - Light",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Horizontal Planks",
+        "colors": "h ==6 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "flatNormals": true
+      }
+    ],
+    "objectIds": [
+      "CONTACT_PIER_RAIL"
+    ]
   },
   {
     "description": "Single row fences - End, joining wall",
@@ -10549,7 +10568,9 @@
       "SLUG2_BAITSHOP_LADDERTOP",
       "ATJUN_MINE_LADDER",
       "CONTACT_LADDER",
-      "CONTACT_LADDER_TOP"
+      "CONTACT_LADDER_TOP",
+      "CONTACT_LADDER_TWOFLOORS",
+      "CONTACT_LADDER_TOP_TWOFLOORS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
