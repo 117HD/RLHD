@@ -20893,6 +20893,43 @@
     ]
   },
   {
+    "description": "Sophanem - Stalls - Spice",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "description": "Cloth Covering",
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 256
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": [
+          "h == 0",
+          "h == 7 && s == 1",
+          "h == 8 && s == 7",
+          "h == 10 && s == 7"
+        ]
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "CONTACT_SPICEMARKET"
+    ]
+  },
+  {
     "description": "Sophanem - Wooden Cart with Canopy",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
