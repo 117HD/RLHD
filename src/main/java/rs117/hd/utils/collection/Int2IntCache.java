@@ -1,7 +1,7 @@
 package rs117.hd.utils.collection;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.StampedLock;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.HashUtil.murmurHash3;
@@ -15,15 +15,19 @@ public final class Int2IntCache {
 	private final int maxSize;
 	private final float growthFactor;
 
-	private final AtomicInteger seq = new AtomicInteger(); // even = stable, odd = write
+	private final StampedLock lock = new StampedLock();
 
 	private int[] keys;
 	private int[] values;
 	private int[] ages;
+	private int[] distances;
 
 	private int size;
 	private int mask;
 	private int ageCounter;
+
+	// high 32 bits = idx, low 32 bits = key
+	private volatile long lastRead;
 
 	public Int2IntCache(int initialCapacity, int maxSize) {
 		this(initialCapacity, maxSize, DEFAULT_GROWTH);
@@ -32,9 +36,10 @@ public final class Int2IntCache {
 	public Int2IntCache(int initialCapacity, int maxSize, float growthFactor) {
 		int cap = max((int) HDUtils.ceilPow2(initialCapacity), 16);
 
-		this.keys = new int[cap];
-		this.values = new int[cap];
-		this.ages = new int[cap];
+		keys = new int[cap];
+		values = new int[cap];
+		ages = new int[cap];
+		distances = new int[cap];
 
 		Arrays.fill(keys, EMPTY);
 
@@ -44,30 +49,28 @@ public final class Int2IntCache {
 	}
 
 	public int getOrDefault(int key, int defaultValue) {
-		int spins = 0;
-		while (true) {
-			final int s = seq.get();
-			if ((s & 1) != 0) {
-				if (spins++ > 100)
-					return defaultValue;
-				Thread.onSpinWait();
-				continue;
-			}
+		long stamp = lock.tryOptimisticRead();
+		int idx = findIndex(key);
 
-			final int idx = findIndex(key);
-			if (seq.get() != s)
-				continue;
-
-			if (idx >= 0) {
-				ages[idx] = ++ageCounter;
-				return values[idx];
+		if (!lock.validate(stamp)) {
+			stamp = lock.readLock();
+			try {
+				idx = findIndex(key);
+			} finally {
+				lock.unlockRead(stamp);
 			}
-			return defaultValue;
 		}
+
+		if (idx >= 0) {
+			ages[idx] = ++ageCounter;
+			return values[idx];
+		}
+
+		return defaultValue;
 	}
 
-	public synchronized void put(int key, int value) {
-		seq.incrementAndGet(); // write start
+	public void put(int key, int value) {
+		long stamp = lock.writeLock();
 		try {
 			normalizeAgesIfNeeded();
 
@@ -80,40 +83,77 @@ public final class Int2IntCache {
 
 			if (size > maxSize)
 				evictOldest();
-
 		} finally {
-			seq.incrementAndGet(); // write end
+			lock.unlockWrite(stamp);
 		}
 	}
 
 	private int findIndex(int key) {
-		final int[] keys = this.keys;
-		final int mask = this.mask;
+		final long lastRead = this.lastRead;
+		if ((int) lastRead == key)
+			return (int) (lastRead >>> 32);
 
-		int idx = murmurHash3(key) & mask;
-		int currentKey;
-		while ((currentKey = keys[idx]) != EMPTY) {
-			if (currentKey == key) {
+		int hash = murmurHash3(key);
+		int idx = hash & mask;
+		int dist = 0;
+
+		while (true) {
+			int k = keys[idx];
+			if (k == EMPTY)
+				return -1;
+
+			if (k == key) {
+				this.lastRead = ((long) idx << 32) | (key & 0xFFFFFFFFL);
 				return idx;
 			}
-			idx = (idx + 1) & mask;
-		}
 
-		return -1;
+			if (distances[idx] < dist)
+				return -1;
+
+			idx = (idx + 1) & mask;
+			dist++;
+		}
 	}
 
 	private int insertIndex(int key) {
-		int idx = murmurHash3(key) & mask;
-		int k;
-		while ((k = keys[idx]) != EMPTY) {
+		int hash = murmurHash3(key);
+		int idx = hash & mask;
+		int dist = 0;
+
+		while (true) {
+			int k = keys[idx];
+
+			if (k == EMPTY) {
+				keys[idx] = key;
+				distances[idx] = dist;
+				size++;
+				return idx;
+			}
+
 			if (k == key)
 				return idx;
-			idx = (idx + 1) & mask;
-		}
 
-		keys[idx] = key;
-		size++;
-		return idx;
+			if (distances[idx] < dist) {
+				// Robin Hood swap
+				int tmpKey = keys[idx];
+				int tmpVal = values[idx];
+				int tmpAge = ages[idx];
+				int tmpDist = distances[idx];
+
+				keys[idx] = key;
+				values[idx] = 0;
+				ages[idx] = 0;
+				distances[idx] = dist;
+
+				key = tmpKey;
+				values[idx] = tmpVal;
+				ages[idx] = tmpAge;
+				dist = tmpDist;
+			}
+
+			idx = (idx + 1) & mask;
+			dist++;
+		}
 	}
 
 	private void resize() {
@@ -128,6 +168,8 @@ public final class Int2IntCache {
 		keys = new int[newCap];
 		values = new int[newCap];
 		ages = new int[newCap];
+		distances = new int[newCap];
+
 		Arrays.fill(keys, EMPTY);
 
 		size = 0;
@@ -161,32 +203,32 @@ public final class Int2IntCache {
 		keys[idx] = EMPTY;
 		values[idx] = 0;
 		ages[idx] = 0;
+		distances[idx] = 0;
 		size--;
 
 		int last = idx;
 		while (true) {
 			int next = (last + 1) & mask;
-			if (keys[next] == EMPTY)
+			if (keys[next] == EMPTY || distances[next] == 0)
 				break;
 
-			int ideal = murmurHash3(keys[next]) & mask;
-			if ((next > last && (ideal <= last || ideal > next)) ||
-				(next < last && (ideal <= last && ideal > next))) {
+			keys[last] = keys[next];
+			values[last] = values[next];
+			ages[last] = ages[next];
+			distances[last] = distances[next] - 1;
 
-				keys[last] = keys[next];
-				values[last] = values[next];
-				ages[last] = ages[next];
+			keys[next] = EMPTY;
+			values[next] = 0;
+			ages[next] = 0;
+			distances[next] = 0;
 
-				keys[next] = EMPTY;
-				values[next] = 0;
-				ages[next] = 0;
-
-				last = next;
-			} else {
-				break;
-			}
+			last = next;
 		}
 	}
+
+	/* =========================
+	   Aging
+	   ========================= */
 
 	private void normalizeAgesIfNeeded() {
 		if ((ageCounter >>> 30) == 0)
@@ -214,16 +256,17 @@ public final class Int2IntCache {
 		return size == 0;
 	}
 
-	public synchronized void clear() {
-		seq.incrementAndGet();
+	public void clear() {
+		long stamp = lock.writeLock();
 		try {
 			Arrays.fill(keys, EMPTY);
 			Arrays.fill(values, 0);
 			Arrays.fill(ages, 0);
+			Arrays.fill(distances, 0);
 			size = 0;
 			ageCounter = 0;
 		} finally {
-			seq.incrementAndGet();
+			lock.unlockWrite(stamp);
 		}
 	}
 }

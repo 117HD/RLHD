@@ -17,9 +17,13 @@ public final class IntHashSet implements Iterable<Integer> {
 	private final float growthFactor;
 
 	private int[] keys;
+	private int[] distances;
+
 	private int size;
 	private int mask;
-	private volatile long lastRead; // high 32 bits = key, low 32 bits = idx
+
+	// high 32 bits = idx, low 32 bits = key
+	private volatile long lastRead;
 
 	public IntHashSet() {
 		this(DEFAULT_CAPACITY, DEFAULT_GROWTH);
@@ -30,11 +34,16 @@ public final class IntHashSet implements Iterable<Integer> {
 	}
 
 	public IntHashSet(int initialCapacity, float growthFactor) {
-		keys = new int[max((int) HDUtils.ceilPow2(initialCapacity), 16)];
+		int cap = max((int) HDUtils.ceilPow2(initialCapacity), DEFAULT_CAPACITY);
+
+		keys = new int[cap];
+		distances = new int[cap];
+
 		Arrays.fill(keys, EMPTY);
+
 		this.growthFactor = growthFactor;
 		this.size = 0;
-		this.mask = keys.length - 1;
+		this.mask = cap - 1;
 	}
 
 	private void resize() {
@@ -45,7 +54,10 @@ public final class IntHashSet implements Iterable<Integer> {
 		int[] oldKeys = keys;
 
 		keys = new int[newCapacity];
+		distances = new int[newCapacity];
+
 		Arrays.fill(keys, EMPTY);
+
 		size = 0;
 		mask = newCapacity - 1;
 
@@ -58,22 +70,41 @@ public final class IntHashSet implements Iterable<Integer> {
 	}
 
 	public boolean add(int key) {
-		int idx = murmurHash3(key) & mask;
-		int currentKey;
-
-		while ((currentKey = keys[idx]) != EMPTY) {
-			if (currentKey == key) {
-				return false; // already present
-			}
-			idx = (idx + 1) & mask;
-		}
-
 		if (size + 1.0 >= keys.length * LOAD_FACTOR)
 			resize();
 
-		keys[idx] = key;
-		size++;
-		return true;
+		int hash = murmurHash3(key);
+		int idx = hash & mask;
+		int dist = 0;
+
+		while (true) {
+			int k = keys[idx];
+
+			if (k == EMPTY) {
+				keys[idx] = key;
+				distances[idx] = dist;
+				size++;
+				return true;
+			}
+
+			if (k == key)
+				return false; // already present
+
+			// Robin Hood swap
+			if (distances[idx] < dist) {
+				int tmpKey = keys[idx];
+				int tmpDist = distances[idx];
+
+				keys[idx] = key;
+				distances[idx] = dist;
+
+				key = tmpKey;
+				dist = tmpDist;
+			}
+
+			idx = (idx + 1) & mask;
+			dist++;
+		}
 	}
 
 	public boolean contains(int key) {
@@ -82,58 +113,68 @@ public final class IntHashSet implements Iterable<Integer> {
 
 	private int findIndex(int key) {
 		final long lastRead = this.lastRead;
-		if((lastRead & 0xFFFFFFFFL) == key)
-			return (int) (lastRead >> 32);
+		if ((int) lastRead == key)
+			return (int) (lastRead >>> 32);
 
-		final int[] keys = this.keys;
-		final int mask = this.mask;
+		int hash = murmurHash3(key);
+		int idx = hash & mask;
+		int dist = 0;
 
-		int idx = murmurHash3(key) & mask;
-		int currentKey;
-		while ((currentKey = keys[idx]) != EMPTY) {
-			if (currentKey == key) {
-				this.lastRead = ((long)idx << 32) | (key & 0xFFFFFFFFL);
+		while (true) {
+			int k = keys[idx];
+
+			if (k == EMPTY)
+				return -1;
+
+			if (k == key) {
+				this.lastRead = ((long) idx << 32) | (key & 0xFFFFFFFFL);
 				return idx;
 			}
-			idx = (idx + 1) & mask;
-		}
 
-		return -1;
+			// Robin Hood early-exit
+			if (distances[idx] < dist)
+				return -1;
+
+			idx = (idx + 1) & mask;
+			dist++;
+		}
 	}
 
 	public boolean remove(int key) {
 		int idx = findIndex(key);
 		if (idx < 0)
 			return false;
+
 		removeIndex(idx);
 		return true;
 	}
 
 	private void removeIndex(int idx) {
-		int lastIdx = idx;
 		keys[idx] = EMPTY;
+		distances[idx] = 0;
 		size--;
 
+		int last = idx;
+
+		// Shift backward while probe distance allows
 		while (true) {
-			int nextIdx = (lastIdx + 1) & mask;
-			int key = keys[nextIdx];
-			if (key == EMPTY)
+			int next = (last + 1) & mask;
+			if (keys[next] == EMPTY || distances[next] == 0)
 				break;
 
-			int idealIdx = murmurHash3(key) & mask;
-			if ((nextIdx > lastIdx && (idealIdx <= lastIdx || idealIdx > nextIdx)) ||
-				(nextIdx < lastIdx && (idealIdx <= lastIdx && idealIdx > nextIdx))) {
-				keys[lastIdx] = key;
-				keys[nextIdx] = EMPTY;
-				lastIdx = nextIdx;
-			} else {
-				break;
-			}
+			keys[last] = keys[next];
+			distances[last] = distances[next] - 1;
+
+			keys[next] = EMPTY;
+			distances[next] = 0;
+
+			last = next;
 		}
 	}
 
 	public void clear() {
 		Arrays.fill(keys, EMPTY);
+		Arrays.fill(distances, 0);
 		size = 0;
 	}
 
