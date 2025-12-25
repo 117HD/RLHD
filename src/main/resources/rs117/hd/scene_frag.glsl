@@ -168,7 +168,7 @@ void main() {
         mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
 
         #if DISPLAY_UV
-            FragColor = vec4(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z, 0.0, 1.0);
+            FragColor = vec4(fract(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z), 0.0, 1.0);
             if (DISPLAY_UV == 1) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
