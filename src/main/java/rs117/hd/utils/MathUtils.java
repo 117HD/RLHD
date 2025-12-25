@@ -300,6 +300,10 @@ public final class MathUtils {
 		return log2(new float[v.length], v);
 	}
 
+	public static float rcp(float v) {
+		return 1.0f / v;
+	}
+
 	public static float sqrt(float v) {
 		return (float) Math.sqrt(v);
 	}

@@ -56,13 +56,15 @@ public class WorldViewContext {
 	}
 
 	void initMetadata() {
-		if (vboM != null || uboWorldViewStruct == null)
+		if (vboM != null)
 			return;
 
 		vboM = new VBO(VAO.METADATA_SIZE);
 		vboM.initialize(GL_STATIC_DRAW);
 		vboM.map();
-		vboM.vb.put(uboWorldViewStruct.worldViewIdx + 1);
+		vboM.vb
+			.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1)
+			.put(0).put(0); // dummy scene offset for macOS
 		vboM.unmap();
 	}
 

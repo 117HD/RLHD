@@ -7,6 +7,7 @@
 
 #define SHORT_MAX 32767 // 2^15 - 1
 
+#include SHADER_TYPE
 #include LEGACY_RENDERER
 #include ZONE_RENDERER
 

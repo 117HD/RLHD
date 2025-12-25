@@ -675,6 +675,8 @@ public class SceneManager {
 		nextSceneContext = null;
 
 		if (isFirst) {
+			root.initMetadata();
+
 			// Load all pre-existing sub scenes on the first scene load
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 				WorldView sub = subEntity.getWorldView();

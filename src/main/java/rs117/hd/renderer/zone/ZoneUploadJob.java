@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.utils.buffer.GLTextureBuffer;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -78,7 +79,15 @@ public final class ZoneUploadJob extends Job {
 				a.map();
 			}
 
-			zone.initialize(o, a, eboAlpha);
+			GLTextureBuffer f = null;
+			sz = zone.sizeF * Zone.TEXTURE_SIZE;
+			if (sz > 0) {
+				f = new GLTextureBuffer("Textured Faces", GL_STATIC_DRAW);
+				f.initialize(sz);
+				f.map();
+			}
+
+			zone.initialize(o, a, f, eboAlpha);
 			zone.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(

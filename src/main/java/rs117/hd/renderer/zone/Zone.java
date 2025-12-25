@@ -23,6 +23,7 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.collection.Int2IntHashMap;
+import rs117.hd.utils.buffer.GLTextureBuffer;
 
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -31,6 +32,7 @@ import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -40,10 +42,13 @@ public class Zone {
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	// alphaBiasHsl int
-	// materialData int
-	// terrainData int
-	public static final int VERT_SIZE = 32;
+	// texturedFaceIdx int
+	public static final int VERT_SIZE = 24;
+
+	// alphaBiasHsl ivec3
+	// materialData ivec3
+	// terrainData ivec3
+	public static final int TEXTURE_SIZE = 36;
 
 	// Metadata format
 	// worldViewIndex int int
@@ -61,9 +66,10 @@ public class Zone {
 	public int glVaoA;
 	public int bufLenA;
 
-	public int sizeO, sizeA;
+	public int sizeO, sizeA, sizeF;
 	@Nullable
 	public VBO vboO, vboA, vboM;
+	public GLTextureBuffer tboF;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
@@ -86,14 +92,14 @@ public class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	public void initialize(VBO o, VBO a, int eboShared) {
+	public void initialize(VBO o, VBO a, GLTextureBuffer f, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
+		if (o == null && a == null || f == null)
+			return;
 
-		if (o != null || a != null) {
-			vboM = new VBO(METADATA_SIZE);
-			vboM.initialize(GL_STATIC_DRAW);
-		}
+		vboM = new VBO(METADATA_SIZE);
+		vboM.initialize(GL_STATIC_DRAW);
 
 		if (o != null) {
 			vboO = o;
@@ -106,6 +112,8 @@ public class Zone {
 			glVaoA = glGenVertexArrays();
 			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
 		}
+
+		tboF = f;
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -134,6 +142,11 @@ public class Zone {
 			vboM = null;
 		}
 
+		if (tboF != null) {
+			tboF.destroy();
+			tboF = null;
+		}
+
 		if (glVao != 0) {
 			glDeleteVertexArrays(glVao);
 			glVao = 0;
@@ -151,6 +164,7 @@ public class Zone {
 
 		sizeO = 0;
 		sizeA = 0;
+		sizeF = 0;
 		bufLen = 0;
 		bufLenA = 0;
 
@@ -221,12 +235,12 @@ public class Zone {
 	}
 
 	public void unmap() {
-		if (vboO != null) {
+		if (vboO != null)
 			vboO.unmap();
-		}
-		if (vboA != null) {
+		if (vboA != null)
 			vboA.unmap();
-		}
+		if (tboF != null)
+			tboF.unmap();
 
 		if (vboO != null) {
 			this.bufLen = vboO.len / (VERT_SIZE / 4);
@@ -256,17 +270,9 @@ public class Zone {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
 
-		// Alpha, bias & HSL
+		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
 		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 20);
-
-		// Material data
-		glEnableVertexAttribArray(4);
-		glVertexAttribIPointer(4, 1, GL_INT, VERT_SIZE, 24);
-
-		// Terrain data
-		glEnableVertexAttribArray(5);
-		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 28);
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
@@ -401,6 +407,7 @@ public class Zone {
 
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
+		lastTboF = tboF.getTexId();
 		flush(cmd);
 	}
 
@@ -414,6 +421,7 @@ public class Zone {
 
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
+		lastTboF = tboF.getTexId();
 		flush(cmd);
 	}
 
@@ -438,6 +446,7 @@ public class Zone {
 		short x, y, z; // local position
 		short rid;
 		int vao;
+		int tboF;
 		byte level;
 		byte lx, lz, ux, uz; // lower/upper zone coords
 		byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
@@ -462,6 +471,7 @@ public class Zone {
 		HdPlugin plugin,
 		MaterialManager materialManager,
 		int vao,
+		int tboF,
 		Model model,
 		ModelOverride modelOverride,
 		int startpos,
@@ -486,6 +496,7 @@ public class Zone {
 		m.y = (short) y;
 		m.z = (short) z;
 		m.vao = vao;
+		m.tboF = tboF;
 		m.rid = (short) rid;
 		m.level = (byte) level;
 		if (lx > -1) {
@@ -616,7 +627,7 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	void addTempAlphaModel(ModelOverride modelOverride, int vao, int startpos, int endpos, int level, int x, int y, int z) {
+	void addTempAlphaModel(ModelOverride modelOverride, int vao, int tboF, int startpos, int endpos, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
@@ -628,6 +639,7 @@ public class Zone {
 		m.y = (short) y;
 		m.z = (short) z;
 		m.vao = vao;
+		m.tboF = tboF;
 		m.rid = -1;
 		m.level = (byte) level;
 		m.lx = m.lz = m.ux = m.uz = -1;
@@ -655,6 +667,7 @@ public class Zone {
 
 	private static int lastDrawMode;
 	private static int lastVao;
+	private static int lastTboF;
 	private static int lastzx, lastzz;
 
 	private static final int[] numOfPriority = FacePrioritySorter.numOfPriority;
@@ -714,10 +727,11 @@ public class Zone {
 			if (level < ctx.minLevel || level > maxLevel || level > currentLevel && hiddenRoofIds.contains((int) m.rid))
 				continue;
 
-			if (lastVao != m.vao || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
+			if (lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
 				flush(cmd);
 
 			lastVao = m.vao;
+			lastTboF = m.tboF;
 			lastzx = zx - m.zofx;
 			lastzz = zz - m.zofz;
 
@@ -822,6 +836,7 @@ public class Zone {
 				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
 				long byteOffset = 4L * (ZoneRenderer.eboAlphaStaging.position() - vertexCount);
 				cmd.BindVertexArray(lastVao);
+				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
@@ -833,6 +848,7 @@ public class Zone {
 		} else if (drawIdx != 0) {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
+			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 			if (glDrawOffset.length == 1) {
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
@@ -899,6 +915,7 @@ public class Zone {
 				m2.y = m.y;
 				m2.z = m.z;
 				m2.vao = m.vao;
+				m2.tboF = m.tboF;
 				m2.rid = m.rid;
 				m2.level = m.level;
 				m2.lx = m.lx;
