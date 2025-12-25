@@ -204,7 +204,6 @@ class FacePrioritySorter {
 			distanceToFaces[distance][distanceFaceCount[distance]++] = i;
 		}
 
-		final boolean hasAlphaBuffer = opaqueBuffer != alphaBuffer;
 		WRITE_CACHE.setOutputBuffers(opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
 
 		int len = 0;
@@ -215,7 +214,7 @@ class FacePrioritySorter {
 					final char[] faces = distanceToFaces[i];
 					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
 						final int face = faces[faceIdx];
-						len += pushFace(model, modelOverride, hasAlphaBuffer, preOrientation, face);
+						len += pushFace(model, modelOverride, preOrientation, face);
 					}
 				}
 			}
@@ -271,7 +270,7 @@ class FacePrioritySorter {
 			for (int pri = 0; pri < 10; ++pri) {
 				while (pri == 0 && currFaceDistance > avg12) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, hasAlphaBuffer, preOrientation, face);
+					len += pushFace(model, modelOverride, preOrientation, face);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -285,7 +284,7 @@ class FacePrioritySorter {
 
 				while (pri == 3 && currFaceDistance > avg34) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, hasAlphaBuffer, preOrientation, face);
+					len += pushFace(model, modelOverride, preOrientation, face);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -299,7 +298,7 @@ class FacePrioritySorter {
 
 				while (pri == 5 && currFaceDistance > avg68) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, hasAlphaBuffer, preOrientation, face);
+					len += pushFace(model, modelOverride, preOrientation, face);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -316,13 +315,13 @@ class FacePrioritySorter {
 
 				for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
 					final int face = priFaces[faceIdx];
-					len += pushFace(model, modelOverride, hasAlphaBuffer, preOrientation, face);
+					len += pushFace(model, modelOverride, preOrientation, face);
 				}
 			}
 
 			while (currFaceDistance != -1000) {
 				final int face = dynFaces[drawnFaces++];
-				len += pushFace(model, modelOverride, hasAlphaBuffer, preOrientation, face);
+				len += pushFace(model, modelOverride, preOrientation, face);
 
 				if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 					drawnFaces = 0;
@@ -342,7 +341,6 @@ class FacePrioritySorter {
 	private int pushFace(
 		Model model,
 		ModelOverride modelOverride,
-		boolean hasAlphaBuffer,
 		int preOrientation,
 		int face
 	) {
@@ -533,7 +531,7 @@ class FacePrioritySorter {
 		boolean hasAlpha = material.hasTransparency || transparency != 0;
 
 		VertexWriteCache vb, tb;
-		if (hasAlpha && hasAlphaBuffer) {
+		if (WRITE_CACHE.useAlphaBuffer && hasAlpha) {
 			vb = WRITE_CACHE.alpha;
 			tb = WRITE_CACHE.alphaTex;
 		} else {

@@ -1,14 +1,12 @@
 package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public final class VertexWriteCache {
-	@Setter
 	private IntBuffer outputBuffer;
 
 	private final int maxCapacity;
@@ -18,6 +16,11 @@ public final class VertexWriteCache {
 	public VertexWriteCache(int initialCapacity, int maxCapacity) {
 		this.maxCapacity = maxCapacity;
 		stagingBuffer = new int[initialCapacity];
+	}
+
+	public void setOutputBuffer(IntBuffer outputBuffer) {
+		this.outputBuffer = outputBuffer;
+		stagingPosition = 0;
 	}
 
 	private void flushAndGrow() {
@@ -81,7 +84,7 @@ public final class VertexWriteCache {
 	}
 
 	public void flush() {
-		if (stagingPosition == 0)
+		if (stagingPosition == 0 || outputBuffer == null)
 			return;
 
 		outputBuffer.put(stagingBuffer, 0, stagingPosition);
@@ -96,12 +99,19 @@ public final class VertexWriteCache {
 		public final VertexWriteCache alpha = new VertexWriteCache(INITIAL_CAPACITY, MAX_CAPACITY);
 		public final VertexWriteCache opaqueTex = new VertexWriteCache(INITIAL_CAPACITY, MAX_CAPACITY);
 		public final VertexWriteCache alphaTex = new VertexWriteCache(INITIAL_CAPACITY, MAX_CAPACITY);
+		public boolean useAlphaBuffer;
 
 		public void setOutputBuffers(IntBuffer opaque, IntBuffer alpha, IntBuffer opaqueTex, IntBuffer alphaTex) {
 			this.opaque.setOutputBuffer(opaque);
-			this.alpha.setOutputBuffer(alpha);
 			this.opaqueTex.setOutputBuffer(opaqueTex);
-			this.alphaTex.setOutputBuffer(alphaTex);
+			useAlphaBuffer = alpha != opaque && alphaTex != opaqueTex;
+			if (useAlphaBuffer) {
+				this.alpha.setOutputBuffer(alpha);
+				this.alphaTex.setOutputBuffer(alphaTex);
+			} else {
+				this.alpha.setOutputBuffer(null);
+				this.alphaTex.setOutputBuffer(null);
+			}
 		}
 
 		public void flush() {
