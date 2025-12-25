@@ -56,13 +56,15 @@ public class WorldViewContext {
 	}
 
 	void initMetadata() {
-		if (vboM != null || uboWorldViewStruct == null)
+		if (vboM != null)
 			return;
 
 		vboM = new VBO(VAO.METADATA_SIZE);
 		vboM.initialize(GL_STATIC_DRAW);
 		vboM.map();
-		vboM.vb.put(uboWorldViewStruct.worldViewIdx + 1);
+		vboM.vb
+			.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1)
+			.put(0).put(0); // dummy scene offset for macOS
 		vboM.unmap();
 	}
 
@@ -92,6 +94,7 @@ public class WorldViewContext {
 				Zone PrevZone = curZone;
 				// Swap the zone out with the one we just uploaded
 				zones[zx][zz] = curZone = uploadTask.zone;
+				curZone.unmap();
 
 				if (PrevZone != curZone)
 					pendingCull.add(PrevZone);
@@ -207,7 +210,7 @@ public class WorldViewContext {
 		Zone newZone = new Zone();
 		newZone.dirty = zones[zx][zz].dirty;
 
-		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, zx, zz);
+		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
 			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());

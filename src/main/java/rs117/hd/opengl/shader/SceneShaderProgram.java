@@ -6,16 +6,18 @@ import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_NORMAL_MAPS;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_REFLECTION_MAP;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 public class SceneShaderProgram extends ShaderProgram {
 	public static final int RENDER_PASS_MAIN = 0;
 	public static final int RENDER_PASS_REFLECTION = 1;
 
-	private final UniformTexture uniTextureArray = addUniformTexture("textureArray");
-	private final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
-	private final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
-	private final UniformTexture uniWaterReflectionMap = addUniformTexture("waterReflectionMap");
-	private final UniformTexture uniWaterNormalMaps = addUniformTexture("waterNormalMaps");
+	protected final UniformTexture uniTextureArray = addUniformTexture("textureArray");
+	protected final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
+	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
+	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
+	protected final UniformTexture uniWaterReflectionMap = addUniformTexture("waterReflectionMap");
+	protected final UniformTexture uniWaterNormalMaps = addUniformTexture("waterNormalMaps");
 
 	// TODO: Compile different shaders for different combinations of these
 	public Uniform1i uniRenderPass = addUniform1i("renderPass");
@@ -27,7 +29,6 @@ public class SceneShaderProgram extends ShaderProgram {
 	public SceneShaderProgram() {
 		super(t -> t
 			.add(GL_VERTEX_SHADER, "scene_vert.glsl")
-			.add(GL_GEOMETRY_SHADER, "scene_geom.glsl")
 			.add(GL_FRAGMENT_SHADER, "scene_frag.glsl"));
 		uniTiledLightingTextureArray.ignoreMissing = true;
 	}
@@ -37,7 +38,15 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTextureArray.set(TEXTURE_UNIT_GAME);
 		uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP);
 		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
+		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
 		uniWaterReflectionMap.set(TEXTURE_UNIT_WATER_REFLECTION_MAP);
 		uniWaterNormalMaps.set(TEXTURE_UNIT_WATER_NORMAL_MAPS);
+	}
+
+	public static class Legacy extends SceneShaderProgram {
+		Legacy() {
+			shaderTemplate.add(GL_GEOMETRY_SHADER, "scene_geom.glsl");
+			uniTextureFaces.ignoreMissing = true;
+		}
 	}
 }

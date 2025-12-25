@@ -88,8 +88,8 @@ public abstract class Job {
 
 	protected static Injector getInjector() { return JOB_SYSTEM.injector; }
 
-	protected void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
-		JOB_SYSTEM.invokeClientCallback(immediate || !executeAsync, callback);
+	protected void invokeClientCallback(Runnable callback) throws InterruptedException {
+		JOB_SYSTEM.invokeClientCallback(callback);
 	}
 
 	public final void workerHandleCancel() throws InterruptedException {

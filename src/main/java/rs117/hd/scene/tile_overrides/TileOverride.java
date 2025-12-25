@@ -25,7 +25,7 @@ import rs117.hd.utils.VariableSupplier;
 
 import static rs117.hd.utils.ExpressionParser.asExpression;
 import static rs117.hd.utils.ExpressionParser.parseExpression;
-import static rs117.hd.utils.MathUtils.clamp;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @NoArgsConstructor
@@ -137,6 +137,14 @@ public class TileOverride {
 			minSaturation = maxSaturation = setSaturation;
 		if (setLightness != -1)
 			minLightness = maxLightness = setLightness;
+
+		// Enforce sensible limits
+		minHue = clamp(minHue, 0, 0x3F);
+		maxHue = clamp(maxHue, 0, 0x3F);
+		minSaturation = clamp(minSaturation, 0, 0x7);
+		maxSaturation = clamp(maxSaturation, 0, 0x7);
+		minLightness = clamp(minLightness, 0, 0x7F);
+		maxLightness = clamp(maxLightness, 0, 0x7F);
 
 		// Convert UV scale to reciprocal, so we can multiply instead of dividing later
 		uvScale = 1 / uvScale;

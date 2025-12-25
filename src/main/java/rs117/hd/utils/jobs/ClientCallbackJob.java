@@ -13,5 +13,4 @@ public final class ClientCallbackJob {
 
 	final Semaphore semaphore = new Semaphore(0);
 	public Runnable callback;
-	public boolean immediate;
 }
