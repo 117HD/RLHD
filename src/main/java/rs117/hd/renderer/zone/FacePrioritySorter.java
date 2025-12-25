@@ -502,7 +502,6 @@ class FacePrioritySorter {
 		}
 
 		if (plugin.configUndoVanillaShading) {
-			// TODO: Decide whether this should be applied when normals are null
 			color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
 			color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
 			color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
