@@ -731,8 +731,8 @@ public final class MathUtils {
 			return 0;
 		// float32: (-1)^sign * 2^(exponent - 127) * (1.mantissa)
 		// float16: (-1)^sign * 2^(exponent -  15) * (1.mantissa)
-		int f = Float.floatToRawIntBits(value);
-		int sign = (f >>> 16) & 0x8000;
+		final int f = Float.floatToRawIntBits(value);
+		final int sign = (f >>> 16) & 0x8000;
 		int exponent = ((f >>> 23) & 0xFF) - 127 + 15;
 		int mantissa = f & 0x7FFFFF;
 
@@ -759,7 +759,6 @@ public final class MathUtils {
 			mantissa += 0x2000;
 			// If rounding up caused the mantissa to overflow, increment the exponent
 			if ((mantissa & 0x800000) != 0) {
-				mantissa = 0;
 				exponent += 1;
 				if (exponent >= 0x1F) // Return infinity if it's too large to represent again
 					return sign | 0x7C00; // Infinity

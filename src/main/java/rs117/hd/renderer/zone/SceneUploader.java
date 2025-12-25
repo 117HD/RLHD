@@ -1796,8 +1796,7 @@ public class SceneUploader {
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				final int ahsl = (0xFF - transparency) << 16 | color1;
-				final var ahslOverride = modelOverride.testColorOverrides( ahsl);
+				final var ahslOverride = modelOverride.testColorOverrides( (0xFF - transparency) << 16 | color1);
 				if(ahslOverride != null) {
 					faceOverride = ahslOverride;
 					material = faceOverride.baseMaterial;

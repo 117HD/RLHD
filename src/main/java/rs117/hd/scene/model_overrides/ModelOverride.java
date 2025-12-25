@@ -616,18 +616,18 @@ public class ModelOverride
 
 	public final ModelOverride testColorOverrides(int ahsl) {
 		final int overrideIdx = aHslModelOverrideCache.getOrDefault(ahsl, -1);
-		if(overrideIdx == -1) {
-			for (int i = 0; i < colorOverrides.length; i++) {
-				final var override = colorOverrides[i];
-				if (override.ahslCondition.test(ahsl)) {
-					aHslModelOverrideCache.put(ahsl, i);
-					return override;
-				}
+		if(overrideIdx != -1)
+			return overrideIdx >= 0 ? colorOverrides[overrideIdx] : null;
+
+		for (int i = 0; i < colorOverrides.length; i++) {
+			final var override = colorOverrides[i];
+			if (override.ahslCondition.test(ahsl)) {
+				aHslModelOverrideCache.put(ahsl, i);
+				return override;
 			}
-			aHslModelOverrideCache.put(ahsl, -2);
-		} else if(overrideIdx >= 0) {
-			return colorOverrides[overrideIdx];
 		}
+
+		aHslModelOverrideCache.put(ahsl, -2);
 		return null;
 	}
 }
