@@ -1632,21 +1632,21 @@ public class SceneUploader {
 
 			vb.putVertex(
 				vx1, vy1, vz1,
-				faceUVs[0], faceUVs[1], 0,
+				faceUVs[0], faceUVs[1], faceUVs[2],
 				modelNormals[0], modelNormals[1], modelNormals[2],
 				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2,
-				faceUVs[4], faceUVs[5], 0,
+				faceUVs[4], faceUVs[5], faceUVs[6],
 				modelNormals[3], modelNormals[4], modelNormals[5],
 				texturedFaceIdx
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3,
-				faceUVs[8], faceUVs[9], 0,
+				faceUVs[8], faceUVs[9], faceUVs[10],
 				modelNormals[6], modelNormals[7], modelNormals[8],
 				texturedFaceIdx
 			);
@@ -1903,19 +1903,19 @@ public class SceneUploader {
 
 			vb.putVertex(
 				vx1, vy1, vz1,
-				faceUVs[0], faceUVs[1], 0,
+				faceUVs[0], faceUVs[1], faceUVs[2],
 				modelNormals[0], modelNormals[1], modelNormals[2],
 				texturedFaceIdx
 			);
 			vb.putVertex(
 				vx2, vy2, vz2,
-				faceUVs[4], faceUVs[5], 0,
+				faceUVs[4], faceUVs[5], faceUVs[6],
 				modelNormals[3], modelNormals[4], modelNormals[5],
 				texturedFaceIdx
 			);
 			vb.putVertex(
 				vx3, vy3, vz3,
-				faceUVs[8], faceUVs[9], 0,
+				faceUVs[8], faceUVs[9], faceUVs[10],
 				modelNormals[6], modelNormals[7], modelNormals[8],
 				texturedFaceIdx
 			);

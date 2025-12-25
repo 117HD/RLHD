@@ -550,19 +550,19 @@ class FacePrioritySorter {
 
 		vb.putVertex(
 			vx1, vy1, vz1,
-			modelUvs[0], modelUvs[1], 0,
+			modelUvs[0], modelUvs[1], modelUvs[2],
 			modelNormals[0], modelNormals[1], modelNormals[2],
 			texturedFaceIdx
 		);
 		vb.putVertex(
 			vx2, vy2, vz2,
-			modelUvs[4], modelUvs[5], 0,
+			modelUvs[4], modelUvs[5], modelUvs[6],
 			modelNormals[3], modelNormals[4], modelNormals[5],
 			texturedFaceIdx
 		);
 		vb.putVertex(
 			vx3, vy3, vz3,
-			modelUvs[8], modelUvs[9], 0,
+			modelUvs[8], modelUvs[9], modelUvs[10],
 			modelNormals[6], modelNormals[7], modelNormals[8],
 			texturedFaceIdx
 		);
