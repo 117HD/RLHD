@@ -1736,10 +1736,6 @@ public class SceneUploader {
 		Material textureMaterial = modelOverride.textureMaterial;
 
 		int len = 0;
-		int triangleA = -1, triangleB = -1, triangleC = -1;
-		float vx1 = 0, vy1 = 0, vz1 = 0;
-		float vx2 = 0, vy2 = 0, vz2 = 0;
-		float vx3 = 0, vy3 = 0, vz3 = 0;
 		for (int face = 0; face < triangleCount; ++face) {
 			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			if (transparency == 255)
@@ -1762,29 +1758,21 @@ public class SceneUploader {
 			if (unlitFaceColors != null)
 				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
 
-			int indicie = indices1[face];
-			if (indicie != triangleA) {
-				triangleA = indicie;
-				vx1 = modelLocalX[indicie];
-				vy1 = modelLocalY[indicie];
-				vz1 = modelLocalZ[indicie];
-			}
+			final int triangleA = indices1[face];
+			final int triangleB = indices2[face];
+			final int triangleC = indices3[face];
 
-			indicie = indices2[face];
-			if (indicie != triangleB) {
-				triangleB = indicie;
-				vx2 = modelLocalX[indicie];
-				vy2 = modelLocalY[indicie];
-				vz2 = modelLocalZ[indicie];
-			}
+			final float vx1 = modelLocalX[triangleA];
+			final float vx2 = modelLocalX[triangleB];
+			final float vx3 = modelLocalX[triangleC];
 
-			indicie = indices3[face];
-			if (indicie != triangleC) {
-				triangleC = indicie;
-				vx3 = modelLocalX[indicie];
-				vy3 = modelLocalY[indicie];
-				vz3 = modelLocalZ[indicie];
-			}
+			final float vy1 = modelLocalY[triangleA];
+			final float vy2 = modelLocalY[triangleB];
+			final float vy3 = modelLocalY[triangleC];
+
+			final float vz1 = modelLocalZ[triangleA];
+			final float vz2 = modelLocalZ[triangleB];
+			final float vz3 = modelLocalZ[triangleC];
 
 			int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;

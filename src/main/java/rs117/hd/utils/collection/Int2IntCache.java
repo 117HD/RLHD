@@ -24,7 +24,6 @@ public final class Int2IntCache {
 	private int size;
 	private int mask;
 	private int ageCounter;
-	private volatile long lastRead; // high 32 bits = key, low 32 bits = idx
 
 	public Int2IntCache(int initialCapacity, int maxSize) {
 		this(initialCapacity, maxSize, DEFAULT_GROWTH);
@@ -88,10 +87,6 @@ public final class Int2IntCache {
 	}
 
 	private int findIndex(int key) {
-		final long lastRead = this.lastRead;
-		if((lastRead & 0xFFFFFFFFL) == key)
-			return (int) (lastRead >> 32);
-
 		final int[] keys = this.keys;
 		final int mask = this.mask;
 
@@ -99,7 +94,6 @@ public final class Int2IntCache {
 		int currentKey;
 		while ((currentKey = keys[idx]) != EMPTY) {
 			if (currentKey == key) {
-				this.lastRead = ((long)idx << 32) | (key & 0xFFFFFFFFL);
 				return idx;
 			}
 			idx = (idx + 1) & mask;
