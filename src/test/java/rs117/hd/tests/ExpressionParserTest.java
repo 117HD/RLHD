@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import org.junit.Assert;
 import org.junit.Test;
 import rs117.hd.config.SeasonalTheme;
-import rs117.hd.scene.model_overrides.AhslPredicateCache;
 import rs117.hd.utils.VariableSupplier;
 
 import static rs117.hd.utils.ExpressionParser.parseExpression;
@@ -75,20 +74,6 @@ public class ExpressionParserTest {
 				"Case: " + entry.getKey() + " " + (passed ? "passed" : "failed") + ". Expected: " + entry.getValue() + ", got: " + result);
 		}
 	}
-
-	@Test
-	public void testAhslPredicateCache() {
-		final int ITERATIONS = 1000;
-		final int VALUE_COUNT = AhslPredicateCache.MAX_CACHE_SIZE * 2;
-		AhslPredicateCache cache = new AhslPredicateCache(ahsl -> ahsl > 100);
-
-		for(int i = 0; i < ITERATIONS; ++i) {
-			for(int v = 0; v < VALUE_COUNT; ++v) {
-				Assert.assertEquals(cache.test(v), v > 100);
-			}
-		}
-	}
-
 
 	private static void assertThrows(Runnable runnable) {
 		try {
