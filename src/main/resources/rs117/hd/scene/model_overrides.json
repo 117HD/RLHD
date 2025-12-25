@@ -25338,6 +25338,7 @@
     "description": "Ruins of Ullek Dungeon - Altar",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
+      "BCS_TOMB_ALTAR_NOOP",
       "BCS_TOMB_ALTAR_OP"
     ],
     "uvType": "BOX"
@@ -29454,7 +29455,8 @@
       "TAPO_SKELETON02",
       "TOBQUEST_SKELETON_OP",
       "LASSAR_CHURCH01_SKELETON01_CORPSE03",
-      "BCS_SKELETON_NOOP1"
+      "BCS_SKELETON_NOOP1",
+      "BCS_SKELETON_NOOP2"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -29493,7 +29495,8 @@
       "ARENA_DESERT01_BONES02",
       "ARENA_DESERT01_BONES03",
       "ARENA_DESERT01_BONES04",
-      "FRISD_FISHMONGER_FISHBONES"
+      "FRISD_FISHMONGER_FISHBONES",
+      "BCS_TOMB_DUGUPSOIL04"
     ],
     "uvType": "BOX",
     "uvOrientation": 256
