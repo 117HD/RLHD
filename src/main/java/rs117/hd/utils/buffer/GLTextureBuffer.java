@@ -82,11 +82,12 @@ public class GLTextureBuffer extends GLBuffer {
 		if (buf == null)
 			throw new RuntimeException("Unable to map TBO buffer " + id + " size " + byteSize);
 
-		if (buf != mappedBuffer) {
+		if (buf == mappedBuffer) {
+			pixelBuffer.position(0);
+		} else {
 			mappedBuffer = buf;
 			pixelBuffer = mappedBuffer.asIntBuffer();
 		}
-		pixelBuffer.position(0);
 
 		glBindBuffer(target, 0);
 		mapped = true;
