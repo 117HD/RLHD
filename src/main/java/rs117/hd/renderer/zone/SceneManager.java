@@ -170,7 +170,7 @@ public class SceneManager {
 
 				root.sceneLoadGroup.complete();
 				root.streamingGroup.complete();
-				root.invalidationGroup.complete();
+				root.blockingInvalidationGroup.complete();
 			} finally {
 				loadingLock.unlock();
 				log.trace("loadingLock unlocked - holdCount: {}", loadingLock.getHoldCount());
@@ -188,17 +188,15 @@ public class SceneManager {
 			}
 		}
 
-		// TODO: Wait for zone invalidations without blocking other async loading
-		// Ensure any queued zone invalidations are now completed
-//		root.completeInvalidation();
-//
-//		if (wv != null) {
-//			for (WorldEntity we : wv.worldEntities()) {
-//				WorldViewContext ctx = getContext(we.getWorldView());
-//				if (ctx != null)
-//					ctx.completeInvalidation();
-//			}
-//		}
+		root.completeInvalidation();
+
+		if (wv != null) {
+			for (WorldEntity we : wv.worldEntities()) {
+				WorldViewContext ctx = getContext(we.getWorldView());
+				if (ctx != null)
+					ctx.completeInvalidation();
+			}
+		}
 	}
 
 	private void updateAreaHiding() {
@@ -302,11 +300,24 @@ public class SceneManager {
 			return;
 
 		Zone zone = ctx.zones[zx][zz];
-		if (zone.rebuild)
-			return;
+		boolean shouldBlock = ctx.sceneContext.isInHouse;
 
-		zone.rebuild = true;
-		log.debug("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
+		// DynamicObjects without an animation are uploaded as static, thus whenever the animation state changes, it may be necessary to
+		// complete the invalidation of the zone before the next frame, to keep it in sync with RuneLite's calls to drawDynamic
+		int numAnimatedDynamicObjects = ctx.sceneContext.countAnimatedDynamicObjectsInZone(zx, zz);
+		if (numAnimatedDynamicObjects != zone.numAnimatedDynamicObjects) {
+			shouldBlock = true;
+			zone.numAnimatedDynamicObjects = numAnimatedDynamicObjects;
+		}
+
+		log.debug("Zone invalidated: wx={} x={} z={} blocking={}", scene.getWorldViewId(), zx, zz, shouldBlock);
+		if (shouldBlock) {
+			// Start the invalidation ASAP since we'll be blocking before drawing the next frame
+			ctx.invalidateZone(true, zx, zz);
+		} else {
+			// If not blocking, flag the zone for rebuilding, such that duplicate invalidations will be ignored
+			zone.rebuild = true;
+		}
 	}
 
 	private static boolean isEdgeTile(Zone[][] zones, int zx, int zz) {
@@ -396,7 +407,7 @@ public class SceneManager {
 
 			root.sceneLoadGroup.complete();
 			root.streamingGroup.complete();
-			root.invalidationGroup.complete();
+			root.blockingInvalidationGroup.complete();
 
 			if (nextSceneContext != null)
 				nextSceneContext.destroy();
