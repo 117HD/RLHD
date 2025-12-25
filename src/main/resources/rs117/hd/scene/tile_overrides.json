@@ -7873,8 +7873,7 @@
   },
   {
     "name": "FREM_COLONIES_SEASONAL_SNOW",
-    "minHue": 3,
-    "maxHue": 7,
+    "maxHue": 0,
     "maxLightness": 63,
     "replacements": {
       "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
