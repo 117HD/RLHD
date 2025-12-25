@@ -19123,12 +19123,13 @@
     ]
   },
   {
-    "description": "Nardah - Chemestry Table",
+    "description": "Nardah - Chemistry Table",
     "baseMaterial": "GRAY_75",
     "uvType": "BOX",
     "uvOrientation": 512,
     "objectIds": [
-      "BCS_CHEMISTY_TABLE_NOOP"
+      "BCS_CHEMISTY_TABLE_NOOP",
+      "BCS_CHEMISTY_TABLE_OP"
     ],
     "colorOverrides": [
       {
@@ -19196,7 +19197,7 @@
     ]
   },
   {
-    "description": "Nardah - Double Doors",
+    "description": "Nardah - Sophanem - Double Doors",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -19204,7 +19205,9 @@
       "ELID_BANK_DOOR",
       "ELID_BANK_DOOR_MIRROR",
       "ELID_TEMPLE_DOOR_OPEN_MIRROR",
-      "ELID_TEMPLE_DOOR_OPEN"
+      "ELID_TEMPLE_DOOR_OPEN",
+      "CONTACT_BANK_DOOR",
+      "CONTACT_BANK_DOOR_MIRROR"
     ],
     "colorOverrides": [
       {
@@ -20777,13 +20780,56 @@
     ]
   },
   {
-    "description": "Sophanem - Bank Table",
+    "description": "Sophanem - Bank Vault",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvOrientation": 488,
     "uvScale": 0.5,
     "uvType": "BOX",
     "objectIds": [
       "CONTACT_BANK_VAULT"
+    ]
+  },
+  {
+    "description": "Sophanem - Altars",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvOrientation": 488,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -512
+      }
+    ],
+    "objectIds": [
+      "CONTACT_LESSER_GOD_TEMPLE_ALTAR_FIXED",
+      "CONTACT_HIGH_PRIEST_TEMPLE_ALTAR"
+    ]
+  },
+  {
+    "description": "Sophanem - Wall Decorations - Crook",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 488,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "CONTACT_HIGH_PRIEST_TEMPLE_DECOR",
+      "CONTACT_TEMPLE_DECOR",
+      "CONTACT_TEMPLE_DECOR_CRONDIS",
+      "CONTACT_TEMPLE_DECOR_HET",
+      "CONTACT_TEMPLE_DECOR_APMEKEN",
+      "CONTACT_TEMPLE_DECOR_SCABARAS"
     ]
   },
   {
@@ -25415,7 +25461,8 @@
       "PLANT_DESERT_MAISA_03",
       "PLANT_DESERT_MAISA_04",
       "PLANT_DESERT_MAISA_05",
-      "PLANT_DESERT_MAISA_06"
+      "PLANT_DESERT_MAISA_06",
+      "BCS_NOLILY_OP"
     ]
   },
   {
