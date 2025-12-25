@@ -9,6 +9,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 public final class Int2IntCache {
 	private static final int EMPTY = Integer.MIN_VALUE;
+	private static final float LOAD_FACTOR = 0.7f;
 	private static final float DEFAULT_GROWTH = 1.5f;
 
 	private final int maxSize;
@@ -71,7 +72,7 @@ public final class Int2IntCache {
 		try {
 			normalizeAgesIfNeeded();
 
-			if ((size + 1) >= keys.length)
+			if (size + 1.0 >= keys.length * LOAD_FACTOR)
 				resize();
 
 			int idx = insertIndex(key);

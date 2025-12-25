@@ -11,6 +11,7 @@ import static rs117.hd.utils.MathUtils.*;
 public final class IntHashSet implements Iterable<Integer> {
 	private static final int DEFAULT_CAPACITY = 16;
 	private static final float DEFAULT_GROWTH = 1.5f;
+	private static final float LOAD_FACTOR = 0.7f;
 	private static final int EMPTY = Integer.MIN_VALUE;
 
 	private final float growthFactor;
@@ -67,7 +68,7 @@ public final class IntHashSet implements Iterable<Integer> {
 			idx = (idx + 1) & mask;
 		}
 
-		if ((size + 1) >= keys.length)
+		if (size + 1.0 >= keys.length * LOAD_FACTOR)
 			resize();
 
 		keys[idx] = key;

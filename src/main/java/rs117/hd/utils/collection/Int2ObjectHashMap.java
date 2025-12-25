@@ -3,8 +3,6 @@ package rs117.hd.utils.collection;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Supplier;
-import lombok.Setter;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.HashUtil.murmurHash3;
@@ -13,6 +11,7 @@ import static rs117.hd.utils.MathUtils.*;
 public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.Entry<T>> {
 	private static final int DEFAULT_CAPACITY = 16;
 	private static final float DEFAULT_GROWTH = 1.5f;
+	private static final float LOAD_FACTOR = 0.7f;
 	private static final int EMPTY = Integer.MIN_VALUE;
 
 	public interface Supplier<T> { T[] get(int capacity); }
@@ -89,7 +88,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 			idx = (idx + 1) & mask; // fast wrap-around using bitmask
 		}
 
-		if ((size + 1) >= keys.length)
+		if (size + 1.0 >= keys.length * LOAD_FACTOR)
 			resize();
 
 		keys[idx] = key;

@@ -535,12 +535,14 @@ class FacePrioritySorter {
 		color2 |= packedAlphaBiasHsl;
 		color3 |= packedAlphaBiasHsl;
 
+		tb.ensureFace(1);
 		final int texturedFaceIdx = tb.putFace(
 			color1, color2, color3,
 			materialData, materialData, materialData,
 			0, 0, 0
 		);
 
+		vb.ensureVertex(3);
 		vb.putVertex(
 			vx1, vy1, vz1,
 			modelUvs[0], modelUvs[1], modelUvs[2],
