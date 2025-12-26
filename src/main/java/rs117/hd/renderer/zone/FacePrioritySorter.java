@@ -38,7 +38,9 @@ import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.utils.HDUtils;
 
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.renderer.zone.SceneUploader.GEOMETRY_UVS;
 import static rs117.hd.renderer.zone.SceneUploader.calculateFaceNormal;
+import static rs117.hd.renderer.zone.SceneUploader.computeFaceUvsInline;
 import static rs117.hd.renderer.zone.SceneUploader.interpolateHSL;
 import static rs117.hd.renderer.zone.SceneUploader.undoVanillaShading;
 import static rs117.hd.utils.MathUtils.*;
@@ -412,19 +414,7 @@ class FacePrioritySorter {
 		if (unlitFaceColors != null)
 			color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
 
-		int texA, texB, texC;
-
-		if (isVanillaUVMapped && textureFaces[face] != -1) {
-			int tface = textureFaces[face] & 0xff;
-			texA = texIndices1[tface];
-			texB = texIndices2[tface];
-			texC = texIndices3[tface];
-		} else {
-			texA = triangleA;
-			texB = triangleB;
-			texC = triangleC;
-		}
-
+		int textureFace = textureFaces != null ? textureFaces[face] : -1;
 		int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 
 		UvType uvType = UvType.GEOMETRY;
@@ -460,23 +450,18 @@ class FacePrioritySorter {
 		if (material != Material.NONE) {
 			uvType = faceOverride.uvType;
 			if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
-				uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+				uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 		}
 
 		int materialData = material.packMaterialData(faceOverride, uvType, false);
 
-		if (uvType == UvType.VANILLA) {
-			modelUvs[0] = modelLocalX[texA] - vx1;
-			modelUvs[1] = modelLocalY[texA] - vy1;
-			modelUvs[2] = modelLocalZ[texA] - vz1;
-			modelUvs[4] = modelLocalX[texB] - vx2;
-			modelUvs[5] = modelLocalY[texB] - vy2;
-			modelUvs[6] = modelLocalZ[texB] - vz2;
-			modelUvs[8] = modelLocalX[texC] - vx3;
-			modelUvs[9] = modelLocalY[texC] - vy3;
-			modelUvs[10] = modelLocalZ[texC] - vz3;
+		final float[] faceUVs;
+		if (uvType == UvType.VANILLA && textureId != -1) {
+			computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC);
+		} else if (uvType != UvType.GEOMETRY) {
+			faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
 		} else {
-			faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
+			faceUVs = GEOMETRY_UVS;
 		}
 
 		final boolean shouldRotateNormals;
@@ -550,19 +535,19 @@ class FacePrioritySorter {
 
 		vb.putVertex(
 			vx1, vy1, vz1,
-			modelUvs[0], modelUvs[1], modelUvs[2],
+			faceUVs[0], faceUVs[1], faceUVs[2],
 			modelNormals[0], modelNormals[1], modelNormals[2],
 			texturedFaceIdx
 		);
 		vb.putVertex(
 			vx2, vy2, vz2,
-			modelUvs[4], modelUvs[5], modelUvs[6],
+			faceUVs[4], faceUVs[5], faceUVs[6],
 			modelNormals[3], modelNormals[4], modelNormals[5],
 			texturedFaceIdx
 		);
 		vb.putVertex(
 			vx3, vy3, vz3,
-			modelUvs[8], modelUvs[9], modelUvs[10],
+			faceUVs[8], faceUVs[9], faceUVs[10],
 			modelNormals[6], modelNormals[7], modelNormals[8],
 			texturedFaceIdx
 		);
