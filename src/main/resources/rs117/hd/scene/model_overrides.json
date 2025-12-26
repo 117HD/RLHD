@@ -49773,6 +49773,12 @@
     "objectIds": [
       "ARAXYTE_CAVE_WALL_TOP",
       "CAVEKIT_ARAXXOR_CAVETOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
     ]
   },
   {
@@ -49817,7 +49823,8 @@
   {
     "description": "Morytania Spider Cave wall topper edges with black",
     "baseMaterial": "PURE_BLACK",
-    "hide": false,
+    "castShadows": false,
+    "receiveShadows": false,
     "objectIds": [
       "ARAXYTE_CAVE_WALL_TOP05"
     ]
@@ -49836,7 +49843,8 @@
         "description": "Web backing",
         "colors": "a < 255",
         "baseMaterial": "NONE",
-        "castShadows": false
+        "castShadows": false,
+        "receiveShadows": false
       }
     ],
     "objectIds": [
