@@ -49776,7 +49776,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "l == 2",
+        "colors": "h == 0 && l == 2",
         "baseMaterial": "PURE_BLACK"
       }
     ]
@@ -49794,7 +49794,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "l == 2",
+        "colors": "h == 0 && l == 2",
         "baseMaterial": "PURE_BLACK"
       }
     ]
@@ -49815,7 +49815,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "l == 2",
+        "colors": "h == 0 && l == 2",
         "baseMaterial": "PURE_BLACK"
       }
     ]
