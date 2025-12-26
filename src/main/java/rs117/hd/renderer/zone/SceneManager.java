@@ -46,10 +46,10 @@ public class SceneManager {
 	private static final int ZONE_DEFER_DIST_START = 3;
 
 	@Inject
-	private Client client;
+	protected Client client;
 
 	@Inject
-	private ClientThread clientThread;
+	protected ClientThread clientThread;
 
 	@Inject
 	private HdPlugin plugin;
