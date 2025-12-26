@@ -1722,9 +1722,9 @@ public class SceneUploader {
 			vertexY += y;
 			vertexZ += z;
 
-			modelLocalX[v] = vertexX;
-			modelLocalY[v] = vertexY;
-			modelLocalZ[v] = vertexZ;
+			modelLocalXI[v] = Float.floatToRawIntBits(modelLocalX[v] = vertexX);
+			modelLocalYI[v] = Float.floatToRawIntBits(modelLocalY[v] = vertexY);
+			modelLocalZI[v] = Float.floatToRawIntBits(modelLocalZ[v] = vertexZ);
 		}
 
 		boolean isVanillaTextured = faceTextures != null;
@@ -1761,18 +1761,6 @@ public class SceneUploader {
 			final int triangleA = indices1[face];
 			final int triangleB = indices2[face];
 			final int triangleC = indices3[face];
-
-			final float vx1 = modelLocalX[triangleA];
-			final float vx2 = modelLocalX[triangleB];
-			final float vx3 = modelLocalX[triangleC];
-
-			final float vy1 = modelLocalY[triangleA];
-			final float vy2 = modelLocalY[triangleB];
-			final float vy3 = modelLocalY[triangleC];
-
-			final float vz1 = modelLocalZ[triangleA];
-			final float vz2 = modelLocalZ[triangleB];
-			final float vz3 = modelLocalZ[triangleC];
 
 			int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
@@ -1825,9 +1813,9 @@ public class SceneUploader {
 				shouldRotateNormals = false;
 				calculateFaceNormal(
 					modelNormals,
-					vx1, vy1, vz1,
-					vx2, vy2, vz2,
-					vx3, vy3, vz3
+					modelLocalX[triangleA], modelLocalY[triangleA], modelLocalZ[triangleA],
+					modelLocalX[triangleB], modelLocalY[triangleB], modelLocalZ[triangleB],
+					modelLocalX[triangleC], modelLocalY[triangleC], modelLocalZ[triangleC]
 				);
 			} else {
 				shouldRotateNormals = orientation != 0;
@@ -1887,19 +1875,19 @@ public class SceneUploader {
 
 			vb.ensureVertex(3);
 			vb.putVertex(
-				vx1, vy1, vz1,
+				modelLocalXI[triangleA], modelLocalYI[triangleA], modelLocalZI[triangleA],
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				modelNormals[0], modelNormals[1], modelNormals[2],
 				texturedFaceIdx
 			);
 			vb.putVertex(
-				vx2, vy2, vz2,
+				modelLocalXI[triangleB], modelLocalYI[triangleB], modelLocalZI[triangleB],
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				modelNormals[3], modelNormals[4], modelNormals[5],
 				texturedFaceIdx
 			);
 			vb.putVertex(
-				vx3, vy3, vz3,
+				modelLocalXI[triangleC], modelLocalYI[triangleC], modelLocalZI[triangleC],
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				modelNormals[6], modelNormals[7], modelNormals[8],
 				texturedFaceIdx
