@@ -51,7 +51,7 @@ layout (location = 1) in vec3 vUv;
     #endif
 
     void main() {
-        int vertex = int(vUv.z);
+        int vertex = gl_VertexID % 3;
         int alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
         int materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
         int terrainData = texelFetch(textureFaces, vTextureFaceIdx + 2)[vertex];
