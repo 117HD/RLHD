@@ -62,7 +62,7 @@ public class SceneUploader {
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
 
-	private static final float[] GEOMETRY_UVS = {
+	public static final float[] GEOMETRY_UVS = {
 		0, 0, 0, 0,
 		1, 0, 0, 0,
 		0, 1, 0, 0
