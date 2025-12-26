@@ -1936,26 +1936,26 @@ public class SceneUploader {
 		float vx2, float vy2, float vz2,
 		float vx3, float vy3, float vz3
 	) {
-		float e0_x = vx2 - vx1;
-		float e0_y = vy2 - vy1;
-		float e0_z = vz2 - vz1;
+		final float e0_x = vx2 - vx1;
+		final float e0_y = vy2 - vy1;
+		final float e0_z = vz2 - vz1;
 
-		float e1_x = vx3 - vx1;
-		float e1_y = vy3 - vy1;
-		float e1_z = vz3 - vz1;
+		final float e1_x = vx3 - vx1;
+		final float e1_y = vy3 - vy1;
+		final float e1_z = vz3 - vz1;
 
 		float nx = e0_y * e1_z - e0_z * e1_y;
 		float ny = e0_z * e1_x - e0_x * e1_z;
 		float nz = e0_x * e1_y - e0_y * e1_x;
 
-		float length = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
-		nx /= length;
-		ny /= length;
-		nz /= length;
+		final float invLength = rcp(sqrt(nx * nx + ny * ny + nz * nz)) * 2048.0f;
+		nx *= invLength;
+		ny *= invLength;
+		nz *= invLength;
 
-		out[0] = out[3] = out[6] = (int) (nx * 2048);
-		out[1] = out[4] = out[7] = (int) (ny * 2048);
-		out[2] = out[5] = out[8] = (int) (nz * 2048);
+		out[0] = out[3] = out[6] = (int) nx;
+		out[1] = out[4] = out[7] = (int) ny;
+		out[2] = out[5] = out[8] = (int) nz;
 	}
 
 	public static int interpolateHSL(int hsl, byte hue2, byte sat2, byte lum2, byte lerp) {
