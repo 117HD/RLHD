@@ -49994,11 +49994,16 @@
   },
   {
     "description": "Morytania Spider Cave webbed stalagmite and scroll",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_3",
     "uvOrientation": 343,
     "uvType": "BOX",
     "uvScale": 0.8,
     "colorOverrides": [
+      {
+        "description": "Scroll",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      },
       {
         "description": "Web backing",
         "colors": "h != 26",
@@ -50006,7 +50011,8 @@
       }
     ],
     "objectIds": [
-      "ARAXXOR_SCOREBOARD_DISABLED"
+      "ARAXXOR_SCOREBOARD_DISABLED",
+      "ARAXXOR_SCOREBOARD"
     ]
   },
   {
