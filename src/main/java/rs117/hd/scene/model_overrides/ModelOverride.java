@@ -18,6 +18,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.Props;
+import rs117.hd.utils.collection.Int2IntCache;
 
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.ExpressionParser.asExpression;
@@ -93,6 +94,8 @@ public class ModelOverride
 	public transient boolean hasTransparency;
 	public transient boolean mightHaveTransparency;
 	public transient boolean modifiesVanillaTexture;
+
+	private transient final Int2IntCache aHslModelOverrideCache = new Int2IntCache(16, 512);
 
 	@FunctionalInterface
 	public interface AhslPredicate {
@@ -609,5 +612,22 @@ public class ModelOverride
 				model.rotateY90Ccw();
 				break;
 		}
+	}
+
+	public final ModelOverride testColorOverrides(int ahsl) {
+		final int overrideIdx = aHslModelOverrideCache.getOrDefault(ahsl, -1);
+		if(overrideIdx != -1)
+			return overrideIdx >= 0 ? colorOverrides[overrideIdx] : null;
+
+		for (int i = 0; i < colorOverrides.length; i++) {
+			final var override = colorOverrides[i];
+			if (override.ahslCondition.test(ahsl)) {
+				aHslModelOverrideCache.put(ahsl, i);
+				return override;
+			}
+		}
+
+		aHslModelOverrideCache.put(ahsl, -2);
+		return null;
 	}
 }

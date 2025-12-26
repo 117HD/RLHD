@@ -22,6 +22,7 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.collection.Int2IntHashMap;
 import rs117.hd.utils.buffer.GLTextureBuffer;
 
 import static net.runelite.api.Perspective.*;
@@ -305,7 +306,7 @@ public class Zone {
 		vboM.unmap();
 	}
 
-	void updateRoofs(Map<Integer, Integer> updates) {
+	void updateRoofs(Int2IntHashMap updates) {
 		for (int level = 0; level < 4; ++level) {
 			for (int i = 0; i < rids[level].length; ++i) {
 				rids[level][i] = updates.getOrDefault(rids[level][i], rids[level][i]);
@@ -313,7 +314,7 @@ public class Zone {
 		}
 
 		for (AlphaModel m : alphaModels) {
-			m.rid = (short) (int) updates.getOrDefault((int) m.rid, (int) m.rid);
+			m.rid = (short) updates.getOrDefault(m.rid, m.rid);
 		}
 	}
 

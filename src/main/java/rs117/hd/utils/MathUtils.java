@@ -727,14 +727,21 @@ public final class MathUtils {
 	}
 
 	public static int float16(float value) {
-		if (value == 0)
+		if(value == 0.0f)
 			return 0;
 		// float32: (-1)^sign * 2^(exponent - 127) * (1.mantissa)
 		// float16: (-1)^sign * 2^(exponent -  15) * (1.mantissa)
-		int f = Float.floatToRawIntBits(value);
-		int sign = (f >>> 16) & 0x8000;
+		final int f = Float.floatToRawIntBits(value);
+		final int sign = (f >>> 16) & 0x8000;
 		int exponent = ((f >>> 23) & 0xFF) - 127 + 15;
 		int mantissa = f & 0x7FFFFF;
+
+		// Normalized range fast path
+		if (exponent > 0 && exponent < 0x1F) {
+			// round-to-nearest-even
+			mantissa += 0x1000;
+			return sign | (exponent << 10) | (mantissa >> 13);
+		}
 
 		if (exponent <= 0) { // Too small, subnormal
 			if (exponent < -10) // To small to represent, return signed zero
@@ -759,7 +766,6 @@ public final class MathUtils {
 			mantissa += 0x2000;
 			// If rounding up caused the mantissa to overflow, increment the exponent
 			if ((mantissa & 0x800000) != 0) {
-				mantissa = 0;
 				exponent += 1;
 				if (exponent >= 0x1F) // Return infinity if it's too large to represent again
 					return sign | 0x7C00; // Infinity

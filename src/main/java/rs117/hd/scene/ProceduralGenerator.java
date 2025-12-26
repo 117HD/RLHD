@@ -39,6 +39,9 @@ import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.collection.Int2IntHashMap;
+import rs117.hd.utils.collection.Int2ObjectHashMap;
+import rs117.hd.utils.collection.IntHashSet;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -77,19 +80,19 @@ public class ProceduralGenerator {
 	@Inject
 	private WaterTypeManager waterTypeManager;
 
-	public void generateSceneData(SceneContext sceneContext)
+	public void generateSceneData(SceneContext sceneContext, SceneContext previousContext)
 	{
 		long timerTotal = System.currentTimeMillis();
 		long timerCalculateTerrainNormals, timerGenerateTerrainData, timerGenerateUnderwaterTerrain;
 
 		long startTime = System.currentTimeMillis();
-		generateUnderwaterTerrain(sceneContext);
+		generateUnderwaterTerrain(sceneContext, previousContext);
 		timerGenerateUnderwaterTerrain = (int)(System.currentTimeMillis() - startTime);
 		startTime = System.currentTimeMillis();
-		calculateTerrainNormals(sceneContext);
+		calculateTerrainNormals(sceneContext, previousContext);
 		timerCalculateTerrainNormals = (int)(System.currentTimeMillis() - startTime);
 		startTime = System.currentTimeMillis();
-		generateTerrainData(sceneContext);
+		generateTerrainData(sceneContext, previousContext);
 		timerGenerateTerrainData = (int)(System.currentTimeMillis() - startTime);
 
 		log.debug("procedural data generation took {}ms to complete", (System.currentTimeMillis() - timerTotal));
@@ -115,19 +118,19 @@ public class ProceduralGenerator {
 	 * material data for each vertex of each Tile. Then adds the resulting
 	 * data to appropriate HashMaps.
 	 */
-	private void generateTerrainData(SceneContext sceneContext)
+	private void generateTerrainData(SceneContext sceneContext, SceneContext previousContext)
 	{
-		sceneContext.vertexTerrainColor = new HashMap<>();
+		sceneContext.vertexTerrainColor = new Int2IntHashMap(previousContext != null && previousContext.vertexTerrainColor != null ? previousContext.vertexTerrainColor.size() : 16);
 		// used for overriding potentially undesirable vertex colors
 		// for example, colors that aren't supposed to be visible
-		sceneContext.highPriorityColor = new HashMap<>();
-		sceneContext.vertexTerrainTexture = new HashMap<>();
+		sceneContext.highPriorityColor = new IntHashSet(previousContext != null && previousContext.highPriorityColor != null ? previousContext.highPriorityColor.size() : 16);
+		sceneContext.vertexTerrainTexture = new Int2ObjectHashMap<>(previousContext != null && previousContext.vertexTerrainTexture != null ? previousContext.vertexTerrainTexture.size() : 16, Material[]::new);
 		// for faces without an overlay is set to true
-		sceneContext.vertexIsUnderlay = new HashMap<>();
+		sceneContext.vertexIsUnderlay = new IntHashSet(previousContext != null && previousContext.vertexIsUnderlay != null ? previousContext.vertexIsUnderlay.size() : 16);
 		// for faces with an overlay is set to true
 		// the result of these maps can be used to determine the vertices
 		// between underlays and overlays for custom blending
-		sceneContext.vertexIsOverlay = new HashMap<>();
+		sceneContext.vertexIsOverlay = new IntHashSet(previousContext != null && previousContext.vertexIsOverlay != null ? previousContext.vertexIsOverlay.size() : 16);
 
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 		int sizeX = sceneContext.sizeX;
@@ -232,9 +235,14 @@ public class ProceduralGenerator {
 			var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
 			var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
 
+			final int[][] vertices = new int[4][3];
+			final int[] vertexKeys = new int[4];
+			final int[] faceColors = new int[3];
 			for (int face = 0; face < faceCount; face++) {
-				int[] faceColors = new int[]{faceColorsA[face], faceColorsB[face], faceColorsC[face]};
-				int[] vertexKeys = faceVertexKeys(tile, face);
+				faceColors[0] = faceColorsA[face];
+				faceColors[1] = faceColorsB[face];
+				faceColors[2] = faceColorsC[face];
+				faceVertexKeys(tile, face, vertices, vertexKeys);
 
 				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
 					boolean isOverlay = isOverlayFace(tile, face);
@@ -302,15 +310,15 @@ public class ProceduralGenerator {
 			// this is used to determine how to blend between vertex colors
 			if (isOverlay)
 			{
-				sceneContext.vertexIsOverlay.put(vertexHashes[vertex], true);
+				sceneContext.vertexIsOverlay.add(vertexHashes[vertex]);
 			}
 			else
 			{
-				sceneContext.vertexIsUnderlay.put(vertexHashes[vertex], true);
+				sceneContext.vertexIsUnderlay.add(vertexHashes[vertex]);
 			}
 
 			// add color and texture to hashmap
-			if ((!lowPriorityColor || !sceneContext.highPriorityColor.containsKey(vertexHashes[vertex])) && !vertexDefaultColor[vertex])
+			if ((!lowPriorityColor || !sceneContext.highPriorityColor.contains(vertexHashes[vertex])) && !vertexDefaultColor[vertex])
 			{
 				boolean shouldWrite = isOverlay || !sceneContext.vertexTerrainColor.containsKey(vertexHashes[vertex]);
 				if (shouldWrite || !sceneContext.vertexTerrainColor.containsKey(vertexHashes[vertex]))
@@ -320,7 +328,7 @@ public class ProceduralGenerator {
 					sceneContext.vertexTerrainTexture.put(vertexHashes[vertex], material);
 
 				if (!lowPriorityColor)
-					sceneContext.highPriorityColor.put(vertexHashes[vertex], true);
+					sceneContext.highPriorityColor.add(vertexHashes[vertex]);
 			}
 		}
 	}
@@ -330,23 +338,23 @@ public class ProceduralGenerator {
 	 * Scene, increasing the depth of each tile based on its distance from the shore.
 	 * Then stores the resulting data in a HashMap.
 	 */
-	private void generateUnderwaterTerrain(SceneContext sceneContext)
+	private void generateUnderwaterTerrain(SceneContext sceneContext, SceneContext previousContext)
 	{
 		int sizeX = sceneContext.sizeX;
 		int sizeY = sceneContext.sizeZ;
 		// true if a tile contains at least 1 face which qualifies as water
 		sceneContext.tileIsWater = new boolean[MAX_Z][sizeX][sizeY];
 		// true if a vertex is part of a face which qualifies as water; non-existent if not
-		sceneContext.vertexIsWater = new HashMap<>();
+		sceneContext.vertexIsWater = new IntHashSet(previousContext != null && sceneContext.vertexIsWater != null ? sceneContext.vertexIsWater.size() : 0);
 		// true if a vertex is part of a face which qualifies as land; non-existent if not
 		// tiles along the shoreline will be true for both vertexIsWater and vertexIsLand
-		sceneContext.vertexIsLand = new HashMap<>();
+		sceneContext.vertexIsLand = new IntHashSet(previousContext != null && sceneContext.vertexIsLand != null ? sceneContext.vertexIsLand.size() : 0);
 		// if true, the tile will be skipped when the scene is drawn
 		// this is due to certain edge cases with water on the same X/Y on different planes
 		sceneContext.skipTile = new boolean[MAX_Z][sizeX][sizeY];
 		// the height adjustment for each vertex, to be applied to the vertex'
 		// real height to create the underwater terrain
-		sceneContext.vertexUnderwaterDepth = new HashMap<>();
+		sceneContext.vertexUnderwaterDepth = new Int2IntHashMap(previousContext != null && sceneContext.vertexUnderwaterDepth != null ? sceneContext.vertexUnderwaterDepth.size() : 0);
 		// the basic 'levels' of underwater terrain, used to sink terrain based on its distance
 		// from the shore, then used to produce the world-space height offset
 		// 0 = land
@@ -366,7 +374,9 @@ public class ProceduralGenerator {
 		}
 
 		Scene scene = sceneContext.scene;
-		Tile[][][] tiles = scene.getExtendedTiles();
+		final Tile[][][] tiles = scene.getExtendedTiles();
+		final int[][] vertices = new int[4][3];
+		final int[] vertexKeys = new int[4];
 
 		// figure out which vertices are water and assign some data
 		for (int z = 0; z < MAX_Z; ++z) {
@@ -386,14 +396,14 @@ public class ProceduralGenerator {
 					}
 
 					if (tile.getSceneTilePaint() != null) {
-						int[] vertexKeys = tileVertexKeys(sceneContext, tile);
+						 tileVertexKeys(sceneContext, tile, vertexKeys);
 
 						int[] worldPos = sceneContext.extendedSceneToWorld(x, y, tile.getRenderLevel());
 						var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos);
 						if (seasonalWaterType(override, tile.getSceneTilePaint().getTexture()) == WaterType.NONE) {
 							for (int vertexKey : vertexKeys)
 								if (tile.getSceneTilePaint().getNeColor() != HIDDEN_HSL || override.forced)
-									sceneContext.vertexIsLand.put(vertexKey, true);
+									sceneContext.vertexIsLand.add(vertexKey);
 
 							sceneContext.underwaterDepthLevels[z][x][y] = 0;
 							sceneContext.underwaterDepthLevels[z][x + 1][y] = 0;
@@ -428,7 +438,7 @@ public class ProceduralGenerator {
 
 							for (int vertexKey : vertexKeys)
 							{
-								sceneContext.vertexIsWater.put(vertexKey, true);
+								sceneContext.vertexIsWater.add(vertexKey);
 							}
 						}
 					}
@@ -490,8 +500,7 @@ public class ProceduralGenerator {
 
 						for (int face = 0; face < faceCount; face++)
 						{
-							int[][] vertices = faceVertices(tile, face);
-							int[] vertexKeys = faceVertexKeys(tile, face);
+							faceVertexKeys(tile, face, vertices, vertexKeys);
 
 							var override = ProceduralGenerator.isOverlayFace(tile, face) ? overlayOverride : underlayOverride;
 							int textureId = model.getTriangleTextureId() == null ? -1 :
@@ -501,7 +510,7 @@ public class ProceduralGenerator {
 								for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
 								{
 									if (model.getTriangleColorA()[face] != HIDDEN_HSL || override.forced)
-										sceneContext.vertexIsLand.put(vertexKeys[vertex], true);
+										sceneContext.vertexIsLand.add(vertexKeys[vertex]);
 
 									if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 &&
 										vertices[vertex][1] % LOCAL_TILE_SIZE == 0
@@ -519,7 +528,7 @@ public class ProceduralGenerator {
 
 								for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
 								{
-									sceneContext.vertexIsWater.put(vertexKeys[vertex], true);
+									sceneContext.vertexIsWater.add(vertexKeys[vertex]);
 								}
 							}
 						}
@@ -621,7 +630,7 @@ public class ProceduralGenerator {
 						tile = tile.getBridge();
 					}
 					if (tile.getSceneTilePaint() != null) {
-						int[] vertexKeys = tileVertexKeys(sceneContext, tile);
+						tileVertexKeys(sceneContext, tile, vertexKeys);
 
 						int swVertexKey = vertexKeys[0];
 						int seVertexKey = vertexKeys[1];
@@ -641,8 +650,7 @@ public class ProceduralGenerator {
 
 						for (int face = 0; face < faceCount; face++)
 						{
-							int[][] vertices = faceVertices(tile, face);
-							int[] vertexKeys = faceVertexKeys(tile, face);
+							faceVertexKeys(tile, face, vertices, vertexKeys);
 
 							for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
 							{
@@ -669,7 +677,7 @@ public class ProceduralGenerator {
 									float southHeightOffset = mix(underwaterDepths[z][x][y], underwaterDepths[z][x + 1][y], lerpX);
 									int heightOffset = (int) mix(southHeightOffset, northHeightOffset, lerpY);
 
-									if (!sceneContext.vertexIsLand.containsKey(vertexKeys[vertex]))
+									if (!sceneContext.vertexIsLand.contains(vertexKeys[vertex]))
 										sceneContext.vertexUnderwaterDepth.put(vertexKeys[vertex], heightOffset);
 								}
 							}
@@ -684,9 +692,9 @@ public class ProceduralGenerator {
 	 * Iterates through all Tiles in a given Scene, calculating vertex normals
 	 * for each one, then stores resulting normal data in a HashMap.
 	 */
-	private void calculateTerrainNormals(SceneContext sceneContext)
+	private void calculateTerrainNormals(SceneContext sceneContext, SceneContext previousSceneContext)
 	{
-		sceneContext.vertexTerrainNormals = new HashMap<>();
+		sceneContext.vertexTerrainNormals = new Int2ObjectHashMap<>(previousSceneContext != null && previousSceneContext.vertexTerrainNormals != null ? previousSceneContext.vertexTerrainNormals.size() : 16, int[][]::new);
 
 		for (Tile[][] plane : sceneContext.scene.getExtendedTiles()) {
 			for (Tile[] column : plane) {
@@ -704,11 +712,11 @@ public class ProceduralGenerator {
 			}
 		}
 
-		sceneContext.vertexTerrainNormals.forEach((key, normal) -> {
-			var n = normalize(vec(normal));
+		for(var entry : sceneContext.vertexTerrainNormals) {
+			var n = normalize(vec(entry.value));
 			for (int i = 0; i < 3; i++)
-				normal[i] = GpuIntBuffer.normShort(n[i]);
-		});
+				entry.value[i] = GpuIntBuffer.normShort(n[i]);
+		}
 	}
 
 	/**
@@ -732,15 +740,16 @@ public class ProceduralGenerator {
 			faceVertices = new int[tileModel.getFaceX().length][VERTICES_PER_FACE][3];
 			faceVertexKeys = new int[tileModel.getFaceX().length][VERTICES_PER_FACE];
 
+			final int[][] vertices = new int[4][3];
+			final int[] vertexKeys = new int[4];
 			for (int face = 0; face < tileModel.getFaceX().length; face++)
 			{
-				int[][] vertices = faceVertices(tile, face);
+				faceVertexKeys(tile, face, vertices, vertexKeys);
 
 				faceVertices[face][0] = new int[]{vertices[0][0], vertices[0][1], vertices[0][2]};
 				faceVertices[face][2] = new int[]{vertices[1][0], vertices[1][1], vertices[1][2]};
 				faceVertices[face][1] = new int[]{vertices[2][0], vertices[2][1], vertices[2][2]};
 
-				int[] vertexKeys = faceVertexKeys(tile, face);
 				faceVertexKeys[face][0] = vertexKeys[0];
 				faceVertexKeys[face][2] = vertexKeys[1];
 				faceVertexKeys[face][1] = vertexKeys[2];
@@ -789,11 +798,15 @@ public class ProceduralGenerator {
 				)
 			);
 
-			for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
-			{
+			for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
 				int vertexKey = faceVertexKeys[face][vertex];
-				// accumulate normals to hashmap
-				sceneContext.vertexTerrainNormals.merge(vertexKey, vertexNormals, (a, b) -> add(a, a, b));
+
+				final int[] terrainNormal = sceneContext.vertexTerrainNormals.getOrDefault(vertexKey, null);
+				if (terrainNormal != null) {
+					add(terrainNormal, terrainNormal, vertexNormals);
+				} else {
+					sceneContext.vertexTerrainNormals.put(vertexKey, vertexNormals);
+				}
 			}
 		}
 	}

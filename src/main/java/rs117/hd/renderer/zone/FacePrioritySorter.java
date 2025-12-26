@@ -42,6 +42,7 @@ import static rs117.hd.renderer.zone.SceneUploader.GEOMETRY_UVS;
 import static rs117.hd.renderer.zone.SceneUploader.calculateFaceNormal;
 import static rs117.hd.renderer.zone.SceneUploader.computeFaceUvsInline;
 import static rs117.hd.renderer.zone.SceneUploader.interpolateHSL;
+import static rs117.hd.renderer.zone.SceneUploader.rotateNormals;
 import static rs117.hd.renderer.zone.SceneUploader.undoVanillaShading;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -436,14 +437,12 @@ class FacePrioritySorter {
 					}
 				}
 			}
-		} else if (modelOverride.colorOverrides != null) {
-			int ahsl = (0xFF - transparency) << 16 | color1;
-			for (var override : modelOverride.colorOverrides) {
-				if (override.ahslCondition.test(ahsl)) {
-					faceOverride = override;
-					material = faceOverride.baseMaterial;
-					break;
-				}
+		}  else if (modelOverride.colorOverrides != null) {
+			final int ahsl = (0xFF - transparency) << 16 | color1;
+			final var ahslOverride = modelOverride.testColorOverrides( ahsl);
+			if(ahslOverride != null) {
+				faceOverride = ahslOverride;
+				material = faceOverride.baseMaterial;
 			}
 		}
 
@@ -500,14 +499,8 @@ class FacePrioritySorter {
 		}
 
 		// Rotate normals
-		if (shouldRotateNormals) {
-			for (int i = 0; i < 9; i += 3) {
-				int x = modelNormals[i];
-				int z = modelNormals[i + 2];
-				modelNormals[i] = z * orientSin + x * orientCos >> 16;
-				modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
-			}
-		}
+		if (shouldRotateNormals)
+			rotateNormals(modelNormals, orientSin, orientCos);
 
 		int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 			bias == null ? 0 : bias[face] & 0xFF;
@@ -527,12 +520,14 @@ class FacePrioritySorter {
 		color2 |= packedAlphaBiasHsl;
 		color3 |= packedAlphaBiasHsl;
 
+		tb.ensureFace(1);
 		final int texturedFaceIdx = tb.putFace(
 			color1, color2, color3,
 			materialData, materialData, materialData,
 			0, 0, 0
 		);
 
+		vb.ensureVertex(3);
 		vb.putVertex(
 			vx1, vy1, vz1,
 			faceUVs[0], faceUVs[1], faceUVs[2],
