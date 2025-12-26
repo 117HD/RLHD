@@ -49768,26 +49768,58 @@
     "description": "Morytania Spider Cave wall topper",
     "baseMaterial": "ROCK_1",
     "uvOrientation": 256,
-    "uvScale": 1.2,
+    "uvScale": 0.85,
     "uvType": "BOX",
     "objectIds": [
       "ARAXYTE_CAVE_WALL_TOP",
-      "ARAXYTE_CAVE_WALL_TOP02",
       "CAVEKIT_ARAXXOR_CAVETOP"
     ]
   },
   {
-    "description": "Morytania Spider Cave wall topper edges with black",
-    "baseMaterial": "ROCK_1",
+    "description": "Morytania Spider Cave wall topper edges with black - Lighter",
+    "baseMaterial": "ROCK_1_LIGHT",
     "uvOrientation": 256,
+    "uvScale": 0.85,
     "uvType": "BOX",
     "objectIds": [
+      "ARAXYTE_CAVE_WALL_TOP02",
       "ARAXYTE_CAVE_WALL_TOP03",
-      "ARAXYTE_CAVE_WALL_TOP04",
-      "ARAXYTE_CAVE_WALL_TOP05",
+      "ARAXYTE_CAVE_WALL_TOP04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave wall topper edges with black - Darker",
+    "baseMaterial": "ROCK_1",
+    "uvOrientation": 256,
+    "uvScale": 0.85,
+    "uvType": "BOX",
+    "objectIds": [
       "CAVEKIT_ARAXXOR_CAVETOP_WALLTOP02",
       "CAVEKIT_ARAXXOR_CAVETOP_WALLTOP03",
-      "CAVEKIT_ARAXXOR_CAVETOP_WALLTOP04"
+      "CAVEKIT_ARAXXOR_CAVETOP_WALLTOP04",
+      "CAVEKIT_ARAXXOR_CAVETOP03_WALLTOP04",
+      "CAVEKIT_ARAXXOR_CAVETOP03_WALLTOP02",
+      "CAVEKIT_ARAXXOR_CAVETOP03_WALLTOP03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave wall topper edges with black",
+    "baseMaterial": "PURE_BLACK",
+    "hide": false,
+    "objectIds": [
+      "ARAXYTE_CAVE_WALL_TOP05"
     ]
   },
   {
@@ -49797,14 +49829,14 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "description": "Web backing",
-        "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
       },
       {
-        "description": "Web",
-        "colors": "h == 0",
-        "baseMaterial": "NONE"
+        "description": "Web backing",
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "castShadows": false
       }
     ],
     "objectIds": [
@@ -49813,7 +49845,22 @@
       "CAVEKIT_WEB01_STRAND01",
       "CAVEKIT_WEB01_STRAND02",
       "CAVEKIT_WEB04_BLOOD01",
-      "CAVEKIT_WEB03_STRAND01_BLOOD01"
+      "CAVEKIT_WEB03_STRAND01_BLOOD01",
+      "CAVEKIT_WEB03_BLOOD01",
+      "CAVEKIT_WEB02_STRAND01_BLOOD01",
+      "CAVEKIT_WEB02_STRAND02_BLOOD01",
+      "CAVEKIT_WEB03_DEFAULT01",
+      "CAVEKIT_WEB02_STRAND01",
+      "CAVEKIT_WEB05_DEFAULT01",
+      "CAVEKIT_WEB03_STRAND01",
+      "CAVEKIT_ARAXXOR_CAVETOP03",
+      "CAVEKIT_WEB04_VENOM01",
+      "CAVEKIT_WEB04_VENOM02",
+      "CAVEKIT_WEB04_DEFAULT01",
+      "CAVEKIT_WEB04_DEFAULT01A",
+      "CAVEKIT_WEB03_STRAND02_BLOOD01",
+      "CAVEKIT_WEB02_STRAND02",
+      "CAVEKIT_WEB03_STRAND02"
     ]
   },
   {
@@ -49824,7 +49871,7 @@
     "colorOverrides": [
       {
         "description": "Web backing",
-        "colors": "h == 10",
+        "colors": "a < 255",
         "baseMaterial": "GROUND_WEB_2_LIGHT"
       },
       {
@@ -49841,35 +49888,37 @@
     "description": "Morytania Spider Cave web tunnel",
     "baseMaterial": "ROCK_1",
     "uvOrientation": 343,
+    "uvScale": 0.85,
     "uvType": "BOX",
     "colorOverrides": [
       {
         "description": "Web backing",
-        "colors": "h == 10",
+        "colors": "a < 255",
         "baseMaterial": "GROUND_WEB_2_LIGHT"
       },
       {
-        "description": "Web",
-        "colors": "h == 0",
-        "baseMaterial": "NONE"
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "PURE_BLACK"
       }
     ],
     "objectIds": [
       "ARAXXOR_CAVE_OUTER_TUNNEL_OP",
       "ARAXXOR_CAVE_OUTER_TUNNEL_NOOP",
-      "ARAXXOR_CAVE_OUTER_TUNNEL_OP_4"
+      "ARAXXOR_CAVE_OUTER_TUNNEL_OP_4",
+      "ARAXXOR_CAVE_OUTER_TUNNEL_OP_2",
+      "ARAXXOR_CAVE_OUTER_TUNNEL_OP_3"
     ]
   },
   {
     "description": "Morytania Spider Cave webbed stalagmite",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_3",
     "uvOrientation": 343,
     "uvType": "BOX",
     "uvScale": 0.8,
     "colorOverrides": [
       {
         "description": "Web backing",
-        "colors": "h == 10",
+        "colors": "h == 10 || h == 13",
         "baseMaterial": "GROUND_WEB_2_LIGHT"
       }
     ],
@@ -49877,7 +49926,62 @@
       "DECOKIT_WEB01_HANGING01",
       "ARAXXOR_STALAGMITE02_WEBBED01",
       "ARAXXOR_STALAGMITE02_WEBBED02",
-      "ARAXXOR_WEBSACK02_STALAGMITE01"
+      "ARAXXOR_WEBSACK02_STALAGMITE01",
+      "ARAXXOR_STALAGMITE01_WEBBED02",
+      "ARAXXOR_STALAGMITE01_WEBBED01",
+      "ARAXXOR_STALAGMITE01_WEBBED03",
+      "ARAXXOR_WEB01_HANGING01",
+      "ARAXXOR_WEB01_HANGING02",
+      "ARAXXOR_WEBSACK01_STALAGMITE01",
+      "DECOKIT_WEB02_HANGING03",
+      "DECOKIT_WEB02_HANGING02",
+      "DECOKIT_WEB03_LAYING01",
+      "DECOKIT_WEB03_LAYING02"
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave Araxxor Venom Pool Rocks",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "ROCK_ACID01_MEDIUM03",
+      "ROCK_ACID01_SMALL01",
+      "ROCK_ACID01_LARGE02",
+      "ROCK_ACID01_LARGE01",
+      "ROCK_ACID01_LARGE03",
+      "ROCK_ACID01_MEDIUM02",
+      "ROCK_ACID01_SMALL02"
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave Araxxor Pool Ripples",
+    "baseMaterial": "GRAY_150",
+    "uvType": "BOX",
+    "objectIds": [
+      "ARAXXOR_RIPPLE_SMALL01",
+      "ARAXXOR_RIPPLE_LARGE01"
+    ]
+  },
+  {
+    "description": "Morytania Spider Cave Large Egg Sack",
+    "baseMaterial": "STONE_NORMALED",
+    "uvOrientation": 343,
+    "uvScale": 1.25,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Web backing",
+        "colors": "h < 10",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Web backing",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
+      }
+    ],
+    "objectIds": [
+      "TOBQUEST_EGG_SAC_FULL_NOOP"
     ]
   },
   {
