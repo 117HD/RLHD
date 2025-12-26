@@ -49877,7 +49877,7 @@
       {
         "description": "Exit",
         "colors": "h == 0",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_90"
       }
     ],
     "objectIds": [

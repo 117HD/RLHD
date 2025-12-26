@@ -43994,5 +43994,20 @@
       0
     ],
     "type": "STATIC"
+  },
+  {
+    "description": "ARAXYTE_SPIDER_CAVE_EXIT",
+    "offset": [ 0, 125, 0 ],
+    "radius": 750,
+    "strength": 3.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "ARAXYTE_CAVE_EXIT"
+    ]
   }
 ]
