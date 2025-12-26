@@ -21868,7 +21868,10 @@
   {
     "description": "PHASMATYS_ENERGY_BARRIER__1",
     "offset": [ 0, 175, 0 ],
-    "objectIds": [ "AHOY_TOWN_BARRIER" ],
+    "objectIds": [
+      "AHOY_TOWN_BARRIER",
+      "AHOY_TOWN_BARRIER_POST_QUEST"
+    ],
     "radius": 800,
     "strength": 4.5,
     "color": [
@@ -21883,7 +21886,10 @@
   {
     "description": "PHASMATYS_ENERGY_BARRIER_2",
     "offset": [ -120, 175, 0 ],
-    "objectIds": [ "AHOY_TOWN_BARRIER" ],
+    "objectIds": [
+      "AHOY_TOWN_BARRIER",
+      "AHOY_TOWN_BARRIER_POST_QUEST"
+    ],
     "radius": 800,
     "strength": 4.5,
     "color": [
