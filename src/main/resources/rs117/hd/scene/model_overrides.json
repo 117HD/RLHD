@@ -16858,6 +16858,45 @@
     ]
   },
   {
+    "description": "Wilderness - Chaos Fanatic Rift",
+    "baseMaterial": "DIRT_1_VERY_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "CHAOS_FANATIC_RIFT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 53",
+        "baseMaterial": "GRAY_80"
+      }
+    ]
+  },
+  {
+    "description": "Wilderness - Chaos Fanatic Rift - Lighter",
+    "areas": [ "CHAOS_FANATIC_RIFT_LIGHTER" ],
+    "baseMaterial": "DIRT_1_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "CHAOS_FANATIC_RIFT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 53",
+        "baseMaterial": "GRAY_80"
+      }
+    ]
+  },
+  {
+    "description": "Wilderness - Chaos Fanatic Rift - Hide Floating Soil",
+    "areas": [ "CHAOS_FANATIC_RIFTS" ],
+    "hide": true,
+    "objectIds": [
+      "WILD5_DUGUPSOIL_1",
+      "WILD5_DUGUPSOIL_2",
+      "WILD5_DUGUPSOIL_3"
+    ]
+  },
+  {
     "description": "Wilderness - Slayer Cave - Stalagmite",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
@@ -68395,7 +68434,7 @@
   },
   {
     "description": "Sunbleak - Spade",
-    "baseMaterial": "DIRT_1_DARK",
+    "baseMaterial": "DIRT_1_SEMI_DARK",
     "uvType": "BOX",
     "uvScale": 0.45,
     "colorOverrides": [

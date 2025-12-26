@@ -4193,6 +4193,20 @@
     ]
   },
   {
+    "name": "CHAOS_FANATIC_RIFT_LIGHTER",
+    "aabbs": [
+      [ 2986, 3845, 2987, 3846 ]
+    ]
+  },
+  {
+    "name": "CHAOS_FANATIC_RIFTS",
+    "aabbs": [
+      [ 2974, 3847, 2975, 3848 ],
+      [ 2976, 3842, 2977, 3843 ],
+      [ 2986, 3845, 2987, 3846 ]
+    ]
+  },
+  {
     "name": "WILDERNESS_NORTH_OF_RESOURCE_AREA",
     "aabbs": [
       [ 3175, 3945, 3202, 3967 ]

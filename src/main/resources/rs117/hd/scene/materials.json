@@ -1224,9 +1224,19 @@
     "brightness": 1.1
   },
   {
-    "name": "DIRT_1_DARK",
+    "name": "DIRT_1_SEMI_DARK",
     "parent": "DIRT_1",
     "brightness": 0.8
+  },
+  {
+    "name": "DIRT_1_DARK",
+    "parent": "DIRT_1",
+    "brightness": 0.7
+  },
+  {
+    "name": "DIRT_1_VERY_DARK",
+    "parent": "DIRT_1",
+    "brightness": 0.65
   },
   {
     "name": "DIRT_1_VERT",

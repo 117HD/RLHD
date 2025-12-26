@@ -21958,10 +21958,10 @@
   },
   {
     "description": "CHAOS_RIFT",
-    "height": 80,
+    "height": 120,
     "alignment": "CENTER",
     "radius": 600,
-    "strength": 10,
+    "strength": 12,
     "color": [
       196,
       79,
@@ -21969,7 +21969,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 30,
+    "range": 20,
     "objectIds": [
       "CHAOS_FANATIC_RIFT"
     ]
