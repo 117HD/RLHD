@@ -2065,27 +2065,35 @@ public class SceneUploader {
 		if(l < IGNORE_LOW_LIGHTNESS)
 			return color;
 
-		// Normals are currently unrotated, so we don't need to do any rotation for this
 		final float nDotL = nx + ny + nz;
-		if (nDotL > 0f) {
-			final float len = sqrt(nx * nx + ny * ny + nz * nz);
-			final float lightDotNormal = (nDotL * 0.57735026f) / len;
+		if (nDotL <= 0f)
+			return color;
 
-			// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
-			// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
-			// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
-			// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
-			// low value for it to look acceptable in most cases.
-			final float colorAdjust = BASE_LIGHTEN - l + (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER;
-			l += (int) (lightDotNormal * colorAdjust);
+		// Normals are currently unrotated, so we don't need to do any rotation for this
+		final float len = sqrt(nx * nx + ny * ny + nz * nz);
+		final float lightDotNormal = (nDotL * 0.57735026f) / len;
+
+		// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
+		// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
+		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
+		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
+		// low value for it to look acceptable in most cases.
+		final float colorAdjust = BASE_LIGHTEN - l + (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER;
+		l += (int) (lightDotNormal * colorAdjust);
+
+		final int maxL;
+		if(legacyGreyColors) {
+			maxL = 55;
+		} else {
+			// Read LUT using the saturation value
+			maxL = MAX_BRIGHTNESS_LOOKUP_TABLE[(color >> 7) & 0x7];
 		}
 
 		// Clamp brightness as detailed above
-		final int s = (color >> 7) & 0x7;
-		final int maxL = legacyGreyColors ? 55 : MAX_BRIGHTNESS_LOOKUP_TABLE[s];
-		if (l > maxL) l = maxL;
+		if (l > maxL)
+			l = maxL;
 
-		// Preserve H, replace S & L
-		return (color & 0xFC00) | (s << 7) | l;
+		// Only replace luminance
+		return (color & ~0x7F) | l;
 	}
 }
