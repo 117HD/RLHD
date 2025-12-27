@@ -9526,7 +9526,7 @@
       144
     ],
     "replacements": {
-      "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "SEASONAL_GRUNGE": "s == 0 && blending || h <= 10 && s < 2 && blending",
       "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
       "SEASONAL_GRASS": [
         "h >= 11 && s == 1",
