@@ -130,7 +130,7 @@ public class SceneManager {
 
 	public void initialize(UBOWorldViews uboWorldViews) {
 		this.uboWorldViews = uboWorldViews;
-		injector.injectMembers(root);
+		root.initialize(injector);
 	}
 
 	public void destroy() {
@@ -534,7 +534,7 @@ public class SceneManager {
 				for (int z = 0; z < NUM_ZONES; ++z) {
 					Zone zone = nextZones[x][z];
 					if (zone == null)
-						zone = nextZones[x][z] = new Zone();
+						zone = nextZones[x][z] = injector.getInstance(Zone.class);
 
 					if (!zone.initialized) {
 						float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
@@ -552,7 +552,7 @@ public class SceneManager {
 			}
 
 			for (SortedZone sorted : sortedZones) {
-				Zone newZone = new Zone();
+				Zone newZone = injector.getInstance(Zone.class);
 				newZone.dirty = sorted.zone.dirty;
 				if (staggerLoad) {
 					// Reuse the old zone while uploading a correct one
@@ -717,7 +717,7 @@ public class SceneManager {
 		proceduralGenerator.generateSceneData(sceneContext);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
-		injector.injectMembers(ctx);
+		ctx.initialize(injector);
 		subs[worldViewId] = ctx;
 
 		for (int x = 0; x < ctx.sizeX; ++x)

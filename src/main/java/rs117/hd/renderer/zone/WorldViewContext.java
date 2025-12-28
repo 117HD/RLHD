@@ -1,5 +1,6 @@
 package rs117.hd.renderer.zone;
 
+import com.google.inject.Injector;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
@@ -16,6 +17,9 @@ import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 
 @Slf4j
 public class WorldViewContext {
+	@Inject
+	private Injector injector;
+
 	@Inject
 	private ClientThread clientThread;
 
@@ -55,9 +59,14 @@ public class WorldViewContext {
 		if (worldView != null)
 			uboWorldViewStruct = uboWorldViews.acquire(worldView);
 		zones = new Zone[sizeX][sizeZ];
+	}
+
+	public void initialize(Injector injector) {
+		injector.injectMembers(this);
+
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
-				zones[x][z] = new Zone();
+				zones[x][z] = injector.getInstance(Zone.class);
 	}
 
 	void initMetadata() {
@@ -212,7 +221,7 @@ public class WorldViewContext {
 			curZone.uploadJob.release();
 		}
 
-		Zone newZone = new Zone();
+		Zone newZone = injector.getInstance(Zone.class);
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
