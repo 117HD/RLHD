@@ -69001,6 +69001,16 @@
     ]
   },
   {
+    "description": "Depth Bias Fix - Minnow Fishing Spot",
+    "depthBias": 255,
+    "npcIds": [
+      "MINNOW_FISHINGSPOT1",
+      "MINNOW_FISHINGSPOT2",
+      "MINNOW_FISHINGSPOT3",
+      "MINNOW_FISHINGSPOT4"
+    ]
+  },
+  {
     "description": "Depth Bias Fix - Catherby shelves poking through a wall",
     "baseMaterial": "WOOD_GRAIN_3",
     "areas": [ "CATHERBY_DEPTH_BIAS_FIX" ],
