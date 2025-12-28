@@ -41580,7 +41580,8 @@
     "description": "Misthalin Mystery Boat",
     "objectIds": [
       "MISTMYST_BOAT_LUMBRIDGE",
-      "MISTMYST_BOAT_ISLAND"
+      "MISTMYST_BOAT_ISLAND",
+      "SEASLUG_ROWBOAT"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -69658,7 +69659,6 @@
       "SAILING_BT_GWENITH_GLIDE_MOTE"
     ]
   },
-
   {
     "description": "Floating Stuff - Hide Ripples",
     "objectIds": [
@@ -69686,8 +69686,27 @@
     "colorOverrides": [
       {
         "description": "Fake Ripples",
-        "colors": "a < 255 || h == 37 && l == 71",
+        "colors": "a < 255 || h == 37 && l == 71 || h == 42",
         "baseMaterial": "GRAY_75",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Water Birds - Hide Ripples",
+    "npcIds": [
+      "DUCK",
+      "DUCK_FEMALE",
+      "DUCK_UPDATE_DUCKLINGS",
+      "DUCK_NOOP",
+      "DUCK_FEMALE_NOOP",
+      "SWAN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255 || h == 37 && l == 71 || h == 42",
+        "baseMaterial": "NONE",
         "hideAsWaterEffect": true
       }
     ]
