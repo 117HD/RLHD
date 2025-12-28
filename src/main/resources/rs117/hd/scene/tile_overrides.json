@@ -3781,15 +3781,21 @@
   {
     "name": "DRAYNOR_MANOR_ENTRANCE_PATH",
     "area": "DRAYNOR_MANOR",
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "minLightness": 12,
+    "maxLightness": 14,
+    "uvOrientation": 488,
     "overlayIds": [
       2,
+      11,
       90,
       117,
       120,
       127,
       132
-    ],
-    "groundMaterial": "VARROCK_PATHS"
+    ]
   },
   {
     "name": "WIZARDS_TOWER_PATH",
