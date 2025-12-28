@@ -3,8 +3,10 @@ package rs117.hd.renderer.zone;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.client.callback.ClientThread;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.utils.jobs.JobGroup;
@@ -14,11 +16,16 @@ import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 
 @Slf4j
 public class WorldViewContext {
+	@Inject
+	private ClientThread clientThread;
+
+	@Inject
+	private SceneManager sceneManager;
+
 	final int worldViewId;
 	final int sizeX, sizeZ;
 	@Nullable
 	WorldViewStruct uboWorldViewStruct;
-	SceneManager sceneManager;
 	ZoneSceneContext sceneContext;
 	Zone[][] zones;
 	VBO vboM;
@@ -37,12 +44,10 @@ public class WorldViewContext {
 	final JobGroup<ZoneUploadJob> invalidationGroup = new JobGroup<>(true, false);
 
 	WorldViewContext(
-		SceneManager sceneManager,
 		@Nullable WorldView worldView,
 		@Nullable ZoneSceneContext sceneContext,
 		UBOWorldViews uboWorldViews
 	) {
-		this.sceneManager = sceneManager;
 		this.worldViewId = worldView == null ? -1 : worldView.getId();
 		this.sceneContext = sceneContext;
 		this.sizeX = worldView == null ? NUM_ZONES : worldView.getSizeX() >> 3;
@@ -94,11 +99,7 @@ public class WorldViewContext {
 				Zone PrevZone = curZone;
 				// Swap the zone out with the one we just uploaded
 				zones[zx][zz] = curZone = uploadTask.zone;
-				if(sceneManager.client.isClientThread()) {
-					curZone.unmap();
-				} else {
-					sceneManager.clientThread.invoke(curZone::unmap);
-				}
+				clientThread.invoke(curZone::unmap);
 
 				if (PrevZone != curZone)
 					pendingCull.add(PrevZone);
