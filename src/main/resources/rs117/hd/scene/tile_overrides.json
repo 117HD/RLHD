@@ -1521,6 +1521,20 @@
     ]
   },
   {
+    "name": "RIMMINGTON_PATH_BLEND_FIX",
+    "area": "RIMMINGTON_PATH_BLEND_FIX",
+    "groundMaterial": "GRAVEL",
+    "setHue": 0,
+    "setSaturation": 0,
+    "minLightness": 24,
+    "maxLightness": 26,
+    "overlayIds": [
+      10,
+      81,
+      88
+    ]
+  },
+  {
     "name": "TAG - FIXES - END"
   },
   {
