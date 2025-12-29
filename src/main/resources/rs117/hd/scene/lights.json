@@ -43922,5 +43922,73 @@
     "objectIds": [
       "GRIMSTONE_FURNACE"
     ]
+  },
+  {
+    "description": "SMOKE_DEVIL_DUNGEON_LAVA_FIRE_1",
+    "offset": [ -50, 300, 0 ],
+    "worldY": 9460,
+    "worldX": 2367,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "SMOKE_DEVIL_DUNGEON_LAVA_FIRE_2",
+    "offset": [ 0, 200, 0 ],
+    "worldY": 9426,
+    "worldX": 2385,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "SMOKE_DEVIL_DUNGEON_LAVA_FIRE_3",
+    "offset": [ 50, 300, 0 ],
+    "worldY": 9449,
+    "worldX": 2350,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "SMOKE_DEVIL_DUNGEON_LAVA_FIRE_4",
+    "offset": [ 50, 200, -50 ],
+    "worldY": 9438,
+    "worldX": 2418,
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
   }
 ]
