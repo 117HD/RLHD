@@ -654,6 +654,19 @@
     "fogDepth": 80
   },
   {
+    "area": "SMOKE_DEVIL_DUNGEON",
+    "fogColor": "#0A0A0A",
+    "directionalStrength": 0.5,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogDepth": 25,
+    "groundFogStart": -150,
+    "groundFogEnd": 150,
+    "groundFogOpacity": 0.4
+  },
+  {
     "area": "KHARIDIAN_DESERT_DEEP",
     "ambientColor": "#c0ae94",
     "ambientStrength": 3,
