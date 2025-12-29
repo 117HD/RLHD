@@ -34551,6 +34551,23 @@
     "uvOrientation": 128
   },
   {
+    "description": "Smoke Devil Dungeon Cave Entrance and Exits",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "SLAYER_CAVE_SMOKEDEVIL_BOSS_ENTRANCE",
+      "SLAYER_CAVE_SMOKEDEVIL_BOSS_EXIT",
+      "SLAYER_CAVE_PASSAGE_SMOKEDEVIL_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
     "description": "Keldagrim - Metallic - Metal Walls - Exterior",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
