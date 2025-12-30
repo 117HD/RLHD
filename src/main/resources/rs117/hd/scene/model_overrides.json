@@ -1245,6 +1245,19 @@
     }
   },
   {
+    "description": "Tree - Achey Tree",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -1,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "ACHEY_TREE",
+      "ACHEY_TREE_STUMP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
     "description": "Spirit trees - Stump",
     "baseMaterial": "BARK",
     "uvType": "BOX",
@@ -7144,7 +7157,6 @@
     "baseMaterial": "ROCK_2",
     "objectIds": [
       "CANOEING_CAVEENTRANCE_BROWN",
-      "SMOKEDEVIL_CAVE_ENTRANCE",
       "FOSSIL_WYVERN_CAVE_ENTRANCE",
       "TZHAAR_KARAMJADUNGEON_WALL_ENTRANCE",
       "RC_ZMI_DUNGEON_WALL_CRACK_ENTRANCE_EXIT",
@@ -7155,6 +7167,24 @@
     "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.5
+  },
+  {
+    "description": "SMOKEDEVIL_CAVE_ENTRANCE",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "SMOKEDEVIL_CAVE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
   },
   {
     "description": "Scorpia Cavern - Entrance",
