@@ -83,8 +83,6 @@
       "GHOST8_UNAGGRESSIVE",
       "HOUSE_GHOST",
       "HOUSE_GHOST2",
-      "SMOKE_DEVIL",
-      "SMOKE_DEVIL_BOSS",
       "HOUSE_GHOST3",
       "HOUSE_GHOST4",
       "HOUSE_GHOST5",
@@ -70981,6 +70979,30 @@
       "HUNTING_POLAR_WEDGE_MIRROR",
       "HUNTING_POLAR_CAVEWALL_TOP_WEDGE",
       "HUNTING_POLAR_WEDGE"
+    ]
+  },
+  {
+    "description": "SMOKE_DEVIL_BOSS",
+    "npcIds": [
+      "SMOKE_DEVIL_BOSS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 196",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "SMOKE_DEVIL",
+    "npcIds": [
+      "SMOKE_DEVIL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 6",
+        "baseMaterial": "GRAY_150"
+      }
     ]
   }
 ]

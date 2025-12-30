@@ -43990,5 +43990,77 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20
+  },
+  {
+    "description": "SMOKE_DEVIL_LIGHT",
+    "offset": [ 0, 75, 0 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      255,
+      255,
+      130
+    ],
+    "npcIds": [
+      "SMOKE_DEVIL"
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150
+  },
+  {
+    "description": "SMOKE_DEVIL_BOSS_BOTTOM_LIGHT",
+    "offset": [ 0, 175, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      110
+    ],
+    "npcIds": [
+      "SMOKE_DEVIL_BOSS"
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 250
+  },
+  {
+    "description": "SMOKE_DEVIL_BOSS_FRONT_LIGHT",
+    "offset": [ 0, 300, 115 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      110
+    ],
+    "npcIds": [
+      "SMOKE_DEVIL_BOSS"
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "SMOKE_DEVIL_BOSS_BACK_LIGHT",
+    "offset": [ 0, 300, -115 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      110
+    ],
+    "npcIds": [
+      "SMOKE_DEVIL_BOSS"
+    ],
+    "type": "STATIC"
   }
 ]

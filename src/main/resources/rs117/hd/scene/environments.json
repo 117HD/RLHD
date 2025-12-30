@@ -661,10 +661,7 @@
       80,
       190
     ],
-    "fogDepth": 25,
-    "groundFogStart": -150,
-    "groundFogEnd": 150,
-    "groundFogOpacity": 0.4
+    "fogDepth": 30
   },
   {
     "area": "KHARIDIAN_DESERT_DEEP",
