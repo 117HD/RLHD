@@ -18657,8 +18657,9 @@
       "CASTLEWARS_ZAMORAK_QUIT",
       "CASTLEWARS_RANDOM_TELE"
     ],
-    "shadowOpacityThreshold": 0.12,
-    "flatNormals": true
+    "castShadows": false,
+    "flatNormals": true,
+    "depthBias": 255
   },
   {
     "description": "Use flat normals for POH Portal Nexus, since it spins around",
