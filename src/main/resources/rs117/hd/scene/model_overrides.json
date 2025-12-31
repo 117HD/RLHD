@@ -10051,6 +10051,7 @@
       "RUGCORNER",
       "RUGSIDE",
       "RUGMIDDLE",
+      "RUGMIDDLE_ALTAR",
       "RUGCORNER_WHITE",
       "RUGSIDE_WHITE",
       "RUGMIDDLE_WHITE",
@@ -11199,7 +11200,7 @@
   },
   {
     "description": "Wooden - Plank - Tables",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "RIMMINGTON_WOODEN_TABLE",
       "RIMMINGTON_SMALL_WOODEN_TABLE",
@@ -16273,7 +16274,7 @@
       "MAGEARENA_WATERPORTAL1",
       "MAGEARENA_WATERPORTAL2"
     ],
-    "uvType": "VANILLA",
+    "uvType": "BOX",
     "castShadows": false
   },
   {
@@ -16345,7 +16346,7 @@
   },
   {
     "description": "Wilderness - Teleport Obelisk",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "WILDERNESS_PORTAL_STONE_GLOWING",
       "WILDERNESS_PORTAL_STONE_0",
@@ -16908,11 +16909,23 @@
   },
   {
     "description": "Chaos Altar",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "CHAOSALTAR"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "colors": "h == 8 || s == 9",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Player Killing - Loot Key Chest",
@@ -25678,7 +25691,7 @@
   },
   {
     "description": "Ground Decoration - Flat Rocks - Small",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "objectIds": [
       "SKEWSTEPS1",

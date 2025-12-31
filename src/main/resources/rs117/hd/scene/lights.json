@@ -43922,5 +43922,43 @@
     "objectIds": [
       "GRIMSTONE_FURNACE"
     ]
+  },
+  {
+    "description": "POH_BONE_SACRIFICE",
+    "offset": [ 0, 150, 0 ],
+    "alignment": "CENTER",
+    "radius": 220,
+    "fadeOutDuration": 100,
+    "fadeInDuration": 200,
+    "strength": 10,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "POH_BONE_SACRIFICE"
+    ]
+  },
+  {
+    "description": "FIRE",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 12.5,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "ZAMORAK_FLAME"
+    ]
   }
 ]
