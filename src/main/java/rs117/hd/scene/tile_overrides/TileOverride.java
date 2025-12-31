@@ -231,7 +231,9 @@ public class TileOverride {
 	}
 
 	public TileOverride resolveNextReplacement(VariableSupplier vars) {
-		for (var entry : replacements) {
+		//noinspection ForLoopReplaceableByForEach - Enhanced for allocates an iterator which generates allot of garbage during scene load
+		for (int i = 0; i < replacements.size(); i++) {
+			var entry = replacements.get(i);
 			if (!entry.getKey().test(vars))
 				continue;
 

@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.Random;
 import javax.annotation.Nullable;
 
+import static net.runelite.api.Perspective.*;
+
 /**
  * Math utility functions similar to GLSL, including vector operations on raw float arrays.
  * Usability and conciseness is prioritized, however most methods at least allow avoiding unnecessary allocations.
@@ -40,6 +42,18 @@ public final class MathUtils {
 	public static final float RAD_TO_DEG = 1 / DEG_TO_RAD;
 	public static final float JAU_TO_RAD = TWO_PI / 2048;
 	public static final float RAD_TO_JAU = 1 / JAU_TO_RAD;
+
+	private static final float[] SINF = new float[2048];
+	private static final float[] COSF = new float[2048];
+
+	static
+	{
+		// Duplicated from Perspective.class since SINF & COSF are private
+		for (int i = 0; i < 2048; ++i) {
+			SINF[i] = (float) Math.sin((double) i * UNIT);
+			COSF[i] = (float) Math.cos((double) i * UNIT);
+		}
+	}
 
 	public static float[] vec(float... vec) {
 		return vec;
@@ -718,23 +732,36 @@ public final class MathUtils {
 		return (float) Math.sin(rad);
 	}
 
+	public static float jauToSinF(int JAU) { return SINF[mod(JAU, 2048)]; }
+
 	public static float cos(float rad) {
 		return (float) Math.cos(rad);
 	}
+
+	public static float jauToCosF(int JAU) { return COSF[mod(JAU, 2048)]; }
 
 	public static float tan(float rad) {
 		return (float) Math.tan(rad);
 	}
 
+	public static int floatToUnorm16(float f) { return (int)(f * 65535.0f) & 0xFFFF; }
+
 	public static int float16(float value) {
-		if (value == 0)
+		if(value == 0.0f)
 			return 0;
 		// float32: (-1)^sign * 2^(exponent - 127) * (1.mantissa)
 		// float16: (-1)^sign * 2^(exponent -  15) * (1.mantissa)
-		int f = Float.floatToRawIntBits(value);
-		int sign = (f >>> 16) & 0x8000;
+		final int f = Float.floatToRawIntBits(value);
+		final int sign = (f >>> 16) & 0x8000;
 		int exponent = ((f >>> 23) & 0xFF) - 127 + 15;
 		int mantissa = f & 0x7FFFFF;
+
+		// Normalized range fast path
+		if (exponent > 0 && exponent < 0x1F) {
+			// round-to-nearest-even
+			mantissa += 0x1000;
+			return sign | (exponent << 10) | (mantissa >> 13);
+		}
 
 		if (exponent <= 0) { // Too small, subnormal
 			if (exponent < -10) // To small to represent, return signed zero
@@ -759,7 +786,6 @@ public final class MathUtils {
 			mantissa += 0x2000;
 			// If rounding up caused the mantissa to overflow, increment the exponent
 			if ((mantissa & 0x800000) != 0) {
-				mantissa = 0;
 				exponent += 1;
 				if (exponent >= 0x1F) // Return infinity if it's too large to represent again
 					return sign | 0x7C00; // Infinity
