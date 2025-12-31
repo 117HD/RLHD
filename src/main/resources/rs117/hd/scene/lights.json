@@ -43922,5 +43922,23 @@
     "objectIds": [
       "GRIMSTONE_FURNACE"
     ]
+  },
+  {
+    "description": "Shades of Mortton - Temple Fire and Pyre",
+    "offset": [ 0, 215, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TEMPLEFIRE_ALTAR",
+      "TEMPLE_PYRE_FIRE"
+    ]
   }
 ]

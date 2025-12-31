@@ -14793,14 +14793,60 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Mortton - Objects - Stone - Funeral Pyre",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Mortton - Objects - Stone - Funeral Pyre - Empty",
+    "baseMaterial": "SMOOTH_STONE",
     "textureMaterial": "HD_CONCRETE_FLAT",
+    "uvScale": 0.7,
     "objectIds": [
       "TEMPLE_PYRE"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Mortton - Objects - Stone - Funeral Pyre - Logs and Bones",
+    "baseMaterial": "SMOOTH_STONE",
+    "textureMaterial": "HD_CONCRETE_FLAT",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TEMPLE_PYRE_LOGS",
+      "TEMPLE_PYRE_OAK",
+      "TEMPLE_PYRE_WILLOW",
+      "TEMPLE_PYRE_MAPLE",
+      "TEMPLE_PYRE_YEW",
+      "TEMPLE_PYRE_MAGIC",
+      "TEMPLE_PYRE_BONES_LOGS",
+      "TEMPLE_PYRE_BONES_OAK",
+      "TEMPLE_PYRE_BONES_WILLOW",
+      "TEMPLE_PYRE_BONES_MAPLE",
+      "TEMPLE_PYRE_BONES_YEW",
+      "TEMPLE_PYRE_BONES_MAGIC",
+      "TEMPLE_PYRE_TEAK",
+      "TEMPLE_PYRE_MAHOGANY",
+      "TEMPLE_PYRE_BONES_TEAK",
+      "TEMPLE_PYRE_BONES_MAHOGANY",
+      "TEMPLE_PYRE_ARCTIC_PINE",
+      "TEMPLE_PYRE_ARCTIC_BONES_PINE",
+      "TEMPLE_PYRE_REDWOOD",
+      "TEMPLE_PYRE_BONES_REDWOOD",
+      "TEMPLE_PYRE_CAMPHOR",
+      "TEMPLE_PYRE_IRONWOOD",
+      "TEMPLE_PYRE_ROSEWOOD",
+      "TEMPLE_PYRE_BONES_CAMPHOR",
+      "TEMPLE_PYRE_BONES_IRONWOOD",
+      "TEMPLE_PYRE_BONES_ROSEWOOD"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.6111111111111,
+        "uvOrientation": 100,
+        "baseMaterial": "LIGHT_BARK"
+      }
+    ]
   },
   {
     "description": "Mortton - Objects - Stone - Stone Stand",
@@ -14816,19 +14862,65 @@
   },
   {
     "description": "Mortton - Objects - Stone - Temple Walls",
-    "baseMaterial": "STONE",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
-      "TEMPLEWALLCORNER_10"
+      "TEMPLEWALLCORNER_1",
+      "TEMPLEWALLCORNER_2",
+      "TEMPLEWALLCORNER_3",
+      "TEMPLEWALLCORNER_4",
+      "TEMPLEWALLCORNER_5",
+      "TEMPLEWALLCORNER_6",
+      "TEMPLEWALLCORNER_7",
+      "TEMPLEWALLCORNER_8",
+      "TEMPLEWALLCORNER_9",
+      "TEMPLEWALLCORNER_10",
+      "TEMPLEWALLCORNER_BASE"
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
     "description": "Mortton - Objects - Stone - Temple Walls - Mirrored",
-    "baseMaterial": "STONE",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
-      "TEMPLEWALL_10"
+      "TEMPLEWALL_1",
+      "TEMPLEWALL_2",
+      "TEMPLEWALL_3",
+      "TEMPLEWALL_4",
+      "TEMPLEWALL_5",
+      "TEMPLEWALL_6",
+      "TEMPLEWALL_7",
+      "TEMPLEWALL_8",
+      "TEMPLEWALL_9",
+      "TEMPLEWALL_10",
+      "TEMPLEWALL_BASE"
     ],
-    "uvType": "MODEL_XY_MIRROR_B"
+    "uvType": "BOX"
+  },
+  {
+    "description": "Mortton - Objects - Stone - Temple Fire - Lit",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "TEMPLEFIRE_ALTAR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Mortton - Objects - Stone - Temple Fire - Unlit and Broken",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "TEMPLEFIRE_ALTAR_NOFIRE",
+      "TEMPLEFIRE_ALTAR_NOFIRE_BROKEN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Mortton Shade Catacombs - Walls - Stone",
@@ -40425,7 +40517,8 @@
       "QIP_SHEEP_SHEARER_SINK",
       "QIP_COOK_SINK",
       "RIMMINGTON_SINK",
-      "AIDE_SINK"
+      "AIDE_SINK",
+      "MORTTON_SINK"
     ],
     "colorOverrides": [
       {
@@ -42490,6 +42583,7 @@
     "uvType": "BOX",
     "objectIds": [
       "SHUTTERWINDOW",
+      "WINDOW_SHUTTER",
       "BROKENWINDOW",
       "BROKENSHUTTERWINDOW1",
       "BROKENSHUTTERWINDOW2"
