@@ -14924,7 +14924,7 @@
   },
   {
     "description": "Mortton Shade Catacombs - Walls - Stone",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE",
     "objectIds": [
       "MYQ3_LAB_WALL",
       "MYQ3_LAB_WALL_EXPOSED_PLASTER",
@@ -14932,11 +14932,23 @@
       "MYQ5_WALL_JOIN_L",
       "MYQ5_WALL_CAVE_SUPPORT_RIGHT",
       "MYQ5_WALL_CAVE_SUPPORT_LEFT",
-      "MYQ5_WALL_CAVE_MID"
+      "MYQ5_WALL_CAVE_MID",
+      "MYQ3_HIDEOUT_WALL_TOP"
     ],
     "uvType": "BOX",
-    "uvScale": 0.46,
-    "uvOrientation": 300
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "s == 4 || s == 3 || s == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.45
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Mortton Shade Catacombs  - Walls - Metallic - Doors",
