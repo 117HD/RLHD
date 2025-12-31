@@ -15251,7 +15251,7 @@
       "SHADECHESTOPEN_GOLD_PURPLE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.3,
     "colorOverrides": [
       {
         "colors": "h == 10",
@@ -15260,6 +15260,38 @@
         "uvScale": 0.7,
         "uvOrientation": 512
       }
+    ]
+  },
+  {
+    "description": "Mortton - NPC - Make hard to see shades more visible - Green",
+    "baseMaterial": "GRAY_125",
+    "castShadows": false,
+    "npcIds": [
+      "SHADESHADOW_LEVEL1"
+    ]
+  },
+  {
+    "description": "Mortton - NPC - Make hard to see shades more visible - Black",
+    "baseMaterial": "GRAY_75",
+    "castShadows": false,
+    "npcIds": [
+      "SHADESHADOW_LEVEL2"
+    ]
+  },
+  {
+    "description": "Mortton - NPC - Make hard to see shades more visible - Red",
+    "baseMaterial": "GRAY_110",
+    "castShadows": false,
+    "npcIds": [
+      "SHADESHADOW_LEVEL3"
+    ]
+  },
+  {
+    "description": "Mortton - NPC - Make hard to see shades more visible - Brown",
+    "baseMaterial": "GRAY_05",
+    "castShadows": false,
+    "npcIds": [
+      "SHADESHADOW_LEVEL5"
     ]
   },
   {
