@@ -14826,7 +14826,7 @@
       "TEMPLE_PYRE_BONES_TEAK",
       "TEMPLE_PYRE_BONES_MAHOGANY",
       "TEMPLE_PYRE_ARCTIC_PINE",
-      "TEMPLE_PYRE_ARCTIC_BONES_PINE",
+      "TEMPLE_PYRE_BONES_ARCTIC_PINE",
       "TEMPLE_PYRE_REDWOOD",
       "TEMPLE_PYRE_BONES_REDWOOD",
       "TEMPLE_PYRE_CAMPHOR",
@@ -14973,7 +14973,7 @@
       "TEMPLE_COFFIN_2X1",
       "TEMPLE_COFFIN_2X2"
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Mortton Shade Catacombs  - Objects - Stone - Altar",
@@ -15186,56 +15186,70 @@
     "uvScale": 0.6
   },
   {
-    "description": "Mortton - Objects - Shade Chests - Medium - Bronze",
+    "description": "Mortton - Objects - Shade Chests - Medium - Steel",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "SHADECHEST_BRONZE_BLOODRED",
       "SHADECHEST_BRONZE_BROWN",
       "SHADECHEST_BRONZE_CRIMSON",
       "SHADECHEST_BRONZE_BLACK",
-      "SHADECHEST_BRONZE_PURPLE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
-  },
-  {
-    "description": "Mortton - Objects - Shade Chests - Medium - Steel",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-    "objectIds": [
+      "SHADECHEST_BRONZE_PURPLE",
       "SHADECHEST_STEEL_BLOODRED",
       "SHADECHEST_STEEL_BROWN",
       "SHADECHEST_STEEL_CRIMSON",
       "SHADECHEST_STEEL_BLACK",
-      "SHADECHEST_STEEL_PURPLE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
-  },
-  {
-    "description": "Mortton - Objects - Shade Chests - Medium - Black",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-    "objectIds": [
+      "SHADECHEST_STEEL_PURPLE",
       "SHADECHEST_BLACK_BLOODRED",
       "SHADECHEST_BLACK_BROWN",
       "SHADECHEST_BLACK_CRIMSON",
       "SHADECHEST_BLACK_BLACK",
-      "SHADECHEST_BLACK_PURPLE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
-  },
-  {
-    "description": "Mortton - Objects - Shade Chests - Medium - Silver",
-    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-    "objectIds": [
+      "SHADECHEST_BLACK_PURPLE",
       "SHADECHEST_SILVER_BLOODRED",
       "SHADECHEST_SILVER_BROWN",
       "SHADECHEST_SILVER_CRIMSON",
       "SHADECHEST_SILVER_BLACK",
-      "SHADECHEST_SILVER_PURPLE"
+      "SHADECHEST_SILVER_PURPLE",
+      "SHADECHEST_GOLD_BLOODRED",
+      "SHADECHEST_GOLD_CRIMSON",
+      "SHADECHEST_GOLD_BLACK",
+      "SHADECHEST_GOLD_BROWN",
+      "SHADECHEST_GOLD_PURPLE",
+      "SHADECHESTOPEN_STEEL_BLOODRED",
+      "SHADECHESTOPEN_STEEL_BROWN",
+      "SHADECHESTOPEN_STEEL_CRIMSON",
+      "SHADECHESTOPEN_STEEL_BLACK",
+      "SHADECHESTOPEN_STEEL_PURPLE",
+      "SHADECHESTOPEN_BRONZE_BROWN",
+      "SHADECHESTOPEN_BRONZE_CRIMSON",
+      "SHADECHESTOPEN_BRONZE_BLACK",
+      "SHADECHESTOPEN_BRONZE_PURPLE",
+      "SHADECHESTOPEN_BLACK_BLOODRED",
+      "SHADECHESTOPEN_BLACK_BROWN",
+      "SHADECHESTOPEN_BLACK_CRIMSON",
+      "SHADECHESTOPEN_BLACK_BLACK",
+      "SHADECHESTOPEN_BLACK_PURPLE",
+      "SHADECHESTOPEN_SILVER_BLOODRED",
+      "SHADECHESTOPEN_SILVER_BROWN",
+      "SHADECHESTOPEN_SILVER_CRIMSON",
+      "SHADECHESTOPEN_SILVER_BLACK",
+      "SHADECHESTOPEN_SILVER_PURPLE",
+      "SHADECHESTOPEN_GOLD_BLOODRED",
+      "SHADECHESTOPEN_GOLD_CRIMSON",
+      "SHADECHESTOPEN_GOLD_BLACK",
+      "SHADECHESTOPEN_GOLD_BROWN",
+      "SHADECHESTOPEN_GOLD_PURPLE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Morytania - Walls - Triple Slat Fence",
