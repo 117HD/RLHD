@@ -11451,13 +11451,43 @@
     "description": "Candelabra",
     "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
-      "GOLDCANDLES",
       "BLACKCANDLES",
-      "FAI_VARROCK_POSH_CANDLESTICK",
       "QIP_DIGSITE_CANDLES"
     ],
     "uvType": "BOX",
     "uvScale": 0.4
+  },
+  {
+    "description": "Candelabra - Silver",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "objectIds": [
+      "FAI_VARROCK_POSH_CANDLESTICK"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Candelabra - Gold",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "objectIds": [
+      "GOLDCANDLES"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_HIGHGLOSS",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.2111111111
+      }
+    ]
   },
   {
     "description": "Candelabra - Wooden",
