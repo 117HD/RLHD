@@ -1263,6 +1263,16 @@
     "brightness": 1.083
   },
   {
+    "name": "DIRT_2_VERY_LIGHT",
+    "parent": "DIRT_2",
+    "brightness": 1.15
+  },
+  {
+    "name": "DIRT_2_DARK",
+    "parent": "DIRT_2",
+    "brightness": 0.85
+  },
+  {
     "name": "GRAVEL_N"
   },
   {

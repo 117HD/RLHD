@@ -8391,7 +8391,10 @@
       "WILDY_HUB_PIER_HALF",
       "WILDY_HUB_PIER_HALF2",
       "WILDY_HUB_PIER_BROKEN",
-      "WILDY_HUB_PIER_BROKEN_MIRROR"
+      "WILDY_HUB_PIER_BROKEN_MIRROR",
+      "WILD_FALLOFF_BRIDGE_PIER_HILLSKEW",
+      "WILD_FALLOFF_BRIDGE_BROKEN",
+      "WILD_FALLOFF_BRIDGE_BROKEN_MIRROR"
     ],
     "uvType": "BOX"
   },
@@ -10155,7 +10158,8 @@
       "WILD_VENANATIS_ENTRANCE01",
       "WILD_VENENATIS_SINGLES_ENTRANCE01",
       "CAVE_ROCK02_ENTRANCE01_COLOSSAL_WYRM",
-      "DEEPFIN_CAVE_ENTRANCE"
+      "DEEPFIN_CAVE_ENTRANCE",
+      "WILD_FALLOFF_CAVEENTRANCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -16357,7 +16361,8 @@
       "WILDERNESS_PORTAL_STONE_5"
     ],
     "uvType": "BOX",
-    "uvScale": 0.75
+    "uvScale": 0.75,
+    "terrainVertexSnap": true
   },
   {
     "description": "Wilderness - Venenatis/Spindel Lair - Walls",
@@ -16906,6 +16911,62 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.32
+  },
+  {
+    "description": "Wilderness - Lava Pool Edges - Darker",
+    "baseMaterial": "NONE",
+    "areas": [ "WILDERNESS" ],
+    "objectIds": [
+      "WILD_FALLOFF_10",
+      "WILD_FALLOFF_12",
+      "WILD_FALLOFF_11",
+      "WILD_FALLOFF3",
+      "WILD_FALLOFF5",
+      "WILD_FALLOFF1",
+      "WILD_FALLOFF9",
+      "WILD_FALLOFF4",
+      "WILD_FALLOFF8",
+      "WILD_FALLOFF2",
+      "WILD_FALLOFF7",
+      "WILD_FALLOFF6"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "DIRT_2_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Wilderness - Lava Pool Edges - Lighter",
+    "baseMaterial": "NONE",
+    "areas": [ "Wilderness - Lava Pool Edges - Lighter" ],
+    "objectIds": [
+      "WILD_FALLOFF_10",
+      "WILD_FALLOFF_12",
+      "WILD_FALLOFF_11",
+      "WILD_FALLOFF3",
+      "WILD_FALLOFF5",
+      "WILD_FALLOFF1",
+      "WILD_FALLOFF9",
+      "WILD_FALLOFF4",
+      "WILD_FALLOFF8",
+      "WILD_FALLOFF2",
+      "WILD_FALLOFF7",
+      "WILD_FALLOFF6"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "DIRT_2_VERY_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Chaos Altar",
@@ -20308,7 +20369,8 @@
     "description": "Drill Sergent - Rope Fence",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      "BARRACK_POST"
+      "BARRACK_POST",
+      "WILD_FALLOFF_BRIDGE_RAILING"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,

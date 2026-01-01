@@ -11719,6 +11719,23 @@
   },
   {
     "description": "wilderness volcano",
+    "worldX": 3367,
+    "worldY": 3935,
+    "plane": 1,
+    "offset": [ 50, 350, 0 ],
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 50,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "range": 20
+  },
+  {
+    "description": "wilderness volcano",
     "worldX": 3365,
     "worldY": 3950,
     "plane": 1,
