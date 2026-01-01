@@ -367,10 +367,10 @@ public class HdPlugin extends Plugin {
 	public int fboTiledLighting;
 	public int texTiledLighting;
 
-	public final UBOGlobal uboGlobal = new UBOGlobal();
-	public final UBOLights uboLights = new UBOLights(false);
-	public final UBOLights uboLightsCulling = new UBOLights(true);
-	public final UBOUI uboUI = new UBOUI();
+	public UBOGlobal uboGlobal;
+	public UBOUI uboUI;
+	public UBOLights uboLights;
+	public UBOLights uboLightsCulling;
 
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
@@ -1053,17 +1053,35 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeUbos() {
+		if(uboGlobal == null)
+			uboGlobal = new UBOGlobal();
 		uboGlobal.initialize(HdPlugin.UNIFORM_BLOCK_GLOBAL);
-		uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
-		uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
+
+		if(uboUI == null)
+			uboUI = new UBOUI();
 		uboUI.initialize(HdPlugin.UNIFORM_BLOCK_UI);
+
+		if(uboLights == null)
+			uboLights = new UBOLights(false);
+		uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
+
+		if(uboLightsCulling == null)
+			uboLightsCulling = new UBOLights(true);
+		uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
 	}
 
 	private void destroyUbos() {
-		uboGlobal.destroy();
-		uboLights.destroy();
-		uboLightsCulling.destroy();
-		uboUI.destroy();
+		if(uboGlobal != null)
+			uboGlobal.destroy();
+
+		if(uboUI != null)
+			uboUI.destroy();
+
+		if(uboLights != null)
+			uboLights.destroy();
+
+		if(uboLightsCulling != null)
+			uboLightsCulling.destroy();
 	}
 
 	private void initializeUiTexture() {
