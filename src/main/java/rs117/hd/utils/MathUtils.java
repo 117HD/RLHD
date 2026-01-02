@@ -304,6 +304,20 @@ public final class MathUtils {
 		return 1.0f / v;
 	}
 
+	public static float square(float v) {
+		return v * v;
+	}
+
+	public static float[] square(float[] out, float... v) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = square(v[i % v.length]);
+		return out;
+	}
+
+	public static float[] square(float... v) {
+		return square(new float[v.length], v);
+	}
+
 	public static float sqrt(float v) {
 		return (float) Math.sqrt(v);
 	}
@@ -510,6 +524,10 @@ public final class MathUtils {
 		return Math.min(a, b);
 	}
 
+	public static char min(char a, char b) {
+		return (char) Math.min(a, b);
+	}
+
 	public static long min(long a, long b) {
 		return Math.min(a, b);
 	}
@@ -556,6 +574,10 @@ public final class MathUtils {
 
 	public static int max(int a, int b) {
 		return Math.max(a, b);
+	}
+
+	public static char max(char a, char b) {
+		return (char) Math.max(a, b);
 	}
 
 	public static long max(long a, long b) {

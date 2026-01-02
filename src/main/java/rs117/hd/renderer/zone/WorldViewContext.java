@@ -1,6 +1,11 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
+import java.nio.IntBuffer;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
@@ -8,17 +13,38 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
+import org.lwjgl.system.MemoryStack;
+import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
+import rs117.hd.utils.Camera;
+import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.RenderState;
+import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
+import static rs117.hd.renderer.zone.VAO.METADATA_SIZE;
 
 @Slf4j
 public class WorldViewContext {
+	private static final int VAO_BUFFER_COUNT = 3;
+
+	public static final int VAO_OPAQUE = 0;
+	public static final int VAO_ALPHA = 1;
+	public static final int VAO_PLAYER = 2;
+	public static final int VAO_SHADOW = 3;
+	public static final int VAO_COUNT = 4;
+
+	public static final int ALPHA_ZSORT = 8192;
+	public static final int ALPHA_ZSORT_SQ = ALPHA_ZSORT * ALPHA_ZSORT;
+
 	@Inject
 	private Injector injector;
+
+	@Inject
+	private HdPlugin plugin;
 
 	@Inject
 	private ClientThread clientThread;
@@ -26,17 +52,27 @@ public class WorldViewContext {
 	@Inject
 	private SceneManager sceneManager;
 
+	private static final ArrayDeque<VAO> VAO_STAGING_POOL = new ArrayDeque<>();
+	private static final ArrayDeque<VAO> VAO_POOL = new ArrayDeque<>();
+
 	final int worldViewId;
 	final int sizeX, sizeZ;
 	@Nullable
 	WorldViewStruct uboWorldViewStruct;
 	ZoneSceneContext sceneContext;
 	Zone[][] zones;
-	VBO vboM;
+	GLBuffer vboM;
 	boolean isLoading = true;
 
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;
+
+	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
+	private final List<Zone> alphaZones = new ArrayList<>();
+
+	CommandBuffer vaoSceneCmd;
+	CommandBuffer vaoDirectionalCmd;
+	final VAO[][] vaos = new VAO[VAO_BUFFER_COUNT][VAO_COUNT];
 
 	public long loadTime;
 	public long uploadTime;
@@ -61,25 +97,91 @@ public class WorldViewContext {
 		zones = new Zone[sizeX][sizeZ];
 	}
 
-	public void initialize(Injector injector) {
+	public void initialize(RenderState renderState, Injector injector) {
 		injector.injectMembers(this);
+
+		vaoSceneCmd = new CommandBuffer(renderState);
+		vaoDirectionalCmd = new CommandBuffer(renderState);
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
 				zones[x][z] = injector.getInstance(Zone.class);
 	}
 
-	void initMetadata() {
+	void initBuffers() {
 		if (vboM != null)
 			return;
 
-		vboM = new VBO(VAO.METADATA_SIZE);
-		vboM.initialize(GL_STATIC_DRAW);
-		vboM.map();
-		vboM.vb
-			.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1)
-			.put(0).put(0); // dummy scene offset for macOS
-		vboM.unmap();
+		vboM = new GLBuffer("WorldViewMetadata", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, 0);
+		vboM.initialize(METADATA_SIZE);
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer buf = stack.callocInt(3);
+			buf.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1);
+			buf.put(0).put(0);
+			buf.flip();
+			vboM.upload(buf);
+		}
+
+		long start = System.nanoTime();
+		for(int i = 0; i < VAO_COUNT; i ++) {
+			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_SHADOW;
+			final ArrayDeque<VAO> POOL = needsStaging ? VAO_STAGING_POOL : VAO_POOL;
+			for(int k = 0; k < VAO_BUFFER_COUNT; k++) {
+				VAO vao = vaos[k][i] = POOL.poll();
+				if(vao == null) {
+					vao = vaos[k][i] = new VAO(Integer.toString(i), needsStaging);
+					vao.initialize();
+				}
+				vao.bindMetadataVAO(vboM);
+			}
+		}
+		log.debug("WorldViewContext - WorldViewid: {} initBuffers took {}ms", worldViewId, (System.nanoTime() - start) / 1000000);
+	}
+
+	void map() {
+		for(int i = 0; i < VAO_COUNT; i ++)
+			vaos[plugin.frame % VAO_BUFFER_COUNT][i].map();
+	}
+
+	VAO.VAOView beginDraw(int type, int faces) {
+		return vaos[plugin.frame % VAO_BUFFER_COUNT][type].beginDraw(faces);
+	}
+
+	void drawAll(int type, CommandBuffer cmd) {
+		vaos[plugin.frame % VAO_BUFFER_COUNT][type].draw(cmd);
+	}
+
+	void unmap() {
+		for(int i = 0; i < VAO_COUNT; i ++) {
+			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_SHADOW;
+			vaos[plugin.frame % VAO_BUFFER_COUNT][i].unmap(shouldCoalesce);
+		}
+	}
+
+	void sortStaticAlphaModels(Camera camera) {
+		alphaZones.clear();
+
+		final int offset = sceneContext.sceneOffset >> 3;
+		final int camPosX = (int) camera.getPositionX();
+		final int camPosZ = (int) camera.getPositionZ();
+		for(int zx = 0; zx < sizeX; zx++) {
+			for(int zz = 0; zz < sizeZ; zz++) {
+				final Zone z = zones[zx][zz];
+				if(z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum))
+					continue;
+
+				final int dx = camPosX - ((zx - offset) << 10);
+				final int dz = camPosZ - ((zz - offset) << 10);
+				z.dist = dx * dx + dz * dz;
+				alphaZones.add(z);
+			}
+		}
+
+		if(!alphaZones.isEmpty()) {
+			alphaZones.sort(alphaSortComparator);
+			for (Zone z : alphaZones)
+				z.alphaStaticModelSort(camera);
+		}
 	}
 
 	void handleZoneSwap(float deltaTime, int zx, int zz) {
@@ -110,8 +212,11 @@ public class WorldViewContext {
 				zones[zx][zz] = curZone = uploadTask.zone;
 				clientThread.invoke(curZone::unmap);
 
-				if (PrevZone != curZone)
+				if (PrevZone != curZone) {
+					curZone.inSceneFrustum  = PrevZone.inSceneFrustum;
+					curZone.inShadowFrustum = PrevZone.inShadowFrustum;
 					pendingCull.add(PrevZone);
+				}
 			} else if (uploadTask.wasCancelled() && !curZone.cull) {
 				boolean shouldRetry = uploadTask.encounteredError() && curZone.isFirstLoadingAttempt;
 				if (shouldRetry) {
@@ -159,6 +264,16 @@ public class WorldViewContext {
 		return queuedWork;
 	}
 
+	int getSortedAlphaCount() {
+		int count = 0;
+
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
+				count += zones[x][z].sortedFacesLen;
+
+		return count;
+	}
+
 	void completeInvalidation() {
 		if (isLoading)
 			return;
@@ -170,7 +285,7 @@ public class WorldViewContext {
 				handleZoneSwap(-1.0f, x, z);
 	}
 
-	void free() {
+	void free(boolean isShutdown) {
 		sceneLoadGroup.cancel();
 		streamingGroup.cancel();
 
@@ -181,6 +296,25 @@ public class WorldViewContext {
 		if (uboWorldViewStruct != null)
 			uboWorldViewStruct.free();
 		uboWorldViewStruct = null;
+
+		for(int i = 0; i < VAO_COUNT; i ++) {
+			for (int k = 0; k < VAO_BUFFER_COUNT; k++) {
+				final ArrayDeque<VAO> POOL = vaos[k][i].hasStagingBuffer() ? VAO_STAGING_POOL : VAO_POOL;
+				if(isShutdown || POOL.size() > 24) {
+					vaos[k][i].destroy();
+				} else {
+					(vaos[k][i].hasStagingBuffer() ? VAO_STAGING_POOL : VAO_POOL).add(vaos[k][i]);
+				}
+			}
+		}
+
+		if(isShutdown) {
+			VAO v;
+			while ((v = VAO_STAGING_POOL.poll()) != null)
+				v.destroy();
+			while ((v = VAO_POOL.poll()) != null)
+				v.destroy();
+		}
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)

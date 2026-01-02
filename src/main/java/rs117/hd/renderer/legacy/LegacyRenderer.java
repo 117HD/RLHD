@@ -222,7 +222,7 @@ public class LegacyRenderer implements Renderer {
 			glDeleteVertexArrays(vaoScene);
 		vaoScene = 0;
 
-		jobSystem.destroy();
+		jobSystem.shutdown();
 
 		destroyBuffers();
 		destroyTileHeightMap();

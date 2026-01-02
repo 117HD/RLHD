@@ -50,6 +50,7 @@ import rs117.hd.config.ShadowResolution;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.config.WorkerThreads;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
@@ -369,7 +370,6 @@ public interface HdPluginConfig extends Config
 	default int brightness() {
 		return 100;
 	}
-
 
 	/*====== Lighting settings ======*/
 
@@ -832,6 +832,30 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_WORKER_THREADS = "workerThreads";
+	@ConfigItem(
+		keyName = KEY_WORKER_THREADS,
+		name = "Worker Threads",
+		description = " * LOW (25%)\n * MED (50%)\n * HIGH (75%)\n * MAX (100%)",
+		section = miscellaneousSettings
+	)
+	default WorkerThreads workerThreads() {
+		return WorkerThreads.MAX;
+	}
+
+	String KEY_POWER_SAVING = "powerSaving";
+	@ConfigItem(
+		keyName = KEY_POWER_SAVING,
+		name = "Power Saving",
+		description = "Reduces workload whilst the client is no longer in focus.",
+		position = 19,
+		section = miscellaneousSettings
+	)
+	default boolean powerSaving()
+	{
+		return false;
+	}
+
 	String KEY_COLOR_FILTER = "colorFilter";
 	@ConfigItem(
 		keyName = KEY_COLOR_FILTER,
@@ -1111,17 +1135,6 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_ASYNC_UI_COPY = "experimentalAsyncUICopy";
-	@ConfigItem(
-		keyName = KEY_ASYNC_UI_COPY,
-		name = "Perform UI copy asynchronously",
-		description = "Slightly improves performance by delaying the UI by one frame.",
-		section = experimentalSettings
-	)
-	default boolean asyncUICopy() {
-		return false;
-	}
-
 	String KEY_TILED_LIGHTING_IMAGE_STORE = "experimentalTiledLightingImageStore";
 	@ConfigItem(
 		keyName = KEY_TILED_LIGHTING_IMAGE_STORE,
@@ -1155,6 +1168,36 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean forceIndirectDraw() {
 		return false;
+	}
+
+	String KEY_ASYNC_MODEL_CACHE_SIZE = "asyncModelCacheSizeMiB";
+	@Range(
+		min = 16,
+		max = 64
+	)
+	@Units(" MiB")
+	@ConfigItem(
+		keyName = KEY_ASYNC_MODEL_CACHE_SIZE,
+		name = "Async cache size",
+		description =
+			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+			"Generally, 32 MiB is plenty, with diminishing returns the higher you go.<br>" +
+			"Minimum=16 MiB, maximum=64 MiB",
+		section = experimentalSettings
+	)
+	default int asyncModelCacheSizeMiB() {
+		return 32;
+	}
+
+	String KEY_ASYNC_MODEL_UPLOAD = "asyncModelUpload";
+	@ConfigItem(
+		keyName = KEY_ASYNC_MODEL_UPLOAD,
+		name = "Async Model Upload",
+		description = "Caches Models to memory so that they can be parallelized and uploaded async.",
+		section = experimentalSettings
+	)
+	default boolean asyncModelUpload() {
+		return true;
 	}
 
 	/*====== Internal settings ======*/

@@ -1,7 +1,7 @@
 package rs117.hd.utils.jobs;
 
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.ArrayDeque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,8 @@ public final class Worker {
 
 	final JobSystem jobSystem;
 	final int workerIdx;
-	final BlockingDeque<JobHandle> localWorkQueue = new LinkedBlockingDeque<>();
+	final ConcurrentLinkedDeque<JobHandle> localWorkQueue = new ConcurrentLinkedDeque<>();
+	final ArrayDeque<JobHandle> localStalledWork = new ArrayDeque<>();
 	final AtomicBoolean inflight = new AtomicBoolean();
 
 	boolean findNextStealTarget() {
@@ -45,7 +46,7 @@ public final class Worker {
 		pausedName = name + " [Paused]";
 		while (jobSystem.active) {
 			// Check local work queue
-			handle = localWorkQueue.poll();
+			handle = (localStalledWork.isEmpty() ? localWorkQueue : localStalledWork).poll();
 
 			while (handle == null) {
 				if (stealTargetIdx >= 0) {
@@ -106,13 +107,22 @@ public final class Worker {
 	}
 
 	void processHandle() throws InterruptedException {
+		boolean requeued = false;
 		try {
 			workerHandleCancel();
 
-			if (handle.item != null && handle.setRunning(this)) {
-				inflight.lazySet(true);
-				handle.item.onRun();
-				handle.item.ranToCompletion.set(true);
+			if (handle.item != null) {
+				if(handle.item.canStart()) {
+					if(handle.setRunning(this)) {
+						inflight.set(true);
+						handle.item.onRun();
+						handle.item.ranToCompletion.set(true);
+					}
+				} else {
+					// Requeue into stalled work queue, since adding to CosncurrentLinkedDeque continuously is costly
+					localStalledWork.addLast(handle);
+					requeued = true;
+				}
 			}
 		} catch (InterruptedException e) {
 			log.debug("Interrupt Received whilst processing: {}", handle.hashCode());
@@ -125,10 +135,12 @@ public final class Worker {
 			handle.item.encounteredError.set(true);
 			handle.cancel(false);
 		} finally {
-			if (handle.item != null && handle.item.wasCancelled.get())
-				handle.item.onCancel();
-			handle.setCompleted();
-			handle.worker = null;
+			if(!requeued) {
+				if (handle.item != null && handle.item.wasCancelled.get())
+					handle.item.onCancel();
+				handle.setCompleted();
+				handle.worker = null;
+			}
 			handle = null;
 		}
 	}

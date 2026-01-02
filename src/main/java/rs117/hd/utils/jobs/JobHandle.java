@@ -31,7 +31,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	private static final ThreadLocal<ArrayDeque<JobHandle>> CYCLE_STACK = ThreadLocal.withInitial(ArrayDeque::new);
 	private static final ThreadLocal<HashSet<JobHandle>> VISITED = ThreadLocal.withInitial(HashSet::new);
 
-	private final LinkedBlockingDeque<JobHandle> dependants = new LinkedBlockingDeque<>();
+	private final ConcurrentLinkedDeque<JobHandle> dependants = new ConcurrentLinkedDeque<>();
 	private final AtomicInteger jobState = new AtomicInteger(STATE_NONE);
 	private final AtomicInteger refCounter = new AtomicInteger();
 	private final AtomicInteger depCount = new AtomicInteger();
@@ -53,13 +53,13 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		}
 
 		handle.setJobState(STATE_NONE);
-		handle.refCounter.lazySet(1);
+		handle.refCounter.set(1);
 		handle.dependants.clear();
 
 		// reset AQS state for completion
 		handle.setStateAQS(0);
 
-		handle.depCount.lazySet(0);
+		handle.depCount.set(0);
 		handle.highPriority = false;
 		handle.item = null;
 		handle.worker = null;
@@ -81,7 +81,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 					"Handle [{}] Skipping dependant [{}] due to being in state: [{}]",
 					this,
 					handle,
-					STATE_NAMES[jobState.getAcquire()]
+					STATE_NAMES[jobState.get()]
 				);
 			return false;
 		}
@@ -133,7 +133,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	}
 
 	synchronized void setInQueue() {
-		assert isIdle() : "State should be NONE but is " + STATE_NAMES[jobState.getAcquire()];
+		assert isIdle() : "State should be NONE but is " + STATE_NAMES[jobState.get()];
 		setJobState(STATE_QUEUED);
 	}
 
@@ -147,7 +147,10 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 			item.done.set(true);
 
 		// Signal completion via AQS
-		releaseShared(0); // TODO: This should increment the generation
+		releaseShared(0);
+
+		if (item != null)
+			item.onCompletion();
 
 		if (VALIDATE)
 			log.debug("Handle [{}] Completed", this);
@@ -180,10 +183,10 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	}
 
 	private void setJobState(int newState) {
-		final int currentState = jobState.getAcquire();
+		final int currentState = jobState.get();
 		if (currentState == newState) return;
 		if (VALIDATE) log.trace("[{}] {} -> {}", hashCode(), STATE_NAMES[currentState], STATE_NAMES[newState]);
-		jobState.lazySet(newState);
+		jobState.set(newState);
 	}
 
 	private void setStateAQS(int value) {
@@ -200,7 +203,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		assert isCompleted() : "Release before setCompleted() has been called?!";
 		assert !VALIDATE || !POOL.contains(this) : "POOL already contains this Handle?!";
 
-		if (VALIDATE) log.debug("Releasing [{}] state: [{}]", this, STATE_NAMES[jobState.getAcquire()]);
+		if (VALIDATE) log.debug("Releasing [{}] state: [{}]", this, STATE_NAMES[jobState.get()]);
 		setJobState(STATE_NONE);
 		item.handle = null;
 		item = null;
@@ -213,7 +216,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		if (item == null || isCancelled() || isCompleted())
 			return;
 
-		int prevState = jobState.getAcquire();
+		int prevState = jobState.get();
 		setJobState(STATE_CANCELLED);
 
 		if (item != null)
@@ -234,12 +237,16 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	}
 
 	boolean isReleased() { return isIdle() && refCounter.get() == 0; }
-	boolean isIdle() { return jobState.getAcquire() == STATE_NONE; }
-	boolean isInQueue() { return jobState.getAcquire() == STATE_QUEUED; }
-	boolean isCancelled() { return jobState.getAcquire() == STATE_CANCELLED; }
-	boolean isCompleted() { return jobState.getAcquire() == STATE_COMPLETED; }
+	boolean isIdle() { return jobState.get() == STATE_NONE; }
+	boolean isInQueue() { return jobState.get() == STATE_QUEUED; }
+	boolean isCancelled() { return jobState.get() == STATE_CANCELLED; }
+	boolean isCompleted() { return jobState.get() == STATE_COMPLETED; }
 
-	void await() throws InterruptedException {
+	boolean await() throws InterruptedException {
+		return await(-1);
+	}
+
+	boolean await(int timeoutNs) throws InterruptedException {
 		refCounter.incrementAndGet();
 
 		final boolean isClientThread = JOB_SYSTEM.client != null && JOB_SYSTEM.client.isClientThread();
@@ -250,6 +257,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 					int seconds = 0;
 					while (!tryAcquireSharedNanos(0, TimeUnit.MILLISECONDS.toNanos(1))) {
 						JOB_SYSTEM.processPendingClientCallbacks();
+						Thread.yield();
 						long elapsed = System.currentTimeMillis() - start;
 						int newSeconds = (int) (elapsed / 1000);
 						if (newSeconds > seconds) {
@@ -257,26 +265,36 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 								log.debug(
 									"Waiting on Handle: [{}] state [{}] elapsed: {} secs",
 									this,
-									STATE_NAMES[jobState.getAcquire()],
+									STATE_NAMES[jobState.get()],
 									newSeconds
 								);
 								JOB_SYSTEM.printWorkersState();
 							}
 							seconds = newSeconds;
 						}
-						if (elapsed > DEADLOCK_TIMEOUT_SECONDS * 1000) {
-							handleDeadlock();
-							return;
+						if(timeoutNs > 0 && elapsed > timeoutNs) {
+							return false;
+						} else {
+							if (elapsed > DEADLOCK_TIMEOUT_SECONDS * 1000) {
+								handleDeadlock();
+								return false;
+							}
 						}
 					}
 				} else {
-					if (!tryAcquireSharedNanos(0, TimeUnit.SECONDS.toNanos(DEADLOCK_TIMEOUT_SECONDS)))
-						handleDeadlock();
+					if(timeoutNs > 0) {
+						if (!tryAcquireSharedNanos(0, timeoutNs))
+							return false;
+					} else {
+						if (!tryAcquireSharedNanos(0, TimeUnit.SECONDS.toNanos(DEADLOCK_TIMEOUT_SECONDS)))
+							handleDeadlock();
+					}
 				}
 			}
 		} finally {
 			refCounter.decrementAndGet();
 		}
+		return true;
 	}
 
 	private boolean isDone() {

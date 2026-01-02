@@ -93,7 +93,13 @@ public class GpuFloatBuffer
 		return buffer.capacity();
 	}
 
-	public void ensureCapacity(int size) {
+	public boolean fits(int size) {
+		int capacity = buffer.capacity();
+		final int position = buffer.position();
+		return (capacity - position) > size;
+	}
+
+	public GpuFloatBuffer ensureCapacity(int size) {
 		int capacity = buffer.capacity();
 		final int position = buffer.position();
 		if ((capacity - position) < size) {
@@ -108,6 +114,7 @@ public class GpuFloatBuffer
 			MemoryUtil.memFree(buffer);
 			buffer = newB;
 		}
+		return this;
 	}
 
 	public FloatBuffer getBuffer()

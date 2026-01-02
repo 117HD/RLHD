@@ -22,7 +22,7 @@ public class JobSystemTests {
 
 	@AfterClass
 	public static void afterAll() {
-		JOB_SYSTEM.destroy();
+		JOB_SYSTEM.shutdown();
 	}
 
 	@Test

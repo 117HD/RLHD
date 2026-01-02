@@ -260,7 +260,7 @@ public class Camera {
 
 	public float[] getForwardDirection() { return getForwardDirection(new float[3]); }
 
-	private void calculateViewMatrix() {
+	private synchronized void calculateViewMatrix() {
 		if ((dirtyFlags & VIEW_MATRIX_DIRTY) != 0) {
 			viewMatrix = Mat4.identity();
 			Mat4.mul(viewMatrix, Mat4.rotateX(orientation[1]));
@@ -299,7 +299,7 @@ public class Camera {
 		return transformPoint(new float[3], point);
 	}
 
-	private void calculateProjectionMatrix() {
+	private synchronized void calculateProjectionMatrix() {
 		if ((dirtyFlags & PROJECTION_MATRIX_DIRTY) != 0) {
 			final float zoomedViewportWidth = (viewportWidth / zoom);
 			final float zoomedViewportHeight = (viewportHeight / zoom);
@@ -326,7 +326,7 @@ public class Camera {
 		return getProjectionMatrix(new float[16]);
 	}
 
-	private void calculateViewProjMatrix() {
+	private synchronized void calculateViewProjMatrix() {
 		if ((dirtyFlags & VIEW_PROJ_MATRIX_DIRTY) != 0) {
 			calculateViewMatrix();
 			calculateProjectionMatrix();
@@ -349,7 +349,7 @@ public class Camera {
 		return getViewProjMatrix(new float[16]);
 	}
 
-	private void calculateInvViewProjMatrix() {
+	private synchronized void calculateInvViewProjMatrix() {
 		if ((dirtyFlags & INV_VIEW_PROJ_MATRIX_DIRTY) != 0) {
 			calculateViewProjMatrix();
 			try {
@@ -372,7 +372,7 @@ public class Camera {
 		return Arrays.copyOf(invViewProjMatrix, invViewProjMatrix.length);
 	}
 
-	private void calculateFrustumPlanes() {
+	private synchronized void calculateFrustumPlanes() {
 		if ((dirtyFlags & FRUSTUM_PLANES_DIRTY) == 0)
 			return;
 		calculateViewProjMatrix();
@@ -391,7 +391,7 @@ public class Camera {
 		return getFrustumPlanes(new float[6][4]);
 	}
 
-	private void calculateFrustumCorners() {
+	private synchronized void calculateFrustumCorners() {
 		if ((dirtyFlags & FRUSTUM_CORNERS_DIRTY) == 0)
 			return;
 		calculateInvViewProjMatrix();
@@ -418,5 +418,10 @@ public class Camera {
 	public boolean intersectsSphere(float x, float y, float z, float radius) {
 		calculateFrustumPlanes();
 		return HDUtils.isSphereIntersectingFrustum(x, y, z, radius, frustumPlanes, frustumPlanes.length);
+	}
+
+	public int classifySphere(float x, float y, float z, float radius) {
+		calculateFrustumPlanes();
+		return HDUtils.classifySphereFrustum(x, y, z, radius, frustumPlanes, frustumPlanes.length);
 	}
 }

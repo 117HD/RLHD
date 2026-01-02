@@ -31,6 +31,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.NpcDisplacementCache;
+import rs117.hd.utils.RenderState;
 import rs117.hd.utils.jobs.GenericJob;
 
 import static net.runelite.api.Constants.*;
@@ -82,6 +83,7 @@ public class SceneManager {
 	@Inject
 	private FrameTimer frameTimer;
 
+	private RenderState renderState;
 	private UBOWorldViews uboWorldViews;
 
 	@Getter
@@ -128,17 +130,18 @@ public class SceneManager {
 		return root;
 	}
 
-	public void initialize(UBOWorldViews uboWorldViews) {
+	public void initialize(UBOWorldViews uboWorldViews, RenderState renderState) {
 		this.uboWorldViews = uboWorldViews;
-		root.initialize(injector);
+		this.renderState = renderState;
+		root.initialize(renderState, injector);
 	}
 
 	public void destroy() {
-		root.free();
+		root.free(true);
 
 		for (int i = 0; i < subs.length; i++) {
 			if (subs[i] != null)
-				subs[i].free();
+				subs[i].free(true);
 			subs[i] = null;
 		}
 
@@ -266,7 +269,7 @@ public class SceneManager {
 			if (subs[worldViewId] == null) {
 				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
 			} else {
-				subs[worldViewId].free();
+				subs[worldViewId].free(false);
 				subs[worldViewId] = null;
 			}
 		}
@@ -677,7 +680,7 @@ public class SceneManager {
 		nextSceneContext = null;
 
 		if (isFirst) {
-			root.initMetadata();
+			root.initBuffers();
 
 			// Load all pre-existing sub scenes on the first scene load
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
@@ -710,14 +713,14 @@ public class SceneManager {
 			log.error("Reload of an already loaded sub scene?");
 			prevCtx.sceneLoadGroup.cancel();
 			prevCtx.streamingGroup.cancel();
-			clientThread.invoke(prevCtx::free);
+			clientThread.invoke(() -> prevCtx.free(false));
 		}
 
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
 		proceduralGenerator.generateSceneData(sceneContext);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
-		ctx.initialize(injector);
+		ctx.initialize(renderState, injector);
 		subs[worldViewId] = ctx;
 
 		for (int x = 0; x < ctx.sizeX; ++x)
@@ -735,11 +738,11 @@ public class SceneManager {
 			return;
 
 		Stopwatch sw = Stopwatch.createStarted();
+		ctx.initBuffers();
 		ctx.sceneLoadGroup.complete();
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
-		ctx.initMetadata();
-		ctx.isLoading = false;
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
+		ctx.isLoading = false;
 		log.debug("swapSubScene time {} WorldView ready: {}", ctx.sceneSwapTime, scene.getWorldViewId());
 	}
 
