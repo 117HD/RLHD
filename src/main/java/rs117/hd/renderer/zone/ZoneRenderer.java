@@ -50,7 +50,7 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
-import rs117.hd.renderer.zone.FacePrioritySorter.SortedModel;
+import rs117.hd.renderer.zone.FacePrioritySorter.SortingSlice;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -911,7 +911,10 @@ public class ZoneRenderer implements Renderer {
 		boolean skipSorting = z.onlyWater && dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
 
 		if (level == 0) {
-			z.alphaSort(zx - offset, zz - offset, sceneCamera);
+			if(!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+				// Only sort if we're gonna render alpha in the scene, shadows don't need any sorting done
+				z.alphaSort(zx - offset, zz - offset, sceneCamera);
+			}
 			z.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
 		}
 
@@ -921,7 +924,7 @@ public class ZoneRenderer implements Renderer {
 
 		if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
 			directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-			z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, directionalCamera, plugin.configRoofShadows, skipSorting);
+			z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, directionalCamera, plugin.configRoofShadows, true);
 		}
 
 		checkGLErrors();
@@ -1049,7 +1052,8 @@ public class ZoneRenderer implements Renderer {
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		VAO o = vaoO.get(size, ctx.vboM);
 
-		SortedModel sortedModel = null;
+		SortingSlice sortedFaces = null;
+		SortingSlice unsortedFaces = null;
 		VAO a = o;
 		int alphaStart = -1;
 
@@ -1060,7 +1064,12 @@ public class ZoneRenderer implements Renderer {
 
 			if (zone.inSceneFrustum) {
 				try {
-					sortedModel = facePrioritySorter.sortModelFaces(
+					sortedFaces = facePrioritySorter.obtainSortingSlice();
+					unsortedFaces = facePrioritySorter.obtainSortingSlice();
+
+					facePrioritySorter.sortModelFaces(
+						sortedFaces,
+						unsortedFaces,
 						projection,
 						m,
 						orient, x, y, z);
@@ -1071,7 +1080,8 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		sceneUploader.uploadTempModel(
-			sortedModel,
+			sortedFaces,
+			unsortedFaces,
 			m,
 			modelOverride,
 			preOrientation,
@@ -1082,8 +1092,13 @@ public class ZoneRenderer implements Renderer {
 			o.tboF.getPixelBuffer(),
 			a.tboF.getPixelBuffer());
 
-		if(sortedModel != null)
-			sortedModel.free();
+		if(sortedFaces != null)
+			sortedFaces.free();
+
+		if(unsortedFaces != null)
+			unsortedFaces.free();
+
+		facePrioritySorter.reset();
 
 		if(o != a) {
 			int alphaEnd = a.vbo.vb.position();
@@ -1149,7 +1164,8 @@ public class ZoneRenderer implements Renderer {
 		final int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		final VAO o = renderable instanceof Player ? vaoPO.get(size, ctx.vboM) : vaoO.get(size, ctx.vboM);
 
-		SortedModel sortedModel = null;
+		SortingSlice sortedFaces = null;
+		SortingSlice unsortedFaces = null;
 		VAO a = o;
 		int alphaStart = -1;
 
@@ -1162,7 +1178,12 @@ public class ZoneRenderer implements Renderer {
 
 			if (!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {
 				try {
-					sortedModel = facePrioritySorter.sortModelFaces(
+					sortedFaces = facePrioritySorter.obtainSortingSlice();
+					unsortedFaces = facePrioritySorter.obtainSortingSlice();
+
+					facePrioritySorter.sortModelFaces(
+						sortedFaces,
+						unsortedFaces,
 						worldProjection,
 						m,
 						orientation, x, y, z);
@@ -1173,7 +1194,8 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		sceneUploader.uploadTempModel(
-			sortedModel,
+			sortedFaces,
+			unsortedFaces,
 			m,
 			modelOverride,
 			preOrientation,
@@ -1184,8 +1206,13 @@ public class ZoneRenderer implements Renderer {
 			o.tboF.getPixelBuffer(),
 			a.tboF.getPixelBuffer());
 
-		if(sortedModel != null)
-			sortedModel.free();
+		if(sortedFaces != null)
+			sortedFaces.free();
+
+		if(unsortedFaces != null)
+			unsortedFaces.free();
+
+		facePrioritySorter.reset();
 
 		if(o != a) {
 			int alphaEnd = a.vbo.vb.position();

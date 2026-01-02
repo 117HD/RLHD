@@ -1670,12 +1670,13 @@ public class SceneUploader {
 		IntBuffer opaqueTexBuffer,
 		IntBuffer alphaTexBuffer
 	) {
-		uploadTempModel(null, model, modelOverride, preOrientation, orientation, x, y, z, opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
+		uploadTempModel(null, null, model, modelOverride, preOrientation, orientation, x, y, z, opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
 	}
 
 	// temp draw
 	public void uploadTempModel(
-		FacePrioritySorter.SortedModel sortedFaces,
+		FacePrioritySorter.SortingSlice sortedFaces,
+		FacePrioritySorter.SortingSlice unsortedFaces,
 		Model model,
 		ModelOverride modelOverride,
 		int preOrientation,
@@ -1760,9 +1761,18 @@ public class SceneUploader {
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
 
-		int faceCount = sortedFaces != null ? sortedFaces.getFaceCount() : triangleCount;
+		final int sortedFaceCount = sortedFaces != null ? sortedFaces.length() : -1;
+		final int faceCount = sortedFaceCount > 0 ? sortedFaceCount + unsortedFaces.length(): triangleCount;
 		for (int f = 0; f < faceCount; ++f) {
-			final int face = sortedFaces != null ? sortedFaces.getFace(f) : f;
+			final int face;
+			if(sortedFaceCount > 0) {
+				if(f < sortedFaceCount)
+					face = sortedFaces.get(f);
+				else
+					face = unsortedFaces.get(f - sortedFaceCount);
+			} else {
+				face = f;
+			}
 
 			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			if (transparency == 255)

@@ -29,8 +29,6 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
-import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
-import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -38,6 +36,9 @@ import static rs117.hd.utils.MathUtils.*;
 public class Zone {
 	@Inject
 	private Client client;
+
+	@Inject
+	private FacePrioritySorter facePrioritySorter;
 
 	// Zone vertex format
 	// pos short vec3(x, y, z)
@@ -673,9 +674,6 @@ public class Zone {
 	private static int lastTboF;
 	private static int lastzx, lastzz;
 
-	private static final int[] numOfPriority = FacePrioritySorter.numOfPriority;
-	private static final int[][] orderedFaces = FacePrioritySorter.orderedFaces;
-
 	private Camera alphaSort_Camera;
 	private int alphaSort_zx, alphaSort_zz;
 	private final Comparator<AlphaModel> alphaSortComparator = Comparator.comparingInt((AlphaModel m) -> {
@@ -719,10 +717,10 @@ public class Zone {
 
 		drawIdx = 0;
 
-		int yawSin = SINE[camera.getFixedYaw()];
-		int yawCos = COSINE[camera.getFixedYaw()];
-		int pitchSin = SINE[camera.getFixedPitch()];
-		int pitchCos = COSINE[camera.getFixedPitch()];
+		final int yawSin = SINE[camera.getFixedYaw()];
+		final int yawCos = COSINE[camera.getFixedYaw()];
+		final int pitchSin = SINE[camera.getFixedPitch()];
+		final int pitchCos = COSINE[camera.getFixedPitch()];
 		for (AlphaModel m : alphaModels) {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
 				continue;
@@ -751,82 +749,17 @@ public class Zone {
 				continue;
 			}
 
-			lastDrawMode = STATIC;
-
-			final int radius = m.radius;
-			int diameter = 1 + radius * 2;
-			final int[] packedFaces = m.packedFaces;
-			if (diameter >= 6000)
+			final FacePrioritySorter.SortingSlice sortedFaces = facePrioritySorter.obtainSortingSlice();
+			if(!facePrioritySorter.sortStaticModelFaces(sortedFaces, m, yawCos, yawSin, pitchCos, pitchSin))
 				continue;
 
-			Arrays.fill(distanceFaceCount, 0, diameter, (char) 0);
+			lastDrawMode = STATIC;
 
-			for (int i = 0; i < packedFaces.length; ++i) {
-				int packed = packedFaces[i];
-				int x = packed >> 21;
-				int y = (packed << 11) >> 22;
-				int z = (packed << 21) >> 21;
+			ZoneRenderer.alphaFaceCount += sortedFaces.length() / 3;
+			sortedFaces.copy(ZoneRenderer.eboAlphaStaging);
 
-				int t = z * yawCos - x * yawSin >> 16;
-				int fz = y * pitchSin + t * pitchCos >> 16;
-				fz += radius;
-
-				assert fz >= 0 && fz < diameter : fz;
-				distanceToFaces[fz][distanceFaceCount[fz]++] = (char) i;
-			}
-
-			ZoneRenderer.eboAlphaStaging.ensureCapacity(packedFaces.length * 3);
-
-			byte[] faceRenderPriorities = m.renderPriorities;
-			final int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
-			if (faceRenderPriorities == null || m.modelOverride.disablePrioritySorting) {
-				for (int i = diameter - 1; i >= 0; --i) {
-					final int cnt = distanceFaceCount[i];
-					if (cnt > 0) {
-						final char[] faces = distanceToFaces[i];
-
-						ZoneRenderer.alphaFaceCount += cnt;
-						for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
-							final int face = faces[faceIdx];
-							int idx = face * 3 + start;
-							ZoneRenderer.eboAlphaStaging.put(idx, idx + 1, idx + 2);
-						}
-					}
-				}
-			} else {
-				// Vanilla uses priority draw order for alpha faces and not depth draw order
-				// And since we don't have the full model here, only the alpha faces, we can't compute the
-				// 10/11 insertion points either. Just ignore those since I think they are mostly for players,
-				// which are rendered differently anyway.
-				Arrays.fill(numOfPriority, 0);
-
-				for (int i = diameter - 1; i >= 0; --i) {
-					final int cnt = distanceFaceCount[i];
-					if (cnt > 0) {
-						final char[] faces = distanceToFaces[i];
-
-						for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
-							final int face = faces[faceIdx];
-							final byte pri = faceRenderPriorities[face];
-							final int distIdx = numOfPriority[pri]++;
-
-							orderedFaces[pri][distIdx] = face;
-						}
-					}
-				}
-
-				for (int pri = 0; pri < 12; ++pri) {
-					final int priNum = numOfPriority[pri];
-					final int[] priFaces = orderedFaces[pri];
-
-					ZoneRenderer.alphaFaceCount += priNum;
-					for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
-						final int face = priFaces[faceIdx];
-						int idx = face * 3 + start;
-						ZoneRenderer.eboAlphaStaging.put(idx, idx + 1, idx + 2);
-					}
-				}
-			}
+			sortedFaces.free();
+			facePrioritySorter.reset();
 		}
 
 		flush(cmd);
