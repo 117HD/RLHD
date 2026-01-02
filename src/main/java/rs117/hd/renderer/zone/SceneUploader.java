@@ -131,7 +131,7 @@ public class SceneUploader {
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
 	// Lazily initialized staging buffers, only used by uploadTempModel
-	public VertexWriteCache.Collection writeCache;
+	private VertexWriteCache.Collection writeCache;
 
 	public void setScene(Scene scene) {
 		if (scene == currentScene)
@@ -1657,8 +1657,25 @@ public class SceneUploader {
 		return len;
 	}
 
+	public void uploadTempModel(
+		Model model,
+		ModelOverride modelOverride,
+		int preOrientation,
+		int orientation,
+		int x,
+		int y,
+		int z,
+		IntBuffer opaqueBuffer,
+		IntBuffer alphaBuffer,
+		IntBuffer opaqueTexBuffer,
+		IntBuffer alphaTexBuffer
+	) {
+		uploadTempModel(null, model, modelOverride, preOrientation, orientation, x, y, z, opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
+	}
+
 	// temp draw
-	public int uploadTempModel(
+	public void uploadTempModel(
+		FacePrioritySorter.SortedModel sortedFaces,
 		Model model,
 		ModelOverride modelOverride,
 		int preOrientation,
@@ -1743,8 +1760,10 @@ public class SceneUploader {
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
 
-		int len = 0;
-		for (int face = 0; face < triangleCount; ++face) {
+		int faceCount = sortedFaces != null ? sortedFaces.getFaceCount() : triangleCount;
+		for (int f = 0; f < faceCount; ++f) {
+			final int face = sortedFaces != null ? sortedFaces.getFace(f) : f;
+
 			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			if (transparency == 255)
 				continue;
@@ -1919,11 +1938,9 @@ public class SceneUploader {
 				modelNormals[6], modelNormals[7], modelNormals[8],
 				texturedFaceIdx
 			);
-			len += 3;
 		}
 
 		writeCache.flush();
-		return len;
 	}
 
 	public static void calculateFaceNormal(
