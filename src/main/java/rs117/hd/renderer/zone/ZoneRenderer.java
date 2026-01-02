@@ -50,6 +50,7 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.renderer.zone.FacePrioritySorter.SortedModel;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -66,7 +67,6 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GpuIntBuffer;
-import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
@@ -122,9 +122,6 @@ public class ZoneRenderer implements Renderer {
 	private SceneUploader sceneUploader;
 
 	@Inject
-	private SceneUploader asyncSceneUploader;
-
-	@Inject
 	private FacePrioritySorter facePrioritySorter;
 
 	@Inject
@@ -158,7 +155,6 @@ public class ZoneRenderer implements Renderer {
 	private VAO.VAOList vaoO;
 	private VAO.VAOList vaoA;
 	private VAO.VAOList vaoPO;
-	private VAO.VAOList vaoShadow;
 
 	public static int indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -190,9 +186,6 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.initialize();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(uboWorldViews);
-
-		// Write caches used exclusively on the client thread can be shared
-		sceneUploader.writeCache = FacePrioritySorter.WRITE_CACHE;
 	}
 
 	@Override
@@ -242,15 +235,13 @@ public class ZoneRenderer implements Renderer {
 		vaoO = new VAO.VAOList(eboAlpha);
 		vaoA = new VAO.VAOList(eboAlpha);
 		vaoPO = new VAO.VAOList(eboAlpha);
-		vaoShadow = new VAO.VAOList(eboAlpha);
 	}
 
 	private void destroyBuffers() {
 		vaoO.free();
 		vaoA.free();
 		vaoPO.free();
-		vaoShadow.free();
-		vaoO = vaoA = vaoPO = vaoShadow = null;
+		vaoO = vaoA = vaoPO = null;
 
 		if (eboAlpha != 0)
 			glDeleteBuffers(eboAlpha);
@@ -293,7 +284,6 @@ public class ZoneRenderer implements Renderer {
 			Scene topLevel = client.getScene();
 			vaoO.addRange(topLevel);
 			vaoPO.addRange(topLevel);
-			vaoShadow.addRange(topLevel);
 		}
 	}
 
@@ -949,7 +939,6 @@ public class ZoneRenderer implements Renderer {
 			case DrawCallbacks.PASS_OPAQUE:
 				vaoO.addRange(scene);
 				vaoPO.addRange(scene);
-				vaoShadow.addRange(scene);
 
 				if (scene.getWorldViewId() == -1) {
 					directionalCmd.SetShader(fastShadowProgram);
@@ -962,15 +951,13 @@ public class ZoneRenderer implements Renderer {
 
 					vaoPO.unmap();
 
-					// Draw shadow-only models
-					vaoShadow.unmap();
-					vaoShadow.drawAll(directionalCmd);
-					vaoShadow.resetAll();
-
 					// Draw players opaque, without depth writes
 					sceneCmd.DepthMask(false);
 					vaoPO.drawAll(sceneCmd);
 					sceneCmd.DepthMask(true);
+
+					// Draw players shadow, with depth writes & alpha
+					vaoPO.drawAll(directionalCmd);
 
 					// Draw players opaque, writing only depth
 					sceneCmd.ColorMask(false, false, false, false);
@@ -1059,79 +1046,54 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
-
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		VAO o = vaoO.get(size, ctx.vboM);
 
+		SortedModel sortedModel = null;
+		VAO a = o;
+		int alphaStart = -1;
+
 		boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
 		if (hasAlpha) {
-			VAO a = vaoA.get(size, ctx.vboM);
-			int start = a.vbo.vb.position();
+			a = vaoA.get(size, ctx.vboM);
+			alphaStart = a.vbo.vb.position();
 
 			if (zone.inSceneFrustum) {
 				try {
-					facePrioritySorter.uploadSortedModel(
+					sortedModel = facePrioritySorter.sortModelFaces(
 						projection,
 						m,
-						modelOverride,
-						preOrientation,
-						orient, x, y, z,
-						o.vbo.vb,
-						a.vbo.vb,
-						o.tboF.getPixelBuffer(),
-						a.tboF.getPixelBuffer());
+						orient, x, y, z);
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
 				}
-
-				if (plugin.configShadowsEnabled) {
-					// Since priority sorting of models includes back-face culling,
-					// we need to upload the entire model again for shadows
-					VAO vao = vaoShadow.get(size, ctx.vboM);
-					sceneUploader.uploadTempModel(
-						m,
-						modelOverride,
-						preOrientation,
-						orient,
-						x, y, z,
-						vao.vbo.vb,
-						vao.vbo.vb,
-						vao.tboF.getPixelBuffer(),
-						vao.tboF.getPixelBuffer()
-					);
-				}
-			} else {
-				sceneUploader.uploadTempModel(
-					m,
-					modelOverride,
-					preOrientation,
-					orient,
-					x, y, z,
-					o.vbo.vb,
-					a.vbo.vb,
-					o.tboF.getPixelBuffer(),
-					a.tboF.getPixelBuffer());
 			}
+		}
 
-			int end = a.vbo.vb.position();
-			if (end > start) {
+		sceneUploader.uploadTempModel(
+			sortedModel,
+			m,
+			modelOverride,
+			preOrientation,
+			orient,
+			x, y, z,
+			o.vbo.vb,
+			a.vbo.vb,
+			o.tboF.getPixelBuffer(),
+			a.tboF.getPixelBuffer());
+
+		if(sortedModel != null)
+			sortedModel.free();
+
+		if(o != a) {
+			int alphaEnd = a.vbo.vb.position();
+			if (alphaEnd > alphaStart) {
 				// level is checked prior to this callback being run, in order to cull clickboxes, but
 				// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
 				int plane = Math.min(ctx.maxLevel, tileObject.getPlane());
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
-				zone.addTempAlphaModel(modelOverride, a.vao, a.tboF.getTexId(), start, end, plane, x & 1023, y, z & 1023);
+				zone.addTempAlphaModel(modelOverride, a.vao, a.tboF.getTexId(), alphaStart, alphaEnd, plane, x & 1023, y, z & 1023);
 			}
-		} else {
-			sceneUploader.uploadTempModel(
-				m,
-				modelOverride,
-				preOrientation,
-				orient,
-				x, y, z,
-				o.vbo.vb,
-				o.vbo.vb,
-				o.tboF.getPixelBuffer(),
-				o.tboF.getPixelBuffer());
 		}
 	}
 
@@ -1163,98 +1125,85 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
+		int offset = ctx.sceneContext.sceneOffset >> 3;
+		int zx = (gameObject.getX() >> 10) + offset;
+		int zz = (gameObject.getY() >> 10) + offset;
+		Zone zone = ctx.zones[zx][zz];
 
-		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
-		if (renderable instanceof Player || m.getFaceTransparencies() != null) {
-			int offset = ctx.sceneContext.sceneOffset >> 3;
-			int zx = (gameObject.getX() >> 10) + offset;
-			int zz = (gameObject.getY() >> 10) + offset;
-			Zone zone = ctx.zones[zx][zz];
+		if (sceneManager.isRoot(ctx)) {
+			try (var ignored = frameTimer.begin(Timer.VISIBILITY_CHECK)) {
+				// Additional Culling checks to help reduce dynamic object perf impact when off screen
+				if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows)
+					return;
 
-			boolean isSubScene = !sceneManager.isRoot(ctx);
+				if (zone.inSceneFrustum && !modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, m.getRadius()))
+					return;
 
-			GenericJob shadowUploadTask = null;
-			if (isSubScene || zone.inShadowFrustum) {
-				final VAO o = vaoShadow.get(size, ctx.vboM);
-
-				shadowUploadTask = GenericJob
-					.build("uploadTempModel", t -> {
-						// Since priority sorting of models includes back-face culling,
-						// we need to upload the entire model again for shadows
-						asyncSceneUploader.uploadTempModel(
-							m,
-							modelOverride,
-							preOrientation,
-							orientation,
-							x, y, z,
-							o.vbo.vb,
-							o.vbo.vb,
-							o.tboF.getPixelBuffer(),
-							o.tboF.getPixelBuffer());
-					})
-					.setExecuteAsync(isSubScene || zone.inSceneFrustum)
-					.queue(true);
+				if (!zone.inSceneFrustum && zone.inShadowFrustum && modelOverride.castShadows &&
+					!directionalShadowCasterVolume.intersectsPoint(x, y, z))
+					return;
 			}
+		}
 
-			if (isSubScene || zone.inSceneFrustum) {
-				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
-				// because they are not depth tested. transparent player faces don't need their own vao because normal
-				// transparent faces are already not depth tested
-				VAO o = renderable instanceof Player ? vaoPO.get(size, ctx.vboM) : vaoO.get(size, ctx.vboM);
-				VAO a = vaoA.get(size, ctx.vboM);
+		final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
+		final int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
+		final VAO o = renderable instanceof Player ? vaoPO.get(size, ctx.vboM) : vaoO.get(size, ctx.vboM);
 
-				int start = a.vbo.vb.position();
+		SortedModel sortedModel = null;
+		VAO a = o;
+		int alphaStart = -1;
+
+		if (renderable instanceof Player || m.getFaceTransparencies() != null) {
+			// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
+			// because they are not depth tested. transparent player faces don't need their own vao because normal
+			// transparent faces are already not depth tested
+			a = vaoA.get(size, ctx.vboM);
+			alphaStart = a.vbo.vb.position();
+
+			if (!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {
 				try {
-					facePrioritySorter.uploadSortedModel(
+					sortedModel = facePrioritySorter.sortModelFaces(
 						worldProjection,
 						m,
-						modelOverride,
-						preOrientation,
-						orientation,
-						x, y, z,
-						o.vbo.vb,
-						a.vbo.vb,
-						o.tboF.getPixelBuffer(),
-						a.tboF.getPixelBuffer()
-					);
+						orientation, x, y, z);
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
 				}
-				int end = a.vbo.vb.position();
-				if (end > start) {
-					// Fix rendering projectiles from boats with hide roofs enabled
-					int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
-					zone.addTempAlphaModel(
-						modelOverride,
-						a.vao,
-						a.tboF.getTexId(),
-						start,
-						end,
-						plane,
-						x & 1023,
-						y - renderable.getModelHeight() /* to render players over locs */,
-						z & 1023
-					);
-				}
 			}
+		}
 
-			if (shadowUploadTask != null) {
-				shadowUploadTask.waitForCompletion();
-				shadowUploadTask.release();
+		sceneUploader.uploadTempModel(
+			sortedModel,
+			m,
+			modelOverride,
+			preOrientation,
+			orientation,
+			x, y, z,
+			o.vbo.vb,
+			a.vbo.vb,
+			o.tboF.getPixelBuffer(),
+			a.tboF.getPixelBuffer());
+
+		if(sortedModel != null)
+			sortedModel.free();
+
+		if(o != a) {
+			int alphaEnd = a.vbo.vb.position();
+			if (alphaEnd > alphaStart) {
+				// Fix rendering projectiles from boats with hide roofs enabled
+				int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
+				zone.addTempAlphaModel(
+					modelOverride,
+					a.vao,
+					a.tboF.getTexId(),
+					alphaStart,
+					alphaEnd,
+					plane,
+					x & 1023,
+					y - renderable.getModelHeight() /* to render players over locs */,
+					z & 1023
+				);
 			}
-		} else {
-			VAO o = vaoO.get(size, ctx.vboM);
-			sceneUploader.uploadTempModel(
-				m,
-				modelOverride,
-				preOrientation,
-				orientation,
-				x, y, z,
-				o.vbo.vb,
-				o.vbo.vb,
-				o.tboF.getPixelBuffer(),
-				o.tboF.getPixelBuffer());
 		}
 	}
 
