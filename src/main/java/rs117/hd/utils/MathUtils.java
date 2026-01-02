@@ -304,6 +304,20 @@ public final class MathUtils {
 		return 1.0f / v;
 	}
 
+	public static float square(float v) {
+		return v * v;
+	}
+
+	public static float[] square(float[] out, float... v) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = square(v[i % v.length]);
+		return out;
+	}
+
+	public static float[] square(float... v) {
+		return square(new float[v.length], v);
+	}
+
 	public static float sqrt(float v) {
 		return (float) Math.sqrt(v);
 	}
