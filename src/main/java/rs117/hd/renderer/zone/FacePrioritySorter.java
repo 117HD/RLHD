@@ -24,121 +24,88 @@
  */
 package rs117.hd.renderer.zone;
 
-import java.nio.IntBuffer;
+import java.util.ArrayDeque;
 import java.util.Arrays;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.HdPlugin;
-import rs117.hd.scene.MaterialManager;
-import rs117.hd.scene.materials.Material;
-import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.renderer.zone.SceneUploader.GEOMETRY_UVS;
-import static rs117.hd.renderer.zone.SceneUploader.calculateFaceNormal;
-import static rs117.hd.renderer.zone.SceneUploader.computeFaceUvsInline;
-import static rs117.hd.renderer.zone.SceneUploader.interpolateHSL;
-import static rs117.hd.renderer.zone.SceneUploader.undoVanillaShading;
+import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-class FacePrioritySorter {
-	static final int[] distances;
-	static final char[] distanceFaceCount;
-	static final char[][] distanceToFaces;
-
-	private static final float[] modelProjectedX;
-	private static final float[] modelProjectedY;
-
-	private static final float[] modelLocalX;
-	private static final float[] modelLocalY;
-	private static final float[] modelLocalZ;
-
-	private static final float[] workingSpace;
-	private static final float[] modelUvs;
-	private static final int[] modelNormals;
-
-	static final int[] numOfPriority;
-	private static final int[] eq10;
-	private static final int[] eq11;
-	private static final int[] lt10;
-	static final int[][] orderedFaces;
-
-	private static int orient, orientSin, orientCos;
-
+final class FacePrioritySorter {
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int MAX_DIAMETER = 6000;
-	private static final int ZSORT_GROUP_SIZE = 1024; // was 512
-	private static final int MAX_FACES_PER_PRIORITY = 4000; // was 2500
+	private static final int ZSORT_GROUP_SIZE = 1024;
+	private static final int MAX_FACES_PER_PRIORITY = 4000;
+	private static final int PRIORITY_COUNT = 12;
 
-	public static VertexWriteCache.Collection WRITE_CACHE = new VertexWriteCache.Collection();
+	private static final int FACES_PER_DISTANCE = ZSORT_GROUP_SIZE;
 
-	static {
-		distances = new int[MAX_VERTEX_COUNT];
-		distanceFaceCount = new char[MAX_DIAMETER];
-		distanceToFaces = new char[MAX_DIAMETER][ZSORT_GROUP_SIZE];
+	private final int[] distances = new int[MAX_VERTEX_COUNT];
+	private final char[] distanceFaceCount = new char[MAX_DIAMETER];
+	private final int[] distanceToFaces = new int[MAX_DIAMETER * FACES_PER_DISTANCE];
+	private final int[] numOfPriority = new int[PRIORITY_COUNT];
+	private final int[] orderedFaces = new int[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
+	private final float[] modelProjectedX = new float[MAX_VERTEX_COUNT];
+	private final float[] modelProjectedY = new float[MAX_VERTEX_COUNT];
+	private final int[] eq10 = new int[MAX_FACES_PER_PRIORITY];
+	private final int[] eq11 = new int[MAX_FACES_PER_PRIORITY];
+	private final int[] lt10 = new int[PRIORITY_COUNT];
 
-		modelProjectedX = new float[MAX_VERTEX_COUNT];
-		modelProjectedY = new float[MAX_VERTEX_COUNT];
+	private final long[] distanceStamp = new long[MAX_DIAMETER];
+	private final ArrayDeque<SortingSlice> sortingSlicePool = new ArrayDeque<>();
+	private long globalStamp = 1;
+	private int[] sortingData = new int[16];
+	private int sortingDataWritten = 0;
 
-		modelLocalX = new float[MAX_VERTEX_COUNT];
-		modelLocalY = new float[MAX_VERTEX_COUNT];
-		modelLocalZ = new float[MAX_VERTEX_COUNT];
-
-		workingSpace = new float[9];
-		modelUvs = new float[12];
-		modelNormals = new int[9];
-
-		numOfPriority = new int[12];
-		eq10 = new int[MAX_FACES_PER_PRIORITY];
-		eq11 = new int[MAX_FACES_PER_PRIORITY];
-		lt10 = new int[12];
-		orderedFaces = new int[12][MAX_FACES_PER_PRIORITY];
+	public SortingSlice obtainSortingSlice() {
+		SortingSlice result = sortingSlicePool.isEmpty() ? new SortingSlice() : sortingSlicePool.pop();
+		result.head = result.length = 0;
+		return result;
 	}
 
-	@Inject
-	private HdPlugin plugin;
+	public void reset() {
+		sortingDataWritten = 0;
+	}
 
-	@Inject
-	private MaterialManager materialManager;
+	private long nextStamp() {
+		if (++globalStamp == Long.MAX_VALUE) {
+			Arrays.fill(distanceStamp, 0);
+			globalStamp = 1;
+		}
+		return globalStamp;
+	}
 
-	int uploadSortedModel(
+	boolean sortModelFaces(
+		SortingSlice sortedFaces,
+		SortingSlice unsortedFaces,
 		Projection proj,
 		Model model,
-		ModelOverride modelOverride,
-		int preOrientation,
 		int orientation,
 		int x,
 		int y,
-		int z,
-		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer,
-		IntBuffer opaqueTexBuffer,
-		IntBuffer alphaTexBuffer
+		int z
 	) {
+		model.calculateBoundsCylinder();
+		final int diameter = model.getDiameter();
+		if (diameter >= MAX_DIAMETER)
+			return false;
+
+		final int radius = model.getRadius();
 		final int vertexCount = model.getVerticesCount();
 		final float[] verticesX = model.getVerticesX();
 		final float[] verticesY = model.getVerticesY();
 		final float[] verticesZ = model.getVerticesZ();
 
-		final int faceCount = model.getFaceCount();
-		final int[] indices1 = model.getFaceIndices1();
-		final int[] indices2 = model.getFaceIndices2();
-		final int[] indices3 = model.getFaceIndices3();
-
-		final int[] faceColors3 = model.getFaceColors3();
-		final byte[] faceRenderPriorities = model.getFaceRenderPriorities();
-
-		orient = orientation = mod(orientation, 2048);
-		orientSin = SINE[orientation];
-		orientCos = COSINE[orientation];
-		float orientSinf = orientSin / 65536f;
-		float orientCosf = orientCos / 65536f;
+		orientation = mod(orientation, 2048);
+		float orientSinf = SINE[orientation] / 65536f;
+		float orientCosf = COSINE[orientation] / 65536f;
 
 		float[] p = proj.project(x, y, z);
 		int zero = (int) p[2];
@@ -154,34 +121,31 @@ class FacePrioritySorter {
 				vertexZ = vertexZ * orientCosf - x0 * orientSinf;
 			}
 
-			// move to local position
 			vertexX += x;
 			vertexY += y;
 			vertexZ += z;
 
-			modelLocalX[v] = vertexX;
-			modelLocalY[v] = vertexY;
-			modelLocalZ[v] = vertexZ;
-
 			p = proj.project(vertexX, vertexY, vertexZ);
-			if (p[2] < 50) {
-				return 0;
-			}
+			if (p[2] < 50)
+				return false;
 
 			modelProjectedX[v] = p[0] / p[2];
 			modelProjectedY[v] = p[1] / p[2];
 			distances[v] = (int) p[2] - zero;
 		}
 
-		model.calculateBoundsCylinder();
-		final int diameter = model.getDiameter();
-		final int radius = model.getRadius();
-		if (diameter >= 6000) {
-			return 0;
-		}
+		final long stamp = nextStamp();
 
-		Arrays.fill(distanceFaceCount, 0, diameter, (char) 0);
+		final int faceCount = model.getFaceCount();
+		final int[] indices1 = model.getFaceIndices1();
+		final int[] indices2 = model.getFaceIndices2();
+		final int[] indices3 = model.getFaceIndices3();
 
+		final int[] faceColors3 = model.getFaceColors3();
+		final byte[] faceRenderPriorities = model.getFaceRenderPriorities();
+
+		unsortedFaces.start();
+		int minFz = diameter, maxFz = 0;
 		for (char i = 0; i < faceCount; ++i) {
 			if (faceColors3[i] == -2)
 				continue;
@@ -198,50 +162,61 @@ class FacePrioritySorter {
 				cX = modelProjectedX[v3],
 				cY = modelProjectedY[v3];
 			// Back-face culling
-			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0)
+			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0) {
+				unsortedFaces.putFace(i);
 				continue;
+			}
 
-			int distance = radius + (distances[v1] + distances[v2] + distances[v3]) / 3;
-			assert distance >= 0 && distance < diameter;
-			distanceToFaces[distance][distanceFaceCount[distance]++] = i;
+			final int fz = radius + (distances[v1] + distances[v2] + distances[v3]) / 3;
+			final int base = fz * FACES_PER_DISTANCE;
+
+			if (distanceStamp[fz] != stamp) {
+				distanceStamp[fz] = stamp;
+				distanceFaceCount[fz] = 1;
+				distanceToFaces[base] = i;
+
+				minFz = Math.min(minFz, fz);
+				maxFz = Math.max(maxFz, fz);
+			} else {
+				distanceToFaces[base + distanceFaceCount[fz]++] = i;
+			}
 		}
+		unsortedFaces.end();
 
-		WRITE_CACHE.setOutputBuffers(opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
-
-		int len = 0;
+		sortedFaces.start();
 		if (faceRenderPriorities == null) {
-			for (int i = diameter - 1; i >= 0; --i) {
-				final int cnt = distanceFaceCount[i];
-				if (cnt > 0) {
-					final char[] faces = distanceToFaces[i];
-					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
-						final int face = faces[faceIdx];
-						len += pushFace(model, modelOverride, preOrientation, face);
-					}
-				}
+			for (int i = maxFz; i >= minFz; --i) {
+				if (distanceStamp[i] != stamp)
+					continue;
+
+				int cnt = distanceFaceCount[i];
+				int base = i * FACES_PER_DISTANCE;
+				sortedFaces.putFaces(distanceToFaces, base, cnt);
 			}
 		} else {
 			Arrays.fill(numOfPriority, 0);
 			Arrays.fill(lt10, 0);
 
-			for (int i = diameter - 1; i >= 0; --i) {
-				final int cnt = distanceFaceCount[i];
-				if (cnt > 0) {
-					final char[] faces = distanceToFaces[i];
-					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
-						final int face = faces[faceIdx];
-						final byte pri = faceRenderPriorities[face];
-						final int distIdx = numOfPriority[pri]++;
+			for (int i = maxFz; i >= minFz; --i) {
+				if (distanceStamp[i] != stamp)
+					continue;
 
-						orderedFaces[pri][distIdx] = face;
-						if (pri < 10) {
-							lt10[pri] += i;
-						} else if (pri == 10) {
-							eq10[distIdx] = i;
-						} else {
-							eq11[distIdx] = i;
-						}
-					}
+				int cnt = distanceFaceCount[i];
+				int base = i * FACES_PER_DISTANCE;
+
+				for (int f = 0; f < cnt; ++f) {
+					int face = distanceToFaces[base + f];
+					byte pri = faceRenderPriorities[face];
+					int idx = numOfPriority[pri]++;
+
+					orderedFaces[pri * MAX_FACES_PER_PRIORITY + idx] = face;
+
+					if (pri < 10)
+						lt10[pri] += i;
+					else if (pri == 10)
+						eq10[idx] = i;
+					else
+						eq11[idx] = i;
 				}
 			}
 
@@ -258,299 +233,230 @@ class FacePrioritySorter {
 				avg68 = (lt10[8] + lt10[6]) / (numOfPriority[8] + numOfPriority[6]);
 
 			int drawnFaces = 0;
+			int dynPri = 10;
 			int numDynFaces = numOfPriority[10];
-			int[] dynFaces = orderedFaces[10];
-			int[] dynFaceDistances = eq10;
+			int dynBase = 10 * MAX_FACES_PER_PRIORITY;
+			int[] dynDist = eq10;
+
 			if (drawnFaces == numDynFaces) {
+				dynPri = 11;
 				numDynFaces = numOfPriority[11];
-				dynFaces = orderedFaces[11];
-				dynFaceDistances = eq11;
+				dynBase = 11 * MAX_FACES_PER_PRIORITY;
+				dynDist = eq11;
 			}
 
-			int currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
+			int currFaceDistance =
+				drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 
 			for (int pri = 0; pri < 10; ++pri) {
 				while (pri == 0 && currFaceDistance > avg12) {
-					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face);
+					sortedFaces.putFace(orderedFaces[dynBase + drawnFaces++]);
 
-					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
+					if (drawnFaces == numDynFaces && dynPri == 10) {
+						dynPri = 11;
 						drawnFaces = 0;
 						numDynFaces = numOfPriority[11];
-						dynFaces = orderedFaces[11];
-						dynFaceDistances = eq11;
+						dynBase = 11 * MAX_FACES_PER_PRIORITY;
+						dynDist = eq11;
 					}
 
-					currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
+					currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 				}
 
 				while (pri == 3 && currFaceDistance > avg34) {
-					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face);
+					sortedFaces.putFace(orderedFaces[dynBase + drawnFaces++]);
 
-					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
+					if (drawnFaces == numDynFaces && dynPri == 10) {
+						dynPri = 11;
 						drawnFaces = 0;
 						numDynFaces = numOfPriority[11];
-						dynFaces = orderedFaces[11];
-						dynFaceDistances = eq11;
+						dynBase = 11 * MAX_FACES_PER_PRIORITY;
+						dynDist = eq11;
 					}
 
-					currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
+					currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 				}
 
 				while (pri == 5 && currFaceDistance > avg68) {
-					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face);
+					sortedFaces.putFace(orderedFaces[dynBase + drawnFaces++]);
 
-					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
+					if (drawnFaces == numDynFaces && dynPri == 10) {
+						dynPri = 11;
 						drawnFaces = 0;
 						numDynFaces = numOfPriority[11];
-						dynFaces = orderedFaces[11];
-						dynFaceDistances = eq11;
+						dynBase = 11 * MAX_FACES_PER_PRIORITY;
+						dynDist = eq11;
 					}
 
-					currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
+					currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 				}
 
-				final int priNum = numOfPriority[pri];
-				final int[] priFaces = orderedFaces[pri];
-
-				for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
-					final int face = priFaces[faceIdx];
-					len += pushFace(model, modelOverride, preOrientation, face);
-				}
+				int cnt = numOfPriority[pri];
+				int base = pri * MAX_FACES_PER_PRIORITY;
+				sortedFaces.putFaces(orderedFaces, base, cnt);
 			}
 
 			while (currFaceDistance != -1000) {
-				final int face = dynFaces[drawnFaces++];
-				len += pushFace(model, modelOverride, preOrientation, face);
+				sortedFaces.putFace(orderedFaces[dynBase + drawnFaces++]);
 
-				if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
+				if (drawnFaces == numDynFaces && dynPri == 10) {
+					dynPri = 11;
 					drawnFaces = 0;
-					dynFaces = orderedFaces[11];
 					numDynFaces = numOfPriority[11];
-					dynFaceDistances = eq11;
+					dynBase = 11 * MAX_FACES_PER_PRIORITY;
+					dynDist = eq11;
 				}
 
-				currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
+				currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 			}
 		}
+		sortedFaces.end();
 
-		WRITE_CACHE.flush();
-		return len;
+		return true;
 	}
 
-	private int pushFace(
-		Model model,
-		ModelOverride modelOverride,
-		int preOrientation,
-		int face
+	boolean sortStaticModelFaces(
+		SortingSlice sortedFaces,
+		Zone.AlphaModel m,
+		int yawCos, int yawSin,
+		int pitchCos, int pitchSin
 	) {
-		final int[] indices1 = model.getFaceIndices1();
-		final int[] indices2 = model.getFaceIndices2();
-		final int[] indices3 = model.getFaceIndices3();
+		final int radius = m.radius;
+		final int diameter = 1 + radius * 2;
+		if (diameter >= MAX_DIAMETER)
+			return false;
 
-		final short[] unlitFaceColors = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
-		final int[] faceColors1 = model.getFaceColors1();
-		final int[] faceColors2 = model.getFaceColors2();
-		final int[] faceColors3 = model.getFaceColors3();
+		final long stamp = nextStamp();
+		int minFz = diameter, maxFz = 0;
+		for (int i = 0; i < m.packedFaces.length; ++i) {
+			final int packed = m.packedFaces[i];
+			final int x = packed >> 21;
+			final int y = (packed << 11) >> 22;
+			final int z = (packed << 21) >> 21;
 
-		final int[] xVertexNormals = model.getVertexNormalsX();
-		final int[] yVertexNormals = model.getVertexNormalsY();
-		final int[] zVertexNormals = model.getVertexNormalsZ();
-		final boolean hasVertexNormals = xVertexNormals != null && yVertexNormals != null && zVertexNormals != null;
+			int fz = ((z * yawCos - x * yawSin) >> 16);
+			fz = ((y * pitchSin + fz * pitchCos) >> 16) + radius;
 
-		final byte overrideAmount = model.getOverrideAmount();
-		final byte overrideHue = model.getOverrideHue();
-		final byte overrideSat = model.getOverrideSaturation();
-		final byte overrideLum = model.getOverrideLuminance();
+			final int base = fz * FACES_PER_DISTANCE;
+			if (distanceStamp[fz] != stamp) {
+				distanceStamp[fz] = stamp;
+				distanceFaceCount[fz] = 1;
+				distanceToFaces[base] = i;
 
-		final short[] faceTextures = model.getFaceTextures();
-		final byte[] textureFaces = model.getTextureFaces();
-		final int[] texIndices1 = model.getTexIndices1();
-		final int[] texIndices2 = model.getTexIndices2();
-		final int[] texIndices3 = model.getTexIndices3();
-
-		final byte[] transparencies = model.getFaceTransparencies();
-		final byte[] bias = model.getFaceBias();
-
-
-		boolean isVanillaTextured = faceTextures != null;
-		boolean isVanillaUVMapped =
-			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
-			model.getTextureFaces() != null;
-		int textureId = isVanillaTextured ? faceTextures[face] : -1;
-
-		Material baseMaterial = modelOverride.baseMaterial;
-		Material textureMaterial = modelOverride.textureMaterial;
-
-		final int triangleA = indices1[face];
-		final int triangleB = indices2[face];
-		final int triangleC = indices3[face];
-
-		float vx1 = modelLocalX[triangleA];
-		float vy1 = modelLocalY[triangleA];
-		float vz1 = modelLocalZ[triangleA];
-
-		float vx2 = modelLocalX[triangleB];
-		float vy2 = modelLocalY[triangleB];
-		float vz2 = modelLocalZ[triangleB];
-
-		float vx3 = modelLocalX[triangleC];
-		float vy3 = modelLocalY[triangleC];
-		float vz3 = modelLocalZ[triangleC];
-
-		int color1 = faceColors1[face];
-		int color2 = faceColors2[face];
-		int color3 = faceColors3[face];
-
-		if (color3 == -1)
-			color2 = color3 = color1;
-
-		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-		if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
-			return 0;
-
-		if (unlitFaceColors != null)
-			color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
-
-		int textureFace = textureFaces != null ? textureFaces[face] : -1;
-		int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
-
-		UvType uvType = UvType.GEOMETRY;
-		Material material = baseMaterial;
-		ModelOverride faceOverride = modelOverride;
-
-		if (textureId != -1) {
-			color1 = color2 = color3 = 90;
-			uvType = UvType.VANILLA;
-			if (textureMaterial != Material.NONE) {
-				material = textureMaterial;
+				minFz = min(minFz, fz);
+				maxFz = max(maxFz, fz);
 			} else {
-				material = materialManager.fromVanillaTexture(textureId);
-				if (modelOverride.materialOverrides != null) {
-					var override = modelOverride.materialOverrides.get(material);
-					if (override != null) {
-						faceOverride = override;
-						material = faceOverride.textureMaterial;
-					}
+				distanceToFaces[base + distanceFaceCount[fz]++] = i;
+			}
+		}
+
+		sortedFaces.start();
+		final int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
+		final byte[] pri = m.renderPriorities;
+		if (pri == null || m.modelOverride.disablePrioritySorting) {
+			for (int i = maxFz; i >= minFz; --i) {
+				if (distanceStamp[i] != stamp)
+					continue;
+
+				final int cnt = distanceFaceCount[i];
+				final int base = i * FACES_PER_DISTANCE;
+
+				for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
+					final int idx = distanceToFaces[base + faceIdx] * 3 + start;
+					sortedFaces.putIndices(idx, idx + 1, idx + 2);
 				}
 			}
-		} else if (modelOverride.colorOverrides != null) {
-			int ahsl = (0xFF - transparency) << 16 | color1;
-			for (var override : modelOverride.colorOverrides) {
-				if (override.ahslCondition.test(ahsl)) {
-					faceOverride = override;
-					material = faceOverride.baseMaterial;
-					break;
+		} else {
+			Arrays.fill(numOfPriority, 0);
+			int minPr = PRIORITY_COUNT, maxPr = 0;
+			for (int i = maxFz; i >= minFz; --i) {
+				if (distanceStamp[i] != stamp)
+					continue;
+
+				final int cnt = distanceFaceCount[i];
+				final int base = i * FACES_PER_DISTANCE;
+				for (int f = 0; f < cnt; ++f) {
+					final int face = distanceToFaces[base + f];
+					final byte p = pri[face];
+
+					minPr = min(minPr, p);
+					maxPr = max(maxPr, p);
+
+					orderedFaces[p * MAX_FACES_PER_PRIORITY + numOfPriority[p]++] = face;
+				}
+			}
+
+			for (int pIdx = minPr; pIdx <= maxPr; ++pIdx) {
+				final int cnt = numOfPriority[pIdx];
+				final int base = pIdx * MAX_FACES_PER_PRIORITY;
+
+				for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
+					final int idx = orderedFaces[base + faceIdx] * 3 + start;
+					sortedFaces.putIndices(idx, idx + 1, idx + 2);
 				}
 			}
 		}
+		sortedFaces.end();
 
-		if (material != Material.NONE) {
-			uvType = faceOverride.uvType;
-			if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
-				uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+		return true;
+	}
+
+	public final class SortingSlice {
+		private int head;
+		private int length;
+
+		public int length() {
+			return length;
 		}
 
-		int materialData = material.packMaterialData(faceOverride, uvType, false);
-
-		final float[] faceUVs;
-		if (uvType == UvType.VANILLA && textureId != -1) {
-			computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC);
-		} else if (uvType != UvType.GEOMETRY) {
-			faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
-		} else {
-			faceUVs = GEOMETRY_UVS;
+		public int get(int idx) {
+			return sortingData[head + idx];
 		}
 
-		final boolean shouldRotateNormals;
-		if (!hasVertexNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && faceColors3[face] == -1)) {
-			shouldRotateNormals = false;
-			calculateFaceNormal(
-				modelNormals,
-				vx1, vy1, vz1,
-				vx2, vy2, vz2,
-				vx3, vy3, vz3
-			);
-		} else {
-			shouldRotateNormals = orient != 0;
-			modelNormals[0] = xVertexNormals[triangleA];
-			modelNormals[1] = yVertexNormals[triangleA];
-			modelNormals[2] = zVertexNormals[triangleA];
-			modelNormals[3] = xVertexNormals[triangleB];
-			modelNormals[4] = yVertexNormals[triangleB];
-			modelNormals[5] = zVertexNormals[triangleB];
-			modelNormals[6] = xVertexNormals[triangleC];
-			modelNormals[7] = yVertexNormals[triangleC];
-			modelNormals[8] = zVertexNormals[triangleC];
+		public void copy(GpuIntBuffer buffer) {
+			if(length <= 0)
+				return;
+
+			buffer.ensureCapacity(length);
+			buffer.getBuffer().put(sortingData, head, length);
 		}
 
-		if (plugin.configUndoVanillaShading) {
-			color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
-			color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
-			color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
+		public void free() {
+			head = length = 0;
+			sortingSlicePool.add(this);
 		}
 
-		// HSL override is not applied to textured faces
-		if (overrideAmount > 0 && textureId == -1) {
-			color1 = interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color2 = interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
+		private void start() {
+			head = sortingDataWritten;
+			length = 0;
 		}
 
-		// Rotate normals
-		if (shouldRotateNormals) {
-			for (int i = 0; i < 9; i += 3) {
-				int x = modelNormals[i];
-				int z = modelNormals[i + 2];
-				modelNormals[i] = z * orientSin + x * orientCos >> 16;
-				modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
-			}
+		private void end() {
+			length = sortingDataWritten - head;
 		}
 
-		int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
-			bias == null ? 0 : bias[face] & 0xFF;
-		int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
-		boolean hasAlpha = material.hasTransparency || transparency != 0;
-
-		VertexWriteCache vb, tb;
-		if (WRITE_CACHE.useAlphaBuffer && hasAlpha) {
-			vb = WRITE_CACHE.alpha;
-			tb = WRITE_CACHE.alphaTex;
-		} else {
-			vb = WRITE_CACHE.opaque;
-			tb = WRITE_CACHE.opaqueTex;
+		private void ensureCapacity(int count) {
+			if (sortingDataWritten + count <= sortingData.length)
+				return;
+			sortingData = Arrays.copyOf(sortingData, (int) HDUtils.ceilPow2(sortingDataWritten + count));
 		}
 
-		color1 |= packedAlphaBiasHsl;
-		color2 |= packedAlphaBiasHsl;
-		color3 |= packedAlphaBiasHsl;
+		private void putFace(int f) {
+			ensureCapacity(1);
+			sortingData[sortingDataWritten++] = f;
+		}
 
-		final int texturedFaceIdx = tb.putFace(
-			color1, color2, color3,
-			materialData, materialData, materialData,
-			0, 0, 0
-		);
+		private void putFaces(int[] faces, int offset, int count) {
+			ensureCapacity(count);
+			System.arraycopy(faces, offset, sortingData, sortingDataWritten, count);
+			sortingDataWritten += count;
+		}
 
-		vb.putVertex(
-			vx1, vy1, vz1,
-			faceUVs[0], faceUVs[1], faceUVs[2],
-			modelNormals[0], modelNormals[1], modelNormals[2],
-			texturedFaceIdx
-		);
-		vb.putVertex(
-			vx2, vy2, vz2,
-			faceUVs[4], faceUVs[5], faceUVs[6],
-			modelNormals[3], modelNormals[4], modelNormals[5],
-			texturedFaceIdx
-		);
-		vb.putVertex(
-			vx3, vy3, vz3,
-			faceUVs[8], faceUVs[9], faceUVs[10],
-			modelNormals[6], modelNormals[7], modelNormals[8],
-			texturedFaceIdx
-		);
-		return 3;
+		private void putIndices(int a, int b, int c) {
+			ensureCapacity(3);
+			sortingData[sortingDataWritten++] = a;
+			sortingData[sortingDataWritten++] = b;
+			sortingData[sortingDataWritten++] = c;
+		}
 	}
 }
