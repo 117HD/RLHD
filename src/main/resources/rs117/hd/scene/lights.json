@@ -27872,8 +27872,8 @@
   {
     "description": "TELEGRAB_CAST_2",
     "offset": [ 0, 75, 75 ],
-    "radius": 85,
-    "strength": 10,
+    "radius": 100,
+    "strength": 7,
     "color": [
       170,
       20,
