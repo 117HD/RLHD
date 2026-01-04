@@ -37,9 +37,6 @@ public class Zone {
 	@Inject
 	private Client client;
 
-	@Inject
-	private FacePrioritySorter facePrioritySorter;
-
 	// Zone vertex format
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
@@ -631,8 +628,12 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	void addTempAlphaModel(ModelOverride modelOverride, int vao, int tboF, int startpos, int endpos, int level, int x, int y, int z) {
-		AlphaModel m = modelCache.poll();
+	synchronized void addTempAlphaModel(ModelOverride modelOverride, int vao, int tboF, int startpos, int endpos, int level, int x, int y, int z) {
+		AlphaModel m;
+		synchronized (modelCache)
+		{
+			m = modelCache.poll();
+		}
 		if (m == null)
 			m = new AlphaModel();
 		m.id = -1;
@@ -693,6 +694,7 @@ public class Zone {
 	}
 
 	void renderAlpha(
+		FacePrioritySorter facePrioritySorter,
 		CommandBuffer cmd,
 		int zx,
 		int zz,
@@ -802,11 +804,13 @@ public class Zone {
 		}
 	}
 
-	void multizoneLocs(SceneContext ctx, int zx, int zz, Camera camera, Zone[][] zones) {
+	synchronized void multizoneLocs(SceneContext ctx, int zx, int zz, Camera camera, Zone[][] zones) {
 		int offset = ctx.sceneOffset >> 3;
 		int cx = (int) camera.getPositionX();
 		int cz = (int) camera.getPositionZ();
-		for (AlphaModel m : alphaModels) {
+		for (int i = 0; i < alphaModels.size(); ++i) // NOPMD: ForLoopCanBeForeach
+		{
+			AlphaModel m = alphaModels.get(i);
 			if (m.lx == -1)
 				continue;
 

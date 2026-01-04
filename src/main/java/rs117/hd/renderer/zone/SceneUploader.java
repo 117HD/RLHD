@@ -1657,22 +1657,6 @@ public class SceneUploader {
 		return len;
 	}
 
-	public void uploadTempModel(
-		Model model,
-		ModelOverride modelOverride,
-		int preOrientation,
-		int orientation,
-		int x,
-		int y,
-		int z,
-		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer,
-		IntBuffer opaqueTexBuffer,
-		IntBuffer alphaTexBuffer
-	) {
-		uploadTempModel(null, null, model, modelOverride, preOrientation, orientation, x, y, z, opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
-	}
-
 	// temp draw
 	public void uploadTempModel(
 		FacePrioritySorter.SortingSlice sortedFaces,

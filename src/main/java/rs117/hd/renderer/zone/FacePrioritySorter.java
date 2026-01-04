@@ -24,9 +24,8 @@
  */
 package rs117.hd.renderer.zone;
 
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import javax.inject.Singleton;
+import java.util.concurrent.LinkedBlockingDeque;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.HDUtils;
@@ -37,7 +36,6 @@ import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-@Singleton
 final class FacePrioritySorter {
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int MAX_DIAMETER = 6000;
@@ -57,15 +55,16 @@ final class FacePrioritySorter {
 	private final int[] eq10 = new int[MAX_FACES_PER_PRIORITY];
 	private final int[] eq11 = new int[MAX_FACES_PER_PRIORITY];
 	private final int[] lt10 = new int[PRIORITY_COUNT];
+	private final float[] p = new float[3];
 
 	private final long[] distanceStamp = new long[MAX_DIAMETER];
-	private final ArrayDeque<SortingSlice> sortingSlicePool = new ArrayDeque<>();
+	private final LinkedBlockingDeque<SortingSlice> SORTING_SLICE_POOL = new LinkedBlockingDeque<>();
 	private long globalStamp = 1;
 	private int[] sortingData = new int[16];
 	private int sortingDataWritten = 0;
 
 	public SortingSlice obtainSortingSlice() {
-		SortingSlice result = sortingSlicePool.isEmpty() ? new SortingSlice() : sortingSlicePool.pop();
+		SortingSlice result = SORTING_SLICE_POOL.isEmpty() ? new SortingSlice() : SORTING_SLICE_POOL.pop();
 		result.head = result.length = 0;
 		return result;
 	}
@@ -107,7 +106,7 @@ final class FacePrioritySorter {
 		float orientSinf = SINE[orientation] / 65536f;
 		float orientCosf = COSINE[orientation] / 65536f;
 
-		float[] p = proj.project(x, y, z);
+		proj.project(x, y, z, p);
 		int zero = (int) p[2];
 
 		for (int v = 0; v < vertexCount; ++v) {
@@ -125,7 +124,7 @@ final class FacePrioritySorter {
 			vertexY += y;
 			vertexZ += z;
 
-			p = proj.project(vertexX, vertexY, vertexZ);
+			proj.project(vertexX, vertexY, vertexZ, p);
 			if (p[2] < 50)
 				return false;
 
@@ -423,7 +422,7 @@ final class FacePrioritySorter {
 
 		public void free() {
 			head = length = 0;
-			sortingSlicePool.add(this);
+			SORTING_SLICE_POOL.add(this);
 		}
 
 		private void start() {
