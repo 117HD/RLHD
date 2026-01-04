@@ -28730,9 +28730,9 @@
   },
   {
     "description": "FIRE_SURGE_2",
-    "offset": [ 0, -25, -100 ],
-    "radius": 250,
-    "strength": 11,
+    "offset": [ 0, 0, -50 ],
+    "radius": 235,
+    "strength": 9,
     "color": [
       252,
       148,
