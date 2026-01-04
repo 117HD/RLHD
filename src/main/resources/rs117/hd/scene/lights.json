@@ -27889,11 +27889,11 @@
   },
   {
     "description": "WIND_STRIKE_TO_BLAST_CAST",
-    "offset": [ 0, 125, 50 ],
-    "radius": 225,
+    "offset": [ 0, 120, 50 ],
+    "radius": 200,
     "fixedDespawnTime": true,
     "despawnDelay": 1000,
-    "strength": 5.5,
+    "strength": 7.5,
     "color": [
       255,
       255,
@@ -27913,7 +27913,7 @@
   {
     "description": "WATER_STRIKE",
     "radius": 225,
-    "strength": 4.5,
+    "strength": 7.5,
     "color": [
       0,
       140,
@@ -27934,7 +27934,7 @@
     "radius": 225,
     "fixedDespawnTime": true,
     "despawnDelay": 1000,
-    "strength": 5,
+    "strength": 8,
     "color": [
       0,
       140,
@@ -27975,7 +27975,7 @@
     "radius": 225,
     "fixedDespawnTime": true,
     "despawnDelay": 1000,
-    "strength": 4,
+    "strength": 7,
     "color": [
       0,
       255,
@@ -28004,7 +28004,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 200,
+    "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIRESTRIKE_TRAVEL"
@@ -28016,11 +28016,34 @@
     "radius": 225,
     "fixedDespawnTime": true,
     "despawnDelay": 1000,
-    "strength": 5.5,
+    "strength": 6,
     "color": [
       255,
       0,
       0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESTRIKE_CASTING",
+      "FIREBOLT_CASTING",
+      "FIREBLAST_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_STRIKE_TO_BLAST_CAST_2",
+    "offset": [ 0, 60, 50 ],
+    "radius": 110,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
     ],
     "type": "STATIC",
     "duration": 0,
@@ -28089,12 +28112,31 @@
   },
   {
     "description": "FIRE_BOLT",
-    "radius": 250,
-    "strength": 6.3,
+    "radius": 265,
+    "strength": 7,
     "color": [
       255,
       0,
       0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "projectileIds": [
+      "FIREBOLT_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_BOLT_2",
+    "offset": [ 0, -25, -25 ],
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
     ],
     "type": "STATIC",
     "duration": 0,
@@ -28167,6 +28209,25 @@
       255,
       0,
       0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIREBLAST_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_BLAST_2",
+    "offset": [ 0, -25, -25 ],
+    "radius": 200,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
     ],
     "type": "STATIC",
     "duration": 0,
@@ -28316,6 +28377,25 @@
     ]
   },
   {
+    "description": "FIRE_WAVE_2",
+    "offset": [ 0, -25, -50 ],
+    "radius": 250,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIREWAVE_TRAVEL"
+    ]
+  },
+  {
     "description": "FIRE_WAVE_CAST",
     "offset": [ 0, 175, 50 ],
     "radius": 300,
@@ -28327,6 +28407,28 @@
       255,
       0,
       0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIREWAVE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_WAVE_CAST_2",
+    "offset": [ 0, 175, 50 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
     ],
     "type": "STATIC",
     "duration": 0,
@@ -28608,6 +28710,25 @@
     ]
   },
   {
+    "description": "FIRE_SURGE_2",
+    "offset": [ 0, -25, -100 ],
+    "radius": 250,
+    "strength": 11,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIRESURGE_TRAVEL"
+    ]
+  },
+  {
     "description": "FIRE_SURGE_CAST_LEFT",
     "offset": [ 80, 175, 50 ],
     "spawnDelay": 100,
@@ -28663,6 +28784,72 @@
       255,
       0,
       0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_LEFT_2",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 200,
+    "strength": 13.8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_RIGHT_2",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 200,
+    "strength": 13.8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_MIDDLE_2",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      252,
+      148,
+      3
     ],
     "type": "STATIC",
     "duration": 0,
