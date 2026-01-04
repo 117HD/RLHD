@@ -50,7 +50,7 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
-import rs117.hd.renderer.zone.FacePrioritySorter.SortingSlice;
+import rs117.hd.renderer.zone.FacePrioritySorter.SortedFaces;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -83,8 +83,6 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class ZoneRenderer implements Renderer {
-	private static final int ALPHA_ZSORT_CLOSE = 2048;
-
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
@@ -122,6 +120,9 @@ public class ZoneRenderer implements Renderer {
 	private SceneUploader sceneUploader;
 
 	@Inject
+	private FacePrioritySorter staticFacePrioritySorter;
+
+	@Inject
 	private FacePrioritySorter facePrioritySorter;
 
 	@Inject
@@ -141,6 +142,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
+
+	private final SortedFaces tempSortedFaces = new SortedFaces();
+	private final SortedFaces tempUnsortedFaces = new SortedFaces();
 
 	private final Camera sceneCamera = new Camera();
 	private final Camera directionalCamera = new Camera().setOrthographic(true);
@@ -285,6 +289,8 @@ public class ZoneRenderer implements Renderer {
 			vaoO.addRange(topLevel);
 			vaoPO.addRange(topLevel);
 		}
+
+		ctx.sortStaticAlphaModels(staticFacePrioritySorter, sceneCamera);
 	}
 
 	private void preSceneDrawTopLevel(
@@ -904,12 +910,7 @@ public class ZoneRenderer implements Renderer {
 		if (!hasAlpha)
 			return;
 
-		int offset = ctx.sceneContext.sceneOffset >> 3;
-		int dx = (int) plugin.cameraPosition[0] - ((zx - offset) << 10);
-		int dz = (int) plugin.cameraPosition[2] - ((zz - offset) << 10);
-		// If the zone is at sea, allow incorrect alpha ordering in the distance, for areas like north of Prifddinas
-		boolean skipSorting = z.onlyWater && dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
-
+		final int offset = ctx.sceneContext.sceneOffset >> 3;
 		if (level == 0) {
 			if(!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
 				// Only sort if we're gonna render alpha in the scene, shadows don't need any sorting done
@@ -918,14 +919,13 @@ public class ZoneRenderer implements Renderer {
 			z.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
 		}
 
-		if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-			z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, sceneCamera, false, skipSorting);
-		}
-
 		if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
 			directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-			z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, directionalCamera, plugin.configRoofShadows, true);
+			z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, null, plugin.configRoofShadows);
 		}
+
+		if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
+			z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, facePrioritySorter, false);
 
 		checkGLErrors();
 	}
@@ -1052,8 +1052,8 @@ public class ZoneRenderer implements Renderer {
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		VAO o = vaoO.get(size, ctx.vboM);
 
-		SortingSlice sortedFaces = null;
-		SortingSlice unsortedFaces = null;
+		SortedFaces sortedFaces = null;
+		SortedFaces unsortedFaces = null;
 		VAO a = o;
 		int alphaStart = -1;
 
@@ -1064,8 +1064,8 @@ public class ZoneRenderer implements Renderer {
 
 			if (zone.inSceneFrustum) {
 				try {
-					sortedFaces = facePrioritySorter.obtainSortingSlice();
-					unsortedFaces = facePrioritySorter.obtainSortingSlice();
+					sortedFaces   = tempSortedFaces.reset();
+					unsortedFaces = tempUnsortedFaces.reset();
 
 					facePrioritySorter.sortModelFaces(
 						sortedFaces,
@@ -1091,14 +1091,6 @@ public class ZoneRenderer implements Renderer {
 			a.vbo.vb,
 			o.tboF.getPixelBuffer(),
 			a.tboF.getPixelBuffer());
-
-		if(sortedFaces != null)
-			sortedFaces.free();
-
-		if(unsortedFaces != null)
-			unsortedFaces.free();
-
-		facePrioritySorter.reset();
 
 		if(o != a) {
 			int alphaEnd = a.vbo.vb.position();
@@ -1164,8 +1156,8 @@ public class ZoneRenderer implements Renderer {
 		final int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		final VAO o = renderable instanceof Player ? vaoPO.get(size, ctx.vboM) : vaoO.get(size, ctx.vboM);
 
-		SortingSlice sortedFaces = null;
-		SortingSlice unsortedFaces = null;
+		SortedFaces sortedFaces = null;
+		SortedFaces unsortedFaces = null;
 		VAO a = o;
 		int alphaStart = -1;
 
@@ -1178,8 +1170,8 @@ public class ZoneRenderer implements Renderer {
 
 			if (!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {
 				try {
-					sortedFaces = facePrioritySorter.obtainSortingSlice();
-					unsortedFaces = facePrioritySorter.obtainSortingSlice();
+					sortedFaces   = tempSortedFaces.reset();
+					unsortedFaces = tempUnsortedFaces.reset();
 
 					facePrioritySorter.sortModelFaces(
 						sortedFaces,
@@ -1205,14 +1197,6 @@ public class ZoneRenderer implements Renderer {
 			a.vbo.vb,
 			o.tboF.getPixelBuffer(),
 			a.tboF.getPixelBuffer());
-
-		if(sortedFaces != null)
-			sortedFaces.free();
-
-		if(unsortedFaces != null)
-			unsortedFaces.free();
-
-		facePrioritySorter.reset();
 
 		if(o != a) {
 			int alphaEnd = a.vbo.vb.position();

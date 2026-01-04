@@ -1,6 +1,9 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
@@ -10,6 +13,7 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
+import rs117.hd.utils.Camera;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -17,6 +21,12 @@ import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 
 @Slf4j
 public class WorldViewContext {
+	public static final int ALPHA_ZSORT_CLOSE = 4096;
+	public static final int ALPHA_ZSORT_CLOSE_SQ = ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
+
+	public static final int ALPHA_ZSORT = 8192;
+	public static final int ALPHA_ZSORT_SQ = ALPHA_ZSORT * ALPHA_ZSORT;
+
 	@Inject
 	private Injector injector;
 
@@ -37,6 +47,11 @@ public class WorldViewContext {
 
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;
+
+	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
+	private final List<Zone> alphaZones = new ArrayList<>();
+
+	StaticAlphaSortingJob staticAlphaSortingJob;
 
 	public long loadTime;
 	public long uploadTime;
@@ -80,6 +95,39 @@ public class WorldViewContext {
 			.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1)
 			.put(0).put(0); // dummy scene offset for macOS
 		vboM.unmap();
+	}
+
+	void sortStaticAlphaModels(FacePrioritySorter facePrioritySorter, Camera camera) {
+		if(staticAlphaSortingJob == null)
+			staticAlphaSortingJob = new StaticAlphaSortingJob(facePrioritySorter);
+
+		staticAlphaSortingJob.waitForCompletion();
+		alphaZones.clear();
+
+		final int offset = sceneContext.sceneOffset >> 3;
+		final int camPosX = (int) camera.getPositionX();
+		final int camPosZ = (int) camera.getPositionZ();
+		for(int zx = 0; zx < sizeX; zx++) {
+			for(int zz = 0; zz < sizeZ; zz++) {
+				final Zone z = zones[zx][zz];
+				if(z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum))
+					continue;
+
+				final int dx = camPosX - ((zx - offset) << 10);
+				final int dz = camPosZ - ((zz - offset) << 10);
+				z.dist = dx * dx + dz * dz;
+				if(z.dist < ALPHA_ZSORT_SQ)
+					alphaZones.add(z);
+			}
+		}
+
+		if(!alphaZones.isEmpty()) {
+			alphaZones.sort(alphaSortComparator);
+			staticAlphaSortingJob.reset();
+			for (Zone z : alphaZones)
+				z.alphaStaticModelSort(staticAlphaSortingJob, z.dist > ALPHA_ZSORT_CLOSE_SQ);
+			staticAlphaSortingJob.queue(camera);
+		}
 	}
 
 	void handleZoneSwap(float deltaTime, int zx, int zz) {

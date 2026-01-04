@@ -23,18 +23,26 @@ public abstract class Job {
 	JobHandle handle;
 
 	public final void waitForCompletion() {
+		waitForCompletion(-1);
+	}
+
+	public final void waitForCompletion(int timeoutNs) {
+		boolean completed = false;
 		if (handle != null) {
 			try {
-				handle.await();
+				completed = handle.await(timeoutNs);
 			} catch (InterruptedException e) {
 				log.warn("Job {} was interrupted while waiting for completion", this);
 				throw new RuntimeException(e);
 			} finally {
-				handle.release();
+				if(completed)
+					handle.release();
 			}
+		} else {
+			completed = true;
 		}
 
-		if (group != null) {
+		if (group != null && completed) {
 			group.pending.remove(this);
 			group = null;
 		}

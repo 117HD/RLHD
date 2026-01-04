@@ -1675,8 +1675,8 @@ public class SceneUploader {
 
 	// temp draw
 	public void uploadTempModel(
-		FacePrioritySorter.SortingSlice sortedFaces,
-		FacePrioritySorter.SortingSlice unsortedFaces,
+		FacePrioritySorter.SortedFaces sortedFaces,
+		FacePrioritySorter.SortedFaces unsortedFaces,
 		Model model,
 		ModelOverride modelOverride,
 		int preOrientation,

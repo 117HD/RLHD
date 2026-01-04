@@ -239,7 +239,11 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	boolean isCancelled() { return jobState.getAcquire() == STATE_CANCELLED; }
 	boolean isCompleted() { return jobState.getAcquire() == STATE_COMPLETED; }
 
-	void await() throws InterruptedException {
+	boolean await() throws InterruptedException {
+		return await(-1);
+	}
+
+	boolean await(int timeoutNs) throws InterruptedException {
 		refCounter.incrementAndGet();
 
 		final boolean isClientThread = JOB_SYSTEM.client != null && JOB_SYSTEM.client.isClientThread();
@@ -264,19 +268,29 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 							}
 							seconds = newSeconds;
 						}
-						if (elapsed > DEADLOCK_TIMEOUT_SECONDS * 1000) {
-							handleDeadlock();
-							return;
+						if(timeoutNs > 0 && elapsed > timeoutNs) {
+							return false;
+						} else {
+							if (elapsed > DEADLOCK_TIMEOUT_SECONDS * 1000) {
+								handleDeadlock();
+								return false;
+							}
 						}
 					}
 				} else {
-					if (!tryAcquireSharedNanos(0, TimeUnit.SECONDS.toNanos(DEADLOCK_TIMEOUT_SECONDS)))
-						handleDeadlock();
+					if(timeoutNs > 0) {
+						if (!tryAcquireSharedNanos(0, timeoutNs))
+							return false;
+					} else {
+						if (!tryAcquireSharedNanos(0, TimeUnit.SECONDS.toNanos(DEADLOCK_TIMEOUT_SECONDS)))
+							handleDeadlock();
+					}
 				}
 			}
 		} finally {
 			refCounter.decrementAndGet();
 		}
+		return true;
 	}
 
 	private boolean isDone() {
