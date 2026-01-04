@@ -2122,15 +2122,6 @@
     "windSpeed": 8.5
   },
   {
-    "area": "XMAS_2025_ENVIRONMENT",
-    "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.2,
-    "directionalColor": "#f4e5c9",
-    "directionalStrength": 2,
-    "fogColor": "#aebde0",
-    "fogDepth": 25
-  },
-  {
     "area": "GRIMSTONE",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 0.75,
