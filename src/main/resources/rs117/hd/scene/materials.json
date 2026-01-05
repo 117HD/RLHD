@@ -1126,6 +1126,37 @@
     "specularGloss": 80.0
   },
   {
+    "name": "SMOOTH_SNOW_N"
+  },
+  {
+    "name": "SMOOTH_SNOW",
+    "normalMap": "SMOOTH_SNOW_N",
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "SMOOTH_SNOW_DIM",
+    "parent": "SMOOTH_SNOW",
+    "brightness": 0.9
+  },
+  {
+    "name": "SMOOTH_SNOW_SEMI_DARK",
+    "parent": "SMOOTH_SNOW",
+    "brightness": 0.85
+  },
+  {
+    "name": "SMOOTH_SNOW_DARK",
+    "parent": "SMOOTH_SNOW",
+    "brightness": 0.735
+  },
+  {
+    "name": "SMOOTH_SNOW_COLORED",
+    "normalMap": "SMOOTH_SNOW_N",
+    "overrideBaseColor": true,
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
     "name": "BASE_GLOSS",
     "parent": "GRAY_85",
     "specularStrength": 0.8,
@@ -1150,23 +1181,6 @@
     "specularGloss": 20.0
   },
   {
-    "name": "SNOW_2_SEMI_DARK",
-    "parent": "SNOW_2",
-    "brightness": 0.85
-  },
-  {
-    "name": "SNOW_2_DARK",
-    "parent": "SNOW_2",
-    "brightness": 0.735
-  },
-  {
-    "name": "SNOW_COLORED",
-    "normalMap": "SNOW_1_N",
-    "overrideBaseColor": true,
-    "specularStrength": 0.4,
-    "specularGloss": 20.0
-  },
-  {
     "name": "SNOW_3_N"
   },
   {
@@ -1176,18 +1190,9 @@
     "specularGloss": 20.0
   },
   {
-    "name": "SNOW_4_N"
-  },
-  {
-    "name": "SNOW_4",
-    "normalMap": "SNOW_4_N",
-    "specularStrength": 0.4,
-    "specularGloss": 20.0
-  },
-  {
-    "name": "SNOW_4_DARK",
-    "parent": "SNOW_4",
-    "brightness": 0.9
+    "name": "SNOW_3_DARK",
+    "parent": "SNOW_3",
+    "brightness": 0.8
   },
   {
     "name": "GRASS_1"
@@ -1933,6 +1938,11 @@
     "brightness": 1.15
   },
   {
+    "name": "MARBLE_1_DARK",
+    "parent": "MARBLE_1",
+    "brightness": 0.85
+  },
+  {
     "name": "MARBLE_2_GLOSS",
     "parent": "MARBLE_2",
     "specularStrength": 0.8,
@@ -1987,6 +1997,11 @@
     "parent": "MARBLE_4_LOW_CONTRAST",
     "specularStrength": 1,
     "specularGloss": 80.0
+  },
+  {
+    "name": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "parent": "MARBLE_4_LOW_CONTRAST_GLOSS",
+    "brightness": 1.8
   },
   {
     "name": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
@@ -2515,6 +2530,11 @@
     "brightness": 0.85
   },
   {
+    "name": "SMOOTH_STONE_VERY_LIGHT",
+    "parent": "SMOOTH_STONE",
+    "brightness": 1.6
+  },
+  {
     "name": "GEM_STONE",
     "normalMap": "METALLIC_2_N",
     "brightness": 1.1,
@@ -2659,7 +2679,7 @@
   },
   {
     "name": "ICE_1",
-    "parent": "SNOW_4",
+    "parent": "SMOOTH_SNOW",
     "specularStrength": 1.1,
     "specularGloss": 200.0,
     "materialsToReplace": [
@@ -2676,7 +2696,7 @@
   },
   {
     "name": "ICE_2",
-    "parent": "SNOW_2",
+    "parent": "SMOOTH_SNOW",
     "specularStrength": 1.5,
     "specularGloss": 800.0
   },
