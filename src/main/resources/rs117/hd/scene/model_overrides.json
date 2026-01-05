@@ -1087,6 +1087,22 @@
     ]
   },
   {
+    "description": "Jellies Specularity",
+    "baseMaterial": "BASE_GLOSS",
+    "npcIds": [
+      "SLAYER_JELLY_1",
+      "SLAYER_JELLY_2",
+      "SLAYER_JELLY_3",
+      "SLAYER_JELLY_4",
+      "SLAYER_JELLY_5",
+      "SLAYER_JELLY_6",
+      "SUPERIOR_JELLY",
+      "KOUREND_JELLY",
+      "SUPERIOR_KOUREND_JELLY",
+      "WILD_CAVE_JELLY_1"
+    ]
+  },
+  {
     "description": "Kourend - Hosidius - Apple Tree",
     "baseMaterial": "BARK",
     "objectIds": [
