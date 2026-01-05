@@ -15050,9 +15050,10 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Mortton - Objects - Stone - Funeral Pyre",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Mort'ton - Objects - Stone - Funeral Pyre - Empty",
+    "baseMaterial": "SMOOTH_STONE",
     "textureMaterial": "HD_CONCRETE_FLAT",
+    "uvScale": 0.7,
     "objectIds": [
       "TEMPLE_PYRE"
     ],
@@ -15060,7 +15061,52 @@
     "uvOrientation": 512
   },
   {
-    "description": "Mortton - Objects - Stone - Stone Stand",
+    "description": "Mort'ton - Objects - Stone - Funeral Pyre - Logs and Bones",
+    "baseMaterial": "SMOOTH_STONE",
+    "textureMaterial": "HD_CONCRETE_FLAT",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TEMPLE_PYRE_LOGS",
+      "TEMPLE_PYRE_OAK",
+      "TEMPLE_PYRE_WILLOW",
+      "TEMPLE_PYRE_MAPLE",
+      "TEMPLE_PYRE_YEW",
+      "TEMPLE_PYRE_MAGIC",
+      "TEMPLE_PYRE_BONES_LOGS",
+      "TEMPLE_PYRE_BONES_OAK",
+      "TEMPLE_PYRE_BONES_WILLOW",
+      "TEMPLE_PYRE_BONES_MAPLE",
+      "TEMPLE_PYRE_BONES_YEW",
+      "TEMPLE_PYRE_BONES_MAGIC",
+      "TEMPLE_PYRE_TEAK",
+      "TEMPLE_PYRE_MAHOGANY",
+      "TEMPLE_PYRE_BONES_TEAK",
+      "TEMPLE_PYRE_BONES_MAHOGANY",
+      "TEMPLE_PYRE_ARCTIC_PINE",
+      "TEMPLE_PYRE_BONES_ARCTIC_PINE",
+      "TEMPLE_PYRE_REDWOOD",
+      "TEMPLE_PYRE_BONES_REDWOOD",
+      "TEMPLE_PYRE_CAMPHOR",
+      "TEMPLE_PYRE_IRONWOOD",
+      "TEMPLE_PYRE_ROSEWOOD",
+      "TEMPLE_PYRE_BONES_CAMPHOR",
+      "TEMPLE_PYRE_BONES_IRONWOOD",
+      "TEMPLE_PYRE_BONES_ROSEWOOD"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.6111111111111,
+        "uvOrientation": 100,
+        "baseMaterial": "LIGHT_BARK"
+      }
+    ]
+  },
+  {
+    "description": "Mort'ton - Objects - Stone - Stone Stand",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "PYRE_STAND"
@@ -15072,24 +15118,70 @@
     "uvOrientationZ": 1024
   },
   {
-    "description": "Mortton - Objects - Stone - Temple Walls",
-    "baseMaterial": "STONE",
+    "description": "Mort'ton - Objects - Stone - Temple Walls",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
-      "TEMPLEWALLCORNER_10"
+      "TEMPLEWALLCORNER_1",
+      "TEMPLEWALLCORNER_2",
+      "TEMPLEWALLCORNER_3",
+      "TEMPLEWALLCORNER_4",
+      "TEMPLEWALLCORNER_5",
+      "TEMPLEWALLCORNER_6",
+      "TEMPLEWALLCORNER_7",
+      "TEMPLEWALLCORNER_8",
+      "TEMPLEWALLCORNER_9",
+      "TEMPLEWALLCORNER_10",
+      "TEMPLEWALLCORNER_BASE"
     ],
-    "uvType": "MODEL_XY"
+    "uvType": "BOX"
   },
   {
-    "description": "Mortton - Objects - Stone - Temple Walls - Mirrored",
-    "baseMaterial": "STONE",
+    "description": "Mort'ton - Objects - Stone - Temple Walls - Mirrored",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
-      "TEMPLEWALL_10"
+      "TEMPLEWALL_1",
+      "TEMPLEWALL_2",
+      "TEMPLEWALL_3",
+      "TEMPLEWALL_4",
+      "TEMPLEWALL_5",
+      "TEMPLEWALL_6",
+      "TEMPLEWALL_7",
+      "TEMPLEWALL_8",
+      "TEMPLEWALL_9",
+      "TEMPLEWALL_10",
+      "TEMPLEWALL_BASE"
     ],
-    "uvType": "MODEL_XY_MIRROR_B"
+    "uvType": "BOX"
   },
   {
-    "description": "Mortton Shade Catacombs - Walls - Stone",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Mort'ton - Objects - Stone - Temple Fire - Lit",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "TEMPLEFIRE_ALTAR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Mort'ton - Objects - Stone - Temple Fire - Unlit and Broken",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "TEMPLEFIRE_ALTAR_NOFIRE",
+      "TEMPLEFIRE_ALTAR_NOFIRE_BROKEN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Mort'ton Shade Catacombs - Walls - Stone",
+    "baseMaterial": "STONE",
     "objectIds": [
       "MYQ3_LAB_WALL",
       "MYQ3_LAB_WALL_EXPOSED_PLASTER",
@@ -15097,14 +15189,26 @@
       "MYQ5_WALL_JOIN_L",
       "MYQ5_WALL_CAVE_SUPPORT_RIGHT",
       "MYQ5_WALL_CAVE_SUPPORT_LEFT",
-      "MYQ5_WALL_CAVE_MID"
+      "MYQ5_WALL_CAVE_MID",
+      "MYQ3_HIDEOUT_WALL_TOP"
     ],
     "uvType": "BOX",
-    "uvScale": 0.46,
-    "uvOrientation": 300
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "s == 4 || s == 3 || s == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.45
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
-    "description": "Mortton Shade Catacombs  - Walls - Metallic - Doors",
+    "description": "Mort'ton Shade Catacombs  - Walls - Metallic - Doors",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "SHADELAIR_BRONZEDOOR",
@@ -15114,22 +15218,33 @@
       "SHADELAIR_BRONZEDOOR_INACTIVE",
       "SHADELAIR_STEELDOOR_INACTIVE",
       "SHADELAIR_BLACKDOOR_INACTIVE",
-      "SHADELAIR_SILVERDOOR_INACTIVE"
+      "SHADELAIR_SILVERDOOR_INACTIVE",
+      "SHADELAIR_GOLDDOOR",
+      "SHADELAIR_GOLDDOOR_INACTIVE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.4
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
-    "description": "Mortton Shade Catacombs  - Objects - Stone - Grave Stone",
+    "description": "Mort'ton Shade Catacombs  - Objects - Stone - Grave Stone",
     "baseMaterial": "STONE",
     "objectIds": [
       "TEMPLE_COFFIN_2X1",
       "TEMPLE_COFFIN_2X2"
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
-    "description": "Mortton Shade Catacombs  - Objects - Stone - Altar",
+    "description": "Mort'ton Shade Catacombs  - Objects - Stone - Altar",
     "baseMaterial": "STONE",
     "objectIds": [
       "SHADE_LAIR_TEMPLE_ALTAR"
@@ -15137,7 +15252,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Ground Decoration - Mortton Catacombs & Sisterhood Sanctuary - Rock Light - Small - Uncolored",
+    "description": "Ground Decoration - Mort'ton Catacombs & Sisterhood Sanctuary - Rock Light - Small - Uncolored",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       "SANCTUARY_CAVE_EDGE_HALF1",
@@ -15279,7 +15394,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortton Shade Catacombs - Decoration - Stone - Brick rubble",
+    "description": "Mort'ton Shade Catacombs - Decoration - Stone - Brick rubble",
     "baseMaterial": "STONE",
     "objectIds": [
       "MYQ5_LAB_CRUMBLED_WALL"
@@ -15287,7 +15402,7 @@
     "uvType": "MODEL_XZ_MIRROR_B"
   },
   {
-    "description": "Mortton Shade Catacombs - Objects - Stone - Brick rubble",
+    "description": "Mort'ton Shade Catacombs - Objects - Stone - Brick rubble",
     "baseMaterial": "STONE",
     "objectIds": [
       "BARROWS_BRICKS_PILE_1"
@@ -15295,7 +15410,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortton Shade Catacombs  - Walls - Metallic - Fence",
+    "description": "Mort'ton Shade Catacombs  - Walls - Metallic - Fence",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "SANCTUARY_TALL_SPIKES",
@@ -15339,56 +15454,102 @@
     "uvScale": 0.6
   },
   {
-    "description": "Mortton - Objects - Shade Chests - Medium - Bronze",
+    "description": "Mort'ton - Objects - Shade Chests - Medium - Steel",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "SHADECHEST_BRONZE_BLOODRED",
       "SHADECHEST_BRONZE_BROWN",
       "SHADECHEST_BRONZE_CRIMSON",
       "SHADECHEST_BRONZE_BLACK",
-      "SHADECHEST_BRONZE_PURPLE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
-  },
-  {
-    "description": "Mortton - Objects - Shade Chests - Medium - Steel",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-    "objectIds": [
+      "SHADECHEST_BRONZE_PURPLE",
       "SHADECHEST_STEEL_BLOODRED",
       "SHADECHEST_STEEL_BROWN",
       "SHADECHEST_STEEL_CRIMSON",
       "SHADECHEST_STEEL_BLACK",
-      "SHADECHEST_STEEL_PURPLE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
-  },
-  {
-    "description": "Mortton - Objects - Shade Chests - Medium - Black",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-    "objectIds": [
+      "SHADECHEST_STEEL_PURPLE",
       "SHADECHEST_BLACK_BLOODRED",
       "SHADECHEST_BLACK_BROWN",
       "SHADECHEST_BLACK_CRIMSON",
       "SHADECHEST_BLACK_BLACK",
-      "SHADECHEST_BLACK_PURPLE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
-  },
-  {
-    "description": "Mortton - Objects - Shade Chests - Medium - Silver",
-    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-    "objectIds": [
+      "SHADECHEST_BLACK_PURPLE",
       "SHADECHEST_SILVER_BLOODRED",
       "SHADECHEST_SILVER_BROWN",
       "SHADECHEST_SILVER_CRIMSON",
       "SHADECHEST_SILVER_BLACK",
-      "SHADECHEST_SILVER_PURPLE"
+      "SHADECHEST_SILVER_PURPLE",
+      "SHADECHEST_GOLD_BLOODRED",
+      "SHADECHEST_GOLD_CRIMSON",
+      "SHADECHEST_GOLD_BLACK",
+      "SHADECHEST_GOLD_BROWN",
+      "SHADECHEST_GOLD_PURPLE",
+      "SHADECHESTOPEN_STEEL_BLOODRED",
+      "SHADECHESTOPEN_STEEL_BROWN",
+      "SHADECHESTOPEN_STEEL_CRIMSON",
+      "SHADECHESTOPEN_STEEL_BLACK",
+      "SHADECHESTOPEN_STEEL_PURPLE",
+      "SHADECHESTOPEN_BRONZE_BROWN",
+      "SHADECHESTOPEN_BRONZE_CRIMSON",
+      "SHADECHESTOPEN_BRONZE_BLACK",
+      "SHADECHESTOPEN_BRONZE_PURPLE",
+      "SHADECHESTOPEN_BLACK_BLOODRED",
+      "SHADECHESTOPEN_BLACK_BROWN",
+      "SHADECHESTOPEN_BLACK_CRIMSON",
+      "SHADECHESTOPEN_BLACK_BLACK",
+      "SHADECHESTOPEN_BLACK_PURPLE",
+      "SHADECHESTOPEN_SILVER_BLOODRED",
+      "SHADECHESTOPEN_SILVER_BROWN",
+      "SHADECHESTOPEN_SILVER_CRIMSON",
+      "SHADECHESTOPEN_SILVER_BLACK",
+      "SHADECHESTOPEN_SILVER_PURPLE",
+      "SHADECHESTOPEN_GOLD_BLOODRED",
+      "SHADECHESTOPEN_GOLD_CRIMSON",
+      "SHADECHESTOPEN_GOLD_BLACK",
+      "SHADECHESTOPEN_GOLD_BROWN",
+      "SHADECHESTOPEN_GOLD_PURPLE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Mort'ton - NPC - Make hard to see shades more visible - Green",
+    "baseMaterial": "GRAY_125",
+    "castShadows": false,
+    "npcIds": [
+      "SHADESHADOW_LEVEL1"
+    ]
+  },
+  {
+    "description": "Mort'ton - NPC - Make hard to see shades more visible - Black",
+    "baseMaterial": "GRAY_75",
+    "castShadows": false,
+    "npcIds": [
+      "SHADESHADOW_LEVEL2"
+    ]
+  },
+  {
+    "description": "Mort'ton - NPC - Make hard to see shades more visible - Red",
+    "baseMaterial": "GRAY_110",
+    "castShadows": false,
+    "npcIds": [
+      "SHADESHADOW_LEVEL3"
+    ]
+  },
+  {
+    "description": "Mort'ton - NPC - Make hard to see shades more visible - Brown",
+    "baseMaterial": "GRAY_05",
+    "castShadows": false,
+    "npcIds": [
+      "SHADESHADOW_LEVEL5"
+    ]
   },
   {
     "description": "Morytania - Walls - Triple Slat Fence",
@@ -41379,7 +41540,8 @@
       "QIP_SHEEP_SHEARER_SINK",
       "QIP_COOK_SINK",
       "RIMMINGTON_SINK",
-      "AIDE_SINK"
+      "AIDE_SINK",
+      "MORTTON_SINK"
     ],
     "colorOverrides": [
       {
@@ -43444,6 +43606,7 @@
     "uvType": "BOX",
     "objectIds": [
       "SHUTTERWINDOW",
+      "WINDOW_SHUTTER",
       "BROKENWINDOW",
       "BROKENSHUTTERWINDOW1",
       "BROKENSHUTTERWINDOW2"

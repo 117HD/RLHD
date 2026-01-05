@@ -44159,5 +44159,43 @@
       "SMOKE_DEVIL_BOSS"
     ],
     "type": "STATIC"
+  },
+  {
+    "description": "Shades of Mort'ton - Temple Fire",
+    "offset": [ 0, 215, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "fadeOutDuration": 200,
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TEMPLEFIRE_ALTAR"
+    ]
+  },
+  {
+    "description": "Shades of Mort'ton - Pyre",
+    "offset": [ 0, 215, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "spawnDelay": 600,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 0,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "TEMPLE_PYRE_FIRE"
+    ]
   }
 ]
