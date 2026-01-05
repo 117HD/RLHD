@@ -94,7 +94,7 @@
     "name": "SEASONAL_SNOW",
     "replacements": {
       "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
-      "WINTER_DIRT": true
+      "DEFAULT_SNOW": true
     }
   },
   {
@@ -1518,6 +1518,20 @@
     "blended": false,
     "overlayIds": [
       134
+    ]
+  },
+  {
+    "name": "RIMMINGTON_PATH_BLEND_FIX",
+    "area": "RIMMINGTON_PATH_BLEND_FIX",
+    "groundMaterial": "GRAVEL",
+    "setHue": 0,
+    "setSaturation": 0,
+    "minLightness": 24,
+    "maxLightness": 26,
+    "overlayIds": [
+      10,
+      81,
+      88
     ]
   },
   {
@@ -3781,15 +3795,21 @@
   {
     "name": "DRAYNOR_MANOR_ENTRANCE_PATH",
     "area": "DRAYNOR_MANOR",
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "minLightness": 12,
+    "maxLightness": 14,
+    "uvOrientation": 488,
     "overlayIds": [
       2,
+      11,
       90,
       117,
       120,
       127,
       132
-    ],
-    "groundMaterial": "VARROCK_PATHS"
+    ]
   },
   {
     "name": "WIZARDS_TOWER_PATH",
@@ -5668,10 +5688,13 @@
     "overlayIds": [
       33
     ],
-    "groundMaterial": "MARBLE_1_GLOSS",
+    "groundMaterial": "MARBLE_4_GLOSS",
+    "shiftLightness": 10,
+    "uvScale": 1.33,
     "blended": false,
     "replacements": {
-      "SNOW_2": "season == SeasonalTheme.WINTER"
+      "SNOW_2": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
     }
   },
   {
@@ -7873,8 +7896,7 @@
   },
   {
     "name": "FREM_COLONIES_SEASONAL_SNOW",
-    "minHue": 3,
-    "maxHue": 7,
+    "maxHue": 0,
     "maxLightness": 63,
     "replacements": {
       "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
@@ -9370,13 +9392,14 @@
       92
     ],
     "groundMaterial": "SNOW_1",
+    "setHue": 0,
+    "shiftLightness": 15,
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
       "SEASONAL_SNOW": "season == SeasonalTheme.WINTER",
       "UNDERLAY_SNOW_NO_BLENDING": "!blending"
-    },
-    "shiftLightness": 15
+    }
   },
   {
     "name": "UNDERLAY_SNOW_NO_BLENDING",
