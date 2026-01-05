@@ -8483,7 +8483,10 @@
       "WILDY_HUB_PIER_HALF",
       "WILDY_HUB_PIER_HALF2",
       "WILDY_HUB_PIER_BROKEN",
-      "WILDY_HUB_PIER_BROKEN_MIRROR"
+      "WILDY_HUB_PIER_BROKEN_MIRROR",
+      "WILD_FALLOFF_BRIDGE_PIER_HILLSKEW",
+      "WILD_FALLOFF_BRIDGE_BROKEN",
+      "WILD_FALLOFF_BRIDGE_BROKEN_MIRROR"
     ],
     "uvType": "BOX"
   },
@@ -10163,6 +10166,7 @@
       "RUGCORNER",
       "RUGSIDE",
       "RUGMIDDLE",
+      "RUGMIDDLE_ALTAR",
       "RUGCORNER_WHITE",
       "RUGSIDE_WHITE",
       "RUGMIDDLE_WHITE",
@@ -10266,7 +10270,8 @@
       "WILD_VENANATIS_ENTRANCE01",
       "WILD_VENENATIS_SINGLES_ENTRANCE01",
       "CAVE_ROCK02_ENTRANCE01_COLOSSAL_WYRM",
-      "DEEPFIN_CAVE_ENTRANCE"
+      "DEEPFIN_CAVE_ENTRANCE",
+      "WILD_FALLOFF_CAVEENTRANCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -11325,7 +11330,7 @@
   },
   {
     "description": "Wooden - Plank - Tables",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "RIMMINGTON_WOODEN_TABLE",
       "RIMMINGTON_SMALL_WOODEN_TABLE",
@@ -16700,7 +16705,7 @@
       "MAGEARENA_WATERPORTAL1",
       "MAGEARENA_WATERPORTAL2"
     ],
-    "uvType": "VANILLA",
+    "uvType": "BOX",
     "castShadows": false
   },
   {
@@ -16772,7 +16777,7 @@
   },
   {
     "description": "Wilderness - Teleport Obelisk",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "WILDERNESS_PORTAL_STONE_GLOWING",
       "WILDERNESS_PORTAL_STONE_0",
@@ -16783,7 +16788,8 @@
       "WILDERNESS_PORTAL_STONE_5"
     ],
     "uvType": "BOX",
-    "uvScale": 0.75
+    "uvScale": 0.75,
+    "terrainVertexSnap": true
   },
   {
     "description": "Wilderness - Venenatis/Spindel Lair - Walls",
@@ -17285,6 +17291,45 @@
     ]
   },
   {
+    "description": "Wilderness - Chaos Fanatic Rift",
+    "baseMaterial": "DIRT_1_VERY_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "CHAOS_FANATIC_RIFT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 53",
+        "baseMaterial": "GRAY_80"
+      }
+    ]
+  },
+  {
+    "description": "Wilderness - Chaos Fanatic Rift - Lighter",
+    "areas": [ "CHAOS_FANATIC_RIFT_LIGHTER" ],
+    "baseMaterial": "DIRT_1_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "CHAOS_FANATIC_RIFT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 53",
+        "baseMaterial": "GRAY_80"
+      }
+    ]
+  },
+  {
+    "description": "Wilderness - Chaos Fanatic Rift - Hide Floating Soil",
+    "areas": [ "CHAOS_FANATIC_RIFTS" ],
+    "hide": true,
+    "objectIds": [
+      "WILD5_DUGUPSOIL_1",
+      "WILD5_DUGUPSOIL_2",
+      "WILD5_DUGUPSOIL_3"
+    ]
+  },
+  {
     "description": "Wilderness - Slayer Cave - Stalagmite",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
@@ -17295,12 +17340,80 @@
     "uvScale": 0.32
   },
   {
+    "description": "Wilderness - Lava Pool Edges - Darker",
+    "baseMaterial": "NONE",
+    "areas": [ "WILDERNESS" ],
+    "objectIds": [
+      "WILD_FALLOFF_10",
+      "WILD_FALLOFF_12",
+      "WILD_FALLOFF_11",
+      "WILD_FALLOFF3",
+      "WILD_FALLOFF5",
+      "WILD_FALLOFF1",
+      "WILD_FALLOFF9",
+      "WILD_FALLOFF4",
+      "WILD_FALLOFF8",
+      "WILD_FALLOFF2",
+      "WILD_FALLOFF7",
+      "WILD_FALLOFF6"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "DIRT_2_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Wilderness - Lava Pool Edges - Lighter",
+    "baseMaterial": "NONE",
+    "areas": [ "Wilderness - Lava Pool Edges - Lighter" ],
+    "objectIds": [
+      "WILD_FALLOFF_10",
+      "WILD_FALLOFF_12",
+      "WILD_FALLOFF_11",
+      "WILD_FALLOFF3",
+      "WILD_FALLOFF5",
+      "WILD_FALLOFF1",
+      "WILD_FALLOFF9",
+      "WILD_FALLOFF4",
+      "WILD_FALLOFF8",
+      "WILD_FALLOFF2",
+      "WILD_FALLOFF7",
+      "WILD_FALLOFF6"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "DIRT_2_VERY_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Chaos Altar",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "CHAOSALTAR"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "colors": "h == 8 || s == 9",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Player Killing - Loot Key Chest",
@@ -20708,7 +20821,8 @@
     "description": "Drill Sergent - Rope Fence",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      "BARRACK_POST"
+      "BARRACK_POST",
+      "WILD_FALLOFF_BRIDGE_RAILING"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -26664,7 +26778,7 @@
   },
   {
     "description": "Ground Decoration - Flat Rocks - Small",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "objectIds": [
       "SKEWSTEPS1",
@@ -70266,7 +70380,7 @@
   },
   {
     "description": "Sunbleak - Spade",
-    "baseMaterial": "DIRT_1_DARK",
+    "baseMaterial": "DIRT_1_SEMI_DARK",
     "uvType": "BOX",
     "uvScale": 0.45,
     "colorOverrides": [

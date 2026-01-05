@@ -11719,6 +11719,23 @@
   },
   {
     "description": "wilderness volcano",
+    "worldX": 3367,
+    "worldY": 3935,
+    "plane": 1,
+    "offset": [ 50, 350, 0 ],
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 50,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "range": 20
+  },
+  {
+    "description": "wilderness volcano",
     "worldX": 3365,
     "worldY": 3950,
     "plane": 1,
@@ -21961,10 +21978,10 @@
   },
   {
     "description": "CHAOS_RIFT",
-    "height": 80,
+    "height": 120,
     "alignment": "CENTER",
     "radius": 600,
-    "strength": 10,
+    "strength": 12,
     "color": [
       196,
       79,
@@ -21972,7 +21989,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 30,
+    "range": 20,
     "objectIds": [
       "CHAOS_FANATIC_RIFT"
     ]
@@ -44196,6 +44213,44 @@
     "range": 20,
     "graphicsObjectIds": [
       "TEMPLE_PYRE_FIRE"
+    ]
+  },
+  {
+    "description": "POH_BONE_SACRIFICE",
+    "offset": [ 0, 150, 0 ],
+    "alignment": "CENTER",
+    "radius": 220,
+    "fadeOutDuration": 100,
+    "fadeInDuration": 200,
+    "strength": 10,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "POH_BONE_SACRIFICE"
+    ]
+  },
+  {
+    "description": "ZAMORAK_FLAME",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 12.5,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "ZAMORAK_FLAME"
     ]
   }
 ]
