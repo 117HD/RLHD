@@ -20651,7 +20651,6 @@
     "objectIds": [
       "TORCH",
       "TORCH_GRUBBY",
-      "CANDLES",
       "GOLDCANDLES",
       "SKULLTORCH",
       "DRAYNOR_CANDLE_WALL",
@@ -39824,8 +39823,8 @@
   {
     "description": "Karamja - Brimhaven Dungeon - Pillar Torches",
     "height": 235,
-    "offset": [ -41, -74, 20 ],
-    "radius": 300,
+    "offset": [ -60, -65, 0 ],
+    "radius": 250,
     "strength": 12.5,
     "color": [
       252,
