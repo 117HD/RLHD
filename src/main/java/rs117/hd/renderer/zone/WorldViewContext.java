@@ -1,10 +1,13 @@
 package rs117.hd.renderer.zone;
 
+import com.google.inject.Injector;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.client.callback.ClientThread;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.utils.jobs.JobGroup;
@@ -14,11 +17,19 @@ import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 
 @Slf4j
 public class WorldViewContext {
+	@Inject
+	private Injector injector;
+
+	@Inject
+	private ClientThread clientThread;
+
+	@Inject
+	private SceneManager sceneManager;
+
 	final int worldViewId;
 	final int sizeX, sizeZ;
 	@Nullable
 	WorldViewStruct uboWorldViewStruct;
-	SceneManager sceneManager;
 	ZoneSceneContext sceneContext;
 	Zone[][] zones;
 	VBO vboM;
@@ -37,12 +48,10 @@ public class WorldViewContext {
 	final JobGroup<ZoneUploadJob> invalidationGroup = new JobGroup<>(true, false);
 
 	WorldViewContext(
-		SceneManager sceneManager,
 		@Nullable WorldView worldView,
 		@Nullable ZoneSceneContext sceneContext,
 		UBOWorldViews uboWorldViews
 	) {
-		this.sceneManager = sceneManager;
 		this.worldViewId = worldView == null ? -1 : worldView.getId();
 		this.sceneContext = sceneContext;
 		this.sizeX = worldView == null ? NUM_ZONES : worldView.getSizeX() >> 3;
@@ -50,19 +59,26 @@ public class WorldViewContext {
 		if (worldView != null)
 			uboWorldViewStruct = uboWorldViews.acquire(worldView);
 		zones = new Zone[sizeX][sizeZ];
+	}
+
+	public void initialize(Injector injector) {
+		injector.injectMembers(this);
+
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
-				zones[x][z] = new Zone();
+				zones[x][z] = injector.getInstance(Zone.class);
 	}
 
 	void initMetadata() {
-		if (vboM != null || uboWorldViewStruct == null)
+		if (vboM != null)
 			return;
 
 		vboM = new VBO(VAO.METADATA_SIZE);
 		vboM.initialize(GL_STATIC_DRAW);
 		vboM.map();
-		vboM.vb.put(uboWorldViewStruct.worldViewIdx + 1);
+		vboM.vb
+			.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1)
+			.put(0).put(0); // dummy scene offset for macOS
 		vboM.unmap();
 	}
 
@@ -92,7 +108,7 @@ public class WorldViewContext {
 				Zone PrevZone = curZone;
 				// Swap the zone out with the one we just uploaded
 				zones[zx][zz] = curZone = uploadTask.zone;
-				curZone.unmap();
+				clientThread.invoke(curZone::unmap);
 
 				if (PrevZone != curZone)
 					pendingCull.add(PrevZone);
@@ -205,7 +221,7 @@ public class WorldViewContext {
 			curZone.uploadJob.release();
 		}
 
-		Zone newZone = new Zone();
+		Zone newZone = injector.getInstance(Zone.class);
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);

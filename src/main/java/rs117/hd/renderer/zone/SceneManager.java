@@ -1,6 +1,7 @@
 package rs117.hd.renderer.zone;
 
 import com.google.common.base.Stopwatch;
+import com.google.inject.Injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +47,9 @@ public class SceneManager {
 	private static final int ZONE_DEFER_DIST_START = 3;
 
 	@Inject
+	private Injector injector;
+
+	@Inject
 	private Client client;
 
 	@Inject
@@ -80,13 +84,14 @@ public class SceneManager {
 
 	private UBOWorldViews uboWorldViews;
 
-	private final Map<Integer, Integer> nextRoofChanges = new HashMap<>();
 	@Getter
-	private final WorldViewContext root = new WorldViewContext(this, null, null, null);
+	private final WorldViewContext root = new WorldViewContext(null, null, null);
 	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
-	private final List<SortedZone> sortedZones = new ArrayList<>();
+
+	private final Map<Integer, Integer> nextRoofChanges = new HashMap<>();
 	private ZoneSceneContext nextSceneContext;
 	private Zone[][] nextZones;
+	private final List<SortedZone> sortedZones = new ArrayList<>();
 	private boolean reloadRequested;
 
 	public boolean isZoneStreamingEnabled() {
@@ -125,6 +130,7 @@ public class SceneManager {
 
 	public void initialize(UBOWorldViews uboWorldViews) {
 		this.uboWorldViews = uboWorldViews;
+		root.initialize(injector);
 	}
 
 	public void destroy() {
@@ -528,7 +534,7 @@ public class SceneManager {
 				for (int z = 0; z < NUM_ZONES; ++z) {
 					Zone zone = nextZones[x][z];
 					if (zone == null)
-						zone = nextZones[x][z] = new Zone();
+						zone = nextZones[x][z] = injector.getInstance(Zone.class);
 
 					if (!zone.initialized) {
 						float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
@@ -546,7 +552,7 @@ public class SceneManager {
 			}
 
 			for (SortedZone sorted : sortedZones) {
-				Zone newZone = new Zone();
+				Zone newZone = injector.getInstance(Zone.class);
 				newZone.dirty = sorted.zone.dirty;
 				if (staggerLoad) {
 					// Reuse the old zone while uploading a correct one
@@ -671,6 +677,8 @@ public class SceneManager {
 		nextSceneContext = null;
 
 		if (isFirst) {
+			root.initMetadata();
+
 			// Load all pre-existing sub scenes on the first scene load
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 				WorldView sub = subEntity.getWorldView();
@@ -708,7 +716,8 @@ public class SceneManager {
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
 		proceduralGenerator.generateSceneData(sceneContext);
 
-		final WorldViewContext ctx = new WorldViewContext(this, worldView, sceneContext, uboWorldViews);
+		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
+		ctx.initialize(injector);
 		subs[worldViewId] = ctx;
 
 		for (int x = 0; x < ctx.sizeX; ++x)
