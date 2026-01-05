@@ -126,13 +126,13 @@ public class LegacyRenderer implements Renderer {
 	private FrameTimer frameTimer;
 
 	@Inject
-	public SceneShaderProgram sceneProgram;
+	private SceneShaderProgram.Legacy sceneProgram;
 
 	@Inject
-	public ModelPassthroughComputeProgram modelPassthroughComputeProgram;
+	private ModelPassthroughComputeProgram modelPassthroughComputeProgram;
 
 	@Inject
-	public ShadowShaderProgram shadowProgram;
+	private ShadowShaderProgram.Legacy shadowProgram;
 
 	@Inject
 	private JobSystem jobSystem;

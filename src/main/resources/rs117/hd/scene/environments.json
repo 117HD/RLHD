@@ -765,15 +765,6 @@
     "fogDepth": 50
   },
   {
-    "area": "GIELINOR_SNOWY_NORTHERN_REGION",
-    "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.5,
-    "directionalColor": "#f4e5c9",
-    "directionalStrength": 2.5,
-    "fogColor": "#aebde0",
-    "fogDepth": 50
-  },
-  {
     "area": "RELLEKKA_HUNTER_REGION",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1,
@@ -787,7 +778,16 @@
     "ambientColor": "#6fb0ff",
     "ambientStrength": 0.75,
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 1,
+    "directionalStrength": 1.75,
+    "fogColor": "#aebde0",
+    "fogDepth": 50
+  },
+  {
+    "area": "GIELINOR_SNOWY_NORTHERN_REGION",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.5,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2.5,
     "fogColor": "#aebde0",
     "fogDepth": 50
   },
@@ -837,6 +837,15 @@
     "groundFogOpacity": 0.3,
     "windSpeed": 17.5,
     "windStrength": 60
+  },
+  {
+    "area": "RELLEKKA_COLD_WATER",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 15
   },
   {
     "area": "FREMENNIK_ISLES_MIDDLE",
@@ -2120,6 +2129,19 @@
     "directionalStrength": 2,
     "fogColor": "#aebde0",
     "fogDepth": 25
+  },
+  {
+    "area": "GRIMSTONE",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 0.75,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1,
+    "fogColor": "#aebde0",
+    "fogDepth": 50
+  },
+  {
+    "area": "GRIMSTONE_DUNGEON",
+    "waterColor": "#6D8AA8"
   },
   {
     "key": "OVERWORLD",
