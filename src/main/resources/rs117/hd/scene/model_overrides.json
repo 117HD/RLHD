@@ -15050,7 +15050,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Mortton - Objects - Stone - Funeral Pyre - Empty",
+    "description": "Mort'ton - Objects - Stone - Funeral Pyre - Empty",
     "baseMaterial": "SMOOTH_STONE",
     "textureMaterial": "HD_CONCRETE_FLAT",
     "uvScale": 0.7,
@@ -15061,7 +15061,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Mortton - Objects - Stone - Funeral Pyre - Logs and Bones",
+    "description": "Mort'ton - Objects - Stone - Funeral Pyre - Logs and Bones",
     "baseMaterial": "SMOOTH_STONE",
     "textureMaterial": "HD_CONCRETE_FLAT",
     "uvScale": 0.7,
@@ -15106,7 +15106,7 @@
     ]
   },
   {
-    "description": "Mortton - Objects - Stone - Stone Stand",
+    "description": "Mort'ton - Objects - Stone - Stone Stand",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "PYRE_STAND"
@@ -15118,7 +15118,7 @@
     "uvOrientationZ": 1024
   },
   {
-    "description": "Mortton - Objects - Stone - Temple Walls",
+    "description": "Mort'ton - Objects - Stone - Temple Walls",
     "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "TEMPLEWALLCORNER_1",
@@ -15136,7 +15136,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Mortton - Objects - Stone - Temple Walls - Mirrored",
+    "description": "Mort'ton - Objects - Stone - Temple Walls - Mirrored",
     "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "TEMPLEWALL_1",
@@ -15154,7 +15154,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Mortton - Objects - Stone - Temple Fire - Lit",
+    "description": "Mort'ton - Objects - Stone - Temple Fire - Lit",
     "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "TEMPLEFIRE_ALTAR"
@@ -15170,7 +15170,7 @@
     ]
   },
   {
-    "description": "Mortton - Objects - Stone - Temple Fire - Unlit and Broken",
+    "description": "Mort'ton - Objects - Stone - Temple Fire - Unlit and Broken",
     "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "TEMPLEFIRE_ALTAR_NOFIRE",
@@ -15180,7 +15180,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Mortton Shade Catacombs - Walls - Stone",
+    "description": "Mort'ton Shade Catacombs - Walls - Stone",
     "baseMaterial": "STONE",
     "objectIds": [
       "MYQ3_LAB_WALL",
@@ -15208,7 +15208,7 @@
     ]
   },
   {
-    "description": "Mortton Shade Catacombs  - Walls - Metallic - Doors",
+    "description": "Mort'ton Shade Catacombs  - Walls - Metallic - Doors",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "SHADELAIR_BRONZEDOOR",
@@ -15235,7 +15235,7 @@
     ]
   },
   {
-    "description": "Mortton Shade Catacombs  - Objects - Stone - Grave Stone",
+    "description": "Mort'ton Shade Catacombs  - Objects - Stone - Grave Stone",
     "baseMaterial": "STONE",
     "objectIds": [
       "TEMPLE_COFFIN_2X1",
@@ -15244,7 +15244,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Mortton Shade Catacombs  - Objects - Stone - Altar",
+    "description": "Mort'ton Shade Catacombs  - Objects - Stone - Altar",
     "baseMaterial": "STONE",
     "objectIds": [
       "SHADE_LAIR_TEMPLE_ALTAR"
@@ -15252,7 +15252,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Ground Decoration - Mortton Catacombs & Sisterhood Sanctuary - Rock Light - Small - Uncolored",
+    "description": "Ground Decoration - Mort'ton Catacombs & Sisterhood Sanctuary - Rock Light - Small - Uncolored",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       "SANCTUARY_CAVE_EDGE_HALF1",
@@ -15394,7 +15394,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortton Shade Catacombs - Decoration - Stone - Brick rubble",
+    "description": "Mort'ton Shade Catacombs - Decoration - Stone - Brick rubble",
     "baseMaterial": "STONE",
     "objectIds": [
       "MYQ5_LAB_CRUMBLED_WALL"
@@ -15402,7 +15402,7 @@
     "uvType": "MODEL_XZ_MIRROR_B"
   },
   {
-    "description": "Mortton Shade Catacombs - Objects - Stone - Brick rubble",
+    "description": "Mort'ton Shade Catacombs - Objects - Stone - Brick rubble",
     "baseMaterial": "STONE",
     "objectIds": [
       "BARROWS_BRICKS_PILE_1"
@@ -15410,7 +15410,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Mortton Shade Catacombs  - Walls - Metallic - Fence",
+    "description": "Mort'ton Shade Catacombs  - Walls - Metallic - Fence",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "SANCTUARY_TALL_SPIKES",
@@ -15454,7 +15454,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Mortton - Objects - Shade Chests - Medium - Steel",
+    "description": "Mort'ton - Objects - Shade Chests - Medium - Steel",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "SHADECHEST_BRONZE_BLOODRED",
@@ -15520,7 +15520,7 @@
     ]
   },
   {
-    "description": "Mortton - NPC - Make hard to see shades more visible - Green",
+    "description": "Mort'ton - NPC - Make hard to see shades more visible - Green",
     "baseMaterial": "GRAY_125",
     "castShadows": false,
     "npcIds": [
@@ -15528,7 +15528,7 @@
     ]
   },
   {
-    "description": "Mortton - NPC - Make hard to see shades more visible - Black",
+    "description": "Mort'ton - NPC - Make hard to see shades more visible - Black",
     "baseMaterial": "GRAY_75",
     "castShadows": false,
     "npcIds": [
@@ -15536,7 +15536,7 @@
     ]
   },
   {
-    "description": "Mortton - NPC - Make hard to see shades more visible - Red",
+    "description": "Mort'ton - NPC - Make hard to see shades more visible - Red",
     "baseMaterial": "GRAY_110",
     "castShadows": false,
     "npcIds": [
@@ -15544,7 +15544,7 @@
     ]
   },
   {
-    "description": "Mortton - NPC - Make hard to see shades more visible - Brown",
+    "description": "Mort'ton - NPC - Make hard to see shades more visible - Brown",
     "baseMaterial": "GRAY_05",
     "castShadows": false,
     "npcIds": [

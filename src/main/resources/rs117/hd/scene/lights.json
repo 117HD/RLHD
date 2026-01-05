@@ -44161,7 +44161,7 @@
     "type": "STATIC"
   },
   {
-    "description": "Shades of Mortton - Temple Fire",
+    "description": "Shades of Mort'ton - Temple Fire",
     "offset": [ 0, 215, 0 ],
     "radius": 300,
     "strength": 15,
@@ -44179,7 +44179,7 @@
     ]
   },
   {
-    "description": "Shades of Mortton - Pyre",
+    "description": "Shades of Mort'ton - Pyre",
     "offset": [ 0, 215, 0 ],
     "radius": 300,
     "strength": 15,
