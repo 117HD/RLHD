@@ -1728,7 +1728,7 @@ public class HdPlugin extends Plugin {
 							case KEY_GROUND_TEXTURES:
 							case KEY_MODEL_TEXTURES:
 							case KEY_TEXTURE_RESOLUTION:
-							case KEY_HD_INFERNAL_CAPE:
+							case KEY_INFERNAL_CAPE:
 								reloadTexturesAndMaterials = true;
 								// fall-through
 							case KEY_GROUND_BLENDING:
