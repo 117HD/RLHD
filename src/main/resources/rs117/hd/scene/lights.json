@@ -41222,7 +41222,7 @@
     "radius": 275,
     "spawnDelay": 650,
     "fixedDespawnTime": true,
-    "despawnDelay": 910,
+    "despawnDelay": 890,
     "strength": 12,
     "color": [
       255,
@@ -41231,7 +41231,7 @@
     ],
     "type": "STATIC",
     "fadeInDuration": 100,
-    "fadeOutDuration": 550,
+    "fadeOutDuration": 300,
     "graphicsObjectIds": [
       "DRAGON_HALBERD_SPECIAL_WEST_RED",
       "DRAGON_HALBERD_SPECIAL_NORTH_RED",
@@ -41245,7 +41245,7 @@
     "radius": 250,
     "spawnDelay": 650,
     "fixedDespawnTime": true,
-    "despawnDelay": 910,
+    "despawnDelay": 890,
     "strength": 10,
     "color": [
       255,
@@ -41254,7 +41254,7 @@
     ],
     "type": "STATIC",
     "fadeInDuration": 100,
-    "fadeOutDuration": 550,
+    "fadeOutDuration": 300,
     "graphicsObjectIds": [
       "DRAGON_HALBERD_SPECIAL_WEST_WHITE",
       "DRAGON_HALBERD_SPECIAL_NORTH_WHITE",
