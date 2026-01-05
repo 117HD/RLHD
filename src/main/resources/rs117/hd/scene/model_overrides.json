@@ -20175,7 +20175,7 @@
     ]
   },
   {
-    "description": "Sophanem Walls",
+    "description": "Sophanem/Menaphos Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "ICTHALARINS_CITY_WALL",
@@ -20190,7 +20190,7 @@
     "depthBias": 150
   },
   {
-    "description": "Sophanem Walls - Sand Trim",
+    "description": "Sophanem/Menaphos Walls - Sand Trim",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "ICTHALARINS_CITY_WALL_SAND02",
@@ -20210,7 +20210,7 @@
     ]
   },
   {
-    "description": "Sophanem Wall Decoration",
+    "description": "Sophanem/Menaphos Wall Decoration",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "FOUR_DIAMONDS_TOMB_WALL_SCARAB",
