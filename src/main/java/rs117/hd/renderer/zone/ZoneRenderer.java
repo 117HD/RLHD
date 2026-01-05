@@ -85,6 +85,9 @@ import static rs117.hd.utils.MathUtils.*;
 public class ZoneRenderer implements Renderer {
 	private static final int ALPHA_ZSORT_CLOSE = 2048;
 
+	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
+	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
 
@@ -117,6 +120,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private SceneUploader sceneUploader;
+
+	@Inject
+	private SceneUploader asyncSceneUploader;
 
 	@Inject
 	private FacePrioritySorter facePrioritySorter;
@@ -184,6 +190,9 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.initialize();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(uboWorldViews);
+
+		// Write caches used exclusively on the client thread can be shared
+		sceneUploader.writeCache = FacePrioritySorter.WRITE_CACHE;
 	}
 
 	@Override
@@ -331,6 +340,26 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			if (updateUniforms) {
+				if (ctx.sceneContext.scene == scene) {
+					try {
+						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+						environmentManager.update(ctx.sceneContext);
+						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+
+						frameTimer.begin(Timer.UPDATE_LIGHTS);
+						lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
+						frameTimer.end(Timer.UPDATE_LIGHTS);
+
+						frameTimer.begin(Timer.UPDATE_SCENE);
+						sceneManager.update();
+						frameTimer.end(Timer.UPDATE_SCENE);
+					} catch (Exception ex) {
+						log.error("Error while updating environment or lights:", ex);
+						plugin.stopPlugin();
+						return;
+					}
+				}
+
 				copyTo(plugin.cameraPosition, vec(cameraX, cameraY, cameraZ));
 				copyTo(plugin.cameraOrientation, vec(cameraYaw, cameraPitch));
 
@@ -426,26 +455,6 @@ public class ZoneRenderer implements Renderer {
 
 					plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
 					plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
-				}
-
-				if (ctx.sceneContext.scene == scene) {
-					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(ctx.sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
-
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
-
-						frameTimer.begin(Timer.UPDATE_SCENE);
-						sceneManager.update();
-						frameTimer.end(Timer.UPDATE_SCENE);
-					} catch (Exception ex) {
-						log.error("Error while updating environment or lights:", ex);
-						plugin.stopPlugin();
-						return;
-					}
 				}
 
 				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
@@ -786,12 +795,60 @@ public class ZoneRenderer implements Renderer {
 			minY -= ProceduralGenerator.MAX_DEPTH;
 		}
 
-		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
-		if (zone.inSceneFrustum) {
-			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.VISIBILITY_CHECK);
-			return zone.inShadowFrustum = true;
+		int x = (((zx << 3) - ctx.sceneContext.sceneOffset) << 7) + 512 - (int) sceneCamera.getPositionX();
+		int z = (((zz << 3) - ctx.sceneContext.sceneOffset) << 7) + 512 - (int) sceneCamera.getPositionZ();
+		int y = maxY - (int) sceneCamera.getPositionY();
+		int zoneRadius = 724; // ~ 512 * sqrt(2)
+		int waterDepth = zone.hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
+
+		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
+		final int rightClip = client.getRasterizer3D_clipMidX2();
+		final int topClip = client.getRasterizer3D_clipNegativeMidY();
+		final int bottomClip = client.getRasterizer3D_clipMidY2();
+
+		final int cameraYawCos = Perspective.COSINE[sceneCamera.getFixedYaw()];
+		final int cameraYawSin = SINE[sceneCamera.getFixedYaw()];
+		final int cameraPitchCos = COSINE[sceneCamera.getFixedPitch()];
+		final int cameraPitchSin = SINE[sceneCamera.getFixedPitch()];
+		final int cameraZoom = (int) sceneCamera.getZoom();
+
+		// Check if the tile is within the near plane of the frustum
+		int transformedZ = z * cameraYawCos - x * cameraYawSin >> 16;
+		int depth = (y + waterDepth) * cameraPitchSin + (transformedZ + zoneRadius) * cameraPitchCos >> 16;
+		if (depth > NEAR_PLANE) {
+			// Check left bound
+			int transformedX = z * cameraYawSin + x * cameraYawCos >> 16;
+			int left = transformedX - zoneRadius;
+			if (left * cameraZoom < rightClip * depth) {
+				// Check right bound
+				int right = transformedX + zoneRadius;
+				if (right * cameraZoom > leftClip * depth) {
+					// Check top bound
+					int transformedY = y * cameraPitchCos - transformedZ * cameraPitchSin >> 16;
+					int transformedRadius = zoneRadius * cameraPitchSin >> 16;
+					int transformedWaterDepth = waterDepth * cameraPitchCos >> 16;
+					int bottom = transformedY + transformedRadius + transformedWaterDepth;
+					if (bottom * cameraZoom > topClip * depth) {
+						// Check bottom bound
+						int transformedZoneHeight = minY * cameraPitchCos >> 16;
+						int top = transformedY - transformedRadius + transformedZoneHeight;
+						if (top * cameraZoom < bottomClip * depth) {
+							if (plugin.enableDetailedTimers)
+								frameTimer.end(Timer.VISIBILITY_CHECK);
+							return zone.inSceneFrustum = zone.inShadowFrustum = true;
+						}
+					}
+				}
+			}
 		}
+
+		// TODO: This leads to objects that extend past the zone being culled, e.g. the platform pieces at Akkha
+//		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
+//		if (zone.inSceneFrustum) {
+//			if (plugin.enableDetailedTimers)
+//				frameTimer.end(Timer.VISIBILITY_CHECK);
+//			return zone.inShadowFrustum = true;
+//		}
 
 		if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
 			zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
@@ -948,7 +1005,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.processPendingClientCallbacks();
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
+		if (ctx == null || ctx.vboM == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -1013,7 +1070,16 @@ public class ZoneRenderer implements Renderer {
 
 			if (zone.inSceneFrustum) {
 				try {
-					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+					facePrioritySorter.uploadSortedModel(
+						projection,
+						m,
+						modelOverride,
+						preOrientation,
+						orient, x, y, z,
+						o.vbo.vb,
+						a.vbo.vb,
+						o.tboF.getPixelBuffer(),
+						a.tboF.getPixelBuffer());
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
 				}
@@ -1029,11 +1095,22 @@ public class ZoneRenderer implements Renderer {
 						orient,
 						x, y, z,
 						vao.vbo.vb,
-						vao.vbo.vb
+						vao.vbo.vb,
+						vao.tboF.getPixelBuffer(),
+						vao.tboF.getPixelBuffer()
 					);
 				}
 			} else {
-				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+				sceneUploader.uploadTempModel(
+					m,
+					modelOverride,
+					preOrientation,
+					orient,
+					x, y, z,
+					o.vbo.vb,
+					a.vbo.vb,
+					o.tboF.getPixelBuffer(),
+					a.tboF.getPixelBuffer());
 			}
 
 			int end = a.vbo.vb.position();
@@ -1042,10 +1119,19 @@ public class ZoneRenderer implements Renderer {
 				// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
 				int plane = Math.min(ctx.maxLevel, tileObject.getPlane());
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
-				zone.addTempAlphaModel(a.vao, start, end, plane, x & 1023, y, z & 1023);
+				zone.addTempAlphaModel(modelOverride, a.vao, a.tboF.getTexId(), start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
+			sceneUploader.uploadTempModel(
+				m,
+				modelOverride,
+				preOrientation,
+				orient,
+				x, y, z,
+				o.vbo.vb,
+				o.vbo.vb,
+				o.tboF.getPixelBuffer(),
+				o.tboF.getPixelBuffer());
 		}
 	}
 
@@ -1054,7 +1140,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.processPendingClientCallbacks();
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !renderCallbackManager.drawObject(scene, gameObject))
+		if (ctx == null || ctx.vboM == null || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
 		ctx.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane(), worldPos);
@@ -1086,29 +1172,32 @@ public class ZoneRenderer implements Renderer {
 			int zz = (gameObject.getY() >> 10) + offset;
 			Zone zone = ctx.zones[zx][zz];
 
+			boolean isSubScene = !sceneManager.isRoot(ctx);
+
 			GenericJob shadowUploadTask = null;
-			if (zone.inShadowFrustum) {
+			if (isSubScene || zone.inShadowFrustum) {
 				final VAO o = vaoShadow.get(size, ctx.vboM);
 
 				shadowUploadTask = GenericJob
 					.build("uploadTempModel", t -> {
 						// Since priority sorting of models includes back-face culling,
 						// we need to upload the entire model again for shadows
-						sceneUploader.uploadTempModel(
+						asyncSceneUploader.uploadTempModel(
 							m,
 							modelOverride,
 							preOrientation,
 							orientation,
 							x, y, z,
 							o.vbo.vb,
-							o.vbo.vb
-						);
+							o.vbo.vb,
+							o.tboF.getPixelBuffer(),
+							o.tboF.getPixelBuffer());
 					})
-					.setExecuteAsync(!sceneManager.isRoot(ctx) || zone.inSceneFrustum)
+					.setExecuteAsync(isSubScene || zone.inSceneFrustum)
 					.queue(true);
 			}
 
-			if (!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {
+			if (isSubScene || zone.inSceneFrustum) {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
@@ -1125,18 +1214,24 @@ public class ZoneRenderer implements Renderer {
 						orientation,
 						x, y, z,
 						o.vbo.vb,
-						a.vbo.vb
+						a.vbo.vb,
+						o.tboF.getPixelBuffer(),
+						a.tboF.getPixelBuffer()
 					);
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
 				}
 				int end = a.vbo.vb.position();
 				if (end > start) {
+					// Fix rendering projectiles from boats with hide roofs enabled
+					int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
 					zone.addTempAlphaModel(
+						modelOverride,
 						a.vao,
+						a.tboF.getTexId(),
 						start,
 						end,
-						gameObject.getPlane(),
+						plane,
 						x & 1023,
 						y - renderable.getModelHeight() /* to render players over locs */,
 						z & 1023
@@ -1157,8 +1252,9 @@ public class ZoneRenderer implements Renderer {
 				orientation,
 				x, y, z,
 				o.vbo.vb,
-				o.vbo.vb
-			);
+				o.vbo.vb,
+				o.tboF.getPixelBuffer(),
+				o.tboF.getPixelBuffer());
 		}
 	}
 
@@ -1221,7 +1317,7 @@ public class ZoneRenderer implements Renderer {
 
 		plugin.drawUi(overlayColor);
 
-		jobSystem.processPendingClientCallbacks(false);
+		jobSystem.processPendingClientCallbacks();
 
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);

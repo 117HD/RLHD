@@ -28,6 +28,7 @@ import java.nio.IntBuffer;
 import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.MaterialManager;
@@ -35,15 +36,18 @@ import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.utils.HDUtils;
-import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.renderer.zone.SceneUploader.GEOMETRY_UVS;
+import static rs117.hd.renderer.zone.SceneUploader.calculateFaceNormal;
+import static rs117.hd.renderer.zone.SceneUploader.computeFaceUvsInline;
+import static rs117.hd.renderer.zone.SceneUploader.interpolateHSL;
+import static rs117.hd.renderer.zone.SceneUploader.undoVanillaShading;
 import static rs117.hd.utils.MathUtils.*;
 
+@Slf4j
 @Singleton
 class FacePrioritySorter {
-	private static final int[] EMPTY_NORMALS = new int[9];
-
 	static final int[] distances;
 	static final char[] distanceFaceCount;
 	static final char[][] distanceToFaces;
@@ -65,23 +69,14 @@ class FacePrioritySorter {
 	private static final int[] lt10;
 	static final int[][] orderedFaces;
 
-	private static int orientSin, orientCos;
+	private static int orient, orientSin, orientCos;
 
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int MAX_DIAMETER = 6000;
 	private static final int ZSORT_GROUP_SIZE = 1024; // was 512
 	private static final int MAX_FACES_PER_PRIORITY = 4000; // was 2500
 
-	private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
-	private static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
-	// subtracts the X lowest lightness levels from the formula.
-	// helps keep darker colors appropriately dark
-	private static final int IGNORE_LOW_LIGHTNESS = 3;
-	// multiplier applied to vertex' lightness value.
-	// results in greater lightening of lighter colors
-	private static final float LIGHTNESS_MULTIPLIER = 3;
-	// the minimum amount by which each color will be lightened
-	private static final int BASE_LIGHTEN = 10;
+	public static VertexWriteCache.Collection WRITE_CACHE = new VertexWriteCache.Collection();
 
 	static {
 		distances = new int[MAX_VERTEX_COUNT];
@@ -104,9 +99,6 @@ class FacePrioritySorter {
 		eq11 = new int[MAX_FACES_PER_PRIORITY];
 		lt10 = new int[12];
 		orderedFaces = new int[12][MAX_FACES_PER_PRIORITY];
-
-		for (int i = 0; i < 8; i++)
-			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
 	}
 
 	@Inject
@@ -125,7 +117,9 @@ class FacePrioritySorter {
 		int y,
 		int z,
 		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer
+		IntBuffer alphaBuffer,
+		IntBuffer opaqueTexBuffer,
+		IntBuffer alphaTexBuffer
 	) {
 		final int vertexCount = model.getVerticesCount();
 		final float[] verticesX = model.getVerticesX();
@@ -140,7 +134,7 @@ class FacePrioritySorter {
 		final int[] faceColors3 = model.getFaceColors3();
 		final byte[] faceRenderPriorities = model.getFaceRenderPriorities();
 
-		orientation = mod(orientation, 2048);
+		orient = orientation = mod(orientation, 2048);
 		orientSin = SINE[orientation];
 		orientCos = COSINE[orientation];
 		float orientSinf = orientSin / 65536f;
@@ -212,6 +206,8 @@ class FacePrioritySorter {
 			distanceToFaces[distance][distanceFaceCount[distance]++] = i;
 		}
 
+		WRITE_CACHE.setOutputBuffers(opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
+
 		int len = 0;
 		if (faceRenderPriorities == null) {
 			for (int i = diameter - 1; i >= 0; --i) {
@@ -220,7 +216,7 @@ class FacePrioritySorter {
 					final char[] faces = distanceToFaces[i];
 					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
 						final int face = faces[faceIdx];
-						len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+						len += pushFace(model, modelOverride, preOrientation, face);
 					}
 				}
 			}
@@ -276,7 +272,7 @@ class FacePrioritySorter {
 			for (int pri = 0; pri < 10; ++pri) {
 				while (pri == 0 && currFaceDistance > avg12) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -290,7 +286,7 @@ class FacePrioritySorter {
 
 				while (pri == 3 && currFaceDistance > avg34) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -304,7 +300,7 @@ class FacePrioritySorter {
 
 				while (pri == 5 && currFaceDistance > avg68) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -321,13 +317,13 @@ class FacePrioritySorter {
 
 				for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
 					final int face = priFaces[faceIdx];
-					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face);
 				}
 			}
 
 			while (currFaceDistance != -1000) {
 				final int face = dynFaces[drawnFaces++];
-				len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
+				len += pushFace(model, modelOverride, preOrientation, face);
 
 				if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 					drawnFaces = 0;
@@ -340,6 +336,7 @@ class FacePrioritySorter {
 			}
 		}
 
+		WRITE_CACHE.flush();
 		return len;
 	}
 
@@ -347,14 +344,13 @@ class FacePrioritySorter {
 		Model model,
 		ModelOverride modelOverride,
 		int preOrientation,
-		int face,
-		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer
+		int face
 	) {
 		final int[] indices1 = model.getFaceIndices1();
 		final int[] indices2 = model.getFaceIndices2();
 		final int[] indices3 = model.getFaceIndices3();
 
+		final short[] unlitFaceColors = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
 		final int[] faceColors1 = model.getFaceColors1();
 		final int[] faceColors2 = model.getFaceColors2();
 		final int[] faceColors3 = model.getFaceColors3();
@@ -415,98 +411,10 @@ class FacePrioritySorter {
 		if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
 			return 0;
 
-		if (plugin.configUndoVanillaShading && hasVertexNormals) {
-			int color1H = color1 >> 10 & 0x3F;
-			int color1S = color1 >> 7 & 0x7;
-			int color1L = color1 & 0x7F;
-			int color2H = color2 >> 10 & 0x3F;
-			int color2S = color2 >> 7 & 0x7;
-			int color2L = color2 & 0x7F;
-			int color3H = color3 >> 10 & 0x3F;
-			int color3S = color3 >> 7 & 0x7;
-			int color3L = color3 & 0x7F;
+		if (unlitFaceColors != null)
+			color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
 
-			// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
-			// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
-			// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
-			// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
-			// low value for it to look acceptable in most cases.
-			float[] L = LIGHT_DIR_MODEL;
-			float color1Adjust =
-				BASE_LIGHTEN - color1L + (color1L < IGNORE_LOW_LIGHTNESS ? 0 : (color1L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
-			float color2Adjust =
-				BASE_LIGHTEN - color2L + (color2L < IGNORE_LOW_LIGHTNESS ? 0 : (color2L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
-			float color3Adjust =
-				BASE_LIGHTEN - color3L + (color3L < IGNORE_LOW_LIGHTNESS ? 0 : (color3L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
-
-			// Normals are currently unrotated, so we don't need to do any rotation for this
-			float nx, ny, nz, lightDotNormal;
-			nx = xVertexNormals[triangleA];
-			ny = yVertexNormals[triangleA];
-			nz = zVertexNormals[triangleA];
-			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
-			if (lightDotNormal > 0) {
-				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-				color1L += (int) (lightDotNormal * color1Adjust);
-			}
-
-			nx = xVertexNormals[triangleB];
-			ny = yVertexNormals[triangleB];
-			nz = zVertexNormals[triangleB];
-			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
-			if (lightDotNormal > 0) {
-				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-				color2L += (int) (lightDotNormal * color2Adjust);
-			}
-
-			nx = xVertexNormals[triangleC];
-			ny = yVertexNormals[triangleC];
-			nz = zVertexNormals[triangleC];
-			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
-			if (lightDotNormal > 0) {
-				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-				color3L += (int) (lightDotNormal * color3Adjust);
-			}
-
-			int maxBrightness1 = 55;
-			int maxBrightness2 = 55;
-			int maxBrightness3 = 55;
-			if (!plugin.configLegacyGreyColors) {
-				maxBrightness1 = MAX_BRIGHTNESS_LOOKUP_TABLE[color1S];
-				maxBrightness2 = MAX_BRIGHTNESS_LOOKUP_TABLE[color2S];
-				maxBrightness3 = MAX_BRIGHTNESS_LOOKUP_TABLE[color3S];
-			}
-
-			// Clamp brightness as detailed above
-			color1L = min(color1L, maxBrightness1);
-			color2L = min(color2L, maxBrightness2);
-			color3L = min(color3L, maxBrightness3);
-
-			color1 = color1H << 10 | color1S << 7 | color1L;
-			color2 = color2H << 10 | color2S << 7 | color2L;
-			color3 = color3H << 10 | color3S << 7 | color3L;
-		}
-
-		// HSL override is not applied to textured faces
-		if (overrideAmount > 0 && textureId == -1) {
-			color1 = SceneUploader.interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color2 = SceneUploader.interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color3 = SceneUploader.interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
-		}
-
-		int texA, texB, texC;
-
-		if (isVanillaUVMapped && textureFaces[face] != -1) {
-			int tface = textureFaces[face] & 0xff;
-			texA = texIndices1[tface];
-			texB = texIndices2[tface];
-			texC = texIndices3[tface];
-		} else {
-			texA = triangleA;
-			texB = triangleB;
-			texC = triangleC;
-		}
-
+		int textureFace = textureFaces != null ? textureFaces[face] : -1;
 		int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 
 		UvType uvType = UvType.GEOMETRY;
@@ -542,76 +450,106 @@ class FacePrioritySorter {
 		if (material != Material.NONE) {
 			uvType = faceOverride.uvType;
 			if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
-				uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+				uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 		}
 
-		boolean keepShading = true; // Skip vanilla shading reversal in the shader, since we do it on the CPU
-		int materialData = material.packMaterialData(faceOverride, uvType, false, keepShading);
+		int materialData = material.packMaterialData(faceOverride, uvType, false);
 
-		if (uvType == UvType.VANILLA) {
-			modelUvs[0] = modelLocalX[texA] - vx1;
-			modelUvs[1] = modelLocalY[texA] - vy1;
-			modelUvs[2] = modelLocalZ[texA] - vz1;
-			modelUvs[4] = modelLocalX[texB] - vx2;
-			modelUvs[5] = modelLocalY[texB] - vy2;
-			modelUvs[6] = modelLocalZ[texB] - vz2;
-			modelUvs[8] = modelLocalX[texC] - vx3;
-			modelUvs[9] = modelLocalY[texC] - vy3;
-			modelUvs[10] = modelLocalZ[texC] - vz3;
+		final float[] faceUVs;
+		if (uvType == UvType.VANILLA && textureId != -1) {
+			computeFaceUvsInline(faceUVs = modelUvs, model, textureFace, triangleA, triangleB, triangleC);
+		} else if (uvType != UvType.GEOMETRY) {
+			faceOverride.fillUvsForFace(faceUVs = modelUvs, model, preOrientation, uvType, face, workingSpace);
 		} else {
-			faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
+			faceUVs = GEOMETRY_UVS;
 		}
 
-		final int[] faceNormals;
-		if (hasVertexNormals) {
-			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && faceColors3[face] == -1)) {
-				faceNormals = EMPTY_NORMALS;
-			} else {
-				faceNormals = modelNormals;
-				faceNormals[0] = xVertexNormals[triangleA];
-				faceNormals[1] = yVertexNormals[triangleA];
-				faceNormals[2] = zVertexNormals[triangleA];
-				faceNormals[3] = xVertexNormals[triangleB];
-				faceNormals[4] = yVertexNormals[triangleB];
-				faceNormals[5] = zVertexNormals[triangleB];
-				faceNormals[6] = xVertexNormals[triangleC];
-				faceNormals[7] = yVertexNormals[triangleC];
-				faceNormals[8] = zVertexNormals[triangleC];
+		final boolean shouldRotateNormals;
+		if (!hasVertexNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && faceColors3[face] == -1)) {
+			shouldRotateNormals = false;
+			calculateFaceNormal(
+				modelNormals,
+				vx1, vy1, vz1,
+				vx2, vy2, vz2,
+				vx3, vy3, vz3
+			);
+		} else {
+			shouldRotateNormals = orient != 0;
+			modelNormals[0] = xVertexNormals[triangleA];
+			modelNormals[1] = yVertexNormals[triangleA];
+			modelNormals[2] = zVertexNormals[triangleA];
+			modelNormals[3] = xVertexNormals[triangleB];
+			modelNormals[4] = yVertexNormals[triangleB];
+			modelNormals[5] = zVertexNormals[triangleB];
+			modelNormals[6] = xVertexNormals[triangleC];
+			modelNormals[7] = yVertexNormals[triangleC];
+			modelNormals[8] = zVertexNormals[triangleC];
+		}
 
-				// Rotate normals
-				for (int i = 0; i < 9; i += 3) {
-					int x = modelNormals[i];
-					int z = modelNormals[i + 2];
-					modelNormals[i] = z * orientSin + x * orientCos >> 16;
-					modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
-				}
+		if (plugin.configUndoVanillaShading) {
+			color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
+			color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
+			color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
+		}
+
+		// HSL override is not applied to textured faces
+		if (overrideAmount > 0 && textureId == -1) {
+			color1 = interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color2 = interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
+		}
+
+		// Rotate normals
+		if (shouldRotateNormals) {
+			for (int i = 0; i < 9; i += 3) {
+				int x = modelNormals[i];
+				int z = modelNormals[i + 2];
+				modelNormals[i] = z * orientSin + x * orientCos >> 16;
+				modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
 			}
-		} else {
-			faceNormals = EMPTY_NORMALS;
 		}
 
 		int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 			bias == null ? 0 : bias[face] & 0xFF;
 		int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 		boolean hasAlpha = material.hasTransparency || transparency != 0;
-		var vb = hasAlpha ? alphaBuffer : opaqueBuffer;
-		GpuIntBuffer.putFloatVertex(
-			vb,
-			vx1, vy1, vz1, packedAlphaBiasHsl | color1,
-			modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-			faceNormals[0], faceNormals[1], faceNormals[2], 0
+
+		VertexWriteCache vb, tb;
+		if (WRITE_CACHE.useAlphaBuffer && hasAlpha) {
+			vb = WRITE_CACHE.alpha;
+			tb = WRITE_CACHE.alphaTex;
+		} else {
+			vb = WRITE_CACHE.opaque;
+			tb = WRITE_CACHE.opaqueTex;
+		}
+
+		color1 |= packedAlphaBiasHsl;
+		color2 |= packedAlphaBiasHsl;
+		color3 |= packedAlphaBiasHsl;
+
+		final int texturedFaceIdx = tb.putFace(
+			color1, color2, color3,
+			materialData, materialData, materialData,
+			0, 0, 0
 		);
-		GpuIntBuffer.putFloatVertex(
-			vb,
-			vx2, vy2, vz2, packedAlphaBiasHsl | color2,
-			modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-			faceNormals[3], faceNormals[4], faceNormals[5], 0
+
+		vb.putVertex(
+			vx1, vy1, vz1,
+			faceUVs[0], faceUVs[1], faceUVs[2],
+			modelNormals[0], modelNormals[1], modelNormals[2],
+			texturedFaceIdx
 		);
-		GpuIntBuffer.putFloatVertex(
-			vb,
-			vx3, vy3, vz3, packedAlphaBiasHsl | color3,
-			modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-			faceNormals[6], faceNormals[7], faceNormals[8], 0
+		vb.putVertex(
+			vx2, vy2, vz2,
+			faceUVs[4], faceUVs[5], faceUVs[6],
+			modelNormals[3], modelNormals[4], modelNormals[5],
+			texturedFaceIdx
+		);
+		vb.putVertex(
+			vx3, vy3, vz3,
+			faceUVs[8], faceUVs[9], faceUVs[10],
+			modelNormals[6], modelNormals[7], modelNormals[8],
+			texturedFaceIdx
 		);
 		return 3;
 	}

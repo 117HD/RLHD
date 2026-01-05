@@ -174,7 +174,11 @@ public final class JobSystem {
 				item.onRun();
 				item.ranToCompletion.set(true);
 			} catch (Throwable ex) {
-				log.warn("Encountered an error whilst processing: {}", item.hashCode(), ex);
+				if (item.wasCancelled()) {
+					log.debug("Encountered an error whilst processing: {}", item.hashCode(), ex);
+				} else {
+					log.warn("Encountered an error whilst processing: {}", item.hashCode(), ex);
+				}
 			} finally {
 				item.done.set(true);
 			}
@@ -212,16 +216,15 @@ public final class JobSystem {
 		signalWorkAvailable(1);
 	}
 
-	void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
+	void invokeClientCallback(Runnable callback) throws InterruptedException {
 		if (client.isClientThread()) {
 			callback.run();
-			processPendingClientCallbacks(false);
+			processPendingClientCallbacks();
 			return;
 		}
 
 		final ClientCallbackJob clientCallback = ClientCallbackJob.current();
 		clientCallback.callback = callback;
-		clientCallback.immediate = immediate;
 
 		clientCallbacks.add(clientCallback);
 
@@ -229,7 +232,7 @@ public final class JobSystem {
 			clientInvokeScheduled = true;
 			clientThread.invoke(() -> {
 				clientInvokeScheduled = false;
-				processPendingClientCallbacks(false);
+				processPendingClientCallbacks();
 			});
 		}
 
@@ -242,21 +245,12 @@ public final class JobSystem {
 	}
 
 	public void processPendingClientCallbacks() {
-		processPendingClientCallbacks(true);
-	}
-
-	public void processPendingClientCallbacks(boolean immediateOnly) {
 		int size = clientCallbacks.size();
 		if (size == 0)
 			return;
 
 		ClientCallbackJob pair;
 		while (size-- > 0 && (pair = clientCallbacks.poll()) != null) {
-			if (!pair.immediate && immediateOnly) {
-				clientCallbacks.add(pair); // Add it back onto the end
-				continue;
-			}
-
 			try {
 				pair.callback.run();
 			} catch (Throwable ex) {
