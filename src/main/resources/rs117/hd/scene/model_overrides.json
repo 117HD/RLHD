@@ -12098,8 +12098,10 @@
     ]
   },
   {
-    "description": "Wizard Tower and Bridge",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "description": "Wizard Tower - Walls and Bridge",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "FAI_WIZTOWER_WALLS",
       "FAI_WIZTOWER_WALLS_TERMINATOR_LEFT",
@@ -12108,8 +12110,6 @@
       "FAI_WIZTOWER_WALLS_L2_5_TERMINATOR_LFT",
       "FAI_WIZTOWER_WALLS_3_TERMINATOR",
       "FAI_WIZTOWER_WALLS_L2",
-      "FAI_WIZTOWER_WALLS_WINDOW",
-      "FAI_WIZTOWER_WALLS_L2_WINDOW",
       "FAI_WIZTOWER_BATTLEMENTS",
       "FAI_WIZTOWER_WALL_BATTLEMENTS",
       "FAI_WIZTOWER_WALL_BATTLEMENTS2",
@@ -12119,8 +12119,6 @@
       "FAI_WIZTOWER_UPPER_WALLS_L2_5_TERMINATOR_RHT",
       "FAI_WIZTOWER_UPPER_WALLS_L2_5_TERMINATOR_LFT",
       "FAI_WIZTOWER_UPPER_WALLS_3_TERMINATOR",
-      "FAI_WIZTOWER_UPPER_WALLS_WINDOW",
-      "FAI_WIZTOWER_UPPER_WALLS_L2_WINDOW",
       "FAI_WIZTOWER_BRIDGESUPPORT",
       "FAI_WIZTOWER_BRIDGE_LINK_UNDER_POLE",
       "FAI_WIZTOWER_BRIDGE_LINK_UNDER_POLE_MIRROR",
@@ -12132,18 +12130,48 @@
       "FAI_WIZTOWER_BRIDGE_FLOOR_WALL_CORNER",
       "FAI_WIZTOWER_BRIDGE_FLOOR_WALL_CORNER_MIRROR",
       "FAI_WIZTOWER_BRIDGE_EDGE_FLOOR",
-      "FAI_WIZTOWER_BRIDGE_CORNER_FLOOR",
-      "FAI_WIZTOWER_BRIDGE_CORNER_FLOOR_MIRROR",
       "FAI_WIZTOWER_INTERNAL_WALLS",
       "FAI_WIZTOWER_BRIDGE_WALLS"
     ],
     "flatNormals": true
   },
   {
-    "description": "Marble Staircase Spiral with wooden rails",
-    "baseMaterial": "MARBLE_3",
+    "description": "Wizard Tower - Walls and Bridge",
+    "baseMaterial": "SMOOTH_STONE_VERY_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.66,
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_WIZTOWER_BRIDGE_CORNER_FLOOR_MIRROR",
+      "FAI_WIZTOWER_BRIDGE_CORNER_FLOOR"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Wizard Tower - Windows",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_WIZTOWER_WALLS_WINDOW",
+      "FAI_WIZTOWER_WALLS_L2_WINDOW",
+      "FAI_WIZTOWER_UPPER_WALLS_WINDOW",
+      "FAI_WIZTOWER_UPPER_WALLS_L2_WINDOW"
+    ],
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Marble Staircase Spiral with wooden rails",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "(h == 7 && s > 2) || (h == 5 && s == 2)",
@@ -15747,10 +15775,18 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "STANDING_TORCH",
-      "ZOGRE_STANDING_TORCH"
+      "ZOGRE_STANDING_TORCH",
+      "FAI_BARBARIAN_TORCH"
     ],
     "uvType": "BOX",
-    "uvScale": 1.1
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_110",
+        "receiveShadows": false
+      }
+    ]
   },
   {
     "description": "Objects - Stone - Stalagmites - Limestone",
@@ -43052,19 +43088,22 @@
         "description": "Red books",
         "colors": "h == 4",
         "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.4
       },
       {
         "description": "Dark brown books",
         "colors": "h == 7 && s > 4",
         "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.4
       },
       {
         "description": "Light brown books",
         "colors": "h == 6 && s == 3",
         "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   },
@@ -46677,12 +46716,17 @@
   },
   {
     "description": "Mizgog Table",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvOrientation": 512,
     "objectIds": [
       "QIP_IMP_CATCHER_MAGIC_TABLE_BEFORE",
       "QIP_IMP_CATCHER_MAGIC_TABLE_AFTER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
     ]
   },
   {
@@ -47358,6 +47402,7 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
+    "uvOrientation": 512,
     "colorOverrides": [
       {
         "description": "Pillow and sheet",
@@ -54465,6 +54510,7 @@
     "uvScale": 0.75,
     "objectIds": [
       "DRAGONMOUNTEDHEAD_RED",
+      "DRAGONMOUNTEDHEAD_RED3_OFFSET",
       "DRAGONMOUNTEDHEAD",
       "DRAGONMOUNTEDHEAD3"
     ],
@@ -54474,7 +54520,8 @@
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvType": "BOX",
         "uvOrientation": 512,
-        "uvScale": 0.5
+        "uvScale": 0.5,
+        "depthBias": 50
       },
       {
         "colors": "h == 5",
@@ -58216,7 +58263,8 @@
     "uvOrientationY": 512,
     "uvScale": 0.75,
     "objectIds": [
-      "PIANO_A"
+      "PIANO_A",
+      "PIANO_NORMAL"
     ]
   },
   {

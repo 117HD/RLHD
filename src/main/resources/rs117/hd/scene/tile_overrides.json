@@ -5668,10 +5668,13 @@
     "overlayIds": [
       33
     ],
-    "groundMaterial": "MARBLE_1_GLOSS",
+    "groundMaterial": "MARBLE_4_GLOSS",
+    "shiftLightness": 10,
+    "uvScale": 1.33,
     "blended": false,
     "replacements": {
-      "SNOW_2": "season == SeasonalTheme.WINTER"
+      "SNOW_2": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
     }
   },
   {
