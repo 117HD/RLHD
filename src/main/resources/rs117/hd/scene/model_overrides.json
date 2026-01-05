@@ -20175,20 +20175,42 @@
     ]
   },
   {
-    "description": "Sophamena Walls",
+    "description": "Sophanem/Menaphos Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "ICTHALARINS_CITY_WALL",
       "ICTHALARINS_CITY_WALL_TABLET",
       "ICTHALARINS_CITY_WALL_LEV2",
-      "ICTHALARINS_CITY_WALL_TABLET_LEV2"
+      "ICTHALARINS_CITY_WALL_TABLET_LEV2",
+      "ICTHALARINS_CITY_WALL_TOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "depthBias": 150
   },
   {
-    "description": "Sophamena Wall Decoration",
+    "description": "Sophanem/Menaphos Walls - Sand Trim",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "ICTHALARINS_CITY_WALL_SAND02",
+      "ICTHALARINS_CITY_WALL_SAND01"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.62,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Sophanem/Menaphos Wall Decoration",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "FOUR_DIAMONDS_TOMB_WALL_SCARAB",
@@ -20196,7 +20218,8 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "depthBias": 150
   },
   {
     "description": "Broken Wood Awning",
