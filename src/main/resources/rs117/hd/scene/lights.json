@@ -27852,9 +27852,9 @@
   },
   {
     "description": "TELEGRAB_CAST",
-    "offset": [ 0, 150, 75 ],
+    "offset": [ 0, 165, 75 ],
     "radius": 125,
-    "strength": 12,
+    "strength": 10,
     "color": [
       170,
       20,
