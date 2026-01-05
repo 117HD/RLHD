@@ -28034,7 +28034,7 @@
     "offset": [ 0, 125, 50 ],
     "radius": 225,
     "fixedDespawnTime": true,
-    "despawnDelay": 1000,
+    "despawnDelay": 1200,
     "strength": 6,
     "color": [
       255,
@@ -28057,16 +28057,16 @@
     "offset": [ 0, 60, 50 ],
     "radius": 110,
     "fixedDespawnTime": true,
-    "despawnDelay": 1000,
+    "despawnDelay": 1100,
     "strength": 4,
     "color": [
       252,
       148,
       3
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
     "duration": 0,
-    "range": 0,
+    "range": 30,
     "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "graphicsObjectIds": [
