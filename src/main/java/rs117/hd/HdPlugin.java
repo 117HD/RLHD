@@ -1053,35 +1053,35 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeUbos() {
-		if(uboGlobal == null)
-			uboGlobal = new UBOGlobal();
+		uboGlobal = new UBOGlobal();
 		uboGlobal.initialize(HdPlugin.UNIFORM_BLOCK_GLOBAL);
 
-		if(uboUI == null)
-			uboUI = new UBOUI();
+		uboUI = new UBOUI();
 		uboUI.initialize(HdPlugin.UNIFORM_BLOCK_UI);
 
-		if(uboLights == null)
-			uboLights = new UBOLights(false);
+		uboLights = new UBOLights(false);
 		uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
 
-		if(uboLightsCulling == null)
-			uboLightsCulling = new UBOLights(true);
+		uboLightsCulling = new UBOLights(true);
 		uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
 	}
 
 	private void destroyUbos() {
-		if(uboGlobal != null)
+		if (uboGlobal != null)
 			uboGlobal.destroy();
+		uboGlobal = null;
 
-		if(uboUI != null)
+		if (uboUI != null)
 			uboUI.destroy();
+		uboUI = null;
 
-		if(uboLights != null)
+		if (uboLights != null)
 			uboLights.destroy();
+		uboLights = null;
 
-		if(uboLightsCulling != null)
+		if (uboLightsCulling != null)
 			uboLightsCulling.destroy();
+		uboLightsCulling = null;
 	}
 
 	private void initializeUiTexture() {
