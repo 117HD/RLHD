@@ -11,7 +11,7 @@ import java.util.Queue;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
-import lombok.RequiredArgsConstructor;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
@@ -35,8 +35,10 @@ import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-@RequiredArgsConstructor
 public class Zone {
+	@Inject
+	private Client client;
+
 	// Zone vertex format
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
@@ -234,6 +236,8 @@ public class Zone {
 	}
 
 	public void unmap() {
+		assert client.isClientThread();
+
 		if (vboO != null)
 			vboO.unmap();
 		if (vboA != null)

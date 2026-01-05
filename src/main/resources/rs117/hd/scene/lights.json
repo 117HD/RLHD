@@ -20651,8 +20651,6 @@
     "objectIds": [
       "TORCH",
       "TORCH_GRUBBY",
-      "CANDLES",
-      "GOLDCANDLES",
       "SKULLTORCH",
       "DRAYNOR_CANDLE_WALL",
       "OLDROOFEDGE_HL_GREYSLATE",
@@ -21179,7 +21177,6 @@
       "DWARF_KELDAGRIM_FIREPLACE",
       "DWARF_KELDAGRIM_BIG_FIREPLACE",
       "TWOCATS_FIREPLACE_LIT",
-      "TWOCATS_FIREPLACE_GONE_OUT",
       "TWOCATS_FIREPLACE_GOT_WOOD",
       "MYQ3_GHETTO_FIREPLACE_BOTTOM",
       "MYQ3_GHETTO_FIREPLACE_MIDDLE",
@@ -21868,7 +21865,10 @@
   {
     "description": "PHASMATYS_ENERGY_BARRIER__1",
     "offset": [ 0, 175, 0 ],
-    "objectIds": [ "AHOY_TOWN_BARRIER" ],
+    "objectIds": [
+      "AHOY_TOWN_BARRIER",
+      "AHOY_TOWN_BARRIER_POST_QUEST"
+    ],
     "radius": 800,
     "strength": 4.5,
     "color": [
@@ -21883,7 +21883,10 @@
   {
     "description": "PHASMATYS_ENERGY_BARRIER_2",
     "offset": [ -120, 175, 0 ],
-    "objectIds": [ "AHOY_TOWN_BARRIER" ],
+    "objectIds": [
+      "AHOY_TOWN_BARRIER",
+      "AHOY_TOWN_BARRIER_POST_QUEST"
+    ],
     "radius": 800,
     "strength": 4.5,
     "color": [
@@ -22692,7 +22695,7 @@
   },
   {
     "description": "POH_RESTORATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 3.5,
@@ -22701,9 +22704,7 @@
       0,
       85
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_RESTORATION",
       "XMAS20_POH_POOL_RESTORATION"
@@ -22730,7 +22731,7 @@
   },
   {
     "description": "POH_REVITALISATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 6,
@@ -22739,9 +22740,7 @@
       179,
       0
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_REVITALISATION",
       "XMAS20_POH_POOL_REVITALISATION"
@@ -22768,7 +22767,7 @@
   },
   {
     "description": "POH_REJUVENATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 3.5,
@@ -22777,9 +22776,7 @@
       225,
       255
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_REJUVENATION",
       "XMAS20_POH_POOL_REJUVENATION"
@@ -22815,9 +22812,7 @@
       0,
       179
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_RECOVERY",
       "XMAS20_POH_POOL_RECOVERY"
@@ -22844,7 +22839,7 @@
   },
   {
     "description": "POH_ORNATE_REJUVENATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 45,
@@ -22853,7 +22848,7 @@
       0,
       255
     ],
-    "type": "PULSE",
+    "type": "STATIC",
     "duration": 1250,
     "range": 20,
     "objectIds": [
@@ -22969,6 +22964,21 @@
     "range": 25,
     "objectIds": [
       "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_4_DRAGON"
+    ]
+  },
+  {
+    "description": "POH_OTHERWORLDY_MUSHROOM_LIGHT",
+    "offset": [ 0, 75, 0 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "POH_THEME_ZANARIS_HERO"
     ]
   },
   {
@@ -39824,8 +39834,8 @@
   {
     "description": "Karamja - Brimhaven Dungeon - Pillar Torches",
     "height": 235,
-    "offset": [ -41, -74, 20 ],
-    "radius": 300,
+    "offset": [ -60, -65, 0 ],
+    "radius": 250,
     "strength": 12.5,
     "color": [
       252,
@@ -43921,6 +43931,93 @@
     "range": 20,
     "objectIds": [
       "GRIMSTONE_FURNACE"
+    ]
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_EDGE",
+    "offset": [ -100, 250, 0 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 3,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "FLOORKIT_GRADIENT04_CORNER01"
+    ]
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE1",
+    "offset": [ 75, 250, 0 ],
+    "worldX": 3616,
+    "worldY": 9818,
+    "radius": 550,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE2",
+    "offset": [ 0, 250, 0 ],
+    "worldX": 3615,
+    "worldY": 9814,
+    "radius": 550,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE3",
+    "offset": [ 0, 250, 0 ],
+    "worldX": 3617,
+    "worldY": 9811,
+    "radius": 450,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE4",
+    "offset": [ 25, 250, 0 ],
+    "worldX": 3617,
+    "worldY": 9822,
+    "radius": 550,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXYTE_SPIDER_CAVE_EXIT",
+    "offset": [ 0, 125, 0 ],
+    "radius": 750,
+    "strength": 3.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "ARAXYTE_CAVE_EXIT"
     ]
   },
   {
