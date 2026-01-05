@@ -21865,7 +21865,10 @@
   {
     "description": "PHASMATYS_ENERGY_BARRIER__1",
     "offset": [ 0, 175, 0 ],
-    "objectIds": [ "AHOY_TOWN_BARRIER" ],
+    "objectIds": [
+      "AHOY_TOWN_BARRIER",
+      "AHOY_TOWN_BARRIER_POST_QUEST"
+    ],
     "radius": 800,
     "strength": 4.5,
     "color": [
@@ -21880,7 +21883,10 @@
   {
     "description": "PHASMATYS_ENERGY_BARRIER_2",
     "offset": [ -120, 175, 0 ],
-    "objectIds": [ "AHOY_TOWN_BARRIER" ],
+    "objectIds": [
+      "AHOY_TOWN_BARRIER",
+      "AHOY_TOWN_BARRIER_POST_QUEST"
+    ],
     "radius": 800,
     "strength": 4.5,
     "color": [
@@ -43925,6 +43931,93 @@
     "range": 20,
     "objectIds": [
       "GRIMSTONE_FURNACE"
+    ]
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_EDGE",
+    "offset": [ -100, 250, 0 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 3,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "FLOORKIT_GRADIENT04_CORNER01"
+    ]
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE1",
+    "offset": [ 75, 250, 0 ],
+    "worldX": 3616,
+    "worldY": 9818,
+    "radius": 550,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE2",
+    "offset": [ 0, 250, 0 ],
+    "worldX": 3615,
+    "worldY": 9814,
+    "radius": 550,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE3",
+    "offset": [ 0, 250, 0 ],
+    "worldX": 3617,
+    "worldY": 9811,
+    "radius": 450,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE4",
+    "offset": [ 25, 250, 0 ],
+    "worldX": 3617,
+    "worldY": 9822,
+    "radius": 550,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXYTE_SPIDER_CAVE_EXIT",
+    "offset": [ 0, 125, 0 ],
+    "radius": 750,
+    "strength": 3.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "ARAXYTE_CAVE_EXIT"
     ]
   }
 ]

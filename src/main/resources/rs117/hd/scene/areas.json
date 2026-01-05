@@ -3695,10 +3695,22 @@
     ]
   },
   {
-    "name": "MORYTANIA_SPIDER_CAVES",
+    "name": "ARAXYTE_SPIDER_CAVES",
     "aabbs": [
-      [ 3648, 9792, 3711, 9871 ],
-      [ 3602, 9792, 3647, 9855 ]
+      [ 3652, 9792, 3711, 9871 ]
+    ]
+  },
+  {
+    "name": "ARAXXOR_ARENA",
+    "aabbs": [
+      [ 3602, 9792, 3651, 9855 ]
+    ]
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES",
+    "areas": [
+      "ARAXYTE_SPIDER_CAVES",
+      "ARAXXOR_ARENA"
     ],
     "hideOtherAreas": true
   },
