@@ -6291,7 +6291,7 @@
   },
   {
     "description": "Wintertodt Terrain",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "WINT_WALL_A",
       "WINT_WALL_PILLAR_A",
@@ -6319,7 +6319,7 @@
   },
   {
     "description": "Wintertodt Root Terrain",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "WINT_WALL_BRUMA_ROOT_A"
     ],
@@ -6342,7 +6342,7 @@
   },
   {
     "description": "Wintertodt Herb Terrain",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "WINT_WALL_HERB_ROOT_B"
     ],
@@ -6358,7 +6358,7 @@
   },
   {
     "description": "Wintertodt Railings",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "WINT_BALCONY_B",
       "WINT_BALCONY_A",
@@ -6372,7 +6372,7 @@
   },
   {
     "description": "Wintertodt Wooden Objects",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "WINT_CHEST_TINDERBOX",
       "WINT_CHEST_VIAL",
@@ -6403,7 +6403,7 @@
   },
   {
     "description": "Wintertodt Barrel Group",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "GODWARS_DEBRIS_BARRICADE_3BARRELS",
       "GODWARS_DEBRIS_BARRICADE_3BARRELS_AXE",
@@ -6960,7 +6960,7 @@
   },
   {
     "description": "GROUND_DECORATION_SNOW",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SNOW_3",
     "objectIds": [
       "WYVERN_DUGUPSOIL_1",
       "WYVERN_DUGUPSOIL_3",
@@ -9274,7 +9274,7 @@
   },
   {
     "description": "Fremennik Isles - Iceberg",
-    "baseMaterial": "SNOW_2_DARK",
+    "baseMaterial": "SMOOTH_SNOW_DARK",
     "uvType": "BOX",
     "npcIds": [
       "FRIS_ICE_CHUNK_ONE",
@@ -9313,7 +9313,7 @@
     "colorOverrides": [
       {
         "colors": "h == 42",
-        "baseMaterial": "SNOW_4"
+        "baseMaterial": "SMOOTH_SNOW"
       }
     ]
   },
@@ -13188,7 +13188,7 @@
   },
   {
     "description": "Snow Caves",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "TROLLROMANCE_PISTE_EXIT_TUNNEL_EXIT",
       "MDAUGHTER_CAVEENTRANCE",
@@ -13206,7 +13206,7 @@
   },
   {
     "description": "Overly Bright Snow Caves",
-    "baseMaterial": "SNOW_2_DARK",
+    "baseMaterial": "SMOOTH_SNOW_DARK",
     "objectIds": [
       "TROLLROMANCE_CAVEENTRANCE",
       "TROLLROMANCE_PISTE_TUNNEL_BOTTOM"
@@ -14873,7 +14873,7 @@
   },
   {
     "description": "Ground Decoration - Flat Stone - Small - Uncolored",
-    "baseMaterial": "SNOW_3",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "MDAUGHTER_FLATSTONE1",
       "MDAUGHTER_FLATSTONE2"
@@ -16076,7 +16076,7 @@
   },
   {
     "description": "Ice Queens Dungeon - Walls - Snow",
-    "baseMaterial": "SNOW_COLORED",
+    "baseMaterial": "SMOOTH_SNOW_COLORED",
     "objectIds": [
       "CAVEWALL_FACE1_WHITE",
       "CAVEWALL_TOP_WHITE",
@@ -16097,7 +16097,7 @@
   },
   {
     "description": "Ice Queens Dungeon - Decorations - Wall - White Object - Snow",
-    "baseMaterial": "SNOW_3",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "CAVE_DETAIL1R_WHITE",
       "CAVE_DETAIL2_WHITE",
@@ -16107,7 +16107,7 @@
   },
   {
     "description": "Objects - Rockslide - Snow Drift - Snow - Medium",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "ROCKSLIDE_WHITE1",
       "ROCKSLIDE_WHITE2",
@@ -16120,7 +16120,7 @@
   },
   {
     "description": "Objects - Rockslide - Snow Drift - Snow - Small",
-    "baseMaterial": "SNOW_3",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "ROCKSLIDE_WHITE3",
       "ROCKSLIDE_WHITE4",
@@ -17990,6 +17990,7 @@
   {
     "description": "Ground - Snow Piles - Tiny",
     "baseMaterial": "SNOW_1",
+    "uvScale": 1.2,
     "castShadows": false,
     "objectIds": [
       "SNOW1",
@@ -17999,12 +18000,11 @@
       "PENG_AGILITY_SNOW01",
       "PENG_AGILITY_SNOW03"
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 2.0
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Ground - Snow Piles - Small",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "TROLLROMANCE_ROCKSLIDE5",
       "TROLLROMANCE_ROCKSLIDE6",
@@ -18015,7 +18015,7 @@
   },
   {
     "description": "Objects - Snow Piles - Large",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "TROLLROMANCE_ROCKSLIDE1",
       "TROLLROMANCE_ROCKSLIDE2",
@@ -18071,7 +18071,7 @@
   },
   {
     "description": "Firm Snowy Patch",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "PENG_OBSERVER_CABIN_NOTBUILD"
     ],
@@ -18194,7 +18194,7 @@
   },
   {
     "description": "Iceberg - Bird Hide - Covered",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "PENG_OBSERVER_CABIN_BUILT_SNOWY"
     ],
@@ -18204,7 +18204,7 @@
   },
   {
     "description": "Iceberg - Agility Course - Snow Drift",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "PENG_AGILITY_OBSTACLEJUMP01",
       "PENG_AGILITY_OBSTACLEJUMP02"
@@ -18213,7 +18213,7 @@
   },
   {
     "description": "Penguin Footprints",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "uvType": "WORLD_XZ",
     "objectIds": [
       "PENG_FOOTPRINTS_STRAIGHT01",
@@ -18409,7 +18409,7 @@
   },
   {
     "description": "Snow Walls",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "TROLLROMANCE_SNOW_CAVEWALL_FACE1",
       "TROLLROMANCE_SNOW_CAVEWALL_TOP",
@@ -18425,7 +18425,7 @@
   },
   {
     "description": "Ground Objects - White Rock-like Objects - Tiny - Colored",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "TROLLROMANCE_DUGUPSOIL_2"
     ],
@@ -18435,7 +18435,7 @@
   },
   {
     "description": "Ground Objects - White Rock-like Objects - Small - Colored",
-    "baseMaterial": "SNOW_3",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "TROLLROMANCE_DUGUPSOIL_1",
       "TROLLROMANCE_DUGUPSOIL_3"
@@ -20169,7 +20169,7 @@
   },
   {
     "description": "Tree - Snowy - Weiss",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "ARCTIC_PINE_SNOWY"
     ]
@@ -29652,7 +29652,7 @@
   },
   {
     "description": "Ghorrock Dungeon - Tables",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "GHORROCK_SNOW01_BROKENTABLE01",
       "GHORROCK_SNOW01_BROKENTABLE02"
@@ -29715,7 +29715,7 @@
   },
   {
     "description": "Snowy Underground Entrance",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [ "MY2ARM_TOWN_HOLE_A", "MY2ARM_TOWN_HOLE_B", "MY2ARM_TOWN_HOLE_C", "MY2ARM_TOWN_HOLE_D", "MY2ARM_TOWN_HOLE_E" ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -36828,7 +36828,7 @@
   },
   {
     "description": "Hunter Pitfall Spiked Pit - Snowy",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "HUNTING_PITFALL_POLAR_LARGE_SW",
       "HUNTING_PITFALL_POLAR_LARGE_SE",
@@ -39845,9 +39845,9 @@
   },
   {
     "description": "Camdozaal Entrance Sides",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SNOW_3",
     "uvType": "BOX",
-    "uvScale": 1.25,
+    "uvScale": 0.33,
     "colorOverrides": [
       {
         "description": "Stone",
@@ -39865,9 +39865,9 @@
   },
   {
     "description": "Camdozaal Entrance",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SNOW_3",
     "uvType": "BOX",
-    "uvScale": 1.25,
+    "uvScale": 0.33,
     "colorOverrides": [
       {
         "description": "Stone",
@@ -39892,7 +39892,7 @@
   },
   {
     "description": "Camdozaal Entrance rubble",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "uvType": "BOX",
     "uvScale": 1.25,
     "colorOverrides": [
@@ -41206,7 +41206,7 @@
   },
   {
     "description": "Asgarnia Ice Dungeon - Snow Walls and Entrances",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "WYVERN_CAVE_WALL",
       "WYVERN_CAVE_WALL_SHORTER",
@@ -41228,7 +41228,7 @@
   },
   {
     "description": "Asgarnia Ice Dungeon - Royal Titans Boss Entrance",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "ROYAL_TITANS_ENTRANCE"
     ],
@@ -41279,7 +41279,7 @@
   },
   {
     "description": "Asgarnia Ice Dungeon - Muddy Walls Blending to Ice",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "WYVERN_CAVE_WALL_COLDMUD_TRANSITION",
       "WYVERN_CAVE_WALL_COLDMUD_TRANSITION_M",
@@ -41372,7 +41372,7 @@
       },
       {
         "colors": "s == 0",
-        "baseMaterial": "SNOW_1",
+        "baseMaterial": "SMOOTH_SNOW",
         "uvType": "BOX"
       }
     ]
@@ -41387,14 +41387,14 @@
     "colorOverrides": [
       {
         "colors": "s <= 1",
-        "baseMaterial": "SNOW_1",
+        "baseMaterial": "SMOOTH_SNOW",
         "uvType": "BOX"
       }
     ]
   },
   {
     "description": "Asgarnia Ice Dungeon - Ice Floes",
-    "baseMaterial": "SNOW_3",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "FLOORKIT_OBSIDIAN02_FILL02",
       "DECOKIT_ICE_DEFAULT01",
@@ -43448,10 +43448,10 @@
     "colorOverrides": [
       {
         "description": "Snow",
-        "baseMaterial": "SNOW_1",
+        "baseMaterial": "SNOW_3",
         "colors": "s == 0",
         "uvType": "BOX",
-        "uvScale": 0.25
+        "uvScale": 0.5
       }
     ],
     "objectIds": [
@@ -49366,7 +49366,7 @@
       },
       {
         "colors": "h == 63 && l > 2",
-        "baseMaterial": "SNOW_1"
+        "baseMaterial": "SMOOTH_SNOW"
       },
       {
         "colors": "h == 63 && l == 2",
@@ -49476,7 +49476,7 @@
   },
   {
     "description": "Hueycoatl Tent",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "DF_TENT_MOUNTAIN01_DWARF01"
     ],
@@ -59398,7 +59398,7 @@
   },
   {
     "description": "Varlamore - Ruins of Tapoyauik Snow Walls",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SMOOTH_SNOW",
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
@@ -59484,7 +59484,7 @@
   },
   {
     "description": "Varlamore - Stone Chest",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "uvType": "BOX",
     "uvScale": 0.71,
     "objectIds": [
@@ -62609,7 +62609,7 @@
   },
   {
     "description": "Lucien's Base - Snow Walls",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "LUC2_OUTPOST_WALL_01_CUSTOM",
       "LUC2_OUTPOST_WALL_01",
@@ -62653,7 +62653,7 @@
   },
   {
     "description": "Lucien's Base - Snowy Crates and Barrels",
-    "baseMaterial": "SNOW_3",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "LUC2_OUTPOST_OUTDOOR_BARREL_BROKEN",
       "LUC2_OUTPOST_OUTDOOR_CRATE",
@@ -62673,7 +62673,7 @@
   },
   {
     "description": "Lucien's Base - Overhead Cover",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "LUC2_OUTPOST_COVER_01"
     ],
@@ -62696,7 +62696,7 @@
   },
   {
     "description": "Lucien's Base - Teleport Sigil Edge",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "objectIds": [
       "LUC2_OUTPOST_TILE_CORNER",
       "LUC2_OUTPOST_TILE_EDGE2",
@@ -63620,7 +63620,7 @@
   },
   {
     "description": "Varlamore - Cam Torum - Stone - Snow - Cam Torum overworld Top",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -63640,7 +63640,7 @@
   },
   {
     "description": "Varlamore - Cam Torum - Stone - Snow - Cam Torum overworld walls",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -63659,7 +63659,7 @@
   },
   {
     "description": "Varlamore - Cam Torum - Stone - Snow - Metallic - Cam Torum Entrance statues",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -63691,7 +63691,7 @@
   },
   {
     "description": "Varlamore - Cam Torum - Stone - Snow - Metallic - Wooden - Cam Torum Entrance - Closed",
-    "baseMaterial": "SNOW_2",
+    "baseMaterial": "SMOOTH_SNOW",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -67058,7 +67058,7 @@
       },
       {
         "colors": "h == 32",
-        "baseMaterial": "SNOW_4_DARK"
+        "baseMaterial": "SMOOTH_SNOW_DIM"
       }
     ]
   },
@@ -67118,7 +67118,7 @@
     "colorOverrides": [
       {
         "colors": "h == 34 || h == 33 || h == 32",
-        "baseMaterial": "SNOW_4_DARK",
+        "baseMaterial": "SMOOTH_SNOW_DIM",
         "uvType": "BOX"
       },
       {
@@ -67161,7 +67161,7 @@
   },
   {
     "description": "God Wars Dungeon - Snowy Rocks",
-    "baseMaterial": "SNOW_2_DARK",
+    "baseMaterial": "SMOOTH_SNOW_DARK",
     "objectIds": [
       "GODWARS_ENTRANCE_ROCK01",
       "GODWARS_CLIMBING_ROCKS_UP",
@@ -67186,7 +67186,7 @@
     "colorOverrides": [
       {
         "colors": "h == 32",
-        "baseMaterial": "SNOW_4_DARK"
+        "baseMaterial": "SMOOTH_SNOW_DIM"
       }
     ]
   },
@@ -67226,7 +67226,7 @@
     "colorOverrides": [
       {
         "colors": "h == 33",
-        "baseMaterial": "SNOW_2_DARK",
+        "baseMaterial": "SMOOTH_SNOW_DARK",
         "uvType": "BOX",
         "uvScale": 0.99,
         "terrainVertexSnap": true
@@ -67252,17 +67252,45 @@
     "uvScale": 0.5,
     "terrainVertexSnap": true,
     "objectIds": [
-      "GODWARS_DEBRIS_TOWER",
       "GODWARS_DEBRIS_BALLANDCHAIN",
       "GODWARS_DEBRIS_BARRELS",
       "GODWARS_DEBRIS_BARRICADE_VARIOUS_WOOD",
-      "GODWARS_DEBRIS_BATTERINGRAM",
       "GODWARS_DEBRIS_WARRIORARM"
     ],
     "colorOverrides": [
       {
         "colors": "h == 33",
-        "baseMaterial": "SNOW_4_DARK",
+        "baseMaterial": "SMOOTH_SNOW_DIM",
+        "terrainVertexSnap": true
+      },
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 0 || h == 10 && s == 1 || h == 36 || h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Battering Ram",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "GODWARS_DEBRIS_BATTERINGRAM",
+      "GODWARS_DEBRIS_TOWER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 33",
+        "baseMaterial": "SMOOTH_SNOW_DARK",
         "terrainVertexSnap": true
       },
       {
@@ -67319,7 +67347,7 @@
     "colorOverrides": [
       {
         "colors": "h < 37",
-        "baseMaterial": "SNOW_4_DARK",
+        "baseMaterial": "SMOOTH_SNOW_DIM",
         "uvType": "BOX",
         "uvScale": 0.99
       }
@@ -67340,7 +67368,7 @@
     "colorOverrides": [
       {
         "colors": "h == 32 && l > 25 || h == 34",
-        "baseMaterial": "SNOW_4",
+        "baseMaterial": "SMOOTH_SNOW",
         "uvType": "MODEL_XZ"
       }
     ]
@@ -67365,8 +67393,9 @@
     "colorOverrides": [
       {
         "colors": "h == 38 || h == 32 || h == 34",
-        "baseMaterial": "SNOW_4_DARK",
-        "uvType": "BOX"
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
       },
       {
         "colors": "h == 0 && l == 2",
@@ -67395,7 +67424,7 @@
     "colorOverrides": [
       {
         "colors": "h == 33",
-        "baseMaterial": "SNOW_2_DARK",
+        "baseMaterial": "SMOOTH_SNOW_DARK",
         "uvType": "BOX",
         "uvScale": 0.99
       },
@@ -67454,7 +67483,7 @@
   },
   {
     "description": "God Wars Dungeon - Broken Bridge to Zamorak Base",
-    "baseMaterial": "SNOW_4_DARK",
+    "baseMaterial": "SMOOTH_SNOW_DIM",
     "uvType": "BOX",
     "flatNormals": true,
     "objectIds": [
@@ -67583,7 +67612,7 @@
       },
       {
         "colors": "h == 32",
-        "baseMaterial": "SNOW_4_DARK"
+        "baseMaterial": "SMOOTH_SNOW_DIM"
       }
     ]
   },
@@ -67598,7 +67627,7 @@
   },
   {
     "description": "God Wars Dungeon - Nex Chasm Edge",
-    "baseMaterial": "SNOW_1",
+    "baseMaterial": "SMOOTH_SNOW",
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
@@ -67619,7 +67648,7 @@
   },
   {
     "description": "God Wars Dungeon - Nex Ancient Forge",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SMOOTH_SNOW",
     "uvType": "BOX",
     "objectIds": [
       "NEX_FURNACE"
@@ -70964,7 +70993,7 @@
   },
   {
     "description": "Xmas 2025 - Bush",
-    "baseMaterial": "SNOW_4_DARK",
+    "baseMaterial": "SMOOTH_SNOW_DIM",
     "uvType": "BOX",
     "objectIds": [
       "XMAS22_BUSH01"
@@ -70972,7 +71001,7 @@
   },
   {
     "description": "Xmas 2025 - Snow Piles",
-    "baseMaterial": "SNOW_4_DARK",
+    "baseMaterial": "SMOOTH_SNOW_DIM",
     "uvType": "BOX",
     "objectIds": [
       "XMAS22_SNOWGAME01_SNOW03",
@@ -71358,7 +71387,7 @@
   },
   {
     "description": "Grimstone - Snowy Rocks",
-    "baseMaterial": "SNOW_4",
+    "baseMaterial": "SNOW_2",
     "objectIds": [
       "ROCKSLIDE_SNOW01_LARGE02_LIGHTGREY",
       "ROCKSLIDE_SNOW01_LARGE01_LIGHTGREY",
@@ -71379,7 +71408,7 @@
   },
   {
     "description": "Relleka Hunter Iceberg",
-    "baseMaterial": "SNOW_2_SEMI_DARK",
+    "baseMaterial": "SMOOTH_SNOW_SEMI_DARK",
     "uvType": "BOX",
     "objectIds": [
       "HUNTING_POLAR_CAVEWALL_FACE1",
