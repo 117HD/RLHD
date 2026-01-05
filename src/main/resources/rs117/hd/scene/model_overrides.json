@@ -20175,7 +20175,7 @@
     ]
   },
   {
-    "description": "Sophamena Walls",
+    "description": "Sophanem Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "ICTHALARINS_CITY_WALL",
@@ -20190,7 +20190,7 @@
     "depthBias": 150
   },
   {
-    "description": "Sophamena Walls - Sand Trim",
+    "description": "Sophanem Walls - Sand Trim",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "ICTHALARINS_CITY_WALL_SAND02",
@@ -20210,7 +20210,7 @@
     ]
   },
   {
-    "description": "Sophamena Wall Decoration",
+    "description": "Sophanem Wall Decoration",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "FOUR_DIAMONDS_TOMB_WALL_SCARAB",
