@@ -1932,6 +1932,11 @@
     "brightness": 1.15
   },
   {
+    "name": "MARBLE_1_DARK",
+    "parent": "MARBLE_1",
+    "brightness": 0.85
+  },
+  {
     "name": "MARBLE_2_GLOSS",
     "parent": "MARBLE_2",
     "specularStrength": 0.8,
@@ -1986,6 +1991,11 @@
     "parent": "MARBLE_4_LOW_CONTRAST",
     "specularStrength": 1,
     "specularGloss": 80.0
+  },
+  {
+    "name": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "parent": "MARBLE_4_LOW_CONTRAST_GLOSS",
+    "brightness": 1.8
   },
   {
     "name": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",

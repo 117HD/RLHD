@@ -913,7 +913,6 @@
       "POH_TIPJAR",
       "POH_ADVENTURE_LOG_1",
       "POH_ADVENTURE_LOG_2",
-      "POH_THEME_ZANARIS_HERO",
       "RAIDS_LASERCRABS_BIGCRYSTAL_1",
       "RAIDS_LASERCRABS_BIGCRYSTAL_2",
       "RAIDS_LASERCRABS_BIGCRYSTAL_3",
@@ -1127,10 +1126,6 @@
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
       "DRILL_TREE3",
-      "POH_SMALL_TREE2_5",
-      "POH_BIG_TREE5_4",
-      "POH_BIG_TREE2_4",
-      "POH_SMALL_TREE4_5",
       "TREE",
       "LIGHTTREE",
       "NEWBIETREE",
@@ -1177,11 +1172,7 @@
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
-      "DRILL_TREE3",
-      "POH_SMALL_TREE2_5",
-      "POH_BIG_TREE5_4",
-      "POH_BIG_TREE2_4",
-      "POH_SMALL_TREE4_5"
+      "DRILL_TREE3"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1305,8 +1296,7 @@
       "SPIRIT_TREE_FULLYGROWN",
       "SPIRIT_TREE_CLAIMXP",
       "SPIRITTREE_SMALL_1OP",
-      "SPIRITTREE_SMALL_2OPS",
-      "POH_SPIRIT_TREE"
+      "SPIRITTREE_SMALL_2OPS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1597,8 +1587,6 @@
     "terrainVertexSnap": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "POH_BIG_TREE6_4",
-      "POH_SMALL_TREE6_5",
       "YEW_TREE_SEEDLING",
       "YEW_TREE_1",
       "YEW_TREE_2",
@@ -1675,8 +1663,6 @@
     "terrainVertexSnap": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "POH_BIG_TREE6_4",
-      "POH_SMALL_TREE6_5",
       "YEW_TREE_SEEDLING",
       "YEW_TREE_1",
       "YEW_TREE_2",
@@ -18498,19 +18484,7 @@
     ],
     "baseMaterial": "CARPET",
     "uvType": "WORLD_XZ",
-    "flatNormals": true,
-    "castShadows": false
-  },
-  {
-    "description": "POH superior garden zen theme carpet",
-    "objectIds": [
-      "POH_THEME_ZEN_PATH",
-      "POH_THEME_ZEN_PATH_CORNER",
-      "POH_THEME_ZEN_EDGE",
-      "POH_THEME_ZEN_INNER_CORNER",
-      "POH_THEME_ZEN_OUTER_CORNER"
-    ],
-    "flatNormals": true,
+    "upwardsNormals": true,
     "castShadows": false
   },
   {
@@ -29871,8 +29845,6 @@
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "terrainVertexSnap": true,
     "objectIds": [
-      "POH_BIG_TREE3_4",
-      "POH_SMALL_TREE3_5",
       "OAK_TREE_SEEDLING",
       "OAK_TREE_1",
       "OAK_TREE_2",
@@ -29908,8 +29880,6 @@
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "terrainVertexSnap": true,
     "objectIds": [
-      "POH_BIG_TREE3_4",
-      "POH_SMALL_TREE3_5",
       "OAK_TREE_SEEDLING",
       "OAK_TREE_1",
       "OAK_TREE_2",
@@ -29945,7 +29915,7 @@
     "terrainVertexSnap": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "POH_BIG_TREE7_4", "POH_SMALL_TREE7_5", "MAGIC_TREE_SEEDLING",
+      "MAGIC_TREE_SEEDLING",
       "MAGIC_TREE_1", "MAGIC_TREE_2", "MAGIC_TREE_3",
       "MAGIC_TREE_4", "MAGIC_TREE_5", "MAGIC_TREE_6",
       "MAGIC_TREE_7", "MAGIC_TREE_8", "MAGIC_TREE_9",
@@ -46618,6 +46588,319 @@
         "colors": "h == 8 && s == 1",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "PoH - Superior Garden - Otherworldly & Zen",
+    "baseMaterial": "GRAY_80",
+    "flatNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "POH_THEME_ZANARIS_EDGE",
+      "POH_THEME_ZANARIS_INNER_CORNER",
+      "POH_THEME_ZANARIS_OUTER_CORNER",
+      "POH_THEME_ZANARIS_PATH",
+      "POH_THEME_ZANARIS_PATH_CORNER",
+      "POH_THEME_ZEN_EDGE",
+      "POH_THEME_ZEN_PATH",
+      "POH_THEME_ZEN_INNER_CORNER",
+      "POH_THEME_ZEN_PATH_CORNER",
+      "POH_THEME_ZEN_OUTER_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && l < 25",
+        "baseMaterial": "DIRT_1_LIGHT",
+        "uvType": "MODEL_XZ",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "uvScale": 0.5,
+        "depthBias": 100
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_1_LIGHT",
+        "uvType": "MODEL_XZ",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "PoH - Superior Garden - Zen - Ornament",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "depthBias": 151,
+    "objectIds": [
+      "POH_THEME_ZEN_HERO"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "depthBias": 150
+      }
+    ]
+  },
+  {
+    "description": "PoH - Superior Garden - Otherworldly - Ornament",
+    "baseMaterial": "GRAY_70",
+    "depthBias": 50,
+    "hideVanillaShadows": true,
+    "objectIds": [
+      "POH_THEME_ZANARIS_HERO"
+    ]
+  },
+  {
+    "description": "PoH - Restoration Pool",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "POH_POOL_RESTORATION",
+      "XMAS20_POH_POOL_RESTORATION"
+    ],
+    "depthBias": 210,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "depthBias": 210
+      },
+      {
+        "colors": "s > 0 && s < 7",
+        "baseMaterial": "GRAY_70",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 210
+      }
+    ]
+  },
+  {
+    "description": "PoH - Rejuvenation and Revitalisation Pool",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "POH_POOL_REJUVENATION",
+      "XMAS20_POH_POOL_REJUVENATION",
+      "POH_POOL_REVITALISATION",
+      "XMAS20_POH_POOL_REVITALISATION"
+    ],
+    "depthBias": 210,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 || h > 25",
+        "baseMaterial": "GRAY_60",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 5 && s < 5",
+        "baseMaterial": "GRAY_90",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 210
+      },
+      {
+        "colors": "s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "depthBias": 210
+      }
+    ]
+  },
+  {
+    "description": "PoH - Fancy Rejuvenation Pool",
+    "baseMaterial": "MARBLE_1_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "POH_POOL_RECOVERY",
+      "XMAS20_POH_POOL_RECOVERY"
+    ],
+    "depthBias": 210,
+    "colorOverrides": [
+      {
+        "colors": "h > 25",
+        "baseMaterial": "GRAY_80",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 210
+      }
+    ]
+  },
+  {
+    "description": "PoH - Ornate Rejuvenation Pool - Normal",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.375,
+    "objectIds": [
+      "POH_POOL_REGENERATION",
+      "XMAS20_POH_POOL_REGENERATION"
+    ],
+    "depthBias": 210,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 60",
+        "baseMaterial": "GRAY_125"
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 210
+      }
+    ]
+  },
+  {
+    "description": "PoH - Ornate Rejuvenation Pool - Fiery",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.375,
+    "objectIds": [
+      "LEAGUE_4_POH_POOL_REJUVENATION"
+    ],
+    "depthBias": 210,
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "depthBias": 210
+      },
+      {
+        "colors": "h == 0 && l < 10",
+        "baseMaterial": "SMOOTH_STONE",
+        "depthBias": 210,
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "a < 106",
+        "baseMaterial": "NONE",
+        "depthBias": 210,
+        "uvType": "MODEL_XZ",
+        "castShadows": false,
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "PoH - Trees",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "POH_SMALL_TREE2_5",
+      "POH_BIG_TREE5_4",
+      "POH_BIG_TREE2_4",
+      "POH_SMALL_TREE4_5",
+      "POH_BIG_TREE3_4",
+      "POH_BIG_TREE6_4",
+      "POH_SMALL_TREE6_5",
+      "POH_BIG_TREE7_4",
+      "POH_SMALL_TREE7_5",
+      "POH_SMALL_TREE3_5",
+      "POH_SPIRIT_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_YELLOW_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_YELLOW_TOP"
+      },
+      "MAPLE_LEAVES": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "MAPLE_LEAVES"
+      }
+    }
+  },
+  {
+    "description": "Depth Bias Fix - Garden Rock",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "depthBias": 210,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_45",
+        "windDisplacementMode": "OBJECT",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "windDisplacementModifier": 1
+      }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Garden Fountain",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "depthBias": 210,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_45",
+        "windDisplacementMode": "OBJECT",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "windDisplacementModifier": 1
+      },
+      {
+        "colors": "h == 36 || h == 37",
+        "baseMaterial": "GRAY_90",
+        "depthBias": 210
+      }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Garden Pond",
+    "retainVanillaUvs": false,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_45",
+        "windDisplacementMode": "OBJECT",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "windDisplacementModifier": 1
+      },
+      {
+        "colors": "h == 7",
+        "retainVanillaUvs": false,
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -69616,42 +69899,6 @@
       "GG_DUSK_LIGHTNING_8"
     ],
     "depthBias": 255
-  },
-  {
-    "description": "Depth Bias Fix - POH Restoration Pools",
-    "objectIds": [
-      "POH_POOL_REJUVENATION",
-      "POH_POOL_REGENERATION",
-      "LEAGUE_4_POH_POOL_REJUVENATION",
-      "XMAS20_POH_POOL_REJUVENATION",
-      "POH_POOL_RESTORATION",
-      "POH_POOL_REVITALISATION",
-      "POH_POOL_RECOVERY",
-      "XMAS20_POH_POOL_RESTORATION",
-      "XMAS20_POH_POOL_REVITALISATION",
-      "XMAS20_POH_POOL_RECOVERY",
-      "XMAS20_POH_POOL_REGENERATION"
-    ],
-    "depthBias": 210
-  },
-  {
-    "description": "Depth Bias Fix - Garden Ornaments",
-    "depthBias": 210,
-    "objectIds": [
-      "POH_CRUDE_GARDEN_CENTREPIECE3",
-      "POH_CRUDE_GARDEN_CENTREPIECE4",
-      "POH_CRUDE_GARDEN_CENTREPIECE2"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h == 13",
-        "baseMaterial": "GRAY_45",
-        "windDisplacementMode": "OBJECT",
-        "upwardsNormals": true,
-        "castShadows": false,
-        "windDisplacementModifier": 1
-      }
-    ]
   },
   {
     "description": "Depth Bias Fix - Mounted Glory/Digsite/Xeric",
