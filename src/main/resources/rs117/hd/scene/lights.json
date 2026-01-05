@@ -20651,7 +20651,6 @@
     "objectIds": [
       "TORCH",
       "TORCH_GRUBBY",
-      "CANDLES",
       "SKULLTORCH",
       "DRAYNOR_CANDLE_WALL",
       "OLDROOFEDGE_HL_GREYSLATE",
@@ -27556,7 +27555,7 @@
     "alignment": "CENTER",
     "offset": [ 0, 20, 35 ],
     "radius": 170,
-    "strength": 30,
+    "strength": 22.5,
     "color": [
       252,
       148,
@@ -27567,8 +27566,9 @@
     "range": 30,
     "fadeInDuration": 50,
     "spawnDelay": 600,
-    "despawnDelay": 100,
-    "fadeOutDuration": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 550,
+    "fadeOutDuration": 250,
     "graphicsObjectIds": [
       "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
     ]
@@ -27580,7 +27580,7 @@
     "offset": [ 0, 20, 35 ],
     "radius": 170,
     "fixedDespawnTime": true,
-    "strength": 30,
+    "strength": 25,
     "color": [
       252,
       148,
@@ -27809,8 +27809,8 @@
     "description": "SUPERHEAT_ITEM",
     "height": 200,
     "alignment": "CENTER",
-    "offset": [ 0, 0, 20 ],
-    "radius": 75,
+    "offset": [ 0, 20, 0 ],
+    "radius": 125,
     "fixedDespawnTime": true,
     "strength": 16.5,
     "color": [
@@ -27824,7 +27824,7 @@
     "fadeInDuration": 100,
     "spawnDelay": 355,
     "despawnDelay": 875,
-    "fadeOutDuration": 75,
+    "fadeOutDuration": 250,
     "graphicsObjectIds": [
       "SUPERHEATITEM_CASTING"
     ]
@@ -27835,6 +27835,7 @@
     "height": 20,
     "radius": 125,
     "strength": 12,
+    "fadeOutDuration": 600,
     "color": [
       170,
       20,
@@ -27848,8 +27849,27 @@
     ]
   },
   {
+    "description": "TELEGRAB_CAST",
+    "offset": [ 0, 150, 75 ],
+    "radius": 125,
+    "strength": 12,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "TELEGRAB_CASTING"
+    ]
+  },
+  {
     "description": "WIND_STRIKE",
-    "radius": 175,
+    "radius": 250,
     "strength": 2.5,
     "color": [
       255,
@@ -27866,9 +27886,32 @@
     ]
   },
   {
+    "description": "WIND_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 5.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSTRIKE_CASTING",
+      "WINDBOLT_CASTING",
+      "WINDBLAST_CASTING"
+    ]
+  },
+  {
     "description": "WATER_STRIKE",
-    "radius": 175,
-    "strength": 3.8,
+    "radius": 225,
+    "strength": 4.5,
     "color": [
       0,
       140,
@@ -27884,9 +27927,32 @@
     ]
   },
   {
+    "description": "WATER_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 5,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSTRIKE_CASTING",
+      "WATERBOLT_CASTING",
+      "WATERBLAST_CASTING"
+    ]
+  },
+  {
     "description": "EARTH_STRIKE",
-    "radius": 175,
-    "strength": 3.1,
+    "radius": 250,
+    "strength": 3.6,
     "color": [
       0,
       255,
@@ -27902,9 +27968,32 @@
     ]
   },
   {
+    "description": "EARTH_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSTRIKE_CASTING",
+      "EARTHBOLT_CASTING",
+      "EARTHBLAST_CASTING"
+    ]
+  },
+  {
     "description": "FIRE_STRIKE",
-    "radius": 175,
-    "strength": 3.8,
+    "radius": 250,
+    "strength": 4.2,
     "color": [
       255,
       0,
@@ -27920,8 +28009,31 @@
     ]
   },
   {
+    "description": "FIRE_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 5.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESTRIKE_CASTING",
+      "FIREBOLT_CASTING",
+      "FIREBLAST_CASTING"
+    ]
+  },
+  {
     "description": "WIND_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 3.8,
     "color": [
       255,
@@ -27939,7 +28051,7 @@
   },
   {
     "description": "WATER_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 6.3,
     "color": [
       0,
@@ -27957,7 +28069,7 @@
   },
   {
     "description": "EARTH_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 5.6,
     "color": [
       0,
@@ -27975,7 +28087,7 @@
   },
   {
     "description": "FIRE_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 6.3,
     "color": [
       255,
@@ -27993,7 +28105,7 @@
   },
   {
     "description": "WIND_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 5.6,
     "color": [
       255,
@@ -28011,7 +28123,7 @@
   },
   {
     "description": "WATER_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 8.8,
     "color": [
       0,
@@ -28029,7 +28141,7 @@
   },
   {
     "description": "EARTH_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 6.9,
     "color": [
       0,
@@ -28047,7 +28159,7 @@
   },
   {
     "description": "FIRE_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 8.8,
     "color": [
       255,
@@ -28082,6 +28194,28 @@
     ]
   },
   {
+    "description": "WIND_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDWAVE_CASTING"
+    ]
+  },
+  {
     "description": "WATER_WAVE",
     "radius": 300,
     "strength": 10,
@@ -28097,6 +28231,28 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERWAVE_TRAVEL"
+    ]
+  },
+  {
+    "description": "WATER_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 300,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERWAVE_CASTING"
     ]
   },
   {
@@ -28118,6 +28274,28 @@
     ]
   },
   {
+    "description": "EARTH_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHWAVE_CASTING"
+    ]
+  },
+  {
     "description": "FIRE_WAVE",
     "radius": 300,
     "strength": 10,
@@ -28133,6 +28311,28 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIREWAVE_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 300,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIREWAVE_CASTING"
     ]
   },
   {
@@ -28154,6 +28354,72 @@
     ]
   },
   {
+    "description": "WIND_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WIND_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WIND_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 700,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 275,
+    "strength": 13.8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSURGE_CASTING"
+    ]
+  },
+  {
     "description": "WATER_SURGE",
     "radius": 400,
     "strength": 13.8,
@@ -28169,6 +28435,72 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERSURGE_TRAVEL"
+    ]
+  },
+  {
+    "description": "WATER_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WATER_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WATER_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "radius": 300,
+    "strength": 13.8,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSURGE_CASTING"
     ]
   },
   {
@@ -28190,6 +28522,72 @@
     ]
   },
   {
+    "description": "EARTH_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "EARTH_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "EARTH_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "radius": 275,
+    "strength": 13.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSURGE_CASTING"
+    ]
+  },
+  {
     "description": "FIRE_SURGE",
     "radius": 400,
     "strength": 13.8,
@@ -28205,6 +28603,72 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIRESURGE_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "radius": 300,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
     ]
   },
   {
@@ -28335,8 +28799,8 @@
   },
   {
     "description": "CRUMBLE_UNDEAD",
-    "radius": 200,
-    "strength": 5,
+    "radius": 225,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -28345,10 +28809,54 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 200,
+    "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "projectileIds": [
       "CRUMBLEUNDEAD_TRAVEL"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_CAST_RIGHT",
+    "offset": [ 40, 100, 50 ],
+    "radius": 175,
+    "strength": 6,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_CASTING"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_CAST_LEFT",
+    "offset": [ -40, 100, 50 ],
+    "radius": 175,
+    "strength": 6,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_CASTING"
     ]
   },
   {
@@ -28385,6 +28893,48 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "IBANBLAST_TRAVEL"
+    ]
+  },
+  {
+    "description": "IBAN_BLAST_CAST_START",
+    "offset": [ 0, 250, 80 ],
+    "radius": 350,
+    "strength": 9,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 150,
+    "graphicsObjectIds": [
+      "IBANBLAST_CASTING"
+    ]
+  },
+  {
+    "description": "IBAN_BLAST_CAST_END",
+    "offset": [ 0, 150, 120 ],
+    "radius": 300,
+    "spawnDelay": 1150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 450,
+    "strength": 8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "IBANBLAST_CASTING"
     ]
   },
   {
@@ -29335,6 +29885,26 @@
     "fadeInDuration": 500,
     "fadeOutDuration": 300,
     "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
+  },
+  {
+    "description": "Dragonfire Breath - Frost Dragon",
+    "offset": [ 0, 150, 290 ],
+    "radius": 185,
+    "strength": 25,
+    "color": [
+      215,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [ "FROSTBREATH_ATTACK" ]
   },
   {
     "description": "UNDEAD_DRUID",
@@ -37543,6 +38113,26 @@
     "spawnDelay": 950
   },
   {
+    "description": "FAIRY_RING_TELEPORT_ANIMATION",
+    "offset": [ 0, 60, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "spawnDelay": 1100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1900,
+    "color": [
+      222,
+      0,
+      255
+    ],
+    "fadeOutDuration": 400,
+    "fadeInDuration": 200,
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "FAIRY_FLOWER_RING"
+    ]
+  },
+  {
     "description": "Wilderness Mage Arena Bank Pool 1",
     "worldX": 2542,
     "worldY": 4720,
@@ -39232,8 +39822,8 @@
   {
     "description": "Karamja - Brimhaven Dungeon - Pillar Torches",
     "height": 235,
-    "offset": [ -41, -74, 20 ],
-    "radius": 300,
+    "offset": [ -60, -65, 0 ],
+    "radius": 250,
     "strength": 12.5,
     "color": [
       252,
@@ -40784,7 +41374,6 @@
     "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
-      "FIREWAVE_TRAVEL",
       "VFX_VMQ4_METZLI_RANGED_FIRE_PROJECTILE_ENRAGED_01"
     ]
   },
@@ -43110,20 +43699,19 @@
     ]
   },
   {
-    "description": "XMAS_2025_FIREPLACE_HEARTH_OUTSIDE",
-    "offset": [ 50, 60, -15 ],
-    "radius": 300,
-    "strength": 12.5,
+    "description": "Sailing - Island Hut Lantern",
+    "offset": [ 3.75, 155, 0 ],
+    "radius": 350,
+    "strength": 9,
     "color": [
       252,
       148,
       3
     ],
     "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
+    "range": 15,
     "objectIds": [
-      "XMAS24_PUB01_FIREPLACE01"
+      "HIDEOUT_LANTERN01_DEFAULT01"
     ]
   },
   {
@@ -43265,6 +43853,72 @@
     "range": 20,
     "objectIds": [
       "FAI_VARROCK_RANGE_WITH_PIPE"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_EXIT_LIGHT_SMALL",
+    "offset": [ -75, 85, -10 ],
+    "radius": 120,
+    "strength": 30,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GRIMSTONE_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_EXIT_LIGHT_LARGE",
+    "offset": [ -125, 115, -10 ],
+    "radius": 600,
+    "strength": 1.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GRIMSTONE_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_FURNACE_BOTTOM",
+    "offset": [ 0, 100, -250 ],
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "GRIMSTONE_FURNACE"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_FURNACE_TOP",
+    "offset": [ 0, 375, -150 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "GRIMSTONE_FURNACE"
     ]
   }
 ]
