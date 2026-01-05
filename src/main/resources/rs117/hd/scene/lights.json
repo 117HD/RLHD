@@ -41190,6 +41190,52 @@
     "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
   },
   {
+    "description": "Scythe of Vitur - Swing - Red",
+    "offset": [ 0, 0, 0 ],
+    "radius": 275,
+    "spawnDelay": 650,
+    "fixedDespawnTime": true,
+    "despawnDelay": 910,
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 550,
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_RED",
+      "DRAGON_HALBERD_SPECIAL_NORTH_RED",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_RED",
+      "DRAGON_HALBERD_SPECIAL_EAST_RED"
+    ]
+  },
+  {
+    "description": "Scythe of Vitur - Swing - White",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "spawnDelay": 650,
+    "fixedDespawnTime": true,
+    "despawnDelay": 910,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 550,
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_WHITE",
+      "DRAGON_HALBERD_SPECIAL_NORTH_WHITE",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_WHITE",
+      "DRAGON_HALBERD_SPECIAL_EAST_WHITE"
+    ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
     "offset": [ 0, 350, 0 ],
     "radius": 500,
