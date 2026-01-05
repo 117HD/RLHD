@@ -1054,16 +1054,16 @@ public class HdPlugin extends Plugin {
 
 	private void initializeUbos() {
 		uboGlobal = new UBOGlobal();
-		uboGlobal.initialize(HdPlugin.UNIFORM_BLOCK_GLOBAL);
+		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 
 		uboUI = new UBOUI();
-		uboUI.initialize(HdPlugin.UNIFORM_BLOCK_UI);
+		uboUI.initialize(UNIFORM_BLOCK_UI);
 
 		uboLights = new UBOLights(false);
-		uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
+		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
 
 		uboLightsCulling = new UBOLights(true);
-		uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
+		uboLightsCulling.initialize(UNIFORM_BLOCK_LIGHTS_CULLING);
 	}
 
 	private void destroyUbos() {
