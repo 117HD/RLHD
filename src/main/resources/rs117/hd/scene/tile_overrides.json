@@ -1535,6 +1535,14 @@
     ]
   },
   {
+    "name": "SOPHANEM_UNDERWALL_FIX",
+    "area": "SOPHANEM",
+    "blended": false,
+    "overlayIds": [
+      206
+    ]
+  },
+  {
     "name": "TAG - FIXES - END"
   },
   {
@@ -9765,7 +9773,8 @@
     "overlayIds": [
       48,
       120,
-      185
+      185,
+      198
     ],
     "groundMaterial": "GRUNGE"
   },

@@ -1464,6 +1464,12 @@
     "brightness": 1.177
   },
   {
+    "name": "GRUNGE_3_LIGHT_MATTE",
+    "parent": "GRUNGE_3_LIGHT",
+    "specularStrength": 0.15,
+    "specularGloss": 10.0
+  },
+  {
     "name": "GRUNGE_3_LIGHT_SHINY",
     "parent": "GRUNGE_3_LIGHT",
     "specularStrength": 0.5,

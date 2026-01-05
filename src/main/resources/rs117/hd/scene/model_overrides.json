@@ -1911,11 +1911,12 @@
     ]
   },
   {
-    "description": "Objects - Tree - Teak",
+    "description": "Objects - Tree - Teak - Depth Fix",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 0.66,
+    "depthBias": 1,
     "colorOverrides": [
       {
         "description": "Leaves",
@@ -2362,7 +2363,7 @@
     ]
   },
   {
-    "description": "Tirannwn - Tents",
+    "description": "Tirannwn - Desert - Tents",
     "baseMaterial": "BURLAP",
     "objectIds": [
       "REGICIDE_DARKELF_TENTROOF",
@@ -2371,7 +2372,10 @@
       "REGICIDE_TENT_HUMAN",
       "REGICIDE_TENTROOF1_HUMAN",
       "REGICDE_TENTROOFCENTRE1",
-      "REGICIDE_TENTROOFCENTRE1"
+      "REGICIDE_TENTROOFCENTRE1",
+      "ICTHALARINS_TENTROOFCENTRE1",
+      "ICTHALARINS_TENTROOF1_HUMAN",
+      "ICTHALARINS_TENT_HUMAN"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -10238,6 +10242,16 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.5
+  },
+  {
+    "description": "Icthlarins Cave",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "inheritTileColorType": "OVERLAY",
+    "objectIds": [
+      "ICTHAL_ENTRANCE_OPEN"
+    ]
   },
   {
     "description": "Motherlode Mine Water Wheel",
@@ -19321,12 +19335,13 @@
     ]
   },
   {
-    "description": "Nardah - Chemestry Table",
+    "description": "Nardah - Chemistry Table",
     "baseMaterial": "GRAY_75",
     "uvType": "BOX",
     "uvOrientation": 512,
     "objectIds": [
-      "BCS_CHEMISTY_TABLE_NOOP"
+      "BCS_CHEMISTY_TABLE_NOOP",
+      "BCS_CHEMISTY_TABLE_OP"
     ],
     "colorOverrides": [
       {
@@ -19394,7 +19409,7 @@
     ]
   },
   {
-    "description": "Nardah - Double Doors",
+    "description": "Nardah - Sophanem - Double Doors",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -19402,7 +19417,9 @@
       "ELID_BANK_DOOR",
       "ELID_BANK_DOOR_MIRROR",
       "ELID_TEMPLE_DOOR_OPEN_MIRROR",
-      "ELID_TEMPLE_DOOR_OPEN"
+      "ELID_TEMPLE_DOOR_OPEN",
+      "CONTACT_BANK_DOOR",
+      "CONTACT_BANK_DOOR_MIRROR"
     ],
     "colorOverrides": [
       {
@@ -20261,7 +20278,8 @@
       "ICTHALARINS_CITY_WALL_TABLET",
       "ICTHALARINS_CITY_WALL_LEV2",
       "ICTHALARINS_CITY_WALL_TABLET_LEV2",
-      "ICTHALARINS_CITY_WALL_TOP"
+      "ICTHALARINS_CITY_WALL_TOP",
+      "ICS_WALL_CRACK"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -21272,10 +21290,91 @@
       "SOPHANEM_GATE_LEFT",
       "SOPHANEM_GATE_LEFT_INACTIVE",
       "SOPHANEM_GATE_RIGHT",
-      "SOPHANEM_GATE_RIGHT_INACTIVE"
+      "SOPHANEM_GATE_RIGHT_INACTIVE",
+      "CONTACT_METAL_RAIL"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Sophanem - Bank Table",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      "CONTACT_BANK_TABLE_01",
+      "CONTACT_BANK_TABLE_02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Sophanem - Bank Vault",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 488,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "CONTACT_BANK_VAULT"
+    ]
+  },
+  {
+    "description": "Sophanem - Altars",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvOrientation": 488,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -512
+      }
+    ],
+    "objectIds": [
+      "CONTACT_LESSER_GOD_TEMPLE_ALTAR_FIXED",
+      "CONTACT_HIGH_PRIEST_TEMPLE_ALTAR"
+    ]
+  },
+  {
+    "description": "Sophanem - Wall Decorations - Crook",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 488,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "CONTACT_HIGH_PRIEST_TEMPLE_DECOR",
+      "CONTACT_TEMPLE_DECOR",
+      "CONTACT_TEMPLE_DECOR_CRONDIS",
+      "CONTACT_TEMPLE_DECOR_HET",
+      "CONTACT_TEMPLE_DECOR_APMEKEN",
+      "CONTACT_TEMPLE_DECOR_SCABARAS"
+    ]
   },
   {
     "description": "Necropolis ground objects - unused - none of these exist on the map",
@@ -25499,39 +25598,186 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Ruins of Ullek - Walls - Pillars - Floors - Furnace - Well",
-    "baseMaterial": "GRUNGE_3_LIGHT",
+    "description": "Kharidian Dessert - Rocks with Sand",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h == 6",
+        "baseMaterial": "SAND_2",
+        "uvType": "WORLD_XZ",
+        "uvScale": 0.7
+      }
+    ],
     "objectIds": [
-      "BCS_MAISA_CAMP_TENT_NOOP",
+      "ROCK_DESERT_09",
+      "ROCK_DESERT_10",
+      "ROCK_DESERT_11"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek - Small rocks - Depth Fix",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "depthBias": 1,
+    "objectIds": [
+      "CLIFF_DESERT_GROUNDROCKS01",
+      "CLIFF_DESERT_GROUNDROCKS02",
+      "CLIFF_DESERT_GROUNDROCKS03"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.22
+  },
+  {
+    "description": "Ruins of Ullek - Walls - Pillars - Floors",
+    "baseMaterial": "GRUNGE_3_LIGHT_MATTE",
+    "uvType": "BOX",
+    "objectIds": [
       "CLIFF_DESERT_WALLTOP",
-      "CLIFF_DESERT_ROCK01",
-      "CLIFF_DESERT_ROCK03",
-      "OUTCROP_DESERT_ROCK1X103",
-      "OUTCROP_DESERT_ROCK1X102",
-      "OUTCROP_DESERT_ROCK1X1",
-      "OUTCROP_DESERT_ROCK2X202",
-      "OUTCROP_DESERT_ROCK2X2",
       "CLIFF_DESERT_ROCK01_NOTES",
       "CLIFF_DESERT_ROCK02",
       "CLIFF_DESERT_WALLTOP02",
       "CLIFF_DESERT_HOUSE01",
       "CLIFF_DESERT_HOUSE02",
       "CLIFF_DESERT_HOUSE03",
-      "STAIRS_DESERT_ROCK01",
-      "STAIRS_DESERT_ROCK02",
-      "STAIRS_DESERT_ROCK03",
       "CLIFF_DESERT_ROCK04",
       "CLIFF_DESERT_ROCK04_ROOF",
       "OUTCROP_DESERT_ROCK1X104",
-      "BCS_WELL_NOOP",
-      "BCS_WELL_OP",
-      "BCS_FURNACE_UNLIT_REFUEL",
       "BCS_TOMB_ENTRANCE_CLOSED",
+      "BCS_TOMB_ENTRANCE_OPEN",
       "CLIFF_DESERT_ROCK_DECORATIVE01",
-      "BCS_FURNACE_LIT",
       "BCS_PILLAR_EMBLEM_NOOP"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek - Walls - Furnace - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRUNGE_3_LIGHT_MATTE",
+    "uvType": "BOX",
+    "objectIds": [
+      "BCS_FURNACE_UNLIT_INSPECT",
+      "BCS_FURNACE_UNLIT_LIGHT",
+      "BCS_FURNACE_UNLIT_REFUEL",
+      "BCS_FURNACE_RIGHT",
+      "BCS_FURNACE_LEFT",
+      "BCS_FURNACE_LIT"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek - Walls - Well",
+    "baseMaterial": "GRUNGE_3_LIGHT_MATTE",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 37",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT_LIGHT",
+        "uvOrientation": 256,
+        "uvType": "MODEL_XZ"
+      }
     ],
-    "uvType": "BOX"
+    "objectIds": [
+      "BCS_WELL_NOOP",
+      "BCS_WELL_OP"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek - Rocks and stairs with Sand",
+    "baseMaterial": "GRUNGE_3_LIGHT_MATTE",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h == 6",
+        "baseMaterial": "SAND_2",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "OUTCROP_DESERT_ROCK1X1",
+      "OUTCROP_DESERT_ROCK1X102",
+      "OUTCROP_DESERT_ROCK2X2",
+      "OUTCROP_DESERT_ROCK2X202",
+      "OUTCROP_DESERT_ROCK1X103",
+      "STAIRS_DESERT_ROCK01",
+      "STAIRS_DESERT_ROCK02",
+      "STAIRS_DESERT_ROCK03"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek - Cliffs with Sand",
+    "baseMaterial": "GRUNGE_3_LIGHT_MATTE",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h == 6",
+        "baseMaterial": "SAND_2",
+        "uvType": "WORLD_XZ"
+      }
+    ],
+    "objectIds": [
+      "CLIFF_DESERT_ROCK01",
+      "CLIFF_DESERT_ROCK03"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek - Camp Tent under stone outcrop",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Rocky Overhang",
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3_LIGHT_MATTE",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Wooden Posts",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Tent",
+        "colors": "h == 26 || h == 28",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Plant Stalk and leaves",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Sand",
+        "colors": "h == 6",
+        "baseMaterial": "SAND_2",
+        "uvType": "WORLD_XZ"
+      }
+    ],
+    "objectIds": [
+      "BCS_MAISA_CAMP_TENT_NOOP"
+    ]
+  },
+  {
+    "description": "Ruins of Ullek - Camp Barriers",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wooden Posts",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "BCS_MAISA_CAMP_BARRIER_LONG",
+      "BCS_MAISA_CAMP_BARRIER_SHORT"
+    ]
   },
   {
     "description": "Ruins of Ullek - Ritual Pillar",
@@ -25573,10 +25819,18 @@
   {
     "description": "Ruins of Ullek - Bushes with rocks",
     "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "colors": "h == 7 && s <= 1",
+        "baseMaterial": "ROCK_1",
+        "uvType": "BOX"
+      }
+    ],
     "objectIds": [
       "PLANT_ROCKS_SWAMP01"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
     "description": "Ruins of Ullek - Wooden Planks",
@@ -25610,7 +25864,8 @@
       "BCS_ARROW_TRAP",
       "BCS_ARROW_TRAP_CORNER_DOUBLE",
       "BCS_ARROW_TRAP_CORNER01",
-      "BCS_ARROW_TRAP_CORNER02"
+      "BCS_ARROW_TRAP_CORNER02",
+      "BCS_TOMB_EXIT"
     ],
     "uvType": "BOX",
     "uvOrientation": 650
@@ -25656,15 +25911,24 @@
   {
     "description": "Ruins of Ullek Dungeon - Sarcophagus",
     "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h < 7",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ],
     "objectIds": [
       "BCS_SARGOPHAGUS"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
     "description": "Ruins of Ullek Dungeon - Altar",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
+      "BCS_TOMB_ALTAR_NOOP",
       "BCS_TOMB_ALTAR_OP"
     ],
     "uvType": "BOX"
@@ -25681,7 +25945,8 @@
       "BCS_URN_NOOP06",
       "BCS_URN_NOOP07",
       "BCS_URN_NOOP08",
-      "BCS_TOMB_URN_NOOP"
+      "BCS_TOMB_URN_NOOP",
+      "BCS_TOMB_URN_OP"
     ],
     "uvType": "BOX"
   },
@@ -25701,22 +25966,48 @@
     "uvType": "BOX"
   },
   {
-
-    "description": "Maisa's Camp - Fire, Barriers, Spade, Table and Flowers",
-    "baseMaterial": "GRUNGE_3_LIGHT",
+    "description": "Ruins of Ullek - Lever",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
-      "BCS_MAISA_CAMP_BARRIER_LONG",
-      "BCS_MAISA_CAMP_BARRIER_SHORT",
+      "BCS_TOMB_LEVER_OFF",
+      "BCS_TOMB_LEVER_ON",
+      "BCS_TOMB_WALL_LEVER_OFF",
+      "BCS_TOMB_WALL_LEVER_ON"
+    ]
+  },
+  {
+    "description": "Maisa's Camp - Fire, Spade, Table",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "BCS_MAISA_CAMP_TABLE",
+      "BCS_MAISA_CAMP_FIRE",
+      "BCS_SPADE"
+    ]
+  },
+  {
+    "description": "Maisa's Camp - Flowers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Plant Stalk and leaves",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
       "PLANT_DESERT_MAISA_01",
+      "PLANT_DESERT_MAISA_02",
       "PLANT_DESERT_MAISA_03",
       "PLANT_DESERT_MAISA_04",
       "PLANT_DESERT_MAISA_05",
       "PLANT_DESERT_MAISA_06",
-      "BCS_MAISA_CAMP_TABLE",
-      "BCS_MAISA_CAMP_FIRE",
-      "BCS_SPADE"
-    ],
-    "uvType": "BOX"
+      "BCS_NOLILY_OP"
+    ]
   },
   {
     "description": "Rocks - Small",
@@ -29739,6 +30030,7 @@
       "CHICKENQUEST_SKELETON_1",
       "CHICKENQUEST_SKELETON_2",
       "CHICKENQUEST_SKELETON_3",
+      "CHICKENQUEST_SKELETON_4",
       "MY2ARM_SKELETON",
       "RAT_BOSS_CORPSE02",
       "RAT_BOSS_CORPSE01",
@@ -29754,7 +30046,9 @@
       "TAPO_SKELETON01",
       "TAPO_SKELETON02",
       "TOBQUEST_SKELETON_OP",
-      "LASSAR_CHURCH01_SKELETON01_CORPSE03"
+      "LASSAR_CHURCH01_SKELETON01_CORPSE03",
+      "BCS_SKELETON_NOOP1",
+      "BCS_SKELETON_NOOP2"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -29793,7 +30087,8 @@
       "ARENA_DESERT01_BONES02",
       "ARENA_DESERT01_BONES03",
       "ARENA_DESERT01_BONES04",
-      "FRISD_FISHMONGER_FISHBONES"
+      "FRISD_FISHMONGER_FISHBONES",
+      "BCS_TOMB_DUGUPSOIL04"
     ],
     "uvType": "BOX",
     "uvOrientation": 256
@@ -32097,7 +32392,8 @@
     "description": "Objects - Wooden - Private Bank Booth Destroyed",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "CONTACT_PRIVATE_BANK_BOOTH_BROKEN"
+      "CONTACT_PRIVATE_BANK_BOOTH_BROKEN",
+      "CONTACT_PRIVATE_BANK_BOOTH"
     ],
     "uvType": "BOX",
     "uvScale": 0.9,
@@ -40676,6 +40972,7 @@
       "ROGUESDEN_CORPSE3",
       "CORPSE3_NOBLOCK",
       "TAPO_SKELETON03",
+      "BCS_SKELETON_NOOP3",
       "CONCH_GRYPHON_BELLE"
     ],
     "colorOverrides": [
