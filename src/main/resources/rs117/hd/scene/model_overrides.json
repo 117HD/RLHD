@@ -76,8 +76,6 @@
       "GHOST8_UNAGGRESSIVE",
       "HOUSE_GHOST",
       "HOUSE_GHOST2",
-      "SMOKE_DEVIL",
-      "SMOKE_DEVIL_BOSS",
       "HOUSE_GHOST3",
       "HOUSE_GHOST4",
       "HOUSE_GHOST5",
@@ -1287,6 +1285,19 @@
         "textureMaterial": "LEAVES_ORANGE_TOP"
       }
     }
+  },
+  {
+    "description": "Tree - Achey Tree",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -1,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "ACHEY_TREE",
+      "ACHEY_TREE_STUMP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Spirit trees - Stump",
@@ -7201,7 +7212,6 @@
     "baseMaterial": "ROCK_2",
     "objectIds": [
       "CANOEING_CAVEENTRANCE_BROWN",
-      "SMOKEDEVIL_CAVE_ENTRANCE",
       "FOSSIL_WYVERN_CAVE_ENTRANCE",
       "TZHAAR_KARAMJADUNGEON_WALL_ENTRANCE",
       "RC_ZMI_DUNGEON_WALL_CRACK_ENTRANCE_EXIT",
@@ -7212,6 +7222,24 @@
     "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.5
+  },
+  {
+    "description": "SMOKEDEVIL_CAVE_ENTRANCE",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "SMOKEDEVIL_CAVE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
   },
   {
     "description": "Scorpia Cavern - Entrance",
@@ -18885,8 +18913,9 @@
       "CASTLEWARS_ZAMORAK_QUIT",
       "CASTLEWARS_RANDOM_TELE"
     ],
-    "shadowOpacityThreshold": 0.12,
-    "flatNormals": true
+    "castShadows": false,
+    "flatNormals": true,
+    "depthBias": 255
   },
   {
     "description": "Use flat normals for POH Portal Nexus, since it spins around",
@@ -35393,6 +35422,23 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 128
+  },
+  {
+    "description": "Smoke Devil Dungeon Cave Entrance and Exits",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "SLAYER_CAVE_SMOKEDEVIL_BOSS_ENTRANCE",
+      "SLAYER_CAVE_SMOKEDEVIL_BOSS_EXIT",
+      "SLAYER_CAVE_PASSAGE_SMOKEDEVIL_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Keldagrim - Metallic - Metal Walls - Exterior",
@@ -72701,6 +72747,30 @@
       "TWOCATS_TABLE_MILK",
       "TWOCATS_TABLE_CAKE",
       "TWOCATS_TABLE_CAKE_MILK"
+    ]
+  },
+  {
+    "description": "SMOKE_DEVIL_BOSS",
+    "npcIds": [
+      "SMOKE_DEVIL_BOSS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 196",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "SMOKE_DEVIL",
+    "npcIds": [
+      "SMOKE_DEVIL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 6",
+        "baseMaterial": "GRAY_150"
+      }
     ]
   }
 ]

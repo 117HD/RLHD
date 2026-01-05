@@ -8494,7 +8494,6 @@
     "uvScale": 2,
     "uvOrientation": 89,
     "shiftLightness": 16,
-
     "replacements": {
       "NONE": "!textures"
     }
