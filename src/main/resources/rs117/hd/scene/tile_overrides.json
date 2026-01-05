@@ -94,7 +94,7 @@
     "name": "SEASONAL_SNOW",
     "replacements": {
       "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
-      "WINTER_DIRT": true
+      "DEFAULT_SNOW": true
     }
   },
   {
@@ -152,6 +152,19 @@
   {
     "name": "WINTER_JAGGED_STONE_TILE_LIGHT_2",
     "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT_2"
+  },
+  {
+    "name": "WINTER_EAST_ARDOUGNE_BRIDGE",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "maxLightness": 53,
+    "replacements": {
+      "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND": "!blending"
+    }
+  },
+  {
+    "name": "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "maxLightness": 44
   },
   {
     "name": "WINTER_EDGEVILLE_PATH",
@@ -1505,6 +1518,20 @@
     "blended": false,
     "overlayIds": [
       134
+    ]
+  },
+  {
+    "name": "RIMMINGTON_PATH_BLEND_FIX",
+    "area": "RIMMINGTON_PATH_BLEND_FIX",
+    "groundMaterial": "GRAVEL",
+    "setHue": 0,
+    "setSaturation": 0,
+    "minLightness": 24,
+    "maxLightness": 26,
+    "overlayIds": [
+      10,
+      81,
+      88
     ]
   },
   {
@@ -3397,7 +3424,8 @@
     "minLightness": 33,
     "maxLightness": 33,
     "replacements": {
-      "NONE": "!textures"
+      "NONE": "!textures",
+      "WINTER_EAST_ARDOUGNE_BRIDGE": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -3767,15 +3795,21 @@
   {
     "name": "DRAYNOR_MANOR_ENTRANCE_PATH",
     "area": "DRAYNOR_MANOR",
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "minLightness": 12,
+    "maxLightness": 14,
+    "uvOrientation": 488,
     "overlayIds": [
       2,
+      11,
       90,
       117,
       120,
       127,
       132
-    ],
-    "groundMaterial": "VARROCK_PATHS"
+    ]
   },
   {
     "name": "WIZARDS_TOWER_PATH",
@@ -5654,10 +5688,13 @@
     "overlayIds": [
       33
     ],
-    "groundMaterial": "MARBLE_1_GLOSS",
+    "groundMaterial": "MARBLE_4_GLOSS",
+    "shiftLightness": 10,
+    "uvScale": 1.33,
     "blended": false,
     "replacements": {
-      "SNOW_2": "season == SeasonalTheme.WINTER"
+      "SNOW_2": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
     }
   },
   {
@@ -7859,8 +7896,7 @@
   },
   {
     "name": "FREM_COLONIES_SEASONAL_SNOW",
-    "minHue": 3,
-    "maxHue": 7,
+    "maxHue": 0,
     "maxLightness": 63,
     "replacements": {
       "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
@@ -9212,6 +9248,46 @@
     "setLightness": 72
   },
   {
+    "name": "GRIMSTONE_DUNGEON_FLOOR",
+    "area": "GRIMSTONE_DUNGEON",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58,
+      159,
+      161
+    ],
+    "shiftLightness": 22,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "GRIMSTONE",
+    "area": "GRIMSTONE",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58
+    ],
+    "shiftLightness": 30,
+    "maxLightness": 105,
+    "replacements": {
+      "NONE": "!textures",
+      "GRIMSTONE_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "GRIMSTONE_NO_BLENDING",
+    "area": "GRIMSTONE",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58
+    ],
+    "maxLightness": 95,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {
@@ -9316,6 +9392,8 @@
       92
     ],
     "groundMaterial": "SNOW_1",
+    "setHue": 0,
+    "shiftLightness": 15,
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
@@ -9339,7 +9417,7 @@
       "SEASONAL_DIRT": "s == 1",
       "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     },
-    "maxLightness": 75
+    "maxLightness": 77
   },
   {
     "name": "TAG - OVERWORLD - START"
