@@ -844,7 +844,11 @@ public class Zone {
 				assert z != null;
 				assert z != this;
 
-				AlphaModel m2 = modelCache.poll();
+				AlphaModel m2;
+				synchronized (modelCache)
+				{
+					m2 = modelCache.poll();
+				}
 				if (m2 == null)
 					m2 = new AlphaModel();
 				m2.id = m.id;
