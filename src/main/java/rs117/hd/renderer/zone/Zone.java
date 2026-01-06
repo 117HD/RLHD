@@ -327,13 +327,13 @@ public class Zone {
 	private static int drawIdx = 0;
 	private static int[] glDrawOffset, glDrawLength;
 
-	private static final int[][] glDrawOffsetPreAlloc = new int[15][];
-	private static final int[][] glDrawLengthPreAlloc = new int[15][];
+	private static final int[][] glDrawOffsetPreAlloc = new int[16][];
+	private static final int[][] glDrawLengthPreAlloc = new int[16][];
 
 	static {
 		for (int i = 0; i < glDrawOffsetPreAlloc.length; ++i) {
-			glDrawOffsetPreAlloc[i] = new int[i + 1];
-			glDrawLengthPreAlloc[i] = new int[i + 1];
+			glDrawOffsetPreAlloc[i] = new int[i];
+			glDrawLengthPreAlloc[i] = new int[i];
 		}
 	}
 
@@ -852,7 +852,7 @@ public class Zone {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
-			if (glDrawOffset.length == 1) {
+			if (drawIdx == 1) {
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
@@ -860,9 +860,9 @@ public class Zone {
 				}
 			} else {
 				if (GL_CAPS.OpenGL43 && SUPPORTS_INDIRECT_DRAW) {
-					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, ZoneRenderer.indirectDrawCmdsStaging);
+					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx, ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
-					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx);
 				}
 			}
 			drawIdx = 0;
