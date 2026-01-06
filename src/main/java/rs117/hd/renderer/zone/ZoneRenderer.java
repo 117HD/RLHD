@@ -153,6 +153,7 @@ public class ZoneRenderer implements Renderer {
 
 	private final RenderState renderState = new RenderState();
 	private final CommandBuffer sceneCmd = new CommandBuffer(renderState);
+	private final CommandBuffer sceneWaterCmd = new CommandBuffer(renderState);
 	private final CommandBuffer directionalCmd = new CommandBuffer(renderState);
 
 	private VAO.VAOList vaoO;
@@ -626,6 +627,7 @@ public class ZoneRenderer implements Renderer {
 		eboAlphaStaging.clear();
 		indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
+		sceneWaterCmd.reset();
 		directionalCmd.reset();
 		renderState.reset();
 
@@ -750,8 +752,13 @@ public class ZoneRenderer implements Renderer {
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
-		// Render the scene
+		// Render scene opaque & alpha
 		sceneCmd.execute();
+
+		// Render scene water
+		renderState.depthMask.set(false);
+		sceneWaterCmd.execute();
+		renderState.depthMask.set(true);
 
 		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
@@ -908,9 +915,7 @@ public class ZoneRenderer implements Renderer {
 
 		boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
 		if (renderWater) {
-			sceneCmd.DepthMask(false);
-			z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
-			sceneCmd.DepthMask(true);
+			z.renderOpaqueLevel(sceneWaterCmd, Zone.LEVEL_WATER_SURFACE);
 		}
 
 		boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
