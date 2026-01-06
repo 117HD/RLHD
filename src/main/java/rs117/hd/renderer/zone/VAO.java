@@ -3,39 +3,43 @@ package rs117.hd.renderer.zone;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.buffer.GLTextureBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
+import static rs117.hd.HdPlugin.NVIDIA_GPU;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
+import static rs117.hd.utils.MathUtils.*;
 
 class VAO {
-	// Zone vertex format
+	// Temp vertex format
 	// pos float vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	// alphaBiasHsl int
-	// materialData int
-	// terrainData int
-	static final int VERT_SIZE = 36;
+	static final int VERT_SIZE = 28;
 
 	// Metadata format
-	// worldViewIndex int int
-	static final int METADATA_SIZE = 4;
+	// worldViewIndex int
+	// dummy sceneOffset ivec2 for macOS workaround
+	static final int METADATA_SIZE = 12;
 
 	final VBO vbo;
+	final GLTextureBuffer tboF;
 	int vao;
 	int vboMetadata;
 
 	VAO(int size) {
 		vbo = new VBO(size);
+		tboF = new GLTextureBuffer("Textured Faces", GL_DYNAMIC_DRAW);
 	}
 
-	void initialize(int ebo, @Nullable VBO vboMetadata) {
+	void initialize(int ebo, @Nonnull VBO vboMetadata) {
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 
@@ -57,42 +61,39 @@ class VAO {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 18);
 
-		// Alpha, bias & HSL
+		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
 		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
-
-		// Material data
-		glEnableVertexAttribArray(4);
-		glVertexAttribIPointer(4, 1, GL_INT, VERT_SIZE, 28);
-
-		// Terrain data
-		glEnableVertexAttribArray(5);
-		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 32);
 
 		bindMetadata(vboMetadata);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
+
+		tboF.initialize(VAOList.TBO_SIZE);
 	}
 
-	void bindMetadata(@Nullable VBO vboMetadata) {
+	void bindMetadata(@Nonnull VBO vboMetadata) {
 		glBindVertexArray(vao);
-		if (vboMetadata == null) {
-			this.vboMetadata = 0;
-			glDisableVertexAttribArray(6);
-		} else {
-			this.vboMetadata = vboMetadata.bufId;
-			glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
+		this.vboMetadata = vboMetadata.bufId;
+		glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
 
-			// WorldView index (not ID)
-			glEnableVertexAttribArray(6);
-			glVertexAttribDivisor(6, 1);
-			glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
+		// WorldView index (not ID)
+		glEnableVertexAttribArray(6);
+		glVertexAttribDivisor(6, 1);
+		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
+
+		if (!NVIDIA_GPU) {
+			// Workaround for incorrect implementations of disabled vertex attribs, particularly on macOS
+			glEnableVertexAttribArray(7);
+			glVertexAttribDivisor(7, 1);
+			glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
 		}
 	}
 
 	void destroy() {
 		vbo.destroy();
+		tboF.destroy();
 		glDeleteVertexArrays(vao);
 		vao = 0;
 	}
@@ -123,6 +124,7 @@ class VAO {
 		assert !vbo.mapped;
 
 		cmd.BindVertexArray(vao);
+		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
 
 		int start = 0;
 		for (int i = 0; i < off; ++i) {
@@ -153,25 +155,28 @@ class VAO {
 	@RequiredArgsConstructor
 	static class VAOList {
 		// this needs to be larger than the largest single model
-		private static final int VAO_SIZE = 4 * 1024 * 1024;
+		private static final int VAO_SIZE = (int) (4 * MiB);
+		private static final int TBO_SIZE = ceil(VAO_SIZE / (3f * VERT_SIZE)) * 9 * Integer.BYTES;
 
 		private int curIdx;
 		private int drawCount;
 		private final List<VAO> vaos = new ArrayList<>();
 		private final int eboAlpha;
 
-		VAO get(int size, @Nullable VBO vboMetadata) {
+		VAO get(int size, @Nonnull VBO vboMetadata) {
 			assert size <= VAO_SIZE;
 
 			while (curIdx < vaos.size()) {
 				VAO vao = vaos.get(curIdx);
 				boolean wasMapped = vao.vbo.mapped;
-				if (!wasMapped)
+				if (!wasMapped) {
 					vao.vbo.map();
+					vao.tboF.map();
+				}
 
 				int rem = vao.vbo.vb.remaining() * Integer.BYTES;
 				if (size <= rem) {
-					if (vao.vboMetadata == (vboMetadata == null ? 0 : vboMetadata.bufId))
+					if (vao.vboMetadata == vboMetadata.bufId)
 						return vao;
 
 					if (!wasMapped) {
@@ -186,6 +191,7 @@ class VAO {
 			VAO vao = new VAO(VAO_SIZE);
 			vao.initialize(eboAlpha, vboMetadata);
 			vao.vbo.map();
+			vao.tboF.map();
 			vaos.add(vao);
 			log.debug("Allocated VAO {} request {}", vao.vao, size);
 			return vao;
@@ -197,6 +203,7 @@ class VAO {
 				if (vao.vbo.mapped) {
 					++sz;
 					vao.vbo.unmap();
+					vao.tboF.unmap();
 				}
 			}
 			curIdx = 0;

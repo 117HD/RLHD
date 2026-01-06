@@ -204,7 +204,7 @@ public final class MathUtils {
 	 * Modulo which returns the answer with the same sign as the modulus.
 	 */
 	public static int mod(int v, int mod) {
-		return v - (v / mod) * mod;
+		return Math.floorMod(v, mod);
 	}
 
 	/**
@@ -298,6 +298,10 @@ public final class MathUtils {
 
 	public static float[] log2(float... v) {
 		return log2(new float[v.length], v);
+	}
+
+	public static float rcp(float v) {
+		return 1.0f / v;
 	}
 
 	public static float sqrt(float v) {

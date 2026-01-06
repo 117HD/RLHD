@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.utils.buffer.GLTextureBuffer;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -31,6 +32,7 @@ public final class ZoneUploadJob extends Job {
 	Zone zone;
 	int x, z;
 	float delay;
+	boolean shouldUnmap;
 
 	@Override
 	protected void onRun() throws InterruptedException {
@@ -45,17 +47,16 @@ public final class ZoneUploadJob extends Job {
 			if (zone.sizeO > 0 || zone.sizeA > 0) {
 				workerHandleCancel();
 
-				invokeClientCallback(isHighPriority(), this::mapZoneVertexBuffers);
+				invokeClientCallback(this::mapZoneVertexBuffers);
 				workerHandleCancel();
 
 				sceneUploader.uploadZone(sceneContext, zone, x, z);
 				workerHandleCancel();
 
-				invokeClientCallback(isHighPriority(), this::unmapZoneVertexBuffers);
-			} else {
-				// The zone should not be left uninitialized, as this will prevent drawing anything within it
-				zone.initialized = true;
+				if (shouldUnmap)
+					invokeClientCallback(zone::unmap);
 			}
+			zone.initialized = true;
 		} finally {
 			sceneUploader.clear();
 		}
@@ -78,7 +79,15 @@ public final class ZoneUploadJob extends Job {
 				a.map();
 			}
 
-			zone.initialize(o, a, eboAlpha);
+			GLTextureBuffer f = null;
+			sz = zone.sizeF * Zone.TEXTURE_SIZE;
+			if (sz > 0) {
+				f = new GLTextureBuffer("Textured Faces", GL_STATIC_DRAW);
+				f.initialize(sz);
+				f.map();
+			}
+
+			zone.initialize(o, a, f, eboAlpha);
 			zone.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(
@@ -91,11 +100,6 @@ public final class ZoneUploadJob extends Job {
 			);
 			cancel();
 		}
-	}
-
-	private void unmapZoneVertexBuffers() {
-		zone.unmap();
-		zone.initialized = true;
 	}
 
 	@Override
@@ -118,7 +122,14 @@ public final class ZoneUploadJob extends Job {
 		POOL.add(this);
 	}
 
-	public static ZoneUploadJob build(WorldViewContext viewContext, ZoneSceneContext sceneContext, Zone zone, int x, int z) {
+	public static ZoneUploadJob build(
+		WorldViewContext viewContext,
+		ZoneSceneContext sceneContext,
+		Zone zone,
+		boolean shouldUnmap,
+		int x,
+		int z
+	) {
 		assert viewContext != null : "WorldViewContext cant be null";
 		assert sceneContext != null : "ZoneSceneContext cant be null";
 		assert zone != null : "Zone cant be null";
@@ -130,6 +141,7 @@ public final class ZoneUploadJob extends Job {
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
 		newTask.zone = zone;
+		newTask.shouldUnmap = shouldUnmap;
 		newTask.x = x;
 		newTask.z = z;
 		newTask.isReleased = false;
