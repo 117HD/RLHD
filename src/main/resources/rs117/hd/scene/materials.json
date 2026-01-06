@@ -1041,6 +1041,11 @@
     "brightness": 0.85
   },
   {
+    "name": "GRAY_80",
+    "parent": "NONE",
+    "brightness": 0.8
+  },
+  {
     "name": "GRAY_75",
     "parent": "NONE",
     "brightness": 0.75
@@ -1121,6 +1126,43 @@
     "specularGloss": 80.0
   },
   {
+    "name": "SMOOTH_SNOW_N"
+  },
+  {
+    "name": "SMOOTH_SNOW",
+    "normalMap": "SMOOTH_SNOW_N",
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "SMOOTH_SNOW_DIM",
+    "parent": "SMOOTH_SNOW",
+    "brightness": 0.9
+  },
+  {
+    "name": "SMOOTH_SNOW_SEMI_DARK",
+    "parent": "SMOOTH_SNOW",
+    "brightness": 0.85
+  },
+  {
+    "name": "SMOOTH_SNOW_DARK",
+    "parent": "SMOOTH_SNOW",
+    "brightness": 0.735
+  },
+  {
+    "name": "SMOOTH_SNOW_COLORED",
+    "normalMap": "SMOOTH_SNOW_N",
+    "overrideBaseColor": true,
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "BASE_GLOSS",
+    "parent": "GRAY_85",
+    "specularStrength": 0.8,
+    "specularGloss": 120.0
+  },
+  {
     "name": "SNOW_1_N"
   },
   {
@@ -1139,18 +1181,6 @@
     "specularGloss": 20.0
   },
   {
-    "name": "SNOW_2_DARK",
-    "parent": "SNOW_2",
-    "brightness": 0.735
-  },
-  {
-    "name": "SNOW_COLORED",
-    "normalMap": "SNOW_1_N",
-    "overrideBaseColor": true,
-    "specularStrength": 0.4,
-    "specularGloss": 20.0
-  },
-  {
     "name": "SNOW_3_N"
   },
   {
@@ -1160,18 +1190,9 @@
     "specularGloss": 20.0
   },
   {
-    "name": "SNOW_4_N"
-  },
-  {
-    "name": "SNOW_4",
-    "normalMap": "SNOW_4_N",
-    "specularStrength": 0.4,
-    "specularGloss": 20.0
-  },
-  {
-    "name": "SNOW_4_DARK",
-    "parent": "SNOW_4",
-    "brightness": 0.9
+    "name": "SNOW_3_DARK",
+    "parent": "SNOW_3",
+    "brightness": 0.8
   },
   {
     "name": "GRASS_1"
@@ -1181,6 +1202,11 @@
   },
   {
     "name": "GRASS_3"
+  },
+  {
+    "name": "GRASS_1_DARK",
+    "parent": "GRASS_1",
+    "brightness": 0.86
   },
   {
     "name": "GRASS_SCROLLING",
@@ -1209,6 +1235,21 @@
     "brightness": 1.1
   },
   {
+    "name": "DIRT_1_SEMI_DARK",
+    "parent": "DIRT_1",
+    "brightness": 0.8
+  },
+  {
+    "name": "DIRT_1_DARK",
+    "parent": "DIRT_1",
+    "brightness": 0.7
+  },
+  {
+    "name": "DIRT_1_VERY_DARK",
+    "parent": "DIRT_1",
+    "brightness": 0.65
+  },
+  {
     "name": "DIRT_1_VERT",
     "parent": "DIRT_1",
     "normalMap": null
@@ -1231,6 +1272,16 @@
     "name": "DIRT_2_LIGHT",
     "parent": "DIRT_2",
     "brightness": 1.083
+  },
+  {
+    "name": "DIRT_2_VERY_LIGHT",
+    "parent": "DIRT_2",
+    "brightness": 1.15
+  },
+  {
+    "name": "DIRT_2_DARK",
+    "parent": "DIRT_2",
+    "brightness": 0.85
   },
   {
     "name": "GRAVEL_N"
@@ -1374,6 +1425,12 @@
     "specularGloss": 20.0
   },
   {
+    "name": "GRUNGE_2_MATTE",
+    "parent": "GRUNGE_2",
+    "specularStrength": 0.15,
+    "specularGloss": 10.0
+  },
+  {
     "name": "GRUNGE_2_SHINY",
     "parent": "GRUNGE_2",
     "specularStrength": 0.7,
@@ -1409,6 +1466,12 @@
     "normalMap": null
   },
   {
+    "name": "GRUNGE_3_GLOSS",
+    "parent": "GRUNGE_3",
+    "specularStrength": 0.4,
+    "specularGloss": 60.0
+  },
+  {
     "name": "GRUNGE_3_SHINY",
     "parent": "GRUNGE_3",
     "brightness": 1.177,
@@ -1419,6 +1482,12 @@
     "name": "GRUNGE_3_LIGHT",
     "parent": "GRUNGE_3",
     "brightness": 1.177
+  },
+  {
+    "name": "GRUNGE_3_LIGHT_MATTE",
+    "parent": "GRUNGE_3_LIGHT",
+    "specularStrength": 0.15,
+    "specularGloss": 10.0
   },
   {
     "name": "GRUNGE_3_LIGHT_SHINY",
@@ -1754,6 +1823,11 @@
     "normalMap": null
   },
   {
+    "name": "CARPET_SEMI_DARK",
+    "parent": "CARPET",
+    "brightness": 0.85
+  },
+  {
     "name": "CARPET_DARK",
     "parent": "CARPET",
     "brightness": 0.701
@@ -1890,6 +1964,11 @@
     "brightness": 1.15
   },
   {
+    "name": "MARBLE_1_DARK",
+    "parent": "MARBLE_1",
+    "brightness": 0.85
+  },
+  {
     "name": "MARBLE_2_GLOSS",
     "parent": "MARBLE_2",
     "specularStrength": 0.8,
@@ -1944,6 +2023,11 @@
     "parent": "MARBLE_4_LOW_CONTRAST",
     "specularStrength": 1,
     "specularGloss": 80.0
+  },
+  {
+    "name": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "parent": "MARBLE_4_LOW_CONTRAST_GLOSS",
+    "brightness": 1.8
   },
   {
     "name": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
@@ -2060,9 +2144,23 @@
     "specularGloss": 30.0
   },
   {
+    "name": "SEMI_LIGHT_BARK",
+    "parent": "BARK",
+    "brightness": 1.177
+  },
+  {
     "name": "LIGHT_BARK",
     "parent": "BARK",
     "brightness": 1.277
+  },
+  {
+    "name": "LIGHT_BARK_SMOOTH",
+    "parent": "LIGHT_BARK",
+    "textureScale": [
+      1,
+      1,
+      0.7
+    ]
   },
   {
     "name": "VERY_LIGHT_BARK",
@@ -2091,12 +2189,31 @@
     "brightness": 1.277
   },
   {
-    "name": "LEAF_VEINS"
+    "name": "LEAF_VEINS_N"
+  },
+  {
+    "name": "LEAF_VEINS",
+    "normalMap": "LEAF_VEINS_N",
+    "specularStrength": 0.15,
+    "specularGloss": 20.0
   },
   {
     "name": "LEAF_VEINS_LIGHT",
     "parent": "LEAF_VEINS",
     "brightness": 1.083
+  },
+  {
+    "name": "LEAF_VEINS_PALM",
+    "parent": "LEAF_VEINS",
+    "specularStrength": 0.4,
+    "specularGloss": 60.0
+  },
+  {
+    "name": "LEAF_VEINS_PALM_LIGHT",
+    "parent": "LEAF_VEINS",
+    "brightness": 1.18,
+    "specularStrength": 0.4,
+    "specularGloss": 60.0
   },
   {
     "name": "LEAF_VEINS_DARK",
@@ -2204,9 +2321,13 @@
     "brightness": 1.228
   },
   {
-    "name": "WOOD_GRAIN_3_SEMILIGHT_DULL",
+    "name": "WOOD_GRAIN_3_SEMILIGHT",
     "parent": "WOOD_GRAIN_3",
-    "brightness": 1.083,
+    "brightness": 1.083
+  },
+  {
+    "name": "WOOD_GRAIN_3_SEMILIGHT_DULL",
+    "parent": "WOOD_GRAIN_3_SEMILIGHT",
     "specularStrength": 0.0,
     "specularGloss": 0.0
   },
@@ -2420,9 +2541,24 @@
     "normalMap": "STONE_N"
   },
   {
-    "name": "SMOOTH_STONE_DARK",
+    "name": "SMOOTH_STONE_SLIGHTLY_LIGHT",
+    "parent": "SMOOTH_STONE",
+    "brightness": 1.05
+  },
+  {
+    "name": "SMOOTH_STONE_SEMI_DARK",
     "parent": "SMOOTH_STONE",
     "brightness": 0.95
+  },
+  {
+    "name": "SMOOTH_STONE_DARK",
+    "parent": "SMOOTH_STONE",
+    "brightness": 0.85
+  },
+  {
+    "name": "SMOOTH_STONE_VERY_LIGHT",
+    "parent": "SMOOTH_STONE",
+    "brightness": 1.6
   },
   {
     "name": "GEM_STONE",
@@ -2569,7 +2705,7 @@
   },
   {
     "name": "ICE_1",
-    "parent": "SNOW_4",
+    "parent": "SMOOTH_SNOW",
     "specularStrength": 1.1,
     "specularGloss": 200.0,
     "materialsToReplace": [
@@ -2586,7 +2722,7 @@
   },
   {
     "name": "ICE_2",
-    "parent": "SNOW_2",
+    "parent": "SMOOTH_SNOW",
     "specularStrength": 1.5,
     "specularGloss": 800.0
   },
@@ -2876,6 +3012,22 @@
     "parent": "GRAY_75",
     "specularStrength": 0.5,
     "specularGloss": 100
+  },
+  {
+    "name": "SEASONLESS_LEAVES_SIDE",
+    "parent": "LEAVES_SIDE"
+  },
+  {
+    "name": "SEASONLESS_LEAVES_TOP",
+    "parent": "LEAVES_TOP"
+  },
+  {
+    "name": "SEASONLESS_WILLOW_LEAVES",
+    "parent": "WILLOW_LEAVES"
+  },
+  {
+    "name": "SEASONLESS_MAPLE_LEAVES",
+    "parent": "MAPLE_LEAVES"
   },
   {
     "name": "LEAVES_YELLOW_SIDE",

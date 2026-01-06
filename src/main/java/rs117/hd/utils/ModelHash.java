@@ -86,6 +86,10 @@ public class ModelHash {
 		return (int) (hash >> 20);
 	}
 
+	public static boolean isTemporaryObject(long hash) {
+		return getIdOrIndex(hash) == 0xFFFFFFFF;
+	}
+
 	/**
 	 * Generate an identifier of a Renderable, consisting of the type and ID.
 	 *

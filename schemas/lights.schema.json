@@ -69,7 +69,7 @@
         "minItems": 3,
         "maxItems": 3,
         "items": {
-          "type": "integer"
+          "type": "number"
         }
       },
       "height": {
