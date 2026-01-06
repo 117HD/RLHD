@@ -8,7 +8,7 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.jobs.Job;
 
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.renderer.zone.Zone.AlphaModel.SORT_TYPE_FAR;
+import static rs117.hd.renderer.zone.Zone.AlphaModel.SORT_TYPE_DISTANCE;
 import static rs117.hd.utils.HDUtils.ceilPow2;
 
 @RequiredArgsConstructor
@@ -32,7 +32,7 @@ public final class StaticAlphaSortingJob extends Job {
 		}
 
 		m.asyncSortIdx = size;
-		if(farZone) m.flags |= SORT_TYPE_FAR;
+		if(farZone) m.flags |= SORT_TYPE_DISTANCE;
 		states.set(size, 0);
 		models[size] = m;
 		size++;
@@ -62,10 +62,10 @@ public final class StaticAlphaSortingJob extends Job {
 	}
 
 	private void processModel(FacePrioritySorter sorter, AlphaModel m) {
-		if((m.flags & SORT_TYPE_FAR) != 0) {
-			sorter.sortFarStaticModelFaces(m, yawCos, yawSin, pitchCos, pitchSin);
+		if((m.flags & SORT_TYPE_DISTANCE) != 0 || m.renderPriorities == null || m.modelOverride.disablePrioritySorting) {
+			sorter.sortFarStaticModelFacesByDistance(m, yawCos, yawSin, pitchCos, pitchSin);
 		} else {
-			sorter.sortStaticModelFaces(m, yawCos, yawSin, pitchCos, pitchSin);
+			sorter.sortStaticModelFacesWithPriority(m, yawCos, yawSin, pitchCos, pitchSin);
 		}
 		m.setSorted();
 	}

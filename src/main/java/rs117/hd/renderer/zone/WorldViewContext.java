@@ -116,7 +116,7 @@ public class WorldViewContext {
 				final int dx = camPosX - ((zx - offset) << 10);
 				final int dz = camPosZ - ((zz - offset) << 10);
 				z.dist = dx * dx + dz * dz;
-				if(z.dist < ALPHA_ZSORT_SQ)
+				if(z.dist <= ALPHA_ZSORT_SQ)
 					alphaZones.add(z);
 			}
 		}

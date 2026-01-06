@@ -60,6 +60,7 @@ public class Zone {
 
 	public int glVao;
 	int bufLen;
+	int dist;
 
 	public int glVaoA;
 	public int bufLenA;
@@ -88,10 +89,7 @@ public class Zone {
 	int[][] roofStart;
 	int[][] roofEnd;
 
-	int dist;
-
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
-
 
 	public void initialize(VBO o, VBO a, GLTextureBuffer f, int eboShared) {
 		assert glVao == 0;
@@ -446,12 +444,14 @@ public class Zone {
 		int[] packedFaces;
 		int[] sortedFaces;
 		byte[] renderPriorities;
+
+		int dist;
 		int asyncSortIdx = -1;
 		int asyncSortPos;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
-		static final int SORT_TYPE_FAR = 4;
+		static final int SORT_TYPE_DISTANCE = 4;
 		static final int SORT_COMPLETED = 8;
 
 		void putSortedFace(int offset) {
@@ -670,7 +670,7 @@ public class Zone {
 			}
 			m.asyncSortIdx = -1;
 			m.asyncSortPos = 0;
-			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_TYPE_FAR | AlphaModel.SORT_COMPLETED);
+			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_TYPE_DISTANCE | AlphaModel.SORT_COMPLETED);
 		}
 	}
 
@@ -708,6 +708,7 @@ public class Zone {
 			if(m.packedFaces == null || m.sortedFaces == null)
 				continue;
 
+			m.dist = dist;
 			job.addAlphaModel(m, farZone);
 		}
 	}
@@ -737,7 +738,9 @@ public class Zone {
 
 		drawIdx = 0;
 
-		for (AlphaModel m : alphaModels) {
+		//noinspection ForLoopReplaceableByForEach
+		for (int i = 0; i < alphaModels.size(); i++) {
+			final AlphaModel m = alphaModels.get(i);
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
 				continue;
 
@@ -827,7 +830,9 @@ public class Zone {
 		int offset = ctx.sceneOffset >> 3;
 		int cx = (int) camera.getPositionX();
 		int cz = (int) camera.getPositionZ();
-		for (AlphaModel m : alphaModels) {
+		//noinspection ForLoopReplaceableByForEach
+		for (int i = 0; i < alphaModels.size(); i++) {
+			final AlphaModel m = alphaModels.get(i);
 			if (m.lx == -1)
 				continue;
 
@@ -842,16 +847,19 @@ public class Zone {
 					int distance = (centerX - cx) * (centerX - cx) +
 								   (centerZ - cz) * (centerZ - cz);
 					if (distance < max) {
-						max = distance;
-						closestZoneX = centerX >> 10;
-						closestZoneZ = centerZ >> 10;
+						int zx2 = (centerX >> 10) + offset;
+						int zz2 = (centerZ >> 10) + offset;
+						if (zx2 >= 0 && zx2 < zones.length && zz2 >= 0 && zz2 < zones[0].length) {
+							if(zones[zx2][zz2].inSceneFrustum) {
+								max = distance;
+								closestZoneX = centerX >> 10;
+								closestZoneZ = centerZ >> 10;
+							}
+						}
 					}
 				}
 			}
-			assert closestZoneX != -50;
-			if (closestZoneX != zx || closestZoneZ != zz) {
-				assert (m.flags & AlphaModel.TEMP) == 0;
-
+			if (closestZoneX != -50 && (closestZoneX != zx || closestZoneZ != zz)) {
 				assert closestZoneX + offset >= 0 : closestZoneX;
 				assert closestZoneX + offset < zones.length : closestZoneX;
 				assert closestZoneZ + offset >= 0 : closestZoneZ;
