@@ -28,6 +28,7 @@ import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.utils.HDUtils;
 
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
@@ -445,7 +446,7 @@ final class FacePrioritySorter {
 		private void ensureCapacity(int count) {
 			if (length + count < facesIndices.length)
 				return;
-			int newCapacity = facesIndices.length * 2;
+			int newCapacity = HDUtils.ceilPow2(length + count);
 			log.debug( "{} Resizing \t{}",
 				this,
 				String.format("%.2f MB -> %.2f MB", (facesIndices.length * Integer.BYTES) / 1e6, (newCapacity * Integer.BYTES) / 1e6)
