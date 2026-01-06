@@ -49,6 +49,8 @@ public class CommandBuffer {
 		this.renderState = renderState;
 	}
 
+	public boolean isEmpty() { return writeHead == 0; }
+
 	private void ensureCapacity(int numLongs) {
 		if (writeHead + numLongs >= cmd.length)
 			cmd = Arrays.copyOf(cmd, cmd.length * 2);

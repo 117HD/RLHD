@@ -690,7 +690,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void directionalShadowPass() {
-		if (!plugin.configShadowsEnabled || plugin.fboShadowMap == 0 || environmentManager.currentDirectionalStrength <= 0)
+		if (!plugin.configShadowsEnabled || plugin.fboShadowMap == 0 || directionalCmd.isEmpty() || environmentManager.currentDirectionalStrength <= 0)
 			return;
 
 		frameTimer.begin(Timer.RENDER_SHADOWS);
@@ -717,6 +717,9 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void scenePass() {
+		if(sceneCmd.isEmpty() && sceneWaterCmd.isEmpty())
+			return;
+
 		sceneProgram.use();
 
 		frameTimer.begin(Timer.DRAW_SCENE);
@@ -756,9 +759,11 @@ public class ZoneRenderer implements Renderer {
 		sceneCmd.execute();
 
 		// Render scene water
-		renderState.depthMask.set(false);
-		sceneWaterCmd.execute();
-		renderState.depthMask.set(true);
+		if(!sceneWaterCmd.isEmpty()) {
+			renderState.depthMask.set(false);
+			sceneWaterCmd.execute();
+			renderState.depthMask.set(true);
+		}
 
 		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
