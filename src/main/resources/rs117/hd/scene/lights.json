@@ -41217,10 +41217,11 @@
     "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
   },
   {
-    "description": "Scythe of Vitur - Swing - Red",
+    "description": "Scythe of Vitur swing & Dragon Halberd special attack - Red",
     "offset": [ 0, 0, 0 ],
     "radius": 275,
-    "spawnDelay": 650,
+    "waitForAnimation": true,
+    "spawnDelay": 250,
     "fixedDespawnTime": true,
     "despawnDelay": 890,
     "strength": 12,
@@ -41240,10 +41241,11 @@
     ]
   },
   {
-    "description": "Scythe of Vitur - Swing - White",
+    "description": "Scythe of Vitur swing & Dragon Halberd special attack - White",
     "offset": [ 0, 0, 0 ],
     "radius": 250,
-    "spawnDelay": 650,
+    "waitForAnimation": true,
+    "spawnDelay": 250,
     "fixedDespawnTime": true,
     "despawnDelay": 890,
     "strength": 10,
