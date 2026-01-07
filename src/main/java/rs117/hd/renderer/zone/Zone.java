@@ -1,5 +1,7 @@
 package rs117.hd.renderer.zone;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +26,7 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.jobs.GenericJob;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
@@ -162,6 +165,8 @@ public class Zone {
 			uploadJob.cancel();
 			uploadJob = null;
 		}
+
+		sortedAlphaFacesUpload.release();
 
 		sizeO = 0;
 		sizeA = 0;
@@ -450,6 +455,7 @@ public class Zone {
 		int lastDist = -1, lastYaw = -1, lastPitch = -1;
 		int dist;
 		int asyncSortIdx = -1;
+		int eboOffset = -1;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
@@ -655,7 +661,9 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	synchronized void removeTemp() {
+	synchronized void postAlphaPass() {
+		sortedAlphaFacesUpload.waitForCompletion();
+
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
@@ -666,6 +674,7 @@ public class Zone {
 				modelCache.add(m);
 			}
 			m.asyncSortIdx = -1;
+			m.eboOffset = -1;
 			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
 		}
 	}
@@ -686,6 +695,25 @@ public class Zone {
 		final int mz = m.z + ((alphaSort_zz - m.zofz) << 10);
 		return (mx - alphaSort_cx) * (mx - alphaSort_cx) + (m.y - alphaSort_cy) * (m.y - alphaSort_cy) + (mz - alphaSort_cz) * (mz - alphaSort_cz);
 	}).reversed();
+
+	private ByteBuffer eboAlphaMappedBuffer;
+	private IntBuffer eboAlphaAsyncBuffer;
+	private final GenericJob sortedAlphaFacesUpload = GenericJob.build("sortedAlphaFacesUpload", this::alphaFacesUpload);
+
+	void alphaFacesUpload(GenericJob job) {
+		if(eboAlphaMappedBuffer != ZoneRenderer.eboAlphaMappedBuffer) {
+			eboAlphaMappedBuffer = ZoneRenderer.eboAlphaMappedBuffer;
+			eboAlphaAsyncBuffer = eboAlphaMappedBuffer.asIntBuffer();
+		}
+		for (int i = 0; i < alphaModels.size(); ++i) {
+			AlphaModel m = alphaModels.get(i);
+			if (m.eboOffset < 0)
+				continue;
+
+			eboAlphaAsyncBuffer.position(m.eboOffset);
+			eboAlphaAsyncBuffer.put(m.sortedFaces.data(), 0, m.sortedFaces.length());
+		}
+	}
 
 	void alphaSort(int zx, int zz, Camera camera) {
 		alphaSort_cx = (int) camera.getPositionX();
@@ -734,6 +762,7 @@ public class Zone {
 
 		drawIdx = 0;
 
+		boolean shouldQueueUpload = false;
 		//noinspection ForLoopReplaceableByForEach
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
@@ -776,12 +805,17 @@ public class Zone {
 			if(m.sortedFaces == null || m.sortedFaces.length() <= 0 || !ZoneRenderer.eboAlphaIsMapped)
 				continue;
 
-			if((long)(ZoneRenderer.eboAlphaBuffer.position() + m.sortedFaces.length()) * Integer.BYTES < ZoneRenderer.eboAlphaCapacity) {
+			if((long)(ZoneRenderer.eboAlphaOffset + m.sortedFaces.length()) * Integer.BYTES < ZoneRenderer.eboAlphaCapacity) {
 				lastDrawMode = STATIC;
+				m.eboOffset = ZoneRenderer.eboAlphaOffset;
 				ZoneRenderer.alphaFaceCount += m.sortedFaces.length() / 3;
-				ZoneRenderer.eboAlphaBuffer.put(m.sortedFaces.data(), 0, m.sortedFaces.length());
+				ZoneRenderer.eboAlphaOffset += m.sortedFaces.length();
+				shouldQueueUpload = true;
 			}
 		}
+
+		if(shouldQueueUpload)
+			sortedAlphaFacesUpload.queue();
 
 		flush(cmd);
 		cmd.DepthMask(true);
@@ -791,7 +825,7 @@ public class Zone {
 		if (lastDrawMode == STATIC) {
 			if (ZoneRenderer.alphaFaceCount > 0) {
 				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
-				long byteOffset = 4L * (ZoneRenderer.eboAlphaBuffer.position() - vertexCount);
+				long byteOffset = 4L * (ZoneRenderer.eboAlphaOffset - vertexCount);
 				cmd.BindVertexArray(lastVao);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
@@ -891,6 +925,7 @@ public class Zone {
 				m2.renderPriorities = m.renderPriorities;
 				m2.radius = m.radius;
 				m2.asyncSortIdx = m.asyncSortIdx;
+				m2.eboOffset = m.eboOffset;
 				m2.sortedFaces = m.sortedFaces;
 
 				m2.flags = AlphaModel.TEMP;

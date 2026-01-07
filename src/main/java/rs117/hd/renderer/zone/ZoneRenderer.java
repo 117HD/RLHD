@@ -26,7 +26,6 @@ package rs117.hd.renderer.zone;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.Set;
 import javax.inject.Inject;
@@ -165,10 +164,10 @@ public class ZoneRenderer implements Renderer {
 	public static int indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
-	private static ByteBuffer eboAlphaMappedBuffer;
+	public static ByteBuffer eboAlphaMappedBuffer;
 	public static boolean eboAlphaIsMapped;
 	public static long eboAlphaCapacity;
-	public static IntBuffer eboAlphaBuffer;
+	public static int eboAlphaOffset;
 	public static int eboAlpha;
 	public static int alphaFaceCount;
 
@@ -236,6 +235,8 @@ public class ZoneRenderer implements Renderer {
 
 	private void initializeBuffers() {
 		eboAlpha = glGenBuffers();
+		eboAlphaCapacity = 0;
+		eboAlphaOffset = 0;
 
 		indirectDrawCmds = glGenBuffers();
 		indirectDrawCmdsStaging = new GpuIntBuffer();
@@ -254,6 +255,8 @@ public class ZoneRenderer implements Renderer {
 		if (eboAlpha != 0)
 			glDeleteBuffers(eboAlpha);
 		eboAlpha = 0;
+		eboAlphaMappedBuffer = null;
+		eboAlphaIsMapped = false;
 
 		if (indirectDrawCmds != 0)
 			glDeleteBuffers(indirectDrawCmds);
@@ -674,11 +677,8 @@ public class ZoneRenderer implements Renderer {
 		);
 
 		if (mappedBuffer != null) {
-			if (mappedBuffer != eboAlphaMappedBuffer) {
-				eboAlphaMappedBuffer = mappedBuffer;
-				eboAlphaBuffer = mappedBuffer.asIntBuffer();
-			}
-			eboAlphaBuffer.position(0);
+			eboAlphaMappedBuffer = mappedBuffer;
+			eboAlphaOffset = 0;
 			eboAlphaIsMapped = true;
 		}
 
@@ -708,7 +708,7 @@ public class ZoneRenderer implements Renderer {
 		// Scene draw state to apply before all recorded commands
 		if (eboAlphaIsMapped) {
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
-			glFlushMappedBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, (long) eboAlphaBuffer.position() * Integer.BYTES);
+			glFlushMappedBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, eboAlphaOffset * Integer.BYTES);
 			glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 			eboAlphaIsMapped = false;
 		}
@@ -992,7 +992,7 @@ public class ZoneRenderer implements Renderer {
 			case DrawCallbacks.PASS_ALPHA:
 				for (int x = 0; x < ctx.sizeX; ++x)
 					for (int z = 0; z < ctx.sizeZ; ++z)
-						ctx.zones[x][z].removeTemp();
+						ctx.zones[x][z].postAlphaPass();
 				break;
 		}
 
