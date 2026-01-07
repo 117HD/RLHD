@@ -3181,6 +3181,58 @@
     "parent": "LEAVES_TOP"
   },
   {
+    "name": "SPRING_CHERRY_BLOSSOM_LEAVES_TOP",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_YELLOW_TOP"
+    ],
+    "replacementCondition": "season == SeasonalTheme.SPRING"
+  },
+  {
+    "name": "SPRING_CHERRY_BLOSSOM_LEAVES_SIDE",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_YELLOW_SIDE"
+    ],
+    "replacementCondition": "season == SeasonalTheme.SPRING"
+  },
+  {
+    "name": "SPRING_JACARDANDA_LEAVES_TOP",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_ORANGE_TOP"
+    ],
+    "replacementCondition": "season == SeasonalTheme.SPRING"
+  },
+  {
+    "name": "SPRING_JACARDANDA_LEAVES_SIDE",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_ORANGE_SIDE"
+    ],
+    "replacementCondition": "season == SeasonalTheme.SPRING"
+  },
+  {
     "name": "AUTUMN_LEAVES_YELLOW_SIDE",
     "hasTransparency": true,
     "textureScale": [
