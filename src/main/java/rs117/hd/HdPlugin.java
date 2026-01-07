@@ -63,7 +63,6 @@ import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginInstantiationException;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
@@ -759,12 +758,10 @@ public class HdPlugin extends Plugin {
 			try {
 				pluginManager.setPluginEnabled(this, false);
 				pluginManager.stopPlugin(this);
-			} catch (PluginInstantiationException ex) {
+			} catch (Throwable ex) {
 				log.error("Error while stopping 117HD:", ex);
 			}
 		});
-
-		shutDown();
 	}
 
 	public void restartPlugin() {
