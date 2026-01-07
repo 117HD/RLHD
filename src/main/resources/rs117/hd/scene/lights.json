@@ -27879,9 +27879,28 @@
   },
   {
     "description": "TELEGRAB_CAST",
-    "offset": [ 0, 150, 75 ],
+    "offset": [ 0, 165, 75 ],
     "radius": 125,
-    "strength": 12,
+    "strength": 10,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "TELEGRAB_CASTING"
+    ]
+  },
+  {
+    "description": "TELEGRAB_CAST_2",
+    "offset": [ 0, 75, 75 ],
+    "radius": 100,
+    "strength": 7,
     "color": [
       170,
       20,
@@ -27916,11 +27935,11 @@
   },
   {
     "description": "WIND_STRIKE_TO_BLAST_CAST",
-    "offset": [ 0, 125, 50 ],
-    "radius": 225,
+    "offset": [ 0, 120, 50 ],
+    "radius": 200,
     "fixedDespawnTime": true,
     "despawnDelay": 1000,
-    "strength": 5.5,
+    "strength": 7.5,
     "color": [
       255,
       255,
@@ -27940,7 +27959,7 @@
   {
     "description": "WATER_STRIKE",
     "radius": 225,
-    "strength": 4.5,
+    "strength": 7.5,
     "color": [
       0,
       140,
@@ -27961,7 +27980,7 @@
     "radius": 225,
     "fixedDespawnTime": true,
     "despawnDelay": 1000,
-    "strength": 5,
+    "strength": 8,
     "color": [
       0,
       140,
@@ -28002,7 +28021,7 @@
     "radius": 225,
     "fixedDespawnTime": true,
     "despawnDelay": 1000,
-    "strength": 4,
+    "strength": 7,
     "color": [
       0,
       255,
@@ -28031,7 +28050,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 200,
+    "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIRESTRIKE_TRAVEL"
@@ -28042,8 +28061,8 @@
     "offset": [ 0, 125, 50 ],
     "radius": 225,
     "fixedDespawnTime": true,
-    "despawnDelay": 1000,
-    "strength": 5.5,
+    "despawnDelay": 1200,
+    "strength": 6,
     "color": [
       255,
       0,
@@ -28052,6 +28071,29 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESTRIKE_CASTING",
+      "FIREBOLT_CASTING",
+      "FIREBLAST_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_STRIKE_TO_BLAST_CAST_2",
+    "offset": [ 0, 60, 50 ],
+    "radius": 110,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
+    "strength": 4,
+    "color": [
+      252,
+      110,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
     "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "graphicsObjectIds": [
@@ -28116,12 +28158,31 @@
   },
   {
     "description": "FIRE_BOLT",
-    "radius": 250,
-    "strength": 6.3,
+    "radius": 265,
+    "strength": 7,
     "color": [
       255,
       0,
       0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "projectileIds": [
+      "FIREBOLT_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_BOLT_2",
+    "offset": [ 0, -25, -25 ],
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
     ],
     "type": "STATIC",
     "duration": 0,
@@ -28194,6 +28255,25 @@
       255,
       0,
       0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIREBLAST_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_BLAST_2",
+    "offset": [ 0, -25, -25 ],
+    "radius": 200,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
     ],
     "type": "STATIC",
     "duration": 0,
@@ -28343,6 +28423,25 @@
     ]
   },
   {
+    "description": "FIRE_WAVE_2",
+    "offset": [ 0, -25, -50 ],
+    "radius": 250,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIREWAVE_TRAVEL"
+    ]
+  },
+  {
     "description": "FIRE_WAVE_CAST",
     "offset": [ 0, 175, 50 ],
     "radius": 300,
@@ -28354,6 +28453,28 @@
       255,
       0,
       0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIREWAVE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_WAVE_CAST_2",
+    "offset": [ 0, 175, 50 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
     ],
     "type": "STATIC",
     "duration": 0,
@@ -28635,6 +28756,25 @@
     ]
   },
   {
+    "description": "FIRE_SURGE_2",
+    "offset": [ 0, 0, -50 ],
+    "radius": 235,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIRESURGE_TRAVEL"
+    ]
+  },
+  {
     "description": "FIRE_SURGE_CAST_LEFT",
     "offset": [ 80, 175, 50 ],
     "spawnDelay": 100,
@@ -28690,6 +28830,72 @@
       255,
       0,
       0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_LEFT_2",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 200,
+    "strength": 13.8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_RIGHT_2",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 200,
+    "strength": 13.8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_MIDDLE_2",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      252,
+      148,
+      3
     ],
     "type": "STATIC",
     "duration": 0,
@@ -41009,6 +41215,54 @@
     "fadeInDuration": 175,
     "fadeOutDuration": 275,
     "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
+    "description": "Scythe of Vitur swing & Dragon Halberd special attack - Red",
+    "offset": [ 0, 0, 0 ],
+    "radius": 275,
+    "waitForAnimation": true,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 890,
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_RED",
+      "DRAGON_HALBERD_SPECIAL_NORTH_RED",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_RED",
+      "DRAGON_HALBERD_SPECIAL_EAST_RED"
+    ]
+  },
+  {
+    "description": "Scythe of Vitur swing & Dragon Halberd special attack - White",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "waitForAnimation": true,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 890,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_WHITE",
+      "DRAGON_HALBERD_SPECIAL_NORTH_WHITE",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_WHITE",
+      "DRAGON_HALBERD_SPECIAL_EAST_WHITE"
+    ]
   },
   {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
