@@ -457,14 +457,12 @@
       "SARADOMIN_PET",
       "ZAMORAK_PET",
       "KBD_PET",
-      "SMOKE_PET",
       "POH_PENANCE_PET",
       "POH_ARMADYL_PET",
       "POH_BANDOS_PET",
       "POH_SARADOMIN_PET",
       "POH_ZAMORAK_PET",
       "POH_KBD_PET",
-      "POH_SMOKE_PET",
       "PENANCE_PET",
       "POH_LAZYCAT_HELL",
       "POH_WILEYCAT_HELL",
@@ -645,16 +643,10 @@
       "DEADMAN_FINAL_ICEGIANT",
       "DEADMAN_FINAL_ICEGIANT2",
       "DEADMAN_FINAL_ICEGIANT3",
-      "HYDRA_PET",
-      "HYDRA_PET_FIRE",
-      "HYDRA_PET_EXTINGUISHED",
       "TROBIN_ARCEUUS_FOCUS_VISIBLE",
       "TROBIN_ARCEUUS_VISIBLE",
       "ARCQUEST_GHOST1",
       "ARCQUEST_GHOST2",
-      "POH_HYDRA_PET",
-      "POH_HYDRA_PET_FIRE",
-      "POH_HYDRA_PET_EXTINGUISHED",
       "ARCEUUS_LORD_TEST_01",
       "ARCEUUS_LORD_TEST_02",
       "KAHLITH_GUARDIAN_1",
@@ -814,6 +806,7 @@
       "CAMDOZAAL_GOLEM_FLAWED_ROCK",
       "POH_VERZIK_PET_BLOAT",
       "POH_VERZIK_PET_XARPUS",
+      "POH_VERZIK_PET_NYLOCAS",
       "TOB_NYLOCAS_INCOMING_MAGIC_STORY",
       "TOB_NYLOCAS_BIG_INCOMING_MAGIC_STORY",
       "TOB_NYLOCAS_FIGHTING_MAGIC_STORY",
@@ -71041,6 +71034,32 @@
     "depthBias": 255
   },
   {
+    "description": "Depth Bias Fix - Various Pets - Fix model clipping",
+    "npcIds": [
+      "POH_TEMPOROSS_PET",
+      "TEMPOROSS_PET",
+      "POH_VERZIK_PET_MAIDEN",
+      "VERZIK_PET_MAIDEN",
+      "POH_HYDRA_PET",
+      "POH_HYDRA_PET_FIRE",
+      "POH_HYDRA_PET_EXTINGUISHED",
+      "HYDRA_PET",
+      "HYDRA_PET_FIRE",
+      "HYDRA_PET_EXTINGUISHED",
+      "POH_HYDRA_PET_EXTINGUISHED",
+      "HYDRA_PET_EXTINGUISHED",
+      "POH_HYDRA_PET_ELECTRIC",
+      "HYDRA_PET_ELECTRIC",
+      "TEKTON_PET",
+      "VANGUARD_PET",
+      "POH_TEKTON_PET",
+      "POH_VANGUARD_PET",
+      "POH_TEKTON_ENRAGED_PET",
+      "TEKTON_ENRAGED_PET"
+    ],
+    "depthBias": 150
+  },
+  {
     "description": "Depth Bias Fix - Grotesque Guardians Lightning / Flames",
     "graphicsObjectIds": [
       "GG_DUSK_LIGHTNING_DAWN_DEATH",
@@ -73009,7 +73028,9 @@
   {
     "description": "SMOKE_DEVIL_BOSS",
     "npcIds": [
-      "SMOKE_DEVIL_BOSS"
+      "SMOKE_DEVIL_BOSS",
+      "SMOKE_PET",
+      "POH_SMOKE_PET"
     ],
     "colorOverrides": [
       {
