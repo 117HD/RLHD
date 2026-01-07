@@ -17859,18 +17859,17 @@
   },
   {
     "description": "TZREK_ZUK",
-    "height": 10,
-    "alignment": "CENTER",
-    "radius": 100,
+    "offset": [ 0, 20, -25 ],
+    "radius": 110,
     "strength": 12.5,
     "color": [
       252,
       128,
       45
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
     "duration": 0,
-    "range": 0,
+    "range": 20,
     "npcIds": [
       "POH_ZUK_PET",
       "ZUK_PET"

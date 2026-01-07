@@ -71077,6 +71077,20 @@
     "depthBias": 150
   },
   {
+    "description": "Depth Bias Fix - Zuk Pet - Baked lighting fix",
+    "npcIds": [
+      "ZUK_PET",
+      "POH_ZUK_PET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "depthBias": 100
+      }
+    ]
+  },
+  {
     "description": "Depth Bias Fix - Grotesque Guardians Lightning / Flames",
     "graphicsObjectIds": [
       "GG_DUSK_LIGHTNING_DAWN_DEATH",
