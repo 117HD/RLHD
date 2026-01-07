@@ -111,7 +111,7 @@
       },
       "replacementCondition": {
         "type": [ "boolean", "string", "array" ],
-        "description": "One or more boolean expressions. If any of them evaluate to true, the replacements are applied.\nSupported operators: !, %, *, /, +, -, <, <=, >, >=, !=, ==, &&, ||, ?.\nSupported variables: `modelTextures`, `groundTextures`, `blending`, `hdInfernalCape`, `season`, `SeasonalTheme.*`.",
+        "description": "One or more boolean expressions. If any of them evaluate to true, the replacements are applied.\nSupported operators: !, %, *, /, +, -, <, <=, >, >=, !=, ==, &&, ||, ?.\nSupported variables: `modelTextures`, `groundTextures`, `blending`, `hdInfernalCape`, `legacyInfernalCape`, `season`, `SeasonalTheme.*`.",
         "items": {
           "type": "string"
         }

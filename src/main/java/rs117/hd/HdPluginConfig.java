@@ -38,6 +38,7 @@ import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
+import rs117.hd.config.InfernalCape;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -791,17 +792,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_HD_INFERNAL_CAPE = "hdInfernalTexture";
+	String KEY_INFERNAL_CAPE = "infernalCape";
 	@ConfigItem(
-		keyName = KEY_HD_INFERNAL_CAPE,
-		name = "HD Infernal Cape",
+		keyName = KEY_INFERNAL_CAPE,
+		name = "Infernal Cape",
 		description =
 			"Replace the infernal cape texture with a more detailed version.<br>" +
 			"Note, with Anisotropic Filtering above zero, the cape may look blurry when zoomed out.",
 		section = miscellaneousSettings
 	)
-	default boolean hdInfernalTexture() {
-		return true;
+	default InfernalCape infernalCape() {
+		return InfernalCape.HD;
 	}
 
 	String KEY_VANILLA_COLOR_BANDING = "vanillaColorBanding";

@@ -2356,6 +2356,25 @@
     "replacementCondition": "hdInfernalCape"
   },
   {
+    "name": "LEGACY_INFERNAL_CAPE",
+    "flowMap": "LAVA_FLOW_MAP",
+    "overrideBaseColor": true,
+    "unlit": true,
+    "flowMapStrength": 0.02,
+    "flowMapDuration": [
+      12.0,
+      4.0
+    ],
+    "scrollSpeed": [
+      -0.0,
+      -0.33333334
+    ],
+    "materialsToReplace": [
+      "INFERNAL_CAPE"
+    ],
+    "replacementCondition": "legacyInfernalCape"
+  },
+  {
     "name": "HD_BRICK_N"
   },
   {
