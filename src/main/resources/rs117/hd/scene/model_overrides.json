@@ -31408,15 +31408,24 @@
   },
   {
     "description": "Guardians of the Rift - Entrance",
+    "baseMaterial": "GRAY_125",
     "objectIds": [
       "GOTR_BARRIER",
       "GOTR_BARRIER_CLOSED",
       "GOTR_BARRIER_NOENTRY"
     ],
-    "castShadows": false
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "baseMaterial": "NONE",
+        "colors": "h == 0",
+        "depthBias": 255
+      }
+    ]
   },
   {
     "description": "Guardians of the Rift - Barriers",
+    "baseMaterial": "GRAY_125",
     "objectIds": [
       "GOTR_BARRIER_TIER1",
       "GOTR_BARRIER_TIER1_3X3",
@@ -31427,7 +31436,15 @@
       "GOTR_BARRIER_TIER4",
       "GOTR_BARRIER_TIER4_3X3"
     ],
-    "castShadows": false
+    "castShadows": false,
+    "depthBias": 0,
+    "colorOverrides": [
+      {
+        "baseMaterial": "NONE",
+        "colors": "h == 0",
+        "depthBias": 255
+      }
+    ]
   },
   {
     "description": "Guardians Of the Rift - Rocks - Large",
