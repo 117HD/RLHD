@@ -194,6 +194,7 @@ public class LightManager {
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
 		var cachedNpcs = client.getTopLevelWorldView().npcs();
 		var cachedPlayers = client.getTopLevelWorldView().players();
+		int gameCycle = client.getGameCycle();
 		final int plane = client.getPlane();
 		boolean changedPlanes = false;
 
@@ -243,8 +244,12 @@ public class LightManager {
 				} else {
 					hiddenTemporarily = !shouldShowProjectileLights();
 					if (light.animationSpecific) {
-						var animation = light.projectile.getAnimation();
-						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+						if (light.def.waitForAnimation && gameCycle < light.projectile.getStartCycle()) {
+							parentExists = false;
+						} else if (!light.def.animationIds.isEmpty()) {
+							var animation = light.projectile.getAnimation();
+							parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+						}
 					}
 					light.orientation = light.projectile.getOrientation();
 				}
@@ -255,8 +260,12 @@ public class LightManager {
 				if (light.graphicsObject.finished()) {
 					light.markedForRemoval = true;
 				} else if (light.animationSpecific) {
-					var animation = light.graphicsObject.getAnimation();
-					parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+					if (light.def.waitForAnimation && gameCycle < light.graphicsObject.getStartCycle()) {
+						parentExists = false;
+					} else if (!light.def.animationIds.isEmpty()) {
+						var animation = light.graphicsObject.getAnimation();
+						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+					}
 				}
 			} else if (light.actor != null && !light.markedForRemoval) {
 				if (light.actor instanceof NPC && light.actor != cachedNpcs.byIndex(((NPC) light.actor).getIndex()) ||
