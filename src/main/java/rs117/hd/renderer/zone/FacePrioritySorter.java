@@ -378,12 +378,14 @@ final class FacePrioritySorter {
 		int yawCos, int yawSin,
 		int pitchCos, int pitchSin
 	) {
-		final int faceCount = m.packedFaces.length;
 		final int radius = m.radius;
 		final int diameter = 1 + radius * 2;
+		if (diameter >= MAX_DIAMETER)
+			return;
 
+		final int faceCount = m.packedFaces.length;
 		final float distFrac = saturate(m.dist / (float)ALPHA_ZSORT_SQ);
-		final int buckets = clamp(ceilPow2((int)((float)(distanceFaceCount.length / faceCount) * (1.0f - distFrac))), 8, MAX_DIAMETER);
+		final int buckets = clamp(ceilPow2((int)((float)(distanceFaceCount.length / faceCount) * (1.0f - distFrac))), 8, diameter);
 		final long stamp = nextStamp();
 
 		int minBucket = buckets, maxBucket = 0;
