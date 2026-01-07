@@ -25,6 +25,8 @@
 package rs117.hd.renderer.zone;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.Set;
 import javax.inject.Inject;
@@ -163,8 +165,11 @@ public class ZoneRenderer implements Renderer {
 	public static int indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
+	private static ByteBuffer eboAlphaMappedBuffer;
+	public static boolean eboAlphaIsMapped;
+	public static long eboAlphaCapacity;
+	public static IntBuffer eboAlphaBuffer;
 	public static int eboAlpha;
-	public static GpuIntBuffer eboAlphaStaging;
 	public static int alphaFaceCount;
 
 	private boolean sceneFboValid;
@@ -231,7 +236,6 @@ public class ZoneRenderer implements Renderer {
 
 	private void initializeBuffers() {
 		eboAlpha = glGenBuffers();
-		eboAlphaStaging = new GpuIntBuffer();
 
 		indirectDrawCmds = glGenBuffers();
 		indirectDrawCmdsStaging = new GpuIntBuffer();
@@ -250,10 +254,6 @@ public class ZoneRenderer implements Renderer {
 		if (eboAlpha != 0)
 			glDeleteBuffers(eboAlpha);
 		eboAlpha = 0;
-
-		if (eboAlphaStaging != null)
-			eboAlphaStaging.destroy();
-		eboAlphaStaging = null;
 
 		if (indirectDrawCmds != 0)
 			glDeleteBuffers(indirectDrawCmds);
@@ -626,14 +626,65 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.upload();
 
 		// Reset buffers for the next frame
-		eboAlphaStaging.clear();
 		indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
 		directionalCmd.reset();
 		renderState.reset();
 
+		mapAlphaBuffer();
+
 		checkGLErrors();
 	}
+
+	private void mapAlphaBuffer() {
+		int totalSortedFaces = sceneManager.getRoot().getSortedAlphaCount();
+
+		WorldView wv = client.getTopLevelWorldView();
+		for (WorldEntity we : wv.worldEntities()) {
+			WorldViewContext entityCtx = sceneManager.getContext(we.getWorldView());
+			if (entityCtx != null)
+				totalSortedFaces += entityCtx.getSortedAlphaCount();
+		}
+
+		long requiredCapacity = totalSortedFaces * 3L * Integer.BYTES;
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
+
+		if (eboAlphaIsMapped) {
+			glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+			eboAlphaIsMapped = false;
+		}
+
+		if (eboAlphaCapacity < requiredCapacity) {
+			glBufferData(
+				GL_ELEMENT_ARRAY_BUFFER,
+				requiredCapacity,
+				GL_STREAM_DRAW
+			);
+			eboAlphaCapacity = requiredCapacity;
+		}
+
+		ByteBuffer mappedBuffer = glMapBufferRange(
+			GL_ELEMENT_ARRAY_BUFFER,
+			0,
+			eboAlphaCapacity,
+			GL_MAP_WRITE_BIT |
+			GL_MAP_FLUSH_EXPLICIT_BIT |
+			GL_MAP_INVALIDATE_BUFFER_BIT,
+			eboAlphaMappedBuffer
+		);
+
+		if (mappedBuffer != null) {
+			if (mappedBuffer != eboAlphaMappedBuffer) {
+				eboAlphaMappedBuffer = mappedBuffer;
+				eboAlphaBuffer = mappedBuffer.asIntBuffer();
+			}
+			eboAlphaBuffer.position(0);
+			eboAlphaIsMapped = true;
+		}
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+
 
 	@Override
 	public void postSceneDraw(Scene scene) {
@@ -655,10 +706,11 @@ public class ZoneRenderer implements Renderer {
 		uboWorldViews.upload();
 
 		// Scene draw state to apply before all recorded commands
-		if (eboAlphaStaging.position() > 0) {
-			eboAlphaStaging.flip();
+		if (eboAlphaIsMapped) {
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboAlphaStaging.getBuffer(), GL_STREAM_DRAW);
+			glFlushMappedBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, (long) eboAlphaBuffer.position() * Integer.BYTES);
+			glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+			eboAlphaIsMapped = false;
 		}
 
 		if (indirectDrawCmdsStaging.position() > 0) {

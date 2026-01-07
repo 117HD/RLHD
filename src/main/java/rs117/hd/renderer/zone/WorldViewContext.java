@@ -207,6 +207,16 @@ public class WorldViewContext {
 		return queuedWork;
 	}
 
+	int getSortedAlphaCount() {
+		int count = 0;
+
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
+				count += zones[x][z].sortedFacesLen;
+
+		return count;
+	}
+
 	void completeInvalidation() {
 		if (isLoading)
 			return;

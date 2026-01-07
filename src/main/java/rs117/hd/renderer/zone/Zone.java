@@ -64,6 +64,7 @@ public class Zone {
 
 	public int glVaoA;
 	public int bufLenA;
+	public int sortedFacesLen;
 
 	public int sizeO, sizeA, sizeF;
 	@Nullable
@@ -635,6 +636,7 @@ public class Zone {
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
+		sortedFacesLen += m.sortedFaces.length;
 		alphaModels.add(m);
 	}
 
@@ -773,17 +775,18 @@ public class Zone {
 			if(!m.isSorted() && ctx.staticAlphaSortingJob != null) {
 				if(!ctx.staticAlphaSortingJob.forceProcessModelClient(sorter, m)) {
 					while (!m.isSorted() && !ctx.staticAlphaSortingJob.isDone())
-						ctx.staticAlphaSortingJob.waitForCompletion(100);
+						ctx.staticAlphaSortingJob.waitForCompletion(10);
 				}
 			}
 
-			if(m.asyncSortPos <= 0)
+			if(m.asyncSortPos <= 0 || !ZoneRenderer.eboAlphaIsMapped)
 				continue;
 
-			lastDrawMode = STATIC;
-			ZoneRenderer.alphaFaceCount += m.asyncSortPos / 3;
-			ZoneRenderer.eboAlphaStaging.ensureCapacity(m.asyncSortPos);
-			ZoneRenderer.eboAlphaStaging.getBuffer().put(m.sortedFaces, 0, m.asyncSortPos);
+			if((long)(ZoneRenderer.eboAlphaBuffer.position() + m.asyncSortPos) * Integer.BYTES < ZoneRenderer.eboAlphaCapacity) {
+				lastDrawMode = STATIC;
+				ZoneRenderer.alphaFaceCount += m.asyncSortPos / 3;
+				ZoneRenderer.eboAlphaBuffer.put(m.sortedFaces, 0, m.asyncSortPos);
+			}
 		}
 
 		flush(cmd);
@@ -794,7 +797,7 @@ public class Zone {
 		if (lastDrawMode == STATIC) {
 			if (ZoneRenderer.alphaFaceCount > 0) {
 				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
-				long byteOffset = 4L * (ZoneRenderer.eboAlphaStaging.position() - vertexCount);
+				long byteOffset = 4L * (ZoneRenderer.eboAlphaBuffer.position() - vertexCount);
 				cmd.BindVertexArray(lastVao);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
@@ -803,8 +806,8 @@ public class Zone {
 				} else {
 					cmd.DrawElements(GL_TRIANGLES, vertexCount, byteOffset);
 				}
-				ZoneRenderer.alphaFaceCount = 0;
 			}
+			ZoneRenderer.alphaFaceCount = 0;
 		} else if (drawIdx != 0) {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
