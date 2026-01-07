@@ -725,11 +725,15 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var lp = graphicsObject.getLocation();
 			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY) {
 				var name = gamevalManager.getSpotanimName(graphicsObject.getId());
+				var anim = graphicsObject.getAnimation();
 				hoveredGamevals.add(name);
 				lines.add(String.format(
-					"Graphics Object: %s (%d)%s",
+					"Graphics Object: %s (%d) anim=%d frame=%d cyclesUntilStart=%d%s",
 					name,
 					graphicsObject.getId(),
+					anim == null ? -1 : anim.getId(),
+					graphicsObject.getAnimationFrame(),
+					graphicsObject.getStartCycle() - client.getGameCycle(),
 					getModelInfo(graphicsObject)
 				));
 			}
