@@ -31,14 +31,16 @@ public final class VertexWriteCache {
 			stagingBuffer = new int[min(stagingBuffer.length * 2, maxCapacity)];
 	}
 
+	public void ensureFace(int faceCount) {
+		if (stagingPosition + (9 * faceCount) > stagingBuffer.length)
+			flushAndGrow();
+	}
+
 	public int putFace(
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC,
 		int terrainDataA, int terrainDataB, int terrainDataC
 	) {
-		if (stagingPosition + 9 > stagingBuffer.length)
-			flushAndGrow();
-
 		final int textureFaceIdx = (outputBuffer.position() + stagingPosition) / 3;
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
@@ -60,23 +62,38 @@ public final class VertexWriteCache {
 		return textureFaceIdx;
 	}
 
+	public void ensureVertex(int vertexCount) {
+		if (stagingPosition + (7 * vertexCount) > stagingBuffer.length)
+			flushAndGrow();
+	}
+
 	public void putVertex(
 		float x, float y, float z,
-		float u, float v, float w,
+		int u, int v, int w,
 		int nx, int ny, int nz,
 		int textureFaceIdx
 	) {
-		if (stagingPosition + 7 > stagingBuffer.length)
-			flushAndGrow();
+		putVertex(
+			Float.floatToRawIntBits(x), Float.floatToRawIntBits(y), Float.floatToRawIntBits(z),
+			u, v, w,
+			nx, ny, nz,
+			textureFaceIdx);
+	}
 
+	public void putVertex(
+		int x, int y, int z,
+		int u, int v, int w,
+		int nx, int ny, int nz,
+		int textureFaceIdx
+	) {
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
-		stagingBuffer[stagingPosition] = Float.floatToRawIntBits(x);
-		stagingBuffer[stagingPosition + 1] = Float.floatToRawIntBits(y);
-		stagingBuffer[stagingPosition + 2] = Float.floatToRawIntBits(z);
-		stagingBuffer[stagingPosition + 3] = float16(v) << 16 | float16(u);
-		stagingBuffer[stagingPosition + 4] = (nx & 0xFFFF) << 16 | float16(w);
+		stagingBuffer[stagingPosition] = (x);
+		stagingBuffer[stagingPosition + 1] = (y);
+		stagingBuffer[stagingPosition + 2] = (z);
+		stagingBuffer[stagingPosition + 3] = (v) << 16 | (u);
+		stagingBuffer[stagingPosition + 4] = (nx & 0xFFFF) << 16 | (w);
 		stagingBuffer[stagingPosition + 5] = (nz & 0xFFFF) << 16 | ny & 0xFFFF;
 		stagingBuffer[stagingPosition + 6] = textureFaceIdx;
 

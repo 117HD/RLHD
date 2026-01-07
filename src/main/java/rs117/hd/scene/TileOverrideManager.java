@@ -25,6 +25,7 @@ import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.collection.Int2ObjectHashMap;
 
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.localToWorld;
@@ -53,7 +54,7 @@ public class TileOverrideManager {
 	private FileWatcher.UnregisterCallback fileWatcher;
 	private boolean trackReplacements;
 	private List<TileOverride> anyMatchOverrides;
-	private ListMultimap<Integer, TileOverride> idMatchOverrides;
+	private Int2ObjectHashMap<List<TileOverride>> idMatchOverrides;
 
 	public void startUp() {
 		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> reload(first)));
@@ -91,7 +92,7 @@ public class TileOverrideManager {
 			checkForReplacementLoops(allOverrides);
 
 			List<TileOverride> anyMatch = new ArrayList<>();
-			ListMultimap<Integer, TileOverride> idMatch = ArrayListMultimap.create();
+			Int2ObjectHashMap<List<TileOverride>> idMatch = new Int2ObjectHashMap<>((ArrayList[]::new));
 
 			var tileOverrideVars = plugin.vars.aliases(Map.of(
 				"textures", "groundTextures"
@@ -112,8 +113,12 @@ public class TileOverrideManager {
 
 				override.replacement = trackReplacements ? override : override.resolveConstantReplacements();
 				if (override.ids != null) {
-					for (int id : override.ids)
-						idMatch.put(id, override);
+					for (int id : override.ids) {
+						List<TileOverride> overrides = idMatch.get(id);
+						if(overrides == null)
+							idMatch.put(id, overrides = new ArrayList<>());
+						overrides.add(override);
+					}
 				} else {
 					anyMatch.add(override);
 				}
@@ -251,6 +256,8 @@ public class TileOverrideManager {
 		outer:
 		for (int id : ids) {
 			final var entries = idMatchOverrides.get(id);
+			if(entries == null)
+				continue;
 			// Enhanced for allocates an iterator...
 			// noinspection ForLoopReplaceableByForEach
 			for (int i = 0; i < entries.size(); i++) {
