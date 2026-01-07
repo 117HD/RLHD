@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.FacePrioritySorter.SortedFaces;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -443,27 +444,20 @@ public class Zone {
 		// only set for static geometry as they require sorting
 		int radius;
 		int[] packedFaces;
-		int[] sortedFaces;
 		byte[] renderPriorities;
+		SortedFaces sortedFaces;
 
+		int lastDist = -1, lastYaw = -1, lastPitch = -1;
 		int dist;
 		int asyncSortIdx = -1;
-		int asyncSortPos;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
-		static final int SORT_TYPE_DISTANCE = 4;
-		static final int SORT_COMPLETED = 8;
+		static final int SORT_COMPLETED = 4;
 
-		void putSortedFace(int offset) {
-			if(asyncSortPos >= sortedFaces.length)
-				return;
-			sortedFaces[asyncSortPos++] = offset;
-			sortedFaces[asyncSortPos++] = offset + 1;
-			sortedFaces[asyncSortPos++] = offset + 2;
-		}
-
-		void setSorted() {
+		void setSorted(int yaw, int pitch) {
+			lastYaw = yaw;
+			lastPitch = pitch;
 			flags |= SORT_COMPLETED;
 		}
 
@@ -630,13 +624,13 @@ public class Zone {
 
 		m.renderPriorities = model.getFaceRenderPriorities();
 		m.radius = 2 + (int) Math.sqrt(radius);
-		m.sortedFaces = new int[bufferIdx * 3];
+		m.sortedFaces = new SortedFaces(bufferIdx * 3);
 
 		assert packedFaces.length > 0;
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
-		sortedFacesLen += m.sortedFaces.length;
+		sortedFacesLen += m.sortedFaces.capacity();
 		alphaModels.add(m);
 	}
 
@@ -668,11 +662,11 @@ public class Zone {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.renderPriorities = null;
+				m.sortedFaces = null;
 				modelCache.add(m);
 			}
 			m.asyncSortIdx = -1;
-			m.asyncSortPos = 0;
-			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_TYPE_DISTANCE | AlphaModel.SORT_COMPLETED);
+			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
 		}
 	}
 
@@ -702,7 +696,7 @@ public class Zone {
 		alphaModels.sort(alphaSortComparator);
 	}
 
-	void alphaStaticModelSort(StaticAlphaSortingJob job, boolean farZone) {
+	void alphaStaticModelSort(StaticAlphaSortingJob job) {
 		for (AlphaModel m : alphaModels) {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp())
 				continue;
@@ -711,7 +705,7 @@ public class Zone {
 				continue;
 
 			m.dist = dist;
-			job.addAlphaModel(m, farZone);
+			job.addAlphaModel(m);
 		}
 	}
 
@@ -779,13 +773,13 @@ public class Zone {
 				}
 			}
 
-			if(m.asyncSortPos <= 0 || !ZoneRenderer.eboAlphaIsMapped)
+			if(m.sortedFaces == null || m.sortedFaces.length() <= 0 || !ZoneRenderer.eboAlphaIsMapped)
 				continue;
 
-			if((long)(ZoneRenderer.eboAlphaBuffer.position() + m.asyncSortPos) * Integer.BYTES < ZoneRenderer.eboAlphaCapacity) {
+			if((long)(ZoneRenderer.eboAlphaBuffer.position() + m.sortedFaces.length()) * Integer.BYTES < ZoneRenderer.eboAlphaCapacity) {
 				lastDrawMode = STATIC;
-				ZoneRenderer.alphaFaceCount += m.asyncSortPos / 3;
-				ZoneRenderer.eboAlphaBuffer.put(m.sortedFaces, 0, m.asyncSortPos);
+				ZoneRenderer.alphaFaceCount += m.sortedFaces.length() / 3;
+				ZoneRenderer.eboAlphaBuffer.put(m.sortedFaces.data(), 0, m.sortedFaces.length());
 			}
 		}
 
@@ -896,6 +890,8 @@ public class Zone {
 				m2.packedFaces = m.packedFaces;
 				m2.renderPriorities = m.renderPriorities;
 				m2.radius = m.radius;
+				m2.asyncSortIdx = m.asyncSortIdx;
+				m2.sortedFaces = m.sortedFaces;
 
 				m2.flags = AlphaModel.TEMP;
 				m.flags |= AlphaModel.SKIP;

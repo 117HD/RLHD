@@ -25,7 +25,6 @@
 package rs117.hd.renderer.zone;
 
 import java.util.Arrays;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 
@@ -370,9 +369,8 @@ final class FacePrioritySorter {
 			final int base = BASE_PRIORITY_LUT[pIdx];
 
 			for (int faceIdx = 0; faceIdx < cnt; ++faceIdx)
-				m.putSortedFace(orderedFaces[base + faceIdx] * 3 + start);
+				m.sortedFaces.putFaceIndices(orderedFaces[base + faceIdx] * 3 + start);
 		}
-		m.setSorted();
 	}
 
 	void sortFarStaticModelFacesByDistance(
@@ -382,10 +380,10 @@ final class FacePrioritySorter {
 	) {
 		final int faceCount = m.packedFaces.length;
 		final int radius = m.radius;
+		final int diameter = 1 + radius * 2;
 
 		final float distFrac = saturate(m.dist / (float)ALPHA_ZSORT_SQ);
-		final int buckets = clamp(ceilPow2((int)((float)(distanceFaceCount.length / faceCount) * (1.0f - distFrac))), 4, MAX_DIAMETER);
-
+		final int buckets = clamp(ceilPow2((int)((float)(distanceFaceCount.length / faceCount) * (1.0f - distFrac))), 8, MAX_DIAMETER);
 		final long stamp = nextStamp();
 
 		int minBucket = buckets, maxBucket = 0;
@@ -398,7 +396,7 @@ final class FacePrioritySorter {
 			int fz = ((z * yawCos - x * yawSin) >> 16);
 			fz = ((y * pitchSin + fz * pitchCos) >> 16) + radius;
 
-			final int bucket = clamp((fz + radius) * buckets / (radius * 2 + 1), 0, buckets - 1);
+			final int bucket = floor(saturate(fz / (float)diameter) * (float)buckets);
 			final int base = bucket * faceCount;
 			if (distanceStamp[bucket] != stamp) {
 				distanceStamp[bucket] = stamp;
@@ -421,15 +419,31 @@ final class FacePrioritySorter {
 			final int base = b * faceCount;
 
 			for (int faceIdx = 0; faceIdx < cnt; ++faceIdx)
-				m.putSortedFace(distanceToFaces[base + faceIdx] * 3 + start);
+				m.sortedFaces.putFaceIndices(distanceToFaces[base + faceIdx] * 3 + start);
 		}
-		m.setSorted();
 	}
 
-	@RequiredArgsConstructor
 	public static final class SortedFaces {
-		private int[] facesIndices = new int[16];
+		private int[] facesIndices;
 		private int length;
+		private boolean fixedSize;
+
+		public SortedFaces() {
+			facesIndices = new int[16];
+		}
+
+		public SortedFaces(int capacity) {
+			facesIndices = new int[capacity];
+			fixedSize = true;
+		}
+
+		public int capacity() {
+			return facesIndices.length;
+		}
+
+		public int[] data() {
+			return facesIndices;
+		}
 
 		public int length() {
 			return length;
@@ -445,7 +459,7 @@ final class FacePrioritySorter {
 		}
 
 		private void ensureCapacity(int count) {
-			if (length + count < facesIndices.length)
+			if (length + count < facesIndices.length || fixedSize)
 				return;
 			int newCapacity = ceilPow2(length + count);
 			log.debug( "{} Resizing \t{}",
@@ -458,6 +472,14 @@ final class FacePrioritySorter {
 		private void putFace(int f) {
 			ensureCapacity(1);
 			facesIndices[length++] = f;
+		}
+
+		void putFaceIndices(int offset) {
+			if(length >= facesIndices.length)
+				return;
+			facesIndices[length++] = offset;
+			facesIndices[length++] = offset + 1;
+			facesIndices[length++] = offset + 2;
 		}
 
 		private void putFaces(int[] indicies, int offset, int count) {

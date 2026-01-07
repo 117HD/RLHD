@@ -21,9 +21,6 @@ import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 
 @Slf4j
 public class WorldViewContext {
-	public static final int ALPHA_ZSORT_CLOSE = 4096;
-	public static final int ALPHA_ZSORT_CLOSE_SQ = ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
-
 	public static final int ALPHA_ZSORT = 8192;
 	public static final int ALPHA_ZSORT_SQ = ALPHA_ZSORT * ALPHA_ZSORT;
 
@@ -116,8 +113,7 @@ public class WorldViewContext {
 				final int dx = camPosX - ((zx - offset) << 10);
 				final int dz = camPosZ - ((zz - offset) << 10);
 				z.dist = dx * dx + dz * dz;
-				if(z.dist <= ALPHA_ZSORT_SQ)
-					alphaZones.add(z);
+				alphaZones.add(z);
 			}
 		}
 
@@ -125,7 +121,7 @@ public class WorldViewContext {
 			alphaZones.sort(alphaSortComparator);
 			staticAlphaSortingJob.reset();
 			for (Zone z : alphaZones)
-				z.alphaStaticModelSort(staticAlphaSortingJob, z.dist > ALPHA_ZSORT_CLOSE_SQ);
+				z.alphaStaticModelSort(staticAlphaSortingJob);
 			staticAlphaSortingJob.queue(camera);
 		}
 	}

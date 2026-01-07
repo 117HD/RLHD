@@ -8,23 +8,27 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.jobs.Job;
 
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.renderer.zone.Zone.AlphaModel.SORT_TYPE_DISTANCE;
 import static rs117.hd.utils.HDUtils.ceilPow2;
+import static rs117.hd.utils.MathUtils.*;
 
 @RequiredArgsConstructor
 public final class StaticAlphaSortingJob extends Job {
+	private static final int DIST_THRESHOLD = 4096 * 4096;
+
 	private final FacePrioritySorter staticSorter;
 
 	private AlphaModel[] models = new AlphaModel[16];
 	private AtomicIntegerArray states = new AtomicIntegerArray(16);
 	private int size = 0;
 
+	private int yaw;
 	private int yawSin;
 	private int yawCos;
+	private int pitch;
 	private int pitchSin;
 	private int pitchCos;
 
-	public void addAlphaModel(AlphaModel m, boolean farZone) {
+	public void addAlphaModel(AlphaModel m) {
 		if (size == models.length) {
 			final int newCapacity = (int) ceilPow2(models.length * 2L);
 			models = Arrays.copyOf(models, newCapacity);
@@ -32,17 +36,18 @@ public final class StaticAlphaSortingJob extends Job {
 		}
 
 		m.asyncSortIdx = size;
-		if(farZone) m.flags |= SORT_TYPE_DISTANCE;
 		states.set(size, 0);
 		models[size] = m;
 		size++;
 	}
 
 	public void queue(Camera camera) {
-		yawSin = SINE[camera.getFixedYaw()];
-		yawCos = COSINE[camera.getFixedYaw()];
-		pitchSin = SINE[camera.getFixedPitch()];
-		pitchCos = COSINE[camera.getFixedPitch()];
+		yaw = camera.getFixedYaw();
+		yawSin = SINE[yaw];
+		yawCos = COSINE[yaw];
+		pitch = camera.getFixedPitch();
+		pitchSin = SINE[pitch];
+		pitchCos = COSINE[pitch];
 		queue();
 	}
 
@@ -62,12 +67,19 @@ public final class StaticAlphaSortingJob extends Job {
 	}
 
 	private void processModel(FacePrioritySorter sorter, AlphaModel m) {
-		if((m.flags & SORT_TYPE_DISTANCE) != 0 || m.renderPriorities == null || m.modelOverride.disablePrioritySorting) {
-			sorter.sortFarStaticModelFacesByDistance(m, yawCos, yawSin, pitchCos, pitchSin);
+		if (m.renderPriorities == null || m.modelOverride.disablePrioritySorting) {
+			if(m.lastYaw != yaw || m.lastPitch != pitch || m.lastDist == -1 || abs(m.lastDist - m.dist) > DIST_THRESHOLD) {
+				m.lastDist = m.dist;
+				m.sortedFaces.reset();
+				sorter.sortFarStaticModelFacesByDistance(m, yawCos, yawSin, pitchCos, pitchSin);
+			}
 		} else {
-			sorter.sortStaticModelFacesWithPriority(m, yawCos, yawSin, pitchCos, pitchSin);
+			if(m.lastYaw != yaw || m.lastPitch != pitch) {
+				m.sortedFaces.reset();
+				sorter.sortStaticModelFacesWithPriority(m, yawCos, yawSin, pitchCos, pitchSin);
+			}
 		}
-		m.setSorted();
+		m.setSorted(yaw, pitch);
 	}
 
 	public boolean forceProcessModelClient(FacePrioritySorter sorter, AlphaModel m) {
