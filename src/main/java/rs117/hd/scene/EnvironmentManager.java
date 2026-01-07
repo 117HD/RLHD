@@ -181,6 +181,7 @@ public class EnvironmentManager {
 						map.put(env.key, env);
 
 				Environment.OVERWORLD = map.getOrDefault("OVERWORLD", Environment.DEFAULT);
+				Environment.SPRING = map.getOrDefault("SPRING", Environment.DEFAULT);
 				Environment.AUTUMN = map.getOrDefault("AUTUMN", Environment.DEFAULT);
 				Environment.WINTER = map.getOrDefault("WINTER", Environment.DEFAULT);
 
@@ -479,6 +480,8 @@ public class EnvironmentManager {
 
 	private Environment getOverworldEnvironment() {
 		switch (plugin.configSeasonalTheme) {
+			case SPRING:
+				return Environment.SPRING;
 			case AUTUMN:
 				return Environment.AUTUMN;
 			case WINTER:
