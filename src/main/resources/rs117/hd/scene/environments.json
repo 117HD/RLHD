@@ -2156,6 +2156,26 @@
     "windStrength": 50
   },
   {
+    "key": "SPRING",
+    "ambientColor": "#f4fdff",
+    "ambientStrength": 1.3,
+    "directionalColor": [
+      295.8393,
+      245.74895,
+      176.9941
+    ],
+    "directionalStrength": 2,
+    "sunAngles": [
+      48,
+      265
+    ],
+    "fogColor": "#aad8ff",
+    "fogDepth": 8,
+    "windAngle": 40,
+    "windSpeed": 10,
+    "windStrength": 30
+  },
+  {
     "key": "AUTUMN",
     "ambientColor": [
       295.8393,
