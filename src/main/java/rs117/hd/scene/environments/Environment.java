@@ -28,7 +28,7 @@ public class Environment {
 		.setFogColor(rgb("#ff00ff"))
 		.normalize();
 
-	public static Environment OVERWORLD, AUTUMN, WINTER;
+	public static Environment OVERWORLD, SPRING, AUTUMN, WINTER;
 
 	public String key;
 	@JsonAdapter(AreaManager.Adapter.class)
