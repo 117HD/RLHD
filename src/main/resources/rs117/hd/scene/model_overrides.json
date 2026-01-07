@@ -71066,26 +71066,6 @@
     "depthBias": 255
   },
   {
-    "description": "Depth Bias Fix - Mounted Glory/Digsite/Xeric",
-    "objectIds": [
-      "POH_TROPHY_AMULETOFGLORY_4",
-      "POH_AMULET_XERIC",
-      "POH_AMULET_XERIC_HONOUR",
-      "POH_AMULET_XERIC_HEART",
-      "POH_AMULET_XERIC_INFERNO",
-      "POH_AMULET_XERIC_GLADE",
-      "POH_AMULET_XERIC_LOOKOUT"
-    ],
-    "depthBias": 100,
-    "colorOverrides": [
-      {
-        "colors": "h == 49 || h == 0 && s == 7",
-        "baseMaterial": "NONE",
-        "depthBias": 110
-      }
-    ]
-  },
-  {
     "description": "Shilo Mine - Walls",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
