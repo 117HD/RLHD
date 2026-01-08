@@ -28,7 +28,6 @@ import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 
-import static net.runelite.api.Perspective.*;
 import static rs117.hd.renderer.zone.WorldViewContext.ALPHA_ZSORT_SQ;
 import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
 import static rs117.hd.utils.HDUtils.ceilPow2;
@@ -77,67 +76,43 @@ final class FacePrioritySorter {
 		return globalStamp;
 	}
 
-	boolean sortModelFaces(
+	void sortModelFaces(
+		SceneUploader sceneUploader,
 		SortedFaces sortedFaces,
 		SortedFaces unsortedFaces,
 		Projection proj,
 		Model model,
-		int orientation,
-		int x,
-		int y,
-		int z
+		int x, int y, int z
 	) {
+		int zero = (int) proj.project(x, y, z)[2];
+		if(zero < -50)
+			return;
+
 		model.calculateBoundsCylinder();
 		final int diameter = model.getDiameter();
 		if (diameter >= MAX_DIAMETER)
-			return false;
+			return;
 
-		final int radius = model.getRadius();
 		final int vertexCount = model.getVerticesCount();
-		final float[] verticesX = model.getVerticesX();
-		final float[] verticesY = model.getVerticesY();
-		final float[] verticesZ = model.getVerticesZ();
-
-		orientation = mod(orientation, 2048);
-		float orientSinf = SINE[orientation] / 65536f;
-		float orientCosf = COSINE[orientation] / 65536f;
-
-		float[] p = proj.project(x, y, z);
-		int zero = (int) p[2];
-
 		for (int v = 0; v < vertexCount; ++v) {
-			float vertexX = verticesX[v];
-			float vertexY = verticesY[v];
-			float vertexZ = verticesZ[v];
-
-			if (orientation != 0) {
-				float x0 = vertexX;
-				vertexX = vertexZ * orientSinf + x0 * orientCosf;
-				vertexZ = vertexZ * orientCosf - x0 * orientSinf;
-			}
-
-			vertexX += x;
-			vertexY += y;
-			vertexZ += z;
-
-			p = proj.project(vertexX, vertexY, vertexZ);
+			float[] p = proj.project(sceneUploader.modelLocalX[v], sceneUploader.modelLocalY[v], sceneUploader.modelLocalZ[v]);
 			if (p[2] < 50)
-				return false;
+				return;
 
 			modelProjectedX[v] = p[0] / p[2];
 			modelProjectedY[v] = p[1] / p[2];
 			distances[v] = (int) p[2] - zero;
 		}
 
-		final long stamp = nextStamp();
-
-		final int faceCount = model.getFaceCount();
 		final int[] indices1 = model.getFaceIndices1();
 		final int[] indices2 = model.getFaceIndices2();
 		final int[] indices3 = model.getFaceIndices3();
 
+		final int radius = model.getRadius();
+		final int faceCount = model.getFaceCount();
 		final int[] faceColors3 = model.getFaceColors3();
-		final byte[] faceRenderPriorities = model.getFaceRenderPriorities();
+
+		final long stamp = nextStamp();
 
 		unsortedFaces.ensureCapacity(faceCount);
 		int minFz = diameter, maxFz = 0;
@@ -149,13 +124,14 @@ final class FacePrioritySorter {
 			final int v2 = indices2[i];
 			final int v3 = indices3[i];
 
-			final float
-				aX = modelProjectedX[v1],
-				aY = modelProjectedY[v1],
-				bX = modelProjectedX[v2],
-				bY = modelProjectedY[v2],
-				cX = modelProjectedX[v3],
-				cY = modelProjectedY[v3];
+			final float aX = modelProjectedX[v1];
+			final float bX = modelProjectedX[v2];
+			final float cX = modelProjectedX[v3];
+
+			final float aY = modelProjectedY[v1];
+			final float bY = modelProjectedY[v2];
+			final float cY = modelProjectedY[v3];
+
 			// Back-face culling
 			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0) {
 				unsortedFaces.putFace(i);
@@ -177,6 +153,8 @@ final class FacePrioritySorter {
 			}
 		}
 
+		sortedFaces.ensureCapacity(faceCount - unsortedFaces.length);
+		final byte[] faceRenderPriorities = model.getFaceRenderPriorities();
 		if (faceRenderPriorities == null) {
 			for (int i = maxFz; i >= minFz; --i) {
 				if (distanceStamp[i] != stamp)
@@ -301,7 +279,6 @@ final class FacePrioritySorter {
 				currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 			}
 		}
-		return true;
 	}
 
 	void sortStaticModelFacesWithPriority(
@@ -426,8 +403,9 @@ final class FacePrioritySorter {
 	}
 
 	public static final class SortedFaces {
-		private int[] facesIndices;
-		private int length;
+		public int[] facesIndices;
+		public int length;
+
 		private boolean fixedSize;
 
 		public SortedFaces() {
@@ -439,41 +417,26 @@ final class FacePrioritySorter {
 			fixedSize = true;
 		}
 
-		public int capacity() {
-			return facesIndices.length;
-		}
-
-		public int[] data() {
-			return facesIndices;
-		}
-
-		public int length() {
-			return length;
-		}
-
 		public SortedFaces reset() {
 			length = 0;
 			return this;
 		}
 
-		public int get(int idx) {
-			return facesIndices[idx];
-		}
-
-		private void ensureCapacity(int count) {
+		private SortedFaces ensureCapacity(int count) {
 			if (length + count < facesIndices.length || fixedSize)
-				return;
+				return this;
 			int newCapacity = ceilPow2(length + count);
 			log.debug( "{} Resizing \t{}",
 				this,
 				String.format("%.2f MB -> %.2f MB", (facesIndices.length * Integer.BYTES) / 1e6, (newCapacity * Integer.BYTES) / 1e6)
 			);
 			facesIndices = Arrays.copyOf(facesIndices, newCapacity);
+			return this;
 		}
 
 		private void putFace(int f) {
-			ensureCapacity(1);
-			facesIndices[length++] = f;
+			if(length < facesIndices.length)
+				facesIndices[length++] = f;
 		}
 
 		void putFaceIndices(int offset) {

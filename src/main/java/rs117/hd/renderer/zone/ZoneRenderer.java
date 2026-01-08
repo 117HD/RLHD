@@ -160,6 +160,7 @@ public class ZoneRenderer implements Renderer {
 	private VAO.VAOList vaoO;
 	private VAO.VAOList vaoA;
 	private VAO.VAOList vaoPO;
+	private VAO.VAOList vaoShadow;
 
 	public static int indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -244,13 +245,15 @@ public class ZoneRenderer implements Renderer {
 		vaoO = new VAO.VAOList(eboAlpha);
 		vaoA = new VAO.VAOList(eboAlpha);
 		vaoPO = new VAO.VAOList(eboAlpha);
+		vaoShadow = new VAO.VAOList(eboAlpha);
 	}
 
 	private void destroyBuffers() {
 		vaoO.free();
 		vaoA.free();
 		vaoPO.free();
-		vaoO = vaoA = vaoPO = null;
+		vaoShadow.free();
+		vaoO = vaoA = vaoPO = vaoShadow = null;
 
 		if (eboAlpha != 0)
 			glDeleteBuffers(eboAlpha);
@@ -291,6 +294,7 @@ public class ZoneRenderer implements Renderer {
 			Scene topLevel = client.getScene();
 			vaoO.addRange(topLevel);
 			vaoPO.addRange(topLevel);
+			vaoShadow.addRange(topLevel);
 		}
 
 		ctx.sortStaticAlphaModels(staticFacePrioritySorter, sceneCamera);
@@ -961,6 +965,7 @@ public class ZoneRenderer implements Renderer {
 			case DrawCallbacks.PASS_OPAQUE:
 				vaoO.addRange(scene);
 				vaoPO.addRange(scene);
+				vaoShadow.addRange(scene);
 
 				if (scene.getWorldViewId() == -1) {
 					directionalCmd.SetShader(fastShadowProgram);
@@ -972,6 +977,11 @@ public class ZoneRenderer implements Renderer {
 					vaoO.resetAll();
 
 					vaoPO.unmap();
+
+					// Draw shadow-only models
+					vaoShadow.unmap();
+					vaoShadow.drawAll(directionalCmd);
+					vaoShadow.resetAll();
 
 					// Draw players opaque, without depth writes
 					sceneCmd.DepthMask(false);
@@ -1011,8 +1021,6 @@ public class ZoneRenderer implements Renderer {
 		int y,
 		int z
 	) {
-		jobSystem.processPendingClientCallbacks();
-
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null || ctx.vboM == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
@@ -1067,45 +1075,48 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
-		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
-		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
-		VAO o = vaoO.get(size, ctx.vboM);
+		sceneUploader.preUploadTempModel(m, x, y, z, orient);
 
-		SortedFaces sortedFaces = null;
-		SortedFaces unsortedFaces = null;
-		VAO a = o;
-		int alphaStart = -1;
+		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
+		final boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
+		if (hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum)) {
+			facePrioritySorter.sortModelFaces(
+				sceneUploader,
+				tempSortedFaces,
+				tempUnsortedFaces,
+				projection,
+				m,
+				x, y, z);
 
-		boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
-		if (hasAlpha) {
-			a = vaoA.get(size, ctx.vboM);
-			alphaStart = a.vbo.vb.position();
-
-			if (zone.inSceneFrustum) {
-				try {
-					sortedFaces   = tempSortedFaces.reset();
-					unsortedFaces = tempUnsortedFaces.reset();
-
-					facePrioritySorter.sortModelFaces(
-						sortedFaces,
-						unsortedFaces,
-						projection,
-						m,
-						orient, x, y, z);
-				} catch (Exception ex) {
-					log.debug("error drawing entity", ex);
-				}
-			}
+			if(tempUnsortedFaces.length > 0 && (!sceneManager.isRoot(ctx) || zone.inShadowFrustum)) {
+				final int shadowSize = tempUnsortedFaces.length * 3 * VAO.VERT_SIZE;
+				final VAO shadowO = vaoShadow.get(shadowSize, ctx.vboM);
+				sceneUploader.uploadTempModel(
+					tempUnsortedFaces,
+					m,
+					modelOverride,
+					preOrientation,
+					orient,
+					true,
+					shadowO.vbo.vb,
+					shadowO.vbo.vb,
+					shadowO.tboF.getPixelBuffer(),
+					shadowO.tboF.getPixelBuffer());
+			};
 		}
 
+		final int size = (tempSortedFaces.length > 0 ? tempSortedFaces.length : m.getFaceCount()) * 3 * VAO.VERT_SIZE;
+		final VAO o = vaoO.get(size, ctx.vboM);
+		final VAO a = hasAlpha ? vaoA.get(size, ctx.vboM) : o;
+		final int alphaStart = a.vbo.vb.position();
+
 		sceneUploader.uploadTempModel(
-			sortedFaces,
-			unsortedFaces,
+			tempSortedFaces.length > 0 ? tempSortedFaces : null,
 			m,
 			modelOverride,
 			preOrientation,
 			orient,
-			x, y, z,
+			false,
 			o.vbo.vb,
 			a.vbo.vb,
 			o.tboF.getPixelBuffer(),
@@ -1121,12 +1132,13 @@ public class ZoneRenderer implements Renderer {
 				zone.addTempAlphaModel(modelOverride, a.vao, a.tboF.getTexId(), alphaStart, alphaEnd, plane, x & 1023, y, z & 1023);
 			}
 		}
+
+		tempSortedFaces.reset();
+		tempUnsortedFaces.reset();
 	}
 
 	@Override
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
-		jobSystem.processPendingClientCallbacks();
-
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null || ctx.vboM == null || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
@@ -1171,47 +1183,51 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
+		sceneUploader.preUploadTempModel(m, x, y, z, orientation);
+
+		// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
+		// because they are not depth tested. transparent player faces don't need their own vao because normal
+		// transparent faces are already not depth tested
+		final boolean hasAlpha = renderable instanceof Player || m.getFaceTransparencies() != null;
 		final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
-		final int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
-		final VAO o = renderable instanceof Player ? vaoPO.get(size, ctx.vboM) : vaoO.get(size, ctx.vboM);
+		if (hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum)) {
+			facePrioritySorter.sortModelFaces(
+				sceneUploader,
+				tempSortedFaces,
+				tempUnsortedFaces,
+				worldProjection,
+				m,
+				x, y, z);
 
-		SortedFaces sortedFaces = null;
-		SortedFaces unsortedFaces = null;
-		VAO a = o;
-		int alphaStart = -1;
-
-		if (renderable instanceof Player || m.getFaceTransparencies() != null) {
-			// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
-			// because they are not depth tested. transparent player faces don't need their own vao because normal
-			// transparent faces are already not depth tested
-			a = vaoA.get(size, ctx.vboM);
-			alphaStart = a.vbo.vb.position();
-
-			if (!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {
-				try {
-					sortedFaces   = tempSortedFaces.reset();
-					unsortedFaces = tempUnsortedFaces.reset();
-
-					facePrioritySorter.sortModelFaces(
-						sortedFaces,
-						unsortedFaces,
-						worldProjection,
-						m,
-						orientation, x, y, z);
-				} catch (Exception ex) {
-					log.debug("error drawing entity", ex);
-				}
+			if(tempUnsortedFaces.length > 0 && (!sceneManager.isRoot(ctx) || zone.inShadowFrustum)) {
+				final int shadowSize = tempUnsortedFaces.length * 3 * VAO.VERT_SIZE;
+				final VAO shadowO = vaoShadow.get(shadowSize, ctx.vboM);
+				sceneUploader.uploadTempModel(
+					tempUnsortedFaces,
+					m,
+					modelOverride,
+					preOrientation,
+					orientation,
+					true,
+					shadowO.vbo.vb,
+					shadowO.vbo.vb,
+					shadowO.tboF.getPixelBuffer(),
+					shadowO.tboF.getPixelBuffer());
 			}
 		}
 
+		final int size = (tempSortedFaces.length > 0 ? tempSortedFaces.length : m.getFaceCount()) * 3 * VAO.VERT_SIZE;
+		final VAO o = renderable instanceof Player ? vaoPO.get(size, ctx.vboM) : vaoO.get(size, ctx.vboM);
+		final VAO a = hasAlpha ? vaoA.get(size, ctx.vboM) : o;
+		int alphaStart = a.vbo.vb.position();
+
 		sceneUploader.uploadTempModel(
-			sortedFaces,
-			unsortedFaces,
+			tempSortedFaces.length > 0 ? tempSortedFaces : null,
 			m,
 			modelOverride,
 			preOrientation,
 			orientation,
-			x, y, z,
+			false,
 			o.vbo.vb,
 			a.vbo.vb,
 			o.tboF.getPixelBuffer(),
@@ -1235,6 +1251,9 @@ public class ZoneRenderer implements Renderer {
 				);
 			}
 		}
+
+		tempSortedFaces.reset();
+		tempUnsortedFaces.reset();
 	}
 
 	@Override

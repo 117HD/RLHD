@@ -636,7 +636,7 @@ public class Zone {
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
-		sortedFacesLen += m.sortedFaces.capacity();
+		sortedFacesLen += m.sortedFaces.facesIndices.length;
 		alphaModels.add(m);
 	}
 
@@ -711,7 +711,7 @@ public class Zone {
 				continue;
 
 			eboAlphaAsyncBuffer.position(m.eboOffset);
-			eboAlphaAsyncBuffer.put(m.sortedFaces.data(), 0, m.sortedFaces.length());
+			eboAlphaAsyncBuffer.put(m.sortedFaces.facesIndices, 0, m.sortedFaces.length);
 		}
 	}
 
@@ -802,14 +802,14 @@ public class Zone {
 				}
 			}
 
-			if(m.sortedFaces == null || m.sortedFaces.length() <= 0 || !ZoneRenderer.eboAlphaIsMapped)
+			if(m.sortedFaces == null || m.sortedFaces.length <= 0 || !ZoneRenderer.eboAlphaIsMapped)
 				continue;
 
-			if((long)(ZoneRenderer.eboAlphaOffset + m.sortedFaces.length()) * Integer.BYTES < ZoneRenderer.eboAlphaCapacity) {
+			if((long)(ZoneRenderer.eboAlphaOffset + m.sortedFaces.length) * Integer.BYTES < ZoneRenderer.eboAlphaCapacity) {
 				lastDrawMode = STATIC;
 				m.eboOffset = ZoneRenderer.eboAlphaOffset;
-				ZoneRenderer.alphaFaceCount += m.sortedFaces.length() / 3;
-				ZoneRenderer.eboAlphaOffset += m.sortedFaces.length();
+				ZoneRenderer.alphaFaceCount += m.sortedFaces.length / 3;
+				ZoneRenderer.eboAlphaOffset += m.sortedFaces.length;
 				shouldQueueUpload = true;
 			}
 		}

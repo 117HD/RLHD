@@ -123,9 +123,9 @@ public class SceneUploader {
 	private final float[] modelUvs = new float[12];
 	private final int[] modelNormals = new int[9];
 
-	private final float[] modelLocalX = new float[MAX_VERTEX_COUNT];
-	private final float[] modelLocalY = new float[MAX_VERTEX_COUNT];
-	private final float[] modelLocalZ = new float[MAX_VERTEX_COUNT];
+	public final float[] modelLocalX = new float[MAX_VERTEX_COUNT];
+	public final float[] modelLocalY = new float[MAX_VERTEX_COUNT];
+	public final float[] modelLocalZ = new float[MAX_VERTEX_COUNT];
 
 	private final int[] modelLocalXI = new int[MAX_VERTEX_COUNT];
 	private final int[] modelLocalYI = new int[MAX_VERTEX_COUNT];
@@ -1689,73 +1689,12 @@ public class SceneUploader {
 		return len;
 	}
 
-	public void uploadTempModel(
-		Model model,
-		ModelOverride modelOverride,
-		int preOrientation,
-		int orientation,
-		int x,
-		int y,
-		int z,
-		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer,
-		IntBuffer opaqueTexBuffer,
-		IntBuffer alphaTexBuffer
-	) {
-		uploadTempModel(null, null, model, modelOverride, preOrientation, orientation, x, y, z, opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
-	}
-
-	// temp draw
-	public void uploadTempModel(
-		FacePrioritySorter.SortedFaces sortedFaces,
-		FacePrioritySorter.SortedFaces unsortedFaces,
-		Model model,
-		ModelOverride modelOverride,
-		int preOrientation,
-		int orientation,
-		int x,
-		int y,
-		int z,
-		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer,
-		IntBuffer opaqueTexBuffer,
-		IntBuffer alphaTexBuffer
-	) {
-		if (writeCache == null)
-			writeCache = new VertexWriteCache.Collection();
-		writeCache.setOutputBuffers(opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
-
-		final int triangleCount = model.getFaceCount();
+	public void preUploadTempModel(Model model, int x, int y, int z, int orientation) {
 		final int vertexCount = model.getVerticesCount();
 
 		final float[] verticesX = model.getVerticesX();
 		final float[] verticesY = model.getVerticesY();
 		final float[] verticesZ = model.getVerticesZ();
-
-		final int[] indices1 = model.getFaceIndices1();
-		final int[] indices2 = model.getFaceIndices2();
-		final int[] indices3 = model.getFaceIndices3();
-
-		final short[] unlitFaceColors = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
-		final int[] color1s = model.getFaceColors1();
-		final int[] color2s = model.getFaceColors2();
-		final int[] color3s = model.getFaceColors3();
-
-		final int[] xVertexNormals = model.getVertexNormalsX();
-		final int[] yVertexNormals = model.getVertexNormalsY();
-		final int[] zVertexNormals = model.getVertexNormalsZ();
-		final boolean modelHasNormals = xVertexNormals != null && yVertexNormals != null && zVertexNormals != null;
-
-		final short[] faceTextures = model.getFaceTextures();
-		final byte[] textureFaces = model.getTextureFaces();
-
-		final byte[] bias = model.getFaceBias();
-		final byte[] transparencies = model.getFaceTransparencies();
-
-		final byte overrideAmount = model.getOverrideAmount();
-		final byte overrideHue = model.getOverrideHue();
-		final byte overrideSat = model.getOverrideSaturation();
-		final byte overrideLum = model.getOverrideLuminance();
 
 		float orientSinf = 0;
 		float orientCosf = 0;
@@ -1784,28 +1723,79 @@ public class SceneUploader {
 			modelLocalY[v] = vertexY;
 			modelLocalZ[v] = vertexZ;
 		}
+	}
+
+	// temp draw
+	public void uploadTempModel(
+		FacePrioritySorter.SortedFaces sortedFaces,
+		Model model,
+		ModelOverride modelOverride,
+		int preOrientation,
+		int orientation,
+		boolean disableUndoVanillaShading,
+		IntBuffer opaqueBuffer,
+		IntBuffer alphaBuffer,
+		IntBuffer opaqueTexBuffer,
+		IntBuffer alphaTexBuffer
+	) {
+		if (writeCache == null)
+			writeCache = new VertexWriteCache.Collection();
+		writeCache.setOutputBuffers(opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
+
+		final int triangleCount = model.getFaceCount();
+
+		final int[] indices1 = model.getFaceIndices1();
+		final int[] indices2 = model.getFaceIndices2();
+		final int[] indices3 = model.getFaceIndices3();
+
+		final short[] unlitFaceColors = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
+		final int[] color1s = model.getFaceColors1();
+		final int[] color2s = model.getFaceColors2();
+		final int[] color3s = model.getFaceColors3();
+
+		final int[] xVertexNormals = model.getVertexNormalsX();
+		final int[] yVertexNormals = model.getVertexNormalsY();
+		final int[] zVertexNormals = model.getVertexNormalsZ();
+		final boolean modelHasNormals = xVertexNormals != null && yVertexNormals != null && zVertexNormals != null;
+
+		final short[] faceTextures = model.getFaceTextures();
+		final byte[] textureFaces = model.getTextureFaces();
+
+		final byte[] bias = model.getFaceBias();
+		final byte[] transparencies = model.getFaceTransparencies();
+
+		final byte overrideAmount = model.getOverrideAmount();
+		final byte overrideHue = model.getOverrideHue();
+		final byte overrideSat = model.getOverrideSaturation();
+		final byte overrideLum = model.getOverrideLuminance();
 
 		boolean isVanillaTextured = faceTextures != null;
 		boolean isVanillaUVMapped =
 			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
 			textureFaces != null;
 
+		float orientSinf = 0;
+		float orientCosf = 0;
+		if (orientation != 0) {
+			orientation = mod(orientation, 2048);
+			orientSinf = SINE[orientation] / 65536f;
+			orientCosf = COSINE[orientation] / 65536f;
+		}
+
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
 
+		ModelOverride lastMaterialDataOverride = modelOverride;
+		UvType lastMaterialDataUVType = UvType.GEOMETRY;
+		int materialData = baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false);
+
 		nextStamp();
-		final int sortedFaceCount = sortedFaces != null ? sortedFaces.length() : -1;
-		final int faceCount = sortedFaceCount > 0 ? sortedFaceCount + unsortedFaces.length(): triangleCount;
+
+		final int faceCount = sortedFaces != null ? sortedFaces.length : triangleCount;
 		for (int f = 0; f < faceCount; ++f) {
-			final int face;
-			if(sortedFaceCount > 0) {
-				if(f < sortedFaceCount)
-					face = sortedFaces.get(f);
-				else
-					face = unsortedFaces.get(f - sortedFaceCount);
-			} else {
-				face = f;
-			}
+			final int face = sortedFaces != null ? sortedFaces.facesIndices[f] : f;
+			if(face == -1)
+				break;
 
 			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			if (transparency == 255)
@@ -1880,7 +1870,11 @@ public class SceneUploader {
 					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			int materialData = material.packMaterialData(faceOverride, uvType, false);
+			if(lastMaterialDataOverride != faceOverride || lastMaterialDataUVType != uvType) {
+				materialData = material.packMaterialData(faceOverride, uvType, false);
+				lastMaterialDataOverride = faceOverride;
+				lastMaterialDataUVType   = uvType;
+			}
 
 			final float[] faceUVs;
 			if (uvType == UvType.VANILLA && textureId != -1) {
@@ -1915,7 +1909,7 @@ public class SceneUploader {
 				modelNormals[8] = zVertexNormals[triangleC];
 			}
 
-			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading) {
+			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && !disableUndoVanillaShading) {
 				color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
 				color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
 				color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);

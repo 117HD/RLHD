@@ -172,6 +172,8 @@ public class Material {
 
 	public final int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
+		// Note: uploadTempModel expects this value to be the same when giving the same parameters and therefore caches the value,
+		// this behavior changes to no longer be the case, uploadTempModel caching needs to be removed
 		assert isValid : String.format("Material %s used after invalidation", this);
 		int materialIndex = uboIndex;
 		assert materialIndex <= MAX_MATERIAL_INDEX;
