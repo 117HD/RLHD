@@ -32397,6 +32397,19 @@
     "description": "Magic Tree",
     "baseMaterial": "BARK_STONEPINE",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "uvType": "BOX",
+    "uvOrientation": 150,
+    "uvScale": 0.35,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_MAGIC_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_MAGIC_TOP"
+      }
+    },
     "objectIds": [
       "MAGIC_TREE_SEEDLING",
       "MAGIC_TREE_1",
@@ -32413,10 +32426,7 @@
       "MAGIC_TREE_FULLYGROWN_1",
       "MAGIC_TREE_FULLYGROWN_2",
       "MAGICTREE"
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 150,
-    "uvScale": 0.35
+    ]
   },
   {
     "description": "Magic Tree Stump",
