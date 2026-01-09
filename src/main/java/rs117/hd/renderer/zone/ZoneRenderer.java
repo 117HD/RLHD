@@ -1060,6 +1060,8 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
+		m.calculateBoundsCylinder();
+
 		if (sceneManager.isRoot(ctx)) {
 			try (var ignored = frameTimer.begin(Timer.VISIBILITY_CHECK)) {
 				// Additional Culling checks to help reduce dynamic object perf impact when off screen
@@ -1167,6 +1169,8 @@ public class ZoneRenderer implements Renderer {
 		int zx = (gameObject.getX() >> 10) + offset;
 		int zz = (gameObject.getY() >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
+
+		m.calculateBoundsCylinder();
 
 		if (sceneManager.isRoot(ctx)) {
 			try (var ignored = frameTimer.begin(Timer.VISIBILITY_CHECK)) {

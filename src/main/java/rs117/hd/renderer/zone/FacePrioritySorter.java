@@ -55,7 +55,7 @@ final class FacePrioritySorter {
 	}
 
 	private final int[] distances = new int[MAX_VERTEX_COUNT];
-	private final char[] distanceFaceCount = new char[MAX_DIAMETER];
+	private final byte[] distanceFaceCount = new byte[MAX_DIAMETER];
 	private final int[] distanceToFaces = new int[MAX_DIAMETER * FACES_PER_DISTANCE];
 	private final int[] numOfPriority = new int[PRIORITY_COUNT];
 	private final int[] orderedFaces = new int[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
@@ -84,13 +84,12 @@ final class FacePrioritySorter {
 		Model model,
 		int x, int y, int z
 	) {
-		int zero = (int) proj.project(x, y, z)[2];
-		if(zero < -50)
-			return;
-
-		model.calculateBoundsCylinder();
 		final int diameter = model.getDiameter();
 		if (diameter >= MAX_DIAMETER)
+			return;
+
+		final int zero = (int) proj.project(x, y, z)[2];
+		if(zero < -50)
 			return;
 
 		final int vertexCount = model.getVerticesCount();
@@ -116,7 +115,7 @@ final class FacePrioritySorter {
 
 		unsortedFaces.ensureCapacity(faceCount);
 		int minFz = diameter, maxFz = 0;
-		for (char i = 0; i < faceCount; ++i) {
+		for (int i = 0; i < faceCount; ++i) {
 			if (faceColors3[i] == -2)
 				continue;
 
@@ -165,20 +164,20 @@ final class FacePrioritySorter {
 				sortedFaces.putFaces(distanceToFaces, base, cnt);
 			}
 		} else {
-			Arrays.fill(numOfPriority, 0);
-			Arrays.fill(lt10, 0);
+			for(int i = 0; i < PRIORITY_COUNT; i++)
+				numOfPriority[i] = lt10[i] = 0;
 
 			for (int i = maxFz; i >= minFz; --i) {
 				if (distanceStamp[i] != stamp)
 					continue;
 
-				int cnt = distanceFaceCount[i];
-				int base = BASE_DISTANCE_LUT[i];
+				final int cnt = distanceFaceCount[i];
+				final int base = BASE_DISTANCE_LUT[i];
 
 				for (int f = 0; f < cnt; ++f) {
-					int face = distanceToFaces[base + f];
-					byte pri = faceRenderPriorities[face];
-					int idx = numOfPriority[pri]++;
+					final int face = distanceToFaces[base + f];
+					final int pri = faceRenderPriorities[face];
+					final int idx = numOfPriority[pri]++;
 
 					orderedFaces[BASE_PRIORITY_LUT[pri] + idx] = face;
 
