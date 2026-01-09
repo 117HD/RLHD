@@ -122,13 +122,8 @@ final class FacePrioritySorter {
 			}
 
 			final int fz = radius + (int)((aD + bD + cD) / 3.0f);
-			if(fz < 0 || fz >= MAX_DIAMETER) {
-				unsortedFaces.reset();
-				sortedFaces.reset();
-				return;
-			}
-
 			final int base = BASE_DISTANCE_LUT[fz];
+
 			if (distanceStamp[fz] != stamp) {
 				distanceStamp[fz] = stamp;
 				distanceFaceCount[fz] = 1;
