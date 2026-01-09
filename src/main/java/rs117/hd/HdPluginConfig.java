@@ -586,7 +586,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_SEASONAL_THEME,
 		name = "Seasonal Theme",
-		description = "Festive themes for Gielinor.",
+		description = "Festive themes for Gielinor. Select Summer to Disable",
 		position = 0,
 		section = environmentSettings
 	)
