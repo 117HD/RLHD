@@ -123,13 +123,8 @@ public class SceneUploader {
 	private final float[] modelUvs = new float[12];
 	private final int[] modelNormals = new int[9];
 
-	private final float[] modelLocalX = new float[MAX_VERTEX_COUNT];
-	private final float[] modelLocalY = new float[MAX_VERTEX_COUNT];
-	private final float[] modelLocalZ = new float[MAX_VERTEX_COUNT];
-
-	private final int[] modelLocalXI = new int[MAX_VERTEX_COUNT];
-	private final int[] modelLocalYI = new int[MAX_VERTEX_COUNT];
-	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
+	private final float[] modelLocal = new float[MAX_VERTEX_COUNT * 3];
+	private final int[] modelLocalI = new int[MAX_VERTEX_COUNT * 3];
 
 	// Lazily initialized staging buffers, only used by uploadTempModel
 	private VertexWriteCache.Collection writeCache;
@@ -1384,7 +1379,7 @@ public class SceneUploader {
 			orientCos = COSINE[orientation];
 		}
 
-		for (int v = 0; v < vertexCount; ++v) {
+		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
 			int vx = (int) vertexX[v];
 			int vy = (int) vertexY[v];
 			int vz = (int) vertexZ[v];
@@ -1418,9 +1413,9 @@ public class SceneUploader {
 				vy = (int) mix(h, vy, blend);
 			}
 
-			modelLocalXI[v] = vx;
-			modelLocalYI[v] = vy;
-			modelLocalZI[v] = vz;
+			modelLocalI[vertexOffset++] = vx;
+			modelLocalI[vertexOffset++] = vy;
+			modelLocalI[vertexOffset++] = vz;
 		}
 
 		boolean isVanillaTextured = faceTextures != null;
@@ -1447,21 +1442,24 @@ public class SceneUploader {
 			if (unlitFaceColors != null)
 				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
 
-			int triangleA = indices1[face];
-			int triangleB = indices2[face];
-			int triangleC = indices3[face];
+			final int triangleA = indices1[face];
+			final int triangleB = indices2[face];
+			final int triangleC = indices3[face];
 
-			int vx1 = modelLocalXI[triangleA];
-			int vy1 = modelLocalYI[triangleA];
-			int vz1 = modelLocalZI[triangleA];
+			int vertexOffset = triangleA * 3;
+			final int vx1 = modelLocalI[vertexOffset];
+			final int vy1 = modelLocalI[vertexOffset + 1];
+			final int vz1 = modelLocalI[vertexOffset + 2];
 
-			int vx2 = modelLocalXI[triangleB];
-			int vy2 = modelLocalYI[triangleB];
-			int vz2 = modelLocalZI[triangleB];
+			vertexOffset = triangleB * 3;
+			final int vx2 = modelLocalI[vertexOffset];
+			final int vy2 = modelLocalI[vertexOffset + 1];
+			final int vz2 = modelLocalI[vertexOffset + 2];
 
-			int vx3 = modelLocalXI[triangleC];
-			int vy3 = modelLocalYI[triangleC];
-			int vz3 = modelLocalZI[triangleC];
+			vertexOffset = triangleC * 3;
+			final int vx3 = modelLocalI[vertexOffset];
+			final int vy3 = modelLocalI[vertexOffset + 1];
+			final int vz3 = modelLocalI[vertexOffset + 2];
 
 			int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
@@ -1696,8 +1694,10 @@ public class SceneUploader {
 		final float[] verticesY = model.getVerticesY();
 		final float[] verticesZ = model.getVerticesZ();
 
+		// Identity orient, will result in no rotation
 		float orientSinf = 0;
-		float orientCosf = 0;
+		float orientCosf = 1;
+
 		if (orientation != 0) {
 			orientation = mod(orientation, 2048);
 			orientSinf = SINE[orientation] / 65536f;
@@ -1706,35 +1706,30 @@ public class SceneUploader {
 
 		final int zero = (int) proj.project(x, y, z)[2];
 		boolean shouldSort = modelProjected != null && zero > -50;
-		for (int v = 0; v < vertexCount; ++v) {
+		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v, vertexOffset += 3) {
 			float vertexX = verticesX[v];
 			float vertexY = verticesY[v];
 			float vertexZ = verticesZ[v];
 
-			if (orientation != 0) {
-				float x0 = vertexX;
-				vertexX = vertexZ * orientSinf + x0 * orientCosf;
-				vertexZ = vertexZ * orientCosf - x0 * orientSinf;
-			}
+			final float x0 = vertexX;
+			vertexX = vertexZ * orientSinf + x0 * orientCosf;
+			vertexZ = vertexZ * orientCosf - x0 * orientSinf;
 
 			vertexX += x;
 			vertexY += y;
 			vertexZ += z;
 
 			if(shouldSort) {
-				float[] p = proj.project(vertexX, vertexY, vertexZ);
+				final float[] p = proj.project(vertexX, vertexY, vertexZ);
+				modelProjected[vertexOffset] = p[0] / p[2];
+				modelProjected[vertexOffset + 1] = p[1] / p[2];
+				modelProjected[vertexOffset + 2] = p[2] - zero;
 				shouldSort = p[2] >= 50;
-				if (shouldSort) {
-					int offset = v * 3;
-					modelProjected[offset] = p[0] / p[2];
-					modelProjected[offset + 1] = p[1] / p[2];
-					modelProjected[offset + 2] = p[2] - zero;
-				}
 			}
 
-			modelLocalX[v] = vertexX;
-			modelLocalY[v] = vertexY;
-			modelLocalZ[v] = vertexZ;
+			modelLocal[vertexOffset] = vertexX;
+			modelLocal[vertexOffset + 1] = vertexY;
+			modelLocal[vertexOffset + 2] = vertexZ;
 		}
 
 		return shouldSort;
@@ -1833,21 +1828,24 @@ public class SceneUploader {
 			if (unlitFaceColors != null)
 				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
 
-			int triangleA = indices1[face];
-			int triangleB = indices2[face];
-			int triangleC = indices3[face];
+			final int triangleA = indices1[face];
+			final int triangleB = indices2[face];
+			final int triangleC = indices3[face];
 
-			float vx1 = modelLocalX[triangleA];
-			float vx2 = modelLocalX[triangleB];
-			float vx3 = modelLocalX[triangleC];
+			int vertexOffset = triangleA * 3;
+			float vx1 = modelLocal[vertexOffset];
+			float vy1 = modelLocal[vertexOffset + 1];
+			float vz1 = modelLocal[vertexOffset + 2];
 
-			float vy1 = modelLocalY[triangleA];
-			float vy2 = modelLocalY[triangleB];
-			float vy3 = modelLocalY[triangleC];
+			vertexOffset = triangleB * 3;
+			float vx2 = modelLocal[vertexOffset];
+			float vy2 = modelLocal[vertexOffset + 1];
+			float vz2 = modelLocal[vertexOffset + 2];
 
-			float vz1 = modelLocalZ[triangleA];
-			float vz2 = modelLocalZ[triangleB];
-			float vz3 = modelLocalZ[triangleC];
+			vertexOffset = triangleC * 3;
+			float vx3 = modelLocal[vertexOffset];
+			float vy3 = modelLocal[vertexOffset + 1];
+			float vz3 = modelLocal[vertexOffset + 2];
 
 			int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
