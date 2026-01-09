@@ -1076,19 +1076,14 @@ public class ZoneRenderer implements Renderer {
 					return;
 			}
 		}
-
-		sceneUploader.preUploadTempModel(m, x, y, z, orient);
-
 		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 		final boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
-		if (hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum)) {
-			facePrioritySorter.sortModelFaces(
-				sceneUploader,
-				tempSortedFaces,
-				tempUnsortedFaces,
-				projection,
-				m,
-				x, y, z);
+
+		boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+		shouldSort &= sceneUploader.transformModelVertices(projection, shouldSort ? facePrioritySorter.modelProjected : null, m, x, y, z, orient);
+
+		if (shouldSort) {
+			facePrioritySorter.sortModelFaces(tempSortedFaces, tempUnsortedFaces, m);
 
 			if(tempUnsortedFaces.length > 0 && (!sceneManager.isRoot(ctx) || zone.inShadowFrustum)) {
 				final int shadowSize = tempUnsortedFaces.length * 3 * VAO.VERT_SIZE;
@@ -1187,21 +1182,17 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
-		sceneUploader.preUploadTempModel(m, x, y, z, orientation);
-
 		// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 		// because they are not depth tested. transparent player faces don't need their own vao because normal
 		// transparent faces are already not depth tested
 		final boolean hasAlpha = renderable instanceof Player || m.getFaceTransparencies() != null;
 		final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
-		if (hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum)) {
-			facePrioritySorter.sortModelFaces(
-				sceneUploader,
-				tempSortedFaces,
-				tempUnsortedFaces,
-				worldProjection,
-				m,
-				x, y, z);
+
+		boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+		shouldSort &= sceneUploader.transformModelVertices(worldProjection, shouldSort ? facePrioritySorter.modelProjected : null, m, x, y, z, orientation);
+
+		if (shouldSort) {
+			facePrioritySorter.sortModelFaces(tempSortedFaces, tempUnsortedFaces, m);
 
 			if(tempUnsortedFaces.length > 0 && (!sceneManager.isRoot(ctx) || zone.inShadowFrustum)) {
 				final int shadowSize = tempUnsortedFaces.length * 3 * VAO.VERT_SIZE;

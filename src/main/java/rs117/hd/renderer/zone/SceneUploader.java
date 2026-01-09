@@ -123,9 +123,9 @@ public class SceneUploader {
 	private final float[] modelUvs = new float[12];
 	private final int[] modelNormals = new int[9];
 
-	public final float[] modelLocalX = new float[MAX_VERTEX_COUNT];
-	public final float[] modelLocalY = new float[MAX_VERTEX_COUNT];
-	public final float[] modelLocalZ = new float[MAX_VERTEX_COUNT];
+	private final float[] modelLocalX = new float[MAX_VERTEX_COUNT];
+	private final float[] modelLocalY = new float[MAX_VERTEX_COUNT];
+	private final float[] modelLocalZ = new float[MAX_VERTEX_COUNT];
 
 	private final int[] modelLocalXI = new int[MAX_VERTEX_COUNT];
 	private final int[] modelLocalYI = new int[MAX_VERTEX_COUNT];
@@ -1689,7 +1689,7 @@ public class SceneUploader {
 		return len;
 	}
 
-	public void preUploadTempModel(Model model, int x, int y, int z, int orientation) {
+	public boolean transformModelVertices(Projection proj, float[] modelProjected, Model model, int x, int y, int z, int orientation) {
 		final int vertexCount = model.getVerticesCount();
 
 		final float[] verticesX = model.getVerticesX();
@@ -1704,6 +1704,8 @@ public class SceneUploader {
 			orientCosf = COSINE[orientation] / 65536f;
 		}
 
+		final int zero = (int) proj.project(x, y, z)[2];
+		boolean shouldSort = modelProjected != null && zero > -50;
 		for (int v = 0; v < vertexCount; ++v) {
 			float vertexX = verticesX[v];
 			float vertexY = verticesY[v];
@@ -1719,10 +1721,23 @@ public class SceneUploader {
 			vertexY += y;
 			vertexZ += z;
 
+			if(shouldSort) {
+				float[] p = proj.project(vertexX, vertexY, vertexZ);
+				shouldSort = p[2] >= 50;
+				if (shouldSort) {
+					int offset = v * 3;
+					modelProjected[offset] = p[0] / p[2];
+					modelProjected[offset + 1] = p[1] / p[2];
+					modelProjected[offset + 2] = p[2] - zero;
+				}
+			}
+
 			modelLocalX[v] = vertexX;
 			modelLocalY[v] = vertexY;
 			modelLocalZ[v] = vertexZ;
 		}
+
+		return shouldSort;
 	}
 
 	// temp draw

@@ -54,13 +54,12 @@ final class FacePrioritySorter {
 			BASE_PRIORITY_LUT[i] = i * MAX_FACES_PER_PRIORITY;
 	}
 
-	private final int[] distances = new int[MAX_VERTEX_COUNT];
+	public final float[] modelProjected = new float[MAX_VERTEX_COUNT * 3];
+
 	private final byte[] distanceFaceCount = new byte[MAX_DIAMETER];
 	private final int[] distanceToFaces = new int[MAX_DIAMETER * FACES_PER_DISTANCE];
 	private final int[] numOfPriority = new int[PRIORITY_COUNT];
 	private final int[] orderedFaces = new int[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
-	private final float[] modelProjectedX = new float[MAX_VERTEX_COUNT];
-	private final float[] modelProjectedY = new float[MAX_VERTEX_COUNT];
 	private final int[] eq10 = new int[MAX_FACES_PER_PRIORITY];
 	private final int[] eq11 = new int[MAX_FACES_PER_PRIORITY];
 	private final int[] lt10 = new int[PRIORITY_COUNT];
@@ -77,31 +76,13 @@ final class FacePrioritySorter {
 	}
 
 	void sortModelFaces(
-		SceneUploader sceneUploader,
 		SortedFaces sortedFaces,
 		SortedFaces unsortedFaces,
-		Projection proj,
-		Model model,
-		int x, int y, int z
+		Model model
 	) {
 		final int diameter = model.getDiameter();
 		if (diameter >= MAX_DIAMETER)
 			return;
-
-		final int zero = (int) proj.project(x, y, z)[2];
-		if(zero < -50)
-			return;
-
-		final int vertexCount = model.getVerticesCount();
-		for (int v = 0; v < vertexCount; ++v) {
-			float[] p = proj.project(sceneUploader.modelLocalX[v], sceneUploader.modelLocalY[v], sceneUploader.modelLocalZ[v]);
-			if (p[2] < 50)
-				return;
-
-			modelProjectedX[v] = p[0] / p[2];
-			modelProjectedY[v] = p[1] / p[2];
-			distances[v] = (int) p[2] - zero;
-		}
 
 		final int[] indices1 = model.getFaceIndices1();
 		final int[] indices2 = model.getFaceIndices2();
@@ -119,17 +100,20 @@ final class FacePrioritySorter {
 			if (faceColors3[i] == -2)
 				continue;
 
-			final int v1 = indices1[i];
-			final int v2 = indices2[i];
-			final int v3 = indices3[i];
+			int offset = indices1[i] * 3;
+			final float aX = modelProjected[offset];
+			final float aY = modelProjected[offset + 1];
+			final float aD = modelProjected[offset + 2];
 
-			final float aX = modelProjectedX[v1];
-			final float bX = modelProjectedX[v2];
-			final float cX = modelProjectedX[v3];
+			offset = indices2[i] * 3;
+			final float bX = modelProjected[offset];
+			final float bY = modelProjected[offset + 1];
+			final float bD = modelProjected[offset + 2];
 
-			final float aY = modelProjectedY[v1];
-			final float bY = modelProjectedY[v2];
-			final float cY = modelProjectedY[v3];
+			offset = indices3[i] * 3;
+			final float cX = modelProjected[offset];
+			final float cY = modelProjected[offset + 1];
+			final float cD = modelProjected[offset + 2];
 
 			// Back-face culling
 			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0) {
@@ -137,9 +121,14 @@ final class FacePrioritySorter {
 				continue;
 			}
 
-			final int fz = radius + (distances[v1] + distances[v2] + distances[v3]) / 3;
-			final int base = BASE_DISTANCE_LUT[fz];
+			final int fz = radius + (int)((aD + bD + cD) / 3.0f);
+			if(fz < 0 || fz >= MAX_DIAMETER) {
+				unsortedFaces.reset();
+				sortedFaces.reset();
+				return;
+			}
 
+			final int base = BASE_DISTANCE_LUT[fz];
 			if (distanceStamp[fz] != stamp) {
 				distanceStamp[fz] = stamp;
 				distanceFaceCount[fz] = 1;
