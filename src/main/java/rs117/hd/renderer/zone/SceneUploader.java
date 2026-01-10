@@ -2158,6 +2158,46 @@ public class SceneUploader {
 		return (color & ~0x7F) | l;
 	}
 
+	public static int undoVanillaShading(
+		final int color, final boolean legacyGreyColors,
+		final int nx, final int ny, final int nz
+	) {
+		int l = color & 0x7F;
+		if(l < IGNORE_LOW_LIGHTNESS)
+			return color;
+
+		final int nDotL = nx + ny + nz;
+		if (nDotL <= 0)
+			return color;
+
+		// Normals are currently unrotated, so we don't need to do any rotation for this
+		final float lightDotNormal = (nDotL * 0.57735026f) / sqrt(square((float)nx) + square((float)ny) + square((float)nz));
+
+		// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
+		// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
+		// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
+		// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
+		// low value for it to look acceptable in most cases.
+		final float colorAdjust = BASE_LIGHTEN - l + (l - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER;
+		l += (int) (lightDotNormal * colorAdjust);
+
+		final int maxL;
+		if(legacyGreyColors) {
+			maxL = 55;
+		} else {
+			// Read LUT using the saturation value
+			maxL = MAX_BRIGHTNESS_LOOKUP_TABLE[(color >> 7) & 0x7];
+		}
+
+		// Clamp brightness as detailed above
+		if (l > maxL)
+			l = maxL;
+
+		// Only replace luminance
+		return (color & ~0x7F) | l;
+	}
+
+
 	private static void rotateNormalsFloat(int[] normals, float orientSin, float orientCos) {
 		int nx = normals[0], nz = normals[2];
 		normals[0] = (int)(nz * orientSin + nx * orientCos);
