@@ -27385,6 +27385,7 @@
     "range": 20,
     "fadeInDuration": 1500,
     "fadeOutDuration": 1300,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "AIDE_PLAYER_BOOK_PORTAL"
     ]
@@ -27428,6 +27429,7 @@
     "range": 20,
     "fadeInDuration": 1500,
     "fadeOutDuration": 1300,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE_TWISTED_PLAYER_BOOK_PORTAL"
     ]
@@ -27467,6 +27469,7 @@
     "duration": 0,
     "range": 20,
     "fadeOutDuration": 1500,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE_4_HOME_TELEPORT_SPOTANIM_4"
     ]
@@ -27505,6 +27508,7 @@
     "duration": 0,
     "range": 20,
     "fadeOutDuration": 1000,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE03_HOME_TELEPORT_SPOTANIM_5"
     ]
@@ -27555,6 +27559,7 @@
     "range": 20,
     "fadeOutDuration": 900,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "despawnDelay": 3800,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_04"
@@ -27573,6 +27578,7 @@
     "fadeInDuration": 500,
     "fadeOutDuration": 900,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "despawnDelay": 3800,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_04"
