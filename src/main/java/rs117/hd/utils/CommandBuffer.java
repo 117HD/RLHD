@@ -184,7 +184,6 @@ public class CommandBuffer {
 		cmd[writeHead++] = (long) indirectOffset * Integer.BYTES;
 	}
 
-
 	public void Enable(int capability) {
 		Toggle(capability, true);
 	}

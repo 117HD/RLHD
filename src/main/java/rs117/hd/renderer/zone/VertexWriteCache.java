@@ -66,15 +66,28 @@ public final class VertexWriteCache {
 		int nx, int ny, int nz,
 		int textureFaceIdx
 	) {
+		putVertex(
+			Float.floatToRawIntBits(x),
+			Float.floatToRawIntBits(y),
+			Float.floatToRawIntBits(z),
+			u, v, w, nx, ny, nz, textureFaceIdx);
+	}
+
+	public void putVertex(
+		int x, int y, int z,
+		float u, float v, float w,
+		int nx, int ny, int nz,
+		int textureFaceIdx
+	) {
 		if (stagingPosition + 7 > stagingBuffer.length)
 			flushAndGrow();
 
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
-		stagingBuffer[stagingPosition] = Float.floatToRawIntBits(x);
-		stagingBuffer[stagingPosition + 1] = Float.floatToRawIntBits(y);
-		stagingBuffer[stagingPosition + 2] = Float.floatToRawIntBits(z);
+		stagingBuffer[stagingPosition] = x;
+		stagingBuffer[stagingPosition + 1] = y;
+		stagingBuffer[stagingPosition + 2] = z;
 		stagingBuffer[stagingPosition + 3] = float16(v) << 16 | float16(u);
 		stagingBuffer[stagingPosition + 4] = (nx & 0xFFFF) << 16 | float16(w);
 		stagingBuffer[stagingPosition + 5] = (nz & 0xFFFF) << 16 | ny & 0xFFFF;

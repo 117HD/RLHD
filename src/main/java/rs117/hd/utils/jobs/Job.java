@@ -23,18 +23,30 @@ public abstract class Job {
 	JobHandle handle;
 
 	public final void waitForCompletion() {
+		waitForCompletion(-1);
+	}
+
+	public final void waitForCompletion(int timeoutNs) {
+		boolean completed = false;
 		if (handle != null) {
 			try {
-				handle.await();
+				if(isDone()) {
+					completed = true;
+				} else {
+					completed = handle.await(timeoutNs);
+				}
 			} catch (InterruptedException e) {
 				log.warn("Job {} was interrupted while waiting for completion", this);
 				throw new RuntimeException(e);
 			} finally {
-				handle.release();
+				if(completed)
+					handle.release();
 			}
+		} else {
+			completed = true;
 		}
 
-		if (group != null) {
+		if (group != null && completed) {
 			group.pending.remove(this);
 			group = null;
 		}
@@ -110,6 +122,7 @@ public abstract class Job {
 
 	public final <T extends Job> T queue(JobGroup<T> group, Job... dependencies) {
 		assert group != null;
+		waitForCompletion();
 		JOB_SYSTEM.queue(this, group.highPriority, dependencies);
 		if (executeAsync) {
 			this.group = (JobGroup<Job>) group;
@@ -119,11 +132,13 @@ public abstract class Job {
 	}
 
 	public final <T extends Job> T queue(boolean highPriority, Job... dependencies) {
+		waitForCompletion();
 		JOB_SYSTEM.queue(this, highPriority, dependencies);
 		return (T) this;
 	}
 
 	public final <T extends Job> T queue(Job... dependencies) {
+		waitForCompletion();
 		JOB_SYSTEM.queue(this, true, dependencies);
 		return (T) this;
 	}
