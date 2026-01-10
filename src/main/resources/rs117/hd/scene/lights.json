@@ -27886,6 +27886,29 @@
     ]
   },
   {
+    "description": "TELEGRAB_IMPACT",
+    "alignment": "CENTER",
+    "height": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "radius": 195,
+    "strength": 8,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "graphicsObjectIds": [
+      "TELEGRAB_IMPACT"
+    ]
+  },
+  {
     "description": "TELEGRAB_CAST",
     "offset": [ 0, 165, 75 ],
     "radius": 125,
