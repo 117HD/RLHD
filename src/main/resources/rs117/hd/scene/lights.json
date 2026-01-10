@@ -27596,6 +27596,7 @@
     "fadeInDuration": 50,
     "spawnDelay": 600,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "despawnDelay": 550,
     "fadeOutDuration": 250,
     "graphicsObjectIds": [
@@ -27609,6 +27610,7 @@
     "offset": [ 0, 20, 35 ],
     "radius": 170,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 25,
     "color": [
       252,
