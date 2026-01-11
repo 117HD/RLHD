@@ -44917,6 +44917,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "waitForAnimation": true,
     "graphicsObjectIds": [
       "ZAMORAK_FLAME"
     ]
