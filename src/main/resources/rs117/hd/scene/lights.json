@@ -27450,6 +27450,7 @@
     "range": 20,
     "spawnDelay": 850,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 200,
     "graphicsObjectIds": [
       "LEAGUE_4_HOME_TELEPORT_SPOTANIM_3"
     ]
@@ -27468,6 +27469,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "fadeInDuration": 200,
     "fadeOutDuration": 1500,
     "despawnWithParent": true,
     "graphicsObjectIds": [
