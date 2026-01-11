@@ -27635,10 +27635,8 @@
     ]
   },
   {
-    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT",
-    "height": 140,
-    "alignment": "CENTER",
-    "offset": [ 0, 20, 70 ],
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT_FLAME_FRONT",
+    "offset": [ 0, 160, 70 ],
     "radius": 30,
     "fixedDespawnTime": true,
     "strength": 30,
@@ -27652,20 +27650,132 @@
     "range": 60,
     "fadeInDuration": 100,
     "spawnDelay": 600,
-    "despawnDelay": 100,
+    "despawnDelay": 500,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
       "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
     ]
   },
   {
-    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT",
-    "height": 140,
-    "alignment": "CENTER",
-    "offset": [ 0, 20, 70 ],
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT_FLAME_LEFT",
+    "offset": [ -25, 170, 50 ],
     "radius": 30,
     "fixedDespawnTime": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 500,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT_FLAME_RIGHT",
+    "offset": [ 25, 170, 50 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 500,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_FRONT",
+    "offset": [ 0, 160, 77 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_LEFT",
+    "offset": [ -25, 170, 50 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_RIGHT",
+    "offset": [ 25, 170, 50 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_TOP",
+    "offset": [ 0, 200, 50 ],
+    "radius": 60,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
+    "strength": 20,
     "color": [
       252,
       148,
@@ -27689,6 +27799,7 @@
     "offset": [ 65, 20, 0 ],
     "radius": 200,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 3,
     "color": [
       252,
@@ -27714,6 +27825,7 @@
     "offset": [ -65, 20, 0 ],
     "radius": 200,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 3,
     "color": [
       252,
