@@ -38480,8 +38480,12 @@
     "description": "Standard Spellbook Teleport",
     "graphicsObjectIds": [ "TELEPORT_CASTING" ],
     "radius": 350,
-    "strength": 12,
-    "color": [ 205, 0, 205 ],
+    "strength": 16,
+    "color": [
+      170,
+      20,
+      255
+    ],
     "offset": [ 0, 130, 0 ],
     "fixedDespawnTime": true,
     "despawnDelay": 550,
