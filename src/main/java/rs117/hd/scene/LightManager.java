@@ -281,8 +281,22 @@ public class LightManager {
 					light.plane = plane;
 					light.orientation = light.actor.getCurrentOrientation();
 
-					if (light.animationSpecific)
-						parentExists = light.def.animationIds.contains(light.actor.getAnimation());
+					if (light.animationSpecific) {
+						if (light.spotanimId != -1) {
+							if (light.def.waitForAnimation) {
+								parentExists = false;
+								for (var spotanim : light.actor.getSpotAnims()) {
+									if (spotanim.getId() == light.spotanimId) {
+										if (gameCycle >= spotanim.getStartCycle())
+											parentExists = true;
+										break;
+									}
+								}
+							}
+						} else {
+							parentExists = light.def.animationIds.contains(light.actor.getAnimation());
+						}
+					}
 
 					int tileExX = ((int) light.origin[0] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 					int tileExY = ((int) light.origin[2] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;

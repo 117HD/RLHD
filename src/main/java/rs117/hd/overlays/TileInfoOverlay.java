@@ -707,8 +707,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						.append(separator)
 						.append(gamevalManager.getSpotanimName(spotanim.getId()))
 						.append(" (").append(spotanim.getId()).append(")")
-						.append(" cycle=").append(spotanim.getCycle())
-						.append(" frame=").append(spotanim.getFrame());
+						.append(" frame=").append(spotanim.getFrame())
+						.append(" cycle=").append(client.getGameCycle() - spotanim.getStartCycle());
 					separator = "\n\t";
 				}
 				if (sb.length() > 0)
@@ -746,12 +746,12 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				var anim = graphicsObject.getAnimation();
 				hoveredGamevals.add(name);
 				lines.add(String.format(
-					"Graphics Object: %s (%d) anim=%d frame=%d cyclesUntilStart=%d%s",
+					"Graphics Object: %s (%d) anim=%d frame=%d cycle=%d%s",
 					name,
 					graphicsObject.getId(),
 					anim == null ? -1 : anim.getId(),
 					graphicsObject.getAnimationFrame(),
-					graphicsObject.getStartCycle() - client.getGameCycle(),
+					client.getGameCycle() - graphicsObject.getStartCycle(),
 					getModelInfo(graphicsObject)
 				));
 			}
