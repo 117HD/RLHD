@@ -697,7 +697,25 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				faceCount,
 				getModelInfo(renderable)
 			));
-			lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
+
+			if (renderable instanceof Actor) {
+				Actor actor = (Actor) renderable;
+				StringBuilder sb = new StringBuilder();
+				String separator = "";
+				for (var spotanim : actor.getSpotAnims()) {
+					sb
+						.append(separator)
+						.append(gamevalManager.getSpotanimName(spotanim.getId()))
+						.append(" (").append(spotanim.getId()).append(")")
+						.append(" frame=").append(spotanim.getFrame())
+						.append(" cycle=").append(client.getGameCycle() - spotanim.getStartCycle());
+					separator = "\n\t";
+				}
+				if (sb.length() > 0)
+					lines.add("Spotanims: " + sb);
+			} else {
+				lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
+			}
 		}
 
 		for (var npc : client.getTopLevelWorldView().npcs()) {
@@ -728,12 +746,12 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				var anim = graphicsObject.getAnimation();
 				hoveredGamevals.add(name);
 				lines.add(String.format(
-					"Graphics Object: %s (%d) anim=%d frame=%d cyclesUntilStart=%d%s",
+					"Graphics Object: %s (%d) anim=%d frame=%d cycle=%d%s",
 					name,
 					graphicsObject.getId(),
 					anim == null ? -1 : anim.getId(),
 					graphicsObject.getAnimationFrame(),
-					graphicsObject.getStartCycle() - client.getGameCycle(),
+					client.getGameCycle() - graphicsObject.getStartCycle(),
 					getModelInfo(graphicsObject)
 				));
 			}

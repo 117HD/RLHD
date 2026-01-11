@@ -38492,7 +38492,8 @@
     "fadeOverlap": true,
     "fadeInDuration": 50,
     "fadeOutDuration": 250,
-    "spawnDelay": 950
+    "spawnDelay": 950,
+    "waitForAnimation": true
   },
   {
     "description": "FAIRY_RING_TELEPORT_ANIMATION",
