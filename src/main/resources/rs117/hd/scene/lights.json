@@ -28266,6 +28266,26 @@
     ]
   },
   {
+    "description": "WIND_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "WINDBOLT_IMPACT"
+    ]
+  },
+  {
     "description": "WATER_BOLT",
     "radius": 250,
     "strength": 6.3,
@@ -28281,6 +28301,26 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERBOLT_TRAVEL"
+    ]
+  },
+  {
+    "description": "WATER_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "WATERBOLT_IMPACT"
     ]
   },
   {
@@ -28302,6 +28342,26 @@
     ]
   },
   {
+    "description": "EARTH_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "EARTHBOLT_IMPACT"
+    ]
+  },
+  {
     "description": "FIRE_BOLT",
     "radius": 265,
     "strength": 7,
@@ -28317,6 +28377,26 @@
     "fadeInDuration": 200,
     "projectileIds": [
       "FIREBOLT_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      255,
+      70,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "FIREBOLT_IMPACT"
     ]
   },
   {
