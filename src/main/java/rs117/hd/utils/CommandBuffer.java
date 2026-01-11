@@ -2,9 +2,12 @@ package rs117.hd.utils;
 
 import java.nio.IntBuffer;
 import java.util.Arrays;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.opengl.shader.ShaderProgram;
+import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.Timer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -42,11 +45,15 @@ public class CommandBuffer {
 
 	private final RenderState renderState;
 
-	private long[] cmd = new long[1 << 20]; // ~1 million calls
+	@Setter
+	private FrameTimer frameTimer;
+
+	private long[] cmd = new long[100000]; // 100k calls
 	private int writeHead = 0;
 
 	public CommandBuffer(RenderState renderState) {
 		this.renderState = renderState;
+		this.frameTimer = frameTimer;
 	}
 
 	private void ensureCapacity(int numLongs) {
@@ -130,11 +137,18 @@ public class CommandBuffer {
 
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawArraysIndirect.xhtml
 		int indirectOffset = indirectBuffer.position();
-		indirectBuffer.ensureCapacity(4).getBuffer()
-			.put(vertexCount)  // count
-			.put(1)         // primCount
-			.put(vertexOffset) // first
-			.put(0);        // baseInstance (reserved 4.1 prior)
+		try {
+			indirectBuffer.ensureCapacity(4).getBuffer()
+				.put(vertexCount)  // count
+				.put(1)         // primCount
+				.put(vertexOffset) // first
+				.put(0);        // baseInstance (reserved 4.1 prior)
+		} catch (Exception e) {
+			log.debug("Failed to write DrawArraysIndirect buffer position={} remaining={} capacity={}",
+				indirectBuffer.getBuffer().position(),
+				indirectBuffer.getBuffer().remaining(),
+				indirectBuffer.getBuffer().capacity(), e);
+		}
 
 		cmd[writeHead++] = GL_DRAW_ARRAYS_INDIRECT_TYPE & 0xFF | (long) mode << 8;
 		cmd[writeHead++] = (long) indirectOffset * Integer.BYTES;
@@ -145,12 +159,19 @@ public class CommandBuffer {
 
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glDrawElementsIndirect.xhtml
 		int indirectOffset = indirectBuffer.position();
-		indirectBuffer.ensureCapacity(5).getBuffer()
-			.put(indexCount)    // count
-			.put(1)          // instanceCount
-			.put(indexOffset)   // firstIndex
-			.put(0)          // baseVertex
-			.put(0);         // baseInstance
+		try {
+			indirectBuffer.ensureCapacity(5).getBuffer()
+				.put(indexCount)    // count
+				.put(1)          // instanceCount
+				.put(indexOffset)   // firstIndex
+				.put(0)          // baseVertex
+				.put(0);         // baseInstance
+		} catch (Exception e) {
+			log.debug("Failed to write DrawArraysIndirect buffer position={} remaining={} capacity={}",
+				indirectBuffer.getBuffer().position(),
+				indirectBuffer.getBuffer().remaining(),
+				indirectBuffer.getBuffer().capacity(), e);
+		}
 
 		cmd[writeHead++] = GL_DRAW_ELEMENTS_INDIRECT_TYPE & 0xFF | (long) mode << 8;
 		cmd[writeHead++] = (long) indirectOffset * Integer.BYTES;
@@ -172,12 +193,20 @@ public class CommandBuffer {
 
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glMultiDrawArraysIndirect.xhtml
 		indirectBuffer.ensureCapacity(drawCount * 4);
+		try {
 		IntBuffer buf = indirectBuffer.getBuffer();
-		for (int i = 0; i < drawCount; i++) {
-			buf.put(vertexCounts[i]);  // count
-			buf.put(1);              // instanceCount
-			buf.put(vertexOffsets[i]); // first
-			buf.put(0);             // baseInstance
+			for (int i = 0; i < drawCount; i++) {
+				buf.put(vertexCounts[i]);  // count
+				buf.put(1);              // instanceCount
+				buf.put(vertexOffsets[i]); // first
+				buf.put(0);             // baseInstance
+			}
+		} catch (Exception e) {
+			log.debug("Failed to write DrawArraysIndirect buffer drawCount={} position={} remaining={} capacity={}",
+				drawCount,
+				indirectBuffer.getBuffer().position(),
+				indirectBuffer.getBuffer().remaining(),
+				indirectBuffer.getBuffer().capacity(), e);
 		}
 
 		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_INDIRECT_TYPE & 0xFF | (long) mode << 8 | (long) drawCount << 32;
@@ -199,6 +228,8 @@ public class CommandBuffer {
 	}
 
 	public void execute() {
+		if(frameTimer != null)
+			frameTimer.begin(Timer.EXECUTE_COMMAND_BUFFER);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer offsets = null, counts = null;
 			int readHead = 0;
@@ -326,6 +357,8 @@ public class CommandBuffer {
 			}
 			renderState.apply();
 		}
+		if(frameTimer != null)
+			frameTimer.end(Timer.EXECUTE_COMMAND_BUFFER);
 	}
 
 	private int writeObject(Object obj) {

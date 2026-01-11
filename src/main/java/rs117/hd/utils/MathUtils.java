@@ -524,6 +524,10 @@ public final class MathUtils {
 		return Math.min(a, b);
 	}
 
+	public static char min(char a, char b) {
+		return (char) Math.min(a, b);
+	}
+
 	public static long min(long a, long b) {
 		return Math.min(a, b);
 	}
@@ -570,6 +574,10 @@ public final class MathUtils {
 
 	public static int max(int a, int b) {
 		return Math.max(a, b);
+	}
+
+	public static char max(char a, char b) {
+		return (char) Math.max(a, b);
 	}
 
 	public static long max(long a, long b) {

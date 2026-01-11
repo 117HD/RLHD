@@ -2,15 +2,14 @@ package rs117.hd.renderer.zone;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -476,7 +475,7 @@ public class Zone {
 		}
 	}
 
-	static final Queue<AlphaModel> modelCache = new ArrayDeque<>();
+	static final ConcurrentLinkedDeque<AlphaModel> modelCache = new ConcurrentLinkedDeque<>();
 
 	void addAlphaModel(
 		HdPlugin plugin,
@@ -661,7 +660,7 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	synchronized void postAlphaPass() {
+	void postAlphaPass() {
 		sortedAlphaFacesUpload.waitForCompletion();
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {

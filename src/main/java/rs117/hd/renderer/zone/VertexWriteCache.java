@@ -13,6 +13,10 @@ public final class VertexWriteCache {
 	private int[] stagingBuffer;
 	private int stagingPosition;
 
+	public VertexWriteCache(int initialCapacity) {
+		this(initialCapacity, initialCapacity);
+	}
+
 	public VertexWriteCache(int initialCapacity, int maxCapacity) {
 		this.maxCapacity = maxCapacity;
 		stagingBuffer = new int[initialCapacity];
@@ -105,13 +109,12 @@ public final class VertexWriteCache {
 	}
 
 	public static class Collection {
-		private static final int MAX_CAPACITY = (int) (MiB / Integer.BYTES);
-		private static final int INITIAL_CAPACITY = (int) (32 * KiB / Integer.BYTES);
+		private static final int CAPACITY = (int) (64 * KiB / Integer.BYTES);
 
-		public final VertexWriteCache opaque = new VertexWriteCache(INITIAL_CAPACITY, MAX_CAPACITY);
-		public final VertexWriteCache alpha = new VertexWriteCache(INITIAL_CAPACITY, MAX_CAPACITY);
-		public final VertexWriteCache opaqueTex = new VertexWriteCache(INITIAL_CAPACITY, MAX_CAPACITY);
-		public final VertexWriteCache alphaTex = new VertexWriteCache(INITIAL_CAPACITY, MAX_CAPACITY);
+		public final VertexWriteCache opaque = new VertexWriteCache(CAPACITY);
+		public final VertexWriteCache alpha = new VertexWriteCache(CAPACITY);
+		public final VertexWriteCache opaqueTex = new VertexWriteCache(CAPACITY);
+		public final VertexWriteCache alphaTex = new VertexWriteCache(CAPACITY);
 		public boolean useAlphaBuffer;
 
 		public void setOutputBuffers(IntBuffer opaque, IntBuffer alpha, IntBuffer opaqueTex, IntBuffer alphaTex) {

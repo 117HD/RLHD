@@ -13,14 +13,22 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
+import rs117.hd.renderer.zone.VAO.VAOList;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
+import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 
 @Slf4j
 public class WorldViewContext {
+	public static final int VAO_OPAQUE = 0;
+	public static final int VAO_ALPHA = 1;
+	public static final int VAO_PLAYER = 3;
+	public static final int VAO_SHADOW = 4;
+	public static final int VAO_COUNT = 5;
+
 	public static final int ALPHA_ZSORT = 8192;
 	public static final int ALPHA_ZSORT_SQ = ALPHA_ZSORT * ALPHA_ZSORT;
 
@@ -49,6 +57,8 @@ public class WorldViewContext {
 	private final List<Zone> alphaZones = new ArrayList<>();
 
 	StaticAlphaSortingJob staticAlphaSortingJob;
+
+	final VAOList[] vaoLists = new VAOList[VAO_COUNT];
 
 	public long loadTime;
 	public long uploadTime;
@@ -81,7 +91,9 @@ public class WorldViewContext {
 				zones[x][z] = injector.getInstance(Zone.class);
 	}
 
-	void initMetadata() {
+	void initBuffers() { initBuffers(-1); }
+
+	void initBuffers(int vaoPreAllocate) {
 		if (vboM != null)
 			return;
 
@@ -92,6 +104,47 @@ public class WorldViewContext {
 			.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1)
 			.put(0).put(0); // dummy scene offset for macOS
 		vboM.unmap();
+
+		for(int i = 0; i < VAO_COUNT; i++) {
+			vaoLists[i] = new VAOList(vboM, eboAlpha);
+			if(vaoPreAllocate > 0)
+				vaoLists[i].preAllocate(vaoPreAllocate);
+		}
+	}
+
+	VAOList getVaoList(int vaoType) {
+		assert vaoType >= 0 && vaoType < VAO_COUNT : "Invalid VAO type: " + vaoType;
+		return vaoLists[vaoType];
+	}
+
+	VAO getVao(int vaoType, int size) {
+		return getVao(vaoType, size, -1);
+	}
+
+	VAO getVao(int vaoType, int size, int renderThreadId) {
+		assert vaoType >= 0 && vaoType < VAO_COUNT : "Invalid VAO type: " + vaoType;
+		return vaoLists[vaoType].get(size, renderThreadId);
+	}
+
+	void map() {
+		for(int i = 0; i < VAO_COUNT; i++) {
+			if(vaoLists[i] != null)
+				vaoLists[i].map();
+		}
+	}
+
+	void addRange() {
+		for(int i = 0; i < VAO_COUNT; i++) {
+			if(vaoLists[i] != null)
+				vaoLists[i].addRange();
+		}
+	}
+
+	void unmap() {
+		for(int i = 0; i < VAO_COUNT; i++) {
+			if(vaoLists[i] != null)
+				vaoLists[i].unmap();
+		}
 	}
 
 	void sortStaticAlphaModels(FacePrioritySorter facePrioritySorter, Camera camera) {
@@ -235,6 +288,11 @@ public class WorldViewContext {
 		if (uboWorldViewStruct != null)
 			uboWorldViewStruct.free();
 		uboWorldViewStruct = null;
+
+		for(int i = 0; i < VAO_COUNT; i++) {
+			if(vaoLists[i] != null)
+				vaoLists[i].free();
+		}
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)

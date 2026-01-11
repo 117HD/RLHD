@@ -25,7 +25,6 @@
 package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -81,8 +80,6 @@ public class SceneUploader {
 	// the minimum amount by which each color will be lightened
 	private static final int BASE_LIGHTEN = 10;
 
-	private static final float INV_SQRT3 = 0.57735026f;
-
 	static {
 		for (int i = 0; i < 8; i++)
 			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
@@ -110,6 +107,7 @@ public class SceneUploader {
 	public ProceduralGenerator proceduralGenerator;
 
 	private int basex, basez, rid, level;
+	private boolean isPooled;
 
 	private final Set<Integer> roofIds = new HashSet<>();
 	private Scene currentScene;
@@ -131,12 +129,10 @@ public class SceneUploader {
 	private final int[] modelLocalI = new int[MAX_VERTEX_COUNT * 3];
 	private final int[] modelLocalN = new int[MAX_VERTEX_COUNT * 3];
 
-	// Lazily initialized staging buffers, only used by uploadTempModel
-	private VertexWriteCache.Collection writeCache;
+	private final float[] projected = new float[4];
 
-	private long[] vanillaTextureToOverrideStamp = null;
-	private ModelOverride[] vanillaTextureToOverrideCache = null;
-	private long globalStamp = 1;
+	// Lazily initialized staging buffers, only used by uploadTempModel
+	public VertexWriteCache.Collection writeCache;
 
 	public void setScene(Scene scene) {
 		if (scene == currentScene)
@@ -159,34 +155,6 @@ public class SceneUploader {
 		underlayIds = null;
 		tileHeights = null;
 		currentScene = null;
-	}
-
-	private long nextStamp() {
-		if (++globalStamp == Long.MAX_VALUE) {
-			Arrays.fill(vanillaTextureToOverrideStamp, 0);
-			globalStamp = 1;
-		}
-		return globalStamp;
-	}
-
-	private ModelOverride getModelOverrideFromVanillaTexture(ModelOverride modelOverride, Material material, int textureId) {
-		if(vanillaTextureToOverrideStamp == null || vanillaTextureToOverrideStamp.length < MaterialManager.VANILLA_TEXTURE_MAPPING.length) {
-			vanillaTextureToOverrideStamp = new long[MaterialManager.VANILLA_TEXTURE_MAPPING.length];
-			vanillaTextureToOverrideCache = new ModelOverride[MaterialManager.VANILLA_TEXTURE_MAPPING.length];
-		}
-
-		ModelOverride override = vanillaTextureToOverrideCache[textureId];
-		if(vanillaTextureToOverrideStamp[textureId] != globalStamp) {
-			if (modelOverride.materialOverrides != null) {
-				override = modelOverride.materialOverrides.get(material);
-			} else {
-				override = null;
-			}
-			vanillaTextureToOverrideStamp[textureId] = globalStamp;
-			vanillaTextureToOverrideCache[textureId] = override;
-		}
-
-		return override;
 	}
 
 	protected void onBeforeProcessTile(Tile t, boolean isEstimate) {}
@@ -1431,7 +1399,6 @@ public class SceneUploader {
 		final Material baseMaterial = modelOverride.baseMaterial;
 		final Material textureMaterial = modelOverride.textureMaterial;
 
-		nextStamp();
 		int len = 0;
 		for (int face = 0; face < faceCount; ++face) {
 			int color1 = color1s[face];
@@ -1578,10 +1545,12 @@ public class SceneUploader {
 					material = textureMaterial;
 				} else {
 					material = materialManager.fromVanillaTexture(textureId);
-					ModelOverride override = getModelOverrideFromVanillaTexture(modelOverride, material, textureId);
-					if (override != null) {
-						faceOverride = override;
-						material = faceOverride.textureMaterial;
+					if (modelOverride.materialOverrides != null) {
+						var override = modelOverride.materialOverrides.get(material);
+						if (override != null) {
+							faceOverride = override;
+							material = faceOverride.textureMaterial;
+						}
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
@@ -1698,6 +1667,11 @@ public class SceneUploader {
 		final int[] vertexNormalsZ = model.getVertexNormalsZ();
 		final boolean modelHasNormals = vertexNormalsX != null && vertexNormalsY != null && vertexNormalsZ != null;
 
+		final float[] modelLocal = this.modelLocal;
+		final float[] projected = this.projected;
+		final int[] modelLocalI = this.modelLocalI;
+		final int[] modelLocalN = this.modelLocalN;
+
 		// Identity orient, will result in no rotation
 		float orientSinf = 0;
 		float orientCosf = 1;
@@ -1724,11 +1698,11 @@ public class SceneUploader {
 			vertexZ += z;
 
 			if(shouldSort) {
-				final float[] p = proj.project(vertexX, vertexY, vertexZ);
-				modelProjected[vertexOffset] = p[0] / p[2];
-				modelProjected[vertexOffset + 1] = p[1] / p[2];
-				modelProjected[vertexOffset + 2] = p[2] - zero;
-				shouldSort = p[2] >= 50;
+				proj.project(vertexX, vertexY, vertexZ, projected);
+				modelProjected[vertexOffset] = projected[0] / projected[2];
+				modelProjected[vertexOffset + 1] = projected[1] / projected[2];
+				modelProjected[vertexOffset + 2] = projected[2] - zero;
+				shouldSort = projected[2] >= 50;
 			}
 
 			if(localSpace) {
@@ -1807,7 +1781,7 @@ public class SceneUploader {
 		IntBuffer opaqueTexBuffer,
 		IntBuffer alphaTexBuffer
 	) {
-		if (writeCache == null)
+		if(writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
 		writeCache.setOutputBuffers(opaqueBuffer, alphaBuffer, opaqueTexBuffer, alphaTexBuffer);
 
@@ -1857,8 +1831,6 @@ public class SceneUploader {
 		final Material baseMaterial = modelOverride.baseMaterial;
 		final Material textureMaterial = modelOverride.textureMaterial;
 
-		nextStamp();
-
 		final int faceCount = hasSortedIndices ? sortedFaces.length : triangleCount;
 		for (int f = 0; f < faceCount; ++f) {
 			final int face = hasSortedIndices ? sortedFaces.facesIndices[f] : f;
@@ -1898,10 +1870,12 @@ public class SceneUploader {
 					material = textureMaterial;
 				} else {
 					material = materialManager.fromVanillaTexture(textureId);
-					ModelOverride override = getModelOverrideFromVanillaTexture(modelOverride, material, textureId);
-					if (override != null) {
-						faceOverride = override;
-						material = faceOverride.textureMaterial;
+					if (modelOverride.materialOverrides != null) {
+						var override = modelOverride.materialOverrides.get(material);
+						if (override != null) {
+							faceOverride = override;
+							material = faceOverride.textureMaterial;
+						}
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {

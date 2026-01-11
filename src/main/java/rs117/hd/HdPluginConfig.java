@@ -1157,6 +1157,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_THREADED_DYNAMIC_UPLOAD = "experimentalThreadedDynamicUpload";
+	@ConfigItem(
+		keyName = KEY_THREADED_DYNAMIC_UPLOAD,
+		name = "Threaded Dynamic Upload",
+		description = "",
+		section = experimentalSettings
+	)
+	default boolean threadedDynamicUpload() {
+		return true;
+	}
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")
