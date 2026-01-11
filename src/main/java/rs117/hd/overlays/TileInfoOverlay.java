@@ -697,7 +697,25 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				faceCount,
 				getModelInfo(renderable)
 			));
-			lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
+
+			if (renderable instanceof Actor) {
+				Actor actor = (Actor) renderable;
+				StringBuilder sb = new StringBuilder();
+				String separator = "";
+				for (var spotanim : actor.getSpotAnims()) {
+					sb
+						.append(separator)
+						.append(gamevalManager.getSpotanimName(spotanim.getId()))
+						.append(" (").append(spotanim.getId()).append(")")
+						.append(" cycle=").append(spotanim.getCycle())
+						.append(" frame=").append(spotanim.getFrame());
+					separator = "\n\t";
+				}
+				if (sb.length() > 0)
+					lines.add("Spotanims: " + sb);
+			} else {
+				lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
+			}
 		}
 
 		for (var npc : client.getTopLevelWorldView().npcs()) {
