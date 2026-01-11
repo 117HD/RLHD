@@ -28649,9 +28649,9 @@
     ]
   },
   {
-    "description": "WIND_SURGE_IMPACT",
+    "description": "WIND_WAVE_AND_SURGE_IMPACT",
     "offset": [ 0, 100, 0 ],
-    "radius": 450,
+    "radius": 400,
     "strength": 10.6,
     "color": [
       255,
@@ -28667,7 +28667,8 @@
     "fadeOutDuration": 250,
     "waitForAnimation": true,
     "graphicsObjectIds": [
-      "WINDSURGE_IMPACT"
+      "WINDSURGE_IMPACT",
+      "WINDWAVE_IMPACT"
     ]
   },
   {
@@ -28755,9 +28756,9 @@
     ]
   },
   {
-    "description": "WATER_SURGE_IMPACT",
+    "description": "WATER_WAVE_AND_SURGE_IMPACT",
     "offset": [ 0, 100, 0 ],
-    "radius": 450,
+    "radius": 400,
     "strength": 13.8,
     "color": [
       0,
@@ -28773,7 +28774,8 @@
     "fadeOutDuration": 250,
     "waitForAnimation": true,
     "graphicsObjectIds": [
-      "WATERSURGE_IMPACT"
+      "WATERSURGE_IMPACT",
+      "WATERWAVE_IMPACT"
     ]
   },
   {
@@ -28861,9 +28863,9 @@
     ]
   },
   {
-    "description": "EARTH_SURGE_IMPACT",
+    "description": "EARTH_WAVE_AND_SURGE_IMPACT",
     "offset": [ 0, 100, 0 ],
-    "radius": 450,
+    "radius": 400,
     "strength": 12.5,
     "color": [
       0,
@@ -28879,7 +28881,8 @@
     "fadeOutDuration": 250,
     "waitForAnimation": true,
     "graphicsObjectIds": [
-      "EARTHSURGE_IMPACT"
+      "EARTHSURGE_IMPACT",
+      "EARTHWAVE_IMPACT"
     ]
   },
   {
@@ -28968,9 +28971,9 @@
   },
   {
     "description": "FIRE_SURGE_2",
-    "offset": [ 0, 0, -50 ],
+    "offset": [ 0, 0, -25 ],
     "radius": 235,
-    "strength": 9,
+    "strength": 8,
     "color": [
       252,
       148,
@@ -28986,9 +28989,9 @@
     ]
   },
   {
-    "description": "FIRE_SURGE_IMPACT",
+    "description": "FIRE_WAVE_AND_SURGE_IMPACT",
     "offset": [ 0, 100, 0 ],
-    "radius": 450,
+    "radius": 425,
     "strength": 13.8,
     "color": [
       255,
@@ -29004,7 +29007,8 @@
     "fadeOutDuration": 250,
     "waitForAnimation": true,
     "graphicsObjectIds": [
-      "FIRESURGE_IMPACT"
+      "FIRESURGE_IMPACT",
+      "FIREWAVE_IMPACT"
     ]
   },
   {
