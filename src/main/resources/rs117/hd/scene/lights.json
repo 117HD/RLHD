@@ -28357,6 +28357,29 @@
     ]
   },
   {
+    "description": "WIND_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 300,
+    "strength": 5.6,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDBLAST_IMPACT"
+    ]
+  },
+  {
     "description": "WATER_BLAST",
     "radius": 275,
     "strength": 8.8,
@@ -28375,6 +28398,29 @@
     ]
   },
   {
+    "description": "WATER_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 300,
+    "strength": 6.9,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERBLAST_IMPACT"
+    ]
+  },
+  {
     "description": "EARTH_BLAST",
     "radius": 275,
     "strength": 6.9,
@@ -28390,6 +28436,29 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHBLAST_TRAVEL"
+    ]
+  },
+  {
+    "description": "EARTH_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 300,
+    "strength": 6.9,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHBLAST_IMPACT"
     ]
   },
   {
@@ -28414,7 +28483,7 @@
     "description": "FIRE_BLAST_2",
     "offset": [ 0, -25, -25 ],
     "radius": 200,
-    "strength": 7,
+    "strength": 6,
     "color": [
       252,
       148,
@@ -28427,6 +28496,29 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIREBLAST_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 325,
+    "strength": 8.8,
+    "color": [
+      255,
+      70,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIREBLAST_IMPACT"
     ]
   },
   {
