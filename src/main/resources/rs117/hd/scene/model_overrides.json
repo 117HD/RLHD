@@ -33539,15 +33539,15 @@
       "ELF_VILLAGE_MUSEUMBARRIERS"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7,
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "colors": "h == 7",
         "baseMaterial": "ROPE",
         "uvType": "BOX",
-        "uvScale": 0.2,
+        "uvScale": 0.25,
         "uvOrientationX": 512,
-        "uvOrientationZ": -200
+        "uvOrientationZ": -180
       }
     ]
   },
@@ -73382,6 +73382,46 @@
       "PRIF_SKEWSTEPS_STONE_EDGE",
       "PRIF_SKEWSTEPS_STONE",
       "PRIF_SKEWSTEPS_STONE_EDGE_M"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Bank Booth",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "PRIF_BANKBOOTH_OPEN",
+      "PRIF_BANKBOOTH_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_50"
+      },
+      {
+        "colors": "h > 7",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Chest of Gold",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "PRIF_CHEST_OPEN",
+      "PRIF_CHEST_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
     ]
   },
   {
