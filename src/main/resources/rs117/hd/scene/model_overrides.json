@@ -73119,7 +73119,8 @@
       "PRIF_WALL_GATE_SIDE_LEFT",
       "PRIF_WALL_GATE_LEFT",
       "PRIF_WALL_GATE_RIGHT",
-      "PRIF_AMLODD_WOODEN_RAILING"
+      "PRIF_AMLODD_WOODEN_RAILING",
+      "SPIRITTREE_PRIF_2OPS"
     ]
   },
   {
@@ -73265,7 +73266,7 @@
         "uvScale": 0.7
       },
       {
-        "colors": [ "h == 5 && s == 4|| h == 6" ],
+        "colors": [ "h == 5 && s == 4 || h == 6" ],
         "baseMaterial": "BARK",
         "uvType": "BOX",
         "uvScale": 0.7
