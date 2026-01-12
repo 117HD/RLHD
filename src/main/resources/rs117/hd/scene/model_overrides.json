@@ -73158,19 +73158,20 @@
     "description": "Tirannwn - Prifddinas - Mossy Rocks Slayer Entrance",
     "baseMaterial": "ROCK_1",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.6,
     "uvOrientation": 256,
     "colorOverrides": [
       {
-        "colors": "h == 12",
-        "baseMaterial": "GRASS_1",
+        "colors": "h > 11",
+        "baseMaterial": "GRUNGE_3",
         "uvScale": 0.8,
         "uvType": "BOX",
         "uvOrientation": 256
       }
     ],
     "objectIds": [
-      "PRIF_SLAYER_DUNGEON_ENTRANCE"
+      "PRIF_SLAYER_DUNGEON_ENTRANCE",
+      "PRIF_MINE_ENTRANCE"
     ]
   },
   {
