@@ -1478,15 +1478,6 @@
     "retainVanillaUvs": true
   },
   {
-    "description": "Prifddinas spirit tree without leaf texture",
-    "objectIds": [
-      "SPIRITTREE_PRIF_1OP",
-      "SPIRITTREE_PRIF_2OPS"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.8
-  },
-  {
     "description": "Fallen Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -73124,6 +73115,7 @@
       "PRIF_WALL_GATE_LEFT_EXIT",
       "PRIF_WALL_GATE_RIGHT_EXIT",
       "PRIF_AMLODD_WOODEN_RAILING",
+      "SPIRITTREE_PRIF_1OP",
       "SPIRITTREE_PRIF_2OPS",
       "PRIF_AMLODD_HOUSE_SUPPORT_NE",
       "PRIF_AMLODD_HOUSE_SUPPORT_SW",
@@ -73255,17 +73247,32 @@
       "PRIF_HOUSE_ROOF_STONE_SLOPE_EDGE_WINDOW",
       "PRIF_HOUSE_ROOF_STONE_SLOPE_LOW_WINDOW",
       "PRIF_AGILITY_HOUSE_ROOF_STONE_SLOPE_LOW_WINDOW",
-      "PRIF_AGILITY_START_LADDER"
+      "PRIF_AGILITY_START_LADDER",
+      "PRIF_CLAN_TOWER_ROOF_O",
+      "PRIF_CLAN_TOWER_ROOF_N",
+      "PRIF_CLAN_TOWER_ROOF_J",
+      "PRIF_CLAN_TOWER_ROOF_K",
+      "PRIF_CLAN_TOWER_ROOF_G",
+      "PRIF_CLAN_TOWER_ROOF_C",
+      "PRIF_CLAN_TOWER_ROOF_D",
+      "PRIF_CLAN_TOWER_ROOF_H",
+      "PRIF_CLAN_TOWER_ROOF_L",
+      "PRIF_CLAN_TOWER_ROOF_P",
+      "PRIF_CLAN_TOWER_ROOF_M",
+      "PRIF_CLAN_TOWER_ROOF_I",
+      "PRIF_CLAN_TOWER_ROOF_E",
+      "PRIF_CLAN_TOWER_ROOF_F",
+      "PRIF_CLAN_TOWER_ROOF_B",
+      "PRIF_CLAN_TOWER_ROOF_A"
     ],
     "colorOverrides": [
       {
         "colors": "h == 25 || h == 26",
-        "baseMaterial": "GRUNGE_3_SMOOTH",
-        "uvType": "MODEL_XZ"
+        "baseMaterial": "GRAY_80"
       },
       {
         "colors": "h > 8",
-        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "baseMaterial": "GRAY_85",
         "uvType": "MODEL_XY",
         "uvScale": 0.7
       }
@@ -73359,9 +73366,7 @@
       },
       {
         "colors": "h > 8",
-        "baseMaterial": "GRUNGE_3_SMOOTH",
-        "uvType": "BOX",
-        "uvScale": 0.7
+        "baseMaterial": "GRAY_85"
       },
       {
         "colors": "h == 0 || h == 4 || h == 6 && s == 7 || h == 8 && s == 7",
@@ -73427,6 +73432,179 @@
         "baseMaterial": "GRUNGE_3_SHINY",
         "uvType": "BOX",
         "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Huge Tower Walls and Roof",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "objectIds": [
+      "CRYSTAL_TOWER_WALL_0_9_LOWER",
+      "CRYSTAL_TOWER_WALL_0_8_LOWER",
+      "CRYSTAL_TOWER_WALL_0_7_LOWER",
+      "CRYSTAL_TOWER_WALL_0_6_LOWER",
+      "CRYSTAL_TOWER_WALL_0_5_LOWER",
+      "CRYSTAL_TOWER_WALL_0_4_LOWER",
+      "CRYSTAL_TOWER_WALL_0_3_LOWER",
+      "CRYSTAL_TOWER_WALL_0_1_LOWER",
+      "CRYSTAL_TOWER_WALL_0_2_LOWER",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_BLANK",
+      "CRYSTAL_TOWER_WALL_1_1_LOWER",
+      "CRYSTAL_TOWER_WALL_1_2_LOWER",
+      "CRYSTAL_TOWER_WALL_1_3_LOWER",
+      "CRYSTAL_TOWER_WALL_1_4_LOWER",
+      "CRYSTAL_TOWER_WALL_1_7_LOWER",
+      "CRYSTAL_TOWER_WALL_1_6_LOWER",
+      "CRYSTAL_TOWER_WALL_1_5_LOWER",
+      "CRYSTAL_TOWER_WALL_1_8_LOWER",
+      "CRYSTAL_TOWER_WALL_1_9_LOWER",
+      "CRYSTAL_TOWER_TOP_WALLS_CORNER_LEFT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_WINDOW",
+      "CRYSTAL_TOWER_TOP_WALLS_CORNER_RIGHT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_ARCH_CONNECTOR_LEFT",
+      "CRYSTAL_TOWER_TOP_WALLS_CORNER_FRONT_LEFT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_ARCH_BOTTOM_LEFT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_DOOR_RIGHT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_DOOR_LEFT",
+      "CRYSTAL_TOWER_TOP_WALLS_CORNER_FRONT_RIGHT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_ARCH_CONNECTOR_RIGHT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_ARCH_BOTTOM_RIGHT",
+      "PRIF_CLAN_TOWER_LVL2_H",
+      "PRIF_CLAN_TOWER_LVL2_F",
+      "PRIF_CLAN_TOWER_LVL2_D",
+      "PRIF_CLAN_TOWER_LVL2_A",
+      "PRIF_CLAN_TOWER_LVL2_B",
+      "PRIF_CLAN_TOWER_LVL2_C",
+      "PRIF_CLAN_TOWER_LVL2_E",
+      "PRIF_CLAN_TOWER_LVL2_G",
+      "PRIF_CLAN_TOWER_LVL2_I",
+      "PRIF_CLAN_TOWER_LVL2_K",
+      "PRIF_CLAN_TOWER_LVL2_M",
+      "PRIF_CLAN_TOWER_LVL2_L",
+      "PRIF_CLAN_TOWER_LVL2_J",
+      "PRIF_CLAN_TOWER_LVL0_F",
+      "PRIF_CLAN_TOWER_LVL0_D",
+      "PRIF_CLAN_TOWER_LVL0_A",
+      "PRIF_CLAN_TOWER_LVL0_B",
+      "PRIF_CLAN_TOWER_LVL0_C",
+      "PRIF_CLAN_TOWER_LVL0_E",
+      "PRIF_CLAN_TOWER_LVL0_G",
+      "PRIF_CLAN_TOWER_LVL0_I",
+      "PRIF_CLAN_TOWER_LVL0_K",
+      "PRIF_CLAN_TOWER_LVL0_M",
+      "PRIF_CLAN_TOWER_LVL0_L",
+      "PRIF_CLAN_TOWER_LVL0_J",
+      "PRIF_CLAN_TOWER_LVL0_H",
+      "PRIF_CLAN_TOWER_LVL1_H",
+      "PRIF_CLAN_TOWER_LVL1_F",
+      "PRIF_CLAN_TOWER_LVL1_D",
+      "PRIF_CLAN_TOWER_LVL1_A",
+      "PRIF_CLAN_TOWER_LVL1_B",
+      "PRIF_CLAN_TOWER_LVL1_C",
+      "PRIF_CLAN_TOWER_LVL1_E",
+      "PRIF_CLAN_TOWER_LVL1_G",
+      "PRIF_CLAN_TOWER_LVL1_I",
+      "PRIF_CLAN_TOWER_LVL1_K",
+      "PRIF_CLAN_TOWER_LVL1_M",
+      "PRIF_CLAN_TOWER_LVL1_L",
+      "PRIF_CLAN_TOWER_LVL1_J",
+      "CRYSTAL_TOWER_TOP_ROOF_E4",
+      "CRYSTAL_TOWER_TOP_ROOF_F3",
+      "CRYSTAL_TOWER_TOP_ROOF_E1",
+      "CRYSTAL_TOWER_TOP_ROOF_C3",
+      "CRYSTAL_TOWER_TOP_ROOF_E3",
+      "CRYSTAL_TOWER_TOP_ROOF_F1",
+      "CRYSTAL_TOWER_TOP_ROOF_E2",
+      "CRYSTAL_TOWER_TOP_ROOF_H",
+      "CRYSTAL_TOWER_TOP_ROOF_A",
+      "CRYSTAL_TOWER_TOP_ROOF_B",
+      "CRYSTAL_TOWER_TOP_ROOF_G",
+      "CRYSTAL_TOWER_TOP_ROOF_F4",
+      "CRYSTAL_TOWER_TOP_ROOF_C1",
+      "CRYSTAL_TOWER_TOP_ROOF_F2",
+      "CRYSTAL_TOWER_TOP_ROOF_C2",
+      "CRYSTAL_TOWER_TOP_ROOF_C4",
+      "CRYSTAL_TOWER_TOP_ROOF_D3",
+      "CRYSTAL_TOWER_TOP_ROOF_D4",
+      "CRYSTAL_TOWER_TOP_ROOF_D2",
+      "CRYSTAL_TOWER_TOP_ROOF_D1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 25",
+        "baseMaterial": "GRAY_85"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Huge Tower Floors",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "CRYSTAL_TOWER_WALKWAY_FLOOR_LIGHT_MIDDLE",
+      "CRYSTAL_TOWER_WALKWAY_FLOOR_LIGHT_DIAGONAL",
+      "CRYSTAL_TOWER_WALKWAY_FLOOR_CRYSTAL_MIDDLE",
+      "CRYSTAL_TOWER_WALKWAY_FLOOR_CRYSTAL_DIAGONAL",
+      "CRYSTAL_TOWER_LOWER_TILE_FLOOR_FULL",
+      "CRYSTAL_TOWER_LOWER_TILE_FLOOR_HALF",
+      "CRYSTAL_TOWER_LOWER_TILE_FLOOR_FULL_HALF",
+      "CRYSTAL_TOWER_LOWER_TILE_FLOOR_HALF_OUTSIDE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_85"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Huge Tower Railing",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "objectIds": [
+      "CRYSTAL_TOWER_WALKWAY_CRYSTAL_SMALL_TOP",
+      "CRYSTAL_TOWER_WALKWAY_CRYSTAL_LARGE_TOP",
+      "CRYSTAL_TOWER_WALKWAY_CRYSTAL_LARGE_BOTTOM",
+      "CRYSTAL_TOWER_WALKWAY_CRYSTAL_SMALL_BOTTOM",
+      "CRYSTAL_TOWER_WALKWAY_BLANK_BASKET1",
+      "CRYSTAL_TOWER_WALKWAY_WALL",
+      "CRYSTAL_TOWER_WALKWAY_WALL_BLANK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "colors": "h == 7 && s == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.35
       }
     ]
   },
