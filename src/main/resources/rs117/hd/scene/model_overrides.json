@@ -33486,7 +33486,7 @@
   },
   {
     "description": "Tirannwn - Lletya - Well",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "LIGHT_BARK_SMOOTH",
     "objectIds": [
       "ELF_VILLAGE_WELL",
       "ELF_VILLAGE_WELL_TOP",
@@ -33496,7 +33496,7 @@
       "SOTE_WELL_BUILT"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7,
+    "uvScale": 0.4,
     "colorOverrides": [
       {
         "colors": [ "h == 10", "h==5" ],
