@@ -2609,7 +2609,6 @@
     "description": "FARMING_PATCH_2",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "FARMING_BORDER_CORNER_LIGHT",
       "FARMING_DIRTPATCH_DARK"
     ],
     "uvType": "MODEL_XZ"
@@ -3382,16 +3381,10 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 7",
-        "baseMaterial": "ROCK_1_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.6
-      },
-      {
-        "colors": "h == 5",
+        "colors": "h == 5 || h == 7",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.55
       },
       {
         "colors": "h == 6",
@@ -3416,7 +3409,7 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "ROCK_1_LIGHT",
+        "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -3466,7 +3459,7 @@
     "colorOverrides": [
       {
         "colors": "s == 5 || s == 7",
-        "baseMaterial": "ROCK_1_LIGHT",
+        "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -74144,23 +74137,25 @@
   },
   {
     "description": "Farming patch border rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": -89,
     "objectIds": [
-      "FARMING_BORDER_STRAIGHT_NORTH",
-      "FARMING_BORDER_STRAIGHT_LIGHT"
+      "FARMING_BORDER_STRAIGHT_NORTH"
     ]
   },
   {
     "description": "Etceteria - Gardening patch borders",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 512,
+    "uvScale": 0.45,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
     "objectIds": [
-      "FARMING_GARDENINGPATCH_BORDER_LIGHT"
+      "FARMING_GARDENINGPATCH_BORDER_LIGHT",
+      "FARMING_BORDER_CORNER_LIGHT",
+      "FARMING_BORDER_STRAIGHT_LIGHT"
     ]
   },
   {
