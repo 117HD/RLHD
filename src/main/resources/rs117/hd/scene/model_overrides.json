@@ -73120,7 +73120,11 @@
       "PRIF_WALL_GATE_LEFT",
       "PRIF_WALL_GATE_RIGHT",
       "PRIF_AMLODD_WOODEN_RAILING",
-      "SPIRITTREE_PRIF_2OPS"
+      "SPIRITTREE_PRIF_2OPS",
+      "PRIF_AMLODD_HOUSE_SUPPORT_NE",
+      "PRIF_AMLODD_HOUSE_SUPPORT_SW",
+      "PRIF_AMLODD_HOUSE_SUPPORT_SE",
+      "PRIF_AMLODD_HOUSE_SUPPORT_NW"
     ]
   },
   {
@@ -73180,17 +73184,183 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
-      "PRIF_HOUSE_FENCE"
+      "PRIF_HOUSE_FENCE",
+      "PRIF_HOUSE_FENCE_AMLODD"
     ]
   },
   {
-    "description": "Tirannwn - Prifddinas - Wood - Dock Support",
-    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "description": "Tirannwn - Prifddinas - House Walls - Stone",
+    "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientationY": 256,
     "objectIds": [
-      "PRIF_HOUSE_WALL_STONE"
+      "PRIF_HOUSE_WALL_STONE",
+      "PRIF_HOUSE_WINDOW_STONE",
+      "PRIF_HOUSE_WALL_STONE2",
+      "PRIF_HOUSE_ARCH_STONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - House Roof - Stone",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_EDGE",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_LOW_M",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_HIGH_M",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_TOP",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_HIGH",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_LOW",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_EDGE_M",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_EDGE",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_LOW",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_HIGH_DECO_M",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_TOP_DECO",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_HIGH_DECO",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_HIGH",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_TOP",
+      "PRIF_HOUSE_ROOF_STONE_CHIMNEY",
+      "PRIF_HOUSE_ROOF_STONE_FILLER_EDGE_M",
+      "PRIF_HOUSE_ROOF_STONE_BEAM_EDGE",
+      "PRIF_HOUSE_ROOF_STONE_FILLER_EDGE",
+      "PRIF_HOUSE_ROOF_STONE_BEAM_LOW",
+      "PRIF_HOUSE_ROOF_STONE_FILLER_LOW",
+      "PRIF_HOUSE_ROOF_STONE_FILLER_LOW_M",
+      "PRIF_HOUSE_ROOF_STONE_BEAM_HIGH_CORNER",
+      "PRIF_HOUSE_ROOF_STONE_BEAM_HIGH_LONG",
+      "PRIF_HOUSE_ROOF_WOOD_FILLER_HIGH",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_EDGE_WINDOW_HALF_M",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_EDGE_WINDOW_HALF",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_LOW_WINDOW_HALF_M",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_LOW_WINDOW_HALF",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_EDGE_WINDOW",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_LOW_WINDOW",
+      "PRIF_AGILITY_HOUSE_ROOF_STONE_SLOPE_LOW_WINDOW",
+      "PRIF_AGILITY_START_LADDER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 25 || h == 26",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - House Wall - Wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "PRIF_HOUSE_WALL",
+      "PRIF_HOUSE_WINDOW",
+      "PRIF_HOUSE_WALL2",
+      "PRIF_HOUSE_ARCH",
+      "PRIF_AMLODD_HOUSE_STEPS",
+      "PRIF_AMLODD_HOUSE_STEPS_M"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 3",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - House Roof - Wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_EDGE",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_EDGE",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_LOW",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_HIGH",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_TOP",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_HIGH_M",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_LOW_M",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_EDGE_M",
+      "PRIF_HOUSE_ROOF_WOOD_CHIMNEY",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_TOP_DECO",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_TOP",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_HIGH",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_HIGH_DECO",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_HIGH_DECO_M",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_LOW",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_LOW_WINDOW",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_EDGE_WINDOW",
+      "PRIF_HOUSE_ROOF_WOOD_FILLER_EDGE",
+      "PRIF_HOUSE_ROOF_WOOD_BEAM_EDGE",
+      "PRIF_HOUSE_ROOF_WOOD_FILLER_EDGE_M",
+      "PRIF_HOUSE_ROOF_WOOD_BEAM_LOW",
+      "PRIF_HOUSE_ROOF_WOOD_FILLER_LOW_M",
+      "PRIF_HOUSE_ROOF_WOOD_FILLER_LOW",
+      "PRIF_HOUSE_ROOF_WOOD_BEAM_HIGH_CORNER",
+      "PRIF_HOUSE_ROOF_WOOD_BEAM_HIGH_LONG",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_EDGE_WINDOW_HALF_M",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_EDGE_WINDOW_HALF",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_LOW_WINDOW_HALF_M",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_LOW_WINDOW_HALF",
+      "PRIF_TALL_SUPPORT",
+      "PRIF_HOUSE_SQUARE_DOOR_CLOSED",
+      "PRIF_HOUSE_SQUARE_DOOR_OPEN",
+      "PRIF_HOUSE_DOOR_STONE_CLOSED",
+      "PRIF_HOUSE_DOOR_CLOSED",
+      "PRIF_AGILITY_HOUSE_ROOF_TIGHTROPE_CONNECTOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 3",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.55
+      },
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 0 || h == 4 || h == 6 && s == 7 || h == 8 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
     ]
   },
   {
