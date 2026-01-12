@@ -27983,7 +27983,7 @@
   {
     "description": "TELEGRAB_PROJECTILE",
     "alignment": "CENTER",
-    "height": 20,
+    "height": 10,
     "radius": 125,
     "strength": 12,
     "fadeOutDuration": 600,
@@ -28024,8 +28024,8 @@
   },
   {
     "description": "TELEGRAB_CAST",
-    "offset": [ 0, 165, 75 ],
-    "radius": 125,
+    "offset": [ 0, 220, 50 ],
+    "radius": 60,
     "strength": 10,
     "color": [
       170,
@@ -28043,9 +28043,9 @@
   },
   {
     "description": "TELEGRAB_CAST_2",
-    "offset": [ 0, 75, 75 ],
-    "radius": 100,
-    "strength": 7,
+    "offset": [ 0, 70, 45 ],
+    "radius": 110,
+    "strength": 7.5,
     "color": [
       170,
       20,
