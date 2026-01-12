@@ -639,7 +639,7 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	void addTempAlphaModel(ModelOverride modelOverride, int vao, int tboF, int startpos, int endpos, int level, int x, int y, int z) {
+	synchronized void addTempAlphaModel(ModelOverride modelOverride, int vao, int tboF, int startpos, int endpos, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
@@ -660,7 +660,7 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	void postAlphaPass() {
+	synchronized void postAlphaPass() {
 		sortedAlphaFacesUpload.waitForCompletion();
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
@@ -714,7 +714,7 @@ public class Zone {
 		}
 	}
 
-	void alphaSort(int zx, int zz, Camera camera) {
+	synchronized void alphaSort(int zx, int zz, Camera camera) {
 		alphaSort_cx = (int) camera.getPositionX();
 		alphaSort_cy = (int) camera.getPositionY();
 		alphaSort_cz = (int) camera.getPositionZ();
@@ -856,7 +856,7 @@ public class Zone {
 		}
 	}
 
-	void multizoneLocs(SceneContext ctx, int zx, int zz, Camera camera, Zone[][] zones) {
+	synchronized void multizoneLocs(SceneContext ctx, int zx, int zz, Camera camera, Zone[][] zones) {
 		int offset = ctx.sceneOffset >> 3;
 		int cx = (int) camera.getPositionX();
 		int cz = (int) camera.getPositionZ();

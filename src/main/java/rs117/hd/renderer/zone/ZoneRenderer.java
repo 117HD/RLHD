@@ -69,6 +69,7 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
@@ -127,6 +128,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private SceneUploader clientSceneUploader;
+
+	@Inject
+	private SceneUploader asyncSceneUploader;
 
 	@Inject
 	private FacePrioritySorter asyncFacePrioritySorter;
@@ -1286,6 +1290,7 @@ public class ZoneRenderer implements Renderer {
 			final boolean hasAlpha = renderable instanceof Player || m.getFaceTransparencies() != null;
 			final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
+			GenericJob shadowUploadJob = null;
 			boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 			shouldSort &= clientSceneUploader.transformModelVertices(
 				worldProjection,
@@ -1305,19 +1310,20 @@ public class ZoneRenderer implements Renderer {
 					final int shadowSize = tempUnsortedFaces.length * 3 * VAO.VERT_SIZE;
 					final VAO shadowO = ctx.getVao(VAO_SHADOW, shadowSize);
 
-					clientSceneUploader.uploadTempModel(
-						clientSceneUploader,
-						tempUnsortedFaces,
-						m,
-						modelOverride,
-						preOrientation,
-						orientation,
-						true,
-						shadowO.vbo.vb,
-						shadowO.vbo.vb,
-						shadowO.tboF.getPixelBuffer(),
-						shadowO.tboF.getPixelBuffer()
-					);
+					shadowUploadJob = GenericJob.build("shadowUpload",
+						t -> asyncSceneUploader.uploadTempModel(
+											clientSceneUploader,
+											tempUnsortedFaces,
+											m,
+											modelOverride,
+											preOrientation,
+											orientation,
+											true,
+											shadowO.vbo.vb,
+											shadowO.vbo.vb,
+											shadowO.tboF.getPixelBuffer(),
+											shadowO.tboF.getPixelBuffer()
+										)).queue();
 				}
 			}
 
@@ -1357,6 +1363,9 @@ public class ZoneRenderer implements Renderer {
 					);
 				}
 			}
+
+			if(shadowUploadJob != null)
+				shadowUploadJob.waitForCompletion();
 
 			tempSortedFaces.reset();
 			tempUnsortedFaces.reset();

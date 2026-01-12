@@ -49,11 +49,11 @@ final class FacePrioritySorter {
 
 	public final float[] modelProjected = new float[MAX_VERTEX_COUNT * 3];
 
-	private final char[] orderedFaces = new char[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
-	private final char[] numOfPriority = new char[PRIORITY_COUNT];
-	private final char[] eq10 = new char[MAX_FACES_PER_PRIORITY];
-	private final char[] eq11 = new char[MAX_FACES_PER_PRIORITY];
-	private final char[] lt10 = new char[PRIORITY_COUNT];
+	private final int[] orderedFaces = new int[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
+	private final int[] numOfPriority = new int[PRIORITY_COUNT];
+	private final int[] eq10 = new int[MAX_FACES_PER_PRIORITY];
+	private final int[] eq11 = new int[MAX_FACES_PER_PRIORITY];
+	private final int[] lt10 = new int[PRIORITY_COUNT];
 
 	private long[] distanceStamp;
 	private char[] distanceFaceCount;
@@ -72,7 +72,7 @@ final class FacePrioritySorter {
 	}
 
 	private void ensureDistanceCapacity(int diameter, int faceCount) {
-		final int newDiameter = min(diameter, MAX_DIAMETER);
+		final int newDiameter = clamp(diameter, allocatedDiameter, MAX_DIAMETER);
 		if (newDiameter <= allocatedDiameter && faceCount <= facesPerDistance)
 			return;
 
@@ -80,11 +80,11 @@ final class FacePrioritySorter {
 		if(newDiameter > allocatedDiameter) {
 			distanceFaceCount = new char[newDiameter];
 			distanceStamp = new long[newDiameter];
+			globalStamp = 1;
 		}
 
 		allocatedDiameter = newDiameter;
 		facesPerDistance = faceCount;
-		globalStamp = 1;
 	}
 
 	void sortModelFaces(
@@ -108,26 +108,23 @@ final class FacePrioritySorter {
 		final long stamp = nextStamp();
 
 		unsortedFaces.ensureCapacity(faceCount);
-		char minFz = (char) diameter, maxFz = 0;
+		int minFz = diameter, maxFz = 0;
 
-		for (char i = 0; i < faceCount; ++i) {
+		for (int i = 0; i < faceCount; ++i) {
 			if (faceColors3[i] == -2)
 				continue;
 
-			int offset = indices1[i] * 3;
-			final float aX = modelProjected[offset];
-			final float aY = modelProjected[offset + 1];
-			final float aD = modelProjected[offset + 2];
+			final int offsetA = indices1[i] * 3;
+			final float aX = modelProjected[offsetA];
+			final float aY = modelProjected[offsetA + 1];
 
-			offset = indices2[i] * 3;
-			final float bX = modelProjected[offset];
-			final float bY = modelProjected[offset + 1];
-			final float bD = modelProjected[offset + 2];
+			final int offsetB = indices2[i] * 3;
+			final float bX = modelProjected[offsetB];
+			final float bY = modelProjected[offsetB + 1];
 
-			offset = indices3[i] * 3;
-			final float cX = modelProjected[offset];
-			final float cY = modelProjected[offset + 1];
-			final float cD = modelProjected[offset + 2];
+			final int offsetC = indices3[i] * 3;
+			final float cX = modelProjected[offsetC];
+			final float cY = modelProjected[offsetC + 1];
 
 			// Back-face culling
 			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0) {
@@ -135,7 +132,7 @@ final class FacePrioritySorter {
 				continue;
 			}
 
-			final char fz = (char) (radius + (int) ((aD + bD + cD) / 3.0f));
+			final int fz = (int)((modelProjected[offsetA + 2] + modelProjected[offsetB + 2] + modelProjected[offsetC + 2]) / 3.0f) + radius;
 			if (fz >= allocatedDiameter) {
 				unsortedFaces.reset();
 				return;
@@ -145,11 +142,11 @@ final class FacePrioritySorter {
 			if (distanceStamp[fz] != stamp) {
 				distanceStamp[fz] = stamp;
 				distanceFaceCount[fz] = 1;
-				distanceToFaces[base] = i;
+				distanceToFaces[base] = (char)i;
 				minFz = min(minFz, fz);
 				maxFz = max(maxFz, fz);
 			} else {
-				distanceToFaces[base + distanceFaceCount[fz]++] = i;
+				distanceToFaces[base + distanceFaceCount[fz]++] = (char)i;
 			}
 		}
 
@@ -158,7 +155,7 @@ final class FacePrioritySorter {
 
 		if (priorities == null) {
 			for (int i = maxFz; i >= minFz; --i) {
-				if (distanceStamp[i] != stamp)
+				if (i >= distanceStamp.length || distanceStamp[i] != stamp)
 					continue;
 
 				sortedFaces.putFaces(
@@ -173,8 +170,8 @@ final class FacePrioritySorter {
 		Arrays.fill(numOfPriority, (char) 0);
 		Arrays.fill(lt10, (char) 0);
 
-		for (char i = maxFz; i >= minFz; --i) {
-			if (distanceStamp[i] != stamp)
+		for (int i = maxFz; i >= minFz; --i) {
+			if (i >= distanceStamp.length || distanceStamp[i] != stamp)
 				continue;
 
 			final int cnt = distanceFaceCount[i];
@@ -209,7 +206,7 @@ final class FacePrioritySorter {
 		int dynPri = 10;
 		int numDynFaces = numOfPriority[10];
 		int dynBase = BASE_PRIORITY_LUT[10];
-		char[] dynDist = eq10;
+		int[] dynDist = eq10;
 
 		int currFaceDistance =
 			drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
@@ -299,7 +296,7 @@ final class FacePrioritySorter {
 		int minPri = PRIORITY_COUNT, maxPri = 0;
 
 		for (int i = maxFz; i >= minFz; --i) {
-			if (distanceStamp[i] != stamp)
+			if (i >= distanceStamp.length || distanceStamp[i] != stamp)
 				continue;
 
 			final int cnt = distanceFaceCount[i];
@@ -438,6 +435,12 @@ final class FacePrioritySorter {
 			facesIndices[length++] = offset;
 			facesIndices[length++] = offset + 1;
 			facesIndices[length++] = offset + 2;
+		}
+
+		private void putFaces(int[] indices, int offset, int count) {
+			ensureCapacity(count);
+			System.arraycopy(indices, offset, facesIndices, length, count);
+			length += count;
 		}
 
 		private void putFaces(char[] indices, int offset, int count) {

@@ -1730,7 +1730,7 @@ public class SceneUploader {
 		return shouldSort;
 	}
 
-	public void uploadTempModel(
+	public final void uploadTempModel(
 		SceneUploader baseSceneUploader,
 		FacePrioritySorter.SortedFaces sortedFaces,
 		Model model,
@@ -1749,7 +1749,7 @@ public class SceneUploader {
 		);
 	}
 
-	public void uploadTempModel(
+	public final void uploadTempModel(
 		FacePrioritySorter.SortedFaces sortedFaces,
 		Model model,
 		ModelOverride modelOverride,
@@ -1917,7 +1917,7 @@ public class SceneUploader {
 
 			if(!isShadow) {
 				final boolean shouldRotateNormals;
-				boolean shouldCalculateFaceNormal;
+				final boolean shouldCalculateFaceNormal;
 				if (!modelHasNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
 					shouldRotateNormals = false;
 					shouldCalculateFaceNormal = true;
@@ -1934,13 +1934,10 @@ public class SceneUploader {
 							arraycopy(modelLocalN, vertexOffsetC, faceNormals, 6, 3);
 						}
 					}
-					shouldCalculateFaceNormal = true;
-					for (int faceNormal : faceNormals) {
-						if (faceNormal != 0) {
-							shouldCalculateFaceNormal = false;
-							break;
-						}
-					}
+					shouldCalculateFaceNormal =
+						faceNormals[0] == 0 && faceNormals[1] == 0 && faceNormals[2] == 0 &&
+						faceNormals[3] == 0 && faceNormals[4] == 0 && faceNormals[5] == 0 &&
+						faceNormals[6] == 0 && faceNormals[7] == 0 && faceNormals[8] == 0;
 				}
 
 				if(shouldCalculateFaceNormal) {
