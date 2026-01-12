@@ -23898,10 +23898,10 @@
   },
   {
     "description": "TELEPORT_PLATFORM",
-    "height": 50,
+    "height": 170,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 12.5,
+    "radius": 375,
+    "strength": 5,
     "color": [
       0,
       255,
@@ -23923,11 +23923,10 @@
     ]
   },
   {
-    "description": "GAUNTLET_PORTAL",
-    "height": 100,
-    "alignment": "FRONT",
-    "radius": 700,
-    "strength": 17.5,
+    "description": "GAUNTLET_PORTAL_FRONT",
+    "offset": [ 0, 100, -50 ],
+    "radius": 400,
+    "strength": 75,
     "color": [
       0,
       127,
@@ -23935,7 +23934,58 @@
     ],
     "type": "PULSE",
     "duration": 5000,
-    "range": 20,
+    "range": 10,
+    "objectIds": [
+      "GAUNTLET_LOBBY_ENTRANCE"
+    ]
+  },
+  {
+    "description": "GAUNTLET_PORTAL_BACK",
+    "offset": [ 0, 150, 75 ],
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      0,
+      127,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "objectIds": [
+      "GAUNTLET_LOBBY_ENTRANCE"
+    ]
+  },
+  {
+    "description": "GAUNTLET_PORTAL_LEFT",
+    "offset": [ -225, 75, -100 ],
+    "radius": 200,
+    "strength": 50,
+    "color": [
+      0,
+      127,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "objectIds": [
+      "GAUNTLET_LOBBY_ENTRANCE"
+    ]
+  },
+  {
+    "description": "GAUNTLET_PORTAL_RIGHT",
+    "offset": [ 225, 75, -100 ],
+    "radius": 200,
+    "strength": 50,
+    "color": [
+      0,
+      127,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
     "objectIds": [
       "GAUNTLET_LOBBY_ENTRANCE"
     ]
