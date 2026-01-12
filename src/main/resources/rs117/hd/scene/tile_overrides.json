@@ -4255,11 +4255,43 @@
     }
   },
   {
+    "name": "PRIFDDINAS_BANK",
+    "area": "PRIFDDINAS_BANK",
+    "overlayIds": [ 42, 106 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "shiftLightness": 10,
+    "uvOrientation": 512,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "PRIFDDINAS_INTERIORS_RAISED",
     "area": "PRIFDDINAS_INTERIORS_RAISED",
     "overlayIds": [ 42, 106 ],
     "groundMaterial": "HD_WOOD_PLANKS_2",
-    "uvScale": 1.25
+    "uvScale": 1.25,
+    "minLightness": 23,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "PRIFDDINAS_TEMPLE_DOOR_NO_BLENDING_FIX",
+    "area": "PRIFDDINAS_TEMPLE_DOOR_NO_BLENDING_FIX",
+    "overlayIds": [ 106 ],
+    "underlayIds": [ 143 ],
+    "groundMaterial": "PLAIN_DIRT",
+    "setHue": 7,
+    "maxLightness": 23,
+    "minLightness": 23,
+    "maxSaturation": 2,
+    "blended": false,
+    "replacements": {
+      "TIRANNWN_PATHS": "blending",
+      "NONE": "!textures"
+    }
   },
   {
     "name": "TIRANNWN_PATHS",
@@ -4267,7 +4299,7 @@
     "overlayIds": [
       106
     ],
-    "groundMaterial": "GRASSY_DIRT"
+    "groundMaterial": "PLAIN_DIRT"
   },
   {
     "name": "PRIFDDINAS_TEMPLE_FLOOR",
@@ -4281,7 +4313,10 @@
     "name": "PRIFDDINAS_GRASS",
     "area": "PRIFDDINAS",
     "underlayIds": [ 48, 50, 67, 143 ],
-    "groundMaterial": "OVERWORLD_GRASS_1"
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "Grand Library Floor",
