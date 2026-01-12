@@ -1917,14 +1917,10 @@ public class SceneUploader {
 
 			if(!isShadow) {
 				final boolean shouldRotateNormals;
+				boolean shouldCalculateFaceNormal;
 				if (!modelHasNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
 					shouldRotateNormals = false;
-					calculateFaceNormal(
-						faceNormals,
-						modelLocal[vertexOffsetA], modelLocal[vertexOffsetA + 1], modelLocal[vertexOffsetA + 2],
-						modelLocal[vertexOffsetB], modelLocal[vertexOffsetB + 1], modelLocal[vertexOffsetB + 2],
-						modelLocal[vertexOffsetC], modelLocal[vertexOffsetC + 1], modelLocal[vertexOffsetC + 2]
-					);
+					shouldCalculateFaceNormal = true;
 				} else {
 					shouldRotateNormals = orientation != 0;
 					if (vertexOffsetA + 3 == vertexOffsetB && vertexOffsetB + 3 == vertexOffsetC) {
@@ -1938,6 +1934,22 @@ public class SceneUploader {
 							arraycopy(modelLocalN, vertexOffsetC, faceNormals, 6, 3);
 						}
 					}
+					shouldCalculateFaceNormal = true;
+					for (int faceNormal : faceNormals) {
+						if (faceNormal != 0) {
+							shouldCalculateFaceNormal = false;
+							break;
+						}
+					}
+				}
+
+				if(shouldCalculateFaceNormal) {
+					calculateFaceNormal(
+						faceNormals,
+						modelLocal[vertexOffsetA], modelLocal[vertexOffsetA + 1], modelLocal[vertexOffsetA + 2],
+						modelLocal[vertexOffsetB], modelLocal[vertexOffsetB + 1], modelLocal[vertexOffsetB + 2],
+						modelLocal[vertexOffsetC], modelLocal[vertexOffsetC + 1], modelLocal[vertexOffsetC + 2]
+					);
 				}
 
 				if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading) {
