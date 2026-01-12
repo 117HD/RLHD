@@ -11,7 +11,7 @@ import java.util.Queue;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
-import lombok.RequiredArgsConstructor;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
@@ -32,11 +32,12 @@ import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
-import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-@RequiredArgsConstructor
 public class Zone {
+	@Inject
+	private Client client;
+
 	// Zone vertex format
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
@@ -234,6 +235,8 @@ public class Zone {
 	}
 
 	public void unmap() {
+		assert client.isClientThread();
+
 		if (vboO != null)
 			vboO.unmap();
 		if (vboA != null)
@@ -321,17 +324,6 @@ public class Zone {
 	private static final int[] drawOff = new int[NUM_DRAW_RANGES];
 	private static final int[] drawEnd = new int[NUM_DRAW_RANGES];
 	private static int drawIdx = 0;
-	private static int[] glDrawOffset, glDrawLength;
-
-	private static final int[][] glDrawOffsetPreAlloc = new int[15][];
-	private static final int[][] glDrawLengthPreAlloc = new int[15][];
-
-	static {
-		for (int i = 0; i < glDrawOffsetPreAlloc.length; ++i) {
-			glDrawOffsetPreAlloc[i] = new int[i + 1];
-			glDrawLengthPreAlloc[i] = new int[i + 1];
-		}
-	}
 
 	private void convertForDraw(int vertSize) {
 		for (int i = 0; i < drawIdx; ++i) {
@@ -342,14 +334,6 @@ public class Zone {
 			drawEnd[i] /= vertSize >> 2;
 
 			drawEnd[i] -= drawOff[i]; // convert from end pos to length
-		}
-
-		if (drawIdx < glDrawOffsetPreAlloc.length) {
-			glDrawOffset = copyTo(glDrawOffsetPreAlloc[drawIdx], drawOff, 0, drawIdx);
-			glDrawLength = copyTo(glDrawLengthPreAlloc[drawIdx], drawEnd, 0, drawIdx);
-		} else {
-			glDrawOffset = Arrays.copyOfRange(drawOff, 0, drawIdx);
-			glDrawLength = Arrays.copyOfRange(drawEnd, 0, drawIdx);
 		}
 	}
 
@@ -848,17 +832,17 @@ public class Zone {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
-			if (glDrawOffset.length == 1) {
+			if (drawIdx == 1) {
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
-					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
+					cmd.DrawArraysIndirect(GL_TRIANGLES, drawOff[0], drawEnd[0], ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
-					cmd.DrawArrays(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0]);
+					cmd.DrawArrays(GL_TRIANGLES, drawOff[0], drawEnd[0]);
 				}
 			} else {
 				if (GL_CAPS.OpenGL43 && SUPPORTS_INDIRECT_DRAW) {
-					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, ZoneRenderer.indirectDrawCmdsStaging);
+					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, drawOff, drawEnd, drawIdx, ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
-					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+					cmd.MultiDrawArrays(GL_TRIANGLES, drawOff, drawEnd, drawIdx);
 				}
 			}
 			drawIdx = 0;

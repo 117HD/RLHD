@@ -97,14 +97,19 @@ public class CommandBuffer {
 	}
 
 	public void MultiDrawArrays(int mode, int[] offsets, int[] counts) {
+		MultiDrawArrays(mode, offsets, counts, counts.length);
+	}
+
+	public void MultiDrawArrays(int mode, int[] offsets, int[] counts, int drawCount) {
 		assert offsets.length == counts.length;
+		assert counts.length >= drawCount;
 		assert (mode & DRAW_MODE_MASK) == mode;
-		if (offsets.length == 0)
+		if (drawCount == 0)
 			return;
 
-		ensureCapacity(1 + offsets.length);
-		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_TYPE & 0xFF | mode << 8 | (long) offsets.length << 32;
-		for (int i = 0; i < offsets.length; i++)
+		ensureCapacity(1 + drawCount);
+		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_TYPE & 0xFF | mode << 8 | (long) drawCount << 32;
+		for (int i = 0; i < drawCount; i++)
 			cmd[writeHead++] = (long) offsets[i] << 32 | counts[i] & INT_MASK;
 	}
 
@@ -152,9 +157,13 @@ public class CommandBuffer {
 	}
 
 	public void MultiDrawArraysIndirect(int mode, int[] vertexOffsets, int[] vertexCounts, GpuIntBuffer indirectBuffer) {
+		MultiDrawArraysIndirect(mode, vertexOffsets, vertexCounts, vertexCounts.length, indirectBuffer);
+	}
+
+	public void MultiDrawArraysIndirect(int mode, int[] vertexOffsets, int[] vertexCounts, int drawCount, GpuIntBuffer indirectBuffer) {
 		assert vertexOffsets.length == vertexCounts.length;
+		assert vertexCounts.length >= drawCount;
 		assert (mode & DRAW_MODE_MASK) == mode;
-		int drawCount = vertexOffsets.length;
 		if (drawCount == 0)
 			return;
 

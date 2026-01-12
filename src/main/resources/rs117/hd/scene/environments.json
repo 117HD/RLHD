@@ -654,6 +654,16 @@
     "fogDepth": 80
   },
   {
+    "area": "SMOKE_DEVIL_DUNGEON",
+    "fogColor": "#0A0A0A",
+    "directionalStrength": 0.5,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogDepth": 30
+  },
+  {
     "area": "KHARIDIAN_DESERT_DEEP",
     "ambientColor": "#c0ae94",
     "ambientStrength": 3,
@@ -2120,15 +2130,6 @@
     "area": "MASTERING_MIXOLOGY_WIND",
     "windStrength": 27.5,
     "windSpeed": 8.5
-  },
-  {
-    "area": "XMAS_2025_ENVIRONMENT",
-    "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.2,
-    "directionalColor": "#f4e5c9",
-    "directionalStrength": 2,
-    "fogColor": "#aebde0",
-    "fogDepth": 25
   },
   {
     "area": "GRIMSTONE",

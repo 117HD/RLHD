@@ -63,7 +63,6 @@ import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginInstantiationException;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
@@ -367,10 +366,10 @@ public class HdPlugin extends Plugin {
 	public int fboTiledLighting;
 	public int texTiledLighting;
 
-	public final UBOGlobal uboGlobal = new UBOGlobal();
-	public final UBOLights uboLights = new UBOLights(false);
-	public final UBOLights uboLightsCulling = new UBOLights(true);
-	public final UBOUI uboUI = new UBOUI();
+	public UBOGlobal uboGlobal;
+	public UBOUI uboUI;
+	public UBOLights uboLights;
+	public UBOLights uboLightsCulling;
 
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
@@ -759,12 +758,10 @@ public class HdPlugin extends Plugin {
 			try {
 				pluginManager.setPluginEnabled(this, false);
 				pluginManager.stopPlugin(this);
-			} catch (PluginInstantiationException ex) {
+			} catch (Throwable ex) {
 				log.error("Error while stopping 117HD:", ex);
 			}
 		});
-
-		shutDown();
 	}
 
 	public void restartPlugin() {
@@ -1053,17 +1050,35 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeUbos() {
-		uboGlobal.initialize(HdPlugin.UNIFORM_BLOCK_GLOBAL);
-		uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
-		uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
-		uboUI.initialize(HdPlugin.UNIFORM_BLOCK_UI);
+		uboGlobal = new UBOGlobal();
+		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
+
+		uboUI = new UBOUI();
+		uboUI.initialize(UNIFORM_BLOCK_UI);
+
+		uboLights = new UBOLights(false);
+		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
+
+		uboLightsCulling = new UBOLights(true);
+		uboLightsCulling.initialize(UNIFORM_BLOCK_LIGHTS_CULLING);
 	}
 
 	private void destroyUbos() {
-		uboGlobal.destroy();
-		uboLights.destroy();
-		uboLightsCulling.destroy();
-		uboUI.destroy();
+		if (uboGlobal != null)
+			uboGlobal.destroy();
+		uboGlobal = null;
+
+		if (uboUI != null)
+			uboUI.destroy();
+		uboUI = null;
+
+		if (uboLights != null)
+			uboLights.destroy();
+		uboLights = null;
+
+		if (uboLightsCulling != null)
+			uboLightsCulling.destroy();
+		uboLightsCulling = null;
 	}
 
 	private void initializeUiTexture() {
