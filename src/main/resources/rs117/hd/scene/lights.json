@@ -27384,6 +27384,7 @@
     "range": 20,
     "fadeInDuration": 1500,
     "fadeOutDuration": 1300,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "AIDE_PLAYER_BOOK_PORTAL"
     ]
@@ -27427,6 +27428,7 @@
     "range": 20,
     "fadeInDuration": 1500,
     "fadeOutDuration": 1300,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE_TWISTED_PLAYER_BOOK_PORTAL"
     ]
@@ -27447,6 +27449,7 @@
     "range": 20,
     "spawnDelay": 850,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 200,
     "graphicsObjectIds": [
       "LEAGUE_4_HOME_TELEPORT_SPOTANIM_3"
     ]
@@ -27465,7 +27468,9 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "fadeInDuration": 200,
     "fadeOutDuration": 1500,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE_4_HOME_TELEPORT_SPOTANIM_4"
     ]
@@ -27504,6 +27509,7 @@
     "duration": 0,
     "range": 20,
     "fadeOutDuration": 1000,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE03_HOME_TELEPORT_SPOTANIM_5"
     ]
@@ -27554,6 +27560,7 @@
     "range": 20,
     "fadeOutDuration": 900,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "despawnDelay": 3800,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_04"
@@ -27572,6 +27579,7 @@
     "fadeInDuration": 500,
     "fadeOutDuration": 900,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "despawnDelay": 3800,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_04"
@@ -27595,6 +27603,7 @@
     "fadeInDuration": 50,
     "spawnDelay": 600,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "despawnDelay": 550,
     "fadeOutDuration": 250,
     "graphicsObjectIds": [
@@ -27608,6 +27617,7 @@
     "offset": [ 0, 20, 35 ],
     "radius": 170,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 25,
     "color": [
       252,
@@ -27626,10 +27636,8 @@
     ]
   },
   {
-    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT",
-    "height": 140,
-    "alignment": "CENTER",
-    "offset": [ 0, 20, 70 ],
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT_FLAME_FRONT",
+    "offset": [ 0, 160, 70 ],
     "radius": 30,
     "fixedDespawnTime": true,
     "strength": 30,
@@ -27643,20 +27651,132 @@
     "range": 60,
     "fadeInDuration": 100,
     "spawnDelay": 600,
-    "despawnDelay": 100,
+    "despawnDelay": 500,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
       "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
     ]
   },
   {
-    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT",
-    "height": 140,
-    "alignment": "CENTER",
-    "offset": [ 0, 20, 70 ],
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT_FLAME_LEFT",
+    "offset": [ -25, 170, 50 ],
     "radius": 30,
     "fixedDespawnTime": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 500,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT_FLAME_RIGHT",
+    "offset": [ 25, 170, 50 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 500,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_FRONT",
+    "offset": [ 0, 160, 77 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_LEFT",
+    "offset": [ -25, 170, 50 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_RIGHT",
+    "offset": [ 25, 170, 50 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_TOP",
+    "offset": [ 0, 200, 50 ],
+    "radius": 60,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
+    "strength": 20,
     "color": [
       252,
       148,
@@ -27680,6 +27800,7 @@
     "offset": [ 65, 20, 0 ],
     "radius": 200,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 3,
     "color": [
       252,
@@ -27705,6 +27826,7 @@
     "offset": [ -65, 20, 0 ],
     "radius": 200,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 3,
     "color": [
       252,
@@ -27860,7 +27982,7 @@
   {
     "description": "TELEGRAB_PROJECTILE",
     "alignment": "CENTER",
-    "height": 20,
+    "height": 10,
     "radius": 125,
     "strength": 12,
     "fadeOutDuration": 600,
@@ -27877,9 +27999,32 @@
     ]
   },
   {
+    "description": "TELEGRAB_IMPACT",
+    "alignment": "CENTER",
+    "height": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "radius": 195,
+    "strength": 8,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "graphicsObjectIds": [
+      "TELEGRAB_IMPACT"
+    ]
+  },
+  {
     "description": "TELEGRAB_CAST",
-    "offset": [ 0, 165, 75 ],
-    "radius": 125,
+    "offset": [ 0, 220, 50 ],
+    "radius": 60,
     "strength": 10,
     "color": [
       170,
@@ -27897,9 +28042,9 @@
   },
   {
     "description": "TELEGRAB_CAST_2",
-    "offset": [ 0, 75, 75 ],
-    "radius": 100,
-    "strength": 7,
+    "offset": [ 0, 70, 45 ],
+    "radius": 110,
+    "strength": 7.5,
     "color": [
       170,
       20,
@@ -28120,6 +28265,26 @@
     ]
   },
   {
+    "description": "WIND_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "WINDBOLT_IMPACT"
+    ]
+  },
+  {
     "description": "WATER_BOLT",
     "radius": 250,
     "strength": 6.3,
@@ -28135,6 +28300,26 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERBOLT_TRAVEL"
+    ]
+  },
+  {
+    "description": "WATER_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "WATERBOLT_IMPACT"
     ]
   },
   {
@@ -28156,6 +28341,26 @@
     ]
   },
   {
+    "description": "EARTH_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "EARTHBOLT_IMPACT"
+    ]
+  },
+  {
     "description": "FIRE_BOLT",
     "radius": 265,
     "strength": 7,
@@ -28171,6 +28376,26 @@
     "fadeInDuration": 200,
     "projectileIds": [
       "FIREBOLT_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      255,
+      70,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "FIREBOLT_IMPACT"
     ]
   },
   {
@@ -28211,6 +28436,29 @@
     ]
   },
   {
+    "description": "WIND_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 300,
+    "strength": 5.6,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDBLAST_IMPACT"
+    ]
+  },
+  {
     "description": "WATER_BLAST",
     "radius": 275,
     "strength": 8.8,
@@ -28229,6 +28477,29 @@
     ]
   },
   {
+    "description": "WATER_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 300,
+    "strength": 6.9,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERBLAST_IMPACT"
+    ]
+  },
+  {
     "description": "EARTH_BLAST",
     "radius": 275,
     "strength": 6.9,
@@ -28244,6 +28515,29 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHBLAST_TRAVEL"
+    ]
+  },
+  {
+    "description": "EARTH_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 300,
+    "strength": 6.9,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHBLAST_IMPACT"
     ]
   },
   {
@@ -28268,7 +28562,7 @@
     "description": "FIRE_BLAST_2",
     "offset": [ 0, -25, -25 ],
     "radius": 200,
-    "strength": 7,
+    "strength": 6,
     "color": [
       252,
       148,
@@ -28281,6 +28575,29 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIREBLAST_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 325,
+    "strength": 8.8,
+    "color": [
+      255,
+      70,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIREBLAST_IMPACT"
     ]
   },
   {
@@ -28503,6 +28820,29 @@
     ]
   },
   {
+    "description": "WIND_WAVE_AND_SURGE_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 10.6,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "despawnDelay": 625,
+    "fixedDespawnTime": true,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "WINDSURGE_IMPACT",
+      "WINDWAVE_IMPACT"
+    ]
+  },
+  {
     "description": "WIND_SURGE_CAST_LEFT",
     "offset": [ 80, 175, 50 ],
     "spawnDelay": 100,
@@ -28584,6 +28924,29 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERSURGE_TRAVEL"
+    ]
+  },
+  {
+    "description": "WATER_WAVE_AND_SURGE_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 13.8,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "despawnDelay": 625,
+    "fixedDespawnTime": true,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "WATERSURGE_IMPACT",
+      "WATERWAVE_IMPACT"
     ]
   },
   {
@@ -28671,6 +29034,29 @@
     ]
   },
   {
+    "description": "EARTH_WAVE_AND_SURGE_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 12.5,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "despawnDelay": 625,
+    "fixedDespawnTime": true,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "EARTHSURGE_IMPACT",
+      "EARTHWAVE_IMPACT"
+    ]
+  },
+  {
     "description": "EARTH_SURGE_CAST_LEFT",
     "offset": [ 80, 175, 50 ],
     "spawnDelay": 100,
@@ -28749,16 +29135,16 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 200,
-    "fadeOutDuration": 250,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "FIRESURGE_TRAVEL"
     ]
   },
   {
     "description": "FIRE_SURGE_2",
-    "offset": [ 0, 0, -50 ],
+    "offset": [ 0, 0, -25 ],
     "radius": 235,
-    "strength": 9,
+    "strength": 8,
     "color": [
       252,
       148,
@@ -28768,9 +29154,32 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 200,
-    "fadeOutDuration": 250,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "FIRESURGE_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_WAVE_AND_SURGE_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 425,
+    "strength": 13.8,
+    "color": [
+      255,
+      70,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "despawnDelay": 625,
+    "fixedDespawnTime": true,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "FIRESURGE_IMPACT",
+      "FIREWAVE_IMPACT"
     ]
   },
   {
@@ -38352,8 +38761,12 @@
     "description": "Standard Spellbook Teleport",
     "graphicsObjectIds": [ "TELEPORT_CASTING" ],
     "radius": 350,
-    "strength": 12,
-    "color": [ 205, 0, 205 ],
+    "strength": 16,
+    "color": [
+      170,
+      20,
+      255
+    ],
     "offset": [ 0, 130, 0 ],
     "fixedDespawnTime": true,
     "despawnDelay": 550,
@@ -44519,6 +44932,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "waitForAnimation": true,
     "graphicsObjectIds": [
       "ZAMORAK_FLAME"
     ]
