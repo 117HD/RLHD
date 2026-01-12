@@ -2181,11 +2181,13 @@
       "REGICIDE_HOLLOWLOGSMALLER"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.45,
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "GRAY_75",
+        "flatNormals": true,
+        "castShadows": false
       }
     ]
   },
@@ -73119,12 +73121,16 @@
       "PRIF_WALL_GATE_SIDE_LEFT",
       "PRIF_WALL_GATE_LEFT",
       "PRIF_WALL_GATE_RIGHT",
+      "PRIF_WALL_GATE_LEFT_EXIT",
+      "PRIF_WALL_GATE_RIGHT_EXIT",
       "PRIF_AMLODD_WOODEN_RAILING",
       "SPIRITTREE_PRIF_2OPS",
       "PRIF_AMLODD_HOUSE_SUPPORT_NE",
       "PRIF_AMLODD_HOUSE_SUPPORT_SW",
       "PRIF_AMLODD_HOUSE_SUPPORT_SE",
-      "PRIF_AMLODD_HOUSE_SUPPORT_NW"
+      "PRIF_AMLODD_HOUSE_SUPPORT_NW",
+      "PRIF_YEWTREE",
+      "PRIF_YEWTREE_STUMP"
     ]
   },
   {
