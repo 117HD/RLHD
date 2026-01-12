@@ -14,6 +14,7 @@ import rs117.hd.utils.jobs.JobGroup;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
+import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 
 @Slf4j
 public class WorldViewContext {
@@ -34,6 +35,10 @@ public class WorldViewContext {
 	Zone[][] zones;
 	VBO vboM;
 	boolean isLoading = true;
+
+	VAO.VAOList vaoO;
+	VAO.VAOList vaoA;
+	VAO.VAOList vaoPO;
 
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;
@@ -80,6 +85,10 @@ public class WorldViewContext {
 			.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1)
 			.put(0).put(0); // dummy scene offset for macOS
 		vboM.unmap();
+
+		vaoO = new VAO.VAOList(vboM, eboAlpha);
+		vaoA = new VAO.VAOList(vboM, eboAlpha);
+		vaoPO = new VAO.VAOList(vboM, eboAlpha);
 	}
 
 	void handleZoneSwap(float deltaTime, int zx, int zz) {
@@ -181,6 +190,10 @@ public class WorldViewContext {
 		if (uboWorldViewStruct != null)
 			uboWorldViewStruct.free();
 		uboWorldViewStruct = null;
+
+		vaoO.free();
+		vaoA.free();
+		vaoPO.free();
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
