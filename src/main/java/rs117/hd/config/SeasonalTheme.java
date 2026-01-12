@@ -10,6 +10,6 @@ public enum SeasonalTheme {
 	SPRING,
 	SUMMER,
 	AUTUMN,
-	WINTER
+	WINTER,
 	;
 }
