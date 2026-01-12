@@ -30431,12 +30431,12 @@
   {
     "description": "GOTR_RIFT_PORTAL",
     "worldX": 3615,
-    "worldY": 9470,
+    "worldY": 9471,
     "plane": 0,
-    "height": 260,
+    "offset": [ 0, 700, -100 ],
     "alignment": "CENTER",
     "radius": 2500,
-    "strength": 11,
+    "strength": 4.5,
     "color": [
       0,
       191.49066,
@@ -30445,6 +30445,22 @@
     "type": "PULSE",
     "duration": 1200,
     "range": 12
+  },
+  {
+    "description": "GOTR_RIFT_PORTAL_2",
+    "worldX": 3615,
+    "worldY": 9470,
+    "plane": 0,
+    "offset": [ 0, 150, -50 ],
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 7.5,
+    "color": [
+      0,
+      191.49066,
+      255
+    ],
+    "type": "STATIC"
   },
   {
     "description": "GOTR_REWARDS_GUARDIAN",
