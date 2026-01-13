@@ -73439,7 +73439,7 @@
     "description": "Tirannwn - Prifddinas - Huge Tower Walls and Roof",
     "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
     "uvType": "BOX",
-    "uvScale": 1.5,
+    "uvScale": 1.4,
     "objectIds": [
       "CRYSTAL_TOWER_WALL_0_9_LOWER",
       "CRYSTAL_TOWER_WALL_0_8_LOWER",
@@ -73571,9 +73571,10 @@
     ]
   },
   {
-    "description": "Tirannwn - Prifddinas - Huge Tower Railing",
+    "description": "Tirannwn - Prifddinas - Huge Tower Railing & Staircase",
     "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
     "uvType": "BOX",
+    "uvScale": 0.55,
     "objectIds": [
       "CRYSTAL_TOWER_WALKWAY_CRYSTAL_SMALL_TOP",
       "CRYSTAL_TOWER_WALKWAY_CRYSTAL_LARGE_TOP",
@@ -73581,7 +73582,22 @@
       "CRYSTAL_TOWER_WALKWAY_CRYSTAL_SMALL_BOTTOM",
       "CRYSTAL_TOWER_WALKWAY_BLANK_BASKET1",
       "CRYSTAL_TOWER_WALKWAY_WALL",
-      "CRYSTAL_TOWER_WALKWAY_WALL_BLANK"
+      "CRYSTAL_TOWER_WALKWAY_WALL_BLANK",
+      "PRIF_CRYSTAL_STAIRCASE_G",
+      "PRIF_CRYSTAL_STAIRCASE_E",
+      "PRIF_CRYSTAL_STAIRCASE_H",
+      "PRIF_CRYSTAL_STAIRCASE_F",
+      "PRIF_CRYSTAL_STAIRCASE_A",
+      "PRIF_CRYSTAL_STAIRCASE_B",
+      "PRIF_CRYSTAL_STAIRCASE_C",
+      "PRIF_CRYSTAL_STAIRCASE_D",
+      "PRIF_CRYSTAL_STAIRCASE_J",
+      "PRIF_CRYSTAL_STAIRCASE_K",
+      "PRIF_CRYSTAL_STAIRCASE_L",
+      "PRIF_CRYSTAL_STAIRCASE_I",
+      "PRIF_CRYSTAL_STAIRCASE_M",
+      "PRIF_CRYSTAL_STAIRCASE_TOP_ARCHES",
+      "PRIF_CRYSTAL_SPIRE_LIGHT"
     ],
     "colorOverrides": [
       {
@@ -73597,14 +73613,18 @@
       {
         "colors": "h == 7 && s == 5",
         "baseMaterial": "DIRT_1",
-        "uvType": "BOX",
+        "uvType": "MODEL_XZ",
         "uvScale": 0.5
       },
       {
-        "colors": "h == 7",
+        "colors": "h == 6 || h == 7",
         "baseMaterial": "BARK",
         "uvType": "BOX",
-        "uvScale": 0.35
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 12 || h == 13",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
       }
     ]
   },
