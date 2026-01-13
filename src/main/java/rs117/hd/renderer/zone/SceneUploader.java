@@ -1817,15 +1817,12 @@ public class SceneUploader {
 			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
 			textureFaces != null;
 
-		final float orientSinf;
-		final float orientCosf;
+		int orientSin = 0;
+		int orientCos = 0;
 		if (orientation != 0) {
 			orientation = mod(orientation, 2048);
-			orientSinf = SINE[orientation] / 65536f;
-			orientCosf = COSINE[orientation] / 65536f;
-		} else {
-			orientSinf = 0.0f;
-			orientCosf = 0.0f;
+			orientSin = SINE[orientation];
+			orientCos = COSINE[orientation];
 		}
 
 		final Material baseMaterial = modelOverride.baseMaterial;
@@ -1956,7 +1953,7 @@ public class SceneUploader {
 				}
 
 				if (shouldRotateNormals)
-					rotateNormalsFloat(faceNormals, orientSinf, orientCosf);
+					rotateNormals(faceNormals, orientSin, orientCos);
 			}
 
 			// HSL override is not applied to textured faces
