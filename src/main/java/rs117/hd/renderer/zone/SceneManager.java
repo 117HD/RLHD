@@ -677,7 +677,7 @@ public class SceneManager {
 		nextSceneContext = null;
 
 		if (isFirst) {
-			root.initMetadata();
+			root.initBuffers(25);
 
 			// Load all pre-existing sub scenes on the first scene load
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
@@ -737,7 +737,7 @@ public class SceneManager {
 		Stopwatch sw = Stopwatch.createStarted();
 		ctx.sceneLoadGroup.complete();
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
-		ctx.initMetadata();
+		ctx.initBuffers();
 		ctx.isLoading = false;
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		log.debug("swapSubScene time {} WorldView ready: {}", ctx.sceneSwapTime, scene.getWorldViewId());

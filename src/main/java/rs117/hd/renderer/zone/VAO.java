@@ -6,7 +6,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
 
@@ -32,7 +31,8 @@ class VAO {
 	final VBO vbo;
 	final GLTextureBuffer tboF;
 	int vao;
-	int vboMetadata;
+	boolean used;
+	int renderThreadId;
 
 	VAO(int size) {
 		vbo = new VBO(size);
@@ -65,17 +65,6 @@ class VAO {
 		glEnableVertexAttribArray(3);
 		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
 
-		bindMetadata(vboMetadata);
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-
-		tboF.initialize(VAOList.TBO_SIZE);
-	}
-
-	void bindMetadata(@Nonnull VBO vboMetadata) {
-		glBindVertexArray(vao);
-		this.vboMetadata = vboMetadata.bufId;
 		glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
 
 		// WorldView index (not ID)
@@ -89,6 +78,11 @@ class VAO {
 			glVertexAttribDivisor(7, 1);
 			glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
 		}
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+
+		tboF.initialize(VAOList.TBO_SIZE);
 	}
 
 	void destroy() {
@@ -99,10 +93,9 @@ class VAO {
 	}
 
 	int[] lengths = new int[4];
-	Scene[] scenes = new Scene[4];
 	int off = 0;
 
-	void addRange(Scene scene) {
+	void addRange() {
 		assert vbo.mapped;
 
 		if (off > 0 && lengths[off - 1] == vbo.vb.position()) {
@@ -112,17 +105,13 @@ class VAO {
 		if (lengths.length == off) {
 			int l = lengths.length << 1;
 			lengths = Arrays.copyOf(lengths, l);
-			scenes = Arrays.copyOf(scenes, l);
 		}
 
 		lengths[off] = vbo.vb.position();
-		scenes[off] = scene;
 		off++;
 	}
 
 	void draw(CommandBuffer cmd) {
-		assert !vbo.mapped;
-
 		cmd.BindVertexArray(vao);
 		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
 
@@ -147,8 +136,9 @@ class VAO {
 	}
 
 	void reset() {
-		Arrays.fill(scenes, 0, off, null);
 		off = 0;
+		used = false;
+		renderThreadId = -1;
 	}
 
 	@Slf4j
@@ -158,83 +148,91 @@ class VAO {
 		private static final int VAO_SIZE = (int) (4 * MiB);
 		private static final int TBO_SIZE = ceil(VAO_SIZE / (3f * VERT_SIZE)) * 9 * Integer.BYTES;
 
-		private int curIdx;
-		private int drawCount;
 		private final List<VAO> vaos = new ArrayList<>();
+		private final VBO vboMetadata;
 		private final int eboAlpha;
 
-		VAO get(int size, @Nonnull VBO vboMetadata) {
-			assert size <= VAO_SIZE;
+		void preAllocate(int count) {
+			for (int i = 0; i < count; i++) {
+				VAO newVao = new VAO(VAO_SIZE);
+				newVao.initialize(eboAlpha, vboMetadata);;
+				vaos.add(newVao);
+			}
+			log.debug("Pre-allocated {} VAO(s)", count);
+		}
 
-			while (curIdx < vaos.size()) {
-				VAO vao = vaos.get(curIdx);
-				boolean wasMapped = vao.vbo.mapped;
-				if (!wasMapped) {
+		synchronized void map() {
+			for (VAO vao : vaos) {
+				if(vao.vao == 0)
+					vao.initialize(eboAlpha, vboMetadata);
+
+				if(!vao.vbo.mapped) {
 					vao.vbo.map();
 					vao.tboF.map();
 				}
 
+				vao.reset();
+			}
+		}
+
+		synchronized VAO get(int size, int renderThreadId) {
+			assert size <= VAO_SIZE;
+
+			for(VAO vao : vaos) {
+				if (!vao.vbo.mapped || (vao.used && vao.renderThreadId != renderThreadId))
+					continue; // only use VAOs which have already been mapped
+
 				int rem = vao.vbo.vb.remaining() * Integer.BYTES;
 				if (size <= rem) {
-					if (vao.vboMetadata == vboMetadata.bufId)
-						return vao;
-
-					if (!wasMapped) {
-						vao.bindMetadata(vboMetadata);
-						return vao;
-					}
+					vao.used = true;
+					vao.renderThreadId = renderThreadId;
+					return vao;
 				}
-
-				curIdx++;
 			}
 
 			VAO vao = new VAO(VAO_SIZE);
+			vaos.add(new VAO(VAO_SIZE));
+
+			if(renderThreadId >= 0)
+				return null; // Render Thread cant allocate or map, so we'll add the VAO so it'll be available next time around
+
+			vao.used = true;
 			vao.initialize(eboAlpha, vboMetadata);
 			vao.vbo.map();
 			vao.tboF.map();
-			vaos.add(vao);
 			log.debug("Allocated VAO {} request {}", vao.vao, size);
 			return vao;
 		}
 
-		void unmap() {
-			int sz = 0;
+		synchronized void unmap() {
+			// Unmap all VAOs which have been used so they can be drawn safely
 			for (VAO vao : vaos) {
-				if (vao.vbo.mapped) {
-					++sz;
+				if (vao.used) {
 					vao.vbo.unmap();
 					vao.tboF.unmap();
 				}
 			}
-			curIdx = 0;
-			drawCount = sz;
 		}
 
 		void free() {
-			for (VAO vao : vaos) {
+			for (VAO vao : vaos)
 				vao.destroy();
-			}
 			vaos.clear();
-			curIdx = 0;
-			drawCount = 0;
 		}
 
-		void addRange(Scene scene) {
-			for (int i = 0; i <= curIdx && i < vaos.size(); ++i) {
-				VAO vao = vaos.get(i);
-				if (vao.vbo.mapped)
-					vao.addRange(scene);
+		void addRange() {
+			for (VAO vao : vaos) {
+				if (vao.used && vao.vbo.mapped)
+					vao.addRange();
 			}
 		}
 
 		void drawAll(CommandBuffer cmd) {
-			for (int i = 0; i < drawCount; ++i)
-				vaos.get(i).draw(cmd);
-		}
-
-		void resetAll() {
-			for (int i = 0; i < drawCount; ++i)
-				vaos.get(i).reset();
+			// Draw all used VAOs
+			for (VAO vao : vaos) {
+				if(vao.used)
+					vao.draw(cmd);
+			}
 		}
 	}
 }

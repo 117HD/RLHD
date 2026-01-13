@@ -61,6 +61,10 @@ public final class HDUtils {
 		return cross(b, c);
 	}
 
+	public static int ceilPow2(int i) {
+		return (int) ceilPow2((long)i);
+	}
+
 	public static long ceilPow2(long l) {
 		assert l >= 0;
 		l--; // Reduce by 1 in case it's already a power of 2
