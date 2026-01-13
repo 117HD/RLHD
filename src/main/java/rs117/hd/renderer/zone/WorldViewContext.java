@@ -45,7 +45,7 @@ public class WorldViewContext {
 	final LinkedBlockingDeque<Zone> pendingCull = new LinkedBlockingDeque<>();
 	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, true);
 	final JobGroup<ZoneUploadJob> streamingGroup = new JobGroup<>(false, false);
-	final JobGroup<ZoneUploadJob> invalidationGroup = new JobGroup<>(true, false);
+	final JobGroup<ZoneUploadJob> blockingInvalidationGroup = new JobGroup<>(true, false);
 
 	WorldViewContext(
 		@Nullable WorldView worldView,
@@ -150,7 +150,7 @@ public class WorldViewContext {
 
 				if (zones[x][z].rebuild) {
 					zones[x][z].rebuild = false;
-					invalidateZone(x, z);
+					invalidateZone(false, x, z);
 					queuedWork = true;
 				}
 			}
@@ -163,11 +163,12 @@ public class WorldViewContext {
 		if (isLoading)
 			return;
 
-		invalidationGroup.complete();
-
-		for (int x = 0; x < sizeX; x++)
-			for (int z = 0; z < sizeZ; z++)
-				handleZoneSwap(-1.0f, x, z);
+		final LinkedBlockingDeque<ZoneUploadJob> pendingInvalidationJobs = blockingInvalidationGroup.getPending();
+		for (ZoneUploadJob job : pendingInvalidationJobs) {
+			job.waitForCompletion();
+			pendingInvalidationJobs.remove(job);
+			handleZoneSwap(-1.0f, job.x, job.z);
+		}
 	}
 
 	void free() {
@@ -201,10 +202,10 @@ public class WorldViewContext {
 		log.debug("invalidate all zones for worldViewId: [{}]", worldViewId);
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
-				invalidateZone(x, z);
+				invalidateZone(false, x, z);
 	}
 
-	void invalidateZone(int zx, int zz) {
+	void invalidateZone(boolean shouldBlock, int zx, int zz) {
 		Zone curZone = zones[zx][zz];
 		float prevUploadDelay = -1.0f;
 		if (curZone.uploadJob != null) {
@@ -227,6 +228,6 @@ public class WorldViewContext {
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
-			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
+			curZone.uploadJob.queue(shouldBlock ? blockingInvalidationGroup : streamingGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
