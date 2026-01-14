@@ -66073,6 +66073,7 @@
     "uvType": "BOX",
     "uvScale": 1.5,
     "uvOrientation": 256,
+    "depthBias": 50,
     "objectIds": [
       "LUC2_GT_HENGE_PUZZLE_BASE_09",
       "LUC2_GT_HENGE_PUZZLE_BASE_10",
