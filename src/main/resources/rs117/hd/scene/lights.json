@@ -35978,10 +35978,10 @@
   },
   {
     "description": "The Scar red flames",
-    "height": 30,
+    "height": 80,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 8,
+    "strength": 7,
     "color": [
       175,
       18,
@@ -35992,6 +35992,62 @@
     "range": 15,
     "objectIds": [
       "DT2_SCAR_FIRE03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 1",
+    "offset": [ -20, 75, 120 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT02",
+      "DT2_SCAR_BROKEN_BOAT03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 2",
+    "offset": [ 60, 100, -150 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT02",
+      "DT2_SCAR_BROKEN_BOAT03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 3",
+    "offset": [ 0, 170, 0 ],
+    "alignment": "CENTER",
+    "radius": 310,
+    "strength": 8.5,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT01"
     ]
   },
   {

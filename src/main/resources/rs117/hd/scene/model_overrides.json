@@ -27509,8 +27509,15 @@
       "DT2_SCAR_ENTRY_STEPPING_STONE"
     ],
     "castShadows": false,
-    "baseMaterial": "STONE",
-    "uvType": "WORLD_XZ"
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "uvType": "WORLD_XZ",
+    "colorOverrides": [
+      {
+        "colors": "a < 255 && h == 35",
+        "baseMaterial": "GRAY_45",
+        "depthBias": 10
+      }
+    ]
   },
   {
     "description": "Lassar Undercity floor tile texture",
@@ -35619,8 +35626,24 @@
         "baseMaterial": "GRUNGE_2"
       },
       {
-        "colors": "l < 8",
+        "colors": "l == 2",
         "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "The Scar Fleshy Objects",
+    "objectIds": [
+      "DT2_SCAR_MAZE_LORE_SEARCHABLE_2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "hideVanillaShadows": true,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 3",
+        "baseMaterial": "GRUNGE_2"
       }
     ]
   },
