@@ -27506,7 +27506,8 @@
   {
     "description": "The Scar stepping stones",
     "objectIds": [
-      "DT2_SCAR_ENTRY_STEPPING_STONE"
+      "DT2_SCAR_ENTRY_STEPPING_STONE",
+      "SCAR_VENTRICULUS_STEPPING_STONE_WITH_OP"
     ],
     "castShadows": false,
     "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
@@ -35576,7 +35577,6 @@
     "description": "The Scar brain matter",
     "objectIds": [
       "LEVIATHAN_WALL_CLIMB",
-      "DT2_SCAR_MAZE_CLOSED",
       "DT2_SCAR_WALLKIT01",
       "DT2_SCAR_WALLKIT01_SHORT",
       "DT2_SCAR_WALLTOP_SHORT_01",
@@ -35595,7 +35595,11 @@
       "DT2_SCAR_FOLIAGE_CORAL01",
       "SCAR_EXIT",
       "SCAR_VENTRICULUS_ENTRY_WITH_OP",
-      "DT2_SCAR_MAZE_1_ENTRY_OPEN"
+      "SCAR_VENTRICULUS_ENTRY",
+      "DT2_SCAR_WALLKIT01_ALCOVE_MID",
+      "DT2_SCAR_WALLKIT01_ALCOVE_LEFT",
+      "DT2_SCAR_WALLKIT01_ALCOVE_RIGHT",
+      "LEVIATHAN_WALL_CLIMB_QUEST"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -35634,18 +35638,98 @@
   {
     "description": "The Scar Fleshy Objects",
     "objectIds": [
+      "DT2_SCAR_MAZE_CHALLENGE_DOOR_3",
+      "DT2_SCAR_MAZE_DOOR_CLOSED",
+      "DT2_SCAR_MAZE_CHALLENGE_DOOR_2",
+      "DT2_SCAR_MAZE_CHALLENGE_DOOR_1",
+      "DT2_SCAR_MAZE_BOAT_ENTRANCE",
+      "DT2_SCAR_MAZE_TINDERBOXES",
+      "DT2_SCAR_MAZE_CLOSED",
+      "DT2_SCAR_MAZE_2_ENTRY_OPEN",
+      "DT2_SCAR_MAZE_1_ENTRY_OPEN",
+      "DT2_SCAR_MAZE_1_RITUAL_CLUE_CRATE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY"
+  },
+  {
+    "description": "The Scar Tainted Essence Node",
+    "objectIds": [
+      "SCAR_AMALGAMATION",
+      "SCAR_AMALGAMATION_2X2",
+      "SCAR_AMALGAMATION_3X3",
+      "SCAR_AMALGAMATION_EMPTY",
+      "SCAR_AMALGAMATION_2X2_EMPTY",
+      "SCAR_AMALGAMATION_3X3_EMPTY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 3",
+        "baseMaterial": "GRUNGE_2"
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "The Scar Fleshy Objects - Depth Bias Fix",
+    "objectIds": [
+      "DT2_SCAR_MAZE_EXIT",
+      "DT2_SCAR_MAZE_LORE_SEARCHABLE_1",
       "DT2_SCAR_MAZE_LORE_SEARCHABLE_2"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
-    "hideVanillaShadows": true,
+    "depthBias": 50,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY"
+  },
+  {
+    "description": "The Scar Electric Maze Safe Spot - Depth Bias Fix",
+    "objectIds": [
+      "DT2_SCAR_MAZE_ELECTRIC_SAFESPOT",
+      "DT2_SCAR_MAZE_ELECTRIC_SAFESPOT_REVERSE",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE02",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE04_M",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE02_M",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE01_M",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE06",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE03",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE04",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE05"
+    ],
+    "depthBias": 150
+  },
+  {
+    "description": "The Scar Brain Stem Pillar",
+    "objectIds": [
+      "DT2_SCAR_MAZE_2_PILLAR_LOC",
+      "DT2_SCAR_MAZE_2_PILLAR_LOC_ACTIVE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
     "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "depthBias": 40,
     "colorOverrides": [
       {
         "colors": "h == 3 && s == 3",
         "baseMaterial": "GRUNGE_2"
       }
     ]
+  },
+  {
+    "description": "The Scar Essence Mine Coffer",
+    "objectIds": [
+      "SCAR_COFFER"
+    ],
+    "baseMaterial": "GRUNGE_3"
   },
   {
     "description": "Disable shadows for footprints in Defender of Varrock",

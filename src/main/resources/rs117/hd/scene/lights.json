@@ -36717,11 +36717,11 @@
   {
     "description": "Neural teleporter blue - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_TELEPORTER_1_1", "DT2_SCAR_MAZE_TELEPORTER_1_2" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       80,
       87,
-      187
+      255
     ],
     "strength": 10,
     "radius": 800
@@ -36729,7 +36729,7 @@
   {
     "description": "Neural teleporter green - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_TELEPORTER_2_1", "DT2_SCAR_MAZE_TELEPORTER_2_2" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       136,
       195,
@@ -36753,7 +36753,7 @@
   {
     "description": "Neural gateway - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_2_PILLAR_ATTACKER_SPAWN" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       202,
       76,
