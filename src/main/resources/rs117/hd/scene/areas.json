@@ -9237,8 +9237,24 @@
   {
     "name": "ANCIENT_VAULT",
     "regions": [
-      13156
-    ]
+      13156,
+      15766
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DT2_DIGSITE_UNDERGROUND",
+    "aabbs": [
+      [ 3393, 9793, 3427, 9833 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DT2_WAR_ROOM",
+    "regions": [
+      11108
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "GLOD_INSTANCE",
