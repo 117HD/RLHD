@@ -44936,5 +44936,19 @@
     "graphicsObjectIds": [
       "ZAMORAK_FLAME"
     ]
+  },
+  {
+    "description": "Ancient Vault Purple Brazier",
+    "offset": [ 0, 250, 0 ],
+    "radius": 500,
+    "strength": 30,
+    "color": [
+      80,
+      60,
+      255
+    ],
+    "objectIds": [
+      "DT2_DESERT_VAULT_BRAZIER01"
+    ]
   }
 ]
