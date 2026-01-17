@@ -44950,5 +44950,61 @@
     "objectIds": [
       "DT2_DESERT_VAULT_BRAZIER01"
     ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Blood Totem",
+    "offset": [ 0, 230, -35 ],
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_BLOOD_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Ice Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_ICE_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Smoke Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      139,
+      69,
+      19
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_SMOKE_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Shade Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_SHADOW_TOTEM_ACTIVE"
+    ]
   }
 ]

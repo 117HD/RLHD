@@ -7197,8 +7197,7 @@
       "DORGESH_CAVES_STALAGTITE_01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "flatNormals": true
+    "uvScale": 0.5
   },
   {
     "description": "ROCK_CAVE_ENTRANCES",
@@ -7314,6 +7313,28 @@
       {
         "colors": 2,
         "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "CAVE_WALLS_BLEND_WITH_BRICKS",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "HOSDUN_BRICK_WALL_END_R",
+      "HOSDUN_BRICK_WALL",
+      "HOSDUN_BRICK_WALL_END_L",
+      "HOSDUN_BRICK_WALL_DAMAGED",
+      "HOSDUN_STONE_PILE1",
+      "HOSDUN_STONE_PILE2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   },
@@ -14376,7 +14397,9 @@
       "MOTD_CRATE",
       "DARKM_MIDDLE_CRATE_SINGLE",
       "EAA_LARGE_CRATE",
-      "EAA_LARGE_CRATES"
+      "EAA_LARGE_CRATES",
+      "DT2_DIGSITE_PICKAXE_CRATE",
+      "DT2_WAR_ROOM_CELL_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -40427,7 +40450,8 @@
       "LUC2_MOV_BARREL",
       "LUC2_DWT_BARREL1",
       "LUC2_DWT_BARREL2",
-      "SLUG2_BARREL_STACKED"
+      "SLUG2_BARREL_STACKED",
+      "QIP_DIGSITE_BARREL_BASIC"
     ]
   },
   {
@@ -73290,6 +73314,69 @@
         "baseMaterial": "MARBLE_1",
         "uvType": "MODEL_XY",
         "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - Digsite Crevice",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "depthBias": 10,
+    "objectIds": [
+      "DT2_DIGSITE_CREVICE_BLOCKED",
+      "DT2_DIGSITE_CREVICE_OPEN",
+      "DECAL_DIRT04_EDGE01",
+      "DT2_WAR_ROOM_EXIT"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room - Altar and Totems and Golem",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "npcIds": [
+      "DT2_WAR_ROOM_BLOOD_TOTEM_ACTIVE",
+      "DT2_WAR_ROOM_ICE_TOTEM_INACTIVE",
+      "DT2_WAR_ROOM_SMOKE_TOTEM_INACTIVE",
+      "DT2_WAR_ROOM_SHADOW_TOTEM_INACTIVE",
+      "DT2_WAR_ROOM_ICE_TOTEM_ACTIVE",
+      "DT2_WAR_ROOM_SMOKE_TOTEM_ACTIVE",
+      "DT2_WAR_ROOM_SHADOW_TOTEM_ACTIVE"
+    ],
+    "objectIds": [
+      "DT2_WAR_ROOM_ALTAR_INACTIVE",
+      "DT2_WAR_ROOM_ALTAR_ACTIVE",
+      "DT2_WAR_ROOM_WARMIND_INACTIVE",
+      "DT2_WAR_ROOM_WARMIND_ACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 || h == 5 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 3 && s == 2",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 3 || h == 0 || h == 53 || h == 60 || h == 32 || h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "colors": "h == 3 && s == 1 || h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h > 40 && s > 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
       }
     ]
   }
