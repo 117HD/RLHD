@@ -27499,8 +27499,9 @@
       "DT2_SCAR_FALLOFF_10"
     ],
     "castShadows": false,
-    "baseMaterial": "TRANSPARENT",
-    "uvType": "WORLD_XZ"
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "The Scar stepping stones",
@@ -35582,10 +35583,46 @@
       "SCAR_VENTRICULUS_INPUT",
       "SCAR_VENTRICULUS_OUTPUT_EXTRACTS",
       "SCAR_VENTRICULUS_OUTPUT_ESSENCE",
+      "DT2_SCAR_FOLIAGE_CORAL03",
+      "DT2_SCAR_FOLIAGE_CORAL02",
+      "DT2_SCAR_FOLIAGE_CORAL01",
       "SCAR_EXIT",
-      "SCAR_VENTRICULUS_ENTRY_WITH_OP"
+      "SCAR_VENTRICULUS_ENTRY_WITH_OP",
+      "DT2_SCAR_MAZE_1_ENTRY_OPEN"
     ],
-    "baseMaterial": "BLANK_GLOSS"
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 3",
+        "baseMaterial": "GRUNGE_2"
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "The Scar Vent",
+    "objectIds": [
+      "DT2_SCAR_VENT01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "terrainVertexSnap": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 3",
+        "baseMaterial": "GRUNGE_2"
+      },
+      {
+        "colors": "l < 8",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Disable shadows for footprints in Defender of Varrock",
