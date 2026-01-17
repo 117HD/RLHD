@@ -1,6 +1,9 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
@@ -10,15 +13,30 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
+import rs117.hd.renderer.zone.VAO.VAOList;
+import rs117.hd.utils.Camera;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
+import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 
 @Slf4j
 public class WorldViewContext {
+	public static final int VAO_OPAQUE = 0;
+	public static final int VAO_ALPHA = 1;
+	public static final int VAO_PLAYER = 3;
+	public static final int VAO_SHADOW = 4;
+	public static final int VAO_COUNT = 5;
+
+	public static final int ALPHA_ZSORT = 8192;
+	public static final int ALPHA_ZSORT_SQ = ALPHA_ZSORT * ALPHA_ZSORT;
+
 	@Inject
 	private Injector injector;
+
+	@Inject
+	private Client client;
 
 	@Inject
 	private ClientThread clientThread;
@@ -37,6 +55,13 @@ public class WorldViewContext {
 
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;
+
+	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
+	private final List<Zone> alphaZones = new ArrayList<>();
+
+	StaticAlphaSortingJob staticAlphaSortingJob;
+
+	final VAOList[] vaoLists = new VAOList[VAO_COUNT];
 
 	public long loadTime;
 	public long uploadTime;
@@ -69,7 +94,9 @@ public class WorldViewContext {
 				zones[x][z] = injector.getInstance(Zone.class);
 	}
 
-	void initMetadata() {
+	void initBuffers() { initBuffers(-1); }
+
+	void initBuffers(int vaoPreAllocate) {
 		if (vboM != null)
 			return;
 
@@ -80,6 +107,75 @@ public class WorldViewContext {
 			.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1)
 			.put(0).put(0); // dummy scene offset for macOS
 		vboM.unmap();
+
+		for(int i = 0; i < VAO_COUNT; i++) {
+			vaoLists[i] = new VAOList(vboM, eboAlpha, client);
+			if(vaoPreAllocate > 0)
+				vaoLists[i].preAllocate(vaoPreAllocate);
+		}
+	}
+
+	VAOList getVaoList(int vaoType) {
+		assert vaoType >= 0 && vaoType < VAO_COUNT : "Invalid VAO type: " + vaoType;
+		return vaoLists[vaoType];
+	}
+
+	VAO getVao(int vaoType, int size) {
+		assert vaoType >= 0 && vaoType < VAO_COUNT : "Invalid VAO type: " + vaoType;
+		return vaoLists[vaoType].get(size);
+	}
+
+	void map() {
+		for(int i = 0; i < VAO_COUNT; i++) {
+			if(vaoLists[i] != null)
+				vaoLists[i].map();
+		}
+	}
+
+	void addRange() {
+		for(int i = 0; i < VAO_COUNT; i++) {
+			if(vaoLists[i] != null)
+				vaoLists[i].addRange();
+		}
+	}
+
+	void unmap() {
+		for(int i = 0; i < VAO_COUNT; i++) {
+			if(vaoLists[i] != null)
+				vaoLists[i].unmap();
+		}
+	}
+
+	void sortStaticAlphaModels(FacePrioritySorter facePrioritySorter, Camera camera) {
+		if(staticAlphaSortingJob == null)
+			staticAlphaSortingJob = new StaticAlphaSortingJob(facePrioritySorter);
+
+		staticAlphaSortingJob.waitForCompletion();
+		alphaZones.clear();
+
+		final int offset = sceneContext.sceneOffset >> 3;
+		final int camPosX = (int) camera.getPositionX();
+		final int camPosZ = (int) camera.getPositionZ();
+		for(int zx = 0; zx < sizeX; zx++) {
+			for(int zz = 0; zz < sizeZ; zz++) {
+				final Zone z = zones[zx][zz];
+				if(z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum))
+					continue;
+
+				final int dx = camPosX - ((zx - offset) << 10);
+				final int dz = camPosZ - ((zz - offset) << 10);
+				z.dist = dx * dx + dz * dz;
+				alphaZones.add(z);
+			}
+		}
+
+		if(!alphaZones.isEmpty()) {
+			alphaZones.sort(alphaSortComparator);
+			staticAlphaSortingJob.reset();
+			for (Zone z : alphaZones)
+				z.alphaStaticModelSort(staticAlphaSortingJob);
+			staticAlphaSortingJob.queue(camera);
+		}
 	}
 
 	void handleZoneSwap(float deltaTime, int zx, int zz) {
@@ -159,6 +255,16 @@ public class WorldViewContext {
 		return queuedWork;
 	}
 
+	int getSortedAlphaCount() {
+		int count = 0;
+
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
+				count += zones[x][z].sortedFacesLen;
+
+		return count;
+	}
+
 	void completeInvalidation() {
 		if (isLoading)
 			return;
@@ -181,6 +287,11 @@ public class WorldViewContext {
 		if (uboWorldViewStruct != null)
 			uboWorldViewStruct.free();
 		uboWorldViewStruct = null;
+
+		for(int i = 0; i < VAO_COUNT; i++) {
+			if(vaoLists[i] != null)
+				vaoLists[i].free();
+		}
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)

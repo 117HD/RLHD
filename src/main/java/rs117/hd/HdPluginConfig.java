@@ -48,6 +48,7 @@ import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
 import rs117.hd.config.TextureResolution;
+import rs117.hd.config.ThreadingMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
 
@@ -370,6 +371,18 @@ public interface HdPluginConfig extends Config
 		return 100;
 	}
 
+	String KEY_POWER_SAVING = "powerSaving";
+	@ConfigItem(
+		keyName = KEY_POWER_SAVING,
+		name = "Power Saving",
+		description = "Reduces workload whilst the client is no longer in focus.",
+		position = 19,
+		section = generalSettings
+	)
+	default boolean powerSaving()
+	{
+		return false;
+	}
 
 	/*====== Lighting settings ======*/
 
@@ -1155,6 +1168,17 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean forceIndirectDraw() {
 		return false;
+	}
+
+	String KEY_THREADED_UPLOAD = "experimentalThreadedUpload";
+	@ConfigItem(
+		keyName = KEY_THREADED_UPLOAD,
+		name = "Threaded Model Upload",
+		description = "",
+		section = experimentalSettings
+	)
+	default ThreadingMode threadedUpload() {
+		return ThreadingMode.MED;
 	}
 
 	/*====== Internal settings ======*/

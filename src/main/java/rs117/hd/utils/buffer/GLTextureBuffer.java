@@ -14,6 +14,8 @@ public class GLTextureBuffer extends GLBuffer {
 	private IntBuffer pixelBuffer;
 
 	private ByteBuffer mappedBuffer;
+
+	@Getter
 	private boolean mapped;
 
 	public GLTextureBuffer(String name, int usage) {

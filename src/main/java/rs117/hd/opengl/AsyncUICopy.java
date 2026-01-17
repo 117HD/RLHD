@@ -62,7 +62,7 @@ public final class AsyncUICopy extends Job {
 		if (buffer != mappedBuffer)
 			mappedBuffer = buffer;
 
-		setExecuteAsync(client.getGameState() == GameState.LOGGED_IN);
+		setExecuteAsync(client.getGameState() == GameState.LOGGED_IN || plugin.isClientMinimized || (plugin.configPowerSaving && plugin.isClientInFocus));
 		queue();
 		inFlight = true;
 	}
@@ -99,7 +99,9 @@ public final class AsyncUICopy extends Job {
 
 	@Override
 	protected void onRun() {
+		long timestamp = System.nanoTime();
 		mappedBuffer.asIntBuffer().put(pixels, 0, width * height);
+		timer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - timestamp);
 	}
 
 	@Override

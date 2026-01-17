@@ -1,7 +1,6 @@
 package rs117.hd.utils.jobs;
 
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,7 @@ public final class Worker {
 
 	final JobSystem jobSystem;
 	final int workerIdx;
-	final BlockingDeque<JobHandle> localWorkQueue = new LinkedBlockingDeque<>();
+	final ConcurrentLinkedDeque<JobHandle> localWorkQueue = new ConcurrentLinkedDeque<>();
 	final AtomicBoolean inflight = new AtomicBoolean();
 
 	boolean findNextStealTarget() {
@@ -110,7 +109,7 @@ public final class Worker {
 			workerHandleCancel();
 
 			if (handle.item != null && handle.setRunning(this)) {
-				inflight.lazySet(true);
+				inflight.set(true);
 				handle.item.onRun();
 				handle.item.ranToCompletion.set(true);
 			}
