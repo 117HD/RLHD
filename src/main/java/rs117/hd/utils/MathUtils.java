@@ -474,6 +474,26 @@ public final class MathUtils {
 		return ceil(new int[v.length], v);
 	}
 
+	public static double round(double v, int n) { return Math.round(v * Math.pow(10.0, n)) / Math.pow(10.0, n);}
+
+	public static double[] round(double[] out, int n, double... v) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = round(v[i % v.length], n);
+		return out;
+	}
+
+	public static double[] round(double[] v, int n) { return round(new double[v.length], n, v); }
+
+	public static float round(float v, int n) { return (float) round((double)v, n);}
+
+	public static float[] round(float[] out, int n, float... v) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = round(v[i % v.length], n);
+		return out;
+	}
+
+	public static float[] round(float[] v, int n) { return round(new float[v.length], n, v); }
+
 	public static int round(float v) {
 		return Math.round(v);
 	}

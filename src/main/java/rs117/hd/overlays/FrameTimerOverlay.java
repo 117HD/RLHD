@@ -122,7 +122,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.leftFont(boldFont)
 				.left("Estimated FPS:")
 				.rightFont(boldFont)
-				.right(String.format("%.1f FPS", 1e9 / max(cpuTime, gpuTime)))
+				.right(getEstimatedFPS(cpuTime, gpuTime))
 				.build());
 
 			children.add(LineComponent.builder()
@@ -233,6 +233,12 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 		var result = super.render(g);
 		frameTimer.cumulativeError += System.nanoTime() - time;
+		return result;
+	}
+
+	private String getEstimatedFPS(long cpuTime, long gpuTime) {
+		final String result = sb.append(round(1e9 / max(cpuTime, gpuTime), 1)).append(" FPS").toString();
+		sb.setLength(0);
 		return result;
 	}
 
