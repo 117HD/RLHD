@@ -2062,7 +2062,7 @@
   },
   {
     "name": "CAM_TORUM_TILES",
-    "parent": "STONE",
+    "parent": "SMOOTH_STONE",
     "normalMap": "LASSAR_UNDERCITY_TILE_N",
     "displacementMap": "LASSAR_UNDERCITY_TILE_D",
     "ambientOcclusionMap": "CAM_TORUM_TILE_AO",

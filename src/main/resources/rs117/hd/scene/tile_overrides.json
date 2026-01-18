@@ -6388,7 +6388,7 @@
     "name": "THE_BLUE_MOON_ENTRANCE_DIRT",
     "area": "THE_BLUE_MOON_ENTRANCE",
     "underlayIds": [ 56, 73, 205, 206 ],
-    "groundMaterial": "CAM_TORUM_TILES",
+    "groundMaterial": "SMOOTH_STONE",
     "uvOrientation": -512,
     "blended": false
   },
