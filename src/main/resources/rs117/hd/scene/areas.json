@@ -189,18 +189,6 @@
     ]
   },
   {
-    "name": "LUMBRIDGE_DRAYNOR_PATH_BLEND_1",
-    "aabbs": [
-      [ 3135, 3293, 3135, 3295 ]
-    ]
-  },
-  {
-    "name": "LUMBRIDGE_DRAYNOR_PATH_BLEND_2",
-    "aabbs": [
-      [ 3136, 3293, 3136, 3296 ]
-    ]
-  },
-  {
     "name": "LUMBRIDGE_SWAMP_PATH_FIX",
     "aabbs": [
       [ 3242, 3184, 3244, 3186 ]
