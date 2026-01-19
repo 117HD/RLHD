@@ -35978,10 +35978,10 @@
   },
   {
     "description": "The Scar red flames",
-    "height": 30,
+    "height": 80,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 8,
+    "strength": 7,
     "color": [
       175,
       18,
@@ -35992,6 +35992,62 @@
     "range": 15,
     "objectIds": [
       "DT2_SCAR_FIRE03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 1",
+    "offset": [ -20, 75, 120 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT02",
+      "DT2_SCAR_BROKEN_BOAT03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 2",
+    "offset": [ 60, 100, -150 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT02",
+      "DT2_SCAR_BROKEN_BOAT03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 3",
+    "offset": [ 0, 170, 0 ],
+    "alignment": "CENTER",
+    "radius": 310,
+    "strength": 8.5,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT01"
     ]
   },
   {
@@ -36661,11 +36717,11 @@
   {
     "description": "Neural teleporter blue - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_TELEPORTER_1_1", "DT2_SCAR_MAZE_TELEPORTER_1_2" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       80,
       87,
-      187
+      255
     ],
     "strength": 10,
     "radius": 800
@@ -36673,7 +36729,7 @@
   {
     "description": "Neural teleporter green - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_TELEPORTER_2_1", "DT2_SCAR_MAZE_TELEPORTER_2_2" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       136,
       195,
@@ -36697,7 +36753,7 @@
   {
     "description": "Neural gateway - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_2_PILLAR_ATTACKER_SPAWN" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       202,
       76,
@@ -44934,6 +44990,76 @@
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "ZAMORAK_FLAME"
+    ]
+  },
+  {
+    "description": "Ancient Vault Purple Brazier",
+    "offset": [ 0, 250, 0 ],
+    "radius": 500,
+    "strength": 30,
+    "color": [
+      80,
+      60,
+      255
+    ],
+    "objectIds": [
+      "DT2_DESERT_VAULT_BRAZIER01"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Blood Totem",
+    "offset": [ 0, 230, -35 ],
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_BLOOD_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Ice Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_ICE_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Smoke Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      139,
+      69,
+      19
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_SMOKE_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Shade Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_SHADOW_TOTEM_ACTIVE"
     ]
   }
 ]

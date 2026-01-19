@@ -9147,6 +9147,13 @@
     ]
   },
   {
+    "name": "THE_SCAR_ESSENCE_MINE",
+    "aabbs": [
+      [ 1927, 6340, 1974, 6383 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "THE_SCAR_QUEST_AREAS",
     "regions": [
       7012,
@@ -9237,8 +9244,24 @@
   {
     "name": "ANCIENT_VAULT",
     "regions": [
-      13156
-    ]
+      13156,
+      15766
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DT2_DIGSITE_UNDERGROUND",
+    "aabbs": [
+      [ 3393, 9793, 3427, 9833 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "DT2_WAR_ROOM",
+    "regions": [
+      11108
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "GLOD_INSTANCE",

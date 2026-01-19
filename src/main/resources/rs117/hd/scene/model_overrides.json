@@ -7218,8 +7218,7 @@
       "DORGESH_CAVES_STALAGTITE_01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "flatNormals": true
+    "uvScale": 0.5
   },
   {
     "description": "ROCK_CAVE_ENTRANCES",
@@ -7335,6 +7334,28 @@
       {
         "colors": 2,
         "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "CAVE_WALLS_BLEND_WITH_BRICKS",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "HOSDUN_BRICK_WALL_END_R",
+      "HOSDUN_BRICK_WALL",
+      "HOSDUN_BRICK_WALL_END_L",
+      "HOSDUN_BRICK_WALL_DAMAGED",
+      "HOSDUN_STONE_PILE1",
+      "HOSDUN_STONE_PILE2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   },
@@ -14428,7 +14449,9 @@
       "MOTD_CRATE",
       "DARKM_MIDDLE_CRATE_SINGLE",
       "EAA_LARGE_CRATE",
-      "EAA_LARGE_CRATES"
+      "EAA_LARGE_CRATES",
+      "DT2_DIGSITE_PICKAXE_CRATE",
+      "DT2_WAR_ROOM_CELL_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -27647,17 +27670,26 @@
       "DT2_SCAR_FALLOFF_10"
     ],
     "castShadows": false,
-    "baseMaterial": "TRANSPARENT",
-    "uvType": "WORLD_XZ"
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.7
   },
   {
     "description": "The Scar stepping stones",
     "objectIds": [
-      "DT2_SCAR_ENTRY_STEPPING_STONE"
+      "DT2_SCAR_ENTRY_STEPPING_STONE",
+      "SCAR_VENTRICULUS_STEPPING_STONE_WITH_OP"
     ],
     "castShadows": false,
-    "baseMaterial": "STONE",
-    "uvType": "WORLD_XZ"
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "uvType": "WORLD_XZ",
+    "colorOverrides": [
+      {
+        "colors": "a < 255 && h == 35",
+        "baseMaterial": "GRAY_45",
+        "depthBias": 10
+      }
+    ]
   },
   {
     "description": "Lassar Undercity floor tile texture",
@@ -36085,7 +36117,6 @@
     "description": "The Scar brain matter",
     "objectIds": [
       "LEVIATHAN_WALL_CLIMB",
-      "DT2_SCAR_MAZE_CLOSED",
       "DT2_SCAR_WALLKIT01",
       "DT2_SCAR_WALLKIT01_SHORT",
       "DT2_SCAR_WALLTOP_SHORT_01",
@@ -36099,10 +36130,146 @@
       "SCAR_VENTRICULUS_INPUT",
       "SCAR_VENTRICULUS_OUTPUT_EXTRACTS",
       "SCAR_VENTRICULUS_OUTPUT_ESSENCE",
+      "DT2_SCAR_FOLIAGE_CORAL03",
+      "DT2_SCAR_FOLIAGE_CORAL02",
+      "DT2_SCAR_FOLIAGE_CORAL01",
       "SCAR_EXIT",
-      "SCAR_VENTRICULUS_ENTRY_WITH_OP"
+      "SCAR_VENTRICULUS_ENTRY_WITH_OP",
+      "SCAR_VENTRICULUS_ENTRY",
+      "DT2_SCAR_WALLKIT01_ALCOVE_MID",
+      "DT2_SCAR_WALLKIT01_ALCOVE_LEFT",
+      "DT2_SCAR_WALLKIT01_ALCOVE_RIGHT",
+      "LEVIATHAN_WALL_CLIMB_QUEST"
     ],
-    "baseMaterial": "BLANK_GLOSS"
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 3",
+        "baseMaterial": "GRUNGE_2"
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "The Scar Vent",
+    "objectIds": [
+      "DT2_SCAR_VENT01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "terrainVertexSnap": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 3",
+        "baseMaterial": "GRUNGE_2"
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "The Scar Fleshy Objects",
+    "objectIds": [
+      "DT2_SCAR_MAZE_CHALLENGE_DOOR_3",
+      "DT2_SCAR_MAZE_DOOR_CLOSED",
+      "DT2_SCAR_MAZE_CHALLENGE_DOOR_2",
+      "DT2_SCAR_MAZE_CHALLENGE_DOOR_1",
+      "DT2_SCAR_MAZE_BOAT_ENTRANCE",
+      "DT2_SCAR_MAZE_TINDERBOXES",
+      "DT2_SCAR_MAZE_CLOSED",
+      "DT2_SCAR_MAZE_2_ENTRY_OPEN",
+      "DT2_SCAR_MAZE_1_ENTRY_OPEN",
+      "DT2_SCAR_MAZE_1_RITUAL_CLUE_CRATE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY"
+  },
+  {
+    "description": "The Scar Tainted Essence Node",
+    "objectIds": [
+      "SCAR_AMALGAMATION",
+      "SCAR_AMALGAMATION_2X2",
+      "SCAR_AMALGAMATION_3X3",
+      "SCAR_AMALGAMATION_EMPTY",
+      "SCAR_AMALGAMATION_2X2_EMPTY",
+      "SCAR_AMALGAMATION_3X3_EMPTY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 3",
+        "baseMaterial": "GRUNGE_2"
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "The Scar Fleshy Objects - Depth Bias Fix",
+    "objectIds": [
+      "DT2_SCAR_MAZE_EXIT",
+      "DT2_SCAR_MAZE_LORE_SEARCHABLE_1",
+      "DT2_SCAR_MAZE_LORE_SEARCHABLE_2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "depthBias": 50,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY"
+  },
+  {
+    "description": "The Scar Electric Maze Safe Spot - Depth Bias Fix",
+    "objectIds": [
+      "DT2_SCAR_MAZE_ELECTRIC_SAFESPOT",
+      "DT2_SCAR_MAZE_ELECTRIC_SAFESPOT_REVERSE",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE02",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE04_M",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE02_M",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE01_M",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE06",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE03",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE04",
+      "DT2_SCAR_FLOOR_RITUAL_CIRCLE05"
+    ],
+    "depthBias": 150
+  },
+  {
+    "description": "The Scar Brain Stem Pillar",
+    "objectIds": [
+      "DT2_SCAR_MAZE_2_PILLAR_LOC",
+      "DT2_SCAR_MAZE_2_PILLAR_LOC_ACTIVE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
+    "depthBias": 40,
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 3",
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
+  },
+  {
+    "description": "The Scar Essence Mine Coffer",
+    "objectIds": [
+      "SCAR_COFFER"
+    ],
+    "baseMaterial": "GRUNGE_3"
   },
   {
     "description": "Disable shadows for footprints in Defender of Varrock",
@@ -41310,7 +41477,8 @@
       "LUC2_MOV_BARREL",
       "LUC2_DWT_BARREL1",
       "LUC2_DWT_BARREL2",
-      "SLUG2_BARREL_STACKED"
+      "SLUG2_BARREL_STACKED",
+      "QIP_DIGSITE_BARREL_BASIC"
     ]
   },
   {
@@ -74512,6 +74680,270 @@
       {
         "colors": "s == 6",
         "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
+    "description": "Ancient Vault - Purple Brazier",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "DT2_DESERT_VAULT_BRAZIER01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 46",
+        "baseMaterial": "GRAY_125",
+        "receiveShadows": false,
+        "castShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Ancient Vault - Inside - Wall Top Trim",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "objectIds": [
+      "DT2_VAULT_UPPER_WALLTOP",
+      "DT2_VAULT_UPPER_WALLTOP03",
+      "DT2_VAULT_UPPER_WALLTOP02",
+      "DT2_VAULT_UPPER_WALLTOP04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Ancient Vault - Inside - Walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "objectIds": [
+      "DT2_VAULT_WALL_PAINTED_DIAG08",
+      "DT2_VAULT_WALL_01_PAINTED_FILLER",
+      "DT2_VAULT_WALL_PAINTED_STRAIGHT05A",
+      "DT2_VAULT_WALL_PAINTED_STRAIGHT04A",
+      "DT2_VAULT_WALL_PAINTED_STRAIGHT03A",
+      "DT2_VAULT_WALL_PAINTED_STRAIGHT02A",
+      "DT2_VAULT_WALL_PAINTED_STRAIGHT01A",
+      "DT2_VAULT_WALL_PAINTED_DIAG07",
+      "DT2_VAULT_WALL_PAINTED_DIAG06",
+      "DT2_VAULT_WALL_PAINTED_DIAG01",
+      "DT2_VAULT_WALL_PAINTED_DIAG02",
+      "DT2_VAULT_WALL_01",
+      "DT2_VAULT_EXIT_STAIRCASE",
+      "DT2_VAULT_SUCELLUS_STATUE_NORMAL",
+      "DT2_VAULT_WHISPERER_STATUE_NORMAL",
+      "DT2_VAULT_VARDORVIS_STATUE_NORMAL",
+      "DT2_VAULT_PERSERIYA_STATUE_NORMAL",
+      "DT2_VAULT_UPPER_PILLAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 49",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Ancient Vault - Inside - Floor",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "objectIds": [
+      "DT2_VAULT_UPPER_FLOOR_04",
+      "DT2_VAULT_UPPER_FLOOR_06",
+      "DT2_VAULT_UPPER_FLOOR_07",
+      "DT2_VAULT_UPPER_FLOOR_08",
+      "DT2_VAULT_UPPER_FLOOR_05",
+      "DT2_VAULT_UPPER_FLOOR_03",
+      "DT2_VAULT_UPPER_FLOOR_02",
+      "DT2_VAULT_UPPER_FLOOR_01",
+      "DT2_VAULT_UPPER_ZAROS_FLOOR_SYMBOL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 46",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvScale": 1.1
+      },
+      {
+        "colors": "s == 2",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 1.5,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Ancient Vault - Outside - Roof",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "objectIds": [
+      "DT2_DESERT_VAULT_ROOF01",
+      "DT2_DESERT_VAULT_ROOF03",
+      "DT2_DESERT_VAULT_ROOF04",
+      "DT2_DESERT_VAULT_ROOF02",
+      "DT2_DESERT_ROCK06",
+      "DT2_DESERT_ROCK05",
+      "DT2_DESERT_ROCK04",
+      "DT2_DESERT_ROCK08",
+      "DT2_DESERT_ROCK07",
+      "DT2_DESERT_ROCK01",
+      "DT2_DESERT_ROCK03",
+      "DT2_DESERT_ROCK02",
+      "DUGUPSOIL_DESERT_VAULT_1",
+      "DUGUPSOIL_DESERT_VAULT_2"
+    ]
+  },
+  {
+    "description": "Ancient Vault - Outside - Walls, Stairs and Pillars",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "objectIds": [
+      "DT2_DESERT_VAULT_WALL02_OUTSIDE_CORNER",
+      "DT2_DESERT_VAULT_WALL02_STRAIGHT02",
+      "DT2_DESERT_VAULT_WALL02_STRAIGHT01",
+      "DT2_DESERT_VAULT_WALL02_INSIDE_CURVE",
+      "DT2_DESERT_VAULT_STEPS4_01",
+      "DT2_DESERT_VAULT_STEPS4_01B",
+      "DT2_DESERT_VAULT_STEPS3_01",
+      "DT2_DESERT_VAULT_STEPS3_01B",
+      "DT2_DESERT_VAULT_STEPS2_01B",
+      "DT2_DESERT_VAULT_STEPS2_01",
+      "DT2_DESERT_VAULT_STEPS1_03",
+      "DT2_DESERT_VAULT_STEPS1_02",
+      "DT2_DESERT_VAULT_STEPS1_01",
+      "DT2_DESERT_VAULT_WALLTOP01",
+      "DT2_DESERT_VAULT_WALL01_OUTSIDE_CORNER",
+      "DT2_DESERT_VAULT_WALL01_END_CAP02",
+      "DT2_DESERT_VAULT_WALL01_END_CAP01",
+      "DT2_DESERT_VAULT_WALL01_STRAIGHT01",
+      "DT2_DESERT_VAULT_WALL01_STRAIGHT02",
+      "DT2_DESERT_VAULT_FLOOR_SYMBOL_07",
+      "DT2_DESERT_VAULT_FLOOR_SYMBOL_04",
+      "DT2_DESERT_VAULT_FLOOR_SYMBOL_08",
+      "DT2_DESERT_VAULT_FLOOR_SYMBOL_09",
+      "DT2_DESERT_VAULT_FLOOR_SYMBOL_06",
+      "DT2_DESERT_VAULT_FLOOR_SYMBOL_05",
+      "DT2_DESERT_VAULT_FLOOR_SYMBOL_01",
+      "DT2_DESERT_VAULT_FLOOR_SYMBOL_02",
+      "DT2_DESERT_VAULT_FLOOR_SYMBOL_03",
+      "DT2_DESERT_VAULT_PILLAR01",
+      "DT2_DESERT_VAULT_PILLAR02",
+      "DT2_DESERT_VAULT_PILLAR03",
+      "DT2_DESERT_VAULT_PILLAR04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 && s == 3 || h == 3 && s == 3 || h == 5 && s == 3 && l < 22",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Ancient Vault - Outside - Door",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "objectIds": [
+      "DT2_DESERT_VAULT_DOOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 1 && h < 4",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      },
+      {
+        "colors": "h == 51",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - Digsite Crevice",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "depthBias": 10,
+    "objectIds": [
+      "DT2_DIGSITE_CREVICE_BLOCKED",
+      "DT2_DIGSITE_CREVICE_OPEN",
+      "DECAL_DIRT04_EDGE01",
+      "DT2_WAR_ROOM_EXIT"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room - Altar and Totems and Golem",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "npcIds": [
+      "DT2_WAR_ROOM_BLOOD_TOTEM_ACTIVE",
+      "DT2_WAR_ROOM_ICE_TOTEM_INACTIVE",
+      "DT2_WAR_ROOM_SMOKE_TOTEM_INACTIVE",
+      "DT2_WAR_ROOM_SHADOW_TOTEM_INACTIVE",
+      "DT2_WAR_ROOM_ICE_TOTEM_ACTIVE",
+      "DT2_WAR_ROOM_SMOKE_TOTEM_ACTIVE",
+      "DT2_WAR_ROOM_SHADOW_TOTEM_ACTIVE"
+    ],
+    "objectIds": [
+      "DT2_WAR_ROOM_ALTAR_INACTIVE",
+      "DT2_WAR_ROOM_ALTAR_ACTIVE",
+      "DT2_WAR_ROOM_WARMIND_INACTIVE",
+      "DT2_WAR_ROOM_WARMIND_ACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 || h == 5 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 3 && s == 2",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 3 || h == 0 || h == 53 || h == 60 || h == 32 || h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "colors": "h == 3 && s == 1 || h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h > 40 && s > 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
       }
     ]
   }
