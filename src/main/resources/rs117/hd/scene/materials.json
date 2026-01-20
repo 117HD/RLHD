@@ -1743,6 +1743,7 @@
   {
     "name": "ROCK_4_ORE",
     "parent": "ROCK_4",
+    "displacementScale": 0.08,
     "specularStrength": 1.0
   },
   {
@@ -1773,6 +1774,7 @@
   {
     "name": "ROCK_5_ORE",
     "parent": "ROCK_5",
+    "displacementScale": 0.08,
     "specularStrength": 1.0
   },
   {
