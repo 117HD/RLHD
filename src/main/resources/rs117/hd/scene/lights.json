@@ -41718,7 +41718,7 @@
     "spawnDelay": 150,
     "fixedDespawnTime": true,
     "despawnDelay": 300,
-    "strength": 10,
+    "strength": 8.5,
     "color": [
       0,
       255,
@@ -41736,7 +41736,7 @@
     "spawnDelay": 750,
     "fixedDespawnTime": true,
     "despawnDelay": 300,
-    "strength": 10,
+    "strength": 8.5,
     "color": [
       0,
       255,
@@ -41748,13 +41748,31 @@
     "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
   },
   {
+    "description": "Abyssal Dagger Special Attack Middle",
+    "offset": [ 0, 135, 60 ],
+    "radius": 190,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1050,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
     "description": "Abyssal Dagger Special Attack Left",
     "offset": [ -30, 150, 60 ],
     "radius": 175,
     "spawnDelay": 350,
     "fixedDespawnTime": true,
     "despawnDelay": 500,
-    "strength": 10,
+    "strength": 8.5,
     "color": [
       0,
       255,
