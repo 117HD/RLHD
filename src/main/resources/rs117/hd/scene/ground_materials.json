@@ -635,5 +635,11 @@
     "materials": [
       "STONE_NORMALED"
     ]
+  },
+  {
+    "name": "SMOOTH_STONE",
+    "materials": [
+      "SMOOTH_STONE"
+    ]
   }
 ]
