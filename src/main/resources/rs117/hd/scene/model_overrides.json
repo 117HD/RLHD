@@ -17430,9 +17430,18 @@
     "colorOverrides": [
       {
         "colors": "hsl == 2",
-        "baseMaterial": "NONE"
+        "baseMaterial": "PURE_BLACK"
       }
     ]
+  },
+  {
+    "description": "Wilderness - Slayer Cave - Wall Filler",
+    "areas": [ "Wilderness Slayer Cave" ],
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "WILD_CAVETOP"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Wilderness - Chaos Fanatic Rift",
