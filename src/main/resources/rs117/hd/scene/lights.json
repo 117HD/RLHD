@@ -27511,9 +27511,9 @@
   },
   {
     "description": "TELEPORT_TABLET",
-    "height": 50,
+    "height": 75,
     "alignment": "CENTER",
-    "radius": 90,
+    "radius": 120,
     "strength": 75,
     "fixedDespawnTime": true,
     "color": [
