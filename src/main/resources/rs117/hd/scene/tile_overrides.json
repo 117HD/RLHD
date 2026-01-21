@@ -4203,6 +4203,21 @@
     }
   },
   {
+    "name": "Wilderness - Obelisk Platoforms",
+    "area": "Wilderness - Obelisks",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "SMOOTH_STONE",
+    "shiftLightness": 4,
+    "blended": false,
+    "uvScale": 1.5,
+    "minLightness": 25,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "ARANDAR_PATHS",
     "area": "ARANDAR",
     "overlayIds": [
