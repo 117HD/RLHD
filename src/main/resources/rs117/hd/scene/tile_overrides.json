@@ -9333,6 +9333,17 @@
     }
   },
   {
+    "name": "Ferox - Fix Path at Deaths Office",
+    "area": "Ferox - Fix Path at Deaths Office",
+    "underlayIds": [ 50 ],
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxLightness": 12,
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {

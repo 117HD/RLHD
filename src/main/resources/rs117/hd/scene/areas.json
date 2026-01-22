@@ -10721,6 +10721,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Ferox - Fix Path at Deaths Office",
+    "aabbs": [
+      [ 3125, 3630, 3126, 3630 ]
+    ]
+  },
+  {
     "name": "Movario's Base - Library",
     "regions": [ 16717 ]
   },
