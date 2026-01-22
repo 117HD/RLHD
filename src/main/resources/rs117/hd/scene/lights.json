@@ -21558,7 +21558,8 @@
     "objectIds": [
       "FAIRY_FURNACE_GLOW",
       "FAI_FALADOR_FURNACE_GLOW",
-      "FURNACE"
+      "FURNACE",
+      "BR_FURNACE"
     ]
   },
   {
