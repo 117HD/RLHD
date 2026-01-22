@@ -66317,6 +66317,7 @@
     "baseMaterial": "CRYSTAL",
     "uvType": "BOX",
     "terrainVertexSnap": true,
+    "depthBias": 25,
     "objectIds": [
       "ARCHEUS_CRYSTAL_MEDIUM",
       "ARCHEUS_CRYSTAL_LARGE",
@@ -66326,14 +66327,7 @@
       "ARCHEUS_CRYSTAL_MEDIUM_RED",
       "ARCHEUS_CRYSTAL_MEDIUM_REFLECT_RED",
       "ARCHEUS_CRYSTAL_LARGE_REFLECT_RED",
-      "ARCHEUS_CRYSTAL_SMALL_RED"
-    ]
-  },
-  {
-    "description": "Arceuus - Crystal - Vertex Snap Disabled",
-    "baseMaterial": "CRYSTAL",
-    "uvType": "BOX",
-    "objectIds": [
+      "ARCHEUS_CRYSTAL_SMALL_RED",
       "ARCHEUS_CRYSTAL_SMALL"
     ]
   },
@@ -66342,6 +66336,7 @@
     "baseMaterial": "CRYSTAL",
     "uvType": "BOX",
     "terrainVertexSnap": true,
+    "depthBias": 25,
     "objectIds": [
       "ARCHEUS_CRYSTAL_SMALLEST",
       "ARCHEUS_CRYSTAL_SMALLEST_01",
