@@ -17476,6 +17476,17 @@
     ]
   },
   {
+    "description": "Wilderness - Slayer Cave - Small Rocks",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "SLICE_DUGUPSOIL_02",
+      "SLICE_DUGUPSOIL_04",
+      "SLICE_DUGUPSOIL_07"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
     "description": "Wilderness - Slayer Cave - Wall Filler",
     "areas": [ "Wilderness Slayer Cave" ],
     "baseMaterial": "PURE_BLACK",

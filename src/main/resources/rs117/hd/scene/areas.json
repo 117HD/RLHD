@@ -4492,6 +4492,16 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Wilderness Slayer Cave - Snow Area",
+    "aabbs": [
+      [ 3328, 10048, 3355, 10061 ],
+      [ 3343, 10062, 3344, 10063 ],
+      [ 3345, 10062 ],
+      [ 3343, 10064 ],
+      [ 3330, 10062, 3342, 10064 ]
+    ]
+  },
+  {
     "name": "Callisto, Vet'ion, Venenatis and Escape Caves",
     "regions": [
       13215,
