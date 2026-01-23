@@ -4198,6 +4198,35 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR",
     "shiftLightness": 5,
     "uvOrientation": 50,
+    "uvScale": 1.2,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Wilderness Slayer Cave - Snow Area",
+    "area": "Wilderness Slayer Cave - Snow Area",
+    "underlayIds": [
+      56,
+      58,
+      59
+    ],
+    "groundMaterial": "DIRTY_SNOW",
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Wilderness Slayer Cave - Lower Levels",
+    "area": "Wilderness Slayer Cave",
+    "underlayIds": [
+      1,
+      56
+    ],
+    "groundMaterial": "PACKED_EARTH",
+    "minLightness": 7,
+    "shiftLightness": 2,
+    "uvScale": 1.35,
     "replacements": {
       "NONE": "!textures"
     }
