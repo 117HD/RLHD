@@ -43808,7 +43808,8 @@
         "colors": "s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.66
+        "uvScale": 0.66,
+        "uvOrientationY": 512
       }
     ]
   },
@@ -43824,7 +43825,8 @@
         "colors": "s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.66
+        "uvScale": 0.66,
+        "uvOrientationY": 512
       }
     ]
   },
