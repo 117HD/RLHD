@@ -28428,7 +28428,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.65,
-    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
     "materialOverrides": {
       "WOODEN_SCREEN": {
         "textureMaterial": "WOODEN_SCREEN"
@@ -28459,7 +28459,7 @@
       "BANKBOOTHCLOSED"
     ],
     "uvType": "BOX",
-    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
     "uvScale": 0.65
   },
   {
