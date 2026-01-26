@@ -7306,7 +7306,8 @@
       "DAGANNOTH_CAVEENTRANCE_ICE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.5,
+    "terrainVertexSnap": true
   },
   {
     "description": "CAVE_WALLS_BLEND",
