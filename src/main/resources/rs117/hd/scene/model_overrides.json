@@ -11162,6 +11162,7 @@
     "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "depthBias": 1,
     "colorOverrides": [
       {
         "description": "Railing",
