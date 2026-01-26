@@ -8721,15 +8721,15 @@
       {
         "baseMaterial": "CARPET_LIGHT",
         "colors": "h == 9",
-        "uvType": "BOX",
-        "uvScale": 0.5
+        "receiveShadows": false
       },
       {
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "colors": "h == 5 && s == 3",
         "uvType": "BOX",
         "uvScale": 0.75,
-        "uvOrientationZ": 512
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
       }
     ]
   },
