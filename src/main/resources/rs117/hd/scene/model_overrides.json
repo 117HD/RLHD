@@ -7225,7 +7225,6 @@
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
     "objectIds": [
-      "CANOEING_CAVEENTRANCE_BROWN",
       "FOSSIL_WYVERN_CAVE_ENTRANCE",
       "TZHAAR_KARAMJADUNGEON_WALL_ENTRANCE",
       "RC_ZMI_DUNGEON_WALL_CRACK_ENTRANCE_EXIT",
@@ -7249,6 +7248,29 @@
     "colorOverrides": [
       {
         "colors": "s > 0",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "CANOE_CAVE",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      "CANOEING_CAVEENTRANCE_BROWN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0 && l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h < 8",
         "baseMaterial": "DIRT_2",
         "uvType": "BOX",
         "uvScale": 0.4
@@ -7294,7 +7316,8 @@
       "DAGANNOTH_CAVEENTRANCE_ICE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.5,
+    "terrainVertexSnap": true
   },
   {
     "description": "CAVE_WALLS_BLEND",
@@ -8708,15 +8731,15 @@
       {
         "baseMaterial": "CARPET_LIGHT",
         "colors": "h == 9",
-        "uvType": "BOX",
-        "uvScale": 0.5
+        "receiveShadows": false
       },
       {
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "colors": "h == 5 && s == 3",
         "uvType": "BOX",
         "uvScale": 0.75,
-        "uvOrientationZ": 512
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
       }
     ]
   },
@@ -11153,6 +11176,7 @@
     "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "depthBias": 1,
     "colorOverrides": [
       {
         "description": "Railing",
@@ -11746,7 +11770,9 @@
   },
   {
     "description": "MARBLE_STATUE_OF_KING",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "STATUE_KING"
     ]
@@ -16834,7 +16860,6 @@
     "description": "Wilderness - Teleport Obelisk",
     "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
-      "WILDERNESS_PORTAL_STONE_GLOWING",
       "WILDERNESS_PORTAL_STONE_0",
       "WILDERNESS_PORTAL_STONE_1",
       "WILDERNESS_PORTAL_STONE_2",
@@ -16845,6 +16870,23 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "terrainVertexSnap": true
+  },
+  {
+    "description": "Wilderness - Teleport Obelisk - Glowing",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "WILDERNESS_PORTAL_STONE_GLOWING"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "terrainVertexSnap": true,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      }
+    ]
   },
   {
     "description": "Wilderness - Venenatis/Spindel Lair - Walls",
@@ -17410,10 +17452,11 @@
   },
   {
     "description": "Wilderness - Slayer Cave - Entrance Stairs",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "WILD_SLAYER_CAVE_SOUTH_ENTRANCE",
-      "WILD_SLAYER_CAVE_NORTH_ENTRANCE"
+      "WILD_SLAYER_CAVE_NORTH_ENTRANCE",
+      "WILDY_HUB_STAIRS_CAVE"
     ],
     "uvType": "BOX"
   },
@@ -17434,9 +17477,29 @@
     "colorOverrides": [
       {
         "colors": "hsl == 2",
-        "baseMaterial": "NONE"
+        "baseMaterial": "PURE_BLACK"
       }
     ]
+  },
+  {
+    "description": "Wilderness - Slayer Cave - Small Rocks",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "SLICE_DUGUPSOIL_02",
+      "SLICE_DUGUPSOIL_04",
+      "SLICE_DUGUPSOIL_07"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Wilderness - Slayer Cave - Wall Filler",
+    "areas": [ "Wilderness Slayer Cave" ],
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "WILD_CAVETOP"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Wilderness - Chaos Fanatic Rift",
@@ -26671,6 +26734,21 @@
     "uvScale": 0.6
   },
   {
+    "description": "Ferox Enclave - Pool of Refreshment",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "WILDY_HUB_POOL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 0 && s < 7",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Wilderness - Slayer Cave - Entrance Wall Fix",
     "baseMaterial": "ROCK_1",
     "areas": [
@@ -28358,7 +28436,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.65,
-    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
     "materialOverrides": {
       "WOODEN_SCREEN": {
         "textureMaterial": "WOODEN_SCREEN"
@@ -28389,7 +28467,7 @@
       "BANKBOOTHCLOSED"
     ],
     "uvType": "BOX",
-    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
     "uvScale": 0.65
   },
   {
@@ -43710,7 +43788,8 @@
         "colors": "s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.66
+        "uvScale": 0.66,
+        "uvOrientationY": 512
       }
     ]
   },
@@ -43726,7 +43805,8 @@
         "colors": "s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.66
+        "uvScale": 0.66,
+        "uvOrientationY": 512
       }
     ]
   },
@@ -66225,6 +66305,7 @@
     "baseMaterial": "CRYSTAL",
     "uvType": "BOX",
     "terrainVertexSnap": true,
+    "depthBias": 25,
     "objectIds": [
       "ARCHEUS_CRYSTAL_MEDIUM",
       "ARCHEUS_CRYSTAL_LARGE",
@@ -66234,14 +66315,7 @@
       "ARCHEUS_CRYSTAL_MEDIUM_RED",
       "ARCHEUS_CRYSTAL_MEDIUM_REFLECT_RED",
       "ARCHEUS_CRYSTAL_LARGE_REFLECT_RED",
-      "ARCHEUS_CRYSTAL_SMALL_RED"
-    ]
-  },
-  {
-    "description": "Arceuus - Crystal - Vertex Snap Disabled",
-    "baseMaterial": "CRYSTAL",
-    "uvType": "BOX",
-    "objectIds": [
+      "ARCHEUS_CRYSTAL_SMALL_RED",
       "ARCHEUS_CRYSTAL_SMALL"
     ]
   },
@@ -66250,6 +66324,7 @@
     "baseMaterial": "CRYSTAL",
     "uvType": "BOX",
     "terrainVertexSnap": true,
+    "depthBias": 25,
     "objectIds": [
       "ARCHEUS_CRYSTAL_SMALLEST",
       "ARCHEUS_CRYSTAL_SMALLEST_01",

@@ -21558,7 +21558,8 @@
     "objectIds": [
       "FAIRY_FURNACE_GLOW",
       "FAI_FALADOR_FURNACE_GLOW",
-      "FURNACE"
+      "FURNACE",
+      "BR_FURNACE"
     ]
   },
   {
@@ -27391,9 +27392,9 @@
   },
   {
     "description": "TELEPORT_TABLET",
-    "height": 50,
+    "height": 75,
     "alignment": "CENTER",
-    "radius": 90,
+    "radius": 120,
     "strength": 75,
     "fixedDespawnTime": true,
     "color": [
@@ -38828,10 +38829,10 @@
   },
   {
     "description": "Wilderness - Teleport Obelisks",
-    "height": 330,
+    "height": 400,
     "alignment": "CENTER",
-    "radius": 350,
-    "strength": 25,
+    "radius": 410,
+    "strength": 30,
     "color": [
       120,
       24,
@@ -38843,7 +38844,7 @@
     "objectIds": [ "WILDERNESS_PORTAL_STONE_GLOWING" ],
     "animationIds": [ "WILDERNESS_PORTAL_STONE_GLOW" ],
     "fadeInDuration": 80,
-    "fadeOutDuration": 80
+    "fadeOutDuration": 150
   },
   {
     "description": "Rag and Bone Man - Pot Boiler",
@@ -41598,7 +41599,7 @@
     "spawnDelay": 150,
     "fixedDespawnTime": true,
     "despawnDelay": 300,
-    "strength": 10,
+    "strength": 8.5,
     "color": [
       0,
       255,
@@ -41616,7 +41617,7 @@
     "spawnDelay": 750,
     "fixedDespawnTime": true,
     "despawnDelay": 300,
-    "strength": 10,
+    "strength": 8.5,
     "color": [
       0,
       255,
@@ -41628,13 +41629,31 @@
     "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
   },
   {
+    "description": "Abyssal Dagger Special Attack Middle",
+    "offset": [ 0, 135, 60 ],
+    "radius": 190,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1050,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
     "description": "Abyssal Dagger Special Attack Left",
     "offset": [ -30, 150, 60 ],
     "radius": 175,
     "spawnDelay": 350,
     "fixedDespawnTime": true,
     "despawnDelay": 500,
-    "strength": 10,
+    "strength": 8.5,
     "color": [
       0,
       255,

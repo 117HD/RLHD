@@ -4504,6 +4504,16 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Wilderness Slayer Cave - Snow Area",
+    "aabbs": [
+      [ 3328, 10048, 3355, 10061 ],
+      [ 3343, 10062, 3344, 10063 ],
+      [ 3345, 10062 ],
+      [ 3343, 10064 ],
+      [ 3330, 10062, 3342, 10064 ]
+    ]
+  },
+  {
     "name": "Callisto, Vet'ion, Venenatis and Escape Caves",
     "regions": [
       13215,
@@ -4551,6 +4561,17 @@
     "aabbs": [
       [ 3350, 3616, 3378, 3631 ],
       [ 3372, 3632, 3378, 3640 ]
+    ]
+  },
+  {
+    "name": "Wilderness - Obelisks",
+    "aabbs": [
+      [ 3225, 3665, 3229, 3669 ],
+      [ 3154, 3618, 3158, 3622 ],
+      [ 3033, 3730, 3037, 3734 ],
+      [ 3104, 3792, 3108, 3796 ],
+      [ 3305, 3914, 3309, 3918 ],
+      [ 2978, 3864, 2982, 3868 ]
     ]
   },
   {
@@ -10706,6 +10727,12 @@
     "name": "Ferox Basement",
     "regions": [ 12700 ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "Ferox - Fix Path at Deaths Office",
+    "aabbs": [
+      [ 3125, 3630, 3126, 3630 ]
+    ]
   },
   {
     "name": "Movario's Base - Library",
