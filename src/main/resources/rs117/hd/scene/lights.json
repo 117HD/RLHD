@@ -45041,9 +45041,11 @@
     "offset": [ 0, 150, 0 ],
     "alignment": "CENTER",
     "radius": 220,
-    "fadeOutDuration": 100,
+    "fadeOutDuration": 700,
     "fadeInDuration": 200,
     "strength": 10,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1650,
     "color": [
       0,
       100,
