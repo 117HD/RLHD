@@ -5058,7 +5058,9 @@
   },
   {
     "description": "STATUE_OF_A_WARRIOR_1",
-    "baseMaterial": "MARBLE_2_GLOSS",
+    "baseMaterial": "MARBLE_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
     "objectIds": [
       "STATUE_FEMALEWARRIOR",
       "STATUE_MALEWARRIOR"
@@ -12788,7 +12790,7 @@
         "colors": "h == 6 && s == 7",
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.6,
+        "uvScale": 0.2,
         "uvOrientation": 512
       }
     ]
@@ -17133,8 +17135,33 @@
     "baseMaterial": "GRAY_65",
     "objectIds": [
       "ELFCHURCHWINDOW"
+    ]
+  },
+  {
+    "description": "Wilderness - Prayer Training Chaos Temple - Stained Glass Window - Depth Bias Fix",
+    "areas": [ "WILDERNESS_CHAOS_TEMPLE_WINDOW_FIX" ],
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      "ELFCHURCHWINDOW"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "GRAY_65",
+        "depthBias": 140
+      },
+      {
+        "colors": "h == 0 && l != 2",
+        "baseMaterial": "GRAY_65",
+        "depthBias": 50
+      },
+      {
+        "colors": "h > 0 && l != 2",
+        "baseMaterial": "GRAY_65",
+        "depthBias": 150
+      }
+    ]
   },
   {
     "description": "Wilderness - Ladder",
@@ -17604,7 +17631,7 @@
   },
   {
     "description": "Chaos Altar",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "CHAOSALTAR"
     ],
@@ -17617,8 +17644,8 @@
         "uvScale": 0.65
       },
       {
-        "colors": "h == 8 || s == 9",
-        "baseMaterial": "METALLIC_1_LIGHT"
+        "colors": "h == 8 || h == 9",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT"
       }
     ]
   },
@@ -49432,6 +49459,19 @@
         "uvType": "BOX",
         "uvOrientationY": 512,
         "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "PoH - Bone Sacrifice Animation",
+    "graphicsObjectIds": [
+      "POH_BONE_SACRIFICE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 36 || h == 55",
+        "baseMaterial": "NONE",
+        "flatNormals": true
       }
     ]
   },

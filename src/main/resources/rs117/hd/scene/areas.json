@@ -4295,6 +4295,14 @@
     ]
   },
   {
+    "name": "WILDERNESS_CHAOS_TEMPLE_WINDOW_FIX",
+    "aabbs": [
+      [ 2950, 3825, 2951, 3825 ],
+      [ 2950, 3816, 2951, 3816 ],
+      [ 2946, 3820, 2946, 3821 ]
+    ]
+  },
+  {
     "name": "Wilderness - Lava Pool Edges - Lighter",
     "aabbs": [
       [ 3055, 3834, 3064, 3837 ],
