@@ -60,6 +60,11 @@ public class GpuIntBuffer
 		ownsBuffer = false;
 	}
 
+	public GpuIntBuffer(GLMappedBuffer buffer) {
+		this.buffer = buffer.getMappedIntBuffer();
+		ownsBuffer = false;
+	}
+
 	public void destroy() {
 		if (buffer != null && ownsBuffer)
 			MemoryUtil.memFree(buffer);
@@ -120,6 +125,21 @@ public class GpuIntBuffer
 		);
 	}
 
+	public void putVertex32(
+		int x, int y, int z,
+		float u, float v, float w,
+		int nx, int ny, int nz,
+		int textureFaceIdx
+	) {
+		buffer.put(x);
+		buffer.put(y);
+		buffer.put( z);
+		buffer.put( float16(v) << 16 | float16(u));
+		buffer.put( (nx & 0xFFFF) << 16 | float16(w));
+		buffer.put( (nz & 0xFFFF) << 16 | ny & 0xFFFF);
+		buffer.put( textureFaceIdx);
+	}
+
 	public void putVertex(
 		int x, int y, int z,
 		float u, float v, float w,
@@ -172,6 +192,12 @@ public class GpuIntBuffer
 
 	public int capacity() {
 		return buffer.capacity();
+	}
+
+	public boolean fits(int size) {
+		int capacity = buffer.capacity();
+		final int position = buffer.position();
+		return (capacity - position) > size;
 	}
 
 	public GpuIntBuffer ensureCapacity(int size) {

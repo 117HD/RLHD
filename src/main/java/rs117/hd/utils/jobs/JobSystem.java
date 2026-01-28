@@ -4,6 +4,8 @@ import com.google.inject.Injector;
 import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
@@ -43,7 +45,7 @@ public final class JobSystem {
 
 	private final int workerCount = max(2, PROCESSOR_COUNT - 1);
 
-	final BlockingDeque<JobHandle> workQueue = new LinkedBlockingDeque<>();
+	final ConcurrentLinkedDeque<JobHandle> workQueue = new ConcurrentLinkedDeque<>();
 	private final ArrayBlockingQueue<ClientCallbackJob> clientCallbacks = new ArrayBlockingQueue<>(workerCount);
 
 	private final HashMap<Thread, Worker> threadToWorker = new HashMap<>();
@@ -91,7 +93,7 @@ public final class JobSystem {
 		return workQueue.size();
 	}
 
-	private void cancelAllWork(BlockingDeque<JobHandle> queue) {
+	private void cancelAllWork(ConcurrentLinkedDeque<JobHandle> queue) {
 		JobHandle handle;
 		while ((handle = queue.poll()) != null) {
 			try {
@@ -191,7 +193,7 @@ public final class JobSystem {
 
 		boolean shouldQueue = true;
 		for (Job dep : dependencies) {
-			if (dep == null || dep.handle == null) continue;
+			if (dep == null || dep.handle == null || dep == item) continue;
 			if (dep.handle.addDependant(newHandle)) {
 				shouldQueue = false;
 			}

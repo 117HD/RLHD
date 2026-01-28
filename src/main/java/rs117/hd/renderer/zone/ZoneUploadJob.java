@@ -4,11 +4,13 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
+import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
 public final class ZoneUploadJob extends Job {
@@ -64,19 +66,19 @@ public final class ZoneUploadJob extends Job {
 
 	private void mapZoneVertexBuffers() {
 		try {
-			VBO o = null, a = null;
+			GLBuffer o = null, a = null;
 			int sz = zone.sizeO * Zone.VERT_SIZE * 3;
 			if (sz > 0) {
-				o = new VBO(sz);
-				o.initialize(GL_STATIC_DRAW);
-				o.map();
+				o = new GLBuffer("Zone::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+				o.initialize(sz);
+				o.map(MAP_WRITE);
 			}
 
 			sz = zone.sizeA * Zone.VERT_SIZE * 3;
 			if (sz > 0) {
-				a = new VBO(sz);
-				a.initialize(GL_STATIC_DRAW);
-				a.map();
+				a = new GLBuffer("Zone::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+				a.initialize(sz);
+				a.map(MAP_WRITE);
 			}
 
 			GLTextureBuffer f = null;
@@ -84,10 +86,10 @@ public final class ZoneUploadJob extends Job {
 			if (sz > 0) {
 				f = new GLTextureBuffer("Textured Faces", GL_STATIC_DRAW);
 				f.initialize(sz);
-				f.map();
+				f.map(MAP_WRITE);
 			}
 
-			zone.initialize(o, a, f, eboAlpha);
+			zone.initialize(o, a, f, eboAlpha.id);
 			zone.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(

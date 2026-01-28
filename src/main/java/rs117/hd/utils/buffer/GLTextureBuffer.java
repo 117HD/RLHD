@@ -1,7 +1,5 @@
 package rs117.hd.utils.buffer;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import lombok.Getter;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -10,18 +8,15 @@ public class GLTextureBuffer extends GLBuffer {
 	@Getter
 	private int texId;
 
-	@Getter
-	private IntBuffer pixelBuffer;
-
-	private ByteBuffer mappedBuffer;
-	private boolean mapped;
-
 	public GLTextureBuffer(String name, int usage) {
-		super(name, GL_TEXTURE_BUFFER, usage);
+		super(name, GL_TEXTURE_BUFFER, usage, 0);
+	}
+	public GLTextureBuffer(String name, int usage, int storageFlags) {
+		super(name, GL_TEXTURE_BUFFER, usage, storageFlags);
 	}
 
 	@Override
-	public void initialize(long initialCapacity) {
+	public GLTextureBuffer initialize(long initialCapacity) {
 		super.initialize(initialCapacity);
 
 		// Create texture
@@ -32,79 +27,28 @@ public class GLTextureBuffer extends GLBuffer {
 		glTexBuffer(target, GL_RGB32I, id);
 
 		glBindTexture(target, 0);
+		return this;
+	}
+
+	@Override
+	public boolean ensureCapacity(long byteOffset, long numBytes) {
+		int oldId = id;
+		boolean resized = super.ensureCapacity(byteOffset, numBytes);
+		if(oldId != id) {
+			glBindTexture(target, texId);
+			glTexBuffer(target, GL_RGB32I, id);
+			glBindTexture(target, 0);
+		}
+		return resized;
 	}
 
 	@Override
 	public void destroy() {
-		if (mapped) {
-			glBindBuffer(target, id);
-			glUnmapBuffer(target);
-			glBindBuffer(target, 0);
-			mapped = false;
-		}
-
 		if (texId != 0) {
 			glDeleteTextures(texId);
 			texId = 0;
 		}
 
-		mappedBuffer = null;
-		pixelBuffer = null;
-
 		super.destroy();
-	}
-
-	public void map() {
-		map(size);
-	}
-
-	public void map(long byteSize) {
-		assert !mapped;
-
-		ensureCapacity(byteSize);
-		glBindBuffer(target, id);
-
-		ByteBuffer buf;
-		if (usage != GL_STATIC_DRAW) {
-			buf = glMapBufferRange(
-				target,
-				0,
-				byteSize,
-				GL_MAP_WRITE_BIT
-				| GL_MAP_FLUSH_EXPLICIT_BIT
-				| GL_MAP_INVALIDATE_BUFFER_BIT,
-				mappedBuffer
-			);
-		} else {
-			buf = glMapBuffer(target, GL_WRITE_ONLY, mappedBuffer);
-		}
-
-		if (buf == null)
-			throw new RuntimeException("Unable to map TBO buffer " + id + " size " + byteSize);
-
-		if (buf == mappedBuffer) {
-			pixelBuffer.position(0);
-		} else {
-			mappedBuffer = buf;
-			pixelBuffer = mappedBuffer.asIntBuffer();
-		}
-
-		glBindBuffer(target, 0);
-		mapped = true;
-	}
-
-	public void unmap() {
-		assert mapped;
-
-		int written = pixelBuffer.position();
-		glBindBuffer(target, id);
-
-		if (usage != GL_STATIC_DRAW)
-			glFlushMappedBufferRange(target, 0, (long) written * Integer.BYTES);
-
-		glUnmapBuffer(target);
-		glBindBuffer(target, 0);
-
-		mapped = false;
 	}
 }
