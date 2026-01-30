@@ -11061,7 +11061,7 @@
     "regions": [ 14379 ]
   },
   {
-    "name": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
+    "name": "ARDOUGNE_SEWER_ENTRANCE_FIX",
     "aabbs": [
       [ 2632, 3294 ]
     ]
