@@ -17969,8 +17969,8 @@
       "PLAGUEMANHOLECLOSED",
       "PLAGUEMANHOLECOVER"
     ],
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 100
+    "uvType": "BOX",
+    "uvScale": 0.2
   },
   {
     "description": "Objects - Stone - Large Gravestone - Large",
