@@ -266,7 +266,8 @@
     "overlayIds": [
       11
     ],
-    "blended": false
+    "blended": false,
+    "heightOffset": -200
   },
   {
     "name": "Morytania River Blending Fix",
