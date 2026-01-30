@@ -7198,6 +7198,16 @@
     "maxSaturation": 3
   },
   {
+    "name": "KHARIDIAN_DESERT_ENAKHRA_TEMPLE_HOLE_FIX",
+    "area": "KHARIDIAN_DESERT_ENAKHRA_TEMPLE_HOLE_FIX",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "shiftSaturation": -2,
+    "minSaturation": 3,
+    "heightOffset": -400
+  },
+  {
     "name": "KHARIDIAN_DEEP_DESERT_CREVICE",
     "groundMaterial": "SAND",
     "maxLightness": 60,
