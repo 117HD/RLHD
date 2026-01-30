@@ -5244,7 +5244,8 @@
     "regions": [
       5954,
       5955
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "BACKWATER_AND_BREAKBONE_STRAIT",
