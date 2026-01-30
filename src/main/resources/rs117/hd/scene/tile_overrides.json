@@ -193,9 +193,10 @@
     "name": "TAG - TEMPORARY - START"
   },
   {
-    "name": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
-    "area": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
+    "name": "ARDOUGNE_SEWER_ENTRANCE_FIX",
+    "area": "ARDOUGNE_SEWER_ENTRANCE_FIX",
     "groundMaterial": "PURE_BLACK",
+    "heightOffset": -150,
     "blended": false,
     "overlayIds": [ 10 ]
   },
