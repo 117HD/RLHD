@@ -27614,7 +27614,11 @@
     "textureMaterial": "MOTHERLODE_MINE_WATER"
   },
   {
-    "description": "Poison Waste dungeon flowing tar (TODO)",
+    "description": "Poison Waste Dungeon Tar Spill",
+    "depthBias": 100,
+    "baseMaterial": "TAR",
+    "uvType": "WORLD_XZ",
+    "upwardsNormals": true,
     "objectIds": [
       "POG_TAR_1",
       "POG_TAR_2",
@@ -27629,7 +27633,26 @@
       "POG_TAR_12",
       "POG_TAR_DRAINOFF_01",
       "POG_TAR_DRAINOFF_02",
-      "POG_TAR_DRAINOFF_03"
+      "POG_TAR_DRAINOFF_03",
+      "POG_TAR_DRAINOFF_04"
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon Tar Bubbles",
+    "baseMaterial": "GRAY_55",
+    "objectIds": [
+      "POG_BUBBLES_LARGE",
+      "POG_BUBBLES_SMALL"
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon Tar Flowing Off Edge",
+    "baseMaterial": "GRAY_60",
+    "flatNormals": true,
+    "objectIds": [
+      "POG_TAR_FALLOFF_01",
+      "POG_TAR_FALLOFF_02",
+      "POG_TAR_FALLOFF_03"
     ]
   },
   {

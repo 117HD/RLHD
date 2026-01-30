@@ -1066,6 +1066,11 @@
     "brightness": 0.6
   },
   {
+    "name": "GRAY_55",
+    "parent": "NONE",
+    "brightness": 0.55
+  },
+  {
     "name": "GRAY_50",
     "parent": "NONE",
     "brightness": 0.5
@@ -1521,6 +1526,20 @@
     "name": "WATER_FOUNTAIN_FLAT_LIGHT",
     "parent": "WATER_FOUNTAIN_FLAT",
     "brightness": 1.1
+  },
+  {
+    "name": "TAR",
+    "parent": "METALLIC_2",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "textureScale": [ 2, 2, 1 ],
+    "flowMapStrength": 0.5,
+    "brightness": 0.85,
+    "specularGloss": 2,
+    "normalMap": "METALLIC_2_N",
+    "flowMapDuration": [
+      35.0,
+      -35.0
+    ]
   },
   {
     "name": "WATER_FLAT_FORCE",
