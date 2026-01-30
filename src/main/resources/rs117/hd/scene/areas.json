@@ -3035,6 +3035,13 @@
     ]
   },
   {
+    "name": "KHARIDIAN_DESERT_ENAKHRA_TEMPLE_HOLE_FIX",
+    "aabbs": [
+      [ 3189, 2925, 3190, 2926 ],
+      [ 3194, 2925 ]
+    ]
+  },
+  {
     "name": "KHARIDIAN_DESERT_COAST_GOATS_CUTOUT_FIX",
     "aabbs": [
       [ 3428, 3153, 3428, 3151 ],
