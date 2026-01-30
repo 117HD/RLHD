@@ -13030,7 +13030,8 @@
   },
   {
     "description": "Sand clumps",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
     "objectIds": [
       "ENAKH_BOULDERKIT_FALLOFF1_PT1",
       "ENAKH_BOULDERKIT_FALLOFF1_PT2",
@@ -13044,7 +13045,9 @@
   },
   {
     "description": "Sand Hole",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "depthBias": 20,
     "objectIds": [
       "ENAKH_BIGHOLE",
       "ENAKH_BUILDING_AREA",
@@ -13122,7 +13125,6 @@
       "ENAKH_SANDY_ROCK3_SMALL",
       "ENAKH_SANDY_ROCK4_SMALL"
     ],
-    "inheritTileColorType": "OVERLAY",
     "uvType": "BOX",
     "uvScale": 0.6
   },
@@ -14034,6 +14036,7 @@
   },
   {
     "description": "Ground Decoration - Grunge - Small - Colored",
+    "hideInAreas": [ "KHARIDIAN_DESERT_ENAKHRA_TEMPLE_HOLE_FIX" ],
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "SAND_DETAIL1",
