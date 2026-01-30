@@ -270,6 +270,15 @@
     "heightOffset": -200
   },
   {
+    "name": "TAVERLEY_DUNGEON_ENTRANCE_FIX",
+    "area": "TAVERLEY_DUNGEON_ENTRANCE_FIX",
+    "groundMaterial": "DIRT",
+    "underlayIds": [
+      63
+    ],
+    "heightOffset": -200
+  },
+  {
     "name": "Morytania River Blending Fix",
     "area": "Morytania River Blending Fix",
     "underlayIds": [ 54, 96 ],

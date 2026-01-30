@@ -11073,6 +11073,12 @@
     ]
   },
   {
+    "name": "TAVERLEY_DUNGEON_ENTRANCE_FIX",
+    "aabbs": [
+      [ 2884, 3397 ]
+    ]
+  },
+  {
     "name": "GRIMSTONE_DUNGEON_PERFORMANCE_FIX",
     "aabbs": [
       [ 2880, 10432, 2943, 10440 ],
