@@ -527,7 +527,37 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+        // Calculate directional fog color based on sun position (matching skybox gradient)
+        vec3 finalFogColor = fogColor;
+        if (skyGradientEnabled == 1) {
+            // Get view direction to the fragment
+            vec3 viewDir = normalize(IN.position - cameraPos);
+
+            // Calculate sun direction (same transformation as sky shader)
+            vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y, skySunDir.z));
+
+            // Project both vectors onto the horizontal plane for horizontal gradient
+            vec3 viewHorizontal = normalize(vec3(viewDir.x, 0.0, viewDir.z));
+            vec3 sunHorizontal = normalize(vec3(sunDir.x, 0.0, sunDir.z));
+
+            // Dot product gives us how much we're facing toward/away from sun horizontally
+            float sunFacing = dot(viewHorizontal, sunHorizontal);
+
+            // Convert to 0-1 range: 0 = facing away from sun, 1 = facing toward sun
+            float sunSideBlend = (sunFacing + 1.0) * 0.5;
+            sunSideBlend = smoothstep(0.0, 1.0, sunSideBlend);
+
+            // Create dark side fog color (darker, more like zenith)
+            vec3 darkSideFog = fogColor * 0.7;
+
+            // Create sun side fog color (warmer, brighter)
+            vec3 sunSideFog = mix(fogColor, skyHorizonColor, 0.3);
+
+            // Blend fog color based on sun facing direction
+            finalFogColor = mix(darkSideFog, sunSideFog, sunSideBlend);
+        }
+
+        outputColor.rgb = mix(outputColor.rgb, finalFogColor, combinedFog);
     }
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
