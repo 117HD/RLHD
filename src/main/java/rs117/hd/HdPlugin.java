@@ -110,6 +110,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
@@ -348,6 +349,9 @@ public class HdPlugin extends Plugin {
 	@Nullable
 	public int[] sceneViewport;
 	public final float[] sceneViewportScale = { 1, 1 };
+
+	// Day/Night Cycle
+	public double[] latLong = { 0, 0 };
 	public int msaaSamples;
 
 	public int[] sceneResolution;
@@ -1732,6 +1736,10 @@ public class HdPlugin extends Plugin {
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
+							case KEY_ENABLE_DAYLIGHT_CYCLE:
+							case KEY_DAYLIGHT_CYCLE:
+							case KEY_CYCLE_DURATION:
+							case KEY_MINIMUM_BRIGHTNESS:
 								reloadEnvironments = true;
 								break;
 							case KEY_SEASONAL_THEME:

@@ -35,6 +35,7 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.shader.SkyShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
@@ -46,6 +47,7 @@ import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -133,6 +135,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private ShadowShaderProgram.Legacy shadowProgram;
+
+	@Inject
+	private SkyShaderProgram skyProgram;
 
 	@Inject
 	private JobSystem jobSystem;
@@ -283,6 +288,8 @@ public class LegacyRenderer implements Renderer {
 		shadowProgram.setMode(plugin.configShadowMode);
 		shadowProgram.compile(includes);
 
+		skyProgram.compile(includes);
+
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initializePrograms();
 		} else {
@@ -303,6 +310,7 @@ public class LegacyRenderer implements Renderer {
 	public void destroyShaders() {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
+		skyProgram.destroy();
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
@@ -985,7 +993,72 @@ public class LegacyRenderer implements Renderer {
 				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
+			// Day/Night Cycle - calculate modified lighting values
+			float[] directionalColor = environmentManager.currentDirectionalColor;
+			float directionalStrength = environmentManager.currentDirectionalStrength;
+			float[] ambientColor = environmentManager.currentAmbientColor;
+			float ambientStrength = environmentManager.currentAmbientStrength;
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+			float[] waterColor = environmentManager.currentWaterColor;
+			float[] sunAngles = environmentManager.currentSunAngles;
+
+			boolean skyGradientEnabled = false;
+			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+				int minimumBrightness = config.minimumBrightness();
+				float cycleDuration = config.cycleDurationMinutes();
+
+				float[] originalRegionalDirectionalColor = environmentManager.currentDirectionalColor;
+				float[] originalRegionalAmbientColor = new float[3];
+				System.arraycopy(environmentManager.currentAmbientColor, 0, originalRegionalAmbientColor, 0, 3);
+
+				directionalColor = TimeOfDay.getRegionalDirectionalLight(plugin.latLong, cycleDuration, originalRegionalDirectionalColor);
+				ambientColor = TimeOfDay.getRegionalAmbientLight(plugin.latLong, cycleDuration, originalRegionalAmbientColor);
+
+				float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(plugin.latLong, cycleDuration, minimumBrightness);
+				directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier;
+				ambientStrength = environmentManager.currentAmbientStrength * brightnessMultiplier;
+
+				double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, cycleDuration);
+				sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
+
+				float[] originalRegionalFogColor = fogColor;
+				fogColor = TimeOfDay.getEnhancedSkyColor(plugin.latLong, cycleDuration, originalRegionalFogColor);
+				// Convert fogColor (sRGB) to linear for waterColor to match expected format
+				waterColor = ColorUtils.srgbToLinear(fogColor);
+
+				// Calculate sky gradient colors for realistic sky rendering
+				// Pass regional fog color to blend with during peak daytime
+				float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(plugin.latLong, cycleDuration, originalRegionalFogColor);
+				float[] sunDirForSky = TimeOfDay.getSunDirectionForSky(plugin.latLong, cycleDuration);
+
+				plugin.uboGlobal.skyGradientEnabled.set(1);
+				plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
+				plugin.uboGlobal.skyHorizonColor.set(skyGradientColors[1]);
+				plugin.uboGlobal.skySunColor.set(skyGradientColors[2]);
+				plugin.uboGlobal.skySunDir.set(sunDirForSky);
+
+				skyGradientEnabled = true;
+
+				// Calculate shadow visibility based on sun altitude
+				double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
+				float shadowVisibility;
+
+				if (sunAltitudeDegrees <= 2) {
+					shadowVisibility = 0.0f;
+				} else if (sunAltitudeDegrees <= 12) {
+					shadowVisibility = (float) ((sunAltitudeDegrees - 2) / 10.0 * 0.6);
+				} else if (sunAltitudeDegrees <= 15) {
+					shadowVisibility = (float) (0.6 + ((sunAltitudeDegrees - 12) / 3.0) * 0.3);
+				} else {
+					double sineFactor = Math.sin(sunAnglesD[1]);
+					shadowVisibility = (float) Math.max(0.9, Math.min(1.0, sineFactor));
+				}
+
+				add(ambientColor, ambientColor, multiply(directionalColor, 1 - shadowVisibility));
+				directionalStrength *= shadowVisibility;
+			} else {
+				plugin.uboGlobal.skyGradientEnabled.set(0);
+			}
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
@@ -1004,7 +1077,7 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
-			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
+			float[] waterColorHsv = ColorUtils.srgbToHsv(waterColor);
 			float lightBrightnessMultiplier = 0.8f;
 			float midBrightnessMultiplier = 0.45f;
 			float darkBrightnessMultiplier = 0.05f;
@@ -1028,17 +1101,16 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.waterColorDark.set(waterColorDark);
 
 			plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
-			float ambientStrength = environmentManager.currentAmbientStrength;
-			float directionalStrength = environmentManager.currentDirectionalStrength;
+			// Apply legacy brightness if enabled
 			if (config.useLegacyBrightness()) {
 				float factor = config.legacyBrightness() / 20f;
 				ambientStrength *= factor;
 				directionalStrength *= factor;
 			}
 			plugin.uboGlobal.ambientStrength.set(ambientStrength);
-			plugin.uboGlobal.ambientColor.set(environmentManager.currentAmbientColor);
+			plugin.uboGlobal.ambientColor.set(ambientColor);
 			plugin.uboGlobal.lightStrength.set(directionalStrength);
-			plugin.uboGlobal.lightColor.set(environmentManager.currentDirectionalColor);
+			plugin.uboGlobal.lightColor.set(directionalColor);
 
 			plugin.uboGlobal.underglowStrength.set(environmentManager.currentUnderglowStrength);
 			plugin.uboGlobal.underglowColor.set(environmentManager.currentUnderglowColor);
@@ -1061,8 +1133,8 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 			plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
-			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
-			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
+			float[] lightViewMatrix = Mat4.rotateX(sunAngles[0]);
+			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - sunAngles[1]));
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to
 			// get the light's direction vector pointing away from each fragment
@@ -1142,15 +1214,32 @@ public class LegacyRenderer implements Renderer {
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
 
-			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
-			glClearColor(
-				gammaCorrectedFogColor[0],
-				gammaCorrectedFogColor[1],
-				gammaCorrectedFogColor[2],
-				1f
-			);
+			// Clear depth buffer
 			glClearDepth(0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+			// Render sky gradient if Day/Night Cycle is enabled, otherwise use solid color clear
+			if (skyGradientEnabled && skyProgram.isValid()) {
+				// Render sky gradient using fullscreen triangle
+				glDisable(GL_DEPTH_TEST);
+				glDisable(GL_CULL_FACE);
+
+				skyProgram.use();
+				glBindVertexArray(plugin.vaoTri);
+				glDrawArrays(GL_TRIANGLES, 0, 3);
+
+				// Switch back to scene program
+				sceneProgram.use();
+			} else {
+				float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
+				glClearColor(
+					gammaCorrectedFogColor[0],
+					gammaCorrectedFogColor[1],
+					gammaCorrectedFogColor[2],
+					1f
+				);
+				glClear(GL_COLOR_BUFFER_BIT);
+			}
 			frameTimer.end(Timer.CLEAR_SCENE);
 
 			frameTimer.begin(Timer.RENDER_SCENE);
