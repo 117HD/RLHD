@@ -593,7 +593,8 @@ public class ZoneRenderer implements Renderer {
 			calculatedFogColorSrgb = fogColor;
 
 			// Calculate sky gradient colors for realistic sky rendering
-			float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(plugin.latLong, cycleDuration);
+			// Pass regional fog color to blend with during peak daytime
+			float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(plugin.latLong, cycleDuration, originalRegionalFogColor);
 			float[] sunDirForSky = TimeOfDay.getSunDirectionForSky(plugin.latLong, cycleDuration);
 
 			plugin.uboGlobal.skyGradientEnabled.set(1);

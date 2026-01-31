@@ -196,8 +196,9 @@ public class TimeOfDay
 	 * Get sky gradient colors for the current time of day.
 	 * Returns an array of 3 float[3] arrays: [zenithColor, horizonColor, sunGlowColor]
 	 * All colors are in sRGB space.
+	 * @param regionalFogColor The regional fog color to blend with during peak daytime (sRGB)
 	 */
-	public static float[][] getSkyGradientColors(double[] latLong, float dayLength) {
+	public static float[][] getSkyGradientColors(double[] latLong, float dayLength, float[] regionalFogColor) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
@@ -248,6 +249,39 @@ public class TimeOfDay
 		float[] zenithColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, zenithKeyframes);
 		float[] horizonColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, horizonKeyframes);
 		float[] sunGlowColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, sunGlowKeyframes);
+
+		// Calculate blend factor for regional color influence during peak daytime
+		// Same blend curve as getEnhancedSkyColor for consistency
+		float blendFactor;
+		if (sunAltitudeDegrees >= 40) {
+			// Very high sun - maximum regional influence (100% regional)
+			blendFactor = 1.0f;
+		} else if (sunAltitudeDegrees >= 10) {
+			// High sun - strong regional influence (50-100% regional)
+			blendFactor = (float) (0.50 + ((sunAltitudeDegrees - 10) / 30.0) * 0.50);
+		} else if (sunAltitudeDegrees >= -3) {
+			// Extended sunset period - gradual regional influence (0% to 50% regional)
+			blendFactor = (float) ((sunAltitudeDegrees + 3) / 13.0) * 0.50f;
+		} else {
+			// Deep twilight/night - no regional influence (0% regional)
+			blendFactor = 0.0f;
+		}
+
+		// Blend with regional fog color if we have regional influence
+		if (blendFactor > 0.0f && regionalFogColor != null) {
+			// Convert regional fog color to linear for blending
+			float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
+
+			// Blend zenith color with regional color (slightly darker for zenith)
+			for (int i = 0; i < 3; i++) {
+				zenithColor[i] = zenithColor[i] * (1 - blendFactor) + regionalLinear[i] * 0.8f * blendFactor;
+			}
+
+			// Blend horizon color with regional color
+			for (int i = 0; i < 3; i++) {
+				horizonColor[i] = horizonColor[i] * (1 - blendFactor) + regionalLinear[i] * blendFactor;
+			}
+		}
 
 		// Convert from linear RGB (what interpolateSrgb returns) back to sRGB for the shader
 		zenithColor = rs117.hd.utils.ColorUtils.linearToSrgb(zenithColor);
