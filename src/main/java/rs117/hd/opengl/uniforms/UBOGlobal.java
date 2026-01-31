@@ -9,6 +9,11 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 		super(GL_DYNAMIC_DRAW);
 	}
 
+	@Override
+	public void initialize() {
+		super.initialize();
+	}
+
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 
@@ -51,6 +56,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property pointLightsCount = addProperty(PropertyType.Int, "pointLightsCount");
 
 	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");
+	public Property viewMatrix = addProperty(PropertyType.Mat4, "viewMatrix");
 	public Property projectionMatrix = addProperty(PropertyType.Mat4, "projectionMatrix");
 	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
 	public Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");

@@ -8,7 +8,6 @@
  */
 package rs117.hd.utils;
 
-import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
@@ -16,6 +15,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.utils.GsonUtils.DelegateFloatAdapter;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -424,10 +424,7 @@ public class ColorUtils {
 	}
 
 	@Slf4j
-	public static class SrgbAdapter extends TypeAdapter<float[]> {
-		private final float[] rgba = { 0, 0, 0, 1 };
-		private final int[] rgbaInt = { 0, 0, 0, 255 };
-
+	public static class SrgbAdapter extends DelegateFloatAdapter<float[]> {
 		@Override
 		public float[] read(JsonReader in) throws IOException {
 			var token = in.peek();
@@ -438,7 +435,7 @@ public class ColorUtils {
 				throw new IOException("Expected hex color code or array of color channels at " + GsonUtils.location(in));
 
 			in.beginArray();
-
+			float[] rgba = { 0, 0, 0, 1 };
 			int i = 0;
 			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
 				if (in.peek() == JsonToken.NULL) {
@@ -453,7 +450,7 @@ public class ColorUtils {
 						break;
 					}
 
-					rgba[i++] = (float) in.nextDouble();
+					rgba[i++] = FLOAT_ADAPTER.read(in);
 					continue;
 				}
 
@@ -483,6 +480,8 @@ public class ColorUtils {
 			if (src.length != 3 && src.length != 4)
 				throw new IOException("The number of components must be 3 or 4 in a color array. Got " + Arrays.toString(src));
 
+			float[] rgba = { 0, 0, 0, 1 };
+			int[] rgbaInt = { 0, 0, 0, 255 };
 			for (int i = 0; i < src.length; i++)
 				rgba[i] = src[i] * 255;
 
@@ -507,7 +506,7 @@ public class ColorUtils {
 			} else {
 				out.beginArray();
 				for (int i = 0; i < src.length; i++)
-					out.value((Number) (round(rgba[i] * 100) / 100.f)); // Cast to Number to remove unnecessary decimals
+					FLOAT_ADAPTER.write(out, rgba[i]);
 				out.endArray();
 			}
 		}
@@ -523,6 +522,19 @@ public class ColorUtils {
 		@Override
 		public void write(JsonWriter out, float[] src) throws IOException {
 			super.write(out, linearToSrgb(src));
+		}
+	}
+
+	public static class LinearAdapter extends DelegateFloatAdapter<Float> {
+		@Override
+		public Float read(JsonReader in) throws IOException {
+			var value = FLOAT_ADAPTER.read(in);
+			return value == null ? null : srgbToLinear(value);
+		}
+
+		@Override
+		public void write(JsonWriter out, Float value) throws IOException {
+			FLOAT_ADAPTER.write(out, value == null ? null : linearToSrgb(value));
 		}
 	}
 }

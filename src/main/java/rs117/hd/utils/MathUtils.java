@@ -10,6 +10,7 @@ package rs117.hd.utils;
 
 import java.util.Arrays;
 import java.util.Random;
+import javax.annotation.Nullable;
 
 /**
  * Math utility functions similar to GLSL, including vector operations on raw float arrays.
@@ -18,7 +19,7 @@ import java.util.Random;
  * When automatically determining the length of the output vector, it will equal the maximum length of the input vectors.
  * Some regular Java math function aliases are included to minimize the need for manual type casting.
  */
-public class MathUtils {
+public final class MathUtils {
 	public static final Random RAND = new Random();
 
 	public static final long KiB = 1024;
@@ -66,24 +67,40 @@ public class MathUtils {
 		return Arrays.copyOf(v, v.length);
 	}
 
-	public static float[] copyTo(float[] out, float[] in, int offset, int len) {
-		assert offset + len <= min(out.length, in.length);
-		System.arraycopy(in, offset, out, offset, len);
+	public static int[] copy(int[] v) {
+		return Arrays.copyOf(v, v.length);
+	}
+
+	public static float[] copyTo(float[] out, @Nullable float[] in, int offset, int len) {
+		if (in != null) {
+			assert offset + len <= min(out.length, in.length);
+			System.arraycopy(in, offset, out, offset, len);
+		}
 		return out;
 	}
 
-	public static float[] copyTo(float[] out, float[] in) {
-		return copyTo(out, in, 0, min(out.length, in.length));
+	public static float[] copyTo(float[] out, @Nullable float[] in) {
+		return copyTo(out, in, 0, in == null ? out.length : min(out.length, in.length));
 	}
 
-	public static int[] copyTo(int[] out, int[] in, int offset, int len) {
-		assert offset + len <= min(out.length, in.length);
-		System.arraycopy(in, offset, out, offset, len);
+	public static int[] copyTo(int[] out, @Nullable int[] in, int offset, int len) {
+		if (in != null) {
+			assert offset + len <= min(out.length, in.length);
+			System.arraycopy(in, offset, out, offset, len);
+		}
 		return out;
 	}
 
-	public static int[] copyTo(int[] out, int[] in) {
-		return copyTo(out, in, 0, min(out.length, in.length));
+	public static int[] copyTo(int[] out, @Nullable int[] in) {
+		return copyTo(out, in, 0, in == null ? out.length : min(out.length, in.length));
+	}
+
+	public static float[] ensureDefaults(@Nullable float[] in, float[] defaults) {
+		return in != null && in.length == defaults.length ? in : copyTo(copy(defaults), in);
+	}
+
+	public static int[] ensureDefaults(@Nullable int[] in, int[] defaults) {
+		return in != null && in.length == defaults.length ? in : copyTo(copy(defaults), in);
 	}
 
 	public static int[] slice(int[] v, int offset) {
@@ -110,6 +127,16 @@ public class MathUtils {
 		return Arrays.copyOfRange(v, offset, offset + length);
 	}
 
+	public static int[] add(int[] out, int[] a, int... b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = a[i % out.length] + b[i % b.length];
+		return out;
+	}
+
+	public static int[] add(int[] a, int[] b) {
+		return add(new int[max(a.length, b.length)], a, b);
+	}
+
 	public static float[] add(float[] out, float[] a, float... b) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = a[i % out.length] + b[i % b.length];
@@ -118,6 +145,16 @@ public class MathUtils {
 
 	public static float[] add(float[] a, float[] b) {
 		return add(new float[max(a.length, b.length)], a, b);
+	}
+
+	public static int[] subtract(int[] out, int[] a, int... b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = a[i % a.length] - b[i % b.length];
+		return out;
+	}
+
+	public static int[] subtract(int[] a, int[] b) {
+		return subtract(new int[max(a.length, b.length)], a, b);
 	}
 
 	public static float[] subtract(float[] out, float[] a, float... b) {
@@ -140,6 +177,10 @@ public class MathUtils {
 		return multiply(new float[max(a.length, b.length)], a, b);
 	}
 
+	public static float divide(float a, float b) {
+		return b == 0 ? 0 : a / b;
+	}
+
 	public static float[] divide(float[] out, float[] a, float... b) {
 		for (int i = 0; i < out.length; i++) {
 			float divisor = b[i % b.length];
@@ -159,6 +200,16 @@ public class MathUtils {
 		return v - floor(v / mod) * mod;
 	}
 
+	/**
+	 * Modulo which returns the answer with the same sign as the modulus.
+	 */
+	public static int mod(int v, int mod) {
+		return Math.floorMod(v, mod);
+	}
+
+	/**
+	 * Modulo which returns the answer with the same sign as the modulus.
+	 */
 	public static int mod(long v, int mod) {
 		return (int) (v - (v / mod) * mod);
 	}
@@ -249,6 +300,10 @@ public class MathUtils {
 		return log2(new float[v.length], v);
 	}
 
+	public static float rcp(float v) {
+		return 1.0f / v;
+	}
+
 	public static float sqrt(float v) {
 		return (float) Math.sqrt(v);
 	}
@@ -279,6 +334,22 @@ public class MathUtils {
 		return dot(v, v);
 	}
 
+	public static float dot(int[] a, int[] b, int n) {
+		assert a.length >= n && b.length >= n;
+		float f = 0;
+		for (int i = 0; i < n; i++)
+			f += a[i] * b[i];
+		return f;
+	}
+
+	public static float dot(int[] a, int... b) {
+		return dot(a, b, min(a.length, b.length));
+	}
+
+	public static float dot(int... v) {
+		return dot(v, v);
+	}
+
 	public static int product(int... v) {
 		int product = 1;
 		for (int factor : v)
@@ -291,6 +362,20 @@ public class MathUtils {
 		for (float factor : v)
 			product *= factor;
 		return product;
+	}
+
+	/**
+	 * Yields incorrect results if either of the input vectors is used as the output vector.
+	 */
+	public static int[] cross(int[] out, int[] a, int[] b) {
+		out[0] = a[1] * b[2] - a[2] * b[1];
+		out[1] = a[2] * b[0] - a[0] * b[2];
+		out[2] = a[0] * b[1] - a[1] * b[0];
+		return out;
+	}
+
+	public static int[] cross(int[] a, int[] b) {
+		return cross(new int[3], a, b);
 	}
 
 	/**
@@ -325,6 +410,18 @@ public class MathUtils {
 
 	public static float[] normalize(float... v) {
 		return normalize(new float[v.length], v);
+	}
+
+	public static float[] normalizePlane(float[] out, float... plane) {
+		return divide(out, plane, length(slice(plane, 0, 3)));
+	}
+
+	public static float[] normalizePlane(float... plane) {
+		return normalizePlane(new float[4], plane);
+	}
+
+	public static float distanceToPlane(float[] plane, float[] v) {
+		return dot(plane, v, 3) + plane[3];
 	}
 
 	public static float abs(float v) {
@@ -513,22 +610,22 @@ public class MathUtils {
 		return min(max(v, min), max);
 	}
 
-	public static float[] clamp(float[] out, float[] v, float[] min, float... max) {
+	public static float[] clamp(float[] out, float[] v, float[] min, float[] max) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = clamp(v[i % v.length], min[i % min.length], max[i % max.length]);
 		return out;
 	}
 
-	public static float[] clamp(float[] out, float[] v, float min, float... max) {
-		return clamp(out, v, vec(min), max);
+	public static float[] clamp(float[] out, float[] v, float min, float max) {
+		return clamp(out, v, vec(min), vec(max));
 	}
 
-	public static float[] clamp(float[] v, float[] min, float... max) {
+	public static float[] clamp(float[] v, float[] min, float[] max) {
 		return clamp(new float[max(v.length, min.length, max.length)], v, min, max);
 	}
 
-	public static float[] clamp(float[] v, float min, float... max) {
-		return clamp(new float[max(v.length, max.length)], v, vec(min), max);
+	public static float[] clamp(float[] v, float min, float max) {
+		return clamp(new float[v.length], v, vec(min), vec(max));
 	}
 
 	public static float saturate(float v) {
@@ -627,5 +724,49 @@ public class MathUtils {
 
 	public static float tan(float rad) {
 		return (float) Math.tan(rad);
+	}
+
+	public static int float16(float value) {
+		if (value == 0)
+			return 0;
+		// float32: (-1)^sign * 2^(exponent - 127) * (1.mantissa)
+		// float16: (-1)^sign * 2^(exponent -  15) * (1.mantissa)
+		int f = Float.floatToRawIntBits(value);
+		int sign = (f >>> 16) & 0x8000;
+		int exponent = ((f >>> 23) & 0xFF) - 127 + 15;
+		int mantissa = f & 0x7FFFFF;
+
+		if (exponent <= 0) { // Too small, subnormal
+			if (exponent < -10) // To small to represent, return signed zero
+				return sign;
+			mantissa |= 0x800000; // Add the leading 1 back in
+			mantissa >>= 1 - exponent; // Shift to represent the smaller exponent
+			// Round based on the last bit, before shifting it away
+			if ((mantissa & 0x1000) != 0)
+				mantissa += 0x2000;
+			return sign | mantissa >> 13;
+		}
+
+		if (exponent >= 0x1F) { // Too large to represent
+			if (mantissa == 0)
+				return sign | 0x7C00; // Infinity
+			return 0x7E00; // NaN
+		}
+
+		// Round based on the last bit, before shifting it away
+		if ((mantissa & 0x1000) != 0) {
+			// Round to nearest even
+			mantissa += 0x2000;
+			// If rounding up caused the mantissa to overflow, increment the exponent
+			if ((mantissa & 0x800000) != 0) {
+				mantissa = 0;
+				exponent += 1;
+				if (exponent >= 0x1F) // Return infinity if it's too large to represent again
+					return sign | 0x7C00; // Infinity
+				return sign | exponent << 10;
+			}
+		}
+
+		return sign | exponent << 10 | mantissa >> 13;
 	}
 }

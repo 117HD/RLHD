@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
@@ -50,9 +49,6 @@ public class AreaManager {
 	@Inject
 	private LightManager lightManager;
 
-	@Inject
-	private ModelPusher modelPusher;
-
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	public static Area[] AREAS = new Area[0];
@@ -66,26 +62,26 @@ public class AreaManager {
 				if (areas == null)
 					throw new IOException("Empty or invalid: " + path);
 
-				AREAS = Arrays.copyOf(areas, areas.length + 2);
-				AREAS[AREAS.length - 2] = Area.ALL;
-				AREAS[AREAS.length - 1] = Area.NONE;
+				clientThread.invoke(() -> {
+					AREAS = Arrays.copyOf(areas, areas.length + 2);
+					AREAS[AREAS.length - 2] = Area.ALL;
+					AREAS[AREAS.length - 1] = Area.NONE;
 
-				ArrayList<Area> areasWithAreaHiding = new ArrayList<>();
-				for (Area area : areas) {
-					area.normalize();
-					if (area.hideOtherAreas)
-						areasWithAreaHiding.add(area);
-				}
-				this.areasWithAreaHiding = areasWithAreaHiding.toArray(Area[]::new);
+					ArrayList<Area> areasWithAreaHiding = new ArrayList<>();
+					for (Area area : areas) {
+						area.normalize();
+						if (area.hideOtherAreas)
+							areasWithAreaHiding.add(area);
+					}
+					this.areasWithAreaHiding = areasWithAreaHiding.toArray(Area[]::new);
 
-				Area.OVERWORLD = getArea("OVERWORLD");
+					Area.OVERWORLD = getArea("OVERWORLD");
 
-				log.debug("Loaded {} areas", areas.length);
+					log.debug("Loaded {} areas", areas.length);
 
-				if (!first) {
-					clientThread.invoke(() -> {
+					if (!first) {
 						// Reload everything which depends on area definitions
-						modelPusher.clearModelCache();
+						plugin.renderer.clearCaches();
 						tileOverrideManager.shutDown();
 						modelOverrideManager.shutDown();
 						lightManager.shutDown();
@@ -99,8 +95,8 @@ public class AreaManager {
 						// Force reload the scene to reapply area hiding
 						if (client.getGameState() == GameState.LOGGED_IN)
 							client.setGameState(GameState.LOADING);
-					});
-				}
+					}
+				});
 			} catch (IOException ex) {
 				log.error("Failed to load areas:", ex);
 			}

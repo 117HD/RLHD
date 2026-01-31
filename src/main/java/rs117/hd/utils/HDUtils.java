@@ -30,6 +30,7 @@ import net.runelite.api.*;
 import rs117.hd.data.ObjectType;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.water_types.WaterType;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -41,18 +42,20 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class HDUtils {
+public final class HDUtils {
 	public static final int HIDDEN_HSL = 12345678;
+	public static final int UNDERWATER_HSL = 6676;
 
-	public static int vertexHash(int[] vPos) {
-		// simple custom hashing function for vertex position data
-		StringBuilder s = new StringBuilder();
-		for (int part : vPos)
-			s.append(part).append(",");
-		return s.toString().hashCode();
+	public static int fastVertexHash(int[] vPos) {
+		int hash = 0;
+		for (int part : vPos) {
+			hash = 31 * hash + part;
+			hash = 31 * hash + ','; // preserve the comma separator effect
+		}
+		return hash;
 	}
 
-	public static float[] calculateSurfaceNormals(float[] a, float[] b, float[] c) {
+	public static int[] calculateSurfaceNormals(int[] a, int[] b, int[] c) {
 		subtract(b, a, b);
 		subtract(c, a, c);
 		return cross(b, c);
@@ -103,6 +106,30 @@ public class HDUtils {
 	// (gameObject.getConfig() >> 6) & 3, // 2-bit orientation
 	// (gameObject.getConfig() >> 8) & 1, // 1-bit interactType != 0 (supports items)
 	// (gameObject.getConfig() >> 9) // should always be zero
+	public static int getObjectConfig(Tile tile, long hash) {
+		if (tile.getWallObject() != null && tile.getWallObject().getHash() == hash)
+			return tile.getWallObject().getConfig();
+		if (tile.getDecorativeObject() != null && tile.getDecorativeObject().getHash() == hash)
+			return tile.getDecorativeObject().getConfig();
+		if (tile.getGroundObject() != null && tile.getGroundObject().getHash() == hash)
+			return tile.getGroundObject().getConfig();
+		for (GameObject gameObject : tile.getGameObjects())
+			if (gameObject != null && gameObject.getHash() == hash)
+				return gameObject.getConfig();
+		return -1;
+	}
+
+	public static int getObjectConfig(TileObject tileObject) {
+		if (tileObject instanceof WallObject)
+			return ((WallObject) tileObject).getConfig();
+		if (tileObject instanceof DecorativeObject)
+			return ((DecorativeObject) tileObject).getConfig();
+		if (tileObject instanceof GroundObject)
+			return ((GroundObject) tileObject).getConfig();
+		if (tileObject instanceof GameObject)
+			return ((GameObject) tileObject).getConfig();
+		return -1;
+	}
 
 	/**
 	 * Computes the orientation used when uploading the model.
@@ -193,7 +220,7 @@ public class HDUtils {
 	/**
 	 * The returned plane may be different
 	 */
-	public static int[] sceneToWorld(Scene scene, int sceneX, int sceneY, int plane) {
+	public static void sceneToWorld(Scene scene, int sceneX, int sceneY, int plane, int[] result) {
 		if (scene.isInstance()) {
 			if (sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
 				int chunkX = sceneX / CHUNK_SIZE;
@@ -207,34 +234,46 @@ public class HDUtils {
 					int worldX = templateChunkX + (sceneX & 7);
 					int worldY = templateChunkY + (sceneY & 7);
 
-					int[] pos = { worldX, worldY, templateChunkPlane };
+					result[0] = worldX;
+					result[1] = worldY;
+					result[2] = templateChunkPlane;
 
-					chunkX = pos[0] & -8;
-					chunkY = pos[1] & -8;
-					int x = pos[0] & 7;
-					int y = pos[1] & 7;
+					chunkX = result[0] & -8;
+					chunkY = result[1] & -8;
+					int x = result[0] & 7;
+					int y = result[1] & 7;
 					switch (rotation) {
 						case 1:
-							pos[0] = chunkX + y;
-							pos[1] = chunkY + (7 - x);
+							result[0] = chunkX + y;
+							result[1] = chunkY + (7 - x);
 							break;
 						case 2:
-							pos[0] = chunkX + (7 - x);
-							pos[1] = chunkY + (7 - y);
+							result[0] = chunkX + (7 - x);
+							result[1] = chunkY + (7 - y);
 							break;
 						case 3:
-							pos[0] = chunkX + (7 - y);
-							pos[1] = chunkY + x;
+							result[0] = chunkX + (7 - y);
+							result[1] = chunkY + x;
 							break;
 					}
-
-					return pos;
+					return;
 				}
 			}
-			return ivec(-1, -1, 0);
+			result[0] = -1;
+			result[1] = -1;
+			result[2] = 0;
+			return;
 		}
 
-		return ivec(scene.getBaseX() + sceneX, scene.getBaseY() + sceneY, plane);
+		result[0] = scene.getBaseX() + sceneX;
+		result[1] = scene.getBaseY() + sceneY;
+		result[2] = plane;
+	}
+
+	public static int[] sceneToWorld(Scene scene, int sceneX, int sceneY, int plane) {
+		int[] result = new int[3];
+		sceneToWorld(scene, sceneX, sceneY, plane, result);
+		return result;
 	}
 
 	public static int worldToRegionID(int[] worldPoint) {
@@ -326,5 +365,85 @@ public class HDUtils {
 			ColorUtils.unpackRawHsl(out, hsl);
 		}
 		return hsl;
+	}
+
+	public static boolean isSphereIntersectingFrustum(float x, float y, float z, float radius, float[][] cullingPlanes, int numPlanes) {
+		for (int i = 0; i < numPlanes; i++) {
+			var p = cullingPlanes[i];
+			if (p[0] * x + p[1] * y + p[2] * z + p[3] < -radius)
+				return false;
+		}
+		return true;
+	}
+
+	public static boolean isAABBIntersectingFrustum(
+		int minX,
+		int minY,
+		int minZ,
+		int maxX,
+		int maxY,
+		int maxZ,
+		float[][] cullingPlanes
+	) {
+		for (float[] plane : cullingPlanes) {
+			if (
+				plane[0] * minX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * minX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * minX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
+				plane[0] * minX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0
+			) {
+				return false;
+			}
+		}
+
+		// Potentially visible
+		return true;
+	}
+
+	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
+		// Up to 12-bit water depth | 8-bit water type | 2-bit plane | terrain flag
+		assert waterType.index < 1 << 7 : "Too many water types";
+		int terrainData = (waterDepth & 0xFFF) << 11 | waterType.index << 3 | plane << 1 | (isTerrain ? 1 : 0);
+		assert (terrainData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
+		return terrainData;
+	}
+
+	private static final ThreadLocal<StringBuilder> threadLocalStringBuilder = ThreadLocal.withInitial(StringBuilder::new);
+
+	public static String getThreadStackTrace(Thread thread) {
+		var stackTrace = thread.getStackTrace();
+		if (stackTrace.length == 0)
+			return "<STACK TRACE UNAVAILABLE>";
+
+		StringBuilder sb = threadLocalStringBuilder.get();
+		for (int i = 1; i < stackTrace.length; i++)
+			sb.append('\t').append(stackTrace[i]).append('\n');
+
+		String s = sb.toString();
+		sb.setLength(0);
+		return s;
+	}
+
+	public static boolean isBakedGroundShading(Model model, int face) {
+		final byte[] faceTransparencies = model.getFaceTransparencies();
+		if (faceTransparencies == null || (faceTransparencies[face] & 0xFF) <= 100)
+			return false;
+
+		final short[] faceTextures = model.getFaceTextures();
+		if (faceTextures != null && faceTextures[face] != -1)
+			return false;
+
+		final float[] yVertices = model.getVerticesY();
+		float heightA = yVertices[model.getFaceIndices1()[face]];
+		if (heightA < -8)
+			return false;
+
+		float heightB = yVertices[model.getFaceIndices2()[face]];
+		float heightC = yVertices[model.getFaceIndices3()[face]];
+		return heightA == heightB && heightA == heightC;
 	}
 }

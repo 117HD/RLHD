@@ -48,6 +48,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.data.ObjectType;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.GamevalManager;
+import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
@@ -62,7 +63,6 @@ import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.MathUtils.*;
@@ -90,6 +90,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private MaterialManager materialManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -161,23 +164,23 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		if (plugin.isLoadingScene())
 			return null;
 
-		var sceneContext = plugin.getSceneContext();
-		if (sceneContext == null)
+		var ctx = plugin.getSceneContext();
+		if (ctx == null)
 			return null;
 
-		if (sceneContext != currentSceneContext) {
-			currentSceneContext = sceneContext;
+		if (ctx != currentSceneContext) {
+			currentSceneContext = ctx;
 
 			hoveredAreaAabb[0] = -1;
 			hoveredAreaAabb[1] = 0;
 			copyTo(selectedAreaAabb, hoveredAreaAabb);
 
 			sceneBase = Objects.requireNonNullElseGet(
-				sceneContext.sceneBase,
-				() -> HDUtils.getSceneBaseBestGuess(sceneContext.scene, client.getPlane())
+				ctx.sceneBase,
+				() -> HDUtils.getSceneBaseBestGuess(ctx.scene, client.getPlane())
 			);
 
-			if (sceneContext.sceneBase == null) {
+			if (ctx.sceneBase == null) {
 				visibleAreas = new Area[0];
 			} else {
 				visibleAreas = Arrays
@@ -191,7 +194,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						copy.unhideAreas = area.unhideAreas;
 						copy.aabbs = Arrays
 							.stream(copy.aabbs)
-							.map(aabb -> sceneContext.sceneBounds.intersects(aabb) ? aabb : dummyAabb)
+							.map(aabb -> ctx.sceneBounds.intersects(aabb) ? aabb : dummyAabb)
 							.toArray(AABB[]::new);
 						return copy;
 					})
@@ -215,8 +218,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		}
 		altHeld = client.isKeyPressed(KeyCode.KC_ALT);
 
-		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
-		int[][][] templateChunks = sceneContext.scene.isInstance() ? sceneContext.scene.getInstanceTemplateChunks() : null;
+		Tile[][][] tiles = ctx.scene.getExtendedTiles();
+		int[][][] templateChunks = ctx.scene.isInstance() ? ctx.scene.getInstanceTemplateChunks() : null;
 		Point canvasMousePos = client.getMouseCanvasPosition();
 		mousePos = null;
 		if (canvasMousePos != null && canvasMousePos.getX() != -1 && canvasMousePos.getY() != -1)
@@ -242,8 +245,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 								boolean shouldDraw = tile != null && (isBridge == 0 || tile.getBridge() != null);
 								if (shouldDraw) {
 									if (templateChunks != null) {
-										int sx = x - SCENE_OFFSET;
-										int sy = y - SCENE_OFFSET;
+										int sx = x - ctx.sceneOffset;
+										int sy = y - ctx.sceneOffset;
 										if (sx < 0 || sy < 0 || sx >= SCENE_SIZE || sy >= SCENE_SIZE)
 											continue;
 										int chunk = templateChunks[z][sx / CHUNK_SIZE][sy / CHUNK_SIZE];
@@ -258,7 +261,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 									}
 
 									if (mode == MODE_TILE_INFO || mode == MODE_MODEL_INFO) {
-										if (!drawTileInfo(g, sceneContext, tile))
+										if (!drawTileInfo(g, ctx, tile))
 											continue;
 									} else {
 										if (altHeld) {
@@ -270,14 +273,14 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 												tile = tile.getBridge();
 											}
 										}
-										var poly = getCanvasTilePoly(client, sceneContext.scene, tile);
+										var poly = getCanvasTilePoly(client, ctx, tile);
 										if (poly == null || !poly.contains(mousePos[0], mousePos[1]))
 											continue;
 										g.drawPolygon(poly);
 									}
 
 									int tileZ = tile.getRenderLevel();
-									hoveredWorldPoint = sceneContext.extendedSceneToWorld(x, y, tileZ);
+									hoveredWorldPoint = ctx.extendedSceneToWorld(x, y, tileZ);
 
 									break tileLoop;
 								}
@@ -292,13 +295,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		switch (mode) {
 			case MODE_OBJECT_IDS:
-				drawAllIds(g, sceneContext);
+				drawAllIds(g, ctx);
 				break;
 			case MODE_SCENE_AABBS:
 				g.setFont(FontManager.getRunescapeSmallFont());
 
 				drawLoadingLines(g);
-				drawRegionBoxes(g, sceneContext);
+				drawRegionBoxes(g, ctx);
 
 				if (mousePos != null) {
 					hoveredAreaAabb[0] = -1;
@@ -311,7 +314,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 							if (i == selectedAreaAabb[0] && j == selectedAreaAabb[1])
 								continue;
 
-							var aabb = toLocalAabb(sceneContext, cropAabb(sceneContext, area.aabbs[j]));
+							var aabb = toLocalAabb(ctx, cropAabb(ctx, area.aabbs[j]));
 							var p = getAabbCanvasCenter(aabb);
 							if (p != null) {
 								subtract(v, mousePos, p);
@@ -345,13 +348,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						String label = aabb.toArgs();
 						if (aabb.isVolume())
 							label = area.name + "[" + j + "]\n" + label;
-						if (sceneContext.currentArea != null && sceneContext.currentArea.name.equals(area.name))
+						if (ctx.currentArea != null && ctx.currentArea.name.equals(area.name))
 							label = "CURRENT\n" + label;
 
 						// Since we have a bunch of AABBs spanning all planes,
 						// it would be a bit obnoxious to always render the full AABB
-						AABB croppedAabb = cropAabb(sceneContext, aabb);
-						var localAabb = toLocalAabb(sceneContext, croppedAabb);
+						AABB croppedAabb = cropAabb(ctx, aabb);
+						var localAabb = toLocalAabb(ctx, croppedAabb);
 
 						g.setColor(TRANSPARENT_WHITE_100);
 						drawLocalAabb(g, localAabb);
@@ -365,10 +368,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						String label = aabb.toArgs();
 						if (aabb.isVolume())
 							label = area.name + ".unhide[" + j + "]\n" + label;
-						if (sceneContext.currentArea != null && sceneContext.currentArea.name.equals(area.name))
+						if (ctx.currentArea != null && ctx.currentArea.name.equals(area.name))
 							label = "CURRENT\n" + label;
 
-						var localAabb = toLocalAabb(sceneContext, cropAabb(sceneContext, aabb));
+						var localAabb = toLocalAabb(ctx, cropAabb(ctx, aabb));
 						g.setColor(Color.PINK);
 						drawLocalAabb(g, localAabb);
 						drawLocalAabbLabel(g, localAabb, label, false);
@@ -380,7 +383,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					var aabb = area.aabbs[hoveredAreaAabb[1]];
 					g.setColor(Color.WHITE);
 
-					var localAabb = toLocalAabb(sceneContext, aabb);
+					var localAabb = toLocalAabb(ctx, aabb);
 					drawLocalAabb(g, localAabb);
 					drawLocalAabbLabel(g, localAabb, area.name + "[" + hoveredAreaAabb[1] + "]\n" + aabb.toArgs(), false);
 				}
@@ -390,7 +393,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					var aabb = area.aabbs[selectedAreaAabb[1]];
 					g.setColor(Color.CYAN);
 
-					var localAabb = toLocalAabb(sceneContext, aabb);
+					var localAabb = toLocalAabb(ctx, aabb);
 					drawLocalAabb(g, localAabb);
 					drawLocalAabbLabel(g, localAabb, area.name + "[" + selectedAreaAabb[1] + "]\n" + aabb.toArgs(), true);
 				}
@@ -415,7 +418,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		for (int i = 0; i < selections.size(); i++) {
 			var aabb = selections.get(i);
-			var localAabb = toLocalAabb(sceneContext, aabb);
+			var localAabb = toLocalAabb(ctx, aabb);
 			// Draw selection boxes
 			g.setColor(Color.YELLOW);
 			drawLocalAabb(g, localAabb);
@@ -424,7 +427,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		}
 
 		if (pendingSelection != null) {
-			var localAabb = toLocalAabb(sceneContext, pendingSelection);
+			var localAabb = toLocalAabb(ctx, pendingSelection);
 			// Draw current selection box
 			g.setColor(Color.YELLOW);
 			drawLocalAabb(g, localAabb);
@@ -432,7 +435,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			drawLocalAabbLabel(g, localAabb, "Selection[" + selections.size() + "]\n" + pendingSelection.toArgs(), true);
 		}
 
-		if (sceneContext.sceneBase == null) {
+		if (ctx.sceneBase == null) {
 			g.setColor(Color.RED);
 			g.setFont(FontManager.getRunescapeFont());
 			var b = g.getClipBounds();
@@ -444,7 +447,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return null;
 	}
 
-	private boolean drawTileInfo(Graphics2D g, SceneContext sceneContext, Tile tile) {
+	private boolean drawTileInfo(Graphics2D g, SceneContext ctx, Tile tile) {
 		boolean infoDrawn = false;
 
 		if (tile != null) {
@@ -453,16 +456,16 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 			Tile bridge = tile.getBridge();
 			if (bridge != null) {
-				poly = getCanvasTilePoly(client, sceneContext.scene, bridge);
+				poly = getCanvasTilePoly(client, ctx, bridge);
 				if (poly != null && poly.contains(mousePos[0], mousePos[1])) {
-					rect = drawTileInfo(g, sceneContext, bridge, poly, null);
+					rect = drawTileInfo(g, ctx, bridge, poly, null);
 					infoDrawn = true;
 				}
 			}
 
-			poly = getCanvasTilePoly(client, sceneContext.scene, tile);
+			poly = getCanvasTilePoly(client, ctx, tile);
 			if (poly != null && poly.contains(mousePos[0], mousePos[1])) {
-				drawTileInfo(g, sceneContext, tile, poly, rect);
+				drawTileInfo(g, ctx, tile, poly, rect);
 				infoDrawn = true;
 			}
 		}
@@ -470,27 +473,28 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return infoDrawn;
 	}
 
-	private Rectangle drawTileInfo(Graphics2D g, SceneContext sceneContext, Tile tile, Polygon poly, Rectangle dodgeRect)
+	private Rectangle drawTileInfo(Graphics2D g, SceneContext ctx, Tile tile, Polygon poly, Rectangle dodgeRect)
 	{
 		SceneTilePaint tilePaint = tile.getSceneTilePaint();
 		SceneTileModel tileModel = tile.getSceneTileModel();
 
-		Scene scene = sceneContext.scene;
+		Scene scene = ctx.scene;
 		int tileX = tile.getSceneLocation().getX();
 		int tileY = tile.getSceneLocation().getY();
 		int tileZ = tile.getRenderLevel();
-		int tileExX = tileX + SCENE_OFFSET;
-		int tileExY = tileY + SCENE_OFFSET;
-		int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
+		int tileExX = tileX + ctx.sceneOffset;
+		int tileExY = tileY + ctx.sceneOffset;
+		int[] worldPos = ctx.sceneToWorld(tileX, tileY, tileZ);
 
 		ArrayList<String> lines = new ArrayList<>();
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (mode == MODE_TILE_INFO) {
-			sceneContext.tileOverrideVars.setTile(tile);
+			ctx.tileOverrideVars.get().setTile(tile);
 			if (tile.getBridge() != null)
 				lines.add("Bridge");
 
+			lines.add("Zone: " + (tileExX / 8) + ", " + (tileExY / 8) + ", " + tileZ);
 			lines.add("Scene point: " + tileX + ", " + tileY + ", " + tileZ);
 			lines.add("World point: " + Arrays.toString(worldPos));
 			lines.add(String.format(
@@ -500,7 +504,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				worldPos[1] >> 6
 			));
 
-			for (var environment : sceneContext.environments) {
+			for (var environment : ctx.environments) {
 				if (environment.area.containsPoint(worldPos)) {
 					lines.add("Environment: " + environment);
 					break;
@@ -511,7 +515,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
 			var replacementPath = new StringBuilder(overlay.toString());
 			while (true) {
-				var replacement = overlay.resolveNextReplacement(sceneContext.tileOverrideVars);
+				var replacement = overlay.resolveNextReplacement(ctx.tileOverrideVars.get());
 				if (replacement == overlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -528,7 +532,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
 			replacementPath = new StringBuilder(underlay.toString());
 			while (true) {
-				var replacement = underlay.resolveNextReplacement(sceneContext.tileOverrideVars);
+				var replacement = underlay.resolveNextReplacement(ctx.tileOverrideVars.get());
 				if (replacement == underlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -544,11 +548,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			if (tilePaint != null) {
 				polyColor = client.isKeyPressed(KeyCode.KC_ALT) ? Color.YELLOW : Color.CYAN;
 				lines.add("Tile type: Paint");
-				Material material = Material.fromVanillaTexture(tilePaint.getTexture());
+				Material material = materialManager.fromVanillaTexture(tilePaint.getTexture());
 				lines.add(String.format("Material: %s (%d)", material.name, tilePaint.getTexture()));
 				lines.add(String.format("HSL: %s", hslString(tile)));
 
-				var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
+				var override = tileOverrideManager.getOverride(ctx, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
 				lines.add("WaterType: " + proceduralGenerator.seasonalWaterType(override, tilePaint.getTexture()));
 			} else if (tileModel != null) {
 				polyColor = Color.ORANGE;
@@ -559,7 +563,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				int numChars = 0;
 				if (tileModel.getTriangleTextureId() != null) {
 					for (int texture : tileModel.getTriangleTextureId()) {
-						String material = String.format("%s (%d)", Material.fromVanillaTexture(texture).name, texture);
+						String material = String.format("%s (%d)", materialManager.fromVanillaTexture(texture).name, texture);
 						boolean unique = uniqueMaterials.add(material);
 						if (unique) {
 							numChars += material.length();
@@ -594,7 +598,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				lines.add(String.format("HSL: %s", hslString(tile)));
 			}
 
-			sceneContext.tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
+			ctx.tileOverrideVars.get().setTile(null); // Avoid accidentally keeping the old scene in memory
 		}
 
 		var decorObject = tile.getDecorativeObject();
@@ -693,7 +697,25 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				faceCount,
 				getModelInfo(renderable)
 			));
-			lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
+
+			if (renderable instanceof Actor) {
+				Actor actor = (Actor) renderable;
+				StringBuilder sb = new StringBuilder();
+				String separator = "";
+				for (var spotanim : actor.getSpotAnims()) {
+					sb
+						.append(separator)
+						.append(gamevalManager.getSpotanimName(spotanim.getId()))
+						.append(" (").append(spotanim.getId()).append(")")
+						.append(" frame=").append(spotanim.getFrame())
+						.append(" cycle=").append(client.getGameCycle() - spotanim.getStartCycle());
+					separator = "\n\t";
+				}
+				if (sb.length() > 0)
+					lines.add("Spotanims: " + sb);
+			} else {
+				lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
+			}
 		}
 
 		for (var npc : client.getTopLevelWorldView().npcs()) {
@@ -721,11 +743,15 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var lp = graphicsObject.getLocation();
 			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY) {
 				var name = gamevalManager.getSpotanimName(graphicsObject.getId());
+				var anim = graphicsObject.getAnimation();
 				hoveredGamevals.add(name);
 				lines.add(String.format(
-					"Graphics Object: %s (%d)%s",
+					"Graphics Object: %s (%d) anim=%d frame=%d cycle=%d%s",
 					name,
 					graphicsObject.getId(),
+					anim == null ? -1 : anim.getId(),
+					graphicsObject.getAnimationFrame(),
+					client.getGameCycle() - graphicsObject.getStartCycle(),
 					getModelInfo(graphicsObject)
 				));
 			}
@@ -884,11 +910,12 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		switch (mode) {
 			case MODE_TILE_INFO:
-				return "  " + (
-					renderable instanceof Model ? "<col=#00ff00>static</col>" :
+				return
+					"  " + (
+						renderable instanceof Model ? "<col=#00ff00>static</col>" :
 						(renderable instanceof DynamicObject || renderable instanceof Actor) ?
 							"<col=#ff0000>dynamic</col>" : "<col=#ffff00>maybe dynamic</col>"
-				);
+					);
 			case MODE_MODEL_INFO:
 				int[] faceColors = model.getFaceColors1();
 				byte[] faceTransparencies = model.getFaceTransparencies();
@@ -944,23 +971,23 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return "";
 	}
 
-	public Polygon getCanvasTilePoly(@Nonnull Client client, Scene scene, Tile tile) {
+	public Polygon getCanvasTilePoly(@Nonnull Client client, SceneContext ctx, Tile tile) {
 		if (tile == null)
 			return null;
 		var l = tile.getSceneLocation();
-		return getCanvasTilePoly(client, scene, l.getX(), l.getY(), tile.getPlane());
+		return getCanvasTilePoly(client, ctx, l.getX(), l.getY(), tile.getPlane());
 	}
 
-	public Polygon getCanvasTilePoly(@Nonnull Client client, Scene scene, int... sceneXYplane) {
+	public Polygon getCanvasTilePoly(@Nonnull Client client, SceneContext ctx, int... sceneXYplane) {
 		final int wx = sceneXYplane[0] * LOCAL_TILE_SIZE;
 		final int sy = sceneXYplane[1] * LOCAL_TILE_SIZE;
 		final int ex = (sceneXYplane[0] + 1) * LOCAL_TILE_SIZE;
 		final int ny = (sceneXYplane[1] + 1) * LOCAL_TILE_SIZE;
 
-		final int sw = getHeight(scene, wx, sy, sceneXYplane[2]);
-		final int se = getHeight(scene, ex, sy, sceneXYplane[2]);
-		final int ne = getHeight(scene, ex, ny, sceneXYplane[2]);
-		final int nw = getHeight(scene, wx, ny, sceneXYplane[2]);
+		final int sw = getHeight(ctx, wx, sy, sceneXYplane[2]);
+		final int se = getHeight(ctx, ex, sy, sceneXYplane[2]);
+		final int ne = getHeight(ctx, ex, ny, sceneXYplane[2]);
+		final int nw = getHeight(ctx, wx, ny, sceneXYplane[2]);
 
 		float[] p1 = localToCanvas(client, wx, sy, sw);
 		float[] p2 = localToCanvas(client, ex, sy, se);
@@ -978,11 +1005,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return poly;
 	}
 
-	private static int getHeight(Scene scene, int localX, int localY, int plane) {
-		int sceneExX = clamp((localX >> LOCAL_COORD_BITS) + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 1);
-		int sceneExY = clamp((localY >> LOCAL_COORD_BITS) + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 1);
+	private static int getHeight(SceneContext ctx, int localX, int localY, int plane) {
+		int sceneExX = clamp((localX >> LOCAL_COORD_BITS) + ctx.sceneOffset, 0, EXTENDED_SCENE_SIZE - 1);
+		int sceneExY = clamp((localY >> LOCAL_COORD_BITS) + ctx.sceneOffset, 0, EXTENDED_SCENE_SIZE - 1);
 
-		int[][][] tileHeights = scene.getTileHeights();
+		int[][][] tileHeights = ctx.scene.getTileHeights();
 		int x = localX & (LOCAL_TILE_SIZE - 1);
 		int y = localY & (LOCAL_TILE_SIZE - 1);
 		int var8 = x * tileHeights[plane][sceneExX + 1][sceneExY] +
@@ -1334,10 +1361,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		int z2 = Integer.MIN_VALUE;
 
 		for (int i = minZ; i < maxZ; i++) {
-			int sw = getHeight(ctx.scene, x1, y1, i);
-			int nw = getHeight(ctx.scene, x1, y2, i);
-			int ne = getHeight(ctx.scene, x2, y2, i);
-			int se = getHeight(ctx.scene, x2, y1, i);
+			int sw = getHeight(ctx, x1, y1, i);
+			int nw = getHeight(ctx, x1, y2, i);
+			int ne = getHeight(ctx, x2, y2, i);
+			int se = getHeight(ctx, x2, y1, i);
 			if (sw != -1) {
 				z1 = min(z1, sw);
 				z2 = max(z2, sw);
@@ -1378,8 +1405,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	private AABB cropAabb(SceneContext ctx, AABB aabb) {
 		if (aabb.isPoint()) {
-			int sceneExX = aabb.minX - (sceneBase[0] - SCENE_OFFSET);
-			int sceneExY = aabb.minY - (sceneBase[1] - SCENE_OFFSET);
+			int sceneExX = aabb.minX - (sceneBase[0] - ctx.sceneOffset);
+			int sceneExY = aabb.minY - (sceneBase[1] - ctx.sceneOffset);
 			if (sceneExX >= 0 && sceneExY >= 0 && sceneExX < EXTENDED_SCENE_SIZE && sceneExY < EXTENDED_SCENE_SIZE) {
 				int minZ = MAX_Z - 1;
 				int maxZ = 0;

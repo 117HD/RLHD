@@ -25,12 +25,19 @@
 package rs117.hd.utils.buffer;
 
 import java.nio.IntBuffer;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 
+import static rs117.hd.utils.MathUtils.*;
+
+@Slf4j
 public class GpuIntBuffer
 {
+	@Getter
 	private IntBuffer buffer;
+	private final boolean ownsBuffer;
 
 	public GpuIntBuffer()
 	{
@@ -45,10 +52,16 @@ public class GpuIntBuffer
 			System.gc();
 			buffer = MemoryUtil.memAllocInt(initialCapacity);
 		}
+		ownsBuffer = true;
+	}
+
+	public GpuIntBuffer(IntBuffer buffer) {
+		this.buffer = buffer;
+		ownsBuffer = false;
 	}
 
 	public void destroy() {
-		if (buffer != null)
+		if (buffer != null && ownsBuffer)
 			MemoryUtil.memFree(buffer);
 		buffer = null;
 	}
@@ -57,6 +70,17 @@ public class GpuIntBuffer
 	@SuppressWarnings("deprecation")
 	protected void finalize() {
 		destroy();
+	}
+
+	@Override
+	public String toString() {
+		return String.format(
+			"%s@%x(pos=%d, size=%d)",
+			getClass().getSimpleName(),
+			hashCode(),
+			buffer.position(),
+			buffer.capacity()
+		);
 	}
 
 	public void put(int x, int y, int z) {
@@ -77,6 +101,59 @@ public class GpuIntBuffer
 
 	public void put(IntBuffer buffer) {
 		this.buffer.put(buffer);
+	}
+
+	public static int normShort(float f) {
+		return round(clamp(f, -1, 1) * Short.MAX_VALUE);
+	}
+
+	public int putFace(
+		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
+		int materialDataA, int materialDataB, int materialDataC,
+		int terrainDataA, int terrainDataB, int terrainDataC
+	) {
+		return putFace(
+			buffer,
+			alphaBiasHslA, alphaBiasHslB, alphaBiasHslC,
+			materialDataA, materialDataB, materialDataC,
+			terrainDataA, terrainDataB, terrainDataC
+		);
+	}
+
+	public void putVertex(
+		int x, int y, int z,
+		float u, float v, float w,
+		int nx, int ny, int nz,
+		int textureFaceIdx
+	) {
+		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
+		buffer.put(float16(u) << 16 | z & 0xFFFF);
+		buffer.put(float16(w) << 16 | float16(v));
+		// Unnormalized normals, assumed to be within short max
+		buffer.put((ny & 0xFFFF) << 16 | nx & 0xFFFF);
+		buffer.put(nz & 0xFFFF);
+		buffer.put(textureFaceIdx);
+	}
+
+	public static int putFace(
+		IntBuffer buffer,
+		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
+		int materialDataA, int materialDataB, int materialDataC,
+		int terrainDataA, int terrainDataB, int terrainDataC
+	) {
+		final int textureFaceIdx = buffer.position() / 3;
+		buffer.put(alphaBiasHslA);
+		buffer.put(alphaBiasHslB);
+		buffer.put(alphaBiasHslC);
+
+		buffer.put(materialDataA);
+		buffer.put(materialDataB);
+		buffer.put(materialDataC);
+
+		buffer.put(terrainDataA); // TODO: Remove?
+		buffer.put(terrainDataB);
+		buffer.put(terrainDataC);
+		return textureFaceIdx;
 	}
 
 	public int position()
@@ -114,10 +191,5 @@ public class GpuIntBuffer
 		}
 
 		return this;
-	}
-
-	public IntBuffer getBuffer()
-	{
-		return buffer;
 	}
 }

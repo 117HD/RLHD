@@ -48,8 +48,11 @@ public class ShaderProgram {
 		program = newProgram;
 		assert isValid();
 
-		for (var prop : uniformProperties)
+		for (var prop : uniformProperties) {
 			prop.uniformIndex = glGetUniformLocation(program, prop.uniformName);
+			if (prop.uniformIndex == -1 && !prop.ignoreMissing)
+				log.warn("{} has missing or unused {}: {}", getClass().getSimpleName(), prop.getClass().getSimpleName(), prop.uniformName);
+		}
 
 		for (var ubo : includes.uniformBuffers) {
 			int bindingIndex = glGetUniformBlockIndex(program, ubo.getUniformBlockName());
@@ -95,6 +98,7 @@ public class ShaderProgram {
 	}
 
 	public void destroy() {
+		viable = true;
 		if (program == 0)
 			return;
 
@@ -105,13 +109,13 @@ public class ShaderProgram {
 			prop.destroy();
 
 		uniformBlockMappings.clear();
-		viable = true;
 	}
 
 	private static class UniformProperty {
 		ShaderProgram program;
 		String uniformName;
 		int uniformIndex;
+		boolean ignoreMissing;
 
 		void destroy() {
 			uniformIndex = -1;
@@ -140,7 +144,8 @@ public class ShaderProgram {
 		public void set(int textureUnit) {
 			assert textureUnit >= GL_TEXTURE0 : "Did you accidentally pass in an image unit?";
 			assert program.isActive();
-			glUniform1i(uniformIndex, textureUnit - GL_TEXTURE0);
+			if (uniformIndex != -1)
+				glUniform1i(uniformIndex, textureUnit - GL_TEXTURE0);
 		}
 	}
 

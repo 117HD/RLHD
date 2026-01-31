@@ -47,7 +47,7 @@ public class Area {
 			Collections.addAll(aabbs, rawAabbs);
 		if (regions != null)
 			for (int regionId : regions)
-				aabbs.add(new AABB(regionId));
+				aabbs.add(AABB.fromRegionId(regionId));
 		if (regionBoxes != null)
 			for (var box : regionBoxes)
 				aabbs.add(box.toAabb());
@@ -82,6 +82,17 @@ public class Area {
 
 	public boolean containsPoint(int... worldPoint) {
 		return containsPoint(true, worldPoint);
+	}
+
+	public boolean intersects(boolean includeUnhiding, int minX, int minY, int maxX, int maxY) {
+		for (AABB aabb : aabbs)
+			if (aabb.intersects(minX, minY, maxX, maxY))
+				return true;
+		if (includeUnhiding)
+			for (var aabb : unhideAreas)
+				if (aabb.intersects(minX, minY, maxX, maxY))
+					return true;
+		return false;
 	}
 
 	public boolean intersects(Area otherArea) {

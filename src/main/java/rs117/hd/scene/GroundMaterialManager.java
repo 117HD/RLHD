@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.ground_materials.GroundMaterial;
-import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -28,6 +27,9 @@ public class GroundMaterialManager {
 	private ClientThread clientThread;
 
 	@Inject
+	private MaterialManager materialManager;
+
+	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
@@ -35,7 +37,7 @@ public class GroundMaterialManager {
 	public static GroundMaterial[] GROUND_MATERIALS = {};
 
 	public void startUp() {
-		fileWatcher = GROUND_MATERIALS_PATH.watch((path, first) -> {
+		fileWatcher = GROUND_MATERIALS_PATH.watch((path, first) -> clientThread.invoke(() -> {
 			try {
 				GroundMaterial[] groundMaterials = path.loadJson(plugin.getGson(), GroundMaterial[].class);
 				if (groundMaterials == null)
@@ -44,28 +46,29 @@ public class GroundMaterialManager {
 				for (var g : groundMaterials)
 					g.normalize();
 
-				clientThread.invoke(() -> {
-					GroundMaterial.DIRT = new GroundMaterial("DIRT", Material.DIRT_1, Material.DIRT_2);
-					GroundMaterial.UNDERWATER_GENERIC = new GroundMaterial("UNDERWATER_GENERIC", Material.DIRT_1, Material.DIRT_2);
 
-					var staticGroundMaterials = List.of(
-						GroundMaterial.NONE,
-						GroundMaterial.DIRT,
-						GroundMaterial.UNDERWATER_GENERIC
-					);
-					GROUND_MATERIALS = Stream.concat(
-						staticGroundMaterials.stream(),
-						Arrays.stream(groundMaterials)
-					).toArray(GroundMaterial[]::new);
+				var dirt1 = materialManager.getMaterial("DIRT_1");
+				var dirt2 = materialManager.getMaterial("DIRT_2");
+				GroundMaterial.DIRT = new GroundMaterial("DIRT", dirt1, dirt2);
+				GroundMaterial.UNDERWATER_GENERIC = new GroundMaterial("UNDERWATER_GENERIC", dirt1, dirt2);
 
-					// Reload everything which depends on ground materials
-					if (!first)
-						tileOverrideManager.reload(true);
-				});
+				var staticGroundMaterials = List.of(
+					GroundMaterial.NONE,
+					GroundMaterial.DIRT,
+					GroundMaterial.UNDERWATER_GENERIC
+				);
+				GROUND_MATERIALS = Stream.concat(
+					staticGroundMaterials.stream(),
+					Arrays.stream(groundMaterials)
+				).toArray(GroundMaterial[]::new);
+
+				// Reload everything which depends on ground materials
+				if (!first)
+					tileOverrideManager.reload(false);
 			} catch (IOException ex) {
 				log.error("Failed to load ground materials:", ex);
 			}
-		});
+		}));
 	}
 
 	public void shutDown() {

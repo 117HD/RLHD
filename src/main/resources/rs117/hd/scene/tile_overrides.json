@@ -91,6 +91,13 @@
     }
   },
   {
+    "name": "SEASONAL_SNOW",
+    "replacements": {
+      "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
+      "DEFAULT_SNOW": true
+    }
+  },
+  {
     "name": "WINTER_GRASS",
     "groundMaterial": "SNOW_1",
     "maxHue": 0,
@@ -108,9 +115,9 @@
   },
   {
     "name": "WINTER_SAND",
-    "groundMaterial": "SNOW_2",
-    "maxHue": 0,
-    "maxSaturation": 0,
+    "groundMaterial": "SAND",
+    "maxHue": 6,
+    "maxSaturation": 1,
     "shiftLightness": 40,
     "maxLightness": 70
   },
@@ -121,6 +128,14 @@
     "maxSaturation": 0,
     "shiftLightness": 40,
     "maxLightness": 70
+  },
+  {
+    "name": "WINTER_ICY_SNOW",
+    "groundMaterial": "SNOW_1",
+    "setHue": 45,
+    "maxSaturation": 0,
+    "shiftLightness": 30,
+    "maxLightness": 68
   },
   {
     "name": "SNOW_2",
@@ -139,9 +154,21 @@
     "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT_2"
   },
   {
+    "name": "WINTER_EAST_ARDOUGNE_BRIDGE",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "maxLightness": 53,
+    "replacements": {
+      "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND": "!blending"
+    }
+  },
+  {
+    "name": "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "maxLightness": 44
+  },
+  {
     "name": "WINTER_EDGEVILLE_PATH",
     "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT",
-    "blendedAsOpposite": true,
     "maxHue": 0,
     "maxSaturation": 0,
     "shiftLightness": 8
@@ -161,6 +188,22 @@
     "replacements": {
       "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
+  },
+  {
+    "name": "TAG - TEMPORARY - START"
+  },
+  {
+    "name": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
+    "area": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
+    "groundMaterial": "PURE_BLACK",
+    "blended": false,
+    "overlayIds": [ 10 ]
+  },
+  {
+    "name": "TAG - TEMPORARY - END"
+  },
+  {
+    "name": "TAG - FIXES - START"
   },
   {
     "name": "GREEN_SAND_HUE_CORRECTION",
@@ -185,73 +228,367 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
-    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH_OVERLAY",
     "area": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "groundMaterial": "VERTICAL_DIRT",
     "overlayIds": [
       14
-    ],
+    ]
+  },
+  {
+    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH_UNDERLAY",
+    "area": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER",
+      "VERTICAL_DIRT_FIX": true
+    },
     "underlayIds": [
       48,
       63,
       64,
       65,
       66
-    ],
-    "groundMaterial": "VERTICAL_DIRT"
+    ]
   },
   {
-    "name": "TUTORIAL_ISLAND_KITCHEN_TILE_1",
-    "area": "TUTORIAL_ISLAND_KITCHEN",
+    "name": "CATHERBY_BEACH_OBELISK_WATER_FIX",
+    "area": "CATHERBY_BEACH_OBELISK_WATER_FIX",
     "overlayIds": [
-      9
+      6
     ],
-    "groundMaterial": "MARBLE_1_SEMIGLOSS",
+    "waterType": "WATER_FLAT",
     "blended": false
   },
   {
-    "name": "TUTORIAL_ISLAND_KITCHEN_TILE_2",
-    "area": "TUTORIAL_ISLAND_KITCHEN",
+    "name": "CATHERBY_BEACH_LADDER_FIX",
+    "area": "CATHERBY_BEACH_LADDER_FIX",
     "overlayIds": [
       11
     ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS",
     "blended": false
   },
   {
-    "name": "TUTORIAL_ISLAND_QUEST_BUILDING_TILE_1",
-    "area": "TUTORIAL_ISLAND_QUEST_BUILDING",
-    "overlayIds": [
-      13
+    "name": "Morytania River Blending Fix",
+    "area": "Morytania River Blending Fix",
+    "underlayIds": [ 54, 96 ],
+    "waterType": "WATER"
+  },
+  {
+    "name": "YANILLE_AGILITY_DUNGEON_ENTRANCE_FIX",
+    "area": "YANILLE_AGILITY_DUNGEON_ENTRANCE",
+    "underlayIds": [
+      63
     ],
-    "groundMaterial": "MARBLE_1_SEMIGLOSS",
     "blended": false
   },
   {
-    "name": "TUTORIAL_ISLAND_QUEST_BUILDING_TILE_2",
-    "area": "TUTORIAL_ISLAND_QUEST_BUILDING",
-    "overlayIds": [
-      26
-    ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS",
-    "blended": false
-  },
-  {
-    "name": "TUTORIAL_ISLAND_BANK_TILE_1",
-    "area": "TUTORIAL_ISLAND_BANK",
-    "overlayIds": [
-      2
-    ],
-    "groundMaterial": "MARBLE_1_SEMIGLOSS",
-    "blended": false
-  },
-  {
-    "name": "TUTORIAL_ISLAND_BANK_TILE_2",
-    "area": "TUTORIAL_ISLAND_BANK",
+    "name": "YANILLE_WATCHTOWER_ARCHWAY__BLENDING_FIX_1",
+    "area": "YANILLE_WATCHTOWER_BOTTOM_DOORWAY",
     "overlayIds": [
       3
     ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS",
+    "groundMaterial": "WORN_TILES"
+  },
+  {
+    "name": "YANILLE_WATCHTOWER_ARCHWAY_BLENDING_FIX_2",
+    "area": "YANILLE_WATCHTOWER_BOTTOM_DOORWAY",
+    "overlayIds": [
+      4
+    ],
+    "groundMaterial": "WORN_TILES"
+  },
+  {
+    "name": "DRAYNOR_WOM_FRONT_FIX_0",
+    "area": "DRAYNOR_WOM_HOUSE_FRONT",
+    "overlayIds": [
+      0
+    ],
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "DRAYNOR_WOM_FRONT_FIX_10",
+    "area": "DRAYNOR_WOM_HOUSE_FRONT",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "minHue": 8,
+    "maxHue": 8,
+    "minSaturation": 4,
+    "maxSaturation": 4,
+    "minLightness": 15,
+    "maxLightness": 15
+  },
+  {
+    "name": "DRAYNOR_PATH_BLENDING_FIX",
+    "area": "DRAYNOR_PATH_BLENDING_FIXES",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "minHue": 9,
+    "maxHue": 9,
+    "minSaturation": 5,
+    "maxSaturation": 5,
+    "minLightness": 15,
+    "maxLightness": 15,
+    "replacements": {
+      "DRAYNOR_PATH_BLENDING_FIX_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "DRAYNOR_PATH_BLENDING_FIX_NO_BLENDING",
+    "area": "DRAYNOR_PATH_BLENDING_FIXES",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "DRAYNOR_NEDS_PATH_FIX",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "minHue": 9,
+    "maxHue": 9,
+    "minSaturation": 5,
+    "maxSaturation": 5,
+    "minLightness": 18,
+    "maxLightness": 18,
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "DRAYNOR_NEDS_PATH_FIX_ENABLE",
+    "area": "DRAYNOR_NEDS_PATH_FIXES",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "GRAVEL",
+    "replacements": {
+      "DRAYNOR_NEDS_PATH_FIX": "blending"
+    }
+  },
+  {
+    "name": "DRAYNOR_BANK_FRONT_FIX",
+    "area": "DRAYNOR_BANK_FRONT_PATH",
+    "overlayIds": [
+      0
+    ],
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "replacements": {
+      "DRAYNOR_BANK_ENTRANCE_PATH": "blending",
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "DRAYNOR_BANK_PATH_FIX_10_DARK",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "minHue": 9,
+    "maxHue": 9,
+    "minSaturation": 4,
+    "maxSaturation": 4,
+    "minLightness": 8,
+    "maxLightness": 8,
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "DRAYNOR_BANK_PATH_FIX_DARK_ENABLE",
+    "area": "DRAYNOR_BANK_PATH_FIX_DARK",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "GRAVEL",
+    "replacements": {
+      "DRAYNOR_BANK_PATH_FIX_10_DARK": "blending"
+    }
+  },
+  {
+    "name": "DRAYNOR_BANK_PATH_FIX_10_LIGHT",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "minHue": 9,
+    "maxHue": 9,
+    "minSaturation": 5,
+    "maxSaturation": 5,
+    "minLightness": 18,
+    "maxLightness": 18,
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "DRAYNOR_BANK_PATH_FIX_LIGHT_ENABLE",
+    "area": "DRAYNOR_BANK_PATH_FIX_LIGHT",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "GRAVEL",
+    "replacements": {
+      "DRAYNOR_BANK_PATH_FIX_10_LIGHT": "blending"
+    }
+  },
+  {
+    "name": "DRAYNOR_BANK_PATH_FIX_0",
+    "area": "DRAYNOR_PATH_BLENDING_FIXES",
+    "overlayIds": [
+      0
+    ],
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "WIZARDS_TOWER_PATH_BLEND_FIX",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "minHue": 10,
+    "maxHue": 10,
+    "minSaturation": 5,
+    "maxSaturation": 5,
+    "minLightness": 19,
+    "maxLightness": 19
+  },
+  {
+    "name": "WIZARDS_TOWER_PATH_BLEND_FIX_WINTER",
+    "groundMaterial": "BRICK_PATHS",
+    "shiftSaturation": -1,
+    "replacements": {
+      "WINTER_GRASS": "blending"
+    }
+  },
+  {
+    "name": "WIZARDS_TOWER_PATH_BLEND_FIX_TOGGLE",
+    "area": "WIZARD_TOWER_PATH_PARTIAL_TILES",
+    "overlayIds": [
+      164
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "shiftSaturation": -1,
+    "replacements": {
+      "WIZARDS_TOWER_PATH_BLEND_FIX_WINTER": "season == SeasonalTheme.WINTER",
+      "WIZARDS_TOWER_PATH_BLEND_FIX": "blending"
+    }
+  },
+  {
+    "name": "KOUREND_CASTLE_UNDER_STATUE_FIX",
+    "area": "GREAT_KOUREND_STATUE",
+    "overlayIds": [
+      1
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "blended": false,
+    "uvScale": 1.2
+  },
+  {
+    "name": "KOUREND_GREAT_STATUE_BLEND_FIX_1",
+    "area": "GREAT_KOUREND_STATUE",
+    "groundMaterial": "GRASS_1",
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    },
+    "overlayIds": [
+      108
+    ]
+  },
+  {
+    "name": "KOUREND_GREAT_STATUE_BLEND_FIX_2",
+    "area": "GREAT_KOUREND_STATUE",
+    "groundMaterial": "GRASS_1",
+    "blended": false,
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    },
+    "overlayIds": [
+      11
+    ],
+    "underlayIds": [
+      112
+    ]
+  },
+  {
+    "name": "HOSIDIUS_WELL_BLEND_FIX",
+    "area": "HOSIDIUS_WELL",
+    "overlayIds": [
+      137
+    ],
+    "groundMaterial": "BRICK_PATHS",
     "blended": false
+  },
+  {
+    "name": "HOSIDIUS_STAIRS_BLEND_FIX",
+    "area": "HOSIDIUS_STAIRS",
+    "overlayIds": [
+      137
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "blended": false
+  },
+  {
+    "name": "HOSIDIUS_MAGIC_TREE_BLEND_FIX",
+    "area": "HOSIDIUS",
+    "overlayIds": [
+      159
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "SHAYZIEN_EAST_PATH_FIX",
+    "area": "SHAYZIEN_EAST_ENTRANCE_BLEND_FIX",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "blended": false
+  },
+  {
+    "name": "XERICS_LOOKOUT_TILE",
+    "area": "XERICS_LOOKOUT",
+    "overlayIds": [
+      2,
+      50
+    ],
+    "groundMaterial": "TILES_2x2_2",
+    "blended": false
+  },
+  {
+    "name": "HOSIDIUS_STONE_FLOOR",
+    "area": "HOSIDIUS",
+    "overlayIds": [
+      123
+    ],
+    "groundMaterial": "BRICK_PATHS"
+  },
+  {
+    "name": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX_OVERLAY",
+    "area": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX",
+    "overlayIds": [
+      77
+    ],
+    "groundMaterial": "DIRT",
+    "maxLightness": 55,
+    "replacements": {
+      "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX_NO_TEXTURES",
+    "area": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX",
+    "overlayIds": [
+      77
+    ],
+    "groundMaterial": "NONE",
+    "maxLightness": 50,
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "LUMBRIDGE_TOWER_INTERIOR_FLOOR",
@@ -270,7 +607,11 @@
       10
     ],
     "groundMaterial": "WORN_TILES",
-    "shiftLightness": 12
+    "blended": false,
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_CASTLE_TILE_OVERLAY",
@@ -282,16 +623,64 @@
   },
   {
     "name": "LUMBRIDGE_CASTLE_FLOORS",
-    "area": "LUMBRIDGE_CASTLE_COBBLE",
+    "area": "LUMBRIDGE_CASTLE_FLOORS",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
+    "replacements": {
+      "NONE": "!textures",
+      "LUMBRIDGE_CASTLE_FLOORS_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_FLOORS_NO_BLENDING",
+    "area": "LUMBRIDGE_CASTLE_FLOORS",
+    "overlayIds": [
+      10
+    ],
+    "shiftLightness": 13,
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "LUM_BRIDGE_NO_BLENDING_FIX",
+    "area": "LUM_BRIDGE_NO_BLENDING_FIX",
     "overlayIds": [
       10
     ],
     "groundMaterial": "VARROCK_PATHS",
-    "shiftLightness": 10
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 0,
+    "maxSaturation": 1,
+    "shiftLightness": 7,
+    "replacements": {
+      "LUMBRIDGE_PATHS": "blending",
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUM_BRIDGE_10",
     "area": "LUM_BRIDGE",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 0,
+    "maxSaturation": 1,
+    "shiftLightness": 7,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "LUM_BRIDGE_BRIGHTNESS_FIX",
+    "area": "LUM_BRIDGE_BRIGHTNESS_FIX",
     "overlayIds": [
       10
     ],
@@ -300,7 +689,19 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 11,
+    "minLightness": 31,
+    "replacements": {
+      "LUM_BRIDGE_BRIGHTNESS_FIX_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "LUM_BRIDGE_BRIGHTNESS_FIX_NO_TEXTURES",
+    "area": "LUM_BRIDGE_BRIGHTNESS_FIX",
+    "overlayIds": [
+      10
+    ],
+    "minLightness": 21
   },
   {
     "name": "LUM_BRIDGE_22",
@@ -313,7 +714,23 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": -5
+    "shiftLightness": -5,
+    "blendedAsOpposite": true
+  },
+  {
+    "name": "LUMBRIDGE_TOWERS_EXTERIOR_BLEND_FIX",
+    "area": "LUMBRIDGE_TOWERS_EXTERIOR_FIX",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "shiftLightness": 9,
+    "blendedAsOpposite": false,
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
+      "LUMBRIDGE_TOWERS_EXTERIOR": "!blending",
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_TOWERS_EXTERIOR",
@@ -321,10 +738,12 @@
     "overlayIds": [
       10
     ],
+    "blended": false,
     "groundMaterial": "VARROCK_PATHS",
-    "shiftLightness": 10,
+    "shiftLightness": 14,
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
     }
   },
   {
@@ -338,7 +757,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 6
+    "shiftLightness": 6,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "BLEND_IMPROVEMENT_2",
@@ -351,7 +773,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 9
+    "shiftLightness": 9,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "SWAMP_PATH_FIX_1",
@@ -386,7 +811,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_VARROCK_BAND_BLEND_FIX",
@@ -402,6 +830,7 @@
     "minLightness": 18,
     "maxLightness": 18,
     "replacements": {
+      "NONE": "!textures",
       "LUMBRIDGE_VARROCK_BAND_BLEND_FIX_NOBLENDING": "!blending"
     }
   },
@@ -414,7 +843,10 @@
     "groundMaterial": "GRAVEL",
     "setHue": 7,
     "setSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_RIVER_DIRT_FIX",
@@ -436,7 +868,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_VARROCK_PATH_FIX_2",
@@ -449,7 +884,627 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Molch Temple floor fix",
+    "area": "Molch Temple floor fix",
+    "overlayIds": [ 115 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_2"
+  },
+  {
+    "name": "Molch Temple floor fix inside",
+    "area": "LIZARDMAN_TEMPLE",
+    "overlayIds": [ 115, 133 ],
+    "blended": false,
+    "groundMaterial": "DIRTY_MARBLE_GLOSS"
+  },
+  {
+    "name": "Molch Water Channel Fix",
+    "area": "Molch Water Channel Fix",
+    "underlayIds": [ 50, 54, 63 ],
+    "waterType": "SWAMP_WATER"
+  },
+  {
+    "name": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX_UNDERLAY",
+    "area": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX",
+    "underlayIds": [
+      60,
+      68,
+      26,
+      8
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "maxLightness": 60,
+    "minLightness": 40,
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER",
+      "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "YANILLE_MAGIC_GUILD_FLOOR_FIX",
+    "area": "YANILLE_MAGIC_GUILD_FLOORS",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
+    "setLightness": 33
+  },
+  {
+    "name": "Luciens Base - Snow Fix",
+    "area": "Lucien's Base Snow",
+    "underlayIds": [
+      56,
+      57,
+      58,
+      148,
+      218
+    ],
+    "groundMaterial": "SNOW_1",
+    "maxLightness": 95
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_OOZE_WATER_FIX",
+    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
+    "overlayIds": [
+      29
+    ],
+    "waterType": "ABYSS_BILE"
+  },
+  {
+    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
+    "overlayIds": [
+      77
+    ],
+    "groundMaterial": "ABYSSAL_FLOOR",
+    "setSaturation": -2,
+    "blended": false
+  },
+  {
+    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_GRASS_FIX",
+    "overlayIds": [
+      29
+    ],
+    "groundMaterial": "ABYSSAL_FLOOR"
+  },
+  {
+    "name": "SORCERESS_GARDEN_HOUSE_FLOOR",
+    "area": "SORCERESS_GARDEN_HOUSE",
+    "overlayIds": [ 123 ],
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 0.85
+  },
+  {
+    "name": "Vet'ion Lair Entrance Fix",
+    "area": "Vet'ion Lair Entrance Fix",
+    "overlayIds": [
+      180
+    ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Cam Torum Entrance Fix",
+    "area": "CAM_TORUM_ENTRANCE_FIX",
+    "blended": false,
+    "overlayIds": [ 11, 228 ],
+    "groundMaterial": "CAM_TORUM_TILES"
+  },
+  {
+    "name": "Cam Torum Bridge Fix",
+    "area": "CAM_TORUM_BRIDGE_FIX",
+    "underlayIds": [ 123 ],
+    "blended": false,
+    "groundMaterial": "CAM_TORUM_TILES",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 1,
+    "maxSaturation": 1,
+    "minLightness": 15,
+    "maxLightness": 15
+  },
+  {
+    "name": "FOSSIL_ISLAND_CENTRAL_BANK_FIX",
+    "area": "FOSSIL_ISLAND_CENTRAL_BANK_FIX",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "GRAVEL",
+    "blended": false,
+    "shiftLightness": -2
+  },
+  {
+    "name": "DARKMEYER_ARBORETUM_BLENDING_FIX",
+    "area": "DARKMEYER_ARBORETUM_BLENDING_FIX",
+    "overlayIds": [
+      49
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
+    "name": "CLOCK_TOWER_DUNGEON_COLORED_TILES_FIX",
+    "area": "CLOCK_TOWER_DUNGEON_COLORED_TILES",
+    "overlayIds": [
+      9,
+      11,
+      13,
+      18
+    ],
+    "groundMaterial": "MARBLE_1",
+    "blended": false
+  },
+  {
+    "name": "WEST_ARDOUGNE_CARPET_FIX_1",
+    "area": "WEST_ARDOUGNE_CARPET_FIX",
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "CARPET",
+    "blended": false,
+    "shiftHue": 1,
+    "shiftSaturation": 3,
+    "shiftLightness": -2
+  },
+  {
+    "name": "WIZARD_CROMPERTY_PATH_BLENDING_FIX",
+    "area": "WIZARD_CROMPERTY_PATH_BLENDING_FIX",
+    "underlayIds": [
+      48,
+      64
+    ],
+    "overlayIds": [ 5 ],
+    "groundMaterial": "WOOD_PLANKS_1",
+    "blended": false,
+    "blendedAsOpposite": true
+  },
+  {
+    "name": "EAST_ARDOUGNE_DOCKS_FIX_5",
+    "area": "EAST_ARDOUGNE_DOCKS_FIX",
+    "overlayIds": [
+      5
+    ],
+    "groundMaterial": "WOOD_PLANKS_1",
+    "minLightness": 65,
+    "maxLightness": 65
+  },
+  {
+    "name": "EAST_ARDOUGNE_DOCKS_FIX_35",
+    "area": "EAST_ARDOUGNE_DOCKS_FIX",
+    "overlayIds": [
+      35
+    ],
+    "groundMaterial": "WOOD_PLANKS_1",
+    "minLightness": 65,
+    "maxLightness": 65
+  },
+  {
+    "name": "EAST_ARDOUGNE_PATH_BLENDING_FIX",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "minHue": 11,
+    "maxHue": 11,
+    "minSaturation": 4,
+    "maxSaturation": 4,
+    "minLightness": 21,
+    "maxLightness": 21
+  },
+  {
+    "name": "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT",
+    "replacements": {
+      "WINTER_GRASS": "blending"
+    }
+  },
+  {
+    "name": "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE",
+    "area": "EAST_ARDOUGNE_PATHING_FIXES",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "shiftLightness": 6,
+    "replacements": {
+      "NONE": "!textures",
+      "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER": "season == SeasonalTheme.WINTER",
+      "EAST_ARDOUGNE_PATH_BLENDING_FIX": "blending"
+    }
+  },
+  {
+    "name": "ASGARNIA_MOUNTAINS_VERTICAL_DIRT_FIX",
+    "area": "ASGARNIA_MOUNTAINS",
+    "overlayIds": [
+      22
+    ],
+    "groundMaterial": "VERTICAL_DIRT"
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Water to Ice Fix",
+    "area": "ASGARNIA_ICE_DUNGEON",
+    "overlayIds": [
+      196
+    ],
+    "groundMaterial": "ICE_4",
+    "shiftLightness": 5,
+    "uvScale": 2,
+    "uvOrientation": -100
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
+    "description": "For when ground blending is ENABLED",
+    "overlayIds": [ 0, 59, 263 ],
+    "underlayIds": [ 59 ],
+    "groundMaterial": "SNOW_2",
+    "replacements": {
+      "ASGARNIA_ICE_DUNGEON Snow Tiles Fix UNBLEND": "!blending"
+    },
+    "shiftLightness": 27
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix UNBLEND",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "SNOW_2",
+    "shiftLightness": 0
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix 2",
+    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX_2",
+    "overlayIds": [
+      0,
+      59,
+      263
+    ],
+    "underlayIds": [
+      59
+    ],
+    "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "ASGARNIA_ICE_DUNGEON Ice Tiles Fix",
+    "area": "ASGARNIA_ICE_DUNGEON_ICE_FIX",
+    "overlayIds": [
+      409
+    ],
+    "groundMaterial": "ICE_1_HIGHGLOSS"
+  },
+  {
+    "name": "EDGEVILLE_BANK_TILING_FIX_1",
+    "area": "EDGEVILLE_BANK_TILING",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "MARBLE_2_GLOSS",
+    "blended": false,
+    "blendedAsOpposite": true,
+    "minLightness": 22,
+    "maxLightness": 22,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_2",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX_2",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "EDGEVILLE_BANK_PERIMETER_FIX",
+    "area": "EDGEVILLE_BANK_PERIMETER_FIX",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "MARBLE_2_GLOSS",
+    "minLightness": 30,
+    "maxLightness": 30,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_BLEND",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "description": "For when ground blending is ENABLED",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
+      "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blending"
+    },
+    "blended": false,
+    "minLightness": 29,
+    "maxLightness": 30
+  },
+  {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
+    "name": "FALADOR_PARTY_ROOM_STAIRS_FIX",
+    "area": "FALADOR_PARTY_ROOM_STAIRS_FIX",
+    "overlayIds": [
+      37
+    ],
+    "blended": false,
+    "maxLightness": 0
+  },
+  {
+    "name": "FALADOR_EAST_BANK_PATH_FIX_2",
+    "area": "FALADOR_EAST_BANK_PATH_FIX_2",
+    "overlayIds": [
+      137
+    ],
+    "groundMaterial": "FALADOR_PATHS",
+    "blended": false,
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 1,
+    "maxSaturation": 1,
+    "shiftLightness": 20,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "FALADOR_EAST_BANK_PATH_FIX_1",
+    "area": "FALADOR_EAST_BANK_PATH_FIX_1",
+    "overlayIds": [
+      137
+    ],
+    "groundMaterial": "FALADOR_PATHS",
+    "blended": false,
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 1,
+    "maxSaturation": 1,
+    "shiftLightness": 16,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "FALADOR_TRIANGLE_DIRT_PATH_FIX_1",
+    "area": "FALADOR_TRIANGLE_PATH_FIX_1",
+    "overlayIds": [
+      2
+    ],
+    "groundMaterial": "GRAVEL",
+    "shiftLightness": 3,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "FALADOR_TRIANGLE_DIRT_PATH_FIX_2",
+    "area": "FALADOR_TRIANGLE_PATH_FIX_1",
+    "overlayIds": [
+      83
+    ],
+    "groundMaterial": "GRAVEL",
+    "shiftHue": -4,
+    "shiftSaturation": -1,
+    "shiftLightness": 5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "FALADOR_TRIANGLE_PATH_PATH_FIX_1",
+    "area": "FALADOR_TRIANGLE_PATH_FIX_2",
+    "overlayIds": [
+      119
+    ],
+    "groundMaterial": "GRAVEL",
+    "shiftHue": -4,
+    "shiftSaturation": -1,
+    "shiftLightness": 2,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "FALADOR_SOUTH_PATH_FIX_1",
+    "area": "FALADOR_SOUTH_PATH_FIX",
+    "overlayIds": [
+      119
+    ],
+    "groundMaterial": "FALADOR_PATHS",
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 1,
+    "maxSaturation": 1,
+    "shiftLightness": 19,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "FALADOR_SOUTH_PATH_FIX_2",
+    "area": "FALADOR_SOUTH_PATH_FIX",
+    "overlayIds": [
+      88
+    ],
+    "groundMaterial": "GRAVEL",
+    "shiftHue": -4,
+    "shiftSaturation": -1,
+    "shiftLightness": 2,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "AL_KHARID_WELL_FIX",
+    "area": "AL_KHARID_WELL",
+    "overlayIds": [
+      21
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
+    "name": "BARBARIAN_VILLAGE_EAST_PATH_FIX_1",
+    "area": "BARBARIAN_VILLAGE_EAST_PATH_FIX",
+    "overlayIds": [
+      83
+    ],
+    "groundMaterial": "DIRT",
+    "shiftSaturation": 2
+  },
+  {
+    "name": "BARBARIAN_VILLAGE_EAST_PATH_FIX_2",
+    "area": "BARBARIAN_VILLAGE_EAST_PATH_FIX",
+    "overlayIds": [
+      2
+    ],
+    "groundMaterial": "GRAVEL",
+    "shiftSaturation": -1,
+    "shiftLightness": 4
+  },
+  {
+    "name": "EXAMCENTRE_FLOOR_FIX_1",
+    "area": "DIGSITE_EXAM_CENTRE",
+    "overlayIds": [
+      88
+    ],
+    "groundMaterial": "WORN_TILES",
+    "blended": false,
+    "shiftLightness": 2
+  },
+  {
+    "name": "EXAMCENTRE_FLOOR_FIX_2",
+    "area": "DIGSITE_EXAM_CENTRE",
+    "overlayIds": [
+      120
+    ],
+    "groundMaterial": "WORN_TILES",
+    "blended": false,
+    "shiftLightness": 2
+  },
+  {
+    "name": "VARROCK_CASTLE_PATH_FIXES_1",
+    "area": "VARROCK_CASTLE_DIRT_PATH_FIXES_1",
+    "overlayIds": [
+      173
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "shiftLightness": 6
+  },
+  {
+    "name": "VARROCK_CASTLE_PATH_FIXES_2",
+    "area": "VARROCK_CASTLE_DIRT_PATH_FIXES_2",
+    "overlayIds": [
+      173
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "shiftLightness": 7
+  },
+  {
+    "name": "VARROCK_MUSEUM_SOUTH_PATH_FIX_1",
+    "area": "VARROCK_MUSEUM_SOUTH_PATH_FIX",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "DIRT",
+    "shiftSaturation": 2
+  },
+  {
+    "name": "VARROCK_MUSEUM_SOUTH_PATH_FIX_2",
+    "area": "VARROCK_MUSEUM_SOUTH_PATH_FIX",
+    "overlayIds": [
+      172
+    ],
+    "groundMaterial": "DIRT",
+    "shiftSaturation": 1
+  },
+  {
+    "name": "VARROCK_MUSEUM_SOUTH_PATH_FIX_3",
+    "area": "VARROCK_MUSEUM_SOUTH_PATH_FIX",
+    "overlayIds": [
+      56
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "shiftLightness": 4
+  },
+  {
+    "name": "VARROCK_WEST_BANK_SOUTH_PATH_FIX_1",
+    "area": "VARROCK_WEST_BANK_SOUTH_PATH_FIX",
+    "overlayIds": [
+      172
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "shiftSaturation": -1,
+    "shiftLightness": 4
+  },
+  {
+    "name": "VARROCK_WILDERNESS_DITCH_PATH_FIX_1",
+    "area": "VARROCK_WILDERNESS_DITCH_PATH_FIX",
+    "overlayIds": [
+      172
+    ],
+    "groundMaterial": "DIRT",
+    "shiftSaturation": 1
+  },
+  {
+    "name": "WEISS_FIREPIT_FIX",
+    "area": "WEISS_FIRE_PIT",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
+    "name": "KOUREND_LEGLESS_FAUN_BLENDING_FIX",
+    "area": "KOUREND_LEGLESS_FAUN_BLENDING_FIX",
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "blended": false,
+    "overlayIds": [
+      134
+    ]
+  },
+  {
+    "name": "RIMMINGTON_PATH_BLEND_FIX",
+    "area": "RIMMINGTON_PATH_BLEND_FIX",
+    "groundMaterial": "GRAVEL",
+    "setHue": 0,
+    "setSaturation": 0,
+    "minLightness": 24,
+    "maxLightness": 26,
+    "overlayIds": [
+      10,
+      81,
+      88
+    ]
+  },
+  {
+    "name": "SOPHANEM_UNDERWALL_FIX",
+    "area": "SOPHANEM",
+    "blended": false,
+    "overlayIds": [
+      206
+    ]
+  },
+  {
+    "name": "TAG - FIXES - END"
+  },
+  {
+    "name": "TAG - Random Events - START"
   },
   {
     "name": "PINBALL_FLOOR",
@@ -529,10 +1584,226 @@
     "blended": false
   },
   {
-    "name": "Al Kharid to Varrock Gate Grass Fix",
-    "area": "Al Kharid to Varrock Gate Grass Fix",
-    "underlayIds": [ 52 ],
+    "name": "PRISON_PETE_TILE_1",
+    "area": "RANDOM_EVENT_PRISON_PETE",
+    "overlayIds": [
+      2
+    ],
+    "groundMaterial": "MARBLE_1",
+    "blended": false
+  },
+  {
+    "name": "PRISON_PETE_TILE_2",
+    "area": "RANDOM_EVENT_PRISON_PETE",
+    "overlayIds": [
+      131
+    ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
+    "name": "PRISON_PETE_PATH",
+    "area": "RANDOM_EVENT_PRISON_PETE",
+    "overlayIds": [
+      133
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "CLASSROOM",
+    "area": "RANDOM_EVENT_CLASSROOM",
+    "overlayIds": [
+      102
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2"
+  },
+  {
+    "name": "TAG - Random Events - END"
+  },
+  {
+    "name": "TAG - Areas - START"
+  },
+  {
+    "name": "Varrock Family Crypt",
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
+    "area": "VARROCK_JULIETS_FAMILY_CRYPT",
+    "underlayIds": [
+      56, 57, 72, 94
+    ],
+    "blended": false,
+    "uvScale": 0.85,
+    "uvOrientation": 256
+  },
+  {
+    "name": "VARROCK_SEWERS_DIRT",
+    "area": "VARROCK_SEWERS",
+    "underlayIds": [
+      10,
+      63,
+      64
+    ],
+    "groundMaterial": "PACKED_EARTH",
+    "replacements": {
+      "DEFAULT_GRASS": "h >= 9",
+      "DEFAULT_PACKED_EARTH": true
+    }
+  },
+  {
+    "name": "VARROCK_SEWERS_GRASS",
+    "area": "VARROCK_SEWERS",
+    "underlayIds": [
+      49
+    ],
     "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_OOZE",
+    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE",
+    "underlayIds": [
+      48,
+      49,
+      61,
+      93
+    ],
+    "groundMaterial": "ABYSSAL_FLOOR"
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_GRASS",
+    "area": "STRONGHOLD_OF_SECURITY",
+    "underlayIds": [
+      48,
+      49,
+      58,
+      59,
+      124
+    ],
+    "groundMaterial": "GRASS_1",
+    "shiftHue": 1,
+    "shiftSaturation": 1
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_WAR_GRAVEL",
+    "area": "STRONGHOLD_OF_SECURITY",
+    "underlayIds": [
+      148
+    ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_FAMINE_DIRT",
+    "area": "STRONGHOLD_OF_SECURITY_FAMINE",
+    "underlayIds": [
+      72,
+      118,
+      126
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
+    "name": "STRONGHOLD_OF_SECURITY_WAR_DIRT",
+    "area": "STRONGHOLD_OF_SECURITY_WAR",
+    "underlayIds": [
+      72,
+      118,
+      126
+    ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "Brimhaven Dungeon - floor",
+    "area": "Brimhaven Dungeon",
+    "underlayIds": [ 63, 64, 65, 66 ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "TUTORIAL_ISLAND_KITCHEN_TILE_1",
+    "area": "TUTORIAL_ISLAND_KITCHEN",
+    "overlayIds": [
+      9
+    ],
+    "groundMaterial": "MARBLE_1_SEMIGLOSS",
+    "blended": false
+  },
+  {
+    "name": "TUTORIAL_ISLAND_KITCHEN_TILE_2",
+    "area": "TUTORIAL_ISLAND_KITCHEN",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS",
+    "blended": false
+  },
+  {
+    "name": "TUTORIAL_ISLAND_QUEST_BUILDING_TILE_1",
+    "area": "TUTORIAL_ISLAND_QUEST_BUILDING",
+    "overlayIds": [
+      13
+    ],
+    "groundMaterial": "MARBLE_1_SEMIGLOSS",
+    "blended": false
+  },
+  {
+    "name": "TUTORIAL_ISLAND_QUEST_BUILDING_TILE_2",
+    "area": "TUTORIAL_ISLAND_QUEST_BUILDING",
+    "overlayIds": [
+      26
+    ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS",
+    "blended": false
+  },
+  {
+    "name": "TUTORIAL_ISLAND_BANK_TILE_1",
+    "area": "TUTORIAL_ISLAND_BANK",
+    "overlayIds": [
+      2
+    ],
+    "groundMaterial": "MARBLE_1_SEMIGLOSS",
+    "blended": false
+  },
+  {
+    "name": "TUTORIAL_ISLAND_BANK_TILE_2",
+    "area": "TUTORIAL_ISLAND_BANK",
+    "overlayIds": [
+      3
+    ],
+    "groundMaterial": "MARBLE_2_SEMIGLOSS",
+    "blended": false
+  },
+  {
+    "name": "CENTER_SARADOMIN_SIDE_DIRT_1",
+    "area": "CASTLE_WARS_UNDERGROUND_SARADOMIN_PORTAL_FIX",
+    "underlayIds": [
+      65,
+      66
+    ],
+    "groundMaterial": "DIRT",
+    "minSaturation": 2,
+    "maxSaturation": 6
+  },
+  {
+    "name": "CENTER_SARADOMIN_SIDE_DIRT_2",
+    "area": "CASTLE_WARS_ARENA_SARADOMIN_SIDE",
+    "underlayIds": [
+      98
+    ],
+    "groundMaterial": "DIRT",
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 4,
+    "maxSaturation": 4
+  },
+  {
+    "name": "CENTER_SARADOMIN_SIDE_DIRT_3",
+    "area": "CASTLE_WARS_ARENA_SARADOMIN_SIDE",
+    "underlayIds": [
+      56
+    ],
+    "groundMaterial": "DIRT",
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 4,
+    "maxSaturation": 4,
+    "shiftLightness": 3
   },
   {
     "name": "LUMBRIDGE_PATHS",
@@ -545,7 +1816,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_CASTLE_ENTRYWAY_1",
@@ -593,6 +1867,7 @@
     "name": "VARROCK_GUARD_POSTS",
     "area": "VARROCK_GUARD_POSTS",
     "overlayIds": [
+      22,
       171
     ],
     "groundMaterial": "VARROCK_PATHS"
@@ -614,12 +1889,12 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "VARROCK_HOUSE_1",
-    "area": "VARROCK_HOUSE_1",
+    "name": "VARROCK_HAIRDRESSER",
+    "area": "VARROCK_HAIRDRESSER",
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS"
   },
   {
     "name": "VARROCK_HOUSE_2",
@@ -630,12 +1905,40 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "VARROCK_BLUE_MOON_INN",
-    "area": "VARROCK_BLUE_MOON_INN",
+    "name": "VARROCK_HOUSE_3",
+    "area": "VARROCK_HOUSE_3",
+    "overlayIds": [
+      26
+    ],
+    "groundMaterial": "TILE_SMALL"
+  },
+  {
+    "name": "VARROCK_BLUE_MOON_INN_FLOOR",
+    "area": "VARROCK_MOON_INN_FLOOR",
+    "overlayIds": [
+      22
+    ],
+    "groundMaterial": "CARPET",
+    "shiftLightness": 3,
+    "blended": false
+  },
+  {
+    "name": "VARROCK_BLUE_MOON_INN_KITCHEN",
+    "area": "VARROCK_BLUE_MOON_INN_KITCHEN",
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILE_SMALL_2",
+    "blended": false
+  },
+  {
+    "name": "VARROCK_BLUE_MOON_INN",
+    "area": "VARROCK_MOON_INN_FLOOR",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "CARPET",
+    "uvScale": 1.5
   },
   {
     "name": "VARROCK_MUSEUM_FLOOR",
@@ -664,14 +1967,6 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "VARROCK_HALLOWEEN_DIRT",
-    "area": "VARROCK_HALLOWEEN_EVENT_DIRT",
-    "overlayIds": [
-      81
-    ],
-    "groundMaterial": "DIRT"
-  },
-  {
     "name": "VARROCK_GRAND_EXCHANGE_ROOF",
     "area": "VARROCK_GRAND_EXCHANGE_ROOF",
     "overlayIds": [
@@ -681,52 +1976,6 @@
     "replacements": {
       "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
-  },
-  {
-    "name": "VARROCK_MUSEUM_SOUTH_PATH_FIX_1",
-    "area": "VARROCK_MUSEUM_SOUTH_PATH_FIX",
-    "overlayIds": [
-      171
-    ],
-    "groundMaterial": "DIRT",
-    "shiftSaturation": 2
-  },
-  {
-    "name": "VARROCK_MUSEUM_SOUTH_PATH_FIX_2",
-    "area": "VARROCK_MUSEUM_SOUTH_PATH_FIX",
-    "overlayIds": [
-      172
-    ],
-    "groundMaterial": "DIRT",
-    "shiftSaturation": 1
-  },
-  {
-    "name": "VARROCK_MUSEUM_SOUTH_PATH_FIX_3",
-    "area": "VARROCK_MUSEUM_SOUTH_PATH_FIX",
-    "overlayIds": [
-      56
-    ],
-    "groundMaterial": "VARROCK_PATHS",
-    "shiftLightness": 4
-  },
-  {
-    "name": "VARROCK_WEST_BANK_SOUTH_PATH_FIX_1",
-    "area": "VARROCK_WEST_BANK_SOUTH_PATH_FIX",
-    "overlayIds": [
-      172
-    ],
-    "groundMaterial": "VARROCK_PATHS",
-    "shiftSaturation": -1,
-    "shiftLightness": 4
-  },
-  {
-    "name": "VARROCK_WILDERNESS_DITCH_PATH_FIX_1",
-    "area": "VARROCK_WILDERNESS_DITCH_PATH_FIX",
-    "overlayIds": [
-      172
-    ],
-    "groundMaterial": "DIRT",
-    "shiftSaturation": 1
   },
   {
     "name": "VARROCK_JULIETS_FLOWER_BED",
@@ -831,7 +2080,11 @@
       4
     ],
     "groundMaterial": "WOOD_PLANKS_1",
-    "blended": false
+    "blended": false,
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "VARROCK_PLANT_PATCHES",
@@ -868,26 +2121,6 @@
     ],
     "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
     "blended": false
-  },
-  {
-    "name": "VARROCK_CASTLE_PATH_FIXES_1",
-    "area": "VARROCK_CASTLE_DIRT_PATH_FIXES_1",
-    "overlayIds": [
-      173
-    ],
-    "groundMaterial": "DIRT",
-    "blended": false,
-    "shiftLightness": 6
-  },
-  {
-    "name": "VARROCK_CASTLE_PATH_FIXES_2",
-    "area": "VARROCK_CASTLE_DIRT_PATH_FIXES_2",
-    "overlayIds": [
-      173
-    ],
-    "groundMaterial": "DIRT",
-    "blended": false,
-    "shiftLightness": 7
   },
   {
     "name": "VARROCK_CASTLE_FLOOR",
@@ -948,45 +2181,6 @@
     "uvScale": 1.5
   },
   {
-    "name": "BARBARIAN_VILLAGE_EAST_PATH_FIX_1",
-    "area": "BARBARIAN_VILLAGE_EAST_PATH_FIX",
-    "overlayIds": [
-      83
-    ],
-    "groundMaterial": "DIRT",
-    "shiftSaturation": 2
-  },
-  {
-    "name": "BARBARIAN_VILLAGE_EAST_PATH_FIX_2",
-    "area": "BARBARIAN_VILLAGE_EAST_PATH_FIX",
-    "overlayIds": [
-      2
-    ],
-    "groundMaterial": "GRAVEL",
-    "shiftSaturation": -1,
-    "shiftLightness": 4
-  },
-  {
-    "name": "EXAMCENTRE_FLOOR_FIX_1",
-    "area": "DIGSITE_EXAM_CENTRE",
-    "overlayIds": [
-      88
-    ],
-    "groundMaterial": "WORN_TILES",
-    "blended": false,
-    "shiftLightness": 2
-  },
-  {
-    "name": "EXAMCENTRE_FLOOR_FIX_2",
-    "area": "DIGSITE_EXAM_CENTRE",
-    "overlayIds": [
-      120
-    ],
-    "groundMaterial": "WORN_TILES",
-    "blended": false,
-    "shiftLightness": 2
-  },
-  {
     "name": "DIGSITE_DOCK",
     "area": "DIGSITE_DOCK",
     "overlayIds": [
@@ -1010,15 +2204,6 @@
       134
     ],
     "groundMaterial": "TILES_2X2_2_GLOSS",
-    "blended": false
-  },
-  {
-    "name": "AL_KHARID_WELL_FIX",
-    "area": "AL_KHARID_WELL",
-    "overlayIds": [
-      21
-    ],
-    "groundMaterial": "DIRT",
     "blended": false
   },
   {
@@ -1249,89 +2434,6 @@
     "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
-    "name": "FALADOR_EAST_BANK_PATH_FIX_2",
-    "area": "FALADOR_EAST_BANK_PATH_FIX_2",
-    "overlayIds": [
-      137
-    ],
-    "groundMaterial": "FALADOR_PATHS",
-    "blended": false,
-    "minHue": 7,
-    "maxHue": 7,
-    "minSaturation": 1,
-    "maxSaturation": 1,
-    "shiftLightness": 20
-  },
-  {
-    "name": "FALADOR_EAST_BANK_PATH_FIX_1",
-    "area": "FALADOR_EAST_BANK_PATH_FIX_1",
-    "overlayIds": [
-      137
-    ],
-    "groundMaterial": "FALADOR_PATHS",
-    "blended": false,
-    "minHue": 7,
-    "maxHue": 7,
-    "minSaturation": 1,
-    "maxSaturation": 1,
-    "shiftLightness": 16
-  },
-  {
-    "name": "FALADOR_TRIANGLE_DIRT_PATH_FIX_1",
-    "area": "FALADOR_TRIANGLE_PATH_FIX_1",
-    "overlayIds": [
-      2
-    ],
-    "groundMaterial": "GRAVEL",
-    "shiftLightness": 3
-  },
-  {
-    "name": "FALADOR_TRIANGLE_DIRT_PATH_FIX_2",
-    "area": "FALADOR_TRIANGLE_PATH_FIX_1",
-    "overlayIds": [
-      83
-    ],
-    "groundMaterial": "GRAVEL",
-    "shiftHue": -4,
-    "shiftSaturation": -1,
-    "shiftLightness": 5
-  },
-  {
-    "name": "FALADOR_TRIANGLE_PATH_PATH_FIX_1",
-    "area": "FALADOR_TRIANGLE_PATH_FIX_2",
-    "overlayIds": [
-      119
-    ],
-    "groundMaterial": "GRAVEL",
-    "shiftHue": -4,
-    "shiftSaturation": -1,
-    "shiftLightness": 2
-  },
-  {
-    "name": "FALADOR_SOUTH_PATH_FIX_1",
-    "area": "FALADOR_SOUTH_PATH_FIX",
-    "overlayIds": [
-      119
-    ],
-    "groundMaterial": "FALADOR_PATHS",
-    "minHue": 7,
-    "maxHue": 7,
-    "minSaturation": 1,
-    "maxSaturation": 1,
-    "shiftLightness": 19
-  },
-  {
-    "name": "FALADOR_SOUTH_PATH_FIX_2",
-    "area": "FALADOR_SOUTH_PATH_FIX",
-    "overlayIds": [
-      88
-    ],
-    "groundMaterial": "GRAVEL",
-    "shiftHue": -4,
-    "shiftSaturation": -1,
-    "shiftLightness": 2
-  },
-  {
     "name": "FALADOR_PATHS",
     "area": "FALADOR",
     "overlayIds": [
@@ -1342,7 +2444,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 15
+    "shiftLightness": 15,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "FALADOR_HAIRDRESSER_TILE_1",
@@ -1379,15 +2484,6 @@
     ],
     "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
-  },
-  {
-    "name": "FALADOR_PARTY_ROOM_STAIRS_FIX",
-    "area": "FALADOR_PARTY_ROOM_STAIRS_FIX",
-    "overlayIds": [
-      37
-    ],
-    "blended": false,
-    "maxLightness": 0
   },
   {
     "name": "FALADOR_BUILDING_FLOOR_1",
@@ -1526,49 +2622,6 @@
     "maxLightness": 30
   },
   {
-    "name": "EDGEVILLE_BANK_TILING_FIX_1",
-    "area": "EDGEVILLE_BANK_TILING",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "MARBLE_2_GLOSS",
-    "blended": false,
-    "blendedAsOpposite": true,
-    "minLightness": 22,
-    "maxLightness": 22
-  },
-  {
-    "name": "EDGEVILLE_BANK_PERIMETER_FIX",
-    "area": "EDGEVILLE_BANK_PERIMETER_FIX",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "MARBLE_2_GLOSS",
-    "minLightness": 30,
-    "maxLightness": 30
-  },
-  {
-    "name": "EDGEVILLE_BANK_WINDOW_FIX_BLEND",
-    "area": "EDGEVILLE_BANK_WINDOW_FIX",
-    "description": "For when ground blending is ENABLED",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "VARROCK_PATHS",
-    "replacements": {
-      "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blending"
-    },
-    "blended": false,
-    "minLightness": 29,
-    "maxLightness": 30
-  },
-  {
-    "name": "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND",
-    "area": "EDGEVILLE_BANK_WINDOW_FIX",
-    "description": "For when ground blending is DISABLED",
-    "groundMaterial": "VARROCK_PATHS"
-  },
-  {
     "name": "EDGEVILLE_BANK_PERIMETER",
     "area": "EDGEVILLE_BANK",
     "overlayIds": [
@@ -1578,7 +2631,10 @@
     "blended": false,
     "blendedAsOpposite": true,
     "minLightness": 30,
-    "maxLightness": 30
+    "maxLightness": 30,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EDGEVILLE_BANK_SURROUNDING_PATH",
@@ -1609,7 +2665,10 @@
     "groundMaterial": "TILES_2x2_1",
     "blended": false,
     "minLightness": 26,
-    "maxLightness": 26
+    "maxLightness": 26,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EDGEVILLE_MANS_HOUSE_FLOOR",
@@ -1676,8 +2735,12 @@
       12
     ],
     "groundMaterial": "VARROCK_PATHS",
+    "blendedAsOpposite": true,
     "minLightness": 32,
-    "maxLightness": 32
+    "maxLightness": 32,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "ABYSSAL_FLOOR_OVERLAY",
@@ -1796,20 +2859,11 @@
   },
   {
     "name": "TROLLHEIM_WALLS",
-    "area": "TROLLHEIM",
+    "area": "TROLL_COUNTRY",
     "overlayIds": [
       83
     ],
     "groundMaterial": "VERTICAL_DIRT"
-  },
-  {
-    "name": "WEISS_FIREPIT_FIX",
-    "area": "WEISS_FIRE_PIT",
-    "overlayIds": [
-      171
-    ],
-    "groundMaterial": "DIRT",
-    "blended": false
   },
   {
     "name": "WEISS_TENT_INTERIOR",
@@ -1871,65 +2925,6 @@
     "maxHue": 1
   },
   {
-    "name": "ASGARNIA_MOUNTAINS_VERTICAL_DIRT_FIX",
-    "area": "ASGARNIA_MOUNTAINS",
-    "overlayIds": [
-      22
-    ],
-    "groundMaterial": "VERTICAL_DIRT"
-  },
-  {
-    "name": "ASGARNIA_ICE_DUNGEON Water to Ice Fix",
-    "area": "ASGARNIA_ICE_DUNGEON",
-    "overlayIds": [
-      196
-    ],
-    "groundMaterial": "ICE_4",
-    "shiftLightness": 5,
-    "uvScale": 2,
-    "uvOrientation": -100
-  },
-  {
-    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix",
-    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
-    "description": "For when ground blending is ENABLED",
-    "overlayIds": [ 0, 59, 263 ],
-    "underlayIds": [ 59 ],
-    "groundMaterial": "SNOW_2",
-    "replacements": {
-      "ASGARNIA_ICE_DUNGEON Snow Tiles Fix UNBLEND": "!blending"
-    },
-    "shiftLightness": 27
-  },
-  {
-    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix UNBLEND",
-    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX",
-    "description": "For when ground blending is DISABLED",
-    "groundMaterial": "SNOW_2",
-    "shiftLightness": 0
-  },
-  {
-    "name": "ASGARNIA_ICE_DUNGEON Snow Tiles Fix 2",
-    "area": "ASGARNIA_ICE_DUNGEON_SNOW_FIX_2",
-    "overlayIds": [
-      0,
-      59,
-      263
-    ],
-    "underlayIds": [
-      59
-    ],
-    "groundMaterial": "SNOW_2"
-  },
-  {
-    "name": "ASGARNIA_ICE_DUNGEON Ice Tiles Fix",
-    "area": "ASGARNIA_ICE_DUNGEON_ICE_FIX",
-    "overlayIds": [
-      409
-    ],
-    "groundMaterial": "ICE_1_HIGHGLOSS"
-  },
-  {
     "name": "ICE_QUEENS_SYMBOL",
     "area": "ICE_QUEENS_DUNGEON",
     "overlayIds": [
@@ -1955,7 +2950,13 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": -2,
+    "blendedAsOpposite": true,
+    "uvScale": 1.25011,
+    "replacements": {
+      "SEERS_ELEMENTAL_WORKSHOP_HOUSE_171": "!blending"
+    }
   },
   {
     "name": "SEERS_ELEMENTAL_WORKSHOP_HOUSE_171",
@@ -1963,17 +2964,10 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS",
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": 3,
     "blended": false,
-    "shiftLightness": 3
-  },
-  {
-    "name": "SEERS_BAR_171_BLENDED",
-    "area": "SEERS_BAR_ENTRANCE",
-    "overlayIds": [
-      171
-    ],
-    "groundMaterial": "VARROCK_PATHS"
+    "uvScale": 1.25011
   },
   {
     "name": "SEERS_BAR_171",
@@ -1981,9 +2975,10 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "blended": false,
-    "shiftLightness": 3
+    "uvScale": 0.85,
+    "shiftLightness": 5
   },
   {
     "name": "SEERS_CAMELOT_CASTLE_BLENDED",
@@ -2030,13 +3025,15 @@
     "blended": false
   },
   {
-    "name": "SEERS_BANK_TILE_3",
+    "name": "SEERS_BANK_CARPET",
     "area": "SEERS_BANK",
     "overlayIds": [
-      8
+      8,
+      171
     ],
-    "groundMaterial": "MARBLE_1_GLOSS",
-    "blended": false
+    "groundMaterial": "CARPET",
+    "blended": false,
+    "shiftLightness": 2
   },
   {
     "name": "SEERS_HOUSE_FLOORS",
@@ -2211,23 +3208,6 @@
     "waterType": "MLM_WATER"
   },
   {
-    "name": "CATHERBY_BEACH_OBELISK_WATER_FIX",
-    "area": "CATHERBY_BEACH_OBELISK_WATER_FIX",
-    "overlayIds": [
-      6
-    ],
-    "waterType": "WATER_FLAT",
-    "blended": false
-  },
-  {
-    "name": "CATHERBY_BEACH_LADDER_FIX",
-    "area": "CATHERBY_BEACH_LADDER_FIX",
-    "overlayIds": [
-      11
-    ],
-    "blended": false
-  },
-  {
     "name": "CATHERBY_BANK_TILE_1",
     "area": "CATHERBY_BANK",
     "overlayIds": [
@@ -2260,8 +3240,11 @@
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS",
-    "shiftLightness": 6
+    "groundMaterial": "CARPET",
+    "shiftLightness": -11,
+    "uvScale": 1.4,
+    "minLightness": 5,
+    "blended": false
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_HOUSE_BLENDING",
@@ -2269,16 +3252,18 @@
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "VARROCK_PATHS",
+    "shiftLightness": 3
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_HOUSE",
-    "area": "EAST_ARDOUGNE_COBBLE_OFFICE",
+    "area": "EAST_ARDOUGNE_COBBLE_OFFICE_HOUSE",
     "overlayIds": [
       10
     ],
     "groundMaterial": "VARROCK_PATHS",
-    "blended": false
+    "blended": false,
+    "shiftLightness": 3
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_CHURCH",
@@ -2297,65 +3282,15 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "EAST_ARDOUGNE_PATH_BLENDING_FIX",
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "minHue": 11,
-    "maxHue": 11,
-    "minSaturation": 4,
-    "maxSaturation": 4,
-    "minLightness": 21,
-    "maxLightness": 21
-  },
-  {
-    "name": "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER",
-    "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT",
-    "replacements": {
-      "WINTER_GRASS": "blending"
-    }
-  },
-  {
-    "name": "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE",
-    "area": "EAST_ARDOUGNE_PATHING_FIXES",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "VARROCK_PATHS",
-    "shiftLightness": 6,
-    "replacements": {
-      "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER": "season == SeasonalTheme.WINTER",
-      "EAST_ARDOUGNE_PATH_BLENDING_FIX": "blending"
-    }
-  },
-  {
-    "name": "EAST_ARDOUGNE_DOCKS_FIX_5",
-    "area": "EAST_ARDOUGNE_DOCKS_FIX",
-    "overlayIds": [
-      5
-    ],
-    "groundMaterial": "WOOD_PLANKS_1",
-    "minLightness": 65,
-    "maxLightness": 65
-  },
-  {
-    "name": "EAST_ARDOUGNE_DOCKS_FIX_35",
-    "area": "EAST_ARDOUGNE_DOCKS_FIX",
-    "overlayIds": [
-      35
-    ],
-    "groundMaterial": "WOOD_PLANKS_1",
-    "minLightness": 65,
-    "maxLightness": 65
-  },
-  {
     "name": "EAST_ARDOUGNE_NORTH_BANK_11",
     "area": "EAST_ARDOUGNE_BANK_NORTH",
     "overlayIds": [
       11
     ],
-    "groundMaterial": "CONCRETE",
+    "groundMaterial": "CARPET",
     "blended": false,
-    "minLightness": 40,
-    "maxLightness": 40
+    "uvScale": 1.4,
+    "shiftLightness": -2
   },
   {
     "name": "EAST_ARDOUGNE_CASTLE_DIRT_FIX",
@@ -2376,7 +3311,10 @@
     "groundMaterial": "CONCRETE",
     "blended": false,
     "minLightness": 40,
-    "maxLightness": 40
+    "maxLightness": 40,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EAST_ARDOUGNE_CASTLE_PATH_FIX_BLENDING",
@@ -2407,7 +3345,8 @@
     "groundMaterial": "VARROCK_PATHS",
     "shiftLightness": 6,
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
     }
   },
   {
@@ -2436,7 +3375,10 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "minLightness": 33,
-    "maxLightness": 33
+    "maxLightness": 33,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EAST_ARDOUGNE_BRIDGE_TEXTURE",
@@ -2446,7 +3388,11 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "minLightness": 33,
-    "maxLightness": 33
+    "maxLightness": 33,
+    "replacements": {
+      "NONE": "!textures",
+      "WINTER_EAST_ARDOUGNE_BRIDGE": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "EAST_ARDOUGNE_HANDELMORT_TEXTURE",
@@ -2456,7 +3402,10 @@
     ],
     "groundMaterial": "BRICK_PATHS",
     "minLightness": 33,
-    "maxLightness": 33
+    "maxLightness": 33,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EAST_ARDOUGNE_HANDELMORT_BALCONY_TEXTURE",
@@ -2477,16 +3426,40 @@
     "groundMaterial": "VARIED_DIRT_SHINY"
   },
   {
-    "name": "WEST_ARDOUGNE_CARPET_FIX_1",
-    "area": "WEST_ARDOUGNE_CARPET_FIX",
-    "overlayIds": [
-      14
+    "name": "WIZARD_CROMPERTY_PATH_1",
+    "area": "WIZARD_CROMPERTY_PATH_1",
+    "underlayIds": [
+      48,
+      64
     ],
-    "groundMaterial": "CARPET",
+    "overlayIds": [ 10 ],
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "shiftLightness": 12,
     "blended": false,
-    "shiftHue": 1,
-    "shiftSaturation": 3,
-    "shiftLightness": -2
+    "blendedAsOpposite": true,
+    "replacements": {
+      "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "WIZARD_CROMPERTY_PATH_2",
+    "area": "WIZARD_CROMPERTY_PATH_2",
+    "underlayIds": [
+      48,
+      64
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "shiftLightness": 12,
+    "blendedAsOpposite": true,
+    "replacements": {
+      "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
+    }
   },
   {
     "name": "WEST_ARDOUGNE_COBBLE_HOUSES",
@@ -2497,16 +3470,56 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "CLOCK_TOWER_DUNGEON_COLORED_TILES_FIX",
-    "area": "CLOCK_TOWER_DUNGEON_COLORED_TILES",
-    "overlayIds": [
-      9,
-      11,
-      13,
-      18
-    ],
+    "name": "Witchaven Mayors house floor - Overlay",
+    "area": "WITCHAVEN_INTERIORS",
     "groundMaterial": "MARBLE_1",
-    "blended": false
+    "blended": false,
+    "overlayIds": [ 38 ]
+  },
+  {
+    "name": "Witchaven Mayors house floor - Underlay",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "MARBLE_2",
+    "blended": false,
+    "underlayIds": [ 9 ],
+    "minLightness": 35,
+    "maxLightness": 35
+  },
+  {
+    "name": "Witchaven Bait Shop Wooden Floor",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "shiftSaturation": -3,
+    "shiftLightness": 8,
+    "overlayIds": [ 91 ],
+    "underlayIds": [ 126 ]
+  },
+  {
+    "name": "Witchaven Interior Ground Floor",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "overlayIds": [ 26, 106 ]
+  },
+  {
+    "name": "Witchaven Interior Wooden Floor",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "overlayIds": [ 171, 172 ],
+    "underlayIds": [ 124 ]
+  },
+  {
+    "name": "WITCHAVEN_CHUCK_BRICKS",
+    "area": "WITCHAVEN_CHURCH_EXTERIOR_TILES",
+    "overlayIds": [
+      106
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "replacements": {
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "WITCHAVEN_PATHS",
@@ -2514,7 +3527,10 @@
     "overlayIds": [
       106
     ],
-    "groundMaterial": "VARIED_DIRT"
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "KHAZARD_BATTLEFIELD_COBBLE_INDOORS",
@@ -2593,17 +3609,10 @@
     "shiftHue": 3,
     "shiftSaturation": -3,
     "minLightness": 35,
-    "maxLightness": 35
-  },
-  {
-    "name": "YANILLE_MAGIC_GUILD_FLOOR_FIX",
-    "area": "YANILLE_MAGIC_GUILD_FLOORS",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
-    "minLightness": 30,
-    "maxLightness": 30
+    "maxLightness": 35,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "GUTANOTH_CAVE",
@@ -2615,87 +3624,31 @@
     "blended": false
   },
   {
-    "name": "FELDIP_HILLS_HUNTER_OVERLAY",
-    "area": "FELDIP_HILLS_SOUTHERN_REGION",
-    "overlayIds": [
-      29
-    ],
-    "groundMaterial": "GRASS_1"
-  },
-  {
-    "name": "YANILLE_WATCHTOWER_ARCHWAY_FIX_1",
-    "area": "YANILLE_WATCHTOWER_BOTTOM_DOORWAY",
-    "overlayIds": [
-      3
-    ],
-    "groundMaterial": "WORN_TILES"
-  },
-  {
-    "name": "YANILLE_WATCHTOWER_ARCHWAY_FIX_2",
-    "area": "YANILLE_WATCHTOWER_BOTTOM_DOORWAY",
-    "overlayIds": [
-      4
-    ],
-    "groundMaterial": "WORN_TILES"
-  },
-  {
-    "name": "YANILLE_WATCHTOWER_BOTTOM_FLOOR_FIX_3",
+    "name": "YANILLE_WATCHTOWER_BOTTOM_FLOOR_TILES",
     "area": "YANILLE_WATCHTOWER_BOTTOM",
     "overlayIds": [
-      3
-    ],
-    "groundMaterial": "WORN_TILES",
-    "blended": false
-  },
-  {
-    "name": "YANILLE_WATCHTOWER_BOTTOM_FLOOR_FIX_4",
-    "area": "YANILLE_WATCHTOWER_BOTTOM",
-    "overlayIds": [
+      3,
       4
     ],
     "groundMaterial": "WORN_TILES",
     "blended": false
   },
   {
-    "name": "YANILLE_WATCHTOWER_MIDDLE_FLOOR_FIX_3",
+    "name": "YANILLE_WATCHTOWER_MIDDLE_FLOOR_TILES",
     "area": "YANILLE_WATCHTOWER_MIDDLE",
     "overlayIds": [
-      3
-    ],
-    "groundMaterial": "WORN_TILES",
-    "blended": false
-  },
-  {
-    "name": "YANILLE_WATCHTOWER_MIDDLE_FLOOR_FIX_4",
-    "area": "YANILLE_WATCHTOWER_MIDDLE",
-    "overlayIds": [
+      3,
       4
     ],
     "groundMaterial": "WORN_TILES",
     "blended": false
   },
   {
-    "name": "YANILLE_WATCHTOWER_TOP_FLOOR_FIX_1",
+    "name": "YANILLE_WATCHTOWER_TOP_FLOOR_TILES",
     "area": "YANILLE_WATCHTOWER_TOP",
     "overlayIds": [
-      1
-    ],
-    "groundMaterial": "MARBLE_1_GLOSS",
-    "blended": false
-  },
-  {
-    "name": "YANILLE_WATCHTOWER_TOP_FLOOR_FIX_2",
-    "area": "YANILLE_WATCHTOWER_TOP",
-    "overlayIds": [
-      2
-    ],
-    "groundMaterial": "MARBLE_1_GLOSS",
-    "blended": false
-  },
-  {
-    "name": "YANILLE_WATCHTOWER_TOP_FLOOR_FIX_3",
-    "area": "YANILLE_WATCHTOWER_TOP",
-    "overlayIds": [
+      1,
+      2,
       3
     ],
     "groundMaterial": "MARBLE_1_GLOSS",
@@ -2720,80 +3673,6 @@
     "blended": false
   },
   {
-    "name": "DRAYNOR_WOM_FRONT_FIX_0",
-    "area": "DRAYNOR_WOM_HOUSE_FRONT",
-    "overlayIds": [
-      0
-    ],
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "DRAYNOR_WOM_FRONT_FIX_10",
-    "area": "DRAYNOR_WOM_HOUSE_FRONT",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "minHue": 8,
-    "maxHue": 8,
-    "minSaturation": 4,
-    "maxSaturation": 4,
-    "minLightness": 15,
-    "maxLightness": 15
-  },
-  {
-    "name": "DRAYNOR_PATH_BLENDING_FIX",
-    "area": "DRAYNOR_PATH_BLENDING_FIXES",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "minHue": 9,
-    "maxHue": 9,
-    "minSaturation": 5,
-    "maxSaturation": 5,
-    "minLightness": 15,
-    "maxLightness": 15,
-    "replacements": {
-      "DRAYNOR_PATH_BLENDING_FIX_NO_BLENDING": "!blending"
-    }
-  },
-  {
-    "name": "DRAYNOR_PATH_BLENDING_FIX_NO_BLENDING",
-    "area": "DRAYNOR_PATH_BLENDING_FIXES",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "GRAVEL"
-  },
-  {
-    "name": "DRAYNOR_NEDS_PATH_FIX",
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "minHue": 9,
-    "maxHue": 9,
-    "minSaturation": 5,
-    "maxSaturation": 5,
-    "minLightness": 18,
-    "maxLightness": 18,
-    "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "DRAYNOR_NEDS_PATH_FIX_ENABLE",
-    "area": "DRAYNOR_NEDS_PATH_FIXES",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "GRAVEL",
-    "replacements": {
-      "DRAYNOR_NEDS_PATH_FIX": "blending"
-    }
-  },
-  {
     "name": "DRAYNOR_BANK_FLOOR",
     "area": "DRAYNOR_BANK",
     "overlayIds": [
@@ -2809,77 +3688,6 @@
     "maxSaturation": 0,
     "minLightness": 22,
     "maxLightness": 22
-  },
-  {
-    "name": "DRAYNOR_BANK_FRONT_FIX",
-    "area": "DRAYNOR_BANK_FRONT_PATH",
-    "overlayIds": [
-      0
-    ],
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "replacements": {
-      "DRAYNOR_BANK_ENTRANCE_PATH": "blending",
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "DRAYNOR_BANK_PATH_FIX_10_DARK",
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "minHue": 9,
-    "maxHue": 9,
-    "minSaturation": 4,
-    "maxSaturation": 4,
-    "minLightness": 8,
-    "maxLightness": 8,
-    "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "DRAYNOR_BANK_PATH_FIX_DARK_ENABLE",
-    "area": "DRAYNOR_BANK_PATH_FIX_DARK",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "GRAVEL",
-    "replacements": {
-      "DRAYNOR_BANK_PATH_FIX_10_DARK": "blending"
-    }
-  },
-  {
-    "name": "DRAYNOR_BANK_PATH_FIX_10_LIGHT",
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "minHue": 9,
-    "maxHue": 9,
-    "minSaturation": 5,
-    "maxSaturation": 5,
-    "minLightness": 18,
-    "maxLightness": 18,
-    "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "DRAYNOR_BANK_PATH_FIX_LIGHT_ENABLE",
-    "area": "DRAYNOR_BANK_PATH_FIX_LIGHT",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "GRAVEL",
-    "replacements": {
-      "DRAYNOR_BANK_PATH_FIX_10_LIGHT": "blending"
-    }
-  },
-  {
-    "name": "DRAYNOR_BANK_PATH_FIX_0",
-    "area": "DRAYNOR_PATH_BLENDING_FIXES",
-    "overlayIds": [
-      0
-    ],
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
-    }
   },
   {
     "name": "DRAYNOR_MANS_HOUSE_FLOOR",
@@ -2953,15 +3761,21 @@
   {
     "name": "DRAYNOR_MANOR_ENTRANCE_PATH",
     "area": "DRAYNOR_MANOR",
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "minLightness": 12,
+    "maxLightness": 14,
+    "uvOrientation": 488,
     "overlayIds": [
       2,
+      11,
       90,
       117,
       120,
       127,
       132
-    ],
-    "groundMaterial": "VARROCK_PATHS"
+    ]
   },
   {
     "name": "WIZARDS_TOWER_PATH",
@@ -2971,37 +3785,6 @@
     ],
     "groundMaterial": "BRICK_PATHS",
     "shiftSaturation": -1
-  },
-  {
-    "name": "WIZARDS_TOWER_PATH_BLEND_FIX",
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "minHue": 10,
-    "maxHue": 10,
-    "minSaturation": 5,
-    "maxSaturation": 5,
-    "minLightness": 19,
-    "maxLightness": 19
-  },
-  {
-    "name": "WIZARDS_TOWER_PATH_BLEND_FIX_WINTER",
-    "groundMaterial": "BRICK_PATHS",
-    "shiftSaturation": -1,
-    "replacements": {
-      "WINTER_GRASS": "blending"
-    }
-  },
-  {
-    "name": "WIZARDS_TOWER_PATH_BLEND_FIX_TOGGLE",
-    "area": "WIZARD_TOWER_PATH_PARTIAL_TILES",
-    "overlayIds": [
-      164
-    ],
-    "groundMaterial": "BRICK_PATHS",
-    "shiftSaturation": -1,
-    "replacements": {
-      "WIZARDS_TOWER_PATH_BLEND_FIX_WINTER": "season == SeasonalTheme.WINTER",
-      "WIZARDS_TOWER_PATH_BLEND_FIX": "blending"
-    }
   },
   {
     "name": "MISTHALIN_MYSTERY_MANOR_TILE_DARK_1",
@@ -3101,14 +3884,6 @@
       "SEASONAL_DIRT": "h == 8 && s <= 2 && l <= 71",
       "SEASONAL_GRASS": "h == 8 && s >= 3 && l <= 71"
     }
-  },
-  {
-    "name": "JAGGED_STONE_PATH",
-    "area": "OVERWORLD",
-    "overlayIds": [
-      117
-    ],
-    "groundMaterial": "VARROCK_PATHS"
   },
   {
     "name": "CASTLE_WARS_LOBBY_FLOOR",
@@ -3220,12 +3995,93 @@
     "underlayIds": [ 92, 93, 94, 96]
   },
   {
-    "name": "SLEPE_PATHS",
-    "area": "SLEPE",
+    "name": "DARKMEYER_PATH_UPPER",
+    "area": "DARKMEYER_UPPER",
     "overlayIds": [
       11
     ],
-    "groundMaterial": "GRAVEL"
+    "groundMaterial": "DARKMEYER_BRICK_PATH_BLEND",
+    "shiftLightness": 3,
+    "minLightness": 12,
+    "replacements": {
+      "DARKMEYER_PATH_UPPER_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "DARKMEYER_PATH_UPPER_NO_BLENDING",
+    "area": "DARKMEYER_UPPER",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "DARKMEYER_BRICK_PATH",
+    "shiftLightness": 3,
+    "uvScale": 0.760009,
+    "minLightness": 12
+  },
+  {
+    "name": "DARKMEYER_PATH_MIDDLE",
+    "area": "DARKMEYER_MIDDLE",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "PLAIN_DIRT",
+    "minLightness": 8
+  },
+  {
+    "name": "DARKMEYER_PATH_LOWER",
+    "area": "DARKMEYER_LOWER",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "PACKED_EARTH",
+    "shiftLightness": -2
+  },
+  {
+    "name": "DARKMEYER_UPPER_HOUSE_FLOORS",
+    "area": "DARKMEYER_UPPER",
+    "overlayIds": [
+      49
+    ],
+    "groundMaterial": "MARBLE_2_GLOSS",
+    "blended": false
+  },
+  {
+    "name": "DARKMEYER_UPPER_HOUSE_ROOFS",
+    "area": "DARKMEYER_UPPER_HOUSE_ROOFS",
+    "underlayIds": [
+      57
+    ],
+    "groundMaterial": "TILES_2x2_1",
+    "blended": false,
+    "shiftLightness": 12
+  },
+  {
+    "name": "DARKMEYER_MIDDLE_HOUSE_FLOORS",
+    "area": "DARKMEYER_MIDDLE",
+    "overlayIds": [
+      49
+    ],
+    "groundMaterial": "GRUNGE_3",
+    "blended": false
+  },
+  {
+    "name": "DARKMEYER_MIDDLE_HOUSE_ROOFS",
+    "area": "DARKMEYER_MIDDLE_HOUSE_ROOFS",
+    "underlayIds": [
+      57
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "blended": false,
+    "shiftLightness": 5,
+    "uvScale": 1.4
+  },
+  {
+    "name": "DARKMEYER_LOWER_HOUSE_FLOORS",
+    "area": "DARKMEYER_LOWER",
+    "overlayIds": [
+      49
+    ],
+    "groundMaterial": "GRUNGE"
   },
   {
     "name": "ABANDONED_MINE_ROCK",
@@ -3246,12 +4102,19 @@
     "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
+    "name": "TRUE_BLOOD_ALTAR_CRYSTAL_POOL",
+    "area": "TRUE_BLOOD_ALTAR_CRYSTAL_POOL",
+    "overlayIds": [
+      72
+    ]
+  },
+  {
     "name": "TRUE_BLOOD_ALTAR_BLOOD",
     "area": "TRUE_BLOOD_ALTAR",
     "overlayIds": [
       72
     ],
-    "waterType": "BLOOD",
+    "waterType": "BLOOD_FLAT",
     "blended": false
   },
   {
@@ -3290,6 +4153,75 @@
     "waterType": "BLOOD"
   },
   {
+    "name": "Wilderness - Dirt without snow",
+    "area": "Wilderness areas with lava in them",
+    "underlayIds": [
+      57,
+      148,
+      149,
+      150
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Wilderness - Dirt by lava",
+    "area": "WILDERNESS",
+    "underlayIds": [
+      72
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "SEASONAL_DIRT": [
+        "h > 0 && s > 0"
+      ]
+    }
+  },
+  {
+    "name": "Wilderness - Dirt - Seasonal",
+    "area": "WILDERNESS",
+    "underlayIds": [
+      147,
+      148,
+      162,
+      163,
+      164,
+      165,
+      167,
+      168,
+      169
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "Wilderness Chaos Temple - Tiles",
+    "area": "WILDERNESS_CHAOS_TEMPLE",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "shiftLightness": -1,
+    "blended": false,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Wilderness Chaos Temple - Carpet",
+    "area": "WILDERNESS_CHAOS_TEMPLE",
+    "overlayIds": [
+      132
+    ],
+    "groundMaterial": "CARPET",
+    "blended": false,
+    "shiftLightness": 10,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "ARANDAR_PATHS",
     "area": "ARANDAR",
     "overlayIds": [
@@ -3297,7 +4229,10 @@
     ],
     "groundMaterial": "SAND_BRICK",
     "shiftSaturation": -2,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LLETYA_WOOD_FLOORS",
@@ -3309,12 +4244,44 @@
     "uvScale": 1.25
   },
   {
+    "name": "PRIFDDINAS_INTERIORS",
+    "area": "PRIFDDINAS_INTERIORS",
+    "overlayIds": [ 42, 106 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "shiftLightness": 10,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "PRIFDDINAS_INTERIORS_RAISED",
+    "area": "PRIFDDINAS_INTERIORS_RAISED",
+    "overlayIds": [ 42, 106 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvScale": 1.25
+  },
+  {
     "name": "TIRANNWN_PATHS",
     "area": "TIRANNWN",
     "overlayIds": [
       106
     ],
     "groundMaterial": "GRASSY_DIRT"
+  },
+  {
+    "name": "PRIFDDINAS_TEMPLE_FLOOR",
+    "area": "PRIFDDINAS_TEMPLE_FLOOR_FIX",
+    "overlayIds": [ 118 ],
+    "underlayIds": [ 143 ],
+    "groundMaterial": "CARPET",
+    "blendedAsOpposite": true
+  },
+  {
+    "name": "PRIFDDINAS_GRASS",
+    "area": "PRIFDDINAS",
+    "underlayIds": [ 48, 50, 67, 143 ],
+    "groundMaterial": "OVERWORLD_GRASS_1"
   },
   {
     "name": "Grand Library Floor",
@@ -3367,16 +4334,6 @@
     ],
     "waterType": "SWAMP_WATER_FLAT",
     "blended": false
-  },
-  {
-    "name": "FOSSIL_ISLAND_CENTRAL_BANK_FIX",
-    "area": "FOSSIL_ISLAND_CENTRAL_BANK_FIX",
-    "overlayIds": [
-      11
-    ],
-    "groundMaterial": "GRAVEL",
-    "blended": false,
-    "shiftLightness": -2
   },
   {
     "name": "FOSSIL_ISLAND_HILL_HOUSE_INTERIOR",
@@ -3441,22 +4398,13 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
-    "name": "KOUREND_CASTLE_UNDER_STATUE_FIX",
-    "area": "GREAT_KOUREND_STATUE",
-    "overlayIds": [
-      1
-    ],
-    "groundMaterial": "BRICK_PATHS",
-    "blended": false,
-    "uvScale": 1.2
-  },
-  {
-    "name": "KOUREND_CASTLE_BLEND_FIX",
-    "area": "KOUREND_CASTLE_ENTRANCE_FIX",
+    "name": "KOUREND_CASTLE_CARPET",
+    "area": "KOUREND_CASTLE_CARPET",
     "overlayIds": [
       11
     ],
-    "groundMaterial": "VARROCK_PATHS",
+    "groundMaterial": "CARPET",
+    "uvScale": 1.5,
     "blended": false
   },
   {
@@ -3465,7 +4413,18 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILES_2x2_1",
+    "shiftLightness": 2,
+    "blended": false
+  },
+  {
+    "name": "KOUREND_CASTLE_BACK_COURTYARD",
+    "area": "KOUREND_CASTLE_BACK_COURTYARD",
+    "underlayIds": [
+      66,
+      72
+    ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "KOUREND_CASTLE_GUARDPOSTS_FLOORS",
@@ -3498,80 +4457,6 @@
       11
     ],
     "groundMaterial": "VARROCK_PATHS"
-  },
-  {
-    "name": "KOUREND_GREAT_STATUE_BLEND_FIX_1",
-    "area": "GREAT_KOUREND_STATUE",
-    "overlayIds": [
-      108
-    ],
-    "groundMaterial": "GRASS_1"
-  },
-  {
-    "name": "KOUREND_GREAT_STATUE_BLEND_FIX_2",
-    "area": "GREAT_KOUREND_STATUE",
-    "overlayIds": [
-      11
-    ],
-    "groundMaterial": "GRASS_1",
-    "blended": false
-  },
-  {
-    "name": "HOSIDIUS_WELL_BLEND_FIX",
-    "area": "HOSIDIUS_WELL",
-    "overlayIds": [
-      137
-    ],
-    "groundMaterial": "BRICK_PATHS",
-    "blended": false
-  },
-  {
-    "name": "HOSIDIUS_STAIRS_BLEND_FIX",
-    "area": "HOSIDIUS_STAIRS",
-    "overlayIds": [
-      137
-    ],
-    "groundMaterial": "BRICK_PATHS",
-    "blended": false
-  },
-  {
-    "name": "HOSIDIUS_MAGIC_TREE_BLEND_FIX",
-    "area": "HOSIDIUS",
-    "overlayIds": [
-      159
-    ],
-    "groundMaterial": "DIRT",
-    "blended": false,
-    "replacements": {
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "SHAYZIEN_EAST_PATH_FIX",
-    "area": "SHAYZIEN_EAST_ENTRANCE_BLEND_FIX",
-    "overlayIds": [
-      11
-    ],
-    "groundMaterial": "VARROCK_PATHS",
-    "blended": false
-  },
-  {
-    "name": "XERICS_LOOKOUT_TILE",
-    "area": "XERICS_LOOKOUT",
-    "overlayIds": [
-      2,
-      50
-    ],
-    "groundMaterial": "TILES_2x2_2",
-    "blended": false
-  },
-  {
-    "name": "HOSIDIUS_STONE_FLOOR",
-    "area": "HOSIDIUS",
-    "overlayIds": [
-      123
-    ],
-    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "BLOOD_ALTAR_BLOOD",
@@ -3652,8 +4537,20 @@
     "overlayIds": [
       163
     ],
-    "groundMaterial": "DIRT",
+    "groundMaterial": "DIRTY_MARBLE",
     "blended": false
+  },
+  {
+    "name": "MOUNT_QUIDAMORTEM_PATH",
+    "area": "MOUNT_QUIDAMORTEM_PATH",
+    "overlayIds": [
+      76
+    ],
+    "groundMaterial": "GRAVEL",
+    "shiftLightness": 5,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LIZARDMAN_TEMPLE_WATER",
@@ -3686,8 +4583,15 @@
     "blended": false
   },
   {
+    "area": "Kebos Interior",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
     "name": "OVERLAY_KOUREND_PATH",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       133
     ],
@@ -3696,7 +4600,7 @@
   },
   {
     "name": "OVERLAY_ZEAH_PATHS",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       11,
       50
@@ -3773,10 +4677,7 @@
     "groundMaterial": "TERRACOTTA_FLOOR",
     "minLightness": 23,
     "shiftLightness": 2,
-    "blended": false,
-    "replacements": {
-      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
-    }
+    "blended": false
   },
   {
     "name": "Aldarin Terracotta Floor - Red",
@@ -3806,10 +4707,7 @@
     "uvOrientation": 512,
     "uvScale": 1.2,
     "minLightness": 14,
-    "maxLightness": 16,
-    "replacements": {
-      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
-    }
+    "maxLightness": 16
   },
   {
     "name": "Aldarin Wooden Floor - 81 ",
@@ -3835,14 +4733,42 @@
     "name": "Aldarin Dirt hills Overlay",
     "area": "ALDARIN",
     "overlayIds": [ 377 ],
-    "groundMaterial": "VERTICAL_DIRT",
+    "groundMaterial": "VERTICAL_DIRT"
+  },
+  {
+    "name": "Aldarin - WARM_REGION - Complex",
+    "area": "ALDARIN",
+    "underlayIds": [
+      26,
+      33,
+      48,
+      50,
+      52,
+      63,
+      68,
+      92,
+      94,
+      112
+    ],
+    "groundMaterial": "DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+      "DEFAULT_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "DEFAULT_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "DEFAULT_GRASS": [
+        "h == 6 && s >= 5",
+        "h == 8 && s >= 6 && l >= 2",
+        "h == 9 && s == 3 && l >= 49",
+        "h == 9 && s >= 4 && l >= 31",
+        "h >= 9 && s >= 5",
+        "h >= 10 && s >= 2",
+        "h >= 11"
+      ],
+      "DEFAULT_DIRT": true
     }
   },
   {
     "name": "FORTIS_EARTHEN_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 326 ],
     "groundMaterial": "TERRACOTTA_FLOOR",
     "uvScale": 1.1,
@@ -3850,7 +4776,7 @@
   },
   {
     "name": "FORTIS_MARBLE_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 327 ],
     "groundMaterial": "MARBLE_2",
     "uvScale": 1.1,
@@ -3865,14 +4791,14 @@
   },
   {
     "name": "FORTIS_RED_DIRT",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 324 ],
     "groundMaterial": "DIRT",
     "uvScale": 1.1
   },
   {
     "name": "FORTIS_HOUSE_TILE_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 123 ],
     "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
     "uvScale": 1.1,
@@ -3880,7 +4806,7 @@
   },
   {
     "name": "FORTIS_CASTLE_WALLS_BRICK_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 159 ],
     "groundMaterial": "BRICK_PATHS",
     "uvScale": 1.1,
@@ -3912,7 +4838,10 @@
     "blendedAsOpposite": true,
     "shiftHue": 8,
     "shiftSaturation": 3,
-    "shiftLightness": -20
+    "shiftLightness": -20,
+    "replacements": {
+      "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_BLENDING": "!blending"
+    }
   },
   {
     "name": "TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX",
@@ -4002,7 +4931,7 @@
     "overlayIds": [
       104
     ],
-    "waterType": "ICE_FLAT",
+    "waterType": "LIGHT_BLUE_WATER",
     "blended": false
   },
   {
@@ -4015,8 +4944,26 @@
     "blended": false
   },
   {
+    "name": "Mount Karuulm Mountainside",
+    "area": "MOUNT_KARUULM",
+    "overlayIds": [ 114, 115 ],
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR"
+  },
+  {
+    "name": "Mount Karuulm - Tunnels",
+    "area": "KOUREND",
+    "overlayIds": [ 116 ],
+    "blended": false,
+    "setLightness": 1
+  },
+  {
     "name": "ZEAH_DIRT_OVERLAY",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       114,
       148
@@ -4034,14 +4981,6 @@
     ],
     "groundMaterial": "WOOD_PLANKS_1",
     "blended": false
-  },
-  {
-    "name": "CRANDOR_GROUND_1",
-    "area": "CRANDOR",
-    "overlayIds": [
-      11
-    ],
-    "groundMaterial": "GRAVEL"
   },
   {
     "name": "FISHING_TRAWLER_BOAT_PORT_KHAZARD_FIX",
@@ -4219,6 +5158,53 @@
     ],
     "waterType": "WATER",
     "blended": false
+  },
+  {
+    "name": "VOID_OUTPOST_BEACH",
+    "groundMaterial": "SAND",
+    "maxLightness": 52
+  },
+  {
+    "name": "Void Knight Outpost - Complex Tiles",
+    "area": "VOID_KNIGHTS_OUTPOST",
+    "underlayIds": [
+      48,
+      53,
+      63,
+      64,
+      68
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": [
+        "h == 9 && s >= 5",
+        "h >= 10"
+      ],
+      "DEFAULT_DIRT": "h <= 8",
+      "VOID_OUTPOST_BEACH": true
+    }
+  },
+  {
+    "name": "Pest Control - Complex Tiles",
+    "area": "PEST_CONTROL",
+    "underlayIds": [
+      49,
+      52,
+      53,
+      59,
+      63,
+      68,
+      121,
+      142,
+      150
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": [
+        "h >= 9 && s >= 4 && h <= 12",
+        "h >= 10 && h <= 12 && s >= 3"
+      ],
+      "DEFAULT_SAND": "h == 8 && s == 3 && l > 30",
+      "DEFAULT_DIRT": true
+    }
   },
   {
     "name": "BA_WAITING_ROOM_NUMBERS",
@@ -4426,12 +5412,12 @@
     "blended": false
   },
   {
-    "name": "POC_FANCY_BRICK_INTERIOR",
+    "name": "POH_FANCY_BRICK_INTERIOR",
     "area": "PLAYER_OWNED_HOUSE",
     "overlayIds": [ 79 ],
-    "groundMaterial": "BRICK_PATHS",
+    "groundMaterial": "TILES_2x2_2",
     "blended": false,
-    "shiftLightness": 6
+    "shiftLightness": 3
   },
   {
     "name": "LAND_OF_GOBLINS_WATER_FIX",
@@ -4452,40 +5438,6 @@
       72
     ],
     "groundMaterial": "STONE_SCROLLING"
-  },
-  {
-    "name": "PRISON_PETE_TILE_1",
-    "area": "RANDOM_EVENT_PRISON_PETE",
-    "overlayIds": [
-      2
-    ],
-    "groundMaterial": "MARBLE_1",
-    "blended": false
-  },
-  {
-    "name": "PRISON_PETE_TILE_2",
-    "area": "RANDOM_EVENT_PRISON_PETE",
-    "overlayIds": [
-      131
-    ],
-    "groundMaterial": "MARBLE_2",
-    "blended": false
-  },
-  {
-    "name": "PRISON_PETE_PATH",
-    "area": "RANDOM_EVENT_PRISON_PETE",
-    "overlayIds": [
-      133
-    ],
-    "groundMaterial": "DIRT"
-  },
-  {
-    "name": "CLASSROOM",
-    "area": "RANDOM_EVENT_CLASSROOM",
-    "overlayIds": [
-      102
-    ],
-    "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
     "name": "ELID_CAVE_WATER_FIX",
@@ -4568,8 +5520,24 @@
       98
     ],
     "replacements": {
-      "DEFAULT_SNOW": "h >= 17 || s == 0",
-      "DEFAULT_DIRT": "h == 7 || s == 1"
+      "SEASONAL_SNOW": "h >= 17 || s == 0",
+      "SEASONAL_DIRT": true
+    }
+  },
+  {
+    "name": "PIRATES_COVE_COMPLEX",
+    "area": "PIRATES_COVE",
+    "underlayIds": [
+      58,
+      59,
+      97,
+      98,
+      112
+    ],
+    "replacements": {
+      "SEASONAL_GRUNGE": "s == 0 && l <= 39",
+      "SEASONAL_SNOW": "h >= 17 || s == 0",
+      "SEASONAL_DIRT": true
     }
   },
   {
@@ -4715,10 +5683,13 @@
     "overlayIds": [
       33
     ],
-    "groundMaterial": "MARBLE_1_GLOSS",
+    "groundMaterial": "MARBLE_4_GLOSS",
+    "shiftLightness": 10,
+    "uvScale": 1.33,
     "blended": false,
     "replacements": {
-      "SNOW_2": "season == SeasonalTheme.WINTER"
+      "SNOW_2": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
     }
   },
   {
@@ -4739,17 +5710,13 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
-    "name": "VARROCK_PATHS",
-    "area": "OVERWORLD",
+    "name": "THE_ONYX_CREST_CLIFF_FIX",
+    "area": "THE_ONYX_CREST",
     "overlayIds": [
-      11,
-      171,
-      179
+      11
     ],
-    "groundMaterial": "VARROCK_PATHS",
-    "replacements": {
-      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
-    }
+    "groundMaterial": "PACKED_EARTH",
+    "uvScale": 1.1
   },
   {
     "name": "SOUL_WARS_DIRT_PATH",
@@ -4815,7 +5782,7 @@
     "area": "Ruins of Tapoyauik",
     "underlayIds": [ 18, 227, 228, 229 ],
     "groundMaterial": "SNOW_1",
-    "shiftLightness": 30,
+    "shiftLightness": 27,
     "shiftHue": 5,
     "maxHue": 38,
     "replacements": {
@@ -4827,7 +5794,7 @@
     "area": "Ruins of Tapoyauik",
     "underlayIds": [ 58, 72, 87 ],
     "groundMaterial": "SNOW_1",
-    "shiftLightness": 30,
+    "shiftLightness": 27,
     "shiftHue": 5,
     "maxHue": 38
   },
@@ -4836,7 +5803,7 @@
     "area": "Ruins of Tapoyauik",
     "overlayIds": [ 263, 379 ],
     "groundMaterial": "SNOW_1",
-    "shiftLightness": 25
+    "shiftLightness": 22
   },
   {
     "name": "Ruins of Tapoyauik Water",
@@ -4861,7 +5828,6 @@
     "name": "Amoxliatl Arena Snow Fix",
     "area": "AMOXLIATL_ARENA_SNOW_FIX",
     "overlayIds": [ 183, 184, 389, 390, 391, 392 ],
-    "maxLightness": 40,
     "groundMaterial": "SNOW_1"
   },
   {
@@ -4869,7 +5835,7 @@
     "area": "AMOXLIATL_ARENA",
     "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
     "groundMaterial": "SNOW_1",
-    "shiftLightness": 20,
+    "shiftLightness": 10,
     "shiftHue": 5,
     "maxHue": 38,
     "replacements": {
@@ -4882,8 +5848,8 @@
     "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
     "groundMaterial": "SNOW_1",
     "maxSaturation": 0,
-    "shiftLightness": 17,
-    "minLightness": 68
+    "shiftLightness": 10,
+    "minLightness": 20
   },
   {
     "name": "COLOSSEUM_TILES",
@@ -4904,6 +5870,114 @@
     "area": "HUNTER_GUILD_SURFACE",
     "overlayIds": [ 151 ],
     "waterType": "PLAIN_WATER"
+  },
+  {
+    "name": "Savannah Church Tiles - White",
+    "area": "Savannah Church of Ralos",
+    "overlayIds": [ 199 ],
+    "groundMaterial": "MARBLE_1",
+    "blended": false
+  },
+  {
+    "name": "Savannah Church Tiles - Yellow",
+    "area": "Savannah Church of Ralos",
+    "overlayIds": [ 226, 227 ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
+    "name": "Savannah Church - Stone tile pathway",
+    "area": "OVERWORLD",
+    "overlayIds": [ 199 ],
+    "groundMaterial": "STONE",
+    "blended": false
+  },
+  {
+    "name": "Varlamore Dirt",
+    "area": "VARLAMORE",
+    "underlayIds": [ 119 ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "Varlamore - Tlati Rainforest - WARM_REGION - Complex",
+    "area": "Varlamore - Tlati Rainforest",
+    "underlayIds": [
+      26,
+      33,
+      40,
+      48,
+      50,
+      52,
+      54,
+      63,
+      66,
+      68,
+      94,
+      123,
+      129,
+      147,
+      167,
+      177,
+      178,
+      230
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "DEFAULT_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "DEFAULT_GRASS": [
+        "h == 6 && s >= 5",
+        "h == 8 && s >= 6 && l >= 2",
+        "h == 9 && s == 3 && l >= 49",
+        "h == 9 && s >= 4 && l >= 31",
+        "h >= 9 && s >= 5",
+        "h >= 10 && s >= 2",
+        "h >= 11"
+      ],
+      "DEFAULT_DIRT": true
+    }
+  },
+  {
+    "name": "Southern Varlamore - WARM_REGION - Complex",
+    "area": "SOUTHERN_VARLAMORE",
+    "underlayIds": [
+      26,
+      33,
+      40,
+      48,
+      50,
+      52,
+      54,
+      63,
+      66,
+      68,
+      94,
+      123,
+      129,
+      147,
+      167,
+      177,
+      178,
+      230
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "DEFAULT_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "DEFAULT_GRASS": [
+        "h == 6 && s >= 5",
+        "h == 8 && s >= 6 && l >= 2",
+        "h == 9 && s == 3 && l >= 49",
+        "h == 9 && s >= 4 && l >= 31",
+        "h >= 9 && s >= 5",
+        "h >= 10 && s >= 2",
+        "h >= 11"
+      ],
+      "DEFAULT_DIRT": true
+    }
   },
   {
     "name": "Proudspire Snow Blending",
@@ -4933,6 +6007,33 @@
     "blended": false,
     "shiftLightness": -10,
     "maxLightness": 85
+  },
+  {
+    "name": "Quetzacalli Gorge - Stone Overlay",
+    "area": "Quetzacalli Gorge",
+    "overlayIds": [ 376 ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Quetzacalli Gorge - Stone Path",
+    "area": "Quetzacalli Gorge",
+    "overlayIds": [ 280 ],
+    "groundMaterial": "STONE_CAVE_FLOOR"
+  },
+  {
+    "name": "Quetzacalli Gorge - Path",
+    "area": "Quetzacalli Gorge",
+    "overlayIds": [ 274 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Quetzacalli Gorge - Path Seasonal Snow",
+    "area": "Quetzacalli Gorge",
+    "underlayIds": [ 176 ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "Mons Gratia Cliff",
@@ -4987,7 +6088,7 @@
     "shiftLightness": 27,
     "maxLightness": 93,
     "replacements": {
-      "OVERWORLD_GRASS_UNDERLAY": "l < 15 || s > 0",
+      "SEASONAL_GRASS": "l < 15 || s > 0",
       "Ralos Rise Snow No Blending" : "!blending"
     }
   },
@@ -5022,10 +6123,10 @@
   {
     "name": "Cam Torum Smith & Bank Tiles Fix",
     "area": "CAM_TORUM_BUILDING_TILES",
-    "overlayIds": [ 132 ],
+    "overlayIds": [ 132, 321],
     "underlayIds": [ 45 ],
     "blended": false,
-    "groundMaterial": "MARBLE_1"
+    "groundMaterial": "TILES_2x2_1"
   },
   {
     "name": "Cam Torum Bank Entrance Fix",
@@ -5038,7 +6139,10 @@
     "minSaturation": 2,
     "maxSaturation": 2,
     "minLightness": 9,
-    "maxLightness": 9
+    "maxLightness": 9,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "Cam Torum Fix Dirt on tiles in front of furnace",
@@ -5058,7 +6162,10 @@
     "minSaturation": 1,
     "maxSaturation": 1,
     "minLightness": 15,
-    "maxLightness": 15
+    "maxLightness": 15,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "Cam Torum Paths Keep Vanilla Colour",
@@ -5068,24 +6175,36 @@
     "groundMaterial": "CAM_TORUM_TILES"
   },
   {
-    "name": "Cam Torum Entrance Fix",
-    "area": "CAM_TORUM_ENTRANCE_FIX",
+    "name": "Cam Torum - Throneroom Tiles",
+    "area": "CAM_TORUM_THRONEROOM_TILES",
+    "overlayIds": [ 321 ],
     "blended": false,
-    "overlayIds": [ 11, 228 ],
     "groundMaterial": "CAM_TORUM_TILES"
   },
   {
-    "name": "Cam Torum Bridge Fix",
-    "area": "CAM_TORUM_BRIDGE_FIX",
-    "underlayIds": [ 123 ],
+    "name": "Cam Torum - Purple Marble Tiles",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 285, 286 ],
     "blended": false,
-    "groundMaterial": "CAM_TORUM_TILES",
-    "minHue": 6,
-    "maxHue": 6,
-    "minSaturation": 1,
-    "maxSaturation": 1,
-    "minLightness": 15,
-    "maxLightness": 15
+    "groundMaterial": "MARBLE_2"
+  },
+  {
+    "name": "Cam Torum - Rocky overlay",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 11, 228 ],
+    "groundMaterial": "STONE_CAVE_FLOOR"
+  },
+  {
+    "name": "Cam Torum - Dirt overlay",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 320, 321, 323 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Cam Torum - Dirt underlay",
+    "area": "CAM_TORUM",
+    "underlayIds": [ 123 ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "Perilous Moons Antechamber Tiles",
@@ -5113,6 +6232,25 @@
     "blended": false
   },
   {
+    "name": "Ancient Prison Tiles",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON",
+    "overlayIds": [ 2 ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
+    "name": "Ancient Prison Floor",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON",
+    "underlayIds": [ 7, 56 ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "Ancient Prison Dirt",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON",
+    "underlayIds": [ 118 ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "EARTHBOUND_CAVERN_WATER_FIX",
     "area": "EARTHBOUND_CAVERN_WATER_FIX",
     "underlayIds": [ 72, 105 ],
@@ -5136,6 +6274,8 @@
   {
     "name": "EARTHBOUND_CAVERN_COMPLEX",
     "area": "EARTHBOUND_CAVERN",
+    "overlayIds": [ 131 ],
+    "underlayIds": [ 54, 56, 72, 105, 144 ],
     "replacements": {
       "EARTHBOUND_CAVERN_ROCK_TOP" : "h == 0 && l == 2",
       "EARTHBOUND_CAVERN_GRASS": "s > 2",
@@ -5159,17 +6299,17 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR",
     "minLightness": 7
   },
+
   {
-    "name": "STREAMBOUND_CAVERN_GRASS",
+    "name": "STREAMBOUND_CAVERN_COMPLEX",
     "area": "STREAMBOUND_CAVERN",
-    "underlayIds": [ 53 ],
-    "groundMaterial": "GRASS_1"
-  },
-  {
-    "name": "STREAMBOUND_CAVERN_ROCK",
-    "area": "STREAMBOUND_CAVERN",
-    "underlayIds": [ 56, 72 ],
-    "groundMaterial": "ROCKY_CAVE_FLOOR"
+    "underlayIds": [ 53, 56, 72 ],
+    "groundMaterial": "GRASS_1",
+    "replacements": {
+      "EARTHBOUND_CAVERN_ROCK_TOP" : "h == 0 && l == 2",
+      "EARTHBOUND_CAVERN_GRASS": "s > 2",
+      "EARTHBOUND_CAVERN_ROCK": "s < 3"
+    }
   },
   {
     "name": "STREAMBOUND_CAVERN_WATER",
@@ -5178,16 +6318,64 @@
     "waterType": "SWAMP_WATER_FLAT"
   },
   {
+    "name": "ANCIENT_SHRINE_OVERLAY_GRASS",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 336 ],
+    "groundMaterial": "OVERWORLD_GRASS_1"
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_ENDS",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 227, 252 ],
+    "groundMaterial": "GRUNGE",
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_RED_DARK",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 194 ],
+    "groundMaterial": "GRUNGE",
+    "shiftSaturation": -1,
+    "shiftLightness": 3,
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_RED_DARKEST",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 86 ],
+    "groundMaterial": "GRUNGE",
+    "shiftLightness": 11,
+    "shiftSaturation": -5,
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_TAN_DARK",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 226 ],
+    "groundMaterial": "GRUNGE",
+    "shiftLightness": 4,
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_TAN_DARKEST",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 80 ],
+    "groundMaterial": "GRUNGE",
+    "shiftLightness": 10,
+    "shiftSaturation": 1,
+    "shiftHue": 1,
+    "blended": false
+  },
+  {
     "name": "ANCIENT_SHRINE_DIRT",
     "area": "ANCIENT_SHRINE",
-    "underlayIds": [ 227 ],
-    "groundMaterial": "DIRT",
-    "blended": false
+    "underlayIds": [ 36 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "ANCIENT_SHRINE_GRASS",
     "area": "ANCIENT_SHRINE",
-    "underlayIds": [ 36, 81 ],
+    "underlayIds": [ 25, 40, 48, 81 ],
     "groundMaterial": "GRASS_1"
   },
   {
@@ -5199,8 +6387,10 @@
   {
     "name": "THE_BLUE_MOON_ENTRANCE_DIRT",
     "area": "THE_BLUE_MOON_ENTRANCE",
-    "underlayIds": [ 73, 205, 206 ],
-    "groundMaterial": "DIRT"
+    "underlayIds": [ 56, 73, 205, 206 ],
+    "groundMaterial": "CAM_TORUM_TILES",
+    "uvOrientation": -512,
+    "blended": false
   },
   {
     "name": "THE_BLUE_MOON_NEAR_WALLS",
@@ -5219,7 +6409,8 @@
     "name": "THE_BLOOD_MOON_ENTRANCE_DIRT",
     "area": "THE_BLOOD_MOON_ENTRANCE",
     "underlayIds": [ 56, 72, 118 ],
-    "groundMaterial": "DIRT"
+    "groundMaterial": "CAM_TORUM_TILES",
+    "blended": false
   },
   {
     "name": "THE_BLOOD_MOON_BLOOD",
@@ -5241,10 +6432,12 @@
     "blended": false
   },
   {
-    "name": "THE_ECLIPSE_MOON_ENTRANCE_DIRT",
+    "name": "THE_ECLIPSE_MOON_ENTRANCE",
     "area": "THE_ECLIPSE_MOON_ENTRANCE",
-    "underlayIds": [ 72, 213 ],
-    "groundMaterial": "DIRT"
+    "underlayIds": [ 56, 72, 212, 213 ],
+    "groundMaterial": "CAM_TORUM_TILES",
+    "uvOrientation": 1024,
+    "blended": false
   },
   {
     "name": "THE_ECLIPSE_MOON_FLOOR_BLENDING_FIX",
@@ -5265,8 +6458,21 @@
       351
     ],
     "groundMaterial": "STONE_CAVE_FLOOR",
+    "blendedAsOpposite": true,
+    "shiftLightness": 9,
+    "replacements": {
+      "MASTERING_MIXOLOGY_OVERLAY_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "MASTERING_MIXOLOGY_OVERLAY_NO_BLENDING",
+    "area": "MASTERING_MIXOLOGY",
+    "overlayIds": [
+      351
+    ],
+    "groundMaterial": "ROCK_PILES",
     "blended": false,
-    "shiftLightness": 6
+    "shiftLightness": 14
   },
   {
     "name": "MASTERING_MIXOLOGY_UNDERLAY",
@@ -5281,338 +6487,301 @@
     "groundMaterial": "INTERIOR_DIRT_FLOOR"
   },
   {
-    "name": "OVERWORLD_GRASS_OVERLAY",
-    "area": "OVERWORLD",
+    "name": "Black Knights Fort - Catacombs Water",
+    "area": "Black Knights Fort - Catacombs",
     "overlayIds": [
-      29
+      158
     ],
-    "groundMaterial": "OVERWORLD_GRASS_1",
+    "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "Tlati Rainforest - Rocky ridges",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "ROCK_PILES",
+    "overlayIds": [ 424, 425 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Tlati Rainforest - Dirt ridges",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "ROCK_PILES",
+    "overlayIds": [ 17 ],
+    "uvOrientation": 128
+  },
+  {
+    "name": "Tal Teklan Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "VARIED_DIRT",
+    "overlayIds": [ 330 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Tal Teklan - Under temple walls blending fix",
+    "area": "Tal Teklan - under temple blending fix",
+    "overlayIds": [ 272 ],
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan - Indoors",
+    "area": "Tal Teklan - Indoors above ground floor",
+    "overlayIds": [ 275 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan - Indoors - Above Ground",
+    "area": "Tal Teklan - Indoors ground level",
+    "overlayIds": [ 272, 275, 276 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan - Fake Bricks",
+    "area": "Varlamore - Tlati Rainforest",
+    "overlayIds": [ 276 ],
+    "groundMaterial": "GRUNGE",
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan Stone Brick Path",
+    "area": "Tal Teklan temple path fix",
+    "groundMaterial": "GRUNGE",
+    "overlayIds": [ 275 ],
+    "shiftLightness": 3,
+    "blended": false,
+    "uvOrientation": 128,
     "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+      "Tal Teklan Stone Brick Path - No blend": "!blending"
     }
   },
   {
-    "name": "VANILLA_BLACK_TILE",
-    "area": "ALL",
-    "overlayIds": [
-      37
-    ],
+    "name": "Tal Teklan Stone Brick Path - No blend",
+    "area": "Tal Teklan temple path fix",
+    "groundMaterial": "GRUNGE",
     "blended": false,
-    "maxLightness": 0
+    "uvOrientation": 128
   },
   {
-    "name": "OVERLAY_WATER",
-    "area": "ALL",
-    "overlayIds": [
-      6,
-      41,
-      104,
-      151,
-      158,
-      196
-    ],
-    "waterType": "WATER"
+    "name": "Tlati Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "DIRT",
+    "overlayIds": [ 272, 275 ],
+    "uvOrientation": -128
   },
   {
-    "name": "STRONGHOLD_OF_SECURITY_OOZE_WATER_FIX",
-    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
-    "overlayIds": [
-      29
-    ],
-    "waterType": "ABYSS_BILE"
+    "name": "Kastori Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "VARIED_DIRT",
+    "overlayIds": [ 303 ],
+    "uvOrientation": -128
   },
   {
-    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_WATER_AND_DIRT_FIX",
-    "overlayIds": [
-      77
-    ],
-    "groundMaterial": "ABYSSAL_FLOOR",
-    "setSaturation": -2,
-    "blended": false
+    "name": "Tlati Rainforest - Light dirt",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "DIRT",
+    "underlayIds": [ 223 ]
   },
   {
-    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE_GRASS_FIX",
-    "overlayIds": [
-      29
-    ],
-    "groundMaterial": "ABYSSAL_FLOOR"
+    "name": "Varlamore - Strangewood Paths - Dirt",
+    "area": "VARLAMORE",
+    "overlayIds": [ 275 ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
-    "name": "SORCERESS_GARDEN_HOUSE_FLOOR",
-    "area": "SORCERESS_GARDEN_HOUSE",
-    "overlayIds": [ 123 ],
-    "groundMaterial": "MARBLE_2",
-    "uvScale": 0.85
+    "name": "Varlamore - Custodas Mountains - Snow",
+    "area": "VARLAMORE",
+    "underlayIds": [ 151 ],
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "SEASONAL_DIRT": "s > 0"
+    }
   },
   {
-    "name": "OVERLAY_DIRT",
-    "area": "ALL",
-    "overlayIds": [
-      14,
-      15,
-      16,
-      21,
-      22,
-      23,
-      60,
-      77,
-      81,
-      82,
-      88,
-      89,
-      101,
-      102,
-      107,
-      108,
-      110,
-      115,
-      123,
-      132,
-      172,
-      173,
-      227
-    ],
-    "groundMaterial": "DIRT"
+    "name": "Varlamore - Custodas Mountains - Grunge",
+    "area": "VARLAMORE",
+    "underlayIds": [ 92, 173 ],
+    "groundMaterial": "GRUNGE",
+    "replacements": {
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
+    }
   },
   {
-    "name": "Vet'ion Lair Entrance Fix",
-    "area": "Vet'ion Lair Entrance Fix",
-    "overlayIds": [
-      180
-    ],
-    "groundMaterial": "GRUNGE"
+    "name": "Varlamore - Custodas Mountains - Dirt",
+    "area": "VARLAMORE",
+    "underlayIds": [ 176 ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
-    "name": "OVERLAY_GRAVEL",
-    "area": "ALL",
-    "overlayIds": [
-      2,
-      3,
-      4,
-      8,
-      9,
-      10,
-      119,
-      127,
-      180
-    ],
+    "name": "Varlamore - Auburn Valley - Dirt path",
+    "area": "VARLAMORE",
+    "overlayIds": [ 186, 187 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Varlamore - Auburn Valley - Complex Tiles",
+    "area": "AUBURNVALE",
+    "underlayIds": [ 63, 66, 67, 68, 70 ],
+    "replacements": {
+      "SEASONAL_GRASS": [
+        "h >= 10 && s == 1",
+        "h == 6 && s == 5 && l >= 20",
+        "h >= 6 && s >= 6"
+      ],
+      "SEASONAL_DIRT": true
+    }
+  },
+  {
+    "name": "Varlamore - Gloomthorn Cobblestone",
+    "area": "Gloomthorn Trail",
+    "overlayIds": [ 139, 228 ],
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
+    "name": "FORTIS_BRIDGE_BRIGHTNESS_FIX",
+    "area": "FORTIS_BRIDGE_BRIGHTNESS_FIX",
+    "overlayIds": [ 329 ],
+    "groundMaterial": "FORTIS_ROADS",
+    "blended": false,
+    "minLightness": 70,
+    "maxLightness": 85
+  },
+  {
+    "name": "FORTIS_BRIDGE",
+    "area": "FORTIS_BRIDGE",
+    "overlayIds": [ 132, 228 ],
+    "groundMaterial": "FORTIS_ROADS",
+    "blended": false,
+    "shiftLightness": 65,
+    "maxHue": 0,
+    "maxSaturation": 0
+  },
+  {
+    "name": "Varlamore - Outer fortis temple - brick floors",
+    "area": "Varlamore - Outer Fortis Temples",
+    "overlayIds": [ 123, 199, 226, 227 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1"
+  },
+  {
+    "name": "Varlamore - Dirt slope overlay",
+    "area": "VARLAMORE",
+    "overlayIds": [ 226 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Varlamore - Snowcaps",
+    "area": "VARLAMORE",
+    "overlayIds": [ 1 ],
+    "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "Varlamore - Fortis floors",
+    "area": "VARLAMORE",
+    "overlayIds": [ 324, 325, 326, 327 ],
+    "blended": false,
+    "groundMaterial": "TERRACOTTA_FLOOR"
+  },
+  {
+    "name": "Varlamore - Nemus Retreat - Gravel paths",
+    "area": "VARLAMORE",
+    "overlayIds": [ 332 ],
     "groundMaterial": "GRAVEL"
   },
   {
-    "name": "OVERLAY_SWAMP_WATER",
-    "area": "ALL",
-    "overlayIds": [
-      7,
-      128,
-      156
-    ],
-    "waterType": "SWAMP_WATER",
-    "blended": false
+    "name": "Varlamore - Stone colored cliffs",
+    "area": "VARLAMORE",
+    "overlayIds": [ 83 ],
+    "groundMaterial": "ROCK_PILES"
   },
   {
-    "name": "OVERLAY_WOOD_PLANKS",
-    "area": "ALL",
-    "overlayIds": [
-      5,
-      35
-    ],
-    "groundMaterial": "WOOD_PLANKS_1"
+    "name": "Varlamore - Light cliffs",
+    "area": "VARLAMORE",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "GRAVEL"
   },
   {
-    "name": "OVERLAY_CLEAN_WOOD_PLANKS",
-    "area": "ALL",
-    "overlayIds": [
-      52
-    ],
-    "groundMaterial": "CLEAN_WOOD_FLOOR",
-    "shiftLightness": -4
+    "name": "Varlamore - Dark cliffs",
+    "area": "VARLAMORE",
+    "overlayIds": [ 222 ],
+    "groundMaterial": "ROCK_PILES"
   },
   {
-    "name": "OVERLAY_SAND",
-    "area": "ALL",
-    "overlayIds": [
-      25,
+    "name": "Vatrachos - Island - Complex",
+    "area": "VATRACHOS_ISLAND",
+    "underlayIds": [ 26, 52, 68 ],
+    "replacements": {
+      "DEFAULT_SAND": "h <= 8",
+      "DEFAULT_GRASS": "h >= 9",
+      "DEFAULT_DIRT": true
+    }
+  },
+  {
+    "name": "Shimmering Atoll - Complex",
+    "area": "SHIMMERING_ATOLL",
+    "underlayIds": [ 50, 68, 223 ],
+    "replacements": {
+      "DEFAULT_SAND": "h == 8 && s <= 3",
+      "DEFAULT_GRASS": "h >= 9",
+      "DEFAULT_DIRT": true
+    }
+  },
+  {
+    "name": "Varlamore - Complex",
+    "area": "VARLAMORE",
+    "underlayIds": [
       26,
-      76
-    ],
-    "groundMaterial": "SAND"
-  },
-  {
-    "name": "OVERLAY_BRICK_BROWN",
-    "area": "ALL",
-    "overlayIds": [
-      27,
-      46
-    ],
-    "groundMaterial": "BRICK_BROWN",
-    "blended": false
-  },
-  {
-    "name": "OVERLAY_SNOW",
-    "area": "ALL",
-    "overlayIds": [
-      30,
       33,
-      254
-    ],
-    "groundMaterial": "SNOW_1"
-  },
-  {
-    "name": "OVERLAY_VARIED_DIRT",
-    "area": "ALL",
-    "overlayIds": [
-      49,
-      83,
-      91
-    ],
-    "groundMaterial": "VARIED_DIRT"
-  },
-  {
-    "name": "OVERLAY_SAND_BRICK",
-    "area": "ALL",
-    "overlayIds": [
-      84,
-      207
-    ],
-    "groundMaterial": "SAND_BRICK"
-  },
-  {
-    "name": "OVERLAY_N122",
-    "area": "ALL",
-    "overlayIds": [
-      134
-    ],
-    "groundMaterial": "TILES_2X2_2_GLOSS"
-  },
-  {
-    "name": "OVERLAY_N119",
-    "area": "ALL",
-    "overlayIds": [
-      137
-    ],
-    "groundMaterial": "BRICK_PATHS"
-  },
-  {
-    "name": "OVERLAY_N93",
-    "area": "ALL",
-    "overlayIds": [
-      163
-    ],
-    "groundMaterial": "CARPET"
-  },
-  {
-    "name": "OVERLAY_N82",
-    "area": "ALL",
-    "overlayIds": [
-      174
-    ],
-    "groundMaterial": "CLEAN_TILE"
-  },
-  {
-    "name": "OVERLAY_12",
-    "area": "ALL",
-    "overlayIds": [
-      12
-    ],
-    "groundMaterial": "STONE_PATTERN"
-  },
-  {
-    "name": "OVERLAY_13",
-    "area": "ALL",
-    "overlayIds": [
-      13
-    ],
-    "groundMaterial": "CARPET",
-    "blended": false
-  },
-  {
-    "name": "LAVA",
-    "area": "ALL",
-    "overlayIds": [
-      19
-    ],
-    "groundMaterial": "HD_LAVA",
-    "blended": false,
-    "maxHue": 0,
-    "maxSaturation": 0,
-    "shiftLightness": 127
-  },
-  {
-    "name": "OVERLAY_20",
-    "area": "ALL",
-    "overlayIds": [
-      20
-    ],
-    "groundMaterial": "MARBLE_DARK"
-  },
-  {
-    "name": "OVERLAY_28",
-    "area": "ALL",
-    "overlayIds": [
-      28
-    ],
-    "groundMaterial": "BRICK",
-    "blended": false
-  },
-  {
-    "name": "OVERLAY_29",
-    "area": "ALL",
-    "overlayIds": [
-      29
-    ],
-    "groundMaterial": "GRASS_1"
-  },
-  {
-    "name": "OVERLAY_32",
-    "area": "ALL",
-    "overlayIds": [
-      32
-    ],
-    "groundMaterial": "CONCRETE"
-  },
-  {
-    "name": "OVERLAY_90",
-    "area": "ALL",
-    "overlayIds": [
-      90
-    ],
-    "groundMaterial": "DIRT"
-  },
-  {
-    "name": "OVERLAY_DIRT_PATH",
-    "area": "ALL",
-    "overlayIds": [
-      36,
-      80,
-      85,
-      131
-    ],
-    "groundMaterial": "VARIED_DIRT"
-  },
-  {
-    "name": "OVERWORLD_GRUNGE",
-    "area": "ALL",
-    "overlayIds": [
       48,
-      185
+      50,
+      52,
+      63,
+      66,
+      68,
+      94,
+      123,
+      129,
+      147,
+      167,
+      177,
+      178,
+      230
     ],
-    "groundMaterial": "GRUNGE"
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "SEASONAL_GRASS": [
+        "h == 6 && s >= 5",
+        "h == 8 && s >= 6 && l >= 2",
+        "h == 9 && s == 3 && l >= 49",
+        "h == 9 && s >= 4 && l >= 31",
+        "h >= 9 && s >= 5",
+        "h >= 10 && s >= 2",
+        "h >= 11"
+      ],
+      "SEASONAL_DIRT": [
+        "h == 6 && s <= 4",
+        "h == 8 && s <= 4 && l <= 71",
+        "h <= 7 && s <= 5 && l <= 60",
+        "h <= 7 && s <= 7 && l <= 34",
+        "h == 8 && s == 5",
+        "h == 9 && s == 2",
+        "h == 9 && s == 3 && l <= 48",
+        "h == 9 && s == 4 && l <= 30",
+        "h == 9 && s == 5 && l <= 30"
+      ],
+      "DEFAULT_DIRT": true
+    }
   },
   {
-    "name": "OVERLAY_120",
-    "area": "ALL",
-    "overlayIds": [
-      120
-    ],
-    "groundMaterial": "GRUNGE"
-  },
-  {
-    "name": "OVERLAY_SKULLS",
-    "area": "ALL",
-    "overlayIds": [
-      261
-    ],
-    "groundMaterial": "SKULL_OBELISK"
+    "area": "SHIPYARD_CONCRETE",
+    "overlayIds": [ 186 ],
+    "setSaturation": 1,
+    "setLightness": 8,
+    "blended": false
   },
   {
     "name": "SARACHNIS_BLOOD",
@@ -5644,23 +6813,21 @@
     "blended": false
   },
   {
+    "name": "Recipe for Disaster Instance Floor",
+    "area": "Recipe for Disaster Instance",
+    "underlayIds": [
+      56
+    ],
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
+    "uvScale": 1.25
+  },
+  {
     "name": "DRAYNOR_SEWERS_UNDERLAY",
     "area": "DRAYNOR_SEWERS",
     "underlayIds": [
       63
     ],
     "groundMaterial": "DIRT"
-  },
-  {
-    "name": "DRAYNOR_72",
-    "area": "DRAYNOR",
-    "underlayIds": [
-      72
-    ],
-    "groundMaterial": "OVERWORLD_GRASS_1",
-    "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
-    }
   },
   {
     "name": "WIZARD_TOWER_BASEMENT_DIRT",
@@ -5691,7 +6858,7 @@
         "h >= 10 && s >= 2"
       ],
       "SEASONAL_DIRT": "h <= 8 && s >= 4 && l <= 71",
-      "DEFAULT_SAND": true
+      "SEASONAL_SAND": true
     }
   },
   {
@@ -5707,7 +6874,6 @@
   {
     "name": "EDGEVILLE_PATH_OVERLAY_48",
     "area": "EDGEVILLE_PATH_OVERLAY",
-    "groundMaterial": "VARROCK_PATHS",
     "replacements": {
       "EDGEVILLE_PATH_OVERLAY_48_CUSTOM_PATH": "blending",
       "WINTER_GRASS": "season == SeasonalTheme.WINTER",
@@ -5726,92 +6892,6 @@
     "uvOrientation": 256
   },
   {
-    "name": "Varrock Family Crypt",
-    "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
-    "area": "VARROCK_JULIETS_FAMILY_CRYPT",
-    "underlayIds": [
-      56, 57, 72, 94
-    ],
-    "blended": false,
-    "uvScale": 0.85,
-    "uvOrientation": 256
-  },
-  {
-    "name": "VARROCK_SEWERS_DIRT",
-    "area": "VARROCK_SEWERS",
-    "underlayIds": [
-      10,
-      63,
-      64
-    ],
-    "groundMaterial": "PACKED_EARTH",
-    "replacements": {
-      "DEFAULT_GRASS": "h >= 9",
-      "DEFAULT_PACKED_EARTH": true
-    }
-  },
-  {
-    "name": "VARROCK_SEWERS_GRASS",
-    "area": "VARROCK_SEWERS",
-    "underlayIds": [
-      49
-    ],
-    "groundMaterial": "GRASS_1"
-  },
-  {
-    "name": "STRONGHOLD_OF_SECURITY_OOZE",
-    "area": "STRONGHOLD_OF_SECURITY_PESTILENCE",
-    "underlayIds": [
-      48,
-      49,
-      61,
-      93
-    ],
-    "groundMaterial": "ABYSSAL_FLOOR"
-  },
-  {
-    "name": "STRONGHOLD_OF_SECURITY_GRASS",
-    "area": "STRONGHOLD_OF_SECURITY",
-    "underlayIds": [
-      48,
-      49,
-      58,
-      59,
-      124
-    ],
-    "groundMaterial": "GRASS_1",
-    "shiftHue": 1,
-    "shiftSaturation": 1
-  },
-  {
-    "name": "STRONGHOLD_OF_SECURITY_WAR_GRAVEL",
-    "area": "STRONGHOLD_OF_SECURITY",
-    "underlayIds": [
-      148
-    ],
-    "groundMaterial": "GRAVEL"
-  },
-  {
-    "name": "STRONGHOLD_OF_SECURITY_FAMINE_DIRT",
-    "area": "STRONGHOLD_OF_SECURITY_FAMINE",
-    "underlayIds": [
-      72,
-      118,
-      126
-    ],
-    "groundMaterial": "EARTHEN_CAVE_FLOOR"
-  },
-  {
-    "name": "STRONGHOLD_OF_SECURITY_WAR_DIRT",
-    "area": "STRONGHOLD_OF_SECURITY_WAR",
-    "underlayIds": [
-      72,
-      118,
-      126
-    ],
-    "groundMaterial": "GRAVEL"
-  },
-  {
     "name": "TOLNA_DUNGEON_ANGER_FLOOR",
     "area": "TOLNA_DUNGEON_ANGER",
     "underlayIds": [
@@ -5819,19 +6899,6 @@
       58
     ],
     "groundMaterial": "DIRT"
-  },
-  {
-    "name": "ASGARNIA_SNOWY_MOUNTAINS_COMPLEX_TILES",
-    "area": "ASGARNIA_MOUNTAINS",
-    "underlayIds": [
-      58,
-      64
-    ],
-    "replacements": {
-      "SEASONAL_GRASS": "s >= 5",
-      "SEASONAL_VERTICAL_DIRT": "s >= 1",
-      "WINTER_DIRT": true
-    }
   },
   {
     "name": "WARRIORS_GUILD_FLOOR_1_UNDERLAY",
@@ -5843,8 +6910,8 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "TROLLHEIM_DIRT",
-    "area": "TROLLHEIM",
+    "name": "TROLLHEIM_GARDEN_DIRT",
+    "area": "TROLL_COUNTRY",
     "underlayIds": [
       63,
       67
@@ -5869,6 +6936,22 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "CATHERBY_BEACH_SAND_OVERLAY",
+    "area": "CATHERBY",
+    "overlayIds": [ 25 ],
+    "replacements": {
+      "SEASONAL_SAND": true
+    }
+  },
+  {
+    "name": "SOUTH_CATHERBY_SAND_EXTENSION",
+    "area": "SOUTH_CATHERBY_SEASON_FIX",
+    "overlayIds": [ 25 ],
+    "replacements": {
+      "SEASONAL_SAND": true
+    }
+  },
+  {
     "name": "CATHERBY_BEACH_SAND",
     "area": "CATHERBY",
     "underlayIds": [
@@ -5877,7 +6960,7 @@
     "replacements": {
       "SEASONAL_GRASS": "h >= 9 || h == 8 && s > 5",
       "SEASONAL_DIRT": "h < 8 && s > 4 && l < 45",
-      "DEFAULT_SAND": true
+      "SEASONAL_SAND": true
     }
   },
   {
@@ -5918,8 +7001,10 @@
   {
     "area": "AL_KHARID_GRASS_FIXES",
     "underlayIds": [
+      48,
       49,
       50,
+      51,
       52,
       62,
       61,
@@ -5927,7 +7012,8 @@
     ],
     "groundMaterial": "GRASS_1",
     "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+      "SEASONAL_GRASS": "h >= 9",
+      "DEFAULT_SAND": true
     }
   },
   {
@@ -6288,6 +7374,7 @@
     "minSaturation": 3,
     "maxSaturation": 3,
     "underlayIds": [
+      48,
       61,
       62,
       64,
@@ -6461,6 +7548,24 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "SHILO_VILLAGE_MINE_SURFACE_FIX",
+    "area": "SHILO_VILLAGE_MINE_SURFACE",
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "underlayIds": [
+      21,
+      50,
+      55
+    ],
+    "replacements": {
+      "DEFAULT_DIRT": [
+        "h <= 8 && s >= 4 && l <= 71",
+        "h == 9 && s == 2 && l <= 44",
+        "h == 8 && s == 3 && l <= 40"
+      ],
+      "DEFAULT_ROCKY_GROUND": "s <= 2 && l <= 40"
+    }
+  },
+  {
     "name": "COMPLEX_TILES_KARAMJA",
     "area": "KARAMJA",
     "underlayIds": [
@@ -6501,16 +7606,52 @@
     }
   },
   {
-    "name": "CRANDOR_SAND",
+    "name": "CRANDOR_GROUND_1",
     "area": "CRANDOR",
-    "underlayIds": [
-      146
+    "overlayIds": [
+      11,
+      92
     ],
-    "groundMaterial": "SAND",
-    "minHue": 6,
-    "maxHue": 6,
-    "minSaturation": 3,
-    "maxSaturation": 3
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "CRANDOR_COMPLEX_TILES",
+    "area": "CRANDOR",
+    "overlayIds": [
+      26
+    ],
+    "underlayIds": [
+      1,
+      52,
+      53,
+      56,
+      57,
+      62,
+      68,
+      72,
+      92,
+      94,
+      98,
+      111,
+      113,
+      126,
+      145,
+      146,
+      148,
+      147,
+      149,
+      150
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": [
+        "h >= 10 && s >= 2",
+        "h == 9 && s >= 3",
+        "h == 8 && s > 5 && l >= 30"
+      ],
+      "DEFAULT_SAND": "h == 8 && s == 3 && l >= 30",
+      "DEFAULT_ROCKY_GROUND": "s <= 0 && l <= 40",
+      "DEFAULT_DIRT": true
+    }
   },
   {
     "name": "GOD_WARS_DUNGEON_SNOW_1",
@@ -6519,7 +7660,20 @@
       58,
       59
     ],
-    "groundMaterial": "SNOW_1"
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "GOD_WARS_DUNGEON_SNOW_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "GOD_WARS_DUNGEON_SNOW_NO_BLENDING",
+    "area": "GOD_WARS_DUNGEON",
+    "underlayIds": [
+      58,
+      59
+    ],
+    "groundMaterial": "SNOW_1",
+    "maxLightness": 65
   },
   {
     "name": "INFERNO_1",
@@ -6736,6 +7890,49 @@
     "shiftLightness": 13
   },
   {
+    "name": "FREM_COLONIES_SEASONAL_SNOW",
+    "maxHue": 0,
+    "maxLightness": 63,
+    "replacements": {
+      "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
+      "DEFAULT_SNOW": true
+    }
+  },
+  {
+    "name": "Etcetera Castle Upstairs",
+    "area": "ETCETERIA_CASTLE_FLOOR",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "underlayIds": [
+      67
+    ]
+  },
+  {
+    "name": "Miscellania and Etcetera Complex Tiles",
+    "area": "FREMENNIK_COLONIES",
+    "underlayIds": [
+      48,
+      49,
+      50,
+      55,
+      56,
+      57,
+      58,
+      60,
+      64,
+      93,
+      96,
+      97
+    ],
+    "replacements": {
+      "FREM_COLONIES_SEASONAL_SNOW": "s == 0",
+      "SEASONAL_GRASS": [
+        "h >= 9 && s >= 2",
+        "h >= 11 && s >= 1"
+      ],
+      "SEASONAL_DIRT": true
+    }
+  },
+  {
     "name": "SHADOW_DUNGEON_FLOOR",
     "area": "SHADOW_DUNGEON",
     "underlayIds": [
@@ -6774,48 +7971,28 @@
     }
   },
   {
-    "name": "CENTER_SARADOMIN_SIDE_DIRT_1",
-    "area": "CASTLE_WARS_UNDERGROUND_SARADOMIN_PORTAL_FIX",
+    "name": "GU'TANOTH - WARM_REGION - Complex",
+    "area": "GU'TANOTH",
+    "overlayIds": [
+      14
+    ],
     "underlayIds": [
+      48,
+      50,
+      63,
+      64,
       65,
       66
     ],
-    "groundMaterial": "DIRT",
-    "minSaturation": 2,
-    "maxSaturation": 6
+    "groundMaterial": "VERTICAL_DIRT"
   },
   {
-    "name": "CENTER_SARADOMIN_SIDE_DIRT_2",
-    "area": "CASTLE_WARS_ARENA_SARADOMIN_SIDE",
-    "underlayIds": [
-      98
+    "name": "FELDIP_HILLS_HUNTER_OVERLAY",
+    "area": "FELDIP_HILLS_SOUTHERN_REGION",
+    "overlayIds": [
+      29
     ],
-    "groundMaterial": "DIRT",
-    "minHue": 7,
-    "maxHue": 7,
-    "minSaturation": 4,
-    "maxSaturation": 4
-  },
-  {
-    "name": "CENTER_SARADOMIN_SIDE_DIRT_3",
-    "area": "CASTLE_WARS_ARENA_SARADOMIN_SIDE",
-    "underlayIds": [
-      56
-    ],
-    "groundMaterial": "DIRT",
-    "minHue": 7,
-    "maxHue": 7,
-    "minSaturation": 4,
-    "maxSaturation": 4,
-    "shiftLightness": 3
-  },
-  {
-    "name": "YANILLE_AGILITY_DUNGEON_ENTRANCE_FIX",
-    "area": "YANILLE_AGILITY_DUNGEON_ENTRANCE",
-    "underlayIds": [
-      63
-    ],
-    "blended": false
+    "groundMaterial": "GRASS_1"
   },
   {
     "name": "FELDIP_HILLS_SOUTH_COMPLEX_TILES",
@@ -7040,6 +8217,7 @@
       67,
       68,
       72,
+      92,
       96,
       111,
       112,
@@ -7075,7 +8253,7 @@
   },
   {
     "name": "ZEAH_GRAVEL_PATH",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       99
     ],
@@ -7085,8 +8263,20 @@
     }
   },
   {
+    "name": "Farming Guild Grass",
+    "area": "Farming Guild Interior",
+    "underlayIds": [
+      49,
+      50,
+      63,
+      68,
+      96
+    ],
+    "groundMaterial": "OVERWORLD_GRASS_1"
+  },
+  {
     "name": "ZEAH_DIRT_UNDERLAY",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "underlayIds": [
       19,
       148,
@@ -7099,7 +8289,7 @@
   },
   {
     "name": "ZEAH_GRAVEL_HILLS",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "underlayIds": [
       99
     ],
@@ -7110,7 +8300,7 @@
   },
   {
     "name": "ZEAH_ROCKY_GROUND",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "underlayIds": [
       27,
       29,
@@ -7120,6 +8310,12 @@
     "replacements": {
       "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
+  },
+  {
+    "name": "Varlamore - Clay Dirt Path",
+    "area": "VARLAMORE",
+    "overlayIds": [ 330 ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "JUDGE_OF_YAMA_BOSS_WATER",
@@ -7266,20 +8462,44 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
+    "name": "ARAXXOR_CAVE_UNDER_ENTRANCE_FIX",
+    "area": "MORYTANIA",
+    "overlayIds": [193 ],
+    "blended": false,
+    "groundMaterial": "GROUND_WEBS",
+    "uvOrientation": 89,
+    "shiftLightness": 16
+  },
+  {
     "name": "ARAXXOR_WEB_OVERLAY",
-    "area": "MORYTANIA_SPIDER_CAVES",
+    "area": "ARAXXOR_ARENA",
     "overlayIds": [
       370
     ],
     "groundMaterial": "GROUND_WEBS",
     "blended": false,
-    "uvScale": 3,
+    "uvScale": 2,
     "uvOrientation": 89,
-    "shiftLightness": 14
+    "shiftLightness": 16,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "ARAXXOR_DIRT",
+    "area": "ARAXXOR_ARENA",
+    "underlayIds": [
+      80
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "minLightness": 16,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "ARAXXOR_WASTE_WATER",
-    "area": "MORYTANIA_SPIDER_CAVES",
+    "area": "ARAXXOR_ARENA",
     "overlayIds": [
       364
     ],
@@ -7287,7 +8507,7 @@
   },
   {
     "name": "MORYTANIA_SPIDER_CAVES_WEB_1",
-    "area": "MORYTANIA_SPIDER_CAVES",
+    "area": "ARAXYTE_SPIDER_CAVES",
     "overlayIds": [
       191
     ],
@@ -7298,29 +8518,33 @@
       84
     ],
     "groundMaterial": "GROUND_WEBS",
-    "uvScale": 2,
+    "uvScale": 3,
     "uvOrientation": 90,
     "shiftLightness": 7,
     "replacements": {
-      "DEFAULT_PACKED_EARTH": "h < 10"
+      "DEFAULT_PACKED_EARTH": "h < 8 || !blending",
+      "NONE": "!textures"
     }
   },
   {
     "name": "MORYTANIA_SPIDER_CAVES_WEB_2",
-    "area": "MORYTANIA_SPIDER_CAVES",
+    "area": "ARAXYTE_SPIDER_CAVES",
     "underlayIds": [
+      10,
       39,
       62,
       80,
       85,
+      118,
       138
     ],
     "groundMaterial": "GROUND_WEBS",
-    "uvScale": 2,
+    "uvScale": 3,
     "uvOrientation": 32,
     "shiftLightness": 7,
     "replacements": {
-      "DEFAULT_PACKED_EARTH": "h < 10"
+      "DEFAULT_PACKED_EARTH": "h < 8 || !blending",
+      "NONE": "!textures"
     }
   },
   {
@@ -7568,26 +8792,21 @@
       0,
       2,
       3,
+      10,
+      17,
       21,
       23,
       24,
-      27
+      27,
+      49,
+      72,
+      73,
+      95
     ],
     "groundMaterial": "DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "ARCEUUS_GRASS",
-    "area": "ARCEUUS",
-    "underlayIds": [
-      17,
-      95
-    ],
-    "groundMaterial": "GRASSY_DIRT",
-    "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+      "SEASONAL_GRASS": "h >= 12 && s >= 2 && h < 30",
+      "SEASONAL_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7684,19 +8903,6 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
-    "name": "PEST_CONTROL",
-    "area": "PEST_CONTROL",
-    "underlayIds": [
-      59,
-      121,
-      142
-    ],
-    "groundMaterial": "DIRT",
-    "replacements": {
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
     "name": "ABYSSAL_FLOOR_UNDERLAY",
     "area": "ABYSSAL_AREAS",
     "underlayIds": [
@@ -7707,7 +8913,7 @@
     "groundMaterial": "ABYSSAL_FLOOR",
     "minHue": 1,
     "maxHue": 1,
-    "uvScale": 1.85
+    "uvScale": 2.5
   },
   {
     "name": "LAW_ALTAR_FLOOR",
@@ -7883,33 +9089,381 @@
     "uvScale": 0.7
   },
   {
-    "name": "OVERWORLD_GRASS_UNDERLAY",
-    "area": "OVERWORLD",
+    "name": "Movario's Base - Library Floor Fix",
+    "area": "Movario's Base - Library",
+    "underlayIds": [ 67 ],
+    "groundMaterial": "NONE",
+    "shiftLightness": 3,
+    "replacements": {
+      "Movario's Base - Stairs Dirt Floor": "h > 5"
+     }
+  },
+  {
+    "name": "Movario's Base - Stairs Dirt Floor",
+    "area": "Movario's Base - Library",
+    "underlayIds": [ 67 ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "Doom of Mokhaiotl - Entrance Tiles",
+    "area": "Doom of Mokhaiotl - Entrance Tiles",
+    "underlayIds": [
+      67,
+      176
+    ],
+    "overlayIds": [
+      426
+    ],
+    "groundMaterial": "DIRTY_MARBLE",
+    "shiftSaturation": -1
+  },
+  {
+    "name": "Doom of Mokhaiotl Floor",
+    "area": "Doom of Mokhaiotl",
+    "underlayIds": [
+      63,
+      67,
+      72,
+      167,
+      176
+    ],
+    "overlayIds": [
+      427
+    ],
+    "groundMaterial": "PLAIN_DIRT",
+    "shiftSaturation": -1
+  },
+  {
+    "name": "Gryphon Dungeon Tiles",
+    "area": "GRYPHON_DUNGEONS",
+    "groundMaterial": "PLAIN_DIRT",
+    "underlayIds": [
+      14
+    ]
+  },
+  {
+    "name": "Fortis roads",
+    "area": "ALL",
+    "overlayIds": [ 328 ],
+    "groundMaterial": "FORTIS_ROADS",
+    "uvOrientation": 1024
+  },
+  {
+    "name": "Fortis roads mirrored",
+    "area": "ALL",
+    "overlayIds": [ 329 ],
+    "groundMaterial": "FORTIS_ROADS_MIRRORED",
+    "uvOrientation": 1024
+  },
+  {
+    "name": "SISTERHOOD_SANCTUARY_CAVE_OVERLAY",
+    "area": "SISTERHOOD_SANCTUARY",
+    "overlayIds": [
+      88
+    ],
+    "groundMaterial": "GRUNGE",
+    "uvScale": 1.1
+  },
+  {
+    "name": "SISTERHOOD_SANCTUARY_CAVE_UNDERLAY",
+    "area": "SISTERHOOD_SANCTUARY",
+    "underlayIds": [
+      98
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "uvScale": 1.1
+  },
+  {
+    "name": "THE_LITTLE_PEARL_SAND",
+    "area": "THE_LITTLE_PEARL",
+    "underlayIds": [
+      61,
+      62,
+      68
+    ],
+    "groundMaterial": "SAND",
+    "uvScale": 1.1,
+    "replacements": {
+      "THE_LITTLE_PEARL_SAND_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "THE_LITTLE_PEARL_SAND_NO_TEXTURES",
+    "area": "THE_LITTLE_PEARL",
+    "underlayIds": [
+      61,
+      62,
+      68
+    ],
+    "groundMaterial": "NONE",
+    "shiftLightness": -8,
+    "maxLightness": 49,
+    "minLightness": 28
+  },
+  {
+    "name": "PANDAMONIUM_ROCKY_TILES",
+    "area": "PANDEMONIUM_ISLAND",
+    "groundMaterial": "OVERWORLD_ROCKY",
+    "underlayIds": [
+      110
+    ]
+  },
+  {
+    "name": "PANDAMONIUM_COMPLEX_TILES",
+    "area": "PANDEMONIUM_ISLAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": "h >= 10",
+      "DEFAULT_SAND": "h == 8",
+      "DEFAULT_DIRT": [
+        "h == 8 && s == 2",
+        "h == 9"
+      ]
+    }
+  },
+  {
+    "name": "DOGNOSE_BEACH_SAND",
+    "area": "DOGNOSE_ISLAND_BEACH",
+    "groundMaterial": "SAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ]
+  },
+  {
+    "name": "DOGNOSE_COMPLEX_TILES",
+    "area": "DOGNOSE_ISLAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": "h >= 10",
+      "DEFAULT_DIRT": "h <= 9"
+    }
+  },
+  {
+    "name": "Essence Mine Snow",
+    "area": "ESSENCE_MINE",
+    "underlayIds": [
+      55,
+      56,
+      58,
+      59
+    ],
+    "groundMaterial": "SNOW_1",
+    "shiftHue": 5,
+    "setLightness": 72
+  },
+  {
+    "name": "GRIMSTONE_DUNGEON_FLOOR",
+    "area": "GRIMSTONE_DUNGEON",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58,
+      159,
+      161
+    ],
+    "shiftLightness": 22,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "GRIMSTONE",
+    "area": "GRIMSTONE",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58
+    ],
+    "shiftLightness": 30,
+    "maxLightness": 105,
+    "replacements": {
+      "NONE": "!textures",
+      "GRIMSTONE_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "GRIMSTONE_NO_BLENDING",
+    "area": "GRIMSTONE",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58
+    ],
+    "maxLightness": 95,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "TAG - CLIMATE - START"
+  },
+  {
+    "name": "WARM_REGION_ROCK_OVERLAYS",
+    "area": "WARM_REGIONS",
+    "groundMaterial": "GRUNGE",
+    "overlayIds": [
+      376
+    ]
+  },
+  {
+    "name": "WARM_REGION_COMPLEX_TILES",
+    "area": "WARM_REGIONS",
     "underlayIds": [
       7,
+      8,
+      12,
+      13,
+      19,
       25,
+      26,
       33,
-      34,
-      40,
+      38,
       48,
       49,
       50,
       51,
       52,
       53,
-      54,
-      67,
-      70,
-      71,
-      75,
+      55,
+      56,
+      59,
+      61,
+      62,
+      63,
+      64,
+      65,
+      68,
+      69,
+      72,
+      77,
       93,
+      94,
+      96,
       97,
+      99,
+      100,
+      109,
+      110,
+      103,
+      121,
+      125,
+      129,
+      130,
+      131,
+      132,
+      141,
+      142,
+      150,
+      202,
+      203,
+      223
+    ],
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "DEFAULT_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "DEFAULT_GRASS": [
+        "h >= 11 && s == 1",
+        "h == 9 && s == 2",
+        "h == 9 && s == 3 && l >= 49",
+        "h >= 9 && s >= 4",
+        "h == 9 && l <= 38",
+        "h >= 10 && s >= 2",
+        "h == 8 && s == 5 && l >= 15",
+        "h == 8 && s >= 6 && l >= 2"
+      ],
+      "DEFAULT_DIRT": true
+    }
+  },
+  {
+    "name": "ASGARNIA_SNOWY_MOUNTAINS_COMPLEX_TILES",
+    "area": "ASGARNIA_MOUNTAINS",
+    "underlayIds": [
+      58,
+      64
+    ],
+    "replacements": {
+      "SEASONAL_GRASS": "s >= 5",
+      "SEASONAL_VERTICAL_DIRT": "s >= 1",
+      "SEASONAL_SNOW": true
+    }
+  },
+  {
+    "name": "SNOW_REGION - SNOW_UNDERLAY",
+    "area": "SNOWY_REGIONS",
+    "underlayIds": [
+      16,
+      55,
+      58,
+      59,
+      60,
+      92
+    ],
+    "groundMaterial": "SNOW_1",
+    "setHue": 0,
+    "shiftLightness": 15,
+    "replacements": {
+      "SEASONAL_GRASS": "s >= 2",
+      "SEASONAL_DIRT": "s == 1",
+      "SEASONAL_SNOW": "season == SeasonalTheme.WINTER",
+      "UNDERLAY_SNOW_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "UNDERLAY_SNOW_NO_BLENDING",
+    "area": "SNOWY_REGIONS",
+    "underlayIds": [
+      16,
+      55,
+      58,
+      59,
+      92
+    ],
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "SEASONAL_GRASS": "s >= 2",
+      "SEASONAL_DIRT": "s == 1",
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    },
+    "maxLightness": 77
+  },
+  {
+    "name": "TAG - OVERWORLD - START"
+  },
+  {
+    "name": "OVERWORLD - COBBLESTONE_PATHS",
+    "area": "OVERWORLD",
+    "overlayIds": [
+      117,
+      171,
+      179
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "OVERWORLD - GRASS_UNDERLAY",
+    "area": "OVERWORLD",
+    "underlayIds": [
+      7,
+      33,
+      34,
+      40,
       99,
       100,
       103,
       114,
       115,
-      126
+      126,
+      203
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
@@ -7917,13 +9471,10 @@
     }
   },
   {
-    "name": "OVERWORLD_DIRT",
+    "name": "OVERWORLD - DIRT",
     "area": "OVERWORLD",
     "underlayIds": [
       19,
-      56,
-      57,
-      66,
       80,
       111,
       118,
@@ -7940,13 +9491,319 @@
     }
   },
   {
-    "name": "OVERWORLD_SAND",
+    "name": "OVERWORLD_GRASS_OVERLAY",
+    "area": "OVERWORLD",
+    "overlayIds": [
+      29
+    ],
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "OVERWORLD - SAND",
     "area": "OVERWORLD",
     "underlayIds": [
       129,
       138
     ],
     "groundMaterial": "SAND"
+  },
+  {
+    "name": "OVERWORLD - COMPLEX_TILES",
+    "area": "OVERWORLD",
+    "underlayIds": [
+      5,
+      8,
+      10,
+      12,
+      13,
+      17,
+      25,
+      26,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      75,
+      77,
+      93,
+      92,
+      94,
+      96,
+      97,
+      98,
+      112,
+      113,
+      125,
+      141,
+      143,
+      144
+    ],
+    "replacements": {
+      "SEASONAL_GRUNGE": "blending && (s == 0 || h <= 10 && s < 2)",
+      "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "SEASONAL_GRASS": [
+        "h >= 11 && s == 1",
+        "h == 9 && s == 2",
+        "h == 9 && s == 3 && l >= 49",
+        "h >= 9 && s >= 4",
+        "h == 9 && l <= 38",
+        "h >= 10 && s >= 2",
+        "h == 8 && s == 5 && l >= 20",
+        "h == 8 && s >= 6 && l >= 20"
+      ],
+      "SEASONAL_DIRT": true
+    }
+  },
+  {
+    "name": "TAG - ALL - START"
+  },
+  {
+    "name": "OVERLAY_GRAVEL",
+    "area": "ALL",
+    "overlayIds": [
+      2,
+      3,
+      4,
+      8,
+      9,
+      10,
+      11,
+      119,
+      127,
+      180
+    ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "OVERLAY_WATER",
+    "area": "ALL",
+    "overlayIds": [
+      6,
+      41,
+      104,
+      151,
+      158
+    ],
+    "waterType": "WATER"
+  },
+  {
+    "name": "OVERLAY_SWAMP_WATER",
+    "area": "ALL",
+    "overlayIds": [
+      7,
+      128,
+      156
+    ],
+    "waterType": "SWAMP_WATER",
+    "blended": false
+  },
+  {
+    "name": "OVERLAY_WOOD_PLANKS",
+    "area": "ALL",
+    "overlayIds": [
+      5,
+      35
+    ],
+    "groundMaterial": "WOOD_PLANKS_1"
+  },
+  {
+    "name": "OVERLAY_CLEAN_WOOD_PLANKS",
+    "area": "ALL",
+    "overlayIds": [
+      52
+    ],
+    "groundMaterial": "CLEAN_WOOD_FLOOR",
+    "shiftLightness": -4
+  },
+  {
+    "name": "OVERLAY_BRICK_BROWN",
+    "area": "ALL",
+    "overlayIds": [
+      27,
+      46
+    ],
+    "groundMaterial": "BRICK_BROWN",
+    "blended": false
+  },
+  {
+    "name": "OVERLAY_SNOW",
+    "area": "ALL",
+    "overlayIds": [
+      30,
+      33,
+      254
+    ],
+    "groundMaterial": "SNOW_1",
+    "maxLightness": 90
+  },
+  {
+    "name": "OVERLAY_SAND_BRICK",
+    "area": "ALL",
+    "overlayIds": [
+      84,
+      207
+    ],
+    "groundMaterial": "SAND_BRICK"
+  },
+  {
+    "name": "OVERLAY_N122",
+    "area": "ALL",
+    "overlayIds": [
+      134
+    ],
+    "groundMaterial": "TILES_2X2_2_GLOSS"
+  },
+  {
+    "name": "OVERLAY_N119",
+    "area": "ALL",
+    "overlayIds": [
+      137
+    ],
+    "groundMaterial": "BRICK_PATHS"
+  },
+  {
+    "name": "OVERLAY_N82",
+    "area": "ALL",
+    "overlayIds": [
+      174
+    ],
+    "groundMaterial": "CLEAN_TILE"
+  },
+  {
+    "name": "OVERLAY_12",
+    "area": "ALL",
+    "overlayIds": [
+      12
+    ],
+    "groundMaterial": "STONE_PATTERN"
+  },
+  {
+    "name": "OVERLAY_CARPET",
+    "area": "ALL",
+    "overlayIds": [
+      13,
+      163
+    ],
+    "groundMaterial": "CARPET",
+    "blended": false
+  },
+  {
+    "name": "LAVA",
+    "area": "ALL",
+    "overlayIds": [
+      19
+    ],
+    "groundMaterial": "HD_LAVA",
+    "blended": false,
+    "maxHue": 0,
+    "maxSaturation": 0,
+    "shiftLightness": 127
+  },
+  {
+    "name": "OVERLAY_20",
+    "area": "ALL",
+    "overlayIds": [
+      20
+    ],
+    "groundMaterial": "MARBLE_4_GLOSS",
+    "uvScale": 1.15,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "OVERLAY_28",
+    "area": "ALL",
+    "overlayIds": [
+      28
+    ],
+    "groundMaterial": "BRICK",
+    "blended": false
+  },
+  {
+    "name": "OVERLAY_GRASS",
+    "area": "ALL",
+    "overlayIds": [
+      29
+    ],
+    "groundMaterial": "GRASS_1"
+  },
+  {
+    "name": "OVERLAY_32",
+    "area": "ALL",
+    "overlayIds": [
+      32
+    ],
+    "groundMaterial": "CONCRETE"
+  },
+  {
+    "name": "OVERLAY_DIRT_PATH",
+    "area": "ALL",
+    "overlayIds": [
+      36,
+      80,
+      85,
+      106,
+      131,
+      216
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "OVERLAY_GRUNGE",
+    "area": "ALL",
+    "overlayIds": [
+      48,
+      120,
+      185,
+      198
+    ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "UNDERLAY_GRUNGE",
+    "area": "ALL",
+    "underlayIds": [
+      8,
+      10,
+      58,
+      60,
+      92,
+      132
+    ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "OVERLAY_SKULLS",
+    "area": "ALL",
+    "overlayIds": [
+      261
+    ],
+    "groundMaterial": "SKULL_OBELISK"
   },
   {
     "name": "UNDERLAY_PACKED_EARTH",
@@ -7957,126 +9814,74 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
-    "name": "Essence Mine Snow",
-    "area": "ESSENCE_MINE",
-    "underlayIds": [
-      55,
-      56,
-      58,
-      59
-    ],
-    "groundMaterial": "SNOW_1",
-    "shiftHue": 5,
-    "setLightness": 72
-  },
-  {
-    "name": "UNDERLAY_SNOW",
-    "area": "SNOWY_REGIONS",
-    "underlayIds": [
+    "name": "OVERLAY_DIRT",
+    "area": "ALL",
+    "overlayIds": [
+      14,
+      15,
       16,
-      55,
-      58,
-      59,
-      92
+      21,
+      22,
+      23,
+      49,
+      60,
+      77,
+      81,
+      82,
+      83,
+      88,
+      89,
+      91,
+      90,
+      101,
+      102,
+      107,
+      108,
+      110,
+      115,
+      123,
+      132,
+      162,
+      172,
+      173,
+      227
     ],
-    "groundMaterial": "SNOW_1",
-    "replacements": {
-      "SEASONAL_GRASS": "s >= 2",
-      "SEASONAL_DIRT": "s == 1",
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "UNDERLAY_OVERWORLD_DIRT",
-    "area": "OVERWORLD",
-    "underlayIds": [
-      72,
-      73,
-      98,
-      112,
-      113
-    ],
-    "groundMaterial": "VARIED_DIRT",
-    "replacements": {
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
-    }
+    "groundMaterial": "DIRT"
   },
   {
     "name": "UNDERLAY_DIRT",
     "area": "ALL",
     "underlayIds": [
+      63,
+      64,
       72,
       73,
       98,
+      103,
       112,
-      113
+      113,
+      121,
+      139
     ],
     "groundMaterial": "VARIED_DIRT"
   },
   {
-    "name": "UNDERLAY_OVERWORLD_GRUNGE",
-    "area": "OVERWORLD",
-    "underlayIds": [
-      8,
-      10,
-      58,
-      60,
-      92
-    ],
-    "groundMaterial": "GRUNGE",
-    "replacements": {
-      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
-    "name": "UNDERLAY_GRUNGE",
+    "name": "OVERLAY_SAND",
     "area": "ALL",
-    "underlayIds": [
-      8,
-      10,
-      58,
-      60,
-      92
+    "overlayIds": [
+      25,
+      26,
+      76
     ],
-    "groundMaterial": "GRUNGE"
+    "groundMaterial": "SAND"
   },
   {
-    "name": "COMPLEX_TILES",
-    "area": "OVERWORLD",
-    "underlayIds": [
-      13,
-      26,
-      55,
-      61,
-      62,
-      63,
-      64,
-      65,
-      68,
-      69,
-      94,
-      96
+    "name": "VANILLA_BLACK_TILE",
+    "area": "ALL",
+    "overlayIds": [
+      37
     ],
-    "replacements": {
-      "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
-      "DEFAULT_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
-      "SEASONAL_GRASS": [
-        "h >= 11 && s == 1",
-        "h == 9 && s == 2",
-        "h == 9 && s == 3 && l >= 49",
-        "h >= 9 && s >= 4",
-        "h == 9 && l <= 38",
-        "h >= 10 && s >= 2",
-        "h == 8 && s == 5 && l >= 15",
-        "h == 8 && s >= 6 && l >= 2"
-      ],
-      "SEASONAL_DIRT": [
-        "h == 8 && s <= 4 && l <= 71",
-        "h <= 7 && s <= 5 && l <= 57",
-        "h <= 7 && s <= 7 && l <= 34",
-        "h == 8 && s == 5"
-      ],
-      "DEFAULT_DIRT": true
-    }
+    "blended": false,
+    "maxLightness": 0
   }
 ]

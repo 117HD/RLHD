@@ -12,6 +12,12 @@
     ]
   },
   {
+    "name": "PURE_BLACK",
+    "materials": [
+      "PURE_BLACK"
+    ]
+  },
+  {
     "name": "GRASS_1",
     "materials": [
       "GRASS_1",
@@ -58,7 +64,7 @@
       "SNOW_1",
       "SNOW_3",
       "GRAVEL_LIGHT",
-      "SNOW_4",
+      "SNOW_2",
       "DIRT_1",
       "GRAVEL_LIGHT",
       "SNOW_2"
@@ -72,14 +78,14 @@
       "SNOW_2",
       "SNOW_3",
       "SNOW_3",
-      "SNOW_4"
+      "SNOW_2"
     ]
   },
   {
     "name": "SNOW_2",
     "materials": [
       "SNOW_2",
-      "SNOW_4"
+      "SNOW_3"
     ]
   },
   {
@@ -107,6 +113,16 @@
     ]
   },
   {
+    "name": "PLAIN_DIRT",
+    "materials": [
+      "DIRT_1",
+      "DIRT_1",
+      "GRAVEL_LIGHT",
+      "DIRT_1",
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "VARIED_DIRT",
     "materials": [
       "GRAVEL",
@@ -123,9 +139,34 @@
     ]
   },
   {
+    "name": "DIRTY_MARBLE",
+    "materials": [
+      "DIRT_1",
+      "MARBLE_1",
+      "DIRT_1",
+      "MARBLE_2"
+    ]
+  },
+  {
+    "name": "DIRTY_MARBLE_GLOSS",
+    "materials": [
+      "MARBLE_1_SEMIGLOSS",
+      "DIRT_1",
+      "MARBLE_2_SEMIGLOSS",
+      "MARBLE_1_SEMIGLOSS",
+      "MARBLE_2_SEMIGLOSS"
+    ]
+  },
+  {
     "name": "TILE_SMALL",
     "materials": [
       "TILE_SMALL_1"
+    ]
+  },
+  {
+    "name": "TILE_SMALL_2",
+    "materials": [
+      "TILE_SMALL_2"
     ]
   },
   {
@@ -158,6 +199,12 @@
     "name": "GRUNGE_2",
     "materials": [
       "GRUNGE_2"
+    ]
+  },
+  {
+    "name": "GRUNGE_3",
+    "materials": [
+      "GRUNGE_3"
     ]
   },
   {
@@ -251,6 +298,18 @@
     ]
   },
   {
+    "name": "MARBLE_4",
+    "materials": [
+      "MARBLE_4"
+    ]
+  },
+  {
+    "name": "MARBLE_4_GLOSS",
+    "materials": [
+      "MARBLE_4_GLOSS"
+    ]
+  },
+  {
     "name": "MARBLE_DARK",
     "materials": [
       "MARBLE_DARK"
@@ -272,6 +331,18 @@
     "name": "CAM_TORUM_TILES",
     "materials": [
       "CAM_TORUM_TILES"
+    ]
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH",
+    "materials": [
+      "DARKMEYER_BRICK_PATH"
+    ]
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH_BLEND",
+    "materials": [
+      "DARKMEYER_BRICK_PATH_BLEND"
     ]
   },
   {
@@ -428,6 +499,14 @@
     ]
   },
   {
+    "name": "ROCK_PILES",
+    "materials": [
+      "STONE_NORMALED",
+      "GRAVEL",
+      "GRUNGE_1"
+    ]
+  },
+  {
     "name": "SANDY_STONE_FLOOR",
     "materials": [
       "SAND_2",
@@ -522,6 +601,12 @@
     ]
   },
   {
+    "name": "FORTIS_ROADS",
+    "materials": [
+      "FORTIS_ROADS"
+    ]
+  },
+  {
     "name": "ABYSSAL_BILE",
     "materials": [
       "ABYSSAL_2_FLOW",
@@ -535,6 +620,20 @@
       "GRUNGE_2_SHINY",
       "GRUNGE_1_LIGHT_SHINY",
       "GRUNGE_2_SHINY"
+    ]
+  },
+  {
+    "name": "FORTIS_ROADS",
+    "materials": [ "FORTIS_ROADS" ]
+  },
+  {
+    "name": "FORTIS_ROADS_MIRRORED",
+    "materials": [ "FORTIS_ROADS_MIRRORED" ]
+  },
+  {
+    "name": "STONE",
+    "materials": [
+      "STONE_NORMALED"
     ]
   }
 ]
