@@ -18547,6 +18547,9 @@
       "SNOW1",
       "SNOW2",
       "SNOW3",
+      "GHORROCK_SNOW1",
+      "GHORROCK_SNOW2",
+      "GHORROCK_SNOW3",
       "PENG_BASE_LINE",
       "PENG_AGILITY_SNOW01",
       "PENG_AGILITY_SNOW03"
@@ -62284,6 +62287,77 @@
     ]
   },
   {
+    "description": "Varlamore - Ruins of Tapoyauik Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "TAPO_STEPS_FROZEN01_DEFAULT01",
+      "TAPO_STEPS_FROZEN01_CORNER01",
+      "TAPO_STEPS_FROZEN01_CORNER02"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik - Transparent snow - white",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "BH_ICESLIDE1",
+      "BH_ICESLIDE2",
+      "BH_ICESLIDE4",
+      "BH_ICESLIDE5",
+      "BH_ICESLIDE6",
+      "ICESLIDE_TAPO01",
+      "ICESLIDE_TAPO02",
+      "ICESLIDE_TAPO03",
+      "ICESLIDE_TAPO04",
+      "ICESLIDE_TAPO05",
+      "ICESLIDE_TAPO06"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik - Snow Stalagmites",
+    "baseMaterial": "SNOW_2",
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "uvScale": 0.75,
+    "objectIds": [
+      "STALAGMITE_SNOW01_SPIKE01",
+      "STALAGMITE_SNOW01_SPIKE02",
+      "STALAGMITE_SNOW01_SPIKE03"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik - Transparant Ice - Blue",
+    "baseMaterial": "ICE_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "ICESLIDE_TAPO01_BLUE01",
+      "ICESLIDE_TAPO02_BLUE01",
+      "ICESLIDE_TAPO03_BLUE01",
+      "ICESLIDE_TAPO04_BLUE01",
+      "ICESLIDE_TAPO05_BLUE01",
+      "ICESLIDE_TAPO06_BLUE01"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik - Transparent ice stalagtites with snow",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h >= 35",
+        "baseMaterial": "ICE_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "TAPO_STALAGMITE_ICICLE01_DEFAULT01",
+      "TAPO_STALAGMITE_ICICLE01_DEFAULT02"
+    ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik Murals and Statues",
     "baseMaterial": "MARBLE_2",
     "uvType": "BOX",
@@ -62351,19 +62425,14 @@
   },
   {
     "description": "Varlamore - Ruins of Tapoyauik Snow Walls",
-    "baseMaterial": "SMOOTH_SNOW",
+    "baseMaterial": "SNOW_1",
     "uvType": "BOX",
     "uvScale": 0.75,
+    "uvOrientation": 256,
     "objectIds": [
       "CAVEKIT_SNOW01_CHASM01",
       "CAVEKIT_SNOW01_DEFAULT01_DARK01",
       "TAPOYAUIK_TRAVERSE_STONE_FAIL_BOTTOM",
-      "CAVEKIT_SNOW01_DEFAULT01",
-      "CAVEKIT_SNOW01_JOIN01_M",
-      "CAVEKIT_SNOW01_ICE01",
-      "CAVEKIT_SNOW01_ICE01_DARK01",
-      "CAVEKIT_SNOW01_ICE01_DARK02",
-      "CAVEKIT_SNOW01_JOIN01",
       "CAVEKIT_SNOW01_EDGE01_DARK01",
       "DECOKIT_SNOW01_EDGE01_DARK01",
       "DECOKIT_SNOW01_CORNER03_DARK01",
@@ -62390,6 +62459,29 @@
       "TAPOYAUIK_TRAVERSE_1_BOTTOM",
       "TAPOYAUIK_TRAVERSE_WALL_FAIL_BOTTOM",
       "TAPOYAUIK_TRAVERSE_2_BOTTOM"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Snow and Ice Walls",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h >= 35",
+        "baseMaterial": "ICE_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "CAVEKIT_SNOW01_DEFAULT01",
+      "CAVEKIT_SNOW01_ICE01",
+      "CAVEKIT_SNOW01_JOIN01_M",
+      "CAVEKIT_SNOW01_JOIN01",
+      "CAVEKIT_SNOW01_ICE01_DARK01",
+      "CAVEKIT_SNOW01_ICE01_DARK02"
     ]
   },
   {
