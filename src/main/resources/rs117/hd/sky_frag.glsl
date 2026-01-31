@@ -50,7 +50,8 @@ void main() {
     // The view direction is from near to far
     vec3 viewDir = normalize(farWorld.xyz - nearWorld.xyz);
 
-    vec3 sunDir = normalize(-skySunDir); // Direction TO the sun
+    // Flip horizontal direction (X and Z) to match shadow direction, keep Y for correct altitude
+    vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y, skySunDir.z));
 
     // Calculate how much the view is looking up vs down
     // viewDir.y is negative when looking up (due to coordinate system)
