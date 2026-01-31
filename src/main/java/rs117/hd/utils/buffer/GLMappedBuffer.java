@@ -104,6 +104,12 @@ public final class GLMappedBuffer {
 		return this;
 	}
 
+	public void setPositionBytes(int bytesPos) {
+		mappedBuffer.position(bytesPos);
+		mappedIntBuffer.position(bytesPos / 4);
+		mappedFloatBuffer.position(bytesPos / 4);
+	}
+
 	public void syncViews() {
 		int bytesPos = mappedBuffer.position();
 		if(mappedIntBuffer.position() * 4 > bytesPos)

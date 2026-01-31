@@ -581,7 +581,12 @@ public class ZoneRenderer implements Renderer {
 
 		// Upload world views before rendering
 		uboWorldViews.upload();
-		eboAlpha.unmap();
+
+		if(eboAlphaMapped != null) {
+			eboAlphaMapped.setPositionBytes(eboAlphaOffset * Integer.BYTES);
+			eboAlpha.unmap();
+		}
+		eboAlphaMapped = null;
 
 		// Scene draw state to apply before all recorded commands
 		if (indirectDrawCmdsStaging.position() > 0) {
@@ -593,18 +598,6 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
-
-		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
-		// but the compute shaders should still be executed in case the camera angle has changed.
-		// Technically we could skip compute shaders as well when the camera is unchanged,
-		// but it would only lead to micro stuttering when rotating the camera, compared to no rotation.
-//		if (!plugin.redrawPreviousFrame) {
-//			updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
-//		}
-
-//		frameTimer.begin(Timer.COMPUTE);
-//		plugin.uboCompute.upload();
-//		frameTimer.end(Timer.COMPUTE);
 		
 		// TODO: Tbh, we should add some form of stat tracking to the FrameTimer
 		plugin.drawnDynamicRenderableCount += modelStreamingManager.getDrawnDynamicRenderableCount();
