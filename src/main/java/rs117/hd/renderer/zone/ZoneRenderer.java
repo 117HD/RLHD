@@ -45,6 +45,7 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.shader.SkyShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
@@ -141,6 +142,9 @@ public class ZoneRenderer implements Renderer {
 	private ShadowShaderProgram.Detailed detailedShadowProgram;
 
 	@Inject
+	private SkyShaderProgram skyProgram;
+
+	@Inject
 	private JobSystem jobSystem;
 
 	@Inject
@@ -152,6 +156,8 @@ public class ZoneRenderer implements Renderer {
 
 	// Day/Night Cycle - stored fog color for skybox clear
 	private float[] calculatedFogColorSrgb = null;
+	// Day/Night Cycle - sky gradient enabled flag
+	private boolean skyGradientEnabled = false;
 
 	private final int[] worldPos = new int[3];
 
@@ -227,6 +233,7 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
+		skyProgram.compile(includes);
 	}
 
 	@Override
@@ -234,6 +241,7 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
+		skyProgram.destroy();
 	}
 
 	private void initializeBuffers() {
@@ -584,6 +592,18 @@ public class ZoneRenderer implements Renderer {
 			// Store calculated fog color for skybox clear in scenePass()
 			calculatedFogColorSrgb = fogColor;
 
+			// Calculate sky gradient colors for realistic sky rendering
+			float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(plugin.latLong, cycleDuration);
+			float[] sunDirForSky = TimeOfDay.getSunDirectionForSky(plugin.latLong, cycleDuration);
+
+			plugin.uboGlobal.skyGradientEnabled.set(1);
+			plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
+			plugin.uboGlobal.skyHorizonColor.set(skyGradientColors[1]);
+			plugin.uboGlobal.skySunColor.set(skyGradientColors[2]);
+			plugin.uboGlobal.skySunDir.set(sunDirForSky);
+
+			skyGradientEnabled = true;
+
 			// Calculate shadow visibility based on sun altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
 			float shadowVisibility;
@@ -604,6 +624,8 @@ public class ZoneRenderer implements Renderer {
 		} else {
 			// Reset stored fog color when daylight cycle is disabled
 			calculatedFogColorSrgb = null;
+			skyGradientEnabled = false;
+			plugin.uboGlobal.skyGradientEnabled.set(0);
 		}
 
 		float fogDepth = 0;
@@ -797,17 +819,36 @@ public class ZoneRenderer implements Renderer {
 		// Clear scene
 		frameTimer.begin(Timer.CLEAR_SCENE);
 
-		// Use Day/Night Cycle fog color if available, otherwise use environment manager's fog color
-		float[] fogColor = calculatedFogColorSrgb != null ? calculatedFogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-		float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
-		glClearColor(
-			gammaCorrectedFogColor[0],
-			gammaCorrectedFogColor[1],
-			gammaCorrectedFogColor[2],
-			1f
-		);
+		// Clear depth buffer
 		glClearDepth(0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		// Render sky gradient if Day/Night Cycle is enabled, otherwise use solid color clear
+		if (skyGradientEnabled && skyProgram.isValid()) {
+			// Render sky gradient using fullscreen triangle
+			renderState.disable.set(GL_DEPTH_TEST);
+			renderState.disable.set(GL_CULL_FACE);
+			renderState.apply();
+
+			skyProgram.use();
+			renderState.vao.set(plugin.vaoTri);
+			renderState.apply();
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+
+			// Switch back to scene program
+			sceneProgram.use();
+		} else {
+			// Use Day/Night Cycle fog color if available, otherwise use environment manager's fog color
+			float[] fogColor = calculatedFogColorSrgb != null ? calculatedFogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
+			glClearColor(
+				gammaCorrectedFogColor[0],
+				gammaCorrectedFogColor[1],
+				gammaCorrectedFogColor[2],
+				1f
+			);
+			glClear(GL_COLOR_BUFFER_BIT);
+		}
 		frameTimer.end(Timer.CLEAR_SCENE);
 
 		frameTimer.begin(Timer.RENDER_SCENE);

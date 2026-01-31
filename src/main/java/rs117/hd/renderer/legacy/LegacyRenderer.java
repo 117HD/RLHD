@@ -35,6 +35,7 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.shader.SkyShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
@@ -134,6 +135,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private ShadowShaderProgram.Legacy shadowProgram;
+
+	@Inject
+	private SkyShaderProgram skyProgram;
 
 	@Inject
 	private JobSystem jobSystem;
@@ -284,6 +288,8 @@ public class LegacyRenderer implements Renderer {
 		shadowProgram.setMode(plugin.configShadowMode);
 		shadowProgram.compile(includes);
 
+		skyProgram.compile(includes);
+
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initializePrograms();
 		} else {
@@ -304,6 +310,7 @@ public class LegacyRenderer implements Renderer {
 	public void destroyShaders() {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
+		skyProgram.destroy();
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
@@ -995,6 +1002,7 @@ public class LegacyRenderer implements Renderer {
 			float[] waterColor = environmentManager.currentWaterColor;
 			float[] sunAngles = environmentManager.currentSunAngles;
 
+			boolean skyGradientEnabled = false;
 			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
 				int minimumBrightness = config.minimumBrightness();
 				float cycleDuration = config.cycleDurationMinutes();
@@ -1018,6 +1026,18 @@ public class LegacyRenderer implements Renderer {
 				// Convert fogColor (sRGB) to linear for waterColor to match expected format
 				waterColor = ColorUtils.srgbToLinear(fogColor);
 
+				// Calculate sky gradient colors for realistic sky rendering
+				float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(plugin.latLong, cycleDuration);
+				float[] sunDirForSky = TimeOfDay.getSunDirectionForSky(plugin.latLong, cycleDuration);
+
+				plugin.uboGlobal.skyGradientEnabled.set(1);
+				plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
+				plugin.uboGlobal.skyHorizonColor.set(skyGradientColors[1]);
+				plugin.uboGlobal.skySunColor.set(skyGradientColors[2]);
+				plugin.uboGlobal.skySunDir.set(sunDirForSky);
+
+				skyGradientEnabled = true;
+
 				// Calculate shadow visibility based on sun altitude
 				double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
 				float shadowVisibility;
@@ -1035,6 +1055,8 @@ public class LegacyRenderer implements Renderer {
 
 				add(ambientColor, ambientColor, multiply(directionalColor, 1 - shadowVisibility));
 				directionalStrength *= shadowVisibility;
+			} else {
+				plugin.uboGlobal.skyGradientEnabled.set(0);
 			}
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
@@ -1191,15 +1213,32 @@ public class LegacyRenderer implements Renderer {
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
 
-			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
-			glClearColor(
-				gammaCorrectedFogColor[0],
-				gammaCorrectedFogColor[1],
-				gammaCorrectedFogColor[2],
-				1f
-			);
+			// Clear depth buffer
 			glClearDepth(0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+			// Render sky gradient if Day/Night Cycle is enabled, otherwise use solid color clear
+			if (skyGradientEnabled && skyProgram.isValid()) {
+				// Render sky gradient using fullscreen triangle
+				glDisable(GL_DEPTH_TEST);
+				glDisable(GL_CULL_FACE);
+
+				skyProgram.use();
+				glBindVertexArray(plugin.vaoTri);
+				glDrawArrays(GL_TRIANGLES, 0, 3);
+
+				// Switch back to scene program
+				sceneProgram.use();
+			} else {
+				float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
+				glClearColor(
+					gammaCorrectedFogColor[0],
+					gammaCorrectedFogColor[1],
+					gammaCorrectedFogColor[2],
+					1f
+				);
+				glClear(GL_COLOR_BUFFER_BIT);
+			}
 			frameTimer.end(Timer.CLEAR_SCENE);
 
 			frameTimer.begin(Timer.RENDER_SCENE);

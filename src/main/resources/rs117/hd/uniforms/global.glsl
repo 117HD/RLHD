@@ -52,4 +52,11 @@ layout(std140) uniform UBOGlobal {
 
     float lightningBrightness;
     float elapsedTime;
+
+    // Sky gradient uniforms for Day/Night Cycle
+    int skyGradientEnabled;
+    vec3 skyZenithColor;
+    vec3 skyHorizonColor;
+    vec3 skySunColor;
+    vec3 skySunDir;
 };

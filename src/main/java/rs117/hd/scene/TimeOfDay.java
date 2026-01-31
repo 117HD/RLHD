@@ -192,6 +192,104 @@ public class TimeOfDay
 		return rs117.hd.utils.ColorUtils.linearToSrgb(resultLinear);
 	}
 
+	/**
+	 * Get sky gradient colors for the current time of day.
+	 * Returns an array of 3 float[3] arrays: [zenithColor, horizonColor, sunGlowColor]
+	 * All colors are in sRGB space.
+	 */
+	public static float[][] getSkyGradientColors(double[] latLong, float dayLength) {
+		Instant modifiedDate = getModifiedDate(dayLength);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
+
+		// Zenith color keyframes (top of sky)
+		Object[][] zenithKeyframes = {
+			{ -30.0, new java.awt.Color(15, 20, 35) },    // Deep night - dark blue
+			{ -15.0, new java.awt.Color(25, 30, 50) },    // Late night
+			{ -8.0,  new java.awt.Color(45, 35, 70) },    // Early twilight - purple tint
+			{ -3.0,  new java.awt.Color(80, 60, 100) },   // Twilight
+			{ 0.0,   new java.awt.Color(100, 80, 120) },  // Horizon sun
+			{ 5.0,   new java.awt.Color(120, 140, 180) }, // Early sunrise
+			{ 15.0,  new java.awt.Color(100, 150, 200) }, // Morning
+			{ 30.0,  new java.awt.Color(90, 145, 200) },  // Mid-morning
+			{ 50.0,  new java.awt.Color(85, 140, 195) },  // Midday
+			{ 90.0,  new java.awt.Color(80, 135, 190) }   // High noon
+		};
+
+		// Horizon color keyframes (sides/bottom of sky)
+		Object[][] horizonKeyframes = {
+			{ -30.0, new java.awt.Color(25, 30, 45) },    // Deep night
+			{ -15.0, new java.awt.Color(35, 35, 55) },    // Late night
+			{ -8.0,  new java.awt.Color(60, 45, 65) },    // Early twilight
+			{ -3.0,  new java.awt.Color(140, 80, 70) },   // Twilight - orange/red
+			{ 0.0,   new java.awt.Color(220, 130, 80) },  // Sunrise/sunset - golden
+			{ 5.0,   new java.awt.Color(230, 170, 120) }, // Early morning golden
+			{ 10.0,  new java.awt.Color(200, 180, 160) }, // Morning warm
+			{ 20.0,  new java.awt.Color(170, 175, 185) }, // Late morning
+			{ 30.0,  new java.awt.Color(150, 165, 190) }, // Midday haze
+			{ 50.0,  new java.awt.Color(140, 160, 190) }, // Afternoon
+			{ 90.0,  new java.awt.Color(135, 155, 185) }  // High noon
+		};
+
+		// Sun glow color keyframes (color of the glow around the sun)
+		Object[][] sunGlowKeyframes = {
+			{ -30.0, new java.awt.Color(0, 0, 0) },       // No glow at night
+			{ -10.0, new java.awt.Color(20, 10, 30) },    // Very faint purple
+			{ -5.0,  new java.awt.Color(80, 40, 60) },    // Purple/pink
+			{ -2.0,  new java.awt.Color(180, 80, 50) },   // Deep orange/red
+			{ 0.0,   new java.awt.Color(255, 150, 80) },  // Bright orange
+			{ 5.0,   new java.awt.Color(255, 200, 130) }, // Golden yellow
+			{ 15.0,  new java.awt.Color(255, 230, 180) }, // Warm white
+			{ 30.0,  new java.awt.Color(255, 250, 220) }, // Nearly white
+			{ 50.0,  new java.awt.Color(255, 255, 240) }, // White with slight warmth
+			{ 90.0,  new java.awt.Color(255, 255, 250) }  // Pure white
+		};
+
+		float[] zenithColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, zenithKeyframes);
+		float[] horizonColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, horizonKeyframes);
+		float[] sunGlowColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, sunGlowKeyframes);
+
+		// Convert from linear RGB (what interpolateSrgb returns) back to sRGB for the shader
+		zenithColor = rs117.hd.utils.ColorUtils.linearToSrgb(zenithColor);
+		horizonColor = rs117.hd.utils.ColorUtils.linearToSrgb(horizonColor);
+		sunGlowColor = rs117.hd.utils.ColorUtils.linearToSrgb(sunGlowColor);
+
+		return new float[][] { zenithColor, horizonColor, sunGlowColor };
+	}
+
+	/**
+	 * Get the sun direction vector for sky gradient rendering.
+	 * Returns normalized direction FROM the camera TO the sun.
+	 * Uses the same coordinate transformation as the shadow light direction.
+	 */
+	public static float[] getSunDirectionForSky(double[] latLong, float dayLength) {
+		Instant modifiedDate = getModifiedDate(dayLength);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+
+		// sunAngles[0] = azimuth, sunAngles[1] = altitude
+		// The renderers use: pitch = altitude, yaw = PI - azimuth
+		// This matches how lightDir is calculated in ZoneRenderer and LegacyRenderer
+		double altitude = sunAngles[1];
+		double yaw = Math.PI - sunAngles[0];
+
+		// Calculate direction vector using the same convention as the camera/light system
+		// The forward direction for yaw=0 is along negative Z
+		// pitch rotates around X axis, yaw rotates around Y axis
+		float x = (float) (Math.sin(yaw) * Math.cos(altitude));
+		float y = (float) Math.sin(altitude);
+		float z = (float) (-Math.cos(yaw) * Math.cos(altitude));
+
+		// Normalize (should already be unit length, but just to be safe)
+		float length = (float) Math.sqrt(x * x + y * y + z * z);
+		if (length > 0.0001f) {
+			x /= length;
+			y /= length;
+			z /= length;
+		}
+
+		return new float[] { x, y, z };
+	}
+
 	public static float[] getNightAmbientColor() {
 		return multiply(rgb(56, 99, 161), 2);
 	}
