@@ -626,7 +626,7 @@ public interface HdPluginConfig extends Config
 		return 60;
 	}
 
-	@Range(min = 10, max = 80)
+	@Range(min = 10, max = 100)
 	@ConfigItem(
 		keyName = "minimumBrightness",
 		name = "Minimum Brightness (%)",
@@ -635,7 +635,8 @@ public interface HdPluginConfig extends Config
 			"• 25% = Dark but playable<br>" +
 			"• 35% = Default comfortable darkness<br>" +
 			"• 50% = Bright nights for easy gameplay<br>" +
-			"• 70%+ = Very bright nights (minimal difference from day)",
+			"• 70%+ = Very bright nights (minimal difference from day)<br>" +
+			"• 100% = No brightness change at night",
 		position = 2,
 		section = daylightCycleSettings
 	)
