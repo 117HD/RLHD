@@ -55,6 +55,7 @@ import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
@@ -148,6 +149,9 @@ public class ZoneRenderer implements Renderer {
 	private final Camera sceneCamera = new Camera();
 	private final Camera directionalCamera = new Camera().setOrthographic(true);
 	private final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
+
+	// Day/Night Cycle - stored fog color for skybox clear
+	private float[] calculatedFogColorSrgb = null;
 
 	private final int[] worldPos = new int[3];
 
@@ -412,8 +416,15 @@ public class ZoneRenderer implements Renderer {
 
 				if (sceneCamera.isDirty()) {
 					int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
-					directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
-					directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
+
+					// Use Day/Night-Cycle sun angles if enabled
+					float[] shadowSunAngles = environmentManager.currentSunAngles;
+					if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+						double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
+						shadowSunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
+					}
+					directionalCamera.setPitch(shadowSunAngles[0]);
+					directionalCamera.setYaw(PI - shadowSunAngles[1]);
 
 					// Define a Finite Plane before extracting corners
 					sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
@@ -538,6 +549,63 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
+		// Day/Night Cycle - calculate modified lighting values
+		float[] directionalColor = environmentManager.currentDirectionalColor;
+		float directionalStrength = environmentManager.currentDirectionalStrength;
+		float[] ambientColor = environmentManager.currentAmbientColor;
+		float ambientStrength = environmentManager.currentAmbientStrength;
+		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+		float[] waterColor = environmentManager.currentWaterColor;
+		float[] sunAngles = environmentManager.currentSunAngles;
+
+		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+			int minimumBrightness = config.minimumBrightness();
+			float cycleDuration = config.cycleDurationMinutes();
+
+			float[] originalRegionalDirectionalColor = environmentManager.currentDirectionalColor;
+			float[] originalRegionalAmbientColor = new float[3];
+			System.arraycopy(environmentManager.currentAmbientColor, 0, originalRegionalAmbientColor, 0, 3);
+
+			directionalColor = TimeOfDay.getRegionalDirectionalLight(plugin.latLong, cycleDuration, originalRegionalDirectionalColor);
+			ambientColor = TimeOfDay.getRegionalAmbientLight(plugin.latLong, cycleDuration, originalRegionalAmbientColor);
+
+			float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(plugin.latLong, cycleDuration, minimumBrightness);
+			directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier;
+			ambientStrength = environmentManager.currentAmbientStrength * brightnessMultiplier;
+
+			double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, cycleDuration);
+			sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
+
+			float[] originalRegionalFogColor = fogColor;
+			fogColor = TimeOfDay.getEnhancedSkyColor(plugin.latLong, cycleDuration, originalRegionalFogColor);
+			// Convert fogColor (sRGB) to linear for waterColor to match expected format
+			waterColor = ColorUtils.srgbToLinear(fogColor);
+
+			// Store calculated fog color for skybox clear in scenePass()
+			calculatedFogColorSrgb = fogColor;
+
+			// Calculate shadow visibility based on sun altitude
+			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
+			float shadowVisibility;
+
+			if (sunAltitudeDegrees <= 2) {
+				shadowVisibility = 0.0f;
+			} else if (sunAltitudeDegrees <= 12) {
+				shadowVisibility = (float) ((sunAltitudeDegrees - 2) / 10.0 * 0.6);
+			} else if (sunAltitudeDegrees <= 15) {
+				shadowVisibility = (float) (0.6 + ((sunAltitudeDegrees - 12) / 3.0) * 0.3);
+			} else {
+				double sineFactor = Math.sin(sunAnglesD[1]);
+				shadowVisibility = (float) Math.max(0.9, Math.min(1.0, sineFactor));
+			}
+
+			add(ambientColor, ambientColor, multiply(directionalColor, 1 - shadowVisibility));
+			directionalStrength *= shadowVisibility;
+		} else {
+			// Reset stored fog color when daylight cycle is disabled
+			calculatedFogColorSrgb = null;
+		}
+
 		float fogDepth = 0;
 		switch (config.fogDepthMode()) {
 			case USER_DEFINED:
@@ -550,13 +618,13 @@ public class ZoneRenderer implements Renderer {
 		fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 		plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 		plugin.uboGlobal.fogDepth.set(fogDepth);
-		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
+		plugin.uboGlobal.fogColor.set(fogColor);
 
 		plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 		plugin.uboGlobal.expandedMapLoadingChunks.set(ctx.sceneContext.expandedMapLoadingChunks);
 		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
-		float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
+		float[] waterColorHsv = ColorUtils.srgbToHsv(waterColor);
 		float lightBrightnessMultiplier = 0.8f;
 		float midBrightnessMultiplier = 0.45f;
 		float darkBrightnessMultiplier = 0.05f;
@@ -580,17 +648,16 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.waterColorDark.set(waterColorDark);
 
 		plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
-		float ambientStrength = environmentManager.currentAmbientStrength;
-		float directionalStrength = environmentManager.currentDirectionalStrength;
+		// Apply legacy brightness if enabled
 		if (config.useLegacyBrightness()) {
 			float factor = config.legacyBrightness() / 20f;
 			ambientStrength *= factor;
 			directionalStrength *= factor;
 		}
 		plugin.uboGlobal.ambientStrength.set(ambientStrength);
-		plugin.uboGlobal.ambientColor.set(environmentManager.currentAmbientColor);
+		plugin.uboGlobal.ambientColor.set(ambientColor);
 		plugin.uboGlobal.lightStrength.set(directionalStrength);
-		plugin.uboGlobal.lightColor.set(environmentManager.currentDirectionalColor);
+		plugin.uboGlobal.lightColor.set(directionalColor);
 
 		plugin.uboGlobal.underglowStrength.set(environmentManager.currentUnderglowStrength);
 		plugin.uboGlobal.underglowColor.set(environmentManager.currentUnderglowColor);
@@ -730,7 +797,8 @@ public class ZoneRenderer implements Renderer {
 		// Clear scene
 		frameTimer.begin(Timer.CLEAR_SCENE);
 
-		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+		// Use Day/Night Cycle fog color if available, otherwise use environment manager's fog color
+		float[] fogColor = calculatedFogColorSrgb != null ? calculatedFogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
 		glClearColor(
 			gammaCorrectedFogColor[0],
