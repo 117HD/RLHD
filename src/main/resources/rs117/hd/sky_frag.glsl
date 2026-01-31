@@ -98,12 +98,12 @@ void main() {
     // Calculate angle between view direction and sun direction (full 3D)
     float sunDot = dot(viewDir, sunDir);
 
-    // Create sun glow with multiple layers
+    // Create sun glow with multiple layers (smaller sun, less intense glow)
     if (sunDot > 0.0) {
-        float coreGlow = pow(sunDot, 64.0) * 0.6;      // Tight bright core
-        float innerGlow = pow(sunDot, 16.0) * 0.4;     // Inner glow
-        float midGlow = pow(sunDot, 4.0) * 0.25;       // Medium spread
-        float outerGlow = pow(sunDot, 1.5) * 0.15;     // Wide atmospheric glow
+        float coreGlow = pow(sunDot, 128.0) * 0.4;     // Tighter, smaller core
+        float innerGlow = pow(sunDot, 32.0) * 0.25;    // Smaller inner glow
+        float midGlow = pow(sunDot, 8.0) * 0.15;       // Reduced medium spread
+        float outerGlow = pow(sunDot, 2.5) * 0.08;     // Subtler atmospheric glow
 
         float totalGlow = coreGlow + innerGlow + midGlow + outerGlow;
         skyColor += skySunColor * totalGlow;
