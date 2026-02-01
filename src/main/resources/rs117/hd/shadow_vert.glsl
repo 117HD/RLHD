@@ -67,10 +67,18 @@ layout (location = 1) in vec3 vUv;
         bool isGroundPlaneTile = (terrainData & 0xF) == 1; // plane == 0 && isTerrain
         bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
-        bool isShadowDisabled =
-            isGroundPlaneTile ||
-            isWaterSurfaceOrUnderwaterTile ||
-            isTransparent;
+        #if TERRAIN_SHADOWS
+            // Allow terrain to cast shadows on other terrain
+            bool isShadowDisabled =
+                isWaterSurfaceOrUnderwaterTile ||
+                isTransparent;
+        #else
+            // Exclude ground plane tiles from casting shadows (original behavior)
+            bool isShadowDisabled =
+                isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile ||
+                isTransparent;
+        #endif
 
         if (!isShadowDisabled && vWorldViewId > 0) {
             ivec4 tint = getWorldViewTint(vWorldViewId);
@@ -142,10 +150,18 @@ layout (location = 1) in vec3 vUv;
         bool isGroundPlaneTile = (vTerrainData & 0xF) == 1; // plane == 0 && isTerrain
         bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
-        bool isShadowDisabled =
-            isGroundPlaneTile ||
-            isWaterSurfaceOrUnderwaterTile ||
-            isTransparent;
+        #if TERRAIN_SHADOWS
+            // Allow terrain to cast shadows on other terrain
+            bool isShadowDisabled =
+                isWaterSurfaceOrUnderwaterTile ||
+                isTransparent;
+        #else
+            // Exclude ground plane tiles from casting shadows (original behavior)
+            bool isShadowDisabled =
+                isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile ||
+                isTransparent;
+        #endif
 
         int shouldCastShadow = isShadowDisabled ? 0 : 1;
 

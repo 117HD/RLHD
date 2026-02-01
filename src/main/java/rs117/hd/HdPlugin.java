@@ -388,6 +388,7 @@ public class HdPlugin extends Plugin {
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
 	public boolean configRoofShadows;
+	public boolean configTerrainShadows;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
 	public boolean configZoneStreaming;
@@ -843,6 +844,7 @@ public class HdPlugin extends Plugin {
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
+			.define("TERRAIN_SHADOWS", config.terrainShadows())
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("PIXELATED_SHADOWS", config.pixelatedShadows())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
@@ -1555,6 +1557,7 @@ public class HdPlugin extends Plugin {
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configRoofShadows = config.roofShadows();
+		configTerrainShadows = config.terrainShadows();
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
@@ -1729,6 +1732,7 @@ public class HdPlugin extends Plugin {
 								break;
 							case KEY_SHADOW_MODE:
 							case KEY_SHADOW_TRANSPARENCY:
+							case KEY_TERRAIN_SHADOWS:
 								recompilePrograms = true;
 								// fall-through
 							case KEY_SHADOW_RESOLUTION:

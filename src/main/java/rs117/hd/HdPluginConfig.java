@@ -1208,6 +1208,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_TERRAIN_SHADOWS = "experimentalTerrainShadows";
+	@ConfigItem(
+		keyName = KEY_TERRAIN_SHADOWS,
+		name = "Terrain Shadows",
+		description = "Allow terrain to cast shadows on other terrain. May cause visual artifacts on slopes.",
+		section = experimentalSettings
+	)
+	default boolean terrainShadows() {
+		return false;
+	}
+
 	String KEY_FORCE_INDIRECT_DRAW = "experimentalForceIndirectDraw";
 	@ConfigItem(
 		keyName = KEY_FORCE_INDIRECT_DRAW,
