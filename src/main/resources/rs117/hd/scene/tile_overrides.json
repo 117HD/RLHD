@@ -3220,9 +3220,9 @@
       10
     ],
     "groundMaterial": "CARPET",
-    "shiftLightness": -11,
     "uvScale": 1.4,
-    "minLightness": 5,
+    "minLightness": 13,
+    "shiftLightness": -6,
     "blended": false
   },
   {
@@ -3269,7 +3269,7 @@
     "groundMaterial": "CARPET",
     "blended": false,
     "uvScale": 1.4,
-    "shiftLightness": -2
+    "shiftLightness": 6
   },
   {
     "name": "EAST_ARDOUGNE_CASTLE_DIRT_FIX",
