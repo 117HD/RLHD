@@ -6921,6 +6921,12 @@
     ]
   },
   {
+    "name": "ZEAH_WOODLAND_ANCIENT_GRAVE",
+    "aabbs": [
+      [ 1346, 3735, 1351, 3738, 1 ]
+    ]
+  },
+  {
     "name": "Kebos Interior",
     "aabbs": [
       [ 1293, 3720, 1303, 3725 ],
