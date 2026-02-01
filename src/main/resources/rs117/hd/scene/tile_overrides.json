@@ -8333,6 +8333,16 @@
     "groundMaterial": "GRASSY_DIRT"
   },
   {
+    "name": "Zeah Woodland - Fix Ancient Grave Clipping",
+    "area": "ZEAH_WOODLAND_ANCIENT_GRAVE",
+    "overlayIds": [ 99 ],
+    "groundMaterial": "VARIED_DIRT",
+    "heightOffset": 3,
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "ZEAH_GRAVEL_PATH",
     "area": "KOUREND",
     "overlayIds": [
