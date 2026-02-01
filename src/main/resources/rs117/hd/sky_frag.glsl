@@ -50,8 +50,12 @@ void main() {
     // The view direction is from near to far
     vec3 viewDir = normalize(farWorld.xyz - nearWorld.xyz);
 
-    // Flip horizontal direction (X and Z) to match shadow direction, keep Y for correct altitude
-    vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y, skySunDir.z));
+    // Transform sun direction to view space
+    // The player's perceived horizon is below the astronomical 0° due to camera angle
+    // Add an offset to lower the sun so it visually sets at the perceived horizon
+    // sin(10°) ≈ 0.17, meaning the sun will appear at horizon when actually at +10°
+    float horizonOffset = 0.17;
+    vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y + horizonOffset, skySunDir.z));
 
     // Calculate how much the view is looking up vs down
     // viewDir.y is negative when looking up (due to coordinate system)
