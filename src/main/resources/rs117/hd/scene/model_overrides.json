@@ -1498,7 +1498,6 @@
   {
     "description": "DEAD_TREES",
     "baseMaterial": "BARK",
-    "terrainVertexSnap": true,
     "objectIds": [
       "DEADTREE1",
       "DEADTREE1_LARGE",
@@ -1533,7 +1532,6 @@
   {
     "description": "DEAD_TREES_LIGHTER",
     "baseMaterial": "LIGHT_BARK",
-    "terrainVertexSnap": true,
     "objectIds": [
       "DARKM_DEAD_TREE_01",
       "DARKM_DEAD_TREE_02",
@@ -1558,11 +1556,11 @@
   {
     "description": "TREE_STUMP",
     "baseMaterial": "BARK",
-    "terrainVertexSnap": true,
     "objectIds": [
       "TREESTUMP",
       "TREESTUMP2",
       "DEADTREE2_STUMP_DARK",
+      "DEADTREE2_STUMP",
       "DEADTREE6_STUMP",
       "VIKING_TREESTUMP",
       "DEADTREE4_STUMP",
@@ -1580,7 +1578,8 @@
       "FAIRY2_PINE_TREE_STUMP",
       "DEADTREE1_LARGE_STUMP",
       "MDAUGHTER_PASSABLE_TREE_STUMP",
-      "DRAGON_SLAYER_QIP_WILD5_TREE_STUMP"
+      "DRAGON_SLAYER_QIP_WILD5_TREE_STUMP",
+      "SOTN_HUNTING_TREESTUMP_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
