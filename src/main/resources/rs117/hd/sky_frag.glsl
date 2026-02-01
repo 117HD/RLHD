@@ -79,8 +79,18 @@ void main() {
     float zenithBlend = smoothstep(-0.1, 0.7, upAmount);
 
     // === COMBINE COLORS ===
-    // Create a "dark side" color that's darker and more blue/purple
-    vec3 darkSideColor = skyZenithColor * 0.7; // Darker version of zenith
+    // Use sun altitude to determine how much directional gradient to apply
+    // skySunDir.y = sin(altitude), positive when sun is up, negative when below horizon
+    float sunAltitude = clamp(skySunDir.y, 0.0, 1.0); // 0 at horizon, 1 when high
+    // sin(40°) ≈ 0.64, so we reach 100% at ~40 degrees sun altitude
+    float daytimeFactor = smoothstep(0.0, 0.64, sunAltitude); // Ramps up as sun rises
+
+    // During sunrise/sunset (low daytimeFactor): use darker zenith for dark side
+    // During daytime (high daytimeFactor): both sides use horizon color for uniform sky
+    // sin(20°) ≈ 0.34, so dimming fades out by ~20° sun altitude (faster than daytimeFactor)
+    float dimFadeout = smoothstep(0.0, 0.34, sunAltitude);
+    float darkSideDim = mix(0.7, 1.0, dimFadeout); // Reaches 1.0 at ~20° sun altitude
+    vec3 darkSideColor = mix(skyZenithColor * darkSideDim, skyHorizonColor, daytimeFactor);
 
     // Create a "sun side" color that's the warm horizon color
     vec3 sunSideColor = skyHorizonColor;
@@ -88,8 +98,8 @@ void main() {
     // Blend horizontally between dark side and sun side based on sun facing direction
     vec3 horizonColor = mix(darkSideColor, sunSideColor, sunSideBlend);
 
-    // The zenith color is less affected by horizontal position but still slightly tinted
-    vec3 zenithColor = mix(skyZenithColor * 0.9, skyZenithColor, sunSideBlend * 0.3);
+    // The zenith color - during daytime use full brightness, during sunset allow some dimming
+    vec3 zenithColor = skyZenithColor;
 
     // Blend vertically between horizon and zenith
     vec3 skyColor = mix(horizonColor, zenithColor, zenithBlend);

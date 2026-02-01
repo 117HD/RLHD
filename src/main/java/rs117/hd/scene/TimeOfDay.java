@@ -158,21 +158,15 @@ public class TimeOfDay
 		// Convert to linear for blending
 		float[] enhancedColor = rs117.hd.utils.ColorUtils.srgbToLinear(enhancedColorSrgb);
 		
-		// Calculate blend factor based sun altitude
-		// Maintain regional character even during sunrise/sunset in gloomy areas
+		// Smoothstep blend from peak sunset (0°) to full regional (40°)
+		// S-curve: starts slow, accelerates in middle, slows at end
 		float blendFactor;
-		// Smooth continuous linear progression throughout, increased sunset blending starting earlier
 		if (sunAltitudeDegrees >= 40) {
-			// Very high sun - maximum regional influence (100% regional)
 			blendFactor = 1.0f;
-		} else if (sunAltitudeDegrees >= 10) {
-			// High sun - strong regional influence (50-100% regional)
-			blendFactor = (float) (0.50 + ((sunAltitudeDegrees - 10) / 30.0) * 0.50);
-		} else if (sunAltitudeDegrees >= -3) {
-			// Extended sunset period - gradual regional influence (0% to 50% regional)
-			blendFactor = (float) ((sunAltitudeDegrees + 3) / 13.0) * 0.50f;
+		} else if (sunAltitudeDegrees >= 0) {
+			float t = (float) (sunAltitudeDegrees / 40.0);
+			blendFactor = t * t * (3.0f - 2.0f * t); // Smoothstep curve
 		} else {
-			// Deep twilight/night - no regional influence (0% regional) to show pure dynamic colors
 			blendFactor = 0.0f;
 		}
 		
@@ -250,20 +244,15 @@ public class TimeOfDay
 		float[] horizonColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, horizonKeyframes);
 		float[] sunGlowColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, sunGlowKeyframes);
 
-		// Calculate blend factor for regional color influence during peak daytime
-		// Same blend curve as getEnhancedSkyColor for consistency
+		// Smoothstep blend from peak sunset (0°) to full regional (40°)
+		// S-curve: starts slow, accelerates in middle, slows at end
 		float blendFactor;
 		if (sunAltitudeDegrees >= 40) {
-			// Very high sun - maximum regional influence (100% regional)
 			blendFactor = 1.0f;
-		} else if (sunAltitudeDegrees >= 10) {
-			// High sun - strong regional influence (50-100% regional)
-			blendFactor = (float) (0.50 + ((sunAltitudeDegrees - 10) / 30.0) * 0.50);
-		} else if (sunAltitudeDegrees >= -3) {
-			// Extended sunset period - gradual regional influence (0% to 50% regional)
-			blendFactor = (float) ((sunAltitudeDegrees + 3) / 13.0) * 0.50f;
+		} else if (sunAltitudeDegrees >= 0) {
+			float t = (float) (sunAltitudeDegrees / 40.0);
+			blendFactor = t * t * (3.0f - 2.0f * t); // Smoothstep curve
 		} else {
-			// Deep twilight/night - no regional influence (0% regional)
 			blendFactor = 0.0f;
 		}
 
@@ -272,9 +261,9 @@ public class TimeOfDay
 			// Convert regional fog color to linear for blending
 			float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
 
-			// Blend zenith color with regional color (slightly darker for zenith)
+			// Blend zenith color with regional color (same intensity as horizon for uniformity)
 			for (int i = 0; i < 3; i++) {
-				zenithColor[i] = zenithColor[i] * (1 - blendFactor) + regionalLinear[i] * 0.8f * blendFactor;
+				zenithColor[i] = zenithColor[i] * (1 - blendFactor) + regionalLinear[i] * blendFactor;
 			}
 
 			// Blend horizon color with regional color
