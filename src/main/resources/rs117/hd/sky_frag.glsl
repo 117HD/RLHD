@@ -53,8 +53,8 @@ void main() {
     // Transform sun direction to view space
     // The player's perceived horizon is below the astronomical 0° due to camera angle
     // Add an offset to lower the sun so it visually sets at the perceived horizon
-    // sin(10°) ≈ 0.17, meaning the sun will appear at horizon when actually at +10°
-    float horizonOffset = 0.17;
+    // sin(5°) ≈ 0.087, meaning the sun will appear at horizon when actually at +5°
+    float horizonOffset = 0.087;
     vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y + horizonOffset, skySunDir.z));
 
     // Calculate how much the view is looking up vs down
