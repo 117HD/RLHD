@@ -45606,8 +45606,13 @@
       {
         "colors": "h == 8 && s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
-        "uvScale": 0.4,
+        "uvScale": 0.25,
         "uvType": "BOX"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150",
+        "upwardsNormals": true
       }
     ],
     "objectIds": [
