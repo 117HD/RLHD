@@ -72605,7 +72605,7 @@
   {
     "description": "Depth Bias Fix - Catherby shelves poking through a wall",
     "baseMaterial": "WOOD_GRAIN_3",
-    "areas": [ "CATHERBY_DEPTH_BIAS_FIX" ],
+    "areas": [ "TIMBER_WALL_DEPTH_BIAS_FIX" ],
     "uvType": "BOX",
     "uvScale": 0.5,
     "flatNormals": true,
