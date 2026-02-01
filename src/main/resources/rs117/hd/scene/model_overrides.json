@@ -28728,6 +28728,17 @@
     ]
   },
   {
+    "description": "PoH - Basic Stone Wall Roof Filler, Slightly bias to prevent zfighting",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "depthBias": 1,
+    "objectIds": [
+      "ROOFWALLFILLER"
+    ]
+  },
+  {
     "description": "PoH - Basic stone wall with wooden window frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
