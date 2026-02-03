@@ -2635,7 +2635,6 @@
       "AVIUM_ONION01",
       "AVIUM_ONION02",
       "RAREFLOWER_BLUE",
-      "FLAX",
       "FLOWERBED1",
       "FLOWERBED_RED",
       "FLOWERBED_YELLOW",
@@ -2686,6 +2685,21 @@
       "POH_PLANTBSMALL2A",
       "POH_PLANTBSMALL2B",
       "DARKM_BRAMBLE_BUSH_2"
+    ]
+  },
+  {
+    "description": "Flax - Prevent clickbox from casting a shadow",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "FLAX"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "NONE",
+        "castShadows": false
+      }
     ]
   },
   {
