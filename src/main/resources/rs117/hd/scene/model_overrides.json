@@ -6320,7 +6320,7 @@
   },
   {
     "description": "Wintertodt Terrain",
-    "baseMaterial": "SMOOTH_SNOW",
+    "baseMaterial": "SNOW_1",
     "objectIds": [
       "WINT_WALL_A",
       "WINT_WALL_PILLAR_A",
@@ -6344,11 +6344,25 @@
       "WINT_SNOW_B"
     ],
     "uvType": "BOX",
-    "uvScale": 1.25
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 37 || h == 32",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 16",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Wintertodt Root Terrain",
-    "baseMaterial": "SMOOTH_SNOW",
+    "baseMaterial": "SNOW_1",
     "objectIds": [
       "WINT_WALL_BRUMA_ROOT_A"
     ],
@@ -6371,7 +6385,7 @@
   },
   {
     "description": "Wintertodt Herb Terrain",
-    "baseMaterial": "SMOOTH_SNOW",
+    "baseMaterial": "SNOW_1",
     "objectIds": [
       "WINT_WALL_HERB_ROOT_B"
     ],
@@ -6387,7 +6401,7 @@
   },
   {
     "description": "Wintertodt Railings",
-    "baseMaterial": "SMOOTH_SNOW",
+    "baseMaterial": "SNOW_1",
     "objectIds": [
       "WINT_BALCONY_B",
       "WINT_BALCONY_A",
@@ -6397,7 +6411,15 @@
       "WINT_BALCONY_NONE"
     ],
     "uvType": "BOX",
-    "uvScale": 1.25
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 32 || h == 37 || h == 42",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Wintertodt Wooden Objects",
@@ -6491,11 +6513,12 @@
       "WINT_BRAZIER_LIT"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.25,
     "colorOverrides": [
       {
         "colors": [ "h == 14 || h == 17" ],
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_65",
+        "upwardsNormals": true
       }
     ]
   },

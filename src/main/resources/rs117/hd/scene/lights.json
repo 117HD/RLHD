@@ -33375,9 +33375,9 @@
   },
   {
     "description": "WINTERTODT_LIT_BRAZIER_FLICKER",
-    "offset": [ -7, 135, -4 ],
+    "offset": [ -7, 145, -4 ],
     "radius": 100,
-    "strength": 300,
+    "strength": 200,
     "color": [
       165,
       255,
