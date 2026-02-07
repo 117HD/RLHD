@@ -25,6 +25,7 @@
 package rs117.hd.renderer.zone;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Set;
 import javax.inject.Inject;
@@ -59,6 +60,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.utils.AtmosphereUtils;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
@@ -425,11 +427,28 @@ public class ZoneRenderer implements Renderer {
 				if (sceneCamera.isDirty()) {
 					int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 
-					// Use Day/Night-Cycle sun angles if enabled
+					// Use Day/Night-Cycle sun/moon angles if enabled
 					float[] shadowSunAngles = environmentManager.currentSunAngles;
 					if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
 						double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
-						shadowSunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
+						double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
+
+						if (sunAltDeg < -15.0) {
+							// Deep night: use moon position for shadow direction if moon is above horizon
+							double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, config.cycleDurationMinutes());
+							if (moonAltDeg > 0) {
+								Instant modifiedDate = TimeOfDay.getModifiedDate(config.cycleDurationMinutes());
+								double[] moonAnglesD = AtmosphereUtils.getMoonPosition(
+									modifiedDate.toEpochMilli(), plugin.latLong);
+								shadowSunAngles = new float[] {
+									(float) moonAnglesD[1], (float) moonAnglesD[0]
+								};
+							} else {
+								shadowSunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
+							}
+						} else {
+							shadowSunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
+						}
 					}
 					directionalCamera.setPitch(shadowSunAngles[0]);
 					directionalCamera.setYaw(PI - shadowSunAngles[1]);
@@ -603,21 +622,70 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skySunColor.set(skyGradientColors[2]);
 			plugin.uboGlobal.skySunDir.set(sunDirForSky);
 
+			// Set moon uniforms
+			float[] moonDir = TimeOfDay.getMoonDirectionForSky(plugin.latLong, cycleDuration);
+			float moonIllumination = TimeOfDay.getMoonIlluminationFraction(cycleDuration);
+			float[] moonColor = environmentManager.currentMoonColor;
+			plugin.uboGlobal.skyMoonDir.set(moonDir);
+			plugin.uboGlobal.skyMoonColor.set(moonColor);
+			plugin.uboGlobal.skyMoonIllumination.set(moonIllumination);
+
 			skyGradientEnabled = true;
 
-			// Calculate shadow visibility based on sun altitude
+			// Calculate shadow visibility based on sun and moon altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
+			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, cycleDuration);
+			float moonIllumFrac = moonIllumination;
 			float shadowVisibility;
 
-			if (sunAltitudeDegrees <= 2) {
-				shadowVisibility = 0.0f;
-			} else if (sunAltitudeDegrees <= 12) {
-				shadowVisibility = (float) ((sunAltitudeDegrees - 2) / 10.0 * 0.6);
-			} else if (sunAltitudeDegrees <= 15) {
-				shadowVisibility = (float) (0.6 + ((sunAltitudeDegrees - 12) / 3.0) * 0.3);
+			if (sunAltitudeDegrees > 2) {
+				// Sun shadows (existing behavior)
+				if (sunAltitudeDegrees <= 12) {
+					shadowVisibility = (float) ((sunAltitudeDegrees - 2) / 10.0 * 0.6);
+				} else if (sunAltitudeDegrees <= 15) {
+					shadowVisibility = (float) (0.6 + ((sunAltitudeDegrees - 12) / 3.0) * 0.3);
+				} else {
+					double sineFactor = Math.sin(sunAnglesD[1]);
+					shadowVisibility = (float) Math.max(0.9, Math.min(1.0, sineFactor));
+				}
+			} else if (sunAltitudeDegrees > -15) {
+				// Transition zone: sun between +2 and -15 degrees
+				// Sun shadows fade out from +2 to 0
+				float sunShadowFade = (float) Math.max(0, sunAltitudeDegrees / 2.0);
+
+				// Moon shadows fade in with cubic ease from 0 to -15
+				float moonShadowFade = 0;
+				if (moonAltDeg > 0 && moonIllumFrac > 0.01f) {
+					float moonTransition = (float) Math.min(1.0, Math.max(0, -sunAltitudeDegrees) / 15.0);
+					// Cubic ease for slow fade-in
+					moonTransition = moonTransition * moonTransition * moonTransition;
+					float moonElevationFactor = (float) Math.min(1.0, Math.sin(Math.toRadians(moonAltDeg)));
+					moonShadowFade = moonTransition * moonIllumFrac * 0.4f * moonElevationFactor;
+				}
+
+				shadowVisibility = Math.max(sunShadowFade * 0.3f, moonShadowFade);
 			} else {
-				double sineFactor = Math.sin(sunAnglesD[1]);
-				shadowVisibility = (float) Math.max(0.9, Math.min(1.0, sineFactor));
+				// Deep night: sun below -15 degrees
+				if (moonAltDeg > 0 && moonIllumFrac > 0.01f) {
+					float moonElevationFactor = (float) Math.min(1.0, Math.sin(Math.toRadians(moonAltDeg)));
+					shadowVisibility = moonIllumFrac * 0.4f * moonElevationFactor;
+				} else {
+					shadowVisibility = 0.0f;
+				}
+			}
+
+			// Modulate light color toward moon color when moon shadows are active
+			if (sunAltitudeDegrees < 0 && moonAltDeg > 0 && moonIllumFrac > 0.01f) {
+				float moonInfluence;
+				if (sunAltitudeDegrees < -15) {
+					moonInfluence = (float) Math.min(1.0, (-sunAltitudeDegrees - 15) / 10.0);
+				} else {
+					moonInfluence = (float) Math.max(0, -sunAltitudeDegrees / 15.0) * 0.5f;
+				}
+				for (int i = 0; i < 3; i++) {
+					directionalColor[i] = directionalColor[i] * (1 - moonInfluence)
+						+ moonColor[i] * moonInfluence;
+				}
 			}
 
 			add(ambientColor, ambientColor, multiply(directionalColor, 1 - shadowVisibility));
@@ -627,6 +695,9 @@ public class ZoneRenderer implements Renderer {
 			calculatedFogColorSrgb = null;
 			skyGradientEnabled = false;
 			plugin.uboGlobal.skyGradientEnabled.set(0);
+			plugin.uboGlobal.skyMoonDir.set(new float[]{ 0, 0, 0 });
+			plugin.uboGlobal.skyMoonColor.set(new float[]{ 0, 0, 0 });
+			plugin.uboGlobal.skyMoonIllumination.set(0.0f);
 		}
 
 		float fogDepth = 0;

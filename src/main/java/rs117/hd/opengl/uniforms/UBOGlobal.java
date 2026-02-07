@@ -70,4 +70,9 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property skyHorizonColor = addProperty(PropertyType.FVec3, "skyHorizonColor");
 	public Property skySunColor = addProperty(PropertyType.FVec3, "skySunColor");
 	public Property skySunDir = addProperty(PropertyType.FVec3, "skySunDir");
+
+	// Moon uniforms for Day/Night Cycle
+	public Property skyMoonDir = addProperty(PropertyType.FVec3, "skyMoonDir");
+	public Property skyMoonColor = addProperty(PropertyType.FVec3, "skyMoonColor");
+	public Property skyMoonIllumination = addProperty(PropertyType.Float, "skyMoonIllumination");
 }

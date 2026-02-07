@@ -313,6 +313,50 @@ public class TimeOfDay
 		return new float[] { x, y, z };
 	}
 
+	/**
+	 * Get the moon direction vector for sky rendering.
+	 * Returns normalized direction FROM the camera TO the moon.
+	 * Uses the same coordinate transformation as getSunDirectionForSky().
+	 */
+	public static float[] getMoonDirectionForSky(double[] latLong, float dayLength) {
+		Instant modifiedDate = getModifiedDate(dayLength);
+		double[] moonAngles = AtmosphereUtils.getMoonPosition(modifiedDate.toEpochMilli(), latLong);
+
+		// moonAngles[0] = azimuth, moonAngles[1] = altitude
+		double altitude = moonAngles[1];
+		double yaw = Math.PI - moonAngles[0];
+
+		float x = (float) (Math.sin(yaw) * Math.cos(altitude));
+		float y = (float) Math.sin(altitude);
+		float z = (float) (-Math.cos(yaw) * Math.cos(altitude));
+
+		float length = (float) Math.sqrt(x * x + y * y + z * z);
+		if (length > 0.0001f) {
+			x /= length;
+			y /= length;
+			z /= length;
+		}
+
+		return new float[] { x, y, z };
+	}
+
+	/**
+	 * Get the moon illumination fraction (0 = new moon, 1 = full moon).
+	 */
+	public static float getMoonIlluminationFraction(float dayLength) {
+		Instant modifiedDate = getModifiedDate(dayLength);
+		return (float) AtmosphereUtils.getMoonIllumination(modifiedDate.toEpochMilli())[0];
+	}
+
+	/**
+	 * Get the moon altitude in degrees.
+	 */
+	public static double getMoonAltitudeDegrees(double[] latLong, float dayLength) {
+		Instant modifiedDate = getModifiedDate(dayLength);
+		double[] moonAngles = AtmosphereUtils.getMoonPosition(modifiedDate.toEpochMilli(), latLong);
+		return Math.toDegrees(moonAngles[1]);
+	}
+
 	public static float[] getNightAmbientColor() {
 		return multiply(rgb(56, 99, 161), 2);
 	}

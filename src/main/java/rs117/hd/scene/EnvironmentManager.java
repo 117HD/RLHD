@@ -119,6 +119,10 @@ public class EnvironmentManager {
 	public float[] currentUnderglowColor = new float[] { 0, 0, 0 };
 	private float[] targetUnderglowColor = new float[] { 0, 0, 0 };
 
+	private float[] startMoonColor = new float[] { 0, 0, 0 };
+	public float[] currentMoonColor = new float[] { 0, 0, 0 };
+	private float[] targetMoonColor = new float[] { 0, 0, 0 };
+
 	private float startGroundFogStart = 0f;
 	public float currentGroundFogStart = 0f;
 	private float targetGroundFogStart = 0f;
@@ -270,6 +274,7 @@ public class EnvironmentManager {
 			currentDirectionalColor = mix(startDirectionalColor, targetDirectionalColor, t);
 			currentUnderglowStrength = mix(startUnderglowStrength, targetUnderglowStrength, t);
 			currentUnderglowColor = mix(startUnderglowColor, targetUnderglowColor, t);
+			currentMoonColor = mix(startMoonColor, targetMoonColor, t);
 			currentGroundFogStart = mix(startGroundFogStart, targetGroundFogStart, t);
 			currentGroundFogEnd = mix(startGroundFogEnd, targetGroundFogEnd, t);
 			currentGroundFogOpacity = mix(startGroundFogOpacity, targetGroundFogOpacity, t);
@@ -323,6 +328,7 @@ public class EnvironmentManager {
 		startDirectionalColor = currentDirectionalColor;
 		startUnderglowStrength = currentUnderglowStrength;
 		startUnderglowColor = currentUnderglowColor;
+		startMoonColor = currentMoonColor;
 		startGroundFogStart = currentGroundFogStart;
 		startGroundFogEnd = currentGroundFogEnd;
 		startGroundFogOpacity = currentGroundFogOpacity;
@@ -358,6 +364,7 @@ public class EnvironmentManager {
 		targetDirectionalColor = env.directionalColor;
 		targetUnderglowStrength = env.underglowStrength;
 		targetUnderglowColor = env.underglowColor;
+		targetMoonColor = env.moonColor;
 		targetUnderwaterCausticsColor = env.waterCausticsColor;
 		targetUnderwaterCausticsStrength = env.waterCausticsStrength;
 		targetWindAngle = env.windAngle;
