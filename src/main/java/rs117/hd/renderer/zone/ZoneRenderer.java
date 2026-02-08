@@ -650,24 +650,33 @@ public class ZoneRenderer implements Renderer {
 				}
 			} else if (sunAltitudeDegrees > -15) {
 				// Transition zone: sun between +2 and -15 degrees
-				// Sun shadows fade out from +2 to 0
-				float sunShadowFade = (float) Math.max(0, sunAltitudeDegrees / 2.0);
+				// Crossfade between sun and moon lighting using a blend factor
+				// t=0 at sun +2deg (full sun), t=1 at sun -15deg (full moon)
+				float t = (float) Math.min(1.0, Math.max(0, (2.0 - sunAltitudeDegrees) / 17.0));
+				// Quadratic ease for gradual transition
+				float moonBlend = t * t;
 
-				// Moon shadows fade in with cubic ease from 0 to -15
-				float moonShadowFade = 0;
-				if (moonAltDeg > 0 && moonIllumFrac > 0.01f) {
-					float moonTransition = (float) Math.min(1.0, Math.max(0, -sunAltitudeDegrees) / 15.0);
-					// Cubic ease for slow fade-in
-					moonTransition = moonTransition * moonTransition * moonTransition;
-					float moonElevationFactor = (float) Math.min(1.0, Math.sin(Math.toRadians(moonAltDeg)));
-					moonShadowFade = moonTransition * moonIllumFrac * 0.4f * moonElevationFactor;
+				// Sun shadow component: fades from full to zero
+				float sunShadow = (1.0f - moonBlend) * 0.3f;
+
+				// Moon shadow component: fades from zero to full
+				float moonShadow = 0;
+				if (moonAltDeg > -5 && moonIllumFrac > 0.01f) {
+					// Smooth elevation factor: full strength above 15deg, fades to 0 at -5deg
+					float moonElevationFactor = (float) Math.min(1.0,
+						Math.max(0, (moonAltDeg + 5.0) / 20.0));
+					moonShadow = moonBlend * moonIllumFrac * 0.4f * moonElevationFactor;
 				}
 
-				shadowVisibility = Math.max(sunShadowFade * 0.3f, moonShadowFade);
+				// Additive blend ensures no dip during crossfade
+				shadowVisibility = sunShadow + moonShadow;
 			} else {
 				// Deep night: sun below -15 degrees
-				if (moonAltDeg > 0 && moonIllumFrac > 0.01f) {
-					float moonElevationFactor = (float) Math.min(1.0, Math.sin(Math.toRadians(moonAltDeg)));
+				// Moon light fades from full at 15deg to zero at -5deg above horizon
+				if (moonAltDeg > -5 && moonIllumFrac > 0.01f) {
+					// Smooth elevation factor: full strength above 15deg, fades to 0 at -5deg
+					float moonElevationFactor = (float) Math.min(1.0,
+						Math.max(0, (moonAltDeg + 5.0) / 20.0));
 					shadowVisibility = moonIllumFrac * 0.4f * moonElevationFactor;
 				} else {
 					shadowVisibility = 0.0f;
@@ -675,13 +684,19 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			// Modulate light color toward moon color when moon shadows are active
-			if (sunAltitudeDegrees < 0 && moonAltDeg > 0 && moonIllumFrac > 0.01f) {
+			// Extend below horizon (-5deg) to match shadow fade-out
+			if (sunAltitudeDegrees < 0 && moonAltDeg > -5 && moonIllumFrac > 0.01f) {
 				float moonInfluence;
 				if (sunAltitudeDegrees < -15) {
-					moonInfluence = (float) Math.min(1.0, (-sunAltitudeDegrees - 15) / 10.0);
+					// Ramp from 0.5 at -15° to 1.0 at -25° (continuous with transition zone)
+					moonInfluence = (float) Math.min(1.0, 0.5 + (-sunAltitudeDegrees - 15) / 20.0);
 				} else {
 					moonInfluence = (float) Math.max(0, -sunAltitudeDegrees / 15.0) * 0.5f;
 				}
+				// Fade moon influence as moon approaches/passes below horizon
+				float moonHorizonFade = (float) Math.min(1.0,
+					Math.max(0, (moonAltDeg + 5.0) / 20.0));
+				moonInfluence *= moonHorizonFade;
 				for (int i = 0; i < 3; i++) {
 					directionalColor[i] = directionalColor[i] * (1 - moonInfluence)
 						+ moonColor[i] * moonInfluence;
