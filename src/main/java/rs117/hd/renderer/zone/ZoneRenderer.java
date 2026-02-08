@@ -606,27 +606,6 @@ public class ZoneRenderer implements Renderer {
 			double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, cycleDuration);
 			sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
 
-			// Moon brightness contribution: when the sun is below the horizon and the moon
-			// is up, add a gentle ambient brightness boost based on moon altitude and phase.
-			// This prevents the world from being uniformly dark regardless of moon presence.
-			double sunAltForMoonLight = Math.toDegrees(sunAnglesD[1]);
-			if (sunAltForMoonLight < 0) {
-				double moonAltForLight = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, cycleDuration);
-				float moonIllumForLight = TimeOfDay.getMoonIlluminationFraction(cycleDuration);
-				if (moonAltForLight > -10 && moonIllumForLight > 0.01f) {
-					// Smoothstep moon elevation: 0 at -10deg, 1 at +20deg
-					float mt = (float) Math.min(1.0, Math.max(0, (moonAltForLight + 10.0) / 30.0));
-					float moonElev = mt * mt * (3.0f - 2.0f * mt);
-					// Sun fade: full moon contribution when sun is well below horizon,
-					// fading to 0 as sun approaches horizon (smoothstep from -12° to 0°)
-					float st = (float) Math.min(1.0, Math.max(0, -sunAltForMoonLight / 12.0));
-					float sunFade = st * st * (3.0f - 2.0f * st);
-					// Moon adds up to ~15% extra ambient brightness at full moon, high in sky
-					float moonBrightnessBoost = moonIllumForLight * 0.15f * moonElev * sunFade;
-					ambientStrength += environmentManager.currentAmbientStrength * moonBrightnessBoost;
-				}
-			}
-
 			float[] originalRegionalFogColor = fogColor;
 			fogColor = TimeOfDay.getEnhancedSkyColor(plugin.latLong, cycleDuration, originalRegionalFogColor);
 			// Convert fogColor (sRGB) to linear for waterColor to match expected format
@@ -684,7 +663,7 @@ public class ZoneRenderer implements Renderer {
 					// reaches full strength at +20deg. C1 continuous onset prevents pop-in.
 					float me = (float) Math.min(1.0, Math.max(0, (moonAltDeg + 10.0) / 30.0));
 					float moonElevationFactor = me * me * (3.0f - 2.0f * me); // smoothstep
-					moonBaseShadow = moonIllumFrac * 0.4f * moonElevationFactor;
+					moonBaseShadow = moonIllumFrac * 0.2f * moonElevationFactor;
 				}
 
 				// Smoothstep blend from 0 at +2° to full moonBaseShadow at -15°
@@ -707,24 +686,23 @@ public class ZoneRenderer implements Renderer {
 					float ps = pt * pt * (3.0f - 2.0f * pt);
 					moonInfluence = ps * 0.05f;
 				} else if (sunAltitudeDegrees >= -15.0) {
-					// Main twilight: smoothstep from 0.05 at 0° to 0.5 at -15°
+					// Main twilight: smoothstep from 0.05 at 0° to 0.8 at -15°
 					float tt = (float) (-sunAltitudeDegrees / 15.0);
 					float ts = tt * tt * (3.0f - 2.0f * tt);
-					moonInfluence = 0.05f + ts * 0.45f;
-				} else if (sunAltitudeDegrees >= -35.0) {
-					// Deep night: smoothstep from 0.5 at -15° to 1.0 at -35°
-					// Using smoothstep so derivative is zero at -15° (matches twilight zone end)
-					float dt = (float) ((-sunAltitudeDegrees - 15.0) / 20.0);
-					float ds = dt * dt * (3.0f - 2.0f * dt);
-					moonInfluence = 0.5f + ds * 0.5f;
+					moonInfluence = 0.05f + ts * 0.75f;
 				} else {
-					moonInfluence = 1.0f;
+					// Deep night: cap at 0.8 so the moon tints but doesn't fully replace
+					// the base nighttime directional color
+					moonInfluence = 0.8f;
 				}
 
 				// Fade moon influence based on moon's own altitude (smoothstep)
 				float ht = (float) Math.min(1.0, Math.max(0, (moonAltDeg + 10.0) / 30.0));
 				float moonHorizonFade = ht * ht * (3.0f - 2.0f * ht);
 				moonInfluence *= moonHorizonFade;
+
+				// Scale by moon phase — full moon has strongest color tint, new moon has none
+				moonInfluence *= moonIllumFrac;
 
 				for (int i = 0; i < 3; i++) {
 					directionalColor[i] = directionalColor[i] * (1 - moonInfluence)
