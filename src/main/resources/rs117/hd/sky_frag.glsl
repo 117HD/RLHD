@@ -231,15 +231,10 @@ void main() {
                 float terminatorEdge = terminatorX * sqrt(max(0.0, 1.0 - clampedY * clampedY));
                 // Smooth the terminator edge — lit when localX is LESS than the edge
                 float isLit = smoothstep(terminatorEdge + 0.05, terminatorEdge - 0.05, localX);
-                // Dark side of the moon is faintly visible instead of fully transparent
-                isLit = max(isLit, 0.05);
 
                 // Limb darkening: edges of the moon are slightly darker
                 float limbDarkening = mix(0.7, 1.0, normDist * normDist);
 
-                // Final moon color - only blend the lit portion onto the sky
-                // Unlit parts remain transparent (show sky behind)
-                // Apply daytime transparency so moon fades out when sun is high
                 // Procedural moon surface detail
                 vec2 moonUV = vec2(localX, localY) * 3.0 + vec2(50.0, 50.0);
                 float surfaceNoise = moonFbm(moonUV);
@@ -251,8 +246,11 @@ void main() {
                 float mariaTint = smoothstep(0.85, 0.65, surfaceBrightness);
                 vec3 surfaceColor = mix(vec3(1.0), vec3(1.0, 0.95, 0.87), mariaTint * 0.3);
 
-                vec3 moonFinalColor = skyMoonColor * limbDarkening * surfaceBrightness * surfaceColor;
-                float moonAlpha = moonDisk * isLit * moonDayAlpha;
+                vec3 litColor = skyMoonColor * limbDarkening * surfaceBrightness * surfaceColor;
+                // Dark side blends toward sky color with slight darkening for subtle visibility
+                vec3 darkSideMoon = skyColor * 0.95;
+                vec3 moonFinalColor = mix(darkSideMoon, litColor, isLit);
+                float moonAlpha = moonDisk * moonDayAlpha;
 
                 skyColor = mix(skyColor, moonFinalColor, moonAlpha);
             }
