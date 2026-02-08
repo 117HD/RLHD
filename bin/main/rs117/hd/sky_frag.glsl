@@ -173,10 +173,10 @@ void main() {
         float moonDayAlpha = 1.0 - smoothstep(-0.17, 0.5, skySunDir.y);
 
         if (moonDot > 0.0 && moonDayAlpha > 0.001) {
-            // Moon angular radius: ~2.4 degrees diameter = 1.2 degrees half-angle
-            // cos(1.2 deg) = 0.99978
-            float moonAngularRadius = 0.99978;
-            float edgeWidth = 0.00004;
+            // Moon angular radius: ~4.8 degrees diameter = 2.4 degrees half-angle
+            // cos(2.4 deg) ≈ 0.99912 — about 2x larger than realistic for visual impact
+            float moonAngularRadius = 0.99912;
+            float edgeWidth = 0.00015;
 
             // Sharp disk with anti-aliased edge
             float moonDisk = smoothstep(moonAngularRadius - edgeWidth, moonAngularRadius, moonDot);
