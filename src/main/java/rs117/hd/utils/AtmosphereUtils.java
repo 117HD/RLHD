@@ -78,10 +78,12 @@ public class AtmosphereUtils
 	public static float[] getDirectionalLight(long millis, double[] latLong) {
 		double[] angles = getSunAngles(millis, latLong);
 
-		// Use night illumination as a base
+		// Use a fixed dim nighttime base color (4100K at low intensity).
+		// Moon-phase-dependent brightness is handled in ZoneRenderer using
+		// getMoonDate() for consistent illumination values.
 		float[] rgb = multiply(
 			ColorUtils.colorTemperatureToLinearRgb(4100),
-			(float) AtmosphereUtils.getMoonIllumination(millis)[0] * .2f
+			0.1f
 		);
 
 		if (!TimeOfDay.isNight(angles)) {

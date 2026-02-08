@@ -168,18 +168,17 @@ void main() {
                 float localY = dot(toView, moonUp) * angDist / moonRadius;
 
                 // Phase terminator: illumination maps to terminator position
-                // illumination=1 (full): terminatorX = 1 (all lit)
-                // illumination=0.5 (half): terminatorX = 0 (straight line)
-                // illumination=0 (new): terminatorX = -1 (all dark)
+                // The lit region is where localX < terminatorEdge (sun-facing side)
+                // illumination=1 (full): terminatorX = 1, edge at +1 -> all lit
+                // illumination=0.5 (half): terminatorX = 0, edge at 0 -> half lit
+                // illumination=0 (new): terminatorX = -1, edge at -1 -> all dark
                 float terminatorX = 2.0 * skyMoonIllumination - 1.0;
 
                 // The terminator is an ellipse on the disk surface
-                // lit region: localX > terminatorX * sqrt(1 - localY^2)
-                // Clamp localY to disk range for edge pixels
                 float clampedY = clamp(localY, -0.99, 0.99);
                 float terminatorEdge = terminatorX * sqrt(max(0.0, 1.0 - clampedY * clampedY));
-                // Smooth the terminator edge slightly
-                float isLit = smoothstep(terminatorEdge - 0.05, terminatorEdge + 0.05, localX);
+                // Smooth the terminator edge — lit when localX is LESS than the edge
+                float isLit = smoothstep(terminatorEdge + 0.05, terminatorEdge - 0.05, localX);
 
                 // Limb darkening: edges of the moon are slightly darker
                 float limbDarkening = mix(0.7, 1.0, normDist * normDist);

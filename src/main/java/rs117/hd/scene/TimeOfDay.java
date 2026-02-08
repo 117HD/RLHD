@@ -456,7 +456,7 @@ public class TimeOfDay
 		Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS);
 
 		// Total simulated days elapsed = completed whole cycles + current cycle progress
-		// This advances continuously, preventing the moon from jumping at cycle boundaries
+		// This advances continuously, preventing the moon from jumping at cycle boundaries.
 		double totalSimulatedDays = completedCycles + accumulatedCycleTime;
 		long totalOffsetMillis = (long) (totalSimulatedDays * 24 * 60 * 60 * 1000);
 
