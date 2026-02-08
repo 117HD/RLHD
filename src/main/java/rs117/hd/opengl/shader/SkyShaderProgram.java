@@ -1,8 +1,11 @@
 package rs117.hd.opengl.shader;
 
 import static org.lwjgl.opengl.GL33C.*;
+import rs117.hd.HdPlugin;
 
 public class SkyShaderProgram extends ShaderProgram {
+	protected final UniformTexture uniNightSkyTexture = addUniformTexture("nightSkyTexture");
+
 	public SkyShaderProgram() {
 		super(t -> t
 			.add(GL_VERTEX_SHADER, "sky_vert.glsl")
@@ -11,6 +14,6 @@ public class SkyShaderProgram extends ShaderProgram {
 
 	@Override
 	protected void initialize() {
-		// No textures needed for sky gradient
+		uniNightSkyTexture.set(HdPlugin.TEXTURE_UNIT_NIGHT_SKY);
 	}
 }

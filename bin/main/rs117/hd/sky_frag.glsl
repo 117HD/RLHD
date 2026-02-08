@@ -32,6 +32,8 @@ in vec2 fScreenPos;
 
 out vec4 FragColor;
 
+uniform sampler2D nightSkyTexture;
+
 // Moon surface noise functions
 float moonHash(in vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
@@ -157,6 +159,20 @@ void main() {
 
         float totalGlow = coreGlow + innerGlow + midGlow + outerGlow;
         skyColor += skySunColor * totalGlow;
+    }
+
+    // === NIGHT SKY TEXTURE ===
+    // Fade in the starfield texture as sun drops below horizon
+    // nightFade is already 0 at -15° and 1 at 0°, so we use its inverse
+    float nightSkyBlend = 1.0 - nightFade;
+    if (nightSkyBlend > 0.001) {
+        // Convert view direction to spherical UV coordinates
+        float phi = atan(viewDir.z, viewDir.x);               // azimuth: -PI to PI
+        float theta = asin(clamp(-viewDir.y, -1.0, 1.0));     // elevation: -PI/2 to PI/2
+        vec2 nightSkyUV = vec2(phi / (2.0 * 3.14159265) + 0.5, theta / 3.14159265 + 0.5);
+        vec3 nightSkyColor = texture(nightSkyTexture, nightSkyUV).rgb;
+
+        skyColor = mix(skyColor, nightSkyColor, nightSkyBlend);
     }
 
     // === MOON DISK ===

@@ -155,6 +155,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_NIGHT_SKY = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
