@@ -476,6 +476,7 @@
     "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
+	"moonColor": "#FF0000",
     "windSpeed": 10,
     "windStrength": 30
   },
