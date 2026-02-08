@@ -160,6 +160,10 @@ public class ZoneRenderer implements Renderer {
 	private float[] calculatedFogColorSrgb = null;
 	// Day/Night Cycle - sky gradient enabled flag
 	private boolean skyGradientEnabled = false;
+	// Day/Night Cycle - smoothed moon values to prevent popping at cycle boundaries
+	private double smoothedMoonAltDeg = Double.NaN;
+	private float smoothedMoonIllumFrac = Float.NaN;
+	private boolean moonSmoothingActive = false;
 
 	private final int[] worldPos = new int[3];
 
@@ -433,10 +437,12 @@ public class ZoneRenderer implements Renderer {
 						double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
 						double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 
-						if (sunAltDeg < -15.0) {
-							// Deep night: use moon position for shadow direction if moon is above horizon
+						if (sunAltDeg < 2.0) {
+							// Below +2° sun shadows are faded out, switch to moon direction
+							// early so the shadow map is already oriented when moon shadows
+							// start fading in via smoothstep — prevents brightness pop
 							double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, config.cycleDurationMinutes());
-							if (moonAltDeg > 0) {
+							if (moonAltDeg > -10) {
 								Instant modifiedDate = TimeOfDay.getModifiedDate(config.cycleDurationMinutes());
 								double[] moonAnglesD = AtmosphereUtils.getMoonPosition(
 									modifiedDate.toEpochMilli(), plugin.latLong);
@@ -603,6 +609,27 @@ public class ZoneRenderer implements Renderer {
 			double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, cycleDuration);
 			sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
 
+			// Moon brightness contribution: when the sun is below the horizon and the moon
+			// is up, add a gentle ambient brightness boost based on moon altitude and phase.
+			// This prevents the world from being uniformly dark regardless of moon presence.
+			double sunAltForMoonLight = Math.toDegrees(sunAnglesD[1]);
+			if (sunAltForMoonLight < 0) {
+				double moonAltForLight = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, cycleDuration);
+				float moonIllumForLight = TimeOfDay.getMoonIlluminationFraction(cycleDuration);
+				if (moonAltForLight > -10 && moonIllumForLight > 0.01f) {
+					// Smoothstep moon elevation: 0 at -10deg, 1 at +20deg
+					float mt = (float) Math.min(1.0, Math.max(0, (moonAltForLight + 10.0) / 30.0));
+					float moonElev = mt * mt * (3.0f - 2.0f * mt);
+					// Sun fade: full moon contribution when sun is well below horizon,
+					// fading to 0 as sun approaches horizon (smoothstep from -12° to 0°)
+					float st = (float) Math.min(1.0, Math.max(0, -sunAltForMoonLight / 12.0));
+					float sunFade = st * st * (3.0f - 2.0f * st);
+					// Moon adds up to ~15% extra ambient brightness at full moon, high in sky
+					float moonBrightnessBoost = moonIllumForLight * 0.15f * moonElev * sunFade;
+					ambientStrength += environmentManager.currentAmbientStrength * moonBrightnessBoost;
+				}
+			}
+
 			float[] originalRegionalFogColor = fogColor;
 			fogColor = TimeOfDay.getEnhancedSkyColor(plugin.latLong, cycleDuration, originalRegionalFogColor);
 			// Convert fogColor (sRGB) to linear for waterColor to match expected format
@@ -634,8 +661,52 @@ public class ZoneRenderer implements Renderer {
 
 			// Calculate shadow visibility based on sun and moon altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
-			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, cycleDuration);
-			float moonIllumFrac = moonIllumination;
+			double rawMoonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, cycleDuration);
+			float rawMoonIllumFrac = moonIllumination;
+
+			// Smooth moon values to prevent popping when date advances at cycle boundaries
+			// Only activate smoothing when a large jump is detected (cycle boundary)
+			// During normal progression, use raw values directly for accurate tracking
+			double moonAltDeg;
+			float moonIllumFrac;
+
+			if (Double.isNaN(smoothedMoonAltDeg)) {
+				// First frame: initialize to raw values, no smoothing needed
+				smoothedMoonAltDeg = rawMoonAltDeg;
+				smoothedMoonIllumFrac = rawMoonIllumFrac;
+				moonAltDeg = rawMoonAltDeg;
+				moonIllumFrac = rawMoonIllumFrac;
+			} else {
+				// Detect large jumps that indicate a cycle boundary
+				double altJump = Math.abs(rawMoonAltDeg - smoothedMoonAltDeg);
+				if (altJump > 5.0) {
+					// Cycle boundary detected - activate smoothing
+					moonSmoothingActive = true;
+				}
+
+				if (moonSmoothingActive) {
+					// Exponential smoothing toward raw target
+					double smoothFactor = 0.05; // ~5% per frame, converge faster
+					smoothedMoonAltDeg += (rawMoonAltDeg - smoothedMoonAltDeg) * smoothFactor;
+					smoothedMoonIllumFrac += (rawMoonIllumFrac - smoothedMoonIllumFrac) * (float) smoothFactor;
+
+					// Deactivate smoothing once we've converged close enough
+					if (Math.abs(rawMoonAltDeg - smoothedMoonAltDeg) < 1.0) {
+						moonSmoothingActive = false;
+						smoothedMoonAltDeg = rawMoonAltDeg;
+						smoothedMoonIllumFrac = rawMoonIllumFrac;
+					}
+
+					moonAltDeg = smoothedMoonAltDeg;
+					moonIllumFrac = smoothedMoonIllumFrac;
+				} else {
+					// Normal progression: use raw values directly
+					smoothedMoonAltDeg = rawMoonAltDeg;
+					smoothedMoonIllumFrac = rawMoonIllumFrac;
+					moonAltDeg = rawMoonAltDeg;
+					moonIllumFrac = rawMoonIllumFrac;
+				}
+			}
 			float shadowVisibility;
 
 			if (sunAltitudeDegrees > 2) {
@@ -648,50 +719,57 @@ public class ZoneRenderer implements Renderer {
 					double sineFactor = Math.sin(sunAnglesD[1]);
 					shadowVisibility = (float) Math.max(0.9, Math.min(1.0, sineFactor));
 				}
-			} else if (sunAltitudeDegrees > -15) {
-				// Transition zone: sun between +2 and -15 degrees
-				// Sun shadows already faded to 0 at +2°, only moon shadows ramp up here
-				// t goes from 0 (at +2°) to 1 (at -15°)
-				float t = (float) Math.min(1.0, Math.max(0, (2.0 - sunAltitudeDegrees) / 17.0));
-				// Quadratic ease for gradual moon shadow fade-in
-				float moonBlend = t * t;
-
-				float moonShadow = 0;
-				if (moonAltDeg > -5 && moonIllumFrac > 0.01f) {
-					// Smooth elevation factor: full strength above 15deg, fades to 0 at -5deg
-					float moonElevationFactor = (float) Math.min(1.0,
-						Math.max(0, (moonAltDeg + 5.0) / 20.0));
-					moonShadow = moonBlend * moonIllumFrac * 0.4f * moonElevationFactor;
-				}
-
-				shadowVisibility = moonShadow;
 			} else {
-				// Deep night: sun below -15 degrees
-				// Moon light fades from full at 15deg to zero at -5deg above horizon
-				if (moonAltDeg > -5 && moonIllumFrac > 0.01f) {
-					// Smooth elevation factor: full strength above 15deg, fades to 0 at -5deg
-					float moonElevationFactor = (float) Math.min(1.0,
-						Math.max(0, (moonAltDeg + 5.0) / 20.0));
-					shadowVisibility = moonIllumFrac * 0.4f * moonElevationFactor;
-				} else {
-					shadowVisibility = 0.0f;
+				// Night: sun below +2 degrees
+				// Moon shadow ramps in via smoothstep from +2° to -15°, then stays constant
+				float moonBaseShadow = 0;
+				if (moonAltDeg > -10 && moonIllumFrac > 0.01f) {
+					// Smoothstep elevation factor: starts at -10deg (zero derivative),
+					// reaches full strength at +20deg. C1 continuous onset prevents pop-in.
+					float me = (float) Math.min(1.0, Math.max(0, (moonAltDeg + 10.0) / 30.0));
+					float moonElevationFactor = me * me * (3.0f - 2.0f * me); // smoothstep
+					moonBaseShadow = moonIllumFrac * 0.4f * moonElevationFactor;
 				}
+
+				// Smoothstep blend from 0 at +2° to full moonBaseShadow at -15°
+				// Uses smoothstep so derivative is zero at both ends (no pop at -15°)
+				float t = (float) Math.min(1.0, Math.max(0, (2.0 - sunAltitudeDegrees) / 17.0));
+				float moonBlend = t * t * (3.0f - 2.0f * t); // smoothstep instead of quadratic
+				shadowVisibility = moonBlend * moonBaseShadow;
 			}
 
-			// Modulate light color toward moon color when moon shadows are active
-			// Extend below horizon (-5deg) to match shadow fade-out
-			if (sunAltitudeDegrees < 0 && moonAltDeg > -5 && moonIllumFrac > 0.01f) {
+			// Smooth sun-to-moon directional light color crossfade
+			// Begin moon color influence ABOVE the horizon (+5°) with a gentle ramp,
+			// overlapping with the sun's natural warm-color fade-out near the horizon.
+			// This prevents the color "pop" at 0° where warm sun tones vanish while
+			// cool moon tones appear simultaneously.
+			if (sunAltitudeDegrees < 5.0 && moonAltDeg > -10 && moonIllumFrac > 0.01f) {
 				float moonInfluence;
-				if (sunAltitudeDegrees < -15) {
-					// Ramp from 0.5 at -15° to 1.0 at -25° (continuous with transition zone)
-					moonInfluence = (float) Math.min(1.0, 0.5 + (-sunAltitudeDegrees - 15) / 20.0);
+				if (sunAltitudeDegrees >= 0.0) {
+					// Pre-horizon: smoothstep from 0.0 at +5° to 0.05 at 0°
+					float pt = (float) ((5.0 - sunAltitudeDegrees) / 5.0);
+					float ps = pt * pt * (3.0f - 2.0f * pt);
+					moonInfluence = ps * 0.05f;
+				} else if (sunAltitudeDegrees >= -15.0) {
+					// Main twilight: smoothstep from 0.05 at 0° to 0.5 at -15°
+					float tt = (float) (-sunAltitudeDegrees / 15.0);
+					float ts = tt * tt * (3.0f - 2.0f * tt);
+					moonInfluence = 0.05f + ts * 0.45f;
+				} else if (sunAltitudeDegrees >= -35.0) {
+					// Deep night: smoothstep from 0.5 at -15° to 1.0 at -35°
+					// Using smoothstep so derivative is zero at -15° (matches twilight zone end)
+					float dt = (float) ((-sunAltitudeDegrees - 15.0) / 20.0);
+					float ds = dt * dt * (3.0f - 2.0f * dt);
+					moonInfluence = 0.5f + ds * 0.5f;
 				} else {
-					moonInfluence = (float) Math.max(0, -sunAltitudeDegrees / 15.0) * 0.5f;
+					moonInfluence = 1.0f;
 				}
-				// Fade moon influence as moon approaches/passes below horizon
-				float moonHorizonFade = (float) Math.min(1.0,
-					Math.max(0, (moonAltDeg + 5.0) / 20.0));
+
+				// Fade moon influence based on moon's own altitude (smoothstep)
+				float ht = (float) Math.min(1.0, Math.max(0, (moonAltDeg + 10.0) / 30.0));
+				float moonHorizonFade = ht * ht * (3.0f - 2.0f * ht);
 				moonInfluence *= moonHorizonFade;
+
 				for (int i = 0; i < 3; i++) {
 					directionalColor[i] = directionalColor[i] * (1 - moonInfluence)
 						+ moonColor[i] * moonInfluence;

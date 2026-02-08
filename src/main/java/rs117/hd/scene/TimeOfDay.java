@@ -16,6 +16,7 @@ public class TimeOfDay
 	private static float lastDayLength = MINUTES_PER_DAY;
 	private static long lastUpdateTime = 0;
 	private static double accumulatedCycleTime = 0.0;
+	private static long completedCycles = 0; // Each completed cycle = one simulated day
 
 	/**
 	 * Get the current sun or moon angles for a given set of coordinates and simulated day length in minutes.
@@ -386,9 +387,12 @@ public class TimeOfDay
 		
 		// Add to accumulated cycle time to maintain continuity
 		accumulatedCycleTime += cycleTimeElapsed;
-		
-		// Keep cycle time within [0, 1) range
-		accumulatedCycleTime = accumulatedCycleTime % 1.0;
+
+		// Track completed cycles (each = one simulated day) for moon phase progression
+		while (accumulatedCycleTime >= 1.0) {
+			accumulatedCycleTime -= 1.0;
+			completedCycles++;
+		}
 		
 		// Update tracking variables for next call
 		lastUpdateTime = currentTimeMillis;
@@ -427,7 +431,9 @@ public class TimeOfDay
 		}
 		
 		// Convert mapped hour to actual time
-		Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS);
+		// Advance date by completedCycles days so moon phase and rise/set times progress
+		Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS)
+			.plus(completedCycles, ChronoUnit.DAYS);
 		long mappedMillis = (long) (mappedHour * 60 * 60 * 1000);
 		return startOfDay.plusMillis(mappedMillis);
 	}
@@ -470,26 +476,42 @@ public class TimeOfDay
 	public static float getDynamicBrightnessMultiplier(double[] latLong, float dayLength, int minimumBrightness) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
-		
+
 		// Calculate sun altitude in degrees (-90 to 90, where 90 is directly overhead)
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
-		
+
 		// Convert minimum brightness from percentage to decimal
 		float minBrightness = minimumBrightness / 100.0f;
 		float horizonBrightness = minBrightness + 0.10f; // 10% brighter at horizon
-		
-		// Brightness based directly on sun altitude for perfect synchronization
-		// When sun is below horizon (negative altitude), use playable night brightness
-		if (sunAltitudeDegrees <= 0) {
-			// Gradual transition from minimum (deep night) to horizon brightness
-			double factor = Math.max(0, sunAltitudeDegrees + 18) / 18.0; // -18° to 0°
-			return (float) (minBrightness + 0.10 * factor);
+
+		if (sunAltitudeDegrees <= -18) {
+			// Deep night: minimum brightness
+			return minBrightness;
+		} else if (sunAltitudeDegrees <= -5) {
+			// Night: smoothstep from minBrightness at -18° to twilightBrightness at -5°
+			// twilightBrightness is partway between min and horizon
+			float twilightBrightness = minBrightness + 0.07f;
+			float t = (float) ((sunAltitudeDegrees + 18.0) / 13.0); // 0 at -18°, 1 at -5°
+			float s = t * t * (3.0f - 2.0f * t);
+			return minBrightness + (twilightBrightness - minBrightness) * s;
+		} else if (sunAltitudeDegrees <= 5) {
+			// Horizon transition: smoothstep from twilightBrightness at -5° to earlyDayBrightness at +5°
+			// This zone spans the critical 0° boundary with a single smooth curve
+			float twilightBrightness = minBrightness + 0.07f;
+			float earlyDayBrightness = horizonBrightness + 0.05f;
+			float t = (float) ((sunAltitudeDegrees + 5.0) / 10.0); // 0 at -5°, 1 at +5°
+			float s = t * t * (3.0f - 2.0f * t);
+			return twilightBrightness + (earlyDayBrightness - twilightBrightness) * s;
 		} else {
-			// When sun is above horizon, scale brightness from horizon to peak brightness
-			// Use sine function to match natural sun intensity curve
-			float peakBrightness = 1.2f; // 20% brighter than default at peak sun
+			// Daytime: sine curve from earlyDayBrightness at +5° to peak at 90°
+			float earlyDayBrightness = horizonBrightness + 0.05f;
+			float peakBrightness = 1.2f;
 			double sineFactor = Math.sin(Math.toRadians(sunAltitudeDegrees));
-			return (float) (horizonBrightness + (peakBrightness - horizonBrightness) * sineFactor);
+			// Scale so that at 5°, we match earlyDayBrightness
+			double sineAt5 = Math.sin(Math.toRadians(5.0));
+			double normalizedSine = (sineFactor - sineAt5) / (1.0 - sineAt5);
+			normalizedSine = Math.max(0, normalizedSine);
+			return (float) (earlyDayBrightness + (peakBrightness - earlyDayBrightness) * normalizedSine);
 		}
 	}
 
