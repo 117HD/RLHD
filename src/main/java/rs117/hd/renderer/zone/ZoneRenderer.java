@@ -160,10 +160,7 @@ public class ZoneRenderer implements Renderer {
 	private float[] calculatedFogColorSrgb = null;
 	// Day/Night Cycle - sky gradient enabled flag
 	private boolean skyGradientEnabled = false;
-	// Day/Night Cycle - smoothed moon values to prevent popping at cycle boundaries
-	private double smoothedMoonAltDeg = Double.NaN;
-	private float smoothedMoonIllumFrac = Float.NaN;
-	private boolean moonSmoothingActive = false;
+
 
 	private final int[] worldPos = new int[3];
 
@@ -443,9 +440,9 @@ public class ZoneRenderer implements Renderer {
 							// start fading in via smoothstep — prevents brightness pop
 							double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, config.cycleDurationMinutes());
 							if (moonAltDeg > -10) {
-								Instant modifiedDate = TimeOfDay.getModifiedDate(config.cycleDurationMinutes());
+								Instant moonDate = TimeOfDay.getMoonDate(config.cycleDurationMinutes());
 								double[] moonAnglesD = AtmosphereUtils.getMoonPosition(
-									modifiedDate.toEpochMilli(), plugin.latLong);
+									moonDate.toEpochMilli(), plugin.latLong);
 								shadowSunAngles = new float[] {
 									(float) moonAnglesD[1], (float) moonAnglesD[0]
 								};
@@ -649,7 +646,8 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skySunColor.set(skyGradientColors[2]);
 			plugin.uboGlobal.skySunDir.set(sunDirForSky);
 
-			// Set moon uniforms
+			// Set moon uniforms — getMoonDate() returns a continuously advancing
+			// timestamp so no smoothing is needed here
 			float[] moonDir = TimeOfDay.getMoonDirectionForSky(plugin.latLong, cycleDuration);
 			float moonIllumination = TimeOfDay.getMoonIlluminationFraction(cycleDuration);
 			float[] moonColor = environmentManager.currentMoonColor;
@@ -660,53 +658,11 @@ public class ZoneRenderer implements Renderer {
 			skyGradientEnabled = true;
 
 			// Calculate shadow visibility based on sun and moon altitude
+			// Moon values come from getMoonDate() which advances continuously,
+			// so no smoothing is needed
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
-			double rawMoonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, cycleDuration);
-			float rawMoonIllumFrac = moonIllumination;
-
-			// Smooth moon values to prevent popping when date advances at cycle boundaries
-			// Only activate smoothing when a large jump is detected (cycle boundary)
-			// During normal progression, use raw values directly for accurate tracking
-			double moonAltDeg;
-			float moonIllumFrac;
-
-			if (Double.isNaN(smoothedMoonAltDeg)) {
-				// First frame: initialize to raw values, no smoothing needed
-				smoothedMoonAltDeg = rawMoonAltDeg;
-				smoothedMoonIllumFrac = rawMoonIllumFrac;
-				moonAltDeg = rawMoonAltDeg;
-				moonIllumFrac = rawMoonIllumFrac;
-			} else {
-				// Detect large jumps that indicate a cycle boundary
-				double altJump = Math.abs(rawMoonAltDeg - smoothedMoonAltDeg);
-				if (altJump > 5.0) {
-					// Cycle boundary detected - activate smoothing
-					moonSmoothingActive = true;
-				}
-
-				if (moonSmoothingActive) {
-					// Exponential smoothing toward raw target
-					double smoothFactor = 0.05; // ~5% per frame, converge faster
-					smoothedMoonAltDeg += (rawMoonAltDeg - smoothedMoonAltDeg) * smoothFactor;
-					smoothedMoonIllumFrac += (rawMoonIllumFrac - smoothedMoonIllumFrac) * (float) smoothFactor;
-
-					// Deactivate smoothing once we've converged close enough
-					if (Math.abs(rawMoonAltDeg - smoothedMoonAltDeg) < 1.0) {
-						moonSmoothingActive = false;
-						smoothedMoonAltDeg = rawMoonAltDeg;
-						smoothedMoonIllumFrac = rawMoonIllumFrac;
-					}
-
-					moonAltDeg = smoothedMoonAltDeg;
-					moonIllumFrac = smoothedMoonIllumFrac;
-				} else {
-					// Normal progression: use raw values directly
-					smoothedMoonAltDeg = rawMoonAltDeg;
-					smoothedMoonIllumFrac = rawMoonIllumFrac;
-					moonAltDeg = rawMoonAltDeg;
-					moonIllumFrac = rawMoonIllumFrac;
-				}
-			}
+			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, cycleDuration);
+			float moonIllumFrac = moonIllumination;
 			float shadowVisibility;
 
 			if (sunAltitudeDegrees > 2) {

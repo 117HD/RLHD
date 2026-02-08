@@ -320,8 +320,8 @@ public class TimeOfDay
 	 * Uses the same coordinate transformation as getSunDirectionForSky().
 	 */
 	public static float[] getMoonDirectionForSky(double[] latLong, float dayLength) {
-		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] moonAngles = AtmosphereUtils.getMoonPosition(modifiedDate.toEpochMilli(), latLong);
+		Instant moonDate = getMoonDate(dayLength);
+		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), latLong);
 
 		// moonAngles[0] = azimuth, moonAngles[1] = altitude
 		double altitude = moonAngles[1];
@@ -345,16 +345,16 @@ public class TimeOfDay
 	 * Get the moon illumination fraction (0 = new moon, 1 = full moon).
 	 */
 	public static float getMoonIlluminationFraction(float dayLength) {
-		Instant modifiedDate = getModifiedDate(dayLength);
-		return (float) AtmosphereUtils.getMoonIllumination(modifiedDate.toEpochMilli())[0];
+		Instant moonDate = getMoonDate(dayLength);
+		return (float) AtmosphereUtils.getMoonIllumination(moonDate.toEpochMilli())[0];
 	}
 
 	/**
 	 * Get the moon altitude in degrees.
 	 */
 	public static double getMoonAltitudeDegrees(double[] latLong, float dayLength) {
-		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] moonAngles = AtmosphereUtils.getMoonPosition(modifiedDate.toEpochMilli(), latLong);
+		Instant moonDate = getMoonDate(dayLength);
+		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), latLong);
 		return Math.toDegrees(moonAngles[1]);
 	}
 
@@ -431,13 +431,37 @@ public class TimeOfDay
 		}
 		
 		// Convert mapped hour to actual time
-		// Advance date by completedCycles days so moon phase and rise/set times progress
+		// Use completedCycles to advance the base date by 1 day per finished cycle,
+		// so the moon's phase and rise/set times progress naturally.
+		// The mappedHour handles the time-of-day within each cycle.
 		Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS)
 			.plus(completedCycles, ChronoUnit.DAYS);
 		long mappedMillis = (long) (mappedHour * 60 * 60 * 1000);
 		return startOfDay.plusMillis(mappedMillis);
 	}
 
+
+	/**
+	 * Get a continuously advancing date for moon calculations.
+	 * Unlike getModifiedDate() which uses non-linear time mapping for the sun,
+	 * this returns a timestamp that advances smoothly based on total elapsed cycles.
+	 * Each cycle = 1 simulated day, so the moon's phase and position change gradually
+	 * without discrete jumps at cycle boundaries.
+	 */
+	public static Instant getMoonDate(float dayLength) {
+		// Ensure getModifiedDate has been called to update accumulatedCycleTime/completedCycles
+		getModifiedDate(dayLength);
+
+		Instant currentInstant = Instant.ofEpochMilli(System.currentTimeMillis());
+		Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS);
+
+		// Total simulated days elapsed = completed whole cycles + current cycle progress
+		// This advances continuously, preventing the moon from jumping at cycle boundaries
+		double totalSimulatedDays = completedCycles + accumulatedCycleTime;
+		long totalOffsetMillis = (long) (totalSimulatedDays * 24 * 60 * 60 * 1000);
+
+		return startOfDay.plusMillis(totalOffsetMillis);
+	}
 
 	public static double[] getLatLong(WorldRegion currentRegion) {
 		double latitude;
