@@ -273,6 +273,33 @@ public class TimeOfDay
 			}
 		}
 
+		// Nighttime: blend both zenith and horizon toward flat night sky color
+		// Mirror of the daytime regional blend, but for night
+		// Ramps from 0° (no blend) to -15° (full flat night sky)
+		float nightBlendFactor;
+		if (sunAltitudeDegrees <= -15) {
+			nightBlendFactor = 1.0f;
+		} else if (sunAltitudeDegrees <= 0) {
+			float nt = (float) (-sunAltitudeDegrees / 15.0);
+			nightBlendFactor = nt * nt * (3.0f - 2.0f * nt);
+		} else {
+			nightBlendFactor = 0.0f;
+		}
+
+		if (nightBlendFactor > 0.0f) {
+			// Deep night zenith color (15, 20, 35) converted to linear
+			float[] nightSkyLinear = rs117.hd.utils.ColorUtils.srgbToLinear(
+				new float[] { 15f / 255f, 20f / 255f, 35f / 255f }
+			);
+
+			for (int i = 0; i < 3; i++) {
+				zenithColor[i] = zenithColor[i] * (1 - nightBlendFactor) + nightSkyLinear[i] * nightBlendFactor;
+			}
+			for (int i = 0; i < 3; i++) {
+				horizonColor[i] = horizonColor[i] * (1 - nightBlendFactor) + nightSkyLinear[i] * nightBlendFactor;
+			}
+		}
+
 		// Convert from linear RGB (what interpolateSrgb returns) back to sRGB for the shader
 		zenithColor = rs117.hd.utils.ColorUtils.linearToSrgb(zenithColor);
 		horizonColor = rs117.hd.utils.ColorUtils.linearToSrgb(horizonColor);

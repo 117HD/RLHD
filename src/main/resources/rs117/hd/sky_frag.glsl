@@ -128,8 +128,15 @@ void main() {
     // Create a "sun side" color that's the warm horizon color
     vec3 sunSideColor = skyHorizonColor;
 
+    // Fade out directional gradient at night so sky becomes uniform
+    // skySunDir.y = sin(altitude): 0 at horizon, negative below
+    // Ramp from full effect at 0° to no effect at -15° (matching night sky blend)
+    float nightFade = smoothstep(-0.26, 0.0, skySunDir.y); // sin(-15°) ≈ -0.26
+
     // Blend horizontally between dark side and sun side based on sun facing direction
+    // At night, blend toward uniform skyZenithColor instead
     vec3 horizonColor = mix(darkSideColor, sunSideColor, sunSideBlend);
+    horizonColor = mix(skyZenithColor, horizonColor, nightFade);
 
     // The zenith color - during daytime use full brightness, during sunset allow some dimming
     vec3 zenithColor = skyZenithColor;
