@@ -650,16 +650,12 @@ public class ZoneRenderer implements Renderer {
 				}
 			} else if (sunAltitudeDegrees > -15) {
 				// Transition zone: sun between +2 and -15 degrees
-				// Crossfade between sun and moon lighting using a blend factor
-				// t=0 at sun +2deg (full sun), t=1 at sun -15deg (full moon)
+				// Sun shadows already faded to 0 at +2°, only moon shadows ramp up here
+				// t goes from 0 (at +2°) to 1 (at -15°)
 				float t = (float) Math.min(1.0, Math.max(0, (2.0 - sunAltitudeDegrees) / 17.0));
-				// Quadratic ease for gradual transition
+				// Quadratic ease for gradual moon shadow fade-in
 				float moonBlend = t * t;
 
-				// Sun shadow component: fades from full to zero
-				float sunShadow = (1.0f - moonBlend) * 0.3f;
-
-				// Moon shadow component: fades from zero to full
 				float moonShadow = 0;
 				if (moonAltDeg > -5 && moonIllumFrac > 0.01f) {
 					// Smooth elevation factor: full strength above 15deg, fades to 0 at -5deg
@@ -668,8 +664,7 @@ public class ZoneRenderer implements Renderer {
 					moonShadow = moonBlend * moonIllumFrac * 0.4f * moonElevationFactor;
 				}
 
-				// Additive blend ensures no dip during crossfade
-				shadowVisibility = sunShadow + moonShadow;
+				shadowVisibility = moonShadow;
 			} else {
 				// Deep night: sun below -15 degrees
 				// Moon light fades from full at 15deg to zero at -5deg above horizon
