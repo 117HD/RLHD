@@ -208,6 +208,8 @@ void main() {
                 float terminatorEdge = terminatorX * sqrt(max(0.0, 1.0 - clampedY * clampedY));
                 // Smooth the terminator edge — lit when localX is LESS than the edge
                 float isLit = smoothstep(terminatorEdge + 0.05, terminatorEdge - 0.05, localX);
+                // Dark side of the moon is faintly visible instead of fully transparent
+                isLit = max(isLit, 0.05);
 
                 // Limb darkening: edges of the moon are slightly darker
                 float limbDarkening = mix(0.7, 1.0, normDist * normDist);
