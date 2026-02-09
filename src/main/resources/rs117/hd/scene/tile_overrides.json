@@ -1,15 +1,41 @@
 [
   {
     "name": "DEFAULT_GRASS",
-    "groundMaterial": "OVERWORLD_GRASS_1"
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 63,
+    "replacements": {
+      "DEFAULT_GRASS_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "DEFAULT_GRASS_NO_TEXTURES",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 44
   },
   {
     "name": "DEFAULT_DIRT",
-    "groundMaterial": "DIRT"
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_DIRT_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "DEFAULT_DIRT_NO_TEXTURES",
+    "groundMaterial": "DIRT",
+    "maxLightness": 44
   },
   {
     "name": "DEFAULT_SAND",
-    "groundMaterial": "SAND"
+    "groundMaterial": "SAND",
+    "maxLightness": 63,
+    "replacements": {
+      "DEFAULT_SAND_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "DEFAULT_SAND_NO_TEXTURES",
+    "groundMaterial": "SAND",
+    "maxLightness": 49
   },
   {
     "name": "DEFAULT_SNOW",
@@ -2398,7 +2424,25 @@
     "minHue": 6,
     "maxHue": 6,
     "minSaturation": 3,
-    "maxSaturation": 3
+    "maxSaturation": 3,
+    "maxLightness": 63,
+    "replacements": {
+      "KHARID_PATHS_3_NO_BLENDING": "!textures"
+    }
+  },
+  {
+    "name": "KHARID_PATHS_3_NO_BLENDING",
+    "area": "KHARID_DESERT_REGION",
+    "overlayIds": [
+      25
+    ],
+    "groundMaterial": "DIRT",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 3,
+    "maxSaturation": 3,
+    "shiftLightness": -12,
+    "maxLightness": 55
   },
   {
     "name": "GIANTS_PLATEAU_CABBAGE_PATCH_FIX",
@@ -7098,6 +7142,16 @@
     "groundMaterial": "DIRT",
     "maxLightness": 50,
     "shiftHue": -1,
+    "shiftSaturation": -1,
+    "replacements": {
+      "KHARID_DIRT_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "KHARID_DIRT_NO_TEXTURES",
+    "groundMaterial": "DIRT",
+    "maxLightness": 47,
+    "shiftHue": -1,
     "shiftSaturation": -1
   },
   {
@@ -7105,6 +7159,17 @@
     "groundMaterial": "OVERWORLD_GRASS_1",
     "maxLightness": 50,
     "shiftHue": -1,
+    "minHue": 9,
+    "replacements": {
+      "KHARID_GRASS_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "KHARID_GRASS_NO_TEXTURES",
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 40,
+    "shiftHue": -1,
+    "shiftLightness": -4,
     "minHue": 9
   },
   {
@@ -7127,7 +7192,16 @@
     "maxLightness": 60,
     "shiftHue": -1,
     "minHue": 6,
-    "maxSaturation": 3
+    "maxSaturation": 3,
+    "replacements": {
+      "KHARID_GRASSY_SAND_NO_BLENDING": "!textures"
+    }
+  },
+  {
+    "name": "KHARID_GRASSY_SAND_NO_BLENDING",
+    "groundMaterial": "SAND",
+    "maxLightness": 45,
+    "shiftLightness": -8
   },
   {
     "name": "KHARID_DIRTY_SAND",
@@ -7135,6 +7209,18 @@
     "maxLightness": 60,
     "shiftHue": -2,
     "minHue": 6,
+    "maxSaturation": 3,
+    "replacements": {
+      "KHARID_DIRTY_SAND_NO_BLENDING": "!textures"
+    }
+  },
+  {
+    "name": "KHARID_DIRTY_SAND_NO_BLENDING",
+    "groundMaterial": "SAND",
+    "maxLightness": 47,
+    "shiftHue": -2,
+    "shiftLightness": -4,
+    "minLightness": 28,
     "maxSaturation": 3
   },
   {
@@ -7143,6 +7229,18 @@
     "maxLightness": 60,
     "shiftHue": -2,
     "shiftSaturation": -2,
+    "minSaturation": 3,
+    "replacements": {
+      "KHARIDIAN_DEEP_DESERT_CREVICE_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "KHARIDIAN_DEEP_DESERT_CREVICE_NO_TEXTURES",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftLightness": -4,
+    "shiftHue": -1,
+    "shiftSaturation": -3,
     "minSaturation": 3
   },
   {
@@ -7243,6 +7341,7 @@
     "minSaturation": 3,
     "maxSaturation": 3,
     "replacements": {
+      "KHARIDIAN_DESERT_SAND_NO_TEXTURES": "!textures",
       "KHARID_DIRT": [
         "h == 7 && s > 3 && s < 8"
       ],
@@ -7250,7 +7349,6 @@
         "h == 8 && s == 5 || s == 6"
       ]
     }
-
   },
   {
     "name": "SOUTH_OF_UNKAH",
@@ -7362,6 +7460,27 @@
     "replacements": {
       "KHARIDIAN_DEEP_DESERT_CREVICE": [
         "h <= 6"
+      ],
+      "KHARIDIAN_DESERT_SAND_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "KHARIDIAN_CREVICE_NO_TEXTURES",
+    "area": "KHARIDIAN_CREVICE",
+    "groundMaterial": "SAND",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 3,
+    "maxSaturation": 3,
+    "shiftLightness": -6,
+    "underlayIds": [
+      61,
+      126,
+      138
+    ],
+    "replacements": {
+      "KHARIDIAN_DEEP_DESERT_CREVICE": [
+        "h <= 6"
       ]
     }
   },
@@ -7417,13 +7536,90 @@
     "minHue": 6,
     "maxHue": 6,
     "minSaturation": 3,
-    "maxSaturation": 3
+    "maxSaturation": 3,
+    "maxLightness": 67,
+    "replacements": {
+      "KHARIDIAN_DESERT_SAND_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "KHARIDIAN_DESERT_SAND_NO_TEXTURES",
+    "area": "KHARIDIAN_DESERT",
+    "underlayIds": [
+      45,
+      49,
+      50,
+      52,
+      53,
+      58,
+      61,
+      62,
+      63,
+      64,
+      67,
+      68,
+      69,
+      126,
+      129,
+      138
+    ],
+    "groundMaterial": "SAND",
+    "minHue": 6,
+    "maxHue": 6,
+    "minSaturation": 3,
+    "maxSaturation": 3,
+    "maxLightness": 53,
+    "shiftLightness": -6
   },
   {
     "name": "KHARID_SAND",
     "area": "KHARID_DESERT_REGION",
     "groundMaterial": "SAND",
     "maxLightness": 60,
+    "shiftHue": -2,
+    "maxSaturation": 4,
+    "underlayIds": [
+      45,
+      49,
+      50,
+      52,
+      53,
+      58,
+      61,
+      62,
+      63,
+      64,
+      67,
+      68,
+      69,
+      99,
+      126,
+      129
+    ],
+    "replacements": {
+      "KHARID_SAND_NO_BLENDING": "!textures",
+      "KHARID_GRASSY_SAND":[
+        "s == 2 && 9 <= h && h <= 10",
+        "s == 4 && 9 <= h && h <= 11"
+      ],
+      "KHARID_DIRTY_SAND":[
+        "s == 4 && 8 == h"
+      ],
+      "KHARID_GRASS": [
+        "h >= 12",
+        "h > 8 && s > 3"
+      ],
+      "KHARID_DIRT": [
+        "h < 8",
+        "h == 8 && s == 5"
+      ]
+    }
+  },
+  {
+    "name": "KHARID_SAND_NO_BLENDING",
+    "area": "KHARID_DESERT_REGION",
+    "shiftLightness": -8,
+    "maxLightness": 50,
     "shiftHue": -2,
     "maxSaturation": 4,
     "underlayIds": [
@@ -7483,10 +7679,23 @@
       125
     ],
     "replacements": {
+      "NECROPOLIS_SAND_NO_TEXTURES": "!textures",
       "KHARID_SAND": [
         "s >= 2"
       ]
     }
+  },
+  {
+    "name": "NECROPOLIS_SAND_NO_TEXTURES",
+    "area": "NECROPOLIS",
+    "groundMaterial": "SANDY_DIRT_2",
+    "shiftLightness": -3,
+    "maxLightness": 67,
+    "underlayIds": [
+      121,
+      124,
+      125
+    ]
   },
   {
     "name": "SMOKE_DUNGEON",
