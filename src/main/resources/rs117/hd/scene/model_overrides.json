@@ -26612,6 +26612,31 @@
     ]
   },
   {
+    "description": "Kalphite Hive - Entrance",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "KALPHITE_BURROW_ENTRANCE",
+      "KALPHITE_BURROW_ENTRANCE_WITHROPE"
+    ],
+    "depthBias": 150,
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.3,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "depthBias": 255
+      },
+      {
+        "colors": "h == 7 || h == 0",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 150
+      }
+    ]
+  },
+  {
     "description": "Rocks - Small",
     "baseMaterial": "ROCK_1",
     "objectIds": [
