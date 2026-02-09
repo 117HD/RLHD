@@ -12228,7 +12228,7 @@
   },
   {
     "description": "Stone Fountain",
-    "baseMaterial": "STONE",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.45,
     "objectIds": [
@@ -46287,7 +46287,7 @@
   },
   {
     "description": "Farming Guild - Small Tree",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "GRUNGE_3_DULL",
     "objectIds": [
       "KEBOS_FARMING_GUILD_TREE_FANCY",
       "KEBOS_FARMING_GUILD_TREE_FANCY2",
@@ -46317,22 +46317,18 @@
   },
   {
     "description": "Farming Guild - Water Barrel",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "textureMaterial": "WATER_FLAT_FLOW_2",
     "objectIds": [
       "FARM_WATER_BARREL1",
       "FARM_WATER_BARREL2"
     ],
     "uvType": "BOX",
-    "uvScale": 0.55,
-    "uvOrientation": 512,
+    "retainVanillaUvs": false,
+    "uvScale": 0.45,
     "colorOverrides": [
       {
-        "colors": [
-          2, 7, 8, 12, 15, 16, 17, 18, 20,
-          21, 22, 24, 25, 26, 27, 28, 29,
-          30, 31, 32, 33, 34, 35, 36, 37,
-          39, 40, 41, 42, 43, 44, 46, 49
-        ],
+        "colors": "h == 0",
         "baseMaterial": "METALLIC_1_SEMIGLOSS"
       }
     ]
@@ -46476,7 +46472,7 @@
   },
   {
     "description": "Farming Guild - Hespori Cave Entrance",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "objectIds": [
       "KEBOS_FARMING_GUILD_HESPORI_ENTRANCE"
@@ -46490,9 +46486,9 @@
   },
   {
     "description": "Farming Guild - Statue",
-    "baseMaterial": "STONE",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvScale": 0.74,
+    "uvScale": 0.55,
     "objectIds": [
       "KEBOS_FARMING_GUILD_GRAND_STATUE"
     ],
@@ -46510,11 +46506,12 @@
   },
   {
     "description": "Farming Guild - Greenhouse Walls",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
     "uvType": "BOX",
     "flatNormals": true,
     "objectIds": [
-      "KEBOS_FARMING_GUILD_WATERTAP",
       "KEBOS_FARMING_GUILD_WALL_STRAIGHT",
       "KEBOS_FARMING_GUILD_WALL_CORNER_OUTSIDE",
       "KEBOS_FARMING_GUILD_WALL_DIAG_OUTSIDE",
@@ -46542,13 +46539,10 @@
         "uvType": "BOX"
       },
       {
-        "colors": [
-          "h == 6",
-          "h == 7",
-          "h == 27",
-          "h == 32"
-        ],
-        "baseMaterial": "GRAY_90"
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_85",
+        "flatNormals": true,
+        "receiveShadows": false
       }
     ]
   },
@@ -46559,6 +46553,25 @@
     "objectIds": [
       "KEBOS_FARMING_GUILD_GATE_T3_LEFT_OPEN",
       "KEBOS_FARMING_GUILD_GATE_T3_RIGHT_OPEN"
+    ]
+  },
+  {
+    "description": "Farming Guild - Greenhouse Walls",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "uvOrientation": 512,
+    "uvScale": 0.2,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      "KEBOS_FARMING_GUILD_WATERTAP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   },
   {
