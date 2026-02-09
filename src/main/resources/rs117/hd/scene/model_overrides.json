@@ -7649,6 +7649,18 @@
     ]
   },
   {
+    "description": "ROUNDED_CAVE_WALLS_TOP_TRANSITIONS",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "objectIds": [
+      "CAVEWALL_TOP_LIGHTTOMUD5",
+      "CAVEWALL_TOP_LIGHTTOMUD_ENDR",
+      "CAVEWALL_TOP_LIGHTTOMUD_ENDL",
+      "CAVEWALL_TOP_LIGHTTOMUD2",
+      "CAVEWALL_TOP_LIGHTTOMUD",
+      "CAVEWALL_TOP_LIGHTTOMUD52"
+    ]
+  },
+  {
     "description": "ROUNDED_CAVE_WALLS_TOP",
     "areas": [ "TAVERLEY_DUNGEON_DARKEN_WALL_TOPS" ],
     "baseMaterial": "GRUNGE_1_DARK",
