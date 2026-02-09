@@ -679,6 +679,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skyMoonDir.set(moonDir);
 			plugin.uboGlobal.skyMoonColor.set(moonColor);
 			plugin.uboGlobal.skyMoonIllumination.set(moonIllumination);
+			plugin.uboGlobal.starVisibility.set(environmentManager.currentStarVisibility);
 
 			skyGradientEnabled = true;
 
@@ -766,6 +767,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skyMoonDir.set(new float[]{ 0, 0, 0 });
 			plugin.uboGlobal.skyMoonColor.set(new float[]{ 0, 0, 0 });
 			plugin.uboGlobal.skyMoonIllumination.set(0.0f);
+			plugin.uboGlobal.starVisibility.set(1.0f);
 		}
 
 		float fogDepth = 0;

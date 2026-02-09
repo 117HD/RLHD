@@ -64,4 +64,7 @@ layout(std140) uniform UBOGlobal {
     vec3 skyMoonDir;
     vec3 skyMoonColor;
     float skyMoonIllumination;
+
+    // Star visibility (from environment override)
+    float starVisibility;
 };

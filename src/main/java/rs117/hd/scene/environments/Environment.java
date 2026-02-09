@@ -73,6 +73,7 @@ public class Environment {
 	public float windSpeed = 15.0f;
 	public float windStrength = 0.0f;
 	public float windCeiling = 1280.0f;
+	public float starVisibility = 1;
 
 	public Environment normalize() {
 		if (area != Area.ALL && area != Area.NONE) {

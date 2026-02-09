@@ -1240,7 +1240,8 @@
     "directionalStrength": 4,
     "fogColor": "#150a05",
     "fogDepth": 40,
-    "waterColor": "#b9d6ff"
+    "waterColor": "#b9d6ff",
+	"starVisibility": 0.05
   },
   {
     "area": "THE_STRANGLEWOOD",

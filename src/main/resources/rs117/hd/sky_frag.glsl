@@ -164,7 +164,8 @@ void main() {
     // === NIGHT SKY TEXTURE ===
     // Fade in the starfield texture as sun drops below horizon
     // nightFade is already 0 at -15° and 1 at 0°, so we use its inverse
-    float nightSkyBlend = 1.0 - nightFade;
+    // starVisibility (from environment override): 0 = no stars (opaque skybox), 1 = full stars
+    float nightSkyBlend = (1.0 - nightFade) * starVisibility;
     if (nightSkyBlend > 0.001) {
         // Convert view direction to spherical UV coordinates
         float phi = atan(viewDir.z, viewDir.x);               // azimuth: -PI to PI
