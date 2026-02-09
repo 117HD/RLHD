@@ -33905,7 +33905,7 @@
   },
   {
     "description": "Mourners Tunnels - Walls - Dirt",
-    "baseMaterial": "DIRT_2",
+    "baseMaterial": "DIRT_1",
     "objectIds": [
       "MOURNING_CAVEWALL_FACE1",
       "MOURNING_SHORTER_CAVEWALL_FACE1",
@@ -33915,7 +33915,7 @@
       "DARKBOW_WALL_BACK_CORNER"
     ],
     "uvType": "BOX",
-    "uvScale": 0.68,
+    "uvScale": 0.75,
     "uvOrientationX": 400,
     "colorOverrides": [
       {
@@ -33945,7 +33945,7 @@
       "DARKBOW_CAVEWALL_TOP5_FALLOFF_MIRROR"
     ],
     "uvType": "MODEL_XZ",
-    "uvScale": 0.68
+    "uvScale": 0.75
   },
   {
     "description": "Metallic - Minecart",
@@ -35829,14 +35829,15 @@
   },
   {
     "description": "Objects - Rock - Brown Rock - Mineable rock models",
-    "baseMaterial": "ROCK_5",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       "MOURNING_ROCKS1",
       "MOURNING_ROCKS2",
       "MOURNING_ROCKS3"
     ],
     "uvType": "BOX",
-    "uvOrientation": 128
+    "uvScale": 0.4,
+    "terrainVertexSnap": true
   },
   {
     "description": "Temple of Light Walls",
