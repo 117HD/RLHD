@@ -33921,6 +33921,14 @@
       {
         "colors": 2,
         "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 4 || h == 8",
+        "baseMaterial": "GRUNGE_3"
       }
     ]
   },
@@ -33931,7 +33939,10 @@
       "DARKBOW_WALL_BACK_CORNER_BLEND_MIRROR",
       "DARKBOW_CAVEWALL_TOP",
       "DARKBOW_CAVEWALL_TOP5",
-      "DARKBOW_CAVEWALL_TOP_SHORT"
+      "DARKBOW_CAVEWALL_TOP_SHORT",
+      "DARKBOW_CAVEWALL_TOP_FALLOFF",
+      "DARKBOW_CAVEWALL_TOP5_FALLOFF",
+      "DARKBOW_CAVEWALL_TOP5_FALLOFF_MIRROR"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.68
