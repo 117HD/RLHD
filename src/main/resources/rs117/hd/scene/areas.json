@@ -1791,6 +1791,12 @@
     ]
   },
   {
+    "name": "MUDSKIPPER_POINT_CLIFF_FIX",
+    "aabbs": [
+      [ 3002, 3141, 3018, 3158 ]
+    ]
+  },
+  {
     "name": "NORTH_OF_MUDSKIPPER",
     "aabbs": [
       [ 2984, 3133, 3041, 3169 ]

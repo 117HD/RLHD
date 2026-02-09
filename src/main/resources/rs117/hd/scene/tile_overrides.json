@@ -9401,6 +9401,24 @@
     }
   },
   {
+    "name": "Mudskipper Point - Fix Blindingly Bright Cliff",
+    "area": "MUDSKIPPER_POINT_CLIFF_FIX",
+    "overlayIds": [ 123 ],
+    "groundMaterial": "DIRT",
+    "maxLightness": 75,
+    "minLightness": 20,
+    "replacements": {
+      "Mudskipper Point - Fix Blindingly Bright Cliff - No Textures": "!textures"
+    }
+  },
+  {
+    "name": "Mudskipper Point - Fix Blindingly Bright Cliff - No Textures",
+    "area": "MUDSKIPPER_POINT_CLIFF_FIX",
+    "overlayIds": [ 123 ],
+    "groundMaterial": "DIRT",
+    "maxLightness": 59
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {
