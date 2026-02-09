@@ -20765,8 +20765,24 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "MOURNING_CAVEWALL_CANDLE_FACE1",
-      "SLUG2_DUNGEON_WALL"
+      "MOURNING_CAVEWALL_CANDLE_FACE1"
+    ]
+  },
+  {
+    "description": "SLUG_DUNGEON_WALL_CANDLE",
+    "offset": [ -25, 230, 0 ],
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SLUG2_CANDLE_WALL"
     ]
   },
   {
