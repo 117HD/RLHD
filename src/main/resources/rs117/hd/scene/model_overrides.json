@@ -6266,7 +6266,6 @@
     "description": "Mount Karuulm - Rock - Walls",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
-    "uvOrientation": 256,
     "uvScale": 0.66,
     "objectIds": [
       "BRIMSTONE_ROCK_CLIFF_2X2",
