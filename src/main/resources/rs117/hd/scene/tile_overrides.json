@@ -193,12 +193,9 @@
     "name": "TAG - TEMPORARY - START"
   },
   {
-    "name": "ARDOUGNE_SEWER_ENTRANCE_FIX",
-    "area": "ARDOUGNE_SEWER_ENTRANCE_FIX",
-    "groundMaterial": "PURE_BLACK",
-    "heightOffset": -150,
-    "blended": false,
-    "overlayIds": [ 10 ]
+    "name": "SEWER_ENTRANCE_FIXES",
+    "area": "SEWER_ENTRANCE_FIXES",
+    "heightOffset": -150
   },
   {
     "name": "TAG - TEMPORARY - END"
