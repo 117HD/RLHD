@@ -3753,6 +3753,21 @@
     "flatNormals": true
   },
   {
+    "description": "LEGEND_GUILD_WALLS",
+    "objectIds": [
+      "BLUEPAINTEDBRICKWALL_1",
+      "BLUEPAINTEDBRICKWALL_2"
+    ],
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 38",
+        "uvType": "BOX",
+        "baseMaterial": "WATTLE_1"
+      }
+    ]
+  },
+  {
     "description": "CASTLE_WALL_ARROW_SLIT",
     "objectIds": [
       "CASTLE_WALL_ARROWSLIT"
@@ -26056,6 +26071,7 @@
   },
   {
     "description": "Hadleys House - Wattle",
+    "flatNormals": true,
     "baseMaterial": "WATTLE_1",
     "objectIds": [
       "PAINTEDBRICKWALL_1",
@@ -28841,13 +28857,6 @@
     ],
     "objectIds": [
       "BRICKWALL_WINDOW"
-    ]
-  },
-  {
-    "description": "Walls - Bricks - Light Brick with White backs",
-    "flatNormals": true,
-    "objectIds": [
-      "BLUEPAINTEDBRICKWALL_1"
     ]
   },
   {
