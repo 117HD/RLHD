@@ -2003,6 +2003,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "WITCHES_HOUSE_BASEMENT",
+    "aabbs": [
+      [ 2896, 9859, 2926, 9879 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "EAST_ARDOUGNE_FURNACE",
     "aabbs": [
       [ 2600, 3310, 2603, 3314 ]
