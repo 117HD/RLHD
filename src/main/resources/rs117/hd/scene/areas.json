@@ -10481,6 +10481,13 @@
     ]
   },
   {
+    "name": "WOLF_DEN",
+    "aabbs": [
+      [ 1467, 9490, 1494, 9516 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "CAM_TORUM",
     "aabbs": [
       [ 1406, 9504, 1494, 9605 ],

@@ -40601,7 +40601,26 @@
       255
     ],
     "type": "STATIC",
-    "objectIds": [ "HG_CAVE_EXIT" ]
+    "objectIds": [
+      "HG_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "Wold Den Cave Exit",
+    "offset": [ -100, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "DIREWOLF_CAVE_EXIT_INSTANCE",
+      "DIREWOLF_CAVE_EXIT"
+    ]
   },
   {
     "description": "Stalker Den Cave Exit",

@@ -38175,6 +38175,44 @@
     ]
   },
   {
+    "description": "Dire Wolf Cave Entrance",
+    "baseMaterial": "GRAVEL",
+    "terrainVertexSnap": true,
+    "depthBias": 100,
+    "objectIds": [
+      "DIREWOLF_CAVE_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "depthBias": 150
+      },
+      {
+        "colors": "h >0",
+        "baseMaterial": "DIRT_1",
+        "depthBias": 150
+      }
+    ]
+  },
+  {
+    "description": "Dire Wolf Cave Exit",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "DIREWOLF_CAVE_EXIT_INSTANCE",
+      "DIREWOLF_CAVE_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": "l > 18",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Stalked Den Rope Shortcut",
     "baseMaterial": "ROCK_3",
     "objectIds": [
