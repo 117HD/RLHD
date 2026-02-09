@@ -45691,6 +45691,10 @@
   },
   {
     "description": "Wooden 3 candle scone with lit flame - static",
+    "objectIds": [
+      "_100_DAVE_CANDLE_WALL",
+      "SLUG2_CANDLE_WALL"
+    ],
     "colorOverrides": [
       {
         "colors": "h == 8 && s == 3",
@@ -45703,9 +45707,6 @@
         "baseMaterial": "GRAY_150",
         "upwardsNormals": true
       }
-    ],
-    "objectIds": [
-      "_100_DAVE_CANDLE_WALL"
     ]
   },
   {
@@ -68319,7 +68320,7 @@
   },
   {
     "description": "Witchaven - Stone - Grass - Stone ruins with grass",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "colorOverrides": [
       {
@@ -68340,7 +68341,7 @@
   },
   {
     "description": "Witchaven - Stone - Stone ruins",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvOrientation": -128,
     "objectIds": [
@@ -68350,19 +68351,36 @@
       "SLUG2_RUIN_PILLAR_TWO",
       "SLUG2_RUIN_WALL",
       "SLUG2_RUIN_WALL_MIRROR",
-      "SLUG2_RUIN_ENTRANCE",
+      "SLUG2_RUIN_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Stone ruins Exit",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvOrientation": -128,
+    "objectIds": [
       "SLUG2_DONGEON_RUIN_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
     ]
   },
   {
     "description": "Witchaven - Stone - Dirt - Witchaven Dungeon Walls",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "colorOverrides": [
       {
         "description": "Grunge",
         "colors": "h == 6",
-        "baseMaterial": "GRUNGE_1"
+        "baseMaterial": "GRUNGE_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": -256
       }
     ],
     "objectIds": [
@@ -68372,16 +68390,26 @@
       "SLUG2_CAVE_DUNGEON_WALL_TWO_MIRROR",
       "SLUG2_DUNGEON_WALL",
       "SLUG2_DUNGEON_WALL2",
-      "SLUG2_HIDDEN_ENTRANCE"
+      "SLUG2_HIDDEN_ENTRANCE",
+      "SLUG2_DUNGEON_DOOR_OPEN"
     ]
   },
   {
     "description": "Witchaven - Metallic - Chests",
-    "baseMaterial": "METALLIC_1",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
+    "uvOrientation": 440,
     "objectIds": [
       "SLUG2_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
     ]
   },
   {
@@ -68390,9 +68418,8 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "description": "Grunge",
         "colors": "h == 10 && s == 1",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
         "uvScale": 0.8
       }
