@@ -1776,6 +1776,28 @@
     "specularStrength": 1.0
   },
   {
+    "name": "ROCK_6_N"
+  },
+  {
+    "name": "ROCK_6",
+    "normalMap": "ROCK_6_N"
+  },
+  {
+    "name": "ROCK_6_DARK",
+    "parent": "ROCK_6",
+    "brightness": 0.9
+  },
+  {
+    "name": "ROCK_6_LIGHT",
+    "parent": "ROCK_6",
+    "brightness": 1.25
+  },
+  {
+    "name": "ROCK_6_VERY_LIGHT",
+    "parent": "ROCK_6",
+    "brightness": 1.5
+  },
+  {
     "name": "ROPE"
   },
   {

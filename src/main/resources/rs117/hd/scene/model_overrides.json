@@ -6283,7 +6283,26 @@
       "BRIMSTONE_ROCK_CLIFF_T",
       "BRIMSTONE_ROCK_CLIFF_U",
       "BRIMSTONE_ROCKYOUTCROP_CORNER",
-      "BRIMSTONE_ROCKYOUTCROP_STRAIGHT"
+      "BRIMSTONE_ROCKYOUTCROP_STRAIGHT",
+      "MOUNT_KARUULM_SHORTCUT_ROCKS_LOW",
+      "MOUNT_KARUULM_SHORTCUT_NOOP",
+      "MOUNT_KARUULM_SHORTCUT_ROCKS"
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "depthBias": 1,
+    "objectIds": [
+      "BRIMSTONE_ROCK_CLIFF_FLAG"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 10 || h == 0",
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT"
+      }
     ]
   },
   {
@@ -6291,6 +6310,7 @@
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.66,
+    "depthBias": 1,
     "objectIds": [
       "BRIMSTONE_SULPHUR_CLIFF_1",
       "BRIMSTONE_SULPHUR_CLIFF_2",
@@ -38942,6 +38962,51 @@
     "uvOrientation": 346
   },
   {
+    "description": "Mount Karuulm - Elevator",
+    "areas": [ "MOUNT_KARUULM" ],
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "BRIMSTONE_ELEVATOR_PILLAR",
+      "BRIMSTONE_ELEVATOR_ROOF",
+      "BRIMSTONE_ELEVATOR_POST",
+      "BRIMSTONE_ELEVATOR_CONTROL_WALL",
+      "BRIMSTONE_DUNGEON_ENTRY"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_50",
+        "upwardsNormals": true,
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Lift Edges",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "BRIMSTONE_ELEVATOR_CORNER_TILE",
+      "BRIMSTONE_ELEVATOR_SIDE1_TILE",
+      "BRIMSTONE_ELEVATOR_SIDE2_TILE",
+      "BRIMSTONE_ELEVATOR_CENTRAL_TILE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Top",
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_6_VERY_LIGHT",
+        "uvType": "BOX",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
     "description": "Zeah Battlefield - Objects - Stone - Pillars",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -38957,7 +39022,10 @@
       "BROKEN_GREY_TILE_01",
       "BROKEN_GREY_TILE_02",
       "BROKEN_GREY_TILE_03",
-      "BROKEN_GREY_TILE_05"
+      "BROKEN_GREY_TILE_05",
+      "BRIMSTONE_DECO_CORN",
+      "BRIMSTONE_DECO_SIDE",
+      "BRIMSTONE_DECO_MED"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -66264,10 +66332,66 @@
     "shadowOpacityThreshold": 0.9
   },
   {
-    "description": "Mount Karuulm - Rock - Lava edges",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Mount Karuulm - Rock - Lava edges Fix 1",
+    "areas": [ "MOUNT_KARUULM_LAVA_POOL_FIX_8" ],
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "uvType": "BOX",
     "objectIds": [
+      "BRIMSTONE_FALLOFF_1",
+      "BRIMSTONE_FALLOFF_6"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Lava",
+        "colors": "h >= 29",
+        "baseMaterial": "GRAY_75",
+        "receiveShadows": false
+      },
+      {
+        "description": "Top",
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_6_DARK",
+        "uvType": "BOX",
+        "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Lava edges Fix 2",
+    "areas": [ "MOUNT_KARUULM_LAVA_POOL_FIX_4", "MOUNT_KARUULM_LAVA_POOL_FIX_14" ],
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "BRIMSTONE_FALLOFF_1",
+      "BRIMSTONE_FALLOFF_2",
+      "BRIMSTONE_FALLOFF_Q",
+      "BRIMSTONE_FALLOFF_R",
+      "BRIMSTONE_FALLOFF_W"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Lava",
+        "colors": "h >= 29",
+        "baseMaterial": "GRAY_75",
+        "receiveShadows": false
+      },
+      {
+        "description": "Top",
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_6",
+        "uvType": "BOX",
+        "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Lava edges",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "BRIMSTONE_LAVABUBBLES",
+      "BRIMSTONE_LAVAFIRE",
+      "BRIMSTONE_FALLOFF_0",
       "BRIMSTONE_FALLOFF_1",
       "BRIMSTONE_FALLOFF_2",
       "BRIMSTONE_FALLOFF_3",
@@ -66283,14 +66407,33 @@
     "colorOverrides": [
       {
         "description": "Lava",
-        "colors": "h >= 32",
-        "baseMaterial": "NONE"
+        "colors": "h >= 29",
+        "baseMaterial": "GRAY_75",
+        "receiveShadows": false
+      },
+      {
+        "description": "Top",
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_6_LIGHT",
+        "uvType": "BOX",
+        "depthBias": 1
       }
     ]
   },
   {
+    "description": "Mount Karuulm - Rock - Lava Trim",
+    "baseMaterial": "ROCK_6_VERY_LIGHT",
+    "uvType": "BOX",
+    "depthBias": 255,
+    "hide": false,
+    "objectIds": [
+      "KARUULM_FLOOR_FALLOFF_STRAIGHT",
+      "KARUULM_FLOOR_FALLOFF_OUSIDE_CORNER"
+    ]
+  },
+  {
     "description": "Mount Karuulm - Rock - Lava vents - ANIMATED",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "uvOrientation": 128,
     "uvType": "BOX",
     "objectIds": [
@@ -66299,13 +66442,9 @@
     "colorOverrides": [
       {
         "description": "Lava",
-        "colors": "h >= 32",
-        "baseMaterial": "NONE"
-      },
-      {
-        "description": "Steam",
-        "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "colors": "h >= 25",
+        "baseMaterial": "NONE",
+        "receiveShadows": false
       }
     ]
   },
@@ -66685,6 +66824,8 @@
     "description": "Varlamore - Cam Torum - Stone - Agility shortcut",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
+    "uvScale": 0.6,
+    "depthBias": 1,
     "objectIds": [
       "RALOS_RISE_SC"
     ]

@@ -472,6 +472,12 @@
     ]
   },
   {
+    "name": "ROCK_6",
+    "materials": [
+      "ROCK_6"
+    ]
+  },
+  {
     "name": "EARTHEN_CAVE_FLOOR",
     "materials": [
       "GRUNGE_1",
