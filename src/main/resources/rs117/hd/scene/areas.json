@@ -11067,9 +11067,10 @@
     "regions": [ 14379 ]
   },
   {
-    "name": "ARDOUGNE_SEWER_ENTRANCE_FIX",
+    "name": "SEWER_ENTRANCE_FIXES",
     "aabbs": [
-      [ 2632, 3294 ]
+      [ 2632, 3294 ],
+      [ 1813, 3745 ]
     ]
   },
   {
