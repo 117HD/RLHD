@@ -20751,11 +20751,10 @@
     ]
   },
   {
-    "description": "WALL_CANDLE",
-    "height": 300,
-    "alignment": "FRONT",
+    "description": "MOURNER_WALL_CANDLE",
+    "offset": [ 0, 310, 100 ],
     "radius": 300,
-    "strength": 10,
+    "strength": 5,
     "color": [
       252,
       148,

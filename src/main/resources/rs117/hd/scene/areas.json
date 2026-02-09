@@ -2060,7 +2060,7 @@
   {
     "name": "PLAGUE_CITY_SEWERS",
     "aabbs": [
-      [ 2496, 9728, 2559, 9789 ]
+      [ 2497, 9729, 2552, 9779 ]
     ],
     "hideOtherAreas": true
   },
@@ -5642,8 +5642,10 @@
   {
     "name": "TEMPLE_OF_LIGHT_EXCAVATION",
     "regions": [
-      7752,
-      8008
+      7752
+    ],
+    "aabbs": [
+      [ 1984, 4608, 2046, 4671 ]
     ]
   },
   {
