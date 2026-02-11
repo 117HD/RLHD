@@ -2576,13 +2576,18 @@
       "HARMLESS_ROCK_POOL",
       "HARMLESS_ROCK_POOL_SMALL",
       "HARMLESS_ROCK_POOL_BITS",
-      "SNAKEBOSS_STEPPINGSTONE"
+      "SNAKEBOSS_STEPPINGSTONE",
+      "BRAIN_ROCK_POOL",
+      "BRAIN_ROCK_POOL_SMALL",
+      "BRAIN_ROCK_POOL_BITS",
+      "FAIRYTALE2_ROCK_POOL_SMALL"
     ],
     "uvType": "BOX",
     "colorOverrides": [
       {
         "colors": [ "h == 42", "h == 35" ],
         "baseMaterial": "TRANSPARENT",
+        "castShadows": false,
         "isWaterEffect": true
       }
     ]
@@ -13465,9 +13470,6 @@
       "BARROWS_ROCKSLIDE1",
       "BARROWS_ROCKSLIDE2",
       "BARROWS_ROCKSLIDE3",
-      "BRAIN_ROCK_POOL",
-      "BRAIN_ROCK_POOL_SMALL",
-      "BRAIN_ROCK_POOL_BITS",
       "SUROK_TUNNEL_ROCKS_SMALL_01",
       "SUROK_TUNNEL_ROCKS_SMALL_02",
       "SUROK_TUNNEL_ROCKS_SMALL_03",
