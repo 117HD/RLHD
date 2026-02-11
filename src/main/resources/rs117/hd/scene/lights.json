@@ -36947,7 +36947,7 @@
   {
     "description": "WALL_TORCH_DAGANNOTH_KINGS",
     "height": 200,
-    "radius": 1000,
+    "radius": 600,
     "strength": 12.5,
     "color": [
       252,
