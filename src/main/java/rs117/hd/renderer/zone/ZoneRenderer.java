@@ -907,11 +907,8 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
-		if (renderWater) {
-			sceneCmd.DepthMask(false);
+		if (renderWater)
 			z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
-			sceneCmd.DepthMask(true);
-		}
 
 		boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 		if (!hasAlpha)

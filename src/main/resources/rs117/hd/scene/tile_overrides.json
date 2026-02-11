@@ -4838,7 +4838,10 @@
     "blendedAsOpposite": true,
     "shiftHue": 8,
     "shiftSaturation": 3,
-    "shiftLightness": -20
+    "shiftLightness": -20,
+    "replacements": {
+      "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_BLENDING": "!blending"
+    }
   },
   {
     "name": "TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX",
@@ -9560,7 +9563,7 @@
       144
     ],
     "replacements": {
-      "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "SEASONAL_GRUNGE": "blending && (s == 0 || h <= 10 && s < 2)",
       "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
       "SEASONAL_GRASS": [
         "h >= 11 && s == 1",
