@@ -13936,6 +13936,7 @@
   },
   {
     "description": "Ground Decoration - Dirt Clump - Tiny - Colored",
+    "hideInAreas": [ "Vet'ion Lair Hide Dirt On Entrance" ],
     "baseMaterial": "DIRT_2",
     "objectIds": [
       "DUGUPSOIL2_UPASS",
@@ -17045,7 +17046,7 @@
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Dirt Wall",
-    "baseMaterial": "DIRT_1",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       "CAVEKIT_ROCK03_HIGH01",
       "CAVEKIT_ROCK03_HIGH01_NOSHADOW",
@@ -17058,8 +17059,17 @@
     "uvType": "BOX"
   },
   {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Dirt Wall",
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "GREYBOX_TOMB_WALL02_DARK01",
+      "GREYBOX_TOMB_WALL02_DARK02"
+    ]
+  },
+  {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Dirt Wall - Arch",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
+    "depthBias": 1,
     "objectIds": [
       "CAVEKIT_ROCK03_ARCH01",
       "CAVEKIT_ROCK03_ARCH01_MIRROR",
@@ -17068,27 +17078,84 @@
       "WILD_VETION_EXIT01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.75
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0 && l > 22",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Wall with Banner",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "DIRT_1",
     "objectIds": [
       "CAVEKIT_ROCK03_FLAG01",
       "CAVEKIT_ROCK03_FLAG01_MIRROR"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Wilderness - Vet'ion/Calvar'ion Lair - Grate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "WILD_VETION_GRATE01_CORNER01_MIRROR",
+      "WILD_VETION_GRATE01_CORNER01",
+      "WILD_VETION_GRATE01_EDGE01",
+      "WILD_VETION_GRATE01_EDGE02_MIRROR",
+      "WILD_VETION_GRATE01_DEFAULT01",
+      "WILD_VETION_GRATE01_EDGE02",
+      "WILD_VETION_GRATE01_CORNER02_MIRROR",
+      "WILD_VETION_GRATE01_EDGE01_MIRROR",
+      "WILD_VETION_GRATE01_CORNER02"
+    ]
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Altar",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "WILD_VETION_COFFIN01",
       "WILD_VETION_COFFIN02",
       "WILD_VETION_COFFIN03"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "NONE",
+        "depthBias": 1
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Carpet",
@@ -17104,7 +17171,10 @@
       "TILEKIT_BRICK01_FABRIC03",
       "TILEKIT_BRICK01_FABRIC04"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 1.5,
+    "depthBias": 1
   },
   {
     "description": "Wilderness - Vet'ion/Calvar'ion Lair - Banner",
@@ -17143,6 +17213,33 @@
       "WILD_VETION_SINGLES_ENTRANCE01"
     ],
     "uvType": "VANILLA"
+  },
+  {
+    "description": "Wilderness - Graveyard of Shadows - Vet'ion Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "WILD_VETION_SIGN01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "depthBias": 50
+      },
+      {
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "GRAY_65",
+        "depthBias": 70
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Wilderness - Artio/Callisto Lair Entrance",
@@ -17575,15 +17672,32 @@
       "WILD_SLAYER_CAVE_SOUTH_EXIT",
       "WILD_SLAYER_CAVE_NORTH_EXIT",
       "WILD_SLAYER_CAVE_LEDGE",
-      "WILDERNESS_SLAYER_CAVE_CREVICE"
+      "WILDERNESS_SLAYER_CAVE_CREVICE",
+      "WILD_CAVE_EXIT_MID",
+      "WILD_CAVE_EXIT_HIGH",
+      "WILD_CAVE_AGILITY_JUMP_START_LEFT",
+      "WILD_CAVE_AGILITY_FALLOFF_EDGE_RIGHT",
+      "WILD_CAVE_AGILITY_JUMP_START_RIGHT",
+      "WILD_CAVE_AGILITY_FALLOFF_STRAIGHT",
+      "WILD_CAVE_AGILITY_FALLOFF_EDGE_LEFT",
+      "WILD_CAVE_AGILITY_STAND_TILE",
+      "WILD_CAVE_AGILITY_JUMP_START_MIDDLE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": "hsl == 2",
+        "colors": "l == 2 && a == 255",
         "baseMaterial": "PURE_BLACK"
       }
     ]
+  },
+  {
+    "description": "Wilderness - Rev Cave - Agility Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "WILD_CAVE_AGILITY_JUMP"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Wilderness - Slayer Cave - Small Rocks",
@@ -17591,14 +17705,18 @@
     "objectIds": [
       "SLICE_DUGUPSOIL_02",
       "SLICE_DUGUPSOIL_04",
-      "SLICE_DUGUPSOIL_07"
+      "SLICE_DUGUPSOIL_07",
+      "WILD_VETION_RUBBLE01",
+      "WILD_VETION_ROCKS01",
+      "WILD_VETION_ROCKS02",
+      "WILD_CAVE_RUBBLE",
+      "WILD_CAVE_EXIT_LOW"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
   },
   {
     "description": "Wilderness - Slayer Cave - Wall Filler",
-    "areas": [ "Wilderness Slayer Cave" ],
     "baseMaterial": "PURE_BLACK",
     "objectIds": [
       "WILD_CAVETOP"
