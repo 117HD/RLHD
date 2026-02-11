@@ -4241,7 +4241,8 @@
     "name": "REVENANT_CAVES",
     "regionBoxes": [
       [ 12701, 12959 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "FROZEN_WASTE_PLATEAU",
@@ -4587,13 +4588,34 @@
   {
     "name": "Vet'ion/Calvar'ion Lair Carpet Fix",
     "aabbs": [
-      [ 1884, 11534, 1890, 11541 ]
+      [ 1884, 11534, 1890, 11541 ],
+      [ 3293, 10190, 3297, 10195 ]
+    ]
+  },
+  {
+    "name": "Vet'ion/Calvar'ion Water Under Grate",
+    "aabbs": [
+      [ 1874, 11532, 1901, 11561 ],
+      [ 3287, 10195, 3303, 10209 ]
+    ]
+  },
+  {
+    "name": "Vet'ion/Calvar'ion Floors",
+    "aabbs": [
+      [ 1878, 11538, 1896, 11553 ],
+      [ 3286, 10194, 3304, 10209 ]
     ]
   },
   {
     "name": "Vet'ion Lair Entrance Fix",
     "aabbs": [
       [ 3220, 3786, 3223, 3791 ]
+    ]
+  },
+  {
+    "name": "Vet'ion Lair Hide Dirt On Entrance",
+    "aabbs": [
+      [ 3180, 3683 ]
     ]
   },
   {

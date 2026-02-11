@@ -964,6 +964,27 @@
     "groundMaterial": "GRUNGE"
   },
   {
+    "name": "Vet'ion/Calvar'ion Water Under Grate",
+    "area": "Vet'ion/Calvar'ion Water Under Grate",
+    "underlayIds": [
+      47,
+      76,
+      89
+    ],
+    "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "Vet'ion/Calvar'ion Main Floor",
+    "area": "Vet'ion/Calvar'ion Floors",
+    "underlayIds": [
+      146,
+      171,
+      172
+    ],
+    "groundMaterial": "DIRTY_MARBLE",
+    "uvScale": 1.25
+  },
+  {
     "name": "Cam Torum Entrance Fix",
     "area": "CAM_TORUM_ENTRANCE_FIX",
     "blended": false,

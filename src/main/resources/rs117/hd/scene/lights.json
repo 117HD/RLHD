@@ -39056,10 +39056,10 @@
     "objectIds": [
       "LIGHT_GODRAY02_LARGE01"
     ],
-    "radius": 1350,
-    "strength": 10,
+    "radius": 1150,
+    "strength": 8,
     "color": "#ffffff",
-    "offset": [ 40, 1000, 0 ]
+    "offset": [ 40, 600, 0 ]
   },
   {
     "description": "Vet'ion/Calvar'ion Outside Candle Centre",
@@ -39267,7 +39267,8 @@
       "NPC_VETION_DEFEND_PARRY_02",
       "NPC_VETION_DEFEND_SHIELD_02"
     ],
-    "fadeOutDuration": 1500
+    "fadeOutDuration": 1500,
+    "fadeInDuration": 100
   },
   {
     "description": "Vet'ion/Calvar'ion Enrage Hound",
@@ -39283,9 +39284,53 @@
     "duration": 0,
     "range": 10,
     "npcIds": [ "VETION_HELLHOUND_SNR_SINGLES" ],
-    "animationIds": [ -1, "DOG_UPDATE_SKELETON_HELLHOUND_DEFEND", "DOG_UPDATE_SKELETON_HELLHOUND_ATTACK" ],
+    "animationIds": [ -1, "WBR_VENTION_HELLHOUND_ATTACK", "WBR_VENTION_HELLHOUND_DEFEND" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 1500
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Lighting",
+    "offset": [ 0, 60, 0 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      0,
+      24,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 1800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "graphicsObjectIds": [
+      "FX_VETION_ATTACK_MAGIC_IMPACT_01"
+    ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Enrage Lighting",
+    "offset": [ 0, 60, 0 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      255,
+      162,
+      41
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 1800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "graphicsObjectIds": [
+      "FX_VETION_ATTACK_MAGIC_IMPACT_02"
+    ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
   },
   {
     "description": "Wilderness - Escape Caves - Rope Light",
