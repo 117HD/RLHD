@@ -4494,7 +4494,8 @@
     ],
     "groundMaterial": "CARPET",
     "uvScale": 1.5,
-    "blended": false
+    "blended": false,
+    "shiftLightness": 2
   },
   {
     "name": "KOUREND_CASTLE_FLOOR",
@@ -4502,8 +4503,8 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "TILES_2x2_1",
-    "shiftLightness": 2,
+    "groundMaterial": "TILES_2X2_1_GLOSS",
+    "shiftLightness": 3,
     "blended": false
   },
   {

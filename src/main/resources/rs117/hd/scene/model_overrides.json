@@ -5281,10 +5281,18 @@
       "ZEAH_KOUREND_STATUE_PLINTH"
     ],
     "uvType": "BOX",
-    "uvScale": 1.1
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "colors": "h < 25",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.1
+      }
+    ]
   },
   {
-    "description": "SHAYZIEN_SHAY_SHRINE",
+    "description": "SHAYZIEN_CAT_SHRINE",
     "baseMaterial": "MARBLE_3_GLOSS",
     "objectIds": [
       "SHAYZIEN_CAT_SHRINE"
@@ -12935,6 +12943,7 @@
     ],
     "uvType": "BOX",
     "flatNormals": true,
+    "uvOrientationY": 512,
     "uvScale": 0.4
   },
   {
@@ -29568,14 +29577,17 @@
   {
     "description": "Kourend - Mage Training Arena - Candelabra",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 178,
     "objectIds": [
       "MAGICTRAINING_CANDLE_STAND",
       "CANDLE_STAND"
     ],
     "colorOverrides": [
+      {
+        "description": "Wooden base",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125",
+        "upwardsNormals": true
+      },
       {
         "description": "Wooden base",
         "colors": "h == 8 && s < 7",
