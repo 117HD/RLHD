@@ -28881,7 +28881,8 @@
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       "LARGEROOT_GNOME",
-      "LARGEROOT2_GNOME"
+      "LARGEROOT2_GNOME",
+      "DK_PEEK_ROOT"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -39858,13 +39859,14 @@
   },
   {
     "description": "Old Ones Dungeon Walls",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "DAGANNOTH_CAVEWALL_FACE1",
       "DAGANNOTH_MOUNTAIN_CAVEWALL_TOP"
     ],
     "uvType": "BOX",
-    "uvOrientation": 100
+    "uvOrientation": 100,
+    "depthBias": 1
   },
   {
     "description": "Waterbirth Island Stairs",
@@ -39927,7 +39929,7 @@
   },
   {
     "description": "Waterbirth Dungeon Walls",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "DAGANNOTH_CAVEWALL_FACE1_GLOW",
       "DAGANNOTH_CAVEWALL_FACE1_FALLOFF",
@@ -39937,8 +39939,6 @@
       "DAGANNOTH_CAVEWALL_PITTED_FACE1",
       "DAGANNOTH_CAVEWALL_PITTED_FACE1_GLOW",
       "DAGANNOTH_CAVEWALL_WATERY_FACE1_GLOW",
-      "DAGANNOTH_CAVEWALL_TORCH_FACE1",
-      "DAGANNOTH_CAVEWALL_TORCH_FACE1_GLOW",
       "DAGANNOTH_CAVEWALL_CONCAVE_FACE1_GLOW",
       "DAGANNOTH_CAVEWALL_FACE1_L2",
       "DAGANNOTH_CAVEWALL_PITTED_FACE1_L2",
@@ -39950,7 +39950,29 @@
       "DAGANNOTH_CAVEWALL_FACE1_FALLOFF_L2",
       "DAGANNOTH_CREVICE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "depthBias": 1
+  },
+  {
+    "description": "Waterbirth Dungeon Walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "DAGANNOTH_CAVEWALL_TORCH_FACE1",
+      "DAGANNOTH_CAVEWALL_TORCH_FACE1_GLOW"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
   },
   {
     "description": "Waterbirth Dungeon Stalagmite",
@@ -39969,6 +39991,20 @@
     "uvType": "BOX"
   },
   {
+    "description": "Waterbirth Dungeon Peak Crack",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "DAGEXP_BOSSROOMLADDER_DOWN_NORMAL"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "GRAY_25"
+      }
+    ]
+  },
+  {
     "description": "Waterbirth Dungeon Stone Chips",
     "baseMaterial": "STONE",
     "objectIds": [
@@ -39979,11 +40015,19 @@
   },
   {
     "description": "Waterbirth Rocks with Seaweed",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "DAGANNOTH_SEAWEEDROCK_LARGE",
       "DAGGANOTH_SEAWEEDROCK_1",
       "DAGGANOTH_SEAWEEDROCK_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 18 || h == 21",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      }
     ]
   },
   {
@@ -39999,7 +40043,7 @@
     "uvType": "BOX"
   }, {
   "description": "Waterbirth Water Leak",
-  "baseMaterial": "SLIME_GRUNGE",
+  "baseMaterial": "GRAY_60",
   "objectIds": [
     "DAGANNOTH_CAVEWALL_ANIMATED_WATER"
   ]

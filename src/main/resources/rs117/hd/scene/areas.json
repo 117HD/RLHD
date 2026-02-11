@@ -9350,45 +9350,47 @@
   },
   {
     "name": "WATERBIRTH_DUNGEON_LEVEL_1",
-    "aabbs": [
-      [ 2432, 10112, 0, 2559, 10175, 0 ]
+    "regionBoxes": [
+      [ 9886, 10142, 0 ]
     ]
   },
   {
     "name": "WATERBIRTH_DUNGEON_LEVEL_2",
-    "aabbs": [
-      [ 1792, 4352, 1, 1983, 4415, 1 ]
+    "regionBoxes": [
+      [ 7236, 7748, 1 ]
     ]
   },
   {
     "name": "WATERBIRTH_DUNGEON_LEVEL_3",
-    "aabbs": [
-      [ 1792, 4352, 2, 1983, 4415, 2 ]
+    "regionBoxes": [
+      [ 7236, 7748, 2 ]
     ]
   },
   {
     "name": "WATERBIRTH_DUNGEON_LEVEL_4",
-    "aabbs": [
-      [ 1792, 4352, 3, 1983, 4415, 3 ]
+    "regionBoxes": [
+      [ 7236, 7748, 3 ]
     ]
   },
   {
     "name": "WATERBIRTH_DUNGEON_LEVEL_5",
-    "aabbs": [
-      [ 1856, 4352, 0, 1983, 4415, 0 ]
+    "regionBoxes": [
+      [ 7492, 7748, 0 ]
     ]
   },
   {
     "name": "DAGANNOTH_KINGS_REGULAR_CAVE",
-    "aabbs": [
-      [ 2880, 4416, 0, 2943, 4479, 0 ]
-    ]
+    "regionBoxes": [
+      [ 11589, 11589, 0 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "DAGANNOTH_KINGS_SLAYER_CAVE",
-    "aabbs": [
-      [ 2880, 4352, 0, 2943, 4415, 0 ]
-    ]
+    "regionBoxes": [
+      [ 11588, 11588, 0 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WATERBIRTH_DUNGEON",
@@ -9400,7 +9402,8 @@
       "WATERBIRTH_DUNGEON_LEVEL_5",
       "DAGANNOTH_KINGS_REGULAR_CAVE",
       "DAGANNOTH_KINGS_SLAYER_CAVE"
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "ESSENCE_MINE",
