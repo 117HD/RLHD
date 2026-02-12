@@ -1246,6 +1246,9 @@ public class LegacyRenderer implements Renderer {
 
 		plugin.drawUi(overlayColor);
 
+		frameTimer.end(Timer.DRAW_FRAME);
+		frameTimer.end(Timer.RENDER_FRAME);
+
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);
 			plugin.awtContext.swapBuffers();
@@ -1263,8 +1266,6 @@ public class LegacyRenderer implements Renderer {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
-		frameTimer.end(Timer.DRAW_FRAME);
-		frameTimer.end(Timer.RENDER_FRAME);
 		frameTimer.endFrameAndReset();
 		frameModelInfoMap.clear();
 		checkGLErrors();
