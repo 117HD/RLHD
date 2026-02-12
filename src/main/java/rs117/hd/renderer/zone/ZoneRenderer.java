@@ -189,6 +189,9 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.shutDown();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
+
+		SceneUploader.POOL = null;
+		FacePrioritySorter.POOL = null;
 	}
 
 	@Override
