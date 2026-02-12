@@ -20,10 +20,10 @@ import static org.lwjgl.opengl.GL33C.*;
 @Slf4j
 @Singleton
 public class FrameTimer {
-	public static final int CPU_TIMER = 1;
-	public static final int ASYNC_TIMER = 2;
-	public static final int GPU_TIMER = 3;
-	public static final int GPU_GROUP_TIMER = 4;
+	public static final int CPU_TIMER = 0;
+	public static final int ASYNC_CPU_TIMER = 1;
+	public static final int GPU_TIMER = 2;
+	public static final int ASYNC_GPU_TIMER = 3;
 
 	private static final OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
 
@@ -35,7 +35,7 @@ public class FrameTimer {
 
 	private static final int NUM_TIMERS = Timer.TIMERS.length;
 	private static final int NUM_GPU_TIMERS = (int) Arrays.stream(Timer.TIMERS).filter(Timer::isGpuTimer).count();
-	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(Timer.TIMERS).filter(Timer::isGpuGroupTimer).count();
+	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(Timer.TIMERS).filter(Timer::hasGpuDebugGroup).count();
 
 	private final AutoTimer[] autoTimers = new AutoTimer[NUM_TIMERS];
 	private final boolean[] activeTimers = new boolean[NUM_TIMERS];
@@ -142,7 +142,7 @@ public class FrameTimer {
 
 	public AutoTimer begin(Timer timer) {
 		int index = timer.ordinal();
-		if (log.isDebugEnabled() && timer.isGpuGroupTimer() && HdPlugin.GL_CAPS.OpenGL43) {
+		if (log.isDebugEnabled() && timer.hasGpuDebugGroup() && HdPlugin.GL_CAPS.OpenGL43) {
 			if (glDebugGroupStack.contains(timer)) {
 				log.warn("The debug group {} is already on the stack", timer.name());
 			} else {
@@ -168,7 +168,7 @@ public class FrameTimer {
 	}
 
 	public void end(Timer timer) {
-		if (log.isDebugEnabled() && timer.isGpuGroupTimer() && HdPlugin.GL_CAPS.OpenGL43) {
+		if (log.isDebugEnabled() && timer.hasGpuDebugGroup() && HdPlugin.GL_CAPS.OpenGL43) {
 			if (glDebugGroupStack.peek() != timer) {
 				log.warn("The debug group {} was popped out of order", timer.name());
 			} else {
@@ -232,7 +232,7 @@ public class FrameTimer {
 			}
 		}
 
-		final float cpuLoad = (float)osBean.getSystemLoadAverage() / osBean.getAvailableProcessors();
+		final float cpuLoad = (float) osBean.getSystemLoadAverage() / osBean.getAvailableProcessors();
 		var frameTimings = new FrameTimings(frameEndTimestamp, timings, cpuLoad);
 		for (var listener : listeners)
 			listener.onFrameCompletion(frameTimings);

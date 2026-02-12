@@ -96,24 +96,24 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.build());
 		} else {
 			long cpuTime = timings[Timer.DRAW_FRAME.ordinal()];
-			long threadedTime = 0;
+			long asyncCpuTime = 0;
 			addTiming("CPU", cpuTime, true);
 			for (var t : Timer.TIMERS) {
 				if (t.isCpuTimer() && t != Timer.DRAW_FRAME)
 					addTiming(t, timings);
-				if(t.isThreadTimer())
-					threadedTime += timings[t.ordinal()];
+				if (t.isAsyncCpuTimer())
+					asyncCpuTime += timings[t.ordinal()];
 			}
 
-			addTiming("Async", threadedTime, true);
+			addTiming("Async", asyncCpuTime, true);
 			for (var t : Timer.TIMERS)
-				if (t.isThreadTimer())
+				if (t.isAsyncCpuTimer())
 					addTiming(t, timings);
 
-			if(cpuLoad > 0) {
+			if (cpuLoad > 0) {
 				children.add(LineComponent.builder()
 					.left("CPU Load:")
-					.right((int) (cpuLoad * 100.0f) + "%")
+					.right((int) (cpuLoad * 100) + "%")
 					.build());
 			}
 
@@ -143,18 +143,18 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.build());
 
 			children.add(LineComponent.builder()
-				.left("Garbage Collection Count:")
+				.left("Garbage collection count:")
 				.right(String.valueOf(plugin.getGarbageCollectionCount()))
 				.build());
 
 			children.add(LineComponent.builder()
-				.left("PowerSaving:")
+				.left("Power saving mode:")
 				.right(plugin.isPowerSaving ? "ON" : "OFF")
 				.build());
 
 			children.add(LineComponent.builder()
 				.leftFont(boldFont)
-				.left("Scene Stats:")
+				.left("Scene stats:")
 				.build());
 
 			if (plugin.getSceneContext() != null) {
@@ -165,14 +165,14 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 					.build());
 			}
 
-			if(plugin.isZoneRenderer()) {
+			if (plugin.isZoneRenderer()) {
 				children.add(LineComponent.builder()
-					.left("Dynamic Renderables:")
+					.left("Dynamic renderables:")
 					.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
 					.build());
 
 				children.add(LineComponent.builder()
-					.left("Temp Renderables:")
+					.left("Temp renderables:")
 					.right(String.valueOf(plugin.getDrawnTempRenderableCount()))
 					.build());
 			} else {
@@ -182,17 +182,17 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 					.build());
 
 				children.add(LineComponent.builder()
-					.left("Static Renderables:")
+					.left("Static renderables:")
 					.right(String.valueOf(plugin.getDrawnStaticRenderableCount()))
 					.build());
 
 				children.add(LineComponent.builder()
-					.left("Dynamic Renderables:")
+					.left("Dynamic renderables:")
 					.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
 					.build());
 
 				children.add(LineComponent.builder()
-					.left("NPC Displacement Cache Size:")
+					.left("NPC displacement cache size:")
 					.right(String.valueOf(npcDisplacementCache.size()))
 					.build());
 			}

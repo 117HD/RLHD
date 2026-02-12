@@ -3,16 +3,16 @@ package rs117.hd.overlays;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 
-import static rs117.hd.overlays.FrameTimer.ASYNC_TIMER;
+import static rs117.hd.overlays.FrameTimer.ASYNC_CPU_TIMER;
+import static rs117.hd.overlays.FrameTimer.ASYNC_GPU_TIMER;
 import static rs117.hd.overlays.FrameTimer.CPU_TIMER;
-import static rs117.hd.overlays.FrameTimer.GPU_GROUP_TIMER;
 import static rs117.hd.overlays.FrameTimer.GPU_TIMER;
 
 @RequiredArgsConstructor
 public enum Timer {
-	// CPU Timers
+	// CPU timers
 
-	// Zone Renderer Draw Callbacks
+	// Draw callbacks
 	DRAW_FLUSH,
 	DRAW_FRAME,
 	DRAW_PRESCENE,
@@ -23,13 +23,15 @@ public enum Timer {
 	DRAW_POSTSCENE,
 	DRAW_TILED_LIGHTING,
 	DRAW_SUBMIT,
+
+	// Miscellaneous
 	SWAP_BUFFERS,
 	EXECUTE_COMMAND_BUFFER,
 	MAP_UI_BUFFER("Map UI Buffer"),
 	COPY_UI("Copy UI"),
 	MODEL_UPLOAD_COMPLETE,
 
-	// Logic Timers
+	// Logic
 	VISIBILITY_CHECK,
 	UPDATE_SCENE,
 	UPDATE_ENVIRONMENT,
@@ -39,7 +41,7 @@ public enum Timer {
 	REPLACE_FISHING_SPOTS,
 	CHARACTER_DISPLACEMENT,
 
-	// Legacy Timers
+	// Legacy
 	GET_MODEL,
 	DRAW_RENDERABLE,
 	CLICKBOX_CHECK,
@@ -50,22 +52,23 @@ public enum Timer {
 	MODEL_PUSHING_UV("Model pushing UV"),
 	IMPOSTOR_TRACKING,
 
-	// Async Timers
-	COPY_UI_ASYNC(ASYNC_TIMER, "Copy UI Async"),
-	DRAW_TEMP_ASYNC(ASYNC_TIMER),
-	DRAW_DYNAMIC_ASYNC(ASYNC_TIMER),
-	STATIC_ALPHA_SORT(ASYNC_TIMER),
+	// Async CPU timers
+	COPY_UI_ASYNC(ASYNC_CPU_TIMER, "Copy UI Async"),
+	DRAW_TEMP_ASYNC(ASYNC_CPU_TIMER),
+	DRAW_DYNAMIC_ASYNC(ASYNC_CPU_TIMER),
+	STATIC_ALPHA_SORT(ASYNC_CPU_TIMER),
 
-	// GPU Timers
+	// GPU timers
 	RENDER_FRAME(GPU_TIMER),
-	RENDER_TILED_LIGHTING(GPU_GROUP_TIMER),
+	RENDER_TILED_LIGHTING(GPU_TIMER),
 	UPLOAD_GEOMETRY(GPU_TIMER),
-	UPLOAD_UI(GPU_GROUP_TIMER, "Upload UI"),
-	COMPUTE(GPU_GROUP_TIMER),
-	CLEAR_SCENE(GPU_GROUP_TIMER),
-	RENDER_SHADOWS(GPU_GROUP_TIMER),
-	RENDER_SCENE(GPU_GROUP_TIMER),
-	RENDER_UI(GPU_GROUP_TIMER, "Render UI");
+	UPLOAD_UI(GPU_TIMER, "Upload UI"),
+	COMPUTE(GPU_TIMER),
+	CLEAR_SCENE(GPU_TIMER),
+	RENDER_SHADOWS(GPU_TIMER),
+	RENDER_SCENE(GPU_TIMER),
+	RENDER_UI(GPU_TIMER, "Render UI"),
+	;
 
 	public static final Timer[] TIMERS = values();
 	public final String name;
@@ -100,16 +103,16 @@ public enum Timer {
 		return type == CPU_TIMER;
 	}
 
+	public boolean isAsyncCpuTimer() {
+		return type == ASYNC_CPU_TIMER;
+	}
+
 	public boolean isGpuTimer() {
-		return type == GPU_TIMER || type == GPU_GROUP_TIMER;
+		return type == GPU_TIMER || type == ASYNC_GPU_TIMER;
 	}
 
-	public boolean isGpuGroupTimer() {
-		return type == GPU_GROUP_TIMER;
-	}
-
-	public boolean isThreadTimer() {
-		return type == ASYNC_TIMER;
+	public boolean hasGpuDebugGroup() {
+		return type == GPU_TIMER;
 	}
 
 	@Override
