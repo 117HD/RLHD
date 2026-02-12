@@ -92,7 +92,7 @@ public final class Worker {
 				}
 
 				if (!jobSystem.active) {
-					log.debug("Shutdown");
+					log.trace("Shutdown");
 					return;
 				}
 			}
@@ -103,7 +103,7 @@ public final class Worker {
 				thread.isInterrupted(); // Consume the interrupt to prevent it from cancelling the next job
 			}
 		}
-		log.debug("Shutdown - {}", jobSystem.active);
+		log.trace("Shutdown - {}", jobSystem.active);
 	}
 
 	void processHandle() throws InterruptedException {
