@@ -170,7 +170,8 @@ public class FrameTimer {
 	public void end(Timer timer) {
 		if (log.isDebugEnabled() && timer.hasGpuDebugGroup() && HdPlugin.GL_CAPS.OpenGL43) {
 			if (glDebugGroupStack.peek() != timer) {
-				log.warn("The debug group {} was popped out of order", timer.name());
+				if (glDebugGroupStack.contains(timer))
+					log.warn("The debug group {} was popped out of order", timer.name());
 			} else {
 				glDebugGroupStack.pop();
 				GL43C.glPopDebugGroup();
