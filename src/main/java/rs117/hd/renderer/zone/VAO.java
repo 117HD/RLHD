@@ -62,11 +62,11 @@ class VAO {
 
 	VAO(String name, boolean useStagingBuffer) {
 		if (useStagingBuffer) {
-			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STREAM_DRAW, 0);
+			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
 				"VAO::VBO_STAGING::" + name,
-				GL_COPY_READ_BUFFER,
-				GL_STREAM_COPY,
+				GL_ARRAY_BUFFER,
+				GL_STREAM_DRAW,
 				STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE
 			);
 		} else {
@@ -153,8 +153,7 @@ class VAO {
 			mergeRanges();
 
 			if (hasStagingBuffer()) {
-				if (!vboRender.ensureCapacity(vboWrittenBytes))
-					vboRender.ophan();
+				vboRender.ophan();
 				if (drawRangeCount > 1 && coalesce) {
 					if (srcCopyOffsets.length < drawRangeCount) {
 						srcCopyOffsets = new long[drawRangeCount];
