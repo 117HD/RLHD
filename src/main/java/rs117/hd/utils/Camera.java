@@ -54,7 +54,7 @@ public class Camera {
 
 	public boolean isViewDirty() { return (dirtyFlags & VIEW_MATRIX_DIRTY) != 0; }
 
-	public boolean getIsOrthographic() {return isOrthographic; }
+	public boolean getIsOrthographic() { return isOrthographic; }
 
 	public Camera setOrthographic(boolean newOrthographic) {
 		if (isOrthographic != newOrthographic) {

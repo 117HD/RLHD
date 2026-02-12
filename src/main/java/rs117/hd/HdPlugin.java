@@ -825,7 +825,8 @@ public class HdPlugin extends Plugin {
 		if (length <= 1)
 			return array + "[" + from + "]";
 		int middle = from + length / 2;
-		return "i < " + middle +
+		return
+			"i < " + middle +
 			" ? " + generateFetchCases(array, from, middle) +
 			" : " + generateFetchCases(array, middle, to);
 	}
@@ -1116,8 +1117,13 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeUiTexture() {
-		for(int i = 0; i < 3; i++) {
-			pboUi[i] = new GLBuffer("PBO::UI", GL_PIXEL_UNPACK_BUFFER, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
+		for (int i = 0; i < 3; i++) {
+			pboUi[i] = new GLBuffer(
+				"PBO::UI",
+				GL_PIXEL_UNPACK_BUFFER,
+				GL_STREAM_DRAW,
+				STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE
+			);
 			pboUi[i].initialize();
 		}
 
@@ -1135,7 +1141,7 @@ public class HdPlugin extends Plugin {
 	private void destroyUiTexture() {
 		uiResolution = null;
 
-		for(int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++) {
 			if (pboUi[i] != null)
 				pboUi[i].destroy();
 			pboUi[i] = null;
@@ -1423,7 +1429,7 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void prepareInterfaceTexture() {
-		if(uiCopyJob != null)
+		if (uiCopyJob != null)
 			uiCopyJob.waitForCompletion();
 		uiCopyJob = null;
 		int[] resolution = {
@@ -1463,11 +1469,13 @@ public class HdPlugin extends Plugin {
 		} else if (widthUI > uiResolution[0] || heightUI > uiResolution[1]) {
 			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", widthUI, heightUI, uiResolution);
 		} else {
-			uiCopyJob = GenericJob.build("AsyncUICopy", t -> {
-				long start = System.nanoTime();
-				pbo.mapped().getMappedIntBuffer().put(pixels, 0, widthUI * heightUI);
-				frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
-			}).setExecuteAsync(!isPowerSaving).queue();
+			uiCopyJob = GenericJob.build(
+				"AsyncUICopy", t -> {
+					long start = System.nanoTime();
+					pbo.mapped().getMappedIntBuffer().put(pixels, 0, widthUI * heightUI);
+					frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
+				}
+			).setExecuteAsync(!isPowerSaving).queue();
 		}
 		pbo.unbind();
 	}
@@ -1504,7 +1512,7 @@ public class HdPlugin extends Plugin {
 		glActiveTexture(TEXTURE_UNIT_UI);
 		glBindTexture(GL_TEXTURE_2D, texUi);
 
-		if(uiCopyJob != null) {
+		if (uiCopyJob != null) {
 			frameTimer.begin(Timer.COPY_UI);
 			uiCopyJob.waitForCompletion();
 			uiCopyJob = null;
@@ -1541,8 +1549,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-     * Convert the front framebuffer to an Image
-     */
+	 * Convert the front framebuffer to an Image
+	 */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
@@ -1558,10 +1566,8 @@ public class HdPlugin extends Plugin {
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
-		for (int y = 0; y < height; ++y)
-		{
-			for (int x = 0; x < width; ++x)
-			{
+		for (int y = 0; y < height; ++y) {
+			for (int x = 0; x < width; ++x) {
 				int r = buffer.get() & 0xff;
 				int g = buffer.get() & 0xff;
 				int b = buffer.get() & 0xff;
@@ -1731,7 +1737,7 @@ public class HdPlugin extends Plugin {
 									reloadScene = true;
 								break;
 							case KEY_WORKER_THREADS:
-								if(jobSystem.isActive()) {
+								if (jobSystem.isActive()) {
 									// Restart the job system with the new worker count
 									jobSystem.shutDown();
 									jobSystem.startUp();
@@ -1820,7 +1826,7 @@ public class HdPlugin extends Plugin {
 					if (reloadTexturesAndMaterials || recompilePrograms || reloadGpuFlags)
 						renderer.waitUntilIdle();
 
-					if(reloadGpuFlags)
+					if (reloadGpuFlags)
 						initGpuFlags();
 
 					if (reloadTexturesAndMaterials) {
@@ -1879,8 +1885,7 @@ public class HdPlugin extends Plugin {
 
 		client.setUnlockedFps(unlockFps);
 		int swapInterval;
-		switch (syncMode)
-		{
+		switch (syncMode) {
 			case ON:
 				swapInterval = 1;
 				break;
@@ -1954,7 +1959,7 @@ public class HdPlugin extends Plugin {
 		lastFrameClientTime = elapsedClientTime;
 		isClientMinimized = isJFrameMinimized(clientJFrame);
 
-		if(!isClientInFocus) {
+		if (!isClientInFocus) {
 			clientUnfocusedTime += deltaTime;
 		} else {
 			clientUnfocusedTime = 0;
@@ -1996,7 +2001,9 @@ public class HdPlugin extends Plugin {
 	}
 
 	@FunctionalInterface
-	public interface IContextFunc { String get();}
+	public interface IContextFunc {
+		String get();
+	}
 
 	public static boolean checkGLErrors() {
 		return checkGLErrors(null);
@@ -2037,9 +2044,9 @@ public class HdPlugin extends Plugin {
 					errStr = String.format("Error code: %d", err);
 					break;
 			}
-			if(contextFunc != null && context == null)
+			if (contextFunc != null && context == null)
 				context = contextFunc.get();
-			if(context != null)
+			if (context != null)
 				log.debug("glGetError({}):", context, new Exception(errStr));
 			else
 				log.debug("GL error:", new Exception(errStr));
@@ -2143,7 +2150,8 @@ public class HdPlugin extends Plugin {
 		} else {
 			errorMessage =
 				"The plugin ran out of memory. "
-				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size from " + config.modelCacheSizeMiB() + " or ") + "closing other programs.<br>"
+				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size from " + config.modelCacheSizeMiB() + " or ")
+				+ "closing other programs.<br>"
 				+ "<br>"
 				+ "If the issue persists, please join our "
 				+ "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and click the \"Open logs folder\" button<br>"

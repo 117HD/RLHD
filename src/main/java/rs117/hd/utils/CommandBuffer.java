@@ -76,7 +76,7 @@ public class CommandBuffer {
 
 	public void FenceSync(GLFence fence, int condition) {
 		ensureCapacity(2);
-		cmd[writeHead++] = GL_FENCE_SYNC & 0xFF | (long)condition << 8;
+		cmd[writeHead++] = GL_FENCE_SYNC & 0xFF | (long) condition << 8;
 		cmd[writeHead++] = writeObject(fence);
 	}
 
@@ -164,10 +164,13 @@ public class CommandBuffer {
 				.put(vertexOffset) // first
 				.put(0);        // baseInstance (reserved 4.1 prior)
 		} catch (Exception e) {
-			log.debug("Failed to write DrawArraysIndirect buffer position={} remaining={} capacity={}",
+			log.debug(
+				"Failed to write DrawArraysIndirect buffer position={} remaining={} capacity={}",
 				indirectBuffer.getBuffer().position(),
 				indirectBuffer.getBuffer().remaining(),
-				indirectBuffer.getBuffer().capacity(), e);
+				indirectBuffer.getBuffer().capacity(),
+				e
+			);
 		}
 
 		cmd[writeHead++] = GL_DRAW_ARRAYS_INDIRECT_TYPE & 0xFF | (long) mode << 8;
@@ -187,10 +190,13 @@ public class CommandBuffer {
 				.put(0)          // baseVertex
 				.put(0);         // baseInstance
 		} catch (Exception e) {
-			log.debug("Failed to write DrawArraysIndirect buffer position={} remaining={} capacity={}",
+			log.debug(
+				"Failed to write DrawArraysIndirect buffer position={} remaining={} capacity={}",
 				indirectBuffer.getBuffer().position(),
 				indirectBuffer.getBuffer().remaining(),
-				indirectBuffer.getBuffer().capacity(), e);
+				indirectBuffer.getBuffer().capacity(),
+				e
+			);
 		}
 
 		cmd[writeHead++] = GL_DRAW_ELEMENTS_INDIRECT_TYPE & 0xFF | (long) mode << 8;
@@ -214,7 +220,7 @@ public class CommandBuffer {
 		// https://registry.khronos.org/OpenGL-Refpages/gl4/html/glMultiDrawArraysIndirect.xhtml
 		indirectBuffer.ensureCapacity(drawCount * 4);
 		try {
-		IntBuffer buf = indirectBuffer.getBuffer();
+			IntBuffer buf = indirectBuffer.getBuffer();
 			for (int i = 0; i < drawCount; i++) {
 				buf.put(vertexCounts[i]);  // count
 				buf.put(1);              // instanceCount
@@ -222,11 +228,14 @@ public class CommandBuffer {
 				buf.put(0);             // baseInstance
 			}
 		} catch (Exception e) {
-			log.debug("Failed to write DrawArraysIndirect buffer drawCount={} position={} remaining={} capacity={}",
+			log.debug(
+				"Failed to write DrawArraysIndirect buffer drawCount={} position={} remaining={} capacity={}",
 				drawCount,
 				indirectBuffer.getBuffer().position(),
 				indirectBuffer.getBuffer().remaining(),
-				indirectBuffer.getBuffer().capacity(), e);
+				indirectBuffer.getBuffer().capacity(),
+				e
+			);
 		}
 
 		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_INDIRECT_TYPE & 0xFF | (long) mode << 8 | (long) drawCount << 32;
@@ -248,7 +257,7 @@ public class CommandBuffer {
 	}
 
 	public void append(CommandBuffer other) {
-		if(other.isEmpty())
+		if (other.isEmpty())
 			return;
 
 		ensureCapacity(other.writeHead);
@@ -257,7 +266,7 @@ public class CommandBuffer {
 	}
 
 	public void execute() {
-		if(frameTimer != null)
+		if (frameTimer != null)
 			frameTimer.begin(Timer.EXECUTE_COMMAND_BUFFER);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer offsets = null, counts = null;
@@ -324,7 +333,7 @@ public class CommandBuffer {
 					}
 					case GL_FENCE_SYNC: {
 						int condition = (int) (data >> 8);
-						GLFence fence = (GLFence) objects[(int)cmd[readHead++]];
+						GLFence fence = (GLFence) objects[(int) cmd[readHead++]];
 						fence.handle = glFenceSync(condition, 0);
 						break;
 					}
@@ -397,7 +406,7 @@ public class CommandBuffer {
 			}
 			renderState.apply();
 		}
-		if(frameTimer != null)
+		if (frameTimer != null)
 			frameTimer.end(Timer.EXECUTE_COMMAND_BUFFER);
 	}
 

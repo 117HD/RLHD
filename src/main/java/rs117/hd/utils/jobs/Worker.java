@@ -112,8 +112,8 @@ public final class Worker {
 			workerHandleCancel();
 
 			if (handle.item != null) {
-				if(handle.item.canStart()) {
-					if(handle.setRunning(this)) {
+				if (handle.item.canStart()) {
+					if (handle.setRunning(this)) {
 						inflight.set(true);
 						handle.item.onRun();
 						handle.item.ranToCompletion.set(true);
@@ -135,7 +135,7 @@ public final class Worker {
 			handle.item.encounteredError.set(true);
 			handle.cancel(false);
 		} finally {
-			if(!requeued) {
+			if (!requeued) {
 				if (handle.item != null && handle.item.wasCancelled.get())
 					handle.item.onCancel();
 				handle.setCompleted();

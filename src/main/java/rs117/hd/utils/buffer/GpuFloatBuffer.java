@@ -28,12 +28,10 @@ import java.nio.FloatBuffer;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 
-public class GpuFloatBuffer
-{
+public class GpuFloatBuffer {
 	private FloatBuffer buffer;
 
-	public GpuFloatBuffer()
-	{
+	public GpuFloatBuffer() {
 		this(65536);
 	}
 
@@ -75,8 +73,7 @@ public class GpuFloatBuffer
 		this.buffer.put(buffer);
 	}
 
-	public int position()
-	{
+	public int position() {
 		return buffer.position();
 	}
 
@@ -117,8 +114,7 @@ public class GpuFloatBuffer
 		return this;
 	}
 
-	public FloatBuffer getBuffer()
-	{
+	public FloatBuffer getBuffer() {
 		return buffer;
 	}
 }

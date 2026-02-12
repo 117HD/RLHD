@@ -61,11 +61,21 @@ class VAO {
 	private long[] CopyNumBytes = new long[16];
 
 	VAO(String name, boolean useStagingBuffer) {
-		if(useStagingBuffer) {
+		if (useStagingBuffer) {
 			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STREAM_DRAW, 0);
-			this.vboStaging = new GLBuffer("VAO::VBO_STAGING::" + name, GL_COPY_READ_BUFFER, GL_STREAM_COPY, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
+			this.vboStaging = new GLBuffer(
+				"VAO::VBO_STAGING::" + name,
+				GL_COPY_READ_BUFFER,
+				GL_STREAM_COPY,
+				STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE
+			);
 		} else {
-			this.vboRender = this.vboStaging = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
+			this.vboRender = this.vboStaging = new GLBuffer(
+				"VAO::VBO::" + name,
+				GL_ARRAY_BUFFER,
+				GL_STREAM_DRAW,
+				STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE
+			);
 		}
 		this.vboWriter = new GLMappedBufferIntWriter(this.vboStaging);
 
@@ -79,7 +89,7 @@ class VAO {
 		vao = glGenVertexArrays();
 		tbo.initialize(INITIAL_SIZE);
 		vboRender.initialize(INITIAL_SIZE);
-		if(vboRender != vboStaging) {
+		if (vboRender != vboStaging) {
 			vboStaging.initialize(INITIAL_SIZE);
 		}
 
@@ -139,14 +149,14 @@ class VAO {
 		long vboWrittenBytes = vboWriter.flush();
 		tboWriter.flush();
 
-		if(drawRangeCount > 0) {
+		if (drawRangeCount > 0) {
 			mergeRanges();
 
 			if (hasStagingBuffer()) {
-				if(!vboRender.ensureCapacity(vboWrittenBytes))
+				if (!vboRender.ensureCapacity(vboWrittenBytes))
 					vboRender.ophan();
 				if (drawRangeCount > 1 && coalesce) {
-					if(srcCopyOffsets.length < drawRangeCount) {
+					if (srcCopyOffsets.length < drawRangeCount) {
 						srcCopyOffsets = new long[drawRangeCount];
 						dstCopyOffsets = new long[drawRangeCount];
 						CopyNumBytes = new long[drawRangeCount];
@@ -170,7 +180,7 @@ class VAO {
 			}
 		}
 
-		if(renderVBOId != vboRender.id)
+		if (renderVBOId != vboRender.id)
 			bindRenderVAO();
 	}
 
@@ -192,7 +202,7 @@ class VAO {
 		drawCounts[drawIdx] = -1;
 
 		VAOView view = freeViews.poll();
-		if(view == null) view = new VAOView();
+		if (view == null) view = new VAOView();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
 		view.tbo = tboWriter.reserve(faceCount * 9);
 		view.vao = vao;

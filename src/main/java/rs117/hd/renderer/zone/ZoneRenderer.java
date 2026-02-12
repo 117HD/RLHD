@@ -160,11 +160,11 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public int gpuFlags() {
-		int flags = DrawCallbacks.ZBUF |
-					DrawCallbacks.ZBUF_ZONE_FRUSTUM_CHECK |
-					DrawCallbacks.NORMALS |
-					modelStreamingManager.gpuFlags();
-		return flags;
+		return
+			DrawCallbacks.ZBUF |
+			DrawCallbacks.ZBUF_ZONE_FRUSTUM_CHECK |
+			DrawCallbacks.NORMALS |
+			modelStreamingManager.gpuFlags();
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class ZoneRenderer implements Renderer {
 
 		jobSystem.startUp();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
-		sceneManager.initialize(uboWorldViews, renderState);
+		sceneManager.initialize(renderState, uboWorldViews);
 	}
 
 	@Override
@@ -550,11 +550,11 @@ public class ZoneRenderer implements Renderer {
 				totalSortedFaces += entityCtx.getSortedAlphaCount();
 		}
 
-		if((plugin.frame % 3) == 0)
+		if ((plugin.frame % 3) == 0)
 			eboAlphaOffset = 0;
 		eboAlphaPrevOffset = eboAlphaOffset;
 
-		long alphaOffsetBytes = eboAlphaOffset * (long)Integer.BYTES;
+		long alphaOffsetBytes = eboAlphaOffset * (long) Integer.BYTES;
 		long alphaNextBytes = totalSortedFaces * 3L * Integer.BYTES;
 		eboAlpha.ensureCapacity(alphaOffsetBytes + alphaNextBytes);
 		eboAlphaMapped = eboAlpha.map(MAP_WRITE | MAP_INVALIDATE, alphaOffsetBytes, alphaNextBytes);
@@ -571,10 +571,8 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		frameTimer.begin(Timer.DRAW_POSTSCENE);
-
-		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
+		if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 			postDrawTopLevel();
-		}
 		frameTimer.end(Timer.DRAW_POSTSCENE);
 	}
 
@@ -587,7 +585,7 @@ public class ZoneRenderer implements Renderer {
 		// Upload world views before rendering
 		uboWorldViews.upload();
 
-		if(eboAlphaMapped != null) {
+		if (eboAlphaMapped != null) {
 			eboAlphaMapped.setPositionBytes((eboAlphaOffset - eboAlphaPrevOffset) * Integer.BYTES);
 			eboAlpha.unmap();
 		}
@@ -603,15 +601,15 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
-		
+
 		// TODO: Tbh, we should add some form of stat tracking to the FrameTimer
 		plugin.drawnDynamicRenderableCount += modelStreamingManager.getDrawnDynamicRenderableCount();
 
 		checkGLErrors();
 	}
 
-	private void tiledlightingPass(){
-		if(!plugin.configTiledLighting || plugin.configDynamicLights == DynamicLights.NONE)
+	private void tiledlightingPass() {
+		if (!plugin.configTiledLighting || plugin.configDynamicLights == DynamicLights.NONE)
 			return;
 
 		plugin.updateTiledLightingFbo();
@@ -743,7 +741,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		Zone zone = ctx.zones[zx][zz];
-		if(plugin.freezeCulling)
+		if (plugin.freezeCulling)
 			return zone.inSceneFrustum || zone.inShadowFrustum;
 
 		minX *= LOCAL_TILE_SIZE;
@@ -762,7 +760,8 @@ public class ZoneRenderer implements Renderer {
 			minZ - PADDING,
 			maxX + PADDING,
 			maxY,
-			maxZ + PADDING);
+			maxZ + PADDING
+		);
 
 		if (zone.inSceneFrustum) {
 			if (plugin.enableDetailedTimers)
@@ -889,7 +888,7 @@ public class ZoneRenderer implements Renderer {
 
 							z.renderPlayers(playerCmd, zx - offset, zz - offset, ctx);
 
-							if(!playerCmd.isEmpty()) {
+							if (!playerCmd.isEmpty()) {
 								// Draw players shadow, with depth writes & alpha
 								ctx.vaoDirectionalCmd.append(playerCmd);
 
@@ -919,7 +918,18 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	@Override
-	public void drawDynamic(int renderThreadId, Projection projection, Scene scene, TileObject tileObject, Renderable r, Model m, int orient, int x, int y, int z) {
+	public void drawDynamic(
+		int renderThreadId,
+		Projection projection,
+		Scene scene,
+		TileObject tileObject,
+		Renderable r,
+		Model m,
+		int orient,
+		int x,
+		int y,
+		int z
+	) {
 		final long start = System.nanoTime();
 		modelStreamingManager.drawDynamic(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
 		frameTimer.add(renderThreadId == -1 ? Timer.DRAW_DYNAMIC : Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - start);

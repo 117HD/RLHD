@@ -69,7 +69,7 @@ public final class GLMappedBuffer {
 	}
 
 	public GLMappedBuffer map(int flags, long offsetBytes, long sizeBytes) {
-		if(mappedBuffer != null) {
+		if (mappedBuffer != null) {
 			mappedBuffer.position(0);
 			mappedIntBuffer.position(0);
 			mappedFloatBuffer.position(0);
@@ -82,18 +82,18 @@ public final class GLMappedBuffer {
 
 		int glFlags = 0;
 		if ((flags & MAP_WRITE) != 0) glFlags |= GL_MAP_WRITE_BIT;
-		if ((flags & MAP_READ) != 0)  glFlags |= GL_MAP_READ_BIT;
-		if ((flags & MAP_UNSYNCHRONIZED) != 0)  glFlags |= GL_MAP_UNSYNCHRONIZED_BIT;
+		if ((flags & MAP_READ) != 0) glFlags |= GL_MAP_READ_BIT;
+		if ((flags & MAP_UNSYNCHRONIZED) != 0) glFlags |= GL_MAP_UNSYNCHRONIZED_BIT;
 
 		final ByteBuffer buf;
-		if(owner.target != GL_STATIC_DRAW) {
+		if (owner.target != GL_STATIC_DRAW) {
 			long mapSize = max(0, min(owner.size - offsetBytes, sizeBytes));
-			if(mapSize <= 0) {
+			if (mapSize <= 0) {
 				return this;
 			}
 
-			if ((flags & MAP_INVALIDATE) != 0)  {
-				if(mapSize == owner.size) glFlags |= GL_MAP_INVALIDATE_BUFFER_BIT;
+			if ((flags & MAP_INVALIDATE) != 0) {
+				if (mapSize == owner.size) glFlags |= GL_MAP_INVALIDATE_BUFFER_BIT;
 				else glFlags |= GL_MAP_INVALIDATE_RANGE_BIT;
 			}
 			buf = glMapBufferRange(
@@ -112,7 +112,7 @@ public final class GLMappedBuffer {
 		if (buf == null)
 			throw new RuntimeException("Failed to map buffer " + owner.id);
 
-		if(mappedBuffer != buf) {
+		if (mappedBuffer != buf) {
 			mappedBuffer = buf;
 			mappedIntBuffer = buf.asIntBuffer();
 			mappedFloatBuffer = buf.asFloatBuffer();
@@ -131,9 +131,9 @@ public final class GLMappedBuffer {
 
 	public int getPositionBytes() {
 		int bytesPos = mappedBuffer.position();
-		if(mappedIntBuffer.position() * 4 > bytesPos)
+		if (mappedIntBuffer.position() * 4 > bytesPos)
 			bytesPos = mappedIntBuffer.position() * 4;
-		if(mappedFloatBuffer.position() * 4 > bytesPos)
+		if (mappedFloatBuffer.position() * 4 > bytesPos)
 			bytesPos = mappedFloatBuffer.position() * 4;
 		return bytesPos;
 	}
@@ -158,7 +158,7 @@ public final class GLMappedBuffer {
 		syncViews();
 
 		glBindBuffer(owner.target, owner.id);
-		if(owner.target != GL_STATIC_DRAW) {
+		if (owner.target != GL_STATIC_DRAW) {
 			mappedBuffer.flip();
 			glFlushMappedBufferRange(owner.target, mappedBuffer.position(), mappedBuffer.remaining());
 			mappedBuffer.clear();

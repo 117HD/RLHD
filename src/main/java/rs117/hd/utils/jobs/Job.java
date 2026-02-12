@@ -30,7 +30,7 @@ public abstract class Job {
 		boolean completed = false;
 		if (handle != null) {
 			try {
-				if(isDone()) {
+				if (isDone()) {
 					completed = true;
 				} else {
 					completed = handle.await(timeoutNs);
@@ -39,7 +39,7 @@ public abstract class Job {
 				log.warn("Job {} was interrupted while waiting for completion", this);
 				throw new RuntimeException(e);
 			} finally {
-				if(completed)
+				if (completed)
 					handle.release();
 			}
 		} else {

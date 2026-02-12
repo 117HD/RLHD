@@ -130,9 +130,9 @@ public class SceneManager {
 		return root;
 	}
 
-	public void initialize(UBOWorldViews uboWorldViews, RenderState renderState) {
-		this.uboWorldViews = uboWorldViews;
+	public void initialize(RenderState renderState, UBOWorldViews uboWorldViews) {
 		this.renderState = renderState;
+		this.uboWorldViews = uboWorldViews;
 		root.initialize(renderState, injector);
 	}
 

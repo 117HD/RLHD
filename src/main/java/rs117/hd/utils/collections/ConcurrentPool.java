@@ -41,8 +41,8 @@ public final class ConcurrentPool<T> {
 		T obj = acquire();
 		if (obj == null && parkedThreads != null) {
 			final Thread currentThread = Thread.currentThread();
-			while((obj = pool.poll()) == null) {
-				if(!parkedThreads.contains(currentThread))
+			while ((obj = pool.poll()) == null) {
+				if (!parkedThreads.contains(currentThread))
 					parkedThreads.add(currentThread);
 				LockSupport.parkNanos(1000);
 			}
@@ -54,9 +54,9 @@ public final class ConcurrentPool<T> {
 	public void recycle(T obj) {
 		pool.offer(obj);
 
-		if(parkedThreads != null){
+		if (parkedThreads != null) {
 			Thread parkedThread = parkedThreads.poll();
-			if(parkedThread != null)
+			if (parkedThread != null)
 				LockSupport.unpark(parkedThread);
 		}
 	}

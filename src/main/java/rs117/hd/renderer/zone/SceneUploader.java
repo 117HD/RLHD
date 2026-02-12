@@ -108,7 +108,9 @@ public class SceneUploader implements AutoCloseable {
 	@Inject
 	public ProceduralGenerator proceduralGenerator;
 
-	public interface OnBeforeProcessTileFunc { void invoke(Tile t, boolean isEstimate); }
+	public interface OnBeforeProcessTileFunc {
+		void invoke(Tile t, boolean isEstimate);
+	}
 
 	public OnBeforeProcessTileFunc onBeforeProcessTile;
 
@@ -133,7 +135,7 @@ public class SceneUploader implements AutoCloseable {
 	public final float[] modelProjected = new float[MAX_VERTEX_COUNT * 3];
 	private final float[] modelLocal = new float[MAX_VERTEX_COUNT * 3];
 	private final int[] modelLocalI = new int[MAX_VERTEX_COUNT * 3];
-	private final boolean[] visibility = new  boolean[MAX_VERTEX_COUNT];
+	private final boolean[] visibility = new boolean[MAX_VERTEX_COUNT];
 
 	private final float[] projected = new float[4];
 
@@ -173,7 +175,8 @@ public class SceneUploader implements AutoCloseable {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					Tile t = tiles[z][(mzx << 3) + xoff][(mzz << 3) + zoff];
 					if (t != null) {
-						if(onBeforeProcessTile != null) onBeforeProcessTile.invoke(t, true);
+						if (onBeforeProcessTile != null)
+							onBeforeProcessTile.invoke(t, true);
 						estimateZoneTileSize(ctx, zone, t);
 					}
 				}
@@ -215,7 +218,7 @@ public class SceneUploader implements AutoCloseable {
 				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab, fb);
 			}
 
-			if (zone.vboO != null) {
+			if (vb != null) {
 				int pos = vb.position();
 				zone.levelOffsets[z] = pos;
 			}
@@ -304,7 +307,8 @@ public class SceneUploader implements AutoCloseable {
 					Tile t = tiles[level][msx][msz];
 					if (t != null) {
 						this.rid = rid;
-						if(onBeforeProcessTile != null) onBeforeProcessTile.invoke(t, false);
+						if (onBeforeProcessTile != null)
+							onBeforeProcessTile.invoke(t, false);
 						uploadZoneTile(ctx, zone, t, false, false, vb, ab, fb);
 					}
 				}
@@ -323,7 +327,8 @@ public class SceneUploader implements AutoCloseable {
 					int msz = (mzz << 3) + zoff;
 					Tile t = tiles[level][msx][msz];
 					if (t != null) {
-						if(onBeforeProcessTile != null) onBeforeProcessTile.invoke(t, false);
+						if (onBeforeProcessTile != null)
+							onBeforeProcessTile.invoke(t, false);
 						uploadZoneTile(ctx, zone, t, false, true, vb, null, fb);
 					}
 				}
@@ -975,7 +980,8 @@ public class SceneUploader implements AutoCloseable {
 		int texturedFaceIdx = fb.putFace(
 			neColor, nwColor, seColor,
 			neMaterialData, nwMaterialData, seMaterialData,
-			neTerrainData, nwTerrainData, seTerrainData);
+			neTerrainData, nwTerrainData, seTerrainData
+		);
 
 		vb.putVertex(
 			lx2, neHeight, lz2,
@@ -1001,7 +1007,8 @@ public class SceneUploader implements AutoCloseable {
 		texturedFaceIdx = fb.putFace(
 			swColor, seColor, nwColor,
 			swMaterialData, seMaterialData, nwMaterialData,
-			swTerrainData, seTerrainData, nwTerrainData);
+			swTerrainData, seTerrainData, nwTerrainData
+		);
 
 		vb.putVertex(
 			lx0, swHeight, lz0,
@@ -1282,7 +1289,8 @@ public class SceneUploader implements AutoCloseable {
 			int texturedFaceIdx = fb.putFace(
 				colorA, colorB, colorC,
 				materialDataA, materialDataB, materialDataC,
-				terrainDataA, terrainDataB, terrainDataC);
+				terrainDataA, terrainDataB, terrainDataC
+			);
 
 			vb.putVertex(
 				lx0, ly0, lz0,
@@ -1320,7 +1328,7 @@ public class SceneUploader implements AutoCloseable {
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
 	) {
-		if(writeCache == null)
+		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
 		writeCache.setOutputBuffers(opaqueBuffer, alphaBuffer, textureBuffer);
 
@@ -1625,14 +1633,8 @@ public class SceneUploader implements AutoCloseable {
 				bias == null ? 0 : bias[face] & 0xFF;
 			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
-			final VertexWriteCache vb, tb;
-			if (writeCache.useAlphaBuffer && hasAlpha) {
-				vb = writeCache.alpha;
-				tb = writeCache.opaqueTex;
-			} else {
-				vb = writeCache.opaque;
-				tb = writeCache.opaqueTex;
-			}
+			final VertexWriteCache vb = writeCache.useAlphaBuffer && hasAlpha ? writeCache.alpha : writeCache.opaque;
+			final VertexWriteCache tb = writeCache.opaqueTex;
 
 			color1 |= packedAlphaBiasHsl;
 			color2 |= packedAlphaBiasHsl;
@@ -1670,7 +1672,19 @@ public class SceneUploader implements AutoCloseable {
 		return len;
 	}
 
-	public boolean preprocessTempModel(Projection proj, float[][] sceneFrustumPlanes, int[] faceDistances, PrimitiveIntArray visibleFaces, PrimitiveIntArray culledFaces, boolean isModelPartiallyVisible, Model model, int x, int y, int z, int orientation) {
+	public boolean preprocessTempModel(
+		Projection proj,
+		float[][] sceneFrustumPlanes,
+		int[] faceDistances,
+		PrimitiveIntArray visibleFaces,
+		PrimitiveIntArray culledFaces,
+		boolean isModelPartiallyVisible,
+		Model model,
+		int x,
+		int y,
+		int z,
+		int orientation
+	) {
 		final int vertexCount = model.getVerticesCount();
 
 		final float[] verticesX = model.getVerticesX();
@@ -1700,7 +1714,7 @@ public class SceneUploader implements AutoCloseable {
 			float vertexY = verticesY[v];
 			float vertexZ = verticesZ[v];
 
-			if(orientation != 0) {
+			if (orientation != 0) {
 				final float x0 = vertexX;
 				vertexX = vertexZ * orientSinf + x0 * orientCosf;
 				vertexZ = vertexZ * orientCosf - x0 * orientSinf;
@@ -1712,9 +1726,9 @@ public class SceneUploader implements AutoCloseable {
 
 			proj.project(vertexX, vertexY, vertexZ, projected);
 
-			if(isModelPartiallyVisible) {
+			if (isModelPartiallyVisible) {
 				// Ignore near & far plane, only test against the side planes
-				if(!(visibility[v] = HDUtils.isPointWithinFrustum(vertexX, vertexY, vertexZ, sceneFrustumPlanes, 4)))
+				if (!(visibility[v] = HDUtils.isPointWithinFrustum(vertexX, vertexY, vertexZ, sceneFrustumPlanes, 4)))
 					allVertsVisible = false;
 			}
 
@@ -1754,7 +1768,7 @@ public class SceneUploader implements AutoCloseable {
 
 		final int zero = (int) proj.project(x, y, z, projected)[2];
 		final int radius = model.getRadius();
-		for(int f = 0; f < triangleCount; f++) {
+		for (int f = 0; f < triangleCount; f++) {
 			if (color3s[f] == -2)
 				continue;
 
@@ -1762,7 +1776,7 @@ public class SceneUploader implements AutoCloseable {
 			int offsetB = indices2[f];
 			int offsetC = indices3[f];
 
-			if(!allVertsVisible && !visibility[offsetA] && !visibility[offsetB] && !visibility[offsetC]) {
+			if (!allVertsVisible && !visibility[offsetA] && !visibility[offsetB] && !visibility[offsetC]) {
 				// TODO: If a triangle is large enough to encompass the entire screen, this will need an additional plane test
 				culledFaces.putFace(f);
 				continue;
@@ -1791,15 +1805,14 @@ public class SceneUploader implements AutoCloseable {
 			final float cY = modelProjected[offsetC + 2];
 
 			// back face culling
-			if ((aX - bX) * (cY - bY) -
-				(cX - bX) * (aY - bY) <= 0) {
+			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0) {
 				culledFaces.putFace(f);
 				continue;
 			}
 
 			// store distance for face sorting
-			if(faceDistances != null && shouldSort)
-				faceDistances[f] = radius + ((int)((aZ + bZ + cZ) / 3.0f) - zero);
+			if (faceDistances != null && shouldSort)
+				faceDistances[f] = radius + ((int) ((aZ + bZ + cZ) / 3.0f) - zero);
 
 			visibleFaces.putFace(f);
 		}
@@ -1818,7 +1831,7 @@ public class SceneUploader implements AutoCloseable {
 		VAO.VAOView opaqueView,
 		VAO.VAOView alphaView
 	) {
-		if(writeCache == null)
+		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
 		writeCache.setOutputBuffers(
 			opaqueView.vbo.getBuffer(),
@@ -1848,7 +1861,10 @@ public class SceneUploader implements AutoCloseable {
 		final int[] faceNormals = isShadow ? EMPTY_NORMALS : modelNormals;
 
 		final boolean hasBias = bias != null;
-		final boolean modelHasNormals = model.getVertexNormalsX() != null && model.getVertexNormalsY() != null && model.getVertexNormalsZ() != null;
+		final boolean modelHasNormals =
+			model.getVertexNormalsX() != null &&
+			model.getVertexNormalsY() != null &&
+			model.getVertexNormalsZ() != null;
 
 		final byte overrideAmount = model.getOverrideAmount();
 		final byte overrideHue = model.getOverrideHue();
@@ -1885,7 +1901,7 @@ public class SceneUploader implements AutoCloseable {
 
 			if (unlitFaceColors != null)
 				color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
-			else if(color3 == -1)
+			else if (color3 == -1)
 				color2 = color3 = color1;
 
 			final int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
@@ -1947,7 +1963,7 @@ public class SceneUploader implements AutoCloseable {
 				faceUVs = GEOMETRY_UVS;
 			}
 
-			if(!isShadow) {
+			if (!isShadow) {
 				final boolean shouldRotateNormals;
 				boolean shouldCalculateFaceNormal;
 				if (!modelHasNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
@@ -1966,7 +1982,7 @@ public class SceneUploader implements AutoCloseable {
 					shouldCalculateFaceNormal &= (modelNormals[8] = zVertexNormals[triangleC]) == 0;
 				}
 
-				if(shouldCalculateFaceNormal) {
+				if (shouldCalculateFaceNormal) {
 					calculateFaceNormal(
 						faceNormals,
 						modelLocal[vertexOffsetA], modelLocal[vertexOffsetA + 1], modelLocal[vertexOffsetA + 2],
@@ -2216,18 +2232,18 @@ public class SceneUploader implements AutoCloseable {
 
 	private static void rotateNormalsFloat(int[] normals, float orientSin, float orientCos) {
 		int nx = normals[0], nz = normals[2];
-		normals[0] = (int)(nz * orientSin + nx * orientCos);
-		normals[2] = (int)(nz * orientCos - nx * orientSin);
+		normals[0] = (int) (nz * orientSin + nx * orientCos);
+		normals[2] = (int) (nz * orientCos - nx * orientSin);
 
 		nx = normals[3];
 		nz = normals[5];
-		normals[3] = (int)(nz * orientSin + nx * orientCos);
-		normals[5] = (int)(nz * orientCos - nx * orientSin);
+		normals[3] = (int) (nz * orientSin + nx * orientCos);
+		normals[5] = (int) (nz * orientCos - nx * orientSin);
 
 		nx = normals[6];
 		nz = normals[8];
-		normals[6] = (int)(nz * orientSin + nx * orientCos);
-		normals[8] = (int)(nz * orientCos - nx * orientSin);
+		normals[6] = (int) (nz * orientSin + nx * orientCos);
+		normals[8] = (int) (nz * orientCos - nx * orientSin);
 	}
 
 	public static void rotateNormals(int[] normals, int orientSin, int orientCos) {

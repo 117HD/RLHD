@@ -3,7 +3,6 @@ package rs117.hd.utils.jobs;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
@@ -272,7 +271,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 							}
 							seconds = newSeconds;
 						}
-						if(timeoutNs > 0 && elapsed > timeoutNs) {
+						if (timeoutNs > 0 && elapsed > timeoutNs) {
 							return false;
 						} else {
 							if (elapsed > DEADLOCK_TIMEOUT_SECONDS * 1000) {
@@ -282,7 +281,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 						}
 					}
 				} else {
-					if(timeoutNs > 0) {
+					if (timeoutNs > 0) {
 						if (!tryAcquireSharedNanos(0, timeoutNs))
 							return false;
 					} else {

@@ -43,7 +43,7 @@ public final class StaticAlphaSortingJob extends Job {
 	}
 
 	public void queue(Camera camera) {
-		if(frameTimer == null)
+		if (frameTimer == null)
 			frameTimer = getInjector().getInstance(FrameTimer.class);
 		yaw = camera.getFixedYaw();
 		yawSin = SINE[yaw];

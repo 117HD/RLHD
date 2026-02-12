@@ -115,7 +115,7 @@ public class ModelHash {
 			id = ModelHash.getIdOrIndex(hash);
 
 			if (renderable instanceof DynamicObject) {
-				var def = ((DynamicObject)renderable).getRecordedObjectComposition();
+				var def = ((DynamicObject) renderable).getRecordedObjectComposition();
 				if (def.getImpostorIds() != null) {
 					var impostor = def.getImpostor();
 					if (impostor != null)
@@ -124,9 +124,9 @@ public class ModelHash {
 			} else if (type == TYPE_NPC) {
 				int index = id;
 				id = UNKNOWN_ID;
-				if(renderable instanceof NPC) {
-					id = ((NPC)renderable).getId();
-				} else if(client.isClientThread()) {
+				if (renderable instanceof NPC) {
+					id = ((NPC) renderable).getId();
+				} else if (client.isClientThread()) {
 					var npcs = client.getTopLevelWorldView().npcs();
 					if (index >= 0 && index < 65536) {
 						NPC npc = npcs.byIndex(index);

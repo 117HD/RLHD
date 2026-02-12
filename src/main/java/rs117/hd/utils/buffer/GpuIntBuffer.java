@@ -33,14 +33,12 @@ import rs117.hd.HdPlugin;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class GpuIntBuffer
-{
+public class GpuIntBuffer {
 	@Getter
 	private IntBuffer buffer;
 	private final boolean ownsBuffer;
 
-	public GpuIntBuffer()
-	{
+	public GpuIntBuffer() {
 		this(65536);
 	}
 
@@ -133,11 +131,11 @@ public class GpuIntBuffer
 	) {
 		buffer.put(x);
 		buffer.put(y);
-		buffer.put( z);
-		buffer.put( float16(v) << 16 | float16(u));
-		buffer.put( (nx & 0xFFFF) << 16 | float16(w));
-		buffer.put( (nz & 0xFFFF) << 16 | ny & 0xFFFF);
-		buffer.put( textureFaceIdx);
+		buffer.put(z);
+		buffer.put(float16(v) << 16 | float16(u));
+		buffer.put((nx & 0xFFFF) << 16 | float16(w));
+		buffer.put((nz & 0xFFFF) << 16 | ny & 0xFFFF);
+		buffer.put(textureFaceIdx);
 	}
 
 	public void putVertex(
@@ -176,8 +174,7 @@ public class GpuIntBuffer
 		return textureFaceIdx;
 	}
 
-	public int position()
-	{
+	public int position() {
 		return buffer.position();
 	}
 

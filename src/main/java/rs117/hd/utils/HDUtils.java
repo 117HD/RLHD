@@ -66,7 +66,7 @@ public final class HDUtils {
 	}
 
 	public static int ceilPow2(int i) {
-		return (int) ceilPow2((long)i);
+		return (int) ceilPow2((long) i);
 	}
 
 	public static long ceilPow2(long l) {
@@ -408,9 +408,9 @@ public final class HDUtils {
 	) {
 		for (int i = 0; i < numPlanes; i++) {
 			final float[] p = cullingPlanes[i];
-			if(p[0] * x0 + p[1] * y0 + p[2] * z0 + p[3] > 0 ||
-			   p[0] * x1 + p[1] * y1 + p[2] * z1 + p[3] > 0 ||
-			   p[0] * x2 + p[1] * y2 + p[2] * z2 + p[3] > 0)
+			if (p[0] * x0 + p[1] * y0 + p[2] * z0 + p[3] > 0 ||
+				p[0] * x1 + p[1] * y1 + p[2] * z1 + p[3] > 0 ||
+				p[0] * x2 + p[1] * y2 + p[2] * z2 + p[3] > 0)
 				continue;
 
 			return false;
@@ -488,7 +488,7 @@ public final class HDUtils {
 		float heightC = yVertices[model.getFaceIndices3()[face]];
 		return heightA == heightB && heightA == heightC;
 	}
-	
+
 	public static boolean isJFrameMinimized(JFrame f) {
 		return f != null && (f.getExtendedState() & Frame.ICONIFIED) != 0;
 	}

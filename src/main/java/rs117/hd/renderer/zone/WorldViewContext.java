@@ -123,12 +123,12 @@ public class WorldViewContext {
 		}
 
 		long start = System.nanoTime();
-		for(int i = 0; i < VAO_COUNT; i ++) {
+		for (int i = 0; i < VAO_COUNT; i++) {
 			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_SHADOW;
 			final ArrayDeque<VAO> POOL = needsStaging ? VAO_STAGING_POOL : VAO_POOL;
-			for(int k = 0; k < VAO_BUFFER_COUNT; k++) {
+			for (int k = 0; k < VAO_BUFFER_COUNT; k++) {
 				VAO vao = vaos[k][i] = POOL.poll();
-				if(vao == null) {
+				if (vao == null) {
 					vao = vaos[k][i] = new VAO(Integer.toString(i), needsStaging);
 					vao.initialize();
 				}
@@ -139,7 +139,7 @@ public class WorldViewContext {
 	}
 
 	void map() {
-		for(int i = 0; i < VAO_COUNT; i ++)
+		for (int i = 0; i < VAO_COUNT; i++)
 			vaos[plugin.frame % VAO_BUFFER_COUNT][i].map();
 	}
 
@@ -152,7 +152,7 @@ public class WorldViewContext {
 	}
 
 	void unmap() {
-		for(int i = 0; i < VAO_COUNT; i ++) {
+		for (int i = 0; i < VAO_COUNT; i++) {
 			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_SHADOW;
 			vaos[plugin.frame % VAO_BUFFER_COUNT][i].unmap(shouldCoalesce);
 		}
@@ -164,10 +164,10 @@ public class WorldViewContext {
 		final int offset = sceneContext.sceneOffset >> 3;
 		final int camPosX = (int) camera.getPositionX();
 		final int camPosZ = (int) camera.getPositionZ();
-		for(int zx = 0; zx < sizeX; zx++) {
-			for(int zz = 0; zz < sizeZ; zz++) {
+		for (int zx = 0; zx < sizeX; zx++) {
+			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
-				if(z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum))
+				if (z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum))
 					continue;
 
 				final int dx = camPosX - ((zx - offset) << 10);
@@ -177,7 +177,7 @@ public class WorldViewContext {
 			}
 		}
 
-		if(!alphaZones.isEmpty()) {
+		if (!alphaZones.isEmpty()) {
 			alphaZones.sort(alphaSortComparator);
 			for (Zone z : alphaZones)
 				z.alphaStaticModelSort(camera);
@@ -213,7 +213,7 @@ public class WorldViewContext {
 				clientThread.invoke(curZone::unmap);
 
 				if (PrevZone != curZone) {
-					curZone.inSceneFrustum  = PrevZone.inSceneFrustum;
+					curZone.inSceneFrustum = PrevZone.inSceneFrustum;
 					curZone.inShadowFrustum = PrevZone.inShadowFrustum;
 					pendingCull.add(PrevZone);
 				}
@@ -297,10 +297,10 @@ public class WorldViewContext {
 			uboWorldViewStruct.free();
 		uboWorldViewStruct = null;
 
-		for(int i = 0; i < VAO_COUNT; i ++) {
+		for (int i = 0; i < VAO_COUNT; i++) {
 			for (int k = 0; k < VAO_BUFFER_COUNT; k++) {
 				final ArrayDeque<VAO> POOL = vaos[k][i].hasStagingBuffer() ? VAO_STAGING_POOL : VAO_POOL;
-				if(isShutdown || POOL.size() > 24) {
+				if (isShutdown || POOL.size() > 24) {
 					vaos[k][i].destroy();
 				} else {
 					(vaos[k][i].hasStagingBuffer() ? VAO_STAGING_POOL : VAO_POOL).add(vaos[k][i]);
@@ -308,7 +308,7 @@ public class WorldViewContext {
 			}
 		}
 
-		if(isShutdown) {
+		if (isShutdown) {
 			VAO v;
 			while ((v = VAO_STAGING_POOL.poll()) != null)
 				v.destroy();

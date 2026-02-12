@@ -11,6 +11,7 @@ public class GLTextureBuffer extends GLBuffer {
 	public GLTextureBuffer(String name, int usage) {
 		super(name, GL_TEXTURE_BUFFER, usage, 0);
 	}
+
 	public GLTextureBuffer(String name, int usage, int storageFlags) {
 		super(name, GL_TEXTURE_BUFFER, usage, storageFlags);
 	}
@@ -34,7 +35,7 @@ public class GLTextureBuffer extends GLBuffer {
 	public boolean ensureCapacity(long byteOffset, long numBytes) {
 		int oldId = id;
 		boolean resized = super.ensureCapacity(byteOffset, numBytes);
-		if(oldId != id) {
+		if (oldId != id) {
 			glBindTexture(target, texId);
 			glTexBuffer(target, GL_RGB32I, id);
 			glBindTexture(target, 0);
