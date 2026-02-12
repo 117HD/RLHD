@@ -29,31 +29,27 @@ import static rs117.hd.renderer.zone.VAO.METADATA_SIZE;
 
 @Slf4j
 public class WorldViewContext {
-	private static final int VAO_BUFFER_COUNT = 3;
-
 	public static final int VAO_OPAQUE = 0;
 	public static final int VAO_ALPHA = 1;
 	public static final int VAO_PLAYER = 2;
 	public static final int VAO_SHADOW = 3;
 	public static final int VAO_COUNT = 4;
 
-	public static final int ALPHA_ZSORT = 8192;
-	public static final int ALPHA_ZSORT_SQ = ALPHA_ZSORT * ALPHA_ZSORT;
+	private static final int FRAMES_IN_FLIGHT = 3;
+	private static final ArrayDeque<VAO> VAO_STAGING_POOL = new ArrayDeque<>();
+	private static final ArrayDeque<VAO> VAO_POOL = new ArrayDeque<>();
 
 	@Inject
 	private Injector injector;
 
 	@Inject
-	private HdPlugin plugin;
-
-	@Inject
 	private ClientThread clientThread;
 
 	@Inject
-	private SceneManager sceneManager;
+	private HdPlugin plugin;
 
-	private static final ArrayDeque<VAO> VAO_STAGING_POOL = new ArrayDeque<>();
-	private static final ArrayDeque<VAO> VAO_POOL = new ArrayDeque<>();
+	@Inject
+	private SceneManager sceneManager;
 
 	final int worldViewId;
 	final int sizeX, sizeZ;
@@ -72,7 +68,7 @@ public class WorldViewContext {
 
 	CommandBuffer vaoSceneCmd;
 	CommandBuffer vaoDirectionalCmd;
-	final VAO[][] vaos = new VAO[VAO_BUFFER_COUNT][VAO_COUNT];
+	final VAO[][] vaos = new VAO[FRAMES_IN_FLIGHT][VAO_COUNT];
 
 	public long loadTime;
 	public long uploadTime;
@@ -115,7 +111,7 @@ public class WorldViewContext {
 		vboM = new GLBuffer("WorldViewMetadata", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, 0);
 		vboM.initialize(METADATA_SIZE);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
-			IntBuffer buf = stack.callocInt(3);
+			IntBuffer buf = stack.mallocInt(3);
 			buf.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1);
 			buf.put(0).put(0);
 			buf.flip();
@@ -126,7 +122,7 @@ public class WorldViewContext {
 		for (int i = 0; i < VAO_COUNT; i++) {
 			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_SHADOW;
 			final ArrayDeque<VAO> POOL = needsStaging ? VAO_STAGING_POOL : VAO_POOL;
-			for (int k = 0; k < VAO_BUFFER_COUNT; k++) {
+			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
 				VAO vao = vaos[k][i] = POOL.poll();
 				if (vao == null) {
 					vao = vaos[k][i] = new VAO(Integer.toString(i), needsStaging);
@@ -135,26 +131,26 @@ public class WorldViewContext {
 				vao.bindMetadataVAO(vboM);
 			}
 		}
-		log.debug("WorldViewContext - WorldViewid: {} initBuffers took {}ms", worldViewId, (System.nanoTime() - start) / 1000000);
+		log.trace("WorldViewContext - WorldViewid: {} initBuffers took {}ms", worldViewId, (System.nanoTime() - start) / 1000000);
 	}
 
 	void map() {
 		for (int i = 0; i < VAO_COUNT; i++)
-			vaos[plugin.frame % VAO_BUFFER_COUNT][i].map();
+			vaos[plugin.frame % FRAMES_IN_FLIGHT][i].map();
 	}
 
 	VAO.VAOView beginDraw(int type, int faces) {
-		return vaos[plugin.frame % VAO_BUFFER_COUNT][type].beginDraw(faces);
+		return vaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
 	}
 
 	void drawAll(int type, CommandBuffer cmd) {
-		vaos[plugin.frame % VAO_BUFFER_COUNT][type].draw(cmd);
+		vaos[plugin.frame % FRAMES_IN_FLIGHT][type].draw(cmd);
 	}
 
 	void unmap() {
 		for (int i = 0; i < VAO_COUNT; i++) {
 			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_SHADOW;
-			vaos[plugin.frame % VAO_BUFFER_COUNT][i].unmap(shouldCoalesce);
+			vaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
 		}
 	}
 
@@ -298,7 +294,7 @@ public class WorldViewContext {
 		uboWorldViewStruct = null;
 
 		for (int i = 0; i < VAO_COUNT; i++) {
-			for (int k = 0; k < VAO_BUFFER_COUNT; k++) {
+			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
 				final ArrayDeque<VAO> POOL = vaos[k][i].hasStagingBuffer() ? VAO_STAGING_POOL : VAO_POOL;
 				if (isShutdown || POOL.size() > 24) {
 					vaos[k][i].destroy();

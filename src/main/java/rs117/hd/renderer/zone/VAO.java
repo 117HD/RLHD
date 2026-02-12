@@ -58,7 +58,7 @@ class VAO {
 
 	private long[] srcCopyOffsets = new long[16];
 	private long[] dstCopyOffsets = new long[16];
-	private long[] CopyNumBytes = new long[16];
+	private long[] copyNumBytes = new long[16];
 
 	VAO(String name, boolean useStagingBuffer) {
 		if (useStagingBuffer) {
@@ -159,20 +159,20 @@ class VAO {
 					if (srcCopyOffsets.length < drawRangeCount) {
 						srcCopyOffsets = new long[drawRangeCount];
 						dstCopyOffsets = new long[drawRangeCount];
-						CopyNumBytes = new long[drawRangeCount];
+						copyNumBytes = new long[drawRangeCount];
 					}
 
-					long destOffset = 0;
+					long dstOffset = 0;
 					for (int i = 0; i < drawRangeCount; i++) {
 						srcCopyOffsets[i] = drawOffsets[i] * (long) VERT_SIZE;
-						dstCopyOffsets[i] = destOffset;
-						CopyNumBytes[i] = drawCounts[i] * (long) VERT_SIZE;
-						destOffset += CopyNumBytes[i];
+						dstCopyOffsets[i] = dstOffset;
+						copyNumBytes[i] = drawCounts[i] * (long) VERT_SIZE;
+						dstOffset += copyNumBytes[i];
 					}
-					vboStaging.copyMultiTo(vboRender, srcCopyOffsets, dstCopyOffsets, CopyNumBytes, drawRangeCount);
+					vboStaging.copyMultiTo(vboRender, srcCopyOffsets, dstCopyOffsets, copyNumBytes, drawRangeCount);
 
 					drawOffsets[0] = 0;
-					drawCounts[0] = (int) (destOffset / VERT_SIZE);
+					drawCounts[0] = (int) (dstOffset / VERT_SIZE);
 					drawRangeCount = 1;
 				} else {
 					vboStaging.copyTo(vboRender, 0, 0, vboWrittenBytes);
