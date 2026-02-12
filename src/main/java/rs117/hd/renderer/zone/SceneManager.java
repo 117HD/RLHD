@@ -315,7 +315,7 @@ public class SceneManager {
 			return;
 
 		zone.rebuild = true;
-		log.debug("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
+		log.trace("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
 	}
 
 	private static boolean isEdgeTile(Zone[][] zones, int zx, int zz) {
