@@ -1,16 +1,15 @@
 package rs117.hd.opengl;
 
-import static org.lwjgl.opengl.GL32C.GL_SYNC_FLUSH_COMMANDS_BIT;
-import static org.lwjgl.opengl.GL32C.GL_TIMEOUT_IGNORED;
-import static org.lwjgl.opengl.GL32C.glClientWaitSync;
-import static org.lwjgl.opengl.GL32C.glDeleteSync;
+import static org.lwjgl.opengl.GL33C.*;
 
 public class GLFence {
 	public long handle;
 
-	public void sync() { sync(GL_TIMEOUT_IGNORED);}
+	public void sync() {
+		sync(GL_TIMEOUT_IGNORED);
+	}
 
-	public void sync(long nanoseconds) {
+	public synchronized void sync(long nanoseconds) {
 		if (handle == 0)
 			return;
 
