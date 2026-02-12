@@ -3,11 +3,13 @@ package rs117.hd.config;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum WorkerThreads {
-	LOW(0.25f),
-	MED(0.5f),
+public enum CpuUsage {
+	MAX(1),
 	HIGH(0.75f),
-	MAX(1.0f);
+	MEDIUM(0.5f),
+	LOW(0.25f),
+	MINIMAL(0),
+	;
 
 	public final float threadRatio;
 }

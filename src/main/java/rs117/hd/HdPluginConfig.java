@@ -35,6 +35,7 @@ import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
+import rs117.hd.config.CpuUsage;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
@@ -50,7 +51,6 @@ import rs117.hd.config.ShadowResolution;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
-import rs117.hd.config.WorkerThreads;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
@@ -832,15 +832,19 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_WORKER_THREADS = "workerThreads";
+	String KEY_CPU_USAGE_LIMIT = "cpuUsageLimit";
 	@ConfigItem(
-		keyName = KEY_WORKER_THREADS,
-		name = "Worker Threads",
-		description = " * LOW (25%)\n * MED (50%)\n * HIGH (75%)\n * MAX (100%)",
+		keyName = KEY_CPU_USAGE_LIMIT,
+		name = "CPU usage",
+		description =
+			"Specify how much of your processor the plugin should be allowed to use.<br>" +
+			"If you play with multiple clients or other heavy programs on the side,<br>" +
+			"reducing this may improve their performance.<br>" +
+			"Defaults to Max, allowing the whole processor to be used.",
 		section = miscellaneousSettings
 	)
-	default WorkerThreads workerThreads() {
-		return WorkerThreads.MAX;
+	default CpuUsage cpuUsageLimit() {
+		return CpuUsage.MAX;
 	}
 
 	String KEY_POWER_SAVING = "powerSaving";

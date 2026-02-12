@@ -1736,7 +1736,7 @@ public class HdPlugin extends Plugin {
 								if (configColorFilter == ColorFilter.CEL_SHADING || configColorFilterPrevious == ColorFilter.CEL_SHADING)
 									reloadScene = true;
 								break;
-							case KEY_WORKER_THREADS:
+							case KEY_CPU_USAGE_LIMIT:
 								if (jobSystem.isActive()) {
 									// Restart the job system with the new worker count
 									jobSystem.shutDown();
