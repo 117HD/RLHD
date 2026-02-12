@@ -193,7 +193,7 @@ public class LegacyRenderer implements Renderer {
 	public void initialize() {
 		modelPusher.startUp();
 
-		jobSystem.initialize();
+		jobSystem.startUp();
 
 		renderBufferOffset = 0;
 		numPassthroughModels = 0;
@@ -222,7 +222,7 @@ public class LegacyRenderer implements Renderer {
 			glDeleteVertexArrays(vaoScene);
 		vaoScene = 0;
 
-		jobSystem.shutdown();
+		jobSystem.shutDown();
 
 		destroyBuffers();
 		destroyTileHeightMap();

@@ -55,7 +55,7 @@ public final class JobSystem {
 	Worker[] workers;
 	Semaphore workerSemaphore;
 
-	public void initialize() {
+	public void startUp() {
 		workerCount = max(2, ceil((PROCESSOR_COUNT - 1) * config.workerThreads().threadRatio));
 		workers = new Worker[workerCount];
 		workerSemaphore = new Semaphore(workerCount);
@@ -102,7 +102,7 @@ public final class JobSystem {
 		}
 	}
 
-	public void shutdown() {
+	public void shutDown() {
 		active = false;
 		cancelAllWork(workQueue);
 

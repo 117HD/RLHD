@@ -1733,8 +1733,8 @@ public class HdPlugin extends Plugin {
 							case KEY_WORKER_THREADS:
 								if(jobSystem.isActive()) {
 									// Restart the job system with the new worker count
-									jobSystem.shutdown();
-									jobSystem.initialize();
+									jobSystem.shutDown();
+									jobSystem.startUp();
 								}
 								break;
 						}

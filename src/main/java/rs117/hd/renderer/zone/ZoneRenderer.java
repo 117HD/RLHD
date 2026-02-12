@@ -177,7 +177,7 @@ public class ZoneRenderer implements Renderer {
 		sceneCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
 
-		jobSystem.initialize();
+		jobSystem.startUp();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(uboWorldViews, renderState);
 	}
@@ -186,7 +186,7 @@ public class ZoneRenderer implements Renderer {
 	public void destroy() {
 		destroyBuffers();
 
-		jobSystem.shutdown();
+		jobSystem.shutDown();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
 	}

@@ -17,12 +17,12 @@ public class JobSystemTests {
 	@BeforeClass
 	public static void beforeAll() {
 		JOB_SYSTEM = new JobSystem();
-		JOB_SYSTEM.initialize();
+		JOB_SYSTEM.startUp();
 	}
 
 	@AfterClass
 	public static void afterAll() {
-		JOB_SYSTEM.shutdown();
+		JOB_SYSTEM.shutDown();
 	}
 
 	@Test
