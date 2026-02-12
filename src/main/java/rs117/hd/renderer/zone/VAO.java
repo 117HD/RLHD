@@ -153,7 +153,7 @@ class VAO {
 			mergeRanges();
 
 			if (hasStagingBuffer()) {
-				vboRender.ophan();
+				vboRender.orphan();
 				if (drawRangeCount > 1 && coalesce) {
 					if (srcCopyOffsets.length < drawRangeCount) {
 						srcCopyOffsets = new long[drawRangeCount];

@@ -105,7 +105,7 @@ public class GLBuffer {
 		size = 0;
 	}
 
-	public void ophan() {
+	public void orphan() {
 		if (isPersistent())
 			return;
 
