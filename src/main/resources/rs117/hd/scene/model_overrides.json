@@ -75507,7 +75507,7 @@
   },
   {
     "description": "Grimstone Dungeon - Upper Floor",
-    "baseMaterial": "SMOOTH_STONE",
+    "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
     "uvType": "MODEL_XZ",
     "uvOrientation": 120,
     "objectIds": [
