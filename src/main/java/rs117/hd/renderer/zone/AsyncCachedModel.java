@@ -19,7 +19,7 @@ import static rs117.hd.renderer.zone.SceneUploader.MAX_VERTEX_COUNT;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public final class AsyncCachedModel extends Job implements Model  {
+public final class AsyncCachedModel extends Job implements Model {
 	public static final ConcurrentLinkedDeque<AsyncCachedModel> INFLIGHT = new ConcurrentLinkedDeque<>();
 	public static ConcurrentPool<AsyncCachedModel> POOL;
 
@@ -96,8 +96,8 @@ public final class AsyncCachedModel extends Job implements Model  {
 
 	@SuppressWarnings("unchecked")
 	private <T> CachedArrayField<T> addField(ModelArrayDef fieldDef) {
-		for(int i = 0; i < cachedFields.length; i++) {
-			if(cachedFields[i] == null) {
+		for (int i = 0; i < cachedFields.length; i++) {
+			if (cachedFields[i] == null) {
 				return (CachedArrayField<T>) (cachedFields[i] = new CachedArrayField<>(fieldDef));
 			}
 		}
@@ -201,7 +201,7 @@ public final class AsyncCachedModel extends Job implements Model  {
 		verticesCount = model.getVerticesCount();
 		faceCount = model.getFaceCount();
 
-		if(zone != null)
+		if (zone != null)
 			zone.pendingModelJobs.add(this);
 		INFLIGHT.add(this);
 		queue();
@@ -211,7 +211,7 @@ public final class AsyncCachedModel extends Job implements Model  {
 		verticesY.cache(model);
 		verticesZ.cache(model);
 
-		faceColors3.cache( model);
+		faceColors3.cache(model);
 
 		faceIndices1.cache(model);
 		faceIndices2.cache(model);
@@ -241,16 +241,19 @@ public final class AsyncCachedModel extends Job implements Model  {
 
 	@Override
 	protected boolean canStart() {
-		if(processing.get()) // Work has been stollen so pop it off the queue
+		if (processing.get()) // Work has been stollen so pop it off the queue
 			return true;
 
-		return verticesX.cached && verticesY.cached && verticesZ.cached && faceIndices1.cached && faceIndices2.cached && faceIndices3.cached  && faceColors3.cached;
+		return
+			verticesX.cached && verticesY.cached && verticesZ.cached &&
+			faceIndices1.cached && faceIndices2.cached && faceIndices3.cached &&
+			faceColors3.cached;
 	}
 
 	@Override
-	protected void onRun()  {
+	protected void onRun() {
 		try {
-			if(!processing.compareAndSet(false, true))
+			if (!processing.compareAndSet(false, true))
 				return; // Client thread has stolen this job
 			try (
 				SceneUploader sceneUploader = SceneUploader.POOL.acquire();
@@ -261,7 +264,7 @@ public final class AsyncCachedModel extends Job implements Model  {
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
 		} finally {
-			if(zone != null)
+			if (zone != null)
 				zone.pendingModelJobs.remove(this);
 			zone = null;
 
@@ -411,7 +414,13 @@ public final class AsyncCachedModel extends Job implements Model  {
 
 	@FunctionalInterface
 	public interface UploadModelFunc {
-		void upload(SceneUploader sceneUploader, FacePrioritySorter facePrioritySorter, PrimitiveIntArray visibleFaces, PrimitiveIntArray culledFaces, Model model);
+		void upload(
+			SceneUploader sceneUploader,
+			FacePrioritySorter facePrioritySorter,
+			PrimitiveIntArray visibleFaces,
+			PrimitiveIntArray culledFaces,
+			Model model
+		);
 	}
 
 	@FunctionalInterface

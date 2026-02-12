@@ -76,7 +76,7 @@ final class FacePrioritySorter implements AutoCloseable {
 			final int faceIdx = visibleFaces.faces[i];
 			final int distance = faceDistances[faceIdx];
 
-			if(distance < 0 || distance >= diameter)
+			if (distance < 0 || distance >= diameter)
 				continue;
 
 			final int tailFaceIdx = zsortTail[distance];
@@ -107,7 +107,7 @@ final class FacePrioritySorter implements AutoCloseable {
 		Arrays.fill(lt10, 0);
 
 		for (int i = maxFz; i >= minFz; --i) {
-			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) { ;
+			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
 				final int pri = priorities[f];
 				final int idx = numOfPriority[pri]++;
 
@@ -223,10 +223,10 @@ final class FacePrioritySorter implements AutoCloseable {
 		final int start = m.startpos / (VERT_SIZE >> 2);
 		for (int i = maxFz; i >= minFz; --i) {
 			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
-				if(m.sortedFacesLen >= m.sortedFaces.length)
+				if (m.sortedFacesLen >= m.sortedFaces.length)
 					break;
 
-				if(f >= faceCount)
+				if (f >= faceCount)
 					continue;
 
 				final int sortedOffset = m.sortedFacesLen;

@@ -371,6 +371,7 @@ public interface HdPluginConfig extends Config
 		return 100;
 	}
 
+
 	/*====== Lighting settings ======*/
 
 	@ConfigSection(

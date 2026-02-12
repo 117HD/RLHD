@@ -68,7 +68,7 @@ public class ModelStreamingManager {
 
 	public int gpuFlags() {
 		int flags = 0;
-		if(config.asyncModelUpload() && PROCESSOR_COUNT > 1) {
+		if (config.asyncModelUpload() && PROCESSOR_COUNT > 1) {
 			// RENDER_THREADS will act as suppliers into the Job System, so this will be 2 + Client Suppliers
 			flags |= DrawCallbacks.RENDER_THREADS(RL_RENDER_THREADS);
 			initializeAsyncCachedModel();
@@ -79,12 +79,12 @@ public class ModelStreamingManager {
 	}
 
 	public void initializeAsyncCachedModel() {
-		if(!config.asyncModelUpload())
+		if (!config.asyncModelUpload())
 			return;
 
 		long maxModelSizeBytes = AsyncCachedModel.calculateMaxModelSizeBytes();
 		long asyncModelCacheSizeBytes = config.asyncModelCacheSizeMiB() * MiB;
-		int maxModelCount = (int)Math.ceil(asyncModelCacheSizeBytes / (double)maxModelSizeBytes);
+		int maxModelCount = (int) Math.ceil(asyncModelCacheSizeBytes / (double) maxModelSizeBytes);
 
 		ensureAsyncUploadsComplete(null);
 
@@ -93,15 +93,15 @@ public class ModelStreamingManager {
 	}
 
 	public void update() {
-		if(AsyncCachedModel.POOL == null)
+		if (AsyncCachedModel.POOL == null)
 			return;
 
-		if(plugin.isPowerSaving) {
-			if(!disabledRenderThreads) {
+		if (plugin.isPowerSaving) {
+			if (!disabledRenderThreads) {
 				disabledRenderThreads = true;
 				client.setGpuFlags(plugin.gpuFlags & ~DrawCallbacks.RENDER_THREADS(RL_RENDER_THREADS));
 			}
-		} else if(disabledRenderThreads) {
+		} else if (disabledRenderThreads) {
 			disabledRenderThreads = false;
 			client.setGpuFlags(plugin.gpuFlags);
 		}
@@ -111,7 +111,7 @@ public class ModelStreamingManager {
 
 	public int getDrawnDynamicRenderableCount() {
 		int count = 0;
-		for(int i = 0; i < drawnDynamicRenderableCount.length; i++)
+		for (int i = 0; i < drawnDynamicRenderableCount.length; i++)
 			count += drawnDynamicRenderableCount[i];
 		return count;
 	}
@@ -166,7 +166,8 @@ public class ModelStreamingManager {
 		final boolean hasAlpha = renderable instanceof Player || m.getFaceTransparencies() != null;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(false);
 		if (asyncModelCache != null) {
-			asyncModelCache.queue(m, hasAlpha ? zone : null,
+			asyncModelCache.queue(
+				m, hasAlpha ? zone : null,
 				(sceneUploader, facePrioritySorter, visibleFaces, culledFaces, cachedModel) -> {
 					final long asyncStart = System.nanoTime();
 					uploadTempModel(
@@ -230,7 +231,8 @@ public class ModelStreamingManager {
 		Model m,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
-		int orientation, int x, int y, int z) {
+		int orientation, int x, int y, int z
+	) {
 
 		boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 		shouldSort &= sceneUploader.preprocessTempModel(
@@ -267,7 +269,7 @@ public class ModelStreamingManager {
 		}
 
 
-		if(visibleFaces.length > 0) {
+		if (visibleFaces.length > 0) {
 			// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 			// because they are not depth tested. transparent player faces don't need their own vao because normal
 			// transparent faces are already not depth tested
@@ -389,13 +391,14 @@ public class ModelStreamingManager {
 		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 		final boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
 
-		if(renderThreadId >= 0)
+		if (renderThreadId >= 0)
 			client.checkClickbox(projection, m, orient, x, y, z, tileObject.getHash());
 
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(renderThreadId >= 0);
-		if(asyncModelCache != null) {
+		if (asyncModelCache != null) {
 			// Fast path, buffer the model into the job queue to unblock rl internals
-			asyncModelCache.queue(m, hasAlpha ? zone : null,
+			asyncModelCache.queue(
+				m, hasAlpha ? zone : null,
 				(sceneUploader, facePrioritySorter, visibleFaces, culledFaces, cachedModel) -> {
 					final long asyncStart = System.nanoTime();
 					uploadDynamicModel(
@@ -415,11 +418,12 @@ public class ModelStreamingManager {
 						x, y, z
 					);
 					frameTimer.add(Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - asyncStart);
-				});
+				}
+			);
 			return;
 		}
 
-		if(renderThreadId >= 0)
+		if (renderThreadId >= 0)
 			return;
 
 		try (
@@ -498,7 +502,7 @@ public class ModelStreamingManager {
 				shadowView.end();
 			}
 
-			if(visibleFaces.length > 0) {
+			if (visibleFaces.length > 0) {
 				final VAO.VAOView opaqueView = ctx.beginDraw(VAO_OPAQUE, visibleFaces.length);
 				final VAO.VAOView alphaView = hasAlpha ? ctx.beginDraw(VAO_ALPHA, visibleFaces.length) : opaqueView;
 
@@ -532,19 +536,19 @@ public class ModelStreamingManager {
 					}
 				}
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			log.error("Error rendering dynamic object", e);
 		}
 	}
 
 	public void ensureAsyncUploadsComplete(Zone zone) {
-		if(AsyncCachedModel.POOL == null)
+		if (AsyncCachedModel.POOL == null)
 			return;
 
 		frameTimer.begin(Timer.MODEL_UPLOAD_COMPLETE);
 		pending.clear();
 		AsyncCachedModel model;
-		while ((model = (zone != null ? zone.pendingModelJobs.poll() : AsyncCachedModel.INFLIGHT.poll()) )!= null)
+		while ((model = (zone != null ? zone.pendingModelJobs.poll() : AsyncCachedModel.INFLIGHT.poll())) != null)
 			pending.add(model);
 
 		AsyncCachedModel pendingModel;
@@ -553,7 +557,7 @@ public class ModelStreamingManager {
 		while (!pending.isEmpty()) {
 			pendingModel = pending.get(idx);
 
-			if(pendingModel.isQueued() && pendingModel.canStart() && pendingModel.processing.compareAndSet(false, true)) {
+			if (pendingModel.isQueued() && pendingModel.canStart() && pendingModel.processing.compareAndSet(false, true)) {
 				try (
 					SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 					FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
@@ -573,14 +577,14 @@ public class ModelStreamingManager {
 				hasStolen = true;
 			}
 
-			if(shouldBlock && pendingModel.waitForCompletion(10))
+			if (shouldBlock && pendingModel.waitForCompletion(10))
 				pending.remove(idx);
 
-			if(pending.isEmpty())
+			if (pending.isEmpty())
 				break;
 
 			idx = (idx + 1) % pending.size();
-			if(idx == 0 && !shouldBlock) {
+			if (idx == 0 && !shouldBlock) {
 				// We've wrapped around to the start, check if any work was stolen.
 				// If no work was stolen, the next iteration we should block since we'll never be able to steal
 				shouldBlock = !hasStolen;
@@ -593,7 +597,7 @@ public class ModelStreamingManager {
 
 
 	private AsyncCachedModel obtainAvailableAsyncCachedModel(boolean shouldBlock) {
-		if(AsyncCachedModel.POOL == null || disabledRenderThreads)
+		if (AsyncCachedModel.POOL == null || disabledRenderThreads)
 			return null;
 
 		return shouldBlock ? AsyncCachedModel.POOL.acquireBlocking() : AsyncCachedModel.POOL.acquire();
