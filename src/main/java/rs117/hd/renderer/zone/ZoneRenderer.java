@@ -869,7 +869,13 @@ public class ZoneRenderer implements Renderer {
 			case DrawCallbacks.PASS_ALPHA:
 				modelStreamingManager.ensureAsyncUploadsComplete(null);
 
+				if(sceneManager.isRoot(ctx))
+					frameTimer.begin(Timer.UNMAP_ROOT_CTX);
+
 				ctx.unmap();
+
+				if(sceneManager.isRoot(ctx))
+					frameTimer.end(Timer.UNMAP_ROOT_CTX);
 
 				// Draw opaque
 				ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
