@@ -137,13 +137,13 @@ public class SceneManager {
 	}
 
 	public void destroy() {
-		root.free(true);
-
+		root.free();
 		for (int i = 0; i < subs.length; i++) {
 			if (subs[i] != null)
-				subs[i].free(true);
+				subs[i].free();
 			subs[i] = null;
 		}
+		WorldViewContext.freeVaoPools();
 
 		Zone.freeZones(nextZones);
 		nextZones = null;
@@ -269,7 +269,7 @@ public class SceneManager {
 			if (subs[worldViewId] == null) {
 				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
 			} else {
-				subs[worldViewId].free(false);
+				subs[worldViewId].free();
 				subs[worldViewId] = null;
 			}
 		}
@@ -713,7 +713,7 @@ public class SceneManager {
 			log.error("Reload of an already loaded sub scene?");
 			prevCtx.sceneLoadGroup.cancel();
 			prevCtx.streamingGroup.cancel();
-			clientThread.invoke(() -> prevCtx.free(false));
+			clientThread.invoke(prevCtx::free);
 		}
 
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);

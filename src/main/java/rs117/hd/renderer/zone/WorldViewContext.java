@@ -281,7 +281,7 @@ public class WorldViewContext {
 				handleZoneSwap(-1.0f, x, z);
 	}
 
-	void free(boolean isShutdown) {
+	void free() {
 		sceneLoadGroup.cancel();
 		streamingGroup.cancel();
 
@@ -296,20 +296,12 @@ public class WorldViewContext {
 		for (int i = 0; i < VAO_COUNT; i++) {
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
 				final ArrayDeque<VAO> POOL = vaos[k][i].hasStagingBuffer() ? VAO_STAGING_POOL : VAO_POOL;
-				if (isShutdown || POOL.size() > 24) {
+				if (POOL.size() > 24) {
 					vaos[k][i].destroy();
 				} else {
-					(vaos[k][i].hasStagingBuffer() ? VAO_STAGING_POOL : VAO_POOL).add(vaos[k][i]);
+					POOL.add(vaos[k][i]);
 				}
 			}
-		}
-
-		if (isShutdown) {
-			VAO v;
-			while ((v = VAO_STAGING_POOL.poll()) != null)
-				v.destroy();
-			while ((v = VAO_POOL.poll()) != null)
-				v.destroy();
 		}
 
 		for (int x = 0; x < sizeX; ++x)
@@ -325,6 +317,14 @@ public class WorldViewContext {
 		vboM = null;
 
 		isLoading = true;
+	}
+
+	public static void freeVaoPools() {
+		VAO v;
+		while ((v = VAO_STAGING_POOL.poll()) != null)
+			v.destroy();
+		while ((v = VAO_POOL.poll()) != null)
+			v.destroy();
 	}
 
 	void invalidate() {
