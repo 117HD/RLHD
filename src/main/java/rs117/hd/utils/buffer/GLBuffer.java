@@ -106,7 +106,7 @@ public class GLBuffer {
 	}
 
 	public void ophan() {
-		if(isPersistent())
+		if (isPersistent())
 			return;
 
 		glBindBuffer(target, id);
