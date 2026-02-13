@@ -49,7 +49,7 @@ public class CommandBuffer {
 
 	private static final ThreadLocal<ArrayDeque<CommandBuffer>> CALL_STACK = ThreadLocal.withInitial(ArrayDeque::new);
 
-	private final Object[] objects = new Object[10];
+	private Object[] objects = new Object[8];
 	private int objectCount = 0;
 
 	public final String name;
@@ -447,11 +447,12 @@ public class CommandBuffer {
 	}
 
 	private int writeObject(Object obj) {
-		for (int i = 0; i < objectCount; i++) {
-			if (objects[i] == obj) {
+		for (int i = 0; i < objectCount; i++)
+			if (objects[i] == obj)
 				return i;
-			}
-		}
+
+		if (objectCount == objects.length)
+			objects = Arrays.copyOf(objects, objects.length * 2);
 		objects[objectCount] = obj;
 		return objectCount++;
 	}
