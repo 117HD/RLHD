@@ -38150,32 +38150,32 @@
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
     "strength": 8.5,
-    "radius": 700,
+    "radius": 600,
     "offset": [ 0, 227, 0 ]
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
-    "strength": 400,
-    "radius": 75,
-    "offset": [ -15, 267, -15 ]
+    "strength": 200,
+    "radius": 100,
+    "offset": [ -15, 297, -15 ]
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT_2",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
-    "strength": 400,
-    "radius": 75,
-    "offset": [ 15, 267, 15 ]
+    "strength": 200,
+    "radius": 100,
+    "offset": [ 15, 297, 15 ]
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT_TOP",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
-    "strength": 400,
-    "radius": 75,
-    "offset": [ 0, 357, 0 ]
+    "strength": 200,
+    "radius": 125,
+    "offset": [ 0, 397, 0 ]
   },
   {
     "description": "Eclipse Moon Lava North",

@@ -37683,14 +37683,15 @@
     ],
     "colorOverrides": [
       {
+        "colors": "a < 255 || h == 0 && l == 2",
+        "baseMaterial": "GRAY_125",
+        "upwardsNormals": true
+      },
+      {
         "colors": "h == 0",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvOrientationX": 512
-      },
-      {
-        "colors": "a < 255",
-        "baseMaterial": "GRAY_150"
       },
       {
         "colors": "h == 5",
