@@ -119,7 +119,7 @@ public final class Worker {
 						handle.item.ranToCompletion.set(true);
 					}
 				} else {
-					// Requeue into stalled work queue, since adding to CosncurrentLinkedDeque continuously is costly
+					// Requeue into stalled work queue, since adding to ConcurrentLinkedDeque continuously is costly
 					localStalledWork.addLast(handle);
 					requeued = true;
 				}

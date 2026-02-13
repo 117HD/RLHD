@@ -245,7 +245,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		return await(-1);
 	}
 
-	boolean await(int timeoutNs) throws InterruptedException {
+	boolean await(int timeoutNanos) throws InterruptedException {
 		refCounter.incrementAndGet();
 
 		final boolean isClientThread = JOB_SYSTEM.client != null && JOB_SYSTEM.client.isClientThread();
@@ -271,7 +271,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 							}
 							seconds = newSeconds;
 						}
-						if (timeoutNs > 0 && elapsed > timeoutNs) {
+						if (timeoutNanos > 0 && elapsed > timeoutNanos) {
 							return false;
 						} else {
 							if (elapsed > DEADLOCK_TIMEOUT_SECONDS * 1000) {
@@ -281,8 +281,8 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 						}
 					}
 				} else {
-					if (timeoutNs > 0) {
-						if (!tryAcquireSharedNanos(0, timeoutNs))
+					if (timeoutNanos > 0) {
+						if (!tryAcquireSharedNanos(0, timeoutNanos))
 							return false;
 					} else {
 						if (!tryAcquireSharedNanos(0, TimeUnit.SECONDS.toNanos(DEADLOCK_TIMEOUT_SECONDS)))

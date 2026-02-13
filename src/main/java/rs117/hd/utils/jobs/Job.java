@@ -26,14 +26,14 @@ public abstract class Job {
 		waitForCompletion(-1);
 	}
 
-	public final boolean waitForCompletion(int timeoutNs) {
+	public final boolean waitForCompletion(int timeoutNanos) {
 		boolean completed = false;
 		if (handle != null) {
 			try {
 				if (isDone()) {
 					completed = true;
 				} else {
-					completed = handle.await(timeoutNs);
+					completed = handle.await(timeoutNanos);
 				}
 			} catch (InterruptedException e) {
 				log.warn("Job {} was interrupted while waiting for completion", this);
@@ -145,10 +145,14 @@ public abstract class Job {
 	}
 
 	protected abstract void onRun() throws InterruptedException;
+
 	protected boolean canStart() { return true; }
+
 	protected void onCompletion() {}
-	protected void onCancel() {};
-	protected void onReleased() {};
+
+	protected void onCancel() {}
+
+	protected void onReleased() {}
 
 	public String toString() {
 		return "[" + hashCode() + "|" + getClass().getSimpleName() + "]";

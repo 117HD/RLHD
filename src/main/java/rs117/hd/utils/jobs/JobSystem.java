@@ -32,10 +32,10 @@ public final class JobSystem {
 	public ClientThread clientThread;
 
 	@Inject
-	private HdPluginConfig config;
+	public HdPlugin plugin;
 
 	@Inject
-	public HdPlugin plugin;
+	private HdPluginConfig config;
 
 	@Inject
 	public FrameTimer frametimer;
