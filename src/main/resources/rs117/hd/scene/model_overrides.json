@@ -38263,13 +38263,18 @@
   },
   {
     "description": "Varlamore Orange Brazier - Animated - Dynamic",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
     "objectIds": [
       "BRAZIER_VARLAMORE01_DEFAULT01_2X3"
     ],
     "colorOverrides": [
       {
         "colors": "h == 6 && s == 7",
-        "baseMaterial": "GRAY_110"
+        "baseMaterial": "GRAY_75",
+        "upwardsNormals": true,
+        "castShadows": false
       }
     ]
   },
