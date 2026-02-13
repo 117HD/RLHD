@@ -14,7 +14,7 @@ import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
 @Slf4j
 @RequiredArgsConstructor
 public final class Worker {
-	static final long SLEEP_TIME = TimeUnit.MICROSECONDS.convert(1, TimeUnit.NANOSECONDS);
+	private static final long SLEEP_TIME_NANOS = TimeUnit.MICROSECONDS.convert(1, TimeUnit.NANOSECONDS);
 
 	String name, pausedName;
 	Thread thread;
@@ -75,7 +75,7 @@ public final class Worker {
 					handle = localStalledWork.isEmpty() ? jobSystem.workQueue.poll() : localStalledWork.poll();
 				}
 
-				if (handle == null && !findNextStealTarget() && System.nanoTime() - waitStart > SLEEP_TIME) {
+				if (handle == null && !findNextStealTarget() && System.nanoTime() - waitStart > SLEEP_TIME_NANOS) {
 					// Wait for a signal that there is work to be had
 					try {
 						jobSystem.workerSemaphore.acquire();
@@ -84,7 +84,7 @@ public final class Worker {
 						thread.isInterrupted(); // Consume the interrupt to prevent it from cancelling the next job
 					}
 
-					if (handle == null ) {
+					if (handle == null) {
 						// We've been signaled that there is work to be had, try the main queue again
 						handle = jobSystem.workQueue.poll();
 					}

@@ -356,7 +356,8 @@ public class ModelStreamingManager {
 		// Cull based on detail draw distance
 		float squaredDistance = renderer.sceneCamera.squaredDistanceTo(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2]);
 		int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
-		if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles && !renderer.detailDrawBlockList.contains(tileObject.getId()))
+		if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles &&
+			!renderer.detailDrawBlockList.contains(tileObject.getId()))
 			return;
 
 		// Hide everything outside the current area if area hiding is enabled
@@ -364,8 +365,8 @@ public class ModelStreamingManager {
 			var base = ctx.sceneContext.sceneBase;
 			assert base != null;
 			boolean inArea = ctx.sceneContext.currentArea.containsPoint(
-				base[0] + ((int)objectWorldPos[0] >> Perspective.LOCAL_COORD_BITS),
-				base[1] + ((int)objectWorldPos[2] >> Perspective.LOCAL_COORD_BITS),
+				base[0] + ((int) objectWorldPos[0] >> Perspective.LOCAL_COORD_BITS),
+				base[1] + ((int) objectWorldPos[2] >> Perspective.LOCAL_COORD_BITS),
 				base[2] + client.getTopLevelWorldView().getPlane()
 			);
 			if (!inArea)

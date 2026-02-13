@@ -192,7 +192,7 @@ public class ZoneRenderer implements Renderer {
 		// Create blocklist for models that shouldn't be culled by the detail distance check
 		detailDrawBlockList.clear();
 		for (Map.Entry<String, Integer> entry : gamevalManager.getObjects().entrySet()) {
-			if(entry.getKey().startsWith("SAILING_BOAT_SAIL_"))
+			if (entry.getKey().startsWith("SAILING_BOAT_SAIL_"))
 				detailDrawBlockList.add(entry.getValue());
 		}
 	}

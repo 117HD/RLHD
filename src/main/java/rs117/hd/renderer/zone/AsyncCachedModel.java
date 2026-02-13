@@ -13,7 +13,6 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 import rs117.hd.utils.jobs.Job;
 
-import static java.lang.System.arraycopy;
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.renderer.zone.SceneUploader.MAX_VERTEX_COUNT;
 import static rs117.hd.utils.MathUtils.*;
@@ -511,7 +510,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			}
 
 			final int srcLen = Array.getLength(src);
-			if(srcLen < arraySize)
+			if (srcLen < arraySize)
 				arraySize = srcLen;
 			if (value == null || capacity < arraySize) {
 				if (pooled != null && capacity >= arraySize) {
@@ -522,7 +521,7 @@ public final class AsyncCachedModel extends Job implements Model {
 				pooled = null;
 			}
 
-			arraycopy(src, 0, value, 0, arraySize);
+			System.arraycopy(src, 0, value, 0, arraySize);
 			cached = true;
 		}
 	}
