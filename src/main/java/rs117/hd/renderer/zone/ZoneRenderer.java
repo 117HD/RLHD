@@ -805,6 +805,7 @@ public class ZoneRenderer implements Renderer {
 		if (!z.initialized || z.sizeO == 0)
 			return;
 
+		frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
 		if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
 			z.renderOpaque(sceneCmd, ctx, false);
 
@@ -812,6 +813,7 @@ public class ZoneRenderer implements Renderer {
 			directionalCmd.SetShader(fastShadowProgram);
 			z.renderOpaque(directionalCmd, ctx, plugin.configRoofShadows);
 		}
+		frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
 
 		checkGLErrors();
 	}
@@ -826,6 +828,7 @@ public class ZoneRenderer implements Renderer {
 		if (!z.initialized)
 			return;
 
+		frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
 		final boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
 		if (renderWater)
 			z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
@@ -833,22 +836,22 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.ensureAsyncUploadsComplete(z);
 
 		final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
-		if (!hasAlpha)
-			return;
+		if (hasAlpha) {
+			final int offset = ctx.sceneContext.sceneOffset >> 3;
+			if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum)) {
+				// Only sort if we're gonna render alpha in the scene, shadows don't need any sorting done
+				z.alphaSort(zx - offset, zz - offset, sceneCamera);
+			}
 
-		final int offset = ctx.sceneContext.sceneOffset >> 3;
-		if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum)) {
-			// Only sort if we're gonna render alpha in the scene, shadows don't need any sorting done
-			z.alphaSort(zx - offset, zz - offset, sceneCamera);
+			if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
+				directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
+				z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, plugin.configRoofShadows);
+			}
+
+			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
+				z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
 		}
-
-		if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
-			directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-			z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, plugin.configRoofShadows);
-		}
-
-		if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
-			z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+		frameTimer.end(Timer.DRAW_ZONE_ALPHA);
 
 		checkGLErrors();
 	}
