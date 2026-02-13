@@ -170,7 +170,7 @@ public class GLBuffer {
 
 			glBufferStorage(target, numBytes, glStorageFlags);
 
-			if ((storageFlags & STORAGE_READ | STORAGE_WRITE) != 0) {
+			if ((storageFlags & (STORAGE_READ | STORAGE_WRITE)) != 0) {
 				ByteBuffer buf = glMapBufferRange(target, 0, numBytes, glMapFlags);
 				if (buf != null) {
 					mappedBuffer = new GLMappedBuffer(this, buf);
