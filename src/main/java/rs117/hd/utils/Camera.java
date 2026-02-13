@@ -260,8 +260,14 @@ public class Camera {
 
 	public float[] getForwardDirection() { return getForwardDirection(new float[3]); }
 
-	private synchronized void calculateViewMatrix() {
-		if ((dirtyFlags & VIEW_MATRIX_DIRTY) != 0) {
+	private void calculateViewMatrix() {
+		if ((dirtyFlags & VIEW_MATRIX_DIRTY) == 0)
+			return;
+
+		synchronized (this) {
+			if ((dirtyFlags & VIEW_MATRIX_DIRTY) == 0)
+				return;
+
 			viewMatrix = Mat4.identity();
 			Mat4.mul(viewMatrix, Mat4.rotateX(orientation[1]));
 			Mat4.mul(viewMatrix, Mat4.rotateY(orientation[0]));
@@ -299,8 +305,14 @@ public class Camera {
 		return transformPoint(new float[3], point);
 	}
 
-	private synchronized void calculateProjectionMatrix() {
-		if ((dirtyFlags & PROJECTION_MATRIX_DIRTY) != 0) {
+	private void calculateProjectionMatrix() {
+		if ((dirtyFlags & PROJECTION_MATRIX_DIRTY) == 0)
+			return;
+
+		synchronized (this) {
+			if ((dirtyFlags & PROJECTION_MATRIX_DIRTY) == 0)
+				return;
+
 			final float zoomedViewportWidth = (viewportWidth / zoom);
 			final float zoomedViewportHeight = (viewportHeight / zoom);
 			if (isOrthographic) {
@@ -326,8 +338,14 @@ public class Camera {
 		return getProjectionMatrix(new float[16]);
 	}
 
-	private synchronized void calculateViewProjMatrix() {
-		if ((dirtyFlags & VIEW_PROJ_MATRIX_DIRTY) != 0) {
+	private void calculateViewProjMatrix() {
+		if ((dirtyFlags & VIEW_PROJ_MATRIX_DIRTY) == 0)
+			return;
+
+		synchronized (this) {
+			if ((dirtyFlags & VIEW_PROJ_MATRIX_DIRTY) == 0)
+				return;
+
 			calculateViewMatrix();
 			calculateProjectionMatrix();
 
@@ -349,8 +367,14 @@ public class Camera {
 		return getViewProjMatrix(new float[16]);
 	}
 
-	private synchronized void calculateInvViewProjMatrix() {
-		if ((dirtyFlags & INV_VIEW_PROJ_MATRIX_DIRTY) != 0) {
+	private void calculateInvViewProjMatrix() {
+		if ((dirtyFlags & INV_VIEW_PROJ_MATRIX_DIRTY) == 0)
+			return;
+
+		synchronized (this) {
+			if ((dirtyFlags & INV_VIEW_PROJ_MATRIX_DIRTY) == 0)
+				return;
+
 			calculateViewProjMatrix();
 			try {
 				invViewProjMatrix = Mat4.inverse(viewProjMatrix);
@@ -372,12 +396,18 @@ public class Camera {
 		return Arrays.copyOf(invViewProjMatrix, invViewProjMatrix.length);
 	}
 
-	private synchronized void calculateFrustumPlanes() {
+	private void calculateFrustumPlanes() {
 		if ((dirtyFlags & FRUSTUM_PLANES_DIRTY) == 0)
 			return;
-		calculateViewProjMatrix();
-		Mat4.extractPlanes(viewProjMatrix, frustumPlanes);
-		dirtyFlags &= ~FRUSTUM_PLANES_DIRTY;
+
+		synchronized (this) {
+			if ((dirtyFlags & FRUSTUM_PLANES_DIRTY) == 0)
+				return;
+
+			calculateViewProjMatrix();
+			Mat4.extractPlanes(viewProjMatrix, frustumPlanes);
+			dirtyFlags &= ~FRUSTUM_PLANES_DIRTY;
+		}
 	}
 
 	public float[][] getFrustumPlanes(float[][] out) {
@@ -391,12 +421,18 @@ public class Camera {
 		return getFrustumPlanes(new float[6][4]);
 	}
 
-	private synchronized void calculateFrustumCorners() {
+	private void calculateFrustumCorners() {
 		if ((dirtyFlags & FRUSTUM_CORNERS_DIRTY) == 0)
 			return;
-		calculateInvViewProjMatrix();
-		Mat4.extractFrustumCorners(invViewProjMatrix, frustumCorners);
-		dirtyFlags &= ~FRUSTUM_CORNERS_DIRTY;
+
+		synchronized (this) {
+			if ((dirtyFlags & FRUSTUM_CORNERS_DIRTY) == 0)
+				return;
+
+			calculateInvViewProjMatrix();
+			Mat4.extractFrustumCorners(invViewProjMatrix, frustumCorners);
+			dirtyFlags &= ~FRUSTUM_CORNERS_DIRTY;
+		}
 	}
 
 	public float[][] getFrustumCorners(float[][] out) {
