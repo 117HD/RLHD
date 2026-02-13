@@ -346,29 +346,31 @@ public class ModelStreamingManager {
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
-		if (sceneManager.isRoot(ctx)) {
-			// Cull based on detail draw distance
-			float squaredDistance = renderer.sceneCamera.squaredDistanceTo(x, y, z);
-			int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
-			if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles)
-				return;
+		final float[] objectWorldPos = vec4(asyncObjectProjectedPos[renderThreadId + 1], x, y, z, 1.0f);
+		if (ctx.uboWorldViewStruct != null)
+			ctx.uboWorldViewStruct.project(objectWorldPos);
 
-			// Hide everything outside the current area if area hiding is enabled
-			if (ctx.sceneContext.currentArea != null) {
-				var base = ctx.sceneContext.sceneBase;
-				assert base != null;
-				boolean inArea = ctx.sceneContext.currentArea.containsPoint(
-					base[0] + (x >> Perspective.LOCAL_COORD_BITS),
-					base[1] + (z >> Perspective.LOCAL_COORD_BITS),
-					base[2] + client.getTopLevelWorldView().getPlane()
-				);
-				if (!inArea)
-					return;
-			}
+		// Cull based on detail draw distance
+		float squaredDistance = renderer.sceneCamera.squaredDistanceTo(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2]);
+		int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
+		if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles)
+			return;
 
-			if (!zone.initialized)
+		// Hide everything outside the current area if area hiding is enabled
+		if (ctx.sceneContext.currentArea != null) {
+			var base = ctx.sceneContext.sceneBase;
+			assert base != null;
+			boolean inArea = ctx.sceneContext.currentArea.containsPoint(
+				base[0] + ((int)objectWorldPos[0] >> Perspective.LOCAL_COORD_BITS),
+				base[1] + ((int)objectWorldPos[2] >> Perspective.LOCAL_COORD_BITS),
+				base[2] + client.getTopLevelWorldView().getPlane()
+			);
+			if (!inArea)
 				return;
 		}
+
+		if (!zone.initialized)
+			return;
 
 		final int[] tileWorldPos = asyncWorldPos[renderThreadId + 1];
 		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), tileWorldPos);
@@ -378,10 +380,6 @@ public class ModelStreamingManager {
 			return;
 
 		m.calculateBoundsCylinder();
-
-		final float[] objectWorldPos = vec4(asyncObjectProjectedPos[renderThreadId + 1], x, y, z, 1.0f);
-		if (ctx.uboWorldViewStruct != null)
-			ctx.uboWorldViewStruct.project(objectWorldPos);
 
 		final int modelClassification = renderer.sceneCamera.classifySphere(
 			objectWorldPos[0], objectWorldPos[1], objectWorldPos[2], m.getRadius());
