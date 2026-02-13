@@ -27,6 +27,7 @@ package rs117.hd.utils;
 import java.awt.Canvas;
 import java.awt.Container;
 import java.awt.Frame;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.swing.JFrame;
 import lombok.extern.slf4j.Slf4j;
@@ -489,14 +490,14 @@ public final class HDUtils {
 		return heightA == heightB && heightA == heightC;
 	}
 
-	public static boolean isJFrameMinimized(JFrame f) {
+	public static boolean isJFrameMinimized(@Nullable JFrame f) {
 		return f != null && (f.getExtendedState() & Frame.ICONIFIED) != 0;
 	}
 
+	@Nullable
 	public static JFrame getJFrame(Canvas canvas) {
-		if (canvas == null) {
+		if (canvas == null)
 			return null;
-		}
 
 		Container parent = canvas.getParent();
 		while (parent != null) {

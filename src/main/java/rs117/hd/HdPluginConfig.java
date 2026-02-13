@@ -778,6 +778,34 @@ public interface HdPluginConfig extends Config
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
 
+	String KEY_CPU_USAGE_LIMIT = "cpuUsageLimit";
+	@ConfigItem(
+		keyName = KEY_CPU_USAGE_LIMIT,
+		name = "CPU usage",
+		description =
+			"Specify how much of your processor the plugin should be allowed to use.<br>" +
+			"If you play with multiple clients or other heavy programs on the side,<br>" +
+			"reducing this may improve their performance.<br>" +
+			"Defaults to Max, allowing the whole processor to be used.",
+		section = miscellaneousSettings,
+		position = -100
+	)
+	default CpuUsage cpuUsageLimit() {
+		return CpuUsage.MAX;
+	}
+
+	String KEY_POWER_SAVING = "powerSaving";
+	@ConfigItem(
+		keyName = KEY_POWER_SAVING,
+		name = "Reduce CPU when unfocused",
+		description = "Automatically reduce CPU load after the window has not been in focus for 15 seconds.",
+		section = miscellaneousSettings,
+		position = -99
+	)
+	default boolean powerSaving() {
+		return false;
+	}
+
 	String KEY_MACOS_INTEL_WORKAROUND = "macosIntelWorkaround";
 	@ConfigItem(
 		keyName = KEY_MACOS_INTEL_WORKAROUND,
@@ -830,34 +858,6 @@ public interface HdPluginConfig extends Config
 		section = miscellaneousSettings
 	)
 	default boolean lowMemoryMode() {
-		return false;
-	}
-
-	String KEY_CPU_USAGE_LIMIT = "cpuUsageLimit";
-	@ConfigItem(
-		keyName = KEY_CPU_USAGE_LIMIT,
-		name = "CPU usage",
-		description =
-			"Specify how much of your processor the plugin should be allowed to use.<br>" +
-			"If you play with multiple clients or other heavy programs on the side,<br>" +
-			"reducing this may improve their performance.<br>" +
-			"Defaults to Max, allowing the whole processor to be used.",
-		section = miscellaneousSettings
-	)
-	default CpuUsage cpuUsageLimit() {
-		return CpuUsage.MAX;
-	}
-
-	String KEY_POWER_SAVING = "powerSaving";
-	@ConfigItem(
-		keyName = KEY_POWER_SAVING,
-		name = "Power Saving",
-		description = "Reduces workload whilst the client is no longer in focus.",
-		position = 19,
-		section = miscellaneousSettings
-	)
-	default boolean powerSaving()
-	{
 		return false;
 	}
 
@@ -1183,7 +1183,7 @@ public interface HdPluginConfig extends Config
 	@Units(" MiB")
 	@ConfigItem(
 		keyName = KEY_ASYNC_MODEL_CACHE_SIZE,
-		name = "Async cache size",
+		name = "Model cache size",
 		description =
 			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
 			"Generally, 32 MiB is plenty, with diminishing returns the higher you go.<br>" +
@@ -1197,11 +1197,11 @@ public interface HdPluginConfig extends Config
 	String KEY_ASYNC_MODEL_UPLOAD = "asyncModelUpload";
 	@ConfigItem(
 		keyName = KEY_ASYNC_MODEL_UPLOAD,
-		name = "Async Model Upload",
-		description = "Caches Models to memory so that they can be parallelized and uploaded async.",
+		name = "Multithreaded model processing",
+		description = "Process multiple models in parallel to improve performance for animated models.",
 		section = experimentalSettings
 	)
-	default boolean asyncModelUpload() {
+	default boolean multithreadedModelProcessing() {
 		return true;
 	}
 

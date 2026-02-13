@@ -68,7 +68,7 @@ public class ModelStreamingManager {
 
 	public int gpuFlags() {
 		int flags = 0;
-		if (config.asyncModelUpload() && PROCESSOR_COUNT > 1) {
+		if (config.multithreadedModelProcessing() && PROCESSOR_COUNT > 1) {
 			// RENDER_THREADS will act as suppliers into the Job System, so this will be 2 + Client Suppliers
 			flags |= DrawCallbacks.RENDER_THREADS(RL_RENDER_THREADS);
 			initializeAsyncCachedModel();
@@ -79,7 +79,7 @@ public class ModelStreamingManager {
 	}
 
 	public void initializeAsyncCachedModel() {
-		if (!config.asyncModelUpload())
+		if (!config.multithreadedModelProcessing())
 			return;
 
 		long maxModelSizeBytes = AsyncCachedModel.calculateMaxModelSizeBytes();

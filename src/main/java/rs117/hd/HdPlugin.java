@@ -28,6 +28,7 @@ package rs117.hd;
 
 import com.google.gson.Gson;
 import com.google.inject.Binder;
+import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -129,8 +130,6 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.utils.HDUtils.getJFrame;
-import static rs117.hd.utils.HDUtils.isJFrameMinimized;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
@@ -328,6 +327,7 @@ public class HdPlugin extends Plugin {
 	public static boolean SUPPORTS_INDIRECT_DRAW;
 
 	public Canvas canvas;
+	public JFrame clientJFrame;
 	public AWTContext awtContext;
 	private Callback debugCallback;
 
@@ -353,8 +353,8 @@ public class HdPlugin extends Plugin {
 	private final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
 	private final GLBuffer[] pboUi = new GLBuffer[3];
 	private int texUi;
-	private int widthUI;
-	private int heightUI;
+	private int uiWidth;
+	private int uiHeight;
 	private GenericJob uiCopyJob;
 
 	@Nullable
@@ -423,8 +423,6 @@ public class HdPlugin extends Plugin {
 	public boolean orthographicProjection;
 	public boolean freezeCulling;
 
-	public JFrame clientJFrame;
-
 	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
@@ -457,11 +455,11 @@ public class HdPlugin extends Plugin {
 	@Getter
 	public long garbageCollectionCount;
 
+	public int frame;
 	public double elapsedTime;
 	public double elapsedClientTime;
 	public float deltaTime;
 	public float deltaClientTime;
-	public int frame;
 	private long lastFrameTimeMillis;
 	private double lastFrameClientTime;
 	public float windOffset;
@@ -469,8 +467,8 @@ public class HdPlugin extends Plugin {
 
 	public float clientUnfocusedTime;
 	public boolean isClientInFocus = true;
-	public boolean isClientMinimized = false;
-	public boolean isPowerSaving = false;
+	public boolean isClientMinimized;
+	public boolean isPowerSaving;
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -509,8 +507,8 @@ public class HdPlugin extends Plugin {
 				fboSceneResolve = 0;
 				rboSceneResolveColor = 0;
 				fboShadowMap = 0;
-				elapsedTime = 0;
 				frame = 0;
+				elapsedTime = 0;
 				elapsedClientTime = 0;
 				deltaTime = 0;
 				deltaClientTime = 0;
@@ -519,7 +517,7 @@ public class HdPlugin extends Plugin {
 
 				AWTContext.loadNatives();
 				canvas = client.getCanvas();
-				clientJFrame = getJFrame(canvas);
+				clientJFrame = HDUtils.getJFrame(canvas);
 
 				synchronized (canvas.getTreeLock()) {
 					// Delay plugin startup until the client's canvas is valid
@@ -662,7 +660,6 @@ public class HdPlugin extends Plugin {
 				renderer.initialize();
 				eventBus.register(renderer);
 
-
 				initializeShaders();
 				initializeShaderHotswapping();
 				initializeUiTexture();
@@ -671,7 +668,7 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				client.setDrawCallbacks(renderer);
-				initGpuFlags();
+				initializeGpuFlags();
 				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
@@ -707,13 +704,12 @@ public class HdPlugin extends Plugin {
 		});
 	}
 
-	private void initGpuFlags() {
+	private void initializeGpuFlags() {
 		gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
 		if (config.removeVertexSnapping())
 			gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
 		if (configShadingMode.unlitFaceColors)
 			gpuFlags |= DrawCallbacks.UNLIT_FACE_COLORS;
-
 		client.setGpuFlags(gpuFlags);
 	}
 
@@ -803,10 +799,6 @@ public class HdPlugin extends Plugin {
 		});
 	}
 
-	public boolean isZoneRenderer() {
-		return renderer != null && renderer instanceof ZoneRenderer;
-	}
-
 	@Nullable
 	public SceneContext getSceneContext() {
 		return renderer == null ? null : renderer.getSceneContext();
@@ -825,8 +817,7 @@ public class HdPlugin extends Plugin {
 		if (length <= 1)
 			return array + "[" + from + "]";
 		int middle = from + length / 2;
-		return
-			"i < " + middle +
+		return "i < " + middle +
 			" ? " + generateFetchCases(array, from, middle) +
 			" : " + generateFetchCases(array, middle, to);
 	}
@@ -1456,8 +1447,8 @@ public class HdPlugin extends Plugin {
 
 		final BufferProvider bufferProvider = client.getBufferProvider();
 		final int[] pixels = bufferProvider.getPixels();
-		widthUI = bufferProvider.getWidth();
-		heightUI = bufferProvider.getHeight();
+		uiWidth = bufferProvider.getWidth();
+		uiHeight = bufferProvider.getHeight();
 
 		frameTimer.begin(Timer.MAP_UI_BUFFER);
 		final GLBuffer pbo = pboUi[frame % 3];
@@ -1466,16 +1457,20 @@ public class HdPlugin extends Plugin {
 		frameTimer.end(Timer.MAP_UI_BUFFER);
 		if (!pbo.isMapped()) {
 			log.error("Unable to map interface PBO. Skipping UI...");
-		} else if (widthUI > uiResolution[0] || heightUI > uiResolution[1]) {
-			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", widthUI, heightUI, uiResolution);
+		} else if (uiWidth > uiResolution[0] || uiHeight > uiResolution[1]) {
+			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", uiWidth, uiHeight, uiResolution);
 		} else {
-			uiCopyJob = GenericJob.build(
-				"AsyncUICopy", t -> {
-					long start = System.nanoTime();
-					pbo.mapped().getMappedIntBuffer().put(pixels, 0, widthUI * heightUI);
-					frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
-				}
-			).setExecuteAsync(!isPowerSaving).queue();
+			uiCopyJob = GenericJob
+				.build(
+					"AsyncUICopy",
+					t -> {
+						long start = System.nanoTime();
+						pbo.mapped().getMappedIntBuffer().put(pixels, 0, uiWidth * uiHeight);
+						frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
+					}
+				)
+				.setExecuteAsync(!isPowerSaving)
+				.queue();
 		}
 		pbo.unbind();
 	}
@@ -1519,12 +1514,11 @@ public class HdPlugin extends Plugin {
 			frameTimer.end(Timer.COPY_UI);
 
 			frameTimer.begin(Timer.UPLOAD_UI);
-
 			final GLBuffer pbo = pboUi[frame % 3];
 			pbo.unmap();
 			pbo.bind();
 
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, widthUI, heightUI, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
+			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, uiWidth, uiHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
 			pbo.unbind();
 			frameTimer.end(Timer.UPLOAD_UI);
 		}
@@ -1827,7 +1821,7 @@ public class HdPlugin extends Plugin {
 						renderer.waitUntilIdle();
 
 					if (reloadGpuFlags)
-						initGpuFlags();
+						initializeGpuFlags();
 
 					if (reloadTexturesAndMaterials) {
 						materialManager.reload(reloadScene);
@@ -1957,14 +1951,13 @@ public class HdPlugin extends Plugin {
 		frame++;
 		lastFrameTimeMillis = System.currentTimeMillis();
 		lastFrameClientTime = elapsedClientTime;
-		isClientMinimized = isJFrameMinimized(clientJFrame);
-
-		if (!isClientInFocus) {
-			clientUnfocusedTime += deltaTime;
-		} else {
+		isClientMinimized = HDUtils.isJFrameMinimized(clientJFrame);
+		if (isClientInFocus) {
 			clientUnfocusedTime = 0;
+		} else {
+			clientUnfocusedTime += deltaTime;
 		}
-		isPowerSaving = isClientMinimized || (configPowerSaving && clientUnfocusedTime > 15.0);
+		isPowerSaving = isClientMinimized || configPowerSaving && clientUnfocusedTime >= 15;
 
 		// The game runs significantly slower with lower planes in Chambers of Xeric
 		var ctx = getSceneContext();
@@ -2000,16 +1993,11 @@ public class HdPlugin extends Plugin {
 		// @formatter:on
 	}
 
-	@FunctionalInterface
-	public interface IContextFunc {
-		String get();
-	}
-
 	public static boolean checkGLErrors() {
 		return checkGLErrors(null);
 	}
 
-	public static boolean checkGLErrors(IContextFunc contextFunc) {
+	public static boolean checkGLErrors(@Nullable Provider<String> contextProvider) {
 		if (SKIP_GL_ERROR_CHECKS)
 			return false;
 
@@ -2044,12 +2032,13 @@ public class HdPlugin extends Plugin {
 					errStr = String.format("Error code: %d", err);
 					break;
 			}
-			if (contextFunc != null && context == null)
-				context = contextFunc.get();
-			if (context != null)
+			if (contextProvider != null && context == null)
+				context = contextProvider.get();
+			if (context != null) {
 				log.debug("glGetError({}):", context, new Exception(errStr));
-			else
+			} else {
 				log.debug("GL error:", new Exception(errStr));
+			}
 			hasGLError = true;
 		}
 	}

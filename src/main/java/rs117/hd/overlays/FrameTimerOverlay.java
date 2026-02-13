@@ -18,6 +18,7 @@ import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
+import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.utils.FrameTimingsRecorder;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.jobs.JobSystem;
@@ -165,7 +166,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 					.build());
 			}
 
-			if (plugin.isZoneRenderer()) {
+			if (plugin.renderer instanceof ZoneRenderer) {
 				children.add(LineComponent.builder()
 					.left("Dynamic renderables:")
 					.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
