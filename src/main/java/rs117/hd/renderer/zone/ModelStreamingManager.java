@@ -148,7 +148,7 @@ public class ModelStreamingManager {
 
 		m.calculateBoundsCylinder();
 
-		assert zone.inSceneFrustum || zone.inShadowFrustum;
+		assert !sceneManager.isRoot(ctx) || zone.inSceneFrustum || zone.inShadowFrustum;
 		final int modelClassification = !sceneManager.isRoot(ctx) ? 1 :
 			zone.inSceneFrustum ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : -1;
 		boolean isOffScreen = modelClassification == -1;
@@ -367,7 +367,7 @@ public class ModelStreamingManager {
 
 		m.calculateBoundsCylinder();
 
-		assert zone.inSceneFrustum || zone.inShadowFrustum;
+		assert !sceneManager.isRoot(ctx) || zone.inSceneFrustum || zone.inShadowFrustum;
 		final int modelClassification = !sceneManager.isRoot(ctx) ? 1 :
 			zone.inSceneFrustum ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : -1;
 		boolean isOffScreen = modelClassification == -1;
