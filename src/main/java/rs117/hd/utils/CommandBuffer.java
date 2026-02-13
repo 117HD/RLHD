@@ -1,7 +1,9 @@
 package rs117.hd.utils;
 
 import java.nio.IntBuffer;
+import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
@@ -45,9 +47,12 @@ public class CommandBuffer {
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 	private static final int DRAW_MODE_MASK = 0xF;
 
+	private static final ThreadLocal<ArrayDeque<CommandBuffer>> CALL_STACK = ThreadLocal.withInitial(ArrayDeque::new);
+
 	private final Object[] objects = new Object[10];
 	private int objectCount = 0;
 
+	public final String name;
 	private final RenderState renderState;
 
 	@Setter
@@ -56,17 +61,32 @@ public class CommandBuffer {
 	private long[] cmd = new long[(int) KiB];
 	private int writeHead = 0;
 
-	public CommandBuffer(RenderState renderState) {
+	public CommandBuffer(String name, RenderState renderState) {
+		this.name = name;
 		this.renderState = renderState;
-	}
-
-	public boolean isEmpty() {
-		return writeHead == 0;
 	}
 
 	private void ensureCapacity(int numLongs) {
 		if (writeHead + numLongs >= cmd.length)
 			cmd = Arrays.copyOf(cmd, cmd.length * 2);
+	}
+
+	private boolean includes(CommandBuffer subCommandBuffer) {
+		if (this == subCommandBuffer)
+			return true;
+		for (int i = 0; i < objectCount; i++)
+			if (objects[i] instanceof CommandBuffer && ((CommandBuffer) objects[i]).includes(this))
+				return true;
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s (size: %d)", name, writeHead);
+	}
+
+	public boolean isEmpty() {
+		return writeHead == 0;
 	}
 
 	public void BindVertexArray(int vao) {
@@ -104,7 +124,8 @@ public class CommandBuffer {
 
 	public void ExecuteSubCommandBuffer(CommandBuffer subCommandBuffer) {
 		ensureCapacity(1);
-		int objectIdx = writeObject(subCommandBuffer); // TODO: Should probably do a circular redundancy check, but for now usage is simiple
+		assert !subCommandBuffer.includes(this);
+		int objectIdx = writeObject(subCommandBuffer);
 		cmd[writeHead++] = GL_EXECUTE_SUB_COMMAND_BUFFER & 0xFF | (long) objectIdx << 8;
 	}
 
@@ -397,7 +418,22 @@ public class CommandBuffer {
 					}
 					case GL_EXECUTE_SUB_COMMAND_BUFFER: {
 						final CommandBuffer subCmd = (CommandBuffer) objects[(int) (data >> 8)];
-						subCmd.execute();
+						var callStack = CALL_STACK.get();
+						if (callStack.contains(subCmd))
+							throw new IllegalStateException(String.format(
+								"Command buffer recursion error: [%s, %s]",
+								callStack
+									.stream()
+									.map(Object::toString)
+									.collect(Collectors.joining(", ")),
+								this
+							));
+						callStack.push(this);
+						try {
+							subCmd.execute();
+						} finally {
+							callStack.pop();
+						}
 						break;
 					}
 					default:

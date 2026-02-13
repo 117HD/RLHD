@@ -96,8 +96,8 @@ public class WorldViewContext {
 	public void initialize(RenderState renderState, Injector injector) {
 		injector.injectMembers(this);
 
-		vaoSceneCmd = new CommandBuffer(renderState);
-		vaoDirectionalCmd = new CommandBuffer(renderState);
+		vaoSceneCmd = new CommandBuffer("WorldViewScene", renderState);
+		vaoDirectionalCmd = new CommandBuffer("WorldViewDirectional", renderState);
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)

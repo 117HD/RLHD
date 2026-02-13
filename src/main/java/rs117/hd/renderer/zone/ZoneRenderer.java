@@ -138,9 +138,9 @@ public class ZoneRenderer implements Renderer {
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
 	public final RenderState renderState = new RenderState();
-	public final CommandBuffer playerCmd = new CommandBuffer(renderState);
-	public final CommandBuffer sceneCmd = new CommandBuffer(renderState);
-	public final CommandBuffer directionalCmd = new CommandBuffer(renderState);
+	public final CommandBuffer playerCmd = new CommandBuffer("Player", renderState);
+	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
+	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
 
 	public static int indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
