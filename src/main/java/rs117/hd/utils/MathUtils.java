@@ -56,11 +56,53 @@ public final class MathUtils {
 		return vec;
 	}
 
+	public static int[] ivec2(int[] out, int x, int y) {
+		out[0] = x;
+		out[1] = y;
+		return out;
+	}
+
+	public static int[] ivec3(int[] out, int x, int y, int z) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		return out;
+	}
+
+	public static int[] ivec4(int[] out, int x, int y, int z, int w) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		out[3] = w;
+		return out;
+	}
+
 	public static int[] ivec(float... vec) {
 		int[] ivec = new int[vec.length];
 		for (int i = 0; i < vec.length; i++)
 			ivec[i] = (int) vec[i];
 		return ivec;
+	}
+
+	public static float[] vec2(float[] out, float x, float y) {
+		out[0] = x;
+		out[1] = y;
+		return out;
+	}
+
+	public static float[] vec3(float[] out, float x, float y, float z) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		return out;
+	}
+
+	public static float[] vec4(float[] out, float x, float y, float z, float w) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		out[3] = w;
+		return out;
 	}
 
 	public static float[] copy(float[] v) {

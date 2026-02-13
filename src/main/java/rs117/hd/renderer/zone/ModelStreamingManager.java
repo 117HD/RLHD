@@ -56,9 +56,9 @@ public class ModelStreamingManager {
 	@Inject
 	private ZoneRenderer renderer;
 
-	private final int[] worldPos = new int[3];
 	private final int[] drawnDynamicRenderableCount = new int[RL_RENDER_THREADS + 1];
-	private final int[][] asyncDynamicWorldPos = new int[RL_RENDER_THREADS][3];
+	private final int[][] asyncWorldPos = new int[RL_RENDER_THREADS + 1][3];
+	private final float[][] asyncObjectProjectedPos = new float[RL_RENDER_THREADS + 1][4];
 
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final PrimitiveIntArray clientVisibleFaces = new PrimitiveIntArray();
@@ -121,7 +121,7 @@ public class ModelStreamingManager {
 		if (ctx == null || (!sceneManager.isRoot(ctx) && ctx.isLoading) || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
-		ctx.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane(), worldPos);
+		ctx.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane(), asyncWorldPos[0]);
 		// Hide everything outside the current area if area hiding is enabled
 		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == -1) {
 			var base = ctx.sceneContext.sceneBase;
@@ -137,7 +137,7 @@ public class ModelStreamingManager {
 		Renderable renderable = gameObject.getRenderable();
 		int uuid = ModelHash.generateUuid(client, gameObject.getHash(), renderable);
 
-		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, asyncWorldPos[0]);
 		if (modelOverride.hide)
 			return;
 
@@ -148,13 +148,18 @@ public class ModelStreamingManager {
 
 		m.calculateBoundsCylinder();
 
-		final int modelClassification = sceneManager.isRoot(ctx) ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : 1;
+		final float[] objectWorldPos = vec4(asyncObjectProjectedPos[0], x, y, z, 1.0f);
+		if(ctx.uboWorldViewStruct != null)
+			ctx.uboWorldViewStruct.project(objectWorldPos);
+
+		final int modelClassification = renderer.sceneCamera.classifySphere(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2], m.getRadius());
 		boolean isOffScreen = modelClassification == -1;
 		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
-		if (isOffScreen && (!modelOverride.castShadows || !renderer.directionalShadowCasterVolume.intersectsPoint(x, y, z)))
+		if (isOffScreen && (!modelOverride.castShadows || !renderer.directionalShadowCasterVolume.intersectsPoint((int)objectWorldPos[0], (int)objectWorldPos[1], (int)objectWorldPos[2])))
 			return;
 		plugin.drawnTempRenderableCount++;
 
+		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final boolean hasAlpha = renderable instanceof Player || m.getFaceTransparencies() != null;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(false);
 		if (asyncModelCache != null) {
@@ -174,7 +179,7 @@ public class ModelStreamingManager {
 						modelOverride,
 						zone,
 						cachedModel,
-						modelClassification == 0,
+						isModelPartiallyVisible,
 						hasAlpha,
 						orientation, x, y, z
 					);
@@ -200,7 +205,7 @@ public class ModelStreamingManager {
 				modelOverride,
 				zone,
 				m,
-				modelClassification == 0,
+				isModelPartiallyVisible,
 				hasAlpha,
 				orientation, x, y, z
 			);
@@ -356,19 +361,23 @@ public class ModelStreamingManager {
 				return;
 		}
 
-		int[] worldPos = renderThreadId > 0 ? asyncDynamicWorldPos[renderThreadId] : this.worldPos;
-		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), worldPos);
+		final int[] tileWorldPos = asyncWorldPos[renderThreadId + 1];
+		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), tileWorldPos);
 		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
-		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, tileWorldPos);
 		if (modelOverride.hide)
 			return;
 
 		m.calculateBoundsCylinder();
 
-		final int modelClassification = sceneManager.isRoot(ctx) ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : 1;
+		final float[] objectWorldPos = vec4(asyncObjectProjectedPos[renderThreadId + 1], x, y, z, 1.0f);
+		if(ctx.uboWorldViewStruct != null)
+			ctx.uboWorldViewStruct.project(objectWorldPos);
+
+		final int modelClassification = renderer.sceneCamera.classifySphere(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2], m.getRadius());
 		boolean isOffScreen = modelClassification == -1;
 		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
-		if (isOffScreen && (!modelOverride.castShadows || !renderer.directionalShadowCasterVolume.intersectsPoint(x, y, z)))
+		if (isOffScreen && (!modelOverride.castShadows || !renderer.directionalShadowCasterVolume.intersectsPoint((int)objectWorldPos[0], (int)objectWorldPos[1], (int)objectWorldPos[2])))
 			return;
 		drawnDynamicRenderableCount[renderThreadId + 1]++;
 
@@ -378,6 +387,7 @@ public class ModelStreamingManager {
 		if (renderThreadId >= 0)
 			client.checkClickbox(projection, m, orient, x, y, z, tileObject.getHash());
 
+		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(renderThreadId >= 0);
 		if (asyncModelCache != null) {
 			// Fast path, buffer the model into the job queue to unblock rl internals
@@ -396,7 +406,7 @@ public class ModelStreamingManager {
 						modelOverride,
 						cachedModel,
 						zone,
-						modelClassification == 0,
+						isModelPartiallyVisible,
 						hasAlpha,
 						preOrientation, orient,
 						x, y, z
@@ -425,7 +435,7 @@ public class ModelStreamingManager {
 				modelOverride,
 				m,
 				zone,
-				modelClassification == 0,
+				isModelPartiallyVisible,
 				hasAlpha,
 				preOrientation, orient,
 				x, y, z

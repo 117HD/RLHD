@@ -56,6 +56,10 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 			}
 		}
 
+		public void project(float[] out) {
+			Mat4.mulVec(out, currentProjection, out);
+		}
+
 		public synchronized void free() {
 			freeIndices.add(worldViewIdx);
 			worldView = null;
