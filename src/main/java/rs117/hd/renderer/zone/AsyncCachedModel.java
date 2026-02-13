@@ -170,10 +170,6 @@ public final class AsyncCachedModel extends Job implements Model {
 	public synchronized void queue(@Nonnull Model model, Zone zone, UploadModelFunc uploadFunc) {
 		this.zone = zone;
 		this.uploadFunc = uploadFunc;
-		processing.set(false);
-		//noinspection ForLoopReplaceableByForEach
-		for (int i = 0; i < cachedFields.length; i++)
-			cachedFields[i].cached = false;
 
 		// Scalars
 		sceneId = model.getSceneId();
@@ -200,6 +196,14 @@ public final class AsyncCachedModel extends Job implements Model {
 		// Counts
 		verticesCount = model.getVerticesCount();
 		faceCount = model.getFaceCount();
+
+		processing.set(false);
+		//noinspection ForLoopReplaceableByForEach
+		for (int i = 0; i < cachedFields.length; i++) {
+			final CachedArrayField<?> cachedField = cachedFields[i];
+			cachedField.arraySize = cachedField.fieldDef.isVertexArray ? verticesCount : faceCount;
+			cachedField.cached = false;
+		}
 
 		if (zone != null)
 			zone.pendingModelJobs.add(this);
@@ -480,6 +484,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		private T pooled;
 		private T value;
 
+		public int arraySize;
 		public volatile boolean cached;
 
 		private CachedArrayField(ModelArrayDef fieldDef) {
@@ -505,17 +510,19 @@ public final class AsyncCachedModel extends Job implements Model {
 				return;
 			}
 
-			final int size = min(fieldDef.isVertexArray ? m.getVerticesCount() : m.getFaceCount(), Array.getLength(src));
-			if (value == null || capacity < size) {
-				if (pooled != null && capacity >= size) {
+			final int srcLen = Array.getLength(src);
+			if(srcLen < arraySize)
+				arraySize = srcLen;
+			if (value == null || capacity < arraySize) {
+				if (pooled != null && capacity >= arraySize) {
 					value = pooled;
 				} else {
-					value = supplier.get(capacity = size);
+					value = supplier.get(capacity = arraySize);
 				}
 				pooled = null;
 			}
 
-			arraycopy(src, 0, value, 0, size);
+			arraycopy(src, 0, value, 0, arraySize);
 			cached = true;
 		}
 	}
