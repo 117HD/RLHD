@@ -149,14 +149,23 @@ public class ModelStreamingManager {
 		m.calculateBoundsCylinder();
 
 		final float[] objectWorldPos = vec4(asyncObjectProjectedPos[0], x, y, z, 1.0f);
-		if(ctx.uboWorldViewStruct != null)
+		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.project(objectWorldPos);
 
-		final int modelClassification = renderer.sceneCamera.classifySphere(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2], m.getRadius());
+		final int modelClassification = renderer.sceneCamera.classifySphere(
+			objectWorldPos[0], objectWorldPos[1], objectWorldPos[2], m.getRadius());
 		boolean isOffScreen = modelClassification == -1;
 		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
-		if (isOffScreen && (!modelOverride.castShadows || !renderer.directionalShadowCasterVolume.intersectsPoint((int)objectWorldPos[0], (int)objectWorldPos[1], (int)objectWorldPos[2])))
+		if (isOffScreen && (
+			!modelOverride.castShadows ||
+			!renderer.directionalShadowCasterVolume.intersectsPoint(
+				(int) objectWorldPos[0],
+				(int) objectWorldPos[1],
+				(int) objectWorldPos[2]
+			)
+		)) {
 			return;
+		}
 		plugin.drawnTempRenderableCount++;
 
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
@@ -371,14 +380,23 @@ public class ModelStreamingManager {
 		m.calculateBoundsCylinder();
 
 		final float[] objectWorldPos = vec4(asyncObjectProjectedPos[renderThreadId + 1], x, y, z, 1.0f);
-		if(ctx.uboWorldViewStruct != null)
+		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.project(objectWorldPos);
 
-		final int modelClassification = renderer.sceneCamera.classifySphere(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2], m.getRadius());
+		final int modelClassification = renderer.sceneCamera.classifySphere(
+			objectWorldPos[0], objectWorldPos[1], objectWorldPos[2], m.getRadius());
 		boolean isOffScreen = modelClassification == -1;
 		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
-		if (isOffScreen && (!modelOverride.castShadows || !renderer.directionalShadowCasterVolume.intersectsPoint((int)objectWorldPos[0], (int)objectWorldPos[1], (int)objectWorldPos[2])))
+		if (isOffScreen && (
+			!modelOverride.castShadows ||
+			!renderer.directionalShadowCasterVolume.intersectsPoint(
+				(int) objectWorldPos[0],
+				(int) objectWorldPos[1],
+				(int) objectWorldPos[2]
+			)
+		)) {
 			return;
+		}
 		drawnDynamicRenderableCount[renderThreadId + 1]++;
 
 		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
