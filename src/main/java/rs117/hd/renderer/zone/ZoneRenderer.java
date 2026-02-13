@@ -150,7 +150,7 @@ public class ZoneRenderer implements Renderer {
 
 	public final HashSet<Integer> detailDrawBlockList = new HashSet<>();
 
-	public static int indirectDrawCmds;
+	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
 	public static GLBuffer eboAlpha;
@@ -241,17 +241,18 @@ public class ZoneRenderer implements Renderer {
 		eboAlpha = new GLBuffer("eboAlpha", GL_ELEMENT_ARRAY_BUFFER, GL_STREAM_DRAW).initialize(MiB);
 		eboAlphaOffset = 0;
 
-		indirectDrawCmds = glGenBuffers();
+		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
 		indirectDrawCmdsStaging = new GpuIntBuffer();
 	}
 
 	private void destroyBuffers() {
 		if (eboAlpha != null)
 			eboAlpha.destroy();
+		eboAlpha = null;
 
-		if (indirectDrawCmds != 0)
-			glDeleteBuffers(indirectDrawCmds);
-		indirectDrawCmds = 0;
+		if (indirectDrawCmds != null)
+			indirectDrawCmds.destroy();
+		indirectDrawCmds = null;
 
 		if (indirectDrawCmdsStaging != null)
 			indirectDrawCmdsStaging.destroy();
@@ -612,8 +613,8 @@ public class ZoneRenderer implements Renderer {
 		// Scene draw state to apply before all recorded commands
 		if (indirectDrawCmdsStaging.position() > 0) {
 			indirectDrawCmdsStaging.flip();
-			glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectDrawCmds);
-			glBufferData(GL_DRAW_INDIRECT_BUFFER, indirectDrawCmdsStaging.getBuffer(), GL_STREAM_DRAW);
+			indirectDrawCmds.orphan();
+			indirectDrawCmds.upload(indirectDrawCmdsStaging);
 		}
 
 		frameTimer.end(Timer.DRAW_SCENE);
@@ -669,6 +670,7 @@ public class ZoneRenderer implements Renderer {
 		// Render to the shadow depth map
 		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
 		renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
+		renderState.ido.set(indirectDrawCmds.id);
 		renderState.apply();
 
 		glClearDepth(1);
@@ -698,6 +700,7 @@ public class ZoneRenderer implements Renderer {
 			renderState.disable.set(GL_MULTISAMPLE);
 		}
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
+		renderState.ido.set(indirectDrawCmds.id);
 		renderState.apply();
 
 		// Clear scene
