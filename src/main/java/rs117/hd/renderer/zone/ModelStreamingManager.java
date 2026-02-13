@@ -346,6 +346,9 @@ public class ModelStreamingManager {
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
+		if (!zone.initialized)
+			return;
+
 		final float[] objectWorldPos = vec4(asyncObjectProjectedPos[renderThreadId + 1], x, y, z, 1.0f);
 		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.project(objectWorldPos);
@@ -353,7 +356,7 @@ public class ModelStreamingManager {
 		// Cull based on detail draw distance
 		float squaredDistance = renderer.sceneCamera.squaredDistanceTo(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2]);
 		int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
-		if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles)
+		if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles && !renderer.detailDrawBlockList.contains(tileObject.getId()))
 			return;
 
 		// Hide everything outside the current area if area hiding is enabled
@@ -368,9 +371,6 @@ public class ModelStreamingManager {
 			if (!inArea)
 				return;
 		}
-
-		if (!zone.initialized)
-			return;
 
 		final int[] tileWorldPos = asyncWorldPos[renderThreadId + 1];
 		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), tileWorldPos);

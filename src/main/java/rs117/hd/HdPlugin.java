@@ -656,6 +656,7 @@ public class HdPlugin extends Plugin {
 				textureManager.startUp();
 				materialManager.startUp();
 				waterTypeManager.startUp();
+				gamevalManager.startUp();
 
 				renderer.initialize();
 				eventBus.register(renderer);
@@ -673,7 +674,6 @@ public class HdPlugin extends Plugin {
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
-				gamevalManager.startUp();
 				areaManager.startUp();
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();

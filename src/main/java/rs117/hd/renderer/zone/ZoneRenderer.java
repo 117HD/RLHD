@@ -26,6 +26,8 @@ package rs117.hd.renderer.zone;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +52,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -116,6 +119,9 @@ public class ZoneRenderer implements Renderer {
 	private ModelStreamingManager modelStreamingManager;
 
 	@Inject
+	private GamevalManager gamevalManager;
+
+	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
@@ -141,6 +147,8 @@ public class ZoneRenderer implements Renderer {
 	public final CommandBuffer playerCmd = new CommandBuffer("Player", renderState);
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
+
+	public final HashSet<Integer> detailDrawBlockList = new HashSet<>();
 
 	public static int indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -180,6 +188,13 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.startUp();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(renderState, uboWorldViews);
+
+		// Create blocklist for models that shouldn't be culled by the detail distance check
+		detailDrawBlockList.clear();
+		for (Map.Entry<String, Integer> entry : gamevalManager.getObjects().entrySet()) {
+			if(entry.getKey().startsWith("SAILING_BOAT_SAIL_"))
+				detailDrawBlockList.add(entry.getValue());
+		}
 	}
 
 	@Override
