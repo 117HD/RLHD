@@ -1736,19 +1736,23 @@ public class SceneUploader implements AutoCloseable {
 			final float pY = projected[1];
 			final float pZ = projected[2];
 
+			// Vertex is behind the camera and therefore isn't visible
+			if(pZ <= 0.0f)
+				visibility[v] = allVertsVisible = false;
+
 			modelLocal[vertexOffset] = vertexX;
 			modelLocalI[vertexOffset] = Float.floatToIntBits(vertexX);
-			modelProjected[vertexOffset] = pZ;
+			modelProjected[vertexOffset] = pX / pZ;
 			vertexOffset++;
 
 			modelLocal[vertexOffset] = vertexY;
 			modelLocalI[vertexOffset] = Float.floatToIntBits(vertexY);
-			modelProjected[vertexOffset] = pX / pZ;
+			modelProjected[vertexOffset] = pY / pZ;
 			vertexOffset++;
 
 			modelLocal[vertexOffset] = vertexZ;
 			modelLocalI[vertexOffset] = Float.floatToIntBits(vertexZ);
-			modelProjected[vertexOffset] = pY / pZ;
+			modelProjected[vertexOffset] = pZ;
 			vertexOffset++;
 
 			shouldSort &= pZ >= 50;
@@ -1787,22 +1791,14 @@ public class SceneUploader implements AutoCloseable {
 			offsetC *= 3;
 
 			// Face is completely behind the projection view
-			final float aZ = modelProjected[offsetA];
-			final float bZ = modelProjected[offsetB];
-			final float cZ = modelProjected[offsetC];
-			if (aZ <= 0.0f && bZ <= 0.0f && cZ <= 0.0f) {
-				culledFaces.putFace(f);
-				continue;
-			}
+			final float aX = modelProjected[offsetA];
+			final float aY = modelProjected[offsetA + 1];
 
-			final float aX = modelProjected[offsetA + 1];
-			final float aY = modelProjected[offsetA + 2];
+			final float bX = modelProjected[offsetB];
+			final float bY = modelProjected[offsetB + 1];
 
-			final float bX = modelProjected[offsetB + 1];
-			final float bY = modelProjected[offsetB + 2];
-
-			final float cX = modelProjected[offsetC + 1];
-			final float cY = modelProjected[offsetC + 2];
+			final float cX = modelProjected[offsetC];
+			final float cY = modelProjected[offsetC + 1];
 
 			// back face culling
 			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0) {
@@ -1811,8 +1807,13 @@ public class SceneUploader implements AutoCloseable {
 			}
 
 			// store distance for face sorting
-			if (faceDistances != null && shouldSort)
+			if (faceDistances != null && shouldSort) {
+				final float aZ = modelProjected[offsetA + 2];
+				final float bZ = modelProjected[offsetB + 2];
+				final float cZ = modelProjected[offsetC + 2];
+
 				faceDistances[f] = radius + ((int) ((aZ + bZ + cZ) / 3.0f) - zero);
+			}
 
 			visibleFaces.putFace(f);
 		}
