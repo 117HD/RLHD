@@ -37904,10 +37904,10 @@
   },
   {
     "description": "VARLAMORE_ORANGE_BRAZIER_SHORT",
-    "height": 225,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12,
+    "radius": 370,
+    "strength": 7,
     "visibleFromOtherPlanes": true,
     "color": [
       252,
