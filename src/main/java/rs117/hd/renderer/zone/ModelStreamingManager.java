@@ -148,9 +148,7 @@ public class ModelStreamingManager {
 
 		m.calculateBoundsCylinder();
 
-		assert !sceneManager.isRoot(ctx) || zone.inSceneFrustum || zone.inShadowFrustum;
-		final int modelClassification = !sceneManager.isRoot(ctx) ? 1 :
-			zone.inSceneFrustum ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : -1;
+		final int modelClassification = sceneManager.isRoot(ctx) ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : 1;
 		boolean isOffScreen = modelClassification == -1;
 		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
 		if (isOffScreen && (!modelOverride.castShadows || !renderer.directionalShadowCasterVolume.intersectsPoint(x, y, z)))
@@ -367,9 +365,7 @@ public class ModelStreamingManager {
 
 		m.calculateBoundsCylinder();
 
-		assert !sceneManager.isRoot(ctx) || zone.inSceneFrustum || zone.inShadowFrustum;
-		final int modelClassification = !sceneManager.isRoot(ctx) ? 1 :
-			zone.inSceneFrustum ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : -1;
+		final int modelClassification = sceneManager.isRoot(ctx) ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : 1;
 		boolean isOffScreen = modelClassification == -1;
 		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
 		if (isOffScreen && (!modelOverride.castShadows || !renderer.directionalShadowCasterVolume.intersectsPoint(x, y, z)))
