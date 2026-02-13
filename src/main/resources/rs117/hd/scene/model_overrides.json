@@ -38715,6 +38715,7 @@
     "description": "Hunter Guild - Wooden - Metallic - Stone -  Cooking Oven",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
+    "uvScale": 0.75,
     "objectIds": [
       "FORTIS_STOVE",
       "FORTIS_STOVE_NOOP",
@@ -38725,9 +38726,8 @@
         "description": "Metal",
         "colors": "h == 0",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvOrientation": 192,
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.1
       },
       {
         "description": "Log",
@@ -38740,6 +38740,13 @@
         "description": "Bricks",
         "colors": "h == 3 && s == 4 || h == 2 && s == 6",
         "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Glow",
+        "colors": "h == 4 && s > 3",
+        "baseMaterial": "GRAY_150",
         "uvType": "BOX",
         "uvScale": 0.8
       }

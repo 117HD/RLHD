@@ -37959,11 +37959,48 @@
     ]
   },
   {
-    "description": "VARLAMORE_OVEN_GLOW",
-    "height": 120,
-    "alignment": "CENTER",
+    "description": "VARLAMORE_OVEN_GLOW_FRONT",
+    "offset": [ 0, 65, -65 ],
     "radius": 300,
     "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FORTIS_STOVE",
+      "FORTIS_STOVE_NOOP",
+      "FURNACE_CLAY01_TWILIGHT"
+    ]
+  },
+  {
+    "description": "VARLAMORE_OVEN_GLOW_TOP_LEFT",
+    "offset": [ -45, 180, 0 ],
+    "radius": 75,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FORTIS_STOVE",
+      "FORTIS_STOVE_NOOP",
+      "FURNACE_CLAY01_TWILIGHT"
+    ]
+  },
+  {
+    "description": "VARLAMORE_OVEN_GLOW_TOP_RIGHT",
+    "offset": [ 45, 180, 0 ],
+    "radius": 75,
+    "strength": 4,
     "color": [
       252,
       148,
