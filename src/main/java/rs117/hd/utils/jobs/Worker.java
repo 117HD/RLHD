@@ -2,6 +2,7 @@ package rs117.hd.utils.jobs;
 
 import java.util.ArrayDeque;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,8 @@ import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
 @Slf4j
 @RequiredArgsConstructor
 public final class Worker {
+	static final long SLEEP_TIME = TimeUnit.MICROSECONDS.convert(1, TimeUnit.NANOSECONDS);
+
 	String name, pausedName;
 	Thread thread;
 	JobHandle handle;
@@ -48,6 +51,7 @@ public final class Worker {
 			// Check local work queue
 			handle = (localStalledWork.isEmpty() ? localWorkQueue : localStalledWork).poll();
 
+			long waitStart = handle == null ? System.nanoTime() : 0;
 			while (handle == null) {
 				if (stealTargetIdx >= 0) {
 					final Worker victim = jobSystem.workers[stealTargetIdx];
@@ -68,10 +72,10 @@ public final class Worker {
 
 				if (handle == null) {
 					// Check if any work is in the main queue before attempting to steal again
-					handle = jobSystem.workQueue.poll();
+					handle = localStalledWork.isEmpty() ? jobSystem.workQueue.poll() : localStalledWork.poll();
 				}
 
-				if (handle == null && !findNextStealTarget()) {
+				if (handle == null && !findNextStealTarget() && System.nanoTime() - waitStart > SLEEP_TIME) {
 					// Wait for a signal that there is work to be had
 					try {
 						jobSystem.workerSemaphore.acquire();
@@ -80,14 +84,9 @@ public final class Worker {
 						thread.isInterrupted(); // Consume the interrupt to prevent it from cancelling the next job
 					}
 
-					if (handle == null) {
+					if (handle == null ) {
 						// We've been signaled that there is work to be had, try the main queue again
 						handle = jobSystem.workQueue.poll();
-					}
-
-					if (handle == null) {
-						// No work in the main queue, this must mean it was pushed to a local queue and as such should find it
-						findNextStealTarget();
 					}
 				}
 
