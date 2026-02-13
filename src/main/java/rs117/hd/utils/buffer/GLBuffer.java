@@ -75,7 +75,7 @@ public class GLBuffer {
 		this(name, target, usage, STORAGE_NONE);
 	}
 
-	public static boolean supportsPersistentBuffers() {
+	public static boolean supportsStorageBuffers() {
 		return GL_CAPS.GL_ARB_buffer_storage;
 	}
 
@@ -106,8 +106,8 @@ public class GLBuffer {
 	}
 
 	public void orphan() {
-		if (isPersistent())
-			return;
+		if (isStorageBuffer())
+			throw new IllegalStateException("Not implemented for storage buffers. Perhaps via glInvalidateBufferData?");
 
 		glBindBuffer(target, id);
 		glBufferData(target, size, usage);
@@ -147,12 +147,13 @@ public class GLBuffer {
 		if (wasMapped) unmap();
 
 		int oldBuffer = id;
+		// Create a new buffer if we have to preserve existing data
 		if (byteOffset > 0 || (storageFlags & STORAGE_IMMUTABLE) != 0)
 			id = glGenBuffers();
 
 		glBindBuffer(target, id);
 
-		if (supportsPersistentBuffers() && (storageFlags & STORAGE_PERSISTENT) != 0) {
+		if (isStorageBuffer()) {
 			int glStorageFlags = GL_MAP_PERSISTENT_BIT;
 			int glMapFlags = GL_MAP_PERSISTENT_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
 			if ((storageFlags & STORAGE_IMMUTABLE) == 0)
@@ -175,52 +176,56 @@ public class GLBuffer {
 				if (buf != null) {
 					mappedBuffer = new GLMappedBuffer(this, buf);
 				} else {
-					log.warn("Persistent buffer failed to map range {} offset: {} size: {} mapFlags: ", name, byteOffset, numBytes);
+					log.warn(
+						"Persistent buffer failed to map range {} offset: {} size: {} mapFlags: {}",
+						name,
+						byteOffset,
+						numBytes,
+						glMapFlags
+					);
 
-					// Recreate buffers to fallback to non-persistent
+					// Recreate buffers to fall back to non-persistent
 					glDeleteBuffers(id);
 					id = glGenBuffers();
 					storageFlags = STORAGE_NONE;
 				}
 				checkGLErrors();
 			}
-		} else {
-			storageFlags = STORAGE_NONE;
 		}
 
-		if (!isPersistent())
+		if (!isStorageBuffer())
 			glBufferData(target, numBytes, usage);
 
 		if (log.isDebugEnabled() && GL_CAPS.OpenGL43) {
 			checkGLErrors(() -> String.format(
-				"Errors encountered on buffer %s offset: %dl size: %dl mapped: %s persistent: %s",
+				"Errors encountered on buffer %s offset: %dl size: %dl mapped: %s isStorage: %s",
 				name,
 				byteOffset,
 				size,
 				isMapped(),
-				isPersistent()
+				isStorageBuffer()
 			));
 			GL43C.glObjectLabel(GL43C.GL_BUFFER, id, name);
 		}
 
+		size = numBytes;
+
 		if (id != oldBuffer && oldBuffer != 0 && byteOffset > 0) {
-			copyRangeTo(oldBuffer, id, 0, 0, size);
+			// Neither buffer must be mapped before this, except for with the persistent bit
+			copyRangeTo(oldBuffer, id, 0, 0, byteOffset);
 			glDeleteBuffers(oldBuffer);
 		}
 
-		size = numBytes;
-
-		// If was mapped, re-mapp without GL_MAP_INVALIDATE_BUFFER_BIT, since we may have previously written data
-		if (wasMapped && !isPersistent())
+		// If was mapped, remap without GL_MAP_INVALIDATE_BUFFER_BIT, since we may have previously written data
+		if (wasMapped && !isStorageBuffer())
 			mappedBuffer.remap();
 
-		glBindBuffer(target, 0);
-
+		unbind();
 		return true;
 	}
 
-	public boolean isPersistent() {
-		return storageFlags != STORAGE_NONE && supportsPersistentBuffers();
+	public boolean isStorageBuffer() {
+		return storageFlags != STORAGE_NONE && supportsStorageBuffers();
 	}
 
 	public boolean isMapped() {
@@ -234,23 +239,23 @@ public class GLBuffer {
 	public void upload(ByteBuffer data, long byteOffset) {
 		long numBytes = data.remaining();
 		ensureCapacity(byteOffset, numBytes);
-		if (isPersistent()) {
+		if (isStorageBuffer()) {
 			mappedBuffer.getMappedBuffer()
 				.position((int) byteOffset)
 				.put(data);
 		} else {
-			glBindBuffer(target, id);
+			bind();
 			glBufferSubData(target, byteOffset, data);
 		}
 		checkGLErrors(() -> String.format(
-			"Errors encountered on buffer %s upload (offset: %dl size: %dl) offset: %dl size: %dl mapped: %s persistent: %s",
+			"Errors encountered on buffer %s upload (offset: %dl size: %dl) offset: %dl size: %dl mapped: %s isStorage: %s",
 			name,
 			data.position(),
 			data.remaining(),
 			byteOffset,
 			size,
 			isMapped(),
-			isPersistent()
+			isStorageBuffer()
 		));
 	}
 
@@ -261,23 +266,23 @@ public class GLBuffer {
 	public void upload(IntBuffer data, long byteOffset) {
 		long numBytes = 4L * data.remaining();
 		ensureCapacity(byteOffset, numBytes);
-		if (isPersistent()) {
+		if (isStorageBuffer()) {
 			mappedBuffer.getMappedIntBuffer()
 				.position((int) (byteOffset / 4))
 				.put(data);
 		} else {
-			glBindBuffer(target, id);
+			bind();
 			glBufferSubData(target, byteOffset, data);
 		}
 		checkGLErrors(() -> String.format(
-			"Errors encountered on buffer %s upload (offset: %dl size: %dl) offset: %dl size: %dl mapped: %s persistent: %s",
+			"Errors encountered on buffer %s upload (offset: %dl size: %dl) offset: %dl size: %dl mapped: %s isStorage: %s",
 			name,
 			data.position(),
 			data.remaining(),
 			byteOffset,
 			size,
 			isMapped(),
-			isPersistent()
+			isStorageBuffer()
 		));
 	}
 
@@ -288,23 +293,23 @@ public class GLBuffer {
 	public void upload(FloatBuffer data, long byteOffset) {
 		long numBytes = 4L * data.remaining();
 		ensureCapacity(byteOffset, numBytes);
-		if (isPersistent()) {
+		if (isStorageBuffer()) {
 			mappedBuffer.getMappedFloatBuffer()
 				.position((int) (byteOffset / 4))
 				.put(data);
 		} else {
-			glBindBuffer(target, id);
+			bind();
 			glBufferSubData(target, byteOffset, data);
 		}
 		checkGLErrors(() -> String.format(
-			"Errors encountered on buffer %s upload (offset: %dl size: %dl) offset: %dl size: %dl mapped: %s persistent: %s",
+			"Errors encountered on buffer %s upload (offset: %dl size: %dl) offset: %dl size: %dl mapped: %s isStorage: %s",
 			name,
 			data.position(),
 			data.remaining(),
 			byteOffset,
 			size,
 			isMapped(),
-			isPersistent()
+			isStorageBuffer()
 		));
 	}
 
@@ -331,8 +336,7 @@ public class GLBuffer {
 	public GLMappedBuffer map(int flags, long byteOffset, long byesSize) {
 		if (mappedBuffer == null)
 			mappedBuffer = new GLMappedBuffer(this);
-		mappedBuffer.map(flags, byteOffset, byesSize);
-		return mappedBuffer;
+		return mappedBuffer.map(flags, byteOffset, byesSize);
 	}
 
 	public GLMappedBuffer mapped() {
@@ -349,24 +353,39 @@ public class GLBuffer {
 			return;
 
 		dst.ensureCapacity(dstOffsetBytes + numBytes);
-		copyRangeTo(id, dst.id, srcOffsetBytes, dstOffsetBytes, numBytes);
+		copyRangeTo(this, dst, srcOffsetBytes, dstOffsetBytes, numBytes);
 	}
 
 	public void copyMultiTo(GLBuffer dst, long[] srcOffsetBytes, long[] dstOffsetBytes, long[] numBytes, int count) {
 		long totalNumBytes = 0;
 		for (int i = 0; i < count; i++)
 			totalNumBytes = max(dstOffsetBytes[i] + numBytes[i], 0L);
-
 		if (totalNumBytes <= 0)
 			return;
 
 		dst.ensureCapacity(totalNumBytes);
-		copyRangesTo(id, dst.id, srcOffsetBytes, dstOffsetBytes, numBytes, count);
+		copyRangesTo(this, dst, srcOffsetBytes, dstOffsetBytes, numBytes, count);
 	}
 
+	private static void copyRangeTo(int src, int dst, long srcOffsetBytes, long dstOffsetBytes, long numBytes) {
+		copyRangesTo(src, dst, new long[] { srcOffsetBytes }, new long[] { dstOffsetBytes }, new long[] { numBytes }, 1);
+	}
 
-	private static void copyRangeTo(int srcId, int dstId, long srcOffsetBytes, long dstOffsetBytes, long numBytes) {
-		copyRangesTo(srcId, dstId, new long[] { srcOffsetBytes }, new long[] { dstOffsetBytes }, new long[] { numBytes }, 1);
+	private static void copyRangeTo(GLBuffer src, GLBuffer dst, long srcOffsetBytes, long dstOffsetBytes, long numBytes) {
+		copyRangesTo(src, dst, new long[] { srcOffsetBytes }, new long[] { dstOffsetBytes }, new long[] { numBytes }, 1);
+	}
+
+	private static void copyRangesTo(
+		GLBuffer src,
+		GLBuffer dst,
+		long[] srcOffsetBytes,
+		long[] dstOffsetBytes,
+		long[] numBytes,
+		int count
+	) {
+		assert !src.isMapped();
+		assert !dst.isMapped();
+		copyRangesTo(src.id, dst.id, srcOffsetBytes, dstOffsetBytes, numBytes, count);
 	}
 
 	private static void copyRangesTo(
@@ -377,63 +396,49 @@ public class GLBuffer {
 		long[] numBytes,
 		int count
 	) {
+		assert count > 0;
 		glBindBuffer(GL_COPY_READ_BUFFER, srcId);
 		glBindBuffer(GL_COPY_WRITE_BUFFER, dstId);
 
-		if (!GL_CAPS.GL_ARB_copy_buffer) {
-			long srcMapStart = Long.MAX_VALUE;
-			long srcMapEnd = 0;
-			long dstMapStart = Long.MAX_VALUE;
-			long dstMapEnd = 0;
-
+		if (GL_CAPS.GL_ARB_copy_buffer) {
+			for (int i = 0; i < count; i++)
+				glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, srcOffsetBytes[i], dstOffsetBytes[i], numBytes[i]);
+		} else {
+			// Fallback path for macOS, which of course has to not support this...
+			// This assumes neither of the buffers are already mapped
+			assert !supportsStorageBuffers();
+			long srcOffset = Long.MAX_VALUE;
+			long dstOffset = Long.MAX_VALUE;
+			long mapSize = 0;
 			for (int i = 0; i < count; i++) {
-				srcMapStart = min(srcMapStart, srcOffsetBytes[i]);
-				srcMapEnd = max(srcMapEnd, srcOffsetBytes[i] + numBytes[i]);
-
-				dstMapStart = min(dstMapStart, dstOffsetBytes[i]);
-				dstMapEnd = max(dstMapEnd, dstOffsetBytes[i] + numBytes[i]);
+				srcOffset = min(srcOffset, srcOffsetBytes[i]);
+				dstOffset = min(dstOffset, dstOffsetBytes[i]);
+				mapSize = max(mapSize, srcOffsetBytes[i] - srcOffset + numBytes[i]);
 			}
-
-			long srcMapSize = srcMapEnd - srcMapStart;
-			long dstMapSize = dstMapEnd - dstMapStart;
 
 			ByteBuffer src = null;
 			ByteBuffer dst = null;
 			try {
-				src = glMapBufferRange(
-					GL_COPY_READ_BUFFER,
-					srcMapStart,
-					srcMapSize,
-					GL_MAP_READ_BIT
-				);
-
+				src = glMapBufferRange(GL_COPY_READ_BUFFER, srcOffset, mapSize, GL_MAP_READ_BIT);
 				if (src == null) {
-					log.error("Failed to map SRC buffer {}", srcId);
+					log.error("Failed to map SRC buffer {}, offset: {}, size: {}", srcId, srcOffset, mapSize, new Throwable());
 					return;
 				}
 
-				dst = glMapBufferRange(
-					GL_COPY_WRITE_BUFFER,
-					dstMapStart,
-					dstMapSize,
-					GL_MAP_WRITE_BIT
-				);
-
+				dst = glMapBufferRange(GL_COPY_WRITE_BUFFER, dstOffset, mapSize, GL_MAP_WRITE_BIT);
 				if (dst == null) {
-					log.error("Failed to map DST buffer {}", dstId);
+					log.error("Failed to map DST buffer {}, offset: {}, size: {}", dstId, dstOffset, mapSize, new Throwable());
 					return;
 				}
 
 				for (int i = 0; i < count; i++) {
-					int srcPos = (int) (srcOffsetBytes[i] - srcMapStart);
-					int dstPos = (int) (dstOffsetBytes[i] - dstMapStart);
+					int srcPos = (int) (srcOffsetBytes[i] - srcOffset);
+					int dstPos = (int) (dstOffsetBytes[i] - dstOffset);
 					int len = (int) numBytes[i];
 
-					src.clear();
 					src.position(srcPos);
 					src.limit(srcPos + len);
 
-					dst.clear();
 					dst.position(dstPos);
 					dst.put(src);
 				}
@@ -443,16 +448,12 @@ public class GLBuffer {
 				if (dst != null)
 					glUnmapBuffer(GL_COPY_WRITE_BUFFER);
 			}
-		} else {
-			for (int i = 0; i < count; i++) {
-				glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, srcOffsetBytes[i], dstOffsetBytes[i], numBytes[i]);
-			}
 		}
 
 		if (checkGLErrors()) {
 			long srcSizeBytes = glGetBufferParameteri64(GL_COPY_READ_BUFFER, GL_BUFFER_SIZE);
 			long dstSizeBytes = glGetBufferParameteri64(GL_COPY_WRITE_BUFFER, GL_BUFFER_SIZE);
-			log.error("Errors copying buffers src:{} dst:{} srcSize:{} dstSize:{}", srcId, dstId, srcSizeBytes, dstSizeBytes);
+			log.error("Errors copying buffers src: {} dst: {} srcSize: {} dstSize: {}", srcId, dstId, srcSizeBytes, dstSizeBytes);
 		}
 
 		glBindBuffer(GL_COPY_READ_BUFFER, 0);

@@ -75,7 +75,7 @@ public final class GLMappedBuffer {
 			mappedFloatBuffer.position(0);
 		}
 
-		if (mapped || owner.isPersistent())
+		if (mapped || owner.isStorageBuffer())
 			return this;
 
 		glBindBuffer(owner.target, owner.id);
@@ -152,7 +152,7 @@ public final class GLMappedBuffer {
 	}
 
 	public void unmap() {
-		if (!mapped || owner.isPersistent())
+		if (!mapped || owner.isStorageBuffer())
 			return;
 
 		syncViews();
