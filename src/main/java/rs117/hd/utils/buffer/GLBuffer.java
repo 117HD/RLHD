@@ -383,8 +383,8 @@ public class GLBuffer {
 		long[] numBytes,
 		int count
 	) {
-		assert !src.isMapped();
-		assert !dst.isMapped();
+		assert !src.isMapped() || src.isStorageBuffer();
+		assert !dst.isMapped() || dst.isStorageBuffer();
 		copyRangesTo(src.id, dst.id, srcOffsetBytes, dstOffsetBytes, numBytes, count);
 	}
 
