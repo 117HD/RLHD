@@ -1829,6 +1829,7 @@ public class SceneUploader implements AutoCloseable {
 		int preOrientation,
 		int orientation,
 		boolean isShadow,
+		boolean disableTextures,
 		VAO.VAOView opaqueView,
 		VAO.VAOView alphaView
 	) {
@@ -1912,36 +1913,38 @@ public class SceneUploader implements AutoCloseable {
 			Material material = baseMaterial;
 			ModelOverride faceOverride = modelOverride;
 
-			if (textureId != -1) {
-				color1 = color2 = color3 = 90;
-				uvType = UvType.VANILLA;
-				if (textureMaterial != Material.NONE) {
-					material = textureMaterial;
-				} else {
-					material = materialManager.fromVanillaTexture(textureId);
-					if (modelOverride.materialOverrides != null) {
-						var override = modelOverride.materialOverrides.get(material);
-						if (override != null) {
+			if(!disableTextures) {
+				if (textureId != -1) {
+					color1 = color2 = color3 = 90;
+					uvType = UvType.VANILLA;
+					if (textureMaterial != Material.NONE) {
+						material = textureMaterial;
+					} else {
+						material = materialManager.fromVanillaTexture(textureId);
+						if (modelOverride.materialOverrides != null) {
+							var override = modelOverride.materialOverrides.get(material);
+							if (override != null) {
+								faceOverride = override;
+								material = faceOverride.textureMaterial;
+							}
+						}
+					}
+				} else if (modelOverride.colorOverrides != null) {
+					int ahsl = (0xFF - transparency) << 16 | color1;
+					for (var override : modelOverride.colorOverrides) {
+						if (override.ahslCondition.test(ahsl)) {
 							faceOverride = override;
-							material = faceOverride.textureMaterial;
+							material = faceOverride.baseMaterial;
+							break;
 						}
 					}
 				}
-			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | color1;
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						faceOverride = override;
-						material = faceOverride.baseMaterial;
-						break;
-					}
-				}
-			}
 
-			if (material != Material.NONE) {
-				uvType = faceOverride.uvType;
-				if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
-					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+				if (material != Material.NONE) {
+					uvType = faceOverride.uvType;
+					if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
+						uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+				}
 			}
 
 			final int materialData = material.packMaterialData(faceOverride, uvType, false);

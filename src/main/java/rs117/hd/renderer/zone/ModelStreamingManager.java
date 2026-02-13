@@ -10,6 +10,7 @@ import net.runelite.api.hooks.*;
 import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ModelOverrideManager;
@@ -255,11 +256,13 @@ public class ModelStreamingManager {
 			orientation
 		);
 
-		final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
-		if (shouldSort)
+		final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
+		if (shouldSort && !isSquashed) {
 			facePrioritySorter.sortModelFaces(visibleFaces, m);
+		}
 
-		if (culledFaces.length > 0 && (!sceneManager.isRoot(ctx) || zone.inShadowFrustum)) {
+		final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
+		if (culledFaces.length > 0 && modelOverride.castShadows && plugin.configShadowMode != ShadowMode.OFF && (!sceneManager.isRoot(ctx) || zone.inShadowFrustum)) {
 			final VAO.VAOView shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 			sceneUploader.uploadTempModel(
 				culledFaces,
@@ -268,19 +271,19 @@ public class ModelStreamingManager {
 				preOrientation,
 				orientation,
 				true,
+				plugin.configShadowMode != ShadowMode.DETAILED,
 				shadowView,
 				shadowView
 			);
 			shadowView.end();
 		}
 
-
 		if (visibleFaces.length > 0) {
 			// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 			// because they are not depth tested. transparent player faces don't need their own vao because normal
 			// transparent faces are already not depth tested
 			final VAO.VAOView opaqueView = ctx.beginDraw(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE, visibleFaces.length);
-			final VAO.VAOView alphaView = hasAlpha ? ctx.beginDraw(VAO_ALPHA, visibleFaces.length) : opaqueView;
+			final VAO.VAOView alphaView = hasAlpha && !isSquashed ? ctx.beginDraw(VAO_ALPHA, visibleFaces.length) : opaqueView;
 
 			sceneUploader.uploadTempModel(
 				visibleFaces,
@@ -288,7 +291,8 @@ public class ModelStreamingManager {
 				modelOverride,
 				preOrientation,
 				orientation,
-				false,
+				isSquashed,
+				!isSquashed,
 				opaqueView,
 				alphaView
 			);
@@ -495,10 +499,12 @@ public class ModelStreamingManager {
 				orient
 			);
 
-			if (shouldSort)
+			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
+			if (shouldSort && !isSquashed) {
 				facePrioritySorter.sortModelFaces(visibleFaces, m);
+			}
 
-			if (culledFaces.length > 0 && (!sceneManager.isRoot(ctx) || zone.inShadowFrustum)) {
+			if (culledFaces.length > 0 && modelOverride.castShadows && plugin.configShadowMode != ShadowMode.OFF && (!sceneManager.isRoot(ctx) || zone.inShadowFrustum)) {
 				final VAO.VAOView shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
 					culledFaces,
@@ -507,6 +513,7 @@ public class ModelStreamingManager {
 					preOrientation,
 					orient,
 					true,
+					plugin.configShadowMode != ShadowMode.DETAILED,
 					shadowView,
 					shadowView
 				);
@@ -516,14 +523,14 @@ public class ModelStreamingManager {
 			if (visibleFaces.length > 0) {
 				final VAO.VAOView opaqueView = ctx.beginDraw(VAO_OPAQUE, visibleFaces.length);
 				final VAO.VAOView alphaView = hasAlpha ? ctx.beginDraw(VAO_ALPHA, visibleFaces.length) : opaqueView;
-
 				sceneUploader.uploadTempModel(
 					visibleFaces,
 					m,
 					modelOverride,
 					preOrientation,
 					orient,
-					false,
+					isSquashed,
+					!isSquashed,
 					opaqueView,
 					alphaView
 				);
