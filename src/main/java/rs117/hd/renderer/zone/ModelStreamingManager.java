@@ -148,19 +148,13 @@ public class ModelStreamingManager {
 
 		m.calculateBoundsCylinder();
 
-		final int modelCalcification = sceneManager.isRoot(ctx) ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : 1;
-		if (sceneManager.isRoot(ctx)) {
-			// Additional Culling checks to help reduce dynamic object perf impact when off screen
-			if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows)
-				return;
-
-			if (zone.inSceneFrustum && !modelOverride.castShadows && modelCalcification == -1)
-				return;
-
-			if (!zone.inSceneFrustum && zone.inShadowFrustum && modelOverride.castShadows &&
-				!renderer.directionalShadowCasterVolume.intersectsPoint(x, y, z))
-				return;
-		}
+		assert zone.inSceneFrustum || zone.inShadowFrustum;
+		final int modelClassification = !sceneManager.isRoot(ctx) ? 1 :
+			zone.inSceneFrustum ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : -1;
+		boolean isOffScreen = modelClassification == -1;
+		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
+		if (isOffScreen && (!modelOverride.castShadows || !renderer.directionalShadowCasterVolume.intersectsPoint(x, y, z)))
+			return;
 		plugin.drawnTempRenderableCount++;
 
 		final boolean hasAlpha = renderable instanceof Player || m.getFaceTransparencies() != null;
@@ -182,7 +176,7 @@ public class ModelStreamingManager {
 						modelOverride,
 						zone,
 						cachedModel,
-						modelCalcification == 0,
+						modelClassification == 0,
 						hasAlpha,
 						orientation, x, y, z
 					);
@@ -208,7 +202,7 @@ public class ModelStreamingManager {
 				modelOverride,
 				zone,
 				m,
-				modelCalcification == 0,
+				modelClassification == 0,
 				hasAlpha,
 				orientation, x, y, z
 			);
@@ -373,19 +367,13 @@ public class ModelStreamingManager {
 
 		m.calculateBoundsCylinder();
 
-		final int modelCalcification = sceneManager.isRoot(ctx) ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : 1;
-		if (sceneManager.isRoot(ctx)) {
-			// Additional Culling checks to help reduce dynamic object perf impact when off screen
-			if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows)
-				return;
-
-			if (zone.inSceneFrustum && !modelOverride.castShadows && modelCalcification == -1)
-				return;
-
-			if (!zone.inSceneFrustum && zone.inShadowFrustum && modelOverride.castShadows &&
-				!renderer.directionalShadowCasterVolume.intersectsPoint(x, y, z))
-				return;
-		}
+		assert zone.inSceneFrustum || zone.inShadowFrustum;
+		final int modelClassification = !sceneManager.isRoot(ctx) ? 1 :
+			zone.inSceneFrustum ? renderer.sceneCamera.classifySphere(x, y, z, m.getRadius()) : -1;
+		boolean isOffScreen = modelClassification == -1;
+		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
+		if (isOffScreen && (!modelOverride.castShadows || !renderer.directionalShadowCasterVolume.intersectsPoint(x, y, z)))
+			return;
 		drawnDynamicRenderableCount[renderThreadId + 1]++;
 
 		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
@@ -412,7 +400,7 @@ public class ModelStreamingManager {
 						modelOverride,
 						cachedModel,
 						zone,
-						modelCalcification == 0,
+						modelClassification == 0,
 						hasAlpha,
 						preOrientation, orient,
 						x, y, z
@@ -441,7 +429,7 @@ public class ModelStreamingManager {
 				modelOverride,
 				m,
 				zone,
-				modelCalcification == 0,
+				modelClassification == 0,
 				hasAlpha,
 				preOrientation, orient,
 				x, y, z
