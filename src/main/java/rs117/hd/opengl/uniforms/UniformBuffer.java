@@ -252,7 +252,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 
 	@SuppressWarnings("unchecked")
 	public UniformBuffer(int glUsage) {
-		glBuffer = (GLBUFFER) new GLBuffer(getClass().getSimpleName(), GL_UNIFORM_BUFFER, glUsage, 0);
+		glBuffer = (GLBUFFER) new GLBuffer(getClass().getSimpleName(), GL_UNIFORM_BUFFER, glUsage);
 	}
 
 	@SuppressWarnings("unchecked")

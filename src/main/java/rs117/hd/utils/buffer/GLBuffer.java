@@ -49,10 +49,10 @@ public class GLBuffer {
 	public static int STORAGE_READ = 8;
 	public static int STORAGE_WRITE = 16;
 
-	public static int MAP_READ = 0;
-	public static int MAP_WRITE = 1;
-	public static int MAP_UNSYNCHRONIZED = 2;
-	public static int MAP_INVALIDATE = 4;
+	public static int MAP_READ = 1;
+	public static int MAP_WRITE = 2;
+	public static int MAP_UNSYNCHRONIZED = 4;
+	public static int MAP_INVALIDATE = 8;
 
 	public final String name;
 	public final int target;
