@@ -196,17 +196,6 @@ public class SceneManager {
 					ctx.update(plugin.deltaTime);
 			}
 		}
-
-		// Ensure any queued zone invalidations are now completed
-		root.completeInvalidation();
-
-		if (wv != null) {
-			for (WorldEntity we : wv.worldEntities()) {
-			WorldViewContext ctx = getContext(we.getWorldView());
-				if (ctx != null)
-					ctx.completeInvalidation();
-			}
-		}
 	}
 
 	private void updateAreaHiding() {
@@ -287,8 +276,7 @@ public class SceneManager {
 	public void completeAllStreaming() {
 		root.sceneLoadGroup.complete();
 		root.streamingGroup.complete();
-
-		root.completeInvalidation();
+		root.invalidationGroup.complete();
 
 		WorldView wv = client.getTopLevelWorldView();
 		if (wv != null) {
@@ -297,8 +285,7 @@ public class SceneManager {
 				if (ctx != null) {
 					ctx.sceneLoadGroup.complete();
 					ctx.streamingGroup.complete();
-
-					ctx.completeInvalidation();
+					ctx.invalidationGroup.complete();
 				}
 			}
 		}

@@ -241,11 +241,11 @@ public class WorldViewContext {
 			cullZone.free();
 		}
 
-		for (int x = 0; x < sizeX; x++) {
-			for (int z = 0; z < sizeZ; z++) {
+		invalidationGroup.complete();
+
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
 				handleZoneSwap(deltaTime, x, z);
-			}
-		}
 	}
 
 	int getSortedAlphaCount() {
@@ -256,17 +256,6 @@ public class WorldViewContext {
 				count += zones[x][z].sortedFacesLen;
 
 		return count;
-	}
-
-	void completeInvalidation() {
-		if (isLoading)
-			return;
-
-		invalidationGroup.complete();
-
-		for (int x = 0; x < sizeX; x++)
-			for (int z = 0; z < sizeZ; z++)
-				handleZoneSwap(-1.0f, x, z);
 	}
 
 	void free() {
@@ -328,6 +317,11 @@ public class WorldViewContext {
 		Zone curZone = zones[zx][zz];
 		float prevUploadDelay = -1.0f;
 		if (curZone.uploadJob != null) {
+			if(curZone.uploadJob.isQueued()) {
+				// No need to cancel as the upload task hasn't started yet
+				// Therefore it'll pick up any new changes to the zone
+				return;
+			}
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
 				curZone.hashCode(),
