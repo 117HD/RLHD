@@ -40,7 +40,7 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 			final Projection worldViewProjection = worldView.getMainWorldProjection();
 			if (worldViewProjection instanceof FloatProjection) {
 				newProjection = ((FloatProjection) worldViewProjection).getProjection();
-				squashed = (newProjection[5] + newProjection[3]) < 0.1f;
+				squashed = newProjection[5] < 0.1f;
 			}
 
 			if (!Arrays.equals(currentProjection, newProjection)) {
