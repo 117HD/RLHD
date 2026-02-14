@@ -827,7 +827,8 @@ public class ZoneRenderer implements Renderer {
 		if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
 			z.renderOpaque(sceneCmd, ctx, false);
 
-		if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
+		final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
+		if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 			directionalCmd.SetShader(fastShadowProgram);
 			z.renderOpaque(directionalCmd, ctx, plugin.configRoofShadows);
 		}
@@ -861,7 +862,8 @@ public class ZoneRenderer implements Renderer {
 				z.alphaSort(zx - offset, zz - offset, sceneCamera);
 			}
 
-			if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
+			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
+			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 				directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
 				z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, plugin.configRoofShadows);
 			}
