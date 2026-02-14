@@ -1789,6 +1789,11 @@
     "brightness": 1.5
   },
   {
+    "name": "ROPE_DARK",
+    "parent": "ROPE",
+    "brightness": 0.75
+  },
+  {
     "name": "CARPET_N"
   },
   {

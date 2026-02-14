@@ -10489,7 +10489,6 @@
   {
     "description": "Motherlode Mine - Ladder, area specific due to use in other places",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-    "areas": [ "MOTHERLODE_MINE" ],
     "objectIds": [
       "MOTHERLODE_LADDER_JOIN",
       "MOTHERLODE_LADDER_BOTTOM_ACTIVE",
@@ -10503,7 +10502,6 @@
   {
     "description": "Motherlode Mine - Machine",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-    "areas": [ "MOTHERLODE_MINE" ],
     "objectIds": [
       "MOTHERLODE_PRESS_FIREBOX",
       "MOTHERLODE_PRESS_CRUSHER"
@@ -11310,9 +11308,18 @@
     "description": "Rooftop Agility - Rope Bridge - Rope",
     "baseMaterial": "ROPE",
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.75,
     "objectIds": [
-      "SHIPROPE",
+      "SHIPROPE"
+    ]
+  },
+  {
+    "description": "Rooftop Agility - Rope Bridge - Rope - Diagonal",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 250,
+    "objectIds": [
       "ROOFTOPS_TIGHTROPE_FORDIAGONAL_3",
       "ROOFTOPS_TIGHTROPE_FORDIAGONAL_4",
       "ROOFTOPS_TIGHTROPE_FORDIAGONAL_6"
@@ -16051,7 +16058,7 @@
       "FOSSIL_DECKING_CORNER"
     ],
     "uvType": "MODEL_XZ",
-    "uvOrientation": 512
+    "uvScale": 0.7
   },
   {
     "description": "Chaos Altar - Walls - Path -  Wooden – Plank",
@@ -73365,6 +73372,12 @@
         "uvScale": 0.55
       },
       {
+        "colors": "h == 5 && s == 3",
+        "baseMaterial": "ROPE_DARK",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      },
+      {
         "colors": "h > 8",
         "baseMaterial": "GRAY_85"
       },
@@ -73643,6 +73656,69 @@
         "flatNormals": true,
         "receiveShadows": false
       }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Agility Course Rope",
+    "baseMaterial": "ROPE",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.55,
+    "uvOrientation": -50,
+    "objectIds": [
+      "PRIF_AGILITY_BALANCING_ROPE"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Agility Course Rope Connector",
+    "baseMaterial": "ROPE",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5,
+    "uvOrientation": -50,
+    "objectIds": [
+      "PRIF_AGILITY_TIGHTROPE_START1",
+      "PRIF_AGILITY_TIGHTROPE1",
+      "PRIF_AGILITY_TIGHTROPE_TREETOP_INACTIVE",
+      "PRIF_AGILITY_TIGHTROPE2",
+      "PRIF_AGILITY_TIGHTROPE3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Agility Course Hole",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4,
+    "objectIds": [
+      "PRIF_AGILITY_DARK_HOLE_ACTIVE",
+      "PRIF_AGILITY_DARK_HOLE_INACTIVE",
+      "PRIF_AGILITY_DARK_HOLE_END"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX",
+        "depthBias": 75
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Agility Course Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "uvOrientationX": 50,
+    "objectIds": [
+      "PRIF_AGILITY_TREE_LADDER_LONG",
+      "PRIF_AGILITY_TREE_LADDER_SHORT"
     ]
   },
   {

@@ -23897,7 +23897,7 @@
     ]
   },
   {
-    "description": "TELEPORT_PLATFORM",
+    "description": "PRIF_TELEPORT_PLATFORM",
     "height": 170,
     "alignment": "CENTER",
     "radius": 375,
