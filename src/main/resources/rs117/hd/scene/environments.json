@@ -477,7 +477,7 @@
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
 	"moonColor": "#FF0000",
-	"sunsetStrength": 0.05,
+	"sunStrength": 0.05,
 	"starVisibility": 1,
     "windSpeed": 10,
     "windStrength": 30
@@ -1234,7 +1234,7 @@
     "directionalStrength": 3.5,
     "fogColor": "#13184f",
     "fogDepth": 30,
-    "sunsetStrength": 0.1
+    "sunStrength": 0.1
   },
   {
     "area": "LOVAKENGJ",
@@ -1245,7 +1245,7 @@
     "fogDepth": 40,
     "waterColor": "#b9d6ff",
 	"starVisibility": 0.05,
-	"sunsetStrength": 0.1
+	"sunStrength": 0.1
   },
   {
     "area": "THE_STRANGLEWOOD",
