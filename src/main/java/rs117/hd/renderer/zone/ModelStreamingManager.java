@@ -1,5 +1,6 @@
 package rs117.hd.renderer.zone;
 
+import com.google.inject.Injector;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,6 +32,9 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public class ModelStreamingManager {
 	private static final int RL_RENDER_THREADS = 2;
+
+	@Inject
+	private Injector injector;
 
 	@Inject
 	private Client client;
@@ -118,8 +122,8 @@ public class ModelStreamingManager {
 		}
 
 		for (int i = 0; i < streamingContexts.length; i++) {
-			if(streamingContexts[i] == null)
-				streamingContexts[i] = plugin.getInjector().getInstance(StreamingContext.class);
+			if (streamingContexts[i] == null)
+				streamingContexts[i] = injector.getInstance(StreamingContext.class);
 			streamingContexts[i].renderableCount = 0;
 		}
 	}
