@@ -884,7 +884,8 @@ public class Zone {
 		}
 
 		if(shouldQueueUpload) {
-			lastSortedAlphaFacesUpload = sortedAlphaFacesUpload.queue(lastSortedAlphaFacesUpload);
+			GenericJob prevJob = lastSortedAlphaFacesUpload != sortedAlphaFacesUpload ? lastSortedAlphaFacesUpload : null;
+			lastSortedAlphaFacesUpload = sortedAlphaFacesUpload.queue(prevJob);
 		}
 
 		flush(cmd);

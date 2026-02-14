@@ -186,7 +186,7 @@ public final class JobSystem {
 
 		boolean shouldQueue = true;
 		for (Job dep : dependencies) {
-			if (dep == null || dep.handle == null || dep == item) continue;
+			if (dep == null || dep.handle == null) continue;
 			if (dep.handle.addDependant(newHandle)) {
 				shouldQueue = false;
 			}
