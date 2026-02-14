@@ -527,37 +527,61 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        // Calculate directional fog color based on sun position (matching skybox gradient)
-        vec3 finalFogColor = fogColor;
         if (skyGradientEnabled == 1) {
-            // Get view direction to the fragment
+            // Compute the sky gradient color at this fragment's view direction
+            // so fog blends geometry into the exact sky color behind it
             vec3 viewDir = normalize(IN.position - cameraPos);
 
-            // Calculate sun direction (same transformation as sky shader)
-            vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y, skySunDir.z));
+            // Match sky shader's sun direction transform (with horizon offset)
+            float horizonOffset = 0.087;
+            vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y + horizonOffset, skySunDir.z));
 
-            // Project both vectors onto the horizontal plane for horizontal gradient
+            float upAmount = -viewDir.y;
+
+            // Horizontal sun-facing gradient
             vec3 viewHorizontal = normalize(vec3(viewDir.x, 0.0, viewDir.z));
             vec3 sunHorizontal = normalize(vec3(sunDir.x, 0.0, sunDir.z));
-
-            // Dot product gives us how much we're facing toward/away from sun horizontally
             float sunFacing = dot(viewHorizontal, sunHorizontal);
+            float sunSideBlend = smoothstep(0.0, 1.0, (sunFacing + 1.0) * 0.5);
 
-            // Convert to 0-1 range: 0 = facing away from sun, 1 = facing toward sun
-            float sunSideBlend = (sunFacing + 1.0) * 0.5;
-            sunSideBlend = smoothstep(0.0, 1.0, sunSideBlend);
+            // Vertical zenith-to-horizon blend
+            float zenithBlend = smoothstep(-0.1, 0.7, upAmount);
 
-            // Create dark side fog color (darker, more like zenith)
-            vec3 darkSideFog = fogColor * 0.7;
+            // Sun altitude factors
+            float sunAltitude = clamp(skySunDir.y, 0.0, 1.0);
+            float daytimeFactor = smoothstep(0.0, 0.64, sunAltitude);
+            float dimFadeout = smoothstep(0.0, 0.34, sunAltitude);
+            float darkSideDim = mix(0.7, 1.0, dimFadeout);
+            vec3 darkSideColor = mix(skyZenithColor * darkSideDim, skyHorizonColor, daytimeFactor);
+            vec3 sunSideColor = skyHorizonColor;
 
-            // Create sun side fog color (warmer, brighter)
-            vec3 sunSideFog = mix(fogColor, skyHorizonColor, 0.3);
+            // Night fade for uniform sky at night
+            float nightFade = smoothstep(-0.26, 0.0, skySunDir.y);
 
-            // Blend fog color based on sun facing direction
-            finalFogColor = mix(darkSideFog, sunSideFog, sunSideBlend);
+            vec3 horizonColor = mix(darkSideColor, sunSideColor, sunSideBlend);
+            horizonColor = mix(skyZenithColor, horizonColor, nightFade);
+
+            vec3 skyColorAtFragment = mix(horizonColor, skyZenithColor, zenithBlend);
+
+            // Add sun glow contribution
+            float sunDot = dot(viewDir, sunDir);
+            if (sunDot > 0.0) {
+                float coreGlow = pow(sunDot, 128.0) * 0.4;
+                float innerGlow = pow(sunDot, 32.0) * 0.25;
+                float midGlow = pow(sunDot, 8.0) * 0.15;
+                float outerGlow = pow(sunDot, 2.5) * 0.08;
+                skyColorAtFragment += skySunColor * (coreGlow + innerGlow + midGlow + outerGlow);
+            }
+
+            // At night with stars enabled, blend fog toward star map background color
+            vec3 starMapBgColor = vec3(0.00304, 0.00304, 0.00521); // #0a0a0e in linear
+            float nightStarBlend = (1.0 - nightFade) * starVisibility;
+            skyColorAtFragment = mix(skyColorAtFragment, starMapBgColor, nightStarBlend);
+
+            outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
+        } else {
+            outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
         }
-
-        outputColor.rgb = mix(outputColor.rgb, finalFogColor, combinedFog);
     }
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
