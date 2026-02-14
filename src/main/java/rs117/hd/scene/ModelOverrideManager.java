@@ -3,12 +3,14 @@ package rs117.hd.scene;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.gameval.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.renderer.zone.SceneManager;
@@ -31,6 +33,9 @@ public class ModelOverrideManager {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private Client client;
 
 	@Inject
 	private GamevalManager gamevalManager;
@@ -65,7 +70,6 @@ public class ModelOverrideManager {
 					}
 
 					addOverride(override);
-
 					if (override.hideInAreas.length > 0) {
 						var hider = override.copy();
 						hider.hide = true;
@@ -75,6 +79,7 @@ public class ModelOverrideManager {
 				}
 
 				addOverride(fishingSpotReplacer.getModelOverride());
+				applySailingCulling();
 
 				log.debug("Loaded {} model overrides", modelOverrides.size());
 
@@ -90,6 +95,31 @@ public class ModelOverrideManager {
 				log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 			}
 		}));
+	}
+
+	private void applySailingCulling() {
+		for (Integer dbTableRow : client.getDBTableRows(DBTableID.SailingBoatSail.ID)) {
+			Integer sailID = (Integer) client.getDBTableField(dbTableRow, DBTableID.SailingBoatSail.COL_LOC, 0)[0];
+			if (sailID == null)
+				continue;
+			int uuid = ModelHash.packUuid(ModelHash.TYPE_OBJECT, sailID);
+			ModelOverride existing = modelOverrides.get(uuid);
+			if (existing != null && !existing.isDummy) {
+				existing.disableDetailCulling = true;
+			} else {
+				ModelOverride sailOverride = new ModelOverride();
+				sailOverride.description = "Sailing boat sail (runtime)";
+				sailOverride.objectIds = Set.of(sailID);
+				sailOverride.disableDetailCulling = true;
+				try {
+					sailOverride.normalize(plugin);
+				} catch (IllegalStateException ex) {
+					log.warn("Skipping sail override for object {}: {}", sailID, ex.getMessage());
+					continue;
+				}
+				addOverride(sailOverride);
+			}
+		}
 	}
 
 	public void shutDown() {
