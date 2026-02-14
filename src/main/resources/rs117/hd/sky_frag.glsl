@@ -161,6 +161,9 @@ void main() {
         skyColor += skySunColor * totalGlow;
     }
 
+    // Save sky color before stars are blended in, for opaque moon dark side
+    vec3 skyColorPreStars = skyColor;
+
     // === NIGHT SKY TEXTURE ===
     // Fade in the starfield texture as sun drops below horizon
     // nightFade is already 0 at -15° and 1 at 0°, so we use its inverse
@@ -228,10 +231,12 @@ void main() {
                 float terminatorX = 2.0 * skyMoonIllumination - 1.0;
 
                 // The terminator is an ellipse on the disk surface
-                float clampedY = clamp(localY, -0.99, 0.99);
-                float terminatorEdge = terminatorX * sqrt(max(0.0, 1.0 - clampedY * clampedY));
+                float yy = localY * localY;
+                float terminatorEdge = terminatorX * sqrt(max(0.0, 1.0 - yy));
+                // Widen the smoothstep near the poles where the ellipse curvature is steep
+                float edgeSoftness = mix(0.05, 0.35, yy * yy);
                 // Smooth the terminator edge — lit when localX is LESS than the edge
-                float isLit = smoothstep(terminatorEdge + 0.05, terminatorEdge - 0.05, localX);
+                float isLit = smoothstep(terminatorEdge + edgeSoftness, terminatorEdge - edgeSoftness, localX);
 
                 // Limb darkening: edges of the moon are slightly darker
                 float limbDarkening = mix(0.7, 1.0, normDist * normDist);
@@ -248,8 +253,9 @@ void main() {
                 vec3 surfaceColor = mix(vec3(1.0), vec3(1.0, 0.95, 0.87), mariaTint * 0.3);
 
                 vec3 litColor = skyMoonColor * limbDarkening * surfaceBrightness * surfaceColor;
-                // Dark side blends toward sky color with slight darkening for subtle visibility
-                vec3 darkSideMoon = skyColor * 0.95;
+                // Dark side: use sky gradient (pre-stars) so it occludes stars at night
+                // while naturally matching the sky color during dawn/dusk
+                vec3 darkSideMoon = skyColorPreStars;
                 vec3 moonFinalColor = mix(darkSideMoon, litColor, isLit);
                 float moonAlpha = moonDisk * moonDayAlpha;
 
