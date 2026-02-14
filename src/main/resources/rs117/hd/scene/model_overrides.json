@@ -31616,7 +31616,8 @@
     "uvOrientation": 256,
     "objectIds": [
       "DEBRIS01_AUBURN01_LUMBER02_SAWDUST01",
-      "DEBRIS01_AUBURN01_LUMBER01_SAWDUST01"
+      "DEBRIS01_AUBURN01_LUMBER01_SAWDUST01",
+      "PRIF_SAWDUST"
     ]
   },
   {
@@ -73129,7 +73130,8 @@
       "PRIF_AMLODD_HOUSE_SUPPORT_SE",
       "PRIF_AMLODD_HOUSE_SUPPORT_NW",
       "PRIF_YEWTREE",
-      "PRIF_YEWTREE_STUMP"
+      "PRIF_YEWTREE_STUMP",
+      "PRIF_BENCH"
     ]
   },
   {
@@ -73676,6 +73678,23 @@
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Sawmill",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "PRIF_SAWMILL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "flatNormals": true
       }
     ]
   },
