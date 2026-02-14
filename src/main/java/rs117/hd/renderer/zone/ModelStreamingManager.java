@@ -107,7 +107,6 @@ public class ModelStreamingManager {
 		log.debug("Initialized Async Cached Model Pool with {} models", maxModelCount);
 	}
 
-
 	public void update() {
 		for (int i = 0; i < streamingContexts.length; i++) {
 			if (streamingContexts[i] == null)

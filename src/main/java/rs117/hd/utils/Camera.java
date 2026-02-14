@@ -31,7 +31,7 @@ public class Camera {
 	private final float[] orientation = new float[2];
 	private final int[] fixedOrientation = new int[2]; // TODO: Is there a reliable way to go from orientation -> Fixed?
 
-	private int dirtyFlags = PROJ_CHANGED | VIEW_CHANGED;
+	private volatile int dirtyFlags = PROJ_CHANGED | VIEW_CHANGED;
 
 	@Getter
 	private int viewportWidth = 10;
