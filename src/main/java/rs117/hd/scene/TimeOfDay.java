@@ -128,7 +128,7 @@ public class TimeOfDay
 	}
 
 
-	public static float[] getEnhancedSkyColor(double[] latLong, float dayLength, float[] regionalFogColor) {
+	public static float[] getEnhancedSkyColor(double[] latLong, float dayLength, float[] regionalFogColor, float sunsetStrength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 		
@@ -158,9 +158,50 @@ public class TimeOfDay
 		float[] enhancedColorSrgb = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, skyColorKeyframes);
 		// Convert to linear for blending
 		float[] enhancedColor = rs117.hd.utils.ColorUtils.srgbToLinear(enhancedColorSrgb);
-		
+
+		// Apply sunsetStrength: suppress procedural sunset colors for dark environments
+		// For positive altitudes, keep full suppression — the regional blend will take over.
+		// For negative altitudes, fade suppression out by -25° where night colors dominate.
+		if (sunsetStrength < 1.0f && regionalFogColor != null) {
+			float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
+			float[] nightSkyLin = rs117.hd.utils.ColorUtils.srgbToLinear(
+				new float[] { 15f / 255f, 20f / 255f, 35f / 255f }
+			);
+
+			float suppressionWindow;
+			if (sunAltitudeDegrees >= 0) {
+				suppressionWindow = 1.0f; // Full suppression above horizon
+			} else if (sunAltitudeDegrees <= -25) {
+				suppressionWindow = 0.0f;
+			} else {
+				float st = (float) (-sunAltitudeDegrees / 25.0);
+				suppressionWindow = 1.0f - st * st * (3.0f - 2.0f * st);
+			}
+
+			float suppression = (1.0f - sunsetStrength) * suppressionWindow;
+			if (suppression > 0.0f) {
+				// Smooth crossfade between regional and night sky blend targets
+				float nightMix;
+				if (sunAltitudeDegrees <= -5) {
+					nightMix = 1.0f;
+				} else if (sunAltitudeDegrees >= 5) {
+					nightMix = 0.0f;
+				} else {
+					float nm = (float) ((5.0 - sunAltitudeDegrees) / 10.0);
+					nightMix = nm * nm * (3.0f - 2.0f * nm);
+				}
+				float[] blendTarget = new float[3];
+				for (int i = 0; i < 3; i++) {
+					blendTarget[i] = regionalLin[i] * (1 - nightMix) + nightSkyLin[i] * nightMix;
+				}
+
+				for (int i = 0; i < 3; i++) {
+					enhancedColor[i] = enhancedColor[i] * (1 - suppression) + blendTarget[i] * suppression;
+				}
+			}
+		}
+
 		// Smoothstep blend from peak sunset (0°) to full regional (40°)
-		// S-curve: starts slow, accelerates in middle, slows at end
 		float blendFactor;
 		if (sunAltitudeDegrees >= 40) {
 			blendFactor = 1.0f;
@@ -170,7 +211,7 @@ public class TimeOfDay
 		} else {
 			blendFactor = 0.0f;
 		}
-		
+
 		// Convert regional fog color from sRGB to linear RGB for proper blending
 		float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
 		
@@ -193,7 +234,7 @@ public class TimeOfDay
 	 * All colors are in sRGB space.
 	 * @param regionalFogColor The regional fog color to blend with during peak daytime (sRGB)
 	 */
-	public static float[][] getSkyGradientColors(double[] latLong, float dayLength, float[] regionalFogColor) {
+	public static float[][] getSkyGradientColors(double[] latLong, float dayLength, float[] regionalFogColor, float sunsetStrength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
@@ -245,8 +286,55 @@ public class TimeOfDay
 		float[] horizonColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, horizonKeyframes);
 		float[] sunGlowColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, sunGlowKeyframes);
 
+		// Apply sunsetStrength: suppress procedural sunset colors for dark environments
+		// For positive altitudes, keep full suppression — the regional blend will take over.
+		// For negative altitudes, fade suppression out by -25° where night colors dominate.
+		if (sunsetStrength < 1.0f && regionalFogColor != null) {
+			float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
+			float[] nightSkyLin = rs117.hd.utils.ColorUtils.srgbToLinear(
+				new float[] { 15f / 255f, 20f / 255f, 35f / 255f }
+			);
+
+			float suppressionWindow;
+			if (sunAltitudeDegrees >= 0) {
+				suppressionWindow = 1.0f; // Full suppression above horizon
+			} else if (sunAltitudeDegrees <= -25) {
+				suppressionWindow = 0.0f;
+			} else {
+				float st = (float) (-sunAltitudeDegrees / 25.0);
+				suppressionWindow = 1.0f - st * st * (3.0f - 2.0f * st);
+			}
+
+			float suppression = (1.0f - sunsetStrength) * suppressionWindow;
+			if (suppression > 0.0f) {
+				// Smooth crossfade between regional and night sky blend targets
+				// around 0° to avoid a hard color jump at the horizon
+				float nightMix;
+				if (sunAltitudeDegrees <= -5) {
+					nightMix = 1.0f;
+				} else if (sunAltitudeDegrees >= 5) {
+					nightMix = 0.0f;
+				} else {
+					float nm = (float) ((5.0 - sunAltitudeDegrees) / 10.0);
+					nightMix = nm * nm * (3.0f - 2.0f * nm);
+				}
+				float[] blendTarget = new float[3];
+				for (int i = 0; i < 3; i++) {
+					blendTarget[i] = regionalLin[i] * (1 - nightMix) + nightSkyLin[i] * nightMix;
+				}
+
+				for (int i = 0; i < 3; i++) {
+					zenithColor[i] = zenithColor[i] * (1 - suppression) + blendTarget[i] * suppression;
+					horizonColor[i] = horizonColor[i] * (1 - suppression) + blendTarget[i] * suppression;
+				}
+				// Suppress sun glow toward zero (it's additive)
+				for (int i = 0; i < 3; i++) {
+					sunGlowColor[i] = sunGlowColor[i] * (1 - suppression);
+				}
+			}
+		}
+
 		// Smoothstep blend from peak sunset (0°) to full regional (40°)
-		// S-curve: starts slow, accelerates in middle, slows at end
 		float blendFactor;
 		if (sunAltitudeDegrees >= 40) {
 			blendFactor = 1.0f;

@@ -1022,13 +1022,13 @@ public class LegacyRenderer implements Renderer {
 				sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
 
 				float[] originalRegionalFogColor = fogColor;
-				fogColor = TimeOfDay.getEnhancedSkyColor(plugin.latLong, cycleDuration, originalRegionalFogColor);
+				fogColor = TimeOfDay.getEnhancedSkyColor(plugin.latLong, cycleDuration, originalRegionalFogColor, environmentManager.currentSunsetStrength);
 				// Convert fogColor (sRGB) to linear for waterColor to match expected format
 				waterColor = ColorUtils.srgbToLinear(fogColor);
 
 				// Calculate sky gradient colors for realistic sky rendering
 				// Pass regional fog color to blend with during peak daytime
-				float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(plugin.latLong, cycleDuration, originalRegionalFogColor);
+				float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(plugin.latLong, cycleDuration, originalRegionalFogColor, environmentManager.currentSunsetStrength);
 				float[] sunDirForSky = TimeOfDay.getSunDirectionForSky(plugin.latLong, cycleDuration);
 
 				plugin.uboGlobal.skyGradientEnabled.set(1);

@@ -159,6 +159,10 @@ public class EnvironmentManager {
 	public float currentStarVisibility = 1f;
 	private float targetStarVisibility = 1f;
 
+	private float startSunsetStrength = 1f;
+	public float currentSunsetStrength = 1f;
+	private float targetSunsetStrength = 1f;
+
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
 
@@ -291,6 +295,7 @@ public class EnvironmentManager {
 			currentWindStrength = mix(startWindStrength, targetWindStrength, t);
 			currentWindCeiling = mix(startWindCeiling, targetWindCeiling, t);
 			currentStarVisibility = mix(startStarVisibility, targetStarVisibility, t);
+			currentSunsetStrength = mix(startSunsetStrength, targetSunsetStrength, t);
 		}
 
 		updateLightning();
@@ -344,6 +349,7 @@ public class EnvironmentManager {
 		startWindStrength = currentWindStrength;
 		startWindCeiling = currentWindCeiling;
 		startStarVisibility = currentStarVisibility;
+		startSunsetStrength = currentSunsetStrength;
 		for (int i = 0; i < 2; i++)
 			startSunAngles[i] = mod(currentSunAngles[i], TWO_PI);
 
@@ -378,6 +384,7 @@ public class EnvironmentManager {
 		targetWindStrength = env.windStrength;
 		targetWindCeiling = env.windCeiling;
 		targetStarVisibility = env.starVisibility;
+		targetSunsetStrength = env.sunsetStrength;
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
