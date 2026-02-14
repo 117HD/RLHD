@@ -644,6 +644,28 @@ public interface HdPluginConfig extends Config
 		return 35;
 	}
 
+	@ConfigItem(
+		keyName = "enableStarMap",
+		name = "Star Map",
+		description = "Show the star map texture in the night sky. When disabled, the night sky uses only the gradient skybox.",
+		position = 3,
+		section = daylightCycleSettings
+	)
+	default boolean enableStarMap() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "enableMoon",
+		name = "Moon",
+		description = "Show the moon in the night sky.",
+		position = 4,
+		section = daylightCycleSettings
+	)
+	default boolean enableMoon() {
+		return true;
+	}
+
 	String KEY_SEASONAL_THEME = "seasonalTheme";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_THEME,
@@ -1176,6 +1198,8 @@ public interface HdPluginConfig extends Config
 	String KEY_DAYLIGHT_CYCLE = "daylightCycle";
 	String KEY_CYCLE_DURATION = "cycleDurationMinutes";
 	String KEY_MINIMUM_BRIGHTNESS = "minimumBrightness";
+	String KEY_ENABLE_STAR_MAP = "enableStarMap";
+	String KEY_ENABLE_MOON = "enableMoon";
 	@ConfigItem(
 		keyName = KEY_ASYNC_UI_COPY,
 		name = "Perform UI copy asynchronously",
