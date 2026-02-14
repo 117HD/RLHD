@@ -381,14 +381,12 @@ public class ModelStreamingManager {
 		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.project(objectWorldPos);
 
-		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
-		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, streamingContext.worldPos);
+		final int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
 
 		// Cull based on detail draw distance
 		float squaredDistance = renderer.sceneCamera.squaredDistanceTo(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2]);
 		int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
-		if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles &&
-			!modelOverride.disableDetailCulling)
+		if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles && !modelOverrideManager.getDetailDrawCullAllowed(uuid))
 			return;
 
 		// Hide everything outside the current area if area hiding is enabled
@@ -405,6 +403,7 @@ public class ModelStreamingManager {
 		}
 
 		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), streamingContext.worldPos);
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, streamingContext.worldPos);
 		if (modelOverride.hide)
 			return;
 

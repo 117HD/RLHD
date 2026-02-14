@@ -2,6 +2,8 @@ package rs117.hd.scene;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -48,6 +50,8 @@ public class ModelOverrideManager {
 
 	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
 
+	private final HashSet<Integer> detailDrawBlockList = new HashSet<>();
+
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	public void startUp() {
@@ -80,6 +84,12 @@ public class ModelOverrideManager {
 
 				addOverride(fishingSpotReplacer.getModelOverride());
 				applySailingCulling();
+
+				detailDrawBlockList.clear();
+				for (Map.Entry<Integer, ModelOverride> entry : modelOverrides.entrySet()) {
+					if(entry.getValue().disableDetailCulling)
+						detailDrawBlockList.add(entry.getKey());
+				}
 
 				log.debug("Loaded {} model overrides", modelOverrides.size());
 
@@ -220,6 +230,10 @@ public class ModelOverrideManager {
 			for (var area : entry.areas)
 				current.areaOverrides.put(area, entry);
 		}
+	}
+
+	public boolean getDetailDrawCullAllowed(int uuid) {
+		return detailDrawBlockList.contains(uuid);
 	}
 
 	@Nonnull
