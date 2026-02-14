@@ -257,13 +257,13 @@ void main() {
                 // with a subtle moon-colored earthshine so it reads as shadowed lunar surface
                 vec3 darkSideMoon = skyColorPreStars + skyMoonColor * 0.02;
                 vec3 moonFinalColor = mix(darkSideMoon, litColor, isLit);
-                float moonAlpha = moonDisk * moonDayAlpha;
+                float moonAlpha = moonDisk * moonDayAlpha * moonVisibility;
 
                 skyColor = mix(skyColor, moonFinalColor, moonAlpha);
             }
 
             // Subtle atmospheric glow around the moon (also faded by daytime transparency)
-            float moonGlow = pow(moonDot, 256.0) * 0.05 * skyMoonIllumination * moonDayAlpha;
+            float moonGlow = pow(moonDot, 256.0) * 0.05 * skyMoonIllumination * moonDayAlpha * moonVisibility;
             skyColor += skyMoonColor * moonGlow;
         }
     }

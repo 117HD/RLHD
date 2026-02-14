@@ -680,6 +680,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skyMoonColor.set(moonColor);
 			plugin.uboGlobal.skyMoonIllumination.set(moonIllumination);
 			plugin.uboGlobal.starVisibility.set(environmentManager.currentStarVisibility);
+			plugin.uboGlobal.moonVisibility.set(environmentManager.currentMoonVisibility);
 
 			skyGradientEnabled = true;
 

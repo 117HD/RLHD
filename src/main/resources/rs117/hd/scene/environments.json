@@ -1245,7 +1245,8 @@
     "fogDepth": 40,
     "waterColor": "#b9d6ff",
 	"starVisibility": 0.05,
-	"sunStrength": 0.1
+	"sunStrength": 0.1,
+	"moonVisibility": 0.05
   },
   {
     "area": "THE_STRANGLEWOOD",

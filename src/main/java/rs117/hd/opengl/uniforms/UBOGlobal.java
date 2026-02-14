@@ -78,4 +78,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	// Star visibility (from environment override)
 	public Property starVisibility = addProperty(PropertyType.Float, "starVisibility");
+
+	// Moon visibility (from environment override)
+	public Property moonVisibility = addProperty(PropertyType.Float, "moonVisibility");
 }
