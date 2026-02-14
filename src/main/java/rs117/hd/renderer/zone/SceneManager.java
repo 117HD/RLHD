@@ -197,17 +197,16 @@ public class SceneManager {
 			}
 		}
 
-		// TODO: Wait for zone invalidations without blocking other async loading
 		// Ensure any queued zone invalidations are now completed
-//		root.completeInvalidation();
-//
-//		if (wv != null) {
-//			for (WorldEntity we : wv.worldEntities()) {
-//				WorldViewContext ctx = getContext(we.getWorldView());
-//				if (ctx != null)
-//					ctx.completeInvalidation();
-//			}
-//		}
+		root.completeInvalidation();
+
+		if (wv != null) {
+			for (WorldEntity we : wv.worldEntities()) {
+			WorldViewContext ctx = getContext(we.getWorldView());
+				if (ctx != null)
+					ctx.completeInvalidation();
+			}
+		}
 	}
 
 	private void updateAreaHiding() {
@@ -310,11 +309,7 @@ public class SceneManager {
 		if (ctx == null)
 			return;
 
-		Zone zone = ctx.zones[zx][zz];
-		if (zone.rebuild)
-			return;
-
-		zone.rebuild = true;
+		ctx.invalidateZone(zx, zz);
 		log.trace("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
 	}
 

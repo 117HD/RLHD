@@ -234,30 +234,18 @@ public class WorldViewContext {
 		}
 	}
 
-	boolean update(float deltaTime) {
-		if (isLoading)
-			return false;
-
+	void update(float deltaTime) {
 		Zone cullZone;
 		while ((cullZone = pendingCull.poll()) != null) {
 			log.trace("Culling zone({})", cullZone.hashCode());
 			cullZone.free();
 		}
 
-		boolean queuedWork = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				handleZoneSwap(deltaTime, x, z);
-
-				if (zones[x][z].rebuild) {
-					zones[x][z].rebuild = false;
-					invalidateZone(x, z);
-					queuedWork = true;
-				}
 			}
 		}
-
-		return queuedWork;
 	}
 
 	int getSortedAlphaCount() {
