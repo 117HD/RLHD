@@ -1,7 +1,6 @@
 package rs117.hd.renderer.zone;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -57,15 +56,26 @@ public class ModelStreamingManager {
 	@Inject
 	private ZoneRenderer renderer;
 
-	private final int[] drawnDynamicRenderableCount = new int[RL_RENDER_THREADS + 1];
-	private final int[][] asyncWorldPos = new int[RL_RENDER_THREADS + 1][3];
-	private final float[][] asyncObjectProjectedPos = new float[RL_RENDER_THREADS + 1][4];
-
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final PrimitiveIntArray clientVisibleFaces = new PrimitiveIntArray();
 	private final PrimitiveIntArray clientCulledFaces = new PrimitiveIntArray();
 
 	private boolean disabledRenderThreads;
+
+	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
+		static final class StreamingContext {
+		final int[] worldPos = new int[3];
+		final float[] objectWorldPos = new float[4];
+		int renderableCount;
+	}
+
+	StreamingContext context(int renderThreadId) {
+		return streamingContexts[renderThreadId + 1];
+	}
+
+	StreamingContext context() {
+		return context(0);
+	}
 
 	public int gpuFlags() {
 		int flags = 0;
@@ -107,13 +117,17 @@ public class ModelStreamingManager {
 			client.setGpuFlags(plugin.gpuFlags);
 		}
 
-		Arrays.fill(drawnDynamicRenderableCount, 0);
+		for (int i = 0; i < streamingContexts.length; i++) {
+			if(streamingContexts[i] == null)
+				streamingContexts[i] = plugin.getInjector().getInstance(StreamingContext.class);
+			streamingContexts[i].renderableCount = 0;
+		}
 	}
 
 	public int getDrawnDynamicRenderableCount() {
 		int count = 0;
-		for (int i = 0; i < drawnDynamicRenderableCount.length; i++)
-			count += drawnDynamicRenderableCount[i];
+		for (int i = 0; i < streamingContexts.length; i++)
+			count += streamingContexts[i].renderableCount;
 		return count;
 	}
 
@@ -122,7 +136,8 @@ public class ModelStreamingManager {
 		if (ctx == null || (!sceneManager.isRoot(ctx) && ctx.isLoading) || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
-		ctx.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane(), asyncWorldPos[0]);
+		final StreamingContext streamingContext = context();
+		ctx.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane(), streamingContext.worldPos);
 		// Hide everything outside the current area if area hiding is enabled
 		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == -1) {
 			var base = ctx.sceneContext.sceneBase;
@@ -138,7 +153,7 @@ public class ModelStreamingManager {
 		Renderable renderable = gameObject.getRenderable();
 		int uuid = ModelHash.generateUuid(client, gameObject.getHash(), renderable);
 
-		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, asyncWorldPos[0]);
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, streamingContext.worldPos);
 		if (modelOverride.hide)
 			return;
 
@@ -149,7 +164,7 @@ public class ModelStreamingManager {
 
 		m.calculateBoundsCylinder();
 
-		final float[] objectWorldPos = vec4(asyncObjectProjectedPos[0], x, y, z, 1.0f);
+		final float[] objectWorldPos = vec4(streamingContext.objectWorldPos, x, y, z, 1.0f);
 		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.project(objectWorldPos);
 
@@ -353,7 +368,8 @@ public class ModelStreamingManager {
 		if (!zone.initialized)
 			return;
 
-		final float[] objectWorldPos = vec4(asyncObjectProjectedPos[renderThreadId + 1], x, y, z, 1.0f);
+		final StreamingContext streamingContext = context(renderThreadId);
+		final float[] objectWorldPos = vec4(streamingContext.objectWorldPos, x, y, z, 1.0f);
 		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.project(objectWorldPos);
 
@@ -377,10 +393,9 @@ public class ModelStreamingManager {
 				return;
 		}
 
-		final int[] tileWorldPos = asyncWorldPos[renderThreadId + 1];
-		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), tileWorldPos);
+		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), streamingContext.worldPos);
 		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
-		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, tileWorldPos);
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, streamingContext.worldPos);
 		if (modelOverride.hide)
 			return;
 
@@ -400,7 +415,7 @@ public class ModelStreamingManager {
 		)) {
 			return;
 		}
-		drawnDynamicRenderableCount[renderThreadId + 1]++;
+		streamingContext.renderableCount++;
 
 		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 		final boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
