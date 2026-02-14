@@ -298,7 +298,7 @@ public class ModelStreamingManager {
 			// because they are not depth tested. transparent player faces don't need their own vao because normal
 			// transparent faces are already not depth tested
 			final VAO.VAOView opaqueView = ctx.beginDraw(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE, visibleFaces.length);
-			final VAO.VAOView alphaView = hasAlpha && !isSquashed ? ctx.beginDraw(VAO_ALPHA, visibleFaces.length) : opaqueView;
+			final VAO.VAOView alphaView = hasAlpha ? ctx.beginDraw(VAO_ALPHA, visibleFaces.length) : opaqueView;
 
 			sceneUploader.uploadTempModel(
 				visibleFaces,
@@ -307,7 +307,7 @@ public class ModelStreamingManager {
 				preOrientation,
 				orientation,
 				isSquashed,
-				!isSquashed,
+				isSquashed,
 				opaqueView,
 				alphaView
 			);
@@ -545,7 +545,7 @@ public class ModelStreamingManager {
 					preOrientation,
 					orient,
 					isSquashed,
-					!isSquashed,
+					isSquashed,
 					opaqueView,
 					alphaView
 				);
