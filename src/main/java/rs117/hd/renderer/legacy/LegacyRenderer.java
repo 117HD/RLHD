@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -71,6 +72,7 @@ import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
+@Singleton
 public class LegacyRenderer implements Renderer {
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex

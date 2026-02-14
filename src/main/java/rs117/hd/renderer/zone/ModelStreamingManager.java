@@ -27,10 +27,16 @@ import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
-@Singleton
 @Slf4j
+@Singleton
 public class ModelStreamingManager {
 	private static final int RL_RENDER_THREADS = 2;
+
+	@Inject
+	private Client client;
+
+	@Inject
+	private RenderCallbackManager renderCallbackManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -39,19 +45,13 @@ public class ModelStreamingManager {
 	private HdPluginConfig config;
 
 	@Inject
-	private Client client;
-
-	@Inject
 	private SceneManager sceneManager;
 
 	@Inject
-	private RenderCallbackManager renderCallbackManager;
+	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
 	private FrameTimer frameTimer;
-
-	@Inject
-	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
 	private ZoneRenderer renderer;
