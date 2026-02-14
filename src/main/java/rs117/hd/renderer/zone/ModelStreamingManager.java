@@ -276,12 +276,15 @@ public class ModelStreamingManager {
 		);
 
 		final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-		if (shouldSort && !isSquashed) {
+		if (shouldSort && !isSquashed)
 			facePrioritySorter.sortModelFaces(visibleFaces, m);
-		}
 
 		final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
-		if (culledFaces.length > 0 && modelOverride.castShadows && plugin.configShadowMode != ShadowMode.OFF && (!sceneManager.isRoot(ctx) || zone.inShadowFrustum)) {
+		if (culledFaces.length > 0 &&
+			modelOverride.castShadows &&
+			plugin.configShadowMode != ShadowMode.OFF &&
+			(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
+		) {
 			final VAO.VAOView shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 			sceneUploader.uploadTempModel(
 				culledFaces,
@@ -519,11 +522,14 @@ public class ModelStreamingManager {
 			);
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (shouldSort && !isSquashed) {
+			if (shouldSort && !isSquashed)
 				facePrioritySorter.sortModelFaces(visibleFaces, m);
-			}
 
-			if (culledFaces.length > 0 && modelOverride.castShadows && plugin.configShadowMode != ShadowMode.OFF && (!sceneManager.isRoot(ctx) || zone.inShadowFrustum)) {
+			if (culledFaces.length > 0 &&
+				modelOverride.castShadows &&
+				plugin.configShadowMode != ShadowMode.OFF &&
+				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
+			) {
 				final VAO.VAOView shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
 					culledFaces,

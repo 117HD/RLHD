@@ -1737,7 +1737,7 @@ public class SceneUploader implements AutoCloseable {
 			final float pZ = projected[2];
 
 			// Vertex is behind the camera and therefore isn't visible
-			if(pZ <= 0.0f)
+			if (pZ <= 0.0f)
 				visibility[v] = allVertsVisible = false;
 
 			modelLocal[vertexOffset] = vertexX;
@@ -1913,7 +1913,7 @@ public class SceneUploader implements AutoCloseable {
 			Material material = baseMaterial;
 			ModelOverride faceOverride = modelOverride;
 
-			if(!disableTextures) {
+			if (!disableTextures) {
 				if (textureId != -1) {
 					color1 = color2 = color3 = 90;
 					uvType = UvType.VANILLA;
