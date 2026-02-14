@@ -3,7 +3,7 @@ package rs117.hd.config;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum CpuUsage {
+public enum CpuUsageLimit {
 	MAX(1),
 	HIGH(0.75f),
 	MEDIUM(0.5f),

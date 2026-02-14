@@ -11,8 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
-import rs117.hd.config.CpuUsage;
+import rs117.hd.config.CpuUsageLimit;
 import rs117.hd.overlays.FrameTimer;
 
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
@@ -53,7 +52,7 @@ public final class JobSystem {
 	Worker[] workers;
 	Semaphore workerSemaphore;
 
-	public void startUp(CpuUsage cpuUsageLimit) {
+	public void startUp(CpuUsageLimit cpuUsageLimit) {
 		workerCount = max(1, ceil((PROCESSOR_COUNT - 1) * cpuUsageLimit.threadRatio));
 		workers = new Worker[workerCount];
 		workerSemaphore = new Semaphore(workerCount);

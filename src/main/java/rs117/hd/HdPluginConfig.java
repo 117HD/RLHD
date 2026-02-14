@@ -35,7 +35,7 @@ import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
-import rs117.hd.config.CpuUsage;
+import rs117.hd.config.CpuUsageLimit;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
@@ -790,8 +790,8 @@ public interface HdPluginConfig extends Config
 		section = miscellaneousSettings,
 		position = -100
 	)
-	default CpuUsage cpuUsageLimit() {
-		return CpuUsage.MAX;
+	default CpuUsageLimit cpuUsageLimit() {
+		return CpuUsageLimit.MAX;
 	}
 
 	String KEY_POWER_SAVING = "powerSaving";
