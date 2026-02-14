@@ -317,11 +317,6 @@ public class WorldViewContext {
 		Zone curZone = zones[zx][zz];
 		float prevUploadDelay = -1.0f;
 		if (curZone.uploadJob != null) {
-			if(curZone.uploadJob.isQueued()) {
-				// No need to cancel as the upload task hasn't started yet
-				// Therefore it'll pick up any new changes to the zone
-				return;
-			}
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
 				curZone.hashCode(),
