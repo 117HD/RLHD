@@ -73661,6 +73661,35 @@
     ]
   },
   {
+    "description": "Tirannwn - Prifddinas - Clan Banners",
+    "baseMaterial": "CARPET_SUPER_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "PRIF_CLAN_BANNER_CRWYS",
+      "PRIF_CLAN_BANNER_CADARN",
+      "PRIF_CLAN_BANNER_TRAHAEARN",
+      "PRIF_CLAN_BANNER_IORWERTH",
+      "PRIF_CLAN_BANNER_ITHELL",
+      "PRIF_CLAN_BANNER_AMLODD",
+      "PRIF_CLAN_BANNER_HEFIN",
+      "PRIF_CLAN_BANNER_MEILYR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 41",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "Tirannwn - Prifddinas - Elf Altar",
     "baseMaterial": "CARPET_LIGHT",
     "uvScale": 0.55,
