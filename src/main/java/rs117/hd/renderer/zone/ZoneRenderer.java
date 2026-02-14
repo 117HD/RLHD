@@ -150,8 +150,6 @@ public class ZoneRenderer implements Renderer {
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
 
-	public final HashSet<Integer> detailDrawBlockList = new HashSet<>();
-
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
@@ -190,13 +188,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(renderState, uboWorldViews);
-
-		// Create blocklist for models that shouldn't be culled by the detail distance check
-		detailDrawBlockList.clear();
-		for (Map.Entry<String, Integer> entry : gamevalManager.getObjects().entrySet()) {
-			if (entry.getKey().startsWith("SAILING_BOAT_SAIL_"))
-				detailDrawBlockList.add(entry.getValue());
-		}
+		
 	}
 
 	@Override
