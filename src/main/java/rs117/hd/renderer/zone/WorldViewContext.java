@@ -295,6 +295,8 @@ public class WorldViewContext {
 
 		for (int i = 0; i < VAO_COUNT; i++) {
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
+				if (vaos[k][i] == null)
+					continue;
 				final ArrayDeque<VAO> POOL = vaos[k][i].hasStagingBuffer() ? VAO_STAGING_POOL : VAO_POOL;
 				if (POOL.size() > 24) {
 					vaos[k][i].destroy();
