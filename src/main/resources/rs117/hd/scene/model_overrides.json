@@ -73659,6 +73659,27 @@
     ]
   },
   {
+    "description": "Tirannwn - Prifddinas - Elf Altar",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvScale": 0.55,
+    "uvType": "BOX",
+    "objectIds": [
+      "ELF_VILLAGE_ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
     "description": "Tirannwn - Prifddinas - Agility Course Rope",
     "baseMaterial": "ROPE",
     "uvType": "MODEL_XZ",
@@ -74075,7 +74096,7 @@
     ]
   },
   {
-    "description": "Great Conch - Sandpit",
+    "description": "Sandpit",
     "baseMaterial": "GRAVEL_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -74089,7 +74110,8 @@
       }
     ],
     "objectIds": [
-      "SANDPIT_2"
+      "SANDPIT_2",
+      "PRIF_SANDPIT"
     ]
   },
   {
