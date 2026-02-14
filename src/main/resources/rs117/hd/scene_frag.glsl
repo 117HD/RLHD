@@ -579,6 +579,10 @@ void main() {
             skyColorAtFragment = mix(skyColorAtFragment, starMapBgColor, nightStarBlend);
 
             outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
+
+            // Dithering to reduce color banding in fog gradients
+            float dither = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453123) - 0.5;
+            outputColor.rgb += dither / 255.0;
         } else {
             outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
         }
