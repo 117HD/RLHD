@@ -253,9 +253,9 @@ void main() {
                 vec3 surfaceColor = mix(vec3(1.0), vec3(1.0, 0.95, 0.87), mariaTint * 0.3);
 
                 vec3 litColor = skyMoonColor * limbDarkening * surfaceBrightness * surfaceColor;
-                // Dark side: use sky gradient (pre-stars) so it occludes stars at night
-                // while naturally matching the sky color during dawn/dusk
-                vec3 darkSideMoon = skyColorPreStars;
+                // Dark side: always opaque (occludes stars). Use the pre-star sky gradient
+                // with a subtle moon-colored earthshine so it reads as shadowed lunar surface
+                vec3 darkSideMoon = skyColorPreStars + skyMoonColor * 0.02;
                 vec3 moonFinalColor = mix(darkSideMoon, litColor, isLit);
                 float moonAlpha = moonDisk * moonDayAlpha;
 
