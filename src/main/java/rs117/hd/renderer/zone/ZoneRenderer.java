@@ -691,6 +691,7 @@ public class ZoneRenderer implements Renderer {
 			float moonIllumFrac = moonIllumination;
 			float shadowVisibility;
 
+			float sunStrength = environmentManager.currentSunStrength;
 			if (sunAltitudeDegrees > 2) {
 				// Sun shadows (existing behavior)
 				if (sunAltitudeDegrees <= 12) {
