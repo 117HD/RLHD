@@ -1687,10 +1687,12 @@ public class HdPlugin extends Plugin {
 				return;
 
 			try {
+				// TODO: Move this synchronization into the renderer, as this is only used by ZoneRenderer
 				sceneManager.getLoadingLock().lock();
 				sceneManager.completeAllStreaming();
 
 				// Synchronize with scene loading
+				// TODO: Move this synchronization into the renderer, as this is only used by LegacyRenderer
 				synchronized (this) {
 					updateCachedConfigs();
 

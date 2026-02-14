@@ -70,6 +70,7 @@ public final class GLMappedBuffer {
 
 	public GLMappedBuffer map(int flags, long offsetBytes, long sizeBytes) {
 		if (mappedBuffer != null) {
+			// TODO: Consider erroring on duplicate call to map, since we're resetting positions here
 			mappedBuffer.position(0);
 			mappedIntBuffer.position(0);
 			mappedFloatBuffer.position(0);
