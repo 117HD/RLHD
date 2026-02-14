@@ -78,7 +78,7 @@ public class ModelStreamingManager {
 	}
 
 	StreamingContext context() {
-		return context(0);
+		return streamingContexts[0];
 	}
 
 	public int gpuFlags() {
@@ -107,7 +107,14 @@ public class ModelStreamingManager {
 		log.debug("Initialized Async Cached Model Pool with {} models", maxModelCount);
 	}
 
+
 	public void update() {
+		for (int i = 0; i < streamingContexts.length; i++) {
+			if (streamingContexts[i] == null)
+				streamingContexts[i] = injector.getInstance(StreamingContext.class);
+			streamingContexts[i].renderableCount = 0;
+		}
+
 		if (AsyncCachedModel.POOL == null)
 			return;
 
@@ -119,12 +126,6 @@ public class ModelStreamingManager {
 		} else if (disabledRenderThreads) {
 			disabledRenderThreads = false;
 			client.setGpuFlags(plugin.gpuFlags);
-		}
-
-		for (int i = 0; i < streamingContexts.length; i++) {
-			if (streamingContexts[i] == null)
-				streamingContexts[i] = injector.getInstance(StreamingContext.class);
-			streamingContexts[i].renderableCount = 0;
 		}
 	}
 
