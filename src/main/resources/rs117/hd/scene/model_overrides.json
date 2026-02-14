@@ -29417,7 +29417,7 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Objects - Hay - Hay Bale",
+    "description": "Objects - Hay - Hay Bale - Vanilla Textured",
     "textureMaterial": "HD_HAY",
     "objectIds": [
       "HAYSTACK",
@@ -29428,6 +29428,16 @@
     "uvOrientationY": 512,
     "uvOrientationZ": 512,
     "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Hay Bale",
+    "baseMaterial": "HD_HAY",
+    "objectIds": [
+      "VC_HAYSTACK2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512
   },
   {
     "description": "Edgeville - Walls - Bank Front Windows - Tutorial Island Walls",
@@ -56332,9 +56342,7 @@
       "FAI_VARROCK_FEATHER_BARREL"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientationX": 512,
-    "retainVanillaUvs": false,
+    "uvScale": 0.6,
     "colorOverrides": [
       {
         "description": "Feathers",
@@ -73686,6 +73694,22 @@
       {
         "colors": "h == 41",
         "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Archery Target",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "PRIF_TARGET"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 9 || h == 40",
+        "baseMaterial": "GRAY_75"
       }
     ]
   },
