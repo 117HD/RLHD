@@ -12,6 +12,7 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.CpuUsage;
 import rs117.hd.overlays.FrameTimer;
 
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
@@ -35,9 +36,6 @@ public final class JobSystem {
 	public HdPlugin plugin;
 
 	@Inject
-	private HdPluginConfig config;
-
-	@Inject
 	public FrameTimer frametimer;
 
 	@Getter
@@ -55,8 +53,8 @@ public final class JobSystem {
 	Worker[] workers;
 	Semaphore workerSemaphore;
 
-	public void startUp() {
-		workerCount = max(1, ceil((PROCESSOR_COUNT - 1) * config.cpuUsageLimit().threadRatio));
+	public void startUp(CpuUsage cpuUsageLimit) {
+		workerCount = max(1, ceil((PROCESSOR_COUNT - 1) * cpuUsageLimit.threadRatio));
 		workers = new Worker[workerCount];
 		workerSemaphore = new Semaphore(workerCount);
 		active = true;

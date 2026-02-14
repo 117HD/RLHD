@@ -193,7 +193,7 @@ public class LegacyRenderer implements Renderer {
 	public void initialize() {
 		modelPusher.startUp();
 
-		jobSystem.startUp();
+		jobSystem.startUp(config.cpuUsageLimit());
 
 		renderBufferOffset = 0;
 		numPassthroughModels = 0;

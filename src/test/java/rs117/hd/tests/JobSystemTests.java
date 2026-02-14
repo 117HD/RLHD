@@ -7,6 +7,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import rs117.hd.config.CpuUsage;
 import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
@@ -17,7 +18,7 @@ public class JobSystemTests {
 	@BeforeClass
 	public static void beforeAll() {
 		JOB_SYSTEM = new JobSystem();
-		JOB_SYSTEM.startUp();
+		JOB_SYSTEM.startUp(CpuUsage.MAX);
 	}
 
 	@AfterClass

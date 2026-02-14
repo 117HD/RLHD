@@ -1734,7 +1734,7 @@ public class HdPlugin extends Plugin {
 								if (jobSystem.isActive()) {
 									// Restart the job system with the new worker count
 									jobSystem.shutDown();
-									jobSystem.startUp();
+									jobSystem.startUp(config.cpuUsageLimit());
 								}
 								break;
 						}

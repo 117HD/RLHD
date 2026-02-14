@@ -185,7 +185,7 @@ public class ZoneRenderer implements Renderer {
 		sceneCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
 
-		jobSystem.startUp();
+		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(renderState, uboWorldViews);
 
