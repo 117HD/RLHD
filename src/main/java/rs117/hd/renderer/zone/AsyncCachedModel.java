@@ -220,10 +220,10 @@ public final class AsyncCachedModel extends Job implements Model {
 		faceIndices2.cache(model);
 		faceIndices3.cache(model);
 
-		faceRenderPriorities.cache(model);
-
 		faceTransparencies.cache(model);
 		faceTextures.cache(model);
+
+		faceRenderPriorities.cache(model);
 
 		vertexNormalsX.cache(model);
 		vertexNormalsY.cache(model);

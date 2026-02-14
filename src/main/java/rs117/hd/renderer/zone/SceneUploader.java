@@ -1679,6 +1679,7 @@ public class SceneUploader implements AutoCloseable {
 		PrimitiveIntArray visibleFaces,
 		PrimitiveIntArray culledFaces,
 		boolean isModelPartiallyVisible,
+		ModelOverride modelOverride,
 		Model model,
 		int x,
 		int y,
@@ -1763,6 +1764,7 @@ public class SceneUploader implements AutoCloseable {
 		final int[] indices1 = model.getFaceIndices1();
 		final int[] indices2 = model.getFaceIndices2();
 		final int[] indices3 = model.getFaceIndices3();
+		final byte[] transparencies = model.getFaceTransparencies();
 
 		visibleFaces.reset();
 		culledFaces.reset();
@@ -1774,6 +1776,14 @@ public class SceneUploader implements AutoCloseable {
 		final int radius = model.getRadius();
 		for (int f = 0; f < triangleCount; f++) {
 			if (color3s[f] == -2)
+				continue;
+
+			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;
+			if (transparency == 255)
+				continue;
+
+			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
+			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
 				continue;
 
 			int offsetA = indices1[f];
@@ -1892,10 +1902,6 @@ public class SceneUploader implements AutoCloseable {
 
 		for (int f = 0; f < faceCount; ++f) {
 			final int face = faces.faces[f];
-
-			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
-				continue;
 
 			int color1 = color1s[face];
 			int color2 = color2s[face];
