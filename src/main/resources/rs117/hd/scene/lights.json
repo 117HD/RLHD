@@ -21619,7 +21619,7 @@
   {
     "description": "Prifddinas - Scavengers Overlook - The Great Conch - Furnace",
     "height": 150,
-    "offset": [ -55, -88, -2 ],
+    "offset": [ 0, -65, -25 ],
     "radius": 480,
     "strength": 7.5,
     "color": [
@@ -23920,6 +23920,76 @@
       "PRIF_LIBRARY_TELEPORTER2",
       "PRIF_CLAN_TOWER_TELEPORTER",
       "GAUNTLET_EXIT"
+    ]
+  },
+  {
+    "description": "PRIF_SINGING_BOWL_1",
+    "height": 160,
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      109,
+      176,
+      230
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "PRIF_SINGING_BOWL"
+    ]
+  },
+  {
+    "description": "PRIF_SINGING_BOWL_2",
+    "height": 320,
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      109,
+      176,
+      230
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "PRIF_SINGING_BOWL"
+    ]
+  },
+  {
+    "description": "PRIF_RANGE_1",
+    "offset": [ -20, 95, -30 ],
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 3,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "ELF_VILLAGE_RANGE"
+    ]
+  },
+  {
+    "description": "PRIF_RANGE_2",
+    "offset": [ 90, 70, 25 ],
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 5,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "ELF_VILLAGE_RANGE"
     ]
   },
   {
