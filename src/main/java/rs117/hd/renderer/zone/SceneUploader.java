@@ -52,6 +52,7 @@ import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
@@ -133,9 +134,15 @@ public class SceneUploader implements AutoCloseable {
 	private final int[] modelNormals = new int[9];
 
 	public final float[] modelProjected = new float[MAX_VERTEX_COUNT * 3];
+	public int tempModelAlphaFaces = 0;
+
 	private final float[] modelLocal = new float[MAX_VERTEX_COUNT * 3];
 	private final int[] modelLocalI = new int[MAX_VERTEX_COUNT * 3];
 	private final boolean[] visibility = new boolean[MAX_VERTEX_COUNT];
+
+	private final ModelOverride[] faceOverrides = new ModelOverride[MAX_FACE_COUNT];
+	private final Material[] faceMaterials = new Material[MAX_FACE_COUNT];
+	private final UvType[] faceUVTypes = new UvType[MAX_FACE_COUNT];
 
 	private final float[] projected = new float[4];
 
@@ -1759,21 +1766,33 @@ public class SceneUploader implements AutoCloseable {
 			shouldSort &= pZ >= 50;
 		}
 
+		visibleFaces.reset();
+		culledFaces.reset();
+
 		final int triangleCount = model.getFaceCount();
+		visibleFaces.ensureCapacity(triangleCount);
+		culledFaces.ensureCapacity(triangleCount);
+
 		final int[] color3s = model.getFaceColors3();
 		final int[] indices1 = model.getFaceIndices1();
 		final int[] indices2 = model.getFaceIndices2();
 		final int[] indices3 = model.getFaceIndices3();
 		final byte[] transparencies = model.getFaceTransparencies();
+		final short[] faceTextures = model.getFaceTextures();
+		final byte[] textureFaces = model.getTextureFaces();
 
-		visibleFaces.reset();
-		culledFaces.reset();
+		final Material baseMaterial = modelOverride.baseMaterial;
+		final Material textureMaterial = modelOverride.textureMaterial;
 
-		visibleFaces.ensureCapacity(triangleCount);
-		culledFaces.ensureCapacity(triangleCount);
+		final boolean isVanillaTextured = faceTextures != null;
+		final boolean isVanillaUVMapped =
+			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
+			textureFaces != null;
 
 		final int zero = (int) proj.project(x, y, z, projected)[2];
 		final int radius = model.getRadius();
+
+		tempModelAlphaFaces = 0;
 		for (int f = 0; f < triangleCount; f++) {
 			if (color3s[f] == -2)
 				continue;
@@ -1785,6 +1804,48 @@ public class SceneUploader implements AutoCloseable {
 			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
 			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
 				continue;
+
+			UvType uvType = UvType.GEOMETRY;
+			Material material = baseMaterial;
+			ModelOverride faceOverride = modelOverride;
+
+			final int textureId = isVanillaTextured ? faceTextures[f] : -1;
+			if (textureId != -1) {
+				uvType = UvType.VANILLA;
+				if (textureMaterial != Material.NONE) {
+					material = textureMaterial;
+				} else {
+					material = materialManager.fromVanillaTexture(textureId);
+					if (modelOverride.materialOverrides != null) {
+						var override = modelOverride.materialOverrides.get(material);
+						if (override != null) {
+							faceOverride = override;
+							material = faceOverride.textureMaterial;
+						}
+					}
+				}
+			} else if (modelOverride.colorOverrides != null) {
+				int ahsl = (0xFF - transparency) << 16 | model.getFaceColors1()[f];
+				for (var override : modelOverride.colorOverrides) {
+					if (override.ahslCondition.test(ahsl)) {
+						faceOverride = override;
+						material = faceOverride.baseMaterial;
+						break;
+					}
+				}
+			}
+
+			if (material != Material.NONE) {
+				uvType = faceOverride.uvType;
+				if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs)) {
+					final int textureFace = textureFaces != null ? textureFaces[f] : -1;
+					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+				}
+			}
+
+			faceOverrides[f] = faceOverride;
+			faceMaterials[f] = material;
+			faceUVTypes[f] = uvType;
 
 			int offsetA = indices1[f];
 			int offsetB = indices2[f];
@@ -1825,6 +1886,9 @@ public class SceneUploader implements AutoCloseable {
 				faceDistances[f] = radius + ((int) ((aZ + bZ + cZ) / 3.0f) - zero);
 			}
 
+			if(material.hasTransparency || transparency != 0)
+				tempModelAlphaFaces++;
+
 			visibleFaces.putFace(f);
 		}
 
@@ -1839,7 +1903,6 @@ public class SceneUploader implements AutoCloseable {
 		int preOrientation,
 		int orientation,
 		boolean isShadow,
-		boolean disableTextures,
 		VAO.VAOView opaqueView,
 		VAO.VAOView alphaView
 	) {
@@ -1865,11 +1928,11 @@ public class SceneUploader implements AutoCloseable {
 		final int[] yVertexNormals = model.getVertexNormalsY();
 		final int[] zVertexNormals = model.getVertexNormalsZ();
 
+		final byte[] transparencies = model.getFaceTransparencies();
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
-
 		final byte[] bias = model.getFaceBias();
-		final byte[] transparencies = model.getFaceTransparencies();
+
 		final int[] faceNormals = isShadow ? EMPTY_NORMALS : modelNormals;
 
 		final boolean hasBias = bias != null;
@@ -1884,9 +1947,6 @@ public class SceneUploader implements AutoCloseable {
 		final byte overrideLum = model.getOverrideLuminance();
 
 		final boolean isVanillaTextured = faceTextures != null;
-		final boolean isVanillaUVMapped =
-			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
-			textureFaces != null;
 
 		int orientSin = 0;
 		int orientCos = 0;
@@ -1896,10 +1956,7 @@ public class SceneUploader implements AutoCloseable {
 			orientCos = COSINE[orientation];
 		}
 
-		final Material baseMaterial = modelOverride.baseMaterial;
-		final Material textureMaterial = modelOverride.textureMaterial;
 		final int faceCount = faces.length;
-
 		for (int f = 0; f < faceCount; ++f) {
 			final int face = faces.faces[f];
 
@@ -1915,43 +1972,12 @@ public class SceneUploader implements AutoCloseable {
 			final int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			final int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			final int textureId = isVanillaTextured ? faceTextures[face] : -1;
-			UvType uvType = UvType.GEOMETRY;
-			Material material = baseMaterial;
-			ModelOverride faceOverride = modelOverride;
+			final UvType uvType = faceUVTypes[face];
+			final Material material = faceMaterials[face];
+			final ModelOverride faceOverride = faceOverrides[face];
 
-			if (!disableTextures) {
-				if (textureId != -1) {
-					color1 = color2 = color3 = 90;
-					uvType = UvType.VANILLA;
-					if (textureMaterial != Material.NONE) {
-						material = textureMaterial;
-					} else {
-						material = materialManager.fromVanillaTexture(textureId);
-						if (modelOverride.materialOverrides != null) {
-							var override = modelOverride.materialOverrides.get(material);
-							if (override != null) {
-								faceOverride = override;
-								material = faceOverride.textureMaterial;
-							}
-						}
-					}
-				} else if (modelOverride.colorOverrides != null) {
-					int ahsl = (0xFF - transparency) << 16 | color1;
-					for (var override : modelOverride.colorOverrides) {
-						if (override.ahslCondition.test(ahsl)) {
-							faceOverride = override;
-							material = faceOverride.baseMaterial;
-							break;
-						}
-					}
-				}
-
-				if (material != Material.NONE) {
-					uvType = faceOverride.uvType;
-					if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
-						uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
-				}
-			}
+			if (textureId != -1)
+				color1 = color2 = color3 = 90;
 
 			final int materialData = material.packMaterialData(faceOverride, uvType, false);
 

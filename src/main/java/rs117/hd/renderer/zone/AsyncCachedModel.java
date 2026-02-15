@@ -214,6 +214,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		verticesY.cache(model);
 		verticesZ.cache(model);
 
+		faceColors1.cache(model);
 		faceColors3.cache(model);
 
 		faceIndices1.cache(model);
@@ -222,6 +223,7 @@ public final class AsyncCachedModel extends Job implements Model {
 
 		faceTransparencies.cache(model);
 		faceTextures.cache(model);
+		textureFaces.cache(model);
 
 		faceRenderPriorities.cache(model);
 
@@ -229,13 +231,9 @@ public final class AsyncCachedModel extends Job implements Model {
 		vertexNormalsY.cache(model);
 		vertexNormalsZ.cache(model);
 
-		faceColors1.cache(model);
 		faceColors2.cache(model);
-
 		unlitFaceColors.cache(model);
-
 		faceBias.cache(model);
-		textureFaces.cache(model);
 
 		texIndices1.cache(model);
 		texIndices2.cache(model);
