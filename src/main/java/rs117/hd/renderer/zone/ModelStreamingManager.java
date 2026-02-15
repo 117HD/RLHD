@@ -605,22 +605,7 @@ public class ModelStreamingManager {
 		while (!pending.isEmpty()) {
 			pendingModel = pending.get(idx);
 
-			if (pendingModel.isQueued() && pendingModel.canStart() && pendingModel.processing.compareAndSet(false, true)) {
-				try (
-					SceneUploader sceneUploader = SceneUploader.POOL.acquire();
-					FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
-				) {
-					clientVisibleFaces.reset();
-					clientCulledFaces.reset();
-					pendingModel.uploadFunc.upload(
-						sceneUploader,
-						facePrioritySorter,
-						clientVisibleFaces,
-						clientCulledFaces,
-						pendingModel
-					);
-				}
-
+			if (pendingModel.isQueued() && pendingModel.canStart() && pendingModel.processModel()) {
 				pending.remove(idx);
 				hasStolen = true;
 			}

@@ -77,11 +77,11 @@ public final class AsyncCachedModel extends Job implements Model {
 	private final CachedArrayField<int[]> vertexNormalsY = addField(ModelArrayDef.VERTEX_NORMALS_Y);
 	private final CachedArrayField<int[]> vertexNormalsZ = addField(ModelArrayDef.VERTEX_NORMALS_Z);
 
-	public final PrimitiveIntArray visibleFaces = new PrimitiveIntArray();
-	public final PrimitiveIntArray culledFaces = new PrimitiveIntArray();
+	private final PrimitiveIntArray visibleFaces = new PrimitiveIntArray();
+	private final PrimitiveIntArray culledFaces = new PrimitiveIntArray();
 
-	public final AtomicBoolean processing = new AtomicBoolean(false);
-	public UploadModelFunc uploadFunc;
+	private final AtomicBoolean processing = new AtomicBoolean(false);
+	private UploadModelFunc uploadFunc;
 
 	@Getter
 	private Zone zone;
@@ -197,13 +197,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		faceCount = model.getFaceCount();
 
 		processing.set(false);
-		//noinspection ForLoopReplaceableByForEach
-		for (int i = 0; i < cachedFields.length; i++) {
-			final CachedArrayField<?> cachedField = cachedFields[i];
-			cachedField.arraySize = cachedField.fieldDef.isVertexArray ? verticesCount : faceCount;
-			cachedField.cached = false;
-		}
-
 		if (zone != null)
 			zone.pendingModelJobs.add(this);
 		INFLIGHT.add(this);
@@ -253,9 +246,14 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	@Override
 	protected void onRun() {
+		processModel();
+	}
+
+	public boolean processModel() {
+		if (!processing.compareAndSet(false, true))
+			return false;
+
 		try {
-			if (!processing.compareAndSet(false, true))
-				return; // Client thread has stolen this job
 			try (
 				SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 				FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
@@ -265,13 +263,19 @@ public final class AsyncCachedModel extends Job implements Model {
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
 		} finally {
+			INFLIGHT.remove(this);
 			if (zone != null)
 				zone.pendingModelJobs.remove(this);
 			zone = null;
 
-			INFLIGHT.remove(this);
+			// Reset cached status before returning to the POOL
+			for (int i = 0; i < cachedFields.length; i++)
+				cachedFields[i].cached = false;
+
 			POOL.recycle(this);
 		}
+
+		return true;
 	}
 
 	@Override
@@ -472,8 +476,7 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	@SuppressWarnings("unchecked")
 	private static final class CachedArrayField<T> {
-		private final ModelArrayDef fieldDef;
-
+		private final boolean isVertexArray;
 		private final ArraySupplier<T> supplier;
 		private final ModelGetter<T> getter;
 
@@ -481,11 +484,10 @@ public final class AsyncCachedModel extends Job implements Model {
 		private T pooled;
 		private T value;
 
-		public int arraySize;
 		public volatile boolean cached;
 
 		private CachedArrayField(ModelArrayDef fieldDef) {
-			this.fieldDef = fieldDef;
+			this.isVertexArray = fieldDef.isVertexArray;
 			this.supplier = (ArraySupplier<T>) fieldDef.supplier;
 			this.getter = (ModelGetter<T>) fieldDef.getter;
 			this.value = supplier.get((int) KiB);
@@ -508,8 +510,11 @@ public final class AsyncCachedModel extends Job implements Model {
 			}
 
 			final int srcLen = Array.getLength(src);
+			int arraySize = isVertexArray ? m.getVerticesCount() : m.getFaceCount();
+
 			if (srcLen < arraySize)
 				arraySize = srcLen;
+
 			if (value == null || capacity < arraySize) {
 				if (pooled != null && capacity >= arraySize) {
 					value = pooled;
