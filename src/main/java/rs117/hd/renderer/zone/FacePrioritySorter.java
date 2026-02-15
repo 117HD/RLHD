@@ -68,16 +68,13 @@ final class FacePrioritySorter implements AutoCloseable {
 			return;
 
 		int minFz = diameter, maxFz = 0;
-		Arrays.fill(zsortHead, 0, diameter, -1);
-		Arrays.fill(zsortTail, 0, diameter, -1);
+		Arrays.fill(zsortHead, 0, diameter + 1, -1);
+		Arrays.fill(zsortTail, 0, diameter + 1, -1);
 
 		// Build the z-sorted linked list of faces
 		for (int i = 0; i < visibleFaces.length; ++i) {
 			final int faceIdx = visibleFaces.faces[i];
-			final int distance = faceDistances[faceIdx];
-
-			if (distance < 0 || distance >= diameter)
-				continue;
+			final int distance = clamp(faceDistances[faceIdx], 0, diameter);
 
 			final int tailFaceIdx = zsortTail[distance];
 			if (tailFaceIdx == -1) {
