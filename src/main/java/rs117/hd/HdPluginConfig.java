@@ -147,7 +147,7 @@ public interface HdPluginConfig extends Config
 	)
 	default AntiAliasingMode antiAliasingMode()
 	{
-		return AntiAliasingMode.DISABLED;
+		return AntiAliasingMode.MSAA_4;
 	}
 
 	String KEY_SCENE_RESOLUTION_SCALE = "sceneResolutionScale";
