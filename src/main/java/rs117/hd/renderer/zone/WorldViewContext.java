@@ -254,6 +254,9 @@ public class WorldViewContext {
 	}
 
 	void completeInvalidation() {
+		if(invalidationGroup.getPendingCount() <= 0)
+			return;
+
 		invalidationGroup.complete();
 
 		for (int x = 0; x < sizeX; x++) {
