@@ -5301,7 +5301,7 @@
     "uvOrientation": 655
   },
   {
-    "description": "Wilderness and Shayzien - Rock Walls",
+    "description": "Wilderness and Shayzien - Rock Walls & Rubble",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "flatNormals": true,
@@ -5351,7 +5351,10 @@
       "WILD6_WALL_WINDOW_SML",
       "WILD_VETION_BRICKS01",
       "WILD_VETION_BRICKS02",
-      "WILD3_WALL_BATTLEMENT_NO_GRADIENT"
+      "WILD3_WALL_BATTLEMENT_NO_GRADIENT",
+      "CRANDOR_LAB_RUBBLE_03",
+      "CRANDOR_LAB_RUBBLE_02",
+      "CRANDOR_LAB_RUBBLE_01"
     ]
   },
   {
