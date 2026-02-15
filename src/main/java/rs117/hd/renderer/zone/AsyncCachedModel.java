@@ -69,9 +69,9 @@ public final class AsyncCachedModel extends Job implements Model {
 	private final CachedArrayField<byte[]> faceBias = addField(ArrayType.FACE_BYTE);
 	private final CachedArrayField<byte[]> textureFaces = addField(ArrayType.FACE_BYTE);
 
-	private final CachedArrayField<int[]> texIndices1 = addField(ArrayType.FACE_INT);
-	private final CachedArrayField<int[]> texIndices2 = addField(ArrayType.FACE_INT);
-	private final CachedArrayField<int[]> texIndices3 = addField(ArrayType.FACE_INT);
+	private final CachedArrayField<int[]> texIndices1 = addField(ArrayType.TEX_INT);
+	private final CachedArrayField<int[]> texIndices2 = addField(ArrayType.TEX_INT);
+	private final CachedArrayField<int[]> texIndices3 = addField(ArrayType.TEX_INT);
 
 	private final CachedArrayField<int[]> vertexNormalsX = addField(ArrayType.VERTEX_INT);
 	private final CachedArrayField<int[]> vertexNormalsY = addField(ArrayType.VERTEX_INT);
@@ -89,7 +89,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	public static long calculateMaxModelSizeBytes() {
 		long size = 0;
 		for (ArrayType modelArrayDef : ArrayType.values())
-			size += (long) modelArrayDef.stride * (long) (modelArrayDef.isVertexArray ? MAX_VERTEX_COUNT : MAX_FACE_COUNT);
+			size += (long) modelArrayDef.stride * (long) (modelArrayDef.type == VERTEX_TYPE ? MAX_VERTEX_COUNT : MAX_FACE_COUNT);
 		return size;
 	}
 
@@ -433,23 +433,29 @@ public final class AsyncCachedModel extends Job implements Model {
 		T get(int capacity);
 	}
 
+	private static final int VERTEX_TYPE = 0;
+	private static final int FACE_TYPE = 1;
+	private static final int TEX_TYPE = 2;
+
 	@RequiredArgsConstructor
 	private enum ArrayType {
-		VERTEX_INT(int[]::new, 4, true),
-		VERTEX_FLOAT(float[]::new, 4, true),
+		VERTEX_INT(int[]::new, 4, VERTEX_TYPE),
+		VERTEX_FLOAT(float[]::new, 4, VERTEX_TYPE),
 
-		FACE_INT(int[]::new, 4, false),
-		FACE_SHORT(short[]::new, 2, false),
-		FACE_BYTE(byte[]::new, 1, false);
+		FACE_INT(int[]::new, 4, FACE_TYPE),
+		FACE_SHORT(short[]::new, 2, FACE_TYPE),
+		FACE_BYTE(byte[]::new, 1, FACE_TYPE),
+
+		TEX_INT(int[]::new, 4, TEX_TYPE);
 
 		private final ArraySupplier<?> supplier;
 		private final int stride;
-		private final boolean isVertexArray;
+		private final int type;
 	}
 
 	@SuppressWarnings("unchecked")
 	private static final class CachedArrayField<T> {
-		private final boolean isVertexArray;
+		private final int arrayType;
 		private final ArraySupplier<T> supplier;
 
 		private int capacity;
@@ -458,9 +464,9 @@ public final class AsyncCachedModel extends Job implements Model {
 
 		public volatile boolean cached;
 
-		private CachedArrayField(ArrayType type) {
-			this.isVertexArray = type.isVertexArray;
-			this.supplier = (ArraySupplier<T>) type.supplier;
+		private CachedArrayField(ArrayType arrayType) {
+			this.arrayType = arrayType.type;
+			this.supplier = (ArraySupplier<T>) arrayType.supplier;
 			this.value = supplier.get((int) KiB);
 		}
 
@@ -479,11 +485,12 @@ public final class AsyncCachedModel extends Job implements Model {
 				return;
 			}
 
-			final int srcLen = Array.getLength(src);
-			int arraySize = isVertexArray ? m.getVerticesCount() : m.getFaceCount();
-
-			if (srcLen < arraySize)
-				arraySize = srcLen;
+			final int arraySize;
+			switch (arrayType) {
+				case VERTEX_TYPE: arraySize = m.getVerticesCount(); break;
+				case FACE_TYPE: arraySize = m.getFaceCount(); break;
+				default: arraySize = Array.getLength(src); break;
+			}
 
 			if (value == null || capacity < arraySize) {
 				if (pooled != null && capacity >= arraySize) {
