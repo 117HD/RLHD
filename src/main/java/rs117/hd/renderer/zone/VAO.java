@@ -2,7 +2,7 @@ package rs117.hd.renderer.zone;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ class VAO {
 	private final GLTextureBuffer tbo;
 
 	private final AtomicInteger inflightDraws = new AtomicInteger();
-	private final ConcurrentLinkedDeque<VAOView> usedViews = new ConcurrentLinkedDeque<>();
+	private final ConcurrentLinkedQueue<VAOView> usedViews = new ConcurrentLinkedQueue<>();
 	private final ArrayDeque<VAOView> freeViews = new ArrayDeque<>();
 
 	private final GLMappedBufferIntWriter vboWriter;

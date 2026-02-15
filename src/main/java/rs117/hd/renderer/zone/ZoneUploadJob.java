@@ -1,6 +1,6 @@
 package rs117.hd.renderer.zone;
 
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -14,7 +14,7 @@ import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
 public final class ZoneUploadJob extends Job {
-	private static final ConcurrentLinkedDeque<ZoneUploadJob> POOL = new ConcurrentLinkedDeque<>();
+	private static final ConcurrentLinkedQueue<ZoneUploadJob> POOL = new ConcurrentLinkedQueue<>();
 
 	private WorldViewContext viewContext;
 	private ZoneSceneContext sceneContext;

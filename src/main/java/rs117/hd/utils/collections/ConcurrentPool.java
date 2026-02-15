@@ -1,7 +1,7 @@
 package rs117.hd.utils.collections;
 
 import com.google.inject.Injector;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.LockSupport;
 import lombok.RequiredArgsConstructor;
 
@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 public final class ConcurrentPool<T> {
 
 	// TODO: Ideally replace with a non allocating pool?
-	private final ConcurrentLinkedDeque<T> pool = new ConcurrentLinkedDeque<>();
-	private final ConcurrentLinkedDeque<Thread> parkedThreads;
+	private final ConcurrentLinkedQueue<T> pool = new ConcurrentLinkedQueue<>();
+	private final ConcurrentLinkedQueue<Thread> parkedThreads;
 
 	private final Injector injector;
 	private final Class<T> clazz;
@@ -25,7 +25,7 @@ public final class ConcurrentPool<T> {
 		this.injector = injector;
 		this.clazz = clazz;
 		this.fixedSize = fixedSize;
-		parkedThreads = fixedSize > 0 ? new ConcurrentLinkedDeque<>() : null;
+		parkedThreads = fixedSize > 0 ? new ConcurrentLinkedQueue<>() : null;
 	}
 
 	public T acquire() {

@@ -1,7 +1,7 @@
 package rs117.hd.renderer.zone;
 
 import java.lang.reflect.Array;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
 import javax.annotation.Nonnull;
@@ -19,7 +19,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public final class AsyncCachedModel extends Job implements Model {
-	public static final ConcurrentLinkedDeque<AsyncCachedModel> INFLIGHT = new ConcurrentLinkedDeque<>();
+	public static final ConcurrentLinkedQueue<AsyncCachedModel> INFLIGHT = new ConcurrentLinkedQueue<>();
 	public static ConcurrentPool<AsyncCachedModel> POOL;
 
 	private int sceneId;

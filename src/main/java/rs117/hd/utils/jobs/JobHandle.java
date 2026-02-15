@@ -2,7 +2,7 @@ package rs117.hd.utils.jobs;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
@@ -25,12 +25,12 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 	private static final String[] STATE_NAMES = { "NONE", "QUEUED", "RUNNING", "CANCELLED", "COMPLETED" };
 	private static final long DEADLOCK_TIMEOUT_SECONDS = 10;
-	private static final ConcurrentLinkedDeque<JobHandle> POOL = new ConcurrentLinkedDeque<>();
+	private static final ConcurrentLinkedQueue<JobHandle> POOL = new ConcurrentLinkedQueue<>();
 
 	private static final ThreadLocal<ArrayDeque<JobHandle>> CYCLE_STACK = ThreadLocal.withInitial(ArrayDeque::new);
 	private static final ThreadLocal<HashSet<JobHandle>> VISITED = ThreadLocal.withInitial(HashSet::new);
 
-	private final ConcurrentLinkedDeque<JobHandle> dependants = new ConcurrentLinkedDeque<>();
+	private final ConcurrentLinkedQueue<JobHandle> dependants = new ConcurrentLinkedQueue<>();
 	private final AtomicInteger jobState = new AtomicInteger(STATE_NONE);
 	private final AtomicInteger refCounter = new AtomicInteger();
 	private final AtomicInteger depCount = new AtomicInteger();
@@ -156,7 +156,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 		int queuedWork = 0;
 		JobHandle dep;
-		while ((dep = dependants.pollFirst()) != null) {
+		while ((dep = dependants.poll()) != null) {
 			if (wasCancelled) {
 				dep.cancel(false);
 				continue;

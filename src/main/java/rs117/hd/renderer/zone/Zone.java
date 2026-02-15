@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.ToIntFunction;
@@ -480,7 +479,7 @@ public class Zone {
 		}
 	}
 
-	static final ConcurrentLinkedDeque<AlphaModel> modelCache = new ConcurrentLinkedDeque<>();
+	static final ConcurrentLinkedQueue<AlphaModel> modelCache = new ConcurrentLinkedQueue<>();
 
 	void addAlphaModel(
 		HdPlugin plugin,
