@@ -259,6 +259,19 @@ public class ZoneRenderer implements Renderer {
 			modelStreamingManager.initializeAsyncCachedModel();
 	}
 
+	@Subscribe(priority = 1)
+	public void onBeforeRender(BeforeRender beforeRender) {
+		try {
+			frameTimer.begin(Timer.UPDATE_SCENE);
+			sceneManager.update();
+			modelStreamingManager.update();
+			frameTimer.end(Timer.UPDATE_SCENE);
+		} catch (Exception ex) {
+			log.error("Error while updating scene:", ex);
+			plugin.stopPlugin();
+		}
+	}
+
 	@Override
 	public void preSceneDraw(
 		Scene scene,
@@ -282,6 +295,8 @@ public class ZoneRenderer implements Renderer {
 
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 			preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
+
+		ctx.completeInvalidation();
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
 		for (int zx = 0; zx < ctx.sizeX; ++zx) {
@@ -360,11 +375,6 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.begin(Timer.UPDATE_LIGHTS);
 				lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
 				frameTimer.end(Timer.UPDATE_LIGHTS);
-
-				frameTimer.begin(Timer.UPDATE_SCENE);
-				sceneManager.update();
-				modelStreamingManager.update();
-				frameTimer.end(Timer.UPDATE_SCENE);
 			} catch (Exception ex) {
 				log.error("Error while updating environment or lights:", ex);
 				plugin.stopPlugin();

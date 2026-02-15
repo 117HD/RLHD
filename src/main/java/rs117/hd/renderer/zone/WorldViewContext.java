@@ -241,11 +241,26 @@ public class WorldViewContext {
 			cullZone.free();
 		}
 
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				handleZoneSwap(deltaTime, x, z);
+
+				if (zones[x][z].rebuild) {
+					zones[x][z].rebuild = false;
+					invalidateZone(x, z);
+				}
+			}
+		}
+	}
+
+	void completeInvalidation() {
 		invalidationGroup.complete();
 
-		for (int x = 0; x < sizeX; x++)
-			for (int z = 0; z < sizeZ; z++)
-				handleZoneSwap(deltaTime, x, z);
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				handleZoneSwap(-1.0f, x, z);
+			}
+		}
 	}
 
 	int getSortedAlphaCount() {

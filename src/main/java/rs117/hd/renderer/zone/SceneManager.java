@@ -296,7 +296,11 @@ public class SceneManager {
 		if (ctx == null)
 			return;
 
-		ctx.invalidateZone(zx, zz);
+		Zone zone = ctx.zones[zx][zz];
+		if (zone.rebuild)
+			return;
+
+		zone.rebuild = true;
 		log.trace("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
 	}
 
