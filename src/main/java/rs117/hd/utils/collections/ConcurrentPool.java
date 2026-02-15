@@ -52,6 +52,7 @@ public final class ConcurrentPool<T> {
 	}
 
 	public void recycle(T obj) {
+		assert !pool.contains(obj) : "Object already in pool";
 		pool.offer(obj);
 
 		if (parkedThreads != null) {
