@@ -19259,7 +19259,6 @@
       "ESSENCEMINE_PORTAL_4",
       "ESSENCEMINE_PORTAL_5",
       "TOURNAMENT_CLANWARS_TEMPPORTAL_JADFEST",
-      "POH_PRIFDDINAS_PORTAL",
       "SOTE_LIBRARY_EXIT",
       "PRIF_AGILITY_SHORTCUT_PORTAL",
       "LEAGUE_5_POH_SPIRIT_RING_LAST_BJQ",
@@ -49318,21 +49317,22 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
-      "POH_BOARD_YANILLE"
+      "POH_BOARD_YANILLE",
+      "POH_BOARD_PRIFDDINAS"
     ],
     "colorOverrides": [
       {
         "colors": "h == 5",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
-        "uvScale": 0.75
+        "uvScale": 0.6
       },
       {
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientationY": 512,
-        "uvScale": 0.75
+        "uvScale": 0.6
       }
     ]
   },
@@ -73664,6 +73664,22 @@
         "baseMaterial": "GRAY_250",
         "flatNormals": true,
         "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - House Portal",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "POH_PRIFDDINAS_PORTAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 48 || a < 255",
+        "baseMaterial": "NONE",
+        "shadowOpacityThreshold": 0.12
       }
     ]
   },
