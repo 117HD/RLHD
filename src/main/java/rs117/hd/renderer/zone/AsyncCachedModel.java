@@ -49,33 +49,33 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	private final CachedArrayField<?>[] cachedFields = new CachedArrayField<?>[21];
 
-	private final CachedArrayField<float[]> verticesX = addField(ModelArrayDef.VERTICES_X);
-	private final CachedArrayField<float[]> verticesY = addField(ModelArrayDef.VERTICES_Y);
-	private final CachedArrayField<float[]> verticesZ = addField(ModelArrayDef.VERTICES_Z);
+	private final CachedArrayField<float[]> verticesX = addField(ArrayType.VERTEX_FLOAT);
+	private final CachedArrayField<float[]> verticesY = addField(ArrayType.VERTEX_FLOAT);
+	private final CachedArrayField<float[]> verticesZ = addField(ArrayType.VERTEX_FLOAT);
 
-	private final CachedArrayField<int[]> faceIndices1 = addField(ModelArrayDef.FACE_INDICES_1);
-	private final CachedArrayField<int[]> faceIndices2 = addField(ModelArrayDef.FACE_INDICES_2);
-	private final CachedArrayField<int[]> faceIndices3 = addField(ModelArrayDef.FACE_INDICES_3);
+	private final CachedArrayField<int[]> faceIndices1 = addField(ArrayType.FACE_INT);
+	private final CachedArrayField<int[]> faceIndices2 = addField(ArrayType.FACE_INT);
+	private final CachedArrayField<int[]> faceIndices3 = addField(ArrayType.FACE_INT);
 
-	private final CachedArrayField<int[]> faceColors1 = addField(ModelArrayDef.FACE_COLORS_1);
-	private final CachedArrayField<int[]> faceColors2 = addField(ModelArrayDef.FACE_COLORS_2);
-	private final CachedArrayField<int[]> faceColors3 = addField(ModelArrayDef.FACE_COLORS_3);
+	private final CachedArrayField<int[]> faceColors1 = addField(ArrayType.FACE_INT);
+	private final CachedArrayField<int[]> faceColors2 = addField(ArrayType.FACE_INT);
+	private final CachedArrayField<int[]> faceColors3 = addField(ArrayType.FACE_INT);
 
-	private final CachedArrayField<short[]> unlitFaceColors = addField(ModelArrayDef.UNLIT_FACE_COLORS);
-	private final CachedArrayField<short[]> faceTextures = addField(ModelArrayDef.FACE_TEXTURES);
+	private final CachedArrayField<short[]> unlitFaceColors = addField(ArrayType.FACE_SHORT);
+	private final CachedArrayField<short[]> faceTextures = addField(ArrayType.FACE_SHORT);
 
-	private final CachedArrayField<byte[]> faceRenderPriorities = addField(ModelArrayDef.FACE_RENDER_PRIORITES);
-	private final CachedArrayField<byte[]> faceTransparencies = addField(ModelArrayDef.FACE_TRANSPARENCIES);
-	private final CachedArrayField<byte[]> faceBias = addField(ModelArrayDef.FACE_BIAS);
-	private final CachedArrayField<byte[]> textureFaces = addField(ModelArrayDef.TEXTURE_FACES);
+	private final CachedArrayField<byte[]> faceRenderPriorities = addField(ArrayType.FACE_BYTE);
+	private final CachedArrayField<byte[]> faceTransparencies = addField(ArrayType.FACE_BYTE);
+	private final CachedArrayField<byte[]> faceBias = addField(ArrayType.FACE_BYTE);
+	private final CachedArrayField<byte[]> textureFaces = addField(ArrayType.FACE_BYTE);
 
-	private final CachedArrayField<int[]> texIndices1 = addField(ModelArrayDef.TEX_INDICIES_1);
-	private final CachedArrayField<int[]> texIndices2 = addField(ModelArrayDef.TEX_INDICIES_2);
-	private final CachedArrayField<int[]> texIndices3 = addField(ModelArrayDef.TEX_INDICIES_3);
+	private final CachedArrayField<int[]> texIndices1 = addField(ArrayType.FACE_INT);
+	private final CachedArrayField<int[]> texIndices2 = addField(ArrayType.FACE_INT);
+	private final CachedArrayField<int[]> texIndices3 = addField(ArrayType.FACE_INT);
 
-	private final CachedArrayField<int[]> vertexNormalsX = addField(ModelArrayDef.VERTEX_NORMALS_X);
-	private final CachedArrayField<int[]> vertexNormalsY = addField(ModelArrayDef.VERTEX_NORMALS_Y);
-	private final CachedArrayField<int[]> vertexNormalsZ = addField(ModelArrayDef.VERTEX_NORMALS_Z);
+	private final CachedArrayField<int[]> vertexNormalsX = addField(ArrayType.VERTEX_INT);
+	private final CachedArrayField<int[]> vertexNormalsY = addField(ArrayType.VERTEX_INT);
+	private final CachedArrayField<int[]> vertexNormalsZ = addField(ArrayType.VERTEX_INT);
 
 	private final PrimitiveIntArray visibleFaces = new PrimitiveIntArray();
 	private final PrimitiveIntArray culledFaces = new PrimitiveIntArray();
@@ -88,13 +88,13 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	public static long calculateMaxModelSizeBytes() {
 		long size = 0;
-		for (ModelArrayDef modelArrayDef : ModelArrayDef.values())
+		for (ArrayType modelArrayDef : ArrayType.values())
 			size += (long) modelArrayDef.stride * (long) (modelArrayDef.isVertexArray ? MAX_VERTEX_COUNT : MAX_FACE_COUNT);
 		return size;
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> CachedArrayField<T> addField(ModelArrayDef fieldDef) {
+	private <T> CachedArrayField<T> addField(ArrayType fieldDef) {
 		for (int i = 0; i < cachedFields.length; i++) {
 			if (cachedFields[i] == null) {
 				return (CachedArrayField<T>) (cachedFields[i] = new CachedArrayField<>(fieldDef));
@@ -203,34 +203,34 @@ public final class AsyncCachedModel extends Job implements Model {
 		queue();
 
 		// Caching is done in order of access, Ideally this should be updated to reflect any changes
-		verticesX.cache(model);
-		verticesY.cache(model);
-		verticesZ.cache(model);
+		verticesX.cache(model, model.getVerticesX());
+		verticesY.cache(model, model.getVerticesY());
+		verticesZ.cache(model, model.getVerticesZ());
 
-		faceColors1.cache(model);
-		faceColors3.cache(model);
+		faceColors1.cache(model, model.getFaceColors1());
+		faceColors3.cache(model, model.getFaceColors3());
 
-		faceIndices1.cache(model);
-		faceIndices2.cache(model);
-		faceIndices3.cache(model);
+		faceIndices1.cache(model, model.getFaceIndices1());
+		faceIndices2.cache(model, model.getFaceIndices2());
+		faceIndices3.cache(model, model.getFaceIndices3());
 
-		faceTransparencies.cache(model);
-		faceTextures.cache(model);
-		textureFaces.cache(model);
+		faceTransparencies.cache(model, model.getFaceTransparencies());
+		faceTextures.cache(model, model.getFaceTextures());
+		textureFaces.cache(model, model.getTextureFaces());
 
-		faceRenderPriorities.cache(model);
+		faceRenderPriorities.cache(model, model.getFaceRenderPriorities());
 
-		vertexNormalsX.cache(model);
-		vertexNormalsY.cache(model);
-		vertexNormalsZ.cache(model);
+		vertexNormalsX.cache(model, model.getVertexNormalsX());
+		vertexNormalsY.cache(model, model.getVertexNormalsY());
+		vertexNormalsZ.cache(model, model.getVertexNormalsZ());
 
-		faceColors2.cache(model);
-		unlitFaceColors.cache(model);
-		faceBias.cache(model);
+		faceColors2.cache(model, model.getFaceColors2());
+		unlitFaceColors.cache(model, model.getUnlitFaceColors());
+		faceBias.cache(model, model.getFaceBias());
 
-		texIndices1.cache(model);
-		texIndices2.cache(model);
-		texIndices3.cache(model);
+		texIndices1.cache(model, model.getTexIndices1());
+		texIndices2.cache(model, model.getTexIndices2());
+		texIndices3.cache(model, model.getTexIndices3());
 	}
 
 	@Override
@@ -433,43 +433,16 @@ public final class AsyncCachedModel extends Job implements Model {
 		T get(int capacity);
 	}
 
-	@FunctionalInterface
-	interface ModelGetter<T> {
-		T get(Model m);
-	}
-
 	@RequiredArgsConstructor
-	private enum ModelArrayDef {
-		VERTICES_X(float[]::new, Model::getVerticesX, 4, true),
-		VERTICES_Y(float[]::new, Model::getVerticesY, 4, true),
-		VERTICES_Z(float[]::new, Model::getVerticesZ, 4, true),
+	private enum ArrayType {
+		VERTEX_INT(int[]::new, 4, true),
+		VERTEX_FLOAT(float[]::new, 4, true),
 
-		FACE_INDICES_1(int[]::new, Model::getFaceIndices1, 4, false),
-		FACE_INDICES_2(int[]::new, Model::getFaceIndices2, 4, false),
-		FACE_INDICES_3(int[]::new, Model::getFaceIndices3, 4, false),
-
-		FACE_COLORS_1(int[]::new, Model::getFaceColors1, 4, false),
-		FACE_COLORS_2(int[]::new, Model::getFaceColors2, 4, false),
-		FACE_COLORS_3(int[]::new, Model::getFaceColors3, 4, false),
-
-		UNLIT_FACE_COLORS(short[]::new, Model::getUnlitFaceColors, 2, false),
-		FACE_TEXTURES(short[]::new, Model::getFaceTextures, 2, false),
-
-		FACE_RENDER_PRIORITES(byte[]::new, Model::getFaceRenderPriorities, 1, false),
-		FACE_TRANSPARENCIES(byte[]::new, Model::getFaceTransparencies, 1, false),
-		FACE_BIAS(byte[]::new, Model::getFaceBias, 1, false),
-		TEXTURE_FACES(byte[]::new, Model::getTextureFaces, 1, false),
-
-		TEX_INDICIES_1(int[]::new, Model::getTexIndices1, 4, false),
-		TEX_INDICIES_2(int[]::new, Model::getTexIndices2, 4, false),
-		TEX_INDICIES_3(int[]::new, Model::getTexIndices3, 4, false),
-
-		VERTEX_NORMALS_X(int[]::new, Model::getVertexNormalsX, 4, true),
-		VERTEX_NORMALS_Y(int[]::new, Model::getVertexNormalsY, 4, true),
-		VERTEX_NORMALS_Z(int[]::new, Model::getVertexNormalsZ, 4, true);
+		FACE_INT(int[]::new, 4, false),
+		FACE_SHORT(short[]::new, 2, false),
+		FACE_BYTE(byte[]::new, 1, false);
 
 		private final ArraySupplier<?> supplier;
-		private final ModelGetter<?> getter;
 		private final int stride;
 		private final boolean isVertexArray;
 	}
@@ -478,7 +451,6 @@ public final class AsyncCachedModel extends Job implements Model {
 	private static final class CachedArrayField<T> {
 		private final boolean isVertexArray;
 		private final ArraySupplier<T> supplier;
-		private final ModelGetter<T> getter;
 
 		private int capacity;
 		private T pooled;
@@ -486,10 +458,9 @@ public final class AsyncCachedModel extends Job implements Model {
 
 		public volatile boolean cached;
 
-		private CachedArrayField(ModelArrayDef fieldDef) {
-			this.isVertexArray = fieldDef.isVertexArray;
-			this.supplier = (ArraySupplier<T>) fieldDef.supplier;
-			this.getter = (ModelGetter<T>) fieldDef.getter;
+		private CachedArrayField(ArrayType type) {
+			this.isVertexArray = type.isVertexArray;
+			this.supplier = (ArraySupplier<T>) type.supplier;
 			this.value = supplier.get((int) KiB);
 		}
 
@@ -499,8 +470,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			return value;
 		}
 
-		public void cache(final Model m) {
-			final T src = getter.get(m);
+		public void cache(final Model m, T src) {
 			if (src == null) {
 				if (value != null)
 					pooled = value;
