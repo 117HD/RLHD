@@ -41317,7 +41317,8 @@
       "LUC2_MOV_BARREL",
       "LUC2_DWT_BARREL1",
       "LUC2_DWT_BARREL2",
-      "SLUG2_BARREL_STACKED"
+      "SLUG2_BARREL_STACKED",
+      "FAI_FALADOR_BARREL_TAP"
     ]
   },
   {
@@ -42651,6 +42652,22 @@
     "objectIds": [ "GARGOYLE1" ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Deaths office - Entrances - Prifddinas",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "DEATH_OFFICE_ACCESS_PRIF"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "l < 8",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Deaths office - Entrances - Lumbridge",
@@ -73717,6 +73734,125 @@
     ]
   },
   {
+    "description": "Tirannwn - Prifddinas - Shop Counter",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvScale": 0.55,
+    "uvType": "BOX",
+    "objectIds": [
+      "PRIF_AMLODD_COUNTER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Magic Shop Case",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvScale": 0.55,
+    "uvType": "BOX",
+    "objectIds": [
+      "PRIF_AMLODD_STAFF_CASE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "h == 0 || s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Magic Shop Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.3,
+    "uvType": "BOX",
+    "objectIds": [
+      "PRIF_AMLODD_STAFF_BARREL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Magic Shop Wand Rack",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "PRIF_AMLODD_WAND_RACK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Shop Scroll",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "PRIF_AMLODD_WALL_SCROLL"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Curse Sphere",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CURSE_SPHERE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 6",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
     "description": "Tirannwn - Prifddinas - Archery Target",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
@@ -74782,7 +74918,8 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
-      "XMAS22_PUB01_BARSTOOL01_TALL01"
+      "XMAS22_PUB01_BARSTOOL01_TALL01",
+      "PRIF_INN_INDOOR_STOOL"
     ],
     "colorOverrides": [
       {
