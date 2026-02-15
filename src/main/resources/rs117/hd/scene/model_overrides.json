@@ -2153,9 +2153,10 @@
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "GRAY_65",
+        "baseMaterial": "GRAY_50",
         "upwardsNormals": true,
-        "windDisplacementMode": "OBJECT"
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
       }
     ]
   },
