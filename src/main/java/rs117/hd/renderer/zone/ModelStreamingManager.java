@@ -308,7 +308,7 @@ public class ModelStreamingManager {
 			final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
 			final VAO.VAOView opaqueView = ctx.beginDraw(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE, opaqueFaceCount);
-			final VAO.VAOView alphaView = hasAlpha ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
+			final VAO.VAOView alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 			sceneUploader.uploadTempModel(
 				visibleFaces,
@@ -552,7 +552,7 @@ public class ModelStreamingManager {
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
 				final VAO.VAOView opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
-				final VAO.VAOView alphaView = hasAlpha ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
+				final VAO.VAOView alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
 					visibleFaces,

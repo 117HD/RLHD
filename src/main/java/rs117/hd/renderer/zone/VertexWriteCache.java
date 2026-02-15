@@ -10,15 +10,17 @@ import static rs117.hd.utils.MathUtils.*;
 public final class VertexWriteCache {
 	private IntBuffer outputBuffer;
 
+	private final String name;
 	private final int maxCapacity;
 	private int[] stagingBuffer;
 	private int stagingPosition;
 
-	public VertexWriteCache(int initialCapacity) {
-		this(initialCapacity, initialCapacity);
+	public VertexWriteCache(String name, int initialCapacity) {
+		this(name, initialCapacity, initialCapacity);
 	}
 
-	public VertexWriteCache(int initialCapacity, int maxCapacity) {
+	public VertexWriteCache(String name, int initialCapacity, int maxCapacity) {
+		this.name = name;
 		this.maxCapacity = maxCapacity;
 		stagingBuffer = new int[initialCapacity];
 	}
@@ -128,17 +130,22 @@ public final class VertexWriteCache {
 		if (stagingPosition == 0 || outputBuffer == null)
 			return;
 
-		outputBuffer.put(stagingBuffer, 0, stagingPosition);
-		stagingPosition = 0;
+		try {
+			outputBuffer.put(stagingBuffer, 0, stagingPosition);
+			stagingPosition = 0;
+		} catch (Exception e) {
+			log.error("Error whilst flushing: {}", name);
+			log.error("Exception ", e);
+		}
 	}
 
 	public static class Collection {
 		private static final int CAPACITY = (int) (128 * KiB / Integer.BYTES);
 
-		public final VertexWriteCache opaque = new VertexWriteCache(CAPACITY);
-		public final VertexWriteCache alpha = new VertexWriteCache(CAPACITY);
-		public final VertexWriteCache opaqueTex = new VertexWriteCache(CAPACITY);
-		public final VertexWriteCache alphaTex = new VertexWriteCache(CAPACITY);
+		public final VertexWriteCache opaque = new VertexWriteCache("OPAQUE", CAPACITY);
+		public final VertexWriteCache alpha = new VertexWriteCache("ALPHA", CAPACITY);
+		public final VertexWriteCache opaqueTex = new VertexWriteCache("OPAQUE_TEX", CAPACITY);
+		public final VertexWriteCache alphaTex = new VertexWriteCache("ALPHA_TEX", CAPACITY);
 		public boolean useAlphaBuffer;
 
 		public void setOutputBuffers(IntBuffer opaque, IntBuffer alpha, IntBuffer opaqueTex, IntBuffer alphaTex) {
