@@ -73289,14 +73289,8 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 25 || h == 26",
-        "baseMaterial": "GRAY_80"
-      },
-      {
         "colors": "h > 8",
-        "baseMaterial": "GRAY_85",
-        "uvType": "MODEL_XY",
-        "uvScale": 0.7
+        "baseMaterial": "GRAY_75"
       }
     ]
   },
@@ -73394,7 +73388,7 @@
       },
       {
         "colors": "h > 8",
-        "baseMaterial": "GRAY_85"
+        "baseMaterial": "GRAY_80"
       },
       {
         "colors": "h == 0 || h == 4 || h == 6 && s == 7 || h == 8 && s == 7",
