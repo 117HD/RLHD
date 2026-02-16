@@ -125,7 +125,7 @@ void main() {
     vec4 outputColor = vec4(1);
 
     #if DISPLAY_DEPTH
-    float depth = texelFetch(sceneAlphaDepth, ivec2(gl_FragCoord.xy), 0).r;
+    float depth = texelFetch(sceneOpaqueDepth, ivec2(gl_FragCoord.xy), 0).r;
     FragColor = vec4(depth, 0.0, 0.0, 1.0);
     if (DISPLAY_DEPTH == 1) return; // Redundant, for syntax highlighting in IntelliJ
     #endif

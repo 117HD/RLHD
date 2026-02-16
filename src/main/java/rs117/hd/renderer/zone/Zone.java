@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.OcclusionManager.OcclusionQuery;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -74,6 +75,9 @@ public class Zone {
 	@Nullable
 	public GLBuffer vboO, vboA, vboM;
 	public GLTextureBuffer tboF;
+	public OcclusionQuery occlusionQuery;
+	public ConcurrentLinkedQueue<OcclusionQuery> additionalOcclusionQueries = new ConcurrentLinkedQueue<>();
+	public boolean isFullyOccluded;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
@@ -121,6 +125,7 @@ public class Zone {
 		}
 
 		tboF = f;
+		occlusionQuery = OcclusionManager.getInstance().obtainQuery();
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -169,6 +174,11 @@ public class Zone {
 			uploadJob = null;
 		}
 
+		if(occlusionQuery != null) {
+			occlusionQuery.free();
+			occlusionQuery = null;
+		}
+
 		sortedAlphaFacesUpload.release();
 
 		sizeO = 0;
@@ -192,6 +202,30 @@ public class Zone {
 		// don't add permanent alphamodels to the cache as permanent alphamodels are always allocated
 		// to avoid having to synchronize the cache
 		alphaModels.clear();
+	}
+
+	public void evaluateOcclusion(){
+		if(occlusionQuery != null) {
+			isFullyOccluded = occlusionQuery.isOccluded();
+			if(isFullyOccluded) {
+				// Check if any of the dynamic occlusion queries are not occluded
+				for(OcclusionQuery dynamicQuery : additionalOcclusionQueries) {
+					if(dynamicQuery.isVisible()) {
+						isFullyOccluded = false;
+						break;
+					}
+				}
+
+				if(isFullyOccluded) {
+					// Zone is fully occluded, we need to requeue all dynamic queries since they are revelvant to if the zone is fully occluded
+					for(OcclusionQuery dynamicQuery : additionalOcclusionQueries)
+						dynamicQuery.queue();
+				}
+			}
+			occlusionQuery.queue();
+		}
+		if(!isFullyOccluded) // Dynamics will reappend when they are processed
+			additionalOcclusionQueries.clear();
 	}
 
 	public static void processPendingDeletions() {
@@ -309,6 +343,11 @@ public class Zone {
 
 		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
 		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
+
+		if(occlusionQuery != null) {
+			occlusionQuery.setOffset(baseX, 0, baseZ);
+			occlusionQuery.setWorldView(viewContext.uboWorldViewStruct);
+		}
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer buf = stack.mallocInt(3)
@@ -944,7 +983,8 @@ public class Zone {
 						int zx2 = (centerX >> 10) + offset;
 						int zz2 = (centerZ >> 10) + offset;
 						if (zx2 >= 0 && zx2 < zones.length && zz2 >= 0 && zz2 < zones[0].length) {
-							if (zones[zx2][zz2].inSceneFrustum && zones[zx2][zz2].initialized) {
+							Zone z2 = zones[zx2][zz2];
+							if(z2.inSceneFrustum && z2.initialized && (z2.occlusionQuery == null || z2.occlusionQuery.isVisible())) {
 								max = distance;
 								closestZoneX = centerX >> 10;
 								closestZoneZ = centerZ >> 10;

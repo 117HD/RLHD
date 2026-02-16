@@ -17,6 +17,7 @@ import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
+import rs117.hd.renderer.zone.OcclusionManager;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -37,6 +38,8 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
 	private static final Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_OCCLUSION = new Keybind(KeyEvent.VK_O, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_OCCLUSION_VISIBILITY = new Keybind(KeyEvent.VK_O, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -49,6 +52,9 @@ public class DeveloperTools implements KeyListener {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private OcclusionManager occlusionManager;
 
 	@Inject
 	private TileInfoOverlay tileInfoOverlay;
@@ -169,6 +175,9 @@ public class DeveloperTools implements KeyListener {
 			case "culling":
 				plugin.freezeCulling = !plugin.freezeCulling;
 				break;
+			case "occlusion":
+				occlusionManager.toggleDebug();
+				break;
 		}
 	}
 
@@ -194,6 +203,10 @@ public class DeveloperTools implements KeyListener {
 			hideUiEnabled = !hideUiEnabled;
 		} else if (KEY_RELOAD_SCENE.matches(e)) {
 			plugin.renderer.reloadScene();
+		} else if(KEY_TOGGLE_OCCLUSION.matches(e)) {
+			occlusionManager.toggleDebug();
+		} else if(KEY_TOGGLE_OCCLUSION_VISIBILITY.matches(e)) {
+			occlusionManager.toggleDebugVisibility();
 		} else {
 			return;
 		}

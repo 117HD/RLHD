@@ -32,6 +32,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
+import rs117.hd.opengl.GLConstants;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.opengl.shader.ShaderIncludes.SHADER_DUMP_PATH;
@@ -103,9 +104,7 @@ public class ShaderTemplate
 			ok = true;
 
 			if (SHADER_DUMP_PATH != null) {
-				int[] numFormats = { 0 };
-				glGetIntegerv(GL41C.GL_NUM_PROGRAM_BINARY_FORMATS, numFormats);
-				if (numFormats[0] < 1) {
+				if (GLConstants.getNumProgramBinaryFormats() < 1) {
 					log.error("OpenGL driver does not support any binary formats");
 				} else {
 					int[] size = { 0 };

@@ -420,12 +420,12 @@ public final class HDUtils {
 	}
 
 	public static boolean isAABBIntersectingFrustum(
-		int minX,
-		int minY,
-		int minZ,
-		int maxX,
-		int maxY,
-		int maxZ,
+		float minX,
+		float minY,
+		float minZ,
+		float maxX,
+		float maxY,
+		float maxZ,
 		float[][] cullingPlanes
 	) {
 		for (float[] plane : cullingPlanes) {
@@ -507,5 +507,23 @@ public final class HDUtils {
 		}
 
 		return null;
+	}
+
+	public static long align(long value, long alignment) {
+		return align(value, alignment, false);
+	}
+
+	public static long align(long value, long alignment, boolean up) {
+		assert alignment > 0 : "Alignment must be positive";
+		assert (alignment & (alignment - 1)) == 0
+			: "Alignment must be a power of two";
+
+		if (up) {
+			// Align up
+			return (value + alignment - 1) & -alignment;
+		} else {
+			// Align down
+			return value & -alignment;
+		}
 	}
 }

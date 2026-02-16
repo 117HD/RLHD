@@ -18,6 +18,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.zone.OcclusionManager.OcclusionQuery;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
@@ -61,6 +62,9 @@ public class ModelStreamingManager {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private OcclusionManager occlusionManager;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -194,6 +198,10 @@ public class ModelStreamingManager {
 		)) {
 			return;
 		}
+
+		final OcclusionQuery occlusionQuery = occlusionManager.obtainOcclusionQuery(ctx, gameObject.getId(), zone, orientation, false, m, x, y, z);
+		if(occlusionQuery != null && occlusionQuery.isOccluded())
+			return;
 		plugin.drawnTempRenderableCount++;
 
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
@@ -432,6 +440,10 @@ public class ModelStreamingManager {
 		)) {
 			return;
 		}
+
+		final OcclusionQuery occlusionQuery = occlusionManager.obtainOcclusionQuery(ctx, tileObject.getHash(), zone, orient, true, m, x, y, z);
+		if(occlusionQuery != null && occlusionQuery.isOccluded())
+			return;
 		streamingContext.renderableCount++;
 
 		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));

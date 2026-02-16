@@ -16,6 +16,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.OcclusionManager;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.ZoneRenderer;
@@ -195,6 +196,14 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				children.add(LineComponent.builder()
 					.left("NPC displacement cache size:")
 					.right(String.valueOf(npcDisplacementCache.size()))
+					.build());
+			}
+
+			var occlusionManager = OcclusionManager.getInstance();
+			if(occlusionManager != null && occlusionManager.isActive()) {
+				children.add(LineComponent.builder()
+					.left("Visible Occlusion Queries:")
+					.right(String.format("%d/%d", occlusionManager.getPassedQueryCount(), occlusionManager.getQueryCount()))
 					.build());
 			}
 
