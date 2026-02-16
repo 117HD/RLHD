@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.opengl.*;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.opengl.GLFence;
 import rs117.hd.opengl.shader.ShaderProgram;
@@ -21,8 +22,6 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class CommandBuffer {
-	public static boolean SKIP_DEPTH_MASKING;
-
 	private static final int GL_MULTI_DRAW_ARRAYS_TYPE = 0;
 	private static final int GL_MULTI_DRAW_ARRAYS_INDIRECT_TYPE = 1;
 	private static final int GL_DRAW_ARRAYS_TYPE = 2;
@@ -36,13 +35,18 @@ public class CommandBuffer {
 	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
 	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
 	private static final int GL_DEPTH_MASK_TYPE = 10;
-	private static final int GL_COLOR_MASK_TYPE = 11;
-	private static final int GL_USE_PROGRAM = 12;
+	private static final int GL_DEPTH_FUNC_TYPE = 11;
+	private static final int GL_COLOR_MASK_TYPE = 12;
+	private static final int GL_BEGIN_QUERY_TYPE = 13;
+	private static final int GL_END_QUERY_TYPE = 14;
+	private static final int GL_CONDITIONAL_RENDERING_BEGIN_TYPE = 15;
+	private static final int GL_CONDITIONAL_RENDERING_END_TYPE = 16;
+	private static final int GL_USE_PROGRAM = 17;
 
-	private static final int GL_TOGGLE_TYPE = 13; // Combined glEnable & glDisable
-	private static final int GL_FENCE_SYNC = 14;
+	private static final int GL_TOGGLE_TYPE = 18; // Combined glEnable & glDisable
+	private static final int GL_FENCE_SYNC = 19;
 
-	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 15;
+	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 20;
 
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 	private static final int DRAW_MODE_MASK = 0xF;
@@ -132,6 +136,11 @@ public class CommandBuffer {
 	public void DepthMask(boolean writeDepth) {
 		ensureCapacity(1);
 		cmd[writeHead++] = GL_DEPTH_MASK_TYPE & 0xFF | (writeDepth ? 1 : 0) << 8;
+	}
+
+	public void DepthFunc(int depth) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_DEPTH_FUNC_TYPE & 0xFF | (long) depth << 8;
 	}
 
 	public void ColorMask(boolean writeRed, boolean writeGreen, boolean writeBlue, boolean writeAlpha) {
@@ -277,6 +286,26 @@ public class CommandBuffer {
 		cmd[writeHead++] = (enabled ? 1L : 0) << 32 | capability & INT_MASK;
 	}
 
+	public void BeginQuery(int mode, int query) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_BEGIN_QUERY_TYPE & 0xFF | (long) mode << 8 | (long) query << 32;
+	}
+
+	public void EndQuery(int mode) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_END_QUERY_TYPE & 0xFF | (long) mode << 8;
+	}
+
+	public void BeginConditionalRender(int query, int mode) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_CONDITIONAL_RENDERING_BEGIN_TYPE & 0xFF | (long) mode << 8 | (long) query << 32;
+	}
+
+	public void EndConditionalRender() {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_CONDITIONAL_RENDERING_END_TYPE & 0xFF;
+	}
+
 	public void append(CommandBuffer other) {
 		if (other.isEmpty())
 			return;
@@ -301,10 +330,11 @@ public class CommandBuffer {
 
 				switch (type) {
 					case GL_DEPTH_MASK_TYPE: {
-						int state = (int) (data >> 8) & 1;
-						if (SKIP_DEPTH_MASKING)
-							continue;
-						renderState.depthMask.set(state == 1);
+						renderState.depthMask.set(((int) (data >> 8) & 1) == 1);
+						break;
+					}
+					case GL_DEPTH_FUNC_TYPE: {
+						renderState.depthFunc.set((int) (data >> 8));
 						break;
 					}
 					case GL_COLOR_MASK_TYPE: {
@@ -313,6 +343,26 @@ public class CommandBuffer {
 						boolean blue = ((data >> 10) & 1) == 1;
 						boolean alpha = ((data >> 11) & 1) == 1;
 						renderState.colorMask.set(red, green, blue, alpha);
+						break;
+					}
+					case GL_BEGIN_QUERY_TYPE: {
+						int mode = (int) data >> 8;
+						int query = (int) (data >> 32);
+						glBeginQuery(mode, query);
+						break;
+					}
+					case GL_END_QUERY_TYPE: {
+						glEndQuery((int) data >> 8);
+						break;
+					}
+					case GL_CONDITIONAL_RENDERING_BEGIN_TYPE: {
+						int mode = (int) data >> 8;
+						int query = (int) (data >> 32);
+						glBeginConditionalRender(query, mode);
+						break;
+					}
+					case GL_CONDITIONAL_RENDERING_END_TYPE: {
+						glEndConditionalRender();
 						break;
 					}
 					case GL_BIND_VERTEX_ARRAY_TYPE: {

@@ -31,6 +31,7 @@
 #define DISPLAY_TANGENT 0
 #define DISPLAY_SHADOWS 0
 #define DISPLAY_LIGHTING 0
+#define DISPLAY_DEPTH 0
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
@@ -42,6 +43,13 @@
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 uniform usampler2DArray tiledLightingArray;
+
+#if MSAA_SAMPLES > 0
+    uniform sampler2DMS sceneOpaqueDepth;
+#else
+    uniform sampler2D sceneOpaqueDepth;
+#endif
+uniform sampler2D sceneAlphaDepth;
 
 // general HD settings
 
@@ -115,6 +123,12 @@ void main() {
     bool isWater = waterTypeIndex > 0 && !isUnderwater;
 
     vec4 outputColor = vec4(1);
+
+    #if DISPLAY_DEPTH
+    float depth = texelFetch(sceneAlphaDepth, ivec2(gl_FragCoord.xy), 0).r;
+    FragColor = vec4(depth, 0.0, 0.0, 1.0);
+    if (DISPLAY_DEPTH == 1) return; // Redundant, for syntax highlighting in IntelliJ
+    #endif
 
     if (isWater) {
         outputColor = sampleWater(waterTypeIndex, viewDir);

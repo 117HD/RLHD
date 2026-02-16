@@ -2,6 +2,7 @@
 
 #include TILED_LIGHTING_LAYER
 #include TILED_IMAGE_STORE
+#define TILE_MIN_MAX 1
 
 #if TILED_IMAGE_STORE
     #extension GL_EXT_shader_image_load_store : enable
@@ -12,10 +13,18 @@
     out uvec4 TiledData;
 #endif
 
+#include <utils/constants.glsl>
+#include <utils/misc.glsl>
+
+#if MSAA_SAMPLES > 0
+    uniform sampler2DMS sceneOpaqueDepth;
+#else
+    uniform sampler2D sceneOpaqueDepth;
+#endif
+uniform sampler2D sceneAlphaDepth;
+
 #include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
-
-#include <utils/constants.glsl>
 
 in vec2 fUv;
 
@@ -60,12 +69,47 @@ uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], in int binSize, inou
     return (idx0 <= 32767) ? uint(idx0 & 0x7FFF) : 0u;
 }
 
+bool calculateTileMinMax(vec2 bl, vec2 tr, out float tileMin, out float tileMax) {
+#if TILE_MIN_MAX
+    ivec2 minPix = clamp(ivec2(floor(bl)), ivec2(0), ivec2(sceneResolution) - 1);
+    ivec2 maxPix = clamp(ivec2(ceil(tr)), ivec2(0), ivec2(sceneResolution));
+
+    // Instead of sampling 16x16x2, it's accurate enough just to sample the corners and mid points
+    float minDepth = 1e20;
+    float maxDepth = -1e20;
+
+    float stepSize = 1.0f / 2.0f;
+    for(float x = 0; x <= 1.0f; x += stepSize) {
+        for(float y = 0; y <= 1.0f; y += stepSize) {
+            ivec2 pix = ivec2(int(mix(minPix.x, maxPix.x, x)), int(mix(minPix.y, maxPix.y, y)));
+            float depth = texelFetch(sceneOpaqueDepth, pix, 0).r;
+            if (depth > 0.0) {
+               minDepth = min(minDepth, depth);
+               maxDepth = max(maxDepth, depth);
+            }
+
+            float alphaDepth = texelFetch(sceneAlphaDepth, pix, 0).r;
+            if (alphaDepth > 0.0)
+               maxDepth = max(maxDepth, alphaDepth);
+        }
+    }
+
+    if(minDepth >= maxDepth)
+        return false;
+
+    tileMin = depth01ToViewZ(minDepth, projectionMatrix);
+    tileMax = depth01ToViewZ(maxDepth, projectionMatrix);
+#endif
+    return true;
+}
+
+
 void main() {
     ivec2 pixelCoord = ivec2(fUv * tiledLightingResolution);
 
 #if USE_LIGHTS_MASK
     int LightMaskSize = int(ceil(pointLightsCount / 32.0));
-    uint LightsMask[32]; // 32 Words = 1024 Lights
+    uint LightsMask[(TILED_LIGHTING_LAYER + 1) * 4]; // 32 Words = 1024 Lights
     for (int i = 0; i < LightMaskSize; i++)
         LightsMask[i] = 0u;
 
@@ -100,6 +144,20 @@ void main() {
     vec2 tr = tileOrigin + tileSize;              // top-right
     vec2 bl = tileOrigin;                         // bottom-left
     vec2 br = tileOrigin + vec2(tileSize.x, 0.0); // bottom-right
+    float tileMin = 0.0f;
+    float tileMax = 1.0f;
+
+#if TILE_MIN_MAX
+    if(!calculateTileMinMax(bl, tr, tileMin, tileMax)) {
+    #if TILED_IMAGE_STORE
+        for (int layer = 0; layer < TILED_LIGHTING_LAYER_COUNT; layer++)
+            imageStore(tiledLightingImage, ivec3(pixelCoord, layer), uvec4(0.0));
+    #else
+        TiledData = uvec4(0.0);
+    #endif
+        return;
+    }
+#endif
 
     vec2 ndcTL = (tl / sceneResolution) * 2.0 - 1.0;
     vec2 ndcTR = (tr / sceneResolution) * 2.0 - 1.0;
@@ -130,16 +188,19 @@ void main() {
         vec3 lightViewPos = lightData.xyz;
         float lightRadiusSqr = lightData.w;
 
+        #if TILE_MIN_MAX
+            float dz = max(lightViewPos.z - tileMin, tileMax - lightViewPos.z);
+            if (dz > 0.0 && dz * dz > lightRadiusSqr)
+                continue;
+        #endif
+
+        float lightTileDot = dot(lightViewPos, tileCenterVec);
+        if (lightTileDot <= 0.0)
+            continue;
+
         float lightDistSqr = dot(lightViewPos, lightViewPos);
-
-        vec3 lightCenterVec = (lightDistSqr > 0.0) ? lightViewPos / sqrt(lightDistSqr) : vec3(0.0);
-
-        float lightSinSqr = clamp(lightRadiusSqr / max(lightDistSqr, 1e-6), 0.0, 1.0);
-        float lightCos = sqrt(0.999 - lightSinSqr);
-        float lightTileCos = dot(lightCenterVec, tileCenterVec);
-
-        float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
-        if (lightTileCos < sumCos)
+        float rhs = lightDistSqr * tileCos * tileCos - lightRadiusSqr;
+        if (lightTileDot * lightTileDot < rhs)
             continue;
 
         #if USE_LIGHTS_MASK
@@ -150,8 +211,9 @@ void main() {
         #endif
 
         const float PROXIMITY_WEIGHT = 0.75;
-        float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
-        float combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
+        float distanceScore = clamp(1.0 - lightDistSqr / (lightRadiusSqr + 1e-6), 0.0, 1.0);
+        float angularScore = lightTileDot * lightTileDot / (lightDistSqr + 1e-6);
+        float combinedScore = (angularScore * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
 
         int idx = 0;
         for (; idx < sortingBinSize; idx++) {

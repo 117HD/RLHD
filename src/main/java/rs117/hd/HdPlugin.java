@@ -163,6 +163,8 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SCENE_OPAQUE_DEPTH = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SCENE_ALPHA_DEPTH = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -365,10 +367,13 @@ public class HdPlugin extends Plugin {
 
 	public int[] sceneResolution;
 	public int fboScene;
+	public int fboSceneDepth;
+	public int fboSceneAlphaDepth;
 	private int rboSceneColor;
-	private int rboSceneDepth;
 	public int fboSceneResolve;
 	private int rboSceneResolveColor;
+	private int texSceneDepth;
+	private int texSceneAlphaDepth;
 
 	public int shadowMapResolution;
 	public int fboShadowMap;
@@ -504,8 +509,10 @@ public class HdPlugin extends Plugin {
 					return false;
 
 				fboScene = 0;
+				fboSceneDepth = 0;
 				rboSceneColor = 0;
-				rboSceneDepth = 0;
+				texSceneDepth = 0;
+				texSceneAlphaDepth = 0;
 				fboSceneResolve = 0;
 				rboSceneResolveColor = 0;
 				fboShadowMap = 0;
@@ -852,6 +859,7 @@ public class HdPlugin extends Plugin {
 		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER)
+			.define("MSAA_SAMPLES", config.antiAliasingMode().getSamples())
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
@@ -1293,13 +1301,6 @@ public class HdPlugin extends Plugin {
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
 		checkGLErrors();
 
-		// Create depth render buffer
-		rboSceneDepth = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1]);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
-		checkGLErrors();
-
 		// If necessary, create an FBO for resolving multisampling
 		if (msaaSamples > 1 && resolutionScale != 1) {
 			fboSceneResolve = glGenFramebuffers();
@@ -1311,9 +1312,101 @@ public class HdPlugin extends Plugin {
 			checkGLErrors();
 		}
 
+		int sceneDepthTarget = msaaSamples > 1 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
+		texSceneDepth = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_SCENE_OPAQUE_DEPTH);
+		glBindTexture(sceneDepthTarget, texSceneDepth);
+		if(msaaSamples > 1) {
+			glTexImage2DMultisample(
+				GL_TEXTURE_2D_MULTISAMPLE,
+				msaaSamples,
+				GL_DEPTH_COMPONENT24,
+				sceneResolution[0],
+				sceneResolution[1],
+				true
+			);
+		} else {
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_DEPTH_COMPONENT24,
+				sceneResolution[0],
+				sceneResolution[1],
+				0,
+				GL_DEPTH_COMPONENT,
+				GL_FLOAT,
+				0
+			);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		}
+
+		glFramebufferTexture2D(
+			GL_FRAMEBUFFER,
+			GL_DEPTH_ATTACHMENT,
+			sceneDepthTarget,
+			texSceneDepth,
+			0
+		);
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			throw new RuntimeException("Scene FBO incomplete");
+
+		fboSceneDepth = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneDepth);
+		glFramebufferTexture2D(
+			GL_FRAMEBUFFER,
+			GL_DEPTH_ATTACHMENT,
+			sceneDepthTarget,
+			texSceneDepth,
+			0
+		);
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			throw new RuntimeException("Opaque depth FBO incomplete");
+
+		texSceneAlphaDepth = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_SCENE_ALPHA_DEPTH);
+		glBindTexture(GL_TEXTURE_2D, texSceneAlphaDepth);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_DEPTH_COMPONENT16,
+			sceneResolution[0],
+			sceneResolution[1],
+			0,
+			GL_DEPTH_COMPONENT,
+			GL_FLOAT,
+			0
+		);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		fboSceneAlphaDepth = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneAlphaDepth);
+		glFramebufferTexture2D(
+			GL_FRAMEBUFFER,
+			GL_DEPTH_ATTACHMENT,
+			GL_TEXTURE_2D,
+			texSceneAlphaDepth,
+			0
+		);
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			throw new RuntimeException("Alpha depth FBO incomplete");
+
 		// Reset
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glActiveTexture(TEXTURE_UNIT_UI);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 	}
 
 	private void destroySceneFbo() {
@@ -1323,13 +1416,21 @@ public class HdPlugin extends Plugin {
 			glDeleteFramebuffers(fboScene);
 		fboScene = 0;
 
+		if(fboSceneDepth != 0)
+			glDeleteRenderbuffers(fboSceneDepth);
+		fboSceneDepth = 0;
+
 		if (rboSceneColor != 0)
 			glDeleteRenderbuffers(rboSceneColor);
 		rboSceneColor = 0;
 
-		if (rboSceneDepth != 0)
-			glDeleteRenderbuffers(rboSceneDepth);
-		rboSceneDepth = 0;
+		if (texSceneDepth != 0)
+			glDeleteTextures(texSceneDepth);
+		texSceneDepth = 0;
+
+		if(texSceneAlphaDepth != 0)
+			glDeleteTextures(texSceneAlphaDepth);
+		texSceneAlphaDepth = 0;
 
 		if (fboSceneResolve != 0)
 			glDeleteFramebuffers(fboSceneResolve);
@@ -1544,8 +1645,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
@@ -1769,6 +1870,7 @@ public class HdPlugin extends Plugin {
 							case KEY_ANTI_ALIASING_MODE:
 							case KEY_SCENE_RESOLUTION_SCALE:
 								recreateSceneFbo = true;
+								recompilePrograms = true;
 								break;
 							case KEY_SHADOW_MODE:
 							case KEY_SHADOW_TRANSPARENCY:
