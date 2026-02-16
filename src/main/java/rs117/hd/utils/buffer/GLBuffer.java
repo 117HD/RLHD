@@ -42,6 +42,8 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class GLBuffer {
+	private static final boolean DEBUG_MAC_OS = false;
+
 	public static int STORAGE_NONE = 0;
 	public static int STORAGE_PERSISTENT = 1;
 	public static int STORAGE_IMMUTABLE = 2;
@@ -76,7 +78,7 @@ public class GLBuffer {
 	}
 
 	public static boolean supportsStorageBuffers() {
-		return GL_CAPS.GL_ARB_buffer_storage;
+		return GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS;
 	}
 
 	public GLBuffer initialize() {
@@ -400,7 +402,7 @@ public class GLBuffer {
 		glBindBuffer(GL_COPY_READ_BUFFER, srcId);
 		glBindBuffer(GL_COPY_WRITE_BUFFER, dstId);
 
-		if (GL_CAPS.GL_ARB_copy_buffer) {
+		if (GL_CAPS.GL_ARB_copy_buffer && !DEBUG_MAC_OS) {
 			for (int i = 0; i < count; i++)
 				glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, srcOffsetBytes[i], dstOffsetBytes[i], numBytes[i]);
 		} else {
@@ -432,15 +434,24 @@ public class GLBuffer {
 				}
 
 				for (int i = 0; i < count; i++) {
-					int srcPos = (int) (srcOffsetBytes[i] - srcOffset);
-					int dstPos = (int) (dstOffsetBytes[i] - dstOffset);
-					int len = (int) numBytes[i];
+					final int srcPos = (int) (srcOffsetBytes[i] - srcOffset);
+					final int dstPos = (int) (dstOffsetBytes[i] - dstOffset);
+					final int len = (int) numBytes[i];
 
-					src.position(srcPos);
-					src.limit(srcPos + len);
+					try {
+						src.position(srcPos);
+						src.limit(srcPos + len);
 
-					dst.position(dstPos);
-					dst.put(src);
+						dst.position(dstPos);
+						dst.put(src);
+
+						if(count > 1) {
+							src.clear();
+							dst.clear();
+						}
+					} catch (Throwable t) {
+						log.error("Failed to copy buffer range {} -> {} offset: {} size: {}", srcId, dstId, srcOffsetBytes[i], numBytes[i], t);
+					}
 				}
 			} finally {
 				if (src != null)
