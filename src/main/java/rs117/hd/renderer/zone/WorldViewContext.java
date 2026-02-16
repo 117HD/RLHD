@@ -166,6 +166,9 @@ public class WorldViewContext {
 				if (z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum))
 					continue;
 
+				if(z.occlusionQuery != null && z.occlusionQuery.isOccluded())
+					continue;
+
 				final int dx = camPosX - ((zx - offset) << 10);
 				final int dz = camPosZ - ((zz - offset) << 10);
 				z.dist = dx * dx + dz * dz;

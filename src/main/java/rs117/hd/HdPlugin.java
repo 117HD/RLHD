@@ -82,6 +82,7 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.opengl.GLConstants;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
@@ -131,6 +132,10 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.opengl.GLConstants.getMaxImageUnits;
+import static rs117.hd.opengl.GLConstants.getMaxSamples;
+import static rs117.hd.opengl.GLConstants.getMaxTextureSize;
+import static rs117.hd.opengl.GLConstants.getMaxTextureUnits;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
@@ -156,7 +161,6 @@ public class HdPlugin extends Plugin {
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
-	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
@@ -166,7 +170,6 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SCENE_OPAQUE_DEPTH = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SCENE_ALPHA_DEPTH = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
-	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
 	public static final int IMAGE_UNIT_TILED_LIGHTING = IMAGE_UNIT_COUNT++;
 
@@ -401,6 +404,7 @@ public class HdPlugin extends Plugin {
 	public boolean configModelBatching;
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
+	public boolean configShadowTransparency;
 	public boolean configRoofShadows;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
@@ -594,13 +598,10 @@ public class HdPlugin extends Plugin {
 				lwjglInitialized = true;
 				checkGLErrors();
 
-				MAX_TEXTURE_UNITS = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS); // Not the fixed pipeline MAX_TEXTURE_UNITS
-				if (MAX_TEXTURE_UNITS < TEXTURE_UNIT_COUNT)
-					log.warn("The GPU only supports {} texture units", MAX_TEXTURE_UNITS);
-				MAX_IMAGE_UNITS = GL_CAPS.GL_ARB_shader_image_load_store ?
-					glGetInteger(ARBShaderImageLoadStore.GL_MAX_IMAGE_UNITS) : 0;
-				if (MAX_IMAGE_UNITS < IMAGE_UNIT_COUNT)
-					log.warn("The GPU only supports {} image units", MAX_IMAGE_UNITS);
+				if (getMaxTextureUnits() < TEXTURE_UNIT_COUNT)
+					log.warn("The GPU only supports {} texture units", getMaxTextureUnits());
+				if (getMaxImageUnits() < IMAGE_UNIT_COUNT)
+					log.warn("The GPU only supports {} image units", getMaxImageUnits());
 
 				if (log.isDebugEnabled() && GL_CAPS.glDebugMessageControl != 0) {
 					debugCallback = GLUtil.setupDebugMessageCallback();
@@ -1249,8 +1250,8 @@ public class HdPlugin extends Plugin {
 		// Bind default FBO to check whether anti-aliasing is forced
 		int defaultFramebuffer = awtContext.getFramebuffer(false);
 		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
-		final int forcedAASamples = glGetInteger(GL_SAMPLES);
-		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
+		final int forcedAASamples = GLConstants.getForcedSamples();
+		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), getMaxSamples());
 
 		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
 		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
@@ -1457,10 +1458,9 @@ public class HdPlugin extends Plugin {
 		glBindTexture(GL_TEXTURE_2D, texShadowMap);
 
 		shadowMapResolution = config.shadowResolution().getValue();
-		int maxResolution = glGetInteger(GL_MAX_TEXTURE_SIZE);
-		if (maxResolution < shadowMapResolution) {
-			log.info("Capping shadow resolution from {} to {}", shadowMapResolution, maxResolution);
-			shadowMapResolution = maxResolution;
+		if (getMaxTextureSize() < shadowMapResolution) {
+			log.info("Capping shadow resolution from {} to {}", shadowMapResolution, getMaxTextureSize());
+			shadowMapResolution = getMaxTextureSize();
 		}
 
 		glTexImage2D(
@@ -1691,6 +1691,7 @@ public class HdPlugin extends Plugin {
 	private void updateCachedConfigs() {
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
+		configShadowTransparency = config.enableShadowTransparency();
 		configRoofShadows = config.roofShadows();
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
