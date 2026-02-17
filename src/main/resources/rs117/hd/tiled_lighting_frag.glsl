@@ -94,7 +94,7 @@ bool calculateTileMinMax(vec2 bl, vec2 tr, out float tileMin, out float tileMax)
         }
     }
 
-    if(minDepth >= maxDepth)
+    if(minDepth > maxDepth)
         return false;
 
     tileMin = depth01ToViewZ(minDepth, projectionMatrix);
@@ -102,7 +102,6 @@ bool calculateTileMinMax(vec2 bl, vec2 tr, out float tileMin, out float tileMax)
 #endif
     return true;
 }
-
 
 void main() {
     ivec2 pixelCoord = ivec2(fUv * tiledLightingResolution);
@@ -144,10 +143,10 @@ void main() {
     vec2 tr = tileOrigin + tileSize;              // top-right
     vec2 bl = tileOrigin;                         // bottom-left
     vec2 br = tileOrigin + vec2(tileSize.x, 0.0); // bottom-right
-    float tileMin = 0.0f;
-    float tileMax = 1.0f;
 
 #if TILE_MIN_MAX
+    float tileMin = 0.0f;
+    float tileMax = 1.0f;
     if(!calculateTileMinMax(bl, tr, tileMin, tileMax)) {
     #if TILED_IMAGE_STORE
         for (int layer = 0; layer < TILED_LIGHTING_LAYER_COUNT; layer++)
@@ -195,12 +194,8 @@ void main() {
         #endif
 
         float lightTileDot = dot(lightViewPos, tileCenterVec);
-        if (lightTileDot <= 0.0)
-            continue;
-
         float lightDistSqr = dot(lightViewPos, lightViewPos);
-        float rhs = lightDistSqr * tileCos * tileCos - lightRadiusSqr;
-        if (lightTileDot * lightTileDot < rhs)
+        if (lightTileDot * lightTileDot < lightDistSqr * tileCos * tileCos - lightRadiusSqr)
             continue;
 
         #if USE_LIGHTS_MASK
