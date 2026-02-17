@@ -19951,7 +19951,7 @@
   },
   {
     "description": "Kharidian Tent",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "CARPET_VERY_LIGHT",
     "objectIds": [
       "TENTWALL2",
       "TENTWALL3",
