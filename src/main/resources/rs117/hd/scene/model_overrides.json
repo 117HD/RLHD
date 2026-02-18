@@ -28907,19 +28907,21 @@
     "description": "Objects - Wood - Trap Door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientation": 512,
+    "uvScale": 0.75,
     "colorOverrides": [
       {
         "description": "Metal",
         "colors": "s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT",
-        "uvType": "BOX",
-        "uvOrientation": 192
+        "baseMaterial": "METALLIC_1_LIGHT"
       }
     ],
     "objectIds": [
       "TRAPDOOR",
-      "MOURNING_HIDEOUT_TRAP_DOOR_BATTLE"
+      "TRAPDOOR_NONACTIVE",
+      "IKOV_TRAPDOOR",
+      "MOURNING_HIDEOUT_TRAP_DOOR_BATTLE",
+      "CHAMPIONS_TRAP_DOOR_OPEN",
+      "CHAMPIONS_TRAP_DOOR_CLOSED"
     ]
   },
   {
