@@ -69,6 +69,18 @@ uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], in int binSize, inou
     return (idx0 <= 32767) ? uint(idx0 & 0x7FFF) : 0u;
 }
 
+#define SAMPLE_DEPTH(FRAC_X, FRAC_Y)                                                                                        \
+    pix = ivec2(int(mix(float(minPix.x), float(maxPix.x), FRAC_X)), int(mix(float(minPix.y), float(maxPix.y), FRAC_Y)));    \
+    depth = texelFetch(sceneOpaqueDepth, pix, 0).r;                                                                         \
+    if (depth > 0.0) {                                                                                                      \
+       minDepth = min(minDepth, depth);                                                                                     \
+       maxDepth = max(maxDepth, depth);                                                                                     \
+    }                                                                                                                       \
+    depth = texelFetch(sceneAlphaDepth, pix, 0).r;                                                                          \
+    if(depth > 0.0)                                                                                                         \
+       maxDepth = max(maxDepth, depth);                                                                                     \
+
+
 bool calculateTileMinMax(vec2 bl, vec2 tr, out float tileMin, out float tileMax) {
 #if TILE_MIN_MAX
     ivec2 minPix = clamp(ivec2(floor(bl)), ivec2(0), ivec2(sceneResolution) - 1);
@@ -78,21 +90,19 @@ bool calculateTileMinMax(vec2 bl, vec2 tr, out float tileMin, out float tileMax)
     float minDepth = 1e20;
     float maxDepth = -1e20;
 
-    float stepSize = 1.0f / 2.0f;
-    for(float x = 0; x <= 1.0f; x += stepSize) {
-        for(float y = 0; y <= 1.0f; y += stepSize) {
-            ivec2 pix = ivec2(int(mix(minPix.x, maxPix.x, x)), int(mix(minPix.y, maxPix.y, y)));
-            float depth = texelFetch(sceneOpaqueDepth, pix, 0).r;
-            if (depth > 0.0) {
-               minDepth = min(minDepth, depth);
-               maxDepth = max(maxDepth, depth);
-            }
+    ivec2 pix;
+    float depth;
+    SAMPLE_DEPTH(0.0, 0.0)
+    SAMPLE_DEPTH(0.5, 0.0)
+    SAMPLE_DEPTH(1.0, 0.0)
 
-            float alphaDepth = texelFetch(sceneAlphaDepth, pix, 0).r;
-            if (alphaDepth > 0.0)
-               maxDepth = max(maxDepth, alphaDepth);
-        }
-    }
+    SAMPLE_DEPTH(0.0, 0.5)
+    SAMPLE_DEPTH(0.5, 0.5)
+    SAMPLE_DEPTH(1.0, 0.5)
+
+    SAMPLE_DEPTH(0.0, 1.0)
+    SAMPLE_DEPTH(0.5, 1.0)
+    SAMPLE_DEPTH(1.0, 1.0)
 
     if(minDepth > maxDepth)
         return false;
