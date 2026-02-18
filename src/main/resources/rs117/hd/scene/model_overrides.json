@@ -35053,7 +35053,8 @@
   },
   {
     "description": "Port Khazard - Banner",
-    "baseMaterial": "CARPET_LIGHT",
+    "baseMaterial": "CARPET_DARK",
+    "upwardsNormals": true,
     "objectIds": [
       "STANDARD_TATTY",
       "STANDARD_RED"
