@@ -483,7 +483,6 @@
       "MM2_DEMON_GLOUGH",
       "MM2_DEMON_GLOUGH_NOMOVE",
       "MM2_DEMON_GLOUGH_CUTSCENE",
-      "II_IMPLING_TYPE_11",
       "WCGUILD_ENT",
       "KOUREND_BLACK_DEMON_1",
       "KOUREND_BLACK_DEMON_2",
@@ -1023,6 +1022,7 @@
       "II_IMPLING_TYPE_8",
       "II_IMPLING_TYPE_9",
       "II_IMPLING_TYPE_10",
+      "II_IMPLING_TYPE_11",
       "II_IMPLING_TYPE_1_MAZE",
       "II_IMPLING_TYPE_2_MAZE",
       "II_IMPLING_TYPE_3_MAZE",
@@ -1032,7 +1032,8 @@
       "II_IMPLING_TYPE_7_MAZE",
       "II_IMPLING_TYPE_8_MAZE",
       "II_IMPLING_TYPE_9_MAZE",
-      "II_IMPLING_TYPE_10_MAZE"
+      "II_IMPLING_TYPE_10_MAZE",
+      "II_IMPLING_TYPE_11_MAZE"
     ],
     "colorOverrides": [
       {
@@ -12589,6 +12590,35 @@
       "FAI_VARROCK_SWING_LANTERN_UNLIT",
       "FAI_FALADOR_LANTERN",
       "LANTERN_OFF"
+    ]
+  },
+  {
+    "description": "Hanging Potted Plant",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HANGINGBASKET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 18",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
     ]
   },
   {
@@ -29791,8 +29821,18 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.47,
-    "uvOrientation": 512,
-    "retainVanillaUvs": false
+    "uvOrientationZ": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.47,
+        "uvOrientationZ": 700,
+        "uvOrientationX": 512
+      }
+    ]
   },
   {
     "description": "Objects - Hay - Hay Bale - Vanilla Textured",
@@ -42939,16 +42979,19 @@
       "BROWNBED",
       "KEBOS_SHACK_BED",
       "FAI_VARROCK_SINGLE_BED_DIRTY",
-      "HOS_BED_01"
+      "HOS_BED_01",
+      "NORMAL_BED"
     ],
     "uvType": "BOX",
+    "uvScale": 0.7,
     "uvOrientation": 64,
     "colorOverrides": [
       {
         "description": "Wood frame",
         "colors": "h == 7 && s > 0",
         "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -45085,7 +45128,6 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.3,
-    "uvOrientation": 512,
     "objectIds": [
       "WINDOW",
       "POSHWINDOW",
@@ -75881,6 +75923,48 @@
       "TWOCATS_TABLE_MILK",
       "TWOCATS_TABLE_CAKE",
       "TWOCATS_TABLE_CAKE_MILK"
+    ]
+  },
+  {
+    "description": "Death to the Dorgushuun - Crate and Cart with Metal and Hay",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DTTD_MACHINE_PARTS_CRATE_SMALL_FULL",
+      "DTTD_MACHINE_PARTS_CRATE_BIG_FULL",
+      "DTTD_BOX_KART",
+      "DTTD_MACHINE_PARTS_CRATE_SMALL_EMPTY",
+      "DTTD_MACHINE_CRATE_OPEN_WITH_LID"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 9",
+        "baseMaterial": "HD_HAY_BRIGHT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Death to the Dorgushuun - Watermill Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DTTD_MILL_TRAPDOOR_OPEN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK"
+      }
     ]
   },
   {
