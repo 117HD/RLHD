@@ -14011,15 +14011,38 @@
     ]
   },
   {
-    "description": "Hide dirt clumps in Varrock west bank",
+    "description": "Hide dirt clumps in Varrock west bank, shops and nicer houses",
     "hide": true,
     "areas": [
-      [ 3180, 3433, 3190, 3447 ]
+      [ 3180, 3433, 3190, 3447 ],
+      [ 3230, 3420, 3239, 3427 ],
+      [ 3236, 3446, 3243, 3454 ],
+      [ 3213, 3410, 3220, 3420 ],
+      [ 3202, 3395, 3209, 3404 ],
+      [ 3192, 3402, 3198, 3406 ],
+      [ 3250, 3399, 3255, 3402 ],
+      [ 3266, 3388, 3274, 3394 ]
     ],
     "objectIds": [
       "VIKING_DUGUPSOIL_BROWN_1",
       "VIKING_DUGUPSOIL_BROWN_2",
-      "VIKING_DUGUPSOIL_BROWN_3"
+      "VIKING_DUGUPSOIL_BROWN_3",
+      "DUGUPSOIL1_BROWNMUD",
+      "DUGUPSOIL2_BROWNMUD",
+      "DUGUPSOIL3_BROWNMUD"
+    ]
+  },
+  {
+    "description": "Varrock Drains",
+    "baseMaterial": "GRAY_65",
+    "flatNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "terrainVertexSnap": true,
+    "depthBias": 1,
+    "objectIds": [
+      "FAI_VARROCK_DRAINS1",
+      "FAI_VARROCK_DRAINS2"
     ]
   },
   {

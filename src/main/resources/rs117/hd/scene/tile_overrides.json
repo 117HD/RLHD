@@ -1399,7 +1399,10 @@
     ],
     "groundMaterial": "DIRT",
     "blended": false,
-    "shiftLightness": 6
+    "shiftLightness": 6,
+    "replacements": {
+      "DEFAULT_DIRT": "!blending"
+    }
   },
   {
     "name": "VARROCK_CASTLE_PATH_FIXES_2",
@@ -1409,7 +1412,10 @@
     ],
     "groundMaterial": "DIRT",
     "blended": false,
-    "shiftLightness": 7
+    "shiftLightness": 7,
+    "replacements": {
+      "DEFAULT_DIRT": "!blending"
+    }
   },
   {
     "name": "VARROCK_MUSEUM_SOUTH_PATH_FIX_1",
@@ -1865,9 +1871,12 @@
     "area": "VARROCK_GUARD_POSTS",
     "overlayIds": [
       22,
+      81,
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "setSaturation": 0,
+    "setLightness": 25,
+    "groundMaterial": "WORN_TILES"
   },
   {
     "name": "VARROCK_HORVIKS_ANVIL",
@@ -1875,7 +1884,12 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": 5,
+    "blended": false,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "VARROCK_ZAMORAK_TEMPLE",
@@ -1883,7 +1897,12 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "WORN_TILES",
+    "blended": false,
+    "shiftLightness": 2,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "VARROCK_HAIRDRESSER",
@@ -1899,7 +1918,12 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "CARPET",
+    "blended": false,
+    "shiftLightness": 2,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "VARROCK_HOUSE_3",
@@ -2103,12 +2127,30 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "VARROCK_BUILDING_FLOOR_POOR",
+    "area": "VARROCK_HOUSE_POOR_HOUSES",
+    "overlayIds": [
+      81
+    ],
+    "groundMaterial": "TILE_SMALL",
+    "blended": false
+  },
+  {
+    "name": "VARROCK_BUILDING_FLOOR_VERY_POOR",
+    "area": "VARROCK_HOUSE_VERY_POOR_HOUSES",
+    "overlayIds": [
+      81
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
     "name": "VARROCK_BUILDING_FLOOR_1",
     "area": "VARROCK",
     "overlayIds": [
       81
     ],
-    "groundMaterial": "TILE_SMALL",
+    "groundMaterial": "TILE_SMALL_2",
     "blended": false
   },
   {
