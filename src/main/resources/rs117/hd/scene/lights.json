@@ -39000,7 +39000,26 @@
     ]
   },
   {
-    "description": "Wilderness - Teleport Obelisks",
+    "description": "Wilderness - Teleport Obelisks - Short",
+    "height": 300,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 30,
+    "color": [
+      120,
+      24,
+      137
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 20,
+    "objectIds": [ "WILDERNESS_PORTAL_STONE_GLOWING" ],
+    "animationIds": [ "WILDERNESS_PORTAL_STONE_GLOW" ],
+    "fadeInDuration": 80,
+    "fadeOutDuration": 150
+  },
+  {
+    "description": "Wilderness - Teleport Obelisks - Wide",
     "height": 400,
     "alignment": "CENTER",
     "radius": 410,

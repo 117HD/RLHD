@@ -4270,7 +4270,7 @@
     "shiftLightness": 4,
     "blended": false,
     "uvScale": 1.5,
-    "minLightness": 25,
+    "minLightness": 35,
     "replacements": {
       "NONE": "!textures"
     }
