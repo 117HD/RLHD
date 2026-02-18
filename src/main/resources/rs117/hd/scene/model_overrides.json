@@ -13030,15 +13030,12 @@
     "uvOrientation": 512
   },
   {
-    "description": "Varrock Castle - Juliets House - Museum Staircase",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "description": "Varrock Castle - Staircase",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "objectIds": [
-      "FAI_VARROCK_STAIRS_TALLER",
       "FAI_VARROCK_STAIRS_TALLER_NEW_FIX"
     ],
     "uvType": "BOX",
-    "uvOrientationY": 512,
-    "flatNormals": true,
     "colorOverrides": [
       {
         "description": "Interior Wallpaper",
@@ -13052,10 +13049,24 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "colors": "h == 7",
         "uvType": "BOX",
-        "uvOrientation": 512,
+        "uvOrientationZ": 512,
+        "uvOrientationY": 512,
+        "uvOrientationX": 325,
         "uvScale": 0.6
       }
     ]
+  },
+  {
+    "description": "Juliets House - Museum Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_STAIRS_TALLER"
+    ],
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
+    "uvOrientationX": -325,
+    "uvScale": 0.6
   },
   {
     "description": "Varrock - Metallic - Stone - Water Pump - Needs proper UV",
