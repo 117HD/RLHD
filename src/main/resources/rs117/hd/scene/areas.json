@@ -400,7 +400,19 @@
   {
     "name": "VARROCK_CHAMPIONS_GUILD",
     "aabbs": [
-      [ 3188, 3352, 0, 3194, 3362, 0 ]
+      [ 3188, 3350, 3194, 3362 ]
+    ]
+  },
+  {
+    "name": "VARROCK_CHAMPIONS_GUILD_KITCHEN",
+    "aabbs": [
+      [ 3188, 3352, 3194, 3354 ]
+    ]
+  },
+  {
+    "name": "VARROCK_CHAMPIONS_GUILD_PATH",
+    "aabbs": [
+      [ 3191, 3363, 3191, 3365 ]
     ]
   },
   {
