@@ -75501,11 +75501,12 @@
     ]
   },
   {
-    "description": "Xmas 2025 - Fireplace",
+    "description": "Blue Moon Inn - Fireplace",
     "baseMaterial": "GRUNGE_3",
     "depthBias": 2,
     "objectIds": [
-      "XMAS24_PUB01_FIREPLACE01"
+      "XMAS24_PUB01_FIREPLACE01",
+      "FAI_VARROCK_FIREPLACE"
     ],
     "colorOverrides": [
       {
