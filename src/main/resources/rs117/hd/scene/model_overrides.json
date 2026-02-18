@@ -1126,6 +1126,7 @@
     "areas": [ "WARM_REGIONS" ],
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "terrainVertexSnap": true,
+    "depthBias": 1,
     "objectIds": [
       "TREE2",
       "TREE3",
@@ -1173,6 +1174,7 @@
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "terrainVertexSnap": true,
+    "depthBias": 1,
     "objectIds": [
       "TREE2",
       "TREE3",
@@ -3348,11 +3350,34 @@
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
     "castShadows": false,
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "QIP_DS_STONE_FLOOR1",
       "QIP_DS_STONE_FLOOR2",
       "QIP_DS_STONE_FLOOR_EDGE1",
       "QIP_DS_STONE_FLOOR_EDGE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Demon Slayer - Varrock Dark Wizard Stone Circle",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "QIP_DS_STONE_WALL_SMALL",
+      "QIP_DS_STONE_WALL_LARGE",
+      "QIP_DS_STONE_WALL_LARGE_TOP",
+      "QIP_DS_STONE_WALL_SMALL_TOP",
+      "QIP_DS_STONE_WALL_SMALL_TOP_DOME",
+      "QIP_DS_STONE_TABLE_INTACT"
     ]
   },
   {
@@ -3420,7 +3445,7 @@
         "colors": "h == 7",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.3
       }
     ]
   },
@@ -5080,6 +5105,7 @@
     "baseMaterial": "STONE_NORMALED",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
+      "VIKING_DRYSTONEWALL",
       "DRYSTONEWALL",
       "DRYSTONEWALL_BUST",
       "DRYSTONEWALL_FALL",
@@ -26120,7 +26146,8 @@
       "FAI_VARROCK_MEMBER_GATER_OPEN"
     ],
     "uvOrientation": 512,
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Morytania - Rotting Tree",
@@ -26308,6 +26335,7 @@
       "MURDER_QIP_CONTEST_FENCE_ENDL"
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
     "flatNormals": true,
     "uvOrientation": 512
   },
@@ -28788,8 +28816,7 @@
     "textureMaterial": "HD_CONCRETE",
     "uvType": "BOX",
     "retainVanillaUvs": false,
-    "uvScale": 0.65,
-    "terrainVertexSnap": true,
+    "uvScale": 0.4,
     "objectIds": [
       "GRAVESTONE1",
       "GRAVESTONE2"
@@ -40710,7 +40737,7 @@
       },
       {
         "colors": "h == 5",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
         "uvScale": 0.75
       }
@@ -41082,8 +41109,8 @@
       "DARKM_HAT_STAND"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientationX": 512,
+    "uvScale": 0.4,
+    "uvOrientationY": 512,
     "retainVanillaUvs": false
   },
   {
@@ -75923,6 +75950,24 @@
       "TWOCATS_TABLE_MILK",
       "TWOCATS_TABLE_CAKE",
       "TWOCATS_TABLE_CAKE_MILK"
+    ]
+  },
+  {
+    "description": "Lumbridge Watermill - Waterwheel",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "WATERWHEEL_LEFT",
+      "WATERWHEEL_CENTRE",
+      "WATERWHEEL_RIGHT"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Lumbridge Watermill - Waterwheel - Pole",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "WATERWHEEL_WALLBASE",
+      "WATERWHEEL_POLE"
     ]
   },
   {
