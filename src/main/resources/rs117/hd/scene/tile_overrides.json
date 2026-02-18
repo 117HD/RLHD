@@ -1956,12 +1956,53 @@
     "blended": false
   },
   {
-    "name": "VARROCK_CHAMPIONS_GUILD",
+    "name": "VARROCK_CHAMPIONS_GUILD_KITCHEN",
+    "area": "VARROCK_CHAMPIONS_GUILD_KITCHEN",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "TILE_SMALL_2",
+    "blended": false,
+    "shiftLightness": 4,
+    "uvScale": 1.011,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "VARROCK_CHAMPIONS_GUILD_BOTTOM_FLOOR",
     "area": "VARROCK_CHAMPIONS_GUILD",
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILES_2X2_1_GLOSS",
+    "blended": false,
+    "shiftLightness": 4,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "VARROCK_CHAMPIONS_GUILD_UPPER_FLOOR",
+    "area": "VARROCK_CHAMPIONS_GUILD",
+    "overlayIds": [
+      81
+    ],
+    "groundMaterial": "CARPET",
+    "uvScale": 1.25,
+    "shiftLightness": 3,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "VARROCK_CHAMPIONS_GUILD_PATH",
+    "area": "VARROCK_CHAMPIONS_GUILD_PATH",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "DIRT",
+    "uvScale": 0.75
   },
   {
     "name": "VARROCK_GRAND_EXCHANGE_ROOF",
