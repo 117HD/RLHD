@@ -702,19 +702,6 @@ public class HdPlugin extends Plugin {
 
 			asyncUICopy.complete();
 
-			developerToolManager.deactivate();
-			tileOverrideManager.shutDown();
-			groundMaterialManager.shutDown();
-			modelOverrideManager.shutDown();
-			lightManager.shutDown();
-			environmentManager.shutDown();
-			fishingSpotReplacer.shutDown();
-			areaManager.shutDown();
-			gamevalManager.shutDown();
-			gammaCalibrationOverlay.destroy();
-			npcDisplacementCache.destroy();
-
-
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
 				renderer.waitUntilIdle();
@@ -734,7 +721,7 @@ public class HdPlugin extends Plugin {
 				renderer = null;
 			}
 
-			developerTools.deactivate();
+			developerToolManager.deactivate();
 			tileOverrideManager.shutDown();
 			groundMaterialManager.shutDown();
 			modelOverrideManager.shutDown();

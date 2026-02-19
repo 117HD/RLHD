@@ -254,6 +254,7 @@ public class DeveloperToolManager implements KeyListener {
 		for (DeveloperTool developerTool : developerTools) {
 			if (developerTool.getKeyBind().matches(e)) {
 				developerTool.toggle();
+				e.consume();
 				return;
 			}
 		}
