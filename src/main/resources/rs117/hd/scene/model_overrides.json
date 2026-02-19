@@ -7107,6 +7107,19 @@
     "uvType": "WORLD_XZ"
   },
   {
+    "description": "Hide shadows of these in grimstone dungeon",
+    "areas": [ "GRIMSTONE_DUNGEON" ],
+    "baseMaterial": "ROCK_1",
+    "castShadows": false,
+    "objectIds": [
+      "_100_OSMAN_WINTER_DUGUPSOIL_1",
+      "_100_OSMAN_WINTER_DUGUPSOIL_2",
+      "_100_OSMAN_WINTER_DUGUPSOIL_3"
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.25
+  },
+  {
     "description": "GROUND_DECORATION_GRAY_ROCK_UNCOLORED",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -7148,6 +7161,7 @@
       "BURGH_ROCK_DUGUPSOIL_1",
       "BURGH_ROCK_DUGUPSOIL_3",
       "_100_OSMAN_WINTER_DUGUPSOIL_1",
+      "_100_OSMAN_WINTER_DUGUPSOIL_2",
       "_100_OSMAN_WINTER_DUGUPSOIL_3",
       "WILDERNESS_ROCKS_FLOOR_HARD_01",
       "WILDERNESS_ROCKS_FLOOR_HARD_02",
@@ -7263,7 +7277,6 @@
       "DUGUPSOIL_MIDGREY3",
       "_100_GOBLINDUGUPSOIL2_SOOT",
       "BURGH_ROCK_DUGUPSOIL_2",
-      "_100_OSMAN_WINTER_DUGUPSOIL_2",
       "WILD1_DUGUPSOIL_2",
       "WILD3_DUGUPSOIL_2",
       "WILD4_DUGUPSOIL_1",
@@ -75527,7 +75540,6 @@
   {
     "description": "Blue Moon Inn - Fireplace",
     "baseMaterial": "GRUNGE_3",
-    "depthBias": 2,
     "objectIds": [
       "XMAS24_PUB01_FIREPLACE01",
       "FAI_VARROCK_FIREPLACE"
@@ -75885,6 +75897,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.5
+  },
+  {
+    "description": "Grimstone Dungeon - Set a pure black trim around the fix below, to cover a seam from the vanilla zbuffer fix",
+    "areas": [ "GRIMSTONE_DUNGEON_FILLER_SEAM_FIX" ],
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "BCS_TOMB_WALLTOP",
+      "CAVEKIT_SNOW03_DEFAULT01_DARK02_WALLTOP"
+    ]
   },
   {
     "description": "Grimstone Dungeon - Hide wall tops for performance",
