@@ -752,10 +752,10 @@ public class LegacySceneUploader {
 			bufferLength += 6;
 
 
-			int packedMaterialDataSW = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay, true);
-			int packedMaterialDataSE = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay, true);
-			int packedMaterialDataNW = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay, true);
-			int packedMaterialDataNE = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay, true);
+			int packedMaterialDataSW = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
+			int packedMaterialDataSE = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
+			int packedMaterialDataNW = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
+			int packedMaterialDataNE = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
 
 			float uvcos = -uvScale, uvsin = 0;
 			if (uvOrientation % 2048 != 0) {
@@ -883,10 +883,10 @@ public class LegacySceneUploader {
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
-			int packedMaterialDataSE = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
-			int packedMaterialDataNW = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
-			int packedMaterialDataNE = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
+			int packedMaterialDataSW = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataSE = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataNW = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataNE = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 			sceneContext.stagingBufferUvs.ensureCapacity(24);
 			sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialDataNE);
@@ -1099,9 +1099,9 @@ public class LegacySceneUploader {
 			bufferLength += 3;
 
 			int[] packedMaterialData = {
-				materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay, true),
-				materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay, true),
-				materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay, true)
+				materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay),
+				materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay),
+				materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay)
 			};
 
 			float uvcos = -uvScale, uvsin = 0;
@@ -1246,9 +1246,9 @@ public class LegacySceneUploader {
 
 				bufferLength += 3;
 
-				int packedMaterialDataA = materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
-				int packedMaterialDataB = materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
-				int packedMaterialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
+				int packedMaterialDataA = materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataB = materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 				sceneContext.stagingBufferUvs.ensureCapacity(12);
 				sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
@@ -1297,7 +1297,7 @@ public class LegacySceneUploader {
 		sceneContext.stagingBufferVertices.put(toX, seHeight, fromY, color);
 		sceneContext.stagingBufferVertices.put(fromX, nwHeight, toY, color);
 
-		int packedMaterialData = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
+		int packedMaterialData = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 		sceneContext.stagingBufferUvs.ensureCapacity(24);
 		sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialData);

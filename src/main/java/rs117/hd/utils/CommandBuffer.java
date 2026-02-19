@@ -27,11 +27,12 @@ public class CommandBuffer {
 	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 6;
 	private static final int GL_BIND_ELEMENTS_ARRAY_TYPE = 7;
 	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
-	private static final int GL_DEPTH_MASK_TYPE = 9;
-	private static final int GL_COLOR_MASK_TYPE = 10;
-	private static final int GL_USE_PROGRAM = 11;
+	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
+	private static final int GL_DEPTH_MASK_TYPE = 10;
+	private static final int GL_COLOR_MASK_TYPE = 11;
+	private static final int GL_USE_PROGRAM = 12;
 
-	private static final int GL_TOGGLE_TYPE = 12; // Combined glEnable & glDisable
+	private static final int GL_TOGGLE_TYPE = 13; // Combined glEnable & glDisable
 
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 	private static final int DRAW_MODE_MASK = 0xF;
@@ -68,6 +69,12 @@ public class CommandBuffer {
 		cmd[writeHead++] = GL_BIND_INDIRECT_ARRAY_TYPE & 0xFF | (long) ido << 8;
 	}
 
+	public void BindTextureUnit(int type, int texId, int bindingIndex) {
+		ensureCapacity(2);
+		cmd[writeHead++] = GL_BIND_TEXTURE_UNIT_TYPE & 0xFF | (long) type << 8;
+		cmd[writeHead++] = texId | (long) bindingIndex << 32;
+	}
+
 	public void SetShader(ShaderProgram program) {
 		ensureCapacity(1);
 		int objectIdx = writeObject(program);
@@ -90,14 +97,19 @@ public class CommandBuffer {
 	}
 
 	public void MultiDrawArrays(int mode, int[] offsets, int[] counts) {
+		MultiDrawArrays(mode, offsets, counts, counts.length);
+	}
+
+	public void MultiDrawArrays(int mode, int[] offsets, int[] counts, int drawCount) {
 		assert offsets.length == counts.length;
+		assert counts.length >= drawCount;
 		assert (mode & DRAW_MODE_MASK) == mode;
-		if (offsets.length == 0)
+		if (drawCount == 0)
 			return;
 
-		ensureCapacity(1 + offsets.length);
-		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_TYPE & 0xFF | mode << 8 | (long) offsets.length << 32;
-		for (int i = 0; i < offsets.length; i++)
+		ensureCapacity(1 + drawCount);
+		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_TYPE & 0xFF | mode << 8 | (long) drawCount << 32;
+		for (int i = 0; i < drawCount; i++)
 			cmd[writeHead++] = (long) offsets[i] << 32 | counts[i] & INT_MASK;
 	}
 
@@ -145,9 +157,13 @@ public class CommandBuffer {
 	}
 
 	public void MultiDrawArraysIndirect(int mode, int[] vertexOffsets, int[] vertexCounts, GpuIntBuffer indirectBuffer) {
+		MultiDrawArraysIndirect(mode, vertexOffsets, vertexCounts, vertexCounts.length, indirectBuffer);
+	}
+
+	public void MultiDrawArraysIndirect(int mode, int[] vertexOffsets, int[] vertexCounts, int drawCount, GpuIntBuffer indirectBuffer) {
 		assert vertexOffsets.length == vertexCounts.length;
+		assert vertexCounts.length >= drawCount;
 		assert (mode & DRAW_MODE_MASK) == mode;
-		int drawCount = vertexOffsets.length;
 		if (drawCount == 0)
 			return;
 
@@ -220,6 +236,16 @@ public class CommandBuffer {
 					}
 					case GL_BIND_INDIRECT_ARRAY_TYPE: {
 						renderState.ido.set((int) (data >> 8));
+						break;
+					}
+					case GL_BIND_TEXTURE_UNIT_TYPE: {
+						long packed = cmd[readHead++];
+						int texType = (int) (data >> 8);
+						int texUnit = (int) (packed >> 32);
+						int texId = (int) packed;
+
+						glActiveTexture(texUnit);
+						glBindTexture(texType, texId);
 						break;
 					}
 					case GL_USE_PROGRAM: {
@@ -314,7 +340,10 @@ public class CommandBuffer {
 	}
 
 	public void reset() {
-		writeHead = 0;
+		Arrays.fill(objects, 0, objectCount, null);
 		renderState.reset();
+
+		writeHead = 0;
+		objectCount = 0;
 	}
 }

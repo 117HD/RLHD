@@ -94,7 +94,7 @@
     "name": "SEASONAL_SNOW",
     "replacements": {
       "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
-      "WINTER_DIRT": true
+      "DEFAULT_SNOW": true
     }
   },
   {
@@ -154,6 +154,19 @@
     "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT_2"
   },
   {
+    "name": "WINTER_EAST_ARDOUGNE_BRIDGE",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "maxLightness": 53,
+    "replacements": {
+      "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND": "!blending"
+    }
+  },
+  {
+    "name": "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "maxLightness": 44
+  },
+  {
     "name": "WINTER_EDGEVILLE_PATH",
     "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT",
     "maxHue": 0,
@@ -178,48 +191,6 @@
   },
   {
     "name": "TAG - TEMPORARY - START"
-  },
-  {
-    "name": "XMAS_2025_FOUNTAIN_FIX",
-    "area": "XMAS_2025_FOUNTAIN_FIX",
-    "groundMaterial": "NONE",
-    "underlayIds": [
-      0,
-      61,
-      124
-    ],
-    "shiftLightness": -10,
-    "shiftHue": 26,
-    "setSaturation": 2
-  },
-  {
-    "name": "XMAS_2025_VARROCK_SNOW_BLENDING",
-    "area": "XMAS_2025_SNOW",
-    "groundMaterial": "SNOW_1",
-    "underlayIds": [
-      58,
-      59,
-      124
-    ],
-    "minLightness": 70,
-    "setHue": 5,
-    "setSaturation": 0,
-    "replacements": {
-      "XMAS_2025_VARROCK_SNOW_NO_BLENDING": "!blending"
-    }
-  },
-  {
-    "name": "XMAS_2025_VARROCK_SNOW_NO_BLENDING",
-    "area": "XMAS_2025_SNOW",
-    "groundMaterial": "SNOW_1",
-    "underlayIds": [
-      58,
-      59,
-      124
-    ],
-    "maxLightness": 75,
-    "setHue": 5,
-    "setSaturation": 0
   },
   {
     "name": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
@@ -1505,6 +1476,28 @@
     "blended": false,
     "overlayIds": [
       134
+    ]
+  },
+  {
+    "name": "RIMMINGTON_PATH_BLEND_FIX",
+    "area": "RIMMINGTON_PATH_BLEND_FIX",
+    "groundMaterial": "GRAVEL",
+    "setHue": 0,
+    "setSaturation": 0,
+    "minLightness": 24,
+    "maxLightness": 26,
+    "overlayIds": [
+      10,
+      81,
+      88
+    ]
+  },
+  {
+    "name": "SOPHANEM_UNDERWALL_FIX",
+    "area": "SOPHANEM",
+    "blended": false,
+    "overlayIds": [
+      206
     ]
   },
   {
@@ -3397,7 +3390,8 @@
     "minLightness": 33,
     "maxLightness": 33,
     "replacements": {
-      "NONE": "!textures"
+      "NONE": "!textures",
+      "WINTER_EAST_ARDOUGNE_BRIDGE": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -3767,15 +3761,21 @@
   {
     "name": "DRAYNOR_MANOR_ENTRANCE_PATH",
     "area": "DRAYNOR_MANOR",
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "minLightness": 12,
+    "maxLightness": 14,
+    "uvOrientation": 488,
     "overlayIds": [
       2,
+      11,
       90,
       117,
       120,
       127,
       132
-    ],
-    "groundMaterial": "VARROCK_PATHS"
+    ]
   },
   {
     "name": "WIZARDS_TOWER_PATH",
@@ -4193,6 +4193,32 @@
     "groundMaterial": "VARIED_DIRT",
     "replacements": {
       "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "Wilderness Chaos Temple - Tiles",
+    "area": "WILDERNESS_CHAOS_TEMPLE",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "shiftLightness": -1,
+    "blended": false,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Wilderness Chaos Temple - Carpet",
+    "area": "WILDERNESS_CHAOS_TEMPLE",
+    "overlayIds": [
+      132
+    ],
+    "groundMaterial": "CARPET",
+    "blended": false,
+    "shiftLightness": 10,
+    "replacements": {
+      "NONE": "!textures"
     }
   },
   {
@@ -4812,7 +4838,10 @@
     "blendedAsOpposite": true,
     "shiftHue": 8,
     "shiftSaturation": 3,
-    "shiftLightness": -20
+    "shiftLightness": -20,
+    "replacements": {
+      "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_BLENDING": "!blending"
+    }
   },
   {
     "name": "TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX",
@@ -5654,10 +5683,13 @@
     "overlayIds": [
       33
     ],
-    "groundMaterial": "MARBLE_1_GLOSS",
+    "groundMaterial": "MARBLE_4_GLOSS",
+    "shiftLightness": 10,
+    "uvScale": 1.33,
     "blended": false,
     "replacements": {
-      "SNOW_2": "season == SeasonalTheme.WINTER"
+      "SNOW_2": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
     }
   },
   {
@@ -7859,8 +7891,7 @@
   },
   {
     "name": "FREM_COLONIES_SEASONAL_SNOW",
-    "minHue": 3,
-    "maxHue": 7,
+    "maxHue": 0,
     "maxLightness": 63,
     "replacements": {
       "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
@@ -8441,19 +8472,34 @@
   },
   {
     "name": "ARAXXOR_WEB_OVERLAY",
-    "area": "MORYTANIA_SPIDER_CAVES",
+    "area": "ARAXXOR_ARENA",
     "overlayIds": [
       370
     ],
     "groundMaterial": "GROUND_WEBS",
     "blended": false,
-    "uvScale": 3,
+    "uvScale": 2,
     "uvOrientation": 89,
-    "shiftLightness": 14
+    "shiftLightness": 16,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "ARAXXOR_DIRT",
+    "area": "ARAXXOR_ARENA",
+    "underlayIds": [
+      80
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "minLightness": 16,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "ARAXXOR_WASTE_WATER",
-    "area": "MORYTANIA_SPIDER_CAVES",
+    "area": "ARAXXOR_ARENA",
     "overlayIds": [
       364
     ],
@@ -8461,7 +8507,7 @@
   },
   {
     "name": "MORYTANIA_SPIDER_CAVES_WEB_1",
-    "area": "MORYTANIA_SPIDER_CAVES",
+    "area": "ARAXYTE_SPIDER_CAVES",
     "overlayIds": [
       191
     ],
@@ -8472,29 +8518,33 @@
       84
     ],
     "groundMaterial": "GROUND_WEBS",
-    "uvScale": 2,
+    "uvScale": 3,
     "uvOrientation": 90,
     "shiftLightness": 7,
     "replacements": {
-      "DEFAULT_PACKED_EARTH": "h < 10"
+      "DEFAULT_PACKED_EARTH": "h < 8 || !blending",
+      "NONE": "!textures"
     }
   },
   {
     "name": "MORYTANIA_SPIDER_CAVES_WEB_2",
-    "area": "MORYTANIA_SPIDER_CAVES",
+    "area": "ARAXYTE_SPIDER_CAVES",
     "underlayIds": [
+      10,
       39,
       62,
       80,
       85,
+      118,
       138
     ],
     "groundMaterial": "GROUND_WEBS",
-    "uvScale": 2,
+    "uvScale": 3,
     "uvOrientation": 32,
     "shiftLightness": 7,
     "replacements": {
-      "DEFAULT_PACKED_EARTH": "h < 10"
+      "DEFAULT_PACKED_EARTH": "h < 8 || !blending",
+      "NONE": "!textures"
     }
   },
   {
@@ -9212,6 +9262,46 @@
     "setLightness": 72
   },
   {
+    "name": "GRIMSTONE_DUNGEON_FLOOR",
+    "area": "GRIMSTONE_DUNGEON",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58,
+      159,
+      161
+    ],
+    "shiftLightness": 22,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "GRIMSTONE",
+    "area": "GRIMSTONE",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58
+    ],
+    "shiftLightness": 30,
+    "maxLightness": 105,
+    "replacements": {
+      "NONE": "!textures",
+      "GRIMSTONE_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "GRIMSTONE_NO_BLENDING",
+    "area": "GRIMSTONE",
+    "groundMaterial": "DIRTY_SNOW",
+    "underlayIds": [
+      58
+    ],
+    "maxLightness": 95,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {
@@ -9316,6 +9406,8 @@
       92
     ],
     "groundMaterial": "SNOW_1",
+    "setHue": 0,
+    "shiftLightness": 15,
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
@@ -9339,7 +9431,7 @@
       "SEASONAL_DIRT": "s == 1",
       "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     },
-    "maxLightness": 75
+    "maxLightness": 77
   },
   {
     "name": "TAG - OVERWORLD - START"
@@ -9471,7 +9563,7 @@
       144
     ],
     "replacements": {
-      "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "SEASONAL_GRUNGE": "blending && (s == 0 || h <= 10 && s < 2)",
       "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
       "SEASONAL_GRASS": [
         "h >= 11 && s == 1",
@@ -9687,7 +9779,8 @@
     "overlayIds": [
       48,
       120,
-      185
+      185,
+      198
     ],
     "groundMaterial": "GRUNGE"
   },

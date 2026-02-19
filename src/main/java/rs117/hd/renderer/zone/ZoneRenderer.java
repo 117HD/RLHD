@@ -86,6 +86,9 @@ import static rs117.hd.utils.MathUtils.*;
 public class ZoneRenderer implements Renderer {
 	private static final int ALPHA_ZSORT_CLOSE = 2048;
 
+	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
+	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
 
@@ -121,6 +124,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private SceneUploader sceneUploader;
+
+	@Inject
+	private SceneUploader asyncSceneUploader;
 
 	@Inject
 	private FacePrioritySorter facePrioritySorter;
@@ -188,8 +194,10 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.initialize();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(uboWorldViews);
-
 		eventBus.register(this);
+
+		// Write caches used exclusively on the client thread can be shared
+		sceneUploader.writeCache = FacePrioritySorter.WRITE_CACHE;
 	}
 
 	@Override
@@ -1004,7 +1012,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.processPendingClientCallbacks();
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
+		if (ctx == null || ctx.vboM == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -1069,7 +1077,16 @@ public class ZoneRenderer implements Renderer {
 
 			if (zone.inSceneFrustum) {
 				try {
-					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+					facePrioritySorter.uploadSortedModel(
+						projection,
+						m,
+						modelOverride,
+						preOrientation,
+						orient, x, y, z,
+						o.vbo.vb,
+						a.vbo.vb,
+						o.tboF.getPixelBuffer(),
+						a.tboF.getPixelBuffer());
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
 				}
@@ -1085,11 +1102,22 @@ public class ZoneRenderer implements Renderer {
 						orient,
 						x, y, z,
 						vao.vbo.vb,
-						vao.vbo.vb
+						vao.vbo.vb,
+						vao.tboF.getPixelBuffer(),
+						vao.tboF.getPixelBuffer()
 					);
 				}
 			} else {
-				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+				sceneUploader.uploadTempModel(
+					m,
+					modelOverride,
+					preOrientation,
+					orient,
+					x, y, z,
+					o.vbo.vb,
+					a.vbo.vb,
+					o.tboF.getPixelBuffer(),
+					a.tboF.getPixelBuffer());
 			}
 
 			int end = a.vbo.vb.position();
@@ -1098,10 +1126,19 @@ public class ZoneRenderer implements Renderer {
 				// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
 				int plane = Math.min(ctx.maxLevel, tileObject.getPlane());
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
-				zone.addTempAlphaModel(modelOverride, a.vao, start, end, plane, x & 1023, y, z & 1023);
+				zone.addTempAlphaModel(modelOverride, a.vao, a.tboF.getTexId(), start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
+			sceneUploader.uploadTempModel(
+				m,
+				modelOverride,
+				preOrientation,
+				orient,
+				x, y, z,
+				o.vbo.vb,
+				o.vbo.vb,
+				o.tboF.getPixelBuffer(),
+				o.tboF.getPixelBuffer());
 		}
 	}
 
@@ -1110,7 +1147,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.processPendingClientCallbacks();
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !renderCallbackManager.drawObject(scene, gameObject))
+		if (ctx == null || ctx.vboM == null || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
 		ctx.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane(), worldPos);
@@ -1152,15 +1189,16 @@ public class ZoneRenderer implements Renderer {
 					.build("uploadTempModel", t -> {
 						// Since priority sorting of models includes back-face culling,
 						// we need to upload the entire model again for shadows
-						sceneUploader.uploadTempModel(
+						asyncSceneUploader.uploadTempModel(
 							m,
 							modelOverride,
 							preOrientation,
 							orientation,
 							x, y, z,
 							o.vbo.vb,
-							o.vbo.vb
-						);
+							o.vbo.vb,
+							o.tboF.getPixelBuffer(),
+							o.tboF.getPixelBuffer());
 					})
 					.setExecuteAsync(isSubScene || zone.inSceneFrustum)
 					.queue(true);
@@ -1183,7 +1221,9 @@ public class ZoneRenderer implements Renderer {
 						orientation,
 						x, y, z,
 						o.vbo.vb,
-						a.vbo.vb
+						a.vbo.vb,
+						o.tboF.getPixelBuffer(),
+						a.tboF.getPixelBuffer()
 					);
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
@@ -1195,6 +1235,7 @@ public class ZoneRenderer implements Renderer {
 					zone.addTempAlphaModel(
 						modelOverride,
 						a.vao,
+						a.tboF.getTexId(),
 						start,
 						end,
 						plane,
@@ -1218,8 +1259,9 @@ public class ZoneRenderer implements Renderer {
 				orientation,
 				x, y, z,
 				o.vbo.vb,
-				o.vbo.vb
-			);
+				o.vbo.vb,
+				o.tboF.getPixelBuffer(),
+				o.tboF.getPixelBuffer());
 		}
 	}
 
@@ -1282,7 +1324,7 @@ public class ZoneRenderer implements Renderer {
 
 		plugin.drawUi(overlayColor);
 
-		jobSystem.processPendingClientCallbacks(false);
+		jobSystem.processPendingClientCallbacks();
 
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);
