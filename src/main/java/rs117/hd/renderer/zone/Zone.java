@@ -3,21 +3,26 @@ package rs117.hd.renderer.zone;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
-import lombok.RequiredArgsConstructor;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.buffer.GLTextureBuffer;
 
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -26,45 +31,58 @@ import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 @Slf4j
-@RequiredArgsConstructor
-class Zone {
+public class Zone {
+	@Inject
+	private Client client;
+
 	// Zone vertex format
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	// alphaBiasHsl int
-	// materialData int
-	// terrainData int
-	static final int VERT_SIZE = 32;
+	// texturedFaceIdx int
+	public static final int VERT_SIZE = 24;
+
+	// alphaBiasHsl ivec3
+	// materialData ivec3
+	// terrainData ivec3
+	public static final int TEXTURE_SIZE = 36;
 
 	// Metadata format
 	// worldViewIndex int int
 	// sceneOffset int vec2(x, y)
-	static final int METADATA_SIZE = 12;
+	public static final int METADATA_SIZE = 12;
 
-	static final int LEVEL_WATER_SURFACE = 4;
+	public static final int LEVEL_WATER_SURFACE = 4;
 
-	int glVao;
+	public static final BlockingDeque<VBO> VBO_PENDING_DELETION = new LinkedBlockingDeque<>();
+	public static final BlockingDeque<Integer> VAO_PENDING_DELETION = new LinkedBlockingDeque<>();
+
+	public int glVao;
 	int bufLen;
 
-	int glVaoA;
-	int bufLenA;
+	public int glVaoA;
+	public int bufLenA;
 
-	int sizeO, sizeA;
+	public int sizeO, sizeA, sizeF;
 	@Nullable
-	VBO vboO, vboA, vboM;
+	public VBO vboO, vboA, vboM;
+	public GLTextureBuffer tboF;
 
-	boolean initialized; // whether the zone vao and vbos are ready
-	boolean cull; // whether the zone is queued for deletion
-	boolean dirty; // whether the zone has temporary modifications
-	boolean metadataDirty; // whether the zone needs metadata updating
-	boolean invalidate; // whether the zone needs rebuilding
-	boolean hasWater; // whether the zone has any water tiles
-	boolean onlyWater; // whether the zone only contains water tiles
-	boolean inSceneFrustum; // whether the zone is visible to the scene camera
-	boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
+	public boolean initialized; // whether the zone vao and vbos are ready
+	public boolean cull; // whether the zone is queued for deletion
+	public boolean needsRoofUpdate; // whether the zone needs to have its roofs updated during scene swap
+	public boolean rebuild; // whether the zone is queued for rebuild
+	public boolean dirty; // whether the zone has temporary modifications
+	public boolean hasWater; // whether the zone has any water tiles
+	public boolean onlyWater; // whether the zone only contains water tiles
+	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
+	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
+	public boolean isFirstLoadingAttempt = true;
+
+	ZoneUploadJob uploadJob;
 
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
 
@@ -74,15 +92,14 @@ class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	void initialize(VBO o, VBO a, int eboShared) {
+	public void initialize(VBO o, VBO a, GLTextureBuffer f, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
+		if (o == null && a == null || f == null)
+			return;
 
-		if (o != null || a != null) {
-			vboM = new VBO(METADATA_SIZE);
-			vboM.initialize(GL_STATIC_DRAW);
-			metadataDirty = true;
-		}
+		vboM = new VBO(METADATA_SIZE);
+		vboM.initialize(GL_STATIC_DRAW);
 
 		if (o != null) {
 			vboO = o;
@@ -95,6 +112,8 @@ class Zone {
 			glVaoA = glGenVertexArrays();
 			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
 		}
+
+		tboF = f;
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -107,7 +126,7 @@ class Zone {
 					zone.free();
 	}
 
-	void free() {
+	public void free() {
 		if (vboO != null) {
 			vboO.destroy();
 			vboO = null;
@@ -123,6 +142,11 @@ class Zone {
 			vboM = null;
 		}
 
+		if (tboF != null) {
+			tboF.destroy();
+			tboF = null;
+		}
+
 		if (glVao != 0) {
 			glDeleteVertexArrays(glVao);
 			glVao = 0;
@@ -133,18 +157,92 @@ class Zone {
 			glVaoA = 0;
 		}
 
+		if (uploadJob != null) {
+			uploadJob.cancel();
+			uploadJob = null;
+		}
+
+		sizeO = 0;
+		sizeA = 0;
+		sizeF = 0;
+		bufLen = 0;
+		bufLenA = 0;
+
+		initialized = false;
+		cull = false;
+		hasWater = false;
+		onlyWater = false;
+		inSceneFrustum = false;
+		inShadowFrustum = false;
+
+		Arrays.fill(levelOffsets, 0);
+		rids = null;
+		roofStart = null;
+		roofEnd = null;
+
 		// don't add permanent alphamodels to the cache as permanent alphamodels are always allocated
 		// to avoid having to synchronize the cache
 		alphaModels.clear();
 	}
 
-	void unmap() {
+	public static void processPendingDeletions() {
+		int leakCount = 0;
+		VBO vbo;
+		while ((vbo = VBO_PENDING_DELETION.poll()) != null) {
+			vbo.destroy();
+			leakCount++;
+		}
+
+		Integer vao;
+		while ((vao = VAO_PENDING_DELETION.poll()) != null) {
+			glDeleteVertexArrays(vao);
+			leakCount++;
+		}
+
+		if (leakCount > 0)
+			log.warn("Destroyed {} leaked VBOs", leakCount);
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		// Just in case the zone instance is no longer valid,
+		// copy everything which needs to be cleaned up here
 		if (vboO != null) {
-			vboO.unmap();
+			VBO_PENDING_DELETION.add(vboO);
+			vboO = null;
 		}
+
 		if (vboA != null) {
-			vboA.unmap();
+			VBO_PENDING_DELETION.add(vboA);
+			vboA = null;
 		}
+
+		if (vboM != null) {
+			VBO_PENDING_DELETION.add(vboM);
+			vboM = null;
+		}
+
+		if (glVao != 0) {
+			VAO_PENDING_DELETION.add(glVao);
+			glVao = 0;
+		}
+
+		if (glVaoA != 0) {
+			VAO_PENDING_DELETION.add(glVaoA);
+			glVaoA = 0;
+		}
+	}
+
+	public void unmap() {
+		assert client.isClientThread();
+
+		if (vboO != null)
+			vboO.unmap();
+		if (vboA != null)
+			vboA.unmap();
+		if (tboF != null)
+			tboF.unmap();
 
 		if (vboO != null) {
 			this.bufLen = vboO.len / (VERT_SIZE / 4);
@@ -174,17 +272,9 @@ class Zone {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
 
-		// Alpha, bias & HSL
+		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
 		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 20);
-
-		// Material data
-		glEnableVertexAttribArray(4);
-		glVertexAttribIPointer(4, 1, GL_INT, VERT_SIZE, 24);
-
-		// Terrain data
-		glEnableVertexAttribArray(5);
-		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 28);
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
@@ -204,13 +294,12 @@ class Zone {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void setMetadata(WorldViewContext viewContext, int mx, int mz) {
-		if (vboM == null || !metadataDirty)
+	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
+		if (vboM == null)
 			return;
-		metadataDirty = false;
 
-		int baseX = (mx - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
-		int baseZ = (mz - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
+		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
+		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
 
 		vboM.map();
 		vboM.vb.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
@@ -235,7 +324,6 @@ class Zone {
 	private static final int[] drawOff = new int[NUM_DRAW_RANGES];
 	private static final int[] drawEnd = new int[NUM_DRAW_RANGES];
 	private static int drawIdx = 0;
-	private static int[] glDrawOffset, glDrawLength;
 
 	private void convertForDraw(int vertSize) {
 		for (int i = 0; i < drawIdx; ++i) {
@@ -247,15 +335,20 @@ class Zone {
 
 			drawEnd[i] -= drawOff[i]; // convert from end pos to length
 		}
-
-		glDrawOffset = Arrays.copyOfRange(drawOff, 0, drawIdx);
-		glDrawLength = Arrays.copyOfRange(drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(CommandBuffer cmd, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds) {
+	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
 		drawIdx = 0;
 
-		for (int level = minLevel; level <= maxLevel; ++level) {
+		int currentLevel = ctx.level;
+		int maxLevel = ctx.maxLevel;
+		var hiddenRoofIds = ctx.hideRoofIds;
+		if (roofShadows) {
+			maxLevel = 3;
+			hiddenRoofIds = Collections.emptySet();
+		}
+
+		for (int level = ctx.minLevel; level <= maxLevel; ++level) {
 			int[] rids = this.rids[level];
 			int[] roofStart = this.roofStart[level];
 			int[] roofEnd = this.roofEnd[level];
@@ -297,6 +390,7 @@ class Zone {
 
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
+		lastTboF = tboF.getTexId();
 		flush(cmd);
 	}
 
@@ -310,6 +404,7 @@ class Zone {
 
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
+		lastTboF = tboF.getTexId();
 		flush(cmd);
 	}
 
@@ -329,10 +424,12 @@ class Zone {
 
 	static class AlphaModel {
 		int id;
+		ModelOverride modelOverride;
 		int startpos, endpos;
 		short x, y, z; // local position
 		short rid;
 		int vao;
+		int tboF;
 		byte level;
 		byte lx, lz, ux, uz; // lower/upper zone coords
 		byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
@@ -354,8 +451,10 @@ class Zone {
 	static final Queue<AlphaModel> modelCache = new ArrayDeque<>();
 
 	void addAlphaModel(
+		HdPlugin plugin,
 		MaterialManager materialManager,
 		int vao,
+		int tboF,
 		Model model,
 		ModelOverride modelOverride,
 		int startpos,
@@ -373,12 +472,14 @@ class Zone {
 	) {
 		AlphaModel m = new AlphaModel();
 		m.id = id;
+		m.modelOverride = modelOverride;
 		m.startpos = startpos;
 		m.endpos = endpos;
 		m.x = (short) x;
 		m.y = (short) y;
 		m.z = (short) z;
 		m.vao = vao;
+		m.tboF = tboF;
 		m.rid = (short) rid;
 		m.level = (byte) level;
 		if (lx > -1) {
@@ -391,6 +492,7 @@ class Zone {
 		}
 
 		int faceCount = model.getFaceCount();
+		short[] unlitColor = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
 		int[] color1 = model.getFaceColors1();
 		int[] color3 = model.getFaceColors3();
 		byte[] transparencies = model.getFaceTransparencies();
@@ -450,6 +552,10 @@ class Zone {
 			if (color3[f] == -2)
 				continue;
 
+			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
+			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
+				continue;
+
 			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;
 			int textureId = faceTextures != null ? faceTextures[f] : -1;
 
@@ -467,7 +573,7 @@ class Zone {
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | color1[f];
+				int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
 				for (var override : modelOverride.colorOverrides) {
 					if (override.ahslCondition.test(ahsl)) {
 						material = override.baseMaterial;
@@ -504,17 +610,19 @@ class Zone {
 		alphaModels.add(m);
 	}
 
-	void addTempAlphaModel(int vao, int startpos, int endpos, int level, int x, int y, int z) {
+	void addTempAlphaModel(ModelOverride modelOverride, int vao, int tboF, int startpos, int endpos, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
 		m.id = -1;
+		m.modelOverride = modelOverride;
 		m.startpos = startpos;
 		m.endpos = endpos;
 		m.x = (short) x;
 		m.y = (short) y;
 		m.z = (short) z;
 		m.vao = vao;
+		m.tboF = tboF;
 		m.rid = -1;
 		m.level = (byte) level;
 		m.lx = m.lz = m.ux = m.uz = -1;
@@ -542,39 +650,50 @@ class Zone {
 
 	private static int lastDrawMode;
 	private static int lastVao;
+	private static int lastTboF;
 	private static int lastzx, lastzz;
 
 	private static final int[] numOfPriority = FacePrioritySorter.numOfPriority;
 	private static final int[][] orderedFaces = FacePrioritySorter.orderedFaces;
 
+	private Camera alphaSort_Camera;
+	private int alphaSort_zx, alphaSort_zz;
+	private final Comparator<AlphaModel> alphaSortComparator = Comparator.comparingInt((AlphaModel m) -> {
+		final int cx = (int) alphaSort_Camera.getPositionX();
+		final int cy = (int) alphaSort_Camera.getPositionY();
+		final int cz = (int) alphaSort_Camera.getPositionZ();
+		final int mx = m.x + ((alphaSort_zx - m.zofx) << 10);
+		final int mz = m.z + ((alphaSort_zz - m.zofz) << 10);
+		return (mx - cx) * (mx - cx) + (m.y - cy) * (m.y - cy) + (mz - cz) * (mz - cz);
+	}).reversed();
+
 	void alphaSort(int zx, int zz, Camera camera) {
-		int cx = (int) camera.getPositionX();
-		int cy = (int) camera.getPositionY();
-		int cz = (int) camera.getPositionZ();
-		alphaModels.sort(Comparator
-			.comparingInt((AlphaModel m) -> {
-				final int mx = m.x + ((zx - m.zofx) << 10);
-				final int mz = m.z + ((zz - m.zofz) << 10);
-				return (mx - cx) * (mx - cx) + (m.y - cy) * (m.y - cy) + (mz - cz) * (mz - cz);
-			})
-			.reversed()
-		);
+		alphaSort_Camera = camera;
+		alphaSort_zx = zx;
+		alphaSort_zz = zz;
+		alphaModels.sort(alphaSortComparator);
 	}
 
 	void renderAlpha(
 		CommandBuffer cmd,
 		int zx,
 		int zz,
-		int minLevel,
-		int currentLevel,
-		int maxLevel,
 		int level,
+		WorldViewContext ctx,
 		Camera camera,
-		Set<Integer> hiddenRoofIds,
-		boolean useStaticUnsorted
+		boolean roofShadows,
+		boolean skipSorting
 	) {
 		if (alphaModels.isEmpty())
 			return;
+
+		int currentLevel = ctx.level;
+		int maxLevel = ctx.maxLevel;
+		var hiddenRoofIds = ctx.hideRoofIds;
+		if (roofShadows) {
+			maxLevel = 3;
+			hiddenRoofIds = Collections.emptySet();
+		}
 
 		cmd.DepthMask(false);
 
@@ -585,16 +704,17 @@ class Zone {
 		int pitchSin = SINE[camera.getFixedPitch()];
 		int pitchCos = COSINE[camera.getFixedPitch()];
 		for (AlphaModel m : alphaModels) {
-			if ((m.flags & AlphaModel.SKIP) != 0) continue;
-			if (m.level != level) continue;
-
-			if (level < minLevel || level > maxLevel || level > currentLevel && hiddenRoofIds.contains((int) m.rid))
+			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
 				continue;
 
-			if (lastVao != m.vao || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
+			if (level < ctx.minLevel || level > maxLevel || level > currentLevel && hiddenRoofIds.contains((int) m.rid))
+				continue;
+
+			if (lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
 				flush(cmd);
 
 			lastVao = m.vao;
+			lastTboF = m.tboF;
 			lastzx = zx - m.zofx;
 			lastzz = zz - m.zofz;
 
@@ -605,7 +725,7 @@ class Zone {
 				continue;
 			}
 
-			if (useStaticUnsorted) {
+			if (skipSorting) {
 				lastDrawMode = STATIC_UNSORTED;
 				pushRange(m.startpos, m.endpos);
 				continue;
@@ -621,8 +741,8 @@ class Zone {
 
 			Arrays.fill(distanceFaceCount, 0, diameter, (char) 0);
 
-			char bufferIdx = 0;
-			for (int packed : packedFaces) {
+			for (int i = 0; i < packedFaces.length; ++i) {
+				int packed = packedFaces[i];
 				int x = packed >> 21;
 				int y = (packed << 11) >> 22;
 				int z = (packed << 21) >> 21;
@@ -632,14 +752,14 @@ class Zone {
 				fz += radius;
 
 				assert fz >= 0 && fz < diameter : fz;
-				distanceToFaces[fz][distanceFaceCount[fz]++] = bufferIdx++;
+				distanceToFaces[fz][distanceFaceCount[fz]++] = (char) i;
 			}
 
-			ZoneRenderer.eboAlphaStaging.ensureCapacity(bufferIdx * 3);
+			ZoneRenderer.eboAlphaStaging.ensureCapacity(packedFaces.length * 3);
 
 			byte[] faceRenderPriorities = m.renderPriorities;
 			final int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
-			if (faceRenderPriorities == null) {
+			if (faceRenderPriorities == null || m.modelOverride.disablePrioritySorting) {
 				for (int i = diameter - 1; i >= 0; --i) {
 					final int cnt = distanceFaceCount[i];
 					if (cnt > 0) {
@@ -699,6 +819,7 @@ class Zone {
 				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
 				long byteOffset = 4L * (ZoneRenderer.eboAlphaStaging.position() - vertexCount);
 				cmd.BindVertexArray(lastVao);
+				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
@@ -710,17 +831,18 @@ class Zone {
 		} else if (drawIdx != 0) {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
-			if (glDrawOffset.length == 1) {
+			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
+			if (drawIdx == 1) {
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
-					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
+					cmd.DrawArraysIndirect(GL_TRIANGLES, drawOff[0], drawEnd[0], ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
-					cmd.DrawArrays(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0]);
+					cmd.DrawArrays(GL_TRIANGLES, drawOff[0], drawEnd[0]);
 				}
 			} else {
 				if (GL_CAPS.OpenGL43 && SUPPORTS_INDIRECT_DRAW) {
-					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, ZoneRenderer.indirectDrawCmdsStaging);
+					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, drawOff, drawEnd, drawIdx, ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
-					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+					cmd.MultiDrawArrays(GL_TRIANGLES, drawOff, drawEnd, drawIdx);
 				}
 			}
 			drawIdx = 0;
@@ -769,12 +891,14 @@ class Zone {
 				if (m2 == null)
 					m2 = new AlphaModel();
 				m2.id = m.id;
+				m2.modelOverride = m.modelOverride;
 				m2.startpos = m.startpos;
 				m2.endpos = m.endpos;
 				m2.x = m.x;
 				m2.y = m.y;
 				m2.z = m.z;
 				m2.vao = m.vao;
+				m2.tboF = m.tboF;
 				m2.rid = m.rid;
 				m2.level = m.level;
 				m2.lx = m.lx;

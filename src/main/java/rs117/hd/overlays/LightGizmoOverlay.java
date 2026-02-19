@@ -452,7 +452,7 @@ public class LightGizmoOverlay extends Overlay implements DeveloperOverlay, Mous
 				if (showDuplicationInfo) {
 					int newlines = (counter++ % 5) + 1;
 					info += "\n".repeat(newlines);
-					info += counter + ": " + l.impostorId;
+					info += counter + ": " + l.tileObjectId;
 					info += "\n".repeat(5 - newlines);
 				}
 				if (!hideInfo) {

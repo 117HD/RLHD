@@ -12,6 +12,12 @@
     ]
   },
   {
+    "name": "PURE_BLACK",
+    "materials": [
+      "PURE_BLACK"
+    ]
+  },
+  {
     "name": "GRASS_1",
     "materials": [
       "GRASS_1",
@@ -58,7 +64,7 @@
       "SNOW_1",
       "SNOW_3",
       "GRAVEL_LIGHT",
-      "SNOW_4",
+      "SNOW_2",
       "DIRT_1",
       "GRAVEL_LIGHT",
       "SNOW_2"
@@ -72,14 +78,14 @@
       "SNOW_2",
       "SNOW_3",
       "SNOW_3",
-      "SNOW_4"
+      "SNOW_2"
     ]
   },
   {
     "name": "SNOW_2",
     "materials": [
       "SNOW_2",
-      "SNOW_4"
+      "SNOW_3"
     ]
   },
   {
@@ -155,6 +161,12 @@
     "name": "TILE_SMALL",
     "materials": [
       "TILE_SMALL_1"
+    ]
+  },
+  {
+    "name": "TILE_SMALL_2",
+    "materials": [
+      "TILE_SMALL_2"
     ]
   },
   {

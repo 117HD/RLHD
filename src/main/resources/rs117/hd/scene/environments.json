@@ -98,7 +98,7 @@
     "windStrength": 40
   },
   {
-    "area": "WILDERNESS",
+    "area": "WILDERNESS_MID",
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,
     "directionalColor": "#c5b8b6",
@@ -654,6 +654,16 @@
     "fogDepth": 80
   },
   {
+    "area": "SMOKE_DEVIL_DUNGEON",
+    "fogColor": "#0A0A0A",
+    "directionalStrength": 0.5,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogDepth": 30
+  },
+  {
     "area": "KHARIDIAN_DESERT_DEEP",
     "ambientColor": "#c0ae94",
     "ambientStrength": 3,
@@ -765,31 +775,31 @@
     "fogDepth": 50
   },
   {
-    "area": "GIELINOR_SNOWY_NORTHERN_REGION",
-    "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.5,
-    "directionalColor": "#f4e5c9",
-    "directionalStrength": 2.5,
-    "fogColor": "#aebde0",
-    "fogDepth": 70
-  },
-  {
-    "area": "RELLEKKA_SNOWY_REGION",
+    "area": "RELLEKKA_HUNTER_REGION",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1,
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
   },
   {
     "area": "RELLEKKA_HUNTER_ICEBERG",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 0.75,
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 1,
+    "directionalStrength": 1.75,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
+  },
+  {
+    "area": "GIELINOR_SNOWY_NORTHERN_REGION",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.5,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 50
   },
   {
     "area": "ICEBERG",
@@ -832,11 +842,20 @@
     "directionalColor": "#abc2d3",
     "directionalStrength": 2,
     "fogColor": "#969ca2",
-    "fogDepth": 40,
+    "fogDepth": 35,
     "groundFogEnd": -400,
     "groundFogOpacity": 0.3,
     "windSpeed": 17.5,
     "windStrength": 60
+  },
+  {
+    "area": "RELLEKKA_COLD_WATER",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 15
   },
   {
     "area": "FREMENNIK_ISLES_MIDDLE",
@@ -1053,6 +1072,7 @@
     "area": "PRIFDDINAS",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
+    "waterColor": "#99d8c8",
     "fogColor": "#99d8c8",
     "fogDepth": 15
   },
@@ -1188,7 +1208,7 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 1.5,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
   },
   {
     "area": "WINTERTODT_ARENA",
@@ -2112,6 +2132,19 @@
     "windSpeed": 8.5
   },
   {
+    "area": "GRIMSTONE",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 0.75,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1,
+    "fogColor": "#aebde0",
+    "fogDepth": 50
+  },
+  {
+    "area": "GRIMSTONE_DUNGEON",
+    "waterColor": "#6D8AA8"
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
@@ -2141,7 +2174,7 @@
       102
     ],
     "fogColor": "#fddcb4",
-    "fogDepth": 18,
+    "fogDepth": 15,
     "windAngle": 40,
     "windSpeed": 12,
     "windStrength": 55
@@ -2153,7 +2186,7 @@
     "directionalStrength": 1.5,
     "sunAngles": [ 52, 235 ],
     "fogColor": "#b8c5db",
-    "fogDepth": 35,
+    "fogDepth": 18,
     "windAngle": 40,
     "windSpeed": 10,
     "windStrength": 30
