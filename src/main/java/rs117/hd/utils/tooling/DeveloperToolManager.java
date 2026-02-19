@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -15,6 +16,7 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
+import net.runelite.client.ui.ClientToolbar;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
@@ -26,6 +28,7 @@ import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.FrameTimingsRecorder;
 import rs117.hd.utils.Props;
+import rs117.hd.utils.tooling.ui.HdSidebar;
 
 @Slf4j
 public class DeveloperToolManager implements KeyListener {
@@ -47,6 +50,13 @@ public class DeveloperToolManager implements KeyListener {
 
 	@Inject
 	private Client client;
+
+	@Getter
+	private HdSidebar sidebar;
+
+
+	@Inject
+	private ClientToolbar clientToolbar;
 
 	@Inject
 	private TileInfoOverlay tileInfoOverlay;
@@ -92,6 +102,10 @@ public class DeveloperToolManager implements KeyListener {
 			}
 		});
 
+		SwingUtilities.invokeLater(() -> {
+			sidebar = new HdSidebar(clientToolbar,this);
+		});
+
 		// Check for any out of bounds areas
 		for (Area area : AreaManager.AREAS) {
 			if (area == Area.ALL || area == Area.NONE)
@@ -104,6 +118,8 @@ public class DeveloperToolManager implements KeyListener {
 				}
 			}
 		}
+
+
 	}
 
 	private void initializeDeveloperTools() {
@@ -113,7 +129,15 @@ public class DeveloperToolManager implements KeyListener {
 			.keyBind(new Keybind(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK))
 			.chatMessages("tileinfo")
 			.overlay(tileInfoOverlay)
-			.description("Shows tile information overlay"));
+			.subToggles(
+				DeveloperTool.SubToggle.dropdownToggle("MODE", "Display mode",
+					List.of("Tile Info", "Model Info", "Scene AABBs", "Object IDs"),
+					() -> tileInfoOverlay.getMode(),
+					(value) -> {
+						int mode = (Integer) value;
+						tileInfoOverlay.setMode(mode);
+					})
+			));
 
 		registerTool(DeveloperTool.builder()
 			.name("FRAME_TIMINGS")
