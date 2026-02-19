@@ -27615,7 +27615,6 @@
   },
   {
     "description": "Poison Waste Dungeon Tar - Spill",
-    "depthBias": 100,
     "baseMaterial": "TAR",
     "uvType": "WORLD_XZ",
     "upwardsNormals": true,
