@@ -65,8 +65,11 @@ public class MinimapManager {
 		eventBus.register(this);
 	}
 
-	public void clear(SceneContext sceneContext) {
+	public void shutDown() {
 		eventBus.unregister(this);
+	}
+
+	public void clear(SceneContext sceneContext) {
 		minimapTilePaintColorsLighting = null;
 		minimapTileModelColorsLighting = null;
 		sceneContext.minimapTileModelColors = null;

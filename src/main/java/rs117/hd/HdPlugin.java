@@ -738,6 +738,7 @@ public class HdPlugin extends Plugin {
 			lightManager.shutDown();
 			environmentManager.shutDown();
 			fishingSpotReplacer.shutDown();
+			minimapManager.shutDown();
 			areaManager.shutDown();
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
