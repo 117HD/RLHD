@@ -5134,7 +5134,7 @@
     "colorOverrides": [
       {
         "colors": "s == 1 || s == 3 || s == 7",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_75"
       },
       {
         "colors": "s == 0 && l > 10",
@@ -5196,7 +5196,7 @@
   },
   {
     "description": "TZHAAR_ROCK_GRADIENT",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "tzHaarRecolorType": "GRADIENT",
@@ -5231,9 +5231,8 @@
         "upwardsNormals": true
       },
       {
-        "colors": "s == 6 || s == 7",
-        "baseMaterial": "GRAY_85",
-        "uvType": "BOX"
+        "colors": "h == 6 || s == 7",
+        "baseMaterial": "GRAY_75"
       }
     ]
   },
@@ -5247,13 +5246,46 @@
       "TZHAAR_CAVE_FENCE3",
       "TZHAAR_CAVE_FENCE4",
       "TZHAAR_CAVE_FENCE5",
-      "TZHAAR_CAVE_FENCE6"
+      "TZHAAR_CAVE_FENCE6",
+      "TZHAAR_CAVE_FLOOR_2"
     ],
     "depthBias": 100
   },
   {
+    "description": "TZHAAR_BANK_CHEST",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "TZHAAR_BANK_CHEST"
+    ],
+    "depthBias": 100,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT",
+        "uvType": "BOX",
+        "depthBias": 101
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_CRATE",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TZHAAR_CRATE",
+      "TZHAAR_CRATES"
+    ],
+    "depthBias": 150,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
     "description": "TZHAAR_FLOOR",
-    "baseMaterial": "GRAY_85",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       "TZHAAR_CAVE_FLOOR_1",
       "TZHAAR_CAVE_FLOOR_2",
