@@ -52,7 +52,7 @@ import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
+import static rs117.hd.renderer.zone.FacePrioritySorter.MAX_FACE_COUNT;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;

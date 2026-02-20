@@ -37,8 +37,8 @@ import static rs117.hd.utils.MathUtils.*;
 final class FacePrioritySorter implements AutoCloseable {
 	public static ConcurrentPool<FacePrioritySorter> POOL;
 
-	private static final int MAX_VERTEX_COUNT = 6500;
-	private static final int MAX_FACE_COUNT = 8192;
+	public static final int MAX_VERTEX_COUNT = 6500;
+	public static final int MAX_FACE_COUNT = 8192;
 	private static final int MAX_DIAMETER = 6000;
 	private static final int MAX_FACES_PER_PRIORITY = 4000;
 	private static final int PRIORITY_COUNT = 12;
