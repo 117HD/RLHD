@@ -34,10 +34,9 @@ import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-final class FacePrioritySorter implements AutoCloseable {
+public final class FacePrioritySorter implements AutoCloseable {
 	public static ConcurrentPool<FacePrioritySorter> POOL;
 
-	public static final int MAX_VERTEX_COUNT = 6500;
 	public static final int MAX_FACE_COUNT = 8192;
 	private static final int MAX_DIAMETER = 6000;
 	private static final int MAX_FACES_PER_PRIORITY = 4000;

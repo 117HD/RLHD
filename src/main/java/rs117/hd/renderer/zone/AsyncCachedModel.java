@@ -7,6 +7,8 @@ import java.util.concurrent.locks.LockSupport;
 import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.collections.ConcurrentPool;
@@ -18,6 +20,9 @@ import static rs117.hd.renderer.zone.SceneUploader.MAX_VERTEX_COUNT;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
+@Getter
+@Setter
+@Accessors(chain = false)
 public final class AsyncCachedModel extends Job implements Model {
 	public static final ConcurrentLinkedQueue<AsyncCachedModel> INFLIGHT = new ConcurrentLinkedQueue<>();
 	public static ConcurrentPool<AsyncCachedModel> POOL;
@@ -29,12 +34,13 @@ public final class AsyncCachedModel extends Job implements Model {
 	private int bottomY;
 	private int radius;
 	private int diameter;
-	private int xyzMag;
+	private int XYZMag;
 	private int renderMode;
 
 	private int modelHeight;
 	private int animationHeightOffset;
 
+	@Accessors(fluent = true)
 	private boolean useBoundingBox;
 
 	private int verticesCount;
@@ -46,6 +52,8 @@ public final class AsyncCachedModel extends Job implements Model {
 	private byte overrideLuminance;
 
 	private long hash;
+
+	private Zone zone;
 
 	private final CachedArrayField<?>[] cachedFields = new CachedArrayField<?>[21];
 
@@ -83,22 +91,21 @@ public final class AsyncCachedModel extends Job implements Model {
 	private final AtomicBoolean processing = new AtomicBoolean(false);
 	private UploadModelFunc uploadFunc;
 
-	@Getter
-	private Zone zone;
-
 	public static long calculateMaxModelSizeBytes() {
 		long size = 0;
-		for (ArrayType modelArrayDef : ArrayType.values())
-			size += (long) modelArrayDef.stride * (long) (modelArrayDef.type == VERTEX_TYPE ? MAX_VERTEX_COUNT : MAX_FACE_COUNT);
+		for (ArrayType modelArrayDef : ArrayType.values()) {
+			size += (long) modelArrayDef.stride * (
+				modelArrayDef.type == VERTEX_TYPE ? MAX_VERTEX_COUNT : MAX_FACE_COUNT
+			);
+		}
 		return size;
 	}
 
 	@SuppressWarnings("unchecked")
 	private <T> CachedArrayField<T> addField(ArrayType fieldDef) {
 		for (int i = 0; i < cachedFields.length; i++) {
-			if (cachedFields[i] == null) {
+			if (cachedFields[i] == null)
 				return (CachedArrayField<T>) (cachedFields[i] = new CachedArrayField<>(fieldDef));
-			}
 		}
 		throw new RuntimeException("Created too many fields, only expected: " + cachedFields.length);
 	}
@@ -178,7 +185,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		bottomY = model.getBottomY();
 		radius = model.getRadius();
 		diameter = model.getDiameter();
-		xyzMag = model.getXYZMag();
+		XYZMag = model.getXYZMag();
 		renderMode = model.getRenderMode();
 
 		modelHeight = model.getModelHeight();
@@ -202,7 +209,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		INFLIGHT.add(this);
 		queue();
 
-		// Caching is done in order of access, Ideally this should be updated to reflect any changes
+		// Caching is done in order of access
+		// Ideally this should be updated to reflect any changes
 		verticesX.cache(model, model.getVerticesX());
 		verticesY.cache(model, model.getVerticesY());
 		verticesZ.cache(model, model.getVerticesZ());
@@ -235,7 +243,7 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	@Override
 	protected boolean canStart() {
-		if (processing.get()) // Work has been stollen so pop it off the queue
+		if (processing.get()) // Work has been stolen, so pop it off the queue
 			return true;
 
 		return
@@ -253,13 +261,11 @@ public final class AsyncCachedModel extends Job implements Model {
 		if (!processing.compareAndSet(false, true))
 			return false;
 
-		try {
-			try (
-				SceneUploader sceneUploader = SceneUploader.POOL.acquire();
-				FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
-			) {
-				uploadFunc.upload(sceneUploader, facePrioritySorter, visibleFaces, culledFaces, this);
-			}
+		try (
+			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
+			FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
+		) {
+			uploadFunc.upload(sceneUploader, facePrioritySorter, visibleFaces, culledFaces, this);
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
 		} finally {
@@ -279,73 +285,10 @@ public final class AsyncCachedModel extends Job implements Model {
 	}
 
 	@Override
-	protected void onCancel() {}
-
-	@Override
-	protected void onCompletion() {}
-
-	@Override
-	public int getSceneId() { return sceneId; }
-
-	@Override
-	public void setSceneId(int sceneId) { this.sceneId = sceneId; }
-
-	@Override
-	public int getBufferOffset() { return bufferOffset; }
-
-	@Override
-	public void setBufferOffset(int bufferOffset) { this.bufferOffset = bufferOffset; }
-
-	@Override
-	public int getUvBufferOffset() { return uvBufferOffset; }
-
-	@Override
-	public void setUvBufferOffset(int bufferOffset) { uvBufferOffset = bufferOffset; }
-
-	@Override
-	public int getBottomY() { return bottomY; }
-
-	@Override
-	public int getFaceCount() { return faceCount; }
-
-	@Override
-	public int getVerticesCount() { return verticesCount; }
-
-	@Override
-	public int getModelHeight() { return modelHeight; }
-
-	@Override
-	public int getRadius() { return radius; }
-
-	@Override
-	public int getDiameter() { return diameter; }
-
-	@Override
-	public void setModelHeight(int modelHeight) { this.modelHeight = modelHeight; }
-
-	@Override
-	public int getAnimationHeightOffset() { return animationHeightOffset; }
-
-	@Override
 	public Model getUnskewedModel() { return this; }
 
 	@Override
 	public void calculateBoundsCylinder() {}
-
-	@Override
-	public byte getOverrideAmount() { return overrideAmount; }
-
-	@Override
-	public byte getOverrideHue() { return overrideHue; }
-
-	@Override
-	public byte getOverrideSaturation() { return overrideSaturation; }
-
-	@Override
-	public byte getOverrideLuminance() { return overrideLuminance; }
-
-	@Override
-	public int getRenderMode() { return renderMode; }
 
 	@Override
 	public void drawFrustum(int zero, int xRotate, int yRotate, int zRotate, int xCamera, int yCamera, int zCamera) {
@@ -367,12 +310,6 @@ public final class AsyncCachedModel extends Job implements Model {
 	public AABB getAABB(int orientation) {
 		throw new UnsupportedOperationException();
 	}
-
-	@Override
-	public int getXYZMag() { return xyzMag; }
-
-	@Override
-	public boolean useBoundingBox() { return useBoundingBox; }
 
 	@Override
 	public Model rotateY90Ccw() {
@@ -414,9 +351,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public long getHash() { return hash; }
-
 	@FunctionalInterface
 	public interface UploadModelFunc {
 		void upload(
@@ -453,7 +387,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		private final int type;
 	}
 
-	@SuppressWarnings("unchecked")
 	private static final class CachedArrayField<T> {
 		private final int arrayType;
 		private final ArraySupplier<T> supplier;
@@ -466,6 +399,7 @@ public final class AsyncCachedModel extends Job implements Model {
 
 		private CachedArrayField(ArrayType arrayType) {
 			this.arrayType = arrayType.type;
+			// noinspection unchecked
 			this.supplier = (ArraySupplier<T>) arrayType.supplier;
 			this.value = supplier.get((int) KiB);
 		}
@@ -501,6 +435,7 @@ public final class AsyncCachedModel extends Job implements Model {
 				pooled = null;
 			}
 
+			// noinspection SuspiciousSystemArraycopy
 			System.arraycopy(src, 0, value, 0, arraySize);
 			cached = true;
 		}
