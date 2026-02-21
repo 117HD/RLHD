@@ -259,8 +259,8 @@ public class ZoneRenderer implements Renderer {
 			modelStreamingManager.initializeAsyncCachedModel();
 	}
 
-	@Subscribe(priority = 1)
-	public void onBeforeRender(BeforeRender beforeRender) {
+	@Subscribe
+	public void onPostClientTick(PostClientTick event) {
 		try {
 			frameTimer.begin(Timer.UPDATE_SCENE);
 			sceneManager.update();
