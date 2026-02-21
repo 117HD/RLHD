@@ -1,5 +1,6 @@
 package rs117.hd.renderer.zone;
 
+import com.google.inject.Injector;
 import java.lang.reflect.Array;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -26,6 +27,30 @@ import static rs117.hd.utils.MathUtils.*;
 public final class AsyncCachedModel extends Job implements Model {
 	public static final ConcurrentLinkedQueue<AsyncCachedModel> INFLIGHT = new ConcurrentLinkedQueue<>();
 	public static ConcurrentPool<AsyncCachedModel> POOL;
+
+	public static final long MAX_MODEL_SIZE_BYTES = calculateMaxModelSizeBytes();
+
+	private static long calculateMaxModelSizeBytes() {
+		var m = new AsyncCachedModel();
+		long size = 0;
+		for (var field : m.cachedFields) {
+			size += (long) field.def.stride * (
+				field.arrayType == VERTEX_TYPE ? MAX_VERTEX_COUNT : MAX_FACE_COUNT
+			);
+		}
+		return size;
+	}
+
+	public static void initialize(Injector injector, long sizeLimitBytes) {
+		int maxModelCount = (int) (sizeLimitBytes / MAX_MODEL_SIZE_BYTES);
+		AsyncCachedModel.POOL = new ConcurrentPool<>(injector, AsyncCachedModel.class, maxModelCount);
+		log.debug("Initialized AsyncCachedModel pool with {} models", maxModelCount);
+	}
+
+	public static void destroy() {
+		INFLIGHT.clear();
+		AsyncCachedModel.POOL = null;
+	}
 
 	private int sceneId;
 	private int bufferOffset;
@@ -90,16 +115,6 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	private final AtomicBoolean processing = new AtomicBoolean(false);
 	private UploadModelFunc uploadFunc;
-
-	public static long calculateMaxModelSizeBytes() {
-		long size = 0;
-		for (ArrayType modelArrayDef : ArrayType.values()) {
-			size += (long) modelArrayDef.stride * (
-				modelArrayDef.type == VERTEX_TYPE ? MAX_VERTEX_COUNT : MAX_FACE_COUNT
-			);
-		}
-		return size;
-	}
 
 	@SuppressWarnings("unchecked")
 	private <T> CachedArrayField<T> addField(ArrayType fieldDef) {
@@ -388,6 +403,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	}
 
 	private static final class CachedArrayField<T> {
+		private final ArrayType def;
 		private final int arrayType;
 		private final ArraySupplier<T> supplier;
 
@@ -398,6 +414,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		public volatile boolean cached;
 
 		private CachedArrayField(ArrayType arrayType) {
+			this.def = arrayType;
 			this.arrayType = arrayType.type;
 			// noinspection unchecked
 			this.supplier = (ArraySupplier<T>) arrayType.supplier;

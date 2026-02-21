@@ -1813,7 +1813,7 @@ public class HdPlugin extends Plugin {
 							case KEY_VSYNC_MODE:
 								setupSyncMode();
 								break;
-							case KEY_ASYNC_MODEL_UPLOAD:
+							case KEY_ASYNC_MODEL_PROCESSING:
 								reloadGpuFlags = true;
 								break;
 						}

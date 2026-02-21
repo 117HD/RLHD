@@ -1194,9 +1194,9 @@ public interface HdPluginConfig extends Config
 		return 32;
 	}
 
-	String KEY_ASYNC_MODEL_UPLOAD = "asyncModelUpload";
+	String KEY_ASYNC_MODEL_PROCESSING = "asyncModelProcessing";
 	@ConfigItem(
-		keyName = KEY_ASYNC_MODEL_UPLOAD,
+		keyName = KEY_ASYNC_MODEL_PROCESSING,
 		name = "Multithreaded model processing",
 		description = "Process multiple models in parallel to improve performance for animated models.",
 		section = experimentalSettings

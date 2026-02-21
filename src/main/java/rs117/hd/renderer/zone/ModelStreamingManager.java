@@ -2,6 +2,7 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.util.ArrayList;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,6 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
-import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static net.runelite.api.Perspective.*;
@@ -68,44 +68,45 @@ public class ModelStreamingManager {
 	private boolean disabledRenderThreads;
 
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
-		static final class StreamingContext {
+
+	public void initialize() {
+		if (!useMultithreading())
+			return;
+
+		AsyncCachedModel.initialize(injector, config.asyncModelCacheSizeMiB() * MiB);
+	}
+
+	public void destroy() {
+		ensureAsyncUploadsComplete(null);
+		AsyncCachedModel.destroy();
+	}
+
+	public void reinitialize() {
+		destroy();
+		initialize();
+	}
+
+	static final class StreamingContext {
 		final int[] worldPos = new int[3];
 		final float[] objectWorldPos = new float[4];
 		int renderableCount;
-	}
-
-	StreamingContext context(int renderThreadId) {
-		return streamingContexts[renderThreadId + 1];
 	}
 
 	StreamingContext context() {
 		return streamingContexts[0];
 	}
 
-	public int gpuFlags() {
-		int flags = 0;
-		if (config.multithreadedModelProcessing() && PROCESSOR_COUNT > 1) {
-			// RENDER_THREADS will act as suppliers into the Job System, so this will be 2 + Client Suppliers
-			flags |= DrawCallbacks.RENDER_THREADS(RL_RENDER_THREADS);
-			initializeAsyncCachedModel();
-		} else {
-			AsyncCachedModel.POOL = null;
-		}
-		return flags;
+	StreamingContext context(int renderThreadId) {
+		return streamingContexts[renderThreadId + 1];
 	}
 
-	public void initializeAsyncCachedModel() {
-		if (!config.multithreadedModelProcessing())
-			return;
+	private boolean useMultithreading() {
+		return config.multithreadedModelProcessing() && PROCESSOR_COUNT > 1;
+	}
 
-		long maxModelSizeBytes = AsyncCachedModel.calculateMaxModelSizeBytes();
-		long asyncModelCacheSizeBytes = config.asyncModelCacheSizeMiB() * MiB;
-		int maxModelCount = (int) Math.ceil(asyncModelCacheSizeBytes / (double) maxModelSizeBytes);
-
-		ensureAsyncUploadsComplete(null);
-
-		AsyncCachedModel.POOL = new ConcurrentPool<>(plugin.getInjector(), AsyncCachedModel.class, maxModelCount);
-		log.debug("Initialized Async Cached Model Pool with {} models", maxModelCount);
+	public int getGpuFlags() {
+		// Render threads will act as suppliers into the job system, so RL_RENDER_THREADS + the client thread
+		return useMultithreading() ? DrawCallbacks.RENDER_THREADS(RL_RENDER_THREADS) : 0;
 	}
 
 	public void update() {
@@ -590,7 +591,7 @@ public class ModelStreamingManager {
 		}
 	}
 
-	public void ensureAsyncUploadsComplete(Zone zone) {
+	public void ensureAsyncUploadsComplete(@Nullable Zone zone) {
 		if (AsyncCachedModel.POOL == null)
 			return;
 

@@ -26,8 +26,6 @@ package rs117.hd.renderer.zone;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,7 +51,6 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.EnvironmentManager;
-import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -121,9 +118,6 @@ public class ZoneRenderer implements Renderer {
 	private ModelStreamingManager modelStreamingManager;
 
 	@Inject
-	private GamevalManager gamevalManager;
-
-	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
@@ -172,7 +166,7 @@ public class ZoneRenderer implements Renderer {
 			DrawCallbacks.ZBUF |
 			DrawCallbacks.ZBUF_ZONE_FRUSTUM_CHECK |
 			DrawCallbacks.NORMALS |
-			modelStreamingManager.gpuFlags();
+			modelStreamingManager.getGpuFlags();
 	}
 
 	@Override
@@ -188,7 +182,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(renderState, uboWorldViews);
-		
+		modelStreamingManager.initialize();
 	}
 
 	@Override
@@ -196,6 +190,7 @@ public class ZoneRenderer implements Renderer {
 		destroyBuffers();
 
 		jobSystem.shutDown();
+		modelStreamingManager.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
 
@@ -255,8 +250,8 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void processConfigChanges(Set<String> keys) {
-		if (keys.contains(KEY_ASYNC_MODEL_CACHE_SIZE))
-			modelStreamingManager.initializeAsyncCachedModel();
+		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING) || keys.contains(KEY_ASYNC_MODEL_CACHE_SIZE))
+			modelStreamingManager.reinitialize();
 	}
 
 	@Subscribe
