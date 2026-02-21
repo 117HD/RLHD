@@ -104,6 +104,7 @@ public class ModelStreamingManager {
 	}
 
 	public void reinitialize() {
+		renderer.waitUntilIdle();
 		destroy();
 		initialize();
 	}
