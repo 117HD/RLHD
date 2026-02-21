@@ -56027,10 +56027,10 @@
     ]
   },
   {
-    "description": "Prayer Alter - Candle Stand Decorations",
-    "baseMaterial": "GRUNGE_3",
+    "description": "Prayer Alter - Candle Stand Decorations - Lumbridge and Port Sarim",
+    "baseMaterial": "CARPET_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.3,
+    "uvScale": 0.23,
     "retainVanillaUvs": false,
     "flatNormals": true,
     "objectIds": [
@@ -56049,6 +56049,37 @@
         "colors": "a < 255",
         "baseMaterial": "GRAY_125",
         "receiveShadows": false
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Prayer Alter - Candle Stand Decorations - Varrock",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "FAI_VARROCK_CHURCH_CANDLES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s < 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125",
+        "receiveShadows": false
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3"
       }
     ]
   },
@@ -56070,17 +56101,14 @@
       {
         "description": "Gold",
         "colors": "h >= 8 && h <= 9",
-        "baseMaterial": "METALLIC_1_GLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": 168
+        "baseMaterial": "METALLIC_1_GLOSS"
       },
       {
         "description": "Paper",
         "colors": "h == 42",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
-        "uvScale": 0.8
+        "uvScale": 0.23
       }
     ]
   },
@@ -73159,6 +73187,22 @@
         "baseMaterial": "DIRT_1",
         "uvType": "MODEL_XZ",
         "uvScale": 0.45
+      }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Varrock Hairdresser Painting",
+    "hideVanillaShadows": true,
+    "retainVanillaShadowsInPvm": true,
+    "depthBias": 100,
+    "objectIds": [
+      "FAI_VARROCK_PORTRAIT_HAIRDRESSER02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 1 && l > 60",
+        "baseMaterial": "NONE",
+        "depthBias": 0
       }
     ]
   },
