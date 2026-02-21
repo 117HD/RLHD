@@ -20821,7 +20821,7 @@
     "offset": [ 3, 0, 40 ]
   },
   {
-    "description": "Altar Candles",
+    "description": "Altar Candles - Lumbridge and Port Sarim",
     "offset": [ 0, 140, -33 ],
     "radius": 180,
     "strength": 7,
@@ -20836,6 +20836,23 @@
     "objectIds": [
       "CANDLES_1",
       "CANDLES_2"
+    ]
+  },
+  {
+    "description": "Altar Candles - Varrock Church",
+    "offset": [ 0, 200, -33 ],
+    "radius": 180,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_CHURCH_CANDLES"
     ]
   },
   {
