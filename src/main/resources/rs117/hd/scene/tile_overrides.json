@@ -5848,7 +5848,7 @@
   },
   {
     "name": "TOA_AMASCUT_FLOOR_SAND_BLEND",
-    "groundMaterial": "SAND",
+    "groundMaterial": "VARIED_DIRT",
     "maxLightness": 32
   },
   {
@@ -5862,7 +5862,7 @@
   {
     "name": "TOA_APMEKEN_FLOOR_OVERLAY_TILE_SAND",
     "area": "TOA_PATH_OF_APMEKEN_PUZZLE",
-    "groundMaterial": "SAND",
+    "groundMaterial": "VARIED_DIRT",
     "shiftLightness": 7,
     "overlayIds": [
       119
@@ -5872,7 +5872,7 @@
   {
     "name": "TOA_APMEKEN_FLOOR_OVERLAY",
     "area": "TOA_PATH_OF_APMEKEN_PUZZLE",
-    "groundMaterial": "SAND",
+    "groundMaterial": "VARIED_DIRT",
     "shiftLightness": 9,
     "overlayIds": [
       238
@@ -5933,7 +5933,7 @@
   {
     "name": "TOA_AMASCUT_FLOOR_SAND",
     "area": "TOMBS_OF_AMASCUT",
-    "groundMaterial": "SAND",
+    "groundMaterial": "VARIED_DIRT",
     "maxLightness": 32,
     "shiftLightness": 10,
     "overlayIds": [
