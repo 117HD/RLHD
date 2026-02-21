@@ -77488,8 +77488,8 @@
     ]
   },
   {
-    "description": "TOA Sand Blending Models",
-    "baseMaterial": "SAND_1_TOA",
+    "description": "TOA Ground Blending Models",
+    "baseMaterial": "GRAVEL_TOA",
     "uvType": "WORLD_XZ",
     "objectIds": [
       "DECAL_SAND01_CRACKS01",
@@ -77504,7 +77504,7 @@
   },
   {
     "description": "TOA Wall sand light",
-    "baseMaterial": "SAND_1",
+    "baseMaterial": "GRAVEL",
     "uvType": "BOX",
     "uvOrientation": 256,
     "objectIds": [
@@ -77513,7 +77513,7 @@
   },
   {
     "description": "TOA wall sand dark",
-    "baseMaterial": "SAND_1_TOA",
+    "baseMaterial": "GRAVEL_TOA",
     "uvType": "BOX",
     "uvOrientation": 256,
     "objectIds": [
@@ -77522,7 +77522,7 @@
   },
   {
     "description": "TOA Rock rubble with sand",
-    "baseMaterial": "SAND_1_TOA",
+    "baseMaterial": "GRAVEL_TOA",
     "uvType": "WORLD_XZ",
     "terrainVertexSnap": true,
     "terrainVertexSnapThreshold": 0.1,

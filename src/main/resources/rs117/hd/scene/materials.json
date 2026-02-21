@@ -1318,6 +1318,11 @@
     "brightness": 1.194
   },
   {
+    "name": "GRAVEL_TOA",
+    "parent": "GRAVEL",
+    "brightness": 1.20
+  },
+  {
     "name": "DIRT_1_SHINY",
     "parent": "DIRT_1",
     "specularStrength": 1.1,
@@ -1364,11 +1369,6 @@
     "normalMap": "SAND_1_N",
     "specularStrength": 0.2,
     "specularGloss": 10.0
-  },
-  {
-    "name": "SAND_1_TOA",
-    "parent": "SAND_1",
-    "brightness": 1.25
   },
   {
     "name": "SAND_2_N"
