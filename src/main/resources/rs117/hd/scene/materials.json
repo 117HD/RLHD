@@ -1366,6 +1366,11 @@
     "specularGloss": 10.0
   },
   {
+    "name": "SAND_1_TOA",
+    "parent": "SAND_1",
+    "brightness": 1.25
+  },
+  {
     "name": "SAND_2_N"
   },
   {
