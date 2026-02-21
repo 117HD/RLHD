@@ -255,11 +255,15 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	@Subscribe
+	public void onBeforeRender(BeforeRender event) {
+		modelStreamingManager.update();
+	}
+
+	@Subscribe
 	public void onPostClientTick(PostClientTick event) {
 		try {
 			frameTimer.begin(Timer.UPDATE_SCENE);
 			sceneManager.update();
-			modelStreamingManager.update();
 			frameTimer.end(Timer.UPDATE_SCENE);
 		} catch (Exception ex) {
 			log.error("Error while updating scene:", ex);

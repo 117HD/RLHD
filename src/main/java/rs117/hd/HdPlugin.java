@@ -1928,14 +1928,9 @@ public class HdPlugin extends Plugin {
 		return config.expandedMapLoadingChunks();
 	}
 
-	@Subscribe(priority = 1)
-	public void onPostClientTick(PostClientTick event) {
+	@Subscribe(priority = -1) // Run after the low detail plugin
+	public void onBeforeRender(BeforeRender beforeRender) {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
-
-		elapsedClientTime += 1 / 50f;
-
-		if (!enableFreezeFrame && skipScene != client.getScene())
-			redrawPreviousFrame = false;
 
 		if (lastFrameTimeMillis > 0) {
 			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
@@ -1965,14 +1960,19 @@ public class HdPlugin extends Plugin {
 			clientUnfocusedTime += deltaTime;
 		}
 		isPowerSaving = isClientMinimized || configPowerSaving && clientUnfocusedTime >= 15;
-	}
 
-	@Subscribe(priority = -1) // Run after the low detail plugin
-	public void onBeforeRender(BeforeRender beforeRender) {
 		// The game runs significantly slower with lower planes in Chambers of Xeric
 		var ctx = getSceneContext();
 		if (ctx != null)
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
+	}
+
+	@Subscribe
+	public void onClientTick(ClientTick clientTick) {
+		elapsedClientTime += 1 / 50f;
+
+		if (!enableFreezeFrame && skipScene != client.getScene())
+			redrawPreviousFrame = false;
 	}
 
 	@Subscribe
