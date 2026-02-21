@@ -3750,10 +3750,18 @@
     "uvType": "MODEL_XY"
   },
   {
+    "description": "LUMBRIDGE_CASTLE_STONE_STEPS",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "DEATH_SKEWSTEPS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
     "description": "STONE_STEPS",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "DEATH_SKEWSTEPS",
       "VIKING_SKEWSTEPS",
       "RIMMINGTON_SKEWSTEPS",
       "RIMMINGTON_SKEWSTEPS_CORNER",
