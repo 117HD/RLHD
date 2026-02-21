@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public abstract class Job {
 	static JobSystem JOB_SYSTEM;
 

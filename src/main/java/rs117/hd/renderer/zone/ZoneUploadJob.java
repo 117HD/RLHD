@@ -1,7 +1,6 @@
 package rs117.hd.renderer.zone;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -49,8 +48,7 @@ public final class ZoneUploadJob extends Job {
 		}
 	}
 
-	@SneakyThrows
-	private void onBeforeProcessTile(Tile t, boolean isEstimate) {
+	private void onBeforeProcessTile(Tile t, boolean isEstimate) throws InterruptedException {
 		workerHandleCancel();
 	}
 

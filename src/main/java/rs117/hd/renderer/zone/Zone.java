@@ -311,7 +311,7 @@ public class Zone {
 		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
-			IntBuffer buf = stack.callocInt(3)
+			IntBuffer buf = stack.mallocInt(3)
 				.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0)
 				.put(baseX)
 				.put(baseZ);
@@ -339,6 +339,7 @@ public class Zone {
 	private static final int[] glDrawOffset = new int[NUM_DRAW_RANGES];
 	private static final int[] glDrawLength = new int[NUM_DRAW_RANGES];
 	private static int drawIdx = 0;
+
 	private void convertForDraw(int vertSize) {
 		for (int i = 0; i < drawIdx; ++i) {
 			assert drawEnd[i] >= drawOff[i];
@@ -439,7 +440,7 @@ public class Zone {
 		}
 	}
 
-	static class AlphaModel {
+	public static class AlphaModel {
 		int id;
 		ModelOverride modelOverride;
 		int startpos, endpos;
@@ -470,8 +471,8 @@ public class Zone {
 			flags |= SORT_COMPLETED;
 		}
 
-		boolean isSorted() {
-			return (flags & SORT_COMPLETED) != 0;
+		boolean needsSorting() {
+			return (flags & SORT_COMPLETED) == 0;
 		}
 
 		boolean isTemp() {
@@ -629,8 +630,6 @@ public class Zone {
 			bufferIdx++;
 		}
 
-		assert radius >= 0;
-
 		m.radius = 2 + (int) Math.sqrt(radius);
 		m.sortedFaces = new int[bufferIdx * 3];
 
@@ -780,15 +779,13 @@ public class Zone {
 	void renderPlayers(
 		CommandBuffer cmd,
 		int zx,
-		int zz,
-		WorldViewContext ctx
+		int zz
 	) {
 		if (playerModels.isEmpty())
 			return;
 
 		drawIdx = 0;
 
-		//noinspection ForLoopReplaceableByForEach
 		for (int i = 0; i < playerModels.size(); i++) {
 			final AlphaModel m = playerModels.get(i);
 
@@ -833,13 +830,13 @@ public class Zone {
 		cmd.DepthMask(false);
 
 		boolean shouldQueueUpload = false;
-		//noinspection ForLoopReplaceableByForEach
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
 				continue;
 
-			if (level < minLevel || level > maxLevel || level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
+			if (level < minLevel || level > maxLevel ||
+				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
 				continue;
 
 			if (lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
@@ -865,15 +862,15 @@ public class Zone {
 
 			// Check if we the faces have already been sorted, if not then the client will steal the work,
 			// if the model is already being processed then we'll have to wait for the result to finish
-			if(!m.isSorted() && !alphaSortingJob.forceProcessModelClient(m)) {
-				while (!m.isSorted() && !alphaSortingJob.isDone())
+			if (m.needsSorting() && !alphaSortingJob.forceProcessModelClient(m)) {
+				while (m.needsSorting() && !alphaSortingJob.isDone())
 					alphaSortingJob.waitForCompletion(10);
 			}
 
-			if(m.sortedFaces == null || m.sortedFacesLen <= 0 || !ZoneRenderer.eboAlphaMapped.isMapped())
+			if (m.sortedFaces == null || m.sortedFacesLen <= 0 || !ZoneRenderer.eboAlphaMapped.isMapped())
 				continue;
 
-			if((long)(ZoneRenderer.eboAlphaOffset + m.sortedFacesLen) * Integer.BYTES < ZoneRenderer.eboAlpha.size) {
+			if ((long) (ZoneRenderer.eboAlphaOffset + m.sortedFacesLen) * Integer.BYTES < ZoneRenderer.eboAlpha.size) {
 				lastDrawMode = STATIC;
 				m.eboOffset = ZoneRenderer.eboAlphaOffset - ZoneRenderer.eboAlphaPrevOffset;
 				alphaFaceCount += m.sortedFacesLen / 3;
@@ -882,7 +879,7 @@ public class Zone {
 			}
 		}
 
-		if(shouldQueueUpload) {
+		if (shouldQueueUpload) {
 			GenericJob prevJob = lastSortedAlphaFacesUpload != sortedAlphaFacesUpload ? lastSortedAlphaFacesUpload : null;
 			lastSortedAlphaFacesUpload = sortedAlphaFacesUpload.queue(prevJob);
 		}
@@ -932,7 +929,6 @@ public class Zone {
 		int offset = ctx.sceneOffset >> 3;
 		int cx = (int) camera.getPositionX();
 		int cz = (int) camera.getPositionZ();
-		//noinspection ForLoopReplaceableByForEach
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
 			if (m.lx == -1)
@@ -952,7 +948,7 @@ public class Zone {
 						int zx2 = (centerX >> 10) + offset;
 						int zz2 = (centerZ >> 10) + offset;
 						if (zx2 >= 0 && zx2 < zones.length && zz2 >= 0 && zz2 < zones[0].length) {
-							if(zones[zx2][zz2].inSceneFrustum && zones[zx2][zz2].initialized) {
+							if (zones[zx2][zz2].inSceneFrustum && zones[zx2][zz2].initialized) {
 								max = distance;
 								closestZoneX = centerX >> 10;
 								closestZoneZ = centerZ >> 10;

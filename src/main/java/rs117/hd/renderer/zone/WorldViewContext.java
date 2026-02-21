@@ -203,15 +203,15 @@ public class WorldViewContext {
 			if (uploadTask.ranToCompletion() && !uploadTask.wasCancelled()) {
 				log.trace("swapping zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
 
-				Zone PrevZone = curZone;
+				Zone prevZone = curZone;
 				// Swap the zone out with the one we just uploaded
 				zones[zx][zz] = curZone = uploadTask.zone;
 				clientThread.invoke(curZone::unmap);
 
-				if (PrevZone != curZone) {
-					curZone.inSceneFrustum = PrevZone.inSceneFrustum;
-					curZone.inShadowFrustum = PrevZone.inShadowFrustum;
-					pendingCull.add(PrevZone);
+				if (prevZone != curZone) {
+					curZone.inSceneFrustum = prevZone.inSceneFrustum;
+					curZone.inShadowFrustum = prevZone.inShadowFrustum;
+					pendingCull.add(prevZone);
 				}
 			} else if (uploadTask.wasCancelled() && !curZone.cull) {
 				boolean shouldRetry = uploadTask.encounteredError() && curZone.isFirstLoadingAttempt;
@@ -254,16 +254,14 @@ public class WorldViewContext {
 	}
 
 	void completeInvalidation() {
-		if(invalidationGroup.getPendingCount() <= 0)
+		if (invalidationGroup.getPendingCount() <= 0)
 			return;
 
 		invalidationGroup.complete();
 
-		for (int x = 0; x < sizeX; x++) {
-			for (int z = 0; z < sizeZ; z++) {
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
 				handleZoneSwap(-1.0f, x, z);
-			}
-		}
 	}
 
 	int getSortedAlphaCount() {

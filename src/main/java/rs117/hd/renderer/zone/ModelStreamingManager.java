@@ -378,7 +378,7 @@ public class ModelStreamingManager {
 		int z
 	) {
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || (!sceneManager.isRoot(ctx) && ctx.isLoading) || !renderCallbackManager.drawObject(scene, tileObject))
+		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;

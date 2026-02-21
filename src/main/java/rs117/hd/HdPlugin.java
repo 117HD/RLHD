@@ -660,6 +660,11 @@ public class HdPlugin extends Plugin {
 
 				renderer.initialize();
 				eventBus.register(renderer);
+				gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
+				if (config.removeVertexSnapping())
+					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
+				if (configShadingMode.unlitFaceColors)
+					gpuFlags |= DrawCallbacks.UNLIT_FACE_COLORS;
 
 				initializeShaders();
 				initializeShaderHotswapping();
@@ -669,11 +674,6 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				client.setDrawCallbacks(renderer);
-				gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
-				if (config.removeVertexSnapping())
-					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
-				if (configShadingMode.unlitFaceColors)
-					gpuFlags |= DrawCallbacks.UNLIT_FACE_COLORS;
 				client.setGpuFlags(gpuFlags);
 				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 				// force rebuild of main buffer provider to enable alpha channel
@@ -1419,6 +1419,7 @@ public class HdPlugin extends Plugin {
 		if (uiCopyJob != null)
 			uiCopyJob.waitForCompletion();
 		uiCopyJob = null;
+
 		int[] resolution = {
 			max(1, client.getCanvasWidth()),
 			max(1, client.getCanvasHeight())
@@ -1683,12 +1684,12 @@ public class HdPlugin extends Plugin {
 				return;
 
 			try {
-				// TODO: Move this synchronization into the renderer, as this is only used by ZoneRenderer
+				// TODO: Move this synchronization into ZoneRenderer
 				sceneManager.getLoadingLock().lock();
 				sceneManager.completeAllStreaming();
 
 				// Synchronize with scene loading
-				// TODO: Move this synchronization into the renderer, as this is only used by LegacyRenderer
+				// TODO: Move this synchronization into LegacyRenderer
 				synchronized (this) {
 					updateCachedConfigs();
 
@@ -1921,6 +1922,8 @@ public class HdPlugin extends Plugin {
 	public void onBeforeRender(BeforeRender beforeRender) {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 
+		frame++;
+
 		if (lastFrameTimeMillis > 0) {
 			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
 
@@ -1939,9 +1942,9 @@ public class HdPlugin extends Plugin {
 			elapsedTime += deltaTime;
 			windOffset += deltaTime * environmentManager.currentWindSpeed;
 		}
-		frame++;
 		lastFrameTimeMillis = System.currentTimeMillis();
 		lastFrameClientTime = elapsedClientTime;
+
 		isClientMinimized = HDUtils.isJFrameMinimized(clientJFrame);
 		if (isClientInFocus) {
 			clientUnfocusedTime = 0;

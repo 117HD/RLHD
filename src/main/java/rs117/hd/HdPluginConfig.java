@@ -784,9 +784,9 @@ public interface HdPluginConfig extends Config
 		name = "CPU usage",
 		description =
 			"Specify how much of your processor the plugin should be allowed to use.<br>" +
-			"If you play with multiple clients or other heavy programs on the side,<br>" +
+			"If you play with multiple clients or use other heavy programs on the side,<br>" +
 			"reducing this may improve their performance.<br>" +
-			"Defaults to Max, allowing the whole processor to be used.",
+			"Defaults to Max, allowing the processor to be fully utilized.",
 		section = miscellaneousSettings,
 		position = -100
 	)
@@ -798,7 +798,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_POWER_SAVING,
 		name = "Reduce CPU when unfocused",
-		description = "Automatically reduce CPU load after the window has not been in focus for 15 seconds.",
+		description = "Automatically reduce CPU load when the game has not been in focus for 15 seconds.",
 		section = miscellaneousSettings,
 		position = -99
 	)

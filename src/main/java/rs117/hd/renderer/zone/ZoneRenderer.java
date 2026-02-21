@@ -140,9 +140,9 @@ public class ZoneRenderer implements Renderer {
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
 	public final RenderState renderState = new RenderState();
-	public final CommandBuffer playerCmd = new CommandBuffer("Player", renderState);
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
+	public final CommandBuffer playerCmd = new CommandBuffer("Player", renderState);
 
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -272,7 +272,7 @@ public class ZoneRenderer implements Renderer {
 		int minLevel, int level, int maxLevel, Set<Integer> hideRoofIds
 	) {
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || (!sceneManager.isRoot(ctx) && ctx.isLoading))
+		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
 
 		frameTimer.begin(Timer.DRAW_PRESCENE);
@@ -292,11 +292,9 @@ public class ZoneRenderer implements Renderer {
 		ctx.completeInvalidation();
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
-		for (int zx = 0; zx < ctx.sizeX; ++zx) {
-			for (int zz = 0; zz < ctx.sizeZ; ++zz) {
+		for (int zx = 0; zx < ctx.sizeX; ++zx)
+			for (int zz = 0; zz < ctx.sizeZ; ++zz)
 				ctx.zones[zx][zz].multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
-			}
-		}
 
 		ctx.sortStaticAlphaModels(sceneCamera);
 
@@ -583,7 +581,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.processPendingClientCallbacks();
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || (!sceneManager.isRoot(ctx) && ctx.isLoading))
+		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
 
 		frameTimer.begin(Timer.DRAW_POSTSCENE);
@@ -618,13 +616,13 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
 
-		// TODO: Tbh, we should add some form of stat tracking to the FrameTimer
+		// TODO: Add proper support for stat tracking to the FrameTimer or elsewhere
 		plugin.drawnDynamicRenderableCount += modelStreamingManager.getDrawnDynamicRenderableCount();
 
 		checkGLErrors();
 	}
 
-	private void tiledlightingPass() {
+	private void tiledLightingPass() {
 		if (!plugin.configTiledLighting || plugin.configDynamicLights == DynamicLights.NONE)
 			return;
 
@@ -773,13 +771,7 @@ public class ZoneRenderer implements Renderer {
 
 		final int PADDING = 4 * LOCAL_TILE_SIZE;
 		zone.inSceneFrustum = sceneCamera.intersectsAABB(
-			minX - PADDING,
-			minY,
-			minZ - PADDING,
-			maxX + PADDING,
-			maxY,
-			maxZ + PADDING
-		);
+			minX - PADDING, minY, minZ - PADDING, maxX + PADDING, maxY, maxZ + PADDING);
 
 		if (zone.inSceneFrustum) {
 			if (plugin.enableDetailedTimers)
@@ -813,7 +805,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.processPendingClientCallbacks();
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || (!sceneManager.isRoot(ctx) && ctx.isLoading))
+		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
 
 		Zone z = ctx.zones[zx][zz];
@@ -837,7 +829,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
 		final WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || (!sceneManager.isRoot(ctx) && ctx.isLoading))
+		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
 
 		final Zone z = ctx.zones[zx][zz];
@@ -854,10 +846,9 @@ public class ZoneRenderer implements Renderer {
 		final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 		if (hasAlpha) {
 			final int offset = ctx.sceneContext.sceneOffset >> 3;
-			if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum)) {
-				// Only sort if we're gonna render alpha in the scene, shadows don't need any sorting done
+			// Only sort if the alpha will be directly visible, since shadows don't require sorting
+			if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
 				z.alphaSort(zx - offset, zz - offset, sceneCamera);
-			}
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
@@ -876,7 +867,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void drawPass(Projection projection, Scene scene, int pass) {
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || (!sceneManager.isRoot(ctx) && ctx.isLoading))
+		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
 
 		frameTimer.begin(Timer.DRAW_PASS);
@@ -915,7 +906,7 @@ public class ZoneRenderer implements Renderer {
 						if (!z.playerModels.isEmpty() && (!sceneManager.isRoot(ctx) || z.inSceneFrustum || z.inShadowFrustum)) {
 							z.playerSort(zx - offset, zz - offset, sceneCamera);
 
-							z.renderPlayers(playerCmd, zx - offset, zz - offset, ctx);
+							z.renderPlayers(playerCmd, zx - offset, zz - offset);
 
 							if (!playerCmd.isEmpty()) {
 								// Draw players shadow, with depth writes & alpha
@@ -960,15 +951,25 @@ public class ZoneRenderer implements Renderer {
 		int z
 	) {
 		final long start = System.nanoTime();
-		modelStreamingManager.drawDynamic(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
-		frameTimer.add(renderThreadId == -1 ? Timer.DRAW_DYNAMIC : Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - start);
+		try {
+			modelStreamingManager.drawDynamic(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
+		} catch (Exception ex) {
+			log.error("Error in drawDynamic:", ex);
+		} finally {
+			frameTimer.add(renderThreadId == -1 ? Timer.DRAW_DYNAMIC : Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - start);
+		}
 	}
 
 	@Override
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		frameTimer.begin(Timer.DRAW_TEMP);
-		modelStreamingManager.drawTemp(worldProjection, scene, gameObject, m, orientation, x, y, z);
-		frameTimer.end(Timer.DRAW_TEMP);
+		try {
+			modelStreamingManager.drawTemp(worldProjection, scene, gameObject, m, orientation, x, y, z);
+		} catch (Exception ex) {
+			log.error("Error in drawTemp:", ex);
+		} finally {
+			frameTimer.end(Timer.DRAW_TEMP);
+		}
 	}
 
 	@Override
@@ -991,7 +992,7 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.DRAW_SUBMIT);
 		if (shouldRenderScene) {
-			tiledlightingPass();
+			tiledLightingPass();
 			directionalShadowPass();
 			scenePass();
 		}

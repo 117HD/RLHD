@@ -438,9 +438,15 @@ public final class AsyncCachedModel extends Job implements Model {
 
 			final int arraySize;
 			switch (arrayType) {
-				case VERTEX_TYPE: arraySize = m.getVerticesCount(); break;
-				case FACE_TYPE: arraySize = m.getFaceCount(); break;
-				default: arraySize = Array.getLength(src); break;
+				case VERTEX_TYPE:
+					arraySize = m.getVerticesCount();
+					break;
+				case FACE_TYPE:
+					arraySize = m.getFaceCount();
+					break;
+				default:
+					arraySize = Array.getLength(src);
+					break;
 			}
 
 			if (value == null || capacity < arraySize) {

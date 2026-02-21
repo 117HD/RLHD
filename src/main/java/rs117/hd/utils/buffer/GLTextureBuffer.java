@@ -9,7 +9,7 @@ public class GLTextureBuffer extends GLBuffer {
 	private int texId;
 
 	public GLTextureBuffer(String name, int usage) {
-		super(name, GL_TEXTURE_BUFFER, usage, 0);
+		this(name, usage, 0);
 	}
 
 	public GLTextureBuffer(String name, int usage, int storageFlags) {

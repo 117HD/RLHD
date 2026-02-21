@@ -65,7 +65,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		// Build the z-sorted linked list of faces
 		for (int i = 0; i < visibleFaces.length; ++i) {
-			final int faceIdx = visibleFaces.faces[i];
+			final int faceIdx = visibleFaces.array[i];
 			final int distance = clamp(faceDistances[faceIdx], 0, diameter);
 
 			final int tailFaceIdx = zsortTail[distance];
@@ -87,7 +87,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		if (priorities == null) {
 			for (int i = maxFz; i >= minFz; --i) {
 				for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
-					visibleFaces.putFace(f);
+					visibleFaces.put(f);
 			}
 			return;
 		}
@@ -111,14 +111,14 @@ public final class FacePrioritySorter implements AutoCloseable {
 			}
 		}
 
-		int avg12 = (numOfPriority[1] + numOfPriority[2]) > 0
-			? (lt10[1] + lt10[2]) / (numOfPriority[1] + numOfPriority[2]) : 0;
+		int avg12 = (numOfPriority[1] + numOfPriority[2]) > 0 ?
+			(lt10[1] + lt10[2]) / (numOfPriority[1] + numOfPriority[2]) : 0;
 
-		int avg34 = (numOfPriority[3] + numOfPriority[4]) > 0
-			? (lt10[3] + lt10[4]) / (numOfPriority[3] + numOfPriority[4]) : 0;
+		int avg34 = (numOfPriority[3] + numOfPriority[4]) > 0 ?
+			(lt10[3] + lt10[4]) / (numOfPriority[3] + numOfPriority[4]) : 0;
 
-		int avg68 = (numOfPriority[6] + numOfPriority[8]) > 0
-			? (lt10[6] + lt10[8]) / (numOfPriority[6] + numOfPriority[8]) : 0;
+		int avg68 = (numOfPriority[6] + numOfPriority[8]) > 0 ?
+			(lt10[6] + lt10[8]) / (numOfPriority[6] + numOfPriority[8]) : 0;
 
 		int drawnFaces = 0;
 		int numDynFaces = numOfPriority[10];
@@ -131,14 +131,15 @@ public final class FacePrioritySorter implements AutoCloseable {
 			dynDist = eq11;
 		}
 
-		int currFaceDistance =
-			drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
+		int currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 
 		for (int pri = 0; pri < 10; ++pri) {
-			while ((pri == 0 && currFaceDistance > avg12) ||
-				   (pri == 3 && currFaceDistance > avg34) ||
-				   (pri == 5 && currFaceDistance > avg68)) {
-				visibleFaces.putFace(orderedFaces[dynBase + drawnFaces++]);
+			while (
+				pri == 0 && currFaceDistance > avg12 ||
+				pri == 3 && currFaceDistance > avg34 ||
+				pri == 5 && currFaceDistance > avg68
+			) {
+				visibleFaces.put(orderedFaces[dynBase + drawnFaces++]);
 
 				if (drawnFaces == numDynFaces && dynBase == 10 * MAX_FACES_PER_PRIORITY) {
 					drawnFaces = 0;
@@ -147,11 +148,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 					dynDist = eq11;
 				}
 
-				currFaceDistance =
-					drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
+				currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 			}
 
-			visibleFaces.putFaces(
+			visibleFaces.put(
 				orderedFaces,
 				pri * MAX_FACES_PER_PRIORITY,
 				numOfPriority[pri]
@@ -159,7 +159,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		}
 
 		while (currFaceDistance != -1000) {
-			visibleFaces.putFace(orderedFaces[dynBase + drawnFaces++]);
+			visibleFaces.put(orderedFaces[dynBase + drawnFaces++]);
 
 			if (drawnFaces == numDynFaces && dynBase == 10 * MAX_FACES_PER_PRIORITY) {
 				drawnFaces = 0;
@@ -168,8 +168,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 				dynDist = eq11;
 			}
 
-			currFaceDistance =
-				drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
+			currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 		}
 	}
 

@@ -14,8 +14,6 @@ import static rs117.hd.utils.HDUtils.ceilPow2;
 
 @RequiredArgsConstructor
 public final class StaticAlphaSortingJob extends Job {
-	private static final int DIST_THRESHOLD = 4096 * 4096;
-
 	private FrameTimer frameTimer;
 
 	private AlphaModel[] models = new AlphaModel[16];
@@ -31,7 +29,7 @@ public final class StaticAlphaSortingJob extends Job {
 
 	public void addAlphaModel(AlphaModel m) {
 		if (size == models.length) {
-			final int newCapacity = (int) ceilPow2(models.length * 2L);
+			final int newCapacity = ceilPow2(models.length * 2);
 			models = Arrays.copyOf(models, newCapacity);
 			states = new AtomicIntegerArray(newCapacity);
 		}
@@ -72,11 +70,8 @@ public final class StaticAlphaSortingJob extends Job {
 	}
 
 	private void processModel(FacePrioritySorter sorter, AlphaModel m) {
-		// TODO: We could cache the YawCos, YawSin, PitchCos, PitchSin values for the model to skip having to re-sort next frame
-		{
-			m.sortedFacesLen = 0;
-			sorter.sortStaticModelFacesByDistance(m, yawCos, yawSin, pitchCos, pitchSin);
-		}
+		m.sortedFacesLen = 0;
+		sorter.sortStaticModelFacesByDistance(m, yawCos, yawSin, pitchCos, pitchSin);
 		m.setSorted();
 	}
 
@@ -90,10 +85,4 @@ public final class StaticAlphaSortingJob extends Job {
 		}
 		return false;
 	}
-
-	@Override
-	protected void onCancel() {}
-
-	@Override
-	protected void onReleased() {}
 }

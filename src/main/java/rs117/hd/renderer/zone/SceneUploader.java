@@ -109,8 +109,9 @@ public class SceneUploader implements AutoCloseable {
 	@Inject
 	public ProceduralGenerator proceduralGenerator;
 
+	@FunctionalInterface
 	public interface OnBeforeProcessTileFunc {
-		void invoke(Tile t, boolean isEstimate);
+		void invoke(Tile t, boolean isEstimate) throws InterruptedException;
 	}
 
 	public OnBeforeProcessTileFunc onBeforeProcessTile;
@@ -173,7 +174,7 @@ public class SceneUploader implements AutoCloseable {
 		onBeforeProcessTile = null;
 	}
 
-	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
+	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
 		// Initialize the zone as containing only water, until a non-water tile is found
 		zone.onlyWater = true;
 
@@ -191,7 +192,7 @@ public class SceneUploader implements AutoCloseable {
 		}
 	}
 
-	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
+	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
 		var vb = zone.vboO != null ? new GpuIntBuffer(zone.vboO.mapped()) : null;
 		var ab = zone.vboA != null ? new GpuIntBuffer(zone.vboA.mapped()) : null;
 		var fb = zone.tboF != null ? new GpuIntBuffer(zone.tboF.mapped()) : null;
@@ -249,7 +250,7 @@ public class SceneUploader implements AutoCloseable {
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
 		GpuIntBuffer fb
-	) {
+	) throws InterruptedException {
 		int ridx = 0;
 
 		// upload the roofs and save their positions
@@ -283,7 +284,7 @@ public class SceneUploader implements AutoCloseable {
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
 		GpuIntBuffer fb
-	) {
+	) throws InterruptedException {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
@@ -323,7 +324,14 @@ public class SceneUploader implements AutoCloseable {
 		}
 	}
 
-	private void uploadZoneWater(ZoneSceneContext ctx, Zone zone, int mzx, int mzz, GpuIntBuffer vb, GpuIntBuffer fb) {
+	private void uploadZoneWater(
+		ZoneSceneContext ctx,
+		Zone zone,
+		int mzx,
+		int mzz,
+		GpuIntBuffer vb,
+		GpuIntBuffer fb
+	) throws InterruptedException {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
@@ -1853,7 +1861,7 @@ public class SceneUploader implements AutoCloseable {
 
 			if (!allVertsVisible && !visibility[offsetA] && !visibility[offsetB] && !visibility[offsetC]) {
 				// TODO: If a triangle is large enough to encompass the entire screen, this will need an additional plane test
-				culledFaces.putFace(f);
+				culledFaces.put(f);
 				continue;
 			}
 
@@ -1873,7 +1881,7 @@ public class SceneUploader implements AutoCloseable {
 
 			// back face culling
 			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0) {
-				culledFaces.putFace(f);
+				culledFaces.put(f);
 				continue;
 			}
 
@@ -1886,10 +1894,10 @@ public class SceneUploader implements AutoCloseable {
 				faceDistances[f] = radius + ((int) ((aZ + bZ + cZ) / 3.0f) - zero);
 			}
 
-			if(material.hasTransparency || transparency != 0)
+			if (material.hasTransparency || transparency != 0)
 				tempModelAlphaFaces++;
 
-			visibleFaces.putFace(f);
+			visibleFaces.put(f);
 		}
 
 		return shouldSort;
@@ -1932,7 +1940,6 @@ public class SceneUploader implements AutoCloseable {
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
 		final byte[] bias = model.getFaceBias();
-
 		final int[] faceNormals = isShadow ? EMPTY_NORMALS : modelNormals;
 
 		final boolean hasBias = bias != null;
@@ -1958,7 +1965,7 @@ public class SceneUploader implements AutoCloseable {
 
 		final int faceCount = faces.length;
 		for (int f = 0; f < faceCount; ++f) {
-			final int face = faces.faces[f];
+			final int face = faces.array[f];
 
 			int color1 = color1s[face];
 			int color2 = color2s[face];
@@ -2264,22 +2271,6 @@ public class SceneUploader implements AutoCloseable {
 
 		// Preserve H, replace S & L
 		return (color & 0xFC00) | (s << 7) | l;
-	}
-
-	private static void rotateNormalsFloat(int[] normals, float orientSin, float orientCos) {
-		int nx = normals[0], nz = normals[2];
-		normals[0] = (int) (nz * orientSin + nx * orientCos);
-		normals[2] = (int) (nz * orientCos - nx * orientSin);
-
-		nx = normals[3];
-		nz = normals[5];
-		normals[3] = (int) (nz * orientSin + nx * orientCos);
-		normals[5] = (int) (nz * orientCos - nx * orientSin);
-
-		nx = normals[6];
-		nz = normals[8];
-		normals[6] = (int) (nz * orientSin + nx * orientCos);
-		normals[8] = (int) (nz * orientCos - nx * orientSin);
 	}
 
 	public static void rotateNormals(int[] normals, int orientSin, int orientCos) {

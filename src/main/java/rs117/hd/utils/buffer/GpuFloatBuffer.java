@@ -25,10 +25,12 @@
 package rs117.hd.utils.buffer;
 
 import java.nio.FloatBuffer;
+import lombok.Getter;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 
 public class GpuFloatBuffer {
+	@Getter
 	private FloatBuffer buffer;
 
 	public GpuFloatBuffer() {
@@ -90,12 +92,6 @@ public class GpuFloatBuffer {
 		return buffer.capacity();
 	}
 
-	public boolean fits(int size) {
-		int capacity = buffer.capacity();
-		final int position = buffer.position();
-		return (capacity - position) > size;
-	}
-
 	public GpuFloatBuffer ensureCapacity(int size) {
 		int capacity = buffer.capacity();
 		final int position = buffer.position();
@@ -112,9 +108,5 @@ public class GpuFloatBuffer {
 			buffer = newB;
 		}
 		return this;
-	}
-
-	public FloatBuffer getBuffer() {
-		return buffer;
 	}
 }

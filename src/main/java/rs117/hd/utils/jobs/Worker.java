@@ -44,6 +44,7 @@ public final class Worker {
 		return nextVictimWorkCount > 0;
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	void run() {
 		name = thread.getName();
 		pausedName = name + " [Paused]";
@@ -102,7 +103,7 @@ public final class Worker {
 				thread.isInterrupted(); // Consume the interrupt to prevent it from cancelling the next job
 			}
 		}
-		log.trace("Shutdown - {}", jobSystem.active);
+		log.trace("Shutdown");
 	}
 
 	void processHandle() throws InterruptedException {

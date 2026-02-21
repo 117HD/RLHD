@@ -68,19 +68,6 @@ public final class VertexWriteCache {
 	}
 
 	public void putVertex(
-		float x, float y, float z,
-		float u, float v, float w,
-		int nx, int ny, int nz,
-		int textureFaceIdx
-	) {
-		putVertex(
-			Float.floatToRawIntBits(x),
-			Float.floatToRawIntBits(y),
-			Float.floatToRawIntBits(z),
-			u, v, w, nx, ny, nz, textureFaceIdx);
-	}
-
-	public void putVertex(
 		int x, int y, int z,
 		float u, float v, float w,
 		int nx, int ny, int nz,
@@ -134,8 +121,7 @@ public final class VertexWriteCache {
 			outputBuffer.put(stagingBuffer, 0, stagingPosition);
 			stagingPosition = 0;
 		} catch (Exception e) {
-			log.error("Error whilst flushing: {}", name);
-			log.error("Exception ", e);
+			log.error("Error whilst flushing: {}", name, e);
 		}
 	}
 

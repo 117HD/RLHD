@@ -74,6 +74,7 @@ public class ModelOverrideManager {
 					}
 
 					addOverride(override);
+
 					if (override.hideInAreas.length > 0) {
 						var hider = override.copy();
 						hider.hide = true;
