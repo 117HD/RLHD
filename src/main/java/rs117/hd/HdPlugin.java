@@ -669,7 +669,12 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				client.setDrawCallbacks(renderer);
-				initializeGpuFlags();
+				gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
+				if (config.removeVertexSnapping())
+					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
+				if (configShadingMode.unlitFaceColors)
+					gpuFlags |= DrawCallbacks.UNLIT_FACE_COLORS;
+				client.setGpuFlags(gpuFlags);
 				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
@@ -702,15 +707,6 @@ public class HdPlugin extends Plugin {
 			}
 			return true;
 		});
-	}
-
-	private void initializeGpuFlags() {
-		gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
-		if (config.removeVertexSnapping())
-			gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
-		if (configShadingMode.unlitFaceColors)
-			gpuFlags |= DrawCallbacks.UNLIT_FACE_COLORS;
-		client.setGpuFlags(gpuFlags);
 	}
 
 	@Override
@@ -1708,7 +1704,6 @@ public class HdPlugin extends Plugin {
 					boolean reloadModelOverrides = false;
 					boolean reloadTileOverrides = false;
 					boolean reloadScene = false;
-					boolean reloadGpuFlags = false;
 
 					for (var key : pendingConfigChanges) {
 						switch (key) {
@@ -1813,17 +1808,11 @@ public class HdPlugin extends Plugin {
 							case KEY_VSYNC_MODE:
 								setupSyncMode();
 								break;
-							case KEY_ASYNC_MODEL_PROCESSING:
-								reloadGpuFlags = true;
-								break;
 						}
 					}
 
-					if (reloadTexturesAndMaterials || recompilePrograms || reloadGpuFlags)
+					if (reloadTexturesAndMaterials || recompilePrograms)
 						renderer.waitUntilIdle();
-
-					if (reloadGpuFlags)
-						initializeGpuFlags();
 
 					if (reloadTexturesAndMaterials) {
 						materialManager.reload(reloadScene);

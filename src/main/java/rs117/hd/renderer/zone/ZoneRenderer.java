@@ -165,8 +165,7 @@ public class ZoneRenderer implements Renderer {
 		return
 			DrawCallbacks.ZBUF |
 			DrawCallbacks.ZBUF_ZONE_FRUSTUM_CHECK |
-			DrawCallbacks.NORMALS |
-			modelStreamingManager.getGpuFlags();
+			DrawCallbacks.NORMALS;
 	}
 
 	@Override
@@ -252,11 +251,6 @@ public class ZoneRenderer implements Renderer {
 	public void processConfigChanges(Set<String> keys) {
 		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING) || keys.contains(KEY_ASYNC_MODEL_CACHE_SIZE))
 			modelStreamingManager.reinitialize();
-	}
-
-	@Subscribe
-	public void onBeforeRender(BeforeRender event) {
-		modelStreamingManager.update();
 	}
 
 	@Subscribe

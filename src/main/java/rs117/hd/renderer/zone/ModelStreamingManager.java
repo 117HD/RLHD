@@ -2,13 +2,17 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.callback.RenderCallbackManager;
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ShadowMode;
@@ -41,6 +45,9 @@ public class ModelStreamingManager {
 	private Client client;
 
 	@Inject
+	private EventBus eventBus;
+
+	@Inject
 	private RenderCallbackManager renderCallbackManager;
 
 	@Inject
@@ -65,31 +72,40 @@ public class ModelStreamingManager {
 	private final PrimitiveIntArray clientVisibleFaces = new PrimitiveIntArray();
 	private final PrimitiveIntArray clientCulledFaces = new PrimitiveIntArray();
 
-	private boolean disabledRenderThreads;
-
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
-
-	public void initialize() {
-		if (!useMultithreading())
-			return;
-
-		AsyncCachedModel.initialize(injector, config.asyncModelCacheSizeMiB() * MiB);
-	}
-
-	public void destroy() {
-		ensureAsyncUploadsComplete(null);
-		AsyncCachedModel.destroy();
-	}
-
-	public void reinitialize() {
-		destroy();
-		initialize();
-	}
+	private int numStreamingContexts;
+	private int numRenderThreads;
 
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
 		final float[] objectWorldPos = new float[4];
 		int renderableCount;
+	}
+
+	public void initialize() {
+		numStreamingContexts = useMultithreading() ? streamingContexts.length : 1;
+		for (int i = 0; i < numStreamingContexts; i++)
+			streamingContexts[i] = injector.getInstance(StreamingContext.class);
+
+		if (useMultithreading())
+			AsyncCachedModel.initialize(injector, config.asyncModelCacheSizeMiB() * MiB);
+
+		eventBus.register(this);
+		updateRenderThreads();
+	}
+
+	public void destroy() {
+		ensureAsyncUploadsComplete(null);
+
+		eventBus.unregister(this);
+		AsyncCachedModel.destroy();
+		Arrays.fill(streamingContexts, null);
+		numRenderThreads = 0;
+	}
+
+	public void reinitialize() {
+		destroy();
+		initialize();
 	}
 
 	StreamingContext context() {
@@ -104,35 +120,29 @@ public class ModelStreamingManager {
 		return config.multithreadedModelProcessing() && PROCESSOR_COUNT > 1;
 	}
 
-	public int getGpuFlags() {
+	private void updateRenderThreads() {
+		assert client.isClientThread();
 		// Render threads will act as suppliers into the job system, so RL_RENDER_THREADS + the client thread
-		return useMultithreading() ? DrawCallbacks.RENDER_THREADS(RL_RENDER_THREADS) : 0;
+		int renderThreads = useMultithreading() && !plugin.isPowerSaving ? RL_RENDER_THREADS : 0;
+		if (renderThreads != numRenderThreads) {
+			numRenderThreads = renderThreads;
+			int gpuFlags = plugin.gpuFlags & ~DrawCallbacks.RENDER_THREADS(RENDER_THREADS_MASK);
+			log.debug("power saving? {}, gpuFlags: {}", plugin.isPowerSaving, gpuFlags);
+			client.setGpuFlags(gpuFlags | DrawCallbacks.RENDER_THREADS(renderThreads));
+		}
 	}
 
-	public void update() {
-		for (int i = 0; i < streamingContexts.length; i++) {
-			if (streamingContexts[i] == null)
-				streamingContexts[i] = injector.getInstance(StreamingContext.class);
+	@Subscribe
+	public void onBeforeRender(BeforeRender event) {
+		for (int i = 0; i < numStreamingContexts; i++)
 			streamingContexts[i].renderableCount = 0;
-		}
 
-		if (AsyncCachedModel.POOL == null)
-			return;
-
-		if (plugin.isPowerSaving) {
-			if (!disabledRenderThreads) {
-				disabledRenderThreads = true;
-				client.setGpuFlags(plugin.gpuFlags & ~DrawCallbacks.RENDER_THREADS(RENDER_THREADS_MASK));
-			}
-		} else if (disabledRenderThreads) {
-			disabledRenderThreads = false;
-			client.setGpuFlags(plugin.gpuFlags);
-		}
+		updateRenderThreads();
 	}
 
 	public int getDrawnDynamicRenderableCount() {
 		int count = 0;
-		for (int i = 0; i < streamingContexts.length; i++)
+		for (int i = 0; i < numStreamingContexts; i++)
 			count += streamingContexts[i].renderableCount;
 		return count;
 	}
@@ -632,7 +642,7 @@ public class ModelStreamingManager {
 
 
 	private AsyncCachedModel obtainAvailableAsyncCachedModel(boolean shouldBlock) {
-		if (AsyncCachedModel.POOL == null || disabledRenderThreads)
+		if (AsyncCachedModel.POOL == null || numRenderThreads == 0)
 			return null;
 
 		return shouldBlock ? AsyncCachedModel.POOL.acquireBlocking() : AsyncCachedModel.POOL.acquire();
