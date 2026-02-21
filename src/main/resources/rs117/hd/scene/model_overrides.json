@@ -77486,5 +77486,60 @@
       "COWBOSS_SCOREBOARD",
       "COWBOSS_SCOREBOARD_UBER"
     ]
+  },
+  {
+    "description": "TOA Sand Blending Models",
+    "baseMaterial": "SAND_1_TOA",
+    "uvType": "WORLD_XZ",
+    "objectIds": [
+      "DECAL_SAND01_CRACKS01",
+      "DECAL_SAND01_CRACKS02",
+      "DECAL_SAND01_CRACKS03",
+      "DECAL_SAND01_CRACKS04",
+      "DECAL_SAND01_CRACKS01_MIRROR",
+      "DECAL_SAND01_CRACKS02_MIRROR",
+      "DECAL_SAND01_CRACKS03_MIRROR",
+      "DECAL_SAND01_CRACKS04_MIRROR"
+    ]
+  },
+  {
+    "description": "TOA Wall sand light",
+    "baseMaterial": "SAND_1",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOA_LOBBY_WALL01_SAND01"
+    ]
+  },
+  {
+    "description": "TOA wall sand dark",
+    "baseMaterial": "SAND_1_TOA",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOA_LOBBY_WALL01_SAND01_MIRROR"
+    ]
+  },
+  {
+    "description": "TOA Rock rubble with sand",
+    "baseMaterial": "SAND_1_TOA",
+    "uvType": "WORLD_XZ",
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.1,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 39",
+        "uvScale": 1.2,
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -128
+      }
+    ],
+    "objectIds": [
+      "TOA_LOBBY_RUBBLE01_STONE01",
+      "TOA_LOBBY_RUBBLE01_STONE02",
+      "TOA_LOBBY_RUBBLE01_STONE03"
+    ]
   }
 ]
