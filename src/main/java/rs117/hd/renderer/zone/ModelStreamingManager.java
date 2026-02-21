@@ -21,6 +21,7 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static net.runelite.api.Perspective.*;
+import static net.runelite.api.hooks.DrawCallbacks.*;
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -120,7 +121,7 @@ public class ModelStreamingManager {
 		if (plugin.isPowerSaving) {
 			if (!disabledRenderThreads) {
 				disabledRenderThreads = true;
-				client.setGpuFlags(plugin.gpuFlags & ~DrawCallbacks.RENDER_THREADS(RL_RENDER_THREADS));
+				client.setGpuFlags(plugin.gpuFlags & ~DrawCallbacks.RENDER_THREADS(RENDER_THREADS_MASK));
 			}
 		} else if (disabledRenderThreads) {
 			disabledRenderThreads = false;
