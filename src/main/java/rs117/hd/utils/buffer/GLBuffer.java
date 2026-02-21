@@ -444,11 +444,6 @@ public class GLBuffer {
 
 						dst.position(dstPos);
 						dst.put(src);
-
-						if(count > 1) {
-							src.clear();
-							dst.clear();
-						}
 					} catch (Throwable t) {
 						log.error("Failed to copy buffer range {} -> {} offset: {} size: {}", srcId, dstId, srcOffsetBytes[i], numBytes[i], t);
 					}
