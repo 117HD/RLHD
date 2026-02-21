@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
@@ -29,13 +30,16 @@ public final class GLMappedBuffer {
 	private final GLBuffer owner;
 
 	@Getter
-	private ByteBuffer mappedBuffer;
+	@Accessors(fluent = true)
+	private ByteBuffer byteView;
 
 	@Getter
-	private IntBuffer mappedIntBuffer;
+	@Accessors(fluent = true)
+	private IntBuffer intView;
 
 	@Getter
-	private FloatBuffer mappedFloatBuffer;
+	@Accessors(fluent = true)
+	private FloatBuffer floatView;
 
 	@Getter
 	private boolean mapped;
@@ -52,9 +56,9 @@ public final class GLMappedBuffer {
 
 	GLMappedBuffer(GLBuffer owner, ByteBuffer mappedBuffer) {
 		this.owner = owner;
-		this.mappedBuffer = mappedBuffer;
-		this.mappedIntBuffer = mappedBuffer.asIntBuffer();
-		this.mappedFloatBuffer = mappedBuffer.asFloatBuffer();
+		this.byteView = mappedBuffer;
+		this.intView = mappedBuffer.asIntBuffer();
+		this.floatView = mappedBuffer.asFloatBuffer();
 		this.mapped = true;
 	}
 
@@ -69,11 +73,10 @@ public final class GLMappedBuffer {
 	}
 
 	public GLMappedBuffer map(int flags, long offsetBytes, long sizeBytes) {
-		if (mappedBuffer != null) {
-			// TODO: Consider erroring on duplicate call to map, since we're resetting positions here
-			mappedBuffer.position(0);
-			mappedIntBuffer.position(0);
-			mappedFloatBuffer.position(0);
+		if (byteView != null) {
+			byteView.position(0);
+			intView.position(0);
+			floatView.position(0);
 		}
 
 		if (mapped || owner.isStorageBuffer())
@@ -102,25 +105,25 @@ public final class GLMappedBuffer {
 				offsetBytes,
 				mapSize,
 				glFlags | GL_MAP_FLUSH_EXPLICIT_BIT,
-				mappedBuffer
+				byteView
 			);
 			this.mappedOffset = offsetBytes;
 		} else {
-			buf = glMapBuffer(owner.target, glFlags, mappedBuffer);
+			buf = glMapBuffer(owner.target, glFlags, byteView);
 			this.mappedOffset = 0;
 		}
 
 		if (buf == null)
 			throw new RuntimeException("Failed to map buffer " + owner.id);
 
-		if (mappedBuffer != buf) {
-			mappedBuffer = buf;
-			mappedIntBuffer = buf.asIntBuffer();
-			mappedFloatBuffer = buf.asFloatBuffer();
+		if (byteView != buf) {
+			byteView = buf;
+			intView = buf.asIntBuffer();
+			floatView = buf.asFloatBuffer();
 		} else {
-			mappedBuffer.position(0);
-			mappedIntBuffer.position(0);
-			mappedFloatBuffer.position(0);
+			byteView.position(0);
+			intView.position(0);
+			floatView.position(0);
 		}
 		this.mappedFlags = flags;
 		mapped = true;
@@ -131,25 +134,25 @@ public final class GLMappedBuffer {
 	}
 
 	public int getPositionBytes() {
-		int bytesPos = mappedBuffer.position();
-		if (mappedIntBuffer.position() * 4 > bytesPos)
-			bytesPos = mappedIntBuffer.position() * 4;
-		if (mappedFloatBuffer.position() * 4 > bytesPos)
-			bytesPos = mappedFloatBuffer.position() * 4;
+		int bytesPos = byteView.position();
+		if (intView.position() * 4 > bytesPos)
+			bytesPos = intView.position() * 4;
+		if (floatView.position() * 4 > bytesPos)
+			bytesPos = floatView.position() * 4;
 		return bytesPos;
 	}
 
 	public void setPositionBytes(int bytesPos) {
-		mappedBuffer.position(bytesPos);
-		mappedIntBuffer.position(bytesPos / 4);
-		mappedFloatBuffer.position(bytesPos / 4);
+		byteView.position(bytesPos);
+		intView.position(bytesPos / 4);
+		floatView.position(bytesPos / 4);
 	}
 
 	public void syncViews() {
 		int bytesPos = getPositionBytes();
-		mappedBuffer.position(bytesPos);
-		mappedIntBuffer.position(bytesPos / 4);
-		mappedFloatBuffer.position(bytesPos / 4);
+		byteView.position(bytesPos);
+		intView.position(bytesPos / 4);
+		floatView.position(bytesPos / 4);
 	}
 
 	public void unmap() {
@@ -160,9 +163,9 @@ public final class GLMappedBuffer {
 
 		glBindBuffer(owner.target, owner.id);
 		if (owner.target != GL_STATIC_DRAW) {
-			mappedBuffer.flip();
-			glFlushMappedBufferRange(owner.target, mappedBuffer.position(), mappedBuffer.remaining());
-			mappedBuffer.clear();
+			byteView.flip();
+			glFlushMappedBufferRange(owner.target, byteView.position(), byteView.remaining());
+			byteView.clear();
 		}
 		glUnmapBuffer(owner.target);
 		glBindBuffer(owner.target, 0);

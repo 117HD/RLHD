@@ -1462,7 +1462,7 @@ public class HdPlugin extends Plugin {
 					"AsyncUICopy",
 					t -> {
 						long start = System.nanoTime();
-						pbo.mapped().getMappedIntBuffer().put(pixels, 0, uiWidth * uiHeight);
+						pbo.mapped().intView().put(pixels, 0, uiWidth * uiHeight);
 						frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
 					}
 				)

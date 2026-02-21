@@ -254,11 +254,11 @@ public class Zone {
 			tboF.unmap();
 
 		if (vboO != null) {
-			this.bufLen = vboO.mapped().getMappedBuffer().position() / VERT_SIZE;
+			this.bufLen = vboO.mapped().byteView().position() / VERT_SIZE;
 		}
 
 		if (vboA != null) {
-			this.bufLenA = vboA.mapped().getMappedBuffer().position() / VERT_SIZE;
+			this.bufLenA = vboA.mapped().byteView().position() / VERT_SIZE;
 		}
 	}
 
@@ -736,7 +736,7 @@ public class Zone {
 	private final GenericJob sortedAlphaFacesUpload = GenericJob.build("sortedAlphaFacesUpload", this::alphaFacesUpload);
 
 	void alphaFacesUpload(GenericJob job) {
-		final IntBuffer eboAlphaBuffer = ZoneRenderer.eboAlphaMapped.getMappedIntBuffer();
+		final IntBuffer eboAlphaBuffer = ZoneRenderer.eboAlphaMapped.intView();
 		for (int i = 0; i < alphaModels.size(); ++i) {
 			AlphaModel m = alphaModels.get(i);
 			if (m.eboOffset < 0 || m.sortedFacesLen <= 0 || m.sortedFaces == null)

@@ -242,7 +242,7 @@ public class GLBuffer {
 		long numBytes = data.remaining();
 		ensureCapacity(byteOffset, numBytes);
 		if (isStorageBuffer()) {
-			mappedBuffer.getMappedBuffer()
+			mappedBuffer.byteView()
 				.position((int) byteOffset)
 				.put(data);
 		} else {
@@ -269,7 +269,7 @@ public class GLBuffer {
 		long numBytes = 4L * data.remaining();
 		ensureCapacity(byteOffset, numBytes);
 		if (isStorageBuffer()) {
-			mappedBuffer.getMappedIntBuffer()
+			mappedBuffer.intView()
 				.position((int) (byteOffset / 4))
 				.put(data);
 		} else {
@@ -296,7 +296,7 @@ public class GLBuffer {
 		long numBytes = 4L * data.remaining();
 		ensureCapacity(byteOffset, numBytes);
 		if (isStorageBuffer()) {
-			mappedBuffer.getMappedFloatBuffer()
+			mappedBuffer.floatView()
 				.position((int) (byteOffset / 4))
 				.put(data);
 		} else {

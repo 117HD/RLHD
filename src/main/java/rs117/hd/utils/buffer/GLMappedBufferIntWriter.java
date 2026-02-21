@@ -32,7 +32,7 @@ public class GLMappedBufferIntWriter {
 		assert mappedBuffer.isMapped();
 
 		// Need staging if we've already staged or mapped buffer has no space
-		if (writtenStagingInts > 0 || mappedBuffer.getMappedIntBuffer().remaining() < sizeInts) {
+		if (writtenStagingInts > 0 || mappedBuffer.intView().remaining() < sizeInts) {
 			ReservedView view = new ReservedView();
 			view.buffer = BufferUtils.createIntBuffer(sizeInts);
 			view.bufferOffsetInts = writtenMappedInts + writtenStagingInts;
@@ -45,8 +45,8 @@ public class GLMappedBufferIntWriter {
 		if (view == null)
 			view = new ReservedView();
 
-		if (view.backing != mappedBuffer.getMappedBuffer()) {
-			view.backing = mappedBuffer.getMappedBuffer();
+		if (view.backing != mappedBuffer.byteView()) {
+			view.backing = mappedBuffer.byteView();
 			view.buffer = view.backing.asIntBuffer();
 		}
 
@@ -56,7 +56,7 @@ public class GLMappedBufferIntWriter {
 		view.bufferOffsetInts = writtenMappedInts;
 
 		writtenMappedInts += sizeInts;
-		mappedBuffer.getMappedIntBuffer().position(writtenMappedInts);
+		mappedBuffer.intView().position(writtenMappedInts);
 
 		usedMappedViews.add(view);
 		return view;

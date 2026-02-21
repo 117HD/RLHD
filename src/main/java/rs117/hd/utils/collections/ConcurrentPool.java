@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public final class ConcurrentPool<T> {
-
-	// TODO: Ideally replace with a non allocating pool?
 	private final ConcurrentLinkedQueue<T> pool = new ConcurrentLinkedQueue<>();
 	private final ConcurrentLinkedQueue<Thread> parkedThreads;
 
@@ -52,7 +50,7 @@ public final class ConcurrentPool<T> {
 	}
 
 	public void recycle(T obj) {
-		assert !pool.contains(obj) : "Object already in pool";
+		assert !pool.contains(obj) : "Object already in pool: " + obj;
 		pool.offer(obj);
 
 		if (parkedThreads != null) {

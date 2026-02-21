@@ -59,7 +59,7 @@ public class GpuIntBuffer {
 	}
 
 	public GpuIntBuffer(GLMappedBuffer buffer) {
-		this.buffer = buffer.getMappedIntBuffer();
+		this.buffer = buffer.intView();
 		ownsBuffer = false;
 	}
 
