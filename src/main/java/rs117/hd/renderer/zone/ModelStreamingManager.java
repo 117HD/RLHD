@@ -399,7 +399,7 @@ public class ModelStreamingManager {
 		// Cull based on detail draw distance
 		float squaredDistance = renderer.sceneCamera.squaredDistanceTo(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2]);
 		int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
-		if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles && !modelOverrideManager.getDetailDrawCullAllowed(uuid))
+		if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles && modelOverrideManager.allowDetailCulling(uuid))
 			return;
 
 		// Hide everything outside the current area if area hiding is enabled

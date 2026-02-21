@@ -3,7 +3,6 @@ package rs117.hd.scene;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -49,8 +48,7 @@ public class ModelOverrideManager {
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
-
-	private final HashSet<Integer> detailDrawBlockList = new HashSet<>();
+	private final HashSet<Integer> detailCullingBlacklist = new HashSet<>();
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
@@ -84,13 +82,12 @@ public class ModelOverrideManager {
 				}
 
 				addOverride(fishingSpotReplacer.getModelOverride());
-				applySailingCulling();
+				addSailingCullingOverrides();
 
-				detailDrawBlockList.clear();
-				for (Map.Entry<Integer, ModelOverride> entry : modelOverrides.entrySet()) {
-					if(entry.getValue().disableDetailCulling)
-						detailDrawBlockList.add(entry.getKey());
-				}
+				detailCullingBlacklist.clear();
+				for (var entry : modelOverrides.entrySet())
+					if (entry.getValue().disableDetailCulling)
+						detailCullingBlacklist.add(entry.getKey());
 
 				log.debug("Loaded {} model overrides", modelOverrides.size());
 
@@ -108,37 +105,13 @@ public class ModelOverrideManager {
 		}));
 	}
 
-	private void applySailingCulling() {
-		for (Integer dbTableRow : client.getDBTableRows(DBTableID.SailingBoatSail.ID)) {
-			Integer sailID = (Integer) client.getDBTableField(dbTableRow, DBTableID.SailingBoatSail.COL_LOC, 0)[0];
-			if (sailID == null)
-				continue;
-			int uuid = ModelHash.packUuid(ModelHash.TYPE_OBJECT, sailID);
-			ModelOverride existing = modelOverrides.get(uuid);
-			if (existing != null && !existing.isDummy) {
-				existing.disableDetailCulling = true;
-			} else {
-				ModelOverride sailOverride = new ModelOverride();
-				sailOverride.description = "Sailing boat sail (runtime)";
-				sailOverride.objectIds = Set.of(sailID);
-				sailOverride.disableDetailCulling = true;
-				try {
-					sailOverride.normalize(plugin);
-				} catch (IllegalStateException ex) {
-					log.warn("Skipping sail override for object {}: {}", sailID, ex.getMessage());
-					continue;
-				}
-				addOverride(sailOverride);
-			}
-		}
-	}
-
 	public void shutDown() {
 		if (fileWatcher != null)
 			fileWatcher.unregister();
 		fileWatcher = null;
 
 		modelOverrides.clear();
+		detailCullingBlacklist.clear();
 	}
 
 	public void reload() {
@@ -233,8 +206,26 @@ public class ModelOverrideManager {
 		}
 	}
 
-	public boolean getDetailDrawCullAllowed(int uuid) {
-		return detailDrawBlockList.contains(uuid);
+	private void addSailingCullingOverrides() {
+		try {
+			for (Integer row : client.getDBTableRows(DBTableID.SailingBoatSail.ID)) {
+				Integer sailId = (Integer) client.getDBTableField(row, DBTableID.SailingBoatSail.COL_LOC, 0)[0];
+				if (sailId == null)
+					continue;
+				ModelOverride sailOverride = new ModelOverride();
+				sailOverride.description = "Disable detail culling of boat sails (generated)";
+				sailOverride.objectIds = Set.of(sailId);
+				sailOverride.disableDetailCulling = true;
+				sailOverride.normalize(plugin);
+				addOverride(sailOverride);
+			}
+		} catch (Exception ex) {
+			log.error("Error while setting up model overrides for disabling detail culling of sails:", ex);
+		}
+	}
+
+	public boolean allowDetailCulling(int uuid) {
+		return !detailCullingBlacklist.contains(uuid);
 	}
 
 	@Nonnull
