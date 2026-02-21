@@ -127,7 +127,6 @@ public class ModelStreamingManager {
 		if (renderThreads != numRenderThreads) {
 			numRenderThreads = renderThreads;
 			int gpuFlags = plugin.gpuFlags & ~DrawCallbacks.RENDER_THREADS(RENDER_THREADS_MASK);
-			log.debug("power saving? {}, gpuFlags: {}", plugin.isPowerSaving, gpuFlags);
 			client.setGpuFlags(gpuFlags | DrawCallbacks.RENDER_THREADS(renderThreads));
 		}
 	}
