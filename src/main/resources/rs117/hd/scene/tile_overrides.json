@@ -2551,7 +2551,8 @@
     "name": "FALADOR_PARTY_ROOM_TILE_1",
     "area": "FALADOR_PARTY_ROOM",
     "overlayIds": [
-      33
+      33,
+      412
     ],
     "groundMaterial": "MARBLE_1_GLOSS",
     "blended": false
@@ -2560,7 +2561,8 @@
     "name": "FALADOR_PARTY_ROOM_TILE_2",
     "area": "FALADOR_PARTY_ROOM",
     "overlayIds": [
-      123
+      123,
+      411
     ],
     "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
