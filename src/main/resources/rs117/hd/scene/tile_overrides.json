@@ -2388,6 +2388,18 @@
     "area": "AL_KHARID_MINE",
     "groundMaterial": "VERTICAL_GRAVEL",
     "shiftHue": -2,
+    "overlayIds": [ 26 ],
+    "replacements": {
+      "AL_KHARID_MINE_WALLS_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "AL_KHARID_MINE_WALLS_NO_TEXTURES",
+    "area": "AL_KHARID_MINE",
+    "groundMaterial": "VERTICAL_GRAVEL",
+    "shiftHue": -2,
+    "shiftLightness": -2,
+    "maxLightness": 53,
     "overlayIds": [ 26 ]
   },
   {
@@ -2458,10 +2470,22 @@
   {
     "name": "PVP_ARENA_PATH",
     "area": "PVP_ARENA",
+    "maxLightness": 53,
     "overlayIds": [
       227
     ],
-    "groundMaterial": "DIRT"
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "PVP_ARENA_PATH_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "PVP_ARENA_PATH_NO_TEXTURES",
+    "area": "PVP_ARENA",
+    "maxLightness": 48,
+    "overlayIds": [
+      227
+    ]
   },
   {
     "name": "DESERT_TREASURE_INTERIOR_FLOOR_OVERLAY",
@@ -7171,7 +7195,7 @@
     "groundMaterial": "OVERWORLD_GRASS_1",
     "maxLightness": 40,
     "shiftHue": -1,
-    "shiftLightness": -4,
+    "shiftLightness": -2,
     "minHue": 9
   },
   {
@@ -7203,7 +7227,7 @@
     "name": "KHARID_GRASSY_SAND_NO_BLENDING",
     "groundMaterial": "SAND",
     "maxLightness": 45,
-    "shiftLightness": -8
+    "shiftLightness": -6
   },
   {
     "name": "KHARID_DIRTY_SAND",
