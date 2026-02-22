@@ -2750,6 +2750,16 @@
     "name": "WATTLE_1"
   },
   {
+    "name": "WATTLE_1_SEMI_DARK",
+    "parent": "WATTLE_1",
+    "brightness": 0.875
+  },
+  {
+    "name": "WATTLE_1_DARK",
+    "parent": "WATTLE_1",
+    "brightness": 0.8
+  },
+  {
     "name": "ICE_1",
     "parent": "SMOOTH_SNOW",
     "specularStrength": 1.1,

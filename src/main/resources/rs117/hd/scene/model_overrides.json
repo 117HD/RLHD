@@ -11716,6 +11716,16 @@
     "flatNormals": true,
     "colorOverrides": [
       {
+        "colors": "h == 10 && s == 0 && l == 61 || h == 10 && s == 0 && l == 109",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 10 && s == 0 && l == 92",
+        "baseMaterial": "WATTLE_1_SEMI_DARK",
+        "uvType": "BOX"
+      },
+      {
         "colors": "h == 10 && s == 0",
         "baseMaterial": "WATTLE_1",
         "uvType": "BOX"
@@ -29871,7 +29881,7 @@
     "colorOverrides": [
       {
         "colors": "h == 10 && s == 0",
-        "baseMaterial": "WATTLE_1",
+        "baseMaterial": "WATTLE_1_DARK",
         "uvType": "BOX"
       }
     ],
@@ -73243,10 +73253,19 @@
     "depthBias": 100,
     "colorOverrides": [
       {
+        "colors": "h == 10 && s == 0 && l == 61 || h == 10 && s == 0 && l == 109",
+        "baseMaterial": "WATTLE_1_DARK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 10 && s == 0 && l == 92",
+        "baseMaterial": "WATTLE_1_SEMI_DARK",
+        "uvType": "BOX"
+      },
+      {
         "colors": "h == 10 && s == 0",
         "baseMaterial": "WATTLE_1",
-        "uvType": "BOX",
-        "depthBias": 100
+        "uvType": "BOX"
       }
     ],
     "objectIds": [
