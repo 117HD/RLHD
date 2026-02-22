@@ -31,6 +31,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.NpcDisplacementCache;
+import rs117.hd.utils.RenderState;
 import rs117.hd.utils.jobs.GenericJob;
 
 import static net.runelite.api.Constants.*;
@@ -82,6 +83,7 @@ public class SceneManager {
 	@Inject
 	private FrameTimer frameTimer;
 
+	private RenderState renderState;
 	private UBOWorldViews uboWorldViews;
 
 	@Getter
@@ -128,19 +130,20 @@ public class SceneManager {
 		return root;
 	}
 
-	public void initialize(UBOWorldViews uboWorldViews) {
+	public void initialize(RenderState renderState, UBOWorldViews uboWorldViews) {
+		this.renderState = renderState;
 		this.uboWorldViews = uboWorldViews;
-		root.initialize(injector);
+		root.initialize(renderState, injector);
 	}
 
 	public void destroy() {
 		root.free();
-
 		for (int i = 0; i < subs.length; i++) {
 			if (subs[i] != null)
 				subs[i].free();
 			subs[i] = null;
 		}
+		WorldViewContext.freeVaoPools();
 
 		Zone.freeZones(nextZones);
 		nextZones = null;
@@ -193,18 +196,6 @@ public class SceneManager {
 					ctx.update(plugin.deltaTime);
 			}
 		}
-
-		// TODO: Wait for zone invalidations without blocking other async loading
-		// Ensure any queued zone invalidations are now completed
-//		root.completeInvalidation();
-//
-//		if (wv != null) {
-//			for (WorldEntity we : wv.worldEntities()) {
-//				WorldViewContext ctx = getContext(we.getWorldView());
-//				if (ctx != null)
-//					ctx.completeInvalidation();
-//			}
-//		}
 	}
 
 	private void updateAreaHiding() {
@@ -285,8 +276,7 @@ public class SceneManager {
 	public void completeAllStreaming() {
 		root.sceneLoadGroup.complete();
 		root.streamingGroup.complete();
-
-		root.completeInvalidation();
+		root.invalidationGroup.complete();
 
 		WorldView wv = client.getTopLevelWorldView();
 		if (wv != null) {
@@ -295,8 +285,7 @@ public class SceneManager {
 				if (ctx != null) {
 					ctx.sceneLoadGroup.complete();
 					ctx.streamingGroup.complete();
-
-					ctx.completeInvalidation();
+					ctx.invalidationGroup.complete();
 				}
 			}
 		}
@@ -312,7 +301,7 @@ public class SceneManager {
 			return;
 
 		zone.rebuild = true;
-		log.debug("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
+		log.trace("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
 	}
 
 	private static boolean isEdgeTile(Zone[][] zones, int zx, int zz) {
@@ -677,7 +666,7 @@ public class SceneManager {
 		nextSceneContext = null;
 
 		if (isFirst) {
-			root.initMetadata();
+			root.initBuffers();
 
 			// Load all pre-existing sub scenes on the first scene load
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
@@ -717,7 +706,7 @@ public class SceneManager {
 		proceduralGenerator.generateSceneData(sceneContext);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
-		ctx.initialize(injector);
+		ctx.initialize(renderState, injector);
 		subs[worldViewId] = ctx;
 
 		for (int x = 0; x < ctx.sizeX; ++x)
@@ -735,11 +724,11 @@ public class SceneManager {
 			return;
 
 		Stopwatch sw = Stopwatch.createStarted();
+		ctx.initBuffers();
 		ctx.sceneLoadGroup.complete();
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
-		ctx.initMetadata();
-		ctx.isLoading = false;
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
+		ctx.isLoading = false;
 		log.debug("swapSubScene time {} WorldView ready: {}", ctx.sceneSwapTime, scene.getWorldViewId());
 	}
 
