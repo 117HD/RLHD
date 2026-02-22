@@ -1551,19 +1551,20 @@ public class SceneUploader implements AutoCloseable {
 				}
 
 				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
-					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
-						uuid,
-						modelOverride,
-						model,
-						face,
-						color1,
-						color2,
-						color3
-					);
-					color1 = tzHaarRecolored[0];
-					color2 = tzHaarRecolored[1];
-					color3 = tzHaarRecolored[2];
-					transparency |= tzHaarRecolored[3];
+					// The legacy TzHaar reskin is not thread-safe
+					synchronized (proceduralGenerator) {
+						int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
+							modelOverride,
+							model,
+							face,
+							color1,
+							color2,
+							color3
+						);
+						color1 = tzHaarRecolored[0];
+						color2 = tzHaarRecolored[1];
+						color3 = tzHaarRecolored[2];
+					}
 				}
 			}
 
