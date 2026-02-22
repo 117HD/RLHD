@@ -33,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
 import org.lwjgl.opengl.*;
@@ -98,9 +97,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private Client client;
-
-	@Inject
-	private EventBus eventBus;
 
 	@Inject
 	private DrawManager drawManager;
@@ -178,8 +174,6 @@ public class ZoneRenderer implements Renderer {
 	public void initialize() {
 		initializeBuffers();
 
-		eventBus.register(this);
-
 		SceneUploader.POOL = new ConcurrentPool<>(plugin.getInjector(), SceneUploader.class);
 		FacePrioritySorter.POOL = new ConcurrentPool<>(plugin.getInjector(), FacePrioritySorter.class);
 		
@@ -194,8 +188,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void destroy() {
-		eventBus.unregister(this);
-
 		destroyBuffers();
 
 		jobSystem.shutDown();
