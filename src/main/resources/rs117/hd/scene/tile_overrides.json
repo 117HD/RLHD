@@ -22,7 +22,8 @@
   {
     "name": "DEFAULT_DIRT_NO_TEXTURES",
     "groundMaterial": "DIRT",
-    "maxLightness": 46
+    "maxLightness": 47,
+    "shiftLightness": 1
   },
   {
     "name": "DEFAULT_SAND",
@@ -35,7 +36,8 @@
   {
     "name": "DEFAULT_SAND_NO_TEXTURES",
     "groundMaterial": "SAND",
-    "maxLightness": 49
+    "maxLightness": 51,
+    "shiftLightness": -5
   },
   {
     "name": "DEFAULT_SNOW",
