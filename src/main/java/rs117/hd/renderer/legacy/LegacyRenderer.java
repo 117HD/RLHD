@@ -1370,7 +1370,8 @@ public class LegacyRenderer implements Renderer {
 		}
 
 		tileVisibilityCached = false;
-		lightManager.loadSceneLights(nextSceneContext, sceneContext);
+		lightManager.loadSceneLights(nextSceneContext);
+		lightManager.swapSceneLights(nextSceneContext, sceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
 

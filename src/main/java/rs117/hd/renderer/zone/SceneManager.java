@@ -330,7 +330,7 @@ public class SceneManager {
 	@Getter
 	private final GenericJob loadSceneLightsTask = GenericJob.build(
 		"LightManager::loadSceneLights",
-		(task) -> lightManager.loadSceneLights(nextSceneContext, root.sceneContext)
+		task -> lightManager.loadSceneLights(nextSceneContext)
 	);
 
 	private final GenericJob calculateRoofChangesTask = GenericJob.build(
@@ -610,6 +610,7 @@ public class SceneManager {
 
 		// Handle object spawns that must be processed on the client thread
 		loadSceneLightsTask.waitForCompletion();
+		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
 
 		for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)
 			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
