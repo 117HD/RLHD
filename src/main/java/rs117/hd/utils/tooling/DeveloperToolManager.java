@@ -192,6 +192,14 @@ public class DeveloperToolManager implements KeyListener {
 			.chatMessages("hideui")
 			.customAction(() -> hideUiEnabled = !hideUiEnabled)
 			.description("Toggles UI visibility"));
+
+		registerTool(DeveloperTool.builder()
+			.name("RELOAD_SCENE")
+			.keyBind(new Keybind(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK))
+			.chatMessages("reloadscene")
+			.customAction(() -> plugin.renderer.reloadScene())
+			.description("Reloads the Scene"));
+
 	}
 
 	public void registerTool(DeveloperTool.DeveloperToolBuilder builder) {
