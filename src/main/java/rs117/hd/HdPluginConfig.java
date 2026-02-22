@@ -999,6 +999,41 @@ public interface HdPluginConfig extends Config
 	default boolean modelCaching() { return true; }
 
 	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiBv2";
+
+	/*====== Resource Packs settings ======*/
+
+	@ConfigSection(
+		name = "Resource Packs",
+		description = "Manage and configure resource packs for textures, environments, and other visual enhancements.",
+		position = 7
+	)
+	String resourcePackSettings = "resourcePackSettings";
+
+	String KEY_ENABLE_RESOURCE_PACKS = "enableResourcePacks";
+	@ConfigItem(
+		keyName = KEY_ENABLE_RESOURCE_PACKS,
+		name = "Enable resource packs",
+		description = 
+			"Enable custom resource packs. When disabled, only the default internal pack will be loaded.<br>" +
+			"The resource pack sidebar will also be hidden when disabled.",
+		position = 1,
+		section = resourcePackSettings
+	)
+	default boolean enableResourcePacks() {
+		return true;
+	}
+
+	String KEY_COMPACT_VIEW = "compactView";
+	@ConfigItem(
+		keyName = KEY_COMPACT_VIEW,
+		name = "Compact pack view",
+		description = "Display resource packs in a more compact format, hiding author and description information.",
+		position = 2,
+		section = resourcePackSettings
+	)
+	default boolean compactView() {
+		return true;
+	}
 	@Range(
 		min = 64,
 		max = 16384
@@ -1039,6 +1074,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_LEGACY_TOB_ENVIRONMENT,
 		name = "Legacy Theatre of Blood",
+		hidden = true,
 		description =
 			"Previously, Theatre of Blood used to look a whole lot more blue, which<br>" +
 			"some people grew really used to. This option brings back that same old look.",
@@ -1047,19 +1083,7 @@ public interface HdPluginConfig extends Config
 	default boolean legacyTobEnvironment() {
 		return false;
 	}
-
-	String KEY_LEGACY_TZHAAR_RESKIN = "tzhaarHD";
-	@ConfigItem(
-		keyName = KEY_LEGACY_TZHAAR_RESKIN,
-		name = "Legacy TzHaar city reskin",
-		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		section = legacySettings
-	)
-	default boolean legacyTzHaarReskin() {
-		return false;
-	}
-
-
+	
 	/*====== Experimental settings ======*/
 
 	@ConfigSection(

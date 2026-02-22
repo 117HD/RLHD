@@ -82,6 +82,7 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.gui.HdSidebar;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
@@ -99,6 +100,9 @@ import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
+import rs117.hd.resourcepacks.PackEventType;
+import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -227,6 +231,9 @@ public class HdPlugin extends Plugin {
 	@Getter
 	private Gson gson;
 
+	@Getter
+	public HdSidebar sidebar;
+
 	@Inject
 	private Client client;
 
@@ -241,6 +248,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private PluginManager pluginManager;
+
+	@Inject
+	private ResourcePackManager resourcePackManager;
 
 	@Inject
 	private HdPluginConfig config;
@@ -652,6 +662,8 @@ public class HdPlugin extends Plugin {
 				initializeVaos();
 				initializeUbos();
 
+				resourcePackManager.startUp();
+
 				// Materials need to be initialized before compiling shader programs
 				textureManager.startUp();
 				materialManager.startUp();
@@ -701,6 +713,7 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
+
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
 				stopPlugin();
@@ -759,6 +772,7 @@ public class HdPlugin extends Plugin {
 			waterTypeManager.shutDown();
 			materialManager.shutDown();
 			textureManager.shutDown();
+			resourcePackManager.shutDown();
 
 			if (awtContext != null)
 				awtContext.destroy();
@@ -816,8 +830,8 @@ public class HdPlugin extends Plugin {
 			return array + "[" + from + "]";
 		int middle = from + length / 2;
 		return "i < " + middle +
-			" ? " + generateFetchCases(array, from, middle) +
-			" : " + generateFetchCases(array, middle, to);
+			   " ? " + generateFetchCases(array, from, middle) +
+			   " : " + generateFetchCases(array, middle, to);
 	}
 
 	public String generateGetter(String type, int arrayLength) {
@@ -1581,6 +1595,17 @@ public class HdPlugin extends Plugin {
 		}
 	}
 
+	@Subscribe
+	public void onResourcePackUpdate(ResourcePackUpdate event) {
+		if (Objects.equals(event.getInternalName(), "tzhaar_reskin") && event.stateIs(PackEventType.ADDED, PackEventType.REMOVED)) {
+			configLegacyTzHaarReskin = resourcePackManager.isEnabled("tzhaar_reskin");
+			clientThread.invoke(() -> {
+				renderer.clearCaches();
+				renderer.reloadScene();
+			});
+		}
+	}
+
 	public boolean isLoadingScene() {
 		return renderer.isLoadingScene();
 	}
@@ -1592,7 +1617,6 @@ public class HdPlugin extends Plugin {
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
-		configLegacyTzHaarReskin = config.legacyTzHaarReskin();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
@@ -1778,6 +1802,17 @@ public class HdPlugin extends Plugin {
 							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
 								break;
+							case KEY_ENABLE_RESOURCE_PACKS:
+								resourcePackManager.shutDown();
+								resourcePackManager.startUp();
+								eventBus.post(new ResourcePackUpdate(PackEventType.ADDED));
+								break;
+							case KEY_COMPACT_VIEW:
+								// Refresh the panel to update view
+								if (sidebar != null) {
+									sidebar.refresh();
+								}
+								break;
 							case KEY_SEASONAL_THEME:
 							case KEY_SEASONAL_HEMISPHERE:
 								reloadEnvironments = true;
@@ -1792,7 +1827,6 @@ public class HdPlugin extends Plugin {
 								// fall-through
 							case KEY_GROUND_BLENDING:
 							case KEY_FILL_GAPS_IN_TERRAIN:
-							case KEY_LEGACY_TZHAAR_RESKIN:
 								reloadScene = true;
 								break;
 							case KEY_VANILLA_SHADOW_MODE:

@@ -28,6 +28,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.InputStream;
 import java.nio.IntBuffer;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -35,16 +36,25 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.SwingUtilities;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.resourcepacks.AbstractResourcePack;
+import rs117.hd.resourcepacks.PackEventType;
+import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -53,7 +63,7 @@ import static rs117.hd.utils.ResourcePath.path;
 public class TextureManager {
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
 	private static final ResourcePath TEXTURE_PATH = Props
-		.getFolder("rlhd.texture-path", () -> path(TextureManager.class, "textures"));
+		.getFolder("rlhd.texture-path", () -> path(HdPlugin.class,"resource-pack", "environments" , "environments.json"));
 
 	@Inject
 	private Client client;
@@ -62,10 +72,23 @@ public class TextureManager {
 	private ClientThread clientThread;
 
 	@Inject
+	private ResourcePackManager resourcePackManager;
+
+	/**
+	 * Checks if a pack has textures by checking if it has any image files in the materials directory.
+	 */
+	private boolean packHasTextures(@Nullable AbstractResourcePack pack) {
+		return pack != null && pack.hasTextures();
+	}
+
+	@Inject
 	private ScheduledExecutorService executor;
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private EventBus eventBus;
 
 	@Inject
 	private MaterialManager materialManager;
@@ -80,7 +103,7 @@ public class TextureManager {
 	public void startUp() {
 		assert vanillaTexturesAvailable();
 		vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
-
+		eventBus.register(this);
 		TEXTURE_PATH.watch((path, first) -> {
 			if (first) return;
 			log.debug("Texture changed: {}", path);
@@ -98,10 +121,12 @@ public class TextureManager {
 		});
 	}
 
+
 	public void shutDown() {
 		pixelBuffer = null;
 		scaledImage = null;
 		vanillaImage = null;
+		eventBus.unregister(this);
 	}
 
 	public boolean vanillaTexturesAvailable() {
@@ -173,7 +198,10 @@ public class TextureManager {
 	@Nullable
 	public BufferedImage loadTexture(String filename) {
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
-			ResourcePath path = TEXTURE_PATH.resolve(filename + "." + ext);
+			ResourcePath path = resourcePackManager.locateFile("materials", filename + "." + ext);
+			if (path == null)
+				continue;
+			
 			try {
 				return path.loadImage();
 			} catch (Exception ex) {
@@ -237,4 +265,15 @@ public class TextureManager {
 			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, clamp(level, 1, maxSamples));
 		}
 	}
+
+	@Subscribe
+	public void onResourcePackUpdate(ResourcePackUpdate event) {
+		for (var layer : materialManager.textureLayers) {
+			layer.needsUpload = true;
+		}
+
+		if (debounce == null || debounce.cancel(false) || debounce.isDone())
+			debounce = executor.schedule(() -> clientThread.invoke(materialManager::uploadTextures), 100, TimeUnit.MILLISECONDS);
+	}
+
 }
