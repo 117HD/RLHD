@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -71,6 +72,7 @@ import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
+@Singleton
 public class LegacyRenderer implements Renderer {
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
@@ -126,13 +128,13 @@ public class LegacyRenderer implements Renderer {
 	private FrameTimer frameTimer;
 
 	@Inject
-	public SceneShaderProgram sceneProgram;
+	private SceneShaderProgram.Legacy sceneProgram;
 
 	@Inject
-	public ModelPassthroughComputeProgram modelPassthroughComputeProgram;
+	private ModelPassthroughComputeProgram modelPassthroughComputeProgram;
 
 	@Inject
-	public ShadowShaderProgram shadowProgram;
+	private ShadowShaderProgram.Legacy shadowProgram;
 
 	@Inject
 	private JobSystem jobSystem;
@@ -193,7 +195,7 @@ public class LegacyRenderer implements Renderer {
 	public void initialize() {
 		modelPusher.startUp();
 
-		jobSystem.initialize();
+		jobSystem.startUp(config.cpuUsageLimit());
 
 		renderBufferOffset = 0;
 		numPassthroughModels = 0;
@@ -222,7 +224,7 @@ public class LegacyRenderer implements Renderer {
 			glDeleteVertexArrays(vaoScene);
 		vaoScene = 0;
 
-		jobSystem.destroy();
+		jobSystem.shutDown();
 
 		destroyBuffers();
 		destroyTileHeightMap();
@@ -1263,6 +1265,9 @@ public class LegacyRenderer implements Renderer {
 
 		plugin.drawUi(overlayColor);
 
+		frameTimer.end(Timer.DRAW_FRAME);
+		frameTimer.end(Timer.RENDER_FRAME);
+
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);
 			plugin.awtContext.swapBuffers();
@@ -1280,8 +1285,6 @@ public class LegacyRenderer implements Renderer {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
-		frameTimer.end(Timer.DRAW_FRAME);
-		frameTimer.end(Timer.RENDER_FRAME);
 		frameTimer.endFrameAndReset();
 		frameModelInfoMap.clear();
 		checkGLErrors();

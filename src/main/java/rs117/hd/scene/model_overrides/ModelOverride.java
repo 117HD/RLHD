@@ -58,6 +58,7 @@ public class ModelOverride
 	public int uvOrientationZ = 0;
 	public int rotate = 0;
 	public boolean hide = false;
+	public boolean disableDetailCulling = false;
 	public boolean retainVanillaUvs = true;
 	public boolean forceMaterialChanges = false;
 	public boolean flatNormals = false;
@@ -218,6 +219,7 @@ public class ModelOverride
 			uvOrientationZ,
 			rotate,
 			hide,
+			disableDetailCulling,
 			retainVanillaUvs,
 			forceMaterialChanges,
 			flatNormals,

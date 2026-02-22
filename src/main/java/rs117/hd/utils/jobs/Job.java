@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public abstract class Job {
 	static JobSystem JOB_SYSTEM;
 
@@ -23,21 +24,34 @@ public abstract class Job {
 	JobHandle handle;
 
 	public final void waitForCompletion() {
+		waitForCompletion(-1);
+	}
+
+	public final boolean waitForCompletion(int timeoutNanos) {
+		boolean completed = false;
 		if (handle != null) {
 			try {
-				handle.await();
+				if (isDone()) {
+					completed = true;
+				} else {
+					completed = handle.await(timeoutNanos);
+				}
 			} catch (InterruptedException e) {
 				log.warn("Job {} was interrupted while waiting for completion", this);
 				throw new RuntimeException(e);
 			} finally {
-				handle.release();
+				if (completed)
+					handle.release();
 			}
+		} else {
+			completed = true;
 		}
 
-		if (group != null) {
+		if (group != null && completed) {
 			group.pending.remove(this);
 			group = null;
 		}
+		return completed;
 	}
 
 	public final boolean isQueued() {
@@ -88,8 +102,8 @@ public abstract class Job {
 
 	protected static Injector getInjector() { return JOB_SYSTEM.injector; }
 
-	protected void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
-		JOB_SYSTEM.invokeClientCallback(immediate || !executeAsync, callback);
+	protected void invokeClientCallback(Runnable callback) throws InterruptedException {
+		JOB_SYSTEM.invokeClientCallback(callback);
 	}
 
 	public final void workerHandleCancel() throws InterruptedException {
@@ -110,6 +124,7 @@ public abstract class Job {
 
 	public final <T extends Job> T queue(JobGroup<T> group, Job... dependencies) {
 		assert group != null;
+		waitForCompletion();
 		JOB_SYSTEM.queue(this, group.highPriority, dependencies);
 		if (executeAsync) {
 			this.group = (JobGroup<Job>) group;
@@ -119,18 +134,26 @@ public abstract class Job {
 	}
 
 	public final <T extends Job> T queue(boolean highPriority, Job... dependencies) {
+		waitForCompletion();
 		JOB_SYSTEM.queue(this, highPriority, dependencies);
 		return (T) this;
 	}
 
 	public final <T extends Job> T queue(Job... dependencies) {
+		waitForCompletion();
 		JOB_SYSTEM.queue(this, true, dependencies);
 		return (T) this;
 	}
 
 	protected abstract void onRun() throws InterruptedException;
-	protected abstract void onCancel();
-	protected abstract void onReleased();
+
+	protected boolean canStart() { return true; }
+
+	protected void onCompletion() {}
+
+	protected void onCancel() {}
+
+	protected void onReleased() {}
 
 	public String toString() {
 		return "[" + hashCode() + "|" + getClass().getSimpleName() + "]";

@@ -24,602 +24,214 @@
  */
 package rs117.hd.renderer.zone;
 
-import java.nio.IntBuffer;
 import java.util.Arrays;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.HdPlugin;
-import rs117.hd.scene.MaterialManager;
-import rs117.hd.scene.materials.Material;
-import rs117.hd.scene.model_overrides.ModelOverride;
-import rs117.hd.scene.model_overrides.UvType;
-import rs117.hd.utils.HDUtils;
-import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.PrimitiveIntArray;
 
-import static net.runelite.api.Perspective.*;
+import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-@Singleton
-class FacePrioritySorter {
-	private static final int[] EMPTY_NORMALS = new int[9];
+public final class FacePrioritySorter implements AutoCloseable {
+	public static ConcurrentPool<FacePrioritySorter> POOL;
 
-	static final int[] distances;
-	static final char[] distanceFaceCount;
-	static final char[][] distanceToFaces;
-
-	private static final float[] modelProjectedX;
-	private static final float[] modelProjectedY;
-
-	private static final float[] modelLocalX;
-	private static final float[] modelLocalY;
-	private static final float[] modelLocalZ;
-
-	private static final float[] workingSpace;
-	private static final float[] modelUvs;
-	private static final int[] modelNormals;
-
-	static final int[] numOfPriority;
-	private static final int[] eq10;
-	private static final int[] eq11;
-	private static final int[] lt10;
-	static final int[][] orderedFaces;
-
-	private static int orientSin, orientCos;
-
-	private static final int MAX_VERTEX_COUNT = 6500;
+	public static final int MAX_FACE_COUNT = 8192;
 	private static final int MAX_DIAMETER = 6000;
-	private static final int ZSORT_GROUP_SIZE = 1024; // was 512
-	private static final int MAX_FACES_PER_PRIORITY = 4000; // was 2500
+	private static final int MAX_FACES_PER_PRIORITY = 4000;
+	private static final int PRIORITY_COUNT = 12;
 
-	private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
-	private static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
-	// subtracts the X lowest lightness levels from the formula.
-	// helps keep darker colors appropriately dark
-	private static final int IGNORE_LOW_LIGHTNESS = 3;
-	// multiplier applied to vertex' lightness value.
-	// results in greater lightening of lighter colors
-	private static final float LIGHTNESS_MULTIPLIER = 3;
-	// the minimum amount by which each color will be lightened
-	private static final int BASE_LIGHTEN = 10;
+	public final int[] faceDistances = new int[MAX_FACE_COUNT];
 
-	static {
-		distances = new int[MAX_VERTEX_COUNT];
-		distanceFaceCount = new char[MAX_DIAMETER];
-		distanceToFaces = new char[MAX_DIAMETER][ZSORT_GROUP_SIZE];
+	private final int[] orderedFaces = new int[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
+	private final int[] numOfPriority = new int[PRIORITY_COUNT];
+	private final int[] eq10 = new int[MAX_FACES_PER_PRIORITY];
+	private final int[] eq11 = new int[MAX_FACES_PER_PRIORITY];
+	private final int[] lt10 = new int[PRIORITY_COUNT];
 
-		modelProjectedX = new float[MAX_VERTEX_COUNT];
-		modelProjectedY = new float[MAX_VERTEX_COUNT];
+	private final int[] zsortHead = new int[MAX_DIAMETER];
+	private final int[] zsortTail = new int[MAX_DIAMETER];
+	private final int[] zsortNext = new int[MAX_FACE_COUNT];
 
-		modelLocalX = new float[MAX_VERTEX_COUNT];
-		modelLocalY = new float[MAX_VERTEX_COUNT];
-		modelLocalZ = new float[MAX_VERTEX_COUNT];
-
-		workingSpace = new float[9];
-		modelUvs = new float[12];
-		modelNormals = new int[9];
-
-		numOfPriority = new int[12];
-		eq10 = new int[MAX_FACES_PER_PRIORITY];
-		eq11 = new int[MAX_FACES_PER_PRIORITY];
-		lt10 = new int[12];
-		orderedFaces = new int[12][MAX_FACES_PER_PRIORITY];
-
-		for (int i = 0; i < 8; i++)
-			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
-	}
-
-	@Inject
-	private HdPlugin plugin;
-
-	@Inject
-	private MaterialManager materialManager;
-
-	int uploadSortedModel(
-		Projection proj,
-		Model model,
-		ModelOverride modelOverride,
-		int preOrientation,
-		int orientation,
-		int x,
-		int y,
-		int z,
-		int category,
-		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer
-	) {
-		final int vertexCount = model.getVerticesCount();
-		final float[] verticesX = model.getVerticesX();
-		final float[] verticesY = model.getVerticesY();
-		final float[] verticesZ = model.getVerticesZ();
-
-		final int faceCount = model.getFaceCount();
-		final int[] indices1 = model.getFaceIndices1();
-		final int[] indices2 = model.getFaceIndices2();
-		final int[] indices3 = model.getFaceIndices3();
-
-		final int[] faceColors3 = model.getFaceColors3();
-		final byte[] faceRenderPriorities = model.getFaceRenderPriorities();
-
-		orientation = mod(orientation, 2048);
-		orientSin = SINE[orientation];
-		orientCos = COSINE[orientation];
-		float orientSinf = orientSin / 65536f;
-		float orientCosf = orientCos / 65536f;
-
-		float[] p = proj.project(x, y, z);
-		int zero = (int) p[2];
-
-		for (int v = 0; v < vertexCount; ++v) {
-			float vertexX = verticesX[v];
-			float vertexY = verticesY[v];
-			float vertexZ = verticesZ[v];
-
-			if (orientation != 0) {
-				float x0 = vertexX;
-				vertexX = vertexZ * orientSinf + x0 * orientCosf;
-				vertexZ = vertexZ * orientCosf - x0 * orientSinf;
-			}
-
-			// move to local position
-			vertexX += x;
-			vertexY += y;
-			vertexZ += z;
-
-			modelLocalX[v] = vertexX;
-			modelLocalY[v] = vertexY;
-			modelLocalZ[v] = vertexZ;
-
-			p = proj.project(vertexX, vertexY, vertexZ);
-			if (p[2] < 50) {
-				return 0;
-			}
-
-			modelProjectedX[v] = p[0] / p[2];
-			modelProjectedY[v] = p[1] / p[2];
-			distances[v] = (int) p[2] - zero;
-		}
-
-		model.calculateBoundsCylinder();
+	void sortModelFaces(PrimitiveIntArray visibleFaces, Model model) {
 		final int diameter = model.getDiameter();
-		final int radius = model.getRadius();
-		if (diameter >= 6000) {
-			return 0;
+		if (diameter <= 0 || diameter >= MAX_DIAMETER)
+			return;
+
+		int minFz = diameter, maxFz = 0;
+		Arrays.fill(zsortHead, 0, diameter + 1, -1);
+		Arrays.fill(zsortTail, 0, diameter + 1, -1);
+
+		// Build the z-sorted linked list of faces
+		for (int i = 0; i < visibleFaces.length; ++i) {
+			final int faceIdx = visibleFaces.array[i];
+			final int distance = clamp(faceDistances[faceIdx], 0, diameter);
+
+			final int tailFaceIdx = zsortTail[distance];
+			if (tailFaceIdx == -1) {
+				zsortHead[distance] = zsortTail[distance] = faceIdx;
+				zsortNext[faceIdx] = -1;
+
+				minFz = min(minFz, distance);
+				maxFz = max(maxFz, distance);
+			} else {
+				zsortNext[tailFaceIdx] = faceIdx;
+				zsortNext[faceIdx] = -1;
+				zsortTail[distance] = faceIdx;
+			}
+		}
+		visibleFaces.reset();
+
+		final byte[] priorities = model.getFaceRenderPriorities();
+		if (priorities == null) {
+			for (int i = maxFz; i >= minFz; --i) {
+				for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
+					visibleFaces.put(f);
+			}
+			return;
 		}
 
-		Arrays.fill(distanceFaceCount, 0, diameter, (char) 0);
+		Arrays.fill(numOfPriority, 0);
+		Arrays.fill(lt10, 0);
 
-		for (char i = 0; i < faceCount; ++i) {
-			if (faceColors3[i] == -2)
-				continue;
+		for (int i = maxFz; i >= minFz; --i) {
+			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
+				final int pri = priorities[f];
+				final int idx = numOfPriority[pri]++;
 
-			final int v1 = indices1[i];
-			final int v2 = indices2[i];
-			final int v3 = indices3[i];
+				orderedFaces[pri * MAX_FACES_PER_PRIORITY + idx] = f;
 
-			final float
-				aX = modelProjectedX[v1],
-				aY = modelProjectedY[v1],
-				bX = modelProjectedX[v2],
-				bY = modelProjectedY[v2],
-				cX = modelProjectedX[v3],
-				cY = modelProjectedY[v3];
-			// Back-face culling
-			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0)
-				continue;
-
-			int distance = radius + (distances[v1] + distances[v2] + distances[v3]) / 3;
-			assert distance >= 0 && distance < diameter;
-			distanceToFaces[distance][distanceFaceCount[distance]++] = i;
+				if (pri < 10)
+					lt10[pri] += i;
+				else if (pri == 10)
+					eq10[idx] = i;
+				else
+					eq11[idx] = i;
+			}
 		}
 
-		int len = 0;
-		if (faceRenderPriorities == null) {
-			for (int i = diameter - 1; i >= 0; --i) {
-				final int cnt = distanceFaceCount[i];
-				if (cnt > 0) {
-					final char[] faces = distanceToFaces[i];
-					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
-						final int face = faces[faceIdx];
-						len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
-					}
-				}
-			}
-		} else {
-			Arrays.fill(numOfPriority, 0);
-			Arrays.fill(lt10, 0);
+		int avg12 = (numOfPriority[1] + numOfPriority[2]) > 0 ?
+			(lt10[1] + lt10[2]) / (numOfPriority[1] + numOfPriority[2]) : 0;
 
-			for (int i = diameter - 1; i >= 0; --i) {
-				final int cnt = distanceFaceCount[i];
-				if (cnt > 0) {
-					final char[] faces = distanceToFaces[i];
-					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
-						final int face = faces[faceIdx];
-						final byte pri = faceRenderPriorities[face];
-						final int distIdx = numOfPriority[pri]++;
+		int avg34 = (numOfPriority[3] + numOfPriority[4]) > 0 ?
+			(lt10[3] + lt10[4]) / (numOfPriority[3] + numOfPriority[4]) : 0;
 
-						orderedFaces[pri][distIdx] = face;
-						if (pri < 10) {
-							lt10[pri] += i;
-						} else if (pri == 10) {
-							eq10[distIdx] = i;
-						} else {
-							eq11[distIdx] = i;
-						}
-					}
-				}
-			}
+		int avg68 = (numOfPriority[6] + numOfPriority[8]) > 0 ?
+			(lt10[6] + lt10[8]) / (numOfPriority[6] + numOfPriority[8]) : 0;
 
-			int avg12 = 0;
-			if (numOfPriority[1] > 0 || numOfPriority[2] > 0)
-				avg12 = (lt10[1] + lt10[2]) / (numOfPriority[1] + numOfPriority[2]);
+		int drawnFaces = 0;
+		int numDynFaces = numOfPriority[10];
+		int dynBase = 10 * MAX_FACES_PER_PRIORITY;
+		int[] dynDist = eq10;
 
-			int avg34 = 0;
-			if (numOfPriority[3] > 0 || numOfPriority[4] > 0)
-				avg34 = (lt10[3] + lt10[4]) / (numOfPriority[3] + numOfPriority[4]);
+		if (numDynFaces == 0) {
+			numDynFaces = numOfPriority[11];
+			dynBase = 11 * MAX_FACES_PER_PRIORITY;
+			dynDist = eq11;
+		}
 
-			int avg68 = 0;
-			if (numOfPriority[6] > 0 || numOfPriority[8] > 0)
-				avg68 = (lt10[8] + lt10[6]) / (numOfPriority[8] + numOfPriority[6]);
+		int currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 
-			int drawnFaces = 0;
-			int numDynFaces = numOfPriority[10];
-			int[] dynFaces = orderedFaces[10];
-			int[] dynFaceDistances = eq10;
-			if (drawnFaces == numDynFaces) {
-				numDynFaces = numOfPriority[11];
-				dynFaces = orderedFaces[11];
-				dynFaceDistances = eq11;
-			}
+		for (int pri = 0; pri < 10; ++pri) {
+			while (
+				pri == 0 && currFaceDistance > avg12 ||
+				pri == 3 && currFaceDistance > avg34 ||
+				pri == 5 && currFaceDistance > avg68
+			) {
+				visibleFaces.put(orderedFaces[dynBase + drawnFaces++]);
 
-			int currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
-
-			for (int pri = 0; pri < 10; ++pri) {
-				while (pri == 0 && currFaceDistance > avg12) {
-					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
-
-					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
-						drawnFaces = 0;
-						numDynFaces = numOfPriority[11];
-						dynFaces = orderedFaces[11];
-						dynFaceDistances = eq11;
-					}
-
-					currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
-				}
-
-				while (pri == 3 && currFaceDistance > avg34) {
-					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
-
-					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
-						drawnFaces = 0;
-						numDynFaces = numOfPriority[11];
-						dynFaces = orderedFaces[11];
-						dynFaceDistances = eq11;
-					}
-
-					currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
-				}
-
-				while (pri == 5 && currFaceDistance > avg68) {
-					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
-
-					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
-						drawnFaces = 0;
-						numDynFaces = numOfPriority[11];
-						dynFaces = orderedFaces[11];
-						dynFaceDistances = eq11;
-					}
-
-					currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
-				}
-
-				final int priNum = numOfPriority[pri];
-				final int[] priFaces = orderedFaces[pri];
-
-				for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
-					final int face = priFaces[faceIdx];
-					len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
-				}
-			}
-
-			while (currFaceDistance != -1000) {
-				final int face = dynFaces[drawnFaces++];
-				len += pushFace(model, modelOverride, preOrientation, face, category,opaqueBuffer, alphaBuffer);
-
-				if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
+				if (drawnFaces == numDynFaces && dynBase == 10 * MAX_FACES_PER_PRIORITY) {
 					drawnFaces = 0;
-					dynFaces = orderedFaces[11];
 					numDynFaces = numOfPriority[11];
-					dynFaceDistances = eq11;
+					dynBase = 11 * MAX_FACES_PER_PRIORITY;
+					dynDist = eq11;
 				}
 
-				currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
+				currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 			}
+
+			visibleFaces.put(
+				orderedFaces,
+				pri * MAX_FACES_PER_PRIORITY,
+				numOfPriority[pri]
+			);
 		}
 
-		return len;
+		while (currFaceDistance != -1000) {
+			visibleFaces.put(orderedFaces[dynBase + drawnFaces++]);
+
+			if (drawnFaces == numDynFaces && dynBase == 10 * MAX_FACES_PER_PRIORITY) {
+				drawnFaces = 0;
+				numDynFaces = numOfPriority[11];
+				dynBase = 11 * MAX_FACES_PER_PRIORITY;
+				dynDist = eq11;
+			}
+
+			currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
+		}
 	}
 
-	private int pushFace(
-		Model model,
-		ModelOverride modelOverride,
-		int preOrientation,
-		int face,
-		int category,
-		IntBuffer opaqueBuffer,
-		IntBuffer alphaBuffer
+	void sortStaticModelFacesByDistance(
+		Zone.AlphaModel m,
+		int yawCos, int yawSin,
+		int pitchCos, int pitchSin
 	) {
-		final int[] indices1 = model.getFaceIndices1();
-		final int[] indices2 = model.getFaceIndices2();
-		final int[] indices3 = model.getFaceIndices3();
+		final int radius = m.radius;
+		final int diameter = 1 + radius * 2;
+		if (diameter >= MAX_DIAMETER)
+			return;
 
-		final short[] unlitFaceColors = plugin.configUnlitFaceColors ? model.getUnlitFaceColors() : null;
-		final int[] faceColors1 = model.getFaceColors1();
-		final int[] faceColors2 = model.getFaceColors2();
-		final int[] faceColors3 = model.getFaceColors3();
+		final int faceCount = m.packedFaces.length;
 
-		final int[] xVertexNormals = model.getVertexNormalsX();
-		final int[] yVertexNormals = model.getVertexNormalsY();
-		final int[] zVertexNormals = model.getVertexNormalsZ();
-		final boolean hasVertexNormals = xVertexNormals != null && yVertexNormals != null && zVertexNormals != null;
+		Arrays.fill(zsortHead, 0, diameter, -1);
+		Arrays.fill(zsortTail, 0, diameter, -1);
 
-		final byte overrideAmount = model.getOverrideAmount();
-		final byte overrideHue = model.getOverrideHue();
-		final byte overrideSat = model.getOverrideSaturation();
-		final byte overrideLum = model.getOverrideLuminance();
+		int minFz = diameter, maxFz = 0;
+		for (int i = 0; i < faceCount; ++i) {
+			final int packed = m.packedFaces[i];
+			final int x = packed >> 21;
+			final int y = (packed << 11) >> 22;
+			final int z = (packed << 21) >> 21;
 
-		final short[] faceTextures = model.getFaceTextures();
-		final byte[] textureFaces = model.getTextureFaces();
-		final int[] texIndices1 = model.getTexIndices1();
-		final int[] texIndices2 = model.getTexIndices2();
-		final int[] texIndices3 = model.getTexIndices3();
+			int fz = ((z * yawCos - x * yawSin) >> 16);
+			fz = ((y * pitchSin + fz * pitchCos) >> 16) + radius;
 
-		final byte[] transparencies = model.getFaceTransparencies();
-		final byte[] bias = model.getFaceBias();
+			if (zsortTail[fz] == -1) {
+				zsortHead[fz] = zsortTail[fz] = i;
+				zsortNext[i] = -1;
 
-
-		boolean isVanillaTextured = faceTextures != null;
-		boolean isVanillaUVMapped =
-			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
-			model.getTextureFaces() != null;
-		int textureId = isVanillaTextured ? faceTextures[face] : -1;
-
-		Material baseMaterial = modelOverride.baseMaterial;
-		Material textureMaterial = modelOverride.textureMaterial;
-
-		final int triangleA = indices1[face];
-		final int triangleB = indices2[face];
-		final int triangleC = indices3[face];
-
-		float vx1 = modelLocalX[triangleA];
-		float vy1 = modelLocalY[triangleA];
-		float vz1 = modelLocalZ[triangleA];
-
-		float vx2 = modelLocalX[triangleB];
-		float vy2 = modelLocalY[triangleB];
-		float vz2 = modelLocalZ[triangleB];
-
-		float vx3 = modelLocalX[triangleC];
-		float vy3 = modelLocalY[triangleC];
-		float vz3 = modelLocalZ[triangleC];
-
-		int color1 = faceColors1[face];
-		int color2 = faceColors2[face];
-		int color3 = faceColors3[face];
-
-		if (color3 == -1)
-			color2 = color3 = color1;
-
-		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-		if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
-			return 0;
-
-		if (unlitFaceColors != null) {
-			color1 = color2 = color3 = unlitFaceColors[face] & 0xFFFF;
-		} else if (plugin.configUndoVanillaShading && hasVertexNormals) {
-			int color1H = color1 >> 10 & 0x3F;
-			int color1S = color1 >> 7 & 0x7;
-			int color1L = color1 & 0x7F;
-			int color2H = color2 >> 10 & 0x3F;
-			int color2S = color2 >> 7 & 0x7;
-			int color2L = color2 & 0x7F;
-			int color3H = color3 >> 10 & 0x3F;
-			int color3S = color3 >> 7 & 0x7;
-			int color3L = color3 & 0x7F;
-
-			// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
-			// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
-			// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
-			// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
-			// low value for it to look acceptable in most cases.
-			float[] L = LIGHT_DIR_MODEL;
-			float color1Adjust =
-				BASE_LIGHTEN - color1L + (color1L < IGNORE_LOW_LIGHTNESS ? 0 : (color1L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
-			float color2Adjust =
-				BASE_LIGHTEN - color2L + (color2L < IGNORE_LOW_LIGHTNESS ? 0 : (color2L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
-			float color3Adjust =
-				BASE_LIGHTEN - color3L + (color3L < IGNORE_LOW_LIGHTNESS ? 0 : (color3L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
-
-			// Normals are currently unrotated, so we don't need to do any rotation for this
-			float nx, ny, nz, lightDotNormal;
-			nx = xVertexNormals[triangleA];
-			ny = yVertexNormals[triangleA];
-			nz = zVertexNormals[triangleA];
-			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
-			if (lightDotNormal > 0) {
-				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-				color1L += (int) (lightDotNormal * color1Adjust);
-			}
-
-			nx = xVertexNormals[triangleB];
-			ny = yVertexNormals[triangleB];
-			nz = zVertexNormals[triangleB];
-			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
-			if (lightDotNormal > 0) {
-				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-				color2L += (int) (lightDotNormal * color2Adjust);
-			}
-
-			nx = xVertexNormals[triangleC];
-			ny = yVertexNormals[triangleC];
-			nz = zVertexNormals[triangleC];
-			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
-			if (lightDotNormal > 0) {
-				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
-				color3L += (int) (lightDotNormal * color3Adjust);
-			}
-
-			int maxBrightness1 = 55;
-			int maxBrightness2 = 55;
-			int maxBrightness3 = 55;
-			if (!plugin.configLegacyGreyColors) {
-				maxBrightness1 = MAX_BRIGHTNESS_LOOKUP_TABLE[color1S];
-				maxBrightness2 = MAX_BRIGHTNESS_LOOKUP_TABLE[color2S];
-				maxBrightness3 = MAX_BRIGHTNESS_LOOKUP_TABLE[color3S];
-			}
-
-			// Clamp brightness as detailed above
-			color1L = min(color1L, maxBrightness1);
-			color2L = min(color2L, maxBrightness2);
-			color3L = min(color3L, maxBrightness3);
-
-			color1 = color1H << 10 | color1S << 7 | color1L;
-			color2 = color2H << 10 | color2S << 7 | color2L;
-			color3 = color3H << 10 | color3S << 7 | color3L;
-		}
-
-		// HSL override is not applied to textured faces
-		if (overrideAmount > 0 && textureId == -1) {
-			color1 = SceneUploader.interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color2 = SceneUploader.interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color3 = SceneUploader.interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
-		}
-
-		int texA, texB, texC;
-
-		if (isVanillaUVMapped && textureFaces[face] != -1) {
-			int tface = textureFaces[face] & 0xff;
-			texA = texIndices1[tface];
-			texB = texIndices2[tface];
-			texC = texIndices3[tface];
-		} else {
-			texA = triangleA;
-			texB = triangleB;
-			texC = triangleC;
-		}
-
-		int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
-
-		UvType uvType = UvType.GEOMETRY;
-		Material material = baseMaterial;
-		ModelOverride faceOverride = modelOverride;
-
-		if (textureId != -1) {
-			color1 = color2 = color3 = 90;
-			uvType = UvType.VANILLA;
-			if (textureMaterial != Material.NONE) {
-				material = textureMaterial;
+				minFz = min(minFz, fz);
+				maxFz = max(maxFz, fz);
 			} else {
-				material = materialManager.fromVanillaTexture(textureId);
-				if (modelOverride.materialOverrides != null) {
-					var override = modelOverride.materialOverrides.get(material);
-					if (override != null) {
-						faceOverride = override;
-						material = faceOverride.textureMaterial;
-					}
-				}
+				int lastFace = zsortTail[fz];
+				zsortNext[lastFace] = i;
+				zsortNext[i] = -1;
+				zsortTail[fz] = i;
 			}
-		} else if (modelOverride.colorOverrides != null) {
-			int ahsl = (0xFF - transparency) << 16 | color1;
-			for (var override : modelOverride.colorOverrides) {
-				if (override.ahslCondition.test(ahsl)) {
-					faceOverride = override;
-					material = faceOverride.baseMaterial;
+		}
+
+		final int start = m.startpos / (VERT_SIZE >> 2);
+		for (int i = maxFz; i >= minFz; --i) {
+			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
+				if (m.sortedFacesLen >= m.sortedFaces.length)
 					break;
-				}
+
+				if (f >= faceCount)
+					continue;
+
+				final int sortedOffset = m.sortedFacesLen;
+				final int faceStart = f * 3 + start;
+				m.sortedFaces[sortedOffset] = faceStart;
+				m.sortedFaces[sortedOffset + 1] = faceStart + 1;
+				m.sortedFaces[sortedOffset + 2] = faceStart + 2;
+				m.sortedFacesLen += 3;
 			}
 		}
+	}
 
-		if (material != Material.NONE) {
-			uvType = faceOverride.uvType;
-			if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
-				uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
-		}
-
-		boolean keepShading = true; // Skip vanilla shading reversal in the shader, since we do it on the CPU
-		int materialData = material.packMaterialData(faceOverride, uvType, false, keepShading, category);
-
-		if (uvType == UvType.VANILLA) {
-			modelUvs[0] = modelLocalX[texA] - vx1;
-			modelUvs[1] = modelLocalY[texA] - vy1;
-			modelUvs[2] = modelLocalZ[texA] - vz1;
-			modelUvs[4] = modelLocalX[texB] - vx2;
-			modelUvs[5] = modelLocalY[texB] - vy2;
-			modelUvs[6] = modelLocalZ[texB] - vz2;
-			modelUvs[8] = modelLocalX[texC] - vx3;
-			modelUvs[9] = modelLocalY[texC] - vy3;
-			modelUvs[10] = modelLocalZ[texC] - vz3;
-		} else {
-			faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
-		}
-
-		final int[] faceNormals;
-		if (hasVertexNormals) {
-			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && faceColors3[face] == -1)) {
-				faceNormals = EMPTY_NORMALS;
-			} else {
-				faceNormals = modelNormals;
-				faceNormals[0] = xVertexNormals[triangleA];
-				faceNormals[1] = yVertexNormals[triangleA];
-				faceNormals[2] = zVertexNormals[triangleA];
-				faceNormals[3] = xVertexNormals[triangleB];
-				faceNormals[4] = yVertexNormals[triangleB];
-				faceNormals[5] = zVertexNormals[triangleB];
-				faceNormals[6] = xVertexNormals[triangleC];
-				faceNormals[7] = yVertexNormals[triangleC];
-				faceNormals[8] = zVertexNormals[triangleC];
-
-				// Rotate normals
-				for (int i = 0; i < 9; i += 3) {
-					int x = modelNormals[i];
-					int z = modelNormals[i + 2];
-					modelNormals[i] = z * orientSin + x * orientCos >> 16;
-					modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
-				}
-			}
-		} else {
-			faceNormals = EMPTY_NORMALS;
-		}
-
-		int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
-			bias == null ? 0 : bias[face] & 0xFF;
-		int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
-		boolean hasAlpha = material.hasTransparency || transparency != 0;
-		var vb = hasAlpha ? alphaBuffer : opaqueBuffer;
-		GpuIntBuffer.putFloatVertex(
-			vb,
-			vx1, vy1, vz1, packedAlphaBiasHsl | color1,
-			modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-			faceNormals[0], faceNormals[1], faceNormals[2], 0
-		);
-		GpuIntBuffer.putFloatVertex(
-			vb,
-			vx2, vy2, vz2, packedAlphaBiasHsl | color2,
-			modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-			faceNormals[3], faceNormals[4], faceNormals[5], 0
-		);
-		GpuIntBuffer.putFloatVertex(
-			vb,
-			vx3, vy3, vz3, packedAlphaBiasHsl | color3,
-			modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-			faceNormals[6], faceNormals[7], faceNormals[8], 0
-		);
-		return 3;
+	@Override
+	public void close() {
+		POOL.recycle(this);
 	}
 }
