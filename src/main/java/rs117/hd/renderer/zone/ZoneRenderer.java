@@ -1096,6 +1096,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void loadScene(WorldView worldView, Scene scene) {
+		if (!plugin.isActive())
+			return;
+
 		try {
 			sceneManager.loadScene(worldView, scene);
 		} catch (OutOfMemoryError oom) {

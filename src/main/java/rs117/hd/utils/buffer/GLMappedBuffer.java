@@ -143,6 +143,8 @@ public final class GLMappedBuffer {
 	}
 
 	public void setPositionBytes(int bytesPos) {
+		if (byteView == null)
+			return;
 		byteView.position(bytesPos);
 		intView.position(bytesPos / 4);
 		floatView.position(bytesPos / 4);

@@ -335,10 +335,10 @@ public class GLBuffer {
 		return map(flags, 0, size);
 	}
 
-	public GLMappedBuffer map(int flags, long byteOffset, long byesSize) {
+	public GLMappedBuffer map(int flags, long byteOffset, long byteSize) {
 		if (mappedBuffer == null)
 			mappedBuffer = new GLMappedBuffer(this);
-		return mappedBuffer.map(flags, byteOffset, byesSize);
+		return mappedBuffer.map(flags, byteOffset, byteSize);
 	}
 
 	public GLMappedBuffer mapped() {

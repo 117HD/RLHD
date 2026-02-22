@@ -711,10 +711,13 @@ public class HdPlugin extends Plugin {
 
 	@Override
 	protected void shutDown() {
-		isActive = false;
-		FileWatcher.destroy();
-
 		clientThread.invoke(() -> {
+			isActive = false;
+			FileWatcher.destroy();
+
+			if (renderer != null)
+				renderer.waitUntilIdle();
+
 			var scene = client.getScene();
 			if (scene != null)
 				scene.setMinLevel(0);
@@ -726,7 +729,6 @@ public class HdPlugin extends Plugin {
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
-				renderer.waitUntilIdle();
 
 				destroyUiTexture();
 				destroyShaders();
