@@ -75890,7 +75890,7 @@
       },
       {
         "colors": "l == 47",
-        "baseMaterial": "GRAY_75",
+        "baseMaterial": "NONE",
         "uvType": "BOX"
       }
     ]
