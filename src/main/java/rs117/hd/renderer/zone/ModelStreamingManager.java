@@ -21,6 +21,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Initializable;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
@@ -35,7 +36,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class ModelStreamingManager {
+public class ModelStreamingManager implements Initializable {
 	private static final int RL_RENDER_THREADS = 2;
 
 	@Inject
@@ -73,7 +74,6 @@ public class ModelStreamingManager {
 	private final PrimitiveIntArray clientCulledFaces = new PrimitiveIntArray();
 
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
-	private int numStreamingContexts;
 	private int numRenderThreads;
 
 	static final class StreamingContext {
@@ -83,8 +83,7 @@ public class ModelStreamingManager {
 	}
 
 	public void initialize() {
-		numStreamingContexts = useMultithreading() ? streamingContexts.length : 1;
-		for (int i = 0; i < numStreamingContexts; i++)
+		for (int i = 0; i < streamingContexts.length; i++)
 			streamingContexts[i] = injector.getInstance(StreamingContext.class);
 
 		if (useMultithreading())
@@ -100,13 +99,6 @@ public class ModelStreamingManager {
 		eventBus.unregister(this);
 		AsyncCachedModel.destroy();
 		Arrays.fill(streamingContexts, null);
-		numRenderThreads = 0;
-	}
-
-	public void reinitialize() {
-		renderer.waitUntilIdle();
-		destroy();
-		initialize();
 	}
 
 	StreamingContext context() {
@@ -126,15 +118,15 @@ public class ModelStreamingManager {
 		// Render threads will act as suppliers into the job system, so RL_RENDER_THREADS + the client thread
 		int renderThreads = useMultithreading() && !plugin.isPowerSaving ? RL_RENDER_THREADS : 0;
 		if (renderThreads != numRenderThreads) {
-			numRenderThreads = renderThreads;
 			int gpuFlags = plugin.gpuFlags & ~DrawCallbacks.RENDER_THREADS(RENDER_THREADS_MASK);
 			client.setGpuFlags(gpuFlags | DrawCallbacks.RENDER_THREADS(renderThreads));
+			numRenderThreads = renderThreads;
 		}
 	}
 
 	@Subscribe
 	public void onBeforeRender(BeforeRender event) {
-		for (int i = 0; i < numStreamingContexts; i++)
+		for (int i = 0; i < streamingContexts.length; i++)
 			streamingContexts[i].renderableCount = 0;
 
 		updateRenderThreads();
@@ -142,7 +134,7 @@ public class ModelStreamingManager {
 
 	public int getDrawnDynamicRenderableCount() {
 		int count = 0;
-		for (int i = 0; i < numStreamingContexts; i++)
+		for (int i = 0; i < streamingContexts.length; i++)
 			count += streamingContexts[i].renderableCount;
 		return count;
 	}

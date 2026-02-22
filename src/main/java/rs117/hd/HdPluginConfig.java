@@ -363,7 +363,7 @@ public interface HdPluginConfig extends Config
 		name = "Brightness",
 		description =
 			"Controls the brightness of the game, excluding UI.<br>" +
-			"Adjust until the disk on the left is barely visible.",
+			"Adjust until the circle on the left is barely visible.",
 		position = 18,
 		section = generalSettings
 	)
