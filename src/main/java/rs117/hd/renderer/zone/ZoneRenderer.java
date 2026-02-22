@@ -176,7 +176,7 @@ public class ZoneRenderer implements Renderer {
 
 		SceneUploader.POOL = new ConcurrentPool<>(plugin.getInjector(), SceneUploader.class);
 		FacePrioritySorter.POOL = new ConcurrentPool<>(plugin.getInjector(), FacePrioritySorter.class);
-		
+
 		sceneCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
 
