@@ -377,7 +377,10 @@ public class Camera {
 
 			calculateViewProjMatrix();
 			try {
-				invViewProjMatrix = Mat4.inverse(viewProjMatrix);
+				float[] invView = Mat4.inverse(viewMatrix);
+				float[] invProj = Mat4.inverse(projectionMatrix);
+				Mat4.mul(invView, invProj);
+				invViewProjMatrix = invView;
 			} catch (Exception ex) {
 				log.warn("Encountered an exception whilst solving inverse of camera ViewProj: ", ex);
 			}
