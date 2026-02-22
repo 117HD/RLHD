@@ -5246,8 +5246,7 @@
       "TZHAAR_CAVE_FENCE3",
       "TZHAAR_CAVE_FENCE4",
       "TZHAAR_CAVE_FENCE5",
-      "TZHAAR_CAVE_FENCE6",
-      "TZHAAR_CAVE_FLOOR_2"
+      "TZHAAR_CAVE_FENCE6"
     ],
     "depthBias": 100
   },
