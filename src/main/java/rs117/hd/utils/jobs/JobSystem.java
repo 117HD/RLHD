@@ -2,8 +2,8 @@ package rs117.hd.utils.jobs;
 
 import com.google.inject.Injector;
 import java.util.HashMap;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.config.CpuUsageLimit;
 import rs117.hd.overlays.FrameTimer;
 
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
@@ -39,18 +40,22 @@ public final class JobSystem {
 	@Getter
 	boolean active;
 
-	private final int workerCount = max(2, PROCESSOR_COUNT - 1);
+	private int workerCount;
 
-	final BlockingDeque<JobHandle> workQueue = new LinkedBlockingDeque<>();
-	private final BlockingDeque<ClientCallbackJob> clientCallbacks = new LinkedBlockingDeque<>(workerCount);
+	final ConcurrentLinkedDeque<JobHandle> workQueue = new ConcurrentLinkedDeque<>();
+	private final ConcurrentLinkedDeque<ClientCallbackJob> clientCallbacks = new ConcurrentLinkedDeque<>();
 
 	private final HashMap<Thread, Worker> threadToWorker = new HashMap<>();
-	Worker[] workers;
 
 	private boolean clientInvokeScheduled;
 
-	public void initialize() {
+	Worker[] workers;
+	Semaphore workerSemaphore;
+
+	public void startUp(CpuUsageLimit cpuUsageLimit) {
+		workerCount = max(1, ceil((PROCESSOR_COUNT - 1) * cpuUsageLimit.threadRatio));
 		workers = new Worker[workerCount];
+		workerSemaphore = new Semaphore(workerCount);
 		active = true;
 
 		for (int i = 0; i < workerCount; i++) {
@@ -66,28 +71,40 @@ public final class JobSystem {
 
 		for (int i = 0; i < workerCount; i++)
 			workers[i].thread.start();
+
+		log.debug("Initialized JobSystem with {} workers", workerCount);
 	}
 
-	public int getInflightWorkerCount() {
-		int inflightCount = 0;
-		for (int i = 0; i < workerCount; i++) {
-			if (workers[i].inflight.get())
-				inflightCount++;
-		}
-		return inflightCount;
+	void signalWorkAvailable(int workCount) {
+		int availPermits = workerSemaphore.availablePermits();
+		if (availPermits >= workCount)
+			return;
+		workerSemaphore.release(min(workCount, workCount - availPermits));
 	}
 
 	public int getWorkQueueSize() {
 		return workQueue.size();
 	}
 
-	public void destroy() {
+	private void cancelAllWork(ConcurrentLinkedDeque<JobHandle> queue) {
+		JobHandle handle;
+		while ((handle = queue.poll()) != null) {
+			try {
+				handle.cancel(false);
+				handle.setCompleted();
+			} catch (InterruptedException e) {
+				log.warn("Interrupted while shutting down worker", e);
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	public void shutDown() {
 		active = false;
-		workQueue.clear();
+		cancelAllWork(workQueue);
 
 		for (Worker worker : workers) {
-			worker.localWorkQueue.clear();
-			worker.thread.interrupt();
+			cancelAllWork(worker.localWorkQueue);
 			if (worker.handle != null) {
 				try {
 					worker.handle.cancel(true);
@@ -96,6 +113,7 @@ public final class JobSystem {
 					throw new RuntimeException(e);
 				}
 			}
+			worker.thread.interrupt();
 		}
 
 		int workerShutdownCount = 0;
@@ -151,7 +169,11 @@ public final class JobSystem {
 				item.onRun();
 				item.ranToCompletion.set(true);
 			} catch (Throwable ex) {
-				log.warn("Encountered an error whilst processing: {}", item.hashCode(), ex);
+				if (item.wasCancelled()) {
+					log.debug("Encountered an error whilst processing: {}", item.hashCode(), ex);
+				} else {
+					log.warn("Encountered an error whilst processing: {}", item.hashCode(), ex);
+				}
 			} finally {
 				item.done.set(true);
 			}
@@ -173,6 +195,7 @@ public final class JobSystem {
 		item.queued.set(true);
 		item.done.set(false);
 		item.wasCancelled.set(false);
+		item.encounteredError.set(false);
 		item.ranToCompletion.set(false);
 
 		if (shouldQueue) {
@@ -184,29 +207,27 @@ public final class JobSystem {
 				workQueue.addLast(newHandle);
 			}
 		}
+
+		signalWorkAvailable(1);
 	}
 
-	void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
+	void invokeClientCallback(Runnable callback) throws InterruptedException {
 		if (client.isClientThread()) {
 			callback.run();
-			processPendingClientCallbacks(false);
+			processPendingClientCallbacks();
 			return;
 		}
 
 		final ClientCallbackJob clientCallback = ClientCallbackJob.current();
 		clientCallback.callback = callback;
-		clientCallback.immediate = immediate;
 
-		if (immediate)
-			clientCallbacks.addFirst(clientCallback);
-		else
-			clientCallbacks.addLast(clientCallback);
+		clientCallbacks.add(clientCallback);
 
 		if (!clientInvokeScheduled) {
 			clientInvokeScheduled = true;
 			clientThread.invoke(() -> {
 				clientInvokeScheduled = false;
-				processPendingClientCallbacks(false);
+				processPendingClientCallbacks();
 			});
 		}
 
@@ -219,21 +240,12 @@ public final class JobSystem {
 	}
 
 	public void processPendingClientCallbacks() {
-		processPendingClientCallbacks(true);
-	}
-
-	public void processPendingClientCallbacks(boolean immediateOnly) {
 		int size = clientCallbacks.size();
 		if (size == 0)
 			return;
 
 		ClientCallbackJob pair;
 		while (size-- > 0 && (pair = clientCallbacks.poll()) != null) {
-			if (!pair.immediate && immediateOnly) {
-				clientCallbacks.addLast(pair); // Add it back onto the end
-				continue;
-			}
-
 			try {
 				pair.callback.run();
 			} catch (Throwable ex) {

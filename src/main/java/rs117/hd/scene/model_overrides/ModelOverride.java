@@ -58,6 +58,7 @@ public class ModelOverride
 	public int uvOrientationZ = 0;
 	public int rotate = 0;
 	public boolean hide = false;
+	public boolean disableDetailCulling = false;
 	public boolean retainVanillaUvs = true;
 	public boolean forceMaterialChanges = false;
 	public boolean flatNormals = false;
@@ -77,6 +78,7 @@ public class ModelOverride
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
 	public int depthBias = -1;
+	public boolean disablePrioritySorting = false;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -217,6 +219,7 @@ public class ModelOverride
 			uvOrientationZ,
 			rotate,
 			hide,
+			disableDetailCulling,
 			retainVanillaUvs,
 			forceMaterialChanges,
 			flatNormals,
@@ -236,6 +239,7 @@ public class ModelOverride
 			windDisplacementModifier,
 			invertDisplacementStrength,
 			depthBias,
+			disablePrioritySorting,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,

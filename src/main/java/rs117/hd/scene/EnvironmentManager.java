@@ -231,9 +231,11 @@ public class EnvironmentManager {
 	}
 
 	public void reload() {
+		var previous = currentEnvironment;
 		shutDown();
 		startUp();
 		forceNextTransition = true;
+		currentEnvironment = previous;
 	}
 
 	/**

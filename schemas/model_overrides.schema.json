@@ -206,6 +206,10 @@
         "type": "integer",
         "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
       },
+      "disablePrioritySorting": {
+        "type": "boolean",
+        "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
+      },
       "materialOverrides": {
         "type": "object",
         "description": "A subset of options can be tweaked separately for specific materials of the model.",
@@ -322,6 +326,10 @@
             "depthBias": {
               "type": "integer",
               "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
+            },
+            "disablePrioritySorting": {
+              "type": "boolean",
+              "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
             }
           }
         }
@@ -449,6 +457,10 @@
             "depthBias": {
               "type": "integer",
               "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
+            },
+            "disablePrioritySorting": {
+              "type": "boolean",
+              "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
             }
           }
         }

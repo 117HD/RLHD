@@ -35,6 +35,8 @@ public class SceneContext {
 	public boolean enableAreaHiding;
 	public boolean fillGaps;
 	public boolean isPrepared;
+	public boolean isInChambersOfXeric;
+	public boolean isInHouse;
 
 	@Nullable
 	public Area currentArea;
