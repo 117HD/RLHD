@@ -21,7 +21,6 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
-import rs117.hd.utils.Initializable;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
@@ -36,7 +35,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class ModelStreamingManager implements Initializable {
+public class ModelStreamingManager {
 	private static final int RL_RENDER_THREADS = 2;
 
 	@Inject
@@ -99,6 +98,11 @@ public class ModelStreamingManager implements Initializable {
 		eventBus.unregister(this);
 		AsyncCachedModel.destroy();
 		Arrays.fill(streamingContexts, null);
+	}
+
+	public void reinitialize() {
+		destroy();
+		initialize();
 	}
 
 	StreamingContext context() {
