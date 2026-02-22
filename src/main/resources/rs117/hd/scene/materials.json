@@ -2750,6 +2750,11 @@
     "name": "WATTLE_1"
   },
   {
+    "name": "WATTLE_1_VERY_LIGHT",
+    "parent": "WATTLE_1",
+    "brightness": 1.5
+  },
+  {
     "name": "WATTLE_1_SEMI_DARK",
     "parent": "WATTLE_1",
     "brightness": 0.875
