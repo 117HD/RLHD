@@ -1922,7 +1922,7 @@ public class HdPlugin extends Plugin {
 	public void onBeforeRender(BeforeRender beforeRender) {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 
-		frame++;
+		frame = (frame + 1) & Integer.MAX_VALUE;
 
 		if (lastFrameTimeMillis > 0) {
 			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
