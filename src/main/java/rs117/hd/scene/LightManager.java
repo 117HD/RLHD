@@ -171,6 +171,8 @@ public class LightManager {
 
 		if (reloadLights) {
 			reloadLights = false;
+			sceneContext.lights.clear();
+			sceneContext.knownProjectiles.clear();
 			loadSceneLights(sceneContext);
 
 			client.getNpcs().forEach(npc -> {

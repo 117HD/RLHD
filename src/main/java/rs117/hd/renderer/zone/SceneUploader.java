@@ -817,6 +817,8 @@ public class SceneUploader implements AutoCloseable {
 		if (onlyWaterSurface && waterType == WaterType.NONE)
 			return;
 
+		ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
+
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];
 		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
 		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
@@ -1077,6 +1079,8 @@ public class SceneUploader implements AutoCloseable {
 		boolean isUnderlayWater = underlayWaterType != WaterType.NONE;
 		if (onlyWaterSurface && !isFallbackWater && !isOverlayWater && !isUnderlayWater)
 			return;
+
+		ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
 
 		final int[] faceX = model.getFaceX();
 		final int[] faceY = model.getFaceY();
