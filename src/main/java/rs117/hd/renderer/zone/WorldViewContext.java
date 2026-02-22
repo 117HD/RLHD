@@ -35,7 +35,6 @@ public class WorldViewContext {
 	public static final int VAO_SHADOW = 3;
 	public static final int VAO_COUNT = 4;
 
-	private static final int FRAMES_IN_FLIGHT = 3;
 	private static final ArrayDeque<VAO> VAO_STAGING_POOL = new ArrayDeque<>();
 	private static final ArrayDeque<VAO> VAO_POOL = new ArrayDeque<>();
 
@@ -68,7 +67,7 @@ public class WorldViewContext {
 
 	CommandBuffer vaoSceneCmd;
 	CommandBuffer vaoDirectionalCmd;
-	final VAO[][] vaos = new VAO[FRAMES_IN_FLIGHT][VAO_COUNT];
+	final VAO[][] vaos = new VAO[ZoneRenderer.FRAMES_IN_FLIGHT][VAO_COUNT];
 
 	public long loadTime;
 	public long uploadTime;
@@ -122,7 +121,7 @@ public class WorldViewContext {
 		for (int i = 0; i < VAO_COUNT; i++) {
 			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_SHADOW;
 			final ArrayDeque<VAO> POOL = needsStaging ? VAO_STAGING_POOL : VAO_POOL;
-			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
+			for (int k = 0; k < ZoneRenderer.FRAMES_IN_FLIGHT; k++) {
 				VAO vao = vaos[k][i] = POOL.poll();
 				if (vao == null) {
 					vao = vaos[k][i] = new VAO(Integer.toString(i), needsStaging);
@@ -136,21 +135,21 @@ public class WorldViewContext {
 
 	void map() {
 		for (int i = 0; i < VAO_COUNT; i++)
-			vaos[plugin.frame % FRAMES_IN_FLIGHT][i].map();
+			vaos[plugin.frame % ZoneRenderer.FRAMES_IN_FLIGHT][i].map();
 	}
 
 	VAO.VAOView beginDraw(int type, int faces) {
-		return vaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
+		return vaos[plugin.frame % ZoneRenderer.FRAMES_IN_FLIGHT][type].beginDraw(faces);
 	}
 
 	void drawAll(int type, CommandBuffer cmd) {
-		vaos[plugin.frame % FRAMES_IN_FLIGHT][type].draw(cmd);
+		vaos[plugin.frame % ZoneRenderer.FRAMES_IN_FLIGHT][type].draw(cmd);
 	}
 
 	void unmap() {
 		for (int i = 0; i < VAO_COUNT; i++) {
 			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_SHADOW;
-			vaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
+			vaos[plugin.frame % ZoneRenderer.FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
 		}
 	}
 
@@ -287,7 +286,7 @@ public class WorldViewContext {
 		uboWorldViewStruct = null;
 
 		for (int i = 0; i < VAO_COUNT; i++) {
-			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
+			for (int k = 0; k < ZoneRenderer.FRAMES_IN_FLIGHT; k++) {
 				if (vaos[k][i] == null)
 					continue;
 				final ArrayDeque<VAO> POOL = vaos[k][i].hasStagingBuffer() ? VAO_STAGING_POOL : VAO_POOL;

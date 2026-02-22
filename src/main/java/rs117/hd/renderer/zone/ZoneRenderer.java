@@ -87,6 +87,8 @@ import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 @Slf4j
 @Singleton
 public class ZoneRenderer implements Renderer {
+	public static final int FRAMES_IN_FLIGHT = 3;
+
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
@@ -564,7 +566,7 @@ public class ZoneRenderer implements Renderer {
 				totalSortedFaces += entityCtx.getSortedAlphaCount();
 		}
 
-		if ((plugin.frame % 3) == 0)
+		if ((plugin.frame % FRAMES_IN_FLIGHT) == 0)
 			eboAlphaOffset = 0;
 		eboAlphaPrevOffset = eboAlphaOffset;
 
