@@ -5916,7 +5916,7 @@
     ]
   },
   {
-    "name": "TOA_CRONDIS_PUZZLE_FLOOR_HIDDEN",
+    "name": "TOA_HET_PUZZLE_FLOOR_HIDDEN",
     "area": "TOA_PATH_OF_HET_PUZZLE",
     "underlayIds": [ 141 ],
     "blended": false
