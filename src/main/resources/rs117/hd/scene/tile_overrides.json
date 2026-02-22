@@ -10,7 +10,7 @@
   {
     "name": "DEFAULT_GRASS_NO_TEXTURES",
     "groundMaterial": "OVERWORLD_GRASS_1",
-    "maxLightness": 44
+    "maxLightness": 42
   },
   {
     "name": "DEFAULT_DIRT",
@@ -22,12 +22,12 @@
   {
     "name": "DEFAULT_DIRT_NO_TEXTURES",
     "groundMaterial": "DIRT",
-    "maxLightness": 44
+    "maxLightness": 46
   },
   {
     "name": "DEFAULT_SAND",
     "groundMaterial": "SAND",
-    "maxLightness": 63,
+    "maxLightness": 64,
     "replacements": {
       "DEFAULT_SAND_NO_TEXTURES": "!textures"
     }
