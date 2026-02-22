@@ -3,6 +3,7 @@ package rs117.hd.utils;
 import java.util.Objects;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
+import net.runelite.client.callback.ClientThread;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -182,7 +183,7 @@ public class ModelHash {
 	 * Returns a category id (0-15) derived from the UUID type for coloring.
 	 */
 	public static int getCategoryForUuid(Client client,Renderable renderable, long hash, boolean rs3HighContrast) {
-		return getCategoryForUuid(client, renderable, hash, false, rs3HighContrast);
+		return getCategoryForUuid(client,renderable, hash, false, rs3HighContrast);
 	}
 
 	/**
@@ -218,12 +219,12 @@ public class ModelHash {
 			id = ModelHash.getIdOrIndex(hash);
 			var npcs = client.getTopLevelWorldView().npcs();
 			if (id >= 0 && id < 65536) {
+				category = CATEGORY_NPC_FRIENDLY;
 				NPC npc = npcs.byIndex(id);
 				if (npc != null) {
 					category = npc.getCombatLevel() != 0 ? CATEGORY_HOSTILE : CATEGORY_NPC_FRIENDLY;
 				}
 			}
-
 		} else if (type == TYPE_PLAYER) {
 			id = ModelHash.getIdOrIndex(hash);
 			var players = client.getTopLevelWorldView().players();

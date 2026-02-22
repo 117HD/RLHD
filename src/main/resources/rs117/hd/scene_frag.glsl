@@ -505,7 +505,7 @@ void main() {
             if (isTerrain) {
                 category = ENTITY_TERRAIN;
             } else {
-                category = vMaterialData[0] >> MATERIAL_CATEGORY_SHIFT & MATERIAL_CATEGORY_MASK;
+                category = fMaterialData[0] >> MATERIAL_CATEGORY_SHIFT & MATERIAL_CATEGORY_MASK;
             }
 
             #if RS3_HIGH_CONTRAST

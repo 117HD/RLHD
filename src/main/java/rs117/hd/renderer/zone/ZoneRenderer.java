@@ -549,6 +549,23 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 		}
 
+		if (plugin.configRs3HighContrast) {
+			float[][] rs3Colors = {
+				ColorUtils.rgb(config.rs3HighContrastPlayerColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastNpcFriendlyColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastHostileColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastObjectColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastProjectileColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastGraphicsColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastPlayerOtherColor().getRGB() & 0xFFFFFF),
+				ColorUtils.rgb(config.rs3HighContrastGroundItemColor().getRGB() & 0xFFFFFF),
+			};
+
+			for (int i = 0; i < rs3Colors.length; i++) {
+				plugin.uboGlobal.highContrastColors[i].set(rs3Colors[i]);
+			}
+		}
+
 		plugin.uboGlobal.upload();
 
 		// Reset buffers for the next frame
