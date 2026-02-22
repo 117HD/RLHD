@@ -9417,7 +9417,19 @@
     "groundMaterial": "OVERWORLD_ROCKY",
     "underlayIds": [
       110
-    ]
+    ],
+    "replacements": {
+      "PANDAMONIUM_ROCKY_TILES_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "PANDAMONIUM_ROCKY_TILES_NO_TEXTURES",
+    "area": "PANDEMONIUM_ISLAND",
+    "groundMaterial": "OVERWORLD_ROCKY",
+    "underlayIds": [
+      110
+    ],
+    "shiftLightness": -4
   },
   {
     "name": "PANDAMONIUM_COMPLEX_TILES",
