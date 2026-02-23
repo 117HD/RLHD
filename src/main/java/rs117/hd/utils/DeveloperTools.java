@@ -11,7 +11,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
-import org.slf4j.LoggerFactory;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
@@ -122,12 +121,6 @@ public class DeveloperTools implements KeyListener {
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
 		hideUiEnabled = false;
-	}
-
-	public static void pluginLogWindowFilterReminder() {
-		LoggerFactory.getLogger("rs117.hd.PluginFileLog")
-			.warn("If this is your first time this session using the HdPluginTest run-configuration, "
-				  + "this window will filter on WARN-level logging until you reset the filter.");
 	}
 
 	@Subscribe
