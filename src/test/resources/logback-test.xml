@@ -3,7 +3,7 @@
     <withJansi>true</withJansi>
     <encoder>
       <pattern>
-        %date{HH:mm:ss.SSS,,en-US} [%-10thread] %highlight(%-5level %-30logger{26} - %msg%n)
+        %date{HH:mm:ss.SSS,,en-US} [%-10thread] %highlight(%-5level %-30logger{26}) - %msg%n
       </pattern>
     </encoder>
   </appender>
@@ -16,7 +16,7 @@
     </rollingPolicy>
     <encoder>
       <pattern>
-        %date{HH:mm:ss.SSS,,en-US} [%-10thread] %highlight(%-5level %-30logger{26} - %msg%n)
+        %date{HH:mm:ss.SSS,,en-US} [%-10thread] %highlight(%-5level %-30logger{26}) - %msg%n
       </pattern>
     </encoder>
   </appender>
