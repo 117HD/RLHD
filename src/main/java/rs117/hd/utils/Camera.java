@@ -23,6 +23,7 @@ public final class Camera {
 	private float[] viewMatrix;
 	private float[] invViewMatrix;
 	private float[] projectionMatrix;
+	private float[] invProjectionMatrix;
 	private float[] viewProjMatrix;
 	private float[] invViewProjMatrix;
 
@@ -280,12 +281,11 @@ public final class Camera {
 			if ((dirtyFlags & VIEW_MATRIX_DIRTY) == 0)
 				return;
 
-			viewMatrix = Mat4.identity();
-			Mat4.mul(viewMatrix, Mat4.rotateX(orientation[1]));
-			Mat4.mul(viewMatrix, Mat4.rotateY(orientation[0]));
+			var view = Mat4.rotateX(orientation[1]);
+			Mat4.mul(view, Mat4.rotateY(orientation[0]));
 			if (position[0] != 0 || position[1] != 0 || position[2] != 0) {
 				Mat4.mul(
-					viewMatrix,
+					view,
 					Mat4.translate(
 						-position[0],
 						-position[1],
@@ -293,10 +293,11 @@ public final class Camera {
 					)
 				);
 			}
+			viewMatrix = view;
 			try {
 				invViewMatrix = Mat4.inverse(viewMatrix);
 			} catch (Exception ex) {
-				log.warn("Encountered an exception whilst solving inverse of camera view: ", ex);
+				log.warn("Encountered an exception whilst solving inverse of camera view:", ex);
 			}
 			dirtyFlags &= ~VIEW_MATRIX_DIRTY;
 		}
@@ -343,7 +344,7 @@ public final class Camera {
 			final float zoomedViewportWidth = (viewportWidth / zoom);
 			final float zoomedViewportHeight = (viewportHeight / zoom);
 			if (isOrthographic) {
-				if(reverseZ) {
+				if (reverseZ) {
 					projectionMatrix = Mat4.orthographicReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
 				} else {
 					if (farPlane > 0.0f) {
@@ -366,6 +367,11 @@ public final class Camera {
 						projectionMatrix = Mat4.perspectiveInfinite(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
 					}
 				}
+			}
+			try {
+				invProjectionMatrix = Mat4.inverse(projectionMatrix);
+			} catch (Exception ex) {
+				log.warn("Encountered an exception whilst solving inverse of camera projection:", ex);
 			}
 			dirtyFlags &= ~PROJECTION_MATRIX_DIRTY;
 		}
@@ -420,10 +426,9 @@ public final class Camera {
 
 			calculateViewProjMatrix();
 			try {
-				float[] invView = Mat4.inverse(viewMatrix);
-				float[] invProj = Mat4.inverse(projectionMatrix);
-				Mat4.mul(invView, invProj);
-				invViewProjMatrix = invView;
+				float[] invViewProj = copy(invViewMatrix);
+				Mat4.mul(invViewProj, invProjectionMatrix);
+				invViewProjMatrix = invViewProj;
 			} catch (Exception ex) {
 				log.warn("Encountered an exception whilst solving inverse of camera ViewProj: ", ex);
 			}
