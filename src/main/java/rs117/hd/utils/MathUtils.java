@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  * When automatically determining the length of the output vector, it will equal the maximum length of the input vectors.
  * Some regular Java math function aliases are included to minimize the need for manual type casting.
  */
-public class MathUtils {
+public final class MathUtils {
 	public static final Random RAND = new Random();
 
 	public static final long KiB = 1024;
@@ -56,11 +56,53 @@ public class MathUtils {
 		return vec;
 	}
 
+	public static int[] ivec2(int[] out, int x, int y) {
+		out[0] = x;
+		out[1] = y;
+		return out;
+	}
+
+	public static int[] ivec3(int[] out, int x, int y, int z) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		return out;
+	}
+
+	public static int[] ivec4(int[] out, int x, int y, int z, int w) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		out[3] = w;
+		return out;
+	}
+
 	public static int[] ivec(float... vec) {
 		int[] ivec = new int[vec.length];
 		for (int i = 0; i < vec.length; i++)
 			ivec[i] = (int) vec[i];
 		return ivec;
+	}
+
+	public static float[] vec2(float[] out, float x, float y) {
+		out[0] = x;
+		out[1] = y;
+		return out;
+	}
+
+	public static float[] vec3(float[] out, float x, float y, float z) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		return out;
+	}
+
+	public static float[] vec4(float[] out, float x, float y, float z, float w) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		out[3] = w;
+		return out;
 	}
 
 	public static float[] copy(float[] v) {
@@ -204,7 +246,7 @@ public class MathUtils {
 	 * Modulo which returns the answer with the same sign as the modulus.
 	 */
 	public static int mod(int v, int mod) {
-		return v - (v / mod) * mod;
+		return Math.floorMod(v, mod);
 	}
 
 	/**
@@ -298,6 +340,24 @@ public class MathUtils {
 
 	public static float[] log2(float... v) {
 		return log2(new float[v.length], v);
+	}
+
+	public static float rcp(float v) {
+		return 1.0f / v;
+	}
+
+	public static float square(float v) {
+		return v * v;
+	}
+
+	public static float[] square(float[] out, float... v) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = square(v[i % v.length]);
+		return out;
+	}
+
+	public static float[] square(float... v) {
+		return square(new float[v.length], v);
 	}
 
 	public static float sqrt(float v) {
@@ -506,6 +566,10 @@ public class MathUtils {
 		return Math.min(a, b);
 	}
 
+	public static char min(char a, char b) {
+		return (char) Math.min(a, b);
+	}
+
 	public static long min(long a, long b) {
 		return Math.min(a, b);
 	}
@@ -552,6 +616,10 @@ public class MathUtils {
 
 	public static int max(int a, int b) {
 		return Math.max(a, b);
+	}
+
+	public static char max(char a, char b) {
+		return (char) Math.max(a, b);
 	}
 
 	public static long max(long a, long b) {

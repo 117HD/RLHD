@@ -24,7 +24,12 @@
  */
 package rs117.hd.utils;
 
+import java.awt.Canvas;
+import java.awt.Container;
+import java.awt.Frame;
+import javax.annotation.Nullable;
 import javax.inject.Singleton;
+import javax.swing.JFrame;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.data.ObjectType;
@@ -42,22 +47,27 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class HDUtils {
+public final class HDUtils {
 	public static final int HIDDEN_HSL = 12345678;
 	public static final int UNDERWATER_HSL = 6676;
 
-	public static int vertexHash(int[] vPos) {
-		// simple custom hashing function for vertex position data
-		StringBuilder s = new StringBuilder();
-		for (int part : vPos)
-			s.append(part).append(",");
-		return s.toString().hashCode();
+	public static int fastVertexHash(int[] vPos) {
+		int hash = 0;
+		for (int part : vPos) {
+			hash = 31 * hash + part;
+			hash = 31 * hash + ','; // preserve the comma separator effect
+		}
+		return hash;
 	}
 
 	public static int[] calculateSurfaceNormals(int[] a, int[] b, int[] c) {
 		subtract(b, a, b);
 		subtract(c, a, c);
 		return cross(b, c);
+	}
+
+	public static int ceilPow2(int i) {
+		return (int) ceilPow2((long) i);
 	}
 
 	public static long ceilPow2(long l) {
@@ -219,7 +229,7 @@ public class HDUtils {
 	/**
 	 * The returned plane may be different
 	 */
-	public static int[] sceneToWorld(Scene scene, int sceneX, int sceneY, int plane) {
+	public static void sceneToWorld(Scene scene, int sceneX, int sceneY, int plane, int[] result) {
 		if (scene.isInstance()) {
 			if (sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
 				int chunkX = sceneX / CHUNK_SIZE;
@@ -233,34 +243,46 @@ public class HDUtils {
 					int worldX = templateChunkX + (sceneX & 7);
 					int worldY = templateChunkY + (sceneY & 7);
 
-					int[] pos = { worldX, worldY, templateChunkPlane };
+					result[0] = worldX;
+					result[1] = worldY;
+					result[2] = templateChunkPlane;
 
-					chunkX = pos[0] & -8;
-					chunkY = pos[1] & -8;
-					int x = pos[0] & 7;
-					int y = pos[1] & 7;
+					chunkX = result[0] & -8;
+					chunkY = result[1] & -8;
+					int x = result[0] & 7;
+					int y = result[1] & 7;
 					switch (rotation) {
 						case 1:
-							pos[0] = chunkX + y;
-							pos[1] = chunkY + (7 - x);
+							result[0] = chunkX + y;
+							result[1] = chunkY + (7 - x);
 							break;
 						case 2:
-							pos[0] = chunkX + (7 - x);
-							pos[1] = chunkY + (7 - y);
+							result[0] = chunkX + (7 - x);
+							result[1] = chunkY + (7 - y);
 							break;
 						case 3:
-							pos[0] = chunkX + (7 - y);
-							pos[1] = chunkY + x;
+							result[0] = chunkX + (7 - y);
+							result[1] = chunkY + x;
 							break;
 					}
-
-					return pos;
+					return;
 				}
 			}
-			return ivec(-1, -1, 0);
+			result[0] = -1;
+			result[1] = -1;
+			result[2] = 0;
+			return;
 		}
 
-		return ivec(scene.getBaseX() + sceneX, scene.getBaseY() + sceneY, plane);
+		result[0] = scene.getBaseX() + sceneX;
+		result[1] = scene.getBaseY() + sceneY;
+		result[2] = plane;
+	}
+
+	public static int[] sceneToWorld(Scene scene, int sceneX, int sceneY, int plane) {
+		int[] result = new int[3];
+		sceneToWorld(scene, sceneX, sceneY, plane, result);
+		return result;
 	}
 
 	public static int worldToRegionID(int[] worldPoint) {
@@ -354,11 +376,45 @@ public class HDUtils {
 		return hsl;
 	}
 
-	public static boolean isSphereIntersectingFrustum(float x, float y, float z, float radius, float[][] cullingPlanes, int numPlanes) {
+	public static boolean isPointWithinFrustum(float x, float y, float z, float[][] cullingPlanes, int numPlanes) {
 		for (int i = 0; i < numPlanes; i++) {
-			var p = cullingPlanes[i];
-			if (p[0] * x + p[1] * y + p[2] * z + p[3] < -radius)
+			final float[] p = cullingPlanes[i];
+			if (p[0] * x + p[1] * y + p[2] * z + p[3] < 0)
 				return false;
+		}
+		return true;
+	}
+
+	public static int classifySphereFrustum(float x, float y, float z, float radius, float[][] cullingPlanes, int numPlanes) {
+		boolean fullyInside = true;
+		for (int i = 0; i < numPlanes; i++) {
+			final float[] p = cullingPlanes[i];
+			final float distance = p[0] * x + p[1] * y + p[2] * z + p[3];
+
+			if (distance < -radius) return -1;
+			if (distance < radius) fullyInside = false;
+		}
+		return fullyInside ? 1 : 0;
+	}
+
+	public static boolean isSphereIntersectingFrustum(float x, float y, float z, float radius, float[][] cullingPlanes, int numPlanes) {
+		return classifySphereFrustum(x, y, z, radius, cullingPlanes, numPlanes) != -1;
+	}
+
+	public static boolean isTriangleIntersectingFrustum(
+		float x0, float y0, float z0,
+		float x1, float y1, float z1,
+		float x2, float y2, float z2,
+		float[][] cullingPlanes, int numPlanes
+	) {
+		for (int i = 0; i < numPlanes; i++) {
+			final float[] p = cullingPlanes[i];
+			if (p[0] * x0 + p[1] * y0 + p[2] * z0 + p[3] > 0 ||
+				p[0] * x1 + p[1] * y1 + p[2] * z1 + p[3] > 0 ||
+				p[0] * x2 + p[1] * y2 + p[2] * z2 + p[3] > 0)
+				continue;
+
+			return false;
 		}
 		return true;
 	}
@@ -397,5 +453,59 @@ public class HDUtils {
 		int terrainData = (waterDepth & 0xFFF) << 11 | waterType.index << 3 | plane << 1 | (isTerrain ? 1 : 0);
 		assert (terrainData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
 		return terrainData;
+	}
+
+	private static final ThreadLocal<StringBuilder> threadLocalStringBuilder = ThreadLocal.withInitial(StringBuilder::new);
+
+	public static String getThreadStackTrace(Thread thread) {
+		var stackTrace = thread.getStackTrace();
+		if (stackTrace.length == 0)
+			return "<STACK TRACE UNAVAILABLE>";
+
+		StringBuilder sb = threadLocalStringBuilder.get();
+		for (int i = 1; i < stackTrace.length; i++)
+			sb.append('\t').append(stackTrace[i]).append('\n');
+
+		String s = sb.toString();
+		sb.setLength(0);
+		return s;
+	}
+
+	public static boolean isBakedGroundShading(Model model, int face) {
+		final byte[] faceTransparencies = model.getFaceTransparencies();
+		if (faceTransparencies == null || (faceTransparencies[face] & 0xFF) <= 100)
+			return false;
+
+		final short[] faceTextures = model.getFaceTextures();
+		if (faceTextures != null && faceTextures[face] != -1)
+			return false;
+
+		final float[] yVertices = model.getVerticesY();
+		float heightA = yVertices[model.getFaceIndices1()[face]];
+		if (heightA < -8)
+			return false;
+
+		float heightB = yVertices[model.getFaceIndices2()[face]];
+		float heightC = yVertices[model.getFaceIndices3()[face]];
+		return heightA == heightB && heightA == heightC;
+	}
+
+	public static boolean isJFrameMinimized(@Nullable JFrame f) {
+		return f != null && (f.getExtendedState() & Frame.ICONIFIED) != 0;
+	}
+
+	@Nullable
+	public static JFrame getJFrame(Canvas canvas) {
+		if (canvas == null)
+			return null;
+
+		Container parent = canvas.getParent();
+		while (parent != null) {
+			if (parent instanceof JFrame)
+				return (JFrame) parent;
+			parent = parent.getParent();
+		}
+
+		return null;
 	}
 }

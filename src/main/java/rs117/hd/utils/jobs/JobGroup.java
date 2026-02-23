@@ -1,0 +1,38 @@
+package rs117.hd.utils.jobs;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RequiredArgsConstructor
+public final class JobGroup<T extends Job> {
+	@Getter
+	final ConcurrentLinkedQueue<T> pending = new ConcurrentLinkedQueue<>();
+
+	@Getter
+	final boolean highPriority;
+
+	@Getter
+	final boolean autoRelease;
+
+	public int getPendingCount() { return pending.size(); }
+
+	public void complete() {
+		T work;
+		while ((work = pending.poll()) != null) {
+			work.waitForCompletion();
+			if (autoRelease) work.release();
+		}
+	}
+
+	public void cancel() {
+		T work;
+		while ((work = pending.poll()) != null) {
+			work.cancel();
+			if (autoRelease) work.release();
+		}
+		pending.clear();
+	}
+}

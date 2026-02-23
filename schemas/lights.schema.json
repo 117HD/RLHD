@@ -69,7 +69,7 @@
         "minItems": 3,
         "maxItems": 3,
         "items": {
-          "type": "integer"
+          "type": "number"
         }
       },
       "height": {
@@ -131,6 +131,10 @@
         "type": "boolean",
         "description": "If enabled, the light will have faded out completely after spawnDelay + despawnDelay milliseconds."
       },
+      "despawnWithParent": {
+        "type": "boolean",
+        "description": "If enabled, the light will immediately despawn if whatever it's attached to despawns."
+      },
       "visibleFromOtherPlanes": {
         "type": "boolean",
         "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to false."
@@ -138,6 +142,14 @@
       "ignoreActorHiding": {
         "type": "boolean",
         "description": "Don't hide the light if its actor is hidden by another actor drawing on top. Defaults to false."
+      },
+      "renderableIndex": {
+        "type": "integer",
+        "description": "Specify which of the two possible `Renderable`s for `DecorativeObject`s and `WallObject`s the light should be added for. If not specified, a light will be added only for the first non-null `Renderable`."
+      },
+      "waitForAnimation": {
+        "type": "boolean",
+        "description": "Whether the light should spawn only when an animation starts playing. Only works for `GraphicsObject`s and `Projectile`s. Defaults to false."
       },
       "areas": {
         "type": "array",

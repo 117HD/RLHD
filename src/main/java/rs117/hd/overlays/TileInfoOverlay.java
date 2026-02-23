@@ -490,7 +490,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (mode == MODE_TILE_INFO) {
-			ctx.tileOverrideVars.setTile(tile);
+			ctx.tileOverrideVars.get().setTile(tile);
 			if (tile.getBridge() != null)
 				lines.add("Bridge");
 
@@ -515,7 +515,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
 			var replacementPath = new StringBuilder(overlay.toString());
 			while (true) {
-				var replacement = overlay.resolveNextReplacement(ctx.tileOverrideVars);
+				var replacement = overlay.resolveNextReplacement(ctx.tileOverrideVars.get());
 				if (replacement == overlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -532,7 +532,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
 			replacementPath = new StringBuilder(underlay.toString());
 			while (true) {
-				var replacement = underlay.resolveNextReplacement(ctx.tileOverrideVars);
+				var replacement = underlay.resolveNextReplacement(ctx.tileOverrideVars.get());
 				if (replacement == underlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -598,22 +598,36 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				lines.add(String.format("HSL: %s", hslString(tile)));
 			}
 
-			ctx.tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
+			ctx.tileOverrideVars.get().setTile(null); // Avoid accidentally keeping the old scene in memory
 		}
 
 		var decorObject = tile.getDecorativeObject();
 		if (decorObject != null) {
-			lines.add(String.format(
-				"Decor Object: %s preori=%d ori=%d offset=[%d, %d] type=%s %s",
-				getIdAndImpostorId(decorObject, decorObject.getRenderable()),
-				HDUtils.getModelPreOrientation(decorObject.getConfig()),
-				HDUtils.getModelOrientation(decorObject.getConfig()),
-				decorObject.getXOffset(),
-				decorObject.getYOffset(),
-				ObjectType.fromConfig(decorObject.getConfig()),
-				getModelInfo(decorObject.getRenderable())
-			));
-			lines.add("Decor Type: " + ObjectType.fromConfig(decorObject.getConfig()));
+			int config = decorObject.getConfig();
+			if (decorObject.getRenderable() != null) {
+				lines.add(String.format(
+					"Decor Object 1: %s preori=%d ori=%d offset=[%d, %d] type=%s %s",
+					getIdAndImpostorId(decorObject, decorObject.getRenderable()),
+					HDUtils.getModelPreOrientation(config),
+					HDUtils.getModelOrientation(config),
+					decorObject.getXOffset(),
+					decorObject.getYOffset(),
+					ObjectType.fromConfig(config),
+					getModelInfo(decorObject.getRenderable())
+				));
+			}
+			if (decorObject.getRenderable2() != null) {
+				lines.add(String.format(
+					"Decor Object 2: %s preori=%d ori=%d offset=[%d, %d] type=%s %s",
+					getIdAndImpostorId(decorObject, decorObject.getRenderable2()),
+					HDUtils.getModelPreOrientation(config),
+					HDUtils.getModelOrientation(config),
+					decorObject.getXOffset(),
+					decorObject.getYOffset(),
+					ObjectType.fromConfig(config),
+					getModelInfo(decorObject.getRenderable2())
+				));
+			}
 		}
 
 		GroundObject groundObject = tile.getGroundObject();
@@ -697,7 +711,25 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				faceCount,
 				getModelInfo(renderable)
 			));
-			lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
+
+			if (renderable instanceof Actor) {
+				Actor actor = (Actor) renderable;
+				StringBuilder sb = new StringBuilder();
+				String separator = "";
+				for (var spotanim : actor.getSpotAnims()) {
+					sb
+						.append(separator)
+						.append(gamevalManager.getSpotanimName(spotanim.getId()))
+						.append(" (").append(spotanim.getId()).append(")")
+						.append(" frame=").append(spotanim.getFrame())
+						.append(" cycle=").append(client.getGameCycle() - spotanim.getStartCycle());
+					separator = "\n\t";
+				}
+				if (sb.length() > 0)
+					lines.add("Spotanims: " + sb);
+			} else {
+				lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
+			}
 		}
 
 		for (var npc : client.getTopLevelWorldView().npcs()) {
@@ -725,11 +757,15 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var lp = graphicsObject.getLocation();
 			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY) {
 				var name = gamevalManager.getSpotanimName(graphicsObject.getId());
+				var anim = graphicsObject.getAnimation();
 				hoveredGamevals.add(name);
 				lines.add(String.format(
-					"Graphics Object: %s (%d)%s",
+					"Graphics Object: %s (%d) anim=%d frame=%d cycle=%d%s",
 					name,
 					graphicsObject.getId(),
+					anim == null ? -1 : anim.getId(),
+					graphicsObject.getAnimationFrame(),
+					client.getGameCycle() - graphicsObject.getStartCycle(),
 					getModelInfo(graphicsObject)
 				));
 			}
