@@ -16,6 +16,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
+import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.ZoneRenderer;
@@ -48,6 +49,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Inject
 	private SceneManager sceneManager;
+
+	@Inject
+	private ParticleManager particleManager;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final long[] timings = new long[Timer.TIMERS.length];
@@ -160,10 +164,10 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 			if (plugin.getSceneContext() != null) {
 				var sceneContext = plugin.getSceneContext();
-				children.add(LineComponent.builder()
-					.left("Lights:")
-					.right(String.format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
-					.build());
+			children.add(LineComponent.builder()
+				.left("Lights:")
+				.right(String.format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
+				.build());
 			}
 
 			if (plugin.renderer instanceof ZoneRenderer) {
@@ -197,6 +201,19 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 					.right(String.valueOf(npcDisplacementCache.size()))
 					.build());
 			}
+
+			children.add(LineComponent.builder()
+				.leftFont(boldFont)
+				.left("Particle stats:")
+				.build());
+			children.add(LineComponent.builder()
+				.left("Emitters:")
+				.right(String.valueOf(particleManager.getEmitters().size()))
+				.build());
+			children.add(LineComponent.builder()
+				.left("Particles:")
+				.right(String.valueOf(particleManager.getParticles().size()))
+				.build());
 
 			children.add(LineComponent.builder()
 				.leftFont(boldFont)

@@ -1,7 +1,11 @@
 package rs117.hd.utils;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.inject.Inject;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
@@ -37,9 +41,13 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
 	private static final Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
+	private static final Keybind KEY_OPEN_PARTICLE_DEV = new Keybind(KeyEvent.VK_P, CTRL_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private rs117.hd.ui.ParticleDevToolsPanel particleDevToolsPanel;
 
 	@Inject
 	private EventBus eventBus;
@@ -78,6 +86,8 @@ public class DeveloperTools implements KeyListener {
 	private boolean hideUiEnabled;
 	private boolean tiledLightingOverlayEnabled;
 
+	private JFrame particleDevFrame;
+
 	public void activate() {
 		// Listen for commands
 		eventBus.register(this);
@@ -115,6 +125,11 @@ public class DeveloperTools implements KeyListener {
 	public void deactivate() {
 		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(this);
+		if (particleDevFrame != null) {
+			particleDevFrame.setVisible(false);
+			particleDevFrame.dispose();
+			particleDevFrame = null;
+		}
 		tileInfoOverlay.setActive(false);
 		frameTimerOverlay.setActive(false);
 		shadowMapOverlay.setActive(false);
@@ -194,10 +209,35 @@ public class DeveloperTools implements KeyListener {
 			hideUiEnabled = !hideUiEnabled;
 		} else if (KEY_RELOAD_SCENE.matches(e)) {
 			plugin.renderer.reloadScene();
+		} else if (KEY_OPEN_PARTICLE_DEV.matches(e)) {
+			SwingUtilities.invokeLater(this::openParticleDevPanel);
 		} else {
 			return;
 		}
 		e.consume();
+	}
+
+	private void openParticleDevPanel() {
+		if (particleDevFrame == null) {
+			particleDevFrame = new JFrame("117 HD – Particle dev tools");
+			particleDevFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+			particleDevFrame.add(particleDevToolsPanel);
+			particleDevFrame.pack();
+			particleDevFrame.setSize(731, 538);
+			particleDevFrame.setMinimumSize(particleDevFrame.getSize());
+			particleDevFrame.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowOpened(WindowEvent e) {
+					particleDevToolsPanel.onActivate();
+				}
+			});
+		}
+		// Apply current Look and Feel (RuneLite/FlatLaf theme) so the window matches the client UI
+		SwingUtilities.updateComponentTreeUI(particleDevFrame);
+		particleDevToolsPanel.onActivate();
+		particleDevFrame.setVisible(true);
+		particleDevFrame.toFront();
+		particleDevFrame.requestFocus();
 	}
 
 	@Override

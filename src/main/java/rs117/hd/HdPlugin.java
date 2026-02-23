@@ -54,6 +54,7 @@ import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.RuneLite;
@@ -109,6 +110,7 @@ import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
@@ -162,6 +164,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_PARTICLE = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -221,14 +224,15 @@ public class HdPlugin extends Plugin {
 		TextureManager.class,
 		TileOverrideManager.class,
 		WaterTypeManager.class,
-		SceneManager.class
+		SceneManager.class,
+		rs117.hd.scene.particles.ParticleManager.class
 	);
 
 	@Getter
 	private Gson gson;
 
 	@Inject
-	private Client client;
+	public Client client;
 
 	@Inject
 	private ClientUI clientUI;
@@ -292,6 +296,10 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private SceneManager sceneManager;
+
+	@Getter
+	@Inject
+	private ParticleManager particleManager;
 
 	@Inject
 	private JobSystem jobSystem;
@@ -684,6 +692,8 @@ public class HdPlugin extends Plugin {
 				tileOverrideManager.startUp();
 				modelOverrideManager.startUp();
 				lightManager.startUp();
+				particleManager.loadConfig(gson);
+				particleManager.startUp();
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
@@ -750,6 +760,7 @@ public class HdPlugin extends Plugin {
 			groundMaterialManager.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
+			particleManager.shutDown();
 			environmentManager.shutDown();
 			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();

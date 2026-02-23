@@ -24,8 +24,12 @@
  */
 package rs117.hd.renderer.zone;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,12 +39,14 @@ import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.ShadowMode;
+import rs117.hd.opengl.shader.ParticleShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -55,7 +61,10 @@ import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.lights.Light;
+import rs117.hd.scene.particles.Particle;
+import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.utils.Camera;
+import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
@@ -75,6 +84,7 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_PARTICLE;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -132,10 +142,31 @@ public class ZoneRenderer implements Renderer {
 	private ShadowShaderProgram.Detailed detailedShadowProgram;
 
 	@Inject
+	private ParticleShaderProgram particleProgram;
+
+	@Inject
+	private ParticleManager particleManager;
+
+	@Inject
 	private JobSystem jobSystem;
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
+
+	private static final int MAX_PARTICLES = 4096;
+	private static final int FLOATS_PER_PARTICLE_VERTEX = 10;
+	private static final int VERTS_PER_PARTICLE = 6;
+	// Quad as two triangles: BL->BR->TR and BL->TR->TL (same winding for a flat quad)
+	private static final float[][] PARTICLE_QUAD_CORNERS = {
+		{ -1, -1 }, { 1, -1 }, { 1, 1 },
+		{ -1, -1 }, { 1, 1 }, { -1, 1 }
+	};
+	private int vaoParticles;
+	private int vboParticles;
+	private FloatBuffer particleStagingBuffer;
+	private int particleTextureId;
+	private int whiteParticleTextureId;
+	private String loadedParticleTexturePath;
 
 	public final Camera sceneCamera = new Camera();
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
@@ -173,6 +204,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initialize() {
 		initializeBuffers();
+		initializeParticleBuffers();
 
 		SceneUploader.POOL = new ConcurrentPool<>(plugin.getInjector(), SceneUploader.class);
 		FacePrioritySorter.POOL = new ConcurrentPool<>(plugin.getInjector(), FacePrioritySorter.class);
@@ -189,6 +221,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void destroy() {
 		destroyBuffers();
+		destroyParticleBuffers();
 
 		jobSystem.shutDown();
 		modelStreamingManager.destroy();
@@ -218,6 +251,7 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
+		particleProgram.compile(includes);
 	}
 
 	@Override
@@ -225,6 +259,7 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
+		particleProgram.destroy();
 	}
 
 	private void initializeBuffers() {
@@ -247,6 +282,141 @@ public class ZoneRenderer implements Renderer {
 		if (indirectDrawCmdsStaging != null)
 			indirectDrawCmdsStaging.destroy();
 		indirectDrawCmdsStaging = null;
+	}
+
+	private void initializeParticleBuffers() {
+		vaoParticles = glGenVertexArrays();
+		vboParticles = glGenBuffers();
+		int particleBufferBytes = MAX_PARTICLES * VERTS_PER_PARTICLE * FLOATS_PER_PARTICLE_VERTEX * 4;
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticles);
+		glBufferData(GL_ARRAY_BUFFER, particleBufferBytes, GL_STREAM_DRAW);
+		glBindVertexArray(vaoParticles);
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticles);
+		final int particleStride = FLOATS_PER_PARTICLE_VERTEX * 4;
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, particleStride, 0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, false, particleStride, 12);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 1, GL_FLOAT, false, particleStride, 20);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 4, GL_FLOAT, false, particleStride, 24);
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		particleStagingBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * VERTS_PER_PARTICLE * FLOATS_PER_PARTICLE_VERTEX);
+
+		// 1x1 white texture used when no particle texture is set
+		whiteParticleTextureId = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_PARTICLE);
+		glBindTexture(GL_TEXTURE_2D, whiteParticleTextureId);
+		ByteBuffer whitePixel = BufferUtils.createByteBuffer(4);
+		whitePixel.put((byte) 255).put((byte) 255).put((byte) 255).put((byte) 255).flip();
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		particleTextureId = whiteParticleTextureId;
+	}
+
+	private void destroyParticleBuffers() {
+		if (vaoParticles != 0) {
+			glDeleteVertexArrays(vaoParticles);
+			vaoParticles = 0;
+		}
+		if (vboParticles != 0) {
+			glDeleteBuffers(vboParticles);
+			vboParticles = 0;
+		}
+		particleStagingBuffer = null;
+		if (particleTextureId != 0 && particleTextureId != whiteParticleTextureId) {
+			glDeleteTextures(particleTextureId);
+			particleTextureId = 0;
+		}
+		if (whiteParticleTextureId != 0) {
+			glDeleteTextures(whiteParticleTextureId);
+			whiteParticleTextureId = 0;
+		}
+		loadedParticleTexturePath = null;
+	}
+
+	private void ensureParticleTextureLoaded() {
+		ResourcePath resPath = particleManager.getTextureResourcePath();
+		String path = particleManager.getTexturePath();
+		if (resPath == null || path == null || path.isEmpty()) {
+			if (particleTextureId != whiteParticleTextureId && particleTextureId != 0) {
+				glDeleteTextures(particleTextureId);
+				particleTextureId = whiteParticleTextureId;
+			}
+			loadedParticleTexturePath = null;
+			return;
+		}
+		if (path.equals(loadedParticleTexturePath) && particleTextureId != 0)
+			return;
+		try {
+			BufferedImage img = resPath.loadImage();
+			int w = img.getWidth();
+			int h = img.getHeight();
+			if (particleTextureId != 0 && particleTextureId != whiteParticleTextureId)
+				glDeleteTextures(particleTextureId);
+			particleTextureId = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_PARTICLE);
+			glBindTexture(GL_TEXTURE_2D, particleTextureId);
+			ByteBuffer pixels = BufferUtils.createByteBuffer(w * h * 4);
+			for (int y = h - 1; y >= 0; y--)
+				for (int x = 0; x < w; x++) {
+					int argb = img.getRGB(x, y);
+					pixels.put((byte) ((argb >> 16) & 0xFF));
+					pixels.put((byte) ((argb >> 8) & 0xFF));
+					pixels.put((byte) (argb & 0xFF));
+					pixels.put((byte) ((argb >> 24) & 0xFF));
+				}
+			pixels.flip();
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			loadedParticleTexturePath = path;
+		} catch (IOException ex) {
+			log.warn("[Particles] Failed to load texture: {}", path, ex);
+			if (particleTextureId != 0 && particleTextureId != whiteParticleTextureId) {
+				glDeleteTextures(particleTextureId);
+				particleTextureId = whiteParticleTextureId;
+			}
+			loadedParticleTexturePath = null;
+		}
+	}
+
+	private int uploadParticles(int currentPlane) {
+		List<Particle> particles = particleManager.getParticles();
+		particleStagingBuffer.clear();
+		float[] particleColor = new float[4];
+		for (Particle p : particles) {
+			if (p.plane != currentPlane)
+				continue;
+			p.getCurrentColor(particleColor);
+			// Apply same camera shift as lights so particle stays fixed on tile when camera rotates
+			float cx = p.position[0] + plugin.cameraShift[0];
+			float cy = p.position[1];
+			float cz = p.position[2] + plugin.cameraShift[1];
+			float size = p.size;
+			for (float[] corner : PARTICLE_QUAD_CORNERS) {
+				particleStagingBuffer.put(cx).put(cy).put(cz);
+				particleStagingBuffer.put(corner[0]).put(corner[1]);
+				particleStagingBuffer.put(size);
+				particleStagingBuffer.put(particleColor[0]).put(particleColor[1]).put(particleColor[2]).put(particleColor[3]);
+			}
+		}
+		int numFloats = particleStagingBuffer.position();
+		int numVerts = numFloats / FLOATS_PER_PARTICLE_VERTEX;
+		if (numVerts == 0)
+			return 0;
+		particleStagingBuffer.flip();
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticles);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, particleStagingBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		return numVerts;
 	}
 
 	@Override
@@ -326,6 +496,10 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.DRAW_FRAME);
 		frameTimer.begin(Timer.DRAW_SCENE);
+
+		frameTimer.begin(Timer.UPDATE_PARTICLES);
+		particleManager.update(ctx.sceneContext, plugin.deltaTime);
+		frameTimer.end(Timer.UPDATE_PARTICLES);
 
 		if (!plugin.enableFreezeFrame && !plugin.redrawPreviousFrame) {
 			plugin.drawnTempRenderableCount = 0;
@@ -726,6 +900,31 @@ public class ZoneRenderer implements Renderer {
 		// Render the scene
 		sceneCmd.execute();
 
+		// Draw particles (billboards) in scene with same depth/blend
+		int currentPlane = client.getTopLevelWorldView().getPlane();
+		int particleVerts = uploadParticles(currentPlane);
+		int totalParticles = particleManager.getParticles().size();
+		if (particleVerts > 0 && particleProgram.isValid()) {
+			// Must set program in renderState before apply(), or apply() overwrites with scene program
+			renderState.program.set(particleProgram);
+			renderState.disable.set(GL_CULL_FACE);  // billboards must not be culled
+			// Don't write depth so overlapping particles blend instead of cutting each other off
+			renderState.depthMask.set(false);
+			renderState.apply();
+			ensureParticleTextureLoaded();
+			glActiveTexture(TEXTURE_UNIT_PARTICLE);
+			glBindTexture(GL_TEXTURE_2D, particleTextureId);
+			particleProgram.setParticleTextureUnit(TEXTURE_UNIT_PARTICLE);
+			glBindVertexArray(vaoParticles);
+			frameTimer.begin(Timer.RENDER_PARTICLES);
+			glDrawArrays(GL_TRIANGLES, 0, particleVerts);
+			frameTimer.end(Timer.RENDER_PARTICLES);
+			glBindVertexArray(0);
+			if (totalParticles > 0 && (System.currentTimeMillis() % 10_000) < 50)
+				log.info("[Particles] Drew {} verts ({} particles) on plane {}", particleVerts, particleVerts / 6, currentPlane);
+		} else if (totalParticles > 0)
+			log.info("[Particles] Skip draw: particleVerts={}, programValid={}, plane={}", particleVerts, particleProgram.isValid(), currentPlane);
+
 		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
 
@@ -733,6 +932,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.disable.set(GL_BLEND);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.depthMask.set(true);  // restore depth write after particles
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);

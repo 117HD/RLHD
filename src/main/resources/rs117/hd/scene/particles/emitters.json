@@ -1,0 +1,12 @@
+[
+  {
+    "placements": [
+      [2945, 3371, 0]
+    ],
+    "objectEmitters": [
+      "FIRE"
+    ],
+    "description": "Lava / test area",
+    "particleId": "42"
+  }
+]
