@@ -79,6 +79,10 @@ import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static org.lwjgl.opengl.GL15.glUnmapBuffer;
+import static org.lwjgl.opengl.GL30.GL_MAP_INVALIDATE_RANGE_BIT;
+import static org.lwjgl.opengl.GL30.GL_MAP_WRITE_BIT;
+import static org.lwjgl.opengl.GL30.glMapBufferRange;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
@@ -154,17 +158,25 @@ public class ZoneRenderer implements Renderer {
 	private UBOWorldViews uboWorldViews;
 
 	private static final int MAX_PARTICLES = 4096;
-	private static final int FLOATS_PER_PARTICLE_VERTEX = 10;
-	private static final int VERTS_PER_PARTICLE = 6;
-	// Quad as two triangles: BL->BR->TR and BL->TR->TL (same winding for a flat quad)
-	private static final float[][] PARTICLE_QUAD_CORNERS = {
-		{ -1, -1 }, { 1, -1 }, { 1, 1 },
-		{ -1, -1 }, { 1, 1 }, { -1, 1 }
+	private static final int QUAD_VERTS = 6;
+	private static final int FLOATS_PER_INSTANCE = 8;
+	// Quad as two triangles: BL->BR->TR and BL->TR->TL
+	private static final float[] PARTICLE_QUAD_CORNERS = {
+		-1, -1,  1, -1,  1, 1,
+		-1, -1,  1, 1,  -1, 1
 	};
 	private int vaoParticles;
-	private int vboParticles;
+	private int vboParticleQuad;
+	private int vboParticleInstances;
 	private FloatBuffer particleStagingBuffer;
+	private final float[] particleDistSq = new float[MAX_PARTICLES];
+	private final Integer[] particleSortOrder = new Integer[MAX_PARTICLES];
 	private int particleTextureId;
+	/** Last-frame particle cull stats for overlay (total on plane, culled by distance, culled by frustum, drawn). */
+	private int lastParticleTotalOnPlane;
+	private int lastParticleCulledDistance;
+	private int lastParticleCulledFrustum;
+	private int lastParticleDrawn;
 	private int whiteParticleTextureId;
 	private String loadedParticleTexturePath;
 
@@ -286,24 +298,33 @@ public class ZoneRenderer implements Renderer {
 
 	private void initializeParticleBuffers() {
 		vaoParticles = glGenVertexArrays();
-		vboParticles = glGenBuffers();
-		int particleBufferBytes = MAX_PARTICLES * VERTS_PER_PARTICLE * FLOATS_PER_PARTICLE_VERTEX * 4;
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticles);
-		glBufferData(GL_ARRAY_BUFFER, particleBufferBytes, GL_STREAM_DRAW);
+		vboParticleQuad = glGenBuffers();
+		vboParticleInstances = glGenBuffers();
+		FloatBuffer quadBuffer = BufferUtils.createFloatBuffer(PARTICLE_QUAD_CORNERS.length).put(PARTICLE_QUAD_CORNERS).flip();
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticleQuad);
+		glBufferData(GL_ARRAY_BUFFER, quadBuffer, GL_STATIC_DRAW);
 		glBindVertexArray(vaoParticles);
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticles);
-		final int particleStride = FLOATS_PER_PARTICLE_VERTEX * 4;
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticleQuad);
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, particleStride, 0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+		glVertexAttribDivisor(0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
+		int instanceStride = FLOATS_PER_INSTANCE * 4;
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, false, particleStride, 12);
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, instanceStride, 0);
+		glVertexAttribDivisor(1, 1);
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 1, GL_FLOAT, false, particleStride, 20);
+		glVertexAttribPointer(2, 4, GL_FLOAT, false, instanceStride, 12);
+		glVertexAttribDivisor(2, 1);
 		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 4, GL_FLOAT, false, particleStride, 24);
+		glVertexAttribPointer(3, 1, GL_FLOAT, false, instanceStride, 28);
+		glVertexAttribDivisor(3, 1);
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		particleStagingBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * VERTS_PER_PARTICLE * FLOATS_PER_PARTICLE_VERTEX);
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
+		glBufferData(GL_ARRAY_BUFFER, (long) MAX_PARTICLES * FLOATS_PER_INSTANCE * 4, GL_STREAM_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		particleStagingBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * FLOATS_PER_INSTANCE);
 
 		// 1x1 white texture used when no particle texture is set
 		whiteParticleTextureId = glGenTextures();
@@ -324,9 +345,13 @@ public class ZoneRenderer implements Renderer {
 			glDeleteVertexArrays(vaoParticles);
 			vaoParticles = 0;
 		}
-		if (vboParticles != 0) {
-			glDeleteBuffers(vboParticles);
-			vboParticles = 0;
+		if (vboParticleQuad != 0) {
+			glDeleteBuffers(vboParticleQuad);
+			vboParticleQuad = 0;
+		}
+		if (vboParticleInstances != 0) {
+			glDeleteBuffers(vboParticleInstances);
+			vboParticleInstances = 0;
 		}
 		particleStagingBuffer = null;
 		if (particleTextureId != 0 && particleTextureId != whiteParticleTextureId) {
@@ -391,33 +416,75 @@ public class ZoneRenderer implements Renderer {
 	private int uploadParticles(int currentPlane) {
 		List<Particle> particles = particleManager.getParticles();
 		particleStagingBuffer.clear();
+		lastParticleTotalOnPlane = 0;
+		lastParticleCulledDistance = 0;
+		lastParticleCulledFrustum = 0;
+		lastParticleDrawn = 0;
 		float[] particleColor = new float[4];
+		float cxCam = plugin.cameraPosition[0];
+		float cyCam = plugin.cameraPosition[1];
+		float czCam = plugin.cameraPosition[2];
+		float maxDistSq = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
+		maxDistSq *= maxDistSq;
+		float[][] frustumPlanes = plugin.cameraFrustum;
+		int n = 0;
 		for (Particle p : particles) {
 			if (p.plane != currentPlane)
 				continue;
+			lastParticleTotalOnPlane++;
+			float dx = p.position[0] - cxCam;
+			float dy = p.position[1] - cyCam;
+			float dz = p.position[2] - czCam;
+			float dSq = dx * dx + dy * dy + dz * dz;
+			if (dSq > maxDistSq) {
+				lastParticleCulledDistance++;
+				continue;
+			}
+			if (!HDUtils.isSphereIntersectingFrustum(p.position[0], p.position[1], p.position[2], p.size, frustumPlanes, frustumPlanes.length)) {
+				lastParticleCulledFrustum++;
+				continue;
+			}
+			particleDistSq[n] = dSq;
 			p.getCurrentColor(particleColor);
-			// Apply same camera shift as lights so particle stays fixed on tile when camera rotates
 			float cx = p.position[0] + plugin.cameraShift[0];
 			float cy = p.position[1];
 			float cz = p.position[2] + plugin.cameraShift[1];
-			float size = p.size;
-			for (float[] corner : PARTICLE_QUAD_CORNERS) {
-				particleStagingBuffer.put(cx).put(cy).put(cz);
-				particleStagingBuffer.put(corner[0]).put(corner[1]);
-				particleStagingBuffer.put(size);
-				particleStagingBuffer.put(particleColor[0]).put(particleColor[1]).put(particleColor[2]).put(particleColor[3]);
-			}
+			particleStagingBuffer.put(cx).put(cy).put(cz);
+			particleStagingBuffer.put(particleColor[0]).put(particleColor[1]).put(particleColor[2]).put(particleColor[3]);
+			particleStagingBuffer.put(p.size);
+			n++;
 		}
-		int numFloats = particleStagingBuffer.position();
-		int numVerts = numFloats / FLOATS_PER_PARTICLE_VERTEX;
-		if (numVerts == 0)
+		int instanceCount = n;
+		lastParticleDrawn = instanceCount;
+		if (instanceCount == 0)
 			return 0;
-		particleStagingBuffer.flip();
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticles);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, particleStagingBuffer);
+		for (int i = 0; i < instanceCount; i++)
+			particleSortOrder[i] = i;
+		Arrays.sort(particleSortOrder, 0, instanceCount, (a, b) -> Float.compare(particleDistSq[b], particleDistSq[a]));
+
+		int uploadBytes = instanceCount * FLOATS_PER_INSTANCE * 4;
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
+		ByteBuffer mapped = glMapBufferRange(GL_ARRAY_BUFFER, 0, uploadBytes, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
+		if (mapped != null) {
+			FloatBuffer mappedFloat = mapped.asFloatBuffer();
+			for (int k = 0; k < instanceCount; k++) {
+				int src = particleSortOrder[k] * FLOATS_PER_INSTANCE;
+				for (int f = 0; f < FLOATS_PER_INSTANCE; f++)
+					mappedFloat.put(particleStagingBuffer.get(src + f));
+			}
+			glUnmapBuffer(GL_ARRAY_BUFFER);
+		} else {
+			particleStagingBuffer.flip();
+			glBufferSubData(GL_ARRAY_BUFFER, 0, particleStagingBuffer);
+		}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		return numVerts;
+		return instanceCount;
 	}
+
+	public int getLastParticleTotalOnPlane() { return lastParticleTotalOnPlane; }
+	public int getLastParticleCulledDistance() { return lastParticleCulledDistance; }
+	public int getLastParticleCulledFrustum() { return lastParticleCulledFrustum; }
+	public int getLastParticleDrawn() { return lastParticleDrawn; }
 
 	@Override
 	public void processConfigChanges(Set<String> keys) {
@@ -900,15 +967,12 @@ public class ZoneRenderer implements Renderer {
 		// Render the scene
 		sceneCmd.execute();
 
-		// Draw particles (billboards) in scene with same depth/blend
+		// Draw particles (instanced billboards) in scene with same depth/blend
 		int currentPlane = client.getTopLevelWorldView().getPlane();
-		int particleVerts = uploadParticles(currentPlane);
-		int totalParticles = particleManager.getParticles().size();
-		if (particleVerts > 0 && particleProgram.isValid()) {
-			// Must set program in renderState before apply(), or apply() overwrites with scene program
+		int particleInstanceCount = uploadParticles(currentPlane);
+		if (particleInstanceCount > 0 && particleProgram.isValid()) {
 			renderState.program.set(particleProgram);
-			renderState.disable.set(GL_CULL_FACE);  // billboards must not be culled
-			// Don't write depth so overlapping particles blend instead of cutting each other off
+			renderState.disable.set(GL_CULL_FACE);
 			renderState.depthMask.set(false);
 			renderState.apply();
 			ensureParticleTextureLoaded();
@@ -917,13 +981,10 @@ public class ZoneRenderer implements Renderer {
 			particleProgram.setParticleTextureUnit(TEXTURE_UNIT_PARTICLE);
 			glBindVertexArray(vaoParticles);
 			frameTimer.begin(Timer.RENDER_PARTICLES);
-			glDrawArrays(GL_TRIANGLES, 0, particleVerts);
+			glDrawArraysInstanced(GL_TRIANGLES, 0, QUAD_VERTS, particleInstanceCount);
 			frameTimer.end(Timer.RENDER_PARTICLES);
 			glBindVertexArray(0);
-			if (totalParticles > 0 && (System.currentTimeMillis() % 10_000) < 50)
-				log.info("[Particles] Drew {} verts ({} particles) on plane {}", particleVerts, particleVerts / 6, currentPlane);
-		} else if (totalParticles > 0)
-			log.info("[Particles] Skip draw: particleVerts={}, programValid={}, plane={}", particleVerts, particleProgram.isValid(), currentPlane);
+		}
 
 		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);

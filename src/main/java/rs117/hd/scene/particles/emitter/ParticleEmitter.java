@@ -229,9 +229,10 @@ public class ParticleEmitter {
 		float yaw = directionYaw + (spreadYawMin == spreadYawMax ? spreadYawMin : spreadYawMin + (spreadYawMax - spreadYawMin) * rng.nextFloat());
 		float pitch = directionPitch + (spreadPitchMin == spreadPitchMax ? spreadPitchMin : spreadPitchMin + (spreadPitchMax - spreadPitchMin) * rng.nextFloat());
 		float cp = cos(pitch);
+		// Horizontal plane is X (0) and Z (2); Y (1) is height. Game angle 0 = South, 2048 = full circle.
 		out[0] = sin(yaw) * cp;
-		out[1] = cos(yaw) * cp;
-		out[2] = -sin(pitch);
+		out[1] = -sin(pitch);
+		out[2] = cos(yaw) * cp;
 	}
 
 	public boolean spawn(Particle into, float originLocalX, float originLocalY, float originLocalZ, int plane) {

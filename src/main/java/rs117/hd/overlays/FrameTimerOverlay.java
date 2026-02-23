@@ -206,14 +206,29 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.leftFont(boldFont)
 				.left("Particle stats:")
 				.build());
+			int totalEmitters = particleManager.getEmitters().size();
 			children.add(LineComponent.builder()
-				.left("Emitters:")
-				.right(String.valueOf(particleManager.getEmitters().size()))
+				.left("Emitters Updating:")
+				.right(String.format("%d/%d", particleManager.getLastEmittersUpdating(), totalEmitters))
 				.build());
 			children.add(LineComponent.builder()
-				.left("Particles:")
-				.right(String.valueOf(particleManager.getParticles().size()))
+				.left("Emitters (culled):")
+				.right(String.valueOf(particleManager.getLastEmittersCulled()))
 				.build());
+			if (plugin.renderer instanceof ZoneRenderer) {
+				ZoneRenderer zr = (ZoneRenderer) plugin.renderer;
+				int drawn = zr.getLastParticleDrawn();
+				int totalOnPlane = zr.getLastParticleTotalOnPlane();
+				int culled = zr.getLastParticleCulledDistance() + zr.getLastParticleCulledFrustum();
+				children.add(LineComponent.builder()
+					.left("Particles (drawn):")
+					.right(String.format("%d/%d", drawn, totalOnPlane))
+					.build());
+				children.add(LineComponent.builder()
+					.left("Particles (culled):")
+					.right(String.valueOf(culled))
+					.build());
+			}
 
 			children.add(LineComponent.builder()
 				.leftFont(boldFont)

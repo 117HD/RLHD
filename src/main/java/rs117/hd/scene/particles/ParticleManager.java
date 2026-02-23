@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +32,7 @@ import rs117.hd.scene.particles.emitter.EmitterConfigEntry;
 import rs117.hd.scene.particles.emitter.EmitterPlacement;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 import rs117.hd.scene.particles.emitter.ParticleEmitterDefinition;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -78,10 +80,8 @@ public class ParticleManager {
 	private String texturePath;
 	private boolean eventBusRegistered;
 	private boolean reloadObjectEmitters;
-	private long lastOutOfSceneInfoLogTime;
-	private long lastInSceneInfoLogTime;
-	private long lastEmitterStatsLogTime;
-	private long lastUpdateEntryLogTime;
+	private int lastEmittersUpdating;
+	private int lastEmittersCulled;
 
 	public void addEmitter(ParticleEmitter emitter) {
 		if (emitter != null && !emitters.contains(emitter))
@@ -272,6 +272,9 @@ public class ParticleManager {
 			((argb >> 24) & 0xff) / 255f
 		};
 	}
+
+	public int getLastEmittersUpdating() { return lastEmittersUpdating; }
+	public int getLastEmittersCulled() { return lastEmittersCulled; }
 
 	public Map<String, ParticleEmitterDefinition> getDefinitions() {
 		return definitions;
@@ -497,18 +500,55 @@ public class ParticleManager {
 	}
 
 	public void update(@Nullable SceneContext ctx, float dt) {
-		long now = System.currentTimeMillis();
-		if (emitters.size() > 0 && now - lastUpdateEntryLogTime > 5_000) {
-			log.info("[Particles] update() called: ctx={}, sceneBase={}, emitters={}, particles={}, dt={}",
-				ctx != null,
-				ctx != null && ctx.sceneBase != null,
-				emitters.size(),
-				particles.size(),
-				dt);
-			lastUpdateEntryLogTime = now;
-		}
-
+		Set<ParticleEmitter> culledEmitters = new HashSet<>();
 		if (ctx != null && ctx.sceneBase != null) {
+			float cx = plugin.cameraPosition[0];
+			float cy = plugin.cameraPosition[1];
+			float cz = plugin.cameraPosition[2];
+			float maxDistSq = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
+			maxDistSq *= maxDistSq;
+			float[][] frustum = plugin.cameraFrustum;
+			float cullRadius = LOCAL_TILE_SIZE / 2f;
+			for (ParticleEmitter emitter : emitters) {
+				boolean skipCulling = emitter.getDefinition() != null && emitter.getDefinition().displayWhenCulled;
+				WorldPoint wp = emitter.getWorldPoint();
+				if (wp == null) {
+					if (!skipCulling) culledEmitters.add(emitter);
+					continue;
+				}
+				var optLocal = ctx.worldToLocals(wp).findFirst();
+				if (optLocal.isEmpty()) {
+					if (!skipCulling) culledEmitters.add(emitter);
+					continue;
+				}
+				int[] local = optLocal.get();
+				int localX = local[0];
+				int localY = local[1];
+				int plane = local[2];
+				int tileExX = localX / LOCAL_TILE_SIZE + ctx.sceneOffset;
+				int tileExY = localY / LOCAL_TILE_SIZE + ctx.sceneOffset;
+				float heightOff = emitter.getHeightOffset();
+				float spawnY = 0f;
+				if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
+					int[][] planeHeights = ctx.scene.getTileHeights()[plane];
+					spawnY = planeHeights[tileExX][tileExY] - heightOff;
+				}
+				float ex = localX + (LOCAL_TILE_SIZE / 2f);
+				float ez = localY + (LOCAL_TILE_SIZE / 2f);
+				float dx = ex - cx;
+				float dy = spawnY - cy;
+				float dz = ez - cz;
+				if (dx * dx + dy * dy + dz * dz > maxDistSq) {
+					if (!skipCulling) culledEmitters.add(emitter);
+					continue;
+				}
+				if (!HDUtils.isSphereIntersectingFrustum(ex, spawnY, ez, cullRadius, frustum, frustum.length)) {
+					if (!skipCulling) culledEmitters.add(emitter);
+				}
+			}
+			lastEmittersCulled = culledEmitters.size();
+			lastEmittersUpdating = emitters.size() - lastEmittersCulled;
+
 			if (reloadObjectEmitters && !objectEmittersByType.isEmpty()) {
 				reloadObjectEmitters = false;
 				for (Tile[][] plane : ctx.scene.getExtendedTiles()) {
@@ -530,17 +570,12 @@ public class ParticleManager {
 				}
 			}
 			for (ParticleEmitter emitter : emitters) {
+				if (culledEmitters.contains(emitter)) continue;
 				WorldPoint wp = emitter.getWorldPoint();
 				if (wp == null) continue;
 				var optLocal = ctx.worldToLocals(wp).findFirst();
-				if (optLocal.isEmpty()) {
-					long now1 = System.currentTimeMillis();
-					if (now1 - lastOutOfSceneInfoLogTime > 15_000) {
-						log.info("[Particles] Emitter at ({}, {}, {}) is not in the current scene. Move near that tile to see particles.", wp.getX(), wp.getY(), wp.getPlane());
-						lastOutOfSceneInfoLogTime = now1;
-					}
+				if (optLocal.isEmpty())
 					continue;
-				}
 				int[] local = optLocal.get();
 				int localX = local[0];
 				int localY = local[1];
@@ -565,10 +600,10 @@ public class ParticleManager {
 				float ox = localX + (LOCAL_TILE_SIZE / 2f);
 				float oz = localY + (LOCAL_TILE_SIZE / 2f);
 				int toSpawn = emitter.advanceEmission(dt);
-				int before = particles.size();
 				for (int i = 0; i < toSpawn && particles.size() < MAX_PARTICLES; i++) {
 					if (emitter.spawn(spawnParticle, ox, spawnY, oz, plane)) {
 						Particle p = new Particle();
+						p.emitter = emitter;
 						p.setPosition(spawnParticle.position[0], spawnParticle.position[1], spawnParticle.position[2]);
 						p.setVelocity(spawnParticle.velocity[0], spawnParticle.velocity[1], spawnParticle.velocity[2]);
 						p.life = spawnParticle.life;
@@ -617,29 +652,15 @@ public class ParticleManager {
 					}
 				}
 
-				int added = particles.size() - before;
-				if (added > 0) {
-					long now1 = System.currentTimeMillis();
-					if (now1 - lastInSceneInfoLogTime > 15_000) {
-						log.info("[Particles] Particles spawning at ({}, {}, {}) – {} active (you're in range).", wp.getX(), wp.getY(), wp.getPlane(), particles.size());
-						lastInSceneInfoLogTime = now1;
-					}
-					if (now1 - lastEmitterStatsLogTime > 5_000) {
-						log.info("[Particles] Emitter ({}, {}, {}): toSpawn={}, added={}, total particles={}", wp.getX(), wp.getY(), wp.getPlane(), toSpawn, added, particles.size());
-						lastEmitterStatsLogTime = now1;
-					}
-				}
 			}
-		} else if (!emitters.isEmpty()) {
-			long now2 = System.currentTimeMillis();
-			if (now2 - lastOutOfSceneInfoLogTime > 15_000) {
-				log.info("[Particles] Update skipped: ctx={}, sceneBase={}, emitters={}", ctx != null, false, emitters.size());
-				lastOutOfSceneInfoLogTime = now2;
-			}
+		} else {
+			lastEmittersUpdating = 0;
+			lastEmittersCulled = emitters.size();
 		}
 
 		toRemove.clear();
 		for (Particle p : particles) {
+			if (p.emitter != null && culledEmitters.contains(p.emitter)) continue;
 			p.life -= dt;
 			if (p.life <= 0) {
 				toRemove.add(p);

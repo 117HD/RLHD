@@ -67,6 +67,8 @@ public class ParticleEmitterDefinition {
 	public boolean useSceneAmbientLight = true;
 	public boolean collidesWithObjects;
 	public boolean clipToTerrain = true;
+	/** When true, emitter is never culled (e.g. for weather/snow high above camera). */
+	public boolean displayWhenCulled = false;
 
 	public int spreadYawMinDecoded, spreadYawMaxDecoded, spreadPitchMinDecoded, spreadPitchMaxDecoded;
 	public int minScaleDecoded, maxScaleDecoded, targetScaleDecoded = -1;

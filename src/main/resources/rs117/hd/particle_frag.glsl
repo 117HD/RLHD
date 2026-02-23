@@ -12,8 +12,7 @@ in vec2 vUV;
 layout (location = 0) out vec4 outColor;
 
 void main() {
-	float r = length(vCorner);
-	if (r > 1.0)
+	if (dot(vCorner, vCorner) > 1.0)
 		discard;
 	outColor = texture(uParticleTexture, vUV) * vColor;
 }
