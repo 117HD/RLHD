@@ -79,7 +79,6 @@ import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
-import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_INVALIDATE;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
@@ -137,7 +136,7 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
-	public final Camera sceneCamera = new Camera();
+	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
@@ -355,6 +354,7 @@ public class ZoneRenderer implements Renderer {
 			sceneCamera.setZoom(zoom);
 
 			// Calculate view matrix, view proj & inv matrix
+			boolean hasSceneCameraChanged = sceneCamera.isViewDirty() || sceneCamera.isProjDirty();
 			sceneCamera.getViewMatrix(plugin.viewMatrix);
 			sceneCamera.getViewProjMatrix(plugin.viewProjMatrix);
 			sceneCamera.getInvViewProjMatrix(plugin.invViewProjMatrix);
@@ -374,31 +374,24 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			if (sceneCamera.isDirty()) {
+			if (hasSceneCameraChanged) {
 				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 				directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
 				directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 
-				// Define a Finite Plane before extracting corners
-				sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
-
-				int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
-				final float[][] sceneFrustumCorners = sceneCamera.getFrustumCorners();
-				clipFrustumToDistance(sceneFrustumCorners, maxDistance);
-
-				directionalShadowCasterVolume.build(sceneFrustumCorners);
-
-				sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
+				final float[][] volumeCorners = directionalShadowCasterVolume
+					.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
 
 				final float[] sceneCenter = new float[3];
-				for (float[] corner : sceneFrustumCorners)
+				for (float[] corner : volumeCorners)
 					add(sceneCenter, sceneCenter, corner);
-				divide(sceneCenter, sceneCenter, (float) sceneFrustumCorners.length);
+				divide(sceneCenter, sceneCenter, (float) volumeCorners.length);
 
 				float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
+				float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
 				float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
 				float radius = 0f;
-				for (float[] corner : sceneFrustumCorners) {
+				for (float[] corner : volumeCorners) {
 					radius = max(radius, distance(sceneCenter, corner));
 
 					directionalCamera.transformPoint(corner, corner);
@@ -406,13 +399,40 @@ public class ZoneRenderer implements Renderer {
 					minX = min(minX, corner[0]);
 					maxX = max(maxX, corner[0]);
 
+					minY = min(minY, corner[1]);
+					maxY = max(maxY, corner[1]);
+
 					minZ = min(minZ, corner[2]);
 					maxZ = max(maxZ, corner[2]);
 				}
-				int directionalSize = (int) max(abs(maxX - minX), abs(maxZ - minZ));
 
-				directionalCamera.setPosition(sceneCenter);
-				directionalCamera.setNearPlane(radius * 2.0f);
+				// Offset the Directional Camera by the radius of the scene
+				float[] directionalFwd = directionalCamera.getForwardDirection();
+				multiply(directionalFwd, directionalFwd, radius);
+				add(sceneCenter, sceneCenter, directionalFwd);
+
+				// Calculate directional size from the AABB of the scene frustum corners
+				// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
+				int directionalSize = (int) max(abs(maxY - minY), abs(maxX - minX), abs(maxZ - minZ));
+				directionalSize = Math.round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
+				directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
+
+				// Ignore directional size changes below the change threshold to avoid inducing shimmering
+				int previousDirectionalSize = directionalCamera.getViewportWidth();
+				float changeThreshold = previousDirectionalSize * 0.05f; // 10% of the previous directional size
+				if (abs(directionalSize - previousDirectionalSize) < changeThreshold)
+					directionalSize = previousDirectionalSize;
+
+				// Snap Position to Shadow Texel Grid to prevent shimmering
+				directionalCamera.transformPoint(sceneCenter, sceneCenter);
+
+				float texelSize = (float) directionalSize / plugin.shadowMapResolution;
+				sceneCenter[0] = (float) floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
+				sceneCenter[1] = (float) floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
+
+				directionalCamera.setPosition(directionalCamera.inverseTransformPoint(sceneCenter, sceneCenter));
+				directionalCamera.setNearPlane(Math.max(0.1f, radius * 0.05f));
+				directionalCamera.setFarPlane(radius * 2.0f);
 				directionalCamera.setZoom(1.0f);
 				directionalCamera.setViewportWidth(directionalSize);
 				directionalCamera.setViewportHeight(directionalSize);
