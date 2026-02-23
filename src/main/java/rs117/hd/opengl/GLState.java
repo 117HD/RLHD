@@ -1,9 +1,8 @@
 package rs117.hd.opengl;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
+import rs117.hd.utils.collection.IntHashSet;
 
 public abstract class GLState {
 	protected boolean hasValue;
@@ -134,7 +133,7 @@ public abstract class GLState {
 	}
 
 	public abstract static class IntSet extends GLState {
-		private final Set<Integer> targets = new HashSet<>();
+		private final IntHashSet targets = new IntHashSet();
 
 		public void add(int target) {
 			hasValue = true;

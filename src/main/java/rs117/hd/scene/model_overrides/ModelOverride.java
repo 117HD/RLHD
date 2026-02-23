@@ -18,6 +18,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.Props;
+import rs117.hd.utils.collection.Int2IntCache;
 
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.ExpressionParser.asExpression;
@@ -83,7 +84,7 @@ public class ModelOverride
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
 
-	public Map<Material, ModelOverride> materialOverrides;
+	public HashMap<Material, ModelOverride> materialOverrides;
 	public ModelOverride[] colorOverrides;
 
 	private JsonElement colors;
@@ -94,6 +95,8 @@ public class ModelOverride
 	public transient boolean hasTransparency;
 	public transient boolean mightHaveTransparency;
 	public transient boolean modifiesVanillaTexture;
+
+	private transient final Int2IntCache aHslModelOverrideCache = new Int2IntCache(16, 512);
 
 	@FunctionalInterface
 	public interface AhslPredicate {
@@ -471,13 +474,12 @@ public class ModelOverride
 		v[2 * 3 + 1] = verticesY[vidx];
 		v[2 * 3 + 2] = verticesZ[vidx];
 
-		float rad, cos, sin;
+		float cos, sin;
 		float temp;
 		if (modelOrientation % 2048 != 0) {
 			// Reverse baked vertex rotation
-			rad = modelOrientation * JAU_TO_RAD;
-			cos = cos(rad);
-			sin = sin(rad);
+			cos = jauToCosF(modelOrientation);
+			sin = jauToSinF(modelOrientation);
 
 			for (int i = 0; i < 3; i++) {
 				temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
@@ -510,9 +512,8 @@ public class ModelOverride
 			}
 
 			if (uvOrientationX % 2048 != 0) {
-				rad = uvOrientationX * JAU_TO_RAD;
-				cos = cos(rad);
-				sin = sin(rad);
+				cos = jauToCosF(uvOrientationX);
+				sin = jauToSinF(uvOrientationX);
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
@@ -534,9 +535,8 @@ public class ModelOverride
 			}
 
 			if (uvOrientationY % 2048 != 0) {
-				rad = uvOrientationY * JAU_TO_RAD;
-				cos = cos(rad);
-				sin = sin(rad);
+				cos = jauToCosF(uvOrientationY);
+				sin = jauToSinF(uvOrientationY);
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
@@ -558,9 +558,8 @@ public class ModelOverride
 			}
 
 			if (uvOrientationZ % 2048 != 0) {
-				rad = uvOrientationZ * JAU_TO_RAD;
-				cos = cos(rad);
-				sin = sin(rad);
+				cos = jauToCosF(uvOrientationZ);
+				sin = jauToSinF(uvOrientationZ);
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
@@ -611,5 +610,24 @@ public class ModelOverride
 				model.rotateY90Ccw();
 				break;
 		}
+	}
+
+	public final ModelOverride testColorOverrides(int ahsl) {
+		final int overrideIdx = aHslModelOverrideCache.getOrDefault(ahsl, -1);
+		if (overrideIdx >= 0)
+			return colorOverrides[overrideIdx];
+		if (overrideIdx == -2)
+			return null;
+
+		for (int i = 0; i < colorOverrides.length; i++) {
+			final var override = colorOverrides[i];
+			if (override.ahslCondition.test(ahsl)) {
+				aHslModelOverrideCache.put(ahsl, i);
+				return override;
+			}
+		}
+
+		aHslModelOverrideCache.put(ahsl, -2);
+		return null;
 	}
 }

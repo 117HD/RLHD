@@ -24,8 +24,6 @@
  */
 package rs117.hd.renderer.zone;
 
-import java.util.HashSet;
-import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -47,6 +45,7 @@ import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.collection.IntHashSet;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
@@ -118,7 +117,7 @@ public class SceneUploader implements AutoCloseable {
 
 	private int basex, basez, rid, level;
 
-	private final Set<Integer> roofIds = new HashSet<>();
+	private final IntHashSet roofIds = new IntHashSet();
 	private Scene currentScene;
 	private Tile[][][] tiles;
 	private byte[][][] settings;
@@ -217,13 +216,13 @@ public class SceneUploader implements AutoCloseable {
 			this.level = z;
 
 			if (z == 0) {
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, roofIds, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, vb, ab, fb);
 			} else {
-				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, vb, ab, fb);
 			}
 
 			if (vb != null) {
@@ -246,7 +245,6 @@ public class SceneUploader implements AutoCloseable {
 		int mzz,
 		int level,
 		boolean visbelow,
-		Set<Integer> roofIds,
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
 		GpuIntBuffer fb
@@ -927,25 +925,25 @@ public class SceneUploader implements AutoCloseable {
 				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
-			if (ctx.vertexIsOverlay.containsKey(neVertexKey) && ctx.vertexIsUnderlay.containsKey(neVertexKey))
+			if (ctx.vertexIsOverlay.contains(neVertexKey) && ctx.vertexIsUnderlay.contains(neVertexKey))
 				neVertexIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(nwVertexKey) && ctx.vertexIsUnderlay.containsKey(nwVertexKey))
+			if (ctx.vertexIsOverlay.contains(nwVertexKey) && ctx.vertexIsUnderlay.contains(nwVertexKey))
 				nwVertexIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(seVertexKey) && ctx.vertexIsUnderlay.containsKey(seVertexKey))
+			if (ctx.vertexIsOverlay.contains(seVertexKey) && ctx.vertexIsUnderlay.contains(seVertexKey))
 				seVertexIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(swVertexKey) && ctx.vertexIsUnderlay.containsKey(swVertexKey))
+			if (ctx.vertexIsOverlay.contains(swVertexKey) && ctx.vertexIsUnderlay.contains(swVertexKey))
 				swVertexIsOverlay = true;
 		} else if (onlyWaterSurface) {
 			// set colors for the shoreline to create a foam effect in the water shader
 			swColor = seColor = nwColor = neColor = 127;
 
-			if (ctx.vertexIsWater.containsKey(swVertexKey) && ctx.vertexIsLand.containsKey(swVertexKey))
+			if (ctx.vertexIsWater.contains(swVertexKey) && ctx.vertexIsLand.contains(swVertexKey))
 				swColor = 0;
-			if (ctx.vertexIsWater.containsKey(seVertexKey) && ctx.vertexIsLand.containsKey(seVertexKey))
+			if (ctx.vertexIsWater.contains(seVertexKey) && ctx.vertexIsLand.contains(seVertexKey))
 				seColor = 0;
-			if (ctx.vertexIsWater.containsKey(nwVertexKey) && ctx.vertexIsLand.containsKey(nwVertexKey))
+			if (ctx.vertexIsWater.contains(nwVertexKey) && ctx.vertexIsLand.contains(nwVertexKey))
 				nwColor = 0;
-			if (ctx.vertexIsWater.containsKey(neVertexKey) && ctx.vertexIsLand.containsKey(neVertexKey))
+			if (ctx.vertexIsWater.contains(neVertexKey) && ctx.vertexIsLand.contains(neVertexKey))
 				neColor = 0;
 
 			if (seColor == 0 && nwColor == 0 && (neColor == 0 || swColor == 0))
@@ -1223,11 +1221,11 @@ public class SceneUploader implements AutoCloseable {
 			} else if (onlyWaterSurface) {
 				// set colors for the shoreline to create a foam effect in the water shader
 				colorA = colorB = colorC = 127;
-				if (ctx.vertexIsWater.containsKey(vertexKeyA) && ctx.vertexIsLand.containsKey(vertexKeyA))
+				if (ctx.vertexIsWater.contains(vertexKeyA) && ctx.vertexIsLand.contains(vertexKeyA))
 					colorA = 0;
-				if (ctx.vertexIsWater.containsKey(vertexKeyB) && ctx.vertexIsLand.containsKey(vertexKeyB))
+				if (ctx.vertexIsWater.contains(vertexKeyB) && ctx.vertexIsLand.contains(vertexKeyB))
 					colorB = 0;
-				if (ctx.vertexIsWater.containsKey(vertexKeyC) && ctx.vertexIsLand.containsKey(vertexKeyC))
+				if (ctx.vertexIsWater.contains(vertexKeyC) && ctx.vertexIsLand.contains(vertexKeyC))
 					colorC = 0;
 				if (colorA == 0 && colorB == 0 && colorC == 0)
 					colorA = colorB = colorC = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
@@ -1266,11 +1264,11 @@ public class SceneUploader implements AutoCloseable {
 				terrainDataC = HDUtils.packTerrainData(true, max(1, depthC), waterType, tileZ);
 			}
 
-			if (ctx.vertexIsOverlay.containsKey(vertexKeyA) && ctx.vertexIsUnderlay.containsKey(vertexKeyA))
+			if (ctx.vertexIsOverlay.contains(vertexKeyA) && ctx.vertexIsUnderlay.contains(vertexKeyA))
 				vertexAIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(vertexKeyB) && ctx.vertexIsUnderlay.containsKey(vertexKeyB))
+			if (ctx.vertexIsOverlay.contains(vertexKeyB) && ctx.vertexIsUnderlay.contains(vertexKeyB))
 				vertexBIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(vertexKeyC) && ctx.vertexIsUnderlay.containsKey(vertexKeyC))
+			if (ctx.vertexIsOverlay.contains(vertexKeyC) && ctx.vertexIsUnderlay.contains(vertexKeyC))
 				vertexCIsOverlay = true;
 
 			ly0 -= override.heightOffset;
@@ -1502,7 +1500,7 @@ public class SceneUploader implements AutoCloseable {
 							int averageColor =
 								(tilePaint.getSwColor() + tilePaint.getNwColor() + tilePaint.getNeColor() + tilePaint.getSeColor()) / 4;
 
-							var override = tileOverrideManager.getOverride(ctx, tile);
+							var override = tileOverrideManager.getOverride(ctx, tile, worldPos);
 							averageColor = override.modifyColor(averageColor);
 							color1 = color2 = color3 = averageColor;
 
@@ -1576,7 +1574,8 @@ public class SceneUploader implements AutoCloseable {
 			Material material = baseMaterial;
 			ModelOverride faceOverride = modelOverride;
 
-			if (isTextured) {
+			if (textureId != -1) {
+				color1 = color2 = color3 = 90;
 				uvType = UvType.VANILLA;
 				if (textureMaterial != Material.NONE) {
 					material = textureMaterial;
@@ -1591,13 +1590,11 @@ public class SceneUploader implements AutoCloseable {
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | color1;
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						faceOverride = override;
-						material = faceOverride.baseMaterial;
-						break;
-					}
+				final int ahsl = (0xFF - transparency) << 16 | color1;
+				final var ahslOverride = modelOverride.testColorOverrides( ahsl);
+				if(ahslOverride != null) {
+					faceOverride = ahslOverride;
+					material = faceOverride.baseMaterial;
 				}
 			}
 
@@ -1649,7 +1646,7 @@ public class SceneUploader implements AutoCloseable {
 			if (shouldRotateNormals)
 				rotateNormals(modelNormals, orientSin, orientCos);
 
-			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
+			final int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				bias == null ? 0 : bias[face] & 0xFF;
 			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
@@ -1838,13 +1835,11 @@ public class SceneUploader implements AutoCloseable {
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | model.getFaceColors1()[f];
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						faceOverride = override;
-						material = faceOverride.baseMaterial;
-						break;
-					}
+				final int ahsl = (0xFF - transparency) << 16 | model.getFaceColors1()[f];
+				final var override = modelOverride.testColorOverrides(ahsl);
+				if (override != null) {
+					faceOverride = override;
+					material = faceOverride.baseMaterial;
 				}
 			}
 
@@ -2078,12 +2073,14 @@ public class SceneUploader implements AutoCloseable {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
+			tb.ensureFace(1);
 			final int texturedFaceIdx = tb.putFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
 				0, 0, 0
 			);
 
+			vb.ensureVertex(3);
 			vb.putVertex(
 				modelLocalI[vertexOffsetA], modelLocalI[vertexOffsetA + 1], modelLocalI[vertexOffsetA + 2],
 				faceUVs[0], faceUVs[1], faceUVs[2],
@@ -2103,7 +2100,7 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx
 			);
 		}
-
+		
 		writeCache.flush();
 	}
 
@@ -2113,26 +2110,26 @@ public class SceneUploader implements AutoCloseable {
 		float vx2, float vy2, float vz2,
 		float vx3, float vy3, float vz3
 	) {
-		float e0_x = vx2 - vx1;
-		float e0_y = vy2 - vy1;
-		float e0_z = vz2 - vz1;
+		final float e0_x = vx2 - vx1;
+		final float e0_y = vy2 - vy1;
+		final float e0_z = vz2 - vz1;
 
-		float e1_x = vx3 - vx1;
-		float e1_y = vy3 - vy1;
-		float e1_z = vz3 - vz1;
+		final float e1_x = vx3 - vx1;
+		final float e1_y = vy3 - vy1;
+		final float e1_z = vz3 - vz1;
 
 		float nx = e0_y * e1_z - e0_z * e1_y;
 		float ny = e0_z * e1_x - e0_x * e1_z;
 		float nz = e0_x * e1_y - e0_y * e1_x;
 
-		float length = (float) Math.sqrt(nx * nx + ny * ny + nz * nz);
-		nx /= length;
-		ny /= length;
-		nz /= length;
+		final float invLength = rcp(sqrt(nx * nx + ny * ny + nz * nz)) * 2048.0f;
+		nx *= invLength;
+		ny *= invLength;
+		nz *= invLength;
 
-		out[0] = out[3] = out[6] = (int) (nx * 2048);
-		out[1] = out[4] = out[7] = (int) (ny * 2048);
-		out[2] = out[5] = out[8] = (int) (nz * 2048);
+		out[0] = out[3] = out[6] = (int) nx;
+		out[1] = out[4] = out[7] = (int) ny;
+		out[2] = out[5] = out[8] = (int) nz;
 	}
 
 	public static int interpolateHSL(int hsl, byte hue2, byte sat2, byte lum2, byte lerp) {

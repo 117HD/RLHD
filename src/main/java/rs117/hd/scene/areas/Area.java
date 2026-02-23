@@ -25,6 +25,7 @@ public class Area {
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] unhideAreas = {};
 
+	public transient AABB aabbsBounds;
 	public transient AABB[] aabbs;
 	private transient boolean normalized;
 
@@ -63,6 +64,17 @@ public class Area {
 			}
 		}
 
+		if(aabbs.size() > 1) {
+			int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
+			for (AABB aabb : aabbs) {
+				minX = Math.min(minX, aabb.minX);
+				minY = Math.min(minY, aabb.minY);
+				maxX = Math.max(maxX, aabb.maxX);
+				maxY = Math.max(maxY, aabb.maxY);
+			}
+			aabbsBounds = new AABB(minX, minY, maxX, maxY);
+		}
+
 		this.aabbs = aabbs.toArray(AABB[]::new);
 
 		if (unhideAreas == null)
@@ -70,9 +82,11 @@ public class Area {
 	}
 
 	public boolean containsPoint(boolean includeUnhiding, int... worldPoint) {
-		for (var aabb : aabbs)
-			if (aabb.contains(worldPoint))
-				return true;
+		if (aabbsBounds == null || aabbsBounds.contains(worldPoint)) {
+			for (var aabb : aabbs)
+				if (aabb.contains(worldPoint))
+					return true;
+		}
 		if (includeUnhiding)
 			for (var aabb : unhideAreas)
 				if (aabb.contains(worldPoint))
@@ -85,9 +99,11 @@ public class Area {
 	}
 
 	public boolean intersects(boolean includeUnhiding, int minX, int minY, int maxX, int maxY) {
-		for (AABB aabb : aabbs)
-			if (aabb.intersects(minX, minY, maxX, maxY))
-				return true;
+		if (aabbsBounds == null || aabbsBounds.intersects(minX, minY, maxX, maxY)) {
+			for (AABB aabb : aabbs)
+				if (aabb.intersects(minX, minY, maxX, maxY))
+					return true;
+		}
 		if (includeUnhiding)
 			for (var aabb : unhideAreas)
 				if (aabb.intersects(minX, minY, maxX, maxY))

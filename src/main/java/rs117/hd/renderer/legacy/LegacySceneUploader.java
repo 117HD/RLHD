@@ -98,7 +98,7 @@ public class LegacySceneUploader {
 	private LegacyModelPusher modelPusher;
 
 	public void upload(LegacySceneContext sceneContext) {
-		proceduralGenerator.generateSceneData(sceneContext);
+		proceduralGenerator.generateSceneData(sceneContext, null);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
@@ -708,23 +708,23 @@ public class LegacySceneUploader {
 				// set colors for the shoreline to create a foam effect in the water shader
 				swColor = seColor = nwColor = neColor = 127;
 
-				if (sceneContext.vertexIsWater.containsKey(swVertexKey) && sceneContext.vertexIsLand.containsKey(swVertexKey))
+				if (sceneContext.vertexIsWater.contains(swVertexKey) && sceneContext.vertexIsLand.contains(swVertexKey))
 					swColor = 0;
-				if (sceneContext.vertexIsWater.containsKey(seVertexKey) && sceneContext.vertexIsLand.containsKey(seVertexKey))
+				if (sceneContext.vertexIsWater.contains(seVertexKey) && sceneContext.vertexIsLand.contains(seVertexKey))
 					seColor = 0;
-				if (sceneContext.vertexIsWater.containsKey(nwVertexKey) && sceneContext.vertexIsLand.containsKey(nwVertexKey))
+				if (sceneContext.vertexIsWater.contains(nwVertexKey) && sceneContext.vertexIsLand.contains(nwVertexKey))
 					nwColor = 0;
-				if (sceneContext.vertexIsWater.containsKey(neVertexKey) && sceneContext.vertexIsLand.containsKey(neVertexKey))
+				if (sceneContext.vertexIsWater.contains(neVertexKey) && sceneContext.vertexIsLand.contains(neVertexKey))
 					neColor = 0;
 			}
 
-			if (sceneContext.vertexIsOverlay.containsKey(neVertexKey) && sceneContext.vertexIsUnderlay.containsKey(neVertexKey))
+			if (sceneContext.vertexIsOverlay.contains(neVertexKey) && sceneContext.vertexIsUnderlay.contains(neVertexKey))
 				neVertexIsOverlay = true;
-			if (sceneContext.vertexIsOverlay.containsKey(nwVertexKey) && sceneContext.vertexIsUnderlay.containsKey(nwVertexKey))
+			if (sceneContext.vertexIsOverlay.contains(nwVertexKey) && sceneContext.vertexIsUnderlay.contains(nwVertexKey))
 				nwVertexIsOverlay = true;
-			if (sceneContext.vertexIsOverlay.containsKey(seVertexKey) && sceneContext.vertexIsUnderlay.containsKey(seVertexKey))
+			if (sceneContext.vertexIsOverlay.contains(seVertexKey) && sceneContext.vertexIsUnderlay.contains(seVertexKey))
 				seVertexIsOverlay = true;
-			if (sceneContext.vertexIsOverlay.containsKey(swVertexKey) && sceneContext.vertexIsUnderlay.containsKey(swVertexKey))
+			if (sceneContext.vertexIsOverlay.contains(swVertexKey) && sceneContext.vertexIsUnderlay.contains(swVertexKey))
 				swVertexIsOverlay = true;
 
 
@@ -1065,19 +1065,19 @@ public class LegacySceneUploader {
 				} else {
 					// set colors for the shoreline to create a foam effect in the water shader
 					colorA = colorB = colorC = 127;
-					if (sceneContext.vertexIsWater.containsKey(vertexKeyA) && sceneContext.vertexIsLand.containsKey(vertexKeyA))
+					if (sceneContext.vertexIsWater.contains(vertexKeyA) && sceneContext.vertexIsLand.contains(vertexKeyA))
 						colorA = 0;
-					if (sceneContext.vertexIsWater.containsKey(vertexKeyB) && sceneContext.vertexIsLand.containsKey(vertexKeyB))
+					if (sceneContext.vertexIsWater.contains(vertexKeyB) && sceneContext.vertexIsLand.contains(vertexKeyB))
 						colorB = 0;
-					if (sceneContext.vertexIsWater.containsKey(vertexKeyC) && sceneContext.vertexIsLand.containsKey(vertexKeyC))
+					if (sceneContext.vertexIsWater.contains(vertexKeyC) && sceneContext.vertexIsLand.contains(vertexKeyC))
 						colorC = 0;
 				}
 
-				if (sceneContext.vertexIsOverlay.containsKey(vertexKeyA) && sceneContext.vertexIsUnderlay.containsKey(vertexKeyA))
+				if (sceneContext.vertexIsOverlay.contains(vertexKeyA) && sceneContext.vertexIsUnderlay.contains(vertexKeyA))
 					vertexAIsOverlay = true;
-				if (sceneContext.vertexIsOverlay.containsKey(vertexKeyB) && sceneContext.vertexIsUnderlay.containsKey(vertexKeyB))
+				if (sceneContext.vertexIsOverlay.contains(vertexKeyB) && sceneContext.vertexIsUnderlay.contains(vertexKeyB))
 					vertexBIsOverlay = true;
-				if (sceneContext.vertexIsOverlay.containsKey(vertexKeyC) && sceneContext.vertexIsUnderlay.containsKey(vertexKeyC))
+				if (sceneContext.vertexIsOverlay.contains(vertexKeyC) && sceneContext.vertexIsUnderlay.contains(vertexKeyC))
 					vertexCIsOverlay = true;
 
 				for (int i = 0; i < 3; i++)
