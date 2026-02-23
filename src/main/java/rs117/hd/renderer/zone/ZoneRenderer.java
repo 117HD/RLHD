@@ -379,7 +379,8 @@ public class ZoneRenderer implements Renderer {
 				directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
 				directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 
-				final float[][] volumeCorners = directionalShadowCasterVolume.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
+				final float[][] volumeCorners = directionalShadowCasterVolume
+					.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
 
 				final float[] sceneCenter = new float[3];
 				for (float[] corner : volumeCorners)
@@ -412,16 +413,16 @@ public class ZoneRenderer implements Renderer {
 
 				// Calculate directional size from the AABB of the scene frustum corners
 				// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
-				int directionalSize = (int) max(abs(maxY - minY), max(abs(maxX - minX), abs(maxZ - minZ)));
-				directionalSize = Math.round(directionalSize / (float)LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
+				int directionalSize = (int) max(abs(maxY - minY), abs(maxX - minX), abs(maxZ - minZ));
+				directionalSize = Math.round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
 				directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
 				float texelSize = (float) directionalSize / plugin.shadowMapResolution;
 
 				// Snap Position to Shadow Texel Grid to prevent shimmering
 				directionalCamera.transformPoint(sceneCenter, sceneCenter);
 
-				sceneCenter[0] = (float)floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
-				sceneCenter[1] = (float)floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
+				sceneCenter[0] = (float) floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
+				sceneCenter[1] = (float) floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
 
 				directionalCamera.setPosition(directionalCamera.inverseTransformPoint(sceneCenter, sceneCenter));
 				directionalCamera.setNearPlane(Math.max(0.1f, radius * 0.05f));
