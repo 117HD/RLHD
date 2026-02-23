@@ -134,6 +134,16 @@ public class Mat4
 		};
 	}
 
+	public static float[] orthographic(float w, float h, float n, float f)
+	{
+		return new float[] {
+			2.0f / w, 0, 0, 0,
+			0, -2.0f / h, 0, 0,
+			0, 0, 1.0f / (f - n), 0,
+			0, 0, -(f + n) / (f - n), 1
+		};
+	}
+
 	/**
 	 * Multiplies matrices a and b, storing the result in matrix a.
 	 *

@@ -396,6 +396,7 @@ public class ZoneRenderer implements Renderer {
 				divide(sceneCenter, sceneCenter, (float) sceneFrustumCorners.length);
 
 				float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
+				float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
 				float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
 				float radius = 0f;
 				for (float[] corner : sceneFrustumCorners) {
@@ -406,13 +407,34 @@ public class ZoneRenderer implements Renderer {
 					minX = min(minX, corner[0]);
 					maxX = max(maxX, corner[0]);
 
+					minY = min(minY, corner[1]);
+					maxY = max(maxY, corner[1]);
+
 					minZ = min(minZ, corner[2]);
 					maxZ = max(maxZ, corner[2]);
 				}
-				int directionalSize = (int) max(abs(maxX - minX), abs(maxZ - minZ));
 
-				directionalCamera.setPosition(sceneCenter);
-				directionalCamera.setNearPlane(radius * 2.0f);
+				// Offset the Directional Camera by the radius of the scene
+				float[] directionalFwd = directionalCamera.getForwardDirection();
+				multiply(directionalFwd, directionalFwd, radius);
+				add(sceneCenter, sceneCenter, directionalFwd);
+
+				// Calculate directional size from the AABB of the scene frustum corners
+				// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
+				int directionalSize = (int) max(abs(maxY - minY), max(abs(maxX - minX), abs(maxZ - minZ)));
+				directionalSize = Math.round(directionalSize / (float)LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
+				directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
+				float texelSize = (float) directionalSize / plugin.shadowMapResolution;
+
+				// Snap Position to Shadow Texel Grid to prevent shimmering
+				directionalCamera.transformPoint(sceneCenter, sceneCenter);
+
+				sceneCenter[0] = (float)floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
+				sceneCenter[1] = (float)floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
+
+				directionalCamera.setPosition(directionalCamera.inverseTransformPoint(sceneCenter, sceneCenter));
+				directionalCamera.setNearPlane(Math.max(0.1f, radius * 0.05f));
+				directionalCamera.setFarPlane(radius * 2.0f);
 				directionalCamera.setZoom(1.0f);
 				directionalCamera.setViewportWidth(directionalSize);
 				directionalCamera.setViewportHeight(directionalSize);
