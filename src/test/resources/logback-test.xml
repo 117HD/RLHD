@@ -8,8 +8,8 @@
     </encoder>
   </appender>
 
-  <appender name="117HD_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>117HD.log</file>
+  <appender name="117HD_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>117hd.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>117HD.%d{yyyy-MM-dd}.log</fileNamePattern>
       <maxHistory>2</maxHistory>
@@ -21,14 +21,13 @@
     </encoder>
   </appender>
 
-
   <logger name="rs117.hd" level="debug" additivity="false">
     <appender-ref ref="CONSOLE"/>
-    <appender-ref ref="117HD_FILE"/>
+    <appender-ref ref="117HD_LOG"/>
   </logger>
 
-  <logger name="rs117.hd.PluginFileLog" level="debug" additivity="false">
-    <appender-ref ref="117HD_FILE"/>
+  <logger name="rs117.hd.FilterReminder" level="debug" additivity="false">
+    <appender-ref ref="117HD_LOG"/>
   </logger>
 
   <root level="info">
