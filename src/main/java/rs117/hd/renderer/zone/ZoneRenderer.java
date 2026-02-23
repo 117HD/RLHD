@@ -416,11 +416,17 @@ public class ZoneRenderer implements Renderer {
 				int directionalSize = (int) max(abs(maxY - minY), abs(maxX - minX), abs(maxZ - minZ));
 				directionalSize = Math.round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
 				directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
-				float texelSize = (float) directionalSize / plugin.shadowMapResolution;
+
+				// Ignore directional size changes below the change threshold to avoid inducing shimmering
+				int previousDirectionalSize = directionalCamera.getViewportWidth();
+				float changeThreshold = previousDirectionalSize * 0.05f; // 10% of the previous directional size
+				if (abs(directionalSize - previousDirectionalSize) < changeThreshold)
+					directionalSize = previousDirectionalSize;
 
 				// Snap Position to Shadow Texel Grid to prevent shimmering
 				directionalCamera.transformPoint(sceneCenter, sceneCenter);
 
+				float texelSize = (float) directionalSize / plugin.shadowMapResolution;
 				sceneCenter[0] = (float) floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
 				sceneCenter[1] = (float) floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
 
