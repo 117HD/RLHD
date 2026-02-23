@@ -46,6 +46,7 @@ public final class Camera {
 	@Getter
 	private float farPlane = 0.0f;
 	private boolean isOrthographic = false;
+	private boolean reverseZ = false;
 
 	public boolean isDirty() {
 		return dirtyFlags != 0;
@@ -64,6 +65,16 @@ public final class Camera {
 		}
 		return this;
 	}
+
+	public Camera setReverseZ(boolean newReverseZ) {
+		if (reverseZ != newReverseZ) {
+			reverseZ = newReverseZ;
+			dirtyFlags |= PROJ_CHANGED;
+		}
+		return this;
+	}
+
+	public boolean getIsReverseZ() {return reverseZ; }
 
 	public Camera setViewportWidth(int newViewportWidth) {
 		if (viewportWidth != newViewportWidth) {
@@ -332,16 +343,28 @@ public final class Camera {
 			final float zoomedViewportWidth = (viewportWidth / zoom);
 			final float zoomedViewportHeight = (viewportHeight / zoom);
 			if (isOrthographic) {
-				if(farPlane > 0.0f) {
-					projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+				if(reverseZ) {
+					projectionMatrix = Mat4.orthographicReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
 				} else {
-					projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					if (farPlane > 0.0f) {
+						projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+					} else {
+						projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					}
 				}
 			} else {
-				if (farPlane > 0.0f) {
-					projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+				if (reverseZ) {
+					if (farPlane > 0.0f) {
+						projectionMatrix = Mat4.perspectiveReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+					} else {
+						projectionMatrix = Mat4.perspectiveInfiniteReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					}
 				} else {
-					projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					if (farPlane > 0.0f) {
+						projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+					} else {
+						projectionMatrix = Mat4.perspectiveInfinite(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					}
 				}
 			}
 			dirtyFlags &= ~PROJECTION_MATRIX_DIRTY;
@@ -482,5 +505,21 @@ public final class Camera {
 	public int classifySphere(float x, float y, float z, float radius) {
 		calculateFrustumPlanes();
 		return HDUtils.classifySphereFrustum(x, y, z, radius, frustumPlanes, frustumPlanes.length);
+	}
+
+	public void copyFrom(Camera other) {
+		viewportWidth = other.viewportWidth;
+		viewportHeight = other.viewportHeight;
+		zoom = other.zoom;
+		nearPlane = other.nearPlane;
+		farPlane = other.farPlane;
+		isOrthographic = other.isOrthographic;
+		reverseZ = other.reverseZ;
+
+		copyTo(position, other.position);
+		copyTo(orientation, other.orientation);
+		copyTo(fixedOrientation, other.fixedOrientation);
+
+		dirtyFlags = PROJ_CHANGED | VIEW_CHANGED;
 	}
 }

@@ -79,7 +79,6 @@ import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
-import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_INVALIDATE;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
@@ -137,7 +136,7 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
-	public final Camera sceneCamera = new Camera();
+	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
@@ -379,27 +378,18 @@ public class ZoneRenderer implements Renderer {
 				directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
 				directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 
-				// Define a Finite Plane before extracting corners
-				sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
-
-				int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
-				final float[][] sceneFrustumCorners = sceneCamera.getFrustumCorners();
-				clipFrustumToDistance(sceneFrustumCorners, maxDistance);
-
-				directionalShadowCasterVolume.build(sceneFrustumCorners);
-
-				sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
+				final float[][] volumeCorners = directionalShadowCasterVolume.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
 
 				final float[] sceneCenter = new float[3];
-				for (float[] corner : sceneFrustumCorners)
+				for (float[] corner : volumeCorners)
 					add(sceneCenter, sceneCenter, corner);
-				divide(sceneCenter, sceneCenter, (float) sceneFrustumCorners.length);
+				divide(sceneCenter, sceneCenter, (float) volumeCorners.length);
 
 				float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
 				float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
 				float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
 				float radius = 0f;
-				for (float[] corner : sceneFrustumCorners) {
+				for (float[] corner : volumeCorners) {
 					radius = max(radius, distance(sceneCenter, corner));
 
 					directionalCamera.transformPoint(corner, corner);

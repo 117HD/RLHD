@@ -89,13 +89,46 @@ public class Mat4
 		};
 	}
 
-	public static float[] perspective(float w, float h, float n) {
-		// Flip Y so positive is up, and reverse depth from 1 at the near plane to 0 infinitely far away
-		return new float[] {
-			2 / w, 0, 0, 0,
-			0, -2 / h, 0, 0,
-			0, 0, 0, 1,
-			0, 0, 2 * n, 0
+	/**
+	 * Infinite far plane, Reverse-Z perspective matrix.
+	 * Depth = 1 at near plane, 0 infinitely far away.
+	 */
+	public static float[] perspectiveInfiniteReverseZ(float w, float h, float n) {
+		return new float[]{
+			2 / w, 0,     0,  0,
+			0,    -2 / h, 0,  0,
+			0,     0,     0,  1,
+			0,     0,     2 * n, 0
+		};
+	}
+
+	/**
+	 * Infinite far plane, normal-Z perspective matrix.
+	 * Depth = 0 at near plane, 1 infinitely far away.
+	 */
+	public static float[] perspectiveInfinite(float w, float h, float n) {
+		return new float[]{
+			2 / w, 0,     0,  0,
+			0,    -2 / h, 0,  0,
+			0,     0,    -1, -1,
+			0,     0,    -2 * n, 0
+		};
+	}
+
+	/**
+	 * Finite far plane, Reverse-Z perspective matrix.
+	 * Depth = 1 at near plane, 0 at far plane.
+	 */
+	public static float[] perspectiveReverseZ(float w, float h, float n, float f) {
+		float nf = n / f;
+		float a = (1 + nf) / (nf - 1);
+		float b = a * n - n;
+		float c = 1; // reversed depth (positive)
+		return new float[]{
+			2 / w, 0,     0,  0,
+			0,    -2 / h, 0,  0,
+			0,     0,     a,  c,
+			0,     0,     b,  0
 		};
 	}
 
@@ -141,6 +174,16 @@ public class Mat4
 			0, -2.0f / h, 0, 0,
 			0, 0, 1.0f / (f - n), 0,
 			0, 0, -(f + n) / (f - n), 1
+		};
+	}
+
+	public static float[] orthographicReverseZ(float w, float h, float n, float f)
+	{
+		return new float[] {
+			2.0f / w, 0, 0, 0,
+			0, -2.0f / h, 0, 0,
+			0, 0, 1.0f / (n - f), 0,
+			0, 0, f / (f - n), 1
 		};
 	}
 
