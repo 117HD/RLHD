@@ -33,6 +33,10 @@ public class Mat4
 	 * Utility class for working with column-major 4 x 4 matrices.
 	 */
 
+	public static float[] zero() {
+		return new float[16];
+	}
+
 	public static float[] identity()
 	{
 		return new float[] {

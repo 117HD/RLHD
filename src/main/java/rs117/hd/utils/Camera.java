@@ -46,7 +46,9 @@ public final class Camera {
 	private float nearPlane = 0.5f;
 	@Getter
 	private float farPlane = 0.0f;
-	private boolean isOrthographic = false;
+	@Getter
+	private boolean orthographic = false;
+	@Getter
 	private boolean reverseZ = false;
 
 	public boolean isDirty() {
@@ -57,12 +59,10 @@ public final class Camera {
 
 	public boolean isViewDirty() { return (dirtyFlags & VIEW_MATRIX_DIRTY) != 0; }
 
-	public boolean getIsOrthographic() { return isOrthographic; }
-
 	public Camera setOrthographic(boolean newOrthographic) {
-		if (isOrthographic != newOrthographic) {
+		if (orthographic != newOrthographic) {
 			synchronized (this) {
-				isOrthographic = newOrthographic;
+				orthographic = newOrthographic;
 				dirtyFlags |= PROJ_CHANGED;
 			}
 		}
@@ -77,10 +77,6 @@ public final class Camera {
 			}
 		}
 		return this;
-	}
-
-	public boolean getIsReverseZ() {
-		return reverseZ;
 	}
 
 	public Camera setViewportWidth(int newViewportWidth) {
@@ -342,7 +338,7 @@ public final class Camera {
 	}
 
 	public float[] getViewMatrix() {
-		return getViewMatrix(new float[16]);
+		return getViewMatrix(Mat4.zero());
 	}
 
 	public float[] inverseTransformPoint(float[] out, float[] point) {
@@ -375,7 +371,7 @@ public final class Camera {
 
 			final float zoomedViewportWidth = (viewportWidth / zoom);
 			final float zoomedViewportHeight = (viewportHeight / zoom);
-			if (isOrthographic) {
+			if (orthographic) {
 				if (reverseZ) {
 					projectionMatrix = Mat4.orthographicReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
 				} else {
@@ -416,7 +412,7 @@ public final class Camera {
 	}
 
 	public float[] getProjectionMatrix() {
-		return getProjectionMatrix(new float[16]);
+		return getProjectionMatrix(Mat4.zero());
 	}
 
 	private void calculateViewProjMatrix() {
@@ -445,7 +441,7 @@ public final class Camera {
 	}
 
 	public float[] getViewProjMatrix() {
-		return getViewProjMatrix(new float[16]);
+		return getViewProjMatrix(Mat4.zero());
 	}
 
 	private void calculateInvViewProjMatrix() {
@@ -550,7 +546,7 @@ public final class Camera {
 		zoom = other.zoom;
 		nearPlane = other.nearPlane;
 		farPlane = other.farPlane;
-		isOrthographic = other.isOrthographic;
+		orthographic = other.orthographic;
 		reverseZ = other.reverseZ;
 
 		copyTo(position, other.position);
