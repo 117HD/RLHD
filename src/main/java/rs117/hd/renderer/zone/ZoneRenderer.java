@@ -354,6 +354,7 @@ public class ZoneRenderer implements Renderer {
 			sceneCamera.setZoom(zoom);
 
 			// Calculate view matrix, view proj & inv matrix
+			boolean hasSceneCameraChanged = sceneCamera.isViewDirty() || sceneCamera.isProjDirty();
 			sceneCamera.getViewMatrix(plugin.viewMatrix);
 			sceneCamera.getViewProjMatrix(plugin.viewProjMatrix);
 			sceneCamera.getInvViewProjMatrix(plugin.invViewProjMatrix);
@@ -373,7 +374,7 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			if (sceneCamera.isDirty()) {
+			if (hasSceneCameraChanged) {
 				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 				directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
 				directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
