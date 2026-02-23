@@ -767,6 +767,15 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_WATER_EFFECTS = "vanillaWaterEffects";
+	@ConfigItem(
+		keyName = KEY_WATER_EFFECTS,
+		name = "Hide Vanilla Ripples",
+		description = "Hides the water effects found around objects floating in the water.",
+		position = 15,
+		section = environmentSettings
+	)
+	default boolean hideVanillaWaterEffects() { return false; }
 
 	/*====== Miscellaneous settings ======*/
 

@@ -161,6 +161,10 @@
         "type": "boolean",
         "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
       },
+      "isWaterEffect": {
+        "type": "boolean",
+        "description": "Whether the model should hide these elements when \"Hide vanilla ripples\" is toggled. Defaults to false."
+      },
       "shadowOpacityThreshold": {
         "type": "number",
         "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
@@ -299,6 +303,10 @@
               "type": "boolean",
               "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
             },
+            "isWaterEffect": {
+              "type": "boolean",
+              "description": "Whether the model should hide these elements when \"Hide vanilla ripples\" is toggled. Defaults to false."
+            },
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
@@ -429,6 +437,10 @@
             "undoVanillaShading": {
               "type": "boolean",
               "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
+            },
+            "isWaterEffect": {
+              "type": "boolean",
+              "description": "Whether the model should hide these elements when \"Hide vanilla ripples\" is toggled. Defaults to false."
             },
             "shadowOpacityThreshold": {
               "type": "number",

@@ -70,6 +70,7 @@ public class ModelOverride
 	public boolean receiveShadows = true;
 	public boolean terrainVertexSnap = false;
 	public boolean undoVanillaShading = true;
+	public boolean isWaterEffect = false;
 	public float terrainVertexSnapThreshold = 0.125f;
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
@@ -94,6 +95,9 @@ public class ModelOverride
 	public transient boolean hasTransparency;
 	public transient boolean mightHaveTransparency;
 	public transient boolean modifiesVanillaTexture;
+
+	// Transient not volatile, since access order can be random as it'll mean we'll just fall back to the full lookup
+	private transient long cachedColorOverrideAhsl;
 
 	@FunctionalInterface
 	public interface AhslPredicate {
@@ -231,6 +235,7 @@ public class ModelOverride
 			receiveShadows,
 			terrainVertexSnap,
 			undoVanillaShading,
+			isWaterEffect,
 			terrainVertexSnapThreshold,
 			shadowOpacityThreshold,
 			tzHaarRecolorType,
@@ -249,7 +254,8 @@ public class ModelOverride
 			ahslCondition,
 			hasTransparency,
 			mightHaveTransparency,
-			modifiesVanillaTexture
+			modifiesVanillaTexture,
+			0 // Runtime caching fields
 		);
 	}
 
@@ -611,5 +617,29 @@ public class ModelOverride
 				model.rotateY90Ccw();
 				break;
 		}
+	}
+
+	public final ModelOverride testColorOverrides(int ahsl, boolean hideWaterEffects) {
+		ModelOverride override = null;
+		final long packedAhl = cachedColorOverrideAhsl;
+		if (packedAhl != 0 && ahsl == (int)packedAhl)
+			override = colorOverrides[(int) (packedAhl >> 32)];
+
+		if(override == null) {
+			final int len = colorOverrides.length;
+			for (int i = 0; i < len; i++) {
+				final var override2 = colorOverrides[i];
+				if (override2.ahslCondition.test(ahsl)) {
+					cachedColorOverrideAhsl = ahsl | (long) i << 32;
+					override = override2;
+					break;
+				}
+			}
+		}
+
+		if (!hideWaterEffects && override != null && override.isWaterEffect)
+			override = null;
+
+		return override;
 	}
 }

@@ -1591,13 +1591,11 @@ public class SceneUploader implements AutoCloseable {
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | color1;
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						faceOverride = override;
-						material = faceOverride.baseMaterial;
-						break;
-					}
+				final int ahsl = (0xFF - transparency) << 16 | color1;
+				final var override = modelOverride.testColorOverrides(ahsl, plugin.configHideWaterEffects);
+				if (override != null) {
+					faceOverride = override;
+					material = faceOverride.baseMaterial;
 				}
 			}
 
@@ -1838,13 +1836,11 @@ public class SceneUploader implements AutoCloseable {
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | model.getFaceColors1()[f];
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						faceOverride = override;
-						material = faceOverride.baseMaterial;
-						break;
-					}
+				final int ahsl = (0xFF - transparency) << 16 | model.getFaceColors1()[f];
+				final var override = modelOverride.testColorOverrides(ahsl, plugin.configHideWaterEffects);
+				if (override != null) {
+					faceOverride = override;
+					material = faceOverride.baseMaterial;
 				}
 			}
 

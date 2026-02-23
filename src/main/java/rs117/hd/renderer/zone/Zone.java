@@ -605,13 +605,10 @@ public class Zone {
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						material = override.baseMaterial;
-						break;
-					}
-				}
+				final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
+				final var override = modelOverride.testColorOverrides(ahsl, plugin.configHideWaterEffects);
+				if (override != null)
+					material = override.baseMaterial;
 			}
 
 			boolean hasAlpha = material.hasTransparency || transparency != 0;

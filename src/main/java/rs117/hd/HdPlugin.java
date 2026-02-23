@@ -406,6 +406,7 @@ public class HdPlugin extends Plugin {
 	public boolean configPreserveVanillaNormals;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
+	public boolean configHideWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public int configDetailDrawDistance;
@@ -1615,6 +1616,7 @@ public class HdPlugin extends Plugin {
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configWindDisplacement = config.windDisplacement();
 		configCharacterDisplacement = config.characterDisplacement();
+		configHideWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
 
