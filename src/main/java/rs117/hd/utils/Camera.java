@@ -61,34 +61,44 @@ public final class Camera {
 
 	public Camera setOrthographic(boolean newOrthographic) {
 		if (isOrthographic != newOrthographic) {
-			isOrthographic = newOrthographic;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				isOrthographic = newOrthographic;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setReverseZ(boolean newReverseZ) {
 		if (reverseZ != newReverseZ) {
-			reverseZ = newReverseZ;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				reverseZ = newReverseZ;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
 
-	public boolean getIsReverseZ() {return reverseZ; }
+	public boolean getIsReverseZ() {
+		return reverseZ;
+	}
 
 	public Camera setViewportWidth(int newViewportWidth) {
 		if (viewportWidth != newViewportWidth) {
-			viewportWidth = newViewportWidth;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				viewportWidth = newViewportWidth;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setViewportHeight(int newViewportHeight) {
 		if (viewportHeight != newViewportHeight) {
-			viewportHeight = newViewportHeight;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				viewportHeight = newViewportHeight;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -99,24 +109,30 @@ public final class Camera {
 
 	public Camera setNearPlane(float newNearPlane) {
 		if (nearPlane != newNearPlane) {
-			nearPlane = newNearPlane;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				nearPlane = newNearPlane;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setFarPlane(float newFarPlane) {
 		if (farPlane != newFarPlane) {
-			farPlane = newFarPlane;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				farPlane = newFarPlane;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setZoom(float newZoom) {
 		if (zoom != newZoom) {
-			zoom = newZoom;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				zoom = newZoom;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -131,8 +147,10 @@ public final class Camera {
 
 	public Camera setPositionX(float x) {
 		if (position[0] != x) {
-			position[0] = x;
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				position[0] = x;
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -147,8 +165,10 @@ public final class Camera {
 
 	public Camera setPositionY(float y) {
 		if (position[1] != y) {
-			position[1] = y;
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				position[1] = y;
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -163,18 +183,22 @@ public final class Camera {
 
 	public Camera setPositionZ(float z) {
 		if (position[2] != z) {
-			position[2] = z;
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				position[2] = z;
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setPosition(float[] newPosition) {
 		if (position[0] != newPosition[0] || position[1] != newPosition[1] || position[2] != newPosition[2]) {
-			position[0] = newPosition[0];
-			position[1] = newPosition[1];
-			position[2] = newPosition[2];
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				position[0] = newPosition[0];
+				position[1] = newPosition[1];
+				position[2] = newPosition[2];
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -200,18 +224,22 @@ public final class Camera {
 
 	public Camera translate(float[] translation) {
 		if (translation[0] != 0.0f || translation[1] != 0.0f || translation[2] != 0.0f) {
-			position[0] += translation[0];
-			position[1] += translation[1];
-			position[2] += translation[2];
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				position[0] += translation[0];
+				position[1] += translation[1];
+				position[2] += translation[2];
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setYaw(float yaw) {
 		if (orientation[0] != yaw) {
-			orientation[0] = yaw;
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				orientation[0] = yaw;
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -229,8 +257,10 @@ public final class Camera {
 
 	public Camera setPitch(float pitch) {
 		if (orientation[1] != pitch) {
-			orientation[1] = pitch;
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				orientation[1] = pitch;
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -256,9 +286,11 @@ public final class Camera {
 
 	public Camera setOrientation(float[] newOrientation) {
 		if (orientation[0] != newOrientation[0] || orientation[1] != newOrientation[1]) {
-			orientation[0] = newOrientation[0];
-			orientation[1] = newOrientation[1];
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				orientation[0] = newOrientation[0];
+				orientation[1] = newOrientation[1];
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
