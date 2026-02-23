@@ -6,20 +6,23 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.RuneLite;
 import net.runelite.client.RuneLiteProperties;
 import net.runelite.client.externalplugins.ExternalPluginManager;
-import org.slf4j.LoggerFactory;
 import rs117.hd.utils.Props;
 
-@SuppressWarnings("unchecked")
 @Slf4j
+@SuppressWarnings("unchecked")
 public class HdPluginTest
 {
 	public static void main(String[] args) throws Exception
 	{
+		log.warn(
+			"If this is your first time using the HdPluginTest run configuration, " +
+			"this window will filter on WARN-level logging by default"
+		);
+
 		Props.DEVELOPMENT = true;
 		Props.set("rlhd.resource-path", "src/main/resources");
 		ClassLoader.getSystemClassLoader().setDefaultAssertionStatus(true);
 		useLatestPluginHub();
-		postLogFilterReminder();
 		ExternalPluginManager.loadBuiltin(HdPlugin.class);
 		RuneLite.main(args);
 	}
@@ -52,12 +55,5 @@ public class HdPluginTest
 				log.error("Failed to automatically use latest plugin-hub version", ex);
 			}
 		}
-	}
-
-	private static void postLogFilterReminder() {
-		LoggerFactory.getLogger("rs117.hd.FilterReminder").warn(
-			"If this is your first time this session using the HdPluginTest run-configuration, " +
-			"this window will filter on WARN-level logging until you reset the filter."
-		);
 	}
 }
