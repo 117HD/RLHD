@@ -4,12 +4,14 @@
  */
 package rs117.hd.scene.particles;
 
+import com.google.common.base.Stopwatch;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -114,10 +116,13 @@ public class ParticleManager {
 		emitterDefinitionManager.startup(onReload);
 		particleDefinitionLoader.startup(onReload);
 		applyConfig();
+		log.info("[Particles] Loaded: Textures(size={}, time={}ms), Definitions(size={}, time={}ms), Emitters(placements={}, objects={}, time={}ms)",
+			particleTextureLoader.getLastTextureCount(), particleTextureLoader.getLastLoadTimeMs(),
+			particleDefinitionLoader.getLastDefinitionCount(), particleDefinitionLoader.getLastLoadTimeMs(),
+			emitterDefinitionManager.getLastPlacements(), emitterDefinitionManager.getLastObjectBindings(), emitterDefinitionManager.getLastLoadTimeMs());
 	}
 
 	private void applyConfig() {
-		// Load both configs in a fixed order so placements always have definitions available (avoids "Unknown particleId" when only emitters was reloaded)
 		emitterDefinitionManager.loadFromDefaultPath();
 		particleDefinitionLoader.loadFromDefaultPath();
 		removeAllObjectSpawnedEmitters();
@@ -481,6 +486,7 @@ public class ParticleManager {
 
 			if (reloadObjectEmitters && !emitterDefinitionManager.getObjectEmittersByType().isEmpty()) {
 				reloadObjectEmitters = false;
+				Stopwatch sw = Stopwatch.createStarted();
 				for (Tile[][] plane : ctx.scene.getExtendedTiles()) {
 					for (Tile[] column : plane) {
 						for (Tile tile : column) {
@@ -498,6 +504,7 @@ public class ParticleManager {
 						}
 					}
 				}
+				log.debug("swapScene - Emitter placement: {} ms", sw.elapsed(TimeUnit.MILLISECONDS));
 			}
 			for (ParticleEmitter emitter : sceneEmitters) {
 				if (emittersCulledThisFrame.contains(emitter)) continue;

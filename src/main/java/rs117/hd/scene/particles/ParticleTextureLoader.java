@@ -41,12 +41,21 @@ public class ParticleTextureLoader {
 
 	private final Map<String, Integer> textureIds = new HashMap<>();
 
+	private int lastTextureCount;
+	private long lastLoadTimeMs;
+
+	public int getLastTextureCount() { return lastTextureCount; }
+	public long getLastLoadTimeMs() { return lastLoadTimeMs; }
+
 	/**
 	 * Preload all given texture names: load from disk and upload to GL. Call when particle config is loaded.
 	 * Existing preloaded textures are disposed first. Safe to call on client/GL thread.
 	 */
 	public void preload(List<String> textureNames) {
+		long start = System.nanoTime();
 		dispose();
+		lastTextureCount = 0;
+		lastLoadTimeMs = (System.nanoTime() - start) / 1_000_000;
 		if (textureNames == null) return;
 		for (String name : textureNames) {
 			if (name == null || name.isEmpty() || textureIds.containsKey(name)) continue;
@@ -59,6 +68,8 @@ public class ParticleTextureLoader {
 				log.warn("[Particles] Failed to preload texture: {}", name, e);
 			}
 		}
+		lastTextureCount = textureIds.size();
+		lastLoadTimeMs = (System.nanoTime() - start) / 1_000_000;
 	}
 
 	@Nullable

@@ -53,6 +53,14 @@ public class EmitterDefinitionManager {
 
 	private FileWatcher.UnregisterCallback watcher;
 
+	private int lastPlacements;
+	private int lastObjectBindings;
+	private long lastLoadTimeMs;
+
+	public int getLastPlacements() { return lastPlacements; }
+	public int getLastObjectBindings() { return lastObjectBindings; }
+	public long getLastLoadTimeMs() { return lastLoadTimeMs; }
+
 	/**
 	 * Load config and register file watcher for hot-reload. When config changes, reloads then runs {@code onReload} on the client thread.
 	 */
@@ -78,6 +86,7 @@ public class EmitterDefinitionManager {
 	 * Load from the given path (e.g. for tests or custom paths).
 	 */
 	private void loadConfig(Gson gson, ResourcePath configPath) {
+		long start = System.nanoTime();
 		try {
 			EmitterConfigEntry[] entries = configPath.loadJson(gson, EmitterConfigEntry[].class);
 			placements.clear();
@@ -110,6 +119,9 @@ public class EmitterDefinitionManager {
 					}
 				}
 			}
+			lastPlacements = placements.size();
+			lastObjectBindings = objectEmittersByType.size();
+			lastLoadTimeMs = (System.nanoTime() - start) / 1_000_000;
 		} catch (IOException ex) {
 			log.error("[Particles] Failed to load emitters.json from {}", configPath, ex);
 			placements.clear();

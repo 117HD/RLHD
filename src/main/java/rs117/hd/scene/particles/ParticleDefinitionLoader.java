@@ -50,6 +50,12 @@ public class ParticleDefinitionLoader {
 
 	private FileWatcher.UnregisterCallback watcher;
 
+	private int lastDefinitionCount;
+	private long lastLoadTimeMs;
+
+	public int getLastDefinitionCount() { return lastDefinitionCount; }
+	public long getLastLoadTimeMs() { return lastLoadTimeMs; }
+
 	/**
 	 * Load config and register file watcher for hot-reload. When config changes, reloads then runs {@code onReload} on the client thread.
 	 */
@@ -72,6 +78,7 @@ public class ParticleDefinitionLoader {
 	}
 
 	private void loadConfig(Gson gson, ResourcePath configPath) {
+		long start = System.nanoTime();
 		ParticleEmitterDefinition[] defs;
 		try {
 			defs = configPath.loadJson(gson, ParticleEmitterDefinition[].class);
@@ -100,6 +107,8 @@ public class ParticleDefinitionLoader {
 					? ordered.get(def.fallbackEmitterType) : null;
 			}
 		}
+		lastDefinitionCount = definitions.size();
+		lastLoadTimeMs = (System.nanoTime() - start) / 1_000_000;
 	}
 
 	@Nullable
