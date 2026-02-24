@@ -48,6 +48,10 @@ public class EmitterDefinitionManager {
 	@Getter
 	private final ListMultimap<Integer, String> objectEmittersByType = ArrayListMultimap.create();
 
+	/** Object id -> (particleId, offsetX, offsetY, offsetZ). Use this when spawning to apply offsets. */
+	@Getter
+	private final ListMultimap<Integer, ObjectEmitterBinding> objectBindingsByType = ArrayListMultimap.create();
+
 	@Getter
 	private final List<ParticleEmitter> definitionEmitters = new ArrayList<>();
 
@@ -86,7 +90,9 @@ public class EmitterDefinitionManager {
 			EmitterConfigEntry[] entries = EMITTERS_CONFIG_PATH.loadJson(plugin.getGson(), EmitterConfigEntry[].class);
 			placements.clear();
 			objectEmittersByType.clear();
+			objectBindingsByType.clear();
 			if (entries != null) {
+				var objects = gamevalManager.getObjects();
 				for (EmitterConfigEntry entry : entries) {
 					if (entry.particleId == null || entry.particleId.isEmpty()) continue;
 					String pid = entry.particleId.toUpperCase();
@@ -102,25 +108,42 @@ public class EmitterDefinitionManager {
 							}
 						}
 					}
-					if (entry.objectEmitters != null && gamevalManager.getObjects() != null) {
-						for (String name : entry.objectEmitters) {
-							if (name == null || name.isEmpty()) continue;
-							Integer id = gamevalManager.getObjects().get(name);
-							if (id != null)
-								objectEmittersByType.put(id, pid);
-							else
-								log.warn("[Particles] Unknown object gameval in emitters.json: {}", name);
+					if (objects != null) {
+						if (entry.objectEmitters != null) {
+							for (String name : entry.objectEmitters) {
+								if (name == null || name.isEmpty()) continue;
+								Integer id = objects.get(name);
+								if (id != null) {
+									objectEmittersByType.put(id, pid);
+									objectBindingsByType.put(id, new ObjectEmitterBinding(pid, 0, 0, 0));
+								} else {
+									log.warn("[Particles] Unknown object gameval in emitters.json: {}", name);
+								}
+							}
+						}
+						if (entry.objectProperties != null) {
+							for (ObjectEmitterProperty prop : entry.objectProperties) {
+								if (prop == null || prop.object == null || prop.object.isEmpty()) continue;
+								Integer id = objects.get(prop.object);
+								if (id != null) {
+									objectBindingsByType.put(id, new ObjectEmitterBinding(
+										pid, prop.offsetX, prop.offsetY, prop.offsetZ));
+								} else {
+									log.warn("[Particles] Unknown object gameval in objectProperties: {}", prop.object);
+								}
+							}
 						}
 					}
 				}
 			}
 			lastPlacements = placements.size();
-			lastObjectBindings = objectEmittersByType.size();
+			lastObjectBindings = objectBindingsByType.size();
 			lastLoadTimeMs = (System.nanoTime() - start) / 1_000_000;
 		} catch (IOException ex) {
 			log.error("[Particles] Failed to load emitters.json from {}", EMITTERS_CONFIG_PATH, ex);
 			placements.clear();
 			objectEmittersByType.clear();
+			objectBindingsByType.clear();
 		}
 	}
 

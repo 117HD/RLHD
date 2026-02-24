@@ -12,6 +12,9 @@ public class EmitterConfigEntry {
 	public int[][] placements;
 	@Nullable
 	public List<String> objectEmitters;
+	/** Object bindings with optional offset x,y,z from object position (like lights). */
+	@Nullable
+	public List<ObjectEmitterProperty> objectProperties;
 	@Nullable
 	public String description;
 	public String particleId;

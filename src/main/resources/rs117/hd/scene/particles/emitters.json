@@ -1,12 +1,12 @@
 [
   {
-    "placements": [
-      [2945, 3371, 0]
-    ],
     "objectEmitters": [
-      "FIRE"
+      "FAI_FALADOR_HOUSE_TORCH"
     ],
-    "description": "Lava / test area",
-    "particleId": "42"
+    "objectEmittersProps" : [
+      { "object": "FAI_FALADOR_HOUSE_TORCH", "offsetX": 0, "offsetY": 0, "offsetZ": 0 }
+    ],
+    "description": "TORCH",
+    "particleId": "133"
   }
 ]

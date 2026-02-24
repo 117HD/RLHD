@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.scene.particles.Particle;
 import rs117.hd.scene.particles.ParticleBuffer;
@@ -26,11 +27,24 @@ public class ParticleEmitter {
 	@Nullable
 	private WorldPoint worldPoint;
 
+	/** When set, position/height are taken from this object's local position and terrain height at that point. */
+	@Nullable
+	private TileObject tileObject;
+
 	@Nullable
 	private String particleId;
 
 	@Builder.Default
 	private float heightOffset = 50f;
+	/** Offset from world position in local X (applied when spawning). */
+	@Builder.Default
+	private float offsetX = 0f;
+	/** Offset from world position in local Z (applied when spawning). */
+	@Builder.Default
+	private float offsetY = 0f;
+	/** Offset from world position in height (applied when spawning). */
+	@Builder.Default
+	private float offsetZ = 0f;
 	@Builder.Default
 	private float directionYaw = 0f;
 	@Builder.Default
@@ -102,6 +116,14 @@ public class ParticleEmitter {
 
 	public ParticleEmitter heightOffset(float aboveGround) {
 		this.heightOffset = aboveGround;
+		return this;
+	}
+
+	/** Offset from object/world position (local X, local Z, height). Like lights. */
+	public ParticleEmitter positionOffset(float x, float z, float height) {
+		this.offsetX = x;
+		this.offsetY = z;
+		this.offsetZ = height;
 		return this;
 	}
 

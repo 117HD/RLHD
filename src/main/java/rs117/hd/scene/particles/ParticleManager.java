@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.coords.*;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.EventBus;
@@ -31,6 +31,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.particles.emitter.EmitterDefinitionManager;
 import rs117.hd.scene.particles.emitter.EmitterPlacement;
+import rs117.hd.scene.particles.emitter.ObjectEmitterBinding;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 import rs117.hd.scene.particles.emitter.ParticleEmitterDefinition;
 import rs117.hd.utils.HDUtils;
@@ -171,7 +172,7 @@ public class ParticleManager {
 	public void loadSceneParticles(@Nullable SceneContext ctx) {
 		removeAllObjectSpawnedEmitters();
 		recreateEmittersFromPlacements(ctx);
-		if (ctx == null || emitterDefinitionManager.getObjectEmittersByType().isEmpty()) return;
+		if (ctx == null || emitterDefinitionManager.getObjectBindingsByType().isEmpty()) return;
 		Stopwatch sw = Stopwatch.createStarted();
 		for (Tile[][] plane : ctx.scene.getExtendedTiles()) {
 			for (Tile[] column : plane) {
@@ -444,7 +445,7 @@ public class ParticleManager {
 	}
 
 	private void handleObjectSpawn(@Nonnull SceneContext sceneContext, @Nonnull TileObject tileObject) {
-		if (tileObject.getPlane() < 0 || emitterDefinitionManager.getObjectEmittersByType().isEmpty())
+		if (tileObject.getPlane() < 0 || emitterDefinitionManager.getObjectBindingsByType().isEmpty())
 			return;
 		int tileObjectId = tileObject.getId();
 		if (tileObject instanceof GameObject &&
@@ -460,15 +461,17 @@ public class ParticleManager {
 
 	private void spawnEmittersForObject(TileObject tileObject, int objectId) {
 		handleObjectDespawn(tileObject);
-		List<String> particleIds = emitterDefinitionManager.getObjectEmittersByType().get(objectId);
-		if (particleIds == null || particleIds.isEmpty()) return;
+		List<ObjectEmitterBinding> bindings = emitterDefinitionManager.getObjectBindingsByType().get(objectId);
+		if (bindings == null || bindings.isEmpty()) return;
 		WorldPoint wp = tileObject.getWorldLocation();
 		List<ParticleEmitter> created = new ArrayList<>();
-		for (String particleId : particleIds) {
-			ParticleEmitterDefinition def = particleDefinitionLoader.getDefinition(particleId);
+		for (ObjectEmitterBinding binding : bindings) {
+			ParticleEmitterDefinition def = particleDefinitionLoader.getDefinition(binding.getParticleId());
 			if (def == null) continue;
 			ParticleEmitter e = createEmitterFromDefinition(def, wp);
 			e.particleId(def.id);
+			e.positionOffset(binding.getOffsetX(), binding.getOffsetY(), binding.getOffsetZ());
+			e.setTileObject(tileObject);
 			sceneEmitters.add(e);
 			created.add(e);
 			if (def.texture != null && !def.texture.isEmpty())
@@ -586,7 +589,7 @@ public class ParticleManager {
 					float dy = spawnY - cy;
 					float dz = ez - cz;
 					tileCulled = dx * dx + dy * dy + dz * dz > maxDistSq
-						|| !HDUtils.isSphereIntersectingFrustum(ex, spawnY, ez, halfTile, frustum, frustumLen);
+								 || !HDUtils.isSphereIntersectingFrustum(ex, spawnY, ez, halfTile, frustum, frustumLen);
 					if (tileCulled && skipCulling) tileCulled = false;
 				}
 				if (tileCulled) {
