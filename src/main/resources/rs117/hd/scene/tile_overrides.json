@@ -7733,6 +7733,17 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "KARAMJA_KARAMBWAN_FIX_NO_BLENDING",
+    "area": "KARAMJA_KARAMBWAN_FIX",
+    "underlayIds": [
+      62
+    ],
+    "groundMaterial": "PLAIN_DIRT",
+    "replacements": {
+      "COMPLEX_TILES_KARAMJA": "blending"
+    }
+  },
+  {
     "name": "SHILO_VILLAGE_MINE_SURFACE_FIX",
     "area": "SHILO_VILLAGE_MINE_SURFACE",
     "groundMaterial": "ROCKY_CAVE_FLOOR",
