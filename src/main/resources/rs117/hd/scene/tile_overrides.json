@@ -122,6 +122,14 @@
     "maxLightness": 70
   },
   {
+    "name": "WINTER_SAND_BEACH",
+    "groundMaterial": "BEACH_SAND",
+    "maxHue": 6,
+    "maxSaturation": 1,
+    "shiftLightness": 40,
+    "maxLightness": 70
+  },
+  {
     "name": "WINTER_GRUNGE",
     "groundMaterial": "SNOW_2",
     "maxHue": 0,
@@ -6939,50 +6947,63 @@
     "name": "CATHERBY_BEACH_SAND_OVERLAY",
     "area": "CATHERBY",
     "overlayIds": [ 25 ],
-    "groundMaterial": "SAND_4",
-    "maxLightness": 60
+    "groundMaterial": "BEACH_SAND",
+    "maxLightness": 60,
+    "replacements": {
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "SOUTH_CATHERBY_SAND_EXTENSION",
     "area": "SOUTH_CATHERBY_SEASON_FIX",
     "overlayIds": [ 25 ],
-    "groundMaterial": "SAND_4",
-    "maxLightness": 65
+    "groundMaterial": "BEACH_SAND",
+    "maxLightness": 65,
+    "replacements": {
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "SOUTH_CATHERBY_SAND_EXTENSION",
     "area": "SOUTH_CATHERBY_SEASON_FIX_EDGE",
     "underlayIds": [ 62 ],
-    "groundMaterial": "SAND_4",
+    "groundMaterial": "BEACH_SAND",
     "maxLightness": 65,
     "minLightness": 52,
     "shiftLightness": 4,
     "setSaturation": 3,
-    "setHue": 8
+    "setHue": 8,
+    "replacements": {
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
+    }
   },
   {
-    "name": "CATHERBY_BEACH_SAND",
+    "name": "CATHERBY_BEACH_SAND_COLOR_FIX",
     "area": "CATHERBY_SAND_COLOR_FIX",
-    "groundMaterial": "SAND_4",
+    "groundMaterial": "BEACH_SAND",
     "maxLightness": 55,
     "setSaturation": 3,
     "setHue": 8,
     "shiftLightness": 2,
     "underlayIds": [
       62
-    ]
+    ],
+    "replacements": {
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "CATHERBY_BEACH_SAND",
     "area": "CATHERBY",
-    "groundMaterial": "SAND_4",
+    "groundMaterial": "BEACH_SAND",
     "maxLightness": 55,
     "underlayIds": [
       62
     ],
     "replacements": {
       "SEASONAL_GRASS": "h >= 9 || h == 8 && s > 5",
-      "SEASONAL_DIRT": "h < 8 && s > 4 && l < 45"
+      "SEASONAL_DIRT": "h < 8 && s > 4 && l < 45",
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
     }
   },
   {
