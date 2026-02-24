@@ -336,6 +336,12 @@ public class SceneManager {
 		task -> lightManager.loadSceneLights(nextSceneContext)
 	);
 
+	@Getter
+	private final GenericJob loadSceneParticlesTask = GenericJob.build(
+		"ParticleManager::loadSceneParticles",
+		task -> particleManager.loadSceneParticles(nextSceneContext)
+	);
+
 	private final GenericJob calculateRoofChangesTask = GenericJob.build(
 		"calculateRoofChanges",
 		(task) -> {
@@ -423,13 +429,14 @@ public class SceneManager {
 			}
 
 			environmentManager.loadSceneEnvironments(nextSceneContext);
-			particleManager.loadSceneParticles(nextSceneContext);
 
 			loadSceneLightsTask.cancel();
+			loadSceneParticlesTask.cancel();
 			calculateRoofChangesTask.cancel();
 
 			generateSceneDataTask.queue();
 			loadSceneLightsTask.queue();
+			loadSceneParticlesTask.queue();
 
 			if (nextSceneContext.enableAreaHiding) {
 				assert nextSceneContext.sceneBase != null;
@@ -614,6 +621,7 @@ public class SceneManager {
 
 		// Handle object spawns that must be processed on the client thread
 		loadSceneLightsTask.waitForCompletion();
+		loadSceneParticlesTask.waitForCompletion();
 		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
 
 		for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)
