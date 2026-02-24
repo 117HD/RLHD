@@ -109,7 +109,7 @@ public class ParticleGizmoOverlay extends Overlay implements MouseListener {
 		float[] point = new float[4];
 		hovers.clear();
 
-		for (ParticleEmitter em : particleManager.getEmitters()) {
+		for (ParticleEmitter em : particleManager.getSceneEmitters()) {
 			WorldPoint wp = em.getWorldPoint();
 			if (wp == null || wp.getPlane() != currentPlane) continue;
 			var optLocal = ctx.worldToLocals(wp).findFirst();

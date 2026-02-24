@@ -210,7 +210,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.leftFont(boldFont)
 				.left("Particle stats:")
 				.build());
-			int totalEmitters = particleManager.getEmitters().size();
+			int totalEmitters = particleManager.getSceneEmitters().size();
 			children.add(LineComponent.builder()
 				.left("Emitters Updating:")
 				.right(String.format("%d/%d", particleManager.getLastEmittersUpdating(), totalEmitters))

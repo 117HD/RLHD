@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2025, Mark7625 (https://github.com/Mark7625/)
  * All rights reserved.
  */
 package rs117.hd.scene.particles;

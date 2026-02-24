@@ -4,7 +4,6 @@
  */
 package rs117.hd.renderer.zone.pass.impl;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -25,8 +24,8 @@ import rs117.hd.renderer.zone.pass.ScenePass;
 import rs117.hd.renderer.zone.pass.ScenePassContext;
 import rs117.hd.scene.particles.Particle;
 import rs117.hd.scene.particles.ParticleManager;
+import rs117.hd.scene.particles.ParticleTextureLoader;
 import rs117.hd.utils.HDUtils;
-import rs117.hd.utils.ResourcePath;
 import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 import static org.lwjgl.opengl.GL15.glUnmapBuffer;
 import static org.lwjgl.opengl.GL30.GL_MAP_INVALIDATE_RANGE_BIT;
@@ -57,6 +56,9 @@ public class ParticlePass implements ScenePass {
 	private ParticleManager particleManager;
 
 	@Inject
+	private ParticleTextureLoader particleTextureLoader;
+
+	@Inject
 	private ParticleShaderProgram particleProgram;
 
 	private int vaoParticles;
@@ -65,9 +67,7 @@ public class ParticlePass implements ScenePass {
 	private FloatBuffer particleStagingBuffer;
 	private final float[] particleDistSq = new float[MAX_PARTICLES];
 	private final Integer[] particleSortOrder = new Integer[MAX_PARTICLES];
-	private int particleTextureId;
 	private int whiteParticleTextureId;
-	private String loadedParticleTexturePath;
 
 	@Getter
 	private int lastParticleTotalOnPlane;
@@ -124,7 +124,6 @@ public class ParticlePass implements ScenePass {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		particleTextureId = whiteParticleTextureId;
 	}
 
 	public void destroy() {
@@ -141,15 +140,11 @@ public class ParticlePass implements ScenePass {
 			vboParticleInstances = 0;
 		}
 		particleStagingBuffer = null;
-		if (particleTextureId != 0 && particleTextureId != whiteParticleTextureId) {
-			glDeleteTextures(particleTextureId);
-			particleTextureId = 0;
-		}
+		particleTextureLoader.dispose();
 		if (whiteParticleTextureId != 0) {
 			glDeleteTextures(whiteParticleTextureId);
 			whiteParticleTextureId = 0;
 		}
-		loadedParticleTexturePath = null;
 	}
 
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
@@ -179,9 +174,10 @@ public class ParticlePass implements ScenePass {
 			renderState.disable.set(GL_CULL_FACE);
 			renderState.depthMask.set(false);
 			renderState.apply();
-			ensureParticleTextureLoaded();
+			Integer textureId = particleTextureLoader.getTextureId(particleManager.getTexturePath());
+			int idToBind = (textureId != null && textureId != 0) ? textureId : whiteParticleTextureId;
 			glActiveTexture(TEXTURE_UNIT_PARTICLE);
-			glBindTexture(GL_TEXTURE_2D, particleTextureId);
+			glBindTexture(GL_TEXTURE_2D, idToBind);
 			particleProgram.setParticleTextureUnit(TEXTURE_UNIT_PARTICLE);
 			glBindVertexArray(vaoParticles);
 			ctx.beginTimer(Timer.RENDER_PARTICLES);
@@ -196,56 +192,8 @@ public class ParticlePass implements ScenePass {
 		ctx.getRenderState().depthMask.set(true);
 	}
 
-	private void ensureParticleTextureLoaded() {
-		ResourcePath resPath = particleManager.getTextureResourcePath();
-		String path = particleManager.getTexturePath();
-		if (resPath == null || path == null || path.isEmpty()) {
-			if (particleTextureId != whiteParticleTextureId && particleTextureId != 0) {
-				glDeleteTextures(particleTextureId);
-				particleTextureId = whiteParticleTextureId;
-			}
-			loadedParticleTexturePath = null;
-			return;
-		}
-		if (path.equals(loadedParticleTexturePath) && particleTextureId != 0)
-			return;
-		try {
-			BufferedImage img = resPath.loadImage();
-			int w = img.getWidth();
-			int h = img.getHeight();
-			if (particleTextureId != 0 && particleTextureId != whiteParticleTextureId)
-				glDeleteTextures(particleTextureId);
-			particleTextureId = glGenTextures();
-			glActiveTexture(TEXTURE_UNIT_PARTICLE);
-			glBindTexture(GL_TEXTURE_2D, particleTextureId);
-			ByteBuffer pixels = BufferUtils.createByteBuffer(w * h * 4);
-			for (int y = h - 1; y >= 0; y--)
-				for (int x = 0; x < w; x++) {
-					int argb = img.getRGB(x, y);
-					pixels.put((byte) ((argb >> 16) & 0xFF));
-					pixels.put((byte) ((argb >> 8) & 0xFF));
-					pixels.put((byte) (argb & 0xFF));
-					pixels.put((byte) ((argb >> 24) & 0xFF));
-				}
-			pixels.flip();
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			loadedParticleTexturePath = path;
-		} catch (IOException ex) {
-			log.warn("[Particles] Failed to load texture: {}", path, ex);
-			if (particleTextureId != 0 && particleTextureId != whiteParticleTextureId) {
-				glDeleteTextures(particleTextureId);
-				particleTextureId = whiteParticleTextureId;
-			}
-			loadedParticleTexturePath = null;
-		}
-	}
-
 	private int uploadParticles(int currentPlane) {
-		List<Particle> particles = particleManager.getParticles();
+		List<Particle> particles = particleManager.getSceneParticles();
 		particleStagingBuffer.clear();
 		lastParticleTotalOnPlane = 0;
 		lastParticleCulledDistance = 0;

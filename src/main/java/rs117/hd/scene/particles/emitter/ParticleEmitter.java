@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2025, Mark7625 (https://github.com/Mark7625/)
  * All rights reserved.
  */
 package rs117.hd.scene.particles.emitter;
@@ -235,8 +235,9 @@ public class ParticleEmitter {
 		out[2] = cos(yaw) * cp;
 	}
 
-	public boolean spawn(Particle into, float originLocalX, float originLocalY, float originLocalZ, int plane) {
-		if (!isActive()) return false;
+	@Nullable
+	public Particle spawn(float originLocalX, float originLocalY, float originLocalZ, int plane) {
+		if (!isActive()) return null;
 
 		ThreadLocalRandom rng = ThreadLocalRandom.current();
 		randomDirectionFromRanges(TMP_DIR, rng);
@@ -249,6 +250,7 @@ public class ParticleEmitter {
 		float life = particleLifeMin + (particleLifeMax - particleLifeMin) * rng.nextFloat();
 		float size = sizeMin + (sizeMax - sizeMin) * rng.nextFloat();
 
+		Particle into = new Particle();
 		into.setPosition(originLocalX, originLocalY, originLocalZ);
 		into.setVelocity(vx, vy, vz);
 		into.life = life;
@@ -274,7 +276,7 @@ public class ParticleEmitter {
 		into.targetColor = targetColor;
 		into.colorTransitionPct = colorTransitionPct;
 		into.alphaTransitionPct = alphaTransitionPct;
-		return true;
+		return into;
 	}
 
 	public int advanceEmission(float dt) {

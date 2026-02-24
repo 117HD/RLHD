@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2025, Mark7625 (https://github.com/Mark7625/)
  * All rights reserved.
  */
 package rs117.hd.scene.particles.emitter;
@@ -52,6 +52,8 @@ public class ParticleEmitterDefinition {
 	public int emissionCycleDuration = -1;
 	public boolean loopEmission = true;
 	public int fallbackEmitterType = -1;
+	@Nullable
+	public ParticleEmitterDefinition fallbackDefinition;
 	public int targetColourArgb;
 	public int minGraphicsQuality;
 	public int colourTransitionPercent = 100;
@@ -67,7 +69,6 @@ public class ParticleEmitterDefinition {
 	public boolean useSceneAmbientLight = true;
 	public boolean collidesWithObjects;
 	public boolean clipToTerrain = true;
-	/** When true, emitter is never culled (e.g. for weather/snow high above camera). */
 	public boolean displayWhenCulled = false;
 
 	public int spreadYawMinDecoded, spreadYawMaxDecoded, spreadPitchMinDecoded, spreadPitchMaxDecoded;
