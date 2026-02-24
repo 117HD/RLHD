@@ -50,18 +50,17 @@ public class ParticleDefinitionLoader {
 
 	private FileWatcher.UnregisterCallback watcher;
 
+	@Getter
 	private int lastDefinitionCount;
+	@Getter
 	private long lastLoadTimeMs;
-
-	public int getLastDefinitionCount() { return lastDefinitionCount; }
-	public long getLastLoadTimeMs() { return lastLoadTimeMs; }
 
 	/**
 	 * Load config and register file watcher for hot-reload. When config changes, reloads then runs {@code onReload} on the client thread.
 	 */
 	public void startup(Runnable onReload) {
 		watcher = PARTICLES_CONFIG_PATH.watch((path, first) -> {
-			loadConfig(plugin.getGson(), path);
+			loadConfig();
 			clientThread.invoke(onReload);
 		});
 	}
@@ -73,17 +72,14 @@ public class ParticleDefinitionLoader {
 		}
 	}
 
-	public void loadFromDefaultPath() {
-		loadConfig(plugin.getGson(), PARTICLES_CONFIG_PATH);
-	}
 
-	private void loadConfig(Gson gson, ResourcePath configPath) {
+	public void loadConfig() {
 		long start = System.nanoTime();
 		ParticleEmitterDefinition[] defs;
 		try {
-			defs = configPath.loadJson(gson, ParticleEmitterDefinition[].class);
+			defs = PARTICLES_CONFIG_PATH.loadJson(plugin.getGson(), ParticleEmitterDefinition[].class);
 		} catch (IOException ex) {
-			log.error("[Particles] Failed to load particles.json from {}", configPath, ex);
+			log.error("[Particles] Failed to load particles.json from {}", PARTICLES_CONFIG_PATH, ex);
 			return;
 		}
 		definitions.clear();
@@ -139,7 +135,4 @@ public class ParticleDefinitionLoader {
 		return null;
 	}
 
-	public static ResourcePath getParticlesConfigPath() {
-		return PARTICLES_CONFIG_PATH;
-	}
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -74,10 +75,8 @@ public class ParticleManager {
 	@Getter
 	private final Set<ParticleEmitter> emittersCulledThisFrame = new HashSet<>();
 
-	private boolean reloadObjectEmitters;
-
 	@Getter
-	private int lastEmittersUpdating,lastEmittersCulled;
+	private int lastEmittersUpdating, lastEmittersCulled;
 
 	public void addEmitter(ParticleEmitter emitter) {
 		if (emitter != null && !sceneEmitters.contains(emitter))
@@ -111,6 +110,31 @@ public class ParticleManager {
 		emittersByTileObject.clear();
 	}
 
+	public void loadSceneParticles(@Nullable SceneContext ctx) {
+		removeAllObjectSpawnedEmitters();
+		recreateEmittersFromPlacements(ctx);
+		if (ctx == null || emitterDefinitionManager.getObjectEmittersByType().isEmpty()) return;
+		Stopwatch sw = Stopwatch.createStarted();
+		for (Tile[][] plane : ctx.scene.getExtendedTiles()) {
+			for (Tile[] column : plane) {
+				for (Tile tile : column) {
+					if (tile == null) continue;
+					DecorativeObject deco = tile.getDecorativeObject();
+					if (deco != null) handleObjectSpawn(ctx, deco);
+					WallObject wall = tile.getWallObject();
+					if (wall != null) handleObjectSpawn(ctx, wall);
+					GroundObject ground = tile.getGroundObject();
+					if (ground != null && ground.getRenderable() != null) handleObjectSpawn(ctx, ground);
+					for (GameObject go : tile.getGameObjects()) {
+						if (go == null || go.getRenderable() instanceof Actor) continue;
+						handleObjectSpawn(ctx, go);
+					}
+				}
+			}
+		}
+		log.info("Finished loading scene particle emitters (count={}, took={}ms)", sceneEmitters.size(), sw.elapsed(TimeUnit.MILLISECONDS));
+	}
+
 	private void loadConfig() {
 		Runnable onReload = () -> clientThread.invoke(this::applyConfig);
 		emitterDefinitionManager.startup(onReload);
@@ -123,33 +147,57 @@ public class ParticleManager {
 	}
 
 	private void applyConfig() {
-		emitterDefinitionManager.loadFromDefaultPath();
-		particleDefinitionLoader.loadFromDefaultPath();
-		removeAllObjectSpawnedEmitters();
+		emitterDefinitionManager.loadConfig();
+		particleDefinitionLoader.loadConfig();
 		particleTextureLoader.preload(particleDefinitionLoader.getAvailableTextureNames());
-		recreateEmittersFromPlacements();
-		reloadObjectEmitters = true;
+		loadSceneParticles(plugin.getSceneContext());
 	}
 
-	public void recreateEmittersFromPlacements() {
-		List<ParticleEmitter> definitionEmitters = emitterDefinitionManager.getDefinitionEmitters();
-		sceneEmitters.removeAll(definitionEmitters);
-		definitionEmitters.clear();
-		particleTextureLoader.setTexturePath(particleDefinitionLoader.getDefaultTexturePath());
-		Map<String, ParticleEmitterDefinition> definitions = particleDefinitionLoader.getDefinitions();
-		List<EmitterPlacement> placements = emitterDefinitionManager.getPlacements();
+	public void recreateEmittersFromPlacements(@Nullable SceneContext ctx) {
+		final List<ParticleEmitter> definitionEmitters = emitterDefinitionManager.getDefinitionEmitters();
+		if (!definitionEmitters.isEmpty()) {
+			sceneEmitters.removeAll(definitionEmitters);
+			definitionEmitters.clear();
+		}
+
+		particleTextureLoader.setActiveTextureName(particleDefinitionLoader.getDefaultTexturePath());
+
+		final Map<String, ParticleEmitterDefinition> definitions = particleDefinitionLoader.getDefinitions();
+		if (definitions.isEmpty()) {
+			log.debug("[Particles] No particle definitions loaded, skipping emitter recreation.");
+			return;
+		}
+
+		final List<EmitterPlacement> placements = emitterDefinitionManager.getPlacements();
+		if (placements.isEmpty()) {
+			return;
+		}
+
+		final boolean checkBounds = ctx != null;
+		final var bounds = checkBounds ? ctx.sceneBounds : null;
+
 		for (EmitterPlacement place : placements) {
-			String pid = place.particleId != null ? place.particleId.toUpperCase() : null;
-			ParticleEmitterDefinition def = definitions.get(pid);
-			if (def == null) {
-				log.warn("[Particles] Unknown particleId in emitters.json: {}", place.particleId);
+			if (place.particleId == null) {
 				continue;
 			}
-			WorldPoint wp = new WorldPoint(place.worldX, place.worldY, place.plane);
-			ParticleEmitter e = createEmitterFromDefinition(def, wp);
-			e.particleId(def.id);
-			sceneEmitters.add(e);
-			definitionEmitters.add(e);
+
+			final String pid = place.particleId.toUpperCase();
+			final ParticleEmitterDefinition def = definitions.get(pid);
+			if (def == null) {
+				continue;
+			}
+
+			final WorldPoint wp = new WorldPoint(place.worldX, place.worldY, place.plane);
+
+			if (checkBounds && !bounds.contains(wp)) {
+				continue;
+			}
+
+			final ParticleEmitter emitter = createEmitterFromDefinition(def, wp);
+			emitter.particleId(def.id);
+
+			sceneEmitters.add(emitter);
+			definitionEmitters.add(emitter);
 		}
 	}
 
@@ -258,7 +306,7 @@ public class ParticleManager {
 		emitter.setDefinition(def);
 		emitter.setEmissionTime(client.getGameCycle(), def.emissionCycleDuration, def.emissionTimeThreshold, def.emitOnlyBeforeTime, def.loopEmission);
 		if (def.texture != null && !def.texture.isEmpty())
-			particleTextureLoader.setTexturePath(def.texture);
+			particleTextureLoader.setActiveTextureName(def.texture);
 	}
 
 	public List<EmitterPlacement> getPlacements() {
@@ -266,29 +314,12 @@ public class ParticleManager {
 	}
 
 	@Nullable
-	public String getTexturePath() {
-		return particleTextureLoader.getTexturePath();
-	}
-
-	@Nullable
-	public ResourcePath getTextureResourcePath() {
-		return particleTextureLoader.getTextureResourcePath();
-	}
-
-	public static ResourcePath getParticleTexturesPath() {
-		return ParticleTextureLoader.getParticleTexturesPath();
+	public String getActiveTextureName() {
+		return particleTextureLoader.getActiveTextureName();
 	}
 
 	public List<String> getAvailableTextureNames() {
 		return particleDefinitionLoader.getAvailableTextureNames();
-	}
-
-	public static ResourcePath getParticlesConfigPath() {
-		return ParticleDefinitionLoader.getParticlesConfigPath();
-	}
-
-	public static ResourcePath getEmittersConfigPath() {
-		return EmitterDefinitionManager.getEmittersConfigPath();
 	}
 
 	public ParticleEmitter placeEmitter(WorldPoint worldPoint) {
@@ -318,7 +349,7 @@ public class ParticleManager {
 		if (player == null) return 0;
 		WorldPoint base = player.getWorldLocation();
 		int count = 0;
-		for (int i = 0; i < ids.length && i < offsets.length; i++) {
+		for (int i = 0; i < ids.length; i++) {
 			ParticleEmitter e = spawnEmitterFromDefinition(ids[i], base.dx(offsets[i][0]).dy(offsets[i][1]));
 			if (e != null) count++;
 		}
@@ -382,7 +413,7 @@ public class ParticleManager {
 			sceneEmitters.add(e);
 			created.add(e);
 			if (def.texture != null && !def.texture.isEmpty())
-				particleTextureLoader.setTexturePath(def.texture);
+				particleTextureLoader.setActiveTextureName(def.texture);
 		}
 		if (!created.isEmpty())
 			emittersByTileObject.put(tileObject, created);
@@ -484,28 +515,6 @@ public class ParticleManager {
 			lastEmittersCulled = emittersCulledThisFrame.size();
 			lastEmittersUpdating = sceneEmitters.size() - lastEmittersCulled;
 
-			if (reloadObjectEmitters && !emitterDefinitionManager.getObjectEmittersByType().isEmpty()) {
-				reloadObjectEmitters = false;
-				Stopwatch sw = Stopwatch.createStarted();
-				for (Tile[][] plane : ctx.scene.getExtendedTiles()) {
-					for (Tile[] column : plane) {
-						for (Tile tile : column) {
-							if (tile == null) continue;
-							DecorativeObject deco = tile.getDecorativeObject();
-							if (deco != null) handleObjectSpawn(ctx, deco);
-							WallObject wall = tile.getWallObject();
-							if (wall != null) handleObjectSpawn(ctx, wall);
-							GroundObject ground = tile.getGroundObject();
-							if (ground != null && ground.getRenderable() != null) handleObjectSpawn(ctx, ground);
-							for (GameObject go : tile.getGameObjects()) {
-								if (go == null || go.getRenderable() instanceof Actor) continue;
-								handleObjectSpawn(ctx, go);
-							}
-						}
-					}
-				}
-				log.debug("swapScene - Emitter placement: {} ms", sw.elapsed(TimeUnit.MILLISECONDS));
-			}
 			for (ParticleEmitter emitter : sceneEmitters) {
 				if (emittersCulledThisFrame.contains(emitter)) continue;
 				WorldPoint wp = emitter.getWorldPoint();

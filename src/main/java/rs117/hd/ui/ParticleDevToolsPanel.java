@@ -618,7 +618,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 		if (chosen == null) return;
 		def.minColourArgb = fromColorToArgb(chosen);
 		minColourButton.setBackground(chosen);
-		plugin.getParticleManager().recreateEmittersFromPlacements();
+		plugin.getParticleManager().recreateEmittersFromPlacements(null);
 	}
 
 	private void chooseMaxColour() {
@@ -628,7 +628,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 		if (chosen == null) return;
 		def.maxColourArgb = fromColorToArgb(chosen);
 		maxColourButton.setBackground(chosen);
-		plugin.getParticleManager().recreateEmittersFromPlacements();
+		plugin.getParticleManager().recreateEmittersFromPlacements(null);
 	}
 
 	private void chooseTargetColour() {
@@ -641,7 +641,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 		def.colourTransitionPercent = ((Number) colorTransitionSpinner.getValue()).intValue();
 		def.alphaTransitionPercent = ((Number) alphaTransitionSpinner.getValue()).intValue();
 		targetColourButton.setBackground(chosen);
-		plugin.getParticleManager().recreateEmittersFromPlacements();
+		plugin.getParticleManager().recreateEmittersFromPlacements(null);
 	}
 
 	@Nullable
@@ -752,6 +752,6 @@ public class ParticleDevToolsPanel extends PluginPanel {
 		def.initialSpawnCount = ((Number) initialSpawnSpinner.getValue()).intValue();
 		Object texObj = textureCombo.getSelectedItem();
 		def.texture = (texObj != null && !texObj.toString().trim().isEmpty()) ? texObj.toString().trim() : null;
-		plugin.getParticleManager().recreateEmittersFromPlacements();
+		plugin.getParticleManager().recreateEmittersFromPlacements(null);
 	}
 }

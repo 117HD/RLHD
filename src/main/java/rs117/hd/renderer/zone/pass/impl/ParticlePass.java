@@ -174,7 +174,7 @@ public class ParticlePass implements ScenePass {
 			renderState.disable.set(GL_CULL_FACE);
 			renderState.depthMask.set(false);
 			renderState.apply();
-			Integer textureId = particleTextureLoader.getTextureId(particleManager.getTexturePath());
+			Integer textureId = particleTextureLoader.getTextureId(particleManager.getActiveTextureName());
 			int idToBind = (textureId != null && textureId != 0) ? textureId : whiteParticleTextureId;
 			glActiveTexture(TEXTURE_UNIT_PARTICLE);
 			glBindTexture(GL_TEXTURE_2D, idToBind);

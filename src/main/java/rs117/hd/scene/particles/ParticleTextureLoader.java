@@ -23,7 +23,7 @@ import static rs117.hd.utils.ResourcePath.path;
 import static org.lwjgl.opengl.GL33C.*;
 
 /**
- * Holds the particle textures folder path, the current texture filename used for rendering,
+ * Holds the particle textures folder path, the active texture name used for rendering,
  * and a preloaded map of texture name → GL texture id so textures are not loaded on demand during draw.
  */
 @Slf4j
@@ -37,7 +37,7 @@ public class ParticleTextureLoader {
 
 	@Getter
 	@Setter
-	private String texturePath;
+	private String activeTextureName;
 
 	private final Map<String, Integer> textureIds = new HashMap<>();
 
@@ -111,9 +111,9 @@ public class ParticleTextureLoader {
 
 	@Nullable
 	public ResourcePath getTextureResourcePath() {
-		if (texturePath == null || texturePath.isEmpty())
+		if (activeTextureName == null || activeTextureName.isEmpty())
 			return null;
-		return PARTICLE_TEXTURES_PATH.resolve(texturePath);
+		return PARTICLE_TEXTURES_PATH.resolve(activeTextureName);
 	}
 
 	public static ResourcePath getParticleTexturesPath() {

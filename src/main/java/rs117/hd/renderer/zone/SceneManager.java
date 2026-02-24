@@ -81,6 +81,9 @@ public class SceneManager {
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
+	private rs117.hd.scene.particles.ParticleManager particleManager;
+
+	@Inject
 	private FrameTimer frameTimer;
 
 	private RenderState renderState;
@@ -420,6 +423,7 @@ public class SceneManager {
 			}
 
 			environmentManager.loadSceneEnvironments(nextSceneContext);
+			particleManager.loadSceneParticles(nextSceneContext);
 
 			loadSceneLightsTask.cancel();
 			calculateRoofChangesTask.cancel();
