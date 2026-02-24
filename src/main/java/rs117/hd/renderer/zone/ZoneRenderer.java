@@ -183,6 +183,9 @@ public class ZoneRenderer implements Renderer {
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(renderState, uboWorldViews);
 		modelStreamingManager.initialize();
+
+		sceneCamera.setDirty();
+		directionalCamera.setDirty();
 	}
 
 	@Override
