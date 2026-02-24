@@ -303,6 +303,24 @@ public class ParticleManager {
 		return e;
 	}
 
+	public int spawnPerformanceTestEmitters() {
+		String[] ids = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+		int[][] offsets = {
+			{ 0, 0 }, { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 },
+			{ 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 2, 0 }
+		};
+		Player player = client.getLocalPlayer();
+		if (player == null) return 0;
+		WorldPoint base = player.getWorldLocation();
+		int count = 0;
+		for (int i = 0; i < ids.length && i < offsets.length; i++) {
+			ParticleEmitter e = spawnEmitterFromDefinition(ids[i], base.dx(offsets[i][0]).dy(offsets[i][1]));
+			if (e != null) count++;
+		}
+		log.info("[Particles] Performance test: spawned {} emitters around player", count);
+		return count;
+	}
+
 	private int getImpostorId(TileObject tileObject) {
 		ObjectComposition def = client.getObjectDefinition(tileObject.getId());
 		if (def == null) return tileObject.getId();

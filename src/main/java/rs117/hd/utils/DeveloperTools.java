@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.Keybind;
@@ -183,6 +184,13 @@ public class DeveloperTools implements KeyListener {
 				break;
 			case "culling":
 				plugin.freezeCulling = !plugin.freezeCulling;
+				break;
+			case "pt":
+				clientThread.invoke(() -> {
+					int n = plugin.getParticleManager().spawnPerformanceTestEmitters();
+					plugin.client.addChatMessage(ChatMessageType.GAMEMESSAGE, "117 HD",
+						"<col=ffff00>[117 HD] Spawned " + n + " particle test emitters.</col>", "117 HD");
+				});
 				break;
 		}
 	}
