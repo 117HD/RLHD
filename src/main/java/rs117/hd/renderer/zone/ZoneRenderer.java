@@ -24,10 +24,8 @@
  */
 package rs117.hd.renderer.zone;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -39,14 +37,12 @@ import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.ShadowMode;
-import rs117.hd.opengl.shader.ParticleShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -56,15 +52,16 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.renderer.zone.pass.impl.ParticlePass;
+import rs117.hd.renderer.zone.pass.ScenePass;
+import rs117.hd.renderer.zone.pass.ScenePassContext;
+import rs117.hd.renderer.zone.pass.ScenePassListener;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.lights.Light;
-import rs117.hd.scene.particles.Particle;
-import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.utils.Camera;
-import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
@@ -79,16 +76,11 @@ import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
-import static org.lwjgl.opengl.GL15.glUnmapBuffer;
-import static org.lwjgl.opengl.GL30.GL_MAP_INVALIDATE_RANGE_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_WRITE_BIT;
-import static org.lwjgl.opengl.GL30.glMapBufferRange;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_PARTICLE;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -146,41 +138,23 @@ public class ZoneRenderer implements Renderer {
 	private ShadowShaderProgram.Detailed detailedShadowProgram;
 
 	@Inject
-	private ParticleShaderProgram particleProgram;
-
-	@Inject
-	private ParticleManager particleManager;
-
-	@Inject
 	private JobSystem jobSystem;
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
-	private static final int MAX_PARTICLES = 4096;
-	private static final int QUAD_VERTS = 6;
-	private static final int FLOATS_PER_INSTANCE = 8;
-	// Quad as two triangles: BL->BR->TR and BL->TR->TL
-	private static final float[] PARTICLE_QUAD_CORNERS = {
-		-1, -1,  1, -1,  1, 1,
-		-1, -1,  1, 1,  -1, 1
-	};
-	private int vaoParticles;
-	private int vboParticleQuad;
-	private int vboParticleInstances;
-	private FloatBuffer particleStagingBuffer;
-	private final float[] particleDistSq = new float[MAX_PARTICLES];
-	private final Integer[] particleSortOrder = new Integer[MAX_PARTICLES];
-	private int particleTextureId;
-	/** Last-frame particle cull stats for overlay (total on plane, culled by distance, culled by frustum, drawn). */
-	private int lastParticleTotalOnPlane;
-	private int lastParticleCulledDistance;
-	private int lastParticleCulledFrustum;
-	private int lastParticleDrawn;
-	private int whiteParticleTextureId;
-	private String loadedParticleTexturePath;
+	@Inject
+	private ParticlePass particlePass;
+
+	private ScenePass[] scenePasses;
+	private final List<ScenePassListener> scenePassListeners = new ArrayList<>();
 
 	public final Camera sceneCamera = new Camera();
+
+	/** Register a listener for before/after the scene pass loop (e.g. from another component's startUp). */
+	public void addScenePassListener(ScenePassListener listener) {
+		scenePassListeners.add(listener);
+	}
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
@@ -216,7 +190,11 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initialize() {
 		initializeBuffers();
-		initializeParticleBuffers();
+		scenePasses = new ScenePass[] { particlePass };
+		java.util.Arrays.sort(scenePasses, ScenePass.ORDER_COMPARATOR);
+		for (ScenePass pass : scenePasses) {
+			pass.initialize();
+		}
 
 		SceneUploader.POOL = new ConcurrentPool<>(plugin.getInjector(), SceneUploader.class);
 		FacePrioritySorter.POOL = new ConcurrentPool<>(plugin.getInjector(), FacePrioritySorter.class);
@@ -233,7 +211,13 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void destroy() {
 		destroyBuffers();
-		destroyParticleBuffers();
+		if (scenePasses != null) {
+			for (ScenePass pass : scenePasses) {
+				pass.destroy();
+			}
+			scenePasses = null;
+		}
+		scenePassListeners.clear();
 
 		jobSystem.shutDown();
 		modelStreamingManager.destroy();
@@ -263,7 +247,11 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
-		particleProgram.compile(includes);
+		if (scenePasses != null) {
+			for (ScenePass pass : scenePasses) {
+				pass.initializeShaders(includes);
+			}
+		}
 	}
 
 	@Override
@@ -271,7 +259,11 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
-		particleProgram.destroy();
+		if (scenePasses != null) {
+			for (ScenePass pass : scenePasses) {
+				pass.destroyShaders();
+			}
+		}
 	}
 
 	private void initializeBuffers() {
@@ -296,195 +288,10 @@ public class ZoneRenderer implements Renderer {
 		indirectDrawCmdsStaging = null;
 	}
 
-	private void initializeParticleBuffers() {
-		vaoParticles = glGenVertexArrays();
-		vboParticleQuad = glGenBuffers();
-		vboParticleInstances = glGenBuffers();
-		FloatBuffer quadBuffer = BufferUtils.createFloatBuffer(PARTICLE_QUAD_CORNERS.length).put(PARTICLE_QUAD_CORNERS).flip();
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticleQuad);
-		glBufferData(GL_ARRAY_BUFFER, quadBuffer, GL_STATIC_DRAW);
-		glBindVertexArray(vaoParticles);
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticleQuad);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
-		glVertexAttribDivisor(0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
-		int instanceStride = FLOATS_PER_INSTANCE * 4;
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, instanceStride, 0);
-		glVertexAttribDivisor(1, 1);
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_FLOAT, false, instanceStride, 12);
-		glVertexAttribDivisor(2, 1);
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 1, GL_FLOAT, false, instanceStride, 28);
-		glVertexAttribDivisor(3, 1);
-		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
-		glBufferData(GL_ARRAY_BUFFER, (long) MAX_PARTICLES * FLOATS_PER_INSTANCE * 4, GL_STREAM_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		particleStagingBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * FLOATS_PER_INSTANCE);
-
-		// 1x1 white texture used when no particle texture is set
-		whiteParticleTextureId = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_PARTICLE);
-		glBindTexture(GL_TEXTURE_2D, whiteParticleTextureId);
-		ByteBuffer whitePixel = BufferUtils.createByteBuffer(4);
-		whitePixel.put((byte) 255).put((byte) 255).put((byte) 255).put((byte) 255).flip();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		particleTextureId = whiteParticleTextureId;
-	}
-
-	private void destroyParticleBuffers() {
-		if (vaoParticles != 0) {
-			glDeleteVertexArrays(vaoParticles);
-			vaoParticles = 0;
-		}
-		if (vboParticleQuad != 0) {
-			glDeleteBuffers(vboParticleQuad);
-			vboParticleQuad = 0;
-		}
-		if (vboParticleInstances != 0) {
-			glDeleteBuffers(vboParticleInstances);
-			vboParticleInstances = 0;
-		}
-		particleStagingBuffer = null;
-		if (particleTextureId != 0 && particleTextureId != whiteParticleTextureId) {
-			glDeleteTextures(particleTextureId);
-			particleTextureId = 0;
-		}
-		if (whiteParticleTextureId != 0) {
-			glDeleteTextures(whiteParticleTextureId);
-			whiteParticleTextureId = 0;
-		}
-		loadedParticleTexturePath = null;
-	}
-
-	private void ensureParticleTextureLoaded() {
-		ResourcePath resPath = particleManager.getTextureResourcePath();
-		String path = particleManager.getTexturePath();
-		if (resPath == null || path == null || path.isEmpty()) {
-			if (particleTextureId != whiteParticleTextureId && particleTextureId != 0) {
-				glDeleteTextures(particleTextureId);
-				particleTextureId = whiteParticleTextureId;
-			}
-			loadedParticleTexturePath = null;
-			return;
-		}
-		if (path.equals(loadedParticleTexturePath) && particleTextureId != 0)
-			return;
-		try {
-			BufferedImage img = resPath.loadImage();
-			int w = img.getWidth();
-			int h = img.getHeight();
-			if (particleTextureId != 0 && particleTextureId != whiteParticleTextureId)
-				glDeleteTextures(particleTextureId);
-			particleTextureId = glGenTextures();
-			glActiveTexture(TEXTURE_UNIT_PARTICLE);
-			glBindTexture(GL_TEXTURE_2D, particleTextureId);
-			ByteBuffer pixels = BufferUtils.createByteBuffer(w * h * 4);
-			for (int y = h - 1; y >= 0; y--)
-				for (int x = 0; x < w; x++) {
-					int argb = img.getRGB(x, y);
-					pixels.put((byte) ((argb >> 16) & 0xFF));
-					pixels.put((byte) ((argb >> 8) & 0xFF));
-					pixels.put((byte) (argb & 0xFF));
-					pixels.put((byte) ((argb >> 24) & 0xFF));
-				}
-			pixels.flip();
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			loadedParticleTexturePath = path;
-		} catch (IOException ex) {
-			log.warn("[Particles] Failed to load texture: {}", path, ex);
-			if (particleTextureId != 0 && particleTextureId != whiteParticleTextureId) {
-				glDeleteTextures(particleTextureId);
-				particleTextureId = whiteParticleTextureId;
-			}
-			loadedParticleTexturePath = null;
-		}
-	}
-
-	private int uploadParticles(int currentPlane) {
-		List<Particle> particles = particleManager.getParticles();
-		particleStagingBuffer.clear();
-		lastParticleTotalOnPlane = 0;
-		lastParticleCulledDistance = 0;
-		lastParticleCulledFrustum = 0;
-		lastParticleDrawn = 0;
-		float[] particleColor = new float[4];
-		float cxCam = plugin.cameraPosition[0];
-		float cyCam = plugin.cameraPosition[1];
-		float czCam = plugin.cameraPosition[2];
-		float maxDistSq = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
-		maxDistSq *= maxDistSq;
-		float[][] frustumPlanes = plugin.cameraFrustum;
-		int n = 0;
-		for (Particle p : particles) {
-			if (p.plane != currentPlane)
-				continue;
-			lastParticleTotalOnPlane++;
-			float dx = p.position[0] - cxCam;
-			float dy = p.position[1] - cyCam;
-			float dz = p.position[2] - czCam;
-			float dSq = dx * dx + dy * dy + dz * dz;
-			if (dSq > maxDistSq) {
-				lastParticleCulledDistance++;
-				continue;
-			}
-			if (!HDUtils.isSphereIntersectingFrustum(p.position[0], p.position[1], p.position[2], p.size, frustumPlanes, frustumPlanes.length)) {
-				lastParticleCulledFrustum++;
-				continue;
-			}
-			particleDistSq[n] = dSq;
-			p.getCurrentColor(particleColor);
-			float cx = p.position[0] + plugin.cameraShift[0];
-			float cy = p.position[1];
-			float cz = p.position[2] + plugin.cameraShift[1];
-			particleStagingBuffer.put(cx).put(cy).put(cz);
-			particleStagingBuffer.put(particleColor[0]).put(particleColor[1]).put(particleColor[2]).put(particleColor[3]);
-			particleStagingBuffer.put(p.size);
-			n++;
-		}
-		int instanceCount = n;
-		lastParticleDrawn = instanceCount;
-		if (instanceCount == 0)
-			return 0;
-		for (int i = 0; i < instanceCount; i++)
-			particleSortOrder[i] = i;
-		Arrays.sort(particleSortOrder, 0, instanceCount, (a, b) -> Float.compare(particleDistSq[b], particleDistSq[a]));
-
-		int uploadBytes = instanceCount * FLOATS_PER_INSTANCE * 4;
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
-		ByteBuffer mapped = glMapBufferRange(GL_ARRAY_BUFFER, 0, uploadBytes, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
-		if (mapped != null) {
-			FloatBuffer mappedFloat = mapped.asFloatBuffer();
-			for (int k = 0; k < instanceCount; k++) {
-				int src = particleSortOrder[k] * FLOATS_PER_INSTANCE;
-				for (int f = 0; f < FLOATS_PER_INSTANCE; f++)
-					mappedFloat.put(particleStagingBuffer.get(src + f));
-			}
-			glUnmapBuffer(GL_ARRAY_BUFFER);
-		} else {
-			particleStagingBuffer.flip();
-			glBufferSubData(GL_ARRAY_BUFFER, 0, particleStagingBuffer);
-		}
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		return instanceCount;
-	}
-
-	public int getLastParticleTotalOnPlane() { return lastParticleTotalOnPlane; }
-	public int getLastParticleCulledDistance() { return lastParticleCulledDistance; }
-	public int getLastParticleCulledFrustum() { return lastParticleCulledFrustum; }
-	public int getLastParticleDrawn() { return lastParticleDrawn; }
+	public int getLastParticleTotalOnPlane() { return particlePass.getLastParticleTotalOnPlane(); }
+	public int getLastParticleCulledDistance() { return particlePass.getLastParticleCulledDistance(); }
+	public int getLastParticleCulledFrustum() { return particlePass.getLastParticleCulledFrustum(); }
+	public int getLastParticleDrawn() { return particlePass.getLastParticleDrawn(); }
 
 	@Override
 	public void processConfigChanges(Set<String> keys) {
@@ -563,10 +370,6 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.DRAW_FRAME);
 		frameTimer.begin(Timer.DRAW_SCENE);
-
-		frameTimer.begin(Timer.UPDATE_PARTICLES);
-		particleManager.update(ctx.sceneContext, plugin.deltaTime);
-		frameTimer.end(Timer.UPDATE_PARTICLES);
 
 		if (!plugin.enableFreezeFrame && !plugin.redrawPreviousFrame) {
 			plugin.drawnTempRenderableCount = 0;
@@ -927,10 +730,16 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
-	private void scenePass() {
+	private void scenePass(ScenePassContext passCtx) {
 		sceneProgram.use();
 
 		frameTimer.begin(Timer.DRAW_SCENE);
+		for (ScenePass pass : scenePasses) {
+			if (pass.shouldDraw(passCtx)) {
+				pass.beforeDraw(passCtx);
+			}
+		}
+
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.msaaSamples > 1) {
 			renderState.enable.set(GL_MULTISAMPLE);
@@ -967,33 +776,32 @@ public class ZoneRenderer implements Renderer {
 		// Render the scene
 		sceneCmd.execute();
 
-		// Draw particles (instanced billboards) in scene with same depth/blend
-		int currentPlane = client.getTopLevelWorldView().getPlane();
-		int particleInstanceCount = uploadParticles(currentPlane);
-		if (particleInstanceCount > 0 && particleProgram.isValid()) {
-			renderState.program.set(particleProgram);
-			renderState.disable.set(GL_CULL_FACE);
-			renderState.depthMask.set(false);
-			renderState.apply();
-			ensureParticleTextureLoaded();
-			glActiveTexture(TEXTURE_UNIT_PARTICLE);
-			glBindTexture(GL_TEXTURE_2D, particleTextureId);
-			particleProgram.setParticleTextureUnit(TEXTURE_UNIT_PARTICLE);
-			glBindVertexArray(vaoParticles);
-			frameTimer.begin(Timer.RENDER_PARTICLES);
-			glDrawArraysInstanced(GL_TRIANGLES, 0, QUAD_VERTS, particleInstanceCount);
-			frameTimer.end(Timer.RENDER_PARTICLES);
-			glBindVertexArray(0);
+		for (ScenePassListener listener : scenePassListeners) {
+			listener.beforeScenePasses(passCtx);
+		}
+
+		for (ScenePass pass : scenePasses) {
+			if (pass.shouldDraw(passCtx)) {
+				pass.draw(passCtx);
+			}
 		}
 
 		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
 
+		for (ScenePass pass : scenePasses) {
+			if (pass.shouldDraw(passCtx)) {
+				pass.afterDraw(passCtx);
+			}
+		}
+		for (ScenePassListener listener : scenePassListeners) {
+			listener.afterScenePasses(passCtx);
+		}
+
 		// Done rendering the scene
 		renderState.disable.set(GL_BLEND);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.depthMask.set(true);  // restore depth write after particles
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
@@ -1253,11 +1061,20 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
+
+		WorldViewContext root = sceneManager.getRoot();
+
+		ScenePassContext passCtx = new ScenePassContext(
+			renderState,
+			frameTimer,
+			root != null ? root.sceneContext : null
+		);
+
 		frameTimer.begin(Timer.DRAW_SUBMIT);
 		if (shouldRenderScene) {
 			tiledLightingPass();
 			directionalShadowPass();
-			scenePass();
+			scenePass(passCtx);
 		}
 
 		if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
