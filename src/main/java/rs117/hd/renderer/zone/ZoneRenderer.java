@@ -694,6 +694,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
 		renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
 		renderState.ido.set(indirectDrawCmds.id);
+		renderState.ebo.set(eboAlpha.id);
 		renderState.apply();
 
 		glClearDepth(1);
@@ -708,6 +709,8 @@ public class ZoneRenderer implements Renderer {
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.ido.set(0);
+		renderState.ebo.set(0);
 
 		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
@@ -724,6 +727,7 @@ public class ZoneRenderer implements Renderer {
 		}
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		renderState.ido.set(indirectDrawCmds.id);
+		renderState.ebo.set(eboAlpha.id);
 		renderState.apply();
 
 		// Clear scene
@@ -759,7 +763,8 @@ public class ZoneRenderer implements Renderer {
 		renderState.disable.set(GL_BLEND);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.apply();
+		renderState.ido.set(0);
+		renderState.ebo.set(0);
 
 		frameTimer.end(Timer.DRAW_SCENE);
 	}
