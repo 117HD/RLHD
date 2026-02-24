@@ -16,6 +16,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.pass.impl.ParticlePass;
 import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
@@ -52,6 +53,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Inject
 	private ParticleManager particleManager;
+
+	@Inject
+	private ParticlePass particlePass;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final long[] timings = new long[Timer.TIMERS.length];
@@ -216,10 +220,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.right(String.valueOf(particleManager.getLastEmittersCulled()))
 				.build());
 			if (plugin.renderer instanceof ZoneRenderer) {
-				ZoneRenderer zr = (ZoneRenderer) plugin.renderer;
-				int drawn = zr.getLastParticleDrawn();
-				int totalOnPlane = zr.getLastParticleTotalOnPlane();
-				int culled = zr.getLastParticleCulledDistance() + zr.getLastParticleCulledFrustum();
+				int drawn = particlePass.getLastParticleDrawn();
+				int totalOnPlane = particlePass.getLastParticleTotalOnPlane();
+				int culled = particlePass.getLastParticleCulledDistance() + particlePass.getLastParticleCulledFrustum();
 				children.add(LineComponent.builder()
 					.left("Particles (drawn):")
 					.right(String.format("%d/%d", drawn, totalOnPlane))

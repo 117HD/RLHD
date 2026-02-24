@@ -288,11 +288,6 @@ public class ZoneRenderer implements Renderer {
 		indirectDrawCmdsStaging = null;
 	}
 
-	public int getLastParticleTotalOnPlane() { return particlePass.getLastParticleTotalOnPlane(); }
-	public int getLastParticleCulledDistance() { return particlePass.getLastParticleCulledDistance(); }
-	public int getLastParticleCulledFrustum() { return particlePass.getLastParticleCulledFrustum(); }
-	public int getLastParticleDrawn() { return particlePass.getLastParticleDrawn(); }
-
 	@Override
 	public void processConfigChanges(Set<String> keys) {
 		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING) || keys.contains(KEY_ASYNC_MODEL_CACHE_SIZE))
