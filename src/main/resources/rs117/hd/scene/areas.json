@@ -1944,6 +1944,12 @@
     ]
   },
   {
+    "name": "KARAMJA_KARAMBWAN_FIX",
+    "aabbs": [
+      [ 2896, 3094, 2942, 3117 ]
+    ]
+  },
+  {
     "name": "BRIMHAVEN_DOCKS_TEXTURED",
     "aabbs": [
       [ 2771, 3223, 2773, 3235 ]
