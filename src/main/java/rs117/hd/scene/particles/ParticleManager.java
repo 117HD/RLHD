@@ -43,6 +43,9 @@ public class ParticleManager {
 
 	private static final int MAX_PARTICLES = 4096;
 	private static final float UNITS_TO_RAD = (float) (2 * Math.PI / 2048);
+	private static final float VEL_EPS = 1e-6f;
+	private static final int FALLOFF_DIV_LINEAR = 1 << 18;
+	private static final int FALLOFF_DIV_SQUARED = 1 << 28;
 
 
 	@Inject
@@ -468,39 +471,43 @@ public class ParticleManager {
 	public void update(@Nullable SceneContext ctx, float dt) {
 		emittersCulledThisFrame.clear();
 		if (ctx != null && ctx.sceneBase != null) {
-			float cx = plugin.cameraPosition[0];
-			float cy = plugin.cameraPosition[1];
-			float cz = plugin.cameraPosition[2];
+			final float cx = plugin.cameraPosition[0];
+			final float cy = plugin.cameraPosition[1];
+			final float cz = plugin.cameraPosition[2];
 			float maxDistSq = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
 			maxDistSq *= maxDistSq;
-			float[][] frustum = plugin.cameraFrustum;
-			float cullRadius = LOCAL_TILE_SIZE / 2f;
+			final float[][] frustum = plugin.cameraFrustum;
+			final int frustumLen = frustum.length;
+			final float halfTile = LOCAL_TILE_SIZE / 2f;
+			final long gameCycle = client.getGameCycle();
+			final int sceneOffset = ctx.sceneOffset;
+			final int maxParticles = MAX_PARTICLES;
+			List<Particle> particles = sceneParticles;
+
 			for (ParticleEmitter emitter : sceneEmitters) {
-				boolean skipCulling = emitter.getDefinition() != null && emitter.getDefinition().displayWhenCulled;
+				ParticleEmitterDefinition def = emitter.getDefinition();
+				boolean skipCulling = def != null && def.displayWhenCulled;
 				WorldPoint wp = emitter.getWorldPoint();
 				if (wp == null) {
 					if (!skipCulling) emittersCulledThisFrame.add(emitter);
 					continue;
 				}
-				var optLocal = ctx.worldToLocals(wp).findFirst();
-				if (optLocal.isEmpty()) {
+				int[] local = ctx.worldToLocalFirst(wp);
+				if (local == null) {
 					if (!skipCulling) emittersCulledThisFrame.add(emitter);
 					continue;
 				}
-				int[] local = optLocal.get();
 				int localX = local[0];
 				int localY = local[1];
 				int plane = local[2];
-				int tileExX = localX / LOCAL_TILE_SIZE + ctx.sceneOffset;
-				int tileExY = localY / LOCAL_TILE_SIZE + ctx.sceneOffset;
-				float heightOff = emitter.getHeightOffset();
+				int tileExX = localX / LOCAL_TILE_SIZE + sceneOffset;
+				int tileExY = localY / LOCAL_TILE_SIZE + sceneOffset;
 				float spawnY = 0f;
 				if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
-					int[][] planeHeights = ctx.scene.getTileHeights()[plane];
-					spawnY = planeHeights[tileExX][tileExY] - heightOff;
+					spawnY = ctx.scene.getTileHeights()[plane][tileExX][tileExY] - emitter.getHeightOffset();
 				}
-				float ex = localX + (LOCAL_TILE_SIZE / 2f);
-				float ez = localY + (LOCAL_TILE_SIZE / 2f);
+				float ex = localX + halfTile;
+				float ez = localY + halfTile;
 				float dx = ex - cx;
 				float dy = spawnY - cy;
 				float dz = ez - cz;
@@ -508,82 +515,52 @@ public class ParticleManager {
 					if (!skipCulling) emittersCulledThisFrame.add(emitter);
 					continue;
 				}
-				if (!HDUtils.isSphereIntersectingFrustum(ex, spawnY, ez, cullRadius, frustum, frustum.length)) {
+				if (!HDUtils.isSphereIntersectingFrustum(ex, spawnY, ez, halfTile, frustum, frustumLen)) {
 					if (!skipCulling) emittersCulledThisFrame.add(emitter);
-				}
-			}
-			lastEmittersCulled = emittersCulledThisFrame.size();
-			lastEmittersUpdating = sceneEmitters.size() - lastEmittersCulled;
-
-			for (ParticleEmitter emitter : sceneEmitters) {
-				if (emittersCulledThisFrame.contains(emitter)) continue;
-				WorldPoint wp = emitter.getWorldPoint();
-				if (wp == null) continue;
-				var optLocal = ctx.worldToLocals(wp).findFirst();
-				if (optLocal.isEmpty())
 					continue;
-				int[] local = optLocal.get();
-				int localX = local[0];
-				int localY = local[1];
-				int plane = local[2];
-				int tileExX = localX / LOCAL_TILE_SIZE + ctx.sceneOffset;
-				int tileExY = localY / LOCAL_TILE_SIZE + ctx.sceneOffset;
-				float heightOff = emitter.getHeightOffset();
-				float spawnY = 0f;
-				if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
-					int[][] planeHeights = ctx.scene.getTileHeights()[plane];
-					spawnY = planeHeights[tileExX][tileExY] - heightOff;
 				}
-				ParticleEmitterDefinition def = emitter.getDefinition();
+				if (particles.size() >= maxParticles) continue;
 				if (def != null && def.hasLevelBounds) {
-					// -2 = disabled, -1 = current level (emitter plane), 0-3 = specific plane
 					int lower = def.lowerBoundLevel == -2 ? 0 : (def.lowerBoundLevel == -1 ? plane : def.lowerBoundLevel);
 					int upper = def.upperBoundLevel == -2 ? 3 : (def.upperBoundLevel == -1 ? plane : def.upperBoundLevel);
 					if (plane < lower || plane > upper) continue;
 				}
-				// RS: only spawn when inside emission time window (uses client game cycle)
-				if (!emitter.isEmissionAllowedAtCycle(client.getGameCycle())) continue;
-				float ox = localX + (LOCAL_TILE_SIZE / 2f);
-				float oz = localY + (LOCAL_TILE_SIZE / 2f);
+				if (!emitter.isEmissionAllowedAtCycle(gameCycle)) continue;
+				float ox = ex;
+				float oz = ez;
 				int toSpawn = emitter.advanceEmission(dt);
-				for (int i = 0; i < toSpawn && sceneParticles.size() < MAX_PARTICLES; i++) {
+				for (int i = 0; i < toSpawn && particles.size() < maxParticles; i++) {
 					Particle p = emitter.spawn(ox, spawnY, oz, plane);
-					if (p != null) {
-						p.emitter = emitter;
-						if (def != null && def.targetColourArgb != 0) {
-							float ticksToSec = 64f;
-							float u8 = 256f * 256f;
-							p.colourIncrementPerSecond = new float[4];
-							p.colourIncrementPerSecond[0] = def.redIncrementPerTick * ticksToSec / u8;
-							p.colourIncrementPerSecond[1] = def.greenIncrementPerTick * ticksToSec / u8;
-							p.colourIncrementPerSecond[2] = def.blueIncrementPerTick * ticksToSec / u8;
-							p.colourIncrementPerSecond[3] = def.alphaIncrementPerTick * ticksToSec / u8;
-							p.colourTransitionEndLife = p.maxLife - def.colourTransitionTicks / ticksToSec;
+					if (p == null) continue;
+					p.emitter = emitter;
+					p.emitterOriginX = ox;
+					p.emitterOriginY = spawnY;
+					p.emitterOriginZ = oz;
+					if (def != null) {
+						if (def.colourIncrementPerSecond != null) {
+							p.colourIncrementPerSecond = def.colourIncrementPerSecond;
+							p.colourTransitionEndLife = p.maxLife - def.colourTransitionSecondsConstant;
 						}
-						if (def != null && def.targetScaleDecoded >= 0) {
-							p.scaleIncrementPerSecond = def.scaleIncrementPerTick * 64f / 16384f * 4f;
-							p.scaleTransitionEndLife = p.maxLife - def.scaleTransitionTicks / 64f;
+						if (def.targetScaleDecoded >= 0) {
+							p.scaleIncrementPerSecond = def.scaleIncrementPerSecondCached;
+							p.scaleTransitionEndLife = p.maxLife - def.scaleTransitionSecondsConstant;
 						}
-						if (def != null && def.targetSpeed >= 0) {
-							p.speedIncrementPerSecond = def.speedIncrementPerTick * 64f / 16384f;
-							p.speedTransitionEndLife = p.maxLife - def.speedTransitionTicks / 64f;
+						if (def.targetSpeed >= 0) {
+							p.speedIncrementPerSecond = def.speedIncrementPerSecondCached;
+							p.speedTransitionEndLife = p.maxLife - def.speedTransitionSecondsConstant;
 						}
-						p.emitterOriginX = ox;
-						p.emitterOriginY = spawnY;
-						p.emitterOriginZ = oz;
-						if (def != null) {
-							p.distanceFalloffType = def.distanceFalloffType;
-							p.distanceFalloffStrength = def.distanceFalloffStrength;
-							p.clipToTerrain = def.clipToTerrain;
-							p.hasLevelBounds = def.hasLevelBounds;
-							p.upperBoundLevel = def.upperBoundLevel;
-							p.lowerBoundLevel = def.lowerBoundLevel;
-						}
-						sceneParticles.add(p);
+						p.distanceFalloffType = def.distanceFalloffType;
+						p.distanceFalloffStrength = def.distanceFalloffStrength;
+						p.clipToTerrain = def.clipToTerrain;
+						p.hasLevelBounds = def.hasLevelBounds;
+						p.upperBoundLevel = def.upperBoundLevel;
+						p.lowerBoundLevel = def.lowerBoundLevel;
 					}
+					particles.add(p);
 				}
-
 			}
+			lastEmittersCulled = emittersCulledThisFrame.size();
+			lastEmittersUpdating = sceneEmitters.size() - lastEmittersCulled;
 		} else {
 			lastEmittersUpdating = 0;
 			lastEmittersCulled = sceneEmitters.size();
@@ -592,7 +569,8 @@ public class ParticleManager {
 		// In-place update and compact: skip culled/dead, update kept particles, compact list
 		int write = 0;
 		List<Particle> list = sceneParticles;
-		for (int i = 0; i < list.size(); i++) {
+		final int listSize = list.size();
+		for (int i = 0; i < listSize; i++) {
 			Particle p = list.get(i);
 			if (p.emitter != null && emittersCulledThisFrame.contains(p.emitter)) continue;
 			p.life -= dt;
@@ -609,36 +587,27 @@ public class ParticleManager {
 			if (p.speedIncrementPerSecond != 0f && p.life >= p.speedTransitionEndLife) {
 				float vx = p.velocity[0], vy = p.velocity[1], vz = p.velocity[2];
 				float cur = (float) Math.sqrt(vx * vx + vy * vy + vz * vz);
-				if (cur > 1e-6f) {
-					float newSpeed = cur + p.speedIncrementPerSecond * dt;
-					float scale = newSpeed / cur;
+				if (cur > VEL_EPS) {
+					float scale = (cur + p.speedIncrementPerSecond * dt) / cur;
 					p.velocity[0] = vx * scale;
 					p.velocity[1] = vy * scale;
 					p.velocity[2] = vz * scale;
 				}
 			}
-			if (p.distanceFalloffType == 1) {
+			if (p.distanceFalloffType == 1 || p.distanceFalloffType == 2) {
 				float dx = p.position[0] - p.emitterOriginX;
 				float dy = p.position[1] - p.emitterOriginY;
 				float dz = p.position[2] - p.emitterOriginZ;
-				float dist = (float) Math.sqrt(dx * dx + dy * dy + dz * dz) / 4f;
 				float curSpeed = (float) Math.sqrt(p.velocity[0] * p.velocity[0] + p.velocity[1] * p.velocity[1] + p.velocity[2] * p.velocity[2]);
-				if (curSpeed > 1e-6f) {
-					float falloff = p.distanceFalloffStrength * dist * dt / (1 << 18);
-					float scale = Math.max(0f, 1f - falloff);
-					p.velocity[0] *= scale;
-					p.velocity[1] *= scale;
-					p.velocity[2] *= scale;
-				}
-			} else if (p.distanceFalloffType == 2) {
-				float dx = p.position[0] - p.emitterOriginX;
-				float dy = p.position[1] - p.emitterOriginY;
-				float dz = p.position[2] - p.emitterOriginZ;
-				float distSq = dx * dx + dy * dy + dz * dz;
-				float curSpeed = (float) Math.sqrt(p.velocity[0] * p.velocity[0] + p.velocity[1] * p.velocity[1] + p.velocity[2] * p.velocity[2]);
-				if (curSpeed > 1e-6f) {
-					float falloff = p.distanceFalloffStrength * distSq * dt / (1 << 28);
-					float scale = Math.max(0f, 1f - falloff);
+				if (curSpeed > VEL_EPS) {
+					float scale;
+					if (p.distanceFalloffType == 1) {
+						float dist = (float) Math.sqrt(dx * dx + dy * dy + dz * dz) / 4f;
+						scale = Math.max(0f, 1f - p.distanceFalloffStrength * dist * dt / FALLOFF_DIV_LINEAR);
+					} else {
+						float distSq = dx * dx + dy * dy + dz * dz;
+						scale = Math.max(0f, 1f - p.distanceFalloffStrength * distSq * dt / FALLOFF_DIV_SQUARED);
+					}
 					p.velocity[0] *= scale;
 					p.velocity[1] *= scale;
 					p.velocity[2] *= scale;
@@ -648,18 +617,20 @@ public class ParticleManager {
 			p.position[1] += p.velocity[1] * dt;
 			p.position[2] += p.velocity[2] * dt;
 			if (p.hasLevelBounds && ctx != null) {
+				int posX = (int) p.position[0];
+				int posZ = (int) p.position[2];
 				float ceiling = p.upperBoundLevel == -2 ? Float.MAX_VALUE
-					: getTerrainHeight(ctx, (int) p.position[0], (int) p.position[2], p.upperBoundLevel == -1 ? p.plane : p.upperBoundLevel);
+					: getTerrainHeight(ctx, posX, posZ, p.upperBoundLevel == -1 ? p.plane : p.upperBoundLevel);
 				float floor = p.lowerBoundLevel == -2 ? -Float.MAX_VALUE
 					: (p.lowerBoundLevel == -1
-						? (p.plane < 3 ? getTerrainHeight(ctx, (int) p.position[0], (int) p.position[2], p.plane + 1) : getTerrainHeight(ctx, (int) p.position[0], (int) p.position[2], p.plane) - 2048f)
-						: getTerrainHeight(ctx, (int) p.position[0], (int) p.position[2], Math.min(3, p.lowerBoundLevel + 1)));
+						? (p.plane < 3 ? getTerrainHeight(ctx, posX, posZ, p.plane + 1) : getTerrainHeight(ctx, posX, posZ, p.plane) - 2048f)
+						: getTerrainHeight(ctx, posX, posZ, Math.min(3, p.lowerBoundLevel + 1)));
 				if (p.position[1] > ceiling || p.position[1] < floor) continue;
 			}
 			if (write != i) list.set(write, p);
 			write++;
 		}
-		list.subList(write, list.size()).clear();
+		list.subList(write, listSize).clear();
 	}
 
 	private static float getTerrainHeight(SceneContext ctx, int localX, int localZ, int plane) {

@@ -172,6 +172,26 @@ public class SceneContext {
 	}
 
 	/**
+	 * Returns the first local coordinate for the given world point without allocating a Stream.
+	 * Use this in hot paths instead of worldToLocals(wp).findFirst().orElse(null).
+	 */
+	@Nullable
+	public int[] worldToLocalFirst(WorldPoint worldPoint) {
+		if (sceneBase != null)
+			return worldToLocal(worldPoint);
+		var coll = WorldPoint.toLocalInstance(scene, worldPoint);
+		var it = coll.iterator();
+		if (!it.hasNext()) return null;
+		WorldPoint ip = it.next();
+		if (ip == null) return null;
+		return ivec(
+			(ip.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE,
+			(ip.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE,
+			ip.getPlane()
+		);
+	}
+
+	/**
 	 * Gets the local coordinate at the south-western corner of the tile, if the scene is contiguous, otherwise null
 	 */
 	@Nullable

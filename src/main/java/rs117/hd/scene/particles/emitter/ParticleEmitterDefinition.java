@@ -83,6 +83,16 @@ public class ParticleEmitterDefinition {
 	public int alphaTransitionTicks, colourTransitionTicks;
 	public int redIncrementPerTick, greenIncrementPerTick, blueIncrementPerTick, alphaIncrementPerTick;
 
+	private static final float TICKS_TO_SEC = 64f;
+	private static final float U8 = 256f * 256f;
+	@Nullable
+	public float[] colourIncrementPerSecond;
+	public float colourTransitionSecondsConstant;
+	public float scaleIncrementPerSecondCached;
+	public float scaleTransitionSecondsConstant;
+	public float speedIncrementPerSecondCached;
+	public float speedTransitionSecondsConstant;
+
 	public void postDecode() {
 		if (minSpeed < SPEED_DISPLAY_THRESHOLD) {
 			minSpeed = minSpeed << 14;
@@ -155,6 +165,21 @@ public class ParticleEmitterDefinition {
 			greenIncrementPerTick += (greenIncrementPerTick <= 0 ? 4 : -4);
 			blueIncrementPerTick += (blueIncrementPerTick <= 0 ? 4 : -4);
 			alphaIncrementPerTick += (alphaIncrementPerTick <= 0 ? 4 : -4);
+			colourIncrementPerSecond = new float[] {
+				redIncrementPerTick * TICKS_TO_SEC / U8,
+				greenIncrementPerTick * TICKS_TO_SEC / U8,
+				blueIncrementPerTick * TICKS_TO_SEC / U8,
+				alphaIncrementPerTick * TICKS_TO_SEC / U8
+			};
+			colourTransitionSecondsConstant = colourTransitionTicks / TICKS_TO_SEC;
+		}
+		if (targetScaleDecoded >= 0) {
+			scaleIncrementPerSecondCached = scaleIncrementPerTick * TICKS_TO_SEC / 16384f * 4f;
+			scaleTransitionSecondsConstant = scaleTransitionTicks / TICKS_TO_SEC;
+		}
+		if (targetSpeed >= 0) {
+			speedIncrementPerSecondCached = speedIncrementPerTick * TICKS_TO_SEC / 16384f;
+			speedTransitionSecondsConstant = speedTransitionTicks / TICKS_TO_SEC;
 		}
 	}
 
