@@ -48,6 +48,7 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
+import rs117.hd.config.ShadowShading;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
@@ -447,93 +448,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_SHADOW_MODE = "shadowMode";
-	@ConfigItem(
-		keyName = KEY_SHADOW_MODE,
-		name = "Shadows",
-		description =
-			"Render fully dynamic shadows.<br>" +
-			"'Off' completely disables shadows.<br>" +
-			"'Fast' enables fast shadows without any texture detail.<br>" +
-			"'Detailed' enables slower shadows with support for texture detail.",
-		position = 5,
-		section = lightingSettings
-	)
-	default ShadowMode shadowMode()
-	{
-		return ShadowMode.DETAILED;
-	}
-
-	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
-	@ConfigItem(
-		keyName = KEY_SHADOW_TRANSPARENCY,
-		name = "Shadow Transparency",
-		description = "Enables partial support for shadows that take transparency into account.",
-		position = 6,
-		section = lightingSettings
-	)
-	default boolean enableShadowTransparency()
-	{
-		return true;
-	}
-
-	String KEY_PIXELATED_SHADOWS = "pixelatedShadows";
-	@ConfigItem(
-		keyName = KEY_PIXELATED_SHADOWS,
-		name = "Pixelated Shadows",
-		description = "Give shadows a slightly pixelated look.",
-		position = 7,
-		section = lightingSettings
-	)
-	default boolean pixelatedShadows() {
-		return false;
-	}
-
-	String KEY_SHADOW_RESOLUTION = "shadowResolution";
-	@ConfigItem(
-		keyName = KEY_SHADOW_RESOLUTION,
-		name = "Shadow Quality",
-		description =
-			"The resolution of the shadow map.<br>" +
-			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
-		position = 8,
-		section = lightingSettings
-	)
-	default ShadowResolution shadowResolution()
-	{
-		return ShadowResolution.RES_4096;
-	}
-
-	@ConfigItem(
-		keyName = "shadowDistance",
-		name = "Shadow Distance",
-		description =
-			"The maximum draw distance for shadows.<br>" +
-			"Shorter distances result in higher quality shadows.",
-		position = 9,
-		section = lightingSettings
-	)
-	@Units(" tiles")
-	default ShadowDistance shadowDistance()
-	{
-		return ShadowDistance.DISTANCE_50;
-	}
-
-	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
-	@ConfigItem(
-		keyName = KEY_EXPAND_SHADOW_DRAW,
-		name = "Expand Shadow Draw",
-		description =
-			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
-			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
-		position = 10,
-		section = lightingSettings
-	)
-	default boolean expandShadowDraw()
-	{
-		return false;
-	}
-
 	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
 	@ConfigItem(
 		keyName = KEY_VANILLA_SHADOW_MODE,
@@ -573,13 +487,92 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	/*====== Shadow settings ======*/
+
+	@ConfigSection(
+		name = "Shadows",
+		description = "Shadow settings",
+		position = 2,
+		closedByDefault = true
+	)
+	String shadowSettings = "shadowSettings";
+
+	String KEY_SHADOW_MODE = "shadowMode";
+	@ConfigItem(
+		keyName = KEY_SHADOW_MODE,
+		name = "Shadows",
+		description =
+			"Render fully dynamic shadows.<br>" +
+			"'Off' completely disables shadows.<br>" +
+			"'Fast' enables fast shadows without any texture detail.<br>" +
+			"'Detailed' enables slower shadows with support for texture detail.",
+		position = 0,
+		section = shadowSettings
+	)
+	default ShadowMode shadowMode()
+	{
+		return ShadowMode.DETAILED;
+	}
+
+	String KEY_SHADOW_RESOLUTION = "shadowResolution";
+	@ConfigItem(
+		keyName = KEY_SHADOW_RESOLUTION,
+		name = "Shadow Quality",
+		description =
+			"The resolution of the shadow map.<br>" +
+			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
+		position = 1,
+		section = shadowSettings
+	)
+	default ShadowResolution shadowResolution() { return ShadowResolution.RES_4096; }
+
+	String KEY_SHADOW_SHADING = "shadowShading";
+	@ConfigItem(
+		keyName = KEY_SHADOW_SHADING,
+		name = "Shadow Shading",
+		description =
+			"Shading technique used when sampling shadow map.<br>" +
+			"'Smooth' Smooths out the shadow pixels (PCF 3x3).<br>" +
+			"'Dithered' Further smoothens pixelation with dithering.<br>"+
+			"'Pixelated' Retains slightly pixelated shadows.",
+		position = 2,
+		section = shadowSettings
+	)
+	default ShadowShading shadowShading() {
+		return ShadowShading.Smooth;
+	}
+
+	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
+	@ConfigItem(
+		keyName = KEY_SHADOW_TRANSPARENCY,
+		name = "Shadow Transparency",
+		description = "Enables partial support for shadows that take transparency into account.",
+		position = 3,
+		section = shadowSettings
+	)
+	default boolean enableShadowTransparency()
+	{
+		return true;
+	}
+
+	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
+	@ConfigItem(
+		keyName = KEY_ROOF_SHADOWS,
+		name = "Roof Shadows",
+		description = "Always cast shadows from roofs, even when they are hidden.",
+		position = 4,
+		section = shadowSettings
+	)
+	default boolean roofShadows() {
+		return false;
+	}
 
 	/*====== Environment settings ======*/
 
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 2,
+		position = 3,
 		closedByDefault = true
 	)
 	String environmentSettings = "environmentSettings";
@@ -983,6 +976,36 @@ public interface HdPluginConfig extends Config
 		return 20;
 	}
 
+	@ConfigItem(
+		keyName = "shadowDistance",
+		name = "Shadow Distance",
+		description =
+			"The maximum draw distance for shadows.<br>" +
+			"Shorter distances result in higher quality shadows.",
+		position = -97,
+		section = legacySettings
+	)
+	@Units(" tiles")
+	default ShadowDistance shadowDistance()
+	{
+		return ShadowDistance.DISTANCE_50;
+	}
+
+	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
+	@ConfigItem(
+		keyName = KEY_EXPAND_SHADOW_DRAW,
+		name = "Expand Shadow Draw",
+		description =
+			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
+			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
+		position = -96,
+		section = legacySettings
+	)
+	default boolean expandShadowDraw()
+	{
+		return false;
+	}
+
 	String KEY_MODEL_BATCHING = "useModelBatching";
 	@ConfigItem(
 		keyName = KEY_MODEL_BATCHING,
@@ -990,7 +1013,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"With the legacy renderer, model batching improves performance by reusing identical models within the same frame.<br>" +
 			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
-		position = -97,
+		position = -95,
 		section = legacySettings
 	)
 	default boolean modelBatching() { return true; }
@@ -1002,7 +1025,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"With the legacy renderer, model caching improves performance by saving and reusing model data from previous frames.<br>" +
 			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
-		position = -96,
+		position = -94,
 		section = legacySettings
 	)
 	default boolean modelCaching() { return true; }
@@ -1020,7 +1043,7 @@ public interface HdPluginConfig extends Config
 			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
 			"Generally, 512 MiB is plenty, with diminishing returns the higher you go.<br>" +
 			"Minimum=64 MiB, maximum=16384 MiB",
-		position = -95,
+		position = -93,
 		section = legacySettings
 	)
 	default int modelCacheSizeMiB() {
@@ -1158,17 +1181,6 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean tiledLightingImageLoadStore() {
 		return true;
-	}
-
-	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
-	@ConfigItem(
-		keyName = KEY_ROOF_SHADOWS,
-		name = "Roof Shadows",
-		description = "Always cast shadows from roofs, even when they are hidden.",
-		section = experimentalSettings
-	)
-	default boolean roofShadows() {
-		return false;
 	}
 
 	String KEY_FORCE_INDIRECT_DRAW = "experimentalForceIndirectDraw";
