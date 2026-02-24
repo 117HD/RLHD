@@ -6,6 +6,7 @@ package rs117.hd.scene.particles;
 
 import com.google.common.base.Stopwatch;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -47,6 +48,9 @@ public class ParticleManager {
 	private static final int FALLOFF_DIV_LINEAR = 1 << 18;
 	private static final int FALLOFF_DIV_SQUARED = 1 << 28;
 
+	private static long tileKey(WorldPoint wp) {
+		return ((long) wp.getPlane() << 28) | ((wp.getX() & 0x3FFF) << 14) | (wp.getY() & 0x3FFF);
+	}
 
 	@Inject
 	private Client client;
@@ -74,7 +78,7 @@ public class ParticleManager {
 	@Getter
 	private final Map<TileObject, List<ParticleEmitter>> emittersByTileObject = new LinkedHashMap<>();
 	@Getter
-	private final List<Particle> sceneParticles = new ArrayList<>();
+	private final ParticleBuffer particleBuffer = new ParticleBuffer();
 	@Getter
 	private final Set<ParticleEmitter> emittersCulledThisFrame = new HashSet<>();
 
@@ -94,7 +98,7 @@ public class ParticleManager {
 		removeAllObjectSpawnedEmitters();
 		sceneEmitters.clear();
 		emitterDefinitionManager.getDefinitionEmitters().clear();
-		sceneParticles.clear();
+		particleBuffer.clear();
 	}
 
 	public void startUp() {
@@ -482,81 +486,136 @@ public class ParticleManager {
 			final long gameCycle = client.getGameCycle();
 			final int sceneOffset = ctx.sceneOffset;
 			final int maxParticles = MAX_PARTICLES;
-			List<Particle> particles = sceneParticles;
+			ParticleBuffer buf = particleBuffer;
 
+			// Group emitters by world tile for spatial culling
+			List<ParticleEmitter> noTile = new ArrayList<>();
+			Map<Long, List<ParticleEmitter>> byTile = new HashMap<>();
 			for (ParticleEmitter emitter : sceneEmitters) {
-				ParticleEmitterDefinition def = emitter.getDefinition();
-				boolean skipCulling = def != null && def.displayWhenCulled;
 				WorldPoint wp = emitter.getWorldPoint();
 				if (wp == null) {
-					if (!skipCulling) emittersCulledThisFrame.add(emitter);
-					continue;
+					noTile.add(emitter);
+				} else {
+					byTile.computeIfAbsent(tileKey(wp), k -> new ArrayList<>()).add(emitter);
 				}
-				int[] local = ctx.worldToLocalFirst(wp);
+			}
+
+			// Process emitters with no world position (cull or skip)
+			for (ParticleEmitter emitter : noTile) {
+				ParticleEmitterDefinition def = emitter.getDefinition();
+				if (def == null || !def.displayWhenCulled)
+					emittersCulledThisFrame.add(emitter);
+			}
+
+			// Process each tile: cull whole tile if first emitter is culled, else process each emitter
+			for (Map.Entry<Long, List<ParticleEmitter>> entry : byTile.entrySet()) {
+				List<ParticleEmitter> list = entry.getValue();
+				ParticleEmitter first = list.get(0);
+				ParticleEmitterDefinition def = first.getDefinition();
+				boolean skipCulling = def != null && def.displayWhenCulled;
+				WorldPoint wp = first.getWorldPoint();
+				int[] local = wp != null ? ctx.worldToLocalFirst(wp) : null;
+				boolean tileCulled;
 				if (local == null) {
-					if (!skipCulling) emittersCulledThisFrame.add(emitter);
-					continue;
-				}
-				int localX = local[0];
-				int localY = local[1];
-				int plane = local[2];
-				int tileExX = localX / LOCAL_TILE_SIZE + sceneOffset;
-				int tileExY = localY / LOCAL_TILE_SIZE + sceneOffset;
-				float spawnY = 0f;
-				if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
-					spawnY = ctx.scene.getTileHeights()[plane][tileExX][tileExY] - emitter.getHeightOffset();
-				}
-				float ex = localX + halfTile;
-				float ez = localY + halfTile;
-				float dx = ex - cx;
-				float dy = spawnY - cy;
-				float dz = ez - cz;
-				if (dx * dx + dy * dy + dz * dz > maxDistSq) {
-					if (!skipCulling) emittersCulledThisFrame.add(emitter);
-					continue;
-				}
-				if (!HDUtils.isSphereIntersectingFrustum(ex, spawnY, ez, halfTile, frustum, frustumLen)) {
-					if (!skipCulling) emittersCulledThisFrame.add(emitter);
-					continue;
-				}
-				if (particles.size() >= maxParticles) continue;
-				if (def != null && def.hasLevelBounds) {
-					int lower = def.lowerBoundLevel == -2 ? 0 : (def.lowerBoundLevel == -1 ? plane : def.lowerBoundLevel);
-					int upper = def.upperBoundLevel == -2 ? 3 : (def.upperBoundLevel == -1 ? plane : def.upperBoundLevel);
-					if (plane < lower || plane > upper) continue;
-				}
-				if (!emitter.isEmissionAllowedAtCycle(gameCycle)) continue;
-				float ox = ex;
-				float oz = ez;
-				int toSpawn = emitter.advanceEmission(dt);
-				for (int i = 0; i < toSpawn && particles.size() < maxParticles; i++) {
-					Particle p = emitter.spawn(ox, spawnY, oz, plane);
-					if (p == null) continue;
-					p.emitter = emitter;
-					p.emitterOriginX = ox;
-					p.emitterOriginY = spawnY;
-					p.emitterOriginZ = oz;
-					if (def != null) {
-						if (def.colourIncrementPerSecond != null) {
-							p.colourIncrementPerSecond = def.colourIncrementPerSecond;
-							p.colourTransitionEndLife = p.maxLife - def.colourTransitionSecondsConstant;
-						}
-						if (def.targetScaleDecoded >= 0) {
-							p.scaleIncrementPerSecond = def.scaleIncrementPerSecondCached;
-							p.scaleTransitionEndLife = p.maxLife - def.scaleTransitionSecondsConstant;
-						}
-						if (def.targetSpeed >= 0) {
-							p.speedIncrementPerSecond = def.speedIncrementPerSecondCached;
-							p.speedTransitionEndLife = p.maxLife - def.speedTransitionSecondsConstant;
-						}
-						p.distanceFalloffType = def.distanceFalloffType;
-						p.distanceFalloffStrength = def.distanceFalloffStrength;
-						p.clipToTerrain = def.clipToTerrain;
-						p.hasLevelBounds = def.hasLevelBounds;
-						p.upperBoundLevel = def.upperBoundLevel;
-						p.lowerBoundLevel = def.lowerBoundLevel;
+					tileCulled = !skipCulling;
+				} else {
+					int localX = local[0];
+					int localY = local[1];
+					int plane = local[2];
+					int tileExX = localX / LOCAL_TILE_SIZE + sceneOffset;
+					int tileExY = localY / LOCAL_TILE_SIZE + sceneOffset;
+					float spawnY = 0f;
+					if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
+						spawnY = ctx.scene.getTileHeights()[plane][tileExX][tileExY] - first.getHeightOffset();
 					}
-					particles.add(p);
+					float ex = localX + halfTile;
+					float ez = localY + halfTile;
+					float dx = ex - cx;
+					float dy = spawnY - cy;
+					float dz = ez - cz;
+					tileCulled = dx * dx + dy * dy + dz * dz > maxDistSq
+						|| !HDUtils.isSphereIntersectingFrustum(ex, spawnY, ez, halfTile, frustum, frustumLen);
+					if (tileCulled && skipCulling) tileCulled = false;
+				}
+				if (tileCulled) {
+					for (ParticleEmitter emitter : list)
+						emittersCulledThisFrame.add(emitter);
+					continue;
+				}
+				for (ParticleEmitter emitter : list) {
+					def = emitter.getDefinition();
+					skipCulling = def != null && def.displayWhenCulled;
+					wp = emitter.getWorldPoint();
+					if (wp == null) {
+						if (!skipCulling) emittersCulledThisFrame.add(emitter);
+						continue;
+					}
+					local = ctx.worldToLocalFirst(wp);
+					if (local == null) {
+						if (!skipCulling) emittersCulledThisFrame.add(emitter);
+						continue;
+					}
+					int localX = local[0];
+					int localY = local[1];
+					int plane = local[2];
+					int tileExX = localX / LOCAL_TILE_SIZE + sceneOffset;
+					int tileExY = localY / LOCAL_TILE_SIZE + sceneOffset;
+					float spawnY = 0f;
+					if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
+						spawnY = ctx.scene.getTileHeights()[plane][tileExX][tileExY] - emitter.getHeightOffset();
+					}
+					float ex = localX + halfTile;
+					float ez = localY + halfTile;
+					float dx = ex - cx;
+					float dy = spawnY - cy;
+					float dz = ez - cz;
+					if (dx * dx + dy * dy + dz * dz > maxDistSq) {
+						if (!skipCulling) emittersCulledThisFrame.add(emitter);
+						continue;
+					}
+					if (!HDUtils.isSphereIntersectingFrustum(ex, spawnY, ez, halfTile, frustum, frustumLen)) {
+						if (!skipCulling) emittersCulledThisFrame.add(emitter);
+						continue;
+					}
+					if (buf.count >= maxParticles) continue;
+					if (def != null && def.hasLevelBounds) {
+						int lower = def.lowerBoundLevel == -2 ? 0 : (def.lowerBoundLevel == -1 ? plane : def.lowerBoundLevel);
+						int upper = def.upperBoundLevel == -2 ? 3 : (def.upperBoundLevel == -1 ? plane : def.upperBoundLevel);
+						if (plane < lower || plane > upper) continue;
+					}
+					if (!emitter.isEmissionAllowedAtCycle(gameCycle)) continue;
+					float ox = ex;
+					float oz = ez;
+					int toSpawn = emitter.advanceEmission(dt);
+					for (int i = 0; i < toSpawn && buf.count < maxParticles; i++) {
+						Particle p = emitter.spawn(ox, spawnY, oz, plane);
+						if (p == null) continue;
+						p.emitter = emitter;
+						p.emitterOriginX = ox;
+						p.emitterOriginY = spawnY;
+						p.emitterOriginZ = oz;
+						if (def != null) {
+							if (def.colourIncrementPerSecond != null) {
+								p.colourIncrementPerSecond = def.colourIncrementPerSecond;
+								p.colourTransitionEndLife = p.maxLife - def.colourTransitionSecondsConstant;
+							}
+							if (def.targetScaleDecoded >= 0) {
+								p.scaleIncrementPerSecond = def.scaleIncrementPerSecondCached;
+								p.scaleTransitionEndLife = p.maxLife - def.scaleTransitionSecondsConstant;
+							}
+							if (def.targetSpeed >= 0) {
+								p.speedIncrementPerSecond = def.speedIncrementPerSecondCached;
+								p.speedTransitionEndLife = p.maxLife - def.speedTransitionSecondsConstant;
+							}
+							p.distanceFalloffType = def.distanceFalloffType;
+							p.distanceFalloffStrength = def.distanceFalloffStrength;
+							p.clipToTerrain = def.clipToTerrain;
+							p.hasLevelBounds = def.hasLevelBounds;
+							p.upperBoundLevel = def.upperBoundLevel;
+							p.lowerBoundLevel = def.lowerBoundLevel;
+						}
+						buf.addFrom(p);
+					}
 				}
 			}
 			lastEmittersCulled = emittersCulledThisFrame.size();
@@ -566,71 +625,81 @@ public class ParticleManager {
 			lastEmittersCulled = sceneEmitters.size();
 		}
 
-		// In-place update and compact: skip culled/dead, update kept particles, compact list
-		int write = 0;
-		List<Particle> list = sceneParticles;
-		final int listSize = list.size();
-		for (int i = 0; i < listSize; i++) {
-			Particle p = list.get(i);
-			if (p.emitter != null && emittersCulledThisFrame.contains(p.emitter)) continue;
-			p.life -= dt;
-			if (p.life <= 0) continue;
-			if (p.colourIncrementPerSecond != null && p.life >= p.colourTransitionEndLife) {
-				for (int c = 0; c < 4; c++) {
-					p.color[c] += p.colourIncrementPerSecond[c] * dt;
-					p.color[c] = Math.max(0f, Math.min(1f, p.color[c]));
-				}
+		// Update and compact (swap-with-last when removing)
+		ParticleBuffer buf = particleBuffer;
+		int n = buf.count;
+		for (int i = 0; i < n; ) {
+			if (buf.emitter[i] != null && emittersCulledThisFrame.contains(buf.emitter[i])) {
+				buf.swap(i, n - 1);
+				n--;
+				continue;
 			}
-			if (p.scaleIncrementPerSecond != 0f && p.life >= p.scaleTransitionEndLife) {
-				p.size += p.scaleIncrementPerSecond * dt;
+			buf.life[i] -= dt;
+			if (buf.life[i] <= 0) {
+				buf.swap(i, n - 1);
+				n--;
+				continue;
 			}
-			if (p.speedIncrementPerSecond != 0f && p.life >= p.speedTransitionEndLife) {
-				float vx = p.velocity[0], vy = p.velocity[1], vz = p.velocity[2];
+			if ((buf.flags[i] & ParticleBuffer.FLAG_COLOUR_INCREMENT) != 0 && buf.life[i] >= buf.colourTransitionEndLife[i]) {
+				buf.colorR[i] = Math.max(0f, Math.min(1f, buf.colorR[i] + buf.colourIncR[i] * dt));
+				buf.colorG[i] = Math.max(0f, Math.min(1f, buf.colorG[i] + buf.colourIncG[i] * dt));
+				buf.colorB[i] = Math.max(0f, Math.min(1f, buf.colorB[i] + buf.colourIncB[i] * dt));
+				buf.colorA[i] = Math.max(0f, Math.min(1f, buf.colorA[i] + buf.colourIncA[i] * dt));
+			}
+			if (buf.scaleIncPerSec[i] != 0f && buf.life[i] >= buf.scaleTransitionEndLife[i]) {
+				buf.size[i] += buf.scaleIncPerSec[i] * dt;
+			}
+			if (buf.speedIncPerSec[i] != 0f && buf.life[i] >= buf.speedTransitionEndLife[i]) {
+				float vx = buf.velX[i], vy = buf.velY[i], vz = buf.velZ[i];
 				float cur = (float) Math.sqrt(vx * vx + vy * vy + vz * vz);
 				if (cur > VEL_EPS) {
-					float scale = (cur + p.speedIncrementPerSecond * dt) / cur;
-					p.velocity[0] = vx * scale;
-					p.velocity[1] = vy * scale;
-					p.velocity[2] = vz * scale;
+					float scale = (cur + buf.speedIncPerSec[i] * dt) / cur;
+					buf.velX[i] = vx * scale;
+					buf.velY[i] = vy * scale;
+					buf.velZ[i] = vz * scale;
 				}
 			}
-			if (p.distanceFalloffType == 1 || p.distanceFalloffType == 2) {
-				float dx = p.position[0] - p.emitterOriginX;
-				float dy = p.position[1] - p.emitterOriginY;
-				float dz = p.position[2] - p.emitterOriginZ;
-				float curSpeed = (float) Math.sqrt(p.velocity[0] * p.velocity[0] + p.velocity[1] * p.velocity[1] + p.velocity[2] * p.velocity[2]);
+			if (buf.distanceFalloffType[i] == 1 || buf.distanceFalloffType[i] == 2) {
+				float dx = buf.posX[i] - buf.emitterOriginX[i];
+				float dy = buf.posY[i] - buf.emitterOriginY[i];
+				float dz = buf.posZ[i] - buf.emitterOriginZ[i];
+				float curSpeed = (float) Math.sqrt(buf.velX[i] * buf.velX[i] + buf.velY[i] * buf.velY[i] + buf.velZ[i] * buf.velZ[i]);
 				if (curSpeed > VEL_EPS) {
 					float scale;
-					if (p.distanceFalloffType == 1) {
+					if (buf.distanceFalloffType[i] == 1) {
 						float dist = (float) Math.sqrt(dx * dx + dy * dy + dz * dz) / 4f;
-						scale = Math.max(0f, 1f - p.distanceFalloffStrength * dist * dt / FALLOFF_DIV_LINEAR);
+						scale = Math.max(0f, 1f - buf.distanceFalloffStrength[i] * dist * dt / FALLOFF_DIV_LINEAR);
 					} else {
 						float distSq = dx * dx + dy * dy + dz * dz;
-						scale = Math.max(0f, 1f - p.distanceFalloffStrength * distSq * dt / FALLOFF_DIV_SQUARED);
+						scale = Math.max(0f, 1f - buf.distanceFalloffStrength[i] * distSq * dt / FALLOFF_DIV_SQUARED);
 					}
-					p.velocity[0] *= scale;
-					p.velocity[1] *= scale;
-					p.velocity[2] *= scale;
+					buf.velX[i] *= scale;
+					buf.velY[i] *= scale;
+					buf.velZ[i] *= scale;
 				}
 			}
-			p.position[0] += p.velocity[0] * dt;
-			p.position[1] += p.velocity[1] * dt;
-			p.position[2] += p.velocity[2] * dt;
-			if (p.hasLevelBounds && ctx != null) {
-				int posX = (int) p.position[0];
-				int posZ = (int) p.position[2];
-				float ceiling = p.upperBoundLevel == -2 ? Float.MAX_VALUE
-					: getTerrainHeight(ctx, posX, posZ, p.upperBoundLevel == -1 ? p.plane : p.upperBoundLevel);
-				float floor = p.lowerBoundLevel == -2 ? -Float.MAX_VALUE
-					: (p.lowerBoundLevel == -1
-						? (p.plane < 3 ? getTerrainHeight(ctx, posX, posZ, p.plane + 1) : getTerrainHeight(ctx, posX, posZ, p.plane) - 2048f)
-						: getTerrainHeight(ctx, posX, posZ, Math.min(3, p.lowerBoundLevel + 1)));
-				if (p.position[1] > ceiling || p.position[1] < floor) continue;
+			buf.posX[i] += buf.velX[i] * dt;
+			buf.posY[i] += buf.velY[i] * dt;
+			buf.posZ[i] += buf.velZ[i] * dt;
+			if (buf.hasLevelBounds[i] && ctx != null) {
+				int posXi = (int) buf.posX[i];
+				int posZi = (int) buf.posZ[i];
+				int pl = buf.plane[i];
+				float ceiling = buf.upperBoundLevel[i] == -2 ? Float.MAX_VALUE
+					: getTerrainHeight(ctx, posXi, posZi, buf.upperBoundLevel[i] == -1 ? pl : buf.upperBoundLevel[i]);
+				float floor = buf.lowerBoundLevel[i] == -2 ? -Float.MAX_VALUE
+					: (buf.lowerBoundLevel[i] == -1
+						? (pl < 3 ? getTerrainHeight(ctx, posXi, posZi, pl + 1) : getTerrainHeight(ctx, posXi, posZi, pl) - 2048f)
+						: getTerrainHeight(ctx, posXi, posZi, Math.min(3, buf.lowerBoundLevel[i] + 1)));
+				if (buf.posY[i] > ceiling || buf.posY[i] < floor) {
+					buf.swap(i, n - 1);
+					n--;
+					continue;
+				}
 			}
-			if (write != i) list.set(write, p);
-			write++;
+			i++;
 		}
-		list.subList(write, listSize).clear();
+		buf.count = n;
 	}
 
 	private static float getTerrainHeight(SceneContext ctx, int localX, int localZ, int plane) {

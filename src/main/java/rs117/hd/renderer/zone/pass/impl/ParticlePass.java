@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
-import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -22,7 +21,7 @@ import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.pass.ScenePass;
 import rs117.hd.renderer.zone.pass.ScenePassContext;
-import rs117.hd.scene.particles.Particle;
+import rs117.hd.scene.particles.ParticleBuffer;
 import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.scene.particles.ParticleTextureLoader;
 import rs117.hd.utils.HDUtils;
@@ -193,7 +192,7 @@ public class ParticlePass implements ScenePass {
 	}
 
 	private int uploadParticles(int currentPlane) {
-		List<Particle> particles = particleManager.getSceneParticles();
+		ParticleBuffer buf = particleManager.getParticleBuffer();
 		particleStagingBuffer.clear();
 		lastParticleTotalOnPlane = 0;
 		lastParticleCulledDistance = 0;
@@ -207,30 +206,30 @@ public class ParticlePass implements ScenePass {
 		maxDistSq *= maxDistSq;
 		float[][] frustumPlanes = plugin.cameraFrustum;
 		int n = 0;
-		for (Particle p : particles) {
-			if (p.plane != currentPlane)
+		for (int i = 0; i < buf.count; i++) {
+			if (buf.plane[i] != currentPlane)
 				continue;
 			lastParticleTotalOnPlane++;
-			float dx = p.position[0] - cxCam;
-			float dy = p.position[1] - cyCam;
-			float dz = p.position[2] - czCam;
+			float dx = buf.posX[i] - cxCam;
+			float dy = buf.posY[i] - cyCam;
+			float dz = buf.posZ[i] - czCam;
 			float dSq = dx * dx + dy * dy + dz * dz;
 			if (dSq > maxDistSq) {
 				lastParticleCulledDistance++;
 				continue;
 			}
-			if (!HDUtils.isSphereIntersectingFrustum(p.position[0], p.position[1], p.position[2], p.size, frustumPlanes, frustumPlanes.length)) {
+			if (!HDUtils.isSphereIntersectingFrustum(buf.posX[i], buf.posY[i], buf.posZ[i], buf.size[i], frustumPlanes, frustumPlanes.length)) {
 				lastParticleCulledFrustum++;
 				continue;
 			}
 			particleDistSq[n] = dSq;
-			p.getCurrentColor(particleColor);
-			float cx = p.position[0] + plugin.cameraShift[0];
-			float cy = p.position[1];
-			float cz = p.position[2] + plugin.cameraShift[1];
+			buf.getCurrentColor(i, particleColor);
+			float cx = buf.posX[i] + plugin.cameraShift[0];
+			float cy = buf.posY[i];
+			float cz = buf.posZ[i] + plugin.cameraShift[1];
 			particleStagingBuffer.put(cx).put(cy).put(cz);
 			particleStagingBuffer.put(particleColor[0]).put(particleColor[1]).put(particleColor[2]).put(particleColor[3]);
-			particleStagingBuffer.put(p.size);
+			particleStagingBuffer.put(buf.size[i]);
 			n++;
 		}
 		int instanceCount = n;
