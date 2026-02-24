@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.scene.particles.Particle;
+import rs117.hd.scene.particles.ParticleBuffer;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -229,10 +230,9 @@ public class ParticleEmitter {
 		float yaw = directionYaw + (spreadYawMin == spreadYawMax ? spreadYawMin : spreadYawMin + (spreadYawMax - spreadYawMin) * rng.nextFloat());
 		float pitch = directionPitch + (spreadPitchMin == spreadPitchMax ? spreadPitchMin : spreadPitchMin + (spreadPitchMax - spreadPitchMin) * rng.nextFloat());
 		float cp = cos(pitch);
-		// Horizontal plane is X (0) and Z (2); Y (1) is height. Game angle 0 = South, 2048 = full circle.
 		out[0] = sin(yaw) * cp;
 		out[1] = -sin(pitch);
-		out[2] = cos(yaw) * cp;
+		out[2] = -cos(yaw) * cp;
 	}
 
 	@Nullable
@@ -296,5 +296,24 @@ public class ParticleEmitter {
 		int n = (int) emissionAccum;
 		emissionAccum -= n;
 		return n;
+	}
+
+	/**
+	 * Emitter tick (reference ParticleEmitter.tick): spawn particles. Call once per frame per emitter.
+	 * Manager handles culling and buffer; this runs advanceEmission and spawnInto + add to buffer.
+	 */
+	public void tick(float dt, long gameCycle, float originX, float originY, float originZ, int plane, rs117.hd.scene.particles.ParticleManager manager) {
+		if (!isEmissionAllowedAtCycle(gameCycle)) return;
+		ParticleBuffer buf = manager.getParticleBuffer();
+		int maxParticles = manager.getMaxParticles();
+		int toSpawn = advanceEmission(dt);
+		for (int i = 0; i < toSpawn && buf.count < maxParticles; i++) {
+			Particle p = manager.obtainParticle();
+			if (!spawnInto(p, originX, originY, originZ, plane)) {
+				manager.releaseParticle(p);
+				continue;
+			}
+			manager.addSpawnedParticleToBuffer(p, originX, originY, originZ, this);
+		}
 	}
 }

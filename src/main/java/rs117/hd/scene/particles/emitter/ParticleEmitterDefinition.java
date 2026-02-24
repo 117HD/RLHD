@@ -7,7 +7,7 @@ package rs117.hd.scene.particles.emitter;
 import javax.annotation.Nullable;
 
 public class ParticleEmitterDefinition {
-	private static final int SPEED_DISPLAY_THRESHOLD = 1 << 18;
+	public static final float NO_TARGET = -1f;
 
 	public String id;
 	@Nullable
@@ -16,16 +16,16 @@ public class ParticleEmitterDefinition {
 	public int directionYaw = 1248;
 	public int directionPitch = 30;
 
-	public int spreadYawMin;
-	public int spreadYawMax;
-	public int spreadPitchMin;
-	public int spreadPitchMax;
-	public int minSpeed;
-	public int maxSpeed;
+	public float spreadYawMin;
+	public float spreadYawMax;
+	public float spreadPitchMin;
+	public float spreadPitchMax;
+	public float minSpeed;
+	public float maxSpeed;
 	public int distanceFalloffType;
 	public int distanceFalloffStrength;
-	public int minScale;
-	public int maxScale;
+	public float minScale;
+	public float maxScale;
 	public int minColourArgb;
 	public int maxColourArgb;
 	@Nullable
@@ -58,12 +58,12 @@ public class ParticleEmitterDefinition {
 	public int minGraphicsQuality;
 	public int colourTransitionPercent = 100;
 	public int alphaTransitionPercent = 100;
-	public int targetSpeed = -1;
+	public float targetSpeed = NO_TARGET;
 	public int speedTransitionPercent = 100;
 	public boolean uniformColourVariation = true;
 	@Nullable
 	public int[] globalEffectors;
-	public int targetScale = -1;
+	public float targetScale = NO_TARGET;
 	public int scaleTransitionPercent = 100;
 	public boolean forceTextureOnSoftwareRenderer;
 	public boolean useSceneAmbientLight = true;
@@ -71,14 +71,13 @@ public class ParticleEmitterDefinition {
 	public boolean clipToTerrain = true;
 	public boolean displayWhenCulled = false;
 
-	public int spreadYawMinDecoded, spreadYawMaxDecoded, spreadPitchMinDecoded, spreadPitchMaxDecoded;
-	public int minScaleDecoded, maxScaleDecoded, targetScaleDecoded = -1;
 	public boolean hasLevelBounds;
 	public int startRed, endRed, deltaRed;
 	public int startGreen, endGreen, deltaGreen;
 	public int startBlue, endBlue, deltaBlue;
 	public int startAlpha, endAlpha, deltaAlpha;
 	public int scaleTransitionTicks, scaleIncrementPerTick;
+	public int targetScaleRef;
 	public int speedTransitionTicks, speedIncrementPerTick;
 	public int alphaTransitionTicks, colourTransitionTicks;
 	public int redIncrementPerTick, greenIncrementPerTick, blueIncrementPerTick, alphaIncrementPerTick;
@@ -94,25 +93,6 @@ public class ParticleEmitterDefinition {
 	public float speedTransitionSecondsConstant;
 
 	public void postDecode() {
-		if (minSpeed < SPEED_DISPLAY_THRESHOLD) {
-			minSpeed = minSpeed << 14;
-		}
-		if (maxSpeed < SPEED_DISPLAY_THRESHOLD) {
-			maxSpeed = maxSpeed << 14;
-		}
-		if (targetSpeed != -1 && targetSpeed < SPEED_DISPLAY_THRESHOLD) {
-			targetSpeed = targetSpeed << 14;
-		}
-
-		spreadYawMinDecoded = spreadYawMin << 3;
-		spreadYawMaxDecoded = spreadYawMax << 3;
-		spreadPitchMinDecoded = spreadPitchMin << 3;
-		spreadPitchMaxDecoded = spreadPitchMax << 3;
-		minScaleDecoded = minScale << 14;
-		maxScaleDecoded = maxScale << 14;
-		if (targetScale != -1) {
-			targetScaleDecoded = targetScale << 14;
-		}
 
 		if (upperBoundLevel > -2 || lowerBoundLevel > -2) {
 			hasLevelBounds = true;
@@ -130,19 +110,21 @@ public class ParticleEmitterDefinition {
 		endAlpha = (maxColourArgb >> 24) & 0xff;
 		deltaAlpha = endAlpha - startAlpha;
 
-		if (targetScale != -1) {
+		if (targetScale >= 0f) {
 			scaleTransitionTicks = scaleTransitionPercent * maxEmissionDelay / 100;
 			if (scaleTransitionTicks == 0) {
 				scaleTransitionTicks = 1;
 			}
-			scaleIncrementPerTick = (targetScaleDecoded - (minScaleDecoded + maxScaleDecoded) / 2) / scaleTransitionTicks;
+			targetScaleRef = (int) Math.round(targetScale / 4f * 16384f);
+			float midScaleRef = (minScale + maxScale) / 2f / 4f * 16384f;
+			scaleIncrementPerTick = (int) Math.round((targetScaleRef - midScaleRef) / scaleTransitionTicks);
 		}
-		if (targetSpeed != -1) {
+		if (targetSpeed >= 0f) {
 			speedTransitionTicks = maxEmissionDelay * speedTransitionPercent / 100;
 			if (speedTransitionTicks == 0) {
 				speedTransitionTicks = 1;
 			}
-			speedIncrementPerTick = (targetSpeed - (minSpeed + maxSpeed) / 2) / speedTransitionTicks;
+			speedIncrementPerTick = (int) Math.round((targetSpeed - (minSpeed + maxSpeed) / 2f) / speedTransitionTicks);
 		}
 		if (targetColourArgb != 0) {
 			alphaTransitionTicks = alphaTransitionPercent * maxEmissionDelay / 100;
@@ -173,11 +155,11 @@ public class ParticleEmitterDefinition {
 			};
 			colourTransitionSecondsConstant = colourTransitionTicks / TICKS_TO_SEC;
 		}
-		if (targetScaleDecoded >= 0) {
+		if (targetScale >= 0f) {
 			scaleIncrementPerSecondCached = scaleIncrementPerTick * TICKS_TO_SEC / 16384f * 4f;
 			scaleTransitionSecondsConstant = scaleTransitionTicks / TICKS_TO_SEC;
 		}
-		if (targetSpeed >= 0) {
+		if (targetSpeed >= 0f) {
 			speedIncrementPerSecondCached = speedIncrementPerTick * TICKS_TO_SEC / 16384f;
 			speedTransitionSecondsConstant = speedTransitionTicks / TICKS_TO_SEC;
 		}

@@ -68,6 +68,20 @@ public final class ParticleBuffer {
 	public int[] flags;
 	public ParticleEmitter[] emitter;
 
+	/** Reference EmittedParticle state (1:1 rev): fixed-point position, short velocity, int speed/life/colour/scale. */
+	public long[] xFixed;
+	public long[] yFixed;
+	public long[] zFixed;
+	public short[] velocityX;
+	public short[] velocityY;
+	public short[] velocityZ;
+	public int[] speedRef;
+	public int[] lifetimeTicks;
+	public int[] remainingTicks;
+	public int[] colourArgbRef;
+	public int[] colourRgbLowRef;
+	public int[] scaleRef;
+
 	public ParticleBuffer() {
 		capacity = INITIAL_CAPACITY;
 		posX = new float[capacity];
@@ -113,6 +127,18 @@ public final class ParticleBuffer {
 		lowerBoundLevel = new int[capacity];
 		flags = new int[capacity];
 		emitter = new ParticleEmitter[capacity];
+		xFixed = new long[capacity];
+		yFixed = new long[capacity];
+		zFixed = new long[capacity];
+		velocityX = new short[capacity];
+		velocityY = new short[capacity];
+		velocityZ = new short[capacity];
+		speedRef = new int[capacity];
+		lifetimeTicks = new int[capacity];
+		remainingTicks = new int[capacity];
+		colourArgbRef = new int[capacity];
+		colourRgbLowRef = new int[capacity];
+		scaleRef = new int[capacity];
 	}
 
 
@@ -165,6 +191,30 @@ public final class ParticleBuffer {
 		flags = copyResize(flags, n, copy);
 		hasLevelBounds = copyResize(hasLevelBounds, n, copy);
 		emitter = copyResize(emitter, n, copy);
+		xFixed = copyResizeLong(xFixed, n, copy);
+		yFixed = copyResizeLong(yFixed, n, copy);
+		zFixed = copyResizeLong(zFixed, n, copy);
+		velocityX = copyResizeShort(velocityX, n, copy);
+		velocityY = copyResizeShort(velocityY, n, copy);
+		velocityZ = copyResizeShort(velocityZ, n, copy);
+		speedRef = copyResize(speedRef, n, copy);
+		lifetimeTicks = copyResize(lifetimeTicks, n, copy);
+		remainingTicks = copyResize(remainingTicks, n, copy);
+		colourArgbRef = copyResize(colourArgbRef, n, copy);
+		colourRgbLowRef = copyResize(colourRgbLowRef, n, copy);
+		scaleRef = copyResize(scaleRef, n, copy);
+	}
+
+	private static long[] copyResizeLong(long[] a, int newLen, int copy) {
+		long[] b = new long[newLen];
+		if (a != null && copy > 0) System.arraycopy(a, 0, b, 0, copy);
+		return b;
+	}
+
+	private static short[] copyResizeShort(short[] a, int newLen, int copy) {
+		short[] b = new short[newLen];
+		if (a != null && copy > 0) System.arraycopy(a, 0, b, 0, copy);
+		return b;
 	}
 
 	private static float[] copyResize(float[] a, int newLen, int copy) {
@@ -248,6 +298,52 @@ public final class ParticleBuffer {
 		speedIncPerSec[i] = p.speedIncrementPerSecond;
 		scaleTransitionEndLife[i] = p.scaleTransitionEndLife;
 		speedTransitionEndLife[i] = p.speedTransitionEndLife;
+		// Ref state from float (so EmittedParticle.tick 1:1 can run)
+		xFixed[i] = (long) (p.position[0] * 4096);
+		yFixed[i] = (long) (p.position[1] * 4096);
+		zFixed[i] = (long) (p.position[2] * 4096);
+		float vx = p.velocity[0], vy = p.velocity[1], vz = p.velocity[2];
+		float mag = (float) Math.sqrt((double) (vx * vx + vy * vy + vz * vz));
+		if (mag > 1e-6f) {
+			velocityX[i] = (short) Math.max(-32768, Math.min(32767, (int) (vx / mag * 32767)));
+			velocityY[i] = (short) Math.max(-32768, Math.min(32767, (int) (vy / mag * 32767)));
+			velocityZ[i] = (short) Math.max(-32768, Math.min(32767, (int) (vz / mag * 32767)));
+			speedRef[i] = (int) (mag * 16384);
+		} else {
+			velocityX[i] = 0;
+			velocityY[i] = 0;
+			velocityZ[i] = 0;
+			speedRef[i] = 0;
+		}
+		lifetimeTicks[i] = (int) (p.maxLife * 50f);
+		remainingTicks[i] = (int) (p.life * 50f);
+		int r = (int) (p.color[0] * 255f) & 0xff;
+		int g = (int) (p.color[1] * 255f) & 0xff;
+		int b = (int) (p.color[2] * 255f) & 0xff;
+		int a = (int) (p.color[3] * 255f) & 0xff;
+		colourArgbRef[i] = (a << 24) | (r << 16) | (g << 8) | b;
+		colourRgbLowRef[i] = 0;
+		scaleRef[i] = (int) (p.size / 4f * 16384);
+	}
+
+	/** Copy ref state to float state for rendering (call after EmittedParticle.tick). */
+	public void syncRefToFloat(int i) {
+		posX[i] = (float) (xFixed[i] >> 12);
+		posY[i] = (float) (yFixed[i] >> 12);
+		posZ[i] = (float) (zFixed[i] >> 12);
+		life[i] = (float) remainingTicks[i] / 50f;
+		maxLife[i] = (float) lifetimeTicks[i] / 50f;
+		size[i] = (float) scaleRef[i] / 16384f * 4f;
+		int argb = colourArgbRef[i];
+		int low = colourRgbLowRef[i];
+		int red16 = (argb >> 8 & 0xff00) + (low >> 16 & 0xff);
+		int green16 = (argb & 0xff00) + (low >> 8 & 0xff);
+		int blue16 = (argb << 8 & 0xff00) + (low & 0xff);
+		int alpha16 = (argb >> 16 & 0xff00) + (low >> 24 & 0xff);
+		colorR[i] = (red16 >> 8) / 255f;
+		colorG[i] = (green16 >> 8) / 255f;
+		colorB[i] = (blue16 >> 8) / 255f;
+		colorA[i] = (alpha16 >> 8) / 255f;
 	}
 
 	public void swap(int i, int j) {
@@ -296,6 +392,30 @@ public final class ParticleBuffer {
 		ParticleEmitter e = emitter[i];
 		emitter[i] = emitter[j];
 		emitter[j] = e;
+		swapLong(xFixed, i, j);
+		swapLong(yFixed, i, j);
+		swapLong(zFixed, i, j);
+		swapShort(velocityX, i, j);
+		swapShort(velocityY, i, j);
+		swapShort(velocityZ, i, j);
+		swapInt(speedRef, i, j);
+		swapInt(lifetimeTicks, i, j);
+		swapInt(remainingTicks, i, j);
+		swapInt(colourArgbRef, i, j);
+		swapInt(colourRgbLowRef, i, j);
+		swapInt(scaleRef, i, j);
+	}
+
+	private static void swapLong(long[] a, int i, int j) {
+		long t = a[i];
+		a[i] = a[j];
+		a[j] = t;
+	}
+
+	private static void swapShort(short[] a, int i, int j) {
+		short t = a[i];
+		a[i] = a[j];
+		a[j] = t;
 	}
 
 	private static void swapFloat(float[] a, int i, int j) {
@@ -329,7 +449,7 @@ public final class ParticleBuffer {
 			out[0] = colorR[i];
 			out[1] = colorG[i];
 			out[2] = colorB[i];
-			out[3] = 1f;
+			out[3] = Math.max(0f, Math.min(1f, colorA[i]));
 			return;
 		}
 		float t = 1f - life[i] / m;
@@ -337,7 +457,7 @@ public final class ParticleBuffer {
 			out[0] = colorR[i];
 			out[1] = colorG[i];
 			out[2] = colorB[i];
-			out[3] = Math.max(0f, Math.min(1f, life[i] / m));
+			out[3] = Math.max(0f, Math.min(1f, colorA[i]));
 			return;
 		}
 		float blend = Particle.transitionBlend(t, colorTransitionPct[i]);

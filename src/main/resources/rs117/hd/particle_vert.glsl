@@ -9,7 +9,6 @@ layout (location = 2) in vec4 aColor;
 layout (location = 3) in float aSize;
 
 out vec4 vColor;
-out vec2 vCorner;
 out vec2 vUV;
 
 void main() {
@@ -23,6 +22,5 @@ void main() {
 	vec3 worldPos = aCenter + (right * aCorner.x + up * aCorner.y) * aSize;
 	gl_Position = projectionMatrix * vec4(worldPos, 1.0);
 	vColor = aColor;
-	vCorner = aCorner;
 	vUV = aCorner * 0.5 + 0.5;
 }

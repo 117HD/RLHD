@@ -6,7 +6,9 @@ package rs117.hd.scene.particles;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
+import javax.imageio.ImageIO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +63,8 @@ public class ParticleTextureLoader {
 			if (name == null || name.isEmpty() || textureIds.containsKey(name)) continue;
 			try {
 				ResourcePath resPath = PARTICLE_TEXTURES_PATH.resolve(name);
-				BufferedImage img = resPath.loadImage();
+				BufferedImage img = loadImageExact(resPath);
+				if (img == null) continue;
 				int id = uploadToGl(img);
 				textureIds.put(name, id);
 			} catch (IOException e) {
@@ -85,6 +88,21 @@ public class ParticleTextureLoader {
 		textureIds.clear();
 	}
 
+	/**
+	 * Load image at exact file resolution (no Toolkit scaling). Returns null if read fails.
+	 */
+	@Nullable
+	private BufferedImage loadImageExact(ResourcePath path) throws IOException {
+		try (InputStream is = path.toInputStream()) {
+			BufferedImage img = ImageIO.read(is);
+			if (img == null) {
+				log.warn("[Particles] ImageIO.read returned null for: {}", path);
+				return null;
+			}
+			return img;
+		}
+	}
+
 	private int uploadToGl(BufferedImage img) {
 		int w = img.getWidth();
 		int h = img.getHeight();
@@ -101,8 +119,10 @@ public class ParticleTextureLoader {
 			}
 		pixels.flip();
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		// NEAREST keeps sharp edges; mipmaps improve quality when particle is drawn small
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glBindTexture(GL_TEXTURE_2D, 0);

@@ -88,15 +88,52 @@ public class ParticleManager {
 	@Getter
 	private int lastEmittersUpdating, lastEmittersCulled;
 
-	private Particle obtainParticle() {
+	/** Used by ParticleEmitter.tick(). */
+	public Particle obtainParticle() {
 		Particle p = particlePool.poll();
 		if (p == null) return new Particle();
 		p.resetForPool();
 		return p;
 	}
 
-	private void releaseParticle(Particle p) {
+	/** Used by ParticleEmitter.tick(). */
+	public void releaseParticle(Particle p) {
 		if (p != null) particlePool.offer(p);
+	}
+
+	public int getMaxParticles() {
+		return MAX_PARTICLES;
+	}
+
+	/** Called by ParticleEmitter.tick() after spawnInto(); adds p to buffer and releases p. */
+	public void addSpawnedParticleToBuffer(Particle p, float ox, float oy, float oz, ParticleEmitter emitter) {
+		ParticleEmitterDefinition def = emitter.getDefinition();
+		p.emitter = emitter;
+		p.emitterOriginX = ox;
+		p.emitterOriginY = oy;
+		p.emitterOriginZ = oz;
+		if (def != null) {
+			if (def.colourIncrementPerSecond != null) {
+				p.colourIncrementPerSecond = def.colourIncrementPerSecond;
+				p.colourTransitionEndLife = p.maxLife - def.colourTransitionSecondsConstant;
+			}
+			if (def.targetScale >= 0f) {
+				p.scaleIncrementPerSecond = def.scaleIncrementPerSecondCached;
+				p.scaleTransitionEndLife = p.maxLife - def.scaleTransitionSecondsConstant;
+			}
+			if (def.targetSpeed >= 0f) {
+				p.speedIncrementPerSecond = def.speedIncrementPerSecondCached;
+				p.speedTransitionEndLife = p.maxLife - def.speedTransitionSecondsConstant;
+			}
+			p.distanceFalloffType = def.distanceFalloffType;
+			p.distanceFalloffStrength = def.distanceFalloffStrength;
+			p.clipToTerrain = def.clipToTerrain;
+			p.hasLevelBounds = def.hasLevelBounds;
+			p.upperBoundLevel = def.upperBoundLevel;
+			p.lowerBoundLevel = def.lowerBoundLevel;
+		}
+		particleBuffer.addFrom(p);
+		releaseParticle(p);
 	}
 
 	public void addEmitter(ParticleEmitter emitter) {
@@ -226,12 +263,12 @@ public class ParticleManager {
 		def.postDecode();
 		if (def.fallbackDefinition != null)
 			def = def.fallbackDefinition;
-		float syMin = (float) def.spreadYawMinDecoded * UNITS_TO_RAD;
-		float syMax = (float) def.spreadYawMaxDecoded * UNITS_TO_RAD;
-		float spMin = (float) def.spreadPitchMinDecoded * UNITS_TO_RAD;
-		float spMax = (float) def.spreadPitchMaxDecoded * UNITS_TO_RAD;
-		float sizeMin = def.minScaleDecoded / 16384f * 4f;
-		float sizeMax = def.maxScaleDecoded / 16384f * 4f;
+		float syMin = def.spreadYawMin * UNITS_TO_RAD;
+		float syMax = def.spreadYawMax * UNITS_TO_RAD;
+		float spMin = def.spreadPitchMin * UNITS_TO_RAD;
+		float spMax = def.spreadPitchMax * UNITS_TO_RAD;
+		float sizeMin = def.minScale;
+		float sizeMax = def.maxScale;
 		float scaleTrans = def.scaleTransitionPercent > 0 ? def.scaleTransitionPercent / 100f * 2f : 1f;
 		float[] colorMin = argbToFloat(def.minColourArgb);
 		float[] colorMax = argbToFloat(def.maxColourArgb);
@@ -251,10 +288,10 @@ public class ParticleManager {
 			.colorRange(colorMin, colorMax)
 			.uniformColorVariation(def.uniformColourVariation)
 			.emissionBurst(def.minSpawnCount, def.maxSpawnCount, def.initialSpawnCount);
-		if (def.targetSpeed >= 0)
+		if (def.targetSpeed >= 0f)
 			e.targetSpeed(def.targetSpeed, def.speedTransitionPercent / 100f * 2f);
-		if (def.targetScaleDecoded >= 0)
-			e.targetScale(def.targetScaleDecoded / 16384f * 4f, scaleTrans);
+		if (def.targetScale >= 0f)
+			e.targetScale(def.targetScale, scaleTrans);
 		if (targetColor != null)
 			e.targetColor(targetColor, def.colourTransitionPercent, def.alphaTransitionPercent);
 		e.setDefinition(def);
@@ -291,12 +328,13 @@ public class ParticleManager {
 		def.postDecode();
 		if (def.fallbackDefinition != null)
 			def = def.fallbackDefinition;
-		float syMin = (float) def.spreadYawMinDecoded * UNITS_TO_RAD;
-		float syMax = (float) def.spreadYawMaxDecoded * UNITS_TO_RAD;
-		float spMin = (float) def.spreadPitchMinDecoded * UNITS_TO_RAD;
-		float spMax = (float) def.spreadPitchMaxDecoded * UNITS_TO_RAD;
-		float sizeMin = def.minScaleDecoded / 16384f * 4f;
-		float sizeMax = def.maxScaleDecoded / 16384f * 4f;
+		// spread 0–2048 angle units (float), speed/scale from JSON as-is
+		float syMin = def.spreadYawMin * UNITS_TO_RAD;
+		float syMax = def.spreadYawMax * UNITS_TO_RAD;
+		float spMin = def.spreadPitchMin * UNITS_TO_RAD;
+		float spMax = def.spreadPitchMax * UNITS_TO_RAD;
+		float sizeMin = def.minScale;
+		float sizeMax = def.maxScale;
 		float scaleTrans = def.scaleTransitionPercent > 0 ? def.scaleTransitionPercent / 100f * 2f : 1f;
 		float[] colorMin = argbToFloat(def.minColourArgb);
 		float[] colorMax = argbToFloat(def.maxColourArgb);
@@ -315,12 +353,12 @@ public class ParticleManager {
 		emitter.colorRange(colorMin, colorMax);
 		emitter.uniformColorVariation(def.uniformColourVariation);
 		emitter.emissionBurst(def.minSpawnCount, def.maxSpawnCount, def.initialSpawnCount);
-		if (def.targetSpeed >= 0)
+		if (def.targetSpeed >= 0f)
 			emitter.targetSpeed(def.targetSpeed, def.speedTransitionPercent / 100f * 2f);
 		else
-			emitter.targetSpeed(-1f, 1f);
-		if (def.targetScaleDecoded >= 0)
-			emitter.targetScale(def.targetScaleDecoded / 16384f * 4f, scaleTrans);
+			emitter.targetSpeed(ParticleEmitterDefinition.NO_TARGET, 1f);
+		if (def.targetScale >= 0f)
+			emitter.targetScale(def.targetScale, scaleTrans);
 		if (targetColor != null)
 			emitter.targetColor(targetColor, def.colourTransitionPercent, def.alphaTransitionPercent);
 		emitter.particleId(def.id);
@@ -597,43 +635,9 @@ public class ParticleManager {
 						int upper = def.upperBoundLevel == -2 ? 3 : (def.upperBoundLevel == -1 ? plane : def.upperBoundLevel);
 						if (plane < lower || plane > upper) continue;
 					}
-					if (!emitter.isEmissionAllowedAtCycle(gameCycle)) continue;
-					float ox = ex;
-					float oz = ez;
-					int toSpawn = emitter.advanceEmission(dt);
-					for (int i = 0; i < toSpawn && buf.count < maxParticles; i++) {
-						Particle p = obtainParticle();
-						if (!emitter.spawnInto(p, ox, spawnY, oz, plane)) {
-							releaseParticle(p);
-							continue;
-						}
-						p.emitter = emitter;
-						p.emitterOriginX = ox;
-						p.emitterOriginY = spawnY;
-						p.emitterOriginZ = oz;
-						if (def != null) {
-							if (def.colourIncrementPerSecond != null) {
-								p.colourIncrementPerSecond = def.colourIncrementPerSecond;
-								p.colourTransitionEndLife = p.maxLife - def.colourTransitionSecondsConstant;
-							}
-							if (def.targetScaleDecoded >= 0) {
-								p.scaleIncrementPerSecond = def.scaleIncrementPerSecondCached;
-								p.scaleTransitionEndLife = p.maxLife - def.scaleTransitionSecondsConstant;
-							}
-							if (def.targetSpeed >= 0) {
-								p.speedIncrementPerSecond = def.speedIncrementPerSecondCached;
-								p.speedTransitionEndLife = p.maxLife - def.speedTransitionSecondsConstant;
-							}
-							p.distanceFalloffType = def.distanceFalloffType;
-							p.distanceFalloffStrength = def.distanceFalloffStrength;
-							p.clipToTerrain = def.clipToTerrain;
-							p.hasLevelBounds = def.hasLevelBounds;
-							p.upperBoundLevel = def.upperBoundLevel;
-							p.lowerBoundLevel = def.lowerBoundLevel;
-						}
-						buf.addFrom(p);
-						releaseParticle(p);
-					}
+					if (def != null)
+						emitter.setDirectionYaw((float) def.directionYaw * UNITS_TO_RAD);
+					emitter.tick(dt, gameCycle, ex, spawnY, ez, plane, this);
 				}
 			}
 			lastEmittersCulled = emittersCulledThisFrame.size();
@@ -643,84 +647,23 @@ public class ParticleManager {
 			lastEmittersCulled = sceneEmitters.size();
 		}
 
-		// Update and compact (swap-with-last when removing)
+		// Update and compact (swap-with-last when removing). Per-particle tick = EmittedParticle.tick() 1:1 ref.
 		ParticleBuffer buf = particleBuffer;
 		int n = buf.count;
+		int tickDelta = Math.max(1, (int) Math.round(dt * 50));
 		for (int i = 0; i < n; ) {
-			if (buf.emitter[i] != null && emittersCulledThisFrame.contains(buf.emitter[i])) {
+			if (EmittedParticle.tick(buf, i, tickDelta, this)) {
 				buf.swap(i, n - 1);
 				n--;
-				continue;
+			} else {
+				i++;
 			}
-			buf.life[i] -= dt;
-			if (buf.life[i] <= 0) {
-				buf.swap(i, n - 1);
-				n--;
-				continue;
-			}
-			if ((buf.flags[i] & ParticleBuffer.FLAG_COLOUR_INCREMENT) != 0 && buf.life[i] >= buf.colourTransitionEndLife[i]) {
-				buf.colorR[i] = Math.max(0f, Math.min(1f, buf.colorR[i] + buf.colourIncR[i] * dt));
-				buf.colorG[i] = Math.max(0f, Math.min(1f, buf.colorG[i] + buf.colourIncG[i] * dt));
-				buf.colorB[i] = Math.max(0f, Math.min(1f, buf.colorB[i] + buf.colourIncB[i] * dt));
-				buf.colorA[i] = Math.max(0f, Math.min(1f, buf.colorA[i] + buf.colourIncA[i] * dt));
-			}
-			if (buf.scaleIncPerSec[i] != 0f && buf.life[i] >= buf.scaleTransitionEndLife[i]) {
-				buf.size[i] += buf.scaleIncPerSec[i] * dt;
-			}
-			if (buf.speedIncPerSec[i] != 0f && buf.life[i] >= buf.speedTransitionEndLife[i]) {
-				float vx = buf.velX[i], vy = buf.velY[i], vz = buf.velZ[i];
-				float cur = (float) Math.sqrt(vx * vx + vy * vy + vz * vz);
-				if (cur > VEL_EPS) {
-					float scale = (cur + buf.speedIncPerSec[i] * dt) / cur;
-					buf.velX[i] = vx * scale;
-					buf.velY[i] = vy * scale;
-					buf.velZ[i] = vz * scale;
-				}
-			}
-			if (buf.distanceFalloffType[i] == 1 || buf.distanceFalloffType[i] == 2) {
-				float dx = buf.posX[i] - buf.emitterOriginX[i];
-				float dy = buf.posY[i] - buf.emitterOriginY[i];
-				float dz = buf.posZ[i] - buf.emitterOriginZ[i];
-				float curSpeed = (float) Math.sqrt(buf.velX[i] * buf.velX[i] + buf.velY[i] * buf.velY[i] + buf.velZ[i] * buf.velZ[i]);
-				if (curSpeed > VEL_EPS) {
-					float scale;
-					if (buf.distanceFalloffType[i] == 1) {
-						float dist = (float) Math.sqrt(dx * dx + dy * dy + dz * dz) / 4f;
-						scale = Math.max(0f, 1f - buf.distanceFalloffStrength[i] * dist * dt / FALLOFF_DIV_LINEAR);
-					} else {
-						float distSq = dx * dx + dy * dy + dz * dz;
-						scale = Math.max(0f, 1f - buf.distanceFalloffStrength[i] * distSq * dt / FALLOFF_DIV_SQUARED);
-					}
-					buf.velX[i] *= scale;
-					buf.velY[i] *= scale;
-					buf.velZ[i] *= scale;
-				}
-			}
-			buf.posX[i] += buf.velX[i] * dt;
-			buf.posY[i] += buf.velY[i] * dt;
-			buf.posZ[i] += buf.velZ[i] * dt;
-			if (buf.hasLevelBounds[i] && ctx != null) {
-				int posXi = (int) buf.posX[i];
-				int posZi = (int) buf.posZ[i];
-				int pl = buf.plane[i];
-				float ceiling = buf.upperBoundLevel[i] == -2 ? Float.MAX_VALUE
-					: getTerrainHeight(ctx, posXi, posZi, buf.upperBoundLevel[i] == -1 ? pl : buf.upperBoundLevel[i]);
-				float floor = buf.lowerBoundLevel[i] == -2 ? -Float.MAX_VALUE
-					: (buf.lowerBoundLevel[i] == -1
-						? (pl < 3 ? getTerrainHeight(ctx, posXi, posZi, pl + 1) : getTerrainHeight(ctx, posXi, posZi, pl) - 2048f)
-						: getTerrainHeight(ctx, posXi, posZi, Math.min(3, buf.lowerBoundLevel[i] + 1)));
-				if (buf.posY[i] > ceiling || buf.posY[i] < floor) {
-					buf.swap(i, n - 1);
-					n--;
-					continue;
-				}
-			}
-			i++;
 		}
 		buf.count = n;
 	}
 
-	private static float getTerrainHeight(SceneContext ctx, int localX, int localZ, int plane) {
+	/** Used by EmittedParticle.tick() for level bounds. */
+	public static float getTerrainHeight(SceneContext ctx, int localX, int localZ, int plane) {
 		int sceneExX = Math.max(0, Math.min(EXTENDED_SCENE_SIZE - 2, (localX >> LOCAL_COORD_BITS) + ctx.sceneOffset));
 		int sceneExY = Math.max(0, Math.min(EXTENDED_SCENE_SIZE - 2, (localZ >> LOCAL_COORD_BITS) + ctx.sceneOffset));
 		int[][][] tileHeights = ctx.scene.getTileHeights();
