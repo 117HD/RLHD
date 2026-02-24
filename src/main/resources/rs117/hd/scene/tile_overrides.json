@@ -6939,28 +6939,25 @@
     "name": "CATHERBY_BEACH_SAND_OVERLAY",
     "area": "CATHERBY",
     "overlayIds": [ 25 ],
-    "replacements": {
-      "SEASONAL_SAND": true
-    }
+    "groundMaterial": "SAND_4"
   },
   {
     "name": "SOUTH_CATHERBY_SAND_EXTENSION",
     "area": "SOUTH_CATHERBY_SEASON_FIX",
     "overlayIds": [ 25 ],
-    "replacements": {
-      "SEASONAL_SAND": true
-    }
+    "groundMaterial": "SAND_4"
   },
   {
     "name": "CATHERBY_BEACH_SAND",
     "area": "CATHERBY",
+    "groundMaterial": "SAND_4",
+    "maxLightness": 55,
     "underlayIds": [
       62
     ],
     "replacements": {
       "SEASONAL_GRASS": "h >= 9 || h == 8 && s > 5",
-      "SEASONAL_DIRT": "h < 8 && s > 4 && l < 45",
-      "SEASONAL_SAND": true
+      "SEASONAL_DIRT": "h < 8 && s > 4 && l < 45"
     }
   },
   {

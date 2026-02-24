@@ -1374,6 +1374,15 @@
     "specularGloss": 10.0
   },
   {
+    "name": "SAND_4_N"
+  },
+  {
+    "name": "SAND_4",
+    "normalMap": "SAND_4_N",
+    "specularStrength": 0.2,
+    "specularGloss": 10.0
+  },
+  {
     "name": "GRUNGE_1_N"
   },
   {
