@@ -238,6 +238,12 @@ public class ParticleEmitter {
 	@Nullable
 	public Particle spawn(float originLocalX, float originLocalY, float originLocalZ, int plane) {
 		if (!isActive()) return null;
+		Particle into = new Particle();
+		return spawnInto(into, originLocalX, originLocalY, originLocalZ, plane) ? into : null;
+	}
+
+	public boolean spawnInto(Particle into, float originLocalX, float originLocalY, float originLocalZ, int plane) {
+		if (!isActive()) return false;
 
 		ThreadLocalRandom rng = ThreadLocalRandom.current();
 		randomDirectionFromRanges(TMP_DIR, rng);
@@ -250,7 +256,6 @@ public class ParticleEmitter {
 		float life = particleLifeMin + (particleLifeMax - particleLifeMin) * rng.nextFloat();
 		float size = sizeMin + (sizeMax - sizeMin) * rng.nextFloat();
 
-		Particle into = new Particle();
 		into.setPosition(originLocalX, originLocalY, originLocalZ);
 		into.setVelocity(vx, vy, vz);
 		into.life = life;
@@ -276,7 +281,7 @@ public class ParticleEmitter {
 		into.targetColor = targetColor;
 		into.colorTransitionPct = colorTransitionPct;
 		into.alphaTransitionPct = alphaTransitionPct;
-		return into;
+		return true;
 	}
 
 	public int advanceEmission(float dt) {

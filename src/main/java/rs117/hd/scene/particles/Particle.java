@@ -44,6 +44,23 @@ public class Particle {
 
 	public Particle() {}
 
+	public void resetForPool() {
+		emitter = null;
+		colourIncrementPerSecond = null;
+		scaleIncrementPerSecond = 0f;
+		speedIncrementPerSecond = 0f;
+		colourTransitionEndLife = -1f;
+		scaleTransitionEndLife = -1f;
+		speedTransitionEndLife = -1f;
+		distanceFalloffType = 0;
+		distanceFalloffStrength = 0;
+		clipToTerrain = false;
+		hasLevelBounds = false;
+		upperBoundLevel = -2;
+		lowerBoundLevel = -2;
+		targetColor = null;
+	}
+
 	public void setPosition(float x, float y, float z) {
 		position[0] = x;
 		position[1] = y;

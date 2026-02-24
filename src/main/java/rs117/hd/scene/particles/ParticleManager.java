@@ -5,7 +5,9 @@
 package rs117.hd.scene.particles;
 
 import com.google.common.base.Stopwatch;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -81,9 +83,21 @@ public class ParticleManager {
 	private final ParticleBuffer particleBuffer = new ParticleBuffer();
 	@Getter
 	private final Set<ParticleEmitter> emittersCulledThisFrame = new HashSet<>();
+	private final Deque<Particle> particlePool = new ArrayDeque<>(256);
 
 	@Getter
 	private int lastEmittersUpdating, lastEmittersCulled;
+
+	private Particle obtainParticle() {
+		Particle p = particlePool.poll();
+		if (p == null) return new Particle();
+		p.resetForPool();
+		return p;
+	}
+
+	private void releaseParticle(Particle p) {
+		if (p != null) particlePool.offer(p);
+	}
 
 	public void addEmitter(ParticleEmitter emitter) {
 		if (emitter != null && !sceneEmitters.contains(emitter))
@@ -588,8 +602,11 @@ public class ParticleManager {
 					float oz = ez;
 					int toSpawn = emitter.advanceEmission(dt);
 					for (int i = 0; i < toSpawn && buf.count < maxParticles; i++) {
-						Particle p = emitter.spawn(ox, spawnY, oz, plane);
-						if (p == null) continue;
+						Particle p = obtainParticle();
+						if (!emitter.spawnInto(p, ox, spawnY, oz, plane)) {
+							releaseParticle(p);
+							continue;
+						}
 						p.emitter = emitter;
 						p.emitterOriginX = ox;
 						p.emitterOriginY = spawnY;
@@ -615,6 +632,7 @@ public class ParticleManager {
 							p.lowerBoundLevel = def.lowerBoundLevel;
 						}
 						buf.addFrom(p);
+						releaseParticle(p);
 					}
 				}
 			}
