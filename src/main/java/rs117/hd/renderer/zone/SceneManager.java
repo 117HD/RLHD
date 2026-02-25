@@ -549,7 +549,7 @@ public class SceneManager {
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z);
-					sorted.zone.uploadJob.revealAfterMS = timeMs + ceil(clamp(sorted.dist / 15.0f, 0.25f, 1.5f) * 1000.0f);
+					sorted.zone.uploadJob.revealAfterTimestampMs = timeMs + ceil(clamp(sorted.dist / 15.0f, 0.25f, 1.5f) * 1000.0f);
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob

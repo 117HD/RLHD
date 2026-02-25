@@ -187,9 +187,9 @@ public class WorldViewContext {
 			return;
 
 		if (!uploadTask.isQueued()) {
-			if (queue && uploadTask.revealAfterMS < System.currentTimeMillis()) {
+			if (queue && uploadTask.revealAfterTimestampMs < System.currentTimeMillis()) {
 				log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
-				uploadTask.revealAfterMS = 0;
+				uploadTask.revealAfterTimestampMs = 0;
 				uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
 			}
 			return;
@@ -338,7 +338,7 @@ public class WorldViewContext {
 				zz,
 				curZone.uploadJob.zone.hashCode()
 			);
-			preRevealAfterMs = curZone.uploadJob.revealAfterMS;
+			preRevealAfterMs = curZone.uploadJob.revealAfterTimestampMs;
 			curZone.uploadJob.cancel();
 			curZone.uploadJob.release();
 		}
@@ -347,8 +347,7 @@ public class WorldViewContext {
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
-		curZone.uploadJob.revealAfterMS = preRevealAfterMs;
-		if (curZone.uploadJob.revealAfterMS < 0.0f)
-			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
+		curZone.uploadJob.revealAfterTimestampMs = preRevealAfterMs;
+		curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
