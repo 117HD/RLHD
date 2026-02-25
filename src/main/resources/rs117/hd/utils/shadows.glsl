@@ -35,9 +35,9 @@
 #elif SHADOW_QUALITY == 2
     #define MIN_SHADOW_BIAS -0.00035
 #elif SHADOW_QUALITY == 3
-    #define MIN_SHADOW_BIAS -0.00025
+    #define MIN_SHADOW_BIAS -0.0003
 #elif SHADOW_QUALITY >= 4
-    #define MIN_SHADOW_BIAS -0.00015
+    #define MIN_SHADOW_BIAS -0.00025
 #endif
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
