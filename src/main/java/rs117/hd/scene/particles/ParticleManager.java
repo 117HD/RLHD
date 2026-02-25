@@ -207,7 +207,8 @@ public class ParticleManager {
 	private void applyConfig() {
 		emitterDefinitionManager.loadConfig();
 		particleDefinitionLoader.loadConfig();
-		particleTextureLoader.preload(particleDefinitionLoader.getAvailableTextureNames());
+		// Do not preload particle textures at all; they are lazily loaded on first use in ParticleTextureLoader.getTextureId.
+		// Preloading (even only emitter-used textures) breaks shadows on some setups.
 		loadSceneParticles(plugin.getSceneContext());
 	}
 

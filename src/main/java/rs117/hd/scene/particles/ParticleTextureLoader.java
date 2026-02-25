@@ -77,8 +77,28 @@ public class ParticleTextureLoader {
 
 	@Nullable
 	public Integer getTextureId(String textureFileName) {
-		if (textureFileName == null || textureFileName.isEmpty()) return null;
-		return textureIds.get(textureFileName);
+		if (textureFileName == null || textureFileName.isEmpty())
+			return null;
+
+		Integer existing = textureIds.get(textureFileName);
+		if (existing != null && existing != 0)
+			return existing;
+
+		long start = System.nanoTime();
+		try {
+			ResourcePath resPath = PARTICLE_TEXTURES_PATH.resolve(textureFileName);
+			BufferedImage img = loadImageExact(resPath);
+			if (img == null)
+				return null;
+			int id = uploadToGl(img);
+			textureIds.put(textureFileName, id);
+			lastTextureCount = textureIds.size();
+			lastLoadTimeMs = (System.nanoTime() - start) / 1_000_000;
+			return id;
+		} catch (IOException e) {
+			log.warn("[Particles] Failed to lazily load texture: {}", textureFileName, e);
+			return null;
+		}
 	}
 
 	public void dispose() {
