@@ -196,9 +196,6 @@ public class SceneManager {
 					ctx.update();
 			}
 		}
-
-		if (root.sceneContext != null && root.sceneContext.isInHouse)
-			root.completeInvalidation();
 	}
 
 	private void updateAreaHiding() {
