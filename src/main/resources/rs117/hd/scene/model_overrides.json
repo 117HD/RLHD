@@ -63221,7 +63221,8 @@
   },
   {
     "description": "Tempoross - Hide Ripples",
-    "hideInAreas": [ "TEMPOROSS_COVE" ],
+    "areas": [ "TEMPOROSS_COVE" ],
+    "hideAsWaterEffect": true,
     "objectIds": [
       "TEMPOROSS_RIPPLE_3_NOSHADOW"
     ]
