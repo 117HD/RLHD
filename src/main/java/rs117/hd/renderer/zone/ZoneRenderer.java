@@ -378,10 +378,12 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			if (hasSceneCameraChanged) {
+			directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
+			directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
+			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
+
+			if (hasSceneCameraChanged || hasDirectionalCameraChanged) {
 				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
-				directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
-				directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 
 				final float[][] volumeCorners = directionalShadowCasterVolume
 					.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
