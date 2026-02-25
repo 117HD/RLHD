@@ -7,7 +7,11 @@ package rs117.hd.renderer.zone.pass.impl;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -24,6 +28,7 @@ import rs117.hd.renderer.zone.pass.ScenePassContext;
 import rs117.hd.scene.particles.ParticleBuffer;
 import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.scene.particles.ParticleTextureLoader;
+import rs117.hd.scene.particles.emitter.ParticleEmitter;
 import rs117.hd.utils.HDUtils;
 import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 import static org.lwjgl.opengl.GL15.glUnmapBuffer;
@@ -67,6 +72,9 @@ public class ParticlePass implements ScenePass {
 	private final float[] particleDistSq = new float[MAX_PARTICLES];
 	private final Integer[] particleSortOrder = new Integer[MAX_PARTICLES];
 	private int whiteParticleTextureId;
+
+	private final String[] textureForVisibleIndex = new String[MAX_PARTICLES];
+	private final FloatBuffer batchUploadBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * FLOATS_PER_INSTANCE);
 
 	@Getter
 	private int lastParticleTotalOnPlane;
@@ -166,26 +174,41 @@ public class ParticlePass implements ScenePass {
 	@Override
 	public void draw(ScenePassContext ctx) {
 		int currentPlane = client.getTopLevelWorldView().getPlane();
-		int particleInstanceCount = uploadParticles(currentPlane);
-		if (particleInstanceCount > 0) {
-			var renderState = ctx.getRenderState();
-			renderState.program.set(particleProgram);
-			renderState.enable.set(GL_BLEND);
-			renderState.blendFunc.reset();
-			renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-			renderState.disable.set(GL_CULL_FACE);
-			renderState.depthMask.set(false);
-			renderState.apply();
-			Integer textureId = particleTextureLoader.getTextureId(particleManager.getActiveTextureName());
-			int idToBind = (textureId != null && textureId != 0) ? textureId : whiteParticleTextureId;
-			glActiveTexture(TEXTURE_UNIT_PARTICLE);
+		List<ParticleTextureBatch> batches = prepareBatches(currentPlane);
+		if (batches.isEmpty())
+			return;
+		var renderState = ctx.getRenderState();
+		renderState.program.set(particleProgram);
+		renderState.enable.set(GL_BLEND);
+		renderState.blendFunc.reset();
+		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		renderState.disable.set(GL_CULL_FACE);
+		renderState.depthMask.set(false);
+		renderState.apply();
+		glActiveTexture(TEXTURE_UNIT_PARTICLE);
+		particleProgram.setParticleTextureUnit(TEXTURE_UNIT_PARTICLE);
+		glBindVertexArray(vaoParticles);
+		ctx.beginTimer(Timer.RENDER_PARTICLES);
+		for (ParticleTextureBatch batch : batches) {
+			int idToBind = (batch.textureId != 0) ? batch.textureId : whiteParticleTextureId;
 			glBindTexture(GL_TEXTURE_2D, idToBind);
-			particleProgram.setParticleTextureUnit(TEXTURE_UNIT_PARTICLE);
-			glBindVertexArray(vaoParticles);
-			ctx.beginTimer(Timer.RENDER_PARTICLES);
-			glDrawArraysInstanced(GL_TRIANGLES, 0, QUAD_VERTS, particleInstanceCount);
-			ctx.endTimer(Timer.RENDER_PARTICLES);
-			glBindVertexArray(0);
+			uploadBatchInstanceData(batch.visibleIndices, batch.count);
+			glDrawArraysInstanced(GL_TRIANGLES, 0, QUAD_VERTS, batch.count);
+		}
+		ctx.endTimer(Timer.RENDER_PARTICLES);
+		glBindVertexArray(0);
+	}
+
+	/** One draw batch: same texture, instance count, and visible indices (in draw order). */
+	private static class ParticleTextureBatch {
+		final int textureId;
+		final int count;
+		final int[] visibleIndices;
+
+		ParticleTextureBatch(int textureId, int[] visibleIndices) {
+			this.textureId = textureId;
+			this.count = visibleIndices.length;
+			this.visibleIndices = visibleIndices;
 		}
 	}
 
@@ -194,7 +217,8 @@ public class ParticlePass implements ScenePass {
 		ctx.getRenderState().depthMask.set(true);
 	}
 
-	private int uploadParticles(int currentPlane) {
+	/** Prepares particle instance data and batches by texture so each particle uses its emitter's texture. */
+	private List<ParticleTextureBatch> prepareBatches(int currentPlane) {
 		ParticleBuffer buf = particleManager.getParticleBuffer();
 		particleStagingBuffer.clear();
 		lastParticleTotalOnPlane = 0;
@@ -226,6 +250,7 @@ public class ParticlePass implements ScenePass {
 				continue;
 			}
 			particleDistSq[n] = dSq;
+			textureForVisibleIndex[n] = getTextureNameForParticle(buf, i);
 			buf.getCurrentColor(i, particleColor);
 			float cx = buf.posX[i] + plugin.cameraShift[0];
 			float cy = buf.posY[i];
@@ -238,28 +263,53 @@ public class ParticlePass implements ScenePass {
 		int instanceCount = n;
 		lastParticleDrawn = instanceCount;
 		if (instanceCount == 0)
-			return 0;
+			return new ArrayList<>();
+
 		for (int i = 0; i < instanceCount; i++)
 			particleSortOrder[i] = i;
 		Arrays.sort(particleSortOrder, 0, instanceCount, (a, b) -> Float.compare(particleDistSq[b], particleDistSq[a]));
 
-		int uploadBytes = instanceCount * FLOATS_PER_INSTANCE * 4;
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
-		ByteBuffer mapped = glMapBufferRange(GL_ARRAY_BUFFER, 0, uploadBytes, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
-		if (mapped != null) {
-			FloatBuffer mappedFloat = mapped.asFloatBuffer();
-			for (int k = 0; k < instanceCount; k++) {
-				int src = particleSortOrder[k] * FLOATS_PER_INSTANCE;
-				for (int f = 0; f < FLOATS_PER_INSTANCE; f++)
-					mappedFloat.put(particleStagingBuffer.get(src + f));
-			}
-			glUnmapBuffer(GL_ARRAY_BUFFER);
-		} else {
-			particleStagingBuffer.flip();
-			glBufferSubData(GL_ARRAY_BUFFER, 0, particleStagingBuffer);
+		// Group by texture (order preserved: back-to-front per texture)
+		Map<String, List<Integer>> textureToIndices = new LinkedHashMap<>();
+		for (int k = 0; k < instanceCount; k++) {
+			int visibleIndex = particleSortOrder[k];
+			String tex = textureForVisibleIndex[visibleIndex];
+			if (tex == null) tex = "";
+			textureToIndices.computeIfAbsent(tex, x -> new ArrayList<>()).add(visibleIndex);
 		}
+
+		List<ParticleTextureBatch> batches = new ArrayList<>();
+		for (Map.Entry<String, List<Integer>> e : textureToIndices.entrySet()) {
+			List<Integer> indices = e.getValue();
+			String textureName = e.getKey();
+			Integer tid = textureName.isEmpty() ? null : particleTextureLoader.getTextureId(textureName);
+			int textureId = (tid != null && tid != 0) ? tid : 0;
+			int[] arr = new int[indices.size()];
+			for (int i = 0; i < indices.size(); i++) arr[i] = indices.get(i);
+			batches.add(new ParticleTextureBatch(textureId, arr));
+		}
+		return batches;
+	}
+
+	private static String getTextureNameForParticle(ParticleBuffer buf, int bufIndex) {
+		ParticleEmitter emitter = buf.emitter[bufIndex];
+		if (emitter == null) return null;
+		var def = emitter.getDefinition();
+		if (def == null || def.texture == null || def.texture.isEmpty()) return null;
+		return def.texture;
+	}
+
+	private void uploadBatchInstanceData(int[] visibleIndices, int count) {
+		batchUploadBuffer.clear();
+		for (int k = 0; k < count; k++) {
+			int src = visibleIndices[k] * FLOATS_PER_INSTANCE;
+			for (int f = 0; f < FLOATS_PER_INSTANCE; f++)
+				batchUploadBuffer.put(particleStagingBuffer.get(src + f));
+		}
+		batchUploadBuffer.flip();
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, batchUploadBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		return instanceCount;
 	}
 
 }
