@@ -29,7 +29,6 @@ public class ParticleEmitter {
 	@Nullable
 	private WorldPoint worldPoint;
 
-	/** When set, position/height are taken from this object's local position and terrain height at that point. */
 	@Nullable
 	private TileObject tileObject;
 
@@ -38,21 +37,15 @@ public class ParticleEmitter {
 
 	@Builder.Default
 	private float heightOffset = 50f;
-	/** Offset from world position in local X (applied when spawning). */
 	@Builder.Default
 	private float offsetX = 0f;
-	/** Offset from world position in local Z (applied when spawning). */
 	@Builder.Default
 	private float offsetY = 0f;
-	/** Offset from world position in height (applied when spawning). */
 	@Builder.Default
 	private float offsetZ = 0f;
-	/** Like lights: alignment for applying offset (CUSTOM = use orientation). */
 	@Builder.Default
 	private Alignment alignment = Alignment.CUSTOM;
-	/** Object orientation in JAU (0–2048), used when alignment.relative. */
 	private int orientation;
-	/** Object size in tiles (for non-CUSTOM alignment). */
 	@Builder.Default
 	private int sizeX = 1;
 	@Builder.Default
@@ -131,7 +124,6 @@ public class ParticleEmitter {
 		return this;
 	}
 
-	/** Offset from object/world position (local X, local Z, height). Like lights. */
 	public ParticleEmitter positionOffset(float x, float z, float height) {
 		this.offsetX = x;
 		this.offsetY = z;

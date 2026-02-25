@@ -88,7 +88,6 @@ public class ParticleManager {
 	@Getter
 	private int lastEmittersUpdating, lastEmittersCulled;
 
-	/** Used by ParticleEmitter.tick(). */
 	public Particle obtainParticle() {
 		Particle p = particlePool.poll();
 		if (p == null) return new Particle();
@@ -96,7 +95,6 @@ public class ParticleManager {
 		return p;
 	}
 
-	/** Used by ParticleEmitter.tick(). */
 	public void releaseParticle(Particle p) {
 		if (p != null) particlePool.offer(p);
 	}
@@ -105,7 +103,6 @@ public class ParticleManager {
 		return MAX_PARTICLES;
 	}
 
-	/** Called by ParticleEmitter.tick() after spawnInto(); adds p to buffer and releases p. */
 	public void addSpawnedParticleToBuffer(Particle p, float ox, float oy, float oz, ParticleEmitter emitter) {
 		ParticleDefinition def = emitter.getDefinition();
 		p.emitter = emitter;
@@ -621,7 +618,6 @@ public class ParticleManager {
 		buf.count = n;
 	}
 
-	/** Get the primary model for a TileObject (for height/bounds). Same renderable as used for clickbox. */
 	@Nullable
 	private static Model getModelFromTileObject(TileObject obj) {
 		Renderable r = null;
@@ -761,7 +757,6 @@ public class ParticleManager {
 		return true;
 	}
 
-	/** Used by EmittedParticle.tick() for level bounds. */
 	public static float getTerrainHeight(SceneContext ctx, int localX, int localZ, int plane) {
 		int sceneExX = Math.max(0, Math.min(EXTENDED_SCENE_SIZE - 2, (localX >> LOCAL_COORD_BITS) + ctx.sceneOffset));
 		int sceneExY = Math.max(0, Math.min(EXTENDED_SCENE_SIZE - 2, (localZ >> LOCAL_COORD_BITS) + ctx.sceneOffset));

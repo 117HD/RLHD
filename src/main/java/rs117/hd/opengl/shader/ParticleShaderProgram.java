@@ -9,7 +9,6 @@ import org.lwjgl.opengl.GL33C;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 
-/** Billboard particles; uses UBOGlobal. */
 public class ParticleShaderProgram extends ShaderProgram {
 	private ShaderProgram.UniformTexture uParticleTexture;
 

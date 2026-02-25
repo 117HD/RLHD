@@ -58,7 +58,6 @@ public class ParticleDevToolsPanel extends PluginPanel {
 
 	private static final String CARD_PLACEHOLDER = "placeholder";
 	private static final String CARD_EDITOR = "editor";
-	/** Game angle units: 2048 units = full circle (matches client SINE/COSINE tables). */
 	private static final int ANGLE_UNITS_PER_CIRCLE = 2048;
 	private static final double RAD_TO_UNITS = ANGLE_UNITS_PER_CIRCLE / (2.0 * Math.PI);
 	private static final double UNITS_TO_RAD = (2.0 * Math.PI) / ANGLE_UNITS_PER_CIRCLE;
@@ -130,10 +129,8 @@ public class ParticleDevToolsPanel extends PluginPanel {
 
 	@Nullable
 	private String selectedDefinitionId;
-	/** True while populating the form from the selected emitter; prevents change listeners from overwriting with stale values. */
 	private boolean loadingEditor;
 	private boolean debugOverlaysEnabled;
-	/** Test emitter used by Cycle button; created at player location on first cycle. */
 	@Nullable
 	private ParticleEmitter testEmitter;
 

@@ -4,6 +4,7 @@
  */
 package rs117.hd.scene.particles;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,8 +26,8 @@ import static rs117.hd.utils.ResourcePath.path;
 import static org.lwjgl.opengl.GL33C.*;
 
 /**
- * Holds the particle textures folder path, the active texture name used for rendering,
- * and a preloaded map of texture name → GL texture id so textures are not loaded on demand during draw.
+ * Particle textures: single 2D textures (getTextureId) plus optional texture array for single-draw batching.
+ * Texture array: layer 0 = white fallback; layers 1..N = lazily loaded, scaled to LAYER_SIZE.
  */
 @Slf4j
 @Singleton
@@ -36,12 +37,17 @@ public class ParticleTextureLoader {
 		"rlhd.particle-texture-path",
 		() -> path(ParticleTextureLoader.class, "..", "textures", "particles")
 	);
+	private static final int LAYER_SIZE = 256;
+	private static final int MAX_LAYERS = 32;
 
 	@Getter
 	@Setter
 	private String activeTextureName;
 
 	private final Map<String, Integer> textureIds = new HashMap<>();
+	private int texArrayId;
+	private final Map<String, Integer> nameToLayer = new HashMap<>();
+	private int nextLayer = 1;
 
 	private int lastTextureCount;
 	private long lastLoadTimeMs;
@@ -101,11 +107,88 @@ public class ParticleTextureLoader {
 		}
 	}
 
+	public int getTextureArrayId() {
+		ensureArrayCreated();
+		return texArrayId;
+	}
+
+	public int getTextureLayer(String textureName) {
+		if (textureName == null || textureName.isEmpty()) return 0;
+		Integer layer = nameToLayer.get(textureName);
+		if (layer != null) return layer;
+		ensureArrayCreated();
+		if (nextLayer >= MAX_LAYERS) {
+			log.warn("[Particles] Texture array full, using layer 0 for: {}", textureName);
+			return 0;
+		}
+		try {
+			ResourcePath resPath = PARTICLE_TEXTURES_PATH.resolve(textureName);
+			BufferedImage img = loadImageExact(resPath);
+			if (img == null) return 0;
+			int layerIdx = nextLayer++;
+			uploadToLayer(layerIdx, img);
+			nameToLayer.put(textureName, layerIdx);
+			lastTextureCount = nameToLayer.size();
+			return layerIdx;
+		} catch (IOException e) {
+			log.warn("[Particles] Failed to load texture: {}", textureName, e);
+			return 0;
+		}
+	}
+
+	private void ensureArrayCreated() {
+		if (texArrayId != 0) return;
+		texArrayId = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texArrayId);
+		ByteBuffer white = BufferUtils.createByteBuffer(LAYER_SIZE * LAYER_SIZE * 4);
+		for (int i = 0; i < LAYER_SIZE * LAYER_SIZE; i++)
+			white.put((byte) 255).put((byte) 255).put((byte) 255).put((byte) 255);
+		white.flip();
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA, LAYER_SIZE, LAYER_SIZE, MAX_LAYERS, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, LAYER_SIZE, LAYER_SIZE, 1, GL_RGBA, GL_UNSIGNED_BYTE, white);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+	}
+
+	private void uploadToLayer(int layer, BufferedImage img) {
+		BufferedImage scaled = img;
+		if (img.getWidth() != LAYER_SIZE || img.getHeight() != LAYER_SIZE) {
+			scaled = new BufferedImage(LAYER_SIZE, LAYER_SIZE, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g = scaled.createGraphics();
+			g.drawImage(img, 0, 0, LAYER_SIZE, LAYER_SIZE, null);
+			g.dispose();
+		}
+		ByteBuffer pixels = BufferUtils.createByteBuffer(LAYER_SIZE * LAYER_SIZE * 4);
+		for (int y = LAYER_SIZE - 1; y >= 0; y--)
+			for (int x = 0; x < LAYER_SIZE; x++) {
+				int argb = scaled.getRGB(x, y);
+				pixels.put((byte) ((argb >> 16) & 0xFF));
+				pixels.put((byte) ((argb >> 8) & 0xFF));
+				pixels.put((byte) (argb & 0xFF));
+				pixels.put((byte) ((argb >> 24) & 0xFF));
+			}
+		pixels.flip();
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texArrayId);
+		glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layer, LAYER_SIZE, LAYER_SIZE, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+	}
+
 	public void dispose() {
 		for (int id : textureIds.values()) {
 			if (id != 0) glDeleteTextures(id);
 		}
 		textureIds.clear();
+		if (texArrayId != 0) {
+			glDeleteTextures(texArrayId);
+			texArrayId = 0;
+		}
+		nameToLayer.clear();
+		nextLayer = 1;
 	}
 
 	/**

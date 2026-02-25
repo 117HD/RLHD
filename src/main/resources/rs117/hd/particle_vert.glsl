@@ -7,9 +7,11 @@ layout (location = 0) in vec2 aCorner;
 layout (location = 1) in vec3 aCenter;
 layout (location = 2) in vec4 aColor;
 layout (location = 3) in float aSize;
+layout (location = 4) in float aLayer;
 
 out vec4 vColor;
 out vec2 vUV;
+out float vLayer;
 
 void main() {
 	vec3 toCamera = cameraPos - aCenter;
@@ -23,4 +25,5 @@ void main() {
 	gl_Position = projectionMatrix * vec4(worldPos, 1.0);
 	vColor = aColor;
 	vUV = aCorner * 0.5 + 0.5;
+	vLayer = aLayer;
 }

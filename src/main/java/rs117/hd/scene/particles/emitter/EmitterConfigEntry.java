@@ -10,7 +10,6 @@ import javax.annotation.Nullable;
 public class EmitterConfigEntry {
 	@Nullable
 	public int[][] placements;
-	/** e.g. [ { "object": "FAI_FALADOR_HOUSE_TORCH", "offsetX": 0, "offsetY": 0, "offsetZ": 0 } ] */
 	@Nullable
 	public List<ObjectEmitterBinding> objectEmitters;
 	@Nullable

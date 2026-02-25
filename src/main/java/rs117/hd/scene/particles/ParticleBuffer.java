@@ -68,7 +68,6 @@ public final class ParticleBuffer {
 	public int[] flags;
 	public ParticleEmitter[] emitter;
 
-	/** Reference EmittedParticle state (1:1 rev): fixed-point position, short velocity, int speed/life/colour/scale. */
 	public long[] xFixed;
 	public long[] yFixed;
 	public long[] zFixed;
@@ -326,7 +325,6 @@ public final class ParticleBuffer {
 		scaleRef[i] = (int) (p.size / 4f * 16384);
 	}
 
-	/** Copy ref state to float state for rendering (call after EmittedParticle.tick). */
 	public void syncRefToFloat(int i) {
 		posX[i] = (float) (xFixed[i] >> 12);
 		posY[i] = (float) (yFixed[i] >> 12);

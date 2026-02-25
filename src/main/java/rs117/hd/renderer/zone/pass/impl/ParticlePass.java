@@ -7,11 +7,7 @@ package rs117.hd.renderer.zone.pass.impl;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -30,10 +26,12 @@ import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.scene.particles.ParticleTextureLoader;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.buffer.GLBuffer;
 import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 import static org.lwjgl.opengl.GL15.glUnmapBuffer;
 import static org.lwjgl.opengl.GL30.GL_MAP_INVALIDATE_RANGE_BIT;
 import static org.lwjgl.opengl.GL30.GL_MAP_WRITE_BIT;
+import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
 import static org.lwjgl.opengl.GL30.glMapBufferRange;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_PARTICLE;
@@ -49,8 +47,11 @@ public class ParticlePass implements ScenePass {
 	private HdPlugin plugin;
 
 	private static final int MAX_PARTICLES = 4096;
+	private static final int MAX_DRAWN = 2048;
 	private static final int QUAD_VERTS = 6;
-	private static final int FLOATS_PER_INSTANCE = 8;
+	private static final int FLOATS_PER_INSTANCE = 9;
+	private static final int INSTANCE_STRIDE_BYTES = 64;
+	private static final int INSTANCE_PADDING_BYTES = INSTANCE_STRIDE_BYTES - FLOATS_PER_INSTANCE * 4; // 28
 	private static final float[] PARTICLE_QUAD_CORNERS = {
 		-1, -1,  1, -1,  1, 1,
 		-1, -1,  1, 1,  -1, 1
@@ -68,13 +69,13 @@ public class ParticlePass implements ScenePass {
 	private int vaoParticles;
 	private int vboParticleQuad;
 	private int vboParticleInstances;
+	private GLBuffer particleInstanceBuffer;
 	private FloatBuffer particleStagingBuffer;
 	private final float[] particleDistSq = new float[MAX_PARTICLES];
 	private final Integer[] particleSortOrder = new Integer[MAX_PARTICLES];
-	private int whiteParticleTextureId;
 
 	private final String[] textureForVisibleIndex = new String[MAX_PARTICLES];
-	private final FloatBuffer batchUploadBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * FLOATS_PER_INSTANCE);
+	private ByteBuffer batchUploadBuffer;
 
 	@Getter
 	private int lastParticleTotalOnPlane;
@@ -84,6 +85,7 @@ public class ParticlePass implements ScenePass {
 	private int lastParticleCulledFrustum;
 	@Getter
 	private int lastParticleDrawn;
+	private int lastUploadedInstanceCount;
 
 	@Override
 	public String passName() {
@@ -93,7 +95,17 @@ public class ParticlePass implements ScenePass {
 	public void initialize() {
 		vaoParticles = glGenVertexArrays();
 		vboParticleQuad = glGenBuffers();
-		vboParticleInstances = glGenBuffers();
+		long instanceVboBytes = (long) MAX_DRAWN * INSTANCE_STRIDE_BYTES;
+		if (GLBuffer.supportsStorageBuffers()) {
+			particleInstanceBuffer = new GLBuffer("particle instances", GL_ARRAY_BUFFER, GL_STREAM_DRAW, GLBuffer.STORAGE_PERSISTENT | GLBuffer.STORAGE_WRITE);
+			particleInstanceBuffer.initialize(instanceVboBytes);
+			vboParticleInstances = particleInstanceBuffer.id;
+		} else {
+			vboParticleInstances = glGenBuffers();
+			glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
+			glBufferData(GL_ARRAY_BUFFER, instanceVboBytes, GL_STREAM_DRAW);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
 		FloatBuffer quadBuffer = BufferUtils.createFloatBuffer(PARTICLE_QUAD_CORNERS.length).put(PARTICLE_QUAD_CORNERS).flip();
 		glBindBuffer(GL_ARRAY_BUFFER, vboParticleQuad);
 		glBufferData(GL_ARRAY_BUFFER, quadBuffer, GL_STATIC_DRAW);
@@ -103,34 +115,22 @@ public class ParticlePass implements ScenePass {
 		glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
 		glVertexAttribDivisor(0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
-		int instanceStride = FLOATS_PER_INSTANCE * 4;
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, instanceStride, 0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 0);
 		glVertexAttribDivisor(1, 1);
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_FLOAT, false, instanceStride, 12);
+		glVertexAttribPointer(2, 4, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 12);
 		glVertexAttribDivisor(2, 1);
 		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 1, GL_FLOAT, false, instanceStride, 28);
+		glVertexAttribPointer(3, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 28);
 		glVertexAttribDivisor(3, 1);
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 32);
+		glVertexAttribDivisor(4, 1);
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
-		glBufferData(GL_ARRAY_BUFFER, (long) MAX_PARTICLES * FLOATS_PER_INSTANCE * 4, GL_STREAM_DRAW);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		particleStagingBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * FLOATS_PER_INSTANCE);
-
-		// 1x1 white texture used when no particle texture is set
-		whiteParticleTextureId = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_PARTICLE);
-		glBindTexture(GL_TEXTURE_2D, whiteParticleTextureId);
-		ByteBuffer whitePixel = BufferUtils.createByteBuffer(4);
-		whitePixel.put((byte) 255).put((byte) 255).put((byte) 255).put((byte) 255).flip();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, whitePixel);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		batchUploadBuffer = BufferUtils.createByteBuffer(MAX_DRAWN * INSTANCE_STRIDE_BYTES);
 	}
 
 	public void destroy() {
@@ -147,11 +147,8 @@ public class ParticlePass implements ScenePass {
 			vboParticleInstances = 0;
 		}
 		particleStagingBuffer = null;
+		batchUploadBuffer = null;
 		particleTextureLoader.dispose();
-		if (whiteParticleTextureId != 0) {
-			glDeleteTextures(whiteParticleTextureId);
-			whiteParticleTextureId = 0;
-		}
 	}
 
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
@@ -174,8 +171,8 @@ public class ParticlePass implements ScenePass {
 	@Override
 	public void draw(ScenePassContext ctx) {
 		int currentPlane = client.getTopLevelWorldView().getPlane();
-		List<ParticleTextureBatch> batches = prepareBatches(currentPlane);
-		if (batches.isEmpty())
+		int instanceCount = prepareBatches(currentPlane);
+		if (instanceCount == 0)
 			return;
 		var renderState = ctx.getRenderState();
 		renderState.program.set(particleProgram);
@@ -186,30 +183,14 @@ public class ParticlePass implements ScenePass {
 		renderState.depthMask.set(false);
 		renderState.apply();
 		glActiveTexture(TEXTURE_UNIT_PARTICLE);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, particleTextureLoader.getTextureArrayId());
 		particleProgram.setParticleTextureUnit(TEXTURE_UNIT_PARTICLE);
 		glBindVertexArray(vaoParticles);
 		ctx.beginTimer(Timer.RENDER_PARTICLES);
-		for (ParticleTextureBatch batch : batches) {
-			int idToBind = (batch.textureId != 0) ? batch.textureId : whiteParticleTextureId;
-			glBindTexture(GL_TEXTURE_2D, idToBind);
-			uploadBatchInstanceData(batch.visibleIndices, batch.count);
-			glDrawArraysInstanced(GL_TRIANGLES, 0, QUAD_VERTS, batch.count);
-		}
+		uploadInstanceDataToVbo(instanceCount);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, QUAD_VERTS, instanceCount);
 		ctx.endTimer(Timer.RENDER_PARTICLES);
 		glBindVertexArray(0);
-	}
-
-	/** One draw batch: same texture, instance count, and visible indices (in draw order). */
-	private static class ParticleTextureBatch {
-		final int textureId;
-		final int count;
-		final int[] visibleIndices;
-
-		ParticleTextureBatch(int textureId, int[] visibleIndices) {
-			this.textureId = textureId;
-			this.count = visibleIndices.length;
-			this.visibleIndices = visibleIndices;
-		}
 	}
 
 	@Override
@@ -217,8 +198,7 @@ public class ParticlePass implements ScenePass {
 		ctx.getRenderState().depthMask.set(true);
 	}
 
-	/** Prepares particle instance data and batches by texture so each particle uses its emitter's texture. */
-	private List<ParticleTextureBatch> prepareBatches(int currentPlane) {
+	private int prepareBatches(int currentPlane) {
 		ParticleBuffer buf = particleManager.getParticleBuffer();
 		particleStagingBuffer.clear();
 		lastParticleTotalOnPlane = 0;
@@ -258,37 +238,32 @@ public class ParticlePass implements ScenePass {
 			particleStagingBuffer.put(cx).put(cy).put(cz);
 			particleStagingBuffer.put(particleColor[0]).put(particleColor[1]).put(particleColor[2]).put(particleColor[3]);
 			particleStagingBuffer.put(buf.size[i]);
+			String tex = textureForVisibleIndex[n];
+			particleStagingBuffer.put((float) particleTextureLoader.getTextureLayer(tex != null ? tex : ""));
 			n++;
+			if (n >= MAX_DRAWN)
+				break;
 		}
 		int instanceCount = n;
 		lastParticleDrawn = instanceCount;
+		lastUploadedInstanceCount = instanceCount;
 		if (instanceCount == 0)
-			return new ArrayList<>();
+			return 0;
 
 		for (int i = 0; i < instanceCount; i++)
 			particleSortOrder[i] = i;
 		Arrays.sort(particleSortOrder, 0, instanceCount, (a, b) -> Float.compare(particleDistSq[b], particleDistSq[a]));
 
-		// Group by texture (order preserved: back-to-front per texture)
-		Map<String, List<Integer>> textureToIndices = new LinkedHashMap<>();
+		// Fill upload buffer in back-to-front order, 64 bytes per instance (9 floats + 28 padding)
+		batchUploadBuffer.clear();
 		for (int k = 0; k < instanceCount; k++) {
-			int visibleIndex = particleSortOrder[k];
-			String tex = textureForVisibleIndex[visibleIndex];
-			if (tex == null) tex = "";
-			textureToIndices.computeIfAbsent(tex, x -> new ArrayList<>()).add(visibleIndex);
+			int src = particleSortOrder[k] * FLOATS_PER_INSTANCE;
+			for (int f = 0; f < FLOATS_PER_INSTANCE; f++)
+				batchUploadBuffer.putFloat(particleStagingBuffer.get(src + f));
+			for (int p = 0; p < INSTANCE_PADDING_BYTES; p++)
+				batchUploadBuffer.put((byte) 0);
 		}
-
-		List<ParticleTextureBatch> batches = new ArrayList<>();
-		for (Map.Entry<String, List<Integer>> e : textureToIndices.entrySet()) {
-			List<Integer> indices = e.getValue();
-			String textureName = e.getKey();
-			Integer tid = textureName.isEmpty() ? null : particleTextureLoader.getTextureId(textureName);
-			int textureId = (tid != null && tid != 0) ? tid : 0;
-			int[] arr = new int[indices.size()];
-			for (int i = 0; i < indices.size(); i++) arr[i] = indices.get(i);
-			batches.add(new ParticleTextureBatch(textureId, arr));
-		}
-		return batches;
+		return instanceCount;
 	}
 
 	private static String getTextureNameForParticle(ParticleBuffer buf, int bufIndex) {
@@ -299,17 +274,21 @@ public class ParticlePass implements ScenePass {
 		return def.texture;
 	}
 
-	private void uploadBatchInstanceData(int[] visibleIndices, int count) {
-		batchUploadBuffer.clear();
-		for (int k = 0; k < count; k++) {
-			int src = visibleIndices[k] * FLOATS_PER_INSTANCE;
-			for (int f = 0; f < FLOATS_PER_INSTANCE; f++)
-				batchUploadBuffer.put(particleStagingBuffer.get(src + f));
-		}
+	private void uploadInstanceDataToVbo(int instanceCount) {
+		int bytes = instanceCount * INSTANCE_STRIDE_BYTES;
 		batchUploadBuffer.flip();
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
-		glBufferSubData(GL_ARRAY_BUFFER, 0, batchUploadBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		if (particleInstanceBuffer != null && particleInstanceBuffer.isMapped()) {
+			particleInstanceBuffer.upload(batchUploadBuffer);
+		} else {
+			glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
+			ByteBuffer mapped = glMapBufferRange(GL_ARRAY_BUFFER, 0, bytes, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
+			if (mapped != null) {
+				mapped.put(batchUploadBuffer);
+				glUnmapBuffer(GL_ARRAY_BUFFER);
+			} else {
+				glBufferSubData(GL_ARRAY_BUFFER, 0, batchUploadBuffer);
+			}
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
 	}
-
 }

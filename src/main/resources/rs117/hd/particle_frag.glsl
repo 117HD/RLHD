@@ -3,15 +3,16 @@
 
 #include <uniforms/global.glsl>
 
-uniform sampler2D uParticleTexture;
+uniform sampler2DArray uParticleTexture;
 
 in vec4 vColor;
 in vec2 vUV;
+in float vLayer;
 
 layout (location = 0) out vec4 outColor;
 
 void main() {
-	vec4 tex = texture(uParticleTexture, vUV);
+	vec4 tex = texture(uParticleTexture, vec3(vUV, vLayer));
 	outColor = tex * vColor;
 	if (outColor.a <= 0.0)
 		discard;

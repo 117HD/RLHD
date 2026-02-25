@@ -45,7 +45,6 @@ public class EmitterDefinitionManager {
 	@Getter
 	private final List<EmitterPlacement> placements = new ArrayList<>();
 
-	/** Object id -> bindings (particleId + offsetX, offsetY, offsetZ). Used when spawning emitters on objects. */
 	@Getter
 	private final ListMultimap<Integer, ObjectEmitterBinding> objectBindingsByType = ArrayListMultimap.create();
 

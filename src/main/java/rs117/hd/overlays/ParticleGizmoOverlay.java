@@ -34,7 +34,6 @@ import static rs117.hd.utils.MathUtils.round;
 
 @Singleton
 public class ParticleGizmoOverlay extends Overlay implements MouseListener {
-	/** Match light gizmo handle dimensions. */
 	private static final int INNER_HANDLE_RING = 19;
 	private static final int OUTER_HANDLE_RING = 25;
 	private static final int INNER_DOT = 6;
@@ -58,7 +57,6 @@ public class ParticleGizmoOverlay extends Overlay implements MouseListener {
 	@Inject
 	private ParticleManager particleManager;
 
-	/** Emitter under mouse (from last render). Used so Shift+click can toggle without interacting with game. */
 	private final ArrayList<ParticleEmitter> hovers = new ArrayList<>();
 
 	public ParticleGizmoOverlay() {
