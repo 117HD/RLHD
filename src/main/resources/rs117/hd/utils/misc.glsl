@@ -26,6 +26,7 @@
 
 #include <uniforms/global.glsl>
 
+#include <utils/constants.glsl>
 #include <utils/color_utils.glsl>
 
 // translates a value from a custom range into 0-1
@@ -60,3 +61,53 @@ vec3 windowsHdrCorrection(vec3 c) {
     // https://github.com/clshortfuse/renodx (MIT license)
     return pow(linearToSrgb(c), vec3(2.2));
 }
+
+void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
+    const vec3 LIGHT_DIR_MODEL = vec3(0.57735026, 0.57735026, 0.57735026);
+    // subtracts the X lowest lightness levels from the formula.
+    // helps keep darker colors appropriately dark
+    const int IGNORE_LOW_LIGHTNESS = 3;
+    // multiplier applied to vertex' lightness value.
+    // results in greater lightening of lighter colors
+    const float LIGHTNESS_MULTIPLIER = 3.f;
+    // the minimum amount by which each color will be lightened
+    const int BASE_LIGHTEN = 10;
+
+    int saturation = hsl >> 7 & 0x7;
+    int lightness = hsl & 0x7F;
+    float vanillaLightDotNormals = dot(LIGHT_DIR_MODEL, unrotatedNormal);
+    if (vanillaLightDotNormals > 0) {
+        vanillaLightDotNormals /= length(unrotatedNormal);
+        float lighten = max(0, lightness - IGNORE_LOW_LIGHTNESS);
+        lightness += int((lighten * LIGHTNESS_MULTIPLIER + BASE_LIGHTEN - lightness) * vanillaLightDotNormals);
+    }
+    int maxLightness;
+    #if LEGACY_GREY_COLORS
+        maxLightness = 55;
+    #else
+        maxLightness = int(127 - 72 * pow(saturation / 7., .05));
+    #endif
+    lightness = min(lightness, maxLightness);
+    hsl &= ~0x7F;
+    hsl |= lightness;
+}
+
+#if SHADER_TYPE == FRAGMENT_SHADER
+    mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv) {
+        // get edge vectors of the pixel triangle
+        vec3 dpdx = dFdx(p);
+        vec3 dpdy = dFdy(p);
+        vec2 duvdx = dFdx(uv);
+        vec2 duvdy = dFdy(uv);
+
+        // solve the linear system
+        vec3 a = cross(dpdy, N);
+        vec3 b = cross(N, dpdx);
+        vec3 T = a * duvdx.x + b * duvdy.x;
+        vec3 B = a * duvdx.y + b * duvdy.y;
+
+        // construct a scale-invariant frame
+        float invmax = inversesqrt(max(dot(T, T), dot(B, B)));
+        return mat3(T * invmax, B * invmax, N);
+    }
+#endif

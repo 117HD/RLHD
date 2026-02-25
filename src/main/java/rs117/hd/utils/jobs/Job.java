@@ -1,0 +1,161 @@
+package rs117.hd.utils.jobs;
+
+import com.google.inject.Injector;
+import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@SuppressWarnings("unchecked")
+public abstract class Job {
+	static JobSystem JOB_SYSTEM;
+
+	protected final AtomicBoolean done = new AtomicBoolean();
+	protected final AtomicBoolean wasCancelled = new AtomicBoolean();
+	protected final AtomicBoolean encounteredError = new AtomicBoolean();
+	protected final AtomicBoolean ranToCompletion = new AtomicBoolean();
+	protected final AtomicBoolean queued = new AtomicBoolean();
+	protected JobGroup<Job> group;
+
+	@Getter
+	protected boolean isReleased;
+
+	boolean executeAsync = true;
+	JobHandle handle;
+
+	public final void waitForCompletion() {
+		waitForCompletion(-1);
+	}
+
+	public final boolean waitForCompletion(int timeoutNanos) {
+		boolean completed = false;
+		if (handle != null) {
+			try {
+				if (isDone()) {
+					completed = true;
+				} else {
+					completed = handle.await(timeoutNanos);
+				}
+			} catch (InterruptedException e) {
+				log.warn("Job {} was interrupted while waiting for completion", this);
+				throw new RuntimeException(e);
+			} finally {
+				if (completed)
+					handle.release();
+			}
+		} else {
+			completed = true;
+		}
+
+		if (group != null && completed) {
+			group.pending.remove(this);
+			group = null;
+		}
+		return completed;
+	}
+
+	public final boolean isQueued() {
+		return queued.get();
+	}
+
+	public final boolean encounteredError() {
+		return encounteredError.get();
+	}
+
+	public final boolean wasCancelled() {
+		return wasCancelled.get();
+	}
+
+	public final boolean ranToCompletion() {
+		return ranToCompletion.get();
+	}
+
+	public final void cancel() {
+		if (handle != null) {
+			try {
+				handle.cancel(true);
+			} catch (InterruptedException e) {
+				log.warn("Job {} was interrupted while waiting for it to be cancelled", this);
+				throw new RuntimeException(e);
+			} finally {
+				handle.release();
+			}
+		}
+	}
+
+	public final void release() {
+		if (isReleased)
+			return;
+		isReleased = true;
+		queued.set(false);
+		waitForCompletion();
+		onReleased();
+	}
+
+	public final boolean isDone() {
+		return done.get();
+	}
+
+	public final boolean isHighPriority() {
+		return (group != null && group.highPriority) || (handle != null && handle.highPriority);
+	}
+
+	protected static Injector getInjector() { return JOB_SYSTEM.injector; }
+
+	protected void invokeClientCallback(Runnable callback) throws InterruptedException {
+		JOB_SYSTEM.invokeClientCallback(callback);
+	}
+
+	public final void workerHandleCancel() throws InterruptedException {
+		if (handle == null)
+			return;
+
+		final Worker worker = handle.worker;
+		if (handle.worker == null)
+			return;
+
+		worker.workerHandleCancel();
+	}
+
+	public final <T extends Job> T setExecuteAsync(boolean executeAsync) {
+		this.executeAsync = executeAsync;
+		return (T) this;
+	}
+
+	public final <T extends Job> T queue(JobGroup<T> group, Job... dependencies) {
+		assert group != null;
+		waitForCompletion();
+		JOB_SYSTEM.queue(this, group.highPriority, dependencies);
+		if (executeAsync) {
+			this.group = (JobGroup<Job>) group;
+			this.group.pending.add(this);
+		}
+		return (T) this;
+	}
+
+	public final <T extends Job> T queue(boolean highPriority, Job... dependencies) {
+		waitForCompletion();
+		JOB_SYSTEM.queue(this, highPriority, dependencies);
+		return (T) this;
+	}
+
+	public final <T extends Job> T queue(Job... dependencies) {
+		waitForCompletion();
+		JOB_SYSTEM.queue(this, true, dependencies);
+		return (T) this;
+	}
+
+	protected abstract void onRun() throws InterruptedException;
+
+	protected boolean canStart() { return true; }
+
+	protected void onCompletion() {}
+
+	protected void onCancel() {}
+
+	protected void onReleased() {}
+
+	public String toString() {
+		return "[" + hashCode() + "|" + getClass().getSimpleName() + "]";
+	}
+}

@@ -11719,6 +11719,23 @@
   },
   {
     "description": "wilderness volcano",
+    "worldX": 3367,
+    "worldY": 3935,
+    "plane": 1,
+    "offset": [ 50, 350, 0 ],
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 50,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "range": 20
+  },
+  {
+    "description": "wilderness volcano",
     "worldX": 3365,
     "worldY": 3950,
     "plane": 1,
@@ -16992,58 +17009,151 @@
     "range": 20
   },
   {
-    "description": "god wars dungeon\nlight from entrance",
-    "worldX": 2882,
-    "worldY": 5314,
-    "plane": 2,
-    "height": 300,
-    "alignment": "SOUTH",
-    "radius": 600,
-    "strength": 10,
+    "description": "God Wars Dungeon - Light from Entrance",
+    "objectIds": [
+      "GODWARS_BIG_HOLE_LIGHT"
+    ],
+    "height": 600,
+    "radius": 1200,
+    "strength": 5,
     "color": [
       255,
       255,
       255
     ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
+    "type": "FLICKER",
+    "range": 15
   },
   {
-    "description": "god wars dungeon\nlight from entrance",
-    "worldX": 2882,
-    "worldY": 5314,
-    "plane": 2,
-    "height": 50,
-    "alignment": "SOUTH",
-    "radius": 2000,
-    "strength": 7.5,
-    "color": [
-      255,
-      255,
-      255
+    "description": "God Wars Dungeon - Zamorak Altar Left",
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
     ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
-  },
-  {
-    "description": "zammy altar",
-    "worldX": 2937,
-    "worldY": 5324,
-    "plane": 2,
-    "height": 200,
-    "alignment": "NORTHEAST",
+    "offset": [ 120, 120, -30 ],
     "radius": 300,
-    "strength": 10,
+    "strength": 4,
     "color": [
       253.63197,
       182.39111,
       33.847893
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
     "duration": 1000,
-    "range": 0.2
+    "range": 10
+  },
+  {
+    "description": "God Wars Dungeon - Zamorak Altar Middle",
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
+    ],
+    "offset": [ 0, 120, -90 ],
+    "radius": 400,
+    "strength":8,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 20
+  },
+  {
+    "description": "God Wars Dungeon - Zamorak Altar Right",
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
+    ],
+    "offset": [ -120, 120, -20 ],
+    "radius": 300,
+    "strength": 4,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 10
+  },
+  {
+    "description": "God Wars Dungeon - Zamorak Balfrug Magic Projectile",
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      252,
+      120,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "GODWARS_BLACK_DEMON_FIREBALL_PROJ"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Growler Magic Projectile",
+    "projectileIds": [ "GODWARS_LION_MAGIC_PROJ" ],
+    "offset": [ 0, 70, 0 ],
+    "radius": 450,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "color": [
+      100,
+      100,
+      200
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Growler Magic Cast",
+    "graphicsObjectIds": [ "GODWARS_LION_MAGIC_SPOT" ],
+    "offset": [ 0, 120, 200 ],
+    "radius": 400,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "spawnDelay": 500,
+    "color": [
+      100,
+      100,
+      200
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "God Wars Dungeon - Bandos Steelwill Magic Projectile",
+    "projectileIds": [ "GODWARS_GOBLIN2_SONIC_ATTK_PROJ" ],
+    "offset": [ 0, 20, 0 ],
+    "radius": 300,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "color": [
+      200,
+      255,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "God Wars Dungeon - Bandos Steelwill Magic Cast",
+    "graphicsObjectIds": [ "GODWARS_GOBLIN2_SONIC_ATTK_SPOT" ],
+    "offset": [ 0, 200, -20 ],
+    "radius": 400,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "spawnDelay": 500,
+    "color": [
+      200,
+      255,
+      0
+    ],
+    "type": "STATIC"
   },
   {
     "description": "ver sinhaza",
@@ -17749,18 +17859,17 @@
   },
   {
     "description": "TZREK_ZUK",
-    "height": 10,
-    "alignment": "CENTER",
-    "radius": 100,
+    "offset": [ 0, 20, -25 ],
+    "radius": 110,
     "strength": 12.5,
     "color": [
       252,
       128,
       45
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
     "duration": 0,
-    "range": 0,
+    "range": 20,
     "npcIds": [
       "POH_ZUK_PET",
       "ZUK_PET"
@@ -19267,6 +19376,38 @@
     "animationIds": [ "TEMPOROSS_LIGHTNING_CLOUD_ATTACK" ]
   },
   {
+    "description": "STORM_TEMPOR_LIGHTNING_SPAWN",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 750,
+    "strength": 2,
+    "color": "#B2E8FF",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 100,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 700,
+    "npcIds": [ "SAILING_SEA_STORMY_CLOUD" ],
+    "animationIds": [ "SAILING_LIGHTNING_CLOUD_ATTACK" ]
+  },
+  {
+    "description": "STORM_TEMPOR_LIGHTNING_STRIKE",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 1300,
+    "strength": 4,
+    "color": "#B2E8FF",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 100,
+    "spawnDelay": 700,
+    "fadeOutDuration": 700,
+    "npcIds": [ "SAILING_SEA_STORMY_CLOUD" ],
+    "animationIds": [ "SAILING_LIGHTNING_CLOUD_ATTACK" ]
+  },
+  {
     "description": "ELECTRIFIED_HARPOONFISH_CANNON",
     "height": 50,
     "alignment": "CENTER",
@@ -20504,7 +20645,6 @@
       "FENK_TORCH",
       "VC_CANDLE",
       "ROYAL_CAVEWALL_TORCH_FLAMES",
-      "KR_UNDERGROUND_JAIL_TOURCH",
       "FAVOUR_TORCH",
       "FALADOR_TORCH",
       "FAVOUR_TORCH",
@@ -20527,8 +20667,6 @@
     "objectIds": [
       "TORCH",
       "TORCH_GRUBBY",
-      "CANDLES",
-      "GOLDCANDLES",
       "SKULLTORCH",
       "DRAYNOR_CANDLE_WALL",
       "OLDROOFEDGE_HL_GREYSLATE",
@@ -20608,7 +20746,8 @@
     "objectIds": [
       "FAI_FALADOR_HOUSE_TORCH",
       "AIDE_TORCH",
-      "GRAB_EVIL_TWIN_TORCH"
+      "GRAB_EVIL_TWIN_TORCH",
+      "CONCH_TORTUGAN01_TORCH01"
     ]
   },
   {
@@ -20718,7 +20857,24 @@
     "objectIds": [
       "MISC_LANTERN",
       "VC_LANTERN_DECOR",
-      "QUEST_LUNAR_HANGING_LANTERN",
+      "QUEST_LUNAR_HANGING_LANTERN"
+    ]
+  },
+  {
+    "description": "Shilo Mine Lantern",
+    "offset": [ -8, 115, 30 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 16,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
       "ATJUN_MINE_WALL_LAMP"
     ]
   },
@@ -20868,7 +21024,8 @@
     "range": 20,
     "objectIds": [
       "FIREPLACECOOKINGPOT",
-      "FOSSIL_RANGE_BUILT"
+      "FOSSIL_RANGE_BUILT",
+      "PANDEMONIUM_COOKING_POT"
     ]
   },
   {
@@ -20891,6 +21048,7 @@
   },
   {
     "description": "FIRE",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "height": 40,
     "alignment": "CENTER",
     "radius": 450,
@@ -20966,7 +21124,8 @@
     "objectIds": [
       "DRAGON_SLAYER_QIP_FIRE_2X2",
       "SOTE_FIRE_LARGE",
-      "SW_CAMP_FIRE"
+      "SW_CAMP_FIRE",
+      "MINOTAURS_REST_CAMPFIRE"
     ]
   },
   {
@@ -21034,7 +21193,6 @@
       "DWARF_KELDAGRIM_FIREPLACE",
       "DWARF_KELDAGRIM_BIG_FIREPLACE",
       "TWOCATS_FIREPLACE_LIT",
-      "TWOCATS_FIREPLACE_GONE_OUT",
       "TWOCATS_FIREPLACE_GOT_WOOD",
       "MYQ3_GHETTO_FIREPLACE_BOTTOM",
       "MYQ3_GHETTO_FIREPLACE_MIDDLE",
@@ -21099,6 +21257,26 @@
     "range": 20,
     "objectIds": [
       "FIREPLACE"
+    ]
+  },
+  {
+    "description": "Recipe for Disaster - Time Bubble",
+    "offset": [ -30, 50, 0 ],
+    "radius": 150,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "_100_BUBBLE3",
+      "_100_BUBBLEB3",
+      "HUNDRED_PORTAL_DOOR2",
+      "HUNDRED_PORTAL_DOOR3"
     ]
   },
   {
@@ -21439,7 +21617,7 @@
     ]
   },
   {
-    "description": "Prifddinas - Scavengers Overlook - Furnace - Needs proper UV",
+    "description": "Prifddinas - Scavengers Overlook - The Great Conch - Furnace",
     "height": 150,
     "offset": [ -55, -88, -2 ],
     "radius": 480,
@@ -21703,7 +21881,10 @@
   {
     "description": "PHASMATYS_ENERGY_BARRIER__1",
     "offset": [ 0, 175, 0 ],
-    "objectIds": [ "AHOY_TOWN_BARRIER" ],
+    "objectIds": [
+      "AHOY_TOWN_BARRIER",
+      "AHOY_TOWN_BARRIER_POST_QUEST"
+    ],
     "radius": 800,
     "strength": 4.5,
     "color": [
@@ -21718,7 +21899,10 @@
   {
     "description": "PHASMATYS_ENERGY_BARRIER_2",
     "offset": [ -120, 175, 0 ],
-    "objectIds": [ "AHOY_TOWN_BARRIER" ],
+    "objectIds": [
+      "AHOY_TOWN_BARRIER",
+      "AHOY_TOWN_BARRIER_POST_QUEST"
+    ],
     "radius": 800,
     "strength": 4.5,
     "color": [
@@ -21793,10 +21977,10 @@
   },
   {
     "description": "CHAOS_RIFT",
-    "height": 80,
+    "height": 120,
     "alignment": "CENTER",
     "radius": 600,
-    "strength": 10,
+    "strength": 12,
     "color": [
       196,
       79,
@@ -21804,7 +21988,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 30,
+    "range": 20,
     "objectIds": [
       "CHAOS_FANATIC_RIFT"
     ]
@@ -22527,7 +22711,7 @@
   },
   {
     "description": "POH_RESTORATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 3.5,
@@ -22536,9 +22720,7 @@
       0,
       85
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_RESTORATION",
       "XMAS20_POH_POOL_RESTORATION"
@@ -22565,7 +22747,7 @@
   },
   {
     "description": "POH_REVITALISATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 6,
@@ -22574,9 +22756,7 @@
       179,
       0
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_REVITALISATION",
       "XMAS20_POH_POOL_REVITALISATION"
@@ -22603,7 +22783,7 @@
   },
   {
     "description": "POH_REJUVENATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 3.5,
@@ -22612,9 +22792,7 @@
       225,
       255
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_REJUVENATION",
       "XMAS20_POH_POOL_REJUVENATION"
@@ -22650,9 +22828,7 @@
       0,
       179
     ],
-    "type": "PULSE",
-    "duration": 800,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "POH_POOL_RECOVERY",
       "XMAS20_POH_POOL_RECOVERY"
@@ -22679,7 +22855,7 @@
   },
   {
     "description": "POH_ORNATE_REJUVENATION_POOL_INNER",
-    "height": 150,
+    "height": 160,
     "alignment": "CENTER",
     "radius": 110,
     "strength": 45,
@@ -22688,7 +22864,7 @@
       0,
       255
     ],
-    "type": "PULSE",
+    "type": "STATIC",
     "duration": 1250,
     "range": 20,
     "objectIds": [
@@ -22804,6 +22980,21 @@
     "range": 25,
     "objectIds": [
       "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_4_DRAGON"
+    ]
+  },
+  {
+    "description": "POH_OTHERWORLDY_MUSHROOM_LIGHT",
+    "offset": [ 0, 75, 0 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "POH_THEME_ZANARIS_HERO"
     ]
   },
   {
@@ -24717,8 +24908,8 @@
     "description": "TRUE_BLOOD_ALTAR",
     "height": 300,
     "alignment": "CENTER",
-    "radius": 4000,
-    "strength": 4,
+    "radius": 1200,
+    "strength": 3,
     "color": [
       255,
       0,
@@ -24726,7 +24917,7 @@
     ],
     "type": "PULSE",
     "duration": 2000,
-    "range": 10,
+    "range": 20,
     "objectIds": [
       "BLOOD_ALTAR"
     ]
@@ -24736,7 +24927,7 @@
     "height": 20,
     "alignment": "CENTER",
     "radius": 400,
-    "strength": 6,
+    "strength": 8,
     "color": [
       255,
       0,
@@ -24768,7 +24959,7 @@
     "range": 5
   },
   {
-    "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE",
+    "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE_WIDE",
     "worldX": 3232,
     "worldY": 4847,
     "plane": 0,
@@ -24784,7 +24975,25 @@
     "type": "FLICKER",
     "duration": 1280,
     "range": 5
-  },
+  },  {
+  "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE_SHORT",
+  "worldX": 3232,
+  "worldY": 4847,
+  "plane": 0,
+  "height": 600,
+  "alignment": "CENTER",
+  "radius": 700,
+  "strength": 14,
+  "color": [
+    255,
+    0,
+    255
+  ],
+  "type": "FLICKER",
+  "duration": 1280,
+  "range": 5
+},
+
   {
     "description": "TRUE_BLOOD_ALTAR_CRYSTAL_3",
     "worldX": 3232,
@@ -25173,11 +25382,28 @@
     ]
   },
   {
+    "description": "LIZARDMAN_LAMP",
+    "offset": [ 30, 120, 0 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "LIZARDMAN_LAMP"
+    ]
+  },
+  {
     "description": "LIZARDMAN_TEMPLE_SKYLIGHT",
-    "height": 600,
+    "height": 850,
     "alignment": "CENTER",
-    "radius": 1000,
-    "strength": 12.5,
+    "radius": 1200,
+    "strength": 15,
     "color": [
       200,
       230,
@@ -25191,10 +25417,28 @@
     ]
   },
   {
-    "description": "LIZARDMAN_TEMPLE_MYSTICAL_BARRIER_GREEN",
-    "height": 200,
+    "description": "Lizardman Temple Torch",
+    "height": 275,
     "alignment": "CENTER",
-    "radius": 600,
+    "radius": 350,
+    "strength": 16,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "KR_UNDERGROUND_JAIL_TOURCH"
+    ]
+  },
+  {
+    "description": "LIZARDMAN_TEMPLE_MYSTICAL_BARRIER_GREEN",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 550,
     "strength": 12.5,
     "color": [
       191,
@@ -25203,9 +25447,28 @@
     ],
     "type": "PULSE",
     "duration": 1400,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "MOLCH_TEMPLE_BARRIER_GREEN"
+    ]
+  },
+  {
+    "description": "Lizardman Spawn",
+    "height": 75,
+    "alignment": "CENTER",
+    "radius": 375,
+    "strength": 6,
+    "spawnDelay": 100,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 800,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [
+      "ZEAH_LIZARDSHAMAN_SPAWN"
     ]
   },
   {
@@ -25901,11 +26164,11 @@
     ]
   },
   {
-    "description": "RED_STREET_LAMP",
+    "description": "DARKMEYER_RED_STREET_LAMP",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 5,
+    "radius": 400,
+    "strength": 15,
     "color": [
       255,
       100,
@@ -25916,6 +26179,186 @@
     "range": 20,
     "objectIds": [
       "DARKM_STREET_LAMP"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLES",
+    "height": 210,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 13,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DARKM_ALTAR_CANDLES_01",
+      "DARKM_ALTAR_CANDLES_02",
+      "DARKM_ALTAR_CANDLES_03"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLE_ALTAR_LEFT",
+    "offset": [ -140, 210, 50 ],
+    "radius": 200,
+    "strength": 8,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "DARKM_ALTAR"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLE_ALTAR_RIGHT",
+    "offset": [ 140, 210, 50 ],
+    "radius": 200,
+    "strength": 8,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "DARKM_ALTAR"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLE_ALTAR_MIDDLE",
+    "offset": [ 0, 210, 50 ],
+    "radius": 200,
+    "strength": 8,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DARKM_ALTAR"
+    ]
+  },
+  {
+    "description": "DARKMEYER_TABLE_CANDLE",
+    "height": 40,
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DARKM_MIDDLE_TABLE_1X1_LAMP"
+    ],
+    "offset": [ 3, 90, 0 ]
+  },
+  {
+    "description": "DARKMEYER_COOKING_RANGE",
+    "height": 100,
+    "offset": [ 93, -20, -48 ],
+    "radius": 150,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "DARKM_RICH_RANGE"
+    ]
+  },
+  {
+    "description": "DARKMEYER_COOKING_RANGE_2",
+    "height": 100,
+    "offset": [ 70, -20, -88 ],
+    "radius": 175,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "DARKM_MIDDLE_RANGE",
+      "DARKM_POOR_RANGE"
+    ]
+  },
+  {
+    "description": "DARKMEYRE_PUB_LIGHT_1",
+    "worldX": 3598,
+    "worldY": 3390,
+    "plane": 0,
+    "offset": [ 150, 170, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 8.5,
+    "color": [
+      253,
+      140,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 20
+  },
+  {
+    "description": "DARKMEYRE_PUB_LIGHT_2",
+    "worldX": 3600,
+    "worldY": 3390,
+    "plane": 0,
+    "offset": [ 0, 170, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 8.5,
+    "color": [
+      253,
+      140,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 20
+  },
+  {
+    "description": "DARKMEYER_POTTERY_OVEN",
+    "height": 100,
+    "offset": [ 90, 55, 0 ],
+    "radius": 250,
+    "strength": 11,
+    "color": [
+      252,
+      75,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "DARKM_POOR_POTTERY_OVEN"
     ]
   },
   {
@@ -26267,9 +26710,9 @@
   },
   {
     "description": "COSMIC_AIR_ALTAR_PILLAR_AND_ORBS",
-    "height": 250,
+    "height": 240,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -26277,8 +26720,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 500,
-    "range": 20,
+    "duration": 700,
+    "range": 7,
     "objectIds": [
       "RUNETEMPLE_STANDINGSTONE_GLOW_AIR"
     ]
@@ -26746,11 +27189,10 @@
     ]
   },
   {
-    "description": "GWD_NEX_ANCIENT_BARRIER_RED",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 10,
+    "description": "GWD_NEX_ANCIENT_BARRIER_RED_OUTSIDE",
+    "offset": [ 0, 200, 125 ],
+    "radius": 550,
+    "strength": 7.5,
     "color": [
       255,
       51,
@@ -26766,11 +27208,46 @@
     ]
   },
   {
-    "description": "GWD_NEX_ANCIENT_BARRIER_PURPLE",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 10,
+    "description": "GWD_NEX_ANCIENT_BARRIER_RED_INSIDE",
+    "offset": [ 0, 200, -125 ],
+    "radius": 550,
+    "strength": 7.5,
+    "color": [
+      255,
+      51,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2200,
+    "range": 10,
+    "objectIds": [
+      "NEX_FIGHT_BARRIER_OUTER_BUSY",
+      "NEX_FIGHT_BARRIER_OUTER_PRIV_BUSY",
+      "NEX_FIGHT_BARRIER_INNER_BUSY"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_BARRIER_PURPLE_INSIDE",
+    "offset": [ 0, 200, -125 ],
+    "radius": 550,
+    "strength": 7.5,
+    "color": [
+      183,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2200,
+    "range": 10,
+    "objectIds": [
+      "NEX_FIGHT_BARRIER_OUTER", "NEX_FIGHT_BARRIER_OUTER_PRIV"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_BARRIER_PURPLE_OUTSIDE",
+    "offset": [ 0, 200, 125 ],
+    "radius": 550,
+    "strength": 7.5,
     "color": [
       183,
       0,
@@ -26799,6 +27276,60 @@
     "range": 10,
     "objectIds": [
       "NEX_FURNACE_NOOP"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_FORGE",
+    "offset": [ 0, 140, -160 ],
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "NEX_FURNACE_NOOP",
+      "NEX_FURNACE"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_FORGE_TOP",
+    "offset": [ 0, 280, 0 ],
+    "radius": 100,
+    "strength": 100,
+    "color": [
+      0,
+      200,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "NEX_FURNACE_NOOP",
+      "NEX_FURNACE"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_FORGE_TOP_2",
+    "offset": [ 0, 375, 0 ],
+    "radius": 150,
+    "strength": 30,
+    "color": [
+      0,
+      200,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "NEX_FURNACE_NOOP",
+      "NEX_FURNACE"
     ]
   },
   {
@@ -26853,6 +27384,7 @@
     "range": 20,
     "fadeInDuration": 1500,
     "fadeOutDuration": 1300,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "AIDE_PLAYER_BOOK_PORTAL"
     ]
@@ -26896,6 +27428,7 @@
     "range": 20,
     "fadeInDuration": 1500,
     "fadeOutDuration": 1300,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE_TWISTED_PLAYER_BOOK_PORTAL"
     ]
@@ -26916,6 +27449,7 @@
     "range": 20,
     "spawnDelay": 850,
     "fadeInDuration": 1000,
+    "fadeOutDuration": 200,
     "graphicsObjectIds": [
       "LEAGUE_4_HOME_TELEPORT_SPOTANIM_3"
     ]
@@ -26934,7 +27468,9 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "fadeInDuration": 200,
     "fadeOutDuration": 1500,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE_4_HOME_TELEPORT_SPOTANIM_4"
     ]
@@ -26973,6 +27509,7 @@
     "duration": 0,
     "range": 20,
     "fadeOutDuration": 1000,
+    "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE03_HOME_TELEPORT_SPOTANIM_5"
     ]
@@ -27023,6 +27560,7 @@
     "range": 20,
     "fadeOutDuration": 900,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "despawnDelay": 3800,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_04"
@@ -27041,6 +27579,7 @@
     "fadeInDuration": 500,
     "fadeOutDuration": 900,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "despawnDelay": 3800,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_04"
@@ -27052,7 +27591,7 @@
     "alignment": "CENTER",
     "offset": [ 0, 20, 35 ],
     "radius": 170,
-    "strength": 30,
+    "strength": 22.5,
     "color": [
       252,
       148,
@@ -27063,8 +27602,10 @@
     "range": 30,
     "fadeInDuration": 50,
     "spawnDelay": 600,
-    "despawnDelay": 100,
-    "fadeOutDuration": 150,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
+    "despawnDelay": 550,
+    "fadeOutDuration": 250,
     "graphicsObjectIds": [
       "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
     ]
@@ -27076,7 +27617,8 @@
     "offset": [ 0, 20, 35 ],
     "radius": 170,
     "fixedDespawnTime": true,
-    "strength": 30,
+    "despawnWithParent": true,
+    "strength": 25,
     "color": [
       252,
       148,
@@ -27094,10 +27636,8 @@
     ]
   },
   {
-    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT",
-    "height": 140,
-    "alignment": "CENTER",
-    "offset": [ 0, 20, 70 ],
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT_FLAME_FRONT",
+    "offset": [ 0, 160, 70 ],
     "radius": 30,
     "fixedDespawnTime": true,
     "strength": 30,
@@ -27111,20 +27651,132 @@
     "range": 60,
     "fadeInDuration": 100,
     "spawnDelay": 600,
-    "despawnDelay": 100,
+    "despawnDelay": 500,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
       "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
     ]
   },
   {
-    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT",
-    "height": 140,
-    "alignment": "CENTER",
-    "offset": [ 0, 20, 70 ],
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT_FLAME_LEFT",
+    "offset": [ -25, 170, 50 ],
     "radius": 30,
     "fixedDespawnTime": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 500,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_LOW_ALCH_HOTSPOT_FLAME_RIGHT",
+    "offset": [ 25, 170, 50 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 500,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_FRONT",
+    "offset": [ 0, 160, 77 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_LEFT",
+    "offset": [ -25, 170, 50 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_RIGHT",
+    "offset": [ 25, 170, 50 ],
+    "radius": 30,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "fadeInDuration": 100,
+    "spawnDelay": 600,
+    "despawnDelay": 2300,
+    "fadeOutDuration": 150,
+    "graphicsObjectIds": [
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HIGH_ALCH_HOTSPOT_FLAME_TOP",
+    "offset": [ 0, 200, 50 ],
+    "radius": 60,
+    "fixedDespawnTime": true,
+    "despawnWithParent": true,
+    "strength": 20,
     "color": [
       252,
       148,
@@ -27148,6 +27800,7 @@
     "offset": [ 65, 20, 0 ],
     "radius": 200,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 3,
     "color": [
       252,
@@ -27173,6 +27826,7 @@
     "offset": [ -65, 20, 0 ],
     "radius": 200,
     "fixedDespawnTime": true,
+    "despawnWithParent": true,
     "strength": 3,
     "color": [
       252,
@@ -27305,8 +27959,8 @@
     "description": "SUPERHEAT_ITEM",
     "height": 200,
     "alignment": "CENTER",
-    "offset": [ 0, 0, 20 ],
-    "radius": 75,
+    "offset": [ 0, 20, 0 ],
+    "radius": 125,
     "fixedDespawnTime": true,
     "strength": 16.5,
     "color": [
@@ -27320,7 +27974,7 @@
     "fadeInDuration": 100,
     "spawnDelay": 355,
     "despawnDelay": 875,
-    "fadeOutDuration": 75,
+    "fadeOutDuration": 250,
     "graphicsObjectIds": [
       "SUPERHEATITEM_CASTING"
     ]
@@ -27328,9 +27982,10 @@
   {
     "description": "TELEGRAB_PROJECTILE",
     "alignment": "CENTER",
-    "height": 20,
+    "height": 10,
     "radius": 125,
     "strength": 12,
+    "fadeOutDuration": 600,
     "color": [
       170,
       20,
@@ -27344,8 +27999,69 @@
     ]
   },
   {
+    "description": "TELEGRAB_IMPACT",
+    "alignment": "CENTER",
+    "height": 25,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "radius": 195,
+    "strength": 8,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 100,
+    "waitForAnimation": true,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "graphicsObjectIds": [
+      "TELEGRAB_IMPACT"
+    ]
+  },
+  {
+    "description": "TELEGRAB_CAST",
+    "offset": [ 0, 220, 50 ],
+    "radius": 60,
+    "strength": 10,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "TELEGRAB_CASTING"
+    ]
+  },
+  {
+    "description": "TELEGRAB_CAST_2",
+    "offset": [ 0, 70, 45 ],
+    "radius": 110,
+    "strength": 7.5,
+    "color": [
+      170,
+      20,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "TELEGRAB_CASTING"
+    ]
+  },
+  {
     "description": "WIND_STRIKE",
-    "radius": 175,
+    "radius": 250,
     "strength": 2.5,
     "color": [
       255,
@@ -27362,9 +28078,32 @@
     ]
   },
   {
+    "description": "WIND_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 120, 50 ],
+    "radius": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 7.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSTRIKE_CASTING",
+      "WINDBOLT_CASTING",
+      "WINDBLAST_CASTING"
+    ]
+  },
+  {
     "description": "WATER_STRIKE",
-    "radius": 175,
-    "strength": 3.8,
+    "radius": 225,
+    "strength": 7.5,
     "color": [
       0,
       140,
@@ -27380,9 +28119,32 @@
     ]
   },
   {
+    "description": "WATER_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 8,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSTRIKE_CASTING",
+      "WATERBOLT_CASTING",
+      "WATERBLAST_CASTING"
+    ]
+  },
+  {
     "description": "EARTH_STRIKE",
-    "radius": 175,
-    "strength": 3.1,
+    "radius": 250,
+    "strength": 3.6,
     "color": [
       0,
       255,
@@ -27398,9 +28160,32 @@
     ]
   },
   {
+    "description": "EARTH_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSTRIKE_CASTING",
+      "EARTHBOLT_CASTING",
+      "EARTHBLAST_CASTING"
+    ]
+  },
+  {
     "description": "FIRE_STRIKE",
-    "radius": 175,
-    "strength": 3.8,
+    "radius": 250,
+    "strength": 4.2,
     "color": [
       255,
       0,
@@ -27409,15 +28194,61 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 200,
+    "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIRESTRIKE_TRAVEL"
     ]
   },
   {
+    "description": "FIRE_STRIKE_TO_BLAST_CAST",
+    "offset": [ 0, 125, 50 ],
+    "radius": 225,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "strength": 6,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESTRIKE_CASTING",
+      "FIREBOLT_CASTING",
+      "FIREBLAST_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_STRIKE_TO_BLAST_CAST_2",
+    "offset": [ 0, 60, 50 ],
+    "radius": 110,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
+    "strength": 4,
+    "color": [
+      252,
+      110,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESTRIKE_CASTING",
+      "FIREBOLT_CASTING",
+      "FIREBLAST_CASTING"
+    ]
+  },
+  {
     "description": "WIND_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 3.8,
     "color": [
       255,
@@ -27434,8 +28265,28 @@
     ]
   },
   {
+    "description": "WIND_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "WINDBOLT_IMPACT"
+    ]
+  },
+  {
     "description": "WATER_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 6.3,
     "color": [
       0,
@@ -27452,8 +28303,28 @@
     ]
   },
   {
+    "description": "WATER_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "WATERBOLT_IMPACT"
+    ]
+  },
+  {
     "description": "EARTH_BOLT",
-    "radius": 210,
+    "radius": 250,
     "strength": 5.6,
     "color": [
       0,
@@ -27470,9 +28341,29 @@
     ]
   },
   {
+    "description": "EARTH_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "EARTHBOLT_IMPACT"
+    ]
+  },
+  {
     "description": "FIRE_BOLT",
-    "radius": 210,
-    "strength": 6.3,
+    "radius": 265,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -27488,8 +28379,47 @@
     ]
   },
   {
+    "description": "FIRE_BOLT_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      255,
+      70,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [
+      "FIREBOLT_IMPACT"
+    ]
+  },
+  {
+    "description": "FIRE_BOLT_2",
+    "offset": [ 0, -25, -25 ],
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "projectileIds": [
+      "FIREBOLT_TRAVEL"
+    ]
+  },
+  {
     "description": "WIND_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 5.6,
     "color": [
       255,
@@ -27506,8 +28436,31 @@
     ]
   },
   {
+    "description": "WIND_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 300,
+    "strength": 5.6,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDBLAST_IMPACT"
+    ]
+  },
+  {
     "description": "WATER_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 8.8,
     "color": [
       0,
@@ -27524,8 +28477,31 @@
     ]
   },
   {
+    "description": "WATER_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 300,
+    "strength": 6.9,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERBLAST_IMPACT"
+    ]
+  },
+  {
     "description": "EARTH_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 6.9,
     "color": [
       0,
@@ -27542,8 +28518,31 @@
     ]
   },
   {
+    "description": "EARTH_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 300,
+    "strength": 6.9,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHBLAST_IMPACT"
+    ]
+  },
+  {
     "description": "FIRE_BLAST",
-    "radius": 250,
+    "radius": 275,
     "strength": 8.8,
     "color": [
       255,
@@ -27557,6 +28556,48 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIREBLAST_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_BLAST_2",
+    "offset": [ 0, -25, -25 ],
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIREBLAST_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_BLAST_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 325,
+    "strength": 8.8,
+    "color": [
+      255,
+      70,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "waitForAnimation": true,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIREBLAST_IMPACT"
     ]
   },
   {
@@ -27578,6 +28619,28 @@
     ]
   },
   {
+    "description": "WIND_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDWAVE_CASTING"
+    ]
+  },
+  {
     "description": "WATER_WAVE",
     "radius": 300,
     "strength": 10,
@@ -27593,6 +28656,28 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERWAVE_TRAVEL"
+    ]
+  },
+  {
+    "description": "WATER_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 300,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERWAVE_CASTING"
     ]
   },
   {
@@ -27614,6 +28699,28 @@
     ]
   },
   {
+    "description": "EARTH_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHWAVE_CASTING"
+    ]
+  },
+  {
     "description": "FIRE_WAVE",
     "radius": 300,
     "strength": 10,
@@ -27629,6 +28736,69 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIREWAVE_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_WAVE_2",
+    "offset": [ 0, -25, -50 ],
+    "radius": 250,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIREWAVE_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_WAVE_CAST",
+    "offset": [ 0, 175, 50 ],
+    "radius": 300,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIREWAVE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_WAVE_CAST_2",
+    "offset": [ 0, 175, 50 ],
+    "radius": 275,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIREWAVE_CASTING"
     ]
   },
   {
@@ -27650,6 +28820,95 @@
     ]
   },
   {
+    "description": "WIND_WAVE_AND_SURGE_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 10.6,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "despawnDelay": 625,
+    "fixedDespawnTime": true,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "WINDSURGE_IMPACT",
+      "WINDWAVE_IMPACT"
+    ]
+  },
+  {
+    "description": "WIND_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WIND_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WIND_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 700,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 275,
+    "strength": 13.8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WINDSURGE_CASTING"
+    ]
+  },
+  {
     "description": "WATER_SURGE",
     "radius": 400,
     "strength": 13.8,
@@ -27665,6 +28924,95 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERSURGE_TRAVEL"
+    ]
+  },
+  {
+    "description": "WATER_WAVE_AND_SURGE_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 13.8,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "despawnDelay": 625,
+    "fixedDespawnTime": true,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "WATERSURGE_IMPACT",
+      "WATERWAVE_IMPACT"
+    ]
+  },
+  {
+    "description": "WATER_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WATER_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "WATER_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "radius": 300,
+    "strength": 13.8,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "WATERSURGE_CASTING"
     ]
   },
   {
@@ -27686,6 +29034,95 @@
     ]
   },
   {
+    "description": "EARTH_WAVE_AND_SURGE_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 12.5,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "despawnDelay": 625,
+    "fixedDespawnTime": true,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "EARTHSURGE_IMPACT",
+      "EARTHWAVE_IMPACT"
+    ]
+  },
+  {
+    "description": "EARTH_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "EARTH_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 225,
+    "strength": 13.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSURGE_CASTING"
+    ]
+  },
+  {
+    "description": "EARTH_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "radius": 275,
+    "strength": 13.8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "EARTHSURGE_CASTING"
+    ]
+  },
+  {
     "description": "FIRE_SURGE",
     "radius": 400,
     "strength": 13.8,
@@ -27698,9 +29135,183 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 200,
-    "fadeOutDuration": 250,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "FIRESURGE_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_2",
+    "offset": [ 0, 0, -25 ],
+    "radius": 235,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "projectileIds": [
+      "FIRESURGE_TRAVEL"
+    ]
+  },
+  {
+    "description": "FIRE_WAVE_AND_SURGE_IMPACT",
+    "offset": [ 0, 100, 0 ],
+    "radius": 425,
+    "strength": 13.8,
+    "color": [
+      255,
+      70,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "despawnDelay": 625,
+    "fixedDespawnTime": true,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "FIRESURGE_IMPACT",
+      "FIREWAVE_IMPACT"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_LEFT",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_RIGHT",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_MIDDLE",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "radius": 300,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_LEFT_2",
+    "offset": [ 80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 200,
+    "strength": 13.8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_RIGHT_2",
+    "offset": [ -80, 175, 50 ],
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "radius": 200,
+    "strength": 13.8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
+    ]
+  },
+  {
+    "description": "FIRE_SURGE_CAST_MIDDLE_2",
+    "offset": [ 0, 175, 100 ],
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "radius": 250,
+    "strength": 13.8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "FIRESURGE_CASTING"
     ]
   },
   {
@@ -27831,8 +29442,8 @@
   },
   {
     "description": "CRUMBLE_UNDEAD",
-    "radius": 200,
-    "strength": 5,
+    "radius": 225,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -27841,10 +29452,54 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 200,
+    "fadeInDuration": 100,
     "fadeOutDuration": 250,
     "projectileIds": [
       "CRUMBLEUNDEAD_TRAVEL"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_CAST_RIGHT",
+    "offset": [ 40, 100, 50 ],
+    "radius": 175,
+    "strength": 6,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_CASTING"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_CAST_LEFT",
+    "offset": [ -40, 100, 50 ],
+    "radius": 175,
+    "strength": 6,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_CASTING"
     ]
   },
   {
@@ -27881,6 +29536,48 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "IBANBLAST_TRAVEL"
+    ]
+  },
+  {
+    "description": "IBAN_BLAST_CAST_START",
+    "offset": [ 0, 250, 80 ],
+    "radius": 350,
+    "strength": 9,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 150,
+    "graphicsObjectIds": [
+      "IBANBLAST_CASTING"
+    ]
+  },
+  {
+    "description": "IBAN_BLAST_CAST_END",
+    "offset": [ 0, 150, 120 ],
+    "radius": 300,
+    "spawnDelay": 1150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 450,
+    "strength": 8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "IBANBLAST_CASTING"
     ]
   },
   {
@@ -28785,7 +30482,9 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 500,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100,
+    "fadeOverlap": true,
     "projectileIds": [
       "FIREBREATH_TRAVEL"
     ]
@@ -28829,6 +30528,26 @@
     "fadeInDuration": 500,
     "fadeOutDuration": 300,
     "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
+  },
+  {
+    "description": "Dragonfire Breath - Frost Dragon",
+    "offset": [ 0, 150, 290 ],
+    "radius": 185,
+    "strength": 25,
+    "color": [
+      215,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [ "FROSTBREATH_ATTACK" ]
   },
   {
     "description": "UNDEAD_DRUID",
@@ -29121,12 +30840,12 @@
   {
     "description": "GOTR_RIFT_PORTAL",
     "worldX": 3615,
-    "worldY": 9470,
+    "worldY": 9471,
     "plane": 0,
-    "height": 260,
+    "offset": [ 0, 700, -100 ],
     "alignment": "CENTER",
     "radius": 2500,
-    "strength": 11,
+    "strength": 4.5,
     "color": [
       0,
       191.49066,
@@ -29137,6 +30856,22 @@
     "range": 12
   },
   {
+    "description": "GOTR_RIFT_PORTAL_2",
+    "worldX": 3615,
+    "worldY": 9470,
+    "plane": 0,
+    "offset": [ 0, 150, -50 ],
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 7.5,
+    "color": [
+      0,
+      191.49066,
+      255
+    ],
+    "type": "STATIC"
+  },
+  {
     "description": "GOTR_REWARDS_GUARDIAN",
     "height": 130,
     "alignment": "CENTER",
@@ -29145,7 +30880,7 @@
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29262,7 +30997,7 @@
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29419,11 +31154,13 @@
     "height": 125,
     "alignment": "CENTER",
     "radius": 200,
-    "strength": 5.5,
+    "strength": 8.5,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 150,
     "color": [
       255,
-      240.28485,
-      0
+      255,
+      100
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29552,15 +31289,15 @@
     "height": 45,
     "alignment": "CENTER",
     "radius": 475,
-    "strength": 3.5,
+    "strength": 3,
     "color": [
       70,
-      242,
-      31
+      250,
+      110
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "NEXUS_TENDRILS",
       "NEXUS_TENDRILS_CORNER",
@@ -29575,8 +31312,8 @@
     "strength": 7.5,
     "color": [
       70,
-      242,
-      31
+      230,
+      110
     ],
     "objectIds": [ "NEXUS_LUNG_WHEEZING" ],
     "fadeInDuration": 200,
@@ -29587,11 +31324,11 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 4,
+    "strength": 8,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29605,7 +31342,7 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 6,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -29623,12 +31360,12 @@
     "description": "GOTR_WEAK_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 1.25,
+    "radius": 350,
+    "strength": 2,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29642,12 +31379,12 @@
     "description": "GOTR_MED_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 1.5,
+    "radius": 300,
+    "strength": 5,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29661,8 +31398,8 @@
     "description": "GOTR_STRONG_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 2.25,
+    "radius": 300,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -29680,8 +31417,8 @@
     "description": "GOTR_OVERCHARGED_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 3,
+    "radius": 300,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -29700,7 +31437,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2,
+    "strength": 4,
     "color": [
       255,
       255,
@@ -29718,7 +31455,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 4,
     "color": [
       0,
       0,
@@ -29736,7 +31473,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 4,
     "color": [
       0,
       255,
@@ -29754,7 +31491,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -29915,7 +31652,7 @@
   {
     "description": "Wyrm Magic Attack",
     "offset": [ 0, 0, 0 ],
-    "radius": 220,
+    "radius": 250,
     "strength": 20,
     "color": [
       0,
@@ -29924,16 +31661,15 @@
     ],
     "type": "FLICKER",
     "duration": 1,
-    "range": 80,
+    "range": 60,
     "projectileIds": [ "WYRM_RANGE_PROJ" ],
-    "spawnDelay": 400,
     "fadeInDuration": 300,
-    "fadeOutDuration": 100
+    "fadeOutDuration": 300
   },
   {
     "description": "Shadow Wyrm Magic Attack",
     "offset": [ 0, 0, 0 ],
-    "radius": 220,
+    "radius": 250,
     "strength": 50,
     "color": [
       0,
@@ -29944,9 +31680,8 @@
     "duration": 10,
     "range": 70,
     "projectileIds": [ "SUPERIOR_WYRM_RANGE_PROJ" ],
-    "spawnDelay": 400,
     "fadeInDuration": 300,
-    "fadeOutDuration": 100
+    "fadeOutDuration": 300
   },
   {
     "description": "KARUULM_INDOOR_LAVA_1",
@@ -32151,8 +33886,7 @@
   },
   {
     "description": "GIANTS_FOUNDRY_CRUCIBLE",
-    "height": 270,
-    "alignment": "CENTER",
+    "offset": [ 13, 270, -25 ],
     "radius": 130,
     "strength": 40,
     "color": [
@@ -32168,9 +33902,25 @@
     "range": 30
   },
   {
-    "description": "GIANTS_FOUNDRY_POURED_METAL_MOULD_JIG",
-    "height": 100,
-    "alignment": "CENTER",
+    "description": "GIANTS_FOUNDRY_POURED_METAL_MOULD_JIG_1",
+    "offset": [ 0, 130, 0 ],
+    "radius": 130,
+    "strength": 12,
+    "color": [
+      255,
+      182,
+      38
+    ],
+    "objectIds": [
+      "GIANTS_FOUNDRY_JIG_MOULD_FILLED"
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 30
+  },
+  {
+    "description": "GIANTS_FOUNDRY_POURED_METAL_MOULD_JIG_2",
+    "offset": [ 0, 120, 120 ],
     "radius": 130,
     "strength": 12,
     "color": [
@@ -33950,10 +35700,11 @@
     ]
   },
   {
-    "description": "RED_MUSHROOM_WALL",
-    "offset": [ 0, 152, 85 ],
-    "radius": 130,
-    "strength": 19.25,
+    "description": "RED_MUSHROOM_WALL_TOP",
+    "offset": [ 0, 102, 85 ],
+    "radius": 180,
+    "strength": 25.25,
+    "visibleFromOtherPlanes": true,
     "color": [
       225,
       30,
@@ -33963,15 +35714,16 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      "FAIRY_WALL_MUSH_RED",
-      "FAIRY_WALL_MUSH_RED_VAR"
+      "FAIRY_WALL_LV2_MUSH_RED",
+      "FAIRY_WALL_LV2_MUSH_RED_VAR"
     ]
   },
   {
     "description": "GREEN_MUSHROOM_WALL",
     "offset": [ 0, 142, 85 ],
-    "radius": 100,
+    "radius": 150,
     "strength": 5.25,
+    "visibleFromOtherPlanes": true,
     "color": [
       180,
       255,
@@ -33982,7 +35734,10 @@
     "range": 20,
     "objectIds": [
       "FAIRY_WALL_MUSH_GREEN",
-      "FAIRY_WALL_MUSH_GREEN_VAR"
+      "FAIRY_WALL_MUSH_GREEN_VAR",
+      "FAIRY_WALL_LV2_MUSH_GREEN_VAR",
+      "FAIRY_WALL_LV2_MUSH_GREEN",
+      "FAIRY_WALL_LV2_TENTACLE"
     ]
   },
   {
@@ -34095,7 +35850,6 @@
   {
     "description": "DIGSITE_LAMP",
     "height": 170,
-    "alignment": "FRONT",
     "radius": 290,
     "strength": 8.5,
     "color": [
@@ -35021,8 +36775,8 @@
   {
     "description": "FIRE_OF_ETERNAL_LIGHT",
     "height": 300,
-    "radius": 850,
-    "strength": 5,
+    "radius": 650,
+    "strength": 20,
     "color": "#ffffff",
     "type": "FLICKER",
     "range": 10,
@@ -35032,9 +36786,9 @@
   },
   {
     "description": "FIRE_OF_UNSEASONAL_WARMTH",
-    "height": 300,
+    "height": 200,
     "radius": 750,
-    "strength": 2.5,
+    "strength": 7,
     "color": [ 255, 85, 0 ],
     "type": "FLICKER",
     "range": 10,
@@ -35155,6 +36909,40 @@
     "range": 20,
     "objectIds": [
       "SLP_POOR_STOVE"
+    ]
+  },
+  {
+    "description": "STOVE",
+    "offset": [ -49, 88, -40 ],
+    "radius": 450,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SLP_STOVE"
+    ]
+  },
+  {
+    "description": "STOVE - Right lit",
+    "offset": [ 20, 88, 65 ],
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SWAN_STOVE"
     ]
   },
   {
@@ -35563,10 +37351,10 @@
   },
   {
     "description": "RUNECRAFTING_YELLOW_PORTALS",
-    "height": 30,
+    "height": 50,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 7.5,
+    "radius": 400,
+    "strength": 17.5,
     "color": [
       255,
       216,
@@ -35574,11 +37362,12 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 50,
+    "range": 20,
     "objectIds": [
       "COSMICTEMPLE_EXIT_PORTAL",
       "LAWTEMPLE_EXIT_PORTAL",
-      "NATURETEMPLE_EXIT_PORTAL"
+      "NATURETEMPLE_EXIT_PORTAL",
+      "DEATHTEMPLE_EXIT_PORTAL"
     ]
   },
   {
@@ -36474,8 +38263,8 @@
       175,
       255
     ],
-    "strength": 5,
-    "radius": 1000,
+    "strength": 3.5,
+    "radius": 750,
     "fadeInDuration": 150,
     "fadeOutDuration": 250,
     "offset": [ 0, 150, 20 ]
@@ -36717,7 +38506,7 @@
     "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01" ],
     "visibleFromOtherPlanes": true,
     "color": "#B1C9DB",
-    "strength": 15,
+    "strength": 10,
     "radius": 170,
     "fixedDespawnTime": true,
     "despawnDelay": 1950,
@@ -36972,15 +38761,40 @@
     "description": "Standard Spellbook Teleport",
     "graphicsObjectIds": [ "TELEPORT_CASTING" ],
     "radius": 350,
-    "strength": 12,
-    "color": [ 205, 0, 205 ],
+    "strength": 16,
+    "color": [
+      170,
+      20,
+      255
+    ],
     "offset": [ 0, 130, 0 ],
     "fixedDespawnTime": true,
     "despawnDelay": 550,
     "fadeOverlap": true,
     "fadeInDuration": 50,
     "fadeOutDuration": 250,
-    "spawnDelay": 950
+    "spawnDelay": 950,
+    "waitForAnimation": true
+  },
+  {
+    "description": "FAIRY_RING_TELEPORT_ANIMATION",
+    "offset": [ 0, 60, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "spawnDelay": 1100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1900,
+    "color": [
+      222,
+      0,
+      255
+    ],
+    "fadeOutDuration": 400,
+    "fadeInDuration": 200,
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "FAIRY_FLOWER_RING"
+    ]
   },
   {
     "description": "Wilderness Mage Arena Bank Pool 1",
@@ -37518,11 +39332,12 @@
   {
     "description": "Grotesque Guardians Flames",
     "graphicsObjectIds": [
-      "GG_DUSK_LIGHTNING_ENRAGED"
+      "GG_DUSK_LIGHTNING_ENRAGED",
+      "GG_DUSK_LIGHTNING_DAWN_DEATH"
     ],
-    "offset": [ 0, 10, 0 ],
-    "radius": 175,
-    "strength": 20,
+    "offset": [ 0, 20, 0 ],
+    "radius": 185,
+    "strength": 22,
     "color": [
       50,
       0,
@@ -37550,25 +39365,6 @@
       255
     ],
     "type": "STATIC"
-  },
-  {
-    "description": "Grotesque Guardians Dusk Heal Orb",
-    "objectIds": [
-      "GARGBOSS_HEALSPHERE_SMALL",
-      "GARGBOSS_HEALSPHERE_MED",
-      "GARGBOSS_HEALSPHERE_LARGE"
-    ],
-    "offset": [ 0, 10, 0 ],
-    "radius": 200,
-    "strength": 20,
-    "color": [
-      50,
-      0,
-      255
-    ],
-    "type": "STATIC",
-    "fadeInDuration": 100,
-    "fadeOutDuration": 150
   },
   {
     "description": "Paterdomus Temple Basement Monument lights",
@@ -38690,8 +40486,8 @@
   {
     "description": "Karamja - Brimhaven Dungeon - Pillar Torches",
     "height": 235,
-    "offset": [ -41, -74, 20 ],
-    "radius": 300,
+    "offset": [ -60, -65, 0 ],
+    "radius": 250,
     "strength": 12.5,
     "color": [
       252,
@@ -38709,7 +40505,7 @@
     "description": "Mastering Mixology - Godray lights - Hovering in mid air to add depth to scene",
     "height": -70,
     "alignment": "CENTER",
-    "radius": 600,
+    "radius": 750,
     "strength": 15,
     "color": [
       255,
@@ -38721,6 +40517,35 @@
     "range": 0,
     "objectIds": [
       "MM_LAB_LIGHT_GODRAY02_LARGE01_BRIGHT01"
+    ]
+  },
+  {
+    "description": "Mastering Mixology - Retort Fire",
+    "height": 90,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "objectIds": [
+      "MM_LAB_MACHINE_RETORT_MAL",
+      "MM_LAB_MACHINE_RETORT_MMM",
+      "MM_LAB_MACHINE_RETORT_MMA",
+      "MM_LAB_MACHINE_RETORT_MML",
+      "MM_LAB_MACHINE_RETORT_AAA",
+      "MM_LAB_MACHINE_RETORT_AAM",
+      "MM_LAB_MACHINE_RETORT_AAL",
+      "MM_LAB_MACHINE_RETORT_LLL",
+      "MM_LAB_MACHINE_RETORT_LLA",
+      "MM_LAB_MACHINE_RETORT_LLM"
     ]
   },
   {
@@ -39446,52 +41271,6 @@
     "graphicsObjectIds": [ "DRAGON_SWORD_SPEC_SPOTANIM" ]
   },
   {
-    "description": "Dragon Halberd Special Attack",
-    "offset": [ 0, 0, 0 ],
-    "radius": 225,
-    "spawnDelay": 200,
-    "fixedDespawnTime": true,
-    "despawnDelay": 910,
-    "strength": 10,
-    "color": [
-      255,
-      0,
-      0
-    ],
-    "type": "STATIC",
-    "fadeInDuration": 100,
-    "fadeOutDuration": 550,
-    "graphicsObjectIds": [
-      "DRAGON_HALBERD_SPECIAL_WEST_RED",
-      "DRAGON_HALBERD_SPECIAL_NORTH_RED",
-      "DRAGON_HALBERD_SPECIAL_SOUTH_RED",
-      "DRAGON_HALBERD_SPECIAL_EAST_RED"
-    ]
-  },
-  {
-    "description": "Crystal Halberd Special Attack",
-    "offset": [ 0, 0, 0 ],
-    "radius": 225,
-    "spawnDelay": 175,
-    "fixedDespawnTime": true,
-    "despawnDelay": 910,
-    "strength": 10,
-    "color": [
-      255,
-      255,
-      255
-    ],
-    "type": "STATIC",
-    "fadeInDuration": 100,
-    "fadeOutDuration": 550,
-    "graphicsObjectIds": [
-      "DRAGON_HALBERD_SPECIAL_WEST_WHITE",
-      "DRAGON_HALBERD_SPECIAL_NORTH_WHITE",
-      "DRAGON_HALBERD_SPECIAL_SOUTH_WHITE",
-      "DRAGON_HALBERD_SPECIAL_EAST_WHITE"
-    ]
-  },
-  {
     "description": "Dragon Spear Special Attack",
     "offset": [ 0, 150, 80 ],
     "radius": 225,
@@ -39737,6 +41516,182 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [ "SPECIAL_ATLATL_SPOTANIM" ]
+  },
+  {
+    "description": "Scorching Bow Special Attack - Arrow",
+    "offset": [ 0, -25, 0 ],
+    "radius": 175,
+    "strength": 12,
+    "fadeOutDuration": 575,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [ "VFX_SCORCHING_BOW_PROJECTILE" ]
+  },
+  {
+    "description": "Emberlight Special Attack Player",
+    "offset": [ 0, 75, 0 ],
+    "radius": 230,
+    "strength": 11.5,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_EMBERLIGHT_SPEC_02" ]
+  },
+  {
+    "description": "Emberlight Special Attack Impact",
+    "offset": [ 0, 75, 90 ],
+    "radius": 260,
+    "spawnDelay": 1150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 650,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 150,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "VFX_EMBERLIGHT_SPEC_02" ]
+  },
+  {
+    "description": "Scorching Bow Special Attack - Shot Firing",
+    "offset": [ 0, 80, 50 ],
+    "radius": 165,
+    "strength": 12,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "spawnDelay": 150,
+    "fadeOutDuration": 175,
+    "fadeInDuration": 250,
+
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [ "VFX_HUMAN_SCORCHING_BOW_SPECIAL_ATTACK_01" ]
+  },
+  {
+    "description": "Abyssal Dagger Special Attack Right 1",
+    "offset": [ 30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
+    "description": "Abyssal Dagger Special Attack Right 2",
+    "offset": [ 30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 750,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
+    "description": "Abyssal Dagger Special Attack Left",
+    "offset": [ -30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
+    "description": "Scythe of Vitur swing & Dragon Halberd special attack - Red",
+    "offset": [ 0, 0, 0 ],
+    "radius": 275,
+    "waitForAnimation": true,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 890,
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_RED",
+      "DRAGON_HALBERD_SPECIAL_NORTH_RED",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_RED",
+      "DRAGON_HALBERD_SPECIAL_EAST_RED"
+    ]
+  },
+  {
+    "description": "Scythe of Vitur swing & Dragon Halberd special attack - White",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "waitForAnimation": true,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 890,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_WHITE",
+      "DRAGON_HALBERD_SPECIAL_NORTH_WHITE",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_WHITE",
+      "DRAGON_HALBERD_SPECIAL_EAST_WHITE"
+    ]
   },
   {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
@@ -40131,7 +42086,6 @@
     "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
-      "FIREWAVE_TRAVEL",
       "VFX_VMQ4_METZLI_RANGED_FIRE_PROJECTILE_ENRAGED_01"
     ]
   },
@@ -41308,6 +43262,1678 @@
     "range": 20,
     "objectIds": [
       "NIGHTMARE_PLATFORM_LVL2_23"
+    ]
+  },
+  {
+    "description": "GIANT_MOLE_LIGHT_SHAFT",
+    "objectIds": [ "MOLE_LIGHT_STREAMING" ],
+    "radius": 700,
+    "strength": 25,
+    "color": "#ffffff",
+    "offset": [ 0, 300, 0 ]
+  },
+  {
+    "description": "Night at the Theatre crypt - Wall Torches",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TOBQUEST_CRYPT_TORCH"
+    ]
+  },
+  {
+    "description": "Night at the Theatre crypt - Candles - Large bunch",
+    "offset": [ -5, 82, 0 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "TOBQUEST_CRYPT_CANDLES_1"
+    ]
+  },
+  {
+    "description": "Night at the Theatre crypt - Candles angled small bunch",
+    "offset": [ -5, 67, 33 ],
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TOBQUEST_CRYPT_CANDLES_2"
+    ]
+  },
+  {
+    "description": "Ghosts Ahoy Range",
+    "height": 100,
+    "offset": [ 53, -53, 48 ],
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "AHOY_RANGE"
+    ]
+  },
+  {
+    "description": "Sisterhood Sanctuary Ghost",
+    "height": 88,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "SANCTUARY_GHOST"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - White light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_WHITE_3",
+      "SOTE_LIGHT_WHITE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - White light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_WHITE_3",
+      "SOTE_LIGHT_WHITE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - White light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_WHITE_3",
+      "SOTE_LIGHT_WHITE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Magenta light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_MAGENTA_3",
+      "SOTE_LIGHT_MAGENTA_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Magenta light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_MAGENTA_3",
+      "SOTE_LIGHT_MAGENTA_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Magenta light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_MAGENTA_3",
+      "SOTE_LIGHT_MAGENTA_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Red light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_RED_3",
+      "SOTE_LIGHT_RED_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Red light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_RED_3",
+      "SOTE_LIGHT_RED_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Red light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_RED_3",
+      "SOTE_LIGHT_RED_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Yellow light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_YELLOW_3",
+      "SOTE_LIGHT_YELLOW_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Yellow light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_YELLOW_3",
+      "SOTE_LIGHT_YELLOW_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Yellow light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      230,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_YELLOW_3",
+      "SOTE_LIGHT_YELLOW_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Black light beam",
+    "offset": [ 0, 144, 0 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 15,
+    "color": [
+      126,
+      0,
+      126
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLACK_3",
+      "SOTE_LIGHT_BLACK_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Black light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 15,
+    "color": [
+      126,
+      0,
+      126
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLACK_3",
+      "SOTE_LIGHT_BLACK_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Black light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 15,
+    "color": [
+      126,
+      0,
+      126
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLACK_3",
+      "SOTE_LIGHT_BLACK_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Blue light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLUE_3",
+      "SOTE_LIGHT_BLUE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Blue light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLUE_3",
+      "SOTE_LIGHT_BLUE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Blue light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLUE_3",
+      "SOTE_LIGHT_BLUE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Cyan light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_CYAN_3",
+      "SOTE_LIGHT_CYAN_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Cyan light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_CYAN_3",
+      "SOTE_LIGHT_CYAN_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Cyan light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_CYAN_3",
+      "SOTE_LIGHT_CYAN_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Green light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 7,
+    "color": [
+      0,
+      252,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_GREEN_3",
+      "SOTE_LIGHT_GREEN_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Green light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 7,
+    "color": [
+      0,
+      252,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_GREEN_3",
+      "SOTE_LIGHT_GREEN_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Green light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 7,
+    "color": [
+      0,
+      252,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_GREEN_3",
+      "SOTE_LIGHT_GREEN_4"
+    ]
+  },
+  {
+    "description": "Piscatoris - Press Light",
+    "offset": [ 25, 120, 0 ],
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SWAN_MACHINE_FIREBOX_LIT"
+    ]
+  },
+  {
+    "description": "Piscatoris - Furnace",
+    "offset": [ 0, 60, 20 ],
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SWAN_FURNACE"
+    ]
+  },
+  {
+    "description": "Sailing Shipyard Portal",
+    "offset": [ 0, 100, -50 ],
+    "radius": 500,
+    "strength": 20,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 10,
+    "objectIds": [
+      "SAILING_SHIPYARD_PORTAL_EXIT"
+    ]
+  },
+  {
+    "description": "Varrock - Greack Conch - Metal cooking  Range",
+    "height": 100,
+    "offset": [ 20, -10, 64 ],
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "FAI_VARROCK_RANGE",
+      "KR_SIN_RANGE"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Projectile",
+    "offset": [ 0, 30, 0 ],
+    "radius": 450,
+    "spawnDelay": 200,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "projectileIds": [
+      "PROJANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Animation 1",
+    "offset": [ 200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Animation 2",
+    "offset": [ -200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Animation 3",
+    "offset": [ 220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Animation 4",
+    "offset": [ -220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Animation 5",
+    "offset": [ 0, 100, -280 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Projectile",
+    "offset": [ 0, 30, 0 ],
+    "radius": 500,
+    "spawnDelay": 200,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "strength": 3.5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "projectileIds": [
+      "PROJANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Animation 1",
+    "offset": [ 200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Animation 2",
+    "offset": [ -200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Animation 3",
+    "offset": [ 220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Animation 4",
+    "offset": [ -220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Animation 5",
+    "offset": [ 0, 100, -280 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Projectile",
+    "offset": [ 0, 30, 0 ],
+    "radius": 500,
+    "spawnDelay": 200,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "strength": 4,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "projectileIds": [
+      "PROJANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Animation 1",
+    "offset": [ 200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Animation 2",
+    "offset": [ -200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Animation 3",
+    "offset": [ 220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Animation 4",
+    "offset": [ -220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Animation 5",
+    "offset": [ 0, 100, -280 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 1",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ -70, 350, 70 ],
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 2",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ 100, 550, -30 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 3",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ -220, 180, 100 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 4",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ 65, 250, 190 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 5",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ 145, 230, -140 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 6",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ 85, 95, -200 ],
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 7",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ -60, 295, -80 ],
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Deepfin Point - Furnace - Inside",
+    "offset": [ 0, 100, -55 ],
+    "radius": 75,
+    "strength": 50,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "DEEPFIN_FURNACE"
+    ]
+  },
+  {
+    "description": "Deepfin Point - Furnace - Outside",
+    "offset": [ 0, 100, -125 ],
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "DEEPFIN_FURNACE"
+    ]
+  },
+  {
+    "description": "Deepfin Cave and Laguna Cave Exit",
+    "offset": [ -50, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 6,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "DEEPFIN_CAVE_EXIT",
+      "LAGUNA_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "Sailing - Island Hut Lantern",
+    "offset": [ 3.75, 155, 0 ],
+    "radius": 350,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "objectIds": [
+      "HIDEOUT_LANTERN01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Sailing - Island Hut Lantern",
+    "offset": [ 3.75, 155, 0 ],
+    "radius": 350,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "objectIds": [
+      "HIDEOUT_LANTERN01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "XMAS_2025_FIREPLACE_HEARTH_INSIDE",
+    "offset": [ 0, 60, -15 ],
+    "radius": 75,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS24_PUB01_FIREPLACE01"
+    ]
+  },
+  {
+    "description": "XMAS_2025_FIREPLACE_CANDLE",
+    "offset": [ -10, 165, -10 ],
+    "radius": 100,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS24_PUB01_FIREPLACE01"
+    ]
+  },
+  {
+    "description": "XMAS_2025_TABLE_CANDLE",
+    "offset": [ -1, 200, 22 ],
+    "radius": 85,
+    "strength": 26.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "XMAS25_TABLE01_EMPTY01",
+      "XMAS25_TABLE01_DRINK01",
+      "XMAS25_TABLE01_FOOD01"
+    ]
+  },
+  {
+    "description": "Varrock Blue Moon Inn Light 1",
+    "worldX": 3225,
+    "worldY": 3399,
+    "offset": [ 0, 300, 0 ],
+    "radius": 500,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Blue Moon Inn Light 2",
+    "worldX": 3230,
+    "worldY": 3400,
+    "offset": [ -50, 300, 50 ],
+    "radius": 425,
+    "strength": 12,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Blue Moon Inn Light 3",
+    "worldX": 3231,
+    "worldY": 3395,
+    "offset": [ 0, 250, 0 ],
+    "radius": 350,
+    "strength": 12,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "VARROCK_RANGE_1",
+    "offset": [ 0, 95, 60 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 5,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_RANGE_WITH_PIPE"
+    ]
+  },
+  {
+    "description": "VARROCK_RANGE_2",
+    "offset": [ 65, 50, -60 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 3,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_RANGE_WITH_PIPE"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_EXIT_LIGHT_SMALL",
+    "offset": [ -75, 85, -10 ],
+    "radius": 120,
+    "strength": 30,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GRIMSTONE_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_EXIT_LIGHT_LARGE",
+    "offset": [ -125, 115, -10 ],
+    "radius": 600,
+    "strength": 1.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GRIMSTONE_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_FURNACE_BOTTOM",
+    "offset": [ 0, 100, -250 ],
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "GRIMSTONE_FURNACE"
+    ]
+  },
+  {
+    "description": "GRIMSTONE_FURNACE_TOP",
+    "offset": [ 0, 375, -150 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "GRIMSTONE_FURNACE"
+    ]
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_EDGE",
+    "offset": [ -100, 250, 0 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 3,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "FLOORKIT_GRADIENT04_CORNER01"
+    ]
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE1",
+    "offset": [ 75, 250, 0 ],
+    "worldX": 3616,
+    "worldY": 9818,
+    "radius": 550,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE2",
+    "offset": [ 0, 250, 0 ],
+    "worldX": 3615,
+    "worldY": 9814,
+    "radius": 550,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE3",
+    "offset": [ 0, 250, 0 ],
+    "worldX": 3617,
+    "worldY": 9811,
+    "radius": 450,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXXOR_VENOM_POOL_MIDDLE4",
+    "offset": [ 25, 250, 0 ],
+    "worldX": 3617,
+    "worldY": 9822,
+    "radius": 550,
+    "strength": 3,
+    "color": [
+      0,
+      242,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "ARAXYTE_SPIDER_CAVE_EXIT",
+    "offset": [ 0, 125, 0 ],
+    "radius": 750,
+    "strength": 3.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "ARAXYTE_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "SMOKE_DEVIL_DUNGEON_LAVA_FIRE_1",
+    "offset": [ -50, 300, 0 ],
+    "worldY": 9460,
+    "worldX": 2367,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "SMOKE_DEVIL_DUNGEON_LAVA_FIRE_2",
+    "offset": [ 0, 200, 0 ],
+    "worldY": 9426,
+    "worldX": 2385,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "SMOKE_DEVIL_DUNGEON_LAVA_FIRE_3",
+    "offset": [ 50, 300, 0 ],
+    "worldY": 9449,
+    "worldX": 2350,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "SMOKE_DEVIL_DUNGEON_LAVA_FIRE_4",
+    "offset": [ 50, 200, -50 ],
+    "worldY": 9438,
+    "worldX": 2418,
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "SMOKE_DEVIL_LIGHT",
+    "offset": [ 0, 75, 0 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      255,
+      255,
+      130
+    ],
+    "npcIds": [
+      "SMOKE_DEVIL"
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150
+  },
+  {
+    "description": "SMOKE_DEVIL_BOSS_BOTTOM_LIGHT",
+    "offset": [ 0, 175, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      110
+    ],
+    "npcIds": [
+      "SMOKE_DEVIL_BOSS"
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 250
+  },
+  {
+    "description": "SMOKE_DEVIL_BOSS_FRONT_LIGHT",
+    "offset": [ 0, 300, 115 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      110
+    ],
+    "npcIds": [
+      "SMOKE_DEVIL_BOSS"
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "SMOKE_DEVIL_BOSS_BACK_LIGHT",
+    "offset": [ 0, 300, -115 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      110
+    ],
+    "npcIds": [
+      "SMOKE_DEVIL_BOSS"
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "Shades of Mort'ton - Temple Fire",
+    "offset": [ 0, 215, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "fadeOutDuration": 200,
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TEMPLEFIRE_ALTAR"
+    ]
+  },
+  {
+    "description": "Shades of Mort'ton - Pyre",
+    "offset": [ 0, 215, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "spawnDelay": 600,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 0,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "TEMPLE_PYRE_FIRE"
+    ]
+  },
+  {
+    "description": "POH_BONE_SACRIFICE",
+    "offset": [ 0, 150, 0 ],
+    "alignment": "CENTER",
+    "radius": 220,
+    "fadeOutDuration": 100,
+    "fadeInDuration": 200,
+    "strength": 10,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [
+      "POH_BONE_SACRIFICE"
+    ]
+  },
+  {
+    "description": "ZAMORAK_FLAME",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 12.5,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "waitForAnimation": true,
+    "graphicsObjectIds": [
+      "ZAMORAK_FLAME"
     ]
   }
 ]

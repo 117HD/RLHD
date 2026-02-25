@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -53,11 +52,11 @@ public class Material {
 	private Material ambientOcclusionMap;
 	@JsonAdapter(Reference.Adapter.class)
 	private Material flowMap;
-	private boolean hasTransparency;
+	public boolean hasTransparency;
 	private boolean overrideBaseColor;
 	private boolean unlit;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
-	private float brightness = 1;
+	public float brightness = 1;
 	private float displacementScale = .1f;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
@@ -75,11 +74,18 @@ public class Material {
 	public transient boolean isFallbackVanillaMaterial;
 	public transient boolean isValid = true;
 
+	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 	public static final Material NONE = new Material().name("NONE");
 	public static final Material[] REQUIRED_MATERIALS = { NONE };
 
 	public static int getTextureLayer(@Nullable Material material) {
 		return material == null ? -1 : material.textureLayer;
+	}
+
+	public static boolean hasVanillaTransparency(int vanillaTextureId) {
+		if (vanillaTextureId < 0 || vanillaTextureId >= MaterialManager.VANILLA_TEXTURE_MAPPING.length)
+			return false;
+		return MaterialManager.VANILLA_TEXTURE_MAPPING[vanillaTextureId].hasTransparency;
 	}
 
 	public void normalize(Map<String, Material> materials) {
@@ -164,17 +170,16 @@ public class Material {
 		return replacementCondition.test(vars);
 	}
 
-	public int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
+	public final int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		assert isValid : String.format("Material %s used after invalidation", this);
 		int materialIndex = uboIndex;
-		assert materialIndex <= ModelPusher.MAX_MATERIAL_INDEX;
-		// The sign bit can't be used without shader changes to correctly unpack the material index
-		return (materialIndex & ModelPusher.MAX_MATERIAL_INDEX) << 20
-			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 14
-			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 11
-			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 8
-			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 7
+		assert materialIndex <= MAX_MATERIAL_INDEX;
+		return (materialIndex & MAX_MATERIAL_INDEX) << 21
+			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 15
+			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 12
+			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
+			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8
 			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			   | (!modelOverride.receiveShadows ? 1 : 0) << 5
 			   | (modelOverride.upwardsNormals ? 1 : 0) << 4

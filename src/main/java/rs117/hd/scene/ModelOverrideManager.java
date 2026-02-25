@@ -2,16 +2,19 @@ package rs117.hd.scene;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.gameval.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.model.ModelPusher;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.ModelHash;
@@ -27,30 +30,34 @@ public class ModelOverrideManager {
 		.getFile("rlhd.model-overrides-path", () -> path(ModelOverrideManager.class, "model_overrides.json"));
 
 	@Inject
-	private Client client;
-
-	@Inject
 	private ClientThread clientThread;
 
 	@Inject
 	private HdPlugin plugin;
 
 	@Inject
+	private Client client;
+
+	@Inject
 	private GamevalManager gamevalManager;
 
 	@Inject
-	private ModelPusher modelPusher;
+	private SceneManager sceneManager;
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
+	private final HashSet<Integer> detailCullingBlacklist = new HashSet<>();
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	public void startUp() {
 		fileWatcher = MODEL_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> {
 			try {
+				sceneManager.getLoadingLock().lock();
+				sceneManager.completeAllStreaming();
+
 				ModelOverride[] parsedOverrides = path.loadJson(plugin.getGson(), ModelOverride[].class);
 				if (parsedOverrides == null)
 					throw new IOException("Empty or invalid: " + path);
@@ -58,7 +65,7 @@ public class ModelOverrideManager {
 				modelOverrides.clear();
 				for (ModelOverride override : parsedOverrides) {
 					try {
-						override.normalize(plugin.configVanillaShadowMode);
+						override.normalize(plugin);
 					} catch (IllegalStateException ex) {
 						log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
 						continue;
@@ -75,16 +82,25 @@ public class ModelOverrideManager {
 				}
 
 				addOverride(fishingSpotReplacer.getModelOverride());
+				addSailingCullingOverrides();
+
+				detailCullingBlacklist.clear();
+				for (var entry : modelOverrides.entrySet())
+					if (entry.getValue().disableDetailCulling)
+						detailCullingBlacklist.add(entry.getKey());
 
 				log.debug("Loaded {} model overrides", modelOverrides.size());
 
 				if (first)
 					return;
 
-				modelPusher.clearModelCache();
-				plugin.reuploadScene();
+				plugin.renderer.clearCaches();
+				plugin.renderer.reloadScene();
 			} catch (Exception ex) {
 				log.error("Failed to load model overrides:", ex);
+			} finally {
+				sceneManager.getLoadingLock().unlock();
+				log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 			}
 		}));
 	}
@@ -95,6 +111,7 @@ public class ModelOverrideManager {
 		fileWatcher = null;
 
 		modelOverrides.clear();
+		detailCullingBlacklist.clear();
 	}
 
 	public void reload() {
@@ -189,6 +206,28 @@ public class ModelOverrideManager {
 		}
 	}
 
+	private void addSailingCullingOverrides() {
+		try {
+			for (Integer row : client.getDBTableRows(DBTableID.SailingBoatSail.ID)) {
+				Integer sailId = (Integer) client.getDBTableField(row, DBTableID.SailingBoatSail.COL_LOC, 0)[0];
+				if (sailId == null)
+					continue;
+				ModelOverride sailOverride = new ModelOverride();
+				sailOverride.description = "Disable detail culling of boat sails (generated)";
+				sailOverride.objectIds = Set.of(sailId);
+				sailOverride.disableDetailCulling = true;
+				sailOverride.normalize(plugin);
+				addOverride(sailOverride);
+			}
+		} catch (Exception ex) {
+			log.error("Error while setting up model overrides for disabling detail culling of sails:", ex);
+		}
+	}
+
+	public boolean allowDetailCulling(int uuid) {
+		return !detailCullingBlacklist.contains(uuid);
+	}
+
 	@Nonnull
 	public ModelOverride getOverride(int uuid, int[] worldPos) {
 		var override = modelOverrides.get(ModelHash.getUuidWithoutSubType(uuid));
@@ -201,5 +240,10 @@ public class ModelOverrideManager {
 					return entry.getValue();
 
 		return override;
+	}
+
+	@Nonnull
+	public ModelOverride getOverride(TileObject tileObject, int[] worldPos) {
+		return getOverride(ModelHash.packUuid(ModelHash.TYPE_OBJECT, tileObject.getId()), worldPos);
 	}
 }

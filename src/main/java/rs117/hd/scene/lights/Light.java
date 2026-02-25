@@ -56,9 +56,9 @@ public class Light
 	public Projectile projectile;
 	public TileObject tileObject;
 	public GraphicsObject graphicsObject;
+	public int tileObjectId;
 	public int spotanimId = -1;
 	public int[] projectileRefCounter;
-	public long hash;
 
 	public int sizeX = 1;
 	public int sizeY = 1;
@@ -91,7 +91,7 @@ public class Light
 			dynamicLifetime = false;
 		}
 
-		animationSpecific = !def.animationIds.isEmpty();
+		animationSpecific = def.waitForAnimation || !def.animationIds.isEmpty();
 		if (animationSpecific) {
 			persistent = replayable = true;
 			// Initially hide the light

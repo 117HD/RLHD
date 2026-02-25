@@ -36,6 +36,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
+	private static final Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -162,6 +163,12 @@ public class DeveloperTools implements KeyListener {
 					keyManager.unregisterKeyListener(this);
 				}
 				break;
+			case "reload":
+				plugin.renderer.reloadScene();
+				break;
+			case "culling":
+				plugin.freezeCulling = !plugin.freezeCulling;
+				break;
 		}
 	}
 
@@ -185,6 +192,8 @@ public class DeveloperTools implements KeyListener {
 			plugin.orthographicProjection = !plugin.orthographicProjection;
 		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
 			hideUiEnabled = !hideUiEnabled;
+		} else if (KEY_RELOAD_SCENE.matches(e)) {
+			plugin.renderer.reloadScene();
 		} else {
 			return;
 		}
