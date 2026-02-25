@@ -775,7 +775,7 @@ public interface HdPluginConfig extends Config
 		position = 15,
 		section = environmentSettings
 	)
-	default boolean hideVanillaWaterEffects() { return false; }
+	default boolean hideVanillaWaterEffects() { return true; }
 
 	/*====== Miscellaneous settings ======*/
 
