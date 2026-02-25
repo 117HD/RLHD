@@ -217,9 +217,6 @@ public class SceneManager {
 			}
 			root.sceneContext.animatedDynamicObjectImpostors.put(objectId, impostorId);
 		}
-
-		if (root.sceneContext != null && root.sceneContext.isInHouse)
-			root.completeInvalidation();
 	}
 
 	private void updateAreaHiding() {
