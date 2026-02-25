@@ -97,7 +97,7 @@ public class ModelOverride
 	public transient boolean modifiesVanillaTexture;
 
 	// Transient not volatile, since access order can be random as it'll mean we'll just fall back to the full lookup
-	private transient long cachedColorOverrideAhsl;
+	private transient long cachedColorOverrideAhsl = -1;
 
 	@FunctionalInterface
 	public interface AhslPredicate {
@@ -255,7 +255,8 @@ public class ModelOverride
 			hasTransparency,
 			mightHaveTransparency,
 			modifiesVanillaTexture,
-			0 // Runtime caching fields
+			// Runtime caching fields
+			-1
 		);
 	}
 
@@ -622,16 +623,16 @@ public class ModelOverride
 	public final ModelOverride testColorOverrides(int ahsl, boolean hideWaterEffects) {
 		ModelOverride override = null;
 		final long packedAhl = cachedColorOverrideAhsl;
-		if (packedAhl != 0 && ahsl == (int)packedAhl)
+		if (packedAhl != -1 && ahsl == (int) packedAhl)
 			override = colorOverrides[(int) (packedAhl >> 32)];
 
-		if(override == null) {
+		if (override == null) {
 			final int len = colorOverrides.length;
-			for (int i = 0; i < len; i++) {
-				final var override2 = colorOverrides[i];
-				if (override2.ahslCondition.test(ahsl)) {
+			for (int i = 0; i < len; ++i) {
+				final var inner = colorOverrides[i];
+				if (inner.ahslCondition.test(ahsl)) {
 					cachedColorOverrideAhsl = ahsl | (long) i << 32;
-					override = override2;
+					override = inner;
 					break;
 				}
 			}
