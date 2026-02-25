@@ -319,5 +319,9 @@ public class WorldViewContext {
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
 		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
+
+		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders
+		if (sceneContext.isInHouse)
+			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
