@@ -174,35 +174,57 @@ public class SceneContext {
 	/**
 	 * Returns the first local coordinate for the given world point without allocating a Stream.
 	 * Use this in hot paths instead of worldToLocals(wp).findFirst().orElse(null).
+	 * When out is non-null and length >= 3, writes into out and returns it to avoid allocation.
 	 */
 	@Nullable
 	public int[] worldToLocalFirst(WorldPoint worldPoint) {
+		return worldToLocalFirst(worldPoint, null);
+	}
+
+	@Nullable
+	public int[] worldToLocalFirst(WorldPoint worldPoint, int[] out) {
 		if (sceneBase != null)
-			return worldToLocal(worldPoint);
+			return worldToLocal(worldPoint, out);
 		var coll = WorldPoint.toLocalInstance(scene, worldPoint);
 		var it = coll.iterator();
 		if (!it.hasNext()) return null;
 		WorldPoint ip = it.next();
 		if (ip == null) return null;
-		return ivec(
-			(ip.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE,
-			(ip.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE,
-			ip.getPlane()
-		);
+		int x = (ip.getX() - scene.getBaseX()) * LOCAL_TILE_SIZE;
+		int y = (ip.getY() - scene.getBaseY()) * LOCAL_TILE_SIZE;
+		int p = ip.getPlane();
+		if (out != null && out.length >= 3) {
+			out[0] = x;
+			out[1] = y;
+			out[2] = p;
+			return out;
+		}
+		return ivec(x, y, p);
 	}
 
 	/**
 	 * Gets the local coordinate at the south-western corner of the tile, if the scene is contiguous, otherwise null
+	 * When out is non-null and length >= 3, writes into out and returns it to avoid allocation.
 	 */
 	@Nullable
 	public int[] worldToLocal(WorldPoint worldPoint) {
+		return worldToLocal(worldPoint, null);
+	}
+
+	@Nullable
+	public int[] worldToLocal(WorldPoint worldPoint, int[] out) {
 		if (sceneBase == null)
 			return null;
-		return ivec(
-			(worldPoint.getX() - sceneBase[0]) * LOCAL_TILE_SIZE,
-			(worldPoint.getY() - sceneBase[1]) * LOCAL_TILE_SIZE,
-			worldPoint.getPlane()
-		);
+		int x = (worldPoint.getX() - sceneBase[0]) * LOCAL_TILE_SIZE;
+		int y = (worldPoint.getY() - sceneBase[1]) * LOCAL_TILE_SIZE;
+		int p = worldPoint.getPlane();
+		if (out != null && out.length >= 3) {
+			out[0] = x;
+			out[1] = y;
+			out[2] = p;
+			return out;
+		}
+		return ivec(x, y, p);
 	}
 
 	public boolean intersects(Area area) {

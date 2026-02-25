@@ -100,7 +100,6 @@ public final class EmittedParticle {
 		buf.yFixed[i] += ((long) buf.velocityY[i] * (long) (buf.speedRef[i] << 2) >> 23) * (long) tickDelta;
 		buf.zFixed[i] += ((long) buf.velocityZ[i] * (long) (buf.speedRef[i] << 2) >> 23) * (long) tickDelta;
 
-		buf.syncRefToFloat(i);
 		return false;
 	}
 }

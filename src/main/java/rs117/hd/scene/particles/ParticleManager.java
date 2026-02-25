@@ -8,6 +8,7 @@ import com.google.common.base.Stopwatch;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -76,14 +77,22 @@ public class ParticleManager {
 
 	@Getter
 	private final List<ParticleEmitter> sceneEmitters = new ArrayList<>();
-	private final List<ParticleEmitter> emitterIterationList = new ArrayList<>();
 	@Getter
 	private final Map<TileObject, List<ParticleEmitter>> emittersByTileObject = new LinkedHashMap<>();
 	@Getter
 	private final ParticleBuffer particleBuffer = new ParticleBuffer();
 	@Getter
 	private final Set<ParticleEmitter> emittersCulledThisFrame = new HashSet<>();
-	private final Deque<Particle> particlePool = new ArrayDeque<>(256);
+	private final Deque<Particle> particlePool = new ArrayDeque<>(512);
+
+	private final float[] spawnOrigin = new float[3];
+	private final float[] spawnPosScratch = new float[3];
+	private final int[] spawnOffsetScratch = new int[2];
+	private final int[] localScratch = new int[3];
+	private final float[] updatePosOut = new float[3];
+	private final int[] planeOutScratch = new int[1];
+	private ParticleEmitter[] emitterIterationArray = new ParticleEmitter[0];
+	private final Map<TileObject, float[]> objectPositionCache = new HashMap<>();
 
 	@Getter
 	private int lastEmittersUpdating, lastEmittersCulled;
@@ -151,6 +160,7 @@ public class ParticleManager {
 
 	public void startUp() {
 		eventBus.register(this);
+		particleBuffer.ensureCapacity(MAX_PARTICLES);
 		loadConfig();
 	}
 
@@ -537,33 +547,47 @@ public class ParticleManager {
 	public void update(@Nullable SceneContext ctx, float dt) {
 		emittersCulledThisFrame.clear();
 		if (ctx != null && ctx.sceneBase != null) {
+			objectPositionCache.clear();
 			float drawDistance = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
 			final float halfTile = LOCAL_TILE_SIZE / 2f;
+			float farSq = drawDistance + halfTile + halfTile * 2;
+			farSq *= farSq;
 			final long gameCycle = client.getGameCycle();
 			final int maxParticles = MAX_PARTICLES;
 			final int[] cameraShift = plugin.cameraShift;
 			final float[][] cameraFrustum = plugin.cameraFrustum;
+			final int[][][] tileHeights = ctx.scene.getTileHeights();
 			ParticleBuffer buf = particleBuffer;
-			float[] pos = new float[3];
-			int[] planeOut = new int[1];
 
-			// Iterate over a copy to avoid ConcurrentModificationException if emitters are added/removed during tick
-			emitterIterationList.clear();
-			emitterIterationList.addAll(sceneEmitters);
-			for (ParticleEmitter emitter : emitterIterationList) {
+			int numEmitters = sceneEmitters.size();
+			if (emitterIterationArray.length < numEmitters)
+				emitterIterationArray = new ParticleEmitter[numEmitters];
+			sceneEmitters.toArray(emitterIterationArray);
+			for (int e = 0; e < numEmitters; e++) {
+				ParticleEmitter emitter = emitterIterationArray[e];
 				ParticleDefinition def = emitter.getDefinition();
 				boolean skipCulling = def != null && def.displayWhenCulled;
 
-				if (!getEmitterSpawnPosition(ctx, emitter, pos, planeOut)) {
+				TileObject obj = emitter.getTileObject();
+				if (obj != null) {
+					LocalPoint lp = obj.getLocalLocation();
+					float dx = plugin.cameraFocalPoint[0] - lp.getX();
+					float dz = plugin.cameraFocalPoint[1] - lp.getY();
+					if (dx * dx + dz * dz >= farSq) {
+						if (!skipCulling) emittersCulledThisFrame.add(emitter);
+						continue;
+					}
+				}
+
+				if (!getEmitterSpawnPosition(ctx, emitter, updatePosOut, planeOutScratch, tileHeights, spawnOrigin, spawnPosScratch, spawnOffsetScratch, localScratch, objectPositionCache)) {
 					if (!skipCulling) emittersCulledThisFrame.add(emitter);
 					continue;
 				}
-				int plane = planeOut[0];
+				int plane = planeOutScratch[0];
 
-				// Culling: same as LightManager (distance from cameraFocalPoint, then frustum with cameraShift)
 				boolean visible = true;
-				float distX = plugin.cameraFocalPoint[0] - pos[0];
-				float distZ = plugin.cameraFocalPoint[1] - pos[2];
+				float distX = plugin.cameraFocalPoint[0] - updatePosOut[0];
+				float distZ = plugin.cameraFocalPoint[1] - updatePosOut[2];
 				float distanceSquared = distX * distX + distZ * distZ;
 				float maxRadius = halfTile * 2;
 				float near = -maxRadius * maxRadius;
@@ -573,9 +597,9 @@ public class ParticleManager {
 					visible = false;
 				if (visible) {
 					visible = isSphereIntersectingFrustum(
-						pos[0] + cameraShift[0],
-						pos[1],
-						pos[2] + cameraShift[1],
+						updatePosOut[0] + cameraShift[0],
+						updatePosOut[1],
+						updatePosOut[2] + cameraShift[1],
 						maxRadius,
 						cameraFrustum,
 						4
@@ -594,7 +618,7 @@ public class ParticleManager {
 				}
 				if (def != null)
 					emitter.setDirectionYaw((float) def.directionYaw * UNITS_TO_RAD);
-				emitter.tick(dt, gameCycle, pos[0], pos[1], pos[2], plane, this);
+				emitter.tick(dt, gameCycle, updatePosOut[0], updatePosOut[1], updatePosOut[2], plane, this);
 			}
 			lastEmittersCulled = emittersCulledThisFrame.size();
 			lastEmittersUpdating = sceneEmitters.size() - lastEmittersCulled;
@@ -603,10 +627,10 @@ public class ParticleManager {
 			lastEmittersCulled = sceneEmitters.size();
 		}
 
-		// Update and compact (swap-with-last when removing). Per-particle tick = EmittedParticle.tick() 1:1 ref.
 		ParticleBuffer buf = particleBuffer;
 		int n = buf.count;
 		int tickDelta = Math.max(1, (int) Math.round(dt * 50));
+		tickDelta = Math.min(tickDelta, 10);
 		for (int i = 0; i < n; ) {
 			if (EmittedParticle.tick(buf, i, tickDelta, this)) {
 				buf.swap(i, n - 1);
@@ -616,6 +640,27 @@ public class ParticleManager {
 			}
 		}
 		buf.count = n;
+
+		if (ctx != null && ctx.sceneBase != null) {
+			float maxDistSq = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
+			maxDistSq *= maxDistSq;
+			float cx = plugin.cameraPosition[0];
+			float cy = plugin.cameraPosition[1];
+			float cz = plugin.cameraPosition[2];
+			for (int i = 0; i < buf.count; i++) {
+				float px = (float) (buf.xFixed[i] >> 12);
+				float py = (float) (buf.yFixed[i] >> 12);
+				float pz = (float) (buf.zFixed[i] >> 12);
+				float dx = px - cx;
+				float dy = py - cy;
+				float dz = pz - cz;
+				if (dx * dx + dy * dy + dz * dz <= maxDistSq)
+					buf.syncRefToFloat(i);
+			}
+		} else {
+			for (int i = 0; i < buf.count; i++)
+				buf.syncRefToFloat(i);
+		}
 	}
 
 	@Nullable
@@ -680,40 +725,53 @@ public class ParticleManager {
 	/**
 	 * Computes the spawn position (local x, y, z) for an emitter — same as used in update().
 	 * Used by ParticleGizmoOverlay to draw the gizmo where particles start.
-	 * Object-attached emitters use the same position/height as object-attached lights (terrain at object position).
-	 * @param ctx scene context
-	 * @param emitter the emitter
-	 * @param outPos output array of length at least 3; filled with (x, y, z) in local space
-	 * @param outPlane optional; if length >= 1, set to emitter's plane
-	 * @return true if position was computed, false if emitter has no valid position
 	 */
 	public boolean getEmitterSpawnPosition(@Nullable SceneContext ctx, ParticleEmitter emitter, float[] outPos, int[] outPlane) {
 		if (ctx == null || ctx.sceneBase == null || outPos == null || outPos.length < 3)
 			return false;
+		int[][][] tileHeights = ctx.scene.getTileHeights();
+		return getEmitterSpawnPosition(ctx, emitter, outPos, outPlane, tileHeights, null, null, null, null, null);
+	}
+
+	private boolean getEmitterSpawnPosition(@Nullable SceneContext ctx, ParticleEmitter emitter, float[] outPos, int[] outPlane,
+			int[][][] tileHeights, float[] scratchOrigin, float[] scratchPos, int[] scratchOffset, int[] scratchLocal,
+			@Nullable Map<TileObject, float[]> positionCache) {
+		if (ctx == null || ctx.sceneBase == null || outPos == null || outPos.length < 3 || tileHeights == null)
+			return false;
 		float halfTile = LOCAL_TILE_SIZE / 2f;
 		int sceneOffset = ctx.sceneOffset;
-		int[][][] tileHeights = ctx.scene.getTileHeights();
-		float[] origin = new float[3];
-		float[] pos = new float[3];
+		float[] origin = scratchOrigin != null ? scratchOrigin : new float[3];
+		float[] pos = scratchPos != null ? scratchPos : new float[3];
+		int[] offset = scratchOffset != null ? scratchOffset : new int[2];
 		TileObject obj = emitter.getTileObject();
 		int plane;
 		if (obj != null) {
+			if (positionCache != null) {
+				float[] cached = positionCache.get(obj);
+				if (cached != null) {
+					outPos[0] = cached[0];
+					outPos[1] = cached[1];
+					outPos[2] = cached[2];
+					if (outPlane != null && outPlane.length >= 1)
+						outPlane[0] = (int) cached[3];
+					return true;
+				}
+			}
 			LocalPoint lp = obj.getLocalLocation();
 			plane = obj.getPlane();
-			int[] offset = new int[2];
 			getObjectPositionOffset(obj, offset);
 			int posX = lp.getX() + offset[0];
 			int posZ = lp.getY() + offset[1];
 			origin[0] = posX;
 			origin[2] = posZ;
-			float baseTerrain = getTerrainHeight(ctx, posX, posZ, plane);
+			float baseTerrain = getTerrainHeight(ctx, posX, posZ, plane, tileHeights);
 			Model model = getModelFromTileObject(obj);
 			float objHeight = baseTerrain + (model != null ? model.getBottomY() : 0);
 			origin[1] = Math.max(objHeight, baseTerrain);
 		} else {
 			WorldPoint wp = emitter.getWorldPoint();
 			if (wp == null) return false;
-			int[] local = ctx.worldToLocalFirst(wp);
+			int[] local = scratchLocal != null ? ctx.worldToLocalFirst(wp, scratchLocal) : ctx.worldToLocalFirst(wp);
 			if (local == null) return false;
 			plane = local[2];
 			int tileExX = local[0] / LOCAL_TILE_SIZE + sceneOffset;
@@ -739,14 +797,13 @@ public class ParticleManager {
 			pos[0] += (int) (radius * sine);
 			pos[2] += (int) (radius * cosine);
 		}
-		// Object-only: apply config offset (offsetX, offsetY, offsetZ) regardless of alignment
 		if (obj != null) {
 			float sin = sin(orientation * JAU_TO_RAD);
 			float cos = cos(orientation * JAU_TO_RAD);
 			float x = emitter.getOffsetX();
 			float z = emitter.getOffsetY();
 			pos[0] += -cos * x - sin * z;
-			pos[1] -= emitter.getOffsetZ(); // positive offsetZ = up
+			pos[1] -= emitter.getOffsetZ();
 			pos[2] += -cos * z + sin * x;
 		}
 		outPos[0] = pos[0];
@@ -754,13 +811,22 @@ public class ParticleManager {
 		outPos[2] = pos[2];
 		if (outPlane != null && outPlane.length >= 1)
 			outPlane[0] = plane;
+		if (obj != null && positionCache != null) {
+			float[] cached = new float[] { outPos[0], outPos[1], outPos[2], plane };
+			positionCache.put(obj, cached);
+		}
 		return true;
 	}
 
 	public static float getTerrainHeight(SceneContext ctx, int localX, int localZ, int plane) {
+		return getTerrainHeight(ctx, localX, localZ, plane, ctx != null && ctx.sceneBase != null ? ctx.scene.getTileHeights() : null);
+	}
+
+	private static float getTerrainHeight(SceneContext ctx, int localX, int localZ, int plane, int[][][] tileHeights) {
+		if (tileHeights == null)
+			tileHeights = ctx.scene.getTileHeights();
 		int sceneExX = Math.max(0, Math.min(EXTENDED_SCENE_SIZE - 2, (localX >> LOCAL_COORD_BITS) + ctx.sceneOffset));
 		int sceneExY = Math.max(0, Math.min(EXTENDED_SCENE_SIZE - 2, (localZ >> LOCAL_COORD_BITS) + ctx.sceneOffset));
-		int[][][] tileHeights = ctx.scene.getTileHeights();
 		int x = localX & (LOCAL_TILE_SIZE - 1);
 		int y = localZ & (LOCAL_TILE_SIZE - 1);
 		int h0 = (x * tileHeights[plane][sceneExX + 1][sceneExY] + (LOCAL_TILE_SIZE - x) * tileHeights[plane][sceneExX][sceneExY]) >> LOCAL_COORD_BITS;
