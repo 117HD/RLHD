@@ -15,6 +15,7 @@ import net.runelite.api.coords.WorldPoint;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.particles.Particle;
 import rs117.hd.scene.particles.ParticleBuffer;
+import rs117.hd.scene.particles.ParticleDefinition;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -103,7 +104,7 @@ public class ParticleEmitter {
 	@Builder.Default
 	private boolean active = true;
 	@Nullable
-	private ParticleEmitterDefinition definition;
+	private ParticleDefinition definition;
 
 	private long cycleStartCycle;
 	@Builder.Default
@@ -223,7 +224,7 @@ public class ParticleEmitter {
 		return this;
 	}
 
-	public void setDefinition(@Nullable ParticleEmitterDefinition def) {
+	public void setDefinition(@Nullable ParticleDefinition def) {
 		this.definition = def;
 	}
 

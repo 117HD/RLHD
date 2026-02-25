@@ -4,7 +4,6 @@
  */
 package rs117.hd.scene.particles;
 
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,7 +18,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.scene.particles.emitter.ParticleEmitterDefinition;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -46,7 +44,7 @@ public class ParticleDefinitionLoader {
 	ClientThread clientThread;
 
 	@Getter
-	private final Map<String, ParticleEmitterDefinition> definitions = new LinkedHashMap<>();
+	private final Map<String, ParticleDefinition> definitions = new LinkedHashMap<>();
 
 	private FileWatcher.UnregisterCallback watcher;
 
@@ -75,17 +73,17 @@ public class ParticleDefinitionLoader {
 
 	public void loadConfig() {
 		long start = System.nanoTime();
-		ParticleEmitterDefinition[] defs;
+		ParticleDefinition[] defs;
 		try {
-			defs = PARTICLES_CONFIG_PATH.loadJson(plugin.getGson(), ParticleEmitterDefinition[].class);
+			defs = PARTICLES_CONFIG_PATH.loadJson(plugin.getGson(), ParticleDefinition[].class);
 		} catch (IOException ex) {
 			log.error("[Particles] Failed to load particles.json from {}", PARTICLES_CONFIG_PATH, ex);
 			return;
 		}
 		definitions.clear();
-		List<ParticleEmitterDefinition> ordered = defs != null ? new ArrayList<>(defs.length) : new ArrayList<>();
+		List<ParticleDefinition> ordered = defs != null ? new ArrayList<>(defs.length) : new ArrayList<>();
 		if (defs != null) {
-			for (ParticleEmitterDefinition def : defs) {
+			for (ParticleDefinition def : defs) {
 				if (def.id != null && !def.id.isEmpty())
 					def.id = def.id.toUpperCase();
 				def.parseHexColours();
@@ -98,7 +96,7 @@ public class ParticleDefinitionLoader {
 					log.warn("[Particles] Duplicate particle id: {}", def.id);
 				ordered.add(def);
 			}
-			for (ParticleEmitterDefinition def : ordered) {
+			for (ParticleDefinition def : ordered) {
 				def.fallbackDefinition = (def.fallbackEmitterType >= 0 && def.fallbackEmitterType < ordered.size())
 					? ordered.get(def.fallbackEmitterType) : null;
 			}
@@ -108,7 +106,7 @@ public class ParticleDefinitionLoader {
 	}
 
 	@Nullable
-	public ParticleEmitterDefinition getDefinition(String id) {
+	public ParticleDefinition getDefinition(String id) {
 		return definitions.get(id);
 	}
 
@@ -121,7 +119,7 @@ public class ParticleDefinitionLoader {
 	public List<String> getAvailableTextureNames() {
 		Set<String> names = new LinkedHashSet<>();
 		names.add("");
-		for (ParticleEmitterDefinition def : definitions.values())
+		for (ParticleDefinition def : definitions.values())
 			if (def.texture != null && !def.texture.isEmpty())
 				names.add(def.texture);
 		return new ArrayList<>(names);
@@ -129,7 +127,7 @@ public class ParticleDefinitionLoader {
 
 	@Nullable
 	public String getDefaultTexturePath() {
-		for (ParticleEmitterDefinition def : definitions.values())
+		for (ParticleDefinition def : definitions.values())
 			if (def.texture != null && !def.texture.isEmpty())
 				return def.texture;
 		return null;

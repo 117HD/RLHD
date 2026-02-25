@@ -2,11 +2,11 @@
  * Copyright (c) 2025, Mark7625 (https://github.com/Mark7625/)
  * All rights reserved.
  */
-package rs117.hd.scene.particles.emitter;
+package rs117.hd.scene.particles;
 
 import javax.annotation.Nullable;
 
-public class ParticleEmitterDefinition {
+public class ParticleDefinition {
 	public static final float NO_TARGET = -1f;
 
 	public String id;
@@ -53,7 +53,7 @@ public class ParticleEmitterDefinition {
 	public boolean loopEmission = true;
 	public int fallbackEmitterType = -1;
 	@Nullable
-	public ParticleEmitterDefinition fallbackDefinition;
+	public ParticleDefinition fallbackDefinition;
 	public int targetColourArgb;
 	public int minGraphicsQuality;
 	public int colourTransitionPercent = 100;

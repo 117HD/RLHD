@@ -49,7 +49,7 @@ import net.runelite.client.ui.PluginPanel;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.ParticleGizmoOverlay;
-import rs117.hd.scene.particles.emitter.ParticleEmitterDefinition;
+import rs117.hd.scene.particles.ParticleDefinition;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 import rs117.hd.scene.particles.ParticleManager;
 
@@ -153,7 +153,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 			JLabel label = new JLabel();
 			if (value != null) {
 				ParticleManager pm = plugin.getParticleManager();
-				ParticleEmitterDefinition def = pm != null ? pm.getDefinition(value) : null;
+				ParticleDefinition def = pm != null ? pm.getDefinition(value) : null;
 				String desc = def != null && def.description != null && !def.description.isEmpty() ? def.description : "";
 				label.setText(desc.isEmpty() ? value : value + " – " + desc);
 			} else {
@@ -496,7 +496,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 			testEmitter.at(playerLoc);
 		}
 		int currentIndex = -1;
-		ParticleEmitterDefinition currentDef = testEmitter.getDefinition();
+		ParticleDefinition currentDef = testEmitter.getDefinition();
 		if (currentDef != null && currentDef.id != null) {
 			for (int i = 0; i < idsOrdered.size(); i++) {
 				if (currentDef.id.equals(idsOrdered.get(i))) {
@@ -507,7 +507,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 		}
 		int nextIndex = (currentIndex + 1) % idsOrdered.size();
 		String nextId = idsOrdered.get(nextIndex);
-		ParticleEmitterDefinition nextDef = pm.getDefinition(nextId);
+		ParticleDefinition nextDef = pm.getDefinition(nextId);
 		if (nextDef == null) return;
 		pm.applyDefinitionToEmitter(testEmitter, nextDef);
 		selectedDefinitionId = nextId;
@@ -543,7 +543,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 			showPlaceholderEditor();
 			return;
 		}
-		ParticleEmitterDefinition def = plugin.getParticleManager().getDefinition(id);
+		ParticleDefinition def = plugin.getParticleManager().getDefinition(id);
 		if (def == null) {
 			showPlaceholderEditor();
 			return;
@@ -555,7 +555,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 		editorCardLayout.show(editorCardPanel, CARD_PLACEHOLDER);
 	}
 
-	private void showEditorFor(ParticleEmitterDefinition def) {
+	private void showEditorFor(ParticleDefinition def) {
 		loadingEditor = true;
 		try {
 		idLabel.setText(def.id != null ? def.id : "");
@@ -575,10 +575,10 @@ public class ParticleDevToolsPanel extends PluginPanel {
 		maxScaleSpinner.setValue(def.maxScale);
 		targetScaleSpinner.setValue(def.targetScale);
 		scaleTransitionSpinner.setValue(def.scaleTransitionPercent);
-		minColourButton.setBackground(toColor(ParticleEmitterDefinition.argbToFloat(def.minColourArgb)));
-		maxColourButton.setBackground(toColor(ParticleEmitterDefinition.argbToFloat(def.maxColourArgb)));
+		minColourButton.setBackground(toColor(ParticleDefinition.argbToFloat(def.minColourArgb)));
+		maxColourButton.setBackground(toColor(ParticleDefinition.argbToFloat(def.maxColourArgb)));
 		if (def.targetColourArgb != 0) {
-			targetColourButton.setBackground(toColor(ParticleEmitterDefinition.argbToFloat(def.targetColourArgb)));
+			targetColourButton.setBackground(toColor(ParticleDefinition.argbToFloat(def.targetColourArgb)));
 		} else {
 			targetColourButton.setBackground(Color.GRAY);
 		}
@@ -612,7 +612,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 	}
 
 	private void chooseMinColour() {
-		ParticleEmitterDefinition def = getSelectedDefinition();
+		ParticleDefinition def = getSelectedDefinition();
 		if (def == null) return;
 		Color chosen = JColorChooser.showDialog(this, "Min Colour", minColourButton.getBackground());
 		if (chosen == null) return;
@@ -622,7 +622,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 	}
 
 	private void chooseMaxColour() {
-		ParticleEmitterDefinition def = getSelectedDefinition();
+		ParticleDefinition def = getSelectedDefinition();
 		if (def == null) return;
 		Color chosen = JColorChooser.showDialog(this, "Max Colour", maxColourButton.getBackground());
 		if (chosen == null) return;
@@ -632,7 +632,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 	}
 
 	private void chooseTargetColour() {
-		ParticleEmitterDefinition def = getSelectedDefinition();
+		ParticleDefinition def = getSelectedDefinition();
 		if (def == null) return;
 		Color current = targetColourButton.getBackground() instanceof Color ? (Color) targetColourButton.getBackground() : Color.GRAY;
 		Color chosen = JColorChooser.showDialog(this, "Target Colour", current);
@@ -645,14 +645,14 @@ public class ParticleDevToolsPanel extends PluginPanel {
 	}
 
 	@Nullable
-	private ParticleEmitterDefinition getSelectedDefinition() {
+	private ParticleDefinition getSelectedDefinition() {
 		if (selectedDefinitionId == null) return null;
 		ParticleManager pm = plugin.getParticleManager();
 		return pm != null ? pm.getDefinition(selectedDefinitionId) : null;
 	}
 
 	private void onExportJsonClicked() {
-		ParticleEmitterDefinition def = getSelectedDefinition();
+		ParticleDefinition def = getSelectedDefinition();
 		if (def == null) {
 			JOptionPane.showMessageDialog(this, "Select a particle config from the list first.", "Export", JOptionPane.INFORMATION_MESSAGE);
 			return;
@@ -676,9 +676,9 @@ public class ParticleDevToolsPanel extends PluginPanel {
 		map.put("maxScale", def.maxScale);
 		map.put("targetScale", def.targetScale);
 		map.put("scaleTransitionPercent", def.scaleTransitionPercent);
-		map.put("minColour", ParticleEmitterDefinition.argbToHex(def.minColourArgb));
-		map.put("maxColour", ParticleEmitterDefinition.argbToHex(def.maxColourArgb));
-		map.put("targetColour", def.targetColourArgb != 0 ? ParticleEmitterDefinition.argbToHex(def.targetColourArgb) : null);
+		map.put("minColour", ParticleDefinition.argbToHex(def.minColourArgb));
+		map.put("maxColour", ParticleDefinition.argbToHex(def.maxColourArgb));
+		map.put("targetColour", def.targetColourArgb != 0 ? ParticleDefinition.argbToHex(def.targetColourArgb) : null);
 		map.put("colourTransitionPercent", def.colourTransitionPercent);
 		map.put("alphaTransitionPercent", def.alphaTransitionPercent);
 		map.put("uniformColourVariation", def.uniformColourVariation);
@@ -717,7 +717,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 	}
 
 	private void applyAllToDefinition() {
-		ParticleEmitterDefinition def = getSelectedDefinition();
+		ParticleDefinition def = getSelectedDefinition();
 		if (def == null) return;
 		def.description = descriptionField.getText().trim();
 		if (def.description.isEmpty()) def.description = null;
@@ -731,7 +731,7 @@ public class ParticleDevToolsPanel extends PluginPanel {
 		def.minSpeed = ((Number) minSpeedSpinner.getValue()).floatValue();
 		def.maxSpeed = ((Number) maxSpeedSpinner.getValue()).floatValue();
 		def.targetSpeed = ((Number) targetSpeedSpinner.getValue()).floatValue();
-		if (def.targetSpeed < 0f) def.targetSpeed = ParticleEmitterDefinition.NO_TARGET;
+		if (def.targetSpeed < 0f) def.targetSpeed = ParticleDefinition.NO_TARGET;
 		def.speedTransitionPercent = ((Number) speedTransitionPctSpinner.getValue()).intValue();
 		def.minScale = ((Number) minScaleSpinner.getValue()).floatValue();
 		def.maxScale = ((Number) maxScaleSpinner.getValue()).floatValue();

@@ -5,7 +5,6 @@
 package rs117.hd.scene.particles;
 
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
-import rs117.hd.scene.particles.emitter.ParticleEmitterDefinition;
 
 /**
  * Per-particle update 1:1 with reference EmittedParticle.tick (rs-client-main).
@@ -37,7 +36,7 @@ public final class EmittedParticle {
 		int posY = (int) (buf.yFixed[i] >> 12);
 		int posZ = (int) (buf.zFixed[i] >> 12);
 		ParticleEmitter emitter = buf.emitter[i];
-		ParticleEmitterDefinition config = emitter != null ? emitter.getDefinition() : null;
+		ParticleDefinition config = emitter != null ? emitter.getDefinition() : null;
 
 		if (config != null && config.targetColourArgb != 0) {
 			int elapsed = buf.lifetimeTicks[i] - buf.remainingTicks[i];
