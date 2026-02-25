@@ -59,6 +59,10 @@ public final class Camera {
 
 	public boolean isViewDirty() { return (dirtyFlags & VIEW_MATRIX_DIRTY) != 0; }
 
+	public synchronized void setDirty() {
+		dirtyFlags |= PROJ_CHANGED | VIEW_CHANGED;
+	}
+
 	public Camera setOrthographic(boolean newOrthographic) {
 		if (orthographic != newOrthographic) {
 			synchronized (this) {
