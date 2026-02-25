@@ -10,11 +10,9 @@ import javax.annotation.Nullable;
 public class EmitterConfigEntry {
 	@Nullable
 	public int[][] placements;
+	/** e.g. [ { "object": "FAI_FALADOR_HOUSE_TORCH", "offsetX": 0, "offsetY": 0, "offsetZ": 0 } ] */
 	@Nullable
-	public List<String> objectEmitters;
-	/** Object bindings with optional offset x,y,z from object position (like lights). */
-	@Nullable
-	public List<ObjectEmitterProperty> objectProperties;
+	public List<ObjectEmitterBinding> objectEmitters;
 	@Nullable
 	public String description;
 	public String particleId;

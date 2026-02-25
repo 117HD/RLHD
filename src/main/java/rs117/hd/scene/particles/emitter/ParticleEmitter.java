@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
+import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.particles.Particle;
 import rs117.hd.scene.particles.ParticleBuffer;
 
@@ -45,6 +46,16 @@ public class ParticleEmitter {
 	/** Offset from world position in height (applied when spawning). */
 	@Builder.Default
 	private float offsetZ = 0f;
+	/** Like lights: alignment for applying offset (CUSTOM = use orientation). */
+	@Builder.Default
+	private Alignment alignment = Alignment.CUSTOM;
+	/** Object orientation in JAU (0–2048), used when alignment.relative. */
+	private int orientation;
+	/** Object size in tiles (for non-CUSTOM alignment). */
+	@Builder.Default
+	private int sizeX = 1;
+	@Builder.Default
+	private int sizeY = 1;
 	@Builder.Default
 	private float directionYaw = 0f;
 	@Builder.Default

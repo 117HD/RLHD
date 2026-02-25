@@ -5718,7 +5718,8 @@
   "collidesWithObjects" : false,
   "clipToTerrain" : true
 }, {
-  "id" : "133",
+  "id" : "TORCH_SMOKE",
+  "heightOffset": 250,
   "spreadYawMin" : 0,
   "spreadYawMax" : 2047,
   "spreadPitchMin" : 527,
@@ -5761,7 +5762,7 @@
   "collidesWithObjects" : false,
   "clipToTerrain" : true
 }, {
-  "id" : "134",
+  "id" : "TORCH_SPARKS",
   "spreadYawMin" : 0,
   "spreadYawMax" : 2034,
   "spreadPitchMin" : 591,

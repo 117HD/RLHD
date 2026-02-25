@@ -29,18 +29,20 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.particles.emitter.EmitterDefinitionManager;
 import rs117.hd.scene.particles.emitter.EmitterPlacement;
 import rs117.hd.scene.particles.emitter.ObjectEmitterBinding;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 import rs117.hd.scene.particles.emitter.ParticleEmitterDefinition;
+import rs117.hd.data.ObjectType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ResourcePath;
 
-import static net.runelite.api.Constants.EXTENDED_SCENE_SIZE;
-import static net.runelite.api.Perspective.LOCAL_COORD_BITS;
-import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
-import static rs117.hd.utils.MathUtils.min;
+import static net.runelite.api.Constants.*;
+import static net.runelite.api.Perspective.*;
+import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class ParticleManager {
@@ -471,7 +473,17 @@ public class ParticleManager {
 			ParticleEmitter e = createEmitterFromDefinition(def, wp);
 			e.particleId(def.id);
 			e.positionOffset(binding.getOffsetX(), binding.getOffsetY(), binding.getOffsetZ());
+			e.setAlignment(binding.getAlignment());
 			e.setTileObject(tileObject);
+			if (tileObject instanceof GameObject) {
+				GameObject go = (GameObject) tileObject;
+				e.setOrientation(HDUtils.getModelOrientation(go.getConfig()));
+				e.setSizeX(go.sizeX());
+				e.setSizeY(go.sizeY());
+			} else {
+				e.setSizeX(1);
+				e.setSizeY(1);
+			}
 			sceneEmitters.add(e);
 			created.add(e);
 			if (def.texture != null && !def.texture.isEmpty())
@@ -530,118 +542,61 @@ public class ParticleManager {
 	public void update(@Nullable SceneContext ctx, float dt) {
 		emittersCulledThisFrame.clear();
 		if (ctx != null && ctx.sceneBase != null) {
-			final float cx = plugin.cameraPosition[0];
-			final float cy = plugin.cameraPosition[1];
-			final float cz = plugin.cameraPosition[2];
-			float maxDistSq = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
-			maxDistSq *= maxDistSq;
-			final float[][] frustum = plugin.cameraFrustum;
-			final int frustumLen = frustum.length;
+			float drawDistance = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
 			final float halfTile = LOCAL_TILE_SIZE / 2f;
 			final long gameCycle = client.getGameCycle();
-			final int sceneOffset = ctx.sceneOffset;
 			final int maxParticles = MAX_PARTICLES;
+			final int[] cameraShift = plugin.cameraShift;
+			final float[][] cameraFrustum = plugin.cameraFrustum;
 			ParticleBuffer buf = particleBuffer;
+			float[] pos = new float[3];
+			int[] planeOut = new int[1];
 
-			// Group emitters by world tile for spatial culling
-			List<ParticleEmitter> noTile = new ArrayList<>();
-			Map<Long, List<ParticleEmitter>> byTile = new HashMap<>();
 			for (ParticleEmitter emitter : sceneEmitters) {
-				WorldPoint wp = emitter.getWorldPoint();
-				if (wp == null) {
-					noTile.add(emitter);
-				} else {
-					byTile.computeIfAbsent(tileKey(wp), k -> new ArrayList<>()).add(emitter);
-				}
-			}
-
-			// Process emitters with no world position (cull or skip)
-			for (ParticleEmitter emitter : noTile) {
 				ParticleEmitterDefinition def = emitter.getDefinition();
-				if (def == null || !def.displayWhenCulled)
-					emittersCulledThisFrame.add(emitter);
-			}
-
-			// Process each tile: cull whole tile if first emitter is culled, else process each emitter
-			for (Map.Entry<Long, List<ParticleEmitter>> entry : byTile.entrySet()) {
-				List<ParticleEmitter> list = entry.getValue();
-				ParticleEmitter first = list.get(0);
-				ParticleEmitterDefinition def = first.getDefinition();
 				boolean skipCulling = def != null && def.displayWhenCulled;
-				WorldPoint wp = first.getWorldPoint();
-				int[] local = wp != null ? ctx.worldToLocalFirst(wp) : null;
-				boolean tileCulled;
-				if (local == null) {
-					tileCulled = !skipCulling;
-				} else {
-					int localX = local[0];
-					int localY = local[1];
-					int plane = local[2];
-					int tileExX = localX / LOCAL_TILE_SIZE + sceneOffset;
-					int tileExY = localY / LOCAL_TILE_SIZE + sceneOffset;
-					float spawnY = 0f;
-					if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
-						spawnY = ctx.scene.getTileHeights()[plane][tileExX][tileExY] - first.getHeightOffset();
-					}
-					float ex = localX + halfTile;
-					float ez = localY + halfTile;
-					float dx = ex - cx;
-					float dy = spawnY - cy;
-					float dz = ez - cz;
-					tileCulled = dx * dx + dy * dy + dz * dz > maxDistSq
-								 || !HDUtils.isSphereIntersectingFrustum(ex, spawnY, ez, halfTile, frustum, frustumLen);
-					if (tileCulled && skipCulling) tileCulled = false;
-				}
-				if (tileCulled) {
-					for (ParticleEmitter emitter : list)
-						emittersCulledThisFrame.add(emitter);
+
+				if (!getEmitterSpawnPosition(ctx, emitter, pos, planeOut)) {
+					if (!skipCulling) emittersCulledThisFrame.add(emitter);
 					continue;
 				}
-				for (ParticleEmitter emitter : list) {
-					def = emitter.getDefinition();
-					skipCulling = def != null && def.displayWhenCulled;
-					wp = emitter.getWorldPoint();
-					if (wp == null) {
-						if (!skipCulling) emittersCulledThisFrame.add(emitter);
-						continue;
-					}
-					local = ctx.worldToLocalFirst(wp);
-					if (local == null) {
-						if (!skipCulling) emittersCulledThisFrame.add(emitter);
-						continue;
-					}
-					int localX = local[0];
-					int localY = local[1];
-					int plane = local[2];
-					int tileExX = localX / LOCAL_TILE_SIZE + sceneOffset;
-					int tileExY = localY / LOCAL_TILE_SIZE + sceneOffset;
-					float spawnY = 0f;
-					if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
-						spawnY = ctx.scene.getTileHeights()[plane][tileExX][tileExY] - emitter.getHeightOffset();
-					}
-					float ex = localX + halfTile;
-					float ez = localY + halfTile;
-					float dx = ex - cx;
-					float dy = spawnY - cy;
-					float dz = ez - cz;
-					if (dx * dx + dy * dy + dz * dz > maxDistSq) {
-						if (!skipCulling) emittersCulledThisFrame.add(emitter);
-						continue;
-					}
-					if (!HDUtils.isSphereIntersectingFrustum(ex, spawnY, ez, halfTile, frustum, frustumLen)) {
-						if (!skipCulling) emittersCulledThisFrame.add(emitter);
-						continue;
-					}
-					if (buf.count >= maxParticles) continue;
-					if (def != null && def.hasLevelBounds) {
-						int lower = def.lowerBoundLevel == -2 ? 0 : (def.lowerBoundLevel == -1 ? plane : def.lowerBoundLevel);
-						int upper = def.upperBoundLevel == -2 ? 3 : (def.upperBoundLevel == -1 ? plane : def.upperBoundLevel);
-						if (plane < lower || plane > upper) continue;
-					}
-					if (def != null)
-						emitter.setDirectionYaw((float) def.directionYaw * UNITS_TO_RAD);
-					emitter.tick(dt, gameCycle, ex, spawnY, ez, plane, this);
+				int plane = planeOut[0];
+
+				// Culling: same as LightManager (distance from cameraFocalPoint, then frustum with cameraShift)
+				boolean visible = true;
+				float distX = plugin.cameraFocalPoint[0] - pos[0];
+				float distZ = plugin.cameraFocalPoint[1] - pos[2];
+				float distanceSquared = distX * distX + distZ * distZ;
+				float maxRadius = halfTile * 2;
+				float near = -maxRadius * maxRadius;
+				float far = drawDistance + halfTile + maxRadius;
+				far *= far;
+				if (distanceSquared <= near || distanceSquared >= far)
+					visible = false;
+				if (visible) {
+					visible = isSphereIntersectingFrustum(
+						pos[0] + cameraShift[0],
+						pos[1],
+						pos[2] + cameraShift[1],
+						maxRadius,
+						cameraFrustum,
+						4
+					);
 				}
+				if (!visible) {
+					if (!skipCulling) emittersCulledThisFrame.add(emitter);
+					continue;
+				}
+
+				if (buf.count >= maxParticles) continue;
+				if (def != null && def.hasLevelBounds) {
+					int lower = def.lowerBoundLevel == -2 ? 0 : (def.lowerBoundLevel == -1 ? plane : def.lowerBoundLevel);
+					int upper = def.upperBoundLevel == -2 ? 3 : (def.upperBoundLevel == -1 ? plane : def.upperBoundLevel);
+					if (plane < lower || plane > upper) continue;
+				}
+				if (def != null)
+					emitter.setDirectionYaw((float) def.directionYaw * UNITS_TO_RAD);
+				emitter.tick(dt, gameCycle, pos[0], pos[1], pos[2], plane, this);
 			}
 			lastEmittersCulled = emittersCulledThisFrame.size();
 			lastEmittersUpdating = sceneEmitters.size() - lastEmittersCulled;
@@ -663,6 +618,146 @@ public class ParticleManager {
 			}
 		}
 		buf.count = n;
+	}
+
+	/** Get the primary model for a TileObject (for height/bounds). Same renderable as used for clickbox. */
+	@Nullable
+	private static Model getModelFromTileObject(TileObject obj) {
+		Renderable r = null;
+		if (obj instanceof GameObject)
+			r = ((GameObject) obj).getRenderable();
+		else if (obj instanceof DecorativeObject)
+			r = ((DecorativeObject) obj).getRenderable();
+		else if (obj instanceof WallObject)
+			r = ((WallObject) obj).getRenderable1();
+		else if (obj instanceof GroundObject)
+			r = ((GroundObject) obj).getRenderable();
+		if (r == null) return null;
+		if (r instanceof Model) return (Model) r;
+		if (r instanceof DynamicObject) return ((DynamicObject) r).getModelZbuf();
+		return r.getModel();
+	}
+
+	/**
+	 * Same object-type position offset as LightManager.spawnLights (for position/height parity with lights).
+	 */
+	private static void getObjectPositionOffset(TileObject tileObject, int[] outOffset) {
+		outOffset[0] = 0;
+		outOffset[1] = 0;
+		if (tileObject instanceof GroundObject) {
+			// no offset
+		} else if (tileObject instanceof DecorativeObject) {
+			var object = (DecorativeObject) tileObject;
+			int ori = HDUtils.getModelOrientation(object.getConfig());
+			switch (ObjectType.fromConfig(object.getConfig())) {
+				case WallDecorDiagonalNoOffset:
+				case WallDecorDiagonalOffset:
+				case WallDecorDiagonalBoth:
+					ori = (ori + 512) % 2048;
+					outOffset[0] = SINE[ori] * 64 >> 16;
+					outOffset[1] = COSINE[ori] * 64 >> 16;
+					break;
+			}
+			outOffset[0] += object.getXOffset();
+			outOffset[1] += object.getYOffset();
+		} else if (tileObject instanceof WallObject) {
+			// no offset
+		} else if (tileObject instanceof GameObject) {
+			var object = (GameObject) tileObject;
+			int ori = HDUtils.getModelOrientation(object.getConfig());
+			int offsetDist = 64;
+			switch (ObjectType.fromConfig(object.getConfig())) {
+				case RoofEdgeDiagonalCorner:
+				case RoofDiagonalWithRoofEdge:
+					ori += 1024;
+					offsetDist = round(offsetDist / sqrt(2));
+				case WallDiagonal:
+					ori = (ori + 2048 - 256) % 2048;
+					outOffset[0] = SINE[ori] * offsetDist >> 16;
+					outOffset[1] = COSINE[ori] * offsetDist >> 16;
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Computes the spawn position (local x, y, z) for an emitter — same as used in update().
+	 * Used by ParticleGizmoOverlay to draw the gizmo where particles start.
+	 * Object-attached emitters use the same position/height as object-attached lights (terrain at object position).
+	 * @param ctx scene context
+	 * @param emitter the emitter
+	 * @param outPos output array of length at least 3; filled with (x, y, z) in local space
+	 * @param outPlane optional; if length >= 1, set to emitter's plane
+	 * @return true if position was computed, false if emitter has no valid position
+	 */
+	public boolean getEmitterSpawnPosition(@Nullable SceneContext ctx, ParticleEmitter emitter, float[] outPos, int[] outPlane) {
+		if (ctx == null || ctx.sceneBase == null || outPos == null || outPos.length < 3)
+			return false;
+		float halfTile = LOCAL_TILE_SIZE / 2f;
+		int sceneOffset = ctx.sceneOffset;
+		int[][][] tileHeights = ctx.scene.getTileHeights();
+		float[] origin = new float[3];
+		float[] pos = new float[3];
+		TileObject obj = emitter.getTileObject();
+		int plane;
+		if (obj != null) {
+			LocalPoint lp = obj.getLocalLocation();
+			plane = obj.getPlane();
+			int[] offset = new int[2];
+			getObjectPositionOffset(obj, offset);
+			int posX = lp.getX() + offset[0];
+			int posZ = lp.getY() + offset[1];
+			origin[0] = posX;
+			origin[2] = posZ;
+			float baseTerrain = getTerrainHeight(ctx, posX, posZ, plane);
+			Model model = getModelFromTileObject(obj);
+			float objHeight = baseTerrain + (model != null ? model.getBottomY() : 0);
+			origin[1] = Math.max(objHeight, baseTerrain);
+		} else {
+			WorldPoint wp = emitter.getWorldPoint();
+			if (wp == null) return false;
+			int[] local = ctx.worldToLocalFirst(wp);
+			if (local == null) return false;
+			plane = local[2];
+			int tileExX = local[0] / LOCAL_TILE_SIZE + sceneOffset;
+			int tileExY = local[1] / LOCAL_TILE_SIZE + sceneOffset;
+			origin[0] = local[0] + halfTile;
+			origin[2] = local[1] + halfTile;
+			if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE)
+				origin[1] = tileHeights[plane][tileExX][tileExY] - emitter.getHeightOffset();
+			else
+				origin[1] = 0;
+		}
+		pos[0] = origin[0];
+		pos[1] = origin[1];
+		pos[2] = origin[2];
+		int orientation = emitter.getAlignment().relative ? mod(emitter.getOrientation() + emitter.getAlignment().orientation, 2048) : emitter.getAlignment().orientation;
+		if (emitter.getAlignment() != Alignment.CUSTOM) {
+			int localSizeX = emitter.getSizeX() * LOCAL_TILE_SIZE;
+			int localSizeY = emitter.getSizeY() * LOCAL_TILE_SIZE;
+			float radius = emitter.getAlignment().radial ? localSizeX / 2f : (float) Math.sqrt(localSizeX * localSizeX + localSizeY * localSizeY) / 2;
+			float sine = sin(orientation * JAU_TO_RAD);
+			float cosine = cos(orientation * JAU_TO_RAD);
+			cosine /= (float) localSizeX / (float) Math.max(localSizeY, 1);
+			pos[0] += (int) (radius * sine);
+			pos[2] += (int) (radius * cosine);
+		}
+		// Object-only: apply config offset (offsetX, offsetY, offsetZ) regardless of alignment
+		if (obj != null) {
+			float sin = sin(orientation * JAU_TO_RAD);
+			float cos = cos(orientation * JAU_TO_RAD);
+			float x = emitter.getOffsetX();
+			float z = emitter.getOffsetY();
+			pos[0] += -cos * x - sin * z;
+			pos[1] -= emitter.getOffsetZ(); // positive offsetZ = up
+			pos[2] += -cos * z + sin * x;
+		}
+		outPos[0] = pos[0];
+		outPos[1] = pos[1];
+		outPos[2] = pos[2];
+		if (outPlane != null && outPlane.length >= 1)
+			outPlane[0] = plane;
+		return true;
 	}
 
 	/** Used by EmittedParticle.tick() for level bounds. */

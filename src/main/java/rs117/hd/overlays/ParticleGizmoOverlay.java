@@ -29,10 +29,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.utils.Mat4;
-import net.runelite.api.coords.WorldPoint;
 
-import static net.runelite.api.Constants.EXTENDED_SCENE_SIZE;
-import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 import static rs117.hd.utils.MathUtils.round;
 
 @Singleton
@@ -106,31 +103,19 @@ public class ParticleGizmoOverlay extends Overlay implements MouseListener {
 		);
 		Stroke thinLine = new BasicStroke(1);
 
+		float[] pos = new float[3];
+		int[] planeOut = new int[1];
 		float[] point = new float[4];
 		hovers.clear();
 
 		for (ParticleEmitter em : particleManager.getSceneEmitters()) {
-			WorldPoint wp = em.getWorldPoint();
-			if (wp == null || wp.getPlane() != currentPlane) continue;
-			var optLocal = ctx.worldToLocals(wp).findFirst();
-			if (optLocal.isEmpty()) continue;
-
-			int[] local = optLocal.get();
-			int localX = local[0];
-			int localY = local[1];
-			int plane = local[2];
-			int tileExX = localX / LOCAL_TILE_SIZE + ctx.sceneOffset;
-			int tileExY = localY / LOCAL_TILE_SIZE + ctx.sceneOffset;
-			float y = 0;
-			if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
-				int[][] heights = ctx.scene.getTileHeights()[plane];
-				y = heights[tileExX][tileExY];  // On the tile surface, not spawn height
-			}
-			float x = localX + (LOCAL_TILE_SIZE / 2f);
-			float z = localY + (LOCAL_TILE_SIZE / 2f);
-			point[0] = x;
-			point[1] = y;
-			point[2] = z;
+			if (!particleManager.getEmitterSpawnPosition(ctx, em, pos, planeOut))
+				continue;
+			if (planeOut[0] != currentPlane)
+				continue;
+			point[0] = pos[0];
+			point[1] = pos[1];
+			point[2] = pos[2];
 			point[3] = 1;
 			Mat4.projectVec(point, projectionMatrix, point);
 			if (point[3] <= 0) continue;
