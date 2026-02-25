@@ -299,7 +299,7 @@ public class WorldViewContext {
 
 	void invalidateZone(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
-		long preRevealAfterMs = 0;
+		long revealAfterTimestampMs = 0;
 		if (curZone.uploadJob != null) {
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
@@ -309,7 +309,7 @@ public class WorldViewContext {
 				zz,
 				curZone.uploadJob.zone.hashCode()
 			);
-			preRevealAfterMs = curZone.uploadJob.revealAfterTimestampMs;
+			revealAfterTimestampMs = curZone.uploadJob.revealAfterTimestampMs;
 			curZone.uploadJob.cancel();
 			curZone.uploadJob.release();
 		}
@@ -318,7 +318,7 @@ public class WorldViewContext {
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
-		curZone.uploadJob.revealAfterTimestampMs = preRevealAfterMs;
+		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
 		curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
