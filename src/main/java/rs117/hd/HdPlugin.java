@@ -119,6 +119,7 @@ import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.HDVariables;
+import rs117.hd.utils.Mat4;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
@@ -447,9 +448,9 @@ public class HdPlugin extends Plugin {
 	public final int[] cameraFocalPoint = new int[2];
 	public final float[] cameraOrientation = new float[2];
 	public final float[][] cameraFrustum = new float[6][4];
-	public float[] viewMatrix = new float[16];
-	public float[] viewProjMatrix = new float[16];
-	public float[] invViewProjMatrix = new float[16];
+	public float[] viewMatrix = Mat4.zero();
+	public float[] viewProjMatrix = Mat4.zero();
+	public float[] invViewProjMatrix = Mat4.zero();
 
 	@Getter
 	public int drawnTileCount;
