@@ -225,7 +225,7 @@ public class HdPlugin extends Plugin {
 		TileOverrideManager.class,
 		WaterTypeManager.class,
 		SceneManager.class,
-		rs117.hd.scene.particles.ParticleManager.class
+		ParticleManager.class
 	);
 
 	@Getter

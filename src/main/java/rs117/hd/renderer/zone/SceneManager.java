@@ -30,6 +30,7 @@ import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.jobs.GenericJob;
@@ -81,7 +82,7 @@ public class SceneManager {
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
-	private rs117.hd.scene.particles.ParticleManager particleManager;
+	private ParticleManager particleManager;
 
 	@Inject
 	private FrameTimer frameTimer;

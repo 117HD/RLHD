@@ -227,8 +227,7 @@ public class ShaderProgram {
 	public static class Uniform1f extends UniformProperty {
 		public void set(float value) {
 			assert program.isActive();
-			if (uniformIndex != -1)
-				glUniform1f(uniformIndex, value);
+			glUniform1f(uniformIndex, value);
 		}
 	}
 
