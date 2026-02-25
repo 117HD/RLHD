@@ -163,7 +163,7 @@
       },
       "isWaterEffect": {
         "type": "boolean",
-        "description": "Whether the model should hide these elements when \"Hide vanilla ripples\" is toggled. Defaults to false."
+        "description": "Whether the model should be hidden when \"Hide vanilla ripples\" is enabled. Defaults to false."
       },
       "shadowOpacityThreshold": {
         "type": "number",
@@ -305,7 +305,7 @@
             },
             "isWaterEffect": {
               "type": "boolean",
-              "description": "Whether the model should hide these elements when \"Hide vanilla ripples\" is toggled. Defaults to false."
+              "description": "Whether the faces should be hidden when \"Hide vanilla ripples\" is enabled. Defaults to false."
             },
             "shadowOpacityThreshold": {
               "type": "number",
@@ -440,7 +440,7 @@
             },
             "isWaterEffect": {
               "type": "boolean",
-              "description": "Whether the model should hide these elements when \"Hide vanilla ripples\" is toggled. Defaults to false."
+              "description": "Whether the faces should be hidden when \"Hide vanilla ripples\" is enabled. Defaults to false."
             },
             "shadowOpacityThreshold": {
               "type": "number",
