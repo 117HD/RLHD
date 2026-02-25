@@ -552,7 +552,8 @@ public class ParticleManager {
 			float[] pos = new float[3];
 			int[] planeOut = new int[1];
 
-			for (ParticleEmitter emitter : sceneEmitters) {
+			// Iterate over a copy to avoid ConcurrentModificationException if emitters are added/removed during tick
+			for (ParticleEmitter emitter : new ArrayList<>(sceneEmitters)) {
 				ParticleEmitterDefinition def = emitter.getDefinition();
 				boolean skipCulling = def != null && def.displayWhenCulled;
 
