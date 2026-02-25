@@ -16,14 +16,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
-import rs117.hd.renderer.zone.SceneManager;
-import rs117.hd.renderer.zone.WorldViewContext;
-import rs117.hd.renderer.zone.ZoneRenderer;
-import rs117.hd.utils.FrameTimingsRecorder;
-import rs117.hd.utils.NpcDisplacementCache;
-import rs117.hd.utils.jobs.JobSystem;
 
-import static rs117.hd.renderer.zone.SceneManager.MAX_WORLDVIEWS;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
@@ -36,18 +29,6 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Inject
 	private FrameTimer frameTimer;
-
-	@Inject
-	private FrameTimingsRecorder frameTimingsRecorder;
-
-	@Inject
-	private NpcDisplacementCache npcDisplacementCache;
-
-	@Inject
-	private JobSystem jobSystem;
-
-	@Inject
-	private SceneManager sceneManager;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final long[] timings = new long[Timer.TIMERS.length];
@@ -142,112 +123,6 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.left("Error compensation:")
 				.right(String.format("%d ns", frameTimer.errorCompensation))
 				.build());
-
-			children.add(LineComponent.builder()
-				.left("Garbage collection count:")
-				.right(String.valueOf(plugin.getGarbageCollectionCount()))
-				.build());
-
-			children.add(LineComponent.builder()
-				.left("Power saving mode:")
-				.right(plugin.isPowerSaving ? "ON" : "OFF")
-				.build());
-
-			children.add(LineComponent.builder()
-				.leftFont(boldFont)
-				.left("Scene stats:")
-				.build());
-
-			if (plugin.getSceneContext() != null) {
-				var sceneContext = plugin.getSceneContext();
-				children.add(LineComponent.builder()
-					.left("Lights:")
-					.right(String.format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
-					.build());
-			}
-
-			if (plugin.renderer instanceof ZoneRenderer) {
-				children.add(LineComponent.builder()
-					.left("Dynamic renderables:")
-					.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
-					.build());
-
-				children.add(LineComponent.builder()
-					.left("Temp renderables:")
-					.right(String.valueOf(plugin.getDrawnTempRenderableCount()))
-					.build());
-			} else {
-				children.add(LineComponent.builder()
-					.left("Tiles:")
-					.right(String.valueOf(plugin.getDrawnTileCount()))
-					.build());
-
-				children.add(LineComponent.builder()
-					.left("Static renderables:")
-					.right(String.valueOf(plugin.getDrawnStaticRenderableCount()))
-					.build());
-
-				children.add(LineComponent.builder()
-					.left("Dynamic renderables:")
-					.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
-					.build());
-
-				children.add(LineComponent.builder()
-					.left("NPC displacement cache size:")
-					.right(String.valueOf(npcDisplacementCache.size()))
-					.build());
-			}
-
-			children.add(LineComponent.builder()
-				.leftFont(boldFont)
-				.left("Streaming Stats:")
-				.build());
-
-			WorldViewContext root = sceneManager.getRoot();
-			addTiming("Root Scene Load", root.loadTime, false);
-			addTiming("Root Scene Upload", root.uploadTime, false);
-			addTiming("Root Scene Swap", root.sceneSwapTime, false);
-
-			// TODO: Maybe this should be calculated somewhere else
-			int subSceneCount = 0;
-			long subSceneLoadTime = 0;
-			long subSceneUploadTime = 0;
-			long subSceneSwapTime = 0;
-
-			for (int worldViewId = 0; worldViewId < MAX_WORLDVIEWS; worldViewId++) {
-				WorldViewContext subscene = sceneManager.getContext(worldViewId);
-				if (subscene != null) {
-					subSceneCount++;
-					subSceneLoadTime += subscene.loadTime;
-					subSceneUploadTime += subscene.uploadTime;
-					subSceneSwapTime += subscene.sceneSwapTime;
-				}
-			}
-
-			if (subSceneCount > 0) {
-				addTiming("Avg SubScene Load", subSceneLoadTime / subSceneCount, false);
-				addTiming("Avg SubScene Upload", subSceneUploadTime / subSceneCount, false);
-				addTiming("Avg SubScene Swap", subSceneSwapTime / subSceneCount, false);
-			}
-
-			children.add(LineComponent.builder()
-				.left("Sub Scene Count:")
-				.right(String.valueOf(subSceneCount))
-				.build());
-
-
-			children.add(LineComponent.builder()
-				.left("Streaming Zones:")
-				.right(String.valueOf(jobSystem.getWorkQueueSize()))
-				.build());
-
-			if (frameTimingsRecorder.isCapturingSnapshot())
-				children.add(LineComponent.builder()
-					.leftFont(boldFont)
-					.left("Capturing Snapshot...")
-					.rightFont(boldFont)
-					.right(String.format("%d%%", frameTimingsRecorder.getProgressPercentage()))
-					.build());
 		}
 
 		var result = super.render(g);

@@ -14,6 +14,7 @@ import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
+import rs117.hd.overlays.StatsOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
@@ -33,6 +34,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_STREAMING_STATS = new Keybind(KeyEvent.VK_F8, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
@@ -57,6 +59,9 @@ public class DeveloperTools implements KeyListener {
 	private FrameTimerOverlay frameTimerOverlay;
 
 	@Inject
+	private StatsOverlay statsOverlay;
+
+	@Inject
 	private FrameTimingsRecorder frameTimingsRecorder;
 
 	@Inject
@@ -72,6 +77,7 @@ public class DeveloperTools implements KeyListener {
 	private boolean tileInfoOverlayEnabled;
 	@Getter
 	private boolean frameTimingsOverlayEnabled;
+	private boolean statsOverlayEnabled;
 	private boolean shadowMapOverlayEnabled;
 	private boolean lightGizmoOverlayEnabled;
 	@Getter
@@ -93,6 +99,7 @@ public class DeveloperTools implements KeyListener {
 		clientThread.invokeLater(() -> {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled);
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
+			statsOverlay.setActive(statsOverlayEnabled);
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
@@ -117,6 +124,7 @@ public class DeveloperTools implements KeyListener {
 		keyManager.unregisterKeyListener(this);
 		tileInfoOverlay.setActive(false);
 		frameTimerOverlay.setActive(false);
+		statsOverlay.setActive(false);
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
@@ -140,6 +148,9 @@ public class DeveloperTools implements KeyListener {
 			case "timers":
 			case "timings":
 				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
+				break;
+			case "stats":
+				statsOverlay.setActive(statsOverlayEnabled = !statsOverlayEnabled);
 				break;
 			case "snapshot":
 				frameTimingsRecorder.recordSnapshot();
@@ -178,6 +189,8 @@ public class DeveloperTools implements KeyListener {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
 		} else if (KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
+		} else if (KEY_TOGGLE_STREAMING_STATS.matches(e)) {
+			statsOverlay.setActive(statsOverlayEnabled = !statsOverlayEnabled);
 		} else if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
 			frameTimingsRecorder.recordSnapshot();
 		} else if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(e)) {
