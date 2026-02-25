@@ -140,15 +140,14 @@
   },
   {
     "name": "SCAR_SLUDGE",
-    "specularStrength": 0.0,
+    "specularStrength": 0.2,
     "specularGloss": 100.0,
     "normalStrength": 0.05,
-    "baseOpacity": 0.85,
-    "fresnelAmount": 0.3,
-    "surfaceColor": "#262623",
-    "foamColor": "#69775e",
-    "depthColor": "#69775e",
-    "duration": 1.2
+    "baseOpacity": 0.95,
+    "fresnelAmount": 0.03,
+    "surfaceColor": "#242824",
+    "foamColor": "#21231F",
+    "duration": 2
   },
   {
     "name": "ABYSS_BILE",
