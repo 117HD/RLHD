@@ -184,6 +184,7 @@ public class ZoneRenderer implements Renderer {
 		sceneManager.initialize(renderState, uboWorldViews);
 		modelStreamingManager.initialize();
 
+		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
 		directionalCamera.setDirty();
 	}
