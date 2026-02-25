@@ -195,7 +195,7 @@ public class ModelStreamingManager {
 			return;
 		}
 		plugin.drawnTempRenderableCount++;
-
+		int category = ModelHash.getCategoryForUuid(client,renderable,gameObject.getHash(), plugin.configRs3HighContrast);
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final boolean hasAlpha = renderable instanceof Player || m.getFaceTransparencies() != null;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(false);
@@ -218,7 +218,7 @@ public class ModelStreamingManager {
 						cachedModel,
 						isModelPartiallyVisible,
 						hasAlpha,
-						orientation, x, y, z
+						orientation, x, y, z,category
 					);
 					frameTimer.add(Timer.DRAW_TEMP_ASYNC, System.nanoTime() - asyncStart);
 				}
@@ -244,7 +244,7 @@ public class ModelStreamingManager {
 				m,
 				isModelPartiallyVisible,
 				hasAlpha,
-				orientation, x, y, z
+				orientation, x, y, z,category
 			);
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
@@ -265,7 +265,7 @@ public class ModelStreamingManager {
 		Model m,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
-		int orientation, int x, int y, int z
+		int orientation, int x, int y, int z,int category
 	) {
 
 		boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
@@ -303,7 +303,8 @@ public class ModelStreamingManager {
 				orientation,
 				true,
 				shadowView,
-				shadowView
+				shadowView,
+				category
 			);
 			shadowView.end();
 		}
@@ -326,7 +327,8 @@ public class ModelStreamingManager {
 				orientation,
 				isSquashed,
 				opaqueView,
-				alphaView
+				alphaView,
+				category
 			);
 
 			// Fix rendering projectiles from boats with hide roofs enabled
@@ -432,6 +434,7 @@ public class ModelStreamingManager {
 		)) {
 			return;
 		}
+		int category = ModelHash.getCategoryForUuid(client,r, tileObject.getHash(), plugin.configRs3HighContrast);
 		streamingContext.renderableCount++;
 
 		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
@@ -462,7 +465,7 @@ public class ModelStreamingManager {
 						isModelPartiallyVisible,
 						hasAlpha,
 						preOrientation, orient,
-						x, y, z
+						x, y, z,category
 					);
 					frameTimer.add(Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - asyncStart);
 				}
@@ -491,7 +494,7 @@ public class ModelStreamingManager {
 				isModelPartiallyVisible,
 				hasAlpha,
 				preOrientation, orient,
-				x, y, z
+				x, y, z,category
 			);
 		}
 	}
@@ -513,7 +516,8 @@ public class ModelStreamingManager {
 		int orient,
 		int x,
 		int y,
-		int z
+		int z,
+		int category
 	) {
 		try {
 			boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
@@ -550,7 +554,8 @@ public class ModelStreamingManager {
 					orient,
 					true,
 					shadowView,
-					shadowView
+					shadowView,
+					category
 				);
 				shadowView.end();
 			}
@@ -570,7 +575,8 @@ public class ModelStreamingManager {
 					orient,
 					isSquashed,
 					opaqueView,
-					alphaView
+					alphaView,
+					category
 				);
 
 				opaqueView.end();

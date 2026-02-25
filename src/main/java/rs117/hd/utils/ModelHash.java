@@ -1,7 +1,9 @@
 package rs117.hd.utils;
 
+import java.util.Objects;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
+import net.runelite.client.callback.ClientThread;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -30,6 +32,16 @@ public class ModelHash {
 	public static final int TYPE_PROJECTILE = 4;
 	public static final int TYPE_GRAPHICS_OBJECT = 5;
 	public static final int TYPE_UNKNOWN = 0xF;
+
+	public static final int CATEGORY_PLAYER        = 0;
+	public static final int CATEGORY_NPC_FRIENDLY  = 1;
+	public static final int CATEGORY_HOSTILE = 2;
+	public static final int CATEGORY_OBJECT        = 3;
+	public static final int CATEGORY_PROJECTILE    = 4;
+	public static final int CATEGORY_GRAPHICS      = 5;
+	public static final int CATEGORY_PLAYER_OTHER  = 6;
+	public static final int CATEGORY_GROUND_ITEM   = 7;
+	public static final int CATEGORY_UNKNOWN       = 15;
 
 	// 117 HD UUID sub object types
 	public static final int TYPE_WALL_OBJECT = 1 << 4 | TYPE_OBJECT;
@@ -165,5 +177,68 @@ public class ModelHash {
 
 	public static int getUuidId(int uuid) {
 		return uuid & 0xFFFFFF;
+	}
+
+	/**
+	 * Returns a category id (0-15) derived from the UUID type for coloring.
+	 */
+	public static int getCategoryForUuid(Client client,Renderable renderable, long hash, boolean rs3HighContrast) {
+		return getCategoryForUuid(client,renderable, hash, false, rs3HighContrast);
+	}
+
+	/**
+	 * Returns a small category id (0-15) derived from the UUID type for coloring.
+	 */
+	public static int getCategoryForUuid(Client client, Renderable renderable ,long hash, boolean hasActions, boolean rs3HighContrast) {
+		if (!rs3HighContrast) {
+			return CATEGORY_UNKNOWN;
+		}
+
+		if (hash == -1) {
+			if (renderable instanceof Projectile) {
+				Projectile projectile = (Projectile) renderable;
+				return projectile.getTargetActor() == client.getLocalPlayer() ? CATEGORY_HOSTILE : CATEGORY_PROJECTILE;
+			} else if (renderable instanceof GraphicsObject) {
+				return CATEGORY_GRAPHICS;
+			}
+		}
+
+		int category = CATEGORY_UNKNOWN;
+		int type;
+		int id;
+
+		if (hash == -1) {
+			return hasActions ? CATEGORY_OBJECT : CATEGORY_UNKNOWN;
+		}
+
+		type = getType(hash);
+
+		if (type == TYPE_OBJECT) {
+			category = hasActions ? CATEGORY_OBJECT : CATEGORY_UNKNOWN;
+		} else if (type == TYPE_NPC) {
+			id = ModelHash.getIdOrIndex(hash);
+			var npcs = client.getTopLevelWorldView().npcs();
+			if (id >= 0 && id < 65536) {
+				category = CATEGORY_NPC_FRIENDLY;
+				NPC npc = npcs.byIndex(id);
+				if (npc != null) {
+					category = npc.getCombatLevel() != 0 ? CATEGORY_HOSTILE : CATEGORY_NPC_FRIENDLY;
+				}
+			}
+		} else if (type == TYPE_PLAYER) {
+			id = ModelHash.getIdOrIndex(hash);
+			var players = client.getTopLevelWorldView().players();
+			if (id >= 0 && id < 65536) {
+				Player player = players.byIndex(id);
+				if (player != null) {
+					category = Objects.equals(player.getName(), client.getLocalPlayer().getName()) ? CATEGORY_PLAYER : CATEGORY_PLAYER_OTHER;
+				}
+			}
+		} else if (type == TYPE_GROUND_ITEM) {
+			category = CATEGORY_GROUND_ITEM;
+		}
+
+		return category;
+
 	}
 }

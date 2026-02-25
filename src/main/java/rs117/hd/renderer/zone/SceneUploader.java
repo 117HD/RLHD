@@ -109,6 +109,9 @@ public class SceneUploader implements AutoCloseable {
 	@Inject
 	public ProceduralGenerator proceduralGenerator;
 
+	@Inject
+	public SceneManager sceneManager;
+
 	@FunctionalInterface
 	public interface OnBeforeProcessTileFunc {
 		void invoke(Tile t, boolean isEstimate) throws InterruptedException;
@@ -717,9 +720,16 @@ public class SceneUploader implements AutoCloseable {
 			var dynamic = (DynamicObject) r;
 			model = dynamic.getModelZbuf();
 			var composition = dynamic.getRecordedObjectComposition();
-			if (composition != null)
+			if (composition != null) {
 				uuid = ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, composition.getId());
+				if (plugin.configRs3HighContrast) {
+					sceneManager.interactiveObjects.add(composition.getId());
+				}
+			}
 		}
+
+		int category = ModelHash.getCategoryForUuid(ctx.client, r,-1, sceneManager.interactiveObjects.contains(ModelHash.getUuidId(uuid)), plugin.configRs3HighContrast);
+
 		if (model == null)
 			return;
 
@@ -735,7 +745,8 @@ public class SceneUploader implements AutoCloseable {
 				x - basex, y, z - basez,
 				opaqueBuffer,
 				alphaBuffer,
-				textureBuffer
+				textureBuffer,
+				category
 			);
 		} catch (Throwable ex) {
 			log.warn(
@@ -1345,7 +1356,8 @@ public class SceneUploader implements AutoCloseable {
 		int x, int y, int z,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer,
-		GpuIntBuffer textureBuffer
+		GpuIntBuffer textureBuffer,
+		int category
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
@@ -1607,7 +1619,7 @@ public class SceneUploader implements AutoCloseable {
 					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			final int materialData = material.packMaterialData(faceOverride, uvType, false);
+			final int materialData = material.packMaterialData(faceOverride, uvType, false,category);
 
 			final float[] faceUVs;
 			if (uvType == UvType.VANILLA && textureId != -1) {
@@ -1917,7 +1929,8 @@ public class SceneUploader implements AutoCloseable {
 		int orientation,
 		boolean isShadow,
 		VAO.VAOView opaqueView,
-		VAO.VAOView alphaView
+		VAO.VAOView alphaView,
+		int category
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
@@ -1991,7 +2004,7 @@ public class SceneUploader implements AutoCloseable {
 			if (textureId != -1)
 				color1 = color2 = color3 = 90;
 
-			final int materialData = material.packMaterialData(faceOverride, uvType, false);
+			final int materialData = material.packMaterialData(faceOverride, uvType, false,category);
 
 			final int triangleA = indices1[face];
 			final int vertexOffsetA = triangleA * 3;

@@ -170,13 +170,18 @@ public class Material {
 		return replacementCondition.test(vars);
 	}
 
-	public final int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
+	public int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
+		return packMaterialData(modelOverride, uvType, isOverlay, 0);
+	}
+
+	public int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay, int category) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		assert isValid : String.format("Material %s used after invalidation", this);
 		int materialIndex = uboIndex;
 		assert materialIndex <= MAX_MATERIAL_INDEX;
 		return (materialIndex & MAX_MATERIAL_INDEX) << 21
-			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 15
+			   | ((category & 0xF) << 17)
+			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3) & 0x3) << 15
 			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 12
 			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
 			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8
