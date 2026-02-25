@@ -606,7 +606,7 @@ public class Zone {
 				}
 			} else if (modelOverride.colorOverrides != null) {
 				final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
-				final var override = modelOverride.testColorOverrides(ahsl, plugin.configHideWaterEffects);
+				final var override = modelOverride.testColorOverrides(ahsl);
 				if (override != null)
 					material = override.baseMaterial;
 			}

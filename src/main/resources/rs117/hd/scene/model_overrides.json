@@ -46315,7 +46315,7 @@
   },
   {
     "description": "Farming Guild - Hide Ripples",
-    "hide": true,
+    "hideAsWaterEffect": true,
     "objectIds": [ "RIPPLE" ]
   },
   {

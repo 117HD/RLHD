@@ -161,9 +161,9 @@
         "type": "boolean",
         "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
       },
-      "isWaterEffect": {
+      "hideAsWaterEffect": {
         "type": "boolean",
-        "description": "Whether the model should be hidden when \"Hide vanilla ripples\" is enabled. Defaults to false."
+        "description": "Whether the model should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
       },
       "shadowOpacityThreshold": {
         "type": "number",
@@ -303,9 +303,9 @@
               "type": "boolean",
               "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
             },
-            "isWaterEffect": {
+            "hideAsWaterEffect": {
               "type": "boolean",
-              "description": "Whether the faces should be hidden when \"Hide vanilla ripples\" is enabled. Defaults to false."
+              "description": "Whether the faces should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
             },
             "shadowOpacityThreshold": {
               "type": "number",
@@ -438,9 +438,9 @@
               "type": "boolean",
               "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
             },
-            "isWaterEffect": {
+            "hideAsWaterEffect": {
               "type": "boolean",
-              "description": "Whether the faces should be hidden when \"Hide vanilla ripples\" is enabled. Defaults to false."
+              "description": "Whether the faces should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
             },
             "shadowOpacityThreshold": {
               "type": "number",

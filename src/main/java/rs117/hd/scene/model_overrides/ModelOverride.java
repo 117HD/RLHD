@@ -70,7 +70,7 @@ public class ModelOverride
 	public boolean receiveShadows = true;
 	public boolean terrainVertexSnap = false;
 	public boolean undoVanillaShading = true;
-	public boolean isWaterEffect = false;
+	public boolean hideAsWaterEffect = false;
 	public float terrainVertexSnapThreshold = 0.125f;
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
@@ -163,6 +163,8 @@ public class ModelOverride
 			textureMaterial.hasTransparency ||
 			tzHaarRecolorType != TzHaarRecolorType.NONE;
 
+		hide |= hideAsWaterEffect && plugin.configHideVanillaWaterEffects;
+
 		if (materialOverrides != null) {
 			var normalized = new HashMap<Material, ModelOverride>();
 			for (var entry : materialOverrides.entrySet()) {
@@ -235,7 +237,7 @@ public class ModelOverride
 			receiveShadows,
 			terrainVertexSnap,
 			undoVanillaShading,
-			isWaterEffect,
+			hideAsWaterEffect,
 			terrainVertexSnapThreshold,
 			shadowOpacityThreshold,
 			tzHaarRecolorType,
@@ -620,7 +622,7 @@ public class ModelOverride
 		}
 	}
 
-	public final ModelOverride testColorOverrides(int ahsl, boolean hideWaterEffects) {
+	public final ModelOverride testColorOverrides(int ahsl) {
 		ModelOverride override = null;
 		final long packedAhl = cachedColorOverrideAhsl;
 		if (packedAhl != -1 && ahsl == (int) packedAhl)
@@ -637,9 +639,6 @@ public class ModelOverride
 				}
 			}
 		}
-
-		if (!hideWaterEffects && override != null && override.isWaterEffect)
-			override = null;
 
 		return override;
 	}

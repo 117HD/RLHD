@@ -767,11 +767,11 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_WATER_EFFECTS = "vanillaWaterEffects";
+	String KEY_HIDE_VANILLA_WATER_EFFECTS = "hideVanillaWaterEffects";
 	@ConfigItem(
-		keyName = KEY_WATER_EFFECTS,
-		name = "Hide Vanilla Ripples",
-		description = "Hides the water effects found around objects floating in the water.",
+		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
+		name = "Hide vanilla water ripples",
+		description = "Hide vanilla ripples found around objects floating in the water.",
 		position = 15,
 		section = environmentSettings
 	)
