@@ -293,8 +293,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		// Round timers to zero if they are less than a microsecond off
 		String result = "~0 ms";
 		if (abs(nanos) > 1e3) {
-			result = sb.append(round(nanos / 1e3) / 1e3).append(" ms").toString();
 			sb.setLength(0);
+			result = sb.append(round(nanos / 1e3) / 1e3).append(" ms").toString();
 		}
 
 		LineComponent component = componentMap.get(name);
