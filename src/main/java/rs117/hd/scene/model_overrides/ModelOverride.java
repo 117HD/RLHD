@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +71,7 @@ public class ModelOverride
 	public boolean receiveShadows = true;
 	public boolean terrainVertexSnap = false;
 	public boolean undoVanillaShading = true;
-	public boolean hideAsWaterEffect = false;
+	private boolean hideAsWaterEffect = false;
 	public float terrainVertexSnapThreshold = 0.125f;
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
@@ -622,6 +623,7 @@ public class ModelOverride
 		}
 	}
 
+	@Nullable
 	public final ModelOverride testColorOverrides(int ahsl) {
 		ModelOverride override = null;
 		final long packedAhl = cachedColorOverrideAhsl;

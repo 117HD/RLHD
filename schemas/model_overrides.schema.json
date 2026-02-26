@@ -111,7 +111,7 @@
       },
       "hide": {
         "type": "boolean",
-        "description": "Whether any model this override applies to should be hidden. Defaults to false."
+        "description": "Whether models this override applies to should be hidden. Defaults to false."
       },
       "retainVanillaUvs": {
         "type": "boolean",
@@ -271,6 +271,10 @@
               "type": "integer",
               "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
             },
+            "hide": {
+              "type": "boolean",
+              "description": "Whether faces this override applies to should be hidden. Defaults to false."
+            },
             "retainVanillaUvs": {
               "type": "boolean",
               "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
@@ -405,6 +409,10 @@
             "uvOrientationZ": {
               "type": "integer",
               "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "hide": {
+              "type": "boolean",
+              "description": "Whether faces this override applies to should be hidden. Defaults to false."
             },
             "retainVanillaUvs": {
               "type": "boolean",
