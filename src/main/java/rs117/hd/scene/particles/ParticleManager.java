@@ -681,6 +681,21 @@ public class ParticleManager {
 	}
 
 	/**
+	 * Current orientation of the tile object in JAU (0–2048). Used so emitter offsets rotate with the object.
+	 */
+	private static int getObjectOrientation(TileObject tileObject) {
+		if (tileObject instanceof GroundObject)
+			return HDUtils.getModelOrientation(((GroundObject) tileObject).getConfig());
+		if (tileObject instanceof DecorativeObject)
+			return HDUtils.getModelOrientation(((DecorativeObject) tileObject).getConfig());
+		if (tileObject instanceof WallObject)
+			return HDUtils.convertWallObjectOrientation(((WallObject) tileObject).getOrientationA());
+		if (tileObject instanceof GameObject)
+			return HDUtils.getModelOrientation(((GameObject) tileObject).getConfig());
+		return 0;
+	}
+
+	/**
 	 * Same object-type position offset as LightManager.spawnLights (for position/height parity with lights).
 	 */
 	private static void getObjectPositionOffset(TileObject tileObject, int[] outOffset) {
@@ -786,7 +801,8 @@ public class ParticleManager {
 		pos[0] = origin[0];
 		pos[1] = origin[1];
 		pos[2] = origin[2];
-		int orientation = emitter.getAlignment().relative ? mod(emitter.getOrientation() + emitter.getAlignment().orientation, 2048) : emitter.getAlignment().orientation;
+		int baseOrientation = obj != null ? getObjectOrientation(obj) : emitter.getOrientation();
+		int orientation = emitter.getAlignment().relative ? mod(baseOrientation + emitter.getAlignment().orientation, 2048) : emitter.getAlignment().orientation;
 		if (emitter.getAlignment() != Alignment.CUSTOM) {
 			int localSizeX = emitter.getSizeX() * LOCAL_TILE_SIZE;
 			int localSizeY = emitter.getSizeY() * LOCAL_TILE_SIZE;
