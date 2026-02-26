@@ -3738,7 +3738,9 @@
       "FENCEGATE_R_COWBOSS_START",
       "FENCEGATE_L_COWBOSS_START",
       "FENCEGATE_R_COWBOSS_START_NOOP",
-      "FENCEGATE_L_COWBOSS_START_NOOP"
+      "FENCEGATE_L_COWBOSS_START_NOOP",
+      "FENCEGATE_R_COWBOSS_EXIT",
+      "FENCEGATE_L_COWBOSS_EXIT"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -76757,7 +76759,7 @@
     ]
   },
   {
-    "description": "Lumbridge - Wooden - Paper - Brutus Sign",
+    "description": "Lumbridge - Wooden - Paper - Brutus Sign & Scoreboard",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvOrientation": 89,
@@ -76780,7 +76782,9 @@
       }
     ],
     "objectIds": [
-      "COWBOSS_SIGN_WARNING"
+      "COWBOSS_SIGN_WARNING",
+      "COWBOSS_SCOREBOARD",
+      "COWBOSS_SCOREBOARD_UBER"
     ]
   }
 ]
