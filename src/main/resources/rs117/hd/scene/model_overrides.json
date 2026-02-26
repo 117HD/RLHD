@@ -11749,6 +11749,9 @@
   {
     "description": "Wooden - Plank - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.6,
     "objectIds": [
       "BIGTABLE2",
       "BIGTABLE3",
@@ -11769,10 +11772,7 @@
       "WILDY_HUB_BROKEN_TABLE",
       "TOURTRAP_QIP_DESERT_TABLE",
       "MYQ3_HIDEOUT_LARGE_TABLE"
-    ],
-    "uvType": "BOX",
-    "flatNormals": true,
-    "uvScale": 0.6
+    ]
   },
   {
     "description": "Wooden tables - Solid - Cobwebs",
@@ -28840,6 +28840,85 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.85
+  },
+  {
+    "description": "Zaff - Table and Rack with Staves",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "objectIds": [
+      "FAI_VARROCK_STAFF_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0 || h == 48",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Zaff - Barrels with Staves",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "objectIds": [
+      "FAI_VARROCK_BATTLESTAFF_BARREL_FULL",
+      "FAI_VARROCK_BARREL_UNFINISHED_STAFFS",
+      "FAI_VARROCK_BATTLESTAFF_BARREL_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Hanging Toolset",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 512,
+    "objectIds": [
+      "FAI_VARROCK_TOOLSET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "MODEL_YZ"
+      }
+    ]
+  },
+  {
+    "description": "Zaff - Rack with Staves",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "objectIds": [
+      "FAI_VARROCK_STAFF_RACK",
+      "FAI_VARROCK_STAFF_RACK_02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 48",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Pillory random event crates",
