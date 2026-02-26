@@ -51,6 +51,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public final class OcclusionManager {
 	private static final int FRAMES_IN_FLIGHT = 2;
+	private static final int VISIBILITY_TEST_DELAY = 3;
 
 	@Getter
 	private static OcclusionManager instance;
@@ -388,6 +389,7 @@ public final class OcclusionManager {
 				continue;
 
 			query.occluded = glGetQueryObjecti(id, GL_QUERY_RESULT) == 0;
+			query.nextVisibilityTest = plugin.frame + VISIBILITY_TEST_DELAY;
 			if (!query.occluded)
 				passedQueryCount++;
 		}
@@ -487,7 +489,7 @@ public final class OcclusionManager {
 	private void processQueries(List<OcclusionQuery> queries, boolean isDebug) {
 		for (int i = 0; i < queries.size(); i++) {
 			final OcclusionQuery query = queries.get(i);
-			if (query.count == 0)
+			if (query.count == 0 || plugin.frame < query.nextVisibilityTest)
 				continue;
 
 			if (query.id[0] == 0)
@@ -505,7 +507,7 @@ public final class OcclusionManager {
 
 		for (int i = 0; i < queries.size(); i++) {
 			final OcclusionQuery query = queries.get(i);
-			if (query.count <= 0 || query.frustumCulled)
+			if (query.count <= 0 || query.frustumCulled || plugin.frame < query.nextVisibilityTest)
 				continue;
 
 			glVertexAttribPointer(1, 3, GL_FLOAT, false, 24, query.vboOffset);
@@ -677,6 +679,7 @@ public final class OcclusionManager {
 		private boolean globalAABB;
 		private boolean isStatic;
 
+		private int nextVisibilityTest;
 		private int activeId;
 		private long vboOffset;
 
@@ -886,7 +889,7 @@ public final class OcclusionManager {
 		}
 
 		public void free() {
-			count = 0;
+			count = nextVisibilityTest = 0;
 			queued = false;
 			occluded = false;
 			isStatic = false;
