@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 import net.runelite.client.ui.FontManager;
@@ -54,6 +55,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private float cpuLoad;
 	private final Map<String, LineComponent> componentMap = new HashMap<>();
 	private final StringBuilder sb = new StringBuilder();
+	private final Formatter formatter = new Formatter(sb);
 
 	@Inject
 	public FrameTimerOverlay(HdPlugin plugin) {
@@ -72,6 +74,12 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			overlayManager.remove(this);
 			frames.clear();
 		}
+	}
+
+	private String format(String format, Object... args) {
+		sb.setLength(0);
+		formatter.format(format, args);
+		return sb.toString();
 	}
 
 	@Override
@@ -135,12 +143,12 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.leftFont(boldFont)
 				.left("Estimated FPS:")
 				.rightFont(boldFont)
-				.right(getEstimatedFPS(cpuTime, gpuTime))
+				.right(format("%.1f FPS", 1e9 / max(cpuTime, gpuTime)))
 				.build());
 
 			children.add(LineComponent.builder()
 				.left("Error compensation:")
-				.right(String.format("%d ns", frameTimer.errorCompensation))
+				.right(format("%d ns", frameTimer.errorCompensation))
 				.build());
 
 			children.add(LineComponent.builder()
@@ -162,7 +170,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				var sceneContext = plugin.getSceneContext();
 				children.add(LineComponent.builder()
 					.left("Lights:")
-					.right(String.format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
+					.right(format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
 					.build());
 			}
 
@@ -246,18 +254,12 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 					.leftFont(boldFont)
 					.left("Capturing Snapshot...")
 					.rightFont(boldFont)
-					.right(String.format("%d%%", frameTimingsRecorder.getProgressPercentage()))
+					.right(format("%d%%", frameTimingsRecorder.getProgressPercentage()))
 					.build());
 		}
 
 		var result = super.render(g);
 		frameTimer.cumulativeError += System.nanoTime() - time;
-		return result;
-	}
-
-	private String getEstimatedFPS(long cpuTime, long gpuTime) {
-		final String result = sb.append(round(1e9 / max(cpuTime, gpuTime), 1)).append(" FPS").toString();
-		sb.setLength(0);
 		return result;
 	}
 
