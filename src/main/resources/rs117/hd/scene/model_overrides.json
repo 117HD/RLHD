@@ -2740,6 +2740,33 @@
     ]
   },
   {
+    "description": "Berry Bushes South of Varrock",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "FAI_VARROCK_CADAVABUSH_2",
+      "FAI_VARROCK_CADAVABUSH_1",
+      "FAI_VARROCK_CADAVABUSH_0",
+      "FAI_VARROCK_REDBERRYBUSH_2",
+      "FAI_VARROCK_REDBERRYBUSH_1",
+      "FAI_VARROCK_REDBERRYBUSH_0"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 21 || h == 24",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "h == 0 || h == 52",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
     "description": "Flowers or plants that should sway in the wind but not be displaced by characters",
     "baseMaterial": "GRAY_90",
     "windDisplacementMode": "VERTEX",
