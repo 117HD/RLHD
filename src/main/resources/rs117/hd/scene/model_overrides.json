@@ -5160,7 +5160,7 @@
       "TZHAAR_CAVE_FLOOR_4",
       "TZHAAR_MAGIC_STORE_ICON"
     ],
-    "tzHaarRecolorType": "GRADIENT"
+    "tzHaarRecolorType": "HUE_SHIFT"
   },
   {
     "description": "TZHAAR_ROCK_HUESHIFT",

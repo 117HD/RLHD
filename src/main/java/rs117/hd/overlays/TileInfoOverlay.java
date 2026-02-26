@@ -603,17 +603,31 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		var decorObject = tile.getDecorativeObject();
 		if (decorObject != null) {
-			lines.add(String.format(
-				"Decor Object: %s preori=%d ori=%d offset=[%d, %d] type=%s %s",
-				getIdAndImpostorId(decorObject, decorObject.getRenderable()),
-				HDUtils.getModelPreOrientation(decorObject.getConfig()),
-				HDUtils.getModelOrientation(decorObject.getConfig()),
-				decorObject.getXOffset(),
-				decorObject.getYOffset(),
-				ObjectType.fromConfig(decorObject.getConfig()),
-				getModelInfo(decorObject.getRenderable())
-			));
-			lines.add("Decor Type: " + ObjectType.fromConfig(decorObject.getConfig()));
+			int config = decorObject.getConfig();
+			if (decorObject.getRenderable() != null) {
+				lines.add(String.format(
+					"Decor Object 1: %s preori=%d ori=%d offset=[%d, %d] type=%s %s",
+					getIdAndImpostorId(decorObject, decorObject.getRenderable()),
+					HDUtils.getModelPreOrientation(config),
+					HDUtils.getModelOrientation(config),
+					decorObject.getXOffset(),
+					decorObject.getYOffset(),
+					ObjectType.fromConfig(config),
+					getModelInfo(decorObject.getRenderable())
+				));
+			}
+			if (decorObject.getRenderable2() != null) {
+				lines.add(String.format(
+					"Decor Object 2: %s preori=%d ori=%d offset=[%d, %d] type=%s %s",
+					getIdAndImpostorId(decorObject, decorObject.getRenderable2()),
+					HDUtils.getModelPreOrientation(config),
+					HDUtils.getModelOrientation(config),
+					decorObject.getXOffset(),
+					decorObject.getYOffset(),
+					ObjectType.fromConfig(config),
+					getModelInfo(decorObject.getRenderable2())
+				));
+			}
 		}
 
 		GroundObject groundObject = tile.getGroundObject();
