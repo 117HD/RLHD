@@ -1,5 +1,5 @@
 #version 330
 
  void main() {
-    // MACOS STUB
+    gl_FragDepth = gl_FragCoord.z;
 }
