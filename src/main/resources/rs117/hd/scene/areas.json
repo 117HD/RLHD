@@ -5380,12 +5380,34 @@
     ]
   },
   {
-    "name": "POISON_WASTE_DUNGEON",
+    "name": "POISON_WASTE_DUNGEON_QUEST_AREA_1",
+    "regions": [
+      5442
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "POISON_WASTE_DUNGEON_QUEST_AREA_2",
+    "regions": [
+      5444
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "POISON_WASTE_DUNGEON_POST_QUEST",
     "regions": [
       5954,
       5955
     ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "POISON_WASTE_DUNGEON",
+    "areas": [
+      "POISON_WASTE_DUNGEON_QUEST_AREA_1",
+      "POISON_WASTE_DUNGEON_QUEST_AREA_2",
+      "POISON_WASTE_DUNGEON_POST_QUEST"
+    ]
   },
   {
     "name": "BACKWATER_AND_BREAKBONE_STRAIT",
