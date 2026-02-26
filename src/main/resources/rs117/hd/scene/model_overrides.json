@@ -28810,7 +28810,19 @@
       "FAI_VARROCK_TENT_PEAK"
     ],
     "uvType": "BOX",
-    "uvScale": 0.85
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "h == 8 || h == 10",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
   },
   {
     "description": "Fortune-teller Aris - Table with Crystal Ball",
@@ -58913,7 +58925,7 @@
     ]
   },
   {
-    "description": "Varrock - Caste Garden - King Statue",
+    "description": "Varrock - Castle Garden - King Statue",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.7,
