@@ -389,8 +389,9 @@ public final class OcclusionManager {
 				continue;
 
 			query.occluded = glGetQueryObjecti(id, GL_QUERY_RESULT) == 0;
-			query.nextVisibilityTest = plugin.frame + VISIBILITY_TEST_DELAY;
-			if (!query.occluded)
+			if(query.occluded)
+				query.nextVisibilityTest = plugin.frame + VISIBILITY_TEST_DELAY;
+			else
 				passedQueryCount++;
 		}
 		frameTimer.end(Timer.OCCLUSION_READBACK);
@@ -433,7 +434,7 @@ public final class OcclusionManager {
 	}
 
 	public void occlusionPass() {
-		if (queuedQueries.isEmpty())
+		if (queuedQueries.isEmpty() || true)
 			return;
 
 		frameTimer.begin(Timer.RENDER_OCCLUSION);
@@ -542,6 +543,7 @@ public final class OcclusionManager {
 		final float dirY = -abs(directionalFwd[1]);
 		final float dirZ = -abs(directionalFwd[2]);
 
+		boolean wasFrustumCulled = query.frustumCulled;
 		query.frustumCulled = false;
 		if (!isDebug && query.globalAABB) {
 			projectAABB(query, projected,
@@ -583,6 +585,9 @@ public final class OcclusionManager {
 
 			aabbBuffer.put(projected);
 		}
+
+		if(wasFrustumCulled) // If we we're frustum culled & are no longer, retest the query ignoring existing delay
+			query.nextVisibilityTest = 0;
 	}
 
 	private boolean isAABBVisible(float[] aabb) {

@@ -163,10 +163,7 @@ public class WorldViewContext {
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
-				if (z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum))
-					continue;
-
-				if(z.occlusionQuery != null && z.occlusionQuery.isOccluded())
+				if (z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum) || z.isFullyOccluded)
 					continue;
 
 				final int dx = camPosX - ((zx - offset) << 10);

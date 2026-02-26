@@ -327,7 +327,7 @@ public class ZoneRenderer implements Renderer {
 				if(!zone.initialized)
 					continue;
 				zone.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
-				zone.evaluateOcclusion();
+				zone.evaluateOcclusion(ctx);
 			}
 		}
 
@@ -937,7 +937,7 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		Zone z = ctx.zones[zx][zz];
-		if(!z.initialized || z.sizeO == 0 || z.occlusionQuery == null || z.occlusionQuery.isOccluded())
+		if(!z.initialized || z.sizeO == 0 )
 			return;
 
 		frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
@@ -967,7 +967,7 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		final Zone z = ctx.zones[zx][zz];
-		if (!z.initialized || z.occlusionQuery == null || z.occlusionQuery.isOccluded())
+		if (!z.initialized || (z.levelOcclusionQueries[level] != null && z.levelOcclusionQueries[level].isOccluded()))
 			return;
 
 		frameTimer.begin(Timer.DRAW_ZONE_ALPHA);

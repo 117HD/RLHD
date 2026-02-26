@@ -75,7 +75,6 @@ public class Zone {
 	@Nullable
 	public GLBuffer vboO, vboA, vboM;
 	public GLTextureBuffer tboF;
-	public OcclusionQuery occlusionQuery;
 	public ConcurrentLinkedQueue<OcclusionQuery> additionalOcclusionQueries = new ConcurrentLinkedQueue<>();
 	public boolean isFullyOccluded;
 
@@ -94,6 +93,7 @@ public class Zone {
 	ZoneUploadJob uploadJob;
 
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
+	OcclusionQuery[] levelOcclusionQueries = new OcclusionQuery[5];
 
 	int[][] rids;
 	int[][] roofStart;
@@ -125,7 +125,9 @@ public class Zone {
 		}
 
 		tboF = f;
-		occlusionQuery = OcclusionManager.getInstance().obtainQuery();
+
+		for(int i = 0; i < 5; ++i)
+			levelOcclusionQueries[i] = OcclusionManager.getInstance().obtainQuery();
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -174,9 +176,10 @@ public class Zone {
 			uploadJob = null;
 		}
 
-		if(occlusionQuery != null) {
-			occlusionQuery.free();
-			occlusionQuery = null;
+		for(int i = 0; i < 5; ++i){
+			if(levelOcclusionQueries[i] != null)
+				levelOcclusionQueries[i].free();
+			levelOcclusionQueries[i] = null;
 		}
 
 		for(AlphaModel m : alphaModels) {
@@ -210,26 +213,31 @@ public class Zone {
 		alphaModels.clear();
 	}
 
-	public void evaluateOcclusion(){
-		if(occlusionQuery != null) {
-			isFullyOccluded = occlusionQuery.isOccluded();
-			if(isFullyOccluded) {
-				// Check if any of the dynamic occlusion queries are not occluded
-				for(OcclusionQuery dynamicQuery : additionalOcclusionQueries) {
-					if(dynamicQuery.isVisible()) {
-						isFullyOccluded = false;
-						break;
-					}
-				}
+	public void evaluateOcclusion(WorldViewContext ctx){
+		isFullyOccluded = true;
+		for (int level = ctx.minLevel; level <= ctx.maxLevel; ++level) {
+			if(levelOcclusionQueries[level] == null || levelOcclusionQueries[level].isVisible())
+				isFullyOccluded = false;
+			if(levelOcclusionQueries[level] != null)
+				levelOcclusionQueries[level].queue();
+		}
 
-				if(isFullyOccluded) {
-					// Zone is fully occluded, we need to requeue all dynamic queries since they are revelvant to if the zone is fully occluded
-					for(OcclusionQuery dynamicQuery : additionalOcclusionQueries)
-						dynamicQuery.queue();
+		if(isFullyOccluded) {
+			// Check if any of the dynamic occlusion queries are not occluded
+			for(OcclusionQuery dynamicQuery : additionalOcclusionQueries) {
+				if(dynamicQuery.isVisible()) {
+					isFullyOccluded = false;
+					break;
 				}
 			}
-			occlusionQuery.queue();
+
+			if(isFullyOccluded) {
+				// Zone is fully occluded, we need to requeue all dynamic queries since they are revelvant to if the zone is fully occluded
+				for(OcclusionQuery dynamicQuery : additionalOcclusionQueries)
+					dynamicQuery.queue();
+			}
 		}
+
 		if(!isFullyOccluded) // Dynamics will reappend when they are processed
 			additionalOcclusionQueries.clear();
 	}
@@ -362,9 +370,11 @@ public class Zone {
 		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
 		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
 
-		if(occlusionQuery != null) {
-			occlusionQuery.setOffset(baseX, 0, baseZ);
-			occlusionQuery.setWorldView(viewContext.uboWorldViewStruct);
+		for(int i = 0; i < 5; i++) {
+			if(levelOcclusionQueries[i] != null) {
+				levelOcclusionQueries[i].setOffset(baseX, 0, baseZ);
+				levelOcclusionQueries[i].setWorldView(viewContext.uboWorldViewStruct);
+			}
 		}
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -424,6 +434,8 @@ public class Zone {
 		}
 
 		for (int level = ctx.minLevel; level <= maxLevel; ++level) {
+			if(levelOcclusionQueries[level] != null && levelOcclusionQueries[level].isOccluded())
+				continue;
 			int[] rids = this.rids[level];
 			int[] roofStart = this.roofStart[level];
 			int[] roofEnd = this.roofEnd[level];
@@ -1020,7 +1032,7 @@ public class Zone {
 						int zz2 = (centerZ >> 10) + offset;
 						if (zx2 >= 0 && zx2 < zones.length && zz2 >= 0 && zz2 < zones[0].length) {
 							Zone z2 = zones[zx2][zz2];
-							if(z2.inSceneFrustum && z2.initialized && (z2.occlusionQuery == null || z2.occlusionQuery.isVisible())) {
+							if(z2.inSceneFrustum && z2.initialized && !z2.isFullyOccluded) {
 								max = distance;
 								closestZoneX = centerX >> 10;
 								closestZoneZ = centerZ >> 10;

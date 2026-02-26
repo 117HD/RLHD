@@ -242,7 +242,9 @@ public class SceneUploader implements AutoCloseable {
 			uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 		}
-		zone.occlusionQuery.setStatic();
+
+		for(int i = 0; i < 5; i++)
+			zone.levelOcclusionQueries[i].setStatic();
 	}
 
 	private void uploadZoneLevel(
@@ -282,7 +284,7 @@ public class SceneUploader implements AutoCloseable {
 
 		if(abbMin[0] != Float.MAX_VALUE && abbMin[1] != Float.MAX_VALUE && abbMin[2] != Float.MAX_VALUE &&
 		   abbMax[0] != -Float.MAX_VALUE && abbMax[1] != -Float.MAX_VALUE && abbMax[2] != -Float.MAX_VALUE) {
-			zone.occlusionQuery.addMinMax(abbMin[0], abbMin[1] - LOCAL_HALF_TILE_SIZE, abbMin[2], abbMax[0], abbMax[1] + LOCAL_HALF_TILE_SIZE, abbMax[2]);
+			zone.levelOcclusionQueries[level].addMinMax(abbMin[0], abbMin[1] - LOCAL_HALF_TILE_SIZE, abbMin[2], abbMax[0], abbMax[1] + LOCAL_HALF_TILE_SIZE, abbMax[2]);
 		}
 	}
 
@@ -368,7 +370,7 @@ public class SceneUploader implements AutoCloseable {
 
 		if(abbMin[0] != Float.MAX_VALUE && abbMin[1] != Float.MAX_VALUE && abbMin[2] != Float.MAX_VALUE &&
 		   abbMax[0] != -Float.MAX_VALUE && abbMax[1] != -Float.MAX_VALUE && abbMax[2] != -Float.MAX_VALUE) {
-			zone.occlusionQuery.addMinMax(abbMin[0], abbMin[1], abbMin[2], abbMax[0], abbMax[1], abbMax[2]);
+			zone.levelOcclusionQueries[level].addMinMax(abbMin[0], abbMin[1] - LOCAL_HALF_TILE_SIZE, abbMin[2], abbMax[0], abbMax[1] + LOCAL_HALF_TILE_SIZE, abbMax[2]);
 		}
 	}
 
@@ -1738,7 +1740,7 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		if(len > 0)
-			zone.occlusionQuery.addAABB(model.getAABB(orientation), x, y, z);
+			zone.levelOcclusionQueries[level].addAABB(model.getAABB(orientation), x, y, z);
 
 		writeCache.flush();
 		return len;
