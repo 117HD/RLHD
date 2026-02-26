@@ -728,7 +728,7 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.DRAW_SCENE);
 
-		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboSceneDepth);
+		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		renderState.ido.set(indirectDrawCmds.id);
 
@@ -760,6 +760,21 @@ public class ZoneRenderer implements Renderer {
 		renderState.disable.set(GL_DEPTH_TEST);
 		renderState.colorMask.set(true, true, true, true);
 		renderState.apply();
+
+		if (plugin.msaaSamples > 1) {
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneDepthResolve);
+
+			glBlitFramebuffer(
+				0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
+				0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
+				GL_DEPTH_BUFFER_BIT,
+				GL_NEAREST
+			);
+
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
 
 		frameTimer.end(Timer.DRAW_SCENE);
 	}

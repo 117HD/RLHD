@@ -93,9 +93,6 @@ public final class OcclusionManager {
 	@Getter
 	private int passedQueryCount;
 
-	private int fboDepthResolve = 0;
-	private int rboDepthResolve = 0;
-
 	private int fboOcclusionDepth = 0;
 	private int rboOcclusionDepth = 0;
 
@@ -302,39 +299,6 @@ public final class OcclusionManager {
 		}
 	}
 
-	private void ensureDepthResolveFbo() {
-		if (fboDepthResolve != 0 || plugin.msaaSamples == 0)
-			return;
-
-		fboDepthResolve = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboDepthResolve);
-
-		rboDepthResolve = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboDepthResolve);
-
-		glRenderbufferStorage(
-			GL_RENDERBUFFER,
-			GL_DEPTH_COMPONENT24,
-			plugin.sceneResolution[0],
-			plugin.sceneResolution[1]
-		);
-
-		glFramebufferRenderbuffer(
-			GL_FRAMEBUFFER,
-			GL_DEPTH_ATTACHMENT,
-			GL_RENDERBUFFER,
-			rboDepthResolve
-		);
-
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			throw new RuntimeException("Depth resolve FBO incomplete");
-
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	}
-
 	private void ensureOcclusionFbo() {
 		int targetWidth = clamp(plugin.sceneResolution[0] / OCCLUSION_DOWNSCALE, MIN_OCCLUSION_SIZE, MAX_OCCLUSION_SIZE);
 		int targetHeight = clamp(plugin.sceneResolution[1] / OCCLUSION_DOWNSCALE, MIN_OCCLUSION_SIZE, MAX_OCCLUSION_SIZE);
@@ -377,8 +341,6 @@ public final class OcclusionManager {
 		if (status != GL_FRAMEBUFFER_COMPLETE) {
 			throw new RuntimeException("Occlusion FBO incomplete: " + status);
 		}
-
-		ensureDepthResolveFbo();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
@@ -468,24 +430,7 @@ public final class OcclusionManager {
 
 		ensureOcclusionFbo();
 
-		if(plugin.msaaSamples > 0) {
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneDepth);
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboDepthResolve);
-
-			glBlitFramebuffer(
-				0, 0,
-				plugin.sceneResolution[0], plugin.sceneResolution[1],
-				0, 0,
-				plugin.sceneResolution[0], plugin.sceneResolution[1],
-				GL_DEPTH_BUFFER_BIT,
-				GL_NEAREST
-			);
-
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, fboDepthResolve);
-		} else {
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneDepth);
-		}
-
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.msaaSamples > 0 ? plugin.fboSceneDepthResolve : plugin.fboScene);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboOcclusionDepth);
 
 		glBlitFramebuffer(
