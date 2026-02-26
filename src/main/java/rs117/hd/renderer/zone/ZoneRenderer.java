@@ -25,7 +25,9 @@
 package rs117.hd.renderer.zone;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -50,6 +52,10 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.renderer.zone.pass.impl.ParticlePass;
+import rs117.hd.renderer.zone.pass.ScenePass;
+import rs117.hd.renderer.zone.pass.ScenePassContext;
+import rs117.hd.renderer.zone.pass.ScenePassListener;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -136,7 +142,19 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
+	@Inject
+	private ParticlePass particlePass;
+
+	private ScenePass[] scenePasses;
+	private final List<ScenePassListener> scenePassListeners = new ArrayList<>();
+
+	/** Register a listener for before/after the scene pass loop (e.g. from another component's startUp). */
+	public void addScenePassListener(ScenePassListener listener) {
+		scenePassListeners.add(listener);
+	}
+
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
+
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
@@ -172,6 +190,11 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initialize() {
 		initializeBuffers();
+		scenePasses = new ScenePass[] { particlePass };
+		java.util.Arrays.sort(scenePasses, ScenePass.ORDER_COMPARATOR);
+		for (ScenePass pass : scenePasses) {
+			pass.initialize();
+		}
 
 		SceneUploader.POOL = new ConcurrentPool<>(plugin.getInjector(), SceneUploader.class);
 		FacePrioritySorter.POOL = new ConcurrentPool<>(plugin.getInjector(), FacePrioritySorter.class);
@@ -192,6 +215,13 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void destroy() {
 		destroyBuffers();
+		if (scenePasses != null) {
+			for (ScenePass pass : scenePasses) {
+				pass.destroy();
+			}
+			scenePasses = null;
+		}
+		scenePassListeners.clear();
 
 		jobSystem.shutDown();
 		modelStreamingManager.destroy();
@@ -221,6 +251,11 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
+		if (scenePasses != null) {
+			for (ScenePass pass : scenePasses) {
+				pass.initializeShaders(includes);
+			}
+		}
 	}
 
 	@Override
@@ -228,6 +263,11 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
+		if (scenePasses != null) {
+			for (ScenePass pass : scenePasses) {
+				pass.destroyShaders();
+			}
+		}
 	}
 
 	private void initializeBuffers() {
@@ -712,10 +752,16 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
-	private void scenePass() {
+	private void scenePass(ScenePassContext passCtx) {
 		sceneProgram.use();
 
 		frameTimer.begin(Timer.DRAW_SCENE);
+		for (ScenePass pass : scenePasses) {
+			if (pass.shouldDraw(passCtx)) {
+				pass.beforeDraw(passCtx);
+			}
+		}
+
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.msaaSamples > 1) {
 			renderState.enable.set(GL_MULTISAMPLE);
@@ -752,8 +798,27 @@ public class ZoneRenderer implements Renderer {
 		// Render the scene
 		sceneCmd.execute();
 
+		for (ScenePassListener listener : scenePassListeners) {
+			listener.beforeScenePasses(passCtx);
+		}
+
+		for (ScenePass pass : scenePasses) {
+			if (pass.shouldDraw(passCtx)) {
+				pass.draw(passCtx);
+			}
+		}
+
 		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
+
+		for (ScenePass pass : scenePasses) {
+			if (pass.shouldDraw(passCtx)) {
+				pass.afterDraw(passCtx);
+			}
+		}
+		for (ScenePassListener listener : scenePassListeners) {
+			listener.afterScenePasses(passCtx);
+		}
 
 		// Done rendering the scene
 		renderState.disable.set(GL_BLEND);
@@ -1018,11 +1083,20 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
+
+		WorldViewContext root = sceneManager.getRoot();
+
+		ScenePassContext passCtx = new ScenePassContext(
+			renderState,
+			frameTimer,
+			root != null ? root.sceneContext : null
+		);
+
 		frameTimer.begin(Timer.DRAW_SUBMIT);
 		if (shouldRenderScene) {
 			tiledLightingPass();
 			directionalShadowPass();
-			scenePass();
+			scenePass(passCtx);
 		}
 
 		if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {

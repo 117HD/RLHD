@@ -16,6 +16,8 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.pass.impl.ParticlePass;
+import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.ZoneRenderer;
@@ -48,6 +50,12 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Inject
 	private SceneManager sceneManager;
+
+	@Inject
+	private ParticleManager particleManager;
+
+	@Inject
+	private ParticlePass particlePass;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final long[] timings = new long[Timer.TIMERS.length];
@@ -160,10 +168,10 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 			if (plugin.getSceneContext() != null) {
 				var sceneContext = plugin.getSceneContext();
-				children.add(LineComponent.builder()
-					.left("Lights:")
-					.right(String.format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
-					.build());
+			children.add(LineComponent.builder()
+				.left("Lights:")
+				.right(String.format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
+				.build());
 			}
 
 			if (plugin.renderer instanceof ZoneRenderer) {
@@ -195,6 +203,33 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				children.add(LineComponent.builder()
 					.left("NPC displacement cache size:")
 					.right(String.valueOf(npcDisplacementCache.size()))
+					.build());
+			}
+
+			children.add(LineComponent.builder()
+				.leftFont(boldFont)
+				.left("Particle stats:")
+				.build());
+			int totalEmitters = particleManager.getSceneEmitters().size();
+			children.add(LineComponent.builder()
+				.left("Emitters Updating:")
+				.right(String.format("%d/%d", particleManager.getLastEmittersUpdating(), totalEmitters))
+				.build());
+			children.add(LineComponent.builder()
+				.left("Emitters (culled):")
+				.right(String.valueOf(particleManager.getLastEmittersCulled()))
+				.build());
+			if (plugin.renderer instanceof ZoneRenderer) {
+				int drawn = particlePass.getLastParticleDrawn();
+				int totalOnPlane = particlePass.getLastParticleTotalOnPlane();
+				int culled = particlePass.getLastParticleCulledDistance() + particlePass.getLastParticleCulledFrustum();
+				children.add(LineComponent.builder()
+					.left("Particles (drawn):")
+					.right(String.format("%d/%d", drawn, totalOnPlane))
+					.build());
+				children.add(LineComponent.builder()
+					.left("Particles (culled):")
+					.right(String.valueOf(culled))
 					.build());
 			}
 

@@ -1,0 +1,12 @@
+[
+  {
+    "placements": [
+      [2945, 3371, 0]
+    ],
+    "objectEmitters": [
+      { "object": "FAI_FALADOR_HOUSE_TORCH", "offsetX": -55, "offsetY": 0, "offsetZ": 205 }
+    ],
+    "description": "WALL_TORCH_MID_SMALL",
+    "particleId": "TORCH_SMOKE"
+  }
+]
