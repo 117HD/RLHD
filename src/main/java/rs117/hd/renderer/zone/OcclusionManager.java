@@ -65,7 +65,6 @@ public final class OcclusionManager {
 	private final ConcurrentLinkedQueue<OcclusionQuery> freeQueries = new ConcurrentLinkedQueue<>();
 	private final List<OcclusionQuery> queuedQueries = new ArrayList<>();
 	private final List<OcclusionQuery> prevQueuedQueries = new ArrayList<>();
-	private final int[] result = new int[1];
 	private final float[] vec = new float[4];
 	private final float[][] sceneFrustumPlanes = new float[6][4];
 	private final float[] directionalFwd = new float[3];
@@ -93,6 +92,16 @@ public final class OcclusionManager {
 	private int queryCount = 0;
 	@Getter
 	private int passedQueryCount;
+
+	private int fboOcclusionDepth = 0;
+	private int rboOcclusionDepth = 0;
+
+	private int occlusionWidth = 0;
+	private int occlusionHeight = 0;
+
+	private static final int OCCLUSION_DOWNSCALE = 4;
+	private static final int MIN_OCCLUSION_SIZE = 256;
+	private static final int MAX_OCCLUSION_SIZE = 1024;
 
 	private int glCubeVAO;
 	private int glCubeVBO;
@@ -266,6 +275,64 @@ public final class OcclusionManager {
 		}
 	}
 
+	private void destroyOcclusionFbo() {
+		if (rboOcclusionDepth != 0) {
+			glDeleteRenderbuffers(rboOcclusionDepth);
+			rboOcclusionDepth = 0;
+		}
+
+		if (fboOcclusionDepth != 0) {
+			glDeleteFramebuffers(fboOcclusionDepth);
+			fboOcclusionDepth = 0;
+		}
+	}
+
+	private void ensureOcclusionFbo() {
+		int targetWidth = clamp(plugin.sceneResolution[0] / OCCLUSION_DOWNSCALE, MIN_OCCLUSION_SIZE, MAX_OCCLUSION_SIZE);
+		int targetHeight = clamp(plugin.sceneResolution[1] / OCCLUSION_DOWNSCALE, MIN_OCCLUSION_SIZE, MAX_OCCLUSION_SIZE);
+
+		if (fboOcclusionDepth != 0 &&
+			targetWidth == occlusionWidth &&
+			targetHeight == occlusionHeight) {
+			return;
+		}
+
+		destroyOcclusionFbo();
+
+		occlusionWidth = targetWidth;
+		occlusionHeight = targetHeight;
+
+		fboOcclusionDepth = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboOcclusionDepth);
+
+		rboOcclusionDepth = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, rboOcclusionDepth);
+
+		glRenderbufferStorage(
+			GL_RENDERBUFFER,
+			GL_DEPTH_COMPONENT24,
+			occlusionWidth,
+			occlusionHeight
+		);
+
+		glFramebufferRenderbuffer(
+			GL_FRAMEBUFFER,
+			GL_DEPTH_ATTACHMENT,
+			GL_RENDERBUFFER,
+			rboOcclusionDepth
+		);
+
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+
+		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE) {
+			throw new RuntimeException("Occlusion FBO incomplete: " + status);
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
 	public void readbackQueries() {
 		active = config.occlusionCulling();
 
@@ -345,8 +412,20 @@ public final class OcclusionManager {
 		zoneRenderer.directionalCamera.getForwardDirection(directionalFwd);
 		normalize(directionalFwd, directionalFwd);
 
-		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
-		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboSceneDepth);
+		ensureOcclusionFbo();
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneDepth);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboOcclusionDepth);
+
+		glBlitFramebuffer(
+			0, 0,
+			plugin.sceneResolution[0], plugin.sceneResolution[1],
+			0, 0,
+			occlusionWidth, occlusionHeight,
+			GL_DEPTH_BUFFER_BIT,
+			GL_NEAREST
+		);
+
+		renderState.viewport.set(0, 0, occlusionWidth, occlusionHeight);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
@@ -579,6 +658,8 @@ public final class OcclusionManager {
 	}
 
 	public void shutdown() {
+		destroyOcclusionFbo();
+
 		if (glCubeVAO != 0)
 			glDeleteVertexArrays(glCubeVAO);
 		glCubeVAO = 0;
