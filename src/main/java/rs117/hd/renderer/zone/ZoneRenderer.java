@@ -48,7 +48,6 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
-import rs117.hd.opengl.uniforms.UBOOcclusion;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -148,9 +147,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
-	
-	@Inject
-	private UBOOcclusion uboOcclusion;
 
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
 
@@ -201,10 +197,9 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.setFrameTimer(frameTimer);
 		
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
-		uboOcclusion.initialize(UNIFORM_BLOCK_OCCLUSION);
 		jobSystem.startUp(config.cpuUsageLimit());
 		modelStreamingManager.initialize();
-		occlusionManager.initialize(renderState, uboOcclusion);
+		occlusionManager.initialize(renderState);
 		sceneManager.initialize(renderState, uboWorldViews);
 		modelStreamingManager.initialize();
 
@@ -222,7 +217,6 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
-		uboOcclusion.destroy();
 
 		SceneUploader.POOL = null;
 		FacePrioritySorter.POOL = null;
@@ -239,7 +233,6 @@ public class ZoneRenderer implements Renderer {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
 			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS))
-			.addUniformBuffer(uboOcclusion)
 			.addUniformBuffer(uboWorldViews);
 	}
 
