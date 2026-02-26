@@ -1538,7 +1538,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				g.setColor(TRANSPARENT_YELLOW_50);
 				drawLocalAabb(g, localAabb);
 				g.setColor(TRANSPARENT_YELLOW_100);
-				drawLocalAabbLabel(g, localAabb, "Region ID\n" + regionId, false);
+				drawLocalAabbLabel(
+					g, localAabb,
+					"Region ID\n" +
+					regionId + "\n" +
+					regionX + ", " + regionY,
+					false
+				);
 			}
 		}
 	}

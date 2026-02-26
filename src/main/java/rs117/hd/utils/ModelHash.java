@@ -116,7 +116,7 @@ public class ModelHash {
 
 			if (renderable instanceof DynamicObject) {
 				var def = ((DynamicObject) renderable).getRecordedObjectComposition();
-				if (def.getImpostorIds() != null) {
+				if (def != null && def.getImpostorIds() != null) {
 					var impostor = def.getImpostor();
 					if (impostor != null)
 						id = impostor.getId();
