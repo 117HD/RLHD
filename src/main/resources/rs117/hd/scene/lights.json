@@ -36109,23 +36109,33 @@
     ]
   },
   {
-    "description": "Poison Waste Dungeon entrance light",
-    "worldX": 1472,
-    "worldY": 4236,
+    "description": "Poison Waste Dungeon entrance light 1",
+    "worldX": 1473,
+    "worldY": 4238,
+    "offset": [ 0, 150, -50 ],
     "plane": 0,
-    "height": 200,
-    "radius": 1000,
+    "radius": 450,
     "strength": 60,
     "color": [ 255, 255, 255 ]
   },
   {
-    "description": "Poison Waste Dungeon entrance light",
-    "worldX": 1472,
-    "worldY": 4239,
+    "description": "Poison Waste Dungeon entrance light 2 ",
+    "worldX": 1473,
+    "worldY": 4237,
+    "offset": [ 0, 150, 50 ],
     "plane": 0,
-    "height": 180,
-    "radius": 1000,
+    "radius": 450,
     "strength": 60,
+    "color": [ 255, 255, 255 ]
+  },
+  {
+    "description": "Poison Waste Dungeon entrance light 3",
+    "worldX": 1475,
+    "worldY": 4238,
+    "offset": [ -25, 200, 50 ],
+    "plane": 0,
+    "radius": 500,
+    "strength": 40,
     "color": [ 255, 255, 255 ]
   },
   {

@@ -28120,7 +28120,10 @@
     "textureMaterial": "MOTHERLODE_MINE_WATER"
   },
   {
-    "description": "Poison Waste dungeon flowing tar (TODO)",
+    "description": "Poison Waste Dungeon Tar - Spill",
+    "baseMaterial": "TAR",
+    "uvType": "WORLD_XZ",
+    "upwardsNormals": true,
     "objectIds": [
       "POG_TAR_1",
       "POG_TAR_2",
@@ -28135,7 +28138,245 @@
       "POG_TAR_12",
       "POG_TAR_DRAINOFF_01",
       "POG_TAR_DRAINOFF_02",
-      "POG_TAR_DRAINOFF_03"
+      "POG_TAR_DRAINOFF_03",
+      "POG_TAR_DRAINOFF_04"
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon Tar - Bubbles",
+    "baseMaterial": "GRAY_55",
+    "objectIds": [
+      "POG_BUBBLES_LARGE",
+      "POG_BUBBLES_SMALL"
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon Tar - Flowing Off Edge",
+    "baseMaterial": "GRAY_60",
+    "flatNormals": true,
+    "objectIds": [
+      "POG_TAR_FALLOFF_01",
+      "POG_TAR_FALLOFF_02",
+      "POG_TAR_FALLOFF_03"
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon Walls - Dirt with Brick",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "POG_SEWER_BRICK_WALL_VAR",
+      "POG_SEWER_BRICK_WALL",
+      "POG_SEWER_BRICK_WALL_PILLAR",
+      "POG_SEWER_BRICK_WALL_BLEND_MIRROR",
+      "POG_SEWER_BRICK_WALL_BLEND",
+      "POG_SEWER_BRICK_WALL_DOUBLE_SIDED",
+      "POG_SEWER_BRICK_WALL_DOUBLE_SIDED_END",
+      "POG_SEWER_BRICK_WALL_DOUBLE_SIDED_END_MIRROR",
+      "POG_SEWER_GRATE_DOOR_SIDE",
+      "POG_SEWER_GRATE_DOOR_SIDE_MIRROR",
+      "POG_SEWER_BRICK_WALL_FOR_DARTS",
+      "POG_SEWER_BRICK_WALL_FOR_PIPE",
+      "POG_SEWER_BRICK_WALL_FOR_JETS",
+      "POG_SEWER_BRICK_WALL_PILLAR_CORNER_MIRROR",
+      "POG_SEWER_BRICK_WALL_PILLAR_CORNER",
+      "POG_SEWER_BRICK_WALL_END",
+      "POG_SEWER_BRICK_WALL_END_MIRROR",
+      "POG_CAVE_WALL_LOWER",
+      "POG_CAVE_WALL_LOWER_ROCKS",
+      "POG_CAVE_WALL_LOWER_GAS_JET",
+      "POG_CAVE_WALL_LOWER_GAS_JET_ROCKS",
+      "POG_CAVE_WALL_GRATE_DOOR_SIDE_MIRROR",
+      "POG_CAVE_WALL_GRATE_DOOR_SIDE",
+      "POG_SEWER_PILLAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon Walls - Dirt with Railing",
+    "baseMaterial": "DIRT_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "POG_SEWER_PIPE_SIDE_01",
+      "POG_SEWER_PIPE_SIDE_FOR_LADDER",
+      "POG_SEWER_PIPE_FLOOR_EDGE_CORNER",
+      "POG_SEWER_PIPE_CORNER",
+      "POG_SEWER_PIPE_SIDE_GRATE_SIDE",
+      "POG_SEWER_PIPE_SIDE_GRATE_MID",
+      "POG_SEWER_PIPE_SIDE_GRATE_MID_MIRROR",
+      "POG_SEWER_PIPE_SIDE_GRATE_SIDE_MIRROR",
+      "POG_SEWER_PIPE_SIDE_02",
+      "POG_SEWER_PIPE_EXIT_BOTTOM_01_MIRROR",
+      "POG_SEWER_PIPE_EXIT_BOTTOM_02_MIRROR",
+      "POG_SEWER_PIPE_EXIT_BOTTOM_03_MIRROR",
+      "POG_SEWER_PIPE_EXIT_BOTTOM_01",
+      "POG_SEWER_PIPE_EXIT_BOTTOM_02",
+      "POG_SEWER_PIPE_EXIT_BOTTOM_03",
+      "POG_SEWER_PIPE_EXIT_TOP_01_MIRROR",
+      "POG_SEWER_PIPE_EXIT_TOP_02_MIRROR",
+      "POG_SEWER_PIPE_EXIT_TOP_03_MIRROR",
+      "POG_SEWER_PIPE_EXIT_TOP_01",
+      "POG_SEWER_PIPE_EXIT_TOP_02",
+      "POG_SEWER_PIPE_EXIT_TOP_03",
+      "POG_SEWER_PIPE_FLOOR_EDGE_01",
+      "POG_SEWER_PIPE_FLOOR_EDGE_02",
+      "POG_SEWER_PIPE_FLOOR_MID_02",
+      "POG_SEWER_PIPE_FLOOR_MID_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon Walls - Dirt - Upper",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "castShadows": false,
+    "objectIds": [
+      "POG_CAVE_WALL_UPPER_02",
+      "POG_CAVE_WALL_UPPER_01",
+      "POG_CAVE_WALL_UPPER_CORNER_02",
+      "POG_CAVE_WALL_UPPER_WALL_TOP",
+      "POG_CAVE_WALL_UPPER_INSIDE_CORNER_01",
+      "POG_CAVE_WALL_UPPER_INSIDE_CORNER_03",
+      "POG_CAVE_WALL_UPPER_INSIDE_CORNER_02",
+      "POG_CAVE_WALL_UPPER_CORNER_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRAY_50",
+        "upwardsNormals": true,
+        "flatNormals": true,
+        "castShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon Walls - Dirt with Pipe",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "objectIds": [
+      "POG_CAVE_WALL_LOWER_PIPE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "GRAY_60",
+        "flatNormals": true,
+        "depthBias": 100
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon - Plain Dirt Roof and Wall Filler",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "POG_CAVE_WALL_LOWER_WALL_TOP",
+      "POG_SEWER_PIPE_TOP_HALF_BLEND_03",
+      "POG_SEWER_PIPE_TOP_HALF_BLEND_02",
+      "POG_SEWER_PIPE_TOP_HALF_BLEND_01",
+      "POG_SEWER_PIPE_TOP_HALF_BLEND_01_MIRROR",
+      "POG_SEWER_PIPE_TOP_HALF_BLEND_02_MIRROR",
+      "POG_SEWER_PIPE_TOP_HALF_BLEND_03_MIRROR",
+      "POG_SEWER_PIPE_TOP_HALF_03_OFFSET",
+      "POG_SEWER_PIPE_TOP_HALF_02_OFFSET",
+      "POG_SEWER_PIPE_TOP_HALF_01_OFFSET",
+      "POG_SEWER_PIPE_TOP_HALF_01",
+      "POG_SEWER_PIPE_TOP_HALF_02",
+      "POG_SEWER_PIPE_TOP_HALF_03",
+      "POG_SEWER_GRATE_DOOR_MID",
+      "POG_SEWER_GRATE_DOOR_TOP",
+      "POG_ROCK_DUGUPSOIL_04",
+      "POG_ROCK_DUGUPSOIL_03",
+      "POG_ROCK_DUGUPSOIL_05",
+      "POG_ROCK_DUGUPSOIL_02",
+      "POG_ROCK_DUGUPSOIL_01",
+      "POG_CAVE_GROUND_FALLOFF_1",
+      "POG_CAVE_GROUND_FALLOFF_2",
+      "POG_CAVE_GROUND_FALLOFF_3",
+      "POG_CAVE_GROUND_FALLOFF_4",
+      "POG_CAVE_GROUND_FALLOFF_5",
+      "POG_CAVE_GROUND_FALLOFF_6",
+      "POG_CAVE_GROUND_FALLOFF_7",
+      "POG_CAVE_GROUND_FALLOFF_8",
+      "POG_CAVE_GROUND_FALLOFF_9",
+      "POG_CAVE_GROUND_FALLOFF_10",
+      "POG_CAVE_GROUND_FALLOFF_11",
+      "POG_CAVE_GROUND_FALLOFF_12"
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon - Metal Door, Gate and Fence",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 256,
+    "objectIds": [
+      "POG_HATCH_CLOSED_DOOR",
+      "POG_HATCH_OPEN_DOOR",
+      "POG_HATCH_OPEN_DOOR_NOOP",
+      "POG_SECURE_DOOR_M",
+      "POG_SECURE_DOOR",
+      "POG_SEWER_GRATE_DOOR_INSTANCE_CLOSED",
+      "POG_SEWER_GRATE_DOOR_NOOP",
+      "POG_SEWER_GRATE_DOOR_CLOSED",
+      "POG_TERRORBIRD_FIGHT_ESCAPE",
+      "POG_SEWER_GRATE_DOOR_INSTANCE_OPEN",
+      "POG_SEWER_GRATE_DOOR_OPEN",
+      "POG_SEWER_PIPE_SIDE_LADDER",
+      "POG_SEWER_RAIL_END",
+      "POG_SEWER_RAIL",
+      "POG_SEWER_RAIL_END_MIRROR"
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon - Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "POG_ROOTS_LEFT_02",
+      "POG_ROOTS_RIGHT_02",
+      "POG_ROOTS_TOP_02",
+      "POG_ROOTS_TOP_01",
+      "POG_ROOTS_MID_01",
+      "POG_ROOTS_RIGHT_01",
+      "POG_ROOTS_LEFT_01"
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon - Ladder Top - Remove square shadow",
+    "baseMaterial": "TRANSPARENT",
+    "castShadows": false,
+    "objectIds": [
+      "POG_SEWER_LADDER_TOP"
     ]
   },
   {
@@ -31565,11 +31806,6 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 64
-  },
-  {
-    "description": "Poison Waste Dungeon exit shading",
-    "objectIds": [ "POG_SEWER_PIPE_SIDE_02" ],
-    "flatNormals": true
   },
   {
     "description": "Fix incorrectly oriented tile model in Karuulm",
@@ -61223,7 +61459,7 @@
   },
   {
     "description": "Aldarin - Path of Glorphie - Stone rubble",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 89,
@@ -61231,7 +61467,16 @@
       "POG_SEWER_BRICK_RUBBLE_01",
       "POG_SEWER_BRICK_RUBBLE_02",
       "POG_SEWER_BRICK_RUBBLE_03",
-      "POG_SEWER_BRICK_RUBBLE_04"
+      "POG_SEWER_BRICK_RUBBLE_04",
+      "POG_SEWER_DUGUPSOIL_03",
+      "POG_SEWER_DUGUPSOIL_02",
+      "POG_SEWER_DUGUPSOIL_04",
+      "POG_SEWER_DUGUPSOIL_05",
+      "POG_SEWER_DUGUPSOIL_PILLAR",
+      "POG_SEWER_DUGUPSOIL_EDGE",
+      "POG_SEWER_DUGUPSOIL_EDGE_CORNER",
+      "POG_SEWER_DUGUPSOIL_EDGE2",
+      "POG_SEWER_DUGUPSOIL_01"
     ]
   },
   {
