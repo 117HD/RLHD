@@ -214,6 +214,7 @@ public class WorldViewContext {
 				if (prevZone != curZone) {
 					curZone.inSceneFrustum = prevZone.inSceneFrustum;
 					curZone.inShadowFrustum = prevZone.inShadowFrustum;
+					clientThread.invoke(() -> zones[zx][zz].setAlphaModelsOffset(this, sceneContext, zx, zz));
 					pendingCull.add(prevZone);
 				}
 			} else if (uploadTask.wasCancelled() && !curZone.cull) {
