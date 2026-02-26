@@ -3690,7 +3690,7 @@
     ]
   },
   {
-    "description": "WOODEN_FENCES",
+    "description": "Generic - Wooden - Double slat wooden fences and their gates",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "PLAGUESHEEP_GATEL",
@@ -3734,7 +3734,11 @@
       "MURDER_QIP_GARDENFENCING",
       "ROYAL_RAIL",
       "PVPA_ACCESS_GATE_R_CLOSED",
-      "PVPA_ACCESS_GATE_L_CLOSED"
+      "PVPA_ACCESS_GATE_L_CLOSED",
+      "FENCEGATE_R_COWBOSS_START",
+      "FENCEGATE_L_COWBOSS_START",
+      "FENCEGATE_R_COWBOSS_START_NOOP",
+      "FENCEGATE_L_COWBOSS_START_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -43212,7 +43216,8 @@
     "objectIds": [
       "WAREHOUSE_SHELVES2",
       "WAREHOUSE_SHELVES3",
-      "WAREHOUSE_SHELVES4"
+      "WAREHOUSE_SHELVES4",
+      "COWQUEST_SETH_SHELF"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -76748,6 +76753,33 @@
     "uvScale": 1.2,
     "objectIds": [
       "BIM_RUINS_DOOR_FLOOR_SCRATCH_RIGHT"
+    ]
+  },
+  {
+    "description": "Lumbridge - Wooden - Paper - Brutus Sign",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "colorOverrides": [
+      {
+        "description": "Sign Post",
+        "colors": "h == 7 && s == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 1.2
+      },
+      {
+        "description": "Sign",
+        "colors": "h == 7 && s <= 5 && l < 50",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "COWBOSS_SIGN_WARNING"
     ]
   }
 ]
