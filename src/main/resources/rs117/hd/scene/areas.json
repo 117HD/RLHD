@@ -2251,8 +2251,7 @@
     ]
   },
   {
-    "name": "WITCHAVEN_DUNGEON",
-    "regions": [ 9295 ],
+    "name": "WITCHAVEN_DUNGEON_FIRST_SECTION",
     "aabbs": [
       [ 2711, 9664, 2751, 9727 ],
       [ 2710, 9664, 2710, 9726 ],
@@ -2267,6 +2266,18 @@
       [ 2687, 9664, 2687, 9703 ]
     ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "WITCHAVEN_DUNGEON_SECOND_SECTION",
+    "regions": [ 9295 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "WITCHAVEN_DUNGEON",
+    "areas": [
+      "WITCHAVEN_DUNGEON_FIRST_SECTION",
+      "WITCHAVEN_DUNGEON_SECOND_SECTION"
+    ]
   },
   {
     "name": "LEGENDS_GUILD_DUNGEON",
