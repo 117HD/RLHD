@@ -101,9 +101,9 @@ public class ParticleEmitter {
 
 	private long cycleStartCycle;
 	@Builder.Default
-	private int emissionCycleDurationTicks = -1;
+	private int emissionCycleDurationTicks = 65535;
 	@Builder.Default
-	private int emissionTimeThresholdTicks = -1;
+	private int emissionTimeThresholdTicks = 65535;
 	@Builder.Default
 	private boolean emitOnlyBeforeTime = true;
 	@Builder.Default

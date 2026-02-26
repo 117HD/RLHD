@@ -56,8 +56,6 @@ public class ParticleDefinition {
 	public String id;
 	@Nullable
 	public String description;
-	@Nullable
-	public ParticleDefinition fallbackDefinition;
 
 	public General general = new General();
 	public Texture texture = new Texture();
@@ -93,8 +91,7 @@ public class ParticleDefinition {
 	public static class General {
 		public int heightOffset = 10;
 		public int directionPitch = 30;
-		public int directionYaw = 1248;
-		public int fallbackEmitterType = -1;
+		public int directionYaw = 1024;
 		public boolean displayWhenCulled;
 	}
 
@@ -330,10 +327,6 @@ public class ParticleDefinition {
 				if (definitions.put(def.id, def) != null)
 					log.warn("[Particles] Duplicate particle id: {}", def.id);
 				ordered.add(def);
-			}
-			for (ParticleDefinition def : ordered) {
-				def.fallbackDefinition = (def.general.fallbackEmitterType >= 0 && def.general.fallbackEmitterType < ordered.size())
-					? ordered.get(def.general.fallbackEmitterType) : null;
 			}
 		}
 		lastDefinitionCount = definitions.size();

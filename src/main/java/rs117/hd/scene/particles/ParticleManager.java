@@ -93,6 +93,7 @@ public class ParticleManager {
 	private final int[] planeOutScratch = new int[1];
 	private ParticleEmitter[] emitterIterationArray = new ParticleEmitter[0];
 	private final Map<TileObject, float[]> objectPositionCache = new HashMap<>();
+	private final List<ParticleEmitter> performanceTestEmitters = new ArrayList<>();
 
 	@Getter
 	private int lastEmittersUpdating, lastEmittersCulled;
@@ -269,8 +270,6 @@ public class ParticleManager {
 
 	private ParticleEmitter createEmitterFromDefinition(ParticleDefinition def, WorldPoint wp) {
 		def.postDecode();
-		if (def.fallbackDefinition != null)
-			def = def.fallbackDefinition;
 		float syMin = def.spread.yawMin * UNITS_TO_RAD;
 		float syMax = def.spread.yawMax * UNITS_TO_RAD;
 		float spMin = def.spread.pitchMin * UNITS_TO_RAD;
@@ -329,13 +328,26 @@ public class ParticleManager {
 		return particleDefinitions.getDefinitionIdsOrdered();
 	}
 
+	/**
+	 * Apply the current definition for the given particle id to all emitters that use that id,
+	 * including both tile emitters (from emitters.json) and object emitters (bound to game objects).
+	 * Use after editing the definition in the panel so emitters update in-game.
+	 */
+	public void applyDefinitionToEmittersWithId(String particleId) {
+		if (particleId == null || particleId.isEmpty()) return;
+		ParticleDefinition def = particleDefinitions.getDefinition(particleId);
+		if (def == null) return;
+		String pid = particleId.toUpperCase();
+		for (ParticleEmitter emitter : sceneEmitters) {
+			String eid = emitter.getParticleId();
+			if (eid != null && eid.equalsIgnoreCase(pid))
+				applyDefinitionToEmitter(emitter, def);
+		}
+	}
+
 	public void applyDefinitionToEmitter(ParticleEmitter emitter, ParticleDefinition def) {
 		if (emitter == null || def == null) return;
-		WorldPoint wp = emitter.getWorldPoint();
-		if (wp == null) return;
 		def.postDecode();
-		if (def.fallbackDefinition != null)
-			def = def.fallbackDefinition;
 		// spread 0–2048 angle units (float), speed/scale from JSON as-is
 		float syMin = def.spread.yawMin * UNITS_TO_RAD;
 		float syMax = def.spread.yawMax * UNITS_TO_RAD;
@@ -349,7 +361,9 @@ public class ParticleManager {
 		float[] targetColor = def.colours.targetColourArgb != 0 ? argbToFloat(def.colours.targetColourArgb) : null;
 		float lifeMin = def.emission.minDelay / 64f;
 		float lifeMax = Math.max(lifeMin, def.emission.maxDelay / 64f);
-		emitter.at(wp);
+		WorldPoint wp = emitter.getWorldPoint();
+		if (wp != null)
+			emitter.at(wp);
 		emitter.heightOffset(def.general.heightOffset);
 		emitter.direction((float) def.general.directionYaw * UNITS_TO_RAD, (float) def.general.directionPitch * UNITS_TO_RAD);
 		emitter.spreadYaw(syMin, syMax);
@@ -408,6 +422,7 @@ public class ParticleManager {
 	}
 
 	public int spawnPerformanceTestEmitters() {
+		despawnPerformanceTestEmitters();
 		String[] ids = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 		int[][] offsets = {
 			{ 0, 0 }, { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 },
@@ -416,13 +431,22 @@ public class ParticleManager {
 		Player player = client.getLocalPlayer();
 		if (player == null) return 0;
 		WorldPoint base = player.getWorldLocation();
-		int count = 0;
 		for (int i = 0; i < ids.length; i++) {
 			ParticleEmitter e = spawnEmitterFromDefinition(ids[i], base.dx(offsets[i][0]).dy(offsets[i][1]));
-			if (e != null) count++;
+			if (e != null) performanceTestEmitters.add(e);
 		}
-		log.info("[Particles] Performance test: spawned {} emitters around player", count);
-		return count;
+		log.info("[Particles] Performance test: spawned {} emitters around player", performanceTestEmitters.size());
+		return performanceTestEmitters.size();
+	}
+
+	public void despawnPerformanceTestEmitters() {
+		for (ParticleEmitter e : performanceTestEmitters)
+			sceneEmitters.remove(e);
+		performanceTestEmitters.clear();
+	}
+
+	public boolean hasPerformanceTestEmitters() {
+		return !performanceTestEmitters.isEmpty();
 	}
 
 	private int getImpostorId(TileObject tileObject) {
@@ -834,6 +858,35 @@ public class ParticleManager {
 			positionCache.put(obj, cached);
 		}
 		return true;
+	}
+
+	/**
+	 * Returns emitters whose spawn position is on the given tile. Used by particle gizmo right-click menu.
+	 */
+	public List<ParticleEmitter> getEmittersAtTile(@Nullable SceneContext ctx, @Nullable Tile tile) {
+		if (tile == null || sceneEmitters.isEmpty())
+			return List.of();
+		LocalPoint lp = tile.getLocalLocation();
+		int tileX = lp.getX() / LOCAL_TILE_SIZE;
+		int tileY = lp.getY() / LOCAL_TILE_SIZE;
+		int plane = tile.getPlane();
+		List<ParticleEmitter> result = new ArrayList<>();
+		for (ParticleEmitter em : sceneEmitters) {
+			TileObject obj = em.getTileObject();
+			if (obj != null) {
+				LocalPoint objLp = obj.getLocalLocation();
+				if (objLp.getX() / LOCAL_TILE_SIZE == tileX && objLp.getY() / LOCAL_TILE_SIZE == tileY && obj.getPlane() == plane)
+					result.add(em);
+			} else {
+				WorldPoint wp = em.getWorldPoint();
+				if (wp != null && ctx != null) {
+					int[] local = ctx.worldToLocalFirst(wp);
+					if (local != null && local[0] / LOCAL_TILE_SIZE == tileX && local[1] / LOCAL_TILE_SIZE == tileY && local[2] == plane)
+						result.add(em);
+				}
+			}
+		}
+		return result;
 	}
 
 	public static float getTerrainHeight(SceneContext ctx, int localX, int localZ, int plane) {

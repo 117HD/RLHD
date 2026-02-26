@@ -1,11 +1,8 @@
 package rs117.hd.utils;
 
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import javax.inject.Inject;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
@@ -19,7 +16,7 @@ import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
-import rs117.hd.overlays.ParticleDebugOverlay;
+import rs117.hd.scene.particles.debug.ParticleDebugOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
@@ -39,7 +36,6 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_PARTICLE_DEBUG_OVERLAY = new Keybind(KeyEvent.VK_F8, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
@@ -48,9 +44,6 @@ public class DeveloperTools implements KeyListener {
 
 	@Inject
 	private ClientThread clientThread;
-
-	@Inject
-	private rs117.hd.ui.ParticleDevToolsPanel particleDevToolsPanel;
 
 	@Inject
 	private EventBus eventBus;
@@ -91,7 +84,6 @@ public class DeveloperTools implements KeyListener {
 	@Getter
 	private boolean hideUiEnabled;
 	private boolean tiledLightingOverlayEnabled;
-	private boolean particleDebugOverlayEnabled;
 
 	private JFrame particleDevFrame;
 
@@ -113,7 +105,6 @@ public class DeveloperTools implements KeyListener {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
-			particleDebugOverlay.setActive(particleDebugOverlayEnabled);
 		});
 
 		// Check for any out of bounds areas
@@ -178,10 +169,6 @@ public class DeveloperTools implements KeyListener {
 			case "tiledlighting":
 				tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
 				break;
-			case "particles":
-			case "particledebug":
-				particleDebugOverlay.setActive(particleDebugOverlayEnabled = !particleDebugOverlayEnabled);
-				break;
 			case "keybinds":
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;
@@ -221,8 +208,6 @@ public class DeveloperTools implements KeyListener {
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
 		} else if (KEY_TOGGLE_TILED_LIGHTING_OVERLAY.matches(e)) {
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
-		} else if (KEY_TOGGLE_PARTICLE_DEBUG_OVERLAY.matches(e)) {
-			particleDebugOverlay.setActive(particleDebugOverlayEnabled = !particleDebugOverlayEnabled);
 		} else if (KEY_TOGGLE_FREEZE_FRAME.matches(e)) {
 			plugin.toggleFreezeFrame();
 		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {
@@ -231,35 +216,10 @@ public class DeveloperTools implements KeyListener {
 			hideUiEnabled = !hideUiEnabled;
 		} else if (KEY_RELOAD_SCENE.matches(e)) {
 			plugin.renderer.reloadScene();
-		} else if (KEY_OPEN_PARTICLE_DEV.matches(e)) {
-			SwingUtilities.invokeLater(this::openParticleDevPanel);
 		} else {
 			return;
 		}
 		e.consume();
-	}
-
-	private void openParticleDevPanel() {
-		if (particleDevFrame == null) {
-			particleDevFrame = new JFrame("117 HD – Particle dev tools");
-			particleDevFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-			particleDevFrame.add(particleDevToolsPanel);
-			particleDevFrame.pack();
-			particleDevFrame.setSize(731, 538);
-			particleDevFrame.setMinimumSize(particleDevFrame.getSize());
-			particleDevFrame.addWindowListener(new WindowAdapter() {
-				@Override
-				public void windowOpened(WindowEvent e) {
-					particleDevToolsPanel.onActivate();
-				}
-			});
-		}
-		// Apply current Look and Feel (RuneLite/FlatLaf theme) so the window matches the client UI
-		SwingUtilities.updateComponentTreeUI(particleDevFrame);
-		particleDevToolsPanel.onActivate();
-		particleDevFrame.setVisible(true);
-		particleDevFrame.toFront();
-		particleDevFrame.requestFocus();
 	}
 
 	@Override

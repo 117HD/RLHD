@@ -67,7 +67,11 @@ import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
+import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.ClientUI;
+import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.ui.components.colorpicker.ColorPickerManager;
+import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -110,6 +114,8 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.particles.ParticleManager;
+import rs117.hd.scene.particles.debug.ParticleGizmoOverlay;
+import rs117.hd.scene.particles.debug.ParticleSidebarPanel;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
@@ -287,6 +293,20 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private DeveloperTools developerTools;
+
+	@Inject
+	private ClientToolbar clientToolbar;
+
+	@Getter
+	private ParticleSidebarPanel particleSidebarPanel;
+
+	@Inject
+	private ParticleGizmoOverlay particleGizmoOverlay;
+
+	@Inject
+	private ColorPickerManager colorPickerManager;
+
+	private NavigationButton particleNavButton;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -710,6 +730,20 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
+
+				SwingUtilities.invokeLater(() -> {
+					particleSidebarPanel = new ParticleSidebarPanel(this, particleManager, clientThread, client, colorPickerManager, particleGizmoOverlay);
+					if (particleNavButton == null) {
+						BufferedImage icon = ImageUtil.loadImageResource(HdPlugin.class, "icon.png");
+						particleNavButton = NavigationButton.builder()
+							.tooltip("117 HD Particles")
+							.icon(icon)
+							.panel(particleSidebarPanel)
+							.build();
+						clientToolbar.addNavigation(particleNavButton);
+					}
+				});
+
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
 				stopPlugin();
@@ -755,7 +789,13 @@ public class HdPlugin extends Plugin {
 			}
 
 			developerTools.deactivate();
-			tileOverrideManager.shutDown();
+			particleGizmoOverlay.setActive(false);
+			SwingUtilities.invokeLater(() -> {
+				if (particleNavButton != null) {
+					clientToolbar.removeNavigation(particleNavButton);
+					particleNavButton = null;
+				}
+			});
 			groundMaterialManager.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
@@ -810,6 +850,18 @@ public class HdPlugin extends Plugin {
 	@Nullable
 	public SceneContext getSceneContext() {
 		return renderer == null ? null : renderer.getSceneContext();
+	}
+
+	/** Open the particle sidebar panel to the Particles tab and select the given particle definition. */
+	public void openParticleConfig(String particleId) {
+		SwingUtilities.invokeLater(() -> {
+			if (particleNavButton != null) {
+				clientToolbar.openPanel(particleNavButton);
+			}
+			if (particleSidebarPanel != null && particleId != null) {
+				particleSidebarPanel.openToParticleConfig(particleId);
+			}
+		});
 	}
 
 	public void toggleFreezeFrame() {

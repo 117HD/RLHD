@@ -2,7 +2,7 @@
  * Copyright (c) 2025, Mark7625.
  * Overlay: green = emitter positions, white = particle positions (helps see culling).
  */
-package rs117.hd.overlays;
+package rs117.hd.scene.particles.debug;
 
 import java.awt.Color;
 import java.awt.Dimension;
