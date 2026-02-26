@@ -62,7 +62,7 @@ public class Matrix {
 				continue columns;
 			}
 
-			throw new IllegalArgumentException("Linear system does not have a solution");
+			throw new IllegalArgumentException("Linear system does not have a solution:\n" + Matrix.format(m, rows, columns));
 		}
 	}
 
