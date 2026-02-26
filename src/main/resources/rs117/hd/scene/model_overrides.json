@@ -1478,15 +1478,6 @@
     "retainVanillaUvs": true
   },
   {
-    "description": "Prifddinas spirit tree without leaf texture",
-    "objectIds": [
-      "SPIRITTREE_PRIF_1OP",
-      "SPIRITTREE_PRIF_2OPS"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.8
-  },
-  {
     "description": "Fallen Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -2162,9 +2153,10 @@
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "GRAY_65",
+        "baseMaterial": "GRAY_50",
         "upwardsNormals": true,
-        "windDisplacementMode": "OBJECT"
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
       }
     ]
   },
@@ -2181,11 +2173,13 @@
       "REGICIDE_HOLLOWLOGSMALLER"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.45,
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "GRAY_75",
+        "flatNormals": true,
+        "castShadows": false
       }
     ]
   },
@@ -2609,7 +2603,6 @@
     "description": "FARMING_PATCH_2",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
-      "FARMING_BORDER_CORNER_LIGHT",
       "FARMING_DIRTPATCH_DARK"
     ],
     "uvType": "MODEL_XZ"
@@ -3382,16 +3375,10 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 7",
-        "baseMaterial": "ROCK_1_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.6
-      },
-      {
-        "colors": "h == 5",
+        "colors": "h == 5 || h == 7",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.55
       },
       {
         "colors": "h == 6",
@@ -3416,7 +3403,7 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "ROCK_1_LIGHT",
+        "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -3466,7 +3453,7 @@
     "colorOverrides": [
       {
         "colors": "s == 5 || s == 7",
-        "baseMaterial": "ROCK_1_LIGHT",
+        "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -5314,7 +5301,7 @@
     "uvOrientation": 655
   },
   {
-    "description": "Wilderness and Shayzien - Rock Walls",
+    "description": "Wilderness and Shayzien - Rock Walls & Rubble",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "flatNormals": true,
@@ -5364,7 +5351,10 @@
       "WILD6_WALL_WINDOW_SML",
       "WILD_VETION_BRICKS01",
       "WILD_VETION_BRICKS02",
-      "WILD3_WALL_BATTLEMENT_NO_GRADIENT"
+      "WILD3_WALL_BATTLEMENT_NO_GRADIENT",
+      "CRANDOR_LAB_RUBBLE_03",
+      "CRANDOR_LAB_RUBBLE_02",
+      "CRANDOR_LAB_RUBBLE_01"
     ]
   },
   {
@@ -10501,9 +10491,8 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Motherlode Mine - Ladder, area specific due to use in other places",
+    "description": "Motherlode Mine - Ladder",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-    "areas": [ "MOTHERLODE_MINE" ],
     "objectIds": [
       "MOTHERLODE_LADDER_JOIN",
       "MOTHERLODE_LADDER_BOTTOM_ACTIVE",
@@ -10517,7 +10506,6 @@
   {
     "description": "Motherlode Mine - Machine",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-    "areas": [ "MOTHERLODE_MINE" ],
     "objectIds": [
       "MOTHERLODE_PRESS_FIREBOX",
       "MOTHERLODE_PRESS_CRUSHER"
@@ -10687,7 +10675,6 @@
       "MYQ3_LADDER_UP",
       "MYQ3_LADDER_DOWN_2",
       "MYQ3_LADDER_UP_2",
-      "MOTHERLODE_LADDER_BOTTOM_INACTIVE",
       "CANAFIS_LADDER_UP",
       "CANAFIS_LADDERTOP",
       "BARROWS_LADDER",
@@ -11324,9 +11311,18 @@
     "description": "Rooftop Agility - Rope Bridge - Rope",
     "baseMaterial": "ROPE",
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.75,
     "objectIds": [
-      "SHIPROPE",
+      "SHIPROPE"
+    ]
+  },
+  {
+    "description": "Rooftop Agility - Rope Bridge - Rope - Diagonal",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 250,
+    "objectIds": [
       "ROOFTOPS_TIGHTROPE_FORDIAGONAL_3",
       "ROOFTOPS_TIGHTROPE_FORDIAGONAL_4",
       "ROOFTOPS_TIGHTROPE_FORDIAGONAL_6"
@@ -16065,7 +16061,7 @@
       "FOSSIL_DECKING_CORNER"
     ],
     "uvType": "MODEL_XZ",
-    "uvOrientation": 512
+    "uvScale": 0.7
   },
   {
     "description": "Chaos Altar - Walls - Path -  Wooden – Plank",
@@ -19266,7 +19262,6 @@
       "ESSENCEMINE_PORTAL_4",
       "ESSENCEMINE_PORTAL_5",
       "TOURNAMENT_CLANWARS_TEMPPORTAL_JADFEST",
-      "POH_PRIFDDINAS_PORTAL",
       "SOTE_LIBRARY_EXIT",
       "PRIF_AGILITY_SHORTCUT_PORTAL",
       "LEAGUE_5_POH_SPIRIT_RING_LAST_BJQ",
@@ -29423,7 +29418,7 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Objects - Hay - Hay Bale",
+    "description": "Objects - Hay - Hay Bale - Vanilla Textured",
     "textureMaterial": "HD_HAY",
     "objectIds": [
       "HAYSTACK",
@@ -29434,6 +29429,16 @@
     "uvOrientationY": 512,
     "uvOrientationZ": 512,
     "retainVanillaUvs": false
+  },
+  {
+    "description": "Objects - Hay - Hay Bale",
+    "baseMaterial": "HD_HAY",
+    "objectIds": [
+      "VC_HAYSTACK2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512
   },
   {
     "description": "Edgeville - Walls - Bank Front Windows - Tutorial Island Walls",
@@ -31622,7 +31627,8 @@
     "uvOrientation": 256,
     "objectIds": [
       "DEBRIS01_AUBURN01_LUMBER02_SAWDUST01",
-      "DEBRIS01_AUBURN01_LUMBER01_SAWDUST01"
+      "DEBRIS01_AUBURN01_LUMBER01_SAWDUST01",
+      "PRIF_SAWDUST"
     ]
   },
   {
@@ -33461,11 +33467,11 @@
     "description": "Tirannwn - Lletya - Objects - Wooden - Tables - Fine - Rounded",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "ELF_VILLAGE_TABLE"
+      "ELF_VILLAGE_TABLE",
+      "ELF_VILLAGE_TABLE_LARGE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientationY": 512
+    "uvScale": 0.8
   },
   {
     "description": "Tirannwn - Lletya - Objects - Wooden - Chair - Pointed",
@@ -33492,7 +33498,7 @@
   },
   {
     "description": "Tirannwn - Lletya - Well",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "LIGHT_BARK_SMOOTH",
     "objectIds": [
       "ELF_VILLAGE_WELL",
       "ELF_VILLAGE_WELL_TOP",
@@ -33502,7 +33508,7 @@
       "SOTE_WELL_BUILT"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7,
+    "uvScale": 0.4,
     "colorOverrides": [
       {
         "colors": [ "h == 10", "h==5" ],
@@ -33545,15 +33551,15 @@
       "ELF_VILLAGE_MUSEUMBARRIERS"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7,
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "colors": "h == 7",
         "baseMaterial": "ROPE",
         "uvType": "BOX",
-        "uvScale": 0.2,
+        "uvScale": 0.25,
         "uvOrientationX": 512,
-        "uvOrientationZ": -200
+        "uvOrientationZ": -180
       }
     ]
   },
@@ -41309,7 +41315,8 @@
       "LUC2_MOV_BARREL",
       "LUC2_DWT_BARREL1",
       "LUC2_DWT_BARREL2",
-      "SLUG2_BARREL_STACKED"
+      "SLUG2_BARREL_STACKED",
+      "FAI_FALADOR_BARREL_TAP"
     ]
   },
   {
@@ -42643,6 +42650,22 @@
     "objectIds": [ "GARGOYLE1" ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Deaths office - Entrances - Prifddinas",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "DEATH_OFFICE_ACCESS_PRIF"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "l < 8",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Deaths office - Entrances - Lumbridge",
@@ -49313,21 +49336,22 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
-      "POH_BOARD_YANILLE"
+      "POH_BOARD_YANILLE",
+      "POH_BOARD_PRIFDDINAS"
     ],
     "colorOverrides": [
       {
         "colors": "h == 5",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
-        "uvScale": 0.75
+        "uvScale": 0.6
       },
       {
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientationY": 512,
-        "uvScale": 0.75
+        "uvScale": 0.6
       }
     ]
   },
@@ -56337,9 +56361,7 @@
       "FAI_VARROCK_FEATHER_BARREL"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientationX": 512,
-    "retainVanillaUvs": false,
+    "uvScale": 0.6,
     "colorOverrides": [
       {
         "description": "Feathers",
@@ -60200,7 +60222,7 @@
     ]
   },
   {
-    "description": "Ardalin - Prif - Paper - Stack of multi colored books",
+    "description": "Aldarin - Prif - Paper - Stack of multi colored books",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -64452,27 +64474,32 @@
     ]
   },
   {
-    "description": "Prifddinas - Scavengers Overlook - Furnace - Needs proper UV",
-    "baseMaterial": "GRUNGE_3",
+    "description": "Prifddinas - Scavengers Overlook - Furnace",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 1.1,
+    "uvScale": 0.2,
     "objectIds": [
       "PRIF_FURNACE"
     ],
     "colorOverrides": [
       {
         "colors": [ "h <= 4 && s > 4" ],
-        "baseMaterial": "HD_LAVA_1",
+        "baseMaterial": "HD_MAGMA_2",
         "uvType": "BOX",
-        "uvScale": 0.75,
-        "uvOrientationX": 512
+        "uvScale": 0.75
       },
       {
         "colors": [ "h == 5 && s == 2" ],
         "baseMaterial": "GRUNGE_2",
         "uvType": "BOX",
-        "uvScale": 0.25,
-        "uvOrientation": 117
+        "uvScale": 0.25
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "STONE_NORMALED",
+        "flatNormals": true,
+        "uvType": "BOX",
+        "uvScale": 0.25
       }
     ]
   },
@@ -73126,7 +73153,18 @@
       "PRIF_WALL_GATE_SIDE_LEFT",
       "PRIF_WALL_GATE_LEFT",
       "PRIF_WALL_GATE_RIGHT",
-      "PRIF_AMLODD_WOODEN_RAILING"
+      "PRIF_WALL_GATE_LEFT_EXIT",
+      "PRIF_WALL_GATE_RIGHT_EXIT",
+      "PRIF_AMLODD_WOODEN_RAILING",
+      "SPIRITTREE_PRIF_1OP",
+      "SPIRITTREE_PRIF_2OPS",
+      "PRIF_AMLODD_HOUSE_SUPPORT_NE",
+      "PRIF_AMLODD_HOUSE_SUPPORT_SW",
+      "PRIF_AMLODD_HOUSE_SUPPORT_SE",
+      "PRIF_AMLODD_HOUSE_SUPPORT_NW",
+      "PRIF_YEWTREE",
+      "PRIF_YEWTREE_STUMP",
+      "PRIF_BENCH"
     ]
   },
   {
@@ -73164,19 +73202,20 @@
     "description": "Tirannwn - Prifddinas - Mossy Rocks Slayer Entrance",
     "baseMaterial": "ROCK_1",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.6,
     "uvOrientation": 256,
     "colorOverrides": [
       {
-        "colors": "h == 12",
-        "baseMaterial": "GRASS_1",
+        "colors": "h > 11",
+        "baseMaterial": "GRUNGE_3",
         "uvScale": 0.8,
         "uvType": "BOX",
         "uvOrientation": 256
       }
     ],
     "objectIds": [
-      "PRIF_SLAYER_DUNGEON_ENTRANCE"
+      "PRIF_SLAYER_DUNGEON_ENTRANCE",
+      "PRIF_MINE_ENTRANCE"
     ]
   },
   {
@@ -73185,17 +73224,196 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
-      "PRIF_HOUSE_FENCE"
+      "PRIF_HOUSE_FENCE",
+      "PRIF_HOUSE_FENCE_AMLODD"
     ]
   },
   {
-    "description": "Tirannwn - Prifddinas - Wood - Dock Support",
-    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "description": "Tirannwn - Prifddinas - House Walls - Stone",
+    "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientationY": 256,
     "objectIds": [
-      "PRIF_HOUSE_WALL_STONE"
+      "PRIF_HOUSE_WALL_STONE",
+      "PRIF_HOUSE_WINDOW_STONE",
+      "PRIF_HOUSE_WALL_STONE2",
+      "PRIF_HOUSE_ARCH_STONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - House Roof - Stone",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_EDGE",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_LOW_M",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_HIGH_M",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_TOP",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_HIGH",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_LOW",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_EDGE_M",
+      "PRIF_HOUSE_ROOF_STONE_SIDE_EDGE",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_LOW",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_HIGH_DECO_M",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_TOP_DECO",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_HIGH_DECO",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_HIGH",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_TOP",
+      "PRIF_HOUSE_ROOF_STONE_CHIMNEY",
+      "PRIF_HOUSE_ROOF_STONE_FILLER_EDGE_M",
+      "PRIF_HOUSE_ROOF_STONE_BEAM_EDGE",
+      "PRIF_HOUSE_ROOF_STONE_FILLER_EDGE",
+      "PRIF_HOUSE_ROOF_STONE_BEAM_LOW",
+      "PRIF_HOUSE_ROOF_STONE_FILLER_LOW",
+      "PRIF_HOUSE_ROOF_STONE_FILLER_LOW_M",
+      "PRIF_HOUSE_ROOF_STONE_BEAM_HIGH_CORNER",
+      "PRIF_HOUSE_ROOF_STONE_BEAM_HIGH_LONG",
+      "PRIF_HOUSE_ROOF_WOOD_FILLER_HIGH",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_EDGE_WINDOW_HALF_M",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_EDGE_WINDOW_HALF",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_LOW_WINDOW_HALF_M",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_LOW_WINDOW_HALF",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_EDGE_WINDOW",
+      "PRIF_HOUSE_ROOF_STONE_SLOPE_LOW_WINDOW",
+      "PRIF_AGILITY_HOUSE_ROOF_STONE_SLOPE_LOW_WINDOW",
+      "PRIF_AGILITY_START_LADDER",
+      "PRIF_CLAN_TOWER_ROOF_O",
+      "PRIF_CLAN_TOWER_ROOF_N",
+      "PRIF_CLAN_TOWER_ROOF_J",
+      "PRIF_CLAN_TOWER_ROOF_K",
+      "PRIF_CLAN_TOWER_ROOF_G",
+      "PRIF_CLAN_TOWER_ROOF_C",
+      "PRIF_CLAN_TOWER_ROOF_D",
+      "PRIF_CLAN_TOWER_ROOF_H",
+      "PRIF_CLAN_TOWER_ROOF_L",
+      "PRIF_CLAN_TOWER_ROOF_P",
+      "PRIF_CLAN_TOWER_ROOF_M",
+      "PRIF_CLAN_TOWER_ROOF_I",
+      "PRIF_CLAN_TOWER_ROOF_E",
+      "PRIF_CLAN_TOWER_ROOF_F",
+      "PRIF_CLAN_TOWER_ROOF_B",
+      "PRIF_CLAN_TOWER_ROOF_A"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - House Wall - Wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "PRIF_HOUSE_WALL",
+      "PRIF_HOUSE_WINDOW",
+      "PRIF_HOUSE_WALL2",
+      "PRIF_HOUSE_ARCH",
+      "PRIF_AMLODD_HOUSE_STEPS",
+      "PRIF_AMLODD_HOUSE_STEPS_M"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 3",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - House Roof - Wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_EDGE",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_EDGE",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_LOW",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_HIGH",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_TOP",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_HIGH_M",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_LOW_M",
+      "PRIF_HOUSE_ROOF_WOOD_SIDE_EDGE_M",
+      "PRIF_HOUSE_ROOF_WOOD_CHIMNEY",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_TOP_DECO",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_TOP",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_HIGH",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_HIGH_DECO",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_HIGH_DECO_M",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_LOW",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_LOW_WINDOW",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_EDGE_WINDOW",
+      "PRIF_HOUSE_ROOF_WOOD_FILLER_EDGE",
+      "PRIF_HOUSE_ROOF_WOOD_BEAM_EDGE",
+      "PRIF_HOUSE_ROOF_WOOD_FILLER_EDGE_M",
+      "PRIF_HOUSE_ROOF_WOOD_BEAM_LOW",
+      "PRIF_HOUSE_ROOF_WOOD_FILLER_LOW_M",
+      "PRIF_HOUSE_ROOF_WOOD_FILLER_LOW",
+      "PRIF_HOUSE_ROOF_WOOD_BEAM_HIGH_CORNER",
+      "PRIF_HOUSE_ROOF_WOOD_BEAM_HIGH_LONG",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_EDGE_WINDOW_HALF_M",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_EDGE_WINDOW_HALF",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_LOW_WINDOW_HALF_M",
+      "PRIF_HOUSE_ROOF_WOOD_SLOPE_LOW_WINDOW_HALF",
+      "PRIF_TALL_SUPPORT",
+      "PRIF_HOUSE_SQUARE_DOOR_CLOSED",
+      "PRIF_HOUSE_SQUARE_DOOR_OPEN",
+      "PRIF_HOUSE_DOOR_STONE_CLOSED",
+      "PRIF_HOUSE_DOOR_CLOSED",
+      "PRIF_AGILITY_HOUSE_ROOF_TIGHTROPE_CONNECTOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 3",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.55
+      },
+      {
+        "colors": "h == 5 && s == 3",
+        "baseMaterial": "ROPE_DARK",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRAY_80"
+      },
+      {
+        "colors": "h == 0 || h == 4 || h == 6 && s == 7 || h == 8 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
     ]
   },
   {
@@ -73217,6 +73435,629 @@
       "PRIF_SKEWSTEPS_STONE_EDGE",
       "PRIF_SKEWSTEPS_STONE",
       "PRIF_SKEWSTEPS_STONE_EDGE_M"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Bank Booth",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "PRIF_BANKBOOTH_OPEN",
+      "PRIF_BANKBOOTH_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_50"
+      },
+      {
+        "colors": "h > 7",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Chest of Gold",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "PRIF_CHEST_OPEN",
+      "PRIF_CHEST_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Huge Tower Walls and Roof",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 1.4,
+    "objectIds": [
+      "CRYSTAL_TOWER_WALL_0_9_LOWER",
+      "CRYSTAL_TOWER_WALL_0_8_LOWER",
+      "CRYSTAL_TOWER_WALL_0_7_LOWER",
+      "CRYSTAL_TOWER_WALL_0_6_LOWER",
+      "CRYSTAL_TOWER_WALL_0_5_LOWER",
+      "CRYSTAL_TOWER_WALL_0_4_LOWER",
+      "CRYSTAL_TOWER_WALL_0_3_LOWER",
+      "CRYSTAL_TOWER_WALL_0_1_LOWER",
+      "CRYSTAL_TOWER_WALL_0_2_LOWER",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_BLANK",
+      "CRYSTAL_TOWER_WALL_1_1_LOWER",
+      "CRYSTAL_TOWER_WALL_1_2_LOWER",
+      "CRYSTAL_TOWER_WALL_1_3_LOWER",
+      "CRYSTAL_TOWER_WALL_1_4_LOWER",
+      "CRYSTAL_TOWER_WALL_1_7_LOWER",
+      "CRYSTAL_TOWER_WALL_1_6_LOWER",
+      "CRYSTAL_TOWER_WALL_1_5_LOWER",
+      "CRYSTAL_TOWER_WALL_1_8_LOWER",
+      "CRYSTAL_TOWER_WALL_1_9_LOWER",
+      "CRYSTAL_TOWER_TOP_WALLS_CORNER_LEFT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_WINDOW",
+      "CRYSTAL_TOWER_TOP_WALLS_CORNER_RIGHT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_ARCH_CONNECTOR_LEFT",
+      "CRYSTAL_TOWER_TOP_WALLS_CORNER_FRONT_LEFT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_ARCH_BOTTOM_LEFT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_DOOR_RIGHT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_DOOR_LEFT",
+      "CRYSTAL_TOWER_TOP_WALLS_CORNER_FRONT_RIGHT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_ARCH_CONNECTOR_RIGHT",
+      "CRYSTAL_TOWER_TOP_WALLS_STRAIGHT_ARCH_BOTTOM_RIGHT",
+      "PRIF_CLAN_TOWER_LVL2_H",
+      "PRIF_CLAN_TOWER_LVL2_F",
+      "PRIF_CLAN_TOWER_LVL2_D",
+      "PRIF_CLAN_TOWER_LVL2_A",
+      "PRIF_CLAN_TOWER_LVL2_B",
+      "PRIF_CLAN_TOWER_LVL2_C",
+      "PRIF_CLAN_TOWER_LVL2_E",
+      "PRIF_CLAN_TOWER_LVL2_G",
+      "PRIF_CLAN_TOWER_LVL2_I",
+      "PRIF_CLAN_TOWER_LVL2_K",
+      "PRIF_CLAN_TOWER_LVL2_M",
+      "PRIF_CLAN_TOWER_LVL2_L",
+      "PRIF_CLAN_TOWER_LVL2_J",
+      "PRIF_CLAN_TOWER_LVL0_F",
+      "PRIF_CLAN_TOWER_LVL0_D",
+      "PRIF_CLAN_TOWER_LVL0_A",
+      "PRIF_CLAN_TOWER_LVL0_B",
+      "PRIF_CLAN_TOWER_LVL0_C",
+      "PRIF_CLAN_TOWER_LVL0_E",
+      "PRIF_CLAN_TOWER_LVL0_G",
+      "PRIF_CLAN_TOWER_LVL0_I",
+      "PRIF_CLAN_TOWER_LVL0_K",
+      "PRIF_CLAN_TOWER_LVL0_M",
+      "PRIF_CLAN_TOWER_LVL0_L",
+      "PRIF_CLAN_TOWER_LVL0_J",
+      "PRIF_CLAN_TOWER_LVL0_H",
+      "PRIF_CLAN_TOWER_LVL1_H",
+      "PRIF_CLAN_TOWER_LVL1_F",
+      "PRIF_CLAN_TOWER_LVL1_D",
+      "PRIF_CLAN_TOWER_LVL1_A",
+      "PRIF_CLAN_TOWER_LVL1_B",
+      "PRIF_CLAN_TOWER_LVL1_C",
+      "PRIF_CLAN_TOWER_LVL1_E",
+      "PRIF_CLAN_TOWER_LVL1_G",
+      "PRIF_CLAN_TOWER_LVL1_I",
+      "PRIF_CLAN_TOWER_LVL1_K",
+      "PRIF_CLAN_TOWER_LVL1_M",
+      "PRIF_CLAN_TOWER_LVL1_L",
+      "PRIF_CLAN_TOWER_LVL1_J",
+      "CRYSTAL_TOWER_TOP_ROOF_E4",
+      "CRYSTAL_TOWER_TOP_ROOF_F3",
+      "CRYSTAL_TOWER_TOP_ROOF_E1",
+      "CRYSTAL_TOWER_TOP_ROOF_C3",
+      "CRYSTAL_TOWER_TOP_ROOF_E3",
+      "CRYSTAL_TOWER_TOP_ROOF_F1",
+      "CRYSTAL_TOWER_TOP_ROOF_E2",
+      "CRYSTAL_TOWER_TOP_ROOF_H",
+      "CRYSTAL_TOWER_TOP_ROOF_A",
+      "CRYSTAL_TOWER_TOP_ROOF_B",
+      "CRYSTAL_TOWER_TOP_ROOF_G",
+      "CRYSTAL_TOWER_TOP_ROOF_F4",
+      "CRYSTAL_TOWER_TOP_ROOF_C1",
+      "CRYSTAL_TOWER_TOP_ROOF_F2",
+      "CRYSTAL_TOWER_TOP_ROOF_C2",
+      "CRYSTAL_TOWER_TOP_ROOF_C4",
+      "CRYSTAL_TOWER_TOP_ROOF_D3",
+      "CRYSTAL_TOWER_TOP_ROOF_D4",
+      "CRYSTAL_TOWER_TOP_ROOF_D2",
+      "CRYSTAL_TOWER_TOP_ROOF_D1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 25",
+        "baseMaterial": "GRAY_85"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Huge Tower Floors",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "CRYSTAL_TOWER_WALKWAY_FLOOR_LIGHT_MIDDLE",
+      "CRYSTAL_TOWER_WALKWAY_FLOOR_LIGHT_DIAGONAL",
+      "CRYSTAL_TOWER_WALKWAY_FLOOR_CRYSTAL_MIDDLE",
+      "CRYSTAL_TOWER_WALKWAY_FLOOR_CRYSTAL_DIAGONAL",
+      "CRYSTAL_TOWER_LOWER_TILE_FLOOR_FULL",
+      "CRYSTAL_TOWER_LOWER_TILE_FLOOR_HALF",
+      "CRYSTAL_TOWER_LOWER_TILE_FLOOR_FULL_HALF",
+      "CRYSTAL_TOWER_LOWER_TILE_FLOOR_HALF_OUTSIDE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_85"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Huge Tower Railing & Staircase",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "CRYSTAL_TOWER_WALKWAY_CRYSTAL_SMALL_TOP",
+      "CRYSTAL_TOWER_WALKWAY_CRYSTAL_LARGE_TOP",
+      "CRYSTAL_TOWER_WALKWAY_CRYSTAL_LARGE_BOTTOM",
+      "CRYSTAL_TOWER_WALKWAY_CRYSTAL_SMALL_BOTTOM",
+      "CRYSTAL_TOWER_WALKWAY_BLANK_BASKET1",
+      "CRYSTAL_TOWER_WALKWAY_WALL",
+      "CRYSTAL_TOWER_WALKWAY_WALL_BLANK",
+      "PRIF_CRYSTAL_STAIRCASE_G",
+      "PRIF_CRYSTAL_STAIRCASE_E",
+      "PRIF_CRYSTAL_STAIRCASE_H",
+      "PRIF_CRYSTAL_STAIRCASE_F",
+      "PRIF_CRYSTAL_STAIRCASE_A",
+      "PRIF_CRYSTAL_STAIRCASE_B",
+      "PRIF_CRYSTAL_STAIRCASE_C",
+      "PRIF_CRYSTAL_STAIRCASE_D",
+      "PRIF_CRYSTAL_STAIRCASE_J",
+      "PRIF_CRYSTAL_STAIRCASE_K",
+      "PRIF_CRYSTAL_STAIRCASE_L",
+      "PRIF_CRYSTAL_STAIRCASE_I",
+      "PRIF_CRYSTAL_STAIRCASE_M",
+      "PRIF_CRYSTAL_STAIRCASE_TOP_ARCHES",
+      "PRIF_CRYSTAL_SPIRE_LIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "colors": "h == 7 && s == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6 || h == 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 12 || h == 13",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Teleport Platform",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "PRIF_LIBRARY_TELEPORTER1",
+      "PRIF_LIBRARY_TELEPORTER2",
+      "PRIF_CLAN_TOWER_TELEPORTER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_250",
+        "flatNormals": true,
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - House Portal",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "POH_PRIFDDINAS_PORTAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 48 || a < 255",
+        "baseMaterial": "NONE",
+        "shadowOpacityThreshold": 0.12
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Clan Banners",
+    "baseMaterial": "CARPET_SUPER_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "PRIF_CLAN_BANNER_CRWYS",
+      "PRIF_CLAN_BANNER_CADARN",
+      "PRIF_CLAN_BANNER_TRAHAEARN",
+      "PRIF_CLAN_BANNER_IORWERTH",
+      "PRIF_CLAN_BANNER_ITHELL",
+      "PRIF_CLAN_BANNER_AMLODD",
+      "PRIF_CLAN_BANNER_HEFIN",
+      "PRIF_CLAN_BANNER_MEILYR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 41",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Shop Counter",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvScale": 0.55,
+    "uvType": "BOX",
+    "objectIds": [
+      "PRIF_AMLODD_COUNTER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Magic Shop Case",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvScale": 0.55,
+    "uvType": "BOX",
+    "objectIds": [
+      "PRIF_AMLODD_STAFF_CASE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "h == 0 || s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Magic Shop Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.3,
+    "uvType": "BOX",
+    "objectIds": [
+      "PRIF_AMLODD_STAFF_BARREL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Magic Shop Wand Rack",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "PRIF_AMLODD_WAND_RACK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Shop Scroll",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "PRIF_AMLODD_WALL_SCROLL"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Curse Sphere",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CURSE_SPHERE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 6",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Archery Target",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "PRIF_TARGET"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 9 || h == 40",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Stalls",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "PRIF_MARKETSTALL_GEM",
+      "PRIF_MARKETSTALL_SILVER",
+      "PRIF_MARKETSTALL_SILK",
+      "PRIF_MARKETSTALL_SPICE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 25",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Singing Bowl",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "PRIF_SINGING_BOWL",
+      "PRIF_RECIPES"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6 || h == 7 && s != 0",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "a != 225",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Elf Altar",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvScale": 0.55,
+    "uvType": "BOX",
+    "objectIds": [
+      "ELF_VILLAGE_ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Sawmill",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "PRIF_SAWMILL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "flatNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Agility Course Rope",
+    "baseMaterial": "ROPE",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.55,
+    "uvOrientation": -50,
+    "objectIds": [
+      "PRIF_AGILITY_BALANCING_ROPE"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Agility Course Rope Connector",
+    "baseMaterial": "ROPE",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.5,
+    "uvOrientation": -50,
+    "objectIds": [
+      "PRIF_AGILITY_TIGHTROPE_START1",
+      "PRIF_AGILITY_TIGHTROPE1",
+      "PRIF_AGILITY_TIGHTROPE_TREETOP_INACTIVE",
+      "PRIF_AGILITY_TIGHTROPE2",
+      "PRIF_AGILITY_TIGHTROPE3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Agility Course Hole",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.4,
+    "objectIds": [
+      "PRIF_AGILITY_DARK_HOLE_ACTIVE",
+      "PRIF_AGILITY_DARK_HOLE_INACTIVE",
+      "PRIF_AGILITY_DARK_HOLE_END"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX",
+        "depthBias": 75
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Agility Course Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "uvOrientationX": 50,
+    "objectIds": [
+      "PRIF_AGILITY_TREE_LADDER_LONG",
+      "PRIF_AGILITY_TREE_LADDER_SHORT"
+    ]
+  },
+  {
+    "description": "Zalcano - Entrance",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.75,
+    "objectIds": [
+      "ZALCANO_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "h == 32 || h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Gauntlet - Surface Entrance",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "GAUNTLET_LOBBY_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255 || h == 32 || h == 33 || h == 4 || h == 5 && l == 37" ],
+        "baseMaterial": "GRUNGE_3_DARK",
+        "receiveShadows": false,
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": [ "h == 5 && s == 4 || h == 6" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
     ]
   },
   {
@@ -73530,7 +74371,7 @@
     ]
   },
   {
-    "description": "Great Conch - Sandpit",
+    "description": "Sandpit",
     "baseMaterial": "GRAVEL_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -73544,7 +74385,8 @@
       }
     ],
     "objectIds": [
-      "SANDPIT_2"
+      "SANDPIT_2",
+      "PRIF_SANDPIT"
     ]
   },
   {
@@ -74075,7 +74917,8 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
-      "XMAS22_PUB01_BARSTOOL01_TALL01"
+      "XMAS22_PUB01_BARSTOOL01_TALL01",
+      "PRIF_INN_INDOOR_STOOL"
     ],
     "colorOverrides": [
       {
@@ -74144,23 +74987,25 @@
   },
   {
     "description": "Farming patch border rocks",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": -89,
     "objectIds": [
-      "FARMING_BORDER_STRAIGHT_NORTH",
-      "FARMING_BORDER_STRAIGHT_LIGHT"
+      "FARMING_BORDER_STRAIGHT_NORTH"
     ]
   },
   {
     "description": "Etceteria - Gardening patch borders",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 512,
+    "uvScale": 0.45,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
     "objectIds": [
-      "FARMING_GARDENINGPATCH_BORDER_LIGHT"
+      "FARMING_GARDENINGPATCH_BORDER_LIGHT",
+      "FARMING_BORDER_CORNER_LIGHT",
+      "FARMING_BORDER_STRAIGHT_LIGHT"
     ]
   },
   {

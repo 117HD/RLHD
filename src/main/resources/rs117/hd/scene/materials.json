@@ -1011,6 +1011,11 @@
     "brightness": 3
   },
   {
+    "name": "GRAY_250",
+    "parent": "NONE",
+    "brightness": 2.5
+  },
+  {
     "name": "GRAY_150",
     "parent": "NONE",
     "brightness": 1.5
@@ -1786,6 +1791,11 @@
     "brightness": 1.5
   },
   {
+    "name": "ROPE_DARK",
+    "parent": "ROPE",
+    "brightness": 0.75
+  },
+  {
     "name": "CARPET_N"
   },
   {
@@ -2233,8 +2243,13 @@
   {
     "name": "LEAVES_1",
     "normalMap": "LEAVES_1_N",
-    "specularStrength": 0.25,
-    "specularGloss": 15.0
+    "specularStrength": 0.15,
+    "specularGloss": 5.0,
+    "textureScale": [
+      1,
+      1,
+      0.5
+    ]
   },
   {
     "name": "WOOD_GRAIN"
