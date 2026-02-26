@@ -10491,7 +10491,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Motherlode Mine - Ladder, area specific due to use in other places",
+    "description": "Motherlode Mine - Ladder",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       "MOTHERLODE_LADDER_JOIN",
@@ -10675,7 +10675,6 @@
       "MYQ3_LADDER_UP",
       "MYQ3_LADDER_DOWN_2",
       "MYQ3_LADDER_UP_2",
-      "MOTHERLODE_LADDER_BOTTOM_INACTIVE",
       "CANAFIS_LADDER_UP",
       "CANAFIS_LADDERTOP",
       "BARROWS_LADDER",
