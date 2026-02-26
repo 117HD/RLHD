@@ -434,7 +434,7 @@ public final class OcclusionManager {
 	}
 
 	public void occlusionPass() {
-		if (queuedQueries.isEmpty() || true)
+		if (queuedQueries.isEmpty())
 			return;
 
 		frameTimer.begin(Timer.RENDER_OCCLUSION);
