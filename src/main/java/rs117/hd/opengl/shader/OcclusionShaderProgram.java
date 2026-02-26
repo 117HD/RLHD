@@ -1,5 +1,6 @@
 package rs117.hd.opengl.shader;
 
+import java.io.IOException;
 import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
@@ -12,20 +13,20 @@ public class OcclusionShaderProgram extends ShaderProgram {
 	}
 
 	@Override
-	protected void initialize() {
-		super.initialize();
+	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
 		if(HdPlugin.APPLE || !GL_CAPS.OpenGL46)
 			shaderTemplate.add(GL_FRAGMENT_SHADER, "depth_frag.glsl");
+		super.compile(includes);
 	}
 
 	public static class Debug extends OcclusionShaderProgram {
 		public Uniform1i queryId = addUniform1i("queryId");
 
 		@Override
-		protected void initialize() {
-			super.initialize();
+		public void compile(ShaderIncludes includes) throws ShaderException, IOException {
 			shaderTemplate.remove(GL_FRAGMENT_SHADER);
 			shaderTemplate.add(GL_FRAGMENT_SHADER, "occlusion_debug_frag.glsl");
+			super.compile(includes);
 		}
 	}
 }

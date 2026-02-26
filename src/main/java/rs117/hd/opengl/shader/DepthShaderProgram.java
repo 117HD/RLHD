@@ -1,5 +1,6 @@
 package rs117.hd.opengl.shader;
 
+import java.io.IOException;
 import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
@@ -14,9 +15,9 @@ public class DepthShaderProgram extends ShaderProgram {
 	}
 
 	@Override
-	protected void initialize() {
-		super.initialize();
+	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
 		if(HdPlugin.APPLE || !GL_CAPS.OpenGL46)
 			shaderTemplate.add(GL_FRAGMENT_SHADER, "depth_frag.glsl");
+		super.compile(includes);
 	}
 }
