@@ -2501,7 +2501,7 @@
       "STONE_PATTERN"
     ],
     "replacementCondition": "modelTextures",
-    "textureScale": [ 1, 1, 1.4 ]
+    "textureScale": [ 1, 1, 1.7 ]
   },
   {
     "name": "STONE_N"
