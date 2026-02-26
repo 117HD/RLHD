@@ -417,6 +417,7 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 			glBindVertexArray(plugin.vaoQuad);
 			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 		}
+		glBindVertexArray(0);
 	}
 
 	private void resetHideTimer() {

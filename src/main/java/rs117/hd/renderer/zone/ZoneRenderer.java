@@ -682,6 +682,8 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.end(Timer.RENDER_TILED_LIGHTING);
 		frameTimer.end(Timer.DRAW_TILED_LIGHTING);
+
+		checkGLErrors();
 	}
 
 	private void directionalShadowPass() {
@@ -713,9 +715,13 @@ public class ZoneRenderer implements Renderer {
 		renderState.ebo.set(0);
 
 		frameTimer.end(Timer.RENDER_SHADOWS);
+
+		checkGLErrors();
 	}
 
 	private void scenePass() {
+		checkGLErrors();
+
 		sceneProgram.use();
 
 		frameTimer.begin(Timer.DRAW_SCENE);
@@ -726,8 +732,6 @@ public class ZoneRenderer implements Renderer {
 			renderState.disable.set(GL_MULTISAMPLE);
 		}
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
-		renderState.ido.set(indirectDrawCmds.id);
-		renderState.ebo.set(eboAlpha.id);
 		renderState.apply();
 
 		// Clear scene
@@ -747,11 +751,14 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.RENDER_SCENE);
 
+		renderState.ido.set(indirectDrawCmds.id);
+		renderState.ebo.set(eboAlpha.id);
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		renderState.apply();
 
 		// Render the scene
 		sceneCmd.execute();
@@ -767,6 +774,8 @@ public class ZoneRenderer implements Renderer {
 		renderState.ebo.set(0);
 
 		frameTimer.end(Timer.DRAW_SCENE);
+
+		checkGLErrors();
 	}
 
 	@Override
@@ -1028,6 +1037,7 @@ public class ZoneRenderer implements Renderer {
 			tiledLightingPass();
 			directionalShadowPass();
 			scenePass();
+			renderState.apply();
 		}
 
 		if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {

@@ -129,6 +129,7 @@ import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
@@ -971,6 +972,8 @@ public class HdPlugin extends Plugin {
 		checkGLErrors();
 
 		eventBus.post(new ShaderRecompile(includes));
+
+		glBindVertexArray(0);
 	}
 
 	private void destroyShaders() {
@@ -1054,6 +1057,7 @@ public class HdPlugin extends Plugin {
 			glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
 			glEnableVertexAttribArray(1);
 		}
+		glBindVertexArray(0);
 	}
 
 	private void destroyVaos() {
@@ -1538,6 +1542,7 @@ public class HdPlugin extends Plugin {
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		glDisable(GL_BLEND);
 		glColorMask(true, true, true, true);
+		glBindVertexArray(0);
 
 		frameTimer.end(Timer.RENDER_UI);
 	}

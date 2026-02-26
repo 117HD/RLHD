@@ -135,6 +135,8 @@ class VAO {
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
 		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+
+		glBindVertexArray(0);
 	}
 
 	void map() {
