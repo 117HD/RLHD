@@ -1900,6 +1900,22 @@
     }
   },
   {
+    "name": "VARROCK_HORVIKS_ANVIL_ROOF",
+    "area": "VARROCK_HORVIKS_ANVIL",
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "blended": false,
+    "shiftLightness": -2,
+    "shiftSaturation": -2,
+    "shiftHue": 1,
+    "uvScale": 1.25,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "VARROCK_ZAMORAK_TEMPLE",
     "area": "VARROCK_ZAMORAK_TEMPLE",
     "overlayIds": [
