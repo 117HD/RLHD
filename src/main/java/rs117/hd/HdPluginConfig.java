@@ -35,6 +35,7 @@ import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
+import rs117.hd.config.CpuUsageLimit;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
@@ -147,7 +148,7 @@ public interface HdPluginConfig extends Config
 	)
 	default AntiAliasingMode antiAliasingMode()
 	{
-		return AntiAliasingMode.DISABLED;
+		return AntiAliasingMode.MSAA_8;
 	}
 
 	String KEY_SCENE_RESOLUTION_SCALE = "sceneResolutionScale";
@@ -362,7 +363,7 @@ public interface HdPluginConfig extends Config
 		name = "Brightness",
 		description =
 			"Controls the brightness of the game, excluding UI.<br>" +
-			"Adjust until the disk on the left is barely visible.",
+			"Adjust until the circle on the left is barely visible.",
 		position = 18,
 		section = generalSettings
 	)
@@ -766,6 +767,15 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_HIDE_VANILLA_WATER_EFFECTS = "hideVanillaWaterEffects";
+	@ConfigItem(
+		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
+		name = "Hide vanilla water ripples",
+		description = "Hide vanilla ripples found around objects floating in the water.",
+		position = 15,
+		section = environmentSettings
+	)
+	default boolean hideVanillaWaterEffects() { return true; }
 
 	/*====== Miscellaneous settings ======*/
 
@@ -776,6 +786,34 @@ public interface HdPluginConfig extends Config
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
+
+	String KEY_CPU_USAGE_LIMIT = "cpuUsageLimit";
+	@ConfigItem(
+		keyName = KEY_CPU_USAGE_LIMIT,
+		name = "CPU usage",
+		description =
+			"Specify how much of your processor the plugin should be allowed to use.<br>" +
+			"If you play with multiple clients or use other heavy programs on the side,<br>" +
+			"reducing this may improve their performance.<br>" +
+			"Defaults to Max, allowing the processor to be fully utilized.",
+		section = miscellaneousSettings,
+		position = -100
+	)
+	default CpuUsageLimit cpuUsageLimit() {
+		return CpuUsageLimit.MAX;
+	}
+
+	String KEY_POWER_SAVING = "powerSaving";
+	@ConfigItem(
+		keyName = KEY_POWER_SAVING,
+		name = "Reduce CPU when unfocused",
+		description = "Automatically reduce CPU load when the game has not been in focus for 15 seconds.",
+		section = miscellaneousSettings,
+		position = -99
+	)
+	default boolean powerSaving() {
+		return false;
+	}
 
 	String KEY_MACOS_INTEL_WORKAROUND = "macosIntelWorkaround";
 	@ConfigItem(
@@ -1111,17 +1149,6 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_ASYNC_UI_COPY = "experimentalAsyncUICopy";
-	@ConfigItem(
-		keyName = KEY_ASYNC_UI_COPY,
-		name = "Perform UI copy asynchronously",
-		description = "Slightly improves performance by delaying the UI by one frame.",
-		section = experimentalSettings
-	)
-	default boolean asyncUICopy() {
-		return false;
-	}
-
 	String KEY_TILED_LIGHTING_IMAGE_STORE = "experimentalTiledLightingImageStore";
 	@ConfigItem(
 		keyName = KEY_TILED_LIGHTING_IMAGE_STORE,
@@ -1155,6 +1182,36 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean forceIndirectDraw() {
 		return false;
+	}
+
+	String KEY_ASYNC_MODEL_CACHE_SIZE = "asyncModelCacheSizeMiB";
+	@Range(
+		min = 16,
+		max = 64
+	)
+	@Units(" MiB")
+	@ConfigItem(
+		keyName = KEY_ASYNC_MODEL_CACHE_SIZE,
+		name = "Model cache size",
+		description =
+			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+			"Generally, 32 MiB is plenty, with diminishing returns the higher you go.<br>" +
+			"Minimum=16 MiB, maximum=64 MiB",
+		section = experimentalSettings
+	)
+	default int asyncModelCacheSizeMiB() {
+		return 32;
+	}
+
+	String KEY_ASYNC_MODEL_PROCESSING = "asyncModelProcessing";
+	@ConfigItem(
+		keyName = KEY_ASYNC_MODEL_PROCESSING,
+		name = "Multithreaded model processing",
+		description = "Process multiple models in parallel to improve performance for animated models.",
+		section = experimentalSettings
+	)
+	default boolean multithreadedModelProcessing() {
+		return true;
 	}
 
 	/*====== Internal settings ======*/
