@@ -334,7 +334,7 @@ public final class OcclusionManager {
 	}
 
 	public void readbackQueries() {
-		active = config.occlusionCulling();
+		active = config.occlusionCulling() && occlusionProgram.isValid();
 
 		processDynamicOcclusionQueries(dynamicOcclusionQuerySet.iterator());
 		processDynamicOcclusionQueries(tempOcclusionQuerySet.iterator());
