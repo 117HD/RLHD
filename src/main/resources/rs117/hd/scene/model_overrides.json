@@ -62921,31 +62921,22 @@
     ]
   },
   {
-    "description": "Gnome Stronghold - Rock Grass - ANIMATED - DYNAMIC",
-    "baseMaterial": "ROCK_4",
-    "uvType": "BOX",
-    "uvScale": 0.85,
-    "colorOverrides": [
-      {
-        "colors": "h == 13",
-        "baseMaterial": "GRAY_50",
-        "uvType": "BOX",
-        "uvScale": 0.4,
-        "upwardsNormals": true
-      }
-    ],
+    "description": "Hot Air Balloon - Grass",
+    "baseMaterial": "GRAY_65",
+    "flatNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "castShadows": false,
     "objectIds": [
       "ZEP_TARGET_GRASS"
     ]
   },
   {
     "description": "Quest - Gnome Stronghold - Rock - ANIMATED - DYNAMIC",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientation": 313,
     "objectIds": [
-      "ZEP_PRE_QUEST_ROCK"
+      "ZEP_MULTI_BASKET_GNO"
     ]
   },
   {
