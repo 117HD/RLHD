@@ -254,13 +254,14 @@ public class ParticlePass implements ScenePass {
 			float flipbookRows = 0f;
 			float flipbookFrameVal = 0f;
 			ParticleDefinition def = getDefinitionForParticle(buf, i);
-			if (def != null && def.flipbookColumns > 0 && def.flipbookRows > 0) {
-				flipbookCols = def.flipbookColumns;
-				flipbookRows = def.flipbookRows;
-				if ("order".equalsIgnoreCase(def.flipbookMode)) {
+			if (def != null && def.texture.flipbook.flipbookColumns > 0 && def.texture.flipbook.flipbookRows > 0) {
+				flipbookCols = def.texture.flipbook.flipbookColumns;
+				flipbookRows = def.texture.flipbook.flipbookRows;
+				String mode = def.texture.flipbook.flipbookMode;
+				if (mode != null && "order".equalsIgnoreCase(mode)) {
 					float maxL = buf.maxLife[i];
 					flipbookFrameVal = maxL > 0 ? (1f - buf.life[i] / maxL) : 0f;
-				} else if ("random".equalsIgnoreCase(def.flipbookMode) && buf.flipbookFrame[i] >= 0f) {
+				} else if (mode != null && "random".equalsIgnoreCase(mode) && buf.flipbookFrame[i] >= 0f) {
 					flipbookFrameVal = 1f + buf.flipbookFrame[i];
 				}
 			}
@@ -295,8 +296,9 @@ public class ParticlePass implements ScenePass {
 		ParticleEmitter emitter = buf.emitter[bufIndex];
 		if (emitter == null) return null;
 		var def = emitter.getDefinition();
-		if (def == null || def.texture == null || def.texture.isEmpty()) return null;
-		return def.texture;
+		String file = def != null ? def.texture.file : null;
+		if (file == null || file.isEmpty()) return null;
+		return file;
 	}
 
 	private static ParticleDefinition getDefinitionForParticle(ParticleBuffer buf, int bufIndex) {

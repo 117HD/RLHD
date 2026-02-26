@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.GamevalManager;
-import rs117.hd.scene.particles.ParticleDefinitionLoader;
+import rs117.hd.scene.particles.ParticleDefinition;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -30,7 +30,7 @@ public class EmitterDefinitionManager {
 
 	private static final ResourcePath EMITTERS_CONFIG_PATH = Props.getFile(
 		"rlhd.emitters-config-path",
-			() -> path(ParticleDefinitionLoader.class, "emitters.json")
+			() -> path(ParticleDefinition.class, "emitters.json")
 	);
 
 	@Inject

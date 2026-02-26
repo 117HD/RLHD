@@ -308,8 +308,8 @@ public class ParticleEmitter {
 		into.colorTransitionPct = colorTransitionPct;
 		into.alphaTransitionPct = alphaTransitionPct;
 		ParticleDefinition def = getDefinition();
-		if (def != null && def.flipbookColumns > 0 && def.flipbookRows > 0 && "random".equalsIgnoreCase(def.flipbookMode)) {
-			int totalFrames = def.flipbookColumns * def.flipbookRows;
+		if (def != null && def.texture.flipbook.flipbookColumns > 0 && def.texture.flipbook.flipbookRows > 0 && "random".equalsIgnoreCase(def.texture.flipbook.flipbookMode)) {
+			int totalFrames = def.texture.flipbook.flipbookColumns * def.texture.flipbook.flipbookRows;
 			into.flipbookRandomFrame = rng.nextInt(totalFrames);
 		}
 		return true;

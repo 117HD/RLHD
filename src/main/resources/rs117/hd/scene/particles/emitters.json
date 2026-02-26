@@ -8,12 +8,5 @@
     ],
     "description": "WALL_TORCH_MID_SMALL",
     "particleId": "TORCH_SMOKE"
-  },
-  {
-    "placements": [
-      [3007, 3476, 0]
-    ],
-    "description": "SNOW",
-    "particleId": "SNOW"
   }
 ]
