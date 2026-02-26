@@ -26496,6 +26496,17 @@
       "CLANWARS_TOURNAMENT_TABLE_SUPPLIES"
     ],
     "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7
+  },
+  {
+    "description": "Generic - Plank - Supply Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "CLANWARS_TOURNAMENT_TABLE_SUPPLIES"
+    ],
+    "flatNormals": true,
     "uvType": "BOX"
   },
   {
