@@ -179,6 +179,12 @@ public class Zone {
 			occlusionQuery = null;
 		}
 
+		for(AlphaModel m : alphaModels) {
+			if(m.occlusionQuery != null)
+				m.occlusionQuery.free();
+			m.occlusionQuery = null;
+		}
+
 		sortedAlphaFacesUpload.release();
 
 		sizeO = 0;
@@ -335,6 +341,18 @@ public class Zone {
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	public void setAlphaModelsOffset(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
+		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
+		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
+
+		for(AlphaModel m : alphaModels) {
+			if(m.occlusionQuery != null) {
+				m.occlusionQuery.setOffset(baseX, 0, baseZ);
+				m.occlusionQuery.setWorldView(viewContext.uboWorldViewStruct);
+			}
+		}
 	}
 
 	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
@@ -497,6 +515,7 @@ public class Zone {
 		int[] packedFaces;
 		int[] sortedFaces;
 		int sortedFacesLen;
+		OcclusionQuery occlusionQuery;
 
 		int dist;
 		int asyncSortIdx = -1;
@@ -672,6 +691,11 @@ public class Zone {
 		m.radius = 2 + (int) Math.sqrt(radius);
 		m.sortedFaces = new int[bufferIdx * 3];
 
+		if(bufferIdx > 0) {
+			m.occlusionQuery = OcclusionManager.getInstance().obtainQuery();
+			m.occlusionQuery.addSphere(x + cx, y + cy, z + cz, m.radius);
+		}
+
 		assert packedFaces.length > 0;
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
@@ -809,6 +833,12 @@ public class Zone {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp())
 				continue;
 
+			if(m.occlusionQuery != null) {
+				m.occlusionQuery.queue();
+				if(m.occlusionQuery.isOccluded())
+					continue;
+			}
+
 			m.dist = dist;
 			alphaSortingJob.addAlphaModel(m);
 		}
@@ -869,7 +899,7 @@ public class Zone {
 		boolean shouldQueueUpload = false;
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
-			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
+			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level || (m.occlusionQuery != null && m.occlusionQuery.isOccluded()))
 				continue;
 
 			if (level < minLevel || level > maxLevel ||
@@ -1024,6 +1054,7 @@ public class Zone {
 				m2.zofx = (byte) (closestZoneX - zx);
 				m2.zofz = (byte) (closestZoneZ - zz);
 
+				m2.occlusionQuery = m.occlusionQuery;
 				m2.packedFaces = m.packedFaces;
 				m2.radius = m.radius;
 				m2.asyncSortIdx = m.asyncSortIdx;

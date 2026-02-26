@@ -50,7 +50,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public final class OcclusionManager {
-	private static final int FRAMES_IN_FLIGHT = 3;
+	private static final int FRAMES_IN_FLIGHT = 2;
 
 	@Getter
 	private static OcclusionManager instance;
@@ -387,6 +387,9 @@ public final class OcclusionManager {
 			if (query.frustumCulled)
 				continue;
 
+			while(glGetQueryObjecti(id, GL_QUERY_RESULT_AVAILABLE) == 0)
+				Thread.onSpinWait();
+
 			query.occluded = glGetQueryObjecti(id, GL_QUERY_RESULT) == 0;
 			if (!query.occluded)
 				passedQueryCount++;
@@ -574,6 +577,9 @@ public final class OcclusionManager {
 
 			if (plugin.configShadowsEnabled && !isDebug)
 				expandAABBAlongShadow(projected, dirX, dirY, dirZ, EXPAND_FACTOR);
+
+			if(query.count == 1)
+				query.frustumCulled = !isAABBVisible(projected);
 
 			aabbBuffer.put(projected);
 		}
