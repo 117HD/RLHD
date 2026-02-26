@@ -8,10 +8,14 @@ layout (location = 1) in vec3 aCenter;
 layout (location = 2) in vec4 aColor;
 layout (location = 3) in float aSize;
 layout (location = 4) in float aLayer;
+layout (location = 5) in float aFlipbookCols;
+layout (location = 6) in float aFlipbookRows;
+layout (location = 7) in float aFlipbookFrame;
 
 out vec4 vColor;
 out vec2 vUV;
 out float vLayer;
+out vec3 vFlipbook;
 
 void main() {
 	vec3 toCamera = cameraPos - aCenter;
@@ -26,4 +30,5 @@ void main() {
 	vColor = aColor;
 	vUV = aCorner * 0.5 + 0.5;
 	vLayer = aLayer;
+	vFlipbook = vec3(aFlipbookCols, aFlipbookRows, aFlipbookFrame);
 }

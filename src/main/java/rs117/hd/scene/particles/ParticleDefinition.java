@@ -47,6 +47,10 @@ public class ParticleDefinition {
 	public int initialSpawnCount;
 	@Nullable
 	public String texture;
+	public int flipbookColumns;
+	public int flipbookRows;
+	@Nullable
+	public String flipbookMode;
 	public boolean emitOnlyBeforeTime = true;
 	public int emissionTimeThreshold = -1;
 	public int emissionCycleDuration = -1;

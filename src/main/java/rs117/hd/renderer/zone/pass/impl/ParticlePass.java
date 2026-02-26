@@ -22,6 +22,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.pass.ScenePass;
 import rs117.hd.renderer.zone.pass.ScenePassContext;
 import rs117.hd.scene.particles.ParticleBuffer;
+import rs117.hd.scene.particles.ParticleDefinition;
 import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.scene.particles.ParticleTextureLoader;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
@@ -49,9 +50,9 @@ public class ParticlePass implements ScenePass {
 	private static final int MAX_PARTICLES = 4096;
 	private static final int MAX_DRAWN = 2048;
 	private static final int QUAD_VERTS = 6;
-	private static final int FLOATS_PER_INSTANCE = 9;
+	private static final int FLOATS_PER_INSTANCE = 12;
 	private static final int INSTANCE_STRIDE_BYTES = 64;
-	private static final int INSTANCE_PADDING_BYTES = INSTANCE_STRIDE_BYTES - FLOATS_PER_INSTANCE * 4; // 28
+	private static final int INSTANCE_PADDING_BYTES = INSTANCE_STRIDE_BYTES - FLOATS_PER_INSTANCE * 4;
 	private static final float[] PARTICLE_QUAD_CORNERS = {
 		-1, -1,  1, -1,  1, 1,
 		-1, -1,  1, 1,  -1, 1
@@ -127,6 +128,15 @@ public class ParticlePass implements ScenePass {
 		glEnableVertexAttribArray(4);
 		glVertexAttribPointer(4, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 32);
 		glVertexAttribDivisor(4, 1);
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 36);
+		glVertexAttribDivisor(5, 1);
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 40);
+		glVertexAttribDivisor(6, 1);
+		glEnableVertexAttribArray(7);
+		glVertexAttribPointer(7, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 44);
+		glVertexAttribDivisor(7, 1);
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		particleStagingBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * FLOATS_PER_INSTANCE);
@@ -240,6 +250,21 @@ public class ParticlePass implements ScenePass {
 			particleStagingBuffer.put(buf.size[i]);
 			String tex = textureForVisibleIndex[n];
 			particleStagingBuffer.put((float) particleTextureLoader.getTextureLayer(tex != null ? tex : ""));
+			float flipbookCols = 0f;
+			float flipbookRows = 0f;
+			float flipbookFrameVal = 0f;
+			ParticleDefinition def = getDefinitionForParticle(buf, i);
+			if (def != null && def.flipbookColumns > 0 && def.flipbookRows > 0) {
+				flipbookCols = def.flipbookColumns;
+				flipbookRows = def.flipbookRows;
+				if ("order".equalsIgnoreCase(def.flipbookMode)) {
+					float maxL = buf.maxLife[i];
+					flipbookFrameVal = maxL > 0 ? (1f - buf.life[i] / maxL) : 0f;
+				} else if ("random".equalsIgnoreCase(def.flipbookMode) && buf.flipbookFrame[i] >= 0f) {
+					flipbookFrameVal = 1f + buf.flipbookFrame[i];
+				}
+			}
+			particleStagingBuffer.put(flipbookCols).put(flipbookRows).put(flipbookFrameVal);
 			n++;
 			if (n >= MAX_DRAWN)
 				break;
@@ -254,7 +279,7 @@ public class ParticlePass implements ScenePass {
 			particleSortOrder[i] = i;
 		Arrays.sort(particleSortOrder, 0, instanceCount, (a, b) -> Float.compare(particleDistSq[b], particleDistSq[a]));
 
-		// Fill upload buffer in back-to-front order, 64 bytes per instance (9 floats + 28 padding)
+		// Fill upload buffer in back-to-front order, 64 bytes per instance (12 floats + 16 padding)
 		batchUploadBuffer.clear();
 		for (int k = 0; k < instanceCount; k++) {
 			int src = particleSortOrder[k] * FLOATS_PER_INSTANCE;
@@ -272,6 +297,11 @@ public class ParticlePass implements ScenePass {
 		var def = emitter.getDefinition();
 		if (def == null || def.texture == null || def.texture.isEmpty()) return null;
 		return def.texture;
+	}
+
+	private static ParticleDefinition getDefinitionForParticle(ParticleBuffer buf, int bufIndex) {
+		ParticleEmitter emitter = buf.emitter[bufIndex];
+		return emitter != null ? emitter.getDefinition() : null;
 	}
 
 	private void uploadInstanceDataToVbo(int instanceCount) {

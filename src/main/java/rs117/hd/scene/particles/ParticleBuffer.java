@@ -81,6 +81,8 @@ public final class ParticleBuffer {
 	public int[] colourRgbLowRef;
 	public int[] scaleRef;
 
+	public float[] flipbookFrame;
+
 	public ParticleBuffer() {
 		capacity = INITIAL_CAPACITY;
 		posX = new float[capacity];
@@ -138,6 +140,7 @@ public final class ParticleBuffer {
 		colourArgbRef = new int[capacity];
 		colourRgbLowRef = new int[capacity];
 		scaleRef = new int[capacity];
+		flipbookFrame = new float[capacity];
 	}
 
 
@@ -202,6 +205,7 @@ public final class ParticleBuffer {
 		colourArgbRef = copyResize(colourArgbRef, n, copy);
 		colourRgbLowRef = copyResize(colourRgbLowRef, n, copy);
 		scaleRef = copyResize(scaleRef, n, copy);
+		flipbookFrame = copyResize(flipbookFrame, n, copy);
 	}
 
 	private static long[] copyResizeLong(long[] a, int newLen, int copy) {
@@ -323,6 +327,7 @@ public final class ParticleBuffer {
 		colourArgbRef[i] = (a << 24) | (r << 16) | (g << 8) | b;
 		colourRgbLowRef[i] = 0;
 		scaleRef[i] = (int) (p.size / 4f * 16384);
+		flipbookFrame[i] = p.flipbookRandomFrame >= 0 ? (float) p.flipbookRandomFrame : -1f;
 	}
 
 	public void syncRefToFloat(int i) {
@@ -402,6 +407,7 @@ public final class ParticleBuffer {
 		swapInt(colourArgbRef, i, j);
 		swapInt(colourRgbLowRef, i, j);
 		swapInt(scaleRef, i, j);
+		swapFloat(flipbookFrame, i, j);
 	}
 
 	private static void swapLong(long[] a, int i, int j) {

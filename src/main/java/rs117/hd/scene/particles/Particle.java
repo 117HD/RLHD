@@ -42,10 +42,13 @@ public class Particle {
 	@Nullable
 	public ParticleEmitter emitter;
 
+	public int flipbookRandomFrame = -1;
+
 	public Particle() {}
 
 	public void resetForPool() {
 		emitter = null;
+		flipbookRandomFrame = -1;
 		colourIncrementPerSecond = null;
 		scaleIncrementPerSecond = 0f;
 		speedIncrementPerSecond = 0f;
