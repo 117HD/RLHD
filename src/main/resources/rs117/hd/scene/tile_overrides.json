@@ -747,38 +747,6 @@
     }
   },
   {
-    "name": "BLEND_IMPROVEMENT_1",
-    "area": "LUMBRIDGE_DRAYNOR_PATH_BLEND_1",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "GRAVEL",
-    "minHue": 7,
-    "maxHue": 7,
-    "minSaturation": 1,
-    "maxSaturation": 1,
-    "shiftLightness": 6,
-    "replacements": {
-      "NONE": "!textures"
-    }
-  },
-  {
-    "name": "BLEND_IMPROVEMENT_2",
-    "area": "LUMBRIDGE_DRAYNOR_PATH_BLEND_2",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "GRAVEL",
-    "minHue": 7,
-    "maxHue": 7,
-    "minSaturation": 1,
-    "maxSaturation": 1,
-    "shiftLightness": 9,
-    "replacements": {
-      "NONE": "!textures"
-    }
-  },
-  {
     "name": "SWAMP_PATH_FIX_1",
     "area": "LUMBRIDGE_SWAMP_PATH_FIX",
     "overlayIds": [
