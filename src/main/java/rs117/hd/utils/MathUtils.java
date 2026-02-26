@@ -300,6 +300,14 @@ public final class MathUtils {
 		return pow2(new float[v.length], v);
 	}
 
+	public static long pow10(int power) {
+		assert power >= 0;
+		long n = 1;
+		for (int i = 0; i < power; i++)
+			n *= 10;
+		return n;
+	}
+
 	public static float exp(float v) {
 		return (float) Math.exp(v);
 	}
@@ -556,6 +564,39 @@ public final class MathUtils {
 
 	public static float[] roundf(float[] v) {
 		return roundf(new float[v.length], v);
+	}
+
+	public static double round(int numDecimals, double v) {
+		double n = pow10(numDecimals);
+		return (double) Math.round(v * n) / n;
+	}
+
+	public static double[] round(double[] out, int numDecimals, double... v) {
+		double n = pow10(numDecimals);
+		double divisor = 1.0 / n;
+		for (int i = 0; i < out.length; i++)
+			out[i] = Math.round(v[i % v.length] * n) * divisor;
+		return out;
+	}
+
+	public static double[] round(int numDecimals, double... v) {
+		return round(new double[v.length], numDecimals, v);
+	}
+
+	public static float round(int numDecimals, float v) {
+		return (float) round(numDecimals, (double) v);
+	}
+
+	public static float[] round(float[] out, int numDecimals, float... v) {
+		double n = pow10(numDecimals);
+		double divisor = 1.0 / n;
+		for (int i = 0; i < out.length; i++)
+			out[i] = (float) (Math.round(v[i % v.length] * n) * divisor);
+		return out;
+	}
+
+	public static float[] round(int numDecimals, float... v) {
+		return round(new float[v.length], numDecimals, v);
 	}
 
 	public static float min(float a, float b) {
