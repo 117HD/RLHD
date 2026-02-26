@@ -2576,6 +2576,7 @@
   {
     "description": "Floating Rocks - Remove Ripples",
     "baseMaterial": "STONE_NORMALED",
+    "castShadows": false,
     "objectIds": [
       "HARMLESS_ROCK_POOL",
       "HARMLESS_ROCK_POOL_SMALL",
@@ -2590,9 +2591,8 @@
     "colorOverrides": [
       {
         "colors": [ "h == 42", "h == 35" ],
-        "baseMaterial": "TRANSPARENT",
-        "castShadows": false,
-        "isWaterEffect": true
+        "baseMaterial": "GRAY_70",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -8917,7 +8917,7 @@
     ]
   },
   {
-    "description": "Relleka - Large Long Boat Mast",
+    "description": "Relleka - Long Boat to Neitiznot/Jatiso",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "MODEL_XY",
     "uvScale": 0.65,
@@ -8932,9 +8932,9 @@
         "uvScale": 0.75
       },
       {
-        "baseMaterial": "TRANSPARENT",
+        "baseMaterial": "GRAY_75",
         "colors": [ "a < 255" ],
-        "isWaterEffect": true
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -27209,8 +27209,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT",
-        "isWaterEffect": true
+        "baseMaterial": "GRAY_70",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -41588,8 +41588,8 @@
     "colorOverrides": [
       {
         "colors": [ "h == 37" ],
-        "baseMaterial": "TRANSPARENT",
-        "isWaterEffect": true
+        "baseMaterial": "GRAY_70",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -47293,6 +47293,7 @@
   {
     "description": "Farming Guild - Hide Ripples",
     "hideAsWaterEffect": true,
+    "baseMaterial": "GRAY_75",
     "objectIds": [ "RIPPLE" ]
   },
   {
@@ -64193,8 +64194,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT",
-        "isWaterEffect": true
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -64328,7 +64329,6 @@
   },
   {
     "description": "Tempoross - Hide Ripples",
-    "areas": [ "TEMPOROSS_COVE" ],
     "hideAsWaterEffect": true,
     "objectIds": [
       "TEMPOROSS_RIPPLE_3_NOSHADOW"
@@ -66540,9 +66540,9 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT",
+        "baseMaterial": "GRAY_60",
         "uvType": "BOX",
-        "isWaterEffect": true
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -69687,8 +69687,8 @@
       {
         "description": "Fake Ripples",
         "colors": "a < 255 || h == 37 && l == 71",
-        "baseMaterial": "TRANSPARENT",
-        "isWaterEffect": true
+        "baseMaterial": "GRAY_75",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -69701,8 +69701,8 @@
       {
         "description": "Fake Ripples",
         "colors": "h == 37",
-        "baseMaterial": "TRANSPARENT",
-        "isWaterEffect": true
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -69724,8 +69724,8 @@
       {
         "description": "Fake Ripples",
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT",
-        "isWaterEffect": true
+        "baseMaterial": "GRAY_65",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -71650,8 +71650,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT",
-        "isWaterEffect": true
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
       }
     ]
   },
