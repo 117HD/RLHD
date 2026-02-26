@@ -99,6 +99,8 @@ public final class OcclusionManager {
 	private int occlusionWidth = 0;
 	private int occlusionHeight = 0;
 
+	private final int result[] = new int[1];
+
 	private static final int OCCLUSION_DOWNSCALE = 4;
 	private static final int MIN_OCCLUSION_SIZE = 256;
 	private static final int MAX_OCCLUSION_SIZE = 1024;
@@ -358,9 +360,13 @@ public final class OcclusionManager {
 			if (query.frustumCulled)
 				continue;
 
-			query.occluded = glGetQueryObjecti(id, GL_QUERY_RESULT) == 0;
-			if (!query.occluded)
-				passedQueryCount++;
+			glGetQueryObjectuiv(id, GL_QUERY_RESULT_AVAILABLE, result);
+			if(result[0] != 0) {
+				glGetQueryObjectuiv(id, GL_QUERY_RESULT, result);
+				query.occluded = result[0] == 0;
+				if (!query.occluded)
+					passedQueryCount++;
+			}
 		}
 		frameTimer.end(Timer.OCCLUSION_READBACK);
 		prevQueuedQueries.clear();
