@@ -16,11 +16,7 @@
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
 
-#if MSAA_SAMPLES > 0
-    uniform sampler2DMS sceneOpaqueDepth;
-#else
-    uniform sampler2D sceneOpaqueDepth;
-#endif
+uniform sampler2D sceneOpaqueDepth;
 uniform sampler2D sceneAlphaDepth;
 
 #include <uniforms/global.glsl>

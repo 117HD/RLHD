@@ -44,11 +44,7 @@ uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 uniform usampler2DArray tiledLightingArray;
 
-#if MSAA_SAMPLES > 0
-    uniform sampler2DMS sceneOpaqueDepth;
-#else
-    uniform sampler2D sceneOpaqueDepth;
-#endif
+uniform sampler2D sceneOpaqueDepth;
 uniform sampler2D sceneAlphaDepth;
 
 // general HD settings

@@ -370,10 +370,11 @@ public class HdPlugin extends Plugin {
 
 	public int[] sceneResolution;
 	public int fboScene;
-	public int fboSceneDepth;
 	public int fboSceneAlphaDepth;
 	private int rboSceneColor;
 	public int fboSceneResolve;
+	public int fboSceneDepthResolve = 0;
+	private int rboSceneDepthResolve = 0;
 	private int rboSceneResolveColor;
 	private int texSceneDepth;
 	private int texSceneAlphaDepth;
@@ -512,10 +513,11 @@ public class HdPlugin extends Plugin {
 					return false;
 
 				fboScene = 0;
-				fboSceneDepth = 0;
 				rboSceneColor = 0;
 				texSceneDepth = 0;
 				texSceneAlphaDepth = 0;
+				fboSceneDepthResolve = 0;
+				rboSceneDepthResolve = 0;
 				fboSceneResolve = 0;
 				rboSceneResolveColor = 0;
 				fboShadowMap = 0;
@@ -1224,14 +1226,11 @@ public class HdPlugin extends Plugin {
 			client.getViewportHeight()
 		};
 
-		// Skip rendering when there's no viewport to render to, which happens while world hopping
 		if (viewport[2] == 0 || viewport[3] == 0)
 			return;
 
-		// DPI scaling and stretched mode also affects the game's viewport
 		divide(sceneViewportScale, vec(actualUiResolution), vec(uiResolution));
 		if (sceneViewportScale[0] != 1 || sceneViewportScale[1] != 1) {
-			// Pad the viewport before scaling, so it always covers the game's viewport in the UI
 			for (int i = 0; i < 2; i++) {
 				viewport[i] -= 1;
 				viewport[i + 2] += 2;
@@ -1239,28 +1238,28 @@ public class HdPlugin extends Plugin {
 			viewport = round(multiply(vec(viewport), sceneViewportScale));
 		}
 
-		// Check if scene FBO needs to be recreated
 		if (Arrays.equals(sceneViewport, viewport))
 			return;
 
 		destroySceneFbo();
 		sceneViewport = viewport;
 
-		// Bind default FBO to check whether anti-aliasing is forced
 		int defaultFramebuffer = awtContext.getFramebuffer(false);
 		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
+
 		final int forcedAASamples = GLConstants.getForcedSamples();
-		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), getMaxSamples());
+		msaaSamples = forcedAASamples != 0
+			? forcedAASamples
+			: min(config.antiAliasingMode().getSamples(), getMaxSamples());
 
-		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
-		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
-		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
-		boolean sRGB = false; // This is currently unused
+		boolean sRGB = false;
 
-		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
-		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
 		int defaultColorAttachment = defaultFramebuffer == 0 ? GL_BACK_LEFT : GL_COLOR_ATTACHMENT0;
-		int alphaBits = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, defaultColorAttachment, GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE);
+		int alphaBits = glGetFramebufferAttachmentParameteri(
+			GL_FRAMEBUFFER,
+			defaultColorAttachment,
+			GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE
+		);
 		checkGLErrors();
 		boolean alpha = alphaBits > 0;
 
@@ -1271,22 +1270,33 @@ public class HdPlugin extends Plugin {
 		float resolutionScale = config.sceneResolutionScale() / 100f;
 		sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
 		uboGlobal.sceneResolution.set(sceneResolution);
-		uboGlobal.upload(); // Ensure this is up to date with rendering
+		uboGlobal.upload();
 
-		// Create and bind the FBO
+		// -------------------------------------------------
+		// Create scene FBO
+		// -------------------------------------------------
+
 		fboScene = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fboScene);
 
-		// Create color render buffer
+		// -------------------------------------------------
+		// Color RBO
+		// -------------------------------------------------
+
 		rboSceneColor = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneColor);
 
-		// Flush out all pending errors, so we can check whether the next step succeeds
 		clearGLErrors();
 
 		int format = 0;
 		for (int desiredFormat : desiredFormats) {
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, desiredFormat, sceneResolution[0], sceneResolution[1]);
+			glRenderbufferStorageMultisample(
+				GL_RENDERBUFFER,
+				msaaSamples,
+				desiredFormat,
+				sceneResolution[0],
+				sceneResolution[1]
+			);
 
 			if (glGetError() == GL_NO_ERROR) {
 				format = desiredFormat;
@@ -1297,35 +1307,66 @@ public class HdPlugin extends Plugin {
 		if (format == 0)
 			throw new RuntimeException("No supported " + (sRGB ? "sRGB" : "linear") + " formats");
 
-		// Found a usable format. Bind the RBO to the scene FBO
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
+		glFramebufferRenderbuffer(
+			GL_FRAMEBUFFER,
+			GL_COLOR_ATTACHMENT0,
+			GL_RENDERBUFFER,
+			rboSceneColor
+		);
 		checkGLErrors();
 
-		// If necessary, create an FBO for resolving multisampling
 		if (msaaSamples > 1 && resolutionScale != 1) {
 			fboSceneResolve = glGenFramebuffers();
 			glBindFramebuffer(GL_FRAMEBUFFER, fboSceneResolve);
+
 			rboSceneResolveColor = glGenRenderbuffers();
 			glBindRenderbuffer(GL_RENDERBUFFER, rboSceneResolveColor);
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, 0, format, sceneResolution[0], sceneResolution[1]);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneResolveColor);
+			glRenderbufferStorageMultisample(
+				GL_RENDERBUFFER,
+				0,
+				format,
+				sceneResolution[0],
+				sceneResolution[1]
+			);
+
+			glFramebufferRenderbuffer(
+				GL_FRAMEBUFFER,
+				GL_COLOR_ATTACHMENT0,
+				GL_RENDERBUFFER,
+				rboSceneResolveColor
+			);
+
 			checkGLErrors();
+
+			glBindFramebuffer(GL_FRAMEBUFFER, fboScene);
 		}
 
-		int sceneDepthTarget = msaaSamples > 1 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D;
-		texSceneDepth = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_SCENE_OPAQUE_DEPTH);
-		glBindTexture(sceneDepthTarget, texSceneDepth);
-		if(msaaSamples > 1) {
-			glTexImage2DMultisample(
-				GL_TEXTURE_2D_MULTISAMPLE,
+		if (msaaSamples > 1) {
+			// Multisampled depth renderbuffer
+			rboSceneDepthResolve = glGenRenderbuffers();
+			glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepthResolve);
+			glRenderbufferStorageMultisample(
+				GL_RENDERBUFFER,
 				msaaSamples,
 				GL_DEPTH_COMPONENT24,
 				sceneResolution[0],
-				sceneResolution[1],
-				true
+				sceneResolution[1]
 			);
-		} else {
+
+			glFramebufferRenderbuffer(
+				GL_FRAMEBUFFER,
+				GL_DEPTH_ATTACHMENT,
+				GL_RENDERBUFFER,
+				rboSceneDepthResolve
+			);
+
+			checkGLErrors();
+
+			// Single-sample depth texture (resolve target)
+			texSceneDepth = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_SCENE_OPAQUE_DEPTH);
+			glBindTexture(GL_TEXTURE_2D, texSceneDepth);
+
 			glTexImage2D(
 				GL_TEXTURE_2D,
 				0,
@@ -1342,31 +1383,58 @@ public class HdPlugin extends Plugin {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		}
 
-		glFramebufferTexture2D(
-			GL_FRAMEBUFFER,
-			GL_DEPTH_ATTACHMENT,
-			sceneDepthTarget,
-			texSceneDepth,
-			0
-		);
+			// Depth resolve FBO
+			fboSceneDepthResolve = glGenFramebuffers();
+			glBindFramebuffer(GL_FRAMEBUFFER, fboSceneDepthResolve);
+
+			glFramebufferTexture2D(
+				GL_FRAMEBUFFER,
+				GL_DEPTH_ATTACHMENT,
+				GL_TEXTURE_2D,
+				texSceneDepth,
+				0
+			);
+
+			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+				throw new RuntimeException("Depth resolve FBO incomplete");
+
+			glBindFramebuffer(GL_FRAMEBUFFER, fboScene);
+		}
+		else {
+			// No MSAA: attach depth texture directly
+			texSceneDepth = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_SCENE_OPAQUE_DEPTH);
+			glBindTexture(GL_TEXTURE_2D, texSceneDepth);
+
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_DEPTH_COMPONENT24,
+				sceneResolution[0],
+				sceneResolution[1],
+				0,
+				GL_DEPTH_COMPONENT,
+				GL_FLOAT,
+				0
+			);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+			glFramebufferTexture2D(
+				GL_FRAMEBUFFER,
+				GL_DEPTH_ATTACHMENT,
+				GL_TEXTURE_2D,
+				texSceneDepth,
+				0
+			);
+		}
 
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			throw new RuntimeException("Scene FBO incomplete");
-
-		fboSceneDepth = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneDepth);
-		glFramebufferTexture2D(
-			GL_FRAMEBUFFER,
-			GL_DEPTH_ATTACHMENT,
-			sceneDepthTarget,
-			texSceneDepth,
-			0
-		);
-
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			throw new RuntimeException("Opaque depth FBO incomplete");
 
 		texSceneAlphaDepth = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_SCENE_ALPHA_DEPTH);
@@ -1416,10 +1484,6 @@ public class HdPlugin extends Plugin {
 			glDeleteFramebuffers(fboScene);
 		fboScene = 0;
 
-		if(fboSceneDepth != 0)
-			glDeleteRenderbuffers(fboSceneDepth);
-		fboSceneDepth = 0;
-
 		if (rboSceneColor != 0)
 			glDeleteRenderbuffers(rboSceneColor);
 		rboSceneColor = 0;
@@ -1435,6 +1499,14 @@ public class HdPlugin extends Plugin {
 		if (fboSceneResolve != 0)
 			glDeleteFramebuffers(fboSceneResolve);
 		fboSceneResolve = 0;
+
+		if(fboSceneDepthResolve != 0)
+			glDeleteFramebuffers(fboSceneDepthResolve);
+		fboSceneDepthResolve = 0;
+
+		if(rboSceneDepthResolve != 0)
+			glDeleteRenderbuffers(rboSceneDepthResolve);
+		rboSceneDepthResolve = 0;
 
 		if (rboSceneResolveColor != 0)
 			glDeleteRenderbuffers(rboSceneResolveColor);
