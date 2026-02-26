@@ -696,7 +696,7 @@ public class Zone {
 		m.radius = 2 + (int) Math.sqrt(radius);
 		m.sortedFaces = new int[bufferIdx * 3];
 
-		if(bufferIdx > 0) {
+		if(bufferIdx >= 32) {
 			m.occlusionQuery = OcclusionManager.getInstance().obtainQuery();
 			m.occlusionQuery.addSphere(x + cx, y + cy, z + cz, m.radius);
 		}
@@ -766,6 +766,7 @@ public class Zone {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.sortedFaces = null;
+				m.occlusionQuery = null;
 				modelCache.add(m);
 			}
 			m.asyncSortIdx = -1;
