@@ -21,24 +21,21 @@ import net.runelite.api.*;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.opengl.GLConstants;
 import rs117.hd.opengl.shader.OcclusionShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.uniforms.UBOOcclusion;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.RenderState;
+import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.buffer.GpuFloatBuffer;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL15C.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15C.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL15C.glBindBuffer;
-import static org.lwjgl.opengl.GL15C.glBufferData;
-import static org.lwjgl.opengl.GL15C.glGenBuffers;
 import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
@@ -48,7 +45,6 @@ import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL43.GL_ANY_SAMPLES_PASSED_CONSERVATIVE;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.checkGLErrors;
-import static rs117.hd.utils.HDUtils.align;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -82,7 +78,6 @@ public final class OcclusionManager {
 	@Inject
 	private OcclusionShaderProgram.Debug occlusionDebugProgram;
 	private RenderState renderState;
-	private UBOOcclusion uboOcclusion;
 	@Getter
 	private boolean active;
 	private int debugMode;
@@ -93,21 +88,22 @@ public final class OcclusionManager {
 	@Getter
 	private int passedQueryCount;
 
+	private GpuFloatBuffer aabbBuffer;
+
 	private int fboOcclusionDepth = 0;
 	private int rboOcclusionDepth = 0;
 
 	private int occlusionWidth = 0;
 	private int occlusionHeight = 0;
 
-	private final int result[] = new int[1];
-
 	private static final int OCCLUSION_DOWNSCALE = 4;
 	private static final int MIN_OCCLUSION_SIZE = 256;
 	private static final int MAX_OCCLUSION_SIZE = 1024;
 
 	private int glCubeVAO;
-	private int glCubeVBO;
-	private int glCubeEBO;
+	private GLBuffer glCubeVBO;
+	private GLBuffer glCubeEBO;
+	private GLBuffer glCubeInstanceData;
 	private int anySamplesPassedTarget;
 
 	public void toggleDebug() { debugMode = (debugMode + 1) % 3; }
@@ -115,12 +111,13 @@ public final class OcclusionManager {
 		debugVisibility = (debugVisibility + 1) % 3;
 	}
 
-	public void initialize(RenderState renderState, UBOOcclusion uboOcclusion) {
+	public void initialize(RenderState renderState) {
 		this.renderState = renderState;
-		this.uboOcclusion = uboOcclusion;
 
 		instance = this;
 		active = config.occlusionCulling();
+
+		aabbBuffer = new GpuFloatBuffer(1024);
 
 		// Check if conservative queries are supported
 		if (GL_CAPS.GL_ARB_occlusion_query2) {
@@ -131,10 +128,13 @@ public final class OcclusionManager {
 			log.info("Using fallback GL_ANY_SAMPLES_PASSED for occlusion queries");
 		}
 
+		glCubeVBO = new GLBuffer("Occlusion VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW).initialize();
+		glCubeEBO = new GLBuffer("Occlusion EBO", GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW).initialize();
+		glCubeInstanceData = new GLBuffer("Occlusion Instance Data", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW).initialize();
+
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			// Create cube VAO
 			glCubeVAO = glGenVertexArrays();
-			glCubeVBO = glGenBuffers();
 			glBindVertexArray(glCubeVAO);
 
 			FloatBuffer vboCubeData = stack.mallocFloat(8 * 3)
@@ -150,8 +150,7 @@ public final class OcclusionManager {
 					-1, 1, 1  // 7
 				})
 				.flip();
-			glBindBuffer(GL_ARRAY_BUFFER, glCubeVBO);
-			glBufferData(GL_ARRAY_BUFFER, vboCubeData, GL_STATIC_DRAW);
+			glCubeVBO.upload(vboCubeData);
 
 			IntBuffer eboCubeData = stack.mallocInt(36)
 				.put(new int[] {
@@ -180,14 +179,19 @@ public final class OcclusionManager {
 					3, 6, 7
 				})
 				.flip();
-
-			glCubeEBO = glGenBuffers();
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glCubeEBO);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboCubeData, GL_STATIC_DRAW);
+			glCubeEBO.upload(eboCubeData);
 
 			// position attribute
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
+
+			// aabb center attribute
+			glEnableVertexAttribArray(1);
+			glVertexAttribDivisor(1, 1);
+
+			// aabb scale attribute
+			glEnableVertexAttribArray(2);
+			glVertexAttribDivisor(2, 1);
 
 			// reset
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -211,10 +215,23 @@ public final class OcclusionManager {
 			glDeleteVertexArrays(glCubeVAO);
 		glCubeVAO = 0;
 
-		if (glCubeVBO != 0)
-			glDeleteBuffers(glCubeVBO);
-		glCubeVBO = 0;
+		if (glCubeVBO != null)
+			glCubeVBO.destroy();
+		glCubeVBO = null;
 
+		if (glCubeEBO != null)
+			glCubeEBO.destroy();
+		glCubeEBO = null;
+
+		if (glCubeInstanceData != null)
+			glCubeInstanceData.destroy();
+		glCubeInstanceData = null;
+
+		if(aabbBuffer != null)
+			aabbBuffer.destroy();
+		aabbBuffer = null;
+
+		destroyOcclusionFbo();
 		deleteQueries(freeQueries);
 		deleteQueries(queuedQueries);
 		deleteQueries(prevQueuedQueries);
@@ -370,13 +387,9 @@ public final class OcclusionManager {
 			if (query.frustumCulled)
 				continue;
 
-			glGetQueryObjectuiv(id, GL_QUERY_RESULT_AVAILABLE, result);
-			if(result[0] != 0) {
-				glGetQueryObjectuiv(id, GL_QUERY_RESULT, result);
-				query.occluded = result[0] == 0;
-				if (!query.occluded)
-					passedQueryCount++;
-			}
+			query.occluded = glGetQueryObjecti(id, GL_QUERY_RESULT) == 0;
+			if (!query.occluded)
+				passedQueryCount++;
 		}
 		frameTimer.end(Timer.OCCLUSION_READBACK);
 		prevQueuedQueries.clear();
@@ -395,7 +408,7 @@ public final class OcclusionManager {
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthMask.set(false);
-		renderState.ebo.set(glCubeEBO);
+		renderState.ebo.set(glCubeEBO.id);
 		renderState.vao.set(glCubeVAO);
 		renderState.apply();
 		occlusionDebugProgram.use();
@@ -448,7 +461,7 @@ public final class OcclusionManager {
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthMask.set(false);
 		renderState.colorMask.set(false, false, false, false);
-		renderState.ebo.set(glCubeEBO);
+		renderState.ebo.set(glCubeEBO.id);
 		renderState.vao.set(glCubeVAO);
 		renderState.apply();
 		occlusionProgram.use();
@@ -472,32 +485,55 @@ public final class OcclusionManager {
 	}
 
 	private void processQueries(List<OcclusionQuery> queries, boolean isDebug) {
-		int start = 0;
-		int uboOffset = 0;
-
 		for (int i = 0; i < queries.size(); i++) {
 			final OcclusionQuery query = queries.get(i);
 			if (query.count == 0)
 				continue;
 
-			if (uboOffset + query.count >= UBOOcclusion.MAX_AABBS) {
-				flushQueries(queries, start, i, isDebug);
-				start = i;
-				uboOffset = 0;
-			}
-
 			if (query.id[0] == 0)
 				glGenQueries(query.id);
 
-			uboOffset = buildQueryAABBs(query, uboOffset, isDebug);
+			buildQueryAABBs(query, isDebug);
 		}
-		flushQueries(queries, start, queries.size(), isDebug);
+
+		aabbBuffer.flip();
+		glCubeInstanceData.upload(aabbBuffer);
+		glCubeInstanceData.bind();
+		aabbBuffer.clear();
+
+		checkGLErrors();
+
+		for (int i = 0; i < queries.size(); i++) {
+			final OcclusionQuery query = queries.get(i);
+			if (query.count <= 0 || query.frustumCulled)
+				continue;
+
+			glVertexAttribPointer(1, 3, GL_FLOAT, false, 24, query.vboOffset);
+			glVertexAttribPointer(2, 3, GL_FLOAT, false, 24, query.vboOffset + 12);
+
+			if (isDebug) {
+				if(debugVisibility > 0) {
+					if (debugVisibility == 1 && !query.isStatic)
+						continue;
+
+					if (debugVisibility == 2 && query.isStatic)
+						continue;
+				}
+				occlusionDebugProgram.queryId.set(query.id[0]);
+				glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0, query.count);
+			} else {
+				glBeginQuery(anySamplesPassedTarget, query.getSampleId());
+				glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0, query.count);
+				glEndQuery(anySamplesPassedTarget);
+				query.advance();
+			}
+		}
 		checkGLErrors();
 	}
 
-	private int buildQueryAABBs(OcclusionQuery query, int uboOffset, boolean isDebug) {
+	private void buildQueryAABBs(OcclusionQuery query, boolean isDebug) {
 		if (query.count <= 0)
-			return uboOffset;
+			return;
 
 		final float EXPAND_FACTOR = 4.0f;
 		final float dirX = -abs(directionalFwd[0]);
@@ -505,62 +541,42 @@ public final class OcclusionManager {
 		final float dirZ = -abs(directionalFwd[2]);
 
 		if (!isDebug && query.globalAABB) {
-			float posX = query.offsetX + (query.globalMinX + query.globalMaxX) * 0.5f;
-			float posY = query.offsetY + (query.globalMinY + query.globalMaxY) * 0.5f;
-			float posZ = query.offsetZ + (query.globalMinZ + query.globalMaxZ) * 0.5f;
+			projectAABB(query, projected,
+				query.offsetX + (query.globalMinX + query.globalMaxX) * 0.5f,
+				query.offsetY + (query.globalMinY + query.globalMaxY) * 0.5f,
+				query.offsetZ + (query.globalMinZ + query.globalMaxZ) * 0.5f,
+				(query.globalMaxX - query.globalMinX) * 0.5f,
+				(query.globalMaxY - query.globalMinY) * 0.5f,
+				(query.globalMaxZ - query.globalMinZ) * 0.5f
+			);
 
-			float sizeX = (query.globalMaxX - query.globalMinX) * 0.5f;
-			float sizeY = (query.globalMaxY - query.globalMinY) * 0.5f;
-			float sizeZ = (query.globalMaxZ - query.globalMinZ) * 0.5f;
-
-			projectAABB(query, projected, posX, posY, posZ, sizeX, sizeY, sizeZ);
 			if (plugin.configShadowsEnabled)
 				expandAABBAlongShadow(projected, dirX, dirY, dirZ, EXPAND_FACTOR);
 
-			if (!isAABBVisible(projected)) {
-				query.frustumCulled = true;
-				return uboOffset;
-			}
+			query.frustumCulled = !isAABBVisible(projected);
 		}
 
-		final int elementSize = (int) align(uboOcclusion.aabbs[0].getType().size, 16, true);
-		final int alignment = GLConstants.getBufferOffsetAlignment();
+		if (query.frustumCulled)
+			return;
 
-		long startByteOffset = (long) uboOffset * elementSize;
-		long alignedStartByteOffset = align(startByteOffset, alignment, true);
-		int alignedUboOffset = (int) (alignedStartByteOffset / elementSize);
+		query.vboOffset = (long)aabbBuffer.position() * Float.BYTES;
+		aabbBuffer.ensureCapacity(query.count * 8);
+		int aabbEnd = query.count * 6;
+		for (int base = 0; base < aabbEnd;) {
+			projectAABB(query, projected,
+				query.offsetX + query.aabb[base++],
+				query.offsetY + query.aabb[base++],
+				query.offsetZ + query.aabb[base++],
+				query.aabb[base++],
+				query.aabb[base++],
+				query.aabb[base++]
+			);
 
-		query.uboOffset = alignedUboOffset;
-		query.writtenCount = 0;
-		for (int j = 0; j < query.count; j++) {
-			float posX = query.offsetX + query.aabb[j * 6];
-			float posY = query.offsetY + query.aabb[j * 6 + 1];
-			float posZ = query.offsetZ + query.aabb[j * 6 + 2];
-
-			float sizeX = query.aabb[j * 6 + 3];
-			float sizeY = query.aabb[j * 6 + 4];
-			float sizeZ = query.aabb[j * 6 + 5];
-
-			projectAABB(query, projected, posX, posY, posZ, sizeX, sizeY, sizeZ);
 			if (plugin.configShadowsEnabled && !isDebug)
 				expandAABBAlongShadow(projected, dirX, dirY, dirZ, EXPAND_FACTOR);
 
-			if(!isAABBVisible(projected))
-				continue;
-
-			uboOcclusion.aabbs[alignedUboOffset++].set(
-				projected[0], projected[1], projected[2]
-			);
-			uboOcclusion.aabbs[alignedUboOffset++].set(
-				projected[3], projected[4], projected[5]
-			);
-			query.writtenCount++;
+			aabbBuffer.put(projected);
 		}
-
-		if(!isDebug)
-			query.frustumCulled = query.writtenCount == 0;
-
-		return alignedUboOffset;
 	}
 
 	private boolean isAABBVisible(float[] aabb) {
@@ -644,52 +660,6 @@ public final class OcclusionManager {
 		out[5] = (maxZ - minZ) * 0.5f;
 	}
 
-	private void flushQueries(List<OcclusionQuery> queries, int start, int end, boolean isDebug) {
-		uboOcclusion.upload();
-		for (int i = start; i < end; i++) {
-			final OcclusionQuery query = queries.get(i);
-			if (query.count <= 0 || query.writtenCount <= 0 || query.frustumCulled)
-				continue;
-			assert query.writtenCount < UBOOcclusion.MAX_AABBS : "Exceeded Max AABBS";
-			assert query.writtenCount <= query.count : "Exceeded query aabb written:" + query.writtenCount + " count:" + query.count;
-
-			uboOcclusion.bindRange(uboOcclusion.aabbs[query.uboOffset], uboOcclusion.aabbs[query.uboOffset + 1 + (query.writtenCount * 2)]);
-
-			if (isDebug) {
-				if(debugVisibility > 0) {
-					if (debugVisibility == 1 && !query.isStatic)
-						continue;
-
-					if (debugVisibility == 2 && query.isStatic)
-						continue;
-				}
-				occlusionDebugProgram.queryId.set(query.id[0]);
-				glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0, query.writtenCount);
-			} else {
-				glBeginQuery(anySamplesPassedTarget, query.getSampleId());
-				glDrawElementsInstanced(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0, query.writtenCount);
-				glEndQuery(anySamplesPassedTarget);
-				query.advance();
-			}
-		}
-	}
-
-	public void shutdown() {
-		destroyOcclusionFbo();
-
-		if (glCubeVAO != 0)
-			glDeleteVertexArrays(glCubeVAO);
-		glCubeVAO = 0;
-
-		if (glCubeEBO != 0)
-			glDeleteBuffers(glCubeEBO);
-		glCubeEBO = 0;
-
-		if (glCubeVBO != 0)
-			glDeleteBuffers(glCubeVBO);
-		glCubeVBO = 0;
-	}
-
 	public final class OcclusionQuery {
 		private final int[] id = new int[FRAMES_IN_FLIGHT];
 		private final boolean[] sampled = new boolean[FRAMES_IN_FLIGHT];
@@ -704,8 +674,8 @@ public final class OcclusionManager {
 		private boolean isStatic;
 
 		private int activeId;
+		private long vboOffset;
 
-		private int uboOffset;
 		private float offsetX;
 		private float offsetY;
 		private float offsetZ;
@@ -722,7 +692,6 @@ public final class OcclusionManager {
 
 		private float[] aabb = new float[6];
 		private int count = 0;
-		private int writtenCount = 0;
 
 		private void advance() {
 			activeId = (activeId + 1) % FRAMES_IN_FLIGHT;
@@ -797,17 +766,10 @@ public final class OcclusionManager {
 			float posX, float posY, float posZ,
 			float sizeX, float sizeY, float sizeZ
 		) {
-			if (count >= UBOOcclusion.MAX_AABBS) {
-				log.warn("Tried to add too many AABBs to OcclusionQuery");
-				return;
-			}
 			assert !isStatic;
 
 			if (count * 6 >= aabb.length) {
-				aabb = Arrays.copyOf(
-					aabb,
-					Math.min(aabb.length * 2, UBOOcclusion.MAX_AABBS * 6)
-				);
+				aabb = Arrays.copyOf(aabb, aabb.length * 2);
 			}
 
 			int base = count * 6;

@@ -428,19 +428,19 @@ public final class HDUtils {
 		float maxZ,
 		float[][] cullingPlanes
 	) {
-		for (float[] plane : cullingPlanes) {
-			if (
-				plane[0] * minX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0
-			) {
+		for (int i = 0; i < cullingPlanes.length; i++ ) {
+			final float[] plane = cullingPlanes[i];
+			final float px = plane[0];
+			final float py = plane[1];
+			final float pz = plane[2];
+			final float pw = plane[3];
+
+			final float pVertexX = px >= 0 ? maxX : minX;
+			final float pVertexY = py >= 0 ? maxY : minY;
+			final float pVertexZ = pz >= 0 ? maxZ : minZ;
+
+			if (px * pVertexX + py * pVertexY + pz * pVertexZ + pw < 0)
 				return false;
-			}
 		}
 
 		// Potentially visible
