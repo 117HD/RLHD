@@ -387,9 +387,6 @@ public final class OcclusionManager {
 			if (query.frustumCulled)
 				continue;
 
-			while(glGetQueryObjecti(id, GL_QUERY_RESULT_AVAILABLE) == 0)
-				Thread.onSpinWait();
-
 			query.occluded = glGetQueryObjecti(id, GL_QUERY_RESULT) == 0;
 			if (!query.occluded)
 				passedQueryCount++;
@@ -543,6 +540,7 @@ public final class OcclusionManager {
 		final float dirY = -abs(directionalFwd[1]);
 		final float dirZ = -abs(directionalFwd[2]);
 
+		query.frustumCulled = false;
 		if (!isDebug && query.globalAABB) {
 			projectAABB(query, projected,
 				query.offsetX + (query.globalMinX + query.globalMaxX) * 0.5f,
