@@ -47292,7 +47292,7 @@
   },
   {
     "description": "Farming Guild - Hide Ripples",
-    "hide": true,
+    "hideAsWaterEffect": true,
     "objectIds": [ "RIPPLE" ]
   },
   {
@@ -64327,7 +64327,8 @@
   },
   {
     "description": "Tempoross - Hide Ripples",
-    "hideInAreas": [ "TEMPOROSS_COVE" ],
+    "areas": [ "TEMPOROSS_COVE" ],
+    "hideAsWaterEffect": true,
     "objectIds": [
       "TEMPOROSS_RIPPLE_3_NOSHADOW"
     ]
