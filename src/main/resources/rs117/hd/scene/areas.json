@@ -2138,12 +2138,19 @@
     "hideOtherAreas": true
   },
   {
-    "name": "WEST_ARDOUGNE_COBBLE_HOUSES",
+    "name": "WEST_ARDOUGNE_CONCRETE_HOUSES",
     "aabbs": [
       [ 2547, 3289, 2549, 3292 ],
       [ 2539, 3284, 2546, 3292 ],
-      [ 2522, 3313, 2529, 3319 ],
+      [ 2522, 3312, 2529, 3319 ],
       [ 2542, 3324, 2546, 3327 ]
+    ]
+  },
+  {
+    "name": "WEST_ARDOUGNE_PLANK_HOUSES",
+    "aabbs": [
+      [ 2530, 3312, 2539, 3316 ],
+      [ 2547, 3321, 2555, 3327 ]
     ]
   },
   {

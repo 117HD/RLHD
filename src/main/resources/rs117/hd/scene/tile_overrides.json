@@ -3589,12 +3589,27 @@
     }
   },
   {
-    "name": "WEST_ARDOUGNE_COBBLE_HOUSES",
-    "area": "WEST_ARDOUGNE_COBBLE_HOUSES",
+    "area": "WEST_ARDOUGNE_CONCRETE_HOUSES",
     "overlayIds": [
       11
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "CONCRETE",
+    "shiftLightness": 30,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "area": "WEST_ARDOUGNE_PLANK_HOUSES",
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "WOOD_PLANKS_1",
+    "shiftLightness": 35,
+    "shiftSaturation": -4,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "Witchaven Mayors house floor - Overlay",

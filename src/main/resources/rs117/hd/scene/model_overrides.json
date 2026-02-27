@@ -14343,7 +14343,10 @@
   },
   {
     "description": "Ground Decoration - Dirt Clump - Tiny - Colored",
-    "hideInAreas": [ "Vet'ion Lair Hide Dirt On Entrance" ],
+    "hideInAreas": [
+      "Vet'ion Lair Hide Dirt On Entrance",
+      "WEST_ARDOUGNE_PLANK_HOUSES"
+    ],
     "baseMaterial": "DIRT_2",
     "objectIds": [
       "DUGUPSOIL2_UPASS",
@@ -14394,6 +14397,9 @@
   {
     "description": "Ground Decoration - Dirt Clump - Small - Colored",
     "baseMaterial": "DIRT_2",
+    "hideInAreas": [
+      "WEST_ARDOUGNE_PLANK_HOUSES"
+    ],
     "objectIds": [
       "DUGUPSOIL1_LIGHT2",
       "DUGUPSOIL3_LIGHT2",
@@ -51917,6 +51923,8 @@
     "description": "Wooden study desk with a green mat",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "description": "Desk mat",
