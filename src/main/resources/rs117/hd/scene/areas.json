@@ -1885,6 +1885,12 @@
     ]
   },
   {
+    "name": "FALADOR_SQUARE_FOUNTAIN",
+    "aabbs": [
+      [ 3036, 3351, 3041, 3356 ]
+    ]
+  },
+  {
     "name": "ASGARNIA_ICE_DUNGEON_NORMAL",
     "aabbs": [
       [ 2984, 9536, 3019, 9601 ],
