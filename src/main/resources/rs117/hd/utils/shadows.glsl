@@ -42,7 +42,7 @@
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
 float fetchShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
-    #if SHADOW_SHADING == SHADOW_DITHERED_SHADING
+    #if SHADOW_FILTERING == SHADOW_DITHERED_SHADING
         int index = int(hash(vec4(floor(fragPos.xyz), i)) * float(POISSON_DISK_LENGTH)) % POISSON_DISK_LENGTH;
         pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
     #endif
@@ -80,7 +80,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
 
     const int kernelSize = 3;
     ivec2 kernelOffset = ivec2(shadowPos.xy - kernelSize / 2);
-    #if SHADOW_SHADING == SHADOW_PIXELATED_SHADING
+    #if SHADOW_FILTERING == SHADOW_PIXELATED_SHADING
         const float kernelAreaReciprocal = 1. / (kernelSize * kernelSize);
     #else
         const float kernelAreaReciprocal = .25; // This is effectively a 2x2 kernel
@@ -110,7 +110,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
         float s12 = fetchShadowTexel(kernelOffset + ivec2(1, 2), fragDepth, fragPos, 7);
         float s21 = fetchShadowTexel(kernelOffset + ivec2(2, 1), fragDepth, fragPos, 8);
 
-        #if SHADOW_SHADING == SHADOW_PIXELATED_SHADING
+        #if SHADOW_FILTERING == SHADOW_PIXELATED_SHADING
             shadow =
                 c00 + s01 + c02 +
                 s10 + s11 + s12 +
