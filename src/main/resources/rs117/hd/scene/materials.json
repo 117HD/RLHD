@@ -2301,6 +2301,11 @@
   {
     "name": "LEAF_VEINS_DARKER",
     "parent": "LEAF_VEINS",
+    "brightness": 0.78
+  },
+  {
+    "name": "LEAF_VEINS_DARKEST",
+    "parent": "LEAF_VEINS",
     "brightness": 0.581
   },
   {
