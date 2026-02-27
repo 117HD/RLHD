@@ -7419,7 +7419,7 @@
     }
   },
   {
-    "name": "SOUTH_CATHERBY_SAND_EXTENSION",
+    "name": "SOUTH_CATHERBY_SAND_EXTENSION_EDGE",
     "area": "SOUTH_CATHERBY_SEASON_FIX_EDGE",
     "underlayIds": [ 62 ],
     "groundMaterial": "BEACH_SAND",
