@@ -505,6 +505,12 @@
     ]
   },
   {
+    "name": "ROCK_1",
+    "materials": [
+      "ROCK_1"
+    ]
+  },
+  {
     "name": "ROCK_PILES",
     "materials": [
       "STONE_NORMALED",

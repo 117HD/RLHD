@@ -4149,6 +4149,12 @@
     ]
   },
   {
+    "name": "TZHAAR_FIX_HOLE_IN_WALL",
+    "aabbs": [
+      [ 2435, 5145, 2435, 5147 ]
+    ]
+  },
+  {
     "name": "THE_INFERNO",
     "regions": [
       9043
@@ -4164,15 +4170,15 @@
     "regions": [ 9552 ],
     "regionBoxes": [
       [ 9807, 10064 ]
-    ],
-    "hideOtherAreas": true
+    ]
   },
   {
     "name": "TZHAAR",
     "areas": [
       "TZHAAR_FIGHT_CAVES",
       "TZHAAR_CITY_REGION"
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "HAM Store Room",

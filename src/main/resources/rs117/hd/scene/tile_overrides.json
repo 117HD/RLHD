@@ -8170,13 +8170,38 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
+    "name": "TZHAAR_FIX_HOLE_IN_WALL",
+    "area": "TZHAAR_FIX_HOLE_IN_WALL",
+    "underlayIds": [
+      72
+    ],
+    "groundMaterial": "STONE_CAVE_FLOOR",
+    "shiftLightness": 0,
+    "heightOffset": 720,
+    "maxLightness": 2,
+    "blended": false
+  },
+  {
     "name": "TZHAAR",
     "area": "TZHAAR",
     "underlayIds": [
       72
     ],
-    "groundMaterial": "VARIED_DIRT_SHINY",
-    "shiftLightness": 2
+    "groundMaterial": "ROCK_1",
+    "maxLightness": 3,
+    "shiftLightness": 1,
+    "replacements": {
+      "TZHAAR_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "TZHAAR_NO_BLENDING",
+    "area": "TZHAAR",
+    "underlayIds": [
+      72
+    ],
+    "groundMaterial": "ROCK_1",
+    "shiftLightness": 1
   },
   {
     "name": "CROMBWICK_MANOR_FLOOR",

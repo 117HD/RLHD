@@ -5197,9 +5197,83 @@
     ]
   },
   {
-    "description": "TZHAAR_ROCK_GRADIENT",
+    "description": "TZHAAR_ROCK_GRADIENT_CAVE_ENTRANCE",
     "baseMaterial": "ROCK_1",
     "uvType": "BOX",
+    "tzHaarRecolorType": "GRADIENT",
+    "objectIds": [
+      "TZHAAR_FIGHTCAVE_WALL_ENTRANCE",
+      "TZHAAR_FIGHTCAVE_WALL_EXIT",
+      "TZHAAR_KARAMJADUNGEON_WALL_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 1 || s == 3 || s == 7",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "s == 0 && l > 10",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_LAVA_FLOW",
+    "baseMaterial": "GRAY_65",
+    "depthBias": 1,
+    "objectIds": [
+      "TZHAAR_LAVA_FLOW"
+    ]
+  },
+  {
+    "description": "LAVABUBBLES",
+    "baseMaterial": "GRAY_110",
+    "upwardsNormals": true,
+    "objectIds": [
+      "LAVABUBBLES"
+    ]
+  },
+  {
+    "description": "TZHAAR_FORGE_AND_VENT",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "TZHAAR_FORGE",
+      "TZHAAR_SULPHAR_VENT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRAY_150",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h > 5 || h == 0 && s == 7 && l > 2",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_CAVE_WALL_ALCOVE_LIGHT",
+    "baseMaterial": "NONE",
+    "upwardsNormals": true,
+    "depthBias": 50,
+    "objectIds": [
+      "TZHAAR_CAVE_WALL_ALCOVE_LIGHT"
+    ]
+  },
+  {
+    "description": "TZHAAR_ROCK_GRADIENT",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "tzHaarRecolorType": "GRADIENT",
     "objectIds": [
       "TZHAAR_CAVE_WALL_1",
@@ -5214,45 +5288,104 @@
       "TZHAAR_CAVE_WALL_10",
       "TZHAAR_CAVE_WALL_ALCOVE",
       "TZHAAR_CAVE_WALL_ALCOVE2",
+      "TZHAAR_CAVEWALL_TOP",
+      "TZHAAR_CAVE_WALL_OVERHANG_1",
+      "TZHAAR_CAVE_WALL_OVERHANG_2",
+      "TZHAAR_CAVE_WALL_OVERHANG_3",
+      "TZHAAR_WALL_CHARGING_STEPS",
+      "TZHAAR_STALAGMITE_1",
+      "TZHAAR_WALL_CHARGING_PILLAR",
+      "JAD_CHALLENGE_SCOREBOARD",
+      "TZHAAR_WALL_CHARGING_FULL",
+      "TZHAAR_WALL_CHARGING_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 6 || s == 7",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "TZHAAR_FENCES",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "tzHaarRecolorType": "GRADIENT",
+    "objectIds": [
       "TZHAAR_CAVE_FENCE1",
       "TZHAAR_CAVE_FENCE2",
       "TZHAAR_CAVE_FENCE3",
       "TZHAAR_CAVE_FENCE4",
       "TZHAAR_CAVE_FENCE5",
-      "TZHAAR_CAVE_FENCE6",
-      "TZHAAR_CAVEWALL_TOP",
-      "TZHAAR_CAVE_WALL_OVERHANG_1",
-      "TZHAAR_CAVE_WALL_OVERHANG_2",
-      "TZHAAR_CAVE_WALL_OVERHANG_3",
-      "TZHAAR_WEAPON_STORE_ICON",
-      "TZHAAR_BANK_STORE_ICON",
-      "TZHAAR_GEM_STORE_ICON",
-      "TZHAAR_MINIGAME_START_ICON",
-      "TZHAAR_WALL_CHARGING_STEPS",
-      "TZHAAR_STALAGMITE_1",
-      "TZHAAR_FIGHTCAVE_WALL_ENTRANCE",
-      "TZHAAR_FIGHTCAVE_WALL_EXIT",
-      "TZHAAR_KARAMJADUNGEON_WALL_EXIT",
-      "TZHAAR_WALL_CHARGING_PILLAR",
-      "JAD_CHALLENGE_SCOREBOARD",
-      "TZHAAR_WALL_CHARGING_FULL",
-      "TZHAAR_WALL_CHARGING_EMPTY"
+      "TZHAAR_CAVE_FENCE6"
+    ],
+    "depthBias": 100
+  },
+  {
+    "description": "TZHAAR_BANK_CHEST",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "TZHAAR_BANK_CHEST"
+    ],
+    "depthBias": 100,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT",
+        "uvType": "BOX",
+        "depthBias": 101
+      }
     ]
   },
   {
-    "description": "TZHAAR_GRADIENT",
+    "description": "TZHAAR_CRATE",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TZHAAR_CRATE",
+      "TZHAAR_CRATES"
+    ],
+    "depthBias": 150,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512
+  },
+  {
+    "description": "TZHAAR_FLOOR",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
       "TZHAAR_CAVE_FLOOR_1",
       "TZHAAR_CAVE_FLOOR_2",
       "TZHAAR_CAVE_FLOOR_3",
       "TZHAAR_CAVE_FLOOR_4",
-      "TZHAAR_MAGIC_STORE_ICON"
+      "TZHAAR_MAGIC_STORE_ICON",
+      "TZHAAR_WEAPON_STORE_ICON",
+      "TZHAAR_BANK_STORE_ICON",
+      "TZHAAR_GEM_STORE_ICON",
+      "TZHAAR_MINIGAME_START_ICON"
     ],
-    "tzHaarRecolorType": "HUE_SHIFT"
+    "depthBias": 100,
+    "tzHaarRecolorType": "HUE_SHIFT",
+    "colorOverrides": [
+      {
+        "colors": "s != 7",
+        "baseMaterial": "ROCK_1",
+        "uvType": "BOX",
+        "depthBias": 100,
+        "uvScale": 0.8
+      }
+    ]
   },
   {
     "description": "TZHAAR_ROCK_HUESHIFT",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_2_LIGHT",
     "uvType": "BOX",
     "tzHaarRecolorType": "HUE_SHIFT",
     "objectIds": [
@@ -5262,6 +5395,13 @@
       "MORULREK_FLOOR_CORNER_OUTER_02",
       "MORULREK_FLOOR_CORNER_INSIDE_01",
       "MORULREK_FLOOR_CORNER_INSIDE_02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      }
     ]
   },
   {
