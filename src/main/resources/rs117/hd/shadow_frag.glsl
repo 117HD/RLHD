@@ -55,15 +55,15 @@ void main() {
                 uvw.x = clamp(uvw.x, 0, .984375);
 
             #if SHADOW_TRANSPARENCY
-            opacity = texture(textureArray, uvw.xyz).a;
-            if (uvw.w > 0)
-                opacity *= texture(textureArray, uvw.xyw).r;
-            opacity *= fOpacity;
-        #else
-            opacity = texture(textureArray, uvw.xyz).a;
-            if (opacity < SHADOW_DEFAULT_OPACITY_THRESHOLD)
-                discard;
-        #endif
+                opacity = texture(textureArray, uvw.xyz).a;
+                if (uvw.w > 0)
+                    opacity *= texture(textureArray, uvw.xyw).r;
+                opacity *= fOpacity;
+            #else
+                opacity = texture(textureArray, uvw.xyz).a;
+                if (opacity < SHADOW_DEFAULT_OPACITY_THRESHOLD)
+                    discard;
+            #endif
         }
     #endif
 
