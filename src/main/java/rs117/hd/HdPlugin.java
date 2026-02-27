@@ -49,6 +49,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
@@ -138,6 +139,8 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
+@Slf4j
+@Singleton
 @PluginDescriptor(
 	name = "117 HD",
 	description = "GPU renderer with a suite of graphical enhancements",
@@ -145,7 +148,6 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 	conflicts = "GPU"
 )
 @PluginDependency(EntityHiderPlugin.class)
-@Slf4j
 public class HdPlugin extends Plugin {
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
