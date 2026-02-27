@@ -57,7 +57,7 @@ void main() {
             #if SHADOW_TRANSPARENCY
             opacity = texture(textureArray, uvw.xyz).a;
             if (uvw.w > 0)
-                opacity *= texture(textureArray, uvw.xyw).a;
+                opacity *= texture(textureArray, uvw.xyw).r;
             opacity *= fOpacity;
         #else
             opacity = texture(textureArray, uvw.xyz).a;
