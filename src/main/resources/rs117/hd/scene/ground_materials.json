@@ -360,6 +360,16 @@
     ]
   },
   {
+    "name": "BEACH_SAND",
+    "materials": [
+      "SAND_4",
+      "GRAVEL_LIGHT",
+      "DIRT_1",
+      "SAND_4",
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "WOOD_PLANKS_1",
     "materials": [
       "WOOD_PLANKS_1"
