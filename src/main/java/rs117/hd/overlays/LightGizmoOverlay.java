@@ -43,7 +43,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class LightGizmoOverlay extends Overlay implements MouseListener, KeyListener {
+public class LightGizmoOverlay extends Overlay implements DeveloperOverlay, MouseListener, KeyListener {
 	private static final Color ORANGE = Color.decode("#ff9f2c");
 
 	@Inject
@@ -103,18 +103,20 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 		setPosition(OverlayPosition.DYNAMIC);
 	}
 
-	public void setActive(boolean activate) {
-		if (activate) {
-			overlayManager.add(this);
-			mouseManager.registerMouseListener(this);
-			keyManager.registerKeyListener(this);
-		} else {
-			overlayManager.remove(this);
-			mouseManager.unregisterMouseListener(this);
-			keyManager.unregisterKeyListener(this);
-			action = Action.SELECT;
-			selections.clear();
-		}
+	@Override
+	public void activate() throws Exception {
+		overlayManager.add(this);
+		mouseManager.registerMouseListener(this);
+		keyManager.registerKeyListener(this);
+	}
+
+	@Override
+	public void deactivate() throws Exception {
+		overlayManager.remove(this);
+		mouseManager.unregisterMouseListener(this);
+		keyManager.unregisterKeyListener(this);
+		action = Action.SELECT;
+		selections.clear();
 	}
 
 	@Override
