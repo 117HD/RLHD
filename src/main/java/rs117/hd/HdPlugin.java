@@ -75,6 +75,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
+import rs117.hd.api.HdApi;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.SeasonalHemisphere;
@@ -106,6 +107,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.MinimapManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -247,6 +249,9 @@ public class HdPlugin extends Plugin {
 	private HdPluginConfig config;
 
 	@Inject
+	private HdApi api;
+
+	@Inject
 	private GamevalManager gamevalManager;
 
 	@Inject
@@ -275,6 +280,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private MinimapManager minimapManager;
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
@@ -540,6 +548,8 @@ public class HdPlugin extends Plugin {
 
 				SKIP_GL_ERROR_CHECKS = false;
 				GL_CAPS = GL.createCapabilities();
+				lwjglInitialized = true;
+
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
@@ -583,9 +593,6 @@ public class HdPlugin extends Plugin {
 						return true;
 					}
 				}
-
-				lwjglInitialized = true;
-				checkGLErrors();
 
 				MAX_TEXTURE_UNITS = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS); // Not the fixed pipeline MAX_TEXTURE_UNITS
 				if (MAX_TEXTURE_UNITS < TEXTURE_UNIT_COUNT)
@@ -688,6 +695,7 @@ public class HdPlugin extends Plugin {
 				lightManager.startUp();
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
+				minimapManager.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
 
@@ -695,6 +703,8 @@ public class HdPlugin extends Plugin {
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
+
+				api.initialize();
 
 				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -729,6 +739,8 @@ public class HdPlugin extends Plugin {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
+			api.destroy();
+
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
 
@@ -739,7 +751,6 @@ public class HdPlugin extends Plugin {
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
-
 				if (renderer != null) {
 					eventBus.unregister(renderer);
 					renderer.destroy();
@@ -754,6 +765,7 @@ public class HdPlugin extends Plugin {
 			lightManager.shutDown();
 			environmentManager.shutDown();
 			fishingSpotReplacer.shutDown();
+			minimapManager.shutDown();
 			areaManager.shutDown();
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
