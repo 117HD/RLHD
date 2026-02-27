@@ -3393,12 +3393,11 @@
     "shiftLightness": 3
   },
   {
-    "name": "EAST_ARDOUGNE_COBBLE_CHURCH",
-    "area": "EAST_ARDOUGNE_COBBLE_CHURCH",
+    "area": "EAST_ARDOUGNE_BRICK_CHURCH",
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE",
@@ -3406,7 +3405,8 @@
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "BRICK_PATHS",
+    "shiftLightness": 4
   },
   {
     "name": "EAST_ARDOUGNE_NORTH_BANK_11",
@@ -3437,8 +3437,8 @@
     ],
     "groundMaterial": "CONCRETE",
     "blended": false,
-    "minLightness": 40,
-    "maxLightness": 40,
+    "minLightness": 43,
+    "maxLightness": 43,
     "replacements": {
       "NONE": "!textures"
     }
