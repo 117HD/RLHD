@@ -112,7 +112,6 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     }
 #endif
 
-
 // 2D Random
 float hash(in vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
@@ -120,7 +119,7 @@ float hash(in vec2 st) {
 
 // 3D Random
 float hash(in vec3 st){
-	return fract(sin(dot(st, vec3(12.9898,78.233,45.164))) * 43758.5453123);
+	return fract(sin(dot(st, vec3(12.9898, 78.233, 45.164))) * 43758.5453123);
 }
 
 // 4D Random
@@ -142,7 +141,7 @@ float noise(in vec2 st) {
 
     // Smooth Interpolation
 
-    // Cubic Hermine Curve.  Same as SmoothStep()
+    // Cubic Hermite Curve.  Same as SmoothStep()
     vec2 u = f*f*(3.0-2.0*f);
     // u = smoothstep(0.,1.,f);
 
@@ -196,21 +195,21 @@ vec4 saturate(vec4 value) {
 #define POISSON_DISK_LENGTH 16
 vec2 getPoissonDisk(int idx) {
     switch(idx) {
-        case 0: return vec2( -0.94201624, -0.39906216 );
-        case 1: return vec2( 0.94558609, -0.76890725 );
-        case 2: return vec2( -0.094184101, -0.92938870 );
-        case 3: return vec2( 0.34495938, 0.29387760 );
-        case 4: return vec2( -0.91588581, 0.45771432 );
-        case 5: return vec2( -0.81544232, -0.87912464 );
-        case 6: return vec2( -0.38277543, 0.27676845 );
-        case 7: return vec2( 0.97484398, 0.75648379 );
-        case 8: return vec2( 0.44323325, -0.97511554 );
-        case 9: return vec2( 0.53742981, -0.47373420 );
-        case 10: return vec2( -0.26496911, -0.41893023 );
-        case 11: return vec2( 0.79197514, 0.19090188 );
-        case 12: return vec2( -0.24188840, 0.99706507 );
-        case 13: return vec2( -0.81409955, 0.91437590 );
-        case 14: return vec2( 0.19984126, 0.78641367 );
-        default: return vec2( 0.14383161, -0.14100790 );
+        case  0: return vec2(-0.94201624,  -0.39906216);
+        case  1: return vec2( 0.94558609,  -0.76890725);
+        case  2: return vec2(-0.094184101, -0.92938870);
+        case  3: return vec2( 0.34495938,   0.29387760);
+        case  4: return vec2(-0.91588581,   0.45771432);
+        case  5: return vec2(-0.81544232,  -0.87912464);
+        case  6: return vec2(-0.38277543,   0.27676845);
+        case  7: return vec2( 0.97484398,   0.75648379);
+        case  8: return vec2( 0.44323325,  -0.97511554);
+        case  9: return vec2( 0.53742981,  -0.47373420);
+        case 10: return vec2(-0.26496911,  -0.41893023);
+        case 11: return vec2( 0.79197514,   0.19090188);
+        case 12: return vec2(-0.24188840,   0.99706507);
+        case 13: return vec2(-0.81409955,   0.91437590);
+        case 14: return vec2( 0.19984126,   0.78641367);
+        default: return vec2( 0.14383161,  -0.14100790);
     }
 }

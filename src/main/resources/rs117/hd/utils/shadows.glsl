@@ -42,19 +42,19 @@
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
 float fetchShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
-#if SHADOW_SHADING == SHADOW_DITHERED_SHADING
-    int index = int(hash(vec4(floor(fragPos.xyz), i)) * float(POISSON_DISK_LENGTH)) % POISSON_DISK_LENGTH;
-    pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
-#endif
+    #if SHADOW_SHADING == SHADOW_DITHERED_SHADING
+        int index = int(hash(vec4(floor(fragPos.xyz), i)) * float(POISSON_DISK_LENGTH)) % POISSON_DISK_LENGTH;
+        pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
+    #endif
 
-#if SHADOW_TRANSPARENCY
-    int alphaDepth = int(texelFetch(shadowMap, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
-    float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
-    float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
-    return depth < fragDepth ? alpha : 0.f;
-#else
-    return texelFetch(shadowMap, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
-#endif
+    #if SHADOW_TRANSPARENCY
+        int alphaDepth = int(texelFetch(shadowMap, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
+        float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
+        float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
+        return depth < fragDepth ? alpha : 0.f;
+    #else
+        return texelFetch(shadowMap, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
+    #endif
 }
 
 float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
@@ -80,14 +80,14 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
 
     const int kernelSize = 3;
     ivec2 kernelOffset = ivec2(shadowPos.xy - kernelSize / 2);
-#if SHADOW_SHADING == SHADOW_PIXELATED_SHADING
-    const float kernelAreaReciprocal = 1. / (kernelSize * kernelSize);
-#else
-    const float kernelAreaReciprocal = .25; // This is effectively a 2x2 kernel
-    vec2 lerp = fract(shadowPos.xy);
-    vec3 lerpX = vec3(1 - lerp.x, 1, lerp.x);
-    vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
-#endif
+    #if SHADOW_SHADING == SHADOW_PIXELATED_SHADING
+        const float kernelAreaReciprocal = 1. / (kernelSize * kernelSize);
+    #else
+        const float kernelAreaReciprocal = .25; // This is effectively a 2x2 kernel
+        vec2 lerp = fract(shadowPos.xy);
+        vec3 lerpX = vec3(1 - lerp.x, 1, lerp.x);
+        vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
+    #endif
 
     // Sample 4 corners first
     float c00 = fetchShadowTexel(kernelOffset + ivec2(0, 0), fragDepth, fragPos, 0);

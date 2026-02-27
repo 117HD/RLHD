@@ -46,9 +46,9 @@ import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
+import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
-import rs117.hd.config.ShadowShading;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
@@ -373,12 +373,93 @@ public interface HdPluginConfig extends Config
 	}
 
 
+	/*====== Shadow settings ======*/
+
+	@ConfigSection(
+		name = "Shadows",
+		description = "Shadow settings",
+		position = 1,
+		closedByDefault = true
+	)
+	String shadowSettings = "shadowSettings";
+
+	String KEY_SHADOW_MODE = "shadowMode";
+	@ConfigItem(
+		keyName = KEY_SHADOW_MODE,
+		name = "Shadow mode",
+		description =
+			"Render fully dynamic shadows.<br>" +
+			"'Off' completely disables shadows.<br>" +
+			"'Fast' enables fast shadows without any texture detail.<br>" +
+			"'Detailed' enables slower shadows with support for texture detail.",
+		position = 1,
+		section = shadowSettings
+	)
+	default ShadowMode shadowMode() {
+		return ShadowMode.DETAILED;
+	}
+
+	String KEY_SHADOW_RESOLUTION = "shadowResolution";
+	@ConfigItem(
+		keyName = KEY_SHADOW_RESOLUTION,
+		name = "Shadow quality",
+		description =
+			"The resolution of the shadow map.<br>" +
+			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
+		position = 2,
+		section = shadowSettings
+	)
+	default ShadowResolution shadowResolution() {
+		return ShadowResolution.RES_8192;
+	}
+
+	String KEY_SHADOW_FILTERING = "shadowFiltering";
+	@ConfigItem(
+		keyName = KEY_SHADOW_FILTERING,
+		name = "Shadow filtering",
+		description =
+			"Filtering technique used when smoothing the edges of shadows.<br>" +
+			"'Smooth' Smooths out the shadow pixels (PCF 3x3).<br>" +
+			"'Dithered' Smooths out pixelation using dithering.<br>" +
+			"'Pixelated' Retains slightly pixelated shadow edges.",
+		position = 3,
+		section = shadowSettings
+	)
+	default ShadowFiltering shadowFiltering() {
+		return ShadowFiltering.SMOOTH;
+	}
+
+	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
+	@ConfigItem(
+		keyName = KEY_SHADOW_TRANSPARENCY,
+		name = "Shadow transparency",
+		description = "Enable partial support for taking the transparency of models into account.",
+		position = 4,
+		section = shadowSettings
+	)
+	default boolean shadowTransparency() {
+		return true;
+	}
+
+	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
+	@ConfigItem(
+		keyName = KEY_ROOF_SHADOWS,
+		name = "Roof shadows",
+		description = "Always cast shadows from roofs, even when they are hidden.",
+		position = 5,
+		section = shadowSettings
+	)
+	default boolean roofShadows() {
+		return false;
+	}
+
+
 	/*====== Lighting settings ======*/
 
 	@ConfigSection(
 		name = "Lighting",
 		description = "Lighting settings",
-		position = 1,
+		position = 2,
 		closedByDefault = true
 	)
 	String lightingSettings = "lightingSettings";
@@ -393,8 +474,7 @@ public interface HdPluginConfig extends Config
 		position = 0,
 		section = lightingSettings
 	)
-	default DynamicLights dynamicLights()
-	{
+	default DynamicLights dynamicLights() {
 		return DynamicLights.SOME;
 	}
 
@@ -487,85 +567,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	/*====== Shadow settings ======*/
-
-	@ConfigSection(
-		name = "Shadows",
-		description = "Shadow settings",
-		position = 2,
-		closedByDefault = true
-	)
-	String shadowSettings = "shadowSettings";
-
-	String KEY_SHADOW_MODE = "shadowMode";
-	@ConfigItem(
-		keyName = KEY_SHADOW_MODE,
-		name = "Shadows",
-		description =
-			"Render fully dynamic shadows.<br>" +
-			"'Off' completely disables shadows.<br>" +
-			"'Fast' enables fast shadows without any texture detail.<br>" +
-			"'Detailed' enables slower shadows with support for texture detail.",
-		position = 0,
-		section = shadowSettings
-	)
-	default ShadowMode shadowMode()
-	{
-		return ShadowMode.DETAILED;
-	}
-
-	String KEY_SHADOW_RESOLUTION = "shadowResolution";
-	@ConfigItem(
-		keyName = KEY_SHADOW_RESOLUTION,
-		name = "Shadow Quality",
-		description =
-			"The resolution of the shadow map.<br>" +
-			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
-		position = 1,
-		section = shadowSettings
-	)
-	default ShadowResolution shadowResolution() { return ShadowResolution.RES_4096; }
-
-	String KEY_SHADOW_SHADING = "shadowShading";
-	@ConfigItem(
-		keyName = KEY_SHADOW_SHADING,
-		name = "Shadow Shading",
-		description =
-			"Shading technique used when sampling shadow map.<br>" +
-			"'Smooth' Smooths out the shadow pixels (PCF 3x3).<br>" +
-			"'Dithered' Further smoothens pixelation with dithering.<br>"+
-			"'Pixelated' Retains slightly pixelated shadows.",
-		position = 2,
-		section = shadowSettings
-	)
-	default ShadowShading shadowShading() {
-		return ShadowShading.Smooth;
-	}
-
-	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
-	@ConfigItem(
-		keyName = KEY_SHADOW_TRANSPARENCY,
-		name = "Shadow Transparency",
-		description = "Enables partial support for shadows that take transparency into account.",
-		position = 3,
-		section = shadowSettings
-	)
-	default boolean enableShadowTransparency()
-	{
-		return true;
-	}
-
-	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
-	@ConfigItem(
-		keyName = KEY_ROOF_SHADOWS,
-		name = "Roof Shadows",
-		description = "Always cast shadows from roofs, even when they are hidden.",
-		position = 4,
-		section = shadowSettings
-	)
-	default boolean roofShadows() {
-		return false;
-	}
 
 	/*====== Environment settings ======*/
 
@@ -978,7 +979,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "shadowDistance",
-		name = "Shadow Distance",
+		name = "Legacy shadow distance",
 		description =
 			"The maximum draw distance for shadows.<br>" +
 			"Shorter distances result in higher quality shadows.",
@@ -994,7 +995,7 @@ public interface HdPluginConfig extends Config
 	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
 	@ConfigItem(
 		keyName = KEY_EXPAND_SHADOW_DRAW,
-		name = "Expand Shadow Draw",
+		name = "Expand shadow draw",
 		description =
 			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
 			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
