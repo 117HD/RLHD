@@ -1914,6 +1914,7 @@
     "shiftLightness": -2,
     "shiftSaturation": -2,
     "shiftHue": 1,
+    "heightOffset": 32,
     "uvScale": 1.25,
     "replacements": {
       "NONE": "!textures"
