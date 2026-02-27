@@ -391,7 +391,7 @@ public interface HdPluginConfig extends Config
 			"Render fully dynamic shadows.<br>" +
 			"'Off' completely disables shadows.<br>" +
 			"'Fast' enables fast shadows without any texture detail.<br>" +
-			"'Detailed' enables slower shadows with support for texture detail.",
+			"'Detailed' enables shadows with support for texture detail.",
 		position = 1,
 		section = shadowSettings
 	)
@@ -419,9 +419,9 @@ public interface HdPluginConfig extends Config
 		name = "Shadow filtering",
 		description =
 			"Filtering technique used when smoothing the edges of shadows.<br>" +
-			"'Smooth' Smooths out the shadow pixels (PCF 3x3).<br>" +
-			"'Dithered' Smooths out pixelation using dithering.<br>" +
-			"'Pixelated' Retains slightly pixelated shadow edges.",
+			"'Smooth' smooths the shadow pixels evenly (PCF 3x3).<br>" +
+			"'Dithered' smooths out pixelation using dithering.<br>" +
+			"'Pixelated' retains slightly pixelated shadow edges.",
 		position = 3,
 		section = shadowSettings
 	)
@@ -433,7 +433,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_SHADOW_TRANSPARENCY,
 		name = "Shadow transparency",
-		description = "Enable partial support for taking the transparency of models into account.",
+		description = "Enable partial support for taking model transparency into account.",
 		position = 4,
 		section = shadowSettings
 	)

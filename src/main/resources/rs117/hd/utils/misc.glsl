@@ -114,17 +114,17 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
 
 // 2D Random
 float hash(in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
 }
 
 // 3D Random
-float hash(in vec3 st){
+float hash(in vec3 st) {
 	return fract(sin(dot(st, vec3(12.9898, 78.233, 45.164))) * 43758.5453123);
 }
 
 // 4D Random
-float hash(in vec4 st){
-	return fract(sin(dot(st, vec4(12.9898,78.233,45.164,94.673))) * 43758.5453123);
+float hash(in vec4 st) {
+	return fract(sin(dot(st, vec4(12.9898, 78.233, 45.164, 94.673))) * 43758.5453123);
 }
 
 // 2D Noise based on Morgan McGuire @morgan3d, under the BSD license
@@ -139,15 +139,12 @@ float noise(in vec2 st) {
     float c = hash(i + vec2(0.0, 1.0));
     float d = hash(i + vec2(1.0, 1.0));
 
-    // Smooth Interpolation
+    // Smooth interpolation
+    vec2 u = smoothstep(0., 1., f);
 
-    // Cubic Hermite Curve.  Same as SmoothStep()
-    vec2 u = f*f*(3.0-2.0*f);
-    // u = smoothstep(0.,1.,f);
-
-    // Mix 4 coorners percentages
+    // Mix 4 corner percentages
     return mix(a, b, u.x) +
-        (c - a)* u.y * (1.0 - u.x) +
+        (c - a) * u.y * (1.0 - u.x) +
         (d - b) * u.x * u.y;
 }
 

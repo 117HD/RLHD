@@ -1774,10 +1774,8 @@ public class HdPlugin extends Plugin {
 								recreateSceneFbo = true;
 								break;
 							case KEY_SHADOW_MODE:
-							case KEY_SHADOW_TRANSPARENCY:
-								recompilePrograms = true;
-								// fall-through
 							case KEY_SHADOW_RESOLUTION:
+							case KEY_SHADOW_TRANSPARENCY:
 								recompilePrograms = true;
 								recreateShadowMapFbo = true;
 								break;

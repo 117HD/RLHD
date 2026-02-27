@@ -30,6 +30,9 @@
     "name": "WATER_FOAM"
   },
   {
+    "name": "LEAF_A"
+  },
+  {
     "name": "WOODEN_DOOR_HANDLE",
     "vanillaTextureIndex": 0
   },
@@ -65,9 +68,6 @@
     "name": "WOODEN_SCREEN",
     "vanillaTextureIndex": 7,
     "hasTransparency": true
-  },
-  {
-    "name": "LEAF_A"
   },
   {
     "name": "LEAVES_SIDE",
