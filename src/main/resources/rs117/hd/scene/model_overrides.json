@@ -10064,7 +10064,6 @@
       "PISCARILIUS_PIER_SIDE_END_01",
       "PISCARILIUS_PIER_SIDE_END_02",
       "PISCARILIUS_PIER_SIDE_END_03",
-      "PISCARILIUS_PIER_SAND_END_02",
       "PISCARILIUS_PIER_SAND_END_03",
       "QUEST_START_ICON_CLIENTOFKOUREND",
       "SALVAGING_STATION_ICON_PISCARILIUS",
@@ -10183,9 +10182,11 @@
     "colorOverrides": [
       {
         "description": "Sand",
-        "baseMaterial": "DIRT_1",
+        "baseMaterial": "DIRT_2",
+        "uvScale": 0.75,
         "colors": "l > 40",
-        "uvType": "WORLD_XZ"
+        "uvType": "WORLD_XZ",
+        "depthBias": 50
       }
     ],
     "objectIds": [
@@ -10201,7 +10202,9 @@
       "PISCARILIUS_PIER_SAND_END_08",
       "PISCARILIUS_PIER_SAND_01",
       "PISCARILIUS_PIER_SAND_02",
-      "PISCARILIUS_PIER_SAND_04"
+      "PISCARILIUS_PIER_SAND_04",
+      "PISCARILIUS_PIER_SAND_END_02",
+      "PISCARILIUS_PIER_SAND_END_03"
     ]
   },
   {
