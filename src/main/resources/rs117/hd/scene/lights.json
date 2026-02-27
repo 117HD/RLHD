@@ -20539,6 +20539,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "visibleFromOtherPlanes": true,
     "objectIds": [
       "DRAGON_SLAYER_QIP_FIRE_1X1"
     ]
