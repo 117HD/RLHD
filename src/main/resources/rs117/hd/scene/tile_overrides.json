@@ -2542,6 +2542,23 @@
     "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
+    "area": "FALADOR_SQUARE_FOUNTAIN",
+    "groundMaterial": "TILES_2X2_1_GLOSS",
+    "overlayIds": [
+      137
+    ],
+    "blended": false,
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 1,
+    "maxSaturation": 1,
+    "shiftLightness": 25,
+    "minLightness": 55,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "FALADOR_PATHS",
     "area": "FALADOR",
     "overlayIds": [

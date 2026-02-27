@@ -4759,14 +4759,23 @@
   },
   {
     "description": "FALADOR_STEPS_1",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "uvType": "BOX",
-    "uvOrientation": 512,
     "flatNormals": true,
-    "uvScale": 0.8,
+    "uvScale": 0.5,
     "objectIds": [
       "RD_SKEWSTEPS",
       "RD_SKEWSTEPS_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 8 && l > 70",
+        "baseMaterial": "SMOOTH_STONE_DARK",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 0.5
+      }
     ]
   },
   {
@@ -11139,10 +11148,20 @@
     "flatNormals": true
   },
   {
-    "description": "Falador - Fountain",
-    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "description": "Varrock - Small Water Fountain",
+    "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 42,
     "objectIds": [
       "FAI_FALADOR_FOUNTAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 10",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -12187,7 +12206,7 @@
   },
   {
     "description": "STONE_STAIRS_WOODEN_RAILS",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "colorOverrides": [
       {
@@ -12206,7 +12225,8 @@
       "STAIRS_CELLAR",
       "STAIRS_FROM_CELLAR",
       "ARDOUGNE_PRISON_ENTRY",
-      "ARDOUGNE_PRISON_EXIT"
+      "ARDOUGNE_PRISON_EXIT",
+      "STAIRS_FALADOR"
     ]
   },
   {
