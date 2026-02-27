@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
@@ -87,7 +88,7 @@ public class ParticleDefinition {
 	public float speedIncrementPerSecondCached;
 	public float speedTransitionSecondsConstant;
 
-	@Getter
+	@Data
 	public static class General {
 		public int heightOffset = 10;
 		public int directionPitch = 30;
@@ -95,14 +96,14 @@ public class ParticleDefinition {
 		public boolean displayWhenCulled;
 	}
 
-	@Getter
+	@Data
 	public static class Texture {
 		@Nullable
 		public String file;
 		public Flipbook flipbook = new Flipbook();
 	}
 
-	@Getter
+	@Data
 	public static class Flipbook {
 		public int flipbookColumns;
 		public int flipbookRows;
@@ -110,7 +111,7 @@ public class ParticleDefinition {
 		public String flipbookMode;
 	}
 
-	@Getter
+	@Data
 	public static class Spread {
 		public float yawMin;
 		public float yawMax;
@@ -118,7 +119,7 @@ public class ParticleDefinition {
 		public float pitchMax;
 	}
 
-	@Getter
+	@Data
 	public static class Speed {
 		public float minSpeed;
 		public float maxSpeed;
@@ -126,7 +127,7 @@ public class ParticleDefinition {
 		public int speedTransitionPercent = 100;
 	}
 
-	@Getter
+	@Data
 	public static class Scale {
 		public float minScale;
 		public float maxScale;
@@ -134,7 +135,7 @@ public class ParticleDefinition {
 		public int scaleTransitionPercent = 100;
 	}
 
-	@Getter
+	@Data
 	public static class Colours {
 		public int minColourArgb;
 		public int maxColourArgb;
@@ -151,7 +152,7 @@ public class ParticleDefinition {
 		public boolean useSceneAmbientLight = true;
 	}
 
-	@Getter
+	@Data
 	public static class Emission {
 		public int minDelay;
 		public int maxDelay;
@@ -164,7 +165,7 @@ public class ParticleDefinition {
 		public boolean loopEmission = true;
 	}
 
-	@Getter
+	@Data
 	public static class Physics {
 		public int upperBoundLevel = -2;
 		public int lowerBoundLevel = -2;

@@ -297,17 +297,17 @@ public class ParticleManager {
 		}
 
 		for (EmitterPlacement place : placements) {
-			if (place.particleId == null) {
+			if (place.getParticleId() == null) {
 				continue;
 			}
 
-			final String pid = place.particleId.toUpperCase();
+			final String pid = place.getParticleId().toUpperCase();
 			final ParticleDefinition def = definitions.get(pid);
 			if (def == null) {
 				continue;
 			}
 
-			final WorldPoint wp = new WorldPoint(place.worldX, place.worldY, place.plane);
+			final WorldPoint wp = new WorldPoint(place.getWorldX(), place.getWorldY(), place.getPlane());
 			final ParticleEmitter emitter = createEmitterFromDefinition(def, wp);
 			emitter.particleId(def.id);
 

@@ -49,11 +49,10 @@ public class ParticleTextureLoader {
 	private final Map<String, Integer> nameToLayer = new HashMap<>();
 	private int nextLayer = 1;
 
+	@Getter
 	private int lastTextureCount;
+	@Getter
 	private long lastLoadTimeMs;
-
-	public int getLastTextureCount() { return lastTextureCount; }
-	public long getLastLoadTimeMs() { return lastLoadTimeMs; }
 
 	/**
 	 * Preload all given texture names: load from disk and upload to GL. Call when particle config is loaded.

@@ -4,9 +4,9 @@
  */
 package rs117.hd.scene.particles.core.buffer;
 
-import rs117.hd.scene.particles.core.Particle;
-
 import javax.annotation.Nullable;
+import lombok.Getter;
+import rs117.hd.scene.particles.core.Particle;
 
 /**
  * Pre-allocated particle pool with index-based free list. No runtime allocation.
@@ -15,7 +15,9 @@ public final class ParticlePool {
 
 	private final Particle[] particles;
 	private final int[] freeIndices;
+	@Getter
 	private int freeCount;
+	@Getter
 	private final int capacity;
 
 	public ParticlePool(int capacity) {
@@ -44,13 +46,5 @@ public final class ParticlePool {
 			p.resetForPool();
 			freeIndices[freeCount++] = p.poolIndex;
 		}
-	}
-
-	public int getCapacity() {
-		return capacity;
-	}
-
-	public int getAvailable() {
-		return freeCount;
 	}
 }

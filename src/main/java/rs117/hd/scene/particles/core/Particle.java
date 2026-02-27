@@ -5,8 +5,10 @@
 package rs117.hd.scene.particles.core;
 
 import javax.annotation.Nullable;
+import lombok.NoArgsConstructor;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 
+@NoArgsConstructor
 public class Particle {
 	public final float[] position = new float[3];
 	public final float[] velocity = new float[3];
@@ -46,8 +48,6 @@ public class Particle {
 
 	/** Pool slot index; used by ParticlePool for bookkeeping. */
 	public int poolIndex;
-
-	public Particle() {}
 
 	public void resetForPool() {
 		emitter = null;
