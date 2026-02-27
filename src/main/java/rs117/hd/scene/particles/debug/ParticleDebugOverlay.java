@@ -16,8 +16,8 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.SceneContext;
-import rs117.hd.scene.particles.ParticleBuffer;
 import rs117.hd.scene.particles.ParticleManager;
+import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
 import rs117.hd.utils.Mat4;
 
 import static rs117.hd.utils.MathUtils.round;

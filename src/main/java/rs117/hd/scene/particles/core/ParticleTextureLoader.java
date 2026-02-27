@@ -2,7 +2,7 @@
  * Copyright (c) 2025, Mark7625 (https://github.com/Mark7625/)
  * All rights reserved.
  */
-package rs117.hd.scene.particles;
+package rs117.hd.scene.particles.core;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -35,7 +35,7 @@ public class ParticleTextureLoader {
 
 	private static final ResourcePath PARTICLE_TEXTURES_PATH = Props.getFolder(
 		"rlhd.particle-texture-path",
-		() -> path(ParticleTextureLoader.class, "..", "textures", "particles")
+		() -> path(ParticleTextureLoader.class, "..", "..", "textures", "particles")
 	);
 	private static final int LAYER_SIZE = 256;
 	private static final int MAX_LAYERS = 32;

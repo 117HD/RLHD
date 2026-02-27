@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.scene.lights.Alignment;
-import rs117.hd.scene.particles.Particle;
-import rs117.hd.scene.particles.ParticleBuffer;
-import rs117.hd.scene.particles.ParticleDefinition;
+import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
+import rs117.hd.scene.particles.core.Particle;
+import rs117.hd.scene.particles.definition.ParticleDefinition;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -340,6 +340,7 @@ public class ParticleEmitter {
 		int toSpawn = advanceEmission(dt);
 		for (int i = 0; i < toSpawn && buf.count < maxParticles; i++) {
 			Particle p = manager.obtainParticle();
+			if (p == null) continue;
 			if (!spawnInto(p, originX, originY, originZ, plane)) {
 				manager.releaseParticle(p);
 				continue;

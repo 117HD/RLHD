@@ -21,12 +21,11 @@ import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.pass.ScenePass;
 import rs117.hd.renderer.zone.pass.ScenePassContext;
-import rs117.hd.scene.particles.ParticleBuffer;
-import rs117.hd.scene.particles.ParticleDefinition;
 import rs117.hd.scene.particles.ParticleManager;
-import rs117.hd.scene.particles.ParticleTextureLoader;
+import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
+import rs117.hd.scene.particles.definition.ParticleDefinition;
+import rs117.hd.scene.particles.core.ParticleTextureLoader;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 import static org.lwjgl.opengl.GL15.glUnmapBuffer;
@@ -49,6 +48,9 @@ public class ParticlePass implements ScenePass {
 
 	private static final int MAX_PARTICLES = 4096;
 	private static final int MAX_DRAWN = 2048;
+
+	private final ParticleManager.ParticleRenderContext renderContext = new ParticleManager.ParticleRenderContext();
+	private final int[] visibleIndices = new int[MAX_DRAWN];
 	private static final int QUAD_VERTS = 6;
 	private static final int FLOATS_PER_INSTANCE = 12;
 	private static final int INSTANCE_STRIDE_BYTES = 64;
@@ -210,69 +212,19 @@ public class ParticlePass implements ScenePass {
 
 	private int prepareBatches(int currentPlane) {
 		ParticleBuffer buf = particleManager.getParticleBuffer();
-		particleStagingBuffer.clear();
-		lastParticleTotalOnPlane = 0;
-		lastParticleCulledDistance = 0;
-		lastParticleCulledFrustum = 0;
-		lastParticleDrawn = 0;
-		float[] particleColor = new float[4];
-		float cxCam = plugin.cameraPosition[0];
-		float cyCam = plugin.cameraPosition[1];
-		float czCam = plugin.cameraPosition[2];
-		float maxDistSq = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
-		maxDistSq *= maxDistSq;
-		float[][] frustumPlanes = plugin.cameraFrustum;
-		int n = 0;
-		for (int i = 0; i < buf.count; i++) {
-			if (buf.plane[i] != currentPlane)
-				continue;
-			lastParticleTotalOnPlane++;
-			float dx = buf.posX[i] - cxCam;
-			float dy = buf.posY[i] - cyCam;
-			float dz = buf.posZ[i] - czCam;
-			float dSq = dx * dx + dy * dy + dz * dz;
-			if (dSq > maxDistSq) {
-				lastParticleCulledDistance++;
-				continue;
-			}
-			if (!HDUtils.isSphereIntersectingFrustum(buf.posX[i], buf.posY[i], buf.posZ[i], buf.size[i], frustumPlanes, frustumPlanes.length)) {
-				lastParticleCulledFrustum++;
-				continue;
-			}
-			particleDistSq[n] = dSq;
-			textureForVisibleIndex[n] = getTextureNameForParticle(buf, i);
-			buf.getCurrentColor(i, particleColor);
-			float cx = buf.posX[i] + plugin.cameraShift[0];
-			float cy = buf.posY[i];
-			float cz = buf.posZ[i] + plugin.cameraShift[1];
-			particleStagingBuffer.put(cx).put(cy).put(cz);
-			particleStagingBuffer.put(particleColor[0]).put(particleColor[1]).put(particleColor[2]).put(particleColor[3]);
-			particleStagingBuffer.put(buf.size[i]);
-			String tex = textureForVisibleIndex[n];
-			particleStagingBuffer.put((float) particleTextureLoader.getTextureLayer(tex != null ? tex : ""));
-			float flipbookCols = 0f;
-			float flipbookRows = 0f;
-			float flipbookFrameVal = 0f;
-			ParticleDefinition def = getDefinitionForParticle(buf, i);
-			if (def != null && def.texture.flipbook.flipbookColumns > 0 && def.texture.flipbook.flipbookRows > 0) {
-				flipbookCols = def.texture.flipbook.flipbookColumns;
-				flipbookRows = def.texture.flipbook.flipbookRows;
-				String mode = def.texture.flipbook.flipbookMode;
-				if (mode != null && "order".equalsIgnoreCase(mode)) {
-					float maxL = buf.maxLife[i];
-					flipbookFrameVal = maxL > 0 ? (1f - buf.life[i] / maxL) : 0f;
-				} else if (mode != null && "random".equalsIgnoreCase(mode) && buf.flipbookFrame[i] >= 0f) {
-					flipbookFrameVal = 1f + buf.flipbookFrame[i];
-				}
-			}
-			particleStagingBuffer.put(flipbookCols).put(flipbookRows).put(flipbookFrameVal);
-			n++;
-			if (n >= MAX_DRAWN)
-				break;
-		}
-		int instanceCount = n;
+		renderContext.cameraX = plugin.cameraPosition[0];
+		renderContext.cameraY = plugin.cameraPosition[1];
+		renderContext.cameraZ = plugin.cameraPosition[2];
+		renderContext.maxDistSq = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
+		renderContext.maxDistSq *= renderContext.maxDistSq;
+		renderContext.frustum = plugin.cameraFrustum;
+
+		int instanceCount = particleManager.filterVisibleParticles(buf, renderContext, currentPlane, 0L, visibleIndices, particleDistSq);
+		lastParticleTotalOnPlane = renderContext.totalOnPlane;
+		lastParticleCulledDistance = renderContext.culledDistance;
+		lastParticleCulledFrustum = renderContext.culledFrustum;
 		lastParticleDrawn = instanceCount;
-		lastUploadedInstanceCount = instanceCount;
+
 		if (instanceCount == 0)
 			return 0;
 
@@ -280,15 +232,49 @@ public class ParticlePass implements ScenePass {
 			particleSortOrder[i] = i;
 		Arrays.sort(particleSortOrder, 0, instanceCount, (a, b) -> Float.compare(particleDistSq[b], particleDistSq[a]));
 
-		// Fill upload buffer in back-to-front order, 64 bytes per instance (12 floats + 16 padding)
+		// Build render list from filtered particles, back-to-front order
+		float[] particleColor = new float[4];
+		particleStagingBuffer.clear();
+		for (int k = 0; k < instanceCount; k++) {
+			int bufIndex = visibleIndices[particleSortOrder[k]];
+			textureForVisibleIndex[k] = getTextureNameForParticle(buf, bufIndex);
+			buf.getCurrentColor(bufIndex, particleColor);
+			float cx = buf.posX[bufIndex] + plugin.cameraShift[0];
+			float cy = buf.posY[bufIndex];
+			float cz = buf.posZ[bufIndex] + plugin.cameraShift[1];
+			particleStagingBuffer.put(cx).put(cy).put(cz);
+			particleStagingBuffer.put(particleColor[0]).put(particleColor[1]).put(particleColor[2]).put(particleColor[3]);
+			particleStagingBuffer.put(buf.size[bufIndex]);
+			String tex = textureForVisibleIndex[k];
+			particleStagingBuffer.put((float) particleTextureLoader.getTextureLayer(tex != null ? tex : ""));
+			float flipbookCols = 0f;
+			float flipbookRows = 0f;
+			float flipbookFrameVal = 0f;
+			ParticleDefinition def = getDefinitionForParticle(buf, bufIndex);
+			if (def != null && def.texture.flipbook.flipbookColumns > 0 && def.texture.flipbook.flipbookRows > 0) {
+				flipbookCols = def.texture.flipbook.flipbookColumns;
+				flipbookRows = def.texture.flipbook.flipbookRows;
+				String mode = def.texture.flipbook.flipbookMode;
+				if (mode != null && "order".equalsIgnoreCase(mode)) {
+					float maxL = buf.maxLife[bufIndex];
+					flipbookFrameVal = maxL > 0 ? (1f - buf.life[bufIndex] / maxL) : 0f;
+				} else if (mode != null && "random".equalsIgnoreCase(mode) && buf.flipbookFrame[bufIndex] >= 0f) {
+					flipbookFrameVal = 1f + buf.flipbookFrame[bufIndex];
+				}
+			}
+			particleStagingBuffer.put(flipbookCols).put(flipbookRows).put(flipbookFrameVal);
+		}
+
+		// Fill upload buffer, 64 bytes per instance (12 floats + 16 padding)
 		batchUploadBuffer.clear();
 		for (int k = 0; k < instanceCount; k++) {
-			int src = particleSortOrder[k] * FLOATS_PER_INSTANCE;
+			int src = k * FLOATS_PER_INSTANCE;
 			for (int f = 0; f < FLOATS_PER_INSTANCE; f++)
 				batchUploadBuffer.putFloat(particleStagingBuffer.get(src + f));
 			for (int p = 0; p < INSTANCE_PADDING_BYTES; p++)
 				batchUploadBuffer.put((byte) 0);
 		}
+		lastUploadedInstanceCount = instanceCount;
 		return instanceCount;
 	}
 

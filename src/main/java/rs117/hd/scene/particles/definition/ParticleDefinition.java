@@ -2,7 +2,7 @@
  * Copyright (c) 2025, Mark7625 (https://github.com/Mark7625/)
  * All rights reserved.
  */
-package rs117.hd.scene.particles;
+package rs117.hd.scene.particles.definition;
 
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class ParticleDefinition {
 
 	public static final ResourcePath PARTICLES_CONFIG_PATH = Props.getFile(
 		"rlhd.particles-config-path",
-		() -> path(ParticleDefinition.class, "particles.json")
+		() -> path(ParticleDefinition.class, "..", "particles.json")
 	);
 
 	@Inject

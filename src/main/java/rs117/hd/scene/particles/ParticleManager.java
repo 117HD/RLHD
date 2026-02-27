@@ -5,16 +5,18 @@
 package rs117.hd.scene.particles;
 
 import com.google.common.base.Stopwatch;
-import java.util.ArrayDeque;
+import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
+import rs117.hd.scene.particles.core.MovingParticle;
+import rs117.hd.scene.particles.core.Particle;
+import rs117.hd.scene.particles.core.ParticleSystem;
+import rs117.hd.scene.particles.definition.ParticleDefinition;
+import rs117.hd.scene.particles.core.ParticleTextureLoader;
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -30,28 +32,72 @@ import rs117.hd.HdPlugin;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.particles.emitter.EmitterDefinitionManager;
+import rs117.hd.scene.particles.emitter.EmitterConfigEntry;
 import rs117.hd.scene.particles.emitter.EmitterPlacement;
-import rs117.hd.scene.particles.emitter.ObjectEmitterBinding;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 import rs117.hd.data.ObjectType;
 import rs117.hd.utils.HDUtils;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class ParticleManager {
 
 	private static final int MAX_PARTICLES = 4096;
-	private static final float UNITS_TO_RAD = (float) (2 * Math.PI / 2048);
-	private static final float VEL_EPS = 1e-6f;
-	private static final int FALLOFF_DIV_LINEAR = 1 << 18;
-	private static final int FALLOFF_DIV_SQUARED = 1 << 28;
 
-	private static long tileKey(WorldPoint wp) {
-		return ((long) wp.getPlane() << 28) | ((wp.getX() & 0x3FFF) << 14) | (wp.getY() & 0x3FFF);
+	public ParticleManager() {
+		this.particleSystem = new ParticleSystem(MAX_PARTICLES);
+	}
+	private static final float UNITS_TO_RAD = (float) (2 * Math.PI / 2048);
+
+	public static final class ParticleRenderContext {
+		public float cameraX, cameraY, cameraZ;
+		public float maxDistSq;
+		public float[][] frustum;
+		public int totalOnPlane;
+		public int culledDistance;
+		public int culledFrustum;
+	}
+
+	/**
+	 * Filters particles by plane, distance, frustum. Fills visible indices and distance-squared; returns count.
+	 */
+	public final int filterVisibleParticles(ParticleBuffer buf, ParticleRenderContext ctx, int plane, long l,
+			int[] outVisibleIndices, float[] outDistSq) {
+		ctx.totalOnPlane = 0;
+		ctx.culledDistance = 0;
+		ctx.culledFrustum = 0;
+		int n = 0;
+		int maxOut = outVisibleIndices != null ? outVisibleIndices.length : 0;
+		int maxDistSqLen = outDistSq != null ? outDistSq.length : 0;
+		int frustumLen = ctx.frustum != null ? ctx.frustum.length : 0;
+		for (int i = 0; i < buf.count; i++) {
+			if (buf.plane[i] != plane)
+				continue;
+			ctx.totalOnPlane++;
+			float dx = buf.posX[i] - ctx.cameraX;
+			float dy = buf.posY[i] - ctx.cameraY;
+			float dz = buf.posZ[i] - ctx.cameraZ;
+			float dSq = dx * dx + dy * dy + dz * dz;
+			if (dSq > ctx.maxDistSq) {
+				ctx.culledDistance++;
+				continue;
+			}
+			if (frustumLen > 0 && !HDUtils.isSphereIntersectingFrustum(buf.posX[i], buf.posY[i], buf.posZ[i], buf.size[i], ctx.frustum, frustumLen)) {
+				ctx.culledFrustum++;
+				continue;
+			}
+			if (n < maxOut && outVisibleIndices != null)
+				outVisibleIndices[n] = i;
+			if (n < maxDistSqLen && outDistSq != null)
+				outDistSq[n] = dSq;
+			n++;
+			if (maxOut > 0 && n >= maxOut)
+				break;
+		}
+		return n;
 	}
 
 	@Inject
@@ -76,14 +122,7 @@ public class ParticleManager {
 	private ClientThread clientThread;
 
 	@Getter
-	private final List<ParticleEmitter> sceneEmitters = new ArrayList<>();
-	@Getter
-	private final Map<TileObject, List<ParticleEmitter>> emittersByTileObject = new LinkedHashMap<>();
-	@Getter
-	private final ParticleBuffer particleBuffer = new ParticleBuffer();
-	@Getter
-	private final Set<ParticleEmitter> emittersCulledThisFrame = new HashSet<>();
-	private final Deque<Particle> particlePool = new ArrayDeque<>(512);
+	private final ParticleSystem particleSystem;
 
 	private final float[] spawnOrigin = new float[3];
 	private final float[] spawnPosScratch = new float[3];
@@ -92,21 +131,40 @@ public class ParticleManager {
 	private final float[] updatePosOut = new float[3];
 	private final int[] planeOutScratch = new int[1];
 	private ParticleEmitter[] emitterIterationArray = new ParticleEmitter[0];
-	private final Map<TileObject, float[]> objectPositionCache = new HashMap<>();
 	private final List<ParticleEmitter> performanceTestEmitters = new ArrayList<>();
+
+	@Getter
+	private boolean continuousRandomSpawn;
 
 	@Getter
 	private int lastEmittersUpdating, lastEmittersCulled;
 
+	public void setContinuousRandomSpawn(boolean on) {
+		this.continuousRandomSpawn = on;
+	}
+
+	public List<ParticleEmitter> getSceneEmitters() {
+		return particleSystem.getEmitters();
+	}
+
+	public Map<TileObject, List<ParticleEmitter>> getEmittersByTileObject() {
+		return particleSystem.getEmittersByTileObject();
+	}
+
+	public ParticleBuffer getParticleBuffer() {
+		return particleSystem.getRenderBuffer();
+	}
+
+	public Set<ParticleEmitter> getEmittersCulledThisFrame() {
+		return particleSystem.getEmittersCulledThisFrame();
+	}
+
 	public Particle obtainParticle() {
-		Particle p = particlePool.poll();
-		if (p == null) return new Particle();
-		p.resetForPool();
-		return p;
+		return particleSystem.getPool().obtain();
 	}
 
 	public void releaseParticle(Particle p) {
-		if (p != null) particlePool.offer(p);
+		particleSystem.getPool().release(p);
 	}
 
 	public int getMaxParticles() {
@@ -139,29 +197,27 @@ public class ParticleManager {
 			p.upperBoundLevel = def.physics.upperBoundLevel;
 			p.lowerBoundLevel = def.physics.lowerBoundLevel;
 		}
-		particleBuffer.addFrom(p);
+		particleSystem.getRenderBuffer().addFrom(p);
 		releaseParticle(p);
 	}
 
 	public void addEmitter(ParticleEmitter emitter) {
-		if (emitter != null && !sceneEmitters.contains(emitter))
-			sceneEmitters.add(emitter);
+		particleSystem.addEmitter(emitter);
 	}
 
 	public void removeEmitter(ParticleEmitter emitter) {
-		sceneEmitters.remove(emitter);
+		particleSystem.removeEmitter(emitter);
 	}
 
 	public void clear() {
 		removeAllObjectSpawnedEmitters();
-		sceneEmitters.clear();
+		particleSystem.getEmitters().clear();
 		emitterDefinitionManager.getDefinitionEmitters().clear();
-		particleBuffer.clear();
+		particleSystem.getRenderBuffer().clear();
 	}
 
 	public void startUp() {
 		eventBus.register(this);
-		particleBuffer.ensureCapacity(MAX_PARTICLES);
 		loadConfig();
 	}
 
@@ -171,9 +227,9 @@ public class ParticleManager {
 	}
 
 	private void removeAllObjectSpawnedEmitters() {
-		for (List<ParticleEmitter> list : emittersByTileObject.values())
-			sceneEmitters.removeAll(list);
-		emittersByTileObject.clear();
+		for (List<ParticleEmitter> list : particleSystem.getEmittersByTileObject().values())
+			particleSystem.removeEmitters(list);
+		particleSystem.getEmittersByTileObject().clear();
 	}
 
 	public void loadSceneParticles(@Nullable SceneContext ctx) {
@@ -198,7 +254,7 @@ public class ParticleManager {
 				}
 			}
 		}
-		log.info("Finished loading scene particle emitters (count={}, took={}ms)", sceneEmitters.size(), sw.elapsed(TimeUnit.MILLISECONDS));
+		log.info("Finished loading scene particle emitters (count={}, took={}ms)", particleSystem.getEmitters().size(), sw.elapsed(TimeUnit.MILLISECONDS));
 	}
 
 	private void loadConfig() {
@@ -223,7 +279,7 @@ public class ParticleManager {
 	public void recreateEmittersFromPlacements(@Nullable SceneContext ctx) {
 		final List<ParticleEmitter> definitionEmitters = emitterDefinitionManager.getDefinitionEmitters();
 		if (!definitionEmitters.isEmpty()) {
-			sceneEmitters.removeAll(definitionEmitters);
+			particleSystem.removeEmitters(definitionEmitters);
 			definitionEmitters.clear();
 		}
 
@@ -240,9 +296,6 @@ public class ParticleManager {
 			return;
 		}
 
-		final boolean checkBounds = ctx != null;
-		final var bounds = checkBounds ? ctx.sceneBounds : null;
-
 		for (EmitterPlacement place : placements) {
 			if (place.particleId == null) {
 				continue;
@@ -255,15 +308,10 @@ public class ParticleManager {
 			}
 
 			final WorldPoint wp = new WorldPoint(place.worldX, place.worldY, place.plane);
-
-			if (checkBounds && !bounds.contains(wp)) {
-				continue;
-			}
-
 			final ParticleEmitter emitter = createEmitterFromDefinition(def, wp);
 			emitter.particleId(def.id);
 
-			sceneEmitters.add(emitter);
+			particleSystem.addEmitter(emitter);
 			definitionEmitters.add(emitter);
 		}
 	}
@@ -338,7 +386,7 @@ public class ParticleManager {
 		ParticleDefinition def = particleDefinitions.getDefinition(particleId);
 		if (def == null) return;
 		String pid = particleId.toUpperCase();
-		for (ParticleEmitter emitter : sceneEmitters) {
+		for (ParticleEmitter emitter : particleSystem.getEmitters()) {
 			String eid = emitter.getParticleId();
 			if (eid != null && eid.equalsIgnoreCase(pid))
 				applyDefinitionToEmitter(emitter, def);
@@ -407,7 +455,7 @@ public class ParticleManager {
 	public ParticleEmitter placeEmitter(WorldPoint worldPoint) {
 		ParticleEmitter e = new ParticleEmitter().at(worldPoint);
 		addEmitter(e);
-		log.info("[Particles] Placed emitter at world ({}, {}, {}), total emitters={}", worldPoint.getX(), worldPoint.getY(), worldPoint.getPlane(), sceneEmitters.size());
+		log.info("[Particles] Placed emitter at world ({}, {}, {}), total emitters={}", worldPoint.getX(), worldPoint.getY(), worldPoint.getPlane(), particleSystem.getEmitters().size());
 		return e;
 	}
 
@@ -441,12 +489,63 @@ public class ParticleManager {
 
 	public void despawnPerformanceTestEmitters() {
 		for (ParticleEmitter e : performanceTestEmitters)
-			sceneEmitters.remove(e);
+			particleSystem.removeEmitter(e);
 		performanceTestEmitters.clear();
 	}
 
 	public boolean hasPerformanceTestEmitters() {
 		return !performanceTestEmitters.isEmpty();
+	}
+
+	/**
+	 * Spawns up to count moving particles at random positions around the player.
+	 * Uses definition "0" for particle appearance. Returns number spawned.
+	 */
+	public int spawnRandomParticles(int count) {
+		return spawnRandomParticlesInternal(count, true);
+	}
+
+	private int spawnRandomParticlesInternal(int count, boolean logResult) {
+		SceneContext ctx = plugin.getSceneContext();
+		Player player = client.getLocalPlayer();
+		if (ctx == null || ctx.sceneBase == null || player == null)
+			return 0;
+		WorldPoint wp = player.getWorldLocation();
+		int[] local = ctx.worldToLocalFirst(wp);
+		if (local == null) return 0;
+		ParticleDefinition def = particleDefinitions.getDefinition("0");
+		if (def == null) def = particleDefinitions.getDefinitions().values().stream().findFirst().orElse(null);
+		if (def == null) return 0;
+		int plane = local[2];
+		float halfTile = LOCAL_TILE_SIZE / 2f;
+		float baseX = local[0] + halfTile;
+		float baseZ = local[1] + halfTile;
+		float baseY = getTerrainHeight(ctx, (int) baseX, (int) baseZ, plane) + 64;
+		ParticleEmitter emitter = createEmitterFromDefinition(def, wp);
+		emitter.particleId(def.id);
+		emitter.setDefinition(def);
+		float radius = 6f * LOCAL_TILE_SIZE;
+		ThreadLocalRandom rng = ThreadLocalRandom.current();
+		ParticleBuffer buf = particleSystem.getRenderBuffer();
+		int spawned = 0;
+		int target = Math.min(count, MAX_PARTICLES);
+		for (int i = 0; i < target; i++) {
+			if (buf.count >= MAX_PARTICLES) break;
+			Particle p = obtainParticle();
+			if (p == null) break;
+			float ox = baseX + (rng.nextFloat() * 2f - 1f) * radius;
+			float oy = baseY + (rng.nextFloat() * 2f - 1f) * radius * 0.5f;
+			float oz = baseZ + (rng.nextFloat() * 2f - 1f) * radius;
+			if (!emitter.spawnInto(p, ox, oy, oz, plane)) {
+				releaseParticle(p);
+				continue;
+			}
+			addSpawnedParticleToBuffer(p, ox, oy, oz, emitter);
+			spawned++;
+		}
+		if (logResult && spawned > 0)
+			log.info("[Particles] Spawned {} random particles around player", spawned);
+		return spawned;
 	}
 
 	private int getImpostorId(TileObject tileObject) {
@@ -493,16 +592,16 @@ public class ParticleManager {
 
 	private void spawnEmittersForObject(TileObject tileObject, int objectId) {
 		handleObjectDespawn(tileObject);
-		List<ObjectEmitterBinding> bindings = emitterDefinitionManager.getObjectBindingsByType().get(objectId);
+		List<EmitterConfigEntry.ObjectBinding> bindings = emitterDefinitionManager.getObjectBindingsByType().get(objectId);
 		if (bindings == null || bindings.isEmpty()) return;
 		WorldPoint wp = tileObject.getWorldLocation();
 		List<ParticleEmitter> created = new ArrayList<>();
-		for (ObjectEmitterBinding binding : bindings) {
-			ParticleDefinition def = particleDefinitions.getDefinition(binding.getParticleId());
+		for (EmitterConfigEntry.ObjectBinding binding : bindings) {
+			ParticleDefinition def = particleDefinitions.getDefinition(binding.particleId);
 			if (def == null) continue;
 			ParticleEmitter e = createEmitterFromDefinition(def, wp);
 			e.particleId(def.id);
-			e.positionOffset(binding.getOffsetX(), binding.getOffsetY(), binding.getOffsetZ());
+			e.positionOffset(binding.offsetX, binding.offsetY, binding.offsetZ);
 			e.setAlignment(binding.getAlignment());
 			e.setTileObject(tileObject);
 			if (tileObject instanceof GameObject) {
@@ -514,20 +613,20 @@ public class ParticleManager {
 				e.setSizeX(1);
 				e.setSizeY(1);
 			}
-			sceneEmitters.add(e);
+			particleSystem.addEmitter(e);
 			created.add(e);
 			String tex = def.texture.file;
 			if (tex != null && !tex.isEmpty())
 				particleTextureLoader.setActiveTextureName(tex);
 		}
 		if (!created.isEmpty())
-			emittersByTileObject.put(tileObject, created);
+			particleSystem.getEmittersByTileObject().put(tileObject, created);
 	}
 
 	private void handleObjectDespawn(TileObject tileObject) {
-		List<ParticleEmitter> list = emittersByTileObject.remove(tileObject);
+		List<ParticleEmitter> list = particleSystem.getEmittersByTileObject().remove(tileObject);
 		if (list != null)
-			sceneEmitters.removeAll(list);
+			particleSystem.removeEmitters(list);
 	}
 
 	@Subscribe
@@ -571,94 +670,49 @@ public class ParticleManager {
 	}
 
 	public void update(@Nullable SceneContext ctx, float dt) {
-		emittersCulledThisFrame.clear();
+		particleSystem.getEmittersCulledThisFrame().clear();
 		if (ctx != null && ctx.sceneBase != null) {
-			objectPositionCache.clear();
-			float drawDistance = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
-			final float halfTile = LOCAL_TILE_SIZE / 2f;
-			float farSq = drawDistance + halfTile + halfTile * 2;
-			farSq *= farSq;
+			particleSystem.getObjectPositionCache().clear();
 			final long gameCycle = client.getGameCycle();
-			final int maxParticles = MAX_PARTICLES;
-			final int[] cameraShift = plugin.cameraShift;
-			final float[][] cameraFrustum = plugin.cameraFrustum;
 			final int[][][] tileHeights = ctx.scene.getTileHeights();
-			ParticleBuffer buf = particleBuffer;
+			ParticleBuffer buf = particleSystem.getRenderBuffer();
 
-			int numEmitters = sceneEmitters.size();
+			int numEmitters = particleSystem.getEmitters().size();
 			if (emitterIterationArray.length < numEmitters)
 				emitterIterationArray = new ParticleEmitter[numEmitters];
-			sceneEmitters.toArray(emitterIterationArray);
+			particleSystem.getEmitters().toArray(emitterIterationArray);
 			for (int e = 0; e < numEmitters; e++) {
 				ParticleEmitter emitter = emitterIterationArray[e];
 				ParticleDefinition def = emitter.getDefinition();
-				boolean skipCulling = def != null && def.general.displayWhenCulled;
 
-				TileObject obj = emitter.getTileObject();
-				if (obj != null) {
-					LocalPoint lp = obj.getLocalLocation();
-					float dx = plugin.cameraFocalPoint[0] - lp.getX();
-					float dz = plugin.cameraFocalPoint[1] - lp.getY();
-					if (dx * dx + dz * dz >= farSq) {
-						if (!skipCulling) emittersCulledThisFrame.add(emitter);
-						continue;
-					}
-				}
-
-				if (!getEmitterSpawnPosition(ctx, emitter, updatePosOut, planeOutScratch, tileHeights, spawnOrigin, spawnPosScratch, spawnOffsetScratch, localScratch, objectPositionCache)) {
-					if (!skipCulling) emittersCulledThisFrame.add(emitter);
+				if (!getEmitterSpawnPosition(ctx, emitter, updatePosOut, planeOutScratch, tileHeights, spawnOrigin, spawnPosScratch, spawnOffsetScratch, localScratch, particleSystem.getObjectPositionCache()))
 					continue;
-				}
 				int plane = planeOutScratch[0];
 
-				boolean visible = true;
-				float distX = plugin.cameraFocalPoint[0] - updatePosOut[0];
-				float distZ = plugin.cameraFocalPoint[1] - updatePosOut[2];
-				float distanceSquared = distX * distX + distZ * distZ;
-				float maxRadius = halfTile * 2;
-				float near = -maxRadius * maxRadius;
-				float far = drawDistance + halfTile + maxRadius;
-				far *= far;
-				if (distanceSquared <= near || distanceSquared >= far)
-					visible = false;
-				if (visible) {
-					visible = isSphereIntersectingFrustum(
-						updatePosOut[0] + cameraShift[0],
-						updatePosOut[1],
-						updatePosOut[2] + cameraShift[1],
-						maxRadius,
-						cameraFrustum,
-						4
-					);
-				}
-				if (!visible) {
-					if (!skipCulling) emittersCulledThisFrame.add(emitter);
-					continue;
-				}
-
-				if (buf.count >= maxParticles) continue;
-				if (def != null && def.hasLevelBounds) {
-					int lower = def.physics.lowerBoundLevel == -2 ? 0 : (def.physics.lowerBoundLevel == -1 ? plane : def.physics.lowerBoundLevel);
-					int upper = def.physics.upperBoundLevel == -2 ? 3 : (def.physics.upperBoundLevel == -1 ? plane : def.physics.upperBoundLevel);
-					if (plane < lower || plane > upper) continue;
-				}
+				if (buf.count >= MAX_PARTICLES) continue;
 				if (def != null)
 					emitter.setDirectionYaw((float) def.general.directionYaw * UNITS_TO_RAD);
 				emitter.tick(dt, gameCycle, updatePosOut[0], updatePosOut[1], updatePosOut[2], plane, this);
 			}
-			lastEmittersCulled = emittersCulledThisFrame.size();
-			lastEmittersUpdating = sceneEmitters.size() - lastEmittersCulled;
+			lastEmittersCulled = 0;
+			lastEmittersUpdating = numEmitters;
+
+			if (continuousRandomSpawn && buf.count < MAX_PARTICLES) {
+				int toSpawn = Math.min(150, MAX_PARTICLES - buf.count);
+				if (toSpawn > 0)
+					spawnRandomParticlesInternal(toSpawn, false);
+			}
 		} else {
 			lastEmittersUpdating = 0;
-			lastEmittersCulled = sceneEmitters.size();
+			lastEmittersCulled = particleSystem.getEmitters().size();
 		}
 
-		ParticleBuffer buf = particleBuffer;
+		ParticleBuffer buf = particleSystem.getRenderBuffer();
 		int n = buf.count;
 		int tickDelta = Math.max(1, (int) Math.round(dt * 50));
 		tickDelta = Math.min(tickDelta, 10);
 		for (int i = 0; i < n; ) {
-			if (EmittedParticle.tick(buf, i, tickDelta, this)) {
+			if (MovingParticle.tick(buf, i, tickDelta)) {
 				buf.swap(i, n - 1);
 				n--;
 			} else {
@@ -667,26 +721,8 @@ public class ParticleManager {
 		}
 		buf.count = n;
 
-		if (ctx != null && ctx.sceneBase != null) {
-			float maxDistSq = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
-			maxDistSq *= maxDistSq;
-			float cx = plugin.cameraPosition[0];
-			float cy = plugin.cameraPosition[1];
-			float cz = plugin.cameraPosition[2];
-			for (int i = 0; i < buf.count; i++) {
-				float px = (float) (buf.xFixed[i] >> 12);
-				float py = (float) (buf.yFixed[i] >> 12);
-				float pz = (float) (buf.zFixed[i] >> 12);
-				float dx = px - cx;
-				float dy = py - cy;
-				float dz = pz - cz;
-				if (dx * dx + dy * dy + dz * dz <= maxDistSq)
-					buf.syncRefToFloat(i);
-			}
-		} else {
-			for (int i = 0; i < buf.count; i++)
-				buf.syncRefToFloat(i);
-		}
+		for (int i = 0; i < buf.count; i++)
+			buf.syncRefToFloat(i);
 	}
 
 	@Nullable
@@ -864,14 +900,14 @@ public class ParticleManager {
 	 * Returns emitters whose spawn position is on the given tile. Used by particle gizmo right-click menu.
 	 */
 	public List<ParticleEmitter> getEmittersAtTile(@Nullable SceneContext ctx, @Nullable Tile tile) {
-		if (tile == null || sceneEmitters.isEmpty())
+		if (tile == null || particleSystem.getEmitters().isEmpty())
 			return List.of();
 		LocalPoint lp = tile.getLocalLocation();
 		int tileX = lp.getX() / LOCAL_TILE_SIZE;
 		int tileY = lp.getY() / LOCAL_TILE_SIZE;
 		int plane = tile.getPlane();
 		List<ParticleEmitter> result = new ArrayList<>();
-		for (ParticleEmitter em : sceneEmitters) {
+		for (ParticleEmitter em : particleSystem.getEmitters()) {
 			TileObject obj = em.getTileObject();
 			if (obj != null) {
 				LocalPoint objLp = obj.getLocalLocation();

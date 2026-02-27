@@ -19,7 +19,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.AbstractSpinnerModel;
 import javax.swing.DefaultComboBoxModel;
@@ -56,9 +55,9 @@ import net.runelite.client.ui.components.colorpicker.RuneliteColorPicker;
 import net.runelite.client.ui.components.materialtabs.MaterialTab;
 import net.runelite.client.ui.components.materialtabs.MaterialTabGroup;
 import rs117.hd.HdPlugin;
-import rs117.hd.scene.particles.ParticleDefinition;
 import rs117.hd.scene.particles.ParticleManager;
-import rs117.hd.scene.particles.ParticleTextureLoader;
+import rs117.hd.scene.particles.definition.ParticleDefinition;
+import rs117.hd.scene.particles.core.ParticleTextureLoader;
 import rs117.hd.utils.ResourcePath;
 
 @Slf4j
@@ -2419,6 +2418,22 @@ public class ParticleSidebarPanel extends PluginPanel  {
 			});
 		});
 		buttons.add(testParticlesBtn);
+
+		JButton spawn4096Btn = new JButton("Spawn 4096 particles");
+		spawn4096Btn.setToolTipText("Toggle continuous spawning of particles around the player (maintains ~4096 until turned off)");
+		styleButton(spawn4096Btn);
+		boolean initialSpawn = particleManager.isContinuousRandomSpawn();
+		setButtonActive(spawn4096Btn, initialSpawn);
+		spawn4096Btn.setText(initialSpawn ? "Stop spawning" : "Spawn 4096 particles");
+		spawn4096Btn.addActionListener(e -> {
+			clientThread.invoke(() -> {
+				boolean on = !particleManager.isContinuousRandomSpawn();
+				particleManager.setContinuousRandomSpawn(on);
+				setButtonActive(spawn4096Btn, on);
+				spawn4096Btn.setText(on ? "Stop spawning" : "Spawn 4096 particles");
+			});
+		});
+		buttons.add(spawn4096Btn);
 
 		p.add(buttons, BorderLayout.NORTH);
 		return p;

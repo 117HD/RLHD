@@ -12,5 +12,12 @@
     ],
     "description": "TEST",
     "particleId": "7"
+  },
+  {
+    "placements": [
+      [3181,3437,0]
+    ],
+    "description": "TES44T",
+    "particleId": "15"
   }
 ]

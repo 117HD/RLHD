@@ -2,16 +2,15 @@
  * Copyright (c) 2025, Mark7625 (https://github.com/Mark7625/)
  * All rights reserved.
  */
-package rs117.hd.scene.particles;
+package rs117.hd.scene.particles.core.buffer;
 
+import rs117.hd.scene.particles.core.Particle;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 
 /**
- * Structure-of-arrays storage for particles to improve cache locality in the update and render loops.
+ * SoA particle buffer. Fixed capacity, pre-allocated at construction. No runtime resize.
  */
 public final class ParticleBuffer {
-
-	private static final int INITIAL_CAPACITY = 512;
 
 	public static final int FLAG_COLOUR_INCREMENT = 1;
 	public static final int FLAG_HAS_TARGET_COLOR = 2;
@@ -83,8 +82,8 @@ public final class ParticleBuffer {
 
 	public float[] flipbookFrame;
 
-	public ParticleBuffer() {
-		capacity = INITIAL_CAPACITY;
+	public ParticleBuffer(int capacity) {
+		this.capacity = capacity;
 		posX = new float[capacity];
 		posY = new float[capacity];
 		posZ = new float[capacity];
@@ -144,109 +143,10 @@ public final class ParticleBuffer {
 	}
 
 
-	public void ensureCapacity(int min) {
-		if (capacity >= min) return;
-		capacity = Math.max(capacity * 2, min);
-		capacity = Math.min(capacity, 4096);
-		int n = capacity;
-		int copy = count;
-		posX = copyResize(posX, n, copy);
-		posY = copyResize(posY, n, copy);
-		posZ = copyResize(posZ, n, copy);
-		velX = copyResize(velX, n, copy);
-		velY = copyResize(velY, n, copy);
-		velZ = copyResize(velZ, n, copy);
-		life = copyResize(life, n, copy);
-		maxLife = copyResize(maxLife, n, copy);
-		size = copyResize(size, n, copy);
-		plane = copyResize(plane, n, copy);
-		colorR = copyResize(colorR, n, copy);
-		colorG = copyResize(colorG, n, copy);
-		colorB = copyResize(colorB, n, copy);
-		colorA = copyResize(colorA, n, copy);
-		initialColorR = copyResize(initialColorR, n, copy);
-		initialColorG = copyResize(initialColorG, n, copy);
-		initialColorB = copyResize(initialColorB, n, copy);
-		initialColorA = copyResize(initialColorA, n, copy);
-		targetColorR = copyResize(targetColorR, n, copy);
-		targetColorG = copyResize(targetColorG, n, copy);
-		targetColorB = copyResize(targetColorB, n, copy);
-		targetColorA = copyResize(targetColorA, n, copy);
-		colorTransitionPct = copyResize(colorTransitionPct, n, copy);
-		alphaTransitionPct = copyResize(alphaTransitionPct, n, copy);
-		colourIncR = copyResize(colourIncR, n, copy);
-		colourIncG = copyResize(colourIncG, n, copy);
-		colourIncB = copyResize(colourIncB, n, copy);
-		colourIncA = copyResize(colourIncA, n, copy);
-		colourTransitionEndLife = copyResize(colourTransitionEndLife, n, copy);
-		scaleTransitionEndLife = copyResize(scaleTransitionEndLife, n, copy);
-		speedTransitionEndLife = copyResize(speedTransitionEndLife, n, copy);
-		scaleIncPerSec = copyResize(scaleIncPerSec, n, copy);
-		speedIncPerSec = copyResize(speedIncPerSec, n, copy);
-		emitterOriginX = copyResize(emitterOriginX, n, copy);
-		emitterOriginY = copyResize(emitterOriginY, n, copy);
-		emitterOriginZ = copyResize(emitterOriginZ, n, copy);
-		distanceFalloffType = copyResize(distanceFalloffType, n, copy);
-		distanceFalloffStrength = copyResize(distanceFalloffStrength, n, copy);
-		upperBoundLevel = copyResize(upperBoundLevel, n, copy);
-		lowerBoundLevel = copyResize(lowerBoundLevel, n, copy);
-		flags = copyResize(flags, n, copy);
-		hasLevelBounds = copyResize(hasLevelBounds, n, copy);
-		emitter = copyResize(emitter, n, copy);
-		xFixed = copyResizeLong(xFixed, n, copy);
-		yFixed = copyResizeLong(yFixed, n, copy);
-		zFixed = copyResizeLong(zFixed, n, copy);
-		velocityX = copyResizeShort(velocityX, n, copy);
-		velocityY = copyResizeShort(velocityY, n, copy);
-		velocityZ = copyResizeShort(velocityZ, n, copy);
-		speedRef = copyResize(speedRef, n, copy);
-		lifetimeTicks = copyResize(lifetimeTicks, n, copy);
-		remainingTicks = copyResize(remainingTicks, n, copy);
-		colourArgbRef = copyResize(colourArgbRef, n, copy);
-		colourRgbLowRef = copyResize(colourRgbLowRef, n, copy);
-		scaleRef = copyResize(scaleRef, n, copy);
-		flipbookFrame = copyResize(flipbookFrame, n, copy);
-	}
-
-	private static long[] copyResizeLong(long[] a, int newLen, int copy) {
-		long[] b = new long[newLen];
-		if (a != null && copy > 0) System.arraycopy(a, 0, b, 0, copy);
-		return b;
-	}
-
-	private static short[] copyResizeShort(short[] a, int newLen, int copy) {
-		short[] b = new short[newLen];
-		if (a != null && copy > 0) System.arraycopy(a, 0, b, 0, copy);
-		return b;
-	}
-
-	private static float[] copyResize(float[] a, int newLen, int copy) {
-		float[] b = new float[newLen];
-		if (a != null && copy > 0) System.arraycopy(a, 0, b, 0, copy);
-		return b;
-	}
-
-	private static int[] copyResize(int[] a, int newLen, int copy) {
-		int[] b = new int[newLen];
-		if (a != null && copy > 0) System.arraycopy(a, 0, b, 0, copy);
-		return b;
-	}
-
-	private static boolean[] copyResize(boolean[] a, int newLen, int copy) {
-		boolean[] b = new boolean[newLen];
-		if (a != null && copy > 0) System.arraycopy(a, 0, b, 0, copy);
-		return b;
-	}
-
-	@SuppressWarnings("unchecked")
-	private static ParticleEmitter[] copyResize(ParticleEmitter[] a, int newLen, int copy) {
-		ParticleEmitter[] b = new ParticleEmitter[newLen];
-		if (a != null && copy > 0) System.arraycopy(a, 0, b, 0, copy);
-		return b;
-	}
+	public void ensureCapacity(int min) {}
 
 	public void addFrom(Particle p) {
-		ensureCapacity(count + 1);
+		if (count >= capacity) return;
 		int i = count++;
 		posX[i] = p.position[0];
 		posY[i] = p.position[1];
@@ -301,7 +201,7 @@ public final class ParticleBuffer {
 		speedIncPerSec[i] = p.speedIncrementPerSecond;
 		scaleTransitionEndLife[i] = p.scaleTransitionEndLife;
 		speedTransitionEndLife[i] = p.speedTransitionEndLife;
-		// Ref state from float (so EmittedParticle.tick 1:1 can run)
+		// Ref state from float (so MovingParticle.tick 1:1 can run)
 		xFixed[i] = (long) (p.position[0] * 4096);
 		yFixed[i] = (long) (p.position[1] * 4096);
 		zFixed[i] = (long) (p.position[2] * 4096);
@@ -330,6 +230,9 @@ public final class ParticleBuffer {
 		flipbookFrame[i] = p.flipbookRandomFrame >= 0 ? (float) p.flipbookRandomFrame : -1f;
 	}
 
+	/**
+	 * Writes ref state (fixed-point) to float arrays for rendering.
+	 */
 	public void syncRefToFloat(int i) {
 		posX[i] = (float) (xFixed[i] >> 12);
 		posY[i] = (float) (yFixed[i] >> 12);
@@ -440,6 +343,9 @@ public final class ParticleBuffer {
 		a[j] = t;
 	}
 
+	/**
+	 * Writes current RGBA of particle at slot i into out[0..3].
+	 */
 	public void getCurrentColor(int i, float[] out) {
 		if ((flags[i] & FLAG_COLOUR_INCREMENT) != 0) {
 			out[0] = colorR[i];

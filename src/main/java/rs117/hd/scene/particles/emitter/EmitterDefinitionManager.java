@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.GamevalManager;
-import rs117.hd.scene.particles.ParticleDefinition;
+import rs117.hd.scene.particles.definition.ParticleDefinition;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -30,7 +30,7 @@ public class EmitterDefinitionManager {
 
 	private static final ResourcePath EMITTERS_CONFIG_PATH = Props.getFile(
 		"rlhd.emitters-config-path",
-			() -> path(ParticleDefinition.class, "emitters.json")
+			() -> path(ParticleDefinition.class, "..", "emitters.json")
 	);
 
 	@Inject
@@ -46,7 +46,7 @@ public class EmitterDefinitionManager {
 	private final List<EmitterPlacement> placements = new ArrayList<>();
 
 	@Getter
-	private final ListMultimap<Integer, ObjectEmitterBinding> objectBindingsByType = ArrayListMultimap.create();
+	private final ListMultimap<Integer, EmitterConfigEntry.ObjectBinding> objectBindingsByType = ArrayListMultimap.create();
 
 	@Getter
 	private final List<ParticleEmitter> definitionEmitters = new ArrayList<>();
@@ -94,24 +94,19 @@ public class EmitterDefinitionManager {
 					if (entry.placements != null) {
 						for (int[] p : entry.placements) {
 							if (p != null && p.length >= 3) {
-								EmitterPlacement pl = new EmitterPlacement();
-								pl.worldX = p[0];
-								pl.worldY = p[1];
-								pl.plane = p[2];
-								pl.particleId = pid;
-								placements.add(pl);
+								placements.add(new EmitterPlacement(p[0], p[1], p[2], pid));
 							}
 						}
 					}
 					if (objects != null && entry.objectEmitters != null) {
-						for (ObjectEmitterBinding b : entry.objectEmitters) {
-							if (b == null || b.getObject() == null || b.getObject().isEmpty()) continue;
-							Integer id = objects.get(b.getObject());
+						for (EmitterConfigEntry.ObjectBinding b : entry.objectEmitters) {
+							if (b == null || b.object == null || b.object.isEmpty()) continue;
+							Integer id = objects.get(b.object);
 							if (id != null) {
-								b.setParticleId(pid);
+								b.particleId = pid;
 								objectBindingsByType.put(id, b);
 							} else {
-								log.warn("[Particles] Unknown object gameval in emitters.json: {}", b.getObject());
+								log.warn("[Particles] Unknown object gameval in emitters.json: {}", b.object);
 							}
 						}
 					}

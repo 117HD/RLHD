@@ -2,7 +2,7 @@
  * Copyright (c) 2025, Mark7625 (https://github.com/Mark7625/)
  * All rights reserved.
  */
-package rs117.hd.scene.particles;
+package rs117.hd.scene.particles.core;
 
 import javax.annotation.Nullable;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
@@ -43,6 +43,9 @@ public class Particle {
 	public ParticleEmitter emitter;
 
 	public int flipbookRandomFrame = -1;
+
+	/** Pool slot index; used by ParticlePool for bookkeeping. */
+	public int poolIndex;
 
 	public Particle() {}
 

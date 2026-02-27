@@ -2,15 +2,19 @@
  * Copyright (c) 2025, Mark7625 (https://github.com/Mark7625/)
  * All rights reserved.
  */
-package rs117.hd.scene.particles;
+package rs117.hd.scene.particles.core;
 
+import static net.runelite.api.Constants.EXTENDED_SCENE_SIZE;
+import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
+
+import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
+import rs117.hd.scene.particles.definition.ParticleDefinition;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 
 /**
- * Per-particle update 1:1 with reference EmittedParticle.tick (rs-client-main).
- * Level bounds / validateAndEnqueueForRender are done elsewhere; not included here.
+ * Advances a single particle. Returns true if it should be removed.
  */
-public final class EmittedParticle {
+public final class MovingParticle {
 
 	private static int clampColour16(int value) {
 		if (value < 0) return 0;
@@ -18,16 +22,7 @@ public final class EmittedParticle {
 		return value;
 	}
 
-	/**
-	 * Advances particle at buffer slot i by tickDelta ticks. Reference EmittedParticle.tick 1:1.
-	 * Returns true if the particle should be removed (remainingTicks <= 0).
-	 * Uses ref state (xFixed, velocityX/Y/Z, speedRef, remainingTicks, colourArgbRef, colourRgbLowRef, scaleRef).
-	 * After tick, call buf.syncRefToFloat(i) so float state is updated for rendering.
-	 */
-	public static boolean tick(ParticleBuffer buf, int i, int tickDelta, ParticleManager manager) {
-		if (buf.emitter[i] != null && manager.getEmittersCulledThisFrame().contains(buf.emitter[i])) {
-			return true;
-		}
+	public static boolean tick(ParticleBuffer buf, int i, int tickDelta) {
 		buf.remainingTicks[i] -= tickDelta;
 		if (buf.remainingTicks[i] <= 0) {
 			return true;
@@ -100,6 +95,14 @@ public final class EmittedParticle {
 		buf.yFixed[i] += ((long) buf.velocityY[i] * (long) (buf.speedRef[i] << 2) >> 23) * (long) tickDelta;
 		buf.zFixed[i] += ((long) buf.velocityZ[i] * (long) (buf.speedRef[i] << 2) >> 23) * (long) tickDelta;
 
+		int east = (int) (buf.xFixed[i] >> 12);
+		int north = (int) (buf.zFixed[i] >> 12);
+		int height = (int) (buf.yFixed[i] >> 12);
+		int sceneSizeXZ = EXTENDED_SCENE_SIZE * LOCAL_TILE_SIZE;
+		if (east < 0 || east >= sceneSizeXZ || north < 0 || north >= sceneSizeXZ
+			|| height < -262144 || height > 262144) {
+			return true;
+		}
 		return false;
 	}
 }
