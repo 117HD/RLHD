@@ -21369,7 +21369,7 @@
     "description": "STANDING_TORCH_LARGE_BLUE",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 700,
+    "radius": 600,
     "strength": 12.5,
     "color": [
       0,
@@ -33021,7 +33021,7 @@
     "worldX": 1345,
     "worldY": 3773,
     "plane": 0,
-    "height": 600,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 4,
@@ -33037,12 +33037,12 @@
   {
     "description": "KARUULM_LAVA_2_2",
     "worldX": 1341,
-    "worldY": 3777,
+    "worldY": 3775,
     "plane": 0,
     "height": 600,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33057,10 +33057,10 @@
     "worldX": 1348,
     "worldY": 3811,
     "plane": 0,
-    "height": 600,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33075,10 +33075,10 @@
     "worldX": 1327,
     "worldY": 3820,
     "plane": 0,
-    "height": 600,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 7.5,
     "color": [
       112,
       200,
@@ -33147,10 +33147,10 @@
     "worldX": 1283,
     "worldY": 3796,
     "plane": 0,
-    "height": 600,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 7.5,
     "color": [
       112,
       200,
@@ -33165,10 +33165,10 @@
     "worldX": 1275,
     "worldY": 3797,
     "plane": 0,
-    "height": 600,
+    "height": 250,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33186,7 +33186,7 @@
     "height": 50,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 11,
     "color": [
       112,
       200,
@@ -33234,13 +33234,13 @@
   },
   {
     "description": "KARUULM_LAVA_12_1",
-    "worldX": 1291,
+    "worldX": 1290,
     "worldY": 3828,
     "plane": 0,
-    "height": 600,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 8,
     "color": [
       112,
       200,
@@ -33258,7 +33258,7 @@
     "height": 600,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 7,
     "color": [
       112,
       200,
@@ -33305,11 +33305,47 @@
     "range": 10
   },
   {
+    "description": "KARUULM_LAVA_EDGE_1",
+    "objectIds": [
+      "BRIMSTONE_FALLOFF_1",
+      "BRIMSTONE_FALLOFF_T",
+      "BRIMSTONE_FALLOFF_2"
+    ],
+    "height": 75,
+    "alignment": "CENTER",
+    "radius": 230,
+    "strength": 23,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20
+  },
+  {
+    "description": "KARUULM_LAVA_EDGE_2",
+    "objectIds": [
+      "BRIMSTONE_FALLOFF_4"
+    ],
+    "offset": [ -70, 75, 50 ],
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 23,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20
+  },
+  {
     "description": "KARUULM_LAVA_15_1",
     "worldX": 1315,
     "worldY": 3812,
     "plane": 0,
-    "height": 500,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 4,
@@ -33327,10 +33363,10 @@
     "worldX": 1314,
     "worldY": 3801,
     "plane": 0,
-    "height": 500,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33345,10 +33381,10 @@
     "worldX": 1318,
     "worldY": 3807,
     "plane": 0,
-    "height": 500,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33363,10 +33399,10 @@
     "worldX": 1306,
     "worldY": 3811,
     "plane": 0,
-    "height": 500,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33381,10 +33417,10 @@
     "worldX": 1307,
     "worldY": 3803,
     "plane": 0,
-    "height": 500,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33396,10 +33432,10 @@
   },
   {
     "description": "KARUULM_SULPHUR_VENT",
-    "height": 80,
+    "height": 120,
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12,
+    "radius": 300,
+    "strength": 18,
     "color": [
       112,
       200,
@@ -33420,7 +33456,7 @@
     "height": 400,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,

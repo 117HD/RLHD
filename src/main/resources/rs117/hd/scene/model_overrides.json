@@ -2576,20 +2576,23 @@
   {
     "description": "Floating Rocks - Remove Ripples",
     "baseMaterial": "STONE_NORMALED",
+    "castShadows": false,
     "objectIds": [
       "HARMLESS_ROCK_POOL",
       "HARMLESS_ROCK_POOL_SMALL",
       "HARMLESS_ROCK_POOL_BITS",
-      "SNAKEBOSS_STEPPINGSTONE"
+      "SNAKEBOSS_STEPPINGSTONE",
+      "BRAIN_ROCK_POOL",
+      "BRAIN_ROCK_POOL_SMALL",
+      "BRAIN_ROCK_POOL_BITS",
+      "FAIRYTALE2_ROCK_POOL_SMALL"
     ],
     "uvType": "BOX",
     "colorOverrides": [
       {
         "colors": [ "h == 42", "h == 35" ],
-        "baseMaterial": "TRANSPARENT",
-        "uvType": "BOX",
-        "uvScale": 0.33,
-        "uvOrientation": 512
+        "baseMaterial": "GRAY_70",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -3154,6 +3157,7 @@
       "SAILING_BT_GWENITH_GLIDE_TELEPORT_MARKER_IORWERTH",
       "SAILING_BT_GWENITH_GLIDE_TELEPORT_MARKER_MEILYR",
       "SAILING_BT_GWENITH_GLIDE_TELEPORT_MARKER_TRAHAEARN",
+      "SAILING_CHARTING_HINT_MARKER_SPYGLASS",
       "XBOWS_INV_FLOOR_NOBLOCK"
     ]
   },
@@ -6488,7 +6492,6 @@
     "description": "Mount Karuulm - Rock - Walls",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
-    "uvOrientation": 256,
     "uvScale": 0.66,
     "objectIds": [
       "BRIMSTONE_ROCK_CLIFF_2X2",
@@ -6505,7 +6508,26 @@
       "BRIMSTONE_ROCK_CLIFF_T",
       "BRIMSTONE_ROCK_CLIFF_U",
       "BRIMSTONE_ROCKYOUTCROP_CORNER",
-      "BRIMSTONE_ROCKYOUTCROP_STRAIGHT"
+      "BRIMSTONE_ROCKYOUTCROP_STRAIGHT",
+      "MOUNT_KARUULM_SHORTCUT_ROCKS_LOW",
+      "MOUNT_KARUULM_SHORTCUT_NOOP",
+      "MOUNT_KARUULM_SHORTCUT_ROCKS"
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "depthBias": 1,
+    "objectIds": [
+      "BRIMSTONE_ROCK_CLIFF_FLAG"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 10 || h == 0",
+        "baseMaterial": "METALLIC_1_SMOOTH_LIGHT"
+      }
     ]
   },
   {
@@ -6513,6 +6535,7 @@
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.66,
+    "depthBias": 1,
     "objectIds": [
       "BRIMSTONE_SULPHUR_CLIFF_1",
       "BRIMSTONE_SULPHUR_CLIFF_2",
@@ -9053,7 +9076,7 @@
     ]
   },
   {
-    "description": "Relleka - Large Long Boat Mast",
+    "description": "Relleka - Long Boat to Neitiznot/Jatiso",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "MODEL_XY",
     "uvScale": 0.65,
@@ -9068,8 +9091,9 @@
         "uvScale": 0.75
       },
       {
-        "baseMaterial": "TRANSPARENT",
-        "colors": [ "a < 255" ]
+        "baseMaterial": "GRAY_75",
+        "colors": [ "a < 255" ],
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -13843,9 +13867,6 @@
       "TROLL_ROMANCE_ROCKNOBLOCK",
       "TROLLRESCUE_ICY_ROCK_BIG",
       "AHOY_SHIPWRECK_ROCKS",
-      "ROCK_POOL",
-      "ROCK_POOL_SMALL",
-      "ROCK_POOL_BITS",
       "MDAUGHTER_CLIFF_BOULDER",
       "MDAUGHTER_CLIFF_BOULDER_WITHROPE",
       "MDAUGHTER_CLIFF_ROCK",
@@ -13865,13 +13886,10 @@
       "MOLE_ROCKS_SMALL_01",
       "MOLE_ROCKS_SMALL_02",
       "MOLE_ROCKS_SMALL_03",
-      "SANDY_ROCK_POOL",
       "ROCKSLIDE_MIDGREY1",
       "ROCKSLIDE_MIDGREY2",
       "ROCKSLIDE_MIDGREY3",
       "ROCKSLIDE_MIDGREY4",
-      "SANDY_ROCK_POOL_SMALL",
-      "SANDY_ROCK_POOL_BITS",
       "BURGH_ROCK1",
       "BURGH_ROCK2",
       "BURGH_ROCK3",
@@ -13918,9 +13936,6 @@
       "BARROWS_ROCKSLIDE1",
       "BARROWS_ROCKSLIDE2",
       "BARROWS_ROCKSLIDE3",
-      "BRAIN_ROCK_POOL",
-      "BRAIN_ROCK_POOL_SMALL",
-      "BRAIN_ROCK_POOL_BITS",
       "SUROK_TUNNEL_ROCKS_SMALL_01",
       "SUROK_TUNNEL_ROCKS_SMALL_02",
       "SUROK_TUNNEL_ROCKS_SMALL_03",
@@ -27353,7 +27368,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "GRAY_70",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -29367,7 +29383,8 @@
     "terrainVertexSnap": true,
     "objectIds": [
       "BOULDER1",
-      "BOULDER2"
+      "BOULDER2",
+      "BOULDER3"
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -39969,6 +39986,51 @@
     "uvOrientation": 346
   },
   {
+    "description": "Mount Karuulm - Elevator",
+    "areas": [ "MOUNT_KARUULM" ],
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "BRIMSTONE_ELEVATOR_PILLAR",
+      "BRIMSTONE_ELEVATOR_ROOF",
+      "BRIMSTONE_ELEVATOR_POST",
+      "BRIMSTONE_ELEVATOR_CONTROL_WALL",
+      "BRIMSTONE_DUNGEON_ENTRY"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_50",
+        "upwardsNormals": true,
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Lift Edges",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "BRIMSTONE_ELEVATOR_CORNER_TILE",
+      "BRIMSTONE_ELEVATOR_SIDE1_TILE",
+      "BRIMSTONE_ELEVATOR_SIDE2_TILE",
+      "BRIMSTONE_ELEVATOR_CENTRAL_TILE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Top",
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_6_VERY_LIGHT",
+        "uvType": "BOX",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
     "description": "Zeah Battlefield - Objects - Stone - Pillars",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -39984,7 +40046,10 @@
       "BROKEN_GREY_TILE_01",
       "BROKEN_GREY_TILE_02",
       "BROKEN_GREY_TILE_03",
-      "BROKEN_GREY_TILE_05"
+      "BROKEN_GREY_TILE_05",
+      "BRIMSTONE_DECO_CORN",
+      "BRIMSTONE_DECO_SIDE",
+      "BRIMSTONE_DECO_MED"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -40796,13 +40861,14 @@
       "DAGANNOTH_PUDDLE"
     ],
     "uvType": "BOX"
-  }, {
+  },
+  {
   "description": "Waterbirth Water Leak",
   "baseMaterial": "GRAY_60",
   "objectIds": [
     "DAGANNOTH_CAVEWALL_ANIMATED_WATER"
   ]
-},
+  },
   {
     "description": "Stone-  Ruined Steps",
     "baseMaterial": "STONE_NORMALED",
@@ -41721,7 +41787,8 @@
     "description": "Misthalin Mystery Boat",
     "objectIds": [
       "MISTMYST_BOAT_LUMBRIDGE",
-      "MISTMYST_BOAT_ISLAND"
+      "MISTMYST_BOAT_ISLAND",
+      "SEASLUG_ROWBOAT"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -41729,7 +41796,8 @@
     "colorOverrides": [
       {
         "colors": [ "h == 37" ],
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "GRAY_70",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -47433,6 +47501,7 @@
   {
     "description": "Farming Guild - Hide Ripples",
     "hideAsWaterEffect": true,
+    "baseMaterial": "GRAY_75",
     "objectIds": [ "RIPPLE" ]
   },
   {
@@ -64333,7 +64402,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -64467,7 +64537,6 @@
   },
   {
     "description": "Tempoross - Hide Ripples",
-    "areas": [ "TEMPOROSS_COVE" ],
     "hideAsWaterEffect": true,
     "objectIds": [
       "TEMPOROSS_RIPPLE_3_NOSHADOW"
@@ -66679,8 +66748,9 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT",
-        "uvType": "BOX"
+        "baseMaterial": "GRAY_60",
+        "uvType": "BOX",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -67525,10 +67595,66 @@
     "shadowOpacityThreshold": 0.9
   },
   {
-    "description": "Mount Karuulm - Rock - Lava edges",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Mount Karuulm - Rock - Lava edges Fix 1",
+    "areas": [ "MOUNT_KARUULM_LAVA_POOL_FIX_8" ],
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "uvType": "BOX",
     "objectIds": [
+      "BRIMSTONE_FALLOFF_1",
+      "BRIMSTONE_FALLOFF_6"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Lava",
+        "colors": "h >= 29",
+        "baseMaterial": "GRAY_75",
+        "receiveShadows": false
+      },
+      {
+        "description": "Top",
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_6_DARK",
+        "uvType": "BOX",
+        "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Lava edges Fix 2",
+    "areas": [ "MOUNT_KARUULM_LAVA_POOL_FIX_4", "MOUNT_KARUULM_LAVA_POOL_FIX_14" ],
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "BRIMSTONE_FALLOFF_1",
+      "BRIMSTONE_FALLOFF_2",
+      "BRIMSTONE_FALLOFF_Q",
+      "BRIMSTONE_FALLOFF_R",
+      "BRIMSTONE_FALLOFF_W"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Lava",
+        "colors": "h >= 29",
+        "baseMaterial": "GRAY_75",
+        "receiveShadows": false
+      },
+      {
+        "description": "Top",
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_6",
+        "uvType": "BOX",
+        "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Lava edges",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "BRIMSTONE_LAVABUBBLES",
+      "BRIMSTONE_LAVAFIRE",
+      "BRIMSTONE_FALLOFF_0",
       "BRIMSTONE_FALLOFF_1",
       "BRIMSTONE_FALLOFF_2",
       "BRIMSTONE_FALLOFF_3",
@@ -67544,14 +67670,33 @@
     "colorOverrides": [
       {
         "description": "Lava",
-        "colors": "h >= 32",
-        "baseMaterial": "NONE"
+        "colors": "h >= 29",
+        "baseMaterial": "GRAY_75",
+        "receiveShadows": false
+      },
+      {
+        "description": "Top",
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_6_LIGHT",
+        "uvType": "BOX",
+        "depthBias": 1
       }
     ]
   },
   {
+    "description": "Mount Karuulm - Rock - Lava Trim",
+    "baseMaterial": "ROCK_6_VERY_LIGHT",
+    "uvType": "BOX",
+    "depthBias": 255,
+    "hide": false,
+    "objectIds": [
+      "KARUULM_FLOOR_FALLOFF_STRAIGHT",
+      "KARUULM_FLOOR_FALLOFF_OUSIDE_CORNER"
+    ]
+  },
+  {
     "description": "Mount Karuulm - Rock - Lava vents - ANIMATED",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "uvOrientation": 128,
     "uvType": "BOX",
     "objectIds": [
@@ -67560,13 +67705,9 @@
     "colorOverrides": [
       {
         "description": "Lava",
-        "colors": "h >= 32",
-        "baseMaterial": "NONE"
-      },
-      {
-        "description": "Steam",
-        "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "colors": "h >= 25",
+        "baseMaterial": "NONE",
+        "receiveShadows": false
       }
     ]
   },
@@ -67947,6 +68088,8 @@
     "description": "Varlamore - Cam Torum - Stone - Agility shortcut",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
+    "uvScale": 0.6,
+    "depthBias": 1,
     "objectIds": [
       "RALOS_RISE_SC"
     ]
@@ -69794,6 +69937,95 @@
     "baseMaterial": "GRAY_110",
     "objectIds": [
       "SAILING_BT_GWENITH_GLIDE_MOTE"
+    ]
+  },
+  {
+    "description": "Floating Stuff - Hide Ripples",
+    "objectIds": [
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED_TILT",
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED",
+      "SEASLUG_CRATE_IN_WATER2",
+      "SEASLUG_CRATE_IN_WATER",
+      "SLUG2_ROWBOAT",
+      "SLUG2_ROWBOAT",
+      "SEASLUG_MESSGAE_BOTTLE",
+      "SAILING_CHARTING_DRINK_CRATE",
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT",
+      "SAILING_BT_TEMPOR_TANTRUM_COLLECTABLE_SUPPLIES",
+      "SAILING_BT_JUBBLY_JIVE_COLLECTABLE_SUPPLIES",
+      "SAILING_BT_GWENITH_GLIDE_COLLECTABLE_SUPPLIES"
+    ],
+    "npcIds": [
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_WOOD",
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_OAK",
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_TEAK",
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_MAHOGANY",
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_CAMPHOR",
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_IRONWOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255 || h == 37 && l == 71 || h == 42",
+        "baseMaterial": "GRAY_75",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Water Birds - Hide Ripples",
+    "npcIds": [
+      "DUCK",
+      "DUCK_FEMALE",
+      "DUCK_UPDATE_DUCKLINGS",
+      "DUCK_NOOP",
+      "DUCK_FEMALE_NOOP",
+      "SWAN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255 || h == 37 && l == 71 || h == 42",
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Floating Jellyfish - Hide Ripples",
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_LARGE_JELLYFISH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "h == 37",
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Rocks in Water - Hide Ripples",
+    "baseMaterial": "STONE_NORMALED",
+    "castShadows": false,
+    "objectIds": [
+      "SANDY_ROCK_POOL_SMALL",
+      "SANDY_ROCK_POOL",
+      "SANDY_ROCK_POOL_BITS",
+      "ROCK_POOL",
+      "ROCK_POOL_SMALL",
+      "ROCK_POOL_BITS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_65",
+        "hideAsWaterEffect": true
+      }
     ]
   },
   {
@@ -71717,7 +71949,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
       }
     ]
   },
