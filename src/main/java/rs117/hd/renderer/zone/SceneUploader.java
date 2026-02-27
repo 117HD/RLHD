@@ -1918,8 +1918,8 @@ public class SceneUploader implements AutoCloseable {
 		int preOrientation,
 		int orientation,
 		boolean isShadow,
-		VAO.VAOView opaqueView,
-		VAO.VAOView alphaView
+		DynamicModelVAO.View opaqueView,
+		DynamicModelVAO.View alphaView
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
