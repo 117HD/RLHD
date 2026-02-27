@@ -21280,7 +21280,7 @@
       {
         "description": "Leaves",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-        "baseMaterial": "LEAF_VEINS_DARKER",
+        "baseMaterial": "LEAF_VEINS_DARKEST",
         "colors": "h > 10"
       }
     ],
@@ -42258,7 +42258,7 @@
   },
   {
     "description": "Lumbridge crypt ivy",
-    "baseMaterial": "LEAF_VEINS",
+    "baseMaterial": "LEAF_VEINS_DARKER",
     "windDisplacementMode": "VERTEX_JIGGLE",
     "objectIds": [
       "FAI_FALADOR_IVY_LARGE",
@@ -42270,10 +42270,12 @@
     "uvType": "MODEL_YZ",
     "uvOrientation": 144,
     "uvScale": 0.1,
+    "flatNormals": true,
     "colorOverrides": [
       {
         "colors": "h == 17",
-        "baseMaterial": "GRUNGE_1"
+        "baseMaterial": "GRUNGE_1",
+        "flatNormals": true
       }
     ]
   },
