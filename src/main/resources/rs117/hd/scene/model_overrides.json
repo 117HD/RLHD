@@ -12084,18 +12084,27 @@
   },
   {
     "description": "Pillared Stone Wall",
-    "baseMaterial": "STONE",
+    "baseMaterial": "GRAY_90",
     "objectIds": [
       "POSHWALLFENCING",
       "POSHWALLFENCING_WITH_PLANT",
       "POSHWALLFENCINGLEFTGATE",
       "POSHWALLFENCINGRIGHTGATE",
       "POSHWALLGATETOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "MARBLE_4_SEMI_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
     ]
   },
   {
     "description": "MARBLE_STAIRS",
     "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
     "objectIds": [
       "SKEWSTEPS2",
       "SKEWSTEPS2_SIDE_LEFT",
@@ -74263,22 +74272,26 @@
     "areas": [ "TIMBER_WALL_DEPTH_BIAS_FIX" ],
     "uvType": "BOX",
     "uvScale": 0.5,
+    "uvOrientationY": 512,
     "flatNormals": true,
-    "depthBias": 100,
+    "depthBias": 120,
     "colorOverrides": [
       {
         "colors": "h == 10 && s == 0 && l == 61 || h == 10 && s == 0 && l == 109",
         "baseMaterial": "WATTLE_1_DARK",
+        "depthBias": 120,
         "uvType": "BOX"
       },
       {
         "colors": "h == 10 && s == 0 && l == 92",
         "baseMaterial": "WATTLE_1_SEMI_DARK",
+        "depthBias": 120,
         "uvType": "BOX"
       },
       {
         "colors": "h == 10 && s == 0",
         "baseMaterial": "WATTLE_1",
+        "depthBias": 120,
         "uvType": "BOX"
       }
     ],

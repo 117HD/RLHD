@@ -2083,6 +2083,11 @@
     "specularGloss": 300.0
   },
   {
+    "name": "MARBLE_4_SEMI_LIGHT",
+    "parent": "MARBLE_4",
+    "brightness": 1.7
+  },
+  {
     "name": "MARBLE_4_LIGHT_GLOSS",
     "parent": "MARBLE_4_GLOSS",
     "brightness": 2
