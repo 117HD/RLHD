@@ -5119,6 +5119,286 @@
     "blended": false
   },
   {
+    "name": "Mount Karuulm - Lava Pool Fix - 1",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_1",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "minLightness": 16,
+    "maxLightness": 16,
+    "shiftHue": 1,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "blended": false,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 2",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_2",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "maxLightness": 16,
+    "shiftHue": 1,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 3",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_3",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "minLightness": 16,
+    "shiftHue": -1,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 4",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_4",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftHue": 1,
+    "minLightness": 11,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "blended": false
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 5 - No Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_5",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftHue": 1,
+    "shiftLightness": 4,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "maxLightness": 16,
+    "replacements": {
+      "Mount Karuulm - Lava Pool Fix - 5 - Blending": "blending",
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 5 - Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_5",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftHue": 1,
+    "minLightness": 15,
+    "maxLightness": 16,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 6 - No Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_6",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftLightness": 5,
+    "minLightness": 15,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "Mount Karuulm - Lava Pool Fix - 6 - Blending": "blending",
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 6 - Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_6",
+    "overlayIds": [ 115 ],
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftLightness": 5,
+    "minLightness": 14,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 7",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_7",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftLightness": 5,
+    "maxLightness": 16,
+    "minLightness": 14,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 8 - No Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_8",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "maxLightness": 10,
+    "minLightness": 10,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "Mount Karuulm - Lava Pool Fix - 8 - Blending": "blending"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 8 - Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_8",
+    "overlayIds": [ 115 ],
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftHue": 2,
+    "maxLightness": 10,
+    "minLightness": 10,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "blendedAsOpposite": true,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 9",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_9",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftLightness": 3,
+    "maxLightness": 15,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "blendedAsOpposite": true,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 10",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_10",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "minLightness": 14,
+    "maxLightness": 16,
+    "shiftLightness": 5,
+    "shiftHue": 2,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 11",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_11",
+    "underlayIds": [
+      29,
+      129
+    ],
+    "shiftLightness": 4,
+    "maxLightness": 17,
+    "shiftHue": 2,
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 12",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_12",
+    "underlayIds": [
+      29,
+      129
+    ],
+    "shiftLightness": 1,
+    "maxLightness": 17,
+    "shiftHue": 2,
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 13",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_13",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "minLightness": 15,
+    "maxLightness": 14,
+    "shiftHue": 1,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm Bank",
+    "area": "MOUNT_KARUULM_BANK",
+    "overlayIds": [ 114, 115 ],
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "Mount Karuulm Mountainside",
     "area": "MOUNT_KARUULM",
     "overlayIds": [ 114, 115 ],
