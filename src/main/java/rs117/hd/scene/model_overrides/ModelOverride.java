@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,6 +71,7 @@ public class ModelOverride
 	public boolean receiveShadows = true;
 	public boolean terrainVertexSnap = false;
 	public boolean undoVanillaShading = true;
+	private boolean hideAsWaterEffect = false;
 	public float terrainVertexSnapThreshold = 0.125f;
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
@@ -94,6 +96,9 @@ public class ModelOverride
 	public transient boolean hasTransparency;
 	public transient boolean mightHaveTransparency;
 	public transient boolean modifiesVanillaTexture;
+
+	// Transient not volatile, since access order can be random as it'll mean we'll just fall back to the full lookup
+	private transient long cachedColorOverrideAhsl = -1;
 
 	@FunctionalInterface
 	public interface AhslPredicate {
@@ -158,6 +163,8 @@ public class ModelOverride
 			baseMaterial.hasTransparency ||
 			textureMaterial.hasTransparency ||
 			tzHaarRecolorType != TzHaarRecolorType.NONE;
+
+		hide |= hideAsWaterEffect && plugin.configHideVanillaWaterEffects;
 
 		if (materialOverrides != null) {
 			var normalized = new HashMap<Material, ModelOverride>();
@@ -231,6 +238,7 @@ public class ModelOverride
 			receiveShadows,
 			terrainVertexSnap,
 			undoVanillaShading,
+			hideAsWaterEffect,
 			terrainVertexSnapThreshold,
 			shadowOpacityThreshold,
 			tzHaarRecolorType,
@@ -249,7 +257,9 @@ public class ModelOverride
 			ahslCondition,
 			hasTransparency,
 			mightHaveTransparency,
-			modifiesVanillaTexture
+			modifiesVanillaTexture,
+			// Runtime caching fields
+			-1
 		);
 	}
 
@@ -611,5 +621,27 @@ public class ModelOverride
 				model.rotateY90Ccw();
 				break;
 		}
+	}
+
+	@Nullable
+	public final ModelOverride testColorOverrides(int ahsl) {
+		ModelOverride override = null;
+		final long packedAhl = cachedColorOverrideAhsl;
+		if (packedAhl != -1 && ahsl == (int) packedAhl)
+			override = colorOverrides[(int) (packedAhl >> 32)];
+
+		if (override == null) {
+			final int len = colorOverrides.length;
+			for (int i = 0; i < len; ++i) {
+				final var inner = colorOverrides[i];
+				if (inner.ahslCondition.test(ahsl)) {
+					cachedColorOverrideAhsl = ahsl | (long) i << 32;
+					override = inner;
+					break;
+				}
+			}
+		}
+
+		return override;
 	}
 }

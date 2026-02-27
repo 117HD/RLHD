@@ -1011,6 +1011,11 @@
     "brightness": 3
   },
   {
+    "name": "GRAY_250",
+    "parent": "NONE",
+    "brightness": 2.5
+  },
+  {
     "name": "GRAY_150",
     "parent": "NONE",
     "brightness": 1.5
@@ -1064,6 +1069,11 @@
     "name": "GRAY_60",
     "parent": "NONE",
     "brightness": 0.6
+  },
+  {
+    "name": "GRAY_55",
+    "parent": "NONE",
+    "brightness": 0.55
   },
   {
     "name": "GRAY_50",
@@ -1533,6 +1543,20 @@
     "brightness": 1.1
   },
   {
+    "name": "TAR",
+    "parent": "METALLIC_2",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "textureScale": [ 2, 2, 1 ],
+    "flowMapStrength": 0.5,
+    "brightness": 0.85,
+    "specularGloss": 2,
+    "normalMap": "METALLIC_2_N",
+    "flowMapDuration": [
+      35.0,
+      -35.0
+    ]
+  },
+  {
     "name": "WATER_FLAT_FORCE",
     "parent": "WATER_FLAT",
     "overrideBaseColor": true
@@ -1578,6 +1602,16 @@
     "scrollSpeed": [
       -0.0,
       -1.3
+    ]
+  },
+  {
+    "name": "WATER_FLAT_FLOW_2",
+    "parent": "WATER_FLAT",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.15,
+    "flowMapDuration": [
+      12.0,
+      -18.0
     ]
   },
   {
@@ -1753,6 +1787,7 @@
   {
     "name": "ROCK_4_ORE",
     "parent": "ROCK_4",
+    "displacementScale": 0.08,
     "specularStrength": 1.0
   },
   {
@@ -1783,7 +1818,30 @@
   {
     "name": "ROCK_5_ORE",
     "parent": "ROCK_5",
+    "displacementScale": 0.08,
     "specularStrength": 1.0
+  },
+  {
+    "name": "ROCK_6_N"
+  },
+  {
+    "name": "ROCK_6",
+    "normalMap": "ROCK_6_N"
+  },
+  {
+    "name": "ROCK_6_DARK",
+    "parent": "ROCK_6",
+    "brightness": 0.9
+  },
+  {
+    "name": "ROCK_6_LIGHT",
+    "parent": "ROCK_6",
+    "brightness": 1.25
+  },
+  {
+    "name": "ROCK_6_VERY_LIGHT",
+    "parent": "ROCK_6",
+    "brightness": 1.5
   },
   {
     "name": "ROPE"
@@ -1792,6 +1850,11 @@
     "name": "ROPE_LIGHT",
     "parent": "ROPE",
     "brightness": 1.5
+  },
+  {
+    "name": "ROPE_DARK",
+    "parent": "ROPE",
+    "brightness": 0.75
   },
   {
     "name": "CARPET_N"
@@ -2072,7 +2135,7 @@
   },
   {
     "name": "CAM_TORUM_TILES",
-    "parent": "STONE",
+    "parent": "SMOOTH_STONE",
     "normalMap": "LASSAR_UNDERCITY_TILE_N",
     "displacementMap": "LASSAR_UNDERCITY_TILE_D",
     "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
@@ -2241,8 +2304,13 @@
   {
     "name": "LEAVES_1",
     "normalMap": "LEAVES_1_N",
-    "specularStrength": 0.25,
-    "specularGloss": 15.0
+    "specularStrength": 0.15,
+    "specularGloss": 5.0,
+    "textureScale": [
+      1,
+      1,
+      0.5
+    ]
   },
   {
     "name": "WOOD_GRAIN"
@@ -2731,6 +2799,21 @@
   },
   {
     "name": "WATTLE_1"
+  },
+  {
+    "name": "WATTLE_1_VERY_LIGHT",
+    "parent": "WATTLE_1",
+    "brightness": 1.5
+  },
+  {
+    "name": "WATTLE_1_SEMI_DARK",
+    "parent": "WATTLE_1",
+    "brightness": 0.875
+  },
+  {
+    "name": "WATTLE_1_DARK",
+    "parent": "WATTLE_1",
+    "brightness": 0.8
   },
   {
     "name": "ICE_1",

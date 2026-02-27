@@ -118,6 +118,7 @@ import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.HDVariables;
+import rs117.hd.utils.Mat4;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
@@ -405,6 +406,7 @@ public class HdPlugin extends Plugin {
 	public boolean configPreserveVanillaNormals;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
+	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public int configDetailDrawDistance;
@@ -440,9 +442,9 @@ public class HdPlugin extends Plugin {
 	public final int[] cameraFocalPoint = new int[2];
 	public final float[] cameraOrientation = new float[2];
 	public final float[][] cameraFrustum = new float[6][4];
-	public float[] viewMatrix = new float[16];
-	public float[] viewProjMatrix = new float[16];
-	public float[] invViewProjMatrix = new float[16];
+	public float[] viewMatrix = Mat4.zero();
+	public float[] viewProjMatrix = Mat4.zero();
+	public float[] invViewProjMatrix = Mat4.zero();
 
 	@Getter
 	public int drawnTileCount;
@@ -1614,6 +1616,7 @@ public class HdPlugin extends Plugin {
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configWindDisplacement = config.windDisplacement();
 		configCharacterDisplacement = config.characterDisplacement();
+		configHideVanillaWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
 
@@ -1795,13 +1798,14 @@ public class HdPlugin extends Plugin {
 							case KEY_LEGACY_TZHAAR_RESKIN:
 								reloadScene = true;
 								break;
-							case KEY_VANILLA_SHADOW_MODE:
+							case KEY_HIDE_VANILLA_WATER_EFFECTS:
 								reloadModelOverrides = true;
+								// fall-through
+							case KEY_VANILLA_SHADOW_MODE:
 								reloadScene = true;
 								break;
 							case KEY_LEGACY_GREY_COLORS:
 							case KEY_PRESERVE_VANILLA_NORMALS:
-							case KEY_SHADING_MODE:
 							case KEY_FLAT_SHADING:
 								recompilePrograms = true;
 								reloadScene = true;

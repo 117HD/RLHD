@@ -20751,9 +20751,25 @@
     ]
   },
   {
-    "description": "WALL_CANDLE",
-    "height": 300,
-    "alignment": "FRONT",
+    "description": "MOURNER_WALL_CANDLE",
+    "offset": [ 0, 310, 100 ],
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MOURNING_CAVEWALL_CANDLE_FACE1"
+    ]
+  },
+  {
+    "description": "SLUG_DUNGEON_WALL_CANDLE",
+    "offset": [ -25, 230, 0 ],
     "radius": 300,
     "strength": 10,
     "color": [
@@ -20765,8 +20781,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "MOURNING_CAVEWALL_CANDLE_FACE1",
-      "SLUG2_DUNGEON_WALL"
+      "SLUG2_CANDLE_WALL"
     ]
   },
   {
@@ -20806,7 +20821,7 @@
     "offset": [ 3, 0, 40 ]
   },
   {
-    "description": "Altar Candles",
+    "description": "Altar Candles - Lumbridge and Port Sarim",
     "offset": [ 0, 140, -33 ],
     "radius": 180,
     "strength": 7,
@@ -20821,6 +20836,23 @@
     "objectIds": [
       "CANDLES_1",
       "CANDLES_2"
+    ]
+  },
+  {
+    "description": "Altar Candles - Varrock Church",
+    "offset": [ 0, 200, -33 ],
+    "radius": 180,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_CHURCH_CANDLES"
     ]
   },
   {
@@ -21337,7 +21369,7 @@
     "description": "STANDING_TORCH_LARGE_BLUE",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 700,
+    "radius": 600,
     "strength": 12.5,
     "color": [
       0,
@@ -21558,7 +21590,8 @@
     "objectIds": [
       "FAIRY_FURNACE_GLOW",
       "FAI_FALADOR_FURNACE_GLOW",
-      "FURNACE"
+      "FURNACE",
+      "BR_FURNACE"
     ]
   },
   {
@@ -21619,7 +21652,7 @@
   {
     "description": "Prifddinas - Scavengers Overlook - The Great Conch - Furnace",
     "height": 150,
-    "offset": [ -55, -88, -2 ],
+    "offset": [ 0, -65, -25 ],
     "radius": 480,
     "strength": 7.5,
     "color": [
@@ -22573,10 +22606,10 @@
   },
   {
     "description": "FIGHT_CAVES_ENTRANCE",
-    "height": 100,
+    "offset": [ 0, 100, -25 ],
     "alignment": "CENTER",
     "radius": 800,
-    "strength": 25,
+    "strength": 35,
     "color": [
       240,
       100,
@@ -22591,9 +22624,73 @@
     ]
   },
   {
-    "description": "TZHAAR_EXIT",
-    "height": 100,
+    "description": "TZHAAR_VENT",
+    "offset": [ 0, 150, 0 ],
     "alignment": "CENTER",
+    "radius": 300,
+    "strength": 30,
+    "color": [
+      240,
+      100,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TZHAAR_SULPHAR_VENT"
+    ]
+  },
+  {
+    "description": "TZHAAR_ALCOVE_LIGHT",
+    "offset": [ 0, 150, 0 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 30,
+    "color": [
+      240,
+      100,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TZHAAR_CAVE_WALL_ALCOVE2",
+      "TZHAAR_CAVE_WALL_ALCOVE_LIGHT"
+    ]
+  },
+  {
+    "description": "TZHAAR_ALCOVE_LIGHT",
+    "offset": [ -130, 170, 0 ],
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 50,
+    "color": [
+      240,
+      100,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TZHAAR_FORGE"
+    ]
+  },
+  {
+    "description": "TZHAAR_CITY_PASSTHROUGH",
+    "offset": [ 0, 170, 0 ],
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 50,
+    "color": [
+      240,
+      50,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "TZHAAR_CITY_PASSTHROUGH"
+    ]
+  },
+  {
+    "description": "TZHAAR_EXIT",
+    "offset": [ 0, 100, -100 ],
     "radius": 1400,
     "strength": 15,
     "color": [
@@ -22610,10 +22707,10 @@
   },
   {
     "description": "INFERNO_ENTRANCE",
-    "height": -100,
+    "height": 600,
     "alignment": "CENTER",
-    "radius": 2000,
-    "strength": 25,
+    "radius": 2500,
+    "strength": 20,
     "color": [
       255,
       55,
@@ -23897,11 +23994,11 @@
     ]
   },
   {
-    "description": "TELEPORT_PLATFORM",
-    "height": 50,
+    "description": "PRIF_TELEPORT_PLATFORM",
+    "height": 170,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 12.5,
+    "radius": 375,
+    "strength": 5,
     "color": [
       0,
       255,
@@ -23923,11 +24020,80 @@
     ]
   },
   {
-    "description": "GAUNTLET_PORTAL",
-    "height": 100,
-    "alignment": "FRONT",
-    "radius": 700,
-    "strength": 17.5,
+    "description": "PRIF_SINGING_BOWL_1",
+    "height": 160,
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      109,
+      176,
+      230
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "PRIF_SINGING_BOWL"
+    ]
+  },
+  {
+    "description": "PRIF_SINGING_BOWL_2",
+    "height": 320,
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      109,
+      176,
+      230
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "PRIF_SINGING_BOWL"
+    ]
+  },
+  {
+    "description": "PRIF_RANGE_1",
+    "offset": [ -20, 95, -30 ],
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 3,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "ELF_VILLAGE_RANGE"
+    ]
+  },
+  {
+    "description": "PRIF_RANGE_2",
+    "offset": [ 90, 70, 25 ],
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 5,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "ELF_VILLAGE_RANGE"
+    ]
+  },
+  {
+    "description": "GAUNTLET_PORTAL_FRONT",
+    "offset": [ 0, 100, -50 ],
+    "radius": 400,
+    "strength": 75,
     "color": [
       0,
       127,
@@ -23935,7 +24101,58 @@
     ],
     "type": "PULSE",
     "duration": 5000,
-    "range": 20,
+    "range": 10,
+    "objectIds": [
+      "GAUNTLET_LOBBY_ENTRANCE"
+    ]
+  },
+  {
+    "description": "GAUNTLET_PORTAL_BACK",
+    "offset": [ 0, 150, 75 ],
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      0,
+      127,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "objectIds": [
+      "GAUNTLET_LOBBY_ENTRANCE"
+    ]
+  },
+  {
+    "description": "GAUNTLET_PORTAL_LEFT",
+    "offset": [ -225, 75, -100 ],
+    "radius": 200,
+    "strength": 50,
+    "color": [
+      0,
+      127,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
+    "objectIds": [
+      "GAUNTLET_LOBBY_ENTRANCE"
+    ]
+  },
+  {
+    "description": "GAUNTLET_PORTAL_RIGHT",
+    "offset": [ 225, 75, -100 ],
+    "radius": 200,
+    "strength": 50,
+    "color": [
+      0,
+      127,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 5000,
+    "range": 10,
     "objectIds": [
       "GAUNTLET_LOBBY_ENTRANCE"
     ]
@@ -27391,9 +27608,9 @@
   },
   {
     "description": "TELEPORT_TABLET",
-    "height": 50,
+    "height": 75,
     "alignment": "CENTER",
-    "radius": 90,
+    "radius": 120,
     "strength": 75,
     "fixedDespawnTime": true,
     "color": [
@@ -32804,7 +33021,7 @@
     "worldX": 1345,
     "worldY": 3773,
     "plane": 0,
-    "height": 600,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 4,
@@ -32820,12 +33037,12 @@
   {
     "description": "KARUULM_LAVA_2_2",
     "worldX": 1341,
-    "worldY": 3777,
+    "worldY": 3775,
     "plane": 0,
     "height": 600,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -32840,10 +33057,10 @@
     "worldX": 1348,
     "worldY": 3811,
     "plane": 0,
-    "height": 600,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -32858,10 +33075,10 @@
     "worldX": 1327,
     "worldY": 3820,
     "plane": 0,
-    "height": 600,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 7.5,
     "color": [
       112,
       200,
@@ -32930,10 +33147,10 @@
     "worldX": 1283,
     "worldY": 3796,
     "plane": 0,
-    "height": 600,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 7.5,
     "color": [
       112,
       200,
@@ -32948,10 +33165,10 @@
     "worldX": 1275,
     "worldY": 3797,
     "plane": 0,
-    "height": 600,
+    "height": 250,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -32969,7 +33186,7 @@
     "height": 50,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 11,
     "color": [
       112,
       200,
@@ -33017,13 +33234,13 @@
   },
   {
     "description": "KARUULM_LAVA_12_1",
-    "worldX": 1291,
+    "worldX": 1290,
     "worldY": 3828,
     "plane": 0,
-    "height": 600,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 8,
     "color": [
       112,
       200,
@@ -33041,7 +33258,7 @@
     "height": 600,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 7,
     "color": [
       112,
       200,
@@ -33088,11 +33305,47 @@
     "range": 10
   },
   {
+    "description": "KARUULM_LAVA_EDGE_1",
+    "objectIds": [
+      "BRIMSTONE_FALLOFF_1",
+      "BRIMSTONE_FALLOFF_T",
+      "BRIMSTONE_FALLOFF_2"
+    ],
+    "height": 75,
+    "alignment": "CENTER",
+    "radius": 230,
+    "strength": 23,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20
+  },
+  {
+    "description": "KARUULM_LAVA_EDGE_2",
+    "objectIds": [
+      "BRIMSTONE_FALLOFF_4"
+    ],
+    "offset": [ -70, 75, 50 ],
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 23,
+    "color": [
+      112,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 20
+  },
+  {
     "description": "KARUULM_LAVA_15_1",
     "worldX": 1315,
     "worldY": 3812,
     "plane": 0,
-    "height": 500,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
     "strength": 4,
@@ -33110,10 +33363,10 @@
     "worldX": 1314,
     "worldY": 3801,
     "plane": 0,
-    "height": 500,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33128,10 +33381,10 @@
     "worldX": 1318,
     "worldY": 3807,
     "plane": 0,
-    "height": 500,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33146,10 +33399,10 @@
     "worldX": 1306,
     "worldY": 3811,
     "plane": 0,
-    "height": 500,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33164,10 +33417,10 @@
     "worldX": 1307,
     "worldY": 3803,
     "plane": 0,
-    "height": 500,
+    "height": 300,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33179,10 +33432,10 @@
   },
   {
     "description": "KARUULM_SULPHUR_VENT",
-    "height": 80,
+    "height": 120,
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12,
+    "radius": 300,
+    "strength": 18,
     "color": [
       112,
       200,
@@ -33203,7 +33456,7 @@
     "height": 400,
     "alignment": "CENTER",
     "radius": 2400,
-    "strength": 4,
+    "strength": 10,
     "color": [
       112,
       200,
@@ -33254,9 +33507,9 @@
   },
   {
     "description": "WINTERTODT_LIT_BRAZIER_FLICKER",
-    "offset": [ -7, 135, -4 ],
+    "offset": [ -7, 145, -4 ],
     "radius": 100,
-    "strength": 300,
+    "strength": 200,
     "color": [
       165,
       255,
@@ -35612,8 +35865,7 @@
   },
   {
     "description": "GNOME_LAMP",
-    "height": 130,
-    "alignment": "BACK",
+    "offset": [ -60, 120, 0 ],
     "radius": 400,
     "strength": 7,
     "color": [
@@ -35957,23 +36209,33 @@
     ]
   },
   {
-    "description": "Poison Waste Dungeon entrance light",
-    "worldX": 1472,
-    "worldY": 4236,
+    "description": "Poison Waste Dungeon entrance light 1",
+    "worldX": 1473,
+    "worldY": 4238,
+    "offset": [ 0, 150, -50 ],
     "plane": 0,
-    "height": 200,
-    "radius": 1000,
+    "radius": 450,
     "strength": 60,
     "color": [ 255, 255, 255 ]
   },
   {
-    "description": "Poison Waste Dungeon entrance light",
-    "worldX": 1472,
-    "worldY": 4239,
+    "description": "Poison Waste Dungeon entrance light 2 ",
+    "worldX": 1473,
+    "worldY": 4237,
+    "offset": [ 0, 150, 50 ],
     "plane": 0,
-    "height": 180,
-    "radius": 1000,
+    "radius": 450,
     "strength": 60,
+    "color": [ 255, 255, 255 ]
+  },
+  {
+    "description": "Poison Waste Dungeon entrance light 3",
+    "worldX": 1475,
+    "worldY": 4238,
+    "offset": [ -25, 200, 50 ],
+    "plane": 0,
+    "radius": 500,
+    "strength": 40,
     "color": [ 255, 255, 255 ]
   },
   {
@@ -36811,7 +37073,7 @@
   {
     "description": "WALL_TORCH_DAGANNOTH_KINGS",
     "height": 200,
-    "radius": 1000,
+    "radius": 600,
     "strength": 12.5,
     "color": [
       252,
@@ -37768,10 +38030,10 @@
   },
   {
     "description": "VARLAMORE_ORANGE_BRAZIER_SHORT",
-    "height": 225,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12,
+    "radius": 370,
+    "strength": 7,
     "visibleFromOtherPlanes": true,
     "color": [
       252,
@@ -37823,11 +38085,48 @@
     ]
   },
   {
-    "description": "VARLAMORE_OVEN_GLOW",
-    "height": 120,
-    "alignment": "CENTER",
+    "description": "VARLAMORE_OVEN_GLOW_FRONT",
+    "offset": [ 0, 65, -65 ],
     "radius": 300,
     "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FORTIS_STOVE",
+      "FORTIS_STOVE_NOOP",
+      "FURNACE_CLAY01_TWILIGHT"
+    ]
+  },
+  {
+    "description": "VARLAMORE_OVEN_GLOW_TOP_LEFT",
+    "offset": [ -45, 180, 0 ],
+    "radius": 75,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FORTIS_STOVE",
+      "FORTIS_STOVE_NOOP",
+      "FURNACE_CLAY01_TWILIGHT"
+    ]
+  },
+  {
+    "description": "VARLAMORE_OVEN_GLOW_TOP_RIGHT",
+    "offset": [ 45, 180, 0 ],
+    "radius": 75,
+    "strength": 4,
     "color": [
       252,
       148,
@@ -38014,32 +38313,32 @@
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
     "strength": 8.5,
-    "radius": 700,
+    "radius": 600,
     "offset": [ 0, 227, 0 ]
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
-    "strength": 400,
-    "radius": 75,
-    "offset": [ -15, 267, -15 ]
+    "strength": 200,
+    "radius": 100,
+    "offset": [ -15, 297, -15 ]
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT_2",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
-    "strength": 400,
-    "radius": 75,
-    "offset": [ 15, 267, 15 ]
+    "strength": 200,
+    "radius": 100,
+    "offset": [ 15, 297, 15 ]
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT_TOP",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
-    "strength": 400,
-    "radius": 75,
-    "offset": [ 0, 357, 0 ]
+    "strength": 200,
+    "radius": 125,
+    "offset": [ 0, 397, 0 ]
   },
   {
     "description": "Eclipse Moon Lava North",
@@ -38827,11 +39126,11 @@
     ]
   },
   {
-    "description": "Wilderness - Teleport Obelisks",
-    "height": 330,
+    "description": "Wilderness - Teleport Obelisks - Short",
+    "height": 300,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 30,
     "color": [
       120,
       24,
@@ -38843,7 +39142,26 @@
     "objectIds": [ "WILDERNESS_PORTAL_STONE_GLOWING" ],
     "animationIds": [ "WILDERNESS_PORTAL_STONE_GLOW" ],
     "fadeInDuration": 80,
-    "fadeOutDuration": 80
+    "fadeOutDuration": 150
+  },
+  {
+    "description": "Wilderness - Teleport Obelisks - Wide",
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 410,
+    "strength": 30,
+    "color": [
+      120,
+      24,
+      137
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 20,
+    "objectIds": [ "WILDERNESS_PORTAL_STONE_GLOWING" ],
+    "animationIds": [ "WILDERNESS_PORTAL_STONE_GLOW" ],
+    "fadeInDuration": 80,
+    "fadeOutDuration": 150
   },
   {
     "description": "Rag and Bone Man - Pot Boiler",
@@ -38920,10 +39238,10 @@
     "objectIds": [
       "LIGHT_GODRAY02_LARGE01"
     ],
-    "radius": 1350,
-    "strength": 10,
+    "radius": 1150,
+    "strength": 8,
     "color": "#ffffff",
-    "offset": [ 40, 1000, 0 ]
+    "offset": [ 40, 600, 0 ]
   },
   {
     "description": "Vet'ion/Calvar'ion Outside Candle Centre",
@@ -39131,7 +39449,8 @@
       "NPC_VETION_DEFEND_PARRY_02",
       "NPC_VETION_DEFEND_SHIELD_02"
     ],
-    "fadeOutDuration": 1500
+    "fadeOutDuration": 1500,
+    "fadeInDuration": 100
   },
   {
     "description": "Vet'ion/Calvar'ion Enrage Hound",
@@ -39147,9 +39466,53 @@
     "duration": 0,
     "range": 10,
     "npcIds": [ "VETION_HELLHOUND_SNR_SINGLES" ],
-    "animationIds": [ -1, "DOG_UPDATE_SKELETON_HELLHOUND_DEFEND", "DOG_UPDATE_SKELETON_HELLHOUND_ATTACK" ],
+    "animationIds": [ -1, "WBR_VENTION_HELLHOUND_ATTACK", "WBR_VENTION_HELLHOUND_DEFEND" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 1500
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Lighting",
+    "offset": [ 0, 60, 0 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      0,
+      24,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 1800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "graphicsObjectIds": [
+      "FX_VETION_ATTACK_MAGIC_IMPACT_01"
+    ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
+  },
+  {
+    "description": "Vet'ion/Calvar'ion Enrage Lighting",
+    "offset": [ 0, 60, 0 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      255,
+      162,
+      41
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 1800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "graphicsObjectIds": [
+      "FX_VETION_ATTACK_MAGIC_IMPACT_02"
+    ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400
   },
   {
     "description": "Wilderness - Escape Caves - Rope Light",
@@ -40465,7 +40828,26 @@
       255
     ],
     "type": "STATIC",
-    "objectIds": [ "HG_CAVE_EXIT" ]
+    "objectIds": [
+      "HG_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "Wold Den Cave Exit",
+    "offset": [ -100, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "DIREWOLF_CAVE_EXIT_INSTANCE",
+      "DIREWOLF_CAVE_EXIT"
+    ]
   },
   {
     "description": "Stalker Den Cave Exit",
@@ -41598,7 +41980,7 @@
     "spawnDelay": 150,
     "fixedDespawnTime": true,
     "despawnDelay": 300,
-    "strength": 10,
+    "strength": 8.5,
     "color": [
       0,
       255,
@@ -41616,7 +41998,7 @@
     "spawnDelay": 750,
     "fixedDespawnTime": true,
     "despawnDelay": 300,
-    "strength": 10,
+    "strength": 8.5,
     "color": [
       0,
       255,
@@ -41628,13 +42010,31 @@
     "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
   },
   {
+    "description": "Abyssal Dagger Special Attack Middle",
+    "offset": [ 0, 135, 60 ],
+    "radius": 190,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1050,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
     "description": "Abyssal Dagger Special Attack Left",
     "offset": [ -30, 150, 60 ],
     "radius": 175,
     "spawnDelay": 350,
     "fixedDespawnTime": true,
     "despawnDelay": 500,
-    "strength": 10,
+    "strength": 8.5,
     "color": [
       0,
       255,
@@ -43820,9 +44220,9 @@
     ]
   },
   {
-    "description": "Varrock - Greack Conch - Metal cooking  Range",
+    "description": "Varrock - Great Conch - Metal cooking  Range",
     "height": 100,
-    "offset": [ 20, -10, 64 ],
+    "offset": [ 20, 0, 64 ],
     "radius": 200,
     "strength": 6,
     "color": [
@@ -44902,9 +45302,11 @@
     "offset": [ 0, 150, 0 ],
     "alignment": "CENTER",
     "radius": 220,
-    "fadeOutDuration": 100,
+    "fadeOutDuration": 700,
     "fadeInDuration": 200,
     "strength": 10,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1650,
     "color": [
       0,
       100,

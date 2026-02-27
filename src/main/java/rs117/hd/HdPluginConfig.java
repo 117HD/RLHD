@@ -148,7 +148,7 @@ public interface HdPluginConfig extends Config
 	)
 	default AntiAliasingMode antiAliasingMode()
 	{
-		return AntiAliasingMode.DISABLED;
+		return AntiAliasingMode.MSAA_8;
 	}
 
 	String KEY_SCENE_RESOLUTION_SCALE = "sceneResolutionScale";
@@ -767,6 +767,15 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_HIDE_VANILLA_WATER_EFFECTS = "hideVanillaWaterEffects";
+	@ConfigItem(
+		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
+		name = "Hide vanilla water ripples",
+		description = "Hide vanilla ripples found around objects floating in the water.",
+		position = 15,
+		section = environmentSettings
+	)
+	default boolean hideVanillaWaterEffects() { return true; }
 
 	/*====== Miscellaneous settings ======*/
 
