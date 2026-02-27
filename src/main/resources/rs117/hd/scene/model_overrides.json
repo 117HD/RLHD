@@ -6851,8 +6851,9 @@
       "SHAYZIEN_CART"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 1.5
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512,
+    "uvScale": 0.65
   },
   {
     "description": "STATUE_BUST",
@@ -57598,14 +57599,13 @@
   },
   {
     "description": "Kourend - Wooden - Static Fruit Stall",
-    "baseMaterial": "PLANT_GRUNGE_2",
-    "uvOrientation": 512,
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.4,
     "colorOverrides": [
       {
         "description": "Stand",
-        "colors": "h == 3",
+        "colors": "h == 3 && l < 45",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvOrientationY": 512,
         "uvType": "BOX",
@@ -57805,8 +57805,7 @@
     "description": "Kourend - Shayzien - Metallic - Ballista",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.3,
-    "uvOrientation": 512,
+    "uvScale": 0.4,
     "objectIds": [
       "SHAYZIEN_MASSIVE_BALLISTA",
       "SHAYZIEN_MASSIVE_CROSSBOW"
@@ -57837,9 +57836,9 @@
     "colorOverrides": [
       {
         "colors": [ "h == 5" ],
-        "baseMaterial": "JAGGED_STONE_TILE",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.75
       },
       {
         "colors": [ "h == 3" ],
