@@ -35354,14 +35354,46 @@
       "DUNGEONKIT_BARS03_SLOPE02",
       "DUNGEONKIT_BARS01_LEFT01",
       "DUNGEONKIT_BARS01_RIGHT01",
-      "DUNGEONKIT_BARS02_LEFT01",
-      "DUNGEONKIT_BARS02_RIGHT01",
       "DUNGEONKIT_BARS03_LEFT01",
       "DUNGEONKIT_BARS03_RIGHT01",
       "DUNGEONKIT_BARS03_BROKEN01"
     ],
     "uvType": "BOX",
-    "uvOrientation": 128
+    "uvScale": 0.2,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Varrock Sewers - Objects - Metallic - Scurrius Entrance Bars - Depth Fix",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      "DUNGEONKIT_BARS02_LEFT01",
+      "DUNGEONKIT_BARS02_RIGHT01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "depthBias": 1,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Varrock Sewers - Objects - Walls - Make Backing Black",
+    "areas": [ "VARROCK_SEWERS" ],
+    "baseMaterial": "PURE_BLACK",
+    "depthBias": 1,
+    "objectIds": [
+      "OLDWALL_BLACKBACK_SLOPE02",
+      "OLDWALL_BLACKBACK_A_DARK03",
+      "OLDWALL_BLACKBACK_B_DARK03",
+      "OLDWALL_BLACKBACK_A_DARK02",
+      "OLDWALL_BLACKBACK_A"
+    ]
+  },
+  {
+    "description": "Varrock Sewers - Objects - Wall Filler",
+    "areas": [ "VARROCK_SEWERS" ],
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "DUNGEONKIT_WALLTOP01_SEWERS01"
+    ]
   },
   {
     "description": "Ground Objects - Wooden - Planks",
