@@ -28,15 +28,15 @@
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
 
-#if SHADOW_QUALITY == 0
+#if SHADOW_RESOLUTION == 0
     #define MIN_SHADOW_BIAS -0.00125f
-#elif SHADOW_QUALITY == 1
+#elif SHADOW_RESOLUTION == 1
     #define MIN_SHADOW_BIAS -0.0007f
-#elif SHADOW_QUALITY == 2
+#elif SHADOW_RESOLUTION == 2
     #define MIN_SHADOW_BIAS -0.00035
-#elif SHADOW_QUALITY == 3
+#elif SHADOW_RESOLUTION == 3
     #define MIN_SHADOW_BIAS -0.0003
-#elif SHADOW_QUALITY >= 4
+#elif SHADOW_RESOLUTION >= 4
     #define MIN_SHADOW_BIAS -0.00025
 #endif
 
