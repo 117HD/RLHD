@@ -830,8 +830,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
-		jobSystem.processPendingClientCallbacks();
-
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
