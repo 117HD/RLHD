@@ -1259,8 +1259,8 @@
     ],
     "groundMaterial": "FALADOR_PATHS",
     "blended": false,
-    "minHue": 7,
-    "maxHue": 7,
+    "minHue": 8,
+    "maxHue": 8,
     "minSaturation": 1,
     "maxSaturation": 1,
     "shiftLightness": 20,
@@ -1276,11 +1276,11 @@
     ],
     "groundMaterial": "FALADOR_PATHS",
     "blended": false,
-    "minHue": 7,
-    "maxHue": 7,
+    "minHue": 8,
+    "maxHue": 8,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 16,
+    "shiftLightness": 17,
     "replacements": {
       "NONE": "!textures"
     }
@@ -1332,8 +1332,8 @@
       119
     ],
     "groundMaterial": "FALADOR_PATHS",
-    "minHue": 7,
-    "maxHue": 7,
+    "minHue": 8,
+    "maxHue": 8,
     "minSaturation": 1,
     "maxSaturation": 1,
     "shiftLightness": 19,
@@ -2565,11 +2565,11 @@
       137
     ],
     "groundMaterial": "FALADOR_PATHS",
-    "minHue": 7,
-    "maxHue": 7,
+    "minHue": 8,
+    "maxHue": 8,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 15,
+    "shiftLightness": 16,
     "replacements": {
       "NONE": "!textures"
     }
