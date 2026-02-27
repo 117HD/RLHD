@@ -2576,20 +2576,23 @@
   {
     "description": "Floating Rocks - Remove Ripples",
     "baseMaterial": "STONE_NORMALED",
+    "castShadows": false,
     "objectIds": [
       "HARMLESS_ROCK_POOL",
       "HARMLESS_ROCK_POOL_SMALL",
       "HARMLESS_ROCK_POOL_BITS",
-      "SNAKEBOSS_STEPPINGSTONE"
+      "SNAKEBOSS_STEPPINGSTONE",
+      "BRAIN_ROCK_POOL",
+      "BRAIN_ROCK_POOL_SMALL",
+      "BRAIN_ROCK_POOL_BITS",
+      "FAIRYTALE2_ROCK_POOL_SMALL"
     ],
     "uvType": "BOX",
     "colorOverrides": [
       {
         "colors": [ "h == 42", "h == 35" ],
-        "baseMaterial": "TRANSPARENT",
-        "uvType": "BOX",
-        "uvScale": 0.33,
-        "uvOrientation": 512
+        "baseMaterial": "GRAY_70",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -3154,6 +3157,7 @@
       "SAILING_BT_GWENITH_GLIDE_TELEPORT_MARKER_IORWERTH",
       "SAILING_BT_GWENITH_GLIDE_TELEPORT_MARKER_MEILYR",
       "SAILING_BT_GWENITH_GLIDE_TELEPORT_MARKER_TRAHAEARN",
+      "SAILING_CHARTING_HINT_MARKER_SPYGLASS",
       "XBOWS_INV_FLOOR_NOBLOCK"
     ]
   },
@@ -3690,7 +3694,7 @@
     ]
   },
   {
-    "description": "WOODEN_FENCES",
+    "description": "Generic - Wooden - Double slat wooden fences and their gates",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "PLAGUESHEEP_GATEL",
@@ -3734,7 +3738,11 @@
       "MURDER_QIP_GARDENFENCING",
       "ROYAL_RAIL",
       "PVPA_ACCESS_GATE_R_CLOSED",
-      "PVPA_ACCESS_GATE_L_CLOSED"
+      "PVPA_ACCESS_GATE_L_CLOSED",
+      "FENCEGATE_R_COWBOSS_START",
+      "FENCEGATE_L_COWBOSS_START",
+      "FENCEGATE_R_COWBOSS_START_NOOP",
+      "FENCEGATE_L_COWBOSS_START_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -8928,7 +8936,7 @@
     ]
   },
   {
-    "description": "Relleka - Large Long Boat Mast",
+    "description": "Relleka - Long Boat to Neitiznot/Jatiso",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "MODEL_XY",
     "uvScale": 0.65,
@@ -8943,8 +8951,9 @@
         "uvScale": 0.75
       },
       {
-        "baseMaterial": "TRANSPARENT",
-        "colors": [ "a < 255" ]
+        "baseMaterial": "GRAY_75",
+        "colors": [ "a < 255" ],
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -13718,9 +13727,6 @@
       "TROLL_ROMANCE_ROCKNOBLOCK",
       "TROLLRESCUE_ICY_ROCK_BIG",
       "AHOY_SHIPWRECK_ROCKS",
-      "ROCK_POOL",
-      "ROCK_POOL_SMALL",
-      "ROCK_POOL_BITS",
       "MDAUGHTER_CLIFF_BOULDER",
       "MDAUGHTER_CLIFF_BOULDER_WITHROPE",
       "MDAUGHTER_CLIFF_ROCK",
@@ -13740,13 +13746,10 @@
       "MOLE_ROCKS_SMALL_01",
       "MOLE_ROCKS_SMALL_02",
       "MOLE_ROCKS_SMALL_03",
-      "SANDY_ROCK_POOL",
       "ROCKSLIDE_MIDGREY1",
       "ROCKSLIDE_MIDGREY2",
       "ROCKSLIDE_MIDGREY3",
       "ROCKSLIDE_MIDGREY4",
-      "SANDY_ROCK_POOL_SMALL",
-      "SANDY_ROCK_POOL_BITS",
       "BURGH_ROCK1",
       "BURGH_ROCK2",
       "BURGH_ROCK3",
@@ -13793,9 +13796,6 @@
       "BARROWS_ROCKSLIDE1",
       "BARROWS_ROCKSLIDE2",
       "BARROWS_ROCKSLIDE3",
-      "BRAIN_ROCK_POOL",
-      "BRAIN_ROCK_POOL_SMALL",
-      "BRAIN_ROCK_POOL_BITS",
       "SUROK_TUNNEL_ROCKS_SMALL_01",
       "SUROK_TUNNEL_ROCKS_SMALL_02",
       "SUROK_TUNNEL_ROCKS_SMALL_03",
@@ -27228,7 +27228,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "GRAY_70",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -29242,7 +29243,8 @@
     "terrainVertexSnap": true,
     "objectIds": [
       "BOULDER1",
-      "BOULDER2"
+      "BOULDER2",
+      "BOULDER3"
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -40719,13 +40721,14 @@
       "DAGANNOTH_PUDDLE"
     ],
     "uvType": "BOX"
-  }, {
+  },
+  {
   "description": "Waterbirth Water Leak",
   "baseMaterial": "GRAY_60",
   "objectIds": [
     "DAGANNOTH_CAVEWALL_ANIMATED_WATER"
   ]
-},
+  },
   {
     "description": "Stone-  Ruined Steps",
     "baseMaterial": "STONE_NORMALED",
@@ -41644,7 +41647,8 @@
     "description": "Misthalin Mystery Boat",
     "objectIds": [
       "MISTMYST_BOAT_LUMBRIDGE",
-      "MISTMYST_BOAT_ISLAND"
+      "MISTMYST_BOAT_ISLAND",
+      "SEASLUG_ROWBOAT"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -41652,7 +41656,8 @@
     "colorOverrides": [
       {
         "colors": [ "h == 37" ],
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "GRAY_70",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -43279,7 +43284,8 @@
     "objectIds": [
       "WAREHOUSE_SHELVES2",
       "WAREHOUSE_SHELVES3",
-      "WAREHOUSE_SHELVES4"
+      "WAREHOUSE_SHELVES4",
+      "COWQUEST_SETH_SHELF"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -47354,7 +47360,8 @@
   },
   {
     "description": "Farming Guild - Hide Ripples",
-    "hide": true,
+    "hideAsWaterEffect": true,
+    "baseMaterial": "GRAY_75",
     "objectIds": [ "RIPPLE" ]
   },
   {
@@ -64255,7 +64262,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -64389,7 +64397,7 @@
   },
   {
     "description": "Tempoross - Hide Ripples",
-    "hideInAreas": [ "TEMPOROSS_COVE" ],
+    "hideAsWaterEffect": true,
     "objectIds": [
       "TEMPOROSS_RIPPLE_3_NOSHADOW"
     ]
@@ -66600,8 +66608,9 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT",
-        "uvType": "BOX"
+        "baseMaterial": "GRAY_60",
+        "uvType": "BOX",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -69791,6 +69800,95 @@
     ]
   },
   {
+    "description": "Floating Stuff - Hide Ripples",
+    "objectIds": [
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED_TILT",
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED",
+      "SEASLUG_CRATE_IN_WATER2",
+      "SEASLUG_CRATE_IN_WATER",
+      "SLUG2_ROWBOAT",
+      "SLUG2_ROWBOAT",
+      "SEASLUG_MESSGAE_BOTTLE",
+      "SAILING_CHARTING_DRINK_CRATE",
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT",
+      "SAILING_BT_TEMPOR_TANTRUM_COLLECTABLE_SUPPLIES",
+      "SAILING_BT_JUBBLY_JIVE_COLLECTABLE_SUPPLIES",
+      "SAILING_BT_GWENITH_GLIDE_COLLECTABLE_SUPPLIES"
+    ],
+    "npcIds": [
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_WOOD",
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_OAK",
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_TEAK",
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_MAHOGANY",
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_CAMPHOR",
+      "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_IRONWOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255 || h == 37 && l == 71 || h == 42",
+        "baseMaterial": "GRAY_75",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Water Birds - Hide Ripples",
+    "npcIds": [
+      "DUCK",
+      "DUCK_FEMALE",
+      "DUCK_UPDATE_DUCKLINGS",
+      "DUCK_NOOP",
+      "DUCK_FEMALE_NOOP",
+      "SWAN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255 || h == 37 && l == 71 || h == 42",
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Floating Jellyfish - Hide Ripples",
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_LARGE_JELLYFISH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "h == 37",
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Rocks in Water - Hide Ripples",
+    "baseMaterial": "STONE_NORMALED",
+    "castShadows": false,
+    "objectIds": [
+      "SANDY_ROCK_POOL_SMALL",
+      "SANDY_ROCK_POOL",
+      "SANDY_ROCK_POOL_BITS",
+      "ROCK_POOL",
+      "ROCK_POOL_SMALL",
+      "ROCK_POOL_BITS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_65",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
     "description": "Sailing - Salvaging Station",
     "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
@@ -71711,7 +71809,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
       }
     ]
   },
@@ -76888,6 +76987,33 @@
     "uvScale": 1.2,
     "objectIds": [
       "BIM_RUINS_DOOR_FLOOR_SCRATCH_RIGHT"
+    ]
+  },
+  {
+    "description": "Lumbridge - Wooden - Paper - Brutus Sign",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "colorOverrides": [
+      {
+        "description": "Sign Post",
+        "colors": "h == 7 && s == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 1.2
+      },
+      {
+        "description": "Sign",
+        "colors": "h == 7 && s <= 5 && l < 50",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "COWBOSS_SIGN_WARNING"
     ]
   }
 ]
