@@ -383,7 +383,7 @@ public class ZoneRenderer implements Renderer {
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
 			if (hasSceneCameraChanged || hasDirectionalCameraChanged) {
-				int shadowDrawDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
+				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 
 				final float[][] volumeCorners = directionalShadowCasterVolume
 					.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
@@ -421,7 +421,7 @@ public class ZoneRenderer implements Renderer {
 				// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
 				int directionalSize = (int) max(abs(maxY - minY), abs(maxX - minX), abs(maxZ - minZ));
 				directionalSize = Math.round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
-				directionalSize = max(1000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
+				directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
 
 				// Ignore directional size changes below the change threshold to avoid inducing shimmering
 				int previousDirectionalSize = directionalCamera.getViewportWidth();
