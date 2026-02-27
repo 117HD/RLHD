@@ -2118,7 +2118,7 @@
     ]
   },
   {
-    "name": "EAST_ARDOUGNE_COBBLE_CHURCH",
+    "name": "EAST_ARDOUGNE_BRICK_CHURCH",
     "aabbs": [
       [ 2609, 3304, 0, 2612, 3307, 0 ]
     ]
@@ -2127,7 +2127,7 @@
     "name": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE",
     "aabbs": [
       [ 2643, 3269, 2650, 3272 ],
-      [ 2647, 3273, 2650, 3273 ]
+      [ 2647, 3273, 2650, 3277 ]
     ]
   },
   {
