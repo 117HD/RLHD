@@ -719,17 +719,23 @@ public interface HdPluginConfig extends Config
 		return TextureResolution.RES_256;
 	}
 
-	String KEY_GROUND_BLENDING = "groundBlending";
+	String KEY_GROUND_BLENDING = "groundBlendingv2";
 	@ConfigItem(
 		keyName = KEY_GROUND_BLENDING,
 		name = "Ground Blending",
-		description = "Controls whether ground tiles should blend into each other, or have distinct edges.",
+		description =
+			"Controls whether ground tiles should blend into each other, or have distinct edges.<br>" +
+			"When set to 'Textures only', textures may blend between tiles, but not their colors.",
 		position = 10,
 		section = environmentSettings
 	)
 	default GroundBlending groundBlending()
 	{
-		return GroundBlending.ON;
+		return groundBlendingv1() ? GroundBlending.ON : GroundBlending.TEXTURES_ONLY;
+	}
+	@ConfigItem(keyName = "groundBlending", hidden = true, name = "", description = "")
+	default boolean groundBlendingv1() {
+		return true;
 	}
 
 	@ConfigItem(
