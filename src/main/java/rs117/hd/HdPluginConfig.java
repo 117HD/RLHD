@@ -39,6 +39,7 @@ import rs117.hd.config.CpuUsageLimit;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
+import rs117.hd.config.GroundBlending;
 import rs117.hd.config.InfernalCape;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
@@ -726,9 +727,9 @@ public interface HdPluginConfig extends Config
 		position = 10,
 		section = environmentSettings
 	)
-	default boolean groundBlending()
+	default GroundBlending groundBlending()
 	{
-		return true;
+		return GroundBlending.ON;
 	}
 
 	@ConfigItem(
