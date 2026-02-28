@@ -575,6 +575,15 @@
     ]
   },
   {
+    "name": "GRASSY_SAND",
+    "materials": [
+      "GRASS_1",
+      "SAND_1",
+      "SAND_2",
+      "SAND_3"
+    ]
+  },
+  {
     "name": "OOZE_FLOOR",
     "materials": [
       "GRUNGE_1_SHINY",
