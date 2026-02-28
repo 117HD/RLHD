@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.BufferUtils;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.GLFence;
 import rs117.hd.opengl.shader.ParticleShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -33,6 +34,7 @@ import static org.lwjgl.opengl.GL30.GL_MAP_INVALIDATE_RANGE_BIT;
 import static org.lwjgl.opengl.GL30.GL_MAP_WRITE_BIT;
 import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
 import static org.lwjgl.opengl.GL30.glMapBufferRange;
+import static org.lwjgl.opengl.GL32C.GL_SYNC_GPU_COMMANDS_COMPLETE;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_PARTICLE;
 
@@ -51,6 +53,7 @@ public class ParticlePass implements ScenePass {
 
 	private final ParticleManager.ParticleRenderContext renderContext = new ParticleManager.ParticleRenderContext();
 	private final int[] visibleIndices = new int[MAX_DRAWN];
+	private static final int INSTANCE_BUFFER_COUNT = 3;
 	private static final int QUAD_VERTS = 6;
 	private static final int FLOATS_PER_INSTANCE = 13;
 	private static final int INSTANCE_STRIDE_BYTES = 64;
@@ -71,8 +74,10 @@ public class ParticlePass implements ScenePass {
 
 	private int vaoParticles;
 	private int vboParticleQuad;
-	private int vboParticleInstances;
-	private GLBuffer particleInstanceBuffer;
+	private int[] vboParticleInstances;
+	private GLBuffer[] particleInstanceBuffers;
+	private final GLFence[] instanceFences = new GLFence[INSTANCE_BUFFER_COUNT];
+	private int instanceBufferSlot;
 	private FloatBuffer particleStagingBuffer;
 	private final float[] particleDistSq = new float[MAX_PARTICLES];
 	private final Integer[] particleSortOrder = new Integer[MAX_PARTICLES];
@@ -99,14 +104,23 @@ public class ParticlePass implements ScenePass {
 		vaoParticles = glGenVertexArrays();
 		vboParticleQuad = glGenBuffers();
 		long instanceVboBytes = (long) MAX_DRAWN * INSTANCE_STRIDE_BYTES;
+		vboParticleInstances = new int[INSTANCE_BUFFER_COUNT];
 		if (GLBuffer.supportsStorageBuffers()) {
-			particleInstanceBuffer = new GLBuffer("particle instances", GL_ARRAY_BUFFER, GL_STREAM_DRAW, GLBuffer.STORAGE_PERSISTENT | GLBuffer.STORAGE_WRITE);
-			particleInstanceBuffer.initialize(instanceVboBytes);
-			vboParticleInstances = particleInstanceBuffer.id;
+			particleInstanceBuffers = new GLBuffer[INSTANCE_BUFFER_COUNT];
+			for (int i = 0; i < INSTANCE_BUFFER_COUNT; i++) {
+				particleInstanceBuffers[i] = new GLBuffer("particle instances " + i, GL_ARRAY_BUFFER, GL_STREAM_DRAW, GLBuffer.STORAGE_PERSISTENT | GLBuffer.STORAGE_WRITE);
+				particleInstanceBuffers[i].initialize(instanceVboBytes);
+				vboParticleInstances[i] = particleInstanceBuffers[i].id;
+				instanceFences[i] = new GLFence();
+			}
 		} else {
-			vboParticleInstances = glGenBuffers();
-			glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
-			glBufferData(GL_ARRAY_BUFFER, instanceVboBytes, GL_STREAM_DRAW);
+			particleInstanceBuffers = null;
+			for (int i = 0; i < INSTANCE_BUFFER_COUNT; i++) {
+				vboParticleInstances[i] = glGenBuffers();
+				glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances[i]);
+				glBufferData(GL_ARRAY_BUFFER, instanceVboBytes, GL_STREAM_DRAW);
+				instanceFences[i] = new GLFence();
+			}
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 		FloatBuffer quadBuffer = BufferUtils.createFloatBuffer(PARTICLE_QUAD_CORNERS.length).put(PARTICLE_QUAD_CORNERS).flip();
@@ -117,7 +131,7 @@ public class ParticlePass implements ScenePass {
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
 		glVertexAttribDivisor(0, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
+		bindInstanceBuffer(0);
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 0);
 		glVertexAttribDivisor(1, 1);
@@ -148,6 +162,10 @@ public class ParticlePass implements ScenePass {
 		batchUploadBuffer = BufferUtils.createByteBuffer(MAX_DRAWN * INSTANCE_STRIDE_BYTES);
 	}
 
+	private void bindInstanceBuffer(int slot) {
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances[slot]);
+	}
+
 	public void destroy() {
 		if (vaoParticles != 0) {
 			glDeleteVertexArrays(vaoParticles);
@@ -157,9 +175,17 @@ public class ParticlePass implements ScenePass {
 			glDeleteBuffers(vboParticleQuad);
 			vboParticleQuad = 0;
 		}
-		if (vboParticleInstances != 0) {
-			glDeleteBuffers(vboParticleInstances);
-			vboParticleInstances = 0;
+		if (vboParticleInstances != null) {
+			for (int i = 0; i < INSTANCE_BUFFER_COUNT; i++) {
+				if (particleInstanceBuffers != null) {
+					particleInstanceBuffers[i].destroy();
+				} else {
+					glDeleteBuffers(vboParticleInstances[i]);
+				}
+				vboParticleInstances[i] = 0;
+			}
+			vboParticleInstances = null;
+			particleInstanceBuffers = null;
 		}
 		particleStagingBuffer = null;
 		batchUploadBuffer = null;
@@ -202,8 +228,25 @@ public class ParticlePass implements ScenePass {
 		particleProgram.setParticleTextureUnit(TEXTURE_UNIT_PARTICLE);
 		glBindVertexArray(vaoParticles);
 		ctx.beginTimer(Timer.RENDER_PARTICLES);
-		uploadInstanceDataToVbo(instanceCount);
+		int slot = instanceBufferSlot;
+		if (particleInstanceBuffers != null) {
+			instanceFences[slot].sync();
+		}
+		uploadInstanceDataToVbo(instanceCount, slot);
+		bindInstanceBuffer(slot);
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 0);
+		glVertexAttribPointer(2, 4, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 12);
+		glVertexAttribPointer(3, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 28);
+		glVertexAttribPointer(4, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 32);
+		glVertexAttribPointer(5, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 36);
+		glVertexAttribPointer(6, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 40);
+		glVertexAttribPointer(7, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 44);
+		glVertexAttribPointer(8, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 48);
 		glDrawArraysInstanced(GL_TRIANGLES, 0, QUAD_VERTS, instanceCount);
+		if (particleInstanceBuffers != null) {
+			instanceFences[slot].handle = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+		}
+		instanceBufferSlot = (instanceBufferSlot + 1) % INSTANCE_BUFFER_COUNT;
 		ctx.endTimer(Timer.RENDER_PARTICLES);
 		glBindVertexArray(0);
 	}
@@ -297,13 +340,13 @@ public class ParticlePass implements ScenePass {
 		return emitter != null ? emitter.getDefinition() : null;
 	}
 
-	private void uploadInstanceDataToVbo(int instanceCount) {
+	private void uploadInstanceDataToVbo(int instanceCount, int slot) {
 		int bytes = instanceCount * INSTANCE_STRIDE_BYTES;
 		batchUploadBuffer.flip();
-		if (particleInstanceBuffer != null && particleInstanceBuffer.isMapped()) {
-			particleInstanceBuffer.upload(batchUploadBuffer);
+		if (particleInstanceBuffers != null && particleInstanceBuffers[slot].isMapped()) {
+			particleInstanceBuffers[slot].upload(batchUploadBuffer);
 		} else {
-			glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances);
+			glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances[slot]);
 			ByteBuffer mapped = glMapBufferRange(GL_ARRAY_BUFFER, 0, bytes, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
 			if (mapped != null) {
 				mapped.put(batchUploadBuffer);
