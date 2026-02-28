@@ -49,6 +49,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
@@ -143,6 +144,8 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
+@Slf4j
+@Singleton
 @PluginDescriptor(
 	name = "117 HD",
 	description = "GPU renderer with a suite of graphical enhancements",
@@ -150,7 +153,6 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 	conflicts = "GPU"
 )
 @PluginDependency(EntityHiderPlugin.class)
-@Slf4j
 public class HdPlugin extends Plugin {
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
@@ -513,6 +515,8 @@ public class HdPlugin extends Plugin {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
+				isActive = true;
+
 				fboScene = 0;
 				rboSceneColor = 0;
 				texSceneDepth = 0;
@@ -701,7 +705,6 @@ public class HdPlugin extends Plugin {
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
 
-				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
@@ -724,6 +727,8 @@ public class HdPlugin extends Plugin {
 	@Override
 	protected void shutDown() {
 		clientThread.invoke(() -> {
+			if (!isActive)
+				return;
 			isActive = false;
 			FileWatcher.destroy();
 
@@ -790,13 +795,22 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void stopPlugin() {
-		SwingUtilities.invokeLater(() -> {
+		clientThread.invoke(() -> {
 			try {
-				pluginManager.setPluginEnabled(this, false);
-				pluginManager.stopPlugin(this);
+				// Shut the plugin down immediately, making RuneLite's call to shutDown() a no-op
+				shutDown();
 			} catch (Throwable ex) {
 				log.error("Error while stopping 117HD:", ex);
 			}
+
+			SwingUtilities.invokeLater(() -> {
+				try {
+					pluginManager.setPluginEnabled(this, false);
+					pluginManager.stopPlugin(this);
+				} catch (Throwable ex) {
+					log.error("Error while stopping 117HD:", ex);
+				}
+			});
 		});
 	}
 
@@ -876,8 +890,9 @@ public class HdPlugin extends Plugin {
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
-			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
-			.define("PIXELATED_SHADOWS", config.pixelatedShadows())
+			.define("SHADOW_TRANSPARENCY", config.shadowTransparency())
+			.define("SHADOW_FILTERING", config.shadowFiltering())
+			.define("SHADOW_RESOLUTION", config.shadowResolution())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configShadingMode.undoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
@@ -1763,7 +1778,7 @@ public class HdPlugin extends Plugin {
 	private void updateCachedConfigs() {
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
-		configShadowTransparency = config.enableShadowTransparency();
+		configShadowTransparency = config.shadowTransparency();
 		configRoofShadows = config.roofShadows();
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
@@ -1936,7 +1951,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
-							case KEY_PIXELATED_SHADOWS:
+							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
 								recompilePrograms = true;
 								break;
@@ -1946,10 +1961,9 @@ public class HdPlugin extends Plugin {
 								recompilePrograms = true;
 								break;
 							case KEY_SHADOW_MODE:
+							case KEY_SHADOW_RESOLUTION:
 							case KEY_SHADOW_TRANSPARENCY:
 								recompilePrograms = true;
-								// fall-through
-							case KEY_SHADOW_RESOLUTION:
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:

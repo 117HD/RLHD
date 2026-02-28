@@ -302,7 +302,7 @@ public class ModelStreamingManager {
 			plugin.configShadowMode != ShadowMode.OFF &&
 			(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
 		) {
-			final VAO.VAOView shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
+			final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 			sceneUploader.uploadTempModel(
 				culledFaces,
 				m,
@@ -323,8 +323,8 @@ public class ModelStreamingManager {
 			final int alphaFaceCount = hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
 			final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
-			final VAO.VAOView opaqueView = ctx.beginDraw(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE, opaqueFaceCount);
-			final VAO.VAOView alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
+			final DynamicModelVAO.View opaqueView = ctx.beginDraw(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE, opaqueFaceCount);
+			final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 			sceneUploader.uploadTempModel(
 				visibleFaces,
@@ -553,7 +553,7 @@ public class ModelStreamingManager {
 				plugin.configShadowMode != ShadowMode.OFF &&
 				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
 			) {
-				final VAO.VAOView shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
+				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
 					culledFaces,
 					m,
@@ -571,8 +571,8 @@ public class ModelStreamingManager {
 				final int alphaFaceCount = hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
-				final VAO.VAOView opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
-				final VAO.VAOView alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
+				final DynamicModelVAO.View opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
+				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
 					visibleFaces,
