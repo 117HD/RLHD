@@ -366,6 +366,7 @@ public class ParticleSidebarPanel extends PluginPanel  {
 
 	/** Dropdown in Particles tab; used to refresh and load default on activate. */
 	private JComboBox<String> particleDropdownRef;
+	private JButton placeBtnRef;
 	private MaterialTabGroup tabGroupRef;
 	private MaterialTab particlesTabRef;
 
@@ -540,7 +541,17 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		JPanel footer = new JPanel(new GridLayout(1, 2, 4, 0));
 
 		JButton placeBtn = new JButton("Place");
+		placeBtnRef = placeBtn;
 		styleButton(placeBtn);
+		particleGizmoOverlay.setOnPlaceModeChanged(() ->
+			SwingUtilities.invokeLater(() -> setButtonActive(placeBtnRef, particleGizmoOverlay.isPlaceModeActive())));
+		placeBtn.addActionListener(e -> {
+			String pid = particleDropdownRef != null ? (String) particleDropdownRef.getSelectedItem() : null;
+			if (pid == null || pid.isEmpty()) return;
+			boolean entering = !particleGizmoOverlay.isPlaceModeActive();
+			particleGizmoOverlay.setPlaceMode(entering, pid);
+			setButtonActive(placeBtn, entering);
+		});
 		footer.add(placeBtn);
 
 		JButton exportBtn = new JButton("Export");
