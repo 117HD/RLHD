@@ -41,6 +41,7 @@ import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -675,6 +676,19 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(
+		keyName = "moonBehavior",
+		name = "Moon Behavior",
+		description = "How the moon moves across the sky.<br>" +
+			"Realistic = Astronomical moon with realistic phases and independent orbit<br>" +
+			"Night Synced = Moon always rises when sun sets and sets when sun rises (always full)",
+		position = 5,
+		section = daylightCycleSettings
+	)
+	default MoonBehavior moonBehavior() {
+		return MoonBehavior.REALISTIC;
+	}
+
 	String KEY_SEASONAL_THEME = "seasonalTheme";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_THEME,
@@ -1262,6 +1276,7 @@ public interface HdPluginConfig extends Config
 	String KEY_MINIMUM_BRIGHTNESS = "minimumBrightness";
 	String KEY_ENABLE_STAR_MAP = "enableStarMap";
 	String KEY_ENABLE_MOON = "enableMoon";
+	String KEY_MOON_BEHAVIOR = "moonBehavior";
 	@ConfigItem(
 		keyName = KEY_ASYNC_UI_COPY,
 		name = "Perform UI copy asynchronously",

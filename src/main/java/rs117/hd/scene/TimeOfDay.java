@@ -3,6 +3,7 @@ package rs117.hd.scene;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import net.runelite.http.api.worlds.WorldRegion;
+import rs117.hd.config.MoonBehavior;
 import rs117.hd.utils.AtmosphereUtils;
 
 import static rs117.hd.utils.ColorUtils.rgb;
@@ -471,6 +472,63 @@ public class TimeOfDay
 		Instant moonDate = getMoonDate(dayLength);
 		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), latLong);
 		return Math.toDegrees(moonAngles[1]);
+	}
+
+	/**
+	 * Get the moon direction vector for sky rendering, respecting moon behavior mode.
+	 */
+	public static float[] getMoonDirectionForSky(double[] latLong, float dayLength, MoonBehavior moonBehavior) {
+		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
+			double[] angles = getNightSyncedMoonAngles(latLong, dayLength);
+			double altitude = angles[1];
+			double yaw = Math.PI - angles[0];
+
+			float x = (float) (Math.sin(yaw) * Math.cos(altitude));
+			float y = (float) Math.sin(altitude);
+			float z = (float) (-Math.cos(yaw) * Math.cos(altitude));
+
+			float length = (float) Math.sqrt(x * x + y * y + z * z);
+			if (length > 0.0001f) {
+				x /= length;
+				y /= length;
+				z /= length;
+			}
+			return new float[] { x, y, z };
+		}
+		return getMoonDirectionForSky(latLong, dayLength);
+	}
+
+	/**
+	 * Get the moon illumination fraction, respecting moon behavior mode.
+	 * Night Synced mode always returns 1.0 (full moon).
+	 */
+	public static float getMoonIlluminationFraction(float dayLength, MoonBehavior moonBehavior) {
+		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
+			return 1.0f;
+		}
+		return getMoonIlluminationFraction(dayLength);
+	}
+
+	/**
+	 * Get the moon altitude in degrees, respecting moon behavior mode.
+	 */
+	public static double getMoonAltitudeDegrees(double[] latLong, float dayLength, MoonBehavior moonBehavior) {
+		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
+			double[] angles = getNightSyncedMoonAngles(latLong, dayLength);
+			return Math.toDegrees(angles[1]);
+		}
+		return getMoonAltitudeDegrees(latLong, dayLength);
+	}
+
+	/**
+	 * Get night synced moon angles {azimuth, altitude} by mirroring the sun.
+	 * The moon is placed opposite the sun (azimuth + PI) with negated altitude,
+	 * so it rises when the sun sets and vice versa.
+	 */
+	public static double[] getNightSyncedMoonAngles(double[] latLong, float dayLength) {
+		Instant modifiedDate = getModifiedDate(dayLength);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		return new double[] { sunAngles[0] + Math.PI, -sunAngles[1] };
 	}
 
 	public static float[] getNightAmbientColor() {

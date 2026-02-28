@@ -248,9 +248,9 @@ void main() {
                 // Map noise to brightness: dark maria (~0.65) to bright highlands (~1.05)
                 float surfaceBrightness = mix(0.65, 1.05, surfaceNoise);
 
-                // Subtle warm tint on darker areas (maria are slightly brownish)
+                // Cool blue tint on darker areas (maria have a subtle blue hue)
                 float mariaTint = smoothstep(0.85, 0.65, surfaceBrightness);
-                vec3 surfaceColor = mix(vec3(1.0), vec3(1.0, 0.95, 0.87), mariaTint * 0.3);
+                vec3 surfaceColor = mix(vec3(1.0), vec3(0.7, 0.8, 1.0), mariaTint * 0.4);
 
                 vec3 litColor = skyMoonColor * limbDarkening * surfaceBrightness * surfaceColor;
                 // Dark side: always opaque (occludes stars). Use the pre-star sky gradient

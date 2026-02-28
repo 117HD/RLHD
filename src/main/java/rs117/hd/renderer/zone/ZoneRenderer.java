@@ -58,6 +58,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.lights.Light;
+import rs117.hd.config.MoonBehavior;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.AtmosphereUtils;
 import rs117.hd.utils.Camera;
@@ -446,19 +447,28 @@ public class ZoneRenderer implements Renderer {
 			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
 				double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
+				MoonBehavior shadowMoonBehavior = config.moonBehavior();
 
 				if (sunAltDeg < 2.0) {
 					// Below +2° sun shadows are faded out, switch to moon direction
 					// early so the shadow map is already oriented when moon shadows
 					// start fading in via smoothstep — prevents brightness pop
-					double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, config.cycleDurationMinutes());
+					double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, config.cycleDurationMinutes(), shadowMoonBehavior);
 					if (moonAltDeg > -10) {
-						Instant moonDate = TimeOfDay.getMoonDate(config.cycleDurationMinutes());
-						double[] moonAnglesD = AtmosphereUtils.getMoonPosition(
-							moonDate.toEpochMilli(), plugin.latLong);
-						shadowSunAngles = new float[] {
-							(float) moonAnglesD[1], (float) moonAnglesD[0]
-						};
+						if (shadowMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
+							double[] moonAnglesD = TimeOfDay.getNightSyncedMoonAngles(
+								plugin.latLong, config.cycleDurationMinutes());
+							shadowSunAngles = new float[] {
+								(float) moonAnglesD[1], (float) moonAnglesD[0]
+							};
+						} else {
+							Instant moonDate = TimeOfDay.getMoonDate(config.cycleDurationMinutes());
+							double[] moonAnglesD = AtmosphereUtils.getMoonPosition(
+								moonDate.toEpochMilli(), plugin.latLong);
+							shadowSunAngles = new float[] {
+								(float) moonAnglesD[1], (float) moonAnglesD[0]
+							};
+						}
 					} else {
 						shadowSunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
 					}
@@ -628,10 +638,10 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skySunColor.set(skyGradientColors[2]);
 			plugin.uboGlobal.skySunDir.set(sunDirForSky);
 
-			// Set moon uniforms — getMoonDate() returns a continuously advancing
-			// timestamp so no smoothing is needed here
-			float[] moonDir = TimeOfDay.getMoonDirectionForSky(plugin.latLong, cycleDuration);
-			float moonIllumination = TimeOfDay.getMoonIlluminationFraction(cycleDuration);
+			// Set moon uniforms
+			MoonBehavior moonBehavior = config.moonBehavior();
+			float[] moonDir = TimeOfDay.getMoonDirectionForSky(plugin.latLong, cycleDuration, moonBehavior);
+			float moonIllumination = TimeOfDay.getMoonIlluminationFraction(cycleDuration, moonBehavior);
 			float[] moonColor = environmentManager.currentMoonColor;
 			plugin.uboGlobal.skyMoonDir.set(moonDir);
 			plugin.uboGlobal.skyMoonColor.set(moonColor);
@@ -642,10 +652,8 @@ public class ZoneRenderer implements Renderer {
 			skyGradientEnabled = true;
 
 			// Calculate shadow visibility based on sun and moon altitude
-			// Moon values come from getMoonDate() which advances continuously,
-			// so no smoothing is needed
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
-			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, cycleDuration);
+			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, cycleDuration, moonBehavior);
 			float moonIllumFrac = moonIllumination;
 			float shadowVisibility;
 

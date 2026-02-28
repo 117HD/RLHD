@@ -93,9 +93,9 @@ public class Environment {
 		if (sunAngles != null)
 			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
 
-		// Default moon color to silver/white (~6500K daylight white)
+		// Default moon color to slightly cool white (~8000K)
 		if (moonColor == null)
-			moonColor = ColorUtils.colorTemperatureToLinearRgb(6500);
+			moonColor = ColorUtils.colorTemperatureToLinearRgb(8000);
 
 		// Base water caustics on directional lighting by default
 		if (waterCausticsColor == null)
