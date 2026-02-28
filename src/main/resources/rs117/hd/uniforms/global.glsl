@@ -41,6 +41,7 @@ layout(std140) uniform UBOGlobal {
     float underwaterCausticsStrength;
 
     vec3 lightDir;
+    vec2 lightNearFar;
 
     int pointLightsCount;
 

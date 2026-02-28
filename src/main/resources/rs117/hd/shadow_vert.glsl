@@ -30,6 +30,7 @@
 #include <uniforms/materials.glsl>
 
 #include <utils/constants.glsl>
+#include <utils/depth.glsl>
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
@@ -107,6 +108,7 @@ layout (location = 1) in vec3 vUv;
         #endif
 
         gl_Position = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
+        gl_Position.z = ApplyLogDepthMinusOneToOne(gl_Position.z, lightNearFar.x, lightNearFar.y);
     }
 #else
     layout (location = 3) in int vAlphaBiasHsl;

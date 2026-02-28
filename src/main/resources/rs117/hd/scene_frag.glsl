@@ -29,7 +29,7 @@
 #define DISPLAY_UV 0
 #define DISPLAY_NORMAL 0
 #define DISPLAY_TANGENT 0
-#define DISPLAY_SHADOWS 0
+#define DISPLAY_SHADOWS 1
 #define DISPLAY_LIGHTING 0
 
 #include <uniforms/global.glsl>

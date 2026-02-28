@@ -444,6 +444,7 @@ public class ZoneRenderer implements Renderer {
 				directionalCamera.setViewportHeight(directionalSize);
 
 				plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
+				plugin.uboGlobal.lightNearFar.set(directionalCamera.getNearPlane(), directionalCamera.getFarPlane());
 				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 			}
 

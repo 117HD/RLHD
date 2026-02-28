@@ -27,6 +27,7 @@
 
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
+#include <utils/depth.glsl>
 
 #if SHADOW_RESOLUTION == 0
     #define MIN_SHADOW_BIAS -0.00125f
@@ -74,6 +75,10 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     shadowPos.xy = clamp(shadowPos.xy, 0, 1);
     shadowPos.xy *= shadowRes;
     shadowPos.xy += .5; // Shift to texel center
+
+#if ZONE_RENDERER
+    shadowPos.z = ApplyLogDepthZeroToOne(shadowPos.z, lightNearFar.x, lightNearFar.y);
+#endif
 
     float shadowBias = MIN_SHADOW_BIAS * max(1, 1.0 - lightDotNormals);
     float fragDepth = shadowPos.z + shadowBias;
