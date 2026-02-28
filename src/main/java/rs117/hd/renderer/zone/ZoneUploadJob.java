@@ -20,7 +20,7 @@ public final class ZoneUploadJob extends Job {
 
 	Zone zone;
 	int x, z;
-	float delay;
+	long revealAfterTimestampMs;
 	boolean shouldUnmap;
 
 	@Override
@@ -108,7 +108,7 @@ public final class ZoneUploadJob extends Job {
 		sceneContext = null;
 		zone.uploadJob = null;
 		zone = null;
-		delay = -1.0f;
+		revealAfterTimestampMs = 0;
 		assert !POOL.contains(this) : "Task is already in pool";
 		POOL.add(this);
 	}

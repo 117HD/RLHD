@@ -186,14 +186,14 @@ public class SceneManager {
 			}
 		}
 
-		root.update(plugin.deltaTime);
+		root.update();
 
 		WorldView wv = client.getTopLevelWorldView();
 		if (wv != null) {
 			for (WorldEntity we : wv.worldEntities()) {
 				WorldViewContext ctx = getContext(we.getWorldView());
 				if (ctx != null)
-					ctx.update(plugin.deltaTime);
+					ctx.update();
 			}
 		}
 	}
@@ -469,7 +469,7 @@ public class SceneManager {
 					curZone.cull = true;
 
 					// Last minute chance for a streamed in zone to be reused
-					ctx.handleZoneSwap(-1.0f, x, z);
+					ctx.handleZoneSwap(x, z, false);
 					// Mark all zones to be culled, unless they get reused later
 					ctx.zones[x][z].cull = true;
 				}
@@ -540,6 +540,7 @@ public class SceneManager {
 				}
 			}
 
+			long timeMs = System.currentTimeMillis();
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = injector.getInstance(Zone.class);
 				newZone.dirty = sorted.zone.dirty;
@@ -548,7 +549,8 @@ public class SceneManager {
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z);
-					sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
+					sorted.zone.uploadJob.revealAfterTimestampMs =
+						timeMs + ceil(clamp(sorted.dist / 15.0f, 0.25f, 1.5f) * 1000.0f);
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
