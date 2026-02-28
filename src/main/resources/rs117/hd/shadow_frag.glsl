@@ -28,6 +28,7 @@
 #include <uniforms/global.glsl>
 
 #include <utils/constants.glsl>
+#include <utils/color_utils.glsl>
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     uniform sampler2DArray textureArray;
@@ -40,7 +41,7 @@
 #endif
 
 void main() {
-    float opacity = 0;
+    float opacity = 1;
     #if SHADOW_TRANSPARENCY
         opacity = fOpacity;
     #endif
@@ -54,13 +55,12 @@ void main() {
             if ((fMaterialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1)
                 uvw.x = clamp(uvw.x, 0, .984375);
 
-            #if SHADOW_TRANSPARENCY
-                opacity = texture(textureArray, uvw.xyz).a;
-                if (uvw.w > 0)
-                    opacity *= texture(textureArray, uvw.xyw).r;
-                opacity *= fOpacity;
-            #else
-                opacity = texture(textureArray, uvw.xyz).a;
+            if (uvw.z != -1)
+                opacity *= texture(textureArray, uvw.xyz).a;
+            if (uvw.w != -1)
+                opacity *= linearToSrgb(texture(textureArray, uvw.xyw).r);
+
+            #if !SHADOW_TRANSPARENCY
                 if (opacity < SHADOW_DEFAULT_OPACITY_THRESHOLD)
                     discard;
             #endif
