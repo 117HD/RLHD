@@ -444,6 +444,7 @@ public class HdPlugin extends Plugin {
 	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
+	public boolean configParticleAmbientLight;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -719,6 +720,7 @@ public class HdPlugin extends Plugin {
 				npcDisplacementCache.initialize();
 
 				isActive = true;
+				updateCachedConfigs();
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
@@ -915,6 +917,7 @@ public class HdPlugin extends Plugin {
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
+			.define("GLOBAL_PARTICLE_AMBIENT_LIGHT", config.particleAmbientLight())
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
@@ -1678,6 +1681,7 @@ public class HdPlugin extends Plugin {
 		configCharacterDisplacement = config.characterDisplacement();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
+		configParticleAmbientLight = config.particleAmbientLight();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -1823,6 +1827,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_PIXELATED_SHADOWS:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_PARTICLE_AMBIENT_LIGHT:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

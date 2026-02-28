@@ -52,7 +52,7 @@ public class ParticlePass implements ScenePass {
 	private final ParticleManager.ParticleRenderContext renderContext = new ParticleManager.ParticleRenderContext();
 	private final int[] visibleIndices = new int[MAX_DRAWN];
 	private static final int QUAD_VERTS = 6;
-	private static final int FLOATS_PER_INSTANCE = 12;
+	private static final int FLOATS_PER_INSTANCE = 13;
 	private static final int INSTANCE_STRIDE_BYTES = 64;
 	private static final int INSTANCE_PADDING_BYTES = INSTANCE_STRIDE_BYTES - FLOATS_PER_INSTANCE * 4;
 	private static final float[] PARTICLE_QUAD_CORNERS = {
@@ -139,6 +139,9 @@ public class ParticlePass implements ScenePass {
 		glEnableVertexAttribArray(7);
 		glVertexAttribPointer(7, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 44);
 		glVertexAttribDivisor(7, 1);
+		glEnableVertexAttribArray(8);
+		glVertexAttribPointer(8, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 48);
+		glVertexAttribDivisor(8, 1);
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		particleStagingBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * FLOATS_PER_INSTANCE);
@@ -263,6 +266,8 @@ public class ParticlePass implements ScenePass {
 				}
 			}
 			particleStagingBuffer.put(flipbookCols).put(flipbookRows).put(flipbookFrameVal);
+			float useSceneAmbient = (def != null && def.colours.useSceneAmbientLight) ? 1f : 0f;
+			particleStagingBuffer.put(useSceneAmbient);
 		}
 
 		// Fill upload buffer, 64 bytes per instance (12 floats + 16 padding)

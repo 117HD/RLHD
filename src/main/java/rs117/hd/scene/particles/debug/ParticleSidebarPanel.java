@@ -1139,6 +1139,15 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		JCheckBox uniformCheck = new JCheckBox("", false);
 		uniformCheck.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
 		content.add(uniformCheck, controlConstraints(row));
+		row++;
+
+		JLabel useSceneAmbientLabel = new JLabel("Use scene ambient light");
+		useSceneAmbientLabel.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
+		useSceneAmbientLabel.setToolTipText("Apply scene ambient lighting to this particle. Disable for self-lit effects like fire.");
+		content.add(useSceneAmbientLabel, labelConstraints(row));
+		JCheckBox useSceneAmbientCheck = new JCheckBox("", true);
+		useSceneAmbientCheck.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
+		content.add(useSceneAmbientCheck, controlConstraints(row));
 
 		section.add(content, BorderLayout.NORTH);
 
@@ -1241,6 +1250,7 @@ public class ParticleSidebarPanel extends PluginPanel  {
 				colourTransSpinner.setValue(colPct);
 				alphaTransSpinner.setValue(alphaPct);
 				uniformCheck.setSelected(c.uniformColourVariation);
+				useSceneAmbientCheck.setSelected(c.useSceneAmbientLight);
 				preview.repaint();
 			} finally {
 				coloursLoadingFromDefinition = false;
@@ -1288,12 +1298,14 @@ public class ParticleSidebarPanel extends PluginPanel  {
 			def.colours.colourTransitionPercent = ((Number) colourTransSpinner.getValue()).intValue();
 			def.colours.alphaTransitionPercent = ((Number) alphaTransSpinner.getValue()).intValue();
 			def.colours.uniformColourVariation = uniformCheck.isSelected();
+			def.colours.useSceneAmbientLight = useSceneAmbientCheck.isSelected();
 			preview.repaint();
 			clientThread.invoke(() -> particleManager.applyDefinitionToEmittersWithId(id));
 		};
 		colourTransSpinner.addChangeListener(percentagesChanged);
 		alphaTransSpinner.addChangeListener(percentagesChanged);
 		uniformCheck.addItemListener(e -> percentagesChanged.stateChanged(null));
+		useSceneAmbientCheck.addItemListener(e -> percentagesChanged.stateChanged(null));
 
 		// Colour pickers using RuneLite's RuneliteColorPicker
 		minButton.addActionListener(e -> {
