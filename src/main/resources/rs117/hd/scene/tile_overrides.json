@@ -9435,12 +9435,6 @@
     "blended": false
   },
   {
-    "name": "TOA_CRONDIS_WATER_BLUE",
-    "area": "TOA_CRONDIS_WATER",
-    "waterType": "WATER",
-    "blended": false
-  },
-  {
     "name": "MAGE_ARENA_BANK_FLOOR",
     "area": "MAGE_ARENA_BANK",
     "underlayIds": [
