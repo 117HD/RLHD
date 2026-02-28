@@ -614,7 +614,11 @@ public class ZoneRenderer implements Renderer {
 
 			float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(plugin.latLong, cycleDuration, minimumBrightness);
 			directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier;
-			ambientStrength = environmentManager.currentAmbientStrength * brightnessMultiplier;
+			// When Day/Night is active, ignore the environment's ambientStrength
+			// (e.g. WINTER=3.5, AUTUMN=0.3) so the cycle's brightness multiplier
+			// controls night darkness without seasonal values making nights
+			// too dark or too bright.
+			ambientStrength = brightnessMultiplier;
 
 			double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, cycleDuration);
 			sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
