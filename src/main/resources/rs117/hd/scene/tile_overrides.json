@@ -7787,7 +7787,7 @@
   },
   {
     "name": "KHARID_GRASSY_SAND",
-    "groundMaterial": "SAND",
+    "groundMaterial": "GRASSY_SAND",
     "maxLightness": 60,
     "shiftHue": -1,
     "minHue": 6,
