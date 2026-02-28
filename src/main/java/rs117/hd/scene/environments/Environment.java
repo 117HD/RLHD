@@ -76,6 +76,7 @@ public class Environment {
 	public float starVisibility = 1;
 	public float moonVisibility = 1;
 	public float sunStrength = 1;
+	public float minBrightnessBoost = 0;
 
 	public Environment normalize() {
 		if (area != Area.ALL && area != Area.NONE) {

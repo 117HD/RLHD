@@ -531,7 +531,8 @@
     "groundFogOpacity": 0.5,
     "windAngle": 40,
     "windSpeed": 7,
-    "windStrength": 26
+    "windStrength": 26,
+    "minBrightnessBoost": 0.6
   },
   {
     "area": "LUMBRIDGE_CASTLE_BASEMENT",

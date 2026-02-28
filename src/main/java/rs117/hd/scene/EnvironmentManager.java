@@ -167,6 +167,10 @@ public class EnvironmentManager {
 	public float currentSunStrength = 1f;
 	private float targetSunStrength = 1f;
 
+	private float startMinBrightnessBoost = 0f;
+	public float currentMinBrightnessBoost = 0f;
+	private float targetMinBrightnessBoost = 0f;
+
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
 
@@ -301,6 +305,7 @@ public class EnvironmentManager {
 			currentStarVisibility = mix(startStarVisibility, targetStarVisibility, t);
 			currentMoonVisibility = mix(startMoonVisibility, targetMoonVisibility, t);
 			currentSunStrength = mix(startSunStrength, targetSunStrength, t);
+			currentMinBrightnessBoost = mix(startMinBrightnessBoost, targetMinBrightnessBoost, t);
 		}
 
 		updateLightning();
@@ -356,6 +361,7 @@ public class EnvironmentManager {
 		startStarVisibility = currentStarVisibility;
 		startMoonVisibility = currentMoonVisibility;
 		startSunStrength = currentSunStrength;
+		startMinBrightnessBoost = currentMinBrightnessBoost;
 		for (int i = 0; i < 2; i++)
 			startSunAngles[i] = mod(currentSunAngles[i], TWO_PI);
 
@@ -392,6 +398,7 @@ public class EnvironmentManager {
 		targetStarVisibility = env.starVisibility;
 		targetMoonVisibility = env.moonVisibility;
 		targetSunStrength = env.sunStrength;
+		targetMinBrightnessBoost = env.minBrightnessBoost;
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {

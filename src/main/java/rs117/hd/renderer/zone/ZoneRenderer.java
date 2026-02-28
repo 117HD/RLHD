@@ -610,7 +610,7 @@ public class ZoneRenderer implements Renderer {
 		float[] sunAngles = environmentManager.currentSunAngles;
 
 		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
-			int minimumBrightness = config.minimumBrightness();
+			int minimumBrightness = (int) (config.minimumBrightness() * (1 + environmentManager.currentMinBrightnessBoost));
 			float cycleDuration = config.cycleDurationMinutes();
 
 			float[] originalRegionalDirectionalColor = environmentManager.currentDirectionalColor;
