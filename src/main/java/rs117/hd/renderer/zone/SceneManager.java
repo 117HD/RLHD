@@ -170,6 +170,12 @@ public class SceneManager {
 
 				if (!generateSceneDataTask.isDone())
 					generateSceneDataTask.waitForCompletion();
+
+				root.sceneContext.fillGaps = config.fillGapsInTerrain();
+				for (var sub : subs)
+					if (sub != null && sub.sceneContext != null)
+						sub.sceneContext.fillGaps = config.fillGapsInTerrain();
+
 				generateSceneDataTask.queue();
 
 				root.invalidate();
@@ -410,6 +416,7 @@ public class SceneManager {
 			Scene prev = client.getTopLevelWorldView().getScene();
 
 			nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
+			nextSceneContext.fillGaps = config.fillGapsInTerrain();
 
 			if (nextSceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 				nextSceneContext.isInHouse = true;
@@ -704,6 +711,7 @@ public class SceneManager {
 		}
 
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
+		sceneContext.fillGaps = config.fillGapsInTerrain();
 		proceduralGenerator.generateSceneData(sceneContext);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
