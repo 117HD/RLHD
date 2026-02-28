@@ -36,6 +36,7 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
 import rs117.hd.opengl.shader.SkyShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
@@ -137,6 +138,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private ShadowShaderProgram.Legacy shadowProgram;
+
+	@Inject
+	private TerrainShadowShaderProgram terrainShadowProgram;
 
 	@Inject
 	private SkyShaderProgram skyProgram;
@@ -290,6 +294,8 @@ public class LegacyRenderer implements Renderer {
 		shadowProgram.setMode(plugin.configShadowMode);
 		shadowProgram.compile(includes);
 
+		terrainShadowProgram.compile(includes);
+
 		skyProgram.compile(includes);
 
 		if (computeMode == ComputeMode.OPENCL) {
@@ -312,6 +318,7 @@ public class LegacyRenderer implements Renderer {
 	public void destroyShaders() {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
+		terrainShadowProgram.destroy();
 		skyProgram.destroy();
 
 		if (computeMode == ComputeMode.OPENGL) {
@@ -1198,6 +1205,16 @@ public class LegacyRenderer implements Renderer {
 
 				glBindVertexArray(vaoScene);
 				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
+
+				// Render terrain-only shadow map
+				if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
+					glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
+					glClearDepth(1);
+					glClear(GL_DEPTH_BUFFER_BIT);
+
+					terrainShadowProgram.use();
+					glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
+				}
 
 				glDisable(GL_CULL_FACE);
 				glDisable(GL_DEPTH_TEST);

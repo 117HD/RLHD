@@ -49,6 +49,7 @@
 
 #include SHADOW_TRANSPARENCY
 #include TERRAIN_SHADOWS
+#include TERRAIN_ONLY_PASS
 #if SHADOW_TRANSPARENCY
     #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.01 // Remove shadows from clickboxes
 #else

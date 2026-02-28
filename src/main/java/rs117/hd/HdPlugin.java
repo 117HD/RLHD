@@ -164,6 +164,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TERRAIN_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_NIGHT_SKY = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
@@ -380,6 +381,8 @@ public class HdPlugin extends Plugin {
 	public int shadowMapResolution;
 	public int fboShadowMap;
 	private int texShadowMap;
+	public int fboTerrainShadowMap;
+	private int texTerrainShadowMap;
 
 	public int[] tiledLightingResolution;
 	public int tiledLightingLayerCount;
@@ -886,6 +889,7 @@ public class HdPlugin extends Plugin {
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
 			.define("TERRAIN_SHADOWS", config.terrainShadows())
+			.define("TERRAIN_ONLY_PASS", false)
 			.define("SHADOW_TRANSPARENCY", config.shadowTransparency())
 			.define("SHADOW_FILTERING", config.shadowFiltering())
 			.define("SHADOW_RESOLUTION", config.shadowResolution())
@@ -1408,6 +1412,39 @@ public class HdPlugin extends Plugin {
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 
+		// Create terrain shadow map FBO and texture
+		if (configTerrainShadows) {
+			fboTerrainShadowMap = glGenFramebuffers();
+			glBindFramebuffer(GL_FRAMEBUFFER, fboTerrainShadowMap);
+
+			texTerrainShadowMap = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
+			glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
+
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_DEPTH_COMPONENT24,
+				shadowMapResolution,
+				shadowMapResolution,
+				0,
+				GL_DEPTH_COMPONENT,
+				GL_FLOAT,
+				0
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texTerrainShadowMap, 0);
+			glDrawBuffer(GL_NONE);
+			glReadBuffer(GL_NONE);
+		} else {
+			initializeDummyTerrainShadowMap();
+		}
+
 		// Reset FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 	}
@@ -1417,6 +1454,19 @@ public class HdPlugin extends Plugin {
 		texShadowMap = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
 		glBindTexture(GL_TEXTURE_2D, texShadowMap);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+		initializeDummyTerrainShadowMap();
+	}
+
+	private void initializeDummyTerrainShadowMap() {
+		texTerrainShadowMap = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
+		glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -1432,6 +1482,14 @@ public class HdPlugin extends Plugin {
 		if (fboShadowMap != 0)
 			glDeleteFramebuffers(fboShadowMap);
 		fboShadowMap = 0;
+
+		if (texTerrainShadowMap != 0)
+			glDeleteTextures(texTerrainShadowMap);
+		texTerrainShadowMap = 0;
+
+		if (fboTerrainShadowMap != 0)
+			glDeleteFramebuffers(fboTerrainShadowMap);
+		fboTerrainShadowMap = 0;
 	}
 
 	public void initializeShaderHotswapping() {

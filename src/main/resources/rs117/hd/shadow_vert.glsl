@@ -67,9 +67,15 @@ layout (location = 1) in vec3 vUv;
         bool isGroundPlaneTile = (terrainData & 0xF) == 1; // plane == 0 && isTerrain
         bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
-        #if TERRAIN_SHADOWS
-            // Allow terrain to cast shadows on other terrain
+        #if TERRAIN_ONLY_PASS
+            // Terrain-only pass: only ground plane tiles cast shadows
             bool isShadowDisabled =
+                !isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile;
+        #elif TERRAIN_SHADOWS
+            // Main pass with terrain shadows: terrain goes to its own map
+            bool isShadowDisabled =
+                isGroundPlaneTile ||
                 isWaterSurfaceOrUnderwaterTile ||
                 isTransparent;
         #else
@@ -150,9 +156,15 @@ layout (location = 1) in vec3 vUv;
         bool isGroundPlaneTile = (vTerrainData & 0xF) == 1; // plane == 0 && isTerrain
         bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
-        #if TERRAIN_SHADOWS
-            // Allow terrain to cast shadows on other terrain
+        #if TERRAIN_ONLY_PASS
+            // Terrain-only pass: only ground plane tiles cast shadows
             bool isShadowDisabled =
+                !isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile;
+        #elif TERRAIN_SHADOWS
+            // Main pass with terrain shadows: terrain goes to its own map
+            bool isShadowDisabled =
+                isGroundPlaneTile ||
                 isWaterSurfaceOrUnderwaterTile ||
                 isTransparent;
         #else

@@ -46,6 +46,7 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
 import rs117.hd.opengl.shader.SkyShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
@@ -142,6 +143,9 @@ public class ZoneRenderer implements Renderer {
 	private ShadowShaderProgram.Detailed detailedShadowProgram;
 
 	@Inject
+	private TerrainShadowShaderProgram terrainShadowProgram;
+
+	@Inject
 	private SkyShaderProgram skyProgram;
 
 	@Inject
@@ -167,6 +171,7 @@ public class ZoneRenderer implements Renderer {
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
+	public final CommandBuffer terrainShadowCmd = new CommandBuffer("TerrainShadow", renderState);
 	public final CommandBuffer playerCmd = new CommandBuffer("Player", renderState);
 
 	private GLBuffer indirectDrawCmds;
@@ -202,6 +207,7 @@ public class ZoneRenderer implements Renderer {
 
 		sceneCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
+		terrainShadowCmd.setFrameTimer(frameTimer);
 
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
@@ -283,6 +289,7 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
+		terrainShadowProgram.compile(includes);
 		skyProgram.compile(includes);
 	}
 
@@ -291,6 +298,7 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
+		terrainShadowProgram.destroy();
 		skyProgram.destroy();
 	}
 
@@ -827,6 +835,7 @@ public class ZoneRenderer implements Renderer {
 		indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
 		directionalCmd.reset();
+		terrainShadowCmd.reset();
 		renderState.reset();
 
 		int totalSortedFaces = sceneManager.getRoot().getSortedAlphaCount();
@@ -952,6 +961,22 @@ public class ZoneRenderer implements Renderer {
 		CommandBuffer.SKIP_DEPTH_MASKING = true;
 		directionalCmd.execute();
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
+
+		// Render terrain-only shadow map
+		if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
+			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
+			renderState.apply();
+
+			glClearDepth(1);
+			glClear(GL_DEPTH_BUFFER_BIT);
+
+			renderState.enable.set(GL_DEPTH_TEST);
+			renderState.depthFunc.set(GL_LEQUAL);
+
+			CommandBuffer.SKIP_DEPTH_MASKING = true;
+			terrainShadowCmd.execute();
+			CommandBuffer.SKIP_DEPTH_MASKING = false;
+		}
 
 		renderState.disable.set(GL_DEPTH_TEST);
 
@@ -1121,6 +1146,11 @@ public class ZoneRenderer implements Renderer {
 		if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 			directionalCmd.SetShader(fastShadowProgram);
 			z.renderOpaque(directionalCmd, ctx, plugin.configRoofShadows);
+
+			if (plugin.configTerrainShadows) {
+				terrainShadowCmd.SetShader(terrainShadowProgram);
+				z.renderOpaque(terrainShadowCmd, ctx, plugin.configRoofShadows);
+			}
 		}
 		frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
 
