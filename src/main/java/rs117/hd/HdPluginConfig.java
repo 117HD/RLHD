@@ -453,6 +453,20 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
+	@ConfigItem(
+		keyName = KEY_EXPAND_SHADOW_DRAW,
+		name = "Expand shadow draw",
+		description =
+			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
+			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
+		position = 6,
+		section = shadowSettings
+	)
+	default boolean expandShadowDraw() {
+		return false;
+	}
+
 
 	/*====== Lighting settings ======*/
 
@@ -990,21 +1004,6 @@ public interface HdPluginConfig extends Config
 	default ShadowDistance shadowDistance()
 	{
 		return ShadowDistance.DISTANCE_50;
-	}
-
-	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
-	@ConfigItem(
-		keyName = KEY_EXPAND_SHADOW_DRAW,
-		name = "Expand shadow draw",
-		description =
-			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
-			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
-		position = -96,
-		section = legacySettings
-	)
-	default boolean expandShadowDraw()
-	{
-		return false;
 	}
 
 	String KEY_MODEL_BATCHING = "useModelBatching";
