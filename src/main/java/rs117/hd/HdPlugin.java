@@ -505,6 +505,8 @@ public class HdPlugin extends Plugin {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
+				isActive = true;
+
 				fboScene = 0;
 				rboSceneColor = 0;
 				rboSceneDepth = 0;
@@ -693,7 +695,6 @@ public class HdPlugin extends Plugin {
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
 
-				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
@@ -716,6 +717,8 @@ public class HdPlugin extends Plugin {
 	@Override
 	protected void shutDown() {
 		clientThread.invoke(() -> {
+			if (!isActive)
+				return;
 			isActive = false;
 			FileWatcher.destroy();
 
@@ -782,13 +785,22 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void stopPlugin() {
-		SwingUtilities.invokeLater(() -> {
+		clientThread.invoke(() -> {
 			try {
-				pluginManager.setPluginEnabled(this, false);
-				pluginManager.stopPlugin(this);
+				// Shut the plugin down immediately, making RuneLite's call to shutDown() a no-op
+				shutDown();
 			} catch (Throwable ex) {
 				log.error("Error while stopping 117HD:", ex);
 			}
+
+			SwingUtilities.invokeLater(() -> {
+				try {
+					pluginManager.setPluginEnabled(this, false);
+					pluginManager.stopPlugin(this);
+				} catch (Throwable ex) {
+					log.error("Error while stopping 117HD:", ex);
+				}
+			});
 		});
 	}
 
