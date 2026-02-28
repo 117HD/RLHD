@@ -19,6 +19,13 @@ public class TimeOfDay
 	private static double accumulatedCycleTime = 0.0;
 	private static long completedCycles = 0; // Each completed cycle = one simulated day
 
+	// Night Synced mode: day offset advances only while the moon is below the horizon,
+	// so phase changes are never visible. We track pending increments and apply them
+	// only when the mirrored moon altitude is negative.
+	private static long nightSyncedDayOffset = 0;
+	private static long lastNightSyncedCycles = 0;
+	private static long pendingDayIncrements = 0;
+
 	/**
 	 * Get the current sun or moon angles for a given set of coordinates and simulated day length in minutes.
 	 *
@@ -500,11 +507,15 @@ public class TimeOfDay
 
 	/**
 	 * Get the moon illumination fraction, respecting moon behavior mode.
-	 * Night Synced mode always returns 1.0 (full moon).
+	 * Night Synced mode derives illumination from the advancing equinox date
+	 * so the phase cycles naturally (each game cycle = +1 day of lunar phase).
 	 */
 	public static float getMoonIlluminationFraction(float dayLength, MoonBehavior moonBehavior) {
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
-			return 1.0f;
+			long equinoxEpochMs = 1742428800000L;
+			long dayMs = 24L * 60 * 60 * 1000;
+			long phaseMillis = equinoxEpochMs + nightSyncedDayOffset * dayMs;
+			return (float) AtmosphereUtils.getMoonIllumination(phaseMillis)[0];
 		}
 		return getMoonIlluminationFraction(dayLength);
 	}
@@ -524,11 +535,52 @@ public class TimeOfDay
 	 * Get night synced moon angles {azimuth, altitude} by mirroring the sun.
 	 * The moon is placed opposite the sun (azimuth + PI) with negated altitude,
 	 * so it rises when the sun sets and vice versa.
+	 *
+	 * Uses a fixed equinox base date plus a day offset that only advances
+	 * while the moon is below the horizon. This means the moon's phase
+	 * changes cycle-to-cycle, but the shift is never visible because it
+	 * only happens when the moon can't be seen.
 	 */
 	public static double[] getNightSyncedMoonAngles(double[] latLong, float dayLength) {
-		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
-		return new double[] { sunAngles[0] + Math.PI, -sunAngles[1] };
+		// Call getModifiedDate to keep accumulatedCycleTime/completedCycles updated
+		getModifiedDate(dayLength);
+
+		double cyclePosition = accumulatedCycleTime;
+
+		// Use a uniform linear mapping: cycle 0→1 maps to a full 24-hour day.
+		// This gives the moon constant angular speed across its whole arc,
+		// unlike the piecewise mapping used for the sun which slows at twilight.
+		//
+		// The start hour is chosen so that the equinox sunset (~19:00) falls
+		// at cycle position ~0.65, matching when the piecewise sun visually
+		// reaches the horizon. This keeps moonrise aligned with visual sunset.
+		// 19 = start + 0.65 * 24  =>  start ≈ 3.4
+		double mappedHour = 3.4 + cyclePosition * 24.0;
+		if (mappedHour >= 24.0) mappedHour -= 24.0;
+
+		// Detect newly completed cycles and queue them as pending
+		long newCycles = completedCycles - lastNightSyncedCycles;
+		if (newCycles > 0) {
+			pendingDayIncrements += newCycles;
+			lastNightSyncedCycles = completedCycles;
+		}
+
+		// March 20, 2025 00:00 UTC (spring equinox)
+		long equinoxEpochMs = 1742428800000L;
+		long dayMs = 24L * 60 * 60 * 1000;
+		long fixedMillis = equinoxEpochMs + nightSyncedDayOffset * dayMs
+			+ (long) (mappedHour * 60 * 60 * 1000);
+
+		double[] sunAngles = AtmosphereUtils.getSunAngles(fixedMillis, latLong);
+		double moonAltitude = -sunAngles[1];
+
+		// Apply pending day increments only while the moon is below the horizon
+		if (pendingDayIncrements > 0 && moonAltitude < 0) {
+			nightSyncedDayOffset += pendingDayIncrements;
+			pendingDayIncrements = 0;
+		}
+
+		return new double[] { sunAngles[0] + Math.PI, moonAltitude };
 	}
 
 	public static float[] getNightAmbientColor() {
