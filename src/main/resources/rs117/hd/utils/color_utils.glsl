@@ -110,6 +110,26 @@ float linearToSrgb(float rgb) {
     step(0.0031308, rgb));
 }
 
+vec3 hsv2rgb(float h) {
+    float s = 1.0;
+    float v = 1.0;
+
+    float i = floor(h * 6.0);
+    float f = h * 6.0 - i;
+    float p = v * (1.0 - s);
+    float q = v * (1.0 - f * s);
+    float t = v * (1.0 - (1.0 - f) * s);
+
+    int modI = int(mod(i, 6.0));
+
+    if (modI == 0) return vec3(v, t, p);
+    if (modI == 1) return vec3(q, v, p);
+    if (modI == 2) return vec3(p, v, t);
+    if (modI == 3) return vec3(p, q, v);
+    if (modI == 4) return vec3(t, p, v);
+    return vec3(v, p, q);
+}
+
 // https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae
 vec3 srgbToHsl(vec3 srgb) {
     float V = max(max(srgb.r, srgb.g), srgb.b);

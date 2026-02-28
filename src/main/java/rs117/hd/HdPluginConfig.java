@@ -1196,6 +1196,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_OCCLUSION_CULLING = "experimentalOcclusionCulling";
+	@ConfigItem(
+		keyName = KEY_OCCLUSION_CULLING,
+		name = "Occlusion Culling",
+		description = "",
+		section = experimentalSettings
+	)
+	default boolean occlusionCulling() {
+		return true;
+	}
+
 	String KEY_ASYNC_MODEL_CACHE_SIZE = "asyncModelCacheSizeMiB";
 	@Range(
 		min = 16,

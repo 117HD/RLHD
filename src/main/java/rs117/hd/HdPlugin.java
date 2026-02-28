@@ -83,6 +83,7 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.opengl.GLConstants;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
@@ -132,6 +133,10 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.opengl.GLConstants.getMaxImageUnits;
+import static rs117.hd.opengl.GLConstants.getMaxSamples;
+import static rs117.hd.opengl.GLConstants.getMaxTextureSize;
+import static rs117.hd.opengl.GLConstants.getMaxTextureUnits;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
@@ -158,15 +163,15 @@ public class HdPlugin extends Plugin {
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
-	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SCENE_OPAQUE_DEPTH = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SCENE_ALPHA_DEPTH = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
-	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
 	public static final int IMAGE_UNIT_TILED_LIGHTING = IMAGE_UNIT_COUNT++;
 
@@ -367,10 +372,14 @@ public class HdPlugin extends Plugin {
 
 	public int[] sceneResolution;
 	public int fboScene;
+	public int fboSceneAlphaDepth;
 	private int rboSceneColor;
-	private int rboSceneDepth;
 	public int fboSceneResolve;
+	public int fboSceneDepthResolve = 0;
+	private int rboSceneDepthResolve = 0;
 	private int rboSceneResolveColor;
+	private int texSceneDepth;
+	private int texSceneAlphaDepth;
 
 	public int shadowMapResolution;
 	public int fboShadowMap;
@@ -398,6 +407,7 @@ public class HdPlugin extends Plugin {
 	public boolean configModelBatching;
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
+	public boolean configShadowTransparency;
 	public boolean configRoofShadows;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
@@ -509,7 +519,10 @@ public class HdPlugin extends Plugin {
 
 				fboScene = 0;
 				rboSceneColor = 0;
-				rboSceneDepth = 0;
+				texSceneDepth = 0;
+				texSceneAlphaDepth = 0;
+				fboSceneDepthResolve = 0;
+				rboSceneDepthResolve = 0;
 				fboSceneResolve = 0;
 				rboSceneResolveColor = 0;
 				fboShadowMap = 0;
@@ -591,13 +604,10 @@ public class HdPlugin extends Plugin {
 				lwjglInitialized = true;
 				checkGLErrors();
 
-				MAX_TEXTURE_UNITS = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS); // Not the fixed pipeline MAX_TEXTURE_UNITS
-				if (MAX_TEXTURE_UNITS < TEXTURE_UNIT_COUNT)
-					log.warn("The GPU only supports {} texture units", MAX_TEXTURE_UNITS);
-				MAX_IMAGE_UNITS = GL_CAPS.GL_ARB_shader_image_load_store ?
-					glGetInteger(ARBShaderImageLoadStore.GL_MAX_IMAGE_UNITS) : 0;
-				if (MAX_IMAGE_UNITS < IMAGE_UNIT_COUNT)
-					log.warn("The GPU only supports {} image units", MAX_IMAGE_UNITS);
+				if (getMaxTextureUnits() < TEXTURE_UNIT_COUNT)
+					log.warn("The GPU only supports {} texture units", getMaxTextureUnits());
+				if (getMaxImageUnits() < IMAGE_UNIT_COUNT)
+					log.warn("The GPU only supports {} image units", getMaxImageUnits());
 
 				if (log.isDebugEnabled() && GL_CAPS.glDebugMessageControl != 0) {
 					debugCallback = GLUtil.setupDebugMessageCallback();
@@ -866,6 +876,7 @@ public class HdPlugin extends Plugin {
 		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER)
+			.define("MSAA_SAMPLES", config.antiAliasingMode().getSamples())
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
@@ -1231,14 +1242,11 @@ public class HdPlugin extends Plugin {
 			client.getViewportHeight()
 		};
 
-		// Skip rendering when there's no viewport to render to, which happens while world hopping
 		if (viewport[2] == 0 || viewport[3] == 0)
 			return;
 
-		// DPI scaling and stretched mode also affects the game's viewport
 		divide(sceneViewportScale, vec(actualUiResolution), vec(uiResolution));
 		if (sceneViewportScale[0] != 1 || sceneViewportScale[1] != 1) {
-			// Pad the viewport before scaling, so it always covers the game's viewport in the UI
 			for (int i = 0; i < 2; i++) {
 				viewport[i] -= 1;
 				viewport[i + 2] += 2;
@@ -1246,28 +1254,28 @@ public class HdPlugin extends Plugin {
 			viewport = round(multiply(vec(viewport), sceneViewportScale));
 		}
 
-		// Check if scene FBO needs to be recreated
 		if (Arrays.equals(sceneViewport, viewport))
 			return;
 
 		destroySceneFbo();
 		sceneViewport = viewport;
 
-		// Bind default FBO to check whether anti-aliasing is forced
 		int defaultFramebuffer = awtContext.getFramebuffer(false);
 		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
-		final int forcedAASamples = glGetInteger(GL_SAMPLES);
-		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
 
-		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
-		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
-		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
-		boolean sRGB = false; // This is currently unused
+		final int forcedAASamples = GLConstants.getForcedSamples();
+		msaaSamples = forcedAASamples != 0
+			? forcedAASamples
+			: min(config.antiAliasingMode().getSamples(), getMaxSamples());
 
-		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
-		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
+		boolean sRGB = false;
+
 		int defaultColorAttachment = defaultFramebuffer == 0 ? GL_BACK_LEFT : GL_COLOR_ATTACHMENT0;
-		int alphaBits = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, defaultColorAttachment, GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE);
+		int alphaBits = glGetFramebufferAttachmentParameteri(
+			GL_FRAMEBUFFER,
+			defaultColorAttachment,
+			GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE
+		);
 		checkGLErrors();
 		boolean alpha = alphaBits > 0;
 
@@ -1278,22 +1286,33 @@ public class HdPlugin extends Plugin {
 		float resolutionScale = config.sceneResolutionScale() / 100f;
 		sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
 		uboGlobal.sceneResolution.set(sceneResolution);
-		uboGlobal.upload(); // Ensure this is up to date with rendering
+		uboGlobal.upload();
 
-		// Create and bind the FBO
+		// -------------------------------------------------
+		// Create scene FBO
+		// -------------------------------------------------
+
 		fboScene = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fboScene);
 
-		// Create color render buffer
+		// -------------------------------------------------
+		// Color RBO
+		// -------------------------------------------------
+
 		rboSceneColor = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneColor);
 
-		// Flush out all pending errors, so we can check whether the next step succeeds
 		clearGLErrors();
 
 		int format = 0;
 		for (int desiredFormat : desiredFormats) {
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, desiredFormat, sceneResolution[0], sceneResolution[1]);
+			glRenderbufferStorageMultisample(
+				GL_RENDERBUFFER,
+				msaaSamples,
+				desiredFormat,
+				sceneResolution[0],
+				sceneResolution[1]
+			);
 
 			if (glGetError() == GL_NO_ERROR) {
 				format = desiredFormat;
@@ -1304,31 +1323,174 @@ public class HdPlugin extends Plugin {
 		if (format == 0)
 			throw new RuntimeException("No supported " + (sRGB ? "sRGB" : "linear") + " formats");
 
-		// Found a usable format. Bind the RBO to the scene FBO
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
+		glFramebufferRenderbuffer(
+			GL_FRAMEBUFFER,
+			GL_COLOR_ATTACHMENT0,
+			GL_RENDERBUFFER,
+			rboSceneColor
+		);
 		checkGLErrors();
 
-		// Create depth render buffer
-		rboSceneDepth = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1]);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
-		checkGLErrors();
-
-		// If necessary, create an FBO for resolving multisampling
 		if (msaaSamples > 1 && resolutionScale != 1) {
 			fboSceneResolve = glGenFramebuffers();
 			glBindFramebuffer(GL_FRAMEBUFFER, fboSceneResolve);
+
 			rboSceneResolveColor = glGenRenderbuffers();
 			glBindRenderbuffer(GL_RENDERBUFFER, rboSceneResolveColor);
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, 0, format, sceneResolution[0], sceneResolution[1]);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneResolveColor);
+			glRenderbufferStorageMultisample(
+				GL_RENDERBUFFER,
+				0,
+				format,
+				sceneResolution[0],
+				sceneResolution[1]
+			);
+
+			glFramebufferRenderbuffer(
+				GL_FRAMEBUFFER,
+				GL_COLOR_ATTACHMENT0,
+				GL_RENDERBUFFER,
+				rboSceneResolveColor
+			);
+
 			checkGLErrors();
+
+			glBindFramebuffer(GL_FRAMEBUFFER, fboScene);
 		}
 
+		if (msaaSamples > 1) {
+			// Multisampled depth renderbuffer
+			rboSceneDepthResolve = glGenRenderbuffers();
+			glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepthResolve);
+			glRenderbufferStorageMultisample(
+				GL_RENDERBUFFER,
+				msaaSamples,
+				GL_DEPTH_COMPONENT24,
+				sceneResolution[0],
+				sceneResolution[1]
+			);
+
+			glFramebufferRenderbuffer(
+				GL_FRAMEBUFFER,
+				GL_DEPTH_ATTACHMENT,
+				GL_RENDERBUFFER,
+				rboSceneDepthResolve
+			);
+
+			checkGLErrors();
+
+			// Single-sample depth texture (resolve target)
+			texSceneDepth = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_SCENE_OPAQUE_DEPTH);
+			glBindTexture(GL_TEXTURE_2D, texSceneDepth);
+
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_DEPTH_COMPONENT24,
+				sceneResolution[0],
+				sceneResolution[1],
+				0,
+				GL_DEPTH_COMPONENT,
+				GL_FLOAT,
+				0
+			);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+			// Depth resolve FBO
+			fboSceneDepthResolve = glGenFramebuffers();
+			glBindFramebuffer(GL_FRAMEBUFFER, fboSceneDepthResolve);
+
+			glFramebufferTexture2D(
+				GL_FRAMEBUFFER,
+				GL_DEPTH_ATTACHMENT,
+				GL_TEXTURE_2D,
+				texSceneDepth,
+				0
+			);
+
+			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+				throw new RuntimeException("Depth resolve FBO incomplete");
+
+			glBindFramebuffer(GL_FRAMEBUFFER, fboScene);
+		}
+		else {
+			// No MSAA: attach depth texture directly
+			texSceneDepth = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_SCENE_OPAQUE_DEPTH);
+			glBindTexture(GL_TEXTURE_2D, texSceneDepth);
+
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_DEPTH_COMPONENT24,
+				sceneResolution[0],
+				sceneResolution[1],
+				0,
+				GL_DEPTH_COMPONENT,
+				GL_FLOAT,
+				0
+			);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+			glFramebufferTexture2D(
+				GL_FRAMEBUFFER,
+				GL_DEPTH_ATTACHMENT,
+				GL_TEXTURE_2D,
+				texSceneDepth,
+				0
+			);
+		}
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			throw new RuntimeException("Scene FBO incomplete");
+
+		texSceneAlphaDepth = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_SCENE_ALPHA_DEPTH);
+		glBindTexture(GL_TEXTURE_2D, texSceneAlphaDepth);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_DEPTH_COMPONENT16,
+			sceneResolution[0],
+			sceneResolution[1],
+			0,
+			GL_DEPTH_COMPONENT,
+			GL_FLOAT,
+			0
+		);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		fboSceneAlphaDepth = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneAlphaDepth);
+		glFramebufferTexture2D(
+			GL_FRAMEBUFFER,
+			GL_DEPTH_ATTACHMENT,
+			GL_TEXTURE_2D,
+			texSceneAlphaDepth,
+			0
+		);
+
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+			throw new RuntimeException("Alpha depth FBO incomplete");
+
 		// Reset
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glActiveTexture(TEXTURE_UNIT_UI);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 	}
 
 	private void destroySceneFbo() {
@@ -1342,13 +1504,25 @@ public class HdPlugin extends Plugin {
 			glDeleteRenderbuffers(rboSceneColor);
 		rboSceneColor = 0;
 
-		if (rboSceneDepth != 0)
-			glDeleteRenderbuffers(rboSceneDepth);
-		rboSceneDepth = 0;
+		if (texSceneDepth != 0)
+			glDeleteTextures(texSceneDepth);
+		texSceneDepth = 0;
+
+		if(texSceneAlphaDepth != 0)
+			glDeleteTextures(texSceneAlphaDepth);
+		texSceneAlphaDepth = 0;
 
 		if (fboSceneResolve != 0)
 			glDeleteFramebuffers(fboSceneResolve);
 		fboSceneResolve = 0;
+
+		if(fboSceneDepthResolve != 0)
+			glDeleteFramebuffers(fboSceneDepthResolve);
+		fboSceneDepthResolve = 0;
+
+		if(rboSceneDepthResolve != 0)
+			glDeleteRenderbuffers(rboSceneDepthResolve);
+		rboSceneDepthResolve = 0;
 
 		if (rboSceneResolveColor != 0)
 			glDeleteRenderbuffers(rboSceneResolveColor);
@@ -1371,10 +1545,9 @@ public class HdPlugin extends Plugin {
 		glBindTexture(GL_TEXTURE_2D, texShadowMap);
 
 		shadowMapResolution = config.shadowResolution().getValue();
-		int maxResolution = glGetInteger(GL_MAX_TEXTURE_SIZE);
-		if (maxResolution < shadowMapResolution) {
-			log.info("Capping shadow resolution from {} to {}", shadowMapResolution, maxResolution);
-			shadowMapResolution = maxResolution;
+		if (getMaxTextureSize() < shadowMapResolution) {
+			log.info("Capping shadow resolution from {} to {}", shadowMapResolution, getMaxTextureSize());
+			shadowMapResolution = getMaxTextureSize();
 		}
 
 		glTexImage2D(
@@ -1559,8 +1732,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
@@ -1605,6 +1778,7 @@ public class HdPlugin extends Plugin {
 	private void updateCachedConfigs() {
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
+		configShadowTransparency = config.shadowTransparency();
 		configRoofShadows = config.roofShadows();
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
@@ -1784,6 +1958,7 @@ public class HdPlugin extends Plugin {
 							case KEY_ANTI_ALIASING_MODE:
 							case KEY_SCENE_RESOLUTION_SCALE:
 								recreateSceneFbo = true;
+								recompilePrograms = true;
 								break;
 							case KEY_SHADOW_MODE:
 							case KEY_SHADOW_RESOLUTION:

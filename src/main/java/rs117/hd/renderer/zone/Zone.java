@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.OcclusionManager.OcclusionQuery;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -74,6 +75,8 @@ public class Zone {
 	@Nullable
 	public GLBuffer vboO, vboA, vboM;
 	public GLTextureBuffer tboF;
+	public ConcurrentLinkedQueue<OcclusionQuery> additionalOcclusionQueries = new ConcurrentLinkedQueue<>();
+	public boolean isFullyOccluded;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
@@ -90,6 +93,7 @@ public class Zone {
 	ZoneUploadJob uploadJob;
 
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
+	OcclusionQuery[] levelOcclusionQueries = new OcclusionQuery[5];
 
 	int[][] rids;
 	int[][] roofStart;
@@ -121,6 +125,9 @@ public class Zone {
 		}
 
 		tboF = f;
+
+		for(int i = 0; i < 5; ++i)
+			levelOcclusionQueries[i] = OcclusionManager.getInstance().obtainQuery();
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -169,6 +176,18 @@ public class Zone {
 			uploadJob = null;
 		}
 
+		for(int i = 0; i < 5; ++i){
+			if(levelOcclusionQueries[i] != null)
+				levelOcclusionQueries[i].free();
+			levelOcclusionQueries[i] = null;
+		}
+
+		for(AlphaModel m : alphaModels) {
+			if(m.occlusionQuery != null)
+				m.occlusionQuery.free();
+			m.occlusionQuery = null;
+		}
+
 		sortedAlphaFacesUpload.release();
 
 		sizeO = 0;
@@ -192,6 +211,35 @@ public class Zone {
 		// don't add permanent alphamodels to the cache as permanent alphamodels are always allocated
 		// to avoid having to synchronize the cache
 		alphaModels.clear();
+	}
+
+	public void evaluateOcclusion(WorldViewContext ctx){
+		isFullyOccluded = true;
+		for (int level = ctx.minLevel; level <= ctx.maxLevel; ++level) {
+			if(levelOcclusionQueries[level] == null || levelOcclusionQueries[level].isVisible())
+				isFullyOccluded = false;
+			if(levelOcclusionQueries[level] != null)
+				levelOcclusionQueries[level].queue();
+		}
+
+		if(isFullyOccluded) {
+			// Check if any of the dynamic occlusion queries are not occluded
+			for(OcclusionQuery dynamicQuery : additionalOcclusionQueries) {
+				if(dynamicQuery.isVisible()) {
+					isFullyOccluded = false;
+					break;
+				}
+			}
+
+			if(isFullyOccluded) {
+				// Zone is fully occluded, we need to requeue all dynamic queries since they are revelvant to if the zone is fully occluded
+				for(OcclusionQuery dynamicQuery : additionalOcclusionQueries)
+					dynamicQuery.queue();
+			}
+		}
+
+		if(!isFullyOccluded) // Dynamics will reappend when they are processed
+			additionalOcclusionQueries.clear();
 	}
 
 	public static void processPendingDeletions() {
@@ -303,12 +351,31 @@ public class Zone {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
+	public void setAlphaModelsOffset(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
+		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
+		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
+
+		for(AlphaModel m : alphaModels) {
+			if(m.occlusionQuery != null) {
+				m.occlusionQuery.setOffset(baseX, 0, baseZ);
+				m.occlusionQuery.setWorldView(viewContext.uboWorldViewStruct);
+			}
+		}
+	}
+
 	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
 		if (vboM == null)
 			return;
 
 		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
 		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
+
+		for(int i = 0; i < 5; i++) {
+			if(levelOcclusionQueries[i] != null) {
+				levelOcclusionQueries[i].setOffset(baseX, 0, baseZ);
+				levelOcclusionQueries[i].setWorldView(viewContext.uboWorldViewStruct);
+			}
+		}
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer buf = stack.mallocInt(3)
@@ -367,6 +434,8 @@ public class Zone {
 		}
 
 		for (int level = ctx.minLevel; level <= maxLevel; ++level) {
+			if(levelOcclusionQueries[level] != null && levelOcclusionQueries[level].isOccluded())
+				continue;
 			int[] rids = this.rids[level];
 			int[] roofStart = this.roofStart[level];
 			int[] roofEnd = this.roofEnd[level];
@@ -458,6 +527,7 @@ public class Zone {
 		int[] packedFaces;
 		int[] sortedFaces;
 		int sortedFacesLen;
+		OcclusionQuery occlusionQuery;
 
 		int dist;
 		int asyncSortIdx = -1;
@@ -638,6 +708,11 @@ public class Zone {
 		m.radius = 2 + (int) Math.sqrt(radius);
 		m.sortedFaces = new int[bufferIdx * 3];
 
+		if(bufferIdx >= 32) {
+			m.occlusionQuery = OcclusionManager.getInstance().obtainQuery();
+			m.occlusionQuery.addSphere(x + cx, y + cy, z + cz, m.radius);
+		}
+
 		assert packedFaces.length > 0;
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
@@ -703,6 +778,7 @@ public class Zone {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.sortedFaces = null;
+				m.occlusionQuery = null;
 				modelCache.add(m);
 			}
 			m.asyncSortIdx = -1;
@@ -775,6 +851,12 @@ public class Zone {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp())
 				continue;
 
+			if(m.occlusionQuery != null) {
+				m.occlusionQuery.queue();
+				if(m.occlusionQuery.isOccluded())
+					continue;
+			}
+
 			m.dist = dist;
 			alphaSortingJob.addAlphaModel(m);
 		}
@@ -815,7 +897,7 @@ public class Zone {
 		int zz,
 		int level,
 		WorldViewContext ctx,
-		boolean isShadowPass,
+		boolean isScenePass,
 		boolean includeRoof
 	) {
 		if (alphaModels.isEmpty())
@@ -832,12 +914,10 @@ public class Zone {
 
 		drawIdx = 0;
 
-		cmd.DepthMask(false);
-
 		boolean shouldQueueUpload = false;
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
-			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
+			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level || (m.occlusionQuery != null && m.occlusionQuery.isOccluded()))
 				continue;
 
 			if (level < minLevel || level > maxLevel ||
@@ -859,7 +939,7 @@ public class Zone {
 				continue;
 			}
 
-			if (isShadowPass || m.asyncSortIdx < 0) {
+			if (!isScenePass || m.asyncSortIdx < 0) {
 				lastDrawMode = STATIC_UNSORTED;
 				pushRange(m.startpos, m.endpos);
 				continue;
@@ -890,8 +970,6 @@ public class Zone {
 		}
 
 		flush(cmd);
-
-		cmd.DepthMask(true);
 	}
 
 	private void flush(CommandBuffer cmd) {
@@ -953,7 +1031,8 @@ public class Zone {
 						int zx2 = (centerX >> 10) + offset;
 						int zz2 = (centerZ >> 10) + offset;
 						if (zx2 >= 0 && zx2 < zones.length && zz2 >= 0 && zz2 < zones[0].length) {
-							if (zones[zx2][zz2].inSceneFrustum && zones[zx2][zz2].initialized) {
+							Zone z2 = zones[zx2][zz2];
+							if(z2.inSceneFrustum && z2.initialized && !z2.isFullyOccluded) {
 								max = distance;
 								closestZoneX = centerX >> 10;
 								closestZoneZ = centerZ >> 10;
@@ -993,6 +1072,7 @@ public class Zone {
 				m2.zofx = (byte) (closestZoneX - zx);
 				m2.zofz = (byte) (closestZoneZ - zz);
 
+				m2.occlusionQuery = m.occlusionQuery;
 				m2.packedFaces = m.packedFaces;
 				m2.radius = m.radius;
 				m2.asyncSortIdx = m.asyncSortIdx;

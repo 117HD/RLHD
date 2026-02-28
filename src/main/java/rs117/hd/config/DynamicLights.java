@@ -43,7 +43,6 @@ public enum DynamicLights
 	static {
 		int max = 0;
 		for (var e : values()) {
-			assert e.tiledLightingLayers % 4 == 0; // Needs to be divisible by 4
 			max = max(max, e.tiledLightingLayers);
 		}
 		MAX_LAYERS_PER_TILE = max;
