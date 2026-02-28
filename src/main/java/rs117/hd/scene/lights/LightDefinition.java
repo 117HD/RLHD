@@ -27,9 +27,11 @@ public class LightDefinition {
 	public int spawnDelay;
 	public int despawnDelay;
 	public boolean fixedDespawnTime;
+	public boolean despawnWithParent;
 	public boolean visibleFromOtherPlanes;
 	public boolean ignoreActorHiding;
 	public int renderableIndex = -1;
+	public boolean waitForAnimation;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] areas = {};

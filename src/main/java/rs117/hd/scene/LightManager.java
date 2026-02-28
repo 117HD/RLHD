@@ -171,7 +171,9 @@ public class LightManager {
 
 		if (reloadLights) {
 			reloadLights = false;
-			loadSceneLights(sceneContext, null);
+			sceneContext.lights.clear();
+			sceneContext.knownProjectiles.clear();
+			loadSceneLights(sceneContext);
 
 			client.getNpcs().forEach(npc -> {
 				addNpcLights(npc);
@@ -194,6 +196,7 @@ public class LightManager {
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
 		var cachedNpcs = client.getTopLevelWorldView().npcs();
 		var cachedPlayers = client.getTopLevelWorldView().players();
+		int gameCycle = client.getGameCycle();
 		final int plane = client.getPlane();
 		boolean changedPlanes = false;
 
@@ -243,8 +246,12 @@ public class LightManager {
 				} else {
 					hiddenTemporarily = !shouldShowProjectileLights();
 					if (light.animationSpecific) {
-						var animation = light.projectile.getAnimation();
-						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+						if (light.def.waitForAnimation && gameCycle < light.projectile.getStartCycle()) {
+							parentExists = false;
+						} else if (!light.def.animationIds.isEmpty()) {
+							var animation = light.projectile.getAnimation();
+							parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+						}
 					}
 					light.orientation = light.projectile.getOrientation();
 				}
@@ -255,8 +262,12 @@ public class LightManager {
 				if (light.graphicsObject.finished()) {
 					light.markedForRemoval = true;
 				} else if (light.animationSpecific) {
-					var animation = light.graphicsObject.getAnimation();
-					parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+					if (light.def.waitForAnimation && gameCycle < light.graphicsObject.getStartCycle()) {
+						parentExists = false;
+					} else if (!light.def.animationIds.isEmpty()) {
+						var animation = light.graphicsObject.getAnimation();
+						parentExists = animation != null && light.def.animationIds.contains(animation.getId());
+					}
 				}
 			} else if (light.actor != null && !light.markedForRemoval) {
 				if (light.actor instanceof NPC && light.actor != cachedNpcs.byIndex(((NPC) light.actor).getIndex()) ||
@@ -272,8 +283,22 @@ public class LightManager {
 					light.plane = plane;
 					light.orientation = light.actor.getCurrentOrientation();
 
-					if (light.animationSpecific)
-						parentExists = light.def.animationIds.contains(light.actor.getAnimation());
+					if (light.animationSpecific) {
+						if (light.spotanimId != -1) {
+							if (light.def.waitForAnimation) {
+								parentExists = false;
+								for (var spotanim : light.actor.getSpotAnims()) {
+									if (spotanim.getId() == light.spotanimId) {
+										if (gameCycle >= spotanim.getStartCycle())
+											parentExists = true;
+										break;
+									}
+								}
+							}
+						} else {
+							parentExists = light.def.animationIds.contains(light.actor.getAnimation());
+						}
+					}
 
 					int tileExX = ((int) light.origin[0] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 					int tileExY = ((int) light.origin[2] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
@@ -399,6 +424,8 @@ public class LightManager {
 						if (light.dynamicLifetime)
 							light.lifetime = -1;
 					}
+				} else if (light.def.despawnWithParent) {
+					light.lifetime = 0;
 				} else if (light.lifetime == -1) {
 					// Schedule despawning of the light if the parent just despawned, and the light isn't already scheduled to despawn
 					float minLifetime = light.spawnDelay + light.fadeInDuration;
@@ -591,24 +618,7 @@ public class LightManager {
 		return plugin.configProjectileLights && !(pluginManager.isPluginEnabled(entityHiderPlugin) && entityHiderConfig.hideProjectiles());
 	}
 
-	public void loadSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext)
-	{
-		if (oldSceneContext == null) {
-			sceneContext.lights.clear();
-			sceneContext.knownProjectiles.clear();
-		} else {
-			// Copy over NPC and projectile lights from the old scene
-			ArrayList<Light> lightsToKeep = new ArrayList<>();
-			for (Light light : oldSceneContext.lights)
-				if (light.actor != null || light.projectile != null)
-					lightsToKeep.add(light);
-
-			sceneContext.lights.addAll(lightsToKeep);
-			for (var light : lightsToKeep)
-				if (light.projectile != null && oldSceneContext.knownProjectiles.contains(light.projectile))
-					sceneContext.knownProjectiles.add(light.projectile);
-		}
-
+	public void loadSceneLights(SceneContext sceneContext) {
 		for (Light light : WORLD_LIGHTS) {
 			assert light.worldPoint != null;
 			if (sceneContext.sceneBounds.contains(light.worldPoint))
@@ -650,6 +660,22 @@ public class LightManager {
 
 		// Set the plane to an unreachable plane, forcing the first `toggleTemporaryVisibility` call to not fade
 		currentPlane = -1;
+	}
+
+	public void swapSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext) {
+		if (oldSceneContext == null)
+			return;
+
+		// Copy over NPC and projectile lights from the old scene
+		ArrayList<Light> lightsToKeep = new ArrayList<>();
+		for (Light light : oldSceneContext.lights)
+			if (light.actor != null || light.projectile != null)
+				lightsToKeep.add(light);
+
+		sceneContext.lights.addAll(lightsToKeep);
+		for (var light : lightsToKeep)
+			if (light.projectile != null && oldSceneContext.knownProjectiles.contains(light.projectile))
+				sceneContext.knownProjectiles.add(light.projectile);
 	}
 
 	private void removeLightIf(Predicate<Light> predicate) {

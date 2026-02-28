@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class Camera {
+public final class Camera {
 	private static final int PROJECTION_MATRIX_DIRTY = 1;
 	private static final int VIEW_MATRIX_DIRTY = 1 << 1;
 	private static final int VIEW_PROJ_MATRIX_DIRTY = 1 << 2;
@@ -21,7 +21,9 @@ public class Camera {
 	private static final int VIEW_CHANGED = VIEW_MATRIX_DIRTY | VIEW_PROJ_CHANGED;
 
 	private float[] viewMatrix;
+	private float[] invViewMatrix;
 	private float[] projectionMatrix;
+	private float[] invProjectionMatrix;
 	private float[] viewProjMatrix;
 	private float[] invViewProjMatrix;
 
@@ -31,7 +33,7 @@ public class Camera {
 	private final float[] orientation = new float[2];
 	private final int[] fixedOrientation = new int[2]; // TODO: Is there a reliable way to go from orientation -> Fixed?
 
-	private int dirtyFlags = PROJ_CHANGED | VIEW_CHANGED;
+	private volatile int dirtyFlags = PROJ_CHANGED | VIEW_CHANGED;
 
 	@Getter
 	private int viewportWidth = 10;
@@ -44,7 +46,10 @@ public class Camera {
 	private float nearPlane = 0.5f;
 	@Getter
 	private float farPlane = 0.0f;
-	private boolean isOrthographic = false;
+	@Getter
+	private boolean orthographic = false;
+	@Getter
+	private boolean reverseZ = false;
 
 	public boolean isDirty() {
 		return dirtyFlags != 0;
@@ -54,28 +59,46 @@ public class Camera {
 
 	public boolean isViewDirty() { return (dirtyFlags & VIEW_MATRIX_DIRTY) != 0; }
 
-	public boolean getIsOrthographic() {return isOrthographic; }
+	public synchronized void setDirty() {
+		dirtyFlags |= PROJ_CHANGED | VIEW_CHANGED;
+	}
 
 	public Camera setOrthographic(boolean newOrthographic) {
-		if (isOrthographic != newOrthographic) {
-			isOrthographic = newOrthographic;
-			dirtyFlags |= PROJ_CHANGED;
+		if (orthographic != newOrthographic) {
+			synchronized (this) {
+				orthographic = newOrthographic;
+				dirtyFlags |= PROJ_CHANGED;
+			}
+		}
+		return this;
+	}
+
+	public Camera setReverseZ(boolean newReverseZ) {
+		if (reverseZ != newReverseZ) {
+			synchronized (this) {
+				reverseZ = newReverseZ;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setViewportWidth(int newViewportWidth) {
 		if (viewportWidth != newViewportWidth) {
-			viewportWidth = newViewportWidth;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				viewportWidth = newViewportWidth;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setViewportHeight(int newViewportHeight) {
 		if (viewportHeight != newViewportHeight) {
-			viewportHeight = newViewportHeight;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				viewportHeight = newViewportHeight;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -86,24 +109,30 @@ public class Camera {
 
 	public Camera setNearPlane(float newNearPlane) {
 		if (nearPlane != newNearPlane) {
-			nearPlane = newNearPlane;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				nearPlane = newNearPlane;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setFarPlane(float newFarPlane) {
 		if (farPlane != newFarPlane) {
-			farPlane = newFarPlane;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				farPlane = newFarPlane;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setZoom(float newZoom) {
 		if (zoom != newZoom) {
-			zoom = newZoom;
-			dirtyFlags |= PROJ_CHANGED;
+			synchronized (this) {
+				zoom = newZoom;
+				dirtyFlags |= PROJ_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -118,8 +147,10 @@ public class Camera {
 
 	public Camera setPositionX(float x) {
 		if (position[0] != x) {
-			position[0] = x;
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				position[0] = x;
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -134,8 +165,10 @@ public class Camera {
 
 	public Camera setPositionY(float y) {
 		if (position[1] != y) {
-			position[1] = y;
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				position[1] = y;
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -150,18 +183,22 @@ public class Camera {
 
 	public Camera setPositionZ(float z) {
 		if (position[2] != z) {
-			position[2] = z;
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				position[2] = z;
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setPosition(float[] newPosition) {
 		if (position[0] != newPosition[0] || position[1] != newPosition[1] || position[2] != newPosition[2]) {
-			position[0] = newPosition[0];
-			position[1] = newPosition[1];
-			position[2] = newPosition[2];
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				position[0] = newPosition[0];
+				position[1] = newPosition[1];
+				position[2] = newPosition[2];
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -187,18 +224,22 @@ public class Camera {
 
 	public Camera translate(float[] translation) {
 		if (translation[0] != 0.0f || translation[1] != 0.0f || translation[2] != 0.0f) {
-			position[0] += translation[0];
-			position[1] += translation[1];
-			position[2] += translation[2];
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				position[0] += translation[0];
+				position[1] += translation[1];
+				position[2] += translation[2];
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
 
 	public Camera setYaw(float yaw) {
 		if (orientation[0] != yaw) {
-			orientation[0] = yaw;
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				orientation[0] = yaw;
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -216,8 +257,10 @@ public class Camera {
 
 	public Camera setPitch(float pitch) {
 		if (orientation[1] != pitch) {
-			orientation[1] = pitch;
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				orientation[1] = pitch;
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -243,9 +286,11 @@ public class Camera {
 
 	public Camera setOrientation(float[] newOrientation) {
 		if (orientation[0] != newOrientation[0] || orientation[1] != newOrientation[1]) {
-			orientation[0] = newOrientation[0];
-			orientation[1] = newOrientation[1];
-			dirtyFlags |= VIEW_CHANGED;
+			synchronized (this) {
+				orientation[0] = newOrientation[0];
+				orientation[1] = newOrientation[1];
+				dirtyFlags |= VIEW_CHANGED;
+			}
 		}
 		return this;
 	}
@@ -261,19 +306,30 @@ public class Camera {
 	public float[] getForwardDirection() { return getForwardDirection(new float[3]); }
 
 	private void calculateViewMatrix() {
-		if ((dirtyFlags & VIEW_MATRIX_DIRTY) != 0) {
-			viewMatrix = Mat4.identity();
-			Mat4.mul(viewMatrix, Mat4.rotateX(orientation[1]));
-			Mat4.mul(viewMatrix, Mat4.rotateY(orientation[0]));
+		if ((dirtyFlags & VIEW_MATRIX_DIRTY) == 0)
+			return;
+
+		synchronized (this) {
+			if ((dirtyFlags & VIEW_MATRIX_DIRTY) == 0)
+				return;
+
+			var view = Mat4.rotateX(orientation[1]);
+			Mat4.mul(view, Mat4.rotateY(orientation[0]));
 			if (position[0] != 0 || position[1] != 0 || position[2] != 0) {
 				Mat4.mul(
-					viewMatrix,
+					view,
 					Mat4.translate(
 						-position[0],
 						-position[1],
 						-position[2]
 					)
 				);
+			}
+			viewMatrix = view;
+			try {
+				invViewMatrix = Mat4.inverse(viewMatrix);
+			} catch (Exception ex) {
+				log.warn("Encountered an exception whilst solving inverse of camera view:", ex);
 			}
 			dirtyFlags &= ~VIEW_MATRIX_DIRTY;
 		}
@@ -286,7 +342,17 @@ public class Camera {
 	}
 
 	public float[] getViewMatrix() {
-		return getViewMatrix(new float[16]);
+		return getViewMatrix(Mat4.zero());
+	}
+
+	public float[] inverseTransformPoint(float[] out, float[] point) {
+		calculateViewMatrix();
+		Mat4.transformVecAffine(out, invViewMatrix, point);
+		return out;
+	}
+
+	public float[] inverseTransformPoint(float[] point) {
+		return inverseTransformPoint(new float[3], point);
 	}
 
 	public float[] transformPoint(float[] out, float[] point) {
@@ -300,17 +366,44 @@ public class Camera {
 	}
 
 	private void calculateProjectionMatrix() {
-		if ((dirtyFlags & PROJECTION_MATRIX_DIRTY) != 0) {
+		if ((dirtyFlags & PROJECTION_MATRIX_DIRTY) == 0)
+			return;
+
+		synchronized (this) {
+			if ((dirtyFlags & PROJECTION_MATRIX_DIRTY) == 0)
+				return;
+
 			final float zoomedViewportWidth = (viewportWidth / zoom);
 			final float zoomedViewportHeight = (viewportHeight / zoom);
-			if (isOrthographic) {
-				projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
-			} else {
-				if (farPlane > 0.0f) {
-					projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+			if (orthographic) {
+				if (reverseZ) {
+					projectionMatrix = Mat4.orthographicReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
 				} else {
-					projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					if (farPlane > 0.0f) {
+						projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+					} else {
+						projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					}
 				}
+			} else {
+				if (reverseZ) {
+					if (farPlane > 0.0f) {
+						projectionMatrix = Mat4.perspectiveReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+					} else {
+						projectionMatrix = Mat4.perspectiveInfiniteReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					}
+				} else {
+					if (farPlane > 0.0f) {
+						projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+					} else {
+						projectionMatrix = Mat4.perspectiveInfinite(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					}
+				}
+			}
+			try {
+				invProjectionMatrix = Mat4.inverse(projectionMatrix);
+			} catch (Exception ex) {
+				log.warn("Encountered an exception whilst solving inverse of camera projection:", ex);
 			}
 			dirtyFlags &= ~PROJECTION_MATRIX_DIRTY;
 		}
@@ -323,11 +416,17 @@ public class Camera {
 	}
 
 	public float[] getProjectionMatrix() {
-		return getProjectionMatrix(new float[16]);
+		return getProjectionMatrix(Mat4.zero());
 	}
 
 	private void calculateViewProjMatrix() {
-		if ((dirtyFlags & VIEW_PROJ_MATRIX_DIRTY) != 0) {
+		if ((dirtyFlags & VIEW_PROJ_MATRIX_DIRTY) == 0)
+			return;
+
+		synchronized (this) {
+			if ((dirtyFlags & VIEW_PROJ_MATRIX_DIRTY) == 0)
+				return;
+
 			calculateViewMatrix();
 			calculateProjectionMatrix();
 
@@ -346,14 +445,22 @@ public class Camera {
 	}
 
 	public float[] getViewProjMatrix() {
-		return getViewProjMatrix(new float[16]);
+		return getViewProjMatrix(Mat4.zero());
 	}
 
 	private void calculateInvViewProjMatrix() {
-		if ((dirtyFlags & INV_VIEW_PROJ_MATRIX_DIRTY) != 0) {
+		if ((dirtyFlags & INV_VIEW_PROJ_MATRIX_DIRTY) == 0)
+			return;
+
+		synchronized (this) {
+			if ((dirtyFlags & INV_VIEW_PROJ_MATRIX_DIRTY) == 0)
+				return;
+
 			calculateViewProjMatrix();
 			try {
-				invViewProjMatrix = Mat4.inverse(viewProjMatrix);
+				float[] invViewProj = copy(invViewMatrix);
+				Mat4.mul(invViewProj, invProjectionMatrix);
+				invViewProjMatrix = invViewProj;
 			} catch (Exception ex) {
 				log.warn("Encountered an exception whilst solving inverse of camera ViewProj: ", ex);
 			}
@@ -375,9 +482,15 @@ public class Camera {
 	private void calculateFrustumPlanes() {
 		if ((dirtyFlags & FRUSTUM_PLANES_DIRTY) == 0)
 			return;
-		calculateViewProjMatrix();
-		Mat4.extractPlanes(viewProjMatrix, frustumPlanes);
-		dirtyFlags &= ~FRUSTUM_PLANES_DIRTY;
+
+		synchronized (this) {
+			if ((dirtyFlags & FRUSTUM_PLANES_DIRTY) == 0)
+				return;
+
+			calculateViewProjMatrix();
+			Mat4.extractPlanes(viewProjMatrix, frustumPlanes);
+			dirtyFlags &= ~FRUSTUM_PLANES_DIRTY;
+		}
 	}
 
 	public float[][] getFrustumPlanes(float[][] out) {
@@ -394,9 +507,15 @@ public class Camera {
 	private void calculateFrustumCorners() {
 		if ((dirtyFlags & FRUSTUM_CORNERS_DIRTY) == 0)
 			return;
-		calculateInvViewProjMatrix();
-		Mat4.extractFrustumCorners(invViewProjMatrix, frustumCorners);
-		dirtyFlags &= ~FRUSTUM_CORNERS_DIRTY;
+
+		synchronized (this) {
+			if ((dirtyFlags & FRUSTUM_CORNERS_DIRTY) == 0)
+				return;
+
+			calculateInvViewProjMatrix();
+			Mat4.extractFrustumCorners(invViewProjMatrix, frustumCorners);
+			dirtyFlags &= ~FRUSTUM_CORNERS_DIRTY;
+		}
 	}
 
 	public float[][] getFrustumCorners(float[][] out) {
@@ -418,5 +537,26 @@ public class Camera {
 	public boolean intersectsSphere(float x, float y, float z, float radius) {
 		calculateFrustumPlanes();
 		return HDUtils.isSphereIntersectingFrustum(x, y, z, radius, frustumPlanes, frustumPlanes.length);
+	}
+
+	public int classifySphere(float x, float y, float z, float radius) {
+		calculateFrustumPlanes();
+		return HDUtils.classifySphereFrustum(x, y, z, radius, frustumPlanes, frustumPlanes.length);
+	}
+
+	public void copyFrom(Camera other) {
+		viewportWidth = other.viewportWidth;
+		viewportHeight = other.viewportHeight;
+		zoom = other.zoom;
+		nearPlane = other.nearPlane;
+		farPlane = other.farPlane;
+		orthographic = other.orthographic;
+		reverseZ = other.reverseZ;
+
+		copyTo(position, other.position);
+		copyTo(orientation, other.orientation);
+		copyTo(fixedOrientation, other.fixedOrientation);
+
+		dirtyFlags = PROJ_CHANGED | VIEW_CHANGED;
 	}
 }

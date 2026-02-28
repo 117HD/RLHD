@@ -1,19 +1,21 @@
 package rs117.hd.renderer.zone;
 
-import java.util.ArrayDeque;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.function.ToIntFunction;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
@@ -22,15 +24,14 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.jobs.GenericJob;
 
-import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
-import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
-import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -58,18 +59,20 @@ public class Zone {
 
 	public static final int LEVEL_WATER_SURFACE = 4;
 
-	public static final BlockingDeque<VBO> VBO_PENDING_DELETION = new LinkedBlockingDeque<>();
+	public static final BlockingDeque<GLBuffer> VBO_PENDING_DELETION = new LinkedBlockingDeque<>();
 	public static final BlockingDeque<Integer> VAO_PENDING_DELETION = new LinkedBlockingDeque<>();
 
 	public int glVao;
 	int bufLen;
+	int dist;
 
 	public int glVaoA;
 	public int bufLenA;
+	public int sortedFacesLen;
 
 	public int sizeO, sizeA, sizeF;
 	@Nullable
-	public VBO vboO, vboA, vboM;
+	public GLBuffer vboO, vboA, vboM;
 	public GLTextureBuffer tboF;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
@@ -83,6 +86,7 @@ public class Zone {
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean isFirstLoadingAttempt = true;
 
+	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
 
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
@@ -92,26 +96,28 @@ public class Zone {
 	int[][] roofEnd;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
+	final List<AlphaModel> playerModels = new ArrayList<>(0);
+	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
 
-	public void initialize(VBO o, VBO a, GLTextureBuffer f, int eboShared) {
+	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 		if (o == null && a == null || f == null)
 			return;
 
-		vboM = new VBO(METADATA_SIZE);
-		vboM.initialize(GL_STATIC_DRAW);
+		vboM = new GLBuffer("ZoneMetadata", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, 0);
+		vboM.initialize(METADATA_SIZE);
 
 		if (o != null) {
 			vboO = o;
 			glVao = glGenVertexArrays();
-			setupVao(glVao, o.bufId, vboM.bufId, eboShared);
+			setupVao(glVao, o.id, vboM.id, eboShared);
 		}
 
 		if (a != null) {
 			vboA = a;
 			glVaoA = glGenVertexArrays();
-			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
+			setupVao(glVaoA, a.id, vboM.id, eboShared);
 		}
 
 		tboF = f;
@@ -163,6 +169,8 @@ public class Zone {
 			uploadJob = null;
 		}
 
+		sortedAlphaFacesUpload.release();
+
 		sizeO = 0;
 		sizeA = 0;
 		sizeF = 0;
@@ -188,7 +196,7 @@ public class Zone {
 
 	public static void processPendingDeletions() {
 		int leakCount = 0;
-		VBO vbo;
+		GLBuffer vbo;
 		while ((vbo = VBO_PENDING_DELETION.poll()) != null) {
 			vbo.destroy();
 			leakCount++;
@@ -246,11 +254,11 @@ public class Zone {
 			tboF.unmap();
 
 		if (vboO != null) {
-			this.bufLen = vboO.len / (VERT_SIZE / 4);
+			this.bufLen = vboO.mapped().byteView().position() / VERT_SIZE;
 		}
 
 		if (vboA != null) {
-			this.bufLenA = vboA.len / (VERT_SIZE / 4);
+			this.bufLenA = vboA.mapped().byteView().position() / VERT_SIZE;
 		}
 	}
 
@@ -302,11 +310,14 @@ public class Zone {
 		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
 		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
 
-		vboM.map();
-		vboM.vb.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
-		vboM.vb.put(baseX);
-		vboM.vb.put(baseZ);
-		vboM.unmap();
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer buf = stack.mallocInt(3)
+				.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0)
+				.put(baseX)
+				.put(baseZ);
+			buf.flip();
+			vboM.upload(buf);
+		}
 	}
 
 	void updateRoofs(Map<Integer, Integer> updates) {
@@ -324,18 +335,10 @@ public class Zone {
 	private static final int NUM_DRAW_RANGES = 512;
 	private static final int[] drawOff = new int[NUM_DRAW_RANGES];
 	private static final int[] drawEnd = new int[NUM_DRAW_RANGES];
+
+	private static final int[] glDrawOffset = new int[NUM_DRAW_RANGES];
+	private static final int[] glDrawLength = new int[NUM_DRAW_RANGES];
 	private static int drawIdx = 0;
-	private static int[] glDrawOffset, glDrawLength;
-
-	private static final int[][] glDrawOffsetPreAlloc = new int[15][];
-	private static final int[][] glDrawLengthPreAlloc = new int[15][];
-
-	static {
-		for (int i = 0; i < glDrawOffsetPreAlloc.length; ++i) {
-			glDrawOffsetPreAlloc[i] = new int[i + 1];
-			glDrawLengthPreAlloc[i] = new int[i + 1];
-		}
-	}
 
 	private void convertForDraw(int vertSize) {
 		for (int i = 0; i < drawIdx; ++i) {
@@ -348,13 +351,8 @@ public class Zone {
 			drawEnd[i] -= drawOff[i]; // convert from end pos to length
 		}
 
-		if (drawIdx < glDrawOffsetPreAlloc.length) {
-			glDrawOffset = copyTo(glDrawOffsetPreAlloc[drawIdx], drawOff, 0, drawIdx);
-			glDrawLength = copyTo(glDrawLengthPreAlloc[drawIdx], drawEnd, 0, drawIdx);
-		} else {
-			glDrawOffset = Arrays.copyOfRange(drawOff, 0, drawIdx);
-			glDrawLength = Arrays.copyOfRange(drawEnd, 0, drawIdx);
-		}
+		copyTo(glDrawOffset, drawOff, 0, drawIdx);
+		copyTo(glDrawLength, drawEnd, 0, drawIdx);
 	}
 
 	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
@@ -442,7 +440,7 @@ public class Zone {
 		}
 	}
 
-	static class AlphaModel {
+	public static class AlphaModel {
 		int id;
 		ModelOverride modelOverride;
 		int startpos, endpos;
@@ -458,17 +456,31 @@ public class Zone {
 		// only set for static geometry as they require sorting
 		int radius;
 		int[] packedFaces;
-		byte[] renderPriorities;
+		int[] sortedFaces;
+		int sortedFacesLen;
+
+		int dist;
+		int asyncSortIdx = -1;
+		int eboOffset = -1;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
+		static final int SORT_COMPLETED = 4;
+
+		void setSorted() {
+			flags |= SORT_COMPLETED;
+		}
+
+		boolean needsSorting() {
+			return (flags & SORT_COMPLETED) == 0;
+		}
 
 		boolean isTemp() {
-			return packedFaces == null;
+			return packedFaces == null || sortedFaces == null;
 		}
 	}
 
-	static final Queue<AlphaModel> modelCache = new ArrayDeque<>();
+	static final ConcurrentLinkedQueue<AlphaModel> modelCache = new ConcurrentLinkedQueue<>();
 
 	void addAlphaModel(
 		HdPlugin plugin,
@@ -524,8 +536,8 @@ public class Zone {
 		int[] indices2 = model.getFaceIndices2();
 		int[] indices3 = model.getFaceIndices3();
 
-		int minX = Integer.MAX_VALUE, minY = minX, minZ = minY;
-		int maxX = Integer.MIN_VALUE, maxY = maxX, maxZ = maxY;
+		int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
 
 		for (int f = 0; f < faceCount; ++f) {
 			if (color3[f] == -2)
@@ -579,6 +591,8 @@ public class Zone {
 			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;
 			int textureId = faceTextures != null ? faceTextures[f] : -1;
 
+			ModelOverride faceOverride = modelOverride;
+
 			Material material = Material.NONE;
 			if (textureId != -1) {
 				if (modelOverride.textureMaterial != Material.NONE) {
@@ -588,19 +602,22 @@ public class Zone {
 					if (modelOverride.materialOverrides != null) {
 						var override = modelOverride.materialOverrides.get(material);
 						if (override != null) {
+							faceOverride = override;
 							material = override.textureMaterial;
 						}
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						material = override.baseMaterial;
-						break;
-					}
+				final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
+				final var override = modelOverride.testColorOverrides(ahsl);
+				if (override != null) {
+					faceOverride = override;
+					material = override.baseMaterial;
 				}
 			}
+
+			if (faceOverride.hide)
+				continue;
 
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
 			if (!hasAlpha)
@@ -618,31 +635,30 @@ public class Zone {
 			bufferIdx++;
 		}
 
-		assert radius >= 0;
-
-		m.renderPriorities = model.getFaceRenderPriorities();
 		m.radius = 2 + (int) Math.sqrt(radius);
+		m.sortedFaces = new int[bufferIdx * 3];
 
 		assert packedFaces.length > 0;
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
+		sortedFacesLen += m.sortedFaces.length;
 		alphaModels.add(m);
 	}
 
-	void addTempAlphaModel(ModelOverride modelOverride, int vao, int tboF, int startpos, int endpos, int level, int x, int y, int z) {
+	synchronized void addTempAlphaModel(ModelOverride modelOverride, DynamicModelVAO.View view, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
 		m.id = -1;
 		m.modelOverride = modelOverride;
-		m.startpos = startpos;
-		m.endpos = endpos;
+		m.startpos = view.getStartOffset();
+		m.endpos = view.getEndOffset();
 		m.x = (short) x;
 		m.y = (short) y;
 		m.z = (short) z;
-		m.vao = vao;
-		m.tboF = tboF;
+		m.vao = view.vao;
+		m.tboF = view.tboTexId;
 		m.rid = -1;
 		m.level = (byte) level;
 		m.lx = m.lz = m.ux = m.uz = -1;
@@ -651,16 +667,47 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	void removeTemp() {
+	synchronized void addPlayerModel(DynamicModelVAO.View view, int level, int x, int y, int z) {
+		AlphaModel m = modelCache.poll();
+		if (m == null)
+			m = new AlphaModel();
+		m.id = -1;
+		m.modelOverride = null;
+		m.startpos = view.getStartOffset();
+		m.endpos = view.getEndOffset();
+		m.x = (short) x;
+		m.y = (short) y;
+		m.z = (short) z;
+		m.vao = view.vao;
+		m.tboF = view.tboTexId;
+		m.rid = -1;
+		m.level = (byte) level;
+		m.lx = m.lz = m.ux = m.uz = -1;
+		m.zofx = m.zofz = 0;
+		playerModels.add(m);
+	}
+
+	synchronized void postAlphaPass() {
+		lastSortedAlphaFacesUpload = null;
+		sortedAlphaFacesUpload.waitForCompletion();
+		alphaSortingJob.waitForCompletion();
+
+		cleanAlphaModels(alphaModels);
+		cleanAlphaModels(playerModels);
+	}
+
+	private void cleanAlphaModels(List<AlphaModel> alphaModels) {
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
 				alphaModels.remove(i);
 				m.packedFaces = null;
-				m.renderPriorities = null;
+				m.sortedFaces = null;
 				modelCache.add(m);
 			}
-			m.flags &= ~AlphaModel.SKIP;
+			m.asyncSortIdx = -1;
+			m.eboOffset = -1;
+			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
 		}
 	}
 
@@ -668,30 +715,98 @@ public class Zone {
 	private static final int TEMP = 2;
 	private static final int STATIC_UNSORTED = 3;
 
+	private static int alphaFaceCount;
 	private static int lastDrawMode;
 	private static int lastVao;
 	private static int lastTboF;
 	private static int lastzx, lastzz;
 
-	private static final int[] numOfPriority = FacePrioritySorter.numOfPriority;
-	private static final int[][] orderedFaces = FacePrioritySorter.orderedFaces;
+	private static final class AlphaSortPredicate implements ToIntFunction<AlphaModel> {
+		int cx, cy, cz;
+		int zx, zz;
 
-	private Camera alphaSort_Camera;
-	private int alphaSort_zx, alphaSort_zz;
-	private final Comparator<AlphaModel> alphaSortComparator = Comparator.comparingInt((AlphaModel m) -> {
-		final int cx = (int) alphaSort_Camera.getPositionX();
-		final int cy = (int) alphaSort_Camera.getPositionY();
-		final int cz = (int) alphaSort_Camera.getPositionZ();
-		final int mx = m.x + ((alphaSort_zx - m.zofx) << 10);
-		final int mz = m.z + ((alphaSort_zz - m.zofz) << 10);
-		return (mx - cx) * (mx - cx) + (m.y - cy) * (m.y - cy) + (mz - cz) * (mz - cz);
-	}).reversed();
+		@Override
+		public int applyAsInt(AlphaModel m) {
+			final int mx = m.x + ((zx - m.zofx) << 10);
+			final int mz = m.z + ((zz - m.zofz) << 10);
+			final int my = m.y;
+			return (mx - cx) * (mx - cx) + (my - cy) * (my - cy) + (mz - cz) * (mz - cz);
+		}
+	}
 
-	void alphaSort(int zx, int zz, Camera camera) {
-		alphaSort_Camera = camera;
-		alphaSort_zx = zx;
-		alphaSort_zz = zz;
+	private final AlphaSortPredicate alphaSortPred = new AlphaSortPredicate();
+	private final Comparator<AlphaModel> alphaSortComparator = Comparator.comparingInt(alphaSortPred).reversed();
+
+	private static GenericJob lastSortedAlphaFacesUpload;
+	private final GenericJob sortedAlphaFacesUpload = GenericJob.build("sortedAlphaFacesUpload", this::alphaFacesUpload);
+
+	void alphaFacesUpload(GenericJob job) {
+		final IntBuffer eboAlphaBuffer = ZoneRenderer.eboAlphaMapped.intView();
+		for (int i = 0; i < alphaModels.size(); ++i) {
+			AlphaModel m = alphaModels.get(i);
+			if (m.eboOffset < 0 || m.sortedFacesLen <= 0 || m.sortedFaces == null)
+				continue;
+
+			eboAlphaBuffer.position(m.eboOffset).put(m.sortedFaces, 0, m.sortedFacesLen);
+		}
+	}
+
+	synchronized void alphaSort(int zx, int zz, Camera camera) {
+		alphaSortPred.cx = (int) camera.getPositionX();
+		alphaSortPred.cy = (int) camera.getPositionY();
+		alphaSortPred.cz = (int) camera.getPositionZ();
+		alphaSortPred.zx = zx;
+		alphaSortPred.zz = zz;
 		alphaModels.sort(alphaSortComparator);
+	}
+
+	synchronized void playerSort(int zx, int zz, Camera camera) {
+		alphaSortPred.cx = (int) camera.getPositionX();
+		alphaSortPred.cy = (int) camera.getPositionY();
+		alphaSortPred.cz = (int) camera.getPositionZ();
+		alphaSortPred.zx = zx;
+		alphaSortPred.zz = zz;
+		playerModels.sort(alphaSortComparator);
+	}
+
+	void alphaStaticModelSort(Camera camera) {
+		alphaSortingJob.reset();
+		for (AlphaModel m : alphaModels) {
+			if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp())
+				continue;
+
+			m.dist = dist;
+			alphaSortingJob.addAlphaModel(m);
+		}
+		alphaSortingJob.queue(camera);
+	}
+
+	void renderPlayers(
+		CommandBuffer cmd,
+		int zx,
+		int zz
+	) {
+		if (playerModels.isEmpty())
+			return;
+
+		drawIdx = 0;
+
+		for (int i = 0; i < playerModels.size(); i++) {
+			final AlphaModel m = playerModels.get(i);
+
+			if (lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
+				flush(cmd);
+
+			lastVao = m.vao;
+			lastTboF = m.tboF;
+			lastzx = zx - m.zofx;
+			lastzz = zz - m.zofz;
+			lastDrawMode = TEMP;
+
+			pushRange(m.startpos, m.endpos);
+		}
+
+		flush(cmd);
 	}
 
 	void renderAlpha(
@@ -700,34 +815,33 @@ public class Zone {
 		int zz,
 		int level,
 		WorldViewContext ctx,
-		Camera camera,
-		boolean roofShadows,
-		boolean skipSorting
+		boolean isShadowPass,
+		boolean includeRoof
 	) {
 		if (alphaModels.isEmpty())
 			return;
 
+		int minLevel = ctx.minLevel;
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
 		var hiddenRoofIds = ctx.hideRoofIds;
-		if (roofShadows) {
+		if (includeRoof) {
 			maxLevel = 3;
 			hiddenRoofIds = Collections.emptySet();
 		}
 
-		cmd.DepthMask(false);
-
 		drawIdx = 0;
 
-		int yawSin = SINE[camera.getFixedYaw()];
-		int yawCos = COSINE[camera.getFixedYaw()];
-		int pitchSin = SINE[camera.getFixedPitch()];
-		int pitchCos = COSINE[camera.getFixedPitch()];
-		for (AlphaModel m : alphaModels) {
+		cmd.DepthMask(false);
+
+		boolean shouldQueueUpload = false;
+		for (int i = 0; i < alphaModels.size(); i++) {
+			final AlphaModel m = alphaModels.get(i);
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
 				continue;
 
-			if (level < ctx.minLevel || level > maxLevel || level > currentLevel && hiddenRoofIds.contains((int) m.rid))
+			if (level < minLevel || level > maxLevel ||
+				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
 				continue;
 
 			if (lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
@@ -745,99 +859,46 @@ public class Zone {
 				continue;
 			}
 
-			if (skipSorting) {
+			if (isShadowPass || m.asyncSortIdx < 0) {
 				lastDrawMode = STATIC_UNSORTED;
 				pushRange(m.startpos, m.endpos);
 				continue;
 			}
 
-			lastDrawMode = STATIC;
-
-			final int radius = m.radius;
-			int diameter = 1 + radius * 2;
-			final int[] packedFaces = m.packedFaces;
-			if (diameter >= 6000)
-				continue;
-
-			Arrays.fill(distanceFaceCount, 0, diameter, (char) 0);
-
-			for (int i = 0; i < packedFaces.length; ++i) {
-				int packed = packedFaces[i];
-				int x = packed >> 21;
-				int y = (packed << 11) >> 22;
-				int z = (packed << 21) >> 21;
-
-				int t = z * yawCos - x * yawSin >> 16;
-				int fz = y * pitchSin + t * pitchCos >> 16;
-				fz += radius;
-
-				assert fz >= 0 && fz < diameter : fz;
-				distanceToFaces[fz][distanceFaceCount[fz]++] = (char) i;
+			// Check if we the faces have already been sorted, if not then the client will steal the work,
+			// if the model is already being processed then we'll have to wait for the result to finish
+			if (m.needsSorting() && !alphaSortingJob.forceProcessModelClient(m)) {
+				while (m.needsSorting() && !alphaSortingJob.isDone())
+					alphaSortingJob.waitForCompletion(10);
 			}
 
-			ZoneRenderer.eboAlphaStaging.ensureCapacity(packedFaces.length * 3);
+			if (m.sortedFaces == null || m.sortedFacesLen <= 0 || !ZoneRenderer.eboAlphaMapped.isMapped())
+				continue;
 
-			byte[] faceRenderPriorities = m.renderPriorities;
-			final int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
-			if (faceRenderPriorities == null || m.modelOverride.disablePrioritySorting) {
-				for (int i = diameter - 1; i >= 0; --i) {
-					final int cnt = distanceFaceCount[i];
-					if (cnt > 0) {
-						final char[] faces = distanceToFaces[i];
-
-						ZoneRenderer.alphaFaceCount += cnt;
-						for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
-							final int face = faces[faceIdx];
-							int idx = face * 3 + start;
-							ZoneRenderer.eboAlphaStaging.put(idx, idx + 1, idx + 2);
-						}
-					}
-				}
-			} else {
-				// Vanilla uses priority draw order for alpha faces and not depth draw order
-				// And since we don't have the full model here, only the alpha faces, we can't compute the
-				// 10/11 insertion points either. Just ignore those since I think they are mostly for players,
-				// which are rendered differently anyway.
-				Arrays.fill(numOfPriority, 0);
-
-				for (int i = diameter - 1; i >= 0; --i) {
-					final int cnt = distanceFaceCount[i];
-					if (cnt > 0) {
-						final char[] faces = distanceToFaces[i];
-
-						for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
-							final int face = faces[faceIdx];
-							final byte pri = faceRenderPriorities[face];
-							final int distIdx = numOfPriority[pri]++;
-
-							orderedFaces[pri][distIdx] = face;
-						}
-					}
-				}
-
-				for (int pri = 0; pri < 12; ++pri) {
-					final int priNum = numOfPriority[pri];
-					final int[] priFaces = orderedFaces[pri];
-
-					ZoneRenderer.alphaFaceCount += priNum;
-					for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
-						final int face = priFaces[faceIdx];
-						int idx = face * 3 + start;
-						ZoneRenderer.eboAlphaStaging.put(idx, idx + 1, idx + 2);
-					}
-				}
+			if ((long) (ZoneRenderer.eboAlphaOffset + m.sortedFacesLen) * Integer.BYTES < ZoneRenderer.eboAlpha.size) {
+				lastDrawMode = STATIC;
+				m.eboOffset = ZoneRenderer.eboAlphaOffset - ZoneRenderer.eboAlphaPrevOffset;
+				alphaFaceCount += m.sortedFacesLen / 3;
+				ZoneRenderer.eboAlphaOffset += m.sortedFacesLen;
+				shouldQueueUpload = true;
 			}
 		}
 
+		if (shouldQueueUpload) {
+			GenericJob prevJob = lastSortedAlphaFacesUpload != sortedAlphaFacesUpload ? lastSortedAlphaFacesUpload : null;
+			lastSortedAlphaFacesUpload = sortedAlphaFacesUpload.queue(prevJob);
+		}
+
 		flush(cmd);
+
 		cmd.DepthMask(true);
 	}
 
 	private void flush(CommandBuffer cmd) {
 		if (lastDrawMode == STATIC) {
-			if (ZoneRenderer.alphaFaceCount > 0) {
-				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
-				long byteOffset = 4L * (ZoneRenderer.eboAlphaStaging.position() - vertexCount);
+			if (alphaFaceCount > 0) {
+				int vertexCount = alphaFaceCount * 3;
+				long byteOffset = 4L * (ZoneRenderer.eboAlphaOffset - vertexCount);
 				cmd.BindVertexArray(lastVao);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
@@ -846,34 +907,35 @@ public class Zone {
 				} else {
 					cmd.DrawElements(GL_TRIANGLES, vertexCount, byteOffset);
 				}
-				ZoneRenderer.alphaFaceCount = 0;
 			}
+			alphaFaceCount = 0;
 		} else if (drawIdx != 0) {
-			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
+			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : DynamicModelVAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
-			if (glDrawOffset.length == 1) {
+			if (drawIdx == 1) {
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
-					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
+					cmd.DrawArraysIndirect(GL_TRIANGLES, drawOff[0], drawEnd[0], ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
-					cmd.DrawArrays(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0]);
+					cmd.DrawArrays(GL_TRIANGLES, drawOff[0], drawEnd[0]);
 				}
 			} else {
 				if (GL_CAPS.OpenGL43 && SUPPORTS_INDIRECT_DRAW) {
-					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, ZoneRenderer.indirectDrawCmdsStaging);
+					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx, ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
-					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength, drawIdx);
 				}
 			}
 			drawIdx = 0;
 		}
 	}
 
-	void multizoneLocs(SceneContext ctx, int zx, int zz, Camera camera, Zone[][] zones) {
+	synchronized void multizoneLocs(SceneContext ctx, int zx, int zz, Camera camera, Zone[][] zones) {
 		int offset = ctx.sceneOffset >> 3;
 		int cx = (int) camera.getPositionX();
 		int cz = (int) camera.getPositionZ();
-		for (AlphaModel m : alphaModels) {
+		for (int i = 0; i < alphaModels.size(); i++) {
+			final AlphaModel m = alphaModels.get(i);
 			if (m.lx == -1)
 				continue;
 
@@ -888,16 +950,19 @@ public class Zone {
 					int distance = (centerX - cx) * (centerX - cx) +
 								   (centerZ - cz) * (centerZ - cz);
 					if (distance < max) {
-						max = distance;
-						closestZoneX = centerX >> 10;
-						closestZoneZ = centerZ >> 10;
+						int zx2 = (centerX >> 10) + offset;
+						int zz2 = (centerZ >> 10) + offset;
+						if (zx2 >= 0 && zx2 < zones.length && zz2 >= 0 && zz2 < zones[0].length) {
+							if (zones[zx2][zz2].inSceneFrustum && zones[zx2][zz2].initialized) {
+								max = distance;
+								closestZoneX = centerX >> 10;
+								closestZoneZ = centerZ >> 10;
+							}
+						}
 					}
 				}
 			}
-			assert closestZoneX != -50;
-			if (closestZoneX != zx || closestZoneZ != zz) {
-				assert (m.flags & AlphaModel.TEMP) == 0;
-
+			if (closestZoneX != -50 && (closestZoneX != zx || closestZoneZ != zz)) {
 				assert closestZoneX + offset >= 0 : closestZoneX;
 				assert closestZoneX + offset < zones.length : closestZoneX;
 				assert closestZoneZ + offset >= 0 : closestZoneZ;
@@ -929,8 +994,11 @@ public class Zone {
 				m2.zofz = (byte) (closestZoneZ - zz);
 
 				m2.packedFaces = m.packedFaces;
-				m2.renderPriorities = m.renderPriorities;
 				m2.radius = m.radius;
+				m2.asyncSortIdx = m.asyncSortIdx;
+				m2.eboOffset = m.eboOffset;
+				m2.sortedFaces = m.sortedFaces;
+				m2.sortedFacesLen = m.sortedFacesLen;
 
 				m2.flags = AlphaModel.TEMP;
 				m.flags |= AlphaModel.SKIP;
