@@ -35,6 +35,7 @@ import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
+import rs117.hd.config.CpuUsageLimit;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
@@ -46,6 +47,7 @@ import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
+import rs117.hd.config.ShadowFiltering;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
 import rs117.hd.config.TextureResolution;
@@ -148,7 +150,7 @@ public interface HdPluginConfig extends Config
 	)
 	default AntiAliasingMode antiAliasingMode()
 	{
-		return AntiAliasingMode.DISABLED;
+		return AntiAliasingMode.MSAA_8;
 	}
 
 	String KEY_SCENE_RESOLUTION_SCALE = "sceneResolutionScale";
@@ -363,7 +365,7 @@ public interface HdPluginConfig extends Config
 		name = "Brightness",
 		description =
 			"Controls the brightness of the game, excluding UI.<br>" +
-			"Adjust until the disk on the left is barely visible.",
+			"Adjust until the circle on the left is barely visible.",
 		position = 18,
 		section = generalSettings
 	)
@@ -372,12 +374,107 @@ public interface HdPluginConfig extends Config
 	}
 
 
+	/*====== Shadow settings ======*/
+
+	@ConfigSection(
+		name = "Shadows",
+		description = "Shadow settings",
+		position = 1,
+		closedByDefault = true
+	)
+	String shadowSettings = "shadowSettings";
+
+	String KEY_SHADOW_MODE = "shadowMode";
+	@ConfigItem(
+		keyName = KEY_SHADOW_MODE,
+		name = "Shadow mode",
+		description =
+			"Render fully dynamic shadows.<br>" +
+			"'Off' completely disables shadows.<br>" +
+			"'Fast' enables fast shadows without any texture detail.<br>" +
+			"'Detailed' enables shadows with support for texture detail.",
+		position = 1,
+		section = shadowSettings
+	)
+	default ShadowMode shadowMode() {
+		return ShadowMode.DETAILED;
+	}
+
+	String KEY_SHADOW_RESOLUTION = "shadowResolution";
+	@ConfigItem(
+		keyName = KEY_SHADOW_RESOLUTION,
+		name = "Shadow quality",
+		description =
+			"The resolution of the shadow map.<br>" +
+			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
+		position = 2,
+		section = shadowSettings
+	)
+	default ShadowResolution shadowResolution() {
+		return ShadowResolution.RES_8192;
+	}
+
+	String KEY_SHADOW_FILTERING = "shadowFiltering";
+	@ConfigItem(
+		keyName = KEY_SHADOW_FILTERING,
+		name = "Shadow filtering",
+		description =
+			"Filtering technique used when smoothing the edges of shadows.<br>" +
+			"'Smooth' smooths the shadow pixels evenly (PCF 3x3).<br>" +
+			"'Dithered' smooths out pixelation using dithering.<br>" +
+			"'Pixelated' retains slightly pixelated shadow edges.",
+		position = 3,
+		section = shadowSettings
+	)
+	default ShadowFiltering shadowFiltering() {
+		return ShadowFiltering.SMOOTH;
+	}
+
+	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
+	@ConfigItem(
+		keyName = KEY_SHADOW_TRANSPARENCY,
+		name = "Shadow transparency",
+		description = "Enable partial support for taking model transparency into account.",
+		position = 4,
+		section = shadowSettings
+	)
+	default boolean shadowTransparency() {
+		return true;
+	}
+
+	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
+	@ConfigItem(
+		keyName = KEY_ROOF_SHADOWS,
+		name = "Roof shadows",
+		description = "Always cast shadows from roofs, even when they are hidden.",
+		position = 5,
+		section = shadowSettings
+	)
+	default boolean roofShadows() {
+		return false;
+	}
+
+	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
+	@ConfigItem(
+		keyName = KEY_EXPAND_SHADOW_DRAW,
+		name = "Expand shadow draw",
+		description =
+			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
+			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
+		position = 6,
+		section = shadowSettings
+	)
+	default boolean expandShadowDraw() {
+		return false;
+	}
+
+
 	/*====== Lighting settings ======*/
 
 	@ConfigSection(
 		name = "Lighting",
 		description = "Lighting settings",
-		position = 1,
+		position = 2,
 		closedByDefault = true
 	)
 	String lightingSettings = "lightingSettings";
@@ -392,8 +489,7 @@ public interface HdPluginConfig extends Config
 		position = 0,
 		section = lightingSettings
 	)
-	default DynamicLights dynamicLights()
-	{
+	default DynamicLights dynamicLights() {
 		return DynamicLights.SOME;
 	}
 
@@ -447,93 +543,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_SHADOW_MODE = "shadowMode";
-	@ConfigItem(
-		keyName = KEY_SHADOW_MODE,
-		name = "Shadows",
-		description =
-			"Render fully dynamic shadows.<br>" +
-			"'Off' completely disables shadows.<br>" +
-			"'Fast' enables fast shadows without any texture detail.<br>" +
-			"'Detailed' enables slower shadows with support for texture detail.",
-		position = 5,
-		section = lightingSettings
-	)
-	default ShadowMode shadowMode()
-	{
-		return ShadowMode.DETAILED;
-	}
-
-	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
-	@ConfigItem(
-		keyName = KEY_SHADOW_TRANSPARENCY,
-		name = "Shadow Transparency",
-		description = "Enables partial support for shadows that take transparency into account.",
-		position = 6,
-		section = lightingSettings
-	)
-	default boolean enableShadowTransparency()
-	{
-		return true;
-	}
-
-	String KEY_PIXELATED_SHADOWS = "pixelatedShadows";
-	@ConfigItem(
-		keyName = KEY_PIXELATED_SHADOWS,
-		name = "Pixelated Shadows",
-		description = "Give shadows a slightly pixelated look.",
-		position = 7,
-		section = lightingSettings
-	)
-	default boolean pixelatedShadows() {
-		return false;
-	}
-
-	String KEY_SHADOW_RESOLUTION = "shadowResolution";
-	@ConfigItem(
-		keyName = KEY_SHADOW_RESOLUTION,
-		name = "Shadow Quality",
-		description =
-			"The resolution of the shadow map.<br>" +
-			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
-		position = 8,
-		section = lightingSettings
-	)
-	default ShadowResolution shadowResolution()
-	{
-		return ShadowResolution.RES_4096;
-	}
-
-	@ConfigItem(
-		keyName = "shadowDistance",
-		name = "Shadow Distance",
-		description =
-			"The maximum draw distance for shadows.<br>" +
-			"Shorter distances result in higher quality shadows.",
-		position = 9,
-		section = lightingSettings
-	)
-	@Units(" tiles")
-	default ShadowDistance shadowDistance()
-	{
-		return ShadowDistance.DISTANCE_50;
-	}
-
-	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
-	@ConfigItem(
-		keyName = KEY_EXPAND_SHADOW_DRAW,
-		name = "Expand Shadow Draw",
-		description =
-			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
-			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
-		position = 10,
-		section = lightingSettings
-	)
-	default boolean expandShadowDraw()
-	{
-		return false;
-	}
-
 	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
 	@ConfigItem(
 		keyName = KEY_VANILLA_SHADOW_MODE,
@@ -579,7 +588,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 2,
+		position = 3,
 		closedByDefault = true
 	)
 	String environmentSettings = "environmentSettings";
@@ -849,6 +858,16 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_HIDE_VANILLA_WATER_EFFECTS = "hideVanillaWaterEffects";
+	@ConfigItem(
+		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
+		name = "Hide vanilla water ripples",
+		description = "Hide vanilla ripples found around objects floating in the water.",
+		position = 15,
+		section = environmentSettings
+	)
+	default boolean hideVanillaWaterEffects() { return true; }
+
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(
@@ -858,6 +877,34 @@ public interface HdPluginConfig extends Config
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
+
+	String KEY_CPU_USAGE_LIMIT = "cpuUsageLimit";
+	@ConfigItem(
+		keyName = KEY_CPU_USAGE_LIMIT,
+		name = "CPU usage",
+		description =
+			"Specify how much of your processor the plugin should be allowed to use.<br>" +
+			"If you play with multiple clients or use other heavy programs on the side,<br>" +
+			"reducing this may improve their performance.<br>" +
+			"Defaults to Max, allowing the processor to be fully utilized.",
+		section = miscellaneousSettings,
+		position = -100
+	)
+	default CpuUsageLimit cpuUsageLimit() {
+		return CpuUsageLimit.MAX;
+	}
+
+	String KEY_POWER_SAVING = "powerSaving";
+	@ConfigItem(
+		keyName = KEY_POWER_SAVING,
+		name = "Reduce CPU when unfocused",
+		description = "Automatically reduce CPU load when the game has not been in focus for 15 seconds.",
+		section = miscellaneousSettings,
+		position = -99
+	)
+	default boolean powerSaving() {
+		return false;
+	}
 
 	String KEY_MACOS_INTEL_WORKAROUND = "macosIntelWorkaround";
 	@ConfigItem(
@@ -1027,6 +1074,21 @@ public interface HdPluginConfig extends Config
 		return 20;
 	}
 
+	@ConfigItem(
+		keyName = "shadowDistance",
+		name = "Legacy shadow distance",
+		description =
+			"The maximum draw distance for shadows.<br>" +
+			"Shorter distances result in higher quality shadows.",
+		position = -97,
+		section = legacySettings
+	)
+	@Units(" tiles")
+	default ShadowDistance shadowDistance()
+	{
+		return ShadowDistance.DISTANCE_50;
+	}
+
 	String KEY_MODEL_BATCHING = "useModelBatching";
 	@ConfigItem(
 		keyName = KEY_MODEL_BATCHING,
@@ -1034,7 +1096,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"With the legacy renderer, model batching improves performance by reusing identical models within the same frame.<br>" +
 			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
-		position = -97,
+		position = -95,
 		section = legacySettings
 	)
 	default boolean modelBatching() { return true; }
@@ -1046,7 +1108,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"With the legacy renderer, model caching improves performance by saving and reusing model data from previous frames.<br>" +
 			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
-		position = -96,
+		position = -94,
 		section = legacySettings
 	)
 	default boolean modelCaching() { return true; }
@@ -1064,7 +1126,7 @@ public interface HdPluginConfig extends Config
 			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
 			"Generally, 512 MiB is plenty, with diminishing returns the higher you go.<br>" +
 			"Minimum=64 MiB, maximum=16384 MiB",
-		position = -95,
+		position = -93,
 		section = legacySettings
 	)
 	default int modelCacheSizeMiB() {
@@ -1221,17 +1283,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
-	@ConfigItem(
-		keyName = KEY_ROOF_SHADOWS,
-		name = "Roof Shadows",
-		description = "Always cast shadows from roofs, even when they are hidden.",
-		section = experimentalSettings
-	)
-	default boolean roofShadows() {
-		return false;
-	}
-
 	String KEY_TERRAIN_SHADOWS = "experimentalTerrainShadows";
 	@ConfigItem(
 		keyName = KEY_TERRAIN_SHADOWS,
@@ -1254,6 +1305,36 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean forceIndirectDraw() {
 		return false;
+	}
+
+	String KEY_ASYNC_MODEL_CACHE_SIZE = "asyncModelCacheSizeMiB";
+	@Range(
+		min = 16,
+		max = 64
+	)
+	@Units(" MiB")
+	@ConfigItem(
+		keyName = KEY_ASYNC_MODEL_CACHE_SIZE,
+		name = "Model cache size",
+		description =
+			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+			"Generally, 32 MiB is plenty, with diminishing returns the higher you go.<br>" +
+			"Minimum=16 MiB, maximum=64 MiB",
+		section = experimentalSettings
+	)
+	default int asyncModelCacheSizeMiB() {
+		return 32;
+	}
+
+	String KEY_ASYNC_MODEL_PROCESSING = "asyncModelProcessing";
+	@ConfigItem(
+		keyName = KEY_ASYNC_MODEL_PROCESSING,
+		name = "Multithreaded model processing",
+		description = "Process multiple models in parallel to improve performance for animated models.",
+		section = experimentalSettings
+	)
+	default boolean multithreadedModelProcessing() {
+		return true;
 	}
 
 	/*====== Internal settings ======*/

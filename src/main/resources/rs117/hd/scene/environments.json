@@ -1774,10 +1774,10 @@
     "area": "POISON_WASTE_DUNGEON",
     "ambientColor": "#aaafb6",
     "ambientStrength": 1.5,
-    "directionalStrength": 1,
+    "directionalStrength": 0.75,
     "sunAngles": [
       80,
-      190
+      175
     ],
     "fogDepth": 40
   },

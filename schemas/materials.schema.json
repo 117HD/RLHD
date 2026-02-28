@@ -38,6 +38,10 @@
         "type": [ "string", "null" ],
         "description": "A material whose texture should be used as this material's flow map. Setting this to `null` will remove the flow map inherited from the parent."
       },
+      "shadowAlphaMap": {
+        "type": [ "string", "null" ],
+        "description": "A material whose texture should be used as this material's shadow alpha map. Setting this to `null` will remove the alpha map inherited from the parent."
+      },
       "vanillaTextureIndex": {
         "type": "number",
         "description": "If specified, the material will override the given vanilla texture ID."

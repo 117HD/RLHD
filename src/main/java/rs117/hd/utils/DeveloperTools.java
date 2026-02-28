@@ -166,6 +166,9 @@ public class DeveloperTools implements KeyListener {
 			case "reload":
 				plugin.renderer.reloadScene();
 				break;
+			case "culling":
+				plugin.freezeCulling = !plugin.freezeCulling;
+				break;
 		}
 	}
 
