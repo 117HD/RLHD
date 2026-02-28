@@ -2593,7 +2593,8 @@
     "materialsToReplace": [
       "STONE_PATTERN"
     ],
-    "replacementCondition": "modelTextures"
+    "replacementCondition": "modelTextures",
+    "textureScale": [ 1, 1, 1.7 ]
   },
   {
     "name": "STONE_N"
