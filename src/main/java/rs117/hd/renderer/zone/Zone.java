@@ -646,7 +646,7 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	synchronized void addTempAlphaModel(ModelOverride modelOverride, VAO.VAOView view, int level, int x, int y, int z) {
+	synchronized void addTempAlphaModel(ModelOverride modelOverride, DynamicModelVAO.View view, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
@@ -667,7 +667,7 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	synchronized void addPlayerModel(VAO.VAOView view, int level, int x, int y, int z) {
+	synchronized void addPlayerModel(DynamicModelVAO.View view, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
@@ -910,7 +910,7 @@ public class Zone {
 			}
 			alphaFaceCount = 0;
 		} else if (drawIdx != 0) {
-			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
+			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : DynamicModelVAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 			if (drawIdx == 1) {

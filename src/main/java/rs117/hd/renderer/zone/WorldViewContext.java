@@ -24,8 +24,8 @@ import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.renderer.zone.DynamicModelVAO.METADATA_SIZE;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
-import static rs117.hd.renderer.zone.VAO.METADATA_SIZE;
 import static rs117.hd.renderer.zone.ZoneRenderer.FRAMES_IN_FLIGHT;
 
 @Slf4j
@@ -36,8 +36,8 @@ public class WorldViewContext {
 	public static final int VAO_SHADOW = 3;
 	public static final int VAO_COUNT = 4;
 
-	private static final ArrayDeque<VAO> VAO_STAGING_POOL = new ArrayDeque<>();
-	private static final ArrayDeque<VAO> VAO_POOL = new ArrayDeque<>();
+	private static final ArrayDeque<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL = new ArrayDeque<>();
+	private static final ArrayDeque<DynamicModelVAO> DYNAMIC_MODEL_VAO_POOL = new ArrayDeque<>();
 
 	@Inject
 	private Injector injector;
@@ -68,7 +68,7 @@ public class WorldViewContext {
 
 	CommandBuffer vaoSceneCmd;
 	CommandBuffer vaoDirectionalCmd;
-	final VAO[][] vaos = new VAO[FRAMES_IN_FLIGHT][VAO_COUNT];
+	final DynamicModelVAO[][] dynamicModelVaos = new DynamicModelVAO[FRAMES_IN_FLIGHT][VAO_COUNT];
 
 	public long loadTime;
 	public long uploadTime;
@@ -121,14 +121,14 @@ public class WorldViewContext {
 		long start = System.nanoTime();
 		for (int i = 0; i < VAO_COUNT; i++) {
 			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_SHADOW;
-			final ArrayDeque<VAO> POOL = needsStaging ? VAO_STAGING_POOL : VAO_POOL;
+			final ArrayDeque<DynamicModelVAO> POOL = needsStaging ? DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
-				VAO vao = vaos[k][i] = POOL.poll();
-				if (vao == null) {
-					vao = vaos[k][i] = new VAO(Integer.toString(i), needsStaging);
-					vao.initialize();
+				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = POOL.poll();
+				if (dynamicModelVao == null) {
+					dynamicModelVao = dynamicModelVaos[k][i] = new DynamicModelVAO(Integer.toString(i), needsStaging);
+					dynamicModelVao.initialize();
 				}
-				vao.bindMetadataVAO(vboM);
+				dynamicModelVao.bindMetadataVAO(vboM);
 			}
 		}
 		log.trace("WorldViewContext - WorldViewid: {} initBuffers took {}ms", worldViewId, (System.nanoTime() - start) / 1000000);
@@ -136,21 +136,21 @@ public class WorldViewContext {
 
 	void map() {
 		for (int i = 0; i < VAO_COUNT; i++)
-			vaos[plugin.frame % FRAMES_IN_FLIGHT][i].map();
+			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].map();
 	}
 
-	VAO.VAOView beginDraw(int type, int faces) {
-		return vaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
+	DynamicModelVAO.View beginDraw(int type, int faces) {
+		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
 	}
 
 	void drawAll(int type, CommandBuffer cmd) {
-		vaos[plugin.frame % FRAMES_IN_FLIGHT][type].draw(cmd);
+		dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].draw(cmd);
 	}
 
 	void unmap() {
 		for (int i = 0; i < VAO_COUNT; i++) {
 			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_SHADOW;
-			vaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
+			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
 		}
 	}
 
@@ -288,13 +288,15 @@ public class WorldViewContext {
 
 		for (int i = 0; i < VAO_COUNT; i++) {
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
-				if (vaos[k][i] == null)
+				if (dynamicModelVaos[k][i] == null)
 					continue;
-				final ArrayDeque<VAO> POOL = vaos[k][i].hasStagingBuffer() ? VAO_STAGING_POOL : VAO_POOL;
+				final ArrayDeque<DynamicModelVAO> POOL = dynamicModelVaos[k][i].hasStagingBuffer() ?
+					DYNAMIC_MODEL_VAO_STAGING_POOL :
+					DYNAMIC_MODEL_VAO_POOL;
 				if (POOL.size() > 24) {
-					vaos[k][i].destroy();
+					dynamicModelVaos[k][i].destroy();
 				} else {
-					POOL.add(vaos[k][i]);
+					POOL.add(dynamicModelVaos[k][i]);
 				}
 			}
 		}
@@ -315,10 +317,10 @@ public class WorldViewContext {
 	}
 
 	public static void freeVaoPools() {
-		VAO v;
-		while ((v = VAO_STAGING_POOL.poll()) != null)
+		DynamicModelVAO v;
+		while ((v = DYNAMIC_MODEL_VAO_STAGING_POOL.poll()) != null)
 			v.destroy();
-		while ((v = VAO_POOL.poll()) != null)
+		while ((v = DYNAMIC_MODEL_VAO_POOL.poll()) != null)
 			v.destroy();
 	}
 
