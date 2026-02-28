@@ -39,6 +39,7 @@ import rs117.hd.config.CpuUsageLimit;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
+import rs117.hd.config.GroundBlending;
 import rs117.hd.config.InfernalCape;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
@@ -718,16 +719,22 @@ public interface HdPluginConfig extends Config
 		return TextureResolution.RES_256;
 	}
 
-	String KEY_GROUND_BLENDING = "groundBlending";
+	String KEY_GROUND_BLENDING = "groundBlendingv2";
 	@ConfigItem(
 		keyName = KEY_GROUND_BLENDING,
 		name = "Ground Blending",
-		description = "Controls whether ground tiles should blend into each other, or have distinct edges.",
+		description =
+			"Controls whether ground tiles should blend into each other, or have distinct edges.<br>" +
+			"When set to 'Textures only', textures may blend between tiles, but not their colors.",
 		position = 10,
 		section = environmentSettings
 	)
-	default boolean groundBlending()
+	default GroundBlending groundBlending()
 	{
+		return groundBlendingv1() ? GroundBlending.ON : GroundBlending.TEXTURES_ONLY;
+	}
+	@ConfigItem(keyName = "groundBlending", hidden = true, name = "", description = "")
+	default boolean groundBlendingv1() {
 		return true;
 	}
 

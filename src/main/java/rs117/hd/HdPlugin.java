@@ -78,6 +78,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.GroundBlending;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
@@ -389,6 +390,8 @@ public class HdPlugin extends Plugin {
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
 	public boolean configGroundBlending;
+	public boolean configGroundBlendingColors;
+	public boolean configGroundBlendingTextures;
 	public boolean configModelTextures;
 	public boolean configLegacyTzHaarReskin;
 	public boolean configProjectileLights;
@@ -1606,7 +1609,10 @@ public class HdPlugin extends Plugin {
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configRoofShadows = config.roofShadows();
 		configGroundTextures = config.groundTextures();
-		configGroundBlending = config.groundBlending();
+		var groundBlending = config.groundBlending();
+		configGroundBlending = groundBlending != GroundBlending.OFF;
+		configGroundBlendingColors = groundBlending.colors;
+		configGroundBlendingTextures = groundBlending.textures;
 		configModelTextures = config.modelTextures();
 		configLegacyTzHaarReskin = config.legacyTzHaarReskin();
 		configProjectileLights = config.projectileLights();
