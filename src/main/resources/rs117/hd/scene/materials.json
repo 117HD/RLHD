@@ -30,6 +30,9 @@
     "name": "WATER_FOAM"
   },
   {
+    "name": "LEAF_A"
+  },
+  {
     "name": "WOODEN_DOOR_HANDLE",
     "vanillaTextureIndex": 0
   },
@@ -70,6 +73,7 @@
     "name": "LEAVES_SIDE",
     "vanillaTextureIndex": 8,
     "hasTransparency": true,
+    "shadowAlphaMap": "LEAF_A",
     "textureScale": [
       1.025,
       1.025,
@@ -363,6 +367,7 @@
   {
     "name": "LEAVES_TOP",
     "vanillaTextureIndex": 60,
+    "shadowAlphaMap": "LEAF_A",
     "hasTransparency": true
   },
   {
@@ -3295,6 +3300,7 @@
   {
     "name": "WINTER_LEAVES_SIDE",
     "hasTransparency": true,
+    "shadowAlphaMap": "LEAF_A",
     "textureScale": [
       1.025,
       1.025,

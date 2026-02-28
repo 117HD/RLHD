@@ -879,8 +879,9 @@ public class HdPlugin extends Plugin {
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
-			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
-			.define("PIXELATED_SHADOWS", config.pixelatedShadows())
+			.define("SHADOW_TRANSPARENCY", config.shadowTransparency())
+			.define("SHADOW_FILTERING", config.shadowFiltering())
+			.define("SHADOW_RESOLUTION", config.shadowResolution())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configShadingMode.undoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
@@ -1776,7 +1777,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
-							case KEY_PIXELATED_SHADOWS:
+							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
 								recompilePrograms = true;
 								break;
@@ -1785,10 +1786,9 @@ public class HdPlugin extends Plugin {
 								recreateSceneFbo = true;
 								break;
 							case KEY_SHADOW_MODE:
+							case KEY_SHADOW_RESOLUTION:
 							case KEY_SHADOW_TRANSPARENCY:
 								recompilePrograms = true;
-								// fall-through
-							case KEY_SHADOW_RESOLUTION:
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
