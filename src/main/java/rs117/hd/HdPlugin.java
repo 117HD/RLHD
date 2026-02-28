@@ -1651,6 +1651,11 @@ public class HdPlugin extends Plugin {
 
 			if (configSeasonalHemisphere == SeasonalHemisphere.NORTHERN) {
 				switch (time.getMonth()) {
+					case MARCH:
+					case APRIL:
+					case MAY:
+						configSeasonalTheme = SeasonalTheme.SPRING;
+						break;
 					case SEPTEMBER:
 					case OCTOBER:
 					case NOVEMBER:
@@ -1676,6 +1681,11 @@ public class HdPlugin extends Plugin {
 					case JULY:
 					case AUGUST:
 						configSeasonalTheme = SeasonalTheme.WINTER;
+						break;
+					case SEPTEMBER:
+					case OCTOBER:
+					case NOVEMBER:
+						configSeasonalTheme = SeasonalTheme.SPRING;
 						break;
 					default:
 						configSeasonalTheme = SeasonalTheme.SUMMER;
