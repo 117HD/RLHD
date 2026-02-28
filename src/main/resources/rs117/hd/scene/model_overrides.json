@@ -3816,15 +3816,123 @@
     "uvScale": 0.75
   },
   {
-    "description": "LUMBRIDGE_CASTLE_WALLS",
+    "description": "Lumbridge - Building Walls with roofs",
+    "areas": [ "LUMBRIDGE" ],
+    "flatNormals": true,
     "objectIds": [
+      "ROOF_REDSLATE",
+      "ROOFWALLFILLER",
+      "ROOF_DOUBLELENGTH",
+      "ROOFEDGE_DOUBLELENGTH_R",
+      "ROOFEDGE_DOUBLELENGTH_RR",
+      "ROOFEDGE_DOUBLELENGTH_L",
+      "ROOFEDGE_DOUBLELENGTH_LL",
+      "ROOFEDGE_AL",
+      "ROOFEDGE_ALL",
+      "ROOFEDGE_TIP",
+      "ROOF_THATCHED"
+    ],
+    "materialOverrides": {
+      "HD_BRICK": {
+        "textureMaterial": "HD_BRICKWALL"
+      }
+    }
+  },
+  {
+    "description": "Lumbridge - Building Walls",
+    "areas": [ "LUMBRIDGE" ],
+    "textureMaterial": "HD_BRICKWALL",
+    "flatNormals": true,
+    "objectIds": [
+      "BRICKWALL",
+      "ROOFWALLFILLER_CHURCH",
+      "BRICKWALL_CHURCH_FRAME",
+      "BRICKWALL_RIVEREDGE",
+      "BRICKWALLSKEW"
+    ]
+  },
+  {
+    "description": "Lumbridge - Castle Walls",
+    "areas": [ "LUMBRIDGE" ],
+    "textureMaterial": "HD_BRICKWALL",
+    "flatNormals": true,
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "PORTCULLIS_2R",
+      "PORTCULLIS_2L"
+    ]
+  },
+  {
+    "description": "Lumbridge - Castle Walls",
+    "areas": [ "LUMBRIDGE" ],
+    "textureMaterial": "HD_BRICKWALL",
+    "flatNormals": true,
+    "objectIds": [
+      "CROSS_CASTLEEDGE",
       "CASTLEWALL",
       "BIGSTONE_CASTLEWALL",
       "CASTLEBATTLEMENTS",
       "CASTLECRUMBLY_L",
       "CASTLECRUMBLY_R"
-    ],
-    "flatNormals": true
+    ]
+  },
+  {
+    "description": "Edgeville - Roof with Walls",
+    "areas": [ "EDGEVILLE" ],
+    "flatNormals": true,
+    "materialOverrides": {
+      "HD_BRICK": {
+        "textureMaterial": "HD_BRICKWALL"
+      }
+    },
+    "objectIds": [
+      "ROOFWALLFILLER",
+      "ROOF_WOODEN"
+    ]
+  },
+  {
+    "description": "Edgeville - Walls",
+    "areas": [ "EDGEVILLE" ],
+    "flatNormals": true,
+    "textureMaterial": "HD_BRICKWALL",
+    "objectIds": [
+      "CASTLEBATTLEMENTS",
+      "BRICKWALL"
+    ]
+  },
+  {
+    "description": "Edgeville Monastary - Walls",
+    "areas": [ "EDGEVILLE_MONASTERY" ],
+    "textureMaterial": "HD_BRICKWALL",
+    "baseMaterial": "WATTLE_1",
+    "flatNormals": true,
+    "objectIds": [
+      "PAINTEDBRICKWALL_1",
+      "PAINTEDBRICKWALL_2"
+    ]
+  },
+  {
+    "description": "Burthorpe - Warriors Guild - Walls",
+    "flatNormals": true,
+    "objectIds": [
+      "WARGUILD_WINDOW",
+      "WARGUILD_WALL"
+    ]
+  },
+  {
+    "description": "Generic - Stone Brick Walls with Bricks Texture - Textured",
+    "flatNormals": true,
+    "objectIds": [
+      "CROSS_CASTLEEDGE",
+      "CASTLEWALL",
+      "BIGSTONE_CASTLEWALL",
+      "CASTLEBATTLEMENTS",
+      "CASTLECRUMBLY_L",
+      "CASTLECRUMBLY_R",
+      "BRICKWALL_BARS"
+    ]
   },
   {
     "description": "LEGEND_GUILD_WALLS",
@@ -26619,6 +26727,7 @@
     "description": "Hadleys House - Wattle",
     "flatNormals": true,
     "baseMaterial": "WATTLE_1",
+    "flatNormals": true,
     "objectIds": [
       "PAINTEDBRICKWALL_1",
       "PAINTEDBRICKWALL_2"

@@ -2468,6 +2468,20 @@
     "replacementCondition": "legacyInfernalCape"
   },
   {
+    "name": "HD_BRICKWALL_N"
+  },
+  {
+    "name": "HD_BRICKWALL_D"
+  },
+  {
+    "name": "HD_BRICKWALL",
+    "normalMap": "HD_BRICKWALL_N",
+    "displacementMap": "HD_BRICKWALL_D",
+    "displacementScale": 0.05,
+    "specularStrength": 0.3,
+    "specularGloss": 20.0
+  },
+  {
     "name": "HD_BRICK_N"
   },
   {
@@ -2478,8 +2492,8 @@
     "normalMap": "HD_BRICK_N",
     "displacementMap": "HD_BRICK_D",
     "displacementScale": 0.05,
-    "specularStrength": 0.3,
-    "specularGloss": 20.0,
+    "specularStrength": 0.25,
+    "specularGloss": 10.0,
     "materialsToReplace": [
       "BRICK"
     ],
