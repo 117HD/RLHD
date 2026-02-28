@@ -43,7 +43,7 @@
 #if SHADOW_MODE != SHADOW_MODE_OFF
 float fetchShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
     #if SHADOW_FILTERING == SHADOW_FILTERING_DITHER
-        int index = int(hash(vec4(floor(fragPos.xyz), i)) * float(POISSON_DISK_LENGTH)) % POISSON_DISK_LENGTH;
+        int index = int(hash(vec4(floor(fragPos.xyz), i)) * POISSON_DISK_LENGTH) % POISSON_DISK_LENGTH;
         pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
     #endif
 
