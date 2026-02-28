@@ -70761,6 +70761,7 @@
       "SAILING_BOAT_SAIL_KANDARIN_1X3_IRONWOOD",
       "SAILING_BOAT_SAIL_KANDARIN_1X3_ROSEWOOD"
     ],
+    "disableDetailCulling": true,
     "colorOverrides": [
       {
         "description": "Rope",
@@ -70851,6 +70852,7 @@
       "SAILING_BOAT_SAIL_KANDARIN_2X5_WOOD",
       "SAILING_BOAT_SAIL_KANDARIN_3X8_WOOD"
     ],
+    "disableDetailCulling": true,
     "colorOverrides": [
       {
         "description": "Rope",
@@ -70897,6 +70899,7 @@
       "SAILING_BOAT_SAIL_KANDARIN_3X8_IRONWOOD",
       "SAILING_BOAT_SAIL_KANDARIN_3X8_ROSEWOOD"
     ],
+    "disableDetailCulling": true,
     "colorOverrides": [
       {
         "description": "Rope",
