@@ -5780,26 +5780,10 @@
     "blended": false
   },
   {
-    "name": "TOA_DISABLE_BLENDING_N18",
-    "area": "TOA_PATH_OF_APMEKEN_PUZZLE",
-    "overlayIds": [
-      238
-    ],
-    "blended": false
-  },
-  {
     "name": "TOA_DISABLE_BLENDING_30",
     "area": "TOA_PATH_OF_APMEKEN_BOSS",
     "overlayIds": [
       30
-    ],
-    "blended": false
-  },
-  {
-    "name": "TOA_DISABLE_BLENDING_N16",
-    "area": "TOA_PATH_OF_HET_PUZZLE",
-    "overlayIds": [
-      240
     ],
     "blended": false
   },
@@ -5860,6 +5844,177 @@
       246
     ],
     "waterType": "SWAMP_WATER",
+    "blended": false
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_SAND_BLEND",
+    "groundMaterial": "VARIED_DIRT",
+    "maxLightness": 32
+  },
+  {
+    "name": "TOA_KEPHRI_FLOOR",
+    "area": "TOMBS_OF_AMASCUT",
+    "underlayIds": [
+      90, 124
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_APMEKEN_FLOOR_OVERLAY_TILE_SAND",
+    "area": "TOA_PATH_OF_APMEKEN_PUZZLE",
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 7,
+    "overlayIds": [
+      119
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_APMEKEN_FLOOR_OVERLAY",
+    "area": "TOA_PATH_OF_APMEKEN_PUZZLE",
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 9,
+    "overlayIds": [
+      238
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_APMEKEN_PUZZLE_FLOOR",
+    "area": "TOA_PATH_OF_APMEKEN_PUZZLE",
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "uvScale": 1.40,
+    "overlayIds": [ 239 ],
+    "underlayIds": [
+      110,
+      117
+    ]
+  },
+  {
+    "name": "TOA_CRONDIS_PUZZLE_FLOOR",
+    "area": "TOA_PATH_OF_CRONDIS_PUZZLE",
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "uvScale": 1.40,
+    "underlayIds": [
+      109,
+      117
+    ]
+  },
+  {
+    "name": "TOA_CRONDIS_PUZZLE_FLOOR_HIDDEN",
+    "area": "TOA_PATH_OF_CRONDIS_PUZZLE",
+    "overlayIds": [ 185 ],
+    "blended": false
+  },
+  {
+    "name": "TOA_CRONDIS_PUZZLE_FLOOR_OVERLAY",
+    "area": "TOA_PATH_OF_CRONDIS_PUZZLE",
+    "groundMaterial": "DIRT",
+    "uvScale": 1.40,
+    "overlayIds": [
+      185, 186, 238
+    ]
+  },
+  {
+    "name": "TOA_HET_PUZZLE_FLOOR_HIDDEN",
+    "area": "TOA_PATH_OF_HET_PUZZLE",
+    "underlayIds": [ 141 ],
+    "blended": false
+  },
+  {
+    "name": "TOA_HET_PUZZLE_FLOOR",
+    "area": "TOA_PATH_OF_HET_PUZZLE",
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "uvScale": 1.40,
+    "underlayIds": [
+      127
+    ]
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_SAND",
+    "area": "TOMBS_OF_AMASCUT",
+    "groundMaterial": "VARIED_DIRT",
+    "maxLightness": 32,
+    "shiftLightness": 10,
+    "overlayIds": [
+      222,
+      238,
+      239,
+      240,
+      242,
+      253
+    ],
+    "underlayIds": [
+      109,
+      110,
+      117,
+      127,
+      128,
+      132
+    ],
+    "replacements": {
+      "TOA_AMASCUT_FLOOR_SAND_BLEND": "blending"
+    }
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_GRAVEL",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvScale": 1.5,
+    "groundMaterial": "GRAVEL",
+    "underlayIds": [
+      156
+    ]
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_STONE_UNDERLAY",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvOrientation": -256,
+    "uvScale": 1.5,
+    "groundMaterial": "STONE",
+    "maxLightness": 18,
+    "shiftLightness": 1,
+    "maxSaturation": 1,
+    "underlayIds": [
+      104, 105
+    ]
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_STONE_RED",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvOrientation": 256,
+    "uvScale": 1.3,
+    "groundMaterial": "STONE",
+    "maxLightness": 13,
+    "minSaturation": 2,
+    "maxSaturation": 3,
+    "setHue": 39,
+    "overlayIds": [
+      72,
+      194
+    ]
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_STONE",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvOrientation": 256,
+    "uvScale": 1.3,
+    "groundMaterial": "STONE",
+    "maxLightness": 15,
+    "minSaturation": 2,
+    "overlayIds": [
+      232, 233, 233, 236, 237
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_STONE_TILES",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvOrientation": 256,
+    "uvScale": 1.3,
+    "groundMaterial": "STONE",
+    "overlayIds": [
+      139, 228
+    ],
     "blended": false
   },
   {
@@ -9277,12 +9432,6 @@
       134
     ],
     "waterType": "POISON_WASTE",
-    "blended": false
-  },
-  {
-    "name": "TOA_CRONDIS_WATER_BLUE",
-    "area": "TOA_CRONDIS_WATER",
-    "waterType": "WATER",
     "blended": false
   },
   {
