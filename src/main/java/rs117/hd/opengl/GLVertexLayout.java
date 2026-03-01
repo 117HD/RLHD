@@ -5,15 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static org.lwjgl.opengl.GL11.GL_BYTE;
-import static org.lwjgl.opengl.GL11.GL_DOUBLE;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_INT;
-import static org.lwjgl.opengl.GL11.GL_SHORT;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_SHORT;
-import static org.lwjgl.opengl.GL30.GL_HALF_FLOAT;
+import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class GLVertexLayout {
@@ -30,7 +22,7 @@ public class GLVertexLayout {
 
 	public GLVertexLayout(String name) {
 		this.name = name;
-		for(int i = 0; i < MAX_ATTRIBUTES; i++)
+		for (int i = 0; i < MAX_ATTRIBUTES; i++)
 			attributes[i] = new Attribute();
 	}
 
@@ -100,10 +92,10 @@ public class GLVertexLayout {
 	public String toString() {
 		StringBuilder str = new StringBuilder();
 		str.append("\nGLVertexLayout - ").append(name).append(" - Version: ").append(version).append("\n");
-		for(int i = 0; i < MAX_ATTRIBUTES; i++) {
+		for (int i = 0; i < MAX_ATTRIBUTES; i++) {
 			Attribute attr = attributes[i];
 			str.append("  * ARRAY_FIELD_").append(i).append(": ");
-			if(attr.isEnabled) {
+			if (attr.isEnabled) {
 				str.append("ENABLED, isInteger: ")
 					.append(attr.isInteger)
 					.append(", isNormalized: ")
@@ -165,7 +157,8 @@ public class GLVertexLayout {
 		UNSIGNED_INT(GL_UNSIGNED_INT),
 		UNSIGNED_SHORT(GL_UNSIGNED_SHORT),
 		BYTE(GL_BYTE),
-		UNSIGNED_BYTE(GL_UNSIGNED_BYTE),;
+		UNSIGNED_BYTE(GL_UNSIGNED_BYTE),
+		;
 
 		public final int glFormatType;
 	}

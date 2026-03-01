@@ -1026,45 +1026,54 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeVaos() {
-		try(MemoryStack stack = MemoryStack.stackPush())
-		{
+		try (MemoryStack stack = MemoryStack.stackPush()) {
 			quadVao = new GLVao("FullscreenQuad::VAO", FULLSCREEN_VERTEX_LAYOUT);
 			quadVao.setBufferRange(
 				new GLBuffer("FullscreenQuad::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW)
 					.initialize()
-					.upload(
-						stack.mallocFloat(16)
-							.put(new float[] {
-								// x, y, u, v
-								1, 1, 1, 1, // top right
-								-1, 1, 0, 1, // top left
-								-1, -1, 0, 0, // bottom left
-								1, -1, 1, 0 // bottom right
-							}).flip()
-					), true, ArrayField.VERTEX_FIELD_0, ArrayField.VERTEX_FIELD_1);
+					.upload(stack
+						.mallocFloat(16)
+						.put(new float[] {
+							// x, y, u, v
+							1, 1, 1, 1, // top right
+							-1, 1, 0, 1, // top left
+							-1, -1, 0, 0, // bottom left
+							1, -1, 1, 0 // bottom right
+						})
+						.flip()
+					),
+				true,
+				ArrayField.VERTEX_FIELD_0,
+				ArrayField.VERTEX_FIELD_1
+			);
 
 			triVao = new GLVao("FullscreenQuad::VAO", FULLSCREEN_VERTEX_LAYOUT);
 			triVao.setBufferRange(
 				new GLBuffer("FullscreenQuad::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW)
 					.initialize()
-					.upload(
-						stack.mallocFloat(16)
-							.put(new float[] {
-								// x, y, u, v
-								-1, -1, 0, 0, // bottom left
-								3, -1, 2, 0, // bottom right (off-screen)
-								-1, 3, 0, 2 // top left (off-screen)
-							}).flip()
-					), true, ArrayField.VERTEX_FIELD_0, ArrayField.VERTEX_FIELD_1);
+					.upload(stack
+						.mallocFloat(16)
+						.put(new float[] {
+							// x, y, u, v
+							-1, -1, 0, 0, // bottom left
+							3, -1, 2, 0, // bottom right (off-screen)
+							-1, 3, 0, 2 // top left (off-screen)
+						})
+						.flip()
+					),
+				true,
+				ArrayField.VERTEX_FIELD_0,
+				ArrayField.VERTEX_FIELD_1
+			);
 		}
 	}
 
 	private void destroyVaos() {
-		if(quadVao != null)
+		if (quadVao != null)
 			quadVao.destroy();
 		quadVao = null;
 
-		if(triVao != null)
+		if (triVao != null)
 			triVao.destroy();
 		triVao = null;
 	}

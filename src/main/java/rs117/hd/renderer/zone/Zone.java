@@ -169,14 +169,14 @@ public class Zone {
 			tboF = null;
 		}
 
-		if(opaqueVao != null) {
+		if (opaqueVao != null) {
 			opaqueVao.destroy();
-			 opaqueVao = null;
+			opaqueVao = null;
 		}
 
-		if(alphaVao != null) {
-			 alphaVao.destroy();
-			 alphaVao = null;
+		if (alphaVao != null) {
+			alphaVao.destroy();
+			alphaVao = null;
 		}
 
 		if (uploadJob != null) {

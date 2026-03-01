@@ -9,7 +9,6 @@ import rs117.hd.opengl.GLVao;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.utils.buffer.GLBuffer;
 
-import static org.lwjgl.opengl.GL20C.glUseProgram;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
@@ -85,7 +84,7 @@ public final class RenderState {
 
 		@Override
 		protected void applyValues(int[] values) {
-			if(values[0] == 0)
+			if (values[0] == 0)
 				return;
 			glFramebufferTextureLayer(values[0], values[1], values[2], values[3], values[4]);
 		}
@@ -107,7 +106,7 @@ public final class RenderState {
 	public static final class GLShaderProgram extends GLState.Object<ShaderProgram> {
 		@Override
 		protected void applyValue(ShaderProgram program) {
-			if(program != null) {
+			if (program != null) {
 				program.use();
 			} else {
 				glUseProgram(0);
@@ -121,16 +120,16 @@ public final class RenderState {
 		@Override
 		protected void applyValue(int buf) { glDrawBuffer(buf); }
 		@Override
-		public void setDefault() {  }
+		public void setDefault() {}
 	}
 
 	public static final class GLBindVAO extends GLState.Object<GLVao> {
 		@Override
 		protected void applyValue(GLVao vao) {
-			if(getAppliedValue() != null)
+			if (getAppliedValue() != null)
 				getAppliedValue().unbind();
 
-			if(vao != null)
+			if (vao != null)
 				vao.bind();
 
 		}
@@ -195,7 +194,7 @@ public final class RenderState {
 
 		@Override
 		protected void applyValue(boolean value) {
-			if(value) {
+			if (value) {
 				glEnable(target);
 			} else {
 				glDisable(target);
