@@ -122,6 +122,14 @@
     "maxLightness": 70
   },
   {
+    "name": "WINTER_SAND_BEACH",
+    "groundMaterial": "BEACH_SAND",
+    "maxHue": 6,
+    "maxSaturation": 1,
+    "shiftLightness": 40,
+    "maxLightness": 70
+  },
+  {
     "name": "WINTER_GRUNGE",
     "groundMaterial": "SNOW_2",
     "maxHue": 0,
@@ -193,11 +201,13 @@
     "name": "TAG - TEMPORARY - START"
   },
   {
-    "name": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
-    "area": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
-    "groundMaterial": "PURE_BLACK",
-    "blended": false,
-    "overlayIds": [ 10 ]
+    "name": "SEWER_ENTRANCE_FIXES",
+    "area": "SEWER_ENTRANCE_FIXES",
+    "heightOffset": -150
+  },
+  {
+    "area": "Black Knights Fort - Entrance Tile Fix",
+    "heightOffset": -170
   },
   {
     "name": "TAG - TEMPORARY - END"
@@ -265,7 +275,17 @@
     "overlayIds": [
       11
     ],
-    "blended": false
+    "blended": false,
+    "heightOffset": -200
+  },
+  {
+    "name": "TAVERLEY_DUNGEON_ENTRANCE_FIX",
+    "area": "TAVERLEY_DUNGEON_ENTRANCE_FIX",
+    "groundMaterial": "DIRT",
+    "underlayIds": [
+      63
+    ],
+    "heightOffset": -200
   },
   {
     "name": "Morytania River Blending Fix",
@@ -747,38 +767,6 @@
     }
   },
   {
-    "name": "BLEND_IMPROVEMENT_1",
-    "area": "LUMBRIDGE_DRAYNOR_PATH_BLEND_1",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "GRAVEL",
-    "minHue": 7,
-    "maxHue": 7,
-    "minSaturation": 1,
-    "maxSaturation": 1,
-    "shiftLightness": 6,
-    "replacements": {
-      "NONE": "!textures"
-    }
-  },
-  {
-    "name": "BLEND_IMPROVEMENT_2",
-    "area": "LUMBRIDGE_DRAYNOR_PATH_BLEND_2",
-    "overlayIds": [
-      10
-    ],
-    "groundMaterial": "GRAVEL",
-    "minHue": 7,
-    "maxHue": 7,
-    "minSaturation": 1,
-    "maxSaturation": 1,
-    "shiftLightness": 9,
-    "replacements": {
-      "NONE": "!textures"
-    }
-  },
-  {
     "name": "SWAMP_PATH_FIX_1",
     "area": "LUMBRIDGE_SWAMP_PATH_FIX",
     "overlayIds": [
@@ -986,6 +974,27 @@
       180
     ],
     "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Vet'ion/Calvar'ion Water Under Grate",
+    "area": "Vet'ion/Calvar'ion Water Under Grate",
+    "underlayIds": [
+      47,
+      76,
+      89
+    ],
+    "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "Vet'ion/Calvar'ion Main Floor",
+    "area": "Vet'ion/Calvar'ion Floors",
+    "underlayIds": [
+      146,
+      171,
+      172
+    ],
+    "groundMaterial": "DIRTY_MARBLE",
+    "uvScale": 1.25
   },
   {
     "name": "Cam Torum Entrance Fix",
@@ -1250,8 +1259,8 @@
     ],
     "groundMaterial": "FALADOR_PATHS",
     "blended": false,
-    "minHue": 7,
-    "maxHue": 7,
+    "minHue": 8,
+    "maxHue": 8,
     "minSaturation": 1,
     "maxSaturation": 1,
     "shiftLightness": 20,
@@ -1267,11 +1276,11 @@
     ],
     "groundMaterial": "FALADOR_PATHS",
     "blended": false,
-    "minHue": 7,
-    "maxHue": 7,
+    "minHue": 8,
+    "maxHue": 8,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 16,
+    "shiftLightness": 17,
     "replacements": {
       "NONE": "!textures"
     }
@@ -1323,8 +1332,8 @@
       119
     ],
     "groundMaterial": "FALADOR_PATHS",
-    "minHue": 7,
-    "maxHue": 7,
+    "minHue": 8,
+    "maxHue": 8,
     "minSaturation": 1,
     "maxSaturation": 1,
     "shiftLightness": 19,
@@ -1402,7 +1411,10 @@
     ],
     "groundMaterial": "DIRT",
     "blended": false,
-    "shiftLightness": 6
+    "shiftLightness": 6,
+    "replacements": {
+      "DEFAULT_DIRT": "!blending"
+    }
   },
   {
     "name": "VARROCK_CASTLE_PATH_FIXES_2",
@@ -1412,7 +1424,10 @@
     ],
     "groundMaterial": "DIRT",
     "blended": false,
-    "shiftLightness": 7
+    "shiftLightness": 7,
+    "replacements": {
+      "DEFAULT_DIRT": "!blending"
+    }
   },
   {
     "name": "VARROCK_MUSEUM_SOUTH_PATH_FIX_1",
@@ -1868,9 +1883,12 @@
     "area": "VARROCK_GUARD_POSTS",
     "overlayIds": [
       22,
+      81,
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "setSaturation": 0,
+    "setLightness": 25,
+    "groundMaterial": "WORN_TILES"
   },
   {
     "name": "VARROCK_HORVIKS_ANVIL",
@@ -1878,7 +1896,29 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": 5,
+    "blended": false,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "VARROCK_HORVIKS_ANVIL_ROOF",
+    "area": "VARROCK_HORVIKS_ANVIL",
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "blended": false,
+    "shiftLightness": -2,
+    "shiftSaturation": -2,
+    "shiftHue": 1,
+    "heightOffset": 32,
+    "uvScale": 1.25,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "VARROCK_ZAMORAK_TEMPLE",
@@ -1886,7 +1926,12 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "WORN_TILES",
+    "blended": false,
+    "shiftLightness": 2,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "VARROCK_HAIRDRESSER",
@@ -1902,7 +1947,12 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "CARPET",
+    "blended": false,
+    "shiftLightness": 2,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "VARROCK_HOUSE_3",
@@ -1959,12 +2009,53 @@
     "blended": false
   },
   {
-    "name": "VARROCK_CHAMPIONS_GUILD",
+    "name": "VARROCK_CHAMPIONS_GUILD_KITCHEN",
+    "area": "VARROCK_CHAMPIONS_GUILD_KITCHEN",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "TILE_SMALL_2",
+    "blended": false,
+    "shiftLightness": 4,
+    "uvScale": 1.011,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "VARROCK_CHAMPIONS_GUILD_BOTTOM_FLOOR",
     "area": "VARROCK_CHAMPIONS_GUILD",
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILES_2X2_1_GLOSS",
+    "blended": false,
+    "shiftLightness": 4,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "VARROCK_CHAMPIONS_GUILD_UPPER_FLOOR",
+    "area": "VARROCK_CHAMPIONS_GUILD",
+    "overlayIds": [
+      81
+    ],
+    "groundMaterial": "CARPET",
+    "uvScale": 1.25,
+    "shiftLightness": 3,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "VARROCK_CHAMPIONS_GUILD_PATH",
+    "area": "VARROCK_CHAMPIONS_GUILD_PATH",
+    "overlayIds": [
+      171
+    ],
+    "groundMaterial": "DIRT",
+    "uvScale": 0.75
   },
   {
     "name": "VARROCK_GRAND_EXCHANGE_ROOF",
@@ -2065,12 +2156,30 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "VARROCK_BUILDING_FLOOR_POOR",
+    "area": "VARROCK_HOUSE_POOR_HOUSES",
+    "overlayIds": [
+      81
+    ],
+    "groundMaterial": "TILE_SMALL",
+    "blended": false
+  },
+  {
+    "name": "VARROCK_BUILDING_FLOOR_VERY_POOR",
+    "area": "VARROCK_HOUSE_VERY_POOR_HOUSES",
+    "overlayIds": [
+      81
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
     "name": "VARROCK_BUILDING_FLOOR_1",
     "area": "VARROCK",
     "overlayIds": [
       81
     ],
-    "groundMaterial": "TILE_SMALL",
+    "groundMaterial": "TILE_SMALL_2",
     "blended": false
   },
   {
@@ -2434,17 +2543,34 @@
     "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
+    "area": "FALADOR_SQUARE_FOUNTAIN",
+    "groundMaterial": "TILES_2X2_1_GLOSS",
+    "overlayIds": [
+      137
+    ],
+    "blended": false,
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 1,
+    "maxSaturation": 1,
+    "shiftLightness": 25,
+    "minLightness": 55,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "FALADOR_PATHS",
     "area": "FALADOR",
     "overlayIds": [
       137
     ],
     "groundMaterial": "FALADOR_PATHS",
-    "minHue": 7,
-    "maxHue": 7,
+    "minHue": 8,
+    "maxHue": 8,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 15,
+    "shiftLightness": 16,
     "replacements": {
       "NONE": "!textures"
     }
@@ -2471,7 +2597,8 @@
     "name": "FALADOR_PARTY_ROOM_TILE_1",
     "area": "FALADOR_PARTY_ROOM",
     "overlayIds": [
-      33
+      33,
+      412
     ],
     "groundMaterial": "MARBLE_1_GLOSS",
     "blended": false
@@ -2480,7 +2607,8 @@
     "name": "FALADOR_PARTY_ROOM_TILE_2",
     "area": "FALADOR_PARTY_ROOM",
     "overlayIds": [
-      123
+      123,
+      411
     ],
     "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
@@ -3241,9 +3369,9 @@
       10
     ],
     "groundMaterial": "CARPET",
-    "shiftLightness": -11,
     "uvScale": 1.4,
-    "minLightness": 5,
+    "minLightness": 13,
+    "shiftLightness": -6,
     "blended": false
   },
   {
@@ -3266,12 +3394,11 @@
     "shiftLightness": 3
   },
   {
-    "name": "EAST_ARDOUGNE_COBBLE_CHURCH",
-    "area": "EAST_ARDOUGNE_COBBLE_CHURCH",
+    "area": "EAST_ARDOUGNE_BRICK_CHURCH",
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE",
@@ -3279,7 +3406,8 @@
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "BRICK_PATHS",
+    "shiftLightness": 4
   },
   {
     "name": "EAST_ARDOUGNE_NORTH_BANK_11",
@@ -3290,7 +3418,7 @@
     "groundMaterial": "CARPET",
     "blended": false,
     "uvScale": 1.4,
-    "shiftLightness": -2
+    "shiftLightness": 6
   },
   {
     "name": "EAST_ARDOUGNE_CASTLE_DIRT_FIX",
@@ -3310,8 +3438,8 @@
     ],
     "groundMaterial": "CONCRETE",
     "blended": false,
-    "minLightness": 40,
-    "maxLightness": 40,
+    "minLightness": 43,
+    "maxLightness": 43,
     "replacements": {
       "NONE": "!textures"
     }
@@ -3462,12 +3590,27 @@
     }
   },
   {
-    "name": "WEST_ARDOUGNE_COBBLE_HOUSES",
-    "area": "WEST_ARDOUGNE_COBBLE_HOUSES",
+    "area": "WEST_ARDOUGNE_CONCRETE_HOUSES",
     "overlayIds": [
       11
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "CONCRETE",
+    "shiftLightness": 30,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "area": "WEST_ARDOUGNE_PLANK_HOUSES",
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "WOOD_PLANKS_1",
+    "shiftLightness": 35,
+    "shiftSaturation": -4,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "Witchaven Mayors house floor - Overlay",
@@ -4222,6 +4365,63 @@
     }
   },
   {
+    "name": "Wilderness Slayer Cave - Upper Levels",
+    "area": "Wilderness Slayer Cave",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "shiftLightness": 5,
+    "uvOrientation": 50,
+    "uvScale": 1.2,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Wilderness Slayer Cave - Snow Area",
+    "area": "Wilderness Slayer Cave - Snow Area",
+    "underlayIds": [
+      56,
+      58,
+      59
+    ],
+    "groundMaterial": "DIRTY_SNOW",
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Wilderness Slayer Cave - Lower Levels",
+    "area": "Wilderness Slayer Cave",
+    "underlayIds": [
+      1,
+      56
+    ],
+    "groundMaterial": "PACKED_EARTH",
+    "minLightness": 7,
+    "shiftLightness": 2,
+    "uvScale": 1.35,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Wilderness - Obelisk Platoforms",
+    "area": "Wilderness - Obelisks",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "SMOOTH_STONE",
+    "shiftLightness": 4,
+    "blended": false,
+    "uvScale": 1.5,
+    "minLightness": 35,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "ARANDAR_PATHS",
     "area": "ARANDAR",
     "overlayIds": [
@@ -4255,11 +4455,43 @@
     }
   },
   {
+    "name": "PRIFDDINAS_BANK",
+    "area": "PRIFDDINAS_BANK",
+    "overlayIds": [ 42, 106 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "shiftLightness": 10,
+    "uvOrientation": 512,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "PRIFDDINAS_INTERIORS_RAISED",
     "area": "PRIFDDINAS_INTERIORS_RAISED",
     "overlayIds": [ 42, 106 ],
     "groundMaterial": "HD_WOOD_PLANKS_2",
-    "uvScale": 1.25
+    "uvScale": 1.25,
+    "minLightness": 23,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "PRIFDDINAS_TEMPLE_DOOR_NO_BLENDING_FIX",
+    "area": "PRIFDDINAS_TEMPLE_DOOR_NO_BLENDING_FIX",
+    "overlayIds": [ 106 ],
+    "underlayIds": [ 143 ],
+    "groundMaterial": "PLAIN_DIRT",
+    "setHue": 7,
+    "maxLightness": 23,
+    "minLightness": 23,
+    "maxSaturation": 2,
+    "blended": false,
+    "replacements": {
+      "TIRANNWN_PATHS": "blending",
+      "NONE": "!textures"
+    }
   },
   {
     "name": "TIRANNWN_PATHS",
@@ -4267,7 +4499,7 @@
     "overlayIds": [
       106
     ],
-    "groundMaterial": "GRASSY_DIRT"
+    "groundMaterial": "PLAIN_DIRT"
   },
   {
     "name": "PRIFDDINAS_TEMPLE_FLOOR",
@@ -4281,7 +4513,10 @@
     "name": "PRIFDDINAS_GRASS",
     "area": "PRIFDDINAS",
     "underlayIds": [ 48, 50, 67, 143 ],
-    "groundMaterial": "OVERWORLD_GRASS_1"
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "Grand Library Floor",
@@ -4405,7 +4640,8 @@
     ],
     "groundMaterial": "CARPET",
     "uvScale": 1.5,
-    "blended": false
+    "blended": false,
+    "shiftLightness": 2
   },
   {
     "name": "KOUREND_CASTLE_FLOOR",
@@ -4413,8 +4649,8 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "TILES_2x2_1",
-    "shiftLightness": 2,
+    "groundMaterial": "TILES_2X2_1_GLOSS",
+    "shiftLightness": 3,
     "blended": false
   },
   {
@@ -4942,6 +5178,286 @@
     ],
     "groundMaterial": "DIRT",
     "blended": false
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 1",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_1",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "minLightness": 16,
+    "maxLightness": 16,
+    "shiftHue": 1,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "blended": false,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 2",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_2",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "maxLightness": 16,
+    "shiftHue": 1,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 3",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_3",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "minLightness": 16,
+    "shiftHue": -1,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 4",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_4",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftHue": 1,
+    "minLightness": 11,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "blended": false
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 5 - No Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_5",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftHue": 1,
+    "shiftLightness": 4,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "maxLightness": 16,
+    "replacements": {
+      "Mount Karuulm - Lava Pool Fix - 5 - Blending": "blending",
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 5 - Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_5",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftHue": 1,
+    "minLightness": 15,
+    "maxLightness": 16,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 6 - No Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_6",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftLightness": 5,
+    "minLightness": 15,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "Mount Karuulm - Lava Pool Fix - 6 - Blending": "blending",
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 6 - Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_6",
+    "overlayIds": [ 115 ],
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftLightness": 5,
+    "minLightness": 14,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 7",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_7",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftLightness": 5,
+    "maxLightness": 16,
+    "minLightness": 14,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 8 - No Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_8",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "maxLightness": 10,
+    "minLightness": 10,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "Mount Karuulm - Lava Pool Fix - 8 - Blending": "blending"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 8 - Blending",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_8",
+    "overlayIds": [ 115 ],
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftHue": 2,
+    "maxLightness": 10,
+    "minLightness": 10,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "blendedAsOpposite": true,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 9",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_9",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "shiftLightness": 3,
+    "maxLightness": 15,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "blendedAsOpposite": true,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 10",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_10",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "minLightness": 14,
+    "maxLightness": 16,
+    "shiftLightness": 5,
+    "shiftHue": 2,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 11",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_11",
+    "underlayIds": [
+      29,
+      129
+    ],
+    "shiftLightness": 4,
+    "maxLightness": 17,
+    "shiftHue": 2,
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 12",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_12",
+    "underlayIds": [
+      29,
+      129
+    ],
+    "shiftLightness": 1,
+    "maxLightness": 17,
+    "shiftHue": 2,
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm - Lava Pool Fix - 13",
+    "area": "MOUNT_KARUULM_LAVA_POOL_FIX_13",
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "minLightness": 15,
+    "maxLightness": 14,
+    "shiftHue": 1,
+    "groundMaterial": "ROCK_6",
+    "uvScale": 1.5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "Mount Karuulm Bank",
+    "area": "MOUNT_KARUULM_BANK",
+    "overlayIds": [ 114, 115 ],
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "Mount Karuulm Mountainside",
@@ -6388,7 +6904,7 @@
     "name": "THE_BLUE_MOON_ENTRANCE_DIRT",
     "area": "THE_BLUE_MOON_ENTRANCE",
     "underlayIds": [ 56, 73, 205, 206 ],
-    "groundMaterial": "CAM_TORUM_TILES",
+    "groundMaterial": "SMOOTH_STONE",
     "uvOrientation": -512,
     "blended": false
   },
@@ -6939,28 +7455,63 @@
     "name": "CATHERBY_BEACH_SAND_OVERLAY",
     "area": "CATHERBY",
     "overlayIds": [ 25 ],
+    "groundMaterial": "BEACH_SAND",
+    "maxLightness": 60,
     "replacements": {
-      "SEASONAL_SAND": true
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
     }
   },
   {
     "name": "SOUTH_CATHERBY_SAND_EXTENSION",
     "area": "SOUTH_CATHERBY_SEASON_FIX",
     "overlayIds": [ 25 ],
+    "groundMaterial": "BEACH_SAND",
+    "maxLightness": 65,
     "replacements": {
-      "SEASONAL_SAND": true
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "SOUTH_CATHERBY_SAND_EXTENSION_EDGE",
+    "area": "SOUTH_CATHERBY_SEASON_FIX_EDGE",
+    "underlayIds": [ 62 ],
+    "groundMaterial": "BEACH_SAND",
+    "maxLightness": 65,
+    "minLightness": 52,
+    "shiftLightness": 4,
+    "setSaturation": 3,
+    "setHue": 8,
+    "replacements": {
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "CATHERBY_BEACH_SAND_COLOR_FIX",
+    "area": "CATHERBY_SAND_COLOR_FIX",
+    "groundMaterial": "BEACH_SAND",
+    "maxLightness": 55,
+    "setSaturation": 3,
+    "setHue": 8,
+    "shiftLightness": 2,
+    "underlayIds": [
+      62
+    ],
+    "replacements": {
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
     }
   },
   {
     "name": "CATHERBY_BEACH_SAND",
     "area": "CATHERBY",
+    "groundMaterial": "BEACH_SAND",
+    "maxLightness": 55,
     "underlayIds": [
       62
     ],
     "replacements": {
       "SEASONAL_GRASS": "h >= 9 || h == 8 && s > 5",
       "SEASONAL_DIRT": "h < 8 && s > 4 && l < 45",
-      "SEASONAL_SAND": true
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7136,6 +7687,16 @@
     "shiftHue": -2,
     "minHue": 6,
     "maxSaturation": 3
+  },
+  {
+    "name": "KHARIDIAN_DESERT_ENAKHRA_TEMPLE_HOLE_FIX",
+    "area": "KHARIDIAN_DESERT_ENAKHRA_TEMPLE_HOLE_FIX",
+    "groundMaterial": "SAND",
+    "maxLightness": 60,
+    "shiftHue": -2,
+    "shiftSaturation": -2,
+    "minSaturation": 3,
+    "heightOffset": -400
   },
   {
     "name": "KHARIDIAN_DEEP_DESERT_CREVICE",
@@ -7548,6 +8109,17 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "KARAMJA_KARAMBWAN_FIX_NO_BLENDING",
+    "area": "KARAMJA_KARAMBWAN_FIX",
+    "underlayIds": [
+      62
+    ],
+    "groundMaterial": "PLAIN_DIRT",
+    "replacements": {
+      "COMPLEX_TILES_KARAMJA": "blending"
+    }
+  },
+  {
     "name": "SHILO_VILLAGE_MINE_SURFACE_FIX",
     "area": "SHILO_VILLAGE_MINE_SURFACE",
     "groundMaterial": "ROCKY_CAVE_FLOOR",
@@ -7694,13 +8266,38 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
+    "name": "TZHAAR_FIX_HOLE_IN_WALL",
+    "area": "TZHAAR_FIX_HOLE_IN_WALL",
+    "underlayIds": [
+      72
+    ],
+    "groundMaterial": "STONE_CAVE_FLOOR",
+    "shiftLightness": 0,
+    "heightOffset": 720,
+    "maxLightness": 2,
+    "blended": false
+  },
+  {
     "name": "TZHAAR",
     "area": "TZHAAR",
     "underlayIds": [
       72
     ],
-    "groundMaterial": "VARIED_DIRT_SHINY",
-    "shiftLightness": 2
+    "groundMaterial": "ROCK_1",
+    "maxLightness": 3,
+    "shiftLightness": 1,
+    "replacements": {
+      "TZHAAR_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "TZHAAR_NO_BLENDING",
+    "area": "TZHAAR",
+    "underlayIds": [
+      72
+    ],
+    "groundMaterial": "ROCK_1",
+    "shiftLightness": 1
   },
   {
     "name": "CROMBWICK_MANOR_FLOOR",
@@ -8250,6 +8847,16 @@
       53, 54
     ],
     "groundMaterial": "GRASSY_DIRT"
+  },
+  {
+    "name": "Zeah Woodland - Fix Ancient Grave Clipping",
+    "area": "ZEAH_WOODLAND_ANCIENT_GRAVE",
+    "overlayIds": [ 99 ],
+    "groundMaterial": "VARIED_DIRT",
+    "heightOffset": 3,
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "ZEAH_GRAVEL_PATH",
@@ -9300,6 +9907,35 @@
     "replacements": {
       "NONE": "!textures"
     }
+  },
+  {
+    "name": "Ferox - Fix Path at Deaths Office",
+    "area": "Ferox - Fix Path at Deaths Office",
+    "underlayIds": [ 50 ],
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxLightness": 12,
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "Mudskipper Point - Fix Blindingly Bright Cliff",
+    "area": "MUDSKIPPER_POINT_CLIFF_FIX",
+    "overlayIds": [ 123 ],
+    "groundMaterial": "DIRT",
+    "maxLightness": 75,
+    "minLightness": 20,
+    "replacements": {
+      "Mudskipper Point - Fix Blindingly Bright Cliff - No Textures": "!textures"
+    }
+  },
+  {
+    "name": "Mudskipper Point - Fix Blindingly Bright Cliff - No Textures",
+    "area": "MUDSKIPPER_POINT_CLIFF_FIX",
+    "overlayIds": [ 123 ],
+    "groundMaterial": "DIRT",
+    "maxLightness": 59
   },
   {
     "name": "TAG - CLIMATE - START"

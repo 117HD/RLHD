@@ -110,3 +110,5 @@ GROUND_WEB_# and variants made by SirFancyBacon for the purpose of this project 
 
 LEAVES_1 and LEAVES_1_N are a modification of textures from CC0-Textures. All textures on this site are licensed as CC0.
 https://cc0-textures.com/t/cc0t-scattered-leaves-001
+
+LEAF_A was created by Jin-Jiyunsun, and is licensed as CC0.

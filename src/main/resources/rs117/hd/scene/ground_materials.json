@@ -360,6 +360,16 @@
     ]
   },
   {
+    "name": "BEACH_SAND",
+    "materials": [
+      "SAND_4",
+      "GRAVEL_LIGHT",
+      "DIRT_1",
+      "SAND_4",
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "WOOD_PLANKS_1",
     "materials": [
       "WOOD_PLANKS_1"
@@ -472,6 +482,12 @@
     ]
   },
   {
+    "name": "ROCK_6",
+    "materials": [
+      "ROCK_6"
+    ]
+  },
+  {
     "name": "EARTHEN_CAVE_FLOOR",
     "materials": [
       "GRUNGE_1",
@@ -496,6 +512,12 @@
       "STONE",
       "ROCK_1",
       "ROCK_2"
+    ]
+  },
+  {
+    "name": "ROCK_1",
+    "materials": [
+      "ROCK_1"
     ]
   },
   {
@@ -634,6 +656,12 @@
     "name": "STONE",
     "materials": [
       "STONE_NORMALED"
+    ]
+  },
+  {
+    "name": "SMOOTH_STONE",
+    "materials": [
+      "SMOOTH_STONE"
     ]
   }
 ]

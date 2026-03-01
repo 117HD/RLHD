@@ -66,9 +66,9 @@
   {
     "name": "BLACK_TAR_FLAT",
     "flat": true,
-    "specularStrength": 0.05,
-    "specularGloss": 300.0,
-    "normalStrength": 0.05,
+    "specularStrength": 0.045,
+    "specularGloss": 250,
+    "normalStrength": 0.075,
     "baseOpacity": 0.9,
     "fresnelAmount": 0.02,
     "surfaceColor": [
@@ -82,7 +82,7 @@
       5.41,
       6.16
     ],
-    "duration": 1.6
+    "duration": 4
   },
   {
     "name": "BLOOD",

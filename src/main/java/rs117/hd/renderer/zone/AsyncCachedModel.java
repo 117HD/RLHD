@@ -218,6 +218,9 @@ public final class AsyncCachedModel extends Job implements Model {
 		verticesCount = model.getVerticesCount();
 		faceCount = model.getFaceCount();
 
+		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
+		waitForCompletion();
+
 		processing.set(false);
 		if (zone != null)
 			zone.pendingModelJobs.add(this);

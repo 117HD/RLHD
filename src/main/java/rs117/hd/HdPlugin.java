@@ -49,6 +49,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
@@ -145,6 +146,8 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
+@Slf4j
+@Singleton
 @PluginDescriptor(
 	name = "117 HD",
 	description = "GPU renderer with a suite of graphical enhancements",
@@ -152,7 +155,6 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 	conflicts = "GPU"
 )
 @PluginDependency(EntityHiderPlugin.class)
-@Slf4j
 public class HdPlugin extends Plugin {
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
@@ -433,6 +435,7 @@ public class HdPlugin extends Plugin {
 	public boolean configPreserveVanillaNormals;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
+	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public int configDetailDrawDistance;
@@ -529,6 +532,8 @@ public class HdPlugin extends Plugin {
 			try {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
+
+				isActive = true;
 
 				fboScene = 0;
 				rboSceneColor = 0;
@@ -757,6 +762,8 @@ public class HdPlugin extends Plugin {
 	@Override
 	protected void shutDown() {
 		clientThread.invoke(() -> {
+			if (!isActive)
+				return;
 			isActive = false;
 			FileWatcher.destroy();
 
@@ -830,13 +837,22 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void stopPlugin() {
-		SwingUtilities.invokeLater(() -> {
+		clientThread.invoke(() -> {
 			try {
-				pluginManager.setPluginEnabled(this, false);
-				pluginManager.stopPlugin(this);
+				// Shut the plugin down immediately, making RuneLite's call to shutDown() a no-op
+				shutDown();
 			} catch (Throwable ex) {
 				log.error("Error while stopping 117HD:", ex);
 			}
+
+			SwingUtilities.invokeLater(() -> {
+				try {
+					pluginManager.setPluginEnabled(this, false);
+					pluginManager.stopPlugin(this);
+				} catch (Throwable ex) {
+					log.error("Error while stopping 117HD:", ex);
+				}
+			});
 		});
 	}
 
@@ -928,8 +944,9 @@ public class HdPlugin extends Plugin {
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
-			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
-			.define("PIXELATED_SHADOWS", config.pixelatedShadows())
+			.define("SHADOW_TRANSPARENCY", config.shadowTransparency())
+			.define("SHADOW_FILTERING", config.shadowFiltering())
+			.define("SHADOW_RESOLUTION", config.shadowResolution())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configShadingMode.undoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
@@ -1679,6 +1696,7 @@ public class HdPlugin extends Plugin {
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configWindDisplacement = config.windDisplacement();
 		configCharacterDisplacement = config.characterDisplacement();
+		configHideVanillaWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
 		configParticleAmbientLight = config.particleAmbientLight();
@@ -1825,7 +1843,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
-							case KEY_PIXELATED_SHADOWS:
+							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
 							case KEY_PARTICLE_AMBIENT_LIGHT:
 								recompilePrograms = true;
@@ -1835,10 +1853,9 @@ public class HdPlugin extends Plugin {
 								recreateSceneFbo = true;
 								break;
 							case KEY_SHADOW_MODE:
+							case KEY_SHADOW_RESOLUTION:
 							case KEY_SHADOW_TRANSPARENCY:
 								recompilePrograms = true;
-								// fall-through
-							case KEY_SHADOW_RESOLUTION:
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
@@ -1862,13 +1879,14 @@ public class HdPlugin extends Plugin {
 							case KEY_LEGACY_TZHAAR_RESKIN:
 								reloadScene = true;
 								break;
-							case KEY_VANILLA_SHADOW_MODE:
+							case KEY_HIDE_VANILLA_WATER_EFFECTS:
 								reloadModelOverrides = true;
+								// fall-through
+							case KEY_VANILLA_SHADOW_MODE:
 								reloadScene = true;
 								break;
 							case KEY_LEGACY_GREY_COLORS:
 							case KEY_PRESERVE_VANILLA_NORMALS:
-							case KEY_SHADING_MODE:
 							case KEY_FLAT_SHADING:
 								recompilePrograms = true;
 								reloadScene = true;

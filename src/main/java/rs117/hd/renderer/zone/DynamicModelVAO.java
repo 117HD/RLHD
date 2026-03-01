@@ -23,7 +23,7 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
 @Slf4j
-class VAO {
+class DynamicModelVAO {
 	public static final int INITIAL_SIZE = (int) (8 * MiB);
 
 	// Temp vertex format
@@ -46,8 +46,8 @@ class VAO {
 	private final GLTextureBuffer tbo;
 
 	private final AtomicInteger inflightDraws = new AtomicInteger();
-	private final ConcurrentLinkedQueue<VAOView> usedViews = new ConcurrentLinkedQueue<>();
-	private final ArrayDeque<VAOView> freeViews = new ArrayDeque<>();
+	private final ConcurrentLinkedQueue<View> usedViews = new ConcurrentLinkedQueue<>();
+	private final ArrayDeque<View> freeViews = new ArrayDeque<>();
 
 	private final GLMappedBufferIntWriter vboWriter;
 	private final GLMappedBufferIntWriter tboWriter;
@@ -60,7 +60,7 @@ class VAO {
 	private long[] dstCopyOffsets = new long[16];
 	private long[] copyNumBytes = new long[16];
 
-	VAO(String name, boolean useStagingBuffer) {
+	DynamicModelVAO(String name, boolean useStagingBuffer) {
 		if (useStagingBuffer) {
 			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
@@ -190,7 +190,7 @@ class VAO {
 		vao = 0;
 	}
 
-	synchronized VAOView beginDraw(int faceCount) {
+	synchronized View beginDraw(int faceCount) {
 		final int drawIdx = drawRangeCount++;
 		if (drawRangeCount >= drawOffsets.length) {
 			drawOffsets = Arrays.copyOf(drawOffsets, drawOffsets.length * 2);
@@ -200,8 +200,8 @@ class VAO {
 		drawOffsets[drawIdx] = -1;
 		drawCounts[drawIdx] = -1;
 
-		VAOView view = freeViews.poll();
-		if (view == null) view = new VAOView();
+		View view = freeViews.poll();
+		if (view == null) view = new View();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
 		view.tbo = tboWriter.reserve(faceCount * 9);
 		view.vao = vao;
@@ -212,7 +212,7 @@ class VAO {
 		return view;
 	}
 
-	private void endDraw(VAOView view) {
+	private void endDraw(View view) {
 		drawOffsets[view.drawIdx] = view.getStartOffset() / VERT_SIZE_INTS;
 		drawCounts[view.drawIdx] = view.getVertexCount();
 
@@ -266,7 +266,7 @@ class VAO {
 		usedViews.clear();
 	}
 
-	public final class VAOView {
+	public final class View {
 		public ReservedView vbo;
 		public ReservedView tbo;
 		public int vao;
