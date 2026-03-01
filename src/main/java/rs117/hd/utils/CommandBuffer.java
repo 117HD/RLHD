@@ -100,7 +100,9 @@ public class CommandBuffer {
 		cmd[writeHead++] = writeObject(fence);
 	}
 
-	public void BindElementsArray(int ebo) {
+	public void BindElementsArray(int vao, int ebo) {
+		// The element buffer is part of VAO state, so enforce binding the VAO simultaneously
+		BindVertexArray(vao);
 		ensureCapacity(1);
 		cmd[writeHead++] = GL_BIND_ELEMENTS_ARRAY_TYPE & 0xFF | (long) ebo << 8;
 	}

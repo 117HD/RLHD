@@ -177,7 +177,7 @@ public class ZoneRenderer implements Renderer {
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
-	public static GLBuffer eboAlpha;
+	public static GLBuffer.EBO eboAlpha;
 	public static GLMappedBuffer eboAlphaMapped;
 	public static int eboAlphaOffset;
 	public static int eboAlphaPrevOffset;
@@ -303,7 +303,8 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void initializeBuffers() {
-		eboAlpha = new GLBuffer("eboAlpha", GL_ELEMENT_ARRAY_BUFFER, GL_STREAM_DRAW).initialize(MiB);
+		eboAlpha = new GLBuffer.EBO("eboAlpha", GL_STREAM_DRAW);
+		eboAlpha.initialize(MiB);
 		eboAlphaOffset = 0;
 
 		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
