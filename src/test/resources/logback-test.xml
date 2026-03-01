@@ -9,9 +9,9 @@
   </appender>
 
   <appender name="117HD_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>117hd.log</file>
+    <file>.logs/117hd.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>117hd.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <fileNamePattern>.logs/117hd.%d{yyyy-MM-dd}.log</fileNamePattern>
       <maxHistory>2</maxHistory>
     </rollingPolicy>
     <encoder>
