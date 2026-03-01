@@ -108,6 +108,11 @@ public class GLVao {
 					"ArrayField: {} is enabled but no buffer is associated, expect erroneous behaviour",
 					GLVertexLayout.ARRAY_FIELD_NAMES[i + 1]
 				);
+			} else if(arrayBuffer.target != GL_ARRAY_BUFFER) {
+				log.warn(
+					"ArrayField: {} is enabled but buffer is not an array buffer, expect erroneous behaviour",
+					GLVertexLayout.ARRAY_FIELD_NAMES[i + 1]
+				);
 			}
 
 			if(prevBufferId != arrayBufferId) {

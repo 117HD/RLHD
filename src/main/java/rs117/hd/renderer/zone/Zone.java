@@ -126,11 +126,10 @@ public class Zone {
 			opaqueVao = new GLVao("Zone::Opaque::VAO", ZONE_VERTEX_LAYOUT);
 			opaqueVao.associateBufferRange(vboO, ArrayField.VERTEX_FIELD_0, ArrayField.VERTEX_FIELD_3);
 			opaqueVao.associateBufferRange(vboM, ArrayField.VERTEX_FIELD_6, ArrayField.VERTEX_FIELD_7);
-			opaqueVao.associateBuffer(eboAlpha, ArrayField.ELEMENT_BUFFER);
 		}
 
 		if ((vboA = a) != null) {
-			alphaVao = new GLVao("Zone::Opaque::VAO", ZONE_VERTEX_LAYOUT);
+			alphaVao = new GLVao("Zone::Alpha::VAO", ZONE_VERTEX_LAYOUT);
 			alphaVao.associateBufferRange(vboA, ArrayField.VERTEX_FIELD_0, ArrayField.VERTEX_FIELD_3);
 			alphaVao.associateBufferRange(vboM, ArrayField.VERTEX_FIELD_6, ArrayField.VERTEX_FIELD_7);
 			alphaVao.associateBuffer(eboAlpha, ArrayField.ELEMENT_BUFFER);
