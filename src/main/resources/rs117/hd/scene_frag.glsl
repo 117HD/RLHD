@@ -576,6 +576,16 @@ void main() {
                 skyColorAtFragment += skySunColor * (coreGlow + innerGlow + midGlow + outerGlow);
             }
 
+            // Horizon haze (must match sky_frag.glsl)
+            float horizonHaze = 1.0 - abs(upAmount);
+            horizonHaze = pow(horizonHaze, 2.5) * 0.15;
+            vec3 hazeColor = mix(skyHorizonColor * 0.8, skyHorizonColor * 1.3, sunSideBlend);
+            skyColorAtFragment = mix(skyColorAtFragment, hazeColor, horizonHaze);
+
+            // Atmospheric scattering (must match sky_frag.glsl)
+            float atmosphericScatter = sunSideBlend * (1.0 - zenithBlend) * 0.2;
+            skyColorAtFragment = mix(skyColorAtFragment, skySunColor * 0.5 + skyHorizonColor * 0.5, atmosphericScatter);
+
             // At night with stars enabled, blend fog toward star map background color
             vec3 starMapBgColor = vec3(0.00304, 0.00304, 0.00521); // #0a0a0e in linear
             float nightStarBlend = (1.0 - nightFade) * starVisibility;
