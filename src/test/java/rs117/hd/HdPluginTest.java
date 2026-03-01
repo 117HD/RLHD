@@ -22,7 +22,6 @@ public class HdPluginTest
 		Props.DEVELOPMENT = true;
 		Props.set("rlhd.resource-path", "src/main/resources");
 		ClassLoader.getSystemClassLoader().setDefaultAssertionStatus(true);
-		PrepareTexturesForTest.run();
 		useLatestPluginHub();
 		ExternalPluginManager.loadBuiltin(HdPlugin.class);
 		RuneLite.main(args);

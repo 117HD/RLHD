@@ -35,6 +35,13 @@ tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
 
+tasks.register('prepareTextures', PrepareTexturesTask) {
+	testTexturesDir = file('src/test/resources/rs117/hd/scene/textures')
+	mainTexturesDir = file('src/main/resources/rs117/hd/scene/textures')
+}
+
+processResources.dependsOn prepareTextures
+
 //import groovy.json.JsonOutput
 //
 //import java.lang.reflect.Modifier
