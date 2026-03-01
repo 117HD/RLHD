@@ -43,9 +43,7 @@ public class Material {
 	public int vanillaTextureIndex = -1;
 
 	@JsonAdapter(Reference.Adapter.class)
-	private Material normalMap;
-	@JsonAdapter(Reference.Adapter.class)
-	private Material displacementMap;
+	private Material normalAndDisplacementMap;
 	@JsonAdapter(Reference.Adapter.class)
 	private Material roughnessMap;
 	@JsonAdapter(Reference.Adapter.class)
@@ -59,7 +57,7 @@ public class Material {
 	private boolean unlit;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
-	private float displacementScale = .1f;
+	private Float displacementScale;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
 	private float specularStrength;
@@ -98,15 +96,15 @@ public class Material {
 			parent.normalize(materials);
 		}
 
-		normalMap = resolveReference(normalMap, materials);
-		displacementMap = resolveReference(displacementMap, materials);
+		normalAndDisplacementMap = resolveReference(normalAndDisplacementMap, materials);
 		roughnessMap = resolveReference(roughnessMap, materials);
 		ambientOcclusionMap = resolveReference(ambientOcclusionMap, materials);
 		flowMap = resolveReference(flowMap, materials);
 		shadowAlphaMap = resolveReference(shadowAlphaMap, materials);
 
-		if (displacementScale == 0)
-			displacementMap = NONE.displacementMap;
+		if (displacementScale == null && parent != null)
+			displacementScale = parent.displacementScale;
+
 		flowMapDuration = ensureDefaults(flowMapDuration, NONE.flowMapDuration);
 		scrollSpeed = ensureDefaults(scrollSpeed, NONE.scrollSpeed);
 		textureScale = ensureDefaults(textureScale, NONE.textureScale);
@@ -124,8 +122,7 @@ public class Material {
 			base = base.parent;
 		modifiesVanillaTexture =
 			base != NONE ||
-			normalMap != null ||
-			displacementMap != null ||
+			normalAndDisplacementMap != null ||
 			roughnessMap != null ||
 			ambientOcclusionMap != null ||
 			flowMap != null ||
@@ -202,8 +199,15 @@ public class Material {
 		float scrollSpeedY = scrollSpeed[1] + vanillaScrollY;
 
 		struct.colorMap.set(textureLayer);
-		struct.normalMap.set(getTextureLayer(normalMap));
-		struct.displacementMap.set(getTextureLayer(displacementMap));
+		if (normalAndDisplacementMap != null) {
+			int layer = getTextureLayer(normalAndDisplacementMap);
+			struct.normalMap.set(layer);
+			float scale = displacementScale != null ? displacementScale : 0;
+			struct.displacementMap.set(scale != 0 ? layer : -1);
+		} else {
+			struct.normalMap.set(-1);
+			struct.displacementMap.set(-1);
+		}
 		struct.roughnessMap.set(getTextureLayer(roughnessMap));
 		struct.ambientOcclusionMap.set(getTextureLayer(ambientOcclusionMap));
 		struct.flowMap.set(getTextureLayer(flowMap));
@@ -214,7 +218,7 @@ public class Material {
 			(hasTransparency ? 1 : 0)
 		);
 		struct.brightness.set(brightness);
-		struct.displacementScale.set(displacementScale);
+		struct.displacementScale.set(displacementScale != null ? displacementScale : 0);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);
 		struct.flowMapStrength.set(flowMapStrength);

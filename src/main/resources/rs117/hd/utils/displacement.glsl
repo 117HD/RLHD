@@ -30,7 +30,8 @@
 #if PARALLAX_OCCLUSION_MAPPING
 
 float sampleHeight(const Material material, const vec2 uv) {
-    return linearToSrgb(texture(textureArray, vec3(uv, material.displacementMap)).r);
+    vec4 tex = texture(textureArray, vec3(uv, material.displacementMap));
+    return (material.normalMap == material.displacementMap) ? tex.a : linearToSrgb(tex.r);
 }
 
 void sampleDisplacementMap(
