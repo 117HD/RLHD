@@ -720,7 +720,6 @@ public class ZoneRenderer implements Renderer {
 		renderState.drawFramebuffer.set(plugin.fboScene);
 		renderState.multisample.set(plugin.msaaSamples > 1);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
-		renderState.ido.set(indirectDrawCmds);
 		renderState.apply();
 
 		// Clear scene
@@ -745,6 +744,8 @@ public class ZoneRenderer implements Renderer {
 		renderState.depthTest.set(true);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		renderState.ido.set(indirectDrawCmds);
+		renderState.apply();
 
 		// Render the scene
 		sceneCmd.execute();

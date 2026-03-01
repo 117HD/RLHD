@@ -135,7 +135,6 @@ import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
-import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
@@ -1114,11 +1113,14 @@ public class HdPlugin extends Plugin {
 		}
 
 		texUi = glGenTextures();
-		bindTextureWithUnit(GL_TEXTURE_2D, TEXTURE_UNIT_UI, texUi);
+		glActiveTexture(TEXTURE_UNIT_UI);
+		glBindTexture(GL_TEXTURE_2D, texUi);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glActiveTexture(TEXTURE_UNIT_UNUSED);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		checkGLErrors();
@@ -1153,7 +1155,8 @@ public class HdPlugin extends Plugin {
 
 		fboTiledLighting = glGenFramebuffers();
 		texTiledLighting = glGenTextures();
-		bindTextureWithUnit(GL_TEXTURE_2D_ARRAY, TEXTURE_UNIT_TILED_LIGHTING_MAP, texTiledLighting);
+		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texTiledLighting);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -1180,6 +1183,8 @@ public class HdPlugin extends Plugin {
 				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+
+		glActiveTexture(TEXTURE_UNIT_UNUSED);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 
 		checkGLErrors();
@@ -1347,7 +1352,8 @@ public class HdPlugin extends Plugin {
 
 		// Create texture
 		texShadowMap = glGenTextures();
-		bindTextureWithUnit(GL_TEXTURE_2D, TEXTURE_UNIT_SHADOW_MAP, texShadowMap);
+		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
+		glBindTexture(GL_TEXTURE_2D, texShadowMap);
 
 		shadowMapResolution = config.shadowResolution().getValue();
 		int maxResolution = glGetInteger(GL_MAX_TEXTURE_SIZE);
@@ -1380,20 +1386,31 @@ public class HdPlugin extends Plugin {
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 
+		// Check framebuffer completeness
+		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE) {
+			log.error("Shadow map framebuffer is not complete: 0x{}", Integer.toHexString(status));
+			throw new RuntimeException("Failed to create shadow map framebuffer: status 0x" + Integer.toHexString(status));
+		}
+
 		// Reset FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		glActiveTexture(TEXTURE_UNIT_UNUSED);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	private void initializeDummyShadowMap() {
 		// Create dummy texture
 		texShadowMap = glGenTextures();
-		bindTextureWithUnit(GL_TEXTURE_2D, TEXTURE_UNIT_SHADOW_MAP, texShadowMap);
+		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
+		glBindTexture(GL_TEXTURE_2D, texShadowMap);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+		glActiveTexture(TEXTURE_UNIT_UNUSED);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
@@ -1978,14 +1995,6 @@ public class HdPlugin extends Plugin {
 	@Subscribe
 	public void onFocusChanged(FocusChanged event) {
 		isClientInFocus = event.isFocused();
-	}
-
-	public static void bindTextureWithUnit(int target, int unit, int textureId) {
-		glActiveTexture(unit);
-		glBindTexture(target, textureId);
-		glActiveTexture(TEXTURE_UNIT_UNUSED);
-
-		checkGLErrors();
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")

@@ -118,7 +118,13 @@ public final class RenderState {
 
 	public static final class GLBindVAO extends GLState.Object<GLVao> {
 		@Override
-		protected void applyValue(GLVao vao) { vao.bind(); }
+		protected void applyValue(GLVao vao) {
+			if(vao != null) {
+				vao.bind();
+			} else {
+				glBindVertexArray(0);
+			}
+		}
 		@Override
 		protected void applyDefault() { glBindVertexArray(0);  }
 	}
