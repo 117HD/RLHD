@@ -364,8 +364,8 @@
     "materials": [
       "SAND_4",
       "GRAVEL_LIGHT",
-      "SAND_4",
-      "DIRT_1"
+      "SAND_4_MIRRORED",
+      "SAND_5"
     ]
   },
   {
@@ -373,7 +373,7 @@
     "materials": [
       "DIRT_1",
       "GRAVEL_LIGHT",
-      "DIRT_1"
+      "SAND_5"
     ]
   },
   {
@@ -510,7 +510,7 @@
       "GRUNGE_1",
       "DIRT_1",
       "DIRT_2",
-      "DIRT_1"
+      "SAND_5"
     ]
   },
   {
