@@ -353,7 +353,7 @@ public class HdPlugin extends Plugin {
 
 	private static final GLVertexLayout FULLSCREEN_VERTEX_LAYOUT = new GLVertexLayout("FULLSCREEN_VERTEX_LAYOUT")
 		.edit(ArrayField.VERTEX_FIELD_0).enabled().component(ComponentType.RG).format(FormatType.FLOAT).stride(16).offset(0)
-		.edit(ArrayField.VERTEX_FIELD_1).enabled().component(ComponentType.RG).format(FormatType.FLOAT).stride(16).offset(4)
+		.edit(ArrayField.VERTEX_FIELD_1).enabled().component(ComponentType.RG).format(FormatType.FLOAT).stride(16).offset(8)
 		.finish();
 
 	public GLVao quadVao;
@@ -1179,7 +1179,7 @@ public class HdPlugin extends Plugin {
 			ARBShaderImageLoadStore.glBindImageTexture(
 				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
 
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 		checkGLErrors();
@@ -1374,7 +1374,6 @@ public class HdPlugin extends Plugin {
 
 		float[] color = { 1, 1, 1, 1 };
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
-		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// Bind texture
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texShadowMap, 0);
@@ -1383,6 +1382,7 @@ public class HdPlugin extends Plugin {
 
 		// Reset FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	private void initializeDummyShadowMap() {
