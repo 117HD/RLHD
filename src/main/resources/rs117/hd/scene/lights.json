@@ -45338,5 +45338,43 @@
     "graphicsObjectIds": [
       "ZAMORAK_FLAME"
     ]
+  },
+  {
+    "description": "Mining helmet light",
+    "heightFromModel": 1.0,
+    "alignment": "CUSTOM",
+    "offset": [0, 0, 30],
+    "radius": 600,
+    "strength": 10,
+    "color": [255, 230, 180],
+    "type": "STATIC",
+    "innerConeAngle": 35,
+    "outerConeAngle": 50,
+    "equipmentIds": ["MINING_HELMET"]
+  },
+  {
+    "description": "Lit bug lantern",
+    "heightFromModel": 0.5,
+    "alignment": "CUSTOM",
+    "radius": 500,
+    "strength": 6,
+    "color": [180, 255, 200],
+    "type": "FLICKER",
+    "range": 10,
+    "equipmentIds": ["LIT_BUG_LANTERN"]
+  },
+  {
+    "description": "Golden prospector helmet light",
+    "heightFromModel": 1.0,
+    "alignment": "CUSTOM",
+    "offset": [ 0.0, -0.0, 48.0 ],
+    "radius": 600,
+    "strength": 30,
+    "color": [255, 215, 100],
+    "type": "STATIC",
+    "innerConeAngle": 5,
+    "outerConeAngle": 40,
+    "conePitch": -35,
+    "equipmentIds": ["GOLDEN_PROSPECTOR_HELMET"]
   }
 ]

@@ -49,6 +49,7 @@ public class Light
 	public float[] origin = new float[3];
 	public float[] offset = new float[3];
 	public float[] pos = new float[3];
+	public float[] direction = new float[3];
 	public int orientation;
 	public float distanceSquared;
 
@@ -58,6 +59,7 @@ public class Light
 	public GraphicsObject graphicsObject;
 	public int tileObjectId;
 	public int spotanimId = -1;
+	public int equipmentItemId = -1;
 	public int[] projectileRefCounter;
 
 	public int sizeX = 1;

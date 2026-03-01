@@ -713,6 +713,7 @@ public class LegacyRenderer implements Renderer {
 			frameTimer.begin(Timer.UPDATE_LIGHTS);
 			final float[] lightPosition = new float[4];
 			final float[] lightColor = new float[4];
+			final float[] lightDirection = new float[4];
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				final Light light = sceneContext.lights.get(i);
 				final float lightRadiusSq = light.radius * light.radius;
@@ -724,16 +725,29 @@ public class LegacyRenderer implements Renderer {
 				lightColor[0] = light.color[0] * light.strength;
 				lightColor[1] = light.color[1] * light.strength;
 				lightColor[2] = light.color[2] * light.strength;
-				lightColor[3] = 0.0f;
 
-				plugin.uboLights.setLight(i, lightPosition, lightColor);
+				if (light.def.outerConeAngle > 0) {
+					lightColor[3] = (float) Math.cos(Math.toRadians(light.def.outerConeAngle));
+					lightDirection[0] = light.direction[0];
+					lightDirection[1] = light.direction[1];
+					lightDirection[2] = light.direction[2];
+					lightDirection[3] = (float) Math.cos(Math.toRadians(light.def.innerConeAngle));
+				} else {
+					lightColor[3] = 0.0f;
+					lightDirection[0] = 0;
+					lightDirection[1] = 0;
+					lightDirection[2] = 0;
+					lightDirection[3] = 0;
+				}
+
+				plugin.uboLights.setLight(i, lightPosition, lightColor, lightDirection);
 
 				if (plugin.configTiledLighting) {
 					// Pre-calculate the view space position of the light, to save having to do the multiplication in the culling shader
 					lightPosition[3] = 1.0f;
 					Mat4.mulVec(lightPosition, plugin.viewMatrix, lightPosition);
 					lightPosition[3] = lightRadiusSq; // Restore lightRadiusSq
-					plugin.uboLightsCulling.setLight(i, lightPosition, lightColor);
+					plugin.uboLightsCulling.setLight(i, lightPosition, lightColor, lightDirection);
 				}
 			}
 

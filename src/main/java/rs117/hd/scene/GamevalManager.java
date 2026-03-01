@@ -28,16 +28,20 @@ import static rs117.hd.utils.ResourcePath.path;
 public class GamevalManager {
 	private static final ResourcePath GAMEVAL_PATH = Props
 		.getFile("rlhd.gameval-path", () -> path(GamevalManager.class, "gamevals.json"));
+	private static final ResourcePath ITEMVAL_PATH = Props
+		.getFile("rlhd.itemval-path", () -> path(GamevalManager.class, "itemvals.json"));
 
 	private static final String NPC_KEY = "npcs";
 	private static final String OBJECT_KEY = "objects";
 	private static final String ANIM_KEY = "anims";
 	private static final String SPOTANIM_KEY = "spotanims";
+	private static final String ITEM_KEY = "items";
 
 	@Inject
 	private HdPlugin plugin;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
+	private FileWatcher.UnregisterCallback itemvalFileWatcher;
 
 	private static final Map<String, Map<String, Integer>> GAMEVALS = new HashMap<>();
 
@@ -50,6 +54,7 @@ public class GamevalManager {
 		GAMEVALS.put(OBJECT_KEY, Collections.emptyMap());
 		GAMEVALS.put(ANIM_KEY, Collections.emptyMap());
 		GAMEVALS.put(SPOTANIM_KEY, Collections.emptyMap());
+		GAMEVALS.put(ITEM_KEY, Collections.emptyMap());
 	}
 
 	public void startUp() throws IOException {
@@ -63,12 +68,25 @@ public class GamevalManager {
 				log.error("Failed to load gamevals:", ex);
 			}
 		});
+		itemvalFileWatcher = ITEMVAL_PATH.watch((path, first) -> {
+			try {
+				Map<String, Map<String, Integer>> itemvals = plugin.getGson()
+					.fromJson(path.toReader(), new TypeToken<Map<String, Map<String, Integer>>>() {}.getType());
+				GAMEVALS.put(ITEM_KEY, itemvals.getOrDefault(ITEM_KEY, Collections.emptyMap()));
+				log.debug("Loaded itemval mappings");
+			} catch (IOException ex) {
+				log.error("Failed to load itemvals:", ex);
+			}
+		});
 	}
 
 	public void shutDown() {
 		if (fileWatcher != null)
 			fileWatcher.unregister();
 		fileWatcher = null;
+		if (itemvalFileWatcher != null)
+			itemvalFileWatcher.unregister();
+		itemvalFileWatcher = null;
 		clearGamevals();
 	}
 
@@ -99,6 +117,10 @@ public class GamevalManager {
 		return GAMEVALS.get(SPOTANIM_KEY);
 	}
 
+	public Map<String, Integer> getItems() {
+		return GAMEVALS.get(ITEM_KEY);
+	}
+
 	public int getNpcId(String name) {
 		return getNpcs().get(name);
 	}
@@ -115,6 +137,10 @@ public class GamevalManager {
 		return getSpotanims().get(name);
 	}
 
+	public int getItemId(String name) {
+		return getItems().get(name);
+	}
+
 	public String getNpcName(int id) {
 		return getName(NPC_KEY, id);
 	}
@@ -129,6 +155,10 @@ public class GamevalManager {
 
 	public String getSpotanimName(int id) {
 		return getName(SPOTANIM_KEY, id);
+	}
+
+	public String getItemName(int id) {
+		return getName(ITEM_KEY, id);
 	}
 
 	@Slf4j
@@ -228,6 +258,12 @@ public class GamevalManager {
 	public static class SpotanimAdapter extends GamevalAdapter {
 		public SpotanimAdapter() {
 			super(SPOTANIM_KEY);
+		}
+	}
+
+	public static class ItemAdapter extends GamevalAdapter {
+		public ItemAdapter() {
+			super(ITEM_KEY);
 		}
 	}
 }

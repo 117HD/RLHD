@@ -15,6 +15,7 @@ public class LightDefinition {
 	public Alignment alignment = Alignment.CUSTOM;
 	public float[] offset = new float[3];
 	public int height;
+	public float heightFromModel = -1;
 	public int radius = 300;
 	public float strength = 5;
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
@@ -22,6 +23,9 @@ public class LightDefinition {
 	public LightType type = LightType.STATIC;
 	public float duration;
 	public float range;
+	public float innerConeAngle = 0;
+	public float outerConeAngle = 0;
+	public float conePitch = 0;
 	public int fadeInDuration = 50;
 	public int fadeOutDuration = 50;
 	public int spawnDelay;
@@ -47,6 +51,8 @@ public class LightDefinition {
 	public HashSet<Integer> graphicsObjectIds = new HashSet<>();
 	@JsonAdapter(GamevalManager.AnimationAdapter.class)
 	public HashSet<Integer> animationIds = new HashSet<>();
+	@JsonAdapter(GamevalManager.ItemAdapter.class)
+	public HashSet<Integer> equipmentIds = new HashSet<>();
 
 	public void normalize() {
 		if (description == null)
