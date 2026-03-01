@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.GLState;
 import rs117.hd.opengl.GLVao;
 import rs117.hd.opengl.shader.ShaderProgram;
@@ -12,27 +13,28 @@ import rs117.hd.utils.buffer.GLBuffer;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
+@Slf4j
 public final class RenderState {
 	private final List<GLState> states = new ArrayList<>();
 
-	public final GLBindFramebuffer framebuffer = addState(GLBindFramebuffer::new);
-	public final GLBindDrawFramebuffer drawFramebuffer = addState(GLBindDrawFramebuffer::new);
-	public final GLBindReadFramebuffer readFramebuffer = addState(GLBindReadFramebuffer::new);
-	public final GLFramebufferTextureLayer framebufferTextureLayer = addState(GLFramebufferTextureLayer::new);
-	public final GLDrawBuffer drawBuffer = addState(GLDrawBuffer::new);
-	public final GLShaderProgram program = addState(GLShaderProgram::new);
-	public final GLViewport viewport = addState(GLViewport::new);
-	public final GLBindVAO vao = addState(GLBindVAO::new);
-	public final GLBindIDO ido = addState(GLBindIDO::new);
-	public final GLBindUBO ubo = addState(GLBindUBO::new);
-	public final GLDepthMask depthMask = addState(GLDepthMask::new);
-	public final GLDepthFunc depthFunc = addState(GLDepthFunc::new);
-	public final GLColorMask colorMask = addState(GLColorMask::new);
-	public final GLBlendFunc blendFunc = addState(GLBlendFunc::new);
-	public final GLToggle blend = new GLToggle(GL_BLEND, false);
-	public final GLToggle cullFace = new GLToggle(GL_CULL_FACE, true);
-	public final GLToggle depthTest = new GLToggle(GL_DEPTH_TEST, false);
-	public final GLToggle multisample = new GLToggle(GL_MULTISAMPLE, false);
+	public final GLBindFramebuffer framebuffer = createState(GLBindFramebuffer::new);
+	public final GLBindDrawFramebuffer drawFramebuffer = createState(GLBindDrawFramebuffer::new);
+	public final GLBindReadFramebuffer readFramebuffer = createState(GLBindReadFramebuffer::new);
+	public final GLFramebufferTextureLayer framebufferTextureLayer = createState(GLFramebufferTextureLayer::new);
+	public final GLDrawBuffer drawBuffer = createState(GLDrawBuffer::new);
+	public final GLShaderProgram program = createState(GLShaderProgram::new);
+	public final GLViewport viewport = createState(GLViewport::new);
+	public final GLBindVAO vao = createState(GLBindVAO::new);
+	public final GLBindIDO ido = createState(GLBindIDO::new);
+	public final GLBindUBO ubo = createState(GLBindUBO::new);
+	public final GLDepthMask depthMask = createState(GLDepthMask::new);
+	public final GLDepthFunc depthFunc = createState(GLDepthFunc::new);
+	public final GLColorMask colorMask = createState(GLColorMask::new);
+	public final GLBlendFunc blendFunc = createState(GLBlendFunc::new);
+	public final GLToggle blend = addState(new GLToggle(GL_BLEND, false));
+	public final GLToggle cullFace = addState(new GLToggle(GL_CULL_FACE, true));
+	public final GLToggle depthTest = addState(new GLToggle(GL_DEPTH_TEST, false));
+	public final GLToggle multisample = addState(new GLToggle(GL_MULTISAMPLE, false));
 
 	public void apply() {
 		for (GLState state : states)
@@ -49,7 +51,19 @@ public final class RenderState {
 			state.reset();
 	}
 
-	private <T extends GLState> T addState(Supplier<T> supplier) {
+	public void printState() {
+		StringBuffer sb = new StringBuffer();
+		for (GLState state : states)
+			state.printState(sb);
+		log.debug("GLRenderState:\n{}", sb.toString().trim());
+	}
+
+	private <T extends GLState> T addState(T state) {
+		states.add(state);
+		return state;
+	}
+
+	private <T extends GLState> T createState(Supplier<T> supplier) {
 		T state = supplier.get();
 		states.add(state);
 		return state;

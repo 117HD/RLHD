@@ -1,9 +1,7 @@
 package rs117.hd.opengl;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import lombok.Getter;
 
 public abstract class GLState {
@@ -25,6 +23,10 @@ public abstract class GLState {
 	abstract void internalApply();
 	public abstract void setDefault();
 
+	public void printState(StringBuffer sb) {
+		sb.append(getClass().getSimpleName()).append(": ").append(hasApplied ? "applied " : " ");
+	}
+
 	public abstract static class Bool extends GLState {
 		private boolean value;
 		private boolean appliedValue;
@@ -43,6 +45,12 @@ public abstract class GLState {
 		}
 
 		protected abstract void applyValue(boolean value);
+
+		@Override
+		public void printState(StringBuffer sb) {
+			super.printState(sb);
+			sb.append("(").append(appliedValue).append(") \n");
+		}
 	}
 
 	public abstract static class Int extends GLState {
@@ -63,6 +71,12 @@ public abstract class GLState {
 		}
 
 		protected abstract void applyValue(int value);
+
+		@Override
+		public void printState(StringBuffer sb) {
+			super.printState(sb);
+			sb.append("(").append(appliedValue).append(") \n");
+		}
 	}
 
 	public abstract static class Object<T> extends GLState {
@@ -84,6 +98,12 @@ public abstract class GLState {
 		}
 
 		protected abstract void applyValue(T value);
+
+		@Override
+		public void printState(StringBuffer sb) {
+			super.printState(sb);
+			sb.append("(").append(appliedValue).append(") \n");
+		}
 	}
 
 	public abstract static class IntArray extends GLState {
@@ -109,6 +129,17 @@ public abstract class GLState {
 		}
 
 		protected abstract void applyValues(int[] values);
+
+		@Override
+		public void printState(StringBuffer sb) {
+			super.printState(sb);
+			sb.append("(");
+			for(int i = 0; i < value.length; i++) {
+				if(i > 0) sb.append(", ");
+				sb.append(value[i]);
+			}
+			sb.append(") \n");
+		}
 	}
 
 	public abstract static class BoolArray extends GLState {
@@ -134,33 +165,16 @@ public abstract class GLState {
 		}
 
 		protected abstract void applyValues(boolean[] values);
-	}
-
-	public abstract static class IntSet extends GLState {
-		private final Set<Integer> targets = new HashSet<>();
-
-		public void add(int target) {
-			hasValue = true;
-			targets.add(target);
-		}
-
-		public void remove(int target) {
-			targets.remove(target);
-			hasApplied = !targets.isEmpty();
-		}
 
 		@Override
-		void internalApply() {
-			for (int t : targets) applyTarget(t);
-			targets.clear();
+		public void printState(StringBuffer sb) {
+			super.printState(sb);
+			sb.append("(");
+			for(int i = 0; i < value.length; i++) {
+				if(i > 0) sb.append(", ");
+				sb.append(value[i]);
+			}
+			sb.append(") \n");
 		}
-
-		@Override
-		public void reset() {
-			super.reset();
-			targets.clear();
-		}
-
-		protected abstract void applyTarget(int target);
 	}
 }
