@@ -7457,6 +7457,7 @@
     "overlayIds": [ 25 ],
     "groundMaterial": "BEACH_SAND",
     "maxLightness": 60,
+    "uvOrientation": 150,
     "replacements": {
       "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
     }
@@ -7465,8 +7466,8 @@
     "name": "SOUTH_CATHERBY_SAND_EXTENSION",
     "area": "SOUTH_CATHERBY_SEASON_FIX",
     "overlayIds": [ 25 ],
-    "groundMaterial": "BEACH_SAND",
-    "maxLightness": 65,
+    "groundMaterial": "BEACH_SAND_PLAIN",
+    "maxLightness": 59,
     "replacements": {
       "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
     }
@@ -7476,7 +7477,7 @@
     "area": "SOUTH_CATHERBY_SEASON_FIX_EDGE",
     "underlayIds": [ 62 ],
     "groundMaterial": "BEACH_SAND",
-    "maxLightness": 65,
+    "maxLightness": 60,
     "minLightness": 52,
     "shiftLightness": 4,
     "setSaturation": 3,
@@ -7486,9 +7487,33 @@
     }
   },
   {
+    "name": "SOUTH_CATHERBY_PLAIN_SAND",
+    "area": "SOUTH_CATHERBY_PLAIN_SAND",
+    "overlayIds": [ 25 ],
+    "underlayIds": [ 62 ],
+    "groundMaterial": "BEACH_SAND_PLAIN",
+    "maxLightness": 60,
+    "uvOrientation": 150,
+    "replacements": {
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "SOUTH_CATHERBY_HILL_BRIGHTNESS_FIX",
+    "area": "SOUTH_CATHERBY_HILL_BRIGHTNESS_FIX",
+    "overlayIds": [ 25 ],
+    "underlayIds": [ 48, 62, 64 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 48,
+    "uvOrientation": 150,
+    "replacements": {
+      "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "CATHERBY_BEACH_SAND_COLOR_FIX",
     "area": "CATHERBY_SAND_COLOR_FIX",
-    "groundMaterial": "BEACH_SAND",
+    "groundMaterial": "BEACH_SAND_PLAIN",
     "maxLightness": 55,
     "setSaturation": 3,
     "setHue": 8,

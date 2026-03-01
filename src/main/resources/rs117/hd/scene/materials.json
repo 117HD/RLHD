@@ -1393,10 +1393,9 @@
   },
   {
     "name": "SAND_4",
-    "normalMap": "SAND_4_N",
+    "normalMap": "DIRT_1_N",
     "specularStrength": 0.2,
-    "specularGloss": 10.0,
-    "textureScale": [ 1, 1, 0.65 ]
+    "specularGloss": 10.0
   },
   {
     "name": "GRUNGE_1_N"
