@@ -249,8 +249,8 @@ public class TimeOfDay
 
 		// Zenith color keyframes (top of sky)
 		Object[][] zenithKeyframes = {
-			{ -30.0, new java.awt.Color(15, 20, 35) },    // Deep night - dark blue
-			{ -15.0, new java.awt.Color(25, 30, 50) },    // Late night
+			{ -30.0, new java.awt.Color(2, 3, 8) },       // Deep night - dark blue
+			{ -15.0, new java.awt.Color(6, 8, 18) },      // Late night
 			{ -8.0,  new java.awt.Color(45, 35, 70) },    // Early twilight - purple tint
 			{ -3.0,  new java.awt.Color(80, 60, 100) },   // Twilight
 			{ 0.0,   new java.awt.Color(100, 80, 120) },  // Horizon sun
@@ -263,8 +263,8 @@ public class TimeOfDay
 
 		// Horizon color keyframes (sides/bottom of sky)
 		Object[][] horizonKeyframes = {
-			{ -30.0, new java.awt.Color(25, 30, 45) },    // Deep night
-			{ -15.0, new java.awt.Color(35, 35, 55) },    // Late night
+			{ -30.0, new java.awt.Color(3, 5, 10) },      // Deep night
+			{ -15.0, new java.awt.Color(8, 10, 20) },     // Late night
 			{ -8.0,  new java.awt.Color(60, 45, 65) },    // Early twilight
 			{ -3.0,  new java.awt.Color(140, 80, 70) },   // Twilight - orange/red
 			{ 0.0,   new java.awt.Color(220, 130, 80) },  // Sunrise/sunset - golden

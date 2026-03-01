@@ -1024,7 +1024,7 @@ public class LegacyRenderer implements Renderer {
 				ambientColor = TimeOfDay.getRegionalAmbientLight(plugin.latLong, cycleDuration, originalRegionalAmbientColor);
 
 				float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(plugin.latLong, cycleDuration, minimumBrightness);
-				directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier;
+				directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier * environmentManager.currentSunStrength;
 				// When Day/Night is active, ignore the environment's ambientStrength
 				// so seasonal values (WINTER=3.5, AUTUMN=0.3) don't make nights
 				// too dark or too bright.
