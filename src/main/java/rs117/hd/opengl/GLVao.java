@@ -23,7 +23,7 @@ public class GLVao {
 	private final GLBuffer[] buffers = new GLBuffer[GLVertexLayout.MAX_ATTRIBUTES];
 	private final boolean[] ownership = new boolean[GLVertexLayout.MAX_ATTRIBUTES];
 
-	private int glVAO;
+	private int glVAO, glBoundEBO;
 	private int layoutVersion;
 
 	public void setBuffer(GLBuffer buffer, boolean takeOwnership, GLVertexLayout.ArrayField field) {
@@ -75,9 +75,6 @@ public class GLVao {
 		glBindVertexArray(glVAO);
 
 		if(layoutVersion != layout.getVersion()) {
-			final GLBuffer eboBuffer = buffers[GLVertexLayout.ArrayField.ELEMENT_BUFFER.ordinal()];
-			if(eboBuffer != null)
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboBuffer.id);
 
 			GLVertexLayout.Attribute[] attributes = layout.getAttributes();
 			for(int i = 0; i < attributes.length; i++) {
@@ -112,13 +109,23 @@ public class GLVao {
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
 			}
 
-			// Unbind VAO, so its safe to unbind the Array & Element buffers
+			checkGLErrors(() -> "Building VAO: " + name + " with layout: " + layout);
+			layoutVersion = layout.getVersion();
+		}
+
+		final GLBuffer eboBuffer = buffers[GLVertexLayout.ArrayField.ELEMENT_BUFFER.ordinal()];
+		if(eboBuffer != null && glBoundEBO != eboBuffer.id) {
+			// Element buffer id has changed, rebind it to the VAO State
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glBoundEBO = eboBuffer.id);
+
+			// Rebind the VAO State, so that its safe to unbind the EBO without clearing it off the state
 			glBindVertexArray(0);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			glBindVertexArray(glVAO);
-
-			checkGLErrors(() -> "Building VAO: " + name + " with layout: " + layout);
-			layoutVersion = layout.getVersion();
+		} else if(glBoundEBO != 0) {
+			// Element buffer was previously bound, but is now null clear it off the VAO State
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			glBoundEBO = 0;
 		}
 	}
 
