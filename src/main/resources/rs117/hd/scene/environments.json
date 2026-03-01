@@ -464,7 +464,9 @@
     "fogColor": "#242d3a",
     "fogDepth": 50,
     "groundFogStart": -300,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+	"starVisibility": 0.1,
+	"sunStrength":0.05
   },
   {
     "area": "DARKMEYER",
@@ -530,7 +532,7 @@
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
 	"starVisibility": 0.1,
-	"sunStrength":0.1,
+	"sunStrength":0.05,
     "windAngle": 40,
     "windSpeed": 7,
     "windStrength": 26,
