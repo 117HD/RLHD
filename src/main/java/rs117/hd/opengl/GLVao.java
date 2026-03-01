@@ -18,6 +18,8 @@ import static rs117.hd.HdPlugin.checkGLErrors;
 @RequiredArgsConstructor
 @Slf4j
 public class GLVao {
+	private static GLVao previousVao;
+
 	private final String name;
 	private final GLVertexLayout layout;
 	private final GLBuffer[] buffers = new GLBuffer[GLVertexLayout.MAX_ATTRIBUTES];
@@ -69,49 +71,16 @@ public class GLVao {
 	}
 
 	public void bind() {
+		if(previousVao != null && previousVao != this)
+			log.warn("Binding VAO: {} when it was already bound by: {}", name, previousVao.name);
+
 		if(glVAO == 0)
 			glVAO = glGenVertexArrays();
 
 		glBindVertexArray(glVAO);
+		previousVao = this;
 
-		if(layoutVersion != layout.getVersion()) {
-
-			GLVertexLayout.Attribute[] attributes = layout.getAttributes();
-			for(int i = 0; i < attributes.length; i++) {
-				final GLVertexLayout.Attribute attrib = attributes[i];
-				if(!attrib.isEnabled) {
-					glDisableVertexAttribArray(i);
-					continue;
-				}
-
-				final GLBuffer arrayBuffer = buffers[i + 1];
-				if(arrayBuffer == null) {
-					log.warn(
-						"ArrayField: {} is enabled but no buffer is associated, expect erroneous behaviour",
-						GLVertexLayout.ARRAY_FIELD_NAMES[i + 1]
-					);
-				} else {
-					glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer.id);
-				}
-
-				glEnableVertexAttribArray(i);
-
-				if(attrib.divisor > 0)
-					glVertexAttribDivisor(i, attrib.divisor);
-
-				if(attrib.isInteger) {
-					assert attrib.format.ordinal() >= GLVertexLayout.FormatType.INT.ordinal();
-					glVertexAttribIPointer(i, attrib.component.size, attrib.format.glFormatType, attrib.stride, attrib.offset);
-				} else {
-					glVertexAttribPointer(i, attrib.component.size, attrib.format.glFormatType, attrib.isNormalized, attrib.stride, attrib.offset);
-				}
-
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-			}
-
-			checkGLErrors(() -> "Building VAO: " + name + " with layout: " + layout);
-			layoutVersion = layout.getVersion();
-		}
+		ensureBuilt();
 
 		final GLBuffer eboBuffer = buffers[GLVertexLayout.ArrayField.ELEMENT_BUFFER.ordinal()];
 		if(eboBuffer != null && glBoundEBO != eboBuffer.id) {
@@ -129,9 +98,52 @@ public class GLVao {
 		}
 	}
 
+	private void ensureBuilt() {
+		if(layoutVersion == layout.getVersion())
+			return;
+
+		GLVertexLayout.Attribute[] attributes = layout.getAttributes();
+		for(int i = 0; i < attributes.length; i++) {
+			final GLVertexLayout.Attribute attrib = attributes[i];
+			if(!attrib.isEnabled) {
+				glDisableVertexAttribArray(i);
+				continue;
+			}
+
+			final GLBuffer arrayBuffer = buffers[i + 1];
+			if(arrayBuffer == null) {
+				log.warn(
+					"ArrayField: {} is enabled but no buffer is associated, expect erroneous behaviour",
+					GLVertexLayout.ARRAY_FIELD_NAMES[i + 1]
+				);
+			} else {
+				glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer.id);
+			}
+
+			glEnableVertexAttribArray(i);
+
+			if(attrib.divisor > 0)
+				glVertexAttribDivisor(i, attrib.divisor);
+
+			if(attrib.isInteger) {
+				assert attrib.format.ordinal() >= GLVertexLayout.FormatType.INT.ordinal();
+				glVertexAttribIPointer(i, attrib.component.size, attrib.format.glFormatType, attrib.stride, attrib.offset);
+			} else {
+				glVertexAttribPointer(i, attrib.component.size, attrib.format.glFormatType, attrib.isNormalized, attrib.stride, attrib.offset);
+			}
+
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
+
+		checkGLErrors(() -> "Building VAO: " + name + " with layout: " + layout);
+		layoutVersion = layout.getVersion();
+	}
+
 	public void unbind() {
-		// TODO: Verify that we've bound & unbound in the correct order
+		if(previousVao != null && previousVao != this)
+			log.warn("Unbinding VAO: {} when it was bound by: {}", name, previousVao.name);
 		glBindVertexArray(0);
+		previousVao = null;
 	}
 
 	public void destroy() {
