@@ -17,6 +17,8 @@ public final class RenderState {
 	private final List<GLState> states = new ArrayList<>();
 
 	public final GLBindFramebuffer framebuffer = addState(GLBindFramebuffer::new);
+	public final GLBindDrawFramebuffer drawFramebuffer = addState(GLBindDrawFramebuffer::new);
+	public final GLBindReadFramebuffer readFramebuffer = addState(GLBindReadFramebuffer::new);
 	public final GLFramebufferTextureLayer framebufferTextureLayer = addState(GLFramebufferTextureLayer::new);
 	public final GLDrawBuffer drawBuffer = addState(GLDrawBuffer::new);
 	public final GLShaderProgram program = addState(GLShaderProgram::new);
@@ -54,16 +56,28 @@ public final class RenderState {
 		return state;
 	}
 
-	public static final class GLBindFramebuffer extends GLState.IntArray {
-		private GLBindFramebuffer() {
-			super(2);
-		}
-
+	public static class GLBindFramebuffer extends GLState.Int {
 		@Override
-		protected void applyValues(int[] values) { glBindFramebuffer(values[0], values[1]); }
+		protected void applyValue(int value) { glBindFramebuffer(GL_FRAMEBUFFER, value); }
 
 		@Override
 		protected void applyDefault() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
+	}
+
+	public static class GLBindReadFramebuffer extends GLState.Int {
+		@Override
+		protected void applyValue(int value) { glBindFramebuffer(GL_READ_FRAMEBUFFER, value); }
+
+		@Override
+		protected void applyDefault() { glBindFramebuffer(GL_READ_FRAMEBUFFER, 0); }
+	}
+
+	public static class GLBindDrawFramebuffer extends GLState.Int {
+		@Override
+		protected void applyValue(int value) { glBindFramebuffer(GL_DRAW_FRAMEBUFFER, value); }
+
+		@Override
+		protected void applyDefault() { glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); }
 	}
 
 	public static final class GLFramebufferTextureLayer extends GLState.IntArray {

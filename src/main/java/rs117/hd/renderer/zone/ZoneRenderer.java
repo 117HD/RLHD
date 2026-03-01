@@ -660,7 +660,8 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
 		frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
 
-		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTiledLighting);
+		renderState.setDefaults();
+		renderState.drawFramebuffer.set(plugin.fboTiledLighting);
 		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
 		renderState.vao.set(plugin.triVao);
 
@@ -674,13 +675,11 @@ public class ZoneRenderer implements Renderer {
 			int layerCount = plugin.configDynamicLights.getTiledLightingLayers();
 			for (int layer = 0; layer < layerCount; layer++) {
 				renderState.program.set(plugin.tiledLightingShaderPrograms.get(layer));
-				renderState.framebufferTextureLayer.set(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, plugin.texTiledLighting, 0, layer);
+				renderState.framebufferTextureLayer.set(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, plugin.texTiledLighting, 0, layer);
 				renderState.apply();
 				glDrawArrays(GL_TRIANGLES, 0, 3);
 			}
 		}
-
-		glBindVertexArray(0);
 
 		frameTimer.end(Timer.RENDER_TILED_LIGHTING);
 		frameTimer.end(Timer.DRAW_TILED_LIGHTING);
@@ -693,7 +692,8 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.begin(Timer.RENDER_SHADOWS);
 
 		// Render to the shadow depth map
-		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
+		renderState.setDefaults();
+		renderState.drawFramebuffer.set(plugin.fboShadowMap);
 		renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
 		renderState.ido.set(indirectDrawCmds);
 		renderState.apply();
@@ -709,8 +709,6 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.execute();
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
-		renderState.setDefaults();
-
 		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
@@ -718,7 +716,8 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.use();
 
 		frameTimer.begin(Timer.DRAW_SCENE);
-		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
+		renderState.setDefaults();
+		renderState.drawFramebuffer.set(plugin.fboScene);
 		renderState.multisample.set(plugin.msaaSamples > 1);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		renderState.ido.set(indirectDrawCmds);
@@ -752,10 +751,6 @@ public class ZoneRenderer implements Renderer {
 
 		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
-
-		// Done rendering the scene
-		renderState.setDefaults();
-
 		frameTimer.end(Timer.DRAW_SCENE);
 	}
 
@@ -1018,23 +1013,26 @@ public class ZoneRenderer implements Renderer {
 			tiledLightingPass();
 			directionalShadowPass();
 			scenePass();
+			renderState.setDefaults();
 		}
 
 		if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
+			renderState.readFramebuffer.set(plugin.fboScene);
 			if (plugin.fboSceneResolve != 0) {
 				// Blit from the scene FBO to the multisample resolve FBO
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneResolve);
+				renderState.drawFramebuffer.set(plugin.fboSceneResolve);
+				renderState.apply();
 				glBlitFramebuffer(
 					0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
 					0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
 					GL_COLOR_BUFFER_BIT, GL_NEAREST
 				);
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneResolve);
+				renderState.readFramebuffer.set(plugin.fboSceneResolve);
 			}
 
 			// Blit from the resolved FBO to the default FBO
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+			renderState.drawFramebuffer.set(plugin.awtContext.getFramebuffer(false));
+			renderState.apply();
 			glBlitFramebuffer(
 				0,
 				0,
@@ -1048,7 +1046,8 @@ public class ZoneRenderer implements Renderer {
 				config.sceneScalingMode().glFilter
 			);
 		} else {
-			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+			renderState.framebuffer.set(plugin.awtContext.getFramebuffer(false));
+			renderState.apply();
 			glClearColor(0, 0, 0, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 		}

@@ -1179,8 +1179,8 @@ public class HdPlugin extends Plugin {
 			ARBShaderImageLoadStore.glBindImageTexture(
 				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
 
-		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 
 		checkGLErrors();
 
