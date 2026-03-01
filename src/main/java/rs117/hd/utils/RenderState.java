@@ -156,7 +156,7 @@ public final class RenderState {
 		@Override
 		protected void applyValue(boolean enabled) { glDepthMask(enabled); }
 		@Override
-		public void setDefault() { set(false); }
+		public void setDefault() { set(true); }
 	}
 
 	public static final class GLDepthFunc extends GLState.Int {
