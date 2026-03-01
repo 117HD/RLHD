@@ -1,11 +1,13 @@
 [
   {
     "name": "DEFAULT_GRASS",
-    "groundMaterial": "OVERWORLD_GRASS_1"
+    "groundMaterial": "OVERWORLD_GRASS_1",
+    "maxLightness": 55
   },
   {
     "name": "DEFAULT_DIRT",
-    "groundMaterial": "DIRT"
+    "groundMaterial": "DIRT",
+    "maxLightness": 55
   },
   {
     "name": "DEFAULT_SAND",
