@@ -8,7 +8,6 @@ import rs117.hd.utils.buffer.GLTextureBuffer;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
@@ -77,7 +76,7 @@ public final class ZoneUploadJob extends Job {
 				f.map(MAP_WRITE);
 			}
 
-			zone.initialize(o, a, f, eboAlpha.id);
+			zone.initialize(o, a, f);
 			zone.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(

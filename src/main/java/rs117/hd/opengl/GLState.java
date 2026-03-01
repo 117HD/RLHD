@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import lombok.Getter;
 
 public abstract class GLState {
 	protected boolean hasValue;
@@ -22,6 +23,7 @@ public abstract class GLState {
 	}
 
 	abstract void internalApply();
+	public abstract void setDefault();
 
 	public abstract static class Bool extends GLState {
 		private boolean value;
@@ -65,6 +67,7 @@ public abstract class GLState {
 
 	public abstract static class Object<T> extends GLState {
 		private T value;
+		@Getter
 		private T appliedValue;
 
 		public final void set(T v) {
