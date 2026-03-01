@@ -8171,10 +8171,17 @@
     }
   },
   {
+    "name": "KARAMJA_WATERFALL_DIRT_FIX",
+    "area": "KARAMJA_WATERFALL_DIRT_FIX",
+    "overlayIds": [ 26 ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "KARAMJA_DUNES",
     "area": "KARAMJA_DUNES",
     "underlayIds": [
-      62
+      62,
+      68
     ],
     "replacements": {
       "DEFAULT_DIRT": [
