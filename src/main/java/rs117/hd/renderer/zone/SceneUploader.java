@@ -768,7 +768,7 @@ public class SceneUploader implements AutoCloseable {
 				zone.addAlphaModel(
 					plugin,
 					materialManager,
-					zone.glVaoA,
+					zone.alphaVao,
 					zone.tboF.getTexId(),
 					model, modelOverride, alphaStart, alphaEnd,
 					x - basex, y, z - basez,

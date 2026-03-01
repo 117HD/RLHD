@@ -6,6 +6,11 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.GLVao;
+import rs117.hd.opengl.GLVertexLayout;
+import rs117.hd.opengl.GLVertexLayout.ArrayField;
+import rs117.hd.opengl.GLVertexLayout.ComponentType;
+import rs117.hd.opengl.GLVertexLayout.FormatType;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
@@ -14,7 +19,6 @@ import rs117.hd.utils.buffer.GLTextureBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
-import static rs117.hd.HdPlugin.NVIDIA_GPU;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
@@ -38,7 +42,18 @@ class DynamicModelVAO {
 	// dummy sceneOffset ivec2 for macOS workaround
 	static final int METADATA_SIZE = 12;
 
-	int vao;
+	public static final GLVertexLayout DYNAMIC_MODEL_VERTEX_LAYOUT = new GLVertexLayout("DYNAMIC_MODEL_VERTEX_LAYOUT")
+		// Mesh Data
+		.edit(ArrayField.VERTEX_FIELD_0).enabled().component(ComponentType.RGB).format(FormatType.FLOAT).stride(VERT_SIZE).offset(0)
+		.edit(ArrayField.VERTEX_FIELD_1).enabled().component(ComponentType.RGB).format(FormatType.HALF_FLOAT).stride(VERT_SIZE).offset(12)
+		.edit(ArrayField.VERTEX_FIELD_2).enabled().component(ComponentType.RGB).format(FormatType.SHORT).stride(VERT_SIZE).offset(18)
+		.edit(ArrayField.VERTEX_FIELD_3).enabled().component(ComponentType.R).format(FormatType.INT).stride(VERT_SIZE).offset(24).asInteger()
+		// Meta Data
+		.edit(ArrayField.VERTEX_FIELD_6).enabled().component(ComponentType.R).format(FormatType.INT).stride(METADATA_SIZE).offset(0).asInteger().divisor(1)
+		.edit(ArrayField.VERTEX_FIELD_7).enabled().component(ComponentType.RG).format(FormatType.INT).stride(METADATA_SIZE).offset(4).asInteger().divisor(1)
+		.finish();
+
+	GLVao vao = new GLVao("DynamicModel::VAO", DYNAMIC_MODEL_VERTEX_LAYOUT);
 	boolean used;
 
 	private final GLBuffer vboRender;
@@ -86,55 +101,16 @@ class DynamicModelVAO {
 	public boolean hasStagingBuffer() { return vboRender != vboStaging; }
 
 	void initialize() {
-		vao = glGenVertexArrays();
 		tbo.initialize(INITIAL_SIZE);
 		vboRender.initialize(INITIAL_SIZE);
 		if (vboRender != vboStaging) {
 			vboStaging.initialize(INITIAL_SIZE);
 		}
-
-		bindRenderVAO();
+		vao.associateBufferRange(vboRender, ArrayField.VERTEX_FIELD_0, ArrayField.VERTEX_FIELD_3);
 	}
 
 	public void bindMetadataVAO(@Nonnull GLBuffer vboMetadata) {
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.id);
-
-		// WorldView index (not ID)
-		glEnableVertexAttribArray(6);
-		glVertexAttribDivisor(6, 1);
-		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
-
-		if (!NVIDIA_GPU) {
-			// Workaround for incorrect implementations of disabled vertex attribs, particularly on macOS
-			glEnableVertexAttribArray(7);
-			glVertexAttribDivisor(7, 1);
-			glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-	}
-
-	void bindRenderVAO() {
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vboRender.id);
-
-		// Position
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, VERT_SIZE, 0);
-
-		// UVs
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 12);
-
-		// Normals
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 18);
-
-		// TextureFaceIdx
-		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+		vao.associateBufferRange(vboMetadata, ArrayField.VERTEX_FIELD_6, ArrayField.VERTEX_FIELD_7);
 	}
 
 	void map() {
@@ -145,7 +121,6 @@ class DynamicModelVAO {
 	}
 
 	synchronized void unmap(boolean coalesce) {
-		final int renderVBOId = vboRender.id;
 		long vboWrittenBytes = vboWriter.flush();
 		tboWriter.flush();
 
@@ -178,16 +153,12 @@ class DynamicModelVAO {
 				}
 			}
 		}
-
-		if (renderVBOId != vboRender.id)
-			bindRenderVAO();
 	}
 
 	void destroy() {
 		vboStaging.destroy();
 		tbo.destroy();
-		glDeleteVertexArrays(vao);
-		vao = 0;
+		vao.destroy();
 	}
 
 	synchronized View beginDraw(int faceCount) {
@@ -269,7 +240,7 @@ class DynamicModelVAO {
 	public final class View {
 		public ReservedView vbo;
 		public ReservedView tbo;
-		public int vao;
+		public GLVao vao;
 		public int tboTexId;
 		private int drawIdx;
 

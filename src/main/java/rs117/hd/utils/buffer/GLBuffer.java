@@ -288,8 +288,9 @@ public class GLBuffer {
 		));
 	}
 
-	public void upload(FloatBuffer data) {
+	public GLBuffer upload(FloatBuffer data) {
 		upload(data, 0);
+		return this;
 	}
 
 	public void upload(FloatBuffer data, long byteOffset) {
