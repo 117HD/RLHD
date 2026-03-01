@@ -30,10 +30,10 @@ public final class RenderState {
 	public final GLDepthFunc depthFunc = addState(GLDepthFunc::new);
 	public final GLColorMask colorMask = addState(GLColorMask::new);
 	public final GLBlendFunc blendFunc = addState(GLBlendFunc::new);
-	public final GLToggle blend = new GLToggle(GL_BLEND, false); // TODO: Verify the default GL STATE
+	public final GLToggle blend = new GLToggle(GL_BLEND, false);
 	public final GLToggle cullFace = new GLToggle(GL_CULL_FACE, true);
 	public final GLToggle depthTest = new GLToggle(GL_DEPTH_TEST, false);
-	public final GLToggle multisample = new GLToggle(GL_DEPTH_TEST, false);
+	public final GLToggle multisample = new GLToggle(GL_MULTISAMPLE, false);
 
 	public void apply() {
 		for (GLState state : states)
@@ -61,7 +61,7 @@ public final class RenderState {
 		protected void applyValue(int value) { glBindFramebuffer(GL_FRAMEBUFFER, value); }
 
 		@Override
-		protected void applyDefault() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
+		public void setDefault() { set(0); }
 	}
 
 	public static class GLBindReadFramebuffer extends GLState.Int {
@@ -69,7 +69,7 @@ public final class RenderState {
 		protected void applyValue(int value) { glBindFramebuffer(GL_READ_FRAMEBUFFER, value); }
 
 		@Override
-		protected void applyDefault() { glBindFramebuffer(GL_READ_FRAMEBUFFER, 0); }
+		public void setDefault() { set(0); }
 	}
 
 	public static class GLBindDrawFramebuffer extends GLState.Int {
@@ -77,7 +77,7 @@ public final class RenderState {
 		protected void applyValue(int value) { glBindFramebuffer(GL_DRAW_FRAMEBUFFER, value); }
 
 		@Override
-		protected void applyDefault() { glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); }
+		public void setDefault() { set(0); }
 	}
 
 	public static final class GLFramebufferTextureLayer extends GLState.IntArray {
@@ -85,11 +85,13 @@ public final class RenderState {
 
 		@Override
 		protected void applyValues(int[] values) {
+			if(values[0] == 0)
+				return;
 			glFramebufferTextureLayer(values[0], values[1], values[2], values[3], values[4]);
 		}
 
 		@Override
-		protected void applyDefault() { }
+		public void setDefault() { set(0, 0, 0, 0, 0); }
 	}
 
 	public static final class GLViewport extends GLState.IntArray {
@@ -99,21 +101,27 @@ public final class RenderState {
 		@Override
 		protected void applyValues(int[] values) { glViewport(values[0], values[1], values[2], values[3]); }
 		@Override
-		protected void applyDefault() { glUseProgram(0); }
+		public void setDefault() { set(0, 0, 0, 0); }
 	}
 
 	public static final class GLShaderProgram extends GLState.Object<ShaderProgram> {
 		@Override
-		protected void applyValue(ShaderProgram program) { program.use(); }
+		protected void applyValue(ShaderProgram program) {
+			if(program != null) {
+				program.use();
+			} else {
+				glUseProgram(0);
+			}
+		}
 		@Override
-		protected void applyDefault() { glUseProgram(0); }
+		public void setDefault() { set(null); }
 	}
 
 	public static final class GLDrawBuffer extends GLState.Int {
 		@Override
 		protected void applyValue(int buf) { glDrawBuffer(buf); }
 		@Override
-		protected void applyDefault() {  }
+		public void setDefault() {  }
 	}
 
 	public static final class GLBindVAO extends GLState.Object<GLVao> {
@@ -127,38 +135,35 @@ public final class RenderState {
 
 		}
 		@Override
-		protected void applyDefault() {
-			if(getAppliedValue() != null)
-				getAppliedValue().unbind();
-		}
+		public void setDefault() { set(null); }
 	}
 
 	public static final class GLBindIDO extends GLState.Object<GLBuffer> {
 		@Override
-		protected void applyValue(GLBuffer ido) { glBindBuffer(GL_DRAW_INDIRECT_BUFFER, ido.id); }
+		protected void applyValue(GLBuffer ido) { glBindBuffer(GL_DRAW_INDIRECT_BUFFER, ido != null ? ido.id : 0); }
 		@Override
-		protected void applyDefault() { glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);  }
+		public void setDefault() { set(null); }
 	}
 
 	public static final class GLBindUBO extends GLState.Int {
 		@Override
 		protected void applyValue(int ubo) { glBindBuffer(GL_UNIFORM_BUFFER, ubo); }
 		@Override
-		protected void applyDefault() { glBindBuffer(GL_UNIFORM_BUFFER, 0);  }
+		public void setDefault() { set(0); }
 	}
 
 	public static final class GLDepthMask extends GLState.Bool {
 		@Override
 		protected void applyValue(boolean enabled) { glDepthMask(enabled); }
 		@Override
-		protected void applyDefault() { glDepthMask(false);  }
+		public void setDefault() { set(false); }
 	}
 
 	public static final class GLDepthFunc extends GLState.Int {
 		@Override
 		protected void applyValue(int func) { glDepthFunc(func); }
 		@Override
-		protected void applyDefault() { glDepthFunc(GL_LESS); }
+		public void setDefault() { set(GL_LESS); }
 	}
 
 	public static final class GLBlendFunc extends GLState.IntArray {
@@ -169,7 +174,7 @@ public final class RenderState {
 		@Override
 		protected void applyValues(int[] values) { glBlendFuncSeparate(values[0], values[1], values[2], values[3]); }
 		@Override
-		protected void applyDefault() { glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO); }
+		public void setDefault() { set(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO); }
 	}
 
 	public static final class GLColorMask extends GLState.BoolArray {
@@ -180,7 +185,7 @@ public final class RenderState {
 		@Override
 		protected void applyValues(boolean[] values) { glColorMask(values[0], values[1], values[2], values[3]); }
 		@Override
-		protected void applyDefault() { glColorMask(true, true, true, true); }
+		public void setDefault() { set(true, true, true, true); }
 	}
 
 	@RequiredArgsConstructor
@@ -198,6 +203,6 @@ public final class RenderState {
 		}
 
 		@Override
-		protected void applyDefault() { applyValue(defaultState); }
+		public void setDefault() { set(defaultState); }
 	}
 }

@@ -22,14 +22,8 @@ public abstract class GLState {
 		}
 	}
 
-	public void setDefault() {
-		if (hasApplied)
-			applyDefault();
-	}
-
-
 	abstract void internalApply();
-	protected abstract void applyDefault();
+	public abstract void setDefault();
 
 	public abstract static class Bool extends GLState {
 		private boolean value;

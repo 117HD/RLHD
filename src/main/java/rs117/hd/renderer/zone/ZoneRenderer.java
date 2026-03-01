@@ -702,9 +702,9 @@ public class ZoneRenderer implements Renderer {
 		glClear(GL_DEPTH_BUFFER_BIT);
 
 		renderState.depthTest.set(true);
+		renderState.depthMask.set(true);
 		renderState.cullFace.set(false);
 		renderState.depthFunc.set(GL_LEQUAL);
-		renderState.program.set(sceneProgram);
 
 		CommandBuffer.SKIP_DEPTH_MASKING = true;
 		directionalCmd.execute();
@@ -741,6 +741,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.blend.set(true);
 		renderState.cullFace.set(true);
 		renderState.depthTest.set(true);
+		renderState.depthMask.set(true);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		renderState.ido.set(indirectDrawCmds);
