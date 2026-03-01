@@ -1,23 +1,23 @@
 [
   {
     "objectEmitters": [
-      { "object": "FAI_FALADOR_HOUSE_TORCH", "offsetX": -55, "offsetY": 0, "offsetZ": 205 }
+      {
+        "object": "FAI_FALADOR_HOUSE_TORCH",
+        "offsetX": -55,
+        "offsetY": 0,
+        "offsetZ": 205
+      }
     ],
     "description": "WALL_TORCH_MID_SMALL",
     "particleId": "TORCH_SMOKE"
   },
   {
-    "placements": [
-      [2945, 3371, 0]
-    ],
-    "description": "TEST",
-    "particleId": "7"
-  },
-  {
-    "placements": [
-      [3181,3437,0]
-    ],
-    "description": "TES44T",
-    "particleId": "15"
+    "particleIds": [ "3", "4" ],
+    "description": "Particles 3 and 4 emitters",
+    "weatherAreas": [ "ICE_MOUNTAIN" ],
+    "edgeFadeInside": 5,
+    "edgeFadeOutside": 2,
+    "weatherSpacing": 3,
+    "weatherEveryNTiles": 2
   }
 ]

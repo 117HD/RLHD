@@ -40,7 +40,9 @@ import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
+import rs117.hd.scene.particles.emitter.EmitterDefinitionManager;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
+import rs117.hd.scene.particles.emitter.WeatherAreaConfig;
 import rs117.hd.utils.Mat4;
 
 import static rs117.hd.utils.MathUtils.cos;
@@ -67,6 +69,7 @@ public class ParticleGizmoOverlay extends Overlay implements MouseListener
 	private static final Color BOUNDS_SPREAD_COLOR = new Color(150, 220, 255, 180);
 	private static final float BOUNDS_SPEED_SCALE = 3.125f;
 	private static final Color PLACE_MODE_TILE_OUTLINE = new Color(100, 255, 150, 220);
+	private static final Color WEATHER_AREA_FILL = new Color(100, 200, 255, 100);
 
 	/** When non-null, show debug dots only for emitters/particles with this particle def id. */
 	private String debugParticleId;
@@ -98,6 +101,9 @@ public class ParticleGizmoOverlay extends Overlay implements MouseListener
 
 	@Inject
 	private ParticleManager particleManager;
+
+	@Inject
+	private EmitterDefinitionManager emitterDefinitionManager;
 
 	@Inject
 	private EventBus eventBus;
@@ -322,6 +328,13 @@ public class ParticleGizmoOverlay extends Overlay implements MouseListener
 		int currentPlane = client.getTopLevelWorldView() != null
 			? client.getTopLevelWorldView().getPlane()
 			: 0;
+
+		// Debug: draw filled weather areas from emitters.json weatherAreas
+		for (WeatherAreaConfig wac : emitterDefinitionManager.getWeatherAreaConfigs()) {
+			for (var aabb : wac.getAabbs()) {
+				tileInfoOverlay.drawFilledWorldAabb(g, ctx, aabb, currentPlane, WEATHER_AREA_FILL);
+			}
+		}
 
 		// Place mode: draw tile outline under mouse
 		if (placeModeActive)

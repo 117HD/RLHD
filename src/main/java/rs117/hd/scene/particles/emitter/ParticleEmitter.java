@@ -92,6 +92,8 @@ public class ParticleEmitter {
 	private float emissionSpawnMin = 1f;
 	@Builder.Default
 	private float emissionSpawnMax = 1f;
+	@Builder.Default
+	private float alphaScale = 1f;
 	private int initialSpawn;
 	private boolean initialSpawnDone;
 	@Builder.Default
@@ -300,6 +302,7 @@ public class ParticleEmitter {
 			for (int i = 0; i < 4; i++)
 				into.initialColor[i] = colorMin[i] + (colorMax[i] - colorMin[i]) * rng.nextFloat();
 		}
+		into.initialColor[3] *= alphaScale;
 		into.color[0] = into.initialColor[0];
 		into.color[1] = into.initialColor[1];
 		into.color[2] = into.initialColor[2];

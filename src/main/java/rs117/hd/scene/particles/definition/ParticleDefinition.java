@@ -94,6 +94,8 @@ public class ParticleDefinition {
 		public int directionPitch = 30;
 		public int directionYaw = 1024;
 		public boolean displayWhenCulled;
+		/** Max random yaw rotation (radians/sec) applied during lifecycle. 0 = no rotation. */
+		public float randomYawRotation;
 	}
 
 	@Data

@@ -115,6 +115,9 @@
   }
 }, {
   "id" : "3",
+  "general" : {
+    "randomYawRotation" : 2.0
+  },
   "spread" : {
     "yawMin" : 947,
     "yawMax" : 1061,
@@ -151,6 +154,9 @@
   }
 }, {
   "id" : "4",
+  "general" : {
+    "randomYawRotation" : 2.0
+  },
   "spread" : {
     "yawMin" : 947,
     "yawMax" : 1061,

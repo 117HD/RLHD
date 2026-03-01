@@ -15,4 +15,6 @@ public class EmitterPlacement {
 	int plane;
 	@Nullable
 	String particleId;
+	/** Alpha scale for edge fade (1 = full, 0 = invisible). Used by weather. */
+	float edgeFadeFactor;
 }

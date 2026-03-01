@@ -55,7 +55,7 @@ public class ParticlePass implements ScenePass {
 	private final int[] visibleIndices = new int[MAX_DRAWN];
 	private static final int INSTANCE_BUFFER_COUNT = 3;
 	private static final int QUAD_VERTS = 6;
-	private static final int FLOATS_PER_INSTANCE = 13;
+	private static final int FLOATS_PER_INSTANCE = 14;
 	private static final int INSTANCE_STRIDE_BYTES = 64;
 	private static final int INSTANCE_PADDING_BYTES = INSTANCE_STRIDE_BYTES - FLOATS_PER_INSTANCE * 4;
 	private static final float[] PARTICLE_QUAD_CORNERS = {
@@ -156,6 +156,9 @@ public class ParticlePass implements ScenePass {
 		glEnableVertexAttribArray(8);
 		glVertexAttribPointer(8, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 48);
 		glVertexAttribDivisor(8, 1);
+		glEnableVertexAttribArray(9);
+		glVertexAttribPointer(9, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 52);
+		glVertexAttribDivisor(9, 1);
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		particleStagingBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * FLOATS_PER_INSTANCE);
@@ -242,6 +245,7 @@ public class ParticlePass implements ScenePass {
 		glVertexAttribPointer(6, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 40);
 		glVertexAttribPointer(7, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 44);
 		glVertexAttribPointer(8, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 48);
+		glVertexAttribPointer(9, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 52);
 		glDrawArraysInstanced(GL_TRIANGLES, 0, QUAD_VERTS, instanceCount);
 		if (particleInstanceBuffers != null) {
 			instanceFences[slot].handle = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
@@ -311,6 +315,7 @@ public class ParticlePass implements ScenePass {
 			particleStagingBuffer.put(flipbookCols).put(flipbookRows).put(flipbookFrameVal);
 			float useSceneAmbient = (def != null && def.colours.useSceneAmbientLight) ? 1f : 0f;
 			particleStagingBuffer.put(useSceneAmbient);
+			particleStagingBuffer.put(buf.yaw[bufIndex]);
 		}
 
 		// Fill upload buffer, 64 bytes per instance (12 floats + 16 padding)

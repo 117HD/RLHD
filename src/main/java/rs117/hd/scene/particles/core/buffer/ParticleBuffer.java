@@ -81,6 +81,7 @@ public final class ParticleBuffer {
 	public int[] scaleRef;
 
 	public float[] flipbookFrame;
+	public float[] yaw;
 
 	public ParticleBuffer(int capacity) {
 		this.capacity = capacity;
@@ -140,6 +141,7 @@ public final class ParticleBuffer {
 		colourRgbLowRef = new int[capacity];
 		scaleRef = new int[capacity];
 		flipbookFrame = new float[capacity];
+		yaw = new float[capacity];
 	}
 
 
@@ -228,6 +230,7 @@ public final class ParticleBuffer {
 		colourRgbLowRef[i] = 0;
 		scaleRef[i] = (int) (p.size / 4f * 16384);
 		flipbookFrame[i] = p.flipbookRandomFrame >= 0 ? (float) p.flipbookRandomFrame : -1f;
+		yaw[i] = 0f;
 	}
 
 	/**
@@ -311,6 +314,7 @@ public final class ParticleBuffer {
 		swapInt(colourRgbLowRef, i, j);
 		swapInt(scaleRef, i, j);
 		swapFloat(flipbookFrame, i, j);
+		swapFloat(yaw, i, j);
 	}
 
 	private static void swapLong(long[] a, int i, int j) {

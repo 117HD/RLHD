@@ -12,6 +12,7 @@ layout (location = 5) in float aFlipbookCols;
 layout (location = 6) in float aFlipbookRows;
 layout (location = 7) in float aFlipbookFrame;
 layout (location = 8) in float aUseSceneAmbientLight;
+layout (location = 9) in float aYaw;
 
 out vec4 vColor;
 out vec2 vUV;
@@ -27,7 +28,11 @@ void main() {
 	float lenSq = dot(right, right);
 	right = mix(vec3(1, 0, 0), right * inversesqrt(lenSq), step(1e-6, lenSq));
 	vec3 up = cross(toCamera, right);
-	vec3 worldPos = aCenter + (right * aCorner.x + up * aCorner.y) * aSize;
+	float c = cos(aYaw);
+	float s = sin(aYaw);
+	vec3 rightR = right * c + up * s;
+	vec3 upR = -right * s + up * c;
+	vec3 worldPos = aCenter + (rightR * aCorner.x + upR * aCorner.y) * aSize;
 	gl_Position = projectionMatrix * vec4(worldPos, 1.0);
 	vColor = aColor;
 	vUV = aCorner * 0.5 + 0.5;

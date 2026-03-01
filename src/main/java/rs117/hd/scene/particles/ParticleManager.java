@@ -35,6 +35,7 @@ import rs117.hd.scene.particles.emitter.EmitterDefinitionManager;
 import rs117.hd.scene.particles.emitter.EmitterConfigEntry;
 import rs117.hd.scene.particles.emitter.EmitterPlacement;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
+import rs117.hd.scene.particles.emitter.WeatherAreaConfig;
 import rs117.hd.data.ObjectType;
 import rs117.hd.utils.HDUtils;
 
@@ -292,25 +293,37 @@ public class ParticleManager {
 		}
 
 		final List<EmitterPlacement> placements = emitterDefinitionManager.getPlacements();
-		if (placements.isEmpty()) {
+		final List<EmitterPlacement> weatherPlacements = emitterDefinitionManager.getWeatherPlacements();
+		if (placements.isEmpty() && weatherPlacements.isEmpty()) {
 			return;
 		}
 
 		for (EmitterPlacement place : placements) {
-			if (place.getParticleId() == null) {
-				continue;
-			}
-
+			if (place.getParticleId() == null) continue;
 			final String pid = place.getParticleId().toUpperCase();
 			final ParticleDefinition def = definitions.get(pid);
-			if (def == null) {
-				continue;
-			}
-
+			if (def == null) continue;
 			final WorldPoint wp = new WorldPoint(place.getWorldX(), place.getWorldY(), place.getPlane());
 			final ParticleEmitter emitter = createEmitterFromDefinition(def, wp);
 			emitter.particleId(def.id);
+			particleSystem.addEmitter(emitter);
+			definitionEmitters.add(emitter);
+		}
 
+		// Weather: random point within area, height offset 1700, pitch 1024 (down)
+		final float weatherHeightOffset = 1700f;
+		final float weatherPitch = 1024 * UNITS_TO_RAD;
+		for (EmitterPlacement place : weatherPlacements) {
+			if (place.getParticleId() == null) continue;
+			final String pid = place.getParticleId().toUpperCase();
+			final ParticleDefinition def = definitions.get(pid);
+			if (def == null) continue;
+			final WorldPoint wp = new WorldPoint(place.getWorldX(), place.getWorldY(), place.getPlane());
+			final ParticleEmitter emitter = createEmitterFromDefinition(def, wp);
+			emitter.particleId(def.id);
+			emitter.setHeightOffset(weatherHeightOffset);
+			emitter.setDirectionPitch(weatherPitch);
+			emitter.setAlphaScale(place.getEdgeFadeFactor());
 			particleSystem.addEmitter(emitter);
 			definitionEmitters.add(emitter);
 		}

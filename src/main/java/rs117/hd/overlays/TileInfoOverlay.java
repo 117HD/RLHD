@@ -992,6 +992,37 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return getCanvasTilePoly(client, ctx, l.getX(), l.getY(), tile.getPlane());
 	}
 
+	/**
+	 * Draws a filled rectangle for a world AABB. Uses same projection as tile outlines (localToCanvas).
+	 * Call for weather area debug overlay.
+	 */
+	public void drawFilledWorldAabb(Graphics2D g, SceneContext ctx, AABB worldAabb, int plane, Color fillColor) {
+		if (ctx == null || ctx.sceneBase == null || !ctx.intersects(worldAabb))
+			return;
+		int x1 = (worldAabb.minX - ctx.sceneBase[0]) * LOCAL_TILE_SIZE;
+		int y1 = (worldAabb.minY - ctx.sceneBase[1]) * LOCAL_TILE_SIZE;
+		int x2 = (worldAabb.maxX + 1 - ctx.sceneBase[0]) * LOCAL_TILE_SIZE;
+		int y2 = (worldAabb.maxY + 1 - ctx.sceneBase[1]) * LOCAL_TILE_SIZE;
+		int[][] corners = {{x1, y1}, {x2, y1}, {x2, y2}, {x1, y2}};
+		int[] polyX = new int[4];
+		int[] polyY = new int[4];
+		int valid = 0;
+		for (int i = 0; i < 4; i++) {
+			int z = getHeight(ctx, corners[i][0], corners[i][1], plane);
+			float[] p = localToCanvas(client, corners[i][0], corners[i][1], z);
+			if (p != null) {
+				polyX[valid] = round(p[0]);
+				polyY[valid] = round(p[1]);
+				valid++;
+			}
+		}
+		if (valid >= 3) {
+			setAntiAliasing(g, true);
+			g.setColor(fillColor);
+			g.fillPolygon(polyX, polyY, valid);
+		}
+	}
+
 	public Polygon getCanvasTilePoly(@Nonnull Client client, SceneContext ctx, int... sceneXYplane) {
 		final int wx = sceneXYplane[0] * LOCAL_TILE_SIZE;
 		final int sy = sceneXYplane[1] * LOCAL_TILE_SIZE;

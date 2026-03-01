@@ -7,6 +7,7 @@ package rs117.hd.scene.particles.core;
 import static net.runelite.api.Constants.EXTENDED_SCENE_SIZE;
 import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
 
+import java.util.concurrent.ThreadLocalRandom;
 import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
 import rs117.hd.scene.particles.definition.ParticleDefinition;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
@@ -81,7 +82,7 @@ public final class MovingParticle {
 			int dist = (int) Math.sqrt((double) (dx * dx + dy * dy + dz * dz)) >> 2;
 			long falloff = (long) (config.physics.distanceFalloffStrength * dist * tickDelta);
 			buf.speedRef[i] -= (long) buf.speedRef[i] * falloff >> 18;
-		} else if (config != null && config.physics.distanceFalloffType == 2) {
+		} else 		if (config != null && config.physics.distanceFalloffType == 2) {
 			int dx = posX - (int) buf.emitterOriginX[i];
 			int dy = posY - (int) buf.emitterOriginY[i];
 			int dz = posZ - (int) buf.emitterOriginZ[i];
@@ -90,6 +91,10 @@ public final class MovingParticle {
 			buf.speedRef[i] -= (long) buf.speedRef[i] * falloff >> 28;
 		}
 
+		if (config != null && config.general.randomYawRotation > 0f) {
+			float maxDelta = config.general.randomYawRotation * (tickDelta / 50f);
+			buf.yaw[i] += (ThreadLocalRandom.current().nextFloat() * 2f - 1f) * maxDelta;
+		}
 
 		buf.xFixed[i] += ((long) buf.velocityX[i] * (long) (buf.speedRef[i] << 2) >> 23) * (long) tickDelta;
 		buf.yFixed[i] += ((long) buf.velocityY[i] * (long) (buf.speedRef[i] << 2) >> 23) * (long) tickDelta;

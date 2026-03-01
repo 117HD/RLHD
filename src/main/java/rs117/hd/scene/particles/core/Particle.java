@@ -46,12 +46,16 @@ public class Particle {
 
 	public int flipbookRandomFrame = -1;
 
+	/** Current yaw rotation (radians) for billboard. Used when randomYawRotation enabled. */
+	public float yaw;
+
 	/** Pool slot index; used by ParticlePool for bookkeeping. */
 	public int poolIndex;
 
 	public void resetForPool() {
 		emitter = null;
 		flipbookRandomFrame = -1;
+		yaw = 0f;
 		colourIncrementPerSecond = null;
 		scaleIncrementPerSecond = 0f;
 		speedIncrementPerSecond = 0f;
