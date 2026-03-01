@@ -83,19 +83,9 @@ public class GLVao {
 		ensureBuilt();
 
 		final GLBuffer eboBuffer = buffers[GLVertexLayout.ArrayField.ELEMENT_BUFFER.ordinal()];
-		if(eboBuffer != null && glBoundEBO != eboBuffer.id) {
-			// Element buffer id has changed, rebind it to the VAO State
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glBoundEBO = eboBuffer.id);
-
-			// Rebind the VAO State, so that its safe to unbind the EBO without clearing it off the state
-			glBindVertexArray(0);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			glBindVertexArray(glVAO);
-		} else if(glBoundEBO != 0) {
-			// Element buffer was previously bound, but is now null clear it off the VAO State
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			glBoundEBO = 0;
-		}
+		final int newEboValue = eboBuffer != null ? eboBuffer.id : 0;
+		if(glBoundEBO != newEboValue)
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glBoundEBO = newEboValue);
 	}
 
 	private void ensureBuilt() {
@@ -103,6 +93,7 @@ public class GLVao {
 			return;
 
 		GLVertexLayout.Attribute[] attributes = layout.getAttributes();
+		int prevBufferId = 0;
 		for(int i = 0; i < attributes.length; i++) {
 			final GLVertexLayout.Attribute attrib = attributes[i];
 			if(!attrib.isEnabled) {
@@ -111,17 +102,20 @@ public class GLVao {
 			}
 
 			final GLBuffer arrayBuffer = buffers[i + 1];
+			final int arrayBufferId = arrayBuffer != null ? arrayBuffer.id : 0;
 			if(arrayBuffer == null) {
 				log.warn(
 					"ArrayField: {} is enabled but no buffer is associated, expect erroneous behaviour",
 					GLVertexLayout.ARRAY_FIELD_NAMES[i + 1]
 				);
-			} else {
-				glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer.id);
+			}
+
+			if(prevBufferId != arrayBufferId) {
+				glBindBuffer(GL_ARRAY_BUFFER, arrayBufferId);
+				prevBufferId = arrayBufferId;
 			}
 
 			glEnableVertexAttribArray(i);
-
 			if(attrib.divisor > 0)
 				glVertexAttribDivisor(i, attrib.divisor);
 
@@ -131,9 +125,12 @@ public class GLVao {
 			} else {
 				glVertexAttribPointer(i, attrib.component.size, attrib.format.glFormatType, attrib.isNormalized, attrib.stride, attrib.offset);
 			}
-
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glBindVertexArray(glVAO);
 
 		checkGLErrors(() -> "Building VAO: " + name + " with layout: " + layout);
 		layoutVersion = layout.getVersion();
@@ -143,6 +140,8 @@ public class GLVao {
 		if(previousVao != null && previousVao != this)
 			log.warn("Unbinding VAO: {} when it was bound by: {}", name, previousVao.name);
 		glBindVertexArray(0);
+		if(glBoundEBO != 0)
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glBoundEBO);
 		previousVao = null;
 	}
 

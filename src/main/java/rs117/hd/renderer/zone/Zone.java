@@ -67,10 +67,10 @@ public class Zone {
 		.edit(ArrayField.VERTEX_FIELD_0).enabled().component(ComponentType.RGB).format(FormatType.SHORT).stride(VERT_SIZE).offset(0)
 		.edit(ArrayField.VERTEX_FIELD_1).enabled().component(ComponentType.RGB).format(FormatType.HALF_FLOAT).stride(VERT_SIZE).offset(6)
 		.edit(ArrayField.VERTEX_FIELD_2).enabled().component(ComponentType.RGB).format(FormatType.SHORT).stride(VERT_SIZE).offset(12)
-		.edit(ArrayField.VERTEX_FIELD_3).enabled().asInteger().component(ComponentType.R).format(FormatType.INT).stride(VERT_SIZE).offset(20)
+		.edit(ArrayField.VERTEX_FIELD_3).enabled().component(ComponentType.R).format(FormatType.INT).stride(VERT_SIZE).offset(20).asInteger()
 		// Meta Data
-		.edit(ArrayField.VERTEX_FIELD_6).enabled().asInteger().divisor(1).component(ComponentType.R).format(FormatType.INT).stride(METADATA_SIZE).offset(0)
-		.edit(ArrayField.VERTEX_FIELD_7).enabled().asInteger().divisor(1).component(ComponentType.R).format(FormatType.INT).stride(METADATA_SIZE).offset(4)
+		.edit(ArrayField.VERTEX_FIELD_6).enabled().component(ComponentType.R).format(FormatType.INT).stride(METADATA_SIZE).offset(0).asInteger().divisor(1)
+		.edit(ArrayField.VERTEX_FIELD_7).enabled().component(ComponentType.R).format(FormatType.INT).stride(METADATA_SIZE).offset(4).asInteger().divisor(1)
 		.finish();
 
 	public static final int LEVEL_WATER_SURFACE = 4;

@@ -704,6 +704,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.depthTest.set(true);
 		renderState.cullFace.set(false);
 		renderState.depthFunc.set(GL_LEQUAL);
+		renderState.program.set(sceneProgram);
 
 		CommandBuffer.SKIP_DEPTH_MASKING = true;
 		directionalCmd.execute();
@@ -713,8 +714,6 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void scenePass() {
-		sceneProgram.use();
-
 		frameTimer.begin(Timer.DRAW_SCENE);
 		renderState.setDefaults();
 		renderState.drawFramebuffer.set(plugin.fboScene);
@@ -745,6 +744,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		renderState.ido.set(indirectDrawCmds);
+		renderState.program.set(sceneProgram);
 		renderState.apply();
 
 		// Render the scene
