@@ -1032,6 +1032,7 @@ public class HdPlugin extends Plugin {
 			quadVao = new GLVao("FullscreenQuad::VAO", FULLSCREEN_VERTEX_LAYOUT);
 			quadVao.setBufferRange(
 				new GLBuffer("FullscreenQuad::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW)
+					.initialize()
 					.upload(
 						stack.mallocFloat(16)
 							.put(new float[] {
@@ -1046,6 +1047,7 @@ public class HdPlugin extends Plugin {
 			triVao = new GLVao("FullscreenQuad::VAO", FULLSCREEN_VERTEX_LAYOUT);
 			triVao.setBufferRange(
 				new GLBuffer("FullscreenQuad::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW)
+					.initialize()
 					.upload(
 						stack.mallocFloat(16)
 							.put(new float[] {
@@ -1982,6 +1984,8 @@ public class HdPlugin extends Plugin {
 		glActiveTexture(unit);
 		glBindTexture(target, textureId);
 		glActiveTexture(TEXTURE_UNIT_UNUSED);
+
+		checkGLErrors();
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")
