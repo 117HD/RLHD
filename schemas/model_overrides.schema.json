@@ -111,7 +111,11 @@
       },
       "hide": {
         "type": "boolean",
-        "description": "Whether any model this override applies to should be hidden. Defaults to false."
+        "description": "Whether models this override applies to should be hidden. Defaults to false."
+      },
+      "disableDetailCulling": {
+        "type": "boolean",
+        "description": "Whether the model should render regardless of the detail distance setting. Defaults to false."
       },
       "retainVanillaUvs": {
         "type": "boolean",
@@ -161,6 +165,10 @@
         "type": "boolean",
         "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
       },
+      "hideAsWaterEffect": {
+        "type": "boolean",
+        "description": "Whether the model should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
+      },
       "shadowOpacityThreshold": {
         "type": "number",
         "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
@@ -205,6 +213,10 @@
       "depthBias": {
         "type": "integer",
         "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
+      },
+      "disablePrioritySorting": {
+        "type": "boolean",
+        "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
       },
       "materialOverrides": {
         "type": "object",
@@ -263,6 +275,10 @@
               "type": "integer",
               "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
             },
+            "hide": {
+              "type": "boolean",
+              "description": "Whether faces this override applies to should be hidden. Defaults to false."
+            },
             "retainVanillaUvs": {
               "type": "boolean",
               "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
@@ -295,6 +311,10 @@
               "type": "boolean",
               "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
             },
+            "hideAsWaterEffect": {
+              "type": "boolean",
+              "description": "Whether the faces should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
+            },
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
@@ -322,6 +342,10 @@
             "depthBias": {
               "type": "integer",
               "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
+            },
+            "disablePrioritySorting": {
+              "type": "boolean",
+              "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
             }
           }
         }
@@ -390,6 +414,10 @@
               "type": "integer",
               "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
             },
+            "hide": {
+              "type": "boolean",
+              "description": "Whether faces this override applies to should be hidden. Defaults to false."
+            },
             "retainVanillaUvs": {
               "type": "boolean",
               "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
@@ -422,6 +450,10 @@
               "type": "boolean",
               "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
             },
+            "hideAsWaterEffect": {
+              "type": "boolean",
+              "description": "Whether the faces should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
+            },
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
@@ -449,6 +481,10 @@
             "depthBias": {
               "type": "integer",
               "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
+            },
+            "disablePrioritySorting": {
+              "type": "boolean",
+              "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
             }
           }
         }

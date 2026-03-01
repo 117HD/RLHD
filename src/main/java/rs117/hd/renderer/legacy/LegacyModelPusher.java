@@ -192,7 +192,7 @@ public class LegacyModelPusher {
 
 		boolean skipUVs =
 			!isVanillaTextured &&
-			baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false, false) == 0 &&
+			baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false) == 0 &&
 			modelOverride.colorOverrides == null;
 
 		// ensure capacity upfront
@@ -346,13 +346,16 @@ public class LegacyModelPusher {
 					}
 				}
 
+				if (faceOverride.hide)
+					continue;
+
 				if (material != Material.NONE) {
 					uvType = faceOverride.uvType;
 					if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
 						uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 				}
 
-				int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
+				int materialData = material.packMaterialData(faceOverride, uvType, false);
 
 				final float[] uvData = sceneContext.modelFaceUvs;
 				if (materialData == 0) {
@@ -585,7 +588,6 @@ public class LegacyModelPusher {
 
 				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
 					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
-						uuid,
 						modelOverride,
 						model,
 						face,
@@ -596,7 +598,6 @@ public class LegacyModelPusher {
 					color1 = tzHaarRecolored[0];
 					color2 = tzHaarRecolored[1];
 					color3 = tzHaarRecolored[2];
-					packedAlphaPriorityFlags |= tzHaarRecolored[3] << 24;
 				}
 			}
 		}

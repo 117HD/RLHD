@@ -56,11 +56,53 @@ public final class MathUtils {
 		return vec;
 	}
 
+	public static int[] ivec2(int[] out, int x, int y) {
+		out[0] = x;
+		out[1] = y;
+		return out;
+	}
+
+	public static int[] ivec3(int[] out, int x, int y, int z) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		return out;
+	}
+
+	public static int[] ivec4(int[] out, int x, int y, int z, int w) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		out[3] = w;
+		return out;
+	}
+
 	public static int[] ivec(float... vec) {
 		int[] ivec = new int[vec.length];
 		for (int i = 0; i < vec.length; i++)
 			ivec[i] = (int) vec[i];
 		return ivec;
+	}
+
+	public static float[] vec2(float[] out, float x, float y) {
+		out[0] = x;
+		out[1] = y;
+		return out;
+	}
+
+	public static float[] vec3(float[] out, float x, float y, float z) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		return out;
+	}
+
+	public static float[] vec4(float[] out, float x, float y, float z, float w) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		out[3] = w;
+		return out;
 	}
 
 	public static float[] copy(float[] v) {
@@ -204,7 +246,7 @@ public final class MathUtils {
 	 * Modulo which returns the answer with the same sign as the modulus.
 	 */
 	public static int mod(int v, int mod) {
-		return v - (v / mod) * mod;
+		return Math.floorMod(v, mod);
 	}
 
 	/**
@@ -258,6 +300,14 @@ public final class MathUtils {
 		return pow2(new float[v.length], v);
 	}
 
+	public static long pow10(int power) {
+		assert power >= 0;
+		long n = 1;
+		for (int i = 0; i < power; i++)
+			n *= 10;
+		return n;
+	}
+
 	public static float exp(float v) {
 		return (float) Math.exp(v);
 	}
@@ -298,6 +348,24 @@ public final class MathUtils {
 
 	public static float[] log2(float... v) {
 		return log2(new float[v.length], v);
+	}
+
+	public static float rcp(float v) {
+		return 1.0f / v;
+	}
+
+	public static float square(float v) {
+		return v * v;
+	}
+
+	public static float[] square(float[] out, float... v) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = square(v[i % v.length]);
+		return out;
+	}
+
+	public static float[] square(float... v) {
+		return square(new float[v.length], v);
 	}
 
 	public static float sqrt(float v) {
@@ -498,12 +566,49 @@ public final class MathUtils {
 		return roundf(new float[v.length], v);
 	}
 
+	public static double round(int numDecimals, double v) {
+		double n = pow10(numDecimals);
+		return (double) Math.round(v * n) / n;
+	}
+
+	public static double[] round(double[] out, int numDecimals, double... v) {
+		double n = pow10(numDecimals);
+		double divisor = 1.0 / n;
+		for (int i = 0; i < out.length; i++)
+			out[i] = Math.round(v[i % v.length] * n) * divisor;
+		return out;
+	}
+
+	public static double[] round(int numDecimals, double... v) {
+		return round(new double[v.length], numDecimals, v);
+	}
+
+	public static float round(int numDecimals, float v) {
+		return (float) round(numDecimals, (double) v);
+	}
+
+	public static float[] round(float[] out, int numDecimals, float... v) {
+		double n = pow10(numDecimals);
+		double divisor = 1.0 / n;
+		for (int i = 0; i < out.length; i++)
+			out[i] = (float) (Math.round(v[i % v.length] * n) * divisor);
+		return out;
+	}
+
+	public static float[] round(int numDecimals, float... v) {
+		return round(new float[v.length], numDecimals, v);
+	}
+
 	public static float min(float a, float b) {
 		return Math.min(a, b);
 	}
 
 	public static int min(int a, int b) {
 		return Math.min(a, b);
+	}
+
+	public static char min(char a, char b) {
+		return (char) Math.min(a, b);
 	}
 
 	public static long min(long a, long b) {
@@ -552,6 +657,10 @@ public final class MathUtils {
 
 	public static int max(int a, int b) {
 		return Math.max(a, b);
+	}
+
+	public static char max(char a, char b) {
+		return (char) Math.max(a, b);
 	}
 
 	public static long max(long a, long b) {

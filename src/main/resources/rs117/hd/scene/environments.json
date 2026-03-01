@@ -654,6 +654,16 @@
     "fogDepth": 80
   },
   {
+    "area": "SMOKE_DEVIL_DUNGEON",
+    "fogColor": "#0A0A0A",
+    "directionalStrength": 0.5,
+    "sunAngles": [
+      80,
+      190
+    ],
+    "fogDepth": 30
+  },
+  {
     "area": "KHARIDIAN_DESERT_DEEP",
     "ambientColor": "#c0ae94",
     "ambientStrength": 3,
@@ -765,15 +775,6 @@
     "fogDepth": 50
   },
   {
-    "area": "GIELINOR_SNOWY_NORTHERN_REGION",
-    "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.5,
-    "directionalColor": "#f4e5c9",
-    "directionalStrength": 2.5,
-    "fogColor": "#aebde0",
-    "fogDepth": 50
-  },
-  {
     "area": "RELLEKKA_HUNTER_REGION",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1,
@@ -787,7 +788,16 @@
     "ambientColor": "#6fb0ff",
     "ambientStrength": 0.75,
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 1,
+    "directionalStrength": 1.75,
+    "fogColor": "#aebde0",
+    "fogDepth": 50
+  },
+  {
+    "area": "GIELINOR_SNOWY_NORTHERN_REGION",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.5,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2.5,
     "fogColor": "#aebde0",
     "fogDepth": 50
   },
@@ -837,6 +847,15 @@
     "groundFogOpacity": 0.3,
     "windSpeed": 17.5,
     "windStrength": 60
+  },
+  {
+    "area": "RELLEKKA_COLD_WATER",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 15
   },
   {
     "area": "FREMENNIK_ISLES_MIDDLE",
@@ -1748,10 +1767,10 @@
     "area": "POISON_WASTE_DUNGEON",
     "ambientColor": "#aaafb6",
     "ambientStrength": 1.5,
-    "directionalStrength": 1,
+    "directionalStrength": 0.75,
     "sunAngles": [
       80,
-      190
+      175
     ],
     "fogDepth": 40
   },
@@ -2113,13 +2132,17 @@
     "windSpeed": 8.5
   },
   {
-    "area": "XMAS_2025_ENVIRONMENT",
+    "area": "GRIMSTONE",
     "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.2,
+    "ambientStrength": 0.75,
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 2,
+    "directionalStrength": 1,
     "fogColor": "#aebde0",
-    "fogDepth": 25
+    "fogDepth": 50
+  },
+  {
+    "area": "GRIMSTONE_DUNGEON",
+    "waterColor": "#6D8AA8"
   },
   {
     "key": "OVERWORLD",
