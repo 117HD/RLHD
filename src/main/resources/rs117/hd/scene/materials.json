@@ -1141,11 +1141,11 @@
     "specularGloss": 80.0
   },
   {
-    "name": "SMOOTH_SNOW_N"
+    "name": "SMOOTH_SNOW_ND"
   },
   {
     "name": "SMOOTH_SNOW",
-    "normalMap": "SMOOTH_SNOW_N",
+    "normalAndDisplacementMap": "SMOOTH_SNOW_ND",
     "specularStrength": 0.4,
     "specularGloss": 20.0
   },
@@ -1166,7 +1166,7 @@
   },
   {
     "name": "SMOOTH_SNOW_COLORED",
-    "normalMap": "SMOOTH_SNOW_N",
+    "normalAndDisplacementMap": "SMOOTH_SNOW_ND",
     "overrideBaseColor": true,
     "specularStrength": 0.4,
     "specularGloss": 20.0
@@ -1178,29 +1178,29 @@
     "specularGloss": 120.0
   },
   {
-    "name": "SNOW_1_N"
+    "name": "SNOW_1_ND"
   },
   {
     "name": "SNOW_1",
-    "normalMap": "SNOW_1_N",
+    "normalAndDisplacementMap": "SNOW_1_ND",
     "specularStrength": 0.4,
     "specularGloss": 20.0
   },
   {
-    "name": "SNOW_2_N"
+    "name": "SNOW_2_ND"
   },
   {
     "name": "SNOW_2",
-    "normalMap": "SNOW_2_N",
+    "normalAndDisplacementMap": "SNOW_2_ND",
     "specularStrength": 0.4,
     "specularGloss": 20.0
   },
   {
-    "name": "SNOW_3_N"
+    "name": "SNOW_3_ND"
   },
   {
     "name": "SNOW_3",
-    "normalMap": "SNOW_3_N",
+    "normalAndDisplacementMap": "SNOW_3_ND",
     "specularStrength": 0.4,
     "specularGloss": 20.0
   },
@@ -1236,11 +1236,11 @@
     "overrideBaseColor": true
   },
   {
-    "name": "DIRT_1_N"
+    "name": "DIRT_1_ND"
   },
   {
     "name": "DIRT_1",
-    "normalMap": "DIRT_1_N",
+    "normalAndDisplacementMap": "DIRT_1_ND",
     "specularStrength": 0.13,
     "specularGloss": 18.0
   },
@@ -1267,21 +1267,21 @@
   {
     "name": "DIRT_1_VERT",
     "parent": "DIRT_1",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
-    "name": "DIRT_2_N"
+    "name": "DIRT_2_ND"
   },
   {
     "name": "DIRT_2",
-    "normalMap": "DIRT_2_N",
+    "normalAndDisplacementMap": "DIRT_2_ND",
     "specularStrength": 0.13,
     "specularGloss": 18.0
   },
   {
     "name": "DIRT_2_VERT",
     "parent": "DIRT_2",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
     "name": "DIRT_2_LIGHT",
@@ -1299,18 +1299,18 @@
     "brightness": 0.85
   },
   {
-    "name": "GRAVEL_N"
+    "name": "GRAVEL_ND"
   },
   {
     "name": "GRAVEL",
-    "normalMap": "GRAVEL_N",
+    "normalAndDisplacementMap": "GRAVEL_ND",
     "specularStrength": 0.4,
     "specularGloss": 130.0
   },
   {
     "name": "VERTICAL_GRAVEL",
     "parent": "GRAVEL",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
     "name": "GRAVEL_SEMI_LIGHT",
@@ -1348,11 +1348,11 @@
     "specularGloss": 380.0
   },
   {
-    "name": "MUD_1_N"
+    "name": "MUD_1_ND"
   },
   {
     "name": "MUD_1",
-    "normalMap": "MUD_1_N",
+    "normalAndDisplacementMap": "MUD_1_ND",
     "specularStrength": 0.5,
     "specularGloss": 25.0
   },
@@ -1362,48 +1362,49 @@
     "brightness": 0.931
   },
   {
-    "name": "SAND_1_N"
+    "name": "SAND_1_ND"
   },
   {
     "name": "SAND_1",
-    "normalMap": "SAND_1_N",
+    "normalAndDisplacementMap": "SAND_1_ND",
     "specularStrength": 0.2,
     "specularGloss": 10.0
   },
   {
-    "name": "SAND_2_N"
+    "name": "SAND_2_ND"
   },
   {
     "name": "SAND_2",
-    "normalMap": "SAND_2_N",
+    "normalAndDisplacementMap": "SAND_2_ND",
     "specularStrength": 0.2,
     "specularGloss": 10.0
   },
   {
-    "name": "SAND_3_N"
+    "name": "SAND_3_ND"
   },
   {
     "name": "SAND_3",
-    "normalMap": "SAND_3_N",
+    "normalAndDisplacementMap": "SAND_3_ND",
     "specularStrength": 0.2,
     "specularGloss": 10.0
   },
   {
-    "name": "SAND_4_N"
+    "name": "SAND_4_ND"
   },
   {
     "name": "SAND_4",
-    "normalMap": "SAND_4_N",
+    "normalAndDisplacementMap": "SAND_4_ND",
+    "displacementScale": 0,
     "specularStrength": 0.2,
     "specularGloss": 10.0,
     "textureScale": [ 1, 1, 0.65 ]
   },
   {
-    "name": "GRUNGE_1_N"
+    "name": "GRUNGE_1_ND"
   },
   {
     "name": "GRUNGE_1",
-    "normalMap": "GRUNGE_1_N",
+    "normalAndDisplacementMap": "GRUNGE_1_ND",
     "specularStrength": 0.25,
     "specularGloss": 30.0
   },
@@ -1441,11 +1442,11 @@
     "specularGloss": 300.0
   },
   {
-    "name": "GRUNGE_2_N"
+    "name": "GRUNGE_2_ND"
   },
   {
     "name": "GRUNGE_2",
-    "normalMap": "GRUNGE_2_N",
+    "normalAndDisplacementMap": "GRUNGE_2_ND",
     "specularStrength": 0.25,
     "specularGloss": 20.0
   },
@@ -1472,23 +1473,23 @@
     ]
   },
   {
-    "name": "GRUNGE_3_N"
+    "name": "GRUNGE_3_ND"
   },
   {
     "name": "GRUNGE_3",
-    "normalMap": "GRUNGE_3_N",
+    "normalAndDisplacementMap": "GRUNGE_3_ND",
     "specularStrength": 0.25,
     "specularGloss": 30.0
   },
   {
     "name": "GRUNGE_3_SMOOTH",
     "parent": "GRUNGE_3",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
     "name": "GRUNGE_3_SMOOTH_LIGHT",
     "parent": "GRUNGE_3_LIGHT",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
     "name": "GRUNGE_3_GLOSS",
@@ -1555,7 +1556,7 @@
     "flowMapStrength": 0.5,
     "brightness": 0.85,
     "specularGloss": 2,
-    "normalMap": "METALLIC_2_N",
+    "normalAndDisplacementMap": "METALLIC_2_ND",
     "flowMapDuration": [
       35.0,
       -35.0
@@ -1622,16 +1623,16 @@
   {
     "name": "GRUNGE_3_DULL",
     "parent": "GRUNGE_3",
-    "normalMap": null,
+    "normalAndDisplacementMap": null,
     "specularStrength": 0.0,
     "specularGloss": 0.0
   },
   {
-    "name": "ROCK_1_N"
+    "name": "ROCK_1_ND"
   },
   {
     "name": "ROCK_1",
-    "normalMap": "ROCK_1_N",
+    "normalAndDisplacementMap": "ROCK_1_ND",
     "specularStrength": 0.35,
     "specularGloss": 40.0
   },
@@ -1643,14 +1644,14 @@
   {
     "name": "ROCK_1_LIGHT_SMOOTH",
     "parent": "ROCK_1_LIGHT",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
-    "name": "ROCK_2_N"
+    "name": "ROCK_2_ND"
   },
   {
     "name": "ROCK_2",
-    "normalMap": "ROCK_2_N",
+    "normalAndDisplacementMap": "ROCK_2_ND",
     "brightness": 1.083,
     "specularStrength": 0.35,
     "specularGloss": 60.0
@@ -1661,15 +1662,11 @@
     "brightness": 1.2
   },
   {
-    "name": "ROCK_3_D"
-  },
-  {
-    "name": "ROCK_3_N"
+    "name": "ROCK_3_ND"
   },
   {
     "name": "ROCK_3",
-    "normalMap": "ROCK_3_N",
-    "displacementMap": "ROCK_3_D",
+    "normalAndDisplacementMap": "ROCK_3_ND",
     "brightness": 1.083,
     "displacementScale": 0.15,
     "specularStrength": 0.4,
@@ -1693,7 +1690,6 @@
   {
     "name": "ROCK_3_VERY_LIGHT_SMOOTH",
     "parent": "ROCK_3",
-    "displacementMap": null,
     "textureScale": [
       1,
       1,
@@ -1704,8 +1700,7 @@
   {
     "name": "ROCK_3_SMOOTH",
     "parent": "ROCK_3",
-    "displacementMap": null,
-    "displacementScale": 0.0,
+    "displacementScale": 0,
     "specularStrength": 0.3,
     "specularGloss": 40.0,
     "textureScale": [
@@ -1717,8 +1712,7 @@
   {
     "name": "ROCK_3_SEMI_SMOOTH",
     "parent": "ROCK_3",
-    "displacementMap": null,
-    "displacementScale": 0.0,
+    "displacementScale": 0,
     "specularStrength": 0.3,
     "specularGloss": 40.0,
     "textureScale": [
@@ -1735,8 +1729,7 @@
   {
     "name": "ROCK_3_SEMI_SMOOTH_LIGHT",
     "parent": "ROCK_3_LIGHT",
-    "displacementMap": null,
-    "displacementScale": 0.0,
+    "displacementScale": 0,
     "specularStrength": 0.3,
     "specularGloss": 40.0,
     "textureScale": [
@@ -1765,15 +1758,11 @@
     "parent": "ROCK_3"
   },
   {
-    "name": "ROCK_4_D"
-  },
-  {
-    "name": "ROCK_4_N"
+    "name": "ROCK_4_ND"
   },
   {
     "name": "ROCK_4",
-    "normalMap": "ROCK_4_N",
-    "displacementMap": "ROCK_4_D",
+    "normalAndDisplacementMap": "ROCK_4_ND",
     "brightness": 1.083,
     "displacementScale": 0.12,
     "specularStrength": 0.4,
@@ -1796,15 +1785,11 @@
     "specularStrength": 1.0
   },
   {
-    "name": "ROCK_5_D"
-  },
-  {
-    "name": "ROCK_5_N"
+    "name": "ROCK_5_ND"
   },
   {
     "name": "ROCK_5",
-    "normalMap": "ROCK_5_N",
-    "displacementMap": "ROCK_5_D",
+    "normalAndDisplacementMap": "ROCK_5_ND",
     "brightness": 1.083,
     "displacementScale": 0.12,
     "specularStrength": 0.4,
@@ -1827,11 +1812,11 @@
     "specularStrength": 1.0
   },
   {
-    "name": "ROCK_6_N"
+    "name": "ROCK_6_ND"
   },
   {
     "name": "ROCK_6",
-    "normalMap": "ROCK_6_N"
+    "normalAndDisplacementMap": "ROCK_6_ND"
   },
   {
     "name": "ROCK_6_DARK",
@@ -1862,11 +1847,11 @@
     "brightness": 0.75
   },
   {
-    "name": "CARPET_N"
+    "name": "CARPET_ND"
   },
   {
     "name": "CARPET",
-    "normalMap": "CARPET_N",
+    "normalAndDisplacementMap": "CARPET_ND",
     "specularStrength": 0.25,
     "specularGloss": 30.0
   },
@@ -1888,17 +1873,17 @@
   {
     "name": "CARPET_LIGHT_SMOOTH",
     "parent": "CARPET_LIGHT",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
     "name": "CARPET_VERY_LIGHT_SMOOTH",
     "parent": "CARPET_VERY_LIGHT",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
     "name": "CARPET_SUPER_LIGHT_SMOOTH",
     "parent": "CARPET_SUPER_LIGHT",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
     "name": "CARPET_SEMI_DARK",
@@ -1919,38 +1904,30 @@
     "brightness": 1.1
   },
   {
-    "name": "FALADOR_PATH_BRICK_N"
-  },
-  {
-    "name": "FALADOR_PATH_BRICK_D"
+    "name": "FALADOR_PATH_BRICK_ND"
   },
   {
     "name": "FALADOR_PATH_BRICK",
-    "normalMap": "FALADOR_PATH_BRICK_N",
-    "displacementMap": "FALADOR_PATH_BRICK_D",
+    "normalAndDisplacementMap": "FALADOR_PATH_BRICK_ND",
     "displacementScale": 0.06,
     "specularStrength": 0.25,
     "specularGloss": 30.0
   },
   {
-    "name": "BRICK_PATH_N"
+    "name": "BRICK_PATH_ND"
   },
   {
     "name": "BRICK_PATH",
-    "normalMap": "BRICK_PATH_N",
+    "normalAndDisplacementMap": "BRICK_PATH_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0
   },
   {
-    "name": "JAGGED_STONE_TILE_D"
-  },
-  {
-    "name": "JAGGED_STONE_TILE_N"
+    "name": "JAGGED_STONE_TILE_ND"
   },
   {
     "name": "JAGGED_STONE_TILE",
-    "normalMap": "JAGGED_STONE_TILE_N",
-    "displacementMap": "JAGGED_STONE_TILE_D",
+    "normalAndDisplacementMap": "JAGGED_STONE_TILE_ND",
     "displacementScale": 0.05,
     "specularStrength": 0.5,
     "specularGloss": 30.0
@@ -1971,11 +1948,11 @@
     "specularGloss": 70.0
   },
   {
-    "name": "TILES_2X2_1_N"
+    "name": "TILES_2X2_1_ND"
   },
   {
     "name": "TILES_2X2_1",
-    "normalMap": "TILES_2X2_1_N"
+    "normalAndDisplacementMap": "TILES_2X2_1_ND"
   },
   {
     "name": "TILES_2X2_1_GLOSS",
@@ -1990,11 +1967,11 @@
     "specularGloss": 300.0
   },
   {
-    "name": "TILES_2X2_2_N"
+    "name": "TILES_2X2_2_ND"
   },
   {
     "name": "TILES_2X2_2",
-    "normalMap": "TILES_2X2_2_N",
+    "normalAndDisplacementMap": "TILES_2X2_2_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0
   },
@@ -2020,11 +1997,11 @@
     "name": "MARBLE_3"
   },
   {
-    "name": "MARBLE_4_N"
+    "name": "MARBLE_4_ND"
   },
   {
     "name": "MARBLE_4",
-    "normalMap": "MARBLE_4_N",
+    "normalAndDisplacementMap": "MARBLE_4_ND",
     "materialsToReplace": [
       "MARBLE_DARK"
     ],
@@ -2099,7 +2076,7 @@
   },
   {
     "name": "MARBLE_4_LOW_CONTRAST",
-    "normalMap": "MARBLE_4_N"
+    "normalAndDisplacementMap": "MARBLE_4_ND"
   },
   {
     "name": "MARBLE_4_LOW_CONTRAST_GLOSS",
@@ -2118,16 +2095,12 @@
     "brightness": 2
   },
   {
-    "name": "LASSAR_UNDERCITY_TILE_N"
-  },
-  {
-    "name": "LASSAR_UNDERCITY_TILE_D"
+    "name": "LASSAR_UNDERCITY_TILE_ND"
   },
   {
     "name": "LASSAR_UNDERCITY_TILES",
     "parent": "MARBLE_2_SEMIGLOSS",
-    "normalMap": "LASSAR_UNDERCITY_TILE_N",
-    "displacementMap": "LASSAR_UNDERCITY_TILE_D",
+    "normalAndDisplacementMap": "LASSAR_UNDERCITY_TILE_ND",
     "displacementScale": 0.015
   },
   {
@@ -2146,16 +2119,14 @@
   {
     "name": "CAM_TORUM_TILES",
     "parent": "SMOOTH_STONE",
-    "normalMap": "LASSAR_UNDERCITY_TILE_N",
-    "displacementMap": "LASSAR_UNDERCITY_TILE_D",
+    "normalAndDisplacementMap": "LASSAR_UNDERCITY_TILE_ND",
     "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
     "displacementScale": 0.025
   },
   {
     "name": "DARKMEYER_BRICK_PATH",
     "parent": "MARBLE_2",
-    "normalMap": "LASSAR_UNDERCITY_TILE_N",
-    "displacementMap": "LASSAR_UNDERCITY_TILE_D",
+    "normalAndDisplacementMap": "LASSAR_UNDERCITY_TILE_ND",
     "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
     "displacementScale": 0.025,
     "textureScale": [
@@ -2218,11 +2189,11 @@
     ]
   },
   {
-    "name": "BARK_N"
+    "name": "BARK_ND"
   },
   {
     "name": "BARK",
-    "normalMap": "BARK_N",
+    "normalAndDisplacementMap": "BARK_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0
   },
@@ -2251,17 +2222,17 @@
     "brightness": 1.553
   },
   {
-    "name": "BARK_STONEPINE_N"
+    "name": "BARK_STONEPINE_ND"
   },
   {
     "name": "BARK_STONEPINE",
-    "normalMap": "BARK_STONEPINE_N",
+    "normalAndDisplacementMap": "BARK_STONEPINE_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0
   },
   {
     "name": "BARK_STONEPINE_2",
-    "normalMap": "BARK_STONEPINE_N",
+    "normalAndDisplacementMap": "BARK_STONEPINE_ND",
     "brightness": 1.277,
     "specularStrength": 0.3,
     "specularGloss": 30.0
@@ -2272,11 +2243,11 @@
     "brightness": 1.277
   },
   {
-    "name": "LEAF_VEINS_N"
+    "name": "LEAF_VEINS_ND"
   },
   {
     "name": "LEAF_VEINS",
-    "normalMap": "LEAF_VEINS_N",
+    "normalAndDisplacementMap": "LEAF_VEINS_ND",
     "specularStrength": 0.15,
     "specularGloss": 20.0
   },
@@ -2314,11 +2285,11 @@
     "brightness": 0.581
   },
   {
-    "name": "LEAVES_1_N"
+    "name": "LEAVES_1_ND"
   },
   {
     "name": "LEAVES_1",
-    "normalMap": "LEAVES_1_N",
+    "normalAndDisplacementMap": "LEAVES_1_ND",
     "specularStrength": 0.15,
     "specularGloss": 5.0,
     "textureScale": [
@@ -2341,11 +2312,11 @@
     "brightness": 0.881
   },
   {
-    "name": "WOOD_GRAIN_2_N"
+    "name": "WOOD_GRAIN_2_ND"
   },
   {
     "name": "WOOD_GRAIN_2",
-    "normalMap": "WOOD_GRAIN_2_N",
+    "normalAndDisplacementMap": "WOOD_GRAIN_2_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0
   },
@@ -2396,15 +2367,11 @@
     ]
   },
   {
-    "name": "WOOD_GRAIN_3_D"
-  },
-  {
-    "name": "WOOD_GRAIN_3_N"
+    "name": "WOOD_GRAIN_3_ND"
   },
   {
     "name": "WOOD_GRAIN_3",
-    "normalMap": "WOOD_GRAIN_3_N",
-    "displacementMap": "WOOD_GRAIN_3_D",
+    "normalAndDisplacementMap": "WOOD_GRAIN_3_ND",
     "specularStrength": 0.3,
     "specularGloss": 25.0
   },
@@ -2468,15 +2435,11 @@
     "replacementCondition": "legacyInfernalCape"
   },
   {
-    "name": "HD_BRICK_N"
-  },
-  {
-    "name": "HD_BRICK_D"
+    "name": "HD_BRICK_ND"
   },
   {
     "name": "HD_BRICK",
-    "normalMap": "HD_BRICK_N",
-    "displacementMap": "HD_BRICK_D",
+    "normalAndDisplacementMap": "HD_BRICK_ND",
     "displacementScale": 0.05,
     "specularStrength": 0.3,
     "specularGloss": 20.0,
@@ -2486,15 +2449,11 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "HD_ROOF_SHINGLES_N"
-  },
-  {
-    "name": "HD_ROOF_SHINGLES_D"
+    "name": "HD_ROOF_SHINGLES_ND"
   },
   {
     "name": "HD_ROOF_SHINGLES_1",
-    "normalMap": "HD_ROOF_SHINGLES_N",
-    "displacementMap": "HD_ROOF_SHINGLES_D",
+    "normalAndDisplacementMap": "HD_ROOF_SHINGLES_ND",
     "displacementScale": 0.11,
     "specularStrength": 0.35,
     "specularGloss": 40.0,
@@ -2504,15 +2463,11 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "HD_BRICK_BROWN_N"
-  },
-  {
-    "name": "HD_BRICK_BROWN_D"
+    "name": "HD_BRICK_BROWN_ND"
   },
   {
     "name": "HD_BRICK_BROWN",
-    "normalMap": "HD_BRICK_BROWN_N",
-    "displacementMap": "HD_BRICK_BROWN_D",
+    "normalAndDisplacementMap": "HD_BRICK_BROWN_ND",
     "displacementScale": 0.05,
     "specularStrength": 0.35,
     "specularGloss": 20.0,
@@ -2542,7 +2497,7 @@
   },
   {
     "name": "HD_ROOF_SHINGLES_2",
-    "normalMap": "HD_ROOF_SHINGLES_N",
+    "normalAndDisplacementMap": "HD_ROOF_SHINGLES_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
@@ -2551,16 +2506,12 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "HD_SIMPLE_GRAIN_WOOD_D"
-  },
-  {
-    "name": "HD_SIMPLE_GRAIN_WOOD_N"
+    "name": "HD_SIMPLE_GRAIN_WOOD_ND"
   },
   {
     "name": "HD_SIMPLE_GRAIN_WOOD",
-    "normalMap": "HD_SIMPLE_GRAIN_WOOD_N",
-    "displacementMap": "HD_SIMPLE_GRAIN_WOOD_D",
-    "displacementScale": 0.008,
+    "normalAndDisplacementMap": "HD_SIMPLE_GRAIN_WOOD_ND",
+    "displacementScale": 0.08,
     "specularStrength": 0.3,
     "specularGloss": 20.0,
     "materialsToReplace": [
@@ -2569,25 +2520,21 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "WORN_TILES_N"
+    "name": "WORN_TILES_ND"
   },
   {
     "name": "WORN_TILES",
-    "normalMap": "WORN_TILES_N",
+    "normalAndDisplacementMap": "WORN_TILES_ND",
     "specularStrength": 0.2,
     "specularGloss": 25.0
   },
   {
-    "name": "HD_STONE_PATTERN_N"
-  },
-  {
-    "name": "HD_STONE_PATTERN_D"
+    "name": "HD_STONE_PATTERN_ND"
   },
   {
     "name": "HD_STONE_PATTERN",
-    "normalMap": "HD_STONE_PATTERN_N",
-    "displacementMap": "HD_STONE_PATTERN_D",
-    "displacementScale": 0.08,
+    "normalAndDisplacementMap": "HD_STONE_PATTERN_ND",
+    "displacementScale": 0.008,
     "specularStrength": 0.25,
     "specularGloss": 30.0,
     "materialsToReplace": [
@@ -2596,7 +2543,7 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "STONE_N"
+    "name": "STONE_ND"
   },
   {
     "name": "STONE"
@@ -2609,7 +2556,7 @@
   {
     "name": "STONE_NORMALED",
     "parent": "STONE",
-    "normalMap": "STONE_N",
+    "normalAndDisplacementMap": "STONE_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0
   },
@@ -2650,7 +2597,7 @@
   },
   {
     "name": "SMOOTH_STONE",
-    "normalMap": "STONE_N"
+    "normalAndDisplacementMap": "STONE_ND"
   },
   {
     "name": "SMOOTH_STONE_SLIGHTLY_LIGHT",
@@ -2674,17 +2621,17 @@
   },
   {
     "name": "GEM_STONE",
-    "normalMap": "METALLIC_2_N",
+    "normalAndDisplacementMap": "METALLIC_2_ND",
     "brightness": 1.1,
     "specularStrength": 1,
     "specularGloss": 30.0
   },
   {
-    "name": "WALL_STONE_N"
+    "name": "WALL_STONE_ND"
   },
   {
     "name": "WALL_STONE",
-    "normalMap": "WALL_STONE_N"
+    "normalAndDisplacementMap": "WALL_STONE_ND"
   },
   {
     "name": "WALL_STONE_LIGHT",
@@ -2692,11 +2639,11 @@
     "brightness": 1.261
   },
   {
-    "name": "METALLIC_1_N"
+    "name": "METALLIC_1_ND"
   },
   {
     "name": "METALLIC_1",
-    "normalMap": "METALLIC_1_N",
+    "normalAndDisplacementMap": "METALLIC_1_ND",
     "specularStrength": 0.6,
     "specularGloss": 30.0
   },
@@ -2726,7 +2673,7 @@
   {
     "name": "METALLIC_1_LIGHT_SMOOTH",
     "parent": "METALLIC_1_LIGHT",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
     "name": "METALLIC_1_LIGHT_SEMIGLOSS",
@@ -2765,7 +2712,7 @@
   {
     "name": "METALLIC_1_LIGHTER_SMOOTH",
     "parent": "METALLIC_1_LIGHTER",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
     "name": "METALLIC_1_VERY_LIGHT",
@@ -2775,7 +2722,7 @@
   {
     "name": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "parent": "METALLIC_1_VERY_LIGHT",
-    "normalMap": null
+    "normalAndDisplacementMap": null
   },
   {
     "name": "METALLIC_1_LIGHT_LOW_GLOSS",
@@ -2784,11 +2731,11 @@
     "specularGloss": 20.0
   },
   {
-    "name": "METALLIC_2_N"
+    "name": "METALLIC_2_ND"
   },
   {
     "name": "METALLIC_2",
-    "normalMap": "METALLIC_2_N",
+    "normalAndDisplacementMap": "METALLIC_2_ND",
     "specularStrength": 0.7,
     "specularGloss": 35.0
   },
@@ -2862,7 +2809,7 @@
   {
     "name": "ICE_4",
     "parent": "WHITE",
-    "normalMap": "WATER_NORMAL_MAP_2",
+    "normalAndDisplacementMap": "WATER_NORMAL_MAP_2",
     "specularStrength": 1.5,
     "specularGloss": 1000.0
   },
@@ -2879,11 +2826,11 @@
     "specularGloss": 80.0
   },
   {
-    "name": "HD_WOOD_PLANKS_1_N"
+    "name": "HD_WOOD_PLANKS_1_ND"
   },
   {
     "name": "HD_WOOD_PLANKS_1",
-    "normalMap": "HD_WOOD_PLANKS_1_N",
+    "normalAndDisplacementMap": "HD_WOOD_PLANKS_1_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
@@ -2892,21 +2839,21 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "HD_WOOD_PLANKS_2_N"
+    "name": "HD_WOOD_PLANKS_2_ND"
   },
   {
     "name": "HD_WOOD_PLANKS_2",
-    "normalMap": "HD_WOOD_PLANKS_2_N",
+    "normalAndDisplacementMap": "HD_WOOD_PLANKS_2_ND",
     "brightness": 1.083,
     "specularStrength": 0.3,
     "specularGloss": 40.0
   },
   {
-    "name": "HD_CRATE_N"
+    "name": "HD_CRATE_ND"
   },
   {
     "name": "HD_CRATE",
-    "normalMap": "HD_CRATE_N",
+    "normalAndDisplacementMap": "HD_CRATE_ND",
     "brightness": 0.955,
     "specularStrength": 0.25,
     "specularGloss": 30.0,
@@ -2916,11 +2863,11 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "HD_ROOF_BRICK_TILE_N"
+    "name": "HD_ROOF_BRICK_TILE_ND"
   },
   {
     "name": "HD_ROOF_BRICK_TILE",
-    "normalMap": "HD_ROOF_BRICK_TILE_N",
+    "normalAndDisplacementMap": "HD_ROOF_BRICK_TILE_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
@@ -2931,7 +2878,7 @@
   {
     "name": "HD_ROOF_BRICK_TILE_GREEN",
     "parent": "ROOF_BRICK_TILE_GREEN",
-    "normalMap": "HD_ROOF_BRICK_TILE_N",
+    "normalAndDisplacementMap": "HD_ROOF_BRICK_TILE_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
@@ -2942,7 +2889,7 @@
   {
     "name": "HD_ROOF_BRICK_TILE_DARK",
     "parent": "ROOF_BRICK_TILE_DARK",
-    "normalMap": "HD_ROOF_BRICK_TILE_N",
+    "normalAndDisplacementMap": "HD_ROOF_BRICK_TILE_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
@@ -2963,15 +2910,11 @@
     "specularGloss": 20.0
   },
   {
-    "name": "HD_CONCRETE_D"
-  },
-  {
-    "name": "HD_CONCRETE_N"
+    "name": "HD_CONCRETE_ND"
   },
   {
     "name": "HD_CONCRETE",
-    "normalMap": "HD_CONCRETE_N",
-    "displacementMap": "HD_CONCRETE_D",
+    "normalAndDisplacementMap": "HD_CONCRETE_ND",
     "brightness": 0.881,
     "displacementScale": 0.05,
     "specularStrength": 0.3,
@@ -2983,15 +2926,15 @@
   },
   {
     "name": "HD_CONCRETE_FLAT",
-    "normalMap": null,
+    "normalAndDisplacementMap": null,
     "parent": "HD_CONCRETE"
   },
   {
-    "name": "HD_HAY_N"
+    "name": "HD_HAY_ND"
   },
   {
     "name": "HD_HAY",
-    "normalMap": "HD_HAY_N",
+    "normalAndDisplacementMap": "HD_HAY_ND",
     "specularStrength": 0.175,
     "specularGloss": 15.0,
     "materialsToReplace": [
@@ -3020,11 +2963,11 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "HD_SAND_BRICK_N"
+    "name": "HD_SAND_BRICK_ND"
   },
   {
     "name": "HD_SAND_BRICK",
-    "normalMap": "HD_SAND_BRICK_N",
+    "normalAndDisplacementMap": "HD_SAND_BRICK_ND",
     "brightness": 0.881,
     "displacementScale": 0.05,
     "specularStrength": 0.3,
@@ -3054,31 +2997,24 @@
     "specularGloss": 20.0
   },
   {
-    "name": "ABYSSAL_D"
-  },
-  {
-    "name": "ABYSSAL_N"
+    "name": "ABYSSAL_ND"
   },
   {
     "name": "ABYSSAL",
-    "normalMap": "ABYSSAL_N",
-    "displacementMap": "ABYSSAL_D",
+    "normalAndDisplacementMap": "ABYSSAL_ND",
     "brightness": 1.612,
     "displacementScale": 0.2,
     "specularStrength": 4.5,
     "specularGloss": 400.0
   },
   {
-    "name": "ABYSSAL_2_D"
-  },
-  {
-    "name": "ABYSSAL_2_N"
+    "name": "ABYSSAL_2_ND"
   },
   {
     "name": "ABYSSAL_2",
-    "normalMap": "ABYSSAL_2_N",
-    "displacementMap": "ABYSSAL_2_D",
+    "normalAndDisplacementMap": "ABYSSAL_2_ND",
     "brightness": 1.323,
+    "displacementScale": 0.05,
     "specularStrength": 7.0,
     "specularGloss": 400.0
   },
@@ -3103,20 +3039,20 @@
     ]
   },
   {
-    "name": "GROUND_WEB_1_N"
+    "name": "GROUND_WEB_1_ND"
   },
   {
     "name": "GROUND_WEB_1",
-    "normalMap": "GROUND_WEB_1_N",
+    "normalAndDisplacementMap": "GROUND_WEB_1_ND",
     "specularStrength": 0.35,
     "specularGloss": 90.0
   },
   {
-    "name": "GROUND_WEB_2_N"
+    "name": "GROUND_WEB_2_ND"
   },
   {
     "name": "GROUND_WEB_2",
-    "normalMap": "GROUND_WEB_2_N",
+    "normalAndDisplacementMap": "GROUND_WEB_2_ND",
     "specularStrength": 0.35,
     "specularGloss": 90.0
   },
@@ -3126,11 +3062,11 @@
     "brightness": 1.5
   },
   {
-    "name": "GROUND_WEB_3_N"
+    "name": "GROUND_WEB_3_ND"
   },
   {
     "name": "GROUND_WEB_3",
-    "normalMap": "GROUND_WEB_3_N",
+    "normalAndDisplacementMap": "GROUND_WEB_3_ND",
     "specularStrength": 0.35,
     "specularGloss": 90.0
   },
@@ -3361,7 +3297,7 @@
   },
   {
     "name": "WINTER_HD_ROOF_SHINGLES_1",
-    "normalMap": "HD_ROOF_SHINGLES_N",
+    "normalAndDisplacementMap": "HD_ROOF_SHINGLES_ND",
     "specularStrength": 0.5,
     "specularGloss": 30.0,
     "materialsToReplace": [
@@ -3371,7 +3307,7 @@
   },
   {
     "name": "WINTER_HD_ROOF_SHINGLES_2",
-    "normalMap": "HD_ROOF_SHINGLES_N",
+    "normalAndDisplacementMap": "HD_ROOF_SHINGLES_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
@@ -3381,7 +3317,7 @@
   },
   {
     "name": "WINTER_HD_ROOF_BRICK_TILES",
-    "normalMap": "HD_ROOF_BRICK_TILE_N",
+    "normalAndDisplacementMap": "HD_ROOF_BRICK_TILE_ND",
     "specularStrength": 0.3,
     "specularGloss": 30.0,
     "materialsToReplace": [
@@ -3411,8 +3347,7 @@
   },
   {
     "name": "WINTER_JAGGED_STONE_TILE",
-    "normalMap": "JAGGED_STONE_TILE_N",
-    "displacementMap": "JAGGED_STONE_TILE_D",
+    "normalAndDisplacementMap": "JAGGED_STONE_TILE_ND",
     "brightness": 1.159,
     "specularStrength": 0.6,
     "specularGloss": 30.0
