@@ -364,8 +364,15 @@
     "materials": [
       "SAND_4",
       "GRAVEL_LIGHT",
-      "DIRT_1",
       "SAND_4",
+      "DIRT_1"
+    ]
+  },
+  {
+    "name": "BEACH_SAND_PLAIN",
+    "materials": [
+      "DIRT_1",
+      "GRAVEL_LIGHT",
       "DIRT_1"
     ]
   },
