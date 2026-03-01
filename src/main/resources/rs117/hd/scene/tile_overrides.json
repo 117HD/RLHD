@@ -9,7 +9,13 @@
   },
   {
     "name": "DEFAULT_SAND",
-    "groundMaterial": "SAND"
+    "groundMaterial": "SAND",
+    "maxLightness": 63
+  },
+  {
+    "name": "BEACH_SAND",
+    "groundMaterial": "BEACH_SAND",
+    "maxLightness": 57
   },
   {
     "name": "DEFAULT_SNOW",
@@ -8134,15 +8140,15 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
-    "name": "KARAMJA_KARAMBWAN_FIX_NO_BLENDING",
-    "area": "KARAMJA_KARAMBWAN_FIX",
+    "name": "KARAMJA_BEACHES_FIX",
+    "area": "KARAMJA_BEACHES_FIX",
+    "minHue": 8,
+    "maxHue": 8,
+    "setSaturation": 3,
     "underlayIds": [
       62
     ],
-    "groundMaterial": "PLAIN_DIRT",
-    "replacements": {
-      "COMPLEX_TILES_KARAMJA": "blending"
-    }
+    "groundMaterial": "BEACH_SAND"
   },
   {
     "name": "SHILO_VILLAGE_MINE_SURFACE_FIX",
@@ -8163,8 +8169,24 @@
     }
   },
   {
+    "name": "KARAMJA_DUNES",
+    "area": "KARAMJA_DUNES",
+    "underlayIds": [
+      62
+    ],
+    "replacements": {
+      "DEFAULT_DIRT": [
+        "h <= 8 && s >= 4 && l <= 71",
+        "h == 9 && s == 2 && l <= 44",
+        "h == 8 && s == 3 && l <= 34"
+      ],
+      "DEFAULT_SAND": true
+    }
+  },
+  {
     "name": "COMPLEX_TILES_KARAMJA",
     "area": "KARAMJA",
+    "overlayIds": [ 25 ],
     "underlayIds": [
       48,
       49,
@@ -8199,7 +8221,7 @@
         "h == 8 && s == 3 && l <= 34"
       ],
       "DEFAULT_ROCKY_GROUND": "s <= 2 && l <= 40",
-      "DEFAULT_SAND": true
+      "BEACH_SAND": true
     }
   },
   {
