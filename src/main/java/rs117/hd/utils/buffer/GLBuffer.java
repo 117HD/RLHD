@@ -66,7 +66,26 @@ public class GLBuffer {
 
 	private GLMappedBuffer mappedBuffer;
 
+	public static class EBO extends GLBuffer {
+		public EBO(String name, int usage) {
+			super(name, GL_ELEMENT_ARRAY_BUFFER, usage);
+		}
+
+		@Override
+		public void bind() {
+			glBindVertexArray(0);
+			glBindBuffer(target, id);
+		}
+
+		@Override
+		public void unbind() {
+			glBindVertexArray(0);
+			glBindBuffer(target, 0);
+		}
+	}
+
 	public GLBuffer(String name, int target, int usage, int storageFlags) {
+		assert target != GL_ELEMENT_ARRAY_BUFFER || this instanceof EBO;
 		this.name = name;
 		this.target = target;
 		this.usage = usage;
@@ -111,9 +130,9 @@ public class GLBuffer {
 		if (isStorageBuffer())
 			throw new IllegalStateException("Not implemented for storage buffers. Perhaps via glInvalidateBufferData?");
 
-		glBindBuffer(target, id);
+		bind();
 		glBufferData(target, size, usage);
-		glBindBuffer(target, 0);
+		unbind();
 	}
 
 	public void bind() {
@@ -131,7 +150,7 @@ public class GLBuffer {
 	public boolean ensureCapacity(long byteOffset, long numBytes) {
 		numBytes += byteOffset;
 		if (numBytes <= size) {
-			glBindBuffer(target, id);
+			bind();
 			return false;
 		}
 
@@ -153,7 +172,7 @@ public class GLBuffer {
 		if (byteOffset > 0 || (storageFlags & STORAGE_IMMUTABLE) != 0)
 			id = glGenBuffers();
 
-		glBindBuffer(target, id);
+		bind();
 
 		if (isStorageBuffer()) {
 			int glStorageFlags = GL_MAP_PERSISTENT_BIT;
@@ -212,6 +231,8 @@ public class GLBuffer {
 
 		size = numBytes;
 
+		unbind();
+
 		if (id != oldBuffer && oldBuffer != 0 && byteOffset > 0) {
 			// Neither buffer must be mapped before this, except for with the persistent bit
 			copyRangeTo(oldBuffer, id, 0, 0, byteOffset);
@@ -222,7 +243,6 @@ public class GLBuffer {
 		if (wasMapped && !isStorageBuffer())
 			mappedBuffer.remap();
 
-		unbind();
 		return true;
 	}
 
