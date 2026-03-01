@@ -10,10 +10,17 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
 GAMEVALS_PATH = Path('src/main/resources/rs117/hd/scene/gamevals.json')
-JSON_FILES_TO_CHECK = [
-    (Path('src/main/resources/rs117/hd/scene/lights.json'), 'lights.json'),
-    (Path('src/main/resources/rs117/hd/scene/model_overrides.json'), 'model_overrides.json')
-]
+
+
+def find_json_files() -> List[tuple]:
+    """Discover all JSON files in the project, excluding gamevals.json."""
+    root = Path('.')
+    result = []
+    for p in sorted(root.rglob('*.json')):
+        if p.name == 'gamevals.json':
+            continue
+        result.append((p, p.name))
+    return result
 
 
 def load_gamevals(file_path: Path) -> Dict[str, Dict[str, int]]:
@@ -43,8 +50,8 @@ def check_json_files_for_gamevals(
         return {}
     
     affected_files: Dict[str, Dict[str, Dict[str, Union[List[int], str]]]] = {}
-    
-    for json_path, file_display_name in JSON_FILES_TO_CHECK:
+
+    for json_path, file_display_name in find_json_files():
         if not json_path.exists():
             continue
         
@@ -144,8 +151,18 @@ def generate_report(changes: Dict[str, Dict[str, List[Tuple[Any, ...]]]]) -> str
     affected_files = check_json_files_for_gamevals(changes['removed'], changes['renamed'])
     
     if affected_files:
-        report_lines.append("### ⚠️ WARNING: FOLLOWING CHANGES HAVE BEEN MADE THAT MAY AFFECT THE JSONS")
-        report_lines.append("")
+        # Summary at top for potentially breaking changes
+        file_list = ", ".join(sorted(affected_files.keys()))
+        report_lines.extend([
+            "**⚠️ Potentially breaking:** The following JSON files reference removed or renamed gamevals and may need updates:",
+            "",
+            f"> {file_list}",
+            "",
+            "---",
+            "",
+            "### Affected files (details)",
+            ""
+        ])
         for file_name, file_matches in affected_files.items():
             report_lines.extend([
                 "<details>",

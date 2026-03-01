@@ -163,6 +163,15 @@ jobs:
           mkdir -p .github
           echo "${{ steps.get-sha.outputs.latest_sha }}" > .github/last-runelite-sha.txt
 
+      - name: Set PR branch name
+        if: steps.check-changes.outputs.has_changes == 'true'
+        id: pr-branch
+        run: |
+          REV="${{ steps.get-rev.outputs.rev }}"
+          REV_DATE="${{ steps.get-rev.outputs.rev_date }}"
+          BRANCH="update-gamevals-${REV//./-}-${REV_DATE}"
+          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+
       - name: Create or Update Pull Request
         if: steps.check-changes.outputs.has_changes == 'true'
         uses: peter-evans/create-pull-request@v6
@@ -171,7 +180,7 @@ jobs:
           title: "Update gamevals from ${{ steps.get-rev.outputs.rev }} [${{ steps.get-rev.outputs.rev_date }}]"
           body: |
             ${{ steps.generate-report.outputs.report }}
-          branch: update-gamevals
+          branch: ${{ steps.pr-branch.outputs.branch }}
           delete-branch: true
           approve: false
           update-branch: true
