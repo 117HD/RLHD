@@ -476,6 +476,9 @@
     "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
+	"moonColor": "#FF0000",
+	"sunStrength": 0.05,
+	"starVisibility": 1,
     "windSpeed": 10,
     "windStrength": 30
   },
@@ -526,9 +529,12 @@
     "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
+	"starVisibility": 0.1,
+	"sunStrength":0.1,
     "windAngle": 40,
     "windSpeed": 7,
-    "windStrength": 26
+    "windStrength": 26,
+    "minBrightnessBoost": 0.6
   },
   {
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
@@ -1230,7 +1236,8 @@
     "directionalColor": "#4eeeff",
     "directionalStrength": 3.5,
     "fogColor": "#13184f",
-    "fogDepth": 30
+    "fogDepth": 30,
+    "sunStrength": 0.1
   },
   {
     "area": "LOVAKENGJ",
@@ -1239,7 +1246,10 @@
     "directionalStrength": 4,
     "fogColor": "#150a05",
     "fogDepth": 40,
-    "waterColor": "#b9d6ff"
+    "waterColor": "#b9d6ff",
+	"starVisibility": 0.05,
+	"sunStrength": 0.1,
+	"moonVisibility": 0.05
   },
   {
     "area": "THE_STRANGLEWOOD",

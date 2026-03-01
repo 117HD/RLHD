@@ -119,6 +119,10 @@ public class EnvironmentManager {
 	public float[] currentUnderglowColor = new float[] { 0, 0, 0 };
 	private float[] targetUnderglowColor = new float[] { 0, 0, 0 };
 
+	private float[] startMoonColor = new float[] { 0, 0, 0 };
+	public float[] currentMoonColor = new float[] { 0, 0, 0 };
+	private float[] targetMoonColor = new float[] { 0, 0, 0 };
+
 	private float startGroundFogStart = 0f;
 	public float currentGroundFogStart = 0f;
 	private float targetGroundFogStart = 0f;
@@ -150,6 +154,22 @@ public class EnvironmentManager {
 	private float startWindCeiling = 0f;
 	public float currentWindCeiling = 0f;
 	private float targetWindCeiling = 0f;
+
+	private float startStarVisibility = 1f;
+	public float currentStarVisibility = 1f;
+	private float targetStarVisibility = 1f;
+
+	private float startMoonVisibility = 1f;
+	public float currentMoonVisibility = 1f;
+	private float targetMoonVisibility = 1f;
+
+	private float startSunStrength = 1f;
+	public float currentSunStrength = 1f;
+	private float targetSunStrength = 1f;
+
+	private float startMinBrightnessBoost = 0f;
+	public float currentMinBrightnessBoost = 0f;
+	private float targetMinBrightnessBoost = 0f;
 
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
@@ -270,6 +290,7 @@ public class EnvironmentManager {
 			currentDirectionalColor = mix(startDirectionalColor, targetDirectionalColor, t);
 			currentUnderglowStrength = mix(startUnderglowStrength, targetUnderglowStrength, t);
 			currentUnderglowColor = mix(startUnderglowColor, targetUnderglowColor, t);
+			currentMoonColor = mix(startMoonColor, targetMoonColor, t);
 			currentGroundFogStart = mix(startGroundFogStart, targetGroundFogStart, t);
 			currentGroundFogEnd = mix(startGroundFogEnd, targetGroundFogEnd, t);
 			currentGroundFogOpacity = mix(startGroundFogOpacity, targetGroundFogOpacity, t);
@@ -281,6 +302,10 @@ public class EnvironmentManager {
 			currentWindSpeed = mix(startWindSpeed, targetWindSpeed, t);
 			currentWindStrength = mix(startWindStrength, targetWindStrength, t);
 			currentWindCeiling = mix(startWindCeiling, targetWindCeiling, t);
+			currentStarVisibility = mix(startStarVisibility, targetStarVisibility, t);
+			currentMoonVisibility = mix(startMoonVisibility, targetMoonVisibility, t);
+			currentSunStrength = mix(startSunStrength, targetSunStrength, t);
+			currentMinBrightnessBoost = mix(startMinBrightnessBoost, targetMinBrightnessBoost, t);
 		}
 
 		updateLightning();
@@ -323,6 +348,7 @@ public class EnvironmentManager {
 		startDirectionalColor = currentDirectionalColor;
 		startUnderglowStrength = currentUnderglowStrength;
 		startUnderglowColor = currentUnderglowColor;
+		startMoonColor = currentMoonColor;
 		startGroundFogStart = currentGroundFogStart;
 		startGroundFogEnd = currentGroundFogEnd;
 		startGroundFogOpacity = currentGroundFogOpacity;
@@ -332,6 +358,10 @@ public class EnvironmentManager {
 		startWindSpeed = currentWindSpeed;
 		startWindStrength = currentWindStrength;
 		startWindCeiling = currentWindCeiling;
+		startStarVisibility = currentStarVisibility;
+		startMoonVisibility = currentMoonVisibility;
+		startSunStrength = currentSunStrength;
+		startMinBrightnessBoost = currentMinBrightnessBoost;
 		for (int i = 0; i < 2; i++)
 			startSunAngles[i] = mod(currentSunAngles[i], TWO_PI);
 
@@ -358,12 +388,17 @@ public class EnvironmentManager {
 		targetDirectionalColor = env.directionalColor;
 		targetUnderglowStrength = env.underglowStrength;
 		targetUnderglowColor = env.underglowColor;
+		targetMoonColor = env.moonColor;
 		targetUnderwaterCausticsColor = env.waterCausticsColor;
 		targetUnderwaterCausticsStrength = env.waterCausticsStrength;
 		targetWindAngle = env.windAngle;
 		targetWindSpeed = env.windSpeed;
 		targetWindStrength = env.windStrength;
 		targetWindCeiling = env.windCeiling;
+		targetStarVisibility = env.starVisibility;
+		targetMoonVisibility = env.moonVisibility;
+		targetSunStrength = env.sunStrength;
+		targetMinBrightnessBoost = env.minBrightnessBoost;
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
@@ -486,6 +521,10 @@ public class EnvironmentManager {
 			default:
 				return Environment.OVERWORLD;
 		}
+	}
+
+	public boolean isOverworld() {
+		return currentEnvironment.isOverworld;
 	}
 
 	public boolean isUnderwater() {

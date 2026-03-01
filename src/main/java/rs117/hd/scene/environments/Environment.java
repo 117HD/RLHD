@@ -10,6 +10,7 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.GsonUtils.DegreesToRadians;
 import rs117.hd.utils.HDUtils;
 
+import rs117.hd.utils.ColorUtils;
 import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
 import static rs117.hd.utils.ColorUtils.rgb;
 
@@ -55,6 +56,9 @@ public class Environment {
 	public float[] underglowColor = rgb("#000000");
 	public float underglowStrength = 0;
 	@Nullable
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] moonColor;
+	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
 	@Nullable
@@ -69,6 +73,10 @@ public class Environment {
 	public float windSpeed = 15.0f;
 	public float windStrength = 0.0f;
 	public float windCeiling = 1280.0f;
+	public float starVisibility = 1;
+	public float moonVisibility = 1;
+	public float sunStrength = 1;
+	public float minBrightnessBoost = 0;
 
 	public Environment normalize() {
 		if (area != Area.ALL && area != Area.NONE) {
@@ -85,6 +93,10 @@ public class Environment {
 
 		if (sunAngles != null)
 			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
+
+		// Default moon color to slightly cool white (~8000K)
+		if (moonColor == null)
+			moonColor = ColorUtils.colorTemperatureToLinearRgb(8000);
 
 		// Base water caustics on directional lighting by default
 		if (waterCausticsColor == null)
