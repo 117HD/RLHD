@@ -45369,12 +45369,26 @@
     "alignment": "CUSTOM",
     "offset": [ 0.0, -0.0, 48.0 ],
     "radius": 600,
-    "strength": 30,
+    "strength": 20,
     "color": [255, 215, 100],
     "type": "STATIC",
     "innerConeAngle": 5,
     "outerConeAngle": 40,
     "conePitch": -35,
     "equipmentIds": ["GOLDEN_PROSPECTOR_HELMET"]
+  },
+  {
+    "description": "Prospector helmet light",
+    "heightFromModel": 1.0,
+    "alignment": "CUSTOM",
+    "offset": [ 0.0, -0.0, 48.0 ],
+    "radius": 600,
+    "strength": 20,
+    "color": [255, 215, 100],
+    "type": "STATIC",
+    "innerConeAngle": 5,
+    "outerConeAngle": 40,
+    "conePitch": -35,
+    "equipmentIds": ["PROSPECTOR_HELMET"]
   }
 ]
