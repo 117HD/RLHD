@@ -67,6 +67,7 @@ import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
+import static rs117.hd.HdPlugin.bindTextureWithUnit;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
@@ -494,8 +495,7 @@ public class LegacyRenderer implements Renderer {
 		tileBuffer.flip();
 
 		texTileHeightMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_TILE_HEIGHT_MAP);
-		glBindTexture(GL_TEXTURE_3D, texTileHeightMap);
+		bindTextureWithUnit(GL_TEXTURE_3D, TEXTURE_UNIT_TILE_HEIGHT_MAP, texTileHeightMap);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -505,6 +505,7 @@ public class LegacyRenderer implements Renderer {
 			Constants.EXTENDED_SCENE_SIZE, Constants.EXTENDED_SCENE_SIZE, Constants.MAX_Z,
 			0, GL_RED_INTEGER, GL_SHORT, tileBuffer
 		);
+		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 
 	public void destroyTileHeightMap() {
@@ -752,7 +753,7 @@ public class LegacyRenderer implements Renderer {
 				glViewport(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
 				glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboTiledLighting);
 
-				glBindVertexArray(plugin.vaoTri);
+				plugin.triVao.bind();
 
 				if (plugin.tiledLightingImageStoreProgram.isValid()) {
 					plugin.tiledLightingImageStoreProgram.use();
@@ -767,6 +768,8 @@ public class LegacyRenderer implements Renderer {
 						glDrawArrays(GL_TRIANGLES, 0, 3);
 					}
 				}
+
+				plugin.triVao.unbind();
 
 				frameTimer.end(Timer.RENDER_TILED_LIGHTING);
 				frameTimer.end(Timer.DRAW_TILED_LIGHTING);

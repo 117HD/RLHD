@@ -39,7 +39,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -76,6 +75,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
+import org.lwjgl.system.MemoryStack;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.SeasonalHemisphere;
@@ -83,6 +83,11 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.opengl.GLVao;
+import rs117.hd.opengl.GLVertexLayout;
+import rs117.hd.opengl.GLVertexLayout.ArrayField;
+import rs117.hd.opengl.GLVertexLayout.ComponentType;
+import rs117.hd.opengl.GLVertexLayout.FormatType;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
@@ -130,6 +135,7 @@ import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
+import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
@@ -160,6 +166,7 @@ public class HdPlugin extends Plugin {
 
 	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
+	public static final int TEXTURE_UNIT_UNUSED = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
@@ -344,11 +351,13 @@ public class HdPlugin extends Plugin {
 	private static final ResourcePath SHADER_PATH = Props
 		.getFolder("rlhd.shader-path", () -> path(HdPlugin.class));
 
-	public int vaoQuad;
-	private int vboQuad;
+	private static final GLVertexLayout FULLSCREEN_VERTEX_LAYOUT = new GLVertexLayout("FULLSCREEN_VERTEX_LAYOUT")
+		.edit(ArrayField.VERTEX_FIELD_0).enabled().component(ComponentType.RG).format(FormatType.FLOAT).stride(16).offset(0)
+		.edit(ArrayField.VERTEX_FIELD_1).enabled().component(ComponentType.RG).format(FormatType.FLOAT).stride(16).offset(4)
+		.finish();
 
-	public int vaoTri;
-	private int vboTri;
+	public GLVao quadVao;
+	public GLVao triVao;
 
 	@Getter
 	@Nullable
@@ -564,7 +573,7 @@ public class HdPlugin extends Plugin {
 				INTEL_GPU = glRenderer.contains("Intel");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
-				SUPPORTS_INDIRECT_DRAW = NVIDIA_GPU && !APPLE || config.forceIndirectDraw();
+				SUPPORTS_INDIRECT_DRAW = false; //NVIDIA_GPU && !APPLE || config.forceIndirectDraw();
 
 				renderer = config.legacyRenderer() ?
 					injector.getInstance(LegacyRenderer.class) :
@@ -927,7 +936,7 @@ public class HdPlugin extends Plugin {
 		var includes = getShaderIncludes();
 
 		// Bind a valid VAO, otherwise validation may fail on older Intel-based Macs
-		glBindVertexArray(vaoTri);
+		triVao.bind();
 
 		renderer.initializeShaders(includes);
 		uiProgram.compile(includes);
@@ -1018,76 +1027,45 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeVaos() {
+		try(MemoryStack stack = MemoryStack.stackPush())
 		{
-			// Create quad VAO
-			vaoQuad = glGenVertexArrays();
-			vboQuad = glGenBuffers();
-			glBindVertexArray(vaoQuad);
+			quadVao = new GLVao("FullscreenQuad::VAO", FULLSCREEN_VERTEX_LAYOUT);
+			quadVao.setBufferRange(
+				new GLBuffer("FullscreenQuad::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW)
+					.upload(
+						stack.mallocFloat(16)
+							.put(new float[] {
+								// x, y, u, v
+								1, 1, 1, 1, // top right
+								-1, 1, 0, 1, // top left
+								-1, -1, 0, 0, // bottom left
+								1, -1, 1, 0 // bottom right
+							}).flip()
+					), true, ArrayField.VERTEX_FIELD_0, ArrayField.VERTEX_FIELD_1);
 
-			FloatBuffer vboQuadData = BufferUtils.createFloatBuffer(16)
-				.put(new float[] {
-					// x, y, u, v
-					1, 1, 1, 1, // top right
-					-1, 1, 0, 1, // top left
-					-1, -1, 0, 0, // bottom left
-					1, -1, 1, 0 // bottom right
-				})
-				.flip();
-			glBindBuffer(GL_ARRAY_BUFFER, vboQuad);
-			glBufferData(GL_ARRAY_BUFFER, vboQuadData, GL_STATIC_DRAW);
-
-			// position attribute
-			glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
-			glEnableVertexAttribArray(0);
-
-			// texture coord attribute
-			glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
-			glEnableVertexAttribArray(1);
-		}
-
-		{
-			// Create tri VAO
-			vaoTri = glGenVertexArrays();
-			vboTri = glGenBuffers();
-			glBindVertexArray(vaoTri);
-
-			FloatBuffer vboTriData = BufferUtils.createFloatBuffer(12)
-				.put(new float[] {
-					// x, y, u, v
-					-1, -1, 0, 0, // bottom left
-					3, -1, 2, 0, // bottom right (off-screen)
-					-1, 3, 0, 2 // top left (off-screen)
-				})
-				.flip();
-			glBindBuffer(GL_ARRAY_BUFFER, vboTri);
-			glBufferData(GL_ARRAY_BUFFER, vboTriData, GL_STATIC_DRAW);
-
-			// position attribute
-			glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
-			glEnableVertexAttribArray(0);
-
-			// texture coord attribute
-			glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
-			glEnableVertexAttribArray(1);
+			triVao = new GLVao("FullscreenQuad::VAO", FULLSCREEN_VERTEX_LAYOUT);
+			triVao.setBufferRange(
+				new GLBuffer("FullscreenQuad::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW)
+					.upload(
+						stack.mallocFloat(16)
+							.put(new float[] {
+								// x, y, u, v
+								-1, -1, 0, 0, // bottom left
+								3, -1, 2, 0, // bottom right (off-screen)
+								-1, 3, 0, 2 // top left (off-screen)
+							}).flip()
+					), true, ArrayField.VERTEX_FIELD_0, ArrayField.VERTEX_FIELD_1);
 		}
 	}
 
 	private void destroyVaos() {
-		if (vboQuad != 0)
-			glDeleteBuffers(vboQuad);
-		vboQuad = 0;
+		if(quadVao != null)
+			quadVao.destroy();
+		quadVao = null;
 
-		if (vaoQuad != 0)
-			glDeleteVertexArrays(vaoQuad);
-		vaoQuad = 0;
-
-		if (vboTri != 0)
-			glDeleteBuffers(vboTri);
-		vboTri = 0;
-
-		if (vaoTri != 0)
-			glDeleteVertexArrays(vaoTri);
-		vaoTri = 0;
+		if(triVao != null)
+			triVao.destroy();
+		triVao = null;
 	}
 
 	private void initializeUbos() {
@@ -1134,12 +1112,12 @@ public class HdPlugin extends Plugin {
 		}
 
 		texUi = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_UI);
-		glBindTexture(GL_TEXTURE_2D, texUi);
+		bindTextureWithUnit(GL_TEXTURE_2D, TEXTURE_UNIT_UI, texUi);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		checkGLErrors();
 	}
@@ -1173,8 +1151,7 @@ public class HdPlugin extends Plugin {
 
 		fboTiledLighting = glGenFramebuffers();
 		texTiledLighting = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, texTiledLighting);
+		bindTextureWithUnit(GL_TEXTURE_2D_ARRAY, TEXTURE_UNIT_TILED_LIGHTING_MAP, texTiledLighting);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -1200,6 +1177,7 @@ public class HdPlugin extends Plugin {
 			ARBShaderImageLoadStore.glBindImageTexture(
 				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
 
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 		checkGLErrors();
@@ -1367,8 +1345,7 @@ public class HdPlugin extends Plugin {
 
 		// Create texture
 		texShadowMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
-		glBindTexture(GL_TEXTURE_2D, texShadowMap);
+		bindTextureWithUnit(GL_TEXTURE_2D, TEXTURE_UNIT_SHADOW_MAP, texShadowMap);
 
 		shadowMapResolution = config.shadowResolution().getValue();
 		int maxResolution = glGetInteger(GL_MAX_TEXTURE_SIZE);
@@ -1395,6 +1372,7 @@ public class HdPlugin extends Plugin {
 
 		float[] color = { 1, 1, 1, 1 };
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// Bind texture
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texShadowMap, 0);
@@ -1408,13 +1386,13 @@ public class HdPlugin extends Plugin {
 	private void initializeDummyShadowMap() {
 		// Create dummy texture
 		texShadowMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
-		glBindTexture(GL_TEXTURE_2D, texShadowMap);
+		bindTextureWithUnit(GL_TEXTURE_2D, TEXTURE_UNIT_SHADOW_MAP, texShadowMap);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	private void destroyShadowMapFbo() {
@@ -1447,7 +1425,6 @@ public class HdPlugin extends Plugin {
 		if (resize) {
 			uiResolution = resolution;
 
-			glActiveTexture(TEXTURE_UNIT_UI);
 			glBindTexture(GL_TEXTURE_2D, texUi);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
 		}
@@ -1520,7 +1497,6 @@ public class HdPlugin extends Plugin {
 		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
 		// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't
 		final int function = config.uiScalingMode().glSamplingFunction;
-		glActiveTexture(TEXTURE_UNIT_UI);
 		glBindTexture(GL_TEXTURE_2D, texUi);
 
 		if (uiCopyJob != null) {
@@ -1544,8 +1520,10 @@ public class HdPlugin extends Plugin {
 
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-		glBindVertexArray(vaoTri);
+
+		triVao.bind();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+		triVao.unbind();
 
 		shadowMapOverlay.render();
 		gammaCalibrationOverlay.render();
@@ -1998,6 +1976,12 @@ public class HdPlugin extends Plugin {
 	@Subscribe
 	public void onFocusChanged(FocusChanged event) {
 		isClientInFocus = event.isFocused();
+	}
+
+	public static void bindTextureWithUnit(int target, int unit, int textureId) {
+		glActiveTexture(unit);
+		glBindTexture(target, textureId);
+		glActiveTexture(TEXTURE_UNIT_UNUSED);
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")

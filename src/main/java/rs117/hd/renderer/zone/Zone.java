@@ -17,6 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.GLVao;
+import rs117.hd.opengl.GLVertexLayout;
+import rs117.hd.opengl.GLVertexLayout.ArrayField;
+import rs117.hd.opengl.GLVertexLayout.FormatType;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -31,8 +35,9 @@ import rs117.hd.utils.jobs.GenericJob;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
-import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.opengl.GLVertexLayout.ComponentType;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
+import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -57,16 +62,27 @@ public class Zone {
 	// sceneOffset int vec2(x, y)
 	public static final int METADATA_SIZE = 12;
 
+	public static final GLVertexLayout ZONE_VERTEX_LAYOUT = new GLVertexLayout("ZONE_VERTEX_LAYOUT")
+		// Mesh Data
+		.edit(ArrayField.VERTEX_FIELD_0).enabled().component(ComponentType.RGB).format(FormatType.SHORT).stride(VERT_SIZE).offset(0)
+		.edit(ArrayField.VERTEX_FIELD_1).enabled().component(ComponentType.RGB).format(FormatType.HALF_FLOAT).stride(VERT_SIZE).offset(6)
+		.edit(ArrayField.VERTEX_FIELD_2).enabled().component(ComponentType.RGB).format(FormatType.SHORT).stride(VERT_SIZE).offset(12)
+		.edit(ArrayField.VERTEX_FIELD_3).enabled().asInteger().component(ComponentType.R).format(FormatType.INT).stride(VERT_SIZE).offset(20)
+		// Meta Data
+		.edit(ArrayField.VERTEX_FIELD_6).enabled().asInteger().divisor(1).component(ComponentType.R).format(FormatType.INT).stride(METADATA_SIZE).offset(0)
+		.edit(ArrayField.VERTEX_FIELD_7).enabled().asInteger().divisor(1).component(ComponentType.R).format(FormatType.INT).stride(METADATA_SIZE).offset(4)
+		.finish();
+
 	public static final int LEVEL_WATER_SURFACE = 4;
 
 	public static final BlockingDeque<GLBuffer> VBO_PENDING_DELETION = new LinkedBlockingDeque<>();
-	public static final BlockingDeque<Integer> VAO_PENDING_DELETION = new LinkedBlockingDeque<>();
+	public static final BlockingDeque<GLVao> VAO_PENDING_DELETION = new LinkedBlockingDeque<>();
 
-	public int glVao;
+	public GLVao opaqueVao;
 	int bufLen;
 	int dist;
 
-	public int glVaoA;
+	public GLVao alphaVao;
 	public int bufLenA;
 	public int sortedFacesLen;
 
@@ -99,25 +115,25 @@ public class Zone {
 	final List<AlphaModel> playerModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
 
-	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f, int eboShared) {
-		assert glVao == 0;
-		assert glVaoA == 0;
+	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
 		if (o == null && a == null || f == null)
 			return;
 
 		vboM = new GLBuffer("ZoneMetadata", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, 0);
 		vboM.initialize(METADATA_SIZE);
 
-		if (o != null) {
-			vboO = o;
-			glVao = glGenVertexArrays();
-			setupVao(glVao, o.id, vboM.id, eboShared);
+		if ((vboO = o) != null) {
+			opaqueVao = new GLVao("Zone::Opaque::VAO", ZONE_VERTEX_LAYOUT);
+			opaqueVao.associateBufferRange(vboO, ArrayField.VERTEX_FIELD_0, ArrayField.VERTEX_FIELD_3);
+			opaqueVao.associateBufferRange(vboM, ArrayField.VERTEX_FIELD_6, ArrayField.VERTEX_FIELD_7);
+			opaqueVao.associateBuffer(eboAlpha, ArrayField.ELEMENT_BUFFER);
 		}
 
-		if (a != null) {
-			vboA = a;
-			glVaoA = glGenVertexArrays();
-			setupVao(glVaoA, a.id, vboM.id, eboShared);
+		if ((vboA = a) != null) {
+			alphaVao = new GLVao("Zone::Opaque::VAO", ZONE_VERTEX_LAYOUT);
+			alphaVao.associateBufferRange(vboA, ArrayField.VERTEX_FIELD_0, ArrayField.VERTEX_FIELD_3);
+			alphaVao.associateBufferRange(vboM, ArrayField.VERTEX_FIELD_6, ArrayField.VERTEX_FIELD_7);
+			alphaVao.associateBuffer(eboAlpha, ArrayField.ELEMENT_BUFFER);
 		}
 
 		tboF = f;
@@ -154,14 +170,14 @@ public class Zone {
 			tboF = null;
 		}
 
-		if (glVao != 0) {
-			glDeleteVertexArrays(glVao);
-			glVao = 0;
+		if(opaqueVao != null) {
+			opaqueVao.destroy();
+			 opaqueVao = null;
 		}
 
-		if (glVaoA != 0) {
-			glDeleteVertexArrays(glVaoA);
-			glVaoA = 0;
+		if(alphaVao != null) {
+			 alphaVao.destroy();
+			 alphaVao = null;
 		}
 
 		if (uploadJob != null) {
@@ -202,9 +218,9 @@ public class Zone {
 			leakCount++;
 		}
 
-		Integer vao;
+		GLVao vao;
 		while ((vao = VAO_PENDING_DELETION.poll()) != null) {
-			glDeleteVertexArrays(vao);
+			vao.destroy();
 			leakCount++;
 		}
 
@@ -232,14 +248,14 @@ public class Zone {
 			vboM = null;
 		}
 
-		if (glVao != 0) {
-			VAO_PENDING_DELETION.add(glVao);
-			glVao = 0;
+		if (opaqueVao != null) {
+			VAO_PENDING_DELETION.add(opaqueVao);
+			opaqueVao = null;
 		}
 
-		if (glVaoA != 0) {
-			VAO_PENDING_DELETION.add(glVaoA);
-			glVaoA = 0;
+		if (alphaVao != null) {
+			VAO_PENDING_DELETION.add(alphaVao);
+			alphaVao = null;
 		}
 	}
 
@@ -260,47 +276,6 @@ public class Zone {
 		if (vboA != null) {
 			this.bufLenA = vboA.mapped().byteView().position() / VERT_SIZE;
 		}
-	}
-
-	private void setupVao(int vao, int buffer, int metadata, int ebo) {
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
-		// The element buffer is part of VAO state
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-
-		// Position
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_SHORT, false, VERT_SIZE, 0);
-
-		// UVs
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 6);
-
-		// Normals
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
-
-		// TextureFaceIdx
-		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 20);
-
-		glBindBuffer(GL_ARRAY_BUFFER, metadata);
-
-		// WorldView index (not ID)
-		glEnableVertexAttribArray(6);
-		glVertexAttribDivisor(6, 1);
-		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
-
-		// Scene offset
-		glEnableVertexAttribArray(7);
-		glVertexAttribDivisor(7, 1);
-		glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
-
-		checkGLErrors();
-
-		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
@@ -407,7 +382,7 @@ public class Zone {
 			return;
 
 		lastDrawMode = STATIC_UNSORTED;
-		lastVao = glVao;
+		lastVao = opaqueVao;
 		lastTboF = tboF.getTexId();
 		flush(cmd);
 	}
@@ -421,7 +396,7 @@ public class Zone {
 			return;
 
 		lastDrawMode = STATIC_UNSORTED;
-		lastVao = glVao;
+		lastVao = opaqueVao;
 		lastTboF = tboF.getTexId();
 		flush(cmd);
 	}
@@ -446,7 +421,7 @@ public class Zone {
 		int startpos, endpos;
 		short x, y, z; // local position
 		short rid;
-		int vao;
+		GLVao vao;
 		int tboF;
 		byte level;
 		byte lx, lz, ux, uz; // lower/upper zone coords
@@ -485,7 +460,7 @@ public class Zone {
 	void addAlphaModel(
 		HdPlugin plugin,
 		MaterialManager materialManager,
-		int vao,
+		GLVao vao,
 		int tboF,
 		Model model,
 		ModelOverride modelOverride,
@@ -717,7 +692,7 @@ public class Zone {
 
 	private static int alphaFaceCount;
 	private static int lastDrawMode;
-	private static int lastVao;
+	private static GLVao lastVao;
 	private static int lastTboF;
 	private static int lastzx, lastzz;
 
@@ -875,7 +850,7 @@ public class Zone {
 			if (m.sortedFaces == null || m.sortedFacesLen <= 0 || !ZoneRenderer.eboAlphaMapped.isMapped())
 				continue;
 
-			if ((long) (ZoneRenderer.eboAlphaOffset + m.sortedFacesLen) * Integer.BYTES < ZoneRenderer.eboAlpha.size) {
+			if ((long) (ZoneRenderer.eboAlphaOffset + m.sortedFacesLen) * Integer.BYTES < eboAlpha.size) {
 				lastDrawMode = STATIC;
 				m.eboOffset = ZoneRenderer.eboAlphaOffset - ZoneRenderer.eboAlphaPrevOffset;
 				alphaFaceCount += m.sortedFacesLen / 3;

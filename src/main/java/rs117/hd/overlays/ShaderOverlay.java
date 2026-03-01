@@ -411,11 +411,13 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		if (fullscreen) {
-			glBindVertexArray(plugin.vaoTri);
+			plugin.triVao.bind();
 			glDrawArrays(GL_TRIANGLES, 0, 3);
+			plugin.triVao.unbind();
 		} else {
-			glBindVertexArray(plugin.vaoQuad);
+			plugin.quadVao.bind();
 			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+			plugin.quadVao.unbind();
 		}
 	}
 

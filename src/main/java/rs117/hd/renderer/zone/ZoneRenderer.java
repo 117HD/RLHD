@@ -662,7 +662,7 @@ public class ZoneRenderer implements Renderer {
 
 		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTiledLighting);
 		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
-		renderState.vao.set(plugin.vaoTri);
+		renderState.vao.set(plugin.triVao);
 
 		if (plugin.tiledLightingImageStoreProgram.isValid()) {
 			renderState.program.set(plugin.tiledLightingImageStoreProgram);
@@ -680,6 +680,8 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
+		glBindVertexArray(0);
+
 		frameTimer.end(Timer.RENDER_TILED_LIGHTING);
 		frameTimer.end(Timer.DRAW_TILED_LIGHTING);
 	}
@@ -693,21 +695,21 @@ public class ZoneRenderer implements Renderer {
 		// Render to the shadow depth map
 		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
 		renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
-		renderState.ido.set(indirectDrawCmds.id);
+		renderState.ido.set(indirectDrawCmds);
 		renderState.apply();
 
 		glClearDepth(1);
 		glClear(GL_DEPTH_BUFFER_BIT);
 
-		renderState.enable.set(GL_DEPTH_TEST);
-		renderState.disable.set(GL_CULL_FACE);
+		renderState.depthTest.set(true);
+		renderState.cullFace.set(false);
 		renderState.depthFunc.set(GL_LEQUAL);
 
 		CommandBuffer.SKIP_DEPTH_MASKING = true;
 		directionalCmd.execute();
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
-		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.setDefaults();
 
 		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
@@ -717,13 +719,9 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.DRAW_SCENE);
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
-		if (plugin.msaaSamples > 1) {
-			renderState.enable.set(GL_MULTISAMPLE);
-		} else {
-			renderState.disable.set(GL_MULTISAMPLE);
-		}
+		renderState.multisample.set(plugin.msaaSamples > 1);
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
-		renderState.ido.set(indirectDrawCmds.id);
+		renderState.ido.set(indirectDrawCmds);
 		renderState.apply();
 
 		// Clear scene
@@ -743,9 +741,9 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.RENDER_SCENE);
 
-		renderState.enable.set(GL_BLEND);
-		renderState.enable.set(GL_CULL_FACE);
-		renderState.enable.set(GL_DEPTH_TEST);
+		renderState.blend.set(true);
+		renderState.cullFace.set(true);
+		renderState.depthTest.set(true);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
@@ -756,10 +754,7 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.RENDER_SCENE);
 
 		// Done rendering the scene
-		renderState.disable.set(GL_BLEND);
-		renderState.disable.set(GL_CULL_FACE);
-		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.apply();
+		renderState.setDefaults();
 
 		frameTimer.end(Timer.DRAW_SCENE);
 	}

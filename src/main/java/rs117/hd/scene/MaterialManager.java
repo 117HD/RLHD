@@ -57,6 +57,7 @@ import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.HdPlugin.bindTextureWithUnit;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -391,12 +392,11 @@ public class MaterialManager {
 
 		int textureSize = config.textureResolution().getSize();
 		textureResolution = ivec(textureSize, textureSize);
-		glActiveTexture(TEXTURE_UNIT_GAME);
 		if (texMaterialTextureArray == 0 || previousLayerCount != textureLayers.size()) {
 			if (texMaterialTextureArray != 0)
 				glDeleteTextures(texMaterialTextureArray);
 			texMaterialTextureArray = glGenTextures();
-			glBindTexture(GL_TEXTURE_2D_ARRAY, texMaterialTextureArray);
+			bindTextureWithUnit(GL_TEXTURE_2D_ARRAY, TEXTURE_UNIT_GAME, texMaterialTextureArray);
 
 			// Since we're reallocating the texture array, all layers need to be reuploaded
 			for (var layer : textureLayers)

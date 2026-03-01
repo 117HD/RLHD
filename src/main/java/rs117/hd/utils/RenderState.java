@@ -3,9 +3,13 @@ package rs117.hd.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import lombok.RequiredArgsConstructor;
 import rs117.hd.opengl.GLState;
+import rs117.hd.opengl.GLVao;
 import rs117.hd.opengl.shader.ShaderProgram;
+import rs117.hd.utils.buffer.GLBuffer;
 
+import static org.lwjgl.opengl.GL20C.glUseProgram;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 
@@ -18,19 +22,25 @@ public final class RenderState {
 	public final GLShaderProgram program = addState(GLShaderProgram::new);
 	public final GLViewport viewport = addState(GLViewport::new);
 	public final GLBindVAO vao = addState(GLBindVAO::new);
-	public final GLBindEBO ebo = addState(GLBindEBO::new);
 	public final GLBindIDO ido = addState(GLBindIDO::new);
 	public final GLBindUBO ubo = addState(GLBindUBO::new);
 	public final GLDepthMask depthMask = addState(GLDepthMask::new);
 	public final GLDepthFunc depthFunc = addState(GLDepthFunc::new);
 	public final GLColorMask colorMask = addState(GLColorMask::new);
 	public final GLBlendFunc blendFunc = addState(GLBlendFunc::new);
-	public final GLEnable enable = addState(GLEnable::new);
-	public final GLDisable disable = addState(GLDisable::new);
+	public final GLToggle blend = new GLToggle(GL_BLEND, false); // TODO: Verify the default GL STATE
+	public final GLToggle cullFace = new GLToggle(GL_CULL_FACE, true);
+	public final GLToggle depthTest = new GLToggle(GL_DEPTH_TEST, false);
+	public final GLToggle multisample = new GLToggle(GL_DEPTH_TEST, false);
 
 	public void apply() {
 		for (GLState state : states)
 			state.apply();
+	}
+
+	public void setDefaults(){
+		for (GLState state : states)
+			state.setDefault();
 	}
 
 	public void reset() {
@@ -51,6 +61,9 @@ public final class RenderState {
 
 		@Override
 		protected void applyValues(int[] values) { glBindFramebuffer(values[0], values[1]); }
+
+		@Override
+		protected void applyDefault() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 	}
 
 	public static final class GLFramebufferTextureLayer extends GLState.IntArray {
@@ -60,55 +73,68 @@ public final class RenderState {
 		protected void applyValues(int[] values) {
 			glFramebufferTextureLayer(values[0], values[1], values[2], values[3], values[4]);
 		}
+
+		@Override
+		protected void applyDefault() { }
 	}
 
 	public static final class GLViewport extends GLState.IntArray {
 		private GLViewport() {
 			super(4);
 		}
-
 		@Override
 		protected void applyValues(int[] values) { glViewport(values[0], values[1], values[2], values[3]); }
+		@Override
+		protected void applyDefault() { glUseProgram(0); }
 	}
 
 	public static final class GLShaderProgram extends GLState.Object<ShaderProgram> {
 		@Override
 		protected void applyValue(ShaderProgram program) { program.use(); }
+		@Override
+		protected void applyDefault() { glUseProgram(0); }
 	}
 
 	public static final class GLDrawBuffer extends GLState.Int {
 		@Override
 		protected void applyValue(int buf) { glDrawBuffer(buf); }
+		@Override
+		protected void applyDefault() {  }
 	}
 
-	public static final class GLBindVAO extends GLState.Int {
+	public static final class GLBindVAO extends GLState.Object<GLVao> {
 		@Override
-		protected void applyValue(int vao) { glBindVertexArray(vao); }
+		protected void applyValue(GLVao vao) { vao.bind(); }
+		@Override
+		protected void applyDefault() { glBindVertexArray(0);  }
 	}
 
-	public static final class GLBindEBO extends GLState.Int {
+	public static final class GLBindIDO extends GLState.Object<GLBuffer> {
 		@Override
-		protected void applyValue(int ebo) { glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo); }
-	}
-
-	public static final class GLBindIDO extends GLState.Int {
+		protected void applyValue(GLBuffer ido) { glBindBuffer(GL_DRAW_INDIRECT_BUFFER, ido.id); }
 		@Override
-		protected void applyValue(int ebo) { glBindBuffer(GL_DRAW_INDIRECT_BUFFER, ebo); }
+		protected void applyDefault() { glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0);  }
 	}
 
 	public static final class GLBindUBO extends GLState.Int {
 		@Override
 		protected void applyValue(int ubo) { glBindBuffer(GL_UNIFORM_BUFFER, ubo); }
+		@Override
+		protected void applyDefault() { glBindBuffer(GL_UNIFORM_BUFFER, 0);  }
 	}
 
 	public static final class GLDepthMask extends GLState.Bool {
 		@Override
 		protected void applyValue(boolean enabled) { glDepthMask(enabled); }
+		@Override
+		protected void applyDefault() { glDepthMask(false);  }
 	}
 
 	public static final class GLDepthFunc extends GLState.Int {
 		@Override
 		protected void applyValue(int func) { glDepthFunc(func); }
+		@Override
+		protected void applyDefault() { glDepthFunc(GL_LESS); }
 	}
 
 	public static final class GLBlendFunc extends GLState.IntArray {
@@ -118,6 +144,8 @@ public final class RenderState {
 
 		@Override
 		protected void applyValues(int[] values) { glBlendFuncSeparate(values[0], values[1], values[2], values[3]); }
+		@Override
+		protected void applyDefault() { glBlendFuncSeparate(GL_ONE, GL_ZERO, GL_ONE, GL_ZERO); }
 	}
 
 	public static final class GLColorMask extends GLState.BoolArray {
@@ -127,25 +155,25 @@ public final class RenderState {
 
 		@Override
 		protected void applyValues(boolean[] values) { glColorMask(values[0], values[1], values[2], values[3]); }
+		@Override
+		protected void applyDefault() { glColorMask(true, true, true, true); }
 	}
 
-	public final class GLEnable extends GLState.IntSet {
+	@RequiredArgsConstructor
+	public static final class GLToggle extends GLState.Bool {
+		private final int target;
+		private final boolean defaultState;
+
 		@Override
-		protected void applyTarget(int target) { glEnable(target); }
-
-		public void set(int target) {
-			add(target);
-			disable.remove(target);
+		protected void applyValue(boolean value) {
+			if(value) {
+				glEnable(target);
+			} else {
+				glDisable(target);
+			}
 		}
-	}
 
-	public final class GLDisable extends GLState.IntSet {
 		@Override
-		protected void applyTarget(int target) { glDisable(target); }
-
-		public void set(int target) {
-			add(target);
-			enable.remove(target);
-		}
+		protected void applyDefault() { applyValue(defaultState); }
 	}
 }

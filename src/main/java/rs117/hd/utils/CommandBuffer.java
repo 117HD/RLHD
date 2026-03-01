@@ -8,9 +8,11 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.opengl.GLFence;
+import rs117.hd.opengl.GLVao;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -32,7 +34,6 @@ public class CommandBuffer {
 	private static final int GL_DRAW_CALL_TYPE_COUNT = 6;
 
 	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 6;
-	private static final int GL_BIND_ELEMENTS_ARRAY_TYPE = 7;
 	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
 	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
 	private static final int GL_DEPTH_MASK_TYPE = 10;
@@ -89,9 +90,9 @@ public class CommandBuffer {
 		return writeHead == 0;
 	}
 
-	public void BindVertexArray(int vao) {
+	public void BindVertexArray(GLVao vao) {
 		ensureCapacity(1);
-		cmd[writeHead++] = GL_BIND_VERTEX_ARRAY_TYPE & 0xFF | (long) vao << 8;
+		cmd[writeHead++] = GL_BIND_VERTEX_ARRAY_TYPE & 0xFF | (long) writeObject(vao) << 8;
 	}
 
 	public void FenceSync(GLFence fence, int condition) {
@@ -100,14 +101,9 @@ public class CommandBuffer {
 		cmd[writeHead++] = writeObject(fence);
 	}
 
-	public void BindElementsArray(int ebo) {
+	public void BindIndirectArray(GLBuffer ido) {
 		ensureCapacity(1);
-		cmd[writeHead++] = GL_BIND_ELEMENTS_ARRAY_TYPE & 0xFF | (long) ebo << 8;
-	}
-
-	public void BindIndirectArray(int ido) {
-		ensureCapacity(1);
-		cmd[writeHead++] = GL_BIND_INDIRECT_ARRAY_TYPE & 0xFF | (long) ido << 8;
+		cmd[writeHead++] = GL_BIND_INDIRECT_ARRAY_TYPE & 0xFF | (long) writeObject(ido) << 8;
 	}
 
 	public void BindTextureUnit(int type, int texId, int bindingIndex) {
@@ -263,18 +259,17 @@ public class CommandBuffer {
 		cmd[writeHead++] = (long) indirectOffset * Integer.BYTES;
 	}
 
-	public void Enable(int capability) {
-		Toggle(capability, true);
+	public void Enable(RenderState.GLToggle toggle) {
+		Toggle(toggle, true);
 	}
 
-	public void Disable(int capability) {
-		Toggle(capability, false);
+	public void Disable(RenderState.GLToggle toggle) {
+		Toggle(toggle, false);
 	}
 
-	public void Toggle(int capability, boolean enabled) {
-		ensureCapacity(2);
-		cmd[writeHead++] = GL_TOGGLE_TYPE;
-		cmd[writeHead++] = (enabled ? 1L : 0) << 32 | capability & INT_MASK;
+	public void Toggle(RenderState.GLToggle toggle, boolean enabled) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_TOGGLE_TYPE | (enabled ? 1L : 0) << 8 | (long) writeObject(toggle) << 9;
 	}
 
 	public void append(CommandBuffer other) {
@@ -316,15 +311,13 @@ public class CommandBuffer {
 						break;
 					}
 					case GL_BIND_VERTEX_ARRAY_TYPE: {
-						renderState.vao.set((int) (data >> 8));
-						break;
-					}
-					case GL_BIND_ELEMENTS_ARRAY_TYPE: {
-						renderState.ebo.set((int) (data >> 8));
+						int objectIdx = (int) (data >> 8);
+						renderState.vao.set((GLVao) objects[objectIdx]);
 						break;
 					}
 					case GL_BIND_INDIRECT_ARRAY_TYPE: {
-						renderState.ido.set((int) (data >> 8));
+						int objectIdx = (int) (data >> 8);
+						renderState.ido.set((GLBuffer) objects[objectIdx]);
 						break;
 					}
 					case GL_BIND_TEXTURE_UNIT_TYPE: {
@@ -343,13 +336,9 @@ public class CommandBuffer {
 						break;
 					}
 					case GL_TOGGLE_TYPE: {
-						long packed = cmd[readHead++];
-						int capability = (int) (packed & INT_MASK);
-						if ((packed >> 32) != 0) {
-							renderState.enable.set(capability);
-						} else {
-							renderState.disable.set(capability);
-						}
+						int objectIdx = (int) (data >> 9);
+						RenderState.GLToggle capability = (RenderState.GLToggle) objects[objectIdx];
+						capability.set(((data >> 9) & 1) == 1);
 						break;
 					}
 					case GL_FENCE_SYNC: {
