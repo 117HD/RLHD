@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.GLResourceManagement;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -111,13 +112,13 @@ public class Zone {
 
 		if (o != null) {
 			vboO = o;
-			glVao = glGenVertexArrays();
+			glVao = GLResourceManagement.obtainVAO();
 			setupVao(glVao, o.id, vboM.id, eboShared);
 		}
 
 		if (a != null) {
 			vboA = a;
-			glVaoA = glGenVertexArrays();
+			glVaoA = GLResourceManagement.obtainVAO();
 			setupVao(glVaoA, a.id, vboM.id, eboShared);
 		}
 
@@ -156,12 +157,12 @@ public class Zone {
 		}
 
 		if (glVao != 0) {
-			glDeleteVertexArrays(glVao);
+			GLResourceManagement.releaseVAO(glVao);
 			glVao = 0;
 		}
 
 		if (glVaoA != 0) {
-			glDeleteVertexArrays(glVaoA);
+			GLResourceManagement.releaseVAO(glVaoA);
 			glVaoA = 0;
 		}
 

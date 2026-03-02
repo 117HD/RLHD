@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.GLResourceManagement;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
@@ -86,7 +87,7 @@ class DynamicModelVAO {
 	public boolean hasStagingBuffer() { return vboRender != vboStaging; }
 
 	void initialize() {
-		vao = glGenVertexArrays();
+		vao = GLResourceManagement.obtainVAO();
 		tbo.initialize(INITIAL_SIZE);
 		vboRender.initialize(INITIAL_SIZE);
 		if (vboRender != vboStaging) {
@@ -186,7 +187,7 @@ class DynamicModelVAO {
 	void destroy() {
 		vboStaging.destroy();
 		tbo.destroy();
-		glDeleteVertexArrays(vao);
+		GLResourceManagement.releaseVAO(vao);
 		vao = 0;
 	}
 
