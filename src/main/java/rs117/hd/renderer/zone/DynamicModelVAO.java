@@ -53,7 +53,7 @@ class DynamicModelVAO {
 		.edit(ArrayField.VERTEX_FIELD_7).enabled().component(ComponentType.RG).format(FormatType.INT).stride(METADATA_SIZE).offset(4).asInteger().divisor(1)
 		.finish();
 
-	GLVao vao = new GLVao("DynamicModel::VAO", DYNAMIC_MODEL_VERTEX_LAYOUT);
+	GLVao vao;
 	boolean used;
 
 	private final GLBuffer vboRender;
@@ -106,6 +106,7 @@ class DynamicModelVAO {
 		if (vboRender != vboStaging) {
 			vboStaging.initialize(INITIAL_SIZE);
 		}
+		vao = new GLVao("DynamicModel::VAO", DYNAMIC_MODEL_VERTEX_LAYOUT);
 		vao.associateBufferRange(vboRender, ArrayField.VERTEX_FIELD_0, ArrayField.VERTEX_FIELD_3);
 	}
 

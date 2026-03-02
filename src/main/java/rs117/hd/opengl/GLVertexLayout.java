@@ -33,27 +33,27 @@ public class GLVertexLayout {
 	}
 
 	public GLVertexLayout enabled() {
-		attributes[editIdx].isEnabled = true;
+		attributes[editIdx].setEnabled(true);
 		return this;
 	}
 
 	public GLVertexLayout disabled() {
-		attributes[editIdx].isEnabled = false;
+		attributes[editIdx].setEnabled(false);
 		return this;
 	}
 
 	public GLVertexLayout normalized(boolean isNormalized) {
-		attributes[editIdx].isNormalized = isNormalized;
+		attributes[editIdx].setNormalized(isNormalized);
 		return this;
 	}
 
 	public GLVertexLayout asFloat() {
-		attributes[editIdx].isInteger = false;
+		attributes[editIdx].setInteger(false);
 		return this;
 	}
 
 	public GLVertexLayout asInteger() {
-		attributes[editIdx].isInteger = true;
+		attributes[editIdx].setInteger(true);
 		return this;
 	}
 
@@ -95,11 +95,11 @@ public class GLVertexLayout {
 		for (int i = 0; i < MAX_ATTRIBUTES; i++) {
 			Attribute attr = attributes[i];
 			str.append("  * ARRAY_FIELD_").append(i).append(": ");
-			if (attr.isEnabled) {
+			if (attr.isEnabled()) {
 				str.append("ENABLED, isInteger: ")
-					.append(attr.isInteger)
+					.append(attr.isInteger())
 					.append(", isNormalized: ")
-					.append(attr.isNormalized)
+					.append(attr.isNormalized())
 					.append(", component: ")
 					.append(attr.component)
 					.append(", format: ")
@@ -164,14 +164,52 @@ public class GLVertexLayout {
 	}
 
 	public static final class Attribute {
+		private static final byte FLAG_ENABLED = 1 << 0;
+		private static final byte FLAG_INTEGER = 1 << 1;
+		private static final byte FLAG_NORMALIZED = 1 << 2;
+
 		public ComponentType component;
 		public FormatType format;
 		public int stride;
 		public int divisor;
 		public long offset;
 
-		public boolean isEnabled;
-		public boolean isInteger; // TODO: Turn into Flags
-		public boolean isNormalized;
+		private byte flags;
+
+		public boolean isEnabled() {
+			return (flags & FLAG_ENABLED) != 0;
+		}
+
+		public void setEnabled(boolean enabled) {
+			if (enabled) {
+				flags |= FLAG_ENABLED;
+			} else {
+				flags &= ~FLAG_ENABLED;
+			}
+		}
+
+		public boolean isInteger() {
+			return (flags & FLAG_INTEGER) != 0;
+		}
+
+		public void setInteger(boolean integer) {
+			if (integer) {
+				flags |= FLAG_INTEGER;
+			} else {
+				flags &= ~FLAG_INTEGER;
+			}
+		}
+
+		public boolean isNormalized() {
+			return (flags & FLAG_NORMALIZED) != 0;
+		}
+
+		public void setNormalized(boolean normalized) {
+			if (normalized) {
+				flags |= FLAG_NORMALIZED;
+			} else {
+				flags &= ~FLAG_NORMALIZED;
+			}
+		}
 	}
 }

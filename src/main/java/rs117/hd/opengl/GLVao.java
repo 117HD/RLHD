@@ -15,21 +15,32 @@ public class GLVao {
 	private final String name;
 	private final GLVertexLayout layout;
 	private final GLBuffer[] buffers = new GLBuffer[GLVertexLayout.MAX_ATTRIBUTES];
-	private final boolean[] ownership = new boolean[GLVertexLayout.MAX_ATTRIBUTES];
+	private final long[] builtData = new long[GLVertexLayout.MAX_ATTRIBUTES];
 
-	private int glVAO, glBoundEBO;
+	private int glVAO;
 	private int layoutVersion;
+
+	private static long packBufferData(int bufferId, boolean owned) {
+		return ((long) bufferId << 1) | (owned ? 1L : 0L);
+	}
+
+	private static int unpackBufferId(long data) {
+		return (int) (data >>> 1);
+	}
+
+	private static boolean unpackOwnership(long data) {
+		return (data & 1L) != 0;
+	}
 
 	public void setBuffer(GLBuffer buffer, boolean takeOwnership, GLVertexLayout.ArrayField field) {
 		buffers[field.ordinal()] = buffer;
-		ownership[field.ordinal()] = takeOwnership;
+		// Note: ownership will be stored in builtData during bind/ensureBuilt
 		layoutVersion = -1;
 	}
 
 	public void setBufferRange(GLBuffer buffer, boolean takeOwnership, GLVertexLayout.ArrayField start, GLVertexLayout.ArrayField end) {
 		for (int i = start.ordinal(); i <= end.ordinal(); i++) {
 			buffers[i] = buffer;
-			ownership[i] = takeOwnership;
 		}
 		layoutVersion = -1;
 	}
@@ -37,7 +48,6 @@ public class GLVao {
 	public void setBuffers(GLBuffer buffer, boolean takeOwnership, GLVertexLayout.ArrayField... fields) {
 		for (int i = 0; i < fields.length; i++) {
 			buffers[fields[i].ordinal()] = buffer;
-			ownership[fields[i].ordinal()] = takeOwnership;
 		}
 		layoutVersion = -1;
 	}
@@ -60,7 +70,6 @@ public class GLVao {
 			GLBuffer b = buffers[i];
 			if (b == buffer) {
 				buffers[i] = null;
-				ownership[i] = false;
 				found = true;
 			}
 		}
@@ -82,19 +91,31 @@ public class GLVao {
 
 		final GLBuffer eboBuffer = buffers[GLVertexLayout.ArrayField.ELEMENT_BUFFER.ordinal()];
 		final int newEboValue = eboBuffer != null ? eboBuffer.id : 0;
-		if (glBoundEBO != newEboValue)
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glBoundEBO = newEboValue);
+		final int boundEboId = unpackBufferId(builtData[0]);
+		if (boundEboId != newEboValue) {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newEboValue);
+			builtData[0] = packBufferData(newEboValue, false);
+		}
 	}
 
 	private void ensureBuilt() {
-		if (layoutVersion == layout.getVersion())
+		boolean hasArrayBuffersChanged = false;
+		for (int i = 1; i < buffers.length; i++) {
+			GLBuffer buffer = buffers[i];
+			if (buffer != null && buffer.id != unpackBufferId(builtData[i])) {
+				hasArrayBuffersChanged = true;
+				break;
+			}
+		}
+
+		if (layoutVersion == layout.getVersion() && !hasArrayBuffersChanged)
 			return;
 
 		GLVertexLayout.Attribute[] attributes = layout.getAttributes();
 		int prevBufferId = 0;
 		for (int i = 0; i < attributes.length; i++) {
 			final GLVertexLayout.Attribute attrib = attributes[i];
-			if (!attrib.isEnabled) {
+			if (!attrib.isEnabled()) {
 				glDisableVertexAttribArray(i);
 				continue;
 			}
@@ -122,7 +143,7 @@ public class GLVao {
 			if (attrib.divisor > 0)
 				glVertexAttribDivisor(i, attrib.divisor);
 
-			if (attrib.isInteger) {
+			if (attrib.isInteger()) {
 				assert attrib.format.ordinal() >= GLVertexLayout.FormatType.INT.ordinal();
 				glVertexAttribIPointer(i, attrib.component.size, attrib.format.glFormatType, attrib.stride, attrib.offset);
 			} else {
@@ -130,11 +151,12 @@ public class GLVao {
 					i,
 					attrib.component.size,
 					attrib.format.glFormatType,
-					attrib.isNormalized,
+					attrib.isNormalized(),
 					attrib.stride,
 					attrib.offset
 				);
 			}
+			builtData[i + 1] = packBufferData(arrayBufferId, false);
 		}
 
 		glBindVertexArray(0);
@@ -150,8 +172,8 @@ public class GLVao {
 		if (previousVao != null && previousVao != this)
 			log.warn("Unbinding VAO: {} when it was bound by: {}", name, previousVao.name);
 		glBindVertexArray(0);
-		if (glBoundEBO != 0)
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glBoundEBO);
+		if (unpackBufferId(builtData[0]) != 0)
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		previousVao = null;
 	}
 
@@ -165,7 +187,7 @@ public class GLVao {
 			if (buffers[i] == null)
 				continue;
 
-			if (ownership[i])
+			if (unpackOwnership(builtData[i]))
 				buffers[i].destroy();
 			buffers[i] = null;
 		}
