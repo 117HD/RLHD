@@ -107,7 +107,7 @@ public class GLBuffer {
 	}
 
 	public GLBuffer initialize(long initialCapacity) {
-		id = obtainBuffer(target);
+		id = obtainBuffer(target, usage);
 		// Initialize both GL and CL buffers to buffers of a single byte or more,
 		// to ensure that valid buffers are given to compute dispatches.
 		// This is particularly important on Apple M2 Max, where an uninitialized buffer leads to a crash
@@ -121,11 +121,7 @@ public class GLBuffer {
 			unmap();
 
 		if (id != 0) {
-			if(isStorageBuffer()) {
-				glDeleteBuffers(id);
-			} else {
-				releaseBuffer(target, id);
-			}
+			releaseBuffer(target, usage, id, isStorageBuffer());
 			id = 0;
 		}
 
@@ -176,7 +172,7 @@ public class GLBuffer {
 		int oldBuffer = id;
 		// Create a new buffer if we have to preserve existing data
 		if (byteOffset > 0 || (storageFlags & STORAGE_IMMUTABLE) != 0)
-			id = obtainBuffer(target);
+			id = glGenBuffers();
 
 		bind();
 
@@ -212,8 +208,8 @@ public class GLBuffer {
 					);
 
 					// Recreate buffers to fall back to non-persistent
-					glDeleteBuffers(id);
-					id = obtainBuffer(target);
+					releaseBuffer(target, usage, id, isStorageBuffer());
+					id = obtainBuffer(target, usage);
 					storageFlags = STORAGE_NONE;
 				}
 				checkGLErrors();
@@ -242,7 +238,7 @@ public class GLBuffer {
 		if (id != oldBuffer && oldBuffer != 0 && byteOffset > 0) {
 			// Neither buffer must be mapped before this, except for with the persistent bit
 			copyRangeTo(oldBuffer, id, 0, 0, byteOffset);
-			releaseBuffer(target, oldBuffer);
+			releaseBuffer(target, usage, id, isStorageBuffer());
 		}
 
 		// If was mapped, remap without GL_MAP_INVALIDATE_BUFFER_BIT, since we may have previously written data

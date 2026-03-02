@@ -6,6 +6,7 @@ import org.lwjgl.opengl.*;
 
 import static java.util.Arrays.copyOf;
 import static org.lwjgl.opengl.GL11C.glGetInteger;
+import static org.lwjgl.opengl.GL15.glDeleteBuffers;
 import static org.lwjgl.opengl.GL20.GL_MAX_VERTEX_ATTRIBS;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL30C.glBindVertexArray;
@@ -19,6 +20,7 @@ public class GLResourceManagement {
 	@RequiredArgsConstructor
 	static final class BufferPool {
 		final int target;
+		final int usage;
 		final Supplier<Integer> gen;
 		final Deleter deleter;
 		int[] unused = new int[16];
@@ -43,28 +45,32 @@ public class GLResourceManagement {
 	}
 
 	private static int MAX_VERTEX_ATTRIBS_VALUE = -1;
-	private static final BufferPool VAO_POOL = new BufferPool(-1, GL30C::glGenVertexArrays, GL30C::glDeleteVertexArrays);
+	private static final BufferPool VAO_POOL = new BufferPool(-1, -1, GL30::glGenVertexArrays, GL30::glDeleteVertexArrays);
 	private static BufferPool[] BUFFER_POOLS = new BufferPool[4];
 	private static int BUFFER_POOL_COUNT = 0;
 
-	private static BufferPool obtainBufferPool(int target) {
+	private static BufferPool obtainBufferPool(int target, int usage) {
 		for(int i = 0; i < BUFFER_POOL_COUNT; i++) {
-			if(BUFFER_POOLS[i].target == target)
+			if(BUFFER_POOLS[i].target == target && BUFFER_POOLS[i].usage == usage)
 				return BUFFER_POOLS[i];
 		}
 
 		if(BUFFER_POOL_COUNT >= BUFFER_POOLS.length)
 			BUFFER_POOLS = copyOf(BUFFER_POOLS, BUFFER_POOLS.length * 2);
 
-		return BUFFER_POOLS[BUFFER_POOL_COUNT++] = new BufferPool(target, GL15C::glGenBuffers, GL15C::glDeleteBuffers);
+		return BUFFER_POOLS[BUFFER_POOL_COUNT++] = new BufferPool(target, usage, GL15::glGenBuffers, GL15::glDeleteBuffers);
 	}
 
-	public static int obtainBuffer(int target) {
-		return obtainBufferPool(target).obtain();
+	public static int obtainBuffer(int target, int usage) {
+		return obtainBufferPool(target, usage).obtain();
 	}
 
-	public static void releaseBuffer(int target, int id) {
-		obtainBufferPool(target).release(id);
+	public static void releaseBuffer(int target, int usage, int id, boolean isStorage) {
+		if(isStorage) {
+			glDeleteBuffers(id);
+		} else {
+			obtainBufferPool(target, usage).release(id);
+		}
 	}
 
 	public static int obtainVAO() {
