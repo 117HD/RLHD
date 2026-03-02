@@ -126,11 +126,11 @@ class DynamicModelVAO {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 12);
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 18);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 18);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);

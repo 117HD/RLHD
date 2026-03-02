@@ -276,11 +276,11 @@ public class Zone {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 6);
+		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 6);
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 12);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);

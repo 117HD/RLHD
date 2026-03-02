@@ -32,9 +32,9 @@
 #include <utils/constants.glsl>
 
 layout (location = 0) in vec3 vPosition;
-layout (location = 1) in vec3 vUv;
 
 #if ZONE_RENDERER
+    layout (location = 1) in vec4 vUv;
     layout (location = 3) in int vTextureFaceIdx;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
@@ -109,6 +109,7 @@ layout (location = 1) in vec3 vUv;
         gl_Position = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
     }
 #else
+    layout (location = 1) in vec3 vUv;
     layout (location = 3) in int vAlphaBiasHsl;
     layout (location = 4) in int vMaterialData;
     layout (location = 5) in int vTerrainData;
@@ -151,7 +152,7 @@ layout (location = 1) in vec3 vUv;
 
         #if SHADOW_MODE == SHADOW_MODE_DETAILED
             gPosition = vPosition;
-            gUv = vUv;
+            gUv = vUv.xyz;
             gMaterialData = vMaterialData;
             gCastShadow = shouldCastShadow;
             #if SHADOW_TRANSPARENCY
