@@ -585,6 +585,18 @@
     "overlayIds": [
       123
     ],
+    "groundMaterial": "BRICK_PATHS",
+    "replacements": {
+      "HOSIDIUS_STONE_FLOOR_TEXTURE_BLENDING_ONLY": "blendingTextures"
+    }
+  },
+  {
+    "name": "HOSIDIUS_STONE_FLOOR_TEXTURE_BLENDING_ONLY",
+    "area": "HOSIDIUS",
+    "blended": false,
+    "overlayIds": [
+      123
+    ],
     "groundMaterial": "BRICK_PATHS"
   },
   {
@@ -10460,6 +10472,18 @@
   {
     "name": "OVERLAY_N119",
     "area": "ALL",
+    "overlayIds": [
+      137
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "replacements": {
+      "OVERLAY_N119_TEXTURE_BLENDING_ONLY": "blendingTextures"
+    }
+  },
+  {
+    "name": "OVERLAY_N119_TEXTURE_BLENDING_ONLY",
+    "area": "ALL",
+    "blended": false,
     "overlayIds": [
       137
     ],
