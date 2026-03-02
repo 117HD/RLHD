@@ -459,8 +459,8 @@ public class GLBuffer {
 					final int len = (int) numBytes[i];
 
 					try {
-						src.position(srcPos);
 						src.limit(srcPos + len);
+						src.position(srcPos);
 
 						dst.position(dstPos);
 						dst.put(src);
