@@ -464,7 +464,7 @@
   },
   {
     "name": "WIZARDS_TOWER_PATH_BLEND_FIX",
-    "groundMaterial": "OVERWORLD_GRASS_1",
+    "groundMaterial": "HD_LAVA",
     "minHue": 10,
     "maxHue": 10,
     "minSaturation": 5,
@@ -488,6 +488,7 @@
     ],
     "groundMaterial": "BRICK_PATHS",
     "shiftSaturation": -1,
+    "blended": false,
     "replacements": {
       "WIZARDS_TOWER_PATH_BLEND_FIX_WINTER": "season == SeasonalTheme.WINTER",
       "WIZARDS_TOWER_PATH_BLEND_FIX": "blending"
@@ -4025,7 +4026,20 @@
       164
     ],
     "groundMaterial": "BRICK_PATHS",
-    "shiftSaturation": -1
+    "shiftSaturation": -1,
+    "replacements": {
+      "WIZARDS_TOWER_PATH_TEXTURE_BLENDING_ONLY": "blendingTextures"
+    }
+  },
+  {
+    "name": "WIZARDS_TOWER_PATH_TEXTURE_BLENDING_ONLY",
+    "area": "WIZARDS_TOWER_PATH",
+    "overlayIds": [
+      164
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "shiftSaturation": -1,
+    "blended": false
   },
   {
     "name": "MISTHALIN_MYSTERY_MANOR_TILE_DARK_1",
