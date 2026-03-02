@@ -38,6 +38,8 @@ import static org.lwjgl.opengl.GL44.GL_MAP_PERSISTENT_BIT;
 import static org.lwjgl.opengl.GL44.glBufferStorage;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.opengl.GLResourceManagement.obtainBuffer;
+import static rs117.hd.opengl.GLResourceManagement.releaseBuffer;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -105,7 +107,7 @@ public class GLBuffer {
 	}
 
 	public GLBuffer initialize(long initialCapacity) {
-		id = glGenBuffers();
+		id = obtainBuffer(target);
 		// Initialize both GL and CL buffers to buffers of a single byte or more,
 		// to ensure that valid buffers are given to compute dispatches.
 		// This is particularly important on Apple M2 Max, where an uninitialized buffer leads to a crash
@@ -119,7 +121,11 @@ public class GLBuffer {
 			unmap();
 
 		if (id != 0) {
-			glDeleteBuffers(id);
+			if(isStorageBuffer()) {
+				glDeleteBuffers(id);
+			} else {
+				releaseBuffer(target, id);
+			}
 			id = 0;
 		}
 
@@ -170,7 +176,7 @@ public class GLBuffer {
 		int oldBuffer = id;
 		// Create a new buffer if we have to preserve existing data
 		if (byteOffset > 0 || (storageFlags & STORAGE_IMMUTABLE) != 0)
-			id = glGenBuffers();
+			id = obtainBuffer(target);
 
 		bind();
 
@@ -207,7 +213,7 @@ public class GLBuffer {
 
 					// Recreate buffers to fall back to non-persistent
 					glDeleteBuffers(id);
-					id = glGenBuffers();
+					id = obtainBuffer(target);
 					storageFlags = STORAGE_NONE;
 				}
 				checkGLErrors();
@@ -236,7 +242,7 @@ public class GLBuffer {
 		if (id != oldBuffer && oldBuffer != 0 && byteOffset > 0) {
 			// Neither buffer must be mapped before this, except for with the persistent bit
 			copyRangeTo(oldBuffer, id, 0, 0, byteOffset);
-			glDeleteBuffers(oldBuffer);
+			releaseBuffer(target, oldBuffer);
 		}
 
 		// If was mapped, remap without GL_MAP_INVALIDATE_BUFFER_BIT, since we may have previously written data

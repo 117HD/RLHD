@@ -83,6 +83,7 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.opengl.GLResourceManagement;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
@@ -736,6 +737,8 @@ public class HdPlugin extends Plugin {
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
+
+				GLResourceManagement.destroyUnusedBuffers();
 
 				destroyUiTexture();
 				destroyShaders();
