@@ -1192,6 +1192,12 @@
     ]
   },
   {
+    "name": "FALADOR_MIDDLE",
+    "aabbs": [
+      [ 2961, 3385, 2969, 3377 ]
+    ]
+  },
+  {
     "name": "FALADOR",
     "areas": [
       "FALADOR_INSTANCE"

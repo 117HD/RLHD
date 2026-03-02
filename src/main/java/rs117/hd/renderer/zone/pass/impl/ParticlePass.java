@@ -1,0 +1,365 @@
+/*
+ * Copyright (c) 2025, Mark7625 (https://github.com/Mark7625/)
+ * All rights reserved.
+ */
+package rs117.hd.renderer.zone.pass.impl;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.util.Arrays;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
+import org.lwjgl.BufferUtils;
+import rs117.hd.HdPlugin;
+import rs117.hd.opengl.GLFence;
+import rs117.hd.opengl.shader.ParticleShaderProgram;
+import rs117.hd.opengl.shader.ShaderException;
+import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.zone.pass.ScenePass;
+import rs117.hd.renderer.zone.pass.ScenePassContext;
+import rs117.hd.scene.particles.ParticleManager;
+import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
+import rs117.hd.scene.particles.definition.ParticleDefinition;
+import rs117.hd.scene.particles.core.ParticleTextureLoader;
+import rs117.hd.scene.particles.emitter.ParticleEmitter;
+import rs117.hd.utils.buffer.GLBuffer;
+import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
+import static org.lwjgl.opengl.GL15.glUnmapBuffer;
+import static org.lwjgl.opengl.GL30.GL_MAP_INVALIDATE_RANGE_BIT;
+import static org.lwjgl.opengl.GL30.GL_MAP_WRITE_BIT;
+import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
+import static org.lwjgl.opengl.GL30.glMapBufferRange;
+import static org.lwjgl.opengl.GL32C.GL_SYNC_GPU_COMMANDS_COMPLETE;
+import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_PARTICLE;
+
+@Slf4j
+@Singleton
+public class ParticlePass implements ScenePass {
+
+	@Inject
+	private Client client;
+
+	@Inject
+	private HdPlugin plugin;
+
+	private static final int MAX_PARTICLES = 4096;
+	private static final int MAX_DRAWN = 2048;
+
+	private final ParticleManager.ParticleRenderContext renderContext = new ParticleManager.ParticleRenderContext();
+	private final int[] visibleIndices = new int[MAX_DRAWN];
+	private static final int INSTANCE_BUFFER_COUNT = 3;
+	private static final int QUAD_VERTS = 6;
+	private static final int FLOATS_PER_INSTANCE = 14;
+	private static final int INSTANCE_STRIDE_BYTES = 64;
+	private static final int INSTANCE_PADDING_BYTES = INSTANCE_STRIDE_BYTES - FLOATS_PER_INSTANCE * 4;
+	private static final float[] PARTICLE_QUAD_CORNERS = {
+		-1, -1,  1, -1,  1, 1,
+		-1, -1,  1, 1,  -1, 1
+	};
+
+	@Inject
+	private ParticleManager particleManager;
+
+	@Inject
+	private ParticleTextureLoader particleTextureLoader;
+
+	@Inject
+	private ParticleShaderProgram particleProgram;
+
+	private int vaoParticles;
+	private int vboParticleQuad;
+	private int[] vboParticleInstances;
+	private GLBuffer[] particleInstanceBuffers;
+	private final GLFence[] instanceFences = new GLFence[INSTANCE_BUFFER_COUNT];
+	private int instanceBufferSlot;
+	private FloatBuffer particleStagingBuffer;
+	private final float[] particleDistSq = new float[MAX_PARTICLES];
+	private final Integer[] particleSortOrder = new Integer[MAX_PARTICLES];
+
+	private final String[] textureForVisibleIndex = new String[MAX_PARTICLES];
+	private ByteBuffer batchUploadBuffer;
+
+	@Getter
+	private int lastParticleTotalOnPlane;
+	@Getter
+	private int lastParticleCulledDistance;
+	@Getter
+	private int lastParticleCulledFrustum;
+	@Getter
+	private int lastParticleDrawn;
+	private int lastUploadedInstanceCount;
+
+	@Override
+	public String passName() {
+		return "Particles";
+	}
+
+	public void initialize() {
+		vaoParticles = glGenVertexArrays();
+		vboParticleQuad = glGenBuffers();
+		long instanceVboBytes = (long) MAX_DRAWN * INSTANCE_STRIDE_BYTES;
+		vboParticleInstances = new int[INSTANCE_BUFFER_COUNT];
+		if (GLBuffer.supportsStorageBuffers()) {
+			particleInstanceBuffers = new GLBuffer[INSTANCE_BUFFER_COUNT];
+			for (int i = 0; i < INSTANCE_BUFFER_COUNT; i++) {
+				particleInstanceBuffers[i] = new GLBuffer("particle instances " + i, GL_ARRAY_BUFFER, GL_STREAM_DRAW, GLBuffer.STORAGE_PERSISTENT | GLBuffer.STORAGE_WRITE);
+				particleInstanceBuffers[i].initialize(instanceVboBytes);
+				vboParticleInstances[i] = particleInstanceBuffers[i].id;
+				instanceFences[i] = new GLFence();
+			}
+		} else {
+			particleInstanceBuffers = null;
+			for (int i = 0; i < INSTANCE_BUFFER_COUNT; i++) {
+				vboParticleInstances[i] = glGenBuffers();
+				glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances[i]);
+				glBufferData(GL_ARRAY_BUFFER, instanceVboBytes, GL_STREAM_DRAW);
+				instanceFences[i] = new GLFence();
+			}
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
+		FloatBuffer quadBuffer = BufferUtils.createFloatBuffer(PARTICLE_QUAD_CORNERS.length).put(PARTICLE_QUAD_CORNERS).flip();
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticleQuad);
+		glBufferData(GL_ARRAY_BUFFER, quadBuffer, GL_STATIC_DRAW);
+		glBindVertexArray(vaoParticles);
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticleQuad);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+		glVertexAttribDivisor(0, 0);
+		bindInstanceBuffer(0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 0);
+		glVertexAttribDivisor(1, 1);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 4, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 12);
+		glVertexAttribDivisor(2, 1);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 28);
+		glVertexAttribDivisor(3, 1);
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 32);
+		glVertexAttribDivisor(4, 1);
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 36);
+		glVertexAttribDivisor(5, 1);
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 40);
+		glVertexAttribDivisor(6, 1);
+		glEnableVertexAttribArray(7);
+		glVertexAttribPointer(7, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 44);
+		glVertexAttribDivisor(7, 1);
+		glEnableVertexAttribArray(8);
+		glVertexAttribPointer(8, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 48);
+		glVertexAttribDivisor(8, 1);
+		glEnableVertexAttribArray(9);
+		glVertexAttribPointer(9, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 52);
+		glVertexAttribDivisor(9, 1);
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		particleStagingBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * FLOATS_PER_INSTANCE);
+		batchUploadBuffer = BufferUtils.createByteBuffer(MAX_DRAWN * INSTANCE_STRIDE_BYTES);
+	}
+
+	private void bindInstanceBuffer(int slot) {
+		glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances[slot]);
+	}
+
+	public void destroy() {
+		if (vaoParticles != 0) {
+			glDeleteVertexArrays(vaoParticles);
+			vaoParticles = 0;
+		}
+		if (vboParticleQuad != 0) {
+			glDeleteBuffers(vboParticleQuad);
+			vboParticleQuad = 0;
+		}
+		if (vboParticleInstances != null) {
+			for (int i = 0; i < INSTANCE_BUFFER_COUNT; i++) {
+				if (particleInstanceBuffers != null) {
+					particleInstanceBuffers[i].destroy();
+				} else {
+					glDeleteBuffers(vboParticleInstances[i]);
+				}
+				vboParticleInstances[i] = 0;
+			}
+			vboParticleInstances = null;
+			particleInstanceBuffers = null;
+		}
+		particleStagingBuffer = null;
+		batchUploadBuffer = null;
+		particleTextureLoader.dispose();
+	}
+
+	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
+		particleProgram.compile(includes);
+	}
+
+	public void destroyShaders() {
+		particleProgram.destroy();
+	}
+
+	@Override
+	public void beforeDraw(ScenePassContext ctx) {
+		if (ctx.getSceneContext() != null) {
+			ctx.beginTimer(Timer.UPDATE_PARTICLES);
+			particleManager.update(ctx.getSceneContext(), plugin.deltaTime);
+			ctx.endTimer(Timer.UPDATE_PARTICLES);
+		}
+	}
+
+	@Override
+	public void draw(ScenePassContext ctx) {
+		int currentPlane = client.getTopLevelWorldView().getPlane();
+		int instanceCount = prepareBatches(currentPlane);
+		if (instanceCount == 0)
+			return;
+		var renderState = ctx.getRenderState();
+		renderState.program.set(particleProgram);
+		renderState.enable.set(GL_BLEND);
+		renderState.blendFunc.reset();
+		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		renderState.disable.set(GL_CULL_FACE);
+		renderState.depthMask.set(false);
+		renderState.apply();
+		glActiveTexture(TEXTURE_UNIT_PARTICLE);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, particleTextureLoader.getTextureArrayId());
+		particleProgram.setParticleTextureUnit(TEXTURE_UNIT_PARTICLE);
+		glBindVertexArray(vaoParticles);
+		ctx.beginTimer(Timer.RENDER_PARTICLES);
+		int slot = instanceBufferSlot;
+		if (particleInstanceBuffers != null) {
+			instanceFences[slot].sync();
+		}
+		uploadInstanceDataToVbo(instanceCount, slot);
+		bindInstanceBuffer(slot);
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 0);
+		glVertexAttribPointer(2, 4, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 12);
+		glVertexAttribPointer(3, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 28);
+		glVertexAttribPointer(4, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 32);
+		glVertexAttribPointer(5, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 36);
+		glVertexAttribPointer(6, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 40);
+		glVertexAttribPointer(7, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 44);
+		glVertexAttribPointer(8, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 48);
+		glVertexAttribPointer(9, 1, GL_FLOAT, false, INSTANCE_STRIDE_BYTES, 52);
+		glDrawArraysInstanced(GL_TRIANGLES, 0, QUAD_VERTS, instanceCount);
+		if (particleInstanceBuffers != null) {
+			instanceFences[slot].handle = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+		}
+		instanceBufferSlot = (instanceBufferSlot + 1) % INSTANCE_BUFFER_COUNT;
+		ctx.endTimer(Timer.RENDER_PARTICLES);
+		glBindVertexArray(0);
+	}
+
+	@Override
+	public void afterDraw(ScenePassContext ctx) {
+		ctx.getRenderState().depthMask.set(true);
+	}
+
+	private int prepareBatches(int currentPlane) {
+		ParticleBuffer buf = particleManager.getParticleBuffer();
+		renderContext.cameraX = plugin.cameraPosition[0];
+		renderContext.cameraY = plugin.cameraPosition[1];
+		renderContext.cameraZ = plugin.cameraPosition[2];
+		renderContext.maxDistSq = (float) (plugin.getDrawDistance() * LOCAL_TILE_SIZE);
+		renderContext.maxDistSq *= renderContext.maxDistSq;
+		renderContext.frustum = plugin.cameraFrustum;
+
+		int instanceCount = particleManager.filterVisibleParticles(buf, renderContext, currentPlane, 0L, visibleIndices, particleDistSq);
+		lastParticleTotalOnPlane = renderContext.totalOnPlane;
+		lastParticleCulledDistance = renderContext.culledDistance;
+		lastParticleCulledFrustum = renderContext.culledFrustum;
+		lastParticleDrawn = instanceCount;
+
+		if (instanceCount == 0)
+			return 0;
+
+		for (int i = 0; i < instanceCount; i++)
+			particleSortOrder[i] = i;
+		Arrays.sort(particleSortOrder, 0, instanceCount, (a, b) -> Float.compare(particleDistSq[b], particleDistSq[a]));
+
+		// Build render list from filtered particles, back-to-front order
+		float[] particleColor = new float[4];
+		particleStagingBuffer.clear();
+		for (int k = 0; k < instanceCount; k++) {
+			int bufIndex = visibleIndices[particleSortOrder[k]];
+			textureForVisibleIndex[k] = getTextureNameForParticle(buf, bufIndex);
+			buf.getCurrentColor(bufIndex, particleColor);
+			float cx = buf.posX[bufIndex] + plugin.cameraShift[0];
+			float cy = buf.posY[bufIndex];
+			float cz = buf.posZ[bufIndex] + plugin.cameraShift[1];
+			particleStagingBuffer.put(cx).put(cy).put(cz);
+			particleStagingBuffer.put(particleColor[0]).put(particleColor[1]).put(particleColor[2]).put(particleColor[3]);
+			particleStagingBuffer.put(buf.size[bufIndex]);
+			String tex = textureForVisibleIndex[k];
+			particleStagingBuffer.put((float) particleTextureLoader.getTextureLayer(tex != null ? tex : ""));
+			float flipbookCols = 0f;
+			float flipbookRows = 0f;
+			float flipbookFrameVal = 0f;
+			ParticleDefinition def = getDefinitionForParticle(buf, bufIndex);
+			if (def != null && def.texture.flipbook.flipbookColumns > 0 && def.texture.flipbook.flipbookRows > 0) {
+				flipbookCols = def.texture.flipbook.flipbookColumns;
+				flipbookRows = def.texture.flipbook.flipbookRows;
+				String mode = def.texture.flipbook.flipbookMode;
+				if (mode != null && "order".equalsIgnoreCase(mode)) {
+					float maxL = buf.maxLife[bufIndex];
+					flipbookFrameVal = maxL > 0 ? (1f - buf.life[bufIndex] / maxL) : 0f;
+				} else if (mode != null && "random".equalsIgnoreCase(mode) && buf.flipbookFrame[bufIndex] >= 0f) {
+					flipbookFrameVal = 1f + buf.flipbookFrame[bufIndex];
+				}
+			}
+			particleStagingBuffer.put(flipbookCols).put(flipbookRows).put(flipbookFrameVal);
+			float useSceneAmbient = (def != null && def.colours.useSceneAmbientLight) ? 1f : 0f;
+			particleStagingBuffer.put(useSceneAmbient);
+			particleStagingBuffer.put(buf.yaw[bufIndex]);
+		}
+
+		// Fill upload buffer, 64 bytes per instance (12 floats + 16 padding)
+		batchUploadBuffer.clear();
+		for (int k = 0; k < instanceCount; k++) {
+			int src = k * FLOATS_PER_INSTANCE;
+			for (int f = 0; f < FLOATS_PER_INSTANCE; f++)
+				batchUploadBuffer.putFloat(particleStagingBuffer.get(src + f));
+			for (int p = 0; p < INSTANCE_PADDING_BYTES; p++)
+				batchUploadBuffer.put((byte) 0);
+		}
+		lastUploadedInstanceCount = instanceCount;
+		return instanceCount;
+	}
+
+	private static String getTextureNameForParticle(ParticleBuffer buf, int bufIndex) {
+		ParticleEmitter emitter = buf.emitter[bufIndex];
+		if (emitter == null) return null;
+		var def = emitter.getDefinition();
+		String file = def != null ? def.texture.file : null;
+		if (file == null || file.isEmpty()) return null;
+		return file;
+	}
+
+	private static ParticleDefinition getDefinitionForParticle(ParticleBuffer buf, int bufIndex) {
+		ParticleEmitter emitter = buf.emitter[bufIndex];
+		return emitter != null ? emitter.getDefinition() : null;
+	}
+
+	private void uploadInstanceDataToVbo(int instanceCount, int slot) {
+		int bytes = instanceCount * INSTANCE_STRIDE_BYTES;
+		batchUploadBuffer.flip();
+		if (particleInstanceBuffers != null && particleInstanceBuffers[slot].isMapped()) {
+			particleInstanceBuffers[slot].upload(batchUploadBuffer);
+		} else {
+			glBindBuffer(GL_ARRAY_BUFFER, vboParticleInstances[slot]);
+			ByteBuffer mapped = glMapBufferRange(GL_ARRAY_BUFFER, 0, bytes, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
+			if (mapped != null) {
+				mapped.put(batchUploadBuffer);
+				glUnmapBuffer(GL_ARRAY_BUFFER);
+			} else {
+				glBufferSubData(GL_ARRAY_BUFFER, 0, batchUploadBuffer);
+			}
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
+	}
+}

@@ -785,12 +785,34 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean hideVanillaWaterEffects() { return true; }
 
+	/*====== Particles settings ======*/
+
+	@ConfigSection(
+		name = "Particles",
+		description = "Particle effect settings",
+		position = 4,
+		closedByDefault = true
+	)
+	String particlesSettings = "particlesSettings";
+
+	String KEY_PARTICLE_AMBIENT_LIGHT = "particleAmbientLight";
+	@ConfigItem(
+		keyName = KEY_PARTICLE_AMBIENT_LIGHT,
+		name = "Scene ambient light",
+		description = "Apply scene ambient lighting to particles so they match the area's light and color.",
+		section = particlesSettings,
+		position = 0
+	)
+	default boolean particleAmbientLight() {
+		return true;
+	}
+
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -944,7 +966,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
@@ -1097,7 +1119,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
-		position = 6,
+		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";

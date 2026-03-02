@@ -30,6 +30,7 @@ import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.particles.ParticleManager;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.jobs.GenericJob;
@@ -79,6 +80,9 @@ public class SceneManager {
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
+
+	@Inject
+	private ParticleManager particleManager;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -333,6 +337,12 @@ public class SceneManager {
 		task -> lightManager.loadSceneLights(nextSceneContext)
 	);
 
+	@Getter
+	private final GenericJob loadSceneParticlesTask = GenericJob.build(
+		"ParticleManager::loadSceneParticles",
+		task -> particleManager.loadSceneParticles(nextSceneContext)
+	);
+
 	private final GenericJob calculateRoofChangesTask = GenericJob.build(
 		"calculateRoofChanges",
 		(task) -> {
@@ -422,10 +432,12 @@ public class SceneManager {
 			environmentManager.loadSceneEnvironments(nextSceneContext);
 
 			loadSceneLightsTask.cancel();
+			loadSceneParticlesTask.cancel();
 			calculateRoofChangesTask.cancel();
 
 			generateSceneDataTask.queue();
 			loadSceneLightsTask.queue();
+			loadSceneParticlesTask.queue();
 
 			if (nextSceneContext.enableAreaHiding) {
 				assert nextSceneContext.sceneBase != null;
@@ -610,6 +622,7 @@ public class SceneManager {
 
 		// Handle object spawns that must be processed on the client thread
 		loadSceneLightsTask.waitForCompletion();
+		loadSceneParticlesTask.waitForCompletion();
 		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
 
 		for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)

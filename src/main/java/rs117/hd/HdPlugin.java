@@ -68,7 +68,11 @@ import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
+import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.ClientUI;
+import net.runelite.client.ui.NavigationButton;
+import net.runelite.client.ui.components.colorpicker.ColorPickerManager;
+import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -110,6 +114,9 @@ import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.particles.ParticleManager;
+import rs117.hd.scene.particles.debug.ParticleGizmoOverlay;
+import rs117.hd.scene.particles.debug.ParticleSidebarPanel;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
@@ -165,6 +172,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_PARTICLE = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -224,14 +232,15 @@ public class HdPlugin extends Plugin {
 		TextureManager.class,
 		TileOverrideManager.class,
 		WaterTypeManager.class,
-		SceneManager.class
+		SceneManager.class,
+		ParticleManager.class
 	);
 
 	@Getter
 	private Gson gson;
 
 	@Inject
-	private Client client;
+	public Client client;
 
 	@Inject
 	private ClientUI clientUI;
@@ -288,6 +297,20 @@ public class HdPlugin extends Plugin {
 	private DeveloperTools developerTools;
 
 	@Inject
+	private ClientToolbar clientToolbar;
+
+	@Getter
+	private ParticleSidebarPanel particleSidebarPanel;
+
+	@Inject
+	private ParticleGizmoOverlay particleGizmoOverlay;
+
+	@Inject
+	private ColorPickerManager colorPickerManager;
+
+	private NavigationButton particleNavButton;
+
+	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
@@ -295,6 +318,10 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private SceneManager sceneManager;
+
+	@Getter
+	@Inject
+	private ParticleManager particleManager;
 
 	@Inject
 	private JobSystem jobSystem;
@@ -420,6 +447,7 @@ public class HdPlugin extends Plugin {
 	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
+	public boolean configParticleAmbientLight;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -690,11 +718,14 @@ public class HdPlugin extends Plugin {
 				tileOverrideManager.startUp();
 				modelOverrideManager.startUp();
 				lightManager.startUp();
+				particleManager.startUp();
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
 
+				isActive = true;
+				updateCachedConfigs();
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
@@ -706,6 +737,20 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
+
+				SwingUtilities.invokeLater(() -> {
+					particleSidebarPanel = new ParticleSidebarPanel(this, particleManager, clientThread, client, colorPickerManager, particleGizmoOverlay);
+					if (particleNavButton == null) {
+						BufferedImage icon = ImageUtil.loadImageResource(HdPlugin.class, "icon.png");
+						particleNavButton = NavigationButton.builder()
+							.tooltip("117 HD Particles")
+							.icon(icon)
+							.panel(particleSidebarPanel)
+							.build();
+						clientToolbar.addNavigation(particleNavButton);
+					}
+				});
+
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
 				stopPlugin();
@@ -753,10 +798,17 @@ public class HdPlugin extends Plugin {
 			}
 
 			developerTools.deactivate();
-			tileOverrideManager.shutDown();
+			particleGizmoOverlay.setActive(false);
+			SwingUtilities.invokeLater(() -> {
+				if (particleNavButton != null) {
+					clientToolbar.removeNavigation(particleNavButton);
+					particleNavButton = null;
+				}
+			});
 			groundMaterialManager.shutDown();
 			modelOverrideManager.shutDown();
 			lightManager.shutDown();
+			particleManager.shutDown();
 			environmentManager.shutDown();
 			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();
@@ -818,6 +870,18 @@ public class HdPlugin extends Plugin {
 		return renderer == null ? null : renderer.getSceneContext();
 	}
 
+	/** Open the particle sidebar panel to the Particles tab and select the given particle definition. */
+	public void openParticleConfig(String particleId) {
+		SwingUtilities.invokeLater(() -> {
+			if (particleNavButton != null) {
+				clientToolbar.openPanel(particleNavButton);
+			}
+			if (particleSidebarPanel != null && particleId != null) {
+				particleSidebarPanel.openToParticleConfig(particleId);
+			}
+		});
+	}
+
 	public void toggleFreezeFrame() {
 		clientThread.invoke(() -> {
 			enableFreezeFrame = !enableFreezeFrame;
@@ -869,6 +933,7 @@ public class HdPlugin extends Plugin {
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
+			.define("GLOBAL_PARTICLE_AMBIENT_LIGHT", config.particleAmbientLight())
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
@@ -1634,6 +1699,7 @@ public class HdPlugin extends Plugin {
 		configHideVanillaWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
+		configParticleAmbientLight = config.particleAmbientLight();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -1779,6 +1845,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_PARTICLE_AMBIENT_LIGHT:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
