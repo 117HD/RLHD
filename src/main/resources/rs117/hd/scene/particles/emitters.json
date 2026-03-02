@@ -17,7 +17,7 @@
     "weatherAreas": [ "ICE_MOUNTAIN" ],
     "edgeFadeInside": 5,
     "edgeFadeOutside": 2,
-    "weatherSpacing": 3,
-    "weatherEveryNTiles": 2
+    "weatherSpacing": 4,
+    "weatherEveryNTiles": 8
   }
 ]

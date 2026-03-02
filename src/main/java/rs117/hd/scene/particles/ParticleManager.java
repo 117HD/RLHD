@@ -46,7 +46,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 public class ParticleManager {
 
-	private static final int MAX_PARTICLES = 4096;
+	private static final int MAX_PARTICLES = 7096;
 
 	public ParticleManager() {
 		this.particleSystem = new ParticleSystem(MAX_PARTICLES);
@@ -313,6 +313,8 @@ public class ParticleManager {
 		// Weather: random point within area, height offset 1700, pitch 1024 (down)
 		final float weatherHeightOffset = 1700f;
 		final float weatherPitch = 1024 * UNITS_TO_RAD;
+		long baseCycle = client.getGameCycle();
+		ThreadLocalRandom rng = ThreadLocalRandom.current();
 		for (EmitterPlacement place : weatherPlacements) {
 			if (place.getParticleId() == null) continue;
 			final String pid = place.getParticleId().toUpperCase();
@@ -324,6 +326,12 @@ public class ParticleManager {
 			emitter.setHeightOffset(weatherHeightOffset);
 			emitter.setDirectionPitch(weatherPitch);
 			emitter.setAlphaScale(place.getEdgeFadeFactor());
+			emitter.setSpawnAtTopOfWorld(true);
+			emitter.emissionBurst(Math.max(4, def.emission.minSpawn), Math.max(8, def.emission.maxSpawn), 0);
+			int phaseOffset = rng.nextInt(0, 2000);
+			emitter.setEmissionTime(baseCycle - phaseOffset, def.emission.emissionCycleDuration, def.emission.emissionTimeThreshold, def.emission.emitOnlyBeforeTime, def.emission.loopEmission);
+			emitter.setEmissionAccum(rng.nextFloat());
+			emitter.particleLifetime(3f, 25f);
 			particleSystem.addEmitter(emitter);
 			definitionEmitters.add(emitter);
 		}
@@ -868,10 +876,14 @@ public class ParticleManager {
 			int tileExY = local[1] / LOCAL_TILE_SIZE + sceneOffset;
 			origin[0] = local[0] + halfTile;
 			origin[2] = local[1] + halfTile;
-			if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE)
-				origin[1] = tileHeights[plane][tileExX][tileExY] - emitter.getHeightOffset();
-			else
-				origin[1] = 0;
+			if (emitter.isSpawnAtTopOfWorld()) {
+				origin[1] = plugin.cameraPosition[1] - 800f;
+			} else {
+				if (tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
+					origin[1] = tileHeights[plane][tileExX][tileExY] - emitter.getHeightOffset();
+				} else
+					origin[1] = 0;
+			}
 		}
 		pos[0] = origin[0];
 		pos[1] = origin[1];

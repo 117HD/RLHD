@@ -94,6 +94,9 @@ public class ParticleEmitter {
 	private float emissionSpawnMax = 1f;
 	@Builder.Default
 	private float alphaScale = 1f;
+	/** When true, spawn at fixed top-of-world height (for weather). Ignores tile height. */
+	@Builder.Default
+	private boolean spawnAtTopOfWorld = false;
 	private int initialSpawn;
 	private boolean initialSpawnDone;
 	@Builder.Default
@@ -228,6 +231,10 @@ public class ParticleEmitter {
 		this.emissionTimeThresholdTicks = thresholdTicks;
 		this.emitOnlyBeforeTime = emitOnlyBeforeTime;
 		this.loopEmission = loopEmission;
+	}
+
+	public void setEmissionAccum(float accum) {
+		this.emissionAccum = Math.max(0f, Math.min(1f, accum));
 	}
 
 	public boolean isEmissionAllowedAtCycle(long currentGameCycle) {
