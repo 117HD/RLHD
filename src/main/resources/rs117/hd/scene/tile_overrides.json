@@ -5266,8 +5266,7 @@
       203
     ],
     "groundMaterial": "SAND",
-    "minLightness": 64,
-    "maxLightness": 64
+    "maxLightness": 68
   },
   {
     "name": "TEMPLE_OF_THE_EYE_ROCK_OVERLAY",
@@ -9471,7 +9470,10 @@
       60
     ],
     "groundMaterial": "VARIED_DIRT_SHINY",
-    "shiftLightness": 5
+    "shiftLightness": 5,
+    "replacements": {
+      "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_BLENDING": "blendingTextures"
+    }
   },
   {
     "name": "TEMPLE_OF_THE_EYE_DIRT",
