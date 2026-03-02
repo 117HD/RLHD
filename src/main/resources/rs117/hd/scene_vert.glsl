@@ -68,15 +68,14 @@ layout (location = 2) in vec3 vNormal;
         int vertex = gl_VertexID % 3;
         bool isProvoking = vertex == 2;
         int materialData = 0;
-        int alphaBiasHsl = 0;
+        int textureFaceIdx = vTextureFaceIdx & 0xFFFFFF;
 
         if (isProvoking) {
             // Only the Provoking vertex needs to fetch the face data
-            fAlphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx).xyz;
-            fMaterialData = texelFetch(textureFaces, vTextureFaceIdx + 1).xyz;
-            fTerrainData = texelFetch(textureFaces, vTextureFaceIdx + 2).xyz;
+            fAlphaBiasHsl = texelFetch(textureFaces, textureFaceIdx).xyz;
+            fMaterialData = texelFetch(textureFaces, textureFaceIdx + 1).xyz;
+            fTerrainData = texelFetch(textureFaces, textureFaceIdx + 2).xyz;
             fWorldViewId = vWorldViewId;
-            alphaBiasHsl = fAlphaBiasHsl[vertex];
             materialData = fMaterialData[vertex];
         } else {
             // All outputs must be written to for macOS compatibility
@@ -84,8 +83,7 @@ layout (location = 2) in vec3 vNormal;
             fMaterialData = ivec3(0);
             fTerrainData  = ivec3(0);
             fWorldViewId  = 0;
-            alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
-            materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
+            materialData  = texelFetch(textureFaces, textureFaceIdx + 1)[vertex];
         }
 
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
@@ -108,7 +106,7 @@ layout (location = 2) in vec3 vNormal;
         #endif
 
         vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
-        int depthBias = (alphaBiasHsl >> 16) & 0xff;
+        int depthBias = (vTextureFaceIdx >> 24) & 0xff;
         clipPosition.z += depthBias / 128.0;
 
         gl_Position = clipPosition;

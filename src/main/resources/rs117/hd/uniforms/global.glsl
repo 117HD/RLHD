@@ -45,6 +45,8 @@ layout(std140) uniform UBOGlobal {
     int pointLightsCount;
 
     vec3 cameraPos;
+    float cameraNear;
+    float cameraFar;
     mat4 viewMatrix;
     mat4 projectionMatrix;
     mat4 invProjectionMatrix;

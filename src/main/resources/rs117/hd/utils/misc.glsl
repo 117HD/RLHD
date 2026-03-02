@@ -210,3 +210,18 @@ vec2 getPoissonDisk(int idx) {
         default: return vec2( 0.14383161,  -0.14100790);
     }
 }
+
+float depth01ToViewZ(float depth01, mat4 proj) {
+    // depth buffer [0,1] -> NDC z [-1,1]
+    float zNdc = depth01 * 2.0 - 1.0;
+
+    // Invert the perspective projection mapping for z:
+    // z_view = P[3][2] / (z_ndc - P[2][2])
+    float denom = zNdc - proj[2][2];
+
+    // Guard against division by ~0 (can show up with infinite-far / extreme values)
+    if (abs(denom) < 1e-20)
+        denom = (denom < 0.0) ? -1e-20 : 1e-20;
+
+    return proj[3][2] / denom;
+}

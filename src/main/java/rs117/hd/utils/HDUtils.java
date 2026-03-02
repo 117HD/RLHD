@@ -420,27 +420,27 @@ public final class HDUtils {
 	}
 
 	public static boolean isAABBIntersectingFrustum(
-		int minX,
-		int minY,
-		int minZ,
-		int maxX,
-		int maxY,
-		int maxZ,
+		float minX,
+		float minY,
+		float minZ,
+		float maxX,
+		float maxY,
+		float maxZ,
 		float[][] cullingPlanes
 	) {
-		for (float[] plane : cullingPlanes) {
-			if (
-				plane[0] * minX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0
-			) {
+		for (int i = 0; i < cullingPlanes.length; i++ ) {
+			final float[] plane = cullingPlanes[i];
+			final float px = plane[0];
+			final float py = plane[1];
+			final float pz = plane[2];
+			final float pw = plane[3];
+
+			final float pVertexX = px >= 0 ? maxX : minX;
+			final float pVertexY = py >= 0 ? maxY : minY;
+			final float pVertexZ = pz >= 0 ? maxZ : minZ;
+
+			if (px * pVertexX + py * pVertexY + pz * pVertexZ + pw < 0)
 				return false;
-			}
 		}
 
 		// Potentially visible
@@ -507,5 +507,23 @@ public final class HDUtils {
 		}
 
 		return null;
+	}
+
+	public static long align(long value, long alignment) {
+		return align(value, alignment, false);
+	}
+
+	public static long align(long value, long alignment, boolean up) {
+		assert alignment > 0 : "Alignment must be positive";
+		assert (alignment & (alignment - 1)) == 0
+			: "Alignment must be a power of two";
+
+		if (up) {
+			// Align up
+			return (value + alignment - 1) & -alignment;
+		} else {
+			// Align down
+			return value & -alignment;
+		}
 	}
 }

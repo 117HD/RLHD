@@ -11,17 +11,19 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
+import rs117.hd.opengl.GLConstants;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.utils.HDUtils.align;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	@RequiredArgsConstructor
-	protected enum PropertyType {
+	public enum PropertyType {
 		Int(4, 4, 1),
 		IVec2(8, 8, 2),
 		IVec3(12, 16, 3),
@@ -35,10 +37,10 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		Mat3(48, 16, 9),
 		Mat4(64, 16, 16);
 
-		private final int size;
-		private final int alignment;
-		private final int elementCount;
-		private final boolean isInt = name().startsWith("I");
+		public final int size;
+		public final int alignment;
+		public final int elementCount;
+		public final boolean isInt = name().startsWith("I");
 	}
 
 	@AllArgsConstructor
@@ -47,6 +49,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		private UniformBuffer<?> owner;
 		private int position;
 		private int offset = -1;
+		@Getter
 		private final PropertyType type;
 		private final String name;
 
@@ -341,6 +344,18 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	public void bind(int bindingIndex) {
 		this.bindingIndex = bindingIndex;
 		glBindBufferBase(GL_UNIFORM_BUFFER, bindingIndex, glBuffer.id);
+	}
+
+	public void bindRange(Property startProperty, Property endProperty) {
+		assert endProperty.offset >= startProperty.offset;
+
+		long bufferAlignment = GLConstants.getBufferOffsetAlignment();
+		long bytesOffset = (long)startProperty.offset * Integer.BYTES;
+		long bytesSize = ((endProperty.offset - startProperty.offset) + align(endProperty.type.size, endProperty.type.alignment, true)) * Integer.BYTES;
+
+		long alignedBytesOffset = align(bytesOffset, bufferAlignment, false);
+
+		glBindBufferRange(GL_UNIFORM_BUFFER, bindingIndex, glBuffer.id, alignedBytesOffset, bytesSize);
 	}
 
 	protected void preUpload() {}

@@ -52,9 +52,10 @@ layout (location = 1) in vec3 vUv;
 
     void main() {
         int vertex = gl_VertexID % 3;
-        int alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
-        int materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
-        int terrainData = texelFetch(textureFaces, vTextureFaceIdx + 2)[vertex];
+        int textureFaceIdx = vTextureFaceIdx & 0xFFFFFF;
+        int alphaBiasHsl = texelFetch(textureFaces, textureFaceIdx)[vertex];
+        int materialData = texelFetch(textureFaces, textureFaceIdx + 1)[vertex];
+        int terrainData = texelFetch(textureFaces, textureFaceIdx + 2)[vertex];
 
         int waterTypeIndex = terrainData >> 3 & 0xFF;
         float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);

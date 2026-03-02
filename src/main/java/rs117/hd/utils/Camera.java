@@ -203,8 +203,12 @@ public final class Camera {
 		return this;
 	}
 
+	public float[] getPosition(float[] out) {
+		return copyTo(out, position);
+	}
+
 	public float[] getPosition() {
-		return copy(position);
+		return getPosition(new float[3]);
 	}
 
 	public float distanceTo(float[] point) {

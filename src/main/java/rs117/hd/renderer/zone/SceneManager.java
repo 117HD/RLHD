@@ -656,6 +656,7 @@ public class SceneManager {
 					root.pendingCull.add(preZone);
 
 				nextZone.setMetadata(ctx, nextSceneContext, x, z);
+				nextZone.setAlphaModelsOffset(ctx, nextSceneContext, x, z);
 			}
 		}
 
