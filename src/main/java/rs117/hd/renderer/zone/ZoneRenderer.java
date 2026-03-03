@@ -173,8 +173,11 @@ public class ZoneRenderer implements Renderer {
 	public void initialize() {
 		initializeBuffers();
 
-		SceneUploader.POOL = new ConcurrentPool<>(plugin.getInjector(), SceneUploader.class);
-		FacePrioritySorter.POOL = new ConcurrentPool<>(plugin.getInjector(), FacePrioritySorter.class);
+		if(SceneUploader.POOL == null)
+			SceneUploader.POOL = new ConcurrentPool<>(() -> plugin.getInjector().getInstance(SceneUploader.class));
+
+		if(FacePrioritySorter.POOL == null)
+			FacePrioritySorter.POOL = new ConcurrentPool<>(() -> plugin.getInjector().getInstance(FacePrioritySorter.class));
 
 		sceneCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
@@ -198,8 +201,11 @@ public class ZoneRenderer implements Renderer {
 		sceneManager.destroy();
 		uboWorldViews.destroy();
 
-		SceneUploader.POOL = null;
-		FacePrioritySorter.POOL = null;
+		if(SceneUploader.POOL != null)
+			SceneUploader.POOL.destroy();
+
+		if(FacePrioritySorter.POOL != null)
+			FacePrioritySorter.POOL.destroy();
 	}
 
 	@Override

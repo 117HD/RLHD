@@ -7,9 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.function.ToIntFunction;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -23,6 +21,7 @@ import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
@@ -37,7 +36,7 @@ import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class Zone {
+public class Zone implements DestructibleHandler.IDestructible {
 	@Inject
 	private Client client;
 
@@ -59,9 +58,6 @@ public class Zone {
 	public static final int METADATA_SIZE = 12;
 
 	public static final int LEVEL_WATER_SURFACE = 4;
-
-	public static final BlockingDeque<GLBuffer> VBO_PENDING_DELETION = new LinkedBlockingDeque<>();
-	public static final BlockingDeque<Integer> VAO_PENDING_DELETION = new LinkedBlockingDeque<>();
 
 	public int glVao;
 	int bufLen;
@@ -106,7 +102,7 @@ public class Zone {
 		if (o == null && a == null || f == null)
 			return;
 
-		vboM = new GLBuffer("ZoneMetadata", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, 0);
+		vboM = new GLBuffer("ZoneMetadata", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW);
 		vboM.initialize(METADATA_SIZE);
 
 		if (o != null) {
@@ -131,26 +127,34 @@ public class Zone {
 		for (Zone[] column : zones)
 			for (Zone zone : column)
 				if (zone != null)
-					zone.free();
+					zone.destroy();
 	}
 
-	public void free() {
-		if (vboO != null) {
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		if(glVao != 0 || glVaoA != 0)
+			DestructibleHandler.queueLeakedDestruction(this);
+	}
+
+	@Override
+	public void destroy() {
+		if(vboO != null) {
 			vboO.destroy();
 			vboO = null;
 		}
 
-		if (vboA != null) {
+		if(vboA != null) {
 			vboA.destroy();
 			vboA = null;
 		}
 
-		if (vboM != null) {
+		if(vboM != null) {
 			vboM.destroy();
 			vboM = null;
 		}
 
-		if (tboF != null) {
+		if(tboF != null) {
 			tboF.destroy();
 			tboF = null;
 		}
@@ -195,53 +199,9 @@ public class Zone {
 		alphaModels.clear();
 	}
 
-	public static void processPendingDeletions() {
-		int leakCount = 0;
-		GLBuffer vbo;
-		while ((vbo = VBO_PENDING_DELETION.poll()) != null) {
-			vbo.destroy();
-			leakCount++;
-		}
-
-		Integer vao;
-		while ((vao = VAO_PENDING_DELETION.poll()) != null) {
-			glDeleteVertexArrays(vao);
-			leakCount++;
-		}
-
-		if (leakCount > 0)
-			log.warn("Destroyed {} leaked VBOs", leakCount);
-	}
-
 	@Override
-	@SuppressWarnings("deprecation")
-	protected void finalize() {
-		// Just in case the zone instance is no longer valid,
-		// copy everything which needs to be cleaned up here
-		if (vboO != null) {
-			VBO_PENDING_DELETION.add(vboO);
-			vboO = null;
-		}
-
-		if (vboA != null) {
-			VBO_PENDING_DELETION.add(vboA);
-			vboA = null;
-		}
-
-		if (vboM != null) {
-			VBO_PENDING_DELETION.add(vboM);
-			vboM = null;
-		}
-
-		if (glVao != 0) {
-			VAO_PENDING_DELETION.add(glVao);
-			glVao = 0;
-		}
-
-		if (glVaoA != 0) {
-			VAO_PENDING_DELETION.add(glVaoA);
-			glVaoA = 0;
-		}
+	public String toString() {
+		return String.format("Zone Initialized: %b, culled: %b hasUploadJob: %b opaqueSize: %d alphaSize: %d", initialized, cull, uploadJob != null, sizeO, sizeA);
 	}
 
 	public void unmap() {

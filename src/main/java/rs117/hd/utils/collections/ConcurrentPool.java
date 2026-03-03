@@ -1,35 +1,38 @@
 package rs117.hd.utils.collections;
 
-import com.google.inject.Injector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.LockSupport;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
+import rs117.hd.utils.DestructibleHandler;
 
 @RequiredArgsConstructor
 public final class ConcurrentPool<T> {
 	private final ConcurrentLinkedQueue<T> pool = new ConcurrentLinkedQueue<>();
 	private final ConcurrentLinkedQueue<Thread> parkedThreads;
 
-	private final Injector injector;
-	private final Class<T> clazz;
+	private Supplier<T> supplier;
 	private final int fixedSize;
 	private int created;
 
-	public ConcurrentPool(Injector injector, Class<T> clazz) {
-		this(injector, clazz, 0);
+	public ConcurrentPool() {
+		this(null);
 	}
 
-	public ConcurrentPool(Injector injector, Class<T> clazz, int fixedSize) {
-		this.injector = injector;
-		this.clazz = clazz;
+	public ConcurrentPool(Supplier<T> supplier) {
+		this(supplier, 0);
+	}
+
+	public ConcurrentPool(Supplier<T> supplier, int fixedSize) {
+		this.supplier = supplier;
 		this.fixedSize = fixedSize;
 		parkedThreads = fixedSize > 0 ? new ConcurrentLinkedQueue<>() : null;
 	}
 
 	public T acquire() {
 		T obj = pool.poll();
-		if (obj == null && (fixedSize == 0 || created < fixedSize)) {
-			obj = injector.getInstance(clazz);
+		if (supplier != null && obj == null && (fixedSize == 0 || created < fixedSize)) {
+			obj = supplier.get();
 			created++;
 		}
 		return obj;
@@ -50,6 +53,14 @@ public final class ConcurrentPool<T> {
 	}
 
 	public void recycle(T obj) {
+		if(obj == null)
+			return;
+
+		if(DestructibleHandler.isDestructingShutdown() && obj instanceof DestructibleHandler.IDestructible) {
+			((DestructibleHandler.IDestructible)obj).destroy();
+			return;
+		}
+
 		assert !pool.contains(obj) : "Object already in pool: " + obj;
 		pool.offer(obj);
 
@@ -57,6 +68,14 @@ public final class ConcurrentPool<T> {
 			Thread parkedThread = parkedThreads.poll();
 			if (parkedThread != null)
 				LockSupport.unpark(parkedThread);
+		}
+	}
+
+	public void destroy() {
+		T obj;
+		while ((obj = pool.poll()) != null) {
+			if(obj instanceof DestructibleHandler.IDestructible)
+				((DestructibleHandler.IDestructible) obj).destroy();
 		}
 	}
 }

@@ -43,13 +43,15 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	public static void initialize(Injector injector, long sizeLimitBytes) {
 		int maxModelCount = (int) (sizeLimitBytes / MAX_MODEL_SIZE_BYTES);
-		AsyncCachedModel.POOL = new ConcurrentPool<>(injector, AsyncCachedModel.class, maxModelCount);
+		if(AsyncCachedModel.POOL == null)
+			AsyncCachedModel.POOL = new ConcurrentPool<>(() -> injector.getInstance(AsyncCachedModel.class), maxModelCount);
 		log.debug("Initialized AsyncCachedModel pool with {} models", maxModelCount);
 	}
 
 	public static void destroy() {
 		INFLIGHT.clear();
-		AsyncCachedModel.POOL = null;
+		if(AsyncCachedModel.POOL != null)
+			AsyncCachedModel.POOL.destroy();
 	}
 
 	private int sceneId;

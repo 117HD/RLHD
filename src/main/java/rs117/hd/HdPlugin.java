@@ -114,6 +114,7 @@ import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
@@ -766,6 +767,8 @@ public class HdPlugin extends Plugin {
 			waterTypeManager.shutDown();
 			materialManager.shutDown();
 			textureManager.shutDown();
+
+			DestructibleHandler.flushPendingDestruction(true);
 
 			if (awtContext != null)
 				awtContext.destroy();
@@ -1977,6 +1980,8 @@ public class HdPlugin extends Plugin {
 		var ctx = getSceneContext();
 		if (ctx != null)
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
+
+		DestructibleHandler.flushPendingDestruction();
 	}
 
 	@Subscribe
