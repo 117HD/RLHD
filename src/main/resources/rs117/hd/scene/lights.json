@@ -45350,7 +45350,7 @@
     "type": "STATIC",
     "innerConeAngle": 35,
     "outerConeAngle": 50,
-    "equipmentIds": ["MINING_HELMET"]
+    "equipmentIds": ["CAVE_GOBLIN_MINING_HELMET_UNLIT"]
   },
   {
     "description": "Lit bug lantern",
@@ -45361,7 +45361,7 @@
     "color": [180, 255, 200],
     "type": "FLICKER",
     "range": 10,
-    "equipmentIds": ["LIT_BUG_LANTERN"]
+    "equipmentIds": ["SLAYER_BUGLAN_ON"]
   },
   {
     "description": "Golden prospector helmet light",
@@ -45375,7 +45375,7 @@
     "innerConeAngle": 5,
     "outerConeAngle": 40,
     "conePitch": -35,
-    "equipmentIds": ["GOLDEN_PROSPECTOR_HELMET"]
+    "equipmentIds": ["MOTHERLODE_REWARD_HAT_GOLD"]
   },
   {
     "description": "Prospector helmet light",
@@ -45389,6 +45389,6 @@
     "innerConeAngle": 5,
     "outerConeAngle": 40,
     "conePitch": -35,
-    "equipmentIds": ["PROSPECTOR_HELMET"]
+    "equipmentIds": ["MOTHERLODE_REWARD_HAT"]
   }
 ]

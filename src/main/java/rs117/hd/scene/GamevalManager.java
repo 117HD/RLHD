@@ -28,9 +28,6 @@ import static rs117.hd.utils.ResourcePath.path;
 public class GamevalManager {
 	private static final ResourcePath GAMEVAL_PATH = Props
 		.getFile("rlhd.gameval-path", () -> path(GamevalManager.class, "gamevals.json"));
-	private static final ResourcePath ITEMVAL_PATH = Props
-		.getFile("rlhd.itemval-path", () -> path(GamevalManager.class, "itemvals.json"));
-
 	private static final String NPC_KEY = "npcs";
 	private static final String OBJECT_KEY = "objects";
 	private static final String ANIM_KEY = "anims";
@@ -41,7 +38,6 @@ public class GamevalManager {
 	private HdPlugin plugin;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
-	private FileWatcher.UnregisterCallback itemvalFileWatcher;
 
 	private static final Map<String, Map<String, Integer>> GAMEVALS = new HashMap<>();
 
@@ -68,25 +64,12 @@ public class GamevalManager {
 				log.error("Failed to load gamevals:", ex);
 			}
 		});
-		itemvalFileWatcher = ITEMVAL_PATH.watch((path, first) -> {
-			try {
-				Map<String, Map<String, Integer>> itemvals = plugin.getGson()
-					.fromJson(path.toReader(), new TypeToken<Map<String, Map<String, Integer>>>() {}.getType());
-				GAMEVALS.put(ITEM_KEY, itemvals.getOrDefault(ITEM_KEY, Collections.emptyMap()));
-				log.debug("Loaded itemval mappings");
-			} catch (IOException ex) {
-				log.error("Failed to load itemvals:", ex);
-			}
-		});
 	}
 
 	public void shutDown() {
 		if (fileWatcher != null)
 			fileWatcher.unregister();
 		fileWatcher = null;
-		if (itemvalFileWatcher != null)
-			itemvalFileWatcher.unregister();
-		itemvalFileWatcher = null;
 		clearGamevals();
 	}
 
