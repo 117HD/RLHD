@@ -29,15 +29,15 @@ public class SharedGLBuffer extends GLBuffer {
 	}
 
 	@Override
-	public void ensureCapacity(long byteOffset, long numBytes) {
-		super.ensureCapacity(byteOffset, numBytes);
-		if (OpenCLManager.context == 0)
-			return;
+	public boolean ensureCapacity(long byteOffset, long numBytes) {
+		boolean resized = super.ensureCapacity(byteOffset, numBytes);
+		if (OpenCLManager.context != 0) {
+			releaseCLBuffer();
 
-		releaseCLBuffer();
-
-		// OpenCL does not allow 0-size GL buffers, it will segfault on macOS
-		if (size != 0)
-			clId = clCreateFromGLBuffer(OpenCLManager.context, clUsage, id, (IntBuffer) null);
+			// OpenCL does not allow 0-size GL buffers, it will segfault on macOS
+			if (size != 0)
+				clId = clCreateFromGLBuffer(OpenCLManager.context, clUsage, id, (IntBuffer) null);
+		}
+		return resized;
 	}
 }

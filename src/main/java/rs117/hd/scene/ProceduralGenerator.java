@@ -37,7 +37,6 @@ import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.ColorUtils;
-import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Constants.*;
@@ -1006,7 +1005,7 @@ public class ProceduralGenerator {
 		return vertexHashes;
 	}
 
-	private static final int[] tzHaarRecolored = new int[4];
+	private static final int[] tzHaarRecolored = new int[3];
 	// used when calculating the gradient to apply to the walls of TzHaar
 	// to emulate the style from 2008 HD rework
 	private static final float[] gradientBaseColor = vec(3, 4, 26);
@@ -1015,7 +1014,6 @@ public class ProceduralGenerator {
 	private static final int gradientTop = -200;
 
 	public static int[] recolorTzHaar(
-		int uuid,
 		ModelOverride modelOverride,
 		Model model,
 		int face,
@@ -1031,40 +1029,18 @@ public class ProceduralGenerator {
 		int hue = 7;
 		hsl1[0] = hsl2[0] = hsl3[0] = hue;
 
-		int transparency = 0;
-
-		// recolor tzhaar to look like the 2008+ HD version
-		if (ModelHash.getUuidSubType(uuid) == ModelHash.TYPE_GROUND_OBJECT) {
-			// remove the black parts of floor objects to allow the ground to show,
-			// so we can apply textures, ground blending, etc. to it
-			if (hsl1[1] <= 1)
-				transparency = 0xFF;
-		}
-
 		if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.GRADIENT) {
 			final int triA = model.getFaceIndices1()[face];
 			final int triB = model.getFaceIndices2()[face];
 			final int triC = model.getFaceIndices3()[face];
 			final float[] yVertices = model.getVerticesY();
-			float heightA = yVertices[triA];
-			float heightB = yVertices[triB];
-			float heightC = yVertices[triC];
+			float height = (yVertices[triA] + yVertices[triB] + yVertices[triC]) / 3;
+			float pos = clamp((height - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 
 			// apply coloring to the rocky walls
-			if (hsl1[2] < 20) {
-				float pos = clamp((heightA - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
+			if (hsl1[2] < 20 || hsl2[2] < 20 || hsl3[2] < 20) {
 				round(hsl1, mix(gradientDarkColor, gradientBaseColor, pos));
-			}
-
-			if (hsl2[2] < 20)
-			{
-				float pos = clamp((heightB - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 				round(hsl2, mix(gradientDarkColor, gradientBaseColor, pos));
-			}
-
-			if (hsl3[2] < 20)
-			{
-				float pos = clamp((heightC - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
 				round(hsl3, mix(gradientDarkColor, gradientBaseColor, pos));
 			}
 		}
@@ -1080,7 +1056,6 @@ public class ProceduralGenerator {
 		tzHaarRecolored[0] = ColorUtils.packRawHsl(hsl1);
 		tzHaarRecolored[1] = ColorUtils.packRawHsl(hsl2);
 		tzHaarRecolored[2] = ColorUtils.packRawHsl(hsl3);
-		tzHaarRecolored[3] = transparency;
 
 		return tzHaarRecolored;
 	}

@@ -346,6 +346,9 @@ public class LegacyModelPusher {
 					}
 				}
 
+				if (faceOverride.hide)
+					continue;
+
 				if (material != Material.NONE) {
 					uvType = faceOverride.uvType;
 					if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
@@ -585,7 +588,6 @@ public class LegacyModelPusher {
 
 				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
 					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
-						uuid,
 						modelOverride,
 						model,
 						face,
@@ -596,7 +598,6 @@ public class LegacyModelPusher {
 					color1 = tzHaarRecolored[0];
 					color2 = tzHaarRecolored[1];
 					color3 = tzHaarRecolored[2];
-					packedAlphaPriorityFlags |= tzHaarRecolored[3] << 24;
 				}
 			}
 		}

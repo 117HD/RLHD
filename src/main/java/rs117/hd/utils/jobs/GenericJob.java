@@ -1,9 +1,9 @@
 package rs117.hd.utils.jobs;
 
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class GenericJob extends Job {
-	private static final ConcurrentLinkedDeque<GenericJob> POOL = new ConcurrentLinkedDeque<>();
+	private static final ConcurrentLinkedQueue<GenericJob> POOL = new ConcurrentLinkedQueue<>();
 
 	@FunctionalInterface
 	public interface TaskRunnable {

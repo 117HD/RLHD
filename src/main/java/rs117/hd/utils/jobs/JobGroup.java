@@ -1,6 +1,6 @@
 package rs117.hd.utils.jobs;
 
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public final class JobGroup<T extends Job> {
 	@Getter
-	final LinkedBlockingDeque<T> pending = new LinkedBlockingDeque<>();
+	final ConcurrentLinkedQueue<T> pending = new ConcurrentLinkedQueue<>();
 
 	@Getter
 	final boolean highPriority;

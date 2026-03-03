@@ -171,7 +171,9 @@ public class LightManager {
 
 		if (reloadLights) {
 			reloadLights = false;
-			loadSceneLights(sceneContext, null);
+			sceneContext.lights.clear();
+			sceneContext.knownProjectiles.clear();
+			loadSceneLights(sceneContext);
 
 			client.getNpcs().forEach(npc -> {
 				addNpcLights(npc);
@@ -616,24 +618,7 @@ public class LightManager {
 		return plugin.configProjectileLights && !(pluginManager.isPluginEnabled(entityHiderPlugin) && entityHiderConfig.hideProjectiles());
 	}
 
-	public void loadSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext)
-	{
-		if (oldSceneContext == null) {
-			sceneContext.lights.clear();
-			sceneContext.knownProjectiles.clear();
-		} else {
-			// Copy over NPC and projectile lights from the old scene
-			ArrayList<Light> lightsToKeep = new ArrayList<>();
-			for (Light light : oldSceneContext.lights)
-				if (light.actor != null || light.projectile != null)
-					lightsToKeep.add(light);
-
-			sceneContext.lights.addAll(lightsToKeep);
-			for (var light : lightsToKeep)
-				if (light.projectile != null && oldSceneContext.knownProjectiles.contains(light.projectile))
-					sceneContext.knownProjectiles.add(light.projectile);
-		}
-
+	public void loadSceneLights(SceneContext sceneContext) {
 		for (Light light : WORLD_LIGHTS) {
 			assert light.worldPoint != null;
 			if (sceneContext.sceneBounds.contains(light.worldPoint))
@@ -675,6 +660,22 @@ public class LightManager {
 
 		// Set the plane to an unreachable plane, forcing the first `toggleTemporaryVisibility` call to not fade
 		currentPlane = -1;
+	}
+
+	public void swapSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext) {
+		if (oldSceneContext == null)
+			return;
+
+		// Copy over NPC and projectile lights from the old scene
+		ArrayList<Light> lightsToKeep = new ArrayList<>();
+		for (Light light : oldSceneContext.lights)
+			if (light.actor != null || light.projectile != null)
+				lightsToKeep.add(light);
+
+		sceneContext.lights.addAll(lightsToKeep);
+		for (var light : lightsToKeep)
+			if (light.projectile != null && oldSceneContext.knownProjectiles.contains(light.projectile))
+				sceneContext.knownProjectiles.add(light.projectile);
 	}
 
 	private void removeLightIf(Predicate<Light> predicate) {

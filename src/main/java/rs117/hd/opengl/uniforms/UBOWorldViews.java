@@ -2,6 +2,7 @@ package rs117.hd.opengl.uniforms;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -27,15 +28,20 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 
 		public WorldView worldView;
 
-		private final float[] currentProjection = new float[16];
+		@Getter
+		private boolean squashed;
+
+		private final float[] currentProjection = Mat4.zero();
 		private final int[] currentTint = new int[4];
 		private final int[] newTint = new int[4];
 
 		public void update() {
 			float[] newProjection = IDENTITY_MATRIX;
 			final Projection worldViewProjection = worldView.getMainWorldProjection();
-			if (worldViewProjection instanceof FloatProjection)
+			if (worldViewProjection instanceof FloatProjection) {
 				newProjection = ((FloatProjection) worldViewProjection).getProjection();
+				squashed = newProjection[5] < 0.1f;
+			}
 
 			if (!Arrays.equals(currentProjection, newProjection)) {
 				projection.set(newProjection);
@@ -54,6 +60,10 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 				tint.set(newTint);
 				copyTo(currentTint, newTint);
 			}
+		}
+
+		public void project(float[] out) {
+			Mat4.mulVec(out, currentProjection, out);
 		}
 
 		public synchronized void free() {

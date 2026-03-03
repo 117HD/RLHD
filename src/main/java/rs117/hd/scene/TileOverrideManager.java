@@ -251,8 +251,6 @@ public class TileOverrideManager {
 		outer:
 		for (int id : ids) {
 			final var entries = idMatchOverrides.get(id);
-			// Enhanced for allocates an iterator...
-			// noinspection ForLoopReplaceableByForEach
 			for (int i = 0; i < entries.size(); i++) {
 				final var entry = entries.get(i);
 				if (entry.area.containsPoint(worldPos)) {

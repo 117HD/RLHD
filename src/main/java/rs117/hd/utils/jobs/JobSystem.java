@@ -2,9 +2,7 @@ package rs117.hd.utils.jobs;
 
 import com.google.inject.Injector;
 import java.util.HashMap;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.config.CpuUsageLimit;
 import rs117.hd.overlays.FrameTimer;
 
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
@@ -41,19 +40,22 @@ public final class JobSystem {
 	@Getter
 	boolean active;
 
-	private final int workerCount = max(2, PROCESSOR_COUNT - 1);
+	private int workerCount;
 
-	final BlockingDeque<JobHandle> workQueue = new LinkedBlockingDeque<>();
-	private final ArrayBlockingQueue<ClientCallbackJob> clientCallbacks = new ArrayBlockingQueue<>(workerCount);
+	final ConcurrentLinkedDeque<JobHandle> workQueue = new ConcurrentLinkedDeque<>();
+	private final ConcurrentLinkedDeque<ClientCallbackJob> clientCallbacks = new ConcurrentLinkedDeque<>();
 
 	private final HashMap<Thread, Worker> threadToWorker = new HashMap<>();
-	Worker[] workers;
-	Semaphore workerSemaphore = new Semaphore(workerCount);
 
 	private boolean clientInvokeScheduled;
 
-	public void initialize() {
+	Worker[] workers;
+	Semaphore workerSemaphore;
+
+	public void startUp(CpuUsageLimit cpuUsageLimit) {
+		workerCount = max(1, ceil((PROCESSOR_COUNT - 1) * cpuUsageLimit.threadRatio));
 		workers = new Worker[workerCount];
+		workerSemaphore = new Semaphore(workerCount);
 		active = true;
 
 		for (int i = 0; i < workerCount; i++) {
@@ -69,15 +71,8 @@ public final class JobSystem {
 
 		for (int i = 0; i < workerCount; i++)
 			workers[i].thread.start();
-	}
 
-	public int getInflightWorkerCount() {
-		int inflightCount = 0;
-		for (int i = 0; i < workerCount; i++) {
-			if (workers[i].inflight.get())
-				inflightCount++;
-		}
-		return inflightCount;
+		log.debug("Initialized JobSystem with {} workers", workerCount);
 	}
 
 	void signalWorkAvailable(int workCount) {
@@ -91,7 +86,7 @@ public final class JobSystem {
 		return workQueue.size();
 	}
 
-	private void cancelAllWork(BlockingDeque<JobHandle> queue) {
+	private void cancelAllWork(ConcurrentLinkedDeque<JobHandle> queue) {
 		JobHandle handle;
 		while ((handle = queue.poll()) != null) {
 			try {
@@ -104,7 +99,7 @@ public final class JobSystem {
 		}
 	}
 
-	public void destroy() {
+	public void shutDown() {
 		active = false;
 		cancelAllWork(workQueue);
 
