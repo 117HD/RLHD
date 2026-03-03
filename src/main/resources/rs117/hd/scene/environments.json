@@ -870,7 +870,9 @@
     "groundFogEnd": -400,
     "groundFogOpacity": 0.3,
     "windSpeed": 17.5,
-    "windStrength": 60
+    "windStrength": 60,
+	"sunStrength": 0.6,
+	"sunlightStrength": 0.4
   },
   {
     "area": "RELLEKKA_COLD_WATER",
