@@ -30,6 +30,7 @@ import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.jobs.GenericJob;
@@ -37,6 +38,8 @@ import rs117.hd.utils.jobs.GenericJob;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.SCENE_SIZE;
 import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.renderer.zone.WorldViewContext.DYNAMIC_MODEL_VAO_POOL;
+import static rs117.hd.renderer.zone.WorldViewContext.DYNAMIC_MODEL_VAO_STAGING_POOL;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -143,7 +146,9 @@ public class SceneManager {
 				subs[i].free();
 			subs[i] = null;
 		}
-		WorldViewContext.freeVaoPools();
+
+		DYNAMIC_MODEL_VAO_STAGING_POOL.destroy();
+		DYNAMIC_MODEL_VAO_POOL.destroy();
 
 		Zone.freeZones(nextZones);
 		nextZones = null;
@@ -158,8 +163,6 @@ public class SceneManager {
 		frameTimer.begin(Timer.UPDATE_AREA_HIDING);
 		updateAreaHiding();
 		frameTimer.end(Timer.UPDATE_AREA_HIDING);
-
-		Zone.processPendingDeletions();
 
 		if (reloadRequested && loadingLock.getHoldCount() == 0) {
 			reloadRequested = false;
@@ -653,7 +656,7 @@ public class SceneManager {
 
 				assert !preZone.cull || preZone != nextZone : "Zone which is marked for culling was reused!";
 				if (preZone.cull)
-					root.pendingCull.add(preZone);
+					DestructibleHandler.queueDestruction(preZone);
 
 				nextZone.setMetadata(ctx, nextSceneContext, x, z);
 			}

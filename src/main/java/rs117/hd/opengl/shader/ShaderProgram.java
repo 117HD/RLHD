@@ -8,11 +8,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
+import rs117.hd.utils.Destructible;
+import rs117.hd.utils.DestructibleHandler;
 
 import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
-public class ShaderProgram {
+public class ShaderProgram implements Destructible {
 	@RequiredArgsConstructor
 	private static class UniformBufferBlockPair {
 		public final UniformBuffer<?> buffer;
@@ -97,6 +99,14 @@ public class ShaderProgram {
 			glUniformBlockBinding(program, pair.uboProgramIndex, pair.buffer.getBindingIndex());
 	}
 
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		if (program != 0)
+			DestructibleHandler.queueLeakedDestruction(this);
+	}
+
+	@Override
 	public void destroy() {
 		viable = true;
 		if (program == 0)
