@@ -264,16 +264,6 @@ public class WorldViewContext {
 				handleZoneSwap(-1.0f, x, z);
 	}
 
-	int getSortedAlphaCount() {
-		int count = 0;
-
-		for (int x = 0; x < sizeX; x++)
-			for (int z = 0; z < sizeZ; z++)
-				count += zones[x][z].sortedFacesLen;
-
-		return count;
-	}
-
 	void free() {
 		sceneLoadGroup.cancel();
 		streamingGroup.cancel();

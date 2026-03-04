@@ -68,7 +68,6 @@ public class Zone {
 
 	public int glVaoA;
 	public int bufLenA;
-	public int sortedFacesLen;
 
 	public int sizeO, sizeA, sizeF;
 	@Nullable
@@ -462,7 +461,7 @@ public class Zone {
 		int dist;
 		int asyncSortIdx = -1;
 
-		static final int SKIP = 1; // temporary model is in a closer zone
+		static final int SKIP = 1; // temporary model is in a closer zonetotalSortedFaces
 		static final int TEMP = 2; // temporary model added to a closer zone
 		static final int SORT_COMPLETED = 4;
 
@@ -641,7 +640,6 @@ public class Zone {
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
-		sortedFacesLen += m.sortedFaces.length;
 		alphaModels.add(m);
 	}
 
