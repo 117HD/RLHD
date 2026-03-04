@@ -26,7 +26,6 @@ import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
-import rs117.hd.utils.jobs.GenericJob;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
@@ -689,7 +688,6 @@ public class Zone {
 	}
 
 	synchronized void postAlphaPass() {
-		lastSortedAlphaFacesUpload = null;
 		sortedAlphaFacesUpload.waitForCompletion();
 		alphaSortingJob.waitForCompletion();
 
@@ -717,6 +715,7 @@ public class Zone {
 	private static final int STATIC_UNSORTED = 3;
 
 	private static int alphaFaceCount;
+	private static int eboAlphaOffset;
 	private static int lastDrawMode;
 	private static int lastVao;
 	private static int lastTboF;
@@ -738,19 +737,7 @@ public class Zone {
 	private final AlphaSortPredicate alphaSortPred = new AlphaSortPredicate();
 	private final Comparator<AlphaModel> alphaSortComparator = Comparator.comparingInt(alphaSortPred).reversed();
 
-	private static GenericJob lastSortedAlphaFacesUpload;
-	private final GenericJob sortedAlphaFacesUpload = GenericJob.build("sortedAlphaFacesUpload", this::alphaFacesUpload);
-
-	void alphaFacesUpload(GenericJob job) {
-		final IntBuffer eboAlphaBuffer = ZoneRenderer.eboAlphaMapped.intView();
-		for (int i = 0; i < alphaModels.size(); ++i) {
-			AlphaModel m = alphaModels.get(i);
-			if (m.eboOffset < 0 || m.sortedFacesLen <= 0 || m.sortedFaces == null)
-				continue;
-
-			eboAlphaBuffer.position(m.eboOffset).put(m.sortedFaces, 0, m.sortedFacesLen);
-		}
-	}
+	private final EboAlphaWriterJob sortedAlphaFacesUpload = new EboAlphaWriterJob();
 
 	synchronized void alphaSort(int zx, int zz, Camera camera) {
 		alphaSortPred.cx = (int) camera.getPositionX();
@@ -835,7 +822,10 @@ public class Zone {
 
 		cmd.DepthMask(false);
 
-		boolean shouldQueueUpload = false;
+		if(!isShadowPass)
+			sortedAlphaFacesUpload.waitForCompletion();
+
+		int eboAlphaStart = eboAlphaOffset = ZoneRenderer.eboAlphaWriter.getWrittenInts();
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
@@ -873,21 +863,20 @@ public class Zone {
 					alphaSortingJob.waitForCompletion(10);
 			}
 
-			if (m.sortedFaces == null || m.sortedFacesLen <= 0 || !ZoneRenderer.eboAlphaMapped.isMapped())
+			if (m.sortedFaces == null || m.sortedFacesLen <= 0)
 				continue;
 
-			if ((long) (ZoneRenderer.eboAlphaOffset + m.sortedFacesLen) * Integer.BYTES < ZoneRenderer.eboAlpha.size) {
-				lastDrawMode = STATIC;
-				m.eboOffset = ZoneRenderer.eboAlphaOffset - ZoneRenderer.eboAlphaPrevOffset;
-				alphaFaceCount += m.sortedFacesLen / 3;
-				ZoneRenderer.eboAlphaOffset += m.sortedFacesLen;
-				shouldQueueUpload = true;
-			}
+			m.eboOffset = eboAlphaOffset;
+			sortedAlphaFacesUpload.alphaModels.add(m);
+
+			eboAlphaOffset += m.sortedFacesLen;
+			alphaFaceCount += m.sortedFacesLen / 3;
+			lastDrawMode = STATIC;
 		}
 
-		if (shouldQueueUpload) {
-			GenericJob prevJob = lastSortedAlphaFacesUpload != sortedAlphaFacesUpload ? lastSortedAlphaFacesUpload : null;
-			lastSortedAlphaFacesUpload = sortedAlphaFacesUpload.queue(prevJob);
+		if (eboAlphaOffset > eboAlphaStart && !sortedAlphaFacesUpload.alphaModels.isEmpty()) {
+			sortedAlphaFacesUpload.eboAlphaView = ZoneRenderer.eboAlphaWriter.reserve(eboAlphaOffset - eboAlphaStart);
+			sortedAlphaFacesUpload.queue();
 		}
 
 		flush(cmd);
@@ -899,7 +888,7 @@ public class Zone {
 		if (lastDrawMode == STATIC) {
 			if (alphaFaceCount > 0 && lastVao != 0) {
 				int vertexCount = alphaFaceCount * 3;
-				long byteOffset = 4L * (ZoneRenderer.eboAlphaOffset - vertexCount);
+				long byteOffset = 4L * (eboAlphaOffset - vertexCount);
 				cmd.BindElementsArray(lastVao, eboAlpha.id);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
