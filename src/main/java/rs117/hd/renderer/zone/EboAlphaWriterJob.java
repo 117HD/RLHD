@@ -7,7 +7,7 @@ import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.jobs.Job;
 
 @Slf4j
-public class EboAlphaWriterJob extends Job {
+public final class EboAlphaWriterJob extends Job {
 	public final ArrayDeque<Zone.AlphaModel> alphaModels = new ArrayDeque<>();
 	public GLMappedBufferIntWriter.ReservedView eboAlphaView;
 
