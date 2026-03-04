@@ -186,6 +186,8 @@ public class DynamicModelVAO implements Destructible {
 
 	@Override
 	public void destroy() {
+		vboWriter.destroy();
+		tboWriter.destroy();
 		vboRender.destroy();
 		vboStaging.destroy();
 		tbo.destroy();
