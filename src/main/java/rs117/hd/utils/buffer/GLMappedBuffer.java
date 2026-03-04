@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glMapBuffer;
 import static org.lwjgl.opengl.GL15.glUnmapBuffer;
 import static org.lwjgl.opengl.GL30.GL_MAP_FLUSH_EXPLICIT_BIT;
@@ -82,7 +81,7 @@ public final class GLMappedBuffer {
 		if (mapped || owner.isStorageBuffer())
 			return this;
 
-		glBindBuffer(owner.target, owner.id);
+		owner.bind();
 
 		int glFlags = 0;
 		if ((flags & MAP_WRITE) != 0) glFlags |= GL_MAP_WRITE_BIT;
@@ -128,7 +127,7 @@ public final class GLMappedBuffer {
 		this.mappedFlags = flags;
 		mapped = true;
 
-		glBindBuffer(owner.target, 0);
+		owner.unbind();
 		checkGLErrors(() -> "Mapping Buffer: " + owner.name + " Size: " + owner.size);
 		return this;
 	}
@@ -163,14 +162,14 @@ public final class GLMappedBuffer {
 
 		syncViews();
 
-		glBindBuffer(owner.target, owner.id);
+		owner.bind();
 		if (owner.target != GL_STATIC_DRAW) {
 			byteView.flip();
 			glFlushMappedBufferRange(owner.target, byteView.position(), byteView.remaining());
 			byteView.clear();
 		}
 		glUnmapBuffer(owner.target);
-		glBindBuffer(owner.target, 0);
+		owner.unbind();
 
 		mapped = false;
 	}

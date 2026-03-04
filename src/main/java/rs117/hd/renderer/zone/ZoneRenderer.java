@@ -594,7 +594,7 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.reset();
 		renderState.reset();
 
-		eboAlphaWriter.map();
+		eboAlphaWriter.map(false);
 
 		checkGLErrors();
 	}
@@ -699,6 +699,9 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.execute();
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
+		glBindVertexArray(0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		
 		renderState.disable.set(GL_DEPTH_TEST);
 
 		frameTimer.end(Timer.RENDER_SHADOWS);
@@ -746,6 +749,9 @@ public class ZoneRenderer implements Renderer {
 
 		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		// Done rendering the scene
 		renderState.disable.set(GL_BLEND);
