@@ -818,7 +818,7 @@ public class Zone {
 
 		cmd.DepthMask(false);
 
-		if(!isShadowPass)
+		if (!isShadowPass)
 			sortedAlphaFacesUpload.waitForCompletion();
 
 		int eboAlphaStart = eboAlphaOffset = ZoneRenderer.eboAlphaWriter.getWrittenInts();
