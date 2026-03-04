@@ -67,27 +67,33 @@ public class GLMappedBufferIntWriter implements Destructible {
 	@Override
 	@SuppressWarnings("deprecation")
 	protected void finalize() {
-		if(!usedStagingViews.isEmpty() || !usedMappedViews.isEmpty() || !freeViews.isEmpty())
+		if (!usedStagingViews.isEmpty() || !usedMappedViews.isEmpty() || !freeViews.isEmpty())
 			DestructibleHandler.queueLeakedDestruction(this);
 	}
 
 	@Override
 	public void destroy() {
-		if(mappedBuffer.isMapped())
+		if (mappedBuffer != null && mappedBuffer.isMapped())
 			mappedBuffer.unmap();
+		mappedBuffer = null;
+
+		for (ReservedView view : freeViews) {
+			view.backing = null;
+			view.buffer = null;
+		}
+		freeViews.clear();
+
+		for (ReservedView view : usedMappedViews) {
+			view.backing = null;
+			view.buffer = null;
+		}
+		usedMappedViews.clear();
 
 		for (ReservedView view : usedStagingViews) {
 			view.backing = null;
 			view.buffer = null;
 		}
 		usedStagingViews.clear();
-
-		freeViews.addAll(usedMappedViews);
-		for (ReservedView view : freeViews) {
-			view.backing = null;
-			view.buffer = null;
-		}
-		freeViews.clear();
 	}
 
 	public synchronized long flush() {
