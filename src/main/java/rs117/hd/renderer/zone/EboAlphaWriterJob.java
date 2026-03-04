@@ -20,7 +20,7 @@ public class EboAlphaWriterJob extends Job {
 
 			Zone.AlphaModel m;
 			while((m = alphaModels.poll()) != null) {
-				if (m.eboOffset < 0 || m.sortedFacesLen <= 0 || m.sortedFaces == null)
+				if (m.sortedFacesLen <= 0 || m.sortedFaces == null)
 					continue;
 
 				if(eboAlphaBuffer.remaining() < m.sortedFacesLen) {
