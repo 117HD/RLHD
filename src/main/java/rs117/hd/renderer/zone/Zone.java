@@ -33,6 +33,7 @@ import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
+import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -275,11 +276,11 @@ public class Zone {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 6);
+		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 6);
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 12);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
@@ -536,8 +537,8 @@ public class Zone {
 		int[] indices2 = model.getFaceIndices2();
 		int[] indices3 = model.getFaceIndices3();
 
-		int minX = Integer.MAX_VALUE, minY = minX, minZ = minY;
-		int maxX = Integer.MIN_VALUE, maxY = maxX, maxZ = maxY;
+		int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
 
 		for (int f = 0; f < faceCount; ++f) {
 			if (color3[f] == -2)
@@ -591,6 +592,8 @@ public class Zone {
 			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;
 			int textureId = faceTextures != null ? faceTextures[f] : -1;
 
+			ModelOverride faceOverride = modelOverride;
+
 			Material material = Material.NONE;
 			if (textureId != -1) {
 				if (modelOverride.textureMaterial != Material.NONE) {
@@ -600,19 +603,22 @@ public class Zone {
 					if (modelOverride.materialOverrides != null) {
 						var override = modelOverride.materialOverrides.get(material);
 						if (override != null) {
+							faceOverride = override;
 							material = override.textureMaterial;
 						}
 					}
 				}
 			} else if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						material = override.baseMaterial;
-						break;
-					}
+				final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
+				final var override = modelOverride.testColorOverrides(ahsl);
+				if (override != null) {
+					faceOverride = override;
+					material = override.baseMaterial;
 				}
 			}
+
+			if (faceOverride.hide)
+				continue;
 
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
 			if (!hasAlpha)
@@ -641,7 +647,7 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	synchronized void addTempAlphaModel(ModelOverride modelOverride, VAO.VAOView view, int level, int x, int y, int z) {
+	synchronized void addTempAlphaModel(ModelOverride modelOverride, DynamicModelVAO.View view, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
@@ -662,7 +668,7 @@ public class Zone {
 		alphaModels.add(m);
 	}
 
-	synchronized void addPlayerModel(VAO.VAOView view, int level, int x, int y, int z) {
+	synchronized void addPlayerModel(DynamicModelVAO.View view, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
@@ -891,10 +897,10 @@ public class Zone {
 
 	private void flush(CommandBuffer cmd) {
 		if (lastDrawMode == STATIC) {
-			if (alphaFaceCount > 0) {
+			if (alphaFaceCount > 0 && lastVao != 0) {
 				int vertexCount = alphaFaceCount * 3;
 				long byteOffset = 4L * (ZoneRenderer.eboAlphaOffset - vertexCount);
-				cmd.BindVertexArray(lastVao);
+				cmd.BindElementsArray(lastVao, eboAlpha.id);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
@@ -905,7 +911,7 @@ public class Zone {
 			}
 			alphaFaceCount = 0;
 		} else if (drawIdx != 0) {
-			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
+			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : DynamicModelVAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 			if (drawIdx == 1) {

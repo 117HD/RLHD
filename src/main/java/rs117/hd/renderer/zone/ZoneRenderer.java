@@ -148,7 +148,7 @@ public class ZoneRenderer implements Renderer {
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
-	public static GLBuffer eboAlpha;
+	public static GLBuffer.EBO eboAlpha;
 	public static GLMappedBuffer eboAlphaMapped;
 	public static int eboAlphaOffset;
 	public static int eboAlphaPrevOffset;
@@ -231,7 +231,8 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void initializeBuffers() {
-		eboAlpha = new GLBuffer("eboAlpha", GL_ELEMENT_ARRAY_BUFFER, GL_STREAM_DRAW).initialize(MiB);
+		eboAlpha = new GLBuffer.EBO("eboAlpha", GL_STREAM_DRAW);
+		eboAlpha.initialize(MiB);
 		eboAlphaOffset = 0;
 
 		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
@@ -382,7 +383,7 @@ public class ZoneRenderer implements Renderer {
 			directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
-			if (hasSceneCameraChanged || hasDirectionalCameraChanged) {
+			if (plugin.configShadowsEnabled && (hasSceneCameraChanged || hasDirectionalCameraChanged)) {
 				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 
 				final float[][] volumeCorners = directionalShadowCasterVolume
@@ -392,6 +393,9 @@ public class ZoneRenderer implements Renderer {
 				for (float[] corner : volumeCorners)
 					add(sceneCenter, sceneCenter, corner);
 				divide(sceneCenter, sceneCenter, (float) volumeCorners.length);
+
+				// Reset position before transforming points
+				directionalCamera.setPosition(0, 0, 0);
 
 				float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
 				float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
@@ -443,10 +447,10 @@ public class ZoneRenderer implements Renderer {
 				directionalCamera.setViewportWidth(directionalSize);
 				directionalCamera.setViewportHeight(directionalSize);
 
-				plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
 				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 			}
 
+			plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
 			plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
 			plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
 			plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);

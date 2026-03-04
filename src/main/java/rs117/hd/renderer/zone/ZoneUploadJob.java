@@ -106,6 +106,7 @@ public final class ZoneUploadJob extends Job {
 	protected void onReleased() {
 		viewContext = null;
 		sceneContext = null;
+		zone.uploadJob = null;
 		zone = null;
 		delay = -1.0f;
 		assert !POOL.contains(this) : "Task is already in pool";

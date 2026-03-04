@@ -346,6 +346,9 @@ public class LegacyModelPusher {
 					}
 				}
 
+				if (faceOverride.hide)
+					continue;
+
 				if (material != Material.NONE) {
 					uvType = faceOverride.uvType;
 					if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))

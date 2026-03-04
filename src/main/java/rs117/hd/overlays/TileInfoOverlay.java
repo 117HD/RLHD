@@ -911,6 +911,16 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	private int getIdOrImpostorId(TileObject object, @Nullable Renderable renderable) {
+		assert client.isClientThread();
+		if (renderable instanceof DynamicObject) {
+			var def = client.getObjectDefinition(object.getId());
+			if (def != null && def.getImpostorIds() != null) {
+				var impostor = def.getImpostor();
+				if (impostor != null)
+					return impostor.getId();
+			}
+		}
+
 		return ModelHash.getUuidId(ModelHash.generateUuid(client, object.getHash(), renderable));
 	}
 
@@ -1538,7 +1548,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				g.setColor(TRANSPARENT_YELLOW_50);
 				drawLocalAabb(g, localAabb);
 				g.setColor(TRANSPARENT_YELLOW_100);
-				drawLocalAabbLabel(g, localAabb, "Region ID\n" + regionId, false);
+				drawLocalAabbLabel(
+					g, localAabb,
+					"Region ID\n" +
+					regionId + "\n" +
+					regionX + ", " + regionY,
+					false
+				);
 			}
 		}
 	}
