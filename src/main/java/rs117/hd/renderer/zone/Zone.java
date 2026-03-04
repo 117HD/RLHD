@@ -461,7 +461,7 @@ public class Zone {
 		int dist;
 		int asyncSortIdx = -1;
 
-		static final int SKIP = 1; // temporary model is in a closer zonetotalSortedFaces
+		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
 		static final int SORT_COMPLETED = 4;
 
