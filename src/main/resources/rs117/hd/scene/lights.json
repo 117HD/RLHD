@@ -36359,7 +36359,8 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "VFX_LEVIATHAN_01_PROJECTILE_MAGIC_01"
     ]
@@ -36376,7 +36377,8 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "VFX_LEVIATHAN_01_PROJECTILE_RANGED_01"
     ]
@@ -36393,7 +36395,8 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "VFX_LEVIATHAN_01_PROJECTILE_MELEE_01"
     ]

@@ -28676,6 +28676,7 @@
     "description": "The Scar stepping stones",
     "objectIds": [
       "DT2_SCAR_ENTRY_STEPPING_STONE",
+      "SCAR_VENTRICULUS_STEPPING_STONE",
       "SCAR_VENTRICULUS_STEPPING_STONE_WITH_OP"
     ],
     "castShadows": false,
@@ -37443,6 +37444,51 @@
         "baseMaterial": "PURE_BLACK"
       }
     ]
+  },
+  {
+    "description": "The Scar Floor Brain Pattern",
+    "depthBias": 35,
+    "objectIds": [
+      "DT2_SCAR_FLOOR_BRAIN01",
+      "DT2_SCAR_FLOOR_BRAIN02",
+      "DT2_SCAR_FLOOR_BRAIN03",
+      "DT2_SCAR_FLOOR_BRAIN04",
+      "DT2_SCAR_FLOOR_BRAIN05",
+      "DT2_SCAR_FLOOR_BRAIN06",
+      "DT2_SCAR_FLOOR_BRAIN07",
+      "DT2_SCAR_FLOOR_BRAIN08",
+      "DT2_SCAR_FLOOR_BRAIN09",
+      "DT2_SCAR_FLOOR_BRAIN10",
+      "DT2_SCAR_FLOOR_BRAIN11",
+      "DT2_SCAR_FLOOR_BRAIN12",
+      "DT2_SCAR_FLOOR_BRAIN13",
+      "DT2_SCAR_FLOOR_BRAIN14",
+      "DT2_SCAR_FLOOR_BRAIN15",
+      "DT2_SCAR_FLOOR_BRAIN16",
+      "DT2_SCAR_FLOOR_BRAIN17",
+      "DT2_SCAR_FLOOR_BRAIN18",
+      "DT2_SCAR_FLOOR_BRAIN19",
+      "DT2_SCAR_FLOOR_BRAIN20",
+      "DT2_SCAR_FLOOR_BRAIN21",
+      "DT2_SCAR_FLOOR_BRAIN22",
+      "DT2_SCAR_FLOOR_BRAIN23",
+      "DT2_SCAR_FLOOR_BRAIN24",
+      "DT2_SCAR_FLOOR_BRAIN25",
+      "DT2_SCAR_FLOOR_BRAIN26",
+      "DT2_SCAR_FLOOR_BRAIN27",
+      "DT2_SCAR_FLOOR_BRAIN28",
+      "DT2_SCAR_FLOOR_BRAIN29",
+      "DT2_SCAR_FLOOR_BRAIN30",
+      "DT2_SCAR_FLOOR_BRAIN31",
+      "DT2_SCAR_FLOOR_BRAIN32",
+      "DT2_SCAR_FLOOR_BRAIN33",
+      "DT2_SCAR_FLOOR_BRAIN34",
+      "DT2_SCAR_FLOOR_BRAIN35"
+    ],
+    "uvType": "MODEL_XZ",
+    "castShadows": false,
+    "uvScale": 0.75,
+    "baseMaterial": "GRUNGE_3_SHINY"
   },
   {
     "description": "The Scar Vent",

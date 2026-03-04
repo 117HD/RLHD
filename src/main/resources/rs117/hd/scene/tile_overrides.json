@@ -5863,6 +5863,16 @@
     "blended": false
   },
   {
+    "name": "THE_SCAR_FLOOR",
+    "area": "THE_SCAR",
+    "groundMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvOrientation": 256,
+    "underlayIds": [
+      185,
+      186
+    ]
+  },
+  {
     "name": "THE_SCAR_WATER",
     "area": "THE_SCAR",
     "overlayIds": [

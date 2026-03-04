@@ -208,6 +208,12 @@
     ]
   },
   {
+    "name": "GRUNGE_3_LIGHT_SHINY",
+    "materials": [
+      "GRUNGE_3_LIGHT_SHINY"
+    ]
+  },
+  {
     "name": "SUBMERGED_GRUNGE_2",
     "materials": [
       "SUBMERGED_GRUNGE_2"
