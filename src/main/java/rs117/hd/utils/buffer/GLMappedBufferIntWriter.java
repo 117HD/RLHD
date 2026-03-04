@@ -26,6 +26,10 @@ public class GLMappedBufferIntWriter implements Destructible {
 	private int writtenMappedInts;
 	private int writtenStagingInts;
 
+	public int getWrittenInts() {
+		return writtenMappedInts + writtenStagingInts;
+	}
+
 	public void map() {
 		mappedBuffer = buffer.map(MAP_WRITE | MAP_INVALIDATE | MAP_UNSYNCHRONIZED);
 	}
