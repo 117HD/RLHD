@@ -24,6 +24,7 @@
  */
 package rs117.hd.renderer.zone;
 
+import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
@@ -93,6 +94,9 @@ public class ZoneRenderer implements Renderer {
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
+
+	@Inject
+	private Injector injector;
 
 	@Inject
 	private Client client;
@@ -173,11 +177,11 @@ public class ZoneRenderer implements Renderer {
 	public void initialize() {
 		initializeBuffers();
 
-		if(SceneUploader.POOL == null)
-			SceneUploader.POOL = new ConcurrentPool<>(() -> plugin.getInjector().getInstance(SceneUploader.class));
+		if (SceneUploader.POOL == null)
+			SceneUploader.POOL = new ConcurrentPool<>(() -> injector.getInstance(SceneUploader.class));
 
-		if(FacePrioritySorter.POOL == null)
-			FacePrioritySorter.POOL = new ConcurrentPool<>(() -> plugin.getInjector().getInstance(FacePrioritySorter.class));
+		if (FacePrioritySorter.POOL == null)
+			FacePrioritySorter.POOL = new ConcurrentPool<>(() -> injector.getInstance(FacePrioritySorter.class));
 
 		sceneCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
@@ -201,10 +205,10 @@ public class ZoneRenderer implements Renderer {
 		sceneManager.destroy();
 		uboWorldViews.destroy();
 
-		if(SceneUploader.POOL != null)
+		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
 
-		if(FacePrioritySorter.POOL != null)
+		if (FacePrioritySorter.POOL != null)
 			FacePrioritySorter.POOL.destroy();
 	}
 

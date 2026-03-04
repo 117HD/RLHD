@@ -8,30 +8,36 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class DestructibleHandler {
-	private static final ConcurrentLinkedQueue<IDestructible> PENDING_DESTRUCTION = new ConcurrentLinkedQueue<>();
-	private static final ConcurrentLinkedQueue<IDestructible> LEAKED_DESTRUCTIBLE = new ConcurrentLinkedQueue<>();
+	private static final ConcurrentLinkedQueue<Destructible> PENDING_DESTRUCTION = new ConcurrentLinkedQueue<>();
+	private static final ConcurrentLinkedQueue<Destructible> LEAKED_DESTRUCTIBLE = new ConcurrentLinkedQueue<>();
 	private static final StringBuilder sb = new StringBuilder();
 	private static final HashMap<Class<?>, Integer> totalLeakedCount = new HashMap<>();
 
 	@Getter
 	private static boolean isDestructingShutdown = false;
 
-	public static void queueDestruction(IDestructible destructible) { PENDING_DESTRUCTION.add(destructible); }
+	public static void queueDestruction(Destructible destructible) {
+		PENDING_DESTRUCTION.add(destructible);
+	}
 
-	public static void queueLeakedDestruction(IDestructible destructible) { LEAKED_DESTRUCTIBLE.add(destructible); }
+	public static void queueLeakedDestruction(Destructible destructible) {
+		LEAKED_DESTRUCTIBLE.add(destructible);
+	}
 
-	public static void flushPendingDestruction() { flushPendingDestruction(false); }
+	public static void flushPendingDestruction() {
+		flushPendingDestruction(false);
+	}
 
 	public static void flushPendingDestruction(boolean isShutdown) {
 		try {
 			isDestructingShutdown = isShutdown;
 
-			IDestructible destructable;
+			Destructible destructable;
 			while ((destructable = PENDING_DESTRUCTION.poll()) != null)
 				destructable.destroy();
 
 			if (isShutdown) {
-				// Perform GC + Finalization to ensure we pick up on any leaks during shutdown
+				// Perform GC + finalization to ensure we pick up on any leaks during shutdown
 				for (int i = 0; i < 5; i++) {
 					System.gc();
 					System.runFinalization();
@@ -60,9 +66,5 @@ public final class DestructibleHandler {
 		} finally {
 			isDestructingShutdown = false;
 		}
-	}
-
-	public interface IDestructible {
-		void destroy();
 	}
 }

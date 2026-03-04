@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.CommandBuffer;
-import rs117.hd.utils.DestructibleHandler;
+import rs117.hd.utils.Destructible;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter.ReservedView;
@@ -24,7 +24,7 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
 @Slf4j
-class DynamicModelVAO implements DestructibleHandler.IDestructible {
+public class DynamicModelVAO implements Destructible {
 	public static final int INITIAL_SIZE = (int) (8 * MiB);
 
 	// Temp vertex format
@@ -190,10 +190,9 @@ class DynamicModelVAO implements DestructibleHandler.IDestructible {
 		vboStaging.destroy();
 		tbo.destroy();
 
-		if(vao != 0) {
+		if (vao != 0)
 			glDeleteVertexArrays(vao);
-			vao = 0;
-		}
+		vao = 0;
 	}
 
 	synchronized View beginDraw(int faceCount) {

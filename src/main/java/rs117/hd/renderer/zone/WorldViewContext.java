@@ -36,8 +36,10 @@ public class WorldViewContext {
 	public static final int VAO_SHADOW = 3;
 	public static final int VAO_COUNT = 4;
 
-	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL = new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO::Staging", true));
-	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_POOL = new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO", false));
+	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL =
+		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO::Staging", true));
+	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_POOL =
+		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO", false));
 
 	@Inject
 	private Injector injector;

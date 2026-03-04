@@ -21,6 +21,7 @@ import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.Destructible;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -36,7 +37,7 @@ import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class Zone implements DestructibleHandler.IDestructible {
+public class Zone implements Destructible {
 	@Inject
 	private Client client;
 
@@ -133,28 +134,28 @@ public class Zone implements DestructibleHandler.IDestructible {
 	@Override
 	@SuppressWarnings("deprecation")
 	protected void finalize() {
-		if(glVao != 0 || glVaoA != 0)
+		if (glVao != 0 || glVaoA != 0)
 			DestructibleHandler.queueLeakedDestruction(this);
 	}
 
 	@Override
 	public void destroy() {
-		if(vboO != null) {
+		if (vboO != null) {
 			vboO.destroy();
 			vboO = null;
 		}
 
-		if(vboA != null) {
+		if (vboA != null) {
 			vboA.destroy();
 			vboA = null;
 		}
 
-		if(vboM != null) {
+		if (vboM != null) {
 			vboM.destroy();
 			vboM = null;
 		}
 
-		if(tboF != null) {
+		if (tboF != null) {
 			tboF.destroy();
 			tboF = null;
 		}
@@ -201,7 +202,10 @@ public class Zone implements DestructibleHandler.IDestructible {
 
 	@Override
 	public String toString() {
-		return String.format("Zone Initialized: %b, culled: %b hasUploadJob: %b opaqueSize: %d alphaSize: %d", initialized, cull, uploadJob != null, sizeO, sizeA);
+		return String.format(
+			"Zone Initialized: %b, culled: %b hasUploadJob: %b opaqueSize: %d alphaSize: %d",
+			initialized, cull, uploadJob != null, sizeO, sizeA
+		);
 	}
 
 	public void unmap() {

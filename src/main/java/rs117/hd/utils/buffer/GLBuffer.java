@@ -29,6 +29,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.opengl.*;
+import rs117.hd.utils.Destructible;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.HDUtils;
 
@@ -42,7 +43,7 @@ import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class GLBuffer implements DestructibleHandler.IDestructible {
+public class GLBuffer implements Destructible {
 	private static final boolean DEBUG_MAC_OS = false;
 
 	public static int STORAGE_NONE = 0;
@@ -117,7 +118,7 @@ public class GLBuffer implements DestructibleHandler.IDestructible {
 	}
 
 	public void setName(String newName) {
-		if(newName != null && !newName.equals(name)) {
+		if (newName != null && !newName.equals(name)) {
 			name = newName;
 			if (id != 0 && log.isDebugEnabled() && GL_CAPS.OpenGL43)
 				GL43C.glObjectLabel(GL43C.GL_BUFFER, id, name);
