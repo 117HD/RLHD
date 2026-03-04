@@ -6,7 +6,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryUtil;
 
 import static rs117.hd.utils.buffer.GLBuffer.MAP_INVALIDATE;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_UNSYNCHRONIZED;
@@ -34,7 +34,7 @@ public class GLMappedBufferIntWriter {
 		// Need staging if we've already staged or mapped buffer has no space
 		if (writtenStagingInts > 0 || mappedBuffer.intView().remaining() < sizeInts) {
 			ReservedView view = new ReservedView();
-			view.buffer = BufferUtils.createIntBuffer(sizeInts);
+			view.buffer = MemoryUtil.memAllocInt(sizeInts);
 			view.bufferOffsetInts = writtenMappedInts + writtenStagingInts;
 			writtenStagingInts += sizeInts;
 			usedStagingViews.add(view);
@@ -69,6 +69,8 @@ public class GLMappedBufferIntWriter {
 			assert view.backing == null;
 			view.buffer.flip();
 			mappedBuffer.getOwner().upload(view.buffer, view.bufferOffsetInts * 4L);
+			MemoryUtil.memFree(view.buffer);
+			view.buffer = null;
 		}
 
 		freeViews.addAll(usedMappedViews);
