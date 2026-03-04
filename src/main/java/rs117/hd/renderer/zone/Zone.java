@@ -425,7 +425,6 @@ public class Zone implements Destructible {
 
 		int dist;
 		int asyncSortIdx = -1;
-		int eboOffset = -1;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
@@ -669,7 +668,6 @@ public class Zone implements Destructible {
 				modelCache.add(m);
 			}
 			m.asyncSortIdx = -1;
-			m.eboOffset = -1;
 			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
 		}
 	}
@@ -830,7 +828,6 @@ public class Zone implements Destructible {
 			if (m.sortedFaces == null || m.sortedFacesLen <= 0)
 				continue;
 
-			m.eboOffset = eboAlphaOffset;
 			sortedAlphaFacesUpload.alphaModels.add(m);
 
 			eboAlphaOffset += m.sortedFacesLen;
@@ -950,7 +947,6 @@ public class Zone implements Destructible {
 				m2.packedFaces = m.packedFaces;
 				m2.radius = m.radius;
 				m2.asyncSortIdx = m.asyncSortIdx;
-				m2.eboOffset = m.eboOffset;
 				m2.sortedFaces = m.sortedFaces;
 				m2.sortedFacesLen = m.sortedFacesLen;
 
