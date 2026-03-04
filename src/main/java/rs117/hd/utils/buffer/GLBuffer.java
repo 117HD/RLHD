@@ -29,6 +29,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.opengl.*;
+import rs117.hd.utils.Destructible;
+import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.HDUtils;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -41,7 +43,7 @@ import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class GLBuffer {
+public class GLBuffer implements Destructible {
 	private static final boolean DEBUG_MAC_OS = false;
 
 	public static int STORAGE_NONE = 0;
@@ -56,9 +58,10 @@ public class GLBuffer {
 	public static int MAP_UNSYNCHRONIZED = 4;
 	public static int MAP_INVALIDATE = 8;
 
-	public final String name;
 	public final int target;
 	public final int usage;
+
+	public String name;
 	public int storageFlags;
 
 	public int id;
@@ -114,6 +117,22 @@ public class GLBuffer {
 		return this;
 	}
 
+	public void setName(String newName) {
+		if (newName != null && !newName.equals(name)) {
+			name = newName;
+			if (id != 0 && log.isDebugEnabled() && GL_CAPS.OpenGL43)
+				GL43C.glObjectLabel(GL43C.GL_BUFFER, id, name);
+		}
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		if (id != 0)
+			DestructibleHandler.queueLeakedDestruction(this);
+	}
+
+	@Override
 	public void destroy() {
 		if (mappedBuffer != null)
 			unmap();
@@ -124,6 +143,11 @@ public class GLBuffer {
 		}
 
 		size = 0;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("Name: %s, Capacity: %d", name, size);
 	}
 
 	public void orphan() {
@@ -459,10 +483,13 @@ public class GLBuffer {
 					final int len = (int) numBytes[i];
 
 					try {
-						src.position(srcPos);
+						// Update limits before positions to appease bounds checking
 						src.limit(srcPos + len);
+						src.position(srcPos);
 
+						dst.limit(dstPos + len);
 						dst.position(dstPos);
+
 						dst.put(src);
 					} catch (Throwable t) {
 						log.error("Failed to copy buffer range {} -> {} offset: {} size: {}", srcId, dstId, srcOffsetBytes[i], numBytes[i], t);

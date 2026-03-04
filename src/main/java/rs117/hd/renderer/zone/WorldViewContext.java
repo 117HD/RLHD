@@ -2,12 +2,10 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.nio.IntBuffer;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +17,10 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -36,8 +36,10 @@ public class WorldViewContext {
 	public static final int VAO_SHADOW = 3;
 	public static final int VAO_COUNT = 4;
 
-	private static final ArrayDeque<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL = new ArrayDeque<>();
-	private static final ArrayDeque<DynamicModelVAO> DYNAMIC_MODEL_VAO_POOL = new ArrayDeque<>();
+	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL =
+		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO::Staging", true));
+	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_POOL =
+		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO", false));
 
 	@Inject
 	private Injector injector;
@@ -74,7 +76,6 @@ public class WorldViewContext {
 	public long uploadTime;
 	public long sceneSwapTime;
 
-	final LinkedBlockingDeque<Zone> pendingCull = new LinkedBlockingDeque<>();
 	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, true);
 	final JobGroup<ZoneUploadJob> streamingGroup = new JobGroup<>(false, false);
 	final JobGroup<ZoneUploadJob> invalidationGroup = new JobGroup<>(true, false);
@@ -121,17 +122,15 @@ public class WorldViewContext {
 		long start = System.nanoTime();
 		for (int i = 0; i < VAO_COUNT; i++) {
 			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_SHADOW;
-			final ArrayDeque<DynamicModelVAO> POOL = needsStaging ? DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
+			final var POOL = needsStaging ? DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
-				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = POOL.poll();
-				if (dynamicModelVao == null) {
-					dynamicModelVao = dynamicModelVaos[k][i] = new DynamicModelVAO(Integer.toString(i), needsStaging);
+				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = POOL.acquire();
+				if (dynamicModelVao.vao == 0)
 					dynamicModelVao.initialize();
-				}
 				dynamicModelVao.bindMetadataVAO(vboM);
 			}
 		}
-		log.trace("WorldViewContext - WorldViewid: {} initBuffers took {}ms", worldViewId, (System.nanoTime() - start) / 1000000);
+		log.trace("WorldViewContext - WorldViewId: {} initBuffers took {}ms", worldViewId, (System.nanoTime() - start) / 1000000);
 	}
 
 	void map() {
@@ -211,7 +210,7 @@ public class WorldViewContext {
 				if (prevZone != curZone) {
 					curZone.inSceneFrustum = prevZone.inSceneFrustum;
 					curZone.inShadowFrustum = prevZone.inShadowFrustum;
-					pendingCull.add(prevZone);
+					DestructibleHandler.queueDestruction(prevZone);
 				}
 			} else if (uploadTask.wasCancelled() && !curZone.cull) {
 				boolean shouldRetry = uploadTask.encounteredError() && curZone.isFirstLoadingAttempt;
@@ -235,12 +234,6 @@ public class WorldViewContext {
 	}
 
 	void update(float deltaTime) {
-		Zone cullZone;
-		while ((cullZone = pendingCull.poll()) != null) {
-			log.trace("Culling zone({})", cullZone.hashCode());
-			cullZone.free();
-		}
-
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
 				handleZoneSwap(deltaTime, x, z);
@@ -264,16 +257,6 @@ public class WorldViewContext {
 				handleZoneSwap(-1.0f, x, z);
 	}
 
-	int getSortedAlphaCount() {
-		int count = 0;
-
-		for (int x = 0; x < sizeX; x++)
-			for (int z = 0; z < sizeZ; z++)
-				count += zones[x][z].sortedFacesLen;
-
-		return count;
-	}
-
 	void free() {
 		sceneLoadGroup.cancel();
 		streamingGroup.cancel();
@@ -290,38 +273,22 @@ public class WorldViewContext {
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
 				if (dynamicModelVaos[k][i] == null)
 					continue;
-				final ArrayDeque<DynamicModelVAO> POOL = dynamicModelVaos[k][i].hasStagingBuffer() ?
+				final var POOL = dynamicModelVaos[k][i].hasStagingBuffer() ?
 					DYNAMIC_MODEL_VAO_STAGING_POOL :
 					DYNAMIC_MODEL_VAO_POOL;
-				if (POOL.size() > 24) {
-					dynamicModelVaos[k][i].destroy();
-				} else {
-					POOL.add(dynamicModelVaos[k][i]);
-				}
+				POOL.recycle(dynamicModelVaos[k][i]);
 			}
 		}
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
-				zones[x][z].free();
-
-		Zone cullZone;
-		while ((cullZone = pendingCull.poll()) != null)
-			cullZone.free();
+				zones[x][z].destroy();
 
 		if (vboM != null)
 			vboM.destroy();
 		vboM = null;
 
 		isLoading = true;
-	}
-
-	public static void freeVaoPools() {
-		DynamicModelVAO v;
-		while ((v = DYNAMIC_MODEL_VAO_STAGING_POOL.poll()) != null)
-			v.destroy();
-		while ((v = DYNAMIC_MODEL_VAO_POOL.poll()) != null)
-			v.destroy();
 	}
 
 	void invalidate() {
