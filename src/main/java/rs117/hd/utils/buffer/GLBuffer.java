@@ -482,10 +482,13 @@ public class GLBuffer implements DestructibleHandler.IDestructible {
 					final int len = (int) numBytes[i];
 
 					try {
+						// Update limits before positions to appease bounds checking
 						src.limit(srcPos + len);
 						src.position(srcPos);
 
+						dst.limit(dstPos + len);
 						dst.position(dstPos);
+
 						dst.put(src);
 					} catch (Throwable t) {
 						log.error("Failed to copy buffer range {} -> {} offset: {} size: {}", srcId, dstId, srcOffsetBytes[i], numBytes[i], t);
