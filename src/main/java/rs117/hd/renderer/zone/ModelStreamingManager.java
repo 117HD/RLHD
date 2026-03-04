@@ -267,7 +267,6 @@ public class ModelStreamingManager {
 		boolean hasAlpha,
 		int orientation, int x, int y, int z
 	) {
-
 		boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 		shouldSort &= sceneUploader.preprocessTempModel(
 			worldProjection,
@@ -332,7 +331,6 @@ public class ModelStreamingManager {
 			// Fix rendering projectiles from boats with hide roofs enabled
 			int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
 
-			opaqueView.end();
 			if (renderable instanceof Player) {
 				if (opaqueView.getEndOffset() > opaqueView.getStartOffset()) {
 					zone.addPlayerModel(
@@ -346,7 +344,6 @@ public class ModelStreamingManager {
 			}
 
 			if (opaqueView != alphaView) {
-				alphaView.end();
 				if (alphaView.getEndOffset() > alphaView.getStartOffset()) {
 					zone.addTempAlphaModel(
 						modelOverride,
@@ -357,7 +354,9 @@ public class ModelStreamingManager {
 						z & 1023
 					);
 				}
+				alphaView.end();
 			}
+			opaqueView.end();
 		}
 	}
 
@@ -573,9 +572,7 @@ public class ModelStreamingManager {
 					alphaView
 				);
 
-				opaqueView.end();
 				if (opaqueView != alphaView) {
-					alphaView.end();
 					if (alphaView.getEndOffset() > alphaView.getStartOffset()) {
 						// level is checked prior to this callback being run, in order to cull clickboxes, but
 						// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
@@ -590,7 +587,9 @@ public class ModelStreamingManager {
 							z & 1023
 						);
 					}
+					alphaView.end();
 				}
+				opaqueView.end();
 			}
 		} catch (Exception e) {
 			log.error("Error rendering dynamic object", e);

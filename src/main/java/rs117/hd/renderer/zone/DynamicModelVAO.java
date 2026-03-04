@@ -222,6 +222,10 @@ class DynamicModelVAO implements DestructibleHandler.IDestructible {
 		drawOffsets[view.drawIdx] = view.getStartOffset() / VERT_SIZE_INTS;
 		drawCounts[view.drawIdx] = view.getVertexCount();
 
+		// Clear ReservedViews before returning to pool
+		view.vbo = null;
+		view.tbo = null;
+
 		usedViews.add(view);
 	}
 
