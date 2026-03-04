@@ -14,7 +14,7 @@ public final class DestructibleHandler {
 	private static final HashMap<Class<?>, Integer> totalLeakedCount = new HashMap<>();
 
 	@Getter
-	private static boolean isDestructingShutdown = false;
+	private static boolean isShuttingDown = false;
 
 	public static void queueDestruction(Destructible destructible) {
 		PENDING_DESTRUCTION.add(destructible);
@@ -30,7 +30,7 @@ public final class DestructibleHandler {
 
 	public static void flushPendingDestruction(boolean isShutdown) {
 		try {
-			isDestructingShutdown = isShutdown;
+			isShuttingDown = isShutdown;
 
 			Destructible destructable;
 			while ((destructable = PENDING_DESTRUCTION.poll()) != null)
@@ -64,7 +64,7 @@ public final class DestructibleHandler {
 
 			log.warn(sb.toString());
 		} finally {
-			isDestructingShutdown = false;
+			isShuttingDown = false;
 		}
 	}
 }

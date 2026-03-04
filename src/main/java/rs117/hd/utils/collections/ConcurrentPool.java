@@ -52,7 +52,7 @@ public final class ConcurrentPool<T> {
 		if (obj == null)
 			return;
 
-		if (DestructibleHandler.isDestructingShutdown() && obj instanceof Destructible) {
+		if (DestructibleHandler.isShuttingDown() && obj instanceof Destructible) {
 			((Destructible) obj).destroy();
 			return;
 		}
