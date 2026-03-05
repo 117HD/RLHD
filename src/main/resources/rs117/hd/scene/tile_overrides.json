@@ -5891,13 +5891,13 @@
     "blended": false
   },
   {
-    "name": "LASSAR_UNDERCITY_CARPET",
+    "name": "LASSAR_UNDERCITY_DIRT",
     "area": "LASSAR_UNDERCITY",
+    "underlayIds": [ 104 ],
     "overlayIds": [
       285
     ],
-    "groundMaterial": "CARPET",
-    "blended": false
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "LASSAR_UNDERCITY_TILES_OVERLAY",
