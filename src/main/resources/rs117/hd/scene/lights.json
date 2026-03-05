@@ -36561,6 +36561,20 @@
     ]
   },
   {
+    "description": "Lassar Undercity Shadow Blocker",
+    "radius": 375,
+    "strength": 25,
+    "height": 120,
+    "color": [
+      255, 255, 255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "DT2_LASSAR_SHADOW_BLOCKER_SHADOW",
+      "DT2_LASSAR_SHADOW_BLOCKER_NORMAL"
+    ]
+  },
+  {
     "description": "Lassar Undercity brazier",
     "radius": 400,
     "strength": 50,
@@ -36613,9 +36627,9 @@
   },
   {
     "description": "Lassar Undercity teleporter",
-    "radius": 350,
-    "strength": 125,
-    "height": 128,
+    "radius": 370,
+    "strength": 300,
+    "height": 220,
     "color": [
       112, 69, 126
     ],
@@ -36645,7 +36659,7 @@
   },
   {
     "description": "Lassar Undercity lost soul",
-    "radius": 600,
+    "radius": 350,
     "strength": 15,
     "height": 140,
     "color": [

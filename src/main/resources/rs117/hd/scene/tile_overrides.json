@@ -5884,6 +5884,7 @@
   {
     "name": "LASSAR_UNDERCITY_HIDDEN",
     "area": "LASSAR_UNDERCITY",
+    "groundMaterial": "SMOOTH_STONE",
     "overlayIds": [
       264,
       286

@@ -28698,14 +28698,47 @@
     ]
   },
   {
-    "description": "Lassar Undercity floor tile texture",
+    "description": "Lassar Undercity - Shadow Pool",
+    "depthBias": 20,
     "objectIds": [
-      "LASSAR_MARBLE_FLOOR_PATTERN_D",
-      "LASSAR_MARBLE_FLOOR_PATTERN_E",
-      "LASSAR_MARBLE_FLOOR_PATTERN_F",
-      "LASSAR_MARBLE_FLOOR_PATTERN_G",
-      "LASSAR_MARBLE_FLOOR_PATTERN_H",
-      "LASSAR_MARBLE_FLOOR_PATTERN_I"
+      "DT2_LASSAR_SHADOW_PUDDLE_ACTIVE",
+      "TEMPLE_LASSAR02_VINE01_CORNER01"
+    ]
+  },
+  {
+    "description": "Lassar Undercity - Shadow Blocker",
+    "baseMaterial": "GRAY_35",
+    "upwardsNormals": true,
+    "objectIds": [
+      "DT2_LASSAR_SHADOW_BLOCKER_SHADOW",
+      "DT2_LASSAR_SHADOW_BLOCKER_NORMAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "NONE",
+        "flatNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Lassar Undercity - Teleporter",
+    "objectIds": [
+      "DT2_LASSAR_TELEPORTER_PALACE",
+      "DT2_LASSAR_TELEPORTER_PLAZA",
+      "DT2_LASSAR_TELEPORTER_CATHEDRAL",
+      "DT2_LASSAR_TELEPORTER_SCIENCE_NORTH",
+      "DT2_LASSAR_TELEPORTER_SCIENCE_SOUTH",
+      "DT2_LASSAR_TELEPORTER_RESIDENTIAL_WEST",
+      "DT2_LASSAR_TELEPORTER_RESIDENTIAL_EAST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 0",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true,
+        "flatNormals": true
+      }
     ]
   },
   {
