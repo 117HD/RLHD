@@ -406,6 +406,7 @@ public class HdPlugin extends Plugin {
 	public boolean configPowerSaving;
 	public boolean configUnlitFaceColors;
 	public boolean configUndoVanillaShading;
+	public boolean configTileItemBiasing;
 	public boolean configPreserveVanillaNormals;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
@@ -1631,6 +1632,7 @@ public class HdPlugin extends Plugin {
 		configShadingMode = config.shadingMode();
 		configUnlitFaceColors = configShadingMode.unlitFaceColors;
 		configUndoVanillaShading = configShadingMode.undoVanillaShading;
+		configTileItemBiasing = config.tileItemBiasing();
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configWindDisplacement = config.windDisplacement();
 		configCharacterDisplacement = config.characterDisplacement();
