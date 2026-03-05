@@ -36578,7 +36578,7 @@
     "description": "Lassar Undercity brazier",
     "radius": 400,
     "strength": 50,
-    "height": 40,
+    "height": 140,
     "color": [
       4,
       168,
@@ -36589,7 +36589,44 @@
     "range": 3,
     "fadeInDuration": 0,
     "objectIds": [
-      "DT2_LASSAR_SHADOW_BRAZIER_LIT_PERMANENTLY"
+      "DT2_LASSAR_SHADOW_BRAZIER_LIT_PERMANENTLY",
+      "DT2_LASSAR_SHADOW_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Lassar Undercity Remnant",
+    "radius": 300,
+    "strength": 25,
+    "height": 140,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "objectIds": [
+      "DT2_LASSAR_REMNANT_STRONG"
+    ]
+  },
+  {
+    "description": "Lassar Undercity Remnant",
+    "radius": 250,
+    "strength": 10,
+    "height": 140,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "objectIds": [
+      "DT2_LASSAR_REMNANT_WEAK"
     ]
   },
   {

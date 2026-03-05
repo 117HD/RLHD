@@ -184,6 +184,17 @@
     "depthColor": "#000000"
   },
   {
+    "name": "WHISPERER_WATER",
+    "flat": true,
+    "surfaceColor": "#181823",
+    "foamColor": [
+      13.07,
+      13.07,
+      13.07
+    ],
+    "depthColor": "#0A0A0F"
+  },
+  {
     "name": "DARK_BLUE_WATER",
     "flat": true,
     "specularStrength": 0.1,

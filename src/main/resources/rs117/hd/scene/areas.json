@@ -9642,6 +9642,24 @@
     ]
   },
   {
+    "name": "LASSAR_UNDERCITY_DRAIN_DEPTH_FIX_FILLER",
+    "aabbs": [
+      [ 2775, 6312, 2793, 6315 ],
+      [ 2794, 6294, 2796, 6311 ],
+      [ 2775, 6291, 2793, 6293 ],
+      [ 2772, 6294, 2775, 6311 ]
+    ]
+  },
+  {
+    "name": "LASSAR_UNDERCITY_DRAIN_DEPTH_FIX_TILES",
+    "aabbs": [
+      [ 2772, 6291, 2780, 6299 ],
+      [ 2772, 6307, 2780, 6315 ],
+      [ 2788, 6307, 2796, 6315 ],
+      [ 2788, 6291, 2796, 6299 ]
+    ]
+  },
+  {
     "name": "LASSAR_UNDERCITY",
     "areas": [
       "LASSAR_UNDERCITY_NORMAL",

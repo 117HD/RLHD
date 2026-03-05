@@ -28709,6 +28709,7 @@
     "description": "Lassar Undercity - Shadow Blocker",
     "baseMaterial": "GRAY_35",
     "upwardsNormals": true,
+    "depthBias": 75,
     "objectIds": [
       "DT2_LASSAR_SHADOW_BLOCKER_SHADOW",
       "DT2_LASSAR_SHADOW_BLOCKER_NORMAL"
@@ -28719,6 +28720,44 @@
         "baseMaterial": "NONE",
         "flatNormals": true
       }
+    ]
+  },
+  {
+    "description": "Lassar Undercity - Hide Wall Filler to Prevent zFighting",
+    "hideInAreas": [ "LASSAR_UNDERCITY_DRAIN_DEPTH_FIX_FILLER" ],
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_WALLTOP05"
+    ]
+  },
+  {
+    "description": "Lassar Undercity - Hide Wall Filler to Prevent zFighting",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "depthBias": 10,
+    "objectIds": [
+      "LASSAR_CHURCH_FLOOR_PURPLE01",
+      "LASSAR_CHURCH_FLOOR_PURPLE01_CORNER01",
+      "LASSAR_CHURCH_BRAZIER01",
+      "LASSAR_CHURCH_FLOOR_PURPLE01_EDGE01",
+      "LASSAR_CHURCH_BRAZIER01_LIGHTER01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "flatNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Lassar Undercity - Hide Ripples",
+    "baseMaterial": "GRAY_65",
+    "hideAsWaterEffect": true,
+    "objectIds": [
+      "TEMPLE_LASSAR01_RIPPLE03",
+      "TEMPLE_LASSAR01_RIPPLE02",
+      "TEMPLE_LASSAR01_RIPPLE01"
     ]
   },
   {
@@ -78559,7 +78598,8 @@
       "DT2_VAULT_PERSERIYA_STATUE_NORMAL",
       "DT2_VAULT_UPPER_PILLAR",
       "DT2_VAULT_PERSERIYA_STATUE_MEDALLION",
-      "DT2_VAULT_SUCELLUS_STATUE_MEDALLION"
+      "DT2_VAULT_SUCELLUS_STATUE_MEDALLION",
+      "DT2_VAULT_WHISPERER_STATUE_MEDALLION"
     ],
     "colorOverrides": [
       {

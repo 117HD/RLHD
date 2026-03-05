@@ -5892,6 +5892,16 @@
     "blended": false
   },
   {
+    "name": "LASSAR_UNDERCITY_DRAIN_CARPET_FIX",
+    "area": "LASSAR_UNDERCITY_DRAIN_DEPTH_FIX_TILES",
+    "underlayIds": [ 104 ],
+    "overlayIds": [
+      285
+    ],
+    "groundMaterial": "CARPET",
+    "heightOffset": 2
+  },
+  {
     "name": "LASSAR_UNDERCITY_DIRT",
     "area": "LASSAR_UNDERCITY",
     "underlayIds": [ 104 ],
@@ -9483,7 +9493,7 @@
       181,
       182
     ],
-    "groundMaterial": "LASSAR_UNDERCITY_TILES_SUBMERGED"
+    "waterType": "WHISPERER_WATER"
   },
   {
     "name": "LASSAR_UNDERCITY_WATER_UNDERLAY",
