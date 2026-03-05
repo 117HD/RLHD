@@ -10570,7 +10570,8 @@
       "AIDE_POORRUG_SIDE",
       "FAI_FALADOR_RUG_RUGSIDE",
       "DADDYSHOME_CARPET_SIDE_BROKEN_0OP",
-      "DADDYSHOME_CARPET_SIDE_FIXED"
+      "DADDYSHOME_CARPET_SIDE_FIXED",
+      "DT2_GHORROCK_RUGSIDE"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.7,
@@ -10585,7 +10586,8 @@
       "AIDE_POORRUG_CORNER",
       "FAI_FALADOR_RUG_CORNER",
       "DADDYSHOME_CARPET_CORNER_BROKEN_0OP",
-      "DADDYSHOME_CARPET_CORNER_FIXED"
+      "DADDYSHOME_CARPET_CORNER_FIXED",
+      "DT2_GHORROCK_RUGCORNER"
     ],
     "uvType": "MODEL_XZ_MIRROR_A",
     "uvScale": 0.7,
@@ -27463,7 +27465,8 @@
     "description": "Ferox Enclave - Ancient Altar",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "WILDY_HUB_ALTAR"
+      "WILDY_HUB_ALTAR",
+      "DT2_GHORROCK_ALTAR"
     ],
     "uvType": "BOX"
   },
@@ -27519,7 +27522,10 @@
     "objectIds": [
       "FAVOUR_POORBED",
       "LOVAKENGJ_SLEEPING_BAG",
-      "TEMPOROSS_LOBBY_SLEEPINGBAG"
+      "TEMPOROSS_LOBBY_SLEEPINGBAG",
+      "DT2_GHORROCK_CELL_BED_OP",
+      "DT2_GHORROCK_BED_POOR",
+      "DT2_GHORROCK_THANKYOU_BED"
     ],
     "uvType": "BOX",
     "uvScale": 0.66
@@ -32091,11 +32097,12 @@
   },
   {
     "description": "Ghorrock Dungeon - Wall",
-    "baseMaterial": "GRUNGE_3_LIGHT",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "GHORROCK_DUNGEON_CAVE_ENTRY",
       "GHORROCK_STONE01",
       "GHORROCK_STONE01_SNOW01",
+      "GHORROCK_STONE01_ALCOVE02_BLANK",
       "GHORROCK_STONE01_SNOW01_TRANSITION",
       "GHORROCK_STONE01_SNOW01_TRANSITION_MIRROR",
       "GHORROCK_STONE01_SNOW01_PILLAR",
@@ -32117,29 +32124,129 @@
       "GHORROCK_METAL_GATE_OPEN",
       "GHORROCK_METAL_GATE_PADLOCK_CLOSED",
       "GHORROCK_METAL_GATE_PADLOCK_OPEN",
+      "GHORROCK_DUNGEON_EXIT",
+      "GHORROCK_DUNGEON_CAVE_EXIT",
+      "GHORROCK_STONE_CORNER_PILLAR",
+      "GHORROCK_STONE_CORNER_PILLAR_MIRROR",
+      "DT2_GHORROCK_CELL_HOLE",
+      "GHORROCK_STONE01_TALL_ARCH02",
+      "GHORROCK_STONE01_TALL_ARCH01",
+      "GHORROCK_ARCH_SNOW01B",
+      "GHORROCK_ARCH_SNOW01D1",
+      "GHORROCK_ARCH_SNOW01C",
+      "GHORROCK_ARCH_SNOW01A",
+      "GHORROCK_STONE01_TALL_PILLAR01",
+      "GHORROCK_SNOW_DRIFT_04",
+      "GHORROCK_SNOW_DRIFT_03",
+      "GHORROCK_SNOW_DRIFT_01",
+      "GHORROCK_ICE_01B",
+      "GHORROCK_ICE_01A",
+      "GHORROCK_ARCH_SNOW01E",
+      "GHORROCK_ARCH_SNOW01D",
+      "DT2_GHORROCK_SHORTCUT_1_EXIT",
+      "DT2_GHORROCK_SHORTCUT_2_EXIT",
+      "DT2_GHORROCK_SHORTCUT_3_ENTRY",
+      "DT2_GHORROCK_SHORTCUT_3_EXIT",
+      "DT2_GHORROCK_SHORTCUT_OPEN",
+      "DT2_GHORROCK_SHORTCUT_BLOCKED",
+      "DT2_GHORROCK_SNOW_BLOCKAGE02",
+      "GHORROCK_WALLTOP_SNOW_FILLER",
+      "DT2_GHORROCK_ASYLUM_ENTRY",
+      "DT2_GHORROCK_PRAYER_ICON"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 32 || h == 33 || h == 35",
+        "baseMaterial": "SMOOTH_SNOW",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 37 && s == 2",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 46",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 4",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Ghorrock Dungeon - Snow Ore Wall",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
       "GHORROCK_ICE01",
       "GHORROCK_ICE02",
       "GHORROCK_SNOW01_ICE01_TRANS",
       "GHORROCK_SNOW01_ICE01_TRANS_MIRROR",
-      "GHORROCK_DUNGEON_EXIT",
       "ANCIENT_ESSENCE_ROCK_ACTIVE",
-      "ANCIENT_ESSENCE_ROCK_EMPTY",
-      "DT2_GHORROCK_ENTRY_NOOP",
-      "GHORROCK_DUNGEON_CAVE_EXIT"
+      "ANCIENT_ESSENCE_ROCK_EMPTY"
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
     "colorOverrides": [
       {
-        "colors": "h > 36",
-        "baseMaterial": "SMOOTH_STONE",
+        "colors": "h == 32 || h == 33",
+        "baseMaterial": "SMOOTH_SNOW",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 46",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.5
       }
     ]
   },
   {
+    "description": "Ghorrock Dungeon - Prison Door",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 32 || h == 33",
+        "baseMaterial": "SMOOTH_SNOW",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 46",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 4 || h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Ghorrock Dungeon - Wall Filler",
+    "flatNormals": true,
+    "baseMaterial": "BLACK",
+    "objectIds": [
+      "GHORROCK_WALLTOP_SNOW_BLACK"
+    ]
+  },
+  {
     "description": "Ghorrock Dungeon - Snow - Trim",
-    "baseMaterial": "GRAY_110",
+    "baseMaterial": "SMOOTH_SNOW",
+    "inheritTileColorType": "UNDERLAY",
+    "uvType": "BOX",
     "objectIds": [
       "GHORROCK_STONE01_SNOW01_FALLOFF_STRAIGHT",
       "GHORROCK_STONE01_SNOW01_FALLOFF_STRAIGHT_END",
@@ -32153,17 +32260,47 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "SOTN_GHORROCK_CHEST_EMPTY",
-      "GHORROCK_SNOW01_CHEST_CLOSED_NOOP"
+      "GHORROCK_SNOW01_CHEST_CLOSED_NOOP",
+      "DT2_GHORROCK_SAPPHIRE_CHEST",
+      "DT2_GHORROCK_EMERALD_CHEST",
+      "DT2_GHORROCK_RUBY_CHEST",
+      "DT2_GHORROCK_DIAMOND_CHEST",
+      "DT2_GHORROCK_EQUIPMENT_CHEST",
+      "DT2_GHORROCK_MEDALLION_CHEST",
+      "DT2_GHORROCK_CHEST_OPEN",
+      "DT2_GHORROCK_RUBY_HINT_CHEST"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Ghorrock Dungeon - Wooden - Ration Crate",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "DT2_GHORROCK_RATION_CRATE_EMPTY",
+      "DT2_GHORROCK_RATION_CRATE_OP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Ghorrock Dungeon - Wooden - Chair",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      "GHORROCK_SNOW01_SMASHEDCHAIR02"
+      "GHORROCK_SNOW01_SMASHEDCHAIR02",
+      "GHORROCK_SNOW01_SMASHEDCHAIR03",
+      "DT2_GHORROCK_DESK_CHAIR"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512
   },
   {
     "description": "Ghorrock Dungeon - Wooden - Chair - Smashed",
@@ -32178,10 +32315,86 @@
     "description": "Ghorrock Dungeon - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      "GHORROCK_CRATE_SINGLE"
+      "GHORROCK_CRATE_SINGLE",
+      "DT2_GHORROCK_RUBY_HINT_CRATE"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Ghorrock Dungeon - Wooden - Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvOrientation": 256,
+    "uvScale": 0.35,
+    "uvType": "BOX",
+    "objectIds": [
+      "DT2_GHORROCK_NORMAL_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.6,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Ghorrock Dungeon - Wooden - Prison Rack",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "GHORROCK_PRISON_RACK01",
+      "GHORROCK_PRISON_RACK02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3 || h == 4 || h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.6,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "NONE",
+        "depthBias": 250
+      }
+    ]
+  },
+  {
+    "description": "Ghorrock Dungeon - Wooden - Prison Harness",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "GHORROCK_HARNESS01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3 || h == 4 || h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.6,
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Ghorrock Dungeon - Firecracker Pack",
+    "baseMaterial": "BURLAP",
+    "objectIds": [
+      "DT2_GHORROCK_FIRECRACKER_PACK_OP",
+      "DT2_GHORROCK_FIRECRACKER_PACK_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.3,
+    "depthBias": 1
   },
   {
     "description": "Ghorrock Dungeon - Wooden - Crate - Stacked",
@@ -32194,12 +32407,51 @@
   },
   {
     "description": "Ghorrock Dungeon - Tables",
-    "baseMaterial": "SMOOTH_SNOW",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "GHORROCK_SNOW01_BROKENTABLE01",
-      "GHORROCK_SNOW01_BROKENTABLE02"
+      "GHORROCK_SNOW01_BROKENTABLE02",
+      "DT2_GHORROCK_ORDERS_DESK",
+      "DT2_GHORROCK_DESK_UNTIDY",
+      "DT2_GHORROCK_EVACUATION_DESK"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "SMOOTH_SNOW"
+      },
+      {
+        "colors": "h == 5 && s == 2 || h == 7 || h == 8",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Ghorrock Dungeon - Bookcases",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DT2_GHORROCK_BOOKCASE_1",
+      "DT2_GHORROCK_BOOKCASE_2",
+      "DT2_GHORROCK_BOOKCASE_3",
+      "DT2_GHORROCK_REFUGEES_CABINET",
+      "DT2_GHORROCK_APOTHECARY_CABINET02"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "SMOOTH_SNOW"
+      },
+      {
+        "colors": "h == 5 && s > 1 || h > 5 || h < 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Ghorrock Dungeon - Lever",
@@ -42968,7 +43220,9 @@
       "LUC2_DWT_BARREL2",
       "SLUG2_BARREL_STACKED",
       "QIP_DIGSITE_BARREL_BASIC",
-      "FAI_FALADOR_BARREL_TAP"
+      "FAI_FALADOR_BARREL_TAP",
+      "BARREL_EMPTY",
+      "BARREL_TAP"
     ]
   },
   {
@@ -78243,7 +78497,8 @@
       "DT2_VAULT_VARDORVIS_STATUE_NORMAL",
       "DT2_VAULT_PERSERIYA_STATUE_NORMAL",
       "DT2_VAULT_UPPER_PILLAR",
-      "DT2_VAULT_PERSERIYA_STATUE_MEDALLION"
+      "DT2_VAULT_PERSERIYA_STATUE_MEDALLION",
+      "DT2_VAULT_SUCELLUS_STATUE_MEDALLION"
     ],
     "colorOverrides": [
       {

@@ -35711,8 +35711,7 @@
   },
   {
     "description": "Secrets of the North - Candle",
-    "height": 240,
-    "alignment": "LEFT",
+    "offset": [ -75, 240, 0 ],
     "radius": 350,
     "strength": 12.5,
     "color": [
@@ -35722,9 +35721,157 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 3,
+    "range": 10,
     "objectIds": [
       "GHORROCK_WALL_CANDLE01"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Alcove Statue Candle",
+    "offset": [ -5, 180, 0 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "GHORROCK_STONE01_DECORATIVE01"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 1",
+    "offset": [ -80, 50, -50 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 2",
+    "offset": [ -155, 50, -30 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 3",
+    "offset": [ 80, 50, -40 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 4",
+    "offset": [ 160, 50, -35 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 5",
+    "offset": [ 120, 340, -55 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 6",
+    "offset": [ -120, 340, -55 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 6",
+    "offset": [ 0, 100, -30 ],
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_PRAYER_ICON"
     ]
   },
   {

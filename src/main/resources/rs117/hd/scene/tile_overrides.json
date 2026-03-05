@@ -9427,20 +9427,15 @@
     }
   },
   {
-    "name": "ICY_UNDERGROUND_SNOW",
-    "area": "ICY_UNDERGROUND_DARK",
-    "underlayIds": [
-      104,
-      159,
-      161
-    ],
-    "groundMaterial": "SNOW_1"
-  },
-  {
     "name": "Ghorrock Dungeon Tiles",
     "area": "Ghorrock Dungeon Tiles",
     "overlayIds": [
       255
+    ],
+    "underlayIds": [
+      16,
+      72,
+      161
     ],
     "groundMaterial": "MARBLE_1_SEMIGLOSS",
     "blended": false
@@ -9451,8 +9446,31 @@
     "overlayIds": [
       255
     ],
+    "underlayIds": [ 160 ],
     "groundMaterial": "DIRT",
-    "blended": false
+    "maxLightness": 25,
+    "minLightness": 25
+  },
+  {
+    "name": "Ghorrock Dungeon Dirt Fix 2",
+    "area": "Ghorrock Dungeon Dirt Fix 2",
+    "overlayIds": [
+      255
+    ],
+    "underlayIds": [ 159 ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "ICY_UNDERGROUND_SNOW",
+    "area": "ICY_UNDERGROUND_DARK",
+    "underlayIds": [
+      104,
+      159,
+      160,
+      161
+    ],
+    "groundMaterial": "SNOW_1",
+    "minLightness": 70
   },
   {
     "name": "LASSAR_UNDERCITY_SUNKEN_CATHEDRAL",
