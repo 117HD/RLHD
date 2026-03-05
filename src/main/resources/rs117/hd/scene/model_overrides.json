@@ -28781,6 +28781,72 @@
     ]
   },
   {
+    "description": "Stranglewood Hideout Temple - Walls",
+    "uvType": "BOX",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "ZEMA_UNDERGROUND_WALL",
+      "ZEMA_UNDERGROUND_WALL_TABLET",
+      "ZEMA_UNDERGROUND_WALL_TOP",
+      "ZEMA_TEMPLE_WALL",
+      "ZEMA_TEMPLE_WALL_TABLET",
+      "ZEMA_TEMPLE_WALL_TOP",
+      "PILLAR_STRANGLER01_TEMPLE01",
+      "PILLAR_STRANGLER01_TEMPLE02",
+      "PILLAR_STRANGLER01_TEMPLE03",
+      "PILLAR_STRANGLER01_TEMPLE04"
+    ]
+  },
+  {
+    "description": "Stranglewood Hideout Temple - Ladder",
+    "uvType": "BOX",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DT2_STRANGLEWOOD_HIDEOUT_ESCAPE"
+    ]
+  },
+  {
+    "description": "Stranglewood Hideout Temple - Ladder",
+    "uvType": "BOX",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "objectIds": [
+      "DT2_STRANGLEWOOD_SURVIVAL_BARRICADE"
+    ]
+  },
+  {
+    "description": "Stranglewood Temple - Chest, Table and Stairs",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "DT2_STRANGLEWOOD_SURVIVAL_SUPPLIES_CLOSED",
+      "DT2_STRANGLEWOOD_SURVIVAL_SUPPLIES_OPEN",
+      "DT2_STRANGLEWOOD_SURVIVAL_SUPPLIES_EMPTY",
+      "DT2_STRANGLEWOOD_LORE_CHEST_1",
+      "DT2_STRANGLEWOOD_LORE_CHEST_2",
+      "DT2_STRANGLEWOOD_LORE_CHEST_3",
+      "DT2_STRANGLEWOOD_LORE_CHEST_4",
+      "DT2_STRANGLEWOOD_LORE_CHEST_5",
+      "DT2_STRANGLEWOOD_LORE_CHEST_6",
+      "DT2_STRANGLEWOOD_LORE_CHEST_7",
+      "DT2_STRANGLEWOOD_LORE_CHEST_7",
+      "DT2_STRANGLEWOOD_TELEPORT_CHEST",
+      "ZEMA_CHEST_CLOSED",
+      "ZEMA_TEMPLE_CHEST_CLOSED",
+      "ZEMA_TEMPLE_CHEST",
+      "ZEMA_TEMPLE_TABLE_2X2",
+      "ZEMA_TEMPLE_TABLE_2X1",
+      "DT2_STRANGLEWOOD_TEMPLE_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRAY_50"
+      }
+    ]
+  },
+  {
     "description": "Hide fake brick tiles to replace them with tile overrides",
     "objectIds": [
       "TILEKIT_BRICK01_DEFAULT01",
