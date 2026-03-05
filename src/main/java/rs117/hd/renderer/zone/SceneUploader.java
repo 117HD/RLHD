@@ -2072,8 +2072,10 @@ public class SceneUploader implements AutoCloseable {
 				color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
 			}
 
-			final int depthBias = ((faceOverride.depthBias != -1 ? faceOverride.depthBias :
-				hasBias ? bias[face] : 0) + modelBias) & 0xFF;
+			int depthBias = (faceOverride.depthBias != -1 ? faceOverride.depthBias :
+				hasBias ? bias[face] & 0xFF : 0);
+			if(depthBias == 0)
+				depthBias = modelBias;
 			final int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			final boolean hasAlpha = material.hasTransparency || transparency != 0;
 
