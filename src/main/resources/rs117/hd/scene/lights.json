@@ -26016,9 +26016,8 @@
   },
   {
     "description": "CAMDOZAAL_STATUE",
-    "height": 200,
-    "alignment": "FRONT",
-    "radius": 450,
+    "offset": [ 0, 200, -50 ],
+    "radius": 250,
     "strength": 30,
     "color": [
       0,

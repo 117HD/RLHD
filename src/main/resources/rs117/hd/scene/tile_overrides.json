@@ -9512,9 +9512,10 @@
     "blended": false
   },
   {
-    "name": "LASSAR_UNDERCITY_TILES_BLENDED",
-    "area": "LASSAR_UNDERCITY",
+    "name": "LASSAR_UNDERCITY_PLAZA_BRICKS",
+    "area": "LASSAR_UNDERCITY_PLAZA_BRICKS",
     "underlayIds": [
+      44,
       46,
       150
     ],

@@ -43392,10 +43392,32 @@
       "CAVEKIT_IMCANDO_ROCK01",
       "CAVEKIT_IMCANDO_ROCK02",
       "CAVEKIT_FALLOFF_IMCANDO01",
-      "DT2_LASSAR_ENTRY_ROCK_NOOP"
+      "DT2_LASSAR_ENTRY_ROCK_NOOP",
+      "DT2_LASSAR_ENTRY_ROCK_OP"
     ],
     "uvType": "BOX",
     "uvOrientation": 256
+  },
+  {
+    "description": "Camdozaal to Lassar Rope",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "DT2_LASSAR_ENTRY_ROCK_ROPE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "uvType": "BOX",
+        "baseMaterial": "ROPE",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Camdozaal Carved Walls and Pillars",
@@ -43485,6 +43507,12 @@
     "uvType": "BOX",
     "objectIds": [
       "BIM_RUINS_WALLKIT_STREETLAMP01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
     ]
   },
   {

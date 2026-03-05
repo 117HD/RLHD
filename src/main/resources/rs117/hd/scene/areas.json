@@ -9635,6 +9635,13 @@
     ]
   },
   {
+    "name": "LASSAR_UNDERCITY_PLAZA_BRICKS",
+    "aabbs": [
+      [ 2604, 6408, 2615, 6419 ],
+      [ 2348, 6408, 2359, 6419 ]
+    ]
+  },
+  {
     "name": "LASSAR_UNDERCITY",
     "areas": [
       "LASSAR_UNDERCITY_NORMAL",
