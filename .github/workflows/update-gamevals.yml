@@ -1,0 +1,187 @@
+name: Update Gamevals
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  update-gamevals:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Get game revision
+        id: get-rev
+        run: |
+          python << 'EOF'
+          import requests
+          import os
+          from datetime import datetime, timedelta
+          
+          resp = requests.get("https://archive.openrs2.org/caches.json", timeout=30)
+          resp.raise_for_status()
+          caches = resp.json()
+          
+          filtered = [c for c in caches if c.get("game") == "oldschool" and c.get("environment") == "live" and c.get("builds")]
+          if not filtered:
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write("rev=\n")
+                  f.write("rev_date=\n")
+              exit(0)
+          
+          majors = [c["builds"][0]["major"] for c in filtered if c["builds"] and len(c["builds"]) > 0 and c["builds"][0].get("major")]
+          if not majors:
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write("rev=\n")
+                  f.write("rev_date=\n")
+              exit(0)
+          
+          max_major = max(majors)
+          today = datetime.utcnow().date()
+          
+          same_major = [c for c in filtered if c["builds"] and len(c["builds"]) > 0 and c["builds"][0].get("major") == max_major and c.get("timestamp")]
+          same_major.sort(key=lambda x: x["timestamp"])
+          
+          if not same_major:
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write(f"rev={max_major}\n")
+                  f.write(f"rev_date={today.strftime('%Y-%m-%d')}\n")
+              exit(0)
+          
+          latest_entry = same_major[-1]
+          latest_ts = datetime.fromisoformat(latest_entry["timestamp"].replace("Z", "+00:00")).date()
+          rev_date = today.strftime('%Y-%m-%d')
+          
+          sub_rev = None
+          for i, c in enumerate(same_major):
+              ts = datetime.fromisoformat(c["timestamp"].replace("Z", "+00:00")).date()
+              if ts == today:
+                  sub_rev = i
+                  rev_date = ts.strftime('%Y-%m-%d')
+                  break
+          
+          if sub_rev is None and today > latest_ts:
+              sub_rev = len(same_major) - 1 + 1
+              rev_date = latest_ts.strftime('%Y-%m-%d')
+          
+          if sub_rev is None:
+              for i, c in enumerate(same_major):
+                  ts = datetime.fromisoformat(c["timestamp"].replace("Z", "+00:00")).date()
+                  if ts > today:
+                      sub_rev = i
+                      rev_date = ts.strftime('%Y-%m-%d')
+                      break
+          
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              if sub_rev is not None:
+                  f.write(f"rev={max_major}.{sub_rev}\n")
+              else:
+                  f.write(f"rev={max_major}\n")
+              f.write(f"rev_date={rev_date}\n")
+          EOF
+
+      - name: Get latest RuneLite SHA and check if already processed
+        id: get-sha
+        run: |
+          python << 'EOF'
+          import requests
+          import os
+          from pathlib import Path
+          
+          api_url = "https://api.github.com/repos/runelite/runelite/commits/master"
+          response = requests.get(api_url, timeout=30)
+          response.raise_for_status()
+          latest_commit = response.json()
+          latest_sha = latest_commit["sha"]
+          
+          sha_file = Path('.github/last-runelite-sha.txt')
+          already_processed = False
+          
+          if sha_file.exists():
+              last_sha = sha_file.read_text().strip()
+              if last_sha == latest_sha:
+                  already_processed = True
+                  print(f"SHA {latest_sha[:7]} already processed, skipping")
+          
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              f.write(f"latest_sha={latest_sha}\n")
+              f.write(f"already_processed={'true' if already_processed else 'false'}\n")
+          EOF
+
+      - name: Fetch and parse gamevals
+        if: steps.get-sha.outputs.already_processed != 'true'
+        id: parse-gamevals
+        run: |
+          python .github/scripts/parse_gamevals.py
+
+      - name: Check for changes
+        if: steps.get-sha.outputs.already_processed != 'true'
+        id: check-changes
+        run: |
+          if git diff --quiet src/main/resources/rs117/hd/scene/gamevals.json; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected"
+          fi
+
+      - name: Generate change report
+        if: steps.check-changes.outputs.has_changes == 'true'
+        id: generate-report
+        run: |
+          echo "report<<EOF" >> $GITHUB_OUTPUT
+          python .github/scripts/generate_change_report.py >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Update last checked SHA file
+        if: steps.check-changes.outputs.has_changes == 'true'
+        run: |
+          mkdir -p .github
+          echo "${{ steps.get-sha.outputs.latest_sha }}" > .github/last-runelite-sha.txt
+
+      - name: Set PR branch name
+        if: steps.check-changes.outputs.has_changes == 'true'
+        id: pr-branch
+        run: |
+          REV="${{ steps.get-rev.outputs.rev }}"
+          REV_DATE="${{ steps.get-rev.outputs.rev_date }}"
+          BRANCH="update-gamevals-${REV//./-}-${REV_DATE}"
+          echo "branch=${BRANCH}" >> $GITHUB_OUTPUT
+
+      - name: Create or Update Pull Request
+        if: steps.check-changes.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "Update gamevals from ${{ steps.get-rev.outputs.rev }} [${{ steps.get-rev.outputs.rev_date }}]"
+          title: "Update gamevals from ${{ steps.get-rev.outputs.rev }} [${{ steps.get-rev.outputs.rev_date }}]"
+          body: |
+            ${{ steps.generate-report.outputs.report }}
+          branch: ${{ steps.pr-branch.outputs.branch }}
+          delete-branch: true
+          approve: false
+          update-branch: true
+
