@@ -919,6 +919,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				if (impostor != null)
 					return impostor.getId();
 			}
+			return object.getId();
 		}
 
 		return ModelHash.getUuidId(ModelHash.generateUuid(client, object.getHash(), renderable));
