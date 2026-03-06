@@ -23129,21 +23129,6 @@
     ]
   },
   {
-    "description": "Tombs of Amascut invocation board",
-    "objectIds": [
-      "TOA_INVOCATION_BOARD"
-    ]
-  },
-  {
-    "description": "Tombs of Amascut exit doorway",
-    "objectIds": [
-      "TOA_LOBBY_EXIT",
-      "TOA_LOBBY_EXIT_NOOP"
-    ],
-    "flatNormals": true,
-    "receiveShadows": false
-  },
-  {
     "description": "Goblin - Walls - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
@@ -78121,11 +78106,45 @@
     ]
   },
   {
+    "description": "ToA - Lobby - Marble - Paper - Sand - Group Pillar",
+    "uvScale": 1.2,
+    "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvOrientation": -128,
+    "colorOverrides": [
+      {
+        "description": "Fake shadow",
+        "colors": "a < 145",
+        "baseMaterial": "TRANSPARENT"
+      },
+      {
+        "description": "Sand",
+        "colors": "a >= 145 && a < 255",
+        "uvType": "BOX",
+        "baseMaterial": "GRAVEL"
+      },
+      {
+        "description": "Paper",
+        "colors": "h >= 2 && h <= 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 187
+      }
+    ],
+    "objectIds": [
+      "TOA_GROUPING_BOARD",
+      "TOA_GROUPING_BOARD_TOP"
+    ]
+  },
+  {
     "description": "ToA - Lobby Exit",
     "uvScale": 1.2,
     "baseMaterial": "MARBLE_3",
     "uvType": "BOX",
     "uvOrientation": -128,
+    "flatNormals": true,
+    "castShadows": false,
     "colorOverrides": [
       {
         "description": "Outside",
@@ -78134,7 +78153,8 @@
       }
     ],
     "objectIds": [
-      "TOA_LOBBY_EXIT"
+      "TOA_LOBBY_EXIT",
+      "TOA_LOBBY_EXIT_NOOP"
     ]
   },
   {
