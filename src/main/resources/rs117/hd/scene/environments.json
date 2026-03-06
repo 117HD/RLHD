@@ -420,6 +420,16 @@
     "fogDepth": 20
   },
   {
+    "area": "TOA_ENTRANCE_LOBBY",
+    "directionalStrength": 0.75,
+    "fogColor": "#050505",
+    "sunAngles": [
+      125,
+      180
+    ],
+    "fogDepth": 20
+  },
+  {
     "area": "TOMBS_OF_AMASCUT",
     "directionalStrength": 0.75,
     "fogColor": "#050505",
