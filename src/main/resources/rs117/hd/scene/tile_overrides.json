@@ -9533,6 +9533,17 @@
     "groundMaterial": "LASSAR_UNDERCITY_TILES"
   },
   {
+    "name": "DT2_MYSTERIOUS_FIGURE_HIDEOUT_FLOOR",
+    "area": "DT2_MYSTERIOUS_FIGURE_HIDEOUT",
+    "underlayIds": [
+      42,
+      61,
+      62
+    ],
+    "groundMaterial": "PLAIN_DIRT",
+    "maxLightness": 33
+  },
+  {
     "name": "SHIP_SAILING_WATER_UNDERLAY",
     "area": "SHIP_SAILING",
     "underlayIds": [

@@ -9689,6 +9689,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "DT2_MYSTERIOUS_FIGURE_HIDEOUT",
+    "regions": [
+      12432
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "GLOD_INSTANCE",
     "regions": [
       8534

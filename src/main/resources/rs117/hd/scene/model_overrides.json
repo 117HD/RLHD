@@ -7305,9 +7305,7 @@
       "HARMLESS_DUGUPSOIL1",
       "HARMLESS_DUGUPSOIL2",
       "HARMLESS_DUGUPSOIL3",
-      "SAND1",
-      "BRIDGELUM_DUGUPSOIL_1",
-      "BRIDGELUM_DUGUPSOIL_2"
+      "SAND1"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -8572,15 +8570,28 @@
     "baseMaterial": "ROCK_3",
     "objectIds": [
       "NTK_TOMB_WALL",
-      "NTK_TOMB_WALL_TOP",
       "NTK_TOMB_WALL_DAMAGE",
-      "NTK_TOMB_DOOR_NOANIM",
-      "NTK_TOMB_DOOR_ANIM",
       "NTK_SPEARTRAP_INMOTION",
       "NTK_TOMB_WALL_TABLET",
       "NTK_TOMB_WALLTOP_STRAIGHT",
       "NTK_TOMB_WALLTOP_CORNER",
-      "NTK_TOMB_WALLTOP_INNER_CORNER"
+      "NTK_TOMB_WALLTOP_INNER_CORNER",
+      "NTK_TOMB_WALL_SCOREBOARD"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Pyramid Plunder Walls - Interior - Bias Fix",
+    "baseMaterial": "ROCK_3",
+    "depthBias": 2,
+    "objectIds": [
+      "NTK_TOMB_WALL_TOP",
+      "NTK_TOMB_DOOR_NOANIM",
+      "NTK_TOMB_DOOR1",
+      "NTK_TOMB_DOOR2",
+      "NTK_TOMB_DOOR3",
+      "NTK_TOMB_DOOR4",
+      "NTK_TOMB_DOOR_ANIM"
     ],
     "uvType": "BOX"
   },
@@ -12520,11 +12531,15 @@
       "MYQ5_PRISONER_DOOR",
       "MYQ5_PRISONER_DOOR_2",
       "TOBQUEST_CRYPT_INNER_DOOR",
-      "TOBQUEST_CRYPT_INNER_DOOR_NOOP"
+      "TOBQUEST_CRYPT_INNER_DOOR_NOOP",
+      "DT2_HIDEOUT_PRISONBARS01",
+      "DT2_HIDEOUT_PRISONGATE",
+      "DT2_HIDEOUT_PRISONGATE_NOOP",
+      "DT2_HIDEOUT_PRISONGATE_OPEN"
     ],
     "uvType": "BOX",
-    "uvScale": 0.75,
-    "uvOrientation": 463
+    "uvScale": 0.5,
+    "uvOrientation": 512
   },
   {
     "description": "Metal Fence Gate with textured posts",
@@ -26724,6 +26739,7 @@
     "description": "Objects - Desert Treasure Pyramid Obilisk - Large",
     "baseMaterial": "NONE",
     "castShadows": false,
+    "upwardsNormals": false,
     "objectIds": [
       "DESERT_TREASURE_OBLIX_A",
       "FD_BLOOD_COLUMN",
@@ -27525,7 +27541,8 @@
       "TEMPOROSS_LOBBY_SLEEPINGBAG",
       "DT2_GHORROCK_CELL_BED_OP",
       "DT2_GHORROCK_BED_POOR",
-      "DT2_GHORROCK_THANKYOU_BED"
+      "DT2_GHORROCK_THANKYOU_BED",
+      "DT2_HIDEOUT_BED"
     ],
     "uvType": "BOX",
     "uvScale": 0.66
@@ -28843,6 +28860,224 @@
       {
         "colors": "h == 0 && s == 0",
         "baseMaterial": "GRAY_50"
+      }
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Entry Portal",
+    "upwardsNormals": true,
+    "depthBias": 255,
+    "objectIds": [
+      "DT2_HIDEOUT_ENTRY"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Exit Portal",
+    "upwardsNormals": true,
+    "objectIds": [
+      "DT2_HIDEOUT_EXIT",
+      "DT2_HIDEOUT_EXIT_NOOP",
+      "DT2_HIDEOUT_BARRIER_ESCAPE",
+      "DT2_HIDEOUT_BARRIER_LEAVE"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DT2_WALL_TOMB01_VARIANT01",
+      "DT2_HIDEOUT_RUBBLE03",
+      "DT2_HIDEOUT_RUBBLE02",
+      "DT2_HIDEOUT_RUBBLE01",
+      "DT2_WALL_TOMB01_TORCH01",
+      "TOA_WALL_BLACK",
+      "ENAKH_TEMPLE_CAVEWALL_TOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h < 7",
+        "baseMaterial": "GRAY_125",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Wall with Bars",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DT2_WALL_TOMB01_BARS01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Wall with Bars - Mirrored",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DT2_WALL_TOMB01_BARS01_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Debris",
+    "baseMaterial": "DIRT_1_SEMI_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "BRIDGELUM_DUGUPSOIL_1",
+      "BRIDGELUM_DUGUPSOIL_2",
+      "BRIDGELUM_DUGUPSOIL_3"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Broken Pottery",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TOA_POTTERY_SINGLE03_BROKEN01",
+      "TOA_POTTERY_SINGLE02_BROKEN02",
+      "TOA_POTTERY_SINGLE02_BROKEN01"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DT2_BOOK_TABLE01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DT2_HIDEOUT_CHAIR01"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Workbench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "DT2_HIDEOUT_WORKBENCH01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DT2_HIDEOUT_CHEST",
+      "DT2_HIDEOUT_CHEST_NOOP",
+      "DT2_HIDEOUT_CHEST_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Treasure",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "TOA_VAULT_TREASURE01",
+      "TOA_VAULT_TREASURE08"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DT2_HIDEOUT_BED02",
+      "DT2_HIDEOUT_BED_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 3",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Altar",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "DT2_HIDEOUT_ALTAR_OP",
+      "DT2_HIDEOUT_ALTAR_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "MARBLE_4_LOW_CONTRAST_SEMI_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -78607,7 +78842,7 @@
     ]
   },
   {
-    "description": "Ancient Vault - Purple Brazier",
+    "description": "Ancient Vault - Purple Brazier - Outside",
     "baseMaterial": "NONE",
     "objectIds": [
       "DT2_DESERT_VAULT_BRAZIER01"
@@ -78618,6 +78853,21 @@
         "baseMaterial": "GRAY_125",
         "receiveShadows": false,
         "castShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Ancient Vault - Purple Brazier - Inside",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "DT2_DESERT_VAULT_BRAZIER02",
+      "DT2_DESERT_VAULT_BRAZIER03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 51",
+        "baseMaterial": "GRAY_65",
+        "upwardsNormals": true
       }
     ]
   },
@@ -78665,7 +78915,13 @@
       "DT2_VAULT_UPPER_PILLAR",
       "DT2_VAULT_PERSERIYA_STATUE_MEDALLION",
       "DT2_VAULT_SUCELLUS_STATUE_MEDALLION",
-      "DT2_VAULT_WHISPERER_STATUE_MEDALLION"
+      "DT2_VAULT_WHISPERER_STATUE_MEDALLION",
+      "DT2_VAULT_PERSERIYA_STATUE_NOOP_MEDALLION",
+      "DT2_VAULT_VARDORVIS_STATUE_NOOP_NORMAL",
+      "DT2_VAULT_VARDORVIS_STATUE_MEDALLION",
+      "DT2_VAULT_VARDORVIS_STATUE_NOOP_MEDALLION",
+      "DT2_VAULT_WHISPERER_STATUE_NOOP_MEDALLION",
+      "DT2_VAULT_SUCELLUS_STATUE_NOOP_MEDALLION"
     ],
     "colorOverrides": [
       {
@@ -78693,7 +78949,8 @@
       "DT2_VAULT_UPPER_FLOOR_03",
       "DT2_VAULT_UPPER_FLOOR_02",
       "DT2_VAULT_UPPER_FLOOR_01",
-      "DT2_VAULT_UPPER_ZAROS_FLOOR_SYMBOL"
+      "DT2_VAULT_UPPER_ZAROS_FLOOR_SYMBOL",
+      "DT2_VAULT_UPPER_ZAROS_FLOOR_SYMBOL_STAIRCASE"
     ],
     "colorOverrides": [
       {
@@ -78808,6 +79065,17 @@
         "uvType": "MODEL_XY",
         "uvScale": 0.8
       }
+    ]
+  },
+  {
+    "description": "Ancient Vault - Kasonde Wight Pool and Presten Portal",
+    "depthBias": 200,
+    "objectIds": [
+      "DT2_KASONDE_WIGHT_POOL_1",
+      "DT2_KASONDE_WIGHT_POOL_2"
+    ],
+    "npcIds": [
+      "DT2_WIGHT_PERSTEN_PORTAL"
     ]
   },
   {
