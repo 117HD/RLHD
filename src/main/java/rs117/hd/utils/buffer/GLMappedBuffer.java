@@ -6,17 +6,7 @@ import java.nio.IntBuffer;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glMapBuffer;
-import static org.lwjgl.opengl.GL15.glUnmapBuffer;
-import static org.lwjgl.opengl.GL30.GL_MAP_FLUSH_EXPLICIT_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_INVALIDATE_BUFFER_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_INVALIDATE_RANGE_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_READ_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_UNSYNCHRONIZED_BIT;
-import static org.lwjgl.opengl.GL30.GL_MAP_WRITE_BIT;
-import static org.lwjgl.opengl.GL30.glFlushMappedBufferRange;
-import static org.lwjgl.opengl.GL30.glMapBufferRange;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_INVALIDATE;

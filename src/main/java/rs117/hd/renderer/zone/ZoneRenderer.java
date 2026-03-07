@@ -709,8 +709,7 @@ public class ZoneRenderer implements Renderer {
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
 		glBindVertexArray(0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		
+
 		renderState.disable.set(GL_DEPTH_TEST);
 
 		shouldClearShadowFbo = true;
@@ -761,7 +760,6 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.RENDER_SCENE);
 
 		glBindVertexArray(0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		// Done rendering the scene
 		renderState.disable.set(GL_BLEND);

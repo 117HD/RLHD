@@ -31,7 +31,7 @@ public class GLMappedBufferIntWriter implements Destructible {
 	}
 
 	public void map(boolean sync) {
-		mappedBuffer = buffer.map(MAP_WRITE | MAP_INVALIDATE | (!sync ? MAP_UNSYNCHRONIZED : 0));
+		mappedBuffer = buffer.map(MAP_WRITE | MAP_INVALIDATE | (sync ? 0 : MAP_UNSYNCHRONIZED));
 	}
 
 	public synchronized ReservedView reserve(int sizeInts) {
