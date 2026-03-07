@@ -44,6 +44,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class GLBuffer implements Destructible {
+	private static ByteBuffer COPY_READ_BUFFER, COPY_WRITE_BUFFER;
 	private static final boolean DEBUG_MAC_OS = false;
 
 	public static int STORAGE_NONE = 0;
@@ -453,30 +454,60 @@ public class GLBuffer implements Destructible {
 			// Fallback path for macOS, which of course has to not support this...
 			// This assumes neither of the buffers are already mapped
 			assert !supportsStorageBuffers();
-			long srcOffset = Long.MAX_VALUE;
-			long dstOffset = Long.MAX_VALUE;
-			long mapSize = 0;
+
+			// Sort by dstOffset to ensure we copy going left to right (in-place sort)
+			for (int i = 1; i < count; i++) {
+				long dstKey = dstOffsetBytes[i];
+				long srcKey = srcOffsetBytes[i];
+				long numKey = numBytes[i];
+				int j = i - 1;
+
+				while (j >= 0 && dstOffsetBytes[j] > dstKey) {
+					dstOffsetBytes[j + 1] = dstOffsetBytes[j];
+					srcOffsetBytes[j + 1] = srcOffsetBytes[j];
+					numBytes[j + 1] = numBytes[j];
+					j--;
+				}
+
+				if (j + 1 != i) {
+					dstOffsetBytes[j + 1] = dstKey;
+					srcOffsetBytes[j + 1] = srcKey;
+					numBytes[j + 1] = numKey;
+				}
+			}
+
+			boolean isContiguous = true;
+			long srcOffset = Long.MAX_VALUE, srcMapSize = 0;
+			long dstOffset = Long.MAX_VALUE, dstMapSize = 0;
 			for (int i = 0; i < count; i++) {
+				if(i > 0 && isContiguous)
+					isContiguous =  dstOffsetBytes[i - 1] + numBytes[i - 1] == dstOffsetBytes[i];
+
 				srcOffset = min(srcOffset, srcOffsetBytes[i]);
 				dstOffset = min(dstOffset, dstOffsetBytes[i]);
-				mapSize = max(mapSize, srcOffsetBytes[i] - srcOffset + numBytes[i]);
+
+				srcMapSize = max(srcMapSize, srcOffsetBytes[i] - srcOffset + numBytes[i]);
+				dstMapSize = max(dstMapSize, dstOffsetBytes[i] - dstOffset + numBytes[i]);
 			}
 
 			ByteBuffer src = null;
 			ByteBuffer dst = null;
 			try {
-				src = glMapBufferRange(GL_COPY_READ_BUFFER, srcOffset, mapSize, GL_MAP_READ_BIT);
+				src = glMapBufferRange(GL_COPY_READ_BUFFER, srcOffset, srcMapSize, GL_MAP_READ_BIT, COPY_READ_BUFFER);
 				if (src == null) {
-					log.error("Failed to map SRC buffer {}, offset: {}, size: {}", srcId, srcOffset, mapSize, new Throwable());
+					log.error("Failed to map SRC buffer {}, offset: {}, size: {}", srcId, srcOffset, srcMapSize, new Throwable());
 					return;
 				}
+				COPY_READ_BUFFER = src;
 
-				dst = glMapBufferRange(GL_COPY_WRITE_BUFFER, dstOffset, mapSize, GL_MAP_WRITE_BIT);
+				dst = glMapBufferRange(GL_COPY_WRITE_BUFFER, dstOffset, dstMapSize, GL_MAP_WRITE_BIT | (isContiguous ? GL_MAP_INVALIDATE_RANGE_BIT : GL_MAP_FLUSH_EXPLICIT_BIT), COPY_WRITE_BUFFER);
 				if (dst == null) {
-					log.error("Failed to map DST buffer {}, offset: {}, size: {}", dstId, dstOffset, mapSize, new Throwable());
+					log.error("Failed to map DST buffer {}, offset: {}, size: {}", dstId, dstOffset, dstMapSize, new Throwable());
 					return;
 				}
+				COPY_WRITE_BUFFER = dst;
 
+				long flushStart = -1, flushEnd = -1;
 				for (int i = 0; i < count; i++) {
 					final int srcPos = (int) (srcOffsetBytes[i] - srcOffset);
 					final int dstPos = (int) (dstOffsetBytes[i] - dstOffset);
@@ -491,10 +522,25 @@ public class GLBuffer implements Destructible {
 						dst.position(dstPos);
 
 						dst.put(src);
+
+						if(!isContiguous) {
+							// When performing none contiguous copies, its more efficient to flush than to map the whole buffer
+							if (flushStart == -1) {
+								flushStart = dstPos;
+								flushEnd = dstPos + len;
+							} else if (flushEnd == dstPos) {
+								flushEnd += len;
+							} else {
+								glFlushMappedBufferRange(GL_COPY_WRITE_BUFFER, flushStart, flushEnd - flushStart);
+								flushStart = flushEnd = -1;
+							}
+						}
 					} catch (Throwable t) {
 						log.error("Failed to copy buffer range {} -> {} offset: {} size: {}", srcId, dstId, srcOffsetBytes[i], numBytes[i], t);
 					}
 				}
+				if(flushStart != -1)
+					glFlushMappedBufferRange(GL_COPY_WRITE_BUFFER, flushStart, flushEnd - flushStart);
 			} finally {
 				if (src != null)
 					glUnmapBuffer(GL_COPY_READ_BUFFER);
