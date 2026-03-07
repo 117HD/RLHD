@@ -132,7 +132,11 @@ import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
+import static org.lwjgl.opengl.NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.utils.HDUtils.getCPUName;
+import static rs117.hd.utils.HDUtils.getTotalPhysicalMemorySize;
+import static rs117.hd.utils.HDUtils.humanReadableByteCountBin;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
@@ -460,6 +464,7 @@ public class HdPlugin extends Plugin {
 	@Getter
 	public long garbageCollectionCount;
 
+	private int startupCount;
 	public int frame;
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -507,6 +512,7 @@ public class HdPlugin extends Plugin {
 					return false;
 
 				isActive = true;
+				startupCount++;
 
 				fboScene = 0;
 				rboSceneColor = 0;
@@ -547,20 +553,33 @@ public class HdPlugin extends Plugin {
 				GL_CAPS = GL.createCapabilities();
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
-
+				
+				long startupTimeStamp = System.currentTimeMillis();
 				OSType osType = OSType.getOSType();
 				String arch = System.getProperty("os.arch", "Unknown");
 				String wordSize = System.getProperty("sun.arch.data.model", "Unknown");
-				log.info("Operating system: {}", osType);
-				log.info("Architecture: {}", arch);
-				log.info("Client is {}-bit", wordSize);
-				APPLE = osType == OSType.MacOS;
-				APPLE_ARM = APPLE && arch.equals("aarch64");
-
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
-				log.info("Using device: {} ({})", glRenderer, glVendor);
-				log.info("Using driver: {}", glGetString(GL_VERSION));
+				String rlawt = Objects.requireNonNullElse(System.getProperty("runelite.rlawtpath"), "Release");
+
+				log.info("Starting RLHD (Launch Count: {})...", startupCount);
+				log.info("Build Version   : {} ({})", BuildInfo.VERSION, BuildInfo.COMMIT_HASH);
+				log.info("Build Repo      : {} ({})", BuildInfo.ORIGIN, BuildInfo.BRANCH);
+				log.info("rlawt           : {}", rlawt);
+				log.info("Operating system: {} {} ({}-bit)", osType, System.getProperty("os.version"), wordSize);
+				log.info("Architecture    : {}", arch);
+				log.info("System CPU      : {}", getCPUName());
+				log.info("System Threads  : {}", Runtime.getRuntime().availableProcessors());
+				log.info("System Memory   : {}", humanReadableByteCountBin(getTotalPhysicalMemorySize()));
+				log.info("Device          : {} ({})", glRenderer, glVendor);
+				log.info("Device Driver   : {}", glGetString(GL_VERSION));
+				if (GL_CAPS.GL_NVX_gpu_memory_info)
+					log.info("Device Memory   : {}", humanReadableByteCountBin(glGetInteger(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX) * 1024L));
+				log.info("Java            : {} ({})", System.getProperty("java.vm.name"), System.getProperty("java.version"));
+				log.info("Java Max Memory : {} (Avail: {})", humanReadableByteCountBin(Runtime.getRuntime().maxMemory()), humanReadableByteCountBin(Runtime.getRuntime().freeMemory()));
+
+				APPLE = osType == OSType.MacOS;
+				APPLE_ARM = APPLE && arch.equals("aarch64");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				INTEL_GPU = glRenderer.contains("Intel");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
@@ -570,9 +589,8 @@ public class HdPlugin extends Plugin {
 				renderer = config.legacyRenderer() ?
 					injector.getInstance(LegacyRenderer.class) :
 					injector.getInstance(ZoneRenderer.class);
-				log.info("Using renderer: {}", renderer.getClass().getSimpleName());
-
-				log.info("Low memory mode: {}", useLowMemoryMode);
+				log.info("Using renderer  : {}", renderer.getClass().getSimpleName());
+				log.info("Low memory mode : {}", useLowMemoryMode);
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
@@ -707,6 +725,8 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
+
+				log.info("RLHD Finished Startup! Took {} ms", System.currentTimeMillis() - startupTimeStamp);
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
 				stopPlugin();
