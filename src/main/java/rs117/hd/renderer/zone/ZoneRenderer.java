@@ -595,7 +595,7 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.reset();
 		renderState.reset();
 
-		eboAlphaWriter.map(false);
+		eboAlphaWriter.map(true);
 
 		checkGLErrors();
 	}

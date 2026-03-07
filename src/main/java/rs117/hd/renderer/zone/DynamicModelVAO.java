@@ -142,8 +142,8 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	void map() {
-		vboWriter.map(true);
-		tboWriter.map(true);
+		vboWriter.map(false);
+		tboWriter.map(false);
 
 		reset();
 	}
