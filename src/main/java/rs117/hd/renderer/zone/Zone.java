@@ -798,23 +798,29 @@ public class Zone implements Destructible {
 				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
 				continue;
 
-			if (lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
-				flush(cmd);
-
-			lastVao = m.vao;
-			lastTboF = m.tboF;
-			lastzx = zx - m.zofx;
-			lastzz = zz - m.zofz;
-
+			int drawMode = STATIC;
 			if (m.isTemp()) {
 				// these are already sorted and so just requires a glMultiDrawArrays() from the active vao
-				lastDrawMode = TEMP;
-				pushRange(m.startpos, m.endpos);
-				continue;
+				drawMode = TEMP;
+			} else if (isShadowPass || m.asyncSortIdx < 0) {
+				drawMode = STATIC_UNSORTED;
 			}
 
-			if (isShadowPass || m.asyncSortIdx < 0) {
-				lastDrawMode = STATIC_UNSORTED;
+			if (lastDrawMode != drawMode ||
+				lastVao != m.vao ||
+				lastTboF != m.tboF ||
+				lastzx != (zx - m.zofx) ||
+				lastzz != (zz - m.zofz)
+			) {
+				flush(cmd);
+				lastDrawMode = drawMode;
+				lastVao = m.vao;
+				lastTboF = m.tboF;
+				lastzx = zx - m.zofx;
+				lastzz = zz - m.zofz;
+			}
+
+			if (drawMode != STATIC) {
 				pushRange(m.startpos, m.endpos);
 				continue;
 			}
