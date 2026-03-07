@@ -2080,7 +2080,8 @@ public class SceneUploader implements AutoCloseable {
 			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
-				hasVanillaBias ? bias[face] & 0xFF : modelBias;
+				hasVanillaBias ? bias[face] & 0xFF : 0;
+			depthBias = clamp(modelBias + depthBias, 0, 0xFF);
 			final int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			final boolean hasAlpha = material.hasTransparency || transparency != 0;
 
