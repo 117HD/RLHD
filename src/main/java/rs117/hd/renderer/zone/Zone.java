@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -26,7 +27,6 @@ import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
-import rs117.hd.utils.jobs.GenericJob;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
@@ -66,7 +66,6 @@ public class Zone implements Destructible {
 
 	public int glVaoA;
 	public int bufLenA;
-	public int sortedFacesLen;
 
 	public int sizeO, sizeA, sizeF;
 	@Nullable
@@ -83,6 +82,8 @@ public class Zone implements Destructible {
 	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean isFirstLoadingAttempt = true;
+
+	public HashSet<Integer> animatedDynamicObjectIds = new HashSet<>();
 
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
@@ -426,7 +427,6 @@ public class Zone implements Destructible {
 
 		int dist;
 		int asyncSortIdx = -1;
-		int eboOffset = -1;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
@@ -607,7 +607,6 @@ public class Zone implements Destructible {
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
-		sortedFacesLen += m.sortedFaces.length;
 		alphaModels.add(m);
 	}
 
@@ -653,7 +652,6 @@ public class Zone implements Destructible {
 	}
 
 	synchronized void postAlphaPass() {
-		lastSortedAlphaFacesUpload = null;
 		sortedAlphaFacesUpload.waitForCompletion();
 		alphaSortingJob.waitForCompletion();
 
@@ -671,7 +669,6 @@ public class Zone implements Destructible {
 				modelCache.add(m);
 			}
 			m.asyncSortIdx = -1;
-			m.eboOffset = -1;
 			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
 		}
 	}
@@ -681,6 +678,7 @@ public class Zone implements Destructible {
 	private static final int STATIC_UNSORTED = 3;
 
 	private static int alphaFaceCount;
+	private static int eboAlphaOffset;
 	private static int lastDrawMode;
 	private static int lastVao;
 	private static int lastTboF;
@@ -702,19 +700,7 @@ public class Zone implements Destructible {
 	private final AlphaSortPredicate alphaSortPred = new AlphaSortPredicate();
 	private final Comparator<AlphaModel> alphaSortComparator = Comparator.comparingInt(alphaSortPred).reversed();
 
-	private static GenericJob lastSortedAlphaFacesUpload;
-	private final GenericJob sortedAlphaFacesUpload = GenericJob.build("sortedAlphaFacesUpload", this::alphaFacesUpload);
-
-	void alphaFacesUpload(GenericJob job) {
-		final IntBuffer eboAlphaBuffer = ZoneRenderer.eboAlphaMapped.intView();
-		for (int i = 0; i < alphaModels.size(); ++i) {
-			AlphaModel m = alphaModels.get(i);
-			if (m.eboOffset < 0 || m.sortedFacesLen <= 0 || m.sortedFaces == null)
-				continue;
-
-			eboAlphaBuffer.position(m.eboOffset).put(m.sortedFaces, 0, m.sortedFacesLen);
-		}
-	}
+	private final EboAlphaWriterJob sortedAlphaFacesUpload = new EboAlphaWriterJob();
 
 	synchronized void alphaSort(int zx, int zz, Camera camera) {
 		alphaSortPred.cx = (int) camera.getPositionX();
@@ -799,7 +785,10 @@ public class Zone implements Destructible {
 
 		cmd.DepthMask(false);
 
-		boolean shouldQueueUpload = false;
+		if (!isShadowPass)
+			sortedAlphaFacesUpload.waitForCompletion();
+
+		int eboAlphaStart = eboAlphaOffset = ZoneRenderer.eboAlphaWriter.getWrittenInts();
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
@@ -809,23 +798,29 @@ public class Zone implements Destructible {
 				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
 				continue;
 
-			if (lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
-				flush(cmd);
-
-			lastVao = m.vao;
-			lastTboF = m.tboF;
-			lastzx = zx - m.zofx;
-			lastzz = zz - m.zofz;
-
+			int drawMode = STATIC;
 			if (m.isTemp()) {
 				// these are already sorted and so just requires a glMultiDrawArrays() from the active vao
-				lastDrawMode = TEMP;
-				pushRange(m.startpos, m.endpos);
-				continue;
+				drawMode = TEMP;
+			} else if (isShadowPass || m.asyncSortIdx < 0) {
+				drawMode = STATIC_UNSORTED;
 			}
 
-			if (isShadowPass || m.asyncSortIdx < 0) {
-				lastDrawMode = STATIC_UNSORTED;
+			if (lastDrawMode != drawMode ||
+				lastVao != m.vao ||
+				lastTboF != m.tboF ||
+				lastzx != (zx - m.zofx) ||
+				lastzz != (zz - m.zofz)
+			) {
+				flush(cmd);
+				lastDrawMode = drawMode;
+				lastVao = m.vao;
+				lastTboF = m.tboF;
+				lastzx = zx - m.zofx;
+				lastzz = zz - m.zofz;
+			}
+
+			if (drawMode != STATIC) {
 				pushRange(m.startpos, m.endpos);
 				continue;
 			}
@@ -837,21 +832,19 @@ public class Zone implements Destructible {
 					alphaSortingJob.waitForCompletion(10);
 			}
 
-			if (m.sortedFaces == null || m.sortedFacesLen <= 0 || !ZoneRenderer.eboAlphaMapped.isMapped())
+			if (m.sortedFaces == null || m.sortedFacesLen <= 0)
 				continue;
 
-			if ((long) (ZoneRenderer.eboAlphaOffset + m.sortedFacesLen) * Integer.BYTES < ZoneRenderer.eboAlpha.size) {
-				lastDrawMode = STATIC;
-				m.eboOffset = ZoneRenderer.eboAlphaOffset - ZoneRenderer.eboAlphaPrevOffset;
-				alphaFaceCount += m.sortedFacesLen / 3;
-				ZoneRenderer.eboAlphaOffset += m.sortedFacesLen;
-				shouldQueueUpload = true;
-			}
+			sortedAlphaFacesUpload.alphaModels.add(m);
+
+			eboAlphaOffset += m.sortedFacesLen;
+			alphaFaceCount += m.sortedFacesLen / 3;
+			lastDrawMode = STATIC;
 		}
 
-		if (shouldQueueUpload) {
-			GenericJob prevJob = lastSortedAlphaFacesUpload != sortedAlphaFacesUpload ? lastSortedAlphaFacesUpload : null;
-			lastSortedAlphaFacesUpload = sortedAlphaFacesUpload.queue(prevJob);
+		if (eboAlphaOffset > eboAlphaStart && !sortedAlphaFacesUpload.alphaModels.isEmpty()) {
+			sortedAlphaFacesUpload.eboAlphaView = ZoneRenderer.eboAlphaWriter.reserve(eboAlphaOffset - eboAlphaStart);
+			sortedAlphaFacesUpload.queue();
 		}
 
 		flush(cmd);
@@ -863,7 +856,7 @@ public class Zone implements Destructible {
 		if (lastDrawMode == STATIC) {
 			if (alphaFaceCount > 0 && lastVao != 0) {
 				int vertexCount = alphaFaceCount * 3;
-				long byteOffset = 4L * (ZoneRenderer.eboAlphaOffset - vertexCount);
+				long byteOffset = 4L * (eboAlphaOffset - vertexCount);
 				cmd.BindElementsArray(lastVao, eboAlpha.id);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
@@ -961,7 +954,6 @@ public class Zone implements Destructible {
 				m2.packedFaces = m.packedFaces;
 				m2.radius = m.radius;
 				m2.asyncSortIdx = m.asyncSortIdx;
-				m2.eboOffset = m.eboOffset;
 				m2.sortedFaces = m.sortedFaces;
 				m2.sortedFacesLen = m.sortedFacesLen;
 

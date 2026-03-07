@@ -136,11 +136,14 @@ public class DynamicModelVAO implements Destructible {
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
 		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 	}
 
 	void map() {
-		vboWriter.map();
-		tboWriter.map();
+		vboWriter.map(false);
+		tboWriter.map(false);
 
 		reset();
 	}

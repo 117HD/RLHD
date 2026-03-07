@@ -64,7 +64,7 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.buffer.GLMappedBuffer;
+import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.JobSystem;
@@ -81,8 +81,6 @@ import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
-import static rs117.hd.utils.buffer.GLBuffer.MAP_INVALIDATE;
-import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
 @Singleton
@@ -153,12 +151,11 @@ public class ZoneRenderer implements Renderer {
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
 	public static GLBuffer.EBO eboAlpha;
-	public static GLMappedBuffer eboAlphaMapped;
-	public static int eboAlphaOffset;
-	public static int eboAlphaPrevOffset;
+	public static GLMappedBufferIntWriter eboAlphaWriter;
 
 	private boolean sceneFboValid;
 	private boolean shouldRenderScene;
+	private boolean shouldClearShadowFbo;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -243,7 +240,7 @@ public class ZoneRenderer implements Renderer {
 	private void initializeBuffers() {
 		eboAlpha = new GLBuffer.EBO("eboAlpha", GL_STREAM_DRAW);
 		eboAlpha.initialize(MiB);
-		eboAlphaOffset = 0;
+		eboAlphaWriter = new GLMappedBufferIntWriter(eboAlpha);
 
 		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
 		indirectDrawCmdsStaging = new GpuIntBuffer();
@@ -253,6 +250,7 @@ public class ZoneRenderer implements Renderer {
 		if (eboAlpha != null)
 			eboAlpha.destroy();
 		eboAlpha = null;
+		eboAlphaWriter = null;
 
 		if (indirectDrawCmds != null)
 			indirectDrawCmds.destroy();
@@ -597,23 +595,7 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.reset();
 		renderState.reset();
 
-		int totalSortedFaces = sceneManager.getRoot().getSortedAlphaCount();
-
-		WorldView wv = client.getTopLevelWorldView();
-		for (WorldEntity we : wv.worldEntities()) {
-			WorldViewContext entityCtx = sceneManager.getContext(we.getWorldView());
-			if (entityCtx != null)
-				totalSortedFaces += entityCtx.getSortedAlphaCount();
-		}
-
-		if ((plugin.frame % FRAMES_IN_FLIGHT) == 0)
-			eboAlphaOffset = 0;
-		eboAlphaPrevOffset = eboAlphaOffset;
-
-		long alphaOffsetBytes = eboAlphaOffset * (long) Integer.BYTES;
-		long alphaNextBytes = totalSortedFaces * 3L * Integer.BYTES;
-		eboAlpha.ensureCapacity(alphaOffsetBytes + alphaNextBytes);
-		eboAlphaMapped = eboAlpha.map(MAP_WRITE | MAP_INVALIDATE, alphaOffsetBytes, alphaNextBytes);
+		eboAlphaWriter.map(true);
 
 		checkGLErrors();
 	}
@@ -641,11 +623,8 @@ public class ZoneRenderer implements Renderer {
 		// Upload world views before rendering
 		uboWorldViews.upload();
 
-		if (eboAlphaMapped != null) {
-			eboAlphaMapped.setPositionBytes((eboAlphaOffset - eboAlphaPrevOffset) * Integer.BYTES);
-			eboAlpha.unmap();
-		}
-		eboAlphaMapped = null;
+		if (eboAlphaWriter != null)
+			eboAlphaWriter.flush();
 
 		// Scene draw state to apply before all recorded commands
 		if (indirectDrawCmdsStaging.position() > 0) {
@@ -699,30 +678,41 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void directionalShadowPass() {
-		if (!plugin.configShadowsEnabled || plugin.fboShadowMap == 0 || environmentManager.currentDirectionalStrength <= 0)
+		final boolean shouldRenderShadows =
+			plugin.configShadowsEnabled &&
+			plugin.fboShadowMap != 0 &&
+			environmentManager.currentDirectionalStrength > 0;
+
+		if (shouldRenderShadows || shouldClearShadowFbo) {
+			// Render to the shadow depth map
+			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
+			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
+			renderState.apply();
+
+			glClearDepth(1);
+			glClear(GL_DEPTH_BUFFER_BIT);
+			shouldClearShadowFbo = false;
+		}
+
+		if (!shouldRenderShadows)
 			return;
 
 		frameTimer.begin(Timer.RENDER_SHADOWS);
 
-		// Render to the shadow depth map
-		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
-		renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
-		renderState.ido.set(indirectDrawCmds.id);
-		renderState.apply();
-
-		glClearDepth(1);
-		glClear(GL_DEPTH_BUFFER_BIT);
-
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthFunc.set(GL_LEQUAL);
+		renderState.ido.set(indirectDrawCmds.id);
 
 		CommandBuffer.SKIP_DEPTH_MASKING = true;
 		directionalCmd.execute();
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
+		glBindVertexArray(0);
+
 		renderState.disable.set(GL_DEPTH_TEST);
 
+		shouldClearShadowFbo = true;
 		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
@@ -768,6 +758,8 @@ public class ZoneRenderer implements Renderer {
 
 		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
+
+		glBindVertexArray(0);
 
 		// Done rendering the scene
 		renderState.disable.set(GL_BLEND);
