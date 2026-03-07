@@ -174,4 +174,12 @@ public final class GLMappedBuffer {
 
 		mapped = false;
 	}
+
+	void destroy() {
+		unmap();
+
+		byteView  = null;
+		intView   = null;
+		floatView = null;
+	}
 }

@@ -136,7 +136,8 @@ public class GLBuffer implements Destructible {
 	@Override
 	public void destroy() {
 		if (mappedBuffer != null)
-			unmap();
+			mappedBuffer.destroy();
+		mappedBuffer = null;
 
 		if (id != 0) {
 			glDeleteBuffers(id);
