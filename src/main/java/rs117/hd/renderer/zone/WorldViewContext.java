@@ -212,6 +212,8 @@ public class WorldViewContext {
 					curZone.inShadowFrustum = prevZone.inShadowFrustum;
 					DestructibleHandler.queueDestruction(prevZone);
 				}
+
+				sceneContext.animatedDynamicObjectIds.addAll(curZone.animatedDynamicObjectIds);
 			} else if (uploadTask.wasCancelled() && !curZone.cull) {
 				boolean shouldRetry = uploadTask.encounteredError() && curZone.isFirstLoadingAttempt;
 				if (shouldRetry) {

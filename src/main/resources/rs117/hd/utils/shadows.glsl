@@ -58,6 +58,9 @@ float fetchShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
 }
 
 float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
+    if (lightStrength <= 0)
+        return 0.f;
+
     vec4 shadowPos = lightProjectionMatrix * vec4(fragPos, 1);
     shadowPos.xyz /= shadowPos.w;
 
