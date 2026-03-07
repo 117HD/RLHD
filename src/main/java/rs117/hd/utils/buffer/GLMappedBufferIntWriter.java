@@ -7,13 +7,15 @@ import java.util.ArrayList;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.lwjgl.BufferUtils;
+import rs117.hd.utils.Destructible;
+import rs117.hd.utils.DestructibleHandler;
 
 import static rs117.hd.utils.buffer.GLBuffer.MAP_INVALIDATE;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_UNSYNCHRONIZED;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @RequiredArgsConstructor
-public class GLMappedBufferIntWriter {
+public class GLMappedBufferIntWriter implements Destructible {
 	private final GLBuffer buffer;
 
 	private final ArrayDeque<ReservedView> freeViews = new ArrayDeque<>();
@@ -24,8 +26,12 @@ public class GLMappedBufferIntWriter {
 	private int writtenMappedInts;
 	private int writtenStagingInts;
 
-	public void map() {
-		mappedBuffer = buffer.map(MAP_WRITE | MAP_INVALIDATE | MAP_UNSYNCHRONIZED);
+	public int getWrittenInts() {
+		return writtenMappedInts + writtenStagingInts;
+	}
+
+	public void map(boolean sync) {
+		mappedBuffer = buffer.map(MAP_WRITE | MAP_INVALIDATE | (sync ? 0 : MAP_UNSYNCHRONIZED));
 	}
 
 	public synchronized ReservedView reserve(int sizeInts) {
@@ -62,6 +68,38 @@ public class GLMappedBufferIntWriter {
 		return view;
 	}
 
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		if (!usedStagingViews.isEmpty() || !usedMappedViews.isEmpty() || !freeViews.isEmpty())
+			DestructibleHandler.queueLeakedDestruction(this);
+	}
+
+	@Override
+	public void destroy() {
+		if (mappedBuffer != null && mappedBuffer.isMapped())
+			mappedBuffer.unmap();
+		mappedBuffer = null;
+
+		for (ReservedView view : freeViews) {
+			view.backing = null;
+			view.buffer = null;
+		}
+		freeViews.clear();
+
+		for (ReservedView view : usedMappedViews) {
+			view.backing = null;
+			view.buffer = null;
+		}
+		usedMappedViews.clear();
+
+		for (ReservedView view : usedStagingViews) {
+			view.backing = null;
+			view.buffer = null;
+		}
+		usedStagingViews.clear();
+	}
+
 	public synchronized long flush() {
 		mappedBuffer.unmap();
 
@@ -69,6 +107,7 @@ public class GLMappedBufferIntWriter {
 			assert view.backing == null;
 			view.buffer.flip();
 			mappedBuffer.getOwner().upload(view.buffer, view.bufferOffsetInts * 4L);
+			view.buffer = null;
 		}
 
 		freeViews.addAll(usedMappedViews);

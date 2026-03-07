@@ -763,5 +763,4 @@ public class TimeOfDay
 			return (float) (earlyDayBrightness + (peakBrightness - earlyDayBrightness) * normalizedSine);
 		}
 	}
-
 }

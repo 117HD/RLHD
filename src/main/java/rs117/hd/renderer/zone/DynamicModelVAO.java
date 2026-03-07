@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.Destructible;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter.ReservedView;
@@ -23,7 +24,7 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
 @Slf4j
-class DynamicModelVAO {
+public class DynamicModelVAO implements Destructible {
 	public static final int INITIAL_SIZE = (int) (8 * MiB);
 
 	// Temp vertex format
@@ -126,20 +127,23 @@ class DynamicModelVAO {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 12);
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 18);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 18);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
 		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 	}
 
 	void map() {
-		vboWriter.map();
-		tboWriter.map();
+		vboWriter.map(false);
+		tboWriter.map(false);
 
 		reset();
 	}
@@ -183,10 +187,16 @@ class DynamicModelVAO {
 			bindRenderVAO();
 	}
 
-	void destroy() {
+	@Override
+	public void destroy() {
+		vboWriter.destroy();
+		tboWriter.destroy();
+		vboRender.destroy();
 		vboStaging.destroy();
 		tbo.destroy();
-		glDeleteVertexArrays(vao);
+
+		if (vao != 0)
+			glDeleteVertexArrays(vao);
 		vao = 0;
 	}
 
@@ -215,6 +225,10 @@ class DynamicModelVAO {
 	private void endDraw(View view) {
 		drawOffsets[view.drawIdx] = view.getStartOffset() / VERT_SIZE_INTS;
 		drawCounts[view.drawIdx] = view.getVertexCount();
+
+		// Clear ReservedViews before returning to pool
+		view.vbo = null;
+		view.tbo = null;
 
 		usedViews.add(view);
 	}

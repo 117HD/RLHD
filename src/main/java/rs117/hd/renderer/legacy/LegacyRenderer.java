@@ -36,8 +36,8 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
-import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
 import rs117.hd.opengl.shader.SkyShaderProgram;
+import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
@@ -1768,6 +1768,14 @@ public class LegacyRenderer implements Renderer {
 			plugin.drawnStaticRenderableCount = plugin.drawnStaticRenderableCount + 1;
 		} else {
 			int uuid = ModelHash.generateUuid(client, hash, renderable);
+			if (renderable instanceof DynamicObject) {
+				var def = client.getObjectDefinition(ModelHash.getUuidId(uuid));
+				if (def != null && def.getImpostorIds() != null) {
+					var impostor = def.getImpostor();
+					if (impostor != null)
+						uuid = ModelHash.packUuid(ModelHash.getUuidType(uuid), impostor.getId());
+				}
+			}
 			int[] worldPos = sceneContext.localToWorld(x, z, plane);
 			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 			if (modelOverride.hide)
