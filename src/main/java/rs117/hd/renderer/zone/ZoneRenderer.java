@@ -159,7 +159,7 @@ public class ZoneRenderer implements Renderer {
 
 	private boolean sceneFboValid;
 	private boolean shouldRenderScene;
-	private boolean shouldClearShadowFBO;
+	private boolean shouldClearShadowFbo;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -700,28 +700,31 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void directionalShadowPass() {
-		final boolean shouldDrawShadows = plugin.configShadowsEnabled && plugin.fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0;
-		if(shouldDrawShadows)
-			frameTimer.begin(Timer.RENDER_SHADOWS);
+		final boolean shouldRenderShadows =
+			plugin.configShadowsEnabled &&
+			plugin.fboShadowMap != 0 &&
+			environmentManager.currentDirectionalStrength > 0;
 
-		if(shouldClearShadowFBO || shouldDrawShadows) {
+		if (shouldRenderShadows || shouldClearShadowFbo) {
 			// Render to the shadow depth map
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
 			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
-			renderState.ido.set(indirectDrawCmds.id);
 			renderState.apply();
 
 			glClearDepth(1);
 			glClear(GL_DEPTH_BUFFER_BIT);
-			shouldClearShadowFBO = false;
+			shouldClearShadowFbo = false;
 		}
 
-		if (!shouldDrawShadows)
+		if (!shouldRenderShadows)
 			return;
+
+		frameTimer.begin(Timer.RENDER_SHADOWS);
 
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthFunc.set(GL_LEQUAL);
+		renderState.ido.set(indirectDrawCmds.id);
 
 		CommandBuffer.SKIP_DEPTH_MASKING = true;
 		directionalCmd.execute();
@@ -729,7 +732,7 @@ public class ZoneRenderer implements Renderer {
 
 		renderState.disable.set(GL_DEPTH_TEST);
 
-		shouldClearShadowFBO = true;
+		shouldClearShadowFbo = true;
 		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
