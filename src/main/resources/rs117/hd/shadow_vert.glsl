@@ -77,10 +77,9 @@ layout (location = 0) in vec3 vPosition;
             isShadowDisabled = tint.w > 0;
         }
 
+        Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
         #if SHADOW_MODE == SHADOW_MODE_DETAILED
             if (!isShadowDisabled) {
-                Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-
                 fUvw = vec4(vUv.xy, material.colorMap, material.shadowAlphaMap);
                 // Scroll UVs
                 fUvw.xy += material.scrollDuration * elapsedTime;
@@ -106,7 +105,10 @@ layout (location = 0) in vec3 vPosition;
             fOpacity = opacity;
         #endif
 
-        gl_Position = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
+        vec4 clipPosition = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
+        if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
+            clipPosition.z += SHADOW_TRANSPARENCY_BIAS;
+        gl_Position = clipPosition;
     }
 #else
     layout (location = 1) in vec3 vUv;
