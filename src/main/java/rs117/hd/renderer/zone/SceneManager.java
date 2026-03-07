@@ -160,6 +160,7 @@ public class SceneManager {
 	}
 
 	public void update() {
+		assert client.isClientThread();
 		frameTimer.begin(Timer.UPDATE_AREA_HIDING);
 		updateAreaHiding();
 		frameTimer.end(Timer.UPDATE_AREA_HIDING);
@@ -189,15 +190,32 @@ public class SceneManager {
 			}
 		}
 
+		if (root.sceneContext == null)
+			return;
+
 		root.update(plugin.deltaTime);
 
 		WorldView wv = client.getTopLevelWorldView();
 		if (wv != null) {
 			for (WorldEntity we : wv.worldEntities()) {
 				WorldViewContext ctx = getContext(we.getWorldView());
-				if (ctx != null)
+				if (ctx != null) {
 					ctx.update(plugin.deltaTime);
+					root.sceneContext.animatedDynamicObjectIds.addAll(
+						ctx.sceneContext.animatedDynamicObjectIds);
+				}
 			}
+		}
+
+		for (int objectId : root.sceneContext.animatedDynamicObjectIds) {
+			int impostorId = objectId;
+			var def = client.getObjectDefinition(objectId);
+			if (def != null && def.getImpostorIds() != null) {
+				var impostor = def.getImpostor();
+				if (impostor != null)
+					impostorId = impostor.getId();
+			}
+			root.sceneContext.animatedDynamicObjectImpostors.put(objectId, impostorId);
 		}
 	}
 
@@ -659,6 +677,7 @@ public class SceneManager {
 					DestructibleHandler.queueDestruction(preZone);
 
 				nextZone.setMetadata(ctx, nextSceneContext, x, z);
+				nextSceneContext.animatedDynamicObjectIds.addAll(nextZone.animatedDynamicObjectIds);
 			}
 		}
 

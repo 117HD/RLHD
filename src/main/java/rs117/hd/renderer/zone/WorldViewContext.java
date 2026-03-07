@@ -212,6 +212,8 @@ public class WorldViewContext {
 					curZone.inShadowFrustum = prevZone.inShadowFrustum;
 					DestructibleHandler.queueDestruction(prevZone);
 				}
+
+				sceneContext.animatedDynamicObjectIds.addAll(curZone.animatedDynamicObjectIds);
 			} else if (uploadTask.wasCancelled() && !curZone.cull) {
 				boolean shouldRetry = uploadTask.encounteredError() && curZone.isFirstLoadingAttempt;
 				if (shouldRetry) {
@@ -255,6 +257,16 @@ public class WorldViewContext {
 		for (int x = 0; x < sizeX; x++)
 			for (int z = 0; z < sizeZ; z++)
 				handleZoneSwap(-1.0f, x, z);
+	}
+
+	int getSortedAlphaCount() {
+		int count = 0;
+
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
+				count += zones[x][z].sortedFacesLen;
+
+		return count;
 	}
 
 	void free() {
