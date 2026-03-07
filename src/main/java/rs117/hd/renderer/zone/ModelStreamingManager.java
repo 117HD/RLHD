@@ -575,7 +575,6 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				final int modelBias = plugin.configTileItemBiasing && r instanceof TileItem ? 125 : 0;
-
 				sceneUploader.uploadTempModel(
 					visibleFaces,
 					m,

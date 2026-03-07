@@ -867,9 +867,8 @@ public interface HdPluginConfig extends Config
 	String KEY_TILE_ITEM_BIASING = "tileItemBiasing";
 	@ConfigItem(
 		keyName = KEY_TILE_ITEM_BIASING,
-		name = "Bias Dropped Items",
-		description =
-			"This applies a bias to Dropped items to ensure they are visible & not intersecting with tile surfaces.",
+		name = "Fix ground item clipping",
+		description = "Move ground items slightly, to prevent them from clipping into the ground.",
 		section = miscellaneousSettings
 	)
 	default boolean tileItemBiasing() { return true; }

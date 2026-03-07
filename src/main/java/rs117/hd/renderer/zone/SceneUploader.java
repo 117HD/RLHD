@@ -1970,7 +1970,7 @@ public class SceneUploader implements AutoCloseable {
 		final byte[] bias = model.getFaceBias();
 		final int[] faceNormals = isShadow ? EMPTY_NORMALS : modelNormals;
 
-		final boolean hasBias = bias != null;
+		final boolean hasVanillaBias = bias != null;
 		final boolean modelHasNormals =
 			model.getVertexNormalsX() != null &&
 			model.getVertexNormalsY() != null &&
@@ -2079,10 +2079,8 @@ public class SceneUploader implements AutoCloseable {
 				color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
 			}
 
-			int depthBias = (faceOverride.depthBias != -1 ? faceOverride.depthBias :
-				hasBias ? bias[face] & 0xFF : 0);
-			if(depthBias == 0)
-				depthBias = modelBias;
+			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
+				hasVanillaBias ? bias[face] & 0xFF : modelBias;
 			final int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			final boolean hasAlpha = material.hasTransparency || transparency != 0;
 
