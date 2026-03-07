@@ -4,7 +4,6 @@ plugins {
 }
 
 repositories {
-	mavenLocal()
 	maven {
 		url = 'https://repo.runelite.net'
 	}
@@ -35,6 +34,11 @@ sourceCompatibility = '11'
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
 }
+
+tasks.register('generateBuildInfo', GenerateBuildInfoTask);
+
+sourceSets.main.java.srcDir("$buildDir/generated/sources/buildinfo")
+compileJava.dependsOn(generateBuildInfo)
 
 //import groovy.json.JsonOutput
 //
