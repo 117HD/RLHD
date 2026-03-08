@@ -8057,8 +8057,7 @@
       "LOST_TRIBE_CELLAR_HOLE_BLOCKING",
       "DTTD_WALL_HAM_TOP5_OUTER2",
       "DTTD_WALL_HAM_TOP5_OUTER",
-      "DTTD_WALL_HAM_TOP_OUTER",
-      "ENAKH_B_W_CAVEWALL_TOP"
+      "DTTD_WALL_HAM_TOP_OUTER"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -17055,7 +17054,11 @@
       "ROCKSLIDE1_UPASS",
       "ROCKSLIDE2_UPASS",
       "ROCKSLIDE3_UPASS",
-      "ROCKSLIDE4_UPASS"
+      "ROCKSLIDE4_UPASS",
+      "ROCKSLIDE2_OBSTACLE_UPASS",
+      "FAVOUR_ROCKSLIDE1",
+      "MM2_ROCKS_UNBREAKABLE",
+      "MM2_ROCKS_BREAKABLE"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -37790,7 +37793,10 @@
     "description": "Objects - Rock Column - Tan - Huge",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      "ROCKCOLUMN1", "ROCKCOLUMN2", "ROCKCOLUMN3"
+      "ROCKCOLUMN1",
+      "ROCKCOLUMN2",
+      "ROCKCOLUMN3",
+      "STALAGMITE_TWIN"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -42089,7 +42095,8 @@
     "objectIds": [
       "MISTMYST_BOAT_LUMBRIDGE",
       "MISTMYST_BOAT_ISLAND",
-      "SEASLUG_ROWBOAT"
+      "SEASLUG_ROWBOAT",
+      "MM2_MONKEY_BOAT"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -52865,7 +52872,6 @@
       "_100_ILM_SNAKE_HIGHWALL_BASIC",
       "_100_ILM_SNAKE_HIGHWALL_HOLE",
       "ENAKH_B_W_CAVEWALL_TOP",
-      "_100_ILM_SNAKE_HOLE",
       "_100_ILM_SNAKE_WALLROCKS"
     ],
     "colorOverrides": [
@@ -58198,7 +58204,9 @@
     "baseMaterial": "GRUNGE_3_DARK",
     "uvOrientation": 512,
     "uvType": "MODEL_XZ",
+    "castShadows": false,
     "uvScale": 0.7,
+    "depthBias": 100,
     "objectIds": [
       "HAY_1",
       "STRAW",
@@ -69470,7 +69478,6 @@
     "depthBias": 1,
     "objectIds": [
       "WOOD2",
-      "GRANDTREE_TRAPDOORTOWERCLOSED",
       "GRANDTREE_TRAPDOORTOWEROPEN"
     ],
     "colorOverrides": [
@@ -69578,6 +69585,150 @@
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Entrance",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 50,
+    "objectIds": [
+      "MM2_SECRET_ENTRANCE_REVEALED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_80",
+        "castShadows": false,
+        "flatNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Walls",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_CAVE_SECRET_BUNKER_LEV1_01",
+      "MM2_CAVE_SECRET_BUNKER_LEV2_STRAIGHT",
+      "MM2_CAVE_SECRET_BUNKER_LEV2_CORNER_01",
+      "MM2_CAVE_SECRET_BUNKER_LEV2_TOP",
+      "MM2_CAVE_SECRET_BUNKER_LEV1_TOP",
+      "MM2_CAVE_SECRET_BUNKER_LEV2_CORNER_02",
+      "MM2_MAZE_RETURN_HIDDEN",
+      "MM2_CAVE_SECRET_BUNKER_PIT_LEV0",
+      "MM2_CAVE_SECRET_BUNKER_LEV0",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_STRAIGHT01",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_CORNER01",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_STRAIGHT03",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_STRAIGHT02",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_CORNER02",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_PLANE",
+      "MM2_CAVE_SECRET_BUNKER_LEV1_02",
+      "MM2_PILLAR_BASE_01",
+      "MM2_PILLAR_BASE_02",
+      "MM2_PILLAR_BASE_03",
+      "MM2_CAVE_SECRET_BUNKER_LEV1_JOIN02",
+      "MM2_SECRET_LAB_ENTRANCE_HIDDEN",
+      "MM2_KRUK_BATTLE_ENTRANCE",
+      "MM2_KRUK_BATTLE_EXIT",
+      "MM2_CAVE_SECRET_BUNKER_LEV1_JOIN01",
+      "MM2_TILE_WALK",
+      "MM2_TILE_BROKEN",
+      "MM2_TILE_BLEND_EDGE",
+      "MM2_TILE_BLEND_CORNER",
+      "MM2_CAVE_SECRET_BUNKER_LEV0_HOLD",
+      "MM2_LEDGE_HANG",
+      "MM2_LEDGE_WALK",
+      "MM2_CRACK_PASS",
+      "MM2_CAVE_SECRET_BUNKER_STEP_ROCKS",
+      "MM2_CAVE_SECRET_BUNKER_LEV0_STEPSIDE_01",
+      "MM2_CAVE_SECRET_BUNKER_LEV0_STEPSIDE_02"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Hole with Vines",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_MAZE_EXIT_HOLE_SIDE",
+      "MM2_MAZE_EXIT_HOLE_CORNER",
+      "MM2_MAZE_EXIT_HOLE",
+      "MM2_TILE_BROKEN_ANIM"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 11",
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Pressure Plate",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "MM2_ROCK_FALL"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Log",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.75111,
+    "objectIds": [
+      "MM2_LOG_WALK"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Saw",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "MM2_TRAP_SAW_FLOOR",
+      "MM2_TRAP_SAW_FLOOR2",
+      "MM2_TRAP_SAW"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Dart Trap",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "MM2_TRAP_DARTS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Dart Trap",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "MM2_TRAP_AXES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   },

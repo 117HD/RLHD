@@ -7982,7 +7982,12 @@
   },
   {
     "name": "Temple of Marimbo Dungeon (Monkey Madness 1)",
-    "regions": [ 11151 ],
+    "regionBoxes": [ [10128, 10637] ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Kruk's Dungeon Main Area (Monkey Madness 2)",
+    "regions": [ 11662 ],
     "hideOtherAreas": true
   },
   {
