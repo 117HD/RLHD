@@ -7647,6 +7647,13 @@
     ]
   },
   {
+    "name": "CRANDOR_LAB",
+    "aabbs": [
+      [ 2855, 9665, 2879, 9695 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "FISHING_PLATFORM",
     "aabbs": [
       [ 2759, 3269, 2796, 3294 ]
