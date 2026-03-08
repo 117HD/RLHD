@@ -20822,7 +20822,7 @@
     "offset": [ 3, 0, 40 ]
   },
   {
-    "description": "Altar Candles - Lumbridge and Port Sarim",
+    "description": "Altar Candles - Lumbridge, Port Sarim, Glough's",
     "offset": [ 0, 140, -33 ],
     "radius": 180,
     "strength": 7,
@@ -20836,7 +20836,8 @@
     "range": 20,
     "objectIds": [
       "CANDLES_1",
-      "CANDLES_2"
+      "CANDLES_2",
+      "MM2_GLOUGHS_CANDLES"
     ]
   },
   {

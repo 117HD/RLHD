@@ -18831,7 +18831,9 @@
       "AVIUM_DEADTREE_1",
       "MM2_GLOUGH_BRANCH_DOWN",
       "DRAGON_SLAYER_QIP_WILD5_TREE_A",
-      "DRAGON_SLAYER_QIP_WILD5_TREE_B"
+      "DRAGON_SLAYER_QIP_WILD5_TREE_B",
+      "MM2_DOWNTREE_SEARCHABLE",
+      "MM2_GLOUGH_BRANCH_UP_ACTIVE"
     ],
     "uvType": "BOX"
   },
@@ -19060,7 +19062,7 @@
     "description": "Gnome - Objects - Wooden - Bench - Textured",
     "baseMaterial": "WOOD_GRAIN_2",
     "uvType": "BOX",
-    "uvScale": 0.48,
+    "uvScale": 0.4,
     "objectIds": [
       "GNOMEBENCH"
     ]
@@ -19069,7 +19071,8 @@
     "description": "Gnome - Wooden - Stool",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientation": 600,
+    "uvScale": 0.75,
+    "uvOrientation": 512,
     "objectIds": [
       "GNOMESTOOL"
     ]
@@ -19103,7 +19106,7 @@
     "description": "Gnome - Wooden - table with cutlery and napkins with candle - Needs proper UV",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientation": 84,
+    "uvScale": 0.75,
     "colorOverrides": [
       {
         "description": "Cutlery napkins and candle",
@@ -19120,6 +19123,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientation": 512,
+    "uvScale": 0.7,
     "objectIds": [
       "ALUFT_GNOME_TABLE",
       "ALUFT_GNOME_OFFICE_TABLE"
@@ -46304,7 +46308,9 @@
       "GARLICCUPBOARDSHUT",
       "GARLICCUPBOARDOPEN",
       "VYVINCUPBOARDSHUT",
-      "VYVINCUPBOARDOPEN"
+      "VYVINCUPBOARDOPEN",
+      "MM2_GLOUGHS_CUPBOARD_CLOSED",
+      "MM2_GLOUGHS_CUPBOARD_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -52498,9 +52504,8 @@
     "description": "Karamja Bamboo bridge",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 1024,
-    "uvOrientationZ": 162,
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
     "colorOverrides": [
       {
         "description": "Rope",
@@ -69313,6 +69318,126 @@
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvOrientation": 192
+      }
+    ]
+  },
+  {
+    "description": "Gnome - Glough's Secret Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "depthBias": 1,
+    "objectIds": [
+      "WOOD2",
+      "GRANDTREE_TRAPDOORTOWERCLOSED",
+      "GRANDTREE_TRAPDOORTOWEROPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Glough's Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM2_GLOUGHS_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 7",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Glough's Fireplace",
+    "baseMaterial": "GRUNGE_3",
+    "depthBias": 40,
+    "objectIds": [
+      "MM2_GLOUGHS_FIREPLACE_NOTE",
+      "MM2_GLOUGHS_FIREPLACE_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Glough's Candle Altar",
+    "baseMaterial": "GRUNGE_3",
+    "depthBias": 40,
+    "objectIds": [
+      "MM2_GLOUGHS_CANDLES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Glough's Bust",
+    "baseMaterial": "GRUNGE_3",
+    "depthBias": 40,
+    "objectIds": [
+      "MM2_GLOUGHS_BUST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Glough's Crates and Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "MM2_GLOUGHS_BARRELS",
+      "MM2_GLOUGHS_CRATES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
