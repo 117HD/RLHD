@@ -18884,7 +18884,9 @@
       }
     ],
     "objectIds": [
-      "GNOMEFENCE"
+      "GNOMEFENCE",
+      "MM2_STRONGHOLD_FENCE",
+      "MM2_STRONGHOLD_FENCE_BROKEN"
     ]
   },
   {
@@ -69650,7 +69652,9 @@
       "MM2_CRACK_PASS",
       "MM2_CAVE_SECRET_BUNKER_STEP_ROCKS",
       "MM2_CAVE_SECRET_BUNKER_LEV0_STEPSIDE_01",
-      "MM2_CAVE_SECRET_BUNKER_LEV0_STEPSIDE_02"
+      "MM2_CAVE_SECRET_BUNKER_LEV0_STEPSIDE_02",
+      "MM2_SECRET_LAB_ENTRANCE",
+      "MM2_SECRET_LAB_EXIT"
     ]
   },
   {
@@ -69803,7 +69807,8 @@
     "objectIds": [
       "MM2_SHIPYARD_CRATE_02",
       "MM2_SHIPYARD_CRATE_03",
-      "MM2_SHIPYARD_CRATE_04"
+      "MM2_SHIPYARD_CRATE_04",
+      "MM2_LAB_CRATE_02"
     ],
     "colorOverrides": [
       {
@@ -69819,7 +69824,8 @@
     "uvOrientationY": 50,
     "objectIds": [
       "MM2_SHIPYARD_CRATE_06",
-      "MM2_SHIPYARD_CRATE_05"
+      "MM2_SHIPYARD_CRATE_05",
+      "MM2_LAB_CRATE_03"
     ],
     "colorOverrides": [
       {
@@ -69833,7 +69839,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
-      "MM2_SHIPYARD_CRATE_01"
+      "MM2_SHIPYARD_CRATE_01",
+      "MM2_LAB_CRATE_01"
     ],
     "colorOverrides": [
       {
@@ -69869,7 +69876,7 @@
     ]
   },
   {
-    "description": "Monkey Madness 2 - Airship",
+    "description": "Monkey Madness 2 - Airship & Lab",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
@@ -69896,7 +69903,17 @@
       "MM2_LAB_ROOF_11",
       "MM2_LAB_ROOF_12",
       "MM2_LAB_ROOF_13",
-      "MM2_LAB_ROOF_14"
+      "MM2_LAB_ROOF_14",
+      "MM2_LAB_WALL_OUTER_03",
+      "MM2_LAB_WALL_OUTER_02",
+      "MM2_LAB_WALL_OUTER_01",
+      "MM2_LAB_WALL_OUTER_END01",
+      "MM2_LAB_WALL_OUTER_END02",
+      "MM2_LAB_DOOR_LEFT",
+      "MM2_LAB_DOOR_RIGHT",
+      "MM2_LAB_DOOR_RIGHT_OPEN",
+      "MM2_LAB_WALL_INNER_CORNER",
+      "MM2_LAB_DOOR_LEFT_OPEN"
     ],
     "colorOverrides": [
       {
@@ -69921,6 +69938,71 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Lab Metal Objects",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "MM2_LAB_FLOOR_BRIDGE",
+      "MM2_LAB_BANISTER_OUTER_02",
+      "MM2_LAB_BANISTER_OUTER_01",
+      "MM2_LAB_BANISTER_OUTER_END_01",
+      "MM2_LAB_BANISTER_OUTER_END_02",
+      "MM2_LAB_DOOR_RIGHT",
+      "MM2_LAB_WALL_OUTER_LOWER01",
+      "MM2_LAB_WALL_OUTER_LOWER02",
+      "MM2_LAB_STAIRS01",
+      "MM2_LAB_WALL_05",
+      "MM2_LAB_FLOOR",
+      "MM2_LAB_WALL_04",
+      "MM2_LAB_WALL_06",
+      "MM2_LAB_BANISTER_01",
+      "MM2_LAB_BANISTER_END_02",
+      "MM2_LAB_BANISTER_END_01",
+      "MM2_LAB_WALL_02",
+      "MM2_LAB_WALL_JOIN02",
+      "MM2_LAB_WALL_JOIN01",
+      "MM2_LAB_PIPE_END_01",
+      "MM2_LAB_PIPE_MIDDLE_01",
+      "MM2_LAB_PIPE_END_02",
+      "MM2_LAB_PIPE_MIDDLE_02",
+      "MM2_LAB_PIPE_CORNER_01",
+      "MM2_LAB_PIPE_END_04",
+      "MM2_LAB_PIPE_END_03",
+      "MM2_LAB_PIPE_CORNER_02",
+      "MM2_LAB_PIPE_TSECTION",
+      "MM2_LAB_WALL_BROKEN_02",
+      "MM2_LAB_WALL_03",
+      "MM2_LAB_WALL_BROKEN_01",
+      "MM2_LAB_CAGE_BROKEN_DOOR",
+      "MM2_LAB_WALL_END_01",
+      "MM2_LAB_WALL_END_02",
+      "MM2_LAB_CAGE_DOOR",
+      "MM2_LAB_LEVER_OFF",
+      "MM2_LAB_LEVER_ON",
+      "MM2_LAB_MUTAGEN_MIXER",
+      "MM2_LAB_MUTAGEN_ONYX_ORB",
+      "MM2_LAB_DISMOUNT"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Lab Tank",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "MM2_LAB_INCUBATOR_HEALTHY",
+      "MM2_LAB_INCUBATOR_CORRUPTED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90",
+        "uvType": "BOX"
       }
     ]
   },
