@@ -19132,8 +19132,7 @@
     "uvOrientation": 512,
     "uvScale": 0.7,
     "objectIds": [
-      "ALUFT_GNOME_TABLE",
-      "ALUFT_GNOME_OFFICE_TABLE"
+      "ALUFT_GNOME_TABLE"
     ]
   },
   {
@@ -69503,7 +69502,8 @@
     "uvScale": 0.7,
     "uvOrientation": 512,
     "objectIds": [
-      "MM2_GLOUGHS_TABLE"
+      "MM2_GLOUGHS_TABLE",
+      "ALUFT_GNOME_OFFICE_TABLE"
     ],
     "colorOverrides": [
       {
