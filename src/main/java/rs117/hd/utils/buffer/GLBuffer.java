@@ -70,24 +70,6 @@ public class GLBuffer implements Destructible {
 
 	private GLMappedBuffer mappedBuffer;
 
-	public static class EBO extends GLBuffer {
-		public EBO(String name, int usage) {
-			super(name, GL_ELEMENT_ARRAY_BUFFER, usage);
-		}
-
-		@Override
-		public void bind() {
-			glBindVertexArray(0);
-			glBindBuffer(target, id);
-		}
-
-		@Override
-		public void unbind() {
-			glBindVertexArray(0);
-			glBindBuffer(target, 0);
-		}
-	}
-
 	public GLBuffer(String name, int target, int usage, int storageFlags) {
 		assert target != GL_ELEMENT_ARRAY_BUFFER || this instanceof EBO;
 		this.name = name;
@@ -102,6 +84,247 @@ public class GLBuffer implements Destructible {
 
 	public static boolean supportsStorageBuffers() {
 		return GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS;
+	}
+
+	private static void copyRangeTo(int src, int dst, long srcOffsetBytes, long dstOffsetBytes, long numBytes) {
+		copyRangesTo(src, dst, new long[] { srcOffsetBytes }, new long[] { dstOffsetBytes }, new long[] { numBytes }, 1);
+	}
+
+	private static void copyRangeTo(GLBuffer src, GLBuffer dst, long srcOffsetBytes, long dstOffsetBytes, long numBytes) {
+		copyRangesTo(src, dst, new long[] { srcOffsetBytes }, new long[] { dstOffsetBytes }, new long[] { numBytes }, 1);
+	}
+
+	private static void copyRangesTo(
+		GLBuffer src,
+		GLBuffer dst,
+		long[] srcOffsetBytes,
+		long[] dstOffsetBytes,
+		long[] numBytes,
+		int count
+	) {
+		assert !src.isMapped() || src.isStorageBuffer();
+		assert !dst.isMapped() || dst.isStorageBuffer();
+		copyRangesTo(src.id, dst.id, srcOffsetBytes, dstOffsetBytes, numBytes, count);
+	}
+
+	private static void copyRangesTo(
+		int srcId,
+		int dstId,
+		long[] srcOffsetBytes,
+		long[] dstOffsetBytes,
+		long[] numBytes,
+		int count
+	) {
+		assert count > 0;
+
+		glBindBuffer(GL_COPY_READ_BUFFER, srcId);
+		glBindBuffer(GL_COPY_WRITE_BUFFER, dstId);
+
+		try {
+			if (GL_CAPS.GL_ARB_copy_buffer && !DEBUG_MAC_OS) {
+				copyWithCopyBuffer(srcOffsetBytes, dstOffsetBytes, numBytes, count);
+			} else if (GL_CAPS.GL_ARB_map_buffer_range && !DEBUG_MAC_OS) {
+				copyWithMapBufferRange(srcId, dstId, srcOffsetBytes, dstOffsetBytes, numBytes, count);
+			} else {
+				copyWithMapBuffer(srcId, dstId, srcOffsetBytes, dstOffsetBytes, numBytes, count);
+			}
+
+			if (checkGLErrors()) {
+				long srcSizeBytes = glGetBufferParameteri64(GL_COPY_READ_BUFFER, GL_BUFFER_SIZE);
+				long dstSizeBytes = glGetBufferParameteri64(GL_COPY_WRITE_BUFFER, GL_BUFFER_SIZE);
+				log.error("Errors copying buffers src: {} dst: {} srcSize: {} dstSize: {}", srcId, dstId, srcSizeBytes, dstSizeBytes);
+			}
+
+		} finally {
+			glBindBuffer(GL_COPY_READ_BUFFER, 0);
+			glBindBuffer(GL_COPY_WRITE_BUFFER, 0);
+		}
+	}
+
+	private static void copyWithCopyBuffer(long[] src, long[] dst, long[] size, int count) {
+		for (int i = 0; i < count; i++) {
+			glCopyBufferSubData(
+				GL_COPY_READ_BUFFER,
+				GL_COPY_WRITE_BUFFER,
+				src[i],
+				dst[i],
+				size[i]
+			);
+		}
+	}
+
+	private static void copyWithMapBufferRange(
+		int srcId,
+		int dstId,
+		long[] srcOffsetBytes,
+		long[] dstOffsetBytes,
+		long[] numBytes,
+		int count
+	) {
+		assert !supportsStorageBuffers();
+
+		for (int i = 1; i < count; i++) {
+			long dstKey = dstOffsetBytes[i];
+			long srcKey = srcOffsetBytes[i];
+			long sizeKey = numBytes[i];
+
+			int j = i - 1;
+			while (j >= 0 && dstOffsetBytes[j] > dstKey) {
+				dstOffsetBytes[j + 1] = dstOffsetBytes[j];
+				srcOffsetBytes[j + 1] = srcOffsetBytes[j];
+				numBytes[j + 1] = numBytes[j];
+				j--;
+			}
+
+			dstOffsetBytes[j + 1] = dstKey;
+			srcOffsetBytes[j + 1] = srcKey;
+			numBytes[j + 1] = sizeKey;
+		}
+
+		long srcOffset = Long.MAX_VALUE, srcMapSize = 0;
+		long dstOffset = Long.MAX_VALUE, dstMapSize = 0;
+		boolean contiguous = true;
+
+		for (int i = 0; i < count; i++) {
+			if (i > 0 && contiguous)
+				contiguous = dstOffsetBytes[i - 1] + numBytes[i - 1] == dstOffsetBytes[i];
+
+			long so = srcOffsetBytes[i];
+			long doff = dstOffsetBytes[i];
+			long len = numBytes[i];
+
+			if (so < srcOffset) srcOffset = so;
+			if (doff < dstOffset) dstOffset = doff;
+
+			long srcEnd = so - srcOffset + len;
+			long dstEnd = doff - dstOffset + len;
+
+			if (srcEnd > srcMapSize) srcMapSize = srcEnd;
+			if (dstEnd > dstMapSize) dstMapSize = dstEnd;
+		}
+
+		ByteBuffer src = null, dst = null;
+		try {
+			src = glMapBufferRange(GL_COPY_READ_BUFFER, srcOffset, srcMapSize, GL_MAP_READ_BIT, COPY_READ_BUFFER);
+			if (src == null) {
+				log.error("Failed to map SRC buffer {}, offset: {}, size: {}", srcId, srcOffset, srcMapSize, new Throwable());
+				return;
+			}
+			COPY_READ_BUFFER = src;
+
+			dst = glMapBufferRange(GL_COPY_WRITE_BUFFER, dstOffset, dstMapSize, GL_MAP_WRITE_BIT | (contiguous ? GL_MAP_INVALIDATE_RANGE_BIT : GL_MAP_FLUSH_EXPLICIT_BIT), COPY_WRITE_BUFFER);
+			if (dst == null) {
+				log.error("Failed to map DST buffer {}, offset: {}, size: {}", dstId, dstOffset, dstMapSize, new Throwable());
+				return;
+			}
+			COPY_WRITE_BUFFER = dst;
+
+			performCopies(
+				src, dst,
+				srcOffset, dstOffset,
+				srcOffsetBytes, dstOffsetBytes, numBytes,
+				count, !contiguous
+			);
+		} finally {
+			if(src != null) glUnmapBuffer(GL_COPY_READ_BUFFER);
+			if(dst != null) glUnmapBuffer(GL_COPY_WRITE_BUFFER);
+		}
+	}
+
+	private static void copyWithMapBuffer(
+		int srcId,
+		int dstId,
+		long[] srcOffsetBytes,
+		long[] dstOffsetBytes,
+		long[] numBytes,
+		int count
+	) {
+		ByteBuffer src = null, dst = null;
+		try {
+			src = glMapBuffer(GL_COPY_READ_BUFFER, GL_READ_ONLY, COPY_READ_BUFFER);
+			if (src == null) {
+				log.error("Failed to map SRC buffer={}", srcId);
+				return;
+			}
+			COPY_READ_BUFFER = src;
+
+			dst = glMapBuffer(GL_COPY_WRITE_BUFFER, GL_WRITE_ONLY, COPY_WRITE_BUFFER);
+			if (dst == null) {
+				log.error("Failed to map DST buffer={}", dstId);
+				glUnmapBuffer(GL_COPY_READ_BUFFER);
+				return;
+			}
+			COPY_WRITE_BUFFER = dst;
+
+			performCopies(
+				src, dst,
+				0, 0,
+				srcOffsetBytes, dstOffsetBytes, numBytes,
+				count, false);
+		} finally {
+			if(src != null) glUnmapBuffer(GL_COPY_READ_BUFFER);
+			if(dst != null) glUnmapBuffer(GL_COPY_WRITE_BUFFER);
+		}
+	}
+
+	private static void performCopies(
+		ByteBuffer src,
+		ByteBuffer dst,
+		long srcBase,
+		long dstBase,
+		long[] srcOffsets,
+		long[] dstOffsets,
+		long[] sizes,
+		int count,
+		boolean flush
+	) {
+		long flushStart = -1;
+		long flushEnd = -1;
+
+		for (int i = 0; i < count; i++) {
+			int srcPos = (int) (srcOffsets[i] - srcBase);
+			int dstPos = (int) (dstOffsets[i] - dstBase);
+			int len = (int) sizes[i];
+
+			src.limit(srcPos + len);
+			src.position(srcPos);
+
+			dst.limit(dstPos + len);
+			dst.position(dstPos);
+
+			dst.put(src);
+
+			if (flush) {
+				if (flushStart == -1) {
+					flushStart = dstPos;
+					flushEnd = dstPos + len;
+				} else if (flushEnd == dstPos) {
+					flushEnd += len;
+				} else {
+					glFlushMappedBufferRange(GL_COPY_WRITE_BUFFER, flushStart, flushEnd - flushStart);
+					flushStart = flushEnd = -1;
+				}
+			}
+		}
+
+		if (flushStart != -1)
+			glFlushMappedBufferRange(GL_COPY_WRITE_BUFFER, flushStart, flushEnd - flushStart);
+	}
+
+	public static String storageFlagsToString(int mask) {
+		if (mask == STORAGE_NONE) return "STORAGE_NONE";
+
+		StringBuilder sb = new StringBuilder();
+		if ((mask & STORAGE_PERSISTENT) != 0) sb.append("STORAGE_PERSISTENT | ");
+		if ((mask & STORAGE_IMMUTABLE) != 0) sb.append("STORAGE_IMMUTABLE | ");
+		if ((mask & STORAGE_CLIENT) != 0) sb.append("STORAGE_CLIENT | ");
+		if ((mask & STORAGE_READ) != 0) sb.append("STORAGE_READ | ");
+		if ((mask & STORAGE_WRITE) != 0) sb.append("STORAGE_WRITE | ");
+
+		if (sb.length() > 3)
+			sb.setLength(sb.length() - 3);
+
+		return sb.toString();
 	}
 
 	public GLBuffer initialize() {
@@ -127,13 +350,6 @@ public class GLBuffer implements Destructible {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
-	protected void finalize() {
-		if (id != 0)
-			DestructibleHandler.queueLeakedDestruction(this);
-	}
-
-	@Override
 	public void destroy() {
 		if (mappedBuffer != null)
 			mappedBuffer.destroy();
@@ -150,6 +366,13 @@ public class GLBuffer implements Destructible {
 	@Override
 	public String toString() {
 		return String.format("Name: %s, Capacity: %d", name, size);
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		if (id != 0)
+			DestructibleHandler.queueLeakedDestruction(this);
 	}
 
 	public void orphan() {
@@ -415,164 +638,21 @@ public class GLBuffer implements Destructible {
 		copyRangesTo(this, dst, srcOffsetBytes, dstOffsetBytes, numBytes, count);
 	}
 
-	private static void copyRangeTo(int src, int dst, long srcOffsetBytes, long dstOffsetBytes, long numBytes) {
-		copyRangesTo(src, dst, new long[] { srcOffsetBytes }, new long[] { dstOffsetBytes }, new long[] { numBytes }, 1);
-	}
-
-	private static void copyRangeTo(GLBuffer src, GLBuffer dst, long srcOffsetBytes, long dstOffsetBytes, long numBytes) {
-		copyRangesTo(src, dst, new long[] { srcOffsetBytes }, new long[] { dstOffsetBytes }, new long[] { numBytes }, 1);
-	}
-
-	private static void copyRangesTo(
-		GLBuffer src,
-		GLBuffer dst,
-		long[] srcOffsetBytes,
-		long[] dstOffsetBytes,
-		long[] numBytes,
-		int count
-	) {
-		assert !src.isMapped() || src.isStorageBuffer();
-		assert !dst.isMapped() || dst.isStorageBuffer();
-		copyRangesTo(src.id, dst.id, srcOffsetBytes, dstOffsetBytes, numBytes, count);
-	}
-
-	private static void copyRangesTo(
-		int srcId,
-		int dstId,
-		long[] srcOffsetBytes,
-		long[] dstOffsetBytes,
-		long[] numBytes,
-		int count
-	) {
-		assert count > 0;
-		glBindBuffer(GL_COPY_READ_BUFFER, srcId);
-		glBindBuffer(GL_COPY_WRITE_BUFFER, dstId);
-
-		if (GL_CAPS.GL_ARB_copy_buffer && !DEBUG_MAC_OS) {
-			for (int i = 0; i < count; i++)
-				glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, srcOffsetBytes[i], dstOffsetBytes[i], numBytes[i]);
-		} else {
-			// Fallback path for macOS, which of course has to not support this...
-			// This assumes neither of the buffers are already mapped
-			assert !supportsStorageBuffers();
-
-			// Sort by dstOffset to ensure we copy going left to right (in-place sort)
-			for (int i = 1; i < count; i++) {
-				long dstKey = dstOffsetBytes[i];
-				long srcKey = srcOffsetBytes[i];
-				long numKey = numBytes[i];
-				int j = i - 1;
-
-				while (j >= 0 && dstOffsetBytes[j] > dstKey) {
-					dstOffsetBytes[j + 1] = dstOffsetBytes[j];
-					srcOffsetBytes[j + 1] = srcOffsetBytes[j];
-					numBytes[j + 1] = numBytes[j];
-					j--;
-				}
-
-				if (j + 1 != i) {
-					dstOffsetBytes[j + 1] = dstKey;
-					srcOffsetBytes[j + 1] = srcKey;
-					numBytes[j + 1] = numKey;
-				}
-			}
-
-			boolean isContiguous = true;
-			long srcOffset = Long.MAX_VALUE, srcMapSize = 0;
-			long dstOffset = Long.MAX_VALUE, dstMapSize = 0;
-			for (int i = 0; i < count; i++) {
-				if(i > 0 && isContiguous)
-					isContiguous =  dstOffsetBytes[i - 1] + numBytes[i - 1] == dstOffsetBytes[i];
-
-				srcOffset = min(srcOffset, srcOffsetBytes[i]);
-				dstOffset = min(dstOffset, dstOffsetBytes[i]);
-
-				srcMapSize = max(srcMapSize, srcOffsetBytes[i] - srcOffset + numBytes[i]);
-				dstMapSize = max(dstMapSize, dstOffsetBytes[i] - dstOffset + numBytes[i]);
-			}
-
-			ByteBuffer src = null;
-			ByteBuffer dst = null;
-			try {
-				src = glMapBufferRange(GL_COPY_READ_BUFFER, srcOffset, srcMapSize, GL_MAP_READ_BIT, COPY_READ_BUFFER);
-				if (src == null) {
-					log.error("Failed to map SRC buffer {}, offset: {}, size: {}", srcId, srcOffset, srcMapSize, new Throwable());
-					return;
-				}
-				COPY_READ_BUFFER = src;
-
-				dst = glMapBufferRange(GL_COPY_WRITE_BUFFER, dstOffset, dstMapSize, GL_MAP_WRITE_BIT | (isContiguous ? GL_MAP_INVALIDATE_RANGE_BIT : GL_MAP_FLUSH_EXPLICIT_BIT), COPY_WRITE_BUFFER);
-				if (dst == null) {
-					log.error("Failed to map DST buffer {}, offset: {}, size: {}", dstId, dstOffset, dstMapSize, new Throwable());
-					return;
-				}
-				COPY_WRITE_BUFFER = dst;
-
-				long flushStart = -1, flushEnd = -1;
-				for (int i = 0; i < count; i++) {
-					final int srcPos = (int) (srcOffsetBytes[i] - srcOffset);
-					final int dstPos = (int) (dstOffsetBytes[i] - dstOffset);
-					final int len = (int) numBytes[i];
-
-					try {
-						// Update limits before positions to appease bounds checking
-						src.limit(srcPos + len);
-						src.position(srcPos);
-
-						dst.limit(dstPos + len);
-						dst.position(dstPos);
-
-						dst.put(src);
-
-						if(!isContiguous) {
-							// When performing none contiguous copies, its more efficient to flush than to map the whole buffer
-							if (flushStart == -1) {
-								flushStart = dstPos;
-								flushEnd = dstPos + len;
-							} else if (flushEnd == dstPos) {
-								flushEnd += len;
-							} else {
-								glFlushMappedBufferRange(GL_COPY_WRITE_BUFFER, flushStart, flushEnd - flushStart);
-								flushStart = flushEnd = -1;
-							}
-						}
-					} catch (Throwable t) {
-						log.error("Failed to copy buffer range {} -> {} offset: {} size: {}", srcId, dstId, srcOffsetBytes[i], numBytes[i], t);
-					}
-				}
-				if(flushStart != -1)
-					glFlushMappedBufferRange(GL_COPY_WRITE_BUFFER, flushStart, flushEnd - flushStart);
-			} finally {
-				if (src != null)
-					glUnmapBuffer(GL_COPY_READ_BUFFER);
-				if (dst != null)
-					glUnmapBuffer(GL_COPY_WRITE_BUFFER);
-			}
+	public static class EBO extends GLBuffer {
+		public EBO(String name, int usage) {
+			super(name, GL_ELEMENT_ARRAY_BUFFER, usage);
 		}
 
-		if (checkGLErrors()) {
-			long srcSizeBytes = glGetBufferParameteri64(GL_COPY_READ_BUFFER, GL_BUFFER_SIZE);
-			long dstSizeBytes = glGetBufferParameteri64(GL_COPY_WRITE_BUFFER, GL_BUFFER_SIZE);
-			log.error("Errors copying buffers src: {} dst: {} srcSize: {} dstSize: {}", srcId, dstId, srcSizeBytes, dstSizeBytes);
+		@Override
+		public void bind() {
+			glBindVertexArray(0);
+			glBindBuffer(target, id);
 		}
 
-		glBindBuffer(GL_COPY_READ_BUFFER, 0);
-		glBindBuffer(GL_COPY_WRITE_BUFFER, 0);
-	}
-
-	public static String storageFlagsToString(int mask) {
-		if (mask == STORAGE_NONE) return "STORAGE_NONE";
-
-		StringBuilder sb = new StringBuilder();
-		if ((mask & STORAGE_PERSISTENT) != 0) sb.append("STORAGE_PERSISTENT | ");
-		if ((mask & STORAGE_IMMUTABLE) != 0) sb.append("STORAGE_IMMUTABLE | ");
-		if ((mask & STORAGE_CLIENT) != 0) sb.append("STORAGE_CLIENT | ");
-		if ((mask & STORAGE_READ) != 0) sb.append("STORAGE_READ | ");
-		if ((mask & STORAGE_WRITE) != 0) sb.append("STORAGE_WRITE | ");
-
-		if (sb.length() > 3)
-			sb.setLength(sb.length() - 3);
-
-		return sb.toString();
+		@Override
+		public void unbind() {
+			glBindVertexArray(0);
+			glBindBuffer(target, 0);
+		}
 	}
 }
