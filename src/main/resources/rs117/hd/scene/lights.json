@@ -21501,6 +21501,24 @@
     ]
   },
   {
+    "description": "CRASH_ISLAND_ROPE",
+    "height": 450,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 25,
+    "color": [
+      200,
+      220,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "_100_ILM_LIGHT_STREAMING_WITH_ROPE"
+    ]
+  },
+  {
     "description": "MINE_LANTERN",
     "offset": [ -10, 120, 50 ],
     "radius": 700,

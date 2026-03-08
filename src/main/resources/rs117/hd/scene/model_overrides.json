@@ -1590,7 +1590,8 @@
       "DEADTREE1_LARGE_STUMP",
       "MDAUGHTER_PASSABLE_TREE_STUMP",
       "DRAGON_SLAYER_QIP_WILD5_TREE_STUMP",
-      "SOTN_HUNTING_TREESTUMP_NOOP"
+      "SOTN_HUNTING_TREESTUMP_NOOP",
+      "MM_BUSH_KHARAZI_JUNGLESTUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -52811,6 +52812,107 @@
       "MM_BAMBOO_LARGEDOOR",
       "MM_BAMBOO_LARGEDOOR_OPEN_LEFT",
       "MM_BAMBOO_LARGEDOOR_OPEN"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Crash Island - Snake Pit Hole",
+    "objectIds": [
+      "_100_ILM_SNAKEPIT_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "windDisplacementMode": "OBJECT"
+      },
+      {
+        "colors": "h > 12",
+        "baseMaterial": "GRASS_1",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h < 12",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Crash Island - Snake Pit Walls",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "_100_ILM_SNAKE_WALL_MIDHOLE",
+      "_100_ILM_SNAKE_WALL_HIGHHOLE",
+      "_100_ILM_SNAKE_WALL_2HOLES",
+      "_100_ILM_SNAKE_WALL_LOWHOLE",
+      "_100_ILM_SNAKE_WALL_BASIC",
+      "_100_ILM_SNAKE_HIGHWALL_BASIC",
+      "_100_ILM_SNAKE_HIGHWALL_HOLE",
+      "ENAKH_B_W_CAVEWALL_TOP",
+      "_100_ILM_SNAKE_HOLE",
+      "_100_ILM_SNAKE_WALLROCKS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Crash Island - Snake Pit Exit Rope",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -75,
+    "objectIds": [
+      "_100_ILM_LIGHT_STREAMING_WITH_ROPE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "NONE",
+        "uvType": "BOX",
+        "depthBias": 2,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Crash Island - Snake Pit Hole Decal",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "depthBias": 1,
+    "objectIds": [
+      "_100_ILM_SNAKE_HOLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "depthBias": 10
+      }
     ]
   },
   {
