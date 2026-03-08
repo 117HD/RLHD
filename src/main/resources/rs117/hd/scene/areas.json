@@ -7958,7 +7958,16 @@
   },
   {
     "name": "Gnome glider hangar (Monkey Madness 1)",
-    "regions": [ 9626 ],
+    "regions": [ 9626 ]
+  },
+  {
+    "name": "Gnome glider hangar (Monkey Madness 1) Post quest?",
+    "regions": [ 10566 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Gnome glider hangar (Monkey Madness 1) Dont know?",
+    "regions": [ 10310 ],
     "hideOtherAreas": true
   },
   {

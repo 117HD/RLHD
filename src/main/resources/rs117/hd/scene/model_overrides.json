@@ -52801,6 +52801,19 @@
     ]
   },
   {
+    "description": "Ape Atoll - Giant Monkey Gate",
+    "baseMaterial": "LIGHT_BARK_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM_BAMBOO_LARGEDOOR_LEFT",
+      "MM_BAMBOO_LARGEDOOR",
+      "MM_BAMBOO_LARGEDOOR_OPEN_LEFT",
+      "MM_BAMBOO_LARGEDOOR_OPEN"
+    ]
+  },
+  {
     "description": "Karamja Bamboo raised bed",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
