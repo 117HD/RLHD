@@ -7932,8 +7932,9 @@
   {
     "name": "MM2_AIRSHIP_PLATFORM",
     "aabbs": [
-      [ 2056, 5375, 2109, 5442 ]
-    ]
+      [ 2049, 5376, 2110, 5439 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "Grand Tree tunnels",

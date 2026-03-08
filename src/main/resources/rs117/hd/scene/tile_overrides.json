@@ -9938,6 +9938,14 @@
     "maxLightness": 59
   },
   {
+    "name": "MM2_AIRSHIP_PLATFORM_WATER",
+    "area": "MM2_AIRSHIP_PLATFORM",
+    "overlayIds": [
+      151
+    ],
+    "waterType": "WATER"
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {

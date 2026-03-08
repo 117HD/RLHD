@@ -15903,7 +15903,8 @@
         "colors": "h == 12",
         "upwardsNormals": true,
         "baseMaterial": "GRAY_75",
-        "windDisplacementMode": "OBJECT"
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
       }
     ],
     "objectIds": [
@@ -42096,7 +42097,8 @@
       "MISTMYST_BOAT_LUMBRIDGE",
       "MISTMYST_BOAT_ISLAND",
       "SEASLUG_ROWBOAT",
-      "MM2_MONKEY_BOAT"
+      "MM2_MONKEY_BOAT",
+      "SLUG2_ROWBOAT"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -42714,7 +42716,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": "h == 5 && s < 2",
+        "colors": "h == 5 && s < 2 || h == 0 && s == 0",
         "uvType": "BOX",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvScale": 0.5
@@ -42765,7 +42767,10 @@
       "LUC2_DWT_BARREL1",
       "LUC2_DWT_BARREL2",
       "SLUG2_BARREL_STACKED",
-      "FAI_FALADOR_BARREL_TAP"
+      "FAI_FALADOR_BARREL_TAP",
+      "MM2_SHIPYARD_BARREL_01",
+      "MM2_SHIPYARD_BARREL_02",
+      "MM2_EXPLOSIVES_BARREL_OPEN"
     ]
   },
   {
@@ -69733,6 +69738,193 @@
     ]
   },
   {
+    "description": "Monkey Madness 2 - Airship Platform Floor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "depthBias": 1,
+    "objectIds": [
+      "MM2_SHIPYARD_PIER_FLOOR_01",
+      "MM2_SHIPYARD_PIER_FLOOR_02",
+      "MM2_SHIPYARD_PIER_FLOOR_03",
+      "MM2_SHIPYARD_PIER_FLOOR_04",
+      "MM2_SHIPYARD_PIER_FLOOR_05",
+      "MM2_SHIPYARD_PIER_FLOOR_06",
+      "MM2_SHIPYARD_PIER_FLOOR_07",
+      "MM2_SHIPYARD_PIER_FLOOR_08",
+      "MM2_SHIPYARD_PIER_FLOOR_09",
+      "MM2_TARGET_D",
+      "MM2_TARGET_C"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MM2_SHIPYARD_SUPPORT_CORNER_STRAIGHT_BASE",
+      "MM2_SHIPYARD_SUPPORT_STRAIGHT_MIDDLE",
+      "MM2_SHIPYARD_SUPPORT_CORNER_BASE",
+      "MM2_SHIPYARD_SCAFOLD_CORNER_UPPER",
+      "MM2_SHIPYARD_SCAFOLD_BEAM_01",
+      "MM2_SHIPYARD_SCAFOLD_BEAM_02",
+      "MM2_SHIPYARD_SCAFOLD_CORNER_TSECTION",
+      "MM2_SHIPYARD_SCAFOLD_STRAIGHT_HALF",
+      "MM2_SHIPYARD_SCAFOLD_STRAIGHT_UPPER",
+      "MM2_SHIPYARD_SUPPORT_STRAIGHT_UPPER2",
+      "MM2_SHIPYARD_SUPPORT_STRAIGHT_UPPER1",
+      "MM2_SHIPYARD_SUPPORT_CORNER_UPPER_LEFT",
+      "MM2_SHIPYARD_SUPPORT_CORNER_UPPER_RIGHT",
+      "MM2_TARGET_B",
+      "MM2_TARGET_A"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Crates - Angled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 100,
+    "objectIds": [
+      "MM2_SHIPYARD_CRATE_02",
+      "MM2_SHIPYARD_CRATE_03",
+      "MM2_SHIPYARD_CRATE_04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Crates - Angled Alt",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 50,
+    "objectIds": [
+      "MM2_SHIPYARD_CRATE_06",
+      "MM2_SHIPYARD_CRATE_05"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Crates - Normal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_SHIPYARD_CRATE_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Anchor",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "MM2_SHIPYARD_ANCHOR"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "SEASLUG_RAILING_END",
+      "SEASLUG_RAILING",
+      "SEASLUG_RAILING_END_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_AIRSHIP_WALL_LEFT_1",
+      "MM2_AIRSHIP_WALL_TOP_GREEN",
+      "MM2_AIRSHIP_WALL_TOP_BLACK",
+      "MM2_AIRSHIP_WALL_RIGHT_1",
+      "MM2_AIRSHIP_WALL_CORNER",
+      "MM2_AIRSHIP_WALL_CORNER_INNER",
+      "MM2_AIRSHIP_WALL_END_LEFT",
+      "MM2_AIRSHIP_WALL_DOOR_LEFT",
+      "MM2_AIRSHIP_WALL_DOOR_RIGHT",
+      "MM2_AIRSHIP_WALL_END_RIGHT",
+      "MM2_LAB_ROOF_01",
+      "MM2_LAB_ROOF_02",
+      "MM2_LAB_ROOF_03",
+      "MM2_LAB_ROOF_04",
+      "MM2_LAB_ROOF_05",
+      "MM2_LAB_ROOF_06",
+      "MM2_LAB_ROOF_07",
+      "MM2_LAB_ROOF_08",
+      "MM2_LAB_ROOF_09",
+      "MM2_LAB_ROOF_10",
+      "MM2_LAB_ROOF_11",
+      "MM2_LAB_ROOF_12",
+      "MM2_LAB_ROOF_13",
+      "MM2_LAB_ROOF_14"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "h > 34 || h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
     "description": "Witchaven - Wooden - Barrels",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -70687,8 +70879,6 @@
       "SLUG2_ROTTEN_BARREL_HALF_BURRIED",
       "SEASLUG_CRATE_IN_WATER2",
       "SEASLUG_CRATE_IN_WATER",
-      "SLUG2_ROWBOAT",
-      "SLUG2_ROWBOAT",
       "SEASLUG_MESSGAE_BOTTLE",
       "SAILING_CHARTING_DRINK_CRATE",
       "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT",
