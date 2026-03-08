@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_INVALIDATE;
@@ -79,7 +80,7 @@ public final class GLMappedBuffer {
 		if ((flags & MAP_UNSYNCHRONIZED) != 0) glFlags |= GL_MAP_UNSYNCHRONIZED_BIT;
 
 		final ByteBuffer buf;
-		if (owner.target != GL_STATIC_DRAW) {
+		if (owner.target != GL_STATIC_DRAW && GL_CAPS.GL_ARB_map_buffer_range) {
 			long mapSize = max(0, min(owner.size - offsetBytes, sizeBytes));
 			if (mapSize <= 0) {
 				return this;
@@ -153,7 +154,7 @@ public final class GLMappedBuffer {
 		syncViews();
 
 		owner.bind();
-		if (owner.target != GL_STATIC_DRAW) {
+		if (owner.target != GL_STATIC_DRAW && GL_CAPS.GL_ARB_map_buffer_range) {
 			byteView.flip();
 			glFlushMappedBufferRange(owner.target, byteView.position(), byteView.remaining());
 			byteView.clear();
