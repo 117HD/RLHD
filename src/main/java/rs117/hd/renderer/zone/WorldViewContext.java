@@ -61,6 +61,7 @@ public class WorldViewContext {
 	Zone[][] zones;
 	GLBuffer vboM;
 	boolean isLoading = true;
+	boolean isFirstLoad = true;
 
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;

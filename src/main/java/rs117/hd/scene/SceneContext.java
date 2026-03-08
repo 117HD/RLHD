@@ -79,12 +79,6 @@ public class SceneContext {
 	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
 	public final ArrayList<TileObject> lightSpawnsToHandleOnClientThread = new ArrayList<>();
 
-	// Model pusher arrays, to avoid simultaneous usage from different threads
-	public final int[] modelFaceVertices = new int[12];
-	public final float[] modelFaceUvs = new float[12];
-	public final float[] modelFaceNormals = new float[12];
-	public final int[] modelPusherResults = new int[2];
-
 	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;
 		this.scene = scene;

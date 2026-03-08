@@ -1935,7 +1935,7 @@ public class HdPlugin extends Plugin {
 	}
 
 	public int getExpandedMapLoadingChunks() {
-		if (useLowMemoryMode)
+		if (useLowMemoryMode || sceneManager.isExpandedMapLoadingChunksOverridden())
 			return 0;
 		return config.expandedMapLoadingChunks();
 	}
