@@ -123,6 +123,12 @@
     ]
   },
   {
+    "name": "DIRT_1",
+    "materials": [
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "VARIED_DIRT",
     "materials": [
       "GRAVEL",

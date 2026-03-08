@@ -8109,6 +8109,47 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "KARAMJA_VOLCANO_LAVA_FIX",
+    "area": "KARAMJA_VOLCANO_LAVA_FIX",
+    "underlayIds": [
+      63,
+      64,
+      65,
+      72,
+      73,
+      98,
+      103,
+      112,
+      113,
+      121,
+      139,
+      149
+    ],
+    "groundMaterial": "DIRT_1",
+    "maxLightness": 15
+  },
+  {
+    "name": "KARAMJA_VOLCANO_INSIDE",
+    "area": "KARAMJA_VOLCANO_DUNGEON",
+    "underlayIds": [
+      59,
+      63,
+      64,
+      65,
+      72,
+      73,
+      98,
+      103,
+      112,
+      113,
+      121,
+      139,
+      149
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "minLightness": 13
+  },
+  {
     "name": "KARAMJA_KARAMBWAN_FIX_NO_BLENDING",
     "area": "KARAMJA_KARAMBWAN_FIX",
     "underlayIds": [

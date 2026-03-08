@@ -7508,6 +7508,29 @@
       "HUNTING_TRAIL_CLUE5_0",
       "HUNTING_TRAIL_CLUE5_3",
       "HUNTING_TRAIL_CLUE5_7",
+      "SULPHUR_DUGUPSOIL_2",
+      "GH_ROCKSLIDE_01",
+      "GH_ROCKSLIDE_02",
+      "GH_ROCKSLIDE_03",
+      "GH_ROCKSLIDE_04",
+      "GH_ROCKSLIDE_05",
+      "GH_ROCKSLIDE_06",
+      "DRAGON_SLAYER_QIP_ROCKCOLUMN1",
+      "DRAGON_SLAYER_QIP_ROCKCOLUMN2",
+      "DRAGON_SLAYER_QIP_ROCKCOLUMN3",
+      "GOBLIN_CAVEWALL_STALAGMITE_TWIN",
+      "GOBLIN_CAVEWALL_STALAGMITE_LARGE",
+      "GOBLIN_CAVEWALL_STALAGMITE",
+      "DORGESH_CAVES_STALAGTITE_01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true
+  },
+  {
+    "description": "ROCK_LIKE_OBJECT",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
       "DRAGON_SLAYER_QIP_STALAGTITE_01",
       "DRAGON_SLAYER_QIP_STALAGTITE_02",
       "DRAGON_SLAYER_QIP_STALAGTITE_FALLOFF",
@@ -7528,28 +7551,16 @@
       "DRAGON_SLAYER_QIP_STALAGMITE_FALLOFF2",
       "DRAGON_SLAYER_QIP_STALAGMITE_FALLOFF3",
       "DRAGON_SLAYER_QIP_PILLAR",
-      "SULPHUR_DUGUPSOIL_2",
-      "GH_ROCKSLIDE_01",
-      "GH_ROCKSLIDE_02",
-      "GH_ROCKSLIDE_03",
-      "GH_ROCKSLIDE_04",
-      "GH_ROCKSLIDE_05",
-      "GH_ROCKSLIDE_06",
       "DRAGON_SLAYER_QIP_ROCKCOLUMN1",
       "DRAGON_SLAYER_QIP_ROCKCOLUMN2",
       "DRAGON_SLAYER_QIP_ROCKCOLUMN3",
-      "GOBLIN_CAVEWALL_STALAGMITE_TWIN",
-      "GOBLIN_CAVEWALL_STALAGMITE_LARGE",
-      "GOBLIN_CAVEWALL_STALAGMITE",
       "DRAGON_SLAYER_QIP_STAGAMITE",
       "DRAGON_SLAYER_QIP_STALAGMITE_WALL",
       "DRAGON_SLAYER_QIP_STALAGMITE_WALL2",
-      "DRAGON_SLAYER_QIP_STALAGTITE_JUMP",
-      "DORGESH_CAVES_STALAGTITE_01"
+      "DRAGON_SLAYER_QIP_STALAGTITE_JUMP"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "flatNormals": true
+    "uvScale": 0.5
   },
   {
     "description": "ROCK_CAVE_ENTRANCES",
@@ -7562,7 +7573,6 @@
       "WILD_CAVE_ENTRANCE_MID",
       "WILDERNESS_GWD_ENTRANCE"
     ],
-    "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.5
   },
@@ -7714,7 +7724,59 @@
     ]
   },
   {
+    "description": "CAVE_FLOOR_LAVA_SEMI_DARK",
+    "baseMaterial": "NONE",
+    "upwardsNormals": true,
+    "areas": [ "KARAMJA_VOLCANO_LAVA_FIX_SEMI_DARK" ],
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_4",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_11",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_2",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_7",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_6",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_3",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_9",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_5",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_10",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_8"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "DIRT_1_SEMI_DARK",
+        "uvType": "BOX",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
     "description": "CAVE_FLOOR_LAVA_DARK",
+    "baseMaterial": "NONE",
+    "areas": [ "KARAMJA_VOLCANO_LAVA_FIX_DARK" ],
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_4",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_11",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_2",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_7",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_6",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_3",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_9",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_5",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_10",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_8"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "DIRT_1_DARK",
+        "uvType": "BOX",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "CAVE_FLOOR_LAVA_VERY_LIGHT",
+    "areas": [ "KARAMJA_VOLCANO_LAVA_FIX_VERY_LIGHT" ],
     "baseMaterial": "NONE",
     "objectIds": [
       "DRAGON_SLAYER_QIP_LAVA_EDGE_4",
@@ -7731,8 +7793,58 @@
     "colorOverrides": [
       {
         "colors": "h == 7 && s == 7",
-        "baseMaterial": "DIRT_1_VERY_DARK",
-        "uvType": "BOX"
+        "baseMaterial": "DIRT_1_VERY_LIGHT",
+        "uvType": "BOX",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "CAVE_FLOOR_LAVA_MEDIUM_LIGHT",
+    "areas": [ "KARAMJA_VOLCANO_LAVA_FIX_MEDIUM_LIGHT" ],
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_4",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_11",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_2",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_7",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_6",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_3",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_9",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_5",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_10",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_8"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "DIRT_1_MEDIUM_LIGHT",
+        "uvType": "BOX",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "CAVE_FLOOR_LAVA_BASE",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_4",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_11",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_2",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_7",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_6",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_3",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_9",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_5",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_10",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_8"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "upwardsNormals": true
       }
     ]
   },
@@ -77004,6 +77116,13 @@
     "uvType": "BOX",
     "objectIds": [
       "DRAGON_SLAYER_QIP_RUIN_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l < 4",
+        "baseMaterial": "BLACK",
+        "uvType": "MODEL_XZ"
+      }
     ]
   },
   {
