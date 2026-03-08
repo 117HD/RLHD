@@ -52916,6 +52916,31 @@
     ]
   },
   {
+    "description": "Ape Atoll - Guard Tower",
+    "baseMaterial": "LIGHT_BARK_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 570,
+    "depthBias": 1,
+    "objectIds": [
+      "MM_WATCHTOWER_LEG1",
+      "MM_WATCHTOWER_LEG2",
+      "MM_BAMBOO_LADDER_WATCHTOWER_WEST",
+      "MM_BAMBOO_LADDER_TOP_WATCHTOWER_WEST",
+      "MM_BAMBOO_LADDER_WATCHTOWER_EAST",
+      "MM_BAMBOO_LADDER_TOP_WATCHTOWER_EAST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "depthBias": 10
+      }
+    ]
+  },
+  {
     "description": "Karamja Bamboo raised bed",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
