@@ -9320,7 +9320,8 @@
       "DAGANNOTH_VIKING_BOAT",
       "FREMENNIK_BOAT_STONE_TRAVEL",
       "FREMENNIK_BOAT_UNGAEL_NO_TRAVEL",
-      "FREMENNIK_BOAT_UNGAEL_TRAVEL"
+      "FREMENNIK_BOAT_UNGAEL_TRAVEL",
+      "UNGAEL_BOAT"
     ],
     "colorOverrides": [
       {
@@ -78635,6 +78636,72 @@
         "colors": "h == 0 && s == 0",
         "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Ungael - Vorkaths Platform",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DS2_UNGAEL_ICE_FALLOFF_10",
+      "DS2_UNGAEL_ICE_FALLOFF_3",
+      "DS2_UNGAEL_ICE_FALLOFF_2",
+      "DS2_UNGAEL_ICE_FALLOFF_0",
+      "DS2_UNGAEL_ICE_FALLOFF_5",
+      "DS2_UNGAEL_ICE_FALLOFF_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Ungael - Lab Entrance, Steps and Dias",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "UNGAEL_LAB_ENTRANCE",
+      "DS2_UNGAEL_STEPS",
+      "FOSSIL_WYVERN_DRAGONKIN_TABLE"
+    ]
+  },
+  {
+    "description": "Ungael - Ruins",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "DS2_UNGAEL_WALL_LOWER",
+      "DS2_UNGAEL_WALL_LOWER_BROKE_R",
+      "DS2_SNOWY_SMALLWALL",
+      "DS2_SNOWY_SMALLWALL_BROKEN_M",
+      "DS2_UNGAEL_WALL_UPPER_WINDOW",
+      "DS2_UNGAEL_WALL_UPPER",
+      "DS2_UNGAEL_WALL_TOP_WINDOW",
+      "DS2_UNGAEL_WALL_LOWER_BROKE_L",
+      "DS2_UNGAEL_RUBBLE_03",
+      "DS2_UNGAEL_RUBBLE_01",
+      "DS2_UNGAEL_RUBBLE_02",
+      "DS2_UNGAEL_WALL_TOP",
+      "DS2_UNGAEL_FLOORING_FALLOFF_3",
+      "DS2_UNGAEL_FLOORING_FALLOFF_1",
+      "DS2_SNOWY_SMALLWALL_BROKEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l > 57",
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h ==7 || h == 8",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.75
       }
     ]
   }

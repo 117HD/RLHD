@@ -10028,6 +10028,93 @@
     "shiftSaturation": -1
   },
   {
+    "name": "Ungael Ruin Floor",
+    "area": "UNGAEL_RUINS_FLOOR",
+    "overlayIds": [ 11 ],
+    "underlayIds": [ 58 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 7,
+    "replacements": {
+      "Ungael No Textures": "!textures"
+    }
+  },
+  {
+    "name": "Ungael Snow",
+    "area": "UNGAEL_SNOW",
+    "overlayIds": [ 33 ],
+    "underlayIds": [
+      16,
+      58,
+      59
+    ],
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 10,
+    "maxLightness": 100,
+    "replacements": {
+      "Ungael Snow Blending": "blending",
+      "Ungael No Textures": "!textures"
+    }
+  },
+  {
+    "name": "Ungael Shore",
+    "area": "UNGAEL",
+    "underlayIds": [ 58, 111 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 0,
+    "replacements": {
+      "Ungael Shore Blending": "blending",
+      "Ungael No Textures": "!textures"
+    }
+  },
+  {
+    "name": "Ungael Shore Blending",
+    "area": "UNGAEL",
+    "underlayIds": [ 58, 111 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 20
+  },
+  {
+    "name": "Ungael Snow Blending",
+    "area": "UNGAEL_SNOW",
+    "overlayIds": [ 33 ],
+    "underlayIds": [
+      16,
+      58,
+      59
+    ],
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 27
+  },
+  {
+    "name": "Ungael Cliffs",
+    "area": "UNGAEL",
+    "overlayIds": [
+      1,
+      90
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": -5,
+    "minLightness": 15,
+    "replacements": {
+      "Ungael Cliffs Blending": "blending",
+      "Ungael No Textures": "!textures"
+    }
+  },
+  {
+    "name": "Ungael Cliffs Blending",
+    "area": "UNGAEL",
+    "overlayIds": [ 1 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": -5
+  },
+  {
+    "name": "Ungael No Textures",
+    "area": "UNGAEL",
+    "shiftLightness": -5,
+    "maxLightness": 90,
+    "minLightness": 20
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {
