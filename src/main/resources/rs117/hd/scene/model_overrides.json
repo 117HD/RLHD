@@ -7515,9 +7515,6 @@
       "GH_ROCKSLIDE_04",
       "GH_ROCKSLIDE_05",
       "GH_ROCKSLIDE_06",
-      "DRAGON_SLAYER_QIP_ROCKCOLUMN1",
-      "DRAGON_SLAYER_QIP_ROCKCOLUMN2",
-      "DRAGON_SLAYER_QIP_ROCKCOLUMN3",
       "GOBLIN_CAVEWALL_STALAGMITE_TWIN",
       "GOBLIN_CAVEWALL_STALAGMITE_LARGE",
       "GOBLIN_CAVEWALL_STALAGMITE",
@@ -7528,7 +7525,7 @@
     "flatNormals": true
   },
   {
-    "description": "ROCK_LIKE_OBJECT",
+    "description": "ROCK_LIKE_OBJECT_NO_FLAT_NORMALS",
     "baseMaterial": "ROCK_1",
     "objectIds": [
       "DRAGON_SLAYER_QIP_STALAGTITE_01",
@@ -7571,7 +7568,8 @@
       "RC_ZMI_DUNGEON_WALL_CRACK_ENTRANCE_EXIT",
       "TOG_CAVE_DOWN",
       "WILD_CAVE_ENTRANCE_MID",
-      "WILDERNESS_GWD_ENTRANCE"
+      "WILDERNESS_GWD_ENTRANCE",
+      "TROLL_STRONGHOLD_DOOR"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -7725,6 +7723,31 @@
     ]
   },
   {
+    "description": "CAVE_FLOOR_LAVA_BASE",
+    "baseMaterial": "NONE",
+    "areas": [ "KARAMJA_VOLCANO_DUNGEON" ],
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_4",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_11",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_2",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_7",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_6",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_3",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_9",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_5",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_10",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_8"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
     "description": "CAVE_FLOOR_LAVA_SEMI_DARK",
     "baseMaterial": "NONE",
     "upwardsNormals": true,
@@ -7820,30 +7843,6 @@
       {
         "colors": "h == 7 && s == 7",
         "baseMaterial": "DIRT_1_MEDIUM_LIGHT",
-        "uvType": "BOX",
-        "upwardsNormals": true
-      }
-    ]
-  },
-  {
-    "description": "CAVE_FLOOR_LAVA_BASE",
-    "baseMaterial": "NONE",
-    "objectIds": [
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_4",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_11",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_2",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_7",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_6",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_3",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_9",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_5",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_10",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_8"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h == 7 && s == 7",
-        "baseMaterial": "DIRT_1",
         "uvType": "BOX",
         "upwardsNormals": true
       }
@@ -8430,10 +8429,6 @@
       "DEATH_MOUNTAIN_CAVEWALL_FACE1",
       "DEATH_MOUNTAINCAVEWALL_TOP_HIGHER",
       "TROLL_MAD_EADGAR_ENTRANCE",
-      "TROLL_STRONGHOLD_WINDOW",
-      "TROLL_STRONGHOLD_TOP_EXIT_LEFT",
-      "TROLL_STRONGHOLD_TOP_EXIT_RIGHT",
-      "TROLL_STRONGHOLD_TOP_EXIT_MID",
       "EADGAR_TROLL_THISTLE_BASE",
       "SLAYER_CAVEWALL_FACE1",
       "SLAYER_MOUNTAIN_CAVEWALL_TOP",
@@ -8445,6 +8440,28 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientation": 256
+  },
+  {
+    "description": "Pale rock walls - Window and Door",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "TROLL_STRONGHOLD_WINDOW",
+      "TROLL_STRONGHOLD_TOP_EXIT_RIGHT",
+      "TROLL_STRONGHOLD_TOP_EXIT_LEFT",
+      "TROLL_STRONGHOLD_TOP_EXIT_MID"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Metal Pipe",
+        "colors": "h == 7 && s == 0 || h == 7 && l > 37",
+        "baseMaterial": "GRAY_90",
+        "uvType": "BOX",
+        "uvOrientation": 157
+      }
+    ]
   },
   {
     "description": "Pale rock wall topper",
@@ -11203,6 +11220,7 @@
       "QIP_COOK_LADDER_TOP",
       "WILD_LADDER",
       "WILD_LADDERTOP",
+      "WILD_LADDER_BROKEN",
       "QIP_WATCHTOWER_LADDER_TOP",
       "DK_LADDER",
       "DK_LADDERTOP",
@@ -35279,9 +35297,9 @@
   },
   {
     "description": "Fossil Island - Stone - Walls - House on the Hill Walls",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.75,
     "uvOrientation": 768,
     "objectIds": [
       "FOSSIL_DKL_WALL_1",
@@ -35290,48 +35308,89 @@
       "FOSSIL_DKL_WALLROOF2",
       "FOSSIL_DKL_WINDOW_1",
       "FOSSIL_DKL_PILLAR_1",
-      "FOSSIL_DKL_ARCH"
+      "FOSSIL_DKL_ARCH",
+      "DS2_LITHKREN_SURFACE_WALL_DESTROYED_A",
+      "DS2_LITHKREN_SURFACE_WALL_DAMAGE_INSIDE_CORNER",
+      "DS2_LITHKREN_SURFACE_WALL_DESTROYED_B",
+      "DS2_LITHKREN_SURFACE_WALL_DAMAGE_INSIDE_CORNER_SE"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "GRUNGE_3",
+        "colors": "s > 0"
+      }
     ]
   },
   {
     "description": "Fossil Island - House on the Hill - Stone - Roof Dome",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 768,
     "objectIds": [
       "FOSSIL_DKL_ROOF_DOME"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "GRUNGE_3",
+        "colors": "s > 0"
+      }
     ]
   },
   {
     "description": "Fossil Island - Stone - Walls - House on the Hill Roof",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 768,
     "objectIds": [
       "FOSSIL_DKL_ROOF_1"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "GRUNGE_3",
+        "colors": "s > 0"
+      }
     ]
   },
   {
     "description": "Fossil Island - Stone - Stairs - House on the Hill Stairs",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 256,
     "objectIds": [
       "FOSSIL_DKL_STAIRCASE",
-      "FOSSIL_DKL_STAIRCASE_EXT"
+      "FOSSIL_DKL_STAIRCASE_EXT",
+      "DS2_LITHKREN_SURFACE_STAIRCASE_1",
+      "DS2_LITHKREN_SURFACE_STAIRCASE_DOWN"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "GRUNGE_3",
+        "colors": "s > 0"
+      }
     ]
   },
   {
     "description": "Fossil Island - Stone - Walls - House on the Hill Short walls",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 768,
     "objectIds": [
-      "FOSSIL_DKL_SMALLWALL_1"
+      "FOSSIL_DKL_SMALLWALL_1",
+      "DS2_LITHKREN_FORTRESS_LOW_WALL_DAMAGED_RIGHT",
+      "DS2_LITHKREN_FORTRESS_LOW_WALL",
+      "DS2_LITHKREN_FORTRESS_LOW_WALL_DAMAGED",
+      "DS2_LITHKREN_SURFACE_TRAPDOOR_1_LADDER",
+      "DS2_LITHKREN_SURFACE_TRAPDOOR_1"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "GRUNGE_3",
+        "colors": "s > 0"
+      }
     ]
   },
   {
@@ -35366,6 +35425,29 @@
       "FOSSIL_DKL_BRIDGE_PARAPET_P1",
       "FOSSIL_DKL_BRIDGE_PARAPET_P2",
       "FOSSIL_DKL_BRIDGE_PARAPET_P3"
+    ]
+  },
+  {
+    "description": "Lithkren - Barrel with Candle",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "DS2_LITHKREN_CANDLE1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Lithkren - Books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "DS2_LITHKREN_FORTRESS_BOOKS1",
+      "DS2_LITHKREN_FORTRESS_BOOKS2"
     ]
   },
   {
@@ -42277,8 +42359,6 @@
     "objectIds": [
       "MISTMYST_BOAT_LUMBRIDGE",
       "MISTMYST_BOAT_ISLAND",
-      "FOSSIL_ROWBOAT_LITHKREN_BUILT",
-      "LITHKREN_ROWBOAT",
       "SEASLUG_ROWBOAT"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
@@ -45496,7 +45576,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_75"
       },
       {
         "colors": "s == 2",

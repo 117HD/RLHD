@@ -8398,6 +8398,12 @@
     ]
   },
   {
+    "name": "LITHKREN_UPPER_FLOOR",
+    "aabbs": [
+      [ 3545, 3987, 3576, 4021, 1 ]
+    ]
+  },
+  {
     "name": "DS2_SHIPS",
     "regionBoxes": [
       [ 6486, 6745 ]
