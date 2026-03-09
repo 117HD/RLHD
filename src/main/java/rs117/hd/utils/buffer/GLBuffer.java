@@ -45,7 +45,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 public class GLBuffer implements Destructible {
 	private static ByteBuffer COPY_READ_BUFFER, COPY_WRITE_BUFFER;
-	private static final boolean DEBUG_MAC_OS = false;
+	public static final boolean DEBUG_MAC_OS = false;
 
 	public static int STORAGE_NONE = 0;
 	public static int STORAGE_PERSISTENT = 1;
