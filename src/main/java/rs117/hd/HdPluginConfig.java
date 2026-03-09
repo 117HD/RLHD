@@ -864,6 +864,15 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_TILE_ITEM_BIASING = "tileItemBiasing";
+	@ConfigItem(
+		keyName = KEY_TILE_ITEM_BIASING,
+		name = "Fix ground item clipping",
+		description = "Move ground items slightly, to prevent them from clipping into the ground.",
+		section = miscellaneousSettings
+	)
+	default boolean tileItemBiasing() { return true; }
+
 	String KEY_LOW_MEMORY_MODE = "lowMemoryMode";
 	@ConfigItem(
 		keyName = KEY_LOW_MEMORY_MODE,

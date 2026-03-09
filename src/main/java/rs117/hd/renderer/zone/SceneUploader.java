@@ -1917,6 +1917,19 @@ public class SceneUploader implements AutoCloseable {
 		return shouldSort;
 	}
 
+	public void uploadTempModel(
+		PrimitiveIntArray faces,
+		Model model,
+		ModelOverride modelOverride,
+		int preOrientation,
+		int orientation,
+		boolean isShadow,
+		DynamicModelVAO.View opaqueView,
+		DynamicModelVAO.View alphaView
+	) {
+		uploadTempModel(faces, model, modelOverride, preOrientation, orientation, 0, isShadow, opaqueView, alphaView);
+	}
+
 	// temp draw
 	public void uploadTempModel(
 		PrimitiveIntArray faces,
@@ -1924,6 +1937,7 @@ public class SceneUploader implements AutoCloseable {
 		ModelOverride modelOverride,
 		int preOrientation,
 		int orientation,
+		int modelBias,
 		boolean isShadow,
 		DynamicModelVAO.View opaqueView,
 		DynamicModelVAO.View alphaView
@@ -1956,7 +1970,7 @@ public class SceneUploader implements AutoCloseable {
 		final byte[] bias = model.getFaceBias();
 		final int[] faceNormals = isShadow ? EMPTY_NORMALS : modelNormals;
 
-		final boolean hasBias = bias != null;
+		final boolean hasVanillaBias = bias != null;
 		final boolean modelHasNormals =
 			model.getVertexNormalsX() != null &&
 			model.getVertexNormalsY() != null &&
@@ -2065,8 +2079,9 @@ public class SceneUploader implements AutoCloseable {
 				color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
 			}
 
-			final int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
-				hasBias ? bias[face] & 0xFF : 0;
+			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
+				hasVanillaBias ? bias[face] & 0xFF : 0;
+			depthBias = clamp(modelBias + depthBias, 0, 0xFF);
 			final int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 			final boolean hasAlpha = material.hasTransparency || transparency != 0;
 

@@ -449,6 +449,17 @@ public class ModelStreamingManager {
 		if (renderThreadId >= 0)
 			client.checkClickbox(projection, m, orient, x, y, z, tileObject.getHash());
 
+		final int tileExX = (x >> Perspective.LOCAL_COORD_BITS) + ctx.sceneContext.sceneOffset;
+		final int tileExY = (z >> Perspective.LOCAL_COORD_BITS) + ctx.sceneContext.sceneOffset;
+
+		final int modelBias;
+		if(plugin.configTileItemBiasing && r instanceof TileItem) {
+			Tile tile = scene.getExtendedTiles()[tileObject.getPlane()][tileExX][tileExY];
+			modelBias = tile != null && tile.getGroundObject() != null ? 125 : 0;
+		} else {
+			modelBias = 0;
+		}
+
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(renderThreadId >= 0);
 		if (asyncModelCache != null) {
@@ -467,9 +478,11 @@ public class ModelStreamingManager {
 						tileObject,
 						modelOverride,
 						cachedModel,
+						r,
 						zone,
 						isModelPartiallyVisible,
 						hasAlpha,
+						modelBias,
 						preOrientation, orient,
 						x, y, z
 					);
@@ -496,9 +509,11 @@ public class ModelStreamingManager {
 				tileObject,
 				modelOverride,
 				m,
+				r,
 				zone,
 				isModelPartiallyVisible,
 				hasAlpha,
+				modelBias,
 				preOrientation, orient,
 				x, y, z
 			);
@@ -515,9 +530,11 @@ public class ModelStreamingManager {
 		TileObject tileObject,
 		ModelOverride modelOverride,
 		Model m,
+		Renderable r,
 		Zone zone,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
+		int modelBias,
 		int preOrientation,
 		int orient,
 		int x,
@@ -577,6 +594,7 @@ public class ModelStreamingManager {
 					modelOverride,
 					preOrientation,
 					orient,
+					modelBias,
 					isSquashed,
 					opaqueView,
 					alphaView
