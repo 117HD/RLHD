@@ -1230,7 +1230,8 @@
     "directionalColor": "#4eeeff",
     "directionalStrength": 3.5,
     "fogColor": "#13184f",
-    "fogDepth": 30
+    "fogDepth": 30,
+    "waterCausticsStrength": 0.8
   },
   {
     "area": "LOVAKENGJ",

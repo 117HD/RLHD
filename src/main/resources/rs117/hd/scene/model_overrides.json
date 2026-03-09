@@ -68388,6 +68388,24 @@
     "shadowOpacityThreshold": 0.9
   },
   {
+    "description": "Arceuus - Pond",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DORGESH_WATER_CORNER",
+      "DORGESH_WATER_SIDE",
+      "DORGESH_WATER_MIDDLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Lava",
+        "colors": "a < 255",
+        "baseMaterial": "TRANSPARENT",
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
     "description": "Mount Karuulm - Rock - Lava edges Fix 1",
     "areas": [ "MOUNT_KARUULM_LAVA_POOL_FIX_8" ],
     "baseMaterial": "ROCK_3_SEMI_SMOOTH",

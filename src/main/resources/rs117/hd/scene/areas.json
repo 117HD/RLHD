@@ -7031,6 +7031,12 @@
     ]
   },
   {
+    "name": "ARCEUUS_POND",
+    "aabbs": [
+      [ 1684, 3744, 1688, 3748 ]
+    ]
+  },
+  {
     "name": "KOUREND_LEGLESS_FAUN_BLENDING_FIX",
     "aabbs": [
       [ 1765, 3676, 1782, 3689 ]

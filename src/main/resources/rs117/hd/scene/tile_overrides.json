@@ -9453,6 +9453,14 @@
     "groundMaterial": "TEMPLE_OF_THE_EYE_FLOOR"
   },
   {
+    "name": "ARCEUUS_POND",
+    "area": "ARCEUUS_POND",
+    "underlayIds": [
+      10
+    ],
+    "waterType": "WATER"
+  },
+  {
     "name": "ARCEUUS_GROUND",
     "area": "ARCEUUS",
     "underlayIds": [
