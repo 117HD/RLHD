@@ -25920,6 +25920,24 @@
     ]
   },
   {
+    "description": "DREAM_BRAZIER",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "LUNAR_MOONCLAN_BRAZIER_LIT"
+    ]
+  },
+  {
     "description": "TOG_BLUE_STREAM",
     "offset": [ -30, 100, 0 ],
     "radius": 400,

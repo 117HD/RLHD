@@ -17135,6 +17135,30 @@
     "uvOrientation": 512
   },
   {
+    "description": "Lunar Isles - Dream Brazier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "LUNAR_MOONCLAN_BRAZIER",
+      "LUNAR_MOONCLAN_BRAZIER_LIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150",
+        "flatNormals": true
+      }
+    ]
+  },
+  {
     "description": "Ice Queens Dungeon - Walls - Snow",
     "baseMaterial": "SMOOTH_SNOW_COLORED",
     "objectIds": [
@@ -45576,7 +45600,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "GRAY_50"
       },
       {
         "colors": "s == 2",
