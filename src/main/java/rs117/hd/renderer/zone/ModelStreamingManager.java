@@ -449,6 +449,17 @@ public class ModelStreamingManager {
 		if (renderThreadId >= 0)
 			client.checkClickbox(projection, m, orient, x, y, z, tileObject.getHash());
 
+		final int tileExX = (x >> Perspective.LOCAL_COORD_BITS) + ctx.sceneContext.sceneOffset;
+		final int tileExY = (z >> Perspective.LOCAL_COORD_BITS) + ctx.sceneContext.sceneOffset;
+
+		final int modelBias;
+		if(plugin.configTileItemBiasing && r instanceof TileItem) {
+			Tile tile = scene.getExtendedTiles()[tileObject.getPlane()][tileExX][tileExY];
+			modelBias = tile != null && tile.getGroundObject() != null ? 125 : 0;
+		} else {
+			modelBias = 0;
+		}
+
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(renderThreadId >= 0);
 		if (asyncModelCache != null) {
@@ -471,6 +482,7 @@ public class ModelStreamingManager {
 						zone,
 						isModelPartiallyVisible,
 						hasAlpha,
+						modelBias,
 						preOrientation, orient,
 						x, y, z
 					);
@@ -501,6 +513,7 @@ public class ModelStreamingManager {
 				zone,
 				isModelPartiallyVisible,
 				hasAlpha,
+				modelBias,
 				preOrientation, orient,
 				x, y, z
 			);
@@ -521,6 +534,7 @@ public class ModelStreamingManager {
 		Zone zone,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
+		int modelBias,
 		int preOrientation,
 		int orient,
 		int x,
@@ -574,7 +588,6 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
-				final int modelBias = plugin.configTileItemBiasing && r instanceof TileItem ? 125 : 0;
 				sceneUploader.uploadTempModel(
 					visibleFaces,
 					m,
