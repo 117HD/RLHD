@@ -607,6 +607,7 @@ public class GLBuffer implements Destructible {
 	public GLMappedBuffer map(int flags, long byteOffset, long byteSize) {
 		if (mappedBuffer == null)
 			mappedBuffer = new GLMappedBuffer(this);
+		ensureCapacity(byteOffset, byteSize);
 		return mappedBuffer.map(flags, byteOffset, byteSize);
 	}
 
