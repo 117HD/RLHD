@@ -65,6 +65,7 @@ public class ShaderProgram implements Destructible {
 		use();
 		initialize();
 
+		// TODO: Consider skipping this on release, as it can be very slow
 		glValidateProgram(program);
 		if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
 			String err = glGetProgramInfoLog(program);
