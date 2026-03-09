@@ -9998,6 +9998,20 @@
     "maxLightness": 59
   },
   {
+    "name": "Karamjan Temple (Dragon Slayer 2)",
+    "area": "Karamjan Temple (Dragon Slayer 2)",
+    "underlayIds": [
+      22,
+      28,
+      57,
+      74
+    ],
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": 7,
+    "uvScale": 2,
+    "blended": false
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {

@@ -45356,5 +45356,25 @@
     "graphicsObjectIds": [
       "ZAMORAK_FLAME"
     ]
+  },
+  {
+    "description": "DS2_MAZE_TELEPORT_EXIT",
+    "height": 280,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 22,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "color": [
+      180,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_MAZE_PLINTH_TELEPORT"
+    ]
   }
 ]

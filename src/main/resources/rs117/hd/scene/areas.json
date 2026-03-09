@@ -7635,7 +7635,8 @@
   },
   {
     "name": "Karamjan Temple (Dragon Slayer 2)",
-    "regions": [ 11408, 11409 ],
+    "regions": [ 11408 ],
+    "aabbs": [ [ 2839, 9279, 2856, 9299 ] ],
     "hideOtherAreas": true
   },
   {

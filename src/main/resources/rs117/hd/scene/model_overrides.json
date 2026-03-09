@@ -10161,6 +10161,10 @@
       "GUIDORGATERCLOSED",
       "GUIDORGATELOPEN",
       "GUIDORGATEROPEN",
+      "ZQWOODENGATECLOSED_L",
+      "ZQWOODENGATECLOSED_R",
+      "ZQWOODENGATECLOSED_L_INACTIVE",
+      "ZQWOODENGATECLOSED_R_INACTIVE",
       "GERTRUDEFENCE",
       "DUEL_SCAFFOLD_RAIL",
       "DUEL_SCAFFOLD_RAIL_UP",
@@ -12571,6 +12575,8 @@
       "ARENA_INACTIVEGATE",
       "ARENA_INACTIVEGATE_R",
       "ARENA_JEREMYDOOR",
+      "ZQSHILOGATECLOSEDL",
+      "ZQSHILOGATECLOSEDR",
       "PRISONDOOROPEN",
       "INACTIVEPRISONDOOR",
       "PRISONDOOR_R",
@@ -16071,7 +16077,7 @@
       {
         "description": "Grass",
         "colors": "s == 7",
-        "baseMaterial": "GRAY_75",
+        "baseMaterial": "GRAY_65",
         "windDisplacementMode": "OBJECT",
         "upwardsNormals": true,
         "castShadows": false
@@ -16122,7 +16128,7 @@
   {
     "description": "Karamja - Mos le Harmless  - Plant - Jungle grass",
     "windDisplacementMode": "OBJECT",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_65",
     "castShadows": false,
     "upwardsNormals": true,
     "objectIds": [
@@ -42926,7 +42932,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Red Vines",
+    "description": "Vines",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       "RED_WORM_VINE",
@@ -42936,11 +42942,14 @@
       "RED_WORM_DIAG1",
       "RED_WORM_DIAG3",
       "RED_WORM_DIAGFILLER",
-      "RED_WORM_END_DIAG"
+      "RED_WORM_END_DIAG",
+      "KHARAZI_SHORTCUT_VINE_END_LIVE",
+      "KHARAZI_SHORTCUT_VINE_STRAIGHT_LIVE",
+      "KHARAZI_SHORTCUT_VINE_DIAG1_LIVE",
+      "KHARAZI_SHORTCUT_VINE_END_DIAG_LIVE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 42
+    "uvScale": 0.611
   },
   {
     "description": "Objects - Wooden - Crate - High poly mesh",
@@ -43179,7 +43188,8 @@
       "SARIM_CART",
       "BR_CART",
       "GRAB_EVIL_TWIN_BARROW_EMPTY",
-      "CONTACT_CART"
+      "CONTACT_CART",
+      "SHILO_BROKENCART_POSTQUEST"
     ]
   },
   {
@@ -67979,7 +67989,7 @@
     ]
   },
   {
-    "description": "Guthix Temple - Vines",
+    "description": "Guthix Temple - Puzzle Statues",
     "baseMaterial": "STONE",
     "objectIds": [
       "LUC2_HERB_STATUE_RANGED",
@@ -78408,6 +78418,56 @@
       {
         "colors": "a < 156",
         "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Kharazi Jungle - Maze Entrance",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "DS2_MAZE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 &&  l == 2",
+        "baseMaterial": "STONE_DARK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0 || h > 50",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Kharazi Jungle - Maze Stone Objects",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DS2_KARAMJA_MAZE",
+      "DS2_KARAMJA_CORNER",
+      "DS2_KARAMJA_MAZE_WALLTOP_STRAIGHT",
+      "DS2_KARAMJA_MAZE_WALLTOP_OUTSIDE_CORNER",
+      "DS2_KARAMJA_MAZE_WALLTOP_INSIDE_CORNER",
+      "DS2_KARAMJA_MAZE_STAIRCASE",
+      "DS2_KARAMJA_MAZE_CAVETOP",
+      "DS2_MAZE_PLINTH_KEY",
+      "DS2_AGILITY_TRAP_EW",
+      "DS2_AGILITY_TRAP_NS",
+      "DS2_THIEVING_TRAP_NS",
+      "DS2_THIEVING_TRAP_EW",
+      "DS2_MAZE_PLINTH_EMPTY",
+      "DS2_MAZE_PLINTH_TELEPORT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
       }
     ]
   }
