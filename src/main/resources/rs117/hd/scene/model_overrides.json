@@ -16071,8 +16071,9 @@
       {
         "description": "Grass",
         "colors": "s == 7",
-        "baseMaterial": "GRAY_65",
+        "baseMaterial": "GRAY_75",
         "windDisplacementMode": "OBJECT",
+        "upwardsNormals": true,
         "castShadows": false
       },
       {
@@ -16121,8 +16122,9 @@
   {
     "description": "Karamja - Mos le Harmless  - Plant - Jungle grass",
     "windDisplacementMode": "OBJECT",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "GRAY_75",
     "castShadows": false,
+    "upwardsNormals": true,
     "objectIds": [
       "JUNGLEFLOOR1",
       "JUNGLEFLOOR2",
