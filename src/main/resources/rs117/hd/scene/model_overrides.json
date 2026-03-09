@@ -8375,6 +8375,7 @@
     "baseMaterial": "GRUNGE_1",
     "terrainVertexSnap": true,
     "objectIds": [
+      "TROLLROMANCE_STRONGHOLD_EXIT_TUNNEL",
       "VIKING_TROLLCAVE_ENTRANCE"
     ],
     "uvType": "BOX",
