@@ -196,6 +196,17 @@ public class ModelStreamingManager {
 		}
 		plugin.drawnTempRenderableCount++;
 
+		final int tileExX = (x >> Perspective.LOCAL_COORD_BITS) + ctx.sceneContext.sceneOffset;
+		final int tileExY = (z >> Perspective.LOCAL_COORD_BITS) + ctx.sceneContext.sceneOffset;
+
+		final int modelBias;
+		if(plugin.configTileBiasing && renderable instanceof Actor) {
+			Tile tile = scene.getExtendedTiles()[gameObject.getPlane()][tileExX][tileExY];
+			modelBias = tile != null && tile.getGroundObject() != null ? 125 : 0;
+		} else {
+			modelBias = 0;
+		}
+
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final boolean hasAlpha = renderable instanceof Player || m.getFaceTransparencies() != null;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(false);
@@ -216,6 +227,7 @@ public class ModelStreamingManager {
 						modelOverride,
 						zone,
 						cachedModel,
+						modelBias,
 						isModelPartiallyVisible,
 						hasAlpha,
 						orientation, x, y, z
@@ -242,6 +254,7 @@ public class ModelStreamingManager {
 				modelOverride,
 				zone,
 				m,
+				modelBias,
 				isModelPartiallyVisible,
 				hasAlpha,
 				orientation, x, y, z
@@ -263,6 +276,7 @@ public class ModelStreamingManager {
 		ModelOverride modelOverride,
 		Zone zone,
 		Model m,
+		int modelBias,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
 		int orientation, int x, int y, int z
@@ -323,6 +337,7 @@ public class ModelStreamingManager {
 				modelOverride,
 				preOrientation,
 				orientation,
+				modelBias,
 				isSquashed,
 				opaqueView,
 				alphaView
@@ -453,7 +468,7 @@ public class ModelStreamingManager {
 		final int tileExY = (z >> Perspective.LOCAL_COORD_BITS) + ctx.sceneContext.sceneOffset;
 
 		final int modelBias;
-		if(plugin.configTileItemBiasing && r instanceof TileItem) {
+		if(plugin.configTileBiasing && r instanceof TileItem) {
 			Tile tile = scene.getExtendedTiles()[tileObject.getPlane()][tileExX][tileExY];
 			modelBias = tile != null && tile.getGroundObject() != null ? 125 : 0;
 		} else {
