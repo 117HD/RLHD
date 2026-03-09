@@ -7706,6 +7706,7 @@
   {
     "description": "CAVE_WALLS_BLEND_LAVA",
     "baseMaterial": "NONE",
+    "upwardsNormals": true,
     "objectIds": [
       "DRAGON_SLAYER_QIP_LAVA_WALL",
       "DRAGON_SLAYER_QIP_LAVA_WALL_CORNER",
@@ -42262,10 +42263,22 @@
     "hideVanillaShadows": true
   },
   {
-    "description": "Misthalin Mystery Boat",
+    "description": "Plain Rowboat with no Ripples",
+    "objectIds": [
+      "FOSSIL_ROWBOAT_LITHKREN_BUILT",
+      "LITHKREN_ROWBOAT"
+    ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Plain Rowboat with Ripples",
     "objectIds": [
       "MISTMYST_BOAT_LUMBRIDGE",
       "MISTMYST_BOAT_ISLAND",
+      "FOSSIL_ROWBOAT_LITHKREN_BUILT",
+      "LITHKREN_ROWBOAT",
       "SEASLUG_ROWBOAT"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
@@ -56480,7 +56493,9 @@
       "FOSSIL_DKL_CHEST1",
       "FOSSIL_DKL_CHEST2",
       "DS2_MAP_CHEST_1_NO_OP",
-      "DS2_MAP_CHEST_2_NO_OP"
+      "DS2_MAP_CHEST_2_NO_OP",
+      "DS2_MAP_CHEST_1_OP",
+      "DS2_MAP_CHEST_2_OP"
     ]
   },
   {
@@ -56505,9 +56520,9 @@
   },
   {
     "description": "Fossil Island - Stone - Strange Stone",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_3",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.4,
     "objectIds": [
       "FOSSIL_DKL_STONE"
     ]
@@ -56528,6 +56543,21 @@
         "colors": "a < 255",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Map",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "FOSSIL_DRAGONKIN_MAP_DISCOVERED",
+      "FOSSIL_DRAGONKIN_MAP_PUZZLE",
+      "FOSSIL_DRAGONKIN_MAP_INCOMPLETE",
+      "FOSSIL_DRAGONKIN_MAP_COMPLETE",
+      "FOSSIL_DKL_MAP_EDGE",
+      "FOSSIL_DKL_MAP_CRN_M",
+      "FOSSIL_DKL_MAP_CRN"
     ]
   },
   {
