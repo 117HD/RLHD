@@ -446,9 +446,6 @@ public class ModelStreamingManager {
 		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 		final boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
 
-		if (renderThreadId >= 0)
-			client.checkClickbox(projection, m, orient, x, y, z, tileObject.getHash());
-
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(renderThreadId >= 0);
 		if (asyncModelCache != null) {
