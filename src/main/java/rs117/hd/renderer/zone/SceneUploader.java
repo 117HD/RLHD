@@ -1434,8 +1434,8 @@ public class SceneUploader implements AutoCloseable {
 			modelLocalI[vertexOffset++] = vz;
 		}
 
-		boolean isVanillaTextured = faceTextures != null;
-		boolean isVanillaUVMapped =
+		final boolean isVanillaTextured = faceTextures != null;
+		final boolean isVanillaUVMapped =
 			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
 			textureFaces != null;
 
@@ -1626,17 +1626,7 @@ public class SceneUploader implements AutoCloseable {
 				faceUVs = GEOMETRY_UVS;
 			}
 
-			final boolean shouldRotateNormals;
-			if (!modelHasNormals || faceOverride.flatNormals || !plugin.configPreserveVanillaNormals && color3s[face] == -1) {
-				shouldRotateNormals = false;
-				calculateFaceNormal(
-					modelNormals,
-					vx1, vy1, vz1,
-					vx2, vy2, vz2,
-					vx3, vy3, vz3
-				);
-			} else {
-				shouldRotateNormals = orientation != 0;
+			if(modelHasNormals) {
 				modelNormals[0] = xVertexNormals[triangleA];
 				modelNormals[1] = yVertexNormals[triangleA];
 				modelNormals[2] = zVertexNormals[triangleA];
@@ -1648,14 +1638,22 @@ public class SceneUploader implements AutoCloseable {
 				modelNormals[8] = zVertexNormals[triangleC];
 			}
 
-			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && !keepShading) {
+			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && modelHasNormals && !keepShading) {
 				color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
 				color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
 				color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
 			}
 
-			if (shouldRotateNormals)
+			if (!modelHasNormals || faceOverride.flatNormals || !plugin.configPreserveVanillaNormals && color3s[face] == -1) {
+				calculateFaceNormal(
+					modelNormals,
+					vx1, vy1, vz1,
+					vx2, vy2, vz2,
+					vx3, vy3, vz3
+				);
+			} else if(orientation != 0) {
 				rotateNormals(modelNormals, orientSin, orientCos);
+			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				bias == null ? 0 : bias[face] & 0xFF;
@@ -2021,22 +2019,23 @@ public class SceneUploader implements AutoCloseable {
 			}
 
 			if (!isShadow) {
-				final boolean shouldRotateNormals;
-				boolean shouldCalculateFaceNormal;
-				if (!modelHasNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
-					shouldRotateNormals = false;
-					shouldCalculateFaceNormal = true;
-				} else {
-					shouldRotateNormals = orientation != 0;
-					shouldCalculateFaceNormal = (modelNormals[0] = xVertexNormals[triangleA]) == 0;
-					shouldCalculateFaceNormal &= (modelNormals[1] = yVertexNormals[triangleA]) == 0;
-					shouldCalculateFaceNormal &= (modelNormals[2] = zVertexNormals[triangleA]) == 0;
-					shouldCalculateFaceNormal &= (modelNormals[3] = xVertexNormals[triangleB]) == 0;
-					shouldCalculateFaceNormal &= (modelNormals[4] = yVertexNormals[triangleB]) == 0;
-					shouldCalculateFaceNormal &= (modelNormals[5] = zVertexNormals[triangleB]) == 0;
-					shouldCalculateFaceNormal &= (modelNormals[6] = xVertexNormals[triangleC]) == 0;
-					shouldCalculateFaceNormal &= (modelNormals[7] = yVertexNormals[triangleC]) == 0;
-					shouldCalculateFaceNormal &= (modelNormals[8] = zVertexNormals[triangleC]) == 0;
+				boolean shouldCalculateFaceNormal = !modelHasNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1);
+				if(modelHasNormals) {
+					shouldCalculateFaceNormal = (faceNormals[0] = xVertexNormals[triangleA]) == 0;
+					shouldCalculateFaceNormal &= (faceNormals[1] = yVertexNormals[triangleA]) == 0;
+					shouldCalculateFaceNormal &= (faceNormals[2] = zVertexNormals[triangleA]) == 0;
+					shouldCalculateFaceNormal &= (faceNormals[3] = xVertexNormals[triangleB]) == 0;
+					shouldCalculateFaceNormal &= (faceNormals[4] = yVertexNormals[triangleB]) == 0;
+					shouldCalculateFaceNormal &= (faceNormals[5] = zVertexNormals[triangleB]) == 0;
+					shouldCalculateFaceNormal &= (faceNormals[6] = xVertexNormals[triangleC]) == 0;
+					shouldCalculateFaceNormal &= (faceNormals[7] = yVertexNormals[triangleC]) == 0;
+					shouldCalculateFaceNormal &= (faceNormals[8] = zVertexNormals[triangleC]) == 0;
+				}
+
+				if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && !shouldCalculateFaceNormal) {
+					color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, faceNormals[0], faceNormals[1], faceNormals[2]);
+					color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, faceNormals[3], faceNormals[4], faceNormals[5]);
+					color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, faceNormals[6], faceNormals[7], faceNormals[8]);
 				}
 
 				if (shouldCalculateFaceNormal) {
@@ -2048,13 +2047,7 @@ public class SceneUploader implements AutoCloseable {
 					);
 				}
 
-				if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading) {
-					color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, faceNormals[0], faceNormals[1], faceNormals[2]);
-					color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, faceNormals[3], faceNormals[4], faceNormals[5]);
-					color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, faceNormals[6], faceNormals[7], faceNormals[8]);
-				}
-
-				if (shouldRotateNormals && !shouldCalculateFaceNormal)
+				if (orientation != 0 && !shouldCalculateFaceNormal)
 					rotateNormals(faceNormals, orientSin, orientCos);
 			}
 
