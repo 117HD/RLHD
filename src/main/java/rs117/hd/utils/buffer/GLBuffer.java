@@ -161,8 +161,6 @@ public class GLBuffer implements Destructible {
 		long[] numBytes,
 		int count
 	) {
-		assert !supportsStorageBuffers();
-
 		for (int i = 1; i < count; i++) {
 			long dstKey = dstOffsetBytes[i];
 			long srcKey = srcOffsetBytes[i];
