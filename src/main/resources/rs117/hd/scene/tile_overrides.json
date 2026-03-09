@@ -10012,6 +10012,14 @@
     "blended": false
   },
   {
+    "name": "Shayzien Crypt Blood",
+    "area": "Shayzien Crypt",
+    "overlayIds": [ 72 ],
+    "groundMaterial": "SMOOTH_STONE",
+    "blended": false,
+    "shiftSaturation": -1
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {

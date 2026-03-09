@@ -5547,11 +5547,89 @@
   },
   {
     "description": "SHAYZIEN_GRAVE",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
-      "ARCHEUUS_LONG_GRAVE_02"
+      "ARCHEUUS_LONG_GRAVE_02",
+      "DS2_TOMB_ENTRY"
+    ]
+  },
+  {
+    "description": "SHAYZIEN_TOMB_WALLS",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "DS2_TOMB_WALL_LEV2",
+      "DS2_TOMB_WALL_TOP",
+      "DS2_TOMB_WALL_TABLET_LEV2",
+      "DS2_TOMB_WALL",
+      "DS2_TOMB_BLOCKPILE1",
+      "DS2_TOMB_STAIRS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 5",
+        "baseMaterial": "SMOOTH_STONE"
+      }
+    ]
+  },
+  {
+    "description": "SHAYZIEN_TOMB_EDGE_TRIM",
+    "baseMaterial": "ROCK_6_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "DS2_TOMB_FALLOFF",
+      "DS2_TOMB_BROKEN_FLOOR_DIAG"
+    ]
+  },
+  {
+    "description": "SHAYZIEN_TOMB_LADDER_AND_DOOR",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "DS2_TOMB_LADDER",
+      "DS2_TOMB_DOOR_CAMORRA_R",
+      "DS2_TOMB_DOOR_CAMORRA_L",
+      "DS2_TOMB_DOOR_L",
+      "DS2_TOMB_DOOR_R",
+      "DS2_TOMB_DOOR_XERIC_L",
+      "DS2_TOMB_DOOR_XERIC_R"
+    ]
+  },
+  {
+    "description": "SHAYZIEN_TOMB_PLINTH",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "DS2_TOMB_PLINTH_EMPTY",
+      "DS2_TOMBSTONE_CAMORRA_INSPECT",
+      "DS2_TOMB_BUST_CAMORRA_NOOP",
+      "DS2_TOMB_BUST_TRISTAN_NOOP",
+      "DS2_TOMB_BUST_AIVAS_NOOP",
+      "DS2_TOMB_BUST_ROBERT_NOOP",
+      "DS2_TOMB_BUST_CAMORRA_OP",
+      "DS2_TOMB_BUST_TRISTAN_OP",
+      "DS2_TOMB_BUST_AIVAS_OP",
+      "DS2_TOMB_BUST_ROBERT_OP",
+      "DS2_TOMB_PLINTH_TRISTAN",
+      "DS2_TOMB_PLINTH_AIVAS",
+      "DS2_TOMB_PLINTH_ROBERT",
+      "DS2_TOMB_PLINTH_CAMORRA",
+      "DS2_TOMBSTONE_CAMORRA_OPEN",
+      "DS2_TOMBSTONE_XERIC"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 0",
+        "baseMaterial": "ROCK_6_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
     ]
   },
   {
