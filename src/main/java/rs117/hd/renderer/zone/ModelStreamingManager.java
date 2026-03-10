@@ -145,7 +145,7 @@ public class ModelStreamingManager {
 
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || (!sceneManager.isRoot(ctx) && ctx.isLoading) || !renderCallbackManager.drawObject(scene, gameObject))
+		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
 		final StreamingContext streamingContext = context();
@@ -267,7 +267,6 @@ public class ModelStreamingManager {
 		boolean hasAlpha,
 		int orientation, int x, int y, int z
 	) {
-
 		boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 		shouldSort &= sceneUploader.preprocessTempModel(
 			worldProjection,
@@ -332,7 +331,6 @@ public class ModelStreamingManager {
 			// Fix rendering projectiles from boats with hide roofs enabled
 			int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
 
-			opaqueView.end();
 			if (renderable instanceof Player) {
 				if (opaqueView.getEndOffset() > opaqueView.getStartOffset()) {
 					zone.addPlayerModel(
@@ -346,7 +344,6 @@ public class ModelStreamingManager {
 			}
 
 			if (opaqueView != alphaView) {
-				alphaView.end();
 				if (alphaView.getEndOffset() > alphaView.getStartOffset()) {
 					zone.addTempAlphaModel(
 						modelOverride,
@@ -357,7 +354,9 @@ public class ModelStreamingManager {
 						z & 1023
 					);
 				}
+				alphaView.end();
 			}
+			opaqueView.end();
 		}
 	}
 
@@ -373,8 +372,11 @@ public class ModelStreamingManager {
 		int y,
 		int z
 	) {
+		WorldViewContext root = sceneManager.getRoot();
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading || !renderCallbackManager.drawObject(scene, tileObject))
+		if (root == null || ctx == null ||
+			!sceneManager.isRoot(ctx) && ctx.isLoading ||
+			!renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -390,7 +392,14 @@ public class ModelStreamingManager {
 		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.project(objectWorldPos);
 
-		final int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
+		final int uuid;
+		if (r instanceof DynamicObject) {
+			int id = tileObject.getId();
+			int impostorId = root.sceneContext.animatedDynamicObjectImpostors.getOrDefault(id, id);
+			uuid = ModelHash.packUuid(ModelHash.getType(tileObject.getHash()), impostorId);
+		} else {
+			uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
+		}
 
 		// Cull based on detail draw distance
 		float squaredDistance = renderer.sceneCamera.squaredDistanceTo(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2]);
@@ -436,9 +445,6 @@ public class ModelStreamingManager {
 
 		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 		final boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
-
-		if (renderThreadId >= 0)
-			client.checkClickbox(projection, m, orient, x, y, z, tileObject.getHash());
 
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(renderThreadId >= 0);
@@ -573,9 +579,7 @@ public class ModelStreamingManager {
 					alphaView
 				);
 
-				opaqueView.end();
 				if (opaqueView != alphaView) {
-					alphaView.end();
 					if (alphaView.getEndOffset() > alphaView.getStartOffset()) {
 						// level is checked prior to this callback being run, in order to cull clickboxes, but
 						// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
@@ -590,7 +594,9 @@ public class ModelStreamingManager {
 							z & 1023
 						);
 					}
+					alphaView.end();
 				}
+				opaqueView.end();
 			}
 		} catch (Exception e) {
 			log.error("Error rendering dynamic object", e);

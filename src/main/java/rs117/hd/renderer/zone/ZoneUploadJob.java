@@ -3,6 +3,7 @@ package rs117.hd.renderer.zone;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
 import rs117.hd.utils.jobs.Job;
@@ -57,14 +58,14 @@ public final class ZoneUploadJob extends Job {
 			GLBuffer o = null, a = null;
 			int sz = zone.sizeO * Zone.VERT_SIZE * 3;
 			if (sz > 0) {
-				o = new GLBuffer("Zone::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+				o = new GLBuffer("Zone::VBO::Opaque", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 				o.initialize(sz);
 				o.map(MAP_WRITE);
 			}
 
 			sz = zone.sizeA * Zone.VERT_SIZE * 3;
 			if (sz > 0) {
-				a = new GLBuffer("Zone::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+				a = new GLBuffer("Zone::VBO::Alpha", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 				a.initialize(sz);
 				a.map(MAP_WRITE);
 			}
@@ -72,7 +73,7 @@ public final class ZoneUploadJob extends Job {
 			GLTextureBuffer f = null;
 			sz = zone.sizeF * Zone.TEXTURE_SIZE;
 			if (sz > 0) {
-				f = new GLTextureBuffer("Textured Faces", GL_STATIC_DRAW);
+				f = new GLTextureBuffer("Zone::TBO", GL_STATIC_DRAW);
 				f.initialize(sz);
 				f.map(MAP_WRITE);
 			}
@@ -95,7 +96,7 @@ public final class ZoneUploadJob extends Job {
 	@Override
 	protected void onCancel() {
 		if (viewContext.zones[x][z] != zone)
-			viewContext.pendingCull.add(zone);
+			DestructibleHandler.queueDestruction(zone);
 
 		// Avoid holding a reference to the context after the job is done
 		viewContext = null;

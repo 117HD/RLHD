@@ -1073,18 +1073,25 @@ public class SceneUploader implements AutoCloseable {
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
 	) {
-		Model model = null;
+		Model model;
 		if (r instanceof Model) {
 			model = (Model) r;
 		} else if (r instanceof DynamicObject) {
 			var dynamic = (DynamicObject) r;
 			model = dynamic.getModelZbuf();
+
+			if (model == null) {
+				// The model will likely be drawn through drawDynamic, and may have an impostor
+				zone.animatedDynamicObjectIds.add(id);
+				return;
+			}
+
 			var composition = dynamic.getRecordedObjectComposition();
 			if (composition != null)
 				uuid = ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, composition.getId());
-		}
-		if (model == null)
+		} else {
 			return;
+		}
 
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
