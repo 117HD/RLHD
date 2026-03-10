@@ -35714,9 +35714,7 @@
     "uvOrientation": 256,
     "objectIds": [
       "FOSSIL_DKL_STAIRCASE",
-      "FOSSIL_DKL_STAIRCASE_EXT",
-      "DS2_LITHKREN_SURFACE_STAIRCASE_1",
-      "DS2_LITHKREN_SURFACE_STAIRCASE_DOWN"
+      "FOSSIL_DKL_STAIRCASE_EXT"
     ],
     "colorOverrides": [
       {
@@ -35801,6 +35799,25 @@
     "objectIds": [
       "DS2_LITHKREN_FORTRESS_BOOKS1",
       "DS2_LITHKREN_FORTRESS_BOOKS2"
+    ]
+  },
+  {
+    "description": "Lithkren - Staircase",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256,
+    "objectIds": [
+      "FOSSIL_DKL_STAIRCASE",
+      "FOSSIL_DKL_STAIRCASE_EXT",
+      "DS2_LITHKREN_SURFACE_STAIRCASE_1",
+      "DS2_LITHKREN_SURFACE_STAIRCASE_DOWN"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "GRUNGE_3",
+        "colors": "s > 0"
+      }
     ]
   },
   {

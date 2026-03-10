@@ -8843,6 +8843,15 @@
     }
   },
   {
+    "name": "LITHKREN_BUILDING_FLOOR",
+    "area": "LITHKREN_BUILDING_FLOOR",
+    "overlayIds": [ 11 ],
+    "underlayIds": [ 150 ],
+    "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
+    "shiftLightness": 6,
+    "blended": false
+  },
+  {
     "name": "LITHKREN_DIRT",
     "area": "LITHKREN",
     "underlayIds": [
@@ -8853,13 +8862,6 @@
       150
     ],
     "groundMaterial": "VARIED_DIRT"
-  },
-  {
-    "name": "LITHKREN_UPPER_FLOOR",
-    "area": "LITHKREN_UPPER_FLOOR",
-    "overlayIds": [ 11 ],
-    "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
-    "shiftLightness": 5
   },
   {
     "name": "LITHKREN_VAULT_FLOOR",
