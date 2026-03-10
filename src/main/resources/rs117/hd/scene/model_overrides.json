@@ -14947,7 +14947,10 @@
       "MOTD_CRATE",
       "DARKM_MIDDLE_CRATE_SINGLE",
       "EAA_LARGE_CRATE",
-      "EAA_LARGE_CRATES"
+      "EAA_LARGE_CRATES",
+      "TOA_LOBBY_LAMP_CRATE_OP",
+      "TOA_LOBBY_CRATE01_DEFAULT01",
+      "TOA_LOBBY_CRATE01_STACK01"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -23113,6 +23116,17 @@
       "DECAL_SAND01_PILE01",
       "DECAL_SAND01_PILE02",
       "DECOKIT_SAND01_PILE01"
+    ]
+  },
+  {
+    "description": "Necropolis - Sandy-Gravel objects",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "MODEL_XZ",
+    "castShadows": false,
+    "objectIds": [
+      "TOA_DUGUPSOIL_SAND_1",
+      "TOA_DUGUPSOIL_SAND_2",
+      "TOA_DUGUPSOIL_SAND_3"
     ]
   },
   {
@@ -78155,6 +78169,27 @@
     "objectIds": [
       "TOA_LOBBY_EXIT",
       "TOA_LOBBY_EXIT_NOOP"
+    ]
+  },
+  {
+    "description": "TOA Lobby - Wooden - Rope - Angled Supports with Rope",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": -128,
+    "colorOverrides": [
+      {
+        "description": "ROPE",
+        "colors": "h == 7",
+        "uvScale": 0.6,
+        "baseMaterial": "ROPE",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "TOA_WALL_SUPPORT03",
+      "TOA_WALL_SUPPORT04",
+      "TOA_WALL_SUPPORT05"
     ]
   },
   {
