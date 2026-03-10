@@ -30960,10 +30960,9 @@
   },
   {
     "description": "ANCIENT_CAVERN_DRAGON_HEAD",
-    "height": 200,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 10,
+    "offset": [ 0, 185, 200 ],
+    "radius": 600,
+    "strength": 15,
     "color": [
       252,
       122,
@@ -30978,7 +30977,7 @@
   },
   {
     "description": "ANCIENT_CAVERN_LAVA_POOL",
-    "height": 200,
+    "height": 100,
     "alignment": "CENTER",
     "radius": 300,
     "strength": 7.5,
@@ -31001,10 +31000,9 @@
   },
   {
     "description": "ANCIENT_CAVERN_DRAGON_HEADS",
-    "height": 200,
-    "alignment": "FRONT",
-    "radius": 500,
-    "strength": 12.5,
+    "offset": [ 0, 150, -150 ],
+    "radius": 550,
+    "strength": 15,
     "color": [
       252,
       122,

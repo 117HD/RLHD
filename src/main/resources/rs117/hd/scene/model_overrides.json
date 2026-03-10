@@ -34721,27 +34721,269 @@
       "BRUT_CAVE_VAR1_LVL1_M",
       "BRUT_CAVE_VAR2_LVL1_M",
       "BRUT_CAVE_VAR2_LVL2",
-      "BRUT_CAVE_VAR3_LVL1"
+      "BRUT_CAVE_VAR3_LVL1",
+      "BRUT_CAVE_LVL2_LEDGE_JOIN2_M",
+      "BRUT_CAVEHANG_NOBACK",
+      "BRUT_CAVEHANG",
+      "BRUT_CAVE_TOP_CENTRE_LVL2",
+      "BRUT_CAVE_LVL2_LEDGE_JOIN2",
+      "BRUT_CAVEFALL_WALL",
+      "BRUT_CAVEHANG_M",
+      "DS2_FORGE_STAIRS_BOTTOM",
+      "DS2_FORGE_STAIRS_TOP",
+      "BRUT_STAIR_LRG_LOW",
+      "BRUT_STAIR_LRG_TOP",
+      "BRUT_CAVE_LVL1_STAIR_JOIN",
+      "BRUT_CAVE_LVL1_LEDGE_JOIN_M",
+      "BRUT_CAVE_LVL1_LEDGE_JOIN",
+      "BRUT_CAVE_LEDGEVAR2",
+      "BRUT_CAVE_STAIRS_TOP",
+      "BRUT_CAVE_STAIRS_LOW",
+      "BRUT_CAVE_LVL1_EXITCAP",
+      "BRUT_CAVEPLR_LVL1",
+      "BRUT_CAVEPLR_LVL2",
+      "BRUT_CAVEPLR_LVL3"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.75,
     "uvOrientation": 256
+  },
+  {
+    "description": "Ancient Cavern - Mithril Door",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "BRUT_MITHRIL_DOOR",
+      "DS2_MITHRIL_DOOR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 37" ],
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Ancient Cavern - Forge",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "DS2_AC_FORGE_DRAGON_HEAD_UNLIT",
+      "DS2_AC_FORGE_DRAGON_HEAD_LIT",
+      "DS2_AC_FORGE_BLANK",
+      "DS2_AC_FORGE_ANVIL",
+      "DS2_AC_FORGE_ANVIL_UNLIT",
+      "DS2_AC_FORGE_OUTER_CORNER",
+      "DS2_AC_FORGE_FLOW",
+      "DS2_AC_FORGE_INSIDE_CORNER",
+      "DS2_AC_FORGE_LIT_FILLER",
+      "DS2_AC_FORGE_WALL_WITH_HOLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "GRAY_85"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": [ "h > 2 && h < 6" ],
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Ancient Cavern - Orb",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "DS2_DRAGONKIN_ORB_UNLIT",
+      "DS2_DRAGONKIN_ORB_LIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": [ "a < 255 || h != 32 && s == 7" ],
+        "baseMaterial": "GRAY_90",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Ancient Cavern - Dragon Burner",
+    "baseMaterial": "GRUNGE_2",
+    "npcIds": [
+      "DS2_DRAGON_HEAD_UNLIT",
+      "DS2_DRAGON_HEAD_LIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255 || s == 7" ],
+        "baseMaterial": "GRAY_90",
+        "upwardsNormals": true
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Ancient Cavern - Waterfall",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "BRUT_CAVE_WATERFALL_1",
+      "BRUT_CAVE_WATERFALL_2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 36 && s > 2 && a > 100" ],
+        "baseMaterial": "GRAY_45"
+      },
+      {
+        "colors": [ "h == 36" ],
+        "baseMaterial": "GRAY_55"
+      }
+    ]
+  },
+  {
+    "description": "Ancient Cavern - Waterfall Foam",
+    "objectIds": [
+      "BRUT_CAVE_WATERFALL_SPRAY2B",
+      "BRUT_CAVE_WATERFALL_SPRAY1B"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 36 && s > 2" ],
+        "baseMaterial": "TRANSPARENT"
+      },
+      {
+        "colors": [ "h == 36 || a < 255" ],
+        "baseMaterial": "GRAY_50"
+      }
+    ]
+  },
+  {
+    "description": "Ancient Cavern - Waterfall from Roof",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "BRUT_CAVE_WATERFALL_TALL",
+      "BRUT_CAVE_WATERFALL_TALL2",
+      "BRUT_CAVE_WATERFALL_TALL_2B",
+      "BRUT_CAVE_WATERFALL_TALL_1B"
+    ]
+  },
+  {
+    "description": "Ancient Cavern - Waterfall Bubbles",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "BRUT_CAVE_WATERFALL_SPRAY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "a < 20" ],
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Wall Top Trim",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "BRUT_CAVEWALL_TOP_LIGHTDARK5_LVL2",
+      "BRUT_CAVEWALL_TOP_LIGHTDARK2_LVL2",
+      "BRUT_CAVEWALL_TOP_LIGHTDARK52_LVL2",
+      "BRUT_CAVEWALL_TOP_LIGHTDARK52",
+      "BRUT_CAVEWALL_TOP_LIGHTDARK2",
+      "BRUT_CAVEWALL_TOP_LIGHTDARK5",
+      "BRUT_CAVEWALL_TOP_LIGHTDARK",
+      "BRUT_CAVE_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && l == 2" ],
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Fossil Island - Wyvern Task Area - Walls - Stone",
     "baseMaterial": "STONE_NORMALED_DARK",
     "objectIds": [ "BRUT_CAVE_TOP_CENTRE" ],
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.75,
     "uvOrientation": 256
   },
   {
     "description": "Fossil Island - Wyvern Task Area - Wall Lip",
-    "baseMaterial": "ROCK_4",
-    "objectIds": [ "BRUT_CAVE_LEDGE", "BRUT_CAVE_LEDGE_M" ],
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "BRUT_CAVE_LEDGE",
+      "BRUT_CAVE_LEDGE_M",
+      "BRUT_CAVE_LEDGEVAR",
+      "BRUT_CAVE_LEDGE_AGILITY"
+    ],
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.75,
     "uvOrientation": 256
+  },
+  {
+    "description": "Fossil Island - Wyvern Task Area - Wall Filler",
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "BRUT_CAVE_TOP",
+      "BRUT_CAVE_TOP_LVL1"
+    ]
+  },
+  {
+    "description": "Ancient Cavern - Whirlpool Entrance",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "BRUT_WHIRLPOOL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_70"
+      }
+    ]
   },
   {
     "description": "Fossil Island - Wyvern Task Area - Rock stairs",
@@ -78730,7 +78972,7 @@
         "uvScale": 0.75
       },
       {
-        "colors": "h ==7 || h == 8",
+        "colors": "h == 7 || h == 8",
         "baseMaterial": "WOOD_GRAIN_3_LIGHT",
         "uvOrientationY": 512,
         "uvType": "BOX",

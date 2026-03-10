@@ -5980,7 +5980,7 @@
     "overlayIds": [
       41
     ],
-    "waterType": "WATER_FLAT",
+    "waterType": "CAVE_WATER_MURKY",
     "blended": false
   },
   {
