@@ -319,6 +319,5 @@ public class WorldViewContext {
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
 		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
-		curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
