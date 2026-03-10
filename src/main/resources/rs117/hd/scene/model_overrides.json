@@ -35804,6 +35804,104 @@
     ]
   },
   {
+    "description": "Lithkren Vault - Walls",
+    "baseMaterial": "ROCK_6_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 75,
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_WALL",
+      "DS2_LITHKREN_DUNGEON_ARCHWAY_WALL_LEFT",
+      "DS2_LITHKREN_DUNGEON_ARCHWAY_WALL_RIGHT",
+      "DS2_LITHKREN_DUNGEON_STAIRS_LOWER",
+      "DS2_LITHKREN_DUNGEON_STAIRS_ACTIVE",
+      "DS2_LITHKREN_DUNGEON_ARCHWAY_TOP_LEFT",
+      "DS2_LITHKREN_DUNGEON_ARCHWAY_TOP_RIGHT",
+      "DS2_LITHKREN_DUNGEON_VAULT_DOOR_BROKEN",
+      "DS2_LITHKREN_DUNGEON_VAULT_DOOR_COMPLETE",
+      "DS2_LITHKREN_DUNGEON_VAULT_DOOR_KEYLESS",
+      "DS2_LITHKREN_DUNGEON_VAULT_DOOR_KEYLESS_NOOP",
+      "DS2_LITHKREN_DUNGEON_VAULT_DOOR_COMPLETE_NOOP",
+      "DS2_LITHKREN_DUNGEON_VAULT_DOOR_BROKEN_NOOP",
+      "DS2_LITHKREN_DUNGEON_VAULT_DOOR_UNLOCKABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Lithkren Vault - Wall Topper",
+    "baseMaterial": "ROCK_6_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 75,
+    "upwardsNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_TOPPER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Lithkren Vault - Brazier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_BRAZIER",
+      "DS2_LITHKREN_DUNGEON_TORCH_SMALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Lithkren Vault - Floor Mural",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_FLOOR_E2",
+      "DS2_LITHKREN_DUNGEON_FLOOR_E1",
+      "DS2_LITHKREN_DUNGEON_FLOOR_E3",
+      "DS2_LITHKREN_DUNGEON_FLOOR_E4",
+      "DS2_LITHKREN_DUNGEON_FLOOR_E7",
+      "DS2_LITHKREN_DUNGEON_FLOOR_E8",
+      "DS2_LITHKREN_DUNGEON_FLOOR_E5",
+      "DS2_LITHKREN_DUNGEON_FLOOR_E6",
+      "DS2_LITHKREN_DUNGEON_FLOOR_C2",
+      "DS2_LITHKREN_DUNGEON_FLOOR_C1",
+      "DS2_LITHKREN_DUNGEON_FLOOR_C3",
+      "DS2_LITHKREN_DUNGEON_FLOOR_C4",
+      "DS2_LITHKREN_DUNGEON_FLOOR_FILLER"
+    ]
+  },
+  {
+    "description": "Lithkren Vault - God Ray",
+    "baseMaterial": "GRAY_115",
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_GODRAY"
+    ]
+  },
+  {
     "description": "Pest Control boat flags",
     "objectIds": [
       "PEST_INTERMEDIATE_BANNER_PIER",

@@ -8862,6 +8862,15 @@
     "shiftLightness": 5
   },
   {
+    "name": "LITHKREN_VAULT_FLOOR",
+    "area": "LITHKREN_DUNGEON",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "TILES_2X2_1_GLOSS",
+    "uvScale": 2,
+    "blended": false,
+    "shiftLightness": 7
+  },
+  {
     "name": "LOVAKENGJ_GROUND_UNDERLAY",
     "area": "LOVAKENGJ",
     "underlayIds": [

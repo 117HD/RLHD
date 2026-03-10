@@ -17589,13 +17589,9 @@
   },
   {
     "description": "Lithkren basement sunlight",
-    "worldX": 3549,
-    "worldY": 10477,
-    "plane": 0,
-    "height": 800,
-    "alignment": "EAST",
+    "offset": [ 0, 400, 0 ],
     "radius": 1500,
-    "strength": 10,
+    "strength": 20,
     "color": [
       255,
       249.4737,
@@ -17603,7 +17599,10 @@
     ],
     "type": "STATIC",
     "duration": 1000,
-    "range": 0.2
+    "range": 0.2,
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_GODRAY"
+    ]
   },
   {
     "description": "HELLCAT",
@@ -25902,11 +25901,29 @@
     ]
   },
   {
-    "description": "LITHKREN_BRAZIER",
+    "description": "LITHKREN_BRAZIER_WIDE",
     "height": 450,
     "alignment": "CENTER",
     "radius": 1200,
     "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_BRAZIER"
+    ]
+  },
+  {
+    "description": "LITHKREN_BRAZIER_SHORT",
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 100,
     "color": [
       252,
       148,

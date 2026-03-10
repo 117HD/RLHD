@@ -8417,12 +8417,12 @@
   },
   {
     "name": "LITHKREN_DUNGEON_INTACT",
-    "aabbs": [ [ 3520, 10368, 3583, 10434 ] ],
+    "aabbs": [ [ 3539, 10381, 3560, 10429 ] ],
     "hideOtherAreas": true
   },
   {
     "name": "LITHKREN_DUNGEON_RUINS",
-    "aabbs": [ [ 3520, 10435, 3583, 10495 ] ],
+    "aabbs": [ [ 3539, 10439, 3560, 10488 ] ],
     "hideOtherAreas": true
   },
   {
@@ -8431,6 +8431,14 @@
       6223
     ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "LITHKREN_DUNGEON",
+    "areas": [
+      "LITHKREN_DUNGEON_LAB",
+      "LITHKREN_DUNGEON_RUINS",
+      "LITHKREN_DUNGEON_INTACT"
+    ]
   },
   {
     "name": "LITHKREN",
