@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.collections.PrimitiveIntArray;
 import rs117.hd.utils.jobs.Job;
 
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
@@ -111,9 +110,6 @@ public final class AsyncCachedModel extends Job implements Model {
 	private final CachedArrayField<int[]> vertexNormalsX = addField(ArrayType.VERTEX_INT);
 	private final CachedArrayField<int[]> vertexNormalsY = addField(ArrayType.VERTEX_INT);
 	private final CachedArrayField<int[]> vertexNormalsZ = addField(ArrayType.VERTEX_INT);
-
-	private final PrimitiveIntArray visibleFaces = new PrimitiveIntArray();
-	private final PrimitiveIntArray culledFaces = new PrimitiveIntArray();
 
 	private final AtomicBoolean processing = new AtomicBoolean(false);
 	private UploadModelFunc uploadFunc;
@@ -281,11 +277,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		if (!processing.compareAndSet(false, true))
 			return false;
 
-		try (
-			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
-			FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
-		) {
-			uploadFunc.upload(sceneUploader, facePrioritySorter, visibleFaces, culledFaces, this);
+		try {
+			uploadFunc.upload();
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
 		} finally {
@@ -373,13 +366,7 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	@FunctionalInterface
 	public interface UploadModelFunc {
-		void upload(
-			SceneUploader sceneUploader,
-			FacePrioritySorter facePrioritySorter,
-			PrimitiveIntArray visibleFaces,
-			PrimitiveIntArray culledFaces,
-			Model model
-		);
+		void upload();
 	}
 
 	@FunctionalInterface
