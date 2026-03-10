@@ -45424,7 +45424,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "DRAGON_SLAYER_QIP_FIRE_2X2"
+      "DRAGON_SLAYER_QIP_FIRE_2X2",
+      "ZORGOTH_FIRE"
     ]
   }
 ]

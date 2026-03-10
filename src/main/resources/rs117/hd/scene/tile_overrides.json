@@ -5566,6 +5566,33 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "DS2_GALLEON_PLANKS",
+    "area": "DS2_GALLEON",
+    "underlayIds": [
+      14,
+      63
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "setLightness": 20,
+    "setSaturation": 2,
+    "heightOffset": 1,
+    "blended": false
+  },
+  {
+    "name": "DS2_GALLEON_PLANKS_2",
+    "area": "DS2_GALLEON_TOP",
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "setLightness": 20,
+    "setSaturation": 2,
+    "heightOffset": -1000,
+    "blended": false
+  },
+  {
     "name": "DS2_SHIPS_WATER",
     "area": "DS2_SHIPS",
     "overlayIds": [

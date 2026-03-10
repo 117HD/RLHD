@@ -8477,6 +8477,18 @@
     ]
   },
   {
+    "name": "DS2_GALLEON",
+    "aabbs": [
+      [ 1625, 5703, 1637, 5741 ]
+    ]
+  },
+  {
+    "name": "DS2_GALLEON_TOP",
+    "aabbs": [
+      [ 1629, 5704, 1633, 5708, 3 ]
+    ]
+  },
+  {
     "name": "THE_GAUNTLET_NORMAL",
     "aabbs": [
       [ 1856, 5632, 1, 1919, 5695, 1 ]
