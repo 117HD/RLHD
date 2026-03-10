@@ -188,8 +188,9 @@ public class GLBuffer implements Destructible {
 			);
 		}
 
-		final boolean wasMapped = mappedBuffer != null && mappedBuffer.isMapped();
-		if (wasMapped) unmap();
+		final int mappedFlags = mappedBuffer != null && mappedBuffer.isMapped() ? mappedBuffer.getMappedFlags() : 0;
+		if (mappedFlags != 0)
+			unmap();
 
 		int oldBuffer = id;
 		// Create a new buffer if we have to preserve existing data
@@ -264,8 +265,8 @@ public class GLBuffer implements Destructible {
 		}
 
 		// If was mapped, remap without GL_MAP_INVALIDATE_BUFFER_BIT, since we may have previously written data
-		if (wasMapped && !isStorageBuffer())
-			mappedBuffer.remap();
+		if (mappedFlags != 0 && !isStorageBuffer())
+			mappedBuffer.map(mappedFlags);
 
 		return true;
 	}

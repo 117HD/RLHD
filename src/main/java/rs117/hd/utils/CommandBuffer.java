@@ -33,7 +33,6 @@ public class CommandBuffer {
 	private static final int GL_DRAW_CALL_TYPE_COUNT = 6;
 
 	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 6;
-	private static final int GL_BIND_ELEMENTS_ARRAY_TYPE = 7;
 	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
 	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
 	private static final int GL_DEPTH_MASK_TYPE = 10;
@@ -90,22 +89,20 @@ public class CommandBuffer {
 		return writeHead == 0;
 	}
 
+	public void BindVertexArray(int vao, GLBuffer ebo) {
+		ensureCapacity(2);
+		cmd[writeHead++] = GL_BIND_VERTEX_ARRAY_TYPE & 0xFF;
+		cmd[writeHead++] = (long) vao | (long) writeObject(ebo) << 32;
+	}
+
 	public void BindVertexArray(int vao) {
-		ensureCapacity(1);
-		cmd[writeHead++] = GL_BIND_VERTEX_ARRAY_TYPE & 0xFF | (long) vao << 8;
+		BindVertexArray(vao, null);
 	}
 
 	public void FenceSync(GLFence fence, int condition) {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_FENCE_SYNC & 0xFF | (long) condition << 8;
 		cmd[writeHead++] = writeObject(fence);
-	}
-
-	public void BindElementsArray(int vao, GLBuffer ebo) {
-		// The element buffer is part of VAO state, so enforce binding the VAO simultaneously
-		BindVertexArray(vao);
-		ensureCapacity(1);
-		cmd[writeHead++] = GL_BIND_ELEMENTS_ARRAY_TYPE & 0xFF | (long) writeObject(ebo) << 8;
 	}
 
 	public void BindIndirectArray(int ido) {
@@ -280,15 +277,6 @@ public class CommandBuffer {
 		cmd[writeHead++] = (enabled ? 1L : 0) << 32 | capability & INT_MASK;
 	}
 
-	public void append(CommandBuffer other) {
-		if (other.isEmpty())
-			return;
-
-		ensureCapacity(other.writeHead);
-		System.arraycopy(other.cmd, 0, cmd, writeHead, other.writeHead);
-		writeHead += other.writeHead;
-	}
-
 	public void execute() {
 		if (frameTimer != null)
 			frameTimer.begin(Timer.EXECUTE_COMMAND_BUFFER);
@@ -319,12 +307,13 @@ public class CommandBuffer {
 						break;
 					}
 					case GL_BIND_VERTEX_ARRAY_TYPE: {
-						renderState.vao.set((int) (data >> 8));
-						break;
-					}
-					case GL_BIND_ELEMENTS_ARRAY_TYPE: {
-						int objectIdx = (int) (data >> 8);
-						renderState.ebo.set(((GLBuffer) objects[objectIdx]).id);
+						long packed = cmd[readHead++];
+						int eboIdx = (int) (packed >> 32);
+						if(eboIdx >= 0) {
+							renderState.vaoAndEbo.set((int)packed, ((GLBuffer) objects[eboIdx]).id);
+						} else {
+							renderState.vao.set((int)packed);
+						}
 						break;
 					}
 					case GL_BIND_INDIRECT_ARRAY_TYPE: {
@@ -451,6 +440,9 @@ public class CommandBuffer {
 	}
 
 	private int writeObject(Object obj) {
+		if(obj == null)
+			return -1;
+
 		for (int i = 0; i < objectCount; i++)
 			if (objects[i] == obj)
 				return i;
