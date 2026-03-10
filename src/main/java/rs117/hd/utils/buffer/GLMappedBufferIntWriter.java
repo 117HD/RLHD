@@ -84,7 +84,7 @@ public class GLMappedBufferIntWriter implements Destructible {
 			mappedBuffer.unmap();
 		mappedBuffer = null;
 
-		if(stagingBuffer != null)
+		if (stagingBuffer != null)
 			stagingBuffer.destroy();
 		stagingBuffer = null;
 
@@ -111,10 +111,10 @@ public class GLMappedBufferIntWriter implements Destructible {
 		mappedBuffer.setPositionBytes(writtenMappedInts * Integer.BYTES);
 		mappedBuffer.unmap();
 
-		if(!usedStagingViews.isEmpty()) {
+		if (!usedStagingViews.isEmpty()) {
 			final GLBuffer owner = mappedBuffer.getOwner();
-			final long mappedSize = (long)writtenMappedInts * Integer.BYTES;
-			final long stagingCapacity = (long)writtenStagingInts * Integer.BYTES;
+			final long mappedSize = (long) writtenMappedInts * Integer.BYTES;
+			final long stagingCapacity = (long) writtenStagingInts * Integer.BYTES;
 
 			owner.ensureCapacity(mappedSize + stagingCapacity);
 			owner.map(MAP_WRITE, mappedSize, stagingCapacity);

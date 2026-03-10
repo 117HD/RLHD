@@ -251,7 +251,7 @@ public class ZoneRenderer implements Renderer {
 			eboAlpha.destroy();
 		eboAlpha = null;
 
-		if(eboAlphaWriter != null)
+		if (eboAlphaWriter != null)
 			eboAlphaWriter.destroy();
 		eboAlphaWriter = null;
 
