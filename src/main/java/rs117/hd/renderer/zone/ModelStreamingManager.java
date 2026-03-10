@@ -476,9 +476,6 @@ public class ModelStreamingManager {
 			return;
 		}
 
-		if (renderThreadId >= 0)
-			return;
-
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
@@ -647,6 +644,6 @@ public class ModelStreamingManager {
 		if (AsyncCachedModel.POOL == null || numRenderThreads == 0)
 			return null;
 
-		return shouldBlock ? AsyncCachedModel.POOL.acquireBlocking() : AsyncCachedModel.POOL.acquire();
+		return shouldBlock ? AsyncCachedModel.POOL.acquireBlocking(5000) : AsyncCachedModel.POOL.acquire();
 	}
 }

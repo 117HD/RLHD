@@ -34,14 +34,17 @@ public final class ConcurrentPool<T> {
 		return obj;
 	}
 
-	public T acquireBlocking() {
+	public T acquireBlocking(long timeout) {
 		T obj = acquire();
 		if (obj == null && parkedThreads != null) {
 			final Thread currentThread = Thread.currentThread();
+			final long deadline = System.nanoTime() + timeout;
 			while ((obj = pool.poll()) == null) {
 				if (!parkedThreads.contains(currentThread))
 					parkedThreads.add(currentThread);
 				LockSupport.parkNanos(1000);
+				if (System.nanoTime() > deadline)
+					return null;
 			}
 			parkedThreads.remove(currentThread);
 		}
