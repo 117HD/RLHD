@@ -11,6 +11,7 @@ import rs117.hd.opengl.GLFence;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -100,11 +101,11 @@ public class CommandBuffer {
 		cmd[writeHead++] = writeObject(fence);
 	}
 
-	public void BindElementsArray(int vao, int ebo) {
+	public void BindElementsArray(int vao, GLBuffer ebo) {
 		// The element buffer is part of VAO state, so enforce binding the VAO simultaneously
 		BindVertexArray(vao);
 		ensureCapacity(1);
-		cmd[writeHead++] = GL_BIND_ELEMENTS_ARRAY_TYPE & 0xFF | (long) ebo << 8;
+		cmd[writeHead++] = GL_BIND_ELEMENTS_ARRAY_TYPE & 0xFF | (long) writeObject(ebo) << 8;
 	}
 
 	public void BindIndirectArray(int ido) {
@@ -322,7 +323,8 @@ public class CommandBuffer {
 						break;
 					}
 					case GL_BIND_ELEMENTS_ARRAY_TYPE: {
-						renderState.ebo.set((int) (data >> 8));
+						int objectIdx = (int) (data >> 8);
+						renderState.ebo.set(((GLBuffer) objects[objectIdx]).id);
 						break;
 					}
 					case GL_BIND_INDIRECT_ARRAY_TYPE: {
