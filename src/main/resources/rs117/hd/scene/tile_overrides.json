@@ -5571,7 +5571,7 @@
     "overlayIds": [
       6
     ],
-    "waterType": "WATER_FLAT",
+    "waterType": "PLAIN_WATER",
     "blended": false
   },
   {

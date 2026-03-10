@@ -20525,25 +20525,6 @@
     "visibleFromOtherPlanes": true
   },
   {
-    "description": "STANDING_TORCH_SHORT_LARGE",
-    "height": 250,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 12.5,
-    "color": [
-      252,
-      148,
-      3
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
-    "visibleFromOtherPlanes": true,
-    "objectIds": [
-      "DRAGON_SLAYER_QIP_FIRE_1X1"
-    ]
-  },
-  {
     "description": "STANDING_TORCH_LARGE",
     "height": 250,
     "alignment": "CENTER",
@@ -21116,7 +21097,6 @@
       "SNAKEBOSS_VILLAGE_FIRE",
       "VIKING_LONGHALL_FIRE",
       "EAGLEPEAK_CAMPFIRE_TIDY",
-      "DS2_VIKING_SHIP_FIRE",
       "VIKING_HOUSE_FIRE",
       "EAGLEPEAK_CAMPFIRE_MESSY",
       "ROYAL_VILLAGE_FIRE",
@@ -21154,7 +21134,6 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "DRAGON_SLAYER_QIP_FIRE_2X2",
       "SOTE_FIRE_LARGE",
       "SW_CAMP_FIRE",
       "MINOTAURS_REST_CAMPFIRE"
@@ -30761,6 +30740,23 @@
     "fadeInDuration": 500,
     "fadeOutDuration": 300,
     "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
+  },
+  {
+    "description": "Dragonfire Breath - Ranged",
+    "offset": [ 0, 0, 0 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "projectileIds": [ "DRAGON_RANGED_FIRE_ATTACK" ]
   },
   {
     "description": "Dragonfire Breath Highlight",
@@ -45390,6 +45386,45 @@
     "range": 20,
     "objectIds": [
       "DS2_MAZE_PLINTH_TELEPORT"
+    ]
+  },
+  {
+    "description": "DS2_SHIP_FIRE",
+    "height": 110,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17,
+    "fadeOutDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "visibleFromOtherPlanes": true,
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_VIKING_SHIP_FIRE",
+      "DRAGON_SLAYER_QIP_FIRE_1X1"
+    ]
+  },
+  {
+    "description": "DS2_SHIP_LARGE",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_FIRE_2X2"
     ]
   }
 ]

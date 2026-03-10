@@ -9344,17 +9344,41 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "uvOrientationY": 512,
     "objectIds": [
       "MISC_VIKING_SHIP_FRONT_LV0",
       "MISC_VIKING_SHIP_FRONT_LV1",
       "MISC_VIKING_SHIPMAIN",
       "MISC_VIKING_SHIPSIDE",
+      "MISC_VIKING_SHIPEDGE",
       "MISC_VIKING_SHIPEDGE_WITH_SEAT",
       "MISC_VIKING_SHIPEDGE_WITH_SEAT_MIRROR",
       "MISC_VIKING_SHIPEDGE",
       "MISC_VIKING_SHIPEDGEPIER",
       "MISC_SHIP_GANGPLANK",
-      "MISC_VIKING_SHIPEDGESHIELD"
+      "MISC_VIKING_SHIPEDGESHIELD",
+      "DS2_VIKING_SHIP_FRONT_LV1",
+      "DS2_VIKING_SHIP_FRONT_LV0",
+      "DS2_VIKINGSHIP_FRONT_LV0"
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat",
+    "objectIds": [
+      "DS2_VIKING_SHIP_SOLDIER",
+      "DS2_VIKING_SHIP_SOLDIER_M",
+      "DS2_VIKING_SHIP_SOLDIER_HURT_M",
+      "DS2_VIKING_SHIP_SOLDIER_HURT",
+      "DS2_VIKING_SHIP_SOLDIER_HURT_NOOP",
+      "DS2_VIKING_SHIP_SOLDIER_HURT_M_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2 || h == 5 && s == 3 || h == 6 && s == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
     ]
   },
   {
@@ -9367,7 +9391,8 @@
       "MISC_VIKING_SHIP_MAST_LV2",
       "MISC_VIKING_SHIP_MAST_LV3",
       "MISC_VIKING_SHIP_MAST_LV3_SAIL_MIRROR",
-      "MISC_VIKING_SHIP_MAST_LV3_SAIL"
+      "MISC_VIKING_SHIP_MAST_LV3_SAIL",
+      "DS2_VIKING_SHIP_FRONT_SMALL_LV1"
     ],
     "colorOverrides": [
       {
@@ -9375,6 +9400,29 @@
         "colors": "h == 5 && s == 4",
         "uvType": "BOX",
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat Mast (Dragon Slayer 2)",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "DS2_VIKING_SHIP_MAST_SINGLE_LVL2",
+      "DS2_VIKING_SHIP_MAST",
+      "DS2_VIKING_SHIP_MAST_BROKEN"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h == 5 && s == 1 || h == 5 && s == 2 && l > 41 || h == 0",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 10"
       }
     ]
   },
@@ -35808,8 +35856,6 @@
     "uvScale": 0.6,
     "uvOrientation": 256,
     "objectIds": [
-      "FOSSIL_DKL_STAIRCASE",
-      "FOSSIL_DKL_STAIRCASE_EXT",
       "DS2_LITHKREN_SURFACE_STAIRCASE_1",
       "DS2_LITHKREN_SURFACE_STAIRCASE_DOWN"
     ],
@@ -36345,7 +36391,8 @@
       "TRAWLER_SHIPRAIL",
       "TRAWLER_SHIPRAIL_BROKEN_FLOOR",
       "DRAGONSHIPLADDER",
-      "DRAGONSHIPLADDERTOP"
+      "DRAGONSHIPLADDERTOP",
+      "DS2_AGILITY_CLIMB_HULL"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -36385,14 +36432,18 @@
   {
     "description": "Plank Boat - Walls - Wooden - Hull with Porthole",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "SHIPHULL_PORTHOLE" ],
+    "objectIds": [
+      "SHIPHULL_PORTHOLE",
+      "DS2_AGILITY_CLIMB_HULL_PORTHOLE",
+      "SHIPHULL_DAMAGED_PORTHOLE"
+    ],
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
     "colorOverrides": [
       {
-        "colors": "h == 27",
+        "colors": "a < 255",
         "baseMaterial": "GRAY_90"
       }
     ]
@@ -36463,7 +36514,11 @@
       "FRONTMAST_FRONT_B",
       "FRONTMAST_BACK_B",
       "FRONTMAST_BACK_C",
-      "FRONTMAST_BACK_D"
+      "FRONTMAST_BACK_D",
+      "DS2_AGILITY_MAST_1",
+      "DS2_BRAIN_BOAT_FRONT_MAST_FRONT",
+      "DS2_BOAT_FRONTMAST_NO_POLE",
+      "DS2_BOAT_BOWSPRIT"
     ],
     "uvType": "BOX",
     "uvScale": 0.9,
@@ -43198,7 +43253,18 @@
       "SARIM_SHIPFLOOR",
       "SARIM_SHIPFLOOR_PUDDLE"
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Port Sarim - Ship Deck Broken",
+    "depthBias": 1,
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DS2_BOAT_MEDIUM_FLOOR_BROKEN_MIDDLE",
+      "SARIM_SHIPFLOOR_DAMAGED2_R"
+    ],
+    "uvType": "BOX",
     "uvOrientation": 512
   },
   {
@@ -75567,8 +75633,9 @@
     ]
   },
   {
-    "description": "Fix Waterfalls that are holes in the world without an opaque texture",
+    "description": "Fix Waterfalls that are holes in the world without an opaque texture or hide in areas not needed",
     "areas": [ "THE_GREAT_CONCH", "LUNAR_ISLE" ],
+    "hideInAreas": [ "DS2_SHIPS" ],
     "textureMaterial": "WATER_FLAT_FLOW",
     "objectIds": [
       "WATERFALL_OVERLAY"
@@ -76016,9 +76083,10 @@
   },
   {
     "description": "Ardougne - Song of the Elves - Skin - Cloth - Metallic - Dead Paladin",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.1,
+    "depthBias": 5,
     "uvOrientation": 192,
     "colorOverrides": [
       {
@@ -76026,33 +76094,38 @@
         "colors": "h == 53",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.6,
+        "depthBias": 5
       },
       {
         "description": "Skin",
         "colors": "h == 5 || h == 4",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.6,
+        "depthBias": 5
       },
       {
         "description": "Hair",
         "colors": "h == 6 && s == 5",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.6,
+        "depthBias": 5
       },
       {
         "description": "Shield",
         "colors": "h == 6 && s == 7 || h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientation": -128
+        "uvOrientation": -128,
+        "depthBias": 5
       }
     ],
     "objectIds": [
       "DS2_PALADIN_DEAD_1",
-      "DS2_PALADIN_DEAD_2"
+      "DS2_PALADIN_DEAD_2",
+      "DS2_PALADIN_DEAD_3"
     ]
   },
   {
@@ -79092,6 +79165,167 @@
         "uvOrientationY": 512,
         "uvType": "BOX",
         "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Ship Fire",
+    "baseMaterial": "GRAY_65",
+    "upwardsNormals": true,
+    "objectIds": [
+      "DS2_VIKING_SHIP_FIRE",
+      "DRAGON_SLAYER_QIP_FIRE_1X1",
+      "DRAGON_SLAYER_QIP_FIRE_2X2"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Supply Crate",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DS2_VIKING_SHIP_PASTE",
+      "DS2_VIKING_SHIP_HAMMERS",
+      "DS2_VIKING_SHIP_POTIONS",
+      "DS2_VIKING_SHIP_WATER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Floating Debris 1",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "objectIds": [
+      "DS2_AGILITY_DIAGONAL_HOP",
+      "DS2_AGILITY_DIAGONAL_HOP_OP",
+      "DS2_AGILITY_DIAGONAL_HOP_AP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_80",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Floating Debris 2",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 360,
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "depthBias": 50,
+    "objectIds": [
+      "DS2_AGILITY_STEPPING_STONE_NO_OP",
+      "DS2_AGILITY_STEPPING_STONE"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Floating Debris 3",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "DS2_VIKINGSHIP_FRONT_LV1_FLOATING"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Sunken Ship",
+    "baseMaterial": "WOOD_GRAIN_3_DARK",
+    "uvOrientation": 512,
+    "depthBias": 1,
+    "objectIds": [
+      "DS2_SHIP_SUNKEN_RIGHT",
+      "DS2_SHIP_SUNKEN_LEFT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7111
+  },
+  {
+    "description": "Dragon Slayer 2 - Dead Paladin",
+    "baseMaterial": "GRAY_80",
+    "depthBias": 5,
+    "objectIds": [
+      "DS2_WHITE_KNIGHT_DEAD_1",
+      "DS2_WHITE_KNIGHT_DEAD_2"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Ship with Red Trim",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "DS2_BOAT_KAND_HULL_WALL",
+      "DS2_BOAT_KAND_HULL_WALL_M",
+      "DS2_BOAT_KAND_HULL_WALL_DIAG",
+      "DS2_BOAT_KAND_HULL_FRONT",
+      "DS2_BOAT_KAND_WALL_FRONT",
+      "DS2_BOAT_KAND_MID_WALL_DIAG_M",
+      "DS2_BOAT_KAND_HULL_WALL_DIAG_M",
+      "DS2_BOAT_KAND_HULL_WALL_DESTROYED",
+      "DS2_BOAT_KAND_HULL_WALL_DESTROYED_M",
+      "DS2_BOAT_HULL_FLOOR",
+      "DS2_BOAT_KAND_FLOOR_DESTROYED_UPPER_1",
+      "DS2_BOAT_KAND_FLOOR_DESTROYED_UPPER_1_M",
+      "DS2_BOAT_FLOOR_BACK",
+      "DS2_BOAT_FLOOR_EDGE"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Ship with Red Trim Rail",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "DS2_BOAT_KAND_RAIL_01",
+      "DS2_BOAT_KAND_FLOOR_EDGE",
+      "DS2_BOAT_KAND_FLOOR_BACK",
+      "DS2_BOAT_KAND_MID_WALL",
+      "DS2_BOAT_KAND_MID_WALL_M",
+      "DS2_BOAT_KAND_RAIL_BROKEN_LEFT_01",
+      "DS2_BOAT_KAND_RAIL_BROKEN_RIGHT_01",
+      "DS2_BOAT_KAND_MID_WALL_HATCH_M",
+      "DS2_BOAT_KAND_MID_WALL_HATCH",
+      "DS2_BOAT_KAND_MID_WALL_HATCH_ROPELADDER_LV2",
+      "DS2_BOAT_KAND_RAIL_01_2X1_DIAG",
+      "DS2_BOAT_KAND_RAIL_01_FILLER",
+      "DS2_BOAT_KAND_RAIL_01_FRONT",
+      "DS2_BOAT_KAND_RAIL_01_FILLER_M",
+      "DS2_BOAT_KAND_RAIL_01_2X1_DIAG_M",
+      "DS2_BOAT_KAND_AGILITY_CLIMB",
+      "DS2_BOAT_KAND_MID_WALL_HATCH_ROPELADDER_LV2_MIRROR",
+      "DS2_BOAT_ALK_AGILITY_CLIMB",
+      "DS2_BOAT_KAND_MID_WALL_DIAG",
+      "DS2_BOAT_ASG_AGILITY_CLIMB"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 1 || h == 10",
+        "baseMaterial": "GRUNGE_3_DARK"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3
       }
     ]
   }
