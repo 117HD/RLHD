@@ -27,6 +27,7 @@ import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
+import rs117.hd.scene.MinimapManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -73,6 +74,9 @@ public class SceneManager {
 
 	@Inject
 	private LightManager lightManager;
+
+	@Inject
+	private MinimapManager minimapManager;
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
@@ -626,6 +630,7 @@ public class SceneManager {
 				}
 			}
 		}
+		minimapManager.prepareScene(nextSceneContext);
 		long roofsTime = sw.elapsed(TimeUnit.MILLISECONDS);
 		log.debug("swapScene - Roofs: {} ms", roofsTime);
 
