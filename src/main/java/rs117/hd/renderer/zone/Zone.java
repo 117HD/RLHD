@@ -857,7 +857,7 @@ public class Zone implements Destructible {
 			if (alphaFaceCount > 0 && lastVao != 0) {
 				int vertexCount = alphaFaceCount * 3;
 				long byteOffset = 4L * (eboAlphaOffset - vertexCount);
-				cmd.BindElementsArray(lastVao, eboAlpha.id);
+				cmd.BindElementsArray(lastVao, eboAlpha);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {

@@ -250,6 +250,9 @@ public class ZoneRenderer implements Renderer {
 		if (eboAlpha != null)
 			eboAlpha.destroy();
 		eboAlpha = null;
+
+		if (eboAlphaWriter != null)
+			eboAlphaWriter.destroy();
 		eboAlphaWriter = null;
 
 		if (indirectDrawCmds != null)
@@ -595,6 +598,7 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.reset();
 		renderState.reset();
 
+		eboAlpha.orphan();
 		eboAlphaWriter.map(true);
 
 		checkGLErrors();
@@ -836,8 +840,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
-		jobSystem.processPendingClientCallbacks();
-
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
