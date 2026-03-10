@@ -68,6 +68,7 @@ public class WorldViewContext {
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
 
+	CommandBuffer vaoPlayerCmd;
 	CommandBuffer vaoSceneCmd;
 	CommandBuffer vaoDirectionalCmd;
 	final DynamicModelVAO[][] dynamicModelVaos = new DynamicModelVAO[FRAMES_IN_FLIGHT][VAO_COUNT];
@@ -97,6 +98,7 @@ public class WorldViewContext {
 	public void initialize(RenderState renderState, Injector injector) {
 		injector.injectMembers(this);
 
+		vaoPlayerCmd = new CommandBuffer("WorldViewPlayer", renderState);
 		vaoSceneCmd = new CommandBuffer("WorldViewScene", renderState);
 		vaoDirectionalCmd = new CommandBuffer("WorldViewDirectional", renderState);
 
