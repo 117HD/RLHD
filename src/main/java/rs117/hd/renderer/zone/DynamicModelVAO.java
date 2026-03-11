@@ -31,7 +31,7 @@ public class DynamicModelVAO implements Destructible {
 	// pos float vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	static final int VERT_SIZE = 28;
+	static final int VERT_SIZE = 32;
 	static final int VERT_SIZE_INTS = VERT_SIZE / 4;
 
 	// Metadata format
@@ -62,7 +62,7 @@ public class DynamicModelVAO implements Destructible {
 	private long[] copyNumBytes = new long[16];
 
 	DynamicModelVAO(String name, boolean useStagingBuffer) {
-		if (useStagingBuffer) {
+		if (useStagingBuffer && GLBuffer.supportsStorageBuffers()) {
 			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
 				"VAO::VBO_STAGING::" + name,
@@ -131,11 +131,11 @@ public class DynamicModelVAO implements Destructible {
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 18);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 20);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 28);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);

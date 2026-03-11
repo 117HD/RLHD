@@ -46,7 +46,7 @@ public class Zone implements Destructible {
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
 	// texturedFaceIdx int
-	public static final int VERT_SIZE = 24;
+	public static final int VERT_SIZE = 28;
 
 	// alphaBiasHsl ivec3
 	// materialData ivec3
@@ -241,15 +241,15 @@ public class Zone implements Destructible {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 6);
+		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 8);
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 16);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 20);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
