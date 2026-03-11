@@ -134,7 +134,6 @@ public class GLBuffer implements Destructible {
 				long dstSizeBytes = glGetBufferParameteri64(GL_COPY_WRITE_BUFFER, GL_BUFFER_SIZE);
 				log.error("Errors copying buffers src: {} dst: {} srcSize: {} dstSize: {}", srcId, dstId, srcSizeBytes, dstSizeBytes);
 			}
-
 		} finally {
 			glBindBuffer(GL_COPY_READ_BUFFER, 0);
 			glBindBuffer(GL_COPY_WRITE_BUFFER, 0);
@@ -142,15 +141,8 @@ public class GLBuffer implements Destructible {
 	}
 
 	private static void copyWithCopyBuffer(long[] src, long[] dst, long[] size, int count) {
-		for (int i = 0; i < count; i++) {
-			glCopyBufferSubData(
-				GL_COPY_READ_BUFFER,
-				GL_COPY_WRITE_BUFFER,
-				src[i],
-				dst[i],
-				size[i]
-			);
-		}
+		for (int i = 0; i < count; i++)
+			glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, src[i], dst[i], size[i]);
 	}
 
 	private static void copyWithMapBufferRange(
@@ -161,6 +153,7 @@ public class GLBuffer implements Destructible {
 		long[] numBytes,
 		int count
 	) {
+		// Sort by dst offset
 		for (int i = 1; i < count; i++) {
 			long dstKey = dstOffsetBytes[i];
 			long srcKey = srcOffsetBytes[i];
@@ -179,53 +172,49 @@ public class GLBuffer implements Destructible {
 			numBytes[j + 1] = sizeKey;
 		}
 
-		long srcOffset = Long.MAX_VALUE, srcMapSize = 0;
-		long dstOffset = Long.MAX_VALUE, dstMapSize = 0;
+		long srcMinOffset = Long.MAX_VALUE, dstMinOffset = Long.MAX_VALUE, bytesToMap = 0;
 		boolean contiguous = true;
 
 		for (int i = 0; i < count; i++) {
 			if (i > 0 && contiguous)
 				contiguous = dstOffsetBytes[i - 1] + numBytes[i - 1] == dstOffsetBytes[i];
 
-			long so = srcOffsetBytes[i];
-			long doff = dstOffsetBytes[i];
-			long len = numBytes[i];
-
-			if (so < srcOffset) srcOffset = so;
-			if (doff < dstOffset) dstOffset = doff;
-
-			long srcEnd = so - srcOffset + len;
-			long dstEnd = doff - dstOffset + len;
-
-			if (srcEnd > srcMapSize) srcMapSize = srcEnd;
-			if (dstEnd > dstMapSize) dstMapSize = dstEnd;
+			srcMinOffset = min(srcMinOffset, srcOffsetBytes[i]);
+			dstMinOffset = min(dstMinOffset, dstOffsetBytes[i]);
+			bytesToMap = max(bytesToMap, dstOffsetBytes[i] - dstMinOffset + numBytes[i]);
 		}
 
 		ByteBuffer src = null, dst = null;
 		try {
-			src = glMapBufferRange(GL_COPY_READ_BUFFER, srcOffset, srcMapSize, GL_MAP_READ_BIT, COPY_READ_BUFFER);
+			src = glMapBufferRange(GL_COPY_READ_BUFFER, srcMinOffset, bytesToMap, GL_MAP_READ_BIT, COPY_READ_BUFFER);
 			if (src == null) {
-				log.error("Failed to map SRC buffer {}, offset: {}, size: {}", srcId, srcOffset, srcMapSize, new Throwable());
+				log.error("Failed to map SRC buffer {}, offset: {}, size: {}", srcId, srcMinOffset, bytesToMap, new Throwable());
 				return;
 			}
 			COPY_READ_BUFFER = src;
 
-			dst = glMapBufferRange(GL_COPY_WRITE_BUFFER, dstOffset, dstMapSize, GL_MAP_WRITE_BIT | (contiguous ? GL_MAP_INVALIDATE_RANGE_BIT : GL_MAP_FLUSH_EXPLICIT_BIT), COPY_WRITE_BUFFER);
+			dst = glMapBufferRange(
+				GL_COPY_WRITE_BUFFER,
+				dstMinOffset,
+				bytesToMap,
+				GL_MAP_WRITE_BIT | (contiguous ? GL_MAP_INVALIDATE_RANGE_BIT : GL_MAP_FLUSH_EXPLICIT_BIT),
+				COPY_WRITE_BUFFER
+			);
 			if (dst == null) {
-				log.error("Failed to map DST buffer {}, offset: {}, size: {}", dstId, dstOffset, dstMapSize, new Throwable());
+				log.error("Failed to map DST buffer {}, offset: {}, size: {}", dstId, dstMinOffset, bytesToMap, new Throwable());
 				return;
 			}
 			COPY_WRITE_BUFFER = dst;
 
 			performCopies(
 				src, dst,
-				srcOffset, dstOffset,
+				srcMinOffset, dstMinOffset,
 				srcOffsetBytes, dstOffsetBytes, numBytes,
 				count, !contiguous
 			);
 		} finally {
-			if(src != null) glUnmapBuffer(GL_COPY_READ_BUFFER);
-			if(dst != null) glUnmapBuffer(GL_COPY_WRITE_BUFFER);
+			if (src != null) glUnmapBuffer(GL_COPY_READ_BUFFER);
+			if (dst != null) glUnmapBuffer(GL_COPY_WRITE_BUFFER);
 		}
 	}
 
@@ -258,10 +247,11 @@ public class GLBuffer implements Destructible {
 				src, dst,
 				0, 0,
 				srcOffsetBytes, dstOffsetBytes, numBytes,
-				count, false);
+				count, false
+			);
 		} finally {
-			if(src != null) glUnmapBuffer(GL_COPY_READ_BUFFER);
-			if(dst != null) glUnmapBuffer(GL_COPY_WRITE_BUFFER);
+			if (src != null) glUnmapBuffer(GL_COPY_READ_BUFFER);
+			if (dst != null) glUnmapBuffer(GL_COPY_WRITE_BUFFER);
 		}
 	}
 
@@ -284,6 +274,7 @@ public class GLBuffer implements Destructible {
 			int dstPos = (int) (dstOffsets[i] - dstBase);
 			int len = (int) sizes[i];
 
+			// Update the limit before the position, to appease internal bounds checks
 			src.limit(srcPos + len);
 			src.position(srcPos);
 

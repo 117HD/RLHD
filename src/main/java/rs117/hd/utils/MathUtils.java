@@ -715,6 +715,10 @@ public final class MathUtils {
 		return min(max(v, min), max);
 	}
 
+	public static long clamp(long v, long min, long max) {
+		return min(max(v, min), max);
+	}
+
 	public static float[] clamp(float[] out, float[] v, float[] min, float[] max) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = clamp(v[i % v.length], min[i % min.length], max[i % max.length]);

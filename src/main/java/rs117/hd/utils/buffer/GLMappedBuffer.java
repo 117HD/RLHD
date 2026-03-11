@@ -74,7 +74,6 @@ public final class GLMappedBuffer {
 
 		owner.bind();
 
-
 		final ByteBuffer buf;
 		if (owner.target != GL_STATIC_DRAW && GL_CAPS.GL_ARB_map_buffer_range && !GLBuffer.DEBUG_MAC_OS) {
 			int glFlags = 0;
@@ -82,10 +81,9 @@ public final class GLMappedBuffer {
 			if ((flags & MAP_READ) != 0) glFlags |= GL_MAP_READ_BIT;
 			if ((flags & MAP_UNSYNCHRONIZED) != 0) glFlags |= GL_MAP_UNSYNCHRONIZED_BIT;
 
-			long mapSize = max(0, min(owner.size - offsetBytes, sizeBytes));
-			if (mapSize <= 0) {
+			long mapSize = clamp(owner.size - offsetBytes, 0, sizeBytes);
+			if (mapSize <= 0)
 				return this;
-			}
 
 			if ((flags & MAP_INVALIDATE) != 0) {
 				if (mapSize == owner.size) glFlags |= GL_MAP_INVALIDATE_BUFFER_BIT;
@@ -101,12 +99,13 @@ public final class GLMappedBuffer {
 			this.mappedOffset = offsetBytes;
 		} else {
 			int glAccess;
-			if((flags & (MAP_WRITE | MAP_READ)) == (MAP_WRITE | MAP_READ))
+			if ((flags & (MAP_WRITE | MAP_READ)) == (MAP_WRITE | MAP_READ)) {
 				glAccess = GL_READ_WRITE;
-			else if((flags & MAP_WRITE) != 0)
+			} else if ((flags & MAP_WRITE) != 0) {
 				glAccess = GL_WRITE_ONLY;
-			else
+			} else {
 				glAccess = GL_READ_ONLY;
+			}
 
 			buf = glMapBuffer(owner.target, glAccess, byteView);
 			this.mappedOffset = 0;
@@ -177,8 +176,8 @@ public final class GLMappedBuffer {
 	void destroy() {
 		unmap();
 
-		byteView  = null;
-		intView   = null;
+		byteView = null;
+		intView = null;
 		floatView = null;
 	}
 }
