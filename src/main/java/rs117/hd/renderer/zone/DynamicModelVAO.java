@@ -62,7 +62,7 @@ public class DynamicModelVAO implements Destructible {
 	private long[] copyNumBytes = new long[16];
 
 	DynamicModelVAO(String name, boolean useStagingBuffer) {
-		if (useStagingBuffer) {
+		if (useStagingBuffer && GLBuffer.supportsStorageBuffers()) {
 			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
 				"VAO::VBO_STAGING::" + name,
