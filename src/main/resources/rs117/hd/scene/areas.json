@@ -7401,13 +7401,13 @@
   {
     "name": "PLAYER_OWNED_HOUSE",
     "regionBoxes": [
-      [ 7257, 8026 ]
+      [ 7534, 8303 ]
     ]
   },
   {
     "name": "PLAYER_OWNED_HOUSE_SNOWY",
-    "aabbs": [
-      [ 1984, 5696, 1, 2047, 5823, 1 ]
+    "regionBoxes": [
+      [ 8046, 8047, 1 ]
     ]
   },
   {
