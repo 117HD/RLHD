@@ -1652,8 +1652,8 @@
   {
     "name": "ROCK_1",
     "normalMap": "ROCK_1_N",
-    "specularStrength": 0.35,
-    "specularGloss": 40.0
+    "specularStrength": 0.25,
+    "specularGloss": 45.0
   },
   {
     "name": "ROCK_1_LIGHT",
@@ -1672,7 +1672,7 @@
     "name": "ROCK_2",
     "normalMap": "ROCK_2_N",
     "brightness": 1.083,
-    "specularStrength": 0.35,
+    "specularStrength": 0.3,
     "specularGloss": 60.0
   },
   {
