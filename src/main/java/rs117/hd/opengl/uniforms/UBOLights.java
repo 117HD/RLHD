@@ -21,12 +21,13 @@ public class UBOLights extends UniformBuffer<GLBuffer> {
 		return lights != null ? "UBOLights" : "UBOLightsCulling";
 	}
 
-	public void setLight(int lightIdx, float[] position, float[] color) {
+	public void setLight(int lightIdx, float[] position, float[] color, float[] direction) {
 		if (lightIdx >= 0 && lightIdx < MAX_LIGHTS) {
 			if (lights != null) {
 				var struct = lights[lightIdx];
 				struct.position.set(position);
 				struct.color.set(color);
+				struct.direction.set(direction);
 			} else {
 				lightPositions[lightIdx].set(position);
 			}
@@ -36,5 +37,6 @@ public class UBOLights extends UniformBuffer<GLBuffer> {
 	public static class LightStruct extends UniformBuffer.StructProperty {
 		public Property position = addProperty(PropertyType.FVec4, "position");
 		public Property color = addProperty(PropertyType.FVec4, "color");
+		public Property direction = addProperty(PropertyType.FVec4, "direction");
 	}
 }

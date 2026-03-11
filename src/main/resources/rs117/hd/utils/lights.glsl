@@ -19,6 +19,19 @@ void calculateLight(
         float attenuation = 1 - sqrt(distanceSquared / radiusSquared);
         attenuation *= attenuation;
 
+        // Spotlight cone attenuation with near-field spill
+        float outerConeCos = light.color.w;
+        if (outerConeCos > 0.0) {
+            vec3 fragDir = normalize(-lightToFrag); // direction from light to fragment
+            float spotCos = dot(fragDir, light.direction.xyz);
+            float innerConeCos = light.direction.w;
+            float coneFactor = smoothstep(outerConeCos, innerConeCos, spotCos);
+            // Near the light source, allow omnidirectional spill so the emitter itself glows
+            float proximity = 1.0 - sqrt(distanceSquared / radiusSquared);
+            float spill = proximity * proximity * proximity; // cubic falloff
+            attenuation *= max(coneFactor, spill * 0.5);
+        }
+
         vec3 pointLightColor = light.color.rgb * attenuation;
         vec3 pointLightDir = normalize(lightToFrag);
 

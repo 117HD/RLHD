@@ -45338,5 +45338,57 @@
     "graphicsObjectIds": [
       "ZAMORAK_FLAME"
     ]
+  },
+  {
+    "description": "Mining helmet light",
+    "heightFromModel": 1.0,
+    "alignment": "CUSTOM",
+    "offset": [0, 0, 30],
+    "radius": 600,
+    "strength": 10,
+    "color": [255, 230, 180],
+    "type": "STATIC",
+    "innerConeAngle": 35,
+    "outerConeAngle": 50,
+    "equipmentIds": ["CAVE_GOBLIN_MINING_HELMET_UNLIT"]
+  },
+  {
+    "description": "Lit bug lantern",
+    "heightFromModel": 0.5,
+    "alignment": "CUSTOM",
+    "radius": 500,
+    "strength": 6,
+    "color": [180, 255, 200],
+    "type": "FLICKER",
+    "range": 10,
+    "equipmentIds": ["SLAYER_BUGLAN_ON"]
+  },
+  {
+    "description": "Golden prospector helmet light",
+    "heightFromModel": 1.0,
+    "alignment": "CUSTOM",
+    "offset": [ 0.0, -0.0, 48.0 ],
+    "radius": 600,
+    "strength": 20,
+    "color": [255, 215, 100],
+    "type": "STATIC",
+    "innerConeAngle": 5,
+    "outerConeAngle": 40,
+    "conePitch": -35,
+    "equipmentIds": ["MOTHERLODE_REWARD_HAT_GOLD"]
+  },
+  {
+    "description": "Prospector helmet light",
+    "heightFromModel": 1.0,
+    "alignment": "CUSTOM",
+    "offset": [ 0.0, -0.0, 48.0 ],
+    "radius": 600,
+    "strength": 20,
+    "color": [255, 215, 100],
+    "type": "STATIC",
+    "innerConeAngle": 5,
+    "outerConeAngle": 40,
+    "conePitch": -35,
+    "equipmentIds": ["MOTHERLODE_REWARD_HAT"]
   }
 ]

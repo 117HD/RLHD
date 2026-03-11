@@ -4,8 +4,9 @@
 
 #if DYNAMIC_LIGHTS
 struct PointLight {
-    vec4 position;
-    vec4 color;
+    vec4 position;  // xyz = world pos, w = radiusSquared
+    vec4 color;     // rgb = color * strength, w = outerConeCos (0 = point light)
+    vec4 direction; // xyz = normalized dir, w = innerConeCos
 };
 
 layout(std140) uniform UBOLights {

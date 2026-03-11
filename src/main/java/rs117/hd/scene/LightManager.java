@@ -41,6 +41,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import net.runelite.api.kit.KitType;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
@@ -103,6 +104,7 @@ public class LightManager {
 	private final ListMultimap<Integer, LightDefinition> OBJECT_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> PROJECTILE_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
+	private final ListMultimap<Integer, LightDefinition> EQUIPMENT_LIGHTS = ArrayListMultimap.create();
 
 	private final Renderable[] imposterRenderables = new Renderable[2];
 	private boolean reloadLights;
@@ -128,6 +130,7 @@ public class LightManager {
 			OBJECT_LIGHTS.clear();
 			PROJECTILE_LIGHTS.clear();
 			GRAPHICS_OBJECT_LIGHTS.clear();
+			EQUIPMENT_LIGHTS.clear();
 
 			for (LightDefinition lightDef : lights) {
 				lightDef.normalize();
@@ -141,6 +144,7 @@ public class LightManager {
 				lightDef.objectIds.forEach(id -> OBJECT_LIGHTS.put(id, lightDef));
 				lightDef.projectileIds.forEach(id -> PROJECTILE_LIGHTS.put(id, lightDef));
 				lightDef.graphicsObjectIds.forEach(id -> GRAPHICS_OBJECT_LIGHTS.put(id, lightDef));
+				lightDef.equipmentIds.forEach(id -> EQUIPMENT_LIGHTS.put(id, lightDef));
 			}
 
 			log.debug("Loaded {} lights", lights.length);
@@ -179,6 +183,11 @@ public class LightManager {
 				addNpcLights(npc);
 				addSpotanimLights(npc);
 			});
+
+			for (Player player : client.getTopLevelWorldView().players()) {
+				if (player != null)
+					addEquipmentLights(player);
+			}
 		}
 
 		// These should never occur, but just in case...
@@ -348,7 +357,20 @@ public class LightManager {
 							lerpX
 						);
 						float tileHeight = mix(heightSouth, heightNorth, lerpY);
-						light.origin[1] = (int) tileHeight - 1 - light.def.height;
+						if (light.equipmentItemId != -1 && light.def.heightFromModel >= 0) {
+							try {
+								Model model = light.actor.getModel();
+								if (model != null) {
+									light.origin[1] = (int) tileHeight - 1 - (int) (model.getModelHeight() * light.def.heightFromModel);
+								} else {
+									light.origin[1] = (int) tileHeight - 1 - light.def.height;
+								}
+							} catch (Exception ex) {
+								light.origin[1] = (int) tileHeight - 1 - light.def.height;
+							}
+						} else {
+							light.origin[1] = (int) tileHeight - 1 - light.def.height;
+						}
 					}
 				}
 			}
@@ -387,6 +409,18 @@ public class LightManager {
 
 				light.pos[0] += offsetX;
 				light.pos[2] += offsetY;
+			}
+
+			if (light.def.outerConeAngle > 0) {
+				float yawRad = light.orientation * JAU_TO_RAD;
+				float pitchRad = light.def.conePitch * DEG_TO_RAD;
+				float yawSin = sin(yawRad);
+				float yawCos = cos(yawRad);
+				float pitchCos = cos(pitchRad);
+				float pitchSin = sin(pitchRad);
+				light.direction[0] = -yawSin * pitchCos;
+				light.direction[1] = -pitchSin;
+				light.direction[2] = -yawCos * pitchCos;
 			}
 
 			// This is a little bit slow, so only update it when necessary
@@ -770,6 +804,43 @@ public class LightManager {
 		}
 	}
 
+	private void addEquipmentLights(Player player) {
+		var sceneContext = plugin.getSceneContext();
+		if (sceneContext == null)
+			return;
+
+		PlayerComposition comp = player.getPlayerComposition();
+		if (comp == null)
+			return;
+
+		for (KitType slot : KitType.values()) {
+			int itemId = comp.getEquipmentId(slot);
+			if (itemId == -1)
+				continue;
+
+			for (LightDefinition def : EQUIPMENT_LIGHTS.get(itemId)) {
+				boolean isDuplicate = sceneContext.lights.stream()
+					.anyMatch(light ->
+						light.actor == player &&
+						light.equipmentItemId == itemId &&
+						light.def == def &&
+						!light.markedForRemoval);
+				if (isDuplicate)
+					continue;
+
+				Light light = new Light(def);
+				light.plane = -1;
+				light.actor = player;
+				light.equipmentItemId = itemId;
+				sceneContext.lights.add(light);
+			}
+		}
+	}
+
+	private void removeEquipmentLights(Player player) {
+		removeLightIf(light -> light.actor == player && light.equipmentItemId != -1);
+	}
+
 	private void handleObjectSpawn(TileObject object) {
 		var sceneContext = plugin.getSceneContext();
 		if (sceneContext != null)
@@ -1045,11 +1116,15 @@ public class LightManager {
 	@Subscribe
 	public void onPlayerSpawned(PlayerSpawned spawn) {
 		addSpotanimLights(spawn.getPlayer());
+		addEquipmentLights(spawn.getPlayer());
 	}
 
 	@Subscribe
 	public void onPlayerChanged(PlayerChanged change) {
 		// Don't add spotanim lights on player change events, since it breaks death & respawn lights
+		Player player = change.getPlayer();
+		removeEquipmentLights(player);
+		addEquipmentLights(player);
 	}
 
 	@Subscribe
