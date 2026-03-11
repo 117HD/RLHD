@@ -179,20 +179,17 @@ public class WorldViewContext {
 		}
 	}
 
-	void handleZoneSwap(float deltaTime, int zx, int zz) {
+	void handleZoneSwap(int zx, int zz, boolean queue) {
 		Zone curZone = zones[zx][zz];
 		ZoneUploadJob uploadTask = curZone.uploadJob;
 		if (uploadTask == null)
 			return;
 
 		if (!uploadTask.isQueued()) {
-			if (deltaTime > 0.0f && uploadTask.delay >= 0.0f) {
-				uploadTask.delay -= deltaTime;
-				if (uploadTask.delay <= 0.0f) {
-					log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
-					uploadTask.delay = -1.0f;
-					uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
-				}
+			if (queue && uploadTask.revealAfterTimestampMs < System.currentTimeMillis()) {
+				log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
+				uploadTask.revealAfterTimestampMs = 0;
+				uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
 			}
 			return;
 		}
@@ -235,10 +232,10 @@ public class WorldViewContext {
 		}
 	}
 
-	void update(float deltaTime) {
+	void update() {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				handleZoneSwap(deltaTime, x, z);
+				handleZoneSwap(x, z, true);
 
 				if (zones[x][z].rebuild) {
 					zones[x][z].rebuild = false;
@@ -256,7 +253,7 @@ public class WorldViewContext {
 
 		for (int x = 0; x < sizeX; x++)
 			for (int z = 0; z < sizeZ; z++)
-				handleZoneSwap(-1.0f, x, z);
+				handleZoneSwap(x, z, false);
 	}
 
 	void free() {
@@ -302,7 +299,7 @@ public class WorldViewContext {
 
 	void invalidateZone(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
-		float prevUploadDelay = -1.0f;
+		long revealAfterTimestampMs = 0;
 		if (curZone.uploadJob != null) {
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
@@ -312,7 +309,7 @@ public class WorldViewContext {
 				zz,
 				curZone.uploadJob.zone.hashCode()
 			);
-			prevUploadDelay = curZone.uploadJob.delay;
+			revealAfterTimestampMs = curZone.uploadJob.revealAfterTimestampMs;
 			curZone.uploadJob.cancel();
 			curZone.uploadJob.release();
 		}
@@ -321,8 +318,10 @@ public class WorldViewContext {
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
-		curZone.uploadJob.delay = prevUploadDelay;
-		if (curZone.uploadJob.delay < 0.0f)
+		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
+
+		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders
+		if (sceneContext.isInHouse)
 			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
