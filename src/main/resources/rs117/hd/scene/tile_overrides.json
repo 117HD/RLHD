@@ -5582,6 +5582,30 @@
     ]
   },
   {
+    "name": "WILDY_POH_DIRT",
+    "area": "PLAYER_OWNED_HOUSE_WILDY",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR_2",
+    "maxLightness": 13,
+    "shiftLightness": -1,
+    "replacements": {
+      "WILDY_POH_DIRT_BLENDING": "blending"
+    }
+  },
+  {
+    "name": "WILDY_POH_DIRT_BLENDING",
+    "area": "PLAYER_OWNED_HOUSE_WILDY",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR_2",
+    "maxLightness": 12,
+    "minLightness": 5,
+    "shiftLightness": -3
+  },
+  {
     "name": "CAMDOZAAL_UNDERWALL_TILES",
     "area": "CAMDOZAAL",
     "overlayIds": [

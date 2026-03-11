@@ -5,6 +5,11 @@
     "unlit": true
   },
   {
+    "name": "UNLIT_125",
+    "parent": "UNLIT",
+    "brightness": 1.25
+  },
+  {
     "name": "TRANSPARENT",
     "hasTransparency": true
   },

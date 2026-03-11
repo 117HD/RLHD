@@ -22729,18 +22729,34 @@
     "description": "POH_EXIT_PORTAL",
     "height": 160,
     "alignment": "CENTER",
-    "radius": 350,
-    "strength": 15,
+    "radius": 450,
+    "strength": 25,
     "color": [
-      93,
-      0,
-      255
+      160,
+      80,
+      250
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "POH_EXIT_PORTAL"
+    ]
+  },
+  {
+    "description": "POH_EXIT_PORTAL_WILDERNESS",
+    "offset": [ 0, 160, 0 ],
+    "alignment": "CENTER",
+    "radius": 475,
+    "strength": 25,
+    "color": [
+      255,
+      200,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "POH_EXIT_PORTAL_WILDERNESS"
     ]
   },
   {

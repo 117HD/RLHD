@@ -7552,6 +7552,30 @@
     "flatNormals": true
   },
   {
+    "description": "WILDY_POH_ROCKS",
+    "baseMaterial": "ROCK_3",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "objectIds": [
+      "DEADMAN_RUBBLE02",
+      "DEADMAN_RUBBLE01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.34
+  },
+  {
+    "description": "WILDY_POH_ROCKS",
+    "baseMaterial": "GRAVEL_SEMI_LIGHT",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "objectIds": [
+      "WILD4_DUGUPSOIL_2",
+      "WILD4_DUGUPSOIL_3",
+      "WILD4_DUGUPSOIL_1",
+      "POH_FLOORDECOR_DEADMAN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
     "objectIds": [
@@ -12857,12 +12881,13 @@
     "uvScale": 0.5,
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
-      "POH_EXIT_PORTAL"
+      "POH_EXIT_PORTAL",
+      "POH_EXIT_PORTAL_WILDERNESS"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 48",
-        "baseMaterial": "NONE",
+        "colors": "h == 48 || h == 6",
+        "baseMaterial": "UNLIT_125",
         "castShadows": false
       }
     ]
