@@ -130,8 +130,9 @@ public class GpuIntBuffer {
 		int textureFaceIdx
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
-		buffer.put(float16(u) << 16 | z & 0xFFFF);
-		buffer.put(float16(w) << 16 | float16(v));
+		buffer.put(z & 0xFFFF);
+		buffer.put(float16(v) << 16 | float16(u));
+		buffer.put(float16(w));
 		// Unnormalized normals, assumed to be within short max
 		buffer.put((ny & 0xFFFF) << 16 | nx & 0xFFFF);
 		buffer.put(nz & 0xFFFF);
