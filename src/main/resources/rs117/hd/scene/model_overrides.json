@@ -4289,14 +4289,14 @@
     ],
     "materialOverrides": {
       "HD_BRICK": {
-        "textureMaterial": "HD_BRICKWALL"
+        "textureMaterial": "HD_BRICK"
       }
     }
   },
   {
     "description": "Lumbridge - Building Walls",
     "areas": [ "LUMBRIDGE" ],
-    "textureMaterial": "HD_BRICKWALL",
+    "textureMaterial": "HD_BRICK",
     "flatNormals": true,
     "objectIds": [
       "BRICKWALL",
@@ -4309,7 +4309,7 @@
   {
     "description": "Lumbridge - Castle Walls",
     "areas": [ "LUMBRIDGE" ],
-    "textureMaterial": "HD_BRICKWALL",
+    "textureMaterial": "HD_BRICK",
     "flatNormals": true,
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
@@ -4322,7 +4322,7 @@
   {
     "description": "Lumbridge - Castle Walls",
     "areas": [ "LUMBRIDGE" ],
-    "textureMaterial": "HD_BRICKWALL",
+    "textureMaterial": "HD_BRICK",
     "flatNormals": true,
     "objectIds": [
       "CROSS_CASTLEEDGE",
@@ -4339,7 +4339,7 @@
     "flatNormals": true,
     "materialOverrides": {
       "HD_BRICK": {
-        "textureMaterial": "HD_BRICKWALL"
+        "textureMaterial": "HD_BRICK"
       }
     },
     "objectIds": [
@@ -4351,7 +4351,7 @@
     "description": "Edgeville - Walls",
     "areas": [ "EDGEVILLE" ],
     "flatNormals": true,
-    "textureMaterial": "HD_BRICKWALL",
+    "textureMaterial": "HD_BRICK",
     "objectIds": [
       "CASTLEBATTLEMENTS",
       "BRICKWALL"
@@ -4360,7 +4360,7 @@
   {
     "description": "Edgeville Monastary - Walls",
     "areas": [ "EDGEVILLE_MONASTERY" ],
-    "textureMaterial": "HD_BRICKWALL",
+    "textureMaterial": "HD_BRICK",
     "baseMaterial": "WATTLE_1",
     "flatNormals": true,
     "objectIds": [
@@ -4424,15 +4424,6 @@
         "uvType": "BOX",
         "baseMaterial": "SMOOTH_STONE"
       }
-    ]
-  },
-  {
-    "description": "LUMBRIDGE_CASTLE_WALL_CROSS_TOPS",
-    "baseMaterial": "METALLIC_1_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.2,
-    "objectIds": [
-      "CROSS_CASTLEEDGE"
     ]
   },
   {
@@ -29392,7 +29383,6 @@
     "description": "Hadleys House - Wattle",
     "flatNormals": true,
     "baseMaterial": "WATTLE_1",
-    "flatNormals": true,
     "objectIds": [
       "PAINTEDBRICKWALL_1",
       "PAINTEDBRICKWALL_2"
