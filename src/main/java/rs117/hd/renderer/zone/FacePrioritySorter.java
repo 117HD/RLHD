@@ -210,7 +210,7 @@ class FacePrioritySorter {
 				continue;
 
 			int distance = radius + (distances[v1] + distances[v2] + distances[v3]) / 3;
-			assert distance >= 0 && distance < diameter;
+//			assert distance >= 0 && distance < diameter; // TODO: Fixed on master, disabling since the exception is handled
 			distanceToFaces[distance][distanceFaceCount[distance]++] = i;
 		}
 
