@@ -281,7 +281,7 @@ public class ZoneRenderer implements Renderer {
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 			preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
 		} else {
-			Scene topLevel = client.getScene();
+			Scene topLevel = client.getTopLevelWorldView().getScene();
 			vaoO.addRange(topLevel);
 			vaoPO.addRange(topLevel);
 			vaoShadow.addRange(topLevel);
@@ -942,7 +942,7 @@ public class ZoneRenderer implements Renderer {
 				vaoPO.addRange(scene);
 				vaoShadow.addRange(scene);
 
-				if (scene.getWorldViewId() == -1) {
+				if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 					directionalCmd.SetShader(fastShadowProgram);
 
 					// Draw opaque
@@ -1107,7 +1107,7 @@ public class ZoneRenderer implements Renderer {
 
 		ctx.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane(), worldPos);
 		// Hide everything outside the current area if area hiding is enabled
-		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == -1) {
+		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == WorldView.TOPLEVEL) {
 			var base = ctx.sceneContext.sceneBase;
 			assert base != null;
 			boolean inArea = ctx.sceneContext.currentArea.containsPoint(
