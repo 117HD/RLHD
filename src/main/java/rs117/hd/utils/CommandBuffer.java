@@ -309,7 +309,7 @@ public class CommandBuffer {
 					case GL_BIND_VERTEX_ARRAY_TYPE: {
 						long packed = cmd[readHead++];
 						int eboIdx = (int) (packed >> 32);
-						if (eboIdx != 0) {
+						if (eboIdx >= 0) {
 							renderState.vaoAndEbo.set((int) packed, ((GLBuffer) objects[eboIdx]).id);
 						} else {
 							renderState.vao.set((int) packed);
