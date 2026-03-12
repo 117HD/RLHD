@@ -92,7 +92,7 @@ public class CommandBuffer {
 	public void BindVertexArray(int vao, GLBuffer ebo) {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_BIND_VERTEX_ARRAY_TYPE & 0xFF;
-		cmd[writeHead++] = (long) vao | (long) writeObject(ebo) << 32;
+		cmd[writeHead++] = (long) writeObject(ebo) << 32 | vao & INT_MASK;
 	}
 
 	public void BindVertexArray(int vao) {
@@ -309,7 +309,7 @@ public class CommandBuffer {
 					case GL_BIND_VERTEX_ARRAY_TYPE: {
 						long packed = cmd[readHead++];
 						int eboIdx = (int) (packed >> 32);
-						if (eboIdx >= 0) {
+						if (eboIdx != 0) {
 							renderState.vaoAndEbo.set((int) packed, ((GLBuffer) objects[eboIdx]).id);
 						} else {
 							renderState.vao.set((int) packed);
