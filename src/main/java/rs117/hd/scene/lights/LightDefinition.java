@@ -22,8 +22,8 @@ public class LightDefinition {
 	public LightType type = LightType.STATIC;
 	public float duration;
 	public float range;
-	public int fadeInDuration = 50;
-	public int fadeOutDuration = 50;
+	public int fadeInDuration = 0;
+	public int fadeOutDuration = 0;
 	public int spawnDelay;
 	public int despawnDelay;
 	public boolean fixedDespawnTime;
