@@ -18931,6 +18931,7 @@
   },
   {
     "description": "Gnome - Ground Decoration - Wooden - Log Supports",
+    "retainVanillaUvs": false,
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "BRIDGE_CORNERFLOOR",
@@ -18978,6 +18979,12 @@
         "description": "Lamp",
         "colors": "s == 0",
         "baseMaterial": "METALLIC_1_LIGHT"
+      },      {
+        "description": "Lamp",
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": false,
+        "flatNormals": true
       }
     ],
     "objectIds": [
