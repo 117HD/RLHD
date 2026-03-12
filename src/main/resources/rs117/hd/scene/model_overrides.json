@@ -5182,7 +5182,8 @@
       "FAI_VARROCK_CASTLE_WALL_SHORT_WALL_BLEND",
       "FAI_VARROCK_CASTLE_WALL_SHORT_WALL_BLEND_MIRROR",
       "FAI_VARROCK_STONE_SHORT_WALL_CUT_MIRROR",
-      "DRYSTONEWALL_PILE"
+      "DRYSTONEWALL_PILE",
+      "POH_FENCING3"
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -51050,7 +51051,9 @@
       },
       {
         "colors": "h == 39 && s == 1 || h == 42 && s == 2 || h == 48 && s == 2 || h == 55 && s == 4 || h == 58 && s == 7",
-        "baseMaterial": "METALLIC_1_LIGHT"
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
       }
     ]
   },
@@ -51080,7 +51083,7 @@
   },
   {
     "description": "PoH - Portal Room Focus",
-    "baseMaterial": "MARBLE_4_LIGHT_GLOSS",
+    "baseMaterial": "MARBLE_2",
     "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.85,
@@ -51350,6 +51353,36 @@
       {
         "colors": "h == 34 ",
         "baseMaterial": "GRAY_200"
+      }
+    ]
+  },
+  {
+    "description": "Wilderness PoH - Walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DEADMAN_POH_WALL_CRUMBLY02_R",
+      "DEADMAN_POH_WALL_CRUMBLY02_L",
+      "DEADMAN_POH_WALL",
+      "DEADMAN_POH_WALL_CRUMBLY01_L",
+      "DEADMAN_POH_WALL_CRUMBLY03_L",
+      "DEADMAN_POH_WINDOW",
+      "DEADMAN_POH_WALL_CRUMBLY01_R",
+      "DEADMAN_POH_WALL_CRUMBLY03_R"
+    ]
+  },
+  {
+    "description": "Wilderness PoH - Walls - Church Window",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "POH_DEADMAN_WINDOW_BINGO_01",
+      "POH_DEADMAN_WINDOW_BINGO_02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90"
       }
     ]
   },
