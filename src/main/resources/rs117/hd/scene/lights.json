@@ -23059,7 +23059,7 @@
     ]
   },
   {
-    "description": "SCRYING_POOL",
+    "description": "POH_PORTAL_ROOM_FOCUS_AND_SCRYING_PPOL",
     "height": 170,
     "alignment": "CENTER",
     "radius": 400,

@@ -29724,8 +29724,9 @@
     "description": "PoH - Basic stone wall with wooden window frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.65,
     "flatNormals": true,
+    "uvOrientationY": 512,
     "colorOverrides": [
       {
         "colors": "s == 0 && l < 30",
@@ -51003,6 +51004,22 @@
         "baseMaterial": "MARBLE_4_SEMI_LIGHT_GLOSS",
         "uvType": "BOX",
         "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "PoH - Portal Room Focus",
+    "baseMaterial": "MARBLE_4_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.85,
+    "objectIds": [
+      "POH_TELEPORT_CENTREPIECE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
