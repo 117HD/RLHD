@@ -23059,7 +23059,7 @@
     ]
   },
   {
-    "description": "POH_PORTAL_ROOM_FOCUS_AND_SCRYING_PPOL",
+    "description": "POH_PORTAL_ROOM_FOCUS_AND_SCRYING_POOL",
     "height": 170,
     "alignment": "CENTER",
     "radius": 400,
@@ -23076,6 +23076,42 @@
       "POH_SCRYING_POOL",
       "POH_TELEPORT_CENTREPIECE",
       "POH_TELEPORT_CENTREPIECE_GRAND"
+    ]
+  },
+  {
+    "description": "POH_WILDY_GARDEN_LAVA_IMP_FOUNTAIN",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "height": 125,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 15,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "range": 25,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE4"
+    ]
+  },
+  {
+    "description": "POH_WILDY_GARDEN_LAVA_ORNAMENTS_POND",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "height": 175,
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 20,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "range": 25,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE3"
     ]
   },
   {

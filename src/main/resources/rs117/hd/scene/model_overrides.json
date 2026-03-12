@@ -50648,6 +50648,23 @@
     ]
   },
   {
+    "description": "Depth Bias Fix - Garden Rock - Wildy",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "depthBias": 210,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
     "description": "Depth Bias Fix - Garden Fountain",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
@@ -50673,6 +50690,39 @@
     ]
   },
   {
+    "description": "Depth Bias Fix - Garden Fountain - Wildy",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "depthBias": 210,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "TRANSPARENT"
+      },
+      {
+        "colors": "a < 255 || h == 37",
+        "baseMaterial": "LAVA",
+        "depthBias": 210,
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationY": 1024
+      },
+      {
+        "colors": "h == 36",
+        "baseMaterial": "HD_MAGMA_2",
+        "depthBias": 210,
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 1024
+      }
+    ]
+  },
+  {
     "description": "Depth Bias Fix - Garden Pond",
     "retainVanillaUvs": false,
     "uvType": "MODEL_XZ",
@@ -50691,8 +50741,29 @@
       },
       {
         "colors": "h == 7",
-        "retainVanillaUvs": false,
         "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Garden Pond - Wildy",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "retainVanillaUvs": false,
+    "textureMaterial": "HD_MAGMA_2",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "TRANSPARENT"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_3",
         "uvType": "BOX",
         "uvScale": 0.5
       }
