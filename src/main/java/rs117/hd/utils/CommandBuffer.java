@@ -309,10 +309,10 @@ public class CommandBuffer {
 					case GL_BIND_VERTEX_ARRAY_TYPE: {
 						long packed = cmd[readHead++];
 						int eboIdx = (int) (packed >> 32);
-						if(eboIdx >= 0) {
-							renderState.vaoAndEbo.set((int)packed, ((GLBuffer) objects[eboIdx]).id);
+						if (eboIdx >= 0) {
+							renderState.vaoAndEbo.set((int) packed, ((GLBuffer) objects[eboIdx]).id);
 						} else {
-							renderState.vao.set((int)packed);
+							renderState.vao.set((int) packed);
 						}
 						break;
 					}
@@ -440,7 +440,7 @@ public class CommandBuffer {
 	}
 
 	private int writeObject(Object obj) {
-		if(obj == null)
+		if (obj == null)
 			return -1;
 
 		for (int i = 0; i < objectCount; i++)
