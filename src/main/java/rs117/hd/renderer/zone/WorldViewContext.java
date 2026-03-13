@@ -232,11 +232,15 @@ public class WorldViewContext {
 		}
 	}
 
-	void update() {
+	void processZoneSwaps() {
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
+				handleZoneSwap(x, z, true);
+	}
+
+	void processZoneRebuilds() {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				handleZoneSwap(x, z, true);
-
 				if (zones[x][z].rebuild) {
 					zones[x][z].rebuild = false;
 					invalidateZone(x, z);
@@ -321,7 +325,7 @@ public class WorldViewContext {
 		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
 
 		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders
-		if (sceneContext.isInHouse)
+		if (sceneContext.isInHouse || revealAfterTimestampMs <= 0)
 			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
