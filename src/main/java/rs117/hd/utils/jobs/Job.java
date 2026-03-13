@@ -23,14 +23,13 @@ public abstract class Job {
 	boolean executeAsync = true;
 	JobHandle handle;
 
-
 	public final void waitForCompletion() {
 		waitForCompletion(false);
 	}
 
 	public final void waitForCompletion(boolean shouldRelease) {
 		waitForCompletion(-1);
-		if(shouldRelease)
+		if (shouldRelease)
 			release();
 	}
 
