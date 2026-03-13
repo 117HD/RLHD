@@ -58,6 +58,10 @@
         "type": "boolean",
         "description": "Whether 117 HD should skip lighting the material, largely preserving the vanilla look."
       },
+      "isCanopy": {
+        "type": "boolean",
+        "description": "Is part of the canopy and will be faded if the face occludes the player."
+      },
       "brightness": {
         "type": "number",
         "description": "A brightness multiplier for the material's color."

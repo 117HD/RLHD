@@ -1,5 +1,6 @@
 package rs117.hd.opengl.shader;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -285,6 +286,26 @@ public class ShaderProgram implements Destructible {
 		public void set(float x, float y, float z, float w) {
 			assert program.isActive();
 			glUniform4f(uniformIndex, x, y, z, w);
+		}
+
+		public void set(Color color) {
+			assert program.isActive();
+			if(color != null)
+				glUniform4f(uniformIndex,
+					color.getRed() / 255.0f,
+					color.getBlue() / 255.0f,
+					color.getGreen() / 255.0f,
+					color.getAlpha() / 255.0f);
+		}
+
+		public void set(Color color, float alpha) {
+			assert program.isActive();
+			if(color != null)
+				glUniform4f(uniformIndex,
+					color.getRed() / 255.0f,
+					color.getBlue() / 255.0f,
+					color.getGreen() / 255.0f,
+					alpha);
 		}
 
 		public void set(float... vec4) {

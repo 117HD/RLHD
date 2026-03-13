@@ -27,6 +27,10 @@ layout(std140) uniform UBOMaterials {
 
 #include MATERIAL_GETTER
 
+bool getMaterialIsCanopy(const Material material) {
+    return (material.flags >> 3 & 1) == 1;
+}
+
 bool getMaterialShouldOverrideBaseColor(const Material material) {
     return (material.flags >> 2 & 1) == 1;
 }
