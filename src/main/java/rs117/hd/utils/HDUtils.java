@@ -27,6 +27,7 @@ package rs117.hd.utils;
 import java.awt.Canvas;
 import java.awt.Container;
 import java.awt.Frame;
+import java.util.concurrent.locks.LockSupport;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.swing.JFrame;
@@ -508,4 +509,78 @@ public final class HDUtils {
 
 		return null;
 	}
+
+	public static boolean isRunningCloseToMemoryCeiling(boolean printStats) {
+		final Runtime RT = Runtime.getRuntime();
+
+		final long free = RT.freeMemory();
+		final long total = RT.totalMemory();
+		final long max = RT.maxMemory();
+
+		final long used = total - free;
+		final double heapUsage = (double) used / max;
+		final long expandable = max - total;
+
+		final boolean heapNearlyFull = heapUsage > 0.80;
+		final boolean littleExpandable = expandable < (max * 0.10);
+		final boolean lowFreeInHeap = free < (total * 0.15);
+
+		if(heapNearlyFull && (littleExpandable || lowFreeInHeap)) {
+			if(printStats) {
+				log.debug(
+					"Memory Stats: heapUsage={}%, used={}MB, free={}MB, total={}MB, max={}MB, expandable={}MB, littleExpandable={}, lowFreeInHeap={}",
+					String.format("%.1f", heapUsage * 100),
+					used / (1024 * 1024),
+					free / (1024 * 1024),
+					total / (1024 * 1024),
+					max / (1024 * 1024),
+					expandable / (1024 * 1024),
+					littleExpandable,
+					lowFreeInHeap
+				);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	// Heuristically hint the JVM to run GC when heap usage is high and expansion/free space is limited.
+	// Uses runtime memory stats to approximate allocation pressure (not exact fragmentation).
+	public static boolean hintGC(long maxMillis) {
+		if (!isRunningCloseToMemoryCeiling(true))
+			return false;
+
+		final Runtime RT = Runtime.getRuntime();
+		final long usedBefore = RT.totalMemory() - RT.freeMemory();
+		final long startTime = System.nanoTime();
+		final long deadline = startTime + (maxMillis * 1_000_000L);
+
+		int iterations = 0;
+		while (System.nanoTime() < deadline) {
+			System.gc();
+			System.runFinalization();
+			System.gc();
+			iterations++;
+
+			if (!isRunningCloseToMemoryCeiling(true)) {
+				final long usedAfter = RT.totalMemory() - RT.freeMemory();
+				log.debug(
+					"GC reclaimed {}MB of memory (After {} iterations, {}ms elapsed)",
+					(usedBefore - usedAfter) / (1024 * 1024),
+					iterations,
+					(System.nanoTime() - startTime) / 1_000_000L
+				);
+				return false;
+			}
+
+			LockSupport.parkNanos(1_000_000L);
+		}
+
+		final long usedAfter = RT.totalMemory() - RT.freeMemory();
+		log.debug("GC reclaimed {}MB of memory (timeout reached)", (usedBefore - usedAfter) / (1024 * 1024));
+
+		return true;
+	}
+
+	public static boolean hintGC() { return hintGC(1); }
 }

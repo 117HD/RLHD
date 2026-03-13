@@ -150,10 +150,4 @@ public final class ZoneUploadJob extends Job {
 			x, z
 		);
 	}
-
-	@Override
-	@SuppressWarnings("deprecation")
-	protected void finalize() {
-		log.debug("ZoneUploadJob finalized, it should have been pooled? - {}", this);
-	}
 }
