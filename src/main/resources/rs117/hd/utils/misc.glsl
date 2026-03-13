@@ -112,6 +112,25 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     }
 #endif
 
+const int DITHER_MAP_LEN = 4;
+const float DITHER_MAP_SCALE = 16.0;
+
+const float DITHER_MAP[DITHER_MAP_LEN * DITHER_MAP_LEN] = float[](
+     0.0 / DITHER_MAP_SCALE,  8.0 / DITHER_MAP_SCALE,  2.0 / DITHER_MAP_SCALE, 10.0 / DITHER_MAP_SCALE,
+    12.0 / DITHER_MAP_SCALE,  4.0 / DITHER_MAP_SCALE, 14.0 / DITHER_MAP_SCALE,  6.0 / DITHER_MAP_SCALE,
+     3.0 / DITHER_MAP_SCALE, 11.0 / DITHER_MAP_SCALE,  1.0 / DITHER_MAP_SCALE,  9.0 / DITHER_MAP_SCALE,
+    15.0 / DITHER_MAP_SCALE,  7.0 / DITHER_MAP_SCALE, 13.0 / DITHER_MAP_SCALE,  5.0 / DITHER_MAP_SCALE
+);
+
+// ------------------------------------------------------------
+// Based on https://www.shadertoy.com/view/4t2cRt
+// Returns a dither value (0.0 or 1.0) based on coords + opacity
+// ------------------------------------------------------------
+bool orderedDither(vec2 pixelCoord, float opacity, float scaleFactor) {
+    ivec2 coord = ivec2(pixelCoord / scaleFactor) & (DITHER_MAP_LEN - 1);
+    return DITHER_MAP[coord.x + coord.y * DITHER_MAP_LEN] < clamp(opacity, 0.0, 1.0);
+}
+
 // 2D Random
 float hash(in vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
