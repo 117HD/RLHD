@@ -2478,8 +2478,8 @@
     "normalMap": "HD_BRICK_N",
     "displacementMap": "HD_BRICK_D",
     "displacementScale": 0.05,
-    "specularStrength": 0.3,
-    "specularGloss": 20.0,
+    "specularStrength": 0.20,
+    "specularGloss": 25.0,
     "materialsToReplace": [
       "BRICK"
     ],
@@ -2504,15 +2504,9 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "HD_BRICK_BROWN_N"
-  },
-  {
-    "name": "HD_BRICK_BROWN_D"
-  },
-  {
     "name": "HD_BRICK_BROWN",
-    "normalMap": "HD_BRICK_BROWN_N",
-    "displacementMap": "HD_BRICK_BROWN_D",
+    "normalMap": "HD_BRICK_N",
+    "displacementMap": "HD_BRICK_D",
     "displacementScale": 0.05,
     "specularStrength": 0.35,
     "specularGloss": 20.0,
