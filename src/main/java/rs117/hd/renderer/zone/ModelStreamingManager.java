@@ -200,23 +200,17 @@ public class ModelStreamingManager {
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(false);
 		if (asyncModelCache != null) {
 			asyncModelCache.queue(
-				m, hasAlpha ? zone : null,
-				() -> {
-					final long asyncStart = System.nanoTime();
-					uploadTempModel(
-						worldProjection,
-						ctx,
-						gameObject,
-						renderable,
-						modelOverride,
-						zone,
-						asyncModelCache,
-						isModelPartiallyVisible,
-						hasAlpha,
-						orientation, x, y, z
-					);
-					frameTimer.add(Timer.DRAW_TEMP_ASYNC, System.nanoTime() - asyncStart);
-				}
+				ctx,
+				worldProjection,
+				gameObject,
+				modelOverride,
+				m,
+				zone,
+				isModelPartiallyVisible,
+				hasAlpha,
+				orientation,
+				x, y, z,
+				this::uploadTempModelAsync
 			);
 			return;
 		}
@@ -233,6 +227,36 @@ public class ModelStreamingManager {
 			hasAlpha,
 			orientation, x, y, z
 		);
+	}
+
+	private void uploadTempModelAsync(
+		WorldViewContext ctx,
+		Projection projection,
+		TileObject tileObject,
+		ModelOverride modelOverride,
+		Model model,
+		Zone zone,
+		boolean isModelPartiallyVisible,
+		boolean hasAlpha,
+		int orientation,
+		int x,
+		int y,
+		int z
+	){
+		final long asyncStart = System.nanoTime();
+		uploadTempModel(
+			projection,
+			ctx,
+			(GameObject) tileObject,
+			((GameObject) tileObject).getRenderable(),
+			modelOverride,
+			zone,
+			model,
+			isModelPartiallyVisible,
+			hasAlpha,
+			orientation, x, y, z
+		);
+		frameTimer.add(Timer.DRAW_TEMP_ASYNC, System.nanoTime() - asyncStart);
 	}
 
 	private void uploadTempModel(
@@ -436,7 +460,6 @@ public class ModelStreamingManager {
 		}
 		streamingContext.renderableCount++;
 
-		final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 		final boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
 
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
@@ -444,23 +467,17 @@ public class ModelStreamingManager {
 		if (asyncModelCache != null) {
 			// Fast path, buffer the model into the job queue to unblock rl internals
 			asyncModelCache.queue(
-				m, hasAlpha ? zone : null,
-				() -> {
-					final long asyncStart = System.nanoTime();
-					uploadDynamicModel(
-						ctx,
-						projection,
-						tileObject,
-						modelOverride,
-						asyncModelCache,
-						zone,
-						isModelPartiallyVisible,
-						hasAlpha,
-						preOrientation, orient,
-						x, y, z
-					);
-					frameTimer.add(Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - asyncStart);
-				}
+				ctx,
+				projection,
+				tileObject,
+				modelOverride,
+				m,
+				zone,
+				isModelPartiallyVisible,
+				hasAlpha,
+				orient,
+				x, y, z,
+				this::uploadDynamicModelAsync
 			);
 			return;
 		}
@@ -474,9 +491,38 @@ public class ModelStreamingManager {
 			zone,
 			isModelPartiallyVisible,
 			hasAlpha,
-			preOrientation, orient,
+			orient,
 			x, y, z
 		);
+	}
+
+	private void uploadDynamicModelAsync(
+		WorldViewContext ctx,
+		Projection projection,
+		TileObject tileObject,
+		ModelOverride modelOverride,
+		Model model,
+		Zone zone,
+		boolean isModelPartiallyVisible,
+		boolean hasAlpha,
+		int orientation,
+		int x,
+		int y,
+		int z) {
+		final long asyncStart = System.nanoTime();
+		uploadDynamicModel(
+			ctx,
+			projection,
+			tileObject,
+			modelOverride,
+			model,
+			zone,
+			isModelPartiallyVisible,
+			hasAlpha,
+			orientation,
+			x, y, z
+		);
+		frameTimer.add(Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - asyncStart);
 	}
 
 	private void uploadDynamicModel(
@@ -488,7 +534,6 @@ public class ModelStreamingManager {
 		Zone zone,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
-		int preOrientation,
 		int orient,
 		int x,
 		int y,
@@ -516,6 +561,7 @@ public class ModelStreamingManager {
 				orient
 			);
 
+			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (shouldSort && !isSquashed)
 				facePrioritySorter.sortModelFaces(visibleFaces, m);
