@@ -206,10 +206,9 @@ public final class AsyncCachedModel extends Job implements Model {
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
 		int orientation,
-		int x,
-		int y,
-		int z,
-		@Nonnull UploadModelFunc uploadFunc) {
+		int x, int y, int z,
+		@Nonnull UploadModelFunc uploadFunc
+	) {
 		this.ctx = ctx;
 		this.projection = projection;
 		this.tileObject = tileObject;
@@ -310,7 +309,18 @@ public final class AsyncCachedModel extends Job implements Model {
 			return false;
 
 		try {
-			uploadFunc.upload(ctx, projection, tileObject, modelOverride, this, zone, isModelPartiallyVisible, hasAlpha, orientation, x, y, z);
+			uploadFunc.upload(
+				ctx,
+				projection,
+				tileObject,
+				modelOverride,
+				this,
+				zone,
+				isModelPartiallyVisible,
+				hasAlpha,
+				orientation,
+				x, y, z
+			);
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
 		} finally {
@@ -413,9 +423,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			boolean isModelPartiallyVisible,
 			boolean hasAlpha,
 			int orientation,
-			int x,
-			int y,
-			int z
+			int x, int y, int z
 		);
 	}
 

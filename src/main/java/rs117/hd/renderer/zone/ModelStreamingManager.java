@@ -225,7 +225,8 @@ public class ModelStreamingManager {
 			m,
 			isModelPartiallyVisible,
 			hasAlpha,
-			orientation, x, y, z
+			orientation,
+			x, y, z
 		);
 	}
 
@@ -239,10 +240,8 @@ public class ModelStreamingManager {
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
 		int orientation,
-		int x,
-		int y,
-		int z
-	){
+		int x, int y, int z
+	) {
 		final long asyncStart = System.nanoTime();
 		uploadTempModel(
 			projection,
@@ -254,7 +253,8 @@ public class ModelStreamingManager {
 			model,
 			isModelPartiallyVisible,
 			hasAlpha,
-			orientation, x, y, z
+			orientation,
+			x, y, z
 		);
 		frameTimer.add(Timer.DRAW_TEMP_ASYNC, System.nanoTime() - asyncStart);
 	}
@@ -269,14 +269,15 @@ public class ModelStreamingManager {
 		Model m,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
-		int orientation, int x, int y, int z
+		int orientation,
+		int x, int y, int z
 	) {
 		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
-		){
+		) {
 			boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 			shouldSort &= sceneUploader.preprocessTempModel(
 				worldProjection,
@@ -287,10 +288,8 @@ public class ModelStreamingManager {
 				isModelPartiallyVisible,
 				modelOverride,
 				m,
-				x,
-				y,
-				z,
-				orientation
+				orientation,
+				x, y, z
 			);
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
@@ -324,7 +323,8 @@ public class ModelStreamingManager {
 				final int alphaFaceCount = hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
-				final DynamicModelVAO.View opaqueView = ctx.beginDraw(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE, opaqueFaceCount);
+				final DynamicModelVAO.View opaqueView =
+					ctx.beginDraw(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
@@ -370,8 +370,7 @@ public class ModelStreamingManager {
 			}
 		} catch (Exception e) {
 			log.error("Error rendering temp object", e);
-		}
-		finally {
+		} finally {
 			FACE_INDICES.recycle(visibleFaces);
 			FACE_INDICES.recycle(culledFaces);
 		}
@@ -506,9 +505,8 @@ public class ModelStreamingManager {
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
 		int orientation,
-		int x,
-		int y,
-		int z) {
+		int x, int y, int z
+	) {
 		final long asyncStart = System.nanoTime();
 		uploadDynamicModel(
 			ctx,
@@ -535,16 +533,14 @@ public class ModelStreamingManager {
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
 		int orient,
-		int x,
-		int y,
-		int z
+		int x, int y, int z
 	) {
 		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
-		){
+		) {
 			boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,
@@ -555,10 +551,8 @@ public class ModelStreamingManager {
 				isModelPartiallyVisible,
 				modelOverride,
 				m,
-				x,
-				y,
-				z,
-				orient
+				orient,
+				x, y, z
 			);
 
 			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));

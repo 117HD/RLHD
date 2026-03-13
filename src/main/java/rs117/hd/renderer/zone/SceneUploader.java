@@ -1709,10 +1709,8 @@ public class SceneUploader implements AutoCloseable {
 		boolean isModelPartiallyVisible,
 		ModelOverride modelOverride,
 		Model model,
-		int x,
-		int y,
-		int z,
-		int orientation
+		int orientation,
+		int x, int y, int z
 	) {
 		final int vertexCount = model.getVerticesCount();
 
