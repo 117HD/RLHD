@@ -628,6 +628,6 @@ public class ModelStreamingManager {
 		if (AsyncCachedModel.POOL == null || numRenderThreads == 0)
 			return null;
 
-		return shouldBlock ? AsyncCachedModel.POOL.acquireBlocking(5000) : AsyncCachedModel.POOL.acquire();
+		return shouldBlock ? AsyncCachedModel.POOL.acquireBlocking(500) : AsyncCachedModel.POOL.acquire();
 	}
 }
