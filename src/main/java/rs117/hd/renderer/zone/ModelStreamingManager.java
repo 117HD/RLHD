@@ -74,6 +74,11 @@ public class ModelStreamingManager {
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
 	private int numRenderThreads;
 
+	private Renderable localPlayer;
+	public int localPlayerVaoOpaque;
+	public int localPlayerVaoAlpha;
+	public int localPlayerOpaqueVertexOffset, localPlayerOpaqueVertexCount;
+
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
 		final float[] objectWorldPos = new float[4];
@@ -131,6 +136,10 @@ public class ModelStreamingManager {
 	public void onBeforeRender(BeforeRender event) {
 		for (int i = 0; i < streamingContexts.length; i++)
 			streamingContexts[i].renderableCount = 0;
+
+		localPlayer = client.getLocalPlayer();
+		localPlayerVaoOpaque = 0;
+		localPlayerVaoAlpha = 0;
 
 		updateRenderThreads();
 	}
@@ -350,6 +359,12 @@ public class ModelStreamingManager {
 							y - renderable.getModelHeight() /* to render players over locs */,
 							z & 1023
 						);
+
+						if(renderable == localPlayer) {
+							localPlayerVaoOpaque = opaqueView.vao;
+							localPlayerOpaqueVertexOffset = opaqueView.getStartOffset() / DynamicModelVAO.VERT_SIZE_INTS;
+							localPlayerOpaqueVertexCount = (opaqueView.getEndOffset() - opaqueView.getStartOffset()) / DynamicModelVAO.VERT_SIZE_INTS;
+						}
 					}
 				}
 

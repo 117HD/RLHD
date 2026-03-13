@@ -25,6 +25,7 @@
  */
 package rs117.hd;
 
+import java.awt.Color;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -785,12 +786,75 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean hideVanillaWaterEffects() { return true; }
 
+
+	/*====== Player Silhouette settings ======*/
+
+	@ConfigSection(
+		name = "Player Silhouette",
+		description = "Player Silhouette settings",
+		position = 4,
+		closedByDefault = true
+	)
+	String playerSilhouetteSettings = "playerSilhouetteSettings";
+
+	String KEY_PLAYER_SILHOUETTE_BANDING = "playerSilhouette";
+	@ConfigItem(
+		keyName = KEY_PLAYER_SILHOUETTE_BANDING,
+		position = 0,
+		name = "Enabled",
+		description = "Draws the players silhouette whilst they are occluded by scene geometry",
+		section = playerSilhouetteSettings
+	)
+	default boolean playerSilhouette() {
+		return true;
+	}
+
+	String KEY_PLAYER_SILHOUETTE_EDGE_SIZE = "playerSilhouetteEdgeSize";
+	@Range(
+		min = 0,
+		max = 5
+	)
+	@ConfigItem(
+		keyName = KEY_PLAYER_SILHOUETTE_EDGE_SIZE,
+		position = 1,
+		name = "Edge Size",
+		description = "Controls the size of the players silhouette edge",
+		section = playerSilhouetteSettings
+	)
+	default int playerSilhouetteEdgeSize() {
+		return 5;
+	}
+
+	String KEY_PLAYER_SILHOUETTE_BANDING_COLOR = "playerSilhouetteColor";
+	@ConfigItem(
+		keyName = KEY_PLAYER_SILHOUETTE_BANDING_COLOR,
+		position = 2,
+		name = "Fill Color",
+		description = "Controls the colour of the players silhouette",
+		section = playerSilhouetteSettings
+	)
+	default Color playerSilhouetteColor() {
+		return new Color(20, 20, 20);
+	}
+
+	String KEY_PLAYER_SILHOUETTE_EDGE_COLOR = "playerSilhouetteEdgeColor";
+	@ConfigItem(
+		keyName = KEY_PLAYER_SILHOUETTE_EDGE_COLOR,
+		position = 3,
+		name = "Edge Color",
+		description = "Controls the colour of the players silhouette",
+		section = playerSilhouetteSettings
+	)
+	default Color playerSilhouetteEdgeColor() {
+		return new Color(76, 100, 112);
+	}
+
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -944,7 +1008,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
@@ -1097,7 +1161,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
-		position = 6,
+		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";

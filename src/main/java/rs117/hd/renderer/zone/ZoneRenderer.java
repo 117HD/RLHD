@@ -42,6 +42,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.ShadowMode;
+import rs117.hd.opengl.shader.BasicSceneProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -127,6 +128,9 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
+	private BasicSceneProgram basicSceneProgram;
+
+	@Inject
 	private ShadowShaderProgram.Fast fastShadowProgram;
 
 	@Inject
@@ -144,6 +148,7 @@ public class ZoneRenderer implements Renderer {
 
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
+	public final CommandBuffer alphaDepthCmd = new CommandBuffer("SceneAlphaDepth", renderState);
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
 	public final CommandBuffer playerCmd = new CommandBuffer("Player", renderState);
 
@@ -226,6 +231,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
+		basicSceneProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
 	}
@@ -233,6 +239,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
+		basicSceneProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
 	}
@@ -595,6 +602,7 @@ public class ZoneRenderer implements Renderer {
 		// Reset buffers for the next frame
 		indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
+		alphaDepthCmd.reset();
 		directionalCmd.reset();
 		renderState.reset();
 
@@ -745,8 +753,11 @@ public class ZoneRenderer implements Renderer {
 			gammaCorrectedFogColor[2],
 			1f
 		);
+		glStencilMask(0xFF);
 		glClearDepth(0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearStencil(0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glStencilMask(0);
 		frameTimer.end(Timer.CLEAR_SCENE);
 
 		frameTimer.begin(Timer.RENDER_SCENE);
@@ -754,21 +765,82 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
+		renderState.enable.set(GL_STENCIL_TEST);
+		renderState.depthMask.set(true);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		renderState.stencilFunc.set(GL_ALWAYS, 0, 0xFFFFFFFF);
+		renderState.apply();
 
-		// Render the scene
+		// Player is also drawn here as part of the main scene draw command buffer
 		sceneCmd.execute();
 
-		// TODO: Filler tiles
+		if(plugin.configPlayerSilhouette) {
+			basicSceneProgram.use();
+			basicSceneProgram.uniScale.set(0f);
+
+			renderState.disable.set(GL_BLEND);
+			renderState.colorMask.set(false, false, false, false);
+			renderState.depthMask.set(true);
+			renderState.apply();
+
+			alphaDepthCmd.execute();
+
+			renderState.colorMask.set(true, true, true, true);
+
+			if (modelStreamingManager.localPlayerVaoOpaque > 0) {
+				renderState.depthFunc.set(GL_LEQUAL);
+				renderState.depthMask.set(false);
+
+				renderState.stencilMask.set(0);
+				renderState.stencilFunc.set(GL_EQUAL, 0, 0xFF);
+
+				renderState.apply();
+				basicSceneProgram.use();
+
+				float EdgeSize = plugin.configPlayerSilhouetteEdgeSize;
+				if(EdgeSize > 0) {
+					var SilhouetteEdgeColor = plugin.configPlayerSilhouetteEdgeColor;
+					basicSceneProgram.uniScale.set(EdgeSize / 2.0f);
+					basicSceneProgram.uniColor.set(
+						SilhouetteEdgeColor != null ? SilhouetteEdgeColor.getRed() / 255.0f : 0.1f,
+						SilhouetteEdgeColor != null ? SilhouetteEdgeColor.getGreen() / 255.0f : 0.1f,
+						SilhouetteEdgeColor != null ? SilhouetteEdgeColor.getBlue() / 255.0f : 0.1f,
+						1.0f
+					);
+				}
+
+				sceneCmd.reset();
+				sceneCmd.BindVertexArray(modelStreamingManager.localPlayerVaoOpaque);
+				sceneCmd.DrawArrays(
+					GL_TRIANGLES,
+					modelStreamingManager.localPlayerOpaqueVertexOffset,
+					modelStreamingManager.localPlayerOpaqueVertexCount
+				);
+				sceneCmd.execute();
+
+				var SilhouetteColor = plugin.configPlayerSilhouetteColor;
+				basicSceneProgram.uniScale.set(EdgeSize > 0 ? -(EdgeSize / 2.0f) : 0);
+				basicSceneProgram.uniColor.set(
+					SilhouetteColor != null ? SilhouetteColor.getRed() / 255.0f : 0.1f,
+					SilhouetteColor != null ? SilhouetteColor.getGreen() / 255.0f : 0.1f,
+					SilhouetteColor != null ? SilhouetteColor.getBlue() / 255.0f : 0.1f,
+					1.0f);
+
+				sceneCmd.execute();
+			}
+		}
+
 		frameTimer.end(Timer.RENDER_SCENE);
 
 		glBindVertexArray(0);
 
 		// Done rendering the scene
+		renderState.depthMask.set(true);
 		renderState.disable.set(GL_BLEND);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.disable.set(GL_STENCIL_TEST);
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
@@ -889,11 +961,16 @@ public class ZoneRenderer implements Renderer {
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 				directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-				z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, plugin.configRoofShadows);
+				z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, false, plugin.configRoofShadows);
 			}
 
-			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
-				z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+				sceneCmd.DepthMask(false);
+				z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
+				sceneCmd.DepthMask(true);
+
+				z.renderAlpha(alphaDepthCmd, zx - offset, zz - offset, level, ctx, false, false);
+			}
 		}
 		frameTimer.end(Timer.DRAW_ZONE_ALPHA);
 
@@ -952,10 +1029,17 @@ public class ZoneRenderer implements Renderer {
 								ctx.vaoSceneCmd.append(playerCmd);
 								ctx.vaoSceneCmd.DepthMask(true);
 
-								// Draw players opaque, writing only depth
+								// Draw players opaque, writing only depth & stencil to mark where players have been drawn
+								ctx.vaoSceneCmd.StencilMask(0xFF);
+								ctx.vaoSceneCmd.StencilFunc(GL_ALWAYS, 1, 0xFF);
+								ctx.vaoSceneCmd.StencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
 								ctx.vaoSceneCmd.ColorMask(false, false, false, false);
+
 								ctx.vaoSceneCmd.append(playerCmd);
+
 								ctx.vaoSceneCmd.ColorMask(true, true, true, true);
+								ctx.vaoSceneCmd.StencilMask(0); // Reset to avoid writing stencil for later calls
 							}
 
 							playerCmd.reset();
