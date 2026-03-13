@@ -3,7 +3,6 @@ package rs117.hd.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import lombok.RequiredArgsConstructor;
 import rs117.hd.opengl.GLState;
 import rs117.hd.opengl.shader.ShaderProgram;
 
@@ -19,7 +18,7 @@ public final class RenderState {
 	public final GLShaderProgram program = addState(GLShaderProgram::new);
 	public final GLViewport viewport = addState(GLViewport::new);
 	public final GLBindVAO vao = addState(GLBindVAO::new);
-	public final GLBindEBO ebo = addState(() -> new GLBindEBO(vao));
+	public final GLBindVAOAndEbo vaoAndEbo = addState(GLBindVAOAndEbo::new);
 	public final GLBindIDO ido = addState(GLBindIDO::new);
 	public final GLBindUBO ubo = addState(GLBindUBO::new);
 	public final GLDepthMask depthMask = addState(GLDepthMask::new);
@@ -87,16 +86,15 @@ public final class RenderState {
 		protected void applyValue(int vao) { glBindVertexArray(vao); }
 	}
 
-	@RequiredArgsConstructor
-	public static final class GLBindEBO extends GLState.Int {
-		private final GLBindVAO vaoBinding;
+	public static final class GLBindVAOAndEbo extends GLState.IntArray {
+		private GLBindVAOAndEbo() {
+			super(2);
+		}
 
 		@Override
-		protected void applyValue(int ebo) {
-			if (vaoBinding.getValue() != 0) {
-				vaoBinding.apply();
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-			}
+		protected void applyValues(int[] values) {
+			glBindVertexArray(values[0]);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, values[1]);
 		}
 	}
 

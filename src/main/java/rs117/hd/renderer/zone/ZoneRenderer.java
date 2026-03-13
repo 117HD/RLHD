@@ -145,7 +145,6 @@ public class ZoneRenderer implements Renderer {
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
-	public final CommandBuffer playerCmd = new CommandBuffer("Player", renderState);
 
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -942,23 +941,17 @@ public class ZoneRenderer implements Renderer {
 						if (!z.playerModels.isEmpty() && (!sceneManager.isRoot(ctx) || z.inSceneFrustum || z.inShadowFrustum)) {
 							z.playerSort(zx - offset, zz - offset, sceneCamera);
 
-							z.renderPlayers(playerCmd, zx - offset, zz - offset);
+							// Draw players shadow, with depth writes & alpha
+							z.renderPlayers(ctx.vaoDirectionalCmd, zx - offset, zz - offset);
 
-							if (!playerCmd.isEmpty()) {
-								// Draw players shadow, with depth writes & alpha
-								ctx.vaoDirectionalCmd.append(playerCmd);
+							ctx.vaoSceneCmd.DepthMask(false);
+							z.renderPlayers(ctx.vaoSceneCmd, zx - offset, zz - offset);
+							ctx.vaoSceneCmd.DepthMask(true);
 
-								ctx.vaoSceneCmd.DepthMask(false);
-								ctx.vaoSceneCmd.append(playerCmd);
-								ctx.vaoSceneCmd.DepthMask(true);
-
-								// Draw players opaque, writing only depth
-								ctx.vaoSceneCmd.ColorMask(false, false, false, false);
-								ctx.vaoSceneCmd.append(playerCmd);
-								ctx.vaoSceneCmd.ColorMask(true, true, true, true);
-							}
-
-							playerCmd.reset();
+							// Draw players opaque, writing only depth
+							ctx.vaoSceneCmd.ColorMask(false, false, false, false);
+							z.renderPlayers(ctx.vaoSceneCmd, zx - offset, zz - offset);
+							ctx.vaoSceneCmd.ColorMask(true, true, true, true);
 						}
 					}
 				}
