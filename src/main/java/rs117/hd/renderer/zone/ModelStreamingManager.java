@@ -18,6 +18,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.zone.renderpass.SilhouettePass;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
@@ -30,6 +31,7 @@ import static net.runelite.api.hooks.DrawCallbacks.*;
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -69,10 +71,18 @@ public class ModelStreamingManager {
 	@Inject
 	private ZoneRenderer renderer;
 
+	@Inject
+	private SilhouettePass silhouettePass;
+
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
 	private int numRenderThreads;
 	private int playerDrawIndex;
+
+	private Renderable localPlayer;
+	public int localPlayerVaoOpaque;
+	public int localPlayerVaoAlpha;
+	public int localPlayerOpaqueVertexOffset, localPlayerOpaqueVertexCount;
 
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
@@ -333,7 +343,8 @@ public class ModelStreamingManager {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
-				final int alphaFaceCount = hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
+				final int vaoType = renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE;
+				final int alphaFaceCount = hasAlpha && vaoType == VAO_OPAQUE ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
 				final DynamicModelVAO.View opaqueView;
@@ -357,6 +368,8 @@ public class ModelStreamingManager {
 
 				// Fix rendering projectiles from boats with hide roofs enabled
 				int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
+				if (renderable instanceof Actor && silhouettePass.isSilhouetteEnabled((Actor) renderable))
+					silhouettePass.addSilhouetteDraw(gameObject, (Actor) renderable, opaqueView, x, y, z);
 				if (opaqueView != alphaView) {
 					if (alphaView.getEndOffset() > alphaView.getStartOffset()) {
 						zone.addTempAlphaModel(

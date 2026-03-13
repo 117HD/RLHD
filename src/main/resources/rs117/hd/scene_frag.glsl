@@ -31,6 +31,7 @@
 #define DISPLAY_TANGENT 0
 #define DISPLAY_SHADOWS 0
 #define DISPLAY_LIGHTING 0
+#define DISPLAY_CANOPY 0
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
@@ -115,6 +116,31 @@ void main() {
     bool isWater = waterTypeIndex > 0 && !isUnderwater;
 
     vec4 outputColor = vec4(1);
+    float fade = 1.0;
+#if PLAYER_CANOPY_FADE
+    if (canopyFadeStrength > 0.0 && getMaterialIsCanopy(material1)) {
+        vec3 camToPlayer = (playerPosition + vec3(0, -playerHeight / 2, 0)) - cameraPos;
+        float lineLength = length(camToPlayer);
+        vec3 lineDir = camToPlayer / lineLength;
+
+        vec3 camToFrag = IN.position - cameraPos;
+        float t = clamp(dot(camToFrag, lineDir), 0.0, lineLength);
+
+        vec3 closestPoint = cameraPos + lineDir * t;
+        float distToLine = max(length(IN.position - closestPoint) - 15.0, 0.0);
+
+        float fadeRadius = mix(0.0, playerHeight, canopyFadeStrength);
+        #if DISPLAY_CANOPY
+        if(DISPLAY_CANOPY == 1) {
+            FragColor = vec4(distToLine / fadeRadius, 0.0, 0.0, 1.0);
+            return;
+        }
+        #endif
+        fade = smoothstep(0.0, fadeRadius, distToLine);
+        if(fade == 0)
+            discard;
+    }
+#endif
 
     if (isWater) {
         outputColor = sampleWater(waterTypeIndex, viewDir);
@@ -501,6 +527,7 @@ void main() {
     }
 
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
+    outputColor.a *= fade;
 
     #if APPLY_COLOR_FILTER
         outputColor.rgb = applyColorFilter(outputColor.rgb);

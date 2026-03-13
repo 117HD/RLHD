@@ -315,5 +315,27 @@ public class DynamicModelVAO implements Destructible {
 		public void end() {
 			endDraw(this);
 		}
+
+		public void draw(DrawCall draw) {
+			draw.vao = vao;
+			draw.offset = getStartOffset() / VERT_SIZE_INTS;
+			draw.count = getVertexCount();
+		}
+	}
+
+	public static final class DrawCall {
+		public int vao;
+		public int offset;
+		public int count;
+
+		public void reset() {
+			vao = 0;
+			offset = 0;
+			count = 0;
+		}
+
+		public boolean isValid() {
+			return vao != 0 && offset >= 0 && count > 0;
+		}
 	}
 }
