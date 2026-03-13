@@ -32,6 +32,8 @@
 #define DISPLAY_SHADOWS 0
 #define DISPLAY_LIGHTING 0
 
+#define NEAR_PLANE_DITHER_START 0.2
+
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
@@ -55,6 +57,9 @@ flat in ivec3 fTerrainData;
 #endif
 
 in FragmentData {
+#if ZONE_RENDERER
+    vec4 positionCS;
+#endif
     vec3 position;
     vec2 uv;
     vec3 normal;
@@ -84,6 +89,15 @@ vec2 worldUvs(float scale) {
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
+#if ZONE_RENDERER
+    float viewZ = 1.0 - (0.5 + (IN.positionCS.z / IN.positionCS.w) * 0.5);
+    if(viewZ < NEAR_PLANE_DITHER_START) {
+        float fadeAmount = 1.0 - saturate(viewZ / NEAR_PLANE_DITHER_START);
+        if(orderedDither(gl_FragCoord.xy, pow(fadeAmount, 1.5) - 0.01, 1.75))
+            discard;
+    }
+#endif
+
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
 
