@@ -112,6 +112,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DestructibleHandler;
@@ -164,8 +165,10 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TERRAIN_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_NIGHT_SKY = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -364,6 +367,9 @@ public class HdPlugin extends Plugin {
 	@Nullable
 	public int[] sceneViewport;
 	public final float[] sceneViewportScale = { 1, 1 };
+
+	// Day/Night Cycle
+	public double[] latLong = { 0, 0 };
 	public int msaaSamples;
 
 	public int[] sceneResolution;
@@ -376,6 +382,8 @@ public class HdPlugin extends Plugin {
 	public int shadowMapResolution;
 	public int fboShadowMap;
 	private int texShadowMap;
+	public int fboTerrainShadowMap;
+	private int texTerrainShadowMap;
 
 	public int[] tiledLightingResolution;
 	public int tiledLightingLayerCount;
@@ -400,6 +408,7 @@ public class HdPlugin extends Plugin {
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
 	public boolean configRoofShadows;
+	public boolean configTerrainShadows;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
 	public boolean configZoneStreaming;
@@ -882,6 +891,8 @@ public class HdPlugin extends Plugin {
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
+			.define("TERRAIN_SHADOWS", config.terrainShadows())
+			.define("TERRAIN_ONLY_PASS", false)
 			.define("SHADOW_TRANSPARENCY", config.shadowTransparency())
 			.define("SHADOW_FILTERING", config.shadowFiltering())
 			.define("SHADOW_RESOLUTION", config.shadowResolution())
@@ -1404,6 +1415,39 @@ public class HdPlugin extends Plugin {
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
 
+		// Create terrain shadow map FBO and texture
+		if (configTerrainShadows) {
+			fboTerrainShadowMap = glGenFramebuffers();
+			glBindFramebuffer(GL_FRAMEBUFFER, fboTerrainShadowMap);
+
+			texTerrainShadowMap = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
+			glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
+
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_DEPTH_COMPONENT24,
+				shadowMapResolution,
+				shadowMapResolution,
+				0,
+				GL_DEPTH_COMPONENT,
+				GL_FLOAT,
+				0
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+			glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texTerrainShadowMap, 0);
+			glDrawBuffer(GL_NONE);
+			glReadBuffer(GL_NONE);
+		} else {
+			initializeDummyTerrainShadowMap();
+		}
+
 		// Reset FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 	}
@@ -1413,6 +1457,19 @@ public class HdPlugin extends Plugin {
 		texShadowMap = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
 		glBindTexture(GL_TEXTURE_2D, texShadowMap);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+		initializeDummyTerrainShadowMap();
+	}
+
+	private void initializeDummyTerrainShadowMap() {
+		texTerrainShadowMap = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
+		glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -1428,6 +1485,14 @@ public class HdPlugin extends Plugin {
 		if (fboShadowMap != 0)
 			glDeleteFramebuffers(fboShadowMap);
 		fboShadowMap = 0;
+
+		if (texTerrainShadowMap != 0)
+			glDeleteTextures(texTerrainShadowMap);
+		texTerrainShadowMap = 0;
+
+		if (fboTerrainShadowMap != 0)
+			glDeleteFramebuffers(fboTerrainShadowMap);
+		fboTerrainShadowMap = 0;
 	}
 
 	public void initializeShaderHotswapping() {
@@ -1608,6 +1673,7 @@ public class HdPlugin extends Plugin {
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configRoofShadows = config.roofShadows();
+		configTerrainShadows = config.terrainShadows();
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
@@ -1790,11 +1856,19 @@ public class HdPlugin extends Plugin {
 							case KEY_SHADOW_MODE:
 							case KEY_SHADOW_RESOLUTION:
 							case KEY_SHADOW_TRANSPARENCY:
+							case KEY_TERRAIN_SHADOWS:
 								recompilePrograms = true;
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
+							case KEY_ENABLE_DAYLIGHT_CYCLE:
+							case KEY_DAYLIGHT_CYCLE:
+							case KEY_CYCLE_DURATION:
+							case KEY_MINIMUM_BRIGHTNESS:
+							case KEY_ENABLE_STAR_MAP:
+							case KEY_ENABLE_MOON:
+							case KEY_MOON_BEHAVIOR:
 								reloadEnvironments = true;
 								break;
 							case KEY_SEASONAL_THEME:

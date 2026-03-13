@@ -83,7 +83,12 @@
     "groundFogOpacity": 0.3,
     "windAngle": 40,
     "windSpeed": 10,
-    "windStrength": 20
+    "windStrength": 20,
+	"sunStrength": 0.05,
+    "sunlightStrength": 0.5,
+    "starVisibility": 0.01,
+    "moonVisibility": 0.1,
+	"minBrightnessBoost": 0.8
   },
   {
     "area": "WILDERNESS_LOW",
@@ -95,7 +100,12 @@
     "fogDepth": 20,
     "windAngle": 40,
     "windSpeed": 15,
-    "windStrength": 40
+    "windStrength": 40,
+	"sunStrength": 0.1,
+    "sunlightStrength": 0.7,
+    "starVisibility": 0.3,
+    "moonVisibility": 0.3,
+	"minBrightnessBoost": 0.8
   },
   {
     "area": "WILDERNESS_MID",
@@ -110,7 +120,12 @@
     "groundFogOpacity": 0.3,
     "windAngle": 40,
     "windSpeed": 15,
-    "windStrength": 25
+    "windStrength": 25,
+	"sunStrength": 0.05,
+    "sunlightStrength": 0.5,
+    "starVisibility": 0.2,
+    "moonVisibility": 0.2,
+	"minBrightnessBoost": 0.8
   },
   {
     "area": "HUNTER_GUILD",
@@ -464,7 +479,9 @@
     "fogColor": "#242d3a",
     "fogDepth": 50,
     "groundFogStart": -300,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+	"starVisibility": 0.1,
+	"sunStrength":0.05
   },
   {
     "area": "DARKMEYER",
@@ -476,6 +493,9 @@
     "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
+	"moonColor": "#FF0000",
+	"sunStrength": 0.05,
+	"starVisibility": 1,
     "windSpeed": 10,
     "windStrength": 30
   },
@@ -526,9 +546,13 @@
     "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
+	"starVisibility": 0.1,
+	"sunStrength":0.05,
+	"sunlightStrength": 0.2,
     "windAngle": 40,
     "windSpeed": 7,
-    "windStrength": 26
+    "windStrength": 26,
+    "minBrightnessBoost": 0.6
   },
   {
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
@@ -846,7 +870,9 @@
     "groundFogEnd": -400,
     "groundFogOpacity": 0.3,
     "windSpeed": 17.5,
-    "windStrength": 60
+    "windStrength": 60,
+	"sunStrength": 0.6,
+	"sunlightStrength": 0.4
   },
   {
     "area": "RELLEKKA_COLD_WATER",
@@ -1056,7 +1082,11 @@
     "fogDepth": 30,
     "windAngle": 40,
     "windSpeed": 10,
-    "windStrength": 40
+    "windStrength": 40,
+	"sunStrength": 0.1,
+    "sunlightStrength": 0.7,
+    "starVisibility": 0.3,
+    "moonVisibility": 0.3
   },
   {
     "area": "TIRANNWN_MAINLAND",
@@ -1186,7 +1216,9 @@
     "fogColor": "#292c10",
     "fogDepth": 50,
     "windStrength": 30,
-    "windSpeed": 10
+    "windSpeed": 10,
+	"sunlightStrength": 0.5,
+	"sunStrength": 0.1
   },
   {
     "area": "LIZARDMAN_TEMPLE",
@@ -1208,7 +1240,11 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 1.5,
     "fogColor": "#aebde0",
-    "fogDepth": 50
+    "fogDepth": 50,
+	"sunStrength": 0.1,
+    "sunlightStrength": 0.8,
+    "starVisibility": 0.3,
+	"moonVisibility": 0.3
   },
   {
     "area": "WINTERTODT_ARENA",
@@ -1222,7 +1258,10 @@
     "fogDepth": 75,
     "groundFogStart": -1750,
     "groundFogEnd": -2250,
-    "groundFogOpacity": 0.65
+    "groundFogOpacity": 0.65,
+	"sunStrength": 0.1,
+    "sunlightStrength": 0.8,
+    "starVisibility": 0.3
   },
   {
     "area": "ARCEUUS",
@@ -1230,7 +1269,8 @@
     "directionalColor": "#4eeeff",
     "directionalStrength": 3.5,
     "fogColor": "#13184f",
-    "fogDepth": 30
+    "fogDepth": 30,
+    "sunStrength": 0.1
   },
   {
     "area": "LOVAKENGJ",
@@ -1239,7 +1279,11 @@
     "directionalStrength": 4,
     "fogColor": "#150a05",
     "fogDepth": 40,
-    "waterColor": "#b9d6ff"
+    "waterColor": "#b9d6ff",
+	"starVisibility": 0.05,
+	"sunlightStrength": 0.01,
+	"sunStrength": 0.01,
+	"moonVisibility": 0.01
   },
   {
     "area": "THE_STRANGLEWOOD",
@@ -1248,7 +1292,10 @@
     "directionalColor": "#f2edf4",
     "directionalStrength": 2.5,
     "fogColor": "#af979f",
-    "fogDepth": 35
+    "fogDepth": 35,
+	"sunStrength": 0.8,
+	"sunlightStrength": 0.8,
+	"starVisibility": 0.3
   },
   {
     "area": "THE_STRANGLEWOOD_QUEST_UNDERGROUND_AREAS",

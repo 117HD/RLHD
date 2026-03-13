@@ -52,4 +52,22 @@ layout(std140) uniform UBOGlobal {
 
     float lightningBrightness;
     float elapsedTime;
+
+    // Sky gradient uniforms for Day/Night Cycle
+    int skyGradientEnabled;
+    vec3 skyZenithColor;
+    vec3 skyHorizonColor;
+    vec3 skySunColor;
+    vec3 skySunDir;
+
+    // Moon uniforms for Day/Night Cycle
+    vec3 skyMoonDir;
+    vec3 skyMoonColor;
+    float skyMoonIllumination;
+
+    // Star visibility (from environment override)
+    float starVisibility;
+
+    // Moon visibility (from environment override)
+    float moonVisibility;
 };

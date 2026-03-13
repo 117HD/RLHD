@@ -105,6 +105,16 @@
         "type": "number",
         "description": "Underglow strength multiplier. Acts as light emanating from the ground."
       },
+      "moonColor": {
+        "type": [ "string", "array" ],
+        "description": "Moon color in sRGB, specified as a hex color code or an array in the range 0-255. Affects both the visible moon disk and the light it casts. Defaults to a cool silver (~4100K).",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
       "sunAngles": {
         "type": "array",
         "description": "The sun's altitude and azimuth specified in degrees in the horizontal coordinate system. Altitude is from the ground up, azimuth is clockwise from north.",
