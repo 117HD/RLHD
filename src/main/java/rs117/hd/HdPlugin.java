@@ -667,6 +667,7 @@ public class HdPlugin extends Plugin {
 
 				renderer.initialize();
 				eventBus.register(renderer);
+				eventBus.register(sceneManager);
 				gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
