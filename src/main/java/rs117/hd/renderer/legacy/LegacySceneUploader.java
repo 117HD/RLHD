@@ -659,16 +659,19 @@ public class LegacySceneUploader {
 				neNormals = sceneContext.vertexTerrainNormals.getOrDefault(neVertexKey, neNormals);
 				nwNormals = sceneContext.vertexTerrainNormals.getOrDefault(nwVertexKey, nwNormals);
 
-				boolean useBlendedMaterialAndColor =
+				boolean allowBlending =
 					plugin.configGroundBlending &&
 					textureId == -1 &&
 					!proceduralGenerator.useDefaultColor(tile, override);
+				boolean blendColors = plugin.configGroundBlendingColors && allowBlending;
+				boolean blendTextures = plugin.configGroundBlendingTextures && allowBlending;
+
 				GroundMaterial groundMaterial = null;
 				if (override != TileOverride.NONE) {
 					groundMaterial = override.groundMaterial;
 					uvOrientation = override.uvOrientation;
 					uvScale = override.uvScale;
-					if (!useBlendedMaterialAndColor) {
+					if (!blendColors) {
 						swColor = override.modifyColor(swColor);
 						seColor = override.modifyColor(seColor);
 						nwColor = override.modifyColor(nwColor);
@@ -683,24 +686,25 @@ public class LegacySceneUploader {
 					groundMaterial = override.groundMaterial;
 				}
 
-				if (useBlendedMaterialAndColor) {
-					// get the vertices' colors and textures from hashmaps
+				if (blendColors) {
 					swColor = sceneContext.vertexTerrainColor.getOrDefault(swVertexKey, swColor);
 					seColor = sceneContext.vertexTerrainColor.getOrDefault(seVertexKey, seColor);
 					neColor = sceneContext.vertexTerrainColor.getOrDefault(neVertexKey, neColor);
 					nwColor = sceneContext.vertexTerrainColor.getOrDefault(nwVertexKey, nwColor);
+				}
 
-					if (plugin.configGroundTextures) {
+				if (plugin.configGroundTextures) {
+					if (blendTextures) {
 						swMaterial = sceneContext.vertexTerrainTexture.getOrDefault(swVertexKey, swMaterial);
 						seMaterial = sceneContext.vertexTerrainTexture.getOrDefault(seVertexKey, seMaterial);
 						neMaterial = sceneContext.vertexTerrainTexture.getOrDefault(neVertexKey, neMaterial);
 						nwMaterial = sceneContext.vertexTerrainTexture.getOrDefault(nwVertexKey, nwMaterial);
+					} else if (groundMaterial != null) {
+						swMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1], worldPos[2]);
+						seMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1], worldPos[2]);
+						nwMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1] + 1, worldPos[2]);
+						neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 					}
-				} else if (plugin.configGroundTextures && groundMaterial != null) {
-					swMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1], worldPos[2]);
-					seMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1], worldPos[2]);
-					nwMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1] + 1, worldPos[2]);
-					neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 				}
 			}
 			else
@@ -1016,15 +1020,18 @@ public class LegacySceneUploader {
 
 					GroundMaterial groundMaterial = null;
 
-					boolean useBlendedMaterialAndColor =
+					boolean allowBlending =
 						plugin.configGroundBlending &&
 						textureId == -1 &&
 						!(isOverlay && proceduralGenerator.useDefaultColor(tile, override));
+					boolean blendColors = plugin.configGroundBlendingColors && allowBlending;
+					boolean blendTextures = plugin.configGroundBlendingTextures && allowBlending;
+
 					if (override != TileOverride.NONE) {
 						groundMaterial = override.groundMaterial;
 						uvOrientation = override.uvOrientation;
 						uvScale = override.uvScale;
-						if (!useBlendedMaterialAndColor) {
+						if (!blendColors) {
 							colorA = override.modifyColor(colorA);
 							colorB = override.modifyColor(colorB);
 							colorC = override.modifyColor(colorC);
@@ -1034,33 +1041,34 @@ public class LegacySceneUploader {
 						groundMaterial = override.groundMaterial;
 					}
 
-					if (useBlendedMaterialAndColor) {
-						// get the vertices' colors and textures from hashmaps
+					if (blendColors) {
 						colorA = sceneContext.vertexTerrainColor.getOrDefault(vertexKeyA, colorA);
 						colorB = sceneContext.vertexTerrainColor.getOrDefault(vertexKeyB, colorB);
 						colorC = sceneContext.vertexTerrainColor.getOrDefault(vertexKeyC, colorC);
+					}
 
-						if (plugin.configGroundTextures) {
+					if (plugin.configGroundTextures) {
+						if (blendTextures) {
 							materialA = sceneContext.vertexTerrainTexture.getOrDefault(vertexKeyA, materialA);
 							materialB = sceneContext.vertexTerrainTexture.getOrDefault(vertexKeyB, materialB);
 							materialC = sceneContext.vertexTerrainTexture.getOrDefault(vertexKeyC, materialC);
+						} else if (groundMaterial != null) {
+							materialA = groundMaterial.getRandomMaterial(
+								worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
+								worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
+								worldPos[2]
+							);
+							materialB = groundMaterial.getRandomMaterial(
+								worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
+								worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
+								worldPos[2]
+							);
+							materialC = groundMaterial.getRandomMaterial(
+								worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
+								worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
+								worldPos[2]
+							);
 						}
-					} else if (plugin.configGroundTextures && groundMaterial != null) {
-						materialA = groundMaterial.getRandomMaterial(
-							worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
-							worldPos[2]
-						);
-						materialB = groundMaterial.getRandomMaterial(
-							worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
-							worldPos[2]
-						);
-						materialC = groundMaterial.getRandomMaterial(
-							worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
-							worldPos[2]
-						);
 					}
 				} else {
 					// set colors for the shoreline to create a foam effect in the water shader
