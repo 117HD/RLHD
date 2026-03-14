@@ -44,6 +44,7 @@ import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -65,6 +66,11 @@ public class SceneUploader implements AutoCloseable {
 
 	public static final int MAX_VERTEX_COUNT = 6500;
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
+	private static final int[] SOUTH_NORMAL = { 0, 0, 1 };
+	private static final int[] EAST_NORMAL = { -1, 0, 0 };
+	private static final int[] NORTH_NORMAL = { 0, 0, -1 };
+	private static final int[] WEST_NORMAL = { 1, 0, 0 };
+	private static final int GAP_DEPTH_OFFSET = 600;
 	private final int[] EMPTY_NORMALS = new int[9];
 
 	public static final float[] GEOMETRY_UVS = {
@@ -87,6 +93,9 @@ public class SceneUploader implements AutoCloseable {
 		for (int i = 0; i < 8; i++)
 			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
 	}
+
+	@Inject
+	private Client client;
 
 	@Inject
 	private RenderCallbackManager renderCallbackManager;
@@ -190,6 +199,110 @@ public class SceneUploader implements AutoCloseable {
 				}
 			}
 		}
+
+		if (ctx.fillGaps)
+			estimateZoneGapTiles(ctx, zone, mzx, mzz);
+	}
+
+	private void estimateZoneGapTiles(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
+		if (ctx.sceneBase == null)
+			return;
+
+		var area = ctx.currentArea;
+		if (area != null && !area.fillGaps)
+			return;
+
+		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int sceneMax = net.runelite.api.Constants.SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int baseExX = ctx.sceneBase[0];
+		int baseExY = ctx.sceneBase[1];
+		int basePlane = ctx.sceneBase[2];
+		int[] regions = client.getMapRegions();
+
+		for (int xoff = 0; xoff < 8; ++xoff) {
+			for (int zoff = 0; zoff < 8; ++zoff) {
+				int tileExX = (mzx << 3) + xoff;
+				int tileExY = (mzz << 3) + zoff;
+				int tileX = tileExX - ctx.sceneOffset;
+				int tileY = tileExY - ctx.sceneOffset;
+				Tile tile = tiles[0][tileExX][tileExY];
+
+				SceneTilePaint paint;
+				SceneTileModel model = null;
+				if (tile != null) {
+					paint = tile.getSceneTilePaint();
+					model = tile.getSceneTileModel();
+
+					if (model == null) {
+						boolean hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
+						if (!hasTilePaint) {
+							tile = tile.getBridge();
+							if (tile != null) {
+								paint = tile.getSceneTilePaint();
+								model = tile.getSceneTileModel();
+								hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
+							}
+						}
+
+						if (hasTilePaint)
+							continue;
+					} else {
+						// Count hidden faces for model gap filling (box of black at bottom)
+						ctx.sceneToWorld(tileX, tileY, 0, worldPos);
+						boolean fillGapsModel =
+							tileX > sceneMin &&
+							tileY > sceneMin &&
+							tileX < sceneMax - 1 &&
+							tileY < sceneMax - 1 &&
+							Area.OVERWORLD.containsPoint(worldPos);
+						if (fillGapsModel) {
+							int tileRegionID = HDUtils.worldToRegionID(worldPos);
+							fillGapsModel = false;
+							for (int region : regions) {
+								if (region == tileRegionID) {
+									fillGapsModel = true;
+									break;
+								}
+							}
+						}
+						if (fillGapsModel && (area == null || area.containsPoint(baseExX + tileExX, baseExY + tileExY, basePlane))) {
+							int[] faceColorA = model.getTriangleColorA();
+							for (int f = 0; f < faceColorA.length; f++) {
+								if (faceColorA[f] == HIDDEN_HSL) {
+									zone.sizeO += 1;
+									zone.sizeF += 1;
+								}
+							}
+						}
+						continue;
+					}
+				}
+
+				ctx.sceneToWorld(tileX, tileY, 0, worldPos);
+				boolean fillGaps =
+					tileX > sceneMin &&
+					tileY > sceneMin &&
+					tileX < sceneMax - 1 &&
+					tileY < sceneMax - 1 &&
+					Area.OVERWORLD.containsPoint(worldPos);
+
+				if (fillGaps) {
+					int tileRegionID = HDUtils.worldToRegionID(worldPos);
+					fillGaps = false;
+					for (int region : regions) {
+						if (region == tileRegionID) {
+							fillGaps = true;
+							break;
+						}
+					}
+				}
+
+				if (fillGaps && (area == null || area.containsPoint(baseExX + tileExX, baseExY + tileExY, basePlane))) {
+					zone.sizeO += 10;
+					zone.sizeF += 10;
+				}
+			}
+		}
 	}
 
 	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
@@ -217,6 +330,8 @@ public class SceneUploader implements AutoCloseable {
 			this.level = z;
 
 			if (z == 0) {
+				if (ctx.fillGaps && vb != null)
+					uploadZoneGapTiles(ctx, zone, mzx, mzz, vb, fb);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab, fb);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab, fb);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, roofIds, vb, ab, fb);
@@ -271,6 +386,254 @@ public class SceneUploader implements AutoCloseable {
 
 		// upload everything else
 		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, vb, ab, fb);
+	}
+
+	private static boolean isHorizontalFace(int x0, int y0, int z0, int x1, int y1, int z1, int x2, int y2, int z2) {
+		int ex = x1 - x0, ey = y1 - y0, ez = z1 - z0;
+		int fx = x2 - x0, fy = y2 - y0, fz = z2 - z0;
+		int nx = ey * fz - ez * fy, ny = ez * fx - ex * fz, nz = ex * fy - ey * fx;
+		int any = ny < 0 ? -ny : ny, anx = nx < 0 ? -nx : nx, anz = nz < 0 ? -nz : nz;
+		return any > anx + anz;
+	}
+
+	private void putGapSide(GpuIntBuffer vb, GpuIntBuffer fb,
+		int x0, int z0, int bot0, int top0,
+		int x1, int z1, int bot1, int top1,
+		int[] normal, int color, int materialData, int terrainData
+	) {
+		int snx = normal[0], sny = normal[2], snz = normal[1];
+		int fi = fb.putFace(color, color, color, materialData, materialData, materialData, terrainData, terrainData, terrainData);
+		vb.putVertex(x0, bot0, z0, 0, 0, 0, snx, sny, snz, fi);
+		vb.putVertex(x1, top1, z1, 0, 0, 0, snx, sny, snz, fi);
+		vb.putVertex(x1, bot1, z1, 0, 0, 0, snx, sny, snz, fi);
+		fi = fb.putFace(color, color, color, materialData, materialData, materialData, terrainData, terrainData, terrainData);
+		vb.putVertex(x0, bot0, z0, 0, 0, 0, snx, sny, snz, fi);
+		vb.putVertex(x0, top0, z0, 0, 0, 0, snx, sny, snz, fi);
+		vb.putVertex(x1, top1, z1, 0, 0, 0, snx, sny, snz, fi);
+	}
+
+	private boolean isInFillGapsRegion(ZoneSceneContext ctx, int tileX, int tileY,
+			int sceneMin, int sceneMax, int[] regions) {
+		if (tileX <= sceneMin || tileY <= sceneMin || tileX >= sceneMax - 1 || tileY >= sceneMax - 1)
+			return false;
+		ctx.sceneToWorld(tileX, tileY, 0, worldPos);
+		if (!Area.OVERWORLD.containsPoint(worldPos))
+			return false;
+		int tileRegionID = HDUtils.worldToRegionID(worldPos);
+		for (int r : regions) {
+			if (r == tileRegionID)
+				return true;
+		}
+		return false;
+	}
+
+	private boolean isFlatGapTile(
+		ZoneSceneContext ctx, Tile[][][] tiles,
+		int tileExX, int tileExY,
+		int sceneMin, int sceneMax,
+		int[] regions, Area area,
+		int baseExX, int baseExY, int basePlane
+	) {
+		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
+			return false;
+		int tileX = tileExX - ctx.sceneOffset;
+		int tileY = tileExY - ctx.sceneOffset;
+		Tile tile = tiles[0][tileExX][tileExY];
+		if (tile != null) {
+			if (tile.getSceneTileModel() != null)
+				return false;
+			boolean hasPaint = tile.getSceneTilePaint() != null && tile.getSceneTilePaint().getNeColor() != HIDDEN_HSL;
+			if (!hasPaint && tile.getBridge() != null) {
+				Tile bridge = tile.getBridge();
+				hasPaint = bridge.getSceneTilePaint() != null && bridge.getSceneTilePaint().getNeColor() != HIDDEN_HSL;
+			}
+			if (hasPaint)
+				return false;
+		}
+		return isInFillGapsRegion(ctx, tileX, tileY, sceneMin, sceneMax, regions)
+			&& (area == null || area.containsPoint(baseExX + tileExX, baseExY + tileExY, basePlane));
+	}
+
+	private void uploadZoneGapTiles(ZoneSceneContext ctx, Zone zone, int mzx, int mzz, GpuIntBuffer vb, GpuIntBuffer fb) {
+		if (!ctx.fillGaps || ctx.sceneBase == null || (ctx.currentArea != null && !ctx.currentArea.fillGaps))
+			return;
+
+		var area = ctx.currentArea;
+		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int sceneMax = net.runelite.api.Constants.SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int baseExX = ctx.sceneBase[0];
+		int baseExY = ctx.sceneBase[1];
+		int basePlane = ctx.sceneBase[2];
+		int[] regions = client.getMapRegions();
+		Material blackMaterial = materialManager.getMaterial("BLACK");
+		int materialData = blackMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
+		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
+
+		for (int xoff = 0; xoff < 8; ++xoff) {
+			for (int zoff = 0; zoff < 8; ++zoff) {
+				int tileExX = (mzx << 3) + xoff;
+				int tileExY = (mzz << 3) + zoff;
+				if (area != null && !area.containsPoint(baseExX + tileExX, baseExY + tileExY, basePlane))
+					continue;
+
+				int tileX = tileExX - ctx.sceneOffset;
+				int tileY = tileExY - ctx.sceneOffset;
+				Tile tile = tiles[0][tileExX][tileExY];
+
+				SceneTilePaint paint;
+				SceneTileModel model = null;
+				if (tile != null) {
+					paint = tile.getSceneTilePaint();
+					model = tile.getSceneTileModel();
+
+					if (model == null) {
+						boolean hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
+						if (!hasTilePaint) {
+							tile = tile.getBridge();
+							if (tile != null) {
+								paint = tile.getSceneTilePaint();
+								model = tile.getSceneTileModel();
+								hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
+							}
+						}
+
+						if (hasTilePaint)
+							continue;
+					} else {
+						if (isInFillGapsRegion(ctx, tileX, tileY, sceneMin, sceneMax, regions)) {
+							uploadGapTileModelFaces(ctx, zone, tile, model, tileExX, tileExY, vb, fb);
+						}
+						continue;
+					}
+				}
+
+				if (!isInFillGapsRegion(ctx, tileX, tileY, sceneMin, sceneMax, regions))
+					continue;
+
+				int sceneTileX = tileExX - ctx.sceneOffset;
+				int sceneTileY = tileExY - ctx.sceneOffset;
+				int lx = sceneTileX * LOCAL_TILE_SIZE - basex;
+				int lz = sceneTileY * LOCAL_TILE_SIZE - basez;
+				int lx0 = lx, lz0 = lz;
+				int lx1 = lx + LOCAL_TILE_SIZE, lz1 = lz;
+				int lx2 = lx + LOCAL_TILE_SIZE, lz2 = lz + LOCAL_TILE_SIZE;
+				int lx3 = lx, lz3 = lz + LOCAL_TILE_SIZE;
+
+				int renderLevel = tile != null ? tile.getRenderLevel() : 0;
+				int swBot = tileHeights[renderLevel][tileExX][tileExY] + GAP_DEPTH_OFFSET;
+				int seBot = tileHeights[renderLevel][tileExX + 1][tileExY] + GAP_DEPTH_OFFSET;
+				int neBot = tileHeights[renderLevel][tileExX + 1][tileExY + 1] + GAP_DEPTH_OFFSET;
+				int nwBot = tileHeights[renderLevel][tileExX][tileExY + 1] + GAP_DEPTH_OFFSET;
+				int swTop = tileHeights[renderLevel][tileExX][tileExY];
+				int seTop = tileHeights[renderLevel][tileExX + 1][tileExY];
+				int neTop = tileHeights[renderLevel][tileExX + 1][tileExY + 1];
+				int nwTop = tileHeights[renderLevel][tileExX][tileExY + 1];
+
+				int terrainData = HDUtils.packTerrainData(true, 0, WaterType.NONE, renderLevel);
+				int color = 0;
+
+				// Only draw a side when the neighbor in that direction is NOT a gap - avoids duplicate faces
+				boolean drawSouth = !isFlatGapTile(ctx, tiles, tileExX, tileExY - 1, sceneMin, sceneMax, regions, area, baseExX, baseExY, basePlane);
+				boolean drawEast = !isFlatGapTile(ctx, tiles, tileExX + 1, tileExY, sceneMin, sceneMax, regions, area, baseExX, baseExY, basePlane);
+				boolean drawNorth = !isFlatGapTile(ctx, tiles, tileExX, tileExY + 1, sceneMin, sceneMax, regions, area, baseExX, baseExY, basePlane);
+				boolean drawWest = !isFlatGapTile(ctx, tiles, tileExX - 1, tileExY, sceneMin, sceneMax, regions, area, baseExX, baseExY, basePlane);
+
+				int u0 = UP_NORMAL[0], u1 = UP_NORMAL[2], u2 = UP_NORMAL[1];
+				int fi = fb.putFace(color, color, color, materialData, materialData, materialData, terrainData, terrainData, terrainData);
+				vb.putVertex(lx2, neBot, lz2, 0, 0, 0, u0, u1, u2, fi);
+				vb.putVertex(lx3, nwBot, lz3, 0, 0, 0, u0, u1, u2, fi);
+				vb.putVertex(lx1, seBot, lz1, 0, 0, 0, u0, u1, u2, fi);
+				fi = fb.putFace(color, color, color, materialData, materialData, materialData, terrainData, terrainData, terrainData);
+				vb.putVertex(lx0, swBot, lz0, 0, 0, 0, u0, u1, u2, fi);
+				vb.putVertex(lx1, seBot, lz1, 0, 0, 0, u0, u1, u2, fi);
+				vb.putVertex(lx3, nwBot, lz3, 0, 0, 0, u0, u1, u2, fi);
+
+				if (drawSouth) putGapSide(vb, fb, lx0, lz0, swBot, swTop, lx1, lz1, seBot, seTop, NORTH_NORMAL, color, materialData, terrainData);
+				if (drawEast) putGapSide(vb, fb, lx1, lz1, seBot, seTop, lx2, lz2, neBot, neTop, WEST_NORMAL, color, materialData, terrainData);
+				if (drawNorth) putGapSide(vb, fb, lx2, lz2, neBot, neTop, lx3, lz3, nwBot, nwTop, SOUTH_NORMAL, color, materialData, terrainData);
+				if (drawWest) putGapSide(vb, fb, lx3, lz3, nwBot, nwTop, lx0, lz0, swBot, swTop, EAST_NORMAL, color, materialData, terrainData);
+			}
+		}
+	}
+
+	private void uploadGapTileModelFaces(
+		ZoneSceneContext ctx,
+		Zone zone,
+		Tile tile,
+		SceneTileModel model,
+		int tileExX, int tileExY,
+		GpuIntBuffer vb,
+		GpuIntBuffer fb
+	) {
+		final int[] triangleColorA = model.getTriangleColorA();
+		final int faceCount = triangleColorA.length;
+
+		Material blackMaterial = materialManager.getMaterial("BLACK");
+		int materialData = blackMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+		int terrainData = HDUtils.packTerrainData(true, 0, WaterType.NONE, tile.getRenderLevel());
+
+		int sceneTileX = tileExX - ctx.sceneOffset;
+		int sceneTileY = tileExY - ctx.sceneOffset;
+		int tileBaseX = sceneTileX * LOCAL_TILE_SIZE - basex;
+		int tileBaseZ = sceneTileY * LOCAL_TILE_SIZE - basez;
+
+		for (int face = 0; face < faceCount; ++face) {
+			if (triangleColorA[face] != HIDDEN_HSL)
+				continue;
+
+			ProceduralGenerator.faceVertexKeys(tile, face, vertices, vertexKeys);
+			ProceduralGenerator.faceLocalVertices(tile, face, vertices);
+
+			int lx0 = tileBaseX + vertices[0][0];
+			int ly0 = vertices[0][2] + GAP_DEPTH_OFFSET;
+			int lz0 = tileBaseZ + vertices[0][1];
+
+			int lx1 = tileBaseX + vertices[1][0];
+			int ly1 = vertices[1][2] + GAP_DEPTH_OFFSET;
+			int lz1 = tileBaseZ + vertices[1][1];
+
+			int lx2 = tileBaseX + vertices[2][0];
+			int ly2 = vertices[2][2] + GAP_DEPTH_OFFSET;
+			int lz2 = tileBaseZ + vertices[2][1];
+
+			if (isHorizontalFace(lx0, ly0, lz0, lx1, ly1, lz1, lx2, ly2, lz2))
+				continue;
+
+			int vertexKeyA = vertexKeys[0];
+			int vertexKeyB = vertexKeys[1];
+			int vertexKeyC = vertexKeys[2];
+
+			int[] normalsA = ctx.vertexTerrainNormals.getOrDefault(vertexKeyA, UP_NORMAL);
+			int[] normalsB = ctx.vertexTerrainNormals.getOrDefault(vertexKeyB, UP_NORMAL);
+			int[] normalsC = ctx.vertexTerrainNormals.getOrDefault(vertexKeyC, UP_NORMAL);
+
+			int color = 0;
+			int texturedFaceIdx = fb.putFace(
+				color, color, color,
+				materialData, materialData, materialData,
+				terrainData, terrainData, terrainData
+			);
+
+			vb.putVertex(
+				lx0, ly0, lz0,
+				0, 0, 0,
+				normalsA[0], normalsA[2], normalsA[1],
+				texturedFaceIdx
+			);
+			vb.putVertex(
+				lx2, ly2, lz2,
+				0, 0, 0,
+				normalsC[0], normalsC[2], normalsC[1],
+				texturedFaceIdx
+			);
+			vb.putVertex(
+				lx1, ly1, lz1,
+				0, 0, 0,
+				normalsB[0], normalsB[2], normalsB[1],
+				texturedFaceIdx
+			);
+		}
 	}
 
 	private void uploadZoneLevelRoof(
