@@ -1389,14 +1389,21 @@
     "specularGloss": 10.0
   },
   {
-    "name": "SAND_4_N"
+    "name": "SAND_4",
+    "normalMap": "DIRT_1_N",
+    "specularStrength": 0.2,
+    "specularGloss": 10.0
   },
   {
-    "name": "SAND_4",
-    "normalMap": "SAND_4_N",
+    "name": "SAND_4_MIRRORED",
+    "parent": "SAND_4",
+    "textureScale": [ -1, -1 ,1 ]
+  },
+  {
+    "name": "SAND_5",
+    "normalMap": "DIRT_1_N",
     "specularStrength": 0.2,
-    "specularGloss": 10.0,
-    "textureScale": [ 1, 1, 0.65 ]
+    "specularGloss": 10.0
   },
   {
     "name": "GRUNGE_1_N"
