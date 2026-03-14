@@ -20822,7 +20822,7 @@
     "offset": [ 3, 0, 40 ]
   },
   {
-    "description": "Altar Candles - Lumbridge and Port Sarim",
+    "description": "Altar Candles - Lumbridge, Port Sarim, Glough's",
     "offset": [ 0, 140, -33 ],
     "radius": 180,
     "strength": 7,
@@ -20836,7 +20836,8 @@
     "range": 20,
     "objectIds": [
       "CANDLES_1",
-      "CANDLES_2"
+      "CANDLES_2",
+      "MM2_GLOUGHS_CANDLES"
     ]
   },
   {
@@ -21497,6 +21498,42 @@
       "CLIMBING_ROPE",
       "CLIMBING_ROPE2",
       "DRAGON_SLAYER_QIP_CLIMBING_ROPE"
+    ]
+  },
+  {
+    "description": "CRASH_ISLAND_ROPE",
+    "height": 450,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 25,
+    "color": [
+      200,
+      220,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "_100_ILM_LIGHT_STREAMING_WITH_ROPE"
+    ]
+  },
+  {
+    "description": "MANICHAL_MONKEY_EXIT_ROPE",
+    "height": 450,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 15,
+    "color": [
+      200,
+      220,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "MM2_MAZE_EXIT_ROPE"
     ]
   },
   {

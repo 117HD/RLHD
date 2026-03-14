@@ -1590,7 +1590,8 @@
       "DEADTREE1_LARGE_STUMP",
       "MDAUGHTER_PASSABLE_TREE_STUMP",
       "DRAGON_SLAYER_QIP_WILD5_TREE_STUMP",
-      "SOTN_HUNTING_TREESTUMP_NOOP"
+      "SOTN_HUNTING_TREESTUMP_NOOP",
+      "MM_BUSH_KHARAZI_JUNGLESTUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -8056,8 +8057,7 @@
       "LOST_TRIBE_CELLAR_HOLE_BLOCKING",
       "DTTD_WALL_HAM_TOP5_OUTER2",
       "DTTD_WALL_HAM_TOP5_OUTER",
-      "DTTD_WALL_HAM_TOP_OUTER",
-      "ENAKH_B_W_CAVEWALL_TOP"
+      "DTTD_WALL_HAM_TOP_OUTER"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -15903,7 +15903,8 @@
         "colors": "h == 12",
         "upwardsNormals": true,
         "baseMaterial": "GRAY_75",
-        "windDisplacementMode": "OBJECT"
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
       }
     ],
     "objectIds": [
@@ -17054,7 +17055,11 @@
       "ROCKSLIDE1_UPASS",
       "ROCKSLIDE2_UPASS",
       "ROCKSLIDE3_UPASS",
-      "ROCKSLIDE4_UPASS"
+      "ROCKSLIDE4_UPASS",
+      "ROCKSLIDE2_OBSTACLE_UPASS",
+      "FAVOUR_ROCKSLIDE1",
+      "MM2_ROCKS_UNBREAKABLE",
+      "MM2_ROCKS_BREAKABLE"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -18831,7 +18836,9 @@
       "AVIUM_DEADTREE_1",
       "MM2_GLOUGH_BRANCH_DOWN",
       "DRAGON_SLAYER_QIP_WILD5_TREE_A",
-      "DRAGON_SLAYER_QIP_WILD5_TREE_B"
+      "DRAGON_SLAYER_QIP_WILD5_TREE_B",
+      "MM2_DOWNTREE_SEARCHABLE",
+      "MM2_GLOUGH_BRANCH_UP_ACTIVE"
     ],
     "uvType": "BOX"
   },
@@ -18877,7 +18884,9 @@
       }
     ],
     "objectIds": [
-      "GNOMEFENCE"
+      "GNOMEFENCE",
+      "MM2_STRONGHOLD_FENCE",
+      "MM2_STRONGHOLD_FENCE_BROKEN"
     ]
   },
   {
@@ -18922,6 +18931,7 @@
   },
   {
     "description": "Gnome - Ground Decoration - Wooden - Log Supports",
+    "retainVanillaUvs": false,
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "BRIDGE_CORNERFLOOR",
@@ -18969,6 +18979,12 @@
         "description": "Lamp",
         "colors": "s == 0",
         "baseMaterial": "METALLIC_1_LIGHT"
+      },      {
+        "description": "Lamp",
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": false,
+        "flatNormals": true
       }
     ],
     "objectIds": [
@@ -19060,7 +19076,7 @@
     "description": "Gnome - Objects - Wooden - Bench - Textured",
     "baseMaterial": "WOOD_GRAIN_2",
     "uvType": "BOX",
-    "uvScale": 0.48,
+    "uvScale": 0.4,
     "objectIds": [
       "GNOMEBENCH"
     ]
@@ -19069,7 +19085,8 @@
     "description": "Gnome - Wooden - Stool",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientation": 600,
+    "uvScale": 0.75,
+    "uvOrientation": 512,
     "objectIds": [
       "GNOMESTOOL"
     ]
@@ -19103,7 +19120,7 @@
     "description": "Gnome - Wooden - table with cutlery and napkins with candle - Needs proper UV",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientation": 84,
+    "uvScale": 0.75,
     "colorOverrides": [
       {
         "description": "Cutlery napkins and candle",
@@ -19120,9 +19137,9 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientation": 512,
+    "uvScale": 0.7,
     "objectIds": [
-      "ALUFT_GNOME_TABLE",
-      "ALUFT_GNOME_OFFICE_TABLE"
+      "ALUFT_GNOME_TABLE"
     ]
   },
   {
@@ -37785,7 +37802,10 @@
     "description": "Objects - Rock Column - Tan - Huge",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      "ROCKCOLUMN1", "ROCKCOLUMN2", "ROCKCOLUMN3"
+      "ROCKCOLUMN1",
+      "ROCKCOLUMN2",
+      "ROCKCOLUMN3",
+      "STALAGMITE_TWIN"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -42084,7 +42104,9 @@
     "objectIds": [
       "MISTMYST_BOAT_LUMBRIDGE",
       "MISTMYST_BOAT_ISLAND",
-      "SEASLUG_ROWBOAT"
+      "SEASLUG_ROWBOAT",
+      "MM2_MONKEY_BOAT",
+      "SLUG2_ROWBOAT"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -42702,7 +42724,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": "h == 5 && s < 2",
+        "colors": "h == 5 && s < 2 || h == 0 && s == 0",
         "uvType": "BOX",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvScale": 0.5
@@ -42753,7 +42775,10 @@
       "LUC2_DWT_BARREL1",
       "LUC2_DWT_BARREL2",
       "SLUG2_BARREL_STACKED",
-      "FAI_FALADOR_BARREL_TAP"
+      "FAI_FALADOR_BARREL_TAP",
+      "MM2_SHIPYARD_BARREL_01",
+      "MM2_SHIPYARD_BARREL_02",
+      "MM2_EXPLOSIVES_BARREL_OPEN"
     ]
   },
   {
@@ -46304,7 +46329,9 @@
       "GARLICCUPBOARDSHUT",
       "GARLICCUPBOARDOPEN",
       "VYVINCUPBOARDSHUT",
-      "VYVINCUPBOARDOPEN"
+      "VYVINCUPBOARDOPEN",
+      "MM2_GLOUGHS_CUPBOARD_CLOSED",
+      "MM2_GLOUGHS_CUPBOARD_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -52498,9 +52525,8 @@
     "description": "Karamja Bamboo bridge",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 1024,
-    "uvOrientationZ": 162,
+    "uvScale": 0.45,
+    "uvOrientationY": 512,
     "colorOverrides": [
       {
         "description": "Rope",
@@ -52793,6 +52819,144 @@
     "objectIds": [
       "STOOL_BAMBOO",
       "MM_STOOL_BAMBOO"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Giant Monkey Gate",
+    "baseMaterial": "LIGHT_BARK_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM_BAMBOO_LARGEDOOR_LEFT",
+      "MM_BAMBOO_LARGEDOOR",
+      "MM_BAMBOO_LARGEDOOR_OPEN_LEFT",
+      "MM_BAMBOO_LARGEDOOR_OPEN"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Crash Island - Snake Pit Hole",
+    "objectIds": [
+      "_100_ILM_SNAKEPIT_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "windDisplacementMode": "OBJECT"
+      },
+      {
+        "colors": "h > 12",
+        "baseMaterial": "GRASS_1",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h < 12",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Crash Island - Snake Pit Walls",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "_100_ILM_SNAKE_WALL_MIDHOLE",
+      "_100_ILM_SNAKE_WALL_HIGHHOLE",
+      "_100_ILM_SNAKE_WALL_2HOLES",
+      "_100_ILM_SNAKE_WALL_LOWHOLE",
+      "_100_ILM_SNAKE_WALL_BASIC",
+      "_100_ILM_SNAKE_HIGHWALL_BASIC",
+      "_100_ILM_SNAKE_HIGHWALL_HOLE",
+      "ENAKH_B_W_CAVEWALL_TOP",
+      "_100_ILM_SNAKE_WALLROCKS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Crash Island - Snake Pit Exit Rope",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -75,
+    "objectIds": [
+      "_100_ILM_LIGHT_STREAMING_WITH_ROPE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "NONE",
+        "uvType": "BOX",
+        "depthBias": 2,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Crash Island - Snake Pit Hole Decal",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "depthBias": 1,
+    "objectIds": [
+      "_100_ILM_SNAKE_HOLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "depthBias": 10
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Guard Tower",
+    "baseMaterial": "LIGHT_BARK_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 570,
+    "depthBias": 1,
+    "objectIds": [
+      "MM_WATCHTOWER_LEG1",
+      "MM_WATCHTOWER_LEG2",
+      "MM_BAMBOO_LADDER_WATCHTOWER_WEST",
+      "MM_BAMBOO_LADDER_TOP_WATCHTOWER_WEST",
+      "MM_BAMBOO_LADDER_WATCHTOWER_EAST",
+      "MM_BAMBOO_LADDER_TOP_WATCHTOWER_EAST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "depthBias": 10
+      }
     ]
   },
   {
@@ -58053,7 +58217,9 @@
     "baseMaterial": "GRUNGE_3_DARK",
     "uvOrientation": 512,
     "uvType": "MODEL_XZ",
+    "castShadows": false,
     "uvScale": 0.7,
+    "depthBias": 100,
     "objectIds": [
       "HAY_1",
       "STRAW",
@@ -69317,6 +69483,537 @@
     ]
   },
   {
+    "description": "Gnome - Glough's Secret Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "depthBias": 1,
+    "objectIds": [
+      "WOOD2",
+      "GRANDTREE_TRAPDOORTOWEROPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Glough's Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM2_GLOUGHS_TABLE",
+      "ALUFT_GNOME_OFFICE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 7",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Glough's Fireplace",
+    "baseMaterial": "GRUNGE_3",
+    "depthBias": 40,
+    "objectIds": [
+      "MM2_GLOUGHS_FIREPLACE_NOTE",
+      "MM2_GLOUGHS_FIREPLACE_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Glough's Candle Altar",
+    "baseMaterial": "GRUNGE_3",
+    "depthBias": 40,
+    "objectIds": [
+      "MM2_GLOUGHS_CANDLES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Glough's Bust",
+    "baseMaterial": "GRUNGE_3",
+    "depthBias": 40,
+    "objectIds": [
+      "MM2_GLOUGHS_BUST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Glough's Crates and Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "MM2_GLOUGHS_BARRELS",
+      "MM2_GLOUGHS_CRATES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Entrance",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 50,
+    "objectIds": [
+      "MM2_SECRET_ENTRANCE_REVEALED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_80",
+        "castShadows": false,
+        "flatNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Walls",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_CAVE_SECRET_BUNKER_LEV1_01",
+      "MM2_CAVE_SECRET_BUNKER_LEV2_STRAIGHT",
+      "MM2_CAVE_SECRET_BUNKER_LEV2_CORNER_01",
+      "MM2_CAVE_SECRET_BUNKER_LEV2_TOP",
+      "MM2_CAVE_SECRET_BUNKER_LEV1_TOP",
+      "MM2_CAVE_SECRET_BUNKER_LEV2_CORNER_02",
+      "MM2_MAZE_RETURN_HIDDEN",
+      "MM2_CAVE_SECRET_BUNKER_PIT_LEV0",
+      "MM2_CAVE_SECRET_BUNKER_LEV0",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_STRAIGHT01",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_CORNER01",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_STRAIGHT03",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_STRAIGHT02",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_CORNER02",
+      "MM2_CAVE_SECRET_BUNKER_FLOOR_PLANE",
+      "MM2_CAVE_SECRET_BUNKER_LEV1_02",
+      "MM2_PILLAR_BASE_01",
+      "MM2_PILLAR_BASE_02",
+      "MM2_PILLAR_BASE_03",
+      "MM2_CAVE_SECRET_BUNKER_LEV1_JOIN02",
+      "MM2_SECRET_LAB_ENTRANCE_HIDDEN",
+      "MM2_KRUK_BATTLE_ENTRANCE",
+      "MM2_KRUK_BATTLE_EXIT",
+      "MM2_CAVE_SECRET_BUNKER_LEV1_JOIN01",
+      "MM2_TILE_WALK",
+      "MM2_TILE_BROKEN",
+      "MM2_TILE_BLEND_EDGE",
+      "MM2_TILE_BLEND_CORNER",
+      "MM2_CAVE_SECRET_BUNKER_LEV0_HOLD",
+      "MM2_LEDGE_HANG",
+      "MM2_LEDGE_WALK",
+      "MM2_CRACK_PASS",
+      "MM2_CAVE_SECRET_BUNKER_STEP_ROCKS",
+      "MM2_CAVE_SECRET_BUNKER_LEV0_STEPSIDE_01",
+      "MM2_CAVE_SECRET_BUNKER_LEV0_STEPSIDE_02",
+      "MM2_SECRET_LAB_ENTRANCE",
+      "MM2_SECRET_LAB_EXIT"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Hole with Vines",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_MAZE_EXIT_HOLE_SIDE",
+      "MM2_MAZE_EXIT_HOLE_CORNER",
+      "MM2_MAZE_EXIT_HOLE",
+      "MM2_TILE_BROKEN_ANIM"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 11",
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Pressure Plate",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "MM2_ROCK_FALL"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Log",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.75111,
+    "objectIds": [
+      "MM2_LOG_WALK"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Saw",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "MM2_TRAP_SAW_FLOOR",
+      "MM2_TRAP_SAW_FLOOR2",
+      "MM2_TRAP_SAW"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Dart Trap",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "MM2_TRAP_DARTS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Kruk's Dungeon Dart Trap",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "MM2_TRAP_AXES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Floor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "depthBias": 1,
+    "objectIds": [
+      "MM2_SHIPYARD_PIER_FLOOR_01",
+      "MM2_SHIPYARD_PIER_FLOOR_02",
+      "MM2_SHIPYARD_PIER_FLOOR_03",
+      "MM2_SHIPYARD_PIER_FLOOR_04",
+      "MM2_SHIPYARD_PIER_FLOOR_05",
+      "MM2_SHIPYARD_PIER_FLOOR_06",
+      "MM2_SHIPYARD_PIER_FLOOR_07",
+      "MM2_SHIPYARD_PIER_FLOOR_08",
+      "MM2_SHIPYARD_PIER_FLOOR_09",
+      "MM2_TARGET_D",
+      "MM2_TARGET_C"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MM2_SHIPYARD_SUPPORT_CORNER_STRAIGHT_BASE",
+      "MM2_SHIPYARD_SUPPORT_STRAIGHT_MIDDLE",
+      "MM2_SHIPYARD_SUPPORT_CORNER_BASE",
+      "MM2_SHIPYARD_SCAFOLD_CORNER_UPPER",
+      "MM2_SHIPYARD_SCAFOLD_BEAM_01",
+      "MM2_SHIPYARD_SCAFOLD_BEAM_02",
+      "MM2_SHIPYARD_SCAFOLD_CORNER_TSECTION",
+      "MM2_SHIPYARD_SCAFOLD_STRAIGHT_HALF",
+      "MM2_SHIPYARD_SCAFOLD_STRAIGHT_UPPER",
+      "MM2_SHIPYARD_SUPPORT_STRAIGHT_UPPER2",
+      "MM2_SHIPYARD_SUPPORT_STRAIGHT_UPPER1",
+      "MM2_SHIPYARD_SUPPORT_CORNER_UPPER_LEFT",
+      "MM2_SHIPYARD_SUPPORT_CORNER_UPPER_RIGHT",
+      "MM2_TARGET_B",
+      "MM2_TARGET_A"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Crates - Angled",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 100,
+    "objectIds": [
+      "MM2_SHIPYARD_CRATE_02",
+      "MM2_SHIPYARD_CRATE_03",
+      "MM2_SHIPYARD_CRATE_04",
+      "MM2_LAB_CRATE_02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Crates - Angled Alt",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 50,
+    "objectIds": [
+      "MM2_SHIPYARD_CRATE_06",
+      "MM2_SHIPYARD_CRATE_05",
+      "MM2_LAB_CRATE_03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Crates - Normal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_SHIPYARD_CRATE_01",
+      "MM2_LAB_CRATE_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Anchor",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "MM2_SHIPYARD_ANCHOR"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship Platform Railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "SEASLUG_RAILING_END",
+      "SEASLUG_RAILING",
+      "SEASLUG_RAILING_END_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Airship & Lab",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_AIRSHIP_WALL_LEFT_1",
+      "MM2_AIRSHIP_WALL_TOP_GREEN",
+      "MM2_AIRSHIP_WALL_TOP_BLACK",
+      "MM2_AIRSHIP_WALL_RIGHT_1",
+      "MM2_AIRSHIP_WALL_CORNER",
+      "MM2_AIRSHIP_WALL_CORNER_INNER",
+      "MM2_AIRSHIP_WALL_END_LEFT",
+      "MM2_AIRSHIP_WALL_DOOR_LEFT",
+      "MM2_AIRSHIP_WALL_DOOR_RIGHT",
+      "MM2_AIRSHIP_WALL_END_RIGHT",
+      "MM2_LAB_ROOF_01",
+      "MM2_LAB_ROOF_02",
+      "MM2_LAB_ROOF_03",
+      "MM2_LAB_ROOF_04",
+      "MM2_LAB_ROOF_05",
+      "MM2_LAB_ROOF_06",
+      "MM2_LAB_ROOF_07",
+      "MM2_LAB_ROOF_08",
+      "MM2_LAB_ROOF_09",
+      "MM2_LAB_ROOF_10",
+      "MM2_LAB_ROOF_11",
+      "MM2_LAB_ROOF_12",
+      "MM2_LAB_ROOF_13",
+      "MM2_LAB_ROOF_14",
+      "MM2_LAB_WALL_OUTER_03",
+      "MM2_LAB_WALL_OUTER_02",
+      "MM2_LAB_WALL_OUTER_01",
+      "MM2_LAB_WALL_OUTER_END01",
+      "MM2_LAB_WALL_OUTER_END02",
+      "MM2_LAB_DOOR_LEFT",
+      "MM2_LAB_DOOR_RIGHT",
+      "MM2_LAB_DOOR_RIGHT_OPEN",
+      "MM2_LAB_WALL_INNER_CORNER",
+      "MM2_LAB_DOOR_LEFT_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "h > 34 || h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Lab Metal Objects",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "MM2_LAB_FLOOR_BRIDGE",
+      "MM2_LAB_BANISTER_OUTER_02",
+      "MM2_LAB_BANISTER_OUTER_01",
+      "MM2_LAB_BANISTER_OUTER_END_01",
+      "MM2_LAB_BANISTER_OUTER_END_02",
+      "MM2_LAB_DOOR_RIGHT",
+      "MM2_LAB_WALL_OUTER_LOWER01",
+      "MM2_LAB_WALL_OUTER_LOWER02",
+      "MM2_LAB_STAIRS01",
+      "MM2_LAB_WALL_05",
+      "MM2_LAB_FLOOR",
+      "MM2_LAB_WALL_04",
+      "MM2_LAB_WALL_06",
+      "MM2_LAB_BANISTER_01",
+      "MM2_LAB_BANISTER_END_02",
+      "MM2_LAB_BANISTER_END_01",
+      "MM2_LAB_WALL_02",
+      "MM2_LAB_WALL_JOIN02",
+      "MM2_LAB_WALL_JOIN01",
+      "MM2_LAB_PIPE_END_01",
+      "MM2_LAB_PIPE_MIDDLE_01",
+      "MM2_LAB_PIPE_END_02",
+      "MM2_LAB_PIPE_MIDDLE_02",
+      "MM2_LAB_PIPE_CORNER_01",
+      "MM2_LAB_PIPE_END_04",
+      "MM2_LAB_PIPE_END_03",
+      "MM2_LAB_PIPE_CORNER_02",
+      "MM2_LAB_PIPE_TSECTION",
+      "MM2_LAB_WALL_BROKEN_02",
+      "MM2_LAB_WALL_03",
+      "MM2_LAB_WALL_BROKEN_01",
+      "MM2_LAB_CAGE_BROKEN_DOOR",
+      "MM2_LAB_WALL_END_01",
+      "MM2_LAB_WALL_END_02",
+      "MM2_LAB_CAGE_DOOR",
+      "MM2_LAB_LEVER_OFF",
+      "MM2_LAB_LEVER_ON",
+      "MM2_LAB_MUTAGEN_MIXER",
+      "MM2_LAB_MUTAGEN_ONYX_ORB",
+      "MM2_LAB_DISMOUNT"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Lab Tank",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "MM2_LAB_INCUBATOR_HEALTHY",
+      "MM2_LAB_INCUBATOR_CORRUPTED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Witchaven - Wooden - Barrels",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -70271,8 +70968,6 @@
       "SLUG2_ROTTEN_BARREL_HALF_BURRIED",
       "SEASLUG_CRATE_IN_WATER2",
       "SEASLUG_CRATE_IN_WATER",
-      "SLUG2_ROWBOAT",
-      "SLUG2_ROWBOAT",
       "SEASLUG_MESSGAE_BOTTLE",
       "SAILING_CHARTING_DRINK_CRATE",
       "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT",

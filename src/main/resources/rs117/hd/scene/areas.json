@@ -7932,7 +7932,31 @@
   {
     "name": "MM2_AIRSHIP_PLATFORM",
     "aabbs": [
-      [ 2056, 5375, 2109, 5442 ]
+      [ 2049, 5376, 2110, 5439 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MM2_SECRET_LAB_CARPET",
+    "aabbs": [
+      [ 2205, 5487, 2210, 5493 ],
+      [ 2204, 5467, 2211, 5481 ],
+      [ 2200, 5486, 2202, 5486 ],
+      [ 2200, 5484, 2200, 5485 ],
+      [ 2200, 5483, 2202, 5483 ],
+      [ 2203, 5483, 2212, 5486 ],
+      [ 2213, 5486, 2214, 5486 ],
+      [ 2215, 5484, 2215, 5486 ],
+      [ 2213, 5483, 2215, 5483 ],
+      [ 2214, 5466, 2215, 5482 ],
+      [ 2200, 5466, 2201, 5482 ],
+      [ 2203, 5462, 2212, 5465 ],
+      [ 2213, 5465, 2215, 5465 ],
+      [ 2215, 5462, 2215, 5464 ],
+      [ 2213, 5462, 2214, 5462 ],
+      [ 2200, 5465, 2202, 5465 ],
+      [ 2200, 5462, 2200, 5464 ],
+      [ 2201, 5462, 2202, 5462 ]
     ]
   },
   {
@@ -7958,7 +7982,16 @@
   },
   {
     "name": "Gnome glider hangar (Monkey Madness 1)",
-    "regions": [ 9626 ],
+    "regions": [ 9626 ]
+  },
+  {
+    "name": "Gnome glider hangar (Monkey Madness 1) Post quest?",
+    "regions": [ 10566 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Gnome glider hangar (Monkey Madness 1) Dont know?",
+    "regions": [ 10310 ],
     "hideOtherAreas": true
   },
   {
@@ -7973,7 +8006,12 @@
   },
   {
     "name": "Temple of Marimbo Dungeon (Monkey Madness 1)",
-    "regions": [ 11151 ],
+    "regionBoxes": [ [10128, 10637] ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Kruk's Dungeon Main Area (Monkey Madness 2)",
+    "regions": [ 11662 ],
     "hideOtherAreas": true
   },
   {
