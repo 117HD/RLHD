@@ -320,12 +320,14 @@ public class ModelStreamingManager {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
-				final int alphaFaceCount = hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
+				final boolean isPlayer = renderable instanceof Player;
+				final int alphaFaceCount = !isPlayer && hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
 				final DynamicModelVAO.View opaqueView =
-					ctx.beginDraw(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE, opaqueFaceCount);
-				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
+					ctx.beginDraw(isPlayer ? VAO_PLAYER : VAO_OPAQUE, opaqueFaceCount);
+				final DynamicModelVAO.View alphaView =
+					alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
 					visibleFaces,
