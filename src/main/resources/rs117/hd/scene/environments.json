@@ -1640,7 +1640,7 @@
       80,
       190
     ],
-    "fogColor": "#030303"
+    "fogColor": "#000000"
   },
   {
     "area": "ICY_UNDERGROUND_BRIGHT",
@@ -1653,6 +1653,16 @@
     ],
     "fogColor": "#adc5e4",
     "fogDepth": 68
+  },
+  {
+    "area": "DT2_MYSTERIOUS_FIGURE_HIDEOUT",
+    "ambientColor": "#aaafb6",
+    "directionalStrength": 0.75,
+    "sunAngles": [
+      70,
+      190
+    ],
+    "fogDepth": 20
   },
   {
     "area": "ASGARNIA_ICE_DUNGEON_SNOWY",
@@ -1784,7 +1794,6 @@
       90,
       180
     ],
-    "fogColor": "#080707",
     "fogDepth": 15
   },
   {
