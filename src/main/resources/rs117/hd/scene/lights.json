@@ -22729,22 +22729,38 @@
     "description": "POH_EXIT_PORTAL",
     "height": 160,
     "alignment": "CENTER",
-    "radius": 350,
-    "strength": 15,
+    "radius": 450,
+    "strength": 25,
     "color": [
-      93,
-      0,
-      255
+      160,
+      80,
+      250
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "POH_EXIT_PORTAL"
     ]
   },
   {
-    "description": "POH_PORTAL",
+    "description": "POH_EXIT_PORTAL_WILDERNESS",
+    "offset": [ 0, 160, 0 ],
+    "alignment": "CENTER",
+    "radius": 475,
+    "strength": 25,
+    "color": [
+      255,
+      200,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "POH_EXIT_PORTAL_WILDERNESS"
+    ]
+  },
+  {
+    "description": "POH_ENTRANCE_PORTAL",
     "height": 180,
     "alignment": "CENTER",
     "radius": 700,
@@ -22768,7 +22784,7 @@
     ]
   },
   {
-    "description": "POH_PORTAL_PRIFDDINAS",
+    "description": "POH_PORTAL_ENTRANCE_PORTAL_PRIFDDINAS",
     "height": 120,
     "alignment": "CENTER",
     "radius": 700,
@@ -22787,10 +22803,10 @@
   },
   {
     "description": "POH_PORTAL_NEXUS",
-    "height": 200,
+    "height": 150,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 12.5,
+    "radius": 450,
+    "strength": 10,
     "color": [
       31,
       225,
@@ -22798,13 +22814,12 @@
     ],
     "type": "PULSE",
     "duration": 1250,
-    "range": 20,
+    "range": 13.5,
     "objectIds": [
-      "LEAGUE_5_POH_SPIRIT_RING",
+      "POH_NEXUS_PORTAL_LEAGUE_5",
       "POH_NEXUS_PORTAL_1",
       "POH_NEXUS_PORTAL_2",
-      "POH_NEXUS_PORTAL_3",
-      "HUNTING_TRAIL4_8L"
+      "POH_NEXUS_PORTAL_3"
     ]
   },
   {
@@ -23044,7 +23059,7 @@
     ]
   },
   {
-    "description": "SCRYING_POOL",
+    "description": "POH_PORTAL_ROOM_FOCUS_AND_SCRYING_POOL",
     "height": 170,
     "alignment": "CENTER",
     "radius": 400,
@@ -23064,10 +23079,46 @@
     ]
   },
   {
+    "description": "POH_WILDY_GARDEN_LAVA_IMP_FOUNTAIN",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "height": 125,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 15,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "range": 25,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE4"
+    ]
+  },
+  {
+    "description": "POH_WILDY_GARDEN_LAVA_ORNAMENTS_POND",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "height": 175,
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 20,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "range": 25,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE3"
+    ]
+  },
+  {
     "description": "POH_TRAILBLAZER_RELOADED_TROPHY",
     "offset": [ 0, 190, -20 ],
-    "radius": 70,
-    "strength": 30,
+    "radius": 92,
+    "strength": 20,
     "color": [
       252,
       188,
@@ -23075,9 +23126,31 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 25,
+    "range": 15,
     "objectIds": [
-      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_4_DRAGON"
+      "POH_LEAGUEHALL_PEDESTAL_1_SIMPLE_LEAGUE_4_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_1_DECORATIVE_LEAGUE_4_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_4_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_2_DECORATIVE_LEAGUE_4_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_4_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_4_DRAGON"
+    ]
+  },
+  {
+    "description": "POH_RAGING_ECHOES_TROPHY",
+    "offset": [ 0, 190, -20 ],
+    "radius": 92,
+    "strength": 30,
+    "color": [
+      160,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_5_DRAGON"
     ]
   },
   {
@@ -23112,7 +23185,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_ARCEUUS_LIBRARY",
       "POH_PORTAL_MAG_ARCEUUS_LIBRARY",
-      "POH_PORTAL_MARBLE_ARCEUUS_LIBRARY"
+      "POH_PORTAL_MARBLE_ARCEUUS_LIBRARY",
+      "POH_PORTAL_LEAGUE_5_ARCEUUS_LIBRARY"
     ]
   },
   {
@@ -23132,7 +23206,8 @@
     "objectIds": [
       "POH_PORTAL_MARBLE_DRAYNOR_MANOR",
       "POH_PORTAL_MAG_DRAYNOR_MANOR",
-      "POH_PORTAL_TEAK_DRAYNOR_MANOR"
+      "POH_PORTAL_TEAK_DRAYNOR_MANOR",
+      "POH_PORTAL_LEAGUE_5_DRAYNOR_MANOR"
     ]
   },
   {
@@ -23152,7 +23227,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_BATTLEFRONT",
       "POH_PORTAL_MARBLE_BATTLEFRONT",
-      "POH_PORTAL_MAG_BATTLEFRONT"
+      "POH_PORTAL_MAG_BATTLEFRONT",
+      "POH_PORTAL_LEAGUE_5_BATTLEFRONT"
     ]
   },
   {
@@ -23171,15 +23247,13 @@
     "range": 20,
     "objectIds": [
       "POH_PORTAL_TEAK_VARROCK_VARROCK1ST",
-      "POH_PORTAL_TEAK_VARROCK_VARROCK1ST",
-      "POH_PORTAL_TEAK_VARROCK_GE1ST",
       "POH_PORTAL_TEAK_VARROCK_GE1ST",
       "POH_PORTAL_MAHOGANY_VARROCK_VARROCK1ST",
       "POH_PORTAL_MAHOGANY_VARROCK_GE1ST",
       "POH_PORTAL_MARBLE_VARROCK_VARROCK1ST",
-      "POH_PORTAL_MARBLE_VARROCK_VARROCK1ST",
       "POH_PORTAL_MARBLE_VARROCK_GE1ST",
-      "POH_PORTAL_MARBLE_VARROCK_GE1ST"
+      "POH_PORTAL_LEAGUE_5_VARROCK_VARROCK1ST",
+      "POH_PORTAL_LEAGUE_5_VARROCK_GE1ST"
     ]
   },
   {
@@ -23199,7 +23273,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_MIND_ALTAR",
       "POH_PORTAL_MARBLE_MIND_ALTAR",
-      "POH_PORTAL_MAG_MIND_ALTAR"
+      "POH_PORTAL_MAG_MIND_ALTAR",
+      "POH_PORTAL_LEAGUE_5_MIND_ALTAR"
     ]
   },
   {
@@ -23219,7 +23294,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_LUMBRIDGE",
       "POH_PORTAL_MAG_LUMBRIDGE",
-      "POH_PORTAL_MARBLE_LUMBRIDGE"
+      "POH_PORTAL_MARBLE_LUMBRIDGE",
+      "POH_PORTAL_LEAGUE_5_LUMBRIDGE"
     ]
   },
   {
@@ -23239,7 +23315,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_FALADOR",
       "POH_PORTAL_MAG_FALADOR",
-      "POH_PORTAL_MARBLE_FALADOR"
+      "POH_PORTAL_MARBLE_FALADOR",
+      "POH_PORTAL_LEAGUE_5_FALADOR"
     ]
   },
   {
@@ -23259,7 +23336,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_SALVE_GRAVEYARD",
       "POH_PORTAL_MARBLE_SALVE_GRAVEYARD",
-      "POH_PORTAL_MAG_SALVE_GRAVEYARD"
+      "POH_PORTAL_MAG_SALVE_GRAVEYARD",
+      "POH_PORTAL_LEAGUE_5_SALVE_GRAVEYARD"
     ]
   },
   {
@@ -23282,7 +23360,9 @@
       "POH_PORTAL_MAHOGANY_CAMELOT_CAMELOT1ST",
       "POH_PORTAL_MAHOGANY_CAMELOT_SEERS1ST",
       "POH_PORTAL_MARBLE_CAMELOT_CAMELOT1ST",
-      "POH_PORTAL_MARBLE_CAMELOT_SEERS1ST"
+      "POH_PORTAL_MARBLE_CAMELOT_SEERS1ST",
+      "POH_PORTAL_LEAGUE_5_CAMELOT_CAMELOT1ST",
+      "POH_PORTAL_LEAGUE_5_CAMELOT_SEERS1ST"
     ]
   },
   {
@@ -23302,7 +23382,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_FENKENSTRAIN",
       "POH_PORTAL_MARBLE_FENKENSTRAIN",
-      "POH_PORTAL_MAG_FENKENSTRAIN"
+      "POH_PORTAL_MAG_FENKENSTRAIN",
+      "POH_PORTAL_LEAGUE_5_FENKENSTRAIN"
     ]
   },
   {
@@ -23322,7 +23403,8 @@
     "objectIds": [
       "POH_PORTAL_MARBLE_ARDOUGNE",
       "POH_PORTAL_TEAK_ARDOUGNE",
-      "POH_PORTAL_MAG_ARDOUGNE"
+      "POH_PORTAL_MAG_ARDOUGNE",
+      "POH_PORTAL_LEAGUE_5_ARDOUGNE"
     ]
   },
   {
@@ -23345,7 +23427,9 @@
       "POH_PORTAL_TEAK_YANILLE_WATCHTOWER1ST",
       "POH_PORTAL_TEAK_YANILLE_YANILLE1ST",
       "POH_PORTAL_MAHOGANY_YANILLE_WATCHTOWER1ST",
-      "POH_PORTAL_MAHOGANY_YANILLE_YANILLE1ST"
+      "POH_PORTAL_MAHOGANY_YANILLE_YANILLE1ST",
+      "POH_PORTAL_LEAGUE_5_YANILLE_WATCHTOWER1ST",
+      "POH_PORTAL_LEAGUE_5_YANILLE_YANILLE1ST"
     ]
   },
   {
@@ -23365,7 +23449,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_SENNTISTEN",
       "POH_PORTAL_TEAK_SENNTISTEN",
-      "POH_PORTAL_MARBLE_SENNTISTEN"
+      "POH_PORTAL_MARBLE_SENNTISTEN",
+      "POH_PORTAL_LEAGUE_5_SENNTISTEN"
     ]
   },
   {
@@ -23385,7 +23470,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_WEST_ARDOUGNE",
       "POH_PORTAL_TEAK_WEST_ARDOUGNE",
-      "POH_PORTAL_MARBLE_WEST_ARDOUGNE"
+      "POH_PORTAL_MARBLE_WEST_ARDOUGNE",
+      "POH_PORTAL_LEAGUE_5_WEST_ARDOUGNE"
     ]
   },
   {
@@ -23405,7 +23491,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_MARIM",
       "POH_PORTAL_MARBLE_MARIM",
-      "POH_PORTAL_MAG_MARIM"
+      "POH_PORTAL_MAG_MARIM",
+      "POH_PORTAL_LEAGUE_5_MARIM"
     ]
   },
   {
@@ -23425,14 +23512,15 @@
     "objectIds": [
       "POH_PORTAL_MAG_HARMONY_ISLAND",
       "POH_PORTAL_TEAK_HARMONY_ISLAND",
-      "POH_PORTAL_MARBLE_HARMONY_ISLAND"
+      "POH_PORTAL_MARBLE_HARMONY_ISLAND",
+      "POH_PORTAL_LEAGUE_5_HARMONY_ISLAND"
     ]
   },
   {
     "description": "POH_PORTAL_KHARYLL",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 460,
     "strength": 12.5,
     "color": [
       255,
@@ -23441,19 +23529,20 @@
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "POH_PORTAL_MAG_KHARYRLL",
       "POH_PORTAL_TEAK_KHARYRLL",
-      "POH_PORTAL_MARBLE_KHARYRLL"
+      "POH_PORTAL_MARBLE_KHARYRLL",
+      "POH_PORTAL_LEAGUE_5_KHARYRLL"
     ]
   },
   {
     "description": "POH_PORTAL_LUNAR_ISLE",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 12.5,
+    "radius": 450,
+    "strength": 17.5,
     "color": [
       219,
       153,
@@ -23461,18 +23550,19 @@
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "POH_PORTAL_MAG_LUNARISLE",
       "POH_PORTAL_TEAK_LUNARISLE",
-      "POH_PORTAL_MARBLE_LUNARISLE"
+      "POH_PORTAL_MARBLE_LUNARISLE",
+      "POH_PORTAL_LEAGUE_5_LUNARISLE"
     ]
   },
   {
     "description": "POH_PORTAL_KOUREND",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 475,
     "strength": 12.5,
     "color": [
       69,
@@ -23481,11 +23571,12 @@
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "POH_PORTAL_TEAK_KOUREND",
       "POH_PORTAL_MARBLE_KOUREND",
-      "POH_PORTAL_MAG_KOUREND"
+      "POH_PORTAL_MAG_KOUREND",
+      "POH_PORTAL_LEAGUE_5_KOUREND"
     ]
   },
   {
@@ -23505,7 +23596,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_CEMETERY",
       "POH_PORTAL_TEAK_CEMETERY",
-      "POH_PORTAL_MARBLE_CEMETERY"
+      "POH_PORTAL_MARBLE_CEMETERY",
+      "POH_PORTAL_LEAGUE_5_CEMETERY"
     ]
   },
   {
@@ -23525,19 +23617,20 @@
     "objectIds": [
       "POH_PORTAL_MAG_WATERBIRTH",
       "POH_PORTAL_TEAK_WATERBIRTH",
-      "POH_PORTAL_MARBLE_WATERBIRTH"
+      "POH_PORTAL_MARBLE_WATERBIRTH",
+      "POH_PORTAL_LEAGUE_5_WATERBIRTH"
     ]
   },
   {
     "description": "POH_PORTAL_BARROWS",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 12.5,
+    "radius": 475,
+    "strength": 25,
     "color": [
-      202,
-      122,
-      255
+      160,
+      80,
+      250
     ],
     "type": "PULSE",
     "duration": 4100,
@@ -23545,7 +23638,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_BARROWS",
       "POH_PORTAL_TEAK_BARROWS",
-      "POH_PORTAL_MARBLE_BARROWS"
+      "POH_PORTAL_MARBLE_BARROWS",
+      "POH_PORTAL_LEAGUE_5_BARROWS"
     ]
   },
   {
@@ -23565,7 +23659,8 @@
     "objectIds": [
       "POH_PORTAL_MARBLE_CARRALLANGAR",
       "POH_PORTAL_TEAK_CARRALLANGAR",
-      "POH_PORTAL_MAG_CARRALLANGAR"
+      "POH_PORTAL_MAG_CARRALLANGAR",
+      "POH_PORTAL_LEAGUE_5_CARRALLANGAR"
     ]
   },
   {
@@ -23585,7 +23680,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_FISHINGGUILD",
       "POH_PORTAL_TEAK_FISHINGGUILD",
-      "POH_PORTAL_MARBLE_FISHINGGUILD"
+      "POH_PORTAL_MARBLE_FISHINGGUILD",
+      "POH_PORTAL_LEAGUE_5_FISHINGGUILD"
     ]
   },
   {
@@ -23605,7 +23701,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_CATHERBY",
       "POH_PORTAL_MAG_CATHERBY",
-      "POH_PORTAL_MARBLE_CATHERBY"
+      "POH_PORTAL_MARBLE_CATHERBY",
+      "POH_PORTAL_LEAGUE_5_CATHERBY"
     ]
   },
   {
@@ -23625,7 +23722,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_ANNAKARL",
       "POH_PORTAL_TEAK_ANNAKARL",
-      "POH_PORTAL_MARBLE_ANNAKARL"
+      "POH_PORTAL_MARBLE_ANNAKARL",
+      "POH_PORTAL_LEAGUE_5_ANNAKARL"
     ]
   },
   {
@@ -23645,7 +23743,8 @@
     "objectIds": [
       "POH_PORTAL_MARBLE_APE_ATOLL",
       "POH_PORTAL_MAG_APE_ATOLL",
-      "POH_PORTAL_TEAK_APE_ATOLL"
+      "POH_PORTAL_TEAK_APE_ATOLL",
+      "POH_PORTAL_LEAGUE_5_APE_ATOLL"
     ]
   },
   {
@@ -23665,7 +23764,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_GHORROCK",
       "POH_PORTAL_MAG_GHORROCK",
-      "POH_PORTAL_MARBLE_GHORROCK"
+      "POH_PORTAL_MARBLE_GHORROCK",
+      "POH_PORTAL_LEAGUE_5_GHORROCK"
     ]
   },
   {
@@ -23685,7 +23785,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_STRONGHOLD",
       "POH_PORTAL_MAG_STRONGHOLD",
-      "POH_PORTAL_MARBLE_STRONGHOLD"
+      "POH_PORTAL_MARBLE_STRONGHOLD",
+      "POH_PORTAL_LEAGUE_5_STRONGHOLD"
     ]
   },
   {
@@ -23705,7 +23806,308 @@
     "objectIds": [
       "POH_PORTAL_MARBLE_WEISS",
       "POH_PORTAL_MAG_WEISS",
-      "POH_PORTAL_TEAK_WEISS"
+      "POH_PORTAL_TEAK_WEISS",
+      "POH_PORTAL_LEAGUE_5_WEISS"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_FORTIS",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_FORTIS",
+      "POH_PORTAL_MAG_FORTIS",
+      "POH_PORTAL_MARBLE_FORTIS",
+      "POH_PORTAL_LEAGUE_5_FORTIS"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_TROLLHEIM",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_TROLLHEIM",
+      "POH_PORTAL_MAG_TROLLHEIM",
+      "POH_PORTAL_MARBLE_TROLLHEIM",
+      "POH_PORTAL_LEAGUE_5_TROLLHEIM"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_PADDEWWA",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_PADDEWWA",
+      "POH_PORTAL_MAG_PADDEWWA",
+      "POH_PORTAL_MARBLE_PADDEWWA",
+      "POH_PORTAL_LEAGUE_5_PADDEWWA"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_LASSAR",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_LASSAR",
+      "POH_PORTAL_MAG_LASSAR",
+      "POH_PORTAL_MARBLE_LASSAR",
+      "POH_PORTAL_LEAGUE_5_LASSAR"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_DAREEYAK",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_DAREEYAK",
+      "POH_PORTAL_MAG_DAREEYAK",
+      "POH_PORTAL_MARBLE_DAREEYAK",
+      "POH_PORTAL_LEAGUE_5_DAREEYAK"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_OURANIA",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_OURANIA",
+      "POH_PORTAL_MAG_OURANIA",
+      "POH_PORTAL_MARBLE_OURANIA",
+      "POH_PORTAL_LEAGUE_5_OURANIA"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_BARBARIAN",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_BARBARIAN",
+      "POH_PORTAL_MAG_BARBARIAN",
+      "POH_PORTAL_MARBLE_BARBARIAN",
+      "POH_PORTAL_LEAGUE_5_BARBARIAN"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_KHAZARD",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_KHAZARD",
+      "POH_PORTAL_MAG_KHAZARD",
+      "POH_PORTAL_MARBLE_KHAZARD",
+      "POH_PORTAL_LEAGUE_5_KHAZARD"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_ICEPLATEAU",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_ICEPLATEAU",
+      "POH_PORTAL_MAG_ICEPLATEAU",
+      "POH_PORTAL_MARBLE_ICEPLATEAU",
+      "POH_PORTAL_LEAGUE_5_ICEPLATEAU"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_RESPAWN",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_RESPAWN",
+      "POH_PORTAL_MAG_RESPAWN",
+      "POH_PORTAL_MARBLE_RESPAWN",
+      "POH_PORTAL_LEAGUE_5_RESPAWN"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_BOAT",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_BOAT",
+      "POH_PORTAL_MAG_BOAT",
+      "POH_PORTAL_MARBLE_BOAT",
+      "POH_PORTAL_LEAGUE_5_BOAT"
+    ]
+  },
+  {
+    "description": "LEAGUE_5_POH_PORTAL_ROOM_FACE",
+    "offset": [ 0, 230, 25 ],
+    "alignment": "CENTER",
+    "radius": 70,
+    "strength": 12,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      "POH_PORTAL_LEAGUE_5_VARROCK",
+      "POH_PORTAL_LEAGUE_5_VARROCK_VARROCK1ST",
+      "POH_PORTAL_LEAGUE_5_VARROCK_GE1ST",
+      "POH_PORTAL_LEAGUE_5_LUMBRIDGE",
+      "POH_PORTAL_LEAGUE_5_FALADOR",
+      "POH_PORTAL_LEAGUE_5_CAMELOT_CAMELOT1ST",
+      "POH_PORTAL_LEAGUE_5_CAMELOT_SEERS1ST",
+      "POH_PORTAL_LEAGUE_5_ARDOUGNE",
+      "POH_PORTAL_LEAGUE_5_YANILLE_WATCHTOWER1ST",
+      "POH_PORTAL_LEAGUE_5_YANILLE_YANILLE1ST",
+      "POH_PORTAL_LEAGUE_5_KHARYRLL",
+      "POH_PORTAL_LEAGUE_5_LUNARISLE",
+      "POH_PORTAL_LEAGUE_5_SENNTISTEN",
+      "POH_PORTAL_LEAGUE_5_ANNAKARL",
+      "POH_PORTAL_LEAGUE_5_WATERBIRTH",
+      "POH_PORTAL_LEAGUE_5_FISHINGGUILD",
+      "POH_PORTAL_LEAGUE_5_MARIM",
+      "POH_PORTAL_LEAGUE_5_KOUREND",
+      "POH_PORTAL_LEAGUE_5_FORTIS",
+      "POH_PORTAL_LEAGUE_5_STRONGHOLD",
+      "POH_PORTAL_LEAGUE_5_CATHERBY",
+      "POH_PORTAL_LEAGUE_5_GHORROCK",
+      "POH_PORTAL_LEAGUE_5_CARRALLANGAR",
+      "POH_PORTAL_LEAGUE_5_WEISS",
+      "POH_PORTAL_LEAGUE_5_ARCEUUS_LIBRARY",
+      "POH_PORTAL_LEAGUE_5_DRAYNOR_MANOR",
+      "POH_PORTAL_LEAGUE_5_BATTLEFRONT",
+      "POH_PORTAL_LEAGUE_5_MIND_ALTAR",
+      "POH_PORTAL_LEAGUE_5_SALVE_GRAVEYARD",
+      "POH_PORTAL_LEAGUE_5_FENKENSTRAIN",
+      "POH_PORTAL_LEAGUE_5_WEST_ARDOUGNE",
+      "POH_PORTAL_LEAGUE_5_HARMONY_ISLAND",
+      "POH_PORTAL_LEAGUE_5_CEMETERY",
+      "POH_PORTAL_LEAGUE_5_BARROWS",
+      "POH_PORTAL_LEAGUE_5_APE_ATOLL",
+      "POH_PORTAL_LEAGUE_5_EMPTY",
+      "POH_PORTAL_LEAGUE_5_TROLLHEIM",
+      "POH_PORTAL_LEAGUE_5_PADDEWWA",
+      "POH_PORTAL_LEAGUE_5_LASSAR",
+      "POH_PORTAL_LEAGUE_5_DAREEYAK",
+      "POH_PORTAL_LEAGUE_5_OURANIA",
+      "POH_PORTAL_LEAGUE_5_BARBARIAN",
+      "POH_PORTAL_LEAGUE_5_KHAZARD",
+      "POH_PORTAL_LEAGUE_5_ICEPLATEAU",
+      "POH_PORTAL_LEAGUE_5_RESPAWN",
+      "POH_PORTAL_LEAGUE_5_BOAT"
+    ]
+  },
+  {
+    "description": "LEAGUE_5_POH_SPIRIT_TREE_RIGHT_EYE",
+    "offset": [ -2, 104, -50 ],
+    "alignment": "CENTER",
+    "radius": 50,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "objectIds": [
+      "LEAGUE_5_POH_SPIRIT_TREE"
+    ]
+  },
+  {
+    "description": "LEAGUE_5_POH_SPIRIT_TREE_LEFT_EYE",
+    "offset": [ 22, 100, -50 ],
+    "alignment": "CENTER",
+    "radius": 50,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "objectIds": [
+      "LEAGUE_5_POH_SPIRIT_TREE"
+    ]
+  },
+  {
+    "description": "LEAGUE_5_POH_SPIRIT_TREE_TOP",
+    "offset": [ 15, 170, -8 ],
+    "alignment": "CENTER",
+    "radius": 70,
+    "strength": 12,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      "LEAGUE_5_POH_SPIRIT_TREE"
     ]
   },
   {
