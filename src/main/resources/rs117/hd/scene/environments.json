@@ -995,7 +995,7 @@
     "area": "UNGAEL",
     "ambientColor": "#eae2cd",
     "ambientStrength": 0.6,
-    "directionalColor": "#82ace0",
+    "directionalColor": "#9DA3C6",
     "directionalStrength": 1.5,
     "fogColor": "#e2e6ed",
     "fogDepth": 40
@@ -1230,7 +1230,8 @@
     "directionalColor": "#4eeeff",
     "directionalStrength": 3.5,
     "fogColor": "#13184f",
-    "fogDepth": 30
+    "fogDepth": 30,
+    "waterCausticsStrength": 0.8
   },
   {
     "area": "LOVAKENGJ",

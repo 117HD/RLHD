@@ -17589,13 +17589,9 @@
   },
   {
     "description": "Lithkren basement sunlight",
-    "worldX": 3549,
-    "worldY": 10477,
-    "plane": 0,
-    "height": 800,
-    "alignment": "EAST",
+    "offset": [ 0, 400, 0 ],
     "radius": 1500,
-    "strength": 10,
+    "strength": 20,
     "color": [
       255,
       249.4737,
@@ -17603,7 +17599,10 @@
     ],
     "type": "STATIC",
     "duration": 1000,
-    "range": 0.2
+    "range": 0.2,
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_GODRAY"
+    ]
   },
   {
     "description": "HELLCAT",
@@ -20526,25 +20525,6 @@
     "visibleFromOtherPlanes": true
   },
   {
-    "description": "STANDING_TORCH_SHORT_LARGE",
-    "height": 250,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 12.5,
-    "color": [
-      252,
-      148,
-      3
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
-    "visibleFromOtherPlanes": true,
-    "objectIds": [
-      "DRAGON_SLAYER_QIP_FIRE_1X1"
-    ]
-  },
-  {
     "description": "STANDING_TORCH_LARGE",
     "height": 250,
     "alignment": "CENTER",
@@ -21117,7 +21097,6 @@
       "SNAKEBOSS_VILLAGE_FIRE",
       "VIKING_LONGHALL_FIRE",
       "EAGLEPEAK_CAMPFIRE_TIDY",
-      "DS2_VIKING_SHIP_FIRE",
       "VIKING_HOUSE_FIRE",
       "EAGLEPEAK_CAMPFIRE_MESSY",
       "ROYAL_VILLAGE_FIRE",
@@ -21155,7 +21134,6 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "DRAGON_SLAYER_QIP_FIRE_2X2",
       "SOTE_FIRE_LARGE",
       "SW_CAMP_FIRE",
       "MINOTAURS_REST_CAMPFIRE"
@@ -25902,7 +25880,7 @@
     ]
   },
   {
-    "description": "LITHKREN_BRAZIER",
+    "description": "LITHKREN_BRAZIER_WIDE",
     "height": 450,
     "alignment": "CENTER",
     "radius": 1200,
@@ -25917,6 +25895,42 @@
     "range": 30,
     "objectIds": [
       "DS2_LITHKREN_DUNGEON_BRAZIER"
+    ]
+  },
+  {
+    "description": "LITHKREN_BRAZIER_SHORT",
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 100,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_BRAZIER"
+    ]
+  },
+  {
+    "description": "DREAM_BRAZIER",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "LUNAR_MOONCLAN_BRAZIER_LIT"
     ]
   },
   {
@@ -30728,6 +30742,23 @@
     "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
   },
   {
+    "description": "Dragonfire Breath - Ranged",
+    "offset": [ 0, 0, 0 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "projectileIds": [ "DRAGON_RANGED_FIRE_ATTACK" ]
+  },
+  {
     "description": "Dragonfire Breath Highlight",
     "offset": [ 0, 140, 390 ],
     "radius": 100,
@@ -30942,10 +30973,9 @@
   },
   {
     "description": "ANCIENT_CAVERN_DRAGON_HEAD",
-    "height": 200,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 10,
+    "offset": [ 0, 185, 200 ],
+    "radius": 600,
+    "strength": 15,
     "color": [
       252,
       122,
@@ -30960,7 +30990,7 @@
   },
   {
     "description": "ANCIENT_CAVERN_LAVA_POOL",
-    "height": 200,
+    "height": 100,
     "alignment": "CENTER",
     "radius": 300,
     "strength": 7.5,
@@ -30983,10 +31013,9 @@
   },
   {
     "description": "ANCIENT_CAVERN_DRAGON_HEADS",
-    "height": 200,
-    "alignment": "FRONT",
-    "radius": 500,
-    "strength": 12.5,
+    "offset": [ 0, 150, -150 ],
+    "radius": 550,
+    "strength": 15,
     "color": [
       252,
       122,
@@ -45337,6 +45366,66 @@
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "ZAMORAK_FLAME"
+    ]
+  },
+  {
+    "description": "DS2_MAZE_TELEPORT_EXIT",
+    "height": 280,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 22,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "color": [
+      180,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_MAZE_PLINTH_TELEPORT"
+    ]
+  },
+  {
+    "description": "DS2_SHIP_FIRE",
+    "height": 110,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17,
+    "fadeOutDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "visibleFromOtherPlanes": true,
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_VIKING_SHIP_FIRE",
+      "DRAGON_SLAYER_QIP_FIRE_1X1"
+    ]
+  },
+  {
+    "description": "DS2_SHIP_LARGE",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_FIRE_2X2",
+      "ZORGOTH_FIRE"
     ]
   }
 ]
