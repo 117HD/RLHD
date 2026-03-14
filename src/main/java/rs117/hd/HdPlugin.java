@@ -31,6 +31,7 @@ import com.google.inject.Binder;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
@@ -398,6 +399,7 @@ public class HdPlugin extends Plugin {
 	public boolean configLegacyGreyColors;
 	public boolean configModelBatching;
 	public boolean configModelCaching;
+	public boolean configPlayerSilhouette;
 	public boolean configShadowsEnabled;
 	public boolean configRoofShadows;
 	public boolean configExpandShadowDraw;
@@ -421,6 +423,9 @@ public class HdPlugin extends Plugin {
 	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
 	public ColorFilter configColorFilterPrevious;
+	public Color configPlayerSilhouetteColor;
+	public Color configPlayerSilhouetteEdgeColor;
+	public float configPlayerSilhouetteEdgeSize;
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
@@ -1314,8 +1319,8 @@ public class HdPlugin extends Plugin {
 		// Create depth render buffer
 		rboSceneDepth = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1]);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH24_STENCIL8, sceneResolution[0], sceneResolution[1]);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
 		checkGLErrors();
 
 		// If necessary, create an FBO for resolving multisampling
@@ -1327,6 +1332,11 @@ public class HdPlugin extends Plugin {
 			glRenderbufferStorageMultisample(GL_RENDERBUFFER, 0, format, sceneResolution[0], sceneResolution[1]);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneResolveColor);
 			checkGLErrors();
+		}
+
+		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE) {
+			log.error("FBO incomplete: {}\n", status);
 		}
 
 		// Reset
@@ -1619,6 +1629,10 @@ public class HdPlugin extends Plugin {
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
+		configPlayerSilhouette = config.playerSilhouette();
+		configPlayerSilhouetteColor = config.playerSilhouetteColor();
+		configPlayerSilhouetteEdgeColor = config.playerSilhouetteEdgeColor();
+		configPlayerSilhouetteEdgeSize = config.playerSilhouetteEdgeSize();
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();

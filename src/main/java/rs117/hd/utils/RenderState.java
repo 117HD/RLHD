@@ -26,6 +26,9 @@ public final class RenderState {
 	public final GLDepthFunc depthFunc = addState(GLDepthFunc::new);
 	public final GLColorMask colorMask = addState(GLColorMask::new);
 	public final GLBlendFunc blendFunc = addState(GLBlendFunc::new);
+	public final GLStencilMask stencilMask = addState(GLStencilMask::new);
+	public final GLStencilFunc stencilFunc = addState(GLStencilFunc::new);
+	public final GLStencilOp stencilOp = addState(GLStencilOp::new);
 	public final GLEnable enable = addState(GLEnable::new);
 	public final GLDisable disable = addState(GLDisable::new);
 
@@ -127,6 +130,29 @@ public final class RenderState {
 
 		@Override
 		protected void applyValues(int[] values) { glBlendFuncSeparate(values[0], values[1], values[2], values[3]); }
+	}
+
+	public static final class GLStencilMask extends GLState.Int {
+		@Override
+		protected void applyValue(int value) { glStencilMask(value); }
+	}
+
+	public static final class GLStencilFunc extends GLState.IntArray {
+		private GLStencilFunc() {
+			super(3);
+		}
+
+		@Override
+		protected void applyValues(int[] values) { glStencilFunc(values[0], values[1], values[2]); }
+	}
+
+	public static final class GLStencilOp extends GLState.IntArray {
+		private GLStencilOp() {
+			super(3);
+		}
+
+		@Override
+		protected void applyValues(int[] values) { glStencilOp(values[0], values[1], values[2]); }
 	}
 
 	public static final class GLColorMask extends GLState.BoolArray {
