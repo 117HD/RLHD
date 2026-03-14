@@ -677,6 +677,7 @@
     "minSaturation": 0,
     "maxSaturation": 1,
     "shiftLightness": 7,
+    "uvScale": 0.75,
     "replacements": {
       "LUMBRIDGE_PATHS": "blending",
       "NONE": "!textures"
@@ -694,6 +695,7 @@
     "minSaturation": 0,
     "maxSaturation": 1,
     "shiftLightness": 7,
+    "uvScale": 0.75,
     "replacements": {
       "NONE": "!textures"
     }
