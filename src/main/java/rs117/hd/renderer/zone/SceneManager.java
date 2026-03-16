@@ -126,7 +126,7 @@ public class SceneManager {
 	}
 
 	public WorldViewContext getContext(int worldViewId) {
-		if (worldViewId != -1)
+		if (worldViewId != WorldView.TOPLEVEL)
 			return subs[worldViewId];
 		if (root.sceneContext == null)
 			return null;
@@ -217,6 +217,9 @@ public class SceneManager {
 			}
 			root.sceneContext.animatedDynamicObjectImpostors.put(objectId, impostorId);
 		}
+
+		if (root.sceneContext != null && root.sceneContext.isInHouse)
+			root.completeInvalidation();
 	}
 
 	private void updateAreaHiding() {
@@ -273,7 +276,7 @@ public class SceneManager {
 
 	public void despawnWorldView(WorldView worldView) {
 		int worldViewId = worldView.getId();
-		if (worldViewId > -1) {
+		if (worldViewId != WorldView.TOPLEVEL) {
 			log.debug("WorldView despawn: {}", worldViewId);
 			if (subs[worldViewId] == null) {
 				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
@@ -397,12 +400,12 @@ public class SceneManager {
 	public synchronized void loadScene(WorldView worldView, Scene scene) {
 		try {
 			loadingLock.lock();
-			if (scene.getWorldViewId() > -1) {
+			if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
 				loadSubScene(worldView, scene);
 				return;
 			}
 
-			assert worldView.getId() == -1;
+			assert worldView.getId() == WorldView.TOPLEVEL;
 			if (nextZones != null)
 				throw new RuntimeException("Double zone load!"); // does this happen?
 
@@ -596,7 +599,7 @@ public class SceneManager {
 			return;
 		}
 
-		if (scene.getWorldViewId() > -1) {
+		if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
 			swapSubScene(scene);
 			return;
 		}
@@ -715,7 +718,7 @@ public class SceneManager {
 
 	private void loadSubScene(WorldView worldView, Scene scene) {
 		int worldViewId = worldView.getId();
-		assert worldViewId != -1;
+		assert worldViewId != WorldView.TOPLEVEL;
 
 		log.debug("Loading world view {}", worldViewId);
 		Stopwatch sw = Stopwatch.createStarted();

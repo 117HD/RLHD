@@ -1439,7 +1439,7 @@ public class HdPlugin extends Plugin {
 
 	public void prepareInterfaceTexture() {
 		if (uiCopyJob != null)
-			uiCopyJob.waitForCompletion();
+			uiCopyJob.waitForCompletion(true);
 		uiCopyJob = null;
 
 		int[] resolution = {
@@ -1471,8 +1471,7 @@ public class HdPlugin extends Plugin {
 
 		frameTimer.begin(Timer.MAP_UI_BUFFER);
 		final GLBuffer pbo = pboUi[frame % 3];
-		pbo.ensureCapacity(uiResolution[0] * uiResolution[1] * 4L);
-		pbo.map(MAP_WRITE);
+		pbo.map(MAP_WRITE, 0, uiWidth * uiHeight * 4L);
 		frameTimer.end(Timer.MAP_UI_BUFFER);
 		if (!pbo.isMapped()) {
 			log.error("Unable to map interface PBO. Skipping UI...");
@@ -1528,7 +1527,7 @@ public class HdPlugin extends Plugin {
 
 		if (uiCopyJob != null) {
 			frameTimer.begin(Timer.COPY_UI);
-			uiCopyJob.waitForCompletion();
+			uiCopyJob.waitForCompletion(true);
 			uiCopyJob = null;
 			frameTimer.end(Timer.COPY_UI);
 

@@ -85,7 +85,7 @@ public class WorldViewContext {
 		@Nullable ZoneSceneContext sceneContext,
 		UBOWorldViews uboWorldViews
 	) {
-		this.worldViewId = worldView == null ? -1 : worldView.getId();
+		this.worldViewId = worldView == null ? WorldView.TOPLEVEL : worldView.getId();
 		this.sceneContext = sceneContext;
 		this.sizeX = worldView == null ? NUM_ZONES : worldView.getSizeX() >> 3;
 		this.sizeZ = worldView == null ? NUM_ZONES : worldView.getSizeY() >> 3;
@@ -162,7 +162,7 @@ public class WorldViewContext {
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
-				if (z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum))
+				if (z.alphaModels.isEmpty() || (worldViewId == WorldView.TOPLEVEL && !z.inSceneFrustum))
 					continue;
 
 				final int dx = camPosX - ((zx - offset) << 10);
@@ -319,5 +319,9 @@ public class WorldViewContext {
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
 		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
+
+		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders
+		if (sceneContext.isInHouse)
+			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
