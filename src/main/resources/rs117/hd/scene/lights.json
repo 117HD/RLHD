@@ -35156,6 +35156,123 @@
     ]
   },
   {
+    "description": "Vorkath Rapid Fireballs",
+    "offset": [ 0, 5, 0 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      255,
+      130,
+      70
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "fadeInDuration": 150,
+    "projectileIds": [
+      "VORKATH_AREA_SMALL_TRAVEL"
+    ]
+  },
+  {
+    "description": "Vorkath Magic Attack Projectile",
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      215,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "projectileIds": [
+      "VORKATH_MAGIC_TRAVEL"
+    ]
+  },
+  {
+    "description": "Vorkath Magic Attack Impact",
+    "offset": [ 0, 150, 0 ],
+    "radius": 400,
+    "strength": 5,
+    "waitForAnimation": true,
+    "color": [
+      215,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "VORKATH_MAGIC_IMPACT"
+    ]
+  },
+  {
+    "description": "Vorkath Venom Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 450,
+    "strength": 20,
+    "color": [
+      30,
+      110,
+      10
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 400,
+    "projectileIds": [
+      "DRAGON_RANGED_VENOM_ATTACK"
+    ]
+  },
+  {
+    "description": "Vorkath Venom Impact",
+    "offset": [ 0, 150, 0 ],
+    "radius": 600,
+    "strength": 6,
+    "waitForAnimation": true,
+    "color": [
+      30,
+      110,
+      10
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "DRAGON_VENOM_IMPACT"
+    ]
+  },
+  {
+    "description": "Vorkath Prayer Corruption Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 400,
+    "projectileIds": [
+      "DRAGON_RANGED_CORRUPTING_ATTACK"
+    ]
+  },
+  {
+    "description": "Vorkath Prayer Corruption Impact",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 4,
+    "waitForAnimation": true,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "DRAGON_CORRUPTING_IMPACT"
+    ]
+  },
+  {
     "description": "TOA_AKKHA_FIRE_SYMBOL",
     "height": 30,
     "alignment": "CENTER",
