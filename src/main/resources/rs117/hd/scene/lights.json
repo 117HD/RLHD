@@ -29674,7 +29674,7 @@
   },
   {
     "description": "CRUMBLE_UNDEAD",
-    "radius": 225,
+    "radius": 300,
     "strength": 6,
     "color": [
       255,
@@ -29692,12 +29692,12 @@
   },
   {
     "description": "CRUMBLE_UNDEAD_CAST_RIGHT",
-    "offset": [ 40, 100, 50 ],
-    "radius": 175,
+    "offset": [ 50, 100, 50 ],
+    "radius": 185,
     "strength": 6,
     "spawnDelay": 250,
     "fixedDespawnTime": true,
-    "despawnDelay": 400,
+    "despawnDelay": 550,
     "color": [
       255,
       255,
@@ -29707,19 +29707,19 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 100,
-    "fadeOutDuration": 250,
+    "fadeOutDuration": 350,
     "graphicsObjectIds": [
       "CRUMBLEUNDEAD_CASTING"
     ]
   },
   {
     "description": "CRUMBLE_UNDEAD_CAST_LEFT",
-    "offset": [ -40, 100, 50 ],
+    "offset": [ -50, 100, 50 ],
     "radius": 175,
     "strength": 6,
     "spawnDelay": 250,
     "fixedDespawnTime": true,
-    "despawnDelay": 400,
+    "despawnDelay": 550,
     "color": [
       255,
       255,
@@ -29729,9 +29729,124 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 100,
-    "fadeOutDuration": 250,
+    "fadeOutDuration": 350,
     "graphicsObjectIds": [
       "CRUMBLEUNDEAD_CASTING"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_IMPACT_NORTH",
+    "offset": [ 0, 100, -120 ],
+    "radius": 200,
+    "strength": 6,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 500,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_IMPACT"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_IMPACT_SOUTH",
+    "offset": [ 0, 100, 120 ],
+    "radius": 175,
+    "strength": 6,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 500,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_IMPACT"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_IMPACT_WEST",
+    "offset": [ 120, 100, 0 ],
+    "radius": 200,
+    "strength": 6,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 500,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_IMPACT"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_IMPACT_EAST",
+    "offset": [ -120, 100, 0 ],
+    "radius": 200,
+    "strength": 6,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 500,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_IMPACT"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_IMPACT_MIDDLE",
+    "offset": [ 0, 100, 0 ],
+    "radius": 250,
+    "strength": 6,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 700,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_IMPACT"
     ]
   },
   {
