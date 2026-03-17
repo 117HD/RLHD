@@ -14,10 +14,7 @@
   {
     "particleIds": [ "3", "4" ],
     "description": "Particles 3 and 4 emitters",
-    "weatherAreas": [ "ICE_MOUNTAIN" ],
-    "edgeFadeInside": 5,
-    "edgeFadeOutside": 2,
-    "weatherSpacing": 4,
-    "weatherEveryNTiles": 8
+    "weatherAreas": [ "ICE_MOUNTAIN","WES" ],
+    "weatherParticlesPerTile": 3
   }
 ]

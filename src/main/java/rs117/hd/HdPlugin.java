@@ -57,6 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
+import net.runelite.api.widgets.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
@@ -76,6 +77,7 @@ import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
+import net.runelite.api.gameval.InterfaceID;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
@@ -1654,6 +1656,14 @@ public class HdPlugin extends Plugin {
 
 		return image;
 	}
+
+	@Subscribe
+	public void onWidgetLoaded(WidgetLoaded widgetLoaded) {
+		if(widgetLoaded.getGroupId() == InterfaceID.TOPLEVEL_OSRS_STRETCH) {
+			client.getWidget(InterfaceID.ToplevelOsrsStretch.OVERLAY_ATMOSPHERE).setHidden(true);
+		}
+	}
+
 
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged) {

@@ -60,10 +60,9 @@ public class EmitterDefinitionManager {
 
 	@Getter
 	private final List<WeatherAreaConfig> weatherAreaConfigs = new ArrayList<>();
-
-	/** Placements at center tile of each weather AABB, for spawning like regular tile emitters. */
+	
 	@Getter
-	private final List<EmitterPlacement> weatherPlacements = new ArrayList<>();
+	private final List<WeatherCylinderConfig> weatherCylinderConfigs = new ArrayList<>();
 
 	private FileWatcher.UnregisterCallback watcher;
 
@@ -101,7 +100,7 @@ public class EmitterDefinitionManager {
 			placements.clear();
 			objectBindingsByType.clear();
 			weatherAreaConfigs.clear();
-			weatherPlacements.clear();
+			weatherCylinderConfigs.clear();
 			if (entries != null) {
 				var objects = gamevalManager.getObjects();
 				for (EmitterConfigEntry entry : entries) {
@@ -148,12 +147,12 @@ public class EmitterDefinitionManager {
 							}
 						}
 						if (!aabbs.isEmpty()) {
-							int padding = Math.max(0, entry.edgeFadeInside);
-							int paddingOutside = Math.max(0, entry.edgeFadeOutside);
-							int everyNTiles = Math.max(0, entry.weatherEveryNTiles);
-							int spacing = Math.max(1, entry.weatherSpacing);
-							weatherAreaConfigs.add(new WeatherAreaConfig(aabbs, new ArrayList<>(pids), padding, paddingOutside));
-							addWeatherPlacementsStandard(aabbs, pids, padding, paddingOutside, everyNTiles, spacing, ThreadLocalRandom.current());
+							weatherAreaConfigs.add(new WeatherAreaConfig(aabbs, new ArrayList<>(pids)));
+							float ppt = Math.max(0f, entry.weatherParticlesPerTile);
+							for (AABB aabb : aabbs) {
+								if (aabb != null)
+									weatherCylinderConfigs.add(new WeatherCylinderConfig(aabb, new ArrayList<>(pids), ppt));
+							}
 						}
 					}
 				}
@@ -166,92 +165,7 @@ public class EmitterDefinitionManager {
 			placements.clear();
 			objectBindingsByType.clear();
 			weatherAreaConfigs.clear();
-			weatherPlacements.clear();
-		}
-	}
-
-	private void addWeatherPlacementsStandard(List<AABB> aabbs, List<String> pids, int padding, int paddingOutside, int everyNTiles, int spacing, ThreadLocalRandom rng) {
-		for (AABB aabb : aabbs) {
-			List<EmitterPlacement> aabbPlacements = new ArrayList<>();
-			int plane = aabbPlane(aabb);
-			int width = aabb.maxX - aabb.minX + 1;
-			int height = aabb.maxY - aabb.minY + 1;
-			int tileCount = width * height;
-
-			for (int x = aabb.minX; x <= aabb.maxX; x += spacing) {
-				for (int y = aabb.minY; y <= aabb.maxY; y += spacing) {
-					int jitterX = rng.nextInt(-spacing, spacing + 1);
-					int jitterY = rng.nextInt(-spacing, spacing + 1);
-					int wx = Math.max(aabb.minX, Math.min(aabb.maxX, x + jitterX));
-					int wy = Math.max(aabb.minY, Math.min(aabb.maxY, y + jitterY));
-					String pid2 = pids.get(rng.nextInt(pids.size()));
-					aabbPlacements.add(new EmitterPlacement(wx, wy, plane, pid2, 1f));
-				}
-			}
-			int extraCount = rng.nextInt(width * height / (spacing * spacing) + 1);
-			for (int i = 0; i < extraCount; i++) {
-				int wx = rng.nextInt(aabb.minX, aabb.maxX + 1);
-				int wy = rng.nextInt(aabb.minY, aabb.maxY + 1);
-				String pid2 = pids.get(rng.nextInt(pids.size()));
-				aabbPlacements.add(new EmitterPlacement(wx, wy, plane, pid2, 1f));
-			}
-			if (padding > 0) {
-				int edgeZoneTiles = Math.max(4, (width + height) * padding);
-				for (int i = 0; i < edgeZoneTiles; i++) {
-					int wx = rng.nextInt(aabb.minX, aabb.maxX + 1);
-					int wy = rng.nextInt(aabb.minY, aabb.maxY + 1);
-					int distToEdge = distToEdge(wx, wy, aabb);
-					if (distToEdge >= padding) continue;
-					float t = (float) distToEdge / padding;
-					if (rng.nextFloat() > t) continue;
-					String pid2 = pids.get(rng.nextInt(pids.size()));
-					aabbPlacements.add(new EmitterPlacement(wx, wy, plane, pid2, t));
-				}
-				if (paddingOutside > 0) {
-					int outsideTiles = Math.max(4, (width + height) * paddingOutside);
-					for (int i = 0; i < outsideTiles; i++) {
-						int wx = rng.nextInt(aabb.minX - paddingOutside, aabb.maxX + paddingOutside + 1);
-						int wy = rng.nextInt(aabb.minY - paddingOutside, aabb.maxY + paddingOutside + 1);
-						if (wx >= aabb.minX && wx <= aabb.maxX && wy >= aabb.minY && wy <= aabb.maxY) continue;
-						int distOutside = distOutside(wx, wy, aabb);
-						if (distOutside > paddingOutside) continue;
-						float t = 1f - (float) distOutside / paddingOutside;
-						if (rng.nextFloat() > t * t) continue;
-						String pid2 = pids.get(rng.nextInt(pids.size()));
-						aabbPlacements.add(new EmitterPlacement(wx, wy, plane, pid2, t));
-					}
-				}
-			}
-
-			if (everyNTiles > 0 && tileCount > 0 && aabbPlacements.size() > 0) {
-				int maxPlacements = Math.max(1, tileCount / everyNTiles);
-				if (aabbPlacements.size() > maxPlacements) {
-					// Stratified sampling: divide area into cells, pick one per cell to avoid gaps
-					int n = Math.max(1, (int) Math.sqrt(maxPlacements));
-					int numCellsX = Math.max(1, Math.min(n, width));
-					int numCellsY = Math.max(1, Math.min(n, height));
-					List<List<EmitterPlacement>> cells = new ArrayList<>(numCellsX * numCellsY);
-					for (int c = 0; c < numCellsX * numCellsY; c++)
-						cells.add(new ArrayList<>());
-					for (EmitterPlacement p : aabbPlacements) {
-						int cx = (p.getWorldX() - aabb.minX) * numCellsX / width;
-						int cy = (p.getWorldY() - aabb.minY) * numCellsY / height;
-						cx = Math.max(0, Math.min(numCellsX - 1, cx));
-						cy = Math.max(0, Math.min(numCellsY - 1, cy));
-						cells.get(cy * numCellsX + cx).add(p);
-					}
-					aabbPlacements = new ArrayList<>();
-					for (List<EmitterPlacement> cell : cells) {
-						if (!cell.isEmpty())
-							aabbPlacements.add(cell.get(rng.nextInt(cell.size())));
-					}
-					if (aabbPlacements.size() > maxPlacements) {
-						Collections.shuffle(aabbPlacements, rng);
-						aabbPlacements = aabbPlacements.subList(0, maxPlacements);
-					}
-				}
-			}
-			weatherPlacements.addAll(aabbPlacements);
+			weatherCylinderConfigs.clear();
 		}
 	}
 

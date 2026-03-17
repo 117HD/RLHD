@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -36,6 +37,7 @@ import rs117.hd.scene.particles.emitter.EmitterConfigEntry;
 import rs117.hd.scene.particles.emitter.EmitterPlacement;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 import rs117.hd.scene.particles.emitter.WeatherAreaConfig;
+import rs117.hd.scene.particles.emitter.WeatherCylinderConfig;
 import rs117.hd.data.ObjectType;
 import rs117.hd.utils.HDUtils;
 
@@ -133,6 +135,8 @@ public class ParticleManager {
 	private final int[] planeOutScratch = new int[1];
 	private ParticleEmitter[] emitterIterationArray = new ParticleEmitter[0];
 	private final List<ParticleEmitter> performanceTestEmitters = new ArrayList<>();
+	private final List<WeatherCylinderInstance> weatherCylinderInstances = new ArrayList<>();
+	private final Random weatherRng = new Random();
 
 	@Getter
 	private boolean continuousRandomSpawn;
@@ -283,6 +287,7 @@ public class ParticleManager {
 			particleSystem.removeEmitters(definitionEmitters);
 			definitionEmitters.clear();
 		}
+		weatherCylinderInstances.clear();
 
 		particleTextureLoader.setActiveTextureName(particleDefinitions.getDefaultTexturePath());
 
@@ -293,8 +298,8 @@ public class ParticleManager {
 		}
 
 		final List<EmitterPlacement> placements = emitterDefinitionManager.getPlacements();
-		final List<EmitterPlacement> weatherPlacements = emitterDefinitionManager.getWeatherPlacements();
-		if (placements.isEmpty() && weatherPlacements.isEmpty()) {
+		final List<WeatherCylinderConfig> weatherCylinderConfigs = emitterDefinitionManager.getWeatherCylinderConfigs();
+		if (placements.isEmpty() && (weatherCylinderConfigs == null || weatherCylinderConfigs.isEmpty())) {
 			return;
 		}
 
@@ -310,30 +315,49 @@ public class ParticleManager {
 			definitionEmitters.add(emitter);
 		}
 
-		// Weather: random point within area, height offset 1700, pitch 1024 (down)
+		// Weather: random point within area, height offset 1700, pitch 1536 (down in this coordinate system)
 		final float weatherHeightOffset = 1700f;
-		final float weatherPitch = 1024 * UNITS_TO_RAD;
+		final float weatherPitch = 1536 * UNITS_TO_RAD;
+		final float weatherYaw = 0f;
 		long baseCycle = client.getGameCycle();
 		ThreadLocalRandom rng = ThreadLocalRandom.current();
-		for (EmitterPlacement place : weatherPlacements) {
-			if (place.getParticleId() == null) continue;
-			final String pid = place.getParticleId().toUpperCase();
-			final ParticleDefinition def = definitions.get(pid);
-			if (def == null) continue;
-			final WorldPoint wp = new WorldPoint(place.getWorldX(), place.getWorldY(), place.getPlane());
-			final ParticleEmitter emitter = createEmitterFromDefinition(def, wp);
-			emitter.particleId(def.id);
-			emitter.setHeightOffset(weatherHeightOffset);
-			emitter.setDirectionPitch(weatherPitch);
-			emitter.setAlphaScale(place.getEdgeFadeFactor());
-			emitter.setSpawnAtTopOfWorld(true);
-			emitter.emissionBurst(Math.max(4, def.emission.minSpawn), Math.max(8, def.emission.maxSpawn), 0);
-			int phaseOffset = rng.nextInt(0, 2000);
-			emitter.setEmissionTime(baseCycle - phaseOffset, def.emission.emissionCycleDuration, def.emission.emissionTimeThreshold, def.emission.emitOnlyBeforeTime, def.emission.loopEmission);
-			emitter.setEmissionAccum(rng.nextFloat());
-			emitter.particleLifetime(3f, 25f);
-			particleSystem.addEmitter(emitter);
-			definitionEmitters.add(emitter);
+
+		// Procedural cylinder weather: one virtual emitter per AABB
+		if (weatherCylinderConfigs != null && !weatherCylinderConfigs.isEmpty()) {
+			for (WeatherCylinderConfig cfg : weatherCylinderConfigs) {
+				if (cfg == null || cfg.getParticleIds() == null || cfg.getParticleIds().isEmpty())
+					continue;
+				for (String pidRaw : cfg.getParticleIds()) {
+					if (pidRaw == null || pidRaw.isEmpty()) continue;
+					final String pid2 = pidRaw.toUpperCase();
+					final ParticleDefinition def = definitions.get(pid2);
+					if (def == null) continue;
+					final ParticleEmitter emitter = createEmitterFromDefinition(def, new WorldPoint(0, 0, 0));
+					emitter.particleId(def.id);
+					emitter.setHeightOffset(weatherHeightOffset);
+					emitter.setDirectionYaw(weatherYaw);
+					emitter.setDirectionPitch(weatherPitch);
+					emitter.spreadYaw(0f, 0f);
+					emitter.spreadPitch(0f, 0f);
+					emitter.setSpawnAtTopOfWorld(true);
+					emitter.emissionBurst(Math.max(4, def.emission.minSpawn), Math.max(8, def.emission.maxSpawn), 0);
+					int phaseOffset = rng.nextInt(0, 2000);
+					emitter.setEmissionTime(baseCycle - phaseOffset, def.emission.emissionCycleDuration, def.emission.emissionTimeThreshold, def.emission.emitOnlyBeforeTime, def.emission.loopEmission);
+					emitter.setEmissionAccum(rng.nextFloat());
+					emitter.particleLifetime(3f, 25f);
+					weatherCylinderInstances.add(new WeatherCylinderInstance(cfg, emitter));
+				}
+			}
+		}
+	}
+
+	private static final class WeatherCylinderInstance {
+		final WeatherCylinderConfig cfg;
+		final ParticleEmitter emitter;
+		float spawnAccum;
+		WeatherCylinderInstance(WeatherCylinderConfig cfg, ParticleEmitter emitter) {
+			this.cfg = cfg;
+			this.emitter = emitter;
 		}
 	}
 
@@ -698,6 +722,8 @@ public class ParticleManager {
 			final int[][][] tileHeights = ctx.scene.getTileHeights();
 			ParticleBuffer buf = particleSystem.getRenderBuffer();
 
+			tickWeatherCylinders(ctx, dt, gameCycle, buf);
+
 			int numEmitters = particleSystem.getEmitters().size();
 			if (emitterIterationArray.length < numEmitters)
 				emitterIterationArray = new ParticleEmitter[numEmitters];
@@ -711,8 +737,17 @@ public class ParticleManager {
 				int plane = planeOutScratch[0];
 
 				if (buf.count >= MAX_PARTICLES) continue;
-				if (def != null)
-					emitter.setDirectionYaw((float) def.general.directionYaw * UNITS_TO_RAD);
+				if (def != null) {
+					// Weather emitters (spawnAtTopOfWorld) must fall straight down.
+					if (emitter.isSpawnAtTopOfWorld()) {
+						emitter.setDirectionYaw(0f);
+						emitter.setDirectionPitch(1536 * UNITS_TO_RAD);
+						emitter.spreadYaw(0f, 0f);
+						emitter.spreadPitch(0f, 0f);
+					} else {
+						emitter.setDirectionYaw((float) def.general.directionYaw * UNITS_TO_RAD);
+					}
+				}
 				emitter.tick(dt, gameCycle, updatePosOut[0], updatePosOut[1], updatePosOut[2], plane, this);
 			}
 			lastEmittersCulled = 0;
@@ -744,6 +779,116 @@ public class ParticleManager {
 
 		for (int i = 0; i < buf.count; i++)
 			buf.syncRefToFloat(i);
+	}
+
+	private void tickWeatherCylinders(@Nonnull SceneContext ctx, float dt, long gameCycle, @Nonnull ParticleBuffer buf) {
+		if (weatherCylinderInstances.isEmpty())
+			return;
+
+		float halfTile = LOCAL_TILE_SIZE / 2f;
+		float spawnY = plugin.cameraPosition[1] - 800f;
+		final int maxParticles = getMaxParticles();
+		final float weatherBudget = maxParticles * 0.75f;
+
+		float sumDesired = 0f;
+		for (WeatherCylinderInstance inst : weatherCylinderInstances) {
+			WeatherCylinderConfig cfg = inst.cfg;
+			if (cfg == null) continue;
+			var aabb = cfg.getAabb();
+			if (aabb == null) continue;
+			if (!ctx.intersects(aabb)) continue;
+			float ppt = cfg.getParticlesPerTile();
+			if (ppt <= 0f) continue;
+			int width = aabb.maxX - aabb.minX + 1;
+			int height = aabb.maxY - aabb.minY + 1;
+			int radiusTiles = Math.max(1, Math.min(width, height) / 2);
+			float desired = (float) (Math.PI * radiusTiles * radiusTiles) * ppt;
+			sumDesired += Math.max(0f, desired);
+		}
+		float scale = 1f;
+		if (sumDesired > 1e-3f) {
+			scale = Math.min(1f, weatherBudget / sumDesired);
+		}
+
+		for (WeatherCylinderInstance inst : weatherCylinderInstances) {
+			WeatherCylinderConfig cfg = inst.cfg;
+			ParticleEmitter emitter = inst.emitter;
+			if (cfg == null || emitter == null) continue;
+			var aabb = cfg.getAabb();
+			if (aabb == null) continue;
+
+			// Only spawn when the AABB intersects the loaded scene
+			if (!ctx.intersects(aabb))
+				continue;
+
+			int plane = aabb.hasZ() ? Math.max(0, Math.min(2, aabb.minZ)) : client.getTopLevelWorldView().getPlane();
+			// keep emitter active
+			Player player = client.getLocalPlayer();
+			if (player != null)
+				emitter.at(player.getWorldLocation());
+			else
+				emitter.at(new WorldPoint(aabb.minX, aabb.minY, plane));
+
+			if (!emitter.isEmissionAllowedAtCycle(gameCycle)) continue;
+			int toSpawn;
+			float ppt = cfg.getParticlesPerTile();
+			if (ppt > 0f) {
+				int width = aabb.maxX - aabb.minX + 1;
+				int height = aabb.maxY - aabb.minY + 1;
+				int radiusTiles = Math.max(1, Math.min(width, height) / 2); // inscribed circle
+				float desiredAlive = (float) (Math.PI * radiusTiles * radiusTiles) * ppt * scale;
+				float avgLife = (emitter.getParticleLifeMin() + emitter.getParticleLifeMax()) * 0.5f;
+				if (avgLife <= 0.01f) avgLife = 1f;
+				float spawnPerSec = desiredAlive / avgLife;
+				inst.spawnAccum += spawnPerSec * dt;
+				toSpawn = (int) inst.spawnAccum;
+				inst.spawnAccum -= toSpawn;
+				toSpawn = Math.min(toSpawn, 600);
+			} else {
+				toSpawn = emitter.advanceEmission(dt);
+			}
+			if (toSpawn <= 0) continue;
+
+			int width = aabb.maxX - aabb.minX + 1;
+			int height = aabb.maxY - aabb.minY + 1;
+			int radiusTiles = Math.max(1, Math.min(width, height) / 2); // inscribed circle
+			int cx = (aabb.minX + aabb.maxX) / 2;
+			int cy = (aabb.minY + aabb.maxY) / 2;
+
+			for (int i = 0; i < toSpawn && buf.count < maxParticles; i++) {
+				int wx = 0, wy = 0;
+				boolean found = false;
+				for (int attempts = 0; attempts < 12; attempts++) {
+					float u = weatherRng.nextFloat();
+					float v = weatherRng.nextFloat();
+					float r = (float) Math.sqrt(u) * radiusTiles;
+					float theta = (float) (v * Math.PI * 2.0);
+					int dx = Math.round((float) Math.cos(theta) * r);
+					int dy = Math.round((float) Math.sin(theta) * r);
+					wx = cx + dx;
+					wy = cy + dy;
+					if (wx < aabb.minX || wx > aabb.maxX || wy < aabb.minY || wy > aabb.maxY)
+						continue;
+					found = true;
+					break;
+				}
+				if (!found) continue;
+
+				WorldPoint wp = new WorldPoint(wx, wy, plane);
+				int[] local = ctx.worldToLocalFirst(wp, localScratch);
+				if (local == null) continue;
+				float ox = local[0] + halfTile;
+				float oz = local[1] + halfTile;
+
+				Particle p = obtainParticle();
+				if (p == null) continue;
+				if (!emitter.spawnInto(p, ox, spawnY, oz, plane)) {
+					releaseParticle(p);
+					continue;
+				}
+				addSpawnedParticleToBuffer(p, ox, spawnY, oz, emitter);
+			}
+		}
 	}
 
 	@Nullable

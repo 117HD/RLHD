@@ -28,19 +28,11 @@ public class EmitterConfigEntry {
 	@Nullable
 	public List<String> weatherAreas;
 
-	/** Tiles from edge (inside) to fade particles to 0 alpha. 0 = no inside fade. */
-	public int edgeFadeInside;
+	@Nullable
+	public String weatherMode;
 
-	/** Tiles from edge (outside) for margin fade. 0 = no outside margin. Default 2. */
-	public int edgeFadeOutside = 2;
+	public float weatherParticlesPerTile;
 
-	/** Emitter every N tiles. E.g. 10 = 1 emitter per 10 tiles. 0 = no cap (use full placement). */
-	public int weatherEveryNTiles;
-
-	/** Grid spacing for weather placements (tiles between emitters). Default 3. */
-	public int weatherSpacing = 3;
-
-	/** Object-specific emitter config. JSON: { "object": "...", "offsetX": 0, "offsetY": 0, "offsetZ": 0, "alignment": "CUSTOM" } */
 	@Data
 	public static class ObjectBinding {
 		@Nullable
@@ -51,7 +43,6 @@ public class EmitterConfigEntry {
 		@Nullable
 		@Getter(lombok.AccessLevel.NONE)
 		public Alignment alignment;
-		/** Set when loading from parent entry (entry.particleId). */
 		@Nullable
 		public String particleId;
 

@@ -13,8 +13,4 @@ import rs117.hd.scene.areas.AABB;
 public class WeatherAreaConfig {
 	List<AABB> aabbs;
 	List<String> particleIds;
-	/** Tiles from edge (inside) to fade to 0. 0 = no fade. */
-	int edgeFadeInside;
-	/** Tiles from edge (outside) for margin. 0 = no outside. */
-	int edgeFadeOutside;
 }

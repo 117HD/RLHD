@@ -1732,6 +1732,12 @@
     ]
   },
   {
+    "name": "WES",
+    "aabbs": [
+      [ 2723, 3740, 2761, 3704 ]
+    ]
+  },
+  {
     "name": "ASGARNIA_MOUNTAINS",
     "areas": [
       "ICE_MOUNTAIN",
