@@ -2869,7 +2869,8 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
+      "OVERWORLD - COBBLESTONE_PATHS - Texture Blending Only": "blendingTextures"
     }
   },
   {
