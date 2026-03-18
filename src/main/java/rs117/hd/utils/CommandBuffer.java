@@ -278,6 +278,9 @@ public class CommandBuffer {
 	}
 
 	public void execute() {
+		// Force VAO state to reapply to ensure it is in sync with the render state
+		renderState.vao.invalidate();
+
 		if (frameTimer != null)
 			frameTimer.begin(Timer.EXECUTE_COMMAND_BUFFER);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -309,11 +312,9 @@ public class CommandBuffer {
 					case GL_BIND_VERTEX_ARRAY_TYPE: {
 						long packed = cmd[readHead++];
 						int eboIdx = (int) (packed >> 32);
-						if (eboIdx >= 0) {
-							renderState.vao.set((int) packed, ((GLBuffer) objects[eboIdx]).id);
-						} else {
-							renderState.vao.setVao((int) packed);
-						}
+						int vao = (int) packed;
+						int ebo = eboIdx >= 0 ? ((GLBuffer) objects[eboIdx]).id : 0;
+						renderState.vao.setVaoAndEbo(vao, ebo);
 						break;
 					}
 					case GL_BIND_INDIRECT_ARRAY_TYPE: {

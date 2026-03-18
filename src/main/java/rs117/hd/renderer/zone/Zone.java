@@ -98,7 +98,7 @@ public class Zone implements Destructible {
 	final List<AlphaModel> playerModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
 
-	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f, int eboShared) {
+	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 		if (o == null && a == null || f == null)
@@ -110,13 +110,13 @@ public class Zone implements Destructible {
 		if (o != null) {
 			vboO = o;
 			glVao = glGenVertexArrays();
-			setupVao(glVao, o.id, vboM.id, eboShared);
+			setupVao(glVao, o.id, vboM.id);
 		}
 
 		if (a != null) {
 			vboA = a;
 			glVaoA = glGenVertexArrays();
-			setupVao(glVaoA, a.id, vboM.id, eboShared);
+			setupVao(glVaoA, a.id, vboM.id);
 		}
 
 		tboF = f;
@@ -228,12 +228,9 @@ public class Zone implements Destructible {
 		}
 	}
 
-	private void setupVao(int vao, int buffer, int metadata, int ebo) {
+	private void setupVao(int vao, int buffer, int metadata) {
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
-		// The element buffer is part of VAO state
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
 		// Position
 		glEnableVertexAttribArray(0);

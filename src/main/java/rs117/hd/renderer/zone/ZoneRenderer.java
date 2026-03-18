@@ -658,7 +658,7 @@ public class ZoneRenderer implements Renderer {
 
 		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTiledLighting);
 		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
-		renderState.vao.set(plugin.vaoTri);
+		renderState.vao.setVao(plugin.vaoTri);
 
 		if (plugin.tiledLightingImageStoreProgram.isValid()) {
 			renderState.program.set(plugin.tiledLightingImageStoreProgram);

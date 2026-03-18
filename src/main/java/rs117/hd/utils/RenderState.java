@@ -80,34 +80,26 @@ public final class RenderState {
 		protected void applyValue(int buf) { glDrawBuffer(buf); }
 	}
 
-	public static final class GLVao extends GLState.IntArray {
-		private GLVao() {
-			super(2);
-		}
+	public static final class GLVao extends GLState {
+		int vao, ebo;
+		int appliedVao, appliedEbo;
 
 		public void setVao(int vao) {
-			set(vao, appliedValue[1]);
+			setVaoAndEbo(vao, 0);
 		}
 
-		public void setEbo(int ebo) {
-			set(appliedValue[0], ebo);
+		public void setVaoAndEbo(int vao, int ebo) {
+			this.vao = vao;
+			this.ebo = ebo;
+			hasValue = true;
 		}
 
 		@Override
-		protected void applyValues(int[] values) {
-			if (values[0] != appliedValue[0]) {
-				glBindVertexArray(values[0]);
-			} else {
-				assert glGetInteger(GL_VERTEX_ARRAY_BINDING) == values[0] :
-					"VAO has been modified without invalidating RenderState";
-			}
-
-			if (values[1] != appliedValue[1]) {
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, values[1]);
-			} else {
-				assert glGetInteger(GL_VERTEX_ARRAY_BINDING) == values[0] :
-					"EBO has been modified without invalidating RenderState";
-			}
+		protected void internalApply() {
+			if (!hasApplied || vao != appliedVao)
+				glBindVertexArray(vao);
+			if (ebo != 0 && (!hasApplied || ebo != appliedEbo))
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		}
 	}
 
