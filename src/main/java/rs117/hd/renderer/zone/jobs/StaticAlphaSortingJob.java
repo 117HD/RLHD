@@ -1,10 +1,11 @@
-package rs117.hd.renderer.zone;
+package rs117.hd.renderer.zone.jobs;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import lombok.RequiredArgsConstructor;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.zone.FacePrioritySorter;
 import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.jobs.Job;

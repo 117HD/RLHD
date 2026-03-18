@@ -1,8 +1,9 @@
-package rs117.hd.renderer.zone;
+package rs117.hd.renderer.zone.jobs;
 
 import java.nio.IntBuffer;
 import java.util.ArrayDeque;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.renderer.zone.Zone;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.jobs.Job;
 

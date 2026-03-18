@@ -5,9 +5,7 @@ import com.google.inject.Injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -23,6 +21,8 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.zone.jobs.RoofChangesJob;
+import rs117.hd.renderer.zone.jobs.ZoneUploadJob;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -93,7 +93,6 @@ public class SceneManager {
 	private final WorldViewContext root = new WorldViewContext(null, null, null);
 	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
 
-	private final Map<Integer, Integer> nextRoofChanges = new HashMap<>();
 	private ZoneSceneContext nextSceneContext;
 	private Zone[][] nextZones;
 	private final List<SortedZone> sortedZones = new ArrayList<>();
@@ -357,45 +356,7 @@ public class SceneManager {
 		task -> lightManager.loadSceneLights(nextSceneContext)
 	);
 
-	private final GenericJob calculateRoofChangesTask = GenericJob.build(
-		"calculateRoofChanges",
-		(task) -> {
-			Scene prev = client.getTopLevelWorldView().getScene();
-			Scene scene = nextSceneContext.scene;
-
-			// Calculate roof ids for the zone
-			final int[][][] prids = prev.getRoofs();
-			final int[][][] nrids = scene.getRoofs();
-
-			final int dx = scene.getBaseX() - prev.getBaseX() >> 3;
-			final int dy = scene.getBaseY() - prev.getBaseY() >> 3;
-
-			nextRoofChanges.clear();
-			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
-				for (int z = 0; z < EXTENDED_SCENE_SIZE; ++z) {
-					int ox = x + (dx << 3);
-					int oz = z + (dy << 3);
-
-					for (int level = 0; level < 4; ++level) {
-						task.workerHandleCancel();
-						// old zone still in scene?
-						if (ox >= 0 && oz >= 0 && ox < EXTENDED_SCENE_SIZE && oz < EXTENDED_SCENE_SIZE) {
-							int prid = prids[level][ox][oz];
-							int nrid = nrids[level][x][z];
-							if (prid > 0 && nrid > 0 && prid != nrid) {
-								Integer old = nextRoofChanges.putIfAbsent(prid, nrid);
-								if (old == null) {
-									log.trace("Roof change: {} -> {}", prid, nrid);
-								} else if (old != nrid) {
-									log.debug("Roof change mismatch: {} -> {} vs {}", prid, nrid, old);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	);
+	private final RoofChangesJob calculateRoofChangesTask = new RoofChangesJob();
 
 	public synchronized void loadScene(WorldView worldView, Scene scene) {
 		try {
@@ -500,6 +461,8 @@ public class SceneManager {
 			}
 
 			// Queue after ensuring previous scene has been cancelled
+			calculateRoofChangesTask.prev = client.getTopLevelWorldView().getScene();
+			calculateRoofChangesTask.scene = nextSceneContext.scene;
 			calculateRoofChangesTask.queue();
 
 			final int dx = scene.getBaseX() - prev.getBaseX() >> 3;
@@ -620,14 +583,18 @@ public class SceneManager {
 		calculateRoofChangesTask.waitForCompletion();
 
 		WorldViewContext ctx = root;
-		if (!nextRoofChanges.isEmpty()) {
-			for (int x = 0; x < ctx.sizeX; ++x) {
-				for (int z = 0; z < ctx.sizeZ; ++z) {
-					Zone zone = nextZones[x][z];
-					if (zone.needsRoofUpdate) {
-						zone.needsRoofUpdate = false;
-						zone.updateRoofs(nextRoofChanges);
-					}
+		for (int x = 0; x < ctx.sizeX; ++x) {
+			for (int z = 0; z < ctx.sizeZ; ++z) {
+				Zone zone = nextZones[x][z];
+				if(calculateRoofChangesTask.doesZoneHaveRoofMismatch(x, z)) {
+					zone.needsRoofUpdate = false;
+					zone.rebuild = true;
+					continue;
+				}
+
+				if (zone.needsRoofUpdate) {
+					zone.needsRoofUpdate = false;
+					zone.updateRoofs(calculateRoofChangesTask.result);
 				}
 			}
 		}
