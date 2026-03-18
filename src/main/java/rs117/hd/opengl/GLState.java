@@ -89,7 +89,7 @@ public abstract class GLState {
 
 	public abstract static class IntArray extends GLState {
 		@Getter
-		protected final int[] value;
+		private final int[] value;
 		protected final int[] appliedValue;
 
 		protected IntArray(int size) {
@@ -115,8 +115,8 @@ public abstract class GLState {
 
 	public abstract static class BoolArray extends GLState {
 		@Getter
-		protected final boolean[] value;
-		protected final boolean[] appliedValue;
+		private final boolean[] value;
+		private final boolean[] appliedValue;
 
 		protected BoolArray(int size) {
 			value = new boolean[size];
@@ -140,7 +140,7 @@ public abstract class GLState {
 	}
 
 	public abstract static class IntSet extends GLState {
-		protected final Set<Integer> targets = new HashSet<>();
+		private final Set<Integer> targets = new HashSet<>();
 
 		public void add(int target) {
 			hasValue = true;

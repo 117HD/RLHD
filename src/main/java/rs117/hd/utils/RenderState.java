@@ -86,11 +86,11 @@ public final class RenderState {
 		}
 
 		public void setVao(int vao) {
-			set(vao, value[1]);
+			set(vao, appliedValue[1]);
 		}
 
 		public void setEbo(int ebo) {
-			set(value[0], ebo);
+			set(appliedValue[0], ebo);
 		}
 
 		@Override
