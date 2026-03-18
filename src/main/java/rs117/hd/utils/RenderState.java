@@ -12,15 +12,14 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 public final class RenderState {
 	private final List<GLState> states = new ArrayList<>();
 
-	public final GLBindFramebuffer framebuffer = addState(GLBindFramebuffer::new);
+	public final GLFramebuffer framebuffer = addState(GLFramebuffer::new);
 	public final GLFramebufferTextureLayer framebufferTextureLayer = addState(GLFramebufferTextureLayer::new);
 	public final GLDrawBuffer drawBuffer = addState(GLDrawBuffer::new);
 	public final GLShaderProgram program = addState(GLShaderProgram::new);
 	public final GLViewport viewport = addState(GLViewport::new);
-	public final GLBindVAO vao = addState(GLBindVAO::new);
-	public final GLBindVAOAndEbo vaoAndEbo = addState(GLBindVAOAndEbo::new);
-	public final GLBindIDO ido = addState(GLBindIDO::new);
-	public final GLBindUBO ubo = addState(GLBindUBO::new);
+	public final GLVao vao = addState(GLVao::new);
+	public final GLIdo ido = addState(GLIdo::new);
+	public final GLUbo ubo = addState(GLUbo::new);
 	public final GLDepthMask depthMask = addState(GLDepthMask::new);
 	public final GLDepthFunc depthFunc = addState(GLDepthFunc::new);
 	public final GLColorMask colorMask = addState(GLColorMask::new);
@@ -44,8 +43,8 @@ public final class RenderState {
 		return state;
 	}
 
-	public static final class GLBindFramebuffer extends GLState.IntArray {
-		private GLBindFramebuffer() {
+	public static final class GLFramebuffer extends GLState.IntArray {
+		private GLFramebuffer() {
 			super(2);
 		}
 
@@ -81,29 +80,43 @@ public final class RenderState {
 		protected void applyValue(int buf) { glDrawBuffer(buf); }
 	}
 
-	public static final class GLBindVAO extends GLState.Int {
-		@Override
-		protected void applyValue(int vao) { glBindVertexArray(vao); }
-	}
-
-	public static final class GLBindVAOAndEbo extends GLState.IntArray {
-		private GLBindVAOAndEbo() {
+	public static final class GLVao extends GLState.IntArray {
+		private GLVao() {
 			super(2);
+		}
+
+		public void setVao(int vao) {
+			set(vao, value[1]);
+		}
+
+		public void setEbo(int ebo) {
+			set(value[0], ebo);
 		}
 
 		@Override
 		protected void applyValues(int[] values) {
-			glBindVertexArray(values[0]);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, values[1]);
+			if (values[0] != appliedValue[0]) {
+				glBindVertexArray(values[0]);
+			} else {
+				assert glGetInteger(GL_VERTEX_ARRAY_BINDING) == values[0] :
+					"VAO has been modified without invalidating RenderState";
+			}
+
+			if (values[1] != appliedValue[1]) {
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, values[1]);
+			} else {
+				assert glGetInteger(GL_VERTEX_ARRAY_BINDING) == values[0] :
+					"EBO has been modified without invalidating RenderState";
+			}
 		}
 	}
 
-	public static final class GLBindIDO extends GLState.Int {
+	public static final class GLIdo extends GLState.Int {
 		@Override
 		protected void applyValue(int ebo) { glBindBuffer(GL_DRAW_INDIRECT_BUFFER, ebo); }
 	}
 
-	public static final class GLBindUBO extends GLState.Int {
+	public static final class GLUbo extends GLState.Int {
 		@Override
 		protected void applyValue(int ubo) { glBindBuffer(GL_UNIFORM_BUFFER, ubo); }
 	}

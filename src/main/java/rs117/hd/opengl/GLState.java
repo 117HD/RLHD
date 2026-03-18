@@ -89,8 +89,8 @@ public abstract class GLState {
 
 	public abstract static class IntArray extends GLState {
 		@Getter
-		private final int[] value;
-		private final int[] appliedValue;
+		protected final int[] value;
+		protected final int[] appliedValue;
 
 		protected IntArray(int size) {
 			value = new int[size];
@@ -103,7 +103,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || !Arrays.equals(value, appliedValue)) {
 				applyValues(value);
 				System.arraycopy(value, 0, appliedValue, 0, value.length);
@@ -115,8 +115,8 @@ public abstract class GLState {
 
 	public abstract static class BoolArray extends GLState {
 		@Getter
-		private final boolean[] value;
-		private final boolean[] appliedValue;
+		protected final boolean[] value;
+		protected final boolean[] appliedValue;
 
 		protected BoolArray(int size) {
 			value = new boolean[size];
@@ -140,7 +140,7 @@ public abstract class GLState {
 	}
 
 	public abstract static class IntSet extends GLState {
-		private final Set<Integer> targets = new HashSet<>();
+		protected final Set<Integer> targets = new HashSet<>();
 
 		public void add(int target) {
 			hasValue = true;

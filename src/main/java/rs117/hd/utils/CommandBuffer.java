@@ -310,9 +310,9 @@ public class CommandBuffer {
 						long packed = cmd[readHead++];
 						int eboIdx = (int) (packed >> 32);
 						if (eboIdx >= 0) {
-							renderState.vaoAndEbo.set((int) packed, ((GLBuffer) objects[eboIdx]).id);
+							renderState.vao.set((int) packed, ((GLBuffer) objects[eboIdx]).id);
 						} else {
-							renderState.vao.set((int) packed);
+							renderState.vao.setVao((int) packed);
 						}
 						break;
 					}
