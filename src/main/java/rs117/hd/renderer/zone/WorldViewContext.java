@@ -152,7 +152,7 @@ public class WorldViewContext {
 
 	void unmap() {
 		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_SHADOW;
+			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
 			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
 		}
 	}
