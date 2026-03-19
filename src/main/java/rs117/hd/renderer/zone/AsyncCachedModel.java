@@ -252,7 +252,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		waitForCompletion();
 
 		processing.set(false);
-		zone.pendingModelJobs.add(this);
+		if(hasAlpha)
+			zone.pendingModelJobs.add(this);
 		INFLIGHT.add(this);
 		queue();
 
@@ -325,7 +326,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			log.error("Error drawing temp object", e);
 		} finally {
 			INFLIGHT.remove(this);
-			if (zone != null)
+			if (zone != null && hasAlpha)
 				zone.pendingModelJobs.remove(this);
 
 			ctx = null;
