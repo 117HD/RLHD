@@ -278,8 +278,8 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	void reset() {
-		Arrays.fill(drawOffsets, 0, drawRangeCount, 0);
-		Arrays.fill(drawCounts, 0, drawRangeCount, 0);
+		Arrays.fill(drawOffsets, 0, drawRangeCount, -1);
+		Arrays.fill(drawCounts, 0, drawRangeCount, -1);
 		used = false;
 		drawRangeCount = 0;
 		freeViews.addAll(usedViews);
