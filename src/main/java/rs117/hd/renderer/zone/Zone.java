@@ -729,11 +729,7 @@ public class Zone implements Destructible {
 		alphaSortingJob.queue(camera);
 	}
 
-	void renderPlayers(
-		CommandBuffer cmd,
-		int zx,
-		int zz
-	) {
+	void renderPlayers(CommandBuffer cmd, int zx, int zz) {
 		if (playerModels.isEmpty())
 			return;
 
