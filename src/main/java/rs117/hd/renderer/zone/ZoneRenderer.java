@@ -297,8 +297,8 @@ public class ZoneRenderer implements Renderer {
 		ctx.maxLevel = maxLevel;
 		ctx.hideRoofIds = hideRoofIds;
 		ctx.vaoSceneCmd.reset();
-		ctx.vaoPlayerCmd.reset();
 		ctx.vaoDirectionalCmd.reset();
+		ctx.vaoPlayerCmd.reset();
 
 		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.update();
@@ -882,10 +882,8 @@ public class ZoneRenderer implements Renderer {
 		final int offset = ctx.sceneContext.sceneOffset >> 3;
 		if (!z.playerModels.isEmpty() && (!sceneManager.isRoot(ctx) || z.inSceneFrustum || z.inShadowFrustum)) {
 			z.playerSort(zx - offset, zz - offset, sceneCamera);
-			
 			z.renderPlayers(ctx.vaoPlayerCmd, zx - offset, zz - offset);
 			z.renderPlayers(ctx.vaoDirectionalCmd, zx - offset, zz - offset);
-
 		}
 
 		final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
@@ -923,16 +921,15 @@ public class ZoneRenderer implements Renderer {
 
 				sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 
-				// Draw players shadow, with depth writes & alpha
+				// Draw players with sorted alpha, without writing depth
 				sceneCmd.DepthMask(false);
 				sceneCmd.ExecuteSubCommandBuffer(ctx.vaoPlayerCmd);
 				sceneCmd.DepthMask(true);
 
-				// Draw players opaque, writing only depth
+				// Redraw players, this time only writing depth, for correct ordering with the background
 				sceneCmd.ColorMask(false, false, false, false);
 				sceneCmd.ExecuteSubCommandBuffer(ctx.vaoPlayerCmd);
 				sceneCmd.ColorMask(true, true, true, true);
-
 				break;
 			case DrawCallbacks.PASS_ALPHA:
 				modelStreamingManager.ensureAsyncUploadsComplete(null);
