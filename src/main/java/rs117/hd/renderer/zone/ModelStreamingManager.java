@@ -3,6 +3,7 @@ package rs117.hd.renderer.zone;
 import com.google.inject.Injector;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -70,9 +71,11 @@ public class ModelStreamingManager {
 	@Inject
 	private ZoneRenderer renderer;
 
+	private final ConcurrentHashMap<Renderable, Integer> playerDrawOrder = new ConcurrentHashMap<>();
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
 	private int numRenderThreads;
+	private int playerDrawIndex;
 
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
@@ -133,6 +136,9 @@ public class ModelStreamingManager {
 			streamingContexts[i].renderableCount = 0;
 
 		updateRenderThreads();
+
+		playerDrawOrder.clear();
+		playerDrawIndex = 0;
 	}
 
 	public int getDrawnDynamicRenderableCount() {
@@ -194,6 +200,9 @@ public class ModelStreamingManager {
 			return;
 		}
 		plugin.drawnTempRenderableCount++;
+
+		if(renderable instanceof Player)
+			playerDrawOrder.put(renderable, playerDrawIndex++);
 
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final boolean hasAlpha = renderable instanceof Player || m.getFaceTransparencies() != null;
@@ -324,8 +333,12 @@ public class ModelStreamingManager {
 				final int alphaFaceCount = hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
-				final DynamicModelVAO.View opaqueView =
-					ctx.beginDraw(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE, opaqueFaceCount);
+				final DynamicModelVAO.View opaqueView;
+				if(renderable instanceof Player) {
+					opaqueView = ctx.beginDraw(VAO_PLAYER, opaqueFaceCount, playerDrawOrder.get(renderable));
+				} else {
+					opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
+				}
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
@@ -341,19 +354,6 @@ public class ModelStreamingManager {
 
 				// Fix rendering projectiles from boats with hide roofs enabled
 				int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
-
-				if (renderable instanceof Player) {
-					if (opaqueView.getEndOffset() > opaqueView.getStartOffset()) {
-						zone.addPlayerModel(
-							opaqueView,
-							plane,
-							x & 1023,
-							y - renderable.getModelHeight() /* to render players over locs */,
-							z & 1023
-						);
-					}
-				}
-
 				if (opaqueView != alphaView) {
 					if (alphaView.getEndOffset() > alphaView.getStartOffset()) {
 						zone.addTempAlphaModel(

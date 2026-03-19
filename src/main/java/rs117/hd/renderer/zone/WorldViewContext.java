@@ -70,7 +70,6 @@ public class WorldViewContext {
 
 	CommandBuffer vaoSceneCmd;
 	CommandBuffer vaoDirectionalCmd;
-	CommandBuffer vaoPlayerCmd;
 	final DynamicModelVAO[][] dynamicModelVaos = new DynamicModelVAO[FRAMES_IN_FLIGHT][VAO_COUNT];
 
 	public long loadTime;
@@ -100,7 +99,6 @@ public class WorldViewContext {
 
 		vaoSceneCmd = new CommandBuffer("WorldViewScene", renderState);
 		vaoDirectionalCmd = new CommandBuffer("WorldViewDirectional", renderState);
-		vaoPlayerCmd = new CommandBuffer("WorldViewPlayer", renderState);
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
@@ -142,6 +140,10 @@ public class WorldViewContext {
 
 	DynamicModelVAO.View beginDraw(int type, int faces) {
 		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
+	}
+
+	DynamicModelVAO.View beginDraw(int type, int faces, int drawIdx) {
+		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces, drawIdx);
 	}
 
 	void drawAll(int type, CommandBuffer cmd) {

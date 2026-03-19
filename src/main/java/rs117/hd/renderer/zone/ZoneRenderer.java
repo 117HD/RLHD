@@ -79,6 +79,7 @@ import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -298,7 +299,6 @@ public class ZoneRenderer implements Renderer {
 		ctx.hideRoofIds = hideRoofIds;
 		ctx.vaoSceneCmd.reset();
 		ctx.vaoDirectionalCmd.reset();
-		ctx.vaoPlayerCmd.reset();
 
 		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.update();
@@ -880,12 +880,6 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.ensureAsyncUploadsComplete(z);
 
 		final int offset = ctx.sceneContext.sceneOffset >> 3;
-		if (!z.playerModels.isEmpty() && (!sceneManager.isRoot(ctx) || z.inSceneFrustum || z.inShadowFrustum)) {
-			z.playerSort(zx - offset, zz - offset, sceneCamera);
-			z.renderPlayers(ctx.vaoPlayerCmd, zx - offset, zz - offset);
-			z.renderPlayers(ctx.vaoDirectionalCmd, zx - offset, zz - offset);
-		}
-
 		final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 		if (hasAlpha) {
 			// Only sort if the alpha will be directly visible, since shadows don't require sorting
@@ -920,16 +914,6 @@ public class ZoneRenderer implements Renderer {
 				directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
 
 				sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
-
-				// Draw players with sorted alpha, without writing depth
-				sceneCmd.DepthMask(false);
-				sceneCmd.ExecuteSubCommandBuffer(ctx.vaoPlayerCmd);
-				sceneCmd.DepthMask(true);
-
-				// Redraw players, this time only writing depth, for correct ordering with the background
-				sceneCmd.ColorMask(false, false, false, false);
-				sceneCmd.ExecuteSubCommandBuffer(ctx.vaoPlayerCmd);
-				sceneCmd.ColorMask(true, true, true, true);
 				break;
 			case DrawCallbacks.PASS_ALPHA:
 				modelStreamingManager.ensureAsyncUploadsComplete(null);
@@ -945,9 +929,20 @@ public class ZoneRenderer implements Renderer {
 				// Draw opaque
 				ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
 				ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
 
 				// Draw shadow-only models
 				ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
+
+				// Draw players with sorted alpha, without writing depth
+				sceneCmd.DepthMask(false);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+				sceneCmd.DepthMask(true);
+
+				// Redraw players, this time only writing depth, for correct ordering with the background
+				sceneCmd.ColorMask(false, false, false, false);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+				sceneCmd.ColorMask(true, true, true, true);
 
 				for (int zx = 0; zx < ctx.sizeX; ++zx)
 					for (int zz = 0; zz < ctx.sizeZ; ++zz)

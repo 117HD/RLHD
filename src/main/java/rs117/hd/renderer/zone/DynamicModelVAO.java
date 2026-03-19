@@ -201,7 +201,11 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	synchronized View beginDraw(int faceCount) {
-		final int drawIdx = drawRangeCount++;
+		return beginDraw(faceCount, drawRangeCount++);
+	}
+
+	synchronized View beginDraw(int faceCount, int drawIdx) {
+		drawRangeCount = max(drawRangeCount, drawIdx + 1);
 		if (drawRangeCount >= drawOffsets.length) {
 			drawOffsets = Arrays.copyOf(drawOffsets, drawOffsets.length * 2);
 			drawCounts = Arrays.copyOf(drawCounts, drawCounts.length * 2);
