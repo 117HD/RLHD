@@ -20,6 +20,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public final class JobSystem {
+	private static JobSystem INSTANCE;
 	public static final boolean VALIDATE = false;
 
 	@Inject
@@ -53,6 +54,7 @@ public final class JobSystem {
 	Semaphore workerSemaphore;
 
 	public void startUp(CpuUsageLimit cpuUsageLimit) {
+		INSTANCE = this;
 		workerCount = max(1, ceil((PROCESSOR_COUNT - 1) * cpuUsageLimit.threadRatio));
 		workers = new Worker[workerCount];
 		workerSemaphore = new Semaphore(workerCount);
@@ -141,6 +143,7 @@ public final class JobSystem {
 			log.debug("All workers shutdown successfully");
 
 		threadToWorker.clear();
+		clientCallbacks.clear();
 		workers = null;
 	}
 
@@ -239,13 +242,16 @@ public final class JobSystem {
 		}
 	}
 
-	public void processPendingClientCallbacks() {
-		int size = clientCallbacks.size();
+	public static void processPendingClientCallbacks() {
+		if(INSTANCE == null || !INSTANCE.client.isClientThread())
+			return;
+
+		int size = INSTANCE.clientCallbacks.size();
 		if (size == 0)
 			return;
 
 		ClientCallbackJob pair;
-		while (size-- > 0 && (pair = clientCallbacks.poll()) != null) {
+		while (size-- > 0 && (pair = INSTANCE.clientCallbacks.poll()) != null) {
 			try {
 				pair.callback.run();
 			} catch (Throwable ex) {
