@@ -252,7 +252,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		waitForCompletion();
 
 		processing.set(false);
-		if(hasAlpha)
+		if (hasAlpha)
 			zone.pendingModelJobs.add(this);
 		INFLIGHT.add(this);
 		queue();

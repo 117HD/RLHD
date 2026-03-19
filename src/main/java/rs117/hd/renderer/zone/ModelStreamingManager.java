@@ -201,7 +201,7 @@ public class ModelStreamingManager {
 		}
 		plugin.drawnTempRenderableCount++;
 
-		if(renderable instanceof Player)
+		if (renderable instanceof Player)
 			playerDrawOrder.put(renderable, playerDrawIndex++);
 
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
@@ -334,7 +334,7 @@ public class ModelStreamingManager {
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
 				final DynamicModelVAO.View opaqueView;
-				if(renderable instanceof Player) {
+				if (renderable instanceof Player) {
 					opaqueView = ctx.beginDraw(VAO_PLAYER, opaqueFaceCount, playerDrawOrder.get(renderable));
 				} else {
 					opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);

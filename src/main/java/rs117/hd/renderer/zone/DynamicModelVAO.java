@@ -90,9 +90,8 @@ public class DynamicModelVAO implements Destructible {
 		vao = glGenVertexArrays();
 		tbo.initialize(INITIAL_SIZE);
 		vboRender.initialize(INITIAL_SIZE);
-		if (vboRender != vboStaging) {
+		if (vboRender != vboStaging)
 			vboStaging.initialize(INITIAL_SIZE);
-		}
 
 		bindRenderVAO();
 	}
