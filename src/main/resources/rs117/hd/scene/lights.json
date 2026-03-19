@@ -18562,9 +18562,9 @@
   },
   {
     "description": "ABERRANT_SPECTRES",
-    "height": 110,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 600,
+    "radius": 400,
     "strength": 15,
     "color": [
       200.6236,
@@ -18574,6 +18574,8 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "fadeOutDuration": 1000,
+    "animationIds": [ -1, "SPECTER_ATTACK", "SPECTER_PARRY" ],
     "npcIds": [
       "SLAYER_ABBERANT_SPECTRE_1",
       "SLAYER_ABBERANT_SPECTRE_2",

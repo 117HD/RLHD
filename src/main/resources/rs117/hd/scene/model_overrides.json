@@ -77970,5 +77970,16 @@
       "COWBOSS_SCOREBOARD",
       "COWBOSS_SCOREBOARD_UBER"
     ]
+  },
+  {
+    "description": "ABBERANT_SPECTRE",
+    "baseMaterial": "GRAY_75",
+    "upwardsNormals": true,
+    "npcIds": [
+      "SLAYER_ABBERANT_SPECTRE_4",
+      "SLAYER_ABBERANT_SPECTRE_2",
+      "SLAYER_ABBERANT_SPECTRE_1",
+      "SLAYER_ABBERANT_SPECTRE_3"
+    ]
   }
 ]
