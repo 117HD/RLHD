@@ -2675,7 +2675,6 @@
   {
     "name": "GEM_STONE",
     "normalMap": "METALLIC_2_N",
-    "hasTransparency": true,
     "brightness": 1.1,
     "specularStrength": 1,
     "specularGloss": 30.0
