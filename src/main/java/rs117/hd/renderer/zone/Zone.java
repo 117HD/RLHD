@@ -555,7 +555,7 @@ public class Zone implements Destructible {
 
 			ModelOverride faceOverride = modelOverride;
 
-			Material material = Material.NONE;
+			Material material = modelOverride.baseMaterial;
 			if (textureId != -1) {
 				if (modelOverride.textureMaterial != Material.NONE) {
 					material = modelOverride.textureMaterial;
