@@ -205,14 +205,16 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	synchronized View beginDraw(int faceCount, int drawIdx) {
+		// Draw at a specific index, e.g. to respect player draw order
+		// mergeRanges() later skips any potentially unfilled entries
 		drawRangeCount = max(drawRangeCount, drawIdx + 1);
 		if (drawRangeCount >= drawOffsets.length) {
-			drawOffsets = Arrays.copyOf(drawOffsets, drawOffsets.length * 2);
-			drawCounts = Arrays.copyOf(drawCounts, drawCounts.length * 2);
+			int oldLength = drawOffsets.length;
+			drawOffsets = Arrays.copyOf(drawOffsets, oldLength * 2);
+			drawCounts = Arrays.copyOf(drawCounts, oldLength * 2);
+			Arrays.fill(drawOffsets, oldLength, drawOffsets.length, -1);
+			Arrays.fill(drawCounts, oldLength, drawOffsets.length, -1);
 		}
-
-		drawOffsets[drawIdx] = -1;
-		drawCounts[drawIdx] = -1;
 
 		View view = freeViews.poll();
 		if (view == null) view = new View();
@@ -226,7 +228,7 @@ public class DynamicModelVAO implements Destructible {
 		return view;
 	}
 
-	private void endDraw(View view) {
+	private synchronized void endDraw(View view) {
 		drawOffsets[view.drawIdx] = view.getStartOffset() / VERT_SIZE_INTS;
 		drawCounts[view.drawIdx] = view.getVertexCount();
 
