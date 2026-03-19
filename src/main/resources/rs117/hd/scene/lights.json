@@ -18574,6 +18574,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "fadeInDuration": 150,
     "fadeOutDuration": 1000,
     "animationIds": [ -1, "SPECTER_ATTACK", "SPECTER_PARRY" ],
     "npcIds": [
@@ -18587,10 +18588,10 @@
   },
   {
     "description": "DEVIANT_SPECTRE",
-    "height": 110,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 600,
-    "strength": 15,
+    "radius": 400,
+    "strength": 17,
     "color": [
       255,
       205.19783,
@@ -18599,15 +18600,18 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 1000,
+    "animationIds": [ -1, "SPECTER_ATTACK", "SPECTER_PARRY" ],
     "npcIds": [
       "KOUREND_SPECTRE"
     ]
   },
   {
     "description": "ABHORRENT_SPECTRE",
-    "height": 200,
+    "height": 530,
     "alignment": "CENTER",
-    "radius": 1000,
+    "radius": 700,
     "strength": 25,
     "color": [
       200.6236,
@@ -18617,15 +18621,18 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 1000,
+    "animationIds": [ -1, "ABHORRENT_SPECTRE_ATTACK", "GIANT_UPDATE_ICE_DEFEND" ],
     "npcIds": [
       "SUPERIOR_ABBERANT_SPECTRE"
     ]
   },
   {
     "description": "REPUGNANT_SPECTRE",
-    "height": 200,
+    "height": 530,
     "alignment": "CENTER",
-    "radius": 1000,
+    "radius": 700,
     "strength": 25,
     "color": [
       255,
@@ -18635,6 +18642,9 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 1000,
+    "animationIds": [ -1, "ABHORRENT_SPECTRE_ATTACK", "GIANT_UPDATE_ICE_DEFEND" ],
     "npcIds": [
       "SUPERIOR_KOUREND_SPECTRE"
     ]
