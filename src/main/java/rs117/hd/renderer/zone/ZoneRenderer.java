@@ -879,9 +879,9 @@ public class ZoneRenderer implements Renderer {
 
 		modelStreamingManager.ensureAsyncUploadsComplete(z);
 
-		final int offset = ctx.sceneContext.sceneOffset >> 3;
 		final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 		if (hasAlpha) {
+			final int offset = ctx.sceneContext.sceneOffset >> 3;
 			// Only sort if the alpha will be directly visible, since shadows don't require sorting
 			if (level == 0 && (!sceneManager.isRoot(ctx) || z.inSceneFrustum))
 				z.alphaSort(zx - offset, zz - offset, sceneCamera);
