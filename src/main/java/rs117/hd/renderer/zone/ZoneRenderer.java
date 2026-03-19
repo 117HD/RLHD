@@ -935,14 +935,14 @@ public class ZoneRenderer implements Renderer {
 				ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 
 				// Draw players with sorted alpha, without writing depth
-				sceneCmd.DepthMask(false);
+				ctx.vaoSceneCmd.DepthMask(false);
 				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
-				sceneCmd.DepthMask(true);
+				ctx.vaoSceneCmd.DepthMask(true);
 
 				// Redraw players, this time only writing depth, for correct ordering with the background
-				sceneCmd.ColorMask(false, false, false, false);
+				ctx.vaoSceneCmd.ColorMask(false, false, false, false);
 				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
-				sceneCmd.ColorMask(true, true, true, true);
+				ctx.vaoSceneCmd.ColorMask(true, true, true, true);
 
 				for (int zx = 0; zx < ctx.sizeX; ++zx)
 					for (int zz = 0; zz < ctx.sizeZ; ++zz)
