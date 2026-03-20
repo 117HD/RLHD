@@ -394,7 +394,10 @@ public class ZoneRenderer implements Renderer {
 			directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
-			if (plugin.configShadowsEnabled && (hasSceneCameraChanged || hasDirectionalCameraChanged)) {
+			if (plugin.configShadowsEnabled &&
+				(hasSceneCameraChanged || hasDirectionalCameraChanged) &&
+				!sceneCamera.isOrthographic()
+			) {
 				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 
 				final float[][] volumeCorners = directionalShadowCasterVolume
