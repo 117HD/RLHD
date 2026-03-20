@@ -40,6 +40,8 @@ import static net.runelite.api.Perspective.SCENE_SIZE;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.WorldViewContext.DYNAMIC_MODEL_VAO_POOL;
 import static rs117.hd.renderer.zone.WorldViewContext.DYNAMIC_MODEL_VAO_STAGING_POOL;
+import static rs117.hd.utils.HDUtils.hintGC;
+import static rs117.hd.utils.HDUtils.isRunningCloseToMemoryCeiling;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -98,6 +100,11 @@ public class SceneManager {
 	private Zone[][] nextZones;
 	private final List<SortedZone> sortedZones = new ArrayList<>();
 	private boolean reloadRequested;
+	@Getter
+	private boolean isExpandedMapLoadingChunksOverridden;
+	private boolean canRestoreExpandedMapLoadingChunks;
+	private long memoryState;
+	private long nextMemoryStateCheck;
 
 	public boolean isZoneStreamingEnabled() {
 		return plugin.configZoneStreaming;
@@ -136,6 +143,7 @@ public class SceneManager {
 	public void initialize(RenderState renderState, UBOWorldViews uboWorldViews) {
 		this.renderState = renderState;
 		this.uboWorldViews = uboWorldViews;
+		root.isFirstLoad = true;
 		root.initialize(renderState, injector);
 	}
 
@@ -159,11 +167,43 @@ public class SceneManager {
 		uboWorldViews = null;
 	}
 
+	public boolean isConsistentlyRunningCloseToMemoryCeiling() {
+		int count = 0;
+		for(int i = 0; i < 64; i++) {
+			long mask = 1L << i;
+			if((memoryState & mask) == mask)
+				count++;
+		}
+		return count > 32;
+	}
+
 	public void update() {
 		assert client.isClientThread();
 		frameTimer.begin(Timer.UPDATE_AREA_HIDING);
 		updateAreaHiding();
 		frameTimer.end(Timer.UPDATE_AREA_HIDING);
+
+		if(System.currentTimeMillis() > nextMemoryStateCheck) {
+			if (isRunningCloseToMemoryCeiling(false)) {
+				memoryState |= 1L << (plugin.frame % 64L);
+			} else {
+				memoryState &= ~(1L << (plugin.frame % 64L));
+			}
+			nextMemoryStateCheck = System.currentTimeMillis() + 78;
+		}
+
+		if(isExpandedMapLoadingChunksOverridden) {
+			if(canRestoreExpandedMapLoadingChunks) {
+				isExpandedMapLoadingChunksOverridden = false;
+				canRestoreExpandedMapLoadingChunks = false;
+				client.setExpandedMapLoading(plugin.getExpandedMapLoadingChunks());
+				log.debug("Restored Expanded Map Loading Chunks to {}...", plugin.getExpandedMapLoadingChunks());
+			}
+		} else if (isConsistentlyRunningCloseToMemoryCeiling() && plugin.getExpandedMapLoadingChunks() > 0) {
+			log.debug("Disabling Expanded Map Loading Chunks to reduce memory pressure, this will be restored once memory has stabilized");
+			client.setExpandedMapLoading(0);
+			isExpandedMapLoadingChunksOverridden = true;
+		}
 
 		if (reloadRequested && loadingLock.getHoldCount() == 0) {
 			reloadRequested = false;
@@ -421,6 +461,15 @@ public class SceneManager {
 				nextSceneContext.destroy();
 			nextSceneContext = null;
 
+			// Determine if we're consistently running close to the memory ceiling and force sync loading to reduce chances of OOMing
+			final boolean canAsyncExecute = !isConsistentlyRunningCloseToMemoryCeiling();
+			if(!canAsyncExecute) {
+				log.debug("Forcing sync load to reduce memory allocation pressure, load will be drastically slower...");
+				hintGC(1000);
+			} else if(isExpandedMapLoadingChunksOverridden) {
+				canRestoreExpandedMapLoadingChunks = true;
+			}
+
 			nextZones = new Zone[NUM_ZONES][NUM_ZONES];
 			nextSceneContext = new ZoneSceneContext(
 				client,
@@ -448,8 +497,16 @@ public class SceneManager {
 			loadSceneLightsTask.cancel();
 			calculateRoofChangesTask.cancel();
 
-			generateSceneDataTask.queue();
-			loadSceneLightsTask.queue();
+			if(root.sceneContext != null)
+				proceduralGenerator.moveSceneData(nextSceneContext, root.sceneContext);
+
+			generateSceneDataTask
+				.setExecuteAsync(canAsyncExecute)
+				.queue();
+
+			loadSceneLightsTask
+				.setExecuteAsync(canAsyncExecute)
+				.queue();
 
 			if (nextSceneContext.enableAreaHiding) {
 				assert nextSceneContext.sceneBase != null;
@@ -500,7 +557,9 @@ public class SceneManager {
 			}
 
 			// Queue after ensuring previous scene has been cancelled
-			calculateRoofChangesTask.queue();
+			calculateRoofChangesTask
+				.setExecuteAsync(canAsyncExecute)
+				.queue();
 
 			final int dx = scene.getBaseX() - prev.getBaseX() >> 3;
 			final int dy = scene.getBaseY() - prev.getBaseY() >> 3;
@@ -538,7 +597,7 @@ public class SceneManager {
 				}
 			}
 
-			boolean staggerLoad =
+			boolean staggerLoad = canAsyncExecute &&
 				isZoneStreamingEnabled() &&
 				!nextSceneContext.isInHouse &&
 				root.sceneContext != null &&
@@ -554,6 +613,7 @@ public class SceneManager {
 						if (!staggerLoad || dist < ZONE_DEFER_DIST_START) {
 							ZoneUploadJob
 								.build(ctx, nextSceneContext, zone, true, x, z)
+								.setExecuteAsync(canAsyncExecute)
 								.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 							nextSceneContext.totalMapZones++;
 						} else {
@@ -579,6 +639,7 @@ public class SceneManager {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, true, sorted.x, sorted.z)
+						.setExecuteAsync(canAsyncExecute)
 						.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 				}
 				sorted.free();
@@ -612,12 +673,14 @@ public class SceneManager {
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
 
-		boolean isFirst = root.sceneContext == null;
-		if (!isFirst)
+		if (root.sceneContext != null)
 			root.sceneContext.destroy(); // Destroy the old context before replacing it
 
 		// Wait for roof change calculation to complete
 		calculateRoofChangesTask.waitForCompletion();
+
+		if(isConsistentlyRunningCloseToMemoryCeiling())
+			hintGC();
 
 		WorldViewContext ctx = root;
 		if (!nextRoofChanges.isEmpty()) {
@@ -693,7 +756,8 @@ public class SceneManager {
 		nextZones = null;
 		nextSceneContext = null;
 
-		if (isFirst) {
+		if (root.isFirstLoad) {
+			root.isFirstLoad = false;
 			root.initBuffers();
 
 			// Load all pre-existing sub scenes on the first scene load

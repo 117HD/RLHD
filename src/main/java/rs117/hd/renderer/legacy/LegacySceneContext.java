@@ -18,6 +18,12 @@ public class LegacySceneContext extends SceneContext {
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
 
+	// Model pusher arrays, to avoid simultaneous usage from different threads
+	public final int[] modelFaceVertices = new int[12];
+	public final float[] modelFaceUvs = new float[12];
+	public final float[] modelFaceNormals = new float[12];
+	public final int[] modelPusherResults = new int[2];
+
 	public LegacySceneContext(
 		Client client,
 		Scene scene,
