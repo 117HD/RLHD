@@ -7801,31 +7801,6 @@
     ]
   },
   {
-    "description": "CAVE_FLOOR_LAVA_BASE",
-    "baseMaterial": "NONE",
-    "areas": [ "KARAMJA_VOLCANO_DUNGEON" ],
-    "objectIds": [
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_4",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_11",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_2",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_7",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_6",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_3",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_9",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_5",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_10",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_8"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h == 7 && s == 7",
-        "baseMaterial": "DIRT_1",
-        "uvType": "BOX",
-        "upwardsNormals": true
-      }
-    ]
-  },
-  {
     "description": "CAVE_FLOOR_LAVA_SEMI_DARK",
     "baseMaterial": "NONE",
     "upwardsNormals": true,
@@ -7846,31 +7821,6 @@
       {
         "colors": "h == 7 && s == 7",
         "baseMaterial": "DIRT_1_SEMI_DARK",
-        "uvType": "BOX",
-        "upwardsNormals": true
-      }
-    ]
-  },
-  {
-    "description": "CAVE_FLOOR_LAVA_DARK",
-    "baseMaterial": "NONE",
-    "areas": [ "KARAMJA_VOLCANO_LAVA_FIX_DARK" ],
-    "objectIds": [
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_4",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_11",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_2",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_7",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_6",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_3",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_9",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_5",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_10",
-      "DRAGON_SLAYER_QIP_LAVA_EDGE_8"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h == 7 && s == 7",
-        "baseMaterial": "DIRT_1_DARK",
         "uvType": "BOX",
         "upwardsNormals": true
       }
@@ -7921,6 +7871,30 @@
       {
         "colors": "h == 7 && s == 7",
         "baseMaterial": "DIRT_1_MEDIUM_LIGHT",
+        "uvType": "BOX",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "CAVE_FLOOR_LAVA_BASE",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_4",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_11",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_2",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_7",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_6",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_3",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_9",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_5",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_10",
+      "DRAGON_SLAYER_QIP_LAVA_EDGE_8"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "DIRT_1",
         "uvType": "BOX",
         "upwardsNormals": true
       }
