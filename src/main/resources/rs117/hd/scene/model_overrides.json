@@ -77736,11 +77736,12 @@
     ]
   },
   {
-    "description": "SMOKE_DEVIL_BOSS",
+    "description": "SMOKE_DEVIL_BOSS_PET_SUPERIOR",
     "npcIds": [
       "SMOKE_DEVIL_BOSS",
       "SMOKE_PET",
-      "POH_SMOKE_PET"
+      "POH_SMOKE_PET",
+      "SUPERIOR_SMOKE_DEVIL"
     ],
     "colorOverrides": [
       {
@@ -77759,6 +77760,20 @@
         "colors": "s == 6",
         "baseMaterial": "GRAY_150"
       }
+    ]
+  },
+  {
+    "description": "ABBERANT_SPECTRE",
+    "baseMaterial": "GRAY_75",
+    "upwardsNormals": true,
+    "npcIds": [
+      "SLAYER_ABBERANT_SPECTRE_1",
+      "SLAYER_ABBERANT_SPECTRE_2",
+      "SLAYER_ABBERANT_SPECTRE_3",
+      "SLAYER_ABBERANT_SPECTRE_4",
+      "SUPERIOR_ABBERANT_SPECTRE",
+      "KOUREND_SPECTRE",
+      "SUPERIOR_KOUREND_SPECTRE"
     ]
   },
   {
@@ -77969,20 +77984,6 @@
       "COWBOSS_SIGN_WARNING",
       "COWBOSS_SCOREBOARD",
       "COWBOSS_SCOREBOARD_UBER"
-    ]
-  },
-  {
-    "description": "ABBERANT_SPECTRE",
-    "baseMaterial": "GRAY_75",
-    "upwardsNormals": true,
-    "npcIds": [
-      "SLAYER_ABBERANT_SPECTRE_1",
-      "SLAYER_ABBERANT_SPECTRE_2",
-      "SLAYER_ABBERANT_SPECTRE_3",
-      "SLAYER_ABBERANT_SPECTRE_4",
-      "SUPERIOR_ABBERANT_SPECTRE",
-      "KOUREND_SPECTRE",
-      "SUPERIOR_KOUREND_SPECTRE"
     ]
   }
 ]

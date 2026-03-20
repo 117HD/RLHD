@@ -45273,6 +45273,58 @@
     "type": "STATIC"
   },
   {
+    "description": "SUPERIOR_SMOKE_DEVIL_BOTTOM_LIGHT",
+    "offset": [ 0, 175, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      116,
+      255,
+      5
+    ],
+    "npcIds": [
+      "SUPERIOR_SMOKE_DEVIL"
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 250
+  },
+  {
+    "description": "SUPERIOR_SMOKE_DEVIL_FRONT_LIGHT",
+    "offset": [ 0, 300, 115 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      116,
+      255,
+      5
+    ],
+    "npcIds": [
+      "SUPERIOR_SMOKE_DEVIL"
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "SUPERIOR_SMOKE_DEVIL_BACK_LIGHT",
+    "offset": [ 0, 300, -115 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      116,
+      255,
+      5
+    ],
+    "npcIds": [
+      "SUPERIOR_SMOKE_DEVIL"
+    ],
+    "type": "STATIC"
+  },
+  {
     "description": "Shades of Mort'ton - Temple Fire",
     "offset": [ 0, 215, 0 ],
     "radius": 300,
