@@ -90,9 +90,8 @@ public class DynamicModelVAO implements Destructible {
 		vao = glGenVertexArrays();
 		tbo.initialize(INITIAL_SIZE);
 		vboRender.initialize(INITIAL_SIZE);
-		if (vboRender != vboStaging) {
+		if (vboRender != vboStaging)
 			vboStaging.initialize(INITIAL_SIZE);
-		}
 
 		bindRenderVAO();
 	}
@@ -200,18 +199,30 @@ public class DynamicModelVAO implements Destructible {
 		vao = 0;
 	}
 
+	synchronized View beginPlayerDraw(int faceCount, int playerDrawIndex) {
+		assert playerDrawIndex != -1;
+		// Draw at a specific index, e.g. to respect player draw order
+		// mergeRanges() later skips any potentially unfilled entries
+		drawRangeCount = max(drawRangeCount, playerDrawIndex + 1);
+		return beginDraw(faceCount, playerDrawIndex);
+	}
+
 	synchronized View beginDraw(int faceCount) {
-		final int drawIdx = drawRangeCount++;
+		return beginDraw(faceCount, drawRangeCount++);
+	}
+
+	private synchronized View beginDraw(int faceCount, int drawIdx) {
 		if (drawRangeCount >= drawOffsets.length) {
-			drawOffsets = Arrays.copyOf(drawOffsets, drawOffsets.length * 2);
-			drawCounts = Arrays.copyOf(drawCounts, drawCounts.length * 2);
+			int oldLength = drawOffsets.length;
+			drawOffsets = Arrays.copyOf(drawOffsets, oldLength * 2);
+			drawCounts = Arrays.copyOf(drawCounts, oldLength * 2);
+			Arrays.fill(drawOffsets, oldLength, drawOffsets.length, -1);
+			Arrays.fill(drawCounts, oldLength, drawOffsets.length, -1);
 		}
 
-		drawOffsets[drawIdx] = -1;
-		drawCounts[drawIdx] = -1;
-
 		View view = freeViews.poll();
-		if (view == null) view = new View();
+		if (view == null)
+			view = new View();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
 		view.tbo = tboWriter.reserve(faceCount * 9);
 		view.vao = vao;
@@ -222,7 +233,7 @@ public class DynamicModelVAO implements Destructible {
 		return view;
 	}
 
-	private void endDraw(View view) {
+	private synchronized void endDraw(View view) {
 		drawOffsets[view.drawIdx] = view.getStartOffset() / VERT_SIZE_INTS;
 		drawCounts[view.drawIdx] = view.getVertexCount();
 
@@ -274,6 +285,8 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	void reset() {
+		Arrays.fill(drawOffsets, 0, drawRangeCount, -1);
+		Arrays.fill(drawCounts, 0, drawRangeCount, -1);
 		used = false;
 		drawRangeCount = 0;
 		freeViews.addAll(usedViews);
