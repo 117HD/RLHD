@@ -46,7 +46,7 @@ public class Zone implements Destructible {
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
 	// texturedFaceIdx int
-	public static final int VERT_SIZE = 24;
+	public static final int VERT_SIZE = 28;
 
 	// alphaBiasHsl ivec3
 	// materialData ivec3
@@ -95,10 +95,9 @@ public class Zone implements Destructible {
 	int[][] roofEnd;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
-	final List<AlphaModel> playerModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
 
-	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f, int eboShared) {
+	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 		if (o == null && a == null || f == null)
@@ -110,13 +109,13 @@ public class Zone implements Destructible {
 		if (o != null) {
 			vboO = o;
 			glVao = glGenVertexArrays();
-			setupVao(glVao, o.id, vboM.id, eboShared);
+			setupVao(glVao, o.id, vboM.id);
 		}
 
 		if (a != null) {
 			vboA = a;
 			glVaoA = glGenVertexArrays();
-			setupVao(glVaoA, a.id, vboM.id, eboShared);
+			setupVao(glVaoA, a.id, vboM.id);
 		}
 
 		tboF = f;
@@ -228,12 +227,9 @@ public class Zone implements Destructible {
 		}
 	}
 
-	private void setupVao(int vao, int buffer, int metadata, int ebo) {
+	private void setupVao(int vao, int buffer, int metadata) {
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
-		// The element buffer is part of VAO state
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
 		// Position
 		glEnableVertexAttribArray(0);
@@ -241,15 +237,15 @@ public class Zone implements Destructible {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 6);
+		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 8);
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 16);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 20);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
@@ -558,7 +554,7 @@ public class Zone implements Destructible {
 
 			ModelOverride faceOverride = modelOverride;
 
-			Material material = Material.NONE;
+			Material material = modelOverride.baseMaterial;
 			if (textureId != -1) {
 				if (modelOverride.textureMaterial != Material.NONE) {
 					material = modelOverride.textureMaterial;
@@ -631,35 +627,10 @@ public class Zone implements Destructible {
 		alphaModels.add(m);
 	}
 
-	synchronized void addPlayerModel(DynamicModelVAO.View view, int level, int x, int y, int z) {
-		AlphaModel m = modelCache.poll();
-		if (m == null)
-			m = new AlphaModel();
-		m.id = -1;
-		m.modelOverride = null;
-		m.startpos = view.getStartOffset();
-		m.endpos = view.getEndOffset();
-		m.x = (short) x;
-		m.y = (short) y;
-		m.z = (short) z;
-		m.vao = view.vao;
-		m.tboF = view.tboTexId;
-		m.rid = -1;
-		m.level = (byte) level;
-		m.lx = m.lz = m.ux = m.uz = -1;
-		m.zofx = m.zofz = 0;
-		playerModels.add(m);
-	}
-
 	synchronized void postAlphaPass() {
 		sortedAlphaFacesUpload.waitForCompletion();
 		alphaSortingJob.waitForCompletion();
 
-		cleanAlphaModels(alphaModels);
-		cleanAlphaModels(playerModels);
-	}
-
-	private void cleanAlphaModels(List<AlphaModel> alphaModels) {
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
@@ -711,15 +682,6 @@ public class Zone implements Destructible {
 		alphaModels.sort(alphaSortComparator);
 	}
 
-	synchronized void playerSort(int zx, int zz, Camera camera) {
-		alphaSortPred.cx = (int) camera.getPositionX();
-		alphaSortPred.cy = (int) camera.getPositionY();
-		alphaSortPred.cz = (int) camera.getPositionZ();
-		alphaSortPred.zx = zx;
-		alphaSortPred.zz = zz;
-		playerModels.sort(alphaSortComparator);
-	}
-
 	void alphaStaticModelSort(Camera camera) {
 		alphaSortingJob.reset();
 		for (AlphaModel m : alphaModels) {
@@ -730,34 +692,6 @@ public class Zone implements Destructible {
 			alphaSortingJob.addAlphaModel(m);
 		}
 		alphaSortingJob.queue(camera);
-	}
-
-	void renderPlayers(
-		CommandBuffer cmd,
-		int zx,
-		int zz
-	) {
-		if (playerModels.isEmpty())
-			return;
-
-		drawIdx = 0;
-
-		for (int i = 0; i < playerModels.size(); i++) {
-			final AlphaModel m = playerModels.get(i);
-
-			if (lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
-				flush(cmd);
-
-			lastVao = m.vao;
-			lastTboF = m.tboF;
-			lastzx = zx - m.zofx;
-			lastzz = zz - m.zofz;
-			lastDrawMode = TEMP;
-
-			pushRange(m.startpos, m.endpos);
-		}
-
-		flush(cmd);
 	}
 
 	void renderAlpha(
@@ -857,7 +791,7 @@ public class Zone implements Destructible {
 			if (alphaFaceCount > 0 && lastVao != 0) {
 				int vertexCount = alphaFaceCount * 3;
 				long byteOffset = 4L * (eboAlphaOffset - vertexCount);
-				cmd.BindElementsArray(lastVao, eboAlpha.id);
+				cmd.BindVertexArray(lastVao, eboAlpha);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {

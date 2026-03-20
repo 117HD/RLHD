@@ -85,7 +85,7 @@ public class WorldViewContext {
 		@Nullable ZoneSceneContext sceneContext,
 		UBOWorldViews uboWorldViews
 	) {
-		this.worldViewId = worldView == null ? -1 : worldView.getId();
+		this.worldViewId = worldView == null ? WorldView.TOPLEVEL : worldView.getId();
 		this.sceneContext = sceneContext;
 		this.sizeX = worldView == null ? NUM_ZONES : worldView.getSizeX() >> 3;
 		this.sizeZ = worldView == null ? NUM_ZONES : worldView.getSizeY() >> 3;
@@ -139,7 +139,12 @@ public class WorldViewContext {
 	}
 
 	DynamicModelVAO.View beginDraw(int type, int faces) {
+		assert type != VAO_PLAYER : "Players are drawn at specific indices, which can't be safely mixed with this";
 		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
+	}
+
+	DynamicModelVAO.View beginPlayerDraw(int playerDrawIndex, int faces) {
+		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][VAO_PLAYER].beginPlayerDraw(faces, playerDrawIndex);
 	}
 
 	void drawAll(int type, CommandBuffer cmd) {
@@ -162,7 +167,7 @@ public class WorldViewContext {
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
-				if (z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum))
+				if (z.alphaModels.isEmpty() || (worldViewId == WorldView.TOPLEVEL && !z.inSceneFrustum))
 					continue;
 
 				final int dx = camPosX - ((zx - offset) << 10);
@@ -179,20 +184,17 @@ public class WorldViewContext {
 		}
 	}
 
-	void handleZoneSwap(float deltaTime, int zx, int zz) {
+	void handleZoneSwap(int zx, int zz, boolean queue) {
 		Zone curZone = zones[zx][zz];
 		ZoneUploadJob uploadTask = curZone.uploadJob;
 		if (uploadTask == null)
 			return;
 
 		if (!uploadTask.isQueued()) {
-			if (deltaTime > 0.0f && uploadTask.delay >= 0.0f) {
-				uploadTask.delay -= deltaTime;
-				if (uploadTask.delay <= 0.0f) {
-					log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
-					uploadTask.delay = -1.0f;
-					uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
-				}
+			if (queue && uploadTask.revealAfterTimestampMs < System.currentTimeMillis()) {
+				log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
+				uploadTask.revealAfterTimestampMs = 0;
+				uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
 			}
 			return;
 		}
@@ -235,10 +237,10 @@ public class WorldViewContext {
 		}
 	}
 
-	void update(float deltaTime) {
+	void update() {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				handleZoneSwap(deltaTime, x, z);
+				handleZoneSwap(x, z, true);
 
 				if (zones[x][z].rebuild) {
 					zones[x][z].rebuild = false;
@@ -256,7 +258,7 @@ public class WorldViewContext {
 
 		for (int x = 0; x < sizeX; x++)
 			for (int z = 0; z < sizeZ; z++)
-				handleZoneSwap(-1.0f, x, z);
+				handleZoneSwap(x, z, false);
 	}
 
 	void free() {
@@ -302,7 +304,7 @@ public class WorldViewContext {
 
 	void invalidateZone(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
-		float prevUploadDelay = -1.0f;
+		long revealAfterTimestampMs = 0;
 		if (curZone.uploadJob != null) {
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
@@ -312,7 +314,7 @@ public class WorldViewContext {
 				zz,
 				curZone.uploadJob.zone.hashCode()
 			);
-			prevUploadDelay = curZone.uploadJob.delay;
+			revealAfterTimestampMs = curZone.uploadJob.revealAfterTimestampMs;
 			curZone.uploadJob.cancel();
 			curZone.uploadJob.release();
 		}
@@ -321,8 +323,10 @@ public class WorldViewContext {
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
-		curZone.uploadJob.delay = prevUploadDelay;
-		if (curZone.uploadJob.delay < 0.0f)
+		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
+
+		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders
+		if (sceneContext.isInHouse)
 			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
