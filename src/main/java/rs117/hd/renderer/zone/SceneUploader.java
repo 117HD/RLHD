@@ -1709,6 +1709,7 @@ public class SceneUploader implements AutoCloseable {
 		boolean isModelPartiallyVisible,
 		ModelOverride modelOverride,
 		Model model,
+		boolean sortAllFaces,
 		int orientation,
 		int x, int y, int z
 	) {
@@ -1897,17 +1898,21 @@ public class SceneUploader implements AutoCloseable {
 				continue;
 			}
 
-			// store distance for face sorting
-			if (faceDistances != null && shouldSort) {
-				final float aZ = modelProjected[offsetA + 2];
-				final float bZ = modelProjected[offsetB + 2];
-				final float cZ = modelProjected[offsetC + 2];
-
-				faceDistances[f] = radius + ((int) ((aZ + bZ + cZ) / 3.0f) - zero);
-			}
-
 			if (material.hasTransparency || transparency != 0)
 				tempModelAlphaFaces++;
+
+			// store distance for face sorting
+			if (faceDistances != null) {
+				if(shouldSort && (sortAllFaces || material.hasTransparency || transparency != 0)) {
+					final float aZ = modelProjected[offsetA + 2];
+					final float bZ = modelProjected[offsetB + 2];
+					final float cZ = modelProjected[offsetC + 2];
+
+					faceDistances[f] = radius + ((int) ((aZ + bZ + cZ) / 3.0f) - zero);
+				} else {
+					faceDistances[f] = Integer.MIN_VALUE;
+				}
+			}
 
 			visibleFaces.put(f);
 		}
