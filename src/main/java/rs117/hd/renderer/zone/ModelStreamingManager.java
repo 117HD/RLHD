@@ -3,7 +3,6 @@ package rs117.hd.renderer.zone;
 import com.google.inject.Injector;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,7 +30,6 @@ import static net.runelite.api.hooks.DrawCallbacks.*;
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -71,7 +69,6 @@ public class ModelStreamingManager {
 	@Inject
 	private ZoneRenderer renderer;
 
-	private final ConcurrentHashMap<Renderable, Integer> playerDrawOrder = new ConcurrentHashMap<>();
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
 	private int numRenderThreads;
@@ -137,7 +134,6 @@ public class ModelStreamingManager {
 
 		updateRenderThreads();
 
-		playerDrawOrder.clear();
 		playerDrawIndex = 0;
 	}
 
@@ -201,11 +197,11 @@ public class ModelStreamingManager {
 		}
 		plugin.drawnTempRenderableCount++;
 
-		if (renderable instanceof Player)
-			playerDrawOrder.put(renderable, playerDrawIndex++);
+		final boolean isPlayer = renderable instanceof Player;
+		final int drawIndex = isPlayer ? playerDrawIndex++ : -1;
 
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
-		final boolean hasAlpha = renderable instanceof Player || m.getFaceTransparencies() != null;
+		final boolean hasAlpha = isPlayer || m.getFaceTransparencies() != null;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(false);
 		if (asyncModelCache != null) {
 			asyncModelCache.queue(
@@ -217,6 +213,7 @@ public class ModelStreamingManager {
 				zone,
 				isModelPartiallyVisible,
 				hasAlpha,
+				drawIndex,
 				orientation,
 				x, y, z,
 				this::uploadTempModelAsync
@@ -234,6 +231,7 @@ public class ModelStreamingManager {
 			m,
 			isModelPartiallyVisible,
 			hasAlpha,
+			drawIndex,
 			orientation,
 			x, y, z
 		);
@@ -248,6 +246,7 @@ public class ModelStreamingManager {
 		Zone zone,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
+		int drawIndex,
 		int orientation,
 		int x, int y, int z
 	) {
@@ -262,6 +261,7 @@ public class ModelStreamingManager {
 			model,
 			isModelPartiallyVisible,
 			hasAlpha,
+			drawIndex,
 			orientation,
 			x, y, z
 		);
@@ -278,6 +278,7 @@ public class ModelStreamingManager {
 		Model m,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
+		int drawIndex,
 		int orientation,
 		int x, int y, int z
 	) {
@@ -335,7 +336,7 @@ public class ModelStreamingManager {
 
 				final DynamicModelVAO.View opaqueView;
 				if (renderable instanceof Player) {
-					opaqueView = ctx.beginDraw(VAO_PLAYER, opaqueFaceCount, playerDrawOrder.get(renderable));
+					opaqueView = ctx.beginPlayerDraw(drawIndex, opaqueFaceCount);
 				} else {
 					opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
 				}
@@ -475,6 +476,7 @@ public class ModelStreamingManager {
 				zone,
 				isModelPartiallyVisible,
 				hasAlpha,
+				-1,
 				orient,
 				x, y, z,
 				this::uploadDynamicModelAsync
@@ -491,6 +493,7 @@ public class ModelStreamingManager {
 			zone,
 			isModelPartiallyVisible,
 			hasAlpha,
+			-1,
 			orient,
 			x, y, z
 		);
@@ -505,6 +508,7 @@ public class ModelStreamingManager {
 		Zone zone,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
+		int drawIndex,
 		int orientation,
 		int x, int y, int z
 	) {
@@ -518,6 +522,7 @@ public class ModelStreamingManager {
 			zone,
 			isModelPartiallyVisible,
 			hasAlpha,
+			drawIndex,
 			orientation,
 			x, y, z
 		);
@@ -533,6 +538,7 @@ public class ModelStreamingManager {
 		Zone zone,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
+		int drawIndex,
 		int orient,
 		int x, int y, int z
 	) {

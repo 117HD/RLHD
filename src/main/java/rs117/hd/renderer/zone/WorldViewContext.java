@@ -139,11 +139,12 @@ public class WorldViewContext {
 	}
 
 	DynamicModelVAO.View beginDraw(int type, int faces) {
+		assert type != VAO_PLAYER : "Players are drawn at specific indices, which can't be safely mixed with this";
 		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
 	}
 
-	DynamicModelVAO.View beginDraw(int type, int faces, int drawIdx) {
-		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces, drawIdx);
+	DynamicModelVAO.View beginPlayerDraw(int playerDrawIndex, int faces) {
+		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][VAO_PLAYER].beginPlayerDraw(faces, playerDrawIndex);
 	}
 
 	void drawAll(int type, CommandBuffer cmd) {

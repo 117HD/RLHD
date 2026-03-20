@@ -199,14 +199,19 @@ public class DynamicModelVAO implements Destructible {
 		vao = 0;
 	}
 
+	synchronized View beginPlayerDraw(int faceCount, int playerDrawIndex) {
+		assert playerDrawIndex != -1;
+		// Draw at a specific index, e.g. to respect player draw order
+		// mergeRanges() later skips any potentially unfilled entries
+		drawRangeCount = max(drawRangeCount, playerDrawIndex + 1);
+		return beginDraw(faceCount, playerDrawIndex);
+	}
+
 	synchronized View beginDraw(int faceCount) {
 		return beginDraw(faceCount, drawRangeCount++);
 	}
 
-	synchronized View beginDraw(int faceCount, int drawIdx) {
-		// Draw at a specific index, e.g. to respect player draw order
-		// mergeRanges() later skips any potentially unfilled entries
-		drawRangeCount = max(drawRangeCount, drawIdx + 1);
+	private synchronized View beginDraw(int faceCount, int drawIdx) {
 		if (drawRangeCount >= drawOffsets.length) {
 			int oldLength = drawOffsets.length;
 			drawOffsets = Arrays.copyOf(drawOffsets, oldLength * 2);
@@ -216,7 +221,8 @@ public class DynamicModelVAO implements Destructible {
 		}
 
 		View view = freeViews.poll();
-		if (view == null) view = new View();
+		if (view == null)
+			view = new View();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
 		view.tbo = tboWriter.reserve(faceCount * 9);
 		view.vao = vao;
