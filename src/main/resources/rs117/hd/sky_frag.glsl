@@ -204,6 +204,11 @@ void main() {
         // Still semi-transparent near the horizon, invisible when sun is high
         float moonDayAlpha = 1.0 - smoothstep(-0.17, 0.5, skySunDir.y);
 
+        // Fade moon when it's close to the sun in the sky
+        float sunMoonDot = dot(moonDir, sunDir);
+        float sunProximityFade = smoothstep(0.9, 0.7, sunMoonDot);
+        moonDayAlpha *= sunProximityFade;
+
         if (moonDot > 0.0 && moonDayAlpha > 0.001) {
             // Moon angular radius: ~3.6 degrees diameter = 1.8 degrees half-angle
             // cos(1.8 deg) ≈ 0.99951 — about 1.5x larger than realistic for visual impact
