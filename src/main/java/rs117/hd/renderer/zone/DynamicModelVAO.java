@@ -31,7 +31,7 @@ public class DynamicModelVAO implements Destructible {
 	// pos float vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	static final int VERT_SIZE = 28;
+	static final int VERT_SIZE = 32;
 	static final int VERT_SIZE_INTS = VERT_SIZE / 4;
 
 	// Metadata format
@@ -62,7 +62,7 @@ public class DynamicModelVAO implements Destructible {
 	private long[] copyNumBytes = new long[16];
 
 	DynamicModelVAO(String name, boolean useStagingBuffer) {
-		if (useStagingBuffer) {
+		if (useStagingBuffer && GLBuffer.supportsStorageBuffers()) {
 			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
 				"VAO::VBO_STAGING::" + name,
@@ -90,9 +90,8 @@ public class DynamicModelVAO implements Destructible {
 		vao = glGenVertexArrays();
 		tbo.initialize(INITIAL_SIZE);
 		vboRender.initialize(INITIAL_SIZE);
-		if (vboRender != vboStaging) {
+		if (vboRender != vboStaging)
 			vboStaging.initialize(INITIAL_SIZE);
-		}
 
 		bindRenderVAO();
 	}
@@ -131,11 +130,11 @@ public class DynamicModelVAO implements Destructible {
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 18);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 20);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 28);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
@@ -200,18 +199,30 @@ public class DynamicModelVAO implements Destructible {
 		vao = 0;
 	}
 
+	synchronized View beginPlayerDraw(int faceCount, int playerDrawIndex) {
+		assert playerDrawIndex != -1;
+		// Draw at a specific index, e.g. to respect player draw order
+		// mergeRanges() later skips any potentially unfilled entries
+		drawRangeCount = max(drawRangeCount, playerDrawIndex + 1);
+		return beginDraw(faceCount, playerDrawIndex);
+	}
+
 	synchronized View beginDraw(int faceCount) {
-		final int drawIdx = drawRangeCount++;
+		return beginDraw(faceCount, drawRangeCount++);
+	}
+
+	private synchronized View beginDraw(int faceCount, int drawIdx) {
 		if (drawRangeCount >= drawOffsets.length) {
-			drawOffsets = Arrays.copyOf(drawOffsets, drawOffsets.length * 2);
-			drawCounts = Arrays.copyOf(drawCounts, drawCounts.length * 2);
+			int oldLength = drawOffsets.length;
+			drawOffsets = Arrays.copyOf(drawOffsets, oldLength * 2);
+			drawCounts = Arrays.copyOf(drawCounts, oldLength * 2);
+			Arrays.fill(drawOffsets, oldLength, drawOffsets.length, -1);
+			Arrays.fill(drawCounts, oldLength, drawOffsets.length, -1);
 		}
 
-		drawOffsets[drawIdx] = -1;
-		drawCounts[drawIdx] = -1;
-
 		View view = freeViews.poll();
-		if (view == null) view = new View();
+		if (view == null)
+			view = new View();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
 		view.tbo = tboWriter.reserve(faceCount * 9);
 		view.vao = vao;
@@ -222,7 +233,7 @@ public class DynamicModelVAO implements Destructible {
 		return view;
 	}
 
-	private void endDraw(View view) {
+	private synchronized void endDraw(View view) {
 		drawOffsets[view.drawIdx] = view.getStartOffset() / VERT_SIZE_INTS;
 		drawCounts[view.drawIdx] = view.getVertexCount();
 
@@ -274,6 +285,8 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	void reset() {
+		Arrays.fill(drawOffsets, 0, drawRangeCount, -1);
+		Arrays.fill(drawCounts, 0, drawRangeCount, -1);
 		used = false;
 		drawRangeCount = 0;
 		freeViews.addAll(usedViews);

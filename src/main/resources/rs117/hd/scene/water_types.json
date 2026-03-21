@@ -260,6 +260,29 @@
     ]
   },
   {
+    "name": "CAVE_WATER_MURKY",
+    "specularStrength": 0.1,
+    "specularGloss": 75.0,
+    "normalStrength": 0.3,
+    "baseOpacity": 0.86,
+    "fresnelAmount": 0.1,
+    "surfaceColor": [
+      5.17,
+      13.07,
+      16.99
+    ],
+    "foamColor": [
+      85,
+      85,
+      85
+    ],
+    "depthColor": [
+      10.79,
+      36.75,
+      41.32
+    ]
+  },
+  {
     "name": "VANILLA_130",
     "vanillaTextureIndex": 130,
     "surfaceColor": "#556F8F",
