@@ -95,7 +95,6 @@ public class Zone implements Destructible {
 	int[][] roofEnd;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
-	final List<AlphaModel> playerModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
 
 	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
@@ -555,7 +554,7 @@ public class Zone implements Destructible {
 
 			ModelOverride faceOverride = modelOverride;
 
-			Material material = Material.NONE;
+			Material material = modelOverride.baseMaterial;
 			if (textureId != -1) {
 				if (modelOverride.textureMaterial != Material.NONE) {
 					material = modelOverride.textureMaterial;
@@ -628,35 +627,10 @@ public class Zone implements Destructible {
 		alphaModels.add(m);
 	}
 
-	synchronized void addPlayerModel(DynamicModelVAO.View view, int level, int x, int y, int z) {
-		AlphaModel m = modelCache.poll();
-		if (m == null)
-			m = new AlphaModel();
-		m.id = -1;
-		m.modelOverride = null;
-		m.startpos = view.getStartOffset();
-		m.endpos = view.getEndOffset();
-		m.x = (short) x;
-		m.y = (short) y;
-		m.z = (short) z;
-		m.vao = view.vao;
-		m.tboF = view.tboTexId;
-		m.rid = -1;
-		m.level = (byte) level;
-		m.lx = m.lz = m.ux = m.uz = -1;
-		m.zofx = m.zofz = 0;
-		playerModels.add(m);
-	}
-
 	synchronized void postAlphaPass() {
 		sortedAlphaFacesUpload.waitForCompletion();
 		alphaSortingJob.waitForCompletion();
 
-		cleanAlphaModels(alphaModels);
-		cleanAlphaModels(playerModels);
-	}
-
-	private void cleanAlphaModels(List<AlphaModel> alphaModels) {
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
@@ -708,15 +682,6 @@ public class Zone implements Destructible {
 		alphaModels.sort(alphaSortComparator);
 	}
 
-	synchronized void playerSort(int zx, int zz, Camera camera) {
-		alphaSortPred.cx = (int) camera.getPositionX();
-		alphaSortPred.cy = (int) camera.getPositionY();
-		alphaSortPred.cz = (int) camera.getPositionZ();
-		alphaSortPred.zx = zx;
-		alphaSortPred.zz = zz;
-		playerModels.sort(alphaSortComparator);
-	}
-
 	void alphaStaticModelSort(Camera camera) {
 		alphaSortingJob.reset();
 		for (AlphaModel m : alphaModels) {
@@ -727,34 +692,6 @@ public class Zone implements Destructible {
 			alphaSortingJob.addAlphaModel(m);
 		}
 		alphaSortingJob.queue(camera);
-	}
-
-	void renderPlayers(
-		CommandBuffer cmd,
-		int zx,
-		int zz
-	) {
-		if (playerModels.isEmpty())
-			return;
-
-		drawIdx = 0;
-
-		for (int i = 0; i < playerModels.size(); i++) {
-			final AlphaModel m = playerModels.get(i);
-
-			if (lastVao != m.vao || lastTboF != m.tboF || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
-				flush(cmd);
-
-			lastVao = m.vao;
-			lastTboF = m.tboF;
-			lastzx = zx - m.zofx;
-			lastzz = zz - m.zofz;
-			lastDrawMode = TEMP;
-
-			pushRange(m.startpos, m.endpos);
-		}
-
-		flush(cmd);
 	}
 
 	void renderAlpha(
