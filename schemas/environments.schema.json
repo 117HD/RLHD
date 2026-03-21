@@ -41,7 +41,7 @@
       },
       "roofShadows": {
         "type": "boolean",
-        "description": "Whether the area should allow roof shadows to be drawn."
+        "description": "Whether the area should allow roof shadows to be drawn. Defaults to on for overworld areas, and false otherwise."
       },
       "instantTransition": {
         "type": "boolean",
