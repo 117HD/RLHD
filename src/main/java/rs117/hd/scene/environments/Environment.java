@@ -5,6 +5,7 @@ import java.util.Objects;
 import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.GsonUtils.DegreesToRadians;
@@ -14,6 +15,7 @@ import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
 import static rs117.hd.utils.ColorUtils.rgb;
 
 @Setter(value = AccessLevel.PRIVATE)
+@Slf4j
 public class Environment {
 	public static final float[] DEFAULT_SUN_ANGLES = HDUtils.sunAngles(52, 235);
 	public static final Environment DEFAULT = new Environment()
@@ -38,6 +40,7 @@ public class Environment {
 	public boolean force = false;
 	public boolean allowSkyOverride = true;
 	public boolean lightningEffects = false;
+	public boolean roofShadows = true;
 	public boolean instantTransition = false;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] ambientColor = rgb("#ffffff");

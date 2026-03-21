@@ -156,6 +156,7 @@ public class ZoneRenderer implements Renderer {
 	private boolean sceneFboValid;
 	private boolean shouldRenderScene;
 	private boolean shouldClearShadowFbo;
+	private boolean shouldDrawRoofShadows;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -462,6 +463,7 @@ public class ZoneRenderer implements Renderer {
 				directionalCamera.setViewportHeight(directionalSize);
 
 				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
+				shouldDrawRoofShadows = plugin.configRoofShadows && environmentManager.roofShadowsEnabled();
 			}
 
 			plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
@@ -858,7 +860,7 @@ public class ZoneRenderer implements Renderer {
 		final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 		if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 			directionalCmd.SetShader(fastShadowProgram);
-			z.renderOpaque(directionalCmd, ctx, plugin.configRoofShadows);
+			z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
 		}
 		frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
 
@@ -892,7 +894,7 @@ public class ZoneRenderer implements Renderer {
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 				directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-				z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, plugin.configRoofShadows);
+				z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
 			}
 
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)

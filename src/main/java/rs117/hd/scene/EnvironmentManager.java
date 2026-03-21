@@ -488,6 +488,10 @@ public class EnvironmentManager {
 		}
 	}
 
+	public boolean roofShadowsEnabled() {
+		return currentEnvironment.roofShadows;
+	}
+
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater;
 	}
