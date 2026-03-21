@@ -547,7 +547,7 @@
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
 	  "starVisibility": 0.1,
-	  "sunStrength":0.05,
+	  "sunStrength":0.025,
 	  "sunlightStrength": 0.2,
     "windAngle": 40,
     "windSpeed": 7,
