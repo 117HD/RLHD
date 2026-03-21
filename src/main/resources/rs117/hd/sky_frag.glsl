@@ -54,7 +54,7 @@ float moonNoise(in vec2 st) {
 float moonFbm(in vec2 st) {
     float value = 0.0;
     float amplitude = 0.5;
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 6; i++) {
         value += amplitude * moonNoise(st);
         st *= 2.0;
         amplitude *= 0.5;
@@ -206,7 +206,7 @@ void main() {
             // Moon angular radius: ~3.6 degrees diameter = 1.8 degrees half-angle
             // cos(1.8 deg) ≈ 0.99951 — about 1.5x larger than realistic for visual impact
             float moonAngularRadius = 0.99951;
-            float edgeWidth = 0.00008;
+            float edgeWidth = 0.00003;
 
             // Sharp disk with anti-aliased edge
             float moonDisk = smoothstep(moonAngularRadius - edgeWidth, moonAngularRadius, moonDot);
@@ -249,18 +249,35 @@ void main() {
                 float isLit = smoothstep(terminatorEdge + edgeSoftness, terminatorEdge - edgeSoftness, localX);
 
                 // Limb darkening: edges of the moon are slightly darker
-                float limbDarkening = mix(0.7, 1.0, normDist * normDist);
+                float limbDarkening = mix(0.85, 1.0, normDist);
 
                 // Procedural moon surface detail
-                vec2 moonUV = vec2(localX, localY) * 3.0 + vec2(50.0, 50.0);
-                float surfaceNoise = moonFbm(moonUV);
+                vec2 moonUV = vec2(localX, localY) * 4.0 + vec2(50.0, 50.0);
 
-                // Map noise to brightness: dark maria (~0.65) to bright highlands (~1.05)
-                float surfaceBrightness = mix(0.65, 1.05, surfaceNoise);
+                // Large-scale terrain — broad tonal variation
+                float largeTerrain = moonFbm(moonUV * 0.4);
 
-                // Cool blue tint on darker areas (maria have a subtle blue hue)
-                float mariaTint = smoothstep(0.85, 0.65, surfaceBrightness);
-                vec3 surfaceColor = mix(vec3(1.0), vec3(0.7, 0.8, 1.0), mariaTint * 0.4);
+                // Medium-scale detail
+                float medTerrain = moonFbm(moonUV * 1.5);
+
+                // Fine surface texture
+                float fineTerrain = moonFbm(moonUV * 5.0);
+
+                // Base brightness from blended terrain layers
+                float surfaceBrightness = largeTerrain * 0.4 + medTerrain * 0.4 + fineTerrain * 0.2;
+                surfaceBrightness = mix(0.6, 1.1, surfaceBrightness);
+
+                // Dark maria (seas) — a few subtle darker patches
+                float seaNoise = moonFbm(moonUV * 0.8 + vec2(30.0, 70.0));
+                float seaMask = smoothstep(0.50, 0.40, seaNoise);
+                surfaceBrightness *= mix(1.0, 0.82, seaMask);
+
+                // Warm gray color that shifts subtly with brightness
+                // Darker areas slightly warmer, brighter areas slightly cooler
+                float colorBlend = smoothstep(0.7, 0.95, surfaceBrightness);
+                vec3 darkTone = vec3(0.85, 0.83, 0.79);
+                vec3 brightTone = vec3(1.0, 0.98, 0.95);
+                vec3 surfaceColor = mix(darkTone, brightTone, colorBlend);
 
                 vec3 litColor = skyMoonColor * limbDarkening * surfaceBrightness * surfaceColor;
                 // Dark side: always opaque (occludes stars). Use the pre-star sky gradient
