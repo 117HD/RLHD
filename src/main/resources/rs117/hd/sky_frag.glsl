@@ -27,12 +27,11 @@
 #include <uniforms/global.glsl>
 #include <utils/color_blindness.glsl>
 #include <utils/misc.glsl>
+#include <utils/starfield.glsl>
 
 in vec2 fScreenPos;
 
 out vec4 FragColor;
-
-uniform sampler2D nightSkyTexture;
 
 // Moon surface noise functions
 float moonHash(in vec2 st) {
@@ -164,30 +163,24 @@ void main() {
     // Save sky color before stars are blended in, for opaque moon dark side
     vec3 skyColorPreStars = skyColor;
 
-    // === NIGHT SKY TEXTURE ===
-    // Fade in the starfield texture as sun drops below horizon
+    // === PROCEDURAL NIGHT SKY ===
+    // Fade in the starfield as sun drops below horizon
     // nightFade is already 0 at -15° and 1 at 0°, so we use its inverse
     // starVisibility (from environment override): 0 = no stars (opaque skybox), 1 = full stars
     float nightSkyBlend = (1.0 - nightFade) * starVisibility;
     if (nightSkyBlend > 0.001) {
-        // Rotate the star map around two axes for realistic celestial motion
+        // Rotate the star field around two axes for realistic celestial motion
         // Primary axis: vertical (Y) - azimuthal sweep (~1 rotation per 1 hour)
         // Secondary axis: tilted (X) - slow polar drift (~1 rotation per 3 hours)
         float rotY = elapsedTime * (2.0 * 3.14159265 / 3600.0);
         float rotX = elapsedTime * (2.0 * 3.14159265 / 10800.0);
         float cosY = cos(rotY), sinY = sin(rotY);
         float cosX = cos(rotX), sinX = sin(rotX);
-        // Rotate around Y axis, then X axis
         vec3 starDir = viewDir;
         starDir = vec3(cosY * starDir.x + sinY * starDir.z, starDir.y, -sinY * starDir.x + cosY * starDir.z);
         starDir = vec3(starDir.x, cosX * starDir.y - sinX * starDir.z, sinX * starDir.y + cosX * starDir.z);
 
-        // Convert rotated direction to spherical UV coordinates
-        float phi = atan(starDir.z, starDir.x);               // azimuth: -PI to PI
-        float theta = asin(clamp(-starDir.y, -1.0, 1.0));     // elevation: -PI/2 to PI/2
-        vec2 nightSkyUV = vec2(phi / (2.0 * 3.14159265) + 0.5, theta / 3.14159265 + 0.5);
-        vec3 nightSkyColor = texture(nightSkyTexture, nightSkyUV).rgb;
-
+        vec3 nightSkyColor = proceduralStarfield(starDir);
         skyColor = mix(skyColor, nightSkyColor, nightSkyBlend);
     }
 

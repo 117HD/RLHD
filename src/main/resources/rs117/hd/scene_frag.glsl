@@ -84,6 +84,7 @@ vec2 worldUvs(float scale) {
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
+#include <utils/starfield.glsl>
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -586,10 +587,13 @@ void main() {
             float atmosphericScatter = sunSideBlend * (1.0 - zenithBlend) * 0.2;
             skyColorAtFragment = mix(skyColorAtFragment, skySunColor * 0.5 + skyHorizonColor * 0.5, atmosphericScatter);
 
-            // At night with stars enabled, blend fog toward star map background color
-            vec3 starMapBgColor = vec3(0.00304, 0.00304, 0.00521); // #0a0a0e in linear
-            float nightStarBlend = (1.0 - nightFade) * starVisibility;
-            skyColorAtFragment = mix(skyColorAtFragment, starMapBgColor, nightStarBlend);
+            // Night sky blend: match sky_frag.glsl's starfield blend so fog color
+            // matches the sky's darkness without showing stars or nebulas
+            float nightSkyBlend = (1.0 - nightFade) * starVisibility;
+            if (nightSkyBlend > 0.001) {
+                vec3 nightBgColor = vec3(0.00304, 0.00304, 0.00521);
+                skyColorAtFragment = mix(skyColorAtFragment, nightBgColor, nightSkyBlend);
+            }
 
             outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
 

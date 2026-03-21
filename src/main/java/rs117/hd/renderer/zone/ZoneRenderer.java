@@ -25,10 +25,7 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.io.IOException;
-import java.nio.IntBuffer;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Set;
@@ -40,7 +37,6 @@ import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
@@ -160,9 +156,6 @@ public class ZoneRenderer implements Renderer {
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
-	// Night sky texture
-	private int nightSkyTexId = -1;
-
 	// Day/Night Cycle - stored fog color for skybox clear
 	private float[] calculatedFogColorSrgb = null;
 	// Day/Night Cycle - sky gradient enabled flag
@@ -222,48 +215,11 @@ public class ZoneRenderer implements Renderer {
 		sceneCamera.setDirty();
 		directionalCamera.setDirty();
 
-		// Load night sky texture
-		loadNightSkyTexture();
-	}
-
-	private void loadNightSkyTexture() {
-		try {
-			BufferedImage image = path(HdPlugin.class, "scene/textures/nightsky.png").loadImage();
-			int width = image.getWidth();
-			int height = image.getHeight();
-
-			// Convert to INT_ARGB if needed
-			BufferedImage argbImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-			argbImage.getGraphics().drawImage(image, 0, 0, null);
-
-			int[] pixels = ((DataBufferInt) argbImage.getRaster().getDataBuffer()).getData();
-			IntBuffer pixelBuffer = BufferUtils.createIntBuffer(pixels.length);
-			pixelBuffer.put(pixels).flip();
-
-			nightSkyTexId = glGenTextures();
-			glActiveTexture(HdPlugin.TEXTURE_UNIT_NIGHT_SKY);
-			glBindTexture(GL_TEXTURE_2D, nightSkyTexId);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
-				GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer);
-
-			log.debug("Loaded night sky texture: {}x{}", width, height);
-		} catch (Exception e) {
-			log.warn("Failed to load night sky texture", e);
-		}
 	}
 
 	@Override
 	public void destroy() {
 		destroyBuffers();
-
-		if (nightSkyTexId != -1) {
-			glDeleteTextures(nightSkyTexId);
-			nightSkyTexId = -1;
-		}
 
 		jobSystem.shutDown();
 		modelStreamingManager.destroy();
@@ -1023,12 +979,6 @@ public class ZoneRenderer implements Renderer {
 			renderState.apply();
 
 			skyProgram.use();
-
-			// Bind night sky texture
-			if (nightSkyTexId != -1) {
-				glActiveTexture(HdPlugin.TEXTURE_UNIT_NIGHT_SKY);
-				glBindTexture(GL_TEXTURE_2D, nightSkyTexId);
-			}
 
 			renderState.vao.setVao(plugin.vaoTri);
 			renderState.apply();
