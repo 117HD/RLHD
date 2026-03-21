@@ -167,7 +167,11 @@ void main() {
     // Fade in the starfield as sun drops below horizon
     // nightFade is already 0 at -15° and 1 at 0°, so we use its inverse
     // starVisibility (from environment override): 0 = no stars (opaque skybox), 1 = full stars
-    float nightSkyBlend = (1.0 - nightFade) * starVisibility;
+    // Directional starfield blend: stars appear first on the anti-sun side
+    // and creep toward the sun-side horizon as twilight deepens
+    float baseProgress = 1.0 - nightFade;
+    float sunProximity = sunSideBlend * (1.0 - zenithBlend);
+    float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * starVisibility;
     if (nightSkyBlend > 0.001) {
         // Rotate the star field around two axes for realistic celestial motion
         // Primary axis: vertical (Y) - azimuthal sweep (~1 rotation per 1 hour)
