@@ -79,6 +79,7 @@ import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -269,18 +270,6 @@ public class ZoneRenderer implements Renderer {
 			modelStreamingManager.reinitialize();
 	}
 
-	@Subscribe
-	public void onPostClientTick(PostClientTick event) {
-		try {
-			frameTimer.begin(Timer.UPDATE_SCENE);
-			sceneManager.update();
-			frameTimer.end(Timer.UPDATE_SCENE);
-		} catch (Exception ex) {
-			log.error("Error while updating scene:", ex);
-			plugin.stopPlugin();
-		}
-	}
-
 	@Override
 	public void preSceneDraw(
 		Scene scene,
@@ -383,6 +372,10 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.begin(Timer.UPDATE_LIGHTS);
 				lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
 				frameTimer.end(Timer.UPDATE_LIGHTS);
+
+				frameTimer.begin(Timer.UPDATE_SCENE);
+				sceneManager.update();
+				frameTimer.end(Timer.UPDATE_SCENE);
 			} catch (Exception ex) {
 				log.error("Error while updating environment or lights:", ex);
 				plugin.stopPlugin();
@@ -393,7 +386,10 @@ public class ZoneRenderer implements Renderer {
 			directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
-			if (plugin.configShadowsEnabled && (hasSceneCameraChanged || hasDirectionalCameraChanged)) {
+			if (plugin.configShadowsEnabled &&
+				(hasSceneCameraChanged || hasDirectionalCameraChanged) &&
+				!sceneCamera.isOrthographic()
+			) {
 				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 
 				final float[][] volumeCorners = directionalShadowCasterVolume
@@ -910,10 +906,9 @@ public class ZoneRenderer implements Renderer {
 		switch (pass) {
 			case DrawCallbacks.PASS_OPAQUE:
 				directionalCmd.SetShader(fastShadowProgram);
-
-				sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 				directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
 
+				sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 				break;
 			case DrawCallbacks.PASS_ALPHA:
 				modelStreamingManager.ensureAsyncUploadsComplete(null);
@@ -929,32 +924,20 @@ public class ZoneRenderer implements Renderer {
 				// Draw opaque
 				ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
 				ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
 
 				// Draw shadow-only models
 				ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 
-				final int offset = ctx.sceneContext.sceneOffset >> 3;
-				for (int zx = 0; zx < ctx.sizeX; ++zx) {
-					for (int zz = 0; zz < ctx.sizeZ; ++zz) {
-						final Zone z = ctx.zones[zx][zz];
+				// Draw players with sorted alpha, without writing depth
+				ctx.vaoSceneCmd.DepthMask(false);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+				ctx.vaoSceneCmd.DepthMask(true);
 
-						if (!z.playerModels.isEmpty() && (!sceneManager.isRoot(ctx) || z.inSceneFrustum || z.inShadowFrustum)) {
-							z.playerSort(zx - offset, zz - offset, sceneCamera);
-
-							// Draw players shadow, with depth writes & alpha
-							z.renderPlayers(ctx.vaoDirectionalCmd, zx - offset, zz - offset);
-
-							ctx.vaoSceneCmd.DepthMask(false);
-							z.renderPlayers(ctx.vaoSceneCmd, zx - offset, zz - offset);
-							ctx.vaoSceneCmd.DepthMask(true);
-
-							// Draw players opaque, writing only depth
-							ctx.vaoSceneCmd.ColorMask(false, false, false, false);
-							z.renderPlayers(ctx.vaoSceneCmd, zx - offset, zz - offset);
-							ctx.vaoSceneCmd.ColorMask(true, true, true, true);
-						}
-					}
-				}
+				// Redraw players, this time only writing depth, for correct ordering with the background
+				ctx.vaoSceneCmd.ColorMask(false, false, false, false);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+				ctx.vaoSceneCmd.ColorMask(true, true, true, true);
 
 				for (int zx = 0; zx < ctx.sizeX; ++zx)
 					for (int zz = 0; zz < ctx.sizeZ; ++zz)

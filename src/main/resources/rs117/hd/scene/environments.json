@@ -995,7 +995,7 @@
     "area": "UNGAEL",
     "ambientColor": "#eae2cd",
     "ambientStrength": 0.6,
-    "directionalColor": "#82ace0",
+    "directionalColor": "#9DA3C6",
     "directionalStrength": 1.5,
     "fogColor": "#e2e6ed",
     "fogDepth": 40
@@ -1230,7 +1230,8 @@
     "directionalColor": "#4eeeff",
     "directionalStrength": 3.5,
     "fogColor": "#13184f",
-    "fogDepth": 30
+    "fogDepth": 30,
+    "waterCausticsStrength": 0.8
   },
   {
     "area": "LOVAKENGJ",
@@ -1342,15 +1343,6 @@
     ],
     "fogColor": "#090606",
     "fogDepth": 20
-  },
-  {
-    "area": "PLAYER_OWNED_HOUSE_SNOWY",
-    "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.5,
-    "directionalColor": "#f4e5c9",
-    "directionalStrength": 2.5,
-    "fogColor": "#aebde0",
-    "fogDepth": 50
   },
   {
     "area": "BLACKHOLE",
@@ -2143,6 +2135,72 @@
   {
     "area": "GRIMSTONE_DUNGEON",
     "waterColor": "#6D8AA8"
+  },
+  {
+    "area": "PLAYER_OWNED_HOUSE_WILDY",
+    "isPohTheme": true,
+    "ambientColor": "#d7d2d2",
+    "ambientStrength": 1,
+    "directionalColor": "#c5b8b6",
+    "directionalStrength": 1.75,
+    "fogColor": "#101012",
+    "fogDepth": 30,
+    "groundFogStart": 0,
+    "groundFogEnd": -250,
+    "groundFogOpacity": 0.3,
+    "windAngle": 40,
+    "windSpeed": 10,
+    "windStrength": 20
+  },
+  {
+    "area": "PLAYER_OWNED_HOUSE_FREM",
+    "isPohTheme": true,
+    "ambientColor": "#96a3cb",
+    "ambientStrength": 0.9,
+    "directionalColor": "#abc2d3",
+    "directionalStrength": 2,
+    "fogColor": "#969ca2",
+    "fogDepth": 35,
+    "groundFogEnd": -400,
+    "groundFogOpacity": 0.3,
+    "windSpeed": 17.5,
+    "windStrength": 60
+  },
+  {
+    "area": "PLAYER_OWNED_HOUSE_MORY",
+    "isPohTheme": true,
+    "ambientColor": "#5a8cc0",
+    "ambientStrength": 1.5,
+    "directionalColor": "#f8bf68",
+    "directionalStrength": 1.25,
+    "fogColor": "#1e314b",
+    "fogDepth": 40,
+    "groundFogStart": -150,
+    "groundFogEnd": -350,
+    "groundFogOpacity": 0.5,
+    "windAngle": 40,
+    "windSpeed": 7,
+    "windStrength": 26
+  },
+  {
+    "area": "PLAYER_OWNED_HOUSE_DEATH",
+    "isPohTheme": true,
+    "ambientColor": "#999189",
+    "ambientStrength": 3,
+    "directionalColor": "#ffbcb7",
+    "directionalStrength": 0.75,
+    "fogColor": "#000000",
+    "fogDepth": 25
+  },
+  {
+    "area": "PLAYER_OWNED_HOUSE_SNOWY",
+    "isPohTheme": true,
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1.5,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 50
   },
   {
     "key": "OVERWORLD",

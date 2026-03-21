@@ -5,6 +5,11 @@
     "unlit": true
   },
   {
+    "name": "UNLIT_125",
+    "parent": "UNLIT",
+    "brightness": 1.25
+  },
+  {
     "name": "TRANSPARENT",
     "hasTransparency": true
   },
@@ -1021,6 +1026,11 @@
     "brightness": 2.5
   },
   {
+    "name": "GRAY_200",
+    "parent": "NONE",
+    "brightness": 2
+  },
+  {
     "name": "GRAY_150",
     "parent": "NONE",
     "brightness": 1.5
@@ -1248,6 +1258,16 @@
     "name": "DIRT_1_LIGHT",
     "parent": "DIRT_1",
     "brightness": 1.1
+  },
+  {
+    "name": "DIRT_1_MEDIUM_LIGHT",
+    "parent": "DIRT_1",
+    "brightness": 1.2
+  },
+  {
+    "name": "DIRT_1_VERY_LIGHT",
+    "parent": "DIRT_1",
+    "brightness": 1.6
   },
   {
     "name": "DIRT_1_SEMI_DARK",
@@ -2096,6 +2116,11 @@
     "name": "MARBLE_4_LIGHT_GLOSS",
     "parent": "MARBLE_4_GLOSS",
     "brightness": 2
+  },
+  {
+    "name": "MARBLE_4_SEMI_LIGHT_GLOSS",
+    "parent": "MARBLE_4_GLOSS",
+    "brightness": 1.5
   },
   {
     "name": "MARBLE_4_LOW_CONTRAST",
