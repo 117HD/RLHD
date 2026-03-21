@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
@@ -60,6 +61,9 @@ public class SceneManager {
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private EventBus eventBus;
 
 	@Inject
 	private HdPlugin plugin;
@@ -139,9 +143,12 @@ public class SceneManager {
 		this.renderState = renderState;
 		this.uboWorldViews = uboWorldViews;
 		root.initialize(renderState, injector);
+		eventBus.register(this);
 	}
 
 	public void destroy() {
+		eventBus.unregister(this);
+
 		root.free();
 		for (int i = 0; i < subs.length; i++) {
 			if (subs[i] != null)
@@ -163,7 +170,7 @@ public class SceneManager {
 
 	@Subscribe
 	public void onPostClientTick(PostClientTick event) {
-		if(!root.isLoading && root.streamingGroup.getPendingCount() == 0)
+		if (!root.isLoading && root.streamingGroup.getPendingCount() == 0)
 			root.processZoneRebuilds();
 
 		WorldView wv = client.getTopLevelWorldView();
@@ -235,8 +242,7 @@ public class SceneManager {
 			root.sceneContext.animatedDynamicObjectImpostors.put(objectId, impostorId);
 		}
 
-		if (root.sceneContext != null)
-			root.completeInvalidation();
+		root.completeInvalidation();
 	}
 
 	private void updateAreaHiding() {
