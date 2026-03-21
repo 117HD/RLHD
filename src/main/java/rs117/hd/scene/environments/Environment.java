@@ -1,7 +1,6 @@
 package rs117.hd.scene.environments;
 
 import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
 import java.util.Objects;
 import javax.annotation.Nullable;
 import lombok.AccessLevel;
@@ -41,6 +40,7 @@ public class Environment {
 	public boolean isUnderwater = false;
 	public boolean force = false;
 	public boolean allowSkyOverride = true;
+	public boolean allowRoofShadows = true;
 	public boolean lightningEffects = false;
 	public boolean instantTransition = false;
 	@JsonAdapter(SrgbToLinearAdapter.class)
@@ -73,10 +73,6 @@ public class Environment {
 	public float windSpeed = 15.0f;
 	public float windStrength = 0.0f;
 	public float windCeiling = 1280.0f;
-	@SerializedName("roofShadows")
-	private transient Boolean roofShadowsNullable;
-
-	public transient boolean roofShadows;
 
 	public Environment normalize() {
 		if (area != Area.ALL && area != Area.NONE) {
@@ -90,9 +86,6 @@ public class Environment {
 				waterColor = Objects.requireNonNullElse(waterColor, DEFAULT.waterColor);
 			}
 		}
-
-		// Enable roof shadows by default for overworld areas
-		roofShadows = Objects.requireNonNullElse(roofShadowsNullable, isOverworld);
 
 		if (sunAngles != null)
 			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);

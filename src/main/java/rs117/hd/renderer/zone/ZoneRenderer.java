@@ -460,7 +460,7 @@ public class ZoneRenderer implements Renderer {
 			shouldDrawRoofShadows =
 				plugin.configShadowsEnabled &&
 				plugin.configRoofShadows &&
-				environmentManager.roofShadowsEnabled();
+				environmentManager.allowRoofShadows();
 
 			plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
 			plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);

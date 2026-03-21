@@ -39,9 +39,9 @@
         "type": "boolean",
         "description": "Whether the area should have flashing lightning effects."
       },
-      "roofShadows": {
+      "allowRoofShadows": {
         "type": "boolean",
-        "description": "Whether the area should allow roof shadows to be drawn. Defaults to on for overworld areas, and false otherwise."
+        "description": "Whether the area should allow roof shadows to be drawn. Defaults to true."
       },
       "instantTransition": {
         "type": "boolean",
