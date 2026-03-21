@@ -8548,9 +8548,33 @@
     ]
   },
   {
+    "name": "PLAYER_OWNED_HOUSE_FREM",
+    "regionBoxes": [
+      [ 7534, 7535, 3 ]
+    ]
+  },
+  {
+    "name": "PLAYER_OWNED_HOUSE_MORY",
+    "regionBoxes": [
+      [ 8047, 8046, 3 ]
+    ]
+  },
+  {
+    "name": "PLAYER_OWNED_HOUSE_DEATH",
+    "regionBoxes": [
+      [ 7791, 7790, 2 ]
+    ]
+  },
+  {
     "name": "PLAYER_OWNED_HOUSE_SNOWY",
     "regionBoxes": [
       [ 8046, 8047, 1 ]
+    ]
+  },
+  {
+    "name": "PLAYER_OWNED_HOUSE_WILDY",
+    "regionBoxes": [
+      [ 8303, 8302 ]
     ]
   },
   {
@@ -9593,6 +9617,13 @@
       [ 2920, 10342, 2934, 10354, 0 ],
       [ 2914, 10338, 2919, 10342, 0 ],
       [ 2911, 10316, 2913, 10318, 0 ]
+    ]
+  },
+  {
+    "name": "Duke Sucellus corner tile fixes",
+    "aabbs": [
+      [ 3028, 6440 ],
+      [ 3050, 6440 ]
     ]
   },
   {

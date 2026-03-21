@@ -892,6 +892,17 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean hideVanillaWaterEffects() { return true; }
 
+	String KEY_POH_THEME_ENVIRONMENTS = "pohThemeEnvironments";
+	@ConfigItem(
+		keyName = KEY_POH_THEME_ENVIRONMENTS,
+		name = "Player-owned house themes",
+		description = "Change the environmental lighting based on the POH style.",
+		position = 16,
+		section = environmentSettings
+	)
+	default boolean pohThemeEnvironments() { return true; }
+
+
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(

@@ -1860,6 +1860,7 @@ public class HdPlugin extends Plugin {
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
+							case KEY_POH_THEME_ENVIRONMENTS:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
 							case KEY_ENABLE_DAYLIGHT_CYCLE:
 							case KEY_DAYLIGHT_CYCLE:

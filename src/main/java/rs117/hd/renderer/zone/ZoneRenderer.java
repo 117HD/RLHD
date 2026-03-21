@@ -179,6 +179,7 @@ public class ZoneRenderer implements Renderer {
 	private boolean sceneFboValid;
 	private boolean shouldRenderScene;
 	private boolean shouldClearShadowFbo;
+	private boolean shouldDrawRoofShadows;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -299,18 +300,6 @@ public class ZoneRenderer implements Renderer {
 			modelStreamingManager.reinitialize();
 	}
 
-	@Subscribe
-	public void onPostClientTick(PostClientTick event) {
-		try {
-			frameTimer.begin(Timer.UPDATE_SCENE);
-			sceneManager.update();
-			frameTimer.end(Timer.UPDATE_SCENE);
-		} catch (Exception ex) {
-			log.error("Error while updating scene:", ex);
-			plugin.stopPlugin();
-		}
-	}
-
 	@Override
 	public void preSceneDraw(
 		Scene scene,
@@ -413,6 +402,10 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.begin(Timer.UPDATE_LIGHTS);
 				lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
 				frameTimer.end(Timer.UPDATE_LIGHTS);
+
+				frameTimer.begin(Timer.UPDATE_SCENE);
+				sceneManager.update();
+				frameTimer.end(Timer.UPDATE_SCENE);
 			} catch (Exception ex) {
 				log.error("Error while updating environment or lights:", ex);
 				plugin.stopPlugin();
@@ -527,6 +520,11 @@ public class ZoneRenderer implements Renderer {
 
 				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 			}
+
+			shouldDrawRoofShadows =
+				plugin.configShadowsEnabled &&
+				plugin.configRoofShadows &&
+				environmentManager.allowRoofShadows();
 
 			plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
 			plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
@@ -1111,11 +1109,11 @@ public class ZoneRenderer implements Renderer {
 		final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 		if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 			directionalCmd.SetShader(fastShadowProgram);
-			z.renderOpaque(directionalCmd, ctx, plugin.configRoofShadows);
+			z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
 
 			if (plugin.configTerrainShadows) {
 				terrainShadowCmd.SetShader(terrainShadowProgram);
-				z.renderOpaque(terrainShadowCmd, ctx, plugin.configRoofShadows);
+				z.renderOpaque(terrainShadowCmd, ctx, shouldDrawRoofShadows);
 			}
 		}
 		frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
@@ -1150,7 +1148,7 @@ public class ZoneRenderer implements Renderer {
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 				directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-				z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, plugin.configRoofShadows);
+				z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
 			}
 
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
