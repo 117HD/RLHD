@@ -71,7 +71,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 				continue;
 			}
 
-			if(needsClear) {
+			if (needsClear) {
 				Arrays.fill(zsortHead, 0, diameter + 1, -1);
 				Arrays.fill(zsortTail, 0, diameter + 1, -1);
 				needsClear = false;
@@ -92,11 +92,11 @@ public final class FacePrioritySorter implements AutoCloseable {
 			}
 		}
 
-		if(visibleFaces.length - unsortedCount == 0)
-			return; // No faces to sort, so dont modify the visible faces array
+		if (visibleFaces.length - unsortedCount == 0)
+			return; // No faces to sort, so don't modify the visible faces array
 
 		visibleFaces.reset();
-		if(unsortedCount > 0) // Push unsorted faces to be drawn first
+		if (unsortedCount > 0) // Push unsorted faces to be drawn first
 			visibleFaces.put(orderedFaces, 0, unsortedCount);
 
 		final byte[] priorities = model.getFaceRenderPriorities();

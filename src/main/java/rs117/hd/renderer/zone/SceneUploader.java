@@ -1903,7 +1903,7 @@ public class SceneUploader implements AutoCloseable {
 
 			// store distance for face sorting
 			if (faceDistances != null) {
-				if(shouldSort && (sortAllFaces || material.hasTransparency || transparency != 0)) {
+				if (shouldSort && (sortAllFaces || material.hasTransparency || transparency != 0)) {
 					final float aZ = modelProjected[offsetA + 2];
 					final float bZ = modelProjected[offsetB + 2];
 					final float cZ = modelProjected[offsetC + 2];
