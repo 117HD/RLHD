@@ -17,7 +17,10 @@ import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
@@ -58,6 +61,9 @@ public class SceneManager {
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private EventBus eventBus;
 
 	@Inject
 	private HdPlugin plugin;
@@ -137,9 +143,12 @@ public class SceneManager {
 		this.renderState = renderState;
 		this.uboWorldViews = uboWorldViews;
 		root.initialize(renderState, injector);
+		eventBus.register(this);
 	}
 
 	public void destroy() {
+		eventBus.unregister(this);
+
 		root.free();
 		for (int i = 0; i < subs.length; i++) {
 			if (subs[i] != null)
@@ -157,6 +166,21 @@ public class SceneManager {
 		nextSceneContext = null;
 
 		uboWorldViews = null;
+	}
+
+	@Subscribe
+	public void onPostClientTick(PostClientTick event) {
+		if (!root.isLoading && root.streamingGroup.getPendingCount() == 0)
+			root.processZoneRebuilds();
+
+		WorldView wv = client.getTopLevelWorldView();
+		if (wv != null) {
+			for (WorldEntity we : wv.worldEntities()) {
+				WorldViewContext ctx = getContext(we.getWorldView());
+				if (ctx != null && !ctx.isLoading && ctx.streamingGroup.getPendingCount() == 0)
+					ctx.processZoneRebuilds();
+			}
+		}
 	}
 
 	public void update() {
@@ -193,14 +217,14 @@ public class SceneManager {
 		if (root.sceneContext == null)
 			return;
 
-		root.update();
+		root.processZoneSwaps();
 
 		WorldView wv = client.getTopLevelWorldView();
 		if (wv != null) {
 			for (WorldEntity we : wv.worldEntities()) {
 				WorldViewContext ctx = getContext(we.getWorldView());
 				if (ctx != null) {
-					ctx.update();
+					ctx.processZoneSwaps();
 					root.sceneContext.animatedDynamicObjectIds.addAll(
 						ctx.sceneContext.animatedDynamicObjectIds);
 				}
@@ -218,8 +242,7 @@ public class SceneManager {
 			root.sceneContext.animatedDynamicObjectImpostors.put(objectId, impostorId);
 		}
 
-		if (root.sceneContext != null && root.sceneContext.isInHouse)
-			root.completeInvalidation();
+		root.completeInvalidation();
 	}
 
 	private void updateAreaHiding() {
