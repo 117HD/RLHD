@@ -40,6 +40,10 @@
     #define MIN_SHADOW_BIAS -0.00025
 #endif
 
+#ifndef TILE_SIZE
+#define TILE_SIZE 128
+#endif
+
 #if SHADOW_MODE != SHADOW_MODE_OFF
 float fetchShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
     #if SHADOW_FILTERING == SHADOW_FILTERING_DITHER
@@ -64,8 +68,17 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     vec4 shadowPos = lightProjectionMatrix * vec4(fragPos, 1);
     shadowPos.xyz /= shadowPos.w;
 
+#if ZONE_RENDERER
+    // TODO: Make this configurable if we make the Shadow Distance Variable
+    const float fadeStart = 75.0 * TILE_SIZE;
+    const float fadeEnd   = 80.0 * TILE_SIZE;
+    float fadeOut = smoothstep(fadeStart, fadeEnd, length(fragPos - cameraPos));
+#else
+    float fadeOut = smoothstep(.75, 1., dot(shadowPos.xy, shadowPos.xy));
     // Fade out shadows near shadow texture edges
-    float fadeOut = smoothstep(.85, 1., dot(shadowPos.xy, shadowPos.xy));
+    fadeOut = smoothstep(.75, 1., dot(shadowPos.xy, shadowPos.xy));
+#endif
+
     if (fadeOut >= 1)
         return 0.f;
 
