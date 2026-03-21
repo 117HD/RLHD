@@ -14,6 +14,8 @@ Some textures copyright (c) 2021 117.
 WOODEN_GRAIN & ROCK Texture 2021 j-meds.
 -- https://github.com/j-meds
 
+ROCK_1 and ROCK_2, and associated textures are based on j-meds original textures and are used under BSD2
+
 Caustics texture by leenor_net, licensed under CC0 1.0 Universal.
 -- https://opengameart.org/content/water-caustics-effect-small
 
