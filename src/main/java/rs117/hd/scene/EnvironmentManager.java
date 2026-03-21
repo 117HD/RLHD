@@ -496,4 +496,8 @@ public class EnvironmentManager {
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater;
 	}
+
+	public boolean allowRoofShadows() {
+		return currentEnvironment.allowRoofShadows;
+	}
 }
