@@ -1447,7 +1447,8 @@
       190
     ],
     "fogColor": "#122717",
-    "fogDepth": 35
+    "fogDepth": 35,
+    "allowRoofShadows": false
   },
   {
     "area": "NIGHTMARE_OF_ASHIHAMA_ARENA",
