@@ -1260,6 +1260,16 @@
     "brightness": 1.1
   },
   {
+    "name": "DIRT_1_MEDIUM_LIGHT",
+    "parent": "DIRT_1",
+    "brightness": 1.2
+  },
+  {
+    "name": "DIRT_1_VERY_LIGHT",
+    "parent": "DIRT_1",
+    "brightness": 1.6
+  },
+  {
     "name": "DIRT_1_SEMI_DARK",
     "parent": "DIRT_1",
     "brightness": 0.8

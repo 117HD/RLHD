@@ -79,6 +79,7 @@ import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -145,7 +146,6 @@ public class ZoneRenderer implements Renderer {
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
-	public final CommandBuffer playerCmd = new CommandBuffer("Player", renderState);
 
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -394,7 +394,10 @@ public class ZoneRenderer implements Renderer {
 			directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
-			if (plugin.configShadowsEnabled && (hasSceneCameraChanged || hasDirectionalCameraChanged)) {
+			if (plugin.configShadowsEnabled &&
+				(hasSceneCameraChanged || hasDirectionalCameraChanged) &&
+				!sceneCamera.isOrthographic()
+			) {
 				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 
 				final float[][] volumeCorners = directionalShadowCasterVolume
@@ -659,7 +662,7 @@ public class ZoneRenderer implements Renderer {
 
 		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTiledLighting);
 		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
-		renderState.vao.set(plugin.vaoTri);
+		renderState.vao.setVao(plugin.vaoTri);
 
 		if (plugin.tiledLightingImageStoreProgram.isValid()) {
 			renderState.program.set(plugin.tiledLightingImageStoreProgram);
@@ -911,10 +914,9 @@ public class ZoneRenderer implements Renderer {
 		switch (pass) {
 			case DrawCallbacks.PASS_OPAQUE:
 				directionalCmd.SetShader(fastShadowProgram);
-
-				sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 				directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
 
+				sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 				break;
 			case DrawCallbacks.PASS_ALPHA:
 				modelStreamingManager.ensureAsyncUploadsComplete(null);
@@ -930,38 +932,20 @@ public class ZoneRenderer implements Renderer {
 				// Draw opaque
 				ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
 				ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
 
 				// Draw shadow-only models
 				ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 
-				final int offset = ctx.sceneContext.sceneOffset >> 3;
-				for (int zx = 0; zx < ctx.sizeX; ++zx) {
-					for (int zz = 0; zz < ctx.sizeZ; ++zz) {
-						final Zone z = ctx.zones[zx][zz];
+				// Draw players with sorted alpha, without writing depth
+				ctx.vaoSceneCmd.DepthMask(false);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+				ctx.vaoSceneCmd.DepthMask(true);
 
-						if (!z.playerModels.isEmpty() && (!sceneManager.isRoot(ctx) || z.inSceneFrustum || z.inShadowFrustum)) {
-							z.playerSort(zx - offset, zz - offset, sceneCamera);
-
-							z.renderPlayers(playerCmd, zx - offset, zz - offset);
-
-							if (!playerCmd.isEmpty()) {
-								// Draw players shadow, with depth writes & alpha
-								ctx.vaoDirectionalCmd.append(playerCmd);
-
-								ctx.vaoSceneCmd.DepthMask(false);
-								ctx.vaoSceneCmd.append(playerCmd);
-								ctx.vaoSceneCmd.DepthMask(true);
-
-								// Draw players opaque, writing only depth
-								ctx.vaoSceneCmd.ColorMask(false, false, false, false);
-								ctx.vaoSceneCmd.append(playerCmd);
-								ctx.vaoSceneCmd.ColorMask(true, true, true, true);
-							}
-
-							playerCmd.reset();
-						}
-					}
-				}
+				// Redraw players, this time only writing depth, for correct ordering with the background
+				ctx.vaoSceneCmd.ColorMask(false, false, false, false);
+				ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+				ctx.vaoSceneCmd.ColorMask(true, true, true, true);
 
 				for (int zx = 0; zx < ctx.sizeX; ++zx)
 					for (int zz = 0; zz < ctx.sizeZ; ++zz)

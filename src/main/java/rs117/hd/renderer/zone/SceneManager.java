@@ -509,7 +509,9 @@ public class SceneManager {
 				prev.isInstance() == scene.isInstance() &&
 				client.getGameState() == GameState.LOGGED_IN && // only reuse for async loads to respect roof removal state changes
 				ctx.sceneContext.expandedMapLoadingChunks == nextSceneContext.expandedMapLoadingChunks &&
-				ctx.sceneContext.currentArea == nextSceneContext.currentArea) {
+				ctx.sceneContext.currentArea == nextSceneContext.currentArea &&
+				!nextSceneContext.isInChambersOfXeric
+			) {
 				for (int x = 0; x < NUM_ZONES; ++x) {
 					for (int z = 0; z < NUM_ZONES; ++z) {
 						int ox = x + dx;

@@ -52,12 +52,6 @@ public final class GLMappedBuffer {
 		this.mapped = true;
 	}
 
-	public GLMappedBuffer remap() {
-		if (mapped)
-			return this;
-		return map(mappedFlags);
-	}
-
 	public GLMappedBuffer map(int flags) {
 		return map(flags, 0, owner.size);
 	}
@@ -118,11 +112,12 @@ public final class GLMappedBuffer {
 			byteView = buf;
 			intView = buf.asIntBuffer();
 			floatView = buf.asFloatBuffer();
-		} else {
-			byteView.position(0);
-			intView.position(0);
-			floatView.position(0);
 		}
+
+		byteView.clear();
+		intView.clear();
+		floatView.clear();
+
 		this.mappedFlags = flags;
 		mapped = true;
 
