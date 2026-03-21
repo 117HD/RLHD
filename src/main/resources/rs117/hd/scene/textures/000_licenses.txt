@@ -116,9 +116,9 @@ LEAF_A was created by Jin-Jiyunsun, and is licensed as CC0.
 Textures below this line are derived from Jagex Ltd. Intellectual Property and used under the Fan Content Policy and are not covered by the BSD-2-Clause license of the main project.
 Jagex reserves the rights to revoke use at any time.
 -- https://legal.jagex.com/docs/policies/fan-content-policy
-HD_BRICK, HD_BRICK_BROWN, HD_BRICK_N, HD_BRICk_D
+HD_BRICK, HD_BRICK_BROWN, HD_BRICK_N, HD_BRICK_D
 MARBLE_4, MARBLE_4_LOW_CONTRAST, MARBLE_4_N
-WINTER_LEAVES, WINTER_LEAVES_SIDE, WINTER_LEAVES_TOP, WINTER_LEAVES_DISEASED, WINTER_MALPE_LEAVES, WINTER_WILLOW_LEAVES
+WINTER_LEAVES, WINTER_LEAVES_SIDE, WINTER_LEAVES_TOP, WINTER_LEAVES_DISEASED, WINTER_MAPLE_LEAVES, WINTER_WILLOW_LEAVES
 AUTUMN_LEAVES, AUTUMN_LEAVES_SIDE, AUTUMN_LEAVES_TOP, AUTUMN_LEAVES_DISEASED, AUTUMN_WILLOW_LEAVES
 FORTIS_ROADS
 HD_IRON_BARS
