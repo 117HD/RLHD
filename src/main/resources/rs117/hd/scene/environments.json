@@ -2138,7 +2138,7 @@
   },
   {
     "area": "PLAYER_OWNED_HOUSE_WILDY",
-    "pohEnvironments": true,
+    "isPohTheme": true,
     "ambientColor": "#d7d2d2",
     "ambientStrength": 1,
     "directionalColor": "#c5b8b6",
@@ -2154,7 +2154,7 @@
   },
   {
     "area": "PLAYER_OWNED_HOUSE_FREM",
-    "pohEnvironments": true,
+    "isPohTheme": true,
     "ambientColor": "#96a3cb",
     "ambientStrength": 0.9,
     "directionalColor": "#abc2d3",
@@ -2168,7 +2168,7 @@
   },
   {
     "area": "PLAYER_OWNED_HOUSE_MORY",
-    "pohEnvironments": true,
+    "isPohTheme": true,
     "ambientColor": "#5a8cc0",
     "ambientStrength": 1.5,
     "directionalColor": "#f8bf68",
@@ -2184,7 +2184,7 @@
   },
   {
     "area": "PLAYER_OWNED_HOUSE_DEATH",
-    "pohEnvironments": true,
+    "isPohTheme": true,
     "ambientColor": "#999189",
     "ambientStrength": 3,
     "directionalColor": "#ffbcb7",
@@ -2194,7 +2194,7 @@
   },
   {
     "area": "PLAYER_OWNED_HOUSE_SNOWY",
-    "pohEnvironments": true,
+    "isPohTheme": true,
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1.5,
     "directionalColor": "#f4e5c9",
