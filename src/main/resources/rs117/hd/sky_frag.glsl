@@ -270,7 +270,57 @@ void main() {
                 // Dark maria (seas) — a few subtle darker patches
                 float seaNoise = moonFbm(moonUV * 0.8 + vec2(30.0, 70.0));
                 float seaMask = smoothstep(0.50, 0.40, seaNoise);
-                surfaceBrightness *= mix(1.0, 0.82, seaMask);
+                surfaceBrightness *= mix(1.0, 0.88, seaMask);
+
+                // Crater ray systems — bright ejecta from impact sites
+                vec2 rayCenters[3] = vec2[3](
+                    vec2(51.0, 47.5),   // lower right
+                    vec2(48.2, 51.0),   // upper left
+                    vec2(50.5, 50.8)    // center-right
+                );
+                float rayMaxDist[3] = float[3](2.8, 2.0, 1.6);
+                float craterSize[3] = float[3](0.10, 0.08, 0.07);
+                for (int ri = 0; ri < 3; ri++) {
+                    vec2 toPoint = moonUV - rayCenters[ri];
+                    float dist = length(toPoint);
+                    // Bright crater center
+                    float centerBright = smoothstep(craterSize[ri], craterSize[ri] * 0.2, dist) * 0.15;
+                    // Dark rim around crater
+                    float darkRim = smoothstep(craterSize[ri] * 0.7, craterSize[ri], dist)
+                                  * (1.0 - smoothstep(craterSize[ri], craterSize[ri] * 1.5, dist));
+                    surfaceBrightness += centerBright;
+                    surfaceBrightness -= darkRim * 0.08;
+                    // Ejecta: diffuse bright halo + spiderweb detail near crater
+                    if (dist > craterSize[ri] * 0.8 && dist < rayMaxDist[ri]) {
+                        float distFade = 1.0 - smoothstep(craterSize[ri], rayMaxDist[ri], dist);
+                        // Diffuse bright halo around the crater
+                        float halo = distFade * distFade * 0.08;
+                        // Spiderweb near-field: high-freq noise for irregular bright webbing
+                        float nearDist = smoothstep(craterSize[ri] * 1.5, craterSize[ri] * 10.0, dist);
+                        float webNoise = moonFbm(moonUV * 6.0 + vec2(float(ri) * 17.0));
+                        float webNoise2 = moonFbm(moonUV * 10.0 + vec2(float(ri) * 31.0));
+                        float web = (smoothstep(0.42, 0.62, webNoise) + smoothstep(0.45, 0.65, webNoise2) * 0.6)
+                                  * (1.0 - nearDist) * distFade * 0.12;
+                        // Long rays: wobbly lines using noise offset on perpendicular distance
+                        float rayBright = 0.0;
+                        for (int rj = 0; rj < 14; rj++) {
+                            float rayAngle = moonHash(vec2(float(ri) * 7.0 + float(rj) * 13.0, float(rj) * 3.0 + float(ri) * 11.0)) * 6.2832;
+                            vec2 rayDir = vec2(cos(rayAngle), sin(rayAngle));
+                            float along = dot(toPoint, rayDir);
+                            if (along > 0.0) {
+                                // Wobble the ray path with noise
+                                float wobble = (moonNoise(vec2(along * 3.0 + float(ri) * 20.0, float(rj) * 5.0)) - 0.5) * 0.06;
+                                float perpDist = abs(toPoint.x * rayDir.y - toPoint.y * rayDir.x + wobble);
+                                float rayW = 0.025 + moonNoise(vec2(float(rj) * 9.0, float(ri) * 4.0)) * 0.015;
+                                float ray = smoothstep(rayW, rayW * 0.2, perpDist);
+                                // Vary brightness per ray
+                                float rayIntensity = 0.5 + moonHash(vec2(float(rj) * 11.0, float(ri) * 6.0)) * 0.5;
+                                rayBright = max(rayBright, ray * rayIntensity);
+                            }
+                        }
+                        surfaceBrightness += rayBright * distFade * 0.09 + halo + web;
+                    }
+                }
 
                 // Warm gray color that shifts subtly with brightness
                 // Darker areas slightly warmer, brighter areas slightly cooler
