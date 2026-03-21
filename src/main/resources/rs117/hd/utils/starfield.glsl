@@ -123,9 +123,9 @@ vec3 proceduralStarfield(vec3 dir) {
 
     for (int layer = 0; layer < 2; layer++) {
         float gridScale = (layer == 0) ? 80.0 : 200.0;
-        float sparsity = (layer == 0) ? 0.80 : 0.74;
+        float sparsity = (layer == 0) ? 0.82 : 0.76;
         float maxBrightness = (layer == 0) ? 1.2 : 0.4;
-        float starRadius = (layer == 0) ? 0.2 : 0.15;
+        float starRadius = (layer == 0) ? 0.45 : 0.30;
 
         // Project direction onto 3D grid
         vec3 scaledDir = dir * gridScale;
@@ -144,17 +144,22 @@ vec3 proceduralStarfield(vec3 dir) {
                     // Random position within cell
                     vec3 starPos = neighborCell + sf_hash3(neighborCell);
 
+                    // Per-star size variation (0.5x to 1.0x of layer radius)
+                    float sizeSeed = sf_hash(neighborCell + vec3(99.0));
+                    float sizeScale = 0.5 + sizeSeed * 0.5;
+                    float thisRadius = starRadius * sizeScale;
+
                     // Distance from current point to star
                     float dist = length(starPos - scaledDir);
-                    if (dist > starRadius) continue;
+                    if (dist > thisRadius) continue;
 
                     // Power-law brightness (many dim, few bright)
                     float brightnessSeed = (cellRand - sparsity) / (1.0 - sparsity);
                     float brightness = pow(brightnessSeed, 2.5) * maxBrightness;
 
                     // Very sharp point-spread falloff for crisp stars
-                    float falloff = 1.0 - smoothstep(0.0, starRadius, dist);
-                    falloff = pow(falloff, 4.0);
+                    float falloff = 1.0 - smoothstep(0.0, thisRadius, dist);
+                    falloff = pow(falloff, 8.0);
                     brightness *= falloff;
 
                     // Color variation matching natural stellar populations
