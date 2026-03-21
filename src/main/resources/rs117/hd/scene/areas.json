@@ -8062,17 +8062,27 @@
     ]
   },
   {
-    "name": "Gnome glider hangar (Monkey Madness 1)",
-    "regions": [ 9626 ]
-  },
-  {
-    "name": "Gnome glider hangar (Monkey Madness 1) Post quest?",
-    "regions": [ 10566 ],
+    "name": "Bonzara's hideout (Monkey Madness 1)",
+    "aabbs": [
+      [ 2408, 9903, 2423, 9918, 1 ]
+    ],
     "hideOtherAreas": true
   },
   {
-    "name": "Gnome glider hangar (Monkey Madness 1) Dont know?",
+    "name": "Gnome glider hangar (Monkey Madness 1)",
+    "aabbs": [
+      [ 2378, 9864, 2411, 9915 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Gnome glider hangar (Monkey Madness 1) cutscene",
     "regions": [ 10310 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Gnome glider hangar (Monkey Madness 1) post quest",
+    "regions": [ 10566 ],
     "hideOtherAreas": true
   },
   {
@@ -8087,7 +8097,9 @@
   },
   {
     "name": "Temple of Marimbo Dungeon (Monkey Madness 1)",
-    "regionBoxes": [ [10128, 10637] ],
+    "regionBoxes": [
+      [ 10128, 10637 ]
+    ],
     "hideOtherAreas": true
   },
   {

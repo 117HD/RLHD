@@ -19339,7 +19339,8 @@
         "description": "Lamp",
         "colors": "s == 0",
         "baseMaterial": "METALLIC_1_LIGHT"
-      },      {
+      },
+      {
         "description": "Lamp",
         "colors": "a < 255",
         "baseMaterial": "NONE",
