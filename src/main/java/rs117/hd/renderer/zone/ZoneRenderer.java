@@ -41,6 +41,7 @@ import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.ShadowMode;
@@ -421,6 +422,7 @@ public class ZoneRenderer implements Renderer {
 			// Use Day/Night-Cycle sun/moon angles if enabled
 			float[] shadowSunAngles = environmentManager.currentSunAngles;
 			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+				TimeOfDay.setCycleMode(config.daylightCycle());
 				double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 				MoonBehavior shadowMoonBehavior = config.moonBehavior();
@@ -584,6 +586,7 @@ public class ZoneRenderer implements Renderer {
 		float[] sunAngles = environmentManager.currentSunAngles;
 
 		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+			TimeOfDay.setCycleMode(config.daylightCycle());
 			int minimumBrightness = (int) (config.minimumBrightness() * (1 + environmentManager.currentMinBrightnessBoost));
 			float cycleDuration = config.cycleDurationMinutes();
 
@@ -633,7 +636,9 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skyMoonColor.set(moonColor);
 			plugin.uboGlobal.skyMoonIllumination.set(moonIllumination);
 			plugin.uboGlobal.starVisibility.set(config.enableStarMap() ? environmentManager.currentStarVisibility : 0f);
-			plugin.uboGlobal.moonVisibility.set(config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
+			DaylightCycle cycleMode = config.daylightCycle();
+			boolean hideMoon = cycleMode == DaylightCycle.FIXED_DAWN || cycleMode == DaylightCycle.FIXED_SUNSET;
+			plugin.uboGlobal.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
 
 			skyGradientEnabled = true;
 

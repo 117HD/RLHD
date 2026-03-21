@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 public enum DaylightCycle
 {
 	DYNAMIC("Dynamic"),
+	FIXED_DAWN("Fixed Dawn"),
+	FIXED_SUNSET("Fixed Sunset"),
+	ALWAYS_NIGHT("Always Night"),
 	;
 
 	private final String name;

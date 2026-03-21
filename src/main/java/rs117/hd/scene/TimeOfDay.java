@@ -3,6 +3,7 @@ package rs117.hd.scene;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import net.runelite.http.api.worlds.WorldRegion;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.MoonBehavior;
 import rs117.hd.utils.AtmosphereUtils;
 
@@ -19,12 +20,22 @@ public class TimeOfDay
 	private static double accumulatedCycleTime = 0.0;
 	private static long completedCycles = 0; // Each completed cycle = one simulated day
 
+	// Current cycle mode — set once per frame by ZoneRenderer before any TimeOfDay calls
+	private static DaylightCycle currentCycleMode = DaylightCycle.DYNAMIC;
+
 	// Night Synced mode: day offset advances only while the moon is below the horizon,
 	// so phase changes are never visible. We track pending increments and apply them
 	// only when the mirrored moon altitude is negative.
 	private static long nightSyncedDayOffset = 0;
 	private static long lastNightSyncedCycles = 0;
 	private static long pendingDayIncrements = 0;
+
+	/**
+	 * Set the cycle mode for this frame. Call before any other TimeOfDay methods.
+	 */
+	public static void setCycleMode(DaylightCycle mode) {
+		currentCycleMode = mode;
+	}
 
 	/**
 	 * Get the current sun or moon angles for a given set of coordinates and simulated day length in minutes.
@@ -600,16 +611,16 @@ public class TimeOfDay
 			lastUpdateTime = currentTimeMillis;
 			lastDayLength = dayLength;
 		}
-		
+
 		// Calculate elapsed real time since last update
 		long realTimeElapsed = currentTimeMillis - lastUpdateTime;
-		
+
 		// Convert cycle duration from minutes to milliseconds for the full cycle
 		double cycleDurationMillis = dayLength * 60.0 * 1000.0; // minutes to milliseconds
-		
+
 		// Calculate how much cycle time has progressed based on current day length
 		double cycleTimeElapsed = realTimeElapsed / cycleDurationMillis;
-		
+
 		// Add to accumulated cycle time to maintain continuity
 		accumulatedCycleTime += cycleTimeElapsed;
 
@@ -618,13 +629,37 @@ public class TimeOfDay
 			accumulatedCycleTime -= 1.0;
 			completedCycles++;
 		}
-		
+
 		// Update tracking variables for next call
 		lastUpdateTime = currentTimeMillis;
 		lastDayLength = dayLength;
-		
+
+		// For non-dynamic modes, return a fixed date at the appropriate time of day.
+		// Cycle tracking above still runs so getMoonDate() advances normally.
+		if (currentCycleMode != DaylightCycle.DYNAMIC) {
+			// March 20, 2025 (spring equinox) — balanced day/night lengths
+			long equinoxEpochMs = 1742428800000L;
+			Instant equinoxDay = Instant.ofEpochMilli(equinoxEpochMs);
+			double fixedHour;
+			switch (currentCycleMode) {
+				case FIXED_DAWN:
+					fixedHour = 6.65;  // 6:00 AM
+					break;
+				case FIXED_SUNSET:
+					fixedHour = 18.3; // 5:30 PM — sun near horizon at equinox latitude
+					break;
+				case ALWAYS_NIGHT:
+					fixedHour = 0.0;  // Midnight — sun well below horizon
+					break;
+				default:
+					fixedHour = 12.0;
+					break;
+			}
+			return equinoxDay.plusMillis((long) (fixedHour * 60 * 60 * 1000));
+		}
+
 		double cyclePosition = accumulatedCycleTime;
-		
+
 		// Map cycle position to time of day with extended twilight periods
 		// 0.0-0.15 = dawn/sunrise twilight (maps to 5am-7am)
 		// 0.15-0.35 = morning (maps to 7am-12pm)
@@ -633,7 +668,7 @@ public class TimeOfDay
 		// 0.70-0.85 = early night (maps to 7pm-12am)
 		// 0.85-1.0 = late night/pre-dawn (maps to 12am-5am)
 		double mappedHour;
-		
+
 		if (cyclePosition < 0.15) {
 			// Dawn twilight: map 0-0.15 to 5am-7am (2 hours of twilight)
 			mappedHour = 5.0 + (cyclePosition / 0.15) * 2.0;
@@ -654,7 +689,7 @@ public class TimeOfDay
 			double lateNightProgress = (cyclePosition - 0.85) / 0.15;
 			mappedHour = 0.0 + lateNightProgress * 5.0;
 		}
-		
+
 		// Convert mapped hour to actual time
 		// Use completedCycles to advance the base date by 1 day per finished cycle,
 		// so the moon's phase and rise/set times progress naturally.
