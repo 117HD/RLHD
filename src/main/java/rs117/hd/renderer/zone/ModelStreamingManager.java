@@ -286,6 +286,7 @@ public class ModelStreamingManager {
 		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
 
 		boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+		boolean isPlayer = renderable instanceof Player;
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
@@ -299,6 +300,7 @@ public class ModelStreamingManager {
 				isModelPartiallyVisible,
 				modelOverride,
 				m,
+				isPlayer,
 				orientation,
 				x, y, z
 			);
@@ -335,7 +337,7 @@ public class ModelStreamingManager {
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
 				final DynamicModelVAO.View opaqueView;
-				if (renderable instanceof Player) {
+				if (isPlayer) {
 					opaqueView = ctx.beginPlayerDraw(drawIndex, opaqueFaceCount);
 				} else {
 					opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
@@ -558,6 +560,7 @@ public class ModelStreamingManager {
 				isModelPartiallyVisible,
 				modelOverride,
 				m,
+				false,
 				orient,
 				x, y, z
 			);
