@@ -243,7 +243,7 @@ public final class JobSystem {
 	}
 
 	public static void processPendingClientCallbacks() {
-		if(INSTANCE == null || !INSTANCE.client.isClientThread())
+		if (INSTANCE == null || !INSTANCE.client.isClientThread())
 			return;
 
 		int size = INSTANCE.clientCallbacks.size();
