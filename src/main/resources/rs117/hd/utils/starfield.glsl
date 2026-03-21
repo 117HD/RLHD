@@ -31,6 +31,88 @@ float sf_noise(vec3 p) {
     );
 }
 
+// Procedural shooting stars — returns additive color contribution
+// Uses time-slotted deterministic spawning for rare, brief meteor streaks
+vec3 shootingStars(vec3 viewDir, float time) {
+    vec3 color = vec3(0.0);
+
+    const float SLOT_DURATION = 15.0;
+
+    for (int channel = 0; channel < 3; channel++) {
+        float channelOffset = float(channel) * 5.0;
+        float t = time - channelOffset;
+        float slot = floor(t / SLOT_DURATION);
+        float phase = fract(t / SLOT_DURATION);
+
+        vec3 seed = vec3(slot, float(channel) * 137.0 + 42.0, 7.0);
+
+        // ~12% spawn chance per slot → ~1 meteor per 42s average
+        if (sf_hash(seed) > 0.12) continue;
+
+        // Start position on upper sky sphere
+        float theta = sf_hash(seed + vec3(1.0, 0.0, 0.0)) * TAU;
+        float cosElev = 1.0 - sf_hash(seed + vec3(2.0, 0.0, 0.0)) * 0.65;
+        float sinElev = sqrt(1.0 - cosElev * cosElev);
+        vec3 startPos = normalize(vec3(sinElev * cos(theta), -cosElev, sinElev * sin(theta)));
+
+        // Travel direction (generally downward with randomization)
+        float tTheta = sf_hash(seed + vec3(3.0, 0.0, 0.0)) * TAU;
+        float tPhi = 0.3 + sf_hash(seed + vec3(4.0, 0.0, 0.0)) * 0.5;
+        vec3 travelDir = normalize(vec3(
+            sin(tPhi) * cos(tTheta),
+            cos(tPhi),
+            sin(tPhi) * sin(tTheta)
+        ));
+
+        float speed = 0.08 + sf_hash(seed + vec3(5.0, 0.0, 0.0)) * 0.06;
+        float lifetime = 0.8 + sf_hash(seed + vec3(6.0, 0.0, 0.0)) * 0.7;
+        float maxBright = 0.6 + sf_hash(seed + vec3(7.0, 0.0, 0.0)) * 0.6;
+
+        // Timing within the slot
+        float startDelay = 0.1 * SLOT_DURATION;
+        float age = phase * SLOT_DURATION - startDelay;
+        if (age < 0.0 || age > lifetime) continue;
+
+        // Fade envelope
+        float fadeIn = smoothstep(0.0, 0.15, age);
+        float fadeOut = smoothstep(0.0, 0.3, lifetime - age);
+        float alpha = fadeIn * fadeOut;
+
+        // Head and tail positions
+        float headDist = age * speed;
+        float trailLen = speed * 0.7 * alpha;
+        vec3 headPos = normalize(startPos + travelDir * headDist);
+        vec3 tailPos = normalize(startPos + travelDir * max(0.0, headDist - trailLen));
+
+        // Distance from viewDir to the meteor line segment
+        vec3 seg = headPos - tailPos;
+        float segLen = length(seg);
+        if (segLen < 0.0001) continue;
+        vec3 segN = seg / segLen;
+
+        float tProj = dot(viewDir - tailPos, segN);
+        tProj = clamp(tProj, 0.0, segLen);
+        vec3 closest = tailPos + segN * tProj;
+        float angDist = acos(clamp(dot(viewDir, normalize(closest)), 0.0, 1.0));
+
+        // Streak rendering
+        float meteorWidth = 0.0015;
+        float streak = smoothstep(meteorWidth, meteorWidth * 0.15, angDist);
+        if (streak < 0.001) continue;
+
+        // Head-to-tail brightness gradient
+        float headGrad = tProj / segLen;
+        float core = smoothstep(0.7, 1.0, headGrad) * 2.0;
+        float trail = headGrad * 0.6;
+        float brightness = (core + trail) * streak * alpha * maxBright;
+
+        // Warm white color
+        color += vec3(1.0, 0.95, 0.8) * brightness;
+    }
+
+    return color;
+}
+
 vec3 proceduralStarfield(vec3 dir) {
     // Near-black background with faint blue tint
     vec3 color = vec3(0.00304, 0.00304, 0.00521);
@@ -41,7 +123,7 @@ vec3 proceduralStarfield(vec3 dir) {
 
     for (int layer = 0; layer < 2; layer++) {
         float gridScale = (layer == 0) ? 80.0 : 200.0;
-        float sparsity = (layer == 0) ? 0.82 : 0.76;
+        float sparsity = (layer == 0) ? 0.80 : 0.74;
         float maxBrightness = (layer == 0) ? 1.2 : 0.4;
         float starRadius = (layer == 0) ? 0.2 : 0.15;
 

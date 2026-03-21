@@ -182,6 +182,11 @@ void main() {
 
         vec3 nightSkyColor = proceduralStarfield(starDir);
         skyColor = mix(skyColor, nightSkyColor, nightSkyBlend);
+
+        // Shooting stars (atmospheric, use un-rotated viewDir)
+        if (viewDir.y < -0.05) {
+            skyColor += shootingStars(viewDir, elapsedTime) * nightSkyBlend;
+        }
     }
 
     // === MOON DISK ===
