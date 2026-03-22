@@ -10964,6 +10964,7 @@
       "MOLE_STALAGTITE_FALLOFF",
       "STAGAMITE_LARGE",
       "STAGAMITE_SMALL",
+      "STALAGTITE_SMALL",
       "STAGATITE_LARGE",
       "TOURTRAP_QIP_MINE_STALAGTITE_01",
       "TOURTRAP_QIP_MINE_STALAGTITE_02",
@@ -41464,13 +41465,26 @@
   },
   {
     "description": "Objects - WOODEN - Textured Torch",
-    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "CAVE_TORCH"
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
-    "uvScale": 0.4
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && a == 255",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125",
+        "upwardsNormals": true
+      }
+    ]
   },
   {
     "description": "Decoration - Textured Lumbridge Heraldry",
