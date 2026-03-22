@@ -666,7 +666,7 @@ public interface HdPluginConfig extends Config
 
 	@ConfigItem(
 		keyName = "enableStarMap",
-		name = "Star Map",
+		name = "Stars",
 		description = "Show the star map texture in the night sky. When disabled, the night sky uses only the gradient skybox.",
 		position = 4,
 		section = daylightCycleSettings
