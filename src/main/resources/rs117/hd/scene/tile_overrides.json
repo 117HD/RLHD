@@ -5566,12 +5566,39 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "DS2_GALLEON_PLANKS",
+    "area": "DS2_GALLEON",
+    "underlayIds": [
+      14,
+      63
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "setLightness": 20,
+    "setSaturation": 2,
+    "heightOffset": 1,
+    "blended": false
+  },
+  {
+    "name": "DS2_GALLEON_PLANKS_2",
+    "area": "DS2_GALLEON_TOP",
+    "overlayIds": [
+      14
+    ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "setLightness": 20,
+    "setSaturation": 2,
+    "heightOffset": -1000,
+    "blended": false
+  },
+  {
     "name": "DS2_SHIPS_WATER",
     "area": "DS2_SHIPS",
     "overlayIds": [
       6
     ],
-    "waterType": "WATER_FLAT",
+    "waterType": "PLAIN_WATER",
     "blended": false
   },
   {
@@ -5580,6 +5607,30 @@
     "overlayIds": [
       160
     ]
+  },
+  {
+    "name": "WILDY_POH_DIRT",
+    "area": "PLAYER_OWNED_HOUSE_WILDY",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR_2",
+    "maxLightness": 13,
+    "shiftLightness": -1,
+    "replacements": {
+      "WILDY_POH_DIRT_BLENDING": "blending"
+    }
+  },
+  {
+    "name": "WILDY_POH_DIRT_BLENDING",
+    "area": "PLAYER_OWNED_HOUSE_WILDY",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR_2",
+    "maxLightness": 12,
+    "minLightness": 5,
+    "shiftLightness": -3
   },
   {
     "name": "CAMDOZAAL_UNDERWALL_TILES",
@@ -6001,7 +6052,7 @@
     "overlayIds": [
       41
     ],
-    "waterType": "WATER_FLAT",
+    "waterType": "CAVE_WATER_MURKY",
     "blended": false
   },
   {
@@ -8130,6 +8181,47 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "KARAMJA_VOLCANO_LAVA_FIX",
+    "area": "KARAMJA_VOLCANO_LAVA_FIX",
+    "underlayIds": [
+      63,
+      64,
+      65,
+      72,
+      73,
+      98,
+      103,
+      112,
+      113,
+      121,
+      139,
+      149
+    ],
+    "groundMaterial": "DIRT_1",
+    "maxLightness": 12
+  },
+  {
+    "name": "KARAMJA_VOLCANO_INSIDE",
+    "area": "KARAMJA_VOLCANO_DUNGEON",
+    "underlayIds": [
+      59,
+      63,
+      64,
+      65,
+      72,
+      73,
+      98,
+      103,
+      112,
+      113,
+      121,
+      139,
+      149
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "minLightness": 13
+  },
+  {
     "name": "KARAMJA_KARAMBWAN_FIX_NO_BLENDING",
     "area": "KARAMJA_KARAMBWAN_FIX",
     "underlayIds": [
@@ -8823,6 +8915,36 @@
     }
   },
   {
+    "name": "LITHKREN_BUILDING_FLOOR",
+    "area": "LITHKREN_BUILDING_FLOOR",
+    "overlayIds": [ 11 ],
+    "underlayIds": [ 150 ],
+    "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
+    "shiftLightness": 6,
+    "blended": false
+  },
+  {
+    "name": "LITHKREN_DIRT",
+    "area": "LITHKREN",
+    "underlayIds": [
+      72,
+      97,
+      129,
+      145,
+      150
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "LITHKREN_VAULT_FLOOR",
+    "area": "LITHKREN_DUNGEON",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "TILES_2X2_1_GLOSS",
+    "uvScale": 2,
+    "blended": false,
+    "shiftLightness": 7
+  },
+  {
     "name": "LOVAKENGJ_GROUND_UNDERLAY",
     "area": "LOVAKENGJ",
     "underlayIds": [
@@ -9414,6 +9536,14 @@
     "groundMaterial": "TEMPLE_OF_THE_EYE_FLOOR"
   },
   {
+    "name": "ARCEUUS_POND",
+    "area": "ARCEUUS_POND",
+    "underlayIds": [
+      10
+    ],
+    "waterType": "WATER"
+  },
+  {
     "name": "ARCEUUS_GROUND",
     "area": "ARCEUUS",
     "underlayIds": [
@@ -9482,6 +9612,14 @@
     ],
     "groundMaterial": "SNOW_1",
     "minLightness": 70
+  },
+  {
+    "area": "Duke Sucellus corner tile fixes",
+    "setHue": 0,
+    "setSaturation": 0,
+    "setLightness": 2,
+    "heightOffset": 255,
+    "blended": false
   },
   {
     "name": "LASSAR_UNDERCITY_SUNKEN_CATHEDRAL",
@@ -9987,6 +10125,139 @@
     "overlayIds": [ 123 ],
     "groundMaterial": "DIRT",
     "maxLightness": 59
+  },
+  {
+    "name": "Karamjan Temple (Dragon Slayer 2)",
+    "area": "Karamjan Temple (Dragon Slayer 2)",
+    "underlayIds": [
+      22,
+      28,
+      57,
+      74
+    ],
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": 7,
+    "uvScale": 2,
+    "blended": false
+  },
+  {
+    "name": "Shayzien Crypt Blood",
+    "area": "Shayzien Crypt",
+    "overlayIds": [ 72 ],
+    "groundMaterial": "SMOOTH_STONE",
+    "blended": false,
+    "shiftSaturation": -1
+  },
+  {
+    "name": "Ungael Ruin Floor",
+    "area": "UNGAEL_RUINS_FLOOR",
+    "overlayIds": [ 11 ],
+    "underlayIds": [ 58 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 7,
+    "replacements": {
+      "Ungael No Textures": "!textures"
+    }
+  },
+  {
+    "name": "Ungael Snow",
+    "area": "UNGAEL_SNOW",
+    "overlayIds": [ 33 ],
+    "underlayIds": [
+      16,
+      58,
+      59
+    ],
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 10,
+    "maxLightness": 100,
+    "replacements": {
+      "Ungael Snow Blending": "blending",
+      "Ungael No Textures": "!textures"
+    }
+  },
+  {
+    "name": "Ungael Shore",
+    "area": "UNGAEL",
+    "underlayIds": [ 58, 111 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 0,
+    "replacements": {
+      "Ungael Shore Blending": "blending",
+      "Ungael No Textures": "!textures"
+    }
+  },
+  {
+    "name": "Ungael Shore Blending",
+    "area": "UNGAEL",
+    "underlayIds": [ 58, 111 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 20
+  },
+  {
+    "name": "Ungael Snow Blending",
+    "area": "UNGAEL_SNOW",
+    "overlayIds": [ 33 ],
+    "underlayIds": [
+      16,
+      58,
+      59
+    ],
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 27
+  },
+  {
+    "name": "Ungael Cliffs",
+    "area": "UNGAEL",
+    "overlayIds": [
+      1,
+      90
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": -5,
+    "minLightness": 15,
+    "replacements": {
+      "Ungael Cliffs Blending": "blending",
+      "Ungael No Textures": "!textures"
+    }
+  },
+  {
+    "name": "Ungael Cliffs Blending",
+    "area": "UNGAEL",
+    "overlayIds": [ 1 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": -5
+  },
+  {
+    "name": "Ungael No Textures",
+    "area": "UNGAEL",
+    "shiftLightness": -5,
+    "maxLightness": 90,
+    "minLightness": 20
+  },
+  {
+    "name": "MM2_AIRSHIP_PLATFORM_WATER",
+    "area": "MM2_AIRSHIP_PLATFORM",
+    "overlayIds": [
+      151
+    ],
+    "waterType": "WATER"
+  },
+  {
+    "name": "MM2_SECRET_LAB_CARPET",
+    "area": "MM2_SECRET_LAB_CARPET",
+    "overlayIds": [
+      55
+    ],
+    "underlayIds": [
+      103,
+      2,
+      100,
+      72
+    ],
+    "groundMaterial": "CARPET",
+    "heightOffset": 1,
+    "blended": false
   },
   {
     "name": "TAG - CLIMATE - START"

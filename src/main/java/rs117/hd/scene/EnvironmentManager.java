@@ -175,6 +175,11 @@ public class EnvironmentManager {
 						.toArray(Environment[]::new);
 				}
 
+				if (!config.pohThemeEnvironments())
+					environments = Arrays.stream(environments)
+						.filter(env -> !env.isPohTheme)
+						.toArray(Environment[]::new);
+
 				HashMap<String, Environment> map = new HashMap<>();
 				for (var env : environments)
 					if (env.key != null)
@@ -490,5 +495,9 @@ public class EnvironmentManager {
 
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater;
+	}
+
+	public boolean allowRoofShadows() {
+		return currentEnvironment.allowRoofShadows;
 	}
 }
