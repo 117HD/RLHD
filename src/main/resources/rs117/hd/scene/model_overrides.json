@@ -11405,6 +11405,7 @@
       "DOV_BASE_EXIT_UPPER",
       "ROYAL_LADDERUP",
       "CIVITAS_LADDER",
+      "CIVITAS_LADDER_MIDDLE",
       "CIVITAS_LADDER_TOP",
       "CIVITAS_LADDER_TOP_NORIM",
       "CIVITAS_LADDER_TALL",
@@ -11424,7 +11425,9 @@
       "CONTACT_LADDER",
       "CONTACT_LADDER_TOP",
       "CONTACT_LADDER_TWOFLOORS",
-      "CONTACT_LADDER_TOP_TWOFLOORS"
+      "CONTACT_LADDER_TOP_TWOFLOORS",
+      "TAL_TEKLAN_LADDER_TALL_BOTTOM",
+      "TAL_TEKLAN_LADDER_TALL_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -14858,6 +14861,19 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Dirt Piles - Medium",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "TLATI_ROCKSLIDE01",
+      "TLATI_ROCKSLIDE02",
+      "TLATI_ROCKSLIDE03",
+      "TLATI_ROCKSLIDE04"
+    ]
   },
   {
     "description": "Ground Decoration - Grunge - Tiny - Uncolored",
@@ -26731,8 +26747,31 @@
       "TLATI_PLANT_FERN01",
       "PLANT_FERN_TLATI01",
       "PLANT_FERN_TLATI02",
-      "PLANT_FERN_TLATI04",
-      "TLATI_PLANT_CLUSTER01_DEFAULT02"
+      "PLANT_FERN_TLATI03",
+      "PLANT_FERN_TLATI04"
+    ]
+  },
+  {
+    "description": "Varlamore - Tlati Rainforest - Plant - Rock - Fern - Small",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_XZ",
+    "windDisplacementMode": "OBJECT",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 12 || h == 14",
+        "baseMaterial": "ROCK_2",
+        "uvScale": 0.25,
+        "uvType": "BOX",
+        "windDisplacementMode": "VERTEX"
+      }
+    ],
+    "objectIds": [
+      "TLATI_PLANT_CLUSTER01_DEFAULT02",
+      "TLATI_PLANT_CLUSTER01_DEFAULT03",
+      "TLATI_PLANT_CLUSTER02_DEFAULT01",
+      "TLATI_PLANT_CLUSTER02_DEFAULT02",
+      "TLATI_PLANT_CLUSTER02_DEFAULT03"
     ]
   },
   {
@@ -26813,7 +26852,8 @@
       "MM_PLANT_KHARAZI_JUNGLE_PLANT2",
       "MM_JUNGLEPLANT_FAT",
       "MM_JUNGLE_PLANT_MISC2",
-      "HUNTING_JUNGLE_PLANT1"
+      "HUNTING_JUNGLE_PLANT1",
+      "SCRAMBLED_FOOD_2_HIDDEN"
     ]
   },
   {
@@ -26823,7 +26863,8 @@
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
-      "JUNGLE1"
+      "JUNGLE1",
+      "SCRAMBLED_FOOD_1_HIDDEN"
     ]
   },
   {
@@ -51501,7 +51542,8 @@
     ],
     "objectIds": [
       "WALLKIT_CIVITAS01_FRAME01",
-      "WALLKIT_CIVITAS03_MIDDLE01"
+      "WALLKIT_CIVITAS03_MIDDLE01",
+      "WALLKIT_CIVITAS03_MIDDLE03"
     ]
   },
   {
@@ -76712,6 +76754,22 @@
     ]
   },
   {
+    "description": "Tlati Rainforest - Tree - Large Tree stump",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "TLATI_STUMP_DEFAULT01",
+      "TLATI_STUMP_DEFAULT02_3X3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "GRASS_3"
+      }
+    ]
+  },
+  {
     "description": "Tlati Rainforest - Tree - Small",
     "baseMaterial": "BARK_STONEPINE_2",
     "uvType": "BOX",
@@ -82016,7 +82074,7 @@
     "colorOverrides": [
       {
         "colors": "h == 13",
-        "baseMaterial": "GRAY_50",
+        "baseMaterial": "GRAY_45",
         "upwardsNormals": true,
         "windDisplacementMode": "OBJECT",
         "castShadows": false,
@@ -82299,6 +82357,16 @@
     ]
   },
   {
+    "description": "Varlamore - Tal Teklan -  Stone roofs",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 768,
+    "objectIds": [
+      "WALLKIT_TALTEKLAN04_ROOF01"
+    ]
+  },
+  {
     "description": "Varlamore - Tal Teklan -  Wooden - Plank walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -82323,44 +82391,27 @@
       "WALLKIT_TALTEKLAN02_MIDDLE01",
       "WALLKIT_TALTEKLAN03_MIDDLE01",
       "WALLKIT_TALTEKLAN03_WINDOW01",
-      "WALLKIT_TALTEKLAN02_WINDOW01"
+      "WALLKIT_TALTEKLAN02_WINDOW01",
+      "WALLKIT_TALTEKLAN02_DOOR01",
+      "WALLKIT_TALTEKLAN02_DOOR01_M"
     ]
   },
   {
-    "description": "Varlamore - Tal Teklan -  Wooden - Decorative wooden pillars",
+    "description": "Varlamore - Tal Teklan -  Wooden - Plank Fence",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
     "colorOverrides": [
       {
         "colors": "h >= 32",
-        "baseMaterial": "ROCK_3_SMOOTH",
+        "baseMaterial": "GRUNGE_3_DARK",
         "uvType": "BOX",
         "uvScale": 0.8,
-        "uvOrientation": 187
-      },
-      {
-        "colors": [ "h == 7 && s == 1" ],
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX",
-        "uvScale": 0.8,
-        "uvOrientation": 87
+        "uvOrientation": 768
       }
     ],
     "objectIds": [
-      "WALLKIT_TALTEKLAN03_POLE01",
-      "WALLKIT_TALTEKLAN03_POLE02",
-      "WALLKIT_TALTEKLAN03_POLE02_M"
-    ]
-  },
-  {
-    "description": "Varlamore - Tal Teklan -  Rooftop walls",
-    "baseMaterial": "ROCK_3_SMOOTH",
-    "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientation": 187,
-    "objectIds": [
-      "WALLKIT_TALTEKLAN04_ROOF01"
+      "WALLKIT_TALTEKLAN01_FENCE01"
     ]
   },
   {
@@ -82399,6 +82450,202 @@
     "objectIds": [
       "WALLKIT_ULAMA01_HOOP01",
       "WALLKIT_ULAMA01_HOOP01_MIRROR"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Brick - Grass - Logs - Stone bricks with a loog support on top",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h >= 10 && h < 30",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvOrientation": 1024,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Stones",
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "PILLAR_ZEMA01_TRUNK01"
+    ]
+  },
+  {
+    "description": "Varlamore - Scrambled cart",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 588,
+    "colorOverrides": [
+      {
+        "description": "Canvas",
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      },
+      {
+        "description": "ROPE",
+        "colors": "h == 0 && s == 3",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.511
+      },
+      {
+        "description": "Moss",
+        "colors": "h == 10",
+        "baseMaterial": "HD_HAY",
+        "uvType": "BOX",
+        "uvOrientation": 544,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "SCRAMBLED_CART_BROKEN"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Brick - Grass - Logs - Stone bricks with a loog support on top",
+    "baseMaterial": "GRASS_3",
+    "uvType": "BOX",
+    "uvOrientation": 1024,
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h <= 6 && s <= 1",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 2 && s == 3",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "PILLAR_ZEMA01_OVERGROWN01",
+      "PILLAR_ZEMA01_OVERGROWN02",
+      "WALLKIT_ZEMA02_DAMAGED01",
+      "WALLKIT_ZEMA02_DAMAGED01_M",
+      "WALLKIT_ZEMA02_DAMAGED02",
+      "WALLKIT_ZEMA02_DAMAGED02_M",
+      "WALLKIT_ZEMA02_DAMAGED03",
+      "WALLKIT_ZEMA02_DAMAGED03_M",
+      "WALLKIT_ZEMA02_DAMAGED04",
+      "WALLKIT_ZEMA02_DAMAGED05",
+      "WALLKIT_ZEMA02_DAMAGED05_M",
+      "WALLKIT_ZEMA02_MOSSY01",
+      "WALLKIT_ZEMA02_OVERGROWN02",
+      "WALLKIT_ZEMA02_OVERGROWN02_M",
+      "WALLKIT_ZEMA02_OVERGROWN03",
+      "WALLKIT_ZEMA02_OVERGROWN03_M",
+      "WALLKIT_ZEMA02_OVERGROWN04_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Brick - Grass - Logs - Stone bricks with a loog support on top",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h >= 12",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvOrientation": 1024,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_ZEMA02_OVERGROWN05",
+      "WALLKIT_ZEMA02_OVERGROWN05_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Tonali - Stone - Brick - Tonali Pillars",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.7,
+    "objectIds": [
+      "PILLAR_STRANGLER01_CITY01",
+      "PILLAR_STRANGLER02_CITY01_BROKEN04"
+    ]
+  },
+  {
+    "description": "Varlamore - Tonali - Stone - Brick - Dirt - Dirty pillars",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 2 && s == 3",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "PILLAR_STRANGLER02_CITY01_BROKEN03"
+    ]
+  },
+  {
+    "description": "Varlamore - Tonali - Stone - Brick - Dirt - Overgrown pillars",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.7,
+    "terrainVertexSnap": true,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h >= 12 && h <=16",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvOrientation": 1024,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Vine",
+        "colors": "h == 10 || h == 18",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvOrientation": 187,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "PILLAR_ZEMA01_OVERGROWN001_3X3",
+      "PILLAR_ZEMA01_OVERGROWN02_3X3"
     ]
   }
 ]
