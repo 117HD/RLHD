@@ -82050,11 +82050,14 @@
     "objectIds": [
       "FLATSKEW_TALTEKLAN02_STRAIGHT01_LVL0",
       "FLATSKEW_TALTEKLAN02_STRAIGHT02_LVL0",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT02_LVL1",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT02_LVL2",
       "FLATSKEW_TALTEKLAN02_CORNER01_LVL0",
       "FLATSKEW_TALTEKLAN02_CORNER02_LVL0",
       "FLATSKEW_TALTEKLAN02_STRAIGHT03_LVL1",
       "FLATSKEW_TALTEKLAN02_STRAIGHT03_LVL2",
       "FLATSKEW_TALTEKLAN02_STRAIGHT04_LVL1",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT04_LVL2",
       "SCRAMBLED_WALL",
       "SCRAMBLED_WALL_END",
       "SCRAMBLED_WALL_END_MIRROR",
@@ -82074,6 +82077,32 @@
     ]
   },
   {
+    "description": "Varlamore - Stone - Brick - Grass - Large stone bricks with moss on them with a hole in it",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h >= 10 && h < 30",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvOrientation": 1024,
+        "uvScale": 1.1
+      },
+      {
+        "description": "Hole",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "FLATSKEW_TALTEKLAN02_BROKEN01_LVL0",
+      "FLATSKEW_TALTEKLAN02_BROKEN01_LVL0_M"
+    ]
+  },
+  {
     "description": "Varlamore - Tal Teklan - Stone - Brick - Large stone bricks - Weird UV scale",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "MODEL_YZ",
@@ -82081,7 +82110,9 @@
     "uvScale": 0.69,
     "objectIds": [
       "ZEMA_TEMPLE01_FLATSKEW_LVL1",
-      "ZEMA_TEMPLE01_FLATSKEW_LVL2"
+      "ZEMA_TEMPLE01_FLATSKEW_LVL2",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT01_LVL1",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT01_LVL2"
     ]
   },
   {
@@ -82108,6 +82139,7 @@
       "SKEWWALL_TALTEKLAN01_CORNER02",
       "SKEWWALL_TALTEKLAN01_END03",
       "STEPS_TALKASTI01_DEFAULT01",
+      "STEPS_TALKASTI01_BROKEN02",
       "STEPS_STRANGLER01_DEFAULT02",
       "SKEWWALL_TALTEKLAN01_END01"
     ]
