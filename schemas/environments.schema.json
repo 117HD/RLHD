@@ -39,6 +39,10 @@
         "type": "boolean",
         "description": "Whether the area should have flashing lightning effects."
       },
+      "allowRoofShadows": {
+        "type": "boolean",
+        "description": "Whether the area should allow roof shadows to be drawn. Defaults to true."
+      },
       "instantTransition": {
         "type": "boolean",
         "description": "Whether transitions to and from this area should always be instant."

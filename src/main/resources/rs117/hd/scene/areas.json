@@ -9670,6 +9670,13 @@
     ]
   },
   {
+    "name": "Duke Sucellus corner tile fixes",
+    "aabbs": [
+      [ 3028, 6440 ],
+      [ 3050, 6440 ]
+    ]
+  },
+  {
     "name": "ICY_UNDERGROUND_BRIGHT",
     "areas": [
       "ICE_QUEENS_DUNGEON",

@@ -9575,6 +9575,14 @@
     "blended": false
   },
   {
+    "area": "Duke Sucellus corner tile fixes",
+    "setHue": 0,
+    "setSaturation": 0,
+    "setLightness": 2,
+    "heightOffset": 255,
+    "blended": false
+  },
+  {
     "name": "LASSAR_UNDERCITY_SUNKEN_CATHEDRAL",
     "area": "LASSAR_UNDERCITY_SUNKEN_CATHEDRAL",
     "underlayIds": [
