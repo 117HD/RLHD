@@ -123,6 +123,12 @@
     ]
   },
   {
+    "name": "DIRT_1",
+    "materials": [
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "VARIED_DIRT",
     "materials": [
       "GRAVEL",
@@ -486,6 +492,16 @@
       "ROCK_2",
       "ROCK_1",
       "GRAVEL"
+    ]
+  },
+  {
+    "name": "ROCKY_CAVE_FLOOR_2",
+    "materials": [
+      "DIRT_1",
+      "DIRT_1",
+      "GRAVEL_LIGHT",
+      "DIRT_2",
+      "ROCK_2"
     ]
   },
   {

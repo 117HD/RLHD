@@ -114,6 +114,7 @@ import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
@@ -766,6 +767,8 @@ public class HdPlugin extends Plugin {
 			waterTypeManager.shutDown();
 			materialManager.shutDown();
 			textureManager.shutDown();
+
+			DestructibleHandler.flushPendingDestruction(true);
 
 			if (awtContext != null)
 				awtContext.destroy();
@@ -1436,7 +1439,7 @@ public class HdPlugin extends Plugin {
 
 	public void prepareInterfaceTexture() {
 		if (uiCopyJob != null)
-			uiCopyJob.waitForCompletion();
+			uiCopyJob.waitForCompletion(true);
 		uiCopyJob = null;
 
 		int[] resolution = {
@@ -1468,8 +1471,7 @@ public class HdPlugin extends Plugin {
 
 		frameTimer.begin(Timer.MAP_UI_BUFFER);
 		final GLBuffer pbo = pboUi[frame % 3];
-		pbo.ensureCapacity(uiResolution[0] * uiResolution[1] * 4L);
-		pbo.map(MAP_WRITE);
+		pbo.map(MAP_WRITE, 0, uiWidth * uiHeight * 4L);
 		frameTimer.end(Timer.MAP_UI_BUFFER);
 		if (!pbo.isMapped()) {
 			log.error("Unable to map interface PBO. Skipping UI...");
@@ -1525,7 +1527,7 @@ public class HdPlugin extends Plugin {
 
 		if (uiCopyJob != null) {
 			frameTimer.begin(Timer.COPY_UI);
-			uiCopyJob.waitForCompletion();
+			uiCopyJob.waitForCompletion(true);
 			uiCopyJob = null;
 			frameTimer.end(Timer.COPY_UI);
 
@@ -1792,6 +1794,7 @@ public class HdPlugin extends Plugin {
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
+							case KEY_POH_THEME_ENVIRONMENTS:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
 								break;
@@ -1977,6 +1980,8 @@ public class HdPlugin extends Plugin {
 		var ctx = getSceneContext();
 		if (ctx != null)
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
+
+		DestructibleHandler.flushPendingDestruction();
 	}
 
 	@Subscribe
