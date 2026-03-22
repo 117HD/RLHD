@@ -10185,6 +10185,30 @@
     "minLightness": 20
   },
   {
+    "name": "MM2_AIRSHIP_PLATFORM_WATER",
+    "area": "MM2_AIRSHIP_PLATFORM",
+    "overlayIds": [
+      151
+    ],
+    "waterType": "WATER"
+  },
+  {
+    "name": "MM2_SECRET_LAB_CARPET",
+    "area": "MM2_SECRET_LAB_CARPET",
+    "overlayIds": [
+      55
+    ],
+    "underlayIds": [
+      103,
+      2,
+      100,
+      72
+    ],
+    "groundMaterial": "CARPET",
+    "heightOffset": 1,
+    "blended": false
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {
