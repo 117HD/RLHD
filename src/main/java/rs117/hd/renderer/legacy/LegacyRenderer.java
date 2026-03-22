@@ -1657,6 +1657,14 @@ public class LegacyRenderer implements Renderer {
 			plugin.drawnStaticRenderableCount = plugin.drawnStaticRenderableCount + 1;
 		} else {
 			int uuid = ModelHash.generateUuid(client, hash, renderable);
+			if (renderable instanceof DynamicObject) {
+				var def = client.getObjectDefinition(ModelHash.getUuidId(uuid));
+				if (def != null && def.getImpostorIds() != null) {
+					var impostor = def.getImpostor();
+					if (impostor != null)
+						uuid = ModelHash.packUuid(ModelHash.getUuidType(uuid), impostor.getId());
+				}
+			}
 			int[] worldPos = sceneContext.localToWorld(x, z, plane);
 			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 			if (modelOverride.hide)

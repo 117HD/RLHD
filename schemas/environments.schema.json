@@ -19,9 +19,13 @@
         "type": "string",
         "description": "Optional description of what this changes or why."
       },
+      "isPohTheme": {
+        "type": "boolean",
+        "description": "Whether the environment is for a player-owned house theme."
+      },
       "isUnderwater": {
         "type": "boolean",
-        "description": "Whether the area is an underwater area, such as Guardians of the Rift."
+        "description": "Whether the environment is for an underwater area, such as Guardians of the Rift."
       },
       "force": {
         "type": "boolean",
@@ -34,6 +38,10 @@
       "lightningEffects": {
         "type": "boolean",
         "description": "Whether the area should have flashing lightning effects."
+      },
+      "allowRoofShadows": {
+        "type": "boolean",
+        "description": "Whether the area should allow roof shadows to be drawn. Defaults to true."
       },
       "instantTransition": {
         "type": "boolean",

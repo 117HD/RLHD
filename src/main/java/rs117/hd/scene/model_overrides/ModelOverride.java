@@ -91,6 +91,7 @@ public class ModelOverride
 	private JsonElement colors;
 
 	public transient boolean isDummy;
+	public transient boolean isGenerated;
 	public transient Map<AABB, ModelOverride> areaOverrides;
 	public transient AhslPredicate ahslCondition;
 	public transient boolean hasTransparency;
@@ -253,6 +254,7 @@ public class ModelOverride
 			colorOverrides,
 			colors,
 			isDummy,
+			isGenerated,
 			areaOverrides,
 			ahslCondition,
 			hasTransparency,

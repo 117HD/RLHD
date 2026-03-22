@@ -28,10 +28,11 @@
 #include <uniforms/global.glsl>
 
 #include <utils/constants.glsl>
+#include <utils/color_utils.glsl>
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     uniform sampler2DArray textureArray;
-    in vec3 fUvw;
+    in vec4 fUvw;
     flat in int fMaterialData;
 #endif
 
@@ -40,24 +41,26 @@
 #endif
 
 void main() {
-    float opacity = 0;
+    float opacity = 1;
     #if SHADOW_TRANSPARENCY
         opacity = fOpacity;
     #endif
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         if (fUvw.z != -1) {
-            vec3 uvw = fUvw;
+            vec4 uvw = fUvw;
 
             // Vanilla tree textures rely on UVs being clamped horizontally,
             // which HD doesn't do, so we instead opt to hide these fragments
             if ((fMaterialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1)
                 uvw.x = clamp(uvw.x, 0, .984375);
 
-            opacity = texture(textureArray, uvw).a;
-            #if SHADOW_TRANSPARENCY
-                opacity *= fOpacity;
-            #else
+            if (uvw.z != -1)
+                opacity *= texture(textureArray, uvw.xyz).a;
+            if (uvw.w != -1)
+                opacity *= linearToSrgb(texture(textureArray, uvw.xyw).r);
+
+            #if !SHADOW_TRANSPARENCY
                 if (opacity < SHADOW_DEFAULT_OPACITY_THRESHOLD)
                     discard;
             #endif

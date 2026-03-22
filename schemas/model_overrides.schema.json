@@ -113,6 +113,10 @@
         "type": "boolean",
         "description": "Whether models this override applies to should be hidden. Defaults to false."
       },
+      "disableDetailCulling": {
+        "type": "boolean",
+        "description": "Whether the model should render regardless of the detail distance setting. Defaults to false."
+      },
       "retainVanillaUvs": {
         "type": "boolean",
         "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."

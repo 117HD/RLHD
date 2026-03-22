@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.Destructible;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter.ReservedView;
@@ -23,14 +24,14 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
 @Slf4j
-class VAO {
+public class DynamicModelVAO implements Destructible {
 	public static final int INITIAL_SIZE = (int) (8 * MiB);
 
 	// Temp vertex format
 	// pos float vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	static final int VERT_SIZE = 28;
+	static final int VERT_SIZE = 32;
 	static final int VERT_SIZE_INTS = VERT_SIZE / 4;
 
 	// Metadata format
@@ -46,8 +47,8 @@ class VAO {
 	private final GLTextureBuffer tbo;
 
 	private final AtomicInteger inflightDraws = new AtomicInteger();
-	private final ConcurrentLinkedQueue<VAOView> usedViews = new ConcurrentLinkedQueue<>();
-	private final ArrayDeque<VAOView> freeViews = new ArrayDeque<>();
+	private final ConcurrentLinkedQueue<View> usedViews = new ConcurrentLinkedQueue<>();
+	private final ArrayDeque<View> freeViews = new ArrayDeque<>();
 
 	private final GLMappedBufferIntWriter vboWriter;
 	private final GLMappedBufferIntWriter tboWriter;
@@ -60,8 +61,8 @@ class VAO {
 	private long[] dstCopyOffsets = new long[16];
 	private long[] copyNumBytes = new long[16];
 
-	VAO(String name, boolean useStagingBuffer) {
-		if (useStagingBuffer) {
+	DynamicModelVAO(String name, boolean useStagingBuffer) {
+		if (useStagingBuffer && GLBuffer.supportsStorageBuffers()) {
 			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
 				"VAO::VBO_STAGING::" + name,
@@ -89,9 +90,8 @@ class VAO {
 		vao = glGenVertexArrays();
 		tbo.initialize(INITIAL_SIZE);
 		vboRender.initialize(INITIAL_SIZE);
-		if (vboRender != vboStaging) {
+		if (vboRender != vboStaging)
 			vboStaging.initialize(INITIAL_SIZE);
-		}
 
 		bindRenderVAO();
 	}
@@ -126,20 +126,23 @@ class VAO {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 12);
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 18);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 20);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 28);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 	}
 
 	void map() {
-		vboWriter.map();
-		tboWriter.map();
+		vboWriter.map(false);
+		tboWriter.map(false);
 
 		reset();
 	}
@@ -183,25 +186,43 @@ class VAO {
 			bindRenderVAO();
 	}
 
-	void destroy() {
+	@Override
+	public void destroy() {
+		vboWriter.destroy();
+		tboWriter.destroy();
+		vboRender.destroy();
 		vboStaging.destroy();
 		tbo.destroy();
-		glDeleteVertexArrays(vao);
+
+		if (vao != 0)
+			glDeleteVertexArrays(vao);
 		vao = 0;
 	}
 
-	synchronized VAOView beginDraw(int faceCount) {
-		final int drawIdx = drawRangeCount++;
+	synchronized View beginPlayerDraw(int faceCount, int playerDrawIndex) {
+		assert playerDrawIndex != -1;
+		// Draw at a specific index, e.g. to respect player draw order
+		// mergeRanges() later skips any potentially unfilled entries
+		drawRangeCount = max(drawRangeCount, playerDrawIndex + 1);
+		return beginDraw(faceCount, playerDrawIndex);
+	}
+
+	synchronized View beginDraw(int faceCount) {
+		return beginDraw(faceCount, drawRangeCount++);
+	}
+
+	private synchronized View beginDraw(int faceCount, int drawIdx) {
 		if (drawRangeCount >= drawOffsets.length) {
-			drawOffsets = Arrays.copyOf(drawOffsets, drawOffsets.length * 2);
-			drawCounts = Arrays.copyOf(drawCounts, drawCounts.length * 2);
+			int oldLength = drawOffsets.length;
+			drawOffsets = Arrays.copyOf(drawOffsets, oldLength * 2);
+			drawCounts = Arrays.copyOf(drawCounts, oldLength * 2);
+			Arrays.fill(drawOffsets, oldLength, drawOffsets.length, -1);
+			Arrays.fill(drawCounts, oldLength, drawOffsets.length, -1);
 		}
 
-		drawOffsets[drawIdx] = -1;
-		drawCounts[drawIdx] = -1;
-
-		VAOView view = freeViews.poll();
-		if (view == null) view = new VAOView();
+		View view = freeViews.poll();
+		if (view == null)
+			view = new View();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
 		view.tbo = tboWriter.reserve(faceCount * 9);
 		view.vao = vao;
@@ -212,9 +233,13 @@ class VAO {
 		return view;
 	}
 
-	private void endDraw(VAOView view) {
+	private synchronized void endDraw(View view) {
 		drawOffsets[view.drawIdx] = view.getStartOffset() / VERT_SIZE_INTS;
 		drawCounts[view.drawIdx] = view.getVertexCount();
+
+		// Clear ReservedViews before returning to pool
+		view.vbo = null;
+		view.tbo = null;
 
 		usedViews.add(view);
 	}
@@ -260,13 +285,15 @@ class VAO {
 	}
 
 	void reset() {
+		Arrays.fill(drawOffsets, 0, drawRangeCount, -1);
+		Arrays.fill(drawCounts, 0, drawRangeCount, -1);
 		used = false;
 		drawRangeCount = 0;
 		freeViews.addAll(usedViews);
 		usedViews.clear();
 	}
 
-	public final class VAOView {
+	public final class View {
 		public ReservedView vbo;
 		public ReservedView tbo;
 		public int vao;

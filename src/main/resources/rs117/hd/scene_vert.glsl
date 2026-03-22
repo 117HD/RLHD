@@ -32,16 +32,18 @@
 #include <utils/uvs.glsl>
 
 layout (location = 0) in vec3 vPosition;
-layout (location = 1) in vec3 vUv;
-layout (location = 2) in vec3 vNormal;
 
 #if ZONE_RENDERER
+    layout (location = 1) in vec4 vUv;
+    layout (location = 2) in vec4 vNormal;
     layout (location = 3) in int vTextureFaceIdx;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
 
     uniform isamplerBuffer textureFaces;
 #else
+    layout (location = 1) in vec3 vUv;
+    layout (location = 2) in vec3 vNormal;
     layout (location = 3) in int vAlphaBiasHsl;
     layout (location = 4) in int vMaterialData;
     layout (location = 5) in int vTerrainData;
@@ -89,7 +91,7 @@ layout (location = 2) in vec3 vNormal;
         }
 
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-        vec3 worldNormal = vNormal;
+        vec3 worldNormal = vNormal.xyz;
         vec3 worldPosition = sceneOffset + vPosition;
         if (vWorldViewId != -1) {
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
@@ -98,7 +100,7 @@ layout (location = 2) in vec3 vNormal;
         }
 
         OUT.position = worldPosition;
-        OUT.uv = computeVertexUvs(materialData, worldPosition, vUv);
+        OUT.uv = computeVertexUvs(materialData, worldPosition, vUv.xyz);
         OUT.normal = worldNormal;
         OUT.texBlend = vec3(0);
         OUT.texBlend[vertex] = 1.0;
@@ -109,7 +111,8 @@ layout (location = 2) in vec3 vNormal;
 
         vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
         int depthBias = (alphaBiasHsl >> 16) & 0xff;
-        clipPosition.z += depthBias / 128.0;
+        if (projectionMatrix[2][3] != 0) // Disable depth bias for orthographic projection
+            clipPosition.z += depthBias / 128.0;
 
         gl_Position = clipPosition;
     }
@@ -123,8 +126,8 @@ layout (location = 2) in vec3 vNormal;
 
     void main() {
         gPosition = vPosition;
-        gUv = vUv;
-        gNormal = vNormal;
+        gUv = vUv.xyz;
+        gNormal = vNormal.xyz;
         gAlphaBiasHsl = vAlphaBiasHsl;
         gMaterialData = vMaterialData;
         gTerrainData = vTerrainData;
