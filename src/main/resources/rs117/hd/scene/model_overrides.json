@@ -2656,7 +2656,6 @@
       "BULLRUSHES3",
       "BULLRUSHES4",
       "BULLRUSHES5",
-      "THISTLE",
       "NETTLES",
       "NETTLES1",
       "NETTLES2",
@@ -12623,6 +12622,27 @@
     ]
   },
   {
+    "description": "Object - Wooden - Metallic - Plank - Chest with metal latch",
+    "baseMaterial": "WOOD_GRAIN_3_DARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "objectIds": [
+      "FROG_QUEST_CHEST",
+      "FROG_QUEST_CHEST_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Latch",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": -89
+      }
+    ]
+  },
+  {
     "description": "CANNON",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
@@ -18886,6 +18906,24 @@
     ]
   },
   {
+    "description": "Varlemore - Wooden - Cloth - Mesh chair ",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "AVIUM_CHAIR_OASIS01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 3",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
     "description": "Objects - Wooden - Tables - Round",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -21431,7 +21469,6 @@
       "MM_BUSH_BIG_KHARAZI_JUNGLE_TREE_LOGS",
       "AVIUM_TREE_1",
       "AVIUM_TREE_2",
-      "AVIUM_TREE_ORANGE",
       "AVIUM_TREE_DARK",
       "KHARAZI_JUNGLE_TREE1",
       "XBOWS_BEACH_TO_ISLAND_TREE_BASIC"
@@ -21447,6 +21484,39 @@
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "terrainVertexSnap": true,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jungle Tree Small with Oranges - Should copy Jungle Tree",
+    "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -3,
+    "objectIds": [
+      "AVIUM_TREE_ORANGE",
+      "FROG_QUEST_TREE_OP",
+      "FROG_QUEST_TREE_STUMP"
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": [ "h == 5 && s < 7", "h == 4" ],
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -3,
+        "baseMaterial": "BARK",
+        "uvScale": 0.75,
+        "terrainVertexSnap": true,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Orange",
+        "colors": [ "h == 5 && s == 7", "h == 4" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.75,
         "uvType": "BOX"
       }
     ]
@@ -80673,6 +80743,71 @@
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Pile of poo",
+    "baseMaterial": "GRUNGE_2_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.8,
+    "objectIds": [
+      "CAPYBARA_POO",
+      "FROG_QUEST_POO_NOOP",
+      "FROG_QUEST_POO_PLANT_OP",
+      "FROG_QUEST_POO_INSPECT_OP"
+    ]
+  },
+  {
+    "description": "Pile of poo",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 266,
+    "uvScale": 0.3,
+    "objectIds": [
+      "FROG_QUEST_LILY_PAD",
+      "FROG_QUEST_LILY_PAD_DESTROYABLE_OP"
+    ]
+  },
+  {
+    "description": "Frog Quest bed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "FROG_QUEST_BED_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Plant - Flower - Thistle",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "uvScale": 0.5,
+    "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "objectIds": [
+      "THISTLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 16",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "terrainVertexSnap": true
       }
     ]
   }
