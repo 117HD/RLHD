@@ -5914,6 +5914,16 @@
     "blended": false
   },
   {
+    "name": "THE_SCAR_FLOOR",
+    "area": "THE_SCAR",
+    "groundMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvOrientation": 256,
+    "underlayIds": [
+      185,
+      186
+    ]
+  },
+  {
     "name": "THE_SCAR_WATER",
     "area": "THE_SCAR",
     "overlayIds": [
@@ -5925,6 +5935,7 @@
   {
     "name": "LASSAR_UNDERCITY_HIDDEN",
     "area": "LASSAR_UNDERCITY",
+    "groundMaterial": "SMOOTH_STONE",
     "overlayIds": [
       264,
       286
@@ -5932,13 +5943,23 @@
     "blended": false
   },
   {
-    "name": "LASSAR_UNDERCITY_CARPET",
-    "area": "LASSAR_UNDERCITY",
+    "name": "LASSAR_UNDERCITY_DRAIN_CARPET_FIX",
+    "area": "LASSAR_UNDERCITY_DRAIN_DEPTH_FIX_TILES",
+    "underlayIds": [ 104 ],
     "overlayIds": [
       285
     ],
     "groundMaterial": "CARPET",
-    "blended": false
+    "heightOffset": 2
+  },
+  {
+    "name": "LASSAR_UNDERCITY_DIRT",
+    "area": "LASSAR_UNDERCITY",
+    "underlayIds": [ 104 ],
+    "overlayIds": [
+      285
+    ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "LASSAR_UNDERCITY_TILES_OVERLAY",
@@ -9547,20 +9568,15 @@
     }
   },
   {
-    "name": "ICY_UNDERGROUND_SNOW",
-    "area": "ICY_UNDERGROUND_DARK",
-    "underlayIds": [
-      104,
-      159,
-      161
-    ],
-    "groundMaterial": "SNOW_1"
-  },
-  {
     "name": "Ghorrock Dungeon Tiles",
     "area": "Ghorrock Dungeon Tiles",
     "overlayIds": [
       255
+    ],
+    "underlayIds": [
+      16,
+      72,
+      161
     ],
     "groundMaterial": "MARBLE_1_SEMIGLOSS",
     "blended": false
@@ -9571,8 +9587,31 @@
     "overlayIds": [
       255
     ],
+    "underlayIds": [ 160 ],
     "groundMaterial": "DIRT",
-    "blended": false
+    "maxLightness": 25,
+    "minLightness": 25
+  },
+  {
+    "name": "Ghorrock Dungeon Dirt Fix 2",
+    "area": "Ghorrock Dungeon Dirt Fix 2",
+    "overlayIds": [
+      255
+    ],
+    "underlayIds": [ 159 ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "ICY_UNDERGROUND_SNOW",
+    "area": "ICY_UNDERGROUND_DARK",
+    "underlayIds": [
+      104,
+      159,
+      160,
+      161
+    ],
+    "groundMaterial": "SNOW_1",
+    "minLightness": 70
   },
   {
     "area": "Duke Sucellus corner tile fixes",
@@ -9592,7 +9631,7 @@
       181,
       182
     ],
-    "groundMaterial": "LASSAR_UNDERCITY_TILES_SUBMERGED"
+    "waterType": "WHISPERER_WATER"
   },
   {
     "name": "LASSAR_UNDERCITY_WATER_UNDERLAY",
@@ -9622,13 +9661,25 @@
     "blended": false
   },
   {
-    "name": "LASSAR_UNDERCITY_TILES_BLENDED",
-    "area": "LASSAR_UNDERCITY",
+    "name": "LASSAR_UNDERCITY_PLAZA_BRICKS",
+    "area": "LASSAR_UNDERCITY_PLAZA_BRICKS",
     "underlayIds": [
+      44,
       46,
       150
     ],
     "groundMaterial": "LASSAR_UNDERCITY_TILES"
+  },
+  {
+    "name": "DT2_MYSTERIOUS_FIGURE_HIDEOUT_FLOOR",
+    "area": "DT2_MYSTERIOUS_FIGURE_HIDEOUT",
+    "underlayIds": [
+      42,
+      61,
+      62
+    ],
+    "groundMaterial": "PLAIN_DIRT",
+    "maxLightness": 33
   },
   {
     "name": "SHIP_SAILING_WATER_UNDERLAY",

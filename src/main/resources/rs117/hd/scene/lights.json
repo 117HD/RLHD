@@ -26469,9 +26469,8 @@
   },
   {
     "description": "CAMDOZAAL_STATUE",
-    "height": 200,
-    "alignment": "FRONT",
-    "radius": 450,
+    "offset": [ 0, 200, -50 ],
+    "radius": 250,
     "strength": 30,
     "color": [
       0,
@@ -36411,8 +36410,7 @@
   },
   {
     "description": "Secrets of the North - Candle",
-    "height": 240,
-    "alignment": "LEFT",
+    "offset": [ -75, 240, 0 ],
     "radius": 350,
     "strength": 12.5,
     "color": [
@@ -36422,9 +36420,157 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 3,
+    "range": 10,
     "objectIds": [
       "GHORROCK_WALL_CANDLE01"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Alcove Statue Candle",
+    "offset": [ -5, 180, 0 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "GHORROCK_STONE01_DECORATIVE01"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 1",
+    "offset": [ -80, 50, -50 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 2",
+    "offset": [ -155, 50, -30 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 3",
+    "offset": [ 80, 50, -40 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 4",
+    "offset": [ 160, 50, -35 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 5",
+    "offset": [ 120, 340, -55 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 6",
+    "offset": [ -120, 340, -55 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 6",
+    "offset": [ 0, 100, -30 ],
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_PRAYER_ICON"
     ]
   },
   {
@@ -36941,10 +37087,10 @@
   },
   {
     "description": "The Scar red flames",
-    "height": 30,
+    "height": 80,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 8,
+    "strength": 7,
     "color": [
       175,
       18,
@@ -36955,6 +37101,62 @@
     "range": 15,
     "objectIds": [
       "DT2_SCAR_FIRE03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 1",
+    "offset": [ -20, 75, 120 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT02",
+      "DT2_SCAR_BROKEN_BOAT03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 2",
+    "offset": [ 60, 100, -150 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT02",
+      "DT2_SCAR_BROKEN_BOAT03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 3",
+    "offset": [ 0, 170, 0 ],
+    "alignment": "CENTER",
+    "radius": 310,
+    "strength": 8.5,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT01"
     ]
   },
   {
@@ -37003,7 +37205,8 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "VFX_LEVIATHAN_01_PROJECTILE_MAGIC_01"
     ]
@@ -37020,7 +37223,8 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "VFX_LEVIATHAN_01_PROJECTILE_RANGED_01"
     ]
@@ -37037,7 +37241,8 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "VFX_LEVIATHAN_01_PROJECTILE_MELEE_01"
     ]
@@ -37056,10 +37261,24 @@
     ]
   },
   {
+    "description": "Lassar Undercity Shadow Blocker",
+    "radius": 375,
+    "strength": 25,
+    "height": 120,
+    "color": [
+      255, 255, 255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "DT2_LASSAR_SHADOW_BLOCKER_SHADOW",
+      "DT2_LASSAR_SHADOW_BLOCKER_NORMAL"
+    ]
+  },
+  {
     "description": "Lassar Undercity brazier",
     "radius": 400,
     "strength": 50,
-    "height": 40,
+    "height": 140,
     "color": [
       4,
       168,
@@ -37070,7 +37289,44 @@
     "range": 3,
     "fadeInDuration": 0,
     "objectIds": [
-      "DT2_LASSAR_SHADOW_BRAZIER_LIT_PERMANENTLY"
+      "DT2_LASSAR_SHADOW_BRAZIER_LIT_PERMANENTLY",
+      "DT2_LASSAR_SHADOW_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Lassar Undercity Remnant",
+    "radius": 300,
+    "strength": 25,
+    "height": 140,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "objectIds": [
+      "DT2_LASSAR_REMNANT_STRONG"
+    ]
+  },
+  {
+    "description": "Lassar Undercity Remnant",
+    "radius": 250,
+    "strength": 10,
+    "height": 140,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "objectIds": [
+      "DT2_LASSAR_REMNANT_WEAK"
     ]
   },
   {
@@ -37108,9 +37364,9 @@
   },
   {
     "description": "Lassar Undercity teleporter",
-    "radius": 350,
-    "strength": 125,
-    "height": 128,
+    "radius": 370,
+    "strength": 300,
+    "height": 220,
     "color": [
       112, 69, 126
     ],
@@ -37140,7 +37396,7 @@
   },
   {
     "description": "Lassar Undercity lost soul",
-    "radius": 600,
+    "radius": 350,
     "strength": 15,
     "height": 140,
     "color": [
@@ -37151,6 +37407,113 @@
     "range": 5,
     "npcIds": [
       "DT2_LASSAR_GHOST"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Entry Portal",
+    "radius": 300,
+    "strength": 15,
+    "height": 140,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "objectIds": [
+      "DT2_HIDEOUT_ENTRY_VIS"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Escape Portal",
+    "radius": 500,
+    "strength": 10,
+    "offset": [ 0, 150, 35 ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "objectIds": [
+      "DT2_HIDEOUT_BARRIER_ESCAPE",
+      "DT2_HIDEOUT_BARRIER_LEAVE"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Exit Portal Middle",
+    "radius": 500,
+    "strength": 10,
+    "offset": [ -65, 150, 0 ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "objectIds": [
+      "DT2_HIDEOUT_EXIT",
+      "DT2_HIDEOUT_EXIT_NOOP"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Exit Portal Left",
+    "radius": 250,
+    "strength": 7,
+    "offset": [ -65, 150, 110 ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "objectIds": [
+      "DT2_HIDEOUT_EXIT",
+      "DT2_HIDEOUT_EXIT_NOOP"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Exit Portal Right",
+    "radius": 250,
+    "strength": 7,
+    "offset": [ -65, 150, -110 ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "objectIds": [
+      "DT2_HIDEOUT_EXIT",
+      "DT2_HIDEOUT_EXIT_NOOP"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Wall Torch",
+    "height": 235,
+    "offset": [ -40, -55, 0 ],
+    "radius": 275,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "DT2_WALL_TOMB01_TORCH01"
     ]
   },
   {
@@ -37168,6 +37531,114 @@
     "range": 10,
     "objectIds": [
       "FAI_BARBARIAN_POTTERY_OVEN"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Purple Magic Attack - Projectile",
+    "radius": 275,
+    "strength": 10,
+    "offset": [ 0, 0, -0 ],
+    "color": [
+      125,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "fadeOutDuration": 200,
+    "fadeInDuration": 100,
+    "range": 5,
+    "projectileIds": [
+      "PURSUER_MAGIC_TRAVEL"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Purple Magic Attack - Impact",
+    "radius": 250,
+    "strength": 15,
+    "offset": [ 0, 40, -0 ],
+    "color": [
+      125,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "fadeOutDuration": 300,
+    "fadeInDuration": 100,
+    "range": 10,
+    "graphicsObjectIds": [
+      "PURSUER_MAGIC_IMPACT"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Purple Magic Attack - Cast",
+    "radius": 300,
+    "strength": 9,
+    "offset": [ 0, 200, -0 ],
+    "fadeInDuration": 250,
+    "fadeOutDuration": 400,
+    "color": [
+      170,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "graphicsObjectIds": [
+      "PURSUER_MAGIC_TRAVEL_SHORT"
+    ]
+  },
+  {
+    "description": "DT2 - Wights",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 10,
+    "fadeInDuration": 100,
+    "despawnWithParent": true,
+    "color": [
+      255,
+      0,
+      200
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "npcIds": [
+      "DT2_TORAG_CUTSCENE",
+      "DT2_AHRIM_CUTSCENE",
+      "DT2_DHAROK_CUTSCENE",
+      "DT2_GUTHAN_CUTSCENE",
+      "DT2_KARIL_CUTSCENE",
+      "DT2_VERAC_CUTSCENE",
+      "DT2_TORAG_COMBAT",
+      "DT2_AHRIM_COMBAT",
+      "DT2_DHAROK_COMBAT",
+      "DT2_GUTHAN_COMBAT",
+      "DT2_KARIL_COMBAT",
+      "DT2_VERAC_COMBAT",
+      "DT2_ASSASSIN_WIGHT_COMBAT",
+      "DT2_KETLA_WIGHT_COMBAT",
+      "DT2_PERSTEN_WIGHT_COMBAT",
+      "DT2_KASONDE_WIGHT_COMBAT",
+      "DT2_WIGHT_PERSTEN_PORTAL"
+    ]
+  },
+  {
+    "description": "DT2 - Elder Horn Teleporting",
+    "height": 500,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 25,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 100,
+    "color": [
+      170,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 30,
+    "objectIds": [
+      "DT2_ELDER_HORN_ANIM"
     ]
   },
   {
@@ -37624,11 +38095,11 @@
   {
     "description": "Neural teleporter blue - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_TELEPORTER_1_1", "DT2_SCAR_MAZE_TELEPORTER_1_2" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       80,
       87,
-      187
+      255
     ],
     "strength": 10,
     "radius": 800
@@ -37636,7 +38107,7 @@
   {
     "description": "Neural teleporter green - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_TELEPORTER_2_1", "DT2_SCAR_MAZE_TELEPORTER_2_2" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       136,
       195,
@@ -37660,7 +38131,7 @@
   {
     "description": "Neural gateway - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_2_PILLAR_ATTACKER_SPAWN" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       202,
       76,
@@ -37670,14 +38141,33 @@
     "radius": 600
   },
   {
-    "description": "Ancient Vault brazier",
-    "objectIds": [ "DT2_DESERT_VAULT_BRAZIER02" ],
+    "description": "Ancient Vault Brazier 1",
+    "objectIds": [
+      "DT2_DESERT_VAULT_BRAZIER02",
+      "DT2_DESERT_VAULT_BRAZIER03"
+    ],
     "height": 200,
     "color": [ 115, 50, 137 ],
-    "strength": 30,
+    "strength": 10,
     "radius": 750,
     "type": "FLICKER",
     "range": 20
+  },
+  {
+    "description": "Ancient Vault Brazier 2",
+    "offset": [ 0, 300, 0 ],
+    "radius": 550,
+    "strength": 30,
+    "color": [
+      80,
+      60,
+      255
+    ],
+    "objectIds": [
+      "DT2_DESERT_VAULT_BRAZIER01",
+      "DT2_DESERT_VAULT_BRAZIER02",
+      "DT2_DESERT_VAULT_BRAZIER03"
+    ]
   },
   {
     "description": "HALLOWEEN_PUMPKIN_LARGE",
@@ -46097,6 +46587,62 @@
     "objectIds": [
       "DRAGON_SLAYER_QIP_FIRE_2X2",
       "ZORGOTH_FIRE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Blood Totem",
+    "offset": [ 0, 230, -35 ],
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_BLOOD_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Ice Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_ICE_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Smoke Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      139,
+      69,
+      19
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_SMOKE_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Shade Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_SHADOW_TOTEM_ACTIVE"
     ]
   }
 ]
