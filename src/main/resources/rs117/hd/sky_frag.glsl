@@ -216,7 +216,7 @@ void main() {
             // Moon angular radius: ~3.6 degrees diameter = 1.8 degrees half-angle
             // cos(1.8 deg) ≈ 0.99951 — about 1.5x larger than realistic for visual impact
             float moonAngularRadius = 0.99951;
-            float edgeWidth = 0.00003;
+            float edgeWidth = fwidth(moonDot) * 1.5;
 
             // Sharp disk with anti-aliased edge
             float moonDisk = smoothstep(moonAngularRadius - edgeWidth, moonAngularRadius, moonDot);
