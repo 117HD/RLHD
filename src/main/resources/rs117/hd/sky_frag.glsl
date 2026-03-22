@@ -172,14 +172,15 @@ void main() {
     float baseProgress = 1.0 - nightFade;
     float sunProximity = sunSideBlend * (1.0 - zenithBlend);
     float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * starVisibility;
+    // Precompute starfield rotation (also needed for moon dark side sampling)
+    float rotY = elapsedTime * (2.0 * 3.14159265 / 3600.0);
+    float rotX = elapsedTime * (2.0 * 3.14159265 / 10800.0);
+    float cosY = cos(rotY), sinY = sin(rotY);
+    float cosX = cos(rotX), sinX = sin(rotX);
     if (nightSkyBlend > 0.001) {
         // Rotate the star field around two axes for realistic celestial motion
         // Primary axis: vertical (Y) - azimuthal sweep (~1 rotation per 1 hour)
         // Secondary axis: tilted (X) - slow polar drift (~1 rotation per 3 hours)
-        float rotY = elapsedTime * (2.0 * 3.14159265 / 3600.0);
-        float rotX = elapsedTime * (2.0 * 3.14159265 / 10800.0);
-        float cosY = cos(rotY), sinY = sin(rotY);
-        float cosX = cos(rotX), sinX = sin(rotX);
         vec3 starDir = viewDir;
         starDir = vec3(cosY * starDir.x + sinY * starDir.z, starDir.y, -sinY * starDir.x + cosY * starDir.z);
         starDir = vec3(starDir.x, cosX * starDir.y - sinX * starDir.z, sinX * starDir.y + cosX * starDir.z);
@@ -339,9 +340,18 @@ void main() {
                 vec3 surfaceColor = mix(darkTone, brightTone, colorBlend);
 
                 vec3 litColor = skyMoonColor * limbDarkening * surfaceBrightness * surfaceColor;
-                // Dark side: always opaque (occludes stars). Use the pre-star sky gradient
-                // with a subtle moon-colored earthshine so it reads as shadowed lunar surface
-                vec3 darkSideMoon = skyColorPreStars + skyMoonColor * 0.02;
+                // Dark side: opaque (occludes stars) but matches surrounding sky tone.
+                // When stars are visible, blend toward the starfield background color
+                // (without star points) so the dark side doesn't glow brighter than the sky.
+                vec3 darkSideBase = skyColorPreStars;
+                if (nightSkyBlend > 0.001) {
+                    vec3 moonStarDir = viewDir;
+                    moonStarDir = vec3(cosY * moonStarDir.x + sinY * moonStarDir.z, moonStarDir.y, -sinY * moonStarDir.x + cosY * moonStarDir.z);
+                    moonStarDir = vec3(moonStarDir.x, cosX * moonStarDir.y - sinX * moonStarDir.z, sinX * moonStarDir.y + cosX * moonStarDir.z);
+                    vec3 nightBgColor = proceduralStarfieldBackground(moonStarDir);
+                    darkSideBase = mix(skyColorPreStars, nightBgColor, nightSkyBlend);
+                }
+                vec3 darkSideMoon = darkSideBase + skyMoonColor * 0.02;
                 vec3 moonFinalColor = mix(darkSideMoon, litColor, isLit);
                 float moonAlpha = moonDisk * moonDayAlpha * moonVisibility;
 
