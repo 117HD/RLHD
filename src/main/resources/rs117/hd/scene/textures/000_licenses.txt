@@ -11,10 +11,13 @@ Sand textures derived from a photograph by Romain Dancre on Unsplash.
 Some textures copyright (c) 2021 117.
 -- https://twitter.com/117scape
 
-WOODEN_GRAIN & ROCK Texture 2021 j-meds.
+ROCK_1 and associated textures are based on the original ROCK_1 texture from the project, licensed under BSD-2-Clause
+
+ROCK_2 and associated textures are based on the original ROCK_2 texture made by j-meds in 2021, licensed under BSD-2-Clause
 -- https://github.com/j-meds
 
-ROCK_1 and ROCK_2, and associated textures are based on j-meds original textures and are used under BSD2
+WOOD_GRAIN texture made by j-meds in 2021, licensed under BSD-2-Clause
+-- https://github.com/j-meds
 
 Caustics texture by leenor_net, licensed under CC0 1.0 Universal.
 -- https://opengameart.org/content/water-caustics-effect-small
@@ -55,7 +58,7 @@ ROCK_4, ROCK_4_N, ROCK_4_D textures from AmbientCG. All textures on this site ar
 ROCK_5, ROCK_5_N, ROCK_5_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=ROCK037
 
-HD_CONCRETE, HD_CONCRETE_N  and HD_CONCRETE_D textures from AmbientCG. All textures on this site are licensed as CC0.
+HD_CONCRETE, HD_CONCRETE_N and HD_CONCRETE_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Rock030
 
 HD_BRICK, HD_BRICK_N, HD_BRICk_D textures from AmbientCG. All textures on this site are licensed as CC0.
