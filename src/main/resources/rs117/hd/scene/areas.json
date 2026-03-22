@@ -2175,6 +2175,14 @@
     ]
   },
   {
+    "name": "EAST_ARDOUGNE_HAZEL_HOUSE_COBBLE_CORNERS",
+    "aabbs": [
+      [ 2576, 3267, 2576, 3270 ],
+      [ 2571, 3274, 2575, 3274 ],
+      [ 2564, 3275, 2567, 3275 ]
+    ]
+  },
+  {
     "name": "EAST_ARDOUGNE_BRIDGE",
     "aabbs": [
       [ 2594, 3295, 2603, 3298 ]

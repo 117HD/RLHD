@@ -49,6 +49,21 @@
     }
   },
   {
+    "description": "TODO: Fix this properly",
+    "name": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
+    "area": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
+    "blended": false,
+    "blendedAsOpposite": true,
+    "underlayIds": [
+      48,
+      50,
+      64
+    ],
+    "replacements": {
+      "SEASONAL_GRASS": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "SEASONAL_GRASS",
     "replacements": {
       "WINTER_GRASS": "season == SeasonalTheme.WINTER",
@@ -1134,22 +1149,6 @@
     "blendedAsOpposite": true
   },
   {
-    "description": "TODO: Fix this properly",
-    "name": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
-    "area": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
-    "groundMaterial": "GRASS_1",
-    "blended": false,
-    "blendedAsOpposite": true,
-    "underlayIds": [
-      48,
-      50,
-      64
-    ],
-    "replacements": {
-      "SEASONAL_GRASS": "season == SeasonalTheme.WINTER || blending"
-    }
-  },
-  {
     "name": "EAST_ARDOUGNE_DOCKS_FIX_5",
     "area": "EAST_ARDOUGNE_DOCKS_FIX",
     "overlayIds": [
@@ -1181,7 +1180,9 @@
   },
   {
     "name": "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER",
-    "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "shiftLightness": 15,
+    "blended": false,
     "replacements": {
       "WINTER_GRASS": "blending"
     }
@@ -3656,15 +3657,50 @@
   {
     "name": "EAST_ARDOUGNE_HAZEL_MANOR_PATH_TEXTURE",
     "area": "EAST_ARDOUGNE_HAZEL_HOUSE",
+    "groundMaterial": "VARROCK_PATHS",
+    "minLightness": 28,
+    "maxLightness": 28,
     "overlayIds": [
       12
     ],
-    "groundMaterial": "VARROCK_PATHS",
-    "minLightness": 33,
-    "maxLightness": 33,
     "replacements": {
+      "EAST_ARDOUGNE_HAZEL_MANOR_PATH_TEXTURE_WINTER": "season == SeasonalTheme.WINTER",
       "NONE": "!textures"
     }
+  },
+  {
+    "name": "EAST_ARDOUGNE_HAZEL_MANOR_PATH_TEXTURE_WINTER",
+    "area": "EAST_ARDOUGNE_HAZEL_HOUSE",
+    "maxLightness": 27,
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "overlayIds": [
+      12
+    ]
+  },
+  {
+    "name": "EAST_ARDOUGNE_HAZEL_MANOR_PATH_TEXTURE_COBBLE_CORNERS",
+    "area": "EAST_ARDOUGNE_HAZEL_HOUSE_COBBLE_CORNERS",
+    "groundMaterial": "VARROCK_PATHS",
+    "minLightness": 28,
+    "maxLightness": 28,
+    "setSaturation": 0,
+    "setHue": 0,
+    "underlayIds": [ 50 ],
+    "replacements": {
+      "EAST_ARDOUGNE_HAZEL_MANOR_PATH_TEXTURE_COBBLE_CORNERS_WINTER": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "EAST_ARDOUGNE_HAZEL_MANOR_PATH_TEXTURE_COBBLE_CORNERS_WINTER",
+    "area": "EAST_ARDOUGNE_HAZEL_HOUSE_COBBLE_CORNERS",
+    "shiftLightness": 14,
+    "setSaturation": 0,
+    "setHue": 0,
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "overlayIds": [
+      12
+    ]
   },
   {
     "name": "EAST_ARDOUGNE_BRIDGE_TEXTURE",
