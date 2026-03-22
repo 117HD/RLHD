@@ -41,7 +41,7 @@
 #endif
 
 #ifndef TILE_SIZE
-#define TILE_SIZE 128
+    #define TILE_SIZE 128
 #endif
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
@@ -68,17 +68,15 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     vec4 shadowPos = lightProjectionMatrix * vec4(fragPos, 1);
     shadowPos.xyz /= shadowPos.w;
 
-#if ZONE_RENDERER
-    // TODO: Make this configurable if we make the Shadow Distance Variable
-    const float fadeStart = 75.0 * TILE_SIZE;
-    const float fadeEnd   = 80.0 * TILE_SIZE;
-    float fadeOut = smoothstep(fadeStart, fadeEnd, length(fragPos - cameraPos));
-#else
-    float fadeOut = smoothstep(.75, 1., dot(shadowPos.xy, shadowPos.xy));
-    // Fade out shadows near shadow texture edges
-    fadeOut = smoothstep(.75, 1., dot(shadowPos.xy, shadowPos.xy));
-#endif
-
+    // Fade out shadows near the shadow map edges
+    #if ZONE_RENDERER
+        // TODO: Make this configurable if we make the Shadow Distance Variable
+        const float fadeStart = 75.0 * TILE_SIZE;
+        const float fadeEnd   = 80.0 * TILE_SIZE;
+        float fadeOut = smoothstep(fadeStart, fadeEnd, length(fragPos - cameraPos));
+    #else
+        float fadeOut = smoothstep(.75, 1., dot(shadowPos.xy, shadowPos.xy));
+    #endif
     if (fadeOut >= 1)
         return 0.f;
 
