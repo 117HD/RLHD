@@ -82040,7 +82040,7 @@
     "colorOverrides": [
       {
         "description": "Moss",
-        "colors": "h >= 10",
+        "colors": "h >= 10 && h < 30",
         "baseMaterial": "GRASS_3",
         "uvType": "BOX",
         "uvOrientation": 1024,
@@ -82054,7 +82054,23 @@
       "FLATSKEW_TALTEKLAN02_CORNER02_LVL0",
       "FLATSKEW_TALTEKLAN02_STRAIGHT03_LVL1",
       "FLATSKEW_TALTEKLAN02_STRAIGHT03_LVL2",
-      "FLATSKEW_TALTEKLAN02_STRAIGHT04_LVL1"
+      "FLATSKEW_TALTEKLAN02_STRAIGHT04_LVL1",
+      "SCRAMBLED_WALL",
+      "SCRAMBLED_WALL_END",
+      "SCRAMBLED_WALL_END_MIRROR",
+      "WALLKIT_ULAMA01_MIDDLE01",
+      "WALLKIT_ULAMA01_MIDDLE02",
+      "WALLKIT_ULAMA01_MIDDLE02_MIRROR",
+      "WALLKIT_ULAMA01_MIDDLE03",
+      "WALLKIT_ULAMA01_MIDDLE03_MIRROR",
+      "WALLKIT_ULAMA01_MIDDLE04",
+      "WALLKIT_ULAMA01_MIDDLE04_MIRROR",
+      "WALLKIT_ULAMA01_MIDDLE05",
+      "WALLKIT_ULAMA01_MIDDLE05_MIRROR",
+      "WALLKIT_ULAMA01_CORNER02",
+      "WALLKIT_ULAMA01_CORNER02_MIRROR",
+      "WALLKIT_ULAMA01_CORNER03",
+      "WALLKIT_ULAMA01_CORNER03_MIRROR"
     ]
   },
   {
@@ -82076,7 +82092,8 @@
     "uvScale": 0.711,
     "objectIds": [
       "ZEMA_TEMPLE01_FLATSKEW_CORN_LVL2",
-      "ZEMA_TEMPLE01_FLATSKEW_CORN_LVL1"
+      "ZEMA_TEMPLE01_FLATSKEW_CORN_LVL1",
+      "PILLAR_ZEMA01_CITY01_BROKEN02"
     ]
   },
   {
@@ -82106,7 +82123,10 @@
       "WALLKIT_ZEMA_CITY02",
       "WALLKIT_ZEMA_CITY04_END01",
       "WALLKIT_ZEMA_CITY04_END01_MIRROR",
-      "TOA_TOMB04_TILE01_FULL01_RED01"
+      "TOA_TOMB04_TILE01_FULL01_RED01",
+      "WALLKIT_ZEMA_CITY01_LOWER",
+      "WALLKIT_ZEMA_CITY04_END01_LOWER",
+      "WALLKIT_ZEMA_CITY04_END01_MIRROR_LOWER"
     ]
   },
   {
@@ -82309,6 +82329,44 @@
     "uvOrientation": 187,
     "objectIds": [
       "WALLKIT_TALTEKLAN04_ROOF01"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Wooden - Decorative wooden pillars",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h >= 32",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "colors": [ "h == 7 && s == 1" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 87
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_TALTEKLAN03_POLE01",
+      "WALLKIT_TALTEKLAN03_POLE02",
+      "WALLKIT_TALTEKLAN03_POLE02_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Stone Hoop",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 187,
+    "objectIds": [
+      "WALLKIT_ULAMA01_HOOP01",
+      "WALLKIT_ULAMA01_HOOP01_MIRROR"
     ]
   }
 ]
