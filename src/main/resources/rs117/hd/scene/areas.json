@@ -9891,12 +9891,25 @@
     ]
   },
   {
-    "name": "ANCIENT_VAULT",
+    "name": "ANCIENT_VAULT_UPPER",
     "regions": [
-      13156,
       15766
     ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "ANCIENT_VAULT_LOWER",
+    "regions": [
+      13156
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ANCIENT_VAULT",
+    "areas": [
+      "ANCIENT_VAULT_UPPER",
+      "ANCIENT_VAULT_LOWER"
+    ]
   },
   {
     "name": "DT2_DIGSITE_UNDERGROUND",
