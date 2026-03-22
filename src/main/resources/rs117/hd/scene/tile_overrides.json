@@ -1134,6 +1134,22 @@
     "blendedAsOpposite": true
   },
   {
+    "description": "TODO: Fix this properly",
+    "name": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
+    "area": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
+    "groundMaterial": "GRASS_1",
+    "blended": false,
+    "blendedAsOpposite": true,
+    "underlayIds": [
+      48,
+      50,
+      64
+    ],
+    "replacements": {
+      "SEASONAL_GRASS": "season == SeasonalTheme.WINTER || blending"
+    }
+  },
+  {
     "name": "EAST_ARDOUGNE_DOCKS_FIX_5",
     "area": "EAST_ARDOUGNE_DOCKS_FIX",
     "overlayIds": [
@@ -3694,25 +3710,6 @@
       63
     ],
     "groundMaterial": "VARIED_DIRT_SHINY"
-  },
-  {
-    "name": "WIZARD_CROMPERTY_PATH_1",
-    "area": "WIZARD_CROMPERTY_PATH_1",
-    "underlayIds": [
-      48,
-      64
-    ],
-    "overlayIds": [ 10 ],
-    "groundMaterial": "VARROCK_PATHS",
-    "maxSaturation": 0,
-    "maxHue": 0,
-    "shiftLightness": 12,
-    "blended": false,
-    "blendedAsOpposite": true,
-    "replacements": {
-      "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER",
-      "NONE": "!textures"
-    }
   },
   {
     "name": "WIZARD_CROMPERTY_PATH_1",
