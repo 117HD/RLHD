@@ -82091,7 +82091,8 @@
       "SKEWWALL_TALTEKLAN01_CORNER02",
       "SKEWWALL_TALTEKLAN01_END03",
       "STEPS_TALKASTI01_DEFAULT01",
-      "STEPS_STRANGLER01_DEFAULT02"
+      "STEPS_STRANGLER01_DEFAULT02",
+      "SKEWWALL_TALTEKLAN01_END01"
     ]
   },
   {
@@ -82178,6 +82179,136 @@
       "TALKASTI01_POTTERY01_DEFAULT03D",
       "TALKASTI01_POTTED01_PLANT01",
       "TALKASTI01_POTTED01_PLANT02"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Smooth walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 768
+      },
+      {
+        "colors": [ "h == 0 && s == 1" ],
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 1024
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_TALTEKLAN01_MIDDLE01",
+      "WALLKIT_TALTEKLAN01_MIDDLE02",
+      "WALLKIT_TALTEKLAN01_MIDDLE03",
+      "WALLKIT_TALTEKLAN01_MIDDLE04",
+      "WALLKIT_TALTEKLAN01_WINDOW01",
+      "WALLKIT_TALTEKLAN01_WINDOW02",
+      "WALLKIT_TALTEKLAN01_WINDOW03",
+      "WALLKIT_TALTEKLAN01_ARCH02",
+      "WALLKIT_TALTEKLAN01_ARCH01"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Smooth walls with wooden planks",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 768
+      },
+      {
+        "colors": [ "h == 0 && s == 1" ],
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 1024
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_TALTEKLAN02_BROKEN01",
+      "WALLKIT_TALTEKLAN02_BROKEN01_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Wooden - Plank walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h >= 32",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 768
+      },
+      {
+        "colors": [ "h == 7 && s == 1" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 1024
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_TALTEKLAN02_MIDDLE01",
+      "WALLKIT_TALTEKLAN03_MIDDLE01",
+      "WALLKIT_TALTEKLAN03_WINDOW01",
+      "WALLKIT_TALTEKLAN02_WINDOW01"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Wooden - Decorative wooden pillars",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h >= 32",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "colors": [ "h == 7 && s == 1" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 87
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_TALTEKLAN03_POLE01",
+      "WALLKIT_TALTEKLAN03_POLE02",
+      "WALLKIT_TALTEKLAN03_POLE02_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Rooftop walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 187,
+    "objectIds": [
+      "WALLKIT_TALTEKLAN04_ROOF01"
     ]
   }
 ]
