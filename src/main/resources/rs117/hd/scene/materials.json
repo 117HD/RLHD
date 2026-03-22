@@ -3410,15 +3410,5 @@
     "brightness": 1.159,
     "specularStrength": 0.6,
     "specularGloss": 30.0
-  },
-  {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHT",
-    "parent": "WINTER_JAGGED_STONE_TILE",
-    "brightness": 1.825
-  },
-  {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHTER",
-    "parent": "WINTER_JAGGED_STONE_TILE",
-    "brightness": 2.916
   }
 ]

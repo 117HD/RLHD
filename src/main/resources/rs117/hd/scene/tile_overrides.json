@@ -151,20 +151,39 @@
   },
   {
     "name": "WINTER_JAGGED_STONE_TILE",
-    "groundMaterial": "WINTER_JAGGED_STONE_TILE"
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE_TEXTURE_ONLY": "blendingTextures"
+    }
+  },
+  {
+    "name": "WINTER_JAGGED_STONE_TILE_TEXTURE_ONLY",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "blended": false
   },
   {
     "name": "WINTER_JAGGED_STONE_TILE_LIGHT",
-    "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT"
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "shiftLightness": 15,
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE_LIGHT_TEXTURE_ONLY": "blendingTextures"
+    }
   },
   {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHT_2",
-    "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT_2"
+    "name": "WINTER_JAGGED_STONE_TILE_LIGHT_TEXTURE_ONLY",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "blended": false,
+    "shiftLightness": 15
+  },
+  {
+    "name": "WINTER_JAGGED_STONE_TILE_LIGHTER",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "shiftLightness": 23
   },
   {
     "name": "WINTER_EAST_ARDOUGNE_BRIDGE",
     "groundMaterial": "WINTER_JAGGED_STONE_TILE",
-    "maxLightness": 53,
+    "maxLightness": 42,
     "replacements": {
       "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND": "!blending"
     }
@@ -172,14 +191,25 @@
   {
     "name": "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND",
     "groundMaterial": "WINTER_JAGGED_STONE_TILE",
-    "maxLightness": 44
+    "maxLightness": 41
   },
   {
     "name": "WINTER_EDGEVILLE_PATH",
-    "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
     "maxHue": 0,
     "maxSaturation": 0,
-    "shiftLightness": 8
+    "shiftLightness": 23,
+    "replacements": {
+      "WINTER_EDGEVILLE_PATH_TEXTURE_BLENDING_ONLY": "blendingTextures"
+    }
+  },
+  {
+    "name": "WINTER_EDGEVILLE_PATH_TEXTURE_BLENDING_ONLY",
+    "groundMaterial": "WINTER_JAGGED_STONE_TILE",
+    "maxHue": 0,
+    "maxSaturation": 0,
+    "shiftLightness": 23,
+    "blended": false
   },
   {
     "name": "WINTER_EAST_ARDOUGNE_CASTLE_PATH_FIX",
@@ -3571,7 +3601,7 @@
     "shiftLightness": 6,
     "replacements": {
       "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
-      "EAST_ARDOUGNE_PATHS_1_TEXTURE_BLENDING_ONLY": "blendingTextures",
+      "EAST_ARDOUGNE_PATHS_1_TEXTURE_BLENDING_ONLY": "textureBlending",
       "NONE": "!textures"
     }
   },
@@ -3627,8 +3657,8 @@
       12
     ],
     "groundMaterial": "VARROCK_PATHS",
-    "minLightness": 33,
-    "maxLightness": 33,
+    "minLightness": 30,
+    "maxLightness": 30,
     "replacements": {
       "NONE": "!textures",
       "WINTER_EAST_ARDOUGNE_BRIDGE": "season == SeasonalTheme.WINTER"
@@ -3685,6 +3715,25 @@
     }
   },
   {
+    "name": "WIZARD_CROMPERTY_PATH_1",
+    "area": "WIZARD_CROMPERTY_PATH_1",
+    "underlayIds": [
+      48,
+      64
+    ],
+    "overlayIds": [ 10 ],
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "shiftLightness": 12,
+    "blended": false,
+    "blendedAsOpposite": true,
+    "replacements": {
+      "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "WIZARD_CROMPERTY_PATH_2",
     "area": "WIZARD_CROMPERTY_PATH_2",
     "underlayIds": [
@@ -3694,8 +3743,26 @@
     "groundMaterial": "VARROCK_PATHS",
     "maxSaturation": 0,
     "maxHue": 0,
-    "shiftLightness": 12,
+    "shiftLightness": 11,
     "blendedAsOpposite": true,
+    "replacements": {
+      "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER",
+      "WIZARD_CROMPERTY_PATH_2_TEXTURE_BLENDING_ONLY": "textureBlending",
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "WIZARD_CROMPERTY_PATH_2_TEXTURE_BLENDING_ONLY",
+    "area": "WIZARD_CROMPERTY_PATH_2",
+    "underlayIds": [
+      48,
+      64
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "shiftLightness": 11,
+    "blended": false,
     "replacements": {
       "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER",
       "NONE": "!textures"
@@ -3803,7 +3870,7 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT_2": "season == SeasonalTheme.WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHTER": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -4969,7 +5036,7 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT_2": "season == SeasonalTheme.WINTER",
+      "WINTER_JAGGED_STONE_TILE_LIGHTER": "season == SeasonalTheme.WINTER",
       "OVERLAY_ZEAH_PATHS_TEXTURE_BLENDING_ONLY": "blendingTextures"
     }
   },
@@ -4983,7 +5050,7 @@
     "groundMaterial": "VARROCK_PATHS",
     "blended": false,
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT_2": "season == SeasonalTheme.WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHTER": "season == SeasonalTheme.WINTER"
     }
   },
   {
