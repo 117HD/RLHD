@@ -5889,6 +5889,16 @@
     "blended": false
   },
   {
+    "name": "TOA_CRONDIS_WATER_GREEN",
+    "area": "TOA_CRONDIS_WATER",
+    "underlayIds": [
+      133,
+      134
+    ],
+    "waterType": "POISON_WASTE",
+    "blended": false
+  },
+  {
     "name": "TOA_CRONDIS_WATER",
     "area": "TOA_CRONDIS_WATER",
     "overlayIds": [
@@ -5940,6 +5950,15 @@
       110,
       117
     ]
+  },
+  {
+    "name": "TOA_CRONDIS_ISLAND",
+    "area": "TOA_PATH_OF_CRONDIS_BOSS",
+    "underlayIds": [
+      109,
+      117
+    ],
+    "groundMaterial": "SAND"
   },
   {
     "name": "TOA_CRONDIS_PUZZLE_FLOOR",
@@ -9577,25 +9596,6 @@
       59
     ],
     "groundMaterial": "SNOW_2"
-  },
-  {
-    "name": "TOA_CRONDIS_ISLAND",
-    "area": "TOA_PATH_OF_CRONDIS_BOSS",
-    "underlayIds": [
-      109,
-      117
-    ],
-    "groundMaterial": "SAND"
-  },
-  {
-    "name": "TOA_CRONDIS_WATER_GREEN",
-    "area": "TOA_CRONDIS_WATER",
-    "underlayIds": [
-      133,
-      134
-    ],
-    "waterType": "POISON_WASTE",
-    "blended": false
   },
   {
     "name": "MAGE_ARENA_BANK_FLOOR",
