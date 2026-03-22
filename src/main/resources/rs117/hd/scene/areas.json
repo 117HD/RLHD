@@ -2291,13 +2291,6 @@
     ]
   },
   {
-    "name": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
-    "aabbs": [
-      [ 2648, 3326, 2650, 3326 ],
-      [ 2650, 3323 ]
-    ]
-  },
-  {
     "name": "CLOCK_TOWER_DUNGEON_COLORED_TILES",
     "aabbs": [
       [ 2578, 9649, 2579, 9650 ]
