@@ -29588,7 +29588,7 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "retainVanillaUvs": false,
-    "uvScale": 0.65,
+    "uvScale": 0.4,
     "objectIds": [
       "BANK_DEPOSIT_BOX"
     ],
@@ -29599,7 +29599,7 @@
         "colors": "s == 7",
         "uvType": "BOX",
         "uvScale": 0.5,
-        "uvOrientation": 256
+        "uvOrientation": 512
       }
     ]
   },
