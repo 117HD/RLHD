@@ -29028,8 +29028,7 @@
       "DT2_SCAR_FALLOFF9",
       "DT2_SCAR_FALLOFF_10"
     ],
-    "castShadows": false,
-    "baseMaterial": "DIRT_1",
+    "baseMaterial": "WATER_SLUDGE",
     "uvType": "BOX",
     "uvScale": 0.7
   },

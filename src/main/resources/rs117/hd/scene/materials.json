@@ -3457,5 +3457,16 @@
     "name": "WINTER_JAGGED_STONE_TILE_LIGHTER",
     "parent": "WINTER_JAGGED_STONE_TILE",
     "brightness": 2.916
+  },
+  {
+    "name": "WATER_SLUDGE",
+    "parent": "MUD_1",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.075,
+    "flowMapDuration": [
+      7.0,
+      -7.0
+    ],
+    "brightness": 1.5
   }
 ]
