@@ -671,7 +671,13 @@
     "vanillaTextureIndex": 120
   },
   {
+    "name": "FORTIS_ROADS_N"
+  },
+  {
     "name": "FORTIS_ROADS",
+    "normalMap": "FORTIS_ROADS_N",
+    "specularStrength": 0.30,
+    "specularGloss": 30,
     "vanillaTextureIndex": 121,
     "textureScale": [ -1, -1 ],
     "brightness": 0.92
