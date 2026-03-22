@@ -49,21 +49,6 @@
     }
   },
   {
-    "description": "TODO: Fix this properly",
-    "name": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
-    "area": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
-    "blended": false,
-    "blendedAsOpposite": true,
-    "underlayIds": [
-      48,
-      50,
-      64
-    ],
-    "replacements": {
-      "SEASONAL_GRASS": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
     "name": "SEASONAL_GRASS",
     "replacements": {
       "WINTER_GRASS": "season == SeasonalTheme.WINTER",
@@ -1147,6 +1132,21 @@
     "groundMaterial": "WOOD_PLANKS_1",
     "blended": false,
     "blendedAsOpposite": true
+  },
+  {
+    "description": "TODO: Fix this properly",
+    "name": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
+    "area": "WIZARD_CROMPERTY_PATH_BLENDING_FIX_2",
+    "blended": false,
+    "blendedAsOpposite": true,
+    "underlayIds": [
+      48,
+      50,
+      64
+    ],
+    "replacements": {
+      "SEASONAL_GRASS": true
+    }
   },
   {
     "name": "EAST_ARDOUGNE_DOCKS_FIX_5",
@@ -3618,7 +3618,6 @@
     "shiftLightness": 6,
     "replacements": {
       "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
-      "EAST_ARDOUGNE_PATHS_1_TEXTURE_BLENDING_ONLY": "textureBlending",
       "NONE": "!textures"
     }
   },
