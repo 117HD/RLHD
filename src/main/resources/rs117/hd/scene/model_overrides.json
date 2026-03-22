@@ -511,11 +511,8 @@
       "SUPERIOR_BLOODVELD",
       "SUPERIOR_KOUREND_BLOODVELD",
       "SUPERIOR_CAVE_HORROR",
-      "SUPERIOR_ABBERANT_SPECTRE",
-      "SUPERIOR_KOUREND_SPECTRE",
       "SUPERIOR_DUSTDEVIL",
       "SUPERIOR_KURASK",
-      "SUPERIOR_SMOKE_DEVIL",
       "SUPERIOR_DARK_BEAST",
       "SUPERIOR_ABYSSAL_DEMON",
       "SUPERIOR_NECHRYAEL",
@@ -11306,6 +11303,7 @@
       "MOLE_STALAGTITE_FALLOFF",
       "STAGAMITE_LARGE",
       "STAGAMITE_SMALL",
+      "STALAGTITE_SMALL",
       "STAGATITE_LARGE",
       "TOURTRAP_QIP_MINE_STALAGTITE_01",
       "TOURTRAP_QIP_MINE_STALAGTITE_02",
@@ -30340,7 +30338,7 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "retainVanillaUvs": false,
-    "uvScale": 0.65,
+    "uvScale": 0.4,
     "objectIds": [
       "BANK_DEPOSIT_BOX"
     ],
@@ -30351,7 +30349,7 @@
         "colors": "s == 7",
         "uvType": "BOX",
         "uvScale": 0.5,
-        "uvOrientation": 256
+        "uvOrientation": 512
       }
     ]
   },
@@ -43076,13 +43074,26 @@
   },
   {
     "description": "Objects - WOODEN - Textured Torch",
-    "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "CAVE_TORCH"
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
-    "uvScale": 0.4
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && a == 255",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125",
+        "upwardsNormals": true
+      }
+    ]
   },
   {
     "description": "Decoration - Textured Lumbridge Heraldry",
@@ -80839,11 +80850,12 @@
     ]
   },
   {
-    "description": "SMOKE_DEVIL_BOSS",
+    "description": "SMOKE_DEVIL_BOSS_PET_SUPERIOR",
     "npcIds": [
       "SMOKE_DEVIL_BOSS",
       "SMOKE_PET",
-      "POH_SMOKE_PET"
+      "POH_SMOKE_PET",
+      "SUPERIOR_SMOKE_DEVIL"
     ],
     "colorOverrides": [
       {
@@ -80862,6 +80874,20 @@
         "colors": "s == 6",
         "baseMaterial": "GRAY_150"
       }
+    ]
+  },
+  {
+    "description": "ABBERANT_SPECTRE",
+    "baseMaterial": "GRAY_75",
+    "upwardsNormals": true,
+    "npcIds": [
+      "SLAYER_ABBERANT_SPECTRE_1",
+      "SLAYER_ABBERANT_SPECTRE_2",
+      "SLAYER_ABBERANT_SPECTRE_3",
+      "SLAYER_ABBERANT_SPECTRE_4",
+      "SUPERIOR_ABBERANT_SPECTRE",
+      "KOUREND_SPECTRE",
+      "SUPERIOR_KOUREND_SPECTRE"
     ]
   },
   {

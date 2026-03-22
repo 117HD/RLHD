@@ -2708,7 +2708,8 @@
     "normalMap": "METALLIC_2_N",
     "brightness": 1.1,
     "specularStrength": 1,
-    "specularGloss": 30.0
+    "specularGloss": 30.0,
+    "hasTransparency": true
   },
   {
     "name": "WALL_STONE_N"
