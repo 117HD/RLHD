@@ -118,6 +118,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private Zone zone;
 	private boolean isModelPartiallyVisible;
 	private boolean hasAlpha;
+	private int drawIndex;
 	private int orientation;
 	private int x;
 	private int y;
@@ -205,6 +206,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		@Nonnull Zone zone,
 		boolean isModelPartiallyVisible,
 		boolean hasAlpha,
+		int drawIndex,
 		int orientation,
 		int x, int y, int z,
 		@Nonnull UploadModelFunc uploadFunc
@@ -216,6 +218,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		this.zone = zone;
 		this.isModelPartiallyVisible = isModelPartiallyVisible;
 		this.hasAlpha = hasAlpha;
+		this.drawIndex = drawIndex;
 		this.orientation = orientation;
 		this.x = x;
 		this.y = y;
@@ -252,7 +255,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		waitForCompletion();
 
 		processing.set(false);
-		zone.pendingModelJobs.add(this);
+		if (hasAlpha)
+			zone.pendingModelJobs.add(this);
 		INFLIGHT.add(this);
 		queue();
 
@@ -318,6 +322,7 @@ public final class AsyncCachedModel extends Job implements Model {
 				zone,
 				isModelPartiallyVisible,
 				hasAlpha,
+				drawIndex,
 				orientation,
 				x, y, z
 			);
@@ -325,7 +330,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			log.error("Error drawing temp object", e);
 		} finally {
 			INFLIGHT.remove(this);
-			if (zone != null)
+			if (zone != null && hasAlpha)
 				zone.pendingModelJobs.remove(this);
 
 			ctx = null;
@@ -422,6 +427,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			@Nonnull Zone zone,
 			boolean isModelPartiallyVisible,
 			boolean hasAlpha,
+			int drawIndex,
 			int orientation,
 			int x, int y, int z
 		);

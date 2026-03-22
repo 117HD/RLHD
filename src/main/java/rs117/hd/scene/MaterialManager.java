@@ -378,7 +378,7 @@ public class MaterialManager {
 				textureLayers.add(layer);
 			} else {
 				layer = textureLayers.get(textureLayerIndex);
-				layer.needsUpload = !Objects.equals(mat.getTextureName(), layer.material.getTextureName());
+				layer.needsUpload |= !Objects.equals(mat.getTextureName(), layer.material.getTextureName());
 			}
 			layer.material = mat;
 			mat.textureLayer = textureLayerIndex++;
