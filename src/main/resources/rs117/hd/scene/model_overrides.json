@@ -8102,6 +8102,16 @@
     "uvOrientation": 100
   },
   {
+    "description": "ROUNDED_CAVE_WALLS_LIGHT",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "objectIds": [
+      "CAVEWALL_FACE1_NOT_LOW_DETAIL_LEV2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100
+  },
+  {
     "description": "Underground Pass - Grunge - Bone - Temple Door attached to Rounded Cave Wall - Textured",
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX",
@@ -19312,7 +19322,7 @@
     "description": "Walls - Double Rope Rails",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.54,
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "description": "Ropes",
@@ -19348,39 +19358,30 @@
         "colors": "h == 6 && s == 3",
         "baseMaterial": "ROPE",
         "uvType": "BOX",
-        "uvScale": 0.25
-      }
-    ]
-  },
-  {
-    "description": "Gnome - Wooden - Diagonal floor - textured",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.7,
-    "retainVanillaUvs": false,
-    "objectIds": [
-      "ALUFT_BRIDGE_CORNERFLOOR"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Rope",
-        "colors": "h == 6 && s == 3",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.25
+        "uvScale": 0.2
       }
     ]
   },
   {
     "description": "Gnome - Ground Decoration - Wooden - Log Supports",
     "retainVanillaUvs": false,
-    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "BRIDGE_CORNERFLOOR",
       "BRIDGE_FLOORLIGHT",
-      "BRIDGE_SIDEFLOOR"
+      "BRIDGE_SIDEFLOOR",
+      "ALUFT_BRIDGE_CORNERFLOOR"
     ],
-    "uvType": "WORLD_XZ"
+    "uvType": "WORLD_XZ",
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512
+      }
+    ]
   },
   {
     "description": "Gnome - Ground Decoration - Wooden - Log Bridges",
@@ -19469,27 +19470,17 @@
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.8,
+    "uvScale": 0.7,
     "objectIds": [
       "TREEDOORROOF"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Wood",
-        "colors": "h == 5",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX",
-        "uvOrientation": 512,
-        "uvScale": 0.8
-      }
     ]
   },
   {
     "description": "Gnome Stronghold Wooden - Platforms - Textured",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.8,
+    "uvScale": 0.7,
     "objectIds": [
       "TREEWALL1B_LVL2",
       "TREEWALL1B_LVL1"
@@ -19607,7 +19598,8 @@
     ],
     "objectIds": [
       "ALUFT_GNOME_RESTAURANT_TABLE_ONE",
-      "ALUFT_GNOME_RESTAURANT_TABLE_TWO"
+      "ALUFT_GNOME_RESTAURANT_TABLE_TWO",
+      "ALUFT_GNOME_RESTAURANT_TABLE"
     ]
   },
   {
@@ -54694,19 +54686,65 @@
   },
   {
     "description": "Gnome Glider",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "CARPET_LIGHT",
     "uvType": "BOX",
+    "uvScale": 0.45,
     "objectIds": [
-      "GNOME_GLIDER"
+      "GNOME_GLIDER",
+      "TREEWALLBRANCH4_LVL4",
+      "FAVOUR_GNOME_GLIDER",
+      "GNOME_GLIDERCRASHED",
+      "MM_GLIDER_OPEN",
+      "MM_GLIDER"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 5 || h == 6 && s == 4",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 256,
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Gnome Cooker",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALUFT_GNOME_COOKER",
+      "ALUFT_GNOME_KITCHEN_UNIT"
     ],
     "colorOverrides": [
       {
         "description": "Roots",
-        "baseMaterial": "LIGHT_BARK",
-        "colors": "h == 5",
-        "uvType": "MODEL_XZ",
-        "uvOrientation": 256,
-        "uvScale": 0.3
+        "baseMaterial": "NONE",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 343,
+        "uvScale": 0.8
+      }
+    ]
+  },
+
+  {
+    "description": "Gnome Stronghold - Terror Bird Cage",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "depthBias": 1,
+    "objectIds": [
+      "ALUFT_TERROR_BIRD_CAGE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Roots",
+        "baseMaterial": "NONE",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 343,
+        "uvScale": 0.8
       }
     ]
   },
@@ -65610,10 +65648,9 @@
       {
         "description": "Wooden spear shaft",
         "colors": "h == 5",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
-        "uvScale": 0.5,
-        "uvOrientation": 383
+        "uvScale": 0.4
       }
     ]
   },
@@ -72463,7 +72500,17 @@
     "uvOrientation": 512,
     "objectIds": [
       "MM2_CRASHSITE_WALL_BOTTOM_01",
-      "MM2_CRASHSITE_WALL_BOTTOM_02"
+      "MM2_CRASHSITE_WALL_BOTTOM_02",
+      "MM2_SHIPYARD_PIPE"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Nieves' Grave",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "MM2_GRAVESTONE_NIEVE"
     ]
   },
   {
