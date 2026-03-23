@@ -1532,7 +1532,8 @@
       "WILD2_TREE_C",
       "MISTMYST_TREE",
       "DEADTREE1_NOOP",
-      "WILDY_HUB_TREE_BIG"
+      "WILDY_HUB_TREE_BIG",
+      "MM2_BURNT_FALLEN_TREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -1567,6 +1568,7 @@
     "objectIds": [
       "TREESTUMP",
       "TREESTUMP2",
+      "TREESTUMP2_GREEN",
       "DEADTREE2_STUMP_DARK",
       "DEADTREE2_STUMP",
       "DEADTREE6_STUMP",
@@ -1588,7 +1590,8 @@
       "MDAUGHTER_PASSABLE_TREE_STUMP",
       "DRAGON_SLAYER_QIP_WILD5_TREE_STUMP",
       "SOTN_HUNTING_TREESTUMP_NOOP",
-      "MM_BUSH_KHARAZI_JUNGLESTUMP"
+      "MM_BUSH_KHARAZI_JUNGLESTUMP",
+      "DEADTREE_BURNT_STUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -7592,7 +7595,10 @@
       "GOBLIN_CAVEWALL_STALAGMITE_TWIN",
       "GOBLIN_CAVEWALL_STALAGMITE_LARGE",
       "GOBLIN_CAVEWALL_STALAGMITE",
-      "DORGESH_CAVES_STALAGTITE_01"
+      "DORGESH_CAVES_STALAGTITE_01",
+      "GNOME_STRONGHOLD_SC_ROCK_BOTTOM",
+      "GNOME_STRONGHOLD_SC_ROCKFALLOFF",
+      "GNOME_STRONGHOLD_SC_ROCK_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -33323,7 +33329,6 @@
     "description": "Oak Tree",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "terrainVertexSnap": true,
     "objectIds": [
       "OAK_TREE_SEEDLING",
       "OAK_TREE_1",
@@ -33358,7 +33363,6 @@
     "areas": [ "WARM_REGIONS" ],
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "terrainVertexSnap": true,
     "objectIds": [
       "OAK_TREE_SEEDLING",
       "OAK_TREE_1",
@@ -35691,7 +35695,8 @@
       "WILD3_MUSHROOMS_C",
       "WILD4_MUSHROOMS_A",
       "WILD4_MUSHROOMS_B",
-      "WILD4_MUSHROOMS_C"
+      "WILD4_MUSHROOMS_C",
+      "WILD5_MUSHROOMS_D"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -39188,6 +39193,24 @@
     ]
   },
   {
+    "description": "Smoke Devil Dungeon Cave Entrance and Exits",
+    "baseMaterial": "GRAVEL",
+    "terrainVertexSnap": true,
+    "depthBias": 50,
+    "objectIds": [
+      "MM2_CAVERN_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "depthBias": 50
+      }
+    ]
+  },
+  {
     "description": "Keldagrim - Metallic - Metal Walls - Exterior",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
@@ -41949,9 +41972,11 @@
       "BROKEN_GREY_TILE_01",
       "BROKEN_GREY_TILE_02",
       "BROKEN_GREY_TILE_03",
+      "BROKEN_GREY_TILE_04",
       "BROKEN_GREY_TILE_05",
       "BRIMSTONE_DECO_CORN",
       "BRIMSTONE_DECO_SIDE",
+      "BROKEN_GREY_TILE_06",
       "BRIMSTONE_DECO_MED"
     ],
     "uvType": "BOX",
@@ -72416,6 +72441,29 @@
         "baseMaterial": "GRAY_90",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Debris Top",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM2_CRASHSITE_WALL_TOP_TALL_01",
+      "MM2_CRASHSITE_WALL_TOP_TALL_02"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Debris Bottom",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "depthBias": 1,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM2_CRASHSITE_WALL_BOTTOM_01",
+      "MM2_CRASHSITE_WALL_BOTTOM_02"
     ]
   },
   {
