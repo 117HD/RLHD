@@ -14929,6 +14929,21 @@
     "uvScale": 0.74
   },
   {
+    "description": "Baxtorian Falls - Cliff Rock Color Fix",
+    "baseMaterial": "GRUNGE_1",
+    "areas": [ "Baxtorian Falls - Cliff Rock Color Fix" ],
+    "inheritTileColorType": "UNDERLAY",
+    "castShadows": false,
+    "depthBias": 255,
+    "objectIds": [
+      "DUGUPSOIL1_LIGHT",
+      "DUGUPSOIL3_LIGHT",
+      "DUGUPSOIL2_LIGHT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.74
+  },
+  {
     "description": "Ground Decoration - Grunge - Small - Colored",
     "hideInAreas": [ "KHARIDIAN_DESERT_ENAKHRA_TEMPLE_HOLE_FIX" ],
     "baseMaterial": "GRUNGE_1",
@@ -31383,7 +31398,9 @@
   },
   {
     "description": "Edgeville - Walls - Bank Front Windows - Tutorial Island Walls",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
     "objectIds": [
       "SHOPWINDOWWALL",
       "SHOPWINDOWWALL2"
@@ -49715,6 +49732,24 @@
     ]
   },
   {
+    "description": "Baxtorian Falls - Tree",
+    "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "OVERHANGING_TREE2_WATERFALL_QUEST",
+      "OVERHANGING_TREE1_WATERFALL_QUEST"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Baxtorian Falls - Swim Point - Hide Shadow",
+    "castShadows": false,
+    "objectIds": [
+      "WATERFALL_SWIM_POINT"
+    ]
+  },
+  {
     "description": "Underground Pass - Well of Voyage",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -54271,20 +54306,24 @@
   },
   {
     "description": "Baxtorian Falls tree and dirt on an island combo model",
-    "baseMaterial": "DIRT_2",
+    "baseMaterial": "DIRT_2_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.5,
+    "terrainVertexSnap": true,
     "colorOverrides": [
       {
         "description": "Tree and dirt as a single model - needs real UV to fix",
         "colors": "h == 5 && s == 6",
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "GRUNGE_2",
         "uvType": "BOX",
         "uvScale": 0.4
       }
     ],
     "objectIds": [
-      "OVERHANG3ROCK"
+      "OVERHANG3ROCK",
+      "WATERFALL_LEDGE_MIDDLE",
+      "WATERFALL_LEDGE_RIGHT",
+      "WATERFALL_LEDGE_LEFT"
     ]
   },
   {
@@ -54296,7 +54335,7 @@
       {
         "description": "Overdoor water",
         "colors": "h == 37",
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "GRUNGE_3_DARK",
         "uvType": "BOX",
         "uvScale": 0.4
       }

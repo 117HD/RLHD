@@ -1633,6 +1633,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Baxtorian Falls - Cliff Rock Color Fix",
+    "aabbs": [
+      [ 2524, 3520, 2535, 3532 ]
+    ]
+  },
+  {
     "name": "GOBLIN_CAVE",
     "regions": [
       10393
