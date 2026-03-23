@@ -39185,24 +39185,6 @@
     ]
   },
   {
-    "description": "Smoke Devil Dungeon Cave Entrance and Exits",
-    "baseMaterial": "GRAVEL",
-    "terrainVertexSnap": true,
-    "depthBias": 50,
-    "objectIds": [
-      "MM2_CAVERN_ENTRANCE"
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 128,
-    "colorOverrides": [
-      {
-        "colors": "h == 0 && l == 2",
-        "baseMaterial": "PURE_BLACK",
-        "depthBias": 50
-      }
-    ]
-  },
-  {
     "description": "Keldagrim - Metallic - Metal Walls - Exterior",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
@@ -61074,7 +61056,7 @@
       {
         "colors": "h == 0",
         "uvType": "BOX",
-        "baseMaterial": "ROCK_5",
+        "baseMaterial": "ROCK_3",
         "uvScale": 0.5
       }
     ]
@@ -61094,7 +61076,7 @@
       {
         "colors": "h == 0",
         "uvType": "BOX",
-        "baseMaterial": "ROCK_4",
+        "baseMaterial": "ROCK_3",
         "uvScale": 0.5
       }
     ]
@@ -72511,6 +72493,111 @@
     "uvScale": 0.7,
     "objectIds": [
       "MM2_GRAVESTONE_NIEVE"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Cavern - Entrance",
+    "baseMaterial": "GRAVEL",
+    "terrainVertexSnap": true,
+    "depthBias": 50,
+    "objectIds": [
+      "MM2_CAVERN_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "depthBias": 50
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Cavern - Entrance",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvOrientation": -50,
+    "uvScale": 0.55,
+    "objectIds": [
+      "MM2_CAVE_BOSS_EXIT",
+      "MM2_CAVE_BOSS_EXIT_TOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Cavern - Waterfall",
+    "depthBias": 255,
+    "objectIds": [
+      "MM2_CAVE_BOSS_WATERFALL_LARGE",
+      "MM2_CAVE_BOSS_WATERFALL_SMALL"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Cavern - Walls",
+    "baseMaterial": "ROCK_6_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_CAVE_BOSS_WALL_02",
+      "MM2_CAVE_BOSS_WALL_0201",
+      "MM2_CAVE_BOSS_WALL_01",
+      "MM2_CAVE_BOSS_WALL_TOP_04",
+      "MM2_CAVE_BOSS_WALL_0102",
+      "MM2_CAVE_BOSS_WALL_LEV1_CORNER_01",
+      "MM2_CAVE_BOSS_WALL_LEV1_STRAIGHT_01",
+      "MM2_CAVE_BOSS_WALL_LEV1_DIAG_03",
+      "MM2_CAVE_BOSS_WALL_LEV1_STRAIGHT_02",
+      "MM2_CAVE_BOSS_WALL_LEV1_CORNER_02",
+      "MM2_CAVE_BOSS_WALL_TOP_05",
+      "MM2_CAVE_BOSS_WALL_TOP_06",
+      "MM2_CAVE_BOSS_WALL_LEV1_DIAG_01",
+      "MM2_CAVE_BOSS_WALL_LEV1_CORNER_03",
+      "MM2_CAVE_BOSS_WALL_LEV1_DIAG_02",
+      "MM2_CAVE_BOSS_WALL_LEV1_CORNER_04",
+      "MM2_CAVE_BOSS_WALL_LEV1_DIAG_04",
+      "MM2_CAVE_BOSS_WALL_LEV1_ROOF",
+      "MM2_CAVE_BOSS_WALL_LEV1_ROOF_SIDE_01",
+      "MM2_CAVE_BOSS_WALL_LEV1_ROOF_SIDE_02",
+      "MM2_CAVE_BOSS_WALL_LEV1_ROOF_02",
+      "MM2_CAVE_BOSS_RAMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 4 || s == 5",
+        "baseMaterial": "ROCK_3_VERY_LIGHT_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Cavern - Walls with Water Pool",
+    "baseMaterial": "ROCK_6_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_CAVE_BOSS_WALL_TOP_02",
+      "MM2_CAVE_BOSS_WALL_TOP_01",
+      "MM2_CAVE_BOSS_WALL_TOP_CORNER_03",
+      "MM2_CAVE_BOSS_WALL_TOP_CORNER_04",
+      "MM2_CAVE_BOSS_WALL_TOP_CORNER_02",
+      "MM2_CAVE_BOSS_WALL_TOP_CORNER_01",
+      "MM2_CAVE_BOSS_WALL_TOP_03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "NONE",
+        "depthBias": 30
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX"
+      }
     ]
   },
   {

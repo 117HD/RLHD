@@ -10260,6 +10260,13 @@
     "blended": false
   },
   {
+    "name": "Crash Site Cavern (Monkey Madness 2)",
+    "area": "Crash Site Cavern (Monkey Madness 2)",
+    "groundMaterial": "PACKED_EARTH",
+    "blended": false,
+    "shiftLightness": 6
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {
