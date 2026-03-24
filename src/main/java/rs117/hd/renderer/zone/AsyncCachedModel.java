@@ -338,6 +338,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			zone = null;
 			tileObject = null;
 			modelOverride = null;
+			drawIndex = -1;
 
 			// Reset cached status before returning to the POOL
 			for (int i = 0; i < cachedFields.length; i++)
