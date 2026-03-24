@@ -83281,6 +83281,7 @@
       "TOA_WALL_TOMB01_VARIANT01",
       "TOA_WALL_TOMB01_VARIANT02",
       "TOA_WALL_TOMB01_VARIANT01_DARK01",
+      "TOA_WALL_TOMB01_VARIANT01_BRIGHT",
       "TOA_SCABARAS_SPAWN_HOLE",
       "TOA_NEXUS_WALL_ALT_MIRROR",
       "TOA_NEXUS_TALLWALL",
@@ -83290,11 +83291,39 @@
       "TOA_GATEWAY_LOBBY03",
       "TOA_DOOR_EXIT",
       "TOA_DOOR_TOP02",
-      "TOA_WALL_PILLAR02"
+      "TOA_NEXUS_PILLAR01",
+      "TOA_NEXUS_PILLAR_BROKEN01",
+      "TOA_NEXUS_PILLAR_BROKEN02",
+      "TOA_WALL_PILLAR02",
+      "TOA_CRONDIS_EXIT",
+      "TOA_CRONDIS_EXIT_TOP"
     ]
   },
   {
-    "description": "ToA - Lobby and Nexus Area - Stone Brick Pickaxe Wall ",
+    "description": "ToA - Lobby and Nexus Area - Boss Doors",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": -189,
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 39",
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX",
+        "uvOrientation": -128,
+        "uvScale": 1.2
+      }
+    ],
+    "objectIds": [
+      "TOA_NEXUS_SCABARAS_DOOR_CLOSED",
+      "TOA_NEXUS_APMEKEN_DOOR_CLOSED",
+      "TOA_NEXUS_CRONDIS_DOOR_CLOSED",
+      "TOA_NEXUS_HET_DOOR_CLOSED"
+    ]
+  },
+  {
+    "description": "ToA - Lobby and Nexus Area - Stone Brick Pickaxe Wall",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -83589,7 +83618,53 @@
     ]
   },
   {
-    "description": "TOA Zebek stone brick wall - incomplete",
+    "description": "TOA - Crondis Puzzle dirt decal",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      "DECAL_SAND05_FLOOR01",
+      "DECAL_SAND05_FLOOR02",
+      "DECAL_SAND05_FLOOR03",
+      "DECAL_SAND05_FLOOR03_MIRROR",
+      "DECAL_SAND05_FLOOR04",
+      "DECAL_SAND05_FLOOR04_MIRROR",
+      "DECAL_SAND05_FLOOR05",
+      "DECAL_SAND05_FLOOR06"
+    ]
+  },
+  {
+    "description": "TOA - Crondis Puzzle Room walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": -512,
+    "colorOverrides": [
+      {
+        "description": "Stone Bricks",
+        "colors": "h == 39",
+        "uvScale": 1.2,
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX",
+        "uvOrientation": -128
+      }
+    ],
+    "objectIds": [
+      "TOA_WALL_CRONDIS01",
+      "TOA_WALL02_CROCODILES01",
+      "TOA_WALL02_CROCODILES02",
+      "TOA_WALL02_CROCODILES03",
+      "TOA_WALL02_CROCODILES05"
+    ]
+  },
+  {
+    "description": "TOA - Crondis Puzzle Room walls - ANIMATED - DYNAMIC",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "TOA_WALL02_CROCODILES04"
+    ]
+  },
+  {
+    "description": "TOA Zebek stone brick wall",
     "baseMaterial": "MARBLE_3",
     "uvType": "BOX",
     "uvOrientation": -256,
