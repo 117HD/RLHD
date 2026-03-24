@@ -185,7 +185,10 @@ public class LegacySceneUploader {
 		}
 
 		assert sceneContext.sceneBase != null;
-		var lp = client.getLocalPlayer().getLocalLocation();
+		var localPlayer = client.getLocalPlayer();
+		if (localPlayer == null)
+			return;
+		var lp = localPlayer.getLocalLocation();
 		int[] worldPos = {
 			sceneContext.sceneBase[0] + lp.getSceneX(),
 			sceneContext.sceneBase[1] + lp.getSceneY(),
