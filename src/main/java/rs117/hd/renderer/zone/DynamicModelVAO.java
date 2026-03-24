@@ -213,7 +213,8 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	synchronized View beginPlayerDraw(int faceCount, int playerDrawIndex) {
-		assert playerDrawIndex != -1 && playerDrawIndex < drawRangeCount : "Provided Draw Index is out of range: " + playerDrawIndex + " " + drawRangeCount;
+		assert playerDrawIndex != -1 && playerDrawIndex < drawRangeCount :
+			String.format("Provided draw index is out of range: %d %d", playerDrawIndex, drawRangeCount);
 		return beginDraw(faceCount, playerDrawIndex);
 	}
 
@@ -222,8 +223,11 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	private synchronized View beginDraw(int faceCount, int drawIdx) {
-		assert drawOffsets[drawIdx] == 0 && drawCounts[drawIdx] == 0 : "Provided Draw Index is already in use: " + drawIdx + " " + drawOffsets[drawIdx] + " " + drawCounts[drawIdx];
-		assert isMapped : "BeginDraw called while not mapped, this is not allowed!";
+		assert drawOffsets[drawIdx] == 0 && drawCounts[drawIdx] == 0 : String.format(
+			"Provided draw index is already in use: %d %d %d",
+			drawIdx, drawOffsets[drawIdx], drawCounts[drawIdx]
+		);
+		assert isMapped : "beginDraw called while not mapped, this is not allowed!";
 
 		View view = freeViews.poll();
 		if (view == null)
@@ -239,8 +243,11 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	private synchronized void endDraw(View view) {
-		assert drawOffsets[view.drawIdx] == 0 && drawCounts[view.drawIdx] == 0 : "Provided Draw Index is already in use: " + view.drawIdx + " " + drawOffsets[view.drawIdx] + " " + drawCounts[view.drawIdx];
-		assert isMapped : "BeginDraw called while not mapped, this is not allowed!";
+		assert drawOffsets[view.drawIdx] == 0 && drawCounts[view.drawIdx] == 0 : String.format(
+			"Provided draw index is already in use: %d %d %d",
+			view.drawIdx, drawOffsets[view.drawIdx], drawCounts[view.drawIdx]
+		);
+		assert isMapped : "beginDraw called while not mapped, this is not allowed!";
 
 		drawOffsets[view.drawIdx] = view.getStartOffset() / VERT_SIZE_INTS;
 		drawCounts[view.drawIdx] = view.getVertexCount();
@@ -256,16 +263,17 @@ public class DynamicModelVAO implements Destructible {
 	void mergeRanges() {
 		drawRangeCount = 0;
 		for (int i = 0; i < writtenRangeCount; i++) {
-			if (drawCounts[i] > 0) {
-				if (drawRangeCount > 0 && drawOffsets[drawRangeCount - 1] + drawCounts[drawRangeCount - 1] == drawOffsets[i]) {
-					drawCounts[drawRangeCount - 1] += drawCounts[i];
-				} else {
-					if (drawRangeCount != i) {
-						drawOffsets[drawRangeCount] = drawOffsets[i];
-						drawCounts[drawRangeCount] = drawCounts[i];
-					}
-					drawRangeCount++;
+			if (drawCounts[i] <= 0)
+				continue;
+
+			if (drawRangeCount > 0 && drawOffsets[drawRangeCount - 1] + drawCounts[drawRangeCount - 1] == drawOffsets[i]) {
+				drawCounts[drawRangeCount - 1] += drawCounts[i];
+			} else {
+				if (drawRangeCount != i) {
+					drawOffsets[drawRangeCount] = drawOffsets[i];
+					drawCounts[drawRangeCount] = drawCounts[i];
 				}
+				drawRangeCount++;
 			}
 		}
 	}
@@ -294,7 +302,7 @@ public class DynamicModelVAO implements Destructible {
 
 	void reset() {
 		Arrays.fill(drawOffsets, 0, writtenRangeCount, 0);
-		Arrays.fill(drawCounts, 0, writtenRangeCount,0);
+		Arrays.fill(drawCounts, 0, writtenRangeCount, 0);
 		drawRangeCount = 0;
 		freeViews.addAll(usedViews);
 		usedViews.clear();

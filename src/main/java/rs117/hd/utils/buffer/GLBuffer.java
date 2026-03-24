@@ -148,6 +148,9 @@ public class GLBuffer implements Destructible {
 		long[] size,
 		int count
 	) {
+		if (count <= 1)
+			return count;
+
 		// Sort by dst offset
 		for (int i = 1; i < count; i++) {
 			long dstKey = dst[i];
@@ -167,9 +170,7 @@ public class GLBuffer implements Destructible {
 			size[j + 1] = sizeKey;
 		}
 
-		if (count <= 1) return count;
-
-		// merge adjacent ranges after sort
+		// Merge adjacent ranges after sort
 		int write = 0;
 		for (int read = 1; read < count; read++) {
 			long prevSrc = src[write];
