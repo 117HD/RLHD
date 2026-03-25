@@ -585,7 +585,7 @@ public class ZoneRenderer implements Renderer {
 
 		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
 			TimeOfDay.setCycleMode(config.daylightCycle());
-			int minimumBrightness = (int) (config.minimumBrightness() * (1 + environmentManager.currentMinBrightnessBoost));
+			int minimumBrightness = config.minimumBrightness();
 			float cycleDuration = config.cycleDurationMinutes();
 
 			float[] originalRegionalDirectionalColor = environmentManager.currentDirectionalColor;
@@ -712,6 +712,12 @@ public class ZoneRenderer implements Renderer {
 						+ moonColor[i] * moonInfluence;
 				}
 			}
+
+			// Scale minBrightnessBoost down as moon directional light increases,
+			// so the boost only raises minimum brightness without stacking with moonlight
+			float boostScale = 1.0f - shadowVisibility;
+			float boostedFloor = (minimumBrightness / 100.0f) * (1 + environmentManager.currentMinBrightnessBoost * boostScale);
+			ambientStrength = Math.max(ambientStrength, boostedFloor);
 
 			add(ambientColor, ambientColor, multiply(directionalColor, 1 - shadowVisibility));
 			directionalStrength *= shadowVisibility;
