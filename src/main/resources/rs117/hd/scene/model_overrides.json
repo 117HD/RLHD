@@ -11018,7 +11018,8 @@
       "WILD_VENENATIS_SINGLES_ENTRANCE01",
       "CAVE_ROCK02_ENTRANCE01_COLOSSAL_WYRM",
       "DEEPFIN_CAVE_ENTRANCE",
-      "WILD_FALLOFF_CAVEENTRANCE"
+      "WILD_FALLOFF_CAVEENTRANCE",
+      "TLATI_DRAGON_NEST_CAVE_ENTRY"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -11405,6 +11406,7 @@
       "DOV_BASE_EXIT_UPPER",
       "ROYAL_LADDERUP",
       "CIVITAS_LADDER",
+      "CIVITAS_LADDER_MIDDLE",
       "CIVITAS_LADDER_TOP",
       "CIVITAS_LADDER_TOP_NORIM",
       "CIVITAS_LADDER_TALL",
@@ -11424,7 +11426,9 @@
       "CONTACT_LADDER",
       "CONTACT_LADDER_TOP",
       "CONTACT_LADDER_TWOFLOORS",
-      "CONTACT_LADDER_TOP_TWOFLOORS"
+      "CONTACT_LADDER_TOP_TWOFLOORS",
+      "TAL_TEKLAN_LADDER_TALL_BOTTOM",
+      "TAL_TEKLAN_LADDER_TALL_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -14858,6 +14862,19 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.5
+  },
+  {
+    "description": "Objects - Dirt Piles - Medium",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "TLATI_ROCKSLIDE01",
+      "TLATI_ROCKSLIDE02",
+      "TLATI_ROCKSLIDE03",
+      "TLATI_ROCKSLIDE04"
+    ]
   },
   {
     "description": "Ground Decoration - Grunge - Tiny - Uncolored",
@@ -19615,8 +19632,9 @@
     ]
   },
   {
-    "description": "Ground Decoration - Wooden - Agility Logs",
+    "description": "Generic - Wooden - Agility Logs",
     "baseMaterial": "BARK",
+    "uvType": "BOX",
     "objectIds": [
       "REGICIDE_LOGBALANCE1",
       "REGICIDE_LOGBALANCE2",
@@ -19629,10 +19647,11 @@
       "BARBARIAN_LOG_BALANCE1",
       "GNOME_LOG_BALANCE1",
       "MINE_LOG_BALANCE1",
-      "WILDERNESS_LOG_BALANCE1"
-    ],
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 512
+      "WILDERNESS_LOG_BALANCE1",
+      "TLATI_NORTH_RIVER_LOG_BALANCE_1",
+      "TLATI_NORTH_RIVER_LOG_BALANCE_2",
+      "TLATI_NORTH_RIVER_LOG_BALANCE_3"
+    ]
   },
   {
     "description": "Objects - Ice Rocks - Small",
@@ -26731,8 +26750,32 @@
       "TLATI_PLANT_FERN01",
       "PLANT_FERN_TLATI01",
       "PLANT_FERN_TLATI02",
-      "PLANT_FERN_TLATI04",
-      "TLATI_PLANT_CLUSTER01_DEFAULT02"
+      "PLANT_FERN_TLATI03",
+      "PLANT_FERN_TLATI04"
+    ]
+  },
+  {
+    "description": "Varlamore - Tlati Rainforest - Plant - Rock - Fern - Small",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_XZ",
+    "windDisplacementMode": "OBJECT",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 12 || h == 14",
+        "baseMaterial": "ROCK_2",
+        "uvScale": 0.25,
+        "uvType": "BOX",
+        "windDisplacementMode": "VERTEX"
+      }
+    ],
+    "objectIds": [
+      "TLATI_PLANT_CLUSTER01_DEFAULT01",
+      "TLATI_PLANT_CLUSTER01_DEFAULT02",
+      "TLATI_PLANT_CLUSTER01_DEFAULT03",
+      "TLATI_PLANT_CLUSTER02_DEFAULT01",
+      "TLATI_PLANT_CLUSTER02_DEFAULT02",
+      "TLATI_PLANT_CLUSTER02_DEFAULT03"
     ]
   },
   {
@@ -26813,7 +26856,8 @@
       "MM_PLANT_KHARAZI_JUNGLE_PLANT2",
       "MM_JUNGLEPLANT_FAT",
       "MM_JUNGLE_PLANT_MISC2",
-      "HUNTING_JUNGLE_PLANT1"
+      "HUNTING_JUNGLE_PLANT1",
+      "SCRAMBLED_FOOD_2_HIDDEN"
     ]
   },
   {
@@ -26823,7 +26867,8 @@
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
-      "JUNGLE1"
+      "JUNGLE1",
+      "SCRAMBLED_FOOD_1_HIDDEN"
     ]
   },
   {
@@ -31639,13 +31684,14 @@
     ]
   },
   {
-    "description": "Tutorial Island - Workbench",
+    "description": "Generic - Tutorial Island - Workbench",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "FAI_VARROCK_WORKBENCH",
       "FAI_DWARF_WORKBENCH",
       "FAI_FALADOR_WORKBENCH",
-      "CONTACT_WORKBENCH"
+      "CONTACT_WORKBENCH",
+      "SCRAMBLED_WORKBENCH"
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -51501,7 +51547,8 @@
     ],
     "objectIds": [
       "WALLKIT_CIVITAS01_FRAME01",
-      "WALLKIT_CIVITAS03_MIDDLE01"
+      "WALLKIT_CIVITAS03_MIDDLE01",
+      "WALLKIT_CIVITAS03_MIDDLE03"
     ]
   },
   {
@@ -76712,6 +76759,22 @@
     ]
   },
   {
+    "description": "Tlati Rainforest - Tree - Large Tree stump",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "TLATI_STUMP_DEFAULT01",
+      "TLATI_STUMP_DEFAULT02_3X3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "GRASS_3"
+      }
+    ]
+  },
+  {
     "description": "Tlati Rainforest - Tree - Small",
     "baseMaterial": "BARK_STONEPINE_2",
     "uvType": "BOX",
@@ -82005,6 +82068,761 @@
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Brick - Grass - Bricks with grass near it",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_45",
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "terrainVertexSnap": true
+      }
+    ],
+    "objectIds": [
+      "TLATI_EDGEKIT_STONE02_SIDE01",
+      "TLATI_EDGEKIT_STONE02_SIDE02",
+      "TLATI_EDGEKIT_STONE02_SIDE03",
+      "TLATI_EDGEKIT_STONE02_CORNER01",
+      "TLATI_EDGEKIT_STONE02_CORNER02"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Brick - Grass - Large stone bricks with moss on them",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h >= 10 && h < 30",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvOrientation": 1024,
+        "uvScale": 1.1
+      }
+    ],
+    "objectIds": [
+      "FLATSKEW_TALTEKLAN02_STRAIGHT01_LVL0",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT02_LVL0",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT02_LVL1",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT02_LVL2",
+      "FLATSKEW_TALTEKLAN02_CORNER01_LVL0",
+      "FLATSKEW_TALTEKLAN02_CORNER02_LVL0",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT03_LVL1",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT03_LVL2",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT04_LVL1",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT04_LVL2",
+      "SCRAMBLED_WALL",
+      "SCRAMBLED_WALL_END",
+      "SCRAMBLED_WALL_END_MIRROR",
+      "WALLKIT_ULAMA01_MIDDLE01",
+      "WALLKIT_ULAMA01_MIDDLE02",
+      "WALLKIT_ULAMA01_MIDDLE02_MIRROR",
+      "WALLKIT_ULAMA01_MIDDLE03",
+      "WALLKIT_ULAMA01_MIDDLE03_MIRROR",
+      "WALLKIT_ULAMA01_MIDDLE04",
+      "WALLKIT_ULAMA01_MIDDLE04_MIRROR",
+      "WALLKIT_ULAMA01_MIDDLE05",
+      "WALLKIT_ULAMA01_MIDDLE05_MIRROR",
+      "WALLKIT_ULAMA01_CORNER02",
+      "WALLKIT_ULAMA01_CORNER02_MIRROR",
+      "WALLKIT_ULAMA01_CORNER03",
+      "WALLKIT_ULAMA01_CORNER03_MIRROR"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Brick - Grass - Large stone bricks with moss on them with a hole in it",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h >= 10 && h < 30",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvOrientation": 1024,
+        "uvScale": 1.1
+      },
+      {
+        "description": "Hole",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "FLATSKEW_TALTEKLAN02_BROKEN01_LVL0",
+      "FLATSKEW_TALTEKLAN02_BROKEN01_LVL0_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan - Stone - Brick - Large stone bricks - Weird UV scale",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "MODEL_YZ",
+    "uvOrientation": -300,
+    "uvScale": 0.69,
+    "objectIds": [
+      "ZEMA_TEMPLE01_FLATSKEW_LVL1",
+      "ZEMA_TEMPLE01_FLATSKEW_LVL2",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT01_LVL1",
+      "FLATSKEW_TALTEKLAN02_STRAIGHT01_LVL2"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan - Stone - Brick - Large stone bricks - Weird UV scale",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.711,
+    "objectIds": [
+      "ZEMA_TEMPLE01_FLATSKEW_CORN_LVL2",
+      "ZEMA_TEMPLE01_FLATSKEW_CORN_LVL1",
+      "PILLAR_ZEMA01_CITY01_BROKEN02"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan - Stone - Brick - Large stone bricks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 187,
+    "uvScale": 0.75,
+    "objectIds": [
+      "SKEWWALL_TALTEKLAN01_STRAIGHT01",
+      "SKEWWALL_TALTEKLAN01_CORNER01",
+      "SKEWWALL_TALTEKLAN01_CORNER02",
+      "STEPS_TALKASTI01_DEFAULT01",
+      "STEPS_TALKASTI01_BROKEN02",
+      "STEPS_STRANGLER01_DEFAULT02",
+      "SKEWWALL_TALTEKLAN01_END01"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan - Stone - Brick - City walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_ZEMA_CITY01",
+      "WALLKIT_ZEMA_CITY02",
+      "WALLKIT_ZEMA_CITY04_END01",
+      "WALLKIT_ZEMA_CITY04_END01_MIRROR",
+      "TOA_TOMB04_TILE01_FULL01_RED01",
+      "WALLKIT_ZEMA_CITY01_LOWER",
+      "WALLKIT_ZEMA_CITY04_END01_LOWER",
+      "WALLKIT_ZEMA_CITY04_END01_MIRROR_LOWER"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan - Stone - Brick - skewed wall",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "ZEMA_TEMPLE01_FLATSKEW_LVL0"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan - Stone - Brick - Large stone bricks with pottery and plants",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 187,
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pot",
+        "colors": "h < 16 && s >= 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.7111
+      },
+      {
+        "colors": "h == 4 && s == 4",
+        "baseMaterial": "DIRT_1",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.555
+      },
+      {
+        "colors": "h >= 10",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SKEWWALL_TALTEKLAN01_END02",
+      "SKEWWALL_TALTEKLAN01_END03",
+      "SKEWWALL_TALTEKLAN01_END04"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  pottery and plants",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.7111,
+    "colorOverrides": [
+      {
+        "colors": "h == 4 && s == 4",
+        "baseMaterial": "DIRT_1",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.555
+      },
+      {
+        "colors": "h >= 10",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "TALKASTI01_POTTERY01_GROUP01",
+      "TALKASTI01_POTTERY01_GROUP02",
+      "TALKASTI01_POTTERY01_DEFAULT01",
+      "TALKASTI01_POTTERY01_DEFAULT02",
+      "TALKASTI01_POTTERY01_DEFAULT02A",
+      "TALKASTI01_POTTERY01_DEFAULT02B",
+      "TALKASTI01_POTTERY01_DEFAULT02C",
+      "TALKASTI01_POTTERY01_DEFAULT02D",
+      "TALKASTI01_POTTERY01_DEFAULT03A",
+      "TALKASTI01_POTTERY01_DEFAULT03C",
+      "TALKASTI01_POTTERY01_DEFAULT03D",
+      "TALKASTI01_POTTED01_PLANT01",
+      "TALKASTI01_POTTED01_PLANT02"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Smooth walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 768
+      },
+      {
+        "colors": [ "h == 0 && s == 1" ],
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 1024
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_TALTEKLAN01_MIDDLE01",
+      "WALLKIT_TALTEKLAN01_MIDDLE02",
+      "WALLKIT_TALTEKLAN01_MIDDLE03",
+      "WALLKIT_TALTEKLAN01_MIDDLE04",
+      "WALLKIT_TALTEKLAN01_WINDOW01",
+      "WALLKIT_TALTEKLAN01_WINDOW02",
+      "WALLKIT_TALTEKLAN01_WINDOW03",
+      "WALLKIT_TALTEKLAN01_ARCH02",
+      "WALLKIT_TALTEKLAN01_ARCH01"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Smooth walls with wooden planks",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 768
+      },
+      {
+        "colors": [ "h == 0 && s == 1" ],
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 1024
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_TALTEKLAN02_BROKEN01",
+      "WALLKIT_TALTEKLAN02_BROKEN01_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Stone roofs",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 768,
+    "objectIds": [
+      "WALLKIT_TALTEKLAN04_ROOF01"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Wooden - Plank walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h >= 32",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 768
+      },
+      {
+        "colors": [ "h == 7 && s == 1" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 1024
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_TALTEKLAN02_MIDDLE01",
+      "WALLKIT_TALTEKLAN03_MIDDLE01",
+      "WALLKIT_TALTEKLAN03_WINDOW01",
+      "WALLKIT_TALTEKLAN02_WINDOW01",
+      "WALLKIT_TALTEKLAN02_DOOR01",
+      "WALLKIT_TALTEKLAN02_DOOR01_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Wooden - Plank Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h >= 32",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 768
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_TALTEKLAN01_FENCE01"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Wooden - Decorative wooden pillars",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h >= 32",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "colors": [ "h == 7 && s == 1" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 87
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_TALTEKLAN03_POLE01",
+      "WALLKIT_TALTEKLAN03_POLE02",
+      "WALLKIT_TALTEKLAN03_POLE02_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  Stone Hoop",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 187,
+    "objectIds": [
+      "WALLKIT_ULAMA01_HOOP01",
+      "WALLKIT_ULAMA01_HOOP01_MIRROR"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Brick - Grass - Logs - Stone bricks with a loog support on top",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h >= 10 && h < 30",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvOrientation": 1024,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Stones",
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "PILLAR_ZEMA01_TRUNK01"
+    ]
+  },
+  {
+    "description": "Varlamore - Scrambled cart",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 588,
+    "colorOverrides": [
+      {
+        "description": "Canvas",
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      },
+      {
+        "description": "ROPE",
+        "colors": "h == 0 && s == 3",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.511
+      },
+      {
+        "description": "Moss",
+        "colors": "h == 10",
+        "baseMaterial": "HD_HAY",
+        "uvType": "BOX",
+        "uvOrientation": 544,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "SCRAMBLED_CART_BROKEN",
+      "SCRAMBLED_CART_BROKEN_OP"
+    ]
+  },
+  {
+    "description": "Varlamore - Scrambled cart - Fixed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Canvas",
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      },
+      {
+        "description": "ROPE",
+        "colors": "h == 0 && s == 3",
+        "baseMaterial": "ROPE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.511
+      },
+      {
+        "description": "Moss",
+        "colors": "h == 10",
+        "baseMaterial": "HD_HAY",
+        "uvType": "BOX",
+        "uvOrientation": 544,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "SCRAMBLED_CART_FIXED"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Brick - Grass - Logs - Stone bricks with a loog support on top",
+    "baseMaterial": "GRASS_3",
+    "uvType": "BOX",
+    "uvOrientation": 1024,
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h <= 6 && s <= 1",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 2 && s == 3",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "PILLAR_ZEMA01_OVERGROWN01",
+      "PILLAR_ZEMA01_OVERGROWN02",
+      "WALLKIT_ZEMA02_DAMAGED01",
+      "WALLKIT_ZEMA02_DAMAGED01_M",
+      "WALLKIT_ZEMA02_DAMAGED02",
+      "WALLKIT_ZEMA02_DAMAGED02_M",
+      "WALLKIT_ZEMA02_DAMAGED03",
+      "WALLKIT_ZEMA02_DAMAGED03_M",
+      "WALLKIT_ZEMA02_DAMAGED04",
+      "WALLKIT_ZEMA02_DAMAGED05",
+      "WALLKIT_ZEMA02_DAMAGED05_M",
+      "WALLKIT_ZEMA02_MOSSY01",
+      "WALLKIT_ZEMA02_OVERGROWN02",
+      "WALLKIT_ZEMA02_OVERGROWN02_M",
+      "WALLKIT_ZEMA02_OVERGROWN03",
+      "WALLKIT_ZEMA02_OVERGROWN03_M",
+      "WALLKIT_ZEMA02_OVERGROWN04_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Brick - Grass - Logs - Stone bricks with a loog support on top",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h >= 12",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvOrientation": 1024,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_ZEMA02_OVERGROWN05",
+      "WALLKIT_ZEMA02_OVERGROWN05_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Tonali - Stone - Brick - Tonali Pillars",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.7,
+    "objectIds": [
+      "PILLAR_STRANGLER01_CITY01",
+      "PILLAR_STRANGLER02_CITY01_BROKEN04"
+    ]
+  },
+  {
+    "description": "Varlamore - Tonali - Stone - Brick - Dirt - Dirty pillars",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 2 && s == 3",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "PILLAR_STRANGLER02_CITY01_BROKEN03"
+    ]
+  },
+  {
+    "description": "Varlamore - Tonali - Stone - Brick - Dirt - Overgrown pillars",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.7,
+    "terrainVertexSnap": true,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h >= 12 && h <=16",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvOrientation": 1024,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Vine",
+        "colors": "h == 10 || h == 18",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvOrientation": 187,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "PILLAR_ZEMA01_OVERGROWN001_3X3",
+      "PILLAR_ZEMA01_OVERGROWN02_3X3"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan -  pottery - Hanging pottery",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.7111,
+    "colorOverrides": [
+      {
+        "colors": "h == 9",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.555
+      }
+    ],
+    "objectIds": [
+      "TALKASTI01_POTTERY01_HANGING01"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan - Rug",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "RUG_TALKASTI01_MIDDLE01_ARCHERY_STORE_ICON",
+      "RUG_TALKASTI01_MIDDLE01",
+      "RUG_TALKASTI01_SIDE01",
+      "RUG_TALKASTI01_CORNER01",
+      "TALKASTI01_POTTERY01_HANGING02"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan - Wooden - Decorative Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Vine",
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 487,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "TALKASTI01_TABLE01_LONG01"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan - Stone - Furnace",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Coal",
+        "colors": "h == 42",
+        "baseMaterial": "ROCK_4",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Heat",
+        "colors": "s == 5 || s == 6",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 487,
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "FURNACE3"
+    ]
+  },
+  {
+    "description": "Varlamore - Tal Teklan - Scrambled - Wooden - Stone - Whetstone",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Water",
+        "colors": "h == 36",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "SCRAMBLED_WHETSTONE_BROKEN_NOOP",
+      "SCRAMBLED_WHETSTONE_BROKEN_OP"
+    ]
+  },
+  {
+    "description": "Varlamore - Plant - Damiana Shrub",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.2511,
+        "uvType": "MODEL_XZ",
+        "windDisplacementMode": "VERTEX"
+      }
+    ],
+    "objectIds": [
+      "DAMIANA_SHRUB"
     ]
   }
 ]

@@ -10582,6 +10582,14 @@
     ]
   },
   {
+    "name": "Tal Teok temple path blending fix",
+    "aabbs": [
+      [ 1231, 3152, 1262, 3183 ],
+      [ 1246, 3136, 1248, 3151 ],
+      [ 1245, 3138, 1245, 3141 ]
+    ]
+  },
+  {
     "name": "Tal Teklan temple path fix",
     "aabbs": [
       [ 1232, 3103, 1246, 3104 ],
