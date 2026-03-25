@@ -374,7 +374,10 @@
     "fogDepth": 40,
     "groundFogStart": -150,
     "groundFogEnd": -350,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+    "moonColor": "#FF0000",
+	  "sunStrength": 0.05,
+    "minBrightnessBoost": 0.8
   },
   {
     "description": "Needs to be above the non-legacy version",
@@ -495,6 +498,7 @@
     "groundFogOpacity": 0.5,
 	  "moonColor": "#FF0000",
 	  "sunStrength": 0.05,
+    "minBrightnessBoost": 0.8,
 	  "starVisibility": 1,
     "windSpeed": 10,
     "windStrength": 30
@@ -509,7 +513,10 @@
     "fogDepth": 40,
     "groundFogStart": -150,
     "groundFogEnd": -350,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+    "moonColor": "#FF0000",
+	  "sunStrength": 0.05,
+    "minBrightnessBoost": 0.8
   },
   {
     "area": "MEIYERDITCH_MYREQUE_HIDEOUT",
@@ -599,7 +606,10 @@
     "directionalColor": "#ffbcb7",
     "directionalStrength": 2,
     "fogColor": "#0c0b0a",
-    "fogDepth": 45
+    "fogDepth": 45,
+    "sunStrength": 0.02,
+    "sunlightStrength": 0.1,
+    "minBrightnessBoost": 0.9
   },
   {
     "area": "DRAYNOR_MANOR_FOREST",
@@ -609,7 +619,10 @@
     "directionalColor": "#ffbcb7",
     "directionalStrength": 2,
     "fogColor": "#474055",
-    "fogDepth": 20
+    "fogDepth": 20,
+    "sunStrength": 0.02,
+    "sunlightStrength": 0.1,
+    "minBrightnessBoost": 0.9
   },
   {
     "area": "DRAYNOR_MANOR_CRYPT",
@@ -1231,7 +1244,9 @@
     "directionalColor": "#4eeeff",
     "directionalStrength": 2.5,
     "fogColor": "#4f1325",
-    "fogDepth": 30
+    "fogDepth": 30,
+    "sunStrength": 0.02,
+    "sunlightStrength": 0.8
   },
   {
     "area": "ZEAH_SNOWY_NORTHERN_REGION",
@@ -1271,7 +1286,8 @@
     "fogColor": "#13184f",
     "fogDepth": 30,
     "sunStrength": 0.1,
-    "waterCausticsStrength": 0.8
+    "waterCausticsStrength": 0.8,
+    "minBrightnessBoost": 0.3
   },
   {
     "area": "LOVAKENGJ",
