@@ -31,6 +31,9 @@
 #define DISPLAY_TANGENT 0
 #define DISPLAY_SHADOWS 0
 #define DISPLAY_LIGHTING 0
+#define DISPLAY_CANOPY 0
+
+#define NEAR_PLANE_DITHER_START 0.2
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
@@ -55,6 +58,9 @@ flat in ivec3 fTerrainData;
 #endif
 
 in FragmentData {
+#if ZONE_RENDERER
+    vec4 positionCS;
+#endif
     vec3 position;
     vec2 uv;
     vec3 normal;
@@ -84,6 +90,15 @@ vec2 worldUvs(float scale) {
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
+#if ZONE_RENDERER
+    float viewZ = 1.0 - (0.5 + (IN.positionCS.z / IN.positionCS.w) * 0.5);
+    if(viewZ < NEAR_PLANE_DITHER_START) {
+        float fadeAmount = 1.0 - saturate(viewZ / NEAR_PLANE_DITHER_START);
+        if(orderedDither(gl_FragCoord.xy, pow(fadeAmount, 1.5) - 0.01, 1.75))
+            discard;
+    }
+#endif
+
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
 
@@ -115,6 +130,31 @@ void main() {
     bool isWater = waterTypeIndex > 0 && !isUnderwater;
 
     vec4 outputColor = vec4(1);
+    float fade = 1.0;
+#if PLAYER_CANOPY_FADE
+    if (canopyFadeStrength > 0.0 && getMaterialIsCanopy(material1)) {
+        vec3 camToPlayer = (playerPosition + vec3(0, -playerHeight / 2, 0)) - cameraPos;
+        float lineLength = length(camToPlayer);
+        vec3 lineDir = camToPlayer / lineLength;
+
+        vec3 camToFrag = IN.position - cameraPos;
+        float t = clamp(dot(camToFrag, lineDir), 0.0, lineLength);
+
+        vec3 closestPoint = cameraPos + lineDir * t;
+        float distToLine = max(length(IN.position - closestPoint) - 15.0, 0.0);
+
+        float fadeRadius = mix(0.0, playerHeight, canopyFadeStrength);
+        #if DISPLAY_CANOPY
+        if(DISPLAY_CANOPY == 1) {
+            FragColor = vec4(distToLine / fadeRadius, 0.0, 0.0, 1.0);
+            return;
+        }
+        #endif
+        fade = smoothstep(0.0, fadeRadius, distToLine);
+        if(fade == 0)
+            discard;
+    }
+#endif
 
     if (isWater) {
         outputColor = sampleWater(waterTypeIndex, viewDir);
@@ -501,6 +541,7 @@ void main() {
     }
 
     outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
+    outputColor.a *= fade;
 
     #if APPLY_COLOR_FILTER
         outputColor.rgb = applyColorFilter(outputColor.rgb);

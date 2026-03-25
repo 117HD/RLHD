@@ -78,6 +78,7 @@
     "name": "LEAVES_SIDE",
     "vanillaTextureIndex": 8,
     "hasTransparency": true,
+    "isCanopy": true,
     "shadowAlphaMap": "LEAF_A",
     "textureScale": [
       1.025,
@@ -194,12 +195,14 @@
     "name": "TROPICAL_LEAF",
     "vanillaTextureIndex": 29,
     "hasTransparency": true,
+    "isCanopy": true,
     "brightness": 0.735
   },
   {
     "name": "WILLOW_LEAVES",
     "vanillaTextureIndex": 30,
     "hasTransparency": true,
+    "isCanopy": true,
     "textureScale": [
       1.025,
       1.0,
@@ -372,6 +375,7 @@
   {
     "name": "LEAVES_TOP",
     "vanillaTextureIndex": 60,
+    "isCanopy": true,
     "shadowAlphaMap": "LEAF_A",
     "hasTransparency": true
   },
@@ -684,11 +688,13 @@
   {
     "name": "LEAFY_ACACIA01",
     "vanillaTextureIndex": 123,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_STONEPINE01",
     "vanillaTextureIndex": 124,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
@@ -701,11 +707,13 @@
   },
   {
     "name": "LEAFYTREE_FROSTY",
-    "vanillaTextureIndex": 127
+    "vanillaTextureIndex": 127,
+    "isCanopy": true
   },
   {
     "name": "LEAFYTREE_TILED_FROSTY",
-    "vanillaTextureIndex": 128
+    "vanillaTextureIndex": 128,
+    "isCanopy": true
   },
   {
     "name": "WATER_OPEN",
@@ -950,61 +958,73 @@
   {
     "name": "LEAFY_JATOBA",
     "vanillaTextureIndex": 189,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_JATOBA_TILED",
     "vanillaTextureIndex": 190,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_JATOBA_DISEASED",
     "vanillaTextureIndex": 191,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_JATOBA_DISEASED_TILED",
     "vanillaTextureIndex": 192,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_CAMPHOR",
     "vanillaTextureIndex": 193,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_CAMPHOR_TILED",
     "vanillaTextureIndex": 194,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_CAMPHOR_DISEASED",
     "vanillaTextureIndex": 195,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_CAMPHOR_DISEASED_TILED",
     "vanillaTextureIndex": 196,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_IRONWOOD",
     "vanillaTextureIndex": 197,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_IRONWOOD_TILED",
     "vanillaTextureIndex": 198,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_IRONWOOD_DISEASED",
     "vanillaTextureIndex": 199,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
     "name": "LEAFY_IRONWOOD_DISEASED_TILED",
     "vanillaTextureIndex": 200,
+    "isCanopy": true,
     "hasTransparency": true
   },
   {
@@ -2303,23 +2323,27 @@
     "brightness": 1.277
   },
   {
-    "name": "LEAF_VEINS_N"
+    "name": "LEAF_VEINS_N",
+    "isCanopy": true
   },
   {
     "name": "LEAF_VEINS",
     "normalMap": "LEAF_VEINS_N",
     "specularStrength": 0.15,
+    "isCanopy": true,
     "specularGloss": 20.0
   },
   {
     "name": "LEAF_VEINS_LIGHT",
     "parent": "LEAF_VEINS",
+    "isCanopy": true,
     "brightness": 1.083
   },
   {
     "name": "LEAF_VEINS_PALM",
     "parent": "LEAF_VEINS",
     "specularStrength": 0.4,
+    "isCanopy": true,
     "specularGloss": 60.0
   },
   {
@@ -2327,21 +2351,25 @@
     "parent": "LEAF_VEINS",
     "brightness": 1.18,
     "specularStrength": 0.4,
+    "isCanopy": true,
     "specularGloss": 60.0
   },
   {
     "name": "LEAF_VEINS_DARK",
     "parent": "LEAF_VEINS",
+    "isCanopy": true,
     "brightness": 0.881
   },
   {
     "name": "LEAF_VEINS_DARKER",
     "parent": "LEAF_VEINS",
+    "isCanopy": true,
     "brightness": 0.78
   },
   {
     "name": "LEAF_VEINS_DARKEST",
     "parent": "LEAF_VEINS",
+    "isCanopy": true,
     "brightness": 0.581
   },
   {
@@ -3333,6 +3361,7 @@
     "name": "WINTER_LEAVES_SIDE",
     "hasTransparency": true,
     "shadowAlphaMap": "LEAF_A",
+    "isCanopy": true,
     "textureScale": [
       1.025,
       1.025,
