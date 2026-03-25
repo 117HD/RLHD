@@ -6827,8 +6827,9 @@
     "colorOverrides": [
       {
         "colors": "h == 32",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
+        "uvOrientation": 512,
         "uvScale": 0.75
       }
     ]
@@ -8702,7 +8703,7 @@
   },
   {
     "description": "Desert Quarry Crates & Tent posts",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "FARMING_CRATE_INACTIVE",
       "FISHING_CONTEST_POST"
@@ -28062,7 +28063,8 @@
       "TEMPOROSS_LOBBY_BANK_CHEST"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "uvScale": 0.65
   },
   {
     "description": "Rough Wooden Plank Stairs",
@@ -31578,6 +31580,7 @@
     ],
     "uvOrientation": 512,
     "uvType": "BOX",
+    "uvScale": 0.65,
     "colorOverrides": [
       {
         "colors": [ "h == 8" ],
@@ -49478,8 +49481,9 @@
     "colorOverrides": [
       {
         "colors": "h == 10",
-        "baseMaterial": "STONE",
-        "uvType": "BOX"
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.75
       },
       {
         "colors": "a < 255",
@@ -49493,6 +49497,8 @@
     "description": "Farming Guild - Greenhouse Gates",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
+    "uvScale": 0.35,
+    "uvOrientation": 512,
     "objectIds": [
       "KEBOS_FARMING_GUILD_GATE_T3_LEFT_OPEN",
       "KEBOS_FARMING_GUILD_GATE_T3_RIGHT_OPEN"
@@ -49523,6 +49529,7 @@
     "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.75,
+    "depthBias": 1,
     "objectIds": [
       "HESPORI_CAVE_EXIT",
       "HESPORI_CAVE_WALL_VINES",
@@ -49540,8 +49547,8 @@
     ]
   },
   {
-    "description": "Farming Guild - Hespori Boss",
-    "baseMaterial": "GRUNGE_3",
+    "description": "Farming Guild - Hespori Boss - Inactive",
+    "baseMaterial": "GRUNGE_3_LIGHT",
     "uvType": "GEOMETRY",
     "objectIds": [
       "HESPORI_PATCH_SEED",
@@ -49549,8 +49556,14 @@
       "HESPORI_PLANT_2",
       "HESPORI_PLANT_FULLYGROWN",
       "HESPORI_PLANT_DEAD"
-    ],
-    "npcIds": [ "HESPORI" ]
+    ]
+  },
+  {
+    "description": "Farming Guild - Hespori Boss",
+    "baseMaterial": "GRUNGE_3",
+    "npcIds": [
+      "HESPORI"
+    ]
   },
   {
     "description": "Farming Guild - Hespori Flower",
@@ -59175,7 +59188,8 @@
     "objectIds": [
       "SARIM_DEPOSIT_BOX",
       "CLAN_MEDIEVAL_DEPOSIT_BOX",
-      "BANK_DEPOSIT_BOX_2"
+      "BANK_DEPOSIT_BOX_2",
+      "BURGH_BANK_DEPOSIT_BOX"
     ]
   },
   {
@@ -82225,6 +82239,119 @@
         "colors": "h > 40 && s > 0",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Poll Booth - Gray",
+    "baseMaterial": "GRAY_85",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "POLLBOOTH_GREY_STANDARD",
+      "POLLBOOTH_GREY_HIGHLIGHT",
+      "POLLBOOTH_GREYFRAME_STANDARD",
+      "POLLBOOTH_GREYFRAME_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 10 && l < 40",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Poll Booth - Other Colors",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "POLLBOOTH_GREEN_STANDARD",
+      "POLLBOOTH_GREEN_NOOP",
+      "POLLBOOTH_GREEN_HIGHLIGHT",
+      "POLLBOOTH_BROWN_STANDARD",
+      "POLLBOOTH_BROWN_HIGHLIGHT",
+      "POLLBOOTH_BLUE_STANDARD",
+      "POLLBOOTH_BLUE_HIGHLIGHT",
+      "POLLBOOTH_RED_STANDARD",
+      "POLLBOOTH_RED_HIGHLIGHT",
+      "POLLBOOTH_SWAMP_STANDARD",
+      "POLLBOOTH_SWAMP_HIGHLIGHT",
+      "POLLBOOTH_ROTTEN_STANDARD",
+      "POLLBOOTH_ROTTEN_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s > 2 || h == 12 || h == 13",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "colors": "h == 0 || h == 18",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Poll Booth - Tzhaar",
+    "baseMaterial": "GRAY_85",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "POLLBOOTH_TZHAAR_STANDARD",
+      "POLLBOOTH_TZHAAR_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 61",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Poll Booth - Vampire",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "POLLBOOTH_SANGUINE_STANDARD",
+      "POLLBOOTH_SANGUINE_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l < 50 || h == 0 && s == 3",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Poll Booth - Karuulm",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "POLLBOOTH_BRIMSTONE_STANDARD",
+      "POLLBOOTH_BRIMSTONE_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 0 && s == 0 || h == 9",
+        "baseMaterial": "GRUNGE_3"
       }
     ]
   }
