@@ -39,6 +39,7 @@ import static org.lwjgl.opengl.GL44.GL_DYNAMIC_STORAGE_BIT;
 import static org.lwjgl.opengl.GL44.GL_MAP_PERSISTENT_BIT;
 import static org.lwjgl.opengl.GL44.glBufferStorage;
 import static rs117.hd.HdPlugin.GL_CAPS;
+import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -80,10 +81,6 @@ public class GLBuffer implements Destructible {
 
 	public GLBuffer(String name, int target, int usage) {
 		this(name, target, usage, STORAGE_NONE);
-	}
-
-	public static boolean supportsStorageBuffers() {
-		return GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS;
 	}
 
 	private static void copyRangeTo(int src, int dst, long srcOffsetBytes, long dstOffsetBytes, long numBytes) {
@@ -525,7 +522,7 @@ public class GLBuffer implements Destructible {
 	}
 
 	public boolean isStorageBuffer() {
-		return storageFlags != STORAGE_NONE && supportsStorageBuffers();
+		return storageFlags != STORAGE_NONE && SUPPORTS_STORAGE_BUFFERS;
 	}
 
 	public boolean isMapped() {
