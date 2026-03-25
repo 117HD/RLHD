@@ -31434,7 +31434,7 @@
     "range": 20,
     "spawnDelay": 900,
     "fixedDespawnTime": true,
-    "despawnDelay": 1000,
+    "despawnDelay": 900,
     "fadeInDuration": 325,
     "fadeOutDuration": 250,
     "graphicsObjectIds": [
