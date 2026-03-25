@@ -31268,7 +31268,7 @@
     ]
   },
   {
-    "description": "Dragonfire Projectile",
+    "description": "Metallic Dragonfire Projectile",
     "radius": 700,
     "strength": 12.5,
     "color": [
@@ -31287,7 +31287,7 @@
     ]
   },
   {
-    "description": "Dragonfire Breath",
+    "description": "Chromatic Dragonfire Breath",
     "offset": [ 0, 200, 290 ],
     "radius": 275,
     "strength": 20,
@@ -31307,7 +31307,7 @@
     "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
   },
   {
-    "description": "Dragonfire Breath - Ranged",
+    "description": "Chromatic Dragonfire Breath - Ranged",
     "offset": [ 0, 0, 0 ],
     "radius": 300,
     "strength": 20,
@@ -31324,7 +31324,7 @@
     "projectileIds": [ "DRAGON_RANGED_FIRE_ATTACK" ]
   },
   {
-    "description": "Dragonfire Breath Highlight",
+    "description": "Chromatic Dragonfire Breath Highlight",
     "offset": [ 0, 140, 390 ],
     "radius": 100,
     "strength": 40,
