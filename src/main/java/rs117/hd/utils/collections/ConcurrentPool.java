@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import rs117.hd.utils.Destructible;
 import rs117.hd.utils.DestructibleHandler;
+import rs117.hd.utils.jobs.JobSystem;
 
 public final class ConcurrentPool<T> {
 	private final ConcurrentLinkedQueue<T> pool = new ConcurrentLinkedQueue<>();
@@ -42,6 +43,7 @@ public final class ConcurrentPool<T> {
 			while ((obj = pool.poll()) == null) {
 				if (!parkedThreads.contains(currentThread))
 					parkedThreads.add(currentThread);
+				JobSystem.processPendingClientCallbacks();
 				LockSupport.parkNanos(1000);
 				if (System.nanoTime() > deadline)
 					return null;
