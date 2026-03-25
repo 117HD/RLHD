@@ -31364,6 +31364,152 @@
     "graphicsObjectIds": [ "FROSTBREATH_ATTACK" ]
   },
   {
+    "description": "Dragonfire Shield - Unleash",
+    "offset": [ 75, 100, 0 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [ "QIP_DRAGON_SLAYER_SHIELD_ATTACK_SPOTANIM" ]
+  },
+  {
+    "description": "Dragonfire Shield - Projectile",
+    "offset": [ 0, 30, 0 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 150,
+    "projectileIds": [ "QIP_DRAGON_SLAYER_PLAYER_PROJANIM" ]
+  },
+  {
+    "description": "Dragonfire Shield - Projectile - Impact",
+    "offset": [ 0, 100, 75 ],
+    "radius": 350,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "spawnDelay": 100,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "despawnDelay": 600,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [ "QIP_DRAGON_SLAYER_PLAYER_IMPACT" ]
+  },
+  {
+    "description": "Dragonfire Shield - Gain Charge Short",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_ONE",
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_TWO"
+    ]
+  },
+  {
+    "description": "Dragonfire Shield - Gain Charge Medium",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1250,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_THREE"
+    ]
+  },
+  {
+    "description": "Dragonfire Shield - Gain Charge Long",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1450,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_FOUR",
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_FIVE"
+    ]
+  },
+  {
+    "description": "Dragonfire Shield - Empty Charges",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 950,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_PLAYER_RELEASING_CHARGE"
+    ]
+  },
+  {
     "description": "UNDEAD_DRUID",
     "radius": 300,
     "strength": 10,
