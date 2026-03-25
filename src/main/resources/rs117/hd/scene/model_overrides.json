@@ -1532,7 +1532,8 @@
       "WILD2_TREE_C",
       "MISTMYST_TREE",
       "DEADTREE1_NOOP",
-      "WILDY_HUB_TREE_BIG"
+      "WILDY_HUB_TREE_BIG",
+      "MM2_BURNT_FALLEN_TREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -1567,6 +1568,7 @@
     "objectIds": [
       "TREESTUMP",
       "TREESTUMP2",
+      "TREESTUMP2_GREEN",
       "DEADTREE2_STUMP_DARK",
       "DEADTREE2_STUMP",
       "DEADTREE6_STUMP",
@@ -1588,7 +1590,8 @@
       "MDAUGHTER_PASSABLE_TREE_STUMP",
       "DRAGON_SLAYER_QIP_WILD5_TREE_STUMP",
       "SOTN_HUNTING_TREESTUMP_NOOP",
-      "MM_BUSH_KHARAZI_JUNGLESTUMP"
+      "MM_BUSH_KHARAZI_JUNGLESTUMP",
+      "DEADTREE_BURNT_STUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -6824,8 +6827,9 @@
     "colorOverrides": [
       {
         "colors": "h == 32",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
+        "uvOrientation": 512,
         "uvScale": 0.75
       }
     ]
@@ -7592,7 +7596,10 @@
       "GOBLIN_CAVEWALL_STALAGMITE_TWIN",
       "GOBLIN_CAVEWALL_STALAGMITE_LARGE",
       "GOBLIN_CAVEWALL_STALAGMITE",
-      "DORGESH_CAVES_STALAGTITE_01"
+      "DORGESH_CAVES_STALAGTITE_01",
+      "GNOME_STRONGHOLD_SC_ROCK_BOTTOM",
+      "GNOME_STRONGHOLD_SC_ROCKFALLOFF",
+      "GNOME_STRONGHOLD_SC_ROCK_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -8090,6 +8097,16 @@
       "SOTE_WELL_CAVE_OPEN",
       "SOTE_WELL_CAVE_EXIT",
       "CAVEWALLTUNNEL_TO_TEMPLE_OPEN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_LIGHT",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "objectIds": [
+      "CAVEWALL_FACE1_NOT_LOW_DETAIL_LEV2"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -8686,7 +8703,7 @@
   },
   {
     "description": "Desert Quarry Crates & Tent posts",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "FARMING_CRATE_INACTIVE",
       "FISHING_CONTEST_POST"
@@ -14930,6 +14947,21 @@
     "uvScale": 0.74
   },
   {
+    "description": "Baxtorian Falls - Cliff Rock Color Fix",
+    "baseMaterial": "GRUNGE_1",
+    "areas": [ "Baxtorian Falls - Cliff Rock Color Fix" ],
+    "inheritTileColorType": "UNDERLAY",
+    "castShadows": false,
+    "depthBias": 255,
+    "objectIds": [
+      "DUGUPSOIL1_LIGHT",
+      "DUGUPSOIL3_LIGHT",
+      "DUGUPSOIL2_LIGHT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.74
+  },
+  {
     "description": "Ground Decoration - Grunge - Small - Colored",
     "hideInAreas": [ "KHARIDIAN_DESERT_ENAKHRA_TEMPLE_HOLE_FIX" ],
     "baseMaterial": "GRUNGE_1",
@@ -19323,7 +19355,7 @@
     "description": "Walls - Double Rope Rails",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.54,
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "description": "Ropes",
@@ -19359,39 +19391,30 @@
         "colors": "h == 6 && s == 3",
         "baseMaterial": "ROPE",
         "uvType": "BOX",
-        "uvScale": 0.25
-      }
-    ]
-  },
-  {
-    "description": "Gnome - Wooden - Diagonal floor - textured",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.7,
-    "retainVanillaUvs": false,
-    "objectIds": [
-      "ALUFT_BRIDGE_CORNERFLOOR"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Rope",
-        "colors": "h == 6 && s == 3",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.25
+        "uvScale": 0.2
       }
     ]
   },
   {
     "description": "Gnome - Ground Decoration - Wooden - Log Supports",
     "retainVanillaUvs": false,
-    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "BRIDGE_CORNERFLOOR",
       "BRIDGE_FLOORLIGHT",
-      "BRIDGE_SIDEFLOOR"
+      "BRIDGE_SIDEFLOOR",
+      "ALUFT_BRIDGE_CORNERFLOOR"
     ],
-    "uvType": "WORLD_XZ"
+    "uvType": "WORLD_XZ",
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512
+      }
+    ]
   },
   {
     "description": "Gnome - Ground Decoration - Wooden - Log Bridges",
@@ -19480,27 +19503,17 @@
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.8,
+    "uvScale": 0.7,
     "objectIds": [
       "TREEDOORROOF"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Wood",
-        "colors": "h == 5",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX",
-        "uvOrientation": 512,
-        "uvScale": 0.8
-      }
     ]
   },
   {
     "description": "Gnome Stronghold Wooden - Platforms - Textured",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.8,
+    "uvScale": 0.7,
     "objectIds": [
       "TREEWALL1B_LVL2",
       "TREEWALL1B_LVL1"
@@ -19618,7 +19631,8 @@
     ],
     "objectIds": [
       "ALUFT_GNOME_RESTAURANT_TABLE_ONE",
-      "ALUFT_GNOME_RESTAURANT_TABLE_TWO"
+      "ALUFT_GNOME_RESTAURANT_TABLE_TWO",
+      "ALUFT_GNOME_RESTAURANT_TABLE"
     ]
   },
   {
@@ -28094,7 +28108,8 @@
       "TEMPOROSS_LOBBY_BANK_CHEST"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "uvScale": 0.65
   },
   {
     "description": "Rough Wooden Plank Stairs",
@@ -31430,7 +31445,9 @@
   },
   {
     "description": "Edgeville - Walls - Bank Front Windows - Tutorial Island Walls",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
     "objectIds": [
       "SHOPWINDOWWALL",
       "SHOPWINDOWWALL2"
@@ -31608,6 +31625,7 @@
     ],
     "uvOrientation": 512,
     "uvType": "BOX",
+    "uvScale": 0.65,
     "colorOverrides": [
       {
         "colors": [ "h == 8" ],
@@ -33369,7 +33387,6 @@
     "description": "Oak Tree",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "terrainVertexSnap": true,
     "objectIds": [
       "OAK_TREE_SEEDLING",
       "OAK_TREE_1",
@@ -33404,7 +33421,6 @@
     "areas": [ "WARM_REGIONS" ],
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "terrainVertexSnap": true,
     "objectIds": [
       "OAK_TREE_SEEDLING",
       "OAK_TREE_1",
@@ -35737,7 +35753,8 @@
       "WILD3_MUSHROOMS_C",
       "WILD4_MUSHROOMS_A",
       "WILD4_MUSHROOMS_B",
-      "WILD4_MUSHROOMS_C"
+      "WILD4_MUSHROOMS_C",
+      "WILD5_MUSHROOMS_D"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -41995,9 +42012,11 @@
       "BROKEN_GREY_TILE_01",
       "BROKEN_GREY_TILE_02",
       "BROKEN_GREY_TILE_03",
+      "BROKEN_GREY_TILE_04",
       "BROKEN_GREY_TILE_05",
       "BRIMSTONE_DECO_CORN",
       "BRIMSTONE_DECO_SIDE",
+      "BROKEN_GREY_TILE_06",
       "BRIMSTONE_DECO_MED"
     ],
     "uvType": "BOX",
@@ -49508,8 +49527,9 @@
     "colorOverrides": [
       {
         "colors": "h == 10",
-        "baseMaterial": "STONE",
-        "uvType": "BOX"
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.75
       },
       {
         "colors": "a < 255",
@@ -49523,6 +49543,8 @@
     "description": "Farming Guild - Greenhouse Gates",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
+    "uvScale": 0.35,
+    "uvOrientation": 512,
     "objectIds": [
       "KEBOS_FARMING_GUILD_GATE_T3_LEFT_OPEN",
       "KEBOS_FARMING_GUILD_GATE_T3_RIGHT_OPEN"
@@ -49553,6 +49575,7 @@
     "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.75,
+    "depthBias": 1,
     "objectIds": [
       "HESPORI_CAVE_EXIT",
       "HESPORI_CAVE_WALL_VINES",
@@ -49570,8 +49593,8 @@
     ]
   },
   {
-    "description": "Farming Guild - Hespori Boss",
-    "baseMaterial": "GRUNGE_3",
+    "description": "Farming Guild - Hespori Boss - Inactive",
+    "baseMaterial": "GRUNGE_3_LIGHT",
     "uvType": "GEOMETRY",
     "objectIds": [
       "HESPORI_PATCH_SEED",
@@ -49579,8 +49602,14 @@
       "HESPORI_PLANT_2",
       "HESPORI_PLANT_FULLYGROWN",
       "HESPORI_PLANT_DEAD"
-    ],
-    "npcIds": [ "HESPORI" ]
+    ]
+  },
+  {
+    "description": "Farming Guild - Hespori Boss",
+    "baseMaterial": "GRUNGE_3",
+    "npcIds": [
+      "HESPORI"
+    ]
   },
   {
     "description": "Farming Guild - Hespori Flower",
@@ -49759,6 +49788,24 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "BAXTORIAN_CHALICE_WATERFALL_QUEST_ASH"
+    ]
+  },
+  {
+    "description": "Baxtorian Falls - Tree",
+    "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "OVERHANGING_TREE2_WATERFALL_QUEST",
+      "OVERHANGING_TREE1_WATERFALL_QUEST"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Baxtorian Falls - Swim Point - Hide Shadow",
+    "castShadows": false,
+    "objectIds": [
+      "WATERFALL_SWIM_POINT"
     ]
   },
   {
@@ -54319,20 +54366,24 @@
   },
   {
     "description": "Baxtorian Falls tree and dirt on an island combo model",
-    "baseMaterial": "DIRT_2",
+    "baseMaterial": "DIRT_2_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.5,
+    "terrainVertexSnap": true,
     "colorOverrides": [
       {
         "description": "Tree and dirt as a single model - needs real UV to fix",
         "colors": "h == 5 && s == 6",
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "GRUNGE_2",
         "uvType": "BOX",
         "uvScale": 0.4
       }
     ],
     "objectIds": [
-      "OVERHANG3ROCK"
+      "OVERHANG3ROCK",
+      "WATERFALL_LEDGE_MIDDLE",
+      "WATERFALL_LEDGE_RIGHT",
+      "WATERFALL_LEDGE_LEFT"
     ]
   },
   {
@@ -54344,7 +54395,7 @@
       {
         "description": "Overdoor water",
         "colors": "h == 37",
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "GRUNGE_3_DARK",
         "uvType": "BOX",
         "uvScale": 0.4
       }
@@ -54716,19 +54767,65 @@
   },
   {
     "description": "Gnome Glider",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "CARPET_LIGHT",
     "uvType": "BOX",
+    "uvScale": 0.45,
     "objectIds": [
-      "GNOME_GLIDER"
+      "GNOME_GLIDER",
+      "TREEWALLBRANCH4_LVL4",
+      "FAVOUR_GNOME_GLIDER",
+      "GNOME_GLIDERCRASHED",
+      "MM_GLIDER_OPEN",
+      "MM_GLIDER"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 5 || h == 6 && s == 4",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 256,
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Gnome Cooker",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALUFT_GNOME_COOKER",
+      "ALUFT_GNOME_KITCHEN_UNIT"
     ],
     "colorOverrides": [
       {
         "description": "Roots",
-        "baseMaterial": "LIGHT_BARK",
-        "colors": "h == 5",
-        "uvType": "MODEL_XZ",
-        "uvOrientation": 256,
-        "uvScale": 0.3
+        "baseMaterial": "NONE",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 343,
+        "uvScale": 0.8
+      }
+    ]
+  },
+
+  {
+    "description": "Gnome Stronghold - Terror Bird Cage",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "depthBias": 1,
+    "objectIds": [
+      "ALUFT_TERROR_BIRD_CAGE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Roots",
+        "baseMaterial": "NONE",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 343,
+        "uvScale": 0.8
       }
     ]
   },
@@ -59138,7 +59235,8 @@
     "objectIds": [
       "SARIM_DEPOSIT_BOX",
       "CLAN_MEDIEVAL_DEPOSIT_BOX",
-      "BANK_DEPOSIT_BOX_2"
+      "BANK_DEPOSIT_BOX_2",
+      "BURGH_BANK_DEPOSIT_BOX"
     ]
   },
   {
@@ -61058,7 +61156,7 @@
       {
         "colors": "h == 0",
         "uvType": "BOX",
-        "baseMaterial": "ROCK_5",
+        "baseMaterial": "ROCK_3",
         "uvScale": 0.5
       }
     ]
@@ -61078,7 +61176,7 @@
       {
         "colors": "h == 0",
         "uvType": "BOX",
-        "baseMaterial": "ROCK_4",
+        "baseMaterial": "ROCK_3",
         "uvScale": 0.5
       }
     ]
@@ -65632,10 +65730,9 @@
       {
         "description": "Wooden spear shaft",
         "colors": "h == 5",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
-        "uvScale": 0.5,
-        "uvOrientation": 383
+        "uvScale": 0.4
       }
     ]
   },
@@ -72461,6 +72558,144 @@
       {
         "colors": "a < 255",
         "baseMaterial": "GRAY_90",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Debris Top",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM2_CRASHSITE_WALL_TOP_TALL_01",
+      "MM2_CRASHSITE_WALL_TOP_TALL_02"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Debris Bottom",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "depthBias": 1,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM2_CRASHSITE_WALL_BOTTOM_01",
+      "MM2_CRASHSITE_WALL_BOTTOM_02",
+      "MM2_SHIPYARD_PIPE"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Nieves' Grave",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "MM2_GRAVESTONE_NIEVE"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Cavern - Entrance",
+    "baseMaterial": "GRAVEL",
+    "terrainVertexSnap": true,
+    "depthBias": 50,
+    "objectIds": [
+      "MM2_CAVERN_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "depthBias": 50
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Cavern - Entrance",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvOrientation": -50,
+    "uvScale": 0.55,
+    "objectIds": [
+      "MM2_CAVE_BOSS_EXIT",
+      "MM2_CAVE_BOSS_EXIT_TOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Cavern - Waterfall",
+    "depthBias": 255,
+    "objectIds": [
+      "MM2_CAVE_BOSS_WATERFALL_LARGE",
+      "MM2_CAVE_BOSS_WATERFALL_SMALL"
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Cavern - Walls",
+    "baseMaterial": "ROCK_6_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_CAVE_BOSS_WALL_02",
+      "MM2_CAVE_BOSS_WALL_0201",
+      "MM2_CAVE_BOSS_WALL_01",
+      "MM2_CAVE_BOSS_WALL_TOP_04",
+      "MM2_CAVE_BOSS_WALL_0102",
+      "MM2_CAVE_BOSS_WALL_LEV1_CORNER_01",
+      "MM2_CAVE_BOSS_WALL_LEV1_STRAIGHT_01",
+      "MM2_CAVE_BOSS_WALL_LEV1_DIAG_03",
+      "MM2_CAVE_BOSS_WALL_LEV1_STRAIGHT_02",
+      "MM2_CAVE_BOSS_WALL_LEV1_CORNER_02",
+      "MM2_CAVE_BOSS_WALL_TOP_05",
+      "MM2_CAVE_BOSS_WALL_TOP_06",
+      "MM2_CAVE_BOSS_WALL_LEV1_DIAG_01",
+      "MM2_CAVE_BOSS_WALL_LEV1_CORNER_03",
+      "MM2_CAVE_BOSS_WALL_LEV1_DIAG_02",
+      "MM2_CAVE_BOSS_WALL_LEV1_CORNER_04",
+      "MM2_CAVE_BOSS_WALL_LEV1_DIAG_04",
+      "MM2_CAVE_BOSS_WALL_LEV1_ROOF",
+      "MM2_CAVE_BOSS_WALL_LEV1_ROOF_SIDE_01",
+      "MM2_CAVE_BOSS_WALL_LEV1_ROOF_SIDE_02",
+      "MM2_CAVE_BOSS_WALL_LEV1_ROOF_02",
+      "MM2_CAVE_BOSS_RAMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 4 || s == 5",
+        "baseMaterial": "ROCK_3_VERY_LIGHT_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Crash Site Cavern - Walls with Water Pool",
+    "baseMaterial": "ROCK_6_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM2_CAVE_BOSS_WALL_TOP_02",
+      "MM2_CAVE_BOSS_WALL_TOP_01",
+      "MM2_CAVE_BOSS_WALL_TOP_CORNER_03",
+      "MM2_CAVE_BOSS_WALL_TOP_CORNER_04",
+      "MM2_CAVE_BOSS_WALL_TOP_CORNER_02",
+      "MM2_CAVE_BOSS_WALL_TOP_CORNER_01",
+      "MM2_CAVE_BOSS_WALL_TOP_03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "NONE",
+        "depthBias": 30
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
         "uvType": "BOX"
       }
     ]
@@ -82823,6 +83058,119 @@
     ],
     "objectIds": [
       "DAMIANA_SHRUB"
+    ]
+  },
+  {
+    "description": "Poll Booth - Gray",
+    "baseMaterial": "GRAY_85",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "POLLBOOTH_GREY_STANDARD",
+      "POLLBOOTH_GREY_HIGHLIGHT",
+      "POLLBOOTH_GREYFRAME_STANDARD",
+      "POLLBOOTH_GREYFRAME_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 10 && l < 40",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Poll Booth - Other Colors",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "POLLBOOTH_GREEN_STANDARD",
+      "POLLBOOTH_GREEN_NOOP",
+      "POLLBOOTH_GREEN_HIGHLIGHT",
+      "POLLBOOTH_BROWN_STANDARD",
+      "POLLBOOTH_BROWN_HIGHLIGHT",
+      "POLLBOOTH_BLUE_STANDARD",
+      "POLLBOOTH_BLUE_HIGHLIGHT",
+      "POLLBOOTH_RED_STANDARD",
+      "POLLBOOTH_RED_HIGHLIGHT",
+      "POLLBOOTH_SWAMP_STANDARD",
+      "POLLBOOTH_SWAMP_HIGHLIGHT",
+      "POLLBOOTH_ROTTEN_STANDARD",
+      "POLLBOOTH_ROTTEN_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s > 2 || h == 12 || h == 13",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "colors": "h == 0 || h == 18",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Poll Booth - Tzhaar",
+    "baseMaterial": "GRAY_85",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "POLLBOOTH_TZHAAR_STANDARD",
+      "POLLBOOTH_TZHAAR_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 61",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Poll Booth - Vampire",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "POLLBOOTH_SANGUINE_STANDARD",
+      "POLLBOOTH_SANGUINE_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l < 50 || h == 0 && s == 3",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Poll Booth - Karuulm",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "POLLBOOTH_BRIMSTONE_STANDARD",
+      "POLLBOOTH_BRIMSTONE_HIGHLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 0 && s == 0 || h == 9",
+        "baseMaterial": "GRUNGE_3"
+      }
     ]
   }
 ]

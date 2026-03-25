@@ -31268,7 +31268,7 @@
     ]
   },
   {
-    "description": "Dragonfire Projectile",
+    "description": "Metallic Dragonfire Projectile",
     "radius": 700,
     "strength": 12.5,
     "color": [
@@ -31279,15 +31279,15 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 300,
-    "fadeOutDuration": 100,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
     "fadeOverlap": true,
     "projectileIds": [
       "FIREBREATH_TRAVEL"
     ]
   },
   {
-    "description": "Dragonfire Breath",
+    "description": "Chromatic Dragonfire Breath",
     "offset": [ 0, 200, 290 ],
     "radius": 275,
     "strength": 20,
@@ -31307,7 +31307,7 @@
     "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
   },
   {
-    "description": "Dragonfire Breath - Ranged",
+    "description": "Chromatic Dragonfire Breath - Ranged",
     "offset": [ 0, 0, 0 ],
     "radius": 300,
     "strength": 20,
@@ -31324,7 +31324,7 @@
     "projectileIds": [ "DRAGON_RANGED_FIRE_ATTACK" ]
   },
   {
-    "description": "Dragonfire Breath Highlight",
+    "description": "Chromatic Dragonfire Breath Highlight",
     "offset": [ 0, 140, 390 ],
     "radius": 100,
     "strength": 40,
@@ -31362,6 +31362,152 @@
     "fadeInDuration": 500,
     "fadeOutDuration": 300,
     "graphicsObjectIds": [ "FROSTBREATH_ATTACK" ]
+  },
+  {
+    "description": "Dragonfire Shield - Unleash",
+    "offset": [ 75, 100, 0 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [ "QIP_DRAGON_SLAYER_SHIELD_ATTACK_SPOTANIM" ]
+  },
+  {
+    "description": "Dragonfire Shield - Projectile",
+    "offset": [ 0, 30, 0 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 150,
+    "projectileIds": [ "QIP_DRAGON_SLAYER_PLAYER_PROJANIM" ]
+  },
+  {
+    "description": "Dragonfire Shield - Projectile - Impact",
+    "offset": [ 0, 100, 75 ],
+    "radius": 350,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "spawnDelay": 100,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "despawnDelay": 600,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [ "QIP_DRAGON_SLAYER_PLAYER_IMPACT" ]
+  },
+  {
+    "description": "Dragonfire Shield - Gain Charge Short",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_ONE",
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_TWO"
+    ]
+  },
+  {
+    "description": "Dragonfire Shield - Gain Charge Medium",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1250,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_THREE"
+    ]
+  },
+  {
+    "description": "Dragonfire Shield - Gain Charge Long",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1450,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_FOUR",
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_FIVE"
+    ]
+  },
+  {
+    "description": "Dragonfire Shield - Empty Charges",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 950,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_PLAYER_RELEASING_CHARGE"
+    ]
   },
   {
     "description": "UNDEAD_DRUID",
@@ -34947,21 +35093,117 @@
     ]
   },
   {
-    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT",
-    "height": 1000,
+    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_TOP",
+    "offset": [ 40, 800, 0 ],
     "alignment": "CENTER",
-    "radius": 2000,
-    "strength": 6,
+    "radius": 1200,
+    "strength": 20,
     "color": [
       255,
       255,
       255
     ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 0,
+    "type": "STATIC",
     "objectIds": [
       "MM2_CAVE_BOSS_EXIT"
+    ]
+  },
+  {
+    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_MIDDLE_1",
+    "offset": [ 45, 500, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "MM2_CAVE_BOSS_EXIT"
+    ]
+  },
+  {
+    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_MIDDLE_2",
+    "offset": [ 45, 250, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "MM2_CAVE_BOSS_EXIT"
+    ]
+  },
+  {
+    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_FLOOR_HIGHLIGHT",
+    "offset": [ 35, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 13,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "MM2_CAVE_BOSS_EXIT"
+    ]
+  },
+  {
+    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_FLOOR_SPOTLIGHT",
+    "offset": [ -14, 150, 0 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 4,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "MM2_CAVE_BOSS_EXIT"
+    ]
+  },
+  {
+    "description": "MM2_GORILLA_MAGIC_ATTACK_PROJECTILE",
+    "offset": [ 0, 125, 0 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      50
+    ],
+    "type": "STATIC",
+    "projectileIds": [
+      "MM2_GORILLA_SPELL" ]
+  },
+  {
+    "description": "MM2_GORILLA_MAGIC_ATTACK_IMPACT",
+    "offset": [ 0, 85, 10 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 10,
+    "waitForAnimation": true,
+    "fadeOutDuration": 300,
+    "color": [
+      0,
+      255,
+      50
+    ],
+    "type": "FLICKER",
+    "range": 40,
+    "graphicsObjectIds": [
+      "MM2_GORILLA_SPELLSPLAT"
     ]
   },
   {
