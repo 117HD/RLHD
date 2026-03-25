@@ -7097,6 +7097,14 @@
     "uvOrientation": 128
   },
   {
+    "name": "Tal Teok Path",
+    "area": "Tal Teok temple path blending fix",
+    "groundMaterial": "GRUNGE",
+    "overlayIds": [ 185 ],
+    "maxLightness": 21,
+    "blended": false
+  },
+  {
     "name": "Tal Teklan Dirt Path",
     "area": "Varlamore - Tlati Rainforest",
     "groundMaterial": "VARIED_DIRT",

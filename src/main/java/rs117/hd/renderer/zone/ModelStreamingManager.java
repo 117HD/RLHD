@@ -72,7 +72,6 @@ public class ModelStreamingManager {
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
 	private int numRenderThreads;
-	private int playerDrawIndex;
 
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
@@ -133,8 +132,6 @@ public class ModelStreamingManager {
 			streamingContexts[i].renderableCount = 0;
 
 		updateRenderThreads();
-
-		playerDrawIndex = 0;
 	}
 
 	public int getDrawnDynamicRenderableCount() {
@@ -198,7 +195,7 @@ public class ModelStreamingManager {
 		plugin.drawnTempRenderableCount++;
 
 		final boolean isPlayer = renderable instanceof Player;
-		final int drawIndex = isPlayer ? playerDrawIndex++ : -1;
+		final int drawIndex = isPlayer ? ctx.obtainPlayerDrawIndex() : -1;
 
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final boolean hasAlpha = isPlayer || m.getFaceTransparencies() != null;
