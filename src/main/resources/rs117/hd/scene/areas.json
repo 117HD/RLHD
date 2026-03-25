@@ -7288,6 +7288,12 @@
     ]
   },
   {
+    "name": "Farming Guild",
+    "regions": [
+      4922
+    ]
+  },
+  {
     "name": "Farming Guild Interior",
     "aabbs": [
       [ 1237, 3722, 1237, 3737 ],
