@@ -278,7 +278,7 @@ public class ZoneRenderer implements Renderer {
 		int minLevel, int level, int maxLevel, Set<Integer> hideRoofIds
 	) {
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
+		if (ctx == null || plugin.isPluginPendingStop() || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
 
 		frameTimer.begin(Timer.DRAW_PRESCENE);
@@ -379,7 +379,7 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.end(Timer.UPDATE_SCENE);
 			} catch (Exception ex) {
 				log.error("Error while updating environment or lights:", ex);
-				plugin.stopPlugin();
+				plugin.requestPluginStop();
 				return;
 			}
 
@@ -610,7 +610,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.processPendingClientCallbacks();
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
+		if (ctx == null || plugin.isPluginPendingStop() || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
 
 		frameTimer.begin(Timer.DRAW_POSTSCENE);
@@ -777,7 +777,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public boolean zoneInFrustum(int zx, int zz, int maxY, int minY) {
-		if (!sceneManager.isTopLevelValid())
+		if (!sceneManager.isTopLevelValid() || plugin.isPluginPendingStop() )
 			return false;
 
 		WorldViewContext ctx = sceneManager.getRoot();
@@ -842,7 +842,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
+		if (ctx == null || plugin.isPluginPendingStop() || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
 
 		Zone z = ctx.zones[zx][zz];
@@ -866,7 +866,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
 		final WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
+		if (ctx == null || plugin.isPluginPendingStop() || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
 
 		final Zone z = ctx.zones[zx][zz];
@@ -904,7 +904,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void drawPass(Projection projection, Scene scene, int pass) {
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
+		if (ctx == null || plugin.isPluginPendingStop() || !sceneManager.isRoot(ctx) && ctx.isLoading)
 			return;
 
 		frameTimer.begin(Timer.DRAW_PASS);
@@ -968,6 +968,9 @@ public class ZoneRenderer implements Renderer {
 		int y,
 		int z
 	) {
+		if(plugin.isPluginPendingStop())
+			return;
+
 		final long start = System.nanoTime();
 		try {
 			modelStreamingManager.drawDynamic(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
@@ -980,6 +983,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
+		if(plugin.isPluginPendingStop())
+			return;
+
 		frameTimer.begin(Timer.DRAW_TEMP);
 		try {
 			modelStreamingManager.drawTemp(worldProjection, scene, gameObject, m, orientation, x, y, z);
@@ -993,7 +999,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void draw(int overlayColor) {
 		final GameState gameState = client.getGameState();
-		if (gameState == GameState.STARTING) {
+		if (gameState == GameState.STARTING || plugin.isPluginPendingStop()) {
 			frameTimer.end(Timer.DRAW_FRAME);
 			return;
 		}
