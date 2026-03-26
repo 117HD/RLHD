@@ -277,7 +277,7 @@ public class ZoneRenderer implements Renderer {
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw,
 		int minLevel, int level, int maxLevel, Set<Integer> hideRoofIds
 	) {
-		if(plugin.isPluginPendingStop())
+		if (plugin.isPluginStopPending())
 			return;
 
 		try {
@@ -311,7 +311,7 @@ public class ZoneRenderer implements Renderer {
 			ctx.map();
 			frameTimer.end(Timer.DRAW_PRESCENE);
 		} catch (Exception ex) {
-			log.error("Error in preSceneDraw({}):", scene.getWorldViewId(), ex);
+			log.error("Error in preSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
 		}
 	}
@@ -615,7 +615,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void postSceneDraw(Scene scene) {
-		if(plugin.isPluginPendingStop())
+		if (plugin.isPluginStopPending())
 			return;
 
 		try {
@@ -630,7 +630,7 @@ public class ZoneRenderer implements Renderer {
 				postDrawTopLevel();
 			frameTimer.end(Timer.DRAW_POSTSCENE);
 		} catch (Exception ex) {
-			log.error("Error in postSceneDraw({}):", scene.getWorldViewId(), ex);
+			log.error("Error in postSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
 		}
 	}
@@ -793,7 +793,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public boolean zoneInFrustum(int zx, int zz, int maxY, int minY) {
-		if(plugin.isPluginPendingStop())
+		if (plugin.isPluginStopPending())
 			return false;
 
 		try {
@@ -855,7 +855,7 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.end(Timer.VISIBILITY_CHECK);
 			if (plugin.orthographicProjection)
 				return zone.inSceneFrustum = true;
-		}catch (Exception ex) {
+		} catch (Exception ex) {
 			log.error("Error in zoneInFrustum({}, {}, {}, {}):", zx, zz, maxY, minY, ex);
 			plugin.requestPluginStop();
 		}
@@ -864,7 +864,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
-		if(plugin.isPluginPendingStop())
+		if (plugin.isPluginStopPending())
 			return;
 
 		try {
@@ -889,14 +889,14 @@ public class ZoneRenderer implements Renderer {
 
 			checkGLErrors();
 		} catch (Exception ex) {
-			log.error("Error in drawZoneOpaque({}, {}, {}):", zx, zz, scene.getWorldViewId(), ex);
+			log.error("Error in drawZoneOpaque({}, {}, {}):", zx, zz, scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
 		}
 	}
 
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
-		if(plugin.isPluginPendingStop())
+		if (plugin.isPluginStopPending())
 			return;
 
 		try {
@@ -935,14 +935,14 @@ public class ZoneRenderer implements Renderer {
 
 			checkGLErrors();
 		} catch (Exception ex) {
-			log.error("Error in drawZoneAlpha({}, {}, {}, {}):", zx, zz, level, scene.getWorldViewId(), ex);
+			log.error("Error in drawZoneAlpha({}, {}, {}, {}):", zx, zz, level, scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
 		}
 	}
 
 	@Override
 	public void drawPass(Projection projection, Scene scene, int pass) {
-		if(plugin.isPluginPendingStop())
+		if (plugin.isPluginStopPending())
 			return;
 
 		try {
@@ -997,7 +997,7 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.DRAW_PASS);
 			checkGLErrors();
 		} catch (Exception ex) {
-			log.error("Error in drawPass({}, {}, {}):", projection, scene.getWorldViewId(), pass, ex);
+			log.error("Error in drawPass({}, {}, {}):", projection, scene != null ? scene.getWorldViewId() : null, pass, ex);
 			plugin.requestPluginStop();
 		}
 	}
@@ -1015,7 +1015,7 @@ public class ZoneRenderer implements Renderer {
 		int y,
 		int z
 	) {
-		if(plugin.isPluginPendingStop())
+		if (plugin.isPluginStopPending())
 			return;
 
 		final long start = System.nanoTime();
@@ -1030,7 +1030,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
-		if(plugin.isPluginPendingStop())
+		if (plugin.isPluginStopPending())
 			return;
 
 		frameTimer.begin(Timer.DRAW_TEMP);
@@ -1045,7 +1045,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void draw(int overlayColor) {
-		if (plugin.isPluginPendingStop())
+		if (plugin.isPluginStopPending())
 			return;
 
 		try {
@@ -1193,7 +1193,12 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void despawnWorldView(WorldView worldView) {
-		sceneManager.despawnWorldView(worldView);
+		try {
+			sceneManager.despawnWorldView(worldView);
+		} catch (Throwable ex) {
+			log.error("Error in despawnWorldView({}):", worldView.getId(), ex);
+			plugin.requestPluginStop();
+		}
 	}
 
 	@Override

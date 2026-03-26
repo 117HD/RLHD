@@ -431,7 +431,7 @@ public class HdPlugin extends Plugin {
 	public boolean freezeCulling;
 
 	@Getter
-	private boolean isPluginPendingStop;
+	private boolean isPluginStopPending;
 	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
@@ -510,8 +510,7 @@ public class HdPlugin extends Plugin {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
-				isPluginPendingStop = false;
-
+				isPluginStopPending = false;
 				isActive = true;
 
 				fboScene = 0;
@@ -800,10 +799,10 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void requestPluginStop() {
-		if(isPluginPendingStop)
+		if (isPluginStopPending)
 			return;
 		log.debug("Requesting plugin to stop when safe");
-		isPluginPendingStop = true;
+		isPluginStopPending = true;
 	}
 
 	public void stopPlugin() {
@@ -1967,9 +1966,9 @@ public class HdPlugin extends Plugin {
 
 		frame = (frame + 1) & Integer.MAX_VALUE;
 
-		if(isPluginPendingStop) {
+		if (isPluginStopPending) {
 			log.debug("Shutdown has been requested, stopping plugin");
-			isPluginPendingStop = false;
+			isPluginStopPending = false;
 			stopPlugin();
 			return;
 		}
