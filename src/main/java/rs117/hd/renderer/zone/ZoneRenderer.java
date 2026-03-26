@@ -310,7 +310,7 @@ public class ZoneRenderer implements Renderer {
 
 			ctx.map();
 			frameTimer.end(Timer.DRAW_PRESCENE);
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			log.error("Error in preSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
 		}
@@ -629,7 +629,7 @@ public class ZoneRenderer implements Renderer {
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 				postDrawTopLevel();
 			frameTimer.end(Timer.DRAW_POSTSCENE);
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			log.error("Error in postSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
 		}
@@ -855,7 +855,7 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.end(Timer.VISIBILITY_CHECK);
 			if (plugin.orthographicProjection)
 				return zone.inSceneFrustum = true;
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			log.error("Error in zoneInFrustum({}, {}, {}, {}):", zx, zz, maxY, minY, ex);
 			plugin.requestPluginStop();
 		}
@@ -888,7 +888,7 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
 
 			checkGLErrors();
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			log.error("Error in drawZoneOpaque({}, {}, {}):", zx, zz, scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
 		}
@@ -934,7 +934,7 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.DRAW_ZONE_ALPHA);
 
 			checkGLErrors();
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			log.error("Error in drawZoneAlpha({}, {}, {}, {}):", zx, zz, level, scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
 		}
@@ -996,7 +996,7 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.end(Timer.DRAW_PASS);
 			checkGLErrors();
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			log.error("Error in drawPass({}, {}, {}):", projection, scene != null ? scene.getWorldViewId() : null, pass, ex);
 			plugin.requestPluginStop();
 		}
@@ -1134,7 +1134,7 @@ public class ZoneRenderer implements Renderer {
 			checkGLErrors();
 
 			shouldRenderScene = false;
-		} catch (Exception ex) {
+		} catch (Throwable ex) {
 			log.error("Error in draw({}):", overlayColor, ex);
 			plugin.requestPluginStop();
 		}
