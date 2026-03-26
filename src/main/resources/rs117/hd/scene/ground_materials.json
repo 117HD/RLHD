@@ -460,18 +460,6 @@
     ]
   },
   {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHT",
-    "materials": [
-      "WINTER_JAGGED_STONE_TILE_LIGHT"
-    ]
-  },
-  {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHT_2",
-    "materials": [
-      "WINTER_JAGGED_STONE_TILE_LIGHTER"
-    ]
-  },
-  {
     "name": "ROCKY_CAVE_FLOOR",
     "materials": [
       "GRUNGE_2",
