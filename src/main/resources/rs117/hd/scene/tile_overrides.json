@@ -3765,7 +3765,7 @@
     "blendedAsOpposite": true,
     "replacements": {
       "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER",
-      "WIZARD_CROMPERTY_PATH_2_TEXTURE_BLENDING_ONLY": "textureBlending",
+      "WIZARD_CROMPERTY_PATH_2_TEXTURE_BLENDING_ONLY": "blendingTextures",
       "NONE": "!textures"
     }
   },
