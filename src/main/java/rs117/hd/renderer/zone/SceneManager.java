@@ -661,11 +661,10 @@ public class SceneManager {
 
 		// Handle object spawns that must be processed on the client thread
 		loadSceneLightsTask.waitForCompletion();
-		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
-
 		for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)
 			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
 		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
+		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
 
 		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
 		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);

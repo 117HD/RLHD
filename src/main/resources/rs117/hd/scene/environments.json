@@ -374,7 +374,10 @@
     "fogDepth": 40,
     "groundFogStart": -150,
     "groundFogEnd": -350,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+    "moonColor": "#FF0000",
+	  "sunStrength": 0.05,
+    "minBrightnessBoost": 0.4
   },
   {
     "description": "Needs to be above the non-legacy version",
@@ -495,6 +498,7 @@
     "groundFogOpacity": 0.5,
 	  "moonColor": "#FF0000",
 	  "sunStrength": 0.05,
+    "minBrightnessBoost": 0.8,
 	  "starVisibility": 1,
     "windSpeed": 10,
     "windStrength": 30
@@ -509,7 +513,10 @@
     "fogDepth": 40,
     "groundFogStart": -150,
     "groundFogEnd": -350,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+    "moonColor": "#FF0000",
+	  "sunStrength": 0.05,
+    "minBrightnessBoost": 0.8
   },
   {
     "area": "MEIYERDITCH_MYREQUE_HIDEOUT",
@@ -552,7 +559,7 @@
     "windAngle": 40,
     "windSpeed": 7,
     "windStrength": 26,
-    "minBrightnessBoost": 0.6
+    "minBrightnessBoost": 0.4
   },
   {
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
@@ -599,7 +606,10 @@
     "directionalColor": "#ffbcb7",
     "directionalStrength": 2,
     "fogColor": "#0c0b0a",
-    "fogDepth": 45
+    "fogDepth": 45,
+    "sunStrength": 0.02,
+    "sunlightStrength": 0.1,
+    "minBrightnessBoost": 0.9
   },
   {
     "area": "DRAYNOR_MANOR_FOREST",
@@ -609,7 +619,10 @@
     "directionalColor": "#ffbcb7",
     "directionalStrength": 2,
     "fogColor": "#474055",
-    "fogDepth": 20
+    "fogDepth": 20,
+    "sunStrength": 0.02,
+    "sunlightStrength": 0.1,
+    "minBrightnessBoost": 0.9
   },
   {
     "area": "DRAYNOR_MANOR_CRYPT",
@@ -805,7 +818,11 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "sunlightStrength": 0.7,
+    "sunStrength": 0.6,
+    "starVisibility": 0.4,
+    "moonVisibility": 0.4
   },
   {
     "area": "RELLEKKA_HUNTER_ICEBERG",
@@ -814,7 +831,11 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 1.75,
     "fogColor": "#aebde0",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "sunlightStrength": 0.7,
+    "sunStrength": 0.6,
+    "starVisibility": 0.4,
+    "moonVisibility": 0.4
   },
   {
     "area": "GIELINOR_SNOWY_NORTHERN_REGION",
@@ -846,7 +867,12 @@
     "fogDepth": 50,
     "groundFogStart": -600,
     "groundFogEnd": -900,
-    "groundFogOpacity": 0.4
+    "groundFogOpacity": 0.4,
+    "sunStrength": 0.6,
+	  "sunlightStrength": 0.4,
+    "minBrightnessBoost": 0.3,
+    "starVisibility": 0.5,
+    "moonVisibility": 0.5
   },
   {
     "area": "MOUNTAIN_CAMP",
@@ -857,7 +883,12 @@
     "fogDepth": 50,
     "groundFogStart": -1200,
     "groundFogEnd": -1600,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+    "sunStrength": 0.6,
+	  "sunlightStrength": 0.4,
+    "minBrightnessBoost": 0.3,
+    "starVisibility": 0.5,
+    "moonVisibility": 0.5
   },
   {
     "area": "FREMENNIK_PROVINCE",
@@ -872,7 +903,10 @@
     "windSpeed": 17.5,
     "windStrength": 60,
 	  "sunStrength": 0.6,
-	  "sunlightStrength": 0.4
+	  "sunlightStrength": 0.4,
+    "minBrightnessBoost": 0.3,
+    "starVisibility": 0.5,
+    "moonVisibility": 0.5
   },
   {
     "area": "RELLEKKA_COLD_WATER",
@@ -918,7 +952,11 @@
     "windStrength": 85,
     "windCeiling": 400,
     "windAngle": 45,
-    "windSpeed": 22.5
+    "windSpeed": 22.5,
+    "sunlightStrength": 0.9,
+    "sunStrength": 0.8,
+    "starVisibility": 0.8,
+    "moonVisibility": 0.8
   },
   {
     "area": "FREMENNIK_ISLES_FAR_NORTH",
@@ -968,7 +1006,11 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 1.5,
     "fogColor": "#adb9c4",
-    "fogDepth": 45
+    "fogDepth": 45,
+    "sunlightStrength": 0.8,
+    "sunStrength": 0.02,
+    "starVisibility": 0.2,
+    "moonVisibility": 0.1
   },
   {
     "area": "ISLAND_OF_STONE",
@@ -978,7 +1020,11 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 1.5,
     "fogColor": "#adb9c4",
-    "fogDepth": 45
+    "fogDepth": 45,
+    "sunlightStrength": 0.6,
+    "sunStrength": 0.02,
+    "starVisibility": 0.2,
+    "moonVisibility": 0.1
   },
   {
     "area": "PENGUIN_BASE",
@@ -1024,7 +1070,11 @@
     "directionalColor": "#9DA3C6",
     "directionalStrength": 1.5,
     "fogColor": "#e2e6ed",
-    "fogDepth": 40
+    "fogDepth": 40,
+    "sunlightStrength": 0.6,
+    "sunStrength": 0.02,
+    "starVisibility": 0.2,
+    "moonVisibility": 0.1
   },
   {
     "area": "GOD_WARS_DUNGEON",
@@ -1086,7 +1136,8 @@
 	  "sunStrength": 0.1,
     "sunlightStrength": 0.7,
     "starVisibility": 0.3,
-    "moonVisibility": 0.3
+    "moonVisibility": 0.3,
+    "minBrightnessBoost": 0.4
   },
   {
     "area": "TIRANNWN_MAINLAND",
@@ -1231,7 +1282,9 @@
     "directionalColor": "#4eeeff",
     "directionalStrength": 2.5,
     "fogColor": "#4f1325",
-    "fogDepth": 30
+    "fogDepth": 30,
+    "sunStrength": 0.02,
+    "sunlightStrength": 0.8
   },
   {
     "area": "ZEAH_SNOWY_NORTHERN_REGION",
@@ -1271,7 +1324,8 @@
     "fogColor": "#13184f",
     "fogDepth": 30,
     "sunStrength": 0.1,
-    "waterCausticsStrength": 0.8
+    "waterCausticsStrength": 0.8,
+    "minBrightnessBoost": 0.3
   },
   {
     "area": "LOVAKENGJ",
@@ -1429,7 +1483,11 @@
     "windSpeed": 20,
     "groundFogStart": 0,
     "groundFogEnd": -300,
-    "groundFogOpacity": 0.3
+    "groundFogOpacity": 0.3,
+    "sunStrength": 0.02,
+    "starVisibility": 0.2,
+    "sunlightStrength": 0.8,
+    "moonVisibility": 0.1
   },
   {
     "area": "THE_STORM_TEMPOR_EDGE",
@@ -1437,7 +1495,11 @@
     "ambientStrength": 3.5,
     "directionalColor": "#707070",
     "fogColor": "#99AECC",
-    "fogDepth": 10
+    "fogDepth": 10,
+    "sunStrength": 0.02,
+    "starVisibility": 0.2,
+    "sunlightStrength": 0.8,
+    "moonVisibility": 0.1
   },
   {
     "area": "THE_STORM_TEMPOR",
@@ -1452,7 +1514,11 @@
     "windSpeed": 20,
     "groundFogStart": 0,
     "groundFogEnd": -300,
-    "groundFogOpacity": 0.25
+    "groundFogOpacity": 0.25,
+    "sunStrength": 0.02,
+    "starVisibility": 0.2,
+    "sunlightStrength": 0.8,
+    "moonVisibility": 0.1
   },
   {
     "area": "TEMPLE_OF_THE_EYE",
@@ -1680,7 +1746,7 @@
       80,
       190
     ],
-    "fogColor": "#030303"
+    "fogColor": "#000000"
   },
   {
     "area": "ICY_UNDERGROUND_BRIGHT",
@@ -1693,6 +1759,16 @@
     ],
     "fogColor": "#adc5e4",
     "fogDepth": 68
+  },
+  {
+    "area": "DT2_MYSTERIOUS_FIGURE_HIDEOUT",
+    "ambientColor": "#aaafb6",
+    "directionalStrength": 0.75,
+    "sunAngles": [
+      70,
+      190
+    ],
+    "fogDepth": 20
   },
   {
     "area": "ASGARNIA_ICE_DUNGEON_SNOWY",
@@ -1824,7 +1900,6 @@
       90,
       180
     ],
-    "fogColor": "#080707",
     "fogDepth": 15
   },
   {
@@ -2007,7 +2082,12 @@
     "fogColor": "#aebde0",
     "fogDepth": 65,
     "groundFogOpacity": 0.3,
-    "groundFogEnd": -1800
+    "groundFogEnd": -1800,
+    "sunStrength": 0.6,
+	  "sunlightStrength": 0.4,
+    "minBrightnessBoost": 0.3,
+    "starVisibility": 0.5,
+    "moonVisibility": 0.5
   },
   {
     "area": "VARLAMORE_SNOWY_MOUNTAINS_UPPER",
@@ -2016,7 +2096,13 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "sunStrength": 0.6,
+	  "sunlightStrength": 0.4,
+    "minBrightnessBoost": 0.3,
+    "starVisibility": 0.5,
+    "moonVisibility": 0.5
+
   },
   {
     "area": "VARLAMORE_SNOWY_MOUNTAINS_LOWER",
@@ -2025,7 +2111,12 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2.75,
     "fogColor": "#aebde0",
-    "fogDepth": 30
+    "fogDepth": 30,
+    "sunStrength": 0.6,
+	  "sunlightStrength": 0.4,
+    "minBrightnessBoost": 0.3,
+    "starVisibility": 0.5,
+    "moonVisibility": 0.5
   },
   {
     "area": "WHITE_WOLF_MOUNTAIN_ENVIRONMENT",
@@ -2064,7 +2155,7 @@
     "directionalStrength": 2,
     "fogColor": "#fddcb4",
     "fogDepth": 6.5,
-	"minBrightnessBoost": 0.5,
+	  "minBrightnessBoost": 0.4,
     "windStrength": 50
   },
   {
@@ -2186,6 +2277,18 @@
     "waterColor": "#6D8AA8"
   },
   {
+    "area": "MM2_AIRSHIP_PLATFORM",
+    "fogColor": "#b9d6ff",
+    "ambientColor": "#97baff",
+    "directionalStrength": 4,
+    "sunAngles": [ 72, 235 ],
+    "fogDepth": 6.5,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "waterCausticsStrength": 0
+  },
+  {
     "area": "PLAYER_OWNED_HOUSE_WILDY",
     "isPohTheme": true,
     "ambientColor": "#d7d2d2",
@@ -2249,7 +2352,11 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2.5,
     "fogColor": "#aebde0",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "sunlightStrength": 0.7,
+    "sunStrength": 0.6,
+    "starVisibility": 0.4,
+    "moonVisibility": 0.4
   },
   {
     "key": "OVERWORLD",
