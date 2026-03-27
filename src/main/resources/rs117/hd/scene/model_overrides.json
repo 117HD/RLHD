@@ -15434,7 +15434,8 @@
       "TOURTRAP_QIP_CRATE_STACKED",
       "FOSSIL_CRATE3_INACTIVE",
       "FAI_WIZTOWER_CRATE",
-      "SLUG2_CRATE_STACK2"
+      "SLUG2_CRATE_STACK2",
+      "TOA_LOBBY_CRATE02_DEFAULT"
     ],
     "uvType": "BOX",
     "flatNormals": true,
