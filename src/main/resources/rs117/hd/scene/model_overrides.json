@@ -73736,7 +73736,8 @@
       "DUCK_UPDATE_DUCKLINGS",
       "DUCK_NOOP",
       "DUCK_FEMALE_NOOP",
-      "SWAN"
+      "SWAN",
+      "DUCKLING"
     ],
     "colorOverrides": [
       {
