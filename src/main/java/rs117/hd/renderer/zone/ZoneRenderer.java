@@ -681,8 +681,8 @@ public class ZoneRenderer implements Renderer {
 			// overlapping with the sun's natural warm-color fade-out near the horizon.
 			// This prevents the color "pop" at 0° where warm sun tones vanish while
 			// cool moon tones appear simultaneously.
+			float moonInfluence = 0;
 			if (sunAltitudeDegrees < 5.0 && moonAltDeg > -10 && moonIllumFrac > 0.01f) {
-				float moonInfluence;
 				if (sunAltitudeDegrees >= 0.0) {
 					// Pre-horizon: smoothstep from 0.0 at +5° to 0.05 at 0°
 					float pt = (float) ((5.0 - sunAltitudeDegrees) / 5.0);
@@ -711,6 +711,18 @@ public class ZoneRenderer implements Renderer {
 					directionalColor[i] = directionalColor[i] * (1 - moonInfluence)
 						+ moonColor[i] * moonInfluence;
 				}
+			}
+
+			// Tint night sky toward regional moon color as moon directional strength increases
+			if (moonInfluence > 0) {
+				float skyTint = moonInfluence * 0.15f;
+				for (int i = 0; i < 3; i++) {
+					skyGradientColors[0][i] = skyGradientColors[0][i] * (1 - skyTint) + moonColor[i] * skyTint;
+					skyGradientColors[1][i] = skyGradientColors[1][i] * (1 - skyTint) + moonColor[i] * skyTint;
+				}
+				plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
+				plugin.uboGlobal.skyHorizonColor.set(skyGradientColors[1]);
+				fogColor = skyGradientColors[1];
 			}
 
 			// Scale minBrightnessBoost down as moon directional light increases,
