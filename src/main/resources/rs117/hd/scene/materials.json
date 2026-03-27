@@ -38,6 +38,9 @@
     "name": "LEAF_A"
   },
   {
+    "name": "LEAF_A_2"
+  },
+  {
     "name": "WOODEN_DOOR_HANDLE",
     "vanillaTextureIndex": 0
   },
@@ -84,6 +87,11 @@
       1.025,
       1.0
     ]
+  },
+  {
+    "name": "LEAVES_SIDE_2",
+    "parent": "LEAVES_SIDE",
+    "shadowAlphaMap": "LEAF_A_2"
   },
   {
     "name": "TREE_RINGS",
@@ -374,6 +382,11 @@
     "vanillaTextureIndex": 60,
     "shadowAlphaMap": "LEAF_A",
     "hasTransparency": true
+  },
+  {
+    "name": "LEAVES_TOP_2",
+    "parent": "LEAVES_TOP",
+    "shadowAlphaMap": "LEAF_A_2"
   },
   {
     "name": "CLAN_SKULL",

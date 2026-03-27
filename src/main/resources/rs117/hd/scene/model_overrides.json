@@ -1321,6 +1321,7 @@
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "windDisplacementModifier": -3,
+    "textureMaterial": "LEAVES_SIDE_2",
     "objectIds": [
       "SPIRIT_TREE_SEEDLING",
       "SPIRIT_TREE_1",
@@ -1400,6 +1401,7 @@
   {
     "description": "Spirit fairy trees",
     "baseMaterial": "BARK",
+    "textureMaterial": "LEAVES_SIDE_2",
     "objectIds": [
       "POH_SPIRIT_RING_LAST_AIP",
       "POH_SPIRIT_RING_LAST_AIS",
@@ -1465,6 +1467,29 @@
       "POH_SPIRIT_RING_LAST_BJS",
       "POH_SPIRIT_RING_LAST_BJR",
       "POH_SPIRIT_RING_LAST_BJQ"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Gnome Stronghold Tree Leaves - Side",
+    "baseMaterial": "BARK",
+    "textureMaterial": "LEAVES_TOP_2",
+    "objectIds": [
+      "TKCANOPYMIDDLE2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Gnome Stronghold Tree Leaves - Side",
+    "baseMaterial": "BARK",
+    "textureMaterial": "LEAVES_SIDE_2",
+    "objectIds": [
+      "TKCANOPYCORNER2",
+      "TKCANOPYFILLER2"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -52538,7 +52563,31 @@
       "POH_SMALL_TREE6_5",
       "POH_BIG_TREE7_4",
       "POH_SMALL_TREE7_5",
-      "POH_SMALL_TREE3_5",
+      "POH_SMALL_TREE3_5"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_YELLOW_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_YELLOW_TOP"
+      },
+      "MAPLE_LEAVES": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "MAPLE_LEAVES"
+      }
+    }
+  },
+  {
+    "description": "PoH - Spirit Tree",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "textureMaterial": "LEAVES_SIDE_2",
+    "objectIds": [
       "POH_SPIRIT_TREE"
     ],
     "uvType": "BOX",
