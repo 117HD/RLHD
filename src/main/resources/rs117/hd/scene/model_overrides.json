@@ -52586,7 +52586,7 @@
     "description": "PoH - Spirit Tree",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "textureMaterial": "LEAVES_SIDE_2",
+    "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "POH_SPIRIT_TREE"
     ],
