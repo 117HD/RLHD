@@ -1401,7 +1401,7 @@
   {
     "description": "Spirit fairy trees",
     "baseMaterial": "BARK",
-    "textureMaterial": "LEAVES_SIDE_2",
+    "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "POH_SPIRIT_RING_LAST_AIP",
       "POH_SPIRIT_RING_LAST_AIS",
