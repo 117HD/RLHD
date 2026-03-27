@@ -1,0 +1,20 @@
+[
+  {
+    "objectEmitters": [
+      {
+        "object": "FAI_FALADOR_HOUSE_TORCH",
+        "offsetX": -55,
+        "offsetY": 0,
+        "offsetZ": 205
+      }
+    ],
+    "description": "WALL_TORCH_MID_SMALL",
+    "particleId": "TORCH_SMOKE"
+  },
+  {
+    "particleIds": [ "3", "4" ],
+    "description": "Particles 3 and 4 emitters",
+    "weatherAreas": [ "ICE_MOUNTAIN","WES","WATERBIRTH_ISLAND" ],
+    "weatherParticlesPerTile": 3
+  }
+]
