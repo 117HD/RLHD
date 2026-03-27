@@ -27,11 +27,16 @@ package rs117.hd.utils;
 import java.awt.Canvas;
 import java.awt.Container;
 import java.awt.Frame;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Objects;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.swing.JFrame;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.client.util.OSType;
 import rs117.hd.data.ObjectType;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -48,6 +53,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public final class HDUtils {
+	private static final String[] UNITS = {"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"};
 	public static final int HIDDEN_HSL = 12345678;
 	public static final int UNDERWATER_HSL = 6676;
 
@@ -507,5 +513,40 @@ public final class HDUtils {
 		}
 
 		return null;
+	}
+
+	public static String humanReadableByteCountBin(long bytes) {
+		if (bytes == Long.MIN_VALUE)
+			bytes = Long.MAX_VALUE;
+
+		double value = Math.abs((double) bytes);
+		int unitIndex = 0;
+
+		while (value >= 1024 && unitIndex < UNITS.length - 1) {
+			value /= 1024;
+			unitIndex++;
+		}
+
+		value = Math.copySign(value, bytes);
+
+		return String.format("%.1f %s", value, UNITS[unitIndex]);
+	}
+
+	public static String getCPUName() {
+		if(OSType.getOSType() == OSType.Linux) {
+			try (BufferedReader br = new BufferedReader(new FileReader("/proc/cpuinfo"))) {
+				String line;
+				while ((line = br.readLine()) != null) {
+					if (line.startsWith("model name"))
+						return line.split(":", 2)[1].trim();
+				}
+			} catch (IOException ignored) {}
+		}
+
+		return Objects.requireNonNullElse(System.getenv("PROCESSOR_IDENTIFIER"), "Unknown");
+	}
+
+	public static long getTotalPhysicalMemorySize() {
+		return ((com.sun.management.OperatingSystemMXBean) java.lang.management.ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize();
 	}
 }
