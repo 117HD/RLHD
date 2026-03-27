@@ -1477,6 +1477,7 @@
     "baseMaterial": "BARK",
     "textureMaterial": "LEAVES_TOP_2",
     "objectIds": [
+      "TKCANOPYMIDDLE",
       "TKCANOPYMIDDLE2"
     ],
     "uvType": "BOX",
@@ -1489,7 +1490,9 @@
     "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "TKCANOPYCORNER2",
-      "TKCANOPYFILLER2"
+      "TKCANOPYFILLER2",
+      "TKCANOPYFILLER",
+      "TKCANOPYCORNER"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
