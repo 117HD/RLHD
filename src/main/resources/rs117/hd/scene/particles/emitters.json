@@ -14,7 +14,7 @@
   {
     "particleIds": [ "3", "4" ],
     "description": "Particles 3 and 4 emitters",
-    "weatherAreas": [ "ICE_MOUNTAIN","WES" ],
+    "weatherAreas": [ "ICE_MOUNTAIN","WES","WATERBIRTH_ISLAND" ],
     "weatherParticlesPerTile": 3
   }
 ]
