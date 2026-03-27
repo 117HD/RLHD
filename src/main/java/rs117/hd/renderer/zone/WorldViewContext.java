@@ -15,6 +15,7 @@ import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
+import rs117.hd.renderer.zone.jobs.ZoneUploadJob;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.DestructibleHandler;
@@ -53,17 +54,17 @@ public class WorldViewContext {
 	@Inject
 	private SceneManager sceneManager;
 
-	final int worldViewId;
-	final int sizeX, sizeZ;
+	public final int worldViewId;
+	public final int sizeX, sizeZ;
 	@Nullable
-	WorldViewStruct uboWorldViewStruct;
-	ZoneSceneContext sceneContext;
-	Zone[][] zones;
-	GLBuffer vboM;
-	boolean isLoading = true;
+	public WorldViewStruct uboWorldViewStruct;
+	public ZoneSceneContext sceneContext;
+	public Zone[][] zones;
+	public GLBuffer vboM;
+	public boolean isLoading = true;
 
-	int minLevel, level, maxLevel;
-	Set<Integer> hideRoofIds;
+	public int minLevel, level, maxLevel;
+	public Set<Integer> hideRoofIds;
 
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
