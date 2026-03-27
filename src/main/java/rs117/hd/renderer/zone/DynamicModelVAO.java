@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.Destructible;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GLMappedBufferIntWriter.ReservedView;
@@ -16,6 +17,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NVIDIA_GPU;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
+import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
@@ -23,14 +25,14 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
 @Slf4j
-class DynamicModelVAO {
+public class DynamicModelVAO implements Destructible {
 	public static final int INITIAL_SIZE = (int) (8 * MiB);
 
 	// Temp vertex format
 	// pos float vec3(x, y, z)
 	// uvw short vec3(u, v, w)
 	// normal short vec3(nx, ny, nz)
-	static final int VERT_SIZE = 28;
+	static final int VERT_SIZE = 32;
 	static final int VERT_SIZE_INTS = VERT_SIZE / 4;
 
 	// Metadata format
@@ -39,7 +41,6 @@ class DynamicModelVAO {
 	static final int METADATA_SIZE = 12;
 
 	int vao;
-	boolean used;
 
 	private final GLBuffer vboRender;
 	private final GLBuffer vboStaging;
@@ -52,8 +53,10 @@ class DynamicModelVAO {
 	private final GLMappedBufferIntWriter vboWriter;
 	private final GLMappedBufferIntWriter tboWriter;
 
+	private boolean isMapped = false;
 	private int[] drawOffsets = new int[16];
 	private int[] drawCounts = new int[16];
+	private int writtenRangeCount;
 	private int drawRangeCount;
 
 	private long[] srcCopyOffsets = new long[16];
@@ -61,7 +64,7 @@ class DynamicModelVAO {
 	private long[] copyNumBytes = new long[16];
 
 	DynamicModelVAO(String name, boolean useStagingBuffer) {
-		if (useStagingBuffer) {
+		if (useStagingBuffer && SUPPORTS_STORAGE_BUFFERS) {
 			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
 				"VAO::VBO_STAGING::" + name,
@@ -89,9 +92,8 @@ class DynamicModelVAO {
 		vao = glGenVertexArrays();
 		tbo.initialize(INITIAL_SIZE);
 		vboRender.initialize(INITIAL_SIZE);
-		if (vboRender != vboStaging) {
+		if (vboRender != vboStaging)
 			vboStaging.initialize(INITIAL_SIZE);
-		}
 
 		bindRenderVAO();
 	}
@@ -126,22 +128,26 @@ class DynamicModelVAO {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 12);
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 18);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 20);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 28);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 	}
 
 	void map() {
-		vboWriter.map();
-		tboWriter.map();
+		vboWriter.map(false);
+		tboWriter.map(false);
 
 		reset();
+		isMapped = true;
 	}
 
 	synchronized void unmap(boolean coalesce) {
@@ -181,27 +187,52 @@ class DynamicModelVAO {
 
 		if (renderVBOId != vboRender.id)
 			bindRenderVAO();
+		isMapped = false;
 	}
 
-	void destroy() {
+	@Override
+	public void destroy() {
+		vboWriter.destroy();
+		tboWriter.destroy();
+		vboRender.destroy();
 		vboStaging.destroy();
 		tbo.destroy();
-		glDeleteVertexArrays(vao);
+
+		if (vao != 0)
+			glDeleteVertexArrays(vao);
 		vao = 0;
 	}
 
-	synchronized View beginDraw(int faceCount) {
-		final int drawIdx = drawRangeCount++;
+	synchronized int obtainDrawIndex() {
+		int drawIndex = drawRangeCount++;
 		if (drawRangeCount >= drawOffsets.length) {
-			drawOffsets = Arrays.copyOf(drawOffsets, drawOffsets.length * 2);
-			drawCounts = Arrays.copyOf(drawCounts, drawCounts.length * 2);
+			int oldLength = drawOffsets.length;
+			drawOffsets = Arrays.copyOf(drawOffsets, oldLength * 2);
+			drawCounts = Arrays.copyOf(drawCounts, oldLength * 2);
 		}
+		return drawIndex;
+	}
 
-		drawOffsets[drawIdx] = -1;
-		drawCounts[drawIdx] = -1;
+	synchronized View beginPlayerDraw(int faceCount, int playerDrawIndex) {
+		assert playerDrawIndex != -1 && playerDrawIndex < drawRangeCount :
+			String.format("Provided draw index is out of range: %d %d", playerDrawIndex, drawRangeCount);
+		return beginDraw(faceCount, playerDrawIndex);
+	}
+
+	synchronized View beginDraw(int faceCount) {
+		return beginDraw(faceCount, obtainDrawIndex());
+	}
+
+	private synchronized View beginDraw(int faceCount, int drawIdx) {
+		assert drawOffsets[drawIdx] == 0 && drawCounts[drawIdx] == 0 : String.format(
+			"Provided draw index is already in use: %d %d %d",
+			drawIdx, drawOffsets[drawIdx], drawCounts[drawIdx]
+		);
+		assert isMapped : "beginDraw called while not mapped, this is not allowed!";
 
 		View view = freeViews.poll();
-		if (view == null) view = new View();
+		if (view == null)
+			view = new View();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
 		view.tbo = tboWriter.reserve(faceCount * 9);
 		view.vao = vao;
@@ -212,29 +243,40 @@ class DynamicModelVAO {
 		return view;
 	}
 
-	private void endDraw(View view) {
+	private synchronized void endDraw(View view) {
+		assert drawOffsets[view.drawIdx] == 0 && drawCounts[view.drawIdx] == 0 : String.format(
+			"Provided draw index is already in use: %d %d %d",
+			view.drawIdx, drawOffsets[view.drawIdx], drawCounts[view.drawIdx]
+		);
+		assert isMapped : "beginDraw called while not mapped, this is not allowed!";
+
 		drawOffsets[view.drawIdx] = view.getStartOffset() / VERT_SIZE_INTS;
 		drawCounts[view.drawIdx] = view.getVertexCount();
+		writtenRangeCount = max(writtenRangeCount, view.drawIdx + 1);
+
+		// Clear ReservedViews before returning to pool
+		view.vbo = null;
+		view.tbo = null;
 
 		usedViews.add(view);
 	}
 
 	void mergeRanges() {
-		int newDrawRangeCount = 0;
-		for (int i = 0; i < drawRangeCount; i++) {
-			if (drawOffsets[i] != -1 && drawCounts[i] != -1) {
-				if (newDrawRangeCount > 0 && drawOffsets[newDrawRangeCount - 1] + drawCounts[newDrawRangeCount - 1] == drawOffsets[i]) {
-					drawCounts[newDrawRangeCount - 1] += drawCounts[i];
-				} else {
-					if (newDrawRangeCount != i) {
-						drawOffsets[newDrawRangeCount] = drawOffsets[i];
-						drawCounts[newDrawRangeCount] = drawCounts[i];
-					}
-					newDrawRangeCount++;
+		drawRangeCount = 0;
+		for (int i = 0; i < writtenRangeCount; i++) {
+			if (drawCounts[i] <= 0)
+				continue;
+
+			if (drawRangeCount > 0 && drawOffsets[drawRangeCount - 1] + drawCounts[drawRangeCount - 1] == drawOffsets[i]) {
+				drawCounts[drawRangeCount - 1] += drawCounts[i];
+			} else {
+				if (drawRangeCount != i) {
+					drawOffsets[drawRangeCount] = drawOffsets[i];
+					drawCounts[drawRangeCount] = drawCounts[i];
 				}
+				drawRangeCount++;
 			}
 		}
-		drawRangeCount = newDrawRangeCount;
 	}
 
 	void draw(CommandBuffer cmd) {
@@ -260,7 +302,8 @@ class DynamicModelVAO {
 	}
 
 	void reset() {
-		used = false;
+		Arrays.fill(drawOffsets, 0, writtenRangeCount, 0);
+		Arrays.fill(drawCounts, 0, writtenRangeCount, 0);
 		drawRangeCount = 0;
 		freeViews.addAll(usedViews);
 		usedViews.clear();

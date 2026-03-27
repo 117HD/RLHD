@@ -123,6 +123,7 @@ import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
@@ -143,6 +144,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
@@ -357,6 +359,7 @@ public class HdPlugin extends Plugin {
 	public static boolean APPLE_ARM;
 
 	public static boolean SUPPORTS_INDIRECT_DRAW;
+	public static boolean SUPPORTS_STORAGE_BUFFERS;
 
 	public Canvas canvas;
 	public JFrame clientJFrame;
@@ -458,6 +461,8 @@ public class HdPlugin extends Plugin {
 	public boolean freezeCulling;
 
 	@Getter
+	private boolean isPluginStopPending;
+	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
@@ -535,6 +540,7 @@ public class HdPlugin extends Plugin {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
+				isPluginStopPending = false;
 				isActive = true;
 
 				fboScene = 0;
@@ -594,7 +600,13 @@ public class HdPlugin extends Plugin {
 				INTEL_GPU = glRenderer.contains("Intel");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
-				SUPPORTS_INDIRECT_DRAW = NVIDIA_GPU && !APPLE || config.forceIndirectDraw();
+				SUPPORTS_INDIRECT_DRAW = config.indirectDraw().get(NVIDIA_GPU && !APPLE);
+				SUPPORTS_STORAGE_BUFFERS = GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS && config.storageBuffers().get(!INTEL_GPU);
+				log.info(
+					"Using features: indirectDraw={}, storageBuffers={}",
+					SUPPORTS_INDIRECT_DRAW,
+					SUPPORTS_STORAGE_BUFFERS
+				);
 
 				renderer = config.legacyRenderer() ?
 					injector.getInstance(LegacyRenderer.class) :
@@ -821,6 +833,8 @@ public class HdPlugin extends Plugin {
 			materialManager.shutDown();
 			textureManager.shutDown();
 
+			DestructibleHandler.flushPendingDestruction(true);
+
 			if (awtContext != null)
 				awtContext.destroy();
 			awtContext = null;
@@ -836,6 +850,13 @@ public class HdPlugin extends Plugin {
 			if (client.getGameState() == GameState.LOGGED_IN)
 				client.setGameState(GameState.LOADING);
 		});
+	}
+
+	public void requestPluginStop() {
+		if (isPluginStopPending)
+			return;
+		log.debug("Requesting plugin to stop when safe");
+		isPluginStopPending = true;
 	}
 
 	public void stopPlugin() {
@@ -1503,7 +1524,7 @@ public class HdPlugin extends Plugin {
 
 	public void prepareInterfaceTexture() {
 		if (uiCopyJob != null)
-			uiCopyJob.waitForCompletion();
+			uiCopyJob.waitForCompletion(true);
 		uiCopyJob = null;
 
 		int[] resolution = {
@@ -1535,8 +1556,7 @@ public class HdPlugin extends Plugin {
 
 		frameTimer.begin(Timer.MAP_UI_BUFFER);
 		final GLBuffer pbo = pboUi[frame % 3];
-		pbo.ensureCapacity(uiResolution[0] * uiResolution[1] * 4L);
-		pbo.map(MAP_WRITE);
+		pbo.map(MAP_WRITE, 0, uiWidth * uiHeight * 4L);
 		frameTimer.end(Timer.MAP_UI_BUFFER);
 		if (!pbo.isMapped()) {
 			log.error("Unable to map interface PBO. Skipping UI...");
@@ -1592,7 +1612,7 @@ public class HdPlugin extends Plugin {
 
 		if (uiCopyJob != null) {
 			frameTimer.begin(Timer.COPY_UI);
-			uiCopyJob.waitForCompletion();
+			uiCopyJob.waitForCompletion(true);
 			uiCopyJob = null;
 			frameTimer.end(Timer.COPY_UI);
 
@@ -1807,7 +1827,8 @@ public class HdPlugin extends Plugin {
 							case KEY_LOW_MEMORY_MODE:
 							case KEY_REMOVE_VERTEX_SNAPPING:
 							case KEY_LEGACY_RENDERER:
-							case KEY_FORCE_INDIRECT_DRAW:
+							case KEY_INDIRECT_DRAW:
+							case KEY_STORAGE_BUFFERS:
 							case KEY_SHADING_MODE:
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
@@ -1869,6 +1890,7 @@ public class HdPlugin extends Plugin {
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
+							case KEY_POH_THEME_ENVIRONMENTS:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
 								break;
@@ -2021,6 +2043,13 @@ public class HdPlugin extends Plugin {
 
 		frame = (frame + 1) & Integer.MAX_VALUE;
 
+		if (isPluginStopPending) {
+			log.debug("Shutdown has been requested, stopping plugin");
+			isPluginStopPending = false;
+			stopPlugin();
+			return;
+		}
+
 		if (lastFrameTimeMillis > 0) {
 			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
 
@@ -2054,6 +2083,8 @@ public class HdPlugin extends Plugin {
 		var ctx = getSceneContext();
 		if (ctx != null)
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
+
+		DestructibleHandler.flushPendingDestruction();
 	}
 
 	@Subscribe

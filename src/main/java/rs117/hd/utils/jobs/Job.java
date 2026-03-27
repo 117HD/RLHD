@@ -24,7 +24,13 @@ public abstract class Job {
 	JobHandle handle;
 
 	public final void waitForCompletion() {
+		waitForCompletion(false);
+	}
+
+	public final void waitForCompletion(boolean shouldRelease) {
 		waitForCompletion(-1);
+		if (shouldRelease)
+			release();
 	}
 
 	public final boolean waitForCompletion(int timeoutNanos) {

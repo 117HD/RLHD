@@ -710,18 +710,25 @@ public class SceneUploader implements AutoCloseable {
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
 	) {
-		Model model = null;
+		Model model;
 		if (r instanceof Model) {
 			model = (Model) r;
 		} else if (r instanceof DynamicObject) {
 			var dynamic = (DynamicObject) r;
 			model = dynamic.getModelZbuf();
+
+			if (model == null) {
+				// The model will likely be drawn through drawDynamic, and may have an impostor
+				zone.animatedDynamicObjectIds.add(id);
+				return;
+			}
+
 			var composition = dynamic.getRecordedObjectComposition();
 			if (composition != null)
 				uuid = ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, composition.getId());
-		}
-		if (model == null)
+		} else {
 			return;
+		}
 
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
@@ -1702,10 +1709,9 @@ public class SceneUploader implements AutoCloseable {
 		boolean isModelPartiallyVisible,
 		ModelOverride modelOverride,
 		Model model,
-		int x,
-		int y,
-		int z,
-		int orientation
+		boolean sortAllFaces,
+		int orientation,
+		int x, int y, int z
 	) {
 		final int vertexCount = model.getVerticesCount();
 
@@ -1892,17 +1898,21 @@ public class SceneUploader implements AutoCloseable {
 				continue;
 			}
 
-			// store distance for face sorting
-			if (faceDistances != null && shouldSort) {
-				final float aZ = modelProjected[offsetA + 2];
-				final float bZ = modelProjected[offsetB + 2];
-				final float cZ = modelProjected[offsetC + 2];
-
-				faceDistances[f] = radius + ((int) ((aZ + bZ + cZ) / 3.0f) - zero);
-			}
-
 			if (material.hasTransparency || transparency != 0)
 				tempModelAlphaFaces++;
+
+			// store distance for face sorting
+			if (faceDistances != null) {
+				if (shouldSort && (sortAllFaces || material.hasTransparency || transparency != 0)) {
+					final float aZ = modelProjected[offsetA + 2];
+					final float bZ = modelProjected[offsetB + 2];
+					final float cZ = modelProjected[offsetC + 2];
+
+					faceDistances[f] = radius + ((int) ((aZ + bZ + cZ) / 3.0f) - zero);
+				} else {
+					faceDistances[f] = Integer.MIN_VALUE;
+				}
+			}
 
 			visibleFaces.put(f);
 		}

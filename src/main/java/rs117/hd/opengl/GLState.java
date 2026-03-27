@@ -14,6 +14,11 @@ public abstract class GLState {
 		hasValue = hasApplied = false;
 	}
 
+	public void invalidate() {
+		hasValue = true;
+		hasApplied = false;
+	}
+
 	public void apply() {
 		if (hasValue) {
 			internalApply();
@@ -22,7 +27,7 @@ public abstract class GLState {
 		}
 	}
 
-	abstract void internalApply();
+	protected void internalApply() {}
 
 	public abstract static class Bool extends GLState {
 		@Getter
@@ -35,7 +40,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || value != appliedValue) {
 				applyValue(value);
 				appliedValue = value;
@@ -56,7 +61,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || value != appliedValue) {
 				applyValue(value);
 				appliedValue = value;
@@ -77,7 +82,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || !Objects.equals(value, appliedValue)) {
 				applyValue(value);
 				appliedValue = value;
@@ -90,7 +95,7 @@ public abstract class GLState {
 	public abstract static class IntArray extends GLState {
 		@Getter
 		private final int[] value;
-		private final int[] appliedValue;
+		protected final int[] appliedValue;
 
 		protected IntArray(int size) {
 			value = new int[size];
@@ -103,7 +108,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || !Arrays.equals(value, appliedValue)) {
 				applyValues(value);
 				System.arraycopy(value, 0, appliedValue, 0, value.length);
@@ -129,7 +134,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || !Arrays.equals(value, appliedValue)) {
 				applyValues(value);
 				System.arraycopy(value, 0, appliedValue, 0, value.length);
@@ -153,7 +158,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			for (int t : targets) applyTarget(t);
 			targets.clear();
 		}
