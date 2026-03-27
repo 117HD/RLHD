@@ -549,8 +549,8 @@ public class LegacyRenderer implements Renderer {
 		boolean updateUniforms = true;
 
 		Player localPlayer = client.getLocalPlayer();
-		var lp = localPlayer.getLocalLocation();
-		if (sceneContext.enableAreaHiding) {
+		if (sceneContext.enableAreaHiding && localPlayer != null) {
+			var lp = localPlayer.getLocalLocation();
 			assert sceneContext.sceneBase != null;
 			int[] worldPos = {
 				sceneContext.sceneBase[0] + lp.getSceneX(),
@@ -660,8 +660,9 @@ public class LegacyRenderer implements Renderer {
 				uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
 				uboCompute.windOffset.set(plugin.windOffset);
 
-				if (plugin.configCharacterDisplacement) {
+				if (plugin.configCharacterDisplacement && localPlayer != null) {
 					// The local player needs to be added first for distance culling
+					var lp = localPlayer.getLocalLocation();
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
