@@ -94,6 +94,16 @@
     "shadowAlphaMap": "LEAF_A_2"
   },
   {
+    "name": "LEAVES_SIDE_ALT",
+    "hasTransparency": true,
+    "shadowAlphaMap": "LEAF_A_2",
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ]
+  },
+  {
     "name": "TREE_RINGS",
     "vanillaTextureIndex": 9,
     "hasTransparency": true

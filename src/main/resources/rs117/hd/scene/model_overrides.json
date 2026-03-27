@@ -1486,7 +1486,7 @@
   {
     "description": "Gnome Stronghold Tree Leaves - Side",
     "baseMaterial": "BARK",
-    "textureMaterial": "LEAVES_SIDE_2",
+    "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "TKCANOPYCORNER2",
       "TKCANOPYFILLER2"
