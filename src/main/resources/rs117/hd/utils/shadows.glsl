@@ -155,7 +155,9 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     shadowPos.xy *= shadowRes;
     shadowPos.xy += .5; // Shift to texel center
 
-    float shadowBias = MIN_SHADOW_BIAS * max(1, 1.0 - lightDotNormals);
+    // Scale bias with surface angle to light - steeper angles need more bias
+    float slopeBias = clamp(tan(acos(clamp(lightDotNormals, 0.0, 1.0))), 1.0, 4.0);
+    float shadowBias = MIN_SHADOW_BIAS * slopeBias;
     float fragDepth = shadowPos.z + shadowBias;
 
     const int kernelSize = 3;
