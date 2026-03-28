@@ -55,9 +55,10 @@ float fetchShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
         int alphaDepth = int(texelFetch(shadowMap, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
         float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
         float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
-        return depth < fragDepth ? alpha : 0.f;
+        return smoothstep(0.0, 0.003, fragDepth - depth) * alpha;
     #else
-        return texelFetch(shadowMap, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
+        float depth = texelFetch(shadowMap, pixelCoord, 0).r;
+        return smoothstep(0.0, 0.003, fragDepth - depth);
     #endif
 }
 
@@ -156,7 +157,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     shadowPos.xy += .5; // Shift to texel center
 
     // Scale bias with surface angle to light - steeper angles need more bias
-    float slopeBias = clamp(tan(acos(clamp(lightDotNormals, 0.0, 1.0))), 1.0, 4.0);
+    float slopeBias = clamp(tan(acos(clamp(lightDotNormals, 0.0, 1.0))), 1.0, 16.0);
     float shadowBias = MIN_SHADOW_BIAS * slopeBias;
     float fragDepth = shadowPos.z + shadowBias;
 
