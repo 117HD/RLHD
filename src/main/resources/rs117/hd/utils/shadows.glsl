@@ -55,10 +55,9 @@ float fetchShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
         int alphaDepth = int(texelFetch(shadowMap, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
         float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
         float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
-        return (fragDepth - depth > 0.0 ? 1.0 : 0.0) * alpha;
+        return depth < fragDepth ? alpha : 0.f;
     #else
-        float depth = texelFetch(shadowMap, pixelCoord, 0).r;
-        return fragDepth - depth > 0.0 ? 1.0 : 0.0;
+        return texelFetch(shadowMap, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
     #endif
 }
 
@@ -69,8 +68,7 @@ float fetchTerrainShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, i
         pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
     #endif
 
-    float depth = texelFetch(terrainShadowMap, pixelCoord, 0).r;
-    return fragDepth - depth > 0.0 ? 1.0 : 0.0;
+    return texelFetch(terrainShadowMap, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
 }
 
 float sampleTerrainShadowMap(ivec2 kernelOffset, float fragDepth, vec3 fragPos
