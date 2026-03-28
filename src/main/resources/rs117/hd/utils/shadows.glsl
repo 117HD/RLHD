@@ -55,10 +55,10 @@ float fetchShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
         int alphaDepth = int(texelFetch(shadowMap, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
         float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
         float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
-        return smoothstep(0.0, 0.003, fragDepth - depth) * alpha;
+        return (fragDepth - depth > 0.0 ? 1.0 : 0.0) * alpha;
     #else
         float depth = texelFetch(shadowMap, pixelCoord, 0).r;
-        return smoothstep(0.0, 0.003, fragDepth - depth);
+        return fragDepth - depth > 0.0 ? 1.0 : 0.0;
     #endif
 }
 
@@ -70,8 +70,7 @@ float fetchTerrainShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, i
     #endif
 
     float depth = texelFetch(terrainShadowMap, pixelCoord, 0).r;
-    // Smooth transition over a wider depth range to reduce banding on slopes
-    return smoothstep(0.0, 0.005, fragDepth - depth);
+    return fragDepth - depth > 0.0 ? 1.0 : 0.0;
 }
 
 float sampleTerrainShadowMap(ivec2 kernelOffset, float fragDepth, vec3 fragPos
