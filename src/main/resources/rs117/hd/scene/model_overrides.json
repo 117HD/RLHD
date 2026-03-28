@@ -83764,7 +83764,7 @@
     ]
   },
   {
-    "description": "TOA Akkah Wall with sand and grunge - incomplete - Perf hit?",
+    "description": "ToA Akkha - Wall with sand and grunge",
     "baseMaterial": "GRAVEL_TOA",
     "uvType": "WORLD_XZ",
     "colorOverrides": [
@@ -83906,7 +83906,41 @@
     ]
   },
   {
-    "description": "TOA Akkah Wall with golden symbols - incomplete - Perf hit?",
+    "description": "ToA - Akkha Entrance",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h >= 35",
+        "uvScale": 1.2,
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "Smooth Stone",
+        "colors": "h == 0",
+        "uvScale": 1.2,
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -128
+      },
+      {
+        "description": "Metal",
+        "colors": "s == 7",
+        "uvScale": 0.5,
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -128
+      }
+    ],
+    "objectIds": [
+      "TOA_ENTRANCE_AKKHA01"
+    ]
+  },
+  {
+    "description": "ToA - Akkha Wall with golden symbols",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "colorOverrides": [
@@ -83933,7 +83967,7 @@
     ]
   },
   {
-    "description": "TOA Akkah Wall with golden symbols - incomplete - Perf hit?",
+    "description": "ToA - Akkha Wall tops",
     "baseMaterial": "MARBLE_3",
     "uvType": "WORLD_XZ",
     "objectIds": [
