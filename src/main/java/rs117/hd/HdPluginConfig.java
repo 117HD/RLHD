@@ -697,7 +697,7 @@ public interface HdPluginConfig extends Config
 		section = daylightCycleSettings
 	)
 	default MoonBehavior moonBehavior() {
-		return MoonBehavior.REALISTIC;
+		return MoonBehavior.NIGHT_SYNCED;
 	}
 
 	String KEY_SEASONAL_THEME = "seasonalTheme";
