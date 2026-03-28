@@ -68,7 +68,9 @@ float fetchTerrainShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, i
         pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
     #endif
 
-    return texelFetch(terrainShadowMap, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
+    float depth = texelFetch(terrainShadowMap, pixelCoord, 0).r;
+    // Smooth transition over a wider depth range to reduce banding on slopes
+    return smoothstep(0.0, 0.005, fragDepth - depth);
 }
 
 float sampleTerrainShadowMap(ivec2 kernelOffset, float fragDepth, vec3 fragPos
