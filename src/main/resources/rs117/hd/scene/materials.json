@@ -1343,6 +1343,11 @@
     "brightness": 1.194
   },
   {
+    "name": "GRAVEL_TOA",
+    "parent": "GRAVEL",
+    "brightness": 1.3
+  },
+  {
     "name": "DIRT_1_SHINY",
     "parent": "DIRT_1",
     "specularStrength": 1.1,
