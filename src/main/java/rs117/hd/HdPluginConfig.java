@@ -1325,7 +1325,8 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_TERRAIN_SHADOWS,
 		name = "Terrain Shadows",
 		description = "Allow terrain to cast shadows on other terrain. May cause visual artifacts on slopes.",
-		section = experimentalSettings
+		position = 7,
+		section = shadowSettings
 	)
 	default boolean terrainShadows() {
 		return false;
