@@ -41,6 +41,9 @@
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
+#if TERRAIN_SHADOWS
+uniform sampler2D terrainShadowMap;
+#endif
 uniform usampler2DArray tiledLightingArray;
 
 // general HD settings
@@ -81,6 +84,7 @@ vec2 worldUvs(float scale) {
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
+#include <utils/starfield.glsl>
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -527,7 +531,78 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+        if (skyGradientEnabled == 1) {
+            // Compute the sky gradient color at this fragment's view direction
+            // so fog blends geometry into the exact sky color behind it
+            vec3 viewDir = normalize(IN.position - cameraPos);
+
+            // Match sky shader's sun direction transform (with horizon offset)
+            float horizonOffset = 0.087;
+            vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y + horizonOffset, skySunDir.z));
+
+            float upAmount = -viewDir.y;
+
+            // Horizontal sun-facing gradient
+            vec3 viewHorizontal = normalize(vec3(viewDir.x, 0.0, viewDir.z));
+            vec3 sunHorizontal = normalize(vec3(sunDir.x, 0.0, sunDir.z));
+            float sunFacing = dot(viewHorizontal, sunHorizontal);
+            float sunSideBlend = smoothstep(0.0, 1.0, (sunFacing + 1.0) * 0.5);
+
+            // Vertical zenith-to-horizon blend
+            float zenithBlend = smoothstep(-0.1, 0.7, upAmount);
+
+            // Sun altitude factors
+            float sunAltitude = clamp(skySunDir.y, 0.0, 1.0);
+            float daytimeFactor = smoothstep(0.0, 0.64, sunAltitude);
+            float dimFadeout = smoothstep(0.0, 0.34, sunAltitude);
+            float darkSideDim = mix(0.7, 1.0, dimFadeout);
+            vec3 darkSideColor = mix(skyZenithColor * darkSideDim, skyHorizonColor, daytimeFactor);
+            vec3 sunSideColor = skyHorizonColor;
+
+            // Night fade for uniform sky at night
+            float nightFade = smoothstep(-0.26, 0.0, skySunDir.y);
+
+            vec3 horizonColor = mix(darkSideColor, sunSideColor, sunSideBlend);
+            horizonColor = mix(skyZenithColor, horizonColor, nightFade);
+
+            vec3 skyColorAtFragment = mix(horizonColor, skyZenithColor, zenithBlend);
+
+            // Add sun glow contribution
+            float sunDot = dot(viewDir, sunDir);
+            if (sunDot > 0.0) {
+                float coreGlow = pow(sunDot, 128.0) * 0.4;
+                float innerGlow = pow(sunDot, 32.0) * 0.25;
+                float midGlow = pow(sunDot, 8.0) * 0.15;
+                float outerGlow = pow(sunDot, 2.5) * 0.08;
+                skyColorAtFragment += skySunColor * (coreGlow + innerGlow + midGlow + outerGlow);
+            }
+
+            // Horizon haze (must match sky_frag.glsl)
+            float horizonHaze = 1.0 - abs(upAmount);
+            horizonHaze = pow(horizonHaze, 2.5) * 0.15;
+            vec3 hazeColor = mix(skyHorizonColor * 0.8, skyHorizonColor * 1.3, sunSideBlend);
+            skyColorAtFragment = mix(skyColorAtFragment, hazeColor, horizonHaze);
+
+            // Atmospheric scattering (must match sky_frag.glsl)
+            float atmosphericScatter = sunSideBlend * (1.0 - zenithBlend) * 0.2;
+            skyColorAtFragment = mix(skyColorAtFragment, skySunColor * 0.5 + skyHorizonColor * 0.5, atmosphericScatter);
+
+            // Night sky blend: match sky_frag.glsl's starfield blend so fog color
+            // matches the sky's darkness without showing stars or nebulas
+            float nightSkyBlend = (1.0 - nightFade) * starVisibility;
+            if (nightSkyBlend > 0.001) {
+                vec3 nightBgColor = vec3(0.00304, 0.00304, 0.00521);
+                skyColorAtFragment = mix(skyColorAtFragment, nightBgColor, nightSkyBlend);
+            }
+
+            outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
+
+            // Dithering to reduce color banding in fog gradients
+            float dither = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453123) - 0.5;
+            outputColor.rgb += dither / 255.0;
+        } else {
+            outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+        }
     }
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
