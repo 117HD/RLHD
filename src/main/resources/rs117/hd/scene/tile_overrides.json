@@ -6088,6 +6088,14 @@
     "blended": false
   },
   {
+    "name": "TOA_AMASCUT_BLOOD",
+    "area": "TOMBS_OF_AMASCUT",
+    "overlayIds": [
+      73, 124
+    ],
+    "waterType": "BLOOD"
+  },
+  {
     "name": "THE_SCAR_FLOOR",
     "area": "THE_SCAR",
     "groundMaterial": "GRUNGE_3_LIGHT_SHINY",
