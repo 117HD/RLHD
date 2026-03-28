@@ -61,12 +61,6 @@ ROCK_5, ROCK_5_N, ROCK_5_D textures from AmbientCG. All textures on this site ar
 HD_CONCRETE, HD_CONCRETE_N and HD_CONCRETE_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Rock030
 
-HD_BRICK, HD_BRICK_N, HD_BRICk_D textures from AmbientCG. All textures on this site are licensed as CC0.
--- https://ambientcg.com/view?id=Bricks061
-
-HD_BRICK_BROWN, HD_BRICK_BROWN_N, HD_BRICK_BROWN_D textures from AmbientCG. All textures on this site are licensed as CC0.
--- https://ambientcg.com/view?id=Bricks062
-
 HD_SIMPLE_GRAIN_WOOD, HD_SIMPLE_GRAIN_WOOD_N and HD_SIMPLE_GRAIN_WOOD_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Wood003
 
@@ -117,3 +111,19 @@ LEAVES_1 and LEAVES_1_N are a modification of textures from CC0-Textures. All te
 https://cc0-textures.com/t/cc0t-scattered-leaves-001
 
 LEAF_A was created by Jin-Jiyunsun, and is licensed as CC0.
+
+------------
+The following assets are derivative works based on intellectual property owned by Jagex Ltd.
+They are used under the Jagex Fan Content Policy and are explicitly excluded from the BSD-2-Clause license governing the rest of this project.
+Jagex reserves the right to revoke permission for the use of these assets at any time.
+Policy: https://legal.jagex.com/docs/policies/fan-content-policy
+
+HD_BRICK, HD_BRICK_BROWN, HD_BRICK_N, HD_BRICK_D
+MARBLE_4, MARBLE_4_LOW_CONTRAST, MARBLE_4_N
+WINTER_LEAVES, WINTER_LEAVES_SIDE, WINTER_LEAVES_TOP, WINTER_LEAVES_DISEASED, WINTER_MAPLE_LEAVES, WINTER_WILLOW_LEAVES
+AUTUMN_LEAVES, AUTUMN_LEAVES_SIDE, AUTUMN_LEAVES_TOP, AUTUMN_LEAVES_DISEASED, AUTUMN_WILLOW_LEAVES
+FORTIS_ROADS
+HD_IRON_BARS
+HD_ROOF_BRICK_TILE
+HD_SAND_BRICK
+HD_STONE_PATTERN, HD_STONE_PATTERN_D, HD_STONE_PATTERN_N
