@@ -7410,12 +7410,18 @@
     "waterType": "BLOOD"
   },
   {
-    "name": "SARACHNIS_DIRT_CLAMP",
+    "name": "SARACHNIS_LAIR_BLOOD_EXTEND",
+    "area": "SARACHNIS_LAIR_BLOOD_EXTEND",
+    "overlayIds": [ 37 ],
+    "underlayIds": [ 122 ],
+    "waterType": "BLOOD"
+  },
+  {
+    "name": "SARACHNIS_TILES",
     "area": "SARACHNIS_LAIR",
-    "underlayIds": [ 100, 122 ],
-    "groundMaterial": "DIRT",
-    "minLightness": 20,
-    "maxLightness": 23
+    "overlayIds": [ 2 ],
+    "uvScale": 0.75,
+    "groundMaterial": "DIRTY_MARBLE"
   },
   {
     "name": "SARACHNIS_DIRT",

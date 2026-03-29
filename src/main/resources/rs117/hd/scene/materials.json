@@ -3177,6 +3177,11 @@
     "specularGloss": 90.0
   },
   {
+    "name": "GROUND_WEB_1_DARK",
+    "parent": "GROUND_WEB_1",
+    "brightness": 0.7
+  },
+  {
     "name": "GROUND_WEB_2_N"
   },
   {

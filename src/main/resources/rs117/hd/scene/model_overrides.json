@@ -7971,14 +7971,38 @@
       "HOSDUN_BRICK_WALL_END_L",
       "HOSDUN_BRICK_WALL_DAMAGED",
       "HOSDUN_STONE_PILE1",
-      "HOSDUN_STONE_PILE2"
+      "HOSDUN_STONE_PILE2",
+      "HOSDUN_PILLAR"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "colorOverrides": [
       {
         "colors": "h == 0",
-        "baseMaterial": "SMOOTH_STONE",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "SARACHNIS_TOMB_WALL_WITH_SARCOPHAGUS",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "HOSDUN_BRICK_WALL_TOMB"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s > 4 && s < 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -35104,12 +35128,19 @@
     ]
   },
   {
-    "description": "Evil Chickens Lair - Dragon Egg",
+    "description": "Black Dragon Egg",
     "baseMaterial": "BLANK_SUPERGLOSS",
     "objectIds": [
       "CHICKENQUEST_BLACK_DRAGON_EGG"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Red Dragon Egg",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "HOSDUN_RED_DRAGON_EGG"
+    ]
   },
   {
     "description": "Evil Chickens Lair - Baby Black Dragon Tunnel",
@@ -83261,6 +83292,50 @@
         "colors": "h == 0 && s == 0 || h == 9",
         "baseMaterial": "GRUNGE_3"
       }
+    ]
+  },
+  {
+    "description": "Sarachanis - Ground Webs",
+    "baseMaterial": "WEB",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HOSDUN_DECOWEB_LARGE",
+      "HOSDUN_DECOWEB_CORN",
+      "HOSDUN_DECOWEB_EDGE"
+    ]
+  },
+  {
+    "description": "Sarachanis - Egg Sacs",
+    "baseMaterial": "GROUND_WEB_1_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HOSDUN_EGG_SAC_WALL",
+      "HOSDUN_EGG_SAC_WALL_OPEN"
+    ]
+  },
+  {
+    "description": "Sarachanis - Webs",
+    "baseMaterial": "GROUND_WEB_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "TOB_NYLOCAS_DEATH_WEB"
+    ]
+  },
+  {
+    "description": "Sarachnis Tiles",
+    "areas": [ "SARACHNIS_LAIR" ],
+    "depthBias": 150,
+    "objectIds": [
+      "_1V1ARENA_DUNGEON_TILES_A"
+    ]
+  },
+  {
+    "description": "Sarachnis Tiles",
+    "baseMaterial": "GRAY_45",
+    "objectIds": [
+      "SARACHNIS_LAIR_WALLDECOR_BLOOD"
     ]
   }
 ]
