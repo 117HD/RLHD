@@ -8560,8 +8560,7 @@
       "FLAG_ENTRANCE_ANGLED",
       "FLAG_ENTRANCE2_ANGLED",
       "FLAG_ENTRANCEL_ANGLED",
-      "FLAG_ENTRANCE2L_ANGLED",
-      "FAI_VARROCK_WINDMILL_MILLSAIL"
+      "FLAG_ENTRANCE2L_ANGLED"
     ],
     "flatNormals": true
   },
@@ -73716,11 +73715,25 @@
     "objectIds": [
       "SLUG2_ROTTEN_BARREL_HALF_BURRIED_TILT",
       "SLUG2_ROTTEN_BARREL_HALF_BURRIED",
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT",
       "SEASLUG_CRATE_IN_WATER2",
       "SEASLUG_CRATE_IN_WATER",
-      "SEASLUG_MESSGAE_BOTTLE",
+      "SEASLUG_MESSGAE_BOTTLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255 || h == 37 && l == 71 || h == 42",
+        "baseMaterial": "GRAY_75",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Sailing Events and Trials - Hide Ripples and Disable Detail Culling",
+    "disableDetailCulling": true,
+    "objectIds": [
       "SAILING_CHARTING_DRINK_CRATE",
-      "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT",
       "SAILING_BT_TEMPOR_TANTRUM_COLLECTABLE_SUPPLIES",
       "SAILING_BT_JUBBLY_JIVE_COLLECTABLE_SUPPLIES",
       "SAILING_BT_GWENITH_GLIDE_COLLECTABLE_SUPPLIES"
@@ -74038,6 +74051,7 @@
   {
     "description": "Sailing - Player Ship Dock",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "disableDetailCulling": true,
     "objectIds": [
       "SAILING_GANGPLANK_PROXY",
       "SAILING_GANGPLANK_PROXY_WIDE",
@@ -74948,7 +74962,8 @@
       "SAILING_RAPIDS_POWERFUL",
       "SAILING_RAPIDS_DEADLY"
     ],
-    "castShadows": false
+    "castShadows": false,
+    "disableDetailCulling": true
   },
   {
     "description": "The Pandemonium - Docks",
@@ -81152,14 +81167,17 @@
     ]
   },
   {
-    "description": "Lumbridge Watermill - Waterwheel",
+    "description": "Windmill and Watermill Blades - Disable Detail Culling",
     "baseMaterial": "GRAY_80",
     "objectIds": [
       "WATERWHEEL_LEFT",
       "WATERWHEEL_CENTRE",
-      "WATERWHEEL_RIGHT"
+      "WATERWHEEL_RIGHT",
+      "MILLSAIL",
+      "FAI_VARROCK_WINDMILL_MILLSAIL"
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "disableDetailCulling": true
   },
   {
     "description": "Lumbridge Watermill - Waterwheel - Pole",
@@ -81168,6 +81186,14 @@
       "WATERWHEEL_WALLBASE",
       "WATERWHEEL_POLE"
     ]
+  },
+  {
+    "description": "Hot Air Balloon - Disable Detail Culling",
+    "objectIds": [
+      "ZEP_BASKET",
+      "ZEP_BALLOON"
+    ],
+    "disableDetailCulling": true
   },
   {
     "description": "Death to the Dorgushuun - Crate and Cart with Metal and Hay",
