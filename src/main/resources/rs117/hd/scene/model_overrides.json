@@ -3845,9 +3845,6 @@
   },
   {
     "description": "LUMBRIDGE_CASTLE_WALLS",
-    "baseMaterial": "HD_BRICK_LIGHT",
-    "uvType": "MODEL_XZ",
-    "uvOrientation": 512,
     "objectIds": [
       "CASTLEWALL",
       "BIGSTONE_CASTLEWALL",
@@ -3855,7 +3852,14 @@
       "CASTLECRUMBLY_L",
       "CASTLECRUMBLY_R"
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "l < 70",
+        "baseMaterial": "SMOOTH_STONE_LIGHT",
+        "uvType": "MODEL_XZ"
+      }
+    ]
   },
   {
     "description": "LEGEND_GUILD_WALLS",
@@ -30624,14 +30628,17 @@
   },
   {
     "description": "PoH - Basic stone wall",
-    "baseMaterial": "HD_BRICK_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientation": 512,
     "flatNormals": true,
     "objectIds": [
       "BRICKWALL",
       "BRICKWALL_NOSHARELIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l < 70",
+        "baseMaterial": "SMOOTH_STONE_LIGHT",
+        "uvType": "MODEL_XZ"
+      }
     ]
   },
   {
