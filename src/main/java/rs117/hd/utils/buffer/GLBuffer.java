@@ -522,7 +522,7 @@ public class GLBuffer implements Destructible {
 	}
 
 	public boolean isStorageBuffer() {
-		return storageFlags != STORAGE_NONE && SUPPORTS_STORAGE_BUFFERS;
+		return storageFlags != STORAGE_NONE && SUPPORTS_STORAGE_BUFFERS && !DEBUG_MAC_OS;
 	}
 
 	public boolean isMapped() {
