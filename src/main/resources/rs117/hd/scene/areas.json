@@ -189,6 +189,12 @@
     ]
   },
   {
+    "name": "LUMBRIDGE_CASTLE_BANK",
+    "aabbs": [
+      [ 3207, 3215, 3210, 3222, 3 ]
+    ]
+  },
+  {
     "name": "LUMBRIDGE_SWAMP_PATH_FIX",
     "aabbs": [
       [ 3242, 3184, 3244, 3186 ]

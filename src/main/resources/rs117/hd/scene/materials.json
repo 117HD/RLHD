@@ -2540,6 +2540,11 @@
     "replacementCondition": "modelTextures"
   },
   {
+    "name": "HD_BRICK_LIGHT",
+    "parent": "HD_BRICK",
+    "brightness": 3.25
+  },
+  {
     "name": "HD_ROOF_SHINGLES_N"
   },
   {

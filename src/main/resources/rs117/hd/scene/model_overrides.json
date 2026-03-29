@@ -3845,6 +3845,9 @@
   },
   {
     "description": "LUMBRIDGE_CASTLE_WALLS",
+    "baseMaterial": "HD_BRICK_LIGHT",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
     "objectIds": [
       "CASTLEWALL",
       "BIGSTONE_CASTLEWALL",
@@ -30621,9 +30624,10 @@
   },
   {
     "description": "PoH - Basic stone wall",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "HD_BRICK_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "uvOrientation": 512,
     "flatNormals": true,
     "objectIds": [
       "BRICKWALL",

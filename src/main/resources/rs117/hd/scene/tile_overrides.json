@@ -634,6 +634,30 @@
     }
   },
   {
+    "name": "LUMBRIDGE_CASTLE_BANK_ROOF",
+    "area": "LUMBRIDGE_CASTLE_BANK",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "blended": false,
+    "shiftLightness": 12,
+    "heightOffset": 30,
+    "replacements": {
+      "LUMBRIDGE_CASTLE_BANK_ROOF_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_BANK_ROOF_NO_TEXTURES",
+    "area": "LUMBRIDGE_CASTLE_BANK",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "NONE",
+    "blended": false,
+    "heightOffset": 30
+  },
+  {
     "name": "LUMBRIDGE_CASTLE_TILE_OVERLAY",
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
     "overlayIds": [
