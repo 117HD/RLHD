@@ -26,21 +26,20 @@ package rs117.hd.config;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import static org.lwjgl.opengl.GL33C.*;
+import rs117.hd.utils.texture.GLSamplerMode;
 
 @Getter
 @RequiredArgsConstructor
 public enum UIScalingMode {
-	NEAREST("Nearest", GL_NEAREST),
-	LINEAR("Bilinear", GL_LINEAR),
-	MITCHELL("Mitchell", GL_NEAREST),
-	CATMULL_ROM("Catmull-Rom", GL_NEAREST),
-	XBR("xBR", GL_NEAREST),
-	HYBRID("Hybrid", GL_LINEAR);
+	NEAREST("Nearest", GLSamplerMode.NEAREST_CLAMP),
+	LINEAR("Bilinear", GLSamplerMode.LINEAR_CLAMP),
+	MITCHELL("Mitchell", GLSamplerMode.NEAREST_CLAMP),
+	CATMULL_ROM("Catmull-Rom", GLSamplerMode.NEAREST_CLAMP),
+	XBR("xBR", GLSamplerMode.NEAREST_CLAMP),
+	HYBRID("Hybrid", GLSamplerMode.LINEAR_CLAMP);
 
 	private final String name;
-	public final int glSamplingFunction;
+	public final GLSamplerMode glSamplingMode;
 
 	@Override
 	public String toString()
