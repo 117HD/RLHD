@@ -1391,20 +1391,6 @@
     "specularGloss": 380.0
   },
   {
-    "name": "MUD_1_N"
-  },
-  {
-    "name": "MUD_1",
-    "normalMap": "MUD_1_N",
-    "specularStrength": 0.5,
-    "specularGloss": 25.0
-  },
-  {
-    "name": "MUD_1_DARK",
-    "parent": "MUD_1",
-    "brightness": 0.931
-  },
-  {
     "name": "SAND_1_N"
   },
   {
@@ -3499,7 +3485,7 @@
   },
   {
     "name": "WATER_SLUDGE",
-    "parent": "MUD_1",
+    "parent": "GRUNGE_3",
     "flowMap": "UNDERWATER_FLOW_MAP",
     "flowMapStrength": 0.075,
     "flowMapDuration": [

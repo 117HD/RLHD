@@ -21121,9 +21121,9 @@
   },
   {
     "description": "Elid - Genie's Crevice - Walls",
-    "baseMaterial": "MUD_1",
-    "uvOrientation": 256,
+    "baseMaterial": "DIRT_1_DARK",
     "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "ELID_UNDERGROUND_WALLS",
       "ELID_UNDERGROUND_WALL_SHORTER",
@@ -29154,7 +29154,8 @@
       "DT2_SCAR_ENTRY_STEPPING_STONE",
       "SCAR_VENTRICULUS_STEPPING_STONE",
       "SCAR_VENTRICULUS_STEPPING_STONE_WITH_OP",
-      "DT2_SCAR_STEPPING_STONE"
+      "DT2_SCAR_STEPPING_STONE",
+      "DT2_SCAR_STEPPING_STONE_OP"
     ],
     "castShadows": false,
     "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
@@ -38255,13 +38256,12 @@
   },
   {
     "description": "Isle of Souls Dungeon - Cave Entrance",
-    "baseMaterial": "MUD_1",
+    "baseMaterial": "DIRT_1_DARK",
     "objectIds": [
       "SW_DUNGEON_ENTRANCE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 100
+    "uvScale": 0.65
   },
   {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
@@ -46488,7 +46488,7 @@
   },
   {
     "description": "Asgarnia Ice Dungeon - Muddy Walls",
-    "baseMaterial": "MUD_1",
+    "baseMaterial": "DIRT_1_DARK",
     "objectIds": [
       "WYVERN_CAVE_WALL_COLDMUD",
       "WYVERN_CAVE_WALLTOP_COLDMUD",
@@ -46503,6 +46503,7 @@
       "WYVERN_CAVE_COLDMUD_PILLAR_DARK01"
     ],
     "uvType": "BOX",
+    "uvScale": 0.75,
     "colorOverrides": [
       {
         "colors": 2,
@@ -46523,8 +46524,9 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "MUD_1",
-        "uvType": "BOX"
+        "baseMaterial": "DIRT_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
       },
       {
         "colors": 2,
@@ -46545,7 +46547,8 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "MUD_1",
+        "baseMaterial": "DIRT_1_DARK",
+        "uvScale": 0.75,
         "uvType": "BOX"
       },
       {
@@ -46556,7 +46559,7 @@
   },
   {
     "description": "Asgarnia Ice Dungeon - Muddly Wall - Darken so it blends in with adjacent walls",
-    "baseMaterial": "MUD_1_DARK",
+    "baseMaterial": "DIRT_1_DARK",
     "objectIds": [
       "WYVERN_CAVE_WALL_COLDMUD_LAMP_SINGLE",
       "CAVEWALL_SHORTCUT_WYVERN_NORTH",
