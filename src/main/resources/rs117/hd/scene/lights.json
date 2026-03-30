@@ -28117,7 +28117,7 @@
   },
   {
     "description": "TRAILBLAZER_HOME_TELEPORT_START",
-    "height": 20,
+    "height": 50,
     "alignment": "CENTER",
     "radius": 350,
     "strength": 25,
@@ -28138,7 +28138,7 @@
   },
   {
     "description": "TRAILBLAZER_HOME_TELEPORT_MIDDLE",
-    "height": 20,
+    "height": 50,
     "alignment": "CENTER",
     "radius": 350,
     "strength": 25,
@@ -28151,10 +28151,31 @@
     "duration": 0,
     "range": 20,
     "fadeInDuration": 200,
-    "fadeOutDuration": 1500,
     "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE_4_HOME_TELEPORT_SPOTANIM_4"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HOME_TELEPORT_END",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1400,
+    "fadeOutDuration": 1500,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [
+      "LEAGUE_4_HOME_TELEPORT_SPOTANIM_5"
     ]
   },
   {
@@ -28177,7 +28198,7 @@
     ]
   },
   {
-    "description": "SHATTERED_HOME_TELEPORT_END",
+    "description": "SHATTERED_HOME_TELEPORT_MIDDLE",
     "height": 20,
     "alignment": "CENTER",
     "radius": 200,
@@ -28190,10 +28211,31 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "fadeOutDuration": 1000,
     "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE03_HOME_TELEPORT_SPOTANIM_5"
+    ]
+  },
+  {
+    "description": "SHATTERED_HOME_TELEPORT_END",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      37,
+      148,
+      225
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "range": 20,
+    "fadeOutDuration": 1000,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [
+      "LEAGUE03_HOME_TELEPORT_SPOTANIM_6"
     ]
   },
   {
@@ -28209,6 +28251,7 @@
     "spawnDelay": 500,
     "fixedDespawnTime": true,
     "despawnDelay": 2700,
+    "fadeOutDuration": 200,
     "fadeInDuration": 900,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_02"
@@ -28225,7 +28268,7 @@
     "duration": 0,
     "range": 20,
     "fadeInDuration": 500,
-    "fadeOutDuration": 100,
+    "fadeOutDuration": 200,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_03"
     ]
@@ -28240,10 +28283,10 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "fadeOutDuration": 900,
+    "fadeOutDuration": 2000,
     "fixedDespawnTime": true,
     "despawnWithParent": true,
-    "despawnDelay": 3800,
+    "despawnDelay": 800,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_04"
     ]
