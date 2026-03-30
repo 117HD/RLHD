@@ -28075,7 +28075,7 @@
     "description": "TELEPORT_TABLET",
     "height": 75,
     "alignment": "CENTER",
-    "radius": 120,
+    "radius": 135,
     "strength": 75,
     "fixedDespawnTime": true,
     "color": [
