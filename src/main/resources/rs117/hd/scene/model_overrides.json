@@ -61351,6 +61351,7 @@
     "description": "Kebos Lowlands - Metallic - Wooden - Mangel",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "uvOrientationY": 512,
     "uvScale": 0.6,
     "objectIds": [
       "TANNINGMANGEL_A",
@@ -61359,9 +61360,7 @@
     "colorOverrides": [
       {
         "colors": "h == 0",
-        "uvType": "BOX",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvScale": 0.5
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
         "colors": "h == 6",
@@ -83313,6 +83312,12 @@
     "objectIds": [
       "HOSDUN_EGG_SAC_WALL",
       "HOSDUN_EGG_SAC_WALL_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "GRAY_80"
+      }
     ]
   },
   {
@@ -83336,6 +83341,24 @@
     "baseMaterial": "GRAY_45",
     "objectIds": [
       "SARACHNIS_LAIR_WALLDECOR_BLOOD"
+    ]
+  },
+  {
+    "description": "Sarachanis - Egg Sacs",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HOSDUN_STALAGMITE_WEBBED_SMALL",
+      "HOSDUN_STALAGMITE_WEBBED_LARGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GROUND_WEB_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   }
 ]
