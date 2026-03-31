@@ -83330,6 +83330,10 @@
       "TOA_LOBBY_DEBRIS_STONE",
       "DEBRIS_TOMB_STONE01",
       "DEBRIS_TOMB_STONE02",
+      "TOA_BABA_DEBRIS_STONE02",
+      "TOA_BABA_DEBRIS_STONE03",
+      "TOA_BABA_DEBRIS_STONE04",
+      "TOA_BABA_DEBRIS_STONE05",
       "SKEWKIT_STONE01_STRAIGHT01"
     ]
   },
@@ -83643,6 +83647,42 @@
     ]
   },
   {
+    "description": "ToA - Metallic - Fence",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "uvScale": 0.33,
+    "objectIds": [
+      "TOA_WALL_FENCE01"
+    ]
+  },
+  {
+    "description": "ToA - Path of Apmeken - Wooden - Metallic - Glass - Potion and Hammer Crates",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 2",
+        "uvScale": 0.5,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "h == 39",
+        "uvType": "BOX",
+        "uvOrientation": -256,
+        "uvScale": 0.33
+      }
+    ],
+    "objectIds": [
+      "TOA_PATH_APMEKEN_POTIONS",
+      "TOA_PATH_APMEKEN_HAMMERS"
+    ]
+  },
+  {
     "description": "ToA - Path of Apmeken - Chasm",
     "baseMaterial": "DIRT_2",
     "uvType": "BOX",
@@ -83712,7 +83752,8 @@
       }
     ],
     "objectIds": [
-      "TOA_PATH_APMEKEN_CONTINUE"
+      "TOA_PATH_APMEKEN_CONTINUE",
+      "TOA_ENTRANCE_BABA02"
     ]
   },
   {
@@ -83724,22 +83765,54 @@
     ]
   },
   {
-    "description": "ToA - Baba stone brick wall",
-    "baseMaterial": "MARBLE_3",
+    "description": "ToA - Path of Apmeken - Stone - Pillars - DYNAMIC",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "TOA_PATH_APMEKEN_PILLAR",
+      "TOA_PATH_APMEKEN_PILLAR_SHAKING"
+    ]
+  },
+  {
+    "description": "ToA - Path of Apmeken - Stone - Statue with Bananas",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
-    "uvOrientation": -256,
-    "uvScale": 1.2,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Banana",
+        "colors": "h == 8 && s == 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "TOA_PATH_APMEKEN_PILLAR_NO_REPAIR"
+    ]
+  },
+  {
+    "description": "ToA - Ba-Ba - Stone Brick topped Plaster wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Plaster",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ],
     "objectIds": [
       "TOA_WALL_BABA05_TRIM01",
       "TOA_WALL_BABA05_TRIM02"
     ]
   },
   {
-    "description": "ToA - Ba-Ba -  Stone Brick Wall - incomplete",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "ToA - Ba-Ba - Stone Brick Wall",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
-    "uvOrientation": -256,
-    "uvScale": 1.2,
     "colorOverrides": [
       {
         "description": "Stone",
@@ -83751,11 +83824,12 @@
       }
     ],
     "objectIds": [
-      "TOA_WALL_BABA04"
+      "TOA_WALL_BABA04",
+      "SKEWRAMP_TOMB01_STRAIGHT03"
     ]
   },
   {
-    "description": "ToA - Ba-Ba Rocks with Bananas",
+    "description": "ToA - Ba-Ba - Rock - Stone - Sand - Rocks with Bananas and Chasm edges",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -83774,11 +83848,34 @@
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
         "uvOrientation": 404
+      },
+      {
+        "description": "Chasm",
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "GRAVEL_TOA",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "uvOrientation": 256
       }
     ],
     "objectIds": [
       "DEBRIS_TOMB04_STONE05",
       "DEBRIS_TOMB04_STONE06"
+    ]
+  },
+  {
+    "description": "ToA - Ba-Ba - Sand - Chasm",
+    "baseMaterial": "GRAVEL_TOA",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.15,
+    "objectIds": [
+      "TOA_CHASM_BABA01",
+      "DECAL_SAND04_EDGE01",
+      "DECAL_SAND04_EDGE02",
+      "DECAL_SAND04_EDGE03",
+      "DECAL_SAND04_EDGE04",
+      "DECAL_SAND04_EDGE05"
     ]
   },
   {
