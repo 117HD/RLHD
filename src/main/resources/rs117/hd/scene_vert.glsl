@@ -34,6 +34,10 @@
 #include <utils/uvs.glsl>
 #include <utils/misc.glsl>
 
+#if ZONE_RENDERER
+    #include <utils/wind.glsl>
+#endif
+
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
@@ -105,6 +109,10 @@ layout (location = 0) in vec3 vPosition;
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);
             worldNormal = mat3(worldViewProjection) * worldNormal;
         }
+
+        #if WIND_DISPLACEMENT
+            worldPosition += computeZoneWindDisplacement(worldPosition, materialData, worldNormal);
+        #endif
 
         OUT.position = worldPosition;
         OUT.uv = computeVertexUvs(materialData, worldPosition, vUv.xyz);

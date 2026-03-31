@@ -52,4 +52,11 @@ layout(std140) uniform UBOGlobal {
 
     float lightningBrightness;
     float elapsedTime;
+
+    // Wind uniforms
+    float windDirectionX;
+    float windDirectionZ;
+    float windStrength;
+    float windCeiling;
+    float windOffset;
 };
