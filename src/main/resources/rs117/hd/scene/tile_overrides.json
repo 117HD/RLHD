@@ -6002,6 +6002,25 @@
     ]
   },
   {
+    "name": "TOA_AKKHA_WALL_UNDERLAY",
+    "area": "TOA_PATH_OF_HET_BOSS",
+    "groundMaterial": "NONE",
+    "blended": false,
+    "overlayIds": [
+      42
+    ]
+  },
+  {
+    "name": "TOA_AKKHA_TILES",
+    "area": "TOA_PATH_OF_HET_BOSS_ROOM_TILES",
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 1.40,
+    "blendedAsOpposite": true,
+    "underlayIds": [
+      94
+    ]
+  },
+  {
     "name": "TOA_AKKHA_SAND",
     "area": "TOMBS_OF_AMASCUT",
     "groundMaterial": "GRAVEL",

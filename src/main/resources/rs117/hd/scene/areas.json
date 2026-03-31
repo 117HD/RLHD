@@ -9101,6 +9101,13 @@
     ]
   },
   {
+    "name": "TOA_PATH_OF_HET_BOSS_ROOM_TILES",
+    "aabbs": [
+      [ 3694, 5405, 3698, 5410, 1 ],
+      [ 3663, 5405, 3667, 5410, 1 ]
+    ]
+  },
+  {
     "name": "TOA_PATH_OF_HET_BOSS",
     "aabbs": [
       [ 3648, 5376, 3711, 5439 ]
