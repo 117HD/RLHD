@@ -6002,6 +6002,16 @@
     ]
   },
   {
+    "name": "TOA_AKKHA_SAND",
+    "area": "TOMBS_OF_AMASCUT",
+    "groundMaterial": "GRAVEL",
+    "uvScale": 1.40,
+    "underlayIds": [
+      94,
+      123
+    ]
+  },
+  {
     "name": "TOA_AMASCUT_FLOOR_SAND",
     "area": "TOMBS_OF_AMASCUT",
     "groundMaterial": "VARIED_DIRT",

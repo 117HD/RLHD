@@ -13851,7 +13851,9 @@
       "FAI_FALADOR_DUGUPSOIL_2",
       "KR_KEEP_DUGUPSOIL2",
       "BIM_VAULT_TILE01DEBRIS01",
-      "BIM_VAULT_TILE01DEBRIS02"
+      "BIM_VAULT_TILE01DEBRIS02",
+      "TOA_BABA_DUGUPSOIL04",
+      "TOA_BABA_DUGUPSOIL05"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.3,
@@ -13867,7 +13869,8 @@
       "FAI_FALADOR_DUGUPSOIL_1",
       "FAI_FALADOR_DUGUPSOIL_3",
       "KR_KEEP_DUGUPSOIL1",
-      "KR_KEEP_DUGUPSOIL3"
+      "KR_KEEP_DUGUPSOIL3",
+      "TOA_BABA_DUGUPSOIL06"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -32610,7 +32613,10 @@
       "TOBQUEST_SKELETON_OP",
       "LASSAR_CHURCH01_SKELETON01_CORPSE03",
       "BCS_SKELETON_NOOP1",
-      "BCS_SKELETON_NOOP2"
+      "BCS_SKELETON_NOOP2",
+      "TOA_BONES01_SKELETON01",
+      "TOA_BONES01_SKELETON02",
+      "TOA_BONES01_SKELETON03"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -32635,7 +32641,10 @@
       "CHICKENQUEST_WAR_BONES4",
       "CHICKENQUEST_BONES_SMALL_01",
       "CHICKENQUEST_BONES_SMALL_02",
-      "CHICKENQUEST_BONES_SMALL_03"
+      "CHICKENQUEST_BONES_SMALL_03",
+      "TOA_BONES01_DEFAULT01",
+      "TOA_BONES01_DEFAULT02",
+      "TOA_BONES01_DEFAULT03"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -83320,11 +83329,12 @@
       "TOA_CRONDIS_EXIT_TOP",
       "TOA_LOBBY_DEBRIS_STONE",
       "DEBRIS_TOMB_STONE01",
-      "DEBRIS_TOMB_STONE02"
+      "DEBRIS_TOMB_STONE02",
+      "SKEWKIT_STONE01_STRAIGHT01"
     ]
   },
   {
-    "description": "ToA - Lobby and Nexus Area - Boss Doors",
+    "description": "ToA - Lobby and Nexus Area - Boss Doors - Closed",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -83344,6 +83354,54 @@
       "TOA_NEXUS_APMEKEN_DOOR_CLOSED",
       "TOA_NEXUS_CRONDIS_DOOR_CLOSED",
       "TOA_NEXUS_HET_DOOR_CLOSED"
+    ]
+  },
+  {
+    "description": "ToA - Lobby and Nexus Area - Boss Doors - Open - ANIMATED - DYNAMIC",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "TOA_NEXUS_SCABARAS_DOOR",
+      "TOA_NEXUS_APMEKEN_DOOR",
+      "TOA_NEXUS_CRONDIS_DOOR",
+      "TOA_NEXUS_HET_DOOR"
+    ]
+  },
+  {
+    "description": "ToA - Lobby and Nexus Area - Metallic - Braziers",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": -404,
+    "objectIds": [
+      "BRAZIER_TOMB02_DEFAULT01",
+      "BRAZIER_TOMB02_BROKEN01",
+      "HS_VASE_STAND_02_STONE"
+    ]
+  },
+  {
+    "description": "ToA - Metallic - Stone - Stone pillars with Braziers",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "colorOverrides": [
+      {
+        "description": "Gold",
+        "colors": "s >= 5",
+        "uvScale": 0.7,
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Sand",
+        "colors": "h == 7",
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "BRAZIER_TOMB01_RIGHT01",
+      "BRAZIER_TOMB01_LEFT01"
     ]
   },
   {
@@ -83568,7 +83626,100 @@
       "TOA_LOBBY_POTTERY02",
       "TOA_LOBBY_POTTERY03",
       "TOA_LOBBY_URN03",
-      "TOA_LOBBY_URN04"
+      "TOA_LOBBY_URN04",
+      "TOA_POTTERY_GROUP01_DEFAULT01",
+      "TOA_POTTERY_GROUP04_DEFAULT01",
+      "TOA_POTTERY_GROUP05_DEFAULT01",
+      "TOA_POTTERY_GROUP06_DEFAULT01",
+      "TOA_POTTERY_GROUP07_DEFAULT01",
+      "TOA_POTTERY_SINGLE02_DEFAULT01",
+      "TOA_POTTERY_SINGLE04_DEFAULT01",
+      "TOA_POTTERY_SINGLE05_DEFAULT01",
+      "TOA_POTTERY_SINGLE01_SCABARAS01",
+      "TOA_POTTERY_SINGLE01_SCABARAS02",
+      "TOA_POTTERY_GROUP01_SCABARAS01",
+      "TOA_POTTERY_GROUP02_SCABARAS01"
+    ]
+  },
+  {
+    "description": "ToA - Path of Apmeken - Chasm",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvOrientation": -180,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 39",
+        "uvScale": 0.85,
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "TOA_CHASM_TOMB01_END01",
+      "TOA_CHASM_TOMB01_DOUBLE01"
+    ]
+  },
+  {
+    "description": "ToA - Path of Apmeken - Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 6 && s == 1",
+        "uvScale": 0.85,
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 7 && s == 5",
+        "uvScale": 0.5,
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "TOA_WALL_TOMB03_VARIANT01_APMEKEN01",
+      "TOA_WALL_TOMB03_VARIANT02_APMEKEN01",
+      "TOA_WALL_TOMB03_TUNNEL01_APMEKEN01"
+    ]
+  },
+  {
+    "description": "ToA - Path of Apmeken - Entrance",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "GRAY_85"
+      },
+      {
+        "description": "Gold",
+        "colors": "s == 7",
+        "uvScale": 0.5,
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "TOA_PATH_APMEKEN_CONTINUE"
+    ]
+  },
+  {
+    "description": "ToA - Path of Apmeken - Entrance - ANIMATED - DYNAMIC",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "TOA_PATH_APMEKEN_TRANSITION",
+      "TOA_PATH_APMEKEN_TRANSITION_M"
     ]
   },
   {
@@ -83603,6 +83754,41 @@
     ]
   },
   {
+    "description": "ToA - Path of Apmeken - Ba-Ba Rocks with Bananas",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Banana",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 7 && s == 5",
+        "uvScale": 0.5,
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "DEBRIS_TOMB04_STONE05",
+      "DEBRIS_TOMB04_STONE06"
+    ]
+  },
+  {
+    "description": "ToA - Path of Apmeken - Entrance - ANIMATED - DYNAMIC",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "TOA_PATH_APMEKEN_TRANSITION",
+      "TOA_PATH_APMEKEN_TRANSITION_M"
+    ]
+  },
+  {
     "description": "ToA - Kephri wall",
     "baseMaterial": "GRUNGE_3_LIGHT",
     "uvType": "BOX",
@@ -83622,7 +83808,33 @@
       "TOA_WALL_TOMB03_VARIANT01_KEPHRI01",
       "TOA_ENTRANCE_KEPHRI03",
       "TOA_ENTRANCE_KEPHRI04",
-      "TOA_ENTRANCE_KEPHRI_MAIN"
+      "TOA_ENTRANCE_KEPHRI_MAIN",
+      "TOA_SCABARAS_CONTINUE"
+    ]
+  },
+  {
+    "description": "ToA - Kephri - Stone - Metallic - Statue",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "colorOverrides": [
+      {
+        "description": "Eyes",
+        "colors": [ "s >= 5", "h >= 48" ],
+        "uvScale": 0.7,
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Sand",
+        "colors": "h == 8",
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "TOA_SCABARAS_STATUE01_3X3"
     ]
   },
   {
@@ -83648,6 +83860,7 @@
     ],
     "objectIds": [
       "TOA_WALL_PILLAR01",
+      "TOA_WALL_PILLAR03",
       "TOA_WALL_SCARAB01",
       "TOA_WALL_LOW01"
     ]
@@ -83674,7 +83887,37 @@
     ],
     "objectIds": [
       "TOA_WALL_SCROLLS01",
-      "TOA_WALL_SCROLLS02"
+      "TOA_WALL_SCROLLS02",
+      "TOA_WALL_SCROLLS03",
+      "TOA_WALL_SCROLLS2X4",
+      "TOA_WALL_SCROLLS2X4_M",
+      "TOA_VAULT_WALL_SCROLLS01",
+      "TOA_VAULT_WALL_SCROLLS02"
+    ]
+  },
+  {
+    "description": "ToA - Kephri Hints with stone symbols",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Gold",
+        "colors": "h == 39",
+        "uvScale": 1.2,
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Scroll",
+        "colors": [ "h == 4 && s >= 3" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ],
+    "objectIds": [
+      "TOA_SCABARAS_HINTS01",
+      "TOA_SCABARAS_HINTS02"
     ]
   },
   {
@@ -83738,7 +83981,7 @@
     ]
   },
   {
-    "description": "TOA Zebek stone brick wall",
+    "description": "TOA - Zebak stone brick wall",
     "baseMaterial": "MARBLE_3",
     "uvType": "BOX",
     "uvOrientation": -256,
@@ -83763,11 +84006,40 @@
       "WALLKIT_TOMB01_SMASHED04_MIRROR",
       "WALLKIT_TOMB01_SMASHED05_MIRROR",
       "WALLKIT_TOMB01_SMASHED06_MIRROR",
-      "WALLKIT_TOMB01_SMASHED07_MIRROR"
+      "WALLKIT_TOMB01_SMASHED07_MIRROR",
+      "TOA_ZEBAK_PILLAR05"
     ]
   },
   {
-    "description": "ToA Akkha - Wall with sand and grunge",
+    "description": "TOA - Zebak stone brick wall",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": -87,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 7",
+        "uvScale": 0.6,
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "Stone",
+        "colors": "h >= 35",
+        "uvScale": 1.2,
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "TOA_ZEBAK_EXIT"
+    ]
+  },
+  {
+    "description": "ToA - Akkha - Wall with sand and grunge",
     "baseMaterial": "GRAVEL_TOA",
     "uvType": "WORLD_XZ",
     "colorOverrides": [
