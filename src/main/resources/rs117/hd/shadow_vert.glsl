@@ -31,6 +31,10 @@
 
 #include <utils/constants.glsl>
 
+#if ZONE_RENDERER
+    #include <utils/wind.glsl>
+#endif
+
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
@@ -100,6 +104,10 @@ layout (location = 0) in vec3 vPosition;
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
         }
+
+        #if WIND_DISPLACEMENT
+            worldPosition += computeZoneWindDisplacement(worldPosition, materialData, vec3(0, 1, 0));
+        #endif
 
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
