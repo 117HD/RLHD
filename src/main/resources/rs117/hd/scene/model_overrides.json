@@ -83735,7 +83735,7 @@
     ]
   },
   {
-    "description": "ToA - Baba stone brick wall - incomplete",
+    "description": "ToA - Ba-Ba -  Stone Brick Wall - incomplete",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvOrientation": -256,
@@ -83755,7 +83755,7 @@
     ]
   },
   {
-    "description": "ToA - Path of Apmeken - Ba-Ba Rocks with Bananas",
+    "description": "ToA - Ba-Ba Rocks with Bananas",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -83779,14 +83779,6 @@
     "objectIds": [
       "DEBRIS_TOMB04_STONE05",
       "DEBRIS_TOMB04_STONE06"
-    ]
-  },
-  {
-    "description": "ToA - Path of Apmeken - Entrance - ANIMATED - DYNAMIC",
-    "baseMaterial": "GRAY_85",
-    "objectIds": [
-      "TOA_PATH_APMEKEN_TRANSITION",
-      "TOA_PATH_APMEKEN_TRANSITION_M"
     ]
   },
   {
@@ -84040,6 +84032,84 @@
     ]
   },
   {
+    "description": "ToA - Path of Het - Grunge - walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h == 8",
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 303
+      }
+    ],
+    "objectIds": [
+      "TOA_HET_PILLAR01"
+    ]
+  },
+  {
+    "description": "ToA - Path of Het - Grunge - walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 7",
+        "uvScale": 0.5,
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -128
+      }
+    ],
+    "objectIds": [
+      "TOA_WALL_TOMB03_VARIANT01_HET01",
+      "TOA_WALL_TOMB03_VARIANT02_HET01"
+    ]
+  },
+  {
+    "description": "ToA - Path of Het - Brick Walls with Grunge",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "uvScale": 0.5,
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -128
+      },
+      {
+        "description": "Bricks",
+        "colors": "h == 39",
+        "uvScale": 1.2,
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX",
+        "uvOrientation": -128
+      }
+    ],
+    "objectIds": [
+      "TOA_WALL_TOMB04_TRANSITION01_HET",
+      "TOA_WALL_TOMB04_TRANSITION01_HET_M",
+      "TOA_WALL_TOMB04_TRANSITION01_M",
+      "TOA_WALL_TOMB04_TRANSITION01",
+      "TOA_WALL_TOMB04_BRICK01_HET",
+      "TOA_WALL_TOMB04_BRICK02_HET",
+      "TOA_WALL_TOMB04_BRICK01"
+    ]
+  },
+  {
+    "description": "ToA - Path of Het - Sand - Sand pile",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "AKKHA_DEBRIS_SAND01",
+      "AKKHA_DEBRIS_SAND02"
+    ]
+  },
+  {
     "description": "ToA - Akkha - Wall with sand and grunge",
     "baseMaterial": "GRAVEL_TOA",
     "uvType": "WORLD_XZ",
@@ -84212,7 +84282,8 @@
       }
     ],
     "objectIds": [
-      "TOA_ENTRANCE_AKKHA01"
+      "TOA_ENTRANCE_AKKHA01",
+      "TOA_DOOR_CONTINUE"
     ]
   },
   {
@@ -84256,6 +84327,7 @@
       "AKKHA_ARENA_OUTER_LVL2_19",
       "AKKHA_ARENA_OUTER_LVL2_20",
       "AKKHA_ARENA_OUTER_LVL2_25",
+      "AKKHA_ARENA_OUTER_LVL2_31",
       "AKKHA_ARENA_OUTER_LVL2_51",
       "AKKHA_ARENA_OUTER_LVL2_56",
       "AKKHA_ARENA_OUTER_LVL2_61",
@@ -84263,7 +84335,12 @@
       "AKKHA_ARENA_OUTER_LVL2_69",
       "AKKHA_ARENA_OUTER_LVL2_70",
       "AKKHA_ARENA_OUTER_LVL2_77",
-      "AKKHA_ARENA_OUTER_LVL2_78"
+      "AKKHA_ARENA_OUTER_LVL2_78",
+      "AKKHA_ARENA_WALLTOP01",
+      "AKKHA_ARENA_WALLTOP02",
+      "AKKHA_ARENA_WALLTOP03",
+      "AKKHA_ARENA_WALLTOP04",
+      "AKKHA_ARENA_WALLTOP05"
     ]
   }
 ]
