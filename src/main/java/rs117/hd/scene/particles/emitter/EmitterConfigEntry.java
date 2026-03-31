@@ -33,6 +33,13 @@ public class EmitterConfigEntry {
 
 	public float weatherParticlesPerTile;
 
+	@Nullable
+	public List<String> globalEffectors;
+	@Nullable
+	public List<String> embeddedEffectors;
+	@Nullable
+	public List<String> localEffectorFilter;
+
 	@Data
 	public static class ObjectBinding {
 		@Nullable

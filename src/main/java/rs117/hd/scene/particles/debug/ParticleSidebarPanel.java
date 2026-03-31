@@ -358,11 +358,13 @@ public class ParticleSidebarPanel extends PluginPanel  {
 	private final HdPlugin plugin;
 	private final ParticleManager particleManager;
 	private final ParticleGizmoOverlay particleGizmoOverlay;
+	private final EffectorDebugOverlay effectorDebugOverlay;
 	private final Client client;
 	private final ColorPickerManager colorPickerManager;
 	private final ClientThread clientThread;
 
 	private boolean gizmoOverlayActive;
+	private boolean effectorOverlayActive;
 
 	/** Dropdown in Particles tab; used to refresh and load default on activate. */
 	private JComboBox<String> particleDropdownRef;
@@ -376,7 +378,8 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		ClientThread clientThread,
 		Client client,
 		ColorPickerManager colorPickerManager,
-		ParticleGizmoOverlay particleGizmoOverlay
+		ParticleGizmoOverlay particleGizmoOverlay,
+		EffectorDebugOverlay effectorDebugOverlay
 	) {
 		super(false);
 		this.plugin = plugin;
@@ -385,6 +388,7 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		this.client = client;
 		this.colorPickerManager = colorPickerManager;
 		this.particleGizmoOverlay = particleGizmoOverlay;
+		this.effectorDebugOverlay = effectorDebugOverlay;
 
 		setLayout(new BorderLayout());
 
@@ -2424,6 +2428,16 @@ public class ParticleSidebarPanel extends PluginPanel  {
 			setButtonActive(gizmoOverlayBtn, gizmoOverlayActive);
 		});
 		buttons.add(gizmoOverlayBtn);
+
+		JButton effectorOverlayBtn = new JButton("Effector overlay");
+		effectorOverlayBtn.setToolTipText("Show effector placement dome overlays from effectors.json.");
+		styleButton(effectorOverlayBtn);
+		effectorOverlayBtn.addActionListener(e -> {
+			effectorOverlayActive = !effectorOverlayActive;
+			effectorDebugOverlay.setActive(effectorOverlayActive);
+			setButtonActive(effectorOverlayBtn, effectorOverlayActive);
+		});
+		buttons.add(effectorOverlayBtn);
 
 		JButton testParticlesBtn = new JButton("Test particles");
 		styleButton(testParticlesBtn);

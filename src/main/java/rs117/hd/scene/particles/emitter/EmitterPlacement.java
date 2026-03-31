@@ -4,6 +4,7 @@
  */
 package rs117.hd.scene.particles.emitter;
 
+import java.util.List;
 import javax.annotation.Nullable;
 import lombok.Value;
 
@@ -17,4 +18,10 @@ public class EmitterPlacement {
 	String particleId;
 	/** Alpha scale for edge fade (1 = full, 0 = invisible). Used by weather. */
 	float edgeFadeFactor;
+	@Nullable
+	List<String> globalEffectors;
+	@Nullable
+	List<String> embeddedEffectors;
+	@Nullable
+	List<String> localEffectorFilter;
 }

@@ -13,4 +13,7 @@ import rs117.hd.scene.areas.AABB;
 public class WeatherAreaConfig {
 	List<AABB> aabbs;
 	List<String> particleIds;
+	List<String> globalEffectors;
+	List<String> embeddedEffectors;
+	List<String> localEffectorFilter;
 }

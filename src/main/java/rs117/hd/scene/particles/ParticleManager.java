@@ -12,6 +12,7 @@ import rs117.hd.scene.particles.core.ParticleSystem;
 import rs117.hd.scene.particles.definition.ParticleDefinition;
 import rs117.hd.scene.particles.core.ParticleTextureLoader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +39,8 @@ import rs117.hd.scene.particles.emitter.EmitterPlacement;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 import rs117.hd.scene.particles.emitter.WeatherAreaConfig;
 import rs117.hd.scene.particles.emitter.WeatherCylinderConfig;
+import rs117.hd.scene.particles.effector.ActiveEffectorState;
+import rs117.hd.scene.particles.effector.EffectorDefinitionManager;
 import rs117.hd.data.ObjectType;
 import rs117.hd.utils.HDUtils;
 
@@ -117,6 +120,9 @@ public class ParticleManager {
 
 	@Inject
 	private ParticleDefinition particleDefinitions;
+
+	@Inject
+	private EffectorDefinitionManager effectorDefinitions;
 
 	@Inject
 	private ParticleTextureLoader particleTextureLoader;
@@ -229,6 +235,9 @@ public class ParticleManager {
 	public void shutDown() {
 		eventBus.unregister(this);
 		removeAllObjectSpawnedEmitters();
+		emitterDefinitionManager.shutdown();
+		particleDefinitions.shutdown();
+		effectorDefinitions.shutdown();
 	}
 
 	private void removeAllObjectSpawnedEmitters() {
@@ -266,16 +275,19 @@ public class ParticleManager {
 		Runnable onReload = () -> clientThread.invoke(this::applyConfig);
 		emitterDefinitionManager.startup(onReload);
 		particleDefinitions.startup(onReload);
+		effectorDefinitions.startup(onReload);
 		applyConfig();
-		log.info("[Particles] Loaded: Textures(size={}, time={}ms), Definitions(size={}, time={}ms), Emitters(placements={}, objects={}, time={}ms)",
+		log.info("[Particles] Loaded: Textures(size={}, time={}ms), Definitions(size={}, time={}ms), Emitters(placements={}, objects={}, time={}ms), Effectors(size={}, time={}ms)",
 			particleTextureLoader.getLastTextureCount(), particleTextureLoader.getLastLoadTimeMs(),
 			particleDefinitions.getLastDefinitionCount(), particleDefinitions.getLastLoadTimeMs(),
-			emitterDefinitionManager.getLastPlacements(), emitterDefinitionManager.getLastObjectBindings(), emitterDefinitionManager.getLastLoadTimeMs());
+			emitterDefinitionManager.getLastPlacements(), emitterDefinitionManager.getLastObjectBindings(), emitterDefinitionManager.getLastLoadTimeMs(),
+			effectorDefinitions.getLastDefinitionCount(), effectorDefinitions.getLastLoadTimeMs());
 	}
 
 	private void applyConfig() {
 		emitterDefinitionManager.loadConfig();
 		particleDefinitions.loadConfig();
+		effectorDefinitions.loadConfig();
 		// Do not preload particle textures at all; they are lazily loaded on first use in ParticleTextureLoader.getTextureId.
 		// Preloading (even only emitter-used textures) breaks shadows on some setups.
 		loadSceneParticles(plugin.getSceneContext());
@@ -310,6 +322,9 @@ public class ParticleManager {
 			if (def == null) continue;
 			final WorldPoint wp = new WorldPoint(place.getWorldX(), place.getWorldY(), place.getPlane());
 			final ParticleEmitter emitter = createEmitterFromDefinition(def, wp);
+			emitter.setGlobalEffectors(place.getGlobalEffectors() != null ? place.getGlobalEffectors() : List.of());
+			emitter.setEmbeddedEffectors(place.getEmbeddedEffectors() != null ? place.getEmbeddedEffectors() : List.of());
+			emitter.setLocalEffectorFilter(place.getLocalEffectorFilter() != null ? place.getLocalEffectorFilter() : List.of());
 			emitter.particleId(def.id);
 			particleSystem.addEmitter(emitter);
 			definitionEmitters.add(emitter);
@@ -333,6 +348,9 @@ public class ParticleManager {
 					final ParticleDefinition def = definitions.get(pid2);
 					if (def == null) continue;
 					final ParticleEmitter emitter = createEmitterFromDefinition(def, new WorldPoint(0, 0, 0));
+					emitter.setGlobalEffectors(cfg.getGlobalEffectors() != null ? cfg.getGlobalEffectors() : List.of());
+					emitter.setEmbeddedEffectors(cfg.getEmbeddedEffectors() != null ? cfg.getEmbeddedEffectors() : List.of());
+					emitter.setLocalEffectorFilter(cfg.getLocalEffectorFilter() != null ? cfg.getLocalEffectorFilter() : List.of());
 					emitter.particleId(def.id);
 					emitter.setHeightOffset(weatherHeightOffset);
 					emitter.setDirectionYaw(weatherYaw);
@@ -767,8 +785,11 @@ public class ParticleManager {
 		int n = buf.count;
 		int tickDelta = Math.max(1, (int) Math.round(dt * 50));
 		tickDelta = Math.min(tickDelta, 10);
+		Map<String, List<ActiveEffectorState>> activeEffectorsById = ctx != null && ctx.sceneBase != null
+			? buildActiveEffectorsById(ctx)
+			: Map.of();
 		for (int i = 0; i < n; ) {
-			if (MovingParticle.tick(buf, i, tickDelta)) {
+			if (MovingParticle.tick(buf, i, tickDelta, activeEffectorsById, effectorDefinitions)) {
 				buf.swap(i, n - 1);
 				n--;
 			} else {
@@ -779,6 +800,25 @@ public class ParticleManager {
 
 		for (int i = 0; i < buf.count; i++)
 			buf.syncRefToFloat(i);
+	}
+
+	private Map<String, List<ActiveEffectorState>> buildActiveEffectorsById(@Nonnull SceneContext ctx) {
+		Map<String, List<ActiveEffectorState>> byId = new HashMap<>();
+		int[] local = new int[3];
+		float halfTile = LOCAL_TILE_SIZE / 2f;
+		for (var placement : effectorDefinitions.getPlacements()) {
+			var def = effectorDefinitions.getDefinition(placement.getEffectorId());
+			if (def == null) continue;
+			var wp = new WorldPoint(placement.getWorldX(), placement.getWorldY(), placement.getPlane());
+			int[] loc = ctx.worldToLocalFirst(wp, local);
+			if (loc == null) continue;
+			float x = loc[0] + halfTile;
+			float z = loc[1] + halfTile;
+			float y = getTerrainHeight(ctx, (int) x, (int) z, loc[2]) - def.heightOffset;
+			byId.computeIfAbsent(def.id, k -> new ArrayList<>())
+				.add(new ActiveEffectorState(def.id, x, y, z, def));
+		}
+		return byId;
 	}
 
 	private void tickWeatherCylinders(@Nonnull SceneContext ctx, float dt, long gameCycle, @Nonnull ParticleBuffer buf) {

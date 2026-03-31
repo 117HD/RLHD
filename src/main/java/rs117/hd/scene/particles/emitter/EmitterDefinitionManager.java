@@ -111,7 +111,12 @@ public class EmitterDefinitionManager {
 						for (int[] p : entry.placements) {
 							if (p != null && p.length >= 3) {
 								for (String pid2 : pids) {
-									placements.add(new EmitterPlacement(p[0], p[1], p[2], pid2, 1f));
+									placements.add(new EmitterPlacement(
+										p[0], p[1], p[2], pid2, 1f,
+										upperCaseList(entry.globalEffectors),
+										upperCaseList(entry.embeddedEffectors),
+										upperCaseList(entry.localEffectorFilter)
+									));
 								}
 							}
 						}
@@ -147,11 +152,21 @@ public class EmitterDefinitionManager {
 							}
 						}
 						if (!aabbs.isEmpty()) {
-							weatherAreaConfigs.add(new WeatherAreaConfig(aabbs, new ArrayList<>(pids)));
+							weatherAreaConfigs.add(new WeatherAreaConfig(
+								aabbs, new ArrayList<>(pids),
+								upperCaseList(entry.globalEffectors),
+								upperCaseList(entry.embeddedEffectors),
+								upperCaseList(entry.localEffectorFilter)
+							));
 							float ppt = Math.max(0f, entry.weatherParticlesPerTile);
 							for (AABB aabb : aabbs) {
 								if (aabb != null)
-									weatherCylinderConfigs.add(new WeatherCylinderConfig(aabb, new ArrayList<>(pids), ppt));
+									weatherCylinderConfigs.add(new WeatherCylinderConfig(
+										aabb, new ArrayList<>(pids), ppt,
+										upperCaseList(entry.globalEffectors),
+										upperCaseList(entry.embeddedEffectors),
+										upperCaseList(entry.localEffectorFilter)
+									));
 							}
 						}
 					}
@@ -197,6 +212,20 @@ public class EmitterDefinitionManager {
 			return List.of(entry.particleId.toUpperCase());
 		}
 		return List.of();
+	}
+
+	private static List<String> upperCaseList(List<String> values) {
+		if (values == null || values.isEmpty()) {
+			return List.of();
+		}
+		List<String> out = new ArrayList<>(values.size());
+		for (String value : values) {
+			if (value == null || value.isEmpty()) {
+				continue;
+			}
+			out.add(value.toUpperCase());
+		}
+		return out;
 	}
 
 }

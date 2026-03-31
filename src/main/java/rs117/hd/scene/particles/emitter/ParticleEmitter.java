@@ -4,6 +4,7 @@
  */
 package rs117.hd.scene.particles.emitter;
 
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
@@ -103,6 +104,12 @@ public class ParticleEmitter {
 	private boolean active = true;
 	@Nullable
 	private ParticleDefinition definition;
+	@Builder.Default
+	private List<String> globalEffectors = List.of();
+	@Builder.Default
+	private List<String> embeddedEffectors = List.of();
+	@Builder.Default
+	private List<String> localEffectorFilter = List.of();
 
 	private long cycleStartCycle;
 	@Builder.Default

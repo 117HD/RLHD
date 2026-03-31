@@ -152,7 +152,47 @@
   "texture" : {
     "file" : "720.png"
   }
-}, {
+},
+  {
+    "id" : "3test",
+    "general" : {
+      "randomYawRotation" : 2.0
+    },
+    "spread" : {
+      "yawMin" : 947,
+      "yawMax" : 1061,
+      "pitchMin" : 451,
+      "pitchMax" : 511
+    },
+    "speed" : {
+      "minSpeed" : 262144,
+      "maxSpeed" : 524288,
+      "targetSpeed" : 2097152
+    },
+    "scale" : {
+      "minScale" : 2,
+      "maxScale" : 8
+    },
+    "colours" : {
+      "minColourArgb" : -1191182337,
+      "maxColourArgb" : -3342337,
+      "targetColourArgb" : -1,
+      "colourTransitionPercent" : 25,
+      "useSceneAmbientLight" : false,
+      "uniformColourVariation" : false
+    },
+    "emission" : {
+      "minDelay" : 1000,
+      "maxDelay" : 1200,
+      "minSpawn" : 2,
+      "maxSpawn" : 4,
+      "emissionTimeThreshold" : 32767,
+      "emissionCycleDuration" : 32767
+    },
+    "texture" : {
+      "file" : "720.png"
+    }
+  },{
   "id" : "4",
   "general" : {
     "randomYawRotation" : 2.0

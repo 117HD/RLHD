@@ -1,0 +1,16 @@
+[
+  {
+    "id": "WIND_DEFAULT",
+    "placements": [
+      [2939, 3365, 0]
+    ],
+    "effect": "wind",
+    "spreadAngle": 0,
+    "forceDirectionX": 1312,
+    "forceDirectionY": 0,
+    "forceDirectionZ": 1624,
+    "heightOffset": 250,
+    "invertDirection": false,
+    "falloffType": 0
+  }
+]

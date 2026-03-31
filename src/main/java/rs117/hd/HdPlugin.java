@@ -117,6 +117,7 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.particles.ParticleManager;
+import rs117.hd.scene.particles.debug.EffectorDebugOverlay;
 import rs117.hd.scene.particles.debug.ParticleGizmoOverlay;
 import rs117.hd.scene.particles.debug.ParticleSidebarPanel;
 import rs117.hd.scene.TextureManager;
@@ -308,6 +309,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private ParticleGizmoOverlay particleGizmoOverlay;
+
+	@Inject
+	private EffectorDebugOverlay effectorDebugOverlay;
 
 	@Inject
 	private ColorPickerManager colorPickerManager;
@@ -753,7 +757,7 @@ public class HdPlugin extends Plugin {
 				clientThread.invokeLater(this::displayUpdateMessage);
 
 				SwingUtilities.invokeLater(() -> {
-					particleSidebarPanel = new ParticleSidebarPanel(this, particleManager, clientThread, client, colorPickerManager, particleGizmoOverlay);
+					particleSidebarPanel = new ParticleSidebarPanel(this, particleManager, clientThread, client, colorPickerManager, particleGizmoOverlay, effectorDebugOverlay);
 					if (particleNavButton == null) {
 						BufferedImage icon = ImageUtil.loadImageResource(HdPlugin.class, "icon.png");
 						particleNavButton = NavigationButton.builder()

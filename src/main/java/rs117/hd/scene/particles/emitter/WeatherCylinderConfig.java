@@ -16,5 +16,8 @@ public class WeatherCylinderConfig {
 	AABB aabb;
 	List<String> particleIds;
 	float particlesPerTile;
+	List<String> globalEffectors;
+	List<String> embeddedEffectors;
+	List<String> localEffectorFilter;
 }
 
