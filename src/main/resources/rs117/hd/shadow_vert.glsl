@@ -118,7 +118,7 @@ layout (location = 0) in vec3 vPosition;
         }
 
         #if WIND_DISPLACEMENT
-            worldPosition += computeZoneWindDisplacement(worldPosition, materialData, vec3(0, 1, 0));
+            // TODO: wind data needs a new vertex slot — vNormal.w is now modelIdx
         #endif
 
         #if SHADOW_TRANSPARENCY

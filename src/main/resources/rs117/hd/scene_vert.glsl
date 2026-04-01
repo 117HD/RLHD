@@ -111,7 +111,7 @@ layout (location = 0) in vec3 vPosition;
         }
 
         #if WIND_DISPLACEMENT
-            worldPosition += computeZoneWindDisplacement(worldPosition, materialData, worldNormal);
+            // TODO: wind data needs a new vertex slot — vNormal.w is now modelIdx
         #endif
 
         OUT.position = worldPosition;
