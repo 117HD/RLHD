@@ -44,15 +44,26 @@ public class GLFrameBufferDesc {
 		return this;
 	}
 
-	public GLFrameBufferDesc setColorAttachment(GLAttachmentSlot slot, GLTextureFormat format, GLTextureParams textureParams) {
+	public GLFrameBufferDesc setColorAttachment(GLAttachmentSlot slot, GLTextureFormat format) { return setColorAttachment(slot, format, null); }
+
+	public GLFrameBufferDesc setColorAttachment(GLAttachmentSlot slot, GLTextureFormat format, Builder paramBuilder) {
 		assert !slot.isDepth();
-		colorDescriptors.add(new AttachmentDescriptor(slot, format, textureParams));
+		GLTextureParams params = paramBuilder != null ? paramBuilder.apply(GLTextureParams.DEFAULT()) : GLTextureParams.DEFAULT();
+		colorDescriptors.add(new AttachmentDescriptor(slot, format, params));
 		return this;
 	}
 
-	public GLFrameBufferDesc setDepthAttachment(GLTextureFormat format, GLTextureParams textureParams) {
-		depthDescriptor = new AttachmentDescriptor(GLAttachmentSlot.DEPTH, format, textureParams);
+	public GLFrameBufferDesc setDepthAttachment(GLTextureFormat format) { return setDepthAttachment(format, null); }
+
+	public GLFrameBufferDesc setDepthAttachment(GLTextureFormat format, Builder paramBuilder) {
+		GLTextureParams params = paramBuilder != null ? paramBuilder.apply(GLTextureParams.DEFAULT()) : GLTextureParams.DEFAULT();
+		depthDescriptor = new AttachmentDescriptor(GLAttachmentSlot.DEPTH, format, params);
 		return this;
+	}
+
+	@FunctionalInterface
+	public interface Builder {
+		GLTextureParams apply(GLTextureParams params);
 	}
 
 	public static class AttachmentDescriptor {

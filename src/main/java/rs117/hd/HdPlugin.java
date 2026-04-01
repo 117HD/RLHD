@@ -678,8 +678,8 @@ public class HdPlugin extends Plugin {
 					.setWidth(canvas.getWidth())
 					.setHeight(canvas.getHeight())
 					.setMSAASamples(msaaSamples)
-					.setColorAttachment(GLAttachmentSlot.COLOR0, backbufferFormat, GLTextureParams.DEFAULT())
-					.setDepthAttachment(GLTextureFormat.DEPTH32F, GLTextureParams.DEFAULT())
+					.setColorAttachment(GLAttachmentSlot.COLOR0, backbufferFormat)
+					.setDepthAttachment(GLTextureFormat.DEPTH32F)
 					.setDebugName("SceneColor"));
 
 				if (!fboScene.isCreated())
@@ -698,8 +698,7 @@ public class HdPlugin extends Plugin {
 						.setWidth(shadowMapResolution)
 						.setHeight(shadowMapResolution)
 						.setDepthAttachment(GLTextureFormat.DEPTH32F,
-							new GLTextureParams()
-								.setSampler(GLSamplerMode.NEAREST_CLAMP)
+							t -> t.setSampler(GLSamplerMode.NEAREST_CLAMP)
 								.setTextureUnit(TEXTURE_UNIT_SHADOW_MAP)
 								.setBorderColor(new float[] { 1.0f, 1.0f, 1.0f, 1.0f}))
 						.setDebugName("ShadowMap"));
@@ -708,8 +707,8 @@ public class HdPlugin extends Plugin {
 					.setShouldConstructionCreate(false)
 					.setDepth(DynamicLights.MAX_LAYERS_PER_TILE)
 					.setColorAttachment(
-						GLAttachmentSlot.COLOR0, GLTextureFormat.RGBA16UI, new GLTextureParams()
-							.setType(GLTextureType.TEXTURE2D_ARRAY)
+						GLAttachmentSlot.COLOR0, GLTextureFormat.RGBA16UI,
+						t -> t.setType(GLTextureType.TEXTURE2D_ARRAY)
 							.setSampler(GLSamplerMode.NEAREST_CLAMP)
 							.setTextureUnit(TEXTURE_UNIT_TILED_LIGHTING_MAP)
 							.setImageUnit(IMAGE_UNIT_TILED_LIGHTING, GL_WRITE_ONLY))
