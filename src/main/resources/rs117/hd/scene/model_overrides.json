@@ -84439,5 +84439,39 @@
       "AKKHA_ARENA_WALLTOP04",
       "AKKHA_ARENA_WALLTOP05"
     ]
+  },
+  {
+    "description": "ToA - Amascut Burial Chamber - Wall",
+    "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": -256,
+    "objectIds": [
+      "TOA_VAULT_WALL01",
+      "TOA_VAULT_WALL02",
+      "TOA_VAULT_WALL03",
+      "TOA_VAULT_WALL04"
+    ]
+  },
+  {
+    "description": "ToA - Amascut Burial Chamber - Wall with golden symbols",
+    "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "TOA_VAULT_WALL_TRIM01",
+      "TOA_VAULT_WALL_TRIM02",
+      "TOA_VAULT_WALL_TRIM04",
+      "TOA_VAULT_WALL_TRIM04"
+    ]
   }
 ]
