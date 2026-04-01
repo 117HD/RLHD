@@ -104,7 +104,7 @@ layout (location = 0) in vec3 vPosition;
         }
 
         #if WIND_DISPLACEMENT
-            worldPosition += computeZoneWindDisplacement(worldPosition, materialData, worldNormal);
+            worldPosition += computeZoneWindDisplacement(worldPosition, materialData, worldNormal, vNormal.w);
         #endif
 
         OUT.position = worldPosition;

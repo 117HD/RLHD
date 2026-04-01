@@ -53,10 +53,12 @@ layout(std140) uniform UBOGlobal {
     float lightningBrightness;
     float elapsedTime;
 
-    // Wind uniforms
+#if ZONE_RENDERER
+    // Wind uniforms (zone renderer only; legacy uses UBOCompute)
     float windDirectionX;
     float windDirectionZ;
     float windStrength;
     float windCeiling;
     float windOffset;
+#endif
 };

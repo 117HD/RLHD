@@ -71,7 +71,11 @@ public final class VertexWriteCache {
 		int x, int y, int z,
 		float u, float v, float w,
 		int nx, int ny, int nz,
-		int textureFaceIdx
+		int textureFaceIdx,
+		float heightRatio,
+		float modelWindReach,
+		int modelOriginX,
+		int modelOriginZ
 	) {
 		if (stagingPosition + 8 > stagingBuffer.length)
 			flushAndGrow();
@@ -79,13 +83,14 @@ public final class VertexWriteCache {
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
+		int packedWindData = packWindData(heightRatio, modelWindReach, modelOriginX, modelOriginZ);
 		stagingBuffer[stagingPosition] = x;
 		stagingBuffer[stagingPosition + 1] = y;
 		stagingBuffer[stagingPosition + 2] = z;
 		stagingBuffer[stagingPosition + 3] = float16(v) << 16 | float16(u);
 		stagingBuffer[stagingPosition + 4] = float16(w);
 		stagingBuffer[stagingPosition + 5] = (ny & 0xFFFF) << 16 | nx & 0xFFFF;
-		stagingBuffer[stagingPosition + 6] = nz & 0xFFFF;
+		stagingBuffer[stagingPosition + 6] = packedWindData << 16 | nz & 0xFFFF;
 		stagingBuffer[stagingPosition + 7] = textureFaceIdx;
 
 		this.stagingPosition += 8;
@@ -95,7 +100,11 @@ public final class VertexWriteCache {
 		int x, int y, int z,
 		float u, float v, float w,
 		int nx, int ny, int nz,
-		int textureFaceIdx
+		int textureFaceIdx,
+		float heightRatio,
+		float modelWindReach,
+		int modelOriginX,
+		int modelOriginZ
 	) {
 		if (stagingPosition + 7 > stagingBuffer.length)
 			flushAndGrow();
@@ -103,16 +112,32 @@ public final class VertexWriteCache {
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
+		int packedWindData = packWindData(heightRatio, modelWindReach, modelOriginX, modelOriginZ);
 		stagingBuffer[stagingPosition] = (y & 0xFFFF) << 16 | x & 0xFFFF;
 		stagingBuffer[stagingPosition + 1] = z & 0xFFFF;
 		stagingBuffer[stagingPosition + 2] = float16(v) << 16 | float16(u);
 		stagingBuffer[stagingPosition + 3] = float16(w);
 		// Unnormalized normals, assumed to be within short max
 		stagingBuffer[stagingPosition + 4] = (ny & 0xFFFF) << 16 | nx & 0xFFFF;
-		stagingBuffer[stagingPosition + 5] = nz & 0xFFFF;
+		stagingBuffer[stagingPosition + 5] = packedWindData << 16 | nz & 0xFFFF;
 		stagingBuffer[stagingPosition + 6] = textureFaceIdx;
 
 		this.stagingPosition += 7;
+	}
+
+	/**
+	 * Pack per-vertex wind data into 16 bits (read as GL_SHORT in shader).
+	 * Bits 0-5  (6 bits): heightRatio (abs(localY) / modelHeight, 0-63)
+	 * Bits 6-9  (4 bits): modelWindReach (abs(modelY) + modelHeight, 0-15 over max 2560)
+	 * Bits 10-12 (3 bits): model origin X / 256, mod 8
+	 * Bits 13-15 (3 bits): model origin Z / 256, mod 8
+	 */
+	public static int packWindData(float heightRatio, float modelWindReach, int modelOriginX, int modelOriginZ) {
+		int packedRatio = (int) (clamp(heightRatio, 0, 1) * 63) & 0x3F;
+		int packedReach = (int) (clamp(modelWindReach / 2560f, 0, 1) * 15) & 0xF;
+		int packedOriginX = ((modelOriginX / 256) & 0x7);
+		int packedOriginZ = ((modelOriginZ / 256) & 0x7);
+		return (packedOriginZ << 13 | packedOriginX << 10 | packedReach << 6 | packedRatio) & 0xFFFF;
 	}
 
 	public void flush() {

@@ -29,6 +29,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.VertexWriteCache;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -127,15 +128,20 @@ public class GpuIntBuffer {
 		int x, int y, int z,
 		float u, float v, float w,
 		int nx, int ny, int nz,
-		int textureFaceIdx
+		int textureFaceIdx,
+		float heightRatio,
+		float modelWindReach,
+		int modelOriginX,
+		int modelOriginZ
 	) {
+		int packedWindData = VertexWriteCache.packWindData(heightRatio, modelWindReach, modelOriginX, modelOriginZ);
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put(z & 0xFFFF);
 		buffer.put(float16(v) << 16 | float16(u));
 		buffer.put(float16(w));
 		// Unnormalized normals, assumed to be within short max
 		buffer.put((ny & 0xFFFF) << 16 | nx & 0xFFFF);
-		buffer.put(nz & 0xFFFF);
+		buffer.put(packedWindData << 16 | nz & 0xFFFF);
 		buffer.put(textureFaceIdx);
 	}
 
