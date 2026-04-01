@@ -43728,6 +43728,9 @@
       "ROR_TEMPLE_TALL_TOP",
       "ROR_TEMPLE_TALL_PILLAR"
     ],
+    "hideInAreas": [
+      [ 1280, 9536, 1343, 9538, 1 ]
+    ],
     "baseMaterial": "PURE_BLACK",
     "castShadows": false,
     "receiveShadows": false
