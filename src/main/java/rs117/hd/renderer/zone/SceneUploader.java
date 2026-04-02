@@ -111,7 +111,7 @@ public class SceneUploader implements AutoCloseable {
 
 	@FunctionalInterface
 	public interface OnBeforeProcessTileFunc {
-		void invoke(Tile t, boolean isEstimate) throws InterruptedException;
+		void invoke(Tile t) throws InterruptedException;
 	}
 
 	public OnBeforeProcessTileFunc onBeforeProcessTile;
@@ -299,7 +299,7 @@ public class SceneUploader implements AutoCloseable {
 					if (t != null) {
 						this.rid = rid;
 						if (onBeforeProcessTile != null)
-							onBeforeProcessTile.invoke(t, false);
+							onBeforeProcessTile.invoke(t);
 						uploadZoneTile(ctx, zone, t, false, false, vb, ab, fb);
 					}
 				}
@@ -326,7 +326,7 @@ public class SceneUploader implements AutoCloseable {
 					Tile t = tiles[level][msx][msz];
 					if (t != null) {
 						if (onBeforeProcessTile != null)
-							onBeforeProcessTile.invoke(t, false);
+							onBeforeProcessTile.invoke(t);
 						uploadZoneTile(ctx, zone, t, false, true, vb, null, fb);
 					}
 				}
