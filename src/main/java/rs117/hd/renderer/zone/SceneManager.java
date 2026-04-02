@@ -361,7 +361,7 @@ public class SceneManager {
 				Zone zone = zones[x][z];
 				if (!zone.initialized)
 					return true;
-				if (zone.sizeO == 0 && zone.sizeA == 0)
+				if (zone.sizeIntsOpaque == 0 && zone.sizeIntsAlpha == 0)
 					return true;
 			}
 		}
@@ -543,7 +543,7 @@ public class SceneManager {
 							continue;
 
 						final Zone old = ctx.zones[ox][oz];
-						if (!old.initialized || (old.sizeO == 0 && old.sizeA == 0))
+						if (!old.initialized || (old.sizeIntsOpaque == 0 && old.sizeIntsAlpha == 0))
 							continue;
 
 						old.needsRoofUpdate = true;

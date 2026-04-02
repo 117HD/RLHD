@@ -1,11 +1,12 @@
 package rs117.hd.renderer.zone;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -13,7 +14,7 @@ import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
 public final class ZoneUploadJob extends Job {
-	private static final ConcurrentLinkedQueue<ZoneUploadJob> POOL = new ConcurrentLinkedQueue<>();
+	public static final ConcurrentPool<ZoneUploadJob> POOL = new ConcurrentPool<>(ZoneUploadJob::new);
 
 	private WorldViewContext viewContext;
 	private ZoneSceneContext sceneContext;
@@ -30,19 +31,39 @@ public final class ZoneUploadJob extends Job {
 
 			sceneUploader.onBeforeProcessTile = this::onBeforeProcessTile;
 			sceneUploader.setScene(sceneContext.scene);
-			sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
 
-			if (zone.sizeO > 0 || zone.sizeA > 0) {
-				workerHandleCancel();
+			try (
+				GpuIntBuffer opaqueStaging = GpuIntBuffer.POOL.acquire();
+				GpuIntBuffer alphaStaging = GpuIntBuffer.POOL.acquire();
+				GpuIntBuffer tboStaging = GpuIntBuffer.POOL.acquire()
+			) {
+					sceneUploader.uploadZone(sceneContext, zone, x, z, opaqueStaging, alphaStaging, tboStaging);
 
-				invokeClientCallback(this::mapZoneVertexBuffers);
-				workerHandleCancel();
+					zone.sizeIntsOpaque = opaqueStaging.position();
+					zone.sizeIntsAlpha = alphaStaging.position();
+					zone.sizeIntsFace = tboStaging.position();
 
-				sceneUploader.uploadZone(sceneContext, zone, x, z);
-				workerHandleCancel();
+					workerHandleCancel();
+					invokeClientCallback(this::mapZoneVertexBuffers);
 
-				if (shouldUnmap)
-					invokeClientCallback(zone::unmap);
+					if(zone.vboO != null) {
+						opaqueStaging.flip();
+						zone.vboO.mapped().intView().put(opaqueStaging.getBuffer());
+					}
+
+					if(zone.vboA != null) {
+						alphaStaging.flip();
+						zone.vboA.mapped().intView().put(alphaStaging.getBuffer());
+					}
+
+					if(zone.tboF != null) {
+						tboStaging.flip();
+						zone.tboF.mapped().intView().put(tboStaging.getBuffer());
+					}
+
+					workerHandleCancel();
+					if (shouldUnmap)
+						invokeClientCallback(zone::unmap);
 			}
 			zone.initialized = true;
 		}
@@ -55,25 +76,22 @@ public final class ZoneUploadJob extends Job {
 	private void mapZoneVertexBuffers() {
 		try {
 			GLBuffer o = null, a = null;
-			int sz = zone.sizeO * Zone.VERT_SIZE * 3;
-			if (sz > 0) {
+			if (zone.sizeIntsOpaque > 0) {
 				o = new GLBuffer("Zone::VBO::Opaque", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-				o.initialize(sz);
+				o.initialize((long)zone.sizeIntsOpaque * Integer.BYTES);
 				o.map(MAP_WRITE);
 			}
 
-			sz = zone.sizeA * Zone.VERT_SIZE * 3;
-			if (sz > 0) {
+			if (zone.sizeIntsAlpha > 0) {
 				a = new GLBuffer("Zone::VBO::Alpha", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-				a.initialize(sz);
+				a.initialize((long)zone.sizeIntsAlpha * Integer.BYTES);
 				a.map(MAP_WRITE);
 			}
 
 			GLTextureBuffer f = null;
-			sz = zone.sizeF * Zone.TEXTURE_SIZE;
-			if (sz > 0) {
+			if (zone.sizeIntsFace > 0) {
 				f = new GLTextureBuffer("Zone::TBO", GL_STATIC_DRAW);
-				f.initialize(sz);
+				f.initialize((long) zone.sizeIntsFace * Integer.BYTES);
 				f.map(MAP_WRITE);
 			}
 
@@ -109,8 +127,7 @@ public final class ZoneUploadJob extends Job {
 		zone.uploadJob = null;
 		zone = null;
 		revealAfterTimestampMs = 0;
-		assert !POOL.contains(this) : "Task is already in pool";
-		POOL.add(this);
+		POOL.recycle(this);
 	}
 
 	public static ZoneUploadJob build(
@@ -126,9 +143,7 @@ public final class ZoneUploadJob extends Job {
 		assert zone != null : "Zone cant be null";
 		assert !zone.initialized : "Zone is already initialized";
 
-		ZoneUploadJob newTask = POOL.poll();
-		if (newTask == null)
-			newTask = new ZoneUploadJob();
+		ZoneUploadJob newTask = POOL.acquire();
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
 		newTask.zone = zone;
