@@ -29,11 +29,14 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
+import rs117.hd.utils.collections.ConcurrentPool;
 
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class GpuIntBuffer {
+public class GpuIntBuffer implements AutoCloseable {
+	public static final ConcurrentPool<GpuIntBuffer> POOL = new ConcurrentPool<>(GpuIntBuffer::new);
+
 	@Getter
 	private IntBuffer buffer;
 	private final boolean ownsBuffer;
@@ -194,5 +197,11 @@ public class GpuIntBuffer {
 		}
 
 		return this;
+	}
+
+	@Override
+	public void close() {
+		buffer.clear();
+		POOL.recycle(this);
 	}
 }

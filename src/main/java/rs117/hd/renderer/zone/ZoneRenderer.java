@@ -203,6 +203,9 @@ public class ZoneRenderer implements Renderer {
 		sceneManager.destroy();
 		uboWorldViews.destroy();
 
+		ZoneUploadJob.POOL.destroy();
+		GpuIntBuffer.POOL.destroy();
+
 		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
 
@@ -873,7 +876,7 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			Zone z = ctx.zones[zx][zz];
-			if (!z.initialized || z.sizeO == 0)
+			if (!z.initialized || z.sizeIntsOpaque == 0)
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
@@ -915,7 +918,7 @@ public class ZoneRenderer implements Renderer {
 
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
 
-			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
+			final boolean hasAlpha = z.sizeIntsAlpha != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
 				// Only sort if the alpha will be directly visible, since shadows don't require sorting

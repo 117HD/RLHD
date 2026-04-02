@@ -67,7 +67,7 @@ public class Zone implements Destructible {
 	public int glVaoA;
 	public int bufLenA;
 
-	public int sizeO, sizeA, sizeF;
+	public int sizeIntsOpaque, sizeIntsAlpha, sizeIntsFace;
 	@Nullable
 	public GLBuffer vboO, vboA, vboM;
 	public GLTextureBuffer tboF;
@@ -119,6 +119,11 @@ public class Zone implements Destructible {
 		}
 
 		tboF = f;
+
+		for(AlphaModel m : alphaModels) {
+			m.vao = glVaoA;
+			m.tboF = tboF.getTexId();
+		}
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -178,9 +183,9 @@ public class Zone implements Destructible {
 
 		sortedAlphaFacesUpload.release();
 
-		sizeO = 0;
-		sizeA = 0;
-		sizeF = 0;
+		sizeIntsOpaque = 0;
+		sizeIntsAlpha = 0;
+		sizeIntsFace = 0;
 		bufLen = 0;
 		bufLenA = 0;
 
@@ -205,7 +210,7 @@ public class Zone implements Destructible {
 	public String toString() {
 		return String.format(
 			"Zone Initialized: %b, culled: %b hasUploadJob: %b opaqueSize: %d alphaSize: %d",
-			initialized, cull, uploadJob != null, sizeO, sizeA
+			initialized, cull, uploadJob != null, sizeIntsOpaque, sizeIntsAlpha
 		);
 	}
 
@@ -447,8 +452,6 @@ public class Zone implements Destructible {
 	void addAlphaModel(
 		HdPlugin plugin,
 		MaterialManager materialManager,
-		int vao,
-		int tboF,
 		Model model,
 		ModelOverride modelOverride,
 		int startpos,
@@ -472,8 +475,6 @@ public class Zone implements Destructible {
 		m.x = (short) x;
 		m.y = (short) y;
 		m.z = (short) z;
-		m.vao = vao;
-		m.tboF = tboF;
 		m.rid = (short) rid;
 		m.level = (byte) level;
 		if (lx > -1) {
