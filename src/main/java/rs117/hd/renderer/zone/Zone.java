@@ -61,11 +61,7 @@ public class Zone implements Destructible {
 	public static final int LEVEL_WATER_SURFACE = 4;
 
 	public int glVao;
-	int bufLen;
-	int dist;
-
 	public int glVaoA;
-	public int bufLenA;
 
 	public int sizeIntsOpaque, sizeIntsAlpha, sizeIntsFace;
 	@Nullable
@@ -88,6 +84,7 @@ public class Zone implements Destructible {
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
 
+	int dist;
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
 
 	int[][] rids;
@@ -119,11 +116,6 @@ public class Zone implements Destructible {
 		}
 
 		tboF = f;
-
-		for(AlphaModel m : alphaModels) {
-			m.vao = glVaoA;
-			m.tboF = tboF.getTexId();
-		}
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -186,8 +178,6 @@ public class Zone implements Destructible {
 		sizeIntsOpaque = 0;
 		sizeIntsAlpha = 0;
 		sizeIntsFace = 0;
-		bufLen = 0;
-		bufLenA = 0;
 
 		initialized = false;
 		cull = false;
@@ -212,25 +202,6 @@ public class Zone implements Destructible {
 			"Zone Initialized: %b, culled: %b hasUploadJob: %b opaqueSize: %d alphaSize: %d",
 			initialized, cull, uploadJob != null, sizeIntsOpaque, sizeIntsAlpha
 		);
-	}
-
-	public void unmap() {
-		assert client.isClientThread();
-
-		if (vboO != null)
-			vboO.unmap();
-		if (vboA != null)
-			vboA.unmap();
-		if (tboF != null)
-			tboF.unmap();
-
-		if (vboO != null) {
-			this.bufLen = vboO.mapped().byteView().position() / VERT_SIZE;
-		}
-
-		if (vboA != null) {
-			this.bufLenA = vboA.mapped().byteView().position() / VERT_SIZE;
-		}
 	}
 
 	private void setupVao(int vao, int buffer, int metadata) {

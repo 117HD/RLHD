@@ -366,6 +366,22 @@ public class GLBuffer implements Destructible {
 		return this;
 	}
 
+	public GLBuffer initialize(java.nio.Buffer data) {
+		id = glGenBuffers();
+		glBindBuffer(target, id);
+		if(data instanceof ByteBuffer) {
+			glBufferData(target, (ByteBuffer) data, usage);
+		} else if(data instanceof IntBuffer) {
+			glBufferData(target, (IntBuffer) data, usage);
+		} else if(data instanceof FloatBuffer) {
+			glBufferData(target, (FloatBuffer) data, usage);
+		} else {
+			throw new IllegalArgumentException("Unsupported data type: " + data.getClass());
+		}
+		unbind();
+		return this;
+	}
+
 	public void setName(String newName) {
 		if (newName != null && !newName.equals(name)) {
 			name = newName;
