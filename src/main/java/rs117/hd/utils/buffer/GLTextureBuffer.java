@@ -19,7 +19,17 @@ public class GLTextureBuffer extends GLBuffer {
 	@Override
 	public GLTextureBuffer initialize(long initialCapacity) {
 		super.initialize(initialCapacity);
+		initializeTexBuffer();
+		return this;
+	}
 
+	public GLTextureBuffer initialize(java.nio.Buffer data) {
+		super.initialize(data);
+		initializeTexBuffer();
+		return this;
+	}
+
+	private void initializeTexBuffer() {
 		// Create texture
 		texId = glGenTextures();
 		glBindTexture(target, texId);
@@ -28,7 +38,6 @@ public class GLTextureBuffer extends GLBuffer {
 		glTexBuffer(target, GL_RGB32I, id);
 
 		glBindTexture(target, 0);
-		return this;
 	}
 
 	@Override

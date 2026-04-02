@@ -214,6 +214,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			WorldViewContext root = sceneManager.getRoot();
 			addTiming("Root Scene Load", root.loadTime, false);
 			addTiming("Root Scene Upload", root.uploadTime, false);
+			addTiming("Root Scene Buffer", root.bufferInit / ((long) root.sizeX * root.sizeZ), false);
 			addTiming("Root Scene Swap", root.sceneSwapTime, false);
 
 			// TODO: Maybe this should be calculated somewhere else
