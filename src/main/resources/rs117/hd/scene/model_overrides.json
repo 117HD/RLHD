@@ -2228,9 +2228,20 @@
     ]
   },
   {
-    "description": "Tirannwn - Mossy Rocks",
+    "description": "Tirannwn - Fossil Island - Mossy Rocks - Needs proper UV",
     "baseMaterial": "ROCK_1",
-    "textureMaterial": "HD_CONCRETE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRASS_3",
+        "uvScale": 0.42,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ],
     "objectIds": [
       "REGICIDE_ROCK1",
       "REGICIDE_ROCK2",
@@ -2242,20 +2253,10 @@
       "SOTE_HUNTING_ROCK3_OP",
       "SOTE_HUNTING_ROCK2_OP",
       "SOTE_HUNTING_ROCK4_OP",
-      "GB_MOSS_CAVEROCK_EXIT"
-    ],
-    "retainVanillaUvs": false,
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 256,
-    "colorOverrides": [
-      {
-        "colors": "h == 12",
-        "baseMaterial": "GRUNGE_3",
-        "uvScale": 0.5,
-        "uvType": "MODEL_XZ",
-        "uvOrientation": 256
-      }
+      "GB_MOSS_CAVEROCK_EXIT",
+      "HUNTING_TRAIL_SPAWN_FOSSIL1",
+      "HUNTING_TRAIL_SPAWN_FOSSIL3",
+      "HUNTING_TRAIL_SPAWN_FOSSIL4"
     ]
   },
   {
@@ -9348,13 +9349,6 @@
   },
   {
     "description": "RowBoat",
-    "objectIds": [
-      "QUEST_LUNAR_ROWBOAT",
-      "SERIM_ROWBOAT",
-      "CONCH_ROWBOAT_NORTH",
-      "CONCH_ROWBOAT_EAST",
-      "CONCH_ROWBOAT_SOUTH"
-    ],
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -9364,6 +9358,17 @@
         "colors": [ "h == 0" ],
         "baseMaterial": "METALLIC_1_LIGHT"
       }
+    ],
+    "objectIds": [
+      "QUEST_LUNAR_ROWBOAT",
+      "SERIM_ROWBOAT",
+      "CONCH_ROWBOAT_NORTH",
+      "CONCH_ROWBOAT_EAST",
+      "CONCH_ROWBOAT_SOUTH",
+      "FOSSIL_ROWBOAT_CAMP",
+      "FOSSIL_ROWBOAT_NORTH",
+      "FOSSIL_ROWBOAT_DIVING",
+      "FOSSIL_ROWBOAT_LITHKREN_BUILT"
     ]
   },
   {
@@ -14630,19 +14635,6 @@
     "objectIds": [
       "SWAMP_MOSS_COVERED_ROCK_1",
       "SWAMP_MOSS_COVERED_ROCK_2"
-    ]
-  },
-  {
-    "description": "Objects - Mossy Rock with grass",
-    "baseMaterial": "ROCK_1",
-    "textureMaterial": "HD_CONCRETE",
-    "retainVanillaUvs": false,
-    "uvType": "BOX",
-    "uvScale": 0.55,
-    "objectIds": [
-      "HUNTING_TRAIL_SPAWN_FOSSIL1",
-      "HUNTING_TRAIL_SPAWN_FOSSIL3",
-      "HUNTING_TRAIL_SPAWN_FOSSIL4"
     ]
   },
   {
@@ -32596,7 +32588,15 @@
       "TOBQUEST_SKELETON_OP",
       "LASSAR_CHURCH01_SKELETON01_CORPSE03",
       "BCS_SKELETON_NOOP1",
-      "BCS_SKELETON_NOOP2"
+      "BCS_SKELETON_NOOP2",
+      "CHARRED_SKELE_01",
+      "CHARRED_SKELE_02",
+      "CHARRED_SKELE_03",
+      "CHARRED_SKELE_04",
+      "DS2_DRAGONKIN_BONES1",
+      "WILD4_SKELETON_2",
+      "LITHKREN_DUNGEON_SKELETON_OP",
+      "LITHKREN_DUNGEON_SKELETON_NO_OP"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -32621,7 +32621,11 @@
       "CHICKENQUEST_WAR_BONES4",
       "CHICKENQUEST_BONES_SMALL_01",
       "CHICKENQUEST_BONES_SMALL_02",
-      "CHICKENQUEST_BONES_SMALL_03"
+      "CHICKENQUEST_BONES_SMALL_03",
+      "DS2_BURNT_BONES1",
+      "DS2_BURNT_BONES2",
+      "DS2_BURNT_BONES3",
+      "DS2_BURNT_BONES4"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -36473,6 +36477,7 @@
     "uvOrientation": 768,
     "objectIds": [
       "FOSSIL_DKL_SMALLWALL_1",
+      "FOSSIL_ZIPWIRE_START",
       "DS2_LITHKREN_FORTRESS_LOW_WALL_DAMAGED_RIGHT",
       "DS2_LITHKREN_FORTRESS_LOW_WALL",
       "DS2_LITHKREN_FORTRESS_LOW_WALL_DAMAGED",
@@ -45386,7 +45391,8 @@
       "TAPO_SKELETON03",
       "BCS_SKELETON_NOOP3",
       "CONCH_GRYPHON_BELLE",
-      "DRAGON_SLAYER_QIP_CORPSE_3"
+      "DRAGON_SLAYER_QIP_CORPSE_3",
+      "WILD4_SKELETON_3"
     ],
     "colorOverrides": [
       {
@@ -79961,7 +79967,8 @@
     "uvOrientation": 313,
     "objectIds": [
       "SHELL2",
-      "SHELL2BIG"
+      "SHELL2BIG",
+      "VIKING_SHELL2BIG"
     ]
   },
   {
@@ -79974,6 +79981,7 @@
       "SHELL1BIG",
       "SHELL1",
       "VIKING_SHELL1",
+      "VIKING_SHELL1BIG",
       "HORROR_SHELL1"
     ]
   },
@@ -83441,6 +83449,84 @@
     ],
     "objectIds": [
       "DRAGON_SLAYER_QIP_SHIELD"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone Brick walls with Grass models",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 303,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 11",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "terrainVertexSnap": true
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_DRYSTONEWALL",
+      "FOSSIL_DRYSTONEWALL_BROKEN_END",
+      "FOSSIL_DRYSTONEWALL_BROKEN_END_RIGHT",
+      "FOSSIL_DRYSTONEWALL_BROKEN"
+    ]
+  },
+  {
+    "description": "Fossil Island - Trap door with Stone Brick walls with Grass models",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 303,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 11",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "terrainVertexSnap": true
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 4 || h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 303
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_MUSHROOM_TRAPDOOR"
+    ]
+  },
+  {
+    "description": "Fossil Island - Dirt - Muddy Patch",
+    "baseMaterial": "DIRT_2_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "HUNTING_TRAIL_CLUE10_0",
+      "HUNTING_TRAIL_CLUE10_1",
+      "HUNTING_TRAIL_CLUE10_2",
+      "HUNTING_TRAIL_CLUE10_3",
+      "HUNTING_TRAIL_CLUE10_5",
+      "HUNTING_TRAIL_CLUE10_6",
+      "HUNTING_TRAIL_CLUE10_8"
     ]
   }
 ]
