@@ -7970,16 +7970,16 @@
     ]
   },
   {
-    "description": "CAVE_WALLS_LANTERN",
+    "description": "CAVE_WALLS_LANTERN - Needs proper UV",
     "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
     "objectIds": [
       "DRAGON_SLAYER_MINE_WALL_SUPPORT_LEFT",
       "DRAGON_SLAYER_MINE_WALL_SUPPORT_RIGHT",
       "DRAGON_SLAYER_MINE_WALL_LAMP_SINGLE",
       "DRAGON_SLAYER_MINE_WALL_LAMP"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.75
+    ]
   },
   {
     "description": "Asgarnia Ice Dungeon Lantern Wall - Darken so they match adjacent walls",
@@ -32644,6 +32644,9 @@
   {
     "description": "Bone Objects",
     "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 187,
     "objectIds": [
       "PILE_OF_SKULLS_GRUBBY",
       "ANIMALSKULL",
@@ -32655,9 +32658,7 @@
       "ANIMALSKULL_BURNT",
       "CARCASS_BURNT",
       "SW_BONES_LARGE_RIBCAGE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.4
+    ]
   },
   {
     "description": "Weiss Snowy Rocks",
@@ -45384,7 +45385,8 @@
       "CORPSE3_NOBLOCK",
       "TAPO_SKELETON03",
       "BCS_SKELETON_NOOP3",
-      "CONCH_GRYPHON_BELLE"
+      "CONCH_GRYPHON_BELLE",
+      "DRAGON_SLAYER_QIP_CORPSE_3"
     ],
     "colorOverrides": [
       {
@@ -45400,9 +45402,6 @@
     "baseMaterial": "BONE",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "objectIds": [
-      "CORPSE4_NOBLOCK"
-    ],
     "colorOverrides": [
       {
         "description": "Helmet",
@@ -45410,6 +45409,10 @@
         "colors": "h == 0 && s == 0",
         "uvType": "BOX"
       }
+    ],
+    "objectIds": [
+      "CORPSE4_NOBLOCK",
+      "DRAGON_SLAYER_QIP_CORPSE_ADVENTURER"
     ]
   },
   {
@@ -45424,7 +45427,9 @@
       "SHADOW_MAJ_CORPSE",
       "SHADOW_MAJ_CORPSE2",
       "HILLGIANT_BOSS_CORPSE2",
-      "HILLGIANT_BOSS_CORPSE3"
+      "HILLGIANT_BOSS_CORPSE3",
+      "DRAGON_SLAYER_QIP_CORPSE_1",
+      "DRAGON_SLAYER_QIP_CORPSE_2"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -81461,9 +81466,10 @@
   },
   {
     "description": "Crandor Lab - Birthing Pool",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvScale": 0.3,
+    "uvScale": 0.75,
+    "uvOrientation": 768,
     "objectIds": [
       "CRANDOR_LAB_BIRTHING_POOL_WATER",
       "CRANDOR_LAB_BIRTHING_POOL",
@@ -81475,7 +81481,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "a < 255 && h == 32",
+        "colors": "h == 32",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
         "uvType": "BOX",
         "uvOrientation": 168
@@ -81493,9 +81499,10 @@
   },
   {
     "description": "Crandor and Ungael Lab - Metallic Objects",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvScale": 0.3,
+    "uvScale": 0.75,
+    "uvOrientation": 768,
     "objectIds": [
       "CRANDOR_LAB_WALL",
       "CRANDOR_LAB_EXIT",
@@ -83387,6 +83394,53 @@
     ],
     "objectIds": [
       "DS2_GUILD_GATEPOST"
+    ]
+  },
+  {
+    "description": "Musa Point - Wooden - Matellic - Plank Bar with pumps",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 3",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Handle",
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "PIRATETREASURE_BAR"
+    ]
+  },
+  {
+    "description": "Quest - Dragon Slayer 2 - Wooden backed iron round shield",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 187
+      }
+    ],
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_SHIELD"
     ]
   }
 ]
