@@ -3,7 +3,7 @@ package rs117.hd.renderer.zone;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.BitSet;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -38,6 +38,8 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class Zone implements Destructible {
+
+	private static final BitSet EMPTY_SET = new BitSet();
 
 	// Zone vertex format
 	// pos short vec3(x, y, z)
@@ -299,10 +301,10 @@ public class Zone implements Destructible {
 
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
-		var hiddenRoofIds = ctx.hideRoofIds;
+		var hiddenRoofIds = ZoneRenderer.hiddenRoofIdsBitField;
 		if (roofShadows) {
 			maxLevel = 3;
-			hiddenRoofIds = Collections.emptySet();
+			hiddenRoofIds = EMPTY_SET;
 		}
 
 		for (int level = ctx.minLevel; level <= maxLevel; ++level) {
@@ -318,7 +320,7 @@ public class Zone implements Destructible {
 
 			for (int roofIdx = 0; roofIdx < ld.ridCount; ++roofIdx) {
 				int rid = ld.getRoofId(roofIdx);
-				if (rid > 0 && !hiddenRoofIds.contains(rid)) {
+				if (rid > 0 && !hiddenRoofIds.get(rid)) {
 					// draw the roof
 					int roofStart = ld.getRoofStart(roofIdx);
 					int roofEnd = ld.getRoofEnd(roofIdx);
@@ -625,10 +627,10 @@ public class Zone implements Destructible {
 		int minLevel = ctx.minLevel;
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
-		var hiddenRoofIds = ctx.hideRoofIds;
+		var hiddenRoofIds = ZoneRenderer.hiddenRoofIdsBitField;
 		if (includeRoof) {
 			maxLevel = 3;
-			hiddenRoofIds = Collections.emptySet();
+			hiddenRoofIds = EMPTY_SET;
 		}
 
 		drawIdx = 0;
@@ -645,7 +647,7 @@ public class Zone implements Destructible {
 				continue;
 
 			if (level < minLevel || level > maxLevel ||
-				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
+				level > currentLevel && m.rid >= 0 && !hiddenRoofIds.isEmpty() && hiddenRoofIds.get(m.rid))
 				continue;
 
 			int drawMode = STATIC;
