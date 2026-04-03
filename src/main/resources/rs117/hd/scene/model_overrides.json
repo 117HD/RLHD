@@ -14621,51 +14621,85 @@
     ]
   },
   {
-    "description": "Objects - Mossy Rock - Medium",
+    "description": "Objects - Mossy Rock - Textured",
     "baseMaterial": "ROCK_1",
     "textureMaterial": "HD_CONCRETE",
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.55,
     "objectIds": [
-      "MDAUGHTER_ROCKSLIDE",
       "SWAMP_MOSS_COVERED_ROCK_1",
-      "SWAMP_MOSS_COVERED_ROCK_2",
+      "SWAMP_MOSS_COVERED_ROCK_2"
+    ]
+  },
+  {
+    "description": "Objects - Mossy Rock with grass",
+    "baseMaterial": "ROCK_1",
+    "textureMaterial": "HD_CONCRETE",
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
       "HUNTING_TRAIL_SPAWN_FOSSIL1",
       "HUNTING_TRAIL_SPAWN_FOSSIL3",
-      "HUNTING_TRAIL_SPAWN_FOSSIL4",
-      "DS2_OGRE_ROCKS_1X1_1",
-      "DS2_OGRE_ROCKS_1X1_2",
-      "DS2_OGRE_ROCKS_1X3_02",
-      "DS2_OGRE_ROCKS_2X1_01",
-      "DS2_OGRE_ROCKS_2X1_02",
+      "HUNTING_TRAIL_SPAWN_FOSSIL4"
+    ]
+  },
+  {
+    "description": "Objects - Mossy Rock - Brown - Medium",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
       "SNP_MOSS_ROCKS_SMALL_01",
       "SNP_MOSS_ROCKS_SMALL_02",
       "SNP_MOSS_ROCKS_SMALL_03",
       "SNP_MOSS_ROCKS_BIG_01",
       "SNP_MOSS_ROCKS_BIG_02",
       "SNP_MOSS_ROCKS_BIG_03"
-    ],
-    "retainVanillaUvs": false,
-    "uvType": "BOX",
-    "uvScale": 0.55
+    ]
   },
   {
-    "description": "Objects - Mossy Rock - Rectangle",
-    "baseMaterial": "ROCK_1",
-    "objectIds": [
-      "DS2_OGRE_ROCKS_1X3_01"
-    ],
+    "description": "Objects - Mossy Rock - Grey - Medium",
+    "baseMaterial": "GRASS_3",
     "uvType": "BOX",
-    "uvScale": 0.35
+    "uvScale": 0.44,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 42",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "DS2_OGRE_ROCKS_1X1_1",
+      "DS2_OGRE_ROCKS_1X1_2",
+      "DS2_OGRE_ROCKS_1X3_02",
+      "DS2_OGRE_ROCKS_2X1_01",
+      "DS2_OGRE_ROCKS_2X1_02",
+      "DS2_OGRE_ROCKS_1X3_01"
+    ]
   },
   {
     "description": "Objects - Mossy Rock - Large",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "GRASS_3",
+    "uvType": "BOX",
+    "uvScale": 0.44,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 42",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX"
+      }
+    ],
     "objectIds": [
       "DS2_OGRE_ROCKS_1X1_3",
       "DS2_OGRE_ROCKS_2X2_01",
       "DS2_OGRE_ROCKS_2X2_02"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.44
+    ]
   },
   {
     "description": "Ground Decoration - Ash Pile - Small",
@@ -17542,7 +17576,7 @@
     "uvScale": 0.33
   },
   {
-    "description": "Objects - Rockslide - Gray Rock - Rock - Medium",
+    "description": "Objects - Rockslide - Grey Rock - Rock - Medium",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       "DEATH_CAMPWALL1",
@@ -17562,7 +17596,8 @@
       "TLATI_ROCKSLIDE01_GREY",
       "TLATI_ROCKSLIDE02_GREY",
       "TLATI_ROCKSLIDE03_GREY",
-      "TLATI_ROCKSLIDE04_GREY"
+      "TLATI_ROCKSLIDE04_GREY",
+      "MDAUGHTER_ROCKSLIDE"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
