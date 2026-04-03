@@ -24,6 +24,7 @@
  */
 package rs117.hd.renderer.zone;
 
+import java.util.Arrays;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -124,6 +125,8 @@ public class SceneUploader implements AutoCloseable {
 	private short[][][] overlayIds;
 	private short[][][] underlayIds;
 	private int[][][] tileHeights;
+	private int[] roofData = new int[300];
+	private int roofDataPos;
 
 	private final int[] worldPos = new int[3];
 	private final int[][] vertices = new int[4][3];
@@ -215,6 +218,10 @@ public class SceneUploader implements AutoCloseable {
 				zone.hasWater = true;
 			}
 		}
+
+		if(roofDataPos > 0)
+			zone.roofData = Arrays.copyOf(roofData, roofDataPos);
+		roofDataPos = 0;
 	}
 
 	private void uploadZoneLevel(
@@ -237,8 +244,11 @@ public class SceneUploader implements AutoCloseable {
 			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, rid, visbelow, vb, ab, fb);
 
 			int endPos = vb != null ? vb.position() : 0;
-			if (endPos > pos)
-				ld.addRoof(rid, pos, endPos);
+			if (endPos > pos) {
+				if(roofDataPos + 3 >= roofData.length)
+					roofData = Arrays.copyOf(roofData, roofData.length * 2);
+				roofDataPos = ld.addRoof(roofData, roofDataPos, rid, pos, endPos);
+			}
 		}
 
 		// upload everything else
