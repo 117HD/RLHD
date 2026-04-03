@@ -83301,5 +83301,92 @@
         "uvScale": 0.5
       }
     ]
+  },
+  {
+    "description": "Myths Guild - Mossy Rock foundation",
+    "baseMaterial": "GRASS_3",
+    "uvType": "BOX",
+    "uvScale": 0.44,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 42",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "DS2_GUILD_WALL_LOWER",
+      "DS2_GUILD_WALL_LOWER_EDGE",
+      "DS2_GUILD_WALL_LOWER_EDGE_M",
+      "DS2_GUILD_ROOF_LOWER",
+      "DS2_GUILD_ROOF_2"
+    ]
+  },
+  {
+    "description": "Myths Guild - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "objectIds": [
+      "DS2_GUILD_WALL_INNER",
+      "DS2_GUILD_PILLAR",
+      "DS2_GUILD_PILLAR_B",
+      "DS2_GUILD_PILLAR_C",
+      "DS2_GUILD_WALL_FENCE",
+      "DS2_GUILD_FALLOFF"
+    ]
+  },
+  {
+    "description": "Myths Guild - Mossy Walls",
+    "baseMaterial": "GRASS_3",
+    "uvType": "BOX",
+    "uvScale": 0.44,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 42",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "DS2_GUILD_WALL_MID"
+    ]
+  },
+  {
+    "description": "Myths Guild - Metallic - Ladder",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.42,
+    "objectIds": [
+      "DS2_GUILD_LADDER",
+      "DS2_GUILD_LADDER_MID",
+      "DS2_GUILD_LADDER_TOP"
+    ]
+  },
+  {
+    "description": "Myths Guild - Stone - Crystal - Gate post",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 303,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 42",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "DS2_GUILD_GATEPOST"
+    ]
   }
 ]
