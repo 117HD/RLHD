@@ -1,5 +1,6 @@
 package rs117.hd.utils.collections;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Supplier;
@@ -8,6 +9,10 @@ import rs117.hd.utils.Destructible;
 import rs117.hd.utils.DestructibleHandler;
 
 public final class ConcurrentPool<T> {
+	private static boolean ASSERTIONS_CHECKED = false;
+	private static boolean ASSERTIONS_ENABLED = false;
+
+	private final ConcurrentHashMap<T, Boolean> pooled;
 	private final ConcurrentLinkedQueue<T> pool = new ConcurrentLinkedQueue<>();
 	private final ConcurrentLinkedQueue<Thread> parkedThreads;
 
@@ -23,6 +28,13 @@ public final class ConcurrentPool<T> {
 		this.supplier = supplier;
 		this.fixedSize = fixedSize;
 		parkedThreads = fixedSize > 0 ? new ConcurrentLinkedQueue<>() : null;
+
+		if (!ASSERTIONS_CHECKED) {
+			ASSERTIONS_CHECKED = true;
+			ASSERTIONS_ENABLED = this.getClass().desiredAssertionStatus();
+		}
+
+		pooled = ASSERTIONS_ENABLED ? new ConcurrentHashMap<>() : null;
 	}
 
 	public T acquire() {
@@ -31,6 +43,8 @@ public final class ConcurrentPool<T> {
 			obj = supplier.get();
 			created++;
 		}
+		if(pooled != null && obj != null)
+			pooled.put(obj, false);
 		return obj;
 	}
 
@@ -60,7 +74,10 @@ public final class ConcurrentPool<T> {
 			return;
 		}
 
-		assert !pool.contains(obj) : "Object already in pool: " + obj;
+		if(pooled != null) {
+			boolean notAlreadyPooled = Boolean.FALSE.equals(pooled.put(obj, true));
+			assert notAlreadyPooled : "Object already in pool: " + obj;
+		}
 		pool.offer(obj);
 
 		if (parkedThreads != null) {
