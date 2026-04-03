@@ -24,8 +24,6 @@
  */
 package rs117.hd.renderer.zone;
 
-import java.util.HashSet;
-import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -118,7 +116,7 @@ public class SceneUploader implements AutoCloseable {
 
 	private int basex, basez, rid, level;
 
-	private final Set<Integer> roofIds = new HashSet<>();
+	private final PrimitiveIntArray roofIds = new PrimitiveIntArray();
 	private Scene currentScene;
 	private Tile[][][] tiles;
 	private byte[][][] settings;
@@ -177,38 +175,35 @@ public class SceneUploader implements AutoCloseable {
 	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz, GpuIntBuffer vb, GpuIntBuffer ab, GpuIntBuffer fb) throws InterruptedException {
 		assert fb != null;
 
-		roofIds.clear();
+		roofIds.reset();
 		for (int level = 0; level <= 3; ++level) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					int rid = roofs[level][(mzx << 3) + xoff][(mzz << 3) + zoff];
 					if (rid > 0)
-						roofIds.add(rid);
+						roofIds.addUnique(rid);
 				}
 			}
 		}
 
-		zone.rids = new int[4][roofIds.size()];
-		zone.roofStart = new int[4][roofIds.size()];
-		zone.roofEnd = new int[4][roofIds.size()];
+		if(roofIds.length > 0)
+			zone.roofData = new int[4 * 3 * roofIds.length];
 
 		for (int z = 0; z <= 3; ++z) {
 			this.level = z;
 
 			if (z == 0) {
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, roofIds, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, vb, ab, fb);
 			} else {
-				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, vb, ab, fb);
 			}
 
-			if (vb != null) {
-				int pos = vb.position();
-				zone.levelOffsets[z] = pos;
-			}
+			if (vb != null)
+				zone.levelData[z].offset = vb.position();
 		}
 
 		// Upload water surface tiles to be drawn after everything else
@@ -216,7 +211,7 @@ public class SceneUploader implements AutoCloseable {
 			int start = vb.position();
 			uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
 			if(vb.position() > start) {
-				zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
+				zone.levelData[Zone.LEVEL_WATER_SURFACE].offset = vb.position();
 				zone.hasWater = true;
 			}
 		}
@@ -229,27 +224,21 @@ public class SceneUploader implements AutoCloseable {
 		int mzz,
 		int level,
 		boolean visbelow,
-		Set<Integer> roofIds,
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
 		GpuIntBuffer fb
 	) throws InterruptedException {
-		int ridx = 0;
-
 		// upload the roofs and save their positions
-		for (int id : roofIds) {
+		final Zone.LevelData ld = zone.levelData[level];
+		for (int i = 0; i < roofIds.length; i++) {
+			int rid = roofIds.array[i];
 			int pos = vb != null ? vb.position() : 0;
 
-			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, vb, ab, fb);
+			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, rid, visbelow, vb, ab, fb);
 
-			int endpos = vb != null ? vb.position() : 0;
-
-			if (endpos > pos) {
-				zone.rids[level][ridx] = id;
-				zone.roofStart[level][ridx] = pos;
-				zone.roofEnd[level][ridx] = endpos;
-				++ridx;
-			}
+			int endPos = vb != null ? vb.position() : 0;
+			if (endPos > pos)
+				ld.addRoof(rid, pos, endPos);
 		}
 
 		// upload everything else
