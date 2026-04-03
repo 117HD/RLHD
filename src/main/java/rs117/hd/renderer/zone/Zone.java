@@ -84,7 +84,6 @@ public class Zone implements Destructible {
 	public final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	public ZoneUploadJob uploadJob;
 
-	int roofDataWritten;
 	int[] roofData;
 	final LevelData[] levelData = new LevelData[LEVEL_COUNT];
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
@@ -879,20 +878,18 @@ public class Zone implements Destructible {
 		int getRoofStart(int i) { return roofData[roofDataStart + (i * 3) + 1]; }
 		int getRoofEnd(int i) { return roofData[roofDataStart + (i * 3) + 2]; }
 
-		void addRoof(int rid, int start, int end) {
+		int addRoof(int[] roofData, int pos, int rid, int start, int end) {
 			assert end >= start : String.format("rid: %d %d >= %d", rid, end, start);
 			if(roofDataStart == -1)
-				roofDataStart = roofDataWritten;
+				roofDataStart = pos;
 
-			assert roofDataWritten < roofData.length;
-			roofData[roofDataWritten++] = rid;
-			roofData[roofDataWritten++] = start;
-			roofData[roofDataWritten++] = end;
+			assert pos + 3 <= roofData.length;
+			roofData[pos++] = rid;
+			roofData[pos++] = start;
+			roofData[pos++] = end;
 
-			assert getRoofId(ridCount) == rid;
-			assert getRoofStart(ridCount) == start;
-			assert getRoofEnd(ridCount) == end;
 			ridCount++;
+			return pos;
 		}
 	}
 }
