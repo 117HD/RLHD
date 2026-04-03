@@ -43,7 +43,6 @@ import java.nio.FloatBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -126,9 +125,15 @@ import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
-import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
+import rs117.hd.utils.texture.GLAttachmentSlot;
+import rs117.hd.utils.texture.GLFrameBuffer;
+import rs117.hd.utils.texture.GLFrameBufferDesc;
+import rs117.hd.utils.texture.GLSamplerMode;
+import rs117.hd.utils.texture.GLTexture;
+import rs117.hd.utils.texture.GLTextureFormat;
+import rs117.hd.utils.texture.GLTextureParams;
+import rs117.hd.utils.texture.GLTextureType;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -136,10 +141,6 @@ import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
-import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
-import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
-import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
-import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
 @Slf4j
 @Singleton
@@ -162,11 +163,11 @@ public class HdPlugin extends Plugin {
 
 	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
-	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_UI = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -353,36 +354,18 @@ public class HdPlugin extends Plugin {
 	public int vaoTri;
 	private int vboTri;
 
-	@Getter
-	@Nullable
-	private int[] uiResolution;
 	private final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
-	private final GLBuffer[] pboUi = new GLBuffer[3];
-	private int texUi;
-	private int uiWidth;
-	private int uiHeight;
-	private GenericJob uiCopyJob;
+	@Getter
+	private GLTexture texUi;
 
 	@Nullable
 	public int[] sceneViewport;
 	public final float[] sceneViewportScale = { 1, 1 };
-	public int msaaSamples;
 
-	public int[] sceneResolution;
-	public int fboScene;
-	private int rboSceneColor;
-	private int rboSceneDepth;
-	public int fboSceneResolve;
-	private int rboSceneResolveColor;
-
-	public int shadowMapResolution;
-	public int fboShadowMap;
-	private int texShadowMap;
-
-	public int[] tiledLightingResolution;
-	public int tiledLightingLayerCount;
-	public int fboTiledLighting;
-	public int texTiledLighting;
+	public GLFrameBuffer fboBackBuffer;
+	public GLFrameBuffer fboScene;
+	public GLFrameBuffer fboShadowMap;
+	public GLFrameBuffer fboTiledLighting;
 
 	public UBOGlobal uboGlobal;
 	public UBOUI uboUI;
@@ -513,12 +496,6 @@ public class HdPlugin extends Plugin {
 				isPluginStopPending = false;
 				isActive = true;
 
-				fboScene = 0;
-				rboSceneColor = 0;
-				rboSceneDepth = 0;
-				fboSceneResolve = 0;
-				rboSceneResolveColor = 0;
-				fboShadowMap = 0;
 				frame = 0;
 				elapsedTime = 0;
 				elapsedClientTime = 0;
@@ -686,8 +663,56 @@ public class HdPlugin extends Plugin {
 
 				initializeShaders();
 				initializeShaderHotswapping();
-				initializeUiTexture();
-				initializeShadowMapFbo();
+
+				fboBackBuffer = GLFrameBuffer.wrap(awtContext.getFramebuffer(false), "backBuffer");
+
+				GLFrameBufferDesc backbufferDesc = fboBackBuffer.getDescriptor();
+				if(backbufferDesc.colorDescriptors.isEmpty())
+					throw new RuntimeException("Couldn't determine BackBuffer descriptor");
+
+				final int forcedAASamples = backbufferDesc.samples;
+				int msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
+
+				GLTextureFormat backbufferFormat = backbufferDesc.colorDescriptors.get(0).format;
+				fboScene = new GLFrameBuffer(new GLFrameBufferDesc()
+					.setWidth(canvas.getWidth())
+					.setHeight(canvas.getHeight())
+					.setMSAASamples(msaaSamples)
+					.setColorAttachment(GLAttachmentSlot.COLOR0, backbufferFormat)
+					.setDepthAttachment(GLTextureFormat.DEPTH32F)
+					.setDebugName("SceneColor"));
+
+				if (!fboScene.isCreated())
+					throw new RuntimeException("No supported " + (backbufferFormat.isSRGB() ? "sRGB" : "linear") + " formats");
+
+				texUi = new GLTexture(1, 1, GLTextureFormat.BGRA8,
+					new GLTextureParams()
+						.setSampler(GLSamplerMode.LINEAR_CLAMP)
+						.setTextureUnit(TEXTURE_UNIT_UI)
+						.setPixelPackBufferCount(3)
+						.setDebugName("UI"));
+
+				int shadowMapResolution = configShadowsEnabled ? config.shadowResolution().getValue() : 1;
+				fboShadowMap = new GLFrameBuffer(
+					new GLFrameBufferDesc()
+						.setWidth(shadowMapResolution)
+						.setHeight(shadowMapResolution)
+						.setDepthAttachment(GLTextureFormat.DEPTH32F,
+							t -> t.setSampler(GLSamplerMode.NEAREST_CLAMP)
+								.setTextureUnit(TEXTURE_UNIT_SHADOW_MAP)
+								.setBorderColor(new float[] { 1.0f, 1.0f, 1.0f, 1.0f}))
+						.setDebugName("ShadowMap"));
+
+				fboTiledLighting = new GLFrameBuffer(new GLFrameBufferDesc()
+					.setShouldConstructionCreate(false)
+					.setDepth(DynamicLights.MAX_LAYERS_PER_TILE)
+					.setColorAttachment(
+						GLAttachmentSlot.COLOR0, GLTextureFormat.RGBA16UI,
+						t -> t.setType(GLTextureType.TEXTURE2D_ARRAY)
+							.setSampler(GLSamplerMode.NEAREST_CLAMP)
+							.setTextureUnit(TEXTURE_UNIT_TILED_LIGHTING_MAP)
+							.setImageUnit(IMAGE_UNIT_TILED_LIGHTING, GL_WRITE_ONLY))
+					.setDebugName("TiledLighting"));
 
 				checkGLErrors();
 
@@ -749,13 +774,25 @@ public class HdPlugin extends Plugin {
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
 
-				destroyUiTexture();
+				if (texUi != null)
+					texUi.destroy();
+				texUi = null;
+
+				if(fboShadowMap != null)
+					fboShadowMap.destroy();
+				fboShadowMap = null;
+
+				if(fboScene != null)
+					fboScene.destroy();
+				fboScene = null;
+
+				if(fboTiledLighting != null)
+					fboTiledLighting.destroy();
+				fboTiledLighting = null;
+
 				destroyShaders();
 				destroyVaos();
 				destroyUbos();
-				destroySceneFbo();
-				destroyShadowMapFbo();
-				destroyTiledLightingFbo();
 
 				if (renderer != null) {
 					eventBus.unregister(renderer);
@@ -1143,111 +1180,13 @@ public class HdPlugin extends Plugin {
 		uboLightsCulling = null;
 	}
 
-	private void initializeUiTexture() {
-		for (int i = 0; i < 3; i++) {
-			pboUi[i] = new GLBuffer(
-				"PBO::UI",
-				GL_PIXEL_UNPACK_BUFFER,
-				GL_STREAM_DRAW,
-				STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE
-			);
-			pboUi[i].initialize();
-		}
-
-		texUi = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_UI);
-		glBindTexture(GL_TEXTURE_2D, texUi);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		checkGLErrors();
-	}
-
-	private void destroyUiTexture() {
-		uiResolution = null;
-
-		for (int i = 0; i < 3; i++) {
-			if (pboUi[i] != null)
-				pboUi[i].destroy();
-			pboUi[i] = null;
-		}
-
-		if (texUi != 0)
-			glDeleteTextures(texUi);
-		texUi = 0;
-	}
-
-	public void updateTiledLightingFbo() {
-		assert configTiledLighting;
-
-		int[] newResolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
-		int newLayerCount = configDynamicLights.getTiledLightingLayers();
-		if (Arrays.equals(newResolution, tiledLightingResolution) && tiledLightingLayerCount == newLayerCount)
-			return;
-
-		destroyTiledLightingFbo();
-
-		tiledLightingResolution = newResolution;
-		tiledLightingLayerCount = newLayerCount;
-
-		fboTiledLighting = glGenFramebuffers();
-		texTiledLighting = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, texTiledLighting);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexImage3D(
-			GL_TEXTURE_2D_ARRAY,
-			0,
-			GL_RGBA16UI,
-			tiledLightingResolution[0],
-			tiledLightingResolution[1],
-			tiledLightingLayerCount,
-			0,
-			GL_RGBA_INTEGER,
-			GL_UNSIGNED_SHORT,
-			0
-		);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
-		checkGLErrors();
-
-		if (tiledLightingImageStoreProgram.isValid())
-			ARBShaderImageLoadStore.glBindImageTexture(
-				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-
-		checkGLErrors();
-
-		uboGlobal.tiledLightingResolution.set(tiledLightingResolution);
-		uboGlobal.upload(); // Ensure this is up to date with rendering
-	}
-
-	private void destroyTiledLightingFbo() {
-		tiledLightingResolution = null;
-
-		if (fboTiledLighting != 0)
-			glDeleteFramebuffers(fboTiledLighting);
-		fboTiledLighting = 0;
-
-		if (texTiledLighting != 0)
-			glDeleteTextures(texTiledLighting);
-		texTiledLighting = 0;
-	}
-
 	public void updateSceneFbo() {
-		if (uiResolution == null)
+		if (texUi == null)
 			return;
 
 		int[] viewport = {
 			client.getViewportXOffset(),
-			uiResolution[1] - (client.getViewportYOffset() + client.getViewportHeight()),
+			texUi.getHeight() - (client.getViewportYOffset() + client.getViewportHeight()),
 			client.getViewportWidth(),
 			client.getViewportHeight()
 		};
@@ -1257,7 +1196,7 @@ public class HdPlugin extends Plugin {
 			return;
 
 		// DPI scaling and stretched mode also affects the game's viewport
-		divide(sceneViewportScale, vec(actualUiResolution), vec(uiResolution));
+		divide(sceneViewportScale, vec(actualUiResolution), vec(texUi.getWidth(), texUi.getHeight()));
 		if (sceneViewportScale[0] != 1 || sceneViewportScale[1] != 1) {
 			// Pad the viewport before scaling, so it always covers the game's viewport in the UI
 			for (int i = 0; i < 2; i++) {
@@ -1267,185 +1206,15 @@ public class HdPlugin extends Plugin {
 			viewport = round(multiply(vec(viewport), sceneViewportScale));
 		}
 
-		// Check if scene FBO needs to be recreated
-		if (Arrays.equals(sceneViewport, viewport))
-			return;
-
-		destroySceneFbo();
+		final int forcedAASamples = fboBackBuffer.getDescriptor().samples;
+		int samples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
 		sceneViewport = viewport;
 
-		// Bind default FBO to check whether anti-aliasing is forced
-		int defaultFramebuffer = awtContext.getFramebuffer(false);
-		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
-		final int forcedAASamples = glGetInteger(GL_SAMPLES);
-		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
-
-		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
-		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
-		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
-		boolean sRGB = false; // This is currently unused
-
-		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
-		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
-		int defaultColorAttachment = defaultFramebuffer == 0 ? GL_BACK_LEFT : GL_COLOR_ATTACHMENT0;
-		int alphaBits = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, defaultColorAttachment, GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE);
-		checkGLErrors();
-		boolean alpha = alphaBits > 0;
-
-		int[] desiredFormats = sRGB ?
-			alpha ? RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA : RENDERBUFFER_FORMATS_SRGB :
-			alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
-
 		float resolutionScale = config.sceneResolutionScale() / 100f;
-		sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
+		int[] sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
 		uboGlobal.sceneResolution.set(sceneResolution);
-		uboGlobal.upload(); // Ensure this is up to date with rendering
 
-		// Create and bind the FBO
-		fboScene = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboScene);
-
-		// Create color render buffer
-		rboSceneColor = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneColor);
-
-		// Flush out all pending errors, so we can check whether the next step succeeds
-		clearGLErrors();
-
-		int format = 0;
-		for (int desiredFormat : desiredFormats) {
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, desiredFormat, sceneResolution[0], sceneResolution[1]);
-
-			if (glGetError() == GL_NO_ERROR) {
-				format = desiredFormat;
-				break;
-			}
-		}
-
-		if (format == 0)
-			throw new RuntimeException("No supported " + (sRGB ? "sRGB" : "linear") + " formats");
-
-		// Found a usable format. Bind the RBO to the scene FBO
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
-		checkGLErrors();
-
-		// Create depth render buffer
-		rboSceneDepth = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1]);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
-		checkGLErrors();
-
-		// If necessary, create an FBO for resolving multisampling
-		if (msaaSamples > 1 && resolutionScale != 1) {
-			fboSceneResolve = glGenFramebuffers();
-			glBindFramebuffer(GL_FRAMEBUFFER, fboSceneResolve);
-			rboSceneResolveColor = glGenRenderbuffers();
-			glBindRenderbuffer(GL_RENDERBUFFER, rboSceneResolveColor);
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, 0, format, sceneResolution[0], sceneResolution[1]);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneResolveColor);
-			checkGLErrors();
-		}
-
-		// Reset
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	}
-
-	private void destroySceneFbo() {
-		sceneViewport = null;
-
-		if (fboScene != 0)
-			glDeleteFramebuffers(fboScene);
-		fboScene = 0;
-
-		if (rboSceneColor != 0)
-			glDeleteRenderbuffers(rboSceneColor);
-		rboSceneColor = 0;
-
-		if (rboSceneDepth != 0)
-			glDeleteRenderbuffers(rboSceneDepth);
-		rboSceneDepth = 0;
-
-		if (fboSceneResolve != 0)
-			glDeleteFramebuffers(fboSceneResolve);
-		fboSceneResolve = 0;
-
-		if (rboSceneResolveColor != 0)
-			glDeleteRenderbuffers(rboSceneResolveColor);
-		rboSceneResolveColor = 0;
-	}
-
-	private void initializeShadowMapFbo() {
-		if (!configShadowsEnabled) {
-			initializeDummyShadowMap();
-			return;
-		}
-
-		// Create and bind the FBO
-		fboShadowMap = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboShadowMap);
-
-		// Create texture
-		texShadowMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
-		glBindTexture(GL_TEXTURE_2D, texShadowMap);
-
-		shadowMapResolution = config.shadowResolution().getValue();
-		int maxResolution = glGetInteger(GL_MAX_TEXTURE_SIZE);
-		if (maxResolution < shadowMapResolution) {
-			log.info("Capping shadow resolution from {} to {}", shadowMapResolution, maxResolution);
-			shadowMapResolution = maxResolution;
-		}
-
-		glTexImage2D(
-			GL_TEXTURE_2D,
-			0,
-			GL_DEPTH_COMPONENT24,
-			shadowMapResolution,
-			shadowMapResolution,
-			0,
-			GL_DEPTH_COMPONENT,
-			GL_FLOAT,
-			0
-		);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-		float[] color = { 1, 1, 1, 1 };
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
-
-		// Bind texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texShadowMap, 0);
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-
-		// Reset FBO
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-	}
-
-	private void initializeDummyShadowMap() {
-		// Create dummy texture
-		texShadowMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
-		glBindTexture(GL_TEXTURE_2D, texShadowMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	}
-
-	private void destroyShadowMapFbo() {
-		if (texShadowMap != 0)
-			glDeleteTextures(texShadowMap);
-		texShadowMap = 0;
-
-		if (fboShadowMap != 0)
-			glDeleteFramebuffers(fboShadowMap);
-		fboShadowMap = 0;
+		fboScene.resize(sceneResolution[0], sceneResolution[1], samples);
 	}
 
 	public void initializeShaderHotswapping() {
@@ -1456,63 +1225,40 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void prepareInterfaceTexture() {
-		if (uiCopyJob != null)
-			uiCopyJob.waitForCompletion(true);
-		uiCopyJob = null;
-
-		int[] resolution = {
-			max(1, client.getCanvasWidth()),
-			max(1, client.getCanvasHeight())
-		};
-		boolean resize = !Arrays.equals(uiResolution, resolution);
-		if (resize) {
-			uiResolution = resolution;
-
-			glActiveTexture(TEXTURE_UNIT_UI);
-			glBindTexture(GL_TEXTURE_2D, texUi);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-		}
+		final BufferProvider bufferProvider = client.getBufferProvider();
+		if(bufferProvider == null)
+			return;
 
 		if (client.isStretchedEnabled()) {
 			Dimension dim = client.getStretchedDimensions();
 			actualUiResolution[0] = dim.width;
 			actualUiResolution[1] = dim.height;
 		} else {
-			copyTo(actualUiResolution, uiResolution);
+			actualUiResolution[0] = client.getCanvasWidth();
+			actualUiResolution[1] = client.getCanvasHeight();
 		}
 		round(actualUiResolution, multiply(vec(actualUiResolution), getDpiScaling()));
 
-		final BufferProvider bufferProvider = client.getBufferProvider();
-		final int[] pixels = bufferProvider.getPixels();
-		uiWidth = bufferProvider.getWidth();
-		uiHeight = bufferProvider.getHeight();
-
-		frameTimer.begin(Timer.MAP_UI_BUFFER);
-		final GLBuffer pbo = pboUi[frame % 3];
-		pbo.map(MAP_WRITE, 0, uiWidth * uiHeight * 4L);
-		frameTimer.end(Timer.MAP_UI_BUFFER);
-		if (!pbo.isMapped()) {
-			log.error("Unable to map interface PBO. Skipping UI...");
-		} else if (uiWidth > uiResolution[0] || uiHeight > uiResolution[1]) {
-			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", uiWidth, uiHeight, uiResolution);
+		texUi.resize(client.getCanvasWidth(), client.getCanvasHeight());
+		if(isPowerSaving || !hasLoggedIn) {
+			texUi.uploadSubPixels2D(
+				bufferProvider.getWidth(),
+				bufferProvider.getHeight(),
+				bufferProvider.getPixels(),
+				GLTextureFormat.BGRA_INT_8_8_8_8
+			);
 		} else {
-			uiCopyJob = GenericJob
-				.build(
-					"AsyncUICopy",
-					t -> {
-						long start = System.nanoTime();
-						pbo.mapped().intView().put(pixels, 0, uiWidth * uiHeight);
-						frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
-					}
-				)
-				.setExecuteAsync(!isPowerSaving)
-				.queue();
+			texUi.uploadSubPixelsAsync2D(
+				bufferProvider.getWidth(),
+				bufferProvider.getHeight(),
+				bufferProvider.getPixels(),
+				GLTextureFormat.BGRA_INT_8_8_8_8
+			);
 		}
-		pbo.unbind();
 	}
 
 	public void drawUi(int overlayColor) {
-		if (uiResolution == null || developerTools.isHideUiEnabled() && hasLoggedIn)
+		if (texUi == null || developerTools.isHideUiEnabled() && hasLoggedIn)
 			return;
 
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
@@ -1521,7 +1267,10 @@ public class HdPlugin extends Plugin {
 
 		frameTimer.begin(Timer.RENDER_UI);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		texUi.completeUploadSubPixelsAsync();
+		texUi.setSampler(config.uiScalingMode().glSamplingMode);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fboBackBuffer.getFboId());
 		// Disable alpha writes, just in case the default FBO has an alpha channel
 		glColorMask(true, true, true, false);
 
@@ -1530,37 +1279,10 @@ public class HdPlugin extends Plugin {
 		tiledLightingOverlay.render();
 
 		uiProgram.use();
-		uboUI.sourceDimensions.set(uiResolution);
+		uboUI.sourceDimensions.set(texUi.getWidth(), texUi.getHeight());
 		uboUI.targetDimensions.set(actualUiResolution);
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
 		uboUI.upload();
-
-		// Set the sampling function used when stretching the UI.
-		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
-		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
-		// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't
-		final int function = config.uiScalingMode().glSamplingFunction;
-		glActiveTexture(TEXTURE_UNIT_UI);
-		glBindTexture(GL_TEXTURE_2D, texUi);
-
-		if (uiCopyJob != null) {
-			frameTimer.begin(Timer.COPY_UI);
-			uiCopyJob.waitForCompletion(true);
-			uiCopyJob = null;
-			frameTimer.end(Timer.COPY_UI);
-
-			frameTimer.begin(Timer.UPLOAD_UI);
-			final GLBuffer pbo = pboUi[frame % 3];
-			pbo.unmap();
-			pbo.bind();
-
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, uiWidth, uiHeight, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
-			pbo.unbind();
-			frameTimer.end(Timer.UPLOAD_UI);
-		}
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
@@ -1579,10 +1301,10 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	public Image screenshot() {
-		if (uiResolution == null)
+		if (texUi == null)
 			return null;
 
 		int width = actualUiResolution[0];
@@ -1871,19 +1593,17 @@ public class HdPlugin extends Plugin {
 					if (recompilePrograms)
 						recompilePrograms();
 
-					if (recreateSceneFbo) {
-						destroySceneFbo();
+					if (recreateSceneFbo)
 						updateSceneFbo();
-					}
 
 					if (reloadScene) {
 						renderer.clearCaches();
 						renderer.reloadScene();
 					}
 
-					if (recreateShadowMapFbo) {
-						destroyShadowMapFbo();
-						initializeShadowMapFbo();
+					if(recreateShadowMapFbo && fboShadowMap != null) {
+						int shadowMapResolution = configShadowsEnabled ? config.shadowResolution().getValue() : 1;
+						fboShadowMap.resize(shadowMapResolution, shadowMapResolution);
 					}
 
 					if (reloadEnvironments)
