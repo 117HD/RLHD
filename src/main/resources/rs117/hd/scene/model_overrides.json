@@ -9367,8 +9367,7 @@
       "CONCH_ROWBOAT_SOUTH",
       "FOSSIL_ROWBOAT_CAMP",
       "FOSSIL_ROWBOAT_NORTH",
-      "FOSSIL_ROWBOAT_DIVING",
-      "FOSSIL_ROWBOAT_LITHKREN_BUILT"
+      "FOSSIL_ROWBOAT_DIVING"
     ]
   },
   {
@@ -83561,6 +83560,40 @@
       "HUNTING_TRAIL_CLUE10_5",
       "HUNTING_TRAIL_CLUE10_6",
       "HUNTING_TRAIL_CLUE10_8"
+    ]
+  },
+  {
+    "description": "Lunar Dream Realm - Ground Decorations",
+    "baseMaterial": "GRAY_125",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      "LUNAR_DREAM_GROUND_DECOR1",
+      "LUNAR_DREAM_GROUND_DECOR3",
+      "LUNAR_DREAM_GROUND_DECOR2"
+    ]
+  },
+  {
+    "description": "Lunar Dream Realm - Plinth - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRAY_110",
+    "objectIds": [
+      "DS2_DREAM_PLINTH",
+      "DS2_DREAM_PILLAR"
+    ]
+  },
+  {
+    "description": "Lunar Dream Realm - Pillar",
+    "baseMaterial": "GRAY_110",
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvOrientation": 187,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "DS2_DREAM_PILLAR"
     ]
   }
 ]
