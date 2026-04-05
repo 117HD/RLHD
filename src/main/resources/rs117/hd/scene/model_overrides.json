@@ -2660,7 +2660,9 @@
       "POH_PLANTBSMALL1C",
       "POH_PLANTBSMALL2A",
       "POH_PLANTBSMALL2B",
-      "DARKM_BRAMBLE_BUSH_2"
+      "DARKM_BRAMBLE_BUSH_2",
+      "FLOWERS_LILLIES_RED01",
+      "LUNAR_LITTLE_FLOWERS_1"
     ]
   },
   {
@@ -5513,14 +5515,47 @@
     ]
   },
   {
-    "description": "SHAYZIEN_DRAGON_STATUE",
+    "description": "Shayzien - Marble - Metallic - Warrior statue with plaque",
     "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Plaque",
+        "colors": "s >= 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "MODEL_XY",
+        "uvOrientation": -187,
+        "uvScale": 0.5
+      }
+    ],
     "objectIds": [
       "AKD_SHAYZIEN_GRAVEYARD_STATUE"
     ]
   },
   {
-    "description": "SHAYZIEN_GRAVE",
+    "description": "Shayzien - Tree - Bush Wall",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SHAYZIEN_HEDGE_MIDDLE",
+      "SHAYZIEN_HEDGE_CORNER",
+      "SHAYZIEN_HEDGE_END"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 11",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Stone Graves",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -5558,13 +5593,12 @@
     ]
   },
   {
-    "description": "SHAYZIEN_TOMB_LADDER_AND_DOOR",
+    "description": "SHAYZIEN_TOMB_DOOR",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 512,
     "objectIds": [
-      "DS2_TOMB_LADDER",
       "DS2_TOMB_DOOR_CAMORRA_R",
       "DS2_TOMB_DOOR_CAMORRA_L",
       "DS2_TOMB_DOOR_L",
@@ -5608,7 +5642,10 @@
   },
   {
     "description": "SHAYZIEN_CEREMONIAL_PILLAR",
-    "baseMaterial": "BLANK_GLOSS",
+    "baseMaterial": "GRUNGE_2_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true,
     "objectIds": [
       "AKD_SHAYZIEN_GRAVESTONE01_DEFAULT",
       "AKD_SHAYZIEN_GRAVESTONE01_RIGHT",
@@ -5623,8 +5660,18 @@
       "AKD_SHAYZIEN_GRAVESTONE02_SPECIAL",
       "AKD_SHAYZIEN_MONUMENT",
       "AKD_SHAYZIEN_MONUMENT_PLAQUE"
-    ],
-    "flatNormals": true
+    ]
+  },
+  {
+    "description": "SHAYZIEN - Tomb",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvOrientation": 187,
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "AKD_SHAYZIEN_TOMB01"
+    ]
   },
   {
     "description": "Shayzien - Metallic - Fence",
@@ -7279,6 +7326,7 @@
       "BARROWS_DUGUPSOIL_1",
       "BARROWS_DUGUPSOIL_2",
       "BARROWS_DUGUPSOIL_3",
+      "DRAGON_SLAYER_QIP_DUGUPSOIL_01",
       "DRAGON_SLAYER_QIP_DUGUPSOIL_02",
       "DRAGON_SLAYER_QIP_DUGUPSOIL_03",
       "DRAGON_SLAYER_QIP_DUGUPSOIL_04",
@@ -11459,7 +11507,9 @@
       "CONTACT_LADDER_TWOFLOORS",
       "CONTACT_LADDER_TOP_TWOFLOORS",
       "TAL_TEKLAN_LADDER_TALL_BOTTOM",
-      "TAL_TEKLAN_LADDER_TALL_TOP"
+      "TAL_TEKLAN_LADDER_TALL_TOP",
+      "PUZZLE_LADDER",
+      "PUZZLE_LADDER_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -13020,7 +13070,21 @@
     "objectIds": [
       "CTLEVERA",
       "CTLEVERB",
-      "WILDINLEVER"
+      "WILDINLEVER",
+      "HAUNTEDLEVERUP",
+      "HAUNTEDLEVERDOWN",
+      "LEVERA_UP",
+      "LEVERA_DOWN",
+      "LEVERB_UP",
+      "LEVERB_DOWN",
+      "LEVERC_UP",
+      "LEVERC_DOWN",
+      "LEVERD_UP",
+      "LEVERD_DOWN",
+      "LEVERE_UP",
+      "LEVERE_DOWN",
+      "LEVERF_UP",
+      "LEVERF_DOWN"
     ]
   },
   {
@@ -43919,6 +43983,61 @@
     ]
   },
   {
+    "description": "Avas Bookcase wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s > 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red carpet",
+        "colors": [ "h == 0 && s >= 2" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "HAUNTEDBOOKCASER",
+      "HAUNTEDBOOKCASEL",
+      "DRAYNOR_WALLS_RIGHT_TERMINATOR",
+      "DRAYNOR_WALLS_LEFT_TERMINATOR"
+    ]
+  },
+  {
     "description": "Murder Mystery Wooden Double Doors",
     "objectIds": [
       "TKBUSH_L",
@@ -61426,14 +61545,16 @@
     ]
   },
   {
-    "description": "Varrock library - book and papers on floor",
+    "description": "Varrock library - Arceuus - book and papers on floor",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.7,
     "objectIds": [
       "FAI_VARROCK_PAGES1",
-      "FAI_VARROCK_PAGES2"
+      "FAI_VARROCK_PAGES2",
+      "ARCHEEUS_HOUSE_BOOKS",
+      "ARCHEEUS_HOUSE_BOOKS_02"
     ]
   },
   {
@@ -83407,6 +83528,21 @@
     ]
   },
   {
+    "description": "Shayzien Crypt - Metallic - Ladder",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.42,
+    "objectIds": [
+      "DS2_TOMB_LADDER",
+      "DS2_TOMB_LADDER_TOP",
+      "DS2_TOMB_LADDER_RIGHT",
+      "DS2_TOMB_LADDER_TOP_RIGHT",
+      "DS2_TOMB_LADDER_RIGHT",
+      "DS2_TOMB_LADDER_TOP_LEFT",
+      "DS2_TOMB_LADDER_BROKEN"
+    ]
+  },
+  {
     "description": "Myths Guild - Metallic - Ladder",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
@@ -83576,8 +83712,7 @@
     "description": "Lunar Dream Realm - Plinth - DYNAMIC - ANIMATED",
     "baseMaterial": "GRAY_110",
     "objectIds": [
-      "DS2_DREAM_PLINTH",
-      "DS2_DREAM_PILLAR"
+      "DS2_DREAM_PLINTH"
     ]
   },
   {
