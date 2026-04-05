@@ -5638,6 +5638,7 @@
   {
     "name": "DREAM_WORLD_GROUND",
     "area": "LUNAR_DREAM_WORLD",
+    "blended": false,
     "overlayIds": [
       160
     ]
