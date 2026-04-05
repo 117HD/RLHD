@@ -46993,5 +46993,56 @@
     "npcIds": [
       "DT2_WAR_ROOM_SHADOW_TOTEM_ACTIVE"
     ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Robert the Strong Barrier 1",
+    "offset": [ -54, 64, 0 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_DREAM_BARRIER"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Robert the Strong Barrier 2",
+    "offset": [ -54, 64, -128 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_DREAM_BARRIER"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Robert the Strong Barrier 3",
+    "offset": [ -54, 64, 128 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_DREAM_BARRIER"
+    ]
   }
 ]
