@@ -38861,17 +38861,6 @@
     "uvType": "BOX"
   },
   {
-    "description": "Disable shadow casting for Pest Control center platform to help with transparent shadows",
-    "objectIds": [ "PEST_PLINTH_TOP_PLAIN" ],
-    "castShadows": false
-  },
-  {
-    "description": "Disable shadow casting for Pest Control center platform to help with transparent shadows",
-    "objectIds": [ "PEST_PLINTH_TOP_PLAIN" ],
-    "seasonalTheme": "AUTUMN",
-    "castShadows": true
-  },
-  {
     "description": "The Scar brain matter",
     "objectIds": [
       "LEVIATHAN_WALL_CLIMB",
@@ -83199,13 +83188,18 @@
     "flatNormals": true,
     "objectIds": [
       "PEST_WALL_NORANGE_INACTIVE",
+      "PEST_WALL_RANGE_INACTIVE",
       "PEST_WALL_RANGE_FIXED",
       "PEST_WALL_NORANGE_FIXED",
       "PEST_WALL_GATE_FIXED",
       "PEST_WALL_GATE_FIXED_MIRROR",
       "PEST_WALL_GATE_FIXED_OPEN",
       "PEST_WALL_GATE_FIXED_MIRROR_OPEN",
+      "PEST_WALL_GATE_DAMAGED_1",
+      "PEST_WALL_GATE_DAMAGED_1_MIRROR",
       "PEST_WALL_GATE_DAMAGED_1_MIRROR_OPEN",
+      "PEST_WALL_GATE_DAMAGED_2",
+      "PEST_WALL_GATE_DAMAGED_2_MIRROR",
       "PEST_WALL_GATE_DAMAGED_1_OPEN",
       "PEST_WALL_GATE_DESTROYED_OPEN",
       "PEST_WALL_GATE_DESTROYED_MIRROR_OPEN",
