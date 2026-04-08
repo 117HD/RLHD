@@ -76,5 +76,6 @@ public final class ConcurrentPool<T> {
 			if (obj instanceof Destructible)
 				((Destructible) obj).destroy();
 		}
+		created = 0;
 	}
 }
