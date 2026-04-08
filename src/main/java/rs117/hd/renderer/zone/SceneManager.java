@@ -463,6 +463,8 @@ public class SceneManager {
 				root.sceneContext
 			);
 
+			particleManager.clearParticleInstances();
+
 			WorldViewContext ctx = root;
 			Scene prev = client.getTopLevelWorldView().getScene();
 

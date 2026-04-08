@@ -2,13 +2,13 @@
   {
     "id": "WIND_DEFAULT",
     "placements": [
-      [2939, 3365, 0]
+      [3011, 3501, 0]
     ],
     "effect": "wind",
     "spreadAngle": 0,
-    "forceDirectionX": 1312,
-    "forceDirectionY": 0,
-    "forceDirectionZ": 1624,
+    "forceDirectionX": 3812,
+    "forceDirectionY": 900,
+    "forceDirectionZ": 1224,
     "heightOffset": 250,
     "invertDirection": false,
     "falloffType": 0

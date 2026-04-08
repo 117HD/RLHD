@@ -227,6 +227,14 @@ public class ParticleManager {
 		particleSystem.getRenderBuffer().clear();
 	}
 
+	/**
+	 * Removes all live particle instances from the render buffer. Emitters are unchanged.
+	 * Use when the scene is about to change so old positions disappear immediately.
+	 */
+	public void clearParticleInstances() {
+		particleSystem.getRenderBuffer().clear();
+	}
+
 	public void startUp() {
 		eventBus.register(this);
 		loadConfig();
@@ -247,6 +255,7 @@ public class ParticleManager {
 	}
 
 	public void loadSceneParticles(@Nullable SceneContext ctx) {
+		clearParticleInstances();
 		removeAllObjectSpawnedEmitters();
 		recreateEmittersFromPlacements(ctx);
 		if (ctx == null || emitterDefinitionManager.getObjectBindingsByType().isEmpty()) return;

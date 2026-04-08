@@ -205,6 +205,9 @@ public class ParticlePass implements ScenePass {
 
 	@Override
 	public void beforeDraw(ScenePassContext ctx) {
+		if (plugin.isLoadingScene()) {
+			return;
+		}
 		if (ctx.getSceneContext() != null) {
 			ctx.beginTimer(Timer.UPDATE_PARTICLES);
 			particleManager.update(ctx.getSceneContext(), plugin.deltaTime);
