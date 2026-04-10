@@ -213,17 +213,12 @@ public class DynamicModelVAO implements Destructible {
 		return drawIndex;
 	}
 
-	synchronized View beginPlayerDraw(int faceCount, int playerDrawIndex) {
-		assert playerDrawIndex != -1 && playerDrawIndex < drawRangeCount :
-			String.format("Provided draw index is out of range: %d %d", playerDrawIndex, drawRangeCount);
-		return beginDraw(faceCount, playerDrawIndex);
-	}
+	synchronized View beginDraw(int faceCount) { return beginDraw(-1, faceCount); }
 
-	synchronized View beginDraw(int faceCount) {
-		return beginDraw(faceCount, obtainDrawIndex());
-	}
+	public synchronized View beginDraw(int drawIdx, int faceCount) {
+		if(drawIdx == -1)
+			drawIdx = obtainDrawIndex();
 
-	private synchronized View beginDraw(int faceCount, int drawIdx) {
 		assert drawOffsets[drawIdx] == 0 && drawCounts[drawIdx] == 0 : String.format(
 			"Provided draw index is already in use: %d %d %d",
 			drawIdx, drawOffsets[drawIdx], drawCounts[drawIdx]

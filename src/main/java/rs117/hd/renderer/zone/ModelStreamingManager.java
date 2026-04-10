@@ -30,6 +30,7 @@ import static net.runelite.api.hooks.DrawCallbacks.*;
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -195,7 +196,7 @@ public class ModelStreamingManager {
 		plugin.drawnTempRenderableCount++;
 
 		final boolean isPlayer = renderable instanceof Player;
-		final int drawIndex = isPlayer ? ctx.obtainPlayerDrawIndex() : -1;
+		final int drawIndex = ctx.obtainDrawIndex(isPlayer ? VAO_PLAYER : VAO_OPAQUE);
 
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final boolean hasAlpha = isPlayer || m.getFaceTransparencies() != null;
@@ -333,12 +334,7 @@ public class ModelStreamingManager {
 				final int alphaFaceCount = hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
-				final DynamicModelVAO.View opaqueView;
-				if (isPlayer) {
-					opaqueView = ctx.beginPlayerDraw(drawIndex, opaqueFaceCount);
-				} else {
-					opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
-				}
+				final DynamicModelVAO.View opaqueView = ctx.beginDraw(isPlayer ? VAO_PLAYER : VAO_OPAQUE, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
@@ -362,7 +358,8 @@ public class ModelStreamingManager {
 							plane,
 							x & 1023,
 							y - renderable.getModelHeight() /* to render players over locs */,
-							z & 1023
+							z & 1023,
+							drawIndex
 						);
 					}
 					alphaView.end();
@@ -461,6 +458,7 @@ public class ModelStreamingManager {
 		streamingContext.renderableCount++;
 
 		final boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
+		final int drawIndex = renderThreadId == -1 ? ctx.obtainDrawIndex(VAO_OPAQUE) : -1;
 
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(renderThreadId >= 0);
@@ -475,7 +473,7 @@ public class ModelStreamingManager {
 				zone,
 				isModelPartiallyVisible,
 				hasAlpha,
-				-1,
+				drawIndex,
 				orient,
 				x, y, z,
 				this::uploadDynamicModelAsync
@@ -492,7 +490,7 @@ public class ModelStreamingManager {
 			zone,
 			isModelPartiallyVisible,
 			hasAlpha,
-			-1,
+			drawIndex,
 			orient,
 			x, y, z
 		);
@@ -590,7 +588,7 @@ public class ModelStreamingManager {
 				final int alphaFaceCount = hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
-				final DynamicModelVAO.View opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
+				final DynamicModelVAO.View opaqueView = ctx.beginDraw(VAO_OPAQUE, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
@@ -616,7 +614,8 @@ public class ModelStreamingManager {
 							plane,
 							x & 1023,
 							y,
-							z & 1023
+							z & 1023,
+							drawIndex
 						);
 					}
 					alphaView.end();
