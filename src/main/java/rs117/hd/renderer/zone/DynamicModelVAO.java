@@ -218,7 +218,8 @@ public class DynamicModelVAO implements Destructible {
 	public synchronized View beginDraw(int drawIdx, int faceCount) {
 		if(drawIdx == -1)
 			drawIdx = obtainDrawIndex();
-
+		
+		assert drawIdx >= 0 && drawIdx < drawRangeCount : "drawIdx:" + drawIdx + " out of bounds of: " + drawRangeCount;
 		assert drawOffsets[drawIdx] == 0 && drawCounts[drawIdx] == 0 : String.format(
 			"Provided draw index is already in use: %d %d %d",
 			drawIdx, drawOffsets[drawIdx], drawCounts[drawIdx]
