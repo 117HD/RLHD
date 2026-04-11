@@ -83200,7 +83200,6 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 512,
-    "flatNormals": true,
     "objectIds": [
       "PEST_WALL_NORANGE_INACTIVE",
       "PEST_WALL_RANGE_INACTIVE",
