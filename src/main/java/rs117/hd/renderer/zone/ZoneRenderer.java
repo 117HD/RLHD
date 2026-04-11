@@ -27,6 +27,8 @@ package rs117.hd.renderer.zone;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.BitSet;
+import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -153,6 +155,9 @@ public class ZoneRenderer implements Renderer {
 	public static GLBuffer.EBO eboAlpha;
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
+	public final Set<Integer> hiddenRoofIdsSet = new HashSet<>();
+	public static final BitSet hiddenRoofIdsBitField = new BitSet(Short.MAX_VALUE);
+
 	private boolean sceneFboValid;
 	private boolean shouldRenderScene;
 	private boolean shouldClearShadowFbo;
@@ -202,6 +207,9 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
+
+		ZoneUploadJob.POOL.destroy();
+		GpuIntBuffer.POOL.destroy();
 
 		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
@@ -271,6 +279,28 @@ public class ZoneRenderer implements Renderer {
 			modelStreamingManager.reinitialize();
 	}
 
+	private void buildHiddenRoofBitField(Set<Integer> hiddenRoofIds) {
+		boolean hasChanged = false;
+		for(Integer id : hiddenRoofIdsSet) {
+			if(!hiddenRoofIds.contains(id)) {
+				hiddenRoofIdsBitField.set(id, false);
+				hasChanged = true;
+			}
+		}
+
+		for(Integer id : hiddenRoofIds) {
+			if(!hiddenRoofIdsSet.contains(id)) {
+				hiddenRoofIdsBitField.set(id, true);
+				hasChanged = true;
+			}
+		}
+
+		if(hasChanged) {
+			hiddenRoofIdsSet.clear();
+			hiddenRoofIdsSet.addAll(hiddenRoofIds);
+		}
+	}
+
 	@Override
 	public void preSceneDraw(
 		Scene scene,
@@ -286,15 +316,17 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_PRESCENE);
+
 			ctx.minLevel = minLevel;
 			ctx.level = level;
 			ctx.maxLevel = maxLevel;
-			ctx.hideRoofIds = hideRoofIds;
 			ctx.vaoSceneCmd.reset();
 			ctx.vaoDirectionalCmd.reset();
 
 			if (ctx.uboWorldViewStruct != null)
 				ctx.uboWorldViewStruct.update();
+
+			buildHiddenRoofBitField(hideRoofIds);
 
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 				preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
@@ -873,7 +905,7 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			Zone z = ctx.zones[zx][zz];
-			if (!z.initialized || z.sizeO == 0)
+			if (!z.initialized || z.sizeIntsOpaque == 0)
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
@@ -915,7 +947,7 @@ public class ZoneRenderer implements Renderer {
 
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
 
-			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
+			final boolean hasAlpha = z.sizeIntsAlpha != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
 				// Only sort if the alpha will be directly visible, since shadows don't require sorting

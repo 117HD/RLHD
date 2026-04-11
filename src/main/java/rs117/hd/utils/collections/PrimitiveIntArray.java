@@ -20,6 +20,23 @@ public final class PrimitiveIntArray {
 		return this;
 	}
 
+	public boolean contains(int i) {
+		for (int j = 0; j < length; j++)
+			if (array[j] == i)
+				return true;
+		return false;
+	}
+
+	public void addUnique(int i) {
+		if(!contains(i))
+			add(i);
+	}
+
+	public void add(int i) {
+		ensureCapacity(1);
+		array[length++] = i;
+	}
+
 	public void put(int i) {
 		if (length < array.length)
 			array[length++] = i;

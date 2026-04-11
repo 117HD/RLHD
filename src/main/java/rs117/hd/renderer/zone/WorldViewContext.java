@@ -5,7 +5,6 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +53,7 @@ public class WorldViewContext {
 	private SceneManager sceneManager;
 
 	final int worldViewId;
-	final int sizeX, sizeZ;
+	public final int sizeX, sizeZ;
 	@Nullable
 	WorldViewStruct uboWorldViewStruct;
 	ZoneSceneContext sceneContext;
@@ -63,7 +62,6 @@ public class WorldViewContext {
 	boolean isLoading = true;
 
 	int minLevel, level, maxLevel;
-	Set<Integer> hideRoofIds;
 
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
@@ -74,6 +72,7 @@ public class WorldViewContext {
 
 	public long loadTime;
 	public long uploadTime;
+	public long bufferInit;
 	public long sceneSwapTime;
 
 	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, true);
@@ -211,8 +210,6 @@ public class WorldViewContext {
 				Zone prevZone = curZone;
 				// Swap the zone out with the one we just uploaded
 				zones[zx][zz] = curZone = uploadTask.zone;
-				clientThread.invoke(curZone::unmap);
-
 				if (prevZone != curZone) {
 					curZone.inSceneFrustum = prevZone.inSceneFrustum;
 					curZone.inShadowFrustum = prevZone.inShadowFrustum;
@@ -330,7 +327,7 @@ public class WorldViewContext {
 		Zone newZone = injector.getInstance(Zone.class);
 		newZone.dirty = zones[zx][zz].dirty;
 
-		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
+		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, zx, zz);
 		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
 
 		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders

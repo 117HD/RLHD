@@ -3,7 +3,7 @@ package rs117.hd.renderer.zone;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.BitSet;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.ToIntFunction;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.system.MemoryStack;
@@ -27,6 +26,7 @@ import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
@@ -38,8 +38,8 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class Zone implements Destructible {
-	@Inject
-	private Client client;
+
+	private static final BitSet EMPTY_SET = new BitSet();
 
 	// Zone vertex format
 	// pos short vec3(x, y, z)
@@ -59,15 +59,13 @@ public class Zone implements Destructible {
 	public static final int METADATA_SIZE = 12;
 
 	public static final int LEVEL_WATER_SURFACE = 4;
+	public static final int LEVEL_COUNT = 5;
 
 	public int glVao;
-	int bufLen;
-	int dist;
-
 	public int glVaoA;
-	public int bufLenA;
+	public int dist;
 
-	public int sizeO, sizeA, sizeF;
+	public int sizeIntsOpaque, sizeIntsAlpha, sizeIntsFace;
 	@Nullable
 	public GLBuffer vboO, vboA, vboM;
 	public GLTextureBuffer tboF;
@@ -85,17 +83,18 @@ public class Zone implements Destructible {
 
 	public HashSet<Integer> animatedDynamicObjectIds = new HashSet<>();
 
-	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
-	ZoneUploadJob uploadJob;
+	public final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
+	public ZoneUploadJob uploadJob;
 
-	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
-
-	int[][] rids;
-	int[][] roofStart;
-	int[][] roofEnd;
-
+	int[] roofData;
+	final LevelData[] levelData = new LevelData[LEVEL_COUNT];
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
+
+	protected Zone() {
+		for(int i = 0; i < LEVEL_COUNT; i++)
+			levelData[i] = new LevelData();
+	}
 
 	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
 		assert glVao == 0;
@@ -177,11 +176,9 @@ public class Zone implements Destructible {
 
 		sortedAlphaFacesUpload.release();
 
-		sizeO = 0;
-		sizeA = 0;
-		sizeF = 0;
-		bufLen = 0;
-		bufLenA = 0;
+		sizeIntsOpaque = 0;
+		sizeIntsAlpha = 0;
+		sizeIntsFace = 0;
 
 		initialized = false;
 		cull = false;
@@ -190,10 +187,7 @@ public class Zone implements Destructible {
 		inSceneFrustum = false;
 		inShadowFrustum = false;
 
-		Arrays.fill(levelOffsets, 0);
-		rids = null;
-		roofStart = null;
-		roofEnd = null;
+		Arrays.fill(levelData, null);
 
 		// don't add permanent alphamodels to the cache as permanent alphamodels are always allocated
 		// to avoid having to synchronize the cache
@@ -204,27 +198,8 @@ public class Zone implements Destructible {
 	public String toString() {
 		return String.format(
 			"Zone Initialized: %b, culled: %b hasUploadJob: %b opaqueSize: %d alphaSize: %d",
-			initialized, cull, uploadJob != null, sizeO, sizeA
+			initialized, cull, uploadJob != null, sizeIntsOpaque, sizeIntsAlpha
 		);
-	}
-
-	public void unmap() {
-		assert client.isClientThread();
-
-		if (vboO != null)
-			vboO.unmap();
-		if (vboA != null)
-			vboA.unmap();
-		if (tboF != null)
-			tboF.unmap();
-
-		if (vboO != null) {
-			this.bufLen = vboO.mapped().byteView().position() / VERT_SIZE;
-		}
-
-		if (vboA != null) {
-			this.bufLenA = vboA.mapped().byteView().position() / VERT_SIZE;
-		}
 	}
 
 	private void setupVao(int vao, int buffer, int metadata) {
@@ -284,12 +259,15 @@ public class Zone implements Destructible {
 
 	void updateRoofs(Map<Integer, Integer> updates) {
 		for (int level = 0; level < 4; ++level) {
-			for (int i = 0; i < rids[level].length; ++i) {
-				rids[level][i] = updates.getOrDefault(rids[level][i], rids[level][i]);
+			final LevelData ld = levelData[level];
+			for (int i = 0; i < ld.ridCount; ++i) {
+				int rid = ld.getRoofId(i);
+				ld.setRoofId(i, updates.getOrDefault(rid, rid));
 			}
 		}
 
-		for (AlphaModel m : alphaModels) {
+		for (int i = 0; i < alphaModels.size(); i++) {
+			final AlphaModel m = alphaModels.get(i);
 			m.rid = (short) (int) updates.getOrDefault((int) m.rid, (int) m.rid);
 		}
 	}
@@ -322,47 +300,45 @@ public class Zone implements Destructible {
 
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
-		var hiddenRoofIds = ctx.hideRoofIds;
+		var hiddenRoofIds = ZoneRenderer.hiddenRoofIdsBitField;
 		if (roofShadows) {
 			maxLevel = 3;
-			hiddenRoofIds = Collections.emptySet();
+			hiddenRoofIds = EMPTY_SET;
 		}
 
 		for (int level = ctx.minLevel; level <= maxLevel; ++level) {
-			int[] rids = this.rids[level];
-			int[] roofStart = this.roofStart[level];
-			int[] roofEnd = this.roofEnd[level];
+			final LevelData ld = levelData[level];
 
-			if (rids.length == 0 || hiddenRoofIds.isEmpty() || level <= currentLevel) {
+			if (ld.ridCount == 0 || hiddenRoofIds.isEmpty() || level <= currentLevel) {
 				// draw the whole level
-				int start = level == 0 ? 0 : this.levelOffsets[level - 1];
-				int end = this.levelOffsets[level];
+				int start = level == 0 ? 0 : levelData[level - 1].offset;
+				int end = levelData[level].offset;
 				pushRange(start, end);
 				continue;
 			}
 
-			for (int roofIdx = 0; roofIdx < rids.length; ++roofIdx) {
-				int rid = rids[roofIdx];
-				if (rid > 0 && !hiddenRoofIds.contains(rid)) {
+			for (int roofIdx = 0; roofIdx < ld.ridCount; ++roofIdx) {
+				int rid = ld.getRoofId(roofIdx);
+				if (rid > 0 && !hiddenRoofIds.get(rid)) {
 					// draw the roof
-					assert roofEnd[roofIdx] >= roofStart[roofIdx];
-					if (roofEnd[roofIdx] > roofStart[roofIdx]) {
-						pushRange(roofStart[roofIdx], roofEnd[roofIdx]);
-					}
+					int roofStart = ld.getRoofStart(roofIdx);
+					int roofEnd = ld.getRoofEnd(roofIdx);
+					if (roofEnd > roofStart)
+						pushRange(roofStart, roofEnd);
 				}
 			}
 
 			// push from the end of the last roof to the end of the level
-			int endpos = level == 0 ? 0 : this.levelOffsets[level - 1];
-			for (int roofIdx = rids.length - 1; roofIdx >= 0; --roofIdx) {
-				int rid = rids[roofIdx];
+			int endpos = level == 0 ? 0 : levelData[level - 1].offset;
+			for (int roofIdx = ld.ridCount - 1; roofIdx >= 0; --roofIdx) {
+				int rid = ld.getRoofId(roofIdx);
 				if (rid > 0) {
-					endpos = roofEnd[roofIdx];
+					endpos = ld.getRoofEnd(roofIdx);
 					break;
 				}
 			}
 			// draw the non roofs
-			pushRange(endpos, this.levelOffsets[level]);
+			pushRange(endpos, levelData[level].offset);
 		}
 
 		if (drawIdx == 0)
@@ -377,7 +353,7 @@ public class Zone implements Destructible {
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
 		drawIdx = 0;
 
-		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
+		pushRange(levelData[level - 1].offset, levelData[level].offset);
 
 		if (drawIdx == 0)
 			return;
@@ -402,52 +378,9 @@ public class Zone implements Destructible {
 		}
 	}
 
-	public static class AlphaModel {
-		int id;
-		ModelOverride modelOverride;
-		int startpos, endpos;
-		short x, y, z; // local position
-		short rid;
-		int vao;
-		int tboF;
-		byte level;
-		byte lx, lz, ux, uz; // lower/upper zone coords
-		byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
-		byte flags;
-
-		// only set for static geometry as they require sorting
-		int radius;
-		int[] packedFaces;
-		int[] sortedFaces;
-		int sortedFacesLen;
-
-		int dist;
-		int asyncSortIdx = -1;
-
-		static final int SKIP = 1; // temporary model is in a closer zone
-		static final int TEMP = 2; // temporary model added to a closer zone
-		static final int SORT_COMPLETED = 4;
-
-		void setSorted() {
-			flags |= SORT_COMPLETED;
-		}
-
-		boolean needsSorting() {
-			return (flags & SORT_COMPLETED) == 0;
-		}
-
-		boolean isTemp() {
-			return packedFaces == null || sortedFaces == null;
-		}
-	}
-
-	static final ConcurrentLinkedQueue<AlphaModel> modelCache = new ConcurrentLinkedQueue<>();
-
 	void addAlphaModel(
 		HdPlugin plugin,
 		MaterialManager materialManager,
-		int vao,
-		int tboF,
 		Model model,
 		ModelOverride modelOverride,
 		int startpos,
@@ -471,8 +404,6 @@ public class Zone implements Destructible {
 		m.x = (short) x;
 		m.y = (short) y;
 		m.z = (short) z;
-		m.vao = vao;
-		m.tboF = tboF;
 		m.rid = (short) rid;
 		m.level = (byte) level;
 		if (lx > -1) {
@@ -607,9 +538,7 @@ public class Zone implements Destructible {
 	}
 
 	synchronized void addTempAlphaModel(ModelOverride modelOverride, DynamicModelVAO.View view, int level, int x, int y, int z) {
-		AlphaModel m = modelCache.poll();
-		if (m == null)
-			m = new AlphaModel();
+		AlphaModel m = AlphaModel.POOL.acquire();
 		m.id = -1;
 		m.modelOverride = modelOverride;
 		m.startpos = view.getStartOffset();
@@ -637,7 +566,7 @@ public class Zone implements Destructible {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.sortedFaces = null;
-				modelCache.add(m);
+				AlphaModel.POOL.recycle(m);
 			}
 			m.asyncSortIdx = -1;
 			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
@@ -655,19 +584,6 @@ public class Zone implements Destructible {
 	private static int lastTboF;
 	private static int lastzx, lastzz;
 
-	private static final class AlphaSortPredicate implements ToIntFunction<AlphaModel> {
-		int cx, cy, cz;
-		int zx, zz;
-
-		@Override
-		public int applyAsInt(AlphaModel m) {
-			final int mx = m.x + ((zx - m.zofx) << 10);
-			final int mz = m.z + ((zz - m.zofz) << 10);
-			final int my = m.y;
-			return (mx - cx) * (mx - cx) + (my - cy) * (my - cy) + (mz - cz) * (mz - cz);
-		}
-	}
-
 	private final AlphaSortPredicate alphaSortPred = new AlphaSortPredicate();
 	private final Comparator<AlphaModel> alphaSortComparator = Comparator.comparingInt(alphaSortPred).reversed();
 
@@ -684,7 +600,8 @@ public class Zone implements Destructible {
 
 	void alphaStaticModelSort(Camera camera) {
 		alphaSortingJob.reset();
-		for (AlphaModel m : alphaModels) {
+		for (int i = 0; i < alphaModels.size(); i++) {
+			final AlphaModel m = alphaModels.get(i);
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.isTemp())
 				continue;
 
@@ -709,10 +626,10 @@ public class Zone implements Destructible {
 		int minLevel = ctx.minLevel;
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
-		var hiddenRoofIds = ctx.hideRoofIds;
+		var hiddenRoofIds = ZoneRenderer.hiddenRoofIdsBitField;
 		if (includeRoof) {
 			maxLevel = 3;
-			hiddenRoofIds = Collections.emptySet();
+			hiddenRoofIds = EMPTY_SET;
 		}
 
 		drawIdx = 0;
@@ -729,7 +646,7 @@ public class Zone implements Destructible {
 				continue;
 
 			if (level < minLevel || level > maxLevel ||
-				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
+				level > currentLevel && m.rid >= 0 && !hiddenRoofIds.isEmpty() && hiddenRoofIds.get(m.rid))
 				continue;
 
 			int drawMode = STATIC;
@@ -864,9 +781,7 @@ public class Zone implements Destructible {
 				assert z != null;
 				assert z != this;
 
-				AlphaModel m2 = modelCache.poll();
-				if (m2 == null)
-					m2 = new AlphaModel();
+				AlphaModel m2 = AlphaModel.POOL.acquire();
 				m2.id = m.id;
 				m2.modelOverride = m.modelOverride;
 				m2.startpos = m.startpos;
@@ -896,6 +811,87 @@ public class Zone implements Destructible {
 
 				z.alphaModels.add(m2);
 			}
+		}
+	}
+
+	private static final class AlphaSortPredicate implements ToIntFunction<AlphaModel> {
+		int cx, cy, cz;
+		int zx, zz;
+
+		@Override
+		public int applyAsInt(AlphaModel m) {
+			final int mx = m.x + ((zx - m.zofx) << 10);
+			final int mz = m.z + ((zz - m.zofz) << 10);
+			final int my = m.y;
+			return (mx - cx) * (mx - cx) + (my - cy) * (my - cy) + (mz - cz) * (mz - cz);
+		}
+	}
+
+	static class AlphaModel {
+		static final ConcurrentPool<AlphaModel> POOL = new ConcurrentPool<>(AlphaModel::new);
+
+		int id;
+		ModelOverride modelOverride;
+		int startpos, endpos;
+		short x, y, z; // local position
+		short rid;
+		int vao;
+		int tboF;
+		byte level;
+		byte lx, lz, ux, uz; // lower/upper zone coords
+		byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
+		byte flags;
+
+		// only set for static geometry as they require sorting
+		int radius;
+		int[] packedFaces;
+		int[] sortedFaces;
+		int sortedFacesLen;
+
+		int dist;
+		int asyncSortIdx = -1;
+
+		static final int SKIP = 1; // temporary model is in a closer zone
+		static final int TEMP = 2; // temporary model added to a closer zone
+		static final int SORT_COMPLETED = 4;
+
+		void setSorted() {
+			flags |= SORT_COMPLETED;
+		}
+
+		boolean needsSorting() {
+			return (flags & SORT_COMPLETED) == 0;
+		}
+
+		boolean isTemp() {
+			return packedFaces == null || sortedFaces == null;
+		}
+	}
+
+	public final class LevelData {
+		public int offset;
+		public int ridCount;
+
+		private int roofDataStart = -1;
+
+		void setRoofId(int i, int rid) { roofData[roofDataStart + (i * 3)] = rid; }
+
+		int getRoofId(int i) { return roofData[roofDataStart + (i * 3)]; }
+		int getRoofStart(int i) { return roofData[roofDataStart + (i * 3) + 1]; }
+		int getRoofEnd(int i) { return roofData[roofDataStart + (i * 3) + 2]; }
+
+		int addRoof(int[] roofData, int pos, int rid, int start, int end) {
+			assert end >= start : String.format("rid: %d %d >= %d", rid, end, start);
+			if(roofDataStart == -1)
+				roofDataStart = pos;
+
+			assert pos + 3 <= roofData.length;
+			roofData[pos++] = rid;
+			roofData[pos++] = start;
+			roofData[pos++] = end;
+
+			ridCount++;
+			return pos;
 		}
 	}
 }

@@ -1,19 +1,19 @@
 package rs117.hd.renderer.zone;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
 public final class ZoneUploadJob extends Job {
-	private static final ConcurrentLinkedQueue<ZoneUploadJob> POOL = new ConcurrentLinkedQueue<>();
+	public static final ConcurrentPool<ZoneUploadJob> POOL = new ConcurrentPool<>(ZoneUploadJob::new);
 
 	private WorldViewContext viewContext;
 	private ZoneSceneContext sceneContext;
@@ -21,7 +21,6 @@ public final class ZoneUploadJob extends Job {
 	Zone zone;
 	int x, z;
 	long revealAfterTimestampMs;
-	boolean shouldUnmap;
 
 	@Override
 	protected void onRun() throws InterruptedException {
@@ -30,66 +29,62 @@ public final class ZoneUploadJob extends Job {
 
 			sceneUploader.onBeforeProcessTile = this::onBeforeProcessTile;
 			sceneUploader.setScene(sceneContext.scene);
-			sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
 
-			if (zone.sizeO > 0 || zone.sizeA > 0) {
+			try (
+				GpuIntBuffer opaqueStaging = GpuIntBuffer.POOL.acquire();
+				GpuIntBuffer alphaStaging = GpuIntBuffer.POOL.acquire();
+				GpuIntBuffer tboStaging = GpuIntBuffer.POOL.acquire()
+			) {
+				sceneUploader.uploadZone(sceneContext, zone, x, z, opaqueStaging, alphaStaging, tboStaging);
+
+				zone.sizeIntsOpaque = opaqueStaging.position();
+				zone.sizeIntsAlpha = alphaStaging.position();
+				zone.sizeIntsFace = tboStaging.position();
+
+				opaqueStaging.flip();
+				alphaStaging.flip();
+				tboStaging.flip();
+
 				workerHandleCancel();
 
-				invokeClientCallback(this::mapZoneVertexBuffers);
-				workerHandleCancel();
+				if(zone.sizeIntsOpaque > 0 || zone.sizeIntsAlpha > 0) {
+					invokeClientCallback(() -> {
+						long start = System.nanoTime();
+						GLBuffer o = null, a = null;
+						if (zone.sizeIntsOpaque > 0) {
+							o = new GLBuffer("Zone::VBO::Opaque", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+							o.initialize(opaqueStaging.getBuffer());
+						}
 
-				sceneUploader.uploadZone(sceneContext, zone, x, z);
-				workerHandleCancel();
+						if (zone.sizeIntsAlpha > 0) {
+							a = new GLBuffer("Zone::VBO::Alpha", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+							a.initialize(alphaStaging.getBuffer());
+						}
 
-				if (shouldUnmap)
-					invokeClientCallback(zone::unmap);
+						GLTextureBuffer f = null;
+						if (zone.sizeIntsFace > 0) {
+							f = new GLTextureBuffer("Zone::TBO", GL_STATIC_DRAW);
+							f.initialize(tboStaging.getBuffer());
+						}
+
+						zone.initialize(o, a, f);
+						zone.setMetadata(viewContext, sceneContext, x, z);
+						viewContext.bufferInit += System.nanoTime() - start;
+					});
+				}
+			}
+
+			for(int i = 0; i < zone.alphaModels.size(); i++) {
+				final Zone.AlphaModel m = zone.alphaModels.get(i);
+				m.vao = zone.glVaoA;
+				m.tboF = zone.tboF.getTexId();
 			}
 			zone.initialized = true;
 		}
 	}
 
-	private void onBeforeProcessTile(Tile t, boolean isEstimate) throws InterruptedException {
+	private void onBeforeProcessTile(Tile t) throws InterruptedException {
 		workerHandleCancel();
-	}
-
-	private void mapZoneVertexBuffers() {
-		try {
-			GLBuffer o = null, a = null;
-			int sz = zone.sizeO * Zone.VERT_SIZE * 3;
-			if (sz > 0) {
-				o = new GLBuffer("Zone::VBO::Opaque", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-				o.initialize(sz);
-				o.map(MAP_WRITE);
-			}
-
-			sz = zone.sizeA * Zone.VERT_SIZE * 3;
-			if (sz > 0) {
-				a = new GLBuffer("Zone::VBO::Alpha", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-				a.initialize(sz);
-				a.map(MAP_WRITE);
-			}
-
-			GLTextureBuffer f = null;
-			sz = zone.sizeF * Zone.TEXTURE_SIZE;
-			if (sz > 0) {
-				f = new GLTextureBuffer("Zone::TBO", GL_STATIC_DRAW);
-				f.initialize(sz);
-				f.map(MAP_WRITE);
-			}
-
-			zone.initialize(o, a, f);
-			zone.setMetadata(viewContext, sceneContext, x, z);
-		} catch (Throwable ex) {
-			log.warn(
-				"Caught exception whilst processing zone [{}, {}] worldId [{}] group priority [{}] cancelling...\n",
-				x,
-				z,
-				viewContext.worldViewId,
-				isHighPriority(),
-				ex
-			);
-			cancel();
-		}
 	}
 
 	@Override
@@ -109,15 +104,13 @@ public final class ZoneUploadJob extends Job {
 		zone.uploadJob = null;
 		zone = null;
 		revealAfterTimestampMs = 0;
-		assert !POOL.contains(this) : "Task is already in pool";
-		POOL.add(this);
+		POOL.recycle(this);
 	}
 
 	public static ZoneUploadJob build(
 		WorldViewContext viewContext,
 		ZoneSceneContext sceneContext,
 		Zone zone,
-		boolean shouldUnmap,
 		int x,
 		int z
 	) {
@@ -126,13 +119,10 @@ public final class ZoneUploadJob extends Job {
 		assert zone != null : "Zone cant be null";
 		assert !zone.initialized : "Zone is already initialized";
 
-		ZoneUploadJob newTask = POOL.poll();
-		if (newTask == null)
-			newTask = new ZoneUploadJob();
+		ZoneUploadJob newTask = POOL.acquire();
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
 		newTask.zone = zone;
-		newTask.shouldUnmap = shouldUnmap;
 		newTask.x = x;
 		newTask.z = z;
 		newTask.isReleased = false;

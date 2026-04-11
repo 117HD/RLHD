@@ -361,7 +361,7 @@ public class SceneManager {
 				Zone zone = zones[x][z];
 				if (!zone.initialized)
 					return true;
-				if (zone.sizeO == 0 && zone.sizeA == 0)
+				if (zone.sizeIntsOpaque == 0 && zone.sizeIntsAlpha == 0)
 					return true;
 			}
 		}
@@ -434,7 +434,7 @@ public class SceneManager {
 
 			Stopwatch sw = Stopwatch.createStarted();
 			root.isLoading = true;
-			root.loadTime = root.uploadTime = root.sceneSwapTime = 0;
+			root.loadTime = root.uploadTime = root.bufferInit = root.sceneSwapTime = 0;
 
 			root.sceneLoadGroup.complete();
 			root.streamingGroup.complete();
@@ -543,7 +543,7 @@ public class SceneManager {
 							continue;
 
 						final Zone old = ctx.zones[ox][oz];
-						if (!old.initialized || (old.sizeO == 0 && old.sizeA == 0))
+						if (!old.initialized || (old.sizeIntsOpaque == 0 && old.sizeIntsAlpha == 0))
 							continue;
 
 						old.needsRoofUpdate = true;
@@ -578,7 +578,7 @@ public class SceneManager {
 						float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 						if (!staggerLoad || dist < ZONE_DEFER_DIST_START) {
 							ZoneUploadJob
-								.build(ctx, nextSceneContext, zone, true, x, z)
+								.build(ctx, nextSceneContext, zone, x, z)
 								.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 							nextSceneContext.totalMapZones++;
 						} else {
@@ -597,13 +597,13 @@ public class SceneManager {
 					// Reuse the old zone while uploading a correct one
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
-						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z);
+						.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z);
 					sorted.zone.uploadJob.revealAfterTimestampMs =
 						timeMs + ceil(clamp(sorted.dist / 15.0f, 0.25f, 1.5f) * 1000.0f);
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
-						.build(ctx, nextSceneContext, newZone, true, sorted.x, sorted.z)
+						.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z)
 						.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 				}
 				sorted.free();
@@ -677,8 +677,8 @@ public class SceneManager {
 		int totalAlpha = 0;
 		for (int x = 0; x < NUM_ZONES; ++x) {
 			for (int z = 0; z < NUM_ZONES; ++z) {
-				totalOpaque += nextZones[x][z].bufLen;
-				totalAlpha += nextZones[x][z].bufLenA;
+				totalOpaque += nextZones[x][z].sizeIntsOpaque;
+				totalAlpha += nextZones[x][z].sizeIntsAlpha;
 			}
 		}
 
@@ -764,7 +764,7 @@ public class SceneManager {
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
 				ZoneUploadJob
-					.build(ctx, sceneContext, ctx.zones[x][z], true, x, z)
+					.build(ctx, sceneContext, ctx.zones[x][z], x, z)
 					.queue(ctx.sceneLoadGroup);
 
 		ctx.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
