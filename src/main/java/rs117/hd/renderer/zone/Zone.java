@@ -172,6 +172,7 @@ public class Zone implements Destructible {
 
 		if (uploadJob != null) {
 			uploadJob.cancel();
+			DestructibleHandler.destroy(uploadJob.zone);
 			uploadJob = null;
 		}
 

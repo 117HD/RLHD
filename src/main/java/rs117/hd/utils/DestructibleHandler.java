@@ -20,6 +20,13 @@ public final class DestructibleHandler {
 		PENDING_DESTRUCTION.add(destructible);
 	}
 
+	public static void destroy(Destructible destructible) {
+		PENDING_DESTRUCTION.remove(destructible);
+		LEAKED_DESTRUCTIBLE.remove(destructible);
+
+		destructible.destroy();
+	}
+
 	public static void queueLeakedDestruction(Destructible destructible) {
 		LEAKED_DESTRUCTIBLE.add(destructible);
 	}

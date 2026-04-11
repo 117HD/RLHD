@@ -314,17 +314,21 @@ public class WorldViewContext {
 		Zone curZone = zones[zx][zz];
 		long revealAfterTimestampMs = 0;
 		if (curZone.uploadJob != null) {
+			Zone pendingZone = curZone.uploadJob.zone;
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
 				curZone.hashCode(),
 				worldViewId,
 				zx,
 				zz,
-				curZone.uploadJob.zone.hashCode()
+				pendingZone.hashCode()
 			);
 			revealAfterTimestampMs = curZone.uploadJob.revealAfterTimestampMs;
 			curZone.uploadJob.cancel();
 			curZone.uploadJob.release();
+
+			if (pendingZone != curZone)
+				DestructibleHandler.destroy(pendingZone);
 		}
 
 		Zone newZone = injector.getInstance(Zone.class);
