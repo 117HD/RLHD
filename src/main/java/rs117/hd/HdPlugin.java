@@ -579,7 +579,7 @@ public class HdPlugin extends Plugin {
 				log.info("Starting 117 HD... (count: {})", startupCount);
 				log.info("Renderer:          {}", rendererClass.getSimpleName());
 				log.info("Build version:     {} - {} - {}", BuildInfo.VERSION, BuildInfo.COMMIT, BuildInfo.TIMESTAMP);
-				log.info("Build repository:  {} ({})", BuildInfo.ORIGIN, BuildInfo.BRANCH);
+				log.info("Build repository:  {} ({})", BuildInfo.REMOTE, BuildInfo.BRANCH);
 				log.info("rlawt version:     {}", rlawtVersion);
 				log.info("Java version:      {} ({})", javaVmName, javaVersion);
 				log.info("Java memory limit: {} (free: {})", formatBytes(runtime.maxMemory()), formatBytes(runtime.freeMemory()));
