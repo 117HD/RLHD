@@ -10185,22 +10185,24 @@
     ]
   },
   {
-    "description": "LIGHT_WOODEN_DOCKS",
+    "description": "Pest Control - Wooden - Docks",
     "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.9,
     "objectIds": [
       "PEST_SERIM_PIER_BROKEN",
       "PEST_SERIM_PIER",
       "PEST_SERIM_PIER_VAR2",
       "PEST_SERIM_PIER_VAR3",
       "PEST_SERIM_PIER_BROKEN_MIRROR"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
-    "description": "LIGHT_WOODEN_DOCKS_ROTATED",
+    "description": "Pest Control - Wooden - Docks - Rotated UV",
     "baseMaterial": "WOOD_GRAIN_2",
     "uvOrientation": 512,
     "uvType": "BOX",
+    "uvScale": 0.9,
     "objectIds": [
       "PEST_SERIM_PIER_VAR1"
     ]
@@ -15909,6 +15911,18 @@
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientation": 512
+  },
+  {
+    "description": "Pest Control - Wooden - Pier support post",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvScale": 0.4,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "objectIds": [
+      "PEST_THIN_PIER_SUPPORT",
+      "PEST_THIN_PIER_SUPPORT_LOW"
+    ]
   },
   {
     "description": "Objects - Metallic - Pots",
@@ -37590,6 +37604,7 @@
       "SAILING_GENERIC_SHIPPLANK_ON",
       "SAILING_GENERIC_SHIPPLANK_OFF",
       "PEST_LANDER_GANGPLANK_INACTIVE",
+      "PEST_LANDER_GANGPLANK",
       "PEST_LANDER_GANGPLANK_2",
       "PEST_LANDER_GANGPLANK_3"
     ],
@@ -83228,6 +83243,30 @@
       "PEST_PLINTH_STEP_CORNER",
       "PEST_PLINTH_STEP_TIP",
       "PEST_PLINTH_TOP_PLAIN"
+    ]
+  },
+  {
+    "description": "Pest Control - Scoreboard",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "s == 3",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "upwardsNormals": true
+      },
+      {
+        "description": "fake text",
+        "colors": "h == 7 && s == 2",
+        "castShadows": false,
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "PEST_SCORES"
     ]
   }
 ]
