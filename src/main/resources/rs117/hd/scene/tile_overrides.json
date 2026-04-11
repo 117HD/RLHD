@@ -5910,14 +5910,31 @@
   {
     "name": "TOA_AMASCUT_FLOOR_SAND_BLEND",
     "groundMaterial": "VARIED_DIRT",
-    "maxLightness": 32,
-    "shiftLightness": -2
+    "maxLightness": 32
+  },
+  {
+    "name": "TOA_KEPHRI_DIRT",
+    "area": "TOA_PATH_OF_SCABARAS_BOSS",
+    "groundMaterial": "VARIED_DIRT",
+    "overlayIds": [
+      49
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_KEPHRI_STONE_TILE",
+    "area": "TOA_PATH_OF_SCABARAS_BOSS",
+    "groundMaterial": "STONE",
+    "overlayIds": [
+      50
+    ],
+    "blended": false
   },
   {
     "name": "TOA_KEPHRI_FLOOR",
     "area": "TOMBS_OF_AMASCUT",
     "underlayIds": [
-      90, 124
+      6, 90, 124
     ],
     "blended": false
   },
@@ -6031,6 +6048,17 @@
     ]
   },
   {
+    "name": "TOA_AMASCUT_NEXUS_FLOOR_SAND",
+    "area": "TOA_PATH_HUB",
+    "groundMaterial": "VARIED_DIRT",
+    "maxLightness": 32,
+    "shiftLightness": 10,
+    "blended": false,
+    "overlayIds": [
+      240
+    ]
+  },
+  {
     "name": "TOA_AMASCUT_FLOOR_SAND",
     "area": "TOMBS_OF_AMASCUT",
     "groundMaterial": "VARIED_DIRT",
@@ -6074,6 +6102,7 @@
     "maxLightness": 18,
     "shiftLightness": 1,
     "maxSaturation": 1,
+    "blended": false,
     "underlayIds": [
       104, 105
     ]
