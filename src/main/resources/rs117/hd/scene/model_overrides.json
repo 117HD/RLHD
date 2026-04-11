@@ -17559,7 +17559,13 @@
       "TLATI_ROCKSLIDE01_GREY",
       "TLATI_ROCKSLIDE02_GREY",
       "TLATI_ROCKSLIDE03_GREY",
-      "TLATI_ROCKSLIDE04_GREY"
+      "TLATI_ROCKSLIDE04_GREY",
+      "TOA_ZEBAK_ROCKS01",
+      "TOA_ZEBAK_ROCKS03",
+      "TOA_ZEBAK_DEBRIS_STONE02",
+      "TOA_ZEBAK_DEBRIS_STONE03",
+      "TOA_ZEBAK_ROCKS04_NOBLOCKRANGE",
+      "TOA_ZEBAK_ROCKS05_NOBLOCKRANGE"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -32644,7 +32650,8 @@
       "CHICKENQUEST_BONES_SMALL_03",
       "TOA_BONES01_DEFAULT01",
       "TOA_BONES01_DEFAULT02",
-      "TOA_BONES01_DEFAULT03"
+      "TOA_BONES01_DEFAULT03",
+      "TOA_ZEBAK_RIBCAGE01"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -83643,7 +83650,8 @@
       "TOA_POTTERY_SINGLE01_SCABARAS01",
       "TOA_POTTERY_SINGLE01_SCABARAS02",
       "TOA_POTTERY_GROUP01_SCABARAS01",
-      "TOA_POTTERY_GROUP02_SCABARAS01"
+      "TOA_POTTERY_GROUP02_SCABARAS01",
+      "TOA_POTTERY_BANKDEPOSIT"
     ]
   },
   {
@@ -83895,11 +83903,7 @@
     ],
     "objectIds": [
       "TOA_WALL_KEPHRI01",
-      "TOA_WALL_TOMB03_VARIANT01_KEPHRI01",
-      "TOA_ENTRANCE_KEPHRI03",
-      "TOA_ENTRANCE_KEPHRI04",
-      "TOA_ENTRANCE_KEPHRI_MAIN",
-      "TOA_SCABARAS_CONTINUE"
+      "TOA_WALL_TOMB03_VARIANT01_KEPHRI01"
     ]
   },
   {
@@ -83941,18 +83945,30 @@
         "uvType": "BOX"
       },
       {
-        "description": "Green and red",
-        "colors": [ "h == 12", "h == 0 && s == 3" ],
+        "description": "Green",
+        "colors": [ "h == 12" ],
         "uvScale": 0.7,
         "baseMaterial": "MARBLE_1",
         "uvType": "BOX"
+      },
+      {
+        "description": "Red Wall",
+        "colors": [ "h == 0 && s == 3" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 1.2
       }
     ],
     "objectIds": [
       "TOA_WALL_PILLAR01",
       "TOA_WALL_PILLAR03",
       "TOA_WALL_SCARAB01",
-      "TOA_WALL_LOW01"
+      "TOA_WALL_LOW01",
+      "TOA_SCABARAS_CONTINUE",
+      "TOA_ENTRANCE_KEPHRI_MAIN",
+      "TOA_ENTRANCE_KEPHRI03",
+      "TOA_ENTRANCE_KEPHRI04"
     ]
   },
   {
@@ -84064,6 +84080,54 @@
     ]
   },
   {
+    "description": "ToA - Crondis Entrance",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": -512,
+    "colorOverrides": [
+      {
+        "description": "Gold",
+        "colors": "s >= 5",
+        "uvScale": 0.7,
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Stone Bricks",
+        "colors": "h == 39",
+        "uvScale": 1.2,
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX",
+        "uvOrientation": -128
+      },
+      {
+        "description": "Red Wall",
+        "colors": [ "h <= 1 && s > 0" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 1.2
+      },
+      {
+        "description": "Red Wall",
+        "colors": [ "h <= 1 && s > 0" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 1.2
+      },
+      {
+        "description": "Shadow",
+        "colors": [ "h == 0 && s == 0" ],
+        "baseMaterial": "TRANSPARENT"
+      }
+    ],
+    "objectIds": [
+      "TOA_PATH_CRONDIS_CONTINUE"
+    ]
+  },
+  {
     "description": "TOA - Crondis Puzzle Room walls - ANIMATED - DYNAMIC",
     "baseMaterial": "GRAY_80",
     "objectIds": [
@@ -84101,7 +84165,7 @@
     ]
   },
   {
-    "description": "TOA - Zebak stone brick wall",
+    "description": "TOA - Zebak Pillars",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvOrientation": -87,
@@ -84109,6 +84173,42 @@
     "colorOverrides": [
       {
         "description": "Stone",
+        "colors": "h >= 35",
+        "uvScale": 1.2,
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "TOA_ZEBAK_PILLAR04_DEFAULT01",
+      "TOA_ZEBAK_PILLAR04_SHAKE01"
+    ]
+  },
+  {
+    "description": "TOA - Zebak Debris",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": -187,
+    "objectIds": [
+      "TOA_ZEBAK_PILLAR01",
+      "TOA_ZEBAK_PILLAR02",
+      "TOA_ZEBAK_DEBRIS01",
+      "TOA_ZEBAK_DEBRIS01_MIRROR",
+      "TOA_ZEBAK_DEBRIS02",
+      "TOA_ZEBAK_DEBRIS03"
+    ]
+  },
+  {
+    "description": "TOA - Zebak Exit",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": -87,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Gold Trim",
         "colors": "h == 7",
         "uvScale": 0.6,
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
