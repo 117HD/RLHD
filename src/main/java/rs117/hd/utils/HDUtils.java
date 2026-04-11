@@ -29,8 +29,7 @@ import java.awt.Container;
 import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.Objects;
+import java.lang.management.ManagementFactory;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.swing.JFrame;
@@ -53,7 +52,6 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public final class HDUtils {
-	private static final String[] UNITS = {"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"};
 	public static final int HIDDEN_HSL = 12345678;
 	public static final int UNDERWATER_HSL = 6676;
 
@@ -515,38 +513,31 @@ public final class HDUtils {
 		return null;
 	}
 
-	public static String humanReadableByteCountBin(long bytes) {
-		if (bytes == Long.MIN_VALUE)
-			bytes = Long.MAX_VALUE;
-
-		double value = Math.abs((double) bytes);
-		int unitIndex = 0;
-
-		while (value >= 1024 && unitIndex < UNITS.length - 1) {
-			value /= 1024;
-			unitIndex++;
-		}
-
-		value = Math.copySign(value, bytes);
-
-		return String.format("%.1f %s", value, UNITS[unitIndex]);
-	}
-
-	public static String getCPUName() {
-		if(OSType.getOSType() == OSType.Linux) {
-			try (BufferedReader br = new BufferedReader(new FileReader("/proc/cpuinfo"))) {
-				String line;
-				while ((line = br.readLine()) != null) {
-					if (line.startsWith("model name"))
-						return line.split(":", 2)[1].trim();
+	public static String getCpuName() {
+		switch (OSType.getOSType()) {
+			case Linux:
+				try (var br = new BufferedReader(new FileReader("/proc/cpuinfo"))) {
+					String line;
+					while ((line = br.readLine()) != null)
+						if (line.startsWith("model name"))
+							return line.split(":", 2)[1].trim();
+				} catch (Exception ignored) {
 				}
-			} catch (IOException ignored) {}
+				break;
+			case MacOS:
+				return "aarch64".equals(System.getProperty("os.arch")) ? "Apple Silicon" : "Intel";
+			case Windows:
+				return System.getenv().getOrDefault("PROCESSOR_IDENTIFIER", "Unknown");
 		}
-
-		return Objects.requireNonNullElse(System.getenv("PROCESSOR_IDENTIFIER"), "Unknown");
+		return "Unknown";
 	}
 
-	public static long getTotalPhysicalMemorySize() {
-		return ((com.sun.management.OperatingSystemMXBean) java.lang.management.ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize();
+	public static long getTotalSystemMemory() {
+		try {
+			var bean = ManagementFactory.getOperatingSystemMXBean();
+			return ((com.sun.management.OperatingSystemMXBean) bean).getTotalPhysicalMemorySize();
+		} catch (Exception ignored) {
+			return Long.MAX_VALUE;
+		}
 	}
 }

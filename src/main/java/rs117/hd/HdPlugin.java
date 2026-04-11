@@ -132,11 +132,7 @@ import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
-import static org.lwjgl.opengl.NVXGPUMemoryInfo.GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.utils.HDUtils.getCPUName;
-import static rs117.hd.utils.HDUtils.getTotalPhysicalMemorySize;
-import static rs117.hd.utils.HDUtils.humanReadableByteCountBin;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
@@ -558,50 +554,43 @@ public class HdPlugin extends Plugin {
 				GL_CAPS = GL.createCapabilities();
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
-				
-				long startupTimeStamp = System.currentTimeMillis();
+
+				var rendererClass = config.legacyRenderer() ? LegacyRenderer.class : ZoneRenderer.class;
+				String rlawtVersion = System.getProperty("runelite.rlawtpath", "Release");
+				String javaVmName = System.getProperty("java.vm.name", "Unknown");
+				String javaVersion = System.getProperty("java.version", "Unknown");
 				OSType osType = OSType.getOSType();
-				String arch = System.getProperty("os.arch", "Unknown");
+				String osArch = System.getProperty("os.arch", "Unknown");
+				String osVersion = System.getProperty("os.version", "Unknown");
 				String wordSize = System.getProperty("sun.arch.data.model", "Unknown");
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
-				String rlawt = Objects.requireNonNullElse(System.getProperty("runelite.rlawtpath"), "Release");
-
-				log.info("Starting RLHD (Launch Count: {})...", startupCount);
-				log.info("Build Version   : {} - {} - {}", BuildInfo.VERSION, BuildInfo.COMMIT_HASH, BuildInfo.TIMESTAMP);
-				log.info("Build Repo      : {} ({})", BuildInfo.ORIGIN, BuildInfo.BRANCH);
-				log.info("rlawt           : {}", rlawt);
-				log.info("Operating system: {} {} ({}-bit)", osType, System.getProperty("os.version"), wordSize);
-				log.info("Architecture    : {}", arch);
-				log.info("System CPU      : {}", getCPUName());
-				log.info("System Threads  : {}", Runtime.getRuntime().availableProcessors());
-				log.info("System Memory   : {}", humanReadableByteCountBin(getTotalPhysicalMemorySize()));
-				log.info("Device          : {} ({})", glRenderer, glVendor);
-				log.info("Device Driver   : {}", glGetString(GL_VERSION));
-				if (GL_CAPS.GL_NVX_gpu_memory_info)
-					log.info("Device Memory   : {}", humanReadableByteCountBin(glGetInteger(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX) * 1024L));
-				log.info("Java            : {} ({})", System.getProperty("java.vm.name"), System.getProperty("java.version"));
-				log.info("Java Max Memory : {} (Avail: {})", humanReadableByteCountBin(Runtime.getRuntime().maxMemory()), humanReadableByteCountBin(Runtime.getRuntime().freeMemory()));
+				var runtime = Runtime.getRuntime();
 
 				APPLE = osType == OSType.MacOS;
-				APPLE_ARM = APPLE && arch.equals("aarch64");
+				APPLE_ARM = APPLE && osArch.equals("aarch64");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				INTEL_GPU = glRenderer.contains("Intel");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
 				SUPPORTS_INDIRECT_DRAW = config.indirectDraw().get(NVIDIA_GPU && !APPLE);
 				SUPPORTS_STORAGE_BUFFERS = GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS && config.storageBuffers().get(!INTEL_GPU);
-				log.info(
-					"Using features: indirectDraw={}, storageBuffers={}",
-					SUPPORTS_INDIRECT_DRAW,
-					SUPPORTS_STORAGE_BUFFERS
-				);
 
-				renderer = config.legacyRenderer() ?
-					injector.getInstance(LegacyRenderer.class) :
-					injector.getInstance(ZoneRenderer.class);
-				log.info("Using renderer  : {}", renderer.getClass().getSimpleName());
-				log.info("Low memory mode : {}", useLowMemoryMode);
+				log.info("Starting 117 HD... (count: {})", startupCount);
+				log.info("Renderer:          {}", rendererClass.getSimpleName());
+				log.info("Build version:     {} - {} - {}", BuildInfo.VERSION, BuildInfo.COMMIT, BuildInfo.TIMESTAMP);
+				log.info("Build repository:  {} ({})", BuildInfo.ORIGIN, BuildInfo.BRANCH);
+				log.info("rlawt version:     {}", rlawtVersion);
+				log.info("Java version:      {} ({})", javaVmName, javaVersion);
+				log.info("Java memory limit: {} (free: {})", formatBytes(runtime.maxMemory()), formatBytes(runtime.freeMemory()));
+				log.info("Operating system:  {} {} ({}-bit {})", osType, osVersion, wordSize, osArch);
+				log.info("CPU:               {} ({} threads)", HDUtils.getCpuName(), runtime.availableProcessors());
+				log.info("Memory:            {}", formatBytes(HDUtils.getTotalSystemMemory()));
+				log.info("GPU:               {} ({})", glRenderer, glVendor);
+				log.info("GPU driver:        {}", glGetString(GL_VERSION));
+				log.info("Indirect draw:     {}", SUPPORTS_INDIRECT_DRAW);
+				log.info("Storage buffers:   {}", SUPPORTS_STORAGE_BUFFERS);
+				log.info("Low memory mode:   {}", useLowMemoryMode);
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
@@ -617,6 +606,8 @@ public class HdPlugin extends Plugin {
 						return true;
 					}
 				}
+
+				renderer = injector.getInstance(rendererClass);
 
 				lwjglInitialized = true;
 				checkGLErrors();
@@ -737,7 +728,7 @@ public class HdPlugin extends Plugin {
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 
-				log.info("RLHD Finished Startup! Took {} ms", System.currentTimeMillis() - startupTimeStamp);
+				log.info("117 HD started successfully!");
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
 				stopPlugin();

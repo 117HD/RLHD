@@ -2,74 +2,68 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Instant;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.inject.Inject;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.file.ProjectLayout;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
 public abstract class GenerateBuildInfoTask extends DefaultTask {
 	private static final String BUILD_INFO_CLASS_PATH = "rs117/hd/BuildInfo.java";
-	private static final String BUILD_INFO_SRC = """
-		package rs117.hd;
-		
-		public final class BuildInfo {
-		
-		    public static final String VERSION = "%s";
-		    public static final String TIMESTAMP = "%s";
-		    public static final String BRANCH = "%s";
-		    public static final String COMMIT_HASH = "%s";
-		    public static final String ORIGIN = "%s";
-		
-		    private BuildInfo() {}
-		}
-		""";
+	private static final String BUILD_INFO_SRC =
+		"package rs117.hd;\n" +
+		"\n" +
+		"public final class BuildInfo {\n" +
+		"    public static final String VERSION = \"%s\";\n" +
+		"    public static final String TIMESTAMP = \"%s\";\n" +
+		"    public static final String BRANCH = \"%s\";\n" +
+		"    public static final String COMMIT = \"%s\";\n" +
+		"    public static final String ORIGIN = \"%s\";\n" +
+		"}\n";
 
-	@Inject
-	public GenerateBuildInfoTask() {
-		getOutputDir().convention(
-			getProject()
-				.getLayout()
-				.getBuildDirectory()
-				.dir("generated/sources/buildinfo")
-		);
-	}
+	private final Logger log = getLogger();
 
 	@OutputDirectory
 	public abstract DirectoryProperty getOutputDir();
 
+	@Inject
+	public GenerateBuildInfoTask(ProjectLayout layout) {
+		getOutputDir().convention(layout.getBuildDirectory().dir("generated/sources/" + getName() + "/main"));
+	}
+
 	@TaskAction
 	public void generate() throws IOException {
-		final Logger log = getLogger();
-
 		String[] gitBranchAndCommit = { "unknown", "unknown" };
 		String origin = "unknown";
 		try {
 			File gitDir = new File(getProject().getRootDir(), ".git");
-
-			gitBranchAndCommit = GitUtils.getGitBranchAndCommit(gitDir);
-			origin = GitUtils.getGitOrigin(gitDir);
+			gitBranchAndCommit = getGitBranchAndCommit(gitDir);
+			origin = getGitOrigin(gitDir);
 		} catch (IOException e) {
 			log.warn("Failed to read git info", e);
 		}
 
 		File outputFile = new File(getOutputDir().get().getAsFile(), BUILD_INFO_CLASS_PATH);
 		File outputDir = outputFile.getParentFile();
-		if(outputDir != null && !outputDir.exists()) {
-			log.info("Created directory: {}", outputDir.getAbsolutePath());
+		if (outputDir != null && !outputDir.exists()) {
 			outputDir.mkdirs();
+			log.info("Created directory: {}", outputDir.getAbsolutePath());
 		}
 
 		String timestamp = Instant.now().toString();
-		String content = BUILD_INFO_SRC
-			.formatted(
-				getProject().getVersion().toString(),
-				timestamp,
-				gitBranchAndCommit[0],
-				gitBranchAndCommit[1],
-				origin
-			);
+		String content = String.format(
+			BUILD_INFO_SRC,
+			getProject().getVersion(),
+			timestamp,
+			gitBranchAndCommit[0],
+			gitBranchAndCommit[1],
+			origin
+		);
 		Files.writeString(outputFile.toPath(), content);
 
 		log.info("Generated {}", BUILD_INFO_CLASS_PATH);
@@ -79,4 +73,57 @@ public abstract class GenerateBuildInfoTask extends DefaultTask {
 		log.info("  * Commit:    {}", gitBranchAndCommit[1]);
 		log.info("  * Origin:    {}", origin);
 	}
+
+	public static String[] getGitBranchAndCommit(File gitDir) throws IOException {
+		File headFile = new File(gitDir, "HEAD");
+		if (!headFile.exists())
+			return new String[] { "unknown", "unknown" };
+
+		String head = Files.readString(headFile.toPath()).trim();
+
+		if (head.startsWith("ref: ")) {
+			String refPath = head.substring(5);
+			String branch = refPath.substring(refPath.lastIndexOf('/') + 1);
+			String commit = readCommitFromRef(gitDir, refPath);
+
+			return new String[] { branch, commit };
+		}
+
+		return new String[] { "detached", shortHash(head) };
+	}
+
+	public static String readCommitFromRef(File gitDir, String refPath) throws IOException {
+		File refFile = new File(gitDir, refPath);
+		if (refFile.exists())
+			return shortHash(Files.readString(refFile.toPath()).trim());
+
+		File packedRefs = new File(gitDir, "packed-refs");
+
+		if (packedRefs.exists()) {
+			List<String> lines = Files.readAllLines(packedRefs.toPath());
+
+			for (String line : lines)
+				if (!line.startsWith("#") && line.endsWith(refPath))
+					return shortHash(line.split(" ")[0]);
+		}
+
+		return "unknown";
+	}
+
+	public static String getGitOrigin(File gitDir) throws IOException {
+		File config = new File(gitDir, "config");
+		if (!config.exists())
+			return "unknown";
+
+		String text = Files.readString(config.toPath());
+		Pattern pattern = Pattern.compile("\\[remote\\s+\"origin\"]([\\s\\S]*?)url\\s*=\\s*(.+)");
+		Matcher matcher = pattern.matcher(text);
+
+		if (matcher.find())
+			return matcher.group(2).trim();
+
+		return "unknown";
+	}
+
+	public static String shortHash(String hash) { return hash.length() > 7 ? hash.substring(0, 7) : hash; }
 }

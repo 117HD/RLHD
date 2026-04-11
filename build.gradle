@@ -39,10 +39,6 @@ tasks.withType(JavaCompile).configureEach {
 	options.release.set(11)
 }
 
-tasks.register('generateBuildInfo', GenerateBuildInfoTask)
-sourceSets.main.java.srcDir(layout.buildDirectory.dir('generated/sources/buildinfo'))
-compileJava.dependsOn(generateBuildInfo)
-
 tasks.register('run', JavaExec) {
 	classpath = sourceSets.test.runtimeClasspath
 	mainClass = pluginMainClass
@@ -76,3 +72,7 @@ tasks.register('shadowJar', Jar) {
 	archiveClassifier.set('shadow')
 	archiveFileName.set("${rootProject.name}-${project.version}-all.jar")
 }
+
+tasks.register('generateBuildInfo', GenerateBuildInfoTask)
+sourceSets.main.java.srcDir(generateBuildInfo)
+compileJava.dependsOn(generateBuildInfo)
