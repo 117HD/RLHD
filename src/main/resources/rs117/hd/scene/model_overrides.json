@@ -4839,7 +4839,12 @@
       "TOURTRAP_QIP_DESERTWALL",
       "TOURTRAP_QIP_CELL_BAR_WALL_BARS",
       "TOURTRAP_QIP_DESERTWALL_WINDOW",
-      "TOURTRAP_QIP_DESERTROOFWALL"
+      "TOURTRAP_QIP_DESERTROOFWALL",
+      "DUEL_ARENA_TOPNOLEAN",
+      "DUEL_ARENA_TOPWITHFLAG",
+      "DUEL_ARENA_TOP_AGED_2",
+      "DUEL_ARENA_TOP_AGED_2_MIRROR",
+      "DUEL_ARENA_TOP_CORNER"
     ],
     "flatNormals": true,
     "uvType": "BOX"
@@ -4870,7 +4875,7 @@
   },
   {
     "description": "Citharede Abbey - Emirs Arena - Ground rubble",
-    "baseMaterial": "ROCK_2",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.75,
     "flatNormals": true,
@@ -86280,6 +86285,87 @@
     "uvOrientation": 187,
     "objectIds": [
       "SHAYZIEN_SLEEPINGBAG"
+    ]
+  },
+  {
+    "description": "Emirs Arena - PvP boards",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "s == 3",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "upwardsNormals": true
+      },
+      {
+        "description": "fake text",
+        "colors": "h == 7 && s == 2",
+        "castShadows": false,
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "PVPA_RECRUITMENT_BOARD",
+      "PVPA_RECRUITMENT_BOARD02",
+      "PVPA_SCOREBOARD"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Carpet",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "_1V1ARENA_DUNGEON_RUG_CORNER",
+      "_1V1ARENA_DUNGEON_RUG_SIDE"
+    ]
+  },
+  {
+    "description": "Emirs Arena - PvP boards",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h >= 1 && s <= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 7 && s == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "PVPA_LOBBY_SUPPLIES_CHEST",
+      "PVPA_STAGINGAREA_SUPPLIES_CHEST"
+    ]
+  },
+  {
+    "description": "Emirs Arena - PvP Wall axe",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "ARENA_DESERT01_AXE01"
     ]
   }
 ]
