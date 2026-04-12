@@ -81660,7 +81660,7 @@
     ]
   },
   {
-    "description": "Crandor and Ungael Lab - Metallic Objects",
+    "description": "Crandor - Stone Walls",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -81668,9 +81668,6 @@
     "objectIds": [
       "CRANDOR_LAB_WALL",
       "CRANDOR_LAB_EXIT",
-      "CRANDOR_LAB_CRATE1",
-      "CRANDOR_LAB_CRATE3",
-      "CRANDOR_LAB_CRATE2",
       "CRANDOR_LAB_FLOOR_EDGE",
       "CRANDOR_LAB_FLOOR_MIDDLE",
       "CRANDOR_LAB_FLOOR_MIDDLE_CRACKED5",
@@ -81678,19 +81675,70 @@
       "CRANDOR_LAB_FLOOR_MIDDLE_CRACKED3",
       "CRANDOR_LAB_FLOOR_MIDDLE_CRACKED1",
       "CRANDOR_LAB_FLOOR_MIDDLE_CRACKED2",
+      "CRANDOR_LAB_FLOOR_EDGE_INSIDE",
+      "CRANDOR_LAB_FLOOR_EDGE_OUTER"
+    ]
+  },
+  {
+    "description": "Crandor and Ungael Lab - Stoen chests",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 768,
+    "objectIds": [
+      "CRANDOR_LAB_CRATE1",
+      "CRANDOR_LAB_CRATE3",
+      "CRANDOR_LAB_CRATE2",
       "CRANDOR_LAB_CHEST_OPEN",
       "UNGAEL_LAB_CHEST_OPEN",
       "UNGAEL_LAB_CHEST_CLOSED",
-      "CRANDOR_LAB_FLOOR_EDGE_INSIDE",
-      "CRANDOR_LAB_FLOOR_EDGE_OUTER",
+      "UNGAEL_LAB_CHEST_OPEN_QUEST"
+    ]
+  },
+  {
+    "description": "Crandor and Ungael Lab - Icy Stone chest",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "ICE_2",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
       "UNGAEL_LAB_FLOOR_ICY2",
       "UNGAEL_LAB_FLOOR_ICY3",
       "UNGAEL_LAB_FLOOR_ICY1",
       "UNGAEL_LAB_CRATE_ICY3",
       "UNGAEL_LAB_CRATE_ICY1",
-      "UNGAEL_LAB_CRATE_ICY2",
+      "UNGAEL_LAB_CRATE_ICY2"
+    ]
+  },
+  {
+    "description": "Crandor and Ungael Lab - Icy Wall",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "ICE_2",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "UNGAEL_LAB_CAVEWALL_TOP",
+      "UNGAEL_LAB_MACHINERY_INCUBATOR_STAIRS",
       "UNGAEL_LAB_WALL",
-      "UNGAEL_LAB_MACHINERY_INCUBATOR_STAIRS"
+      "UNGAEL_LAB_DOOR"
     ]
   },
   {
@@ -81711,7 +81759,6 @@
       "UNGAEL_LAB_MACHINE_NOTES_5",
       "UNGAEL_LAB_MACHINE_NOTES_3",
       "UNGAEL_LAB_MACHINE_NOTES",
-      "UNGAEL_LAB_CAVEWALL_TOP",
       "UNGAEL_LAB_WALL_DOOR_LEFT",
       "UNGAEL_LAB_WALL_DOOR_RIGHT",
       "UNGAEL_LAB_EXIT"
@@ -81855,13 +81902,127 @@
     ]
   },
   {
-    "description": "Ungael - Lab Entrance, Steps and Dias",
+    "description": "Ungael - Stone - Snow - Steps",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "SNOW",
+        "colors": "l > 40",
+        "baseMaterial": "SNOW_1",
+        "uvType": "MODEL_XZ"
+      }
+    ],
     "objectIds": [
-      "UNGAEL_LAB_ENTRANCE",
-      "DS2_UNGAEL_STEPS",
+      "DS2_UNGAEL_STEPS"
+    ]
+  },
+  {
+    "description": "Ungael - Dias",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "SNOW",
+        "colors": "h == 0",
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
       "FOSSIL_WYVERN_DRAGONKIN_TABLE"
+    ]
+  },
+  {
+    "description": "Ungael - Lab Entrance",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "SNOW",
+        "colors": "l > 40",
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "UNGAEL_LAB_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Ungael - Ruins Rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "s == 0 && l >= 30",
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "DS2_UNGAEL_RUBBLE_01",
+      "DS2_UNGAEL_RUBBLE_02",
+      "DS2_UNGAEL_RUBBLE_03"
+    ]
+  },
+  {
+    "description": "Ungael - Snowy Stone Ruins with wooden post and rop",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Snow",
+        "colors": "l >= 30",
+        "baseMaterial": "SNOW_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 6 && s >= 3",
+        "baseMaterial": "ROPE",
+        "uvOrientation": 66,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "DS2_SNOWY_SMALLWALL_BROKEN",
+      "DS2_SNOWY_SMALLWALL",
+      "DS2_SNOWY_SMALLWALL_BROKEN_M",
+      "DS2_SNOWY_SMALLWALL_BRIDGEPOST",
+      "DS2_SNOWY_RAIL_RAILING"
+    ]
+  },
+  {
+    "description": "Ungael - Snowy wooden Bridge",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Snow",
+        "colors": "s == 0",
+        "baseMaterial": "SNOW_1",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.75,
+        "uvOrientation": 128
+      }
+    ],
+    "objectIds": [
+      "DS2_UNGAEL_BRIDGE_MIDDLE",
+      "DS2_UNGAEL_BRIDGE",
+      "DS2_UNGAEL_BRIDGE_M"
     ]
   },
   {
@@ -81871,23 +82032,17 @@
     "objectIds": [
       "DS2_UNGAEL_WALL_LOWER",
       "DS2_UNGAEL_WALL_LOWER_BROKE_R",
-      "DS2_SNOWY_SMALLWALL",
-      "DS2_SNOWY_SMALLWALL_BROKEN_M",
       "DS2_UNGAEL_WALL_UPPER_WINDOW",
       "DS2_UNGAEL_WALL_UPPER",
       "DS2_UNGAEL_WALL_TOP_WINDOW",
       "DS2_UNGAEL_WALL_LOWER_BROKE_L",
-      "DS2_UNGAEL_RUBBLE_03",
-      "DS2_UNGAEL_RUBBLE_01",
-      "DS2_UNGAEL_RUBBLE_02",
       "DS2_UNGAEL_WALL_TOP",
       "DS2_UNGAEL_FLOORING_FALLOFF_3",
-      "DS2_UNGAEL_FLOORING_FALLOFF_1",
-      "DS2_SNOWY_SMALLWALL_BROKEN"
+      "DS2_UNGAEL_FLOORING_FALLOFF_1"
     ],
     "colorOverrides": [
       {
-        "colors": "l > 57",
+        "colors": "s == 0 && l >= 61",
         "baseMaterial": "SNOW_1",
         "uvType": "BOX",
         "uvScale": 0.75
