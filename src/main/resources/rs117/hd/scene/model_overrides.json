@@ -83323,7 +83323,8 @@
         "description": "Flag",
         "colors": "s == 0",
         "upwardsNormals": true,
-        "baseMaterial": "GRAY_50"
+        "baseMaterial": "GRAY_50",
+        "flatNormals": true
       }
     ],
     "objectIds": [
