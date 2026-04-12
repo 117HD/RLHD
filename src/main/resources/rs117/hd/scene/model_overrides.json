@@ -13687,6 +13687,7 @@
       "ELID_GENIE_DOOR_OPEN",
       "SLUG2_VILLAGE_POORDOOR",
       "PEST_POORDOOROPEN",
+      "PEST_POORDOORALWAYSOPEN",
       "MISC_BANK_DOOR"
     ],
     "uvOrientation": 512,
@@ -75642,6 +75643,20 @@
     "description": "Pest Control Isle - Wooden - Bank Booth - Closed",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "colors": "s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ],
     "objectIds": [ "PEST_BANKBOOTH_CLOSED" ]
   },
   {
@@ -75650,6 +75665,12 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
         "colors": "a < 255",
         "baseMaterial": "BLANK_GLOSS"
       }
@@ -75657,6 +75678,32 @@
     "objectIds": [
       "PEST_BANKBOOTH",
       "PEST_BANKBOOTH_MULTI"
+    ]
+  },
+  {
+    "description": "Pest Control - Chest of Gold",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "PEST_BANK_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bronze Lock",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Coins",
+        "colors": "h == 8",
+        "baseMaterial": "GRAVEL_SHINY",
+        "uvType": "BOX",
+        "uvScale": 1.15
+      }
     ]
   },
   {
