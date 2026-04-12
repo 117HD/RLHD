@@ -886,12 +886,6 @@
       "RAIDS_BLOCKAGE_GREEN",
       "OLM_CRYSTAL_ATTACK_LARGE",
       "HUNTING_TRAIL_SPAWN_FOSSIL2",
-      "FOSSIL_FLORA_SWAMP_SKROOM_01_SMALL",
-      "FOSSIL_FLORA_SWAMP_SKROOM_02_SMALL",
-      "FOSSIL_FLORA_SWAMP_SKROOM_01_MEDIUM",
-      "FOSSIL_FLORA_SWAMP_SKROOM_02_MEDIUM",
-      "FOSSIL_FLORA_SWAMP_SKROOM_01_LARGE",
-      "FOSSIL_FLORA_SWAMP_SKROOM_02_LARGE",
       "FOSSIL_DUMMYSHROOM",
       "OSB5_DISPLAY_GRA",
       "OSB5_ADVENTURE_LOG",
@@ -7339,7 +7333,8 @@
       "LUC2_MOV_DUGUPSOIL4",
       "LUC2_MOV_DUGUPSOIL5",
       "LUC2_MOV_DUGUPSOIL6",
-      "LUC2_MOV_DUGUPSOIL7"
+      "LUC2_MOV_DUGUPSOIL7",
+      "FERTILESOIL"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.44
@@ -35652,7 +35647,7 @@
   },
   {
     "description": "Ancient Cavern - Dragon Burner",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "npcIds": [
       "DS2_DRAGON_HEAD_UNLIT",
       "DS2_DRAGON_HEAD_LIT"
@@ -36648,6 +36643,20 @@
     "baseMaterial": "ROCK_6_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 75,
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
     "objectIds": [
       "DS2_LITHKREN_DUNGEON_WALL",
       "DS2_LITHKREN_DUNGEON_ARCHWAY_WALL_LEFT",
@@ -36662,21 +36671,30 @@
       "DS2_LITHKREN_DUNGEON_VAULT_DOOR_KEYLESS_NOOP",
       "DS2_LITHKREN_DUNGEON_VAULT_DOOR_COMPLETE_NOOP",
       "DS2_LITHKREN_DUNGEON_VAULT_DOOR_BROKEN_NOOP",
-      "DS2_LITHKREN_DUNGEON_VAULT_DOOR_UNLOCKABLE"
-    ],
+      "DS2_LITHKREN_DUNGEON_VAULT_DOOR_UNLOCKABLE",
+      "DS2_LITHKREN_VAULT_DOOR_FIXED"
+    ]
+  },
+  {
+    "description": "Lithkren Vault - Pool",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 313,
     "colorOverrides": [
       {
-        "colors": "s > 0",
-        "baseMaterial": "SMOOTH_STONE",
-        "uvType": "BOX",
-        "uvScale": 0.75
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       },
       {
-        "colors": "l == 2",
-        "baseMaterial": "BLACK",
-        "uvType": "BOX",
-        "uvScale": 0.75
+        "colors": "h == 35",
+        "baseMaterial": "NONE"
       }
+    ],
+    "objectIds": [
+      "DS2_LITHKREN_VAULT_POOL_STRAIGHT",
+      "DS2_LITHKREN_VAULT_POOL_CORNER",
+      "UNGAEL_BIRTHING_POOL_CORNER_90_SMALL_RIGHT",
+      "UNGAEL_BIRTHING_POOL_CORNER_90_SMALL_LEFT"
     ]
   },
   {
@@ -45590,7 +45608,10 @@
   {
     "description": "Ramshackle Barrier",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "WOOD_WALL_BARRICADEL" ],
+    "objectIds": [
+      "WOOD_WALL_BARRICADER",
+      "WOOD_WALL_BARRICADEL"
+    ],
     "uvType": "BOX"
   },
   {
@@ -59274,13 +59295,14 @@
     ]
   },
   {
-    "description": "Fossil Island - House on the Hill - Necklace Enchanter",
+    "description": "Fossil Island - Lithkren - House on the Hill - Necklace Enchanter",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 163,
     "objectIds": [
-      "FOSSIL_LAB_NECKLACE_ENCHANTER"
+      "FOSSIL_LAB_NECKLACE_ENCHANTER",
+      "LITHKREN_NECKLACE_ENCHANTER"
     ],
     "colorOverrides": [
       {
@@ -81639,11 +81661,16 @@
       "UNGAEL_BIRTHING_POOL_FILLER",
       "UNGAEL_BIRTHING_POOL_CORNER_90",
       "UNGAEL_BIRTHING_POOL_STRAIGHT",
-      "UNGAEL_LAB_CONTROL_PANEL"
+      "UNGAEL_LAB_CONTROL_PANEL",
+      "UNGAEL_BIRTHING_POOL_STRAIGHT_LOW"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 32",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 32 || h == 35",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
         "uvType": "BOX",
         "uvOrientation": 168
@@ -81747,7 +81774,6 @@
     "uvType": "BOX",
     "uvScale": 0.3,
     "objectIds": [
-      "DS2_LITHKREN_VAULT_LAZOR",
       "CRANDOR_LAB_MACHINE_SIDE_01",
       "CRANDOR_LAB_MACHINE_SIDE_02",
       "CRANDOR_LAB_MOUNTED_SHELVES",
@@ -81796,6 +81822,71 @@
     ]
   },
   {
+    "description": "Lithkren - Machines ",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      },
+      {
+        "colors": [ "h == 5", "h == 4", "h == 0 && s == 3", "h == 0 && s == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ],
+    "objectIds": [
+      "DS2_LITHKREN_VAULT_MACHINE02_MAIN",
+      "DS2_LITHKREN_VAULT_MACHINE02_STAIRS",
+      "DS2_LITHKREN_VAULT_MACHINE03",
+      "LITHKREN_VAULT_MACHINE_NOTES",
+      "LITHKREN_VAULT_MACHINE_NOTES_4",
+      "LITHKREN_VAULT_MACHINE_NOTES_5",
+      "LITHKREN_VAULT_MACHINE_NOTES_6",
+      "DS2_LITHKREN_VAULT_TUBE_FIXED",
+      "DS2_LITHKREN_VAULT_CONTROL_PANEL"
+    ]
+  },
+  {
+    "description": "Lithkren - Machines - Lazors - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": [ "h == 5", "h == 4", "h == 0 && s == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 0 && s == 3 || h == 38",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "DS2_LITHKREN_VAULT_LAZOR",
+      "DS2_LITHKREN_VAULT_MACHINE01_INCOMPLETE",
+      "LITHKREN_VAULT_MACHINE_NOTES_3"
+    ]
+  },
+  {
     "description": "Crandor Lab - Rubble",
     "baseMaterial": "METALLIC_1_LIGHT",
     "areas": [ "CRANDOR_LAB" ],
@@ -81834,9 +81925,10 @@
   },
   {
     "description": "Kharazi Jungle - Maze Entrance",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "GRASS_3",
     "uvType": "BOX",
     "uvScale": 0.5,
+    "uvOrientation": 559,
     "objectIds": [
       "DS2_MAZE_ENTRANCE"
     ],
@@ -83884,6 +83976,55 @@
     ],
     "objectIds": [
       "DS2_DREAM_PILLAR"
+    ]
+  },
+  {
+    "description": "Kharazi Jungle - Maze Entrance",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 &&  l == 2",
+        "baseMaterial": "STONE_DARK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0 || h > 50",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "LG_ORD_TOTEM_POLE",
+      "LG_TOTEM_POLE_GOOD"
+    ]
+  },
+  {
+    "description": "Fossil Island - Skrooms",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "uvType": "BOX",
+    "hideVanillaShadows": true,
+    "uvScale": 0.8,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_SKROOM_01_SMALL",
+      "FOSSIL_FLORA_SWAMP_SKROOM_02_SMALL",
+      "FOSSIL_FLORA_SWAMP_SKROOM_01_MEDIUM",
+      "FOSSIL_FLORA_SWAMP_SKROOM_02_MEDIUM",
+      "FOSSIL_FLORA_SWAMP_SKROOM_01_LARGE",
+      "FOSSIL_FLORA_SWAMP_SKROOM_02_LARGE"
+    ]
+  },
+  {
+    "description": "Fossil Island - Mushrooms",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FOSSIL_MUSHROOM_BLOOD_STINKHORN_02",
+      "FOSSIL_MUSHROOM_GROUP_SMALL_02"
     ]
   }
 ]
