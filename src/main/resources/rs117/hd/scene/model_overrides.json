@@ -20300,7 +20300,6 @@
       "CLANWARS_PRISONPORTAL_SWAMP",
       "CLANCUP_PORTAL_CHALLENGEAREA_EXIT",
       "CLANCUP_PORTAL_FROM_BATTLEAREA",
-      "LEAGUE_5_POH_SPIRIT_RING",
       "CATA_BOSS_EXIT_PORTAL",
       "TOURNAMENT_CASTLEWARS_TO_CLANWARS",
       "CASTLEWARS_F2P_PORTAL",
@@ -52506,14 +52505,20 @@
   },
   {
     "description": "PoH - Spirit Tree",
-    "baseMaterial": "BARK",
+    "baseMaterial": "NONE",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "POH_SPIRIT_TREE"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
@@ -53240,13 +53245,18 @@
   },
   {
     "description": "PoH - Spirit Tree - Raging Echo League",
-    "uvType": "BOX",
-    "uvScale": 0.4,
-    "baseMaterial": "LIGHT_BARK",
+    "baseMaterial": "NONE",
     "objectIds": [
-      "LEAGUE_5_POH_SPIRIT_TREE"
+      "LEAGUE_5_POH_SPIRIT_TREE",
+      "LEAGUE_5_POH_SPIRIT_RING"
     ],
     "colorOverrides": [
+      {
+        "colors": "h == 39 ||h == 40 || h == 42 || h == 46 || h == 53",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "baseMaterial": "LIGHT_BARK"
+      },
       {
         "colors": "h == 33 || h == 58",
         "baseMaterial": "GRAY_150"
