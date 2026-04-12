@@ -89,11 +89,6 @@
     ]
   },
   {
-    "name": "LEAVES_SIDE_2",
-    "parent": "LEAVES_SIDE",
-    "shadowAlphaMap": "LEAF_A_2"
-  },
-  {
     "name": "LEAVES_SIDE_ALT",
     "hasTransparency": true,
     "shadowAlphaMap": "LEAF_A_2",
@@ -3276,6 +3271,19 @@
     "replacementCondition": "season == SeasonalTheme.AUTUMN"
   },
   {
+    "name": "AUTUMN_LEAVES_ORANGE_SIDE_ALT",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_SIDE_ALT"
+    ],
+    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+  },
+  {
     "name": "AUTUMN_LEAVES_ORANGE_TOP",
     "hasTransparency": true,
     "textureScale": [
@@ -3284,7 +3292,8 @@
       1.0
     ],
     "materialsToReplace": [
-      "LEAVES_ORANGE_TOP"
+      "LEAVES_ORANGE_TOP",
+      "LEAVES_TOP_2"
     ],
     "replacementCondition": "season == SeasonalTheme.AUTUMN"
   },
@@ -3371,13 +3380,28 @@
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },
   {
+    "name": "WINTER_LEAVES_SIDE_ALT",
+    "hasTransparency": true,
+    "shadowAlphaMap": "LEAF_A_2",
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_SIDE_ALT"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
     "name": "WINTER_LEAVES_TOP",
     "hasTransparency": true,
     "materialsToReplace": [
       "LEAVES_TOP",
       "LEAVES_YELLOW_TOP",
       "LEAVES_ORANGE_TOP",
-      "LEAVES_RED_TOP"
+      "LEAVES_RED_TOP",
+      "LEAVES_TOP_2"
     ],
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },

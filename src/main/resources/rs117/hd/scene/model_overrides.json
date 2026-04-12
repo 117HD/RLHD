@@ -1321,7 +1321,7 @@
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "windDisplacementModifier": -3,
-    "textureMaterial": "LEAVES_SIDE_2",
+    "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "SPIRIT_TREE_SEEDLING",
       "SPIRIT_TREE_1",
@@ -1473,7 +1473,7 @@
     "retainVanillaUvs": true
   },
   {
-    "description": "Gnome Stronghold Tree Leaves - Side",
+    "description": "Gnome Stronghold Tree Leaves - Top",
     "baseMaterial": "BARK",
     "textureMaterial": "LEAVES_TOP_2",
     "objectIds": [
