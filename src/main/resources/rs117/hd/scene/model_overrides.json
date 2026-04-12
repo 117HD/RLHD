@@ -83314,5 +83314,21 @@
     "objectIds": [
       "PEST_SCORES"
     ]
+  },
+  {
+    "description": "Pest Control - Flags - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRAY_90",
+    "colorOverrides": [
+      {
+        "description": "Flag",
+        "colors": "s == 0",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_50"
+      }
+    ],
+    "objectIds": [
+      "PEST_VETERAN_BANNER_LANDER_INSIDE",
+      "PEST_INTERMEDIATE_BANNER_LANDER_TOP"
+    ]
   }
 ]
