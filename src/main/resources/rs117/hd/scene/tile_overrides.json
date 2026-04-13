@@ -10315,7 +10315,7 @@
       1,
       90
     ],
-    "groundMaterial": "VARIED_DIRT",
+    "groundMaterial": "ROCK_PILES",
     "shiftLightness": -5,
     "minLightness": 15,
     "replacements": {
@@ -10327,7 +10327,7 @@
     "name": "Ungael Cliffs Blending",
     "area": "UNGAEL",
     "overlayIds": [ 1 ],
-    "groundMaterial": "VARIED_DIRT",
+    "groundMaterial": "ROCK_PILES",
     "shiftLightness": -5
   },
   {
