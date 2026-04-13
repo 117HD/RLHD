@@ -30421,15 +30421,23 @@
         "textureMaterial": "WOODEN_SCREEN"
       }
     },
-    "objectIds": [
-      "BANKBOOTH",
-      "BANKPRIVATEBOOTH"
-    ],
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "GRAY_50"
+      },
+      {
+        "colors": "s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
       }
+    ],
+    "objectIds": [
+      "BANKBOOTH",
+      "BANKPRIVATEBOOTH",
+      "BANKBOOTH_END_RIGHT"
     ]
   },
   {
