@@ -9333,6 +9333,30 @@
     "flatNormals": true
   },
   {
+    "description": "Rellekka - Well",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "RELLEKKA_WELL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 4",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": -42,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Relleka - Stalls",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
@@ -11584,6 +11608,16 @@
   {
     "description": "Falador - Marble Stairs",
     "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Railing",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": -172
+      }
+    ],
     "objectIds": [
       "FAI_FALADOR_CASTLE_SPIRALSTAIRS",
       "FAI_FALADOR_CASTLE_SPIRALSTAIRSTOP"
@@ -34850,6 +34884,19 @@
   {
     "description": "Freminnik - Kourend - Walls - Barricade",
     "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Exposed Wood",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      }
+    ],
     "objectIds": [
       "VIKING_PIKE_DEFENCE",
       "VIKING_PIKE_DEFENCE_TERMINATOR_RIGHT",
@@ -34857,10 +34904,7 @@
       "VIKING_PIKE_DEFENCE_BEND",
       "VIKING_PIKE_DEFENCE_BEND_MIRROR",
       "VIKING_PIKE_DEFENCE_CORNER"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 256
+    ]
   },
   {
     "description": "Island of Stone - Cave and Pillars",
