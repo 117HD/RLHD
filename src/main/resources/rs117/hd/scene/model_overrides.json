@@ -56907,10 +56907,10 @@
         "windDisplacementModifier": -3
       },
       {
-        "description": "Grass that needs upward normals to fix",
+        "description": "Grass that needs flat normals to fix",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_50",
-        "upwardsNormals": true,
+        "baseMaterial": "GRAY_70",
+        "flatNormals": true,
         "castShadows": false
       }
     ],

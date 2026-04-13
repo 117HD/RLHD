@@ -9348,6 +9348,37 @@
     }
   },
   {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_1",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_1",
+    "underlayIds": [ 48 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 19
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_2",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_2",
+    "underlayIds": [ 48, 50 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 17
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "underlayIds": [ 48, 50 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 15,
+    "replacements": {
+      "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3_BLENDING": "blending"
+    }
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3_BLENDING",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "underlayIds": [ 48, 50 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 10
+  },
+  {
     "name": "GOBLIN_VILLAGE_TILES_BLEND_FIX",
     "area": "GOBLIN_VILLAGE_COOKS_CHAMBER",
     "underlayIds": [

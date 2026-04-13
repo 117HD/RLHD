@@ -3867,6 +3867,24 @@
     ]
   },
   {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_1",
+    "aabbs": [
+      [ 3656, 3408, 3656, 3410 ]
+    ]
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_2",
+    "aabbs": [
+      [ 3657, 3409, 3657, 3410 ]
+    ]
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "aabbs": [
+      [ 3658, 3409, 3658, 3410 ]
+    ]
+  },
+  {
     "name": "MORYTANIA_SPIDER_CAVES",
     "areas": [
       "ARAXYTE_SPIDER_CAVES",
