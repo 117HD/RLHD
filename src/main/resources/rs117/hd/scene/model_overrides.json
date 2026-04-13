@@ -78767,11 +78767,18 @@
         "uvScale": 0.8
       },
       {
-        "description": "Grass",
-        "colors": "h == 12 && s == 2",
+        "description": "Moss",
+        "colors": "h == 12 && s == 2 && l <= 35",
         "baseMaterial": "GRASS_2",
         "uvType": "BOX",
         "uvOrientation": 256
+      },
+      {
+        "description": "Grass",
+        "colors": "h == 12 && s == 2 && l >= 36",
+        "baseMaterial": "GRAY_75",
+        "castShadows": false,
+        "windDisplacementMode": "VERTEX_JIGGLE"
       }
     ],
     "objectIds": [
