@@ -2378,6 +2378,16 @@
     "blended": false
   },
   {
+    "name": "SOPHANEM_PYRAMID_DOOR_FLOOR",
+    "area": "SOPHANEM_PYRAMID_DOOR_FLOOR",
+    "overlayIds": [
+      26
+    ],
+    "groundMaterial": "STONE",
+    "blended": false,
+    "shiftLightness": 4
+  },
+  {
     "name": "SOPHANEM_PYRAMID_UNDERSIDE",
     "area": "SOPHANEM_PYRAMIDS",
     "overlayIds": [

@@ -2952,6 +2952,12 @@
     ]
   },
   {
+    "name": "SOPHANEM_PYRAMID_DOOR_FLOOR",
+    "aabbs": [
+      [ 3294, 2777, 3295, 2779 ]
+    ]
+  },
+  {
     "name": "SOPHANEM_TEMPLE_BANK",
     "regions": [
       11088

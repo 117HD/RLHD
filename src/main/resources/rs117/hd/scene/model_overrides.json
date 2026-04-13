@@ -8738,15 +8738,31 @@
   },
   {
     "description": "Desert pyramid walls",
-    "baseMaterial": "WALL_STONE",
+    "baseMaterial": "WALL_STONE_ALT",
     "objectIds": [
       "ICS_PYRAMID_WALL_FLATSKEW",
       "ICS_PYRAMID_WALL_FLATSKEW_CORN",
       "FOUR_DIAMONDS_PYRAMID_WALL",
-      "FOUR_DIAMONDS_PYRAMID_CORNER"
+      "FOUR_DIAMONDS_PYRAMID_CORNER",
+      "FOUR_DIAMONDS_DOOR_WALL_INTERNAL_2_MIRROR",
+      "FOUR_DIAMONDS_DOOR_WALL_INTERNAL_1_MIRROR"
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "uvScale": 1.5,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Desert pyramid walls - Filler",
+    "baseMaterial": "WALL_STONE_ALT",
+    "objectIds": [
+      "FOUR_DIAMONDS_DOOR_WALL_INTERNAL_2_MIRROR",
+      "FOUR_DIAMONDS_DOOR_WALL_INTERNAL_1_MIRROR",
+      "FOUR_DIAMONDS_DOOR_WALL_INTERNAL_2",
+      "FOUR_DIAMONDS_DOOR_WALL_INTERNAL_1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.911111111
   },
   {
     "description": "Desert pyramid walls - Interior",
@@ -8793,7 +8809,8 @@
   },
   {
     "description": "Sophanem pyramid door",
-    "baseMaterial": "MARBLE_3",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
     "objectIds": [
       "ICTHALARINS_TEMPLE_DOOR",
       "CONTACT_EGYPT_COLUMN",

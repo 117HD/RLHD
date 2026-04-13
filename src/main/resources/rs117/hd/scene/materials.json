@@ -2733,6 +2733,11 @@
     "normalMap": "WALL_STONE_N"
   },
   {
+    "name": "WALL_STONE_ALT",
+    "parent": "WALL_STONE",
+    "textureScale": [ 1, 0.5, 1 ]
+  },
+  {
     "name": "WALL_STONE_LIGHT",
     "parent": "WALL_STONE",
     "brightness": 1.261
