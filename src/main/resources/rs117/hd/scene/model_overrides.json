@@ -13791,6 +13791,20 @@
   {
     "description": "Varrock Castle Doors",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationY": 512,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -89
+      }
+    ],
     "objectIds": [
       "GUIDORDOOR",
       "GUIDORDOOROPEN",
@@ -13799,11 +13813,7 @@
       "DS2_VARROCK_DOOR_OPEN",
       "DS2_VARROCK_DOOR",
       "VM_STORE_ROOM_DOOR"
-    ],
-    "uvType": "BOX",
-    "flatNormals": true,
-    "uvOrientationY": 512,
-    "uvScale": 0.4
+    ]
   },
   {
     "description": "Varrock Castle Railing",
@@ -84084,6 +84094,32 @@
     "objectIds": [
       "FOSSIL_MUSHROOM_BLOOD_STINKHORN_02",
       "FOSSIL_MUSHROOM_GROUP_SMALL_02"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Marble - Grave",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h <= 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 256
+      },
+      {
+        "description": "Collar",
+        "colors": "h == 62",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5111
+      }
+    ],
+    "objectIds": [
+      "DS2_GRAVE_CLOSED"
     ]
   }
 ]
