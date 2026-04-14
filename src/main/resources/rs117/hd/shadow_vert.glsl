@@ -31,10 +31,15 @@
 
 #include <utils/constants.glsl>
 
+#if ZONE_RENDERER
+    #include <utils/wind.glsl>
+#endif
+
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
     layout (location = 1) in vec4 vUv;
+    layout (location = 2) in vec4 vNormal;
     layout (location = 3) in int vTextureFaceIdx;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
@@ -100,6 +105,10 @@ layout (location = 0) in vec3 vPosition;
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
         }
+
+        #if WIND_DISPLACEMENT
+            worldPosition += computeZoneWindDisplacement(worldPosition, materialData, vec3(0, 1, 0), vNormal.w);
+        #endif
 
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
