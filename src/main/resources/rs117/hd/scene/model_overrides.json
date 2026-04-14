@@ -11023,6 +11023,7 @@
       "RUGMIDDLE_ORANGE",
       "RUGCORNER2",
       "RUGSIDE2",
+      "RUGINSIDECORNER",
       "BLUERUGCORNER",
       "BLUERUGSIDE",
       "BLUERUGMIDDLE",
@@ -13126,7 +13127,8 @@
       "DWARF_KELDAGRIM_ANVIL",
       "GIM_ANVIL",
       "LOVAKENGJ_ANVIL",
-      "DARKM_ANVIL"
+      "DARKM_ANVIL",
+      "DS2_GUILD_BLACKSMITH_ANVIL"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -83806,14 +83808,26 @@
       "DS2_GUILD_WALL_LOWER_EDGE",
       "DS2_GUILD_WALL_LOWER_EDGE_M",
       "DS2_GUILD_ROOF_LOWER",
-      "DS2_GUILD_ROOF_2"
+      "DS2_GUILD_WALL_LOWER_B",
+      "DS2_GUILD_ROOF_2",
+      "DS2_GUILD_STAIRS_UP"
+    ]
+  },
+  {
+    "description": "Myths Guild - Steps",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      "DS2_GUILD_STEPS",
+      "DS2_GUILD_MID_STAIRS"
     ]
   },
   {
     "description": "Myths Guild - Walls",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.7555,
     "uvOrientation": 256,
     "objectIds": [
       "DS2_GUILD_WALL_INNER",
@@ -83821,7 +83835,8 @@
       "DS2_GUILD_PILLAR_B",
       "DS2_GUILD_PILLAR_C",
       "DS2_GUILD_WALL_FENCE",
-      "DS2_GUILD_FALLOFF"
+      "DS2_GUILD_FALLOFF",
+      "DS2_GUILD_MID_STAIRS_TOP"
     ]
   },
   {
@@ -84120,6 +84135,67 @@
     ],
     "objectIds": [
       "DS2_GRAVE_CLOSED"
+    ]
+  },
+  {
+    "description": "Myths Guild - Stone - Wooden - Carpet - Altar",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h >= 3 && h <= 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Carpet",
+        "colors": "h == 40",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5111
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 42",
+        "baseMaterial": "MARBLE_2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "DS2_GUILD_ALTAR"
+    ]
+  },
+  {
+    "description": "Myths Guild - Marble - Statue",
+    "baseMaterial": "MARBLE_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "DS2_GUILD_STATUE_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Myths Guild - Stone - Wooden - Carpet - Altar",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 42",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "DS2_GUILD_BOOKSHELF_1",
+      "DS2_GUILD_BOOKSHELF_2"
     ]
   }
 ]
