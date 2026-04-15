@@ -47044,5 +47044,23 @@
     "objectIds": [
       "DS2_DREAM_BARRIER"
     ]
+  },
+  {
+    "description": "Hosideus - Myths Guild - Cooking Range",
+    "offset": [ 0, 72, -18 ],
+    "radius": 180,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 19,
+    "objectIds": [
+      "HOS_COOKING_RANGE_02",
+      "DS2_GUILD_COOKING_RANGE"
+    ]
   }
 ]
