@@ -47239,5 +47239,135 @@
     "npcIds": [
       "LEAGUE6_YAMA_THRONE"
     ]
+  },
+  {
+    "description": "YAMA_LAIR_CHAIR_LIGHT_LEAGUES",
+    "offset": [ 85, 50, -20 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "LEAGUE_6_DEMONIC_CHAIR01"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_NORTH",
+    "offset": [ -110, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_SOUTH",
+    "offset": [ 110, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_EAST",
+    "offset": [ 0, 100, 110 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_WEST",
+    "offset": [ 0, 100, -110 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
   }
 ]
