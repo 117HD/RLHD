@@ -7,8 +7,8 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.HdPluginFeatures.MAP_BUFFER_RANGE;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_INVALIDATE;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_READ;
@@ -69,7 +69,7 @@ public final class GLMappedBuffer {
 		owner.bind();
 
 		final ByteBuffer buf;
-		if (owner.target != GL_STATIC_DRAW && GL_CAPS.GL_ARB_map_buffer_range && !GLBuffer.DEBUG_MAC_OS) {
+		if (owner.target != GL_STATIC_DRAW && MAP_BUFFER_RANGE.isSupported() && !GLBuffer.DEBUG_MAC_OS) {
 			int glFlags = 0;
 			if ((flags & MAP_WRITE) != 0) glFlags |= GL_MAP_WRITE_BIT;
 			if ((flags & MAP_READ) != 0) glFlags |= GL_MAP_READ_BIT;
@@ -157,7 +157,7 @@ public final class GLMappedBuffer {
 		syncViews();
 
 		owner.bind();
-		if (owner.target != GL_STATIC_DRAW && GL_CAPS.GL_ARB_map_buffer_range && !GLBuffer.DEBUG_MAC_OS) {
+		if (owner.target != GL_STATIC_DRAW && MAP_BUFFER_RANGE.isSupported() && !GLBuffer.DEBUG_MAC_OS) {
 			byteView.flip();
 			glFlushMappedBufferRange(owner.target, byteView.position(), byteView.remaining());
 			byteView.clear();

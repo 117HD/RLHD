@@ -68,7 +68,7 @@ layout (location = 0) in vec3 vPosition;
 
     void main() {
         int vertex = gl_VertexID % 3;
-        bool isProvoking = vertex == 2;
+        bool isProvoking = vertex == 2 || PROVOKING_VERTEX_SUPPORT == 0; // When lacking support, all vertexs are treated as provoking
         int materialData = 0;
         int alphaBiasHsl = 0;
 

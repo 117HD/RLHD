@@ -14,10 +14,10 @@ import rs117.hd.utils.buffer.GLMappedBufferIntWriter.ReservedView;
 import rs117.hd.utils.buffer.GLTextureBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NVIDIA_GPU;
-import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
-import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
+import static rs117.hd.HdPluginFeatures.DRAW_INDIRECT;
+import static rs117.hd.HdPluginFeatures.MULTI_DRAW_INDIRECT;
+import static rs117.hd.HdPluginFeatures.STORAGE_BUFFERS;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
@@ -64,7 +64,7 @@ public class DynamicModelVAO implements Destructible {
 	private long[] copyNumBytes = new long[16];
 
 	DynamicModelVAO(String name, boolean useStagingBuffer) {
-		if (useStagingBuffer && SUPPORTS_STORAGE_BUFFERS) {
+		if (useStagingBuffer && STORAGE_BUFFERS.isSupported()) {
 			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
 				"VAO::VBO_STAGING::" + name,
@@ -287,13 +287,13 @@ public class DynamicModelVAO implements Destructible {
 		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tbo.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
 
 		if (drawRangeCount == 1) {
-			if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
+			if (DRAW_INDIRECT.isSupported()) {
 				cmd.DrawArraysIndirect(GL_TRIANGLES, drawOffsets[0], drawCounts[0], ZoneRenderer.indirectDrawCmdsStaging);
 			} else {
 				cmd.DrawArrays(GL_TRIANGLES, drawOffsets[0], drawCounts[0]);
 			}
 		} else {
-			if (GL_CAPS.OpenGL43 && SUPPORTS_INDIRECT_DRAW) {
+			if (MULTI_DRAW_INDIRECT.isSupported()) {
 				cmd.MultiDrawArraysIndirect(GL_TRIANGLES, drawOffsets, drawCounts, drawRangeCount, ZoneRenderer.indirectDrawCmdsStaging);
 			} else {
 				cmd.MultiDrawArrays(GL_TRIANGLES, drawOffsets, drawCounts, drawRangeCount);
