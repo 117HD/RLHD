@@ -21153,6 +21153,64 @@
     ]
   },
   {
+    "description": "FIRE_TALL_LOW",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 20.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "FX_FIRE_TALL03",
+      "FX_FIRE_TALL02",
+      "FX_FIRE_TALL01"
+    ]
+  },
+  {
+    "description": "FIRE_TALL_MID",
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "FX_FIRE_TALL03",
+      "FX_FIRE_TALL02",
+      "FX_FIRE_TALL01"
+    ]
+  },
+  {
+    "description": "FIRE_TALL_HIGH",
+    "height": 700,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "FX_FIRE_TALL03"
+    ]
+  },
+  {
     "description": "MAGICAL_FIRE",
     "height": 40,
     "alignment": "CENTER",
@@ -28308,6 +28366,68 @@
     "despawnDelay": 3800,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
     ]
   },
   {
@@ -47009,6 +47129,262 @@
     "range": 0,
     "objectIds": [
       "TOA_LOBBY_EXIT"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_TORCH",
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TORCH_DEMONIC01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_EXIT_LEAGUES",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 35,
+    "objectIds": [
+      "LEAGUE_6_YAMA_EXIT"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_THRONE_LIGHT_1_LEAGUES",
+    "offset": [ 170, 200, 290 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_THRONE_LIGHT_2_LEAGUES",
+    "offset": [ 300, 120, 250 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_THRONE_LIGHT_3_LEAGUES",
+    "offset": [ -185, 250, 250 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_THRONE_LIGHT_4_LEAGUES",
+    "offset": [ -220, 150, 275 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_THRONE_LIGHT_5_LEAGUES",
+    "offset": [ 160, 125, -175 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 20.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_CHAIR_LIGHT_LEAGUES",
+    "offset": [ 85, 50, -20 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "LEAGUE_6_DEMONIC_CHAIR01"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_NORTH",
+    "offset": [ -110, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_SOUTH",
+    "offset": [ 110, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_EAST",
+    "offset": [ 0, 100, 110 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_WEST",
+    "offset": [ 0, 100, -110 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
     ]
   },
   {
