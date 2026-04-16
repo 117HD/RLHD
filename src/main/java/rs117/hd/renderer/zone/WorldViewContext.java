@@ -125,7 +125,7 @@ public class WorldViewContext {
 			final var POOL = needsStaging ? DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
 				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = POOL.acquire();
-				if (dynamicModelVao.vao == 0)
+				if (dynamicModelVao.getVao() == 0)
 					dynamicModelVao.initialize();
 				dynamicModelVao.bindMetadataVAO(vboM);
 			}
