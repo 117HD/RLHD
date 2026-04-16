@@ -411,7 +411,6 @@ public class Zone implements Destructible {
 		short rid;
 		int vao;
 		int tboF;
-		int drawIdx;
 		byte level;
 		byte lx, lz, ux, uz; // lower/upper zone coords
 		byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
@@ -440,6 +439,13 @@ public class Zone implements Destructible {
 
 		boolean isTemp() {
 			return packedFaces == null || sortedFaces == null;
+		}
+
+		void setView(DynamicModelVAO.View view) {
+			vao = view.vao;
+			tboF = view.tboTexId;
+			startpos = view.getStartOffset();
+			endpos = view.getEndOffset();
 		}
 	}
 
@@ -608,26 +614,21 @@ public class Zone implements Destructible {
 		alphaModels.add(m);
 	}
 
-	synchronized void addTempAlphaModel(ModelOverride modelOverride, DynamicModelVAO.View view, int level, int x, int y, int z, int drawIdx) {
+	synchronized AlphaModel requestTempAlphaModel(ModelOverride modelOverride, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
 		m.id = -1;
 		m.modelOverride = modelOverride;
-		m.startpos = view.getStartOffset();
-		m.endpos = view.getEndOffset();
 		m.x = (short) x;
 		m.y = (short) y;
 		m.z = (short) z;
-		m.vao = view.vao;
-		m.tboF = view.tboTexId;
-		m.rid = -1;
-		m.drawIdx = max(drawIdx, 0);
 		m.level = (byte) level;
-		m.lx = m.lz = m.ux = m.uz = -1;
+		m.vao = m.tboF = m.rid = m.lx = m.lz = m.ux = m.uz = -1;
 		m.flags = 0;
 		m.zofx = m.zofz = 0;
 		alphaModels.add(m);
+		return m;
 	}
 
 	synchronized void postAlphaPass() {
@@ -640,7 +641,6 @@ public class Zone implements Destructible {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.sortedFaces = null;
-				m.drawIdx = 0;
 				modelCache.add(m);
 			}
 			m.asyncSortIdx = -1;
@@ -668,7 +668,7 @@ public class Zone implements Destructible {
 			final int mx = m.x + ((zx - m.zofx) << 10);
 			final int mz = m.z + ((zz - m.zofz) << 10);
 			final int my = m.y;
-			return m.drawIdx + ((mx - cx) * (mx - cx) + (my - cy) * (my - cy) + (mz - cz) * (mz - cz));
+			return (mx - cx) * (mx - cx) + (my - cy) * (my - cy) + (mz - cz) * (mz - cz);
 		}
 	}
 
@@ -729,7 +729,7 @@ public class Zone implements Destructible {
 		int eboAlphaStart = eboAlphaOffset = ZoneRenderer.eboAlphaWriter.getWrittenInts();
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
-			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
+			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level || m.vao == -1)
 				continue;
 
 			if (level < minLevel || level > maxLevel ||
