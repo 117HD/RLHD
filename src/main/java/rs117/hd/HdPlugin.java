@@ -431,6 +431,8 @@ public class HdPlugin extends Plugin {
 	public boolean freezeCulling;
 
 	@Getter
+	private boolean isPluginStopPending;
+	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
@@ -508,6 +510,7 @@ public class HdPlugin extends Plugin {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
+				isPluginStopPending = false;
 				isActive = true;
 
 				fboScene = 0;
@@ -793,6 +796,13 @@ public class HdPlugin extends Plugin {
 			if (client.getGameState() == GameState.LOGGED_IN)
 				client.setGameState(GameState.LOADING);
 		});
+	}
+
+	public void requestPluginStop() {
+		if (isPluginStopPending)
+			return;
+		log.debug("Requesting plugin to stop when safe");
+		isPluginStopPending = true;
 	}
 
 	public void stopPlugin() {
@@ -1955,6 +1965,13 @@ public class HdPlugin extends Plugin {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 
 		frame = (frame + 1) & Integer.MAX_VALUE;
+
+		if (isPluginStopPending) {
+			log.debug("Shutdown has been requested, stopping plugin");
+			isPluginStopPending = false;
+			stopPlugin();
+			return;
+		}
 
 		if (lastFrameTimeMillis > 0) {
 			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);

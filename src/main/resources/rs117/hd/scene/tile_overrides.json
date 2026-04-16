@@ -9079,7 +9079,8 @@
       174
     ],
     "groundMaterial": "WORN_TILES",
-    "shiftLightness": -30,
+    "shiftLightness": -35,
+    "minLightness": 20,
     "replacements": {
       "NONE": "!textures"
     }
