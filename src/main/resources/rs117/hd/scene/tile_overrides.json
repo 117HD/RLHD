@@ -9330,19 +9330,6 @@
     "groundMaterial": "OVERWORLD_GRASS_1"
   },
   {
-    "name": "Farming Guild Tiled Path",
-    "area": "Farming Guild",
-    "overlayIds": [
-      174
-    ],
-    "groundMaterial": "WORN_TILES",
-    "shiftLightness": -35,
-    "minLightness": 20,
-    "replacements": {
-      "NONE": "!textures"
-    }
-  },
-  {
     "name": "ZEAH_DIRT_UNDERLAY",
     "area": "KOUREND",
     "underlayIds": [
