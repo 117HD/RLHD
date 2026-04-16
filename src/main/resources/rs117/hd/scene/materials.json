@@ -38,6 +38,9 @@
     "name": "LEAF_A"
   },
   {
+    "name": "LEAF_A_2"
+  },
+  {
     "name": "WOODEN_DOOR_HANDLE",
     "vanillaTextureIndex": 0
   },
@@ -79,6 +82,16 @@
     "vanillaTextureIndex": 8,
     "hasTransparency": true,
     "shadowAlphaMap": "LEAF_A",
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ]
+  },
+  {
+    "name": "LEAVES_SIDE_ALT",
+    "hasTransparency": true,
+    "shadowAlphaMap": "LEAF_A_2",
     "textureScale": [
       1.025,
       1.025,
@@ -374,6 +387,11 @@
     "vanillaTextureIndex": 60,
     "shadowAlphaMap": "LEAF_A",
     "hasTransparency": true
+  },
+  {
+    "name": "LEAVES_TOP_2",
+    "parent": "LEAVES_TOP",
+    "shadowAlphaMap": "LEAF_A_2"
   },
   {
     "name": "CLAN_SKULL",
@@ -1343,6 +1361,11 @@
     "brightness": 1.194
   },
   {
+    "name": "GRAVEL_TOA",
+    "parent": "GRAVEL",
+    "brightness": 1.3
+  },
+  {
     "name": "DIRT_1_SHINY",
     "parent": "DIRT_1",
     "specularStrength": 1.1,
@@ -1366,20 +1389,6 @@
     "brightness": 1.211,
     "specularStrength": 1.1,
     "specularGloss": 380.0
-  },
-  {
-    "name": "MUD_1_N"
-  },
-  {
-    "name": "MUD_1",
-    "normalMap": "MUD_1_N",
-    "specularStrength": 0.5,
-    "specularGloss": 25.0
-  },
-  {
-    "name": "MUD_1_DARK",
-    "parent": "MUD_1",
-    "brightness": 0.931
   },
   {
     "name": "SAND_1_N"
@@ -2517,6 +2526,11 @@
     "replacementCondition": "modelTextures"
   },
   {
+    "name": "HD_BRICK_LIGHT",
+    "parent": "HD_BRICK",
+    "brightness": 3.25
+  },
+  {
     "name": "HD_ROOF_SHINGLES_N"
   },
   {
@@ -2624,7 +2638,8 @@
     "materialsToReplace": [
       "STONE_PATTERN"
     ],
-    "replacementCondition": "modelTextures"
+    "replacementCondition": "modelTextures",
+    "textureScale": [ 1, 1, 1.7 ]
   },
   {
     "name": "STONE_N"
@@ -2689,6 +2704,11 @@
     "brightness": 1.05
   },
   {
+    "name": "SMOOTH_STONE_LIGHT",
+    "parent": "SMOOTH_STONE",
+    "brightness": 1.175
+  },
+  {
     "name": "SMOOTH_STONE_SEMI_DARK",
     "parent": "SMOOTH_STONE",
     "brightness": 0.95
@@ -2717,6 +2737,11 @@
   {
     "name": "WALL_STONE",
     "normalMap": "WALL_STONE_N"
+  },
+  {
+    "name": "WALL_STONE_ALT",
+    "parent": "WALL_STONE",
+    "textureScale": [ 1, 0.5, 1 ]
   },
   {
     "name": "WALL_STONE_LIGHT",
@@ -3144,6 +3169,11 @@
     "specularGloss": 90.0
   },
   {
+    "name": "GROUND_WEB_1_DARK",
+    "parent": "GROUND_WEB_1",
+    "brightness": 0.7
+  },
+  {
     "name": "GROUND_WEB_2_N"
   },
   {
@@ -3252,6 +3282,19 @@
     "replacementCondition": "season == SeasonalTheme.AUTUMN"
   },
   {
+    "name": "AUTUMN_LEAVES_ORANGE_SIDE_ALT",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_SIDE_ALT"
+    ],
+    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+  },
+  {
     "name": "AUTUMN_LEAVES_ORANGE_TOP",
     "hasTransparency": true,
     "textureScale": [
@@ -3260,7 +3303,8 @@
       1.0
     ],
     "materialsToReplace": [
-      "LEAVES_ORANGE_TOP"
+      "LEAVES_ORANGE_TOP",
+      "LEAVES_TOP_2"
     ],
     "replacementCondition": "season == SeasonalTheme.AUTUMN"
   },
@@ -3347,13 +3391,28 @@
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },
   {
+    "name": "WINTER_LEAVES_SIDE_ALT",
+    "hasTransparency": true,
+    "shadowAlphaMap": "LEAF_A_2",
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_SIDE_ALT"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
     "name": "WINTER_LEAVES_TOP",
     "hasTransparency": true,
     "materialsToReplace": [
       "LEAVES_TOP",
       "LEAVES_YELLOW_TOP",
       "LEAVES_ORANGE_TOP",
-      "LEAVES_RED_TOP"
+      "LEAVES_RED_TOP",
+      "LEAVES_TOP_2"
     ],
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },
@@ -3461,7 +3520,7 @@
   },
   {
     "name": "WATER_SLUDGE",
-    "parent": "MUD_1",
+    "parent": "GRUNGE_3",
     "flowMap": "UNDERWATER_FLOW_MAP",
     "flowMapStrength": 0.075,
     "flowMapDuration": [
