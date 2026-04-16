@@ -10218,6 +10218,13 @@
     ]
   },
   {
+    "description": "Pest Control - Banner flag",
+    "flatNormals": true,
+    "objectIds": [
+      "PEST_BANNER"
+    ]
+  },
+  {
     "description": "LIGHT_WOODEN_DOCKS_MIRRORED",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
