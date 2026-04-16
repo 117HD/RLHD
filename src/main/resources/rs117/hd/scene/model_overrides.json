@@ -1321,6 +1321,7 @@
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "windDisplacementModifier": -3,
+    "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "SPIRIT_TREE_SEEDLING",
       "SPIRIT_TREE_1",
@@ -1400,71 +1401,35 @@
   {
     "description": "Spirit fairy trees",
     "baseMaterial": "BARK",
+    "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
-      "POH_SPIRIT_RING_LAST_AIP",
-      "POH_SPIRIT_RING_LAST_AIS",
-      "POH_SPIRIT_RING_LAST_AIR",
-      "POH_SPIRIT_RING_LAST_AIQ",
-      "POH_SPIRIT_RING_LAST_ALP",
-      "POH_SPIRIT_RING_LAST_ALS",
-      "POH_SPIRIT_RING_LAST_ALR",
-      "POH_SPIRIT_RING_LAST_ALQ",
-      "POH_SPIRIT_RING_LAST_AKP",
-      "POH_SPIRIT_RING_LAST_AKS",
-      "POH_SPIRIT_RING_LAST_AKR",
-      "POH_SPIRIT_RING_LAST_AKQ",
-      "POH_SPIRIT_RING_LAST_AJP",
-      "POH_SPIRIT_RING_LAST_AJS",
-      "POH_SPIRIT_RING_LAST_AJR",
-      "POH_SPIRIT_RING_LAST_AJQ",
-      "POH_SPIRIT_RING_LAST_DIP",
-      "POH_SPIRIT_RING_LAST_DIS",
-      "POH_SPIRIT_RING_LAST_DIR",
-      "POH_SPIRIT_RING_LAST_DIQ",
-      "POH_SPIRIT_RING_LAST_DLP",
-      "POH_SPIRIT_RING_LAST_DLS",
-      "POH_SPIRIT_RING_LAST_DLR",
-      "POH_SPIRIT_RING_LAST_DLQ",
-      "POH_SPIRIT_RING_LAST_DKP",
-      "POH_SPIRIT_RING_LAST_DKS",
-      "POH_SPIRIT_RING_LAST_DKR",
-      "POH_SPIRIT_RING_LAST_DKQ",
-      "POH_SPIRIT_RING_LAST_DJP",
-      "POH_SPIRIT_RING_LAST_DJS",
-      "POH_SPIRIT_RING_LAST_DJR",
-      "POH_SPIRIT_RING_LAST_DJQ",
-      "POH_SPIRIT_RING_LAST_CIP",
-      "POH_SPIRIT_RING_LAST_CIS",
-      "POH_SPIRIT_RING_LAST_CIR",
-      "POH_SPIRIT_RING_LAST_CIQ",
-      "POH_SPIRIT_RING_LAST_CLP",
-      "POH_SPIRIT_RING_LAST_CLS",
-      "POH_SPIRIT_RING_LAST_CLR",
-      "POH_SPIRIT_RING_LAST_CLQ",
-      "POH_SPIRIT_RING_LAST_CKP",
-      "POH_SPIRIT_RING_LAST_CKS",
-      "POH_SPIRIT_RING_LAST_CKR",
-      "POH_SPIRIT_RING_LAST_CKQ",
-      "POH_SPIRIT_RING_LAST_CJP",
-      "POH_SPIRIT_RING_LAST_CJS",
-      "POH_SPIRIT_RING_LAST_CJR",
-      "POH_SPIRIT_RING_LAST_CJQ",
-      "POH_SPIRIT_RING_LAST_BIP",
-      "POH_SPIRIT_RING_LAST_BIS",
-      "POH_SPIRIT_RING_LAST_BIR",
-      "POH_SPIRIT_RING_LAST_BIQ",
-      "POH_SPIRIT_RING_LAST_BLP",
-      "POH_SPIRIT_RING_LAST_BLS",
-      "POH_SPIRIT_RING_LAST_BLR",
-      "POH_SPIRIT_RING_LAST_BLQ",
-      "POH_SPIRIT_RING_LAST_BKP",
-      "POH_SPIRIT_RING_LAST_BKS",
-      "POH_SPIRIT_RING_LAST_BKR",
-      "POH_SPIRIT_RING_LAST_BKQ",
-      "POH_SPIRIT_RING_LAST_BJP",
-      "POH_SPIRIT_RING_LAST_BJS",
-      "POH_SPIRIT_RING_LAST_BJR",
-      "POH_SPIRIT_RING_LAST_BJQ"
+      "POH_SPIRIT_RING"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Gnome Stronghold Tree Leaves - Top",
+    "baseMaterial": "BARK",
+    "textureMaterial": "LEAVES_TOP_2",
+    "objectIds": [
+      "TKCANOPYMIDDLE",
+      "TKCANOPYMIDDLE2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Gnome Stronghold Tree Leaves - Side",
+    "baseMaterial": "BARK",
+    "textureMaterial": "LEAVES_SIDE_ALT",
+    "objectIds": [
+      "TKCANOPYCORNER2",
+      "TKCANOPYFILLER2",
+      "TKCANOPYFILLER",
+      "TKCANOPYCORNER"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -3824,7 +3789,14 @@
       "CASTLECRUMBLY_L",
       "CASTLECRUMBLY_R"
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "l < 70",
+        "baseMaterial": "SMOOTH_STONE_LIGHT",
+        "uvType": "MODEL_XZ"
+      }
+    ]
   },
   {
     "description": "LEGEND_GUILD_WALLS",
@@ -7936,14 +7908,38 @@
       "HOSDUN_BRICK_WALL_END_L",
       "HOSDUN_BRICK_WALL_DAMAGED",
       "HOSDUN_STONE_PILE1",
-      "HOSDUN_STONE_PILE2"
+      "HOSDUN_STONE_PILE2",
+      "HOSDUN_PILLAR"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "colorOverrides": [
       {
         "colors": "h == 0",
-        "baseMaterial": "SMOOTH_STONE",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "SARACHNIS_TOMB_WALL_WITH_SARCOPHAGUS",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "HOSDUN_BRICK_WALL_TOMB"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s > 4 && s < 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -8525,8 +8521,7 @@
       "FLAG_ENTRANCE_ANGLED",
       "FLAG_ENTRANCE2_ANGLED",
       "FLAG_ENTRANCEL_ANGLED",
-      "FLAG_ENTRANCE2L_ANGLED",
-      "FAI_VARROCK_WINDMILL_MILLSAIL"
+      "FLAG_ENTRANCE2L_ANGLED"
     ],
     "flatNormals": true
   },
@@ -8743,7 +8738,7 @@
   },
   {
     "description": "Desert pyramid walls",
-    "baseMaterial": "WALL_STONE",
+    "baseMaterial": "WALL_STONE_ALT",
     "objectIds": [
       "ICS_PYRAMID_WALL_FLATSKEW",
       "ICS_PYRAMID_WALL_FLATSKEW_CORN",
@@ -8751,7 +8746,21 @@
       "FOUR_DIAMONDS_PYRAMID_CORNER"
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "uvScale": 1.5,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Desert pyramid walls - Filler",
+    "baseMaterial": "WALL_STONE_ALT",
+    "objectIds": [
+      "FOUR_DIAMONDS_DOOR_WALL_INTERNAL_1",
+      "FOUR_DIAMONDS_DOOR_WALL_INTERNAL_2",
+      "FOUR_DIAMONDS_DOOR_WALL_INTERNAL_1_MIRROR",
+      "FOUR_DIAMONDS_DOOR_WALL_INTERNAL_2_MIRROR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.5
   },
   {
     "description": "Desert pyramid walls - Interior",
@@ -8798,7 +8807,8 @@
   },
   {
     "description": "Sophanem pyramid door",
-    "baseMaterial": "MARBLE_3",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
     "objectIds": [
       "ICTHALARINS_TEMPLE_DOOR",
       "CONTACT_EGYPT_COLUMN",
@@ -20318,7 +20328,6 @@
       "CLANWARS_PRISONPORTAL_SWAMP",
       "CLANCUP_PORTAL_CHALLENGEAREA_EXIT",
       "CLANCUP_PORTAL_FROM_BATTLEAREA",
-      "LEAGUE_5_POH_SPIRIT_RING",
       "CATA_BOSS_EXIT_PORTAL",
       "TOURNAMENT_CASTLEWARS_TO_CLANWARS",
       "CASTLEWARS_F2P_PORTAL",
@@ -20328,67 +20337,6 @@
       "SHAYZIENQUEST_PRISON_PORTAL",
       "TOB_SOTETSEG_DARKREALM_EXIT",
       "POH_TELENEXUS_1",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_AIP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_AIS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_AIR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_AIQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_ALP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_ALS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_ALR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_ALQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_AKP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_AKS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_AKR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_AKQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_AJP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_AJS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DIP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DIS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DIR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DIQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DLP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DLS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DLR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DLQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DKP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DKS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DKR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DKQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DJP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DJS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DJR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_DJQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CIP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CIS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CIR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CIQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CLP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CLS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CLR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CLQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CKP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CKS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CKR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CKQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CJP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CJS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CJR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_CJQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BIP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BIS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BIR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BIQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BLP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BLS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BLR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BLQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BKP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BKS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BKR",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BKQ",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BJP",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BJS",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BJR",
       "_1V1ARENA_PORTAL_LOWER",
       "_1V1ARENA_PORTAL_HIGHER",
       "AIRTEMPLE_EXIT_PORTAL",
@@ -20400,7 +20348,6 @@
       "TOURNAMENT_CLANWARS_TEMPPORTAL_JADFEST",
       "SOTE_LIBRARY_EXIT",
       "PRIF_AGILITY_SHORTCUT_PORTAL",
-      "LEAGUE_5_POH_SPIRIT_RING_LAST_BJQ",
       "BH_SUPPLY_CRATE_STACK",
       "HUNTING_TRAIL4_8L",
       "DT2_LASSAR_REMNANT_POSTQUEST",
@@ -21076,9 +21023,9 @@
   },
   {
     "description": "Elid - Genie's Crevice - Walls",
-    "baseMaterial": "MUD_1",
-    "uvOrientation": 256,
+    "baseMaterial": "DIRT_1_DARK",
     "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "ELID_UNDERGROUND_WALLS",
       "ELID_UNDERGROUND_WALL_SHORTER",
@@ -29106,7 +29053,8 @@
       "DT2_SCAR_ENTRY_STEPPING_STONE",
       "SCAR_VENTRICULUS_STEPPING_STONE",
       "SCAR_VENTRICULUS_STEPPING_STONE_WITH_OP",
-      "DT2_SCAR_STEPPING_STONE"
+      "DT2_SCAR_STEPPING_STONE",
+      "DT2_SCAR_STEPPING_STONE_OP"
     ],
     "castShadows": false,
     "baseMaterial": "GRUNGE_3_LIGHT_SUPER_SHINY",
@@ -30603,13 +30551,17 @@
   },
   {
     "description": "PoH - Basic stone wall",
-    "baseMaterial": "STONE_NORMALED",
-    "uvType": "BOX",
-    "uvScale": 0.8,
     "flatNormals": true,
     "objectIds": [
       "BRICKWALL",
       "BRICKWALL_NOSHARELIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l < 70",
+        "baseMaterial": "SMOOTH_STONE_LIGHT",
+        "uvType": "MODEL_XZ"
+      }
     ]
   },
   {
@@ -35083,12 +35035,19 @@
     ]
   },
   {
-    "description": "Evil Chickens Lair - Dragon Egg",
+    "description": "Black Dragon Egg",
     "baseMaterial": "BLANK_SUPERGLOSS",
     "objectIds": [
       "CHICKENQUEST_BLACK_DRAGON_EGG"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Red Dragon Egg",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "HOSDUN_RED_DRAGON_EGG"
+    ]
   },
   {
     "description": "Evil Chickens Lair - Baby Black Dragon Tunnel",
@@ -38203,13 +38162,12 @@
   },
   {
     "description": "Isle of Souls Dungeon - Cave Entrance",
-    "baseMaterial": "MUD_1",
+    "baseMaterial": "DIRT_1_DARK",
     "objectIds": [
       "SW_DUNGEON_ENTRANCE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 100
+    "uvScale": 0.65
   },
   {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
@@ -46439,7 +46397,7 @@
   },
   {
     "description": "Asgarnia Ice Dungeon - Muddy Walls",
-    "baseMaterial": "MUD_1",
+    "baseMaterial": "DIRT_1_DARK",
     "objectIds": [
       "WYVERN_CAVE_WALL_COLDMUD",
       "WYVERN_CAVE_WALLTOP_COLDMUD",
@@ -46454,6 +46412,7 @@
       "WYVERN_CAVE_COLDMUD_PILLAR_DARK01"
     ],
     "uvType": "BOX",
+    "uvScale": 0.75,
     "colorOverrides": [
       {
         "colors": 2,
@@ -46474,8 +46433,9 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "MUD_1",
-        "uvType": "BOX"
+        "baseMaterial": "DIRT_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
       },
       {
         "colors": 2,
@@ -46496,7 +46456,8 @@
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "MUD_1",
+        "baseMaterial": "DIRT_1_DARK",
+        "uvScale": 0.75,
         "uvType": "BOX"
       },
       {
@@ -46507,7 +46468,7 @@
   },
   {
     "description": "Asgarnia Ice Dungeon - Muddly Wall - Darken so it blends in with adjacent walls",
-    "baseMaterial": "MUD_1_DARK",
+    "baseMaterial": "DIRT_1_DARK",
     "objectIds": [
       "WYVERN_CAVE_WALL_COLDMUD_LAMP_SINGLE",
       "CAVEWALL_SHORTCUT_WYVERN_NORTH",
@@ -47033,7 +46994,7 @@
         "baseMaterial": "GRAY_50"
       },
       {
-        "colors": "s >= 3",
+        "colors": "s == 1 || s >= 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.66,
@@ -47050,7 +47011,7 @@
     "objectIds": [ "KR_BANKBOOTH_CLOSED" ],
     "colorOverrides": [
       {
-        "colors": "s >= 3",
+        "colors": "s == 1 || s >= 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientation": 512,
@@ -52558,11 +52519,41 @@
       "POH_SMALL_TREE6_5",
       "POH_BIG_TREE7_4",
       "POH_SMALL_TREE7_5",
-      "POH_SMALL_TREE3_5",
-      "POH_SPIRIT_TREE"
+      "POH_SMALL_TREE3_5"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_YELLOW_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_YELLOW_TOP"
+      },
+      "MAPLE_LEAVES": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "MAPLE_LEAVES"
+      }
+    }
+  },
+  {
+    "description": "PoH - Spirit Tree",
+    "baseMaterial": "NONE",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "textureMaterial": "LEAVES_SIDE_ALT",
+    "objectIds": [
+      "POH_SPIRIT_TREE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
@@ -53289,13 +53280,18 @@
   },
   {
     "description": "PoH - Spirit Tree - Raging Echo League",
-    "uvType": "BOX",
-    "uvScale": 0.4,
-    "baseMaterial": "LIGHT_BARK",
+    "baseMaterial": "NONE",
     "objectIds": [
-      "LEAGUE_5_POH_SPIRIT_TREE"
+      "LEAGUE_5_POH_SPIRIT_TREE",
+      "LEAGUE_5_POH_SPIRIT_RING"
     ],
     "colorOverrides": [
+      {
+        "colors": "h == 39 ||h == 40 || h == 42 || h == 46 || h == 53",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "baseMaterial": "LIGHT_BARK"
+      },
       {
         "colors": "h == 33 || h == 58",
         "baseMaterial": "GRAY_150"
@@ -56946,10 +56942,10 @@
         "windDisplacementModifier": -3
       },
       {
-        "description": "Grass that needs upward normals to fix",
+        "description": "Grass that needs flat normals to fix",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_50",
-        "upwardsNormals": true,
+        "baseMaterial": "GRAY_70",
+        "flatNormals": true,
         "castShadows": false
       }
     ],
@@ -61278,6 +61274,7 @@
     "description": "Kebos Lowlands - Metallic - Wooden - Mangel",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "uvOrientationY": 512,
     "uvScale": 0.6,
     "objectIds": [
       "TANNINGMANGEL_A",
@@ -61286,9 +61283,7 @@
     "colorOverrides": [
       {
         "colors": "h == 0",
-        "uvType": "BOX",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvScale": 0.5
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
         "colors": "h == 6",
@@ -73673,11 +73668,25 @@
     "objectIds": [
       "SLUG2_ROTTEN_BARREL_HALF_BURRIED_TILT",
       "SLUG2_ROTTEN_BARREL_HALF_BURRIED",
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT",
       "SEASLUG_CRATE_IN_WATER2",
       "SEASLUG_CRATE_IN_WATER",
-      "SEASLUG_MESSGAE_BOTTLE",
+      "SEASLUG_MESSGAE_BOTTLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255 || h == 37 && l == 71 || h == 42",
+        "baseMaterial": "GRAY_75",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Sailing Events and Trials - Hide Ripples and Disable Detail Culling",
+    "disableDetailCulling": true,
+    "objectIds": [
       "SAILING_CHARTING_DRINK_CRATE",
-      "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT",
       "SAILING_BT_TEMPOR_TANTRUM_COLLECTABLE_SUPPLIES",
       "SAILING_BT_JUBBLY_JIVE_COLLECTABLE_SUPPLIES",
       "SAILING_BT_GWENITH_GLIDE_COLLECTABLE_SUPPLIES"
@@ -73707,7 +73716,8 @@
       "DUCK_UPDATE_DUCKLINGS",
       "DUCK_NOOP",
       "DUCK_FEMALE_NOOP",
-      "SWAN"
+      "SWAN",
+      "DUCKLING"
     ],
     "colorOverrides": [
       {
@@ -73994,6 +74004,7 @@
   {
     "description": "Sailing - Player Ship Dock",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "disableDetailCulling": true,
     "objectIds": [
       "SAILING_GANGPLANK_PROXY",
       "SAILING_GANGPLANK_PROXY_WIDE",
@@ -74904,7 +74915,8 @@
       "SAILING_RAPIDS_POWERFUL",
       "SAILING_RAPIDS_DEADLY"
     ],
-    "castShadows": false
+    "castShadows": false,
+    "disableDetailCulling": true
   },
   {
     "description": "The Pandemonium - Docks",
@@ -81108,14 +81120,17 @@
     ]
   },
   {
-    "description": "Lumbridge Watermill - Waterwheel",
+    "description": "Windmill and Watermill Blades - Disable Detail Culling",
     "baseMaterial": "GRAY_80",
     "objectIds": [
       "WATERWHEEL_LEFT",
       "WATERWHEEL_CENTRE",
-      "WATERWHEEL_RIGHT"
+      "WATERWHEEL_RIGHT",
+      "MILLSAIL",
+      "FAI_VARROCK_WINDMILL_MILLSAIL"
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "disableDetailCulling": true
   },
   {
     "description": "Lumbridge Watermill - Waterwheel - Pole",
@@ -81124,6 +81139,14 @@
       "WATERWHEEL_WALLBASE",
       "WATERWHEEL_POLE"
     ]
+  },
+  {
+    "description": "Hot Air Balloon - Disable Detail Culling",
+    "objectIds": [
+      "ZEP_BASKET",
+      "ZEP_BALLOON"
+    ],
+    "disableDetailCulling": true
   },
   {
     "description": "Death to the Dorgushuun - Crate and Cart with Metal and Hay",
@@ -83190,6 +83213,74 @@
       {
         "colors": "h == 0 && s == 0 || h == 9",
         "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Sarachanis - Ground Webs",
+    "baseMaterial": "WEB",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HOSDUN_DECOWEB_LARGE",
+      "HOSDUN_DECOWEB_CORN",
+      "HOSDUN_DECOWEB_EDGE"
+    ]
+  },
+  {
+    "description": "Sarachanis - Egg Sacs",
+    "baseMaterial": "GROUND_WEB_1_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HOSDUN_EGG_SAC_WALL",
+      "HOSDUN_EGG_SAC_WALL_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "GRAY_80"
+      }
+    ]
+  },
+  {
+    "description": "Sarachanis - Webs",
+    "baseMaterial": "GROUND_WEB_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "TOB_NYLOCAS_DEATH_WEB"
+    ]
+  },
+  {
+    "description": "Sarachnis Tiles",
+    "areas": [ "SARACHNIS_LAIR" ],
+    "depthBias": 150,
+    "objectIds": [
+      "_1V1ARENA_DUNGEON_TILES_A"
+    ]
+  },
+  {
+    "description": "Sarachnis Tiles",
+    "baseMaterial": "GRAY_45",
+    "objectIds": [
+      "SARACHNIS_LAIR_WALLDECOR_BLOOD"
+    ]
+  },
+  {
+    "description": "Sarachanis - Egg Sacs",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HOSDUN_STALAGMITE_WEBBED_SMALL",
+      "HOSDUN_STALAGMITE_WEBBED_LARGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GROUND_WEB_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
