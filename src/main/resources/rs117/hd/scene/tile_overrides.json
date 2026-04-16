@@ -642,6 +642,30 @@
     }
   },
   {
+    "name": "LUMBRIDGE_CASTLE_BANK_ROOF",
+    "area": "LUMBRIDGE_CASTLE_BANK",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "blended": false,
+    "shiftLightness": 12,
+    "heightOffset": 30,
+    "replacements": {
+      "LUMBRIDGE_CASTLE_BANK_ROOF_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_BANK_ROOF_NO_TEXTURES",
+    "area": "LUMBRIDGE_CASTLE_BANK",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "NONE",
+    "blended": false,
+    "heightOffset": 30
+  },
+  {
     "name": "LUMBRIDGE_CASTLE_TILE_OVERLAY",
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
     "overlayIds": [
@@ -685,6 +709,7 @@
     "minSaturation": 0,
     "maxSaturation": 1,
     "shiftLightness": 7,
+    "uvScale": 0.75,
     "replacements": {
       "LUMBRIDGE_PATHS": "blending",
       "NONE": "!textures"
@@ -702,6 +727,7 @@
     "minSaturation": 0,
     "maxSaturation": 1,
     "shiftLightness": 7,
+    "uvScale": 0.75,
     "replacements": {
       "NONE": "!textures"
     }
@@ -2360,6 +2386,16 @@
     ],
     "groundMaterial": "MARBLE_1_SEMIGLOSS",
     "blended": false
+  },
+  {
+    "name": "SOPHANEM_PYRAMID_DOOR_FLOOR",
+    "area": "SOPHANEM_PYRAMID_DOOR_FLOOR",
+    "overlayIds": [
+      26
+    ],
+    "groundMaterial": "STONE",
+    "blended": false,
+    "shiftLightness": 4
   },
   {
     "name": "SOPHANEM_PYRAMID_UNDERSIDE",
@@ -5839,26 +5875,10 @@
     "blended": false
   },
   {
-    "name": "TOA_DISABLE_BLENDING_N18",
-    "area": "TOA_PATH_OF_APMEKEN_PUZZLE",
-    "overlayIds": [
-      238
-    ],
-    "blended": false
-  },
-  {
     "name": "TOA_DISABLE_BLENDING_30",
     "area": "TOA_PATH_OF_APMEKEN_BOSS",
     "overlayIds": [
       30
-    ],
-    "blended": false
-  },
-  {
-    "name": "TOA_DISABLE_BLENDING_N16",
-    "area": "TOA_PATH_OF_HET_PUZZLE",
-    "overlayIds": [
-      240
     ],
     "blended": false
   },
@@ -5913,6 +5933,16 @@
     "blended": false
   },
   {
+    "name": "TOA_CRONDIS_WATER_GREEN",
+    "area": "TOA_CRONDIS_WATER",
+    "underlayIds": [
+      133,
+      134
+    ],
+    "waterType": "POISON_WASTE",
+    "blended": false
+  },
+  {
     "name": "TOA_CRONDIS_WATER",
     "area": "TOA_CRONDIS_WATER",
     "overlayIds": [
@@ -5920,6 +5950,277 @@
     ],
     "waterType": "SWAMP_WATER",
     "blended": false
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_SAND_BLEND",
+    "groundMaterial": "VARIED_DIRT",
+    "maxLightness": 32
+  },
+  {
+    "name": "TOA_KEPHRI_DIRT",
+    "area": "TOA_PATH_OF_SCABARAS_BOSS",
+    "groundMaterial": "VARIED_DIRT",
+    "overlayIds": [
+      49
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_KEPHRI_STONE_TILE",
+    "area": "TOA_PATH_OF_SCABARAS_BOSS",
+    "groundMaterial": "STONE",
+    "overlayIds": [
+      50
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_KEPHRI_FLOOR",
+    "area": "TOMBS_OF_AMASCUT",
+    "underlayIds": [
+      6, 90, 124
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_APMEKEN_FLOOR_OVERLAY_TILE_SAND",
+    "area": "TOA_PATH_OF_APMEKEN_PUZZLE",
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 7,
+    "overlayIds": [
+      119
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_APMEKEN_FLOOR_OVERLAY",
+    "area": "TOA_PATH_OF_APMEKEN_PUZZLE",
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 9,
+    "overlayIds": [
+      238
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_APMEKEN_PUZZLE_FLOOR",
+    "area": "TOA_PATH_OF_APMEKEN_PUZZLE",
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "uvScale": 1.40,
+    "overlayIds": [ 239 ],
+    "underlayIds": [
+      110,
+      117
+    ]
+  },
+  {
+    "name": "TOA_CRONDIS_ISLAND",
+    "area": "TOA_PATH_OF_CRONDIS_BOSS",
+    "underlayIds": [
+      109,
+      117
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "TOA_CRONDIS_PUZZLE_FLOOR",
+    "area": "TOA_PATH_OF_CRONDIS_PUZZLE",
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "uvScale": 1.40,
+    "underlayIds": [
+      109,
+      117
+    ]
+  },
+  {
+    "name": "TOA_CRONDIS_PUZZLE_FLOOR_HIDDEN",
+    "area": "TOA_PATH_OF_CRONDIS_PUZZLE",
+    "overlayIds": [ 185 ],
+    "blended": false
+  },
+  {
+    "name": "TOA_CRONDIS_PUZZLE_FLOOR_OVERLAY",
+    "area": "TOA_PATH_OF_CRONDIS_PUZZLE",
+    "groundMaterial": "DIRT",
+    "uvScale": 1.40,
+    "overlayIds": [
+      185, 186, 238
+    ]
+  },
+  {
+    "name": "TOA_HET_PUZZLE_FLOOR_HIDDEN",
+    "area": "TOA_PATH_OF_HET_PUZZLE",
+    "underlayIds": [ 141 ],
+    "blended": false
+  },
+  {
+    "name": "TOA_HET_PUZZLE_FLOOR",
+    "area": "TOA_PATH_OF_HET_PUZZLE",
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "uvScale": 1.40,
+    "underlayIds": [
+      127
+    ]
+  },
+  {
+    "name": "TOA_AKKHA_WALL_UNDERLAY",
+    "area": "TOA_PATH_OF_HET_BOSS",
+    "groundMaterial": "NONE",
+    "blended": false,
+    "overlayIds": [
+      42
+    ]
+  },
+  {
+    "name": "TOA_AKKHA_TILES",
+    "area": "TOA_PATH_OF_HET_BOSS_ROOM_TILES",
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 1.40,
+    "blendedAsOpposite": true,
+    "underlayIds": [
+      94
+    ]
+  },
+  {
+    "name": "TOA_AKKHA_SAND",
+    "area": "TOMBS_OF_AMASCUT",
+    "groundMaterial": "GRAVEL",
+    "uvScale": 1.40,
+    "underlayIds": [
+      94,
+      123
+    ]
+  },
+  {
+    "name": "TOA_AMASCUT_NEXUS_FLOOR_SAND",
+    "area": "TOA_PATH_HUB",
+    "groundMaterial": "VARIED_DIRT",
+    "maxLightness": 32,
+    "shiftLightness": 10,
+    "blended": false,
+    "overlayIds": [
+      240
+    ]
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_SAND",
+    "area": "TOMBS_OF_AMASCUT",
+    "groundMaterial": "VARIED_DIRT",
+    "maxLightness": 32,
+    "shiftLightness": 10,
+    "overlayIds": [
+      222,
+      238,
+      239,
+      240,
+      242,
+      253
+    ],
+    "underlayIds": [
+      109,
+      110,
+      117,
+      127,
+      128,
+      132
+    ],
+    "replacements": {
+      "TOA_AMASCUT_FLOOR_SAND_BLEND": "blending"
+    }
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_GRAVEL",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvScale": 1.5,
+    "groundMaterial": "GRAVEL",
+    "underlayIds": [
+      156
+    ]
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_STONE_UNDERLAY",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvOrientation": -256,
+    "uvScale": 1.5,
+    "groundMaterial": "MARBLE_2",
+    "maxLightness": 17,
+    "shiftLightness": 1,
+    "setSaturation": 2,
+    "blended": false,
+    "underlayIds": [
+      104, 105
+    ]
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_STONE_RED",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvOrientation": 256,
+    "uvScale": 1.3,
+    "groundMaterial": "MARBLE_2",
+    "setSaturation": 2,
+    "shiftHue": 39,
+    "overlayIds": [
+      72,
+      194
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_STONE_LOBBY",
+    "area": "TOA_ENTRANCE_LOBBY",
+    "uvOrientation": 256,
+    "uvScale": 1.3,
+    "groundMaterial": "MARBLE_2",
+    "setSaturation": 2,
+    "shiftLightness": 2,
+    "maxLightness": 17,
+    "shiftHue": -1,
+    "overlayIds": [
+      232, 233, 236, 237
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_STONE",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvOrientation": 256,
+    "uvScale": 1.3,
+    "groundMaterial": "MARBLE_2",
+    "maxLightness": 15,
+    "minSaturation": 2,
+    "overlayIds": [
+      232, 233, 236, 237
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_STONE_TILES",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvOrientation": 256,
+    "uvScale": 1.3,
+    "groundMaterial": "MARBLE_2",
+    "overlayIds": [
+      139, 228
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_AMASCUT_BLOOD",
+    "area": "TOMBS_OF_AMASCUT",
+    "overlayIds": [
+      73, 124
+    ],
+    "waterType": "BLOOD"
+  },
+  {
+    "name": "THE_SCAR_FLOOR",
+    "area": "THE_SCAR",
+    "groundMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvOrientation": 256,
+    "underlayIds": [
+      185,
+      186
+    ]
   },
   {
     "name": "THE_SCAR_WATER",
@@ -5933,6 +6234,7 @@
   {
     "name": "LASSAR_UNDERCITY_HIDDEN",
     "area": "LASSAR_UNDERCITY",
+    "groundMaterial": "SMOOTH_STONE",
     "overlayIds": [
       264,
       286
@@ -5940,13 +6242,23 @@
     "blended": false
   },
   {
-    "name": "LASSAR_UNDERCITY_CARPET",
-    "area": "LASSAR_UNDERCITY",
+    "name": "LASSAR_UNDERCITY_DRAIN_CARPET_FIX",
+    "area": "LASSAR_UNDERCITY_DRAIN_DEPTH_FIX_TILES",
+    "underlayIds": [ 104 ],
     "overlayIds": [
       285
     ],
     "groundMaterial": "CARPET",
-    "blended": false
+    "heightOffset": 2
+  },
+  {
+    "name": "LASSAR_UNDERCITY_DIRT",
+    "area": "LASSAR_UNDERCITY",
+    "underlayIds": [ 104 ],
+    "overlayIds": [
+      285
+    ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "LASSAR_UNDERCITY_TILES_OVERLAY",
@@ -7084,6 +7396,14 @@
     "uvOrientation": 128
   },
   {
+    "name": "Tal Teok Path",
+    "area": "Tal Teok temple path blending fix",
+    "groundMaterial": "GRUNGE",
+    "overlayIds": [ 185 ],
+    "maxLightness": 21,
+    "blended": false
+  },
+  {
     "name": "Tal Teklan Dirt Path",
     "area": "Varlamore - Tlati Rainforest",
     "groundMaterial": "VARIED_DIRT",
@@ -7365,12 +7685,18 @@
     "waterType": "BLOOD"
   },
   {
-    "name": "SARACHNIS_DIRT_CLAMP",
+    "name": "SARACHNIS_LAIR_BLOOD_EXTEND",
+    "area": "SARACHNIS_LAIR_BLOOD_EXTEND",
+    "overlayIds": [ 37 ],
+    "underlayIds": [ 122 ],
+    "waterType": "BLOOD"
+  },
+  {
+    "name": "SARACHNIS_TILES",
     "area": "SARACHNIS_LAIR",
-    "underlayIds": [ 100, 122 ],
-    "groundMaterial": "DIRT",
-    "minLightness": 20,
-    "maxLightness": 23
+    "overlayIds": [ 2 ],
+    "uvScale": 0.75,
+    "groundMaterial": "DIRTY_MARBLE"
   },
   {
     "name": "SARACHNIS_DIRT",
@@ -9061,6 +9387,19 @@
     "groundMaterial": "OVERWORLD_GRASS_1"
   },
   {
+    "name": "Farming Guild Tiled Path",
+    "area": "Farming Guild",
+    "overlayIds": [
+      174
+    ],
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": -35,
+    "minLightness": 20,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "ZEAH_DIRT_UNDERLAY",
     "area": "KOUREND",
     "underlayIds": [
@@ -9334,6 +9673,37 @@
     }
   },
   {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_1",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_1",
+    "underlayIds": [ 48 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 19
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_2",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_2",
+    "underlayIds": [ 48, 50 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 17
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "underlayIds": [ 48, 50 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 15,
+    "replacements": {
+      "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3_BLENDING": "blending"
+    }
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3_BLENDING",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "underlayIds": [ 48, 50 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 10
+  },
+  {
     "name": "GOBLIN_VILLAGE_TILES_BLEND_FIX",
     "area": "GOBLIN_VILLAGE_COOKS_CHAMBER",
     "underlayIds": [
@@ -9438,31 +9808,6 @@
       59
     ],
     "groundMaterial": "SNOW_2"
-  },
-  {
-    "name": "TOA_CRONDIS_ISLAND",
-    "area": "TOA_PATH_OF_CRONDIS_BOSS",
-    "underlayIds": [
-      109,
-      117
-    ],
-    "groundMaterial": "SAND"
-  },
-  {
-    "name": "TOA_CRONDIS_WATER_GREEN",
-    "area": "TOA_CRONDIS_WATER",
-    "underlayIds": [
-      133,
-      134
-    ],
-    "waterType": "POISON_WASTE",
-    "blended": false
-  },
-  {
-    "name": "TOA_CRONDIS_WATER_BLUE",
-    "area": "TOA_CRONDIS_WATER",
-    "waterType": "WATER",
-    "blended": false
   },
   {
     "name": "MAGE_ARENA_BANK_FLOOR",
@@ -9604,20 +9949,15 @@
     }
   },
   {
-    "name": "ICY_UNDERGROUND_SNOW",
-    "area": "ICY_UNDERGROUND_DARK",
-    "underlayIds": [
-      104,
-      159,
-      161
-    ],
-    "groundMaterial": "SNOW_1"
-  },
-  {
     "name": "Ghorrock Dungeon Tiles",
     "area": "Ghorrock Dungeon Tiles",
     "overlayIds": [
       255
+    ],
+    "underlayIds": [
+      16,
+      72,
+      161
     ],
     "groundMaterial": "MARBLE_1_SEMIGLOSS",
     "blended": false
@@ -9628,8 +9968,31 @@
     "overlayIds": [
       255
     ],
+    "underlayIds": [ 160 ],
     "groundMaterial": "DIRT",
-    "blended": false
+    "maxLightness": 25,
+    "minLightness": 25
+  },
+  {
+    "name": "Ghorrock Dungeon Dirt Fix 2",
+    "area": "Ghorrock Dungeon Dirt Fix 2",
+    "overlayIds": [
+      255
+    ],
+    "underlayIds": [ 159 ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "ICY_UNDERGROUND_SNOW",
+    "area": "ICY_UNDERGROUND_DARK",
+    "underlayIds": [
+      104,
+      159,
+      160,
+      161
+    ],
+    "groundMaterial": "SNOW_1",
+    "minLightness": 70
   },
   {
     "area": "Duke Sucellus corner tile fixes",
@@ -9649,7 +10012,7 @@
       181,
       182
     ],
-    "groundMaterial": "LASSAR_UNDERCITY_TILES_SUBMERGED"
+    "waterType": "WHISPERER_WATER"
   },
   {
     "name": "LASSAR_UNDERCITY_WATER_UNDERLAY",
@@ -9679,13 +10042,25 @@
     "blended": false
   },
   {
-    "name": "LASSAR_UNDERCITY_TILES_BLENDED",
-    "area": "LASSAR_UNDERCITY",
+    "name": "LASSAR_UNDERCITY_PLAZA_BRICKS",
+    "area": "LASSAR_UNDERCITY_PLAZA_BRICKS",
     "underlayIds": [
+      44,
       46,
       150
     ],
     "groundMaterial": "LASSAR_UNDERCITY_TILES"
+  },
+  {
+    "name": "DT2_MYSTERIOUS_FIGURE_HIDEOUT_FLOOR",
+    "area": "DT2_MYSTERIOUS_FIGURE_HIDEOUT",
+    "underlayIds": [
+      42,
+      61,
+      62
+    ],
+    "groundMaterial": "PLAIN_DIRT",
+    "maxLightness": 33
   },
   {
     "name": "SHIP_SAILING_WATER_UNDERLAY",
@@ -10264,6 +10639,13 @@
     "groundMaterial": "CARPET",
     "heightOffset": 1,
     "blended": false
+  },
+  {
+    "name": "Crash Site Cavern (Monkey Madness 2)",
+    "area": "Crash Site Cavern (Monkey Madness 2)",
+    "groundMaterial": "PACKED_EARTH",
+    "blended": false,
+    "shiftLightness": 6
   },
   {
     "name": "TAG - CLIMATE - START"

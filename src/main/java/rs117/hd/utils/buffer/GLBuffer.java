@@ -39,6 +39,7 @@ import static org.lwjgl.opengl.GL44.GL_DYNAMIC_STORAGE_BIT;
 import static org.lwjgl.opengl.GL44.GL_MAP_PERSISTENT_BIT;
 import static org.lwjgl.opengl.GL44.glBufferStorage;
 import static rs117.hd.HdPlugin.GL_CAPS;
+import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -82,10 +83,6 @@ public class GLBuffer implements Destructible {
 		this(name, target, usage, STORAGE_NONE);
 	}
 
-	public static boolean supportsStorageBuffers() {
-		return GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS;
-	}
-
 	private static void copyRangeTo(int src, int dst, long srcOffsetBytes, long dstOffsetBytes, long numBytes) {
 		copyRangesTo(src, dst, new long[] { srcOffsetBytes }, new long[] { dstOffsetBytes }, new long[] { numBytes }, 1);
 	}
@@ -121,6 +118,8 @@ public class GLBuffer implements Destructible {
 		glBindBuffer(GL_COPY_WRITE_BUFFER, dstId);
 
 		try {
+			count = sortAndMergeRanges(srcOffsetBytes, dstOffsetBytes, numBytes, count);
+
 			if (GL_CAPS.GL_ARB_copy_buffer && !DEBUG_MAC_OS) {
 				copyWithCopyBuffer(srcOffsetBytes, dstOffsetBytes, numBytes, count);
 			} else if (GL_CAPS.GL_ARB_map_buffer_range && !DEBUG_MAC_OS) {
@@ -140,6 +139,62 @@ public class GLBuffer implements Destructible {
 		}
 	}
 
+	private static int sortAndMergeRanges(
+		long[] src,
+		long[] dst,
+		long[] size,
+		int count
+	) {
+		if (count <= 1)
+			return count;
+
+		// Sort by dst offset
+		for (int i = 1; i < count; i++) {
+			long dstKey = dst[i];
+			long srcKey = src[i];
+			long sizeKey = size[i];
+
+			int j = i - 1;
+			while (j >= 0 && dst[j] > dstKey) {
+				dst[j + 1] = dst[j];
+				src[j + 1] = src[j];
+				size[j + 1] = size[j];
+				j--;
+			}
+
+			dst[j + 1] = dstKey;
+			src[j + 1] = srcKey;
+			size[j + 1] = sizeKey;
+		}
+
+		// Merge adjacent ranges after sort
+		int write = 0;
+		for (int read = 1; read < count; read++) {
+			long prevSrc = src[write];
+			long prevDst = dst[write];
+			long prevSize = size[write];
+
+			long currSrc = src[read];
+			long currDst = dst[read];
+			long currSize = size[read];
+
+			boolean adjacent =
+				(prevDst + prevSize == currDst) &&
+				(prevSrc + prevSize == currSrc);
+
+			if (adjacent) {
+				size[write] += currSize;
+			} else {
+				write++;
+				src[write] = currSrc;
+				dst[write] = currDst;
+				size[write] = currSize;
+			}
+		}
+
+		return write + 1;
+	}
+
 	private static void copyWithCopyBuffer(long[] src, long[] dst, long[] size, int count) {
 		for (int i = 0; i < count; i++)
 			glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, src[i], dst[i], size[i]);
@@ -153,25 +208,6 @@ public class GLBuffer implements Destructible {
 		long[] numBytes,
 		int count
 	) {
-		// Sort by dst offset
-		for (int i = 1; i < count; i++) {
-			long dstKey = dstOffsetBytes[i];
-			long srcKey = srcOffsetBytes[i];
-			long sizeKey = numBytes[i];
-
-			int j = i - 1;
-			while (j >= 0 && dstOffsetBytes[j] > dstKey) {
-				dstOffsetBytes[j + 1] = dstOffsetBytes[j];
-				srcOffsetBytes[j + 1] = srcOffsetBytes[j];
-				numBytes[j + 1] = numBytes[j];
-				j--;
-			}
-
-			dstOffsetBytes[j + 1] = dstKey;
-			srcOffsetBytes[j + 1] = srcKey;
-			numBytes[j + 1] = sizeKey;
-		}
-
 		long srcMinOffset = Long.MAX_VALUE, dstMinOffset = Long.MAX_VALUE, bytesToMap = 0;
 		boolean contiguous = true;
 
@@ -486,7 +522,7 @@ public class GLBuffer implements Destructible {
 	}
 
 	public boolean isStorageBuffer() {
-		return storageFlags != STORAGE_NONE && supportsStorageBuffers();
+		return storageFlags != STORAGE_NONE && SUPPORTS_STORAGE_BUFFERS;
 	}
 
 	public boolean isMapped() {

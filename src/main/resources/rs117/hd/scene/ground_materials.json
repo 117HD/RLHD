@@ -131,7 +131,7 @@
   {
     "name": "VARIED_DIRT",
     "materials": [
-      "GRAVEL",
+      "GRAVEL_LIGHT",
       "DIRT_1",
       "DIRT_2"
     ]
@@ -139,7 +139,7 @@
   {
     "name": "VARIED_DIRT_SHINY",
     "materials": [
-      "GRAVEL_SHINY",
+      "GRAVEL_SHINY_LIGHT",
       "DIRT_1_SHINY",
       "DIRT_2_SHINY"
     ]
@@ -211,6 +211,12 @@
     "name": "GRUNGE_3",
     "materials": [
       "GRUNGE_3"
+    ]
+  },
+  {
+    "name": "GRUNGE_3_LIGHT_SHINY",
+    "materials": [
+      "GRUNGE_3_LIGHT_SHINY"
     ]
   },
   {

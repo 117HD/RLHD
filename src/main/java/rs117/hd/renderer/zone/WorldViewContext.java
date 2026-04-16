@@ -121,7 +121,7 @@ public class WorldViewContext {
 
 		long start = System.nanoTime();
 		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_SHADOW;
+			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
 			final var POOL = needsStaging ? DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
 				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = POOL.acquire();
@@ -147,13 +147,17 @@ public class WorldViewContext {
 		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][VAO_PLAYER].beginPlayerDraw(faces, playerDrawIndex);
 	}
 
+	int obtainPlayerDrawIndex() {
+		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][VAO_PLAYER].obtainDrawIndex();
+	}
+
 	void drawAll(int type, CommandBuffer cmd) {
 		dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].draw(cmd);
 	}
 
 	void unmap() {
 		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_SHADOW;
+			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
 			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
 		}
 	}
@@ -310,17 +314,21 @@ public class WorldViewContext {
 		Zone curZone = zones[zx][zz];
 		long revealAfterTimestampMs = 0;
 		if (curZone.uploadJob != null) {
+			Zone pendingZone = curZone.uploadJob.zone;
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
 				curZone.hashCode(),
 				worldViewId,
 				zx,
 				zz,
-				curZone.uploadJob.zone.hashCode()
+				pendingZone.hashCode()
 			);
 			revealAfterTimestampMs = curZone.uploadJob.revealAfterTimestampMs;
 			curZone.uploadJob.cancel();
 			curZone.uploadJob.release();
+
+			if (pendingZone != curZone)
+				DestructibleHandler.destroy(pendingZone);
 		}
 
 		Zone newZone = injector.getInstance(Zone.class);

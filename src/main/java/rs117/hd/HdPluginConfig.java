@@ -36,6 +36,7 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.CpuUsageLimit;
+import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
@@ -1194,17 +1195,30 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_FORCE_INDIRECT_DRAW = "experimentalForceIndirectDraw";
+	String KEY_INDIRECT_DRAW = "experimentalIndirectDraw";
 	@ConfigItem(
-		keyName = KEY_FORCE_INDIRECT_DRAW,
-		name = "Force indirect draw",
+		keyName = KEY_INDIRECT_DRAW,
+		name = "Indirect draw",
 		description =
 			"Indirect draw is currently only enabled automatically for Nvidia GPUs.<br>" +
 			"Enabling this <i>might</i> improve performance, if it is supported by your system.",
 		section = experimentalSettings
 	)
-	default boolean forceIndirectDraw() {
-		return false;
+	default DefaultBoolean indirectDraw() {
+		return DefaultBoolean.DEFAULT;
+	}
+
+	String KEY_STORAGE_BUFFERS = "experimentalStorageBuffers";
+	@ConfigItem(
+		keyName = KEY_STORAGE_BUFFERS,
+		name = "Storage buffers",
+		description =
+			"Storage buffers may improve performance, but may also cause graphical artifacts on some hardware.<br>" +
+			"By default, we disable this automatically for Intel GPUs, since older ones can be problematic.",
+		section = experimentalSettings
+	)
+	default DefaultBoolean storageBuffers() {
+		return DefaultBoolean.DEFAULT;
 	}
 
 	String KEY_ASYNC_MODEL_CACHE_SIZE = "asyncModelCacheSizeMiB";
