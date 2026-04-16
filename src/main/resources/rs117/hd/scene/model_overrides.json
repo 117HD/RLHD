@@ -10195,16 +10195,34 @@
     ]
   },
   {
-    "description": "LIGHT_WOODEN_DOCKS",
+    "description": "Pest Control - Wooden - Docks",
     "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.9,
     "objectIds": [
       "PEST_SERIM_PIER_BROKEN",
       "PEST_SERIM_PIER",
       "PEST_SERIM_PIER_VAR2",
       "PEST_SERIM_PIER_VAR3",
       "PEST_SERIM_PIER_BROKEN_MIRROR"
-    ],
-    "uvType": "BOX"
+    ]
+  },
+  {
+    "description": "Pest Control - Wooden - Docks - Rotated UV",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "PEST_SERIM_PIER_VAR1"
+    ]
+  },
+  {
+    "description": "Pest Control - Banner flag",
+    "flatNormals": true,
+    "objectIds": [
+      "PEST_BANNER"
+    ]
   },
   {
     "description": "LIGHT_WOODEN_DOCKS_MIRRORED",
@@ -11455,7 +11473,9 @@
       "CONTACT_LADDER_TWOFLOORS",
       "CONTACT_LADDER_TOP_TWOFLOORS",
       "TAL_TEKLAN_LADDER_TALL_BOTTOM",
-      "TAL_TEKLAN_LADDER_TALL_TOP"
+      "TAL_TEKLAN_LADDER_TALL_TOP",
+      "PEST_WATCHTOWER_LADDER",
+      "PEST_WATCHTOWER_LADDER_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -13684,6 +13704,7 @@
       "ELID_GENIE_DOOR_OPEN",
       "SLUG2_VILLAGE_POORDOOR",
       "PEST_POORDOOROPEN",
+      "PEST_POORDOORALWAYSOPEN",
       "MISC_BANK_DOOR"
     ],
     "uvOrientation": 512,
@@ -15915,6 +15936,18 @@
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientation": 512
+  },
+  {
+    "description": "Pest Control - Wooden - Pier support post",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvScale": 0.4,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "objectIds": [
+      "PEST_THIN_PIER_SUPPORT",
+      "PEST_THIN_PIER_SUPPORT_LOW"
+    ]
   },
   {
     "description": "Objects - Metallic - Pots",
@@ -37553,7 +37586,11 @@
       "SAILING_PANDEMONIUM_SHIPPLANK_OFF_B",
       "GANGPLANK",
       "SAILING_GENERIC_SHIPPLANK_ON",
-      "SAILING_GENERIC_SHIPPLANK_OFF"
+      "SAILING_GENERIC_SHIPPLANK_OFF",
+      "PEST_LANDER_GANGPLANK_INACTIVE",
+      "PEST_LANDER_GANGPLANK",
+      "PEST_LANDER_GANGPLANK_2",
+      "PEST_LANDER_GANGPLANK_3"
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -38820,17 +38857,6 @@
       "LAWTEMPLE_CAVEWALL_TOP5"
     ],
     "uvType": "BOX"
-  },
-  {
-    "description": "Disable shadow casting for Pest Control center platform to help with transparent shadows",
-    "objectIds": [ "PEST_PLINTH_TOP_PLAIN" ],
-    "castShadows": false
-  },
-  {
-    "description": "Disable shadow casting for Pest Control center platform to help with transparent shadows",
-    "objectIds": [ "PEST_PLINTH_TOP_PLAIN" ],
-    "seasonalTheme": "AUTUMN",
-    "castShadows": true
   },
   {
     "description": "The Scar brain matter",
@@ -75653,6 +75679,20 @@
     "description": "Pest Control Isle - Wooden - Bank Booth - Closed",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "colors": "s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ],
     "objectIds": [ "PEST_BANKBOOTH_CLOSED" ]
   },
   {
@@ -75661,6 +75701,12 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
         "colors": "a < 255",
         "baseMaterial": "BLANK_GLOSS"
       }
@@ -75668,6 +75714,32 @@
     "objectIds": [
       "PEST_BANKBOOTH",
       "PEST_BANKBOOTH_MULTI"
+    ]
+  },
+  {
+    "description": "Pest Control - Chest of Gold",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "PEST_BANK_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bronze Lock",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Coins",
+        "colors": "h == 8",
+        "baseMaterial": "GRAVEL_SHINY",
+        "uvType": "BOX",
+        "uvScale": 1.15
+      }
     ]
   },
   {
@@ -84689,6 +84761,101 @@
       "TOA_VAULT_WALL_TRIM02",
       "TOA_VAULT_WALL_TRIM04",
       "TOA_VAULT_WALL_TRIM04"
+    ]
+  },
+  {
+    "description": "Pest Control - Wooden - Walls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "PEST_WALL_NORANGE_INACTIVE",
+      "PEST_WALL_RANGE_INACTIVE",
+      "PEST_WALL_RANGE_FIXED",
+      "PEST_WALL_NORANGE_FIXED",
+      "PEST_WALL_GATE_FIXED",
+      "PEST_WALL_GATE_FIXED_MIRROR",
+      "PEST_WALL_GATE_FIXED_OPEN",
+      "PEST_WALL_GATE_FIXED_MIRROR_OPEN",
+      "PEST_WALL_GATE_DAMAGED_1",
+      "PEST_WALL_GATE_DAMAGED_1_MIRROR",
+      "PEST_WALL_GATE_DAMAGED_1_MIRROR_OPEN",
+      "PEST_WALL_GATE_DAMAGED_2",
+      "PEST_WALL_GATE_DAMAGED_2_MIRROR",
+      "PEST_WALL_GATE_DAMAGED_1_OPEN",
+      "PEST_WALL_GATE_DESTROYED_OPEN",
+      "PEST_WALL_GATE_DESTROYED_MIRROR_OPEN",
+      "PEST_WATCHTOWER_SUPPORT_SHAPE8",
+      "PEST_WATCHTOWER_SUPPORT_SHAPE8_STRAIGHT",
+      "PEST_BARRICADE_FIXED",
+      "PEST_BARRICADE_DAMAGED",
+      "PEST_BARRICADE_DESTROYED",
+      "PEST_BARRICADE_FIXED_TOP",
+      "PEST_BARRICADE_DAMAGED_TOP",
+      "PEST_BARRICADE_DESTROYED_TOP",
+      "PEST_BARRICADE_FIXED_BOTTOM",
+      "PEST_BARRICADE_DAMAGED_BOTTOM",
+      "PEST_BARRICADE_DESTROYED_BOTTOM"
+    ]
+  },
+  {
+    "description": "Pest Control - Stone - Plinth",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "PEST_PLINTH_STEP_EDGE",
+      "PEST_PLINTH_STEPS",
+      "PEST_PLINTH_STEPS_MIRROR",
+      "PEST_PLINTH_STEP_CORNER",
+      "PEST_PLINTH_STEP_TIP",
+      "PEST_PLINTH_TOP_PLAIN"
+    ]
+  },
+  {
+    "description": "Pest Control - Scoreboard",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "s == 3",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "upwardsNormals": true
+      },
+      {
+        "description": "fake text",
+        "colors": "h == 7 && s == 2",
+        "castShadows": false,
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "PEST_SCORES"
+    ]
+  },
+  {
+    "description": "Pest Control - Flags - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRAY_90",
+    "colorOverrides": [
+      {
+        "description": "Flag",
+        "colors": "s == 0",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_50",
+        "flatNormals": true
+      }
+    ],
+    "objectIds": [
+      "PEST_NOVICE_BANNER_PIER",
+      "PEST_NOVICE_BANNER_LANDER_INSIDE",
+      "PEST_NOVICE_BANNER_LANDER_TOP",
+      "PEST_VETERAN_BANNER_LANDER_INSIDE",
+      "PEST_INTERMEDIATE_BANNER_LANDER_TOP",
+      "PEST_INTERMEDIATE_BANNER_LANDER_INSIDE"
     ]
   }
 ]
