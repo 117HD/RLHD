@@ -81359,8 +81359,7 @@
     "uvScale": 1.2,
     "objectIds": [
       "WILD_CALLISTO_DUGUPSOIL02_RED",
-      "WILD_CALLISTO_DUGUPSOIL03_RED",
-      "YAMA_DUGUPSOIL2"
+      "WILD_CALLISTO_DUGUPSOIL03_RED"
     ]
   },
   {
@@ -83265,6 +83264,194 @@
         "uvType": "BOX",
         "uvScale": 0.5
       }
+    ]
+  },
+  {
+    "description": "Yamas Lair - Fire",
+    "upwardsNormals": true,
+    "objectIds": [
+      "FX_FIRE_TALL01",
+      "FX_FIRE_TALL02",
+      "FX_FIRE_TALL03"
+    ]
+  },
+  {
+    "description": "Yamas Lair - Demonic Spike",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.75,
+    "objectIds": [
+      "PILLAR_DEMONIC01_SPIKE",
+      "PILLAR_DEMONIC01_SPIKE01",
+      "PILLAR_DEMONIC01_SPIKE02",
+      "PILLAR_DEMONIC01_SPIKE03"
+    ]
+  },
+  {
+    "description": "Yamas Lair - Hanging Cage",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "COF_GIBBET"
+    ]
+  },
+  {
+    "description": "Yamas Lair - Ground Debris",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "YAMA_DUGUPSOIL1",
+      "YAMA_DUGUPSOIL2",
+      "YAMA_DUGUPSOIL3"
+    ]
+  },
+  {
+    "description": "Yamas Lair - Leagues - Sage in a Cage",
+    "baseMaterial": "GRAY_90",
+    "npcIds": [
+      "LEAGUE_SAGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Yamas Lair - Leagues - Basalt",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "LEAGUE_6_RUNE01_STACK01",
+      "LEAGUE_6_BASALT_GROUP02",
+      "LEAGUE_6_BASALT_RUNE02",
+      "LEAGUE_6_BASALT_GROUP01",
+      "LEAGUE_6_BASALT_RUNE01",
+      "LEAGUE_6_BASALT_RUNE03",
+      "LEAGUE_6_BASALT_GROUP03",
+      "LEAGUE_6_RUNE01_SHARDS01",
+      "LEAGUE_6_BASALT_BOARD01",
+      "YAMA_PEDESTAL"
+    ]
+  },
+  {
+    "description": "Yamas Lair - Leagues - Desks with Scrolls and or Skulls",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "LEAGUE_6_SKULLS_DESK01_SCROLLS01",
+      "LEAGUE_6_SKULLS_DESK01_RUNE01",
+      "ROCK_SKULLS01_LARGE01",
+      "ROCK_SKULLS01_LARGE02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.45
+      }
+    ]
+  },
+  {
+    "description": "Yamas Lair - Leagues - Scrolls and Skulls",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "SKULLS_HUMAN01_PILE01",
+      "SKULLS_HUMAN01_SINGLE01",
+      "LEAGUE_6_DECOR01_SCROLLS01",
+      "LEAGUE_6_DECOR01_SCROLLS02"
+    ]
+  },
+  {
+    "description": "Yamas Lair - Leagues - Floating Runes",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "LEAGUE_6_BASALT_RUNE04",
+      "LEAGUE_6_BASALT_RUNE03"
+    ]
+  },
+  {
+    "description": "Yamas Lair - Leagues - Throne Rug",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "LEAGUE_6_RUG01_MIDDLE01",
+      "LEAGUE_6_RUG01_SIDE01",
+      "LEAGUE_6_RUG01_SIDE02",
+      "LEAGUE_6_RUG01_END02",
+      "LEAGUE_6_RUG01_END01"
+    ]
+  },
+  {
+    "description": "Yamas Lair - Leagues - Yama & Throne",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 6 || h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      },
+      {
+        "colors": "h == 0 && s == 2 && l < 10",
+        "baseMaterial": "SMOOTH_STONE"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 4 || h == 6",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Yamas Lair - Leagues - Imps Making Relics",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "npcIds": [
+      "LEAGUE6_IMP_RELIC_TINKER_1",
+      "LEAGUE6_IMP_RELIC_TINKER_2",
+      "LEAGUE6_IMP_RELIC_TINKER_3",
+      "LEAGUE6_IMP_JUMPING_1",
+      "LEAGUE6_IMP_JUMPING_2",
+      "LEAGUE6_IMP_JUMPING_3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 5",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Yamas Lair - Leagues - Imps Carrying Relics",
+    "baseMaterial": "GRAY_90",
+    "npcIds": [
+      "LEAGUE6_IMP_RELIC_CARRY_1",
+      "LEAGUE6_IMP_RELIC_CARRY_2",
+      "LEAGUE6_IMP_RELIC_CARRY_3",
+      "LEAGUE6_IMP_RELIC_CARRY_4"
     ]
   }
 ]
