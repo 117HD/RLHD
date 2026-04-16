@@ -634,6 +634,30 @@
     }
   },
   {
+    "name": "LUMBRIDGE_CASTLE_BANK_ROOF",
+    "area": "LUMBRIDGE_CASTLE_BANK",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "blended": false,
+    "shiftLightness": 12,
+    "heightOffset": 30,
+    "replacements": {
+      "LUMBRIDGE_CASTLE_BANK_ROOF_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_BANK_ROOF_NO_TEXTURES",
+    "area": "LUMBRIDGE_CASTLE_BANK",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "NONE",
+    "blended": false,
+    "heightOffset": 30
+  },
+  {
     "name": "LUMBRIDGE_CASTLE_TILE_OVERLAY",
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
     "overlayIds": [
@@ -2352,6 +2376,16 @@
     ],
     "groundMaterial": "MARBLE_1_SEMIGLOSS",
     "blended": false
+  },
+  {
+    "name": "SOPHANEM_PYRAMID_DOOR_FLOOR",
+    "area": "SOPHANEM_PYRAMID_DOOR_FLOOR",
+    "overlayIds": [
+      26
+    ],
+    "groundMaterial": "STONE",
+    "blended": false,
+    "shiftLightness": 4
   },
   {
     "name": "SOPHANEM_PYRAMID_UNDERSIDE",
@@ -7386,12 +7420,18 @@
     "waterType": "BLOOD"
   },
   {
-    "name": "SARACHNIS_DIRT_CLAMP",
+    "name": "SARACHNIS_LAIR_BLOOD_EXTEND",
+    "area": "SARACHNIS_LAIR_BLOOD_EXTEND",
+    "overlayIds": [ 37 ],
+    "underlayIds": [ 122 ],
+    "waterType": "BLOOD"
+  },
+  {
+    "name": "SARACHNIS_TILES",
     "area": "SARACHNIS_LAIR",
-    "underlayIds": [ 100, 122 ],
-    "groundMaterial": "DIRT",
-    "minLightness": 20,
-    "maxLightness": 23
+    "overlayIds": [ 2 ],
+    "uvScale": 0.75,
+    "groundMaterial": "DIRTY_MARBLE"
   },
   {
     "name": "SARACHNIS_DIRT",
@@ -9317,6 +9357,37 @@
       "DEFAULT_PACKED_EARTH": "h < 8 || !blending",
       "NONE": "!textures"
     }
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_1",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_1",
+    "underlayIds": [ 48 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 19
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_2",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_2",
+    "underlayIds": [ 48, 50 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 17
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "underlayIds": [ 48, 50 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 15,
+    "replacements": {
+      "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3_BLENDING": "blending"
+    }
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3_BLENDING",
+    "area": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "underlayIds": [ 48, 50 ],
+    "groundMaterial": "GRASS_1",
+    "maxLightness": 10
   },
   {
     "name": "GOBLIN_VILLAGE_TILES_BLEND_FIX",
