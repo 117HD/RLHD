@@ -59,6 +59,10 @@ public final class Camera {
 
 	public boolean isViewDirty() { return (dirtyFlags & VIEW_MATRIX_DIRTY) != 0; }
 
+	public synchronized void setDirty() {
+		dirtyFlags |= PROJ_CHANGED | VIEW_CHANGED;
+	}
+
 	public Camera setOrthographic(boolean newOrthographic) {
 		if (orthographic != newOrthographic) {
 			synchronized (this) {
@@ -187,7 +191,8 @@ public final class Camera {
 		return this;
 	}
 
-	public Camera setPosition(float[] newPosition) {
+	public Camera setPosition(float... newPosition) {
+		assert newPosition.length >= 3;
 		if (position[0] != newPosition[0] || position[1] != newPosition[1] || position[2] != newPosition[2]) {
 			synchronized (this) {
 				position[0] = newPosition[0];

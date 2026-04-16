@@ -911,25 +911,38 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	private int getIdOrImpostorId(TileObject object, @Nullable Renderable renderable) {
+		assert client.isClientThread();
+		if (renderable instanceof DynamicObject) {
+			var def = client.getObjectDefinition(object.getId());
+			if (def != null && def.getImpostorIds() != null) {
+				var impostor = def.getImpostor();
+				if (impostor != null)
+					return impostor.getId();
+			}
+			return object.getId();
+		}
+
 		return ModelHash.getUuidId(ModelHash.generateUuid(client, object.getHash(), renderable));
 	}
 
-	private String getModelInfo(Renderable renderable) {
-		if (renderable == null)
+	private String getModelInfo(Renderable r) {
+		if (r == null)
 			return " null renderable";
 
-		Model model = renderable instanceof Model ? (Model) renderable : renderable.getModel();
+		Model model = r instanceof Model ? (Model) r : r.getModel();
 		if (model == null)
 			return " null model";
 
+		boolean isStatic =
+			r instanceof Model ||
+			r instanceof DynamicObject && ((DynamicObject) r).getModelZbuf() != null;
+		boolean isDynamic = r instanceof DynamicObject || r instanceof Actor;
+
 		switch (mode) {
 			case MODE_TILE_INFO:
-				return
-					"  " + (
-						renderable instanceof Model ? "<col=#00ff00>static</col>" :
-						(renderable instanceof DynamicObject || renderable instanceof Actor) ?
-							"<col=#ff0000>dynamic</col>" : "<col=#ffff00>maybe dynamic</col>"
-					);
+				return isStatic ? " <col=#00ff00>static</col>" :
+					isDynamic ? " <col=#ff0000>dynamic</col>" :
+						" <col=#ffff00>maybe dynamic</col>";
 			case MODE_MODEL_INFO:
 				int[] faceColors = model.getFaceColors1();
 				byte[] faceTransparencies = model.getFaceTransparencies();
@@ -1538,7 +1551,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				g.setColor(TRANSPARENT_YELLOW_50);
 				drawLocalAabb(g, localAabb);
 				g.setColor(TRANSPARENT_YELLOW_100);
-				drawLocalAabbLabel(g, localAabb, "Region ID\n" + regionId, false);
+				drawLocalAabbLabel(
+					g, localAabb,
+					"Region ID\n" +
+					regionId + "\n" +
+					regionX + ", " + regionY,
+					false
+				);
 			}
 		}
 	}

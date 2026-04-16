@@ -144,13 +144,14 @@ public class ModelOverrideManager {
 			current = null;
 		}
 
-		boolean isDuplicate = false;
-
 		if (entry.areas.length == 0) {
 			// Non-area-restricted override, of which there can only be one per UUID
 
 			// A dummy override is used as the base if only area-specific overrides exist
-			isDuplicate = current != null && !current.isDummy;
+			boolean isDuplicate = current != null && !current.isDummy;
+
+			if (isDuplicate && entry.isGenerated)
+				return; // Manually specified model overrides should take precedence over generated ones
 
 			if (isDuplicate && Props.DEVELOPMENT) {
 				String name = null;
@@ -213,7 +214,8 @@ public class ModelOverrideManager {
 				if (sailId == null)
 					continue;
 				ModelOverride sailOverride = new ModelOverride();
-				sailOverride.description = "Disable detail culling of boat sails (generated)";
+				sailOverride.isGenerated = true;
+				sailOverride.description = "Disable detail culling of boat sails";
 				sailOverride.objectIds = Set.of(sailId);
 				sailOverride.disableDetailCulling = true;
 				sailOverride.normalize(plugin);

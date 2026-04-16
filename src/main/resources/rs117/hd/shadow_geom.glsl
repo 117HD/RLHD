@@ -43,7 +43,7 @@ flat in vec3 gUv[3];
 flat in int gMaterialData[3];
 flat in int gCastShadow[3];
 
-out vec3 fUvw;
+out vec4 fUvw;
 flat out int fMaterialData;
 
 #if SHADOW_TRANSPARENCY
@@ -67,7 +67,7 @@ void main() {
     fMaterialData = materialData;
 
     for (int i = 0; i < 3; i++) {
-        fUvw = vec3(uvw[i].xy, material.colorMap);
+        fUvw = vec4(uvw[i].xy, material.colorMap, material.shadowAlphaMap);
         // Scroll UVs
         fUvw.xy += material.scrollDuration * elapsedTime;
         // Scale from the center

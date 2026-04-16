@@ -32,9 +32,9 @@
 #include <utils/constants.glsl>
 
 layout (location = 0) in vec3 vPosition;
-layout (location = 1) in vec3 vUv;
 
 #if ZONE_RENDERER
+    layout (location = 1) in vec4 vUv;
     layout (location = 3) in int vTextureFaceIdx;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
@@ -42,7 +42,7 @@ layout (location = 1) in vec3 vUv;
     uniform isamplerBuffer textureFaces;
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
-        out vec3 fUvw;
+        out vec4 fUvw;
         flat out int fMaterialData;
     #endif
 
@@ -77,18 +77,17 @@ layout (location = 1) in vec3 vUv;
             isShadowDisabled = tint.w > 0;
         }
 
+        Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
         #if SHADOW_MODE == SHADOW_MODE_DETAILED
             if (!isShadowDisabled) {
-                Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-
-                fUvw = vec3(vUv.xy, material.colorMap);
+                fUvw = vec4(vUv.xy, material.colorMap, material.shadowAlphaMap);
                 // Scroll UVs
                 fUvw.xy += material.scrollDuration * elapsedTime;
                 // Scale from the center
                 fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
             } else {
                 // All outputs must be written for Mac compatibility, even if unused
-                fUvw = vec3(0);
+                fUvw = vec4(0);
             }
             fMaterialData = materialData;
         #endif
@@ -106,9 +105,13 @@ layout (location = 1) in vec3 vUv;
             fOpacity = opacity;
         #endif
 
-        gl_Position = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
+        vec4 clipPosition = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
+        if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
+            clipPosition.z += SHADOW_TRANSPARENCY_BIAS;
+        gl_Position = clipPosition;
     }
 #else
+    layout (location = 1) in vec3 vUv;
     layout (location = 3) in int vAlphaBiasHsl;
     layout (location = 4) in int vMaterialData;
     layout (location = 5) in int vTerrainData;
@@ -151,7 +154,7 @@ layout (location = 1) in vec3 vUv;
 
         #if SHADOW_MODE == SHADOW_MODE_DETAILED
             gPosition = vPosition;
-            gUv = vUv;
+            gUv = vUv.xyz;
             gMaterialData = vMaterialData;
             gCastShadow = shouldCastShadow;
             #if SHADOW_TRANSPARENCY

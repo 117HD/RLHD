@@ -59,15 +59,25 @@ public final class FacePrioritySorter implements AutoCloseable {
 		if (diameter <= 0 || diameter >= MAX_DIAMETER)
 			return;
 
+		int unsortedCount = 0;
 		int minFz = diameter, maxFz = 0;
-		Arrays.fill(zsortHead, 0, diameter + 1, -1);
-		Arrays.fill(zsortTail, 0, diameter + 1, -1);
+		boolean needsClear = true;
 
 		// Build the z-sorted linked list of faces
 		for (int i = 0; i < visibleFaces.length; ++i) {
 			final int faceIdx = visibleFaces.array[i];
-			final int distance = clamp(faceDistances[faceIdx], 0, diameter);
+			if (faceDistances[faceIdx] == Integer.MIN_VALUE) {
+				orderedFaces[unsortedCount++] = faceIdx;
+				continue;
+			}
 
+			if (needsClear) {
+				Arrays.fill(zsortHead, 0, diameter + 1, -1);
+				Arrays.fill(zsortTail, 0, diameter + 1, -1);
+				needsClear = false;
+			}
+
+			final int distance = clamp(faceDistances[faceIdx], 0, diameter);
 			final int tailFaceIdx = zsortTail[distance];
 			if (tailFaceIdx == -1) {
 				zsortHead[distance] = zsortTail[distance] = faceIdx;
@@ -81,7 +91,13 @@ public final class FacePrioritySorter implements AutoCloseable {
 				zsortTail[distance] = faceIdx;
 			}
 		}
+
+		if (visibleFaces.length - unsortedCount == 0)
+			return; // No faces to sort, so don't modify the visible faces array
+
 		visibleFaces.reset();
+		if (unsortedCount > 0) // Push unsorted faces to be drawn first
+			visibleFaces.put(orderedFaces, 0, unsortedCount);
 
 		final byte[] priorities = model.getFaceRenderPriorities();
 		if (priorities == null) {

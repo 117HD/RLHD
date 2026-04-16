@@ -174,6 +174,7 @@ public class LightManager {
 			sceneContext.lights.clear();
 			sceneContext.knownProjectiles.clear();
 			loadSceneLights(sceneContext);
+			swapSceneLights(sceneContext, null);
 
 			client.getNpcs().forEach(npc -> {
 				addNpcLights(npc);
@@ -653,16 +654,16 @@ public class LightManager {
 				}
 			}
 		}
-
-		// Force lights to instantly appear when spawning them as part of a new scene
-		for (var light : sceneContext.lights)
-			light.fadeInDuration = 0;
-
-		// Set the plane to an unreachable plane, forcing the first `toggleTemporaryVisibility` call to not fade
-		currentPlane = -1;
 	}
 
 	public void swapSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext) {
+		// Force lights to instantly appear when spawning them as part of a new scene
+		for (int i = 0; i < sceneContext.lights.size(); i++)
+			sceneContext.lights.get(i).fadeInDuration = 0;
+
+		// Set the plane to an unreachable plane, forcing the first `toggleTemporaryVisibility` call to not fade
+		currentPlane = -1;
+
 		if (oldSceneContext == null)
 			return;
 
@@ -819,7 +820,17 @@ public class LightManager {
 			}
 		}
 
-		sceneContext.lights.removeIf(light -> light.tileObject == tileObject);
+		for (int i = 0; i < sceneContext.lights.size(); ++i) {
+			var light = sceneContext.lights.get(i);
+			if (light.tileObject == tileObject) {
+				if (light.tileObjectId == tileObjectId)
+					return; // Duplicate spawn, probably from spawn event right after scene load
+
+				// Schedule despawning of the old light
+				light.markedForRemoval = true;
+			}
+		}
+
 		spawnLights(sceneContext, tileObject, tileObjectId);
 	}
 

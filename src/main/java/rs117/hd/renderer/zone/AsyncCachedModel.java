@@ -12,8 +12,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.collections.PrimitiveIntArray;
 import rs117.hd.utils.jobs.Job;
 
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
@@ -43,13 +43,15 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	public static void initialize(Injector injector, long sizeLimitBytes) {
 		int maxModelCount = (int) (sizeLimitBytes / MAX_MODEL_SIZE_BYTES);
-		AsyncCachedModel.POOL = new ConcurrentPool<>(injector, AsyncCachedModel.class, maxModelCount);
+		if (AsyncCachedModel.POOL == null)
+			AsyncCachedModel.POOL = new ConcurrentPool<>(() -> injector.getInstance(AsyncCachedModel.class), maxModelCount);
 		log.debug("Initialized AsyncCachedModel pool with {} models", maxModelCount);
 	}
 
 	public static void destroy() {
 		INFLIGHT.clear();
-		AsyncCachedModel.POOL = null;
+		if (AsyncCachedModel.POOL != null)
+			AsyncCachedModel.POOL.destroy();
 	}
 
 	private int sceneId;
@@ -77,8 +79,6 @@ public final class AsyncCachedModel extends Job implements Model {
 	private byte overrideLuminance;
 
 	private long hash;
-
-	private Zone zone;
 
 	private final CachedArrayField<?>[] cachedFields = new CachedArrayField<?>[21];
 
@@ -110,10 +110,19 @@ public final class AsyncCachedModel extends Job implements Model {
 	private final CachedArrayField<int[]> vertexNormalsY = addField(ArrayType.VERTEX_INT);
 	private final CachedArrayField<int[]> vertexNormalsZ = addField(ArrayType.VERTEX_INT);
 
-	private final PrimitiveIntArray visibleFaces = new PrimitiveIntArray();
-	private final PrimitiveIntArray culledFaces = new PrimitiveIntArray();
-
 	private final AtomicBoolean processing = new AtomicBoolean(false);
+	private WorldViewContext ctx;
+	private Projection projection;
+	private TileObject tileObject;
+	private ModelOverride modelOverride;
+	private Zone zone;
+	private boolean isModelPartiallyVisible;
+	private boolean hasAlpha;
+	private int drawIndex;
+	private int orientation;
+	private int x;
+	private int y;
+	private int z;
 	private UploadModelFunc uploadFunc;
 
 	@SuppressWarnings("unchecked")
@@ -188,8 +197,32 @@ public final class AsyncCachedModel extends Job implements Model {
 	@Override
 	public short[] getFaceTextures() { return faceTextures.getValue(); }
 
-	public synchronized void queue(@Nonnull Model model, Zone zone, UploadModelFunc uploadFunc) {
+	public synchronized void queue(
+		@Nonnull WorldViewContext ctx,
+		@Nonnull Projection projection,
+		@Nonnull TileObject tileObject,
+		@Nonnull ModelOverride modelOverride,
+		@Nonnull Model model,
+		@Nonnull Zone zone,
+		boolean isModelPartiallyVisible,
+		boolean hasAlpha,
+		int drawIndex,
+		int orientation,
+		int x, int y, int z,
+		@Nonnull UploadModelFunc uploadFunc
+	) {
+		this.ctx = ctx;
+		this.projection = projection;
+		this.tileObject = tileObject;
+		this.modelOverride = modelOverride;
 		this.zone = zone;
+		this.isModelPartiallyVisible = isModelPartiallyVisible;
+		this.hasAlpha = hasAlpha;
+		this.drawIndex = drawIndex;
+		this.orientation = orientation;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 		this.uploadFunc = uploadFunc;
 
 		// Scalars
@@ -218,8 +251,11 @@ public final class AsyncCachedModel extends Job implements Model {
 		verticesCount = model.getVerticesCount();
 		faceCount = model.getFaceCount();
 
+		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
+		waitForCompletion();
+
 		processing.set(false);
-		if (zone != null)
+		if (hasAlpha)
 			zone.pendingModelJobs.add(this);
 		INFLIGHT.add(this);
 		queue();
@@ -276,18 +312,33 @@ public final class AsyncCachedModel extends Job implements Model {
 		if (!processing.compareAndSet(false, true))
 			return false;
 
-		try (
-			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
-			FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
-		) {
-			uploadFunc.upload(sceneUploader, facePrioritySorter, visibleFaces, culledFaces, this);
+		try {
+			uploadFunc.upload(
+				ctx,
+				projection,
+				tileObject,
+				modelOverride,
+				this,
+				zone,
+				isModelPartiallyVisible,
+				hasAlpha,
+				drawIndex,
+				orientation,
+				x, y, z
+			);
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
 		} finally {
 			INFLIGHT.remove(this);
-			if (zone != null)
+			if (zone != null && hasAlpha)
 				zone.pendingModelJobs.remove(this);
+
+			ctx = null;
+			projection = null;
 			zone = null;
+			tileObject = null;
+			modelOverride = null;
+			drawIndex = -1;
 
 			// Reset cached status before returning to the POOL
 			for (int i = 0; i < cachedFields.length; i++)
@@ -369,11 +420,17 @@ public final class AsyncCachedModel extends Job implements Model {
 	@FunctionalInterface
 	public interface UploadModelFunc {
 		void upload(
-			SceneUploader sceneUploader,
-			FacePrioritySorter facePrioritySorter,
-			PrimitiveIntArray visibleFaces,
-			PrimitiveIntArray culledFaces,
-			Model model
+			@Nonnull WorldViewContext ctx,
+			@Nonnull Projection projection,
+			@Nonnull TileObject tileObject,
+			@Nonnull ModelOverride modelOverride,
+			@Nonnull Model model,
+			@Nonnull Zone zone,
+			boolean isModelPartiallyVisible,
+			boolean hasAlpha,
+			int drawIndex,
+			int orientation,
+			int x, int y, int z
 		);
 	}
 
