@@ -83843,16 +83843,6 @@
     ]
   },
   {
-    "description": "Myths Guild - Steps",
-    "baseMaterial": "ROCK_3_SMOOTH",
-    "uvType": "BOX",
-    "uvOrientation": 256,
-    "objectIds": [
-      "DS2_GUILD_STEPS",
-      "DS2_GUILD_MID_STAIRS"
-    ]
-  },
-  {
     "description": "Myths Guild - Walls",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
