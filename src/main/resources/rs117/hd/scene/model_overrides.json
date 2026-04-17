@@ -51921,7 +51921,6 @@
   {
     "description": "Fortis Roads - Lighten Broken Trims - No depth bias, causes issues for bridge otherwise",
     "areas": [ "FORTIS_BRIDGE" ],
-    "baseMaterial": "GRAY_110",
     "objectIds": [
       "FLOOR_CIVITAS_MIDDLE01",
       "FLOOR_CIVITAS_MIDDLE02"
