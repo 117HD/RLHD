@@ -52112,13 +52112,82 @@
     ]
   },
   {
-    "description": "Fortis Roads - Lighten Broken Trims",
+    "description": "Fortis Roads - Lighten and Flatten Broken Trims",
+    "terrainVertexSnap": true,
+    "baseMaterial": "GRAY_110",
+    "depthBias": 2,
+    "terrainVertexSnapThreshold": 4,
     "objectIds": [
       "FLOOR_CIVITAS_FADE01",
       "FLOOR_CIVITAS_FADE02",
       "FLOOR_CIVITAS_MIDDLE01",
       "FLOOR_CIVITAS_MIDDLE02",
+      "FLOOR_CIVITAS_MIDDLE01_DARK01",
+      "FLOOR_CIVITAS_MIDDLE01_DARK02",
+      "FLOOR_CIVITAS_MIDDLE01_DARK03",
+      "FLOOR_CIVITAS_MIDDLE01_DARK02_DUNGEONENTRANCE_ICON_CLICKABLE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 1",
+        "baseMaterial": "GRAY_115",
+        "terrainVertexSnap": true,
+        "terrainVertexSnapThreshold": 1,
+        "flatNormals": true,
+        "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Fortis Roads - Lighten and Semi Flatten Corner Trim",
+    "terrainVertexSnap": true,
+    "baseMaterial": "GRAY_110",
+    "depthBias": 2,
+    "terrainVertexSnapThreshold": 1,
+    "objectIds": [
       "FLOOR_CIVITAS_HALF01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 1",
+        "baseMaterial": "GRAY_115",
+        "terrainVertexSnap": true,
+        "terrainVertexSnapThreshold": 1,
+        "flatNormals": true,
+        "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Fortis Roads - Darken and Flatten Broken Trims at Gates",
+    "areas": [ "FORTIS_ROADS_TRIM_DARKEN" ],
+    "terrainVertexSnap": true,
+    "baseMaterial": "GRAY_90",
+    "depthBias": 2,
+    "terrainVertexSnapThreshold": 4,
+    "objectIds": [
+      "FLOOR_CIVITAS_FADE02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 1",
+        "terrainVertexSnap": true,
+        "terrainVertexSnapThreshold": 1,
+        "flatNormals": true,
+        "depthBias": 1,
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Fortis Roads - Lighten Broken Trims - No depth bias, causes issues for bridge otherwise",
+    "areas": [ "FORTIS_BRIDGE" ],
+    "objectIds": [
+      "FLOOR_CIVITAS_MIDDLE01",
+      "FLOOR_CIVITAS_MIDDLE02"
     ],
     "uvType": "BOX",
     "colorOverrides": [
