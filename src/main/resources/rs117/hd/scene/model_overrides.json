@@ -11102,14 +11102,15 @@
     ]
   },
   {
-    "description": "Motherlode Mine Walls",
+    "description": "Motherlode Mine - Walls",
     "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "MOTHERLODE_WALL",
       "MOTHERLODE_SUPPORT_LEFT",
       "MOTHERLODE_SUPPORT_MIDDLE",
       "MOTHERLODE_SUPPORT_RIGHT",
-      "MOTHERLODE_ORE_SINGLE",
       "MOTHERLODE_DEPLETED_SINGLE",
       "MOTHERLODE_DEPLETED_LEFT",
       "MOTHERLODE_DEPLETED_MIDDLE",
@@ -11117,13 +11118,29 @@
       "MGUILD_WALL",
       "MGUILD_WALL_LEFT",
       "MGUILD_WALL_RIGHT",
+      "MOTHERLODE_WATER_TUNNEL"
+    ]
+  },
+  {
+    "description": "Motherlode Mine - Ore Walls",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "colors": "h == 0",
+        "baseMaterial": "GRAVEL_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.711
+      }
+    ],
+    "objectIds": [
+      "MOTHERLODE_ORE_SINGLE",
       "MOTHERLODE_ORE_LEFT",
       "MOTHERLODE_ORE_MIDDLE",
-      "MOTHERLODE_ORE_RIGHT",
-      "MOTHERLODE_WATER_TUNNEL"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7
+      "MOTHERLODE_ORE_RIGHT"
+    ]
   },
   {
     "areas": [
@@ -11144,10 +11161,6 @@
     "areas": [ "Motherlode Mine Dark Wall Fix" ],
     "objectIds": [
       "MOTHERLODE_WALL",
-      "MOTHERLODE_ORE_SINGLE",
-      "MOTHERLODE_ORE_LEFT",
-      "MOTHERLODE_ORE_MIDDLE",
-      "MOTHERLODE_ORE_RIGHT",
       "MOTHERLODE_DEPLETED_SINGLE",
       "MOTHERLODE_DEPLETED_LEFT",
       "MOTHERLODE_DEPLETED_MIDDLE",
@@ -11155,6 +11168,28 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Motherlode Mine - Ore Walls Lighten",
+    "areas": [ "Motherlode Mine Dark Wall Fix" ],
+    "baseMaterial": "DIRT_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Ore",
+        "colors": "h == 0",
+        "baseMaterial": "GRAVEL_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.711
+      }
+    ],
+    "objectIds": [
+      "MOTHERLODE_ORE_SINGLE",
+      "MOTHERLODE_ORE_LEFT",
+      "MOTHERLODE_ORE_MIDDLE",
+      "MOTHERLODE_ORE_RIGHT"
+    ]
   },
   {
     "description": "Motherlode Mine Walls Lighten & Darken Caves",
