@@ -994,9 +994,6 @@ public class LightManager {
 
 	@Subscribe
 	public void onProjectileMoved(ProjectileMoved projectileMoved) {
-		if (!shouldShowProjectileLights())
-			return;
-
 		SceneContext sceneContext = plugin.getSceneContext();
 		if (sceneContext == null)
 			return;
