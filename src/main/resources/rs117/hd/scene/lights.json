@@ -47386,5 +47386,74 @@
       "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
       "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
     ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Robert the Strong Barrier 1",
+    "offset": [ -54, 64, 0 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_DREAM_BARRIER"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Robert the Strong Barrier 2",
+    "offset": [ -54, 64, -128 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_DREAM_BARRIER"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Robert the Strong Barrier 3",
+    "offset": [ -54, 64, 128 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_DREAM_BARRIER"
+    ]
+  },
+  {
+    "description": "Hosideus - Myths Guild - Cooking Range",
+    "offset": [ 0, 72, -18 ],
+    "radius": 180,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 19,
+    "objectIds": [
+      "HOS_COOKING_RANGE_02",
+      "DS2_GUILD_COOKING_RANGE"
+    ]
   }
 ]
