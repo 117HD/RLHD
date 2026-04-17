@@ -57,6 +57,7 @@ import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.HdPluginFeatures.TEXTURE_STORAGE_3D;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -405,7 +406,7 @@ public class MaterialManager {
 			log.debug("Allocating {}x{} texture array with {} layers", textureSize, textureSize, textureLayers.size());
 			int mipLevels = 1 + floor(log2(textureSize));
 			int format = GL_SRGB8_ALPHA8;
-			if (HdPlugin.GL_CAPS.glTexStorage3D != 0) {
+			if (TEXTURE_STORAGE_3D.isSupported()) {
 				ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, textureLayers.size());
 			} else {
 				// Allocate each mip level separately
