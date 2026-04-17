@@ -27,11 +27,15 @@ package rs117.hd.utils;
 import java.awt.Canvas;
 import java.awt.Container;
 import java.awt.Frame;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.lang.management.ManagementFactory;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.swing.JFrame;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.client.util.OSType;
 import rs117.hd.data.ObjectType;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -507,5 +511,33 @@ public final class HDUtils {
 		}
 
 		return null;
+	}
+
+	public static String getCpuName() {
+		switch (OSType.getOSType()) {
+			case Linux:
+				try (var br = new BufferedReader(new FileReader("/proc/cpuinfo"))) {
+					String line;
+					while ((line = br.readLine()) != null)
+						if (line.startsWith("model name"))
+							return line.split(":", 2)[1].trim();
+				} catch (Exception ignored) {
+				}
+				break;
+			case MacOS:
+				return "aarch64".equals(System.getProperty("os.arch")) ? "Apple Silicon" : "Intel";
+			case Windows:
+				return System.getenv().getOrDefault("PROCESSOR_IDENTIFIER", "Unknown");
+		}
+		return "Unknown";
+	}
+
+	public static long getTotalSystemMemory() {
+		try {
+			var bean = ManagementFactory.getOperatingSystemMXBean();
+			return ((com.sun.management.OperatingSystemMXBean) bean).getTotalPhysicalMemorySize();
+		} catch (Exception ignored) {
+			return Long.MAX_VALUE;
+		}
 	}
 }

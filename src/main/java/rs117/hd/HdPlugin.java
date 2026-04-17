@@ -464,6 +464,7 @@ public class HdPlugin extends Plugin {
 	@Getter
 	public long garbageCollectionCount;
 
+	private int startupCount;
 	public int frame;
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -512,6 +513,7 @@ public class HdPlugin extends Plugin {
 
 				isPluginStopPending = false;
 				isActive = true;
+				startupCount++;
 
 				fboScene = 0;
 				rboSceneColor = 0;
@@ -553,37 +555,42 @@ public class HdPlugin extends Plugin {
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
+				var rendererClass = config.legacyRenderer() ? LegacyRenderer.class : ZoneRenderer.class;
+				String rlawtVersion = System.getProperty("runelite.rlawtpath", "Release");
+				String javaVmName = System.getProperty("java.vm.name", "Unknown");
+				String javaVersion = System.getProperty("java.version", "Unknown");
 				OSType osType = OSType.getOSType();
-				String arch = System.getProperty("os.arch", "Unknown");
+				String osArch = System.getProperty("os.arch", "Unknown");
+				String osVersion = System.getProperty("os.version", "Unknown");
 				String wordSize = System.getProperty("sun.arch.data.model", "Unknown");
-				log.info("Operating system: {}", osType);
-				log.info("Architecture: {}", arch);
-				log.info("Client is {}-bit", wordSize);
-				APPLE = osType == OSType.MacOS;
-				APPLE_ARM = APPLE && arch.equals("aarch64");
-
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
-				log.info("Using device: {} ({})", glRenderer, glVendor);
-				log.info("Using driver: {}", glGetString(GL_VERSION));
+				var runtime = Runtime.getRuntime();
+
+				APPLE = osType == OSType.MacOS;
+				APPLE_ARM = APPLE && osArch.equals("aarch64");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				INTEL_GPU = glRenderer.contains("Intel");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
 				SUPPORTS_INDIRECT_DRAW = config.indirectDraw().get(NVIDIA_GPU && !APPLE);
 				SUPPORTS_STORAGE_BUFFERS = GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS && config.storageBuffers().get(!INTEL_GPU);
-				log.info(
-					"Using features: indirectDraw={}, storageBuffers={}",
-					SUPPORTS_INDIRECT_DRAW,
-					SUPPORTS_STORAGE_BUFFERS
-				);
 
-				renderer = config.legacyRenderer() ?
-					injector.getInstance(LegacyRenderer.class) :
-					injector.getInstance(ZoneRenderer.class);
-				log.info("Using renderer: {}", renderer.getClass().getSimpleName());
-
-				log.info("Low memory mode: {}", useLowMemoryMode);
+				log.info("Starting 117 HD... (count: {})", startupCount);
+				log.info("Renderer:          {}", rendererClass.getSimpleName());
+				log.info("Build version:     {} - {} - {}", BuildInfo.VERSION, BuildInfo.COMMIT, BuildInfo.TIMESTAMP);
+				log.info("Build repository:  {} ({})", BuildInfo.REMOTE, BuildInfo.BRANCH);
+				log.info("rlawt version:     {}", rlawtVersion);
+				log.info("Java version:      {} ({})", javaVmName, javaVersion);
+				log.info("Java memory limit: {} (free: {})", formatBytes(runtime.maxMemory()), formatBytes(runtime.freeMemory()));
+				log.info("Operating system:  {} {} ({}-bit {})", osType, osVersion, wordSize, osArch);
+				log.info("CPU:               {} ({} threads)", HDUtils.getCpuName(), runtime.availableProcessors());
+				log.info("Memory:            {}", formatBytes(HDUtils.getTotalSystemMemory()));
+				log.info("GPU:               {} ({})", glRenderer, glVendor);
+				log.info("GPU driver:        {}", glGetString(GL_VERSION));
+				log.info("Indirect draw:     {}", SUPPORTS_INDIRECT_DRAW);
+				log.info("Storage buffers:   {}", SUPPORTS_STORAGE_BUFFERS);
+				log.info("Low memory mode:   {}", useLowMemoryMode);
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
@@ -599,6 +606,8 @@ public class HdPlugin extends Plugin {
 						return true;
 					}
 				}
+
+				renderer = injector.getInstance(rendererClass);
 
 				lwjglInitialized = true;
 				checkGLErrors();
@@ -718,6 +727,8 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
+
+				log.info("117 HD started successfully!");
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
 				stopPlugin();
