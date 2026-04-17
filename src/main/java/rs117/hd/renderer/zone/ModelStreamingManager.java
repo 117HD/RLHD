@@ -292,8 +292,7 @@ public class ModelStreamingManager {
 		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
 
-
-		boolean shouldSort = alphaModel != null || renderable.getRenderMode() != Renderable.RENDERMODE_UNSORTED;
+		boolean shouldSort = renderable.getRenderMode() == Renderable.RENDERMODE_SORTED || renderable.getRenderMode() == Renderable.RENDERMODE_SORTED_NO_DEPTH;
 		boolean isPlayer = renderable instanceof Player;
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
@@ -554,7 +553,7 @@ public class ModelStreamingManager {
 		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
 
-		boolean shouldSort = alphaModel != null || renderable.getRenderMode() != Renderable.RENDERMODE_UNSORTED;
+		boolean shouldSort = renderable.getRenderMode() == Renderable.RENDERMODE_SORTED || renderable.getRenderMode() == Renderable.RENDERMODE_SORTED_NO_DEPTH;
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
