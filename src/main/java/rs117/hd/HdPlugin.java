@@ -73,6 +73,7 @@ import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.Version;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
@@ -581,6 +582,8 @@ public class HdPlugin extends Plugin {
 				log.info("Build version:     {} - {} - {}", BuildInfo.VERSION, BuildInfo.COMMIT, BuildInfo.TIMESTAMP);
 				log.info("Build repository:  {} ({})", BuildInfo.REMOTE, BuildInfo.BRANCH);
 				log.info("rlawt version:     {}", rlawtVersion);
+				log.info("rlawt version:     {}", rlawtVersion);
+				log.info("LWJGL Version:     {}", Version.getVersion());
 				log.info("Java version:      {} ({})", javaVmName, javaVersion);
 				log.info("Java memory limit: {} (free: {})", formatBytes(runtime.maxMemory()), formatBytes(runtime.freeMemory()));
 				log.info("Operating system:  {} {} ({}-bit {})", osType, osVersion, wordSize, osArch);
@@ -591,6 +594,8 @@ public class HdPlugin extends Plugin {
 				log.info("Indirect draw:     {}", SUPPORTS_INDIRECT_DRAW);
 				log.info("Storage buffers:   {}", SUPPORTS_STORAGE_BUFFERS);
 				log.info("Low memory mode:   {}", useLowMemoryMode);
+
+				renderer = injector.getInstance(rendererClass);
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
@@ -606,8 +611,6 @@ public class HdPlugin extends Plugin {
 						return true;
 					}
 				}
-
-				renderer = injector.getInstance(rendererClass);
 
 				lwjglInitialized = true;
 				checkGLErrors();
