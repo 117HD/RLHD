@@ -2,9 +2,8 @@ package rs117.hd.renderer.zone;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.Destructible;
@@ -40,14 +39,14 @@ public class DynamicModelVAO implements Destructible {
 	// dummy sceneOffset ivec2 for macOS workaround
 	static final int METADATA_SIZE = 12;
 
-	int vao;
+	@Getter
+	private int vao;
 
 	private final GLBuffer vboRender;
 	private final GLBuffer vboStaging;
 	private final GLTextureBuffer tbo;
 
-	private final AtomicInteger inflightDraws = new AtomicInteger();
-	private final ConcurrentLinkedQueue<View> usedViews = new ConcurrentLinkedQueue<>();
+	private final ArrayDeque<View> usedViews = new ArrayDeque<>();
 	private final ArrayDeque<View> freeViews = new ArrayDeque<>();
 
 	private final GLMappedBufferIntWriter vboWriter;
@@ -213,17 +212,15 @@ public class DynamicModelVAO implements Destructible {
 		return drawIndex;
 	}
 
-	synchronized View beginPlayerDraw(int faceCount, int playerDrawIndex) {
-		assert playerDrawIndex != -1 && playerDrawIndex < drawRangeCount :
-			String.format("Provided draw index is out of range: %d %d", playerDrawIndex, drawRangeCount);
-		return beginDraw(faceCount, playerDrawIndex);
+	View beginDraw(int faceCount) {
+		return beginDraw(-1, faceCount);
 	}
 
-	synchronized View beginDraw(int faceCount) {
-		return beginDraw(faceCount, obtainDrawIndex());
-	}
+	public synchronized View beginDraw(int drawIdx, int faceCount) {
+		if (drawIdx == -1)
+			drawIdx = obtainDrawIndex();
 
-	private synchronized View beginDraw(int faceCount, int drawIdx) {
+		assert drawIdx >= 0 && drawIdx < drawRangeCount : "drawIdx " + drawIdx + " out of bounds from 0 to " + drawRangeCount;
 		assert drawOffsets[drawIdx] == 0 && drawCounts[drawIdx] == 0 : String.format(
 			"Provided draw index is already in use: %d %d %d",
 			drawIdx, drawOffsets[drawIdx], drawCounts[drawIdx]
@@ -239,7 +236,6 @@ public class DynamicModelVAO implements Destructible {
 		view.tboTexId = tbo.getTexId();
 		view.drawIdx = drawIdx;
 
-		inflightDraws.incrementAndGet();
 		return view;
 	}
 
