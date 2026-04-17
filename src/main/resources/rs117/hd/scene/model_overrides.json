@@ -51848,7 +51848,7 @@
     ]
   },
   {
-    "description": "Fortis Roads - Lighten Broken Trims",
+    "description": "Fortis Roads - Lighten and Flatten Broken Trims",
     "terrainVertexSnap": true,
     "baseMaterial": "GRAY_110",
     "depthBias": 50,
@@ -51873,7 +51873,7 @@
     ]
   },
   {
-    "description": "Fortis Roads - Lighten Broken Trims",
+    "description": "Fortis Roads - Lighten Broken Trims Only - Causes issues for bridge otherwise",
     "areas": [ "FORTIS_BRIDGE" ],
     "baseMaterial": "GRAY_110",
     "objectIds": [
