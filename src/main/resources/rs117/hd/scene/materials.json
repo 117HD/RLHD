@@ -1343,7 +1343,9 @@
     "name": "GRAVEL",
     "normalMap": "GRAVEL_N",
     "specularStrength": 0.4,
-    "specularGloss": 130.0
+    "specularGloss": 130.0,
+    "hexTilingScale": 1.25,
+    "hexTilingBlend": 2.5
   },
   {
     "name": "VERTICAL_GRAVEL",
@@ -1434,7 +1436,8 @@
     "name": "GRUNGE_1",
     "normalMap": "GRUNGE_1_N",
     "specularStrength": 0.25,
-    "specularGloss": 30.0
+    "specularGloss": 30.0,
+    "hexTilingScale": 1.5
   },
   {
     "name": "GRUNGE_1_LIGHT",
@@ -3051,6 +3054,9 @@
     "normalMap": "HD_HAY_N",
     "specularStrength": 0.175,
     "specularGloss": 15.0,
+    "hexTilingScale": 1.5,
+    "hexTilingBlend": 1.5,
+    "hexTilingMode": "OFFSET_WITH_MIRROR",
     "materialsToReplace": [
       "HAY"
     ],

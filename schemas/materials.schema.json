@@ -87,6 +87,23 @@
         "type": "number",
         "description": "The gloss of specular reflections. Defaults to 0. Commonly ranges from 10 to 500."
       },
+      "hexTilingScale": {
+        "type": "number",
+        "description": "The scale of the hexagonal tiling pattern. Defaults to 0.0, i.e. no tiling."
+      },
+      "hexTilingBlend": {
+        "type": "number",
+        "description": "The blending of the hexagonal tiling pattern. Defaults to 4.0."
+      },
+      "hexTilingMode": {
+        "type": "string",
+        "description": "",
+        "enum": [
+          "OFFSET",
+          "OFFSET_WITH_MIRROR",
+          "OFFSET_WITH_ROTATION"
+        ]
+      },
       "scrollSpeed": {
         "type": "array",
         "description": "The duration in seconds, per UV direction, before texture scrolling repeats. Defaults to [ 0, 0 ], which disables scrolling.",
