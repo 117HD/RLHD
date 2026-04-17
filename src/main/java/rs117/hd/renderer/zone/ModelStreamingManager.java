@@ -195,11 +195,13 @@ public class ModelStreamingManager {
 		}
 		plugin.drawnTempRenderableCount++;
 
-		final boolean hasAlpha = (m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+		final boolean hasAlpha =
+			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
+			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				modelOverride,
-				Math.min(ctx.maxLevel, gameObject.getPlane()),
+				min(ctx.maxLevel, gameObject.getPlane()),
 				x & 1023,
 				y - renderable.getModelHeight(),
 				z & 1023
@@ -292,7 +294,9 @@ public class ModelStreamingManager {
 		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
 
-		boolean shouldSort = renderable.getRenderMode() == Renderable.RENDERMODE_SORTED || renderable.getRenderMode() == Renderable.RENDERMODE_SORTED_NO_DEPTH;
+		boolean shouldSort =
+			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED ||
+			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED_NO_DEPTH;
 		boolean isPlayer = renderable instanceof Player;
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
@@ -455,7 +459,9 @@ public class ModelStreamingManager {
 		}
 		streamingContext.renderableCount++;
 
-		final boolean hasAlpha = (m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+		final boolean hasAlpha =
+			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
+			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				modelOverride,
@@ -553,7 +559,9 @@ public class ModelStreamingManager {
 		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
 
-		boolean shouldSort = renderable.getRenderMode() == Renderable.RENDERMODE_SORTED || renderable.getRenderMode() == Renderable.RENDERMODE_SORTED_NO_DEPTH;
+		boolean shouldSort =
+			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED ||
+			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED_NO_DEPTH;
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
