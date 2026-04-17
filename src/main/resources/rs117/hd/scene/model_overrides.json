@@ -51849,6 +51849,33 @@
   },
   {
     "description": "Fortis Roads - Lighten Broken Trims",
+    "terrainVertexSnap": true,
+    "baseMaterial": "GRAY_110",
+    "depthBias": 50,
+    "terrainVertexSnapThreshold": 4,
+    "objectIds": [
+      "FLOOR_CIVITAS_FADE01",
+      "FLOOR_CIVITAS_FADE02",
+      "FLOOR_CIVITAS_MIDDLE01",
+      "FLOOR_CIVITAS_MIDDLE02",
+      "FLOOR_CIVITAS_HALF01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 1",
+        "baseMaterial": "GRAY_115",
+        "terrainVertexSnap": true,
+        "terrainVertexSnapThreshold": 1,
+        "flatNormals": true,
+        "depthBias": 10
+      }
+    ]
+  },
+  {
+    "description": "Fortis Roads - Lighten Broken Trims",
+    "areas": [ "FORTIS_BRIDGE" ],
+    "baseMaterial": "GRAY_110",
     "objectIds": [
       "FLOOR_CIVITAS_FADE01",
       "FLOOR_CIVITAS_FADE02",
