@@ -2656,7 +2656,9 @@
       "POH_PLANTBSMALL2B",
       "DARKM_BRAMBLE_BUSH_2",
       "FLOWERS_LILLIES_RED01",
-      "LUNAR_LITTLE_FLOWERS_1"
+      "LUNAR_LITTLE_FLOWERS_1",
+      "LUNAR_LITTLE_FLOWERS_2",
+      "LUNAR_LITTLE_FLOWERS_3"
     ]
   },
   {
@@ -15834,19 +15836,20 @@
   {
     "description": "Objects - Wooden - Barrel with Metal Band",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [
-      "AGGIE_COURTYARD_BARREL",
-      "BURGH_BARREL",
-      "CANAFIS_BARREL_TAP",
-      "KR_BARREL"
-    ],
     "uvOrientation": 100,
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": "h == 5 && s < 2",
+        "colors": [ "h == 5 && s < 2", "h == 42" ],
         "baseMaterial": "METALLIC_1_LIGHT"
       }
+    ],
+    "objectIds": [
+      "AGGIE_COURTYARD_BARREL",
+      "BURGH_BARREL",
+      "CANAFIS_BARREL_TAP",
+      "KR_BARREL",
+      "LUNAR_PIRATE_BARREL_CLOSED"
     ]
   },
   {
@@ -17324,12 +17327,12 @@
   {
     "description": "Lunar Island - Objects - Wooden - Chair",
     "baseMaterial": "WOOD_GRAIN_3",
+    "flatNormals": true,
+    "uvType": "BOX",
     "objectIds": [
       "LUNAR_MOONCLAN_CHAIR_2",
       "LUNAR_MOONCLAN_CHAIR"
-    ],
-    "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
     "description": "Lunar Island - Objects - Wooden - Bench",
@@ -17391,6 +17394,85 @@
     ]
   },
   {
+    "description": "Lunar Island - Wooden - Mirror",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Mirror",
+        "colors": "h == 37",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "LUNAR_MOONCLAN_MIRROR"
+    ]
+  },
+  {
+    "description": "Lunar Island - Wooden - Cloth - Bed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Bed",
+        "colors": "h >= 8",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 142
+      }
+    ],
+    "objectIds": [
+      "LUNAR_MOONCLAN_BED",
+      "LUNAR_MOONCLAN_BED_BLUE"
+    ]
+  },
+  {
+    "description": "Lunar Island - Wooden - Sink",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "LUNAR_MOONCLAN_SINK_SMALL"
+    ]
+  },
+  {
+    "description": "Lunar Island - Grunge - Wall skin",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "LUNAR_MOONCLAN_SKIN",
+      "LUNAR_MOONCLAN_SKIN_HANGING"
+    ]
+  },
+  {
+    "description": "Rellekka - Well",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 || h == 42",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 36 || h == 37",
+        "baseMaterial": "WATER_FLAT",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "LUNAR_MOONCLAN_WELL"
+    ]
+  },
+  {
     "description": "Objects - Wooden - Plank tables - Medium",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -17441,23 +17523,105 @@
     "description": "Lunar Isles - Objects - Wooden - Tables - Fine",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "LUNAR_MOONCLAN_TABLE_RECTANGLE",
-      "LUNAR_MOONCLAN_TABLE_RECTANGLE_SCALES"
+      "LUNAR_MOONCLAN_TABLE_RECTANGLE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.8
   },
   {
-    "description": "Lunar Isles - Objects - Wooden - Table with hats",
+    "description": "Lunar Isles - Metallic - Wooden - Tables - Fine",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      "LUNAR_MOONCLAN_TABLE_RECTANGLE_CLOTHS"
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Scales",
+        "colors": " h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33
+      },
+      {
+        "description": "Scroll",
+        "colors": " h == 10",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "upwardsNormals": true
+      }
     ],
+    "objectIds": [
+      "LUNAR_MOONCLAN_TABLE_RECTANGLE_SCALES"
+    ]
+  },
+  {
+    "description": "Lunar Isles - Carpet - Wooden - Table with hats",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientation": 512,
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Brim",
+        "colors": " h == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      },
+      {
+        "description": "Seed and ribbon",
+        "colors": " h >= 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "LUNAR_MOONCLAN_TABLE_RECTANGLE_CLOTHS"
+    ]
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden - Clothes rack - slanted",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": -256,
+    "uvScale": 0.8111111,
+    "colorOverrides": [
+      {
+        "description": "Bags",
+        "colors": "h == 0 || h > 6",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "LUNAR_MOONCLAN_HANGING_BAGS",
+      "LUNAR_MOONCLAN_HANGING_BAGS_HIGH"
+    ]
+  },
+  {
+    "description": "Lunar Isles - Objects - Wooden - Clothes rack - slanted",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.8111111,
+    "colorOverrides": [
+      {
+        "description": "Bags",
+        "colors": "h == 0 || h > 6",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "LUNAR_MOONCLAN_CLOTHES_RACK"
+    ]
   },
   {
     "description": "Lunar Isles - Objects - Wooden staircase",
@@ -17484,8 +17648,12 @@
   {
     "description": "Lunar Isles - WALLS - Wooden - Plank",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
     "objectIds": [
       "LUNAR_MOONCLAN_BASIC_WALL",
+      "LUNAR_MOONCLAN_LINKING_WALL",
+      "LUNAR_MOONCLAN_LINKING_WALL_MIRROR",
       "LUNAR_MOONCLAN_WALL",
       "LUNAR_MOONCLAN_DOOR_SUPPORT",
       "LUNAR_MOONCLAN_WALL_FLUSH",
@@ -17495,8 +17663,7 @@
       "LUNAR_MOONCLAN_FIRSTFLOOR_WALL_BASIC",
       "LUNAR_MOONCLAN_FIRSTFLOOR_WALL",
       "LUNAR_MOONCLAN_FIRSTFLOOR_WALL_FLUSH"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Plank - Windows",
@@ -28241,7 +28408,8 @@
       "FRIS_BANK_CHEST_OPEN",
       "FAIRY_CHEST_BANK",
       "BARBASSAULT_BANK_CHEST",
-      "TEMPOROSS_LOBBY_BANK_CHEST"
+      "TEMPOROSS_LOBBY_BANK_CHEST",
+      "LUNAR_BASIC_CHEST"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -43643,13 +43811,14 @@
     ]
   },
   {
-    "description": "Cooking Shelves - Lumbridge kitchen",
+    "description": "Lunar Island - Cooking Shelves - Lumbridge kitchen",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "COOKINGSHELF",
       "QIP_COOK_COOKINGSHELF",
       "CANAFIS_COOKING_SHELVES",
       "LUNAR_MOONCLAN_SHELF_POTS",
+      "LUNAR_MOONCLAN_SHELF_SPOONS",
       "FARM_COOKINGSHELF",
       "FARM_COOKINGUTENSILS",
       "CONTACT_COOKINGSHELF"
@@ -48582,7 +48751,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_POSH_BOOKCASE_SHORT",
-      "FAI_VARROCK_POSH_BOOKCASE_SHORT_EAST_OFFSET"
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT_EAST_OFFSET",
+      "LUNAR_MOONCLAN_BOOKCASE"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
@@ -51316,6 +51486,22 @@
     ]
   },
   {
+    "description": "Lunar Island - metallic - Wooden - Cooker",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 10" ],
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "LUNAR_MOONCLAN_COOKER_SMALL",
+      "LUNAR_MOONCLAN_COOKER_WITH_KETTLE"
+    ]
+  },
+  {
     "description": "Baba Yaga's House - Bed",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
@@ -51357,15 +51543,6 @@
         "uvScale": 0.7
       }
     ]
-  },
-  {
-    "description": "Baba Yaga's House - Bookcase",
-    "baseMaterial": "GRAY_85",
-    "objectIds": [
-      "LUNAR_MOONCLAN_BOOKCASE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.4
   },
   {
     "description": "Baba Yaga's House - Sink",
@@ -63173,7 +63350,7 @@
     "description": "Lunar Island - Moonclan - Wood - Roofs",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.751,
     "objectIds": [
       "LUNAR_MOONCLAN_ROOFEND1",
       "LUNAR_MOONCLAN_ROOFEND2",
@@ -63219,6 +63396,91 @@
       "LUNAR_MOONCLAN_ROOFTOP4",
       "LUNAR_MOONCLAN_ROOFEND3_STEEP",
       "LUNAR_MOONCLAN_ROOFEND_GUTTERING"
+    ]
+  },
+  {
+    "description": "Lunar Island - Metallic - Bank Vault",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvScale": 0.66,
+    "uvType": "BOX",
+    "objectIds": [
+      "LUNAR_MOONCLAN_VAULT_BOX",
+      "LUNAR_MOONCLAN_BANK_VAULT"
+    ]
+  },
+  {
+    "description": "Lunar Island - Wooden - Plank tables with fish",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "fish",
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "LUNAR_PIRATE_LOW_TABLE"
+    ]
+  },
+  {
+    "description": "Lunar Island - Wooden - Barrel with Metal Band and fish",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientation": 100,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5 && s < 2", "h == 42" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "description": "fish",
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "LUNAR_PIRATE_BARREL_FISH"
+    ]
+  },
+  {
+    "description": "Lunar Island - Wooden - Metallic - Empty Barrel with Metal Band",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3 && s == 2" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ],
+    "objectIds": [
+      "LUNAR_PIRATE_APPLE_BARREL_EMPTY"
+    ]
+  },
+  {
+    "description": "Lunar Island - Wooden - Metallic - Apple Barrel with Metal Band",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3 && s == 2" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": [ "s >= 4" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "LUNAR_PIRATE_APPLE_BARREL_BROWNSTUFF"
     ]
   },
   {
@@ -84572,16 +84834,6 @@
       "TOA_NEXUS_APMEKEN_DOOR_CLOSED",
       "TOA_NEXUS_CRONDIS_DOOR_CLOSED",
       "TOA_NEXUS_HET_DOOR_CLOSED"
-    ]
-  },
-  {
-    "description": "ToA - Lobby and Nexus Area - Boss Doors - Open - ANIMATED - DYNAMIC",
-    "baseMaterial": "GRAY_85",
-    "objectIds": [
-      "TOA_NEXUS_SCABARAS_DOOR",
-      "TOA_NEXUS_APMEKEN_DOOR",
-      "TOA_NEXUS_CRONDIS_DOOR",
-      "TOA_NEXUS_HET_DOOR"
     ]
   },
   {
