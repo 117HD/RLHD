@@ -72,7 +72,7 @@ public class ModelStreamingManager {
 
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
-	private int numRenderThreads;
+	private int numRenderThreads = -1;
 
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
@@ -97,6 +97,7 @@ public class ModelStreamingManager {
 		eventBus.unregister(this);
 		AsyncCachedModel.destroy();
 		Arrays.fill(streamingContexts, null);
+		numRenderThreads = -1;
 	}
 
 	public void reinitialize() {
@@ -677,7 +678,7 @@ public class ModelStreamingManager {
 
 
 	private AsyncCachedModel obtainAvailableAsyncCachedModel(boolean shouldBlock) {
-		if (AsyncCachedModel.POOL == null || numRenderThreads == 0)
+		if (AsyncCachedModel.POOL == null || numRenderThreads <= 0)
 			return null;
 
 		return shouldBlock ? AsyncCachedModel.POOL.acquireBlocking(5000) : AsyncCachedModel.POOL.acquire();

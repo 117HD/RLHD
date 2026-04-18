@@ -53,6 +53,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		INFLIGHT.clear();
 		if (AsyncCachedModel.POOL != null)
 			AsyncCachedModel.POOL.destroy();
+		AsyncCachedModel.POOL = null;
 	}
 
 	private int sceneId;
