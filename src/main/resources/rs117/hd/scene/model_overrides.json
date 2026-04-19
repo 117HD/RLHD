@@ -41288,7 +41288,8 @@
       "FLOORKIT_ROOKERY01_EDGE02_M"
     ],
     "uvType": "BOX",
-    "uvScale": 1.2
+    "uvScale": 1.2,
+    "textureMaterial": "LEAVES_SIDE_ALT"
   },
   {
     "description": "Hunter Guild Big Tree with Leaves",
