@@ -67,10 +67,24 @@ layout (location = 0) in vec3 vPosition;
         bool isGroundPlaneTile = (terrainData & 0xF) == 1; // plane == 0 && isTerrain
         bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
-        bool isShadowDisabled =
-            isGroundPlaneTile ||
-            isWaterSurfaceOrUnderwaterTile ||
-            isTransparent;
+        #if TERRAIN_ONLY_PASS
+            // Terrain-only pass: only ground plane tiles cast shadows
+            bool isShadowDisabled =
+                !isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile;
+        #elif TERRAIN_SHADOWS
+            // Main pass with terrain shadows: terrain goes to its own map
+            bool isShadowDisabled =
+                isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile ||
+                isTransparent;
+        #else
+            // Exclude ground plane tiles from casting shadows (original behavior)
+            bool isShadowDisabled =
+                isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile ||
+                isTransparent;
+        #endif
 
         if (!isShadowDisabled && vWorldViewId > 0) {
             ivec4 tint = getWorldViewTint(vWorldViewId);
@@ -145,10 +159,24 @@ layout (location = 0) in vec3 vPosition;
         bool isGroundPlaneTile = (vTerrainData & 0xF) == 1; // plane == 0 && isTerrain
         bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
-        bool isShadowDisabled =
-            isGroundPlaneTile ||
-            isWaterSurfaceOrUnderwaterTile ||
-            isTransparent;
+        #if TERRAIN_ONLY_PASS
+            // Terrain-only pass: only ground plane tiles cast shadows
+            bool isShadowDisabled =
+                !isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile;
+        #elif TERRAIN_SHADOWS
+            // Main pass with terrain shadows: terrain goes to its own map
+            bool isShadowDisabled =
+                isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile ||
+                isTransparent;
+        #else
+            // Exclude ground plane tiles from casting shadows (original behavior)
+            bool isShadowDisabled =
+                isGroundPlaneTile ||
+                isWaterSurfaceOrUnderwaterTile ||
+                isTransparent;
+        #endif
 
         int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
