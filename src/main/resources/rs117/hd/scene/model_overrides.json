@@ -8623,7 +8623,6 @@
   {
     "description": "UNKNOWN_2",
     "objectIds": [
-      "STANDARD_DUEL",
       "WALLSTANDARD_MELEE_RED",
       "WALLSTANDARD_RANGED_RED",
       "WALLSTANDARD_MELEE_BLUE",
@@ -22170,7 +22169,8 @@
       "ARENA_DESERT01_CORNER01",
       "ARENA_DESERT01_COLUNM01",
       "ARENA_DESERT01_COLUNM01_M",
-      "ARENA_DESERT01_ARCH01"
+      "ARENA_DESERT01_ARCH01",
+      "ARENA_DESERT01_INNER02"
     ]
   },
   {
@@ -86324,7 +86324,7 @@
     ]
   },
   {
-    "description": "Emirs Arena - PvP boards",
+    "description": "Emirs Arena - PvP Chests",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -86350,6 +86350,24 @@
     ]
   },
   {
+    "description": "Emirs Arena - PvP Signs",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "STANDARD_DUEL"
+    ]
+  },
+  {
     "description": "Emirs Arena - PvP Wall axe",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -86366,6 +86384,47 @@
     ],
     "objectIds": [
       "ARENA_DESERT01_AXE01"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Stone brick Pyramid walls",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.9111111,
+    "uvOrientation": -256,
+    "objectIds": [
+      "ARENA_TEMPLE_SKEW01",
+      "ARENA_TEMPLE_SKEW02"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Statue with golden axe",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "s >= 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "ARENA_DESERT01_STATUE04_3X3"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Wooden Braces",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ARENA_SCAFFOLD_PLANKS_RIGHT",
+      "ARENA_SCAFFOLD_PLANKS_LEFT"
     ]
   }
 ]
