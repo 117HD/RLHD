@@ -119,12 +119,8 @@ public final class VertexWriteCache {
 		if (stagingPosition == 0 || outputBuffer == null)
 			return;
 
-		try {
-			outputBuffer.put(stagingBuffer, 0, stagingPosition);
-			stagingPosition = 0;
-		} catch (Exception e) {
-			log.error("Error whilst flushing: {}", name, e);
-		}
+		outputBuffer.put(stagingBuffer, 0, stagingPosition);
+		stagingPosition = 0;
 	}
 
 	public static class Collection {

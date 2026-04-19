@@ -688,13 +688,17 @@ public class HdPlugin extends Plugin {
 				waterTypeManager.startUp();
 				gamevalManager.startUp();
 
-				renderer.initialize();
-				eventBus.register(renderer);
 				gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
 				if (configShadingMode.unlitFaceColors)
 					gpuFlags |= DrawCallbacks.UNLIT_FACE_COLORS;
+				client.setGpuFlags(gpuFlags);
+
+				// Initialize the renderer after setting initial GPU flags,
+				// to let the renderer override GPU flags even during startup
+				renderer.initialize();
+				eventBus.register(renderer);
 
 				initializeShaders();
 				initializeShaderHotswapping();
@@ -704,7 +708,6 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				client.setDrawCallbacks(renderer);
-				client.setGpuFlags(gpuFlags);
 				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();

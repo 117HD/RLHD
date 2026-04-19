@@ -30,6 +30,7 @@ import static net.runelite.api.hooks.DrawCallbacks.*;
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -71,7 +72,7 @@ public class ModelStreamingManager {
 
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
-	private int numRenderThreads;
+	private int numRenderThreads = -1;
 
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
@@ -96,6 +97,7 @@ public class ModelStreamingManager {
 		eventBus.unregister(this);
 		AsyncCachedModel.destroy();
 		Arrays.fill(streamingContexts, null);
+		numRenderThreads = -1;
 	}
 
 	public void reinitialize() {
@@ -194,22 +196,32 @@ public class ModelStreamingManager {
 		}
 		plugin.drawnTempRenderableCount++;
 
-		final boolean isPlayer = renderable instanceof Player;
-		final int drawIndex = isPlayer ? ctx.obtainPlayerDrawIndex() : -1;
+		final boolean hasAlpha =
+			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
+			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+		final Zone.AlphaModel alphaModel = hasAlpha ?
+			zone.requestTempAlphaModel(
+				modelOverride,
+				min(ctx.maxLevel, gameObject.getPlane()),
+				x & 1023,
+				y - renderable.getModelHeight(),
+				z & 1023
+			) : null;
 
+		final int drawIndex = ctx.obtainDrawIndex(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE);
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
-		final boolean hasAlpha = isPlayer || m.getFaceTransparencies() != null;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(false);
 		if (asyncModelCache != null) {
 			asyncModelCache.queue(
 				ctx,
 				worldProjection,
 				gameObject,
+				renderable,
 				modelOverride,
 				m,
 				zone,
+				alphaModel,
 				isModelPartiallyVisible,
-				hasAlpha,
 				drawIndex,
 				orientation,
 				x, y, z,
@@ -226,8 +238,8 @@ public class ModelStreamingManager {
 			modelOverride,
 			zone,
 			m,
+			alphaModel,
 			isModelPartiallyVisible,
-			hasAlpha,
 			drawIndex,
 			orientation,
 			x, y, z
@@ -238,11 +250,12 @@ public class ModelStreamingManager {
 		WorldViewContext ctx,
 		Projection projection,
 		TileObject tileObject,
+		Renderable renderable,
 		ModelOverride modelOverride,
 		Model model,
 		Zone zone,
+		Zone.AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
-		boolean hasAlpha,
 		int drawIndex,
 		int orientation,
 		int x, int y, int z
@@ -252,12 +265,12 @@ public class ModelStreamingManager {
 			projection,
 			ctx,
 			(GameObject) tileObject,
-			((GameObject) tileObject).getRenderable(),
+			renderable,
 			modelOverride,
 			zone,
 			model,
+			alphaModel,
 			isModelPartiallyVisible,
-			hasAlpha,
 			drawIndex,
 			orientation,
 			x, y, z
@@ -273,8 +286,8 @@ public class ModelStreamingManager {
 		ModelOverride modelOverride,
 		Zone zone,
 		Model m,
+		Zone.AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
-		boolean hasAlpha,
 		int drawIndex,
 		int orientation,
 		int x, int y, int z
@@ -282,7 +295,9 @@ public class ModelStreamingManager {
 		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
 
-		boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+		boolean shouldSort =
+			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED ||
+			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED_NO_DEPTH;
 		boolean isPlayer = renderable instanceof Player;
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
@@ -330,15 +345,10 @@ public class ModelStreamingManager {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
-				final int alphaFaceCount = hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
+				final int alphaFaceCount = alphaModel != null ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
-				final DynamicModelVAO.View opaqueView;
-				if (isPlayer) {
-					opaqueView = ctx.beginPlayerDraw(drawIndex, opaqueFaceCount);
-				} else {
-					opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
-				}
+				final DynamicModelVAO.View opaqueView = ctx.beginDraw(isPlayer ? VAO_PLAYER : VAO_OPAQUE, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
@@ -353,18 +363,8 @@ public class ModelStreamingManager {
 				);
 
 				// Fix rendering projectiles from boats with hide roofs enabled
-				int plane = Math.min(ctx.maxLevel, gameObject.getPlane());
-				if (opaqueView != alphaView) {
-					if (alphaView.getEndOffset() > alphaView.getStartOffset()) {
-						zone.addTempAlphaModel(
-							modelOverride,
-							alphaView,
-							plane,
-							x & 1023,
-							y - renderable.getModelHeight() /* to render players over locs */,
-							z & 1023
-						);
-					}
+				if (opaqueView != alphaView && alphaView.getEndOffset() > alphaView.getStartOffset()) {
+					alphaModel.setView(alphaView);
 					alphaView.end();
 				}
 				opaqueView.end();
@@ -460,8 +460,19 @@ public class ModelStreamingManager {
 		}
 		streamingContext.renderableCount++;
 
-		final boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
+		final boolean hasAlpha =
+			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
+			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+		final Zone.AlphaModel alphaModel = hasAlpha ?
+			zone.requestTempAlphaModel(
+				modelOverride,
+				Math.min(ctx.maxLevel, tileObject.getPlane()),
+				x & 1023,
+				y,
+				z & 1023
+			) : null;
 
+		final int drawIndex = renderThreadId == -1 ? ctx.obtainDrawIndex(VAO_OPAQUE) : -1;
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(renderThreadId >= 0);
 		if (asyncModelCache != null) {
@@ -470,12 +481,13 @@ public class ModelStreamingManager {
 				ctx,
 				projection,
 				tileObject,
+				r,
 				modelOverride,
 				m,
 				zone,
+				alphaModel,
 				isModelPartiallyVisible,
-				hasAlpha,
-				-1,
+				drawIndex,
 				orient,
 				x, y, z,
 				this::uploadDynamicModelAsync
@@ -487,12 +499,13 @@ public class ModelStreamingManager {
 			ctx,
 			projection,
 			tileObject,
+			r,
 			modelOverride,
 			m,
 			zone,
+			alphaModel,
 			isModelPartiallyVisible,
-			hasAlpha,
-			-1,
+			drawIndex,
 			orient,
 			x, y, z
 		);
@@ -502,11 +515,12 @@ public class ModelStreamingManager {
 		WorldViewContext ctx,
 		Projection projection,
 		TileObject tileObject,
+		Renderable renderable,
 		ModelOverride modelOverride,
 		Model model,
 		Zone zone,
+		Zone.AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
-		boolean hasAlpha,
 		int drawIndex,
 		int orientation,
 		int x, int y, int z
@@ -516,11 +530,12 @@ public class ModelStreamingManager {
 			ctx,
 			projection,
 			tileObject,
+			renderable,
 			modelOverride,
 			model,
 			zone,
+			alphaModel,
 			isModelPartiallyVisible,
-			hasAlpha,
 			drawIndex,
 			orientation,
 			x, y, z
@@ -532,22 +547,26 @@ public class ModelStreamingManager {
 		WorldViewContext ctx,
 		Projection projection,
 		TileObject tileObject,
+		Renderable renderable,
 		ModelOverride modelOverride,
 		Model m,
 		Zone zone,
+		Zone.AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
-		boolean hasAlpha,
 		int drawIndex,
 		int orient,
 		int x, int y, int z
 	) {
 		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
+
+		boolean shouldSort =
+			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED ||
+			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED_NO_DEPTH;
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
-			FacePrioritySorter facePrioritySorter = FacePrioritySorter.POOL.acquire()
+			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
 		) {
-			boolean shouldSort = hasAlpha && (!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,
 				plugin.cameraFrustum,
@@ -587,10 +606,10 @@ public class ModelStreamingManager {
 			}
 
 			if (visibleFaces.length > 0) {
-				final int alphaFaceCount = hasAlpha ? sceneUploader.tempModelAlphaFaces : 0;
+				final int alphaFaceCount = alphaModel != null ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
 
-				final DynamicModelVAO.View opaqueView = ctx.beginDraw(VAO_OPAQUE, opaqueFaceCount);
+				final DynamicModelVAO.View opaqueView = ctx.beginDraw(VAO_OPAQUE, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
@@ -604,21 +623,8 @@ public class ModelStreamingManager {
 					alphaView
 				);
 
-				if (opaqueView != alphaView) {
-					if (alphaView.getEndOffset() > alphaView.getStartOffset()) {
-						// level is checked prior to this callback being run, in order to cull clickboxes, but
-						// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
-						int plane = Math.min(ctx.maxLevel, tileObject.getPlane());
-						// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
-						zone.addTempAlphaModel(
-							modelOverride,
-							alphaView,
-							plane,
-							x & 1023,
-							y,
-							z & 1023
-						);
-					}
+				if (opaqueView != alphaView && alphaView.getEndOffset() > alphaView.getStartOffset()) {
+					alphaModel.setView(alphaView);
 					alphaView.end();
 				}
 				opaqueView.end();
@@ -672,7 +678,7 @@ public class ModelStreamingManager {
 
 
 	private AsyncCachedModel obtainAvailableAsyncCachedModel(boolean shouldBlock) {
-		if (AsyncCachedModel.POOL == null || numRenderThreads == 0)
+		if (AsyncCachedModel.POOL == null || numRenderThreads <= 0)
 			return null;
 
 		return shouldBlock ? AsyncCachedModel.POOL.acquireBlocking(5000) : AsyncCachedModel.POOL.acquire();

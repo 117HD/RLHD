@@ -189,6 +189,12 @@
     ]
   },
   {
+    "name": "LUMBRIDGE_CASTLE_BANK",
+    "aabbs": [
+      [ 3207, 3215, 3210, 3222, 3 ]
+    ]
+  },
+  {
     "name": "LUMBRIDGE_SWAMP_PATH_FIX",
     "aabbs": [
       [ 3242, 3184, 3244, 3186 ]
@@ -2946,6 +2952,12 @@
     ]
   },
   {
+    "name": "SOPHANEM_PYRAMID_DOOR_FLOOR",
+    "aabbs": [
+      [ 3294, 2777, 3295, 2779 ]
+    ]
+  },
+  {
     "name": "SOPHANEM_TEMPLE_BANK",
     "regions": [
       11088
@@ -3858,6 +3870,24 @@
     "name": "ARAXXOR_ARENA",
     "aabbs": [
       [ 3602, 9792, 3651, 9855 ]
+    ]
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_1",
+    "aabbs": [
+      [ 3656, 3408, 3656, 3410 ]
+    ]
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_2",
+    "aabbs": [
+      [ 3657, 3409, 3657, 3410 ]
+    ]
+  },
+  {
+    "name": "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3",
+    "aabbs": [
+      [ 3658, 3409, 3658, 3410 ]
     ]
   },
   {
@@ -7384,6 +7414,15 @@
     ]
   },
   {
+    "name": "SARACHNIS_LAIR_BLOOD_EXTEND",
+    "aabbs": [
+      [ 1852, 9900, 1853, 9903 ],
+      [ 1840, 9882, 1843, 9890 ],
+      [ 1838, 9911, 1839, 9911 ],
+      [ 1830, 9901, 1831, 9902 ]
+    ]
+  },
+  {
     "name": "ZEAH_UPPER_LEVELS",
     "aabbs": [
       [ 1085, 2870, 1, 1938, 4078, 3 ]
@@ -9098,6 +9137,13 @@
     "name": "TOA_PATH_OF_HET_PUZZLE",
     "aabbs": [
       [ 3648, 5248, 3711, 5311 ]
+    ]
+  },
+  {
+    "name": "TOA_PATH_OF_HET_BOSS_ROOM_TILES",
+    "aabbs": [
+      [ 3694, 5405, 3698, 5410, 1 ],
+      [ 3663, 5405, 3667, 5410, 1 ]
     ]
   },
   {
@@ -11389,7 +11435,7 @@
   {
     "name": "FORTIS_BRIDGE",
     "aabbs": [
-      [ 1730, 3106, 1746, 3107 ]
+      [ 1731, 3106, 1745, 3107 ]
     ]
   },
   {
@@ -11397,6 +11443,15 @@
     "aabbs": [
       [ 1730, 3106, 1730, 3107 ],
       [ 1746, 3106, 1746, 3108 ]
+    ]
+  },
+  {
+    "name": "FORTIS_ROADS_TRIM_DARKEN",
+    "aabbs": [
+      [ 1680, 3073, 1681, 3073 ],
+      [ 1759, 3081, 1760, 3081 ],
+      [ 1620, 3106, 1620, 3107 ],
+      [ 1651, 3147, 1651, 3148 ]
     ]
   },
   {

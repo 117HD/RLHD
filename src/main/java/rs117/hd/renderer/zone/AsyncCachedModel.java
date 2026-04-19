@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.Job;
@@ -52,6 +53,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		INFLIGHT.clear();
 		if (AsyncCachedModel.POOL != null)
 			AsyncCachedModel.POOL.destroy();
+		AsyncCachedModel.POOL = null;
 	}
 
 	private int sceneId;
@@ -114,10 +116,11 @@ public final class AsyncCachedModel extends Job implements Model {
 	private WorldViewContext ctx;
 	private Projection projection;
 	private TileObject tileObject;
+	private Renderable renderable;
 	private ModelOverride modelOverride;
 	private Zone zone;
+	private AlphaModel alphaModel;
 	private boolean isModelPartiallyVisible;
-	private boolean hasAlpha;
 	private int drawIndex;
 	private int orientation;
 	private int x;
@@ -201,11 +204,12 @@ public final class AsyncCachedModel extends Job implements Model {
 		@Nonnull WorldViewContext ctx,
 		@Nonnull Projection projection,
 		@Nonnull TileObject tileObject,
+		@Nonnull Renderable renderable,
 		@Nonnull ModelOverride modelOverride,
 		@Nonnull Model model,
 		@Nonnull Zone zone,
+		AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
-		boolean hasAlpha,
 		int drawIndex,
 		int orientation,
 		int x, int y, int z,
@@ -214,10 +218,11 @@ public final class AsyncCachedModel extends Job implements Model {
 		this.ctx = ctx;
 		this.projection = projection;
 		this.tileObject = tileObject;
+		this.renderable = renderable;
 		this.modelOverride = modelOverride;
 		this.zone = zone;
+		this.alphaModel = alphaModel;
 		this.isModelPartiallyVisible = isModelPartiallyVisible;
-		this.hasAlpha = hasAlpha;
 		this.drawIndex = drawIndex;
 		this.orientation = orientation;
 		this.x = x;
@@ -255,7 +260,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		waitForCompletion();
 
 		processing.set(false);
-		if (hasAlpha)
+		if (alphaModel != null)
 			zone.pendingModelJobs.add(this);
 		INFLIGHT.add(this);
 		queue();
@@ -317,11 +322,12 @@ public final class AsyncCachedModel extends Job implements Model {
 				ctx,
 				projection,
 				tileObject,
+				renderable,
 				modelOverride,
 				this,
 				zone,
+				alphaModel,
 				isModelPartiallyVisible,
-				hasAlpha,
 				drawIndex,
 				orientation,
 				x, y, z
@@ -330,13 +336,15 @@ public final class AsyncCachedModel extends Job implements Model {
 			log.error("Error drawing temp object", e);
 		} finally {
 			INFLIGHT.remove(this);
-			if (zone != null && hasAlpha)
+			if (alphaModel != null)
 				zone.pendingModelJobs.remove(this);
 
 			ctx = null;
 			projection = null;
 			zone = null;
+			alphaModel = null;
 			tileObject = null;
+			renderable = null;
 			modelOverride = null;
 			drawIndex = -1;
 
@@ -423,11 +431,12 @@ public final class AsyncCachedModel extends Job implements Model {
 			@Nonnull WorldViewContext ctx,
 			@Nonnull Projection projection,
 			@Nonnull TileObject tileObject,
+			@Nonnull Renderable renderable,
 			@Nonnull ModelOverride modelOverride,
 			@Nonnull Model model,
 			@Nonnull Zone zone,
+			AlphaModel alphaModel,
 			boolean isModelPartiallyVisible,
-			boolean hasAlpha,
 			int drawIndex,
 			int orientation,
 			int x, int y, int z

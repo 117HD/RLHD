@@ -125,7 +125,7 @@ public class WorldViewContext {
 			final var POOL = needsStaging ? DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
 				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = POOL.acquire();
-				if (dynamicModelVao.vao == 0)
+				if (dynamicModelVao.getVao() == 0)
 					dynamicModelVao.initialize();
 				dynamicModelVao.bindMetadataVAO(vboM);
 			}
@@ -139,16 +139,15 @@ public class WorldViewContext {
 	}
 
 	DynamicModelVAO.View beginDraw(int type, int faces) {
-		assert type != VAO_PLAYER : "Players are drawn at specific indices, which can't be safely mixed with this";
 		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
 	}
 
-	DynamicModelVAO.View beginPlayerDraw(int playerDrawIndex, int faces) {
-		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][VAO_PLAYER].beginPlayerDraw(faces, playerDrawIndex);
+	DynamicModelVAO.View beginDraw(int type, int playerDrawIndex, int faces) {
+		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(playerDrawIndex, faces);
 	}
 
-	int obtainPlayerDrawIndex() {
-		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][VAO_PLAYER].obtainDrawIndex();
+	int obtainDrawIndex(int type) {
+		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].obtainDrawIndex();
 	}
 
 	void drawAll(int type, CommandBuffer cmd) {
@@ -314,17 +313,21 @@ public class WorldViewContext {
 		Zone curZone = zones[zx][zz];
 		long revealAfterTimestampMs = 0;
 		if (curZone.uploadJob != null) {
+			Zone pendingZone = curZone.uploadJob.zone;
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
 				curZone.hashCode(),
 				worldViewId,
 				zx,
 				zz,
-				curZone.uploadJob.zone.hashCode()
+				pendingZone.hashCode()
 			);
 			revealAfterTimestampMs = curZone.uploadJob.revealAfterTimestampMs;
 			curZone.uploadJob.cancel();
 			curZone.uploadJob.release();
+
+			if (pendingZone != curZone)
+				DestructibleHandler.destroy(pendingZone);
 		}
 
 		Zone newZone = injector.getInstance(Zone.class);
