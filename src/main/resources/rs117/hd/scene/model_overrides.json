@@ -1406,7 +1406,7 @@
   {
     "description": "Gnome Stronghold Tree Leaves - Top",
     "baseMaterial": "BARK",
-    "textureMaterial": "LEAVES_TOP_2",
+    "textureMaterial": "LEAVES_TOP_ALT",
     "objectIds": [
       "TKCANOPYMIDDLE",
       "TKCANOPYMIDDLE2"
@@ -77425,11 +77425,11 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE_ALT"
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+        "textureMaterial": "SEASONLESS_LEAVES_TOP_ALT"
       }
     }
   },
@@ -77492,11 +77492,11 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE_ALT"
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+        "textureMaterial": "SEASONLESS_LEAVES_TOP_ALT"
       }
     }
   },
