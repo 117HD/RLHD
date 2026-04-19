@@ -702,12 +702,14 @@
   {
     "name": "LEAFY_ACACIA01",
     "vanillaTextureIndex": 123,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "shadowAlphaMap": "LEAF_A_2"
   },
   {
     "name": "LEAFY_STONEPINE01",
     "vanillaTextureIndex": 124,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "shadowAlphaMap": "LEAF_A_2"
   },
   {
     "name": "BRICK_CAM_TORUM",

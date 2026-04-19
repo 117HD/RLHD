@@ -6741,9 +6741,8 @@
   {
     "name": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
     "area": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
-    "overlayIds": [ 336 ],
-    "groundMaterial": "GRASS_1",
-    "blended": false
+    "overlayIds": [ 336, 377 ],
+    "groundMaterial": "GRASS_1"
   },
   {
     "name": "HUNTER_GUILD_POND",
