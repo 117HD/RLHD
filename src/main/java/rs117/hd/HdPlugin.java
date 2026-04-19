@@ -582,7 +582,6 @@ public class HdPlugin extends Plugin {
 				log.info("Build version:     {} - {} - {}", BuildInfo.VERSION, BuildInfo.COMMIT, BuildInfo.TIMESTAMP);
 				log.info("Build repository:  {} ({})", BuildInfo.REMOTE, BuildInfo.BRANCH);
 				log.info("rlawt version:     {}", rlawtVersion);
-				log.info("rlawt version:     {}", rlawtVersion);
 				log.info("LWJGL Version:     {}", Version.getVersion());
 				log.info("Java version:      {} ({})", javaVmName, javaVersion);
 				log.info("Java memory limit: {} (free: {})", formatBytes(runtime.maxMemory()), formatBytes(runtime.freeMemory()));
