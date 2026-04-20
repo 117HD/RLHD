@@ -67188,6 +67188,7 @@
   {
     "description": "Amoxaliatl - Ice Spikes",
     "baseMaterial": "GRAY_125",
+    "depthBias": 20,
     "graphicsObjectIds": [
       "VFX_AMOXLIATL_ICE_FLOOR_COMBINED_01"
     ],
