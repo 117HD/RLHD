@@ -133,9 +133,10 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.HdPluginFeatures.PROVOKING_VERTEX;
+import static rs117.hd.HdPluginFeatures.SHADER_IMAGE_STORE;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
-import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
@@ -328,9 +329,6 @@ public class HdPlugin extends Plugin {
 	public static boolean NVIDIA_GPU;
 	public static boolean APPLE;
 	public static boolean APPLE_ARM;
-
-	public static boolean SUPPORTS_INDIRECT_DRAW;
-	public static boolean SUPPORTS_STORAGE_BUFFERS;
 
 	public Canvas canvas;
 	public JFrame clientJFrame;
@@ -570,14 +568,6 @@ public class HdPlugin extends Plugin {
 				INTEL_GPU = glRenderer.contains("Intel");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
-				SUPPORTS_INDIRECT_DRAW = config.indirectDraw().get(NVIDIA_GPU && !APPLE);
-				SUPPORTS_STORAGE_BUFFERS = GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS && config.storageBuffers().get(!INTEL_GPU);
-				log.info(
-					"Using features: indirectDraw={}, storageBuffers={}",
-					SUPPORTS_INDIRECT_DRAW,
-					SUPPORTS_STORAGE_BUFFERS
-				);
-
 				renderer = config.legacyRenderer() ?
 					injector.getInstance(LegacyRenderer.class) :
 					injector.getInstance(ZoneRenderer.class);
@@ -599,6 +589,8 @@ public class HdPlugin extends Plugin {
 						return true;
 					}
 				}
+
+				HdPluginFeatures.evaluate(config);
 
 				lwjglInitialized = true;
 				checkGLErrors();
@@ -717,6 +709,9 @@ public class HdPlugin extends Plugin {
 				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
 					client.setGameState(GameState.LOADING);
+
+				if(PROVOKING_VERTEX.isSupported())
+					glProvokingVertex(GL_LAST_VERTEX_CONVENTION);
 
 				checkGLErrors();
 
@@ -943,6 +938,7 @@ public class HdPlugin extends Plugin {
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(materialManager.uboMaterials)
 			.addUniformBuffer(waterTypeManager.uboWaterTypes);
+		HdPluginFeatures.addShaderIncludes(includes);
 		renderer.addShaderIncludes(includes);
 		return includes;
 	}
@@ -958,7 +954,7 @@ public class HdPlugin extends Plugin {
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
 			if (!AMD_GPU && configTiledLightingImageLoadStore &&
-				GL_CAPS.GL_ARB_shader_image_load_store &&
+				SHADER_IMAGE_STORE.isSupported() &&
 				tiledLightingImageStoreProgram.isViable()
 			) {
 				try {
