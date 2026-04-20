@@ -44008,7 +44008,8 @@
       "MISTMYST_BOAT_ISLAND",
       "SEASLUG_ROWBOAT",
       "MM2_MONKEY_BOAT",
-      "SLUG2_ROWBOAT"
+      "SLUG2_ROWBOAT",
+      "SLUG2_ROWBOAT_DMG"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
