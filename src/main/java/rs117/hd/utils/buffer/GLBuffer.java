@@ -83,6 +83,10 @@ public class GLBuffer implements Destructible {
 		this(name, target, usage, STORAGE_NONE);
 	}
 
+	public static boolean supportsStorageBuffers() {
+		return GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS;
+	}
+
 	private static void copyRangeTo(int src, int dst, long srcOffsetBytes, long dstOffsetBytes, long numBytes) {
 		copyRangesTo(src, dst, new long[] { srcOffsetBytes }, new long[] { dstOffsetBytes }, new long[] { numBytes }, 1);
 	}
