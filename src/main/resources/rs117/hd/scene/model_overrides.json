@@ -30210,14 +30210,14 @@
   },
   {
     "description": "Ore - Empty - Rock",
-    "baseMaterial": "ROCK_5_ORE",
+    "baseMaterial": "ROCK_4_ORE",
     "objectIds": [
       "ROCKS1",
       "ROCKS2"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
-    "uvOrientation": 512
+    "uvOrientation": 700
   },
   {
     "description": "Ore - Tin - Rock",
@@ -30286,14 +30286,14 @@
   },
   {
     "description": "Ore - Coal - Rock",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_4",
     "objectIds": [
       "COALROCK1",
       "COALROCK2"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
-    "uvOrientation": 256
+    "uvOrientation": 700
   },
   {
     "description": "Ore - Silver - Rock",
