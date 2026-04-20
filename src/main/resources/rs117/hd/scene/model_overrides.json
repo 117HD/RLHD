@@ -30513,7 +30513,16 @@
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
-    "uvScale": 0.65
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Objects - Concrete - Gravestone",
@@ -83833,9 +83842,9 @@
   },
   {
     "description": "Varlamore - Tal Teklan - Stone - Furnace",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvScale": 0.7,
+    "uvScale": 0.85,
     "colorOverrides": [
       {
         "description": "Coal",
@@ -83847,7 +83856,7 @@
       },
       {
         "description": "Heat",
-        "colors": "s == 5 || s == 6",
+        "colors": "h == 3 || s == 5 || s == 6",
         "baseMaterial": "GRUNGE_1",
         "uvType": "MODEL_XZ",
         "uvOrientation": 487,
