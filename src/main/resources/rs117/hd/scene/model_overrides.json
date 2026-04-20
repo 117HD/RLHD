@@ -8085,12 +8085,12 @@
     "uvOrientation": 400
   },
   {
-    "description": "Hide weird wall piece above other walls in Canifis pub basement",
-    "objectIds": [ "CAVEWALL_FACE1" ],
-    "baseMaterial": "GRUNGE_1",
-    "hideInAreas": [
-      [ 3469, 9845 ]
+    "description": "Dirt Cave Wall",
+    "objectIds": [
+      "CAVE2EXIT",
+      "CAVEWALL_FACE1"
     ],
+    "baseMaterial": "GRUNGE_1",
     "uvType": "BOX"
   },
   {
