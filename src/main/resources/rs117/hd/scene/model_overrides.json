@@ -66931,6 +66931,16 @@
     ]
   },
   {
+    "description": "Varlamore - Ruins of Tapoyauik Rock and Snow Walls",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "areas": [ "Ruins of Tapoyauik Lever Fix" ],
+    "depthBias": 1,
+    "uvType": "BOX",
+    "objectIds": [
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN01_LEVERBASE"
+    ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik Steps",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
@@ -67021,6 +67031,7 @@
       "VMQ3_RUINS_FIRE_STATUE_ICON_NOOP",
       "VMQ3_RUINS_WATER_STATUE_ICON_NOOP",
       "VMQ3_RUINS_AIR_STATUE_BROKEN",
+      "VMQ3_RUINS_EARTH_STATUE_BROKEN",
       "VMQ3_RUINS_FIRE_STATUE_BROKEN",
       "VMQ3_RUINS_WATER_STATUE_BROKEN",
       "VMQ3_RUINS_EARTH_STATUE_ICON_INSPECT",
@@ -67092,7 +67103,6 @@
       "DECOKIT_SNOW01_MIDDLE01",
       "CAVEKIT_SNOW01_EDGELEDGE02",
       "CAVEKIT_SNOW01_EDGELEDGE01",
-      "CAVEKIT_SNOW01_LEDGE02",
       "CAVEKIT_SNOW01_EDGELEDGE02_M",
       "CAVEKIT_SNOW01_EDGELEDGE01_M",
       "DECOKIT_SNOW01_EDGE03",
@@ -67103,6 +67113,20 @@
       "TAPOYAUIK_TRAVERSE_1_BOTTOM",
       "TAPOYAUIK_TRAVERSE_WALL_FAIL_BOTTOM",
       "TAPOYAUIK_TRAVERSE_2_BOTTOM"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Ledge",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "depthBias": 1,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TAPOYAUIK_TRAVERSE_WALL_END",
+      "TAPOYAUIK_TRAVERSE_WALL_START",
+      "TAPOYAUIK_TRAVERSE_1_BOTTOM",
+      "CAVEKIT_SNOW01_LEDGE02"
     ]
   },
   {

@@ -10899,6 +10899,10 @@
     "aabbs": [ [ 1620, 9619, 1645, 9643 ] ]
   },
   {
+    "name": "Ruins of Tapoyauik Lever Fix",
+    "aabbs": [ [ 1695, 9603, 3 ] ]
+  },
+  {
     "name": "HUNTER_GUILD",
     "regions": [
       6291
