@@ -68006,10 +68006,12 @@
     ]
   },
   {
-    "description": "Tempoross - Hide Ripples",
+    "description": "Generic Ripples - Hide Toggle",
     "hideAsWaterEffect": true,
     "objectIds": [
-      "TEMPOROSS_RIPPLE_3_NOSHADOW"
+      "TEMPOROSS_RIPPLE_3_NOSHADOW",
+      "TEMPOROSS_RIPPLE_1_NOSHADOW",
+      "FX_CAMTORUM01_RIPPLE01"
     ]
   },
   {
@@ -74184,6 +74186,48 @@
         "description": "Fake Ripples",
         "colors": "a < 255 || h == 37 && l == 71 || h == 42",
         "baseMaterial": "NONE",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
+    "description": "Capybara - Hide Ripples",
+    "npcIds": [
+      "VARLAMORE_CAPYBARA_SUBMERGED_NORTH",
+      "VARLAMORE_CAPYBARA_SUBMERGED_SOUTH",
+      "VARLAMORE_CAPYBARA_SUBMERGED_EAST",
+      "VARLAMORE_CAPYBARA_SUBMERGED_WEST",
+      "VARLAMORE_CAPYBARA_SUBMERGED_ORANGE_NORTH",
+      "VARLAMORE_CAPYBARA_SUBMERGED_ORANGE_SOUTH",
+      "VARLAMORE_CAPYBARA_SUBMERGED_ORANGE_EAST",
+      "VARLAMORE_CAPYBARA_SUBMERGED_ORANGE_WEST"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255 && h == 39",
+        "hideAsWaterEffect": false,
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Pygmy Hippo - Hide Ripples",
+    "npcIds": [
+      "VARLAMORE_HIPPO_SUBMERGED_NORTH",
+      "VARLAMORE_HIPPO_SUBMERGED_SOUTH",
+      "VARLAMORE_HIPPO_SUBMERGED_EAST",
+      "VARLAMORE_HIPPO_SUBMERGED_WEST",
+      "VARLAMORE_HIPPO_CALF_SUBMERGED_NORTH",
+      "VARLAMORE_HIPPO_CALF_SUBMERGED_SOUTH",
+      "VARLAMORE_HIPPO_CALF_SUBMERGED_EAST",
+      "VARLAMORE_HIPPO_CALF_SUBMERGED_WEST"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_80",
         "hideAsWaterEffect": true
       }
     ]
@@ -80938,14 +80982,22 @@
     "description": "Tlati - Mossy Rocks",
     "baseMaterial": "ROCK_1",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.4,
     "uvOrientation": 256,
     "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 23 && s == 4 && l > 23",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.35,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
       {
         "description": "Moss",
         "colors": "h < 23 && s >= 3",
         "baseMaterial": "GRASS_1",
-        "uvScale": 0.8,
+        "uvScale": 0.55,
         "uvType": "BOX",
         "uvOrientation": 256
       }
