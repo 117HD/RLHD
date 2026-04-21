@@ -73,6 +73,38 @@ tasks.register('shadowJar', Jar) {
 	archiveFileName.set("${rootProject.name}-${project.version}-all.jar")
 }
 
-tasks.register('generateBuildInfo', GenerateBuildInfoTask)
+tasks.register('generateBuildInfo') {
+	def outputDir = layout.buildDirectory.dir("generated/sources/${name}/main").get()
+	outputs.dir outputDir
+
+	def runCmd = { String cmd ->
+		try {
+			def stdout = new ByteArrayOutputStream()
+			def result = exec { commandLine cmd.split(); standardOutput = stdout; ignoreExitValue = true }
+			[out: stdout.toString().trim() ?: null, exit: result.exitValue]
+		} catch (Exception ignored) {
+			[out: null, exit: -1]
+		}
+	}
+
+	doLast {
+		def commit = runCmd('git rev-parse HEAD').out ?: "unknown commit"
+		def isModified = runCmd('git diff --quiet HEAD').exit != 0
+		if (isModified)
+			commit += "*";
+
+		def path = outputDir.file("rs117/hd/BuildInfo.java").asFile
+		path.parentFile.mkdirs()
+		path.text = """
+			package rs117.hd;
+
+			public class BuildInfo {
+			    public static final String VERSION = "${version}";
+			    public static final Long TIMESTAMP = ${System.currentTimeMillis()}L;
+			    public static final String COMMIT = "${commit}";
+			}
+		""".stripIndent().trim()
+	}
+}
 sourceSets.main.java.srcDir(generateBuildInfo)
 compileJava.dependsOn(generateBuildInfo)

@@ -40,8 +40,10 @@ import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -557,6 +559,7 @@ public class HdPlugin extends Plugin {
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
 				var rendererClass = config.legacyRenderer() ? LegacyRenderer.class : ZoneRenderer.class;
+				Instant buildTimestamp = Instant.ofEpochMilli(BuildInfo.TIMESTAMP).truncatedTo(ChronoUnit.SECONDS);
 				String rlawtVersion = System.getProperty("runelite.rlawtpath", "Release");
 				String javaVmName = System.getProperty("java.vm.name", "Unknown");
 				String javaVersion = System.getProperty("java.version", "Unknown");
@@ -579,8 +582,7 @@ public class HdPlugin extends Plugin {
 
 				log.info("Starting 117 HD... (count: {})", startupCount);
 				log.info("Renderer:          {}", rendererClass.getSimpleName());
-				log.info("Build version:     {} - {} - {}", BuildInfo.VERSION, BuildInfo.COMMIT, BuildInfo.TIMESTAMP);
-				log.info("Build repository:  {} ({})", BuildInfo.REMOTE, BuildInfo.BRANCH);
+				log.info("Build version:     {} @ {} ({})", BuildInfo.VERSION, buildTimestamp, BuildInfo.COMMIT);
 				log.info("rlawt version:     {}", rlawtVersion);
 				log.info("LWJGL Version:     {}", Version.getVersion());
 				log.info("Java version:      {} ({})", javaVmName, javaVersion);
