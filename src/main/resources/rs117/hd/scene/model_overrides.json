@@ -19872,6 +19872,7 @@
     "description": "Generic - Wooden - Agility Logs",
     "baseMaterial": "BARK",
     "uvType": "BOX",
+    "uvScale": 0.83,
     "objectIds": [
       "REGICIDE_LOGBALANCE1",
       "REGICIDE_LOGBALANCE2",
