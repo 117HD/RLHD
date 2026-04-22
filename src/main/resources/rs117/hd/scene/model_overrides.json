@@ -8155,6 +8155,23 @@
     "uvOrientation": 100
   },
   {
+    "description": "ROUNDED_CAVE_EXIT_LIGHT_WITH_BLACK_EXIT",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "objectIds": [
+      "RANTZOGRECAVEEXITR",
+      "RANTZOGRECAVEEXITL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
     "description": "Underground Pass - Grunge - Bone - Temple Door attached to Rounded Cave Wall - Textured",
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX",
@@ -11139,7 +11156,8 @@
       "CAVE_ROCK02_ENTRANCE01_COLOSSAL_WYRM",
       "DEEPFIN_CAVE_ENTRANCE",
       "WILD_FALLOFF_CAVEENTRANCE",
-      "TLATI_DRAGON_NEST_CAVE_ENTRY"
+      "TLATI_DRAGON_NEST_CAVE_ENTRY",
+      "RANTZOGRECAVEENTRANCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -86106,6 +86124,40 @@
       "PEST_VETERAN_BANNER_LANDER_INSIDE",
       "PEST_INTERMEDIATE_BANNER_LANDER_TOP",
       "PEST_INTERMEDIATE_BANNER_LANDER_INSIDE"
+    ]
+  },
+  {
+    "description": "Rantz 'locked' Chest",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "objectIds": [
+      "CHOMPYBIRD_CHEST",
+      "CHOMPYBIRD_CHEST_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Rantz Cooking Fire",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.4,
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CHOMPYBIRD_SPITROAST_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
     ]
   },
   {
