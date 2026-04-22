@@ -2555,6 +2555,15 @@
     "blended": false
   },
   {
+    "name": "PVP_ARENA_TILES",
+    "area": "PVP_ARENA_UPSTAIRS",
+    "groundMaterial": "STONE",
+    "overlayIds": [
+      226,
+      227
+    ]
+  },
+  {
     "name": "PVP_ARENA_PATH",
     "area": "PVP_ARENA",
     "overlayIds": [
@@ -10893,7 +10902,8 @@
       104,
       136,
       151,
-      158
+      158,
+      196
     ],
     "waterType": "WATER"
   },

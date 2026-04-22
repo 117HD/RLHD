@@ -4839,13 +4839,18 @@
       "TOURTRAP_QIP_DESERTWALL",
       "TOURTRAP_QIP_CELL_BAR_WALL_BARS",
       "TOURTRAP_QIP_DESERTWALL_WINDOW",
-      "TOURTRAP_QIP_DESERTROOFWALL"
+      "TOURTRAP_QIP_DESERTROOFWALL",
+      "DUEL_ARENA_TOPNOLEAN",
+      "DUEL_ARENA_TOPWITHFLAG",
+      "DUEL_ARENA_TOP_AGED_2",
+      "DUEL_ARENA_TOP_AGED_2_MIRROR",
+      "DUEL_ARENA_TOP_CORNER"
     ],
     "flatNormals": true,
     "uvType": "BOX"
   },
   {
-    "description": "CITHAREDE_ABBEY_WALLS",
+    "description": "Citharede Abbey - Walls",
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -4865,8 +4870,44 @@
       "GH_WALL_WINDOW_01",
       "GH_WALL_WINDOW_02",
       "GH_WALL_ARCH_L",
-      "GH_WALL_ARCH_R",
+      "GH_WALL_ARCH_R"
+    ]
+  },
+  {
+    "description": "Citharede Abbey - Emirs Arena - Ground rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "flatNormals": true,
+    "uvOrientation": 42,
+    "objectIds": [
       "GH_STONE_PILE1"
+    ]
+  },
+  {
+    "description": "Citharede Abbey - Emirs Arena - Tent wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 256
+      },
+      {
+        "description": "Cloth",
+        "colors": "s == 1",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "GH_TENT_WALL"
     ]
   },
   {
@@ -7389,12 +7430,40 @@
     "uvType": "WORLD_XZ"
   },
   {
+    "description": "Emirs Arena - Ground decoration - Sand - Tiny",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "uvScale": 0.7111,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Rocky object",
+        "colors": "s == 2",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvOrientation": 303,
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "DUGUPSOIL_DUEL_ARENA_1",
+      "DUGUPSOIL_DUEL_ARENA_2"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Ground decoration - Sand",
+    "baseMaterial": "SAND_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 128,
+    "objectIds": [
+      "DUGUPSOIL_DUEL_ARENA_3"
+    ]
+  },
+  {
     "description": "GROUND_DECORATION_SAND",
     "baseMaterial": "SAND_1",
     "objectIds": [
-      "DUGUPSOIL_DUEL_ARENA_1",
-      "DUGUPSOIL_DUEL_ARENA_2",
-      "DUGUPSOIL_DUEL_ARENA_3",
       "HARMLESS_DUGUPSOIL_SQUISHED1",
       "HARMLESS_DUGUPSOIL_SQUISHED2",
       "HARMLESS_DUGUPSOIL_SQUISHED3",
@@ -8554,7 +8623,6 @@
   {
     "description": "UNKNOWN_2",
     "objectIds": [
-      "STANDARD_DUEL",
       "WALLSTANDARD_MELEE_RED",
       "WALLSTANDARD_RANGED_RED",
       "WALLSTANDARD_MELEE_BLUE",
@@ -22062,6 +22130,7 @@
   {
     "description": "PvP Arena Walls",
     "baseMaterial": "WATTLE_1",
+    "uvType": "BOX",
     "objectIds": [
       "ARENA_DESERT01_WALL01",
       "ARENA_DESERT01_WINDOW01",
@@ -22081,8 +22150,52 @@
       "ARENA_DESERT01_LOW02",
       "ARENA_DESERT01_LOW02_M",
       "ARENA_DESERT01_LOW03"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Walls",
+    "baseMaterial": "WATTLE_1",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Trim",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX"
+      }
     ],
-    "uvType": "BOX"
+    "objectIds": [
+      "ARENA_DESERT01_DEFAULT01",
+      "ARENA_DESERT01_CORNER01",
+      "ARENA_DESERT01_COLUNM01",
+      "ARENA_DESERT01_COLUNM01_M",
+      "ARENA_DESERT01_ARCH01",
+      "ARENA_DESERT01_INNER02"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Walls with gate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Trim",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ARENA_DESERT01_GATE01",
+      "ARENA_DESERT01_GATE01_M",
+      "ARENA_DESERT01_GATE02"
+    ]
   },
   {
     "description": "PvP Arena Walls - Corners",
@@ -22095,20 +22208,25 @@
   },
   {
     "description": "PvP Arena Stairs",
-    "baseMaterial": "STONE_LOWGLOSS",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.9,
     "objectIds": [
       "PVPA_STAGINGAREA_ENTRY",
       "PVPA_STAGINGAREA_ENTRY02"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "PvP Arena Statue",
-    "baseMaterial": "STONE_LOWGLOSS",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
     "objectIds": [
-      "ARENA_DESERT01_STATUE01"
-    ],
-    "uvType": "GEOMETRY"
+      "ARENA_DESERT01_STATUE01",
+      "ARENA_DESERT01_STATUE02",
+      "ARENA_DESERT01_STATUE01_3X3",
+      "ARENA_DESERT01_STATUE02_3X3",
+      "ARENA_DESERT01_STATUE03_3X3"
+    ]
   },
   {
     "description": "PvP Arena blood",
@@ -48917,12 +49035,29 @@
     ]
   },
   {
-    "description": "Wooden Scaffold with wooden bucket on it",
+    "description": "Wooden Scaffold with bucket on it",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.85,
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Bucket",
+        "colors": "s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 187
+      },
+      {
+        "description": "Bucket",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.85
+      }
+    ],
     "objectIds": [
       "SCAFFOLD"
     ]
@@ -86140,6 +86275,156 @@
         "baseMaterial": "NONE",
         "receiveShadows": false
       }
+    ]
+  },
+  {
+    "description": "Shayzien - Emirs Arena - Cloth - Sleeping Bag",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 187,
+    "objectIds": [
+      "SHAYZIEN_SLEEPINGBAG"
+    ]
+  },
+  {
+    "description": "Emirs Arena - PvP boards",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "s == 3",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "upwardsNormals": true
+      },
+      {
+        "description": "fake text",
+        "colors": "h == 7 && s == 2",
+        "castShadows": false,
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "PVPA_RECRUITMENT_BOARD",
+      "PVPA_RECRUITMENT_BOARD02",
+      "PVPA_SCOREBOARD"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Carpet",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "_1V1ARENA_DUNGEON_RUG_CORNER",
+      "_1V1ARENA_DUNGEON_RUG_SIDE"
+    ]
+  },
+  {
+    "description": "Emirs Arena - PvP Chests",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h >= 1 && s <= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 7 && s == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "PVPA_LOBBY_SUPPLIES_CHEST",
+      "PVPA_STAGINGAREA_SUPPLIES_CHEST"
+    ]
+  },
+  {
+    "description": "Emirs Arena - PvP Signs",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "STANDARD_DUEL"
+    ]
+  },
+  {
+    "description": "Emirs Arena - PvP Wall axe",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "ARENA_DESERT01_AXE01"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Stone brick Pyramid walls",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.9111111,
+    "uvOrientation": -256,
+    "objectIds": [
+      "ARENA_TEMPLE_SKEW01",
+      "ARENA_TEMPLE_SKEW02"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Statue with golden axe",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "s >= 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "ARENA_DESERT01_STATUE04_3X3"
+    ]
+  },
+  {
+    "description": "Emirs Arena - Wooden Braces",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ARENA_SCAFFOLD_PLANKS_RIGHT",
+      "ARENA_SCAFFOLD_PLANKS_LEFT"
     ]
   }
 ]

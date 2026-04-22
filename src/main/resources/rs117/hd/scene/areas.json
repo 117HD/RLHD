@@ -2805,6 +2805,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "PVP_ARENA_UPSTAIRS",
+    "aabbs": [
+      [ 3360, 3279, 3374, 3271, 1 ]
+    ]
+  },
+  {
     "name": "PVP_ARENA",
     "aabbs": [
       [ 3312, 3199, 3407, 3290 ]
