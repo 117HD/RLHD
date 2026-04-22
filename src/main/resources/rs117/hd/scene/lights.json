@@ -45778,9 +45778,9 @@
   },
   {
     "description": "Piscatoris - Press Light",
-    "offset": [ 25, 120, 0 ],
+    "offset": [ 65, 120, 0 ],
     "radius": 200,
-    "strength": 5,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -45795,7 +45795,7 @@
   },
   {
     "description": "Piscatoris - Furnace",
-    "offset": [ 0, 60, 20 ],
+    "offset": [ 0, 70, 50 ],
     "radius": 200,
     "strength": 5,
     "color": [
