@@ -9313,7 +9313,8 @@
       "VIKING_PIER_RAIL_CURVE_OUT",
       "VIKING_PIER_RAIL_CURVE_IN",
       "BRUT_PIER_RAIL",
-      "VIKING_FENCE_STILE"
+      "VIKING_FENCE_STILE",
+      "HUNTING_FENCE_STYLE"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
