@@ -1,10 +1,9 @@
 package rs117.hd.opengl;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import lombok.Getter;
+import rs117.hd.utils.collections.PrimitiveIntArray;
 
 public abstract class GLState {
 	protected boolean hasValue;
@@ -187,11 +186,11 @@ public abstract class GLState {
 	}
 
 	public abstract static class IntSet extends GLState {
-		private final Set<Integer> targets = new HashSet<>();
+		private final PrimitiveIntArray targets = new PrimitiveIntArray();
 
 		public void add(int target) {
 			hasValue = true;
-			targets.add(target);
+			targets.addUnique(target);
 		}
 
 		public void remove(int target) {
@@ -201,14 +200,15 @@ public abstract class GLState {
 
 		@Override
 		protected void internalApply() {
-			for (int t : targets) applyTarget(t);
-			targets.clear();
+			for (int i = 0; i < targets.length; i++)
+				applyTarget(targets.array[i]);
+			targets.reset();
 		}
 
 		@Override
 		public void reset() {
 			super.reset();
-			targets.clear();
+			targets.reset();
 		}
 
 		protected abstract void applyTarget(int target);
