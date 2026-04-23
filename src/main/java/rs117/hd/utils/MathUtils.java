@@ -8,9 +8,12 @@
  */
 package rs117.hd.utils;
 
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.function.Supplier;
 import javax.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Math utility functions similar to GLSL, including vector operations on raw float arrays.
@@ -40,6 +43,109 @@ public final class MathUtils {
 	public static final float RAD_TO_DEG = 1 / DEG_TO_RAD;
 	public static final float JAU_TO_RAD = TWO_PI / 2048;
 	public static final float RAD_TO_JAU = 1 / JAU_TO_RAD;
+
+	@RequiredArgsConstructor
+	public static final class VecHandle<T> implements AutoCloseable {
+		private final VecCache<T> owner;
+		private final T vec;
+		private boolean cached = true;
+
+		public T data() {
+			assert !cached;
+			return vec;
+		}
+
+		@Override
+		public void close() {
+			final ArrayDeque<VecHandle<T>> deque = owner.cache.get();
+			cached = true;
+			deque.add(this);
+		}
+	}
+
+	@RequiredArgsConstructor
+	static final class VecCache<T> {
+		final ThreadLocal<ArrayDeque<VecHandle<T>>> cache = ThreadLocal.withInitial(ArrayDeque::new);
+		final Supplier<T> supplier;
+
+		VecHandle<T> get() {
+			final ArrayDeque<VecHandle<T>> deque = cache.get();
+			VecHandle<T> handle = deque.poll();
+			if (handle == null)
+				handle = new VecHandle<>(this, supplier.get());
+			assert handle.cached;
+			handle.cached = false;
+			return handle;
+		}
+	}
+
+	private static final VecCache<int[]> iVec2Cache = new VecCache<>(() -> new int[2]);
+	private static final VecCache<int[]> iVec3Cache = new VecCache<>(() -> new int[3]);
+	private static final VecCache<int[]> iVec4Cache = new VecCache<>(() -> new int[4]);
+
+	private static final VecCache<float[]> vec2Cache = new VecCache<>(() -> new float[2]);
+	private static final VecCache<float[]> vec3Cache = new VecCache<>(() -> new float[3]);
+	private static final VecCache<float[]> vec4Cache = new VecCache<>(() -> new float[4]);
+
+	public static VecHandle<int[]> ivec2() {return iVec2Cache.get(); }
+	public static VecHandle<int[]> ivec2(int x, int y) {
+		final VecHandle<int[]> out = iVec2Cache.get();
+		out.vec[0] = x;
+		out.vec[1] = y;
+		return out;
+	}
+
+	public static VecHandle<int[]> ivec3() {return iVec3Cache.get(); }
+	public static VecHandle<int[]> ivec3(int x, int y, int z) {
+		final VecHandle<int[]> out = iVec3Cache.get();
+		out.vec[0] = x;
+		out.vec[1] = y;
+		out.vec[2] = z;
+		return out;
+	}
+
+	public static VecHandle<int[]> ivec4() {return iVec4Cache.get(); }
+	public static VecHandle<int[]> ivec4(int x, int y, int z, int w) {
+		final VecHandle<int[]> out = iVec4Cache.get();
+		out.vec[0] = x;
+		out.vec[1] = y;
+		out.vec[2] = z;
+		out.vec[3] = w;
+		return out;
+	}
+
+	public static VecHandle<float[]> vec2() { return vec2Cache.get(); }
+	public static VecHandle<float[]> vec2(int[] ivec) { return vec2(ivec[0], ivec[1]); }
+	public static VecHandle<float[]> vec2(int x, int y) { return vec2((float) x, (float) y); }
+	public static VecHandle<float[]> vec2(float x, float y) {
+		final VecHandle<float[]> out = vec2Cache.get();
+		out.vec[0] = x;
+		out.vec[1] = y;
+		return out;
+	}
+
+	public static VecHandle<float[]> vec3() { return vec3Cache.get(); }
+	public static VecHandle<float[]> vec3(int[] ivec) { return vec3(ivec[0], ivec[1], ivec[2]); }
+	public static VecHandle<float[]> vec3(int x, int y, int z) { return vec3((float) x, (float) y, (float) z); }
+	public static VecHandle<float[]> vec3(float x, float y, float z) {
+		final VecHandle<float[]> out = vec3Cache.get();
+		out.vec[0] = x;
+		out.vec[1] = y;
+		out.vec[2] = z;
+		return out;
+	}
+
+	public static VecHandle<float[]> vec4() { return vec4Cache.get(); }
+	public static VecHandle<float[]> vec4(int[] ivec) { return vec4(ivec[0], ivec[1], ivec[2], ivec[3]); }
+	public static VecHandle<float[]> vec4(int x, int y, int z, int w) { return vec4((float) x, (float) y, (float) z, (float) w); }
+	public static VecHandle<float[]> vec4(float x, float y, float z, float w) {
+		final VecHandle<float[]> out = vec4Cache.get();
+		out.vec[0] = x;
+		out.vec[1] = y;
+		out.vec[2] = z;
+		out.vec[3] = w;
+		return out;
+	}
 
 	public static float[] vec(float... vec) {
 		return vec;

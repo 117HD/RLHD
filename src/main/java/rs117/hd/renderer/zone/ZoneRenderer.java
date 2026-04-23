@@ -343,10 +343,15 @@ public class ZoneRenderer implements Renderer {
 			plugin.drawnTempRenderableCount = 0;
 			plugin.drawnDynamicRenderableCount = 0;
 
-			copyTo(plugin.cameraPosition, vec(cameraX, cameraY, cameraZ));
-			copyTo(plugin.cameraOrientation, vec(cameraYaw, cameraPitch));
-
-			copyTo(plugin.cameraFocalPoint, ivec((int) client.getCameraFocalPointX(), (int) client.getCameraFocalPointZ()));
+			try(
+				var cameraPosition = vec3(cameraX, cameraY, cameraZ);
+				var cameraOrientation = vec2(cameraYaw, cameraPitch);
+				var cameraFocalPoint = ivec2((int) client.getCameraFocalPointX(), (int) client.getCameraFocalPointZ());
+				) {
+				copyTo(plugin.cameraPosition, cameraPosition.data());
+				copyTo(plugin.cameraOrientation, cameraOrientation.data());
+				copyTo(plugin.cameraFocalPoint, cameraFocalPoint.data());
+			}
 			Arrays.fill(plugin.cameraShift, 0);
 
 			float zoom = client.get3dZoom();
@@ -399,70 +404,75 @@ public class ZoneRenderer implements Renderer {
 				(hasSceneCameraChanged || hasDirectionalCameraChanged) &&
 				!sceneCamera.isOrthographic()
 			) {
-				int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
+				try (
+					var sceneCenterHandle = vec3();
+					var directionalFwdHandle = vec3();
+				) {
+					int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 
-				final float[][] volumeCorners = directionalShadowCasterVolume
-					.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
+					final float[][] volumeCorners = directionalShadowCasterVolume
+						.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
 
-				final float[] sceneCenter = new float[3];
-				for (float[] corner : volumeCorners)
-					add(sceneCenter, sceneCenter, corner);
-				divide(sceneCenter, sceneCenter, (float) volumeCorners.length);
+					final float[] sceneCenter = sceneCenterHandle.data();
+					for (float[] corner : volumeCorners)
+						add(sceneCenter, sceneCenter, corner);
+					divide(sceneCenter, sceneCenter, (float) volumeCorners.length);
 
-				// Reset position before transforming points
-				directionalCamera.setPosition(0, 0, 0);
+					// Reset position before transforming points
+					directionalCamera.setPosition(0, 0, 0);
 
-				float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
-				float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
-				float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
-				float radius = 0f;
-				for (float[] corner : volumeCorners) {
-					radius = max(radius, distance(sceneCenter, corner));
+					float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
+					float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
+					float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
+					float radius = 0f;
+					for (float[] corner : volumeCorners) {
+						radius = max(radius, distance(sceneCenter, corner));
 
-					directionalCamera.transformPoint(corner, corner);
+						directionalCamera.transformPoint(corner, corner);
 
-					minX = min(minX, corner[0]);
-					maxX = max(maxX, corner[0]);
+						minX = min(minX, corner[0]);
+						maxX = max(maxX, corner[0]);
 
-					minY = min(minY, corner[1]);
-					maxY = max(maxY, corner[1]);
+						minY = min(minY, corner[1]);
+						maxY = max(maxY, corner[1]);
 
-					minZ = min(minZ, corner[2]);
-					maxZ = max(maxZ, corner[2]);
+						minZ = min(minZ, corner[2]);
+						maxZ = max(maxZ, corner[2]);
+					}
+
+					// Offset the Directional Camera by the radius of the scene
+					final float[] directionalFwd = directionalCamera.getForwardDirection(directionalFwdHandle.data());
+					multiply(directionalFwd, directionalFwd, radius);
+					add(sceneCenter, sceneCenter, directionalFwd);
+
+					// Calculate directional size from the AABB of the scene frustum corners
+					// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
+					int directionalSize = (int) max(abs(maxY - minY), abs(maxX - minX), abs(maxZ - minZ));
+					directionalSize = Math.round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
+					directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
+
+					// Ignore directional size changes below the change threshold to avoid inducing shimmering
+					int previousDirectionalSize = directionalCamera.getViewportWidth();
+					float changeThreshold = previousDirectionalSize * 0.05f; // 10% of the previous directional size
+					if (abs(directionalSize - previousDirectionalSize) < changeThreshold)
+						directionalSize = previousDirectionalSize;
+
+					// Snap Position to Shadow Texel Grid to prevent shimmering
+					directionalCamera.transformPoint(sceneCenter, sceneCenter);
+
+					float texelSize = (float) directionalSize / plugin.shadowMapResolution;
+					sceneCenter[0] = (float) floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
+					sceneCenter[1] = (float) floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
+
+					directionalCamera.setPosition(directionalCamera.inverseTransformPoint(sceneCenter, sceneCenter));
+					directionalCamera.setNearPlane(Math.max(0.1f, radius * 0.05f));
+					directionalCamera.setFarPlane(radius * 2.0f);
+					directionalCamera.setZoom(1.0f);
+					directionalCamera.setViewportWidth(directionalSize);
+					directionalCamera.setViewportHeight(directionalSize);
+
+					plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 				}
-
-				// Offset the Directional Camera by the radius of the scene
-				float[] directionalFwd = directionalCamera.getForwardDirection();
-				multiply(directionalFwd, directionalFwd, radius);
-				add(sceneCenter, sceneCenter, directionalFwd);
-
-				// Calculate directional size from the AABB of the scene frustum corners
-				// Then snap to the nearest multiple of `LOCAL_HALF_TILE_SIZE` to prevent shimmering
-				int directionalSize = (int) max(abs(maxY - minY), abs(maxX - minX), abs(maxZ - minZ));
-				directionalSize = Math.round(directionalSize / (float) LOCAL_HALF_TILE_SIZE) * LOCAL_HALF_TILE_SIZE;
-				directionalSize = max(8000, directionalSize); // Clamp the size to prevent going too small at reduced draw distances
-
-				// Ignore directional size changes below the change threshold to avoid inducing shimmering
-				int previousDirectionalSize = directionalCamera.getViewportWidth();
-				float changeThreshold = previousDirectionalSize * 0.05f; // 10% of the previous directional size
-				if (abs(directionalSize - previousDirectionalSize) < changeThreshold)
-					directionalSize = previousDirectionalSize;
-
-				// Snap Position to Shadow Texel Grid to prevent shimmering
-				directionalCamera.transformPoint(sceneCenter, sceneCenter);
-
-				float texelSize = (float) directionalSize / plugin.shadowMapResolution;
-				sceneCenter[0] = (float) floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
-				sceneCenter[1] = (float) floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
-
-				directionalCamera.setPosition(directionalCamera.inverseTransformPoint(sceneCenter, sceneCenter));
-				directionalCamera.setNearPlane(Math.max(0.1f, radius * 0.05f));
-				directionalCamera.setFarPlane(radius * 2.0f);
-				directionalCamera.setZoom(1.0f);
-				directionalCamera.setViewportWidth(directionalSize);
-				directionalCamera.setViewportHeight(directionalSize);
-
-				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 			}
 
 			shouldDrawRoofShadows =
@@ -481,29 +491,35 @@ public class ZoneRenderer implements Renderer {
 				assert ctx.sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
 
 				frameTimer.begin(Timer.UPDATE_LIGHTS);
-				final float[] lightPosition = new float[4];
-				final float[] lightColor = new float[4];
-				for (int i = 0; i < ctx.sceneContext.numVisibleLights; i++) {
-					final Light light = ctx.sceneContext.lights.get(i);
-					final float lightRadiusSq = light.radius * light.radius;
-					lightPosition[0] = light.pos[0] + plugin.cameraShift[0];
-					lightPosition[1] = light.pos[1];
-					lightPosition[2] = light.pos[2] + plugin.cameraShift[1];
-					lightPosition[3] = lightRadiusSq;
+				try (
+					var lightPositionHandle = vec4();
+					var lightColorHandle = vec4()
+				) {
+					final float[] lightPosition = lightPositionHandle.data();
+					final float[] lightColor = lightColorHandle.data();
 
-					lightColor[0] = light.color[0] * light.strength;
-					lightColor[1] = light.color[1] * light.strength;
-					lightColor[2] = light.color[2] * light.strength;
-					lightColor[3] = 0.0f;
+					for (int i = 0; i < ctx.sceneContext.numVisibleLights; i++) {
+						final Light light = ctx.sceneContext.lights.get(i);
+						final float lightRadiusSq = light.radius * light.radius;
+						lightPosition[0] = light.pos[0] + plugin.cameraShift[0];
+						lightPosition[1] = light.pos[1];
+						lightPosition[2] = light.pos[2] + plugin.cameraShift[1];
+						lightPosition[3] = lightRadiusSq;
 
-					plugin.uboLights.setLight(i, lightPosition, lightColor);
+						lightColor[0] = light.color[0] * light.strength;
+						lightColor[1] = light.color[1] * light.strength;
+						lightColor[2] = light.color[2] * light.strength;
+						lightColor[3] = 0.0f;
 
-					if (plugin.configTiledLighting) {
-						// Pre-calculate the view space position of the light, to save having to do the multiplication in the culling shader
-						lightPosition[3] = 1.0f;
-						Mat4.mulVec(lightPosition, plugin.viewMatrix, lightPosition);
-						lightPosition[3] = lightRadiusSq; // Restore lightRadiusSq
-						plugin.uboLightsCulling.setLight(i, lightPosition, lightColor);
+						plugin.uboLights.setLight(i, lightPosition, lightColor);
+
+						if (plugin.configTiledLighting) {
+							// Pre-calculate the view space position of the light, to save having to do the multiplication in the culling shader
+							lightPosition[3] = 1.0f;
+							Mat4.mulVec(lightPosition, plugin.viewMatrix, lightPosition);
+							lightPosition[3] = lightRadiusSq; // Restore lightRadiusSq
+							plugin.uboLightsCulling.setLight(i, lightPosition, lightColor);
+						}
 					}
 				}
 
@@ -536,28 +552,37 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.expandedMapLoadingChunks.set(ctx.sceneContext.expandedMapLoadingChunks);
 		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
-		float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
-		float lightBrightnessMultiplier = 0.8f;
-		float midBrightnessMultiplier = 0.45f;
-		float darkBrightnessMultiplier = 0.05f;
-		float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-			waterColorHsv[0],
-			waterColorHsv[1],
-			waterColorHsv[2] * lightBrightnessMultiplier
-		}));
-		float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-			waterColorHsv[0],
-			waterColorHsv[1],
-			waterColorHsv[2] * midBrightnessMultiplier
-		}));
-		float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-			waterColorHsv[0],
-			waterColorHsv[1],
-			waterColorHsv[2] * darkBrightnessMultiplier
-		}));
-		plugin.uboGlobal.waterColorLight.set(waterColorLight);
-		plugin.uboGlobal.waterColorMid.set(waterColorMid);
-		plugin.uboGlobal.waterColorDark.set(waterColorDark);
+		try (
+			var waterColorLightHandle = vec3();
+			var waterColorMidHandle = vec3();
+			var waterColorDarkHandle = vec3();
+		) {
+			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor); // TODO: Pass in a vec3
+			float lightBrightnessMultiplier = 0.8f;
+			float midBrightnessMultiplier = 0.45f;
+			float darkBrightnessMultiplier = 0.05f;
+			float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(vec3(
+				waterColorLightHandle.data(),
+				waterColorHsv[0],
+				waterColorHsv[1],
+				waterColorHsv[2] * lightBrightnessMultiplier
+			)));
+			float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(vec3(
+				waterColorMidHandle.data(),
+				waterColorHsv[0],
+				waterColorHsv[1],
+				waterColorHsv[2] * midBrightnessMultiplier
+			)));
+			float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(vec3(
+				waterColorDarkHandle.data(),
+				waterColorHsv[0],
+				waterColorHsv[1],
+				waterColorHsv[2] * darkBrightnessMultiplier
+			)));
+			plugin.uboGlobal.waterColorLight.set(waterColorLight);
+			plugin.uboGlobal.waterColorMid.set(waterColorMid);
+			plugin.uboGlobal.waterColorDark.set(waterColorDark);
+		}
 
 		plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
 		float ambientStrength = environmentManager.currentAmbientStrength;

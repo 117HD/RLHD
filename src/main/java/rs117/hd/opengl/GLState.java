@@ -107,6 +107,27 @@ public abstract class GLState {
 			System.arraycopy(v, 0, value, 0, v.length);
 		}
 
+		public final void set(int a, int b) {
+			hasValue = true;
+			value[0] = a;
+			value[1] = b;
+		}
+
+		public final void set(int a, int b, int c) {
+			hasValue = true;
+			value[0] = a;
+			value[1] = b;
+			value[2] = c;
+		}
+
+		public final void set(int a, int b, int c, int d) {
+			hasValue = true;
+			value[0] = a;
+			value[1] = b;
+			value[2] = c;
+			value[3] = d;
+		}
+
 		@Override
 		protected void internalApply() {
 			if (!hasApplied || !Arrays.equals(value, appliedValue)) {
@@ -131,6 +152,27 @@ public abstract class GLState {
 		public final void set(boolean... v) {
 			hasValue = true;
 			System.arraycopy(v, 0, value, 0, v.length);
+		}
+
+		public final void set(boolean a, boolean b) {
+			hasValue = true;
+			value[0] = a;
+		 	value[1] = b;
+		}
+
+		public final void set(boolean a, boolean b, boolean c) {
+			hasValue = true;
+			value[0] = a;
+			value[1] = b;
+			value[2] = c;
+		}
+
+		public final void set(boolean a, boolean b, boolean c, boolean d) {
+			hasValue = true;
+			value[0] = a;
+			value[1] = b;
+			value[2] = c;
+			value[3] = d;
 		}
 
 		@Override

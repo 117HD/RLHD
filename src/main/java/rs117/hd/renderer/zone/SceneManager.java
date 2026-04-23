@@ -103,7 +103,6 @@ public class SceneManager {
 	private ZoneSceneContext nextSceneContext;
 	private Zone[][] nextZones;
 	private final List<SortedZone> sortedZones = new ArrayList<>();
-	private final int[] playerWorldPos = new int[3];
 	private boolean reloadRequested;
 
 	public boolean isZoneStreamingEnabled() {
@@ -248,20 +247,22 @@ public class SceneManager {
 
 	private void updateAreaHiding() {
 		Player localPlayer = client.getLocalPlayer();
-		if (!isTopLevelValid() || localPlayer == null || root.isLoading)
+		if (!isTopLevelValid() || localPlayer == null || root.isLoading || !root.sceneContext.enableAreaHiding) {
+			plugin.justChangedArea = false;
 			return;
+		}
 
-		if (root.sceneContext.enableAreaHiding) {
-			var base = root.sceneContext.sceneBase;
-			assert base != null;
-			var lp = localPlayer.getLocalLocation();
-			final var worldPos = ivec3(
-				playerWorldPos,
+		var base = root.sceneContext.sceneBase;
+		assert base != null;
+		var lp = localPlayer.getLocalLocation();
+
+		try (
+			var worldPosHandle = ivec3(
 				base[0] + lp.getSceneX(),
 				base[1] + lp.getSceneY(),
 				base[2] + client.getTopLevelWorldView().getPlane()
-			);
-
+			)) {
+			final int[] worldPos = worldPosHandle.data();
 			// We need to check all areas contained in the scene in the order they appear in the list,
 			// in order to ensure lower floors can take precedence over higher floors which include tiny
 			// portions of the floor beneath around stairs and ladders
@@ -294,8 +295,6 @@ public class SceneManager {
 			} else {
 				plugin.justChangedArea = false;
 			}
-		} else {
-			plugin.justChangedArea = false;
 		}
 	}
 
