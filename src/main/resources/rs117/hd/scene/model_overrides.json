@@ -2558,7 +2558,8 @@
       "BRAIN_ROCK_POOL",
       "BRAIN_ROCK_POOL_SMALL",
       "BRAIN_ROCK_POOL_BITS",
-      "FAIRYTALE2_ROCK_POOL_SMALL"
+      "FAIRYTALE2_ROCK_POOL_SMALL",
+      "STALKER_DEN_STEPPING_STONE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -34068,6 +34069,9 @@
       "WALLKIT_AUBURNVALE01_DOOR01_M",
       "WALLKIT_AUBURNVALE01_DOOR01",
       "SOC_WALL_INSPECT_REINFORCED",
+      "SOC_WALL_INSPECT_REINFORCE",
+      "SOC_WALL_INSPECT_OP",
+      "SOC_WALL_INSPECT_NOOP",
       "SOC_WINDOW_NOOP"
     ]
   },
@@ -34262,6 +34266,28 @@
     ]
   },
   {
+    "description": "Auburnvale - Stalker Blood Trail",
+    "baseMaterial": "GRAY_90",
+    "depthBias": 50,
+    "objectIds": [
+      "SOC_PUDDLE"
+    ]
+  },
+  {
+    "description": "Auburnvale - Stalker Den - Stalker Victims",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "SOC_STALKER_VICTIM_1",
+      "SOC_STALKER_VICTIM_2",
+      "SOC_STALKER_VICTIM_3",
+      "SOC_STALKER_VICTIM_4",
+      "SOC_STALKER_VICTIM_5",
+      "SOC_STALKER_VICTIM_6",
+      "SOC_STALKER_VICTIM_7",
+      "SOC_STALKER_VICTIM_8"
+    ]
+  },
+  {
     "description": "Auburnvale - Stalker Den - Roots with Red Vines",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
@@ -34289,7 +34315,7 @@
       },
       {
         "colors": "h == 42",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvScale": 0.4,
         "uvType": "MODEL_XZ"
       }
@@ -40799,6 +40825,7 @@
     "description": "Perilous Moons - Darken Ripples in Earthbound",
     "areas": [ "EARTHBOUND_CAVERN" ],
     "baseMaterial": "GRAY_35",
+    "hideAsWaterEffect": true,
     "objectIds": [
       "DWARF_RIPPLE"
     ]
@@ -41130,6 +41157,7 @@
       "DECOKIT_ROCK01_JOIN01",
       "DECOKIT_ROCK01_JOIN02",
       "CAVEKIT_ROCK02_LOW02",
+      "DECOKIT_ROCK01_MIDDLE01_DARK01",
       "WILD_BOSS_ESCAPE_CAVE_EXIT01",
       "WILD_BOSS_ESCAPE_CAVE_EXIT02",
       "WILD_BOSS_ESCAPE_CAVE_EXIT_NOOP",
@@ -44129,6 +44157,7 @@
     "description": "Fix shadow transparency performance with black boxes in the Hunter Guild & Perilous Moons, and improve looks",
     "objectIds": [
       "CAVEKIT_ROCK01_WALLTOP05",
+      "CAVEKIT_ROCK01_WALLTOP06_DARK02",
       "ROR_TEMPLE_TALL_TOP",
       "ROR_TEMPLE_TALL_PILLAR"
     ],
@@ -76527,6 +76556,13 @@
     "baseMaterial": "GRAY_70",
     "objectIds": [
       "GODWARS_WATERFALL_BOTTOM_OFFSET"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Waterfall Foam",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "GODWARS_WATERFALL_BOTTOM_BUBBLES"
     ]
   },
   {

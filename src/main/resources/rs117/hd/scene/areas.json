@@ -10640,6 +10640,10 @@
     ]
   },
   {
+    "name": "Stalker Den",
+    "regionBoxes": [ [ 5017, 5272 ] ]
+  },
+  {
     "name": "Tal Teok temple path blending fix",
     "aabbs": [
       [ 1231, 3152, 1262, 3183 ],

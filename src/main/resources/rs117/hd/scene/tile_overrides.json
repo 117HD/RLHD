@@ -7502,6 +7502,12 @@
     }
   },
   {
+    "name": "Varlamore - Stalker Den - Water",
+    "area": "Stalker Den",
+    "overlayIds": [ 41 ],
+    "waterType": "CAVE_WATER"
+  },
+  {
     "name": "Varlamore - Auburn Valley - Dirt path",
     "area": "VARLAMORE",
     "overlayIds": [ 186, 187 ],
