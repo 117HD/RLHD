@@ -1442,7 +1442,13 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "retainVanillaUvs": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 17",
+        "baseMaterial": "LEAF_VEINS_DARK"
+      }
+    ]
   },
   {
     "description": "Fallen Tree",
