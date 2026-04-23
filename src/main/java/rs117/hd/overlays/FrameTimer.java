@@ -198,15 +198,26 @@ public class FrameTimer {
 		}
 	}
 
-	public void add(Timer timer, long nanos) {
+	public long getTimeStamp() { return isActive ? System.nanoTime() : 0; }
+
+	public long getUsedMemory() { return isActive ? HDUtils.getUsedMemory() : 0; }
+
+	public void addDuration(Timer timer, long nanos) {
 		if (isActive) {
 			timings[timer.ordinal()] += nanos;
 		}
 	}
 
-	public void add(Timer timer, long nanos, long allocation) {
+	public void add(Timer timer, long startNanos) {
 		if (isActive) {
-			timings[timer.ordinal()] += nanos;
+			timings[timer.ordinal()] += System.nanoTime() - startNanos;
+		}
+	}
+
+	public void add(Timer timer, long startNanos, long startMemory) {
+		if (isActive) {
+			long allocation = HDUtils.getUsedMemory() - startMemory;
+			timings[timer.ordinal()] += System.nanoTime() - startNanos;
 			allocations[timer.ordinal()] += allocation > 0 ? allocation : 0;
 		}
 	}
@@ -274,6 +285,6 @@ public class FrameTimer {
 			plugin.garbageCollectionCount += gc.getCollectionCount();
 		}
 
-		add(Timer.GARBAGE_COLLECTION, elapsedDuration * 1_000_000L);
+		addDuration(Timer.GARBAGE_COLLECTION, elapsedDuration * 1_000_000L);
 	}
 }

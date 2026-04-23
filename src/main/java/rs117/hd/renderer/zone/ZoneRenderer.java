@@ -1018,8 +1018,8 @@ public class ZoneRenderer implements Renderer {
 		if (plugin.isPluginStopPending())
 			return;
 
-		final long start = System.nanoTime();
-		final long startUsed = HDUtils.getUsedMemory();
+		final long start = frameTimer.getTimeStamp();
+		final long used = frameTimer.getUsedMemory();
 		try {
 			modelStreamingManager.drawDynamic(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
 		} catch (Exception ex) {
@@ -1027,8 +1027,8 @@ public class ZoneRenderer implements Renderer {
 		} finally {
 			frameTimer.add(
 				renderThreadId == -1 ? Timer.DRAW_DYNAMIC : Timer.DRAW_DYNAMIC_ASYNC,
-				System.nanoTime() - start,
-				HDUtils.getUsedMemory() - startUsed
+				start,
+				used
 			);
 		}
 	}
