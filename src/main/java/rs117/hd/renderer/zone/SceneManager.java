@@ -232,15 +232,15 @@ public class SceneManager {
 			}
 		}
 
-		for (int objectId : root.sceneContext.animatedDynamicObjectIds) {
-			int impostorId = objectId;
+		for (Integer objectId : root.sceneContext.animatedDynamicObjectIds) {
+			Integer impostorId = objectId;
 			var def = client.getObjectDefinition(objectId);
 			if (def != null && def.getImpostorIds() != null) {
 				var impostor = def.getImpostor();
 				if (impostor != null)
 					impostorId = impostor.getId();
 			}
-			root.sceneContext.animatedDynamicObjectImpostors.put(objectId, impostorId);
+			root.sceneContext.animatedDynamicObjectImpostors.putIfAbsent(objectId, impostorId);
 		}
 
 		root.completeInvalidation();
