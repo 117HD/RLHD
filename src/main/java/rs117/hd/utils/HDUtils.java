@@ -532,7 +532,28 @@ public final class HDUtils {
 		return "Unknown";
 	}
 
+	private static boolean THREAD_ALLOCATED_BYTES_SUPPORTED = true;
+	private static com.sun.management.ThreadMXBean threadMXBean;
+
+	public static void setupThreadAllocatedBytesMonitoring() {
+		if(ManagementFactory.getThreadMXBean() instanceof com.sun.management.ThreadMXBean) {
+			threadMXBean = (com.sun.management.ThreadMXBean) ManagementFactory.getThreadMXBean();
+			THREAD_ALLOCATED_BYTES_SUPPORTED = threadMXBean.isThreadAllocatedMemorySupported();
+			if(THREAD_ALLOCATED_BYTES_SUPPORTED) {
+				threadMXBean.setThreadAllocatedMemoryEnabled(true);
+				THREAD_ALLOCATED_BYTES_SUPPORTED = threadMXBean.isThreadAllocatedMemoryEnabled();
+			}
+		} else {
+			THREAD_ALLOCATED_BYTES_SUPPORTED = false;
+		}
+
+		log.debug("Thread allocated bytes monitoring: {}", THREAD_ALLOCATED_BYTES_SUPPORTED);
+	}
+
 	public static long getUsedMemory() {
+		if(THREAD_ALLOCATED_BYTES_SUPPORTED)
+			return threadMXBean.getThreadAllocatedBytes(Thread.currentThread().getId());
+
 		final Runtime runtime = Runtime.getRuntime();
 		return runtime.totalMemory() - runtime.freeMemory();
 	}

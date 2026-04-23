@@ -676,6 +676,8 @@ public class HdPlugin extends Plugin {
 					}
 				}
 
+				HDUtils.setupThreadAllocatedBytesMonitoring();
+
 				updateCachedConfigs();
 				developerTools.activate();
 
