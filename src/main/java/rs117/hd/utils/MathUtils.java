@@ -880,14 +880,29 @@ public final class MathUtils {
 	}
 
 	public static String formatBytes(long bytes) {
-		if (bytes < 0)
-			return "-" + formatBytes(bytes == Long.MIN_VALUE ? Long.MAX_VALUE : -bytes);
+		StringBuilder sb = new StringBuilder();
+		formatBytes(bytes, sb);
+		return sb.toString();
+	}
+
+	public static StringBuilder formatBytes(long bytes, StringBuilder sb) {
+		if (bytes < 0) {
+			sb.append('-');
+			return formatBytes(bytes == Long.MIN_VALUE ? Long.MAX_VALUE : -bytes, sb);
+		}
+
 		if (bytes == Long.MAX_VALUE)
-			return "infinity";
+			return sb.append("infinity");
+
 		if (bytes < 1024)
-			return bytes + " B";
+			return sb.append(bytes).append(" B");
+
 		int i = (63 - Long.numberOfLeadingZeros(bytes)) / 10 - 1;
 		int decimal = (10 * (int) (bytes >> i * 10) / 1024) % 10;
-		return String.format("%d%s %siB", bytes >> (i + 1) * 10, decimal == 0 ? "" : "." + decimal, "KMGTPE".charAt(i));
+
+		sb.append(bytes >> (i + 1) * 10);
+		if(decimal > 0)
+			sb.append('.').append(decimal);
+		return sb.append(' ').append("KMGTPE".charAt(i));
 	}
 }

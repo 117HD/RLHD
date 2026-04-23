@@ -261,6 +261,7 @@ public class ModelStreamingManager {
 		int x, int y, int z
 	) {
 		final long asyncStart = System.nanoTime();
+		final long asyncUsed = HDUtils.getUsedMemory();
 		uploadTempModel(
 			projection,
 			ctx,
@@ -275,7 +276,11 @@ public class ModelStreamingManager {
 			orientation,
 			x, y, z
 		);
-		frameTimer.add(Timer.DRAW_TEMP_ASYNC, System.nanoTime() - asyncStart);
+		frameTimer.add(
+			Timer.DRAW_TEMP_ASYNC,
+			System.nanoTime() - asyncStart,
+			HDUtils.getUsedMemory() - asyncUsed
+		);
 	}
 
 	private void uploadTempModel(
@@ -526,6 +531,7 @@ public class ModelStreamingManager {
 		int x, int y, int z
 	) {
 		final long asyncStart = System.nanoTime();
+		final long asyncUsed = HDUtils.getUsedMemory();
 		uploadDynamicModel(
 			ctx,
 			projection,
@@ -540,7 +546,11 @@ public class ModelStreamingManager {
 			orientation,
 			x, y, z
 		);
-		frameTimer.add(Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - asyncStart);
+		frameTimer.add(
+			Timer.DRAW_DYNAMIC_ASYNC,
+			System.nanoTime() - asyncStart,
+			HDUtils.getUsedMemory() - asyncUsed
+		);
 	}
 
 	private void uploadDynamicModel(

@@ -532,6 +532,11 @@ public final class HDUtils {
 		return "Unknown";
 	}
 
+	public static long getUsedMemory() {
+		final Runtime runtime = Runtime.getRuntime();
+		return runtime.totalMemory() - runtime.freeMemory();
+	}
+
 	public static long getTotalSystemMemory() {
 		try {
 			var bean = ManagementFactory.getOperatingSystemMXBean();

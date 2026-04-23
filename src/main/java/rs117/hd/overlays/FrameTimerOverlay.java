@@ -3,6 +3,7 @@ package rs117.hd.overlays;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.utils.FrameTimingsRecorder;
+import rs117.hd.utils.MathUtils;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.jobs.JobSystem;
 
@@ -52,10 +54,15 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final long[] timings = new long[Timer.TIMERS.length];
-	private float cpuLoad;
-	private final Map<String, LineComponent> componentMap = new HashMap<>();
+	private final long[] allocations = new long[Timer.TIMERS.length];
+	private final Map<String, LineComponent> timerComponentMap = new HashMap<>();
 	private final StringBuilder sb = new StringBuilder();
 	private final Formatter formatter = new Formatter(sb);
+
+	private char[] strChars = new char[128];
+	private String longestTimerName;
+	private float cpuLoad;
+	private Graphics2D graphics;
 
 	@Inject
 	public FrameTimerOverlay(HdPlugin plugin) {
@@ -95,6 +102,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Override
 	public Dimension render(Graphics2D g) {
+		this.graphics = g;
+
 		long time = System.nanoTime();
 		var boldFont = FontManager.getRunescapeBoldFont();
 
@@ -105,19 +114,26 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.build());
 		} else {
 			long cpuTime = timings[Timer.DRAW_FRAME.ordinal()];
+			long cpuAlloc = allocations[Timer.DRAW_FRAME.ordinal()];
 			long asyncCpuTime = 0;
-			addTiming("CPU", cpuTime, true);
+			addTiming("CPU", cpuTime, cpuAlloc, true);
 			for (var t : Timer.TIMERS) {
+				if(t == Timer.CLIENT)
+					continue;
 				if (t.isCpuTimer() && t != Timer.DRAW_FRAME)
-					addTiming(t, timings);
+					addTiming(t, timings, allocations);
 				if (t.isAsyncCpuTimer())
 					asyncCpuTime += timings[t.ordinal()];
 			}
 
+			long clientTime = timings[Timer.CLIENT.ordinal()];
+			long clientAlloc = allocations[Timer.CLIENT.ordinal()];
+			addTiming("Client", clientTime, clientAlloc, true);
 			addTiming("Async", asyncCpuTime, true);
 			for (var t : Timer.TIMERS)
 				if (t.isAsyncCpuTimer())
-					addTiming(t, timings);
+					addTiming(t, timings, allocations);
+
 
 			if (cpuLoad > 0) {
 				children.add(LineComponent.builder()
@@ -130,7 +146,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			addTiming("GPU", gpuTime, true);
 			for (var t : Timer.TIMERS)
 				if (t.isGpuTimer() && t != Timer.RENDER_FRAME)
-					addTiming(t, timings);
+					addTiming(t, timings, null);
 
 			children.add(LineComponent.builder()
 				.leftFont(boldFont)
@@ -267,48 +283,99 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		if (frames.isEmpty())
 			return false;
 
+		if(longestTimerName == null) {
+			longestTimerName = Timer.CLIENT.name;
+			for (var timer : Timer.TIMERS) {
+				if(timer.name.length() > longestTimerName.length())
+					longestTimerName = timer.name;
+			}
+		}
+
 		Arrays.fill(timings, 0);
+		Arrays.fill(allocations, 0);
 		cpuLoad = 0;
 		for (var frame : frames) {
-			for (int i = 0; i < frame.timers.length; i++)
+			for (int i = 0; i < frame.timers.length; i++) {
 				timings[i] += frame.timers[i];
+				allocations[i] += frame.allocations[i];
+			}
 			cpuLoad += frame.cpuLoad;
 		}
 
-		for (int i = 0; i < timings.length; i++)
+		for (int i = 0; i < timings.length; i++) {
 			timings[i] = max(0, timings[i] / frames.size());
+			allocations[i] = max(0, allocations[i] / frames.size());
+		}
 		cpuLoad /= frames.size();
 
 		return true;
 	}
 
-	private void addTiming(Timer timer, long[] timings) {
-		addTiming(timer.name, timings[timer.ordinal()], false);
+	private void addTiming(Timer timer, long[] timings, long[] allocations) {
+		addTiming(timer.name, timings[timer.ordinal()], allocations != null ? allocations[timer.ordinal()] : -1, false);
 	}
 
+
 	private void addTiming(String name, long nanos, boolean bold) {
+		addTiming(name, nanos, -1, bold);
+	}
+
+	private int stringWidth(String str, FontMetrics fmt) {
+		int len = str.length();
+		if(strChars == null || strChars.length < len)
+			strChars = new char[len];
+		str.getChars(0, len, strChars, 0);
+		return fmt.charsWidth(strChars, 0, len);
+	}
+
+	private void addTiming(String name, long nanos, long allocation, boolean bold) {
 		if (nanos == 0)
 			return;
 
+		final var font = bold ? FontManager.getRunescapeBoldFont() : FontManager.getRunescapeFont();
+		final var metrics = graphics.getFontMetrics(font);
 		// Round timers to zero if they are less than a microsecond off
-		String result = "~0 ms";
+		sb.setLength(0);
+
+		String value = "~0 ms";
 		if (abs(nanos) > 1e3) {
 			sb.setLength(0);
-			result = sb.append(round(nanos / 1e3) / 1e3).append(" ms").toString();
+			value = sb.append(round(nanos / 1e3) / 1e3).append(" ms").toString();
 		}
 
-		LineComponent component = componentMap.get(name);
+		String title = name;
+		if(allocation >= 0) {
+			sb.setLength(0);
+			sb.append(name).append(": ");
+
+			int spaceWidth = stringWidth(" ", metrics);
+			int lineWidth = stringWidth(name, metrics);
+			int padding = (stringWidth(longestTimerName, metrics) - lineWidth) / spaceWidth;
+
+			// This is 2:15 AM Coding... Very hacky this certainly can be done better. But the core idea is here :D
+			padding += Math.max(0, ((getBounds().width / 6) / spaceWidth));
+			if(bold)
+				padding = (int) (padding * 0.915f);
+
+			for(int i = 0; i < padding; i++)
+				sb.append(" ");
+
+			sb.append(" (");
+			title = MathUtils.formatBytes(allocation, sb).append(")  ").toString();
+		}
+
+		LineComponent component = timerComponentMap.get(name);
 		if (component == null) {
-			var font = bold ? FontManager.getRunescapeBoldFont() : FontManager.getRunescapeFont();
 			component = LineComponent.builder()
-				.left(name + ":")
+				.left(title)
 				.leftFont(font)
-				.right(result)
+				.right(value)
 				.rightFont(font)
 				.build();
-			componentMap.put(name, component);
+			timerComponentMap.put(name, component);
 		} else {
-			component.setRight(result);
+			component.setLeft(title);
+			component.setRight(value);
 		}
 
 		panelComponent.getChildren().add(component);

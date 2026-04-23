@@ -1991,6 +1991,8 @@ public class HdPlugin extends Plugin {
 			return;
 		}
 
+		frameTimer.end(Timer.CLIENT);
+
 		if (lastFrameTimeMillis > 0) {
 			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
 

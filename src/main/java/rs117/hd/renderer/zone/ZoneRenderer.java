@@ -1019,12 +1019,17 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		final long start = System.nanoTime();
+		final long startUsed = HDUtils.getUsedMemory();
 		try {
 			modelStreamingManager.drawDynamic(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
 		} catch (Exception ex) {
 			log.error("Error in drawDynamic:", ex);
 		} finally {
-			frameTimer.add(renderThreadId == -1 ? Timer.DRAW_DYNAMIC : Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - start);
+			frameTimer.add(
+				renderThreadId == -1 ? Timer.DRAW_DYNAMIC : Timer.DRAW_DYNAMIC_ASYNC,
+				System.nanoTime() - start,
+				HDUtils.getUsedMemory() - startUsed
+			);
 		}
 	}
 
@@ -1054,6 +1059,9 @@ public class ZoneRenderer implements Renderer {
 				frameTimer.end(Timer.DRAW_FRAME);
 				return;
 			}
+
+			if(!shouldRenderScene)
+				frameTimer.end(Timer.CLIENT);
 
 			try {
 				plugin.prepareInterfaceTexture();
@@ -1131,6 +1139,7 @@ public class ZoneRenderer implements Renderer {
 			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
 			frameTimer.endFrameAndReset();
+			frameTimer.begin(Timer.CLIENT);
 			checkGLErrors();
 
 			shouldRenderScene = false;
