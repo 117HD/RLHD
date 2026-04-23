@@ -268,6 +268,9 @@ public class FrameTimer {
 	}
 
 	private void trackGarbageCollection() {
+		if(!isActive)
+			return;
+
 		List<GarbageCollectorMXBean> garbageCollectors = ManagementFactory.getGarbageCollectorMXBeans();
 		if (lastGCTimes == null || lastGCTimes.length != garbageCollectors.size())
 			lastGCTimes = new long[garbageCollectors.size()];
