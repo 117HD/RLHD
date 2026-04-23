@@ -165,7 +165,7 @@ public class FrameTimer {
 		} else if (!activeTimers[index]) {
 			cumulativeError += errorCompensation + 1 >> 1;
 			timings[index] -= System.nanoTime() - cumulativeError;
-			memoryUsage[index] = HDUtils.getUsedMemory();
+			memoryUsage[index] = HDUtils.getUsedMemory(timer != Timer.CLIENT);
 		}
 		activeTimers[index] = true;
 
@@ -190,7 +190,7 @@ public class FrameTimer {
 			glQueryCounter(gpuQueries[timer.ordinal() * 2 + 1], GL_TIMESTAMP);
 			// leave the GPU timer active, since it needs to be gathered at a later point
 		} else {
-			long allocated = HDUtils.getUsedMemory() - memoryUsage[timer.ordinal()];
+			long allocated = HDUtils.getUsedMemory(timer != Timer.CLIENT) - memoryUsage[timer.ordinal()];
 			cumulativeError += errorCompensation >> 1;
 			timings[timer.ordinal()] += System.nanoTime() - cumulativeError;
 			activeTimers[timer.ordinal()] = false;
@@ -200,7 +200,7 @@ public class FrameTimer {
 
 	public long getTimeStamp() { return isActive ? System.nanoTime() : 0; }
 
-	public long getUsedMemory() { return isActive ? HDUtils.getUsedMemory() : 0; }
+	public long getUsedMemory() { return isActive ? HDUtils.getUsedMemory(true) : 0; }
 
 	public void addDuration(Timer timer, long nanos) {
 		if (isActive) {
@@ -216,7 +216,7 @@ public class FrameTimer {
 
 	public void add(Timer timer, long startNanos, long startMemory) {
 		if (isActive) {
-			long allocation = HDUtils.getUsedMemory() - startMemory;
+			long allocation = HDUtils.getUsedMemory(true) - startMemory;
 			timings[timer.ordinal()] += System.nanoTime() - startNanos;
 			allocations[timer.ordinal()] += allocation > 0 ? allocation : 0;
 		}

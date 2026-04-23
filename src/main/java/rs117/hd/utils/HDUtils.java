@@ -550,8 +550,8 @@ public final class HDUtils {
 		log.debug("Thread allocated bytes monitoring: {}", THREAD_ALLOCATED_BYTES_SUPPORTED);
 	}
 
-	public static long getUsedMemory() {
-		if(THREAD_ALLOCATED_BYTES_SUPPORTED)
+	public static long getUsedMemory(boolean useThreadTracking) {
+		if(THREAD_ALLOCATED_BYTES_SUPPORTED && useThreadTracking)
 			return threadMXBean.getThreadAllocatedBytes(Thread.currentThread().getId());
 
 		final Runtime runtime = Runtime.getRuntime();
