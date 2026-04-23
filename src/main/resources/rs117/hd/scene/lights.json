@@ -47389,6 +47389,28 @@
     ]
   },
   {
+    "description": "LEAGUES_6_SOUL_HARVEST_ANIMATION",
+    "offset": [ 0, 225, -35 ],
+    "radius": 150,
+    "strength": 20,
+    "color": [
+      150,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "ignoreActorHiding": true,
+    "graphicsObjectIds": [
+      "LEAGUES_6_SOUL_HARVEST"
+    ]
+  },
+  {
     "description": "Dragon Slayer 2 - Robert the Strong Barrier 1",
     "offset": [ -54, 64, 0 ],
     "radius": 250,
