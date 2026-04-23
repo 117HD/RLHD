@@ -103,6 +103,7 @@ public class SceneManager {
 	private ZoneSceneContext nextSceneContext;
 	private Zone[][] nextZones;
 	private final List<SortedZone> sortedZones = new ArrayList<>();
+	private final int[] playerWorldPos = new int[3];
 	private boolean reloadRequested;
 
 	public boolean isZoneStreamingEnabled() {
@@ -250,15 +251,16 @@ public class SceneManager {
 		if (!isTopLevelValid() || localPlayer == null || root.isLoading)
 			return;
 
-		var lp = localPlayer.getLocalLocation();
 		if (root.sceneContext.enableAreaHiding) {
 			var base = root.sceneContext.sceneBase;
 			assert base != null;
-			int[] worldPos = {
+			var lp = localPlayer.getLocalLocation();
+			final var worldPos = ivec3(
+				playerWorldPos,
 				base[0] + lp.getSceneX(),
 				base[1] + lp.getSceneY(),
 				base[2] + client.getTopLevelWorldView().getPlane()
-			};
+			);
 
 			// We need to check all areas contained in the scene in the order they appear in the list,
 			// in order to ensure lower floors can take precedence over higher floors which include tiny
