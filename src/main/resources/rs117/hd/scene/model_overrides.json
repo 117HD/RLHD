@@ -12716,7 +12716,7 @@
   },
   {
     "description": "STONE_STAIRS_WOODEN_RAILS",
-    "baseMaterial": "SMOOTH_STONE",
+    "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
     "uvType": "BOX",
     "colorOverrides": [
       {
