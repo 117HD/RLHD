@@ -1731,7 +1731,9 @@
     "objectIds": [
       "XBOWS_YEWTREE_BASIC",
       "XBOWS_YEWTREE_ROPE_GRAPPLED",
-      "XBOWS_YEWTREE_ROPE_TIED"
+      "XBOWS_YEWTREE_ROPE_TIED",
+      "POG_GRAPPLE_TREE_BASE_OP",
+      "POG_GRAPPLE_TREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -28990,6 +28992,121 @@
     ],
     "areas": [ "MOTHERLODE_MINE" ],
     "textureMaterial": "MOTHERLODE_MINE_WATER"
+  },
+  {
+    "description": "Poison Waste - Ramp",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.55,
+    "objectIds": [
+      "POG_CANYON_RAMP_02",
+      "POG_CANYON_RAMP_01",
+      "POG_CANYON_RAMP_02_MIRROR",
+      "POG_CANYON_RAMP_01_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2 && l == 32",
+        "baseMaterial": "DIRT_1_MEDIUM_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste - Cliff & Rocks",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.55,
+    "objectIds": [
+      "POG_CANYON_KIT_LEVEL_0_10",
+      "POG_CANYON_KIT_LEVEL_0_2",
+      "POG_CANYON_KIT_LEVEL_0_1",
+      "POG_CANYON_KIT_LEVEL_0_3",
+      "POG_CANYON_KIT_LEVEL_0_5",
+      "POG_CANYON_KIT_LEVEL_0_6",
+      "POG_CANYON_KIT_LEVEL_0_11",
+      "POG_CANYON_KIT_LEVEL_0_7",
+      "POG_CANYON_KIT_LEVEL_0_4",
+      "POG_CANYON_KIT_LEVEL_0_12",
+      "POG_CANYON_KIT_LEVEL_1_10",
+      "POG_CANYON_KIT_LEVEL_1_2",
+      "POG_CANYON_KIT_LEVEL_1_1",
+      "POG_CANYON_KIT_LEVEL_1_3",
+      "POG_CANYON_KIT_LEVEL_1_5",
+      "POG_CANYON_KIT_LEVEL_1_6",
+      "POG_CANYON_KIT_LEVEL_1_11",
+      "POG_CANYON_KIT_LEVEL_1_7",
+      "POG_CANYON_KIT_LEVEL_1_4",
+      "POG_CANYON_KIT_LEVEL_1_12",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_BACK_01_MIRROR",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_BACK_02_MIRROR",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_BACK_03",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_BACK_02",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_BACK_01",
+      "POG_CANYON_ROCK_2X2_02",
+      "POG_CANYON_ROCK_1X1_02",
+      "POG_CANYON_ROCK_1X1_01",
+      "POG_CANYON_ROCK_2X2_01",
+      "POG_CANYON_DUGUPSOIL_02",
+      "POG_CANYON_DUGUPSOIL_01",
+      "POG_CANYON_DUGUPSOIL_03",
+      "POG_CANYON_DUGUPSOIL_04",
+      "POG_CANYON_DUGUPSOIL_05"
+    ]
+  },
+  {
+    "description": "Poison Waste - Arch",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "POG_CANYON_STRUCTURE_BASE",
+      "POG_CANYON_STRUCTURE_TOP_01",
+      "POG_CANYON_STRUCTURE_TOP_02",
+      "POG_CANYON_STRUCTURE_TOP_04",
+      "POG_CANYON_KIT_LEVEL_2_1_LINK_MIRROR",
+      "POG_CANYON_KIT_LEVEL_2_1_LINK",
+      "POG_CANYON_KIT_LEVEL_2_TOP",
+      "POG_CANYON_KIT_LEVEL_2_1",
+      "POG_CANYON_KIT_LEVEL_2_3",
+      "POG_CANYON_STRUCTURE_TOP_03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon - Entrance",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "POG_CANYON_SEWER_ENTRANCE_LOWER_01_MIRROR",
+      "POG_CANYON_SEWER_ENTRANCE_LOWER_02",
+      "POG_CANYON_SEWER_ENTRANCE_LOWER_01",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_01",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_01_MIRROR",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_02",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_03",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_02_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "DIRT_1_SEMI_DARK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 9",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Poison Waste Dungeon Tar - Spill",
