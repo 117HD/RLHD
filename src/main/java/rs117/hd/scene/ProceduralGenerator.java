@@ -233,13 +233,13 @@ public class ProceduralGenerator {
 			} else {
 				tileVertexKeys(sceneContext, tile, vertices, hashes);
 
-				copyTo(faceVertices[0][0], vertices[3]);
-				copyTo(faceVertices[0][1], vertices[1]);
-				copyTo(faceVertices[0][2], vertices[2]);
+				ivec3(faceVertices[0][0], vertices[3][0], vertices[3][1], vertices[3][2]);
+				ivec3(faceVertices[0][1], vertices[1][0], vertices[1][1], vertices[1][2]);
+				ivec3(faceVertices[0][2], vertices[2][0], vertices[2][1], vertices[2][2]);
 
-				copyTo(faceVertices[1][0], vertices[0]);
-				copyTo(faceVertices[1][1], vertices[2]);
-				copyTo(faceVertices[1][2], vertices[1]);
+				ivec3(faceVertices[1][0], vertices[0][0], vertices[0][1], vertices[0][2]);
+				ivec3(faceVertices[1][1], vertices[2][0], vertices[2][1], vertices[2][2]);
+				ivec3(faceVertices[1][2], vertices[1][0], vertices[1][1], vertices[1][2]);
 
 				ivec3(faceVertexKeys[0], hashes[3], hashes[1], hashes[2]);
 				ivec3(faceVertexKeys[1], hashes[0], hashes[2], hashes[1]);
