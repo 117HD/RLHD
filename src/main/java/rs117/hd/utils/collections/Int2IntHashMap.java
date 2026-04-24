@@ -8,14 +8,12 @@ import static rs117.hd.utils.collections.Util.DEFAULT_CAPACITY;
 import static rs117.hd.utils.collections.Util.DEFAULT_GROWTH;
 import static rs117.hd.utils.collections.Util.EMPTY;
 import static rs117.hd.utils.collections.Util.LOAD_FACTOR;
-import static rs117.hd.utils.collections.Util.READ_CACHE_SIZE;
 import static rs117.hd.utils.collections.Util.findIndex;
 import static rs117.hd.utils.collections.Util.murmurHash3;
 
 public final class Int2IntHashMap {
 	private final float growthFactor;
 
-	private final long[] readCache = new long[READ_CACHE_SIZE];
 	private int[] keys;
 	private int[] values;
 	private int[] distances;
@@ -130,14 +128,14 @@ public final class Int2IntHashMap {
 	public int getOrDefault(Object key, int defaultValue) { return key != null ? getOrDefault(key.hashCode(), defaultValue) : defaultValue; }
 
 	public int getOrDefault(int key, int defaultValue) {
-		int idx = findIndex(key, mask, keys, distances, readCache);
+		int idx = findIndex(key, mask, keys, distances);
 		return idx >= 0 ? values[idx] : defaultValue;
 	}
 
 	public boolean containsKey(Object key) { return key != null && containsKey(key.hashCode()); }
 
 	public boolean containsKey(int key) {
-		return findIndex(key, mask, keys, distances, readCache) >= 0;
+		return findIndex(key, mask, keys, distances) >= 0;
 	}
 
 	public int getValue(int idx) {
@@ -151,7 +149,7 @@ public final class Int2IntHashMap {
 	public boolean remove(Object key) { return key != null && remove(key.hashCode()); }
 
 	public boolean remove(int key) {
-		int idx = findIndex(key, mask, keys, distances, readCache);
+		int idx = findIndex(key, mask, keys, distances);
 		if (idx < 0)
 			return false;
 

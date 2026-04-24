@@ -5,7 +5,6 @@ public final class Util {
 	public static final int EMPTY = Integer.MIN_VALUE;
 	public static final float LOAD_FACTOR = 0.7f;
 	public static final float DEFAULT_GROWTH = 1.5f;
-	public static final int READ_CACHE_SIZE = 4;
 
 	public static int murmurHash3(int x) {
 		x ^= x >>> 16;
@@ -25,12 +24,7 @@ public final class Util {
 		return x;
 	}
 
-	public static int findIndex(final int key, final int mask, final int[] keys, final int[] distances, final long[] readCache) {
-		final int cachePos = key & (READ_CACHE_SIZE - 1);
-		final long lastRead = readCache[cachePos];
-		if ((int) lastRead == key)
-			return (int) (lastRead >>> 32);
-
+	public static int findIndex(final int key, final int mask, final int[] keys, final int[] distances) {
 		int idx = murmurHash3(key) & mask;
 		for (int dist = 0; dist == 0 || distances[idx] >= dist; dist++) {
 			final int k = keys[idx];
@@ -38,10 +32,8 @@ public final class Util {
 			if (k == EMPTY)
 				break;
 
-			if (k == key) {
-				readCache[cachePos] = ((long) idx << 32) | (key & 0xFFFFFFFFL);
+			if (k == key)
 				return idx;
-			}
 
 			idx = (idx + 1) & mask;
 		}
