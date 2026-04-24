@@ -41257,6 +41257,24 @@
     "uvScale": 0.86
   },
   {
+    "description": "Hunter Guild - Cave at the back of the Guild",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      "HG_CAVE_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "depthBias": 50,
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
     "description": "Cam Torum Calcified Mining Rocks",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -42117,10 +42135,24 @@
     ]
   },
   {
-    "description": "Hunter Box Trap - Open",
-    "baseMaterial": "GRAY_85",
+    "description": "Hunter Box Trap - Closing or Shaking",
+    "baseMaterial": "GRAY_115",
     "objectIds": [
-      "HUNTING_BOXTRAP_EMPTY"
+      "HUNTING_BOXTRAP_FULL_CHINCHOMPA_BIG",
+      "HUNTING_BOXTRAP_FULL_CHINCHOMPA",
+      "HUNTING_BOXTRAP_FULL_CHINCHOMPA_BLACK",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_N",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_E",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_S",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_W",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BIG_N",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BIG_E",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BIG_S",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BIG_W",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BLACK_N",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BLACK_S",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BLACK_E",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BLACK_W"
     ]
   },
   {
