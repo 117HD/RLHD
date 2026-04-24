@@ -164,6 +164,7 @@ public class ProceduralGenerator {
 
 		private final int[] vertexHeights = new int[4];
 		private final float[] normal = new float[3];
+		private final int[] surfaceNormal = new int[3];
 		private final int[] normalA = new int[3];
 		private final int[] normalB = new int[3];
 		private final int[] normalC = new int[3];
@@ -275,16 +276,15 @@ public class ProceduralGenerator {
 					vertexHeights[2]
 				);
 
-				int[] vertexNormals = calculateSurfaceNormals(normalA, normalA, normalB, normalC);
+				calculateSurfaceNormals(surfaceNormal, normalA, normalB, normalC);
 
 				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-					int vertexKey = faceVertexKeys[face][vertex];
-
+					final int vertexKey = faceVertexKeys[face][vertex];
 					final int[] terrainNormal = sceneContext.vertexTerrainNormals.getOrDefault(vertexKey, null);
 					if (terrainNormal != null) {
-						add(terrainNormal, terrainNormal, vertexNormals);
+						add(terrainNormal, terrainNormal, surfaceNormal);
 					} else {
-						sceneContext.vertexTerrainNormals.put(vertexKey, vertexNormals);
+						sceneContext.vertexTerrainNormals.put(vertexKey, surfaceNormal);
 					}
 				}
 			}
@@ -814,9 +814,8 @@ public class ProceduralGenerator {
 
 								sceneContext.setTileFlag(z, x, y, TILE_WATER_FLAG);
 
-								for (int i = 0; i < hashes.length; i++) {
+								for (int i = 0; i < hashes.length; i++)
 									sceneContext.vertexIsWater.add(hashes[i]);
-								}
 							}
 						} else if (tile.getSceneTileModel() != null) {
 							SceneTileModel model = tile.getSceneTileModel();
