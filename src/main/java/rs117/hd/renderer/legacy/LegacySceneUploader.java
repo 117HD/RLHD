@@ -54,6 +54,8 @@ import rs117.hd.utils.ModelHash;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.SceneContext.TILE_SKIP_FLAG;
+import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
@@ -829,7 +831,7 @@ public class LegacySceneUploader {
 		int nwVertexKey = vertexKeys[2];
 		int neVertexKey = vertexKeys[3];
 
-		if (sceneContext.tileIsWater[tileZ][tileExX][tileExY]) {
+		if (sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_WATER_FLAG)) {
 			// underwater terrain
 
 			underwaterTerrain = 1;
@@ -943,7 +945,7 @@ public class LegacySceneUploader {
 		final int tileExY = tileY + sceneContext.sceneOffset;
 		final int tileZ = tile.getRenderLevel();
 
-		if (!fillGaps && sceneContext.skipTile[tileZ][tileExX][tileExY])
+		if (!fillGaps && sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_SKIP_FLAG))
 			return new int[3];
 
 		int bufferLength = 0;
@@ -1144,7 +1146,7 @@ public class LegacySceneUploader {
 		int uvBufferLength = 0;
 		int underwaterTerrain = 0;
 
-		if (sceneContext.skipTile[tileZ][tileExX][tileExY])
+		if (sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_SKIP_FLAG))
 			return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 
 		final int[] faceColorA = model.getTriangleColorA();
@@ -1159,7 +1161,7 @@ public class LegacySceneUploader {
 			return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 		}
 
-		if (sceneContext.tileIsWater[tileZ][tileExX][tileExY]) {
+		if (sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_WATER_FLAG)) {
 			underwaterTerrain = 1;
 
 			int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];
