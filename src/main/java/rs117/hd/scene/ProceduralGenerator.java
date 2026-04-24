@@ -38,6 +38,7 @@ import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -76,10 +77,19 @@ public class ProceduralGenerator {
 	@Inject
 	private WaterTypeManager waterTypeManager;
 
-	private final ThreadLocal<MainTileOverridesGenerator> mainTileOverridesGenerator = ThreadLocal.withInitial(MainTileOverridesGenerator::new);
-	private final ThreadLocal<TerrainDataGenerator> terrainDataGenerator = ThreadLocal.withInitial(TerrainDataGenerator::new);
-	private final ThreadLocal<UnderwaterTerrainGenerator> underwaterTerrainGenerator = ThreadLocal.withInitial(UnderwaterTerrainGenerator::new);
-	private final ThreadLocal<TerrainNormalGenerator> TerrainNormalGenerator = ThreadLocal.withInitial(TerrainNormalGenerator::new);
+	private final ConcurrentPool<GeneratorContext> GENERATOR_POOL = new ConcurrentPool<>(GeneratorContext::new);
+
+	final class GeneratorContext implements AutoCloseable {
+		final MainTileOverridesGenerator mainTileOverridesGenerator = new MainTileOverridesGenerator();
+		final TerrainDataGenerator terrainDataGenerator = new TerrainDataGenerator();
+		final UnderwaterTerrainGenerator underwaterTerrainGenerator = new UnderwaterTerrainGenerator();
+		final TerrainNormalGenerator terrainNormalGenerator = new TerrainNormalGenerator();
+
+		@Override
+		public void close() {
+			GENERATOR_POOL.recycle(this);
+		}
+	}
 
 	/**
 	 * Gets the vertex keys of a Tile Paint tile for use in retrieving data from hashmaps.
@@ -88,8 +98,7 @@ public class ProceduralGenerator {
 	 * @param ctx that the tile is from
 	 * @param tile to get the vertex keys of
 	 */
-	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[][] tileVertices, int[] vertexHashes)
-	{
+	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[][] tileVertices, int[] vertexHashes) {
 		tileVertices(ctx, tile, tileVertices);
 		for (int vertex = 0; vertex < 4; ++vertex)
 			vertexHashes[vertex] = fastVertexHash(tileVertices[vertex]);
@@ -107,44 +116,43 @@ public class ProceduralGenerator {
 			sceneContext.underwaterDepthLevels = null;
 	}
 
-	public static void faceVertexKeys(Tile tile, int face, int[][] vertices, int[] vertexHashes)
-	{
+	public static void faceVertexKeys(Tile tile, int face, int[][] vertices, int[] vertexHashes) {
 		faceVertices(tile, face, vertices);
 		for (int vertex = 0; vertex < 3; ++vertex)
 			vertexHashes[vertex] = fastVertexHash(vertices[vertex]);
 	}
 
-	public static int[] faceVertexKeys(Tile tile, int face)
-	{
+	public static int[] faceVertexKeys(Tile tile, int face) {
 		int[][] vertices = new int[3][3];
 		int[] vertexHashes = new int[3];
 		faceVertexKeys(tile, face, vertices, vertexHashes);
 		return vertexHashes;
 	}
 
-	public void generateSceneData(SceneContext sceneContext)
-	{
-		long timerTotal = System.currentTimeMillis();
-		long timerCalculateMainOverrides, timerCalculateTerrainNormals, timerGenerateTerrainData, timerGenerateUnderwaterTerrain;
+	public void generateSceneData(SceneContext sceneContext) {
+		try (GeneratorContext ctx = GENERATOR_POOL.acquire()) {
+			long timerTotal = System.currentTimeMillis();
+			long timerCalculateMainOverrides, timerCalculateTerrainNormals, timerGenerateTerrainData, timerGenerateUnderwaterTerrain;
 
-		long startTime = System.currentTimeMillis();
-		mainTileOverridesGenerator.get().generate(sceneContext);
-		timerCalculateMainOverrides = (int) (System.currentTimeMillis() - startTime);
-		startTime = System.currentTimeMillis();
-		underwaterTerrainGenerator.get().generate(sceneContext);
-		timerGenerateUnderwaterTerrain = (int)(System.currentTimeMillis() - startTime);
-		startTime = System.currentTimeMillis();
-		TerrainNormalGenerator.get().generate(sceneContext);
-		timerCalculateTerrainNormals = (int)(System.currentTimeMillis() - startTime);
-		startTime = System.currentTimeMillis();
-		terrainDataGenerator.get().generate(sceneContext);
-		timerGenerateTerrainData = (int)(System.currentTimeMillis() - startTime);
+			long startTime = System.currentTimeMillis();
+			ctx.mainTileOverridesGenerator.generate(sceneContext);
+			timerCalculateMainOverrides = (int) (System.currentTimeMillis() - startTime);
+			startTime = System.currentTimeMillis();
+			ctx.underwaterTerrainGenerator.generate(sceneContext);
+			timerGenerateUnderwaterTerrain = (int) (System.currentTimeMillis() - startTime);
+			startTime = System.currentTimeMillis();
+			ctx.terrainNormalGenerator.generate(sceneContext);
+			timerCalculateTerrainNormals = (int) (System.currentTimeMillis() - startTime);
+			startTime = System.currentTimeMillis();
+			ctx.terrainDataGenerator.generate(sceneContext);
+			timerGenerateTerrainData = (int) (System.currentTimeMillis() - startTime);
 
-		log.debug("procedural data generation took {}ms to complete", (System.currentTimeMillis() - timerTotal));
-		log.debug("-- calculateMainTileOverrides: {}ms", timerCalculateMainOverrides);
-		log.debug("-- calculateTerrainNormals: {}ms", timerCalculateTerrainNormals);
-		log.debug("-- generateTerrainData: {}ms", timerGenerateTerrainData);
-		log.debug("-- generateUnderwaterTerrain: {}ms", timerGenerateUnderwaterTerrain);
+			log.debug("procedural data generation took {}ms to complete", (System.currentTimeMillis() - timerTotal));
+			log.debug("-- calculateMainTileOverrides: {}ms", timerCalculateMainOverrides);
+			log.debug("-- calculateTerrainNormals: {}ms", timerCalculateTerrainNormals);
+			log.debug("-- generateTerrainData: {}ms", timerGenerateTerrainData);
+			log.debug("-- generateUnderwaterTerrain: {}ms", timerGenerateUnderwaterTerrain);
+		}
 	}
 
 	static class TerrainNormalGenerator {
@@ -319,17 +327,13 @@ public class ProceduralGenerator {
 		return waterType;
 	}
 
-	private static boolean[] getTileOverlayTris(int tileShapeIndex)
-	{
-		if (tileShapeIndex >= TILE_OVERLAY_TRIS.length)
-		{
+	private static boolean[] getTileOverlayTris(int tileShapeIndex) {
+		if (tileShapeIndex >= TILE_OVERLAY_TRIS.length) {
 			log.debug("getTileOverlayTris(): unknown tileShapeIndex ({})", tileShapeIndex);
 			return new boolean[10]; // false
 		}
-		else
-		{
-			return TILE_OVERLAY_TRIS[tileShapeIndex];
-		}
+
+		return TILE_OVERLAY_TRIS[tileShapeIndex];
 	}
 
 	public static boolean isOverlayFace(Tile tile, int face) {
@@ -375,8 +379,7 @@ public class ProceduralGenerator {
 		return vertices;
 	}
 
-	private static void faceVertices(Tile tile, int face, int[][] vertices)
-	{
+	private static void faceVertices(Tile tile, int face, int[][] vertices) {
 		SceneTileModel sceneTileModel = tile.getSceneTileModel();
 
 		final int[] faceA = sceneTileModel.getFaceX();
@@ -405,8 +408,7 @@ public class ProceduralGenerator {
 		vertices[2][2] = vertexY[vertexFacesC];
 	}
 
-	private static int[][] faceVertices(Tile tile, int face)
-	{
+	private static int[][] faceVertices(Tile tile, int face) {
 		int[][] vertices = new int[3][3];
 		faceVertices(tile, face, vertices);
 		return vertices;
@@ -440,7 +442,7 @@ public class ProceduralGenerator {
 		return vertices;
 	}
 
-	class MainTileOverridesGenerator {
+	final class MainTileOverridesGenerator {
 		private final int[] worldPos = new int[3];
 		private final int[] ids = new int[2];
 
@@ -457,27 +459,25 @@ public class ProceduralGenerator {
 							continue;
 						sceneContext.extendedSceneToWorld(x, y, tile.getRenderLevel(), worldPos);
 						tileOverrideManager.buildIdsFromTile(sceneContext, tile, ids);
-						sceneContext.tileOverrides[z][x][y] = tileOverrideManager.getOverride(sceneContext, tile, worldPos);
+						sceneContext.tileOverrides[z][x][y] = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids);
 					}
 				}
 			}
 		}
 	}
 
-	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[] vertexHashes)
-	{
+	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[] vertexHashes) {
 		int[][] vertices = new int[4][3];
 		tileVertexKeys(ctx, tile, vertices, vertexHashes);
 	}
 
-	public static int[] tileVertexKeys(SceneContext ctx, Tile tile)
-	{
+	public static int[] tileVertexKeys(SceneContext ctx, Tile tile) {
 		int[] vertexHashes = new int[4];
 		tileVertexKeys(ctx, tile, vertexHashes);
 		return vertexHashes;
 	}
 
-	class TerrainDataGenerator {
+	final class TerrainDataGenerator {
 		private final int[][] vertices = new int[4][3];
 		private final int[] hashes = new int[4];
 		private final int[] worldPos = new int[3];
@@ -707,7 +707,7 @@ public class ProceduralGenerator {
 		}
 	}
 
-	class UnderwaterTerrainGenerator {
+	final class UnderwaterTerrainGenerator {
 		private final int[][][] underwaterDepths = new int[MAX_Z][EXTENDED_SCENE_SIZE + 1][EXTENDED_SCENE_SIZE + 1];
 		private final int[][] vertices = new int[4][3];
 		private final int[] hashes = new int[4];
@@ -1067,9 +1067,7 @@ public class ProceduralGenerator {
 				round(hsl2, mix(gradientDarkColor, gradientBaseColor, pos));
 				round(hsl3, mix(gradientDarkColor, gradientBaseColor, pos));
 			}
-		}
-		else if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.HUE_SHIFT)
-		{
+		} else if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.HUE_SHIFT) {
 			// objects around the entrance to The Inferno only need a hue-shift
 			// and very slight lightening to match the lightened terrain
 			hsl1[2] += 1;
