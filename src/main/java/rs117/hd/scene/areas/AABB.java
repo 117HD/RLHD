@@ -191,6 +191,13 @@ public class AABB {
 		};
 	}
 
+	public int distanceToPoint(int x, int y) {
+		int dx = Math.max(Math.max(minX - x, 0), x - maxX);
+		int dy = Math.max(Math.max(minY - y, 0), y - maxY);
+
+		return dx * dx + dy * dy;
+	}
+
 	@Override
 	public String toString() {
 		if (hasZ())
