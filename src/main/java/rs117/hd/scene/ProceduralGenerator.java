@@ -578,11 +578,11 @@ public class ProceduralGenerator {
 			vertexIsOverlay = ensureCapacity(vertexIsOverlay, faceCount * VERTICES_PER_FACE);
 			vertexDefaultColor = ensureCapacity(vertexDefaultColor, faceCount * VERTICES_PER_FACE);
 
-			Arrays.fill(vertexHashes, 0);
-			Arrays.fill(vertexColors, 0);
-			Arrays.fill(vertexOverrides, null);
-			Arrays.fill(vertexIsOverlay, false);
-			Arrays.fill(vertexDefaultColor, false);
+			Arrays.fill(vertexHashes, 0, faceCount * VERTICES_PER_FACE, 0);
+			Arrays.fill(vertexColors, 0, faceCount * VERTICES_PER_FACE, 0);
+			Arrays.fill(vertexOverrides, 0, faceCount * VERTICES_PER_FACE, null);
+			Arrays.fill(vertexIsOverlay, 0, faceCount * VERTICES_PER_FACE, false);
+			Arrays.fill(vertexDefaultColor, 0, faceCount * VERTICES_PER_FACE, false);
 
 			Scene scene = sceneContext.scene;
 			if (tile.getSceneTilePaint() != null) {
