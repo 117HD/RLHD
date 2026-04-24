@@ -361,7 +361,9 @@ public class SceneUploader implements AutoCloseable {
 			z.sizeO += 2;
 			z.sizeF += 2;
 
-			TileOverride override = tileOverrideManager.getOverride(ctx, t, worldPos);
+			int tileExX = tilePoint.getX() + ctx.sceneOffset;
+			int tileExY = tilePoint.getY() + ctx.sceneOffset;
+			TileOverride override = ctx.tileOverrides[t.getRenderLevel()][tileExX][tileExY];
 			WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
 			if (waterType != WaterType.NONE) {
 				z.hasWater = true;
@@ -820,7 +822,7 @@ public class SceneUploader implements AutoCloseable {
 		if (neColor == HIDDEN_HSL)
 			return;
 
-		TileOverride override = tileOverrideManager.getOverride(ctx, tile, worldPos);
+		TileOverride override = ctx.tileOverrides[tileZ][tileExX][tileExY];
 		WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
 		if (onlyWaterSurface && waterType == WaterType.NONE)
 			return;
