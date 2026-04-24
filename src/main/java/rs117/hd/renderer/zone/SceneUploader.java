@@ -145,6 +145,7 @@ public class SceneUploader implements AutoCloseable {
 	private final Material[] faceMaterials = new Material[MAX_FACE_COUNT];
 	private final UvType[] faceUVTypes = new UvType[MAX_FACE_COUNT];
 
+	private final int[] tzHaarRecolored = new int[3];
 	private final float[] projected = new float[4];
 
 	// Lazily initialized staging buffers, only used by uploadTempModel
@@ -1591,20 +1592,18 @@ public class SceneUploader implements AutoCloseable {
 				}
 
 				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
-					// The legacy TzHaar reskin is not thread-safe
-					synchronized (proceduralGenerator) {
-						int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
-							modelOverride,
-							model,
-							face,
-							color1,
-							color2,
-							color3
-						);
-						color1 = tzHaarRecolored[0];
-						color2 = tzHaarRecolored[1];
-						color3 = tzHaarRecolored[2];
-					}
+					ProceduralGenerator.recolorTzHaar(
+						modelOverride,
+						model,
+						face,
+						color1,
+						color2,
+						color3,
+						tzHaarRecolored
+					);
+					color1 = tzHaarRecolored[0];
+					color2 = tzHaarRecolored[1];
+					color3 = tzHaarRecolored[2];
 				}
 			}
 

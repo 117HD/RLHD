@@ -145,6 +145,25 @@ public final class MathUtils {
 		return in != null && in.length == defaults.length ? in : copyTo(copy(defaults), in);
 	}
 
+	public static boolean[] ensureCapacity(boolean[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new boolean[size];
+	}
+
+	public static float[] ensureCapacity(float[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new float[size];
+	}
+
+	public static int[] ensureCapacity(int[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new int[size];
+	}
+
+	@FunctionalInterface
+	public interface ArraySupplier<T> { T[] get(int size); }
+
+	public static <T> T[] ensureCapacity(T[] in, int size, ArraySupplier<T> supplier) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : supplier.get(size);
+	}
+
 	public static int[] slice(int[] v, int offset) {
 		return Arrays.copyOfRange(v, offset, v.length);
 	}

@@ -72,6 +72,7 @@ public class LegacyModelPusher {
 
 	private static final int[] ZEROED_INTS = new int[12];
 
+	private final int[] tzHaarRecolored = new int[3];
 	private ModelCache modelCache;
 
 	public void startUp() {
@@ -587,13 +588,14 @@ public class LegacyModelPusher {
 				}
 
 				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
-					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
+					ProceduralGenerator.recolorTzHaar(
 						modelOverride,
 						model,
 						face,
 						color1,
 						color2,
-						color3
+						color3,
+						tzHaarRecolored
 					);
 					color1 = tzHaarRecolored[0];
 					color2 = tzHaarRecolored[1];

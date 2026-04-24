@@ -219,19 +219,23 @@ public class TileOverrideManager {
 		return getOverride(sceneContext, tile, worldPos);
 	}
 
+	public int[] buildIdsFromTile(SceneContext sceneContext, @Nonnull Tile tile, int[] ids) {
+		var pos = tile.getSceneLocation();
+		int x = pos.getX() + sceneContext.sceneOffset;
+		int y = pos.getY() + sceneContext.sceneOffset;
+		int z = tile.getRenderLevel();
+		int overlayId = OVERLAY_FLAG | sceneContext.scene.getOverlayIds()[z][x][y];
+		int underlayId = sceneContext.scene.getUnderlayIds()[z][x][y];
+		ids[0] = overlayId;
+		ids[1] = underlayId;
+		return ids;
+	}
+
 	@Nonnull
 	public TileOverride getOverride(SceneContext sceneContext, @Nonnull Tile tile, @Nonnull int[] worldPos, int... ids) {
-		if (ids.length == 0) {
-			var pos = tile.getSceneLocation();
-			int x = pos.getX() + sceneContext.sceneOffset;
-			int y = pos.getY() + sceneContext.sceneOffset;
-			int z = tile.getRenderLevel();
-			int overlayId = OVERLAY_FLAG | sceneContext.scene.getOverlayIds()[z][x][y];
-			int underlayId = sceneContext.scene.getUnderlayIds()[z][x][y];
-			ids = OVERLAY_UNDERLAY_IDS.get();
-			ids[0] = overlayId;
-			ids[1] = underlayId;
-		}
+		if (ids.length == 0)
+			ids = buildIdsFromTile(sceneContext, tile, OVERLAY_UNDERLAY_IDS.get());
+
 		var override = getOverrideBeforeReplacements(worldPos, ids);
 		if (override.isConstant())
 			return override;
@@ -248,21 +252,23 @@ public class TileOverrideManager {
 		var match = TileOverride.NONE;
 		int index = match.index;
 
-		outer:
-		for (int id : ids) {
+		for (int i = 0; i < ids.length; i++) {
+			final int id = ids[i];
 			final var entries = idMatchOverrides.get(id);
-			for (int i = 0; i < entries.size(); i++) {
-				final var entry = entries.get(i);
+			for (int k = 0; k < entries.size(); k++) {
+				final var entry = entries.get(k);
 				if (entry.area.containsPoint(worldPos)) {
 					index = entry.index;
 					match = entry.replacement;
 					match.queriedAsOverlay = (id & OVERLAY_FLAG) != 0;
-					break outer;
+					i = ids.length;
+					break;
 				}
 			}
 		}
 
-		for (var entry : anyMatchOverrides) {
+		for (int i = 0; i < anyMatchOverrides.size(); i++)  {
+			final var entry = anyMatchOverrides.get(i);
 			if (entry.index > index)
 				break;
 			if (entry.area.containsPoint(worldPos)) {
