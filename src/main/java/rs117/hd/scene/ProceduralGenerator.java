@@ -162,6 +162,7 @@ public class ProceduralGenerator {
 		private final int[] hashes = new int[4];
 
 		private final int[] vertexHeights = new int[4];
+		private final float[] normal = new float[3];
 		private final int[] normalA = new int[3];
 		private final int[] normalB = new int[3];
 		private final int[] normalC = new int[3];
@@ -193,7 +194,7 @@ public class ProceduralGenerator {
 			}
 
 			sceneContext.vertexTerrainNormals.forEach((entry) -> {
-				var n = normalize(vec(entry.value));
+				var n = normalize(normal, vec3(normal, entry.value[0], entry.value[1], entry.value[2]));
 				for (int i = 0; i < 3; i++)
 					entry.value[i] = GpuIntBuffer.normShort(n[i]);
 			});
@@ -659,7 +660,7 @@ public class ProceduralGenerator {
 				int lightenAdd = 3;
 				float darkenMultiplier = 0.5f;
 
-				final Integer key = vertexHashes[vertex];
+				final int key = vertexHashes[vertex];
 				int[] vNormals = sceneContext.vertexTerrainNormals.get(key);
 				if (vNormals == null)
 					vNormals = new int[] { 0, 0, 0 };
