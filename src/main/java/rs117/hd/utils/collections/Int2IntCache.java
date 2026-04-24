@@ -7,7 +7,6 @@ import rs117.hd.utils.HDUtils;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.collections.Util.DEFAULT_GROWTH;
 import static rs117.hd.utils.collections.Util.EMPTY;
-import static rs117.hd.utils.collections.Util.READ_CACHE_SIZE;
 import static rs117.hd.utils.collections.Util.findIndex;
 import static rs117.hd.utils.collections.Util.murmurHash3;
 
@@ -17,7 +16,6 @@ public final class Int2IntCache {
 
 	private final StampedLock lock = new StampedLock();
 
-	private final long[] readCache = new long[READ_CACHE_SIZE];
 	private int[] keys;
 	private int[] values;
 	private int[] ages;
@@ -48,12 +46,12 @@ public final class Int2IntCache {
 
 	public int getOrDefault(int key, int defaultValue) {
 		long stamp = lock.tryOptimisticRead();
-		int idx = findIndex(key, mask, keys, distances, readCache);
+		int idx = findIndex(key, mask, keys, distances);
 
 		if (!lock.validate(stamp)) {
 			stamp = lock.readLock();
 			try {
-				idx = findIndex(key, mask, keys, distances, readCache);
+				idx = findIndex(key, mask, keys, distances);
 			} finally {
 				lock.unlockRead(stamp);
 			}
@@ -128,9 +126,7 @@ public final class Int2IntCache {
 	}
 
 	private void resize() {
-		int newCap = (int) HDUtils.ceilPow2(
-			max((int) (keys.length * growthFactor), keys.length + 1)
-		);
+		int newCap = HDUtils.ceilPow2(max((int) (keys.length * growthFactor), keys.length + 1));
 
 		int[] oldKeys = keys;
 		int[] oldValues = values;
