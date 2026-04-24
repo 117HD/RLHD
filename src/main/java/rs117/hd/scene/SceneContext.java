@@ -25,6 +25,9 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.MathUtils.*;
 
 public class SceneContext {
+	public static final byte TILE_WATER_FLAG = 1;
+	public static final byte TILE_SKIP_FLAG = 1 << 1;
+
 	public final Client client;
 	public final Scene scene;
 	public final int expandedMapLoadingChunks;
@@ -65,12 +68,11 @@ public class SceneContext {
 	public IntHashSet highPriorityColor;
 
 	// Water-related data
-	public boolean[][][] tileIsWater;
+	public byte[][][] tileFlags;
 	public IntHashSet vertexIsWater;
 	public IntHashSet vertexIsLand;
 	public IntHashSet vertexIsOverlay;
 	public IntHashSet vertexIsUnderlay;
-	public boolean[][][] skipTile;
 	public Int2IntHashMap vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
@@ -101,6 +103,14 @@ public class SceneContext {
 	}
 
 	public synchronized void destroy() {}
+
+	public void setTileFlag(int plane, int x, int y, byte flag) {
+		tileFlags[plane][x][y] |= flag;
+	}
+
+	public boolean isTileFlagSet(int plane, int x, int y, byte flag) {
+		return (tileFlags[plane][x][y] & flag) != 0;
+	}
 
 	/**
 	 * Transform local coordinates into world coordinates.

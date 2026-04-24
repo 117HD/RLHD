@@ -44,6 +44,8 @@ import rs117.hd.utils.collections.IntHashSet;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.SceneContext.TILE_SKIP_FLAG;
+import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.calculateSurfaceNormals;
@@ -107,12 +109,11 @@ public class ProceduralGenerator {
 	}
 
 	public void clearSceneData(SceneContext sceneContext) {
-		sceneContext.tileIsWater = null;
+		sceneContext.tileFlags = null;
 		sceneContext.vertexIsWater = null;
 		sceneContext.vertexIsLand = null;
 		sceneContext.vertexIsOverlay = null;
 		sceneContext.vertexIsUnderlay = null;
-		sceneContext.skipTile = null;
 		sceneContext.vertexUnderwaterDepth = null;
 		if (!(sceneContext instanceof LegacySceneContext))
 			sceneContext.underwaterDepthLevels = null;
@@ -726,16 +727,14 @@ public class ProceduralGenerator {
 		private void generate(SceneContext sceneContext) {
 			int sizeX = sceneContext.sizeX;
 			int sizeY = sceneContext.sizeZ;
-			// true if a tile contains at least 1 face which qualifies as water
-			sceneContext.tileIsWater = new boolean[MAX_Z][sizeX][sizeY];
+			// bit 1 set if a tile contains at least 1 face which qualifies as water
+			// bit 2 set if a tile will be skipped when the scene is drawn, this is due to certain edge cases with water on the same X/Y on different planes
+			sceneContext.tileFlags = new byte[MAX_Z][sizeX][sizeY];
 			// true if a vertex is part of a face which qualifies as water; non-existent if not
 			sceneContext.vertexIsWater = new IntHashSet();
 			// true if a vertex is part of a face which qualifies as land; non-existent if not
 			// tiles along the shoreline will be true for both vertexIsWater and vertexIsLand
 			sceneContext.vertexIsLand = new IntHashSet();
-			// if true, the tile will be skipped when the scene is drawn
-			// this is due to certain edge cases with water on the same X/Y on different planes
-			sceneContext.skipTile = new boolean[MAX_Z][sizeX][sizeY];
 			// the height adjustment for each vertex, to be applied to the vertex'
 			// real height to create the underwater terrain
 			sceneContext.vertexUnderwaterDepth = new Int2IntHashMap();
@@ -795,13 +794,13 @@ public class ProceduralGenerator {
 									boolean continueLoop = false;
 
 									for (int checkZ = 0; checkZ < z; ++checkZ) {
-										if (sceneContext.tileIsWater[checkZ][x][y]) {
+										if (sceneContext.isTileFlagSet(checkZ, x, y, TILE_WATER_FLAG)) {
 											sceneContext.underwaterDepthLevels[z][x][y] = 0;
 											sceneContext.underwaterDepthLevels[z][x + 1][y] = 0;
 											sceneContext.underwaterDepthLevels[z][x][y + 1] = 0;
 											sceneContext.underwaterDepthLevels[z][x + 1][y + 1] = 0;
 
-											sceneContext.skipTile[z][x][y] = true;
+											sceneContext.setTileFlag(z, x, y, TILE_SKIP_FLAG);
 
 											continueLoop = true;
 
@@ -813,7 +812,7 @@ public class ProceduralGenerator {
 										continue;
 								}
 
-								sceneContext.tileIsWater[z][x][y] = true;
+								sceneContext.setTileFlag(z, x, y, TILE_WATER_FLAG);
 
 								for (int i = 0; i < hashes.length; i++) {
 									sceneContext.vertexIsWater.add(hashes[i]);
@@ -849,13 +848,13 @@ public class ProceduralGenerator {
 									boolean continueLoop = false;
 
 									for (int checkZ = 0; checkZ < z; ++checkZ) {
-										if (sceneContext.tileIsWater[checkZ][x][y]) {
+										if (sceneContext.isTileFlagSet(checkZ, x, y, TILE_WATER_FLAG)) {
 											sceneContext.underwaterDepthLevels[z][x][y] = 0;
 											sceneContext.underwaterDepthLevels[z][x + 1][y] = 0;
 											sceneContext.underwaterDepthLevels[z][x][y + 1] = 0;
 											sceneContext.underwaterDepthLevels[z][x + 1][y + 1] = 0;
 
-											sceneContext.skipTile[z][x][y] = true;
+											sceneContext.setTileFlag(z, x, y, TILE_SKIP_FLAG);
 
 											continueLoop = true;
 
@@ -889,11 +888,9 @@ public class ProceduralGenerator {
 										}
 									}
 								} else {
-									sceneContext.tileIsWater[z][x][y] = true;
-
-									for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
+									sceneContext.setTileFlag(z, x, y, TILE_WATER_FLAG);
+									for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
 										sceneContext.vertexIsWater.add(hashes[vertex]);
-									}
 								}
 							}
 						} else {
@@ -969,18 +966,16 @@ public class ProceduralGenerator {
 			for (int z = 0; z < MAX_Z; ++z) {
 				for (int x = 0; x < sizeX; ++x) {
 					for (int y = 0; y < sizeY; ++y) {
-						if (!sceneContext.tileIsWater[z][x][y]) {
+						if (!sceneContext.isTileFlagSet(z, x, y, TILE_WATER_FLAG))
 							continue;
-						}
 
 						Tile tile = tiles[z][x][y];
-						if (tile == null) {
+						if (tile == null)
 							continue;
-						}
 
-						if (tile.getBridge() != null) {
+						if (tile.getBridge() != null)
 							tile = tile.getBridge();
-						}
+
 						if (tile.getSceneTilePaint() != null) {
 							tileVertexKeys(sceneContext, tile, vertices, hashes);
 
