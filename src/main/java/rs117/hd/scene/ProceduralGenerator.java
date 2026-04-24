@@ -546,6 +546,11 @@ public class ProceduralGenerator {
 				return;
 			}
 
+			int tileX = tileExX - sceneContext.sceneOffset;
+			int tileY = tileExY - sceneContext.sceneOffset;
+			int tileZ = tile.getRenderLevel();
+			sceneContext.sceneToWorld(tileX, tileY, tileZ, worldPos);
+
 			vertexHashes = ensureCapacity(vertexHashes, faceCount * VERTICES_PER_FACE);
 			vertexColors = ensureCapacity(vertexColors, faceCount * VERTICES_PER_FACE);
 			vertexOverrides = ensureCapacity(vertexOverrides, faceCount * VERTICES_PER_FACE, TileOverride[]::new);
@@ -602,10 +607,6 @@ public class ProceduralGenerator {
 						vertexDefaultColor[i] = true;
 			} else if (tile.getSceneTileModel() != null) {
 				// tile model
-				int tileX = tileExX - sceneContext.sceneOffset;
-				int tileY = tileExY - sceneContext.sceneOffset;
-				int tileZ = tile.getRenderLevel();
-				sceneContext.sceneToWorld(tileX, tileY, tileZ, worldPos);
 
 				SceneTileModel sceneTileModel = tile.getSceneTileModel();
 
