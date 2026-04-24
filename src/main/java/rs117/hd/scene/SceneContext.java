@@ -13,6 +13,7 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.materials.Material;
+import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
 
@@ -54,6 +55,7 @@ public class SceneContext {
 	public int uniqueModels;
 
 	// Terrain data
+	public TileOverride[][][] tileOverrides;
 	public HashMap<Integer, Integer> vertexTerrainColor;
 	public HashMap<Integer, Material> vertexTerrainTexture;
 	public HashMap<Integer, int[]> vertexTerrainNormals;

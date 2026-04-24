@@ -64,10 +64,10 @@ public final class HDUtils {
 		return hash;
 	}
 
-	public static int[] calculateSurfaceNormals(int[] a, int[] b, int[] c) {
+	public static int[] calculateSurfaceNormals(int[] out, int[] a, int[] b, int[] c) {
 		subtract(b, a, b);
 		subtract(c, a, c);
-		return cross(b, c);
+		return cross(out, b, c);
 	}
 
 	public static int ceilPow2(int i) {
