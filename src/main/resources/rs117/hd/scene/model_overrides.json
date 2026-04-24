@@ -42117,6 +42117,13 @@
     ]
   },
   {
+    "description": "Hunter Box Trap - Open",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "HUNTING_BOXTRAP_EMPTY"
+    ]
+  },
+  {
     "description": "Bear Rugs",
     "baseMaterial": "CARPET",
     "objectIds": [
