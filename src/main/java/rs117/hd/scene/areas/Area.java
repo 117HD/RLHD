@@ -26,6 +26,7 @@ public class Area {
 	public AABB[] unhideAreas = {};
 
 	public transient AABB[] aabbs;
+	public transient AABB areaBounds;
 	private transient boolean normalized;
 
 	public Area(String name) {
@@ -63,20 +64,60 @@ public class Area {
 			}
 		}
 
+		for (int i = 0; i < aabbs.size(); i++) {
+			final var aabb = aabbs.get(i);
+			for(int k = 0; k < aabbs.size(); k++) {
+				if(i == k) continue;
+				if(aabb.contains(aabbs.get(k))) {
+					aabbs.remove(k);
+					k--;
+				}
+			}
+		}
+
 		this.aabbs = aabbs.toArray(AABB[]::new);
+
+		if(this.aabbs.length > 1) {
+			int MinX = Integer.MAX_VALUE;
+			int MinY = Integer.MAX_VALUE;
+			int MinZ = Integer.MAX_VALUE;
+
+			int MaxX = Integer.MIN_VALUE;
+			int MaxY = Integer.MIN_VALUE;
+			int MaxZ = Integer.MIN_VALUE;
+
+			for (AABB aabb : aabbs) {
+				MinX = Math.min(MinX, aabb.minX);
+				MinY = Math.min(MinY, aabb.minY);
+				MinZ = Math.min(MinZ, aabb.minZ);
+				MaxX = Math.max(MaxX, aabb.maxX);
+				MaxY = Math.max(MaxY, aabb.maxY);
+				MaxZ = Math.max(MaxZ, aabb.maxZ);
+			}
+
+			areaBounds = new AABB(MinX, MinY, MinZ, MaxX, MaxY, MaxZ);
+		}
 
 		if (unhideAreas == null)
 			unhideAreas = new AABB[0];
 	}
 
 	public boolean containsPoint(boolean includeUnhiding, int... worldPoint) {
-		for (var aabb : aabbs)
+		if(areaBounds != null && !areaBounds.contains(worldPoint))
+			return false;
+
+		for (int i = 0; i < aabbs.length; i++) {
+			final AABB aabb = aabbs[i];
 			if (aabb.contains(worldPoint))
 				return true;
-		if (includeUnhiding)
-			for (var aabb : unhideAreas)
+		}
+		if (includeUnhiding) {
+			for (int i = 0; i < unhideAreas.length; i++) {
+				final AABB aabb = unhideAreas[i];
 				if (aabb.contains(worldPoint))
 					return true;
+			}
+		}
 		return false;
 	}
 
