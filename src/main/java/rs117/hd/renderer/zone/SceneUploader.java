@@ -24,6 +24,7 @@
  */
 package rs117.hd.renderer.zone;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -128,6 +129,8 @@ public class SceneUploader implements AutoCloseable {
 	private short[][][] underlayIds;
 	private int[][][] tileHeights;
 
+	private final HashMap<Tile, GameObject[]> tileGameObjects = new HashMap<>();
+
 	private final int[] worldPos = new int[3];
 	private final int[][] vertices = new int[4][3];
 	private final int[] vertexKeys = new int[4];
@@ -166,6 +169,7 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	public void clear() {
+		tileGameObjects.clear();
 		tiles = null;
 		settings = null;
 		roofs = null;
@@ -442,7 +446,9 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		GameObject[] gameObjects = t.getGameObjects();
-		for (GameObject gameObject : gameObjects) {
+		tileGameObjects.put(t, gameObjects);
+		for (int i = 0; i < gameObjects.length; i++) {
+			final GameObject gameObject = gameObjects[i];
 			if (gameObject == null || !gameObject.getSceneMinLocation().equals(t.getSceneLocation()))
 				continue;
 
@@ -641,8 +647,12 @@ public class SceneUploader implements AutoCloseable {
 			);
 		}
 
-		GameObject[] gameObjects = t.getGameObjects();
-		for (GameObject gameObject : gameObjects) {
+		GameObject[] gameObjects = tileGameObjects.get(t);
+		if(gameObjects == null)
+			gameObjects = t.getGameObjects();
+
+		for (int i = 0; i < gameObjects.length; i++) {
+			final GameObject gameObject = gameObjects[i];
 			if (gameObject == null || !renderCallbackManager.drawObject(ctx.scene, gameObject))
 				continue;
 
