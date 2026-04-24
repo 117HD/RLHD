@@ -25,8 +25,6 @@
 package rs117.hd.renderer.zone;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -49,6 +47,7 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static net.runelite.api.Constants.*;
@@ -120,7 +119,7 @@ public class SceneUploader implements AutoCloseable {
 
 	private int basex, basez, rid, level;
 
-	private final Set<Integer> roofIds = new HashSet<>();
+	private final IntHashSet roofIds = new IntHashSet();
 	private Scene currentScene;
 	private Tile[][][] tiles;
 	private byte[][][] settings;
@@ -223,13 +222,13 @@ public class SceneUploader implements AutoCloseable {
 			this.level = z;
 
 			if (z == 0) {
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, roofIds, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, roofIds, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, vb, ab, fb);
 			} else {
-				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, vb, ab, fb);
 			}
 
 			if (vb != null) {
@@ -252,7 +251,6 @@ public class SceneUploader implements AutoCloseable {
 		int mzz,
 		int level,
 		boolean visbelow,
-		Set<Integer> roofIds,
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
 		GpuIntBuffer fb
