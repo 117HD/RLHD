@@ -1,7 +1,5 @@
 package rs117.hd.scene;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -26,6 +24,7 @@ import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.collections.Int2ObjectHashMap;
 
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.localToWorld;
@@ -54,7 +53,7 @@ public class TileOverrideManager {
 	private FileWatcher.UnregisterCallback fileWatcher;
 	private boolean trackReplacements;
 	private List<TileOverride> anyMatchOverrides;
-	private ListMultimap<Integer, TileOverride> idMatchOverrides;
+	private Int2ObjectHashMap<List<TileOverride>> idMatchOverrides;
 
 	public void startUp() {
 		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> reload(first)));
@@ -92,7 +91,7 @@ public class TileOverrideManager {
 			checkForReplacementLoops(allOverrides);
 
 			List<TileOverride> anyMatch = new ArrayList<>();
-			ListMultimap<Integer, TileOverride> idMatch = ArrayListMultimap.create();
+			Int2ObjectHashMap<List<TileOverride>> idMatch = new Int2ObjectHashMap<>();
 
 			var tileOverrideVars = plugin.vars.aliases(Map.of(
 				"textures", "groundTextures"
@@ -113,8 +112,12 @@ public class TileOverrideManager {
 
 				override.replacement = trackReplacements ? override : override.resolveConstantReplacements();
 				if (override.ids != null) {
-					for (int id : override.ids)
-						idMatch.put(id, override);
+					for (int id : override.ids) {
+						List<TileOverride> overrides = idMatch.get(id);
+						if(overrides == null)
+							idMatch.put(id, overrides = new ArrayList<>());
+						overrides.add(override);
+					}
 				} else {
 					anyMatch.add(override);
 				}
@@ -256,6 +259,8 @@ public class TileOverrideManager {
 		for (int i = 0; i < ids.length; i++) {
 			final int id = ids[i];
 			final var entries = idMatchOverrides.get(id);
+			if(entries == null)
+				continue;
 			for (int k = 0; k < entries.size(); k++) {
 				final var entry = entries.get(k);
 				if (entry.area.containsPoint(worldPos)) {
