@@ -87,7 +87,7 @@ public final class MathUtils {
 	private static final VecCache<float[]> vec3Cache = new VecCache<>(() -> new float[3]);
 	private static final VecCache<float[]> vec4Cache = new VecCache<>(() -> new float[4]);
 
-	public static VecHandle<int[]> ivec2() {return iVec2Cache.get(); }
+	public static VecHandle<int[]> ivec2() {return ivec2(0, 0); }
 	public static VecHandle<int[]> ivec2(int x, int y) {
 		final VecHandle<int[]> out = iVec2Cache.get();
 		out.vec[0] = x;
@@ -95,7 +95,7 @@ public final class MathUtils {
 		return out;
 	}
 
-	public static VecHandle<int[]> ivec3() {return iVec3Cache.get(); }
+	public static VecHandle<int[]> ivec3() {return ivec3(0, 0, 0);  }
 	public static VecHandle<int[]> ivec3(int x, int y, int z) {
 		final VecHandle<int[]> out = iVec3Cache.get();
 		out.vec[0] = x;
@@ -104,7 +104,7 @@ public final class MathUtils {
 		return out;
 	}
 
-	public static VecHandle<int[]> ivec4() {return iVec4Cache.get(); }
+	public static VecHandle<int[]> ivec4() {return ivec4(0, 0, 0, 0); }
 	public static VecHandle<int[]> ivec4(int x, int y, int z, int w) {
 		final VecHandle<int[]> out = iVec4Cache.get();
 		out.vec[0] = x;
@@ -114,7 +114,7 @@ public final class MathUtils {
 		return out;
 	}
 
-	public static VecHandle<float[]> vec2() { return vec2Cache.get(); }
+	public static VecHandle<float[]> vec2() { return vec2(0, 0); }
 	public static VecHandle<float[]> vec2(int[] ivec) { return vec2(ivec[0], ivec[1]); }
 	public static VecHandle<float[]> vec2(int x, int y) { return vec2((float) x, (float) y); }
 	public static VecHandle<float[]> vec2(float x, float y) {
@@ -124,7 +124,7 @@ public final class MathUtils {
 		return out;
 	}
 
-	public static VecHandle<float[]> vec3() { return vec3Cache.get(); }
+	public static VecHandle<float[]> vec3() { return vec3(0, 0, 0); }
 	public static VecHandle<float[]> vec3(int[] ivec) { return vec3(ivec[0], ivec[1], ivec[2]); }
 	public static VecHandle<float[]> vec3(int x, int y, int z) { return vec3((float) x, (float) y, (float) z); }
 	public static VecHandle<float[]> vec3(float x, float y, float z) {
@@ -135,7 +135,7 @@ public final class MathUtils {
 		return out;
 	}
 
-	public static VecHandle<float[]> vec4() { return vec4Cache.get(); }
+	public static VecHandle<float[]> vec4() { return vec4(0, 0, 0, 0); }
 	public static VecHandle<float[]> vec4(int[] ivec) { return vec4(ivec[0], ivec[1], ivec[2], ivec[3]); }
 	public static VecHandle<float[]> vec4(int x, int y, int z, int w) { return vec4((float) x, (float) y, (float) z, (float) w); }
 	public static VecHandle<float[]> vec4(float x, float y, float z, float w) {
