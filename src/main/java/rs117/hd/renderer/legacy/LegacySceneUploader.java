@@ -100,7 +100,7 @@ public class LegacySceneUploader {
 	private LegacyModelPusher modelPusher;
 
 	public void upload(LegacySceneContext sceneContext) {
-		proceduralGenerator.generateSceneData(sceneContext);
+		proceduralGenerator.generateSceneData(sceneContext, null);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 

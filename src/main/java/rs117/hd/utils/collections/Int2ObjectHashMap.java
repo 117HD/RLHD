@@ -224,6 +224,8 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 		return size;
 	}
 
+	public int capacity() { return keys.length; }
+
 	@Override
 	public Iterator<Entry<T>> iterator() {
 		return new EntryIterator();
