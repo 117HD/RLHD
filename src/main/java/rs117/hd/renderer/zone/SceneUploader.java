@@ -1390,6 +1390,13 @@ public class SceneUploader implements AutoCloseable {
 		final byte[] transparencies = model.getFaceTransparencies();
 		final float modelHeight = model.getModelHeight();
 
+		final var scenePos = tile.getSceneLocation();
+		final int tileX = scenePos.getX();
+		final int tileY = scenePos.getY();
+		final int tileZ = tile.getRenderLevel();
+		final int tileExX = tileX + ctx.sceneOffset;
+		final int tileExY = tileY + ctx.sceneOffset;
+
 		int orientSin = 0;
 		int orientCos = 0;
 		if (orientation != 0) {
@@ -1416,13 +1423,13 @@ public class SceneUploader implements AutoCloseable {
 
 			if (modelOverride.terrainVertexSnap && heightFrac <= modelOverride.terrainVertexSnapThreshold) {
 				int plane = tile.getRenderLevel();
-				int tileExX = clamp(ctx.sceneOffset + ((vx + basex) / 128), 0, EXTENDED_SCENE_SIZE - 1);
-				int tileExY = clamp(ctx.sceneOffset + ((vz + basez) / 128), 0, EXTENDED_SCENE_SIZE - 1);
+				int vertexTileExX = clamp(ctx.sceneOffset + ((vx + basex) / 128), 0, EXTENDED_SCENE_SIZE - 1);
+				int vertexTileExY = clamp(ctx.sceneOffset + ((vz + basez) / 128), 0, EXTENDED_SCENE_SIZE - 1);
 
-				float h00 = tileHeights[plane][tileExX][tileExY];
-				float h10 = tileHeights[plane][tileExX + 1][tileExY];
-				float h01 = tileHeights[plane][tileExX][tileExY + 1];
-				float h11 = tileHeights[plane][tileExX + 1][tileExY + 1];
+				float h00 = tileHeights[plane][vertexTileExX][vertexTileExY];
+				float h10 = tileHeights[plane][vertexTileExX + 1][vertexTileExY];
+				float h01 = tileHeights[plane][vertexTileExX][vertexTileExY + 1];
+				float h11 = tileHeights[plane][vertexTileExX + 1][vertexTileExY + 1];
 
 				float hx0 = mix(h00, h10, (vx % 128.0f) / 128.0f);
 				float hx1 = mix(h01, h11, (vx % 128.0f) / 128.0f);
@@ -1541,8 +1548,7 @@ public class SceneUploader implements AutoCloseable {
 							int averageColor =
 								(tilePaint.getSwColor() + tilePaint.getNwColor() + tilePaint.getNeColor() + tilePaint.getSeColor()) / 4;
 
-							var override = tileOverrideManager.getOverride(ctx, tile);
-							averageColor = override.modifyColor(averageColor);
+							averageColor = ctx.tileOverrides[tileZ][tileExX][tileExY].modifyColor(averageColor);
 							color1 = color2 = color3 = averageColor;
 
 							// Let the shader know vanilla shading reversal should be skipped for this face
@@ -1572,15 +1578,10 @@ public class SceneUploader implements AutoCloseable {
 							if (faceColorIndex != -1) {
 								int color = tileModel.getTriangleColorA()[faceColorIndex];
 								if (color != HIDDEN_HSL) {
-									var scenePos = tile.getSceneLocation();
-									int tileX = scenePos.getX();
-									int tileY = scenePos.getY();
-									int tileZ = tile.getRenderLevel();
-									int tileExX = tileX + ctx.sceneOffset;
-									int tileExY = tileY + ctx.sceneOffset;
 									int tileId = modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
 										OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :
 										scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+
 									var override = tileOverrideManager.getOverride(ctx, tile, worldPos, tileId);
 									color = override.modifyColor(color);
 									color1 = color2 = color3 = color;
