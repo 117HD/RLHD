@@ -359,14 +359,16 @@ public class SceneUploader implements AutoCloseable {
 		var tilePoint = t.getSceneLocation();
 		ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane(), worldPos);
 
+		int tileExX = tilePoint.getX() + ctx.sceneOffset;
+		int tileExY = tilePoint.getY() + ctx.sceneOffset;
+		int tileZ = t.getRenderLevel();
+
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && paint.getNeColor() != HIDDEN_HSL) {
 			z.sizeO += 2;
 			z.sizeF += 2;
 
-			int tileExX = tilePoint.getX() + ctx.sceneOffset;
-			int tileExY = tilePoint.getY() + ctx.sceneOffset;
-			TileOverride override = ctx.tileOverrides[t.getRenderLevel()][tileExX][tileExY];
+			TileOverride override = ctx.tileOverrides[tileZ][tileExX][tileExY];
 			WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
 			if (waterType != WaterType.NONE) {
 				z.hasWater = true;
@@ -386,9 +388,6 @@ public class SceneUploader implements AutoCloseable {
 			z.sizeO += len;
 			z.sizeF += len;
 
-			int tileExX = tilePoint.getX() + ctx.sceneOffset;
-			int tileExY = tilePoint.getY() + ctx.sceneOffset;
-			int tileZ = t.getRenderLevel();
 			int overlayId = OVERLAY_FLAG | overlayIds[tileZ][tileExX][tileExY];
 			int underlayId = underlayIds[tileZ][tileExX][tileExY];
 			var overlayOverride = tileOverrideManager.getOverride(ctx, t, worldPos, overlayId);
@@ -502,7 +501,7 @@ public class SceneUploader implements AutoCloseable {
 			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
 
 		if (!onlyWaterSurface)
-			uploadZoneTileRenderables(ctx, zone, t, vertexBuffer, alphaBuffer, textureBuffer);
+			uploadZoneTileRenderables(ctx, zone, t, tileExX, tileExY, tileZ, vertexBuffer, alphaBuffer, textureBuffer);
 
 		Tile bridge = t.getBridge();
 		if (bridge != null)
@@ -513,6 +512,7 @@ public class SceneUploader implements AutoCloseable {
 		ZoneSceneContext ctx,
 		Zone zone,
 		Tile t,
+		int tileExX, int tileExY, int tileZ,
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
@@ -537,6 +537,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				wallObject.getId(),
+				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -559,6 +560,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				wallObject.getId(),
+				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -586,6 +588,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				decorativeObject.getId(),
+				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -608,6 +611,7 @@ public class SceneUploader implements AutoCloseable {
 				-1,
 				-1,
 				decorativeObject.getId(),
+				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -630,6 +634,7 @@ public class SceneUploader implements AutoCloseable {
 				-1, -1,
 				-1,
 				groundObject.getId(),
+				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -663,6 +668,7 @@ public class SceneUploader implements AutoCloseable {
 				min.getY(), max.getX(),
 				max.getY(),
 				gameObject.getId(),
+				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -712,6 +718,7 @@ public class SceneUploader implements AutoCloseable {
 		int ux,
 		int uz,
 		int id,
+		int tileExX, int tileExY, int tileZ,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
@@ -746,6 +753,7 @@ public class SceneUploader implements AutoCloseable {
 				ctx, tile, model, modelOverride, uuid,
 				preOrientation, orient,
 				x - basex, y, z - basez,
+				tileExX, tileExY, tileZ,
 				opaqueBuffer,
 				alphaBuffer,
 				textureBuffer
@@ -1356,6 +1364,7 @@ public class SceneUploader implements AutoCloseable {
 		int uuid,
 		int preOrientation, int orientation,
 		int x, int y, int z,
+		int tileExX, int tileExY, int tileZ,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer,
 		GpuIntBuffer textureBuffer
@@ -1393,13 +1402,6 @@ public class SceneUploader implements AutoCloseable {
 		final byte[] transparencies = model.getFaceTransparencies();
 		final float modelHeight = model.getModelHeight();
 
-		final var scenePos = tile.getSceneLocation();
-		final int tileX = scenePos.getX();
-		final int tileY = scenePos.getY();
-		final int tileZ = tile.getRenderLevel();
-		final int tileExX = tileX + ctx.sceneOffset;
-		final int tileExY = tileY + ctx.sceneOffset;
-
 		int orientSin = 0;
 		int orientCos = 0;
 		if (orientation != 0) {
@@ -1425,14 +1427,13 @@ public class SceneUploader implements AutoCloseable {
 			vz += z;
 
 			if (modelOverride.terrainVertexSnap && heightFrac <= modelOverride.terrainVertexSnapThreshold) {
-				int plane = tile.getRenderLevel();
 				int vertexTileExX = clamp(ctx.sceneOffset + ((vx + basex) / 128), 0, EXTENDED_SCENE_SIZE - 1);
 				int vertexTileExY = clamp(ctx.sceneOffset + ((vz + basez) / 128), 0, EXTENDED_SCENE_SIZE - 1);
 
-				float h00 = tileHeights[plane][vertexTileExX][vertexTileExY];
-				float h10 = tileHeights[plane][vertexTileExX + 1][vertexTileExY];
-				float h01 = tileHeights[plane][vertexTileExX][vertexTileExY + 1];
-				float h11 = tileHeights[plane][vertexTileExX + 1][vertexTileExY + 1];
+				float h00 = tileHeights[tileZ][vertexTileExX][vertexTileExY];
+				float h10 = tileHeights[tileZ][vertexTileExX + 1][vertexTileExY];
+				float h01 = tileHeights[tileZ][vertexTileExX][vertexTileExY + 1];
+				float h11 = tileHeights[tileZ][vertexTileExX + 1][vertexTileExY + 1];
 
 				float hx0 = mix(h00, h10, (vx % 128.0f) / 128.0f);
 				float hx1 = mix(h01, h11, (vx % 128.0f) / 128.0f);
