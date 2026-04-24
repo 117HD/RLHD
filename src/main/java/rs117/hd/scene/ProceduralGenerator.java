@@ -163,11 +163,11 @@ public class ProceduralGenerator {
 		private final int[] hashes = new int[4];
 
 		private final int[] vertexHeights = new int[4];
-		private final float[] normal = new float[3];
 		private final int[] surfaceNormal = new int[3];
 		private final int[] normalA = new int[3];
 		private final int[] normalB = new int[3];
 		private final int[] normalC = new int[3];
+		private final float[] avgNormal = new float[3];
 
 		private int[][][] faceVertices = new int[2][VERTICES_PER_FACE][3];
 		private int[][] faceVertexKeys = new int[VERTICES_PER_FACE][3];
@@ -196,7 +196,7 @@ public class ProceduralGenerator {
 			}
 
 			sceneContext.vertexTerrainNormals.forEach((entry) -> {
-				var n = normalize(normal, vec3(normal, entry.value[0], entry.value[1], entry.value[2]));
+				var n = normalize(avgNormal, vec3(avgNormal, entry.value[0], entry.value[1], entry.value[2]));
 				for (int i = 0; i < 3; i++)
 					entry.value[i] = GpuIntBuffer.normShort(n[i]);
 			});
@@ -225,8 +225,8 @@ public class ProceduralGenerator {
 					faceVertexKeys(tile, face, vertices, hashes);
 
 					ivec3(faceVertices[face][0], vertices[0][0], vertices[0][1], vertices[0][2]);
-					ivec3(faceVertices[face][1], vertices[1][0], vertices[1][1], vertices[1][2]);
-					ivec3(faceVertices[face][2], vertices[2][0], vertices[2][1], vertices[2][2]);
+					ivec3(faceVertices[face][2], vertices[1][0], vertices[1][1], vertices[1][2]);
+					ivec3(faceVertices[face][1], vertices[2][0], vertices[2][1], vertices[2][2]);
 
 					ivec3(faceVertexKeys[face], hashes[0], hashes[1], hashes[2]);
 				}
@@ -284,7 +284,7 @@ public class ProceduralGenerator {
 					if (terrainNormal != null) {
 						add(terrainNormal, terrainNormal, surfaceNormal);
 					} else {
-						sceneContext.vertexTerrainNormals.put(vertexKey, surfaceNormal);
+						sceneContext.vertexTerrainNormals.put(vertexKey, copy(surfaceNormal));
 					}
 				}
 			}
