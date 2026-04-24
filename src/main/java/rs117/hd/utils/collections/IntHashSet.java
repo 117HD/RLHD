@@ -156,9 +156,9 @@ public final class IntHashSet implements Iterable<Integer> {
 		return size == 0;
 	}
 
-	public int size() {
-		return size;
-	}
+	public int size() { return size; }
+
+	public int capacity() { return keys.length; }
 
 	@Override
 	public Iterator<Integer> iterator() {

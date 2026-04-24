@@ -197,4 +197,6 @@ public final class Int2IntHashMap {
 	public int size() {
 		return size;
 	}
+
+	public int capacity() { return keys.length; }
 }

@@ -132,22 +132,22 @@ public class ProceduralGenerator {
 		return vertexHashes;
 	}
 
-	public void generateSceneData(SceneContext sceneContext) {
+	public void generateSceneData(SceneContext sceneCtx, SceneContext prevSceneCtx) {
 		try (GeneratorContext ctx = GENERATOR_POOL.acquire()) {
 			long timerTotal = System.currentTimeMillis();
 			long timerCalculateMainOverrides, timerCalculateTerrainNormals, timerGenerateTerrainData, timerGenerateUnderwaterTerrain;
 
 			long startTime = System.currentTimeMillis();
-			ctx.mainTileOverridesGenerator.generate(sceneContext);
+			ctx.mainTileOverridesGenerator.generate(sceneCtx, prevSceneCtx);
 			timerCalculateMainOverrides = (int) (System.currentTimeMillis() - startTime);
 			startTime = System.currentTimeMillis();
-			ctx.underwaterTerrainGenerator.generate(sceneContext);
+			ctx.underwaterTerrainGenerator.generate(sceneCtx, prevSceneCtx);
 			timerGenerateUnderwaterTerrain = (int) (System.currentTimeMillis() - startTime);
 			startTime = System.currentTimeMillis();
-			ctx.terrainNormalGenerator.generate(sceneContext);
+			ctx.terrainNormalGenerator.generate(sceneCtx, prevSceneCtx);
 			timerCalculateTerrainNormals = (int) (System.currentTimeMillis() - startTime);
 			startTime = System.currentTimeMillis();
-			ctx.terrainDataGenerator.generate(sceneContext);
+			ctx.terrainDataGenerator.generate(sceneCtx, prevSceneCtx);
 			timerGenerateTerrainData = (int) (System.currentTimeMillis() - startTime);
 
 			log.debug("procedural data generation took {}ms to complete", (System.currentTimeMillis() - timerTotal));
@@ -176,8 +176,8 @@ public class ProceduralGenerator {
 		 * Iterates through all Tiles in a given Scene, calculating vertex normals
 		 * for each one, then stores resulting normal data in a HashMap.
 		 */
-		private void generate(SceneContext sceneContext) {
-			sceneContext.vertexTerrainNormals = new Int2ObjectHashMap<>();
+		private void generate(SceneContext sceneContext, SceneContext prevSceneContext) {
+			sceneContext.vertexTerrainNormals = new Int2ObjectHashMap<>(prevSceneContext != null && prevSceneContext.vertexTerrainNormals != null ? prevSceneContext.vertexTerrainNormals.capacity() : 0);
 
 			for (Tile[][] plane : sceneContext.scene.getExtendedTiles()) {
 				for (Tile[] column : plane) {
@@ -449,11 +449,22 @@ public class ProceduralGenerator {
 		return vertices;
 	}
 
+	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[] vertexHashes) {
+		int[][] vertices = new int[4][3];
+		tileVertexKeys(ctx, tile, vertices, vertexHashes);
+	}
+
+	public static int[] tileVertexKeys(SceneContext ctx, Tile tile) {
+		int[] vertexHashes = new int[4];
+		tileVertexKeys(ctx, tile, vertexHashes);
+		return vertexHashes;
+	}
+
 	final class MainTileOverridesGenerator {
 		private final int[] worldPos = new int[3];
 		private final int[] ids = new int[2];
 
-		private void generate(SceneContext sceneContext) {
+		private void generate(SceneContext sceneContext, SceneContext preSceneCtx) {
 			Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 			int sizeX = sceneContext.sizeX;
 			int sizeY = sceneContext.sizeZ;
@@ -473,17 +484,6 @@ public class ProceduralGenerator {
 		}
 	}
 
-	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[] vertexHashes) {
-		int[][] vertices = new int[4][3];
-		tileVertexKeys(ctx, tile, vertices, vertexHashes);
-	}
-
-	public static int[] tileVertexKeys(SceneContext ctx, Tile tile) {
-		int[] vertexHashes = new int[4];
-		tileVertexKeys(ctx, tile, vertexHashes);
-		return vertexHashes;
-	}
-
 	final class TerrainDataGenerator {
 		private final int[][] vertices = new int[4][3];
 		private final int[] hashes = new int[4];
@@ -500,18 +500,18 @@ public class ProceduralGenerator {
 		 * material data for each vertex of each Tile. Then adds the resulting
 		 * data to appropriate HashMaps.
 		 */
-		private void generate(SceneContext sceneContext) {
-			sceneContext.vertexTerrainColor = new Int2IntHashMap();
+		private void generate(SceneContext sceneContext, SceneContext prevSceneCtx) {
+			sceneContext.vertexTerrainColor = new Int2IntHashMap(prevSceneCtx != null && prevSceneCtx.vertexTerrainColor != null ? prevSceneCtx.vertexTerrainColor.capacity() : 0);
 			// used for overriding potentially undesirable vertex colors
 			// for example, colors that aren't supposed to be visible
-			sceneContext.highPriorityColor = new IntHashSet();
-			sceneContext.vertexTerrainTexture = new Int2ObjectHashMap<>();
+			sceneContext.highPriorityColor = new IntHashSet(prevSceneCtx != null && prevSceneCtx.highPriorityColor != null ? prevSceneCtx.highPriorityColor.capacity() : 0);
+			sceneContext.vertexTerrainTexture = new Int2ObjectHashMap<>(prevSceneCtx != null && prevSceneCtx.vertexTerrainTexture != null ? prevSceneCtx.vertexTerrainTexture.capacity() : 0);
 			// for faces without an overlay is set to true
-			sceneContext.vertexIsUnderlay = new IntHashSet();
+			sceneContext.vertexIsUnderlay = new IntHashSet(prevSceneCtx != null && prevSceneCtx.vertexIsUnderlay != null ? prevSceneCtx.vertexIsUnderlay.capacity() : 0);
 			// for faces with an overlay is set to true
 			// the result of these maps can be used to determine the vertices
 			// between underlays and overlays for custom blending
-			sceneContext.vertexIsOverlay = new IntHashSet();
+			sceneContext.vertexIsOverlay = new IntHashSet(prevSceneCtx != null && prevSceneCtx.vertexIsOverlay != null ? prevSceneCtx.vertexIsOverlay.capacity() : 0);
 
 			Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 			int sizeX = sceneContext.sizeX;
@@ -725,20 +725,20 @@ public class ProceduralGenerator {
 		 * Scene, increasing the depth of each tile based on its distance from the shore.
 		 * Then stores the resulting data in a HashMap.
 		 */
-		private void generate(SceneContext sceneContext) {
+		private void generate(SceneContext sceneContext, SceneContext prevSceneCtx) {
 			int sizeX = sceneContext.sizeX;
 			int sizeY = sceneContext.sizeZ;
 			// bit 1 set if a tile contains at least 1 face which qualifies as water
 			// bit 2 set if a tile will be skipped when the scene is drawn, this is due to certain edge cases with water on the same X/Y on different planes
 			sceneContext.tileFlags = new byte[MAX_Z][sizeX][sizeY];
 			// true if a vertex is part of a face which qualifies as water; non-existent if not
-			sceneContext.vertexIsWater = new IntHashSet();
+			sceneContext.vertexIsWater = new IntHashSet(prevSceneCtx != null && prevSceneCtx.vertexIsWater != null ? prevSceneCtx.vertexIsWater.capacity() : 0);
 			// true if a vertex is part of a face which qualifies as land; non-existent if not
 			// tiles along the shoreline will be true for both vertexIsWater and vertexIsLand
-			sceneContext.vertexIsLand = new IntHashSet();
+			sceneContext.vertexIsLand = new IntHashSet(prevSceneCtx != null && prevSceneCtx.vertexIsLand != null ? prevSceneCtx.vertexIsLand.capacity() : 0);
 			// the height adjustment for each vertex, to be applied to the vertex'
 			// real height to create the underwater terrain
-			sceneContext.vertexUnderwaterDepth = new Int2IntHashMap();
+			sceneContext.vertexUnderwaterDepth = new Int2IntHashMap(prevSceneCtx != null && prevSceneCtx.vertexUnderwaterDepth != null ? prevSceneCtx.vertexUnderwaterDepth.capacity() : 0);
 			// the basic 'levels' of underwater terrain, used to sink terrain based on its distance
 			// from the shore, then used to produce the world-space height offset
 			// 0 = land
