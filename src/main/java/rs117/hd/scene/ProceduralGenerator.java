@@ -469,12 +469,30 @@ public class ProceduralGenerator {
 			int sizeX = sceneContext.sizeX;
 			int sizeY = sceneContext.sizeZ;
 			sceneContext.tileOverrides = new TileOverride[MAX_Z][sizeX][sizeY];
+
+			final boolean canReuse = preSceneCtx != null && sceneContext.scene.isInstance() == preSceneCtx.scene.isInstance() && sceneContext.currentArea == preSceneCtx.currentArea;
+			final int dx = canReuse ? sceneContext.scene.getBaseX() - preSceneCtx.scene.getBaseX() : 0;
+			final int dy = canReuse ? sceneContext.scene.getBaseY() - preSceneCtx.scene.getBaseY() : 0;
+
 			for (int z = 0; z < MAX_Z; ++z) {
 				for (int x = 0; x < sizeX; ++x) {
 					for (int y = 0; y < sizeY; ++y) {
 						final Tile tile = tiles[z][x][y];
 						if (tile == null)
 							continue;
+
+						if(canReuse) {
+							int oX = x + dx;
+							int oY = y + dy;
+							if(oX >= 0 && oX < sizeX && oY >= 0 && oY < sizeY) {
+								var prevOverride = preSceneCtx.tileOverrides[z][oX][oY];
+								if(prevOverride != null) {
+									sceneContext.tileOverrides[z][x][y] = prevOverride;
+									continue;
+								}
+							}
+						}
+
 						sceneContext.extendedSceneToWorld(x, y, tile.getRenderLevel(), worldPos);
 						tileOverrideManager.buildIdsFromTile(sceneContext, tile, ids);
 						sceneContext.tileOverrides[z][x][y] = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids);
@@ -517,15 +535,18 @@ public class ProceduralGenerator {
 			int sizeX = sceneContext.sizeX;
 			int sizeY = sceneContext.sizeZ;
 			for (int z = 0; z < MAX_Z; ++z) {
-				for (int x = 0; x < sizeX; ++x)
-					for (int y = 0; y < sizeY; ++y)
-						if (tiles[z][x][y] != null)
-							generateDataForTile(sceneContext, tiles[z][x][y], x, y, z);
+				for (int x = 0; x < sizeX; ++x) {
+					for (int y = 0; y < sizeY; ++y) {
+						final var tile = tiles[z][x][y];
+						if(tile == null)
+							continue;
 
-				for (int x = 0; x < sizeX; ++x)
-					for (int y = 0; y < sizeY; ++y)
-						if (tiles[z][x][y] != null && tiles[z][x][y].getBridge() != null)
-							generateDataForTile(sceneContext, tiles[z][x][y].getBridge(), x, y, z);
+						generateDataForTile(sceneContext, tiles[z][x][y], x, y, z);
+
+						if(tile.getBridge() != null)
+							generateDataForTile(sceneContext, tile.getBridge(), x, y, z);
+					}
+				}
 			}
 		}
 
@@ -771,9 +792,8 @@ public class ProceduralGenerator {
 						}
 
 						Tile tile = tiles[z][x][y];
-						if (tile.getBridge() != null) {
+						if (tile.getBridge() != null)
 							tile = tile.getBridge();
-						}
 
 						if (tile.getSceneTilePaint() != null) {
 							tileVertexKeys(sceneContext, tile, vertices, hashes);
