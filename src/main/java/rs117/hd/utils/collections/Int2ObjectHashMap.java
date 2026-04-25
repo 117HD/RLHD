@@ -88,6 +88,8 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 		}
 	}
 
+	public boolean put(Object key, T value) { return key != null && put(key.hashCode(), value); }
+
 	public boolean put(int key, T value) {
 		return put(key, value, true);
 	}
