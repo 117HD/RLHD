@@ -3,6 +3,7 @@ package rs117.hd.utils.collections;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import lombok.Getter;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.MathUtils.*;
@@ -232,18 +233,17 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 	}
 
 	public static class Entry<T> {
-		public final int key;
-		public T value;
-
-		Entry(int key, T value) {
-			this.key = key;
-			this.value = value;
-		}
+		@Getter
+		private int key;
+		@Getter
+		private T value;
 	}
 
 	private class EntryIterator implements Iterator<Entry<T>> {
 		private int index = -1;
 		private int nextIndex = -1;
+
+		private final Entry<T> entry = new Entry<>();
 
 		EntryIterator() {
 			advance();
@@ -267,7 +267,10 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 
 			index = nextIndex;
 			advance();
-			return new Entry<>(keys[index], values[index]);
+
+			entry.key = keys[index];
+			entry.value = values[index];
+			return entry;
 		}
 
 		@Override
