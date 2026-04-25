@@ -828,11 +828,15 @@ public class SceneUploader implements AutoCloseable {
 		SceneTilePaint paint,
 		boolean onlyWaterSurface,
 		int tileExX, int tileExY, int tileZ,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb,
+		GpuIntBuffer opaqueBuffer,
+		GpuIntBuffer textureBuffer,
 		int lx,
 		int lz
 	) {
+		if (writeCache == null)
+			writeCache = new VertexWriteCache.Collection();
+		writeCache.setOutputBuffers(opaqueBuffer, opaqueBuffer, textureBuffer);
+
 		int swColor = paint.getSwColor();
 		int seColor = paint.getSeColor();
 		int neColor = paint.getNeColor();
@@ -1023,59 +1027,64 @@ public class SceneUploader implements AutoCloseable {
 		uvx = fract(uvx * uvcos - uvy * uvsin);
 		uvy = fract(tmp * uvsin + uvy * uvcos);
 
-		int texturedFaceIdx = fb.putFace(
+		final var vb = writeCache.getVertexBuffer();
+		final var tb = writeCache.getTextureBuffer();
+
+		int texturedFaceIdx = tb.putFace(
 			neColor, nwColor, seColor,
 			neMaterialData, nwMaterialData, seMaterialData,
 			neTerrainData, nwTerrainData, seTerrainData
 		);
 
-		vb.putVertex(
+		vb.putStaticVertex(
 			lx2, neHeight, lz2,
 			uvx, uvy, 0,
 			neNormals[0], neNormals[2], neNormals[1],
 			texturedFaceIdx
 		);
 
-		vb.putVertex(
+		vb.putStaticVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[2], nwNormals[1],
 			texturedFaceIdx
 		);
 
-		vb.putVertex(
+		vb.putStaticVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[2], seNormals[1],
 			texturedFaceIdx
 		);
 
-		texturedFaceIdx = fb.putFace(
+		texturedFaceIdx = tb.putFace(
 			swColor, seColor, nwColor,
 			swMaterialData, seMaterialData, nwMaterialData,
 			swTerrainData, seTerrainData, nwTerrainData
 		);
 
-		vb.putVertex(
+		vb.putStaticVertex(
 			lx0, swHeight, lz0,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
 			swNormals[0], swNormals[2], swNormals[1],
 			texturedFaceIdx
 		);
 
-		vb.putVertex(
+		vb.putStaticVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[2], seNormals[1],
 			texturedFaceIdx
 		);
 
-		vb.putVertex(
+		vb.putStaticVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[2], nwNormals[1],
 			texturedFaceIdx
 		);
+
+		writeCache.flush();
 	}
 
 	private void uploadTileModel(
@@ -1085,9 +1094,13 @@ public class SceneUploader implements AutoCloseable {
 		boolean onlyWaterSurface,
 		int tileExX, int tileExY, int tileZ,
 		int basex, int basez,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb
+		GpuIntBuffer opaqueBuffer,
+		GpuIntBuffer textureBuffer
 	) {
+		if (writeCache == null)
+			writeCache = new VertexWriteCache.Collection();
+		writeCache.setOutputBuffers(opaqueBuffer, opaqueBuffer, textureBuffer);
+
 		final int[] triangleTextures = model.getTriangleTextureId();
 		boolean isFallbackWater = false;
 		if (triangleTextures != null) {
@@ -1334,33 +1347,37 @@ public class SceneUploader implements AutoCloseable {
 			float uvCx = uvx + dx * uvcos - dz * uvsin;
 			float uvCy = uvy + dx * uvsin + dz * uvcos;
 
-			int texturedFaceIdx = fb.putFace(
+			final VertexWriteCache vb = writeCache.getVertexBuffer();
+			final VertexWriteCache tb = writeCache.getTextureBuffer();
+
+			int texturedFaceIdx = tb.putFace(
 				colorA, colorB, colorC,
 				materialDataA, materialDataB, materialDataC,
 				terrainDataA, terrainDataB, terrainDataC
 			);
 
-			vb.putVertex(
+			vb.putStaticVertex(
 				lx0, ly0, lz0,
 				uvAx, uvAy, 0,
 				normalsA[0], normalsA[2], normalsA[1],
 				texturedFaceIdx
 			);
 
-			vb.putVertex(
+			vb.putStaticVertex(
 				lx1, ly1, lz1,
 				uvBx, uvBy, 0,
 				normalsB[0], normalsB[2], normalsB[1],
 				texturedFaceIdx
 			);
 
-			vb.putVertex(
+			vb.putStaticVertex(
 				lx2, ly2, lz2,
 				uvCx, uvCy, 0,
 				normalsC[0], normalsC[2], normalsC[1],
 				texturedFaceIdx
 			);
 		}
+		writeCache.flush();
 	}
 
 	// scene upload
@@ -1674,8 +1691,7 @@ public class SceneUploader implements AutoCloseable {
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				bias == null ? 0 : bias[face] & 0xFF;
 			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
-			boolean hasAlpha = material.hasTransparency || transparency != 0;
-			final VertexWriteCache vb = writeCache.useAlphaBuffer && hasAlpha ? writeCache.alpha : writeCache.opaque;
+			final VertexWriteCache vb = writeCache.getVertexBuffer(material.hasTransparency || transparency != 0);
 			final VertexWriteCache tb = writeCache.opaqueTex;
 
 			color1 |= packedAlphaBiasHsl;
@@ -2091,14 +2107,8 @@ public class SceneUploader implements AutoCloseable {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			final VertexWriteCache vb, tb;
-			if (writeCache.useAlphaBuffer && hasAlpha) {
-				vb = writeCache.alpha;
-				tb = writeCache.alphaTex;
-			} else {
-				vb = writeCache.opaque;
-				tb = writeCache.opaqueTex;
-			}
+			final VertexWriteCache vb = writeCache.getVertexBuffer(hasAlpha);
+			final VertexWriteCache tb = writeCache.getTextureBuffer(hasAlpha);
 
 			color1 |= packedAlphaBiasHsl;
 			color2 |= packedAlphaBiasHsl;
