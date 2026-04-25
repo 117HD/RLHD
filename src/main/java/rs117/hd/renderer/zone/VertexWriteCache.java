@@ -158,6 +158,17 @@ public final class VertexWriteCache {
 			}
 		}
 
+		public VertexWriteCache getVertexBuffer() { return opaque; }
+		public VertexWriteCache getTextureBuffer() { return opaqueTex; }
+
+		public VertexWriteCache getVertexBuffer(boolean hasAlpha) {
+			return useAlphaBuffer && hasAlpha ? alpha : opaque;
+		}
+
+		public VertexWriteCache getTextureBuffer(boolean hasAlpha) {
+			return useAlphaBuffer && hasAlpha ? alphaTex : opaqueTex;
+		}
+
 		public void flush() {
 			opaque.flush();
 			alpha.flush();
