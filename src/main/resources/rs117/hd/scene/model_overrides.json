@@ -71016,6 +71016,7 @@
   },
   {
     "description": "Arceuus - Pond",
+    "areas": [ "ARCEUUS" ],
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "objectIds": [
@@ -77313,7 +77314,7 @@
     "description": "Dorgeshkaan - Slepe - Stone - Bench",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvOrientation": 512,
+    "uvOrientation": 333,
     "uvScale": 0.8,
     "objectIds": [
       "DORGESH_MARKET_BENCH"
@@ -86140,6 +86141,145 @@
         "baseMaterial": "NONE",
         "receiveShadows": false
       }
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Walls with metallic lines",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "depthBias": 1,
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_1WALLS_TUNNEL",
+      "DORGESH_1WALLS_TUNNEL_BLACKEND",
+      "DORGESH_1WALLS_TUNNEL_BLACKEND_INV",
+      "DORGESH_1WALLS_TUNNEL_DOOR",
+      "DORGESH_1WALLS_TUNNEL_JOIN_COVER"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Walls with metallic lines and water",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "depthBias": 1,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "colors": "a == 255 && s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_1WALLS",
+      "DORGESH_1WALLS_COLUMN",
+      "DORGESH_1WALLS_TUNNEL_JOIN",
+      "DORGESH_1WALLS_TUNNEL_JOIN_MIRROR",
+      "DORGESH_1STAIRS"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Walls with metallic lines and water fountain - DYNAMIC - ANIMATED",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "depthBias": 1,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "colors": "a == 255 && s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_1WALLS_FEATURE"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Wall top",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "DORGESH_1WALLS_TUNNEL_TOP",
+      "DORGESH_1WALLS_TUNNEL_TOP_EDGE",
+      "DORGESH_1WALLS_TUNNEL_TOP_CORNER",
+      "DORGESH_1WALLS_TUNNEL_TOP_CORNER_INVERSE"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Statues",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "a == 255 && s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_COUNCIL_STATUE1",
+      "DORGESH_COUNCIL_STATUE2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Glass - Metallic - Bankbooth",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "a == 255 && s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_BANK_BOOTH"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Ponds",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "receiveShadows": false
+      }
+    ],
+    "objectIds": [
+      "DORGESH_WATER_CORNER",
+      "DORGESH_WATER_SIDE",
+      "DORGESH_WATER_MIDDLE"
     ]
   }
 ]
