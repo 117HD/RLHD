@@ -47666,7 +47666,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_50"
       },
       {
         "colors": "s == 5",
