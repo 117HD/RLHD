@@ -3482,21 +3482,6 @@
     ]
   },
   {
-    "description": "Farming - Herbs - Ranaar",
-    "baseMaterial": "LEAF_VEINS_VERY_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.4,
-    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
-    "windDisplacementModifier": -1,
-    "objectIds": [
-      "HERB_RANARR_WEED_FULLYGROWN",
-      "HERB_RANARR_WEED_SEED",
-      "HERB_RANARR_WEED_1",
-      "HERB_RANARR_WEED_2",
-      "HERB_RANARR_WEED_3"
-    ]
-  },
-  {
     "description": "Farming - Bush - Redberry",
     "baseMaterial": "GRUNGE_3",
     "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
