@@ -8295,6 +8295,7 @@
       "SWAMP_CAVEWALLINSIDECORNER",
       "SWAMP_CAVEWALL_TOP5",
       "SWAMP_CAVEWALL_TOP1",
+      "SWAMP_CAVEWALL_EDGE_TOP1",
       "SWAMP_CAVEWALL1_STALAGMITE1",
       "SWAMP_CAVEWALL1",
       "SWAMP_CAVEWALL1_GUNGYWATER1",
@@ -86144,10 +86145,12 @@
     ]
   },
   {
-    "description": "Dorgesh-Kaan - Stone - Metallic - Walls with metallic lines",
-    "baseMaterial": "SMOOTH_STONE",
+    "description": "Dorgesh-Kaan - Rock - Metallic - Walls with metallic electric lines",
+    "baseMaterial": "ROCK_2",
     "uvType": "BOX",
     "depthBias": 1,
+    "uvOrientation": -256,
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "s > 2",
@@ -86166,10 +86169,32 @@
     ]
   },
   {
-    "description": "Dorgesh-Kaan - Stone - Metallic - Walls with metallic lines and water",
-    "baseMaterial": "SMOOTH_STONE",
+    "description": "Dorgesh-Kaan - Rock - Water - Rock walls with water trophs",
+    "baseMaterial": "ROCK_2",
     "uvType": "BOX",
-    "depthBias": 1,
+    "uvOrientation": -256,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "DORGESH_2WALLS_BACK",
+      "SLICE_GOBLIN_STATION_ENTRANCE_SIDE",
+      "SLICE_GOBLIN_STATION_ENTRANCE_SIDE_MIRROR",
+      "DORGESH_3WALLS_BACK",
+      "DORGESH_2WALLS_BACK_WATER",
+      "DORGESH_4WALLS"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Rock - Metallic - Water - Walls with metallic lines and water",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "h == 32",
@@ -86188,14 +86213,47 @@
       "DORGESH_1WALLS_COLUMN",
       "DORGESH_1WALLS_TUNNEL_JOIN",
       "DORGESH_1WALLS_TUNNEL_JOIN_MIRROR",
-      "DORGESH_1STAIRS"
+      "DORGESH_1STAIRS",
+      "DORGESH_1STAIRS_TOP",
+      "DORGESH_1STAIRS_POSH",
+      "DORGESH_2STAIRS_POSH",
+      "DORGESH_4WALLS_WALL_JOIN",
+      "DORGESH_4WALLS_WALL_JOIN_MIRROR"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Water - Glass - Goblin Station Entrance",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "colors": "a == 255 && s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SLICE_GOBLIN_STATION_ENTRANCE"
     ]
   },
   {
     "description": "Dorgesh-Kaan - Stone - Metallic - Walls with metallic lines and water fountain - DYNAMIC - ANIMATED",
-    "baseMaterial": "SMOOTH_STONE",
+    "baseMaterial": "ROCK_2",
     "uvType": "BOX",
-    "depthBias": 1,
+    "uvOrientation": -256,
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "h == 32",
@@ -86215,12 +86273,119 @@
   },
   {
     "description": "Dorgesh-Kaan - Stone - Metallic - Wall top",
-    "baseMaterial": "SMOOTH_STONE",
+    "baseMaterial": "ROCK_2",
     "objectIds": [
       "DORGESH_1WALLS_TUNNEL_TOP",
       "DORGESH_1WALLS_TUNNEL_TOP_EDGE",
       "DORGESH_1WALLS_TUNNEL_TOP_CORNER",
-      "DORGESH_1WALLS_TUNNEL_TOP_CORNER_INVERSE"
+      "DORGESH_1WALLS_TUNNEL_TOP_CORNER_INVERSE",
+      "DORGESH_4WALLS_TUNNEL_TOP",
+      "DORGESH_4WALLS_TUNNEL_TOP_EDGE",
+      "DORGESH_4WALLS_SWAMP_JOIN_TOP",
+      "DORGESH_4WALLS_SWAMP_JOIN_TOP_DOOR",
+      "DORGESH_4WALLS_SWAMP_JOIN_TOP_DOOR_MIRROR"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Walls with metallic Rails",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_2WALLS_COLUMN",
+      "DORGESH_2WALLS_COLUMN_TERM",
+      "DORGESH_2WALLS_COLUMN_TERM_MIRROR",
+      "DORGESH_2FEATURE_COLUMN",
+      "DORGESH_2STUMP_COLUMN",
+      "DORGESH_3WALLS_ARCH_TERM_R",
+      "DORGESH_3WALLS_ARCH_TERM_L",
+      "DORGESH_3WALLS_ARCH",
+      "DORGESH_2WALLS_ARCHES",
+      "DORGESH_3WALLS_ARCH_WINDOW",
+      "DORGESH_3WALLS_ARCH_WINDOW_MIRROR",
+      "DORGESH_3WALLS_ARCH_BUTRESS",
+      "DORGESH_3WALLS_ARCH_BUTRESS_R",
+      "DORGESH_3WALLS_ARCH_BUTRESS_L",
+      "DORGESH_3WALLS_BUTTRESS_DOUBLE",
+      "DORGESH_3WALLS_BUTTRESS_SINGLE_R",
+      "DORGESH_3WALLS_BUTTRESS_SINGLE_L"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Stairs with rails",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_2STAIRS_INTERNAL",
+      "DORGESH_2STAIRS_INTERNAL_TOP_LOWER"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - House Walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "objectIds": [
+      "DORGESH_INNER_WALL_SUPPORT",
+      "DORGESH_FIRST_WALLS_INNER_SUPPORT",
+      "DORGESH_GROUND_WALLS_INNER_SUPPORT",
+      "DORGESH_GROUND_WALLS_INNER",
+      "DORGESH_GROUND_WALLS_INNER_WINDOW",
+      "DORGESH_GROUND_WALLS_INNER_WINDOW_L_TERM",
+      "DORGESH_FIRST_WALLS_INNER",
+      "DORGESH_FIRST_WALLS_INNER_WINDOW",
+      "DORGESH_ROOF_INNER",
+      "DORGESH_GROUND_WALLS_INNER_THEATRE_ARCH",
+      "DORGESH_GROUND_WALLS_INNER_THEATRE_ARCH_MIRROR",
+      "DORGESH_GROUND_WALLS_INNER_SUPPORT_THEATRE",
+      "DORGESH_FIRST_WALLS_INNER_SUPPORT_THEATRE"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone -  Metallic - House Walls with metal features",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "colors": "a == 255 && s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_FIRST_WALLS_INNER_DOOR_TOP",
+      "DORGESH_GROUND_WALLS_INNER_WINDOW_POSH",
+      "DORGESH_GROUND_WALLS_INNER_WINDOW_POSH_R_TERM",
+      "DORGESH_GROUND_WALLS_INNER_WINDOW_POSH_L_TERM",
+      "DORGESH_FIRST_WALLS_INNER_WINDOW_POSH",
+      "DORGESH_FIRST_WALLS_INNER_DOOR_TOP_POSH",
+      "DORGESH_GROUND_WALLS_INNER_WINDOW_THEATRE",
+      "DORGESH_FIRST_WALLS_INNER_WINDOW_THEATRE",
+      "DORGESH_FIRST_WALLS_INNER_ARCH_TOP_THEATRE"
     ]
   },
   {
