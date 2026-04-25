@@ -43,6 +43,10 @@ import rs117.hd.utils.collections.IntHashSet;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_COUNT;
+import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_MAIN;
+import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_OVERLAY;
+import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_UNDERLAY;
 import static rs117.hd.scene.SceneContext.TILE_SKIP_FLAG;
 import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
@@ -460,16 +464,19 @@ public class ProceduralGenerator {
 	}
 
 	final class MainTileOverridesGenerator {
+		private final TileOverride[] overrides = new TileOverride[TILE_OVERRIDE_COUNT];
 		private final int[] worldPos = new int[3];
 		private final int[] ids = new int[2];
 
 		private void generate(SceneContext sceneContext, SceneContext preSceneCtx) {
-			Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
-			int sizeX = sceneContext.sizeX;
-			int sizeY = sceneContext.sizeZ;
-			sceneContext.tileOverrides = new TileOverride[MAX_Z][sizeX][sizeY];
+			final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+			final int sizeX = sceneContext.sizeX;
+			final int sizeY = sceneContext.sizeZ;
 
-			final boolean canReuse = preSceneCtx != null && sceneContext.scene.isInstance() == preSceneCtx.scene.isInstance() && sceneContext.currentArea == preSceneCtx.currentArea;
+			sceneContext.tileOverrideIndices = new int[MAX_Z][sizeX][sizeY];
+			sceneContext.tileOverrides.ensureCapacity(preSceneCtx != null ? preSceneCtx.tileOverrides.size() : 0);
+
+			final boolean canReuse = preSceneCtx != null && sceneContext.scene.isInstance() == preSceneCtx.scene.isInstance() && sceneContext.currentArea == preSceneCtx.currentArea && !preSceneCtx.tileOverrides.isEmpty();
 			final int dX = canReuse ? sceneContext.scene.getBaseX() - preSceneCtx.scene.getBaseX() : 0;
 			final int dY = canReuse ? sceneContext.scene.getBaseY() - preSceneCtx.scene.getBaseY() : 0;
 
@@ -492,20 +499,25 @@ public class ProceduralGenerator {
 			}
 		}
 
-		private void calculateTileOverride(SceneContext sceneContext, SceneContext prevSceneContext, Tile tile, int x, int y, int prevX, int prevY) {
+		private void calculateTileOverride(SceneContext sceneContext, SceneContext prevSceneContext, Tile tile, int tileExX, int tileExY, int prevTileExX, int prevTileExY) {
 			final int tileZ = tile.getRenderLevel();
 
-			TileOverride override = null;
-			if(prevSceneContext != null)
-				override = prevSceneContext.tileOverrides[tileZ][prevX][prevY];
-
-			if (override == null) {
-				sceneContext.extendedSceneToWorld(x, y, tileZ, worldPos);
-				tileOverrideManager.buildIdsFromTile(sceneContext, tile, ids);
-				override = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids);
+			if(prevSceneContext != null && prevSceneContext.getTileOverrides(tileZ, prevTileExX, prevTileExY, overrides)) {
+				sceneContext.setTileOverride(tileZ, tileExX, tileExY, overrides[0], overrides[1], overrides[2]);
+				return;
 			}
 
-			sceneContext.tileOverrides[tileZ][x][y] = override;
+			sceneContext.extendedSceneToWorld(tileExX, tileExY, tileZ, worldPos);
+			tileOverrideManager.buildIdsFromTile(sceneContext, tile, ids);
+			final var mainOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids);
+
+			final int overlayId = OVERLAY_FLAG | sceneContext.scene.getOverlayIds()[tileZ][tileExX][tileExY];
+			final int underlayId = sceneContext.scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+
+			final var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
+			final var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
+
+			sceneContext.setTileOverride(tileZ, tileExX, tileExY, mainOverride, underlayOverride, overlayOverride);
 		}
 	}
 
@@ -595,7 +607,7 @@ public class ProceduralGenerator {
 			if (tile.getSceneTilePaint() != null) {
 				// tile paint
 
-				var override = sceneContext.tileOverrides[plane][tileExX][tileExY];
+				var override = sceneContext.getTileOverride(plane, tileExX, tileExY, TILE_OVERRIDE_MAIN);
 				if (override.waterType != WaterType.NONE) {
 					// skip water tiles
 					return;
@@ -642,10 +654,8 @@ public class ProceduralGenerator {
 				final int[] faceColorsB = sceneTileModel.getTriangleColorB();
 				final int[] faceColorsC = sceneTileModel.getTriangleColorC();
 
-				int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];
-				int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
-				var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
-				var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
+				var overlayOverride = sceneContext.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_OVERLAY);
+				var underlayOverride = sceneContext.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_UNDERLAY);
 
 				for (int face = 0; face < faceCount; face++) {
 					faceVertexKeys(tile, face, vertices, hashes);
@@ -746,7 +756,6 @@ public class ProceduralGenerator {
 		private final int[][][] underwaterDepths = new int[MAX_Z][EXTENDED_SCENE_SIZE + 1][EXTENDED_SCENE_SIZE + 1];
 		private final int[][] vertices = new int[4][3];
 		private final int[] hashes = new int[4];
-		private final int[] worldPos = new int[3];
 
 		/**
 		 * Generates underwater terrain data by iterating through all Tiles in a given
@@ -805,7 +814,7 @@ public class ProceduralGenerator {
 						if (tile.getSceneTilePaint() != null) {
 							tileVertexKeys(sceneContext, tile, vertices, hashes);
 
-							var override = sceneContext.tileOverrides[z][x][y];
+							var override = sceneContext.getTileOverride(z, x, y, TILE_OVERRIDE_MAIN);
 							if (seasonalWaterType(override, tile.getSceneTilePaint().getTexture()) == WaterType.NONE) {
 								for (int i = 0; i < hashes.length; i++)
 									if (tile.getSceneTilePaint().getNeColor() != HIDDEN_HSL || override.forced)
@@ -851,11 +860,8 @@ public class ProceduralGenerator {
 							int faceCount = model.getFaceX().length;
 
 							int tileZ = tile.getRenderLevel();
-							sceneContext.extendedSceneToWorld(x, y, tileZ, worldPos);
-							int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][x][y];
-							int underlayId = scene.getUnderlayIds()[tileZ][x][y];
-							var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
-							var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
+							var overlayOverride = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_OVERLAY);
+							var underlayOverride = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_UNDERLAY);
 
 							// Stop tiles on the same X,Y coordinates on different planes from
 							// each generating water. Prevents undesirable results in certain places.

@@ -28,6 +28,11 @@ public class SceneContext {
 	public static final byte TILE_WATER_FLAG = 1;
 	public static final byte TILE_SKIP_FLAG = 1 << 1;
 
+	public static final int TILE_OVERRIDE_MAIN = 0;
+	public static final int TILE_OVERRIDE_UNDERLAY = 1;
+	public static final int TILE_OVERRIDE_OVERLAY = 2;
+	public static final int TILE_OVERRIDE_COUNT = 3;
+
 	public final Client client;
 	public final Scene scene;
 	public final int expandedMapLoadingChunks;
@@ -60,7 +65,8 @@ public class SceneContext {
 	public int uniqueModels;
 
 	// Terrain data
-	public TileOverride[][][] tileOverrides;
+	public int[][][] tileOverrideIndices;
+	public final ArrayList<TileOverride> tileOverrides = new ArrayList<>();
 	public Int2IntHashMap vertexTerrainColor;
 	public Int2ObjectHashMap<Material> vertexTerrainTexture;
 	public Int2ObjectHashMap<int[]> vertexTerrainNormals;
@@ -110,6 +116,66 @@ public class SceneContext {
 
 	public boolean isTileFlagSet(int plane, int x, int y, byte flag) {
 		return (tileFlags[plane][x][y] & flag) != 0;
+	}
+
+	public void setTileOverride(int plane, int x, int y, TileOverride mainOverride, TileOverride underlayOverride, TileOverride overlayOverride) {
+		assert tileOverrideIndices[plane][x][y] == 0;
+
+		int index = tileOverrides.size();
+		int packed = 0;
+		if(mainOverride != null) {
+			tileOverrides.add(mainOverride);
+			packed |= 1 << TILE_OVERRIDE_MAIN;
+		}
+
+		if(underlayOverride != null) {
+			tileOverrides.add(underlayOverride);
+			packed |= 1 << TILE_OVERRIDE_UNDERLAY;
+		}
+
+		if(overlayOverride != null) {
+			tileOverrides.add(overlayOverride);
+			packed |= 1 << TILE_OVERRIDE_OVERLAY;
+		}
+
+		if(index == tileOverrides.size())
+			return; // No overrides, nothing to do
+
+		packed |= index << TILE_OVERRIDE_COUNT;
+		tileOverrideIndices[plane][x][y] = packed;
+	}
+
+	public boolean getTileOverrides(int plane, int x, int y, TileOverride[] result) {
+		final int packed = tileOverrideIndices[plane][x][y];
+		if(packed == 0)
+			return false;
+
+		int offset = packed >> TILE_OVERRIDE_COUNT;
+		for(int i = 0; i < TILE_OVERRIDE_COUNT; i++) {
+			if((packed & (1 << i)) == 0)
+				continue;
+
+			result[i] = tileOverrides.get(offset++);
+		}
+
+		return true;
+	}
+
+	public TileOverride getTileOverride(int plane, int x, int y, int type) {
+		if(tileOverrideIndices == null)
+			return null;
+
+		final int packed = tileOverrideIndices[plane][x][y];
+		if(packed == 0 || (packed & (1 << type)) == 0)
+			return null;
+
+		int offset = packed >> TILE_OVERRIDE_COUNT;
+		for(int i = 0; i < type; i++) {
+			if((packed & (1 << i)) != 0)
+				offset++;
+		}
+
+		return tileOverrides.get(offset);
 	}
 
 	/**
