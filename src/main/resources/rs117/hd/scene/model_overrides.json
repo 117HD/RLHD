@@ -78994,11 +78994,12 @@
   },
   {
     "description": "Fix Waterfalls that are holes in the world without an opaque texture or hide in areas not needed",
-    "areas": [ "THE_GREAT_CONCH", "LUNAR_ISLE" ],
+    "areas": [ "THE_GREAT_CONCH", "LUNAR_ISLE", "RIVER_ELID_WATERFALL" ],
     "hideInAreas": [ "DS2_SHIPS" ],
     "textureMaterial": "WATER_FLAT_FLOW",
     "objectIds": [
-      "WATERFALL_OVERLAY"
+      "WATERFALL_OVERLAY",
+      "WATERFALL_OVERLAY_1_BRIGHTER"
     ]
   },
   {
