@@ -468,9 +468,11 @@ public class ProceduralGenerator {
 		private final TileOverride[] overrides = new TileOverride[TILE_OVERRIDE_COUNT];
 		private final int[] worldPos = new int[3];
 		private final int[] ids = new int[2];
-
+		
 		private void generate(SceneContext sceneContext, SceneContext preSceneCtx) {
 			final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+			final short[][][] overlayIds = sceneContext.scene.getOverlayIds();
+			final short[][][] underlayIds = sceneContext.scene.getUnderlayIds();
 			final int sizeX = sceneContext.sizeX;
 			final int sizeY = sceneContext.sizeZ;
 
@@ -491,32 +493,35 @@ public class ProceduralGenerator {
 						final int oX = x + dX;
 						final int oY = y + dY;
 						final boolean canReuseTile = canReuse && oX >= 0 && oX < sizeX && oY >= 0 && oY < sizeY;
-						calculateTileOverride(sceneContext, canReuseTile ? preSceneCtx : null, tile, x, y, oX, oY);
 
-						if(tile.getBridge() != null)
-							calculateTileOverride(sceneContext, canReuseTile ? preSceneCtx : null, tile.getBridge(), x, y, oX, oY);
+						int tileZ = tile.getRenderLevel();
+						ids[0] = OVERLAY_FLAG | overlayIds[tileZ][x][y];
+						ids[1] = underlayIds[tileZ][x][y];
+						calculateTileOverride(sceneContext, canReuseTile ? preSceneCtx : null, tile, tileZ, x, y, oX, oY);
+
+						final Tile bridge = tile.getBridge();
+						if(bridge != null) {
+							tileZ = bridge.getRenderLevel();
+							ids[0] = OVERLAY_FLAG | overlayIds[tileZ][x][y];
+							ids[1] = underlayIds[tileZ][x][y];
+							calculateTileOverride(sceneContext, canReuseTile ? preSceneCtx : null, bridge, tileZ, x, y, oX, oY);
+						}
 					}
 				}
 			}
 		}
 
-		private void calculateTileOverride(SceneContext sceneContext, SceneContext prevSceneContext, Tile tile, int tileExX, int tileExY, int prevTileExX, int prevTileExY) {
-			final int tileZ = tile.getRenderLevel();
-
+		private void calculateTileOverride(SceneContext sceneContext, SceneContext prevSceneContext, Tile tile, int tileZ, int tileExX, int tileExY, int prevTileExX, int prevTileExY) {
 			if(prevSceneContext != null && prevSceneContext.getTileOverrides(tileZ, prevTileExX, prevTileExY, overrides)) {
 				sceneContext.setTileOverride(tileZ, tileExX, tileExY, overrides[0], overrides[1], overrides[2]);
 				return;
 			}
 
 			sceneContext.extendedSceneToWorld(tileExX, tileExY, tileZ, worldPos);
-			tileOverrideManager.buildIdsFromTile(sceneContext, tile, ids);
+
 			final var mainOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids);
-
-			final int overlayId = OVERLAY_FLAG | sceneContext.scene.getOverlayIds()[tileZ][tileExX][tileExY];
-			final int underlayId = sceneContext.scene.getUnderlayIds()[tileZ][tileExX][tileExY];
-
-			final var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
-			final var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
+			final var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids[1]);
+			final var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids[0]);
 
 			sceneContext.setTileOverride(tileZ, tileExX, tileExY, mainOverride, underlayOverride, overlayOverride);
 		}
