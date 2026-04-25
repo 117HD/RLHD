@@ -14,3 +14,4 @@ nb-configuration.xml
 nbproject/
 hs_err_pid*
 shader-dumps/
+**/*.log

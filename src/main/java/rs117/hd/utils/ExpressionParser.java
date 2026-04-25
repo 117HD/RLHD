@@ -186,6 +186,8 @@ public class ExpressionParser {
 		OR("||", 1, 2),
 		TERNARY("?", 0, 3);
 
+		static final Operator[] OPERATORS = values();
+
 		final String symbol;
 		final int precedence;
 		final int numOperands;
@@ -686,7 +688,7 @@ public class ExpressionParser {
 		while (!ctx.done()) {
 			ctx.skipWhitespace();
 			ctx.op = null;
-			for (var op : Operator.values()) {
+			for (var op : Operator.OPERATORS) {
 				// Skip lower precedence operators
 				if (op.precedence >= ctx.minPrecedence && ctx.expr.startsWith(op.symbol, ctx.index)) {
 					if (op == Operator.TERNARY) {

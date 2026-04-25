@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 
 public class UIShaderProgram extends ShaderProgram {
-	private final UniformTexture uniTextureArray = addUniformTexture("uniUiTexture");
+	private final UniformTexture uniUiTexture = addUniformTexture("uiTexture");
 
 	public UIShaderProgram() {
 		super(t -> t
@@ -14,6 +14,6 @@ public class UIShaderProgram extends ShaderProgram {
 
 	@Override
 	protected void initialize() {
-		uniTextureArray.set(TEXTURE_UNIT_UI);
+		uniUiTexture.set(TEXTURE_UNIT_UI);
 	}
 }

@@ -24,8 +24,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
 
-void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
+#include <utils/constants.glsl>
+
+void computeUvs(const int materialData, const int worldViewIndex, const vec3 pos[3], inout vec3 uvw[3]) {
     if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {
         // Treat the input uvw as a normal vector for a plane that goes through origo,
         // and find the distance from the point to the plane
@@ -41,6 +44,12 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
         for (int i = 0; i < 3; i++)
             uvw[i].xy = (TBN * pos[i]).xy / 128. * scale;
     } else if ((materialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+        #if ZONE_RENDERER
+            // Vanilla UVs are relative to vertex positions
+            for (int i = 0; i < 3; i++)
+                uvw[i] = pos[i] + mat3(getWorldViewProjection(worldViewIndex)) * uvw[i];
+        #endif
+
         vec3 v1 = uvw[0];
         vec3 v2 = uvw[1] - v1;
         vec3 v3 = uvw[2] - v1;
@@ -68,4 +77,23 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
             );
         }
     }
+}
+
+vec2 computeVertexUvs(int materialData, const vec3 pos, const vec3 uvw) {
+    if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {
+        // Treat the input uvw as a normal vector for a plane that goes through origo,
+        // and find the distance from the point to the plane
+        float scale = 1. / length(uvw);
+
+        vec3 N = uvw * scale;
+        vec3 C1 = cross(vec3(0, 0, 1), N);
+        vec3 C2 = cross(vec3(0, 1, 0), N);
+        vec3 T = normalize(length(C1) > length(C2) ? C1 : C2);
+        vec3 B = cross(N, T);
+        mat3 TBN = mat3(T, B, N);
+
+        return (TBN * pos).xy / 128. * scale;
+    }
+
+    return uvw.xy;
 }

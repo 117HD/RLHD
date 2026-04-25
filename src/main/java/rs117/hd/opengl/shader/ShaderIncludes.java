@@ -69,6 +69,7 @@ public class ShaderIncludes {
 		var clone = new ShaderIncludes();
 		clone.includeProcessors.addAll(includeProcessors);
 		clone.includePaths.addAll(includePaths);
+		clone.includeMap.putAll(includeMap);
 		clone.uniformBuffers.addAll(uniformBuffers);
 		return clone;
 	}

@@ -84,6 +84,17 @@ public class Area {
 		return containsPoint(true, worldPoint);
 	}
 
+	public boolean intersects(boolean includeUnhiding, int minX, int minY, int maxX, int maxY) {
+		for (AABB aabb : aabbs)
+			if (aabb.intersects(minX, minY, maxX, maxY))
+				return true;
+		if (includeUnhiding)
+			for (var aabb : unhideAreas)
+				if (aabb.intersects(minX, minY, maxX, maxY))
+					return true;
+		return false;
+	}
+
 	public boolean intersects(Area otherArea) {
 		if (otherArea == null)
 			return false;

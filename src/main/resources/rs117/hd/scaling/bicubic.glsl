@@ -107,7 +107,7 @@ vec4 textureCubic(sampler2D sampler, vec2 texCoords)
 
     vec4 c;
 
-    #if UI_SCALING_MODE == SAMPLING_CATROM
+    #if UI_SCALING_MODE == UI_SCALING_MODE_CATROM
         // catrom benefits from anti-ringing, which requires knowledge of the minimum and maximum samples in the kernel
         vec4 min_sample = vec4(FLT_MAX);
         vec4 max_sample = vec4(FLT_MIN);
@@ -139,7 +139,7 @@ vec4 textureCubic(sampler2D sampler, vec2 texCoords)
         c = clamp(c, min_sample, max_sample);
         // mix according to anti-ringing strength
         c = mix(aux, c, CR_AR_STRENGTH);
-    #elif UI_SCALING_MODE == SAMPLING_MITCHELL
+    #elif UI_SCALING_MODE == UI_SCALING_MODE_MITCHELL
         for (int m = -1; m <= 2; m++)
         {
             for (int n = -1; n <= 2; n++)

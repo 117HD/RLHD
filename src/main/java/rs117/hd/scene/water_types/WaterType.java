@@ -25,6 +25,7 @@ import static rs117.hd.utils.ColorUtils.rgb;
 @Setter(AccessLevel.PROTECTED)
 public class WaterType {
 	public String name;
+	public int vanillaTextureIndex = -1;
 	private boolean flat = false;
 	private float specularStrength = .5f;
 	private float specularGloss = 500;

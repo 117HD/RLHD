@@ -11,6 +11,10 @@
         "type": "string",
         "description": "Identifier used to refer to the water type."
       },
+      "vanillaTextureIndex": {
+        "type": "integer",
+        "description": "Defines a fallback water type for a specific vanilla texture."
+      },
       "flat": {
         "type": "boolean",
         "description": "Whether the water type should be opaque, i.e. not show any underwater geometry."

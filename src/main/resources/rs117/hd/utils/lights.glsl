@@ -36,18 +36,28 @@ void calculateLighting(
     inout vec3 pointLightsOut, inout vec3 pointLightsSpecularOut
 ) {
     #if TILED_LIGHTING
-        ivec2 tileXY = ivec2(floor(gl_FragCoord.xy / sceneResolution * tiledLightingResolution));
+        ivec2 tileXY = ivec2(gl_FragCoord.xy / sceneResolution * tiledLightingResolution);
 
         for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
-            ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
+            uvec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
+            ivec2 unpackedData = ivec2(0);
 
-            #define PROCESS_TILED_LIGHT_COMPONENT(c)            \
-                if (tileLayerData[c] <= 0)                      \
-                    break;                                      \
-                calculateLight(tileLayerData[c] - 1,            \
-                    position, normals, viewDir,                 \
-                    texBlend, specularGloss, specularStrength,  \
-                    pointLightsOut, pointLightsSpecularOut);
+            #define PROCESS_TILED_LIGHT_COMPONENT(c)                 \
+                if (tileLayerData[c] <= 0u)                          \
+                    break;                                           \
+                unpackedData = decodePackedLight(tileLayerData[c]);  \
+                                                                     \
+                if (unpackedData[0] >= 0)                            \
+                    calculateLight(unpackedData[0],                  \
+                        position, normals, viewDir,                  \
+                        texBlend, specularGloss, specularStrength,   \
+                        pointLightsOut, pointLightsSpecularOut);     \
+                                                                     \
+                if (unpackedData[1] >= 0)                            \
+                    calculateLight(unpackedData[1],                  \
+                        position, normals, viewDir,                  \
+                        texBlend, specularGloss, specularStrength,   \
+                        pointLightsOut, pointLightsSpecularOut);
 
             PROCESS_TILED_LIGHT_COMPONENT(0);
             PROCESS_TILED_LIGHT_COMPONENT(1);

@@ -70,6 +70,7 @@ public class TileOverride {
 	public transient int index;
 	public transient int[] ids;
 	public transient boolean queriedAsOverlay;
+	public transient TileOverride replacement;
 	@Nonnull
 	private transient List<Map.Entry<ExpressionPredicate, TileOverride>> replacements = Collections.emptyList();
 
@@ -137,6 +138,14 @@ public class TileOverride {
 		if (setLightness != -1)
 			minLightness = maxLightness = setLightness;
 
+		// Enforce sensible limits
+		minHue = clamp(minHue, 0, 0x3F);
+		maxHue = clamp(maxHue, 0, 0x3F);
+		minSaturation = clamp(minSaturation, 0, 0x7);
+		maxSaturation = clamp(maxSaturation, 0, 0x7);
+		minLightness = clamp(minLightness, 0, 0x7F);
+		maxLightness = clamp(maxLightness, 0, 0x7F);
+
 		// Convert UV scale to reciprocal, so we can multiply instead of dividing later
 		uvScale = 1 / uvScale;
 
@@ -199,20 +208,19 @@ public class TileOverride {
 
 	public TileOverride resolveConstantReplacements() {
 		// Check if the override always resolves to the same replacement override
-		for (var entry : replacements) {
+		var override = this;
+		// Enhanced for loop here causes the original iterator to be used without replacements
+		for (int i = 0; i < override.replacements.size(); i++) {
+			var entry = override.replacements.get(i);
 			var predicate = entry.getKey();
 			// Stop on the first non-constant predicate
 			if (predicate != ExpressionPredicate.TRUE)
 				break;
 
-			if (predicate.test()) {
-				return entry.getValue();
-			} else {
-				assert false : "Constant false expressions should be filtered out by this point";
-			}
+			override = entry.getValue();
 		}
 
-		return this;
+		return override;
 	}
 
 	public TileOverride resolveReplacements(VariableSupplier vars) {

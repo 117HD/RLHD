@@ -30,12 +30,16 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ShadingMode {
-	DEFAULT("117 HD"),
-	VANILLA("Vanilla"),
-	NONE("None"),
+	DEFAULT("117 HD", false, true, true),
+	VANILLA("Vanilla", false, false, false),
+	NONE("None", true, false, false),
+	UNLIT("Experimental", true, false, true),
 	;
 
 	private final String name;
+	public final boolean unlitFaceColors;
+	public final boolean undoVanillaShading;
+	public final boolean directionalShading;
 
 	@Override
 	public String toString() {

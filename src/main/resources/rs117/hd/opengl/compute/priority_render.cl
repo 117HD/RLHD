@@ -568,13 +568,13 @@ void sort_and_insert(
 
     #if UNDO_VANILLA_SHADING
         if ((thisrvA.ahsl >> 20 & 1) == 0) {
-            if (fast_length(normA) == 0) {
+            if (fast_length(normA.xyz) == 0) {
                 // Compute flat normal if necessary, and rotate it back to match unrotated normals
                 float3 N = cross(
                   (float3)(thisrvA.x - thisrvB.x, thisrvA.y - thisrvB.y, thisrvA.z - thisrvB.z),
                   (float3)(thisrvA.x - thisrvC.x, thisrvA.y - thisrvC.y, thisrvA.z - thisrvC.z)
                 );
-                normA = normB = normC = (float4) (N, 1.f);
+                normA.xyz = normB.xyz = normC.xyz = N;
             }
             undoVanillaShading(&thisrvA, normA.xyz);
             undoVanillaShading(&thisrvB, normB.xyz);

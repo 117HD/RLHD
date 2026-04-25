@@ -3,13 +3,22 @@ package rs117.hd.opengl.shader;
 import java.io.IOException;
 import org.lwjgl.opengl.*;
 
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
+
 public class ModelSortingComputeProgram extends ShaderProgram {
 	public final int threadCount, facesPerThread;
+
+	private final UniformTexture uniTileHeightMap = addUniformTexture("tileHeightMap");
 
 	public ModelSortingComputeProgram(int threadCount, int facesPerThread) {
 		super(t -> t.add(GL43C.GL_COMPUTE_SHADER, "comp.glsl"));
 		this.threadCount = threadCount;
 		this.facesPerThread = facesPerThread;
+	}
+
+	@Override
+	protected void initialize() {
+		uniTileHeightMap.set(TEXTURE_UNIT_TILE_HEIGHT_MAP);
 	}
 
 	@Override

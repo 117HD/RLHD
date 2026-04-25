@@ -7,7 +7,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 public class Light
 {
-	public static final float VISIBILITY_FADE = 0.1f;
+	public static final float VISIBILITY_FADE = 0.064f;
 
 	public final float randomOffset = RAND.nextFloat();
 	public final LightDefinition def;
@@ -56,9 +56,9 @@ public class Light
 	public Projectile projectile;
 	public TileObject tileObject;
 	public GraphicsObject graphicsObject;
+	public int tileObjectId;
 	public int spotanimId = -1;
 	public int[] projectileRefCounter;
-	public long hash;
 
 	public int sizeX = 1;
 	public int sizeY = 1;
@@ -91,7 +91,7 @@ public class Light
 			dynamicLifetime = false;
 		}
 
-		animationSpecific = !def.animationIds.isEmpty();
+		animationSpecific = def.waitForAnimation || !def.animationIds.isEmpty();
 		if (animationSpecific) {
 			persistent = replayable = true;
 			// Initially hide the light
@@ -105,8 +105,8 @@ public class Light
 
 	public void toggleTemporaryVisibility(boolean changedPlanes) {
 		hiddenTemporarily = !hiddenTemporarily;
-		// If visibility changes due to something other than changing planes, fade in or out
-		if (!changedPlanes) {
+		// If visibility changes due to something other than changing planes, and the light didn't spawn this frame, fade in or out
+		if (!changedPlanes && elapsedTime > 0) {
 			// Begin fading in or out, while accounting for time already spent fading out or in respectively
 			float beginFadeAt = elapsedTime;
 			if (changedVisibilityAt != -1)

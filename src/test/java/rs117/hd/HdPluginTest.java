@@ -8,12 +8,17 @@ import net.runelite.client.RuneLiteProperties;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 import rs117.hd.utils.Props;
 
-@SuppressWarnings("unchecked")
 @Slf4j
+@SuppressWarnings("unchecked")
 public class HdPluginTest
 {
 	public static void main(String[] args) throws Exception
 	{
+		log.warn(
+			"If this is your first time using the HdPluginTest run configuration, " +
+			"this window will filter on WARN-level logging by default"
+		);
+
 		Props.DEVELOPMENT = true;
 		Props.set("rlhd.resource-path", "src/main/resources");
 		ClassLoader.getSystemClassLoader().setDefaultAssertionStatus(true);

@@ -3,7 +3,6 @@ package rs117.hd.opengl.uniforms;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.buffer.GLBuffer;
 
@@ -19,6 +18,7 @@ public class UBOMaterials extends UniformBuffer<GLBuffer> {
 		public Property roughnessMap = addProperty(PropertyType.Int, "roughnessMap");
 		public Property ambientOcclusionMap = addProperty(PropertyType.Int, "ambientOcclusionMap");
 		public Property flowMap = addProperty(PropertyType.Int, "flowMap");
+		public Property shadowAlphaMap = addProperty(PropertyType.Int, "shadowAlphaMap");
 		public Property flags = addProperty(PropertyType.Int, "flags");
 		public Property brightness = addProperty(PropertyType.Float, "brightness");
 		public Property displacementScale = addProperty(PropertyType.Float, "displacementScale");
@@ -35,7 +35,7 @@ public class UBOMaterials extends UniformBuffer<GLBuffer> {
 
 	public UBOMaterials(int materialCount) {
 		super(GL_STATIC_DRAW);
-		assert materialCount - 1 <= ModelPusher.MAX_MATERIAL_INDEX :
+		assert materialCount - 1 <= Material.MAX_MATERIAL_INDEX :
 			"Too many materials (" + materialCount + ") to fit into packed material data.";
 		uboStructs = addStructs(new MaterialStruct[materialCount], MaterialStruct::new);
 		initialize(HdPlugin.UNIFORM_BLOCK_MATERIALS);

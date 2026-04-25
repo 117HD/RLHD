@@ -64,7 +64,7 @@ public class GroundMaterialManager {
 
 				// Reload everything which depends on ground materials
 				if (!first)
-					tileOverrideManager.reload(true);
+					tileOverrideManager.reload(false);
 			} catch (IOException ex) {
 				log.error("Failed to load ground materials:", ex);
 			}

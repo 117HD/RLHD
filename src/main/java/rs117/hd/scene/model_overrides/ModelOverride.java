@@ -7,10 +7,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.scene.GamevalManager;
@@ -57,6 +59,7 @@ public class ModelOverride
 	public int uvOrientationZ = 0;
 	public int rotate = 0;
 	public boolean hide = false;
+	public boolean disableDetailCulling = false;
 	public boolean retainVanillaUvs = true;
 	public boolean forceMaterialChanges = false;
 	public boolean flatNormals = false;
@@ -67,12 +70,17 @@ public class ModelOverride
 	public boolean castShadows = true;
 	public boolean receiveShadows = true;
 	public boolean terrainVertexSnap = false;
+	public boolean undoVanillaShading = true;
+	private boolean hideAsWaterEffect = false;
+	public float terrainVertexSnapThreshold = 0.125f;
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
+	public int depthBias = -1;
+	public boolean disablePrioritySorting = false;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -83,15 +91,22 @@ public class ModelOverride
 	private JsonElement colors;
 
 	public transient boolean isDummy;
+	public transient boolean isGenerated;
 	public transient Map<AABB, ModelOverride> areaOverrides;
 	public transient AhslPredicate ahslCondition;
+	public transient boolean hasTransparency;
+	public transient boolean mightHaveTransparency;
+	public transient boolean modifiesVanillaTexture;
+
+	// Transient not volatile, since access order can be random as it'll mean we'll just fall back to the full lookup
+	private transient long cachedColorOverrideAhsl = -1;
 
 	@FunctionalInterface
 	public interface AhslPredicate {
 		boolean test(int ahsl);
 	}
 
-	public void normalize(VanillaShadowMode vanillaShadowMode) {
+	public void normalize(HdPlugin plugin) {
 		// Ensure there are no nulls in case of invalid configuration during development
 		if (baseMaterial == null) {
 			if (Props.DEVELOPMENT)
@@ -130,24 +145,47 @@ public class ModelOverride
 			windDisplacementModifier = clamp(windDisplacementModifier, -3, 3);
 		}
 
+		modifiesVanillaTexture = textureMaterial.modifiesVanillaTexture;
+
+		boolean disableTextures = !plugin.configModelTextures && !forceMaterialChanges;
+		if (disableTextures) {
+			if (baseMaterial.modifiesVanillaTexture)
+				baseMaterial = Material.NONE;
+			if (textureMaterial.modifiesVanillaTexture)
+				textureMaterial = Material.NONE;
+		}
+
 		if (areas == null)
 			areas = new AABB[0];
 		if (hideInAreas == null)
 			hideInAreas = new AABB[0];
 
+		hasTransparency = mightHaveTransparency =
+			baseMaterial.hasTransparency ||
+			textureMaterial.hasTransparency ||
+			tzHaarRecolorType != TzHaarRecolorType.NONE;
+
+		hide |= hideAsWaterEffect && plugin.configHideVanillaWaterEffects;
+
 		if (materialOverrides != null) {
 			var normalized = new HashMap<Material, ModelOverride>();
 			for (var entry : materialOverrides.entrySet()) {
 				var override = entry.getValue();
-				override.normalize(vanillaShadowMode);
+				override.normalize(plugin);
+				if (disableTextures && override.modifiesVanillaTexture)
+					continue;
+				mightHaveTransparency |= override.mightHaveTransparency;
 				normalized.put(entry.getKey(), override);
 			}
+			if (normalized.isEmpty())
+				normalized = null;
 			materialOverrides = normalized;
 		}
 
 		if (colorOverrides != null) {
 			for (var override : colorOverrides) {
-				override.normalize(vanillaShadowMode);
+				override.normalize(plugin);
+				mightHaveTransparency |= override.mightHaveTransparency;
 				override.ahslCondition = parseAhslConditions(override.colors);
 			}
 		}
@@ -160,9 +198,9 @@ public class ModelOverride
 			uvOrientationZ = uvOrientation;
 
 		if (retainVanillaShadowsInPvm) {
-			if (vanillaShadowMode.retainInPvm)
+			if (plugin.configVanillaShadowMode.retainInPvm)
 				hideVanillaShadows = false;
-			if (vanillaShadowMode == VanillaShadowMode.PREFER_IN_PVM && hideHdShadowsInPvm)
+			if (plugin.configVanillaShadowMode == VanillaShadowMode.PREFER_IN_PVM && hideHdShadowsInPvm)
 				castShadows = false;
 		}
 
@@ -189,6 +227,7 @@ public class ModelOverride
 			uvOrientationZ,
 			rotate,
 			hide,
+			disableDetailCulling,
 			retainVanillaUvs,
 			forceMaterialChanges,
 			flatNormals,
@@ -199,19 +238,30 @@ public class ModelOverride
 			castShadows,
 			receiveShadows,
 			terrainVertexSnap,
+			undoVanillaShading,
+			hideAsWaterEffect,
+			terrainVertexSnapThreshold,
 			shadowOpacityThreshold,
 			tzHaarRecolorType,
 			inheritTileColorType,
 			windDisplacementMode,
 			windDisplacementModifier,
 			invertDisplacementStrength,
+			depthBias,
+			disablePrioritySorting,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
 			colors,
 			isDummy,
+			isGenerated,
 			areaOverrides,
-			ahslCondition
+			ahslCondition,
+			hasTransparency,
+			mightHaveTransparency,
+			modifiesVanillaTexture,
+			// Runtime caching fields
+			-1
 		);
 	}
 
@@ -339,7 +389,7 @@ public class ModelOverride
 		}
 	}
 
-	public void fillUvsForFace(float[] out, Model model, int orientation, UvType uvType, int face) {
+	public void fillUvsForFace(float[] out, Model model, int orientation, UvType uvType, int face, float[] workingSpace) {
 		switch (uvType) {
 			case WORLD_XY:
 			case WORLD_XZ:
@@ -370,7 +420,7 @@ public class ModelOverride
 				break;
 			}
 			case BOX:
-				computeBoxUvw(out, model, orientation, face);
+				computeBoxUvw(out, model, orientation, face, workingSpace);
 				break;
 			case VANILLA: {
 				final byte[] textureFaces = model.getTextureFaces();
@@ -412,22 +462,26 @@ public class ModelOverride
 		}
 	}
 
-	private void computeBoxUvw(float[] out, Model model, int modelOrientation, int face) {
-		final float[][] vertexXYZ = {
-			model.getVerticesX(),
-			model.getVerticesY(),
-			model.getVerticesZ()
-		};
-		final int[] triABC = {
-			model.getFaceIndices1()[face],
-			model.getFaceIndices2()[face],
-			model.getFaceIndices3()[face]
-		};
+	@SuppressWarnings({ "PointlessArithmeticExpression", "UnnecessaryLocalVariable" })
+	private void computeBoxUvw(float[] out, Model model, int modelOrientation, int face, float[] workingSpace) {
+		final float[] verticesX = model.getVerticesX();
+		final float[] verticesY = model.getVerticesY();
+		final float[] verticesZ = model.getVerticesZ();
 
-		float[][] v = new float[3][3];
-		for (int tri = 0; tri < 3; tri++)
-			for (int i = 0; i < 3; i++)
-				v[tri][i] = vertexXYZ[i][triABC[tri]];
+		final float[] v = workingSpace;
+		int vidx;
+		vidx = model.getFaceIndices1()[face];
+		v[0 * 3 + 0] = verticesX[vidx];
+		v[0 * 3 + 1] = verticesY[vidx];
+		v[0 * 3 + 2] = verticesZ[vidx];
+		vidx = model.getFaceIndices2()[face];
+		v[1 * 3 + 0] = verticesX[vidx];
+		v[1 * 3 + 1] = verticesY[vidx];
+		v[1 * 3 + 2] = verticesZ[vidx];
+		vidx = model.getFaceIndices3()[face];
+		v[2 * 3 + 0] = verticesX[vidx];
+		v[2 * 3 + 1] = verticesY[vidx];
+		v[2 * 3 + 2] = verticesZ[vidx];
 
 		float rad, cos, sin;
 		float temp;
@@ -438,31 +492,33 @@ public class ModelOverride
 			sin = sin(rad);
 
 			for (int i = 0; i < 3; i++) {
-				temp = v[i][0] * sin + v[i][2] * cos;
-				v[i][0] = v[i][0] * cos - v[i][2] * sin;
-				v[i][2] = temp;
+				temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+				v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+				v[i * 3 + 2] = temp;
 			}
 		}
 
 		for (int i = 0; i < 3; i++) {
-			v[i][0] = (v[i][0] / LOCAL_TILE_SIZE + .5f) / uvScale;
-			v[i][1] = (v[i][1] / LOCAL_TILE_SIZE + .5f) / uvScale;
-			v[i][2] = (v[i][2] / LOCAL_TILE_SIZE + .5f) / uvScale;
+			v[i * 3] = (v[i * 3] / LOCAL_TILE_SIZE + .5f) / uvScale;
+			v[i * 3 + 1] = (v[i * 3 + 1] / LOCAL_TILE_SIZE + .5f) / uvScale;
+			v[i * 3 + 2] = (v[i * 3 + 2] / LOCAL_TILE_SIZE + .5f) / uvScale;
 		}
 
-		// Compute face normal
-		float[] a = subtract(v[1], v[0]);
-		float[] b = subtract(v[2], v[0]);
-		float[] n = cross(a, b);
-		float[] absN = abs(n);
+		// Compute face normal as cross(v[1] - v[0], v[2] - v[0])
+		float nx = (v[3 + 1] - v[1]) * (v[6 + 2] - v[2]) - (v[3 + 2] - v[2]) * (v[6 + 1] - v[1]);
+		float ny = (v[3 + 2] - v[2]) * (v[6 + 0] - v[0]) - (v[3 + 0] - v[0]) * (v[6 + 2] - v[2]);
+		float nz = (v[3 + 0] - v[0]) * (v[6 + 1] - v[1]) - (v[3 + 1] - v[1]) * (v[6 + 0] - v[0]);
+		float absNx = abs(nx);
+		float absNy = abs(ny);
+		float absNz = abs(nz);
 
 		out[2] = out[6] = out[10] = 0;
-		if (absN[0] > absN[1] && absN[0] > absN[2]) {
+		if (absNx > absNy && absNx > absNz) {
 			// YZ plane
-			float flip = sign(n[0]);
+			float flip = sign(nx);
 			for (int tri = 0; tri < 3; tri++) {
-				out[tri * 4] = flip * -v[tri][2];
-				out[tri * 4 + 1] = v[tri][1];
+				out[tri * 4] = flip * -v[tri * 3 + 2];
+				out[tri * 4 + 1] = v[tri * 3 + 1];
 			}
 
 			if (uvOrientationX % 2048 != 0) {
@@ -472,21 +528,21 @@ public class ModelOverride
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
-					v[i][0] = out[j] - .5f;
-					v[i][2] = out[j + 1] - .5f;
-					temp = v[i][0] * sin + v[i][2] * cos;
-					v[i][0] = v[i][0] * cos - v[i][2] * sin;
-					v[i][2] = temp;
-					out[j] = v[i][0] + .5f;
-					out[j + 1] = v[i][2] + .5f;
+					v[i * 3] = out[j] - .5f;
+					v[i * 3 + 2] = out[j + 1] - .5f;
+					temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+					v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+					v[i * 3 + 2] = temp;
+					out[j] = v[i * 3] + .5f;
+					out[j + 1] = v[i * 3 + 2] + .5f;
 				}
 			}
-		} else if (absN[1] > absN[0] && absN[1] > absN[2]) {
+		} else if (absNy > absNx && absNy > absNz) {
 			// XZ
-			float flip = sign(n[1]);
+			float flip = sign(ny);
 			for (int tri = 0; tri < 3; tri++) {
-				out[tri * 4] = flip * -v[tri][0];
-				out[tri * 4 + 1] = v[tri][2];
+				out[tri * 4] = flip * -v[tri * 3];
+				out[tri * 4 + 1] = v[tri * 3 + 2];
 			}
 
 			if (uvOrientationY % 2048 != 0) {
@@ -496,21 +552,21 @@ public class ModelOverride
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
-					v[i][0] = out[j] - .5f;
-					v[i][2] = out[j + 1] - .5f;
-					temp = v[i][0] * sin + v[i][2] * cos;
-					v[i][0] = v[i][0] * cos - v[i][2] * sin;
-					v[i][2] = temp;
-					out[j] = v[i][0] + .5f;
-					out[j + 1] = v[i][2] + .5f;
+					v[i * 3] = out[j] - .5f;
+					v[i * 3 + 2] = out[j + 1] - .5f;
+					temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+					v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+					v[i * 3 + 2] = temp;
+					out[j] = v[i * 3] + .5f;
+					out[j + 1] = v[i * 3 + 2] + .5f;
 				}
 			}
 		} else {
 			// XY
-			float flip = sign(n[2]);
+			float flip = sign(nz);
 			for (int tri = 0; tri < 3; tri++) {
-				out[tri * 4] = flip * v[tri][0];
-				out[tri * 4 + 1] = v[tri][1];
+				out[tri * 4] = flip * v[tri * 3];
+				out[tri * 4 + 1] = v[tri * 3 + 1];
 			}
 
 			if (uvOrientationZ % 2048 != 0) {
@@ -520,13 +576,13 @@ public class ModelOverride
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
-					v[i][0] = out[j] - .5f;
-					v[i][2] = out[j + 1] - .5f;
-					temp = v[i][0] * sin + v[i][2] * cos;
-					v[i][0] = v[i][0] * cos - v[i][2] * sin;
-					v[i][2] = temp;
-					out[j] = v[i][0] + .5f;
-					out[j + 1] = v[i][2] + .5f;
+					v[i * 3] = out[j] - .5f;
+					v[i * 3 + 2] = out[j + 1] - .5f;
+					temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+					v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+					v[i * 3 + 2] = temp;
+					out[j] = v[i * 3] + .5f;
+					out[j + 1] = v[i * 3 + 2] + .5f;
 				}
 			}
 		}
@@ -567,5 +623,27 @@ public class ModelOverride
 				model.rotateY90Ccw();
 				break;
 		}
+	}
+
+	@Nullable
+	public final ModelOverride testColorOverrides(int ahsl) {
+		ModelOverride override = null;
+		final long packedAhl = cachedColorOverrideAhsl;
+		if (packedAhl != -1 && ahsl == (int) packedAhl)
+			override = colorOverrides[(int) (packedAhl >> 32)];
+
+		if (override == null) {
+			final int len = colorOverrides.length;
+			for (int i = 0; i < len; ++i) {
+				final var inner = colorOverrides[i];
+				if (inner.ahslCondition.test(ahsl)) {
+					cachedColorOverrideAhsl = ahsl | (long) i << 32;
+					override = inner;
+					break;
+				}
+			}
+		}
+
+		return override;
 	}
 }

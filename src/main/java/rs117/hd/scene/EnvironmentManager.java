@@ -25,7 +25,9 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -166,6 +168,18 @@ public class EnvironmentManager {
 					throw new IOException("Empty or invalid: " + path);
 				log.debug("Loaded {} environments", environments.length);
 
+				if (!config.legacyTobEnvironment()) {
+					var legacyEnvs = List.of("TOB_ROOM_VAULT_LEGACY", "THEATRE_OF_BLOOD_LEGACY");
+					environments = Arrays.stream(environments)
+						.filter(env -> env.key == null || !legacyEnvs.contains(env.key))
+						.toArray(Environment[]::new);
+				}
+
+				if (!config.pohThemeEnvironments())
+					environments = Arrays.stream(environments)
+						.filter(env -> !env.isPohTheme)
+						.toArray(Environment[]::new);
+
 				HashMap<String, Environment> map = new HashMap<>();
 				for (var env : environments)
 					if (env.key != null)
@@ -205,8 +219,12 @@ public class EnvironmentManager {
 		forceNextTransition = false;
 	}
 
-	public void triggerTransition() {
+	public void reload() {
+		var previous = currentEnvironment;
+		shutDown();
+		startUp();
 		forceNextTransition = true;
+		currentEnvironment = previous;
 	}
 
 	/**
@@ -477,5 +495,9 @@ public class EnvironmentManager {
 
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater;
+	}
+
+	public boolean allowRoofShadows() {
+		return currentEnvironment.allowRoofShadows;
 	}
 }

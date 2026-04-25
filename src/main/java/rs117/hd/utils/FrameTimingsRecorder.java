@@ -108,7 +108,7 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 			snapshot.osArch = System.getProperty("os.arch");
 			snapshot.osVersion = System.getProperty("os.version");
 			snapshot.javaVersion = System.getProperty("java.version");
-			snapshot.cpuCores = Runtime.getRuntime().availableProcessors();
+			snapshot.cpuCores = HdPlugin.PROCESSOR_COUNT;
 			snapshot.memoryMaxMiB = Runtime.getRuntime().maxMemory() / MiB;
 			snapshot.gpuName = String.format(
 				"%s (%s, OpenGL %s)",
@@ -160,8 +160,8 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 		for (var frame : snapshot.frames) {
 			frame.cpu = new LinkedHashMap<>();
 			frame.gpu = new LinkedHashMap<>();
-			for (Timer t : Timer.values())
-				(t.isGpuTimer ? frame.gpu : frame.cpu).put(t.name, frame.rawTimings[t.ordinal()]);
+			for (Timer t : Timer.TIMERS)
+				(t.isGpuTimer() ? frame.gpu : frame.cpu).put(t.name, frame.rawTimings[t.ordinal()]);
 		}
 
 		try {
