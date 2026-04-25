@@ -1897,6 +1897,23 @@
     "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
+    "name": "DORGESHKAAN_FLOOR",
+    "area": "DORGESHKAAN",
+    "underlayIds": [
+      10,
+      12
+    ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "DORGESHKAAN_DIRT",
+    "area": "DORGESHKAAN",
+    "overlayIds": [
+      120
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "LUMBRIDGE_CHRISTMAS_EVENT",
     "area": "LUMBRIDGE",
     "overlayIds": [
