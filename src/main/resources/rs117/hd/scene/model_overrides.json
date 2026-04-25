@@ -7372,9 +7372,6 @@
       "RIMMINGTON_ROCKSLIDE4",
       "RIMMINGTONROCKSLIDE5",
       "RIMMINGTON_ROCKSLIDE6",
-      "ELID_DUGUPSOIL_1",
-      "ELID_DUGUPSOIL_2",
-      "ELID_DUGUPSOIL_3",
       "_100_OSMAN_AUTUMN_DUGUPSOIL_1",
       "_100_OSMAN_AUTUMN_DUGUPSOIL_2",
       "_100_OSMAN_AUTUMN_DUGUPSOIL_3",
@@ -21262,7 +21259,10 @@
       "ELID_UNDERGROUND_WALL_SHORTER",
       "ELID_UNDERGROUND_TOP_SHORTER",
       "ELID_UNDERGROUND_DOOR_WALL_MIRROR",
+      "ELID_STALAGTITES_LARGER_SCALED_2",
+      "ELID_STALAGTITES_TWIN_SCALED_2",
       "ELID_UNDERGROUND_TOP5_HIGHER",
+      "ELID_STALAGTITES_SMALLER_SCALED",
       "ELID_UNDERGROUND_DOOR_WALL",
       "ELID_UNDERGROUND_TOP",
       "ELID_STALAGTITES_SMALLER",
@@ -21270,6 +21270,32 @@
       "ELID_STALAGTITES",
       "ELID_STALAGTITES_TWIN",
       "ELID_STALAGTITES_FALLOFF"
+    ]
+  },
+  {
+    "description": "Elid - Dungeon - Exit",
+    "baseMaterial": "DIRT_1_VERY_DARK",
+    "objectIds": [
+      "ELID_UNDERGROUND_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || a < 255",
+        "baseMaterial": "NONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Elid - Dungeon - Soil",
+    "baseMaterial": "DIRT_1",
+    "castShadows": false,
+    "inheritTileColorType": "OVERLAY",
+    "objectIds": [
+      "ELID_DUGUPSOIL_1",
+      "ELID_DUGUPSOIL_2",
+      "ELID_DUGUPSOIL_3"
     ]
   },
   {
@@ -21284,6 +21310,40 @@
       "ELID_FALLOFF_3",
       "ELID_FALLOFF_6",
       "ELID_FALLOFF_7"
+    ]
+  },
+  {
+    "description": "Elid - Source Cave",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "DESERT_WATER_CAVE",
+      "DESERT_WATER_CAVE_ROOT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && l < 3 || h == 8 && l < 27",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 12",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Elid - Source Cave - Root",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DESERT_WATER_CAVE_ROOT"
     ]
   },
   {
