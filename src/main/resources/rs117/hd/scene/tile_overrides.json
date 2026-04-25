@@ -1899,6 +1899,8 @@
   {
     "name": "DORGESHKAAN_FLOOR",
     "area": "DORGESHKAAN",
+    "minLightness": 14,
+    "maxLightness": 20,
     "underlayIds": [
       10,
       12
