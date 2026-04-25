@@ -36,7 +36,6 @@ import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.ColorUtils;
-import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.Int2ObjectHashMap;
@@ -198,7 +197,7 @@ public class ProceduralGenerator {
 			sceneContext.vertexTerrainNormals.forEach((entry) -> {
 				var n = normalize(avgNormal, vec3(avgNormal, entry.value[0], entry.value[1], entry.value[2]));
 				for (int i = 0; i < 3; i++)
-					entry.value[i] = GpuIntBuffer.normShort(n[i]);
+					entry.value[i] = normShort(n[i]);
 			});
 		}
 

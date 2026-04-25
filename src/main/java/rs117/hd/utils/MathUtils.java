@@ -854,6 +854,10 @@ public final class MathUtils {
 		return (float) Math.tan(rad);
 	}
 
+	public static int normShort(float f) {
+		return round(clamp(f, -1, 1) * Short.MAX_VALUE);
+	}
+
 	public static int float16(float value) {
 		if (value == 0)
 			return 0;
