@@ -34,7 +34,6 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
@@ -53,9 +52,11 @@ import rs117.hd.utils.collections.PrimitiveIntArray;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.renderer.zone.FacePrioritySorter.MAX_FACE_COUNT;
+import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_MAIN;
+import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_OVERLAY;
+import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_UNDERLAY;
 import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
-import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.UNDERWATER_HSL;
 import static rs117.hd.utils.MathUtils.*;
@@ -100,9 +101,6 @@ public class SceneUploader implements AutoCloseable {
 
 	@Inject
 	private MaterialManager materialManager;
-
-	@Inject
-	private TileOverrideManager tileOverrideManager;
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
@@ -370,7 +368,7 @@ public class SceneUploader implements AutoCloseable {
 			z.sizeO += 2;
 			z.sizeF += 2;
 
-			TileOverride override = ctx.tileOverrides[tileZ][tileExX][tileExY];
+			TileOverride override = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_MAIN);
 			WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
 			if (waterType != WaterType.NONE) {
 				z.hasWater = true;
@@ -390,10 +388,8 @@ public class SceneUploader implements AutoCloseable {
 			z.sizeO += len;
 			z.sizeF += len;
 
-			int overlayId = OVERLAY_FLAG | overlayIds[tileZ][tileExX][tileExY];
-			int underlayId = underlayIds[tileZ][tileExX][tileExY];
-			var overlayOverride = tileOverrideManager.getOverride(ctx, t, worldPos, overlayId);
-			var underlayOverride = tileOverrideManager.getOverride(ctx, t, worldPos, underlayId);
+			var overlayOverride = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_OVERLAY);
+			var underlayOverride = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_UNDERLAY);
 
 			final int[] triangleTextures = model.getTriangleTextureId();
 			boolean isFallbackWater = false;
@@ -845,7 +841,7 @@ public class SceneUploader implements AutoCloseable {
 		if (neColor == HIDDEN_HSL)
 			return;
 
-		TileOverride override = ctx.tileOverrides[tileZ][tileExX][tileExY];
+		TileOverride override = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_MAIN);
 		WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
 		if (onlyWaterSurface && waterType == WaterType.NONE)
 			return;
@@ -1111,10 +1107,8 @@ public class SceneUploader implements AutoCloseable {
 				}
 			}
 		}
-		int overlayId = OVERLAY_FLAG | overlayIds[tileZ][tileExX][tileExY];
-		int underlayId = underlayIds[tileZ][tileExX][tileExY];
-		var overlayOverride = tileOverrideManager.getOverride(ctx, tile, worldPos, overlayId);
-		var underlayOverride = tileOverrideManager.getOverride(ctx, tile, worldPos, underlayId);
+		var overlayOverride = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_OVERLAY);
+		var underlayOverride = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_UNDERLAY);
 		WaterType overlayWaterType = proceduralGenerator.seasonalWaterType(overlayOverride, 0);
 		WaterType underlayWaterType = proceduralGenerator.seasonalWaterType(underlayOverride, 0);
 		boolean isOverlayWater = overlayWaterType != WaterType.NONE;
@@ -1577,7 +1571,7 @@ public class SceneUploader implements AutoCloseable {
 							int averageColor =
 								(tilePaint.getSwColor() + tilePaint.getNwColor() + tilePaint.getNeColor() + tilePaint.getSeColor()) / 4;
 
-							averageColor = ctx.tileOverrides[tileZ][tileExX][tileExY].modifyColor(averageColor);
+							averageColor = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_MAIN).modifyColor(averageColor);
 							color1 = color2 = color3 = averageColor;
 
 							// Let the shader know vanilla shading reversal should be skipped for this face
@@ -1607,11 +1601,10 @@ public class SceneUploader implements AutoCloseable {
 							if (faceColorIndex != -1) {
 								int color = tileModel.getTriangleColorA()[faceColorIndex];
 								if (color != HIDDEN_HSL) {
-									int tileId = modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
-										OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :
-										scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+									var override = ctx.getTileOverride(tileZ, tileExX, tileExY,
+										modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
+										TILE_OVERRIDE_OVERLAY : TILE_OVERRIDE_UNDERLAY);
 
-									var override = tileOverrideManager.getOverride(ctx, tile, worldPos, tileId);
 									color = override.modifyColor(color);
 									color1 = color2 = color3 = color;
 
