@@ -87,8 +87,8 @@ public class ModelOverrideManager {
 
 				detailCullingBlacklist.clear();
 				for (var entry : modelOverrides)
-					if (entry.value.disableDetailCulling)
-						detailCullingBlacklist.add(entry.key);
+					if (entry.getValue().disableDetailCulling)
+						detailCullingBlacklist.add(entry.getKey());
 
 				log.debug("Loaded {} model overrides", modelOverrides.size());
 

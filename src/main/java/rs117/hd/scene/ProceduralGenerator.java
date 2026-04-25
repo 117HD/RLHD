@@ -198,11 +198,12 @@ public class ProceduralGenerator {
 				}
 			}
 
-			sceneContext.vertexTerrainNormals.forEach((entry) -> {
-				var n = normalize(avgNormal, vec3(avgNormal, entry.value[0], entry.value[1], entry.value[2]));
+			for(var entry : sceneContext.vertexTerrainNormals) {
+				final int[] vertexNormal = entry.getValue();
+				normalize(avgNormal, vec3(avgNormal, vertexNormal[0], vertexNormal[1], vertexNormal[2]));
 				for (int i = 0; i < 3; i++)
-					entry.value[i] = normShort(n[i]);
-			});
+					vertexNormal[i] = normShort(avgNormal[i]);
+			}
 		}
 
 		/**
