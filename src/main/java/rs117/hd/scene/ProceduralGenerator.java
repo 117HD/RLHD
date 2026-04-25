@@ -468,7 +468,7 @@ public class ProceduralGenerator {
 		private final TileOverride[] overrides = new TileOverride[TILE_OVERRIDE_COUNT];
 		private final int[] worldPos = new int[3];
 		private final int[] ids = new int[2];
-		
+
 		private void generate(SceneContext sceneContext, SceneContext preSceneCtx) {
 			final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 			final short[][][] overlayIds = sceneContext.scene.getOverlayIds();
@@ -758,10 +758,18 @@ public class ProceduralGenerator {
 		}
 	}
 
+
+
 	final class UnderwaterTerrainGenerator {
 		private final int[][][] underwaterDepths = new int[MAX_Z][EXTENDED_SCENE_SIZE + 1][EXTENDED_SCENE_SIZE + 1];
 		private final int[][] vertices = new int[4][3];
 		private final int[] hashes = new int[4];
+
+		// Defines ranges of water tiles
+		private final int[] minX = new int[MAX_Z];
+		private final int[] maxX = new int[MAX_Z];
+		private final int[] minY = new int[MAX_Z];
+		private final int[] maxY = new int[MAX_Z];
 
 		/**
 		 * Generates underwater terrain data by iterating through all Tiles in a given
@@ -800,6 +808,12 @@ public class ProceduralGenerator {
 
 			Scene scene = sceneContext.scene;
 			Tile[][][] tiles = scene.getExtendedTiles();
+
+			int minZ = MAX_Z, maxZ = 0;
+			Arrays.fill(minX, sizeX);
+			Arrays.fill(minY, sizeY);
+			Arrays.fill(maxX, 0);
+			Arrays.fill(maxY, 0);
 
 			// figure out which vertices are water and assign some data
 			for (int z = 0; z < MAX_Z; ++z) {
@@ -856,6 +870,12 @@ public class ProceduralGenerator {
 								}
 
 								sceneContext.setTileFlag(z, x, y, TILE_WATER_FLAG);
+								maxZ = max(maxZ, z);
+								minZ = min(minZ, z);
+								minX[z] = min(minX[z], x);
+								maxX[z] = max(maxX[z], x);
+								minY[z] = min(minY[z], y);
+								maxY[z] = max(maxY[z], y);
 
 								for (int i = 0; i < hashes.length; i++)
 									sceneContext.vertexIsWater.add(hashes[i]);
@@ -928,6 +948,13 @@ public class ProceduralGenerator {
 									}
 								} else {
 									sceneContext.setTileFlag(z, x, y, TILE_WATER_FLAG);
+									minZ = min(minZ, z);
+									maxZ = max(maxZ, z);
+									minX[z] = min(minX[z], x);
+									maxX[z] = max(maxX[z], x);
+									minY[z] = min(minY[z], y);
+									maxY[z] = max(maxY[z], y);
+
 									for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
 										sceneContext.vertexIsWater.add(hashes[vertex]);
 								}
@@ -944,9 +971,9 @@ public class ProceduralGenerator {
 
 			// Sink terrain further from shore by desired levels.
 			for (int level = 0; level < DEPTH_LEVEL_SLOPE.length - 1; level++) {
-				for (int z = 0; z < MAX_Z; ++z) {
-					for (int x = 0; x < sceneContext.underwaterDepthLevels[z].length; x++) {
-						for (int y = 0; y < sceneContext.underwaterDepthLevels[z][x].length; y++) {
+				for (int z = minZ; z <= maxZ; ++z) {
+					for (int x = minX[z]; x <= maxX[z]; x++) {
+						for (int y = minY[z]; y <= maxY[z]; y++) {
 							if (sceneContext.underwaterDepthLevels[z][x][y] == 0) {
 								// Skip the tile if it isn't water.
 								continue;
@@ -986,9 +1013,9 @@ public class ProceduralGenerator {
 			}
 
 			// Adjust the height levels to world coordinate offsets and add to an array.
-			for (int z = 0; z < MAX_Z; ++z) {
-				for (int x = 0; x < sceneContext.underwaterDepthLevels[z].length; x++) {
-					for (int y = 0; y < sceneContext.underwaterDepthLevels[z][x].length; y++) {
+			for (int z = minZ; z <= maxZ; ++z) {
+				for (int x = minX[z]; x <= maxX[z]; x++) {
+					for (int y = minY[z]; y <= maxY[z]; y++) {
 						if (sceneContext.underwaterDepthLevels[z][x][y] == 0) {
 							underwaterDepths[z][x][y] = 0;
 							continue;
@@ -1002,9 +1029,9 @@ public class ProceduralGenerator {
 
 			// Store the height offsets in a hashmap and calculate interpolated
 			// height offsets for non-corner vertices.
-			for (int z = 0; z < MAX_Z; ++z) {
-				for (int x = 0; x < sizeX; ++x) {
-					for (int y = 0; y < sizeY; ++y) {
+			for (int z = minZ; z <= maxZ; ++z) {
+				for (int x = minX[z]; x <= maxX[z]; x++) {
+					for (int y = minY[z]; y <= maxY[z]; y++) {
 						if (!sceneContext.isTileFlagSet(z, x, y, TILE_WATER_FLAG))
 							continue;
 
