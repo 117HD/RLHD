@@ -15059,6 +15059,18 @@
     ]
   },
   {
+    "description": "Shilo Village - Shortcut - Dirt Piles",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "SHORTCUT_SHILO_ROCKS_TOP",
+      "SHORTCUT_SHILO_ROCKS_MIDDLE",
+      "SHORTCUT_SHILO_ROCKS_BOTTOM"
+    ]
+  },
+  {
     "description": "Ground Decoration - Grunge - Tiny - Uncolored",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -19363,18 +19375,25 @@
   {
     "description": "Objects - Ardougne Castle - Timber Defence",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      "TIMBERDEFENCE_EDGEL_NEW",
-      "TIMBERDEFENCE_EDGER_NEW",
-      "TIMBERDEFENCE_NEW"
-    ],
     "uvType": "BOX",
     "uvScale": 0.5,
     "colorOverrides": [
       {
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
         "colors": "h == 7",
-        "baseMaterial": "GRAY_90"
+        "baseMaterial": "METALLIC_1_LIGHT"
       }
+    ],
+    "objectIds": [
+      "TIMBERDEFENCE_EDGEL_NEW",
+      "TIMBERDEFENCE_EDGER_NEW",
+      "TIMBERDEFENCE_NEW"
     ]
   },
   {
@@ -23932,6 +23951,17 @@
   {
     "description": "Meiyerditch Walls",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Smooth wall sectionsd",
+        "colors": "h == 32",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      }
+    ],
     "objectIds": [
       "AREA_SANGUINE_OUTER_CRUMBLE1",
       "AREA_SANGUINE_OUTER_CRUMBLE2",
@@ -23969,9 +23999,7 @@
       "MYQ3_GHETTO_BARICADE_WALL_SECRETPASS",
       "MYQ3_GHETTO_BARICADE_WALL_SECRETPASS_INACTIVE",
       "MYQ3_SECRET_ROCK_BARRICADE_UNLOCK"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.55
+    ]
   },
   {
     "description": "Meiyerditch Walls Rubble",
@@ -67916,7 +67944,24 @@
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "TEMPOROSS_LOBBY_BOOKTABLE",
-      "TEMPOROSS_LOBBY_SHOP_TABLE",
+      "TEMPOROSS_LOBBY_SHOP_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Ruins of Unkah entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 482,
+    "objectIds": [
       "TEMPOROSS_LOBBY_PASS"
     ],
     "colorOverrides": [
@@ -67926,6 +67971,12 @@
         "uvType": "BOX",
         "uvOrientationX": 512,
         "uvScale": 0.8
+      },
+      {
+        "colors": "h >= 10",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   },
