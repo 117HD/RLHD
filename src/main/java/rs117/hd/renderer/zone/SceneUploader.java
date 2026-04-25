@@ -122,8 +122,6 @@ public class SceneUploader implements AutoCloseable {
 	private Tile[][][] tiles;
 	private byte[][][] settings;
 	private int[][][] roofs;
-	private short[][][] overlayIds;
-	private short[][][] underlayIds;
 	private int[][][] tileHeights;
 
 	private final HashMap<Tile, GameObject[]> tileGameObjects = new HashMap<>();
@@ -160,8 +158,6 @@ public class SceneUploader implements AutoCloseable {
 		tiles = scene.getExtendedTiles();
 		settings = scene.getExtendedTileSettings();
 		roofs = scene.getRoofs();
-		overlayIds = scene.getOverlayIds();
-		underlayIds = scene.getUnderlayIds();
 		tileHeights = scene.getTileHeights();
 	}
 
@@ -170,8 +166,6 @@ public class SceneUploader implements AutoCloseable {
 		tiles = null;
 		settings = null;
 		roofs = null;
-		overlayIds = null;
-		underlayIds = null;
 		tileHeights = null;
 		currentScene = null;
 		onBeforeProcessTile = null;
