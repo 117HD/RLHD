@@ -24,7 +24,6 @@
  */
 package rs117.hd.renderer.zone;
 
-import java.util.HashMap;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -46,6 +45,7 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.Int2ObjectHashMap;
 import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
@@ -124,7 +124,7 @@ public class SceneUploader implements AutoCloseable {
 	private int[][][] roofs;
 	private int[][][] tileHeights;
 
-	private final HashMap<Tile, GameObject[]> tileGameObjects = new HashMap<>();
+	private final Int2ObjectHashMap<GameObject[]> tileGameObjects = new Int2ObjectHashMap<>();
 
 	private final int[] worldPos = new int[3];
 	private final int[][] vertices = new int[4][3];
