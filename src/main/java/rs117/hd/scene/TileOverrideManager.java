@@ -223,22 +223,19 @@ public class TileOverrideManager {
 		return getOverride(sceneContext, tile, worldPos);
 	}
 
-	public int[] buildIdsFromTile(SceneContext sceneContext, @Nonnull Tile tile, int[] ids) {
-		var pos = tile.getSceneLocation();
-		int x = pos.getX() + sceneContext.sceneOffset;
-		int y = pos.getY() + sceneContext.sceneOffset;
-		int z = tile.getRenderLevel();
-		int overlayId = OVERLAY_FLAG | sceneContext.scene.getOverlayIds()[z][x][y];
-		int underlayId = sceneContext.scene.getUnderlayIds()[z][x][y];
-		ids[0] = overlayId;
-		ids[1] = underlayId;
-		return ids;
-	}
-
 	@Nonnull
 	public TileOverride getOverride(SceneContext sceneContext, @Nonnull Tile tile, @Nonnull int[] worldPos, int... ids) {
-		if (ids.length == 0)
-			ids = buildIdsFromTile(sceneContext, tile, OVERLAY_UNDERLAY_IDS.get());
+		if (ids.length == 0) {
+			var pos = tile.getSceneLocation();
+			int x = pos.getX() + sceneContext.sceneOffset;
+			int y = pos.getY() + sceneContext.sceneOffset;
+			int z = tile.getRenderLevel();
+			int overlayId = OVERLAY_FLAG | sceneContext.scene.getOverlayIds()[z][x][y];
+			int underlayId = sceneContext.scene.getUnderlayIds()[z][x][y];
+			ids = OVERLAY_UNDERLAY_IDS.get();
+			ids[0] = overlayId;
+			ids[1] = underlayId;
+		}
 
 		final TileOverride override = getOverrideBeforeReplacements(worldPos, ids);
 		if (override.isConstant())
