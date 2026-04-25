@@ -30,8 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 
-import static rs117.hd.utils.MathUtils.*;
-
 @Slf4j
 public class GpuIntBuffer {
 	@Getter
@@ -104,60 +102,6 @@ public class GpuIntBuffer {
 
 	public void put(IntBuffer buffer) {
 		this.buffer.put(buffer);
-	}
-
-	public static int normShort(float f) {
-		return round(clamp(f, -1, 1) * Short.MAX_VALUE);
-	}
-
-	public int putFace(
-		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
-		int materialDataA, int materialDataB, int materialDataC,
-		int terrainDataA, int terrainDataB, int terrainDataC
-	) {
-		return putFace(
-			buffer,
-			alphaBiasHslA, alphaBiasHslB, alphaBiasHslC,
-			materialDataA, materialDataB, materialDataC,
-			terrainDataA, terrainDataB, terrainDataC
-		);
-	}
-
-	public void putVertex(
-		int x, int y, int z,
-		float u, float v, float w,
-		int nx, int ny, int nz,
-		int textureFaceIdx
-	) {
-		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
-		buffer.put(z & 0xFFFF);
-		buffer.put(float16(v) << 16 | float16(u));
-		buffer.put(float16(w));
-		// Unnormalized normals, assumed to be within short max
-		buffer.put((ny & 0xFFFF) << 16 | nx & 0xFFFF);
-		buffer.put(nz & 0xFFFF);
-		buffer.put(textureFaceIdx);
-	}
-
-	public static int putFace(
-		IntBuffer buffer,
-		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
-		int materialDataA, int materialDataB, int materialDataC,
-		int terrainDataA, int terrainDataB, int terrainDataC
-	) {
-		final int textureFaceIdx = buffer.position() / 3;
-		buffer.put(alphaBiasHslA);
-		buffer.put(alphaBiasHslB);
-		buffer.put(alphaBiasHslC);
-
-		buffer.put(materialDataA);
-		buffer.put(materialDataB);
-		buffer.put(materialDataC);
-
-		buffer.put(terrainDataA); // TODO: Remove?
-		buffer.put(terrainDataB);
-		buffer.put(terrainDataC);
-		return textureFaceIdx;
 	}
 
 	public int position() {
