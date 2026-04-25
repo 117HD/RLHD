@@ -21130,7 +21130,8 @@
       "VMQ4_CRYPT_ENNIUS_EXIT",
       "VMQ4_CRYPT_ENNIUS_ITZLA_BLOCKAGE",
       "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER",
-      "CHOMPYBIRD_SPITROAST_EMPTY"
+      "CHOMPYBIRD_SPITROAST_EMPTY",
+      "BONES_IN_PASTE_FIRE"
     ]
   },
   {
@@ -30598,11 +30599,12 @@
   {
     "description": "WARPED_SCEPTER_SPELL",
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 10,
+    "height": 10,
+    "radius": 180,
+    "strength": 50,
     "color": [
-      170,
-      20,
+      70,
+      10,
       255
     ],
     "type": "FLICKER",
