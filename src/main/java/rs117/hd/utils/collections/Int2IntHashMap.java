@@ -140,8 +140,7 @@ public final class Int2IntHashMap {
 
 	public int getBits(int key, int maskBits, int shift, int defaultValue) {
 		int idx = findIndex(key, mask, keys, distances);
-		int v = (idx >= 0) ? values[idx] : defaultValue;
-		return (v >>> shift) & maskBits;
+		return idx >= 0 ? (values[idx] >>> shift) & maskBits : defaultValue;
 	}
 
 	private boolean put(int key, int value, boolean overwrite) {
