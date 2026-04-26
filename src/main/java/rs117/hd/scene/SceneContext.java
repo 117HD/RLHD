@@ -106,23 +106,25 @@ public class SceneContext {
 	public synchronized void destroy() {}
 
 	public void setVertexIsLand(int hash) {
-		vertexData.put(hash, vertexData.getOrDefault(hash, 0) | VERTEX_IS_LAND);
+		vertexData.compute(hash, v -> v | VERTEX_IS_LAND, 0);
 	}
 
 	public void setVertexIsWater(int hash) {
-		vertexData.put(hash, vertexData.getOrDefault(hash, 0) | VERTEX_IS_WATER);
+		vertexData.compute(hash, v -> v | VERTEX_IS_WATER, 0);
 	}
 
 	public void setVertexHighPriorityColor(int hash) {
-		vertexData.put(hash, vertexData.getOrDefault(hash, 0) | VERTEX_IS_HIGH_PRIORITY_COLOR);
+		vertexData.compute(hash, v -> v | VERTEX_IS_HIGH_PRIORITY_COLOR, 0);
 	}
 
 	public void setVertexIsOverlay(int hash, boolean isOverlay) {
-		vertexData.put(hash, vertexData.getOrDefault(hash, 0) | (isOverlay ? VERTEX_IS_OVERLAY : VERTEX_IS_UNDERLAY));
+		final int flag = isOverlay ? VERTEX_IS_OVERLAY : VERTEX_IS_UNDERLAY;
+		vertexData.compute(hash, v -> v | flag, 0);
 	}
 
 	public void setVertexUnderwaterDepth(int hash, int depth) {
-		vertexData.put(hash, vertexData.getOrDefault(hash, 0) | (depth << VERTEX_UNDER_WATER_DEPTH_SHIFT));
+		final int shifted = (depth << VERTEX_UNDER_WATER_DEPTH_SHIFT);
+		vertexData.compute(hash, v -> v | shifted, 0);
 	}
 
 	public boolean isVertexHighPriorityColor(int hash) {
