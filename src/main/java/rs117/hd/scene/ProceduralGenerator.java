@@ -657,13 +657,13 @@ public class ProceduralGenerator {
 				vertexColors[2] = nwColor;
 				vertexColors[3] = neColor;
 
+				final boolean useDefaultColor = useDefaultColor(tile, override);
 				for (int i = 0; i < 4; i++) {
 					vertexOverrides[i] = override;
 					vertexIsOverlay[i] = override.queriedAsOverlay;
-				}
-				if (useDefaultColor(tile, override))
-					for (int i = 0; i < 4; i++)
+					if (useDefaultColor)
 						vertexDefaultColor[i] = true;
+				}
 			} else if (tile.getSceneTileModel() != null) {
 				// tile model
 
@@ -686,10 +686,9 @@ public class ProceduralGenerator {
 							continue; // skip water faces
 
 						final int base = face * VERTICES_PER_FACE + vertex;
-						vertexHashes[base] = hashes[vertex];
 
-						int color = (vertex == 0 ? faceColorsA : vertex == 1 ? faceColorsB : faceColorsC)[face];
-						vertexColors[base] = color;
+						vertexHashes[base] = hashes[vertex];
+						vertexColors[base] = (vertex == 0 ? faceColorsA : vertex == 1 ? faceColorsB : faceColorsC)[face];
 
 						vertexOverrides[base] = override;
 						vertexIsOverlay[base] = isOverlay;
@@ -700,7 +699,7 @@ public class ProceduralGenerator {
 				}
 			}
 
-			int vertexCount = faceCount * VERTICES_PER_FACE;
+			final int vertexCount = faceCount * VERTICES_PER_FACE;
 			for (int vertex = 0; vertex < vertexCount; vertex++) {
 				if (vertexHashes[vertex] == 0)
 					continue;
@@ -720,17 +719,18 @@ public class ProceduralGenerator {
 				int lightenAdd = 3;
 				float darkenMultiplier = 0.5f;
 
+				float dot = 0;
 				final int key = vertexHashes[vertex];
-				if (sceneContext.getVertexNormal(key, vNormals) == null)
+				if (sceneContext.getVertexNormal(key, vNormals) == null) {
 					vNormals[0] = vNormals[1] = vNormals[2] = 0;
-
-				float dot = dot(vNormals);
-				if (dot < EPSILON) {
-					dot = 0;
 				} else {
-					// Approximately reverse vanilla tile lighting
-					dot = (vNormals[0] + vNormals[1]) / sqrt(2 * dot);
+					dot = dot(vNormals);
+					if(dot >= EPSILON) {
+						// Approximately reverse vanilla tile lighting
+						dot = (vNormals[0] + vNormals[1]) / sqrt(2 * dot);
+					}
 				}
+
 				int lightness = color & 0x7F;
 				lightness = (int) mix(lightness, (int) (max(lightness - lightenAdd, 0) * lightenMultiplier) + lightenBase, max(dot, 0));
 				lightness = (int) (1.25f * mix(lightness, (int) (lightness * darkenMultiplier), -min(dot, 0)));
