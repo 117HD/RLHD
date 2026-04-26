@@ -115,6 +115,9 @@ public class ProceduralGenerator {
 	public void clearSceneData(SceneContext sceneContext) {
 		sceneContext.tileFlags = null;
 		sceneContext.vertexData = null;
+		sceneContext.tileOverrideIndices = null;
+		sceneContext.vertexTerrainTexture = null;
+		sceneContext.vertexNormals = null;
 		if (!(sceneContext instanceof LegacySceneContext))
 			sceneContext.underwaterDepthLevels = null;
 	}
