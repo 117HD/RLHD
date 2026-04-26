@@ -480,8 +480,8 @@ public class ProceduralGenerator {
 			sceneContext.tileOverrides.ensureCapacity(preSceneCtx != null ? preSceneCtx.tileOverrides.size() : 0);
 
 			final boolean canReuse = preSceneCtx != null && sceneContext.scene.isInstance() == preSceneCtx.scene.isInstance() && sceneContext.currentArea == preSceneCtx.currentArea && !preSceneCtx.tileOverrides.isEmpty();
-			final int dX = canReuse ? sceneContext.scene.getBaseX() - preSceneCtx.scene.getBaseX() : 0;
-			final int dY = canReuse ? sceneContext.scene.getBaseY() - preSceneCtx.scene.getBaseY() : 0;
+			final int dX = canReuse ? (sceneContext.scene.getBaseX() - preSceneCtx.scene.getBaseX() >> 3) << 3 : 0;
+			final int dY = canReuse ? (sceneContext.scene.getBaseY() - preSceneCtx.scene.getBaseY() >> 3) << 3 : 0;
 
 			for (int z = 0; z < MAX_Z; ++z) {
 				for (int x = 0; x < sizeX; ++x) {
@@ -492,7 +492,7 @@ public class ProceduralGenerator {
 
 						final int oX = x + dX;
 						final int oY = y + dY;
-						final boolean canReuseTile = canReuse && oX >= 0 && oX < sizeX && oY >= 0 && oY < sizeY;
+						final boolean canReuseTile = canReuse && oX >= 8 && oX < sizeX - 8 && oY >= 8 && oY < sizeY - 8;
 
 						int tileZ = tile.getRenderLevel();
 						ids[0] = OVERLAY_FLAG | overlayIds[tileZ][x][y];
