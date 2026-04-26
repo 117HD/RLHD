@@ -74,9 +74,9 @@ public class SceneContext {
 	public int[][][] tileOverrideIndices;
 	public Int2IntHashMap vertexTerrainColor;
 	public Int2IntHashMap vertexData;
+	public Int2IntHashMap vertexTerrainNormalIndices;
 	public Int2ObjectHashMap<Material> vertexTerrainTexture;
-	public Int2ObjectHashMap<int[]> vertexTerrainNormals;
-	// Water-related data
+	public short[] vertexNormals;
 	public byte[][][] underwaterDepthLevels;
 	public int numVisibleLights = 0;
 
@@ -137,6 +137,29 @@ public class SceneContext {
 
 	public boolean isVertexUnderlay(int hash) {
 		return vertexData.test(hash, VERTEX_IS_UNDERLAY);
+	}
+
+	public short[] getVertexNormalOrDefault(int hash, short[] result, short[] defaultNormal) {
+		if(getVertexNormal(hash, result) != null)
+			return result;
+
+		result[0] = defaultNormal[0];
+		result[1] = defaultNormal[1];
+		result[2] = defaultNormal[2];
+
+		return result;
+	}
+
+	public short[] getVertexNormal(int hash, short[] result) {
+		int index = vertexTerrainNormalIndices.getOrDefault(hash, -1);
+		if(index == -1)
+			return null;
+
+		final int offset = index * 3;
+		result[0] = vertexNormals[offset];
+		result[1] = vertexNormals[offset + 1];
+		result[2] = vertexNormals[offset + 2];
+		return result;
 	}
 
 	public int getVertexUnderwaterDepth(int hash) {

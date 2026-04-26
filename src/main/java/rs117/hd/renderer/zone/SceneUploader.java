@@ -66,7 +66,7 @@ public class SceneUploader implements AutoCloseable {
 	public static ConcurrentPool<SceneUploader> POOL;
 
 	public static final int MAX_VERTEX_COUNT = 6500;
-	private static final int[] UP_NORMAL = { 0, -1, 0 };
+	private static final short[] UP_NORMAL = { 0, -1, 0 };
 	private final int[] EMPTY_NORMALS = new int[9];
 
 	public static final float[] GEOMETRY_UVS = {
@@ -132,6 +132,7 @@ public class SceneUploader implements AutoCloseable {
 	private final float[] workingSpace = new float[9];
 	private final float[] modelUvs = new float[12];
 	private final int[] modelNormals = new int[9];
+	private final short[][] tileNormals = new short[4][3];
 
 	public final float[] modelProjected = new float[MAX_VERTEX_COUNT * 3];
 	public int tempModelAlphaFaces = 0;
@@ -886,19 +887,19 @@ public class SceneUploader implements AutoCloseable {
 		Material neMaterial = Material.NONE;
 		Material nwMaterial = Material.NONE;
 
-		int[] swNormals = UP_NORMAL;
-		int[] seNormals = UP_NORMAL;
-		int[] neNormals = UP_NORMAL;
-		int[] nwNormals = UP_NORMAL;
+		short[] swNormals = UP_NORMAL;
+		short[] seNormals = UP_NORMAL;
+		short[] neNormals = UP_NORMAL;
+		short[] nwNormals = UP_NORMAL;
 
 		int swTerrainData, seTerrainData, nwTerrainData, neTerrainData;
 		swTerrainData = seTerrainData = nwTerrainData = neTerrainData = HDUtils.packTerrainData(true, 0, waterType, tileZ);
 
 		if (!onlyWaterSurface) {
-			swNormals = ctx.vertexTerrainNormals.getOrDefault(swVertexKey, swNormals);
-			seNormals = ctx.vertexTerrainNormals.getOrDefault(seVertexKey, seNormals);
-			neNormals = ctx.vertexTerrainNormals.getOrDefault(neVertexKey, neNormals);
-			nwNormals = ctx.vertexTerrainNormals.getOrDefault(nwVertexKey, nwNormals);
+			swNormals = ctx.getVertexNormalOrDefault(swVertexKey, tileNormals[0], UP_NORMAL);
+			seNormals = ctx.getVertexNormalOrDefault(seVertexKey, tileNormals[1], UP_NORMAL);
+			neNormals = ctx.getVertexNormalOrDefault(neVertexKey, tileNormals[2], UP_NORMAL);
+			nwNormals = ctx.getVertexNormalOrDefault(nwVertexKey, tileNormals[3], UP_NORMAL);
 		}
 
 		if (waterType == WaterType.NONE) {
@@ -1184,17 +1185,17 @@ public class SceneUploader implements AutoCloseable {
 			int uvOrientation = 0;
 			float uvScale = 1;
 
-			int[] normalsA = UP_NORMAL;
-			int[] normalsB = UP_NORMAL;
-			int[] normalsC = UP_NORMAL;
+			short[] normalsA = UP_NORMAL;
+			short[] normalsB = UP_NORMAL;
+			short[] normalsC = UP_NORMAL;
 
 			int terrainDataA, terrainDataB, terrainDataC;
 			terrainDataA = terrainDataB = terrainDataC = HDUtils.packTerrainData(true, 0, waterType, tileZ);
 
 			if (!onlyWaterSurface) {
-				normalsA = ctx.vertexTerrainNormals.getOrDefault(vertexKeyA, normalsA);
-				normalsB = ctx.vertexTerrainNormals.getOrDefault(vertexKeyB, normalsB);
-				normalsC = ctx.vertexTerrainNormals.getOrDefault(vertexKeyC, normalsC);
+				normalsA = ctx.getVertexNormalOrDefault(vertexKeyA, tileNormals[0], UP_NORMAL);
+				normalsB = ctx.getVertexNormalOrDefault(vertexKeyB, tileNormals[1], UP_NORMAL);
+				normalsC = ctx.getVertexNormalOrDefault(vertexKeyC, tileNormals[2], UP_NORMAL);
 			}
 
 			if (!isWater) {

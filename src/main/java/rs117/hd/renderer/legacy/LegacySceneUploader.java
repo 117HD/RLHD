@@ -70,7 +70,7 @@ public class LegacySceneUploader {
 	public static final int SCENE_ID_MASK = 0xFFFF;
 	public static final int EXCLUDED_FROM_SCENE_BUFFER = 0xFFFFFFFF;
 
-	private static final int[] UP_NORMAL = { 0, -1, 0 };
+	private static final short[] UP_NORMAL = { 0, -1, 0 };
 
 	@Inject
 	private Client client;
@@ -645,10 +645,10 @@ public class LegacySceneUploader {
 			Material neMaterial = Material.NONE;
 			Material nwMaterial = Material.NONE;
 
-			int[] swNormals = UP_NORMAL;
-			int[] seNormals = UP_NORMAL;
-			int[] neNormals = UP_NORMAL;
-			int[] nwNormals = UP_NORMAL;
+			short[] swNormals = UP_NORMAL;
+			short[] seNormals = UP_NORMAL;
+			short[] neNormals = UP_NORMAL;
+			short[] nwNormals = UP_NORMAL;
 
 			if (waterType == WaterType.NONE) {
 				if (textureId != -1) {
@@ -659,10 +659,10 @@ public class LegacySceneUploader {
 					swMaterial = seMaterial = neMaterial = nwMaterial = material;
 				}
 
-				swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, swNormals);
-				seNormals = sceneContext.vertexTerrainNormals.getOrDefault(seVertexKey, seNormals);
-				neNormals = sceneContext.vertexTerrainNormals.getOrDefault(neVertexKey, neNormals);
-				nwNormals = sceneContext.vertexTerrainNormals.getOrDefault(nwVertexKey, nwNormals);
+				swNormals = sceneContext.getVertexNormalOrDefault(swVertexKey, new short[3], UP_NORMAL);
+				seNormals = sceneContext.getVertexNormalOrDefault(seVertexKey, new short[3], UP_NORMAL);
+				neNormals = sceneContext.getVertexNormalOrDefault(neVertexKey, new short[3], UP_NORMAL);
+				nwNormals = sceneContext.getVertexNormalOrDefault(nwVertexKey, new short[3], UP_NORMAL);
 
 				boolean useBlendedMaterialAndColor =
 					plugin.configGroundBlending &&
@@ -844,10 +844,10 @@ public class LegacySceneUploader {
 			int nwDepth = sceneContext.getVertexUnderwaterDepth(nwVertexKey);
 			int neDepth = sceneContext.getVertexUnderwaterDepth(neVertexKey);
 
-			int[] swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, UP_NORMAL);
-			int[] seNormals = sceneContext.vertexTerrainNormals.getOrDefault(seVertexKey, UP_NORMAL);
-			int[] nwNormals = sceneContext.vertexTerrainNormals.getOrDefault(nwVertexKey, UP_NORMAL);
-			int[] neNormals = sceneContext.vertexTerrainNormals.getOrDefault(neVertexKey, UP_NORMAL);
+			short[] swNormals = sceneContext.getVertexNormalOrDefault(swVertexKey, new short[3], UP_NORMAL);
+			short[] seNormals = sceneContext.getVertexNormalOrDefault(seVertexKey, new short[3], UP_NORMAL);
+			short[] nwNormals = sceneContext.getVertexNormalOrDefault(nwVertexKey, new short[3], UP_NORMAL);
+			short[] neNormals = sceneContext.getVertexNormalOrDefault(neVertexKey, new short[3], UP_NORMAL);
 
 			Material swMaterial = Material.NONE;
 			Material seMaterial = Material.NONE;
@@ -987,9 +987,9 @@ public class LegacySceneUploader {
 			int uvOrientation = 0;
 			float uvScale = 1;
 
-			int[] normalsA = UP_NORMAL;
-			int[] normalsB = UP_NORMAL;
-			int[] normalsC = UP_NORMAL;
+			short[] normalsA = UP_NORMAL;
+			short[] normalsB = UP_NORMAL;
+			short[] normalsC = UP_NORMAL;
 
 			WaterType waterType = WaterType.NONE;
 
@@ -1015,9 +1015,9 @@ public class LegacySceneUploader {
 						materialA = materialB = materialC = material;
 					}
 
-					normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, normalsA);
-					normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, normalsB);
-					normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, normalsC);
+					normalsA = sceneContext.getVertexNormalOrDefault(vertexKeyA, new short[3], UP_NORMAL);
+					normalsB = sceneContext.getVertexNormalOrDefault(vertexKeyB, new short[3], UP_NORMAL);
+					normalsC = sceneContext.getVertexNormalOrDefault(vertexKeyC, new short[3], UP_NORMAL);
 
 					GroundMaterial groundMaterial = null;
 
@@ -1213,9 +1213,9 @@ public class LegacySceneUploader {
 					);
 				}
 
-				int[] normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, UP_NORMAL);
-				int[] normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, UP_NORMAL);
-				int[] normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, UP_NORMAL);
+				short[] normalsA = sceneContext.getVertexNormalOrDefault(vertexKeyA, new short[3], UP_NORMAL);
+				short[] normalsB = sceneContext.getVertexNormalOrDefault(vertexKeyB, new short[3], UP_NORMAL);
+				short[] normalsC = sceneContext.getVertexNormalOrDefault(vertexKeyC, new short[3], UP_NORMAL);
 
 				int textureId = faceTextures == null ? -1 : faceTextures[face];
 				WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
