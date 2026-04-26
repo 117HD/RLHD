@@ -113,6 +113,10 @@ public final class MathUtils {
 		return Arrays.copyOf(v, v.length);
 	}
 
+	public static short[] copy(short[] v) {
+		return Arrays.copyOf(v, v.length);
+	}
+
 	public static float[] copyTo(float[] out, @Nullable float[] in, int offset, int len) {
 		if (in != null) {
 			assert offset + len <= min(out.length, in.length);
@@ -430,6 +434,22 @@ public final class MathUtils {
 	}
 
 	public static float dot(int... v) {
+		return dot(v, v);
+	}
+
+	public static float dot(short[] a, short[] b, int n) {
+		assert a.length >= n && b.length >= n;
+		float f = 0;
+		for (int i = 0; i < n; i++)
+			f += a[i] * b[i];
+		return f;
+	}
+
+	public static float dot(short[] a, short... b) {
+		return dot(a, b, min(a.length, b.length));
+	}
+
+	public static float dot(short... v) {
 		return dot(v, v);
 	}
 
@@ -854,8 +874,8 @@ public final class MathUtils {
 		return (float) Math.tan(rad);
 	}
 
-	public static int normShort(float f) {
-		return round(clamp(f, -1, 1) * Short.MAX_VALUE);
+	public static short normShort(float f) {
+		return (short) round(clamp(f, -1, 1) * Short.MAX_VALUE);
 	}
 
 	public static int float16(float value) {

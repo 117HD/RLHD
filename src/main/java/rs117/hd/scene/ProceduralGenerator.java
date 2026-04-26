@@ -24,7 +24,9 @@
  */
 package rs117.hd.scene;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -160,12 +162,12 @@ public class ProceduralGenerator {
 		private final int[][] vertices = new int[4][3];
 		private final int[] hashes = new int[4];
 
+		private final List<int[]> vertexNormals = new ArrayList<>();
 		private final int[] vertexHeights = new int[4];
 		private final int[] surfaceNormal = new int[3];
 		private final int[] normalA = new int[3];
 		private final int[] normalB = new int[3];
 		private final int[] normalC = new int[3];
-		private final float[] avgNormal = new float[3];
 
 		private int[][][] faceVertices = new int[2][VERTICES_PER_FACE][3];
 		private int[][] faceVertexKeys = new int[VERTICES_PER_FACE][3];
@@ -175,7 +177,7 @@ public class ProceduralGenerator {
 		 * for each one, then stores resulting normal data in a HashMap.
 		 */
 		private void generate(SceneContext sceneContext, SceneContext prevSceneContext) {
-			sceneContext.vertexTerrainNormals = new Int2ObjectHashMap<>(prevSceneContext != null && prevSceneContext.vertexTerrainNormals != null ? prevSceneContext.vertexTerrainNormals.capacity() : 0);
+			sceneContext.vertexTerrainNormalIndices = new Int2IntHashMap(prevSceneContext != null && prevSceneContext.vertexTerrainNormalIndices != null ? prevSceneContext.vertexTerrainNormalIndices.capacity() : 0);
 			final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 
 			for (int z = 0; z < MAX_Z; z++) {
@@ -193,12 +195,26 @@ public class ProceduralGenerator {
 				}
 			}
 
-			for(var entry : sceneContext.vertexTerrainNormals) {
-				final int[] vertexNormal = entry.getValue();
-				normalize(avgNormal, vec3(avgNormal, vertexNormal[0], vertexNormal[1], vertexNormal[2]));
-				for (int i = 0; i < 3; i++)
-					vertexNormal[i] = normShort(avgNormal[i]);
+			sceneContext.vertexNormals = new short[vertexNormals.size() * 3];
+			for(int i = 0, offset = 0; i < vertexNormals.size(); i++) {
+				final int[] n = vertexNormals.get(i);
+
+				final float x = n[0];
+				final float y = n[1];
+				final float z = n[2];
+
+				float len = x * x + y * y + z * z;
+				if (len == 0) {
+					n[0] = n[1] = n[2] = 0;
+					continue;
+				}
+
+				final float invLen = rcp(sqrt(len));
+				sceneContext.vertexNormals[offset++] = normShort(x * invLen);
+				sceneContext.vertexNormals[offset++] = normShort(y * invLen);
+				sceneContext.vertexNormals[offset++] = normShort(z * invLen);
 			}
+			vertexNormals.clear();
 		}
 
 		/**
@@ -279,11 +295,14 @@ public class ProceduralGenerator {
 
 				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
 					final int vertexKey = faceVertexKeys[face][vertex];
-					final int[] terrainNormal = sceneContext.vertexTerrainNormals.getOrDefault(vertexKey, null);
-					if (terrainNormal != null) {
-						add(terrainNormal, terrainNormal, surfaceNormal);
+					int terrainNormalIdx = sceneContext.vertexTerrainNormalIndices.getOrDefault(vertexKey, -1);
+					if (terrainNormalIdx == -1) {
+						terrainNormalIdx = vertexNormals.size();
+						vertexNormals.add(copy(surfaceNormal));
+						sceneContext.vertexTerrainNormalIndices.put(vertexKey, terrainNormalIdx);
 					} else {
-						sceneContext.vertexTerrainNormals.put(vertexKey, copy(surfaceNormal));
+						final int[] n = vertexNormals.get(terrainNormalIdx);
+						add(n, n, surfaceNormal);
 					}
 				}
 			}
@@ -528,6 +547,7 @@ public class ProceduralGenerator {
 		private final int[][] vertices = new int[4][3];
 		private final int[] hashes = new int[4];
 		private final int[] worldPos = new int[3];
+		private final short[] vNormals = new short[3];
 
 		private int[] vertexHashes;
 		private int[] vertexColors;
@@ -694,9 +714,8 @@ public class ProceduralGenerator {
 				float darkenMultiplier = 0.5f;
 
 				final int key = vertexHashes[vertex];
-				int[] vNormals = sceneContext.vertexTerrainNormals.get(key);
-				if (vNormals == null)
-					vNormals = new int[] { 0, 0, 0 };
+				if (sceneContext.getVertexNormal(key, vNormals) == null)
+					vNormals[0] = vNormals[1] = vNormals[2] = 0;
 
 				float dot = dot(vNormals);
 				if (dot < EPSILON) {
