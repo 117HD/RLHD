@@ -59,6 +59,8 @@ import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 import rs117.hd.utils.jobs.JobSystem;
+import rs117.hd.utils.texture.GLAttachmentSlot;
+import rs117.hd.utils.texture.GLTexture;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -67,6 +69,7 @@ import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
+import static rs117.hd.HdPlugin.TILED_LIGHTING_TILE_SIZE;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
@@ -744,14 +747,19 @@ public class LegacyRenderer implements Renderer {
 
 			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
 			if (plugin.configTiledLighting) {
-				plugin.updateTiledLightingFbo();
-				assert plugin.fboTiledLighting != 0;
+				assert plugin.fboTiledLighting != null;
 
 				frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
 				frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
 
-				glViewport(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
-				glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboTiledLighting);
+				int[] tiledLightingResolution = max(ivec(1), round(divide(vec(plugin.fboScene.getWidth(), plugin.fboScene.getHeight()), TILED_LIGHTING_TILE_SIZE)));
+				if (plugin.fboTiledLighting.resize(tiledLightingResolution[0], tiledLightingResolution[1])) {
+					plugin.uboGlobal.tiledLightingResolution.set(tiledLightingResolution);
+					plugin.uboGlobal.upload();
+				}
+
+				glViewport(0, 0, plugin.fboTiledLighting.getWidth(), plugin.fboTiledLighting.getHeight());
+				glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboTiledLighting.getFboId());
 
 				glBindVertexArray(plugin.vaoTri);
 
@@ -761,10 +769,11 @@ public class LegacyRenderer implements Renderer {
 					glDrawArrays(GL_TRIANGLES, 0, 3);
 				} else {
 					glDrawBuffer(GL_COLOR_ATTACHMENT0);
-					int layerCount = plugin.configDynamicLights.getTiledLightingLayers();
+					final int layerCount = plugin.configDynamicLights.getTiledLightingLayers();
+					final GLTexture texTiledLighting = plugin.fboTiledLighting.getColorTexture(GLAttachmentSlot.COLOR0);
 					for (int layer = 0; layer < layerCount; layer++) {
 						plugin.tiledLightingShaderPrograms.get(layer).use();
-						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, plugin.texTiledLighting, 0, layer);
+						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting.getWidth(), 0, layer);
 						glDrawArrays(GL_TRIANGLES, 0, 3);
 					}
 				}
@@ -1078,13 +1087,13 @@ public class LegacyRenderer implements Renderer {
 				plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
 
-			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
+			if (plugin.configShadowsEnabled && plugin.fboShadowMap != null
 				&& environmentManager.currentDirectionalStrength > 0) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
 
 				// Render to the shadow depth map
-				glViewport(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
-				glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboShadowMap);
+				glViewport(0, 0, plugin.fboShadowMap.getWidth(), plugin.fboShadowMap.getHeight());
+				glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboShadowMap.getFboId());
 				glClearDepth(1);
 				glClear(GL_DEPTH_BUFFER_BIT);
 				glDepthFunc(GL_LEQUAL);
@@ -1134,13 +1143,13 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.upload();
 			sceneProgram.use();
 
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
-			if (plugin.msaaSamples > 1) {
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboScene.getFboId());
+			if (plugin.fboScene.getSamples() > 1) {
 				glEnable(GL_MULTISAMPLE);
 			} else {
 				glDisable(GL_MULTISAMPLE);
 			}
-			glViewport(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
+			glViewport(0, 0, plugin.fboScene.getWidth(), plugin.fboScene.getHeight());
 
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
@@ -1216,35 +1225,18 @@ public class LegacyRenderer implements Renderer {
 			glDepthMask(true);
 			glUseProgram(0);
 
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
-			if (plugin.fboSceneResolve != 0) {
-				// Blit from the scene FBO to the multisample resolve FBO
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneResolve);
-				glBlitFramebuffer(
-					0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-					0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-					GL_COLOR_BUFFER_BIT, GL_NEAREST
-				);
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneResolve);
-			}
-
-			// Blit from the resolved FBO to the default FBO
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-			glBlitFramebuffer(
-				0,
-				0,
-				plugin.sceneResolution[0],
-				plugin.sceneResolution[1],
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene.getFboId());
+			plugin.fboScene.blitTo(
+				plugin.fboBackBuffer,
+				GLAttachmentSlot.COLOR0,
+				GLAttachmentSlot.BACK_LEFT,
 				plugin.sceneViewport[0],
 				plugin.sceneViewport[1],
 				plugin.sceneViewport[0] + plugin.sceneViewport[2],
 				plugin.sceneViewport[1] + plugin.sceneViewport[3],
-				GL_COLOR_BUFFER_BIT,
-				config.sceneScalingMode().glFilter
-			);
+				config.sceneScalingMode().glFilter);
 		} else {
-			glClearColor(0, 0, 0, 1f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			plugin.fboBackBuffer.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 
 		plugin.drawUi(overlayColor);

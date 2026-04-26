@@ -69,6 +69,7 @@ import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.JobSystem;
+import rs117.hd.utils.texture.GLAttachmentSlot;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -77,6 +78,7 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
+import static rs117.hd.HdPlugin.TILED_LIGHTING_TILE_SIZE;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -90,7 +92,7 @@ public class ZoneRenderer implements Renderer {
 	public static final int FRAMES_IN_FLIGHT = 3;
 
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
-	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
@@ -459,7 +461,7 @@ public class ZoneRenderer implements Renderer {
 				// Snap Position to Shadow Texel Grid to prevent shimmering
 				directionalCamera.transformPoint(sceneCenter, sceneCenter);
 
-				float texelSize = (float) directionalSize / plugin.shadowMapResolution;
+				float texelSize = (float) directionalSize / plugin.fboShadowMap.getWidth();
 				sceneCenter[0] = (float) floor(sceneCenter[0] / texelSize + 0.5f) * texelSize;
 				sceneCenter[1] = (float) floor(sceneCenter[1] / texelSize + 0.5f) * texelSize;
 
@@ -676,27 +678,29 @@ public class ZoneRenderer implements Renderer {
 		if (!plugin.configTiledLighting || plugin.configDynamicLights == DynamicLights.NONE)
 			return;
 
-		plugin.updateTiledLightingFbo();
-		assert plugin.fboTiledLighting != 0;
+		assert plugin.fboTiledLighting != null;
 
 		frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
 		frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
 
-		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTiledLighting);
-		renderState.viewport.set(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
+		int[] tiledLightingResolution = max(ivec(1), round(divide(vec(plugin.fboScene.getWidth(), plugin.fboScene.getHeight()), TILED_LIGHTING_TILE_SIZE)));
+		if (plugin.fboTiledLighting.resize(tiledLightingResolution[0], tiledLightingResolution[1])) {
+			plugin.uboGlobal.tiledLightingResolution.set(tiledLightingResolution);
+			plugin.uboGlobal.upload();
+		}
 		renderState.vao.setVao(plugin.vaoTri);
 
 		if (plugin.tiledLightingImageStoreProgram.isValid()) {
+			plugin.fboTiledLighting.bind(renderState, GL_DRAW_FRAMEBUFFER);
 			renderState.program.set(plugin.tiledLightingImageStoreProgram);
-			renderState.drawBuffer.set(GL_NONE);
 			renderState.apply();
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		} else {
 			renderState.drawBuffer.set(GL_COLOR_ATTACHMENT0);
-			int layerCount = plugin.configDynamicLights.getTiledLightingLayers();
+			final int layerCount = plugin.configDynamicLights.getTiledLightingLayers();
 			for (int layer = 0; layer < layerCount; layer++) {
+				plugin.fboTiledLighting.bind(renderState, GL_DRAW_FRAMEBUFFER, GLAttachmentSlot.COLOR0, layer);
 				renderState.program.set(plugin.tiledLightingShaderPrograms.get(layer));
-				renderState.framebufferTextureLayer.set(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, plugin.texTiledLighting, 0, layer);
 				renderState.apply();
 				glDrawArrays(GL_TRIANGLES, 0, 3);
 			}
@@ -707,19 +711,15 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void directionalShadowPass() {
+		if(plugin.fboShadowMap == null)
+			return;
+
 		final boolean shouldRenderShadows =
 			plugin.configShadowsEnabled &&
-			plugin.fboShadowMap != 0 &&
 			environmentManager.currentDirectionalStrength > 0;
 
 		if (shouldRenderShadows || shouldClearShadowFbo) {
-			// Render to the shadow depth map
-			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
-			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
-			renderState.apply();
-
-			glClearDepth(1);
-			glClear(GL_DEPTH_BUFFER_BIT);
+			plugin.fboShadowMap.clearDepth(1.0f);
 			shouldClearShadowFbo = false;
 		}
 
@@ -728,6 +728,7 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.RENDER_SHADOWS);
 
+		plugin.fboShadowMap.bind(renderState, GL_DRAW_FRAMEBUFFER);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthFunc.set(GL_LEQUAL);
@@ -749,33 +750,23 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.use();
 
 		frameTimer.begin(Timer.DRAW_SCENE);
-		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
-		if (plugin.msaaSamples > 1) {
-			renderState.enable.set(GL_MULTISAMPLE);
-		} else {
-			renderState.disable.set(GL_MULTISAMPLE);
-		}
-		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
-		renderState.ido.set(indirectDrawCmds.id);
-		renderState.apply();
 
 		// Clear scene
 		frameTimer.begin(Timer.CLEAR_SCENE);
-
 		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
-		glClearColor(
+		plugin.fboScene.clear(
 			gammaCorrectedFogColor[0],
 			gammaCorrectedFogColor[1],
 			gammaCorrectedFogColor[2],
-			1f
-		);
-		glClearDepth(0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			1f,
+			0.0f);
 		frameTimer.end(Timer.CLEAR_SCENE);
 
 		frameTimer.begin(Timer.RENDER_SCENE);
 
+		plugin.fboScene.bind(renderState, GL_DRAW_FRAMEBUFFER);
+		renderState.ido.set(indirectDrawCmds.id);
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
@@ -1080,37 +1071,18 @@ public class ZoneRenderer implements Renderer {
 				scenePass();
 			}
 
-			if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
-				if (plugin.fboSceneResolve != 0) {
-					// Blit from the scene FBO to the multisample resolve FBO
-					glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneResolve);
-					glBlitFramebuffer(
-						0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-						0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-						GL_COLOR_BUFFER_BIT, GL_NEAREST
-					);
-					glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneResolve);
-				}
-
-				// Blit from the resolved FBO to the default FBO
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-				glBlitFramebuffer(
-					0,
-					0,
-					plugin.sceneResolution[0],
-					plugin.sceneResolution[1],
+			if (sceneFboValid && plugin.fboScene != null && plugin.sceneViewport != null) {
+				plugin.fboScene.blitTo(
+					plugin.fboBackBuffer,
+					GLAttachmentSlot.COLOR0,
+					GLAttachmentSlot.BACK_LEFT,
 					plugin.sceneViewport[0],
 					plugin.sceneViewport[1],
 					plugin.sceneViewport[0] + plugin.sceneViewport[2],
 					plugin.sceneViewport[1] + plugin.sceneViewport[3],
-					GL_COLOR_BUFFER_BIT,
-					config.sceneScalingMode().glFilter
-				);
+					config.sceneScalingMode().glFilter);
 			} else {
-				glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-				glClearColor(0, 0, 0, 1);
-				glClear(GL_COLOR_BUFFER_BIT);
+				plugin.fboBackBuffer.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			}
 
 			plugin.drawUi(overlayColor);
@@ -1136,7 +1108,7 @@ public class ZoneRenderer implements Renderer {
 				log.error("Unable to swap buffers:", ex);
 			}
 
-			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+			glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboBackBuffer.getFboId());
 
 			frameTimer.endFrameAndReset();
 			checkGLErrors();
