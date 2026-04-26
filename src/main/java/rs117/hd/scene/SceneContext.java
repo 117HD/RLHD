@@ -17,7 +17,6 @@ import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.Int2ObjectHashMap;
-import rs117.hd.utils.collections.IntHashSet;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -37,6 +36,9 @@ public class SceneContext {
 	public static final int VERTEX_IS_WATER = 1 << 2;
 	public static final int VERTEX_IS_OVERLAY = 1 << 3;
 	public static final int VERTEX_IS_UNDERLAY = 1 << 4;
+	public static final int VERTEX_IS_HIGH_PRIORITY_COLOR = 1 << 5;
+	public static final int VERTEX_UNDER_WATER_DEPTH_SHIFT = 6;
+	public static final int VERTEX_UNDER_WATER_DEPTH_MASK = 0x3FFFFFF;
 
 	public final Client client;
 	public final Scene scene;
@@ -70,19 +72,16 @@ public class SceneContext {
 	public int uniqueModels;
 
 	// Terrain data
+	public byte[][][] tileFlags;
 	public int[][][] tileOverrideIndices;
 	public final ArrayList<TileOverride> tileOverrides = new ArrayList<>();
 	public Int2IntHashMap vertexTerrainColor;
+	public Int2IntHashMap vertexData;
 	public Int2ObjectHashMap<Material> vertexTerrainTexture;
 	public Int2ObjectHashMap<int[]> vertexTerrainNormals;
-	// Used for overriding potentially low quality vertex colors
-	public IntHashSet highPriorityColor;
 
 	// Water-related data
-	public byte[][][] tileFlags;
 	public byte[][][] underwaterDepthLevels;
-	public Int2IntHashMap vertexType;
-	public Int2IntHashMap vertexUnderwaterDepth;
 
 	// Thread safe tile override variables
 	public final static ThreadLocal<TileOverrideVariables> tileOverrideVars = ThreadLocal.withInitial(TileOverrideVariables::new);
@@ -107,31 +106,47 @@ public class SceneContext {
 	public synchronized void destroy() {}
 
 	public void setVertexIsLand(int hash) {
-		vertexType.put(hash, vertexType.getOrDefault(hash, 0) | VERTEX_IS_LAND);
+		vertexData.put(hash, vertexData.getOrDefault(hash, 0) | VERTEX_IS_LAND);
 	}
 
 	public void setVertexIsWater(int hash) {
-		vertexType.put(hash, vertexType.getOrDefault(hash, 0) | VERTEX_IS_WATER);
+		vertexData.put(hash, vertexData.getOrDefault(hash, 0) | VERTEX_IS_WATER);
+	}
+
+	public void setVertexHighPriorityColor(int hash) {
+		vertexData.put(hash, vertexData.getOrDefault(hash, 0) | VERTEX_IS_HIGH_PRIORITY_COLOR);
 	}
 
 	public void setVertexIsOverlay(int hash, boolean isOverlay) {
-		vertexType.put(hash, vertexType.getOrDefault(hash, 0) | (isOverlay ? VERTEX_IS_OVERLAY : VERTEX_IS_UNDERLAY));
+		vertexData.put(hash, vertexData.getOrDefault(hash, 0) | (isOverlay ? VERTEX_IS_OVERLAY : VERTEX_IS_UNDERLAY));
 	}
 
-	public boolean isVertexIsLand(int hash) {
-		return (vertexType.getOrDefault(hash, 0) & VERTEX_IS_LAND) != 0;
+	public void setVertexUnderwaterDepth(int hash, int depth) {
+		vertexData.put(hash, vertexData.getOrDefault(hash, 0) | (depth << VERTEX_UNDER_WATER_DEPTH_SHIFT));
 	}
 
-	public boolean isVertexIsWater(int hash) {
-		return (vertexType.getOrDefault(hash, 0) & VERTEX_IS_WATER) != 0;
+	public boolean isVertexHighPriorityColor(int hash) {
+		return (vertexData.getOrDefault(hash, 0) & VERTEX_IS_HIGH_PRIORITY_COLOR) != 0;
 	}
 
-	public boolean isVertexIsOverlay(int hash) {
-		return (vertexType.getOrDefault(hash, 0) & VERTEX_IS_OVERLAY) != 0;
+	public boolean isVertexLand(int hash) {
+		return (vertexData.getOrDefault(hash, 0) & VERTEX_IS_LAND) != 0;
 	}
 
-	public boolean isVertexIsUnderlay(int hash) {
-		return (vertexType.getOrDefault(hash, 0) & VERTEX_IS_UNDERLAY) != 0;
+	public boolean isVertexWater(int hash) {
+		return (vertexData.getOrDefault(hash, 0) & VERTEX_IS_WATER) != 0;
+	}
+
+	public boolean isVertexOverlay(int hash) {
+		return (vertexData.getOrDefault(hash, 0) & VERTEX_IS_OVERLAY) != 0;
+	}
+
+	public boolean isVertexUnderlay(int hash) {
+		return (vertexData.getOrDefault(hash, 0) & VERTEX_IS_UNDERLAY) != 0;
+	}
+
+	public int getVertexUnderwaterDepth(int hash) {
+		return (vertexData.getOrDefault(hash, 0) >> VERTEX_UNDER_WATER_DEPTH_SHIFT) & VERTEX_UNDER_WATER_DEPTH_MASK;
 	}
 
 	public void setTileFlag(int plane, int x, int y, byte flag) {
