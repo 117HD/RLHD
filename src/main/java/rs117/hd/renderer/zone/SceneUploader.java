@@ -147,6 +147,10 @@ public class SceneUploader implements AutoCloseable {
 	private final int[] tzHaarRecolored = new int[3];
 	private final float[] projected = new float[4];
 
+	private final GpuIntBuffer zoneVboO = new GpuIntBuffer(false);
+	private final GpuIntBuffer zoneVboA = new GpuIntBuffer(false);
+	private final GpuIntBuffer zoneTboF = new GpuIntBuffer(false);
+
 	// Lazily initialized staging buffers, only used by uploadTempModel
 	public VertexWriteCache.Collection writeCache;
 
@@ -190,10 +194,10 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
-		var vb = zone.vboO != null ? new GpuIntBuffer(zone.vboO.mapped()) : null;
-		var ab = zone.vboA != null ? new GpuIntBuffer(zone.vboA.mapped()) : null;
-		var fb = zone.tboF != null ? new GpuIntBuffer(zone.tboF.mapped()) : null;
-		assert fb != null;
+		var vb = zone.vboO != null ? zoneVboO.setBuffer(zone.vboO.mapped()) : null;
+		var ab = zone.vboA != null ? zoneVboA.setBuffer(zone.vboA.mapped()) : null;
+		var fb = zone.tboF != null ? zoneTboF.setBuffer(zone.tboF.mapped()) : null;
+		assert zone.tboF != null;
 
 		roofIds.clear();
 		for (int level = 0; level <= 3; ++level) {

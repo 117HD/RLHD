@@ -56,15 +56,20 @@ public class GpuIntBuffer {
 		ownsBuffer = false;
 	}
 
-	public GpuIntBuffer(GLMappedBuffer buffer) {
-		this.buffer = buffer.intView();
-		ownsBuffer = false;
+	public GpuIntBuffer(boolean ownsBuffer) {
+		this.ownsBuffer = ownsBuffer;
 	}
 
 	public void destroy() {
 		if (buffer != null && ownsBuffer)
 			MemoryUtil.memFree(buffer);
 		buffer = null;
+	}
+
+	public GpuIntBuffer setBuffer(GLMappedBuffer buffer) {
+		assert !ownsBuffer;
+		this.buffer = buffer.intView();
+		return this;
 	}
 
 	@Override
