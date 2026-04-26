@@ -506,7 +506,7 @@ public class ProceduralGenerator {
 
 						final int oX = x + dX;
 						final int oY = y + dY;
-						final boolean canReuseTile = canReuse && oX >= 8 && oX < sizeX - 8 && oY >= 8 && oY < sizeY - 8;
+						final boolean canReuseTile = canReuse && oX >= 0 && oX < sizeX && oY >= 0 && oY < sizeY;
 
 						int tileZ = tile.getRenderLevel();
 						ids[0] = OVERLAY_FLAG | overlayIds[tileZ][x][y];

@@ -223,15 +223,17 @@ public class SceneContext {
 		if (packed == 0)
 			return false;
 
+		boolean found = false;
 		int offset = packed >> TILE_OVERRIDE_COUNT;
 		for (int i = 0; i < TILE_OVERRIDE_COUNT; i++) {
 			if ((packed & (1 << i)) == 0)
 				continue;
 
 			result[i] = tileOverrides.get(offset++);
+			found = true;
 		}
 
-		return true;
+		return found;
 	}
 
 	public TileOverride getTileOverride(int plane, int x, int y, int type) {
