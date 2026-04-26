@@ -19,6 +19,8 @@ public final class IntHashSet implements Iterable<Integer> {
 	private int[] keys;
 	private int[] distances;
 
+	private int lowTide = Integer.MAX_VALUE;
+	private int highTide;
 	private int size;
 	private int mask;
 
@@ -83,6 +85,8 @@ public final class IntHashSet implements Iterable<Integer> {
 				keys[idx] = key;
 				distances[idx] = dist;
 				size++;
+				lowTide = min(idx, lowTide);
+				highTide = max(idx, highTide);
 				return true;
 			}
 
@@ -147,8 +151,10 @@ public final class IntHashSet implements Iterable<Integer> {
 	}
 
 	public void clear() {
-		Arrays.fill(keys, EMPTY);
-		Arrays.fill(distances, 0);
+		if(size == 0)
+			return;
+		Arrays.fill(keys, lowTide, highTide, EMPTY);
+		Arrays.fill(distances, lowTide, highTide, 0);
 		size = 0;
 	}
 
