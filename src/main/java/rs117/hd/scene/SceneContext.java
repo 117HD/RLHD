@@ -39,57 +39,46 @@ public class SceneContext {
 	public static final int VERTEX_IS_HIGH_PRIORITY_COLOR = 1 << 5;
 	public static final int VERTEX_UNDER_WATER_DEPTH_SHIFT = 6;
 	public static final int VERTEX_UNDER_WATER_DEPTH_MASK = 0x3FFFFFF;
-
+	// Thread safe tile override variables
+	public final static ThreadLocal<TileOverrideVariables> tileOverrideVars = ThreadLocal.withInitial(TileOverrideVariables::new);
 	public final Client client;
 	public final Scene scene;
 	public final int expandedMapLoadingChunks;
-	public int sizeX, sizeZ;
-
 	@Nullable
 	public final int[] sceneBase;
 	public final AABB sceneBounds;
+	public final ArrayList<Environment> environments = new ArrayList<>();
+	public final ArrayList<TileOverride> tileOverrides = new ArrayList<>();
+	public final ArrayList<Light> lights = new ArrayList<>();
+	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
+	public final ArrayList<TileObject> lightSpawnsToHandleOnClientThread = new ArrayList<>();
+	public int sizeX, sizeZ;
 	public int sceneOffset;
-
 	public boolean enableAreaHiding;
 	public boolean fillGaps;
 	public boolean isInChambersOfXeric;
 	public boolean isInHouse;
-
 	@Nullable
 	public Area currentArea;
 	public Area[] possibleAreas = new Area[0];
-	public final ArrayList<Environment> environments = new ArrayList<>();
 	public byte[][] filledTiles = new byte[EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
-
 	public int staticVertexCount = 0;
-
 	public int staticGapFillerTilesOffset;
 	public int staticGapFillerTilesVertexCount;
 	public int staticCustomTilesOffset;
 	public int staticCustomTilesVertexCount;
-
 	// Statistics
 	public int uniqueModels;
-
 	// Terrain data
 	public byte[][][] tileFlags;
 	public int[][][] tileOverrideIndices;
-	public final ArrayList<TileOverride> tileOverrides = new ArrayList<>();
 	public Int2IntHashMap vertexTerrainColor;
 	public Int2IntHashMap vertexData;
 	public Int2ObjectHashMap<Material> vertexTerrainTexture;
 	public Int2ObjectHashMap<int[]> vertexTerrainNormals;
-
 	// Water-related data
 	public byte[][][] underwaterDepthLevels;
-
-	// Thread safe tile override variables
-	public final static ThreadLocal<TileOverrideVariables> tileOverrideVars = ThreadLocal.withInitial(TileOverrideVariables::new);
-
 	public int numVisibleLights = 0;
-	public final ArrayList<Light> lights = new ArrayList<>();
-	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
-	public final ArrayList<TileObject> lightSpawnsToHandleOnClientThread = new ArrayList<>();
 
 	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;
@@ -106,49 +95,57 @@ public class SceneContext {
 	public synchronized void destroy() {}
 
 	public void setVertexIsLand(int hash) {
-		vertexData.compute(hash, v -> v | VERTEX_IS_LAND, 0);
+		vertexData.or(hash, VERTEX_IS_LAND, 0);
 	}
 
 	public void setVertexIsWater(int hash) {
-		vertexData.compute(hash, v -> v | VERTEX_IS_WATER, 0);
+		vertexData.or(hash, VERTEX_IS_WATER, 0);
 	}
 
 	public void setVertexHighPriorityColor(int hash) {
-		vertexData.compute(hash, v -> v | VERTEX_IS_HIGH_PRIORITY_COLOR, 0);
+		vertexData.or(hash, VERTEX_IS_HIGH_PRIORITY_COLOR, 0);
 	}
 
 	public void setVertexIsOverlay(int hash, boolean isOverlay) {
-		final int flag = isOverlay ? VERTEX_IS_OVERLAY : VERTEX_IS_UNDERLAY;
-		vertexData.compute(hash, v -> v | flag, 0);
+		int mask = VERTEX_IS_OVERLAY | VERTEX_IS_UNDERLAY;
+		int value = isOverlay ? VERTEX_IS_OVERLAY : VERTEX_IS_UNDERLAY;
+		vertexData.setBits(hash, value, mask, 0);
 	}
 
 	public void setVertexUnderwaterDepth(int hash, int depth) {
-		final int shifted = (depth << VERTEX_UNDER_WATER_DEPTH_SHIFT);
-		vertexData.compute(hash, v -> v | shifted, 0);
+		int value = (depth << VERTEX_UNDER_WATER_DEPTH_SHIFT);
+		int mask = VERTEX_UNDER_WATER_DEPTH_MASK << VERTEX_UNDER_WATER_DEPTH_SHIFT;
+
+		vertexData.setBits(hash, value, mask, 0);
 	}
 
 	public boolean isVertexHighPriorityColor(int hash) {
-		return (vertexData.getOrDefault(hash, 0) & VERTEX_IS_HIGH_PRIORITY_COLOR) != 0;
+		return vertexData.test(hash, VERTEX_IS_HIGH_PRIORITY_COLOR);
 	}
 
 	public boolean isVertexLand(int hash) {
-		return (vertexData.getOrDefault(hash, 0) & VERTEX_IS_LAND) != 0;
+		return vertexData.test(hash, VERTEX_IS_LAND);
 	}
 
 	public boolean isVertexWater(int hash) {
-		return (vertexData.getOrDefault(hash, 0) & VERTEX_IS_WATER) != 0;
+		return vertexData.test(hash, VERTEX_IS_WATER);
 	}
 
 	public boolean isVertexOverlay(int hash) {
-		return (vertexData.getOrDefault(hash, 0) & VERTEX_IS_OVERLAY) != 0;
+		return vertexData.test(hash, VERTEX_IS_OVERLAY);
 	}
 
 	public boolean isVertexUnderlay(int hash) {
-		return (vertexData.getOrDefault(hash, 0) & VERTEX_IS_UNDERLAY) != 0;
+		return vertexData.test(hash, VERTEX_IS_UNDERLAY);
 	}
 
 	public int getVertexUnderwaterDepth(int hash) {
-		return (vertexData.getOrDefault(hash, 0) >> VERTEX_UNDER_WATER_DEPTH_SHIFT) & VERTEX_UNDER_WATER_DEPTH_MASK;
+		return vertexData.getBits(
+			hash,
+			VERTEX_UNDER_WATER_DEPTH_MASK,
+			VERTEX_UNDER_WATER_DEPTH_SHIFT,
+			0
+		);
 	}
 
 	public void setTileFlag(int plane, int x, int y, byte flag) {
@@ -159,27 +156,34 @@ public class SceneContext {
 		return (tileFlags[plane][x][y] & flag) != 0;
 	}
 
-	public void setTileOverride(int plane, int x, int y, TileOverride mainOverride, TileOverride underlayOverride, TileOverride overlayOverride) {
+	public void setTileOverride(
+		int plane,
+		int x,
+		int y,
+		TileOverride mainOverride,
+		TileOverride underlayOverride,
+		TileOverride overlayOverride
+	) {
 		assert tileOverrideIndices[plane][x][y] == 0;
 
 		int index = tileOverrides.size();
 		int packed = 0;
-		if(mainOverride != null) {
+		if (mainOverride != null) {
 			tileOverrides.add(mainOverride);
 			packed |= 1 << TILE_OVERRIDE_MAIN;
 		}
 
-		if(underlayOverride != null) {
+		if (underlayOverride != null) {
 			tileOverrides.add(underlayOverride);
 			packed |= 1 << TILE_OVERRIDE_UNDERLAY;
 		}
 
-		if(overlayOverride != null) {
+		if (overlayOverride != null) {
 			tileOverrides.add(overlayOverride);
 			packed |= 1 << TILE_OVERRIDE_OVERLAY;
 		}
 
-		if(index == tileOverrides.size())
+		if (index == tileOverrides.size())
 			return; // No overrides, nothing to do
 
 		packed |= index << TILE_OVERRIDE_COUNT;
@@ -188,12 +192,12 @@ public class SceneContext {
 
 	public boolean getTileOverrides(int plane, int x, int y, TileOverride[] result) {
 		final int packed = tileOverrideIndices[plane][x][y];
-		if(packed == 0)
+		if (packed == 0)
 			return false;
 
 		int offset = packed >> TILE_OVERRIDE_COUNT;
-		for(int i = 0; i < TILE_OVERRIDE_COUNT; i++) {
-			if((packed & (1 << i)) == 0)
+		for (int i = 0; i < TILE_OVERRIDE_COUNT; i++) {
+			if ((packed & (1 << i)) == 0)
 				continue;
 
 			result[i] = tileOverrides.get(offset++);
@@ -203,16 +207,16 @@ public class SceneContext {
 	}
 
 	public TileOverride getTileOverride(int plane, int x, int y, int type) {
-		if(tileOverrideIndices == null)
+		if (tileOverrideIndices == null)
 			return null;
 
 		final int packed = tileOverrideIndices[plane][x][y];
-		if(packed == 0 || (packed & (1 << type)) == 0)
+		if (packed == 0 || (packed & (1 << type)) == 0)
 			return null;
 
 		int offset = packed >> TILE_OVERRIDE_COUNT;
-		for(int i = 0; i < type; i++) {
-			if((packed & (1 << i)) != 0)
+		for (int i = 0; i < type; i++) {
+			if ((packed & (1 << i)) != 0)
 				offset++;
 		}
 

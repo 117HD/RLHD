@@ -38,8 +38,8 @@ public class GroundMaterial {
 	 */
 	public Material getRandomMaterial(int... worldPos) {
 		long hash = 0;
-		for (int coord : worldPos)
-			hash = hash * 31 + coord;
+		for (int i = 0; i < worldPos.length; i++)
+			hash = hash * 31 + worldPos[i];
 		long seed = (hash ^ 0x5DEECE66DL) & ((1L << 48) - 1);
 		seed = (seed * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1);
 		int r = (int) (seed >>> (48 - 31));
