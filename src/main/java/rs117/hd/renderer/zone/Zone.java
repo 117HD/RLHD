@@ -16,6 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.jobs.EboAlphaWriterJob;
+import rs117.hd.renderer.zone.jobs.StaticAlphaSortingJob;
+import rs117.hd.renderer.zone.jobs.ZoneUploadJob;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -85,8 +88,8 @@ public class Zone implements Destructible {
 
 	public HashSet<Integer> animatedDynamicObjectIds = new HashSet<>();
 
-	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
-	ZoneUploadJob uploadJob;
+	private final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
+	public ZoneUploadJob uploadJob;
 
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
 
@@ -417,19 +420,19 @@ public class Zone implements Destructible {
 		byte flags;
 
 		// only set for static geometry as they require sorting
-		int radius;
-		int[] packedFaces;
-		int[] sortedFaces;
-		int sortedFacesLen;
+		public int radius;
+		public int[] packedFaces;
+		public int[] sortedFaces;
+		public int sortedFacesLen;
 
 		int dist;
-		int asyncSortIdx = -1;
+		public int asyncSortIdx = -1;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
 		static final int SORT_COMPLETED = 4;
 
-		void setSorted() {
+		public void setSorted() {
 			flags |= SORT_COMPLETED;
 		}
 

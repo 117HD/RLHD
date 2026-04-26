@@ -1,8 +1,12 @@
-package rs117.hd.renderer.zone;
+package rs117.hd.renderer.zone.jobs;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.renderer.zone.SceneUploader;
+import rs117.hd.renderer.zone.WorldViewContext;
+import rs117.hd.renderer.zone.Zone;
+import rs117.hd.renderer.zone.ZoneSceneContext;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
@@ -18,10 +22,10 @@ public final class ZoneUploadJob extends Job {
 	private WorldViewContext viewContext;
 	private ZoneSceneContext sceneContext;
 
-	Zone zone;
-	int x, z;
-	long revealAfterTimestampMs;
-	boolean shouldUnmap;
+	public Zone zone;
+	public int x, z;
+	public long revealAfterTimestampMs;
+	public boolean shouldUnmap;
 
 	@Override
 	protected void onRun() throws InterruptedException {
