@@ -13995,7 +13995,8 @@
       "BIM_VAULT_TILE01DEBRIS01",
       "BIM_VAULT_TILE01DEBRIS02",
       "TOA_BABA_DUGUPSOIL04",
-      "TOA_BABA_DUGUPSOIL05"
+      "TOA_BABA_DUGUPSOIL05",
+      "DORGESH_ROCKS_3"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.3,
@@ -14012,7 +14013,11 @@
       "FAI_FALADOR_DUGUPSOIL_3",
       "KR_KEEP_DUGUPSOIL1",
       "KR_KEEP_DUGUPSOIL3",
-      "TOA_BABA_DUGUPSOIL06"
+      "TOA_BABA_DUGUPSOIL06",
+      "DORGESH_ROCKS_1",
+      "DORGESH_ROCKS_2",
+      "DORGESH_ROCKS_4",
+      "DORGESH_ROCKS_5"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -19057,11 +19062,19 @@
   {
     "description": "Objects - Stone - Chair 5 - Stone Chair with cushion",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 5",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       "DWARF_KELDAGRIM_CHAIR_POSH"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.8
+    ]
   },
   {
     "description": "Slayer Tower broken chairs",
@@ -86336,6 +86349,7 @@
     ],
     "objectIds": [
       "DORGESH_2STAIRS_INTERNAL",
+      "DORGESH_2STAIRS_INTERNAL_TOP",
       "DORGESH_2STAIRS_INTERNAL_TOP_LOWER"
     ]
   },
@@ -86349,6 +86363,7 @@
       "DORGESH_GROUND_WALLS_INNER_SUPPORT",
       "DORGESH_GROUND_WALLS_INNER",
       "DORGESH_GROUND_WALLS_INNER_WINDOW",
+      "DORGESH_GROUND_WALLS_INNER_WINDOW_R_TERM",
       "DORGESH_GROUND_WALLS_INNER_WINDOW_L_TERM",
       "DORGESH_FIRST_WALLS_INNER",
       "DORGESH_FIRST_WALLS_INNER_WINDOW",
@@ -86390,7 +86405,7 @@
   },
   {
     "description": "Dorgesh-Kaan - Stone - Metallic - Statues",
-    "baseMaterial": "SMOOTH_STONE",
+    "baseMaterial": "MARBLE_1",
     "uvScale": 0.8,
     "uvType": "BOX",
     "colorOverrides": [
@@ -86404,7 +86419,7 @@
     ],
     "objectIds": [
       "DORGESH_COUNCIL_STATUE1",
-      "DORGESH_COUNCIL_STATUE2"
+      "DORGESH_COUNCIL_STATUE2", "DORGESH_COUNCIL_BUST1"
     ]
   },
   {
@@ -86445,6 +86460,14 @@
       "DORGESH_WATER_CORNER",
       "DORGESH_WATER_SIDE",
       "DORGESH_WATER_MIDDLE"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Brick Edging",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DORGESH_NO_WATER_CORNER", "DORGESH_NO_WATER_SIDE"
     ]
   },
   {
@@ -86572,6 +86595,454 @@
     ],
     "objectIds": [
       "DORGESH_MARKET_BARRIER"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Door with metal trim",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 589,
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_INNER_DOOR_CLOSED",
+      "DORGESH_INNER_DOOR_OPEN",
+      "DORGESH_INNER_DOOR_POSH_CLOSED",
+      "DORGESH_INNER_DOOR_POSH_OPEN"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Chairs and Stools with metal trim",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_RICH_STOOL",
+      "DORGESH_RICH_CHAIR1"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Carpet - Chairs with metal trim and cushions - Red",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "colors": "s >= 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      },
+      {
+        "colors": "h== 0 && s <= 3",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_STATELY_CHAIR",
+      "DORGESH_COUNCIL_HEAD_CHAIR"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Carpet - Chairs with metal trim and cushions - Blue",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "colors": "s >= 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_COUNCIL_CHAIR_MEMBERS"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Chairs and Stools",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "objectIds": [
+      "DORGESH_AVERAGE_STOOL",
+      "DORGESH_AVERAGE_CHAIR1"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Table",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      "DORGESH_AVERAGE_TABLE_1BY1",
+      "DORGESH_AVERAGE_TABLE_2BY1"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Bank tables with books and clutter",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s <=  1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
+      {
+        "colors": [ "s == 0", "s > 6" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_BANK_DESK1",
+      "DORGESH_BANK_DESK2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Council Tables with Scrools and clutter",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s <=  1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
+      {
+        "colors": [ "s == 0", "s > 6" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Scrolls",
+        "colors": [ "h == 8" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.5,
+        "uvType": "BOX",
+        "depthBias": 100
+      }
+    ],
+    "objectIds": [
+      "DORGESH_SCRIBE_TABLE_1BY1",
+      "DORGESH_SCRIBE_TABLE_2BY1",
+      "DORGESH_SCRIBE_TABLE_2BY2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Table with metal trim",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_STATELY_TABLE_1BY1",
+      "DORGESH_RICH_TABLE_2BY1",
+      "DORGESH_RICH_TABLE_2BY2",
+      "DORGESH_STATELY_TABLE_2BY2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Council Table",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 1.25,
+    "uvType": "BOX",
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_COUNCIL_TABLE"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Chest with metal trim",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": 386,
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ],
+    "objectIds": [
+      "DORGESH_AVERAGE_CHEST_CLOSED",
+      "DORGESH_AVERAGE_CHEST_CLOSED_EMPTY",
+      "DORGESH_AVERAGE_CHEST_OPEN",
+      "DORGESH_RICH_CHEST_CLOSED",
+      "DORGESH_RICH_CHEST_CLOSED_EMPTY",
+      "DORGESH_RICH_CHEST_OPEN"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Cloth - Stone Bed and blanket",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -187,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s <=  2",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvScale": 0.5,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
+      {
+        "colors": [ "h == 5 && s >= 6", "h == 6 && s >= 6" ],
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 189
+      }
+    ],
+    "objectIds": [
+      "DORGESH_AVERAGE_BED_2BY1",
+      "DORGESH_AVERAGE_BED_2BY2",
+      "DORGESH_RICH_BED_2BY2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Paper - Glass - Shelf with objects",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 189,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 589
+      }
+    ],
+    "objectIds": [
+      "DORGESH_AVERAGE_SHELF1",
+      "DORGESH_AVERAGE_SHELF2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Paper - Bookshelf",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 589,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 189
+      }
+    ],
+    "objectIds": [
+      "DORGESH_SCRIBE_BOOKSHELF"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Paper - Wallshelf with books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 589,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 189
+      }
+    ],
+    "objectIds": [
+      "DORGESH_SCRIBE_SHELF1",
+      "DORGESH_SCRIBE_SHELF2",
+      "DORGESH_SCRIBE_SHELF3"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Glass - Rich Shelf with objects and golden trim",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 189,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 5 && s == 7", "h == 6 && s == 7" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -89
+      },
+      {
+        "colors": [ "h == 10", "h == 0 && s > 0" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 589
+      }
+    ],
+    "objectIds": [
+      "DORGESH_RICH_SHELF1",
+      "DORGESH_RICH_SHELF2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Metal ladder with gold railing",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 589,
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_RICH_LADDER_BASE",
+      "DORGESH_RICH_LADDER_TOP_LOWER",
+      "DORGESH_RICH_LADDER_TOP"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Cloth - Doormat and carpet",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "DORGESH_DOORMAT1",
+      "DORGESH_DOORMAT2",
+      "DORGESH_DOORMAT3",
+      "DORGESH_AVERAGE_RUG_CENTRE",
+      "DORGESH_AVERAGE_RUG_CORNER",
+      "DORGESH_AVERAGE_RUG_EDGE"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Supports with gold features",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "depthBias": 44
+      }
+    ],
+    "objectIds": [
+      "DORGESH_INNER_WALL_SUPPORT_POSH"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Hanging wall Carvings",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "depthBias": 44
+      }
+    ],
+    "objectIds": [
+      "DORGESH_COUNCIL_CARVINGS1",
+      "DORGESH_COUNCIL_CARVINGS2",
+      "DORGESH_STATELY_WALL_ART2",
+      "DORGESH_STATELY_WALL_ART3"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Hanging wall Carvings",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 187,
+    "objectIds": [
+      "DORGESH_SCRIBE_WALL_MAP",
+      "DORGESH_SCRIBE_WALL_MAP2"
     ]
   }
 ]
