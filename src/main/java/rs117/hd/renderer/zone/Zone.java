@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.ToIntFunction;
 import javax.annotation.Nullable;
@@ -27,6 +26,7 @@ import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.collections.Int2IntHashMap;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
@@ -283,16 +283,15 @@ public class Zone implements Destructible {
 		}
 	}
 
-	void updateRoofs(Map<Integer, Integer> updates) {
+	void updateRoofs(Int2IntHashMap updates) {
 		for (int level = 0; level < 4; ++level) {
 			for (int i = 0; i < rids[level].length; ++i) {
 				rids[level][i] = updates.getOrDefault(rids[level][i], rids[level][i]);
 			}
 		}
 
-		for (AlphaModel m : alphaModels) {
-			m.rid = (short) (int) updates.getOrDefault((int) m.rid, (int) m.rid);
-		}
+		for (AlphaModel m : alphaModels)
+			m.rid = (short) updates.getOrDefault(m.rid, m.rid);
 	}
 
 	private static final int NUM_DRAW_RANGES = 512;
