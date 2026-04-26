@@ -71,8 +71,8 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     // Fade out shadows near the shadow map edges
     #if ZONE_RENDERER
         // TODO: Make this configurable if we make the Shadow Distance Variable
-        const float fadeStart = 75.0 * TILE_SIZE;
-        const float fadeEnd   = 80.0 * TILE_SIZE;
+        const float fadeStart = 55.0 * TILE_SIZE;
+        const float fadeEnd   = 65.0 * TILE_SIZE;
         float fadeOut = smoothstep(fadeStart, fadeEnd, length(fragPos - cameraPos));
     #else
         float fadeOut = smoothstep(.75, 1., dot(shadowPos.xy, shadowPos.xy));
