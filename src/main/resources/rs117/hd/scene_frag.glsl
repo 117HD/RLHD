@@ -31,6 +31,7 @@
 #define DISPLAY_TANGENT 0
 #define DISPLAY_SHADOWS 0
 #define DISPLAY_LIGHTING 0
+#define DISPLAY_HEX 0
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
@@ -81,6 +82,7 @@ vec2 worldUvs(float scale) {
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
+#include <utils/hex_tiling.glsl>
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -158,7 +160,6 @@ void main() {
         uv3 += uvFlow * flowMapStrength;
 
         // Set up tangent-space transformation matrix
-
         vec3 N;
         #if FLAT_SHADING && ZONE_RENDERER
             N = normalize(fFlatNormal);
@@ -205,6 +206,16 @@ void main() {
             fragPos += TBN * fragDelta;
         #endif
 
+        // Build HexData, if Terrain use world space XZ otherwise UVs
+        HexData hex1 = buildHexData(uv1, IN.position / TILE_SIZE, material1.hexTilingScale, material1.hexTilingBlend, getMaterialHexTilingMode(material1));
+        HexData hex2 = buildHexData(uv2, IN.position / TILE_SIZE, material2.hexTilingScale, material2.hexTilingBlend, getMaterialHexTilingMode(material2));
+        HexData hex3 = buildHexData(uv3, IN.position / TILE_SIZE, material3.hexTilingScale, material3.hexTilingBlend, getMaterialHexTilingMode(material3));
+
+        #if DISPLAY_HEX
+            FragColor = vec4(debugHex(hex1) * IN.texBlend.x + debugHex(hex2) * IN.texBlend.y + debugHex(hex3) * IN.texBlend.z, 1.0);
+            if (DISPLAY_HEX == 1) return; // Redundant, for syntax highlighting in IntelliJ
+        #endif
+
         vec3 hsl1 = unpackRawHsl(fAlphaBiasHsl[0]);
         vec3 hsl2 = unpackRawHsl(fAlphaBiasHsl[1]);
         vec3 hsl3 = unpackRawHsl(fAlphaBiasHsl[2]);
@@ -237,9 +248,9 @@ void main() {
         #endif
 
         // get diffuse textures
-        vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);
-        vec4 texColor2 = colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2), mipBias);
-        vec4 texColor3 = colorMap3 == -1 ? vec4(1) : texture(textureArray, vec3(uv3, colorMap3), mipBias);
+        vec4 texColor1 = colorMap1 == -1 ? vec4(1) : sampleHex(textureArray, vec3(uv1, colorMap1), hex1);
+        vec4 texColor2 = colorMap2 == -1 ? vec4(1) : sampleHex(textureArray, vec3(uv2, colorMap2), hex2);
+        vec4 texColor3 = colorMap3 == -1 ? vec4(1) : sampleHex(textureArray, vec3(uv3, colorMap3), hex3);
         texColor1.rgb *= material1.brightness;
         texColor2.rgb *= material2.brightness;
         texColor3.rgb *= material3.brightness;
@@ -347,9 +358,9 @@ void main() {
         vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
         vec3 vSpecularStrength = vec3(material1.specularStrength, material2.specularStrength, material3.specularStrength);
         vSpecularStrength *= vec3(
-            material1.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv1, material1.roughnessMap)).r),
-            material2.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv2, material2.roughnessMap)).r),
-            material3.roughnessMap == -1 ? 1 : linearToSrgb(texture(textureArray, vec3(uv3, material3.roughnessMap)).r)
+            material1.roughnessMap == -1 ? 1 : linearToSrgb(sampleHex(textureArray, vec3(uv1, material1.roughnessMap), hex1).r),
+            material2.roughnessMap == -1 ? 1 : linearToSrgb(sampleHex(textureArray, vec3(uv2, material2.roughnessMap), hex2).r),
+            material3.roughnessMap == -1 ? 1 : linearToSrgb(sampleHex(textureArray, vec3(uv3, material3.roughnessMap), hex3).r)
         );
 
         // apply specular highlights to anything semi-transparent
@@ -372,9 +383,9 @@ void main() {
         vec3 ambientLightOut = ambientColor * ambientStrength;
 
         float aoFactor =
-            IN.texBlend.x * (material1.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv1, material1.ambientOcclusionMap)).r) +
-            IN.texBlend.y * (material2.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv2, material2.ambientOcclusionMap)).r) +
-            IN.texBlend.z * (material3.ambientOcclusionMap == -1 ? 1 : texture(textureArray, vec3(uv3, material3.ambientOcclusionMap)).r);
+            IN.texBlend.x * (material1.ambientOcclusionMap == -1 ? 1 : sampleHex(textureArray, vec3(uv1, material1.ambientOcclusionMap), hex1).r) +
+            IN.texBlend.y * (material2.ambientOcclusionMap == -1 ? 1 : sampleHex(textureArray, vec3(uv2, material2.ambientOcclusionMap), hex2).r) +
+            IN.texBlend.z * (material3.ambientOcclusionMap == -1 ? 1 : sampleHex(textureArray, vec3(uv3, material3.ambientOcclusionMap), hex3).r);
         ambientLightOut *= aoFactor;
 
         // directional light
