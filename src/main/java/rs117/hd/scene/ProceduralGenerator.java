@@ -118,8 +118,6 @@ public class ProceduralGenerator {
 		sceneContext.tileOverrideIndices = null;
 		sceneContext.vertexTerrainTexture = null;
 		sceneContext.vertexNormals = null;
-		if (!(sceneContext instanceof LegacySceneContext))
-			sceneContext.underwaterDepthLevels = null;
 	}
 
 	public static void faceVertexKeys(Tile tile, int face, int[][] vertices, int[] vertexHashes) {
@@ -773,6 +771,8 @@ public class ProceduralGenerator {
 		private final int[][] vertices = new int[4][3];
 		private final int[] hashes = new int[4];
 
+		private final byte[][][] underwaterDepthLevels = new byte[MAX_Z][EXTENDED_SCENE_SIZE + 1][EXTENDED_SCENE_SIZE + 1];
+
 		// Defines ranges of water tiles
 		private final int[] minX = new int[MAX_Z];
 		private final int[] maxX = new int[MAX_Z];
@@ -792,10 +792,6 @@ public class ProceduralGenerator {
 			// bit 2 set if a tile will be skipped when the scene is drawn, this is due to certain edge cases with water on the same X/Y on different planes
 			sceneContext.tileFlags = new byte[MAX_Z][sizeX][sizeY];
 			sceneContext.vertexData = new Int2IntHashMap(prevSceneCtx != null && prevSceneCtx.vertexData != null ? prevSceneCtx.vertexData.capacity() : 0);
-			// the basic 'levels' of underwater terrain, used to sink terrain based on its distance
-			// from the shore, then used to produce the world-space height offset
-			// 0 = land
-			sceneContext.underwaterDepthLevels = new byte[MAX_Z][sizeX + 1][sizeY + 1];
 			// the world-space height offsets of each vertex on the tile grid
 			// these offsets are interpolated to calculate offsets for vertices not on the grid (tilemodels)
 
@@ -804,7 +800,7 @@ public class ProceduralGenerator {
 					// set the array to 1 initially
 					// this assumes that all vertices are water;
 					// we will set non-water vertices to 0 in the next loop
-					Arrays.fill(sceneContext.underwaterDepthLevels[z][x], (byte)1);
+					Arrays.fill(underwaterDepthLevels[z][x], (byte)1);
 				}
 			}
 
@@ -817,16 +813,16 @@ public class ProceduralGenerator {
 			// figure out which vertices are water and assign some data
 			for (int z = 0; z < MAX_Z; ++z) {
 				final Tile[][] zTiles = tiles[z];
-				final byte[][] underwaterDepthLevels = sceneContext.underwaterDepthLevels[z];
+				final byte[][] zUnderwaterDepthLevels = underwaterDepthLevels[z];
 				for (int x = 0; x < sizeX; ++x) {
 					final Tile[] xTiles = zTiles[x];
 					for (int y = 0; y < sizeY; ++y) {
 						Tile tile = xTiles[y];
 						if (tile == null) {
-							underwaterDepthLevels[x][y] = 0;
-							underwaterDepthLevels[x + 1][y] = 0;
-							underwaterDepthLevels[x][y + 1] = 0;
-							underwaterDepthLevels[x + 1][y + 1] = 0;
+							zUnderwaterDepthLevels[x][y] = 0;
+							zUnderwaterDepthLevels[x + 1][y] = 0;
+							zUnderwaterDepthLevels[x][y + 1] = 0;
+							zUnderwaterDepthLevels[x + 1][y + 1] = 0;
 							continue;
 						}
 
@@ -843,10 +839,10 @@ public class ProceduralGenerator {
 									if (tile.getSceneTilePaint().getNeColor() != HIDDEN_HSL || override.forced)
 										sceneContext.setVertexIsLand(hashes[i]);
 
-								underwaterDepthLevels[x][y] = 0;
-								underwaterDepthLevels[x + 1][y] = 0;
-								underwaterDepthLevels[x][y + 1] = 0;
-								underwaterDepthLevels[x + 1][y + 1] = 0;
+								zUnderwaterDepthLevels[x][y] = 0;
+								zUnderwaterDepthLevels[x + 1][y] = 0;
+								zUnderwaterDepthLevels[x][y + 1] = 0;
+								zUnderwaterDepthLevels[x + 1][y + 1] = 0;
 							} else {
 								// Stop tiles on the same X,Y coordinates on different planes from
 								// each generating water. Prevents undesirable results in certain places.
@@ -855,10 +851,10 @@ public class ProceduralGenerator {
 
 									for (int checkZ = 0; checkZ < z; ++checkZ) {
 										if (sceneContext.isTileFlagSet(checkZ, x, y, TILE_WATER_FLAG)) {
-											underwaterDepthLevels[x][y] = 0;
-											underwaterDepthLevels[x + 1][y] = 0;
-											underwaterDepthLevels[x][y + 1] = 0;
-											underwaterDepthLevels[x + 1][y + 1] = 0;
+											zUnderwaterDepthLevels[x][y] = 0;
+											zUnderwaterDepthLevels[x + 1][y] = 0;
+											zUnderwaterDepthLevels[x][y + 1] = 0;
+											zUnderwaterDepthLevels[x + 1][y + 1] = 0;
 
 											sceneContext.setTileFlag(z, x, y, TILE_SKIP_FLAG);
 
@@ -910,10 +906,10 @@ public class ProceduralGenerator {
 
 									for (int checkZ = 0; checkZ < z; ++checkZ) {
 										if (sceneContext.isTileFlagSet(checkZ, x, y, TILE_WATER_FLAG)) {
-											underwaterDepthLevels[x][y] = 0;
-											underwaterDepthLevels[x + 1][y] = 0;
-											underwaterDepthLevels[x][y + 1] = 0;
-											underwaterDepthLevels[x + 1][y + 1] = 0;
+											zUnderwaterDepthLevels[x][y] = 0;
+											zUnderwaterDepthLevels[x + 1][y] = 0;
+											zUnderwaterDepthLevels[x][y + 1] = 0;
+											zUnderwaterDepthLevels[x + 1][y + 1] = 0;
 
 											sceneContext.setTileFlag(z, x, y, TILE_SKIP_FLAG);
 
@@ -945,7 +941,7 @@ public class ProceduralGenerator {
 											int vX = (vertices[vertex][0] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 											int vY = (vertices[vertex][1] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 
-											sceneContext.underwaterDepthLevels[z][vX][vY] = 0;
+											zUnderwaterDepthLevels[vX][vY] = 0;
 										}
 									}
 								} else {
@@ -962,10 +958,10 @@ public class ProceduralGenerator {
 								}
 							}
 						} else {
-							underwaterDepthLevels[x][y] = 0;
-							underwaterDepthLevels[x + 1][y] = 0;
-							underwaterDepthLevels[x][y + 1] = 0;
-							underwaterDepthLevels[x + 1][y + 1] = 0;
+							zUnderwaterDepthLevels[x][y] = 0;
+							zUnderwaterDepthLevels[x + 1][y] = 0;
+							zUnderwaterDepthLevels[x][y + 1] = 0;
+							zUnderwaterDepthLevels[x + 1][y + 1] = 0;
 						}
 					}
 				}
@@ -974,10 +970,10 @@ public class ProceduralGenerator {
 			// Sink terrain further from shore by desired levels.
 			for (int level = 0; level < DEPTH_LEVEL_SLOPE.length - 1; level++) {
 				for (int z = minZ; z <= maxZ; ++z) {
-					final byte[][] underwaterDepthLevels = sceneContext.underwaterDepthLevels[z];
+					final byte[][] zUnderwaterDepthLevels = underwaterDepthLevels[z];
 					for (int x = minX[z]; x <= maxX[z]; x++) {
 						for (int y = minY[z]; y <= maxY[z]; y++) {
-							int tileHeight = underwaterDepthLevels[x][y];
+							int tileHeight = zUnderwaterDepthLevels[x][y];
 							if (tileHeight == 0 || tileHeight >= Byte.MAX_VALUE) {
 								// Skip the tile if it isn't water.
 								continue;
@@ -987,30 +983,30 @@ public class ProceduralGenerator {
 							// it creates a 'wall' to prevent fog from passing through.
 							// Not incredibly effective, but better than nothing.
 							if (x == 0 || y == 0 || x == EXTENDED_SCENE_SIZE || y == EXTENDED_SCENE_SIZE) {
-								underwaterDepthLevels[x][y] = 0;
+								zUnderwaterDepthLevels[x][y] = 0;
 								continue;
 							}
 
-							if (underwaterDepthLevels[x - 1][y] < tileHeight) {
+							if (zUnderwaterDepthLevels[x - 1][y] < tileHeight) {
 								// West
 								continue;
 							}
-							if (x < underwaterDepthLevels[z].length - 1
-							    && underwaterDepthLevels[x + 1][y] < tileHeight) {
+							if (x < zUnderwaterDepthLevels.length - 1
+							    && zUnderwaterDepthLevels[x + 1][y] < tileHeight) {
 								// East
 								continue;
 							}
-							if (underwaterDepthLevels[x][y - 1] < tileHeight) {
+							if (zUnderwaterDepthLevels[x][y - 1] < tileHeight) {
 								// South
 								continue;
 							}
-							if (y < underwaterDepthLevels[z].length - 1
-							    && underwaterDepthLevels[x][y + 1] < tileHeight) {
+							if (y < zUnderwaterDepthLevels.length - 1
+							    && zUnderwaterDepthLevels[x][y + 1] < tileHeight) {
 								// North
 								continue;
 							}
 							// At this point, it's surrounded only by other depth-adjusted vertices.
-							underwaterDepthLevels[x][y]++;
+							zUnderwaterDepthLevels[x][y]++;
 						}
 					}
 				}
@@ -1023,11 +1019,11 @@ public class ProceduralGenerator {
 				for (int x = minX[z]; x <= maxX[z]; x++) {
 					final Tile[] xTiles = zTiles[x];
 					for (int y = minY[z]; y <= maxY[z]; y++) {
-						if (!sceneContext.isTileFlagSet(z, x, y, TILE_WATER_FLAG))
-							continue;
-
 						Tile tile = xTiles[y];
 						if (tile == null)
+							continue;
+
+						if (!sceneContext.isTileFlagSet(z, x, y, TILE_WATER_FLAG))
 							continue;
 
 						if (tile.getBridge() != null)
@@ -1036,10 +1032,10 @@ public class ProceduralGenerator {
 						if (tile.getSceneTilePaint() != null) {
 							tileVertexKeys(sceneContext, tile, vertices, hashes);
 
-							final int swVertex = getHeightOffset(sceneContext, z, x, y);
-							final int seVertex = getHeightOffset(sceneContext, z, x + 1, y);
-							final int nwVertex = getHeightOffset(sceneContext, z, x, y + 1);
-							final int neVertex = getHeightOffset(sceneContext, z, x + 1, y + 1);
+							final int swVertex = getHeightOffset(z, x, y);
+							final int seVertex = getHeightOffset(z, x + 1, y);
+							final int nwVertex = getHeightOffset(z, x, y + 1);
+							final int neVertex = getHeightOffset(z, x + 1, y + 1);
 
 							sceneContext.setVertexUnderwaterDepth(hashes[0], swVertex);
 							sceneContext.setVertexUnderwaterDepth(hashes[1], seVertex);
@@ -1063,7 +1059,7 @@ public class ProceduralGenerator {
 										int vX = (vertices[vertex][0] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 										int vY = (vertices[vertex][1] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 
-										int height = getHeightOffset(sceneContext, z, vX, vY);
+										int height = getHeightOffset(z, vX, vY);
 										sceneContext.setVertexUnderwaterDepth(hashes[vertex], height);
 									} else {
 										// If the tile is a tile model and this vertex is shared only by faces that are water,
@@ -1073,13 +1069,13 @@ public class ProceduralGenerator {
 										float lerpX = fract(vertices[vertex][0] / (float) LOCAL_TILE_SIZE);
 										float lerpY = fract(vertices[vertex][1] / (float) LOCAL_TILE_SIZE);
 										float northHeightOffset = mix(
-											getHeightOffset(sceneContext, z, x, y + 1),
-											getHeightOffset(sceneContext, z, x + 1, y + 1),
+											getHeightOffset(z, x, y + 1),
+											getHeightOffset(z, x + 1, y + 1),
 											lerpX
 										);
 										float southHeightOffset = mix(
-											getHeightOffset(sceneContext, z, x, y),
-											getHeightOffset(sceneContext, z, x + 1, y),
+											getHeightOffset(z, x, y),
+											getHeightOffset(z, x + 1, y),
 											lerpX);
 										int heightOffset = (int) mix(southHeightOffset, northHeightOffset, lerpY);
 
@@ -1092,10 +1088,18 @@ public class ProceduralGenerator {
 					}
 				}
 			}
+
+			if(sceneContext instanceof LegacySceneContext) {
+				byte[][][] sceneUnderwaterDepthLevels = ((LegacySceneContext)sceneContext).underwaterDepthLevels;
+				for (int z = 0; z < MAX_Z; ++z) {
+					for (int x = 0; x < sizeX; ++x)
+						System.arraycopy(this.underwaterDepthLevels[z][x], 0, sceneUnderwaterDepthLevels[z][x], 0, sizeY);
+				}
+			}
 		}
 
-		private int getHeightOffset(SceneContext sceneContext, int z, int x, int y) {
-			int depthLevel = sceneContext.underwaterDepthLevels[z][x][y];
+		private int getHeightOffset(int z, int x, int y) {
+			int depthLevel = underwaterDepthLevels[z][x][y];
 			if (depthLevel == 0)
 				return 0;
 

@@ -83,7 +83,6 @@ public class SceneContext {
 	public Int2IntHashMap vertexTerrainNormalIndices;
 	public Int2ObjectHashMap<Material> vertexTerrainTexture;
 	public short[] vertexNormals;
-	public byte[][][] underwaterDepthLevels;
 
 	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;

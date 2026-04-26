@@ -14,6 +14,8 @@ public class LegacySceneContext extends SceneContext {
 	public boolean isPrepared;
 	public boolean forceDisableAreaHiding;
 
+	public byte[][][] underwaterDepthLevels;
+
 	public GpuIntBuffer staticUnorderedModelBuffer;
 	public GpuIntBuffer stagingBufferVertices;
 	public GpuFloatBuffer stagingBufferUvs;
