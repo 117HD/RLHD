@@ -707,6 +707,8 @@ public class SceneManager {
 					DestructibleHandler.queueDestruction(preZone);
 
 				nextZone.setMetadata(ctx, nextSceneContext, x, z);
+				if(preZone.rebuild)
+					nextZone.rebuild = true;
 				nextSceneContext.animatedDynamicObjectIds.addAll(nextZone.animatedDynamicObjectIds);
 			}
 		}
