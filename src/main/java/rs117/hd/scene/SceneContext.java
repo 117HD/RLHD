@@ -39,11 +39,13 @@ public class SceneContext {
 	public static final int VERTEX_IS_HIGH_PRIORITY_COLOR = 1 << 5;
 	public static final int VERTEX_UNDER_WATER_DEPTH_SHIFT = 6;
 	public static final int VERTEX_UNDER_WATER_DEPTH_MASK = 0x3FFFFFF;
+
 	// Thread safe tile override variables
 	public final static ThreadLocal<TileOverrideVariables> tileOverrideVars = ThreadLocal.withInitial(TileOverrideVariables::new);
 	public final Client client;
 	public final Scene scene;
 	public final int expandedMapLoadingChunks;
+
 	@Nullable
 	public final int[] sceneBase;
 	public final AABB sceneBounds;
@@ -54,10 +56,12 @@ public class SceneContext {
 	public final ArrayList<TileObject> lightSpawnsToHandleOnClientThread = new ArrayList<>();
 	public int sizeX, sizeZ;
 	public int sceneOffset;
+	public int numVisibleLights = 0;
 	public boolean enableAreaHiding;
 	public boolean fillGaps;
 	public boolean isInChambersOfXeric;
 	public boolean isInHouse;
+
 	@Nullable
 	public Area currentArea;
 	public Area[] possibleAreas = new Area[0];
@@ -67,8 +71,10 @@ public class SceneContext {
 	public int staticGapFillerTilesVertexCount;
 	public int staticCustomTilesOffset;
 	public int staticCustomTilesVertexCount;
+
 	// Statistics
 	public int uniqueModels;
+
 	// Terrain data
 	public byte[][][] tileFlags;
 	public int[][][] tileOverrideIndices;
@@ -78,7 +84,6 @@ public class SceneContext {
 	public Int2ObjectHashMap<Material> vertexTerrainTexture;
 	public short[] vertexNormals;
 	public byte[][][] underwaterDepthLevels;
-	public int numVisibleLights = 0;
 
 	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;
