@@ -45,7 +45,6 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.collections.Int2ObjectHashMap;
 import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
@@ -124,8 +123,6 @@ public class SceneUploader implements AutoCloseable {
 	private int[][][] roofs;
 	private int[][][] tileHeights;
 
-	private final Int2ObjectHashMap<GameObject[]> tileGameObjects = new Int2ObjectHashMap<>();
-
 	private final int[] worldPos = new int[3];
 	private final int[][] vertices = new int[4][3];
 	private final int[] vertexKeys = new int[4];
@@ -167,7 +164,6 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	public void clear() {
-		tileGameObjects.clear();
 		tiles = null;
 		settings = null;
 		roofs = null;
@@ -439,7 +435,6 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		GameObject[] gameObjects = t.getGameObjects();
-		tileGameObjects.put(t, gameObjects);
 		for (int i = 0; i < gameObjects.length; i++) {
 			final GameObject gameObject = gameObjects[i];
 			if (gameObject == null || !gameObject.getSceneMinLocation().equals(t.getSceneLocation()))
@@ -640,7 +635,7 @@ public class SceneUploader implements AutoCloseable {
 			);
 		}
 
-		GameObject[] gameObjects = tileGameObjects.get(t);
+		GameObject[] gameObjects = t.getGameObjects();
 		if(gameObjects == null)
 			gameObjects = t.getGameObjects();
 
