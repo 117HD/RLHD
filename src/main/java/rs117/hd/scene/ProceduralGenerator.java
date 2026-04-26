@@ -609,11 +609,10 @@ public class ProceduralGenerator {
 			Arrays.fill(vertexIsOverlay, 0, faceCount * VERTICES_PER_FACE, false);
 			Arrays.fill(vertexDefaultColor, 0, faceCount * VERTICES_PER_FACE, false);
 
-			Scene scene = sceneContext.scene;
 			if (tile.getSceneTilePaint() != null) {
 				// tile paint
 
-				var override = sceneContext.getTileOverride(plane, tileExX, tileExY, TILE_OVERRIDE_MAIN);
+				var override = sceneContext.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_MAIN);
 				if (override.waterType != WaterType.NONE) {
 					// skip water tiles
 					return;
@@ -831,10 +830,11 @@ public class ProceduralGenerator {
 						if (tile.getBridge() != null)
 							tile = tile.getBridge();
 
+						int tileZ = tile.getRenderLevel();
 						if (tile.getSceneTilePaint() != null) {
 							tileVertexKeys(sceneContext, tile, vertices, hashes);
 
-							var override = sceneContext.getTileOverride(z, x, y, TILE_OVERRIDE_MAIN);
+							var override = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_MAIN);
 							if (seasonalWaterType(override, tile.getSceneTilePaint().getTexture()) == WaterType.NONE) {
 								for (int i = 0; i < hashes.length; i++)
 									if (tile.getSceneTilePaint().getNeColor() != HIDDEN_HSL || override.forced)
@@ -885,7 +885,6 @@ public class ProceduralGenerator {
 
 							int faceCount = model.getFaceX().length;
 
-							int tileZ = tile.getRenderLevel();
 							var overlayOverride = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_OVERLAY);
 							var underlayOverride = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_UNDERLAY);
 
