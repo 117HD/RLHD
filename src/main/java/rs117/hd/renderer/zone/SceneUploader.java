@@ -636,9 +636,6 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		GameObject[] gameObjects = t.getGameObjects();
-		if(gameObjects == null)
-			gameObjects = t.getGameObjects();
-
 		for (int i = 0; i < gameObjects.length; i++) {
 			final GameObject gameObject = gameObjects[i];
 			if (gameObject == null || !renderCallbackManager.drawObject(ctx.scene, gameObject))
