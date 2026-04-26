@@ -1,6 +1,7 @@
 package rs117.hd.utils.collections;
 
 import java.util.Arrays;
+import java.util.function.IntUnaryOperator;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.MathUtils.*;
@@ -79,6 +80,15 @@ public final class Int2IntHashMap {
 
 	public boolean putIfAbsent(int key, int value) {
 		return put(key, value, false);
+	}
+
+	public int compute(int key, IntUnaryOperator op, int defaultValue) {
+		int idx = findIndex(key, mask, keys, distances);
+		if (idx >= 0)
+			return values[idx] = op.applyAsInt(values[idx]);
+		int newVal = op.applyAsInt(defaultValue);
+		put(key, newVal);
+		return newVal;
 	}
 
 	private boolean put(int key, int value, boolean overwrite) {
