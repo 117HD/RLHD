@@ -732,17 +732,22 @@ public class ProceduralGenerator {
 				}
 
 				int lightness = color & 0x7F;
-				lightness = (int) mix(lightness, (int) (max(lightness - lightenAdd, 0) * lightenMultiplier) + lightenBase, max(dot, 0));
-				lightness = (int) (1.25f * mix(lightness, (int) (lightness * darkenMultiplier), -min(dot, 0)));
-				final int maxBrightness = 55; // reduces overexposure
-				lightness = min(lightness, maxBrightness);
-				color = color & ~0x7F | lightness;
 
-				Material material = override.groundMaterial.getRandomMaterial(worldPos);
-				boolean isOverlay = vertexIsOverlay[vertex] != override.blendedAsOpposite;
+				float lightFactor = Math.max(dot, 0f);
+				int adjustedLight = (int)((Math.max(lightness - lightenAdd, 0) * lightenMultiplier) + lightenBase);
+				lightness = (int)mix(lightness, adjustedLight, lightFactor);
+
+				float darkFactor = -Math.min(dot, 0f);
+				int darkened = (int)(lightness * darkenMultiplier);
+				lightness = (int)(1.25f * mix(lightness, darkened, darkFactor));
+
+				lightness = Math.min(lightness, 55); // reduces overexposure
+				color = (color & ~0x7F) | lightness;
+
 				color = override.modifyColor(color);
 
-				vertexColors[vertex] = color;
+				final Material material = override.groundMaterial.getRandomMaterial(worldPos);
+				final boolean isOverlay = vertexIsOverlay[vertex] != override.blendedAsOpposite;
 
 				// mark the vertex as either an overlay or underlay.
 				// this is used to determine how to blend between vertex colors
@@ -753,10 +758,10 @@ public class ProceduralGenerator {
 					boolean shouldWrite = isOverlay || !sceneContext.vertexTerrainColor.containsKey(key);
 
 					if (shouldWrite) {
-						sceneContext.vertexTerrainColor.put(key, vertexColors[vertex]);
+						sceneContext.vertexTerrainColor.put(key, color);
 						sceneContext.vertexTerrainTexture.put(key, material);
 					} else {
-						sceneContext.vertexTerrainColor.putIfAbsent(key, vertexColors[vertex]);
+						sceneContext.vertexTerrainColor.putIfAbsent(key, color);
 						sceneContext.vertexTerrainTexture.putIfAbsent(key, material);
 					}
 
