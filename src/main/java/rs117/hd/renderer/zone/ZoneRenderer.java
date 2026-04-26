@@ -607,6 +607,13 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 		}
 
+		// Wind uniforms
+		plugin.uboGlobal.windDirectionX.set(cos(environmentManager.currentWindAngle));
+		plugin.uboGlobal.windDirectionZ.set(sin(environmentManager.currentWindAngle));
+		plugin.uboGlobal.windStrength.set(environmentManager.currentWindStrength);
+		plugin.uboGlobal.windCeiling.set(environmentManager.currentWindCeiling);
+		plugin.uboGlobal.windOffset.set(plugin.windOffset);
+
 		plugin.uboGlobal.upload();
 
 		// Reset buffers for the next frame
