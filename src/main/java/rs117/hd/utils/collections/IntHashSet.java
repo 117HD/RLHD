@@ -68,6 +68,56 @@ public final class IntHashSet implements Iterable<Integer> {
 		}
 	}
 
+	private void resizeTo(int newCapacity) {
+		if (newCapacity <= keys.length)
+			return;
+
+		int cap = HDUtils.ceilPow2(newCapacity);
+
+		final int[] oldKeys = keys;
+		keys = new int[cap];
+		distances = new int[cap];
+		Arrays.fill(keys, EMPTY);
+
+		size = 0;
+		mask = cap - 1;
+
+		for (int k : oldKeys) {
+			if (k != EMPTY)
+				add(k);
+		}
+	}
+
+	public boolean addAll(Iterable<Integer> collection) {
+		if (collection == null)
+			return false;
+
+		boolean modified = false;
+		for (Integer val : collection) {
+			if (add(val))
+				modified = true;
+		}
+
+		return modified;
+	}
+
+	public boolean addAll(IntHashSet other) {
+		if (other == null || other.size == 0)
+			return false;
+
+		if (size + other.size >= keys.length * LOAD_FACTOR)
+			resizeTo(HDUtils.ceilPow2( (int) ((size + other.size) / LOAD_FACTOR)));
+
+		boolean modified = false;
+		for (int i = 0; i < other.keys.length; i++) {
+			int k = other.keys[i];
+			if (k != EMPTY && add(k))
+				modified = true;
+		}
+
+		return modified;
+	}
+
 	public boolean add(Object key) { return key != null && add(key.hashCode()); }
 
 	public boolean add(int key) {
