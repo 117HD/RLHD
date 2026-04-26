@@ -190,6 +190,14 @@ public final class Int2IntHashMap {
 		}
 	}
 
+	public int find(Object key) {
+		return findIndex(key.hashCode(), mask, keys, distances);
+	}
+
+	public int find(int key) {
+		return findIndex(key, mask, keys, distances);
+	}
+
 	public int getOrDefault(Object key, int defaultValue) { return key != null ? getOrDefault(key.hashCode(), defaultValue) : defaultValue; }
 
 	public int getOrDefault(int key, int defaultValue) {
