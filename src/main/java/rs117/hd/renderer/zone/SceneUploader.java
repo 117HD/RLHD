@@ -954,25 +954,25 @@ public class SceneUploader implements AutoCloseable {
 				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
-			if (ctx.isVertexIsOverlay(neVertexKey) && ctx.isVertexIsUnderlay(neVertexKey))
+			if (ctx.isVertexOverlay(neVertexKey) && ctx.isVertexUnderlay(neVertexKey))
 				neVertexIsOverlay = true;
-			if (ctx.isVertexIsOverlay(nwVertexKey) && ctx.isVertexIsUnderlay(nwVertexKey))
+			if (ctx.isVertexOverlay(nwVertexKey) && ctx.isVertexUnderlay(nwVertexKey))
 				nwVertexIsOverlay = true;
-			if (ctx.isVertexIsOverlay(seVertexKey) && ctx.isVertexIsUnderlay(seVertexKey))
+			if (ctx.isVertexOverlay(seVertexKey) && ctx.isVertexUnderlay(seVertexKey))
 				seVertexIsOverlay = true;
-			if (ctx.isVertexIsOverlay(swVertexKey) && ctx.isVertexIsUnderlay(swVertexKey))
+			if (ctx.isVertexOverlay(swVertexKey) && ctx.isVertexUnderlay(swVertexKey))
 				swVertexIsOverlay = true;
 		} else if (onlyWaterSurface) {
 			// set colors for the shoreline to create a foam effect in the water shader
 			swColor = seColor = nwColor = neColor = 127;
 
-			if (ctx.isVertexIsWater(swVertexKey) && ctx.isVertexIsLand(swVertexKey))
+			if (ctx.isVertexWater(swVertexKey) && ctx.isVertexLand(swVertexKey))
 				swColor = 0;
-			if (ctx.isVertexIsWater(seVertexKey) && ctx.isVertexIsLand(seVertexKey))
+			if (ctx.isVertexWater(seVertexKey) && ctx.isVertexLand(seVertexKey))
 				seColor = 0;
-			if (ctx.isVertexIsWater(nwVertexKey) && ctx.isVertexIsLand(nwVertexKey))
+			if (ctx.isVertexWater(nwVertexKey) && ctx.isVertexLand(nwVertexKey))
 				nwColor = 0;
-			if (ctx.isVertexIsWater(neVertexKey) && ctx.isVertexIsLand(neVertexKey))
+			if (ctx.isVertexWater(neVertexKey) && ctx.isVertexLand(neVertexKey))
 				neColor = 0;
 
 			if (seColor == 0 && nwColor == 0 && (neColor == 0 || swColor == 0))
@@ -989,10 +989,10 @@ public class SceneUploader implements AutoCloseable {
 				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
-			int swDepth = ctx.vertexUnderwaterDepth.getOrDefault(swVertexKey, 0);
-			int seDepth = ctx.vertexUnderwaterDepth.getOrDefault(seVertexKey, 0);
-			int nwDepth = ctx.vertexUnderwaterDepth.getOrDefault(nwVertexKey, 0);
-			int neDepth = ctx.vertexUnderwaterDepth.getOrDefault(neVertexKey, 0);
+			int swDepth = ctx.getVertexUnderwaterDepth(swVertexKey);
+			int seDepth = ctx.getVertexUnderwaterDepth(seVertexKey);
+			int nwDepth = ctx.getVertexUnderwaterDepth(nwVertexKey);
+			int neDepth = ctx.getVertexUnderwaterDepth(neVertexKey);
 			swHeight += swDepth;
 			seHeight += seDepth;
 			nwHeight += nwDepth;
@@ -1257,11 +1257,11 @@ public class SceneUploader implements AutoCloseable {
 			} else if (onlyWaterSurface) {
 				// set colors for the shoreline to create a foam effect in the water shader
 				colorA = colorB = colorC = 127;
-				if (ctx.isVertexIsWater(vertexKeyA) && ctx.isVertexIsLand(vertexKeyA))
+				if (ctx.isVertexWater(vertexKeyA) && ctx.isVertexLand(vertexKeyA))
 					colorA = 0;
-				if (ctx.isVertexIsWater(vertexKeyB) && ctx.isVertexIsLand(vertexKeyB))
+				if (ctx.isVertexWater(vertexKeyB) && ctx.isVertexLand(vertexKeyB))
 					colorB = 0;
-				if (ctx.isVertexIsWater(vertexKeyC) && ctx.isVertexIsLand(vertexKeyC))
+				if (ctx.isVertexWater(vertexKeyC) && ctx.isVertexLand(vertexKeyC))
 					colorC = 0;
 				if (colorA == 0 && colorB == 0 && colorC == 0)
 					colorA = colorB = colorC = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
@@ -1288,9 +1288,9 @@ public class SceneUploader implements AutoCloseable {
 					);
 				}
 
-				int depthA = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyA, 0);
-				int depthB = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyB, 0);
-				int depthC = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0);
+				int depthA = ctx.getVertexUnderwaterDepth(vertexKeyA);
+				int depthB = ctx.getVertexUnderwaterDepth(vertexKeyB);
+				int depthC = ctx.getVertexUnderwaterDepth(vertexKeyC);
 				ly0 += depthA;
 				ly1 += depthB;
 				ly2 += depthC;
@@ -1300,11 +1300,11 @@ public class SceneUploader implements AutoCloseable {
 				terrainDataC = HDUtils.packTerrainData(true, max(1, depthC), waterType, tileZ);
 			}
 
-			if (ctx.isVertexIsOverlay(vertexKeyA) && ctx.isVertexIsUnderlay(vertexKeyA))
+			if (ctx.isVertexOverlay(vertexKeyA) && ctx.isVertexUnderlay(vertexKeyA))
 				vertexAIsOverlay = true;
-			if (ctx.isVertexIsOverlay(vertexKeyB) && ctx.isVertexIsUnderlay(vertexKeyB))
+			if (ctx.isVertexOverlay(vertexKeyB) && ctx.isVertexUnderlay(vertexKeyB))
 				vertexBIsOverlay = true;
-			if (ctx.isVertexIsOverlay(vertexKeyC) && ctx.isVertexIsUnderlay(vertexKeyC))
+			if (ctx.isVertexOverlay(vertexKeyC) && ctx.isVertexUnderlay(vertexKeyC))
 				vertexCIsOverlay = true;
 
 			ly0 -= override.heightOffset;

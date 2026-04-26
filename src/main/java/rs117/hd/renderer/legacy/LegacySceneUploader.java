@@ -713,23 +713,23 @@ public class LegacySceneUploader {
 				// set colors for the shoreline to create a foam effect in the water shader
 				swColor = seColor = nwColor = neColor = 127;
 
-				if (sceneContext.isVertexIsWater(swVertexKey) && sceneContext.isVertexIsLand(swVertexKey))
+				if (sceneContext.isVertexWater(swVertexKey) && sceneContext.isVertexLand(swVertexKey))
 					swColor = 0;
-				if (sceneContext.isVertexIsWater(seVertexKey) && sceneContext.isVertexIsLand(seVertexKey))
+				if (sceneContext.isVertexWater(seVertexKey) && sceneContext.isVertexLand(seVertexKey))
 					seColor = 0;
-				if (sceneContext.isVertexIsWater(nwVertexKey) && sceneContext.isVertexIsLand(nwVertexKey))
+				if (sceneContext.isVertexWater(nwVertexKey) && sceneContext.isVertexLand(nwVertexKey))
 					nwColor = 0;
-				if (sceneContext.isVertexIsWater(neVertexKey) && sceneContext.isVertexIsLand(neVertexKey))
+				if (sceneContext.isVertexWater(neVertexKey) && sceneContext.isVertexLand(neVertexKey))
 					neColor = 0;
 			}
 
-			if (sceneContext.isVertexIsOverlay(neVertexKey) && sceneContext.isVertexIsUnderlay(neVertexKey))
+			if (sceneContext.isVertexOverlay(neVertexKey) && sceneContext.isVertexUnderlay(neVertexKey))
 				neVertexIsOverlay = true;
-			if (sceneContext.isVertexIsOverlay(nwVertexKey) && sceneContext.isVertexIsUnderlay(nwVertexKey))
+			if (sceneContext.isVertexOverlay(nwVertexKey) && sceneContext.isVertexUnderlay(nwVertexKey))
 				nwVertexIsOverlay = true;
-			if (sceneContext.isVertexIsOverlay(seVertexKey) && sceneContext.isVertexIsUnderlay(seVertexKey))
+			if (sceneContext.isVertexOverlay(seVertexKey) && sceneContext.isVertexUnderlay(seVertexKey))
 				seVertexIsOverlay = true;
-			if (sceneContext.isVertexIsOverlay(swVertexKey) && sceneContext.isVertexIsUnderlay(swVertexKey))
+			if (sceneContext.isVertexOverlay(swVertexKey) && sceneContext.isVertexUnderlay(swVertexKey))
 				swVertexIsOverlay = true;
 
 
@@ -839,10 +839,10 @@ public class LegacySceneUploader {
 			int swColor, seColor, neColor, nwColor;
 			swColor = seColor = neColor = nwColor = UNDERWATER_HSL;
 
-			int swDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(swVertexKey, 0);
-			int seDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(seVertexKey, 0);
-			int nwDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(nwVertexKey, 0);
-			int neDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(neVertexKey, 0);
+			int swDepth = sceneContext.getVertexUnderwaterDepth(swVertexKey);
+			int seDepth = sceneContext.getVertexUnderwaterDepth(seVertexKey);
+			int nwDepth = sceneContext.getVertexUnderwaterDepth(nwVertexKey);
+			int neDepth = sceneContext.getVertexUnderwaterDepth(neVertexKey);
 
 			int[] swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, UP_NORMAL);
 			int[] seNormals = sceneContext.vertexTerrainNormals.getOrDefault(seVertexKey, UP_NORMAL);
@@ -1070,19 +1070,19 @@ public class LegacySceneUploader {
 				} else {
 					// set colors for the shoreline to create a foam effect in the water shader
 					colorA = colorB = colorC = 127;
-					if (sceneContext.isVertexIsWater(vertexKeyA) && sceneContext.isVertexIsLand(vertexKeyA))
+					if (sceneContext.isVertexWater(vertexKeyA) && sceneContext.isVertexLand(vertexKeyA))
 						colorA = 0;
-					if (sceneContext.isVertexIsWater(vertexKeyB) && sceneContext.isVertexIsLand(vertexKeyB))
+					if (sceneContext.isVertexWater(vertexKeyB) && sceneContext.isVertexLand(vertexKeyB))
 						colorB = 0;
-					if (sceneContext.isVertexIsWater(vertexKeyC) && sceneContext.isVertexIsLand(vertexKeyC))
+					if (sceneContext.isVertexWater(vertexKeyC) && sceneContext.isVertexLand(vertexKeyC))
 						colorC = 0;
 				}
 
-				if (sceneContext.isVertexIsOverlay(vertexKeyA) && sceneContext.isVertexIsUnderlay(vertexKeyA))
+				if (sceneContext.isVertexOverlay(vertexKeyA) && sceneContext.isVertexUnderlay(vertexKeyA))
 					vertexAIsOverlay = true;
-				if (sceneContext.isVertexIsOverlay(vertexKeyB) && sceneContext.isVertexIsUnderlay(vertexKeyB))
+				if (sceneContext.isVertexOverlay(vertexKeyB) && sceneContext.isVertexUnderlay(vertexKeyB))
 					vertexBIsOverlay = true;
-				if (sceneContext.isVertexIsOverlay(vertexKeyC) && sceneContext.isVertexIsUnderlay(vertexKeyC))
+				if (sceneContext.isVertexOverlay(vertexKeyC) && sceneContext.isVertexUnderlay(vertexKeyC))
 					vertexCIsOverlay = true;
 
 				for (int i = 0; i < 3; i++)
@@ -1190,9 +1190,9 @@ public class LegacySceneUploader {
 				int vertexKeyB = vertexKeys[1];
 				int vertexKeyC = vertexKeys[2];
 
-				int depthA = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyA, 0);
-				int depthB = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyB, 0);
-				int depthC = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0);
+				int depthA = sceneContext.getVertexUnderwaterDepth(vertexKeyA);
+				int depthB = sceneContext.getVertexUnderwaterDepth(vertexKeyB);
+				int depthC = sceneContext.getVertexUnderwaterDepth(vertexKeyC);
 
 				if (plugin.configGroundTextures) {
 					GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
