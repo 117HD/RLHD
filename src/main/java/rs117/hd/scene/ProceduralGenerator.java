@@ -113,10 +113,7 @@ public class ProceduralGenerator {
 
 	public void clearSceneData(SceneContext sceneContext) {
 		sceneContext.tileFlags = null;
-		sceneContext.vertexIsWater = null;
-		sceneContext.vertexIsLand = null;
-		sceneContext.vertexIsOverlay = null;
-		sceneContext.vertexIsUnderlay = null;
+		sceneContext.vertexType = null;
 		sceneContext.vertexUnderwaterDepth = null;
 		if (!(sceneContext instanceof LegacySceneContext))
 			sceneContext.underwaterDepthLevels = null;
@@ -549,12 +546,6 @@ public class ProceduralGenerator {
 			// for example, colors that aren't supposed to be visible
 			sceneContext.highPriorityColor = new IntHashSet(prevSceneCtx != null && prevSceneCtx.highPriorityColor != null ? prevSceneCtx.highPriorityColor.capacity() : 0);
 			sceneContext.vertexTerrainTexture = new Int2ObjectHashMap<>(prevSceneCtx != null && prevSceneCtx.vertexTerrainTexture != null ? prevSceneCtx.vertexTerrainTexture.capacity() : 0);
-			// for faces without an overlay is set to true
-			sceneContext.vertexIsUnderlay = new IntHashSet(prevSceneCtx != null && prevSceneCtx.vertexIsUnderlay != null ? prevSceneCtx.vertexIsUnderlay.capacity() : 0);
-			// for faces with an overlay is set to true
-			// the result of these maps can be used to determine the vertices
-			// between underlays and overlays for custom blending
-			sceneContext.vertexIsOverlay = new IntHashSet(prevSceneCtx != null && prevSceneCtx.vertexIsOverlay != null ? prevSceneCtx.vertexIsOverlay.capacity() : 0);
 
 			Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 			int sizeX = sceneContext.sizeX;
@@ -732,11 +723,7 @@ public class ProceduralGenerator {
 
 				// mark the vertex as either an overlay or underlay.
 				// this is used to determine how to blend between vertex colors
-				if (isOverlay) {
-					sceneContext.vertexIsOverlay.add(key);
-				} else {
-					sceneContext.vertexIsUnderlay.add(key);
-				}
+				sceneContext.setVertexIsOverlay(key, isOverlay);
 
 				// add color and texture to hashmap
 				if ((!lowPriorityColor || !sceneContext.highPriorityColor.contains(key)) && !vertexDefaultColor[vertex]) {
@@ -781,18 +768,14 @@ public class ProceduralGenerator {
 			// bit 1 set if a tile contains at least 1 face which qualifies as water
 			// bit 2 set if a tile will be skipped when the scene is drawn, this is due to certain edge cases with water on the same X/Y on different planes
 			sceneContext.tileFlags = new byte[MAX_Z][sizeX][sizeY];
-			// true if a vertex is part of a face which qualifies as water; non-existent if not
-			sceneContext.vertexIsWater = new IntHashSet(prevSceneCtx != null && prevSceneCtx.vertexIsWater != null ? prevSceneCtx.vertexIsWater.capacity() : 0);
-			// true if a vertex is part of a face which qualifies as land; non-existent if not
-			// tiles along the shoreline will be true for both vertexIsWater and vertexIsLand
-			sceneContext.vertexIsLand = new IntHashSet(prevSceneCtx != null && prevSceneCtx.vertexIsLand != null ? prevSceneCtx.vertexIsLand.capacity() : 0);
+			sceneContext.vertexType = new Int2IntHashMap(prevSceneCtx != null && prevSceneCtx.vertexType != null ? prevSceneCtx.vertexType.capacity() : 0);
 			// the height adjustment for each vertex, to be applied to the vertex'
 			// real height to create the underwater terrain
 			sceneContext.vertexUnderwaterDepth = new Int2IntHashMap(prevSceneCtx != null && prevSceneCtx.vertexUnderwaterDepth != null ? prevSceneCtx.vertexUnderwaterDepth.capacity() : 0);
 			// the basic 'levels' of underwater terrain, used to sink terrain based on its distance
 			// from the shore, then used to produce the world-space height offset
 			// 0 = land
-			sceneContext.underwaterDepthLevels = new int[MAX_Z][sizeX + 1][sizeY + 1];
+			sceneContext.underwaterDepthLevels = new byte[MAX_Z][sizeX + 1][sizeY + 1];
 			// the world-space height offsets of each vertex on the tile grid
 			// these offsets are interpolated to calculate offsets for vertices not on the grid (tilemodels)
 
@@ -801,7 +784,7 @@ public class ProceduralGenerator {
 					// set the array to 1 initially
 					// this assumes that all vertices are water;
 					// we will set non-water vertices to 0 in the next loop
-					Arrays.fill(sceneContext.underwaterDepthLevels[z][x], 1);
+					Arrays.fill(sceneContext.underwaterDepthLevels[z][x], (byte)1);
 				}
 			}
 
@@ -838,7 +821,7 @@ public class ProceduralGenerator {
 							if (seasonalWaterType(override, tile.getSceneTilePaint().getTexture()) == WaterType.NONE) {
 								for (int i = 0; i < hashes.length; i++)
 									if (tile.getSceneTilePaint().getNeColor() != HIDDEN_HSL || override.forced)
-										sceneContext.vertexIsLand.add(hashes[i]);
+										sceneContext.setVertexIsLand(hashes[i]);
 
 								sceneContext.underwaterDepthLevels[z][x][y] = 0;
 								sceneContext.underwaterDepthLevels[z][x + 1][y] = 0;
@@ -878,7 +861,7 @@ public class ProceduralGenerator {
 								maxY[z] = max(maxY[z], y);
 
 								for (int i = 0; i < hashes.length; i++)
-									sceneContext.vertexIsWater.add(hashes[i]);
+									sceneContext.setVertexIsWater(hashes[i]);
 							}
 						} else if (tile.getSceneTileModel() != null) {
 							SceneTileModel model = tile.getSceneTileModel();
@@ -934,7 +917,7 @@ public class ProceduralGenerator {
 								if (seasonalWaterType(override, textureId) == WaterType.NONE) {
 									for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
 										if (model.getTriangleColorA()[face] != HIDDEN_HSL || override.forced)
-											sceneContext.vertexIsLand.add(hashes[vertex]);
+											sceneContext.setVertexIsLand(hashes[vertex]);
 
 										if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 &&
 										    vertices[vertex][1] % LOCAL_TILE_SIZE == 0
@@ -955,7 +938,7 @@ public class ProceduralGenerator {
 									maxY[z] = max(maxY[z], y);
 
 									for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
-										sceneContext.vertexIsWater.add(hashes[vertex]);
+										sceneContext.setVertexIsWater(hashes[vertex]);
 								}
 							}
 						} else {
@@ -973,10 +956,12 @@ public class ProceduralGenerator {
 				for (int z = minZ; z <= maxZ; ++z) {
 					for (int x = minX[z]; x <= maxX[z]; x++) {
 						for (int y = minY[z]; y <= maxY[z]; y++) {
-							if (sceneContext.underwaterDepthLevels[z][x][y] == 0) {
+							int tileHeight = sceneContext.underwaterDepthLevels[z][x][y];
+							if (tileHeight == 0 || tileHeight >= Byte.MAX_VALUE) {
 								// Skip the tile if it isn't water.
 								continue;
 							}
+
 							// If it's on the edge of the scene, reset the depth so
 							// it creates a 'wall' to prevent fog from passing through.
 							// Not incredibly effective, but better than nothing.
@@ -985,7 +970,6 @@ public class ProceduralGenerator {
 								continue;
 							}
 
-							int tileHeight = sceneContext.underwaterDepthLevels[z][x][y];
 							if (sceneContext.underwaterDepthLevels[z][x - 1][y] < tileHeight) {
 								// West
 								continue;
@@ -1082,7 +1066,7 @@ public class ProceduralGenerator {
 										float southHeightOffset = mix(underwaterDepths[z][x][y], underwaterDepths[z][x + 1][y], lerpX);
 										int heightOffset = (int) mix(southHeightOffset, northHeightOffset, lerpY);
 
-										if (!sceneContext.vertexIsLand.contains(hashes[vertex]))
+										if (!sceneContext.isVertexIsLand(hashes[vertex]))
 											sceneContext.vertexUnderwaterDepth.put(hashes[vertex], heightOffset);
 									}
 								}

@@ -33,6 +33,11 @@ public class SceneContext {
 	public static final int TILE_OVERRIDE_OVERLAY = 2;
 	public static final int TILE_OVERRIDE_COUNT = 3;
 
+	public static final int VERTEX_IS_LAND = 1 << 1;
+	public static final int VERTEX_IS_WATER = 1 << 2;
+	public static final int VERTEX_IS_OVERLAY = 1 << 3;
+	public static final int VERTEX_IS_UNDERLAY = 1 << 4;
+
 	public final Client client;
 	public final Scene scene;
 	public final int expandedMapLoadingChunks;
@@ -75,12 +80,9 @@ public class SceneContext {
 
 	// Water-related data
 	public byte[][][] tileFlags;
-	public IntHashSet vertexIsWater;
-	public IntHashSet vertexIsLand;
-	public IntHashSet vertexIsOverlay;
-	public IntHashSet vertexIsUnderlay;
+	public byte[][][] underwaterDepthLevels;
+	public Int2IntHashMap vertexType;
 	public Int2IntHashMap vertexUnderwaterDepth;
-	public int[][][] underwaterDepthLevels;
 
 	// Thread safe tile override variables
 	public final static ThreadLocal<TileOverrideVariables> tileOverrideVars = ThreadLocal.withInitial(TileOverrideVariables::new);
@@ -89,12 +91,6 @@ public class SceneContext {
 	public final ArrayList<Light> lights = new ArrayList<>();
 	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
 	public final ArrayList<TileObject> lightSpawnsToHandleOnClientThread = new ArrayList<>();
-
-	// Model pusher arrays, to avoid simultaneous usage from different threads
-	public final int[] modelFaceVertices = new int[12];
-	public final float[] modelFaceUvs = new float[12];
-	public final float[] modelFaceNormals = new float[12];
-	public final int[] modelPusherResults = new int[2];
 
 	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;
@@ -109,6 +105,34 @@ public class SceneContext {
 	}
 
 	public synchronized void destroy() {}
+
+	public void setVertexIsLand(int hash) {
+		vertexType.put(hash, vertexType.getOrDefault(hash, 0) | VERTEX_IS_LAND);
+	}
+
+	public void setVertexIsWater(int hash) {
+		vertexType.put(hash, vertexType.getOrDefault(hash, 0) | VERTEX_IS_WATER);
+	}
+
+	public void setVertexIsOverlay(int hash, boolean isOverlay) {
+		vertexType.put(hash, vertexType.getOrDefault(hash, 0) | (isOverlay ? VERTEX_IS_OVERLAY : VERTEX_IS_UNDERLAY));
+	}
+
+	public boolean isVertexIsLand(int hash) {
+		return (vertexType.getOrDefault(hash, 0) & VERTEX_IS_LAND) != 0;
+	}
+
+	public boolean isVertexIsWater(int hash) {
+		return (vertexType.getOrDefault(hash, 0) & VERTEX_IS_WATER) != 0;
+	}
+
+	public boolean isVertexIsOverlay(int hash) {
+		return (vertexType.getOrDefault(hash, 0) & VERTEX_IS_OVERLAY) != 0;
+	}
+
+	public boolean isVertexIsUnderlay(int hash) {
+		return (vertexType.getOrDefault(hash, 0) & VERTEX_IS_UNDERLAY) != 0;
+	}
 
 	public void setTileFlag(int plane, int x, int y, byte flag) {
 		tileFlags[plane][x][y] |= flag;
