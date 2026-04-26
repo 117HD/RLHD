@@ -176,19 +176,19 @@ public class ProceduralGenerator {
 		 */
 		private void generate(SceneContext sceneContext, SceneContext prevSceneContext) {
 			sceneContext.vertexTerrainNormals = new Int2ObjectHashMap<>(prevSceneContext != null && prevSceneContext.vertexTerrainNormals != null ? prevSceneContext.vertexTerrainNormals.capacity() : 0);
+			final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 
-			for (Tile[][] plane : sceneContext.scene.getExtendedTiles()) {
-				for (Tile[] column : plane) {
-					for (Tile tile : column) {
-						if (tile != null) {
-							boolean isBridge = false;
+			for (int z = 0; z < MAX_Z; z++) {
+				for (int x = 0; x < sceneContext.sizeX; x++) {
+					for (int y = 0; y < sceneContext.sizeZ; y++) {
+						final Tile tile = tiles[z][x][y];
+						if (tile == null)
+							continue;
 
-							if (tile.getBridge() != null) {
-								calculateNormalsForTile(sceneContext, tile.getBridge(), false);
-								isBridge = true;
-							}
-							calculateNormalsForTile(sceneContext, tile, isBridge);
-						}
+						final boolean isBridge = tile.getBridge() != null;
+						if (isBridge)
+							calculateNormalsForTile(sceneContext, tile.getBridge(), false);
+						calculateNormalsForTile(sceneContext, tile, isBridge);
 					}
 				}
 			}

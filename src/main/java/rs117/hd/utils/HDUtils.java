@@ -57,8 +57,8 @@ public final class HDUtils {
 
 	public static int fastVertexHash(int[] vPos) {
 		int hash = 0;
-		for (int part : vPos) {
-			hash = 31 * hash + part;
+		for (int i = 0; i < vPos.length; i++) {
+			hash = 31 * hash + vPos[i];
 			hash = 31 * hash + ','; // preserve the comma separator effect
 		}
 		return hash;

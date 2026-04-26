@@ -91,6 +91,59 @@ public final class Int2IntHashMap {
 		return newVal;
 	}
 
+	public int or(int key, int maskBits, int defaultValue) {
+		int idx = findIndex(key, mask, keys, distances);
+		if (idx >= 0)
+			return values[idx] |= maskBits;
+		int newVal = defaultValue | maskBits;
+		put(key, newVal);
+		return newVal;
+	}
+
+	public int and(int key, int maskBits, int defaultValue) {
+		int idx = findIndex(key, mask, keys, distances);
+		if (idx >= 0)
+			return values[idx] &= maskBits;
+		int newVal = defaultValue & maskBits;
+		put(key, newVal);
+		return newVal;
+	}
+
+	public int xor(int key, int maskBits, int defaultValue) {
+		int idx = findIndex(key, mask, keys, distances);
+		if (idx >= 0)
+			return values[idx] ^= maskBits;
+		int newVal = defaultValue ^ maskBits;
+		put(key, newVal);
+		return newVal;
+	}
+
+	public int setBits(int key, int valueBits, int maskBits, int defaultValue) {
+		int idx = findIndex(key, mask, keys, distances);
+
+		if (idx >= 0) {
+			int v = values[idx];
+			v = (v & ~maskBits) | (valueBits & maskBits);
+			values[idx] = v;
+			return v;
+		}
+
+		int newVal = (defaultValue & ~maskBits) | (valueBits & maskBits);
+		put(key, newVal);
+		return newVal;
+	}
+
+	public boolean test(int key, int maskBits) {
+		int idx = findIndex(key, mask, keys, distances);
+		return idx >= 0 && (values[idx] & maskBits) != 0;
+	}
+
+	public int getBits(int key, int maskBits, int shift, int defaultValue) {
+		int idx = findIndex(key, mask, keys, distances);
+		int v = (idx >= 0) ? values[idx] : defaultValue;
+		return (v >>> shift) & maskBits;
+	}
+
 	private boolean put(int key, int value, boolean overwrite) {
 		if (size + 1.0 >= keys.length * LOAD_FACTOR)
 			resize();

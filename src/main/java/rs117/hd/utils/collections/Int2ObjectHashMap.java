@@ -3,6 +3,8 @@ package rs117.hd.utils.collections;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.function.IntUnaryOperator;
+import java.util.function.UnaryOperator;
 import lombok.Getter;
 import rs117.hd.utils.HDUtils;
 
@@ -98,6 +100,15 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 
 	public boolean putIfAbsent(int key, T value) {
 		return put(key, value, false);
+	}
+
+	public T compute(int key, UnaryOperator<T> op, T defaultValue) {
+		int idx = findIndex(key, mask, keys, distances);
+		if (idx >= 0)
+			return values[idx] = op.apply(values[idx]);
+		T newVal = op.apply(defaultValue);
+		put(key, newVal);
+		return newVal;
 	}
 
 	private boolean put(int key, T value, boolean overwrite) {
