@@ -33,13 +33,19 @@ public class GroundMaterial {
 				materials[j] = Material.NONE;
 	}
 
+
+	public Material getRandomMaterial(int[] worldPos) {
+		assert worldPos.length == 3;
+		return getRandomMaterial(worldPos[0], worldPos[1], worldPos[2]);
+	}
+
 	/**
 	 * Get a random material based on the given coordinates.
 	 */
-	public Material getRandomMaterial(int... worldPos) {
-		long hash = 0;
-		for (int i = 0; i < worldPos.length; i++)
-			hash = hash * 31 + worldPos[i];
+	public Material getRandomMaterial(int x, int y, int z) {
+		long hash = x;
+		hash = hash * 31 + y;
+		hash = hash * 31 + z;
 		long seed = (hash ^ 0x5DEECE66DL) & ((1L << 48) - 1);
 		seed = (seed * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1);
 		int r = (int) (seed >>> (48 - 31));
