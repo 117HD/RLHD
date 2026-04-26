@@ -1,10 +1,9 @@
 package rs117.hd.opengl;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import lombok.Getter;
+import rs117.hd.utils.collections.PrimitiveIntArray;
 
 public abstract class GLState {
 	protected boolean hasValue;
@@ -107,6 +106,27 @@ public abstract class GLState {
 			System.arraycopy(v, 0, value, 0, v.length);
 		}
 
+		public final void set(int a, int b) {
+			hasValue = true;
+			value[0] = a;
+			value[1] = b;
+		}
+
+		public final void set(int a, int b, int c) {
+			hasValue = true;
+			value[0] = a;
+			value[1] = b;
+			value[2] = c;
+		}
+
+		public final void set(int a, int b, int c, int d) {
+			hasValue = true;
+			value[0] = a;
+			value[1] = b;
+			value[2] = c;
+			value[3] = d;
+		}
+
 		@Override
 		protected void internalApply() {
 			if (!hasApplied || !Arrays.equals(value, appliedValue)) {
@@ -133,6 +153,27 @@ public abstract class GLState {
 			System.arraycopy(v, 0, value, 0, v.length);
 		}
 
+		public final void set(boolean a, boolean b) {
+			hasValue = true;
+			value[0] = a;
+		 	value[1] = b;
+		}
+
+		public final void set(boolean a, boolean b, boolean c) {
+			hasValue = true;
+			value[0] = a;
+			value[1] = b;
+			value[2] = c;
+		}
+
+		public final void set(boolean a, boolean b, boolean c, boolean d) {
+			hasValue = true;
+			value[0] = a;
+			value[1] = b;
+			value[2] = c;
+			value[3] = d;
+		}
+
 		@Override
 		protected void internalApply() {
 			if (!hasApplied || !Arrays.equals(value, appliedValue)) {
@@ -145,11 +186,11 @@ public abstract class GLState {
 	}
 
 	public abstract static class IntSet extends GLState {
-		private final Set<Integer> targets = new HashSet<>();
+		private final PrimitiveIntArray targets = new PrimitiveIntArray();
 
 		public void add(int target) {
 			hasValue = true;
-			targets.add(target);
+			targets.addUnique(target);
 		}
 
 		public void remove(int target) {
@@ -159,14 +200,15 @@ public abstract class GLState {
 
 		@Override
 		protected void internalApply() {
-			for (int t : targets) applyTarget(t);
-			targets.clear();
+			for (int i = 0; i < targets.length; i++)
+				applyTarget(targets.array[i]);
+			targets.reset();
 		}
 
 		@Override
 		public void reset() {
 			super.reset();
-			targets.clear();
+			targets.reset();
 		}
 
 		protected abstract void applyTarget(int target);
