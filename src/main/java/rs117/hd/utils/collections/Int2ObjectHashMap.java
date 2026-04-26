@@ -24,6 +24,8 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 	private T[] values;
 	private int[] distances;
 
+	private int lowTide = Integer.MAX_VALUE;
+	private int highTide;
 	private int size;
 	private int mask;
 
@@ -114,6 +116,8 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 				values[idx] = value;
 				distances[idx] = dist;
 				size++;
+				lowTide = min(idx, lowTide);
+				highTide = max(idx, highTide);
 				return true;
 			}
 
@@ -213,9 +217,13 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 	}
 
 	public void clear() {
-		Arrays.fill(keys, EMPTY);
-		Arrays.fill(values, null);
-		Arrays.fill(distances, 0);
+		if(size == 0)
+			return;
+		Arrays.fill(keys, lowTide, highTide, EMPTY);
+		Arrays.fill(values, lowTide, highTide, null);
+		Arrays.fill(distances, lowTide, highTide, 0);
+		lowTide = keys.length;
+		highTide = 0;
 		size = 0;
 	}
 
