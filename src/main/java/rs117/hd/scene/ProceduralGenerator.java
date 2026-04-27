@@ -499,7 +499,7 @@ public class ProceduralGenerator {
 			final int sizeX = sceneContext.sizeX;
 			final int sizeY = sceneContext.sizeZ;
 
-			sceneContext.tileOverrideIndices = new int[MAX_Z][sizeX][sizeY];
+			sceneContext.tileOverrideIndices = new int[MAX_Z * sizeX * sizeY];
 			sceneContext.tileOverrides.ensureCapacity(preSceneCtx != null ? preSceneCtx.tileOverrides.size() : 0);
 
 			final boolean canReuse = preSceneCtx != null && sceneContext.scene.isInstance() == preSceneCtx.scene.isInstance() && sceneContext.currentArea == preSceneCtx.currentArea && !preSceneCtx.tileOverrides.isEmpty();
@@ -801,7 +801,7 @@ public class ProceduralGenerator {
 			final int sizeY = sceneContext.sizeZ;
 			// bit 1 set if a tile contains at least 1 face which qualifies as water
 			// bit 2 set if a tile will be skipped when the scene is drawn, this is due to certain edge cases with water on the same X/Y on different planes
-			sceneContext.tileFlags = new byte[MAX_Z][sizeX][sizeY];
+			sceneContext.tileFlags = new byte[MAX_Z * sizeX * sizeY];
 			sceneContext.vertexData = new Int2IntHashMap(prevSceneCtx != null && prevSceneCtx.vertexData != null ? prevSceneCtx.vertexData.capacity() : 0);
 			// the world-space height offsets of each vertex on the tile grid
 			// these offsets are interpolated to calculate offsets for vertices not on the grid (tilemodels)
