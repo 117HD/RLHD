@@ -64693,8 +64693,8 @@
         "uvScale": 0.8
       },
       {
-        "colors": "h == 7 && s == 0 && l == 33 || h > 7 || h == 8",
-        "baseMaterial": "GRUNGE_3",
+        "colors": " h > 7",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
         "depthBias": 2
       }
     ]
