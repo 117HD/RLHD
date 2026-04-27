@@ -210,7 +210,7 @@ public class TextureManager {
 		scaleOp.filter(image, scaledImage);
 
 		int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
-		pixelBuffer.put(pixels).flip();
+		pixelBuffer.clear().put(pixels).flip();
 
 		// Go from TYPE_4BYTE_ABGR in the BufferedImage to RGBA
 		glTexSubImage3D(

@@ -390,9 +390,10 @@ public class MaterialManager {
 			mat.textureLayer = mat.resolveTextureOwner().textureLayer;
 
 		int textureSize = config.textureResolution().getSize();
-		textureResolution = ivec(textureSize, textureSize);
+		int[] resolution = ivec(textureSize, textureSize);
 		glActiveTexture(TEXTURE_UNIT_GAME);
-		if (texMaterialTextureArray == 0 || previousLayerCount != textureLayers.size()) {
+		if (texMaterialTextureArray == 0 || previousLayerCount != textureLayers.size() || !Arrays.equals(textureResolution, resolution)) {
+			textureResolution = resolution;
 			if (texMaterialTextureArray != 0)
 				glDeleteTextures(texMaterialTextureArray);
 			texMaterialTextureArray = glGenTextures();
