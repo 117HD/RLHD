@@ -13171,7 +13171,8 @@
       "GIM_ANVIL",
       "LOVAKENGJ_ANVIL",
       "DARKM_ANVIL",
-      "DS2_GUILD_BLACKSMITH_ANVIL"
+      "DS2_GUILD_BLACKSMITH_ANVIL",
+      "DORGESH_BLACKSMITH_ANVIL"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -62832,10 +62833,13 @@
     ]
   },
   {
-    "description": "Zeah - Varrock - Metallic - Metal shelf with copper pots",
+    "description": "Zeah - Varrock - - Dorgesh-Kaan - Metallic - Metal shelf with copper pots",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
-      "DORGESH_KITCHEN_POTS"
+      "DORGESH_KITCHEN_POTS",
+      "DORGESH_KITCHEN_SHELVES1",
+      "DORGESH_KITCHEN_SHELVES2",
+      "DORGESH_KITCHEN_SHELVES3"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -83741,8 +83745,8 @@
     ]
   },
   {
-    "description": "Varlamore - Tal Teklan - Stone - Furnace",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Varlamore - Tal Teklan - Dorgesh-Kaan - Stone - Furnace",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.7,
     "colorOverrides": [
@@ -83761,10 +83765,48 @@
         "uvType": "MODEL_XZ",
         "uvOrientation": 487,
         "uvScale": 0.7
+      },
+      {
+        "description": "Gold band",
+        "colors": "s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ],
     "objectIds": [
-      "FURNACE3"
+      "FURNACE3",
+      "DORGESH_BLACKSMITH_FURNACE_COMBINE"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Leather - Furnace Bellows",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Leather",
+        "colors": "s == 2",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Coal",
+        "colors": "h == 42",
+        "baseMaterial": "ROCK_4",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Gold band",
+        "colors": "s >= 6",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "DORGESH_BLACKSMITH_FURNACE_BELLOWS"
     ]
   },
   {
@@ -86453,6 +86495,25 @@
     ]
   },
   {
+    "description": "Dorgesh-Kaan - Stone -  Metallic - Blacksmith Chimney metal features",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvOrientation": 147,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "a == 255 && s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "DORGESH_BLACKSMITH_FURNACE_CHIMNEY_PIPE"
+    ]
+  },
+  {
     "description": "Dorgesh-Kaan - Stone - Metallic - Statues",
     "baseMaterial": "MARBLE_1",
     "uvScale": 0.8,
@@ -87267,7 +87328,7 @@
     ]
   },
   {
-    "description": "Camdozaal - Plant - Fern",
+    "description": "Dorgesh-Kaan - Plant - Fern",
     "baseMaterial": "LEAF_VEINS_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 128,
@@ -87279,6 +87340,93 @@
       "DORGESH_FERN_LARGE2",
       "DORGESH_FERN_LARGE_FLOWER1",
       "DORGESH_FERN_LARGE_FLOWER2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan -  Metallic - Broken objects",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": 187,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "DORGESH_BLACKSMITH_POKER_HAMMER",
+      "DORGESH_BLACKSMITH_HAMMER_TONG",
+      "DORGESH_BLACKSMITH_HAMMER_AXE"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Sand - Metallic - Sandbox",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -187,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "DORGESH_SANDPIT"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Kitchen Table",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -187,
+    "objectIds": [
+      "DORGESH_KITCHEN_TABLE"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Stove with cooking",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -187,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s <= 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvScale": 0.5,
+        "uvType": "BOX",
+        "uvOrientation": -187
+      },
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "DORGESH_COOKING_RANGE1",
+      "DORGESH_COOKING_RANGE2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Kitchen Sink - DYNAMIC - ANIMATED",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -187,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "DORGESH_SINK"
     ]
   },
   {
