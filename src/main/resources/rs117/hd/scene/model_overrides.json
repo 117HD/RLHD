@@ -7552,6 +7552,8 @@
       "MYARM_ROCK_FLOOR_06",
       "LOTR_RUINS_FLOOR_RUBBLE_02_LVL2",
       "DORGESH_ROCKS_DARK1",
+      "DORGESH_ROCKS_DARK2",
+      "DORGESH_ROCKS_DARK3",
       "DORGESH_ROCKS_DARK4",
       "DORGESH_ROCKS_DARK5",
       "ATJUN_DUGUPSOIL_SQUISHED_3",
@@ -7613,6 +7615,7 @@
       "GOBLIN_CAVEWALL_STALAGMITE_LARGE",
       "GOBLIN_CAVEWALL_STALAGMITE",
       "DORGESH_CAVES_STALAGTITE_01",
+      "DORGESH_CAVES_STALAGTITE_02",
       "GNOME_STRONGHOLD_SC_ROCK_BOTTOM",
       "GNOME_STRONGHOLD_SC_ROCKFALLOFF",
       "GNOME_STRONGHOLD_SC_ROCK_TOP"
@@ -8372,6 +8375,24 @@
     "uvOrientation": 100
   },
   {
+    "description": "Dorgeh-Kaan Agility Area - Rock - Metal - Climbable Walls And walls with cables",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ],
+    "objectIds": [
+      "DORGESH_CAVES_LADDER_DOWN",
+      "DORGESH_CAVEWALL_SLOPE_STEPS",
+      "DORGESH_GENERATOR_CABLE_WALL"
+    ]
+  },
+  {
     "description": "LUMBRIDGE_HOLE_DECALS",
     "baseMaterial": "TRANSPARENT",
     "objectIds": [
@@ -8420,7 +8441,8 @@
       },
       {
         "colors": "h == 7",
-        "baseMaterial": "BONE"
+        "baseMaterial": "BONE",
+        "uvType": "BOX"
       },
       {
         "colors": "h == 17",
@@ -14583,7 +14605,10 @@
       "DOV_HUNTING_BOULDER1_OP",
       "DOV_HUNTING_BOULDER2",
       "DOV_HUNTING_BOULDER2_OP",
-      "DS2_GRAVE_ROCKS"
+      "DS2_GRAVE_ROCKS",
+      "DORGESH_CAVES_ROCKS_SMALL_02",
+      "DORGESH_CAVES_ROCKS_SMALL_03",
+      "DORGESH_CAVES_ROCKS_BIG_03"
     ],
     "uvType": "BOX",
     "uvScale": 0.32
@@ -86737,7 +86762,8 @@
     "uvOrientation": 256,
     "objectIds": [
       "DORGESH_AVERAGE_TABLE_1BY1",
-      "DORGESH_AVERAGE_TABLE_2BY1"
+      "DORGESH_AVERAGE_TABLE_2BY1",
+      "DORGESH_AVERAGE_TABLE_2BY2"
     ]
   },
   {
@@ -87250,7 +87276,40 @@
       "DORGESH_FERN1",
       "DORGESH_FERN2",
       "DORGESH_FERN_LARGE1",
-      "DORGESH_FERN_LARGE2"
+      "DORGESH_FERN_LARGE2",
+      "DORGESH_FERN_LARGE_FLOWER1",
+      "DORGESH_FERN_LARGE_FLOWER2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Cable",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": 187,
+    "objectIds": [
+      "DORGESH_CAVES_CABLE",
+      "DORGESH_CAVES_LOOSE_CABLE_1",
+      "DORGESH_CAVES_LOOSE_CABLE_2",
+      "DORGESH_CAVES_LOOSE_CABLE_3",
+      "DORGESH_CABLEBALANCE_START",
+      "DORGESH_CABLEBALANCE_MIDDLE",
+      "DORGESH_GENERATOR_CABLE1",
+      "DORGESH_GENERATOR_CABLE2",
+      "DORGESH_GENERATOR_CABLE3"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan -  Metallic - Broken objects",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": 187,
+    "objectIds": [
+      "DORGESH_CAVES_BROKEN_LAMPPOST",
+      "DORGESH_CAVES_BROKEN_STUFF_1",
+      "DORGESH_CAVES_BROKEN_STUFF_2",
+      "DORGESH_CAVES_BROKEN_STUFF_3"
     ]
   }
 ]
