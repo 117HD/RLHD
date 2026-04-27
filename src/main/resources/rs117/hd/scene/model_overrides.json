@@ -33814,6 +33814,9 @@
       "FUNGI_SHELF01_CLUSTER01",
       "DORGESH_MUSHROOM_FLOOR5",
       "DORGESH_MUSHROOM_FLOOR4",
+      "DORGESH_MUSHROOM_FLOOR3",
+      "DORGESH_MUSHROOM_FLOOR2",
+      "DORGESH_MUSHROOM_FLOOR1",
       "FOSSIL_MUSHROOM2"
     ]
   },
@@ -86285,7 +86288,7 @@
     ]
   },
   {
-    "description": "Dorgesh-Kaan - Stone - Metallic - Wall top",
+    "description": "Dorgesh-Kaan - Stone - Wall top",
     "baseMaterial": "ROCK_2",
     "objectIds": [
       "DORGESH_1WALLS_TUNNEL_TOP",
@@ -86371,7 +86374,27 @@
       "DORGESH_GROUND_WALLS_INNER_THEATRE_ARCH",
       "DORGESH_GROUND_WALLS_INNER_THEATRE_ARCH_MIRROR",
       "DORGESH_GROUND_WALLS_INNER_SUPPORT_THEATRE",
-      "DORGESH_FIRST_WALLS_INNER_SUPPORT_THEATRE"
+      "DORGESH_FIRST_WALLS_INNER_SUPPORT_THEATRE",
+      "DORGESH_1STAIRS_POSH_TOP",
+      "DORGESH_2STAIRS_POSH_TOP"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Metallic - Cloth - Stone pillars with waving flags - ANIMATED - DYNAMIC",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "s > 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET_LIGHT"
+      }
+    ],
+    "objectIds": [
+      "DORGESH_3STAIRS_POSH_COLUMNS"
     ]
   },
   {
@@ -86400,7 +86423,8 @@
       "DORGESH_FIRST_WALLS_INNER_DOOR_TOP_POSH",
       "DORGESH_GROUND_WALLS_INNER_WINDOW_THEATRE",
       "DORGESH_FIRST_WALLS_INNER_WINDOW_THEATRE",
-      "DORGESH_FIRST_WALLS_INNER_ARCH_TOP_THEATRE"
+      "DORGESH_FIRST_WALLS_INNER_ARCH_TOP_THEATRE",
+      "DORGESH_FIRST_WALLS_INNER_ARCH_TOP_COUNCIL"
     ]
   },
   {
@@ -86419,7 +86443,9 @@
     ],
     "objectIds": [
       "DORGESH_COUNCIL_STATUE1",
-      "DORGESH_COUNCIL_STATUE2", "DORGESH_COUNCIL_BUST1"
+      "DORGESH_COUNCIL_STATUE2",
+      "DORGESH_COUNCIL_BUST1",
+      "DORGESH_COUNCIL_BUST2"
     ]
   },
   {
@@ -86967,6 +86993,26 @@
     ]
   },
   {
+    "description": "Dorgesh-Kaan - Metallic - Paper - Glass - Shelf with objects",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 189,
+    "colorOverrides": [
+      {
+        "colors": "h >= 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 589
+      }
+    ],
+    "objectIds": [
+      "DORGESH_ZANIK_SHELF1",
+      "DORGESH_ZANIK_SHELF2"
+    ]
+  },
+  {
     "description": "Dorgesh-Kaan - Metallic - Metal ladder with gold railing",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
@@ -87043,6 +87089,168 @@
     "objectIds": [
       "DORGESH_SCRIBE_WALL_MAP",
       "DORGESH_SCRIBE_WALL_MAP2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Hanging wall trophies",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "DORGESH_ZANIK_HANGING_BEETLE",
+      "DORGESH_ZANIK_HANGING_MOTH"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Hanging wall frog",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "colors": "h <= 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "DORGESH_ZANIK_HANGING_FROG"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Stone tables with mushrooms and maps",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s <=  1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "DORGESH_ZANIK_TABLE_2BY1",
+      "DORGESH_ZANIK_TABLE_2BY2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Stone - Stone tables with mushrooms and maps",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "DORGESH_ZANIK_FUNGUS_SEAT"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Bone - Metallic - Nursery Walls",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -404,
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s ==  1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "DORGESH_NURSERY_WALL",
+      "DORGESH_NURSERY_DOOR_CLOSED",
+      "DORGESH_NURSERY_DOOR_OPEN",
+      "DORGESH_NURSERY_WALL_GATE"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Metallic - Play blocks",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -404,
+    "objectIds": [
+      "DORGESH_NURSERY_PLAYBLOCKS1",
+      "DORGESH_NURSERY_PLAYBLOCKS2",
+      "DORGESH_NURSERY_PLAYBLOCKS3"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Hopscotch",
+    "baseMaterial": "DIRT_1",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -404,
+    "objectIds": [
+      "DORGESH_NURSERY_HOP_SCOTCH1",
+      "DORGESH_NURSERY_HOP_SCOTCH2",
+      "DORGESH_NURSERY_HOP_SCOTCH3",
+      "DORGESH_NURSERY_HOP_SCOTCH4"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Bone - Puzzle board",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -404,
+    "objectIds": [
+      "DORGESH_NURSERY_BLOCK_PUZZLE1"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Bone - Puzzle Blocks",
+    "baseMaterial": "BONE",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -404,
+    "objectIds": [
+      "DORGESH_NURSERY_BLOCK_PUZZLE2"
+    ]
+  },
+  {
+    "description": "Dorgesh-Kaan - Bone - Metallic - Nursery Crib",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -404,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 187
+      }
+    ],
+    "objectIds": [
+      "DORGESH_NURSERY_CRIB"
+    ]
+  },
+  {
+    "description": "Camdozaal - Plant - Fern",
+    "baseMaterial": "LEAF_VEINS_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.4,
+    "objectIds": [
+      "DORGESH_FERN1",
+      "DORGESH_FERN2",
+      "DORGESH_FERN_LARGE1",
+      "DORGESH_FERN_LARGE2"
     ]
   }
 ]
