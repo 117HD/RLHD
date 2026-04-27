@@ -103,7 +103,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		if (unsortedCount > 0) // Push unsorted faces to be drawn first
 			visibleFaces.put(orderedFaces, 0, unsortedCount);
 
-		final byte[] priorities = !depthOnly ? model.getFaceRenderPriorities() : null;
+		final byte[] priorities = depthOnly ? null : model.getFaceRenderPriorities();
 		if (priorities == null) {
 			for (int i = maxFz; i >= minFz; --i) {
 				for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
