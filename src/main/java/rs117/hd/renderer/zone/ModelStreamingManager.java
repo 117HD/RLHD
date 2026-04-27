@@ -582,7 +582,7 @@ public class ModelStreamingManager {
 			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (shouldSort && !isSquashed)
-				facePrioritySorter.sortModelFaces(visibleFaces, m);
+				facePrioritySorter.sortModelFaces(visibleFaces, m, true);
 
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
