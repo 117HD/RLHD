@@ -31,8 +31,11 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
+def props = new Properties()
+file('runelite-plugin.properties').withInputStream { props.load(it) }
+
 group = 'rs117.hd'
-version = '1.5.2'
+version = props.getProperty('version')
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
