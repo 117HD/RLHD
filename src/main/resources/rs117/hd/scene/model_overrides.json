@@ -79257,7 +79257,20 @@
     "graphicsObjectIds": [
       "TEMPOROSS_FISHING_SPOTANIM"
     ],
-    "depthBias": 255
+    "depthBias": 150,
+    "colorOverrides": [
+      {
+        "colors": "h == 32 && l > 50",
+        "baseMaterial": "GRAY_65",
+        "hideAsWaterEffect": true,
+        "depthBias": 250
+      },
+      {
+        "colors": "h == 0 || h == 7 || h == 8",
+        "baseMaterial": "GRAY_90",
+        "depthBias": 250
+      }
+    ]
   },
   {
     "description": "Depth Bias Fix - Various Pets - Fix model clipping",
