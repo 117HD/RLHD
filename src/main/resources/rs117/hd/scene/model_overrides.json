@@ -65114,9 +65114,9 @@
   },
   {
     "description": "Varlamore - Stone - Table",
-    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.75,
     "uvOrientation": 313,
     "objectIds": [
       "TABLE_CIVITAS01_TABLE01",
