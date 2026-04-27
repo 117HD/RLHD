@@ -27877,7 +27877,8 @@
     "uvScale": 0.5,
     "objectIds": [
       "KALPHITE_BURROW_ENTRANCE",
-      "KALPHITE_BURROW_ENTRANCE_WITHROPE"
+      "KALPHITE_BURROW_ENTRANCE_WITHROPE",
+      "KALPHITE_BURROW_ENTRANCE_NOROPE"
     ],
     "depthBias": 150,
     "terrainVertexSnap": true,
@@ -40162,7 +40163,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Varlamore Awnings Large Red, MODEL_XZ is used with intent",
+    "description": "Varlamore Awnings Large Red",
     "baseMaterial": "CARPET",
     "objectIds": [
       "TENT_BAZAAR01_CORNER01",
@@ -40184,7 +40185,45 @@
       "ARENA_TENT_DIAG04",
       "ARENA_TENT_DIAG05"
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Varlamore Awnings Large Yellow",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "TENT_BAZAAR01_MIDDLE01"
+    ],
+    "uvType": "MODEL_XZ",
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "ROPE_SEMI_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Varlamore Tent Walls",
@@ -40195,23 +40234,25 @@
     "uvType": "BOX"
   },
   {
-    "description": "Varlamore Circular Awning, MODEL_XZ is used with intent",
-    "baseMaterial": "CARPET",
-    "objectIds": [
-      "TENT_BAZAAR01_MIDDLE01"
-    ],
-    "uvType": "MODEL_XZ"
-  },
-  {
     "description": "Varlamore Banners",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
       "TENT_BAZAAR01_WALL02",
       "TENT_BAZAAR01_WALL02_OFFSET",
       "TENT_BAZAAR01_WALL03",
       "BANNER_VARLAMORE01_DEFAULT02"
     ],
-    "uvType": "MODEL_YZ"
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 4 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.25,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Colossal Wyrm Agility Course - Stone Chips",
@@ -52139,8 +52180,9 @@
     "description": "Fortis wooden staircase",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.9,
+    "uvScale": 0.75,
     "flatNormals": true,
+    "uvOrientation": 512,
     "objectIds": [
       "CIVITAS_STAIRS_1X3",
       "ALDARIN_STAIRS_1X2"
@@ -52419,6 +52461,15 @@
     "objectIds": [
       "WALLKIT_CIVITAS05_FENCE02",
       "WALLKIT_CIVITAS05_FENCE03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvOrientation": 128
+      }
     ]
   },
   {
@@ -52435,7 +52486,7 @@
       {
         "description": "Bricks",
         "colors": "h == 7 && s == 1",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
         "uvOrientation": 128
       }
@@ -54455,7 +54506,13 @@
       "CAKETHIEFSTALL",
       "SILKTHIEFSTALL",
       "SILVERTHIEFSTALL",
-      "SPICETHIEFSTALL"
+      "SPICETHIEFSTALL",
+      "FORTIS_MARKET_STALL_GEMS",
+      "FORTIS_MARKET_STALL_FUR",
+      "FORTIS_MARKET_STALL_SILK",
+      "FORTIS_MARKET_STALL",
+      "FORTIS_MARKET_STALL_BAKERS",
+      "FORTIS_MARKET_STALL_SPICE"
     ],
     "colorOverrides": [
       {
@@ -64485,13 +64542,21 @@
     "objectIds": [
       "ROOFKIT_CIVITAS_FACADE02_6X1",
       "ROOFKIT_CIVITAS_FACADE02_6X1_M"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Symbol",
+        "colors": "h == 8 || h == 35",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX"
+      }
     ]
   },
   {
-    "description": "Aldarin - Fortis - Terracotta shingled roof with fron facade",
-    "baseMaterial": "GRUNGE_3_DARK",
+    "description": "Aldarin - Fortis - Terracotta shingled roof with sun facade",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvOrientation": -256,
     "objectIds": [
       "ROOFKIT_ALDARIN_FACADE01_5X1",
       "ROOFKIT_ALDARIN_FACADE01_5X1_M",
@@ -64508,11 +64573,9 @@
       },
       {
         "description": "Symbol",
-        "colors": "h == 0 && s == 4 || h == 8 && s == 6",
-        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-        "uvType": "BOX",
-        "uvOrientation": 303,
-        "uvScale": 0.8
+        "colors": "h == 0 && s == 4 || h == 8 && s == 6 || h == 3",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX"
       }
     ]
   },
@@ -64603,6 +64666,7 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 179,
+    "depthBias": 1,
     "objectIds": [
       "PILLAR_ALDARIN01_CITY01_LOWER01",
       "PILLAR_ALDARIN01_CITY01_HIGHER01",
@@ -64610,16 +64674,28 @@
       "PILLAR_CIVITAS01_CITY01_HIGHER01",
       "PILLAR_CIVITAS01_CITY01",
       "PILLAR_CIVITAS01_CITY02_LOWER01",
+      "PILLAR_CIVITAS01_CITY02",
+      "PILLAR_CIVITAS01_CITY03",
       "PILLAR_CIVITAS01_MUSEUM01",
       "PILLAR_CIVITAS01_MUSEUM03"
     ],
     "colorOverrides": [
       {
-        "colors": "h <= 1",
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 3
+      },
+      {
+        "colors": "h <= 1 || h == 25",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvOrientation": 89,
         "uvScale": 0.8
+      },
+      {
+        "colors": "h == 7 && s == 0 && l == 33 || h > 7 || h == 8",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 2
       }
     ]
   },
