@@ -24,9 +24,7 @@
  */
 package rs117.hd.scene;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -80,22 +78,23 @@ public class ProceduralGenerator {
 		};
 
 	@Inject
-	private Client client;
-
-	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
 	private WaterTypeManager waterTypeManager;
 
-	private final ConcurrentPool<GeneratorContext> SUB_SCENE_GENERATOR_POOL = new ConcurrentPool<>(GeneratorContext::new);
-	private final GeneratorContext TOP_LEVEL_GENERATOR = new GeneratorContext();
+	private final ConcurrentPool<GeneratorContext> GENERATOR_POOL = new ConcurrentPool<>(GeneratorContext::new);
 
-	final class GeneratorContext {
+	final class GeneratorContext implements AutoCloseable {
 		final MainTileOverridesGenerator mainTileOverridesGenerator = new MainTileOverridesGenerator();
 		final TerrainDataGenerator terrainDataGenerator = new TerrainDataGenerator();
 		final UnderwaterTerrainGenerator underwaterTerrainGenerator = new UnderwaterTerrainGenerator();
 		final TerrainNormalGenerator terrainNormalGenerator = new TerrainNormalGenerator();
+
+		@Override
+		public void close() {
+			GENERATOR_POOL.recycle(this);
+		}
 	}
 
 	/**
@@ -133,9 +132,7 @@ public class ProceduralGenerator {
 	}
 
 	public void generateSceneData(SceneContext sceneCtx, SceneContext prevSceneCtx) {
-		final boolean isSceneCtxTopLevel = client.getTopLevelWorldView().getScene() == sceneCtx.scene;
-		final GeneratorContext ctx = isSceneCtxTopLevel ? TOP_LEVEL_GENERATOR : SUB_SCENE_GENERATOR_POOL.acquire();
-		try {
+		try (GeneratorContext ctx = GENERATOR_POOL.acquire()) {
 			long timerTotal = System.currentTimeMillis();
 			long timerCalculateMainOverrides, timerCalculateTerrainNormals, timerGenerateTerrainData, timerGenerateUnderwaterTerrain;
 
@@ -157,9 +154,6 @@ public class ProceduralGenerator {
 			log.debug("-- calculateTerrainNormals: {}ms", timerCalculateTerrainNormals);
 			log.debug("-- generateTerrainData: {}ms", timerGenerateTerrainData);
 			log.debug("-- generateUnderwaterTerrain: {}ms", timerGenerateUnderwaterTerrain);
-		} finally {
-			if(!isSceneCtxTopLevel)
-				SUB_SCENE_GENERATOR_POOL.recycle(ctx);
 		}
 	}
 
@@ -167,7 +161,6 @@ public class ProceduralGenerator {
 		private final int[][] vertices = new int[4][3];
 		private final int[] hashes = new int[4];
 
-		private final List<int[]> vertexNormals = new ArrayList<>();
 		private final int[] vertexHeights = new int[4];
 		private final int[] surfaceNormal = new int[3];
 		private final int[] normalA = new int[3];
@@ -176,14 +169,20 @@ public class ProceduralGenerator {
 
 		private int[][][] faceVertices = new int[2][VERTICES_PER_FACE][3];
 		private int[][] faceVertexKeys = new int[VERTICES_PER_FACE][3];
+		private int[] vertexNormals;
+		private int vertexNormalsPos = 0;
 
 		/**
 		 * Iterates through all Tiles in a given Scene, calculating vertex normals
 		 * for each one, then stores resulting normal data in a HashMap.
 		 */
 		private void generate(SceneContext sceneContext, SceneContext prevSceneContext) {
-			sceneContext.vertexTerrainNormalIndices = new Int2IntHashMap(prevSceneContext != null && prevSceneContext.vertexTerrainNormalIndices != null ? prevSceneContext.vertexTerrainNormalIndices.capacity() : 0);
 			final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+
+			sceneContext.vertexTerrainNormalIndices = new Int2IntHashMap(prevSceneContext != null && prevSceneContext.vertexTerrainNormalIndices != null ? prevSceneContext.vertexTerrainNormalIndices.capacity() : 0);
+
+			vertexNormals = new int[prevSceneContext != null && prevSceneContext.vertexNormals != null ? prevSceneContext.vertexNormals.length : 3000];
+			vertexNormalsPos = 0;
 
 			for (int z = 0; z < MAX_Z; z++) {
 				final Tile[][] zTiles = tiles[z];
@@ -202,26 +201,22 @@ public class ProceduralGenerator {
 				}
 			}
 
-			sceneContext.vertexNormals = new short[vertexNormals.size() * 3];
-			for(int i = 0, offset = 0; i < vertexNormals.size(); i++) {
-				final int[] n = vertexNormals.get(i);
+			sceneContext.vertexNormals = new short[vertexNormalsPos];
+			for(int offset = 0; offset < vertexNormalsPos; offset += 3) {
+				final float x = vertexNormals[offset];
+				final float y = vertexNormals[offset + 1];
+				final float z = vertexNormals[offset + 2];
 
-				final float x = n[0];
-				final float y = n[1];
-				final float z = n[2];
-
-				float len = x * x + y * y + z * z;
-				if (len == 0) {
-					n[0] = n[1] = n[2] = 0;
+				final float len = x * x + y * y + z * z;
+				if (len == 0)
 					continue;
-				}
 
 				final float invLen = rcp(sqrt(len));
-				sceneContext.vertexNormals[offset++] = normShort(x * invLen);
-				sceneContext.vertexNormals[offset++] = normShort(y * invLen);
-				sceneContext.vertexNormals[offset++] = normShort(z * invLen);
+				sceneContext.vertexNormals[offset] = normShort(x * invLen);
+				sceneContext.vertexNormals[offset + 1] = normShort(y * invLen);
+				sceneContext.vertexNormals[offset + 2] = normShort(z * invLen);
 			}
-			vertexNormals.clear();
+			vertexNormals = null;
 		}
 
 		/**
@@ -302,14 +297,21 @@ public class ProceduralGenerator {
 
 				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
 					final int vertexKey = faceVertexKeys[face][vertex];
-					int terrainNormalIdx = sceneContext.vertexTerrainNormalIndices.getOrDefault(vertexKey, -1);
+					final int terrainNormalIdx = sceneContext.vertexTerrainNormalIndices.getOrDefault(vertexKey, -1);
 					if (terrainNormalIdx == -1) {
-						terrainNormalIdx = vertexNormals.size();
-						vertexNormals.add(copy(surfaceNormal));
-						sceneContext.vertexTerrainNormalIndices.put(vertexKey, terrainNormalIdx);
+						sceneContext.vertexTerrainNormalIndices.put(vertexKey, vertexNormalsPos / 3);
+
+						if(vertexNormalsPos + 3 >= vertexNormals.length)
+							vertexNormals = Arrays.copyOf(vertexNormals, vertexNormalsPos * 2);
+
+						vertexNormals[vertexNormalsPos++] = surfaceNormal[0];
+						vertexNormals[vertexNormalsPos++] = surfaceNormal[1];
+						vertexNormals[vertexNormalsPos++] = surfaceNormal[2];
 					} else {
-						final int[] n = vertexNormals.get(terrainNormalIdx);
-						add(n, n, surfaceNormal);
+						final int offset = terrainNormalIdx * 3;
+						vertexNormals[offset] += surfaceNormal[0];
+						vertexNormals[offset + 1] += surfaceNormal[1];
+						vertexNormals[offset + 2] += surfaceNormal[2];
 					}
 				}
 			}
