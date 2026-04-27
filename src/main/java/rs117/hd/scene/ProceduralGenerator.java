@@ -112,10 +112,10 @@ public class ProceduralGenerator {
 
 	public void clearSceneData(SceneContext sceneContext) {
 		sceneContext.tileFlags = null;
-		sceneContext.vertexData = null;
+		sceneContext.vertexTerrainData = null;
 		sceneContext.tileOverrideIndices = null;
 		sceneContext.vertexTerrainTexture = null;
-		sceneContext.vertexNormals = null;
+		sceneContext.vertexTerrainNormals = null;
 	}
 
 	public static void faceVertexKeys(Tile tile, int face, int[][] vertices, int[] vertexHashes) {
@@ -181,7 +181,7 @@ public class ProceduralGenerator {
 
 			sceneContext.vertexTerrainNormalIndices = new Int2IntHashMap(prevSceneContext != null && prevSceneContext.vertexTerrainNormalIndices != null ? prevSceneContext.vertexTerrainNormalIndices.capacity() : 0);
 
-			vertexNormals = new int[prevSceneContext != null && prevSceneContext.vertexNormals != null ? prevSceneContext.vertexNormals.length : 3000];
+			vertexNormals = new int[prevSceneContext != null && prevSceneContext.vertexTerrainNormals != null ? prevSceneContext.vertexTerrainNormals.length : 3000];
 			vertexNormalsPos = 0;
 
 			for (int z = 0; z < MAX_Z; z++) {
@@ -201,7 +201,7 @@ public class ProceduralGenerator {
 				}
 			}
 
-			sceneContext.vertexNormals = new short[vertexNormalsPos];
+			sceneContext.vertexTerrainNormals = new short[vertexNormalsPos];
 			for(int offset = 0; offset < vertexNormalsPos; offset += 3) {
 				final float x = vertexNormals[offset];
 				final float y = vertexNormals[offset + 1];
@@ -212,9 +212,9 @@ public class ProceduralGenerator {
 					continue;
 
 				final float invLen = rcp(sqrt(len));
-				sceneContext.vertexNormals[offset] = normShort(x * invLen);
-				sceneContext.vertexNormals[offset + 1] = normShort(y * invLen);
-				sceneContext.vertexNormals[offset + 2] = normShort(z * invLen);
+				sceneContext.vertexTerrainNormals[offset] = normShort(x * invLen);
+				sceneContext.vertexTerrainNormals[offset + 1] = normShort(y * invLen);
+				sceneContext.vertexTerrainNormals[offset + 2] = normShort(z * invLen);
 			}
 			vertexNormals = null;
 		}
@@ -802,7 +802,7 @@ public class ProceduralGenerator {
 			// bit 1 set if a tile contains at least 1 face which qualifies as water
 			// bit 2 set if a tile will be skipped when the scene is drawn, this is due to certain edge cases with water on the same X/Y on different planes
 			sceneContext.tileFlags = new byte[MAX_Z * sizeX * sizeY];
-			sceneContext.vertexData = new Int2IntHashMap(prevSceneCtx != null && prevSceneCtx.vertexData != null ? prevSceneCtx.vertexData.capacity() : 0);
+			sceneContext.vertexTerrainData = new Int2IntHashMap(prevSceneCtx != null && prevSceneCtx.vertexTerrainData != null ? prevSceneCtx.vertexTerrainData.capacity() : 0);
 			// the world-space height offsets of each vertex on the tile grid
 			// these offsets are interpolated to calculate offsets for vertices not on the grid (tilemodels)
 

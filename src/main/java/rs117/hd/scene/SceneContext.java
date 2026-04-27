@@ -66,6 +66,8 @@ public class SceneContext {
 	public Area currentArea;
 	public Area[] possibleAreas = new Area[0];
 	public byte[][] filledTiles = new byte[EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+	public byte[] tileFlags;
+	public int[] tileOverrideIndices;
 	public int staticVertexCount = 0;
 	public int staticGapFillerTilesOffset;
 	public int staticGapFillerTilesVertexCount;
@@ -76,13 +78,11 @@ public class SceneContext {
 	public int uniqueModels;
 
 	// Terrain data
-	public byte[] tileFlags;
-	public int[] tileOverrideIndices;
-	public Int2IntHashMap vertexTerrainColor;
-	public Int2IntHashMap vertexData;
-	public Int2IntHashMap vertexTerrainNormalIndices;
 	public Int2ObjectHashMap<Material> vertexTerrainTexture;
-	public short[] vertexNormals;
+	public Int2IntHashMap vertexTerrainColor;
+	public Int2IntHashMap vertexTerrainData;
+	public Int2IntHashMap vertexTerrainNormalIndices;
+	public short[] vertexTerrainNormals;
 
 	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;
@@ -99,48 +99,48 @@ public class SceneContext {
 	public synchronized void destroy() {}
 
 	public void setVertexIsLand(int hash) {
-		vertexData.or(hash, VERTEX_IS_LAND, 0);
+		vertexTerrainData.or(hash, VERTEX_IS_LAND, 0);
 	}
 
 	public void setVertexIsWater(int hash) {
-		vertexData.or(hash, VERTEX_IS_WATER, 0);
+		vertexTerrainData.or(hash, VERTEX_IS_WATER, 0);
 	}
 
 	public void setVertexHighPriorityColor(int hash) {
-		vertexData.or(hash, VERTEX_IS_HIGH_PRIORITY_COLOR, 0);
+		vertexTerrainData.or(hash, VERTEX_IS_HIGH_PRIORITY_COLOR, 0);
 	}
 
 	public void setVertexIsOverlay(int hash, boolean isOverlay) {
 		int mask = VERTEX_IS_OVERLAY | VERTEX_IS_UNDERLAY;
 		int value = isOverlay ? VERTEX_IS_OVERLAY : VERTEX_IS_UNDERLAY;
-		vertexData.setBits(hash, value, mask, 0);
+		vertexTerrainData.setBits(hash, value, mask, 0);
 	}
 
 	public void setVertexUnderwaterDepth(int hash, int depth) {
 		int value = (depth << VERTEX_UNDER_WATER_DEPTH_SHIFT);
 		int mask = VERTEX_UNDER_WATER_DEPTH_MASK << VERTEX_UNDER_WATER_DEPTH_SHIFT;
 
-		vertexData.setBits(hash, value, mask, 0);
+		vertexTerrainData.setBits(hash, value, mask, 0);
 	}
 
 	public boolean isVertexHighPriorityColor(int hash) {
-		return vertexData.test(hash, VERTEX_IS_HIGH_PRIORITY_COLOR);
+		return vertexTerrainData.test(hash, VERTEX_IS_HIGH_PRIORITY_COLOR);
 	}
 
 	public boolean isVertexLand(int hash) {
-		return vertexData.test(hash, VERTEX_IS_LAND);
+		return vertexTerrainData.test(hash, VERTEX_IS_LAND);
 	}
 
 	public boolean isVertexWater(int hash) {
-		return vertexData.test(hash, VERTEX_IS_WATER);
+		return vertexTerrainData.test(hash, VERTEX_IS_WATER);
 	}
 
 	public boolean isVertexOverlay(int hash) {
-		return vertexData.test(hash, VERTEX_IS_OVERLAY);
+		return vertexTerrainData.test(hash, VERTEX_IS_OVERLAY);
 	}
 
 	public boolean isVertexUnderlay(int hash) {
-		return vertexData.test(hash, VERTEX_IS_UNDERLAY);
+		return vertexTerrainData.test(hash, VERTEX_IS_UNDERLAY);
 	}
 
 	public short[] getVertexNormalOrDefault(int hash, short[] result, short[] defaultNormal) {
@@ -160,14 +160,14 @@ public class SceneContext {
 			return null;
 
 		final int offset = index * 3;
-		result[0] = vertexNormals[offset];
-		result[1] = vertexNormals[offset + 1];
-		result[2] = vertexNormals[offset + 2];
+		result[0] = vertexTerrainNormals[offset];
+		result[1] = vertexTerrainNormals[offset + 1];
+		result[2] = vertexTerrainNormals[offset + 2];
 		return result;
 	}
 
 	public int getVertexUnderwaterDepth(int hash) {
-		return vertexData.getBits(
+		return vertexTerrainData.getBits(
 			hash,
 			VERTEX_UNDER_WATER_DEPTH_MASK,
 			VERTEX_UNDER_WATER_DEPTH_SHIFT,
