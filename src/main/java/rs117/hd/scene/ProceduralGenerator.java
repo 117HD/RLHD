@@ -80,23 +80,22 @@ public class ProceduralGenerator {
 		};
 
 	@Inject
+	private Client client;
+
+	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
 	private WaterTypeManager waterTypeManager;
 
-	private final ConcurrentPool<GeneratorContext> GENERATOR_POOL = new ConcurrentPool<>(GeneratorContext::new);
+	private final ConcurrentPool<GeneratorContext> SUB_SCENE_GENERATOR_POOL = new ConcurrentPool<>(GeneratorContext::new);
+	private final GeneratorContext TOP_LEVEL_GENERATOR = new GeneratorContext();
 
-	final class GeneratorContext implements AutoCloseable {
+	final class GeneratorContext {
 		final MainTileOverridesGenerator mainTileOverridesGenerator = new MainTileOverridesGenerator();
 		final TerrainDataGenerator terrainDataGenerator = new TerrainDataGenerator();
 		final UnderwaterTerrainGenerator underwaterTerrainGenerator = new UnderwaterTerrainGenerator();
 		final TerrainNormalGenerator terrainNormalGenerator = new TerrainNormalGenerator();
-
-		@Override
-		public void close() {
-			GENERATOR_POOL.recycle(this);
-		}
 	}
 
 	/**
@@ -134,7 +133,9 @@ public class ProceduralGenerator {
 	}
 
 	public void generateSceneData(SceneContext sceneCtx, SceneContext prevSceneCtx) {
-		try (GeneratorContext ctx = GENERATOR_POOL.acquire()) {
+		final boolean isSceneCtxTopLevel = client.getTopLevelWorldView().getScene() == sceneCtx.scene;
+		final GeneratorContext ctx = isSceneCtxTopLevel ? TOP_LEVEL_GENERATOR : SUB_SCENE_GENERATOR_POOL.acquire();
+		try {
 			long timerTotal = System.currentTimeMillis();
 			long timerCalculateMainOverrides, timerCalculateTerrainNormals, timerGenerateTerrainData, timerGenerateUnderwaterTerrain;
 
@@ -156,6 +157,9 @@ public class ProceduralGenerator {
 			log.debug("-- calculateTerrainNormals: {}ms", timerCalculateTerrainNormals);
 			log.debug("-- generateTerrainData: {}ms", timerGenerateTerrainData);
 			log.debug("-- generateUnderwaterTerrain: {}ms", timerGenerateUnderwaterTerrain);
+		} finally {
+			if(!isSceneCtxTopLevel)
+				SUB_SCENE_GENERATOR_POOL.recycle(ctx);
 		}
 	}
 
