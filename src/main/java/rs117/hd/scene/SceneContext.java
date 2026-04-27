@@ -76,8 +76,8 @@ public class SceneContext {
 	public int uniqueModels;
 
 	// Terrain data
-	public byte[][][] tileFlags;
-	public int[][][] tileOverrideIndices;
+	public byte[] tileFlags;
+	public int[] tileOverrideIndices;
 	public Int2IntHashMap vertexTerrainColor;
 	public Int2IntHashMap vertexData;
 	public Int2IntHashMap vertexTerrainNormalIndices;
@@ -176,11 +176,11 @@ public class SceneContext {
 	}
 
 	public void setTileFlag(int plane, int x, int y, byte flag) {
-		tileFlags[plane][x][y] |= flag;
+		tileFlags[getTileIdx(plane, x, y)] |= flag;
 	}
 
 	public boolean isTileFlagSet(int plane, int x, int y, byte flag) {
-		return (tileFlags[plane][x][y] & flag) != 0;
+		return (tileFlags[getTileIdx(plane, x, y)] & flag) != 0;
 	}
 
 	public void setTileOverride(
@@ -191,7 +191,6 @@ public class SceneContext {
 		TileOverride underlayOverride,
 		TileOverride overlayOverride
 	) {
-		assert tileOverrideIndices[plane][x][y] == 0;
 
 		int index = tileOverrides.size();
 		int packed = 0;
@@ -214,11 +213,13 @@ public class SceneContext {
 			return; // No overrides, nothing to do
 
 		packed |= index << TILE_OVERRIDE_COUNT;
-		tileOverrideIndices[plane][x][y] = packed;
+		final int tileIndex = getTileIdx(plane, x, y);
+		assert tileOverrideIndices[tileIndex] == 0;
+		tileOverrideIndices[tileIndex] = packed;
 	}
 
 	public boolean getTileOverrides(int plane, int x, int y, TileOverride[] result) {
-		final int packed = tileOverrideIndices[plane][x][y];
+		final int packed = tileOverrideIndices[getTileIdx(plane, x, y)];
 		if (packed == 0)
 			return false;
 
@@ -239,7 +240,7 @@ public class SceneContext {
 		if (tileOverrideIndices == null)
 			return null;
 
-		final int packed = tileOverrideIndices[plane][x][y];
+		final int packed = tileOverrideIndices[getTileIdx(plane, x, y)];
 		if (packed == 0 || (packed & (1 << type)) == 0)
 			return null;
 
@@ -250,6 +251,17 @@ public class SceneContext {
 		}
 
 		return tileOverrides.get(offset);
+	}
+
+	public int[] getTileIndices(int tileIdx, int[] indices) {
+		indices[0] = tileIdx % sizeX;
+		indices[1] = (tileIdx / sizeX) % sizeZ;
+		indices[2] = tileIdx / (sizeX * sizeZ);
+		return indices;
+	}
+
+	public int getTileIdx(int plane, int x, int y) {
+		return x + y * sizeX + plane * sizeX * sizeZ;
 	}
 
 	/**
