@@ -55,6 +55,17 @@ public final class HDUtils {
 	public static final int HIDDEN_HSL = 12345678;
 	public static final int UNDERWATER_HSL = 6676;
 
+	public static int fastVertex3Hash(int[] vPos) {
+		int hash = vPos[0];
+		hash = 31 * hash + 44;
+
+		hash = 31 * hash + vPos[1];
+		hash = 31 * hash + 44;
+
+		hash = 31 * hash + vPos[2];
+		return 31 * hash + 44;
+	}
+
 	public static int fastVertexHash(int[] vPos) {
 		int hash = 0;
 		for (int i = 0; i < vPos.length; i++) {
