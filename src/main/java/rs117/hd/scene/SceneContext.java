@@ -67,14 +67,6 @@ public class SceneContext {
 	public byte[][] filledTiles = new byte[EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 	public byte[] tileFlags;
 	public char[] tileOverrideIndices;
-	public int staticVertexCount = 0;
-	public int staticGapFillerTilesOffset;
-	public int staticGapFillerTilesVertexCount;
-	public int staticCustomTilesOffset;
-	public int staticCustomTilesVertexCount;
-
-	// Statistics
-	public int uniqueModels;
 
 	// Terrain data
 	public Int2ObjectHashMap<Material> vertexTerrainTexture;
