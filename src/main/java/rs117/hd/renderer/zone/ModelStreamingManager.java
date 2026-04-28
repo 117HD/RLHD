@@ -23,7 +23,7 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.collections.PrimitiveIntArray;
+import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static net.runelite.api.Perspective.*;
 import static net.runelite.api.hooks.DrawCallbacks.*;
@@ -37,7 +37,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class ModelStreamingManager {
-	public static final ConcurrentPool<PrimitiveIntArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveIntArray::new);
+	public static final ConcurrentPool<PrimitiveCharArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveCharArray::new);
 	public static final int RL_RENDER_THREADS = 2;
 
 	@Inject
@@ -292,8 +292,8 @@ public class ModelStreamingManager {
 		int orientation,
 		int x, int y, int z
 	) {
-		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
-		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
 
 		boolean shouldSort =
 			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED ||
@@ -557,8 +557,8 @@ public class ModelStreamingManager {
 		int orient,
 		int x, int y, int z
 	) {
-		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
-		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
 
 		boolean shouldSort = renderable.getRenderMode() != Renderable.RENDERMODE_UNSORTED;
 		try (

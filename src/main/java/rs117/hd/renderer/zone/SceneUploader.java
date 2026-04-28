@@ -46,7 +46,7 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.IntHashSet;
-import rs117.hd.utils.collections.PrimitiveIntArray;
+import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -1724,8 +1724,8 @@ public class SceneUploader implements AutoCloseable {
 		Projection proj,
 		float[][] sceneFrustumPlanes,
 		int[] faceDistances,
-		PrimitiveIntArray visibleFaces,
-		PrimitiveIntArray culledFaces,
+		PrimitiveCharArray visibleFaces,
+		PrimitiveCharArray culledFaces,
 		boolean isModelPartiallyVisible,
 		ModelOverride modelOverride,
 		Model model,
@@ -1833,7 +1833,7 @@ public class SceneUploader implements AutoCloseable {
 		final int radius = model.getRadius();
 
 		tempModelAlphaFaces = 0;
-		for (int f = 0; f < triangleCount; f++) {
+		for (char f = 0; f < triangleCount; f++) {
 			if (color3s[f] == -2)
 				continue;
 
@@ -1942,7 +1942,7 @@ public class SceneUploader implements AutoCloseable {
 
 	// temp draw
 	public void uploadTempModel(
-		PrimitiveIntArray faces,
+		PrimitiveCharArray faces,
 		Model model,
 		ModelOverride modelOverride,
 		int preOrientation,
