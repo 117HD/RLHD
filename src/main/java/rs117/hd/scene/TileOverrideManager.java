@@ -38,6 +38,8 @@ public class TileOverrideManager {
 
 	private static final ThreadLocal<int[]> OVERLAY_UNDERLAY_IDS = ThreadLocal.withInitial(() -> new int[2]);
 
+	public static TileOverride[] OVERRIDES;
+
 	@Inject
 	private Client client;
 
@@ -62,6 +64,7 @@ public class TileOverrideManager {
 	public void shutDown() {
 		if (fileWatcher != null)
 			fileWatcher.unregister();
+		OVERRIDES = null;
 		fileWatcher = null;
 		anyMatchOverrides = null;
 		idMatchOverrides = null;
@@ -125,6 +128,7 @@ public class TileOverrideManager {
 
 			anyMatchOverrides = anyMatch;
 			idMatchOverrides = idMatch;
+			OVERRIDES = allOverrides;
 
 			log.debug("Loaded {} tile overrides", allOverrides.length);
 		} catch (IOException ex) {
