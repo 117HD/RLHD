@@ -6741,9 +6741,8 @@
   {
     "name": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
     "area": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
-    "overlayIds": [ 336 ],
-    "groundMaterial": "GRASS_1",
-    "blended": false
+    "overlayIds": [ 336, 377 ],
+    "groundMaterial": "GRASS_1"
   },
   {
     "name": "HUNTER_GUILD_POND",
@@ -7501,6 +7500,12 @@
     "replacements": {
       "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
+  },
+  {
+    "name": "Varlamore - Stalker Den - Water",
+    "area": "Stalker Den",
+    "overlayIds": [ 41 ],
+    "waterType": "CAVE_WATER"
   },
   {
     "name": "Varlamore - Auburn Valley - Dirt path",

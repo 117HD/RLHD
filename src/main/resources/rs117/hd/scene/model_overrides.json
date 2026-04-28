@@ -1406,7 +1406,7 @@
   {
     "description": "Gnome Stronghold Tree Leaves - Top",
     "baseMaterial": "BARK",
-    "textureMaterial": "LEAVES_TOP_2",
+    "textureMaterial": "LEAVES_TOP_ALT",
     "objectIds": [
       "TKCANOPYMIDDLE",
       "TKCANOPYMIDDLE2"
@@ -1442,7 +1442,13 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "retainVanillaUvs": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 17",
+        "baseMaterial": "LEAF_VEINS_DARK"
+      }
+    ]
   },
   {
     "description": "Fallen Tree",
@@ -1731,7 +1737,9 @@
     "objectIds": [
       "XBOWS_YEWTREE_BASIC",
       "XBOWS_YEWTREE_ROPE_GRAPPLED",
-      "XBOWS_YEWTREE_ROPE_TIED"
+      "XBOWS_YEWTREE_ROPE_TIED",
+      "POG_GRAPPLE_TREE_BASE_OP",
+      "POG_GRAPPLE_TREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -2550,7 +2558,8 @@
       "BRAIN_ROCK_POOL",
       "BRAIN_ROCK_POOL_SMALL",
       "BRAIN_ROCK_POOL_BITS",
-      "FAIRYTALE2_ROCK_POOL_SMALL"
+      "FAIRYTALE2_ROCK_POOL_SMALL",
+      "STALKER_DEN_STEPPING_STONE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -7363,9 +7372,6 @@
       "RIMMINGTON_ROCKSLIDE4",
       "RIMMINGTONROCKSLIDE5",
       "RIMMINGTON_ROCKSLIDE6",
-      "ELID_DUGUPSOIL_1",
-      "ELID_DUGUPSOIL_2",
-      "ELID_DUGUPSOIL_3",
       "_100_OSMAN_AUTUMN_DUGUPSOIL_1",
       "_100_OSMAN_AUTUMN_DUGUPSOIL_2",
       "_100_OSMAN_AUTUMN_DUGUPSOIL_3",
@@ -8063,7 +8069,9 @@
       "SLAYER_CAVE_TUNNEL_RIGHT",
       "SLAYER_CAVE_TUNNEL_LEFT",
       "EYEGLO_DUNGEON_EXIT_RIGHT",
-      "EYEGLO_DUNGEON_EXIT_LEFT"
+      "EYEGLO_DUNGEON_EXIT_LEFT",
+      "SLAYER_CAVE_EXIT_LEFT",
+      "SLAYER_CAVE_EXIT_RIGHT"
     ],
     "colorOverrides": [
       {
@@ -8085,12 +8093,12 @@
     "uvOrientation": 400
   },
   {
-    "description": "Hide weird wall piece above other walls in Canifis pub basement",
-    "objectIds": [ "CAVEWALL_FACE1" ],
-    "baseMaterial": "GRUNGE_1",
-    "hideInAreas": [
-      [ 3469, 9845 ]
+    "description": "Dirt Cave Wall",
+    "objectIds": [
+      "CAVE2EXIT",
+      "CAVEWALL_FACE1"
     ],
+    "baseMaterial": "GRUNGE_1",
     "uvType": "BOX"
   },
   {
@@ -8151,6 +8159,23 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 100
+  },
+  {
+    "description": "ROUNDED_CAVE_EXIT_LIGHT_WITH_BLACK_EXIT",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "objectIds": [
+      "RANTZOGRECAVEEXITR",
+      "RANTZOGRECAVEEXITL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Underground Pass - Grunge - Bone - Temple Door attached to Rounded Cave Wall - Textured",
@@ -9311,7 +9336,8 @@
       "VIKING_PIER_RAIL_CURVE_OUT",
       "VIKING_PIER_RAIL_CURVE_IN",
       "BRUT_PIER_RAIL",
-      "VIKING_FENCE_STILE"
+      "VIKING_FENCE_STILE",
+      "HUNTING_FENCE_STYLE"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -11136,7 +11162,8 @@
       "CAVE_ROCK02_ENTRANCE01_COLOSSAL_WYRM",
       "DEEPFIN_CAVE_ENTRANCE",
       "WILD_FALLOFF_CAVEENTRANCE",
-      "TLATI_DRAGON_NEST_CAVE_ENTRY"
+      "TLATI_DRAGON_NEST_CAVE_ENTRY",
+      "RANTZOGRECAVEENTRANCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -12687,7 +12714,7 @@
   },
   {
     "description": "STONE_STAIRS_WOODEN_RAILS",
-    "baseMaterial": "SMOOTH_STONE",
+    "baseMaterial": "SMOOTH_STONE_SLIGHTLY_LIGHT",
     "uvType": "BOX",
     "colorOverrides": [
       {
@@ -12707,7 +12734,8 @@
       "STAIRS_FROM_CELLAR",
       "ARDOUGNE_PRISON_ENTRY",
       "ARDOUGNE_PRISON_EXIT",
-      "STAIRS_FALADOR"
+      "STAIRS_FALADOR",
+      "YANILLESTAIRSUP"
     ]
   },
   {
@@ -13632,6 +13660,22 @@
     "uvType": "BOX",
     "flatNormals": true,
     "uvScale": 0.65
+  },
+  {
+    "description": "Wooden Door 1 - Fake Plank - Light",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "objectIds": [
+      "RANGING_GUILD_DOOR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Golden Handles",
+        "colors": "h == 5 && s != 1 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
   },
   {
     "description": "Wooden Door 2 - 4 Panel",
@@ -15040,7 +15084,8 @@
       "LAGUNA_DUGUPSOIL03_MUD01",
       "LAGUNA_DUGUPSOIL01_SAND01",
       "LAGUNA_DUGUPSOIL02_SAND01",
-      "LAGUNA_DUGUPSOIL03_SAND01"
+      "LAGUNA_DUGUPSOIL03_SAND01",
+      "CLIMBINGCAVEROCKS1"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -15055,7 +15100,10 @@
       "TLATI_ROCKSLIDE01",
       "TLATI_ROCKSLIDE02",
       "TLATI_ROCKSLIDE03",
-      "TLATI_ROCKSLIDE04"
+      "TLATI_ROCKSLIDE04",
+      "TLATI_TREE_AREASHORTCUT_MIDDLE",
+      "TLATI_TREE_AREA_SHORTCUT_BOTTOM",
+      "TLATI_TREE_AREA_SHORTCUT_TOP"
     ]
   },
   {
@@ -19851,6 +19899,7 @@
     "description": "Generic - Wooden - Agility Logs",
     "baseMaterial": "BARK",
     "uvType": "BOX",
+    "uvScale": 0.83,
     "objectIds": [
       "REGICIDE_LOGBALANCE1",
       "REGICIDE_LOGBALANCE2",
@@ -21210,7 +21259,10 @@
       "ELID_UNDERGROUND_WALL_SHORTER",
       "ELID_UNDERGROUND_TOP_SHORTER",
       "ELID_UNDERGROUND_DOOR_WALL_MIRROR",
+      "ELID_STALAGTITES_LARGER_SCALED_2",
+      "ELID_STALAGTITES_TWIN_SCALED_2",
       "ELID_UNDERGROUND_TOP5_HIGHER",
+      "ELID_STALAGTITES_SMALLER_SCALED",
       "ELID_UNDERGROUND_DOOR_WALL",
       "ELID_UNDERGROUND_TOP",
       "ELID_STALAGTITES_SMALLER",
@@ -21218,6 +21270,32 @@
       "ELID_STALAGTITES",
       "ELID_STALAGTITES_TWIN",
       "ELID_STALAGTITES_FALLOFF"
+    ]
+  },
+  {
+    "description": "Elid - Dungeon - Exit",
+    "baseMaterial": "DIRT_1_VERY_DARK",
+    "objectIds": [
+      "ELID_UNDERGROUND_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || a < 255",
+        "baseMaterial": "NONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Elid - Dungeon - Soil",
+    "baseMaterial": "DIRT_1",
+    "castShadows": false,
+    "inheritTileColorType": "OVERLAY",
+    "objectIds": [
+      "ELID_DUGUPSOIL_1",
+      "ELID_DUGUPSOIL_2",
+      "ELID_DUGUPSOIL_3"
     ]
   },
   {
@@ -21232,6 +21310,40 @@
       "ELID_FALLOFF_3",
       "ELID_FALLOFF_6",
       "ELID_FALLOFF_7"
+    ]
+  },
+  {
+    "description": "Elid - Source Cave",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "DESERT_WATER_CAVE",
+      "DESERT_WATER_CAVE_ROOT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && l < 3 || h == 8 && l < 27",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 12",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Elid - Source Cave - Root",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DESERT_WATER_CAVE_ROOT"
     ]
   },
   {
@@ -27765,7 +27877,8 @@
     "uvScale": 0.5,
     "objectIds": [
       "KALPHITE_BURROW_ENTRANCE",
-      "KALPHITE_BURROW_ENTRANCE_WITHROPE"
+      "KALPHITE_BURROW_ENTRANCE_WITHROPE",
+      "KALPHITE_BURROW_ENTRANCE_NOROPE"
     ],
     "depthBias": 150,
     "terrainVertexSnap": true,
@@ -28947,6 +29060,121 @@
     ],
     "areas": [ "MOTHERLODE_MINE" ],
     "textureMaterial": "MOTHERLODE_MINE_WATER"
+  },
+  {
+    "description": "Poison Waste - Ramp",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.55,
+    "objectIds": [
+      "POG_CANYON_RAMP_02",
+      "POG_CANYON_RAMP_01",
+      "POG_CANYON_RAMP_02_MIRROR",
+      "POG_CANYON_RAMP_01_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2 && l == 32",
+        "baseMaterial": "DIRT_1_MEDIUM_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste - Cliff & Rocks",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.55,
+    "objectIds": [
+      "POG_CANYON_KIT_LEVEL_0_10",
+      "POG_CANYON_KIT_LEVEL_0_2",
+      "POG_CANYON_KIT_LEVEL_0_1",
+      "POG_CANYON_KIT_LEVEL_0_3",
+      "POG_CANYON_KIT_LEVEL_0_5",
+      "POG_CANYON_KIT_LEVEL_0_6",
+      "POG_CANYON_KIT_LEVEL_0_11",
+      "POG_CANYON_KIT_LEVEL_0_7",
+      "POG_CANYON_KIT_LEVEL_0_4",
+      "POG_CANYON_KIT_LEVEL_0_12",
+      "POG_CANYON_KIT_LEVEL_1_10",
+      "POG_CANYON_KIT_LEVEL_1_2",
+      "POG_CANYON_KIT_LEVEL_1_1",
+      "POG_CANYON_KIT_LEVEL_1_3",
+      "POG_CANYON_KIT_LEVEL_1_5",
+      "POG_CANYON_KIT_LEVEL_1_6",
+      "POG_CANYON_KIT_LEVEL_1_11",
+      "POG_CANYON_KIT_LEVEL_1_7",
+      "POG_CANYON_KIT_LEVEL_1_4",
+      "POG_CANYON_KIT_LEVEL_1_12",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_BACK_01_MIRROR",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_BACK_02_MIRROR",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_BACK_03",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_BACK_02",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_BACK_01",
+      "POG_CANYON_ROCK_2X2_02",
+      "POG_CANYON_ROCK_1X1_02",
+      "POG_CANYON_ROCK_1X1_01",
+      "POG_CANYON_ROCK_2X2_01",
+      "POG_CANYON_DUGUPSOIL_02",
+      "POG_CANYON_DUGUPSOIL_01",
+      "POG_CANYON_DUGUPSOIL_03",
+      "POG_CANYON_DUGUPSOIL_04",
+      "POG_CANYON_DUGUPSOIL_05"
+    ]
+  },
+  {
+    "description": "Poison Waste - Arch",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "POG_CANYON_STRUCTURE_BASE",
+      "POG_CANYON_STRUCTURE_TOP_01",
+      "POG_CANYON_STRUCTURE_TOP_02",
+      "POG_CANYON_STRUCTURE_TOP_04",
+      "POG_CANYON_KIT_LEVEL_2_1_LINK_MIRROR",
+      "POG_CANYON_KIT_LEVEL_2_1_LINK",
+      "POG_CANYON_KIT_LEVEL_2_TOP",
+      "POG_CANYON_KIT_LEVEL_2_1",
+      "POG_CANYON_KIT_LEVEL_2_3",
+      "POG_CANYON_STRUCTURE_TOP_03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Poison Waste Dungeon - Entrance",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "POG_CANYON_SEWER_ENTRANCE_LOWER_01_MIRROR",
+      "POG_CANYON_SEWER_ENTRANCE_LOWER_02",
+      "POG_CANYON_SEWER_ENTRANCE_LOWER_01",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_01",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_01_MIRROR",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_02",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_03",
+      "POG_CANYON_SEWER_ENTRANCE_UPPER_02_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "DIRT_1_SEMI_DARK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 9",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Poison Waste Dungeon Tar - Spill",
@@ -30207,14 +30435,14 @@
   },
   {
     "description": "Ore - Empty - Rock",
-    "baseMaterial": "ROCK_5_ORE",
+    "baseMaterial": "ROCK_4_ORE",
     "objectIds": [
       "ROCKS1",
       "ROCKS2"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
-    "uvOrientation": 512
+    "uvOrientation": 700
   },
   {
     "description": "Ore - Tin - Rock",
@@ -30283,14 +30511,14 @@
   },
   {
     "description": "Ore - Coal - Rock",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_4",
     "objectIds": [
       "COALROCK1",
       "COALROCK2"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
-    "uvOrientation": 256
+    "uvOrientation": 700
   },
   {
     "description": "Ore - Silver - Rock",
@@ -30510,7 +30738,16 @@
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
-    "uvScale": 0.65
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Objects - Concrete - Gravestone",
@@ -30733,7 +30970,9 @@
       "LUMBRIDGE_POH_ROOF_1_02",
       "LUMBRIDGE_POH_ROOF_1_03",
       "LUMBRIDGE_POH_ROOF_1_04",
-      "LUMBRIDGE_POH_ROOF_2_01"
+      "LUMBRIDGE_POH_ROOF_2_01",
+      "XBOWS_YANILLE_CASTLEWALL",
+      "XBOWS_YANILLE_CASTLEWALL_BATTLEMENT"
     ]
   },
   {
@@ -33891,6 +34130,9 @@
       "WALLKIT_AUBURNVALE01_DOOR01_M",
       "WALLKIT_AUBURNVALE01_DOOR01",
       "SOC_WALL_INSPECT_REINFORCED",
+      "SOC_WALL_INSPECT_REINFORCE",
+      "SOC_WALL_INSPECT_OP",
+      "SOC_WALL_INSPECT_NOOP",
       "SOC_WINDOW_NOOP"
     ]
   },
@@ -34085,6 +34327,28 @@
     ]
   },
   {
+    "description": "Auburnvale - Stalker Blood Trail",
+    "baseMaterial": "GRAY_90",
+    "depthBias": 50,
+    "objectIds": [
+      "SOC_PUDDLE"
+    ]
+  },
+  {
+    "description": "Auburnvale - Stalker Den - Stalker Victims",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "SOC_STALKER_VICTIM_1",
+      "SOC_STALKER_VICTIM_2",
+      "SOC_STALKER_VICTIM_3",
+      "SOC_STALKER_VICTIM_4",
+      "SOC_STALKER_VICTIM_5",
+      "SOC_STALKER_VICTIM_6",
+      "SOC_STALKER_VICTIM_7",
+      "SOC_STALKER_VICTIM_8"
+    ]
+  },
+  {
     "description": "Auburnvale - Stalker Den - Roots with Red Vines",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
@@ -34112,7 +34376,7 @@
       },
       {
         "colors": "h == 42",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvScale": 0.4,
         "uvType": "MODEL_XZ"
       }
@@ -39899,7 +40163,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Varlamore Awnings Large Red, MODEL_XZ is used with intent",
+    "description": "Varlamore Awnings Large Red",
     "baseMaterial": "CARPET",
     "objectIds": [
       "TENT_BAZAAR01_CORNER01",
@@ -39921,7 +40185,45 @@
       "ARENA_TENT_DIAG04",
       "ARENA_TENT_DIAG05"
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Varlamore Awnings Large Yellow",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "TENT_BAZAAR01_MIDDLE01"
+    ],
+    "uvType": "MODEL_XZ",
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "ROPE_SEMI_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Varlamore Tent Walls",
@@ -39932,23 +40234,25 @@
     "uvType": "BOX"
   },
   {
-    "description": "Varlamore Circular Awning, MODEL_XZ is used with intent",
-    "baseMaterial": "CARPET",
-    "objectIds": [
-      "TENT_BAZAAR01_MIDDLE01"
-    ],
-    "uvType": "MODEL_XZ"
-  },
-  {
     "description": "Varlamore Banners",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
       "TENT_BAZAAR01_WALL02",
       "TENT_BAZAAR01_WALL02_OFFSET",
       "TENT_BAZAAR01_WALL03",
       "BANNER_VARLAMORE01_DEFAULT02"
     ],
-    "uvType": "MODEL_YZ"
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 4 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.25,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Colossal Wyrm Agility Course - Stone Chips",
@@ -40622,6 +40926,7 @@
     "description": "Perilous Moons - Darken Ripples in Earthbound",
     "areas": [ "EARTHBOUND_CAVERN" ],
     "baseMaterial": "GRAY_35",
+    "hideAsWaterEffect": true,
     "objectIds": [
       "DWARF_RIPPLE"
     ]
@@ -40953,6 +41258,7 @@
       "DECOKIT_ROCK01_JOIN01",
       "DECOKIT_ROCK01_JOIN02",
       "CAVEKIT_ROCK02_LOW02",
+      "DECOKIT_ROCK01_MIDDLE01_DARK01",
       "WILD_BOSS_ESCAPE_CAVE_EXIT01",
       "WILD_BOSS_ESCAPE_CAVE_EXIT02",
       "WILD_BOSS_ESCAPE_CAVE_EXIT_NOOP",
@@ -40997,13 +41303,6 @@
       "ROCK_LAVA01_MEDIUM03",
       "ROCK_LAVA01_SMALL01",
       "ROCK_LAVA01_SMALL02",
-      "VARLAMORE_MINING_ROCK",
-      "VARLAMORE_MINING_ROCK_EMPTY",
-      "VARLAMORE_MINING_ROCK02",
-      "VARLAMORE_MINING_ROCK03",
-      "VARLAMORE_MINING_ROCK_EMPTY03",
-      "VARLAMORE_MINING_ROCK04",
-      "VARLAMORE_MINING_ROCK_EMPTY04",
       "ROR_RUBBLE01_LARGE01",
       "ROR_RUBBLE01_MEDIUM01",
       "ROR_RUBBLE01_SMALL01",
@@ -41057,6 +41356,55 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.86
+  },
+  {
+    "description": "Hunter Guild - Cave at the back of the Guild",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      "HG_CAVE_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "depthBias": 50,
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Cam Torum Calcified Mining Rocks",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "VARLAMORE_MINING_ROCK",
+      "VARLAMORE_MINING_ROCK_EMPTY",
+      "VARLAMORE_MINING_ROCK02",
+      "VARLAMORE_MINING_ROCK03",
+      "VARLAMORE_MINING_ROCK_EMPTY03",
+      "VARLAMORE_MINING_ROCK_EMPTY02",
+      "VARLAMORE_MINING_ROCK04",
+      "VARLAMORE_MINING_ROCK_EMPTY04"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Cam Torum Calcified Mining Rocks",
+    "depthBias": 10,
+    "objectIds": [
+      "VARLAMORE_MINING_SPECIAL_ROCK"
+    ]
   },
   {
     "description": "Varlamore Orange Brazier - Animated - Dynamic",
@@ -41288,7 +41636,8 @@
       "FLOORKIT_ROOKERY01_EDGE02_M"
     ],
     "uvType": "BOX",
-    "uvScale": 1.2
+    "uvScale": 1.2,
+    "textureMaterial": "LEAVES_SIDE_ALT"
   },
   {
     "description": "Hunter Guild Big Tree with Leaves",
@@ -41884,6 +42233,27 @@
       "HUNTING_DEADFALL_TRAPPING_FENNEC",
       "HUNTING_DEADFALL_TRAPPING_FENNEC_M",
       "HUNTING_DEADFALL_FULL_FENNEC"
+    ]
+  },
+  {
+    "description": "Hunter Box Trap - Closing or Shaking",
+    "baseMaterial": "GRAY_115",
+    "objectIds": [
+      "HUNTING_BOXTRAP_FULL_CHINCHOMPA_BIG",
+      "HUNTING_BOXTRAP_FULL_CHINCHOMPA",
+      "HUNTING_BOXTRAP_FULL_CHINCHOMPA_BLACK",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_N",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_E",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_S",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_W",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BIG_N",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BIG_E",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BIG_S",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BIG_W",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BLACK_N",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BLACK_S",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BLACK_E",
+      "HUNTING_BOXTRAP_TRAPPING_CHINCHOMPA_BLACK_W"
     ]
   },
   {
@@ -43927,6 +44297,7 @@
     "description": "Fix shadow transparency performance with black boxes in the Hunter Guild & Perilous Moons, and improve looks",
     "objectIds": [
       "CAVEKIT_ROCK01_WALLTOP05",
+      "CAVEKIT_ROCK01_WALLTOP06_DARK02",
       "ROR_TEMPLE_TALL_TOP",
       "ROR_TEMPLE_TALL_PILLAR"
     ],
@@ -47396,7 +47767,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_50"
       },
       {
         "colors": "s == 5",
@@ -51809,8 +52180,9 @@
     "description": "Fortis wooden staircase",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.9,
+    "uvScale": 0.75,
     "flatNormals": true,
+    "uvOrientation": 512,
     "objectIds": [
       "CIVITAS_STAIRS_1X3",
       "ALDARIN_STAIRS_1X2"
@@ -52089,6 +52461,15 @@
     "objectIds": [
       "WALLKIT_CIVITAS05_FENCE02",
       "WALLKIT_CIVITAS05_FENCE03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvOrientation": 128
+      }
     ]
   },
   {
@@ -52105,7 +52486,7 @@
       {
         "description": "Bricks",
         "colors": "h == 7 && s == 1",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
         "uvOrientation": 128
       }
@@ -54125,7 +54506,13 @@
       "CAKETHIEFSTALL",
       "SILKTHIEFSTALL",
       "SILVERTHIEFSTALL",
-      "SPICETHIEFSTALL"
+      "SPICETHIEFSTALL",
+      "FORTIS_MARKET_STALL_GEMS",
+      "FORTIS_MARKET_STALL_FUR",
+      "FORTIS_MARKET_STALL_SILK",
+      "FORTIS_MARKET_STALL",
+      "FORTIS_MARKET_STALL_BAKERS",
+      "FORTIS_MARKET_STALL_SPICE"
     ],
     "colorOverrides": [
       {
@@ -64155,13 +64542,21 @@
     "objectIds": [
       "ROOFKIT_CIVITAS_FACADE02_6X1",
       "ROOFKIT_CIVITAS_FACADE02_6X1_M"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Symbol",
+        "colors": "h == 8 || h == 35",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX"
+      }
     ]
   },
   {
-    "description": "Aldarin - Fortis - Terracotta shingled roof with fron facade",
-    "baseMaterial": "GRUNGE_3_DARK",
+    "description": "Aldarin - Fortis - Terracotta shingled roof with sun facade",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvOrientation": -256,
     "objectIds": [
       "ROOFKIT_ALDARIN_FACADE01_5X1",
       "ROOFKIT_ALDARIN_FACADE01_5X1_M",
@@ -64178,11 +64573,9 @@
       },
       {
         "description": "Symbol",
-        "colors": "h == 0 && s == 4 || h == 8 && s == 6",
-        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
-        "uvType": "BOX",
-        "uvOrientation": 303,
-        "uvScale": 0.8
+        "colors": "h == 0 && s == 4 || h == 8 && s == 6 || h == 3",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "BOX"
       }
     ]
   },
@@ -64273,6 +64666,7 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 179,
+    "depthBias": 1,
     "objectIds": [
       "PILLAR_ALDARIN01_CITY01_LOWER01",
       "PILLAR_ALDARIN01_CITY01_HIGHER01",
@@ -64280,16 +64674,28 @@
       "PILLAR_CIVITAS01_CITY01_HIGHER01",
       "PILLAR_CIVITAS01_CITY01",
       "PILLAR_CIVITAS01_CITY02_LOWER01",
+      "PILLAR_CIVITAS01_CITY02",
+      "PILLAR_CIVITAS01_CITY03",
       "PILLAR_CIVITAS01_MUSEUM01",
       "PILLAR_CIVITAS01_MUSEUM03"
     ],
     "colorOverrides": [
       {
-        "colors": "h <= 1",
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 3
+      },
+      {
+        "colors": "h <= 1 || h == 25",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvOrientation": 89,
         "uvScale": 0.8
+      },
+      {
+        "colors": " h > 7",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "depthBias": 2
       }
     ]
   },
@@ -64708,9 +65114,9 @@
   },
   {
     "description": "Varlamore - Stone - Table",
-    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.75,
     "uvOrientation": 313,
     "objectIds": [
       "TABLE_CIVITAS01_TABLE01",
@@ -65842,13 +66248,52 @@
     ]
   },
   {
-    "description": "Yannile - Metal Hole",
+    "description": "Yanille - Metal Hole",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.2,
     "uvOrientation": 512,
     "objectIds": [
       "YANILLEHOLEOUT"
+    ]
+  },
+  {
+    "description": "Yanille Dungeon Wooden Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "YANILLESTAIRSDOWN"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "terrainVertexSnap": true
+  },
+  {
+    "description": "Yanille Dungeon Salazar Exit Cave",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      "CLIMBINGCAVEROCKS2"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "terrainVertexSnap": true,
+    "colorOverrides": [
+      {
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "colors": "h == 0",
+        "uvOrientation": 400
+      },
+      {
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": -125,
+        "colors": "h == 5 && s == 7"
+      },
+      {
+        "baseMaterial": "GRAY_90",
+        "colors": "h == 14"
+      }
     ]
   },
   {
@@ -66930,6 +67375,16 @@
     ]
   },
   {
+    "description": "Varlamore - Ruins of Tapoyauik Rock and Snow Walls",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "areas": [ "Ruins of Tapoyauik Lever Fix" ],
+    "depthBias": 1,
+    "uvType": "BOX",
+    "objectIds": [
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN01_LEVERBASE"
+    ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik Steps",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
@@ -67020,6 +67475,7 @@
       "VMQ3_RUINS_FIRE_STATUE_ICON_NOOP",
       "VMQ3_RUINS_WATER_STATUE_ICON_NOOP",
       "VMQ3_RUINS_AIR_STATUE_BROKEN",
+      "VMQ3_RUINS_EARTH_STATUE_BROKEN",
       "VMQ3_RUINS_FIRE_STATUE_BROKEN",
       "VMQ3_RUINS_WATER_STATUE_BROKEN",
       "VMQ3_RUINS_EARTH_STATUE_ICON_INSPECT",
@@ -67091,7 +67547,6 @@
       "DECOKIT_SNOW01_MIDDLE01",
       "CAVEKIT_SNOW01_EDGELEDGE02",
       "CAVEKIT_SNOW01_EDGELEDGE01",
-      "CAVEKIT_SNOW01_LEDGE02",
       "CAVEKIT_SNOW01_EDGELEDGE02_M",
       "CAVEKIT_SNOW01_EDGELEDGE01_M",
       "DECOKIT_SNOW01_EDGE03",
@@ -67099,9 +67554,22 @@
       "DECOKIT_SNOW01_CORNER01_DARK02",
       "DECOKIT_SNOW01_EDGE01_DARK02",
       "DECOKIT_SNOW01_MIDDLE01_DARK02",
-      "TAPOYAUIK_TRAVERSE_1_BOTTOM",
       "TAPOYAUIK_TRAVERSE_WALL_FAIL_BOTTOM",
       "TAPOYAUIK_TRAVERSE_2_BOTTOM"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Ledge",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "depthBias": 1,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TAPOYAUIK_TRAVERSE_WALL_END",
+      "TAPOYAUIK_TRAVERSE_WALL_START",
+      "TAPOYAUIK_TRAVERSE_1_BOTTOM",
+      "CAVEKIT_SNOW01_LEDGE02"
     ]
   },
   {
@@ -67163,6 +67631,7 @@
   {
     "description": "Amoxaliatl - Ice Spikes",
     "baseMaterial": "GRAY_125",
+    "depthBias": 20,
     "graphicsObjectIds": [
       "VFX_AMOXLIATL_ICE_FLOOR_COMBINED_01"
     ],
@@ -67956,10 +68425,12 @@
     ]
   },
   {
-    "description": "Tempoross - Hide Ripples",
+    "description": "Generic Ripples - Hide Toggle",
     "hideAsWaterEffect": true,
     "objectIds": [
-      "TEMPOROSS_RIPPLE_3_NOSHADOW"
+      "TEMPOROSS_RIPPLE_3_NOSHADOW",
+      "TEMPOROSS_RIPPLE_1_NOSHADOW",
+      "FX_CAMTORUM01_RIPPLE01"
     ]
   },
   {
@@ -71545,9 +72016,8 @@
   },
   {
     "description": "Varlamore - Cam Torum - Stone - Metallic - Statues with railing",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvOrientation": -400,
     "objectIds": [
       "DUNGEONKIT_IMCANDO01_STATUE01_DEFAULT01",
       "DUNGEONKIT_IMCANDO01_STATUE01",
@@ -71563,11 +72033,42 @@
     ]
   },
   {
-    "description": "Varlamore - Cam Torum - Carved walls",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Varlamore - Cam Torum - Stone - Metallic - Mine Elevator",
+    "baseMaterial": "SMOOTH_STONE",
+    "depthBias": 1,
     "uvType": "BOX",
-    "uvOrientation": 256,
-    "uvScale": 1.1,
+    "objectIds": [
+      "CAM_TORUM_ELEVATOR01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "CARPET_LIGHT"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK",
+        "depthBias": 1
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Carved walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 1.25,
     "objectIds": [
       "DUNGEONKIT_IMCANDO03_DEFAULT01",
       "DUNGEONKIT_IMCANDO03_CORNER01",
@@ -71595,10 +72096,9 @@
   },
   {
     "description": "Varlamore - Cam Torum - Carved walls with metal doors or metal window frames",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvOrientation": 256,
-    "uvScale": 1.1,
+    "uvScale": 1.25,
     "objectIds": [
       "DUNGEONKIT_IMCANDO02_DOOR01_2X1",
       "DUNGEONKIT_IMCANDO02_WINDOW01",
@@ -71626,9 +72126,8 @@
   },
   {
     "description": "Varlamore - Cam Torum - Stone - Metallic - Statues with fire burners",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvOrientation": -400,
     "objectIds": [
       "DUNGEONKIT_IMCANDO02_STATUE02",
       "DUNGEONKIT_IMCANDO03_STATUE01",
@@ -74111,6 +74610,48 @@
     ]
   },
   {
+    "description": "Capybara - Hide Ripples",
+    "npcIds": [
+      "VARLAMORE_CAPYBARA_SUBMERGED_NORTH",
+      "VARLAMORE_CAPYBARA_SUBMERGED_SOUTH",
+      "VARLAMORE_CAPYBARA_SUBMERGED_EAST",
+      "VARLAMORE_CAPYBARA_SUBMERGED_WEST",
+      "VARLAMORE_CAPYBARA_SUBMERGED_ORANGE_NORTH",
+      "VARLAMORE_CAPYBARA_SUBMERGED_ORANGE_SOUTH",
+      "VARLAMORE_CAPYBARA_SUBMERGED_ORANGE_EAST",
+      "VARLAMORE_CAPYBARA_SUBMERGED_ORANGE_WEST"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255 && h == 39",
+        "hideAsWaterEffect": false,
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Pygmy Hippo - Hide Ripples",
+    "npcIds": [
+      "VARLAMORE_HIPPO_SUBMERGED_NORTH",
+      "VARLAMORE_HIPPO_SUBMERGED_SOUTH",
+      "VARLAMORE_HIPPO_SUBMERGED_EAST",
+      "VARLAMORE_HIPPO_SUBMERGED_WEST",
+      "VARLAMORE_HIPPO_CALF_SUBMERGED_NORTH",
+      "VARLAMORE_HIPPO_CALF_SUBMERGED_SOUTH",
+      "VARLAMORE_HIPPO_CALF_SUBMERGED_EAST",
+      "VARLAMORE_HIPPO_CALF_SUBMERGED_WEST"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_80",
+        "hideAsWaterEffect": true
+      }
+    ]
+  },
+  {
     "description": "Floating Jellyfish - Hide Ripples",
     "objectIds": [
       "SAILING_CHARTING_GENERIC_LARGE_JELLYFISH"
@@ -76193,6 +76734,13 @@
     ]
   },
   {
+    "description": "God Wars Dungeon - Waterfall Foam",
+    "baseMaterial": "GRAY_80",
+    "objectIds": [
+      "GODWARS_WATERFALL_BOTTOM_BUBBLES"
+    ]
+  },
+  {
     "description": "God Wars Dungeon - Walls",
     "baseMaterial": "GRUNGE_3_LIGHT",
     "uvType": "BOX",
@@ -77425,11 +77973,11 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE_ALT"
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+        "textureMaterial": "SEASONLESS_LEAVES_TOP_ALT"
       }
     }
   },
@@ -77492,11 +78040,11 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE_ALT"
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+        "textureMaterial": "SEASONLESS_LEAVES_TOP_ALT"
       }
     }
   },
@@ -78582,11 +79130,12 @@
   },
   {
     "description": "Fix Waterfalls that are holes in the world without an opaque texture or hide in areas not needed",
-    "areas": [ "THE_GREAT_CONCH", "LUNAR_ISLE" ],
+    "areas": [ "THE_GREAT_CONCH", "LUNAR_ISLE", "RIVER_ELID_WATERFALL" ],
     "hideInAreas": [ "DS2_SHIPS" ],
     "textureMaterial": "WATER_FLAT_FLOW",
     "objectIds": [
-      "WATERFALL_OVERLAY"
+      "WATERFALL_OVERLAY",
+      "WATERFALL_OVERLAY_1_BRIGHTER"
     ]
   },
   {
@@ -78685,18 +79234,7 @@
     ]
   },
   {
-    "description": "Depth Bias Fix - Tempoross Pools",
-    "objectIds": [
-      "TEMPOROSS_REWARDPOOL_0",
-      "TEMPOROSS_REWARDPOOL_8",
-      "TEMPOROSS_REWARDPOOL_7",
-      "TEMPOROSS_REWARDPOOL_6",
-      "TEMPOROSS_REWARDPOOL_5",
-      "TEMPOROSS_REWARDPOOL_4",
-      "TEMPOROSS_REWARDPOOL_3",
-      "TEMPOROSS_REWARDPOOL_2",
-      "TEMPOROSS_REWARDPOOL_1"
-    ],
+    "description": "Depth Bias Fix - Tempoross Boss Pools",
     "npcIds": [
       "TEMPOROSS_P2_FISHINGSPOT",
       "TEMPOROSS_P2_FISHINGSPOT_INACTIVE",
@@ -78709,6 +79247,34 @@
       "TEMPOROSS_FISHING_SPOTANIM"
     ],
     "depthBias": 255
+  },
+  {
+    "description": "Depth Bias Fix - Tempoross Reward Pools",
+    "objectIds": [
+      "TEMPOROSS_REWARDPOOL_0",
+      "TEMPOROSS_REWARDPOOL_8",
+      "TEMPOROSS_REWARDPOOL_7",
+      "TEMPOROSS_REWARDPOOL_6",
+      "TEMPOROSS_REWARDPOOL_5",
+      "TEMPOROSS_REWARDPOOL_4",
+      "TEMPOROSS_REWARDPOOL_3",
+      "TEMPOROSS_REWARDPOOL_2",
+      "TEMPOROSS_REWARDPOOL_1"
+    ],
+    "depthBias": 150,
+    "colorOverrides": [
+      {
+        "colors": "h == 32 && l > 50",
+        "baseMaterial": "GRAY_65",
+        "hideAsWaterEffect": true,
+        "depthBias": 250
+      },
+      {
+        "colors": "h == 0 || h == 7 || h == 8",
+        "baseMaterial": "GRAY_90",
+        "depthBias": 250
+      }
+    ]
   },
   {
     "description": "Depth Bias Fix - Various Pets - Fix model clipping",
@@ -80860,14 +81426,22 @@
     "description": "Tlati - Mossy Rocks",
     "baseMaterial": "ROCK_1",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.4,
     "uvOrientation": 256,
     "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 23 && s == 4 && l > 23",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.35,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
       {
         "description": "Moss",
         "colors": "h < 23 && s >= 3",
         "baseMaterial": "GRASS_1",
-        "uvScale": 0.8,
+        "uvScale": 0.55,
         "uvType": "BOX",
         "uvOrientation": 256
       }
@@ -83116,7 +83690,8 @@
       "ZEMA_TEMPLE01_FLATSKEW_LVL1",
       "ZEMA_TEMPLE01_FLATSKEW_LVL2",
       "FLATSKEW_TALTEKLAN02_STRAIGHT01_LVL1",
-      "FLATSKEW_TALTEKLAN02_STRAIGHT01_LVL2"
+      "FLATSKEW_TALTEKLAN02_STRAIGHT01_LVL2",
+      "ZEMA_TEMPLE01_FLATSKEW_ALT_LVL1"
     ]
   },
   {
@@ -83699,9 +84274,9 @@
   },
   {
     "description": "Varlamore - Tal Teklan - Stone - Furnace",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvScale": 0.7,
+    "uvScale": 0.85,
     "colorOverrides": [
       {
         "description": "Coal",
@@ -83713,7 +84288,7 @@
       },
       {
         "description": "Heat",
-        "colors": "s == 5 || s == 6",
+        "colors": "h == 3 || s == 5 || s == 6",
         "baseMaterial": "GRUNGE_1",
         "uvType": "MODEL_XZ",
         "uvOrientation": 487,
@@ -85900,6 +86475,40 @@
       "PEST_VETERAN_BANNER_LANDER_INSIDE",
       "PEST_INTERMEDIATE_BANNER_LANDER_TOP",
       "PEST_INTERMEDIATE_BANNER_LANDER_INSIDE"
+    ]
+  },
+  {
+    "description": "Rantz 'locked' Chest",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "objectIds": [
+      "CHOMPYBIRD_CHEST",
+      "CHOMPYBIRD_CHEST_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 10",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Rantz Cooking Fire",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.4,
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CHOMPYBIRD_SPITROAST_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
     ]
   },
   {

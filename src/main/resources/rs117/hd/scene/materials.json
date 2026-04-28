@@ -389,7 +389,7 @@
     "hasTransparency": true
   },
   {
-    "name": "LEAVES_TOP_2",
+    "name": "LEAVES_TOP_ALT",
     "parent": "LEAVES_TOP",
     "shadowAlphaMap": "LEAF_A_2"
   },
@@ -702,12 +702,14 @@
   {
     "name": "LEAFY_ACACIA01",
     "vanillaTextureIndex": 123,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "shadowAlphaMap": "LEAF_A_2"
   },
   {
     "name": "LEAFY_STONEPINE01",
     "vanillaTextureIndex": 124,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "shadowAlphaMap": "LEAF_A_2"
   },
   {
     "name": "BRICK_CAM_TORUM",
@@ -1892,6 +1894,11 @@
     "brightness": 1.5
   },
   {
+    "name": "ROPE_SEMI_LIGHT",
+    "parent": "ROPE",
+    "brightness": 1.2
+  },
+  {
     "name": "ROPE_DARK",
     "parent": "ROPE",
     "brightness": 0.75
@@ -2189,7 +2196,8 @@
     "normalMap": "LASSAR_UNDERCITY_TILE_N",
     "displacementMap": "LASSAR_UNDERCITY_TILE_D",
     "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
-    "displacementScale": 0.025
+    "displacementScale": 0.025,
+    "textureScale": [ 1, 1, 0.6 ]
   },
   {
     "name": "DARKMEYER_BRICK_PATH",
@@ -3211,6 +3219,16 @@
     "parent": "LEAVES_TOP"
   },
   {
+    "name": "SEASONLESS_LEAVES_SIDE_ALT",
+    "parent": "LEAVES_SIDE",
+    "shadowAlphaMap": "LEAF_A_2"
+  },
+  {
+    "name": "SEASONLESS_LEAVES_TOP_ALT",
+    "parent": "LEAVES_TOP",
+    "shadowAlphaMap": "LEAF_A_2"
+  },
+  {
     "name": "SEASONLESS_WILLOW_LEAVES",
     "parent": "WILLOW_LEAVES"
   },
@@ -3304,7 +3322,7 @@
     ],
     "materialsToReplace": [
       "LEAVES_ORANGE_TOP",
-      "LEAVES_TOP_2"
+      "LEAVES_TOP_ALT"
     ],
     "replacementCondition": "season == SeasonalTheme.AUTUMN"
   },
@@ -3412,7 +3430,7 @@
       "LEAVES_YELLOW_TOP",
       "LEAVES_ORANGE_TOP",
       "LEAVES_RED_TOP",
-      "LEAVES_TOP_2"
+      "LEAVES_TOP_ALT"
     ],
     "replacementCondition": "season == SeasonalTheme.WINTER"
   },

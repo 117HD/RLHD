@@ -21129,7 +21129,9 @@
       "VMQ4_CRYPT_ASSAULT_FIRE",
       "VMQ4_CRYPT_ENNIUS_EXIT",
       "VMQ4_CRYPT_ENNIUS_ITZLA_BLOCKAGE",
-      "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER"
+      "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER",
+      "CHOMPYBIRD_SPITROAST_EMPTY",
+      "BONES_IN_PASTE_FIRE"
     ]
   },
   {
@@ -30597,11 +30599,12 @@
   {
     "description": "WARPED_SCEPTER_SPELL",
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 10,
+    "height": 10,
+    "radius": 180,
+    "strength": 50,
     "color": [
-      170,
-      20,
+      70,
+      10,
       255
     ],
     "type": "FLICKER",
@@ -45778,9 +45781,9 @@
   },
   {
     "description": "Piscatoris - Press Light",
-    "offset": [ 25, 120, 0 ],
+    "offset": [ 65, 120, 0 ],
     "radius": 200,
-    "strength": 5,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -45795,7 +45798,7 @@
   },
   {
     "description": "Piscatoris - Furnace",
-    "offset": [ 0, 60, 20 ],
+    "offset": [ 0, 70, 50 ],
     "radius": 200,
     "strength": 5,
     "color": [
@@ -47385,6 +47388,28 @@
       "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
       "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
       "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_SOUL_HARVEST_ANIMATION",
+    "offset": [ 0, 225, -35 ],
+    "radius": 150,
+    "strength": 20,
+    "color": [
+      150,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "ignoreActorHiding": true,
+    "graphicsObjectIds": [
+      "LEAGUES_6_SOUL_HARVEST"
     ]
   },
   {
