@@ -79234,18 +79234,7 @@
     ]
   },
   {
-    "description": "Depth Bias Fix - Tempoross Pools",
-    "objectIds": [
-      "TEMPOROSS_REWARDPOOL_0",
-      "TEMPOROSS_REWARDPOOL_8",
-      "TEMPOROSS_REWARDPOOL_7",
-      "TEMPOROSS_REWARDPOOL_6",
-      "TEMPOROSS_REWARDPOOL_5",
-      "TEMPOROSS_REWARDPOOL_4",
-      "TEMPOROSS_REWARDPOOL_3",
-      "TEMPOROSS_REWARDPOOL_2",
-      "TEMPOROSS_REWARDPOOL_1"
-    ],
+    "description": "Depth Bias Fix - Tempoross Boss Pools",
     "npcIds": [
       "TEMPOROSS_P2_FISHINGSPOT",
       "TEMPOROSS_P2_FISHINGSPOT_INACTIVE",
@@ -79256,6 +79245,21 @@
     ],
     "graphicsObjectIds": [
       "TEMPOROSS_FISHING_SPOTANIM"
+    ],
+    "depthBias": 255
+  },
+  {
+    "description": "Depth Bias Fix - Tempoross Reward Pools",
+    "objectIds": [
+      "TEMPOROSS_REWARDPOOL_0",
+      "TEMPOROSS_REWARDPOOL_8",
+      "TEMPOROSS_REWARDPOOL_7",
+      "TEMPOROSS_REWARDPOOL_6",
+      "TEMPOROSS_REWARDPOOL_5",
+      "TEMPOROSS_REWARDPOOL_4",
+      "TEMPOROSS_REWARDPOOL_3",
+      "TEMPOROSS_REWARDPOOL_2",
+      "TEMPOROSS_REWARDPOOL_1"
     ],
     "depthBias": 150,
     "colorOverrides": [
