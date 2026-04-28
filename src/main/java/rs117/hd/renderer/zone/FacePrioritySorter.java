@@ -28,7 +28,7 @@ import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.collections.PrimitiveIntArray;
+import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
 import static rs117.hd.utils.MathUtils.*;
@@ -44,7 +44,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 	public final int[] faceDistances = new int[MAX_FACE_COUNT];
 
-	private final int[] orderedFaces = new int[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
+	private final char[] orderedFaces = new char[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
 	private final int[] numOfPriority = new int[PRIORITY_COUNT];
 	private final int[] eq10 = new int[MAX_FACES_PER_PRIORITY];
 	private final int[] eq11 = new int[MAX_FACES_PER_PRIORITY];
@@ -54,11 +54,11 @@ public final class FacePrioritySorter implements AutoCloseable {
 	private final int[] zsortTail = new int[MAX_DIAMETER];
 	private final int[] zsortNext = new int[MAX_FACE_COUNT];
 
-	void sortModelFaces(PrimitiveIntArray visibleFaces, Model model) {
+	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model) {
 		sortModelFaces(visibleFaces, model, false);
 	}
 
-	void sortModelFaces(PrimitiveIntArray visibleFaces, Model model, boolean depthOnly) {
+	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model, boolean depthOnly) {
 		final int diameter = model.getDiameter();
 		if (diameter <= 0 || diameter >= MAX_DIAMETER)
 			return;
@@ -69,7 +69,8 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		// Build the z-sorted linked list of faces
 		for (int i = 0; i < visibleFaces.length; ++i) {
-			final int faceIdx = visibleFaces.array[i];
+			final char faceIdx = visibleFaces.array[i];
+			assert faceIdx < faceDistances.length;
 			if (faceDistances[faceIdx] == Integer.MIN_VALUE) {
 				orderedFaces[unsortedCount++] = faceIdx;
 				continue;
@@ -107,7 +108,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		if (priorities == null) {
 			for (int i = maxFz; i >= minFz; --i) {
 				for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
-					visibleFaces.put(f);
+					visibleFaces.put((char) f);
 			}
 			return;
 		}
@@ -120,7 +121,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 				final int pri = priorities[f];
 				final int idx = numOfPriority[pri]++;
 
-				orderedFaces[pri * MAX_FACES_PER_PRIORITY + idx] = f;
+				orderedFaces[pri * MAX_FACES_PER_PRIORITY + idx] = (char) f;
 
 				if (pri < 10)
 					lt10[pri] += i;
