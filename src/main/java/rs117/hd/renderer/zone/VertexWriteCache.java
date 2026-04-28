@@ -124,7 +124,7 @@ public final class VertexWriteCache {
 	}
 
 	public static class Collection {
-		private static final int CAPACITY = (int) (128 * KiB / Integer.BYTES);
+		private static final int CAPACITY = (int) (8 * KiB / Integer.BYTES);
 
 		public final VertexWriteCache opaque = new VertexWriteCache("OPAQUE", CAPACITY);
 		public final VertexWriteCache alpha = new VertexWriteCache("ALPHA", CAPACITY);
