@@ -2559,7 +2559,8 @@
       "BRAIN_ROCK_POOL_SMALL",
       "BRAIN_ROCK_POOL_BITS",
       "FAIRYTALE2_ROCK_POOL_SMALL",
-      "STALKER_DEN_STEPPING_STONE"
+      "STALKER_DEN_STEPPING_STONE",
+      "FRISD_IZSO_ROCK_POOL_SMALL"
     ],
     "uvType": "BOX",
     "colorOverrides": [
