@@ -520,12 +520,11 @@ public class ProceduralGenerator {
 			final int sizeX = sceneContext.sizeX;
 			final int sizeY = sceneContext.sizeZ;
 
-			sceneContext.tileOverrideIndices = new int[MAX_Z * sizeX * sizeY];
-			sceneContext.tileOverrides.ensureCapacity(preSceneCtx != null ? preSceneCtx.tileOverrides.size() : 0);
-
-			final boolean canReuse = preSceneCtx != null && sceneContext.scene.isInstance() == preSceneCtx.scene.isInstance() && sceneContext.currentArea == preSceneCtx.currentArea && !preSceneCtx.tileOverrides.isEmpty();
+			final boolean canReuse = preSceneCtx != null && sceneContext.scene.isInstance() == preSceneCtx.scene.isInstance() && sceneContext.currentArea == preSceneCtx.currentArea;
 			final int dX = canReuse ? (sceneContext.scene.getBaseX() - preSceneCtx.scene.getBaseX() >> 3) << 3 : 0;
 			final int dY = canReuse ? (sceneContext.scene.getBaseY() - preSceneCtx.scene.getBaseY() >> 3) << 3 : 0;
+
+			sceneContext.tileOverrideIndices = new char[MAX_Z * sizeX * sizeY * 3];
 
 			for (int z = 0; z < MAX_Z; ++z) {
 				final Tile[][] zTiles = tiles[z];
@@ -555,13 +554,12 @@ public class ProceduralGenerator {
 					}
 				}
 			}
-
-			sceneContext.tileOverrides.trimToSize();
 		}
 
 		private void calculateTileOverride(SceneContext sceneContext, SceneContext prevSceneContext, Tile tile, int tileZ, int tileExX, int tileExY, int prevTileExX, int prevTileExY) {
-			if(prevSceneContext != null && prevSceneContext.getTileOverrides(tileZ, prevTileExX, prevTileExY, overrides)) {
-				sceneContext.setTileOverride(tileZ, tileExX, tileExY, overrides[0], overrides[1], overrides[2]);
+			if(prevSceneContext != null) {
+				if(prevSceneContext.getTileOverrides(tileZ, prevTileExX, prevTileExY, overrides))
+					sceneContext.setTileOverride(tileZ, tileExX, tileExY, overrides[0], overrides[1], overrides[2]);
 				return;
 			}
 

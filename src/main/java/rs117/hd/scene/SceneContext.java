@@ -50,7 +50,6 @@ public class SceneContext {
 	public final int[] sceneBase;
 	public final AABB sceneBounds;
 	public final ArrayList<Environment> environments = new ArrayList<>();
-	public final ArrayList<TileOverride> tileOverrides = new ArrayList<>();
 	public final ArrayList<Light> lights = new ArrayList<>();
 	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
 	public final ArrayList<TileObject> lightSpawnsToHandleOnClientThread = new ArrayList<>();
@@ -67,7 +66,7 @@ public class SceneContext {
 	public Area[] possibleAreas = new Area[0];
 	public byte[][] filledTiles = new byte[EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 	public byte[] tileFlags;
-	public int[] tileOverrideIndices;
+	public char[] tileOverrideIndices;
 	public int staticVertexCount = 0;
 	public int staticGapFillerTilesOffset;
 	public int staticGapFillerTilesVertexCount;
@@ -191,66 +190,36 @@ public class SceneContext {
 		TileOverride underlayOverride,
 		TileOverride overlayOverride
 	) {
+		final int offset = getTileIdx(plane, x, y) * TILE_OVERRIDE_COUNT;
 
-		int index = tileOverrides.size();
-		int packed = 0;
-		if (mainOverride != null) {
-			tileOverrides.add(mainOverride);
-			packed |= 1 << TILE_OVERRIDE_MAIN;
-		}
+		if(mainOverride != null && mainOverride != TileOverride.NONE)
+			tileOverrideIndices[offset + TILE_OVERRIDE_MAIN] = (char) (mainOverride.index + 1);
 
-		if (underlayOverride != null) {
-			tileOverrides.add(underlayOverride);
-			packed |= 1 << TILE_OVERRIDE_UNDERLAY;
-		}
+		if(underlayOverride != null && underlayOverride != TileOverride.NONE)
+			tileOverrideIndices[offset + TILE_OVERRIDE_UNDERLAY] = (char) (underlayOverride.index + 1);
 
-		if (overlayOverride != null) {
-			tileOverrides.add(overlayOverride);
-			packed |= 1 << TILE_OVERRIDE_OVERLAY;
-		}
-
-		if (index == tileOverrides.size())
-			return; // No overrides, nothing to do
-
-		packed |= index << TILE_OVERRIDE_COUNT;
-		final int tileIndex = getTileIdx(plane, x, y);
-		assert tileOverrideIndices[tileIndex] == 0;
-		tileOverrideIndices[tileIndex] = packed;
+		if(overlayOverride != null && overlayOverride != TileOverride.NONE)
+			tileOverrideIndices[offset + TILE_OVERRIDE_OVERLAY] = (char) (overlayOverride.index + 1);
 	}
 
 	public boolean getTileOverrides(int plane, int x, int y, TileOverride[] result) {
-		final int packed = tileOverrideIndices[getTileIdx(plane, x, y)];
-		if (packed == 0)
-			return false;
+		final int offset = getTileIdx(plane, x, y) * TILE_OVERRIDE_COUNT;
 
-		boolean found = false;
-		int offset = packed >> TILE_OVERRIDE_COUNT;
+		boolean hasOverrides = false;
 		for (int i = 0; i < TILE_OVERRIDE_COUNT; i++) {
-			if ((packed & (1 << i)) == 0)
-				continue;
-
-			result[i] = tileOverrides.get(offset++);
-			found = true;
+			final int idx = tileOverrideIndices[offset + i];
+			result[i] = idx > 0 ? TileOverrideManager.OVERRIDES[idx - 1] : TileOverride.NONE;
+			if(idx > 0)
+				hasOverrides = true;
 		}
 
-		return found;
+		return hasOverrides;
 	}
 
 	public TileOverride getTileOverride(int plane, int x, int y, int type) {
-		if (tileOverrideIndices == null)
-			return null;
-
-		final int packed = tileOverrideIndices[getTileIdx(plane, x, y)];
-		if (packed == 0 || (packed & (1 << type)) == 0)
-			return null;
-
-		int offset = packed >> TILE_OVERRIDE_COUNT;
-		for (int i = 0; i < type; i++) {
-			if ((packed & (1 << i)) != 0)
-				offset++;
-		}
-
-		return tileOverrides.get(offset);
+		final int offset = getTileIdx(plane, x, y) * TILE_OVERRIDE_COUNT;
+		final int idx = tileOverrideIndices[offset + type];
+		return idx > 0 ? TileOverrideManager.OVERRIDES[idx - 1] : TileOverride.NONE;
 	}
 
 	public int[] getTileIndices(int tileIdx, int[] indices) {
