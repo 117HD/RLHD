@@ -21,6 +21,15 @@ public class LegacySceneContext extends SceneContext {
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
 
+	public int staticVertexCount = 0;
+	public int staticGapFillerTilesOffset;
+	public int staticGapFillerTilesVertexCount;
+	public int staticCustomTilesOffset;
+	public int staticCustomTilesVertexCount;
+
+	// Statistics
+	public int uniqueModels;
+
 	// Model pusher arrays, to avoid simultaneous usage from different threads
 	public final int[] modelFaceVertices = new int[12];
 	public final float[] modelFaceUvs = new float[12];
