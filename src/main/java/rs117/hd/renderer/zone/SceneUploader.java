@@ -1994,9 +1994,9 @@ public class SceneUploader implements AutoCloseable {
 			orientCos = COSINE[orientation];
 		}
 
-		final int faceCount = faces.length;
-		for (int f = 0; f < faceCount; ++f) {
+		for (int f = 0; f < faces.length; ++f) {
 			final int face = faces.array[f];
+			if(face >= model.getFaceCount()) continue;
 
 			int color1 = color1s[face];
 			int color2 = color2s[face];
