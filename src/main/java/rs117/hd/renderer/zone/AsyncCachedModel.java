@@ -1,7 +1,7 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
-import java.lang.reflect.Array;
+import java.util.ArrayDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
@@ -17,9 +17,9 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.Job;
 
+import static java.lang.reflect.Array.getLength;
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.renderer.zone.SceneUploader.MAX_VERTEX_COUNT;
-import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Getter
@@ -349,8 +349,14 @@ public final class AsyncCachedModel extends Job implements Model {
 			drawIndex = -1;
 
 			// Reset cached status before returning to the POOL
-			for (int i = 0; i < cachedFields.length; i++)
-				cachedFields[i].cached = false;
+			for (int i = 0; i < cachedFields.length; i++) {
+				var f = cachedFields[i];
+				if (f.value != null) {
+					f.def.release(f.value);
+					f.value = null;
+				}
+				f.cached = false;
+			}
 
 			POOL.recycle(this);
 		}
@@ -463,18 +469,55 @@ public final class AsyncCachedModel extends Job implements Model {
 
 		TEX_INT(int[]::new, 4, TEX_TYPE);
 
+		private static final int MAX_BUCKET = 18;
+
+		private final ArrayDeque<Object>[] buckets = new ArrayDeque[MAX_BUCKET + 1];
 		private final ArraySupplier<?> supplier;
 		private final int stride;
 		private final int type;
+
+		{
+			for(int i = 0; i < MAX_BUCKET; i++)
+				buckets[i] = new ArrayDeque<>();
+		}
+
+		private static int bucket(int size) {
+			return 32 - Integer.numberOfLeadingZeros(size - 1);
+		}
+
+		@SuppressWarnings("unchecked")
+		public <T> T borrow(int size) {
+			final int b = bucket(size);
+			assert b < buckets.length : "Array pool size exceeded: " + size;
+			final ArrayDeque<?> bucket = buckets[b];
+			synchronized (bucket) {
+				Object array = buckets[b].poll();
+				if (array != null)
+					return (T) array;
+			}
+
+			return (T) supplier.get(1 << b);
+		}
+
+		public void release(Object array) {
+			if (array == null)
+				return;
+
+			final int len = getLength(array);
+			final int b = bucket(len);
+			assert b < buckets.length : "Array pool size exceeded: " + len;
+			final ArrayDeque<Object> bucket = buckets[b];
+			synchronized (bucket) {
+				bucket.push(array);
+			}
+		}
 	}
 
 	private static final class CachedArrayField<T> {
 		private final ArrayType def;
 		private final int arrayType;
-		private final ArraySupplier<T> supplier;
 
 		private int capacity;
-		private T pooled;
 		private T value;
 
 		public volatile boolean cached;
@@ -482,9 +525,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		private CachedArrayField(ArrayType arrayType) {
 			this.def = arrayType;
 			this.arrayType = arrayType.type;
-			// noinspection unchecked
-			this.supplier = (ArraySupplier<T>) arrayType.supplier;
-			this.value = supplier.get((int) KiB);
 		}
 
 		public T getValue() {
@@ -495,9 +535,10 @@ public final class AsyncCachedModel extends Job implements Model {
 
 		public void cache(final Model m, T src) {
 			if (src == null) {
-				if (value != null)
-					pooled = value;
-				value = null;
+				if (value != null) {
+					def.release(value);
+					value = null;
+				}
 				cached = true;
 				return;
 			}
@@ -511,17 +552,17 @@ public final class AsyncCachedModel extends Job implements Model {
 					arraySize = m.getFaceCount();
 					break;
 				default:
-					arraySize = Array.getLength(src);
+					arraySize = getLength(src);
 					break;
 			}
 
+			// Ensure capacity using pool
 			if (value == null || capacity < arraySize) {
-				if (pooled != null && capacity >= arraySize) {
-					value = pooled;
-				} else {
-					value = supplier.get(capacity = arraySize);
-				}
-				pooled = null;
+				if (value != null)
+					def.release(value);
+
+				value = def.borrow(arraySize);
+				capacity = getLength(value);
 			}
 
 			// noinspection SuspiciousSystemArraycopy
