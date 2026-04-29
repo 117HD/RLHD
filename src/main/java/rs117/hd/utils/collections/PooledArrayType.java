@@ -1,10 +1,10 @@
 package rs117.hd.utils.collections;
 
+import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.RequiredArgsConstructor;
 
-import static java.lang.reflect.Array.getLength;
 import static rs117.hd.utils.MathUtils.*;
 
 @RequiredArgsConstructor
@@ -31,14 +31,16 @@ public enum PooledArrayType {
 
 	{
 		for (int i = 0; i < buckets.length; i++) {
-			buckets[i] = new Bucket();
+			buckets[i] = new Bucket(1 << i);
 		}
 	}
 
+	@RequiredArgsConstructor
 	private static final class Bucket {
 		private final ArrayDeque<Object> stack = new ArrayDeque<>();
 		private final ReentrantLock lock = new ReentrantLock();
 
+		private final int size;
 		private int opCounter;
 		private int inUse;
 		private int peakInUse;
@@ -80,8 +82,10 @@ public enum PooledArrayType {
 	@SuppressWarnings("unchecked")
 	public <T> T borrow(int requestedSize) {
 		final int b = bucket(requestedSize);
-		final Bucket bucket = buckets[b];
+		if(b < 0 || b >= buckets.length)
+			return (T) supplier.get(requestedSize);
 
+		final Bucket bucket = buckets[b];
 		if(!bucket.stack.isEmpty()) {
 			bucket.lock.lock();
 			try {
@@ -97,15 +101,21 @@ public enum PooledArrayType {
 			}
 		}
 
-		return (T) supplier.get(1 << b);
+		return (T) supplier.get(bucket.size);
 	}
 
 	public void release(Object array) {
 		if (array == null)
 			return;
 
-		final int b = bucket(getLength(array));
+		final int arrayLen = Array.getLength(array);
+		final int b = bucket(arrayLen);
+		if(b < 0 || b >= buckets.length)
+			return;
+
 		final Bucket bucket = buckets[b];
+		if(arrayLen != bucket.size)
+			return;
 
 		bucket.lock.lock();
 		try {
