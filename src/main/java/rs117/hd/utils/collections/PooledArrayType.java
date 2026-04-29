@@ -1,10 +1,11 @@
 package rs117.hd.utils.collections;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.RequiredArgsConstructor;
 
 import static java.lang.reflect.Array.getLength;
+import static rs117.hd.utils.MathUtils.*;
 
 @RequiredArgsConstructor
 public enum PooledArrayType {
@@ -35,7 +36,7 @@ public enum PooledArrayType {
 	}
 
 	private static final class Bucket {
-		private final ArrayList<Object> deque = new ArrayList<>();
+		private final ArrayDeque<Object> stack = new ArrayDeque<>();
 		private final ReentrantLock lock = new ReentrantLock();
 
 		private int opCounter;
@@ -53,14 +54,14 @@ public enum PooledArrayType {
 			avgDemand = (float)(ALPHA * peakInUse + (1 - ALPHA) * avgDemand);
 			peakInUse = inUse;
 
-			if (deque.size() > avgDemand) {
+			if (stack.size() > avgDemand) {
 				if (lastOverTargetTime == 0) {
 					lastOverTargetTime = now;
 				} else if (now - lastOverTargetTime > SHRINK_DELAY_MS) {
-					int target = Math.max((int)(avgDemand * 0.5f), 1);
+					int target = max((int)(avgDemand * 0.5f), 1);
 
-					while (deque.size() > target)
-						deque.remove(deque.size() - 1);
+					while (stack.size() > target)
+						stack.poll();
 
 					lastOverTargetTime = now;
 				}
@@ -71,7 +72,9 @@ public enum PooledArrayType {
 	}
 
 	private static int bucket(int size) {
-		return 32 - Integer.numberOfLeadingZeros(size - 1);
+		if (size <= 1) return 0;
+		int b = 32 - Integer.numberOfLeadingZeros(size - 1);
+		return min(b, MAX_BUCKET);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -79,16 +82,16 @@ public enum PooledArrayType {
 		final int b = bucket(requestedSize);
 		final Bucket bucket = buckets[b];
 
-		if(!bucket.deque.isEmpty()) {
+		if(!bucket.stack.isEmpty()) {
 			bucket.lock.lock();
 			try {
 				bucket.inUse++;
 				bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
 				bucket.maybeCleanup();
 
-				final int size = bucket.deque.size();
-				if (size > 0)
-					return (T) bucket.deque.remove(size - 1);
+				T array = (T) bucket.stack.poll();
+				if(array != null)
+					return array;
 			} finally {
 				bucket.lock.unlock();
 			}
@@ -107,7 +110,7 @@ public enum PooledArrayType {
 		bucket.lock.lock();
 		try {
 			bucket.inUse--;
-			bucket.deque.add(array);
+			bucket.stack.add(array);
 
 			bucket.maybeCleanup();
 		} finally {
