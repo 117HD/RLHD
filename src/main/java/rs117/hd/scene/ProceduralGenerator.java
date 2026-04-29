@@ -39,6 +39,7 @@ import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.Int2ObjectHashMap;
+import rs117.hd.utils.collections.PooledArrayType;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -186,7 +187,7 @@ public class ProceduralGenerator {
 
 			sceneContext.vertexTerrainNormalIndices = new Int2IntHashMap(prevSceneContext != null && prevSceneContext.vertexTerrainNormalIndices != null ? prevSceneContext.vertexTerrainNormalIndices.capacity() : 0);
 
-			vertexNormals = new int[prevSceneContext != null && prevSceneContext.vertexTerrainNormals != null ? prevSceneContext.vertexTerrainNormals.length : 3000];
+			vertexNormals = PooledArrayType.INT.borrow(prevSceneContext != null && prevSceneContext.vertexTerrainNormals != null ? prevSceneContext.vertexTerrainNormals.length : 3000);
 			vertexNormalsPos = 0;
 
 			for (int z = 0; z < MAX_Z; z++) {
@@ -221,6 +222,8 @@ public class ProceduralGenerator {
 				sceneContext.vertexTerrainNormals[offset + 1] = normShort(y * invLen);
 				sceneContext.vertexTerrainNormals[offset + 2] = normShort(z * invLen);
 			}
+
+			PooledArrayType.INT.release(vertexNormals);
 			vertexNormals = null;
 		}
 
@@ -306,8 +309,13 @@ public class ProceduralGenerator {
 					if (terrainNormalIdx == -1) {
 						sceneContext.vertexTerrainNormalIndices.put(vertexKey, vertexNormalsPos / 3);
 
-						if(vertexNormalsPos + 3 >= vertexNormals.length)
-							vertexNormals = Arrays.copyOf(vertexNormals, vertexNormalsPos * 2);
+						if(vertexNormalsPos + 3 >= vertexNormals.length) {
+							int[] newVertexNormals = PooledArrayType.INT.borrow(vertexNormalsPos * 2);
+							System.arraycopy(vertexNormals, 0, newVertexNormals, 0, vertexNormalsPos);
+
+							PooledArrayType.INT.release(vertexNormals);
+							vertexNormals = newVertexNormals;
+						}
 
 						vertexNormals[vertexNormalsPos++] = surfaceNormal[0];
 						vertexNormals[vertexNormalsPos++] = surfaceNormal[1];
