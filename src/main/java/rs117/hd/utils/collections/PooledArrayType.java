@@ -9,6 +9,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @RequiredArgsConstructor
 public enum PooledArrayType {
+	BOOL(boolean[]::new, 1),
 	BYTE(byte[]::new, 1),
 	SHORT(short[]::new, 2),
 	INT(int[]::new, 4),
