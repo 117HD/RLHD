@@ -16209,7 +16209,7 @@
       "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01_FADE03"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.75,
     "uvOrientation": 256
   },
   {
@@ -28656,6 +28656,7 @@
     "baseMaterial": "ROCK_3",
     "objectIds": [
       "GIANTS_FOUNDRY_JIG_EMPTY",
+      "GIANTS_FOUNDRY_JIG_EMPTY_QUEST",
       "GIANTS_FOUNDRY_JIG_MOULD",
       "GIANTS_FOUNDRY_JIG_MOULD_FILLED"
     ],
@@ -28674,7 +28675,8 @@
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "GIANTS_FOUNDRY_PREFORM_STORAGE_EMPTY",
-      "GIANTS_FOUNDRY_PREFORM_STORAGE_FULL"
+      "GIANTS_FOUNDRY_PREFORM_STORAGE_FULL",
+      "GIANTS_FOUNDRY_PREFORM_STORAGE_EMPTY_QUEST"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -28720,7 +28722,8 @@
       "GIANTS_FOUNDRY_WATERFALL_PLATFORM_FENCE"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "uvScale": 0.65
   },
   {
     "description": "Giants Foundry Clamps",
@@ -28737,7 +28740,8 @@
     "objectIds": [
       "GIANTS_FOUNDRY_CRUCIBLE_EMPTY",
       "GIANTS_FOUNDRY_CRUCIBLE_PARTIAL",
-      "GIANTS_FOUNDRY_CRUCIBLE_FULL"
+      "GIANTS_FOUNDRY_CRUCIBLE_FULL",
+      "GIANTS_FOUNDRY_CRUCIBLE_EMPTY_QUEST"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -28813,7 +28817,9 @@
     "description": "Giants Foundry - Trip Hammer",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
-      "GIANTS_FOUNDRY_TRIP_HAMMER"
+      "GIANTS_FOUNDRY_TRIP_HAMMER",
+      "GIANTS_FOUNDRY_TRIP_HAMMER_BROKEN_QUEST",
+      "GIANTS_FOUNDRY_TRIP_HAMMER_QUEST"
     ],
     "colorOverrides": [
       {
@@ -28833,7 +28839,8 @@
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
       "GIANTS_FOUNDRY_TOOL_POWERUNIT",
-      "GIANTS_FOUNDRY_TOOL_POWERUNIT02"
+      "GIANTS_FOUNDRY_TOOL_POWERUNIT02",
+      "GIANTS_FOUNDRY_TOOL_POWERUNIT_QUEST"
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -28856,7 +28863,9 @@
     "description": "Giants Foundry - Grindstone",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
-      "GIANTS_FOUNDRY_GRINDSTONE"
+      "GIANTS_FOUNDRY_GRINDSTONE",
+      "GIANTS_FOUNDRY_GRINDSTONE_BROKEN_QUEST",
+      "GIANTS_FOUNDRY_GRINDSTONE_QUEST"
     ],
     "colorOverrides": [
       {
@@ -28865,11 +28874,6 @@
         "uvType": "BOX",
         "uvOrientationX": 512,
         "uvScale": 0.4
-      },
-      {
-        "colors": [ "h == 5" ],
-        "baseMaterial": "GRAY_90",
-        "uvType": "GEOMETRY"
       }
     ]
   },
@@ -28879,9 +28883,16 @@
     "uvType": "BOX",
     "uvScale": 0.3,
     "objectIds": [
-      "GIANTS_FOUNDRY_POLISHING_WHEEL"
+      "GIANTS_FOUNDRY_POLISHING_WHEEL",
+      "GIANTS_FOUNDRY_POLISHING_WHEEL_BROKEN_QUEST",
+      "GIANTS_FOUNDRY_POLISHING_WHEEL_QUEST"
     ],
     "colorOverrides": [
+      {
+        "colors": [ "h == 5 || h == 2 && s == 0" ],
+        "baseMaterial": "GRAY_90",
+        "uvType": "GEOMETRY"
+      },
       {
         "colors": [ "h == 2" ],
         "baseMaterial": "WOOD_GRAIN_3",
@@ -28946,7 +28957,8 @@
       "GIANTS_FOUNDRY_WATERFALL_WATER_01",
       "GIANTS_FOUNDRY_WATERFALL_WATER_02",
       "GIANTS_FOUNDRY_WATERFALL_WATER_03",
-      "GIANTS_FOUNDRY_WATERFALL_WATER_04"
+      "GIANTS_FOUNDRY_WATERFALL_WATER_04",
+      "GIANTS_FOUNDRY_WATERFALL_QUEST"
     ]
   },
   {
@@ -28967,13 +28979,6 @@
     ],
     "uvType": "GEOMETRY",
     "uvScale": 0.28
-  },
-  {
-    "description": "Giants Foundry -  Wooden - Chest",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "GIANTS_FOUNDRY_CHEST_INACTIVE" ],
-    "uvType": "BOX",
-    "uvOrientation": 512
   },
   {
     "description": "Giants Foundry -  Wooden - Pile of Buckets",
@@ -28999,7 +29004,11 @@
   {
     "description": "Giants Foundry -  Wooden - Bank Chest",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "GIANTS_FOUNDRY_CHEST" ],
+    "objectIds": [
+      "GIANTS_FOUNDRY_CHEST",
+      "GIANTS_FOUNDRY_CHEST_INACTIVE",
+      "GIANTS_FOUNDRY_CHEST_QUEST"
+    ],
     "uvType": "BOX",
     "uvOrientation": 512,
     "colorOverrides": [
