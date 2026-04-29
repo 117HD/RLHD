@@ -46,6 +46,7 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.IntHashSet;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static net.runelite.api.Constants.*;
@@ -131,12 +132,10 @@ public class SceneUploader implements AutoCloseable {
 	private final int[] modelNormals = new int[9];
 	private final short[][] tileNormals = new short[4][3];
 
-	public final float[] modelProjected = new float[MAX_VERTEX_COUNT * 3];
 	public int tempModelAlphaFaces = 0;
 
 	private final float[] modelLocal = new float[MAX_VERTEX_COUNT * 3];
 	private final int[] modelLocalI = new int[MAX_VERTEX_COUNT * 3];
-	private final boolean[] visibility = new boolean[MAX_VERTEX_COUNT];
 
 	private final ModelOverride[] faceOverrides = new ModelOverride[MAX_FACE_COUNT];
 	private final Material[] faceMaterials = new Material[MAX_FACE_COUNT];
@@ -1735,9 +1734,10 @@ public class SceneUploader implements AutoCloseable {
 
 		final float[] modelLocal = this.modelLocal;
 		final int[] modelLocalI = this.modelLocalI;
-		final float[] modelProjected = this.modelProjected;
-		final boolean[] visibility = this.visibility;
 		final float[] projected = this.projected;
+
+		final boolean[] visibility = PooledArrayType.BOOL.borrow(vertexCount);
+		final float[] modelProjected = PooledArrayType.FLOAT.borrow(vertexCount * 3);
 
 		// Identity orient, will result in no rotation
 		float orientSinf = 0;
@@ -1930,6 +1930,9 @@ public class SceneUploader implements AutoCloseable {
 
 			visibleFaces.put(f);
 		}
+
+		PooledArrayType.BOOL.release(visibility);
+		PooledArrayType.FLOAT.release(modelProjected);
 
 		return shouldSort;
 	}

@@ -42,8 +42,6 @@ public final class FacePrioritySorter implements AutoCloseable {
 	private static final int MAX_FACES_PER_PRIORITY = 4000;
 	private static final int PRIORITY_COUNT = 12;
 
-	public final int[] faceDistances = new int[MAX_FACE_COUNT];
-
 	private final char[] orderedFaces = new char[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
 	private final int[] numOfPriority = new int[PRIORITY_COUNT];
 	private final int[] eq10 = new int[MAX_FACES_PER_PRIORITY];
@@ -54,11 +52,11 @@ public final class FacePrioritySorter implements AutoCloseable {
 	private final int[] zsortTail = new int[MAX_DIAMETER];
 	private final int[] zsortNext = new int[MAX_FACE_COUNT];
 
-	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model) {
-		sortModelFaces(visibleFaces, model, false);
+	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model, int[] faceDistances) {
+		sortModelFaces(visibleFaces, model, faceDistances, false);
 	}
 
-	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model, boolean depthOnly) {
+	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model, int[] faceDistances, boolean depthOnly) {
 		final int diameter = model.getDiameter();
 		if (diameter <= 0 || diameter >= MAX_DIAMETER)
 			return;
