@@ -536,7 +536,7 @@ public final class HDUtils {
 		try {
 			var bean = ManagementFactory.getOperatingSystemMXBean();
 			return ((com.sun.management.OperatingSystemMXBean) bean).getTotalPhysicalMemorySize();
-		} catch (Exception ignored) {
+		} catch (Throwable ignored) {
 			return Long.MAX_VALUE;
 		}
 	}
