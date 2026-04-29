@@ -14,7 +14,7 @@ public enum PooledArrayType {
 	INT(int[]::new, 4),
 	FLOAT(float[]::new, 4);
 
-	private static final int MAX_BUCKET = 18;
+	private static final int MAX_BUCKET = 32;
 	private static final long SHRINK_DELAY_MS = 60_000;
 	private static final int CLEANUP_INTERVAL = 64;
 	private static final double ALPHA = 0.1;
