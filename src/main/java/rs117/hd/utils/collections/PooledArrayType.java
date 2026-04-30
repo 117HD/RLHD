@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import static rs117.hd.utils.HDUtils.ceilPow2;
 import static rs117.hd.utils.MathUtils.*;
 
-@RequiredArgsConstructor
 public enum PooledArrayType {
 	BOOL(boolean[]::new, 1),
 	BYTE(byte[]::new, 1),
@@ -26,15 +25,15 @@ public enum PooledArrayType {
 		T get(int capacity);
 	}
 
+	private final Bucket[] buckets = new Bucket[MAX_BUCKET + 1];
 	public final ArraySupplier<?> supplier;
 	public final int stride;
 
-	private final Bucket[] buckets = new Bucket[MAX_BUCKET + 1];
-
-	{
-		for (int i = 0; i < buckets.length; i++) {
+	PooledArrayType(ArraySupplier<?> supplier, int stride) {
+		this.supplier = supplier;
+		this.stride = stride;
+		for (int i = 0; i < buckets.length; i++)
 			buckets[i] = new Bucket(1 << i);
-		}
 	}
 
 	@RequiredArgsConstructor
