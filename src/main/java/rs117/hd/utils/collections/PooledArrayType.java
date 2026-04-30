@@ -90,6 +90,8 @@ public enum PooledArrayType {
 			return (T) supplier.get(requestedSize);
 
 		final Bucket bucket = buckets[b];
+		assert bucket.size == roundedSize;
+		assert roundedSize >= requestedSize;
 		bucket.lock.lock();
 		try {
 			bucket.inUse++;
