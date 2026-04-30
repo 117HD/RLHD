@@ -1976,6 +1976,7 @@ public class SceneUploader implements AutoCloseable {
 		final byte[] bias = model.getFaceBias();
 		final int[] faceNormals = isShadow ? EMPTY_NORMALS : modelNormals;
 
+		final int faceCount = model.getFaceCount();
 		final boolean hasBias = bias != null;
 		final boolean modelHasNormals =
 			model.getVertexNormalsX() != null &&
@@ -1999,7 +2000,7 @@ public class SceneUploader implements AutoCloseable {
 
 		for (int f = 0; f < faces.length; ++f) {
 			final char face = faces.array[f];
-			if(face >= model.getFaceCount()) continue;
+			if(face >= faceCount) continue;
 
 			int color1 = color1s[face];
 			int color2 = color2s[face];
