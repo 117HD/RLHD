@@ -66,8 +66,8 @@ public final class FacePrioritySorter implements AutoCloseable {
 		boolean needsClear = true;
 
 		final int faceCount = visibleFaces.length;
-		final int maxFacesPerPriority = min(faceCount, MAX_FACES_PER_PRIORITY);
-		final char[] orderedFaces = PooledArrayType.CHAR.borrow(faceCount * maxFacesPerPriority);
+		final int facesPerPriority = min(faceCount, MAX_FACES_PER_PRIORITY);
+		final char[] orderedFaces = PooledArrayType.CHAR.borrow(PRIORITY_COUNT * facesPerPriority);
 
 		// Build the z-sorted linked list of faces
 		for (int i = 0; i < faceCount; ++i) {
@@ -126,7 +126,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 				final int pri = priorities[f];
 				final int idx = numOfPriority[pri]++;
 
-				orderedFaces[pri * maxFacesPerPriority + idx] = (char) f;
+				orderedFaces[pri * facesPerPriority + idx] = (char) f;
 
 				if (pri < 10)
 					lt10[pri] += i;
@@ -148,12 +148,12 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		int drawnFaces = 0;
 		int numDynFaces = numOfPriority[10];
-		int dynBase = 10 * maxFacesPerPriority;
+		int dynBase = 10 * facesPerPriority;
 		int[] dynDist = eq10;
 
 		if (numDynFaces == 0) {
 			numDynFaces = numOfPriority[11];
-			dynBase = 11 * maxFacesPerPriority;
+			dynBase = 11 * facesPerPriority;
 			dynDist = eq11;
 		}
 
@@ -167,10 +167,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 			) {
 				visibleFaces.put(orderedFaces[dynBase + drawnFaces++]);
 
-				if (drawnFaces == numDynFaces && dynBase == 10 * maxFacesPerPriority) {
+				if (drawnFaces == numDynFaces && dynBase == 10 * facesPerPriority) {
 					drawnFaces = 0;
 					numDynFaces = numOfPriority[11];
-					dynBase = 11 * maxFacesPerPriority;
+					dynBase = 11 * facesPerPriority;
 					dynDist = eq11;
 				}
 
@@ -179,7 +179,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 			visibleFaces.put(
 				orderedFaces,
-				pri * maxFacesPerPriority,
+				pri * facesPerPriority,
 				numOfPriority[pri]
 			);
 		}
@@ -187,10 +187,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 		while (currFaceDistance != -1000) {
 			visibleFaces.put(orderedFaces[dynBase + drawnFaces++]);
 
-			if (drawnFaces == numDynFaces && dynBase == 10 * maxFacesPerPriority) {
+			if (drawnFaces == numDynFaces && dynBase == 10 * facesPerPriority) {
 				drawnFaces = 0;
 				numDynFaces = numOfPriority[11];
-				dynBase = 11 * maxFacesPerPriority;
+				dynBase = 11 * facesPerPriority;
 				dynDist = eq11;
 			}
 
