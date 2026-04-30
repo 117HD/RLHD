@@ -20,6 +20,10 @@ import rs117.hd.utils.jobs.Job;
 import static java.lang.reflect.Array.getLength;
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.renderer.zone.SceneUploader.MAX_VERTEX_COUNT;
+import static rs117.hd.utils.collections.PooledArrayType.BYTE;
+import static rs117.hd.utils.collections.PooledArrayType.FLOAT;
+import static rs117.hd.utils.collections.PooledArrayType.INT;
+import static rs117.hd.utils.collections.PooledArrayType.SHORT;
 
 @Slf4j
 @Getter
@@ -35,8 +39,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		var m = new AsyncCachedModel();
 		long size = 0;
 		for (var field : m.cachedFields) {
-			size += (long) field.def.arrayType.stride * (
-				field.arrayType == VERTEX_TYPE ? MAX_VERTEX_COUNT : MAX_FACE_COUNT
+			size += (long) field.arrayType.stride * (
+				field.fieldType == VERTEX_TYPE ? MAX_VERTEX_COUNT : MAX_FACE_COUNT
 			);
 		}
 		return size;
@@ -84,33 +88,33 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	private final CachedArrayField<?>[] cachedFields = new CachedArrayField<?>[21];
 
-	private final CachedArrayField<float[]> verticesX = addField(FieldDef.VERTEX_FLOAT);
-	private final CachedArrayField<float[]> verticesY = addField(FieldDef.VERTEX_FLOAT);
-	private final CachedArrayField<float[]> verticesZ = addField(FieldDef.VERTEX_FLOAT);
+	private final CachedArrayField<float[]> verticesX = addField(FLOAT, VERTEX_TYPE);
+	private final CachedArrayField<float[]> verticesY = addField(FLOAT, VERTEX_TYPE);
+	private final CachedArrayField<float[]> verticesZ = addField(FLOAT, VERTEX_TYPE);
 
-	private final CachedArrayField<int[]> faceIndices1 = addField(FieldDef.FACE_INT);
-	private final CachedArrayField<int[]> faceIndices2 = addField(FieldDef.FACE_INT);
-	private final CachedArrayField<int[]> faceIndices3 = addField(FieldDef.FACE_INT);
+	private final CachedArrayField<int[]> faceIndices1 = addField(INT, FACE_TYPE);
+	private final CachedArrayField<int[]> faceIndices2 = addField(INT, FACE_TYPE);
+	private final CachedArrayField<int[]> faceIndices3 = addField(INT, FACE_TYPE);
 
-	private final CachedArrayField<int[]> faceColors1 = addField(FieldDef.FACE_INT);
-	private final CachedArrayField<int[]> faceColors2 = addField(FieldDef.FACE_INT);
-	private final CachedArrayField<int[]> faceColors3 = addField(FieldDef.FACE_INT);
+	private final CachedArrayField<int[]> faceColors1 = addField(INT, FACE_TYPE);
+	private final CachedArrayField<int[]> faceColors2 = addField(INT, FACE_TYPE);
+	private final CachedArrayField<int[]> faceColors3 = addField(INT, FACE_TYPE);
 
-	private final CachedArrayField<short[]> unlitFaceColors = addField(FieldDef.FACE_SHORT);
-	private final CachedArrayField<short[]> faceTextures = addField(FieldDef.FACE_SHORT);
+	private final CachedArrayField<short[]> unlitFaceColors = addField(SHORT, FACE_TYPE);
+	private final CachedArrayField<short[]> faceTextures = addField(SHORT, FACE_TYPE);
 
-	private final CachedArrayField<byte[]> faceRenderPriorities = addField(FieldDef.FACE_BYTE);
-	private final CachedArrayField<byte[]> faceTransparencies = addField(FieldDef.FACE_BYTE);
-	private final CachedArrayField<byte[]> faceBias = addField(FieldDef.FACE_BYTE);
-	private final CachedArrayField<byte[]> textureFaces = addField(FieldDef.FACE_BYTE);
+	private final CachedArrayField<byte[]> faceRenderPriorities = addField(BYTE, FACE_TYPE);
+	private final CachedArrayField<byte[]> faceTransparencies = addField(BYTE, FACE_TYPE);
+	private final CachedArrayField<byte[]> faceBias = addField(BYTE, FACE_TYPE);
+	private final CachedArrayField<byte[]> textureFaces = addField(BYTE, FACE_TYPE);
 
-	private final CachedArrayField<int[]> texIndices1 = addField(FieldDef.TEX_INT);
-	private final CachedArrayField<int[]> texIndices2 = addField(FieldDef.TEX_INT);
-	private final CachedArrayField<int[]> texIndices3 = addField(FieldDef.TEX_INT);
+	private final CachedArrayField<int[]> texIndices1 = addField(INT, TEX_TYPE);
+	private final CachedArrayField<int[]> texIndices2 = addField(INT, TEX_TYPE);
+	private final CachedArrayField<int[]> texIndices3 = addField(INT, TEX_TYPE);
 
-	private final CachedArrayField<int[]> vertexNormalsX = addField(FieldDef.VERTEX_INT);
-	private final CachedArrayField<int[]> vertexNormalsY = addField(FieldDef.VERTEX_INT);
-	private final CachedArrayField<int[]> vertexNormalsZ = addField(FieldDef.VERTEX_INT);
+	private final CachedArrayField<int[]> vertexNormalsX = addField(INT, VERTEX_TYPE);
+	private final CachedArrayField<int[]> vertexNormalsY = addField(INT, VERTEX_TYPE);
+	private final CachedArrayField<int[]> vertexNormalsZ = addField(INT, VERTEX_TYPE);
 
 	private final AtomicBoolean processing = new AtomicBoolean(false);
 	private WorldViewContext ctx;
@@ -129,10 +133,10 @@ public final class AsyncCachedModel extends Job implements Model {
 	private UploadModelFunc uploadFunc;
 
 	@SuppressWarnings("unchecked")
-	private <T> CachedArrayField<T> addField(FieldDef fieldDef) {
+	private <T> CachedArrayField<T> addField(PooledArrayType arrayType, int fieldType) {
 		for (int i = 0; i < cachedFields.length; i++) {
 			if (cachedFields[i] == null)
-				return (CachedArrayField<T>) (cachedFields[i] = new CachedArrayField<>(fieldDef));
+				return (CachedArrayField<T>) (cachedFields[i] = new CachedArrayField<>(arrayType, fieldType));
 		}
 		throw new RuntimeException("Created too many fields, only expected: " + cachedFields.length);
 	}
@@ -352,7 +356,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			for (int i = 0; i < cachedFields.length; i++) {
 				var f = cachedFields[i];
 				if (f.value != null) {
-					f.def.arrayType.release(f.value);
+					f.arrayType.release(f.value);
 					f.value = null;
 				}
 				f.cached = false;
@@ -454,34 +458,14 @@ public final class AsyncCachedModel extends Job implements Model {
 	private static final int TEX_TYPE = 2;
 
 	@RequiredArgsConstructor
-	private enum FieldDef {
-		VERTEX_INT(PooledArrayType.INT, VERTEX_TYPE),
-		VERTEX_FLOAT(PooledArrayType.FLOAT, VERTEX_TYPE),
-
-		FACE_INT(PooledArrayType.INT, FACE_TYPE),
-		FACE_SHORT(PooledArrayType.SHORT, FACE_TYPE),
-		FACE_BYTE(PooledArrayType.BYTE, FACE_TYPE),
-
-		TEX_INT(PooledArrayType.INT, TEX_TYPE);
-
+	private static final class CachedArrayField<T> {
 		private final PooledArrayType arrayType;
 		private final int fieldType;
-	}
-
-	private static final class CachedArrayField<T> {
-		private final FieldDef def;
-		private final int arrayType;
 
 		private int capacity;
 		private T value;
 
 		public volatile boolean cached;
-
-		private CachedArrayField(FieldDef arrayType) {
-			this.def = arrayType;
-			this.arrayType = arrayType.fieldType;
-		}
-
 		public T getValue() {
 			while (!cached)
 				LockSupport.parkNanos(this, 5);
@@ -491,7 +475,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		public void cache(final Model m, T src) {
 			if (src == null) {
 				if (value != null) {
-					def.arrayType.release(value);
+					arrayType.release(value);
 					value = null;
 				}
 				cached = true;
@@ -499,7 +483,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			}
 
 			final int arraySize;
-			switch (arrayType) {
+			switch (fieldType) {
 				case VERTEX_TYPE:
 					arraySize = m.getVerticesCount();
 					break;
@@ -514,9 +498,9 @@ public final class AsyncCachedModel extends Job implements Model {
 			// Ensure capacity using pool
 			if (value == null || capacity < arraySize) {
 				if (value != null)
-					def.arrayType.release(value);
+					arrayType.release(value);
 
-				value = def.arrayType.borrow(arraySize);
+				value = arrayType.borrow(arraySize);
 				capacity = getLength(value);
 			}
 
