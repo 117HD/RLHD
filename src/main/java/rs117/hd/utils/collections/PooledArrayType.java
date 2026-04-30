@@ -5,6 +5,7 @@ import java.util.ArrayDeque;
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.RequiredArgsConstructor;
 
+import static rs117.hd.utils.HDUtils.ceilPow2;
 import static rs117.hd.utils.MathUtils.*;
 
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ public enum PooledArrayType {
 	INT(int[]::new, 4),
 	FLOAT(float[]::new, 4);
 
-	private static final int MAX_BUCKET = 32;
+	private static final int MAX_BUCKET = 30;
 	private static final long SHRINK_DELAY_MS = 60_000;
 	private static final int CLEANUP_INTERVAL = 64;
 	private static final double ALPHA = 0.1;
@@ -82,26 +83,28 @@ public enum PooledArrayType {
 
 	@SuppressWarnings("unchecked")
 	public <T> T borrow(int requestedSize) {
-		final int b = bucket(requestedSize);
-		if(b < 0 || b >= buckets.length)
+		final int roundedSize = ceilPow2(requestedSize);
+		final int b = bucket(roundedSize);
+
+		if (b < 0 || b >= buckets.length) // Out of range, allocate directly
 			return (T) supplier.get(requestedSize);
 
 		final Bucket bucket = buckets[b];
-		if(!bucket.stack.isEmpty()) {
-			bucket.lock.lock();
-			try {
-				bucket.inUse++;
-				bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
-				bucket.maybeCleanup();
+		bucket.lock.lock();
+		try {
+			bucket.inUse++;
+			bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
 
-				T array = (T) bucket.stack.poll();
-				if(array != null)
-					return array;
-			} finally {
-				bucket.lock.unlock();
-			}
+			T array = (T) bucket.stack.poll();
+			bucket.maybeCleanup();
+
+			if (array != null)
+				return array;
+		} finally {
+			bucket.lock.unlock();
 		}
 
+		// Always allocate exact bucket size (power of two)
 		return (T) supplier.get(bucket.size);
 	}
 
@@ -111,18 +114,20 @@ public enum PooledArrayType {
 
 		final int arrayLen = Array.getLength(array);
 		final int b = bucket(arrayLen);
-		if(b < 0 || b >= buckets.length)
+
+		if (b < 0 || b >= buckets.length)
 			return;
 
 		final Bucket bucket = buckets[b];
-		if(arrayLen != bucket.size)
+
+		// Strict invariant: only exact bucket-sized arrays allowed
+		if (arrayLen != bucket.size)
 			return;
 
 		bucket.lock.lock();
 		try {
 			bucket.inUse--;
 			bucket.stack.add(array);
-
 			bucket.maybeCleanup();
 		} finally {
 			bucket.lock.unlock();
