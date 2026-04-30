@@ -178,6 +178,15 @@ public class SceneContext {
 		int plane,
 		int x,
 		int y,
+		TileOverride[] overrides
+	) {
+		setTileOverride(plane, x, y, overrides[0], overrides[1], overrides[2]);
+	}
+
+	public void setTileOverride(
+		int plane,
+		int x,
+		int y,
 		TileOverride mainOverride,
 		TileOverride underlayOverride,
 		TileOverride overlayOverride

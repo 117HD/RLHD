@@ -522,30 +522,35 @@ public class ProceduralGenerator {
 		private final int[] ids = new int[2];
 
 		private void generate(SceneContext sceneContext, SceneContext preSceneCtx) {
+			final boolean canReuseScene = preSceneCtx != null && sceneContext.scene.isInstance() == preSceneCtx.scene.isInstance() && sceneContext.currentArea == preSceneCtx.currentArea;
+			final Tile[][][] prevTiles = canReuseScene ? preSceneCtx.scene.getExtendedTiles() : null;
+
 			final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 			final short[][][] overlayIds = sceneContext.scene.getOverlayIds();
 			final short[][][] underlayIds = sceneContext.scene.getUnderlayIds();
-			final int sizeX = sceneContext.sizeX;
-			final int sizeY = sceneContext.sizeZ;
 
-			final boolean canReuse = preSceneCtx != null && sceneContext.scene.isInstance() == preSceneCtx.scene.isInstance() && sceneContext.currentArea == preSceneCtx.currentArea;
-			final int dX = canReuse ? (sceneContext.scene.getBaseX() - preSceneCtx.scene.getBaseX() >> 3) << 3 : 0;
-			final int dY = canReuse ? (sceneContext.scene.getBaseY() - preSceneCtx.scene.getBaseY() >> 3) << 3 : 0;
+			final int dX = canReuseScene ? (sceneContext.scene.getBaseX() - preSceneCtx.scene.getBaseX() >> 3) << 3 : 0;
+			final int dY = canReuseScene ? (sceneContext.scene.getBaseY() - preSceneCtx.scene.getBaseY() >> 3) << 3 : 0;
 
-			sceneContext.tileOverrideIndices = new char[MAX_Z * sizeX * sizeY * 3];
+			sceneContext.tileOverrideIndices = new char[MAX_Z * sceneContext.sizeX * sceneContext.sizeZ * 3];
 
 			for (int z = 0; z < MAX_Z; ++z) {
+				final Tile[][] prevZTiles = canReuseScene ? prevTiles[z] : null;
 				final Tile[][] zTiles = tiles[z];
-				for (int x = 0; x < sizeX; ++x) {
+				for (int x = 0; x < sceneContext.sizeX; ++x) {
+					final Tile[] prevXTiles = canReuseScene ? prevZTiles[z] : null;
 					final Tile[] xTiles = zTiles[x];
-					for (int y = 0; y < sizeY; ++y) {
+					for (int y = 0; y < sceneContext.sizeZ; ++y) {
 						final Tile tile = xTiles[y];
 						if (tile == null)
 							continue;
 
 						final int oX = x + dX;
 						final int oY = y + dY;
-						final boolean canReuseTile = canReuse && oX >= 2 && oX < sizeX - 2 && oY >= 2 && oY < sizeY - 2;
+						final boolean canReuseTile = canReuseScene &&
+													 oX >= 0 && oX < sceneContext.sizeX &&
+													 oY >= 0 && oY < sceneContext.sizeZ &&
+													 prevXTiles[oY] != null;
 
 						int tileZ = tile.getRenderLevel();
 						ids[0] = OVERLAY_FLAG | overlayIds[tileZ][x][y];
@@ -565,19 +570,18 @@ public class ProceduralGenerator {
 		}
 
 		private void calculateTileOverride(SceneContext sceneContext, SceneContext prevSceneContext, Tile tile, int tileZ, int tileExX, int tileExY, int prevTileExX, int prevTileExY) {
-			if(prevSceneContext != null) {
-				if(prevSceneContext.getTileOverrides(tileZ, prevTileExX, prevTileExY, overrides))
-					sceneContext.setTileOverride(tileZ, tileExX, tileExY, overrides[0], overrides[1], overrides[2]);
+			if(prevSceneContext != null && prevSceneContext.getTileOverrides(tileZ, prevTileExX, prevTileExY, overrides)) {
+				sceneContext.setTileOverride(tileZ, tileExX, tileExY, overrides);
 				return;
 			}
 
 			sceneContext.extendedSceneToWorld(tileExX, tileExY, tileZ, worldPos);
 
-			final var mainOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids);
-			final var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids[1]);
-			final var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids[0]);
+			overrides[0] = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids);
+			overrides[1] = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids[1]);
+			overrides[2] = tileOverrideManager.getOverride(sceneContext, tile, worldPos, ids[0]);
 
-			sceneContext.setTileOverride(tileZ, tileExX, tileExY, mainOverride, underlayOverride, overlayOverride);
+			sceneContext.setTileOverride(tileZ, tileExX, tileExY, overrides);
 		}
 	}
 
