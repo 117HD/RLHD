@@ -117,6 +117,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private final CachedArrayField<int[]> vertexNormalsZ = addField(INT, VERTEX_TYPE);
 
 	private final AtomicBoolean processing = new AtomicBoolean(false);
+	private final AtomicBoolean isCompleted = new AtomicBoolean(false);
 	private WorldViewContext ctx;
 	private Projection projection;
 	private TileObject tileObject;
@@ -136,7 +137,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private <T> CachedArrayField<T> addField(PooledArrayType arrayType, int fieldType) {
 		for (int i = 0; i < cachedFields.length; i++) {
 			if (cachedFields[i] == null)
-				return (CachedArrayField<T>) (cachedFields[i] = new CachedArrayField<>(arrayType, fieldType));
+				return (CachedArrayField<T>) (cachedFields[i] = new CachedArrayField<>(this, arrayType, fieldType));
 		}
 		throw new RuntimeException("Created too many fields, only expected: " + cachedFields.length);
 	}
@@ -220,7 +221,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		@Nonnull UploadModelFunc uploadFunc
 	) {
 		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
-		waitForCompletion();
+		waitForCompletion(true);
 
 		this.ctx = ctx;
 		this.projection = projection;
@@ -264,6 +265,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		faceCount = model.getFaceCount();
 
 		processing.set(false);
+		isCompleted.set(false);
 		if (alphaModel != null)
 			zone.pendingModelJobs.add(this);
 		INFLIGHT.add(this);
@@ -307,9 +309,9 @@ public final class AsyncCachedModel extends Job implements Model {
 			return true;
 
 		return
-			verticesX.cached && verticesY.cached && verticesZ.cached &&
-			faceIndices1.cached && faceIndices2.cached && faceIndices3.cached &&
-			faceColors3.cached;
+			verticesX.isCached() && verticesY.isCached() && verticesZ.isCached() &&
+			faceIndices1.isCached() && faceIndices2.isCached() && faceIndices3.isCached() &&
+			faceColors3.isCached();
 	}
 
 	@Override
@@ -336,10 +338,17 @@ public final class AsyncCachedModel extends Job implements Model {
 				orientation,
 				x, y, z
 			);
+			isCompleted.set(true);
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
 		} finally {
-			INFLIGHT.remove(this);
+			// Reset cached status before returning to the POOL
+			for (int i = 0; i < cachedFields.length; i++) {
+				final CachedArrayField<?> field = cachedFields[i];
+				field.ensureCached();
+				field.reset();
+			}
+
 			if (alphaModel != null)
 				zone.pendingModelJobs.remove(this);
 
@@ -352,16 +361,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			modelOverride = null;
 			drawIndex = -1;
 
-			// Reset cached status before returning to the POOL
-			for (int i = 0; i < cachedFields.length; i++) {
-				var f = cachedFields[i];
-				if(f.value != null) {
-					f.arrayType.release(f.value);
-					f.value = null;
-				}
-				f.cached = false;
-			}
-
+			INFLIGHT.remove(this);
 			POOL.recycle(this);
 		}
 
@@ -459,26 +459,39 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	@RequiredArgsConstructor
 	private static final class CachedArrayField<T> {
+		private final AsyncCachedModel model;
 		private final PooledArrayType arrayType;
 		private final int fieldType;
 
-		private int capacity;
 		private T value;
+		private final AtomicBoolean cached = new AtomicBoolean(false);
 
-		public volatile boolean cached;
-		public T getValue() {
-			while (!cached)
+		public boolean isCached() {return cached.get();}
+
+		public void ensureCached() {
+			while (!cached.get())
 				LockSupport.parkNanos(this, 5);
+		}
+
+		public T getValue() {
+			ensureCached();
 			return value;
 		}
 
+		public void reset() {
+			if(value != null)
+				arrayType.release(value);
+			value = null;
+			cached.set(false);
+		}
+
 		public void cache(final Model m, T src) {
-			if (src == null) {
-				if (value != null) {
-					arrayType.release(value);
-					value = null;
-				}
-				cached = true;
+			assert !cached.get();
+			assert value == null;
+
+			// If model is completed, then we can skip caching since its unnecessary to continue
+			if (src == null || model.isCompleted.get()) {
+				cached.set(true);
 				return;
 			}
 
@@ -495,20 +508,11 @@ public final class AsyncCachedModel extends Job implements Model {
 					break;
 			}
 
-			// Ensure capacity using pool
-			if (value == null || capacity < arraySize) {
-				if (value != null)
-					arrayType.release(value);
-
-				value = arrayType.borrow(arraySize);
-				capacity = getLength(value);
-			}
-
-			assert capacity >= arraySize : "Capacity: " + capacity + ", arraySize: " + arraySize;
+			value = arrayType.borrow(arraySize);
 
 			// noinspection SuspiciousSystemArraycopy
 			System.arraycopy(src, 0, value, 0, arraySize);
-			cached = true;
+			cached.set(true);
 		}
 	}
 }

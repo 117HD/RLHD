@@ -684,7 +684,7 @@ public class ModelStreamingManager {
 	}
 
 
-	private AsyncCachedModel obtainAvailableAsyncCachedModel(boolean shouldBlock) {
+	private synchronized AsyncCachedModel obtainAvailableAsyncCachedModel(boolean shouldBlock) {
 		if (AsyncCachedModel.POOL == null || numRenderThreads <= 0)
 			return null;
 

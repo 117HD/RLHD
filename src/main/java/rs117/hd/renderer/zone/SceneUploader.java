@@ -1999,7 +1999,7 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		for (int f = 0; f < faces.length; ++f) {
-			final char face = faces.array[f];
+			final int face = faces.array[f];
 			if(face >= faceCount) continue;
 
 			int color1 = color1s[face];

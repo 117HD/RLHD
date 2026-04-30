@@ -22,6 +22,7 @@ import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.utils.FrameTimingsRecorder;
 import rs117.hd.utils.NpcDisplacementCache;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static rs117.hd.renderer.zone.SceneManager.MAX_WORLDVIEWS;
@@ -205,6 +206,11 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 					.right(String.valueOf(npcDisplacementCache.size()))
 					.build());
 			}
+
+			children.add(LineComponent.builder()
+				.left("Array Cache Size:")
+				.right(formatBytes(PooledArrayType.getTotalCacheSize()))
+				.build());
 
 			children.add(LineComponent.builder()
 				.leftFont(boldFont)
