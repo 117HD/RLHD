@@ -355,10 +355,6 @@ public final class AsyncCachedModel extends Job implements Model {
 			// Reset cached status before returning to the POOL
 			for (int i = 0; i < cachedFields.length; i++) {
 				var f = cachedFields[i];
-				if (f.value != null) {
-					f.arrayType.release(f.value);
-					f.value = null;
-				}
 				f.cached = false;
 			}
 
@@ -501,7 +497,6 @@ public final class AsyncCachedModel extends Job implements Model {
 					arrayType.release(value);
 
 				value = arrayType.borrow(arraySize);
-				assert value != null;
 				capacity = getLength(value);
 			}
 
