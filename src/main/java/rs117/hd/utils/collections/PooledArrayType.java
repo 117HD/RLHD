@@ -5,12 +5,12 @@ import java.util.ArrayDeque;
 import java.util.concurrent.locks.ReentrantLock;
 import lombok.RequiredArgsConstructor;
 
-import static rs117.hd.utils.HDUtils.ceilPow2;
 import static rs117.hd.utils.MathUtils.*;
 
 public enum PooledArrayType {
 	BOOL(boolean[]::new, 1),
 	BYTE(byte[]::new, 1),
+	CHAR(char[]::new, 2),
 	SHORT(short[]::new, 2),
 	INT(int[]::new, 4),
 	FLOAT(float[]::new, 4);
@@ -72,6 +72,12 @@ public enum PooledArrayType {
 				lastOverTargetTime = 0;
 			}
 		}
+	}
+
+	private static int ceilPow2(int x) {
+		if (x <= 1) return 1;
+		if (x > (1 << 30)) return Integer.MAX_VALUE; // prevent overflow
+		return 1 << (32 - Integer.numberOfLeadingZeros(x - 1));
 	}
 
 	private static int bucket(int size) {

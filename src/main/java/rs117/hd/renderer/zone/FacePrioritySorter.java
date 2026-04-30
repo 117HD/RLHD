@@ -28,6 +28,7 @@ import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
@@ -42,7 +43,6 @@ public final class FacePrioritySorter implements AutoCloseable {
 	private static final int MAX_FACES_PER_PRIORITY = 4000;
 	private static final int PRIORITY_COUNT = 12;
 
-	private final char[] orderedFaces = new char[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
 	private final int[] numOfPriority = new int[PRIORITY_COUNT];
 	private final int[] eq10 = new int[MAX_FACES_PER_PRIORITY];
 	private final int[] eq11 = new int[MAX_FACES_PER_PRIORITY];
@@ -65,8 +65,12 @@ public final class FacePrioritySorter implements AutoCloseable {
 		int minFz = diameter, maxFz = 0;
 		boolean needsClear = true;
 
+		final int faceCount = visibleFaces.length;
+		final int maxFacesPerPriority = min(faceCount, MAX_FACES_PER_PRIORITY);
+		final char[] orderedFaces = PooledArrayType.CHAR.borrow(faceCount * maxFacesPerPriority);
+
 		// Build the z-sorted linked list of faces
-		for (int i = 0; i < visibleFaces.length; ++i) {
+		for (int i = 0; i < faceCount; ++i) {
 			final char faceIdx = visibleFaces.array[i];
 			assert faceIdx < faceDistances.length;
 			if (faceDistances[faceIdx] == Integer.MIN_VALUE) {
@@ -95,8 +99,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 			}
 		}
 
-		if (visibleFaces.length - unsortedCount == 0)
+		if (visibleFaces.length - unsortedCount == 0) {
+			PooledArrayType.CHAR.release(orderedFaces);
 			return; // No faces to sort, so don't modify the visible faces array
+		}
 
 		visibleFaces.reset();
 		if (unsortedCount > 0) // Push unsorted faces to be drawn first
@@ -108,6 +114,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 				for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
 					visibleFaces.put((char) f);
 			}
+			PooledArrayType.CHAR.release(orderedFaces);
 			return;
 		}
 
@@ -119,7 +126,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 				final int pri = priorities[f];
 				final int idx = numOfPriority[pri]++;
 
-				orderedFaces[pri * MAX_FACES_PER_PRIORITY + idx] = (char) f;
+				orderedFaces[pri * maxFacesPerPriority + idx] = (char) f;
 
 				if (pri < 10)
 					lt10[pri] += i;
@@ -141,12 +148,12 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		int drawnFaces = 0;
 		int numDynFaces = numOfPriority[10];
-		int dynBase = 10 * MAX_FACES_PER_PRIORITY;
+		int dynBase = 10 * maxFacesPerPriority;
 		int[] dynDist = eq10;
 
 		if (numDynFaces == 0) {
 			numDynFaces = numOfPriority[11];
-			dynBase = 11 * MAX_FACES_PER_PRIORITY;
+			dynBase = 11 * maxFacesPerPriority;
 			dynDist = eq11;
 		}
 
@@ -160,10 +167,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 			) {
 				visibleFaces.put(orderedFaces[dynBase + drawnFaces++]);
 
-				if (drawnFaces == numDynFaces && dynBase == 10 * MAX_FACES_PER_PRIORITY) {
+				if (drawnFaces == numDynFaces && dynBase == 10 * maxFacesPerPriority) {
 					drawnFaces = 0;
 					numDynFaces = numOfPriority[11];
-					dynBase = 11 * MAX_FACES_PER_PRIORITY;
+					dynBase = 11 * maxFacesPerPriority;
 					dynDist = eq11;
 				}
 
@@ -172,7 +179,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 			visibleFaces.put(
 				orderedFaces,
-				pri * MAX_FACES_PER_PRIORITY,
+				pri * maxFacesPerPriority,
 				numOfPriority[pri]
 			);
 		}
@@ -180,15 +187,16 @@ public final class FacePrioritySorter implements AutoCloseable {
 		while (currFaceDistance != -1000) {
 			visibleFaces.put(orderedFaces[dynBase + drawnFaces++]);
 
-			if (drawnFaces == numDynFaces && dynBase == 10 * MAX_FACES_PER_PRIORITY) {
+			if (drawnFaces == numDynFaces && dynBase == 10 * maxFacesPerPriority) {
 				drawnFaces = 0;
 				numDynFaces = numOfPriority[11];
-				dynBase = 11 * MAX_FACES_PER_PRIORITY;
+				dynBase = 11 * maxFacesPerPriority;
 				dynDist = eq11;
 			}
 
 			currFaceDistance = drawnFaces < numDynFaces ? dynDist[drawnFaces] : -1000;
 		}
+		PooledArrayType.CHAR.release(orderedFaces);
 	}
 
 	void sortStaticModelFacesByDistance(

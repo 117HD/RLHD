@@ -504,6 +504,8 @@ public final class AsyncCachedModel extends Job implements Model {
 				capacity = getLength(value);
 			}
 
+			assert capacity >= arraySize : "Capacity: " + capacity + ", arraySize: " + arraySize;
+
 			// noinspection SuspiciousSystemArraycopy
 			System.arraycopy(src, 0, value, 0, arraySize);
 			cached = true;
