@@ -501,6 +501,7 @@ public final class AsyncCachedModel extends Job implements Model {
 					arrayType.release(value);
 
 				value = arrayType.borrow(arraySize);
+				assert value != null;
 				capacity = getLength(value);
 			}
 
