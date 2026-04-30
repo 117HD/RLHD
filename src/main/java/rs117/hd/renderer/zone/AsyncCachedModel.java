@@ -219,6 +219,9 @@ public final class AsyncCachedModel extends Job implements Model {
 		int x, int y, int z,
 		@Nonnull UploadModelFunc uploadFunc
 	) {
+		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
+		waitForCompletion();
+
 		this.ctx = ctx;
 		this.projection = projection;
 		this.tileObject = tileObject;
@@ -259,9 +262,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		// Counts
 		verticesCount = model.getVerticesCount();
 		faceCount = model.getFaceCount();
-
-		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
-		waitForCompletion();
 
 		processing.set(false);
 		if (alphaModel != null)
@@ -355,6 +355,10 @@ public final class AsyncCachedModel extends Job implements Model {
 			// Reset cached status before returning to the POOL
 			for (int i = 0; i < cachedFields.length; i++) {
 				var f = cachedFields[i];
+				if(f.value != null) {
+					f.arrayType.release(f.value);
+					f.value = null;
+				}
 				f.cached = false;
 			}
 
