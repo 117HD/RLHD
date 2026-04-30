@@ -15,6 +15,8 @@ public enum PooledArrayType {
 	INT(int[]::new, 4),
 	FLOAT(float[]::new, 4);
 
+	public static final PooledArrayType[] VALUES = values();
+
 	private static final int MAX_BUCKET = 30;
 	private static final long SHRINK_DELAY_MS = 60_000;
 	private static final int CLEANUP_INTERVAL = 64;
@@ -84,6 +86,18 @@ public enum PooledArrayType {
 		if (size <= 1) return 0;
 		int b = 32 - Integer.numberOfLeadingZeros(size - 1);
 		return min(b, MAX_BUCKET);
+	}
+
+	public static long getTotalCacheSize() {
+		long size = 0;
+		for(int i = 0; i < VALUES.length; i++) {
+			final PooledArrayType type = VALUES[i];
+			for (int b = 0; b < type.buckets.length; b++) {
+				final Bucket bucket = type.buckets[b];
+				size += (long) bucket.stack.size() * bucket.size * type.stride;
+			}
+		}
+		return size ;
 	}
 
 	@SuppressWarnings("unchecked")

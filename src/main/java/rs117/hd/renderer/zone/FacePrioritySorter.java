@@ -68,6 +68,11 @@ public final class FacePrioritySorter implements AutoCloseable {
 		final int faceCount = visibleFaces.length;
 		final int facesPerPriority = min(faceCount, MAX_FACES_PER_PRIORITY);
 		final char[] orderedFaces = PooledArrayType.CHAR.borrow(PRIORITY_COUNT * facesPerPriority);
+		final int[] touchedBuckets = this.touchedBuckets;
+		final int[] zsortStamp = this.zsortStamp;
+		final int[] zsortHead = this.zsortHead;
+		final int[] zsortTail = this.zsortTail;
+		final int[] zsortNext = this.zsortNext;
 
 		int unsortedCount = 0;
 		int touchedCount = 0;
@@ -90,6 +95,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 			if (zsortStamp[distance] != currentStamp) {
 				zsortStamp[distance] = currentStamp;
 
+				assert touchedCount < touchedBuckets.length;
 				touchedBuckets[touchedCount++] = distance;
 
 				zsortHead[distance] = faceIdx;
@@ -111,14 +117,14 @@ public final class FacePrioritySorter implements AutoCloseable {
 		if (unsortedCount > 0) // Push unsorted faces to be drawn first
 			visibleFaces.put(orderedFaces, 0, unsortedCount);
 
-		Arrays.sort(touchedBuckets, 0, touchedCount);
+		if(touchedCount > 0)
+			Arrays.sort(touchedBuckets, 0, touchedCount);
 
 		final byte[] priorities = depthOnly ? null : model.getFaceRenderPriorities();
 		if (priorities == null) {
 			for (int t = touchedCount - 1; t >= 0; --t) {
-				final int i = touchedBuckets[t];
-
-				for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
+				int f = zsortHead[touchedBuckets[t]];
+				for (; f != -1; f = zsortNext[f])
 					visibleFaces.put((char) f);
 			}
 			PooledArrayType.CHAR.release(orderedFaces);
@@ -217,15 +223,19 @@ public final class FacePrioritySorter implements AutoCloseable {
 		if (diameter >= MAX_DIAMETER)
 			return;
 
+		final int[] touchedBuckets = this.touchedBuckets;
+		final int[] zsortStamp = this.zsortStamp;
+		final int[] zsortHead = this.zsortHead;
+		final int[] zsortTail = this.zsortTail;
+		final int[] zsortNext = this.zsortNext;
 		final int faceCount = m.packedFaces.length;
-		int touchedCount = 0;
 
+		int touchedCount = 0;
 		if (++currentStamp == 0) {
 			Arrays.fill(zsortStamp, 0);
 			currentStamp = 1;
 		}
 
-		int minFz = diameter, maxFz = 0;
 		for (int i = 0; i < faceCount; ++i) {
 			final int packed = m.packedFaces[i];
 			final int x = packed >> 21;
@@ -238,14 +248,12 @@ public final class FacePrioritySorter implements AutoCloseable {
 			if (zsortStamp[fz] != currentStamp) {
 				zsortStamp[fz] = currentStamp;
 
+				assert touchedCount < touchedBuckets.length;
 				touchedBuckets[touchedCount++] = fz;
 
 				zsortHead[fz] = i;
 				zsortTail[fz] = i;
 				zsortNext[i] = -1;
-
-				minFz = min(minFz, fz);
-				maxFz = max(maxFz, fz);
 			} else {
 				zsortNext[zsortTail[fz]] = i;
 				zsortNext[i] = -1;
@@ -253,16 +261,14 @@ public final class FacePrioritySorter implements AutoCloseable {
 			}
 		}
 
-		Arrays.sort(touchedBuckets, 0, touchedCount);
+		if(touchedCount > 0)
+			Arrays.sort(touchedBuckets, 0, touchedCount);
 
 		final int start = m.startpos / (VERT_SIZE >> 2);
 		for (int t = touchedCount - 1; t >= 0; --t) {
-			final int i = touchedBuckets[t];
-			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
-				if (m.sortedFacesLen >= m.sortedFaces.length)
-					break;
-
-				if (f >= faceCount)
+			int f = zsortHead[touchedBuckets[t]];
+			for (; f != -1; f = zsortNext[f]) {
+				if (f < 0 || f >= faceCount)
 					continue;
 
 				final int sortedOffset = m.sortedFacesLen;
@@ -271,6 +277,9 @@ public final class FacePrioritySorter implements AutoCloseable {
 				m.sortedFaces[sortedOffset + 1] = faceStart + 1;
 				m.sortedFaces[sortedOffset + 2] = faceStart + 2;
 				m.sortedFacesLen += 3;
+
+				if (m.sortedFacesLen >= m.sortedFaces.length)
+					break;
 			}
 		}
 	}
