@@ -47480,5 +47480,87 @@
       "HOS_COOKING_RANGE_02",
       "DS2_GUILD_COOKING_RANGE"
     ]
+  },
+  {
+    "description": "Zulrah - Pillar Torch East - Wide",
+    "offset": [ 70, 140, -80 ],
+    "worldX": 2271,
+    "worldY": 3071,
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Pillar Torch West - Wide",
+    "offset": [ -70, 140, -80 ],
+    "worldX": 2265,
+    "worldY": 3071,
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Pillar Torch East - Narrow",
+    "offset": [ 30, 180, -30 ],
+    "worldX": 2271,
+    "worldY": 3071,
+    "radius": 120,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Pillar Torch West - Narrow",
+    "offset": [ -30, 180, -30 ],
+    "worldX": 2265,
+    "worldY": 3071,
+    "radius": 120,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Fire Attack",
+    "offset": [ 0, 20, 0 ],
+    "radius": 265,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 200,
+    "projectileIds": [
+      "SNAKEBOSS_FIREBALL"
+    ]
   }
 ]

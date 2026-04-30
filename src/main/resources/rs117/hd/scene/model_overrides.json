@@ -2471,12 +2471,13 @@
   },
   {
     "description": "Poison Waste - Sulphur Gas",
-    "baseMaterial": "GRAY_90",
+    "baseMaterial": "GRAY_80",
     "objectIds": [
       "REGICIDE_SULPHAR_GAS"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.5,
+    "castShadows": false
   },
   {
     "description": "Poison Waste - Zul-Andra - Torch",
@@ -2500,16 +2501,29 @@
   },
   {
     "description": "Poison Waste - Zulrah - Sacrificial Boat",
-    "baseMaterial": "HD_WOOD_PLANKS_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      "SNAKEBOSS_BOAT_1OP",
       "SNAKEBOSS_BOAT_2OPS"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Poison Waste - Zulrah - Sacrificial Boat",
+    "baseMaterial": "GRAY_125",
+    "upwardsNormals": true,
+    "objectIds": [
+      "SNAKEBOSS_PILLAR",
+      "SNAKEBOSS_PILLAR_BROKEN"
+    ],
     "colorOverrides": [
       {
-        "colors": "h == 40",
-        "baseMaterial": "NONE"
+        "colors": "a == 255",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
       }
     ]
   },
@@ -10274,11 +10288,11 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
-    "uvScale": 1.1,
-    "uvOrientation": 512,
+    "uvScale": 0.75,
     "objectIds": [
       "AHOY_PIER_RAIL",
-      "ECTOPOOL_SC_RAILDOWN"
+      "ECTOPOOL_SC_RAILDOWN",
+      "AHOY_PIER_RAIL_TALL2"
     ]
   },
   {
