@@ -128,6 +128,7 @@ import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
 import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
@@ -790,6 +791,7 @@ public class HdPlugin extends Plugin {
 			materialManager.shutDown();
 			textureManager.shutDown();
 
+			PooledArrayType.shutdown();
 			DestructibleHandler.flushPendingDestruction(true);
 
 			if (awtContext != null)

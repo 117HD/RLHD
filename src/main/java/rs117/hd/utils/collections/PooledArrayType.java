@@ -78,6 +78,20 @@ public enum PooledArrayType {
 		return (hash ^ (hash >>> 16)) & STRIPES_MASK;
 	}
 
+	public static void shutdown() {
+		for (PooledArrayType t : VALUES) {
+			for (Bucket[] stripes : t.buckets) {
+				for (Bucket bucket : stripes) {
+					bucket.stack.clear();
+					bucket.inUse = 0;
+					bucket.peakInUse = 0;
+					bucket.avgDemand = 0;
+					bucket.lastOverTargetTime = 0;
+				}
+			}
+		}
+	}
+
 	public static long getCurrentTotalCacheSize() {
 		long size = 0;
 		for (PooledArrayType t : VALUES)
