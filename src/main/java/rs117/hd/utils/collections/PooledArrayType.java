@@ -110,6 +110,13 @@ public enum PooledArrayType {
 		return borrow(requestedSize);
 	}
 
+	@SuppressWarnings("SuspiciousSystemArraycopy")
+	public <T> T cache(Object array, int offset, int size) {
+		T cached = borrow(size);
+		System.arraycopy(array, offset, cached, 0, size);
+		return cached;
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T> T borrow(int requestedSize) {
 		final int roundedSize = ceilPow2(requestedSize);

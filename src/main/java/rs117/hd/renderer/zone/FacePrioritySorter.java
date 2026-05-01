@@ -48,11 +48,15 @@ public final class FacePrioritySorter implements AutoCloseable {
 	private final int[] eq11 = new int[MAX_FACES_PER_PRIORITY];
 	private final int[] lt10 = new int[PRIORITY_COUNT];
 
-	private final int[] zsortHead = new int[MAX_DIAMETER];
-	private final int[] zsortTail = new int[MAX_DIAMETER];
-	private final int[] zsortNext = new int[MAX_FACE_COUNT];
+	private int[] zsortHead;
+	private int[] zsortTail;
+	private int[] zsortNext;
 
-	private int currentStamp = 1;
+	private void ensureCapacity(int diameter, int faceCount) {
+		zsortHead = PooledArrayType.INT.ensureCapacity(zsortHead, min(MAX_DIAMETER, diameter + 1));
+		zsortTail = PooledArrayType.INT.ensureCapacity(zsortTail, min(MAX_DIAMETER, diameter + 1));
+		zsortNext = PooledArrayType.INT.ensureCapacity(zsortNext, min(MAX_FACE_COUNT, faceCount));
+	}
 
 	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model, int[] faceDistances) {
 		sortModelFaces(visibleFaces, model, faceDistances, false);
@@ -63,19 +67,18 @@ public final class FacePrioritySorter implements AutoCloseable {
 		if (diameter <= 0 || diameter >= MAX_DIAMETER)
 			return;
 
-		final int faceCount = visibleFaces.length;
-		final int facesPerPriority = min(faceCount, MAX_FACES_PER_PRIORITY);
+		final int visibleFaceCount = visibleFaces.length;
+		final int facesPerPriority = min(visibleFaceCount, MAX_FACES_PER_PRIORITY);
 		final char[] orderedFaces = PooledArrayType.CHAR.borrow(PRIORITY_COUNT * facesPerPriority);
-		final int[] zsortHead = this.zsortHead;
-		final int[] zsortTail = this.zsortTail;
-		final int[] zsortNext = this.zsortNext;
 
 		int unsortedCount = 0;
 		int minFz = diameter, maxFz = 0;
 		boolean needsClear = true;
 
+		ensureCapacity(diameter, model.getFaceCount());
+
 		// Build the z-sorted linked list of faces
-		for (int i = 0; i < faceCount; ++i) {
+		for (int i = 0; i < visibleFaceCount; ++i) {
 			final char faceIdx = visibleFaces.array[i];
 			assert faceIdx < faceDistances.length;
 			if (faceDistances[faceIdx] == Integer.MIN_VALUE) {
@@ -216,13 +219,13 @@ public final class FacePrioritySorter implements AutoCloseable {
 			return;
 
 		final int faceCount = m.packedFaces.length;
-
-		Arrays.fill(zsortHead, 0, diameter, -1);
-		Arrays.fill(zsortTail, 0, diameter, -1);
-
 		final int m02 = -(yawSin * pitchCos) >> 16;
 		final int m12 = pitchSin;
 		final int m22 = (yawCos * pitchCos) >> 16;
+
+		ensureCapacity(diameter, faceCount);
+		Arrays.fill(zsortHead, 0, diameter, -1);
+		Arrays.fill(zsortTail, 0, diameter, -1);
 
 		int minFz = diameter, maxFz = 0;
 		for (int i = 0; i < faceCount; ++i) {
@@ -267,6 +270,14 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 	@Override
 	public void close() {
+		PooledArrayType.INT.release(zsortHead);
+		PooledArrayType.INT.release(zsortTail);
+		PooledArrayType.INT.release(zsortNext);
+
+		zsortHead = null;
+		zsortTail = null;
+		zsortNext = null;
+
 		POOL.recycle(this);
 	}
 }

@@ -508,10 +508,7 @@ public final class AsyncCachedModel extends Job implements Model {
 					break;
 			}
 
-			value = arrayType.borrow(arraySize);
-
-			// noinspection SuspiciousSystemArraycopy
-			System.arraycopy(src, 0, value, 0, arraySize);
+			value = arrayType.cache(src, 0, arraySize);
 			cached.set(true);
 		}
 	}
