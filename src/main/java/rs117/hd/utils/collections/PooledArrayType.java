@@ -2,9 +2,11 @@ package rs117.hd.utils.collections;
 
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.StampedLock;
 import lombok.RequiredArgsConstructor;
 
+import static java.lang.Integer.numberOfLeadingZeros;
 import static rs117.hd.utils.MathUtils.*;
 
 public enum PooledArrayType {
@@ -19,8 +21,10 @@ public enum PooledArrayType {
 	public static final PooledArrayType[] VALUES = values();
 
 	private static final int MAX_BUCKET = 30;
-	private static final long SHRINK_DELAY_MS = 60_000;
+	private static final int STRIPES = 8;
+	private static final int STRIPES_MASK = STRIPES - 1;
 	private static final int CLEANUP_INTERVAL = 64;
+	private static final long SHRINK_DELAY_MS = 60_000;
 	private static final double ALPHA = 0.1;
 
 	@FunctionalInterface
@@ -28,21 +32,26 @@ public enum PooledArrayType {
 		T get(int capacity);
 	}
 
-	private final Bucket[] buckets = new Bucket[MAX_BUCKET + 1];
+	private final Bucket[][] buckets = new Bucket[MAX_BUCKET + 1][STRIPES];
 	public final ArraySupplier<?> supplier;
 	public final int stride;
 
 	PooledArrayType(ArraySupplier<?> supplier, int stride) {
 		this.supplier = supplier;
 		this.stride = stride;
-		for (int i = 0; i < buckets.length; i++)
-			buckets[i] = new Bucket(1 << i);
+
+		for (int i = 0; i < buckets.length; i++) {
+			int size = 1 << i;
+			for (int s = 0; s < STRIPES; s++)
+				buckets[i][s] = new Bucket(size);
+		}
 	}
 
 	@RequiredArgsConstructor
 	private static final class Bucket {
 		private final ArrayDeque<Object> stack = new ArrayDeque<>();
-		private final ReentrantLock lock = new ReentrantLock();
+		private final StampedLock lock = new StampedLock();
+		private final AtomicBoolean isEmpty = new AtomicBoolean(true);
 
 		private final int size;
 		private int opCounter;
@@ -50,73 +59,119 @@ public enum PooledArrayType {
 		private int peakInUse;
 		private float avgDemand;
 		private long lastOverTargetTime;
-
-		private void maybeCleanup() {
-			if ((++opCounter & (CLEANUP_INTERVAL - 1)) != 0)
-				return;
-
-			final long now = System.currentTimeMillis();
-
-			avgDemand = (float)(ALPHA * peakInUse + (1 - ALPHA) * avgDemand);
-			peakInUse = inUse;
-
-			if (stack.size() > avgDemand) {
-				if (lastOverTargetTime == 0) {
-					lastOverTargetTime = now;
-				} else if (now - lastOverTargetTime > SHRINK_DELAY_MS) {
-					int target = max((int)(avgDemand * 0.5f), 1);
-
-					while (stack.size() > target)
-						stack.poll();
-
-					lastOverTargetTime = now;
-				}
-			} else {
-				lastOverTargetTime = 0;
-			}
-		}
 	}
 
 	private static int ceilPow2(int x) {
 		if (x <= 1) return 1;
-		if (x > (1 << 30)) return Integer.MAX_VALUE; // prevent overflow
-		return 1 << (32 - Integer.numberOfLeadingZeros(x - 1));
+		if (x > (1 << 30)) return Integer.MAX_VALUE;
+		return 1 << (32 - numberOfLeadingZeros(x - 1));
 	}
 
 	private static int bucket(int size) {
 		if (size <= 1) return 0;
-		int b = 32 - Integer.numberOfLeadingZeros(size - 1);
+		int b = 32 - numberOfLeadingZeros(size - 1);
 		return min(b, MAX_BUCKET);
+	}
+
+	private static int stripeIndex() {
+		final int hash = Thread.currentThread().hashCode();
+		return (hash ^ (hash >>> 16)) & STRIPES_MASK;
 	}
 
 	public static long getCurrentTotalCacheSize() {
 		long size = 0;
-		for(int i = 0; i < VALUES.length; i++)
-			size += VALUES[i].getCurrentCacheSize();
-		return size ;
+		for (PooledArrayType t : VALUES)
+			size += t.getCurrentCacheSize();
+		return size;
 	}
 
 	public long getCurrentCacheSize() {
 		long size = 0;
 		for (int b = 0; b < buckets.length; b++) {
-			final Bucket bucket = buckets[b];
-			size += (long) bucket.stack.size() * bucket.size;
+			for (int s = 0; s < STRIPES; s++) {
+				Bucket bucket = buckets[b][s];
+				size += (long) bucket.stack.size() * bucket.size;
+			}
 		}
 		return size * stride;
 	}
 
+	private void maybeCleanup(int b, int s, Bucket bucket) {
+		if ((++bucket.opCounter & (CLEANUP_INTERVAL - 1)) != 0)
+			return;
+
+
+		bucket.avgDemand = (float) (ALPHA * bucket.peakInUse + (1 - ALPHA) * bucket.avgDemand);
+		bucket.peakInUse = bucket.inUse;
+
+		if (bucket.stack.size() <= bucket.avgDemand) {
+			bucket.lastOverTargetTime = 0;
+			return;
+		}
+
+		final long now = System.currentTimeMillis();
+		if (bucket.lastOverTargetTime == 0) {
+			bucket.lastOverTargetTime = now;
+			return;
+		}
+
+		if (now - bucket.lastOverTargetTime <= SHRINK_DELAY_MS)
+			return;
+
+		final int target = max((int) (bucket.avgDemand * 0.5f), 1);
+		int excess = bucket.stack.size() - target;
+
+		while (excess-- > 0) {
+			Object arr = bucket.stack.poll();
+			if (arr == null)
+				break;
+
+			spill(b, s, arr);
+		}
+		bucket.isEmpty.set(bucket.stack.isEmpty());
+		bucket.lastOverTargetTime = now;
+	}
+
+	private boolean spill(int b, int fromStripe, Object array) {
+		final Bucket[] stripes = buckets[b];
+		for (int i = 1; i < STRIPES; i++) {
+			final int s = (fromStripe + i) & STRIPES_MASK;
+			final Bucket other = stripes[s];
+
+			if (other.stack.size() > other.avgDemand)
+				continue;
+
+			final long stamp = other.lock.tryWriteLock();
+			if (stamp == 0)
+				continue;
+
+			try {
+				if (other.stack.size() <= other.avgDemand) {
+					other.stack.add(array);
+					other.isEmpty.set(false);
+					return true;
+				}
+			} finally {
+				other.lock.unlockWrite(stamp);
+			}
+		}
+
+		return false;
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T> T ensureCapacity(Object array, int requestedSize) {
-		final int arrayLen = array != null ? Array.getLength(array) : 0;
-		if(arrayLen >= requestedSize)
+		final int len = array != null ? Array.getLength(array) : 0;
+		if (len >= requestedSize)
 			return (T) array;
+
 		release(array);
 		return borrow(requestedSize);
 	}
 
 	@SuppressWarnings("SuspiciousSystemArraycopy")
 	public <T> T cache(Object array, int offset, int size) {
-		T cached = borrow(size);
+		final T cached = borrow(size);
 		System.arraycopy(array, offset, cached, 0, size);
 		return cached;
 	}
@@ -126,53 +181,70 @@ public enum PooledArrayType {
 		final int roundedSize = ceilPow2(requestedSize);
 		final int b = bucket(roundedSize);
 
-		if (b < 0 || b >= buckets.length) // Out of range, allocate directly
+		if (b < 0 || b >= buckets.length)
 			return (T) supplier.get(requestedSize);
 
-		final Bucket bucket = buckets[b];
-		assert bucket.size == roundedSize;
-		assert roundedSize >= requestedSize;
-		bucket.lock.lock(); // TODO: This has become a major bottleneck
-		try {
-			bucket.inUse++;
-			bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
+		final Bucket[] bucketStripes = buckets[b];
+		final int startStripe = stripeIndex();
 
-			T array = (T) bucket.stack.poll();
-			bucket.maybeCleanup();
+		for (int i = 0; i < STRIPES * 2; i++) {
+			final int s = (startStripe + i) & STRIPES_MASK;
+			final Bucket bucket = bucketStripes[s];
+			if (bucket.isEmpty.get())
+				continue;
 
-			if (array != null)
-				return array;
-		} finally {
-			bucket.lock.unlock();  // TODO: This has become a major bottleneck
+			final long stamp = i < STRIPES ? bucket.lock.tryWriteLock() : bucket.lock.writeLock();
+			if(stamp == 0)
+				continue;
+
+			try {
+				final T arr = (T) bucket.stack.poll();
+				if (arr != null) {
+					bucket.inUse++;
+					bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
+					bucket.isEmpty.set(bucket.stack.isEmpty());
+					maybeCleanup(b, s, bucket);
+					return arr;
+				}
+			} finally {
+				bucket.lock.unlockWrite(stamp);
+			}
 		}
 
-		// Always allocate exact bucket size (power of two)
-		return (T) supplier.get(bucket.size);
+		return (T) supplier.get(roundedSize);
 	}
 
 	public void release(Object array) {
 		if (array == null)
 			return;
 
-		final int arrayLen = Array.getLength(array);
-		final int b = bucket(arrayLen);
+		final int len = Array.getLength(array);
+		if(len != ceilPow2(len))
+			return;
 
+		final int b = bucket(len);
 		if (b < 0 || b >= buckets.length)
 			return;
 
-		final Bucket bucket = buckets[b];
+		final int startStripe = stripeIndex();
+		final Bucket[] bucketStripes = buckets[b];
 
-		// Strict invariant: only exact bucket-sized arrays allowed
-		if (arrayLen != bucket.size)
-			return;
+		for (int i = 0; i < STRIPES * 2; i++) {
+			final int s = (startStripe + i) & STRIPES_MASK;
+			final Bucket bucket = bucketStripes[s];
+			final long stamp = i < STRIPES ? bucket.lock.tryWriteLock() : bucket.lock.writeLock();
+			if(stamp == 0)
+				continue;
 
-		bucket.lock.lock();  // TODO: This has become a major bottleneck
-		try {
-			bucket.inUse--;
-			bucket.stack.add(array);
-			bucket.maybeCleanup();
-		} finally {
-			bucket.lock.unlock();  // TODO: This has become a major bottleneck
+			try {
+				bucket.inUse--;
+				bucket.stack.add(array);
+				bucket.isEmpty.set(false);
+				maybeCleanup(b, s, bucket);
+				return;
+			} finally {
+				bucket.lock.unlockWrite(stamp);
+			}
 		}
 	}
 }
