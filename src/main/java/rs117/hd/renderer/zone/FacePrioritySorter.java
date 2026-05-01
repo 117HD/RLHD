@@ -53,8 +53,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 	private int[] zsortTail;
 	private int[] zsortNext;
 
-	private void ensureCapacity(int diameter, int faceCount, int facesPerPriority) {
-		orderedFaces = facesPerPriority > 0 ? PooledArrayType.CHAR.borrow(PRIORITY_COUNT * facesPerPriority) : null;
+	private void ensureCapacity(int diameter, int faceCount) {
 		zsortHead = PooledArrayType.INT.ensureCapacity(zsortHead, min(MAX_DIAMETER, diameter + 1));
 		zsortTail = PooledArrayType.INT.ensureCapacity(zsortTail, min(MAX_DIAMETER, diameter + 1));
 		zsortNext = PooledArrayType.INT.ensureCapacity(zsortNext, min(MAX_FACE_COUNT, faceCount));
@@ -71,12 +70,13 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		final int visibleFaceCount = visibleFaces.length;
 		final int facesPerPriority = min(visibleFaceCount, MAX_FACES_PER_PRIORITY);
+		orderedFaces = PooledArrayType.CHAR.ensureCapacity(orderedFaces, PRIORITY_COUNT * facesPerPriority);
 
 		int unsortedCount = 0;
 		int minFz = diameter, maxFz = 0;
 		boolean needsClear = true;
 
-		ensureCapacity(diameter, model.getFaceCount(), facesPerPriority);
+		ensureCapacity(diameter, model.getFaceCount());
 
 		// Build the z-sorted linked list of faces
 		for (int i = 0; i < visibleFaceCount; ++i) {
@@ -109,7 +109,6 @@ public final class FacePrioritySorter implements AutoCloseable {
 		}
 
 		if (visibleFaces.length - unsortedCount == 0) {
-			PooledArrayType.CHAR.release(orderedFaces);
 			return; // No faces to sort, so don't modify the visible faces array
 		}
 
@@ -123,7 +122,6 @@ public final class FacePrioritySorter implements AutoCloseable {
 				for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
 					visibleFaces.put((char) f);
 			}
-			PooledArrayType.CHAR.release(orderedFaces);
 			return;
 		}
 
@@ -223,7 +221,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		final int m12 = pitchSin;
 		final int m22 = (yawCos * pitchCos) >> 16;
 
-		ensureCapacity(diameter, faceCount, 0);
+		ensureCapacity(diameter, faceCount);
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
 
