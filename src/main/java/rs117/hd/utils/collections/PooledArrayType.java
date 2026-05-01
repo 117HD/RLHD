@@ -27,14 +27,9 @@ public enum PooledArrayType {
 	private static final long SHRINK_DELAY_MS = 60_000;
 	private static final double ALPHA = 0.1;
 
-	@FunctionalInterface
-	public interface ArraySupplier<T> {
-		T get(int capacity);
-	}
-
-	private final Bucket[][] buckets = new Bucket[MAX_BUCKET + 1][STRIPES];
 	public final ArraySupplier<?> supplier;
 	public final int stride;
+	private final Bucket[][] buckets = new Bucket[MAX_BUCKET + 1][STRIPES];
 
 	PooledArrayType(ArraySupplier<?> supplier, int stride) {
 		this.supplier = supplier;
@@ -45,20 +40,6 @@ public enum PooledArrayType {
 			for (int s = 0; s < STRIPES; s++)
 				buckets[i][s] = new Bucket(size);
 		}
-	}
-
-	@RequiredArgsConstructor
-	private static final class Bucket {
-		private final ArrayDeque<Object> stack = new ArrayDeque<>();
-		private final StampedLock lock = new StampedLock();
-		private final AtomicBoolean isEmpty = new AtomicBoolean(true);
-
-		private final int size;
-		private int opCounter;
-		private int inUse;
-		private int peakInUse;
-		private float avgDemand;
-		private long lastOverTargetTime;
 	}
 
 	private static int ceilPow2(int x) {
@@ -113,7 +94,6 @@ public enum PooledArrayType {
 	private void maybeCleanup(int b, int s, Bucket bucket) {
 		if ((++bucket.opCounter & (CLEANUP_INTERVAL - 1)) != 0)
 			return;
-
 
 		bucket.avgDemand = (float) (ALPHA * bucket.peakInUse + (1 - ALPHA) * bucket.avgDemand);
 		bucket.peakInUse = bucket.inUse;
@@ -208,7 +188,7 @@ public enum PooledArrayType {
 				continue;
 
 			final long stamp = i < STRIPES ? bucket.lock.tryWriteLock() : bucket.lock.writeLock();
-			if(stamp == 0)
+			if (stamp == 0)
 				continue;
 
 			try {
@@ -233,7 +213,7 @@ public enum PooledArrayType {
 			return;
 
 		final int len = Array.getLength(array);
-		if(len != ceilPow2(len))
+		if (len != ceilPow2(len))
 			return;
 
 		final int b = bucket(len);
@@ -247,7 +227,7 @@ public enum PooledArrayType {
 			final int s = (startStripe + i) & STRIPES_MASK;
 			final Bucket bucket = bucketStripes[s];
 			final long stamp = i < STRIPES ? bucket.lock.tryWriteLock() : bucket.lock.writeLock();
-			if(stamp == 0)
+			if (stamp == 0)
 				continue;
 
 			try {
@@ -260,5 +240,24 @@ public enum PooledArrayType {
 				bucket.lock.unlockWrite(stamp);
 			}
 		}
+	}
+
+	@FunctionalInterface
+	public interface ArraySupplier<T> {
+		T get(int capacity);
+	}
+
+	@RequiredArgsConstructor
+	private static final class Bucket {
+		private final ArrayDeque<Object> stack = new ArrayDeque<>();
+		private final StampedLock lock = new StampedLock();
+		private final AtomicBoolean isEmpty = new AtomicBoolean(true);
+
+		private final int size;
+		private int opCounter;
+		private int inUse;
+		private int peakInUse;
+		private float avgDemand;
+		private long lastOverTargetTime;
 	}
 }
