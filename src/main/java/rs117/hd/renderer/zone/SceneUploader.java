@@ -2098,10 +2098,6 @@ public class SceneUploader implements AutoCloseable {
 			final VertexWriteCache vb = writeCache.getVertexBuffer(hasAlpha);
 			final VertexWriteCache tb = writeCache.getTextureBuffer(hasAlpha);
 
-			color1 |= packedAlphaBiasHsl;
-			color2 |= packedAlphaBiasHsl;
-			color3 |= packedAlphaBiasHsl;
-
 			final int texturedFaceIdx = tb.putFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
