@@ -13,7 +13,8 @@ public enum PooledArrayType {
 	CHAR(char[]::new, 2),
 	SHORT(short[]::new, 2),
 	INT(int[]::new, 4),
-	FLOAT(float[]::new, 4);
+	FLOAT(float[]::new, 4),
+	OBJECT(Object[]::new, 4);
 
 	public static final PooledArrayType[] VALUES = values();
 
@@ -98,6 +99,15 @@ public enum PooledArrayType {
 			}
 		}
 		return size ;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T ensureCapacity(Object array, int requestedSize) {
+		final int arrayLen = array != null ? Array.getLength(array) : 0;
+		if(arrayLen >= requestedSize)
+			return (T) array;
+		release(array);
+		return borrow(requestedSize);
 	}
 
 	@SuppressWarnings("unchecked")

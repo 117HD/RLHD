@@ -47,11 +47,11 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PooledObjectArray;
 import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.renderer.zone.FacePrioritySorter.MAX_FACE_COUNT;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_MAIN;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_OVERLAY;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_UNDERLAY;
@@ -132,14 +132,12 @@ public class SceneUploader implements AutoCloseable {
 	private final int[] modelNormals = new int[9];
 	private final short[][] tileNormals = new short[4][3];
 
+	private int[] modelVertices;
 	public int tempModelAlphaFaces = 0;
 
-	private final float[] modelLocal = new float[MAX_VERTEX_COUNT * 3];
-	private final int[] modelLocalI = new int[MAX_VERTEX_COUNT * 3];
-
-	private final ModelOverride[] faceOverrides = new ModelOverride[MAX_FACE_COUNT];
-	private final Material[] faceMaterials = new Material[MAX_FACE_COUNT];
-	private final UvType[] faceUVTypes = new UvType[MAX_FACE_COUNT];
+	private final PooledObjectArray<ModelOverride> faceOverrides = new PooledObjectArray<>();
+	private final PooledObjectArray<Material> faceMaterials = new PooledObjectArray<>();
+	private final PooledObjectArray<UvType> faceUVTypes = new PooledObjectArray<>();
 
 	private final int[] tzHaarRecolored = new int[3];
 	private final float[] projected = new float[4];
@@ -169,6 +167,17 @@ public class SceneUploader implements AutoCloseable {
 		tileHeights = null;
 		currentScene = null;
 		onBeforeProcessTile = null;
+
+		PooledArrayType.INT.release(modelVertices);
+		modelVertices = null;
+
+		faceOverrides.release();
+		faceMaterials.release();
+		faceUVTypes.release();
+	}
+
+	private void ensureVerticesAllocated(int vertexCount) {
+		modelVertices = PooledArrayType.INT.ensureCapacity(modelVertices, vertexCount * 3);
 	}
 
 	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
@@ -1419,6 +1428,8 @@ public class SceneUploader implements AutoCloseable {
 			orientCos = COSINE[orientation];
 		}
 
+		ensureVerticesAllocated(vertexCount);
+
 		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
 			int vx = (int) vertexX[v];
 			int vy = (int) vertexY[v];
@@ -1452,9 +1463,9 @@ public class SceneUploader implements AutoCloseable {
 				vy = (int) mix(h, vy, blend);
 			}
 
-			modelLocalI[vertexOffset++] = vx;
-			modelLocalI[vertexOffset++] = vy;
-			modelLocalI[vertexOffset++] = vz;
+			modelVertices[vertexOffset++] = vx;
+			modelVertices[vertexOffset++] = vy;
+			modelVertices[vertexOffset++] = vz;
 		}
 
 		boolean isVanillaTextured = faceTextures != null;
@@ -1518,19 +1529,19 @@ public class SceneUploader implements AutoCloseable {
 			final int triangleC = indices3[face];
 
 			int vertexOffset = triangleA * 3;
-			final int vx1 = modelLocalI[vertexOffset];
-			final int vy1 = modelLocalI[vertexOffset + 1];
-			final int vz1 = modelLocalI[vertexOffset + 2];
+			final int vx1 = modelVertices[vertexOffset];
+			final int vy1 = modelVertices[vertexOffset + 1];
+			final int vz1 = modelVertices[vertexOffset + 2];
 
 			vertexOffset = triangleB * 3;
-			final int vx2 = modelLocalI[vertexOffset];
-			final int vy2 = modelLocalI[vertexOffset + 1];
-			final int vz2 = modelLocalI[vertexOffset + 2];
+			final int vx2 = modelVertices[vertexOffset];
+			final int vy2 = modelVertices[vertexOffset + 1];
+			final int vz2 = modelVertices[vertexOffset + 2];
 
 			vertexOffset = triangleC * 3;
-			final int vx3 = modelLocalI[vertexOffset];
-			final int vy3 = modelLocalI[vertexOffset + 1];
-			final int vz3 = modelLocalI[vertexOffset + 2];
+			final int vx3 = modelVertices[vertexOffset];
+			final int vy3 = modelVertices[vertexOffset + 1];
+			final int vz3 = modelVertices[vertexOffset + 2];
 
 			boolean keepShading = isTextured;
 			if (isTextured) {
@@ -1732,10 +1743,6 @@ public class SceneUploader implements AutoCloseable {
 		final float[] verticesY = model.getVerticesY();
 		final float[] verticesZ = model.getVerticesZ();
 
-		final float[] modelLocal = this.modelLocal;
-		final int[] modelLocalI = this.modelLocalI;
-		final float[] projected = this.projected;
-
 		final boolean[] visibility = PooledArrayType.BOOL.borrow(vertexCount);
 		final float[] modelProjected = PooledArrayType.FLOAT.borrow(vertexCount * 3);
 
@@ -1748,6 +1755,8 @@ public class SceneUploader implements AutoCloseable {
 			orientSinf = SINE[orientation] / 65536f;
 			orientCosf = COSINE[orientation] / 65536f;
 		}
+
+		ensureVerticesAllocated(vertexCount);
 
 		boolean shouldSort = true;
 		boolean allVertsVisible = true;
@@ -1782,18 +1791,15 @@ public class SceneUploader implements AutoCloseable {
 			if (pZ <= 0.0f)
 				visibility[v] = allVertsVisible = false;
 
-			modelLocal[vertexOffset] = vertexX;
-			modelLocalI[vertexOffset] = Float.floatToIntBits(vertexX);
+			modelVertices[vertexOffset] = Float.floatToIntBits(vertexX);
 			modelProjected[vertexOffset] = pX / pZ;
 			vertexOffset++;
 
-			modelLocal[vertexOffset] = vertexY;
-			modelLocalI[vertexOffset] = Float.floatToIntBits(vertexY);
+			modelVertices[vertexOffset] = Float.floatToIntBits(vertexY);
 			modelProjected[vertexOffset] = pY / pZ;
 			vertexOffset++;
 
-			modelLocal[vertexOffset] = vertexZ;
-			modelLocalI[vertexOffset] = Float.floatToIntBits(vertexZ);
+			modelVertices[vertexOffset] = Float.floatToIntBits(vertexZ);
 			modelProjected[vertexOffset] = pZ;
 			vertexOffset++;
 
@@ -1825,6 +1831,10 @@ public class SceneUploader implements AutoCloseable {
 
 		final int zero = (int) proj.project(x, y, z, projected)[2];
 		final int radius = model.getRadius();
+
+		faceOverrides.ensureCapacity(triangleCount);
+		faceMaterials.ensureCapacity(triangleCount);
+		faceUVTypes.ensureCapacity(triangleCount);
 
 		tempModelAlphaFaces = 0;
 		for (char f = 0; f < triangleCount; f++) {
@@ -1878,9 +1888,9 @@ public class SceneUploader implements AutoCloseable {
 				}
 			}
 
-			faceOverrides[f] = faceOverride;
-			faceMaterials[f] = material;
-			faceUVTypes[f] = uvType;
+			faceOverrides.set(f,faceOverride);
+			faceMaterials.set(f, material);
+			faceUVTypes.set(f, uvType);
 
 			int offsetA = indices1[f];
 			int offsetB = indices2[f];
@@ -2014,9 +2024,9 @@ public class SceneUploader implements AutoCloseable {
 			final int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			final int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			final int textureId = isVanillaTextured ? faceTextures[face] : -1;
-			final UvType uvType = faceUVTypes[face];
-			final Material material = faceMaterials[face];
-			final ModelOverride faceOverride = faceOverrides[face];
+			final UvType uvType = faceUVTypes.get(face);
+			final Material material = faceMaterials.get(face);
+			final ModelOverride faceOverride = faceOverrides.get(face);
 
 			if (textureId != -1)
 				color1 = color2 = color3 = 90;
@@ -2061,11 +2071,11 @@ public class SceneUploader implements AutoCloseable {
 				}
 
 				if (shouldCalculateFaceNormal) {
-					calculateFaceNormal(
+					calculateFaceNormalInt(
 						faceNormals,
-						modelLocal[vertexOffsetA], modelLocal[vertexOffsetA + 1], modelLocal[vertexOffsetA + 2],
-						modelLocal[vertexOffsetB], modelLocal[vertexOffsetB + 1], modelLocal[vertexOffsetB + 2],
-						modelLocal[vertexOffsetC], modelLocal[vertexOffsetC + 1], modelLocal[vertexOffsetC + 2]
+						modelVertices[vertexOffsetA], modelVertices[vertexOffsetA + 1], modelVertices[vertexOffsetA + 2],
+						modelVertices[vertexOffsetB], modelVertices[vertexOffsetB + 1], modelVertices[vertexOffsetB + 2],
+						modelVertices[vertexOffsetC], modelVertices[vertexOffsetC + 1], modelVertices[vertexOffsetC + 2]
 					);
 				}
 
@@ -2105,19 +2115,19 @@ public class SceneUploader implements AutoCloseable {
 			);
 
 			vb.putVertex(
-				modelLocalI[vertexOffsetA], modelLocalI[vertexOffsetA + 1], modelLocalI[vertexOffsetA + 2],
+				modelVertices[vertexOffsetA], modelVertices[vertexOffsetA + 1], modelVertices[vertexOffsetA + 2],
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				faceNormals[0], faceNormals[1], faceNormals[2],
 				texturedFaceIdx
 			);
 			vb.putVertex(
-				modelLocalI[vertexOffsetB], modelLocalI[vertexOffsetB + 1], modelLocalI[vertexOffsetB + 2],
+				modelVertices[vertexOffsetB], modelVertices[vertexOffsetB + 1], modelVertices[vertexOffsetB + 2],
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				faceNormals[3], faceNormals[4], faceNormals[5],
 				texturedFaceIdx
 			);
 			vb.putVertex(
-				modelLocalI[vertexOffsetC], modelLocalI[vertexOffsetC + 1], modelLocalI[vertexOffsetC + 2],
+				modelVertices[vertexOffsetC], modelVertices[vertexOffsetC + 1], modelVertices[vertexOffsetC + 2],
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				faceNormals[6], faceNormals[7], faceNormals[8],
 				texturedFaceIdx
@@ -2125,6 +2135,19 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		writeCache.flush();
+	}
+
+	public static void calculateFaceNormalInt(
+		int[] out,
+		int vx1, int vy1, int vz1,
+		int vx2, int vy2, int vz2,
+		int vx3, int vy3, int vz3
+	) {
+		calculateFaceNormal(out,
+			Float.intBitsToFloat(vx1), Float.intBitsToFloat(vy1), Float.intBitsToFloat(vz1),
+			Float.intBitsToFloat(vx2), Float.intBitsToFloat(vy2), Float.intBitsToFloat(vz2),
+			Float.intBitsToFloat(vx3), Float.intBitsToFloat(vy3), Float.intBitsToFloat(vz3)
+		);
 	}
 
 	public static void calculateFaceNormal(
