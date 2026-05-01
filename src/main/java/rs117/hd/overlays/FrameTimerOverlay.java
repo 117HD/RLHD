@@ -209,7 +209,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 			children.add(LineComponent.builder()
 				.left("Array Cache Size:")
-				.right(formatBytes(PooledArrayType.getTotalCacheSize()))
+				.right(formatBytes(PooledArrayType.getCurrentTotalCacheSize()))
 				.build());
 
 			children.add(LineComponent.builder()

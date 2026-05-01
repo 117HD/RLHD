@@ -89,16 +89,20 @@ public enum PooledArrayType {
 		return min(b, MAX_BUCKET);
 	}
 
-	public static long getTotalCacheSize() {
+	public static long getCurrentTotalCacheSize() {
 		long size = 0;
-		for(int i = 0; i < VALUES.length; i++) {
-			final PooledArrayType type = VALUES[i];
-			for (int b = 0; b < type.buckets.length; b++) {
-				final Bucket bucket = type.buckets[b];
-				size += (long) bucket.stack.size() * bucket.size * type.stride;
-			}
-		}
+		for(int i = 0; i < VALUES.length; i++)
+			size += VALUES[i].getCurrentCacheSize();
 		return size ;
+	}
+
+	public long getCurrentCacheSize() {
+		long size = 0;
+		for (int b = 0; b < buckets.length; b++) {
+			final Bucket bucket = buckets[b];
+			size += (long) bucket.stack.size() * bucket.size;
+		}
+		return size * stride;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -128,7 +132,7 @@ public enum PooledArrayType {
 		final Bucket bucket = buckets[b];
 		assert bucket.size == roundedSize;
 		assert roundedSize >= requestedSize;
-		bucket.lock.lock();
+		bucket.lock.lock(); // TODO: This has become a major bottleneck
 		try {
 			bucket.inUse++;
 			bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
@@ -139,7 +143,7 @@ public enum PooledArrayType {
 			if (array != null)
 				return array;
 		} finally {
-			bucket.lock.unlock();
+			bucket.lock.unlock();  // TODO: This has become a major bottleneck
 		}
 
 		// Always allocate exact bucket size (power of two)
@@ -162,13 +166,13 @@ public enum PooledArrayType {
 		if (arrayLen != bucket.size)
 			return;
 
-		bucket.lock.lock();
+		bucket.lock.lock();  // TODO: This has become a major bottleneck
 		try {
 			bucket.inUse--;
 			bucket.stack.add(array);
 			bucket.maybeCleanup();
 		} finally {
-			bucket.lock.unlock();
+			bucket.lock.unlock();  // TODO: This has become a major bottleneck
 		}
 	}
 }
