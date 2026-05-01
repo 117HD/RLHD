@@ -153,6 +153,11 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.build());
 
 			children.add(LineComponent.builder()
+				.left("Pooled Array Size:")
+				.right(formatBytes(PooledArrayType.getCurrentTotalCacheSize()))
+				.build());
+
+			children.add(LineComponent.builder()
 				.left("Garbage collection count:")
 				.right(String.valueOf(plugin.getGarbageCollectionCount()))
 				.build());
@@ -206,11 +211,6 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 					.right(String.valueOf(npcDisplacementCache.size()))
 					.build());
 			}
-
-			children.add(LineComponent.builder()
-				.left("Array Cache Size:")
-				.right(formatBytes(PooledArrayType.getCurrentTotalCacheSize()))
-				.build());
 
 			children.add(LineComponent.builder()
 				.leftFont(boldFont)
