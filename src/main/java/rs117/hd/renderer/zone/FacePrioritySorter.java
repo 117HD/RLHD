@@ -249,9 +249,6 @@ public final class FacePrioritySorter implements AutoCloseable {
 		final int start = m.startpos / (VERT_SIZE >> 2);
 		for (int i = maxFz; i >= minFz; --i) {
 			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
-				if (m.sortedFacesLen >= m.sortedFaces.length)
-					break;
-
 				if (f >= faceCount)
 					continue;
 
@@ -261,6 +258,9 @@ public final class FacePrioritySorter implements AutoCloseable {
 				m.sortedFaces[sortedOffset + 1] = faceStart + 1;
 				m.sortedFaces[sortedOffset + 2] = faceStart + 2;
 				m.sortedFacesLen += 3;
+
+				if (m.sortedFacesLen >= m.sortedFaces.length)
+					return;
 			}
 		}
 	}
