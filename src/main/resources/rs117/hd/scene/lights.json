@@ -43973,6 +43973,7 @@
       3
     ],
     "type": "FLICKER",
+    "despawnWithParent": true,
     "duration": 0,
     "range": 20,
     "npcIds": [ "VMQ4_METZLI_FIRE_WAVE" ]
@@ -44076,6 +44077,7 @@
     "radius": 275,
     "strength": 8,
     "fadeInDuration": 200,
+    "despawnWithParent": true,
     "color": [
       0,
       140,
