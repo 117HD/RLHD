@@ -35,6 +35,7 @@ import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.collections.Int2IntHashMap;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
 
 import static net.runelite.api.Constants.*;
@@ -444,6 +445,8 @@ public class SceneManager {
 			if (nextSceneContext != null)
 				nextSceneContext.destroy();
 			nextSceneContext = null;
+
+			PooledArrayType.forceCleanup();
 
 			nextZones = new Zone[NUM_ZONES][NUM_ZONES];
 			nextSceneContext = new ZoneSceneContext(
