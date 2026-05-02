@@ -102,9 +102,7 @@ public class SceneContext {
 	}
 
 	public void setVertexIsOverlay(int hash, boolean isOverlay) {
-		int mask = VERTEX_IS_OVERLAY | VERTEX_IS_UNDERLAY;
-		int value = isOverlay ? VERTEX_IS_OVERLAY : VERTEX_IS_UNDERLAY;
-		vertexTerrainData.setBits(hash, value, mask, 0);
+		vertexTerrainData.or(hash, isOverlay ? VERTEX_IS_OVERLAY : VERTEX_IS_UNDERLAY, 0);
 	}
 
 	public void setVertexUnderwaterDepth(int hash, int depth) {
