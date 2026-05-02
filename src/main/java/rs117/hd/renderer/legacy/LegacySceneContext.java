@@ -6,6 +6,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
+import static net.runelite.api.Constants.*;
 import static rs117.hd.utils.MathUtils.*;
 
 public class LegacySceneContext extends SceneContext {
@@ -43,6 +44,8 @@ public class LegacySceneContext extends SceneContext {
 		@Nullable LegacySceneContext previous
 	) {
 		super(client, scene, expandedMapLoadingChunks);
+
+		underwaterDepthLevels = new byte[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 		if (previous == null) {
 			staticUnorderedModelBuffer = new GpuIntBuffer();
