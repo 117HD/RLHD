@@ -2,13 +2,18 @@ package rs117.hd.utils.collections;
 
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.StampedLock;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import rs117.hd.utils.HDUtils;
 
 import static java.lang.Integer.numberOfLeadingZeros;
 import static rs117.hd.utils.MathUtils.*;
 
+@Slf4j
 public enum PooledArrayType {
 	BOOL(boolean[]::new, 1),
 	BYTE(byte[]::new, 1),
@@ -60,6 +65,7 @@ public enum PooledArrayType {
 	}
 
 	public static void forceCleanup() {
+		long startCacheSize = getCurrentTotalCacheSize();
 		for(int v = 0; v < VALUES.length; v++) {
 			final PooledArrayType type = VALUES[v];
 			for (int b = 0; b < type.buckets.length; b++) {
@@ -70,6 +76,36 @@ public enum PooledArrayType {
 				}
 			}
 		}
+		long endCacheSize = getCurrentTotalCacheSize();
+		long diff = endCacheSize - startCacheSize;
+		log.debug("PooledArrayType - Prev: {} New: {} Diff: {}", formatBytes(startCacheSize), formatBytes(endCacheSize), (diff < 0 ? "-" : "") + formatBytes(abs(diff)));
+	}
+
+	public static void printDetailedStats() {
+		final List<String> columnNames = new ArrayList<>();
+		final List<List<String>> data = new ArrayList<>();
+
+		columnNames.add("Type");
+		columnNames.add("Items");
+		columnNames.add("Allocated");
+
+		for (int v = 0; v < VALUES.length; v++) {
+			final PooledArrayType type = VALUES[v];
+			final List<String> row = new ArrayList<>();
+			row.add(type.name());
+			row.add(String.valueOf(type.getElementCount()));
+			row.add(formatBytes(type.getCurrentCacheSize()));
+			data.add(row);
+		}
+
+		log.debug("\n{}",
+			HDUtils.buildTable(
+				"PooledArrayType stats (" + formatBytes(getCurrentTotalCacheSize()) + ")",
+				columnNames,
+				null,
+				data
+			)
+		);
 	}
 
 	public static void shutdown() {
@@ -92,6 +128,15 @@ public enum PooledArrayType {
 		long size = 0;
 		for (PooledArrayType t : VALUES)
 			size += t.getCurrentCacheSize();
+		return size;
+	}
+
+	public int getElementCount() {
+		int size = 0;
+		for (int b = 0; b < buckets.length; b++) {
+			for (int s = 0; s < STRIPES; s++)
+				size += buckets[b][s].stack.size();
+		}
 		return size;
 	}
 
@@ -128,7 +173,7 @@ public enum PooledArrayType {
 			return;
 		}
 
-		if (now - bucket.lastOverTargetTime <= SHRINK_DELAY_MS)
+		if (!forced && now - bucket.lastOverTargetTime <= SHRINK_DELAY_MS)
 			return;
 
 		final int target = max((int) (bucket.avgDemand * 0.5f), 1);
