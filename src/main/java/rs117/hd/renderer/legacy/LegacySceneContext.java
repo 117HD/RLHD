@@ -6,6 +6,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
+import static net.runelite.api.Constants.*;
 import static rs117.hd.utils.MathUtils.*;
 
 public class LegacySceneContext extends SceneContext {
@@ -14,10 +15,27 @@ public class LegacySceneContext extends SceneContext {
 	public boolean isPrepared;
 	public boolean forceDisableAreaHiding;
 
+	public byte[][][] underwaterDepthLevels;
+
 	public GpuIntBuffer staticUnorderedModelBuffer;
 	public GpuIntBuffer stagingBufferVertices;
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
+
+	public int staticVertexCount = 0;
+	public int staticGapFillerTilesOffset;
+	public int staticGapFillerTilesVertexCount;
+	public int staticCustomTilesOffset;
+	public int staticCustomTilesVertexCount;
+
+	// Statistics
+	public int uniqueModels;
+
+	// Model pusher arrays, to avoid simultaneous usage from different threads
+	public final int[] modelFaceVertices = new int[12];
+	public final float[] modelFaceUvs = new float[12];
+	public final float[] modelFaceNormals = new float[12];
+	public final int[] modelPusherResults = new int[2];
 
 	public LegacySceneContext(
 		Client client,
@@ -26,6 +44,8 @@ public class LegacySceneContext extends SceneContext {
 		@Nullable LegacySceneContext previous
 	) {
 		super(client, scene, expandedMapLoadingChunks);
+
+		underwaterDepthLevels = new byte[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 		if (previous == null) {
 			staticUnorderedModelBuffer = new GpuIntBuffer();

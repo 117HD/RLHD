@@ -30,6 +30,7 @@ import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.management.ManagementFactory;
+import java.util.List;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import javax.swing.JFrame;
@@ -55,19 +56,30 @@ public final class HDUtils {
 	public static final int HIDDEN_HSL = 12345678;
 	public static final int UNDERWATER_HSL = 6676;
 
+	public static int fastVertex3Hash(int[] vPos) {
+		int hash = vPos[0];
+		hash = 31 * hash + 44;
+
+		hash = 31 * hash + vPos[1];
+		hash = 31 * hash + 44;
+
+		hash = 31 * hash + vPos[2];
+		return 31 * hash + 44;
+	}
+
 	public static int fastVertexHash(int[] vPos) {
 		int hash = 0;
-		for (int part : vPos) {
-			hash = 31 * hash + part;
+		for (int i = 0; i < vPos.length; i++) {
+			hash = 31 * hash + vPos[i];
 			hash = 31 * hash + ','; // preserve the comma separator effect
 		}
 		return hash;
 	}
 
-	public static int[] calculateSurfaceNormals(int[] a, int[] b, int[] c) {
+	public static int[] calculateSurfaceNormals(int[] out, int[] a, int[] b, int[] c) {
 		subtract(b, a, b);
 		subtract(c, a, c);
-		return cross(b, c);
+		return cross(out, b, c);
 	}
 
 	public static int ceilPow2(int i) {
@@ -492,6 +504,106 @@ public final class HDUtils {
 		float heightB = yVertices[model.getFaceIndices2()[face]];
 		float heightC = yVertices[model.getFaceIndices3()[face]];
 		return heightA == heightB && heightA == heightC;
+	}
+
+	public static String buildTable(
+		String header,
+		List<String> columnNames,
+		List<String> rowNames,
+		List<List<String>> data
+	) {
+		final int rows = data.size();
+		final int cols = data.isEmpty() ? 0 : data.get(0).size();
+
+		// Compute column widths
+		final int[] colWidths = new int[cols];
+		for (int c = 0; c < cols; c++) {
+			int max = 0;
+
+			if (columnNames != null && c < columnNames.size())
+				max = columnNames.get(c).length();
+
+			for (int r = 0; r < rows; r++) {
+				String cell = data.get(r).get(c);
+				if (cell != null)
+					max = Math.max(max, cell.length());
+			}
+
+			colWidths[c] = max;
+		}
+
+		int rowNameWidth = 0;
+		if (rowNames != null) {
+			for (String name : rowNames)
+				rowNameWidth = Math.max(rowNameWidth, name.length());
+		}
+
+		// Calculate full table width
+		int totalWidth = 0;
+
+		if (rowNames != null)
+			totalWidth += rowNameWidth + 3; // " | "
+
+		for (int c = 0; c < cols; c++) {
+			totalWidth += colWidths[c];
+			if (c < cols - 1)
+				totalWidth += 3; // " | "
+		}
+
+		final StringBuilder sb = new StringBuilder();
+
+		if (header != null && !header.isEmpty()) {
+			sb.append(repeat("=", Math.max(header.length(), totalWidth))).append("\n");
+			sb.append(header).append("\n");
+			sb.append(repeat("=", Math.max(header.length(), totalWidth))).append("\n");
+		}
+
+		// Column headers
+		if (columnNames != null) {
+			if (rowNames != null)
+				sb.append(pad("", rowNameWidth)).append(" | ");
+
+			for (int c = 0; c < cols; c++) {
+				sb.append(pad(columnNames.get(c), colWidths[c]));
+				if (c < cols - 1) sb.append(" | ");
+			}
+			sb.append("\n");
+		}
+
+		// Separator
+		if (columnNames != null) {
+			if (rowNames != null)
+				sb.append(repeat("-", rowNameWidth)).append("-+-");
+
+			for (int c = 0; c < cols; c++) {
+				sb.append(repeat("-", colWidths[c]));
+				if (c < cols - 1) sb.append("-+-");
+			}
+			sb.append("\n");
+		}
+
+		// Data rows
+		for (int r = 0; r < rows; r++) {
+			if (rowNames != null)
+				sb.append(pad(rowNames.get(r), rowNameWidth)).append(" | ");
+
+			for (int c = 0; c < cols; c++) {
+				sb.append(pad(data.get(r).get(c), colWidths[c]));
+				if (c < cols - 1) sb.append(" | ");
+			}
+			sb.append("\n");
+		}
+
+		return sb.toString();
+	}
+
+	private static String pad(String s, int width) {
+		if (s == null) s = "";
+		return String.format("%-" + width + "s", s);
+	}
+
+	private static String repeat(String s, int count) {
+		return s.repeat(Math.max(0, count));
 	}
 
 	public static boolean isJFrameMinimized(@Nullable JFrame f) {

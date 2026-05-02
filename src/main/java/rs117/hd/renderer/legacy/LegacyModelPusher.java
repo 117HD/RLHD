@@ -72,6 +72,7 @@ public class LegacyModelPusher {
 
 	private static final int[] ZEROED_INTS = new int[12];
 
+	private final int[] tzHaarRecolored = new int[3];
 	private ModelCache modelCache;
 
 	public void startUp() {
@@ -387,7 +388,7 @@ public class LegacyModelPusher {
 		sceneContext.modelPusherResults[1] = texturedFaceCount;
 	}
 
-	private void getNormalDataForFace(SceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
+	private void getNormalDataForFace(LegacySceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
 		assert packTerrainData(false, 0, WaterType.NONE, 0) == 0;
 		if (modelOverride.flatNormals || !plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1) {
 			Arrays.fill(sceneContext.modelFaceNormals, 0);
@@ -424,7 +425,7 @@ public class LegacyModelPusher {
 
 	@SuppressWarnings({ "ReassignedVariable" })
 	private int[] getFaceVertices(
-		SceneContext sceneContext,
+		LegacySceneContext sceneContext,
 		Tile tile,
 		int uuid,
 		Model model,
@@ -587,13 +588,14 @@ public class LegacyModelPusher {
 				}
 
 				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
-					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
+					ProceduralGenerator.recolorTzHaar(
 						modelOverride,
 						model,
 						face,
 						color1,
 						color2,
-						color3
+						color3,
+						tzHaarRecolored
 					);
 					color1 = tzHaarRecolored[0];
 					color2 = tzHaarRecolored[1];

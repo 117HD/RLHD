@@ -1,7 +1,6 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
-import java.lang.reflect.Array;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
@@ -15,11 +14,16 @@ import net.runelite.api.*;
 import rs117.hd.renderer.zone.Zone.AlphaModel;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.Job;
 
+import static java.lang.reflect.Array.getLength;
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.renderer.zone.SceneUploader.MAX_VERTEX_COUNT;
-import static rs117.hd.utils.MathUtils.*;
+import static rs117.hd.utils.collections.PooledArrayType.BYTE;
+import static rs117.hd.utils.collections.PooledArrayType.FLOAT;
+import static rs117.hd.utils.collections.PooledArrayType.INT;
+import static rs117.hd.utils.collections.PooledArrayType.SHORT;
 
 @Slf4j
 @Getter
@@ -35,8 +39,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		var m = new AsyncCachedModel();
 		long size = 0;
 		for (var field : m.cachedFields) {
-			size += (long) field.def.stride * (
-				field.arrayType == VERTEX_TYPE ? MAX_VERTEX_COUNT : MAX_FACE_COUNT
+			size += (long) field.arrayType.stride * (
+				field.fieldType == VERTEX_TYPE ? MAX_VERTEX_COUNT : MAX_FACE_COUNT
 			);
 		}
 		return size;
@@ -84,35 +88,36 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	private final CachedArrayField<?>[] cachedFields = new CachedArrayField<?>[21];
 
-	private final CachedArrayField<float[]> verticesX = addField(ArrayType.VERTEX_FLOAT);
-	private final CachedArrayField<float[]> verticesY = addField(ArrayType.VERTEX_FLOAT);
-	private final CachedArrayField<float[]> verticesZ = addField(ArrayType.VERTEX_FLOAT);
+	private final CachedArrayField<float[]> verticesX = addField(FLOAT, VERTEX_TYPE);
+	private final CachedArrayField<float[]> verticesY = addField(FLOAT, VERTEX_TYPE);
+	private final CachedArrayField<float[]> verticesZ = addField(FLOAT, VERTEX_TYPE);
 
-	private final CachedArrayField<int[]> faceIndices1 = addField(ArrayType.FACE_INT);
-	private final CachedArrayField<int[]> faceIndices2 = addField(ArrayType.FACE_INT);
-	private final CachedArrayField<int[]> faceIndices3 = addField(ArrayType.FACE_INT);
+	private final CachedArrayField<int[]> faceIndices1 = addField(INT, FACE_TYPE);
+	private final CachedArrayField<int[]> faceIndices2 = addField(INT, FACE_TYPE);
+	private final CachedArrayField<int[]> faceIndices3 = addField(INT, FACE_TYPE);
 
-	private final CachedArrayField<int[]> faceColors1 = addField(ArrayType.FACE_INT);
-	private final CachedArrayField<int[]> faceColors2 = addField(ArrayType.FACE_INT);
-	private final CachedArrayField<int[]> faceColors3 = addField(ArrayType.FACE_INT);
+	private final CachedArrayField<int[]> faceColors1 = addField(INT, FACE_TYPE);
+	private final CachedArrayField<int[]> faceColors2 = addField(INT, FACE_TYPE);
+	private final CachedArrayField<int[]> faceColors3 = addField(INT, FACE_TYPE);
 
-	private final CachedArrayField<short[]> unlitFaceColors = addField(ArrayType.FACE_SHORT);
-	private final CachedArrayField<short[]> faceTextures = addField(ArrayType.FACE_SHORT);
+	private final CachedArrayField<short[]> unlitFaceColors = addField(SHORT, FACE_TYPE);
+	private final CachedArrayField<short[]> faceTextures = addField(SHORT, FACE_TYPE);
 
-	private final CachedArrayField<byte[]> faceRenderPriorities = addField(ArrayType.FACE_BYTE);
-	private final CachedArrayField<byte[]> faceTransparencies = addField(ArrayType.FACE_BYTE);
-	private final CachedArrayField<byte[]> faceBias = addField(ArrayType.FACE_BYTE);
-	private final CachedArrayField<byte[]> textureFaces = addField(ArrayType.FACE_BYTE);
+	private final CachedArrayField<byte[]> faceRenderPriorities = addField(BYTE, FACE_TYPE);
+	private final CachedArrayField<byte[]> faceTransparencies = addField(BYTE, FACE_TYPE);
+	private final CachedArrayField<byte[]> faceBias = addField(BYTE, FACE_TYPE);
+	private final CachedArrayField<byte[]> textureFaces = addField(BYTE, FACE_TYPE);
 
-	private final CachedArrayField<int[]> texIndices1 = addField(ArrayType.TEX_INT);
-	private final CachedArrayField<int[]> texIndices2 = addField(ArrayType.TEX_INT);
-	private final CachedArrayField<int[]> texIndices3 = addField(ArrayType.TEX_INT);
+	private final CachedArrayField<int[]> texIndices1 = addField(INT, TEX_TYPE);
+	private final CachedArrayField<int[]> texIndices2 = addField(INT, TEX_TYPE);
+	private final CachedArrayField<int[]> texIndices3 = addField(INT, TEX_TYPE);
 
-	private final CachedArrayField<int[]> vertexNormalsX = addField(ArrayType.VERTEX_INT);
-	private final CachedArrayField<int[]> vertexNormalsY = addField(ArrayType.VERTEX_INT);
-	private final CachedArrayField<int[]> vertexNormalsZ = addField(ArrayType.VERTEX_INT);
+	private final CachedArrayField<int[]> vertexNormalsX = addField(INT, VERTEX_TYPE);
+	private final CachedArrayField<int[]> vertexNormalsY = addField(INT, VERTEX_TYPE);
+	private final CachedArrayField<int[]> vertexNormalsZ = addField(INT, VERTEX_TYPE);
 
 	private final AtomicBoolean processing = new AtomicBoolean(false);
+	private final AtomicBoolean isCompleted = new AtomicBoolean(false);
 	private WorldViewContext ctx;
 	private Projection projection;
 	private TileObject tileObject;
@@ -129,10 +134,10 @@ public final class AsyncCachedModel extends Job implements Model {
 	private UploadModelFunc uploadFunc;
 
 	@SuppressWarnings("unchecked")
-	private <T> CachedArrayField<T> addField(ArrayType fieldDef) {
+	private <T> CachedArrayField<T> addField(PooledArrayType arrayType, int fieldType) {
 		for (int i = 0; i < cachedFields.length; i++) {
 			if (cachedFields[i] == null)
-				return (CachedArrayField<T>) (cachedFields[i] = new CachedArrayField<>(fieldDef));
+				return (CachedArrayField<T>) (cachedFields[i] = new CachedArrayField<>(this, arrayType, fieldType));
 		}
 		throw new RuntimeException("Created too many fields, only expected: " + cachedFields.length);
 	}
@@ -215,6 +220,9 @@ public final class AsyncCachedModel extends Job implements Model {
 		int x, int y, int z,
 		@Nonnull UploadModelFunc uploadFunc
 	) {
+		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
+		waitForCompletion(true);
+
 		this.ctx = ctx;
 		this.projection = projection;
 		this.tileObject = tileObject;
@@ -256,10 +264,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		verticesCount = model.getVerticesCount();
 		faceCount = model.getFaceCount();
 
-		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
-		waitForCompletion();
-
 		processing.set(false);
+		isCompleted.set(false);
 		if (alphaModel != null)
 			zone.pendingModelJobs.add(this);
 		INFLIGHT.add(this);
@@ -303,9 +309,9 @@ public final class AsyncCachedModel extends Job implements Model {
 			return true;
 
 		return
-			verticesX.cached && verticesY.cached && verticesZ.cached &&
-			faceIndices1.cached && faceIndices2.cached && faceIndices3.cached &&
-			faceColors3.cached;
+			verticesX.isCached() && verticesY.isCached() && verticesZ.isCached() &&
+			faceIndices1.isCached() && faceIndices2.isCached() && faceIndices3.isCached() &&
+			faceColors3.isCached();
 	}
 
 	@Override
@@ -332,10 +338,17 @@ public final class AsyncCachedModel extends Job implements Model {
 				orientation,
 				x, y, z
 			);
+			isCompleted.set(true);
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
 		} finally {
-			INFLIGHT.remove(this);
+			// Reset cached status before returning to the POOL
+			for (int i = 0; i < cachedFields.length; i++) {
+				final CachedArrayField<?> field = cachedFields[i];
+				field.ensureCached();
+				field.reset();
+			}
+
 			if (alphaModel != null)
 				zone.pendingModelJobs.remove(this);
 
@@ -348,10 +361,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			modelOverride = null;
 			drawIndex = -1;
 
-			// Reset cached status before returning to the POOL
-			for (int i = 0; i < cachedFields.length; i++)
-				cachedFields[i].cached = false;
-
+			INFLIGHT.remove(this);
 			POOL.recycle(this);
 		}
 
@@ -443,67 +453,50 @@ public final class AsyncCachedModel extends Job implements Model {
 		);
 	}
 
-	@FunctionalInterface
-	interface ArraySupplier<T> {
-		T get(int capacity);
-	}
-
 	private static final int VERTEX_TYPE = 0;
 	private static final int FACE_TYPE = 1;
 	private static final int TEX_TYPE = 2;
 
 	@RequiredArgsConstructor
-	private enum ArrayType {
-		VERTEX_INT(int[]::new, 4, VERTEX_TYPE),
-		VERTEX_FLOAT(float[]::new, 4, VERTEX_TYPE),
-
-		FACE_INT(int[]::new, 4, FACE_TYPE),
-		FACE_SHORT(short[]::new, 2, FACE_TYPE),
-		FACE_BYTE(byte[]::new, 1, FACE_TYPE),
-
-		TEX_INT(int[]::new, 4, TEX_TYPE);
-
-		private final ArraySupplier<?> supplier;
-		private final int stride;
-		private final int type;
-	}
-
 	private static final class CachedArrayField<T> {
-		private final ArrayType def;
-		private final int arrayType;
-		private final ArraySupplier<T> supplier;
+		private final AsyncCachedModel model;
+		private final PooledArrayType arrayType;
+		private final int fieldType;
 
-		private int capacity;
-		private T pooled;
 		private T value;
+		private final AtomicBoolean cached = new AtomicBoolean(false);
 
-		public volatile boolean cached;
+		public boolean isCached() {return cached.get();}
 
-		private CachedArrayField(ArrayType arrayType) {
-			this.def = arrayType;
-			this.arrayType = arrayType.type;
-			// noinspection unchecked
-			this.supplier = (ArraySupplier<T>) arrayType.supplier;
-			this.value = supplier.get((int) KiB);
+		public void ensureCached() {
+			while (!cached.get())
+				LockSupport.parkNanos(this, 5);
 		}
 
 		public T getValue() {
-			while (!cached)
-				LockSupport.parkNanos(this, 5);
+			ensureCached();
 			return value;
 		}
 
+		public void reset() {
+			if(value != null)
+				arrayType.release(value);
+			value = null;
+			cached.set(false);
+		}
+
 		public void cache(final Model m, T src) {
-			if (src == null) {
-				if (value != null)
-					pooled = value;
-				value = null;
-				cached = true;
+			assert !cached.get();
+			assert value == null;
+
+			// If model is completed, then we can skip caching since its unnecessary to continue
+			if (src == null || model.isCompleted.get()) {
+				cached.set(true);
 				return;
 			}
 
 			final int arraySize;
-			switch (arrayType) {
+			switch (fieldType) {
 				case VERTEX_TYPE:
 					arraySize = m.getVerticesCount();
 					break;
@@ -511,22 +504,12 @@ public final class AsyncCachedModel extends Job implements Model {
 					arraySize = m.getFaceCount();
 					break;
 				default:
-					arraySize = Array.getLength(src);
+					arraySize = getLength(src);
 					break;
 			}
 
-			if (value == null || capacity < arraySize) {
-				if (pooled != null && capacity >= arraySize) {
-					value = pooled;
-				} else {
-					value = supplier.get(capacity = arraySize);
-				}
-				pooled = null;
-			}
-
-			// noinspection SuspiciousSystemArraycopy
-			System.arraycopy(src, 0, value, 0, arraySize);
-			cached = true;
+			value = arrayType.cache(src, 0, arraySize);
+			cached.set(true);
 		}
 	}
 }

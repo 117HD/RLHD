@@ -23,7 +23,8 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.collections.PrimitiveIntArray;
+import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static net.runelite.api.Perspective.*;
 import static net.runelite.api.hooks.DrawCallbacks.*;
@@ -37,7 +38,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class ModelStreamingManager {
-	public static final ConcurrentPool<PrimitiveIntArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveIntArray::new);
+	public static final ConcurrentPool<PrimitiveCharArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveCharArray::new);
 	public static final int RL_RENDER_THREADS = 2;
 
 	@Inject
@@ -292,8 +293,8 @@ public class ModelStreamingManager {
 		int orientation,
 		int x, int y, int z
 	) {
-		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
-		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
 
 		boolean shouldSort =
 			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED ||
@@ -303,10 +304,11 @@ public class ModelStreamingManager {
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
 		) {
+			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
 				worldProjection,
 				plugin.cameraFrustum,
-				shouldSort ? facePrioritySorter.faceDistances : null,
+				faceDistances,
 				visibleFaces,
 				culledFaces,
 				isModelPartiallyVisible,
@@ -319,7 +321,10 @@ public class ModelStreamingManager {
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (shouldSort && !isSquashed)
-				facePrioritySorter.sortModelFaces(visibleFaces, m);
+				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances);
+
+			if(facePrioritySorter != null)
+				PooledArrayType.INT.release( faceDistances);
 
 			final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 			if (culledFaces.length > 0 &&
@@ -557,18 +562,19 @@ public class ModelStreamingManager {
 		int orient,
 		int x, int y, int z
 	) {
-		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
-		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
 
 		boolean shouldSort = renderable.getRenderMode() != Renderable.RENDERMODE_UNSORTED;
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
 		) {
+			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,
 				plugin.cameraFrustum,
-				shouldSort ? facePrioritySorter.faceDistances : null,
+				faceDistances,
 				visibleFaces,
 				culledFaces,
 				isModelPartiallyVisible,
@@ -582,7 +588,10 @@ public class ModelStreamingManager {
 			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (shouldSort && !isSquashed)
-				facePrioritySorter.sortModelFaces(visibleFaces, m, true);
+				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances, true);
+
+			if(facePrioritySorter != null)
+				PooledArrayType.INT.release(faceDistances);
 
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
@@ -675,7 +684,7 @@ public class ModelStreamingManager {
 	}
 
 
-	private AsyncCachedModel obtainAvailableAsyncCachedModel(boolean shouldBlock) {
+	private synchronized AsyncCachedModel obtainAvailableAsyncCachedModel(boolean shouldBlock) {
 		if (AsyncCachedModel.POOL == null || numRenderThreads <= 0)
 			return null;
 

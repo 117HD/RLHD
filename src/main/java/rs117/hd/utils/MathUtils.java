@@ -113,6 +113,10 @@ public final class MathUtils {
 		return Arrays.copyOf(v, v.length);
 	}
 
+	public static short[] copy(short[] v) {
+		return Arrays.copyOf(v, v.length);
+	}
+
 	public static float[] copyTo(float[] out, @Nullable float[] in, int offset, int len) {
 		if (in != null) {
 			assert offset + len <= min(out.length, in.length);
@@ -143,6 +147,25 @@ public final class MathUtils {
 
 	public static int[] ensureDefaults(@Nullable int[] in, int[] defaults) {
 		return in != null && in.length == defaults.length ? in : copyTo(copy(defaults), in);
+	}
+
+	public static boolean[] ensureCapacity(boolean[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new boolean[size];
+	}
+
+	public static float[] ensureCapacity(float[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new float[size];
+	}
+
+	public static int[] ensureCapacity(int[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new int[size];
+	}
+
+	@FunctionalInterface
+	public interface ArraySupplier<T> { T[] get(int size); }
+
+	public static <T> T[] ensureCapacity(T[] in, int size, ArraySupplier<T> supplier) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : supplier.get(size);
 	}
 
 	public static int[] slice(int[] v, int offset) {
@@ -411,6 +434,22 @@ public final class MathUtils {
 	}
 
 	public static float dot(int... v) {
+		return dot(v, v);
+	}
+
+	public static float dot(short[] a, short[] b, int n) {
+		assert a.length >= n && b.length >= n;
+		float f = 0;
+		for (int i = 0; i < n; i++)
+			f += a[i] * b[i];
+		return f;
+	}
+
+	public static float dot(short[] a, short... b) {
+		return dot(a, b, min(a.length, b.length));
+	}
+
+	public static float dot(short... v) {
 		return dot(v, v);
 	}
 
@@ -833,6 +872,10 @@ public final class MathUtils {
 
 	public static float tan(float rad) {
 		return (float) Math.tan(rad);
+	}
+
+	public static short normShort(float f) {
+		return (short) round(clamp(f, -1, 1) * Short.MAX_VALUE);
 	}
 
 	public static int float16(float value) {

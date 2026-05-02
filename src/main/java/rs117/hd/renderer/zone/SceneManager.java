@@ -5,9 +5,7 @@ import com.google.inject.Injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -36,6 +34,8 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
+import rs117.hd.utils.collections.Int2IntHashMap;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
 
 import static net.runelite.api.Constants.*;
@@ -99,7 +99,7 @@ public class SceneManager {
 	private final WorldViewContext root = new WorldViewContext(null, null, null);
 	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
 
-	private final Map<Integer, Integer> nextRoofChanges = new HashMap<>();
+	private final Int2IntHashMap nextRoofChanges = new Int2IntHashMap();
 	private ZoneSceneContext nextSceneContext;
 	private Zone[][] nextZones;
 	private final List<SortedZone> sortedZones = new ArrayList<>();
@@ -371,7 +371,7 @@ public class SceneManager {
 	@Getter
 	private final GenericJob generateSceneDataTask = GenericJob.build(
 		"ProceduralGenerator::generateSceneData",
-		(task) -> proceduralGenerator.generateSceneData(nextSceneContext != null ? nextSceneContext : root.sceneContext)
+		(task) -> proceduralGenerator.generateSceneData(nextSceneContext != null ? nextSceneContext : root.sceneContext, root.sceneContext)
 	);
 
 	@Getter
@@ -403,14 +403,16 @@ public class SceneManager {
 						task.workerHandleCancel();
 						// old zone still in scene?
 						if (ox >= 0 && oz >= 0 && ox < EXTENDED_SCENE_SIZE && oz < EXTENDED_SCENE_SIZE) {
-							int prid = prids[level][ox][oz];
-							int nrid = nrids[level][x][z];
-							if (prid > 0 && nrid > 0 && prid != nrid) {
-								Integer old = nextRoofChanges.putIfAbsent(prid, nrid);
-								if (old == null) {
-									log.trace("Roof change: {} -> {}", prid, nrid);
-								} else if (old != nrid) {
-									log.debug("Roof change mismatch: {} -> {} vs {}", prid, nrid, old);
+							final int prevRoofId = prids[level][ox][oz];
+							final int newRoofId = nrids[level][x][z];
+							if (prevRoofId > 0 && newRoofId > 0 && prevRoofId != newRoofId) {
+								int oldIdx = nextRoofChanges.find(prevRoofId);
+								if (oldIdx != -1) {
+									if(nextRoofChanges.getValue(oldIdx) != newRoofId)
+										log.debug("Roof change mismatch: {} -> {} vs {}", prevRoofId, newRoofId, nextRoofChanges.getValue(oldIdx));
+								} else {
+									log.trace("Roof change: {} -> {}", prevRoofId, newRoofId);
+									nextRoofChanges.put(prevRoofId, newRoofId);
 								}
 							}
 						}
@@ -443,6 +445,8 @@ public class SceneManager {
 			if (nextSceneContext != null)
 				nextSceneContext.destroy();
 			nextSceneContext = null;
+
+			PooledArrayType.forceCleanup();
 
 			nextZones = new Zone[NUM_ZONES][NUM_ZONES];
 			nextSceneContext = new ZoneSceneContext(
@@ -664,6 +668,7 @@ public class SceneManager {
 		for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)
 			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
 		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
+		nextSceneContext.lightSpawnsToHandleOnClientThread.trimToSize();
 		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
 
 		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
@@ -706,6 +711,8 @@ public class SceneManager {
 					DestructibleHandler.queueDestruction(preZone);
 
 				nextZone.setMetadata(ctx, nextSceneContext, x, z);
+				if(preZone.rebuild)
+					nextZone.rebuild = true;
 				nextSceneContext.animatedDynamicObjectIds.addAll(nextZone.animatedDynamicObjectIds);
 			}
 		}
@@ -755,7 +762,7 @@ public class SceneManager {
 		}
 
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
-		proceduralGenerator.generateSceneData(sceneContext);
+		proceduralGenerator.generateSceneData(sceneContext, null);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
 		ctx.initialize(renderState, injector);

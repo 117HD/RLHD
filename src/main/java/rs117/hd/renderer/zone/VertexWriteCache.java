@@ -124,7 +124,7 @@ public final class VertexWriteCache {
 	}
 
 	public static class Collection {
-		private static final int CAPACITY = (int) (128 * KiB / Integer.BYTES);
+		private static final int CAPACITY = (int) (8 * KiB / Integer.BYTES);
 
 		public final VertexWriteCache opaque = new VertexWriteCache("OPAQUE", CAPACITY);
 		public final VertexWriteCache alpha = new VertexWriteCache("ALPHA", CAPACITY);
@@ -156,6 +156,17 @@ public final class VertexWriteCache {
 				this.alpha.setOutputBuffer(null);
 				this.alphaTex.setOutputBuffer(null);
 			}
+		}
+
+		public VertexWriteCache getVertexBuffer() { return opaque; }
+		public VertexWriteCache getTextureBuffer() { return opaqueTex; }
+
+		public VertexWriteCache getVertexBuffer(boolean hasAlpha) {
+			return useAlphaBuffer && hasAlpha ? alpha : opaque;
+		}
+
+		public VertexWriteCache getTextureBuffer(boolean hasAlpha) {
+			return useAlphaBuffer && hasAlpha ? alphaTex : opaqueTex;
 		}
 
 		public void flush() {
