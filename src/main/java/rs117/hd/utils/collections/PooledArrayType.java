@@ -59,10 +59,25 @@ public enum PooledArrayType {
 		return (hash ^ (hash >>> 16)) & STRIPES_MASK;
 	}
 
+	public static void forceCleanup() {
+		for(int v = 0; v < VALUES.length; v++) {
+			final PooledArrayType type = VALUES[v];
+			for (int b = 0; b < type.buckets.length; b++) {
+				for (int s = 0; s < STRIPES; s++) {
+					final Bucket bucket = type.buckets[b][s];
+					bucket.opCounter = 0;
+					type.maybeCleanup(b, s, bucket, true);
+				}
+			}
+		}
+	}
+
 	public static void shutdown() {
-		for (PooledArrayType t : VALUES) {
-			for (Bucket[] stripes : t.buckets) {
-				for (Bucket bucket : stripes) {
+		for(int v = 0; v < VALUES.length; v++) {
+			final PooledArrayType type = VALUES[v];
+			for (int b = 0; b < VALUES[v].buckets.length; b++) {
+				for (int s = 0; s < STRIPES; s++) {
+					final Bucket bucket = type.buckets[b][s];
 					bucket.stack.clear();
 					bucket.inUse = 0;
 					bucket.peakInUse = 0;
@@ -92,7 +107,11 @@ public enum PooledArrayType {
 	}
 
 	private void maybeCleanup(int b, int s, Bucket bucket) {
-		if ((++bucket.opCounter & (CLEANUP_INTERVAL - 1)) != 0)
+		maybeCleanup(b, s, bucket, false);
+	}
+
+	private void maybeCleanup(int b, int s, Bucket bucket, boolean forced) {
+		if (!forced && (++bucket.opCounter & (CLEANUP_INTERVAL - 1)) != 0)
 			return;
 
 		bucket.avgDemand = (float) (ALPHA * bucket.peakInUse + (1 - ALPHA) * bucket.avgDemand);

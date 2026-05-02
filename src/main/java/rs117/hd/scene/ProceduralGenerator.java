@@ -643,9 +643,9 @@ public class ProceduralGenerator {
 				return;
 			}
 
-			int tileX = tileExX - sceneContext.sceneOffset;
-			int tileY = tileExY - sceneContext.sceneOffset;
-			int tileZ = tile.getRenderLevel();
+			final int tileX = tileExX - sceneContext.sceneOffset;
+			final int tileY = tileExY - sceneContext.sceneOffset;
+			final int tileZ = tile.getRenderLevel();
 			sceneContext.sceneToWorld(tileX, tileY, tileZ, worldPos);
 
 			vertexHashes = ensureCapacity(vertexHashes, faceCount * VERTICES_PER_FACE);
