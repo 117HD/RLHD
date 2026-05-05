@@ -71657,6 +71657,85 @@
     "uvType": "BOX"
   },
   {
+    "description": "Doom of Mokhaiotl - Descend Hole",
+    "baseMaterial": "GRAY_125",
+    "depthBias": 20,
+    "objectIds": [
+      "DOM_DESCEND_HOLE_UNIQUE",
+      "DOM_DESCEND_HOLE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "DIRT_2_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "depthBias": 20
+      },
+      {
+        "colors": "h == 7 && a == 255",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "depthBias": 20
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "DIRT_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "depthBias": 20
+      }
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Dirt Ground Decorations",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "objectIds": [
+      "TONALI_BOSS02_DUGUPSOIL03",
+      "TONALI_BOSS02_DUGUPSOIL01",
+      "TONALI_BOSS02_DUGUPSOIL02"
+    ],
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.3
+  },
+  {
+    "description": "Doom of Mokhaiotl - Blocker Rock",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "DOM_ROCK"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Acid",
+    "baseMaterial": "GRAY_85",
+    "depthBias": 1,
+    "objectIds": [
+      "DOM_ACIDPOOL",
+      "DOM_ACIDPOOL_DIAGONAL"
+    ],
+    "graphicsObjectIds": [
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_N",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_E",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_S",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_W",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_NW",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_NE",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_SE",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_SW",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_DESPAWN_N",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_DESPAWN_E",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_DESPAWN_S",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_DESPAWN_W",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_DESPAWN_NW",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_DESPAWN_NE",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_DESPAWN_SE",
+      "VFX_DOOM_BOSS_BLOOD_SPLAT_DESPAWN_SW",
+      "VFX_DOOM_BOSS_BLOOD_PROJECTILE"
+    ]
+  },
+  {
     "description": "Tonali Caverns - Temple Wall - Simple",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -71701,6 +71780,93 @@
       {
         "colors": "h > 8",
         "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Tonali Caverns - Temple Wall - Delve 2 to 5",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "WALLKIT_TONALI03_DEFAULT03",
+      "WALLKIT_TONALI03_DEFAULT02_M",
+      "WALLKIT_TONALI03_DEFAULT02",
+      "WALLKIT_TONALI03_PILLAR01",
+      "WALLKIT_TONALI03_DEFAULT01",
+      "WALLKIT_TONALI03_TRANSITION01_M",
+      "WALLKIT_TONALI03_CAVE01",
+      "WALLKIT_TONALI03_TRANSITION01",
+      "TONALI_BOSS02_ROCKSLIDE02",
+      "TONALI_BOSS02_ROCKSLIDE04",
+      "TONALI_BOSS02_ROCKSLIDE03",
+      "TONALI_CORPSE_REMAINS03",
+      "TONALI_CORPSE_REMAINS02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      },
+      {
+        "colors": "h == 5 && s == 4",
+        "baseMaterial": "DIRT_1_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.65
+      },
+      {
+        "colors": "h == 5 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h > 6",
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Tonali Caverns - - Pillars and Bricks - Delve 2 to 5",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "WALLKIT_TONALI03_PILLAR02",
+      "TONALI_RUBBLE01_BRICK02",
+      "TONALI_RUBBLE02_BRICK02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tonali Caverns - Cave Wall - Deep Delve",
+    "baseMaterial": "ROCK_3_SMOOTH_LIGHT",
+    "objectIds": [
+      "WALLKIT_TONALI04_CAVE01",
+      "WALLKIT_TONALI04_CAVE02",
+      "WALLKIT_TONALI04_CAVE03",
+      "WALLKIT_TONALI04_CAVE04",
+      "WALLKIT_TONALI04_CAVE05",
+      "WALLKIT_TONALI04_CAVE06"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s == 2",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 4",
+        "baseMaterial": "DIRT_1_LIGHT",
         "uvType": "BOX"
       }
     ]

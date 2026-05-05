@@ -44103,6 +44103,70 @@
     ]
   },
   {
+    "description": "Doom of Mokhaiotl - Range Projectile",
+    "radius": 275,
+    "strength": 11,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_STANDARD_PROJECTILE_RANGE"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Magic Projectile",
+    "radius": 275,
+    "strength": 25,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_STANDARD_PROJECTILE_MAGIC"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Melee Projectile",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_STANDARD_PROJECTILE_MELEE"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Charge Beam Projectile",
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      255,
+      90,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_BEAM_ATTACK_HEAD_01"
+    ]
+  },
+  {
     "description": "Ectophial",
     "offset": [ 0, 25, 0 ],
     "radius": 250,
