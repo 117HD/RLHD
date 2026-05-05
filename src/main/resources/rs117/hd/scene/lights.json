@@ -35997,7 +35997,7 @@
   },
   {
     "description": "TOA_ORANGE_FLAME_PROJECTILE",
-    "radius": 600,
+    "radius": 375,
     "strength": 7,
     "color": [
       255,
@@ -36008,6 +36008,7 @@
     "duration": 600,
     "range": 3,
     "fadeInDuration": 0,
+    "fadeOutDuration": 350,
     "projectileIds": [
       "VORKATH_AREA_TRAVEL",
       "VORKATH_AREA_TRAVEL_SMALL"
@@ -36224,7 +36225,7 @@
     "description": "TOA_CRONDIS_MAGE_ORB",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 500,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -36234,6 +36235,7 @@
     "type": "FLICKER",
     "duration": 300,
     "range": 3,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "ZEBAK_MAGE_PROJANIM_SPLIT"
     ]
