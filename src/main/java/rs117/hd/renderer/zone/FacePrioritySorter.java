@@ -55,6 +55,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 	private final int[] zsortNext = new int[MAX_FACE_COUNT];
 
 	void sortModelFaces(PrimitiveIntArray visibleFaces, Model model) {
+		sortModelFaces(visibleFaces, model, false);
+	}
+
+	void sortModelFaces(PrimitiveIntArray visibleFaces, Model model, boolean depthOnly) {
 		final int diameter = model.getDiameter();
 		if (diameter <= 0 || diameter >= MAX_DIAMETER)
 			return;
@@ -99,7 +103,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		if (unsortedCount > 0) // Push unsorted faces to be drawn first
 			visibleFaces.put(orderedFaces, 0, unsortedCount);
 
-		final byte[] priorities = model.getFaceRenderPriorities();
+		final byte[] priorities = depthOnly ? null : model.getFaceRenderPriorities();
 		if (priorities == null) {
 			for (int i = maxFz; i >= minFz; --i) {
 				for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
