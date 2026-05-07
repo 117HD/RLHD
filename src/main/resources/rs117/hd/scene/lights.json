@@ -28372,10 +28372,89 @@
   },
   {
     "description": "DEMONIC_PACTS_HOME_TELEPORT_START",
-    "height": 50,
-    "alignment": "CENTER",
-    "radius": 250,
-    "strength": 20,
+    "offset": [ 0, 50, 0 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_1",
+    "offset": [ -45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_2",
+    "offset": [ 45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_3",
+    "offset": [ -45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_4",
+    "offset": [ 45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -28395,8 +28474,88 @@
     "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE",
     "height": 50,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 20,
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_1",
+    "offset": [ -45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_2",
+    "offset": [ 45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_3",
+    "offset": [ -45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_4",
+    "offset": [ 45, 40, -40 ],
+    "radius": 100,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -28416,8 +28575,84 @@
     "description": "DEMONIC_PACTS_HOME_TELEPORT_END",
     "height": 50,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 20,
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_1",
+    "offset": [ 45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_2",
+    "offset": [ -45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_3",
+    "offset": [ -45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_4",
+    "offset": [ 45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
     "color": [
       252,
       148,
