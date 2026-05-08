@@ -36691,7 +36691,7 @@
   },
   {
     "description": "TOA_WARDEN_P2_MAGE_SKULL_BASIC",
-    "radius": 500,
+    "radius": 350,
     "strength": 15,
     "color": [
       255,
@@ -36700,6 +36700,7 @@
     ],
     "type": "PULSE",
     "duration": 300,
+    "fadeOutDuration": 200,
     "range": 2,
     "projectileIds": [
       "FX_WARDENS_BOMB01"
@@ -36707,8 +36708,9 @@
   },
   {
     "description": "TOA_WARDEN_P2_OBELISK_LIGHTNING_BALL",
-    "radius": 500,
-    "strength": 50,
+    "radius": 350,
+    "height": 30,
+    "strength": 30,
     "color": [
       255,
       200,
@@ -36716,6 +36718,7 @@
     ],
     "type": "PULSE",
     "duration": 300,
+    "fadeOutDuration": 200,
     "range": 2,
     "projectileIds": [
       "FX_WARDENS_BOMB02"
