@@ -21501,8 +21501,7 @@
     "uvScale": 0.6,
     "terrainVertexSnap": true,
     "objectIds": [
-      "DESERT_WATER_CAVE",
-      "DESERT_WATER_CAVE_ROOT"
+      "DESERT_WATER_CAVE"
     ],
     "colorOverrides": [
       {
