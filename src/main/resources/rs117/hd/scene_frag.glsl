@@ -89,14 +89,14 @@ vec2 worldUvs(float scale) {
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
-#if ZONE_RENDERER
-    float viewZ = 1.0 - (0.5 + (IN.positionCS.z / IN.positionCS.w) * 0.5);
-    if(viewZ < NEAR_PLANE_DITHER_START) {
-        float fadeAmount = 1.0 - saturate(viewZ / NEAR_PLANE_DITHER_START);
-        if(orderedDither(gl_FragCoord.xy, pow(fadeAmount, 1.5) - 0.01, 1.75))
-            discard;
-    }
-#endif
+    #if ZONE_RENDERER
+        float viewZ = 1.0 - (0.5 + (IN.positionCS.z / IN.positionCS.w) * 0.5);
+        if (viewZ < NEAR_PLANE_DITHER_START) {
+            float fadeAmount = 1.0 - saturate(viewZ / NEAR_PLANE_DITHER_START);
+            if (orderedDither(gl_FragCoord.xy, pow(fadeAmount, 1.5) - 0.01, 1.75))
+                discard;
+        }
+    #endif
 
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
