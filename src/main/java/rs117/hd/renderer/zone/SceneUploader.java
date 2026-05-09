@@ -1628,7 +1628,7 @@ public class SceneUploader implements AutoCloseable {
 
 			final boolean shouldRotateNormals;
 			boolean shouldCalculateFaceNormal;
-			if (!modelHasNormals || faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
+			if (!modelHasNormals || faceOverride.flatNormals || !plugin.configPreserveVanillaNormals && color3s[face] == -1) {
 				shouldRotateNormals = false;
 				shouldCalculateFaceNormal = true;
 			} else {
