@@ -905,6 +905,7 @@ public class HdPlugin extends Plugin {
 			.define("TEXEL_SIZE", GLTextureBuffer.isRGBASupported() ? 4 : 3)
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
+			.define("DITHER_FADE", config.ditherFading())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
@@ -1816,6 +1817,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_DITHER_FADING:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

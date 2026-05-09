@@ -61,7 +61,6 @@ layout (location = 0) in vec3 vPosition;
     #endif
 
     out FragmentData {
-        vec4 positionCS;
         vec3 position;
         vec2 uv;
         vec3 normal;
@@ -117,12 +116,12 @@ layout (location = 0) in vec3 vPosition;
             fFlatNormal = worldNormal;
         #endif
 
+        vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
         int depthBias = (alphaBiasHsl >> 16) & 0xff;
-        OUT.positionCS = projectionMatrix * vec4(worldPosition, 1.0);
         if (projectionMatrix[2][3] != 0) // Disable depth bias for orthographic projection
-            OUT.positionCS.z += depthBias / 128.0;
+            clipPosition.z += depthBias / 128.0;
 
-        gl_Position = OUT.positionCS;
+        gl_Position = clipPosition;
     }
 #else
     out vec3 gPosition;
