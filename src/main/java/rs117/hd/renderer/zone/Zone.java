@@ -33,6 +33,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 import static rs117.hd.utils.MathUtils.*;
@@ -57,10 +58,16 @@ public class Zone implements Destructible {
 	// terrainData ivec3
 	public static final int TEXTURE_SIZE = 36;
 
+	// position vec3
+	// height float
+	// fade float
+	public static final int MODEL_DATA_SIZE = 20;
+
 	// Metadata format
 	// worldViewIndex int int
 	// sceneOffset int vec2(x, y)
-	public static final int METADATA_SIZE = 12;
+	// fade float float
+	public static final int METADATA_SIZE = 16;
 
 	public static int LEVEL_COUNT = MAX_Z;
 	public static final int LEVEL_WATER_SURFACE = LEVEL_COUNT++;
@@ -73,10 +80,10 @@ public class Zone implements Destructible {
 	public int glVaoA;
 	public int bufLenA;
 
-	public int sizeO, sizeA, sizeF;
+	public int sizeO, sizeA, sizeF, sizeM;
 	@Nullable
 	public GLBuffer vboO, vboA, vboM;
-	public GLTextureBuffer tboF;
+	public GLTextureBuffer tboF, tboM;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
@@ -94,6 +101,7 @@ public class Zone implements Destructible {
 
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
+	float fadingAlpha;
 
 	int[] levelOffsets = new int[LEVEL_COUNT]; // buffer pos in ints for the end of the level
 
@@ -104,7 +112,7 @@ public class Zone implements Destructible {
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
 
-	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
+	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f, GLTextureBuffer m) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 		if (o == null && a == null || f == null)
@@ -126,6 +134,7 @@ public class Zone implements Destructible {
 		}
 
 		tboF = f;
+		tboM = m;
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -165,6 +174,11 @@ public class Zone implements Destructible {
 		if (tboF != null) {
 			tboF.destroy();
 			tboF = null;
+		}
+
+		if (tboM != null) {
+			tboM.destroy();
+			tboM = null;
 		}
 
 		if (glVao != 0) {
@@ -226,6 +240,8 @@ public class Zone implements Destructible {
 			vboA.unmap();
 		if (tboF != null)
 			tboF.unmap();
+		if(tboM != null)
+			tboM.unmap();
 
 		if (vboO != null) {
 			this.bufLen = vboO.mapped().byteView().position() / VERT_SIZE;
@@ -268,6 +284,11 @@ public class Zone implements Destructible {
 		glVertexAttribDivisor(7, 1);
 		glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
 
+		// Scene offset
+		glEnableVertexAttribArray(8);
+		glVertexAttribDivisor(8, 1);
+		glVertexAttribPointer(8, 1, GL_FLOAT, false, METADATA_SIZE, 12);
+
 		checkGLErrors();
 
 		glBindVertexArray(0);
@@ -278,14 +299,16 @@ public class Zone implements Destructible {
 		if (vboM == null)
 			return;
 
+		float fade = saturate(fadingAlpha);
 		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
 		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
-			IntBuffer buf = stack.mallocInt(3)
+			IntBuffer buf = stack.mallocInt(METADATA_SIZE / Integer.BYTES)
 				.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0)
 				.put(baseX)
-				.put(baseZ);
+				.put(baseZ)
+				.put(Float.floatToIntBits(fade));
 			buf.flip();
 			vboM.upload(buf);
 		}
@@ -326,6 +349,8 @@ public class Zone implements Destructible {
 	}
 
 	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
+		if(fadingAlpha > 1.0)
+			return;
 		drawIdx = 0;
 
 		int currentLevel = ctx.level;
@@ -379,10 +404,14 @@ public class Zone implements Destructible {
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
 		lastTboF = tboF.getTexId();
+		lastTboM = tboM != null ? tboM.getTexId() : 0;
 		flush(cmd);
 	}
 
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
+		if(fadingAlpha > 1.0)
+			return;
+
 		drawIdx = 0;
 
 		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
@@ -393,6 +422,7 @@ public class Zone implements Destructible {
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
 		lastTboF = tboF.getTexId();
+		lastTboM = tboM != null ? tboM.getTexId() : 0;
 		flush(cmd);
 	}
 
@@ -418,6 +448,7 @@ public class Zone implements Destructible {
 		short rid;
 		int vao;
 		int tboF;
+		int tboM;
 		byte level;
 		byte lx, lz, ux, uz; // lower/upper zone coords
 		byte zofx, zofz; // for temp alpha models, offset of source zone from target zone
@@ -456,7 +487,8 @@ public class Zone implements Destructible {
 
 		void setView(DynamicModelVAO.View view) {
 			vao = view.vao;
-			tboF = view.tboTexId;
+			tboF = view.tboFId;
+			tboM = view.tboMId;
 			startpos = view.getStartOffset();
 			endpos = view.getEndOffset();
 		}
@@ -467,6 +499,7 @@ public class Zone implements Destructible {
 		MaterialManager materialManager,
 		int vao,
 		int tboF,
+		int tboM,
 		Model model,
 		ModelOverride modelOverride,
 		int startpos,
@@ -492,6 +525,7 @@ public class Zone implements Destructible {
 		m.z = (short) z;
 		m.vao = vao;
 		m.tboF = tboF;
+		m.tboM = tboM;
 		m.rid = (short) rid;
 		m.level = (byte) level;
 		if (lx > -1) {
@@ -636,7 +670,7 @@ public class Zone implements Destructible {
 		m.y = (short) y;
 		m.z = (short) z;
 		m.level = (byte) level;
-		m.vao = m.tboF = m.rid = m.lx = m.lz = m.ux = m.uz = -1;
+		m.vao = m.tboF = m.tboM = m.rid = m.lx = m.lz = m.ux = m.uz = -1;
 		m.flags = 0;
 		m.zofx = m.zofz = 0;
 		alphaModels.add(m);
@@ -669,6 +703,7 @@ public class Zone implements Destructible {
 	private static int lastDrawMode;
 	private static int lastVao;
 	private static int lastTboF;
+	private static int lastTboM;
 	private static int lastzx, lastzz;
 
 	static class AlphaModelComparator implements Comparator<AlphaModel> {
@@ -722,7 +757,7 @@ public class Zone implements Destructible {
 		boolean depthOnly,
 		boolean includeRoof
 	) {
-		if (alphaModels.isEmpty())
+		if (alphaModels.isEmpty() || fadingAlpha > 1.0)
 			return;
 
 		int minLevel = ctx.minLevel;
@@ -760,6 +795,7 @@ public class Zone implements Destructible {
 			if (lastDrawMode != drawMode ||
 				lastVao != m.vao ||
 				lastTboF != m.tboF ||
+				lastTboM != m.tboM ||
 				lastzx != (zx - m.zofx) ||
 				lastzz != (zz - m.zofz)
 			) {
@@ -767,6 +803,7 @@ public class Zone implements Destructible {
 				lastDrawMode = drawMode;
 				lastVao = m.vao;
 				lastTboF = m.tboF;
+				lastTboM = m.tboM;
 				lastzx = zx - m.zofx;
 				lastzz = zz - m.zofz;
 			}
@@ -808,6 +845,7 @@ public class Zone implements Destructible {
 				long byteOffset = 4L * (eboAlphaOffset - vertexCount);
 				cmd.BindVertexArray(lastVao, eboAlpha);
 				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
+				cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboM, TEXTURE_UNIT_MODEL_DATA);
 				// The EBO & IDO is bound by in ZoneRenderer
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
@@ -820,6 +858,7 @@ public class Zone implements Destructible {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : DynamicModelVAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
+			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboM, TEXTURE_UNIT_MODEL_DATA);
 			if (drawIdx == 1) {
 				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawArraysIndirect(GL_TRIANGLES, drawOff[0], drawEnd[0], ZoneRenderer.indirectDrawCmdsStaging);
@@ -889,6 +928,7 @@ public class Zone implements Destructible {
 				m2.z = m.z;
 				m2.vao = m.vao;
 				m2.tboF = m.tboF;
+				m2.tboM = m.tboM;
 				m2.rid = m.rid;
 				m2.level = m.level;
 				m2.lx = m.lx;

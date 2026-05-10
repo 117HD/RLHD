@@ -131,6 +131,7 @@ import rs117.hd.utils.ShaderRecompile;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.buffer.GLTextureBuffer;
 import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
@@ -907,8 +908,10 @@ public class HdPlugin extends Plugin {
 		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER)
+			.define("TEXEL_SIZE", GLTextureBuffer.isRGBASupported() ? 4 : 3)
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
+			.define("DITHER_FADE", config.ditherFading())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
@@ -1825,6 +1828,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_DITHER_FADING:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
