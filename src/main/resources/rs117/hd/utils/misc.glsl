@@ -112,6 +112,66 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     }
 #endif
 
+// 2x2 Bayer via bit permutation
+// Generates ordered dithering Bayer matrix without a lookup table
+float bayer2x2(vec2 pixelCoord) {
+    uvec2 p = uvec2(pixelCoord) & 1u;
+    uint v =
+        ((p.x & 1u) << 1u) |
+        ((p.y & 1u) << 0u);
+
+    return (float(v) + 0.5) * (1.0 / 4.0);
+}
+
+// 4x4 Bayer via bit permutation
+// Generates ordered dithering Bayer matrix without a lookup table
+float bayer4x4(vec2 pixelCoord) {
+    uvec2 p = uvec2(pixelCoord) & 3u;
+    uint v =
+        ((p.x & 1u) << 3u) |
+        ((p.y & 1u) << 2u) |
+        ((p.x & 2u) << 0u) |
+        ((p.y & 2u) >> 1u);
+
+    return (float(v) + 0.5) * (1.0 / 16.0);
+}
+
+// 8x8 Bayer via bit permutation
+// Generates ordered dithering Bayer matrix without a lookup table
+float bayer8x8(vec2 pixelCoord) {
+   uvec2 p = uvec2(pixelCoord) & 7u;
+   uint v =
+       ((p.x & 1u) << 5u) |
+       ((p.y & 1u) << 4u) |
+       ((p.x & 2u) << 2u) |
+       ((p.y & 2u) << 1u) |
+       ((p.x & 4u) >> 1u) |
+       ((p.y & 4u) >> 2u);
+
+   return (float(v) + 0.5) * (1.0 / 64.0);
+}
+
+// Based on https://www.shadertoy.com/view/4t2cRt (merger doctrine)
+// Returns a dither value (0.0 or 1.0) based on coords & opacity
+bool orderedDither4x4(vec2 pixelCoord, float opacity, float scaleFactor) {
+    float threshold = bayer4x4(pixelCoord / scaleFactor);
+    return threshold < clamp(opacity, 0.0, 1.0);
+}
+
+bool orderedDither2x2(vec2 pixelCoord, float opacity, float scaleFactor) {
+    float threshold = bayer2x2(pixelCoord / scaleFactor);
+    return threshold < clamp(opacity, 0.0, 1.0);
+}
+
+bool orderedDither8x8(vec2 pixelCoord, float opacity, float scaleFactor) {
+    float threshold = bayer8x8(pixelCoord / scaleFactor);
+    return threshold < clamp(opacity, 0.0, 1.0);
+}
+
+float interleavedGradientNoise(vec2 p) {
+    return fract(52.9829189 * fract(dot(p, vec2(0.06711056, 0.00583715))));
+}
+
 // 2D Random
 float hash(in vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
