@@ -13,7 +13,6 @@ public class GLTextureBuffer extends GLBuffer {
 	@Getter
 	private int texId;
 
-	private final int texelSize;
 	private final int internalFormat;
 
 	public GLTextureBuffer(String name, int usage) {
@@ -23,13 +22,7 @@ public class GLTextureBuffer extends GLBuffer {
 	public GLTextureBuffer(String name, int usage, int storageFlags) {
 		super(name, GL_TEXTURE_BUFFER, usage, storageFlags);
 
-		if(isRGBASupported()) {
-			texelSize = 4;
-			internalFormat = GL_RGBA32I;
-		} else {
-			texelSize = 3;
-			internalFormat = GL_RGB32I;
-		}
+		internalFormat = isRGBASupported() ? GL_RGBA32I : GL_RGB32I;
 	}
 
 	@Override
@@ -39,17 +32,13 @@ public class GLTextureBuffer extends GLBuffer {
 		texId = glGenTextures();
 		glBindTexture(target, texId);
 		glTexBuffer(target, internalFormat, id);
-
 		glBindTexture(target, 0);
+
 		return this;
 	}
 
 	@Override
 	public boolean ensureCapacity(long byteOffset, long numBytes) {
-		// Ensure offset and size are aligned to texels
-		byteOffset = alignToTexel(byteOffset);
-		numBytes = alignToTexel(numBytes);
-
 		int oldId = id;
 		final boolean resized = super.ensureCapacity(byteOffset, numBytes);
 
@@ -60,15 +49,6 @@ public class GLTextureBuffer extends GLBuffer {
 		}
 
 		return resized;
-	}
-
-	private long alignToTexel(long numBytes) {
-		final int texelBytes = texelSize * 4;
-		final long remainder = numBytes % texelBytes;
-		if (remainder == 0)
-			return numBytes;
-
-		return numBytes + (texelBytes - remainder);
 	}
 
 	@Override
