@@ -5,11 +5,13 @@ import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
 public abstract class ShadowShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTextureArray = addUniformTexture("textureArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
+	protected final UniformTexture uniModelData = addUniformTexture("modelData");
 
 	protected ShadowMode mode;
 
@@ -23,6 +25,7 @@ public abstract class ShadowShaderProgram extends ShaderProgram {
 	protected void initialize() {
 		uniTextureArray.set(TEXTURE_UNIT_GAME);
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
+		uniModelData.set(TEXTURE_UNIT_MODEL_DATA);
 	}
 
 	@Override
@@ -47,6 +50,8 @@ public abstract class ShadowShaderProgram extends ShaderProgram {
 		public Legacy setMode(ShadowMode mode) {
 			this.mode = mode;
 			uniTextureArray.ignoreMissing = mode != ShadowMode.DETAILED;
+			uniTextureFaces.ignoreMissing = true;
+			uniModelData.ignoreMissing = true;
 			return this;
 		}
 
