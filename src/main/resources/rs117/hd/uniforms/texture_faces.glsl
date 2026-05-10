@@ -10,8 +10,10 @@ struct FaceData {
     ivec3 TerrainData;
 };
 
+#define PARSER_TARGET_BUFFER textureFaces
+
 BEGIN_BUFFER_PARSER(getFaceData,FaceData)
-    READ_IVEC3(textureFaces, AlphaBiasHsl)
-    READ_IVEC3(textureFaces, MaterialData)
-    READ_IVEC3(textureFaces, TerrainData)
+    READ_IVEC3(AlphaBiasHsl)
+    READ_IVEC3(MaterialData)
+    READ_IVEC3(TerrainData)
 END_BUFFER_PARSER()

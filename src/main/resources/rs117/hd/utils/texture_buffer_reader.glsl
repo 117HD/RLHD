@@ -176,12 +176,12 @@ StructType FuncName(int offset) {                 \
     return data;            \
 }
 
-#define READ_INT(texBuffer, field) data.field = readInt(texBuffer, reader);
-#define READ_FLOAT(texBuffer, field) data.field = readFloat(texBuffer, reader);
-#define READ_BOOL(texBuffer, field) data.field = readBool(texBuffer, reader);
-#define READ_IVEC2(texBuffer, field) data.field = readIVec2(texBuffer, reader);
-#define READ_IVEC3(texBuffer, field) data.field = readIVec3(texBuffer, reader);
-#define READ_IVEC4(texBuffer, field) data.field = readIVec4(texBuffer, reader);
-#define READ_VEC2(texBuffer, field) data.field = readVec2(texBuffer, reader);
-#define READ_VEC3(texBuffer, field) data.field = readVec3(texBuffer, reader);
-#define READ_VEC4(texBuffer, field) data.field = readVec4(texBuffer, reader);
+#define READ_INT(field) data.field = readInt(PARSER_TARGET_BUFFER, reader);
+#define READ_FLOAT(field) data.field = readFloat(PARSER_TARGET_BUFFER, reader);
+#define READ_BOOL(field) data.field = readBool(PARSER_TARGET_BUFFER, reader);
+#define READ_IVEC2(field) data.field = readIVec2(PARSER_TARGET_BUFFER, reader);
+#define READ_IVEC3(field) data.field = readIVec3(PARSER_TARGET_BUFFER, reader);
+#define READ_IVEC4(field) data.field = readIVec4(PARSER_TARGET_BUFFER, reader);
+#define READ_VEC2(field) data.field = readVec2(PARSER_TARGET_BUFFER, reader);
+#define READ_VEC3(field) data.field = readVec3(PARSER_TARGET_BUFFER, reader);
+#define READ_VEC4(field) data.field = readVec4(PARSER_TARGET_BUFFER, reader);
