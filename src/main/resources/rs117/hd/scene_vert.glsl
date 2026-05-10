@@ -28,9 +28,11 @@
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/texture_faces.glsl>
+#include <uniforms/model_data.glsl>
 
 #include <utils/constants.glsl>
 #include <utils/uvs.glsl>
+#include <utils/misc.glsl>
 
 layout (location = 0) in vec3 vPosition;
 
@@ -79,6 +81,13 @@ layout (location = 0) in vec3 vPosition;
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
         vec3 worldNormal = vNormal.xyz;
         vec3 worldPosition = sceneOffset + vPosition;
+
+        int modelIdx = int(vNormal.w);
+        if(modelIdx > 0) {
+            //ModelData modelData = getModelData(modelIdx);
+
+        }
+
         if (vWorldViewId != -1) {
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);

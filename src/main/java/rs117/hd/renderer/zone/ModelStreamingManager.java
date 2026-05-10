@@ -328,12 +328,15 @@ public class ModelStreamingManager {
 				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
+				int shadowModelIdx = SceneUploader.writeModelData(shadowView.tboM.getBuffer(), x, y, z, m, modelOverride);
 				sceneUploader.uploadTempModel(
 					culledFaces,
 					m,
 					modelOverride,
 					preOrientation,
 					orientation,
+					shadowModelIdx,
+					shadowModelIdx,
 					true,
 					shadowView,
 					shadowView
@@ -351,12 +354,17 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View opaqueView = ctx.beginDraw(isPlayer ? VAO_PLAYER : VAO_OPAQUE, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
+				final int opaqueModelIdx = SceneUploader.writeModelData(opaqueView.tboM.getBuffer(), x, y, z, m, modelOverride);
+				final int alphaModelIdx = alphaFaceCount > 0 ? SceneUploader.writeModelData(alphaView.tboM.getBuffer(), x, y, z, m, modelOverride) : opaqueModelIdx;
+
 				sceneUploader.uploadTempModel(
 					visibleFaces,
 					m,
 					modelOverride,
 					preOrientation,
 					orientation,
+					opaqueModelIdx,
+					alphaModelIdx,
 					isSquashed,
 					opaqueView,
 					alphaView
@@ -590,12 +598,15 @@ public class ModelStreamingManager {
 				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
+				final int shadowModelIdx = SceneUploader.writeModelData(shadowView.tboM.getBuffer(), x, y, z, m, modelOverride);
 				sceneUploader.uploadTempModel(
 					culledFaces,
 					m,
 					modelOverride,
 					preOrientation,
 					orient,
+					shadowModelIdx,
+					shadowModelIdx,
 					true,
 					shadowView,
 					shadowView
@@ -610,12 +621,17 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View opaqueView = ctx.beginDraw(VAO_OPAQUE, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
+				final int opaqueModelIdx = SceneUploader.writeModelData(opaqueView.tboM.getBuffer(), x, y, z, m, modelOverride);
+				final int alphaModelIdx = alphaFaceCount > 0 ? SceneUploader.writeModelData(alphaView.tboM.getBuffer(), x, y, z, m, modelOverride) : opaqueModelIdx;
+
 				sceneUploader.uploadTempModel(
 					visibleFaces,
 					m,
 					modelOverride,
 					preOrientation,
 					orient,
+					opaqueModelIdx,
+					alphaModelIdx,
 					isSquashed,
 					opaqueView,
 					alphaView
