@@ -164,3 +164,24 @@ void skipScalars(inout TexBufferReader reader, int count) {
 void rewindReader(inout TexBufferReader reader, int position) {
     reader.position = position;
 }
+
+#define BEGIN_BUFFER_PARSER(FuncName, StructType) \
+StructType FuncName(int offset) {                 \
+    TexBufferReader reader =                      \
+        buildTexBufferReader(offset);             \
+                                                  \
+    StructType data;
+
+#define END_BUFFER_PARSER() \
+    return data;            \
+}
+
+#define READ_INT(texBuffer, field) data.field = readInt(texBuffer, reader);
+#define READ_FLOAT(texBuffer, field) data.field = readFloat(texBuffer, reader);
+#define READ_BOOL(texBuffer, field) data.field = readBool(texBuffer, reader);
+#define READ_IVEC2(texBuffer, field) data.field = readIVec2(texBuffer, reader);
+#define READ_IVEC3(texBuffer, field) data.field = readIVec3(texBuffer, reader);
+#define READ_IVEC4(texBuffer, field) data.field = readIVec4(texBuffer, reader);
+#define READ_VEC2(texBuffer, field) data.field = readVec2(texBuffer, reader);
+#define READ_VEC3(texBuffer, field) data.field = readVec3(texBuffer, reader);
+#define READ_VEC4(texBuffer, field) data.field = readVec4(texBuffer, reader);

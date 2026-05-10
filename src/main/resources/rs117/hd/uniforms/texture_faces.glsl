@@ -10,12 +10,8 @@ struct FaceData {
     ivec3 TerrainData;
 };
 
-FaceData getFaceData(int faceOffset) {
-    TexBufferReader reader = buildTexBufferReader(faceOffset);
-
-    FaceData faceData;
-    faceData.AlphaBiasHsl = readIVec3(textureFaces, reader);
-    faceData.MaterialData = readIVec3(textureFaces, reader);
-    faceData.TerrainData = readIVec3(textureFaces, reader);
-    return faceData;
-}
+BEGIN_BUFFER_PARSER(getFaceData,FaceData)
+    READ_IVEC3(textureFaces, AlphaBiasHsl)
+    READ_IVEC3(textureFaces, MaterialData)
+    READ_IVEC3(textureFaces, TerrainData)
+END_BUFFER_PARSER()
