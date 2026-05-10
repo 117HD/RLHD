@@ -28,6 +28,7 @@
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
+#include <uniforms/texture_faces.glsl>
 
 #include <utils/constants.glsl>
 
@@ -38,8 +39,6 @@ layout (location = 0) in vec3 vPosition;
     layout (location = 3) in int vTextureFaceIdx;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
-
-    uniform isamplerBuffer textureFaces;
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         out vec4 fUvw;
@@ -52,9 +51,10 @@ layout (location = 0) in vec3 vPosition;
 
     void main() {
         int vertex = gl_VertexID % 3;
-        int alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
-        int materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
-        int terrainData = texelFetch(textureFaces, vTextureFaceIdx + 2)[vertex];
+        FaceData faceData = getFaceData(vTextureFaceIdx);
+        int alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+        int materialData = faceData.MaterialData[vertex];
+        int terrainData = faceData.TerrainData[vertex];
 
         int waterTypeIndex = terrainData >> 3 & 0xFF;
         float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);

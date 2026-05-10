@@ -46,7 +46,7 @@ public final class VertexWriteCache {
 		if (stagingPosition + 9 > stagingBuffer.length)
 			flushAndGrow();
 
-		final int textureFaceIdx = (outputBuffer.position() + stagingPosition) / 3;
+		final int textureFaceIdx = outputBuffer.position() + stagingPosition;
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
