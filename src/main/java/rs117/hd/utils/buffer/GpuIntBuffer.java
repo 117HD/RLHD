@@ -157,7 +157,7 @@ public class GpuIntBuffer {
 		buffer.put(terrainDataA); // TODO: Remove?
 		buffer.put(terrainDataB);
 		buffer.put(terrainDataC);
-		return textureFaceIdx;
+		return textureFaceIdx << 1;
 	}
 
 	public int position() {

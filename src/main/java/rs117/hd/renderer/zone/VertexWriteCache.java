@@ -38,7 +38,7 @@ public final class VertexWriteCache {
 			stagingBuffer = new int[min(stagingBuffer.length * 2, maxCapacity)];
 	}
 
-	public int putFace(
+	public int putStaticFace(
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC,
 		int terrainDataA, int terrainDataB, int terrainDataC
@@ -64,7 +64,25 @@ public final class VertexWriteCache {
 
 		this.stagingPosition += 9;
 
-		return textureFaceIdx;
+		return textureFaceIdx << 1;
+	}
+
+	public int putModelFace(int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC, int materialData) {
+		if (stagingPosition + 4 > stagingBuffer.length)
+			flushAndGrow();
+
+		final int textureFaceIdx = outputBuffer.position() + stagingPosition;
+
+		final int[] stagingBuffer = this.stagingBuffer;
+		final int stagingPosition = this.stagingPosition;
+
+		stagingBuffer[stagingPosition] = alphaBiasHslA;
+		stagingBuffer[stagingPosition + 1] = alphaBiasHslB;
+		stagingBuffer[stagingPosition + 2] = alphaBiasHslC;
+		stagingBuffer[stagingPosition + 3] = materialData;
+
+		this.stagingPosition += 4;
+		return 1 | textureFaceIdx << 1;
 	}
 
 	public void putVertex(

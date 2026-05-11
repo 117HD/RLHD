@@ -39,7 +39,7 @@ layout (location = 0) in vec3 vPosition;
 #if ZONE_RENDERER
     layout (location = 1) in vec4 vUv;
     layout (location = 2) in vec4 vNormal;
-    layout (location = 3) in int vTextureFaceIdx;
+    layout (location = 3) in int vPackedTextureFace;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
 #else
@@ -68,15 +68,27 @@ layout (location = 0) in vec3 vPosition;
     } OUT;
 
     void main() {
-        FaceData faceData = getFaceData(vTextureFaceIdx);
-        fAlphaBiasHsl = faceData.AlphaBiasHsl;
-        fMaterialData = faceData.MaterialData;
-        fTerrainData = faceData.TerrainData;
         fWorldViewId = vWorldViewId;
 
         int vertex = gl_VertexID % 3;
-        int alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
-        int materialData = faceData.MaterialData[vertex];
+        int alphaBiasHsl;
+        int materialData;
+
+        if(isModelFace(vPackedTextureFace)) {
+            ModelFaceData faceData = getModelFaceData(getFaceOffset(vPackedTextureFace));
+            fAlphaBiasHsl = faceData.AlphaBiasHsl;
+            fMaterialData = ivec3(faceData.MaterialData);
+            fTerrainData = ivec3(0);
+            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+            materialData = faceData.MaterialData;
+        } else {
+            StaticFaceData faceData = getStaticFaceData(getFaceOffset(vPackedTextureFace));
+            fAlphaBiasHsl = faceData.AlphaBiasHsl;
+            fMaterialData = faceData.MaterialData;
+            fTerrainData = faceData.TerrainData;
+            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+            materialData = faceData.MaterialData[vertex];
+        }
 
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
         vec3 worldNormal = vNormal.xyz;

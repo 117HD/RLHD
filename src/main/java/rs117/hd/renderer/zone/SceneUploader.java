@@ -1705,11 +1705,7 @@ public class SceneUploader implements AutoCloseable {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			final int texturedFaceIdx = tb.putFace(
-				color1, color2, color3,
-				materialData, materialData, materialData,
-				0, 0, 0
-			);
+			final int texturedFaceIdx = tb.putModelFace(color1, color2, color3, materialData);
 
 			vb.putStaticVertex(
 				vx1, vy1, vz1,
@@ -2130,11 +2126,7 @@ public class SceneUploader implements AutoCloseable {
 			color3 |= packedAlphaBiasHsl;
 
 			final int modelIdx = hasAlpha ? alphaModelIdx : opaqueModelIdx;
-			final int texturedFaceIdx = tb.putFace(
-				color1, color2, color3,
-				materialData, materialData, materialData,
-				0, 0, 0
-			);
+			final int texturedFaceIdx = tb.putModelFace(color1, color2, color3, materialData);
 
 			vb.putVertex(
 				modelLocalI[vertexOffsetA], modelLocalI[vertexOffsetA + 1], modelLocalI[vertexOffsetA + 2],

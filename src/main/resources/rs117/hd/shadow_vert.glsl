@@ -36,7 +36,7 @@ layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
     layout (location = 1) in vec4 vUv;
-    layout (location = 3) in int vTextureFaceIdx;
+    layout (location = 3) in int vPackedTextureFace;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
 
@@ -51,10 +51,22 @@ layout (location = 0) in vec3 vPosition;
 
     void main() {
         int vertex = gl_VertexID % 3;
-        FaceData faceData = getFaceData(vTextureFaceIdx);
-        int alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
-        int materialData = faceData.MaterialData[vertex];
-        int terrainData = faceData.TerrainData[vertex];
+        int alphaBiasHsl;
+        int materialData;
+        int terrainData;
+        int faceDataOffset;
+
+        if(isModelFace(vPackedTextureFace)) {
+            ModelFaceData faceData = getModelFaceData(getFaceOffset(vPackedTextureFace));
+            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+            materialData = faceData.MaterialData;
+            terrainData = 0;
+        } else {
+            StaticFaceData faceData = getStaticFaceData(getFaceOffset(vPackedTextureFace));
+            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+            materialData = faceData.MaterialData[vertex];
+            terrainData = faceData.TerrainData[vertex];
+        }
 
         int waterTypeIndex = terrainData >> 3 & 0xFF;
         float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
