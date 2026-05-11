@@ -28812,7 +28812,6 @@
   },
   {
     "description": "Crashed Star",
-    "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
       "STAR_SIZE_NINE_STAR",
       "STAR_SIZE_EIGHT_STAR",
@@ -28824,7 +28823,21 @@
       "STAR_SIZE_TWO_STAR",
       "STAR_SIZE_ONE_STAR"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 17 || h == 28 || h == 48 || h == 0 && s == 1",
+        "baseMaterial": "ROCK_3_ORE",
+        "uvScale": 0.85,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 6 || h == 8 || h == 36",
+        "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Seers Village Courthouse Metal Cage",
