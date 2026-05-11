@@ -1357,13 +1357,16 @@ public class SceneUploader implements AutoCloseable {
 		}
 	}
 
+	public static final int MODEL_DATA_SIZE = 4;
+
 	public static int writeModelData(IntBuffer modelBuffer, int x, int y, int z, Model model, ModelOverride override) {
-		int modelIdx = modelBuffer.position() / 4;
+		int modelIdx = modelBuffer.position() / MODEL_DATA_SIZE;
 		modelBuffer
 			.put(x)
 			.put(y)
 			.put(z)
 			.put(model.getModelHeight());
+		assert modelBuffer.position() % MODEL_DATA_SIZE == 0;
 		return modelIdx + 1;
 	}
 
