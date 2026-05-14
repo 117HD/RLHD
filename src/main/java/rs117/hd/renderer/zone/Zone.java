@@ -56,12 +56,14 @@ public class Zone implements Destructible {
 
 	// position vec3
 	// height float
-	public static final int MODEL_DATA_SIZE = 16;
+	// fade float
+	public static final int MODEL_DATA_SIZE = 20;
 
 	// Metadata format
 	// worldViewIndex int int
 	// sceneOffset int vec2(x, y)
-	public static final int METADATA_SIZE = 12;
+	// fade float float
+	public static final int METADATA_SIZE = 16;
 
 	public static final int LEVEL_WATER_SURFACE = 4;
 
@@ -92,6 +94,7 @@ public class Zone implements Destructible {
 
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
+	float fadingAlpha;
 
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
 
@@ -273,6 +276,11 @@ public class Zone implements Destructible {
 		glVertexAttribDivisor(7, 1);
 		glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
 
+		// Scene offset
+		glEnableVertexAttribArray(8);
+		glVertexAttribDivisor(8, 1);
+		glVertexAttribPointer(8, 1, GL_FLOAT, false, METADATA_SIZE, 12);
+
 		checkGLErrors();
 
 		glBindVertexArray(0);
@@ -283,14 +291,16 @@ public class Zone implements Destructible {
 		if (vboM == null)
 			return;
 
+		float fade = saturate(fadingAlpha);
 		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
 		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
-			IntBuffer buf = stack.mallocInt(3)
+			IntBuffer buf = stack.mallocInt(METADATA_SIZE / Integer.BYTES)
 				.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0)
 				.put(baseX)
-				.put(baseZ);
+				.put(baseZ)
+				.put(Float.floatToIntBits(fade));
 			buf.flip();
 			vboM.upload(buf);
 		}
@@ -332,6 +342,8 @@ public class Zone implements Destructible {
 	}
 
 	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
+		if(fadingAlpha > 1.0)
+			return;
 		drawIdx = 0;
 
 		int currentLevel = ctx.level;
@@ -385,7 +397,7 @@ public class Zone implements Destructible {
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
 		lastTboF = tboF.getTexId();
-		lastTboM = tboM.getTexId();
+		lastTboM = tboM != null ? tboM.getTexId() : 0;
 		flush(cmd);
 	}
 
@@ -400,7 +412,7 @@ public class Zone implements Destructible {
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
 		lastTboF = tboF.getTexId();
-		lastTboM = tboM.getTexId();
+		lastTboM = tboM != null ? tboM.getTexId() : 0;
 		flush(cmd);
 	}
 
@@ -643,7 +655,7 @@ public class Zone implements Destructible {
 		m.y = (short) y;
 		m.z = (short) z;
 		m.level = (byte) level;
-		m.vao = m.tboF = m.rid = m.lx = m.lz = m.ux = m.uz = -1;
+		m.vao = m.tboF = m.tboM = m.rid = m.lx = m.lz = m.ux = m.uz = -1;
 		m.flags = 0;
 		m.zofx = m.zofz = 0;
 		alphaModels.add(m);
@@ -727,7 +739,7 @@ public class Zone implements Destructible {
 		boolean isShadowPass,
 		boolean includeRoof
 	) {
-		if (alphaModels.isEmpty())
+		if (alphaModels.isEmpty() || fadingAlpha > 1.0)
 			return;
 
 		int minLevel = ctx.minLevel;
@@ -904,6 +916,7 @@ public class Zone implements Destructible {
 				m2.z = m.z;
 				m2.vao = m.vao;
 				m2.tboF = m.tboF;
+				m2.tboM = m.tboM;
 				m2.rid = m.rid;
 				m2.level = m.level;
 				m2.lx = m.lx;

@@ -52,8 +52,11 @@ flat in ivec3 fAlphaBiasHsl;
 flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
 
-#if FLAT_SHADING && ZONE_RENDERER
-    flat in vec3 fFlatNormal;
+#if ZONE_RENDERER
+    #if FLAT_SHADING
+        flat in vec3 fFlatNormal;
+    #endif
+    flat in float fFade;
 #endif
 
 in FragmentData {
@@ -88,8 +91,8 @@ void main() {
     vec3 downDir = vec3(0, -1, 0);
 #if DITHER_FADE
     float viewZ = 1.0 - gl_FragCoord.z;
-    if (viewZ < NEAR_PLANE_DITHER_START) {
-        float fadeAmount = 1.0 - saturate(viewZ / NEAR_PLANE_DITHER_START);
+    if (fFade > 0.0 || viewZ < NEAR_PLANE_DITHER_START) {
+        float fadeAmount = mix(1.0 - saturate(viewZ / NEAR_PLANE_DITHER_START), fFade, saturate(fFade));
         float threshold = smoothstep(0.0, 1.0, pow(fadeAmount, 1.35));
         float noise = interleavedGradientNoise(gl_FragCoord.xy);
         if (noise < threshold)

@@ -47,6 +47,7 @@ import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
+import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PrimitiveIntArray;
@@ -197,8 +198,8 @@ public class SceneUploader implements AutoCloseable {
 		var vb = zone.vboO != null ? new GpuIntBuffer(zone.vboO.mapped()) : null;
 		var ab = zone.vboA != null ? new GpuIntBuffer(zone.vboA.mapped()) : null;
 		var fb = zone.tboF != null ? new GpuIntBuffer(zone.tboF.mapped()) : null;
-		var md = zone.tboF != null ? new GpuIntBuffer(zone.tboM.mapped()) : null;
-		assert fb != null && md != null;
+		var md = zone.tboM != null ? new GpuIntBuffer(zone.tboM.mapped()) : null;
+		assert fb != null;
 
 		roofIds.clear();
 		for (int level = 0; level <= 3; ++level) {
@@ -751,7 +752,7 @@ public class SceneUploader implements AutoCloseable {
 		int alphaStart = alphaBuffer != null ? alphaBuffer.position() : 0;
 		try {
 			uploadStaticModel(
-				ctx, tile, model, modelOverride, uuid,
+				ctx, tile, model, modelOverride, zone, uuid,
 				preOrientation, orient,
 				x - basex, y, z - basez,
 				opaqueBuffer,
@@ -1357,16 +1358,32 @@ public class SceneUploader implements AutoCloseable {
 		}
 	}
 
-	public static final int MODEL_DATA_SIZE = 4;
-
-	public static int writeModelData(IntBuffer modelBuffer, int x, int y, int z, Model model, ModelOverride override) {
-		int modelIdx = modelBuffer.position() / MODEL_DATA_SIZE;
+	private static void writeModelData(IntBuffer modelBuffer, int x, int y, int z, Model model, ModelOverride override, Zone zone, boolean isStatic) {
 		modelBuffer
 			.put(x)
 			.put(y)
 			.put(z)
-			.put(model.getModelHeight());
-		assert modelBuffer.position() % MODEL_DATA_SIZE == 0;
+			.put(model.getModelHeight())
+			.put(Float.floatToIntBits(isStatic ? -1.0f : saturate(zone.fadingAlpha)));
+	}
+
+	public static int writeStaticModelData(IntBuffer modelBuffer, int x, int y, int z, Model model, ModelOverride override, Zone zone) {
+		final int modelDataSizeInts = Zone.MODEL_DATA_SIZE / Integer.BYTES;
+		final int modelIdx = modelBuffer.position() / modelDataSizeInts;
+
+		writeModelData(modelBuffer, x, y, z, model, override, zone, true);
+
+		assert modelBuffer.position() % modelDataSizeInts == 0;
+		return modelIdx + 1;
+	}
+
+	public static int writeDynamicModelData(GLMappedBufferIntWriter.ReservedView view, int x, int y, int z, Model model, ModelOverride override, Zone zone) {
+		final int modelDataSizeInts = Zone.MODEL_DATA_SIZE / Integer.BYTES;
+		final int modelIdx = view.getBufferOffsetInts() / modelDataSizeInts;
+
+		writeModelData(view.getBuffer(), x, y, z, model, override, zone, false);
+
+		assert view.getBufferOffsetInts() % modelDataSizeInts == 0;
 		return modelIdx + 1;
 	}
 
@@ -1376,6 +1393,7 @@ public class SceneUploader implements AutoCloseable {
 		Tile tile,
 		Model model,
 		ModelOverride modelOverride,
+		Zone zone,
 		int uuid,
 		int preOrientation, int orientation,
 		int x, int y, int z,
@@ -1472,7 +1490,7 @@ public class SceneUploader implements AutoCloseable {
 		final Material baseMaterial = modelOverride.baseMaterial;
 		final Material textureMaterial = modelOverride.textureMaterial;
 
-		final int modelIdx = writeModelData(modelBuffer.getBuffer(), x, y, z, model, modelOverride);
+		final int modelIdx = writeStaticModelData(modelBuffer.getBuffer(), x, y, z, model, modelOverride, zone);
 
 		int len = 0;
 		for (int face = 0; face < faceCount; ++face) {

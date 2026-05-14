@@ -42,6 +42,7 @@ layout (location = 0) in vec3 vPosition;
     layout (location = 3) in int vPackedTextureFace;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
+    layout (location = 8) in float vFade;
 #else
     layout (location = 1) in vec3 vUv;
     layout (location = 2) in vec3 vNormal;
@@ -52,6 +53,7 @@ layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
     flat out int fWorldViewId;
+    flat out float fFade;
     flat out ivec3 fAlphaBiasHsl;
     flat out ivec3 fMaterialData;
     flat out ivec3 fTerrainData;
@@ -88,6 +90,7 @@ layout (location = 0) in vec3 vPosition;
             fTerrainData = faceData.TerrainData;
             alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
             materialData = faceData.MaterialData[vertex];
+            fFade        = vFade;
         }
 
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
@@ -96,8 +99,8 @@ layout (location = 0) in vec3 vPosition;
 
         int modelIdx = int(vNormal.w);
         if(modelIdx > 0) {
-            //ModelData modelData = getModelData(modelIdx);
-
+            ModelData modelData = getModelData(modelIdx);
+            fFade = max(modelData.fade, fFade);
         }
 
         if (vWorldViewId != -1) {

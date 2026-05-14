@@ -2,7 +2,7 @@
 
 #include <utils/texture_buffer_reader.glsl>
 
-#define MODEL_DATA_SIZE 4
+#define MODEL_DATA_SIZE 5
 #define PARSER_TARGET_BUFFER modelData
 
 uniform isamplerBuffer modelData;
@@ -10,12 +10,14 @@ uniform isamplerBuffer modelData;
 struct ModelData {
     ivec3 position;
     int height;
+    float fade; // Used by Dynamic Models
 };
 
 
 BEGIN_BUFFER_PARSER(readModelData, ModelData)
     READ_IVEC3(position)
     READ_INT(height)
+    READ_FLOAT(fade)
 END_BUFFER_PARSER()
 
 ModelData getModelData(int modelIdx) {

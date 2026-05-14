@@ -38,7 +38,8 @@ public class DynamicModelVAO implements Destructible {
 	// Metadata format
 	// worldViewIndex int
 	// dummy sceneOffset ivec2 for macOS workaround
-	static final int METADATA_SIZE = 12;
+	// fade float
+	static final int METADATA_SIZE = 16;
 
 	@Getter
 	private int vao;
@@ -242,7 +243,7 @@ public class DynamicModelVAO implements Destructible {
 			view = new View();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
 		view.tboF = tboFWriter.reserve(faceCount * 4);
-		view.tboM = tboMWriter.reserve(4);
+		view.tboM = tboMWriter.reserve(Zone.MODEL_DATA_SIZE / Integer.BYTES);
 		view.vao = vao;
 		view.tboFId = tboF.getTexId();
 		view.tboMId = tboM.getTexId();
@@ -265,6 +266,7 @@ public class DynamicModelVAO implements Destructible {
 		// Clear ReservedViews before returning to pool
 		view.vbo = null;
 		view.tboF = null;
+		view.tboM = null;
 
 		usedViews.add(view);
 	}

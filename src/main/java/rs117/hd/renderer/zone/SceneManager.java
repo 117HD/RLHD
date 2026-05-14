@@ -589,17 +589,19 @@ public class SceneManager {
 				}
 			}
 
-			long timeMs = System.currentTimeMillis();
+			//long timeMs = System.currentTimeMillis();
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = injector.getInstance(Zone.class);
 				newZone.dirty = sorted.zone.dirty;
 				if (staggerLoad) {
+					if(!sorted.zone.cull)
+						newZone.fadingAlpha = saturate(sorted.dist / 15.0f) * 3.0f; // Fade in new chunks that are appearing out of the fog
+
 					// Reuse the old zone while uploading a correct one
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
-						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z);
-					sorted.zone.uploadJob.revealAfterTimestampMs =
-						timeMs + ceil(clamp(sorted.dist / 15.0f, 0.25f, 1.5f) * 1000.0f);
+						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z)
+						.queue(ctx.streamingGroup, generateSceneDataTask);
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
