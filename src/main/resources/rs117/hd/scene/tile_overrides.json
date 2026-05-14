@@ -2352,13 +2352,51 @@
     "blended": false
   },
   {
-    "name": "MAGE_TRAINING_ARENA_FLOOR",
-    "area": "MAGE_TRAINING_ARENA",
+    "name": "MAGE_TRAINING_ARENA_LOBBY_FLOOR",
+    "area": "MAGE_TRAINING_ARENA_LOBBY",
     "overlayIds": [
       134
     ],
     "groundMaterial": "TILES_2X2_2_GLOSS",
-    "blended": false
+    "blended": false,
+    "uvScale": 2,
+    "shiftLightness": 2
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_LOBBY_FLOOR_PATTERN",
+    "area": "MAGE_TRAINING_ARENA_LOBBY",
+    "underlayIds": [
+      56
+    ],
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "blended": false,
+    "uvScale": 2
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_PLAYGROUNDS_FLOOR",
+    "area": "MAGE_TRAINING_ARENA_PLAYGROUNDS",
+    "overlayIds": [
+      134
+    ],
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "blended": false,
+    "uvScale": 2
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_PLAYGROUNDS_FLOOR_BLACK",
+    "area": "MAGE_TRAINING_ARENA_PLAYGROUNDS",
+    "underlayIds": [ 72 ],
+    "setLightness": 0
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_PLAYGROUNDS_FLOOR_MARBLE",
+    "area": "MAGE_TRAINING_ARENA_PLAYGROUNDS",
+    "groundMaterial": "MARBLE_4_GLOSS",
+    "overlayIds": [ 20 ],
+    "minLightness": 20,
+    "shiftLightness": 25,
+    "shiftHue": 4,
+    "uvScale": 0.75
   },
   {
     "name": "AL_KHARID_FLOOR_1",
@@ -7924,15 +7962,6 @@
       "SEASONAL_DIRT": "h < 8 && s > 4 && l < 45",
       "WINTER_SAND_BEACH": "season == SeasonalTheme.WINTER"
     }
-  },
-  {
-    "name": "MAGE_TRAINING_ARENA_FLOOR_PATTERN",
-    "area": "MAGE_TRAINING_ARENA",
-    "underlayIds": [
-      56
-    ],
-    "groundMaterial": "TILES_2X2_2_GLOSS",
-    "blended": false
   },
   {
     "name": "MAGE_TRAINING_ARENA_AND_KHARID_MINE_DIRT_FIX",
