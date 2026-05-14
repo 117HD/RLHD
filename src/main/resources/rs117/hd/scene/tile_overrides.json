@@ -2395,8 +2395,7 @@
     "overlayIds": [ 20 ],
     "minLightness": 20,
     "shiftLightness": 25,
-    "shiftHue": 4,
-    "uvScale": 0.75
+    "shiftHue": 4
   },
   {
     "name": "AL_KHARID_FLOOR_1",
