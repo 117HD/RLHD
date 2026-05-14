@@ -402,6 +402,9 @@ public class Zone implements Destructible {
 	}
 
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
+		if(fadingAlpha > 1.0)
+			return;
+
 		drawIdx = 0;
 
 		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);

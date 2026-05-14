@@ -174,6 +174,9 @@ public class ModelStreamingManager {
 		int zz = (gameObject.getY() >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
+		if(!zone.initialized || zone.fadingAlpha > 1.0f)
+			return;
+
 		m.calculateBoundsCylinder();
 
 		final float[] objectWorldPos = vec4(streamingContext.objectWorldPos, x, y, z, 1.0f);
@@ -409,7 +412,7 @@ public class ModelStreamingManager {
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
-		if (!zone.initialized)
+		if (!zone.initialized || zone.fadingAlpha > 1.0f)
 			return;
 
 		final StreamingContext streamingContext = context(renderThreadId);
