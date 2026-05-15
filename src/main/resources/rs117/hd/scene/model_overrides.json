@@ -86636,7 +86636,7 @@
       {
         "description": "Back of Exit",
         "colors": "l == 2",
-        "baseMaterial": "GRAY_55",
+        "baseMaterial": "GRAY_60",
         "flatNormals": true
       }
     ],
