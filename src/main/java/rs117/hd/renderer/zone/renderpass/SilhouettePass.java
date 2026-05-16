@@ -136,11 +136,14 @@ public final class SilhouettePass {
 	}
 
 	private void buildInteractingMap() {
+		actorToInteracting.clear();
+
+		if(configNPCSilhouette != NPCSilhouetteMode.Interacting)
+			return;
+
 		WorldView root = client.getTopLevelWorldView();
 		if(root == null)
 			return;
-
-		actorToInteracting.clear();
 
 		root.players().forEach(this::putInteracting);
 		root.npcs().forEach(this::putInteracting);
