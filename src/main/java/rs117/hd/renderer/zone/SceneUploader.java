@@ -145,6 +145,7 @@ public class SceneUploader implements AutoCloseable {
 	private final Material[] faceMaterials = new Material[MAX_FACE_COUNT];
 	private final UvType[] faceUVTypes = new UvType[MAX_FACE_COUNT];
 
+	private final int[] modelOffset = new int[3];
 	private final float[] projected = new float[4];
 
 	// Lazily initialized staging buffers, only used by uploadTempModel
@@ -772,13 +773,14 @@ public class SceneUploader implements AutoCloseable {
 				assert uz < 25 : uz;
 			}
 			try {
+				modelOverride.applyModelOffset(modelOffset, preOrientation, orient);
 				zone.addAlphaModel(
 					plugin,
 					materialManager,
 					zone.glVaoA,
 					zone.tboF.getTexId(),
 					model, modelOverride, alphaStart, alphaEnd,
-					x - basex, y, z - basez,
+					(x - basex) + modelOffset[0], y + modelOffset[1], (z - basez) + modelOffset[2],
 					lx, lz, ux, uz,
 					rid, level, id
 				);
@@ -1396,23 +1398,10 @@ public class SceneUploader implements AutoCloseable {
 			orientCos = COSINE[orientation];
 		}
 
-		int offsetX = modelOverride.modelOffset[0];
-		int offsetY = modelOverride.modelOffset[1];
-		int offsetZ = modelOverride.modelOffset[2];
-
-		if(offsetX != 0 || offsetY != 0 || offsetZ != 0) {
-			if (modelOverride.modelOffsetRelative && (offsetX != 0 || offsetZ != 0) && (preOrientation != 0 || orientation != 0)) {
-				final int offsetOrientSin = SINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
-				final int offsetOrientCos = COSINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
-
-				offsetX = modelOverride.modelOffset[2] * offsetOrientSin + modelOverride.modelOffset[0] * offsetOrientCos >> 16;
-				offsetZ = modelOverride.modelOffset[2] * offsetOrientCos - modelOverride.modelOffset[0] * offsetOrientSin >> 16;
-			}
-
-			x += offsetX;
-			y += offsetY;
-			z += offsetZ;
-		}
+		modelOverride.applyModelOffset(modelOffset, preOrientation, orientation);
+		x += modelOffset[0];
+		y += modelOffset[1];
+		z += modelOffset[2];
 
 		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
 			int vx = (int) vertexX[v];
@@ -1760,23 +1749,10 @@ public class SceneUploader implements AutoCloseable {
 			orientCosf = COSINE[orientation] / 65536f;
 		}
 
-		int offsetX = modelOverride.modelOffset[0];
-		int offsetY = modelOverride.modelOffset[1];
-		int offsetZ = modelOverride.modelOffset[2];
-
-		if(offsetX != 0 || offsetY != 0 || offsetZ != 0) {
-			if (modelOverride.modelOffsetRelative && (offsetX != 0 || offsetZ != 0) && (preOrientation != 0 || orientation != 0)) {
-				final int offsetOrientSin = SINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
-				final int offsetOrientCos = COSINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
-
-				offsetX = modelOverride.modelOffset[2] * offsetOrientSin + modelOverride.modelOffset[0] * offsetOrientCos >> 16;
-				offsetZ = modelOverride.modelOffset[2] * offsetOrientCos - modelOverride.modelOffset[0] * offsetOrientSin >> 16;
-			}
-
-			x += offsetX;
-			y += offsetY;
-			z += offsetZ;
-		}
+		modelOverride.applyModelOffset(modelOffset, preOrientation, orientation);
+		x += modelOffset[0];
+		y += modelOffset[1];
+		z += modelOffset[2];
 
 		boolean shouldSort = true;
 		boolean allVertsVisible = true;
