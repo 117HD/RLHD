@@ -1002,16 +1002,16 @@ public class ZoneRenderer implements Renderer {
 				final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 				if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-				z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, false, shouldDrawRoofShadows);
+					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, false, shouldDrawRoofShadows);
 				}
 
-			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-				sceneCmd.DepthMask(false);
-				z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
-				sceneCmd.DepthMask(true);
+				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+					sceneCmd.DepthMask(false);
+					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
+					sceneCmd.DepthMask(true);
 
-				z.renderAlpha(alphaDepthCmd, zx - offset, zz - offset, level, ctx, false, false);
-			}
+					z.renderAlpha(alphaDepthCmd, zx - offset, zz - offset, level, ctx, false, false);
+				}
 			}
 			frameTimer.end(Timer.DRAW_ZONE_ALPHA);
 
@@ -1037,10 +1037,9 @@ public class ZoneRenderer implements Renderer {
 			switch (pass) {
 				case DrawCallbacks.PASS_OPAQUE:
 					directionalCmd.SetShader(fastShadowProgram);
+					directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
-				directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
-
 					break;
 				case DrawCallbacks.PASS_ALPHA:
 					modelStreamingManager.ensureAsyncUploadsComplete(null);
@@ -1053,26 +1052,27 @@ public class ZoneRenderer implements Renderer {
 					if (sceneManager.isRoot(ctx))
 						frameTimer.end(Timer.UNMAP_ROOT_CTX);
 
-				// Draw opaque
+					// Draw opaque
+					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
+
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
-				// Draw shadow-only models
-					ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 
-				ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
+					// Draw shadow-only models
+					ctx.drawAll(VAO_SHADOW, ctx.vaoDirectionalCmd);
 
 					// Draw players with sorted alpha, without writing depth
 					ctx.vaoSceneCmd.DepthMask(false);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
 					ctx.vaoSceneCmd.DepthMask(true);
 
-				// Redraw players, this time only writing depth, for correct ordering with the background
-				ctx.vaoSceneCmd.SetShader(depthSceneProgram);
+					// Redraw players, this time only writing depth, for correct ordering with the background
+					ctx.vaoSceneCmd.SetShader(depthSceneProgram);
 					ctx.vaoSceneCmd.ColorMask(false, false, false, false);
 
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
 
-				ctx.vaoSceneCmd.SetShader(sceneProgram);
+					ctx.vaoSceneCmd.SetShader(sceneProgram);
 					ctx.vaoSceneCmd.ColorMask(true, true, true, true);
 
 					for (int zx = 0; zx < ctx.sizeX; ++zx)
