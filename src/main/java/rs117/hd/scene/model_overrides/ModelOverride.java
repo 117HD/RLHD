@@ -81,6 +81,8 @@ public class ModelOverride
 	public boolean invertDisplacementStrength = false;
 	public int depthBias = -1;
 	public boolean disablePrioritySorting = false;
+	public boolean modelOffsetRelative = false;
+	public int[] modelOffset = { 0, 0, 0, };
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -249,6 +251,8 @@ public class ModelOverride
 			invertDisplacementStrength,
 			depthBias,
 			disablePrioritySorting,
+			modelOffsetRelative,
+			modelOffset,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,

@@ -218,6 +218,17 @@
         "type": "boolean",
         "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
       },
+      "modelOffsetRelative": {
+        "type": "boolean",
+        "description": "Applies model offset relative to the models orientation."
+      },
+      "modelOffset": {
+        "type": "array",
+        "description": "XYZ Offset applied in world space by default, modelOffsetRelative enables rotating the offset by the models orientation",
+        "items": {
+          "type": "integer"
+        }
+      },
       "materialOverrides": {
         "type": "object",
         "description": "A subset of options can be tweaked separately for specific materials of the model.",

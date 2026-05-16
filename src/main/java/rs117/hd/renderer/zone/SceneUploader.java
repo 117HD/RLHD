@@ -1396,6 +1396,24 @@ public class SceneUploader implements AutoCloseable {
 			orientCos = COSINE[orientation];
 		}
 
+		int offsetX = modelOverride.modelOffset[0];
+		int offsetY = modelOverride.modelOffset[1];
+		int offsetZ = modelOverride.modelOffset[2];
+
+		if(offsetX != 0 || offsetY != 0 || offsetZ != 0) {
+			if (modelOverride.modelOffsetRelative && (offsetX != 0 || offsetZ != 0) && (preOrientation != 0 || orientation != 0)) {
+				final int offsetOrientSin = SINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
+				final int offsetOrientCos = COSINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
+
+				offsetX = modelOverride.modelOffset[2] * offsetOrientSin + modelOverride.modelOffset[0] * offsetOrientCos >> 16;
+				offsetZ = modelOverride.modelOffset[2] * offsetOrientCos - modelOverride.modelOffset[0] * offsetOrientSin >> 16;
+			}
+
+			x += offsetX;
+			y += offsetY;
+			z += offsetZ;
+		}
+
 		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
 			int vx = (int) vertexX[v];
 			int vy = (int) vertexY[v];
@@ -1716,6 +1734,7 @@ public class SceneUploader implements AutoCloseable {
 		ModelOverride modelOverride,
 		Model model,
 		boolean sortAllFaces,
+		int preOrientation,
 		int orientation,
 		int x, int y, int z
 	) {
@@ -1739,6 +1758,24 @@ public class SceneUploader implements AutoCloseable {
 			orientation = mod(orientation, 2048);
 			orientSinf = SINE[orientation] / 65536f;
 			orientCosf = COSINE[orientation] / 65536f;
+		}
+
+		int offsetX = modelOverride.modelOffset[0];
+		int offsetY = modelOverride.modelOffset[1];
+		int offsetZ = modelOverride.modelOffset[2];
+
+		if(offsetX != 0 || offsetY != 0 || offsetZ != 0) {
+			if (modelOverride.modelOffsetRelative && (offsetX != 0 || offsetZ != 0) && (preOrientation != 0 || orientation != 0)) {
+				final int offsetOrientSin = SINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
+				final int offsetOrientCos = COSINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
+
+				offsetX = modelOverride.modelOffset[2] * offsetOrientSin + modelOverride.modelOffset[0] * offsetOrientCos >> 16;
+				offsetZ = modelOverride.modelOffset[2] * offsetOrientCos - modelOverride.modelOffset[0] * offsetOrientSin >> 16;
+			}
+
+			x += offsetX;
+			y += offsetY;
+			z += offsetZ;
 		}
 
 		boolean shouldSort = true;
