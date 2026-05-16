@@ -10621,7 +10621,7 @@
     "shiftLightness": 6
   },
   {
-    "name": "KRAKEN_COVE_WATER_FIX_2",
+    "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
     "area": "KRAKEN_COVE_HIDE_WATER_EDGE",
     "overlayIds": [ 7 ],
     "waterType": "SWAMP_WATER",
@@ -10631,7 +10631,6 @@
     "name": "KRAKEN_COVE_WATER_FIX",
     "area": "KRAKEN_COVE_WALL_FIX",
     "underlayIds": [ 53, 54 ],
-    "groundMaterial": "HD_LAVA",
     "waterType": "SWAMP_WATER"
   },
   {
