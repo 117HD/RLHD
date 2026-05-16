@@ -10621,6 +10621,20 @@
     "shiftLightness": 6
   },
   {
+    "name": "KRAKEN_COVE_WATER_FIX_2",
+    "area": "KRAKEN_COVE_HIDE_WATER_EDGE",
+    "overlayIds": [ 7 ],
+    "waterType": "SWAMP_WATER",
+    "heightOffset": -150
+  },
+  {
+    "name": "KRAKEN_COVE_WATER_FIX",
+    "area": "KRAKEN_COVE_WALL_FIX",
+    "underlayIds": [ 53, 54 ],
+    "groundMaterial": "HD_LAVA",
+    "waterType": "SWAMP_WATER"
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {
@@ -10930,6 +10944,17 @@
       196
     ],
     "waterType": "WATER"
+  },
+  {
+    "name": "OVERLAY_SWAMP_WATER",
+    "area": "ALL",
+    "overlayIds": [
+      7,
+      128,
+      156
+    ],
+    "waterType": "SWAMP_WATER",
+    "blended": false
   },
   {
     "name": "OVERLAY_SWAMP_WATER",

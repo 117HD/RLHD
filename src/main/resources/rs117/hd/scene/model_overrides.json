@@ -2574,7 +2574,9 @@
       "BRAIN_ROCK_POOL_BITS",
       "FAIRYTALE2_ROCK_POOL_SMALL",
       "STALKER_DEN_STEPPING_STONE",
-      "FRISD_IZSO_ROCK_POOL_SMALL"
+      "FRISD_IZSO_ROCK_POOL_SMALL",
+      "SLAYER_CAVE_POOLROCK_1",
+      "SLAYER_CAVE_POOLROCK_2"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -15157,8 +15159,6 @@
       "SUROK_TUNNEL_ROCKS_SMALL_01",
       "SUROK_TUNNEL_ROCKS_SMALL_02",
       "SUROK_TUNNEL_ROCKS_SMALL_03",
-      "SLAYER_CAVE_POOLROCK_1",
-      "SLAYER_CAVE_POOLROCK_2",
       "ARCHEUUS_RUNESTONE_SHORTCUT_GREY_TOP",
       "ARCHEUUS_RUNESTONE_SHORTCUT_GREY_BOTTOM",
       "ARCHEUUS_RUNESTONE_SHORTCUT_GREY_MIDDLE",
@@ -23053,9 +23053,16 @@
   },
   {
     "description": "Wall Decoration - Blood",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "GRAY_55",
     "objectIds": [
       "_100_DAVE_WALL_BLOOD"
+    ]
+  },
+  {
+    "description": "Wall Decoration - Blood - Lighter",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "CAVE_BLOOD1"
     ]
   },
   {
@@ -48172,6 +48179,18 @@
     "uvScale": 1.25
   },
   {
+    "description": "Kraken Cove - Wall Offset Fix",
+    "baseMaterial": "STONE_NORMALED",
+    "areas": [ "KRAKEN_COVE_WALL_FIX" ],
+    "modelOffset": [ 0, 16, 0 ],
+    "objectIds": [
+      "ROYAL_CAVEWALL_FACE_GLOW",
+      "ROYAL_CAVEWALL_FACE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25
+  },
+  {
     "description": "Kraken Cove - Stalagmites",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -48189,23 +48208,38 @@
       "SLAYER_KRAKENCAVE_SHIPWRECK"
     ],
     "uvType": "BOX",
-    "uvScale": 0.44
+    "uvScale": 0.6
   },
   {
-    "description": "Kraken Cove - Floating Body and Hole",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Kraken Cove - Floating Body",
+    "baseMaterial": "DIRT_1",
     "objectIds": [
-      "GODWARS_UWATER_DEADGUY02",
+      "GODWARS_UWATER_DEADGUY02"
+    ]
+  },
+  {
+    "description": "Kraken Cove - Inaccessible Hole",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "depthBias": 200,
+    "objectIds": [
       "SLAYER_CAVE_KRAKEN_HOLE"
     ]
   },
   {
     "description": "Kraken Cove - Darken Whirlpools",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "GRAY_70",
     "npcIds": [
       "SLAYER_KRAKEN_SUB",
       "SLAYER_KRAKEN_BOSS_WHIRLPOOL",
       "SLAYER_KRAKEN_BOSS_TENTACLE_WHIRLPOOL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32 || h == 37",
+        "baseMaterial": "GRAY_90"
+      }
     ]
   },
   {
