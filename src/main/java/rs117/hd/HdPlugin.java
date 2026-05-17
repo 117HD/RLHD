@@ -512,6 +512,20 @@ public class HdPlugin extends Plugin {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
+				AWTContext.loadNatives();
+				canvas = client.getCanvas();
+				synchronized (canvas.getTreeLock()) {
+					// Delay plugin startup until the client's canvas is valid
+					if (!canvas.isValid())
+						return false;
+
+					awtContext = new AWTContext(canvas);
+					awtContext.configurePixelFormat(0, 0, 0);
+				}
+				awtContext.createGLContext();
+				canvas.setIgnoreRepaint(true);
+				clientJFrame = HDUtils.getJFrame(canvas);
+
 				isPluginStopPending = false;
 				isActive = true;
 				startupCount++;
@@ -529,23 +543,6 @@ public class HdPlugin extends Plugin {
 				deltaClientTime = 0;
 				lastFrameTimeMillis = 0;
 				lastFrameClientTime = 0;
-
-				AWTContext.loadNatives();
-				canvas = client.getCanvas();
-				clientJFrame = HDUtils.getJFrame(canvas);
-
-				synchronized (canvas.getTreeLock()) {
-					// Delay plugin startup until the client's canvas is valid
-					if (!canvas.isValid())
-						return false;
-
-					awtContext = new AWTContext(canvas);
-					awtContext.configurePixelFormat(0, 0, 0);
-				}
-
-				awtContext.createGLContext();
-
-				canvas.setIgnoreRepaint(true);
 
 				// lwjgl defaults to lwjgl- + user.name, but this breaks if the username would cause an invalid path
 				// to be created.
