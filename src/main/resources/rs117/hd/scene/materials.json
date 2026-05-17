@@ -3080,13 +3080,6 @@
     "brightness": 1.293
   },
   {
-    "name": "HD_HAY_GRAYSCALE",
-    "normalMap": "HD_HAY_N",
-    "specularStrength": 0.175,
-    "specularGloss": 15.0,
-    "brightness": 1.5
-  },
-  {
     "name": "HD_IRON_BARS",
     "hasTransparency": true,
     "specularStrength": 0.6,
