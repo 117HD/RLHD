@@ -2943,6 +2943,11 @@
     "specularGloss": 60.0
   },
   {
+    "name": "SLIME_GRUNGE_LIGHT",
+    "parent": "SLIME_GRUNGE",
+    "brightness": 1.15
+  },
+  {
     "name": "WATER_PUDDLE",
     "parent": "NONE",
     "specularStrength": 1.5,
@@ -3073,6 +3078,13 @@
     "name": "HD_HAY_BRIGHT",
     "parent": "HD_HAY",
     "brightness": 1.293
+  },
+  {
+    "name": "HD_HAY_GRAYSCALE",
+    "normalMap": "HD_HAY_N",
+    "specularStrength": 0.175,
+    "specularGloss": 15.0,
+    "brightness": 1.5
   },
   {
     "name": "HD_IRON_BARS",
