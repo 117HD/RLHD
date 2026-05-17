@@ -172,6 +172,7 @@ public class Zone implements Destructible {
 
 		if (uploadJob != null) {
 			uploadJob.cancel();
+			DestructibleHandler.destroy(uploadJob.zone);
 			uploadJob = null;
 		}
 
@@ -439,6 +440,13 @@ public class Zone implements Destructible {
 		boolean isTemp() {
 			return packedFaces == null || sortedFaces == null;
 		}
+
+		void setView(DynamicModelVAO.View view) {
+			vao = view.vao;
+			tboF = view.tboTexId;
+			startpos = view.getStartOffset();
+			endpos = view.getEndOffset();
+		}
 	}
 
 	static final ConcurrentLinkedQueue<AlphaModel> modelCache = new ConcurrentLinkedQueue<>();
@@ -606,25 +614,21 @@ public class Zone implements Destructible {
 		alphaModels.add(m);
 	}
 
-	synchronized void addTempAlphaModel(ModelOverride modelOverride, DynamicModelVAO.View view, int level, int x, int y, int z) {
+	synchronized AlphaModel requestTempAlphaModel(ModelOverride modelOverride, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
 		if (m == null)
 			m = new AlphaModel();
 		m.id = -1;
 		m.modelOverride = modelOverride;
-		m.startpos = view.getStartOffset();
-		m.endpos = view.getEndOffset();
 		m.x = (short) x;
 		m.y = (short) y;
 		m.z = (short) z;
-		m.vao = view.vao;
-		m.tboF = view.tboTexId;
-		m.rid = -1;
 		m.level = (byte) level;
-		m.lx = m.lz = m.ux = m.uz = -1;
+		m.vao = m.tboF = m.rid = m.lx = m.lz = m.ux = m.uz = -1;
 		m.flags = 0;
 		m.zofx = m.zofz = 0;
 		alphaModels.add(m);
+		return m;
 	}
 
 	synchronized void postAlphaPass() {
@@ -725,7 +729,7 @@ public class Zone implements Destructible {
 		int eboAlphaStart = eboAlphaOffset = ZoneRenderer.eboAlphaWriter.getWrittenInts();
 		for (int i = 0; i < alphaModels.size(); i++) {
 			final AlphaModel m = alphaModels.get(i);
-			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
+			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level || m.vao == -1)
 				continue;
 
 			if (level < minLevel || level > maxLevel ||
