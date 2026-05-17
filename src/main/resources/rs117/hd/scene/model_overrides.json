@@ -4257,9 +4257,7 @@
       "RIMMINGTON_SKEWSTEPS",
       "RIMMINGTON_SKEWSTEPS_CORNER",
       "RIMMINGTON_FLOORSTEPS",
-      "RIMMINGTON_FLOORSTEPS_WATER_SOURCE",
-      "NTK_SKEWSTEPS",
-      "NTK_SKEWSTEPS_CORNER"
+      "RIMMINGTON_FLOORSTEPS_WATER_SOURCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.75
@@ -9466,22 +9464,26 @@
   },
   {
     "description": "Pyramid Plunder Walls - Exit Doors",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "objectIds": [
       "NTK_TOMB_DOOR_EXIT",
       "NTK_ANTECHAMBER_EXIT"
     ],
     "uvType": "BOX",
+    "depthBias": 1,
     "colorOverrides": [
       {
-        "colors": [ "l == 103", "l == 23" ],
-        "baseMaterial": "NONE"
+        "colors": [ "l == 103", "l == 23"],
+        "baseMaterial": "GRAY_200",
+        "depthBias": 1
       }
     ]
   },
   {
     "description": "Pyramid Plunder Walls - Interior",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
     "objectIds": [
       "NTK_TOMB_WALL",
       "NTK_TOMB_WALL_DAMAGE",
@@ -9496,18 +9498,21 @@
   },
   {
     "description": "Pyramid Plunder Walls - Interior - Bias Fix",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "depthBias": 2,
+    "uvType": "BOX",
+    "uvScale": 0.75,
     "objectIds": [
-      "NTK_TOMB_WALL_TOP",
       "NTK_TOMB_DOOR_NOANIM",
       "NTK_TOMB_DOOR1",
       "NTK_TOMB_DOOR2",
       "NTK_TOMB_DOOR3",
       "NTK_TOMB_DOOR4",
-      "NTK_TOMB_DOOR_ANIM"
-    ],
-    "uvType": "BOX"
+      "NTK_TOMB_DOOR_ANIM",
+      "NTK_TOMB_WALL_TOP",
+      "NTK_SKEWSTEPS",
+      "NTK_SKEWSTEPS_CORNER"
+    ]
   },
   {
     "description": "Pyramid Plunder Obelisk, Busts and Wall symbol",
