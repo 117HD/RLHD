@@ -76,6 +76,18 @@ public class ModelOverride
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
+	private int shiftHue;
+	private int minHue;
+	private int maxHue = 63;
+	private int shiftSaturation;
+	private int minSaturation;
+	private int maxSaturation = 7;
+	private int shiftLightness;
+	private int minLightness;
+	private int maxLightness = 127;
+	private int shiftAlpha;
+	private int minAlpha;
+	private int maxAlpha = 255;
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
@@ -244,6 +256,18 @@ public class ModelOverride
 			shadowOpacityThreshold,
 			tzHaarRecolorType,
 			inheritTileColorType,
+			shiftHue,
+			minHue,
+			maxHue,
+			shiftSaturation,
+			minSaturation,
+			maxSaturation,
+			shiftLightness,
+			minLightness,
+			maxLightness,
+			shiftAlpha,
+			minAlpha,
+			maxAlpha,
 			windDisplacementMode,
 			windDisplacementModifier,
 			invertDisplacementStrength,
@@ -623,6 +647,38 @@ public class ModelOverride
 				model.rotateY90Ccw();
 				break;
 		}
+	}
+
+	public boolean shiftsColor() {
+		return shiftHue != 0 || shiftSaturation != 0 || shiftLightness != 0
+			|| minHue != 0 || maxHue != 63
+			|| minSaturation != 0 || maxSaturation != 7
+			|| minLightness != 0 || maxLightness != 127;
+	}
+
+	public boolean shiftsAlpha() {
+		return shiftAlpha != 0 || minAlpha != 0 || maxAlpha != 255;
+	}
+
+	public int modifyAlpha(int alpha) {
+		alpha += shiftAlpha;
+		return clamp(alpha, minAlpha, maxAlpha);
+	}
+
+	public int modifyColor(int jagexHsl) {
+		int h = jagexHsl >> 10 & 0x3F;
+		h += shiftHue;
+		h = clamp(h, minHue, maxHue);
+
+		int s = jagexHsl >> 7 & 7;
+		s += shiftSaturation;
+		s = clamp(s, minSaturation, maxSaturation);
+
+		int l = jagexHsl & 0x7F;
+		l += shiftLightness;
+		l = clamp(l, minLightness, maxLightness);
+
+		return h << 10 | s << 7 | l;
 	}
 
 	@Nullable
