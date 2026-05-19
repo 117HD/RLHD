@@ -118,6 +118,7 @@ import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.GraphicsPresets;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.HDVariables;
@@ -252,6 +253,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private GraphicsPresets graphicsPresets;
 
 	@Inject
 	private GamevalManager gamevalManager;
@@ -672,6 +676,7 @@ public class HdPlugin extends Plugin {
 					}
 				}
 
+				graphicsPresets.startUp();
 				updateCachedConfigs();
 				developerTools.activate();
 
@@ -1752,6 +1757,7 @@ public class HdPlugin extends Plugin {
 
 					log.debug("Processing {} pending config changes: {}", pendingConfigChanges.size(), pendingConfigChanges);
 
+					graphicsPresets.processConfigChange(pendingConfigChanges);
 					renderer.processConfigChanges(pendingConfigChanges);
 
 					boolean recompilePrograms = false;
