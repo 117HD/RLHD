@@ -96,6 +96,7 @@ public interface HdPluginConfig extends Config
 		position = 1,
 		section = generalSettings
 	)
+	@Presets(ints = {50, 100, 125, 184})
 	default int drawDistance() {
 		return 50;
 	}
