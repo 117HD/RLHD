@@ -357,13 +357,16 @@ void main() {
                 }
                 vec3 darkSideMoon = darkSideBase + skyMoonColor * 0.02;
                 vec3 moonFinalColor = mix(darkSideMoon, litColor, isLit);
-                float moonAlpha = moonDisk * moonDayAlpha * moonVisibility;
+                // Fade moon near the horizon to match the star/nebula horizon fade
+                float moonHorizonFade = smoothstep(-0.1, 0.07, upAmount);
+                float moonAlpha = moonDisk * moonDayAlpha * moonVisibility * moonHorizonFade;
 
                 skyColor = mix(skyColor, moonFinalColor, moonAlpha);
             }
 
             // Subtle atmospheric glow around the moon (also faded by daytime transparency)
-            float moonGlow = pow(moonDot, 256.0) * 0.05 * skyMoonIllumination * moonDayAlpha * moonVisibility;
+            float glowHorizonFade = smoothstep(-0.1, 0.07, upAmount);
+            float moonGlow = pow(moonDot, 256.0) * 0.05 * skyMoonIllumination * moonDayAlpha * moonVisibility * glowHorizonFade;
             skyColor += skyMoonColor * moonGlow;
         }
     }
