@@ -731,7 +731,7 @@ public class ZoneRenderer implements Renderer {
 
 			// Tint night sky toward regional moon color as moon directional strength increases
 			if (moonInfluence > 0) {
-				float skyTint = moonInfluence * 0.15f;
+				float skyTint = moonInfluence * 0.05f;
 				for (int i = 0; i < 3; i++) {
 					skyGradientColors[0][i] = skyGradientColors[0][i] * (1 - skyTint) + moonColor[i] * skyTint;
 					skyGradientColors[1][i] = skyGradientColors[1][i] * (1 - skyTint) + moonColor[i] * skyTint;
