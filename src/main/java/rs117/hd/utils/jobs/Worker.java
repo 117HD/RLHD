@@ -14,7 +14,10 @@ import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
 @Slf4j
 @RequiredArgsConstructor
 public final class Worker {
-	private static final long SLEEP_TIME_NANOS = TimeUnit.MICROSECONDS.convert(1, TimeUnit.NANOSECONDS);
+	static final long MIN_SLEEP_NANOS = 1_000;
+	static final long MAX_SLEEP_NANOS = 1_000_000; // 1ms
+
+	static final double SLEEP_ALPHA = 0.1;
 
 	String name, pausedName;
 	Thread thread;
@@ -25,16 +28,17 @@ public final class Worker {
 	final int workerIdx;
 	final ConcurrentLinkedDeque<JobHandle> localWorkQueue = new ConcurrentLinkedDeque<>();
 	final ArrayDeque<JobHandle> localStalledWork = new ArrayDeque<>();
-	final AtomicBoolean inflight = new AtomicBoolean();
+	final AtomicBoolean processing = new AtomicBoolean();
 
 	boolean findNextStealTarget() {
 		// Find the best target to steal work from
 		int nextVictimIdx = -1;
 		int nextVictimWorkCount = -1;
 		for (int i = 0; i < jobSystem.workers.length; i++) {
-			if (i == workerIdx || !jobSystem.workers[i].inflight.get())
+			final Worker worker = jobSystem.workers[i];
+			if (i == workerIdx || !worker.processing.get() || worker.localWorkQueue.isEmpty())
 				continue; // Don't query ourselves or a worker that is idle
-			int workCount = jobSystem.workers[i].localWorkQueue.size();
+			int workCount = worker.localWorkQueue.size();
 			if (workCount > nextVictimWorkCount) {
 				nextVictimIdx = i;
 				nextVictimWorkCount = workCount;
@@ -48,11 +52,14 @@ public final class Worker {
 	void run() {
 		name = thread.getName();
 		pausedName = name + " [Paused]";
+
+		long spinWaitNanos = TimeUnit.MICROSECONDS.convert(1, TimeUnit.NANOSECONDS);
 		while (jobSystem.active) {
 			// Check local work queue
 			handle = (localStalledWork.isEmpty() ? localWorkQueue : localStalledWork).poll();
 
-			long waitStart = handle == null ? System.nanoTime() : 0;
+			long idleStart = handle == null ? System.nanoTime() : 0;
+			long idleTime = 0;
 			while (handle == null) {
 				if (stealTargetIdx >= 0) {
 					final Worker victim = jobSystem.workers[stealTargetIdx];
@@ -76,7 +83,8 @@ public final class Worker {
 					handle = localStalledWork.isEmpty() ? jobSystem.workQueue.poll() : localStalledWork.poll();
 				}
 
-				if (handle == null && !findNextStealTarget() && System.nanoTime() - waitStart > SLEEP_TIME_NANOS) {
+				idleTime = System.nanoTime() - idleStart;
+				if (handle == null && !findNextStealTarget() && idleTime > spinWaitNanos) {
 					// Wait for a signal that there is work to be had
 					try {
 						jobSystem.workerSemaphore.acquire();
@@ -91,16 +99,33 @@ public final class Worker {
 					}
 				}
 
+				if(handle == null)
+					Thread.onSpinWait();
+
 				if (!jobSystem.active) {
 					log.trace("Shutdown");
 					return;
 				}
 			}
 
+			if (idleStart != 0) {
+				spinWaitNanos = clamp(
+					(long) (
+						spinWaitNanos * (1.0 - SLEEP_ALPHA) +
+						idleTime * SLEEP_ALPHA
+					),
+					MIN_SLEEP_NANOS,
+					MAX_SLEEP_NANOS
+				);
+			}
+
 			try {
+				processing.set(true);
 				processHandle();
 			} catch (InterruptedException ignored) {
 				thread.isInterrupted(); // Consume the interrupt to prevent it from cancelling the next job
+			} finally {
+				processing.set(false);
 			}
 		}
 		log.trace("Shutdown");
@@ -114,7 +139,6 @@ public final class Worker {
 			if (handle.item != null) {
 				if (handle.item.canStart()) {
 					if (handle.setRunning(this)) {
-						inflight.set(true);
 						handle.item.onRun();
 						handle.item.ranToCompletion.set(true);
 					}

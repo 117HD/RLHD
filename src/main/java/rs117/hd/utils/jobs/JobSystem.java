@@ -150,7 +150,7 @@ public final class JobSystem {
 
 	public boolean hasIdleWorkers() {
 		for (Worker worker : workers) {
-			if (!worker.inflight.get())
+			if (!worker.processing.get())
 				return true;
 		}
 		return false;
