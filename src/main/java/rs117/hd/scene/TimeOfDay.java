@@ -184,7 +184,7 @@ public class TimeOfDay
 		if (sunStrength < 1.0f && regionalFogColor != null) {
 			float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
 			float[] nightSkyLin = rs117.hd.utils.ColorUtils.srgbToLinear(
-				new float[] { 15f / 255f, 20f / 255f, 35f / 255f }
+				new float[] { 5f / 255f, 7f / 255f, 15f / 255f }
 			);
 
 			float suppressionWindow;
@@ -311,7 +311,7 @@ public class TimeOfDay
 		if (sunStrength < 1.0f && regionalFogColor != null) {
 			float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
 			float[] nightSkyLin = rs117.hd.utils.ColorUtils.srgbToLinear(
-				new float[] { 15f / 255f, 20f / 255f, 35f / 255f }
+				new float[] { 5f / 255f, 7f / 255f, 15f / 255f }
 			);
 
 			float suppressionWindow;
@@ -396,7 +396,7 @@ public class TimeOfDay
 		if (nightBlendFactor > 0.0f) {
 			// Deep night zenith color (15, 20, 35) converted to linear
 			float[] nightSkyLinear = rs117.hd.utils.ColorUtils.srgbToLinear(
-				new float[] { 15f / 255f, 20f / 255f, 35f / 255f }
+				new float[] { 5f / 255f, 7f / 255f, 15f / 255f }
 			);
 
 			for (int i = 0; i < 3; i++) {

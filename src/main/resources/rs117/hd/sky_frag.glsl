@@ -186,7 +186,11 @@ void main() {
         starDir = vec3(starDir.x, cosX * starDir.y - sinX * starDir.z, sinX * starDir.y + cosX * starDir.z);
 
         vec3 nightSkyColor = proceduralStarfield(starDir);
-        skyColor = mix(skyColor, nightSkyColor, nightSkyBlend);
+
+        // Fade out stars and nebula near the horizon so the sky converges
+        // to the plain gradient color that the fog uses, hiding the world edge
+        float horizonStarFade = smoothstep(-0.1, 0.07, upAmount);
+        skyColor = mix(skyColor, nightSkyColor, nightSkyBlend * horizonStarFade);
 
         // Shooting stars (atmospheric, use un-rotated viewDir)
         if (viewDir.y < -0.05) {

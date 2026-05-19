@@ -587,12 +587,12 @@ void main() {
             float atmosphericScatter = sunSideBlend * (1.0 - zenithBlend) * 0.2;
             skyColorAtFragment = mix(skyColorAtFragment, skySunColor * 0.5 + skyHorizonColor * 0.5, atmosphericScatter);
 
-            // Night sky blend: match sky_frag.glsl's starfield blend so fog color
-            // matches the sky's darkness without showing stars or nebulas
+            // Night sky blend: darken fog toward skyZenithColor, which is what
+            // the sky converges to at the horizon at night (stars are faded out
+            // near the horizon in sky_frag.glsl)
             float nightSkyBlend = (1.0 - nightFade) * starVisibility;
             if (nightSkyBlend > 0.001) {
-                vec3 nightBgColor = vec3(0.00304, 0.00304, 0.00521);
-                skyColorAtFragment = mix(skyColorAtFragment, nightBgColor, nightSkyBlend);
+                skyColorAtFragment = mix(skyColorAtFragment, skyZenithColor, nightSkyBlend);
             }
 
             outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
