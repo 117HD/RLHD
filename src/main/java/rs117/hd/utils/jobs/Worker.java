@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.utils.Props;
+import rs117.hd.utils.platform.PlatformBindings;
 
 import static rs117.hd.utils.HDUtils.getThreadStackTrace;
 import static rs117.hd.utils.MathUtils.*;
@@ -53,10 +55,31 @@ public final class Worker {
 		name = thread.getName();
 		pausedName = name + " [Paused]";
 
+		int affinityCore = workerIdx + 1;
+		if(PlatformBindings.setAffinity(1L << affinityCore))
+			log.trace("Set worker {} affinity to {}", workerIdx, affinityCore);
+
 		long spinWaitNanos = TimeUnit.MICROSECONDS.convert(1, TimeUnit.NANOSECONDS);
+		long nextCPUCoreCheck = Props.DEVELOPMENT ? 0 : -1;
+
 		while (jobSystem.active) {
 			// Check local work queue
 			handle = (localStalledWork.isEmpty() ? localWorkQueue : localStalledWork).poll();
+
+			// Check if the worker is on the correct core, helps determine if CPU Pinning is working correctly on platforms
+			if(nextCPUCoreCheck >= 0 && System.nanoTime() > nextCPUCoreCheck) {
+				int cpu = PlatformBindings.getCpu();
+				if (cpu != -1) {
+					if (cpu != affinityCore) {
+						log.warn("Expected worker {} to be on core {}, but it is on core {}", workerIdx, affinityCore, cpu);
+						nextCPUCoreCheck = -1L;
+					} else {
+						nextCPUCoreCheck = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
+					}
+				} else {
+					nextCPUCoreCheck = -1L;
+				}
+			}
 
 			long idleStart = handle == null ? System.nanoTime() : 0;
 			long idleTime = 0;

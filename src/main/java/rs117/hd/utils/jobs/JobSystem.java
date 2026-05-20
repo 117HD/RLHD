@@ -61,7 +61,7 @@ public final class JobSystem {
 		for (int i = 0; i < workerCount; i++) {
 			Worker worker = workers[i] = new Worker(this, i);
 			worker.thread = new Thread(worker::run);
-			worker.thread.setPriority(Thread.NORM_PRIORITY + 1);
+			worker.thread.setPriority(Thread.NORM_PRIORITY + 3);
 			worker.thread.setName("117HD - Worker " + i);
 			threadToWorker.put(worker.thread, worker);
 		}
