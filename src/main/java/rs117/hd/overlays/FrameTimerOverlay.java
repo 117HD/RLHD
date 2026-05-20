@@ -243,12 +243,6 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.right(String.valueOf(subSceneCount))
 				.build());
 
-
-			children.add(LineComponent.builder()
-				.left("Streaming Zones:")
-				.right(String.valueOf(jobSystem.getWorkQueueSize()))
-				.build());
-
 			if (frameTimingsRecorder.isCapturingSnapshot())
 				children.add(LineComponent.builder()
 					.leftFont(boldFont)
