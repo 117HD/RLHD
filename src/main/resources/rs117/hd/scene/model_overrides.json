@@ -76712,17 +76712,22 @@
       },
       {
         "description": "Cloth",
-        "colors": "h == 6 || h == 8",
+        "colors": "h == 6",
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.3
+      },
+      {
+        "description": "Shells",
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_3"
       },
       {
         "description": "Seaweed",
         "colors": "h == 15",
         "baseMaterial": "GRUNGE_1_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.3
       }
     ]
   },
