@@ -76275,24 +76275,6 @@
         "description": "Metal",
         "colors": "h == 0 || h == 1 || h > 15",
         "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
-      },
-      {
-        "description": "Sail Low Tier",
-        "colors": "h == 11 || h == 12",
-        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
-        "uvType": "BOX",
-        "uvScale": 0.3,
-        "uvOrientation": 400,
-        "undoVanillaShading": false
-      },
-      {
-        "description": "Sail Med Tier",
-        "colors": "h == 6 && s == 1",
-        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
-        "uvType": "BOX",
-        "uvScale": 0.3,
-        "uvOrientation": 400,
-        "undoVanillaShading": false
       }
     ]
   },
@@ -76366,18 +76348,6 @@
         "description": "Metal",
         "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
-      },
-      {
-        "description": "Sail Low Tier",
-        "colors": "h == 11 || h == 12 || h == 0 && s == 7",
-        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
-        "undoVanillaShading": false
-      },
-      {
-        "description": "Sail Med Tier",
-        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
-        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH",
-        "undoVanillaShading": false
       }
     ]
   },
@@ -76413,18 +76383,6 @@
         "description": "Metal",
         "colors": "h == 0 || h == 1 || h > 15",
         "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
-      },
-      {
-        "description": "Sail Low Tier",
-        "colors": "h == 11 || h == 12 || h == 0 && s == 7",
-        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
-        "undoVanillaShading": false
-      },
-      {
-        "description": "Sail Med Tier",
-        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
-        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH",
-        "undoVanillaShading": false
       }
     ]
   },
