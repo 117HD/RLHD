@@ -39,6 +39,10 @@ public class GamevalManager {
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
+	private final HashSet<Handle> handles = new HashSet<>();
+	private long clearTime = 0;
+
+	private static boolean loaded = false;
 	private static final Map<String, Map<String, Integer>> GAMEVALS = new HashMap<>();
 
 	static {
@@ -50,19 +54,41 @@ public class GamevalManager {
 		GAMEVALS.put(OBJECT_KEY, Collections.emptyMap());
 		GAMEVALS.put(ANIM_KEY, Collections.emptyMap());
 		GAMEVALS.put(SPOTANIM_KEY, Collections.emptyMap());
+		loaded = false;
 	}
 
 	public void startUp() throws IOException {
-		fileWatcher = GAMEVAL_PATH.watch((path, first) -> {
-			try {
-				Map<String, Map<String, Integer>> gamevals = plugin.getGson()
-					.fromJson(path.toReader(), new TypeToken<Map<String, Map<String, Integer>>>() {}.getType());
-				GAMEVALS.replaceAll((k, v) -> gamevals.getOrDefault(k, Collections.emptyMap()));
-				log.debug("Loaded gameval mappings");
-			} catch (IOException ex) {
-				log.error("Failed to load gamevals:", ex);
-			}
-		});
+		fileWatcher = GAMEVAL_PATH.watch((path, first) -> loadGamevals());
+	}
+
+	public void update() {
+		if(!loaded || clearTime == 0 || System.currentTimeMillis() < clearTime)
+			return;
+
+		log.debug("Clearing gameval mappings");
+		clearGamevals();
+		clearTime = 0;
+	}
+
+	private void loadGamevals() {
+		try {
+			Map<String, Map<String, Integer>> gamevals = plugin.getGson()
+				.fromJson(GAMEVAL_PATH.toReader(), new TypeToken<Map<String, Map<String, Integer>>>() {}.getType());
+			GAMEVALS.replaceAll((k, v) -> gamevals.getOrDefault(k, Collections.emptyMap()));
+			loaded = true;
+			log.debug("Loaded gameval mappings");
+		} catch (IOException ex) {
+			log.error("Failed to load gamevals:", ex);
+		}
+	}
+
+	public Handle obtainHandle() {
+		if(!loaded)
+			loadGamevals();
+		Handle handle = new Handle();
+		handles.add(handle);
+		clearTime = 0; // Clear the clear time since we've requeued the handle
+		return handle;
 	}
 
 	public void shutDown() {
@@ -73,6 +99,9 @@ public class GamevalManager {
 	}
 
 	private String getName(String key, int id) {
+		if(!loaded)
+			log.warn("Gamevals not loaded yet, will fail to resolve name.");
+
 		return GAMEVALS
 			.get(key)
 			.entrySet()
@@ -81,54 +110,6 @@ public class GamevalManager {
 			.map(Map.Entry::getKey)
 			.findFirst()
 			.orElse(null);
-	}
-
-	public Map<String, Integer> getNpcs() {
-		return GAMEVALS.get(NPC_KEY);
-	}
-
-	public Map<String, Integer> getObjects() {
-		return GAMEVALS.get(OBJECT_KEY);
-	}
-
-	public Map<String, Integer> getAnims() {
-		return GAMEVALS.get(ANIM_KEY);
-	}
-
-	public Map<String, Integer> getSpotanims() {
-		return GAMEVALS.get(SPOTANIM_KEY);
-	}
-
-	public int getNpcId(String name) {
-		return getNpcs().get(name);
-	}
-
-	public int getObjectId(String name) {
-		return getObjects().get(name);
-	}
-
-	public int getAnimId(String name) {
-		return getAnims().get(name);
-	}
-
-	public int getSpotanimId(String name) {
-		return getSpotanims().get(name);
-	}
-
-	public String getNpcName(int id) {
-		return getName(NPC_KEY, id);
-	}
-
-	public String getObjectName(int id) {
-		return getName(OBJECT_KEY, id);
-	}
-
-	public String getAnimName(int id) {
-		return getName(ANIM_KEY, id);
-	}
-
-	public String getSpotanimName(int id) {
-		return getName(SPOTANIM_KEY, id);
 	}
 
 	@Slf4j
@@ -228,6 +209,64 @@ public class GamevalManager {
 	public static class SpotanimAdapter extends GamevalAdapter {
 		public SpotanimAdapter() {
 			super(SPOTANIM_KEY);
+		}
+	}
+
+	public class Handle implements AutoCloseable {
+
+		public Map<String, Integer> getNpcs() {
+			return GAMEVALS.get(NPC_KEY);
+		}
+
+		public Map<String, Integer> getObjects() {
+			return GAMEVALS.get(OBJECT_KEY);
+		}
+
+		public Map<String, Integer> getAnims() {
+			return GAMEVALS.get(ANIM_KEY);
+		}
+
+		public Map<String, Integer> getSpotanims() {
+			return GAMEVALS.get(SPOTANIM_KEY);
+		}
+
+		public int getNpcId(String name) {
+			return getNpcs().get(name);
+		}
+
+		public int getObjectId(String name) {
+			return getObjects().get(name);
+		}
+
+		public int getAnimId(String name) {
+			return getAnims().get(name);
+		}
+
+		public int getSpotanimId(String name) {
+			return getSpotanims().get(name);
+		}
+
+		public String getNpcName(int id) {
+			return getName(NPC_KEY, id);
+		}
+
+		public String getObjectName(int id) {
+			return getName(OBJECT_KEY, id);
+		}
+
+		public String getAnimName(int id) {
+			return getName(ANIM_KEY, id);
+		}
+
+		public String getSpotanimName(int id) {
+			return getName(SPOTANIM_KEY, id);
+		}
+
+		@Override
+		public void close() {
+			handles.remove(this);
+			if(handles.isEmpty())
+				clearTime = System.currentTimeMillis() + 10000; // Set the clear time to 10 seconds from now
 		}
 	}
 }

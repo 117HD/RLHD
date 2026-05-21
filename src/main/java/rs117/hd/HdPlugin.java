@@ -2020,6 +2020,8 @@ public class HdPlugin extends Plugin {
 		if (ctx != null)
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
 
+		gamevalManager.update();
+
 		DestructibleHandler.flushPendingDestruction();
 	}
 

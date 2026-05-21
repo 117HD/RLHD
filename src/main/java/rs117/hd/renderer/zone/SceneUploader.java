@@ -762,18 +762,20 @@ public class SceneUploader implements AutoCloseable {
 				textureBuffer
 			);
 		} catch (Throwable ex) {
-			log.warn(
-				"Error uploading {} {} {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
-				r instanceof DynamicObject ? "dynamic" : "static",
-				ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
-				ModelHash.getUuidSubType(uuid),
-				gamevalManager.getObjectName(id),
-				id,
-				modelOverride.description,
-				opaqueBuffer,
-				alphaBuffer,
-				ex
-			);
+			try(GamevalManager.Handle handle = gamevalManager.obtainHandle()) {
+				log.warn(
+					"Error uploading {} {} {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
+					r instanceof DynamicObject ? "dynamic" : "static",
+					ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
+					ModelHash.getUuidSubType(uuid),
+					handle.getObjectName(id),
+					id,
+					modelOverride.description,
+					opaqueBuffer,
+					alphaBuffer,
+					ex
+				);
+			}
 		}
 
 		int alphaEnd = alphaBuffer != null ? alphaBuffer.position() : 0;
@@ -800,18 +802,20 @@ public class SceneUploader implements AutoCloseable {
 					rid, level, id
 				);
 			} catch (Throwable ex) {
-				log.warn(
-					"Error adding alpha model for {} {} {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
-					r instanceof DynamicObject ? "dynamic" : "static",
-					ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
-					ModelHash.getUuidSubType(uuid),
-					gamevalManager.getObjectName(id),
-					id,
-					modelOverride.description,
-					opaqueBuffer,
-					alphaBuffer,
-					ex
-				);
+				try(GamevalManager.Handle handle = gamevalManager.obtainHandle()) {
+					log.warn(
+						"Error adding alpha model for {} {} {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
+						r instanceof DynamicObject ? "dynamic" : "static",
+						ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
+						ModelHash.getUuidSubType(uuid),
+						handle.getObjectName(id),
+						id,
+						modelOverride.description,
+						opaqueBuffer,
+						alphaBuffer,
+						ex
+					);
+				}
 			}
 		}
 	}
