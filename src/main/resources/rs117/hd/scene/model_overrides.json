@@ -76461,8 +76461,8 @@
     ]
   },
   {
-    "description": "Sailing - Raft, Skiff and Sloop - Sails - Canvas and Cotton",
-    "baseMaterial": "CARPET_SUPER_LIGHT",
+    "description": "Sailing - Raft, Skiff and Sloop - Sails - Canvas, Cotton and Other Colors",
+    "baseMaterial": "CARPET_ULTRA_LIGHT_SMOOTH",
     "disableDetailCulling": true,
     "objectIds": [
       "SAILING_BOAT_SAIL_KANDARIN_1X3_CANVAS",
@@ -76470,14 +76470,7 @@
       "SAILING_BOAT_SAIL_KANDARIN_2X5_CANVAS",
       "SAILING_BOAT_SAIL_KANDARIN_2X5_COTTON",
       "SAILING_BOAT_SAIL_KANDARIN_3X8_CANVAS",
-      "SAILING_BOAT_SAIL_KANDARIN_3X8_COTTON"
-    ]
-  },
-  {
-    "description": "Sailing - Raft, Skiff and Sloop - Sails - Other Colors",
-    "baseMaterial": "CARPET_ULTRA_LIGHT_SMOOTH",
-    "disableDetailCulling": true,
-    "objectIds": [
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_COTTON",
       "SAILING_BOAT_SAIL_KANDARIN_1X3_BLACK",
       "SAILING_BOAT_SAIL_KANDARIN_1X3_PURPLE",
       "SAILING_BOAT_SAIL_KANDARIN_1X3_GREEN",
@@ -77621,7 +77614,6 @@
   },
   {
     "description": "Sailing - Cabin Boy Jenkins - Fix Brightness",
-    "baseMaterial": "UNLIT",
     "npcIds": [
       "SAILING_CREW_GHOST_JENKINS_DOCK",
       "SAILING_CREW_GHOST_JENKINS_UNRECRUITED",
@@ -77634,6 +77626,12 @@
       "SAILING_CREW_GHOST_JENKINS_CARGO",
       "SAILING_CREW_GHOST_JENKINS_CARGO_2",
       "SAILING_CREW_GHOST_JENKINS_CARGO_3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "UNLIT_125"
+      }
     ]
   },
   {
