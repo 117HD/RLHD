@@ -3,12 +3,13 @@ package rs117.hd.utils.collections;
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.StampedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Props;
 
 import static java.lang.Integer.numberOfLeadingZeros;
 import static rs117.hd.utils.MathUtils.*;
@@ -180,13 +181,12 @@ public enum PooledArrayType {
 		int excess = bucket.stack.size() - target;
 
 		while (excess-- > 0) {
-			Object arr = bucket.stack.poll();
+			Object arr = bucket.poll();
 			if (arr == null)
 				break;
 
 			spill(b, s, arr);
 		}
-		bucket.isEmpty.set(bucket.stack.isEmpty());
 		bucket.lastOverTargetTime = now;
 	}
 
@@ -205,8 +205,7 @@ public enum PooledArrayType {
 
 			try {
 				if (other.stack.size() <= other.avgDemand) {
-					other.stack.add(array);
-					other.isEmpty.set(false);
+					other.add(array);
 					return true;
 				}
 			} finally {
@@ -248,7 +247,7 @@ public enum PooledArrayType {
 		for (int i = 0; i < STRIPES * 2; i++) {
 			final int s = (startStripe + i) & STRIPES_MASK;
 			final Bucket bucket = bucketStripes[s];
-			if (bucket.isEmpty.get())
+			if (bucket.isEmpty)
 				continue;
 
 			final long stamp = i < STRIPES ? bucket.lock.tryWriteLock() : bucket.lock.writeLock();
@@ -256,11 +255,10 @@ public enum PooledArrayType {
 				continue;
 
 			try {
-				final T arr = (T) bucket.stack.poll();
+				final T arr = (T) bucket.poll();
 				if (arr != null) {
 					bucket.inUse++;
 					bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
-					bucket.isEmpty.set(bucket.stack.isEmpty());
 					maybeCleanup(b, s, bucket);
 					return arr;
 				}
@@ -295,9 +293,8 @@ public enum PooledArrayType {
 				continue;
 
 			try {
-				bucket.inUse--;
-				bucket.stack.add(array);
-				bucket.isEmpty.set(false);
+				bucket.inUse = max(0, bucket.inUse - 1);
+				bucket.add(array);
 				maybeCleanup(b, s, bucket);
 				return;
 			} finally {
@@ -313,9 +310,9 @@ public enum PooledArrayType {
 
 	@RequiredArgsConstructor
 	private static final class Bucket {
+		private final HashSet<Object> set = Props.DEVELOPMENT ? new HashSet<>() : null;
 		private final ArrayDeque<Object> stack = new ArrayDeque<>();
 		private final StampedLock lock = new StampedLock();
-		private final AtomicBoolean isEmpty = new AtomicBoolean(true);
 
 		private final int size;
 		private int opCounter;
@@ -323,5 +320,22 @@ public enum PooledArrayType {
 		private int peakInUse;
 		private float avgDemand;
 		private long lastOverTargetTime;
+
+		private volatile boolean isEmpty = true;
+
+		@SuppressWarnings("AssertWithSideEffects")
+		public void add(Object array) {
+			assert set == null || set.add(array);
+			stack.add(array);
+			isEmpty = false;
+		}
+
+		public Object poll() {
+			Object arr = stack.poll();
+			if(set != null)
+				set.remove(arr);
+			isEmpty = stack.isEmpty();
+			return arr;
+		}
 	}
 }
