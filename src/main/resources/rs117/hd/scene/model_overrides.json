@@ -7510,6 +7510,7 @@
       "OLDCASTLEWALL",
       "OLDWALL",
       "CROSS_OLDCASTLEEDGE",
+      "OLDWALL_NO_OCCLUDE",
       "CASTLEWARS_WALL_SARADOMIN",
       "CASTLEWARS_CASTLEBATTLEMENTS_SARADOMIN",
       "CASTLEWARS_BATTLEMENTS_SARADOMIN_BLOCKRANGE",
@@ -29189,6 +29190,16 @@
     "uvScale": 0.65
   },
   {
+    "description": "Wooden Bank Chest - Lighter",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "BANK_CHEST"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.65
+  },
+  {
     "description": "Rough Wooden Plank Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -42635,6 +42646,7 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "BARREL_WOODEN01_CIVITAS01",
+      "BARREL_WOODEN01_CIVITAS02",
       "BARREL_WOODEN01_AVIUM01",
       "BARREL_WOODEN01_ALDARIN01",
       "TWILIGHT_TEMPLE_LOWER_BARREL",
@@ -76847,6 +76859,7 @@
       {
         "description": "Remove shadow cast by clickbox",
         "colors": "h == 0 && l > 55",
+        "baseMaterial": "NONE",
         "castShadows": false
       },
       {
