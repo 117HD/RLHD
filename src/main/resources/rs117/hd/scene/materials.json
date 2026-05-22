@@ -1928,6 +1928,11 @@
     "brightness": 1.35
   },
   {
+    "name": "CARPET_ULTRA_LIGHT",
+    "parent": "CARPET",
+    "brightness": 1.45
+  },
+  {
     "name": "CARPET_LIGHT_SMOOTH",
     "parent": "CARPET_LIGHT",
     "normalMap": null
@@ -1940,6 +1945,11 @@
   {
     "name": "CARPET_SUPER_LIGHT_SMOOTH",
     "parent": "CARPET_SUPER_LIGHT",
+    "normalMap": null
+  },
+  {
+    "name": "CARPET_ULTRA_LIGHT_SMOOTH",
+    "parent": "CARPET_ULTRA_LIGHT",
     "normalMap": null
   },
   {
