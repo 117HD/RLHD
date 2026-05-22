@@ -75452,6 +75452,7 @@
       "BOATKIT_MAST_REARMAST_HOISTED",
       "BOATKIT_MAST_MIDDLEMAST_UNFURLED"
     ],
+    "disableDetailCulling": true,
     "colorOverrides": [
       {
         "description": "Hull",
