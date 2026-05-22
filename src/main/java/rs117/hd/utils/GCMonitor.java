@@ -5,7 +5,6 @@ import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import javax.inject.Singleton;
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
@@ -26,7 +25,10 @@ public class GCMonitor {
 	private static final double MIN_FREE_HEAP_RATIO = 0.10;
 	private static final long MIN_FREE_BYTES = 128L * 1024L * 1024L;
 
+	private static long NEXT_LOG_TIME_MS = 0;
 	private static long LAST_FULL_GC_TIME_MS = 0;
+
+	private static int FULL_GC_COUNT = 0;
 
 	private final List<NotificationEmitter> emitters = new ArrayList<>();
 
@@ -58,13 +60,18 @@ public class GCMonitor {
 			return;
 
 		final GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
-		final String action = info.getGcAction().toLowerCase(Locale.ROOT);
+		final String action = info.getGcAction().toLowerCase();
 		if (!action.contains("major") && !action.contains("full") && !action.contains("old"))
 			return;
 
-		long currentTime = System.currentTimeMillis();
-		if (LAST_FULL_GC_TIME_MS > 0 && currentTime - LAST_FULL_GC_TIME_MS < 1000)
-			log.warn("[GCMonitor] Multiple Full GCs within a second have occurred, increasing max memory might help");
+		final long currentTime = System.currentTimeMillis();
+		if (LAST_FULL_GC_TIME_MS > 0 && currentTime - LAST_FULL_GC_TIME_MS < 1000) {
+			FULL_GC_COUNT++;
+			if(currentTime > NEXT_LOG_TIME_MS) {
+				log.warn("[GCMonitor] Multiple Full GCs ({}) within a second have occurred, increasing max memory might help", FULL_GC_COUNT);
+				NEXT_LOG_TIME_MS = currentTime + 10000;
+			}
+		}
 		LAST_FULL_GC_TIME_MS = currentTime;
 
 		final long usedHeap = RUNTIME.totalMemory() - RUNTIME.freeMemory();
