@@ -18,8 +18,6 @@ import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.Job;
 
 import static java.lang.reflect.Array.getLength;
-import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
-import static rs117.hd.renderer.zone.SceneUploader.MAX_VERTEX_COUNT;
 import static rs117.hd.utils.collections.PooledArrayType.BYTE;
 import static rs117.hd.utils.collections.PooledArrayType.FLOAT;
 import static rs117.hd.utils.collections.PooledArrayType.INT;
@@ -33,24 +31,9 @@ public final class AsyncCachedModel extends Job implements Model {
 	public static final ConcurrentLinkedQueue<AsyncCachedModel> INFLIGHT = new ConcurrentLinkedQueue<>();
 	public static ConcurrentPool<AsyncCachedModel> POOL;
 
-	public static final long MAX_MODEL_SIZE_BYTES = calculateMaxModelSizeBytes();
-
-	private static long calculateMaxModelSizeBytes() {
-		var m = new AsyncCachedModel();
-		long size = 0;
-		for (var field : m.cachedFields) {
-			size += (long) field.arrayType.stride * (
-				field.fieldType == VERTEX_TYPE ? MAX_VERTEX_COUNT : MAX_FACE_COUNT
-			);
-		}
-		return size;
-	}
-
-	public static void initialize(Injector injector, long sizeLimitBytes) {
-		int maxModelCount = (int) (sizeLimitBytes / MAX_MODEL_SIZE_BYTES);
+	public static void initialize(Injector injector) {
 		if (AsyncCachedModel.POOL == null)
-			AsyncCachedModel.POOL = new ConcurrentPool<>(() -> injector.getInstance(AsyncCachedModel.class), maxModelCount);
-		log.debug("Initialized AsyncCachedModel pool with {} models", maxModelCount);
+			AsyncCachedModel.POOL = new ConcurrentPool<>(() -> injector.getInstance(AsyncCachedModel.class), 32);
 	}
 
 	public static void destroy() {

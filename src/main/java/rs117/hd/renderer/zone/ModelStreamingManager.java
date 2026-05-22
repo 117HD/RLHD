@@ -86,7 +86,7 @@ public class ModelStreamingManager {
 			streamingContexts[i] = injector.getInstance(StreamingContext.class);
 
 		if (useMultithreading())
-			AsyncCachedModel.initialize(injector, config.asyncModelCacheSizeMiB() * MiB);
+			AsyncCachedModel.initialize(injector);
 
 		eventBus.register(this);
 		updateRenderThreads();
