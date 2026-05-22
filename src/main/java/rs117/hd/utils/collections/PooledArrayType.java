@@ -3,7 +3,6 @@ package rs117.hd.utils.collections;
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.locks.StampedLock;
 import lombok.RequiredArgsConstructor;
@@ -315,7 +314,6 @@ public enum PooledArrayType {
 
 	@RequiredArgsConstructor
 	private static final class Bucket {
-		private final HashSet<Object> set = Props.DEVELOPMENT ? new HashSet<>() : null;
 		private final ArrayDeque<Object> stack = new ArrayDeque<>();
 		private final StampedLock lock = new StampedLock();
 
@@ -329,7 +327,7 @@ public enum PooledArrayType {
 		private volatile boolean isEmpty = true;
 
 		public void add(Object array) {
-			if(set != null && !set.add(array))
+			if(Props.DEVELOPMENT && !isEmpty && stack.contains(array))
 				throw new IllegalStateException("Duplicate array: " + array);
 			stack.add(array);
 			isEmpty = false;
@@ -337,8 +335,6 @@ public enum PooledArrayType {
 
 		public Object poll() {
 			Object arr = stack.poll();
-			if(set != null)
-				set.remove(arr);
 			isEmpty = stack.isEmpty();
 			return arr;
 		}

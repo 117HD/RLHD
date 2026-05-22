@@ -8,7 +8,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.ToIntFunction;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +33,7 @@ import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
+import static rs117.hd.utils.HDUtils.quickSort;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -402,7 +402,7 @@ public class Zone implements Destructible {
 		}
 	}
 
-	public static class AlphaModel {
+	public static final class AlphaModel {
 		int id;
 		ModelOverride modelOverride;
 		int startpos, endpos;
@@ -438,6 +438,14 @@ public class Zone implements Destructible {
 
 		boolean isTemp() {
 			return packedFaces == null || sortedFaces == null;
+		}
+
+		int calculateDepth(int cx, int cy, int cz, int zx, int zz) {
+			final int mx = (x + ((zx - zofx) << 10));
+			final int mz = (z + ((zz - zofz) << 10));
+			return (mx - cx) * (mx - cx) +
+			       (y - cy) * (y - cy) +
+			       (mz - cz) * (mz - cz);
 		}
 
 		void setView(DynamicModelVAO.View view) {
@@ -658,31 +666,35 @@ public class Zone implements Destructible {
 	private static int lastTboF;
 	private static int lastzx, lastzz;
 
-	private static final class AlphaSortPredicate implements ToIntFunction<AlphaModel> {
-		int cx, cy, cz;
+	static class AlphaModelComparator implements Comparator<AlphaModel> {
 		int zx, zz;
+		int cx, cy, cz;
 
 		@Override
-		public int applyAsInt(AlphaModel m) {
-			final int mx = m.x + ((zx - m.zofx) << 10);
-			final int mz = m.z + ((zz - m.zofz) << 10);
-			final int my = m.y;
-			return (mx - cx) * (mx - cx) + (my - cy) * (my - cy) + (mz - cz) * (mz - cz);
+		public int compare(AlphaModel modelA, AlphaModel modelB)
+		{
+			return Integer.compare(
+				modelA.calculateDepth(cx, cy, cz, zx, zz),
+				modelB.calculateDepth(cx, cy, cz, zx, zz)
+			);
 		}
 	}
 
-	private final AlphaSortPredicate alphaSortPred = new AlphaSortPredicate();
-	private final Comparator<AlphaModel> alphaSortComparator = Comparator.comparingInt(alphaSortPred).reversed();
-
+	private static final AlphaModelComparator alphaModelComparator = new AlphaModelComparator();
 	private final EboAlphaWriterJob sortedAlphaFacesUpload = new EboAlphaWriterJob();
 
 	synchronized void alphaSort(int zx, int zz, Camera camera) {
-		alphaSortPred.cx = (int) camera.getPositionX();
-		alphaSortPred.cy = (int) camera.getPositionY();
-		alphaSortPred.cz = (int) camera.getPositionZ();
-		alphaSortPred.zx = zx;
-		alphaSortPred.zz = zz;
-		alphaModels.sort(alphaSortComparator);
+		final int alphaModelCount = alphaModels.size();
+		if (alphaModelCount <= 1)
+			return;
+
+		alphaModelComparator.cx = (int) camera.getPositionX();
+		alphaModelComparator.cy = (int) camera.getPositionY();
+		alphaModelComparator.cz = (int) camera.getPositionZ();
+		alphaModelComparator.zx = zx;
+		alphaModelComparator.zz = zz;
+
+		quickSort(alphaModels, alphaModelComparator);
 	}
 
 	void alphaStaticModelSort(Camera camera) {
