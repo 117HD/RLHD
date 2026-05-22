@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.StampedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,9 @@ public enum PooledArrayType {
 
 	public static final PooledArrayType[] VALUES = values();
 
+	private static final double MAX_HEAP_FRACTION = 0.05; // 768 MB * 0.05 = 38.4 MB
+	private static final long MAX_POOL_BYTES = (long) (Runtime.getRuntime().maxMemory() * MAX_HEAP_FRACTION);
+
 	private static final int MAX_BUCKET = 30;
 	private static final int STRIPES = 8;
 	private static final int STRIPES_MASK = STRIPES - 1;
@@ -32,8 +36,11 @@ public enum PooledArrayType {
 	private static final long SHRINK_DELAY_MS = 60_000;
 	private static final double ALPHA = 0.1;
 
+	private static final AtomicLong CURRENT_POOL_BYTES = new AtomicLong();
+
 	public final ArraySupplier<?> supplier;
 	public final int stride;
+
 	private final Bucket[][] buckets = new Bucket[MAX_BUCKET + 1][STRIPES];
 
 	PooledArrayType(ArraySupplier<?> supplier, int stride) {
@@ -62,6 +69,10 @@ public enum PooledArrayType {
 	private static int stripeIndex() {
 		final int hash = Thread.currentThread().hashCode();
 		return (hash ^ (hash >>> 16)) & STRIPES_MASK;
+	}
+
+	private static boolean isPoolFull(long additionalBytes) {
+		return CURRENT_POOL_BYTES.get() + additionalBytes > MAX_POOL_BYTES;
 	}
 
 	public static void forceCleanup() {
@@ -114,12 +125,16 @@ public enum PooledArrayType {
 	}
 
 	public static void shutdown() {
-		for(int v = 0; v < VALUES.length; v++) {
+		CURRENT_POOL_BYTES.set(0);
+
+		for (int v = 0; v < VALUES.length; v++) {
 			final PooledArrayType type = VALUES[v];
 			for (int b = 0; b < VALUES[v].buckets.length; b++) {
 				for (int s = 0; s < STRIPES; s++) {
 					final Bucket bucket = type.buckets[b][s];
 					bucket.stack.clear();
+					bucket.isEmpty = true;
+
 					bucket.inUse = 0;
 					bucket.peakInUse = 0;
 					bucket.avgDemand = 0;
@@ -130,10 +145,7 @@ public enum PooledArrayType {
 	}
 
 	public static long getCurrentTotalCacheSize() {
-		long size = 0;
-		for (PooledArrayType t : VALUES)
-			size += t.getCurrentCacheSize();
-		return size;
+		return CURRENT_POOL_BYTES.get();
 	}
 
 	public int getElementCount() {
@@ -185,17 +197,21 @@ public enum PooledArrayType {
 		int excess = bucket.stack.size() - target;
 
 		while (excess-- > 0) {
-			Object arr = bucket.poll();
+			Object arr = bucket.poll(bytesFor(bucket.size));
 			if (arr == null)
 				break;
 
 			spill(b, s, arr);
 		}
+
 		bucket.lastOverTargetTime = now;
 	}
 
 	private boolean spill(int b, int fromStripe, Object array) {
 		final Bucket[] stripes = buckets[b];
+
+		final long bytes = bytesFor(Array.getLength(array));
+
 		for (int i = 1; i < STRIPES; i++) {
 			final int s = (fromStripe + i) & STRIPES_MASK;
 			final Bucket other = stripes[s];
@@ -209,7 +225,7 @@ public enum PooledArrayType {
 
 			try {
 				if (other.stack.size() <= other.avgDemand) {
-					other.add(array);
+					other.add(array, bytes);
 					return true;
 				}
 			} finally {
@@ -218,6 +234,10 @@ public enum PooledArrayType {
 		}
 
 		return false;
+	}
+
+	private long bytesFor(int len) {
+		return (long) len * stride;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -245,6 +265,7 @@ public enum PooledArrayType {
 		if (b < 0 || b >= buckets.length)
 			return (T) supplier.get(requestedSize);
 
+		final long bytes = bytesFor(roundedSize);
 		final Bucket[] bucketStripes = buckets[b];
 		final int startStripe = stripeIndex();
 
@@ -254,12 +275,16 @@ public enum PooledArrayType {
 			if (bucket.isEmpty)
 				continue;
 
-			final long stamp = i < STRIPES ? bucket.lock.tryWriteLock() : bucket.lock.writeLock();
+			final long stamp =
+				i < STRIPES
+					? bucket.lock.tryWriteLock()
+					: bucket.lock.writeLock();
+
 			if (stamp == 0)
 				continue;
 
 			try {
-				final T arr = (T) bucket.poll();
+				final T arr = (T) bucket.poll(bytes);
 				if (arr != null) {
 					bucket.inUse++;
 					bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
@@ -286,19 +311,31 @@ public enum PooledArrayType {
 		if (b < 0 || b >= buckets.length)
 			return;
 
+		final long bytes = bytesFor(len);
+		if (isPoolFull(bytes))
+			return;
+
 		final int startStripe = stripeIndex();
+
 		final Bucket[] bucketStripes = buckets[b];
 
 		for (int i = 0; i < STRIPES * 2; i++) {
 			final int s = (startStripe + i) & STRIPES_MASK;
 			final Bucket bucket = bucketStripes[s];
-			final long stamp = i < STRIPES ? bucket.lock.tryWriteLock() : bucket.lock.writeLock();
+
+			final long stamp =
+				i < STRIPES
+					? bucket.lock.tryWriteLock()
+					: bucket.lock.writeLock();
 			if (stamp == 0)
 				continue;
 
 			try {
+				if (isPoolFull(bytes))
+					return;
+
 				bucket.inUse = max(0, bucket.inUse - 1);
-				bucket.add(array);
+				bucket.add(array, bytes);
 				maybeCleanup(b, s, bucket);
 				return;
 			} finally {
@@ -326,15 +363,18 @@ public enum PooledArrayType {
 
 		private volatile boolean isEmpty = true;
 
-		public void add(Object array) {
-			if(Props.DEVELOPMENT && !isEmpty && stack.contains(array))
+		public void add(Object array, long bytes) {
+			if (Props.DEVELOPMENT && !isEmpty && stack.contains(array))
 				throw new IllegalStateException("Duplicate array: " + array);
 			stack.add(array);
+			CURRENT_POOL_BYTES.addAndGet(bytes);
 			isEmpty = false;
 		}
 
-		public Object poll() {
+		public Object poll(long bytes) {
 			Object arr = stack.poll();
+			if (arr != null)
+				CURRENT_POOL_BYTES.addAndGet(-bytes);
 			isEmpty = stack.isEmpty();
 			return arr;
 		}
