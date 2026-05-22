@@ -211,7 +211,7 @@ public class ModelStreamingManager {
 
 		final int drawIndex = ctx.obtainDrawIndex(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE);
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
-		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(false);
+		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(m);
 		if (asyncModelCache != null) {
 			asyncModelCache.queue(
 				ctx,
@@ -479,7 +479,7 @@ public class ModelStreamingManager {
 
 		final int drawIndex = renderThreadId == -1 ? ctx.obtainDrawIndex(VAO_OPAQUE) : -1;
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
-		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(renderThreadId >= 0);
+		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(m);
 		if (asyncModelCache != null) {
 			// Fast path, buffer the model into the job queue to unblock rl internals
 			asyncModelCache.queue(
@@ -684,10 +684,20 @@ public class ModelStreamingManager {
 	}
 
 
-	private synchronized AsyncCachedModel obtainAvailableAsyncCachedModel(boolean shouldBlock) {
+	private synchronized AsyncCachedModel obtainAvailableAsyncCachedModel(Model model) {
 		if (AsyncCachedModel.POOL == null || numRenderThreads <= 0)
 			return null;
 
-		return shouldBlock ? AsyncCachedModel.POOL.acquireBlocking(5000) : AsyncCachedModel.POOL.acquire();
+		AsyncCachedModel result = AsyncCachedModel.POOL.acquire();
+		if(result == null)
+			return null;
+
+		if(result.setup(model))
+			return result;
+
+		// We failed to reserve space to cache the model, so retun the model back to the pool
+		AsyncCachedModel.POOL.recycle(result);
+
+		return null;
 	}
 }

@@ -257,46 +257,45 @@ public enum PooledArrayType {
 		return cached;
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T borrow(int requestedSize) {
+		return borrow(requestedSize, true);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T borrow(int requestedSize, boolean createIfMissing) {
 		final int roundedSize = ceilPow2(requestedSize);
 		final int b = bucket(roundedSize);
 
-		if (b < 0 || b >= buckets.length)
-			return (T) supplier.get(requestedSize);
+		if(b >= 0 && b < buckets.length) {
+			final long bytes = bytesFor(roundedSize);
+			final Bucket[] bucketStripes = buckets[b];
+			final int startStripe = stripeIndex();
 
-		final long bytes = bytesFor(roundedSize);
-		final Bucket[] bucketStripes = buckets[b];
-		final int startStripe = stripeIndex();
+			for (int i = 0; i < STRIPES * 2; i++) {
+				final int s = (startStripe + i) & STRIPES_MASK;
+				final Bucket bucket = bucketStripes[s];
+				if (bucket.isEmpty)
+					continue;
 
-		for (int i = 0; i < STRIPES * 2; i++) {
-			final int s = (startStripe + i) & STRIPES_MASK;
-			final Bucket bucket = bucketStripes[s];
-			if (bucket.isEmpty)
-				continue;
+				final long stamp = i < STRIPES ? bucket.lock.tryWriteLock() : bucket.lock.writeLock();
+				if (stamp == 0)
+					continue;
 
-			final long stamp =
-				i < STRIPES
-					? bucket.lock.tryWriteLock()
-					: bucket.lock.writeLock();
-
-			if (stamp == 0)
-				continue;
-
-			try {
-				final T arr = (T) bucket.poll(bytes);
-				if (arr != null) {
-					bucket.inUse++;
-					bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
-					maybeCleanup(b, s, bucket);
-					return arr;
+				try {
+					final T arr = (T) bucket.poll(bytes);
+					if (arr != null) {
+						bucket.inUse++;
+						bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
+						maybeCleanup(b, s, bucket);
+						return arr;
+					}
+				} finally {
+					bucket.lock.unlockWrite(stamp);
 				}
-			} finally {
-				bucket.lock.unlockWrite(stamp);
 			}
 		}
 
-		return (T) supplier.get(roundedSize);
+		return createIfMissing ? (T) supplier.get(roundedSize) : null;
 	}
 
 	public void release(Object array) {

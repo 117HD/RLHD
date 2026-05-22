@@ -23,11 +23,14 @@ import static rs117.hd.utils.collections.PooledArrayType.FLOAT;
 import static rs117.hd.utils.collections.PooledArrayType.INT;
 import static rs117.hd.utils.collections.PooledArrayType.SHORT;
 
+@SuppressWarnings("jol")
 @Slf4j
 @Getter
 @Setter
 @Accessors(chain = false)
 public final class AsyncCachedModel extends Job implements Model {
+	public static final Runtime runtime = Runtime.getRuntime();
+
 	public static final ConcurrentLinkedQueue<AsyncCachedModel> INFLIGHT = new ConcurrentLinkedQueue<>();
 	public static ConcurrentPool<AsyncCachedModel> POOL;
 
@@ -115,6 +118,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private int y;
 	private int z;
 	private UploadModelFunc uploadFunc;
+	private long availMemory;
 
 	@SuppressWarnings("unchecked")
 	private <T> CachedArrayField<T> addField(PooledArrayType arrayType, int fieldType) {
@@ -188,6 +192,21 @@ public final class AsyncCachedModel extends Job implements Model {
 	@Override
 	public short[] getFaceTextures() { return faceTextures.getValue(); }
 
+	public synchronized boolean setup(Model model) {
+		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
+		waitForCompletion(true);
+
+		availMemory = runtime.freeMemory();
+		if(processCachedFields(model, false))
+			return true;
+
+		// We've failed to obtain arrays to cache the model, return any we obtained and return false
+		for (int i = 0; i < cachedFields.length; i++)
+			cachedFields[i].reset();
+
+		return false;
+	}
+
 	public synchronized void queue(
 		@Nonnull WorldViewContext ctx,
 		@Nonnull Projection projection,
@@ -203,9 +222,6 @@ public final class AsyncCachedModel extends Job implements Model {
 		int x, int y, int z,
 		@Nonnull UploadModelFunc uploadFunc
 	) {
-		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
-		waitForCompletion(true);
-
 		this.ctx = ctx;
 		this.projection = projection;
 		this.tileObject = tileObject;
@@ -247,43 +263,52 @@ public final class AsyncCachedModel extends Job implements Model {
 		verticesCount = model.getVerticesCount();
 		faceCount = model.getFaceCount();
 
-		processing.set(false);
-		isCompleted.set(false);
 		if (alphaModel != null)
 			zone.pendingModelJobs.add(this);
+
+		processing.set(false);
+		isCompleted.set(false);
+
 		INFLIGHT.add(this);
 		queue();
 
+		processCachedFields(model, true);
+	}
+
+	private boolean processCachedFields(Model model, boolean cache) {
 		// Caching is done in order of access
 		// Ideally this should be updated to reflect any changes
-		verticesX.cache(model, model.getVerticesX());
-		verticesY.cache(model, model.getVerticesY());
-		verticesZ.cache(model, model.getVerticesZ());
+		boolean success = true;
+		success &= verticesX.cache(model, model.getVerticesX(), cache);
+		success &= verticesY.cache(model, model.getVerticesY(), cache);
+		success &= verticesZ.cache(model, model.getVerticesZ(), cache);
 
-		faceColors1.cache(model, model.getFaceColors1());
-		faceColors3.cache(model, model.getFaceColors3());
+		success &= faceColors1.cache(model, model.getFaceColors1(), cache);
+		success &= faceColors3.cache(model, model.getFaceColors3(), cache);
 
-		faceIndices1.cache(model, model.getFaceIndices1());
-		faceIndices2.cache(model, model.getFaceIndices2());
-		faceIndices3.cache(model, model.getFaceIndices3());
+		success &= faceIndices1.cache(model, model.getFaceIndices1(), cache);
+		success &= faceIndices2.cache(model, model.getFaceIndices2(), cache);
+		success &= faceIndices3.cache(model, model.getFaceIndices3(), cache);
 
-		faceTransparencies.cache(model, model.getFaceTransparencies());
-		faceTextures.cache(model, model.getFaceTextures());
-		textureFaces.cache(model, model.getTextureFaces());
+		success &= faceTransparencies.cache(model, model.getFaceTransparencies(), cache);
+		success &= faceTextures.cache(model, model.getFaceTextures(), cache);
+		success &= textureFaces.cache(model, model.getTextureFaces(), cache);
 
-		faceRenderPriorities.cache(model, model.getFaceRenderPriorities());
+		success &= faceRenderPriorities.cache(model, model.getFaceRenderPriorities(), cache);
 
-		vertexNormalsX.cache(model, model.getVertexNormalsX());
-		vertexNormalsY.cache(model, model.getVertexNormalsY());
-		vertexNormalsZ.cache(model, model.getVertexNormalsZ());
+		success &= vertexNormalsX.cache(model, model.getVertexNormalsX(), cache);
+		success &= vertexNormalsY.cache(model, model.getVertexNormalsY(), cache);
+		success &= vertexNormalsZ.cache(model, model.getVertexNormalsZ(), cache);
 
-		faceColors2.cache(model, model.getFaceColors2());
-		unlitFaceColors.cache(model, model.getUnlitFaceColors());
-		faceBias.cache(model, model.getFaceBias());
+		success &= faceColors2.cache(model, model.getFaceColors2(), cache);
+		success &= unlitFaceColors.cache(model, model.getUnlitFaceColors(), cache);
+		success &= faceBias.cache(model, model.getFaceBias(), cache);
 
-		texIndices1.cache(model, model.getTexIndices1());
-		texIndices2.cache(model, model.getTexIndices2());
-		texIndices3.cache(model, model.getTexIndices3());
+		success &= texIndices1.cache(model, model.getTexIndices1(), cache);
+		success &= texIndices2.cache(model, model.getTexIndices2(), cache);
+		success &= texIndices3.cache(model, model.getTexIndices3(), cache);
+
+		return success;
 	}
 
 	@Override
@@ -441,7 +466,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private static final int TEX_TYPE = 2;
 
 	@RequiredArgsConstructor
-	private static final class CachedArrayField<T> {
+	private final class CachedArrayField<T> {
 		private final AsyncCachedModel model;
 		private final PooledArrayType arrayType;
 		private final int fieldType;
@@ -468,14 +493,11 @@ public final class AsyncCachedModel extends Job implements Model {
 			cached.set(false);
 		}
 
-		public void cache(final Model m, T src) {
-			assert !cached.get();
-			assert value == null;
-
-			// If model is completed, then we can skip caching since its unnecessary to continue
-			if (src == null || model.isCompleted.get()) {
-				cached.set(true);
-				return;
+		public boolean cache(final Model m, T src, boolean cache) {
+			if(src == null) {
+				if(cache)
+					cached.set(true);
+				return true;
 			}
 
 			final int arraySize;
@@ -491,8 +513,24 @@ public final class AsyncCachedModel extends Job implements Model {
 					break;
 			}
 
-			value = arrayType.cache(src, 0, arraySize);
+			if(!cache) {
+				// Attempt to get an array from the pool, if we fail check if enough memory is available before creating
+				final long requested = (long) arraySize * arrayType.stride;
+				value = arrayType.borrow(arraySize, false);
+
+				if(value == null && requested < availMemory) {
+					availMemory -= requested;
+					value = (T) arrayType.supplier.get(arraySize);
+				}
+
+				return value != null;
+			}
+
+			if (!model.isCompleted.get())
+				System.arraycopy(src, 0, value, 0, arraySize);
+
 			cached.set(true);
+			return true;
 		}
 	}
 }
