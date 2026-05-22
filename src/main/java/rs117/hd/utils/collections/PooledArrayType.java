@@ -27,7 +27,7 @@ public enum PooledArrayType {
 	public static final PooledArrayType[] VALUES = values();
 
 	private static final double MAX_HEAP_FRACTION = 0.05; // 768 MB * 0.05 = 38.4 MB
-	private static final long MAX_POOL_BYTES = (long) (Runtime.getRuntime().maxMemory() * MAX_HEAP_FRACTION);
+	private static final long MAX_POOL_BYTES = Math.max((long) (Runtime.getRuntime().maxMemory() * MAX_HEAP_FRACTION), (long) 1e+7);
 
 	private static final int MAX_BUCKET = 30;
 	private static final int STRIPES = 8;
@@ -75,7 +75,7 @@ public enum PooledArrayType {
 		return CURRENT_POOL_BYTES.get() + additionalBytes > MAX_POOL_BYTES;
 	}
 
-	public static void forceCleanup() {
+	public static void forceCleanup(boolean full) {
 		long startCacheSize = getCurrentTotalCacheSize();
 		for(int v = 0; v < VALUES.length; v++) {
 			final PooledArrayType type = VALUES[v];
@@ -85,13 +85,21 @@ public enum PooledArrayType {
 					final long stamp = bucket.lock.writeLock();
 					try {
 						bucket.opCounter = 0;
-						type.maybeCleanup(b, s, bucket, true);
+						if(full) {
+							bucket.inUse = 0;
+							bucket.isEmpty = true;
+							bucket.stack.clear();
+						} else {
+							type.maybeCleanup(b, s, bucket, true);
+						}
 					} finally {
 						bucket.lock.unlockWrite(stamp);
 					}
 				}
 			}
 		}
+		if(full)
+			CURRENT_POOL_BYTES.set(0);
 		long endCacheSize = getCurrentTotalCacheSize();
 		long diff = endCacheSize - startCacheSize;
 		log.debug("PooledArrayType - Prev: {} New: {} Diff: {}", formatBytes(startCacheSize), formatBytes(endCacheSize), (diff < 0 ? "-" : "") + formatBytes(abs(diff)));

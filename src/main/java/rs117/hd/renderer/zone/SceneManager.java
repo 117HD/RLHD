@@ -446,7 +446,7 @@ public class SceneManager {
 				nextSceneContext.destroy();
 			nextSceneContext = null;
 
-			PooledArrayType.forceCleanup();
+			PooledArrayType.forceCleanup(false);
 
 			nextZones = new Zone[NUM_ZONES][NUM_ZONES];
 			nextSceneContext = new ZoneSceneContext(

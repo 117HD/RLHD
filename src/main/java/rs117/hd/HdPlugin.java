@@ -118,6 +118,7 @@ import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.GCMonitor;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.HDVariables;
@@ -143,6 +144,7 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
+@SuppressWarnings("ALL")
 @Slf4j
 @Singleton
 @PluginDescriptor(
@@ -302,6 +304,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private JobSystem jobSystem;
+
+	@Inject
+	private GCMonitor gcMonitor;
 
 	@Getter
 	@Inject
@@ -707,6 +712,7 @@ public class HdPlugin extends Plugin {
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
+				gcMonitor.startup();
 				areaManager.startUp();
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
@@ -790,6 +796,7 @@ public class HdPlugin extends Plugin {
 			waterTypeManager.shutDown();
 			materialManager.shutDown();
 			textureManager.shutDown();
+			gcMonitor.shutdown();
 
 			PooledArrayType.shutdown();
 			DestructibleHandler.flushPendingDestruction(true);
