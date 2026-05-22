@@ -86,9 +86,12 @@ public class ModelOverrideManager {
 				addSailingCullingOverrides(gamevalHandle);
 
 				detailCullingBlacklist.clear();
-				for (var entry : modelOverrides)
+				for (var entry : modelOverrides) {
+					final ModelOverride override = entry.getValue();
 					if (entry.getValue().disableDetailCulling)
 						detailCullingBlacklist.add(entry.getKey());
+					override.clearIds();
+				}
 
 				log.debug("Loaded {} model overrides", modelOverrides.size());
 

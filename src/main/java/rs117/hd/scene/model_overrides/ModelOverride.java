@@ -208,6 +208,19 @@ public class ModelOverride
 			shadowOpacityThreshold = 1;
 	}
 
+	public void clearIds(){
+		areas = null;
+		npcIds = null;
+		objectIds = null;
+		projectileIds = null;
+		graphicsObjectIds = null;
+
+		if (colorOverrides != null) {
+			for (var override : colorOverrides)
+				override.clearIds();
+		}
+	}
+
 	public ModelOverride copy() {
 		return new ModelOverride(
 			description,
