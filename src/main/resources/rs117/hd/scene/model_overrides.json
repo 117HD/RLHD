@@ -76844,6 +76844,11 @@
     ],
     "colorOverrides": [
       {
+        "description": "Remove shadow cast by clickbox",
+        "colors": "h == 0 && l > 55",
+        "castShadows": false
+      },
+      {
         "description": "Wood",
         "colors": "h == 6 && s == 2",
         "baseMaterial": "WOOD_GRAIN_3",
