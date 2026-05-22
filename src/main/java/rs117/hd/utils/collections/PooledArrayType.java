@@ -72,8 +72,13 @@ public enum PooledArrayType {
 			for (int b = 0; b < type.buckets.length; b++) {
 				for (int s = 0; s < STRIPES; s++) {
 					final Bucket bucket = type.buckets[b][s];
-					bucket.opCounter = 0;
-					type.maybeCleanup(b, s, bucket, true);
+					final long stamp = bucket.lock.writeLock();
+					try {
+						bucket.opCounter = 0;
+						type.maybeCleanup(b, s, bucket, true);
+					} finally {
+						bucket.lock.unlockWrite(stamp);
+					}
 				}
 			}
 		}
@@ -323,9 +328,9 @@ public enum PooledArrayType {
 
 		private volatile boolean isEmpty = true;
 
-		@SuppressWarnings("AssertWithSideEffects")
 		public void add(Object array) {
-			assert set == null || set.add(array);
+			if(set != null && !set.add(array))
+				throw new IllegalStateException("Duplicate array: " + array);
 			stack.add(array);
 			isEmpty = false;
 		}
