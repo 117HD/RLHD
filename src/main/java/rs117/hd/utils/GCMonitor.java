@@ -106,10 +106,10 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		final GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
 
 		final long usedHeap = RUNTIME.totalMemory() - RUNTIME.freeMemory();
-		final long freeHeap = RUNTIME.maxMemory() - usedHeap;
+		final long availableHeap = RUNTIME.maxMemory() - usedHeap;
 
 		// Store available heap space after GC
-		GC_AVAIL[gcCount % GC_AVAIL.length] = freeHeap;
+		GC_AVAIL[gcCount % GC_AVAIL.length] = availableHeap;
 		gcDurationMs = info.getGcInfo().getDuration();
 		gcCount++;
 

@@ -1,5 +1,7 @@
 package rs117.hd.utils.collections;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.LockSupport;
 import java.util.function.Supplier;
@@ -8,6 +10,8 @@ import rs117.hd.utils.Destructible;
 import rs117.hd.utils.DestructibleHandler;
 
 public final class ConcurrentPool<T> {
+	public static List<ConcurrentPool<?>> ALL_POOLS = new ArrayList<>();
+
 	private final ConcurrentLinkedQueue<T> pool = new ConcurrentLinkedQueue<>();
 	private final ConcurrentLinkedQueue<Thread> parkedThreads;
 
@@ -23,6 +27,7 @@ public final class ConcurrentPool<T> {
 		this.supplier = supplier;
 		this.fixedSize = fixedSize;
 		parkedThreads = fixedSize > 0 ? new ConcurrentLinkedQueue<>() : null;
+		ALL_POOLS.add(this);
 	}
 
 	public T acquire() {
@@ -76,6 +81,14 @@ public final class ConcurrentPool<T> {
 			if (obj instanceof Destructible)
 				((Destructible) obj).destroy();
 		}
+		ALL_POOLS.remove(this);
 		created = 0;
+	}
+
+	public static void destroyAll() {
+		ConcurrentPool pool;
+		while (!ALL_POOLS.isEmpty() && (pool = ALL_POOLS.remove(0)) != null)
+			pool.destroy();
+		ALL_POOLS.clear();
 	}
 }

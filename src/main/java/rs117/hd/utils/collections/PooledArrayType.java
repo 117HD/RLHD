@@ -147,6 +147,9 @@ public enum PooledArrayType {
 					bucket.peakInUse = 0;
 					bucket.avgDemand = 0;
 					bucket.lastOverTargetTime = 0;
+
+					// Recreate the bucket to clear the stack inner arrays
+					type.buckets[b][s] = new Bucket(bucket.size);
 				}
 			}
 		}
