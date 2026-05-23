@@ -703,7 +703,7 @@ public final class HDUtils {
 		int right,
 		Comparator comparator
 	) {
-		final int[] stack = PooledArrayType.INT.borrow(128);
+		final int[] stack = PooledArrayType.INT.borrow(a.length + 1);
 		try {
 			int top = 0;
 
