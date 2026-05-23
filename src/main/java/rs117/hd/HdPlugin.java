@@ -440,6 +440,7 @@ public class HdPlugin extends Plugin {
 
 	@Getter
 	private boolean isPluginStopPending;
+	private String pluginStopReason;
 	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
@@ -818,10 +819,15 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void requestPluginStop() {
+		requestPluginStop(null);
+	}
+
+	public void requestPluginStop(String reason) {
 		if (isPluginStopPending)
 			return;
-		log.debug("Requesting plugin to stop when safe");
 		isPluginStopPending = true;
+		pluginStopReason = reason;
+		log.debug("Requesting plugin to stop when safe");
 	}
 
 	public void stopPlugin() {
@@ -1986,8 +1992,12 @@ public class HdPlugin extends Plugin {
 		frame = (frame + 1) & Integer.MAX_VALUE;
 
 		if (isPluginStopPending) {
-			log.debug("Shutdown has been requested, stopping plugin");
+			if(pluginStopReason != null)
+				client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", pluginStopReason, null);
+			log.debug("Shutdown has been requested, stopping plugin due to reason: {}", pluginStopReason != null ? pluginStopReason : "unknown");
+			pluginStopReason = null;
 			isPluginStopPending = false;
+
 			stopPlugin();
 			return;
 		}

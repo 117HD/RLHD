@@ -99,8 +99,7 @@ public class GCMonitor implements NotificationListener {
 
 			if(averageGCAvail < REQUIRED_HEAP_AVAIL) {
 				log.warn("Detected Average Avail Heap after GC: {}", formatBytes(averageGCAvail));
-				log.warn("Shutting down plugin due to lack of heap space, increase max memory or decrease required heap space");
-				plugin.requestPluginStop();
+				plugin.requestPluginStop("117HD has turned off due to lack of memory, increase max memory or reduce enabled plugins");
 				return;
 			}
 
