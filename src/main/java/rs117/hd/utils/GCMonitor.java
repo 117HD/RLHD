@@ -23,7 +23,8 @@ import static rs117.hd.utils.MathUtils.*;
 public class GCMonitor {
 	private static final Runtime RUNTIME = Runtime.getRuntime();
 
-	private static final long REQUIRED_HEAP_AVAIL = (long) 2e+8; // 200 MB
+	// This is the required available memory needed at all times otherwise the client will OOM when loading another scene
+	private static final long REQUIRED_HEAP_AVAIL = (long) 1.8e+8; // 180 MB
 
 	private static int GC_COUNT = 0;
 	private static long GC_TIME_MS = 0;
