@@ -249,6 +249,11 @@ public enum PooledArrayType {
 	}
 
 	@SuppressWarnings("unchecked")
+	public <T> T create(int requestedSize) {
+		return (T) supplier.get(ceilPow2(requestedSize));
+	}
+
+	@SuppressWarnings("unchecked")
 	public <T> T ensureCapacity(Object array, int requestedSize) {
 		final int len = array != null ? Array.getLength(array) : 0;
 		if (len >= requestedSize)

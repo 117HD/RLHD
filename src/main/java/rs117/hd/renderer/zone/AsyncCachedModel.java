@@ -520,7 +520,7 @@ public final class AsyncCachedModel extends Job implements Model {
 
 				if(value == null && requested < availMemory) {
 					availMemory -= requested;
-					value = (T) arrayType.supplier.get(arraySize);
+					value = arrayType.create(arraySize);
 				}
 
 				return value != null;
