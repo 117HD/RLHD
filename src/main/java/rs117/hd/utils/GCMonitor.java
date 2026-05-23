@@ -24,6 +24,8 @@ import rs117.hd.HdPlugin;
 import rs117.hd.utils.collections.PooledArrayType;
 
 import static com.sun.management.GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION;
+import static net.runelite.client.ui.overlay.OverlayPosition.ABOVE_CHATBOX_RIGHT;
+import static net.runelite.client.ui.overlay.OverlayPriority.HIGHEST;
 import static rs117.hd.utils.HDUtils.drawStringShadowed;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -46,7 +48,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	private long nextHeapLogTime = 0;
 	private final long[] GC_AVAIL = new long[32];
 
-	private final Dimension bounds = new Dimension(428, 32);
+	private final Dimension bounds = new Dimension(500, 32);
 
 	@Inject
 	private HdPlugin plugin;
@@ -66,6 +68,8 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		}
 
 		overlayManager.add(this);
+		setPriority(HIGHEST);
+		setPosition(ABOVE_CHATBOX_RIGHT);
 
 		Arrays.fill(GC_AVAIL, 0);
 		gcCount = 0;
