@@ -31,6 +31,7 @@ import com.google.inject.Binder;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
@@ -70,6 +71,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
+import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -1993,7 +1995,7 @@ public class HdPlugin extends Plugin {
 
 		if (isPluginStopPending) {
 			if(pluginStopReason != null)
-				client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", pluginStopReason, null);
+				client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", ColorUtil.prependColorTag(pluginStopReason, Color.RED), null);
 			log.debug("Shutdown has been requested, stopping plugin due to reason: {}", pluginStopReason != null ? pluginStopReason : "unknown");
 			pluginStopReason = null;
 			isPluginStopPending = false;
