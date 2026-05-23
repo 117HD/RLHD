@@ -10621,6 +10621,25 @@
     "shiftLightness": 6
   },
   {
+    "name": "Chambers of Xeric Ground - Complex",
+    "area": "CHAMBERS_OF_XERIC",
+    "underlayIds": [
+      66,
+      103
+    ],
+    "replacements": {
+      "DEFAULT_GRUNGE": [
+        "h >= 14",
+        "s == 0 || h <= 10 && s < 2"
+      ],
+      "DEFAULT_GRASS": [
+        "h >= 11 && s == 1 && h <= 13",
+        "h >= 10 && s >= 2 && h <= 13"
+      ],
+      "DEFAULT_DIRT": true
+    }
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {
