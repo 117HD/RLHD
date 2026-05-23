@@ -674,8 +674,8 @@ public class Zone implements Destructible {
 		public int compare(AlphaModel modelA, AlphaModel modelB)
 		{
 			return Integer.compare(
-				modelA.calculateDepth(cx, cy, cz, zx, zz),
-				modelB.calculateDepth(cx, cy, cz, zx, zz)
+				modelB.calculateDepth(cx, cy, cz, zx, zz),
+				modelA.calculateDepth(cx, cy, cz, zx, zz)
 			);
 		}
 	}
