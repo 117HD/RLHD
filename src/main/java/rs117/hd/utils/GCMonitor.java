@@ -28,7 +28,13 @@ public class GCMonitor {
 	private static long NEXT_LOG_TIME_MS = 0;
 	private static long LAST_FULL_GC_TIME_MS = 0;
 
+	private static int GC_COUNT = 0;
+	private static long GC_TIME_MS = 0;
 	private static int FULL_GC_COUNT = 0;
+
+	public static int getGCCount() { return GC_COUNT; }
+
+	public static long getGCTimeMS() { return GC_TIME_MS; }
 
 	private final List<NotificationEmitter> emitters = new ArrayList<>();
 
@@ -60,6 +66,9 @@ public class GCMonitor {
 			return;
 
 		final GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
+		GC_TIME_MS = info.getGcInfo().getDuration();
+		GC_COUNT++;
+
 		final String action = info.getGcAction().toLowerCase();
 		if (!action.contains("major") && !action.contains("full") && !action.contains("old"))
 			return;

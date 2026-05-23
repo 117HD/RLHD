@@ -468,8 +468,6 @@ public class HdPlugin extends Plugin {
 	public int drawnTempRenderableCount;
 	@Getter
 	public int drawnDynamicRenderableCount;
-	@Getter
-	public long garbageCollectionCount;
 
 	private int startupCount;
 	public int frame;
@@ -2028,6 +2026,7 @@ public class HdPlugin extends Plugin {
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
 
 		gamevalManager.update();
+		frameTimer.add(Timer.GARBAGE_COLLECTION, GCMonitor.getGCTimeMS() * 1000000L);
 
 		DestructibleHandler.flushPendingDestruction();
 	}
