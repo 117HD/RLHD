@@ -7793,6 +7793,17 @@
     ]
   },
   {
+    "description": "CoX - Plant - Fern",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25,
+    "uvOrientation": 187,
+    "objectIds": [
+      "RAIDS_PLANT1",
+      "RAIDS_PLANT2"
+    ]
+  },
+  {
     "description": "COX_PILLAR",
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX",
@@ -8027,7 +8038,8 @@
       "LUC2_MOV_DUGUPSOIL5",
       "LUC2_MOV_DUGUPSOIL6",
       "LUC2_MOV_DUGUPSOIL7",
-      "FERTILESOIL"
+      "FERTILESOIL",
+      "RAIDS_PATCH_GROUNDDECOR"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.44
