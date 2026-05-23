@@ -6,11 +6,14 @@ import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.management.ListenerNotFoundException;
 import javax.management.Notification;
 import javax.management.NotificationEmitter;
+import javax.management.NotificationListener;
 import javax.management.openmbean.CompositeData;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.HdPlugin;
 import rs117.hd.utils.collections.PooledArrayType;
@@ -20,21 +23,23 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class GCMonitor {
+public class GCMonitor implements NotificationListener {
 	private static final Runtime RUNTIME = Runtime.getRuntime();
 
 	// This is the required available memory needed at all times otherwise the client will OOM when loading another scene
 	private static final long REQUIRED_HEAP_AVAIL = (long) 1.8e+8; // 180 MB
 
-	private static int GC_COUNT = 0;
-	private static long GC_TIME_MS = 0;
+	@Getter
+	private int gcCount = 0;
 
-	private static long nextHeapLogTime = 0;
-	private static final long[] GC_AVAIL = new long[32];
+	@Getter
+	private long gcDurationMs = 0;
 
-	public static int getGCCount() { return GC_COUNT; }
+	private long nextHeapLogTime = 0;
+	private final long[] GC_AVAIL = new long[32];
 
-	public static long getGCTimeMS() { return GC_TIME_MS; }
+	@Inject
+	private HdPlugin plugin;
 
 	private final List<NotificationEmitter> emitters = new ArrayList<>();
 
@@ -42,14 +47,14 @@ public class GCMonitor {
 		for (GarbageCollectorMXBean gcBean : ManagementFactory.getGarbageCollectorMXBeans()) {
 			if (gcBean instanceof NotificationEmitter) {
 				NotificationEmitter emitter = (NotificationEmitter) gcBean;
-				emitter.addNotificationListener(GCMonitor::onGcNotification, null, null);
+				emitter.addNotificationListener(this, null, null);
 				emitters.add(emitter);
 			}
 		}
 
 		Arrays.fill(GC_AVAIL, 0);
-		GC_COUNT = 0;
-		GC_TIME_MS = 0;
+		gcCount = 0;
+		gcDurationMs = 0;
 		nextHeapLogTime = 0;
 
 		log.info("Registered {} GC notification listeners", emitters.size());
@@ -58,7 +63,7 @@ public class GCMonitor {
 	public void shutdown() {
 		for (NotificationEmitter emitter : emitters) {
 			try {
-				emitter.removeNotificationListener(GCMonitor::onGcNotification);
+				emitter.removeNotificationListener(this);
 			} catch (ListenerNotFoundException e) {
 				log.debug("GC listener already removed", e);
 			}
@@ -66,8 +71,9 @@ public class GCMonitor {
 		emitters.clear();
 	}
 
-	private static void onGcNotification(Notification notification, Object handback) {
-		if(!HdPlugin.isActive() || HdPlugin.isPluginStopPending())
+	@Override
+	public void handleNotification(Notification notification, Object handback) {
+		if(!plugin.isActive() || plugin.isPluginStopPending())
 			return;
 
 		if (!GARBAGE_COLLECTION_NOTIFICATION.equals(notification.getType()))
@@ -79,13 +85,13 @@ public class GCMonitor {
 		final long freeHeap = RUNTIME.maxMemory() - usedHeap;
 
 		// Store available heap space after GC
-		GC_AVAIL[GC_COUNT % GC_AVAIL.length] = freeHeap;
-		GC_TIME_MS = info.getGcInfo().getDuration();
-		GC_COUNT++;
+		GC_AVAIL[gcCount % GC_AVAIL.length] = freeHeap;
+		gcDurationMs = info.getGcInfo().getDuration();
+		gcCount++;
 
 		// Calculate average available heap space after GC & determine if theres enough space
-		if(GC_COUNT > 4) {
-			final int gcAvailCount = min(GC_AVAIL.length, GC_COUNT);
+		if(gcCount >= 8) {
+			final int gcAvailCount = min(GC_AVAIL.length, gcCount);
 			long averageGCAvail = 0;
 			for (int i = 0; i < gcAvailCount; i++)
 				averageGCAvail += GC_AVAIL[i];
@@ -94,7 +100,7 @@ public class GCMonitor {
 			if(averageGCAvail < REQUIRED_HEAP_AVAIL) {
 				log.warn("Detected Average Avail Heap after GC: {}", formatBytes(averageGCAvail));
 				log.warn("Shutting down plugin due to lack of heap space, increase max memory or decrease required heap space");
-				HdPlugin.requestPluginStop();
+				plugin.requestPluginStop();
 				return;
 			}
 

@@ -50,6 +50,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private JobSystem jobSystem;
 
 	@Inject
+	private GCMonitor gcMonitor;
+
+	@Inject
 	private SceneManager sceneManager;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
@@ -160,7 +163,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 			children.add(LineComponent.builder()
 				.left("Garbage collection count:")
-				.right(String.valueOf(GCMonitor.getGCCount()))
+				.right(String.valueOf(gcMonitor.getGcCount()))
 				.build());
 
 			children.add(LineComponent.builder()

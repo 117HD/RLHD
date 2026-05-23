@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -438,9 +439,9 @@ public class HdPlugin extends Plugin {
 	public boolean freezeCulling;
 
 	@Getter
-	private static boolean isPluginStopPending;
+	private boolean isPluginStopPending;
 	@Getter
-	private static boolean isActive;
+	private boolean isActive;
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
 	public boolean redrawPreviousFrame;
@@ -816,7 +817,7 @@ public class HdPlugin extends Plugin {
 		});
 	}
 
-	public static void requestPluginStop() {
+	public void requestPluginStop() {
 		if (isPluginStopPending)
 			return;
 		log.debug("Requesting plugin to stop when safe");
@@ -2026,7 +2027,7 @@ public class HdPlugin extends Plugin {
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
 
 		gamevalManager.update();
-		frameTimer.add(Timer.GARBAGE_COLLECTION, GCMonitor.getGCTimeMS() * 1000000L);
+		frameTimer.add(Timer.GARBAGE_COLLECTION, gcMonitor.getGcDurationMs(), TimeUnit.MILLISECONDS);
 
 		DestructibleHandler.flushPendingDestruction();
 	}
