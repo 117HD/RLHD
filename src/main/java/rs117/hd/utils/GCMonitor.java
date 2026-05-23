@@ -149,7 +149,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		final float percentTillShutdown = saturate((float) (averageGCAvail - MIN_HEAP_AVAIL) / MIN_HEAP_AVAIL);
 
 		g.setColor(COLORS[(int) (percentTillShutdown * COLORS.length)]);
-		drawStringShadowed(g, "Client is running low on memory, memory left: " + round(2, percentTillShutdown) + "% till 117HD will shutdown", 8, 12);
+		drawStringShadowed(g, "Client is running low on memory, memory left: " + round(1, percentTillShutdown * 100.0f) + "% till 117HD will shutdown", 8, 12);
 		drawStringShadowed(g, "Please either increase memory or reduce active plugins", 8, 28);
 		return bounds;
 	}
