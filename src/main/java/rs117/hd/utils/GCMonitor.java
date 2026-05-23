@@ -142,7 +142,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		if(averageGCAvail > RECOMMENDED_HEAP_AVAIL)
 			return null;
 
-		final float percentTillShutdown = (float) (averageGCAvail - MIN_HEAP_AVAIL) / MIN_HEAP_AVAIL;
+		final float percentTillShutdown = saturate((float) (averageGCAvail - MIN_HEAP_AVAIL) / MIN_HEAP_AVAIL);
 
 		g.setColor(COLORS[(int) (percentTillShutdown * COLORS.length)]);
 		drawStringShadowed(g, "Client is running low on memory, memory left: " + round(2, percentTillShutdown) + "% till 117HD will shutdown", 8, 12);
