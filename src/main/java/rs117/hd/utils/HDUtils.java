@@ -25,8 +25,10 @@
 package rs117.hd.utils;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Frame;
+import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.management.ManagementFactory;
@@ -653,6 +655,24 @@ public final class HDUtils {
 		} catch (Throwable ignored) {
 			return Long.MAX_VALUE;
 		}
+	}
+
+	public static void drawStringShadowed(Graphics2D g, String s, float x, float y) {
+		var c = g.getColor();
+		g.setColor(Color.BLACK);
+		g.drawString(s, x + 1, y + 1);
+		g.setColor(c);
+		g.drawString(s, x, y);
+	}
+
+	public static void drawStringCentered(Graphics2D g, String s, float x, float y) {
+		var m = g.getFontMetrics();
+		drawStringShadowed(g, s, x - m.stringWidth(s) / 2.f, y + m.getHeight() / 2.f);
+	}
+
+	public static void drawStringCentered(Graphics2D g, String s) {
+		var b = g.getClipBounds();
+		drawStringCentered(g, s, b.width / 2.f, b.height / 2.f);
 	}
 
 	@SuppressWarnings("unchecked")
