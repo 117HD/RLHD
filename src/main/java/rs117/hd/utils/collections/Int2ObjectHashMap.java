@@ -3,7 +3,6 @@ package rs117.hd.utils.collections;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.IntUnaryOperator;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
 import rs117.hd.utils.HDUtils;
@@ -68,10 +67,18 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 		this.mask = cap - 1;
 	}
 
-	private void resize() {
-		int newCapacity = (int) HDUtils.ceilPow2(
-			max((int) (keys.length * growthFactor), keys.length + 1)
-		);
+	public void trimToSize() {
+		resizeTo(size);
+	}
+
+	private void grow() {
+		resizeTo((int) (keys.length * growthFactor));
+	}
+
+	private void resizeTo(int newCapacity) {
+		newCapacity = HDUtils.ceilPow2(newCapacity);
+		if(newCapacity == keys.length)
+			return;
 
 		int[] oldKeys = keys;
 		T[] oldValues = values;
@@ -113,7 +120,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 
 	private boolean put(int key, T value, boolean overwrite) {
 		if (size + 1.0 >= keys.length * LOAD_FACTOR)
-			resize();
+			grow();
 
 		final int[] keys = this.keys;
 		final int[] distances = this.distances;

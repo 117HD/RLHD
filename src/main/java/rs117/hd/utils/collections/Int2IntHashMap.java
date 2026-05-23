@@ -46,10 +46,18 @@ public final class Int2IntHashMap {
 		this.size = 0;
 	}
 
-	private void resize() {
-		int newCapacity = (int) HDUtils.ceilPow2(
-			max((int) (keys.length * growthFactor), keys.length + 1)
-		);
+	public void trimToSize() {
+		resizeTo(size);
+	}
+
+	private void grow() {
+		resizeTo((int) (keys.length * growthFactor));
+	}
+
+	private void resizeTo(int newCapacity) {
+		newCapacity = HDUtils.ceilPow2(newCapacity);
+		if(newCapacity == keys.length)
+			return;
 
 		int[] oldKeys = keys;
 		int[] oldValues = values;
@@ -145,7 +153,7 @@ public final class Int2IntHashMap {
 
 	private boolean put(int key, int value, boolean overwrite) {
 		if (size + 1.0 >= keys.length * LOAD_FACTOR)
-			resize();
+			grow();
 
 		final int[] keys = this.keys;
 		final int[] distances = this.distances;

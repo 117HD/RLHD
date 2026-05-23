@@ -115,7 +115,10 @@ public class ModelOverrideManager {
 		fileWatcher = null;
 
 		modelOverrides.clear();
+		modelOverrides.trimToSize();
+
 		detailCullingBlacklist.clear();
+		detailCullingBlacklist.trimToSize();
 	}
 
 	public void reload() {

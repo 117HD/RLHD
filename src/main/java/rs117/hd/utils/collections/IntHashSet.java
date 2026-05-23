@@ -45,42 +45,26 @@ public final class IntHashSet implements Iterable<Integer> {
 		this.mask = cap - 1;
 	}
 
-	private void resize() {
-		int newCapacity = (int) HDUtils.ceilPow2(
-			max((int) (keys.length * growthFactor), keys.length + 1)
-		);
+	public void trimToSize() {
+		resizeTo(size);
+	}
 
-		int[] oldKeys = keys;
+	private void grow() {
+		resizeTo((int) (keys.length * growthFactor));
+	}
 
+	private void resizeTo(int newCapacity) {
+		newCapacity = HDUtils.ceilPow2(newCapacity);
+		if(newCapacity == keys.length)
+			return;
+
+		final int[] oldKeys = keys;
 		keys = new int[newCapacity];
 		distances = new int[newCapacity];
-
 		Arrays.fill(keys, EMPTY);
 
 		size = 0;
 		mask = newCapacity - 1;
-
-		for (int i = 0; i < oldKeys.length; i++) {
-			int key = oldKeys[i];
-			if (key != EMPTY) {
-				add(key);
-			}
-		}
-	}
-
-	private void resizeTo(int newCapacity) {
-		if (newCapacity <= keys.length)
-			return;
-
-		int cap = HDUtils.ceilPow2(newCapacity);
-
-		final int[] oldKeys = keys;
-		keys = new int[cap];
-		distances = new int[cap];
-		Arrays.fill(keys, EMPTY);
-
-		size = 0;
-		mask = cap - 1;
 
 		for (int k : oldKeys) {
 			if (k != EMPTY)
@@ -122,7 +106,7 @@ public final class IntHashSet implements Iterable<Integer> {
 
 	public boolean add(int key) {
 		if (size + 1.0 >= keys.length * LOAD_FACTOR)
-			resize();
+			grow();
 
 		final int[] keys = this.keys;
 		final int[] distances = this.distances;
