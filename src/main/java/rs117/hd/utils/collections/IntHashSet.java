@@ -46,7 +46,7 @@ public final class IntHashSet implements Iterable<Integer> {
 	}
 
 	public void trimToSize() {
-		resizeTo(size);
+		resizeTo(max(size, DEFAULT_CAPACITY));
 	}
 
 	private void grow() {
@@ -66,9 +66,9 @@ public final class IntHashSet implements Iterable<Integer> {
 		size = 0;
 		mask = newCapacity - 1;
 
-		for (int k : oldKeys) {
-			if (k != EMPTY)
-				add(k);
+		for (int i = 0; i < min(oldKeys.length, newCapacity); i++) {
+			if (oldKeys[i] != EMPTY)
+				add(oldKeys[i]);
 		}
 	}
 

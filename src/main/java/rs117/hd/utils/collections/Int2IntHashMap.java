@@ -47,7 +47,7 @@ public final class Int2IntHashMap {
 	}
 
 	public void trimToSize() {
-		resizeTo(size);
+		resizeTo(max(size, DEFAULT_CAPACITY));
 	}
 
 	private void grow() {
@@ -71,7 +71,7 @@ public final class Int2IntHashMap {
 		mask = newCapacity - 1;
 		size = 0;
 
-		for (int i = 0; i < oldKeys.length; i++) {
+		for (int i = 0; i < min(oldKeys.length, newCapacity); i++) {
 			if (oldKeys[i] != EMPTY) {
 				put(oldKeys[i], oldValues[i]);
 			}
