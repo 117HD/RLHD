@@ -811,12 +811,16 @@ public class HdPlugin extends Plugin {
 				debugCallback.free();
 			debugCallback = null;
 
-			// force main buffer provider rebuild to turn off alpha channel
-			client.resizeCanvas();
+			System.gc();
 
-			// Force the client to reload the scene to reset any scene modifications & update GPU flags
-			if (client.getGameState() == GameState.LOGGED_IN)
-				client.setGameState(GameState.LOADING);
+			clientThread.invokeLater(() -> {
+				// force main buffer provider rebuild to turn off alpha channel
+				client.resizeCanvas();
+
+				// Force the client to reload the scene to reset any scene modifications & update GPU flags
+				if (client.getGameState() == GameState.LOGGED_IN)
+					client.setGameState(GameState.LOADING);
+			});
 		});
 	}
 
