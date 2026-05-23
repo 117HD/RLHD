@@ -438,9 +438,9 @@ public class HdPlugin extends Plugin {
 	public boolean freezeCulling;
 
 	@Getter
-	private boolean isPluginStopPending;
+	private static boolean isPluginStopPending;
 	@Getter
-	private boolean isActive;
+	private static boolean isActive;
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
 	public boolean redrawPreviousFrame;
@@ -816,7 +816,7 @@ public class HdPlugin extends Plugin {
 		});
 	}
 
-	public void requestPluginStop() {
+	public static void requestPluginStop() {
 		if (isPluginStopPending)
 			return;
 		log.debug("Requesting plugin to stop when safe");
