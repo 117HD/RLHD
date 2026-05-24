@@ -657,12 +657,16 @@ public final class HDUtils {
 		}
 	}
 
-	public static void drawStringShadowed(Graphics2D g, String s, float x, float y) {
+	public static void drawStringShadowed(Graphics2D g, String s, float x, float y, Color shadowColor) {
 		var c = g.getColor();
-		g.setColor(Color.BLACK);
+		g.setColor(shadowColor);
 		g.drawString(s, x + 1, y + 1);
 		g.setColor(c);
 		g.drawString(s, x, y);
+	}
+
+	public static void drawStringShadowed(Graphics2D g, String s, float x, float y) {
+		drawStringShadowed(g, s, x, y, Color.BLACK);
 	}
 
 	public static void drawStringCentered(Graphics2D g, String s, float x, float y) {

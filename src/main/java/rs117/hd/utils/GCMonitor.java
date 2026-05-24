@@ -35,8 +35,10 @@ public class GCMonitor extends Overlay implements NotificationListener {
 
 	private static final long RECOMMENDED_HEAP_AVAIL = (long) 2e+8; // 200 MB
 	private static final long MIN_HEAP_AVAIL = (long) 1e+8; // 100 MB
+
 	private static final long GC_SAMPLE_WINDOW_MS = 60_000;
-	private static final int MIN_RECENT_SAMPLES_FOR_SHUTDOWN = 4;
+
+	private static final long FADE_DURATION_MS = 1_000;
 
 	private static final Color[] WARNING_COLORS = {
 		Color.RED,
@@ -54,6 +56,10 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	@Getter
 	private long gcDurationMs = 0;
 	private long nextHeapLogTime = 0;
+
+
+	private float warningAlpha = 0f;
+	private long lastRenderTime = System.currentTimeMillis();
 
 	@Inject
 	private HdPlugin plugin;
@@ -109,24 +115,6 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		return getAvgAvailHeap() < RECOMMENDED_HEAP_AVAIL;
 	}
 
-	private int getRecentSampleCount() {
-		final long now = System.currentTimeMillis();
-
-		int count = 0;
-		for (int i = 0; i < gcSamples.length; i++) {
-			final GCSample sample = gcSamples[i];
-			if (sample.timestamp == 0)
-				continue;
-
-			if (now - sample.timestamp > GC_SAMPLE_WINDOW_MS)
-				continue;
-
-			count++;
-		}
-
-		return count;
-	}
-
 	private long getAvgAvailHeap() {
 		final long now = System.currentTimeMillis();
 
@@ -135,10 +123,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 
 		for (int i = 0; i < gcSamples.length; i++) {
 			final GCSample sample = gcSamples[i];
-			if (sample.timestamp == 0)
-				continue;
-
-			if (now - sample.timestamp > GC_SAMPLE_WINDOW_MS)
+			if (sample.timestamp == 0 || now - sample.timestamp > GC_SAMPLE_WINDOW_MS)
 				continue;
 
 			accum += sample.availableHeap;
@@ -174,29 +159,25 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		gcDurationMs = info.getGcInfo().getDuration();
 		gcCount++;
 
-		final int recentSamples = getRecentSampleCount();
 		final long averageGCAvail = getAvgAvailHeap();
+		if (averageGCAvail < MIN_HEAP_AVAIL) {
+			log.warn("Detected Average Avail Heap after GC: {}", formatBytes(averageGCAvail));
 
-		if (recentSamples >= MIN_RECENT_SAMPLES_FOR_SHUTDOWN) {
-			if (averageGCAvail < MIN_HEAP_AVAIL) {
-				log.warn("Detected Average Avail Heap after GC: {}", formatBytes(averageGCAvail));
+			plugin.requestPluginStop(
+				"117HD has turned off due to lack of memory, " +
+				"increase max memory or reduce enabled plugins"
+			);
 
-				plugin.requestPluginStop(
-					"117HD has turned off due to lack of memory, " +
-					"increase max memory or reduce enabled plugins"
-				);
+			return;
+		}
 
-				return;
-			}
+		if (nextHeapLogTime <= now) {
+			nextHeapLogTime = now + 30_000;
 
-			if (nextHeapLogTime <= now) {
-				nextHeapLogTime = now + 30_000;
-
-				log.info(
-					"Average Avail Heap after GC: {}",
-					formatBytes(averageGCAvail)
-				);
-			}
+			log.info(
+				"Average Avail Heap after GC: {}",
+				formatBytes(averageGCAvail)
+			);
 		}
 
 		final String action = info.getGcAction().toLowerCase();
@@ -215,34 +196,48 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	public Dimension render(Graphics2D g) {
 		final long averageGCAvail = getAvgAvailHeap();
 
-		if (averageGCAvail > RECOMMENDED_HEAP_AVAIL)
+		final long now = System.currentTimeMillis();
+		final float deltaSeconds = (now - lastRenderTime) / 1000f;
+		final float fadeSpeed = deltaSeconds / (FADE_DURATION_MS / 1000f);
+
+		if (averageGCAvail <= RECOMMENDED_HEAP_AVAIL) {
+			warningAlpha = Math.min(1f, warningAlpha + fadeSpeed);
+		} else {
+			warningAlpha = Math.max(0f, warningAlpha - fadeSpeed);
+		}
+		lastRenderTime = now;
+
+		if (warningAlpha <= 0f)
 			return null;
 
-		final float percentTillShutdown = saturate(
-			(float) (averageGCAvail - MIN_HEAP_AVAIL) / MIN_HEAP_AVAIL
+		final float shutdownFrac = saturate((float) (averageGCAvail - MIN_HEAP_AVAIL) / MIN_HEAP_AVAIL);
+		final int colorIndex = min(WARNING_COLORS.length - 1, (int) (shutdownFrac * WARNING_COLORS.length));
+
+		final Color fadedShadowColor = new Color(0, 0, 0, (int) (warningAlpha * 255));
+		final Color fadedBaseColor = new Color(
+			WARNING_COLORS[colorIndex].getRed(),
+			WARNING_COLORS[colorIndex].getGreen(),
+			WARNING_COLORS[colorIndex].getBlue(),
+			(int) (warningAlpha * 255)
 		);
 
-		final int colorIndex = Math.min(
-			WARNING_COLORS.length - 1,
-			(int) (percentTillShutdown * WARNING_COLORS.length)
-		);
-
-		g.setColor(WARNING_COLORS[colorIndex]);
-
+		g.setColor(fadedBaseColor);
 		drawStringShadowed(
 			g,
 			"Client is running low on memory, memory left: "
-			+ round(1, percentTillShutdown * 100.0f)
+			+ round(1, shutdownFrac * 100.0f)
 			+ "% till 117HD will shutdown",
 			8,
-			12
+			12,
+			fadedShadowColor
 		);
 
 		drawStringShadowed(
 			g,
 			"Please either increase memory or reduce active plugins",
 			8,
-			28
+			28,
+			fadedShadowColor
 		);
 
 		return bounds;
