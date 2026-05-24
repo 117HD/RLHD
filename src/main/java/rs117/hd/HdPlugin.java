@@ -48,7 +48,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -2045,8 +2044,7 @@ public class HdPlugin extends Plugin {
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
 
 		gamevalManager.update();
-		frameTimer.add(Timer.GARBAGE_COLLECTION, gcMonitor.getGcDurationMs(), TimeUnit.MILLISECONDS);
-
+		gcMonitor.update();
 		DestructibleHandler.flushPendingDestruction();
 	}
 

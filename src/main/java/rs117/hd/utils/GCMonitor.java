@@ -8,6 +8,7 @@ import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.management.ListenerNotFoundException;
@@ -20,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.Timer;
 import rs117.hd.utils.collections.PooledArrayType;
 
 import static com.sun.management.GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION;
@@ -53,11 +56,8 @@ public class GCMonitor extends Overlay implements NotificationListener {
 
 	@Getter
 	private int gcCount = 0;
-	@Getter
 	private long gcDurationMs = 0;
 	private long nextHeapLogTime = 0;
-
-
 	private float warningAlpha = 0f;
 	private long lastRenderTime = System.currentTimeMillis();
 
@@ -66,6 +66,9 @@ public class GCMonitor extends Overlay implements NotificationListener {
 
 	@Inject
 	private OverlayManager overlayManager;
+
+	@Inject
+	private FrameTimer frameTimer;
 
 	public GCMonitor() {
 		for (int i = 0; i < gcSamples.length; i++)
@@ -96,6 +99,10 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		}
 
 		log.info("Registered {} GC notification listeners", emitters.size());
+	}
+
+	public void update() {
+		frameTimer.add(Timer.GARBAGE_COLLECTION, gcDurationMs, TimeUnit.MILLISECONDS);
 	}
 
 	public void shutdown() {
