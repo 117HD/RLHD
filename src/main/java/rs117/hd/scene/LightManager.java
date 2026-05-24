@@ -65,9 +65,9 @@ import rs117.hd.utils.ResourcePath;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
-import static rs117.hd.utils.HDUtils.quickSort;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.utils.collections.Util.quickSort;
 
 @Singleton
 @Slf4j

@@ -32,7 +32,6 @@ import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.management.ManagementFactory;
-import java.util.Comparator;
 import java.util.List;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
@@ -44,7 +43,6 @@ import rs117.hd.data.ObjectType;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.water_types.WaterType;
-import rs117.hd.utils.collections.PooledArrayType;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -677,83 +675,5 @@ public final class HDUtils {
 	public static void drawStringCentered(Graphics2D g, String s) {
 		var b = g.getClipBounds();
 		drawStringCentered(g, s, b.width / 2.f, b.height / 2.f);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> void quickSort(List<T> list, Comparator<T> comparator) {
-		final int size = list.size();
-		final Object[] sortingBin = PooledArrayType.OBJECT.borrow(size);
-		try {
-			list.toArray(sortingBin);
-			quickSort(sortingBin, 0, size - 1, comparator);
-
-			list.clear();
-			for (int i = 0; i < size; i++)
-				list.add((T) sortingBin[i]);
-		} finally {
-			PooledArrayType.OBJECT.release(sortingBin);
-		}
-	}
-
-	@SuppressWarnings({ "rawtypes" })
-	public static void quickSort(Object[] a, Comparator comparator) {
-		quickSort(a, 0, a.length - 1, comparator);
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void quickSort(
-		Object[] a,
-		int left,
-		int right,
-		Comparator comparator
-	) {
-		final int[] stack = PooledArrayType.INT.borrow(a.length + 1);
-		try {
-			int top = 0;
-
-			stack[top++] = left;
-			stack[top++] = right;
-
-			while (top > 0) {
-				right = stack[--top];
-				left = stack[--top];
-
-				while (left < right) {
-					int i = left;
-					int j = right;
-
-					Object pivot = a[(left + right) >>> 1];
-
-					while (i <= j) {
-						while (comparator.compare(a[i], pivot) < 0) i++;
-						while (comparator.compare(a[j], pivot) > 0) j--;
-
-						if (i <= j) {
-							Object tmp = a[i];
-							a[i] = a[j];
-							a[j] = tmp;
-							i++;
-							j--;
-						}
-					}
-
-					if (j - left < right - i) {
-						if (i < right) {
-							stack[top++] = i;
-							stack[top++] = right;
-						}
-						right = j;
-					} else {
-						if (left < j) {
-							stack[top++] = left;
-							stack[top++] = j;
-						}
-						left = i;
-					}
-				}
-			}
-		} finally {
-			PooledArrayType.INT.release(stack);
-		}
 	}
 }
