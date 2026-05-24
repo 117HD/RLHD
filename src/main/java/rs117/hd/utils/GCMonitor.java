@@ -64,7 +64,6 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	private long nextHeapLogTime = 0;
 	private float warningAlpha = 0f;
 	private long lastRenderTime = System.currentTimeMillis();
-	private long lastFullGCAvailHeap = Long.MAX_VALUE;
 	private final List<SuspendHandle> suspendHandles = new ArrayList<>();
 
 	@Inject
@@ -98,7 +97,6 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		gcCount = 0;
 		gcDurationMs = 0;
 		nextHeapLogTime = 0;
-		lastFullGCAvailHeap = Long.MAX_VALUE;
 
 		for (GCSample sample : gcSamples) {
 			sample.timestamp = 0;
@@ -205,7 +203,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 			totalWeight += sample.weight;
 		}
 
-		return totalWeight > 0 ? min(accum / totalWeight, lastFullGCAvailHeap) : RUNTIME.maxMemory();
+		return totalWeight > 0 ? accum / totalWeight : RUNTIME.maxMemory();
 	}
 
 	@Override
@@ -231,9 +229,6 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		final long now = System.currentTimeMillis();
 
 		if (suspendHandles.isEmpty()) {
-			if (isFullGC)
-				lastFullGCAvailHeap = availableHeap;
-
 			final GCSample sample = gcSamples[gcCount % gcSamples.length];
 			sample.timestamp = now;
 			sample.availableHeap = availableHeap;
