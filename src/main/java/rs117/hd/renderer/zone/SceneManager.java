@@ -32,6 +32,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.DestructibleHandler;
+import rs117.hd.utils.GCMonitor;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.collections.Int2IntHashMap;
@@ -91,6 +92,9 @@ public class SceneManager {
 
 	@Inject
 	private FrameTimer frameTimer;
+
+	@Inject
+	private GCMonitor gcMonitor;
 
 	private RenderState renderState;
 	private UBOWorldViews uboWorldViews;
@@ -673,6 +677,14 @@ public class SceneManager {
 
 		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
 		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
+
+		if(gcMonitor.isCloseToRunningOutOfMemory()) {
+			log.warn("Running low on memory, clearing current scene context & triggering GC");
+			long availBefore = Runtime.getRuntime().freeMemory();
+			root.sceneContext = null;
+			System.gc();
+			log.debug("Freed Memory: {} bytes", formatBytes(Runtime.getRuntime().freeMemory() - availBefore));
+		}
 
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
 		int blockingCount = root.sceneLoadGroup.getPendingCount();

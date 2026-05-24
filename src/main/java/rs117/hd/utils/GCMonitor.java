@@ -46,7 +46,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	private long gcDurationMs = 0;
 
 	private long nextHeapLogTime = 0;
-	private final long[] GC_AVAIL = new long[32];
+	private final long[] GC_AVAIL = new long[16];
 
 	private final Dimension bounds = new Dimension(500, 32);
 
@@ -89,6 +89,10 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		}
 		emitters.clear();
 		overlayManager.remove(this);
+	}
+
+	public boolean isCloseToRunningOutOfMemory() {
+		return getAvgAvailHeap() < RECOMMENDED_HEAP_AVAIL;
 	}
 
 	private long getAvgAvailHeap() {
