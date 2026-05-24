@@ -119,12 +119,16 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		overlayManager.remove(this);
 	}
 
-	public long calculateRecommendedHeapSize() {
-		return (long) (RECOMMENDED_HEAP_AVAIL * (plugin.configExpandedMapLoadingChunks + 1) / (MAX_EXPANDED_CHUNKS + 1.0));
+	private double calculateExpandedMapLoadingFrac() {
+		return mix(0.6f, 1.0f, (plugin.configExpandedMapLoadingChunks + 1) / (MAX_EXPANDED_CHUNKS + 1.0f));
 	}
 
-	public long calculateMinimalHeapSize() {
-		return (long) (MIN_HEAP_AVAIL * (plugin.configExpandedMapLoadingChunks + 1) / (MAX_EXPANDED_CHUNKS + 1.0));
+	private long calculateRecommendedHeapSize() {
+		return (long) (RECOMMENDED_HEAP_AVAIL * calculateExpandedMapLoadingFrac());
+	}
+
+	private long calculateMinimalHeapSize() {
+		return (long) (MIN_HEAP_AVAIL * calculateExpandedMapLoadingFrac());
 	}
 
 	public boolean isCloseToRunningOutOfMemory() {
