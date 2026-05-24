@@ -36,6 +36,7 @@ import static rs117.hd.utils.MathUtils.*;
 public class GCMonitor extends Overlay implements NotificationListener {
 	private static final Runtime RUNTIME = Runtime.getRuntime();
 
+	private static final int MAX_EXPANDED_CHUNKS = 5;
 	private static final long RECOMMENDED_HEAP_AVAIL = (long) 2e+8; // 200 MB
 	private static final long MIN_HEAP_AVAIL = (long) 1e+8; // 100 MB
 
@@ -118,8 +119,30 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		overlayManager.remove(this);
 	}
 
+	public long calculateRecommendedHeapSize() {
+		return (long) (RECOMMENDED_HEAP_AVAIL * (plugin.configExpandedMapLoadingChunks + 1) / (MAX_EXPANDED_CHUNKS + 1.0));
+	}
+
+	public long calculateMinimalHeapSize() {
+		return (long) (MIN_HEAP_AVAIL * (plugin.configExpandedMapLoadingChunks + 1) / (MAX_EXPANDED_CHUNKS + 1.0));
+	}
+
 	public boolean isCloseToRunningOutOfMemory() {
-		return getAvgAvailHeap() < RECOMMENDED_HEAP_AVAIL;
+		return getAvgAvailHeap() < calculateRecommendedHeapSize();
+	}
+
+	private int getRecentSampleCount() {
+		final long now = System.currentTimeMillis();
+
+		int count = 0;
+		for (int i = 0; i < gcSamples.length; i++) {
+			final GCSample sample = gcSamples[i];
+			if (sample.timestamp == 0 || now - sample.timestamp > GC_SAMPLE_WINDOW_MS)
+				continue;
+
+			count++;
+		}
+		return count;
 	}
 
 	private long getAvgAvailHeap() {
@@ -137,10 +160,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 			count++;
 		}
 
-		if (count == 0)
-			return RUNTIME.maxMemory() - RUNTIME.freeMemory();
-
-		return accum / count;
+		return count > 0 ? accum / count : RUNTIME.maxMemory();
 	}
 
 	@Override
@@ -151,8 +171,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		if (!GARBAGE_COLLECTION_NOTIFICATION.equals(notification.getType()))
 			return;
 
-		final GarbageCollectionNotificationInfo info =
-			GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
+		final GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
 
 		final long usedHeap = RUNTIME.totalMemory() - RUNTIME.freeMemory();
 		final long availableHeap = RUNTIME.maxMemory() - usedHeap;
@@ -167,12 +186,15 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		gcCount++;
 
 		final long averageGCAvail = getAvgAvailHeap();
-		if (averageGCAvail < MIN_HEAP_AVAIL) {
+		final int recentSampleCount = getRecentSampleCount();
+		if (recentSampleCount >= 4 && averageGCAvail < calculateMinimalHeapSize()) {
 			log.warn("Detected Average Avail Heap after GC: {}", formatBytes(averageGCAvail));
 
 			plugin.requestPluginStop(
-				"117HD has turned off due to lack of memory, " +
-				"increase max memory or reduce enabled plugins"
+				"117HD has turned off due to lack of memory try:\n" +
+				" * Reducing enabled plugins\n" +
+				" * Reducing Extended Map Loading\n"+
+				" * Increasing Client Memory"
 			);
 
 			return;
@@ -207,7 +229,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		final float deltaSeconds = (now - lastRenderTime) / 1000f;
 		final float fadeSpeed = deltaSeconds / (FADE_DURATION_MS / 1000f);
 
-		if (averageGCAvail <= RECOMMENDED_HEAP_AVAIL) {
+		if (averageGCAvail <= calculateRecommendedHeapSize()) {
 			warningAlpha = Math.min(1f, warningAlpha + fadeSpeed);
 		} else {
 			warningAlpha = Math.max(0f, warningAlpha - fadeSpeed);
@@ -217,7 +239,8 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		if (warningAlpha <= 0f)
 			return null;
 
-		final float shutdownFrac = saturate((float) (averageGCAvail - MIN_HEAP_AVAIL) / MIN_HEAP_AVAIL);
+		final long minHeapSize = calculateMinimalHeapSize();
+		final float shutdownFrac = saturate((float) (averageGCAvail - minHeapSize) / minHeapSize);
 		final int colorIndex = min(WARNING_COLORS.length - 1, (int) (shutdownFrac * WARNING_COLORS.length));
 
 		final Color fadedShadowColor = new Color(0, 0, 0, (int) (warningAlpha * 255));
@@ -241,7 +264,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 
 		drawStringShadowed(
 			g,
-			"Please either increase memory or reduce active plugins",
+			"Please either reduce active plugins/extended loaded chunks or increase client memory",
 			8,
 			28,
 			fadedShadowColor

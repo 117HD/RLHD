@@ -425,6 +425,7 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public int configDetailDrawDistance;
+	public int configExpandedMapLoadingChunks;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -1655,6 +1656,7 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void updateCachedConfigs() {
+		configExpandedMapLoadingChunks = config.expandedMapLoadingChunks();
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configRoofShadows = config.roofShadows();
@@ -1999,8 +2001,11 @@ public class HdPlugin extends Plugin {
 		frame = (frame + 1) & Integer.MAX_VALUE;
 
 		if (isPluginStopPending) {
-			if(pluginStopReason != null)
-				client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", ColorUtil.prependColorTag(pluginStopReason, Color.RED), null);
+			if(pluginStopReason != null) {
+				String[] lines = pluginStopReason.split("\n");
+				for (String line : lines)
+					client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", ColorUtil.prependColorTag(line, Color.RED), null);
+			}
 			log.debug("Shutdown has been requested, stopping plugin due to reason: {}", pluginStopReason != null ? pluginStopReason : "unknown");
 			pluginStopReason = null;
 			isPluginStopPending = false;
