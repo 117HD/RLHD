@@ -2055,6 +2055,13 @@
     ]
   },
   {
+    "name": "BRIMHAVEN_AGILITY_ARENA_DIRT_CLAMP",
+    "description": "For clamping the brightness and darkness at the base of the pillars to remove baked in shading",
+    "aabbs": [
+      [ 2757, 9542, 2809, 9594 ]
+    ]
+  },
+  {
     "name": "Brimhaven Dungeon",
     "aabbs": [
       [ 2624, 9408, 2732, 9599 ],

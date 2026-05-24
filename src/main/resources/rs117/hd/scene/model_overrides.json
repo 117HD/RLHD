@@ -64707,6 +64707,7 @@
   {
     "description": "Karamja - Brimhaven - Stone - Pillars with torches",
     "baseMaterial": "STONE_NORMALED",
+    "flatNormals": false,
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 179,
@@ -64725,6 +64726,7 @@
     "description": "Karamja -  Brimhaven Agility Dungeon - Walls",
     "baseMaterial": "SMOOTH_STONE",
     "retainVanillaUvs": false,
+    "upwardsNormals": false,
     "objectIds": [
       "AGILITY_WALL",
       "AGILITY_CRUMBLYWALL1",
@@ -64757,7 +64759,7 @@
   },
   {
     "description": "Karamja -  Brimhaven Agility Dungeon - Plank",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "objectIds": [
       "AGILITYARENA_PLANK3",
       "AGILITYARENA_PLANK",
@@ -64806,6 +64808,7 @@
   {
     "description": "Karamja -  Brimhaven Agility Dungeon - Pillars and Ledge",
     "baseMaterial": "SMOOTH_STONE",
+    "receiveShadows": false,
     "objectIds": [
       "AGILITY_PILLAR",
       "AGILITYARENA_PILLAR_TOP",
