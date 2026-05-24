@@ -51,6 +51,9 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		Color.GREEN
 	};
 
+	private static final int GC_WEIGHT_FULL = 4;
+	private static final int GC_WEIGHT_MINOR = 1;
+
 	private final GCSample[] gcSamples = new GCSample[16];
 	private final Dimension bounds = new Dimension(500, 32);
 	private final List<NotificationEmitter> emitters = new ArrayList<>();
@@ -61,6 +64,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	private long nextHeapLogTime = 0;
 	private float warningAlpha = 0f;
 	private long lastRenderTime = System.currentTimeMillis();
+	private List<SuspendHandle> suspendHandles = new ArrayList<>();
 
 	@Inject
 	private HdPlugin plugin;
@@ -97,9 +101,16 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		for (GCSample sample : gcSamples) {
 			sample.timestamp = 0;
 			sample.availableHeap = 0;
+			sample.weight = 0;
 		}
 
 		log.info("Registered {} GC notification listeners", emitters.size());
+	}
+
+	public SuspendHandle acquireSuspendHandle() {
+		SuspendHandle suspendHandle = new SuspendHandle();
+		suspendHandles.add(suspendHandle);
+		return suspendHandle;
 	}
 
 	public void update() {
@@ -116,6 +127,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		}
 
 		emitters.clear();
+		suspendHandles.clear();
 		overlayManager.remove(this);
 	}
 
@@ -157,36 +169,36 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		return getAvgAvailHeap() < calculateRecommendedHeapSize();
 	}
 
-	private int getRecentSampleCount() {
+	private int getRecentSampleWeight() {
 		final long now = System.currentTimeMillis();
 
-		int count = 0;
+		int totalWeight = 0;
 		for (int i = 0; i < gcSamples.length; i++) {
 			final GCSample sample = gcSamples[i];
 			if (sample.timestamp == 0 || now - sample.timestamp > GC_SAMPLE_WINDOW_MS)
 				continue;
 
-			count++;
+			totalWeight += sample.weight;
 		}
-		return count;
+		return totalWeight;
 	}
 
 	private long getAvgAvailHeap() {
 		final long now = System.currentTimeMillis();
 
 		long accum = 0;
-		int count = 0;
+		int totalWeight = 0;
 
 		for (int i = 0; i < gcSamples.length; i++) {
 			final GCSample sample = gcSamples[i];
 			if (sample.timestamp == 0 || now - sample.timestamp > GC_SAMPLE_WINDOW_MS)
 				continue;
 
-			accum += sample.availableHeap;
-			count++;
+			accum += sample.availableHeap * sample.weight;
+			totalWeight += sample.weight;
 		}
 
-		return count > 0 ? accum / count : RUNTIME.maxMemory();
+		return totalWeight > 0 ? accum / totalWeight : RUNTIME.maxMemory();
 	}
 
 	@Override
@@ -198,22 +210,29 @@ public class GCMonitor extends Overlay implements NotificationListener {
 			return;
 
 		final GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
-
-		final long usedHeap = RUNTIME.totalMemory() - RUNTIME.freeMemory();
-		final long availableHeap = RUNTIME.maxMemory() - usedHeap;
-
-		final long now = System.currentTimeMillis();
-
-		GCSample sample = gcSamples[gcCount % gcSamples.length];
-		sample.timestamp = now;
-		sample.availableHeap = availableHeap;
-
 		gcDurationMs = info.getGcInfo().getDuration();
 		gcCount++;
 
+		final String action = info.getGcAction().toLowerCase();
+		final boolean isFullGC = action.contains("major") || action.contains("full") || action.contains("old");
+		final int gcWeight = isFullGC ? GC_WEIGHT_FULL : GC_WEIGHT_MINOR;
+
+		PooledArrayType.forceCleanup(isFullGC);
+
+		final long usedHeap = RUNTIME.totalMemory() - RUNTIME.freeMemory();
+		final long availableHeap = RUNTIME.maxMemory() - usedHeap;
+		final long now = System.currentTimeMillis();
+
+		if(suspendHandles.isEmpty()) {
+			final GCSample sample = gcSamples[gcCount % gcSamples.length];
+			sample.timestamp = now;
+			sample.availableHeap = availableHeap;
+			sample.weight = gcWeight;
+		}
+
 		final long averageGCAvail = getAvgAvailHeap();
-		final int recentSampleCount = getRecentSampleCount();
-		if (recentSampleCount >= 4 && averageGCAvail < calculateMinimalHeapSize()) {
+		final int recentSampleWeight = getRecentSampleWeight();
+		if (recentSampleWeight >= 8 && averageGCAvail < calculateMinimalHeapSize()) {
 			log.warn("Detected Average Avail Heap after GC: {}", formatBytes(averageGCAvail));
 
 			final int recommendedIncreaseMB = calculateRecommendedMemoryIncreaseMB(averageGCAvail);
@@ -239,17 +258,6 @@ public class GCMonitor extends Overlay implements NotificationListener {
 				formatBytes(averageGCAvail)
 			);
 		}
-
-		final String action = info.getGcAction().toLowerCase();
-
-		if (!action.contains("major")
-		    && !action.contains("full")
-		    && !action.contains("old")) {
-			return;
-		}
-
-		// Full GC has occurred, cleanup pooled arrays to free memory
-		PooledArrayType.forceCleanup(true);
 	}
 
 	@Override
@@ -307,5 +315,13 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	private static final class GCSample {
 		long timestamp;
 		long availableHeap;
+		int weight;
+	}
+
+	public class SuspendHandle implements AutoCloseable {
+		@Override
+		public void close() {
+			suspendHandles.remove(this);
+		}
 	}
 }

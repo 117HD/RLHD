@@ -517,7 +517,7 @@ public class HdPlugin extends Plugin {
 		gson = GsonUtils.wrap(injector.getInstance(Gson.class));
 
 		clientThread.invoke(() -> {
-			try {
+			try (GCMonitor.SuspendHandle ignored = gcMonitor.acquireSuspendHandle()) {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 

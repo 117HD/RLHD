@@ -427,7 +427,7 @@ public class SceneManager {
 	);
 
 	public synchronized void loadScene(WorldView worldView, Scene scene) {
-		try {
+		try (GCMonitor.SuspendHandle ignored = gcMonitor.acquireSuspendHandle()) {
 			loadingLock.lock();
 			if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
 				loadSubScene(worldView, scene);
@@ -627,137 +627,143 @@ public class SceneManager {
 	}
 
 	public void swapScene(Scene scene) {
-		if (!plugin.isActive() || plugin.skipScene == scene) {
-			plugin.redrawPreviousFrame = true;
-			return;
-		}
+		try (GCMonitor.SuspendHandle ignored = gcMonitor.acquireSuspendHandle()) {
+			if (!plugin.isActive() || plugin.skipScene == scene) {
+				plugin.redrawPreviousFrame = true;
+				return;
+			}
 
-		if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
-			swapSubScene(scene);
-			return;
-		}
+			if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
+				swapSubScene(scene);
+				return;
+			}
 
-		if (nextSceneContext == null)
-			return; // Return early if scene loading failed
+			if (nextSceneContext == null)
+				return; // Return early if scene loading failed
 
-		Stopwatch sw = Stopwatch.createStarted();
+			Stopwatch sw = Stopwatch.createStarted();
 
-		fishingSpotReplacer.despawnRuneLiteObjects();
-		npcDisplacementCache.clear();
+			fishingSpotReplacer.despawnRuneLiteObjects();
+			npcDisplacementCache.clear();
 
-		boolean isFirst = root.sceneContext == null;
-		if (!isFirst)
-			root.sceneContext.destroy(); // Destroy the old context before replacing it
+			boolean isFirst = root.sceneContext == null;
+			if (!isFirst)
+				root.sceneContext.destroy(); // Destroy the old context before replacing it
 
-		// Wait for roof change calculation to complete
-		calculateRoofChangesTask.waitForCompletion();
+			// Wait for roof change calculation to complete
+			calculateRoofChangesTask.waitForCompletion();
 
-		WorldViewContext ctx = root;
-		if (!nextRoofChanges.isEmpty()) {
-			for (int x = 0; x < ctx.sizeX; ++x) {
-				for (int z = 0; z < ctx.sizeZ; ++z) {
-					Zone zone = nextZones[x][z];
-					if (zone.needsRoofUpdate) {
-						zone.needsRoofUpdate = false;
-						zone.updateRoofs(nextRoofChanges);
+			WorldViewContext ctx = root;
+			if (!nextRoofChanges.isEmpty()) {
+				for (int x = 0; x < ctx.sizeX; ++x) {
+					for (int z = 0; z < ctx.sizeZ; ++z) {
+						Zone zone = nextZones[x][z];
+						if (zone.needsRoofUpdate) {
+							zone.needsRoofUpdate = false;
+							zone.updateRoofs(nextRoofChanges);
+						}
 					}
 				}
 			}
-		}
-		long roofsTime = sw.elapsed(TimeUnit.MILLISECONDS);
-		log.debug("swapScene - Roofs: {} ms", roofsTime);
+			long roofsTime = sw.elapsed(TimeUnit.MILLISECONDS);
+			log.debug("swapScene - Roofs: {} ms", roofsTime);
 
-		// Handle object spawns that must be processed on the client thread
-		loadSceneLightsTask.waitForCompletion();
-		for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)
-			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
-		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
-		nextSceneContext.lightSpawnsToHandleOnClientThread.trimToSize();
-		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
+			// Handle object spawns that must be processed on the client thread
+			loadSceneLightsTask.waitForCompletion();
+			for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)
+				lightManager.handleObjectSpawn(nextSceneContext, tileObject);
+			nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
+			nextSceneContext.lightSpawnsToHandleOnClientThread.trimToSize();
+			lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
 
-		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
-		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
+			long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
+			log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
 
-		if(gcMonitor.isCloseToRunningOutOfMemory()) {
-			long sceneCleanupTime = sw.elapsed(TimeUnit.MILLISECONDS);
-			log.warn("Running low on memory, clearing current scene context & triggering GC");
-			long availBefore = Runtime.getRuntime().freeMemory();
-			root.sceneContext = null;
-			System.gc();
-			log.debug("Freed Memory: {} - {} ms", formatBytes(Runtime.getRuntime().freeMemory() - availBefore), sw.elapsed(TimeUnit.MILLISECONDS) - sceneCleanupTime);
-		}
-
-		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
-		int blockingCount = root.sceneLoadGroup.getPendingCount();
-		root.sceneLoadGroup.complete();
-
-		int totalOpaque = 0;
-		int totalAlpha = 0;
-		for (int x = 0; x < NUM_ZONES; ++x) {
-			for (int z = 0; z < NUM_ZONES; ++z) {
-				totalOpaque += nextZones[x][z].bufLen;
-				totalAlpha += nextZones[x][z].bufLenA;
-			}
-		}
-
-		root.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS) - sceneUploadTimeStart;
-		log.debug(
-			"upload time {} reused {} deferred {} map {} sceneLoad {} len opaque {} size opaque {} KiB len alpha {} size alpha {} KiB",
-			TimeUnit.MILLISECONDS.convert(root.uploadTime, TimeUnit.NANOSECONDS),
-			nextSceneContext.totalReused,
-			nextSceneContext.totalDeferred,
-			nextSceneContext.totalMapZones,
-			blockingCount,
-			totalOpaque,
-			(totalOpaque * Zone.VERT_SIZE * 3L) / KiB,
-			totalAlpha,
-			(totalAlpha * Zone.VERT_SIZE * 3L) / KiB
-		);
-
-		for (int x = 0; x < ctx.sizeX; ++x) {
-			for (int z = 0; z < ctx.sizeZ; ++z) {
-				Zone preZone = ctx.zones[x][z];
-				Zone nextZone = nextZones[x][z];
-
-				assert !preZone.cull || preZone != nextZone : "Zone which is marked for culling was reused!";
-				if (preZone.cull)
-					DestructibleHandler.queueDestruction(preZone);
-
-				nextZone.setMetadata(ctx, nextSceneContext, x, z);
-				if(preZone.rebuild)
-					nextZone.rebuild = true;
-				nextSceneContext.animatedDynamicObjectIds.addAll(nextZone.animatedDynamicObjectIds);
-			}
-		}
-
-		ctx.zones = nextZones;
-		root.sceneContext = nextSceneContext;
-		root.isLoading = false;
-
-		nextZones = null;
-		nextSceneContext = null;
-
-		if (isFirst) {
-			root.initBuffers();
-
-			// Load all pre-existing sub scenes on the first scene load
-			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
-				WorldView sub = subEntity.getWorldView();
-				Scene subScene = sub.getScene();
+			if (gcMonitor.isCloseToRunningOutOfMemory()) {
+				long sceneCleanupTime = sw.elapsed(TimeUnit.MILLISECONDS);
+				log.warn("Running low on memory, clearing current scene context & triggering GC");
+				long availBefore = Runtime.getRuntime().freeMemory();
+				root.sceneContext = null;
+				System.gc();
 				log.debug(
-					"Loading worldview: id={}, sizeX={}, sizeZ={}",
-					sub.getId(),
-					sub.getSizeX(),
-					sub.getSizeY()
+					"Freed Memory: {} - {} ms",
+					formatBytes(Runtime.getRuntime().freeMemory() - availBefore),
+					sw.elapsed(TimeUnit.MILLISECONDS) - sceneCleanupTime
 				);
-				loadSubScene(sub, subScene);
-				swapSubScene(subScene);
 			}
-		}
 
-		checkGLErrors();
-		root.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
-		log.debug("swapScene time: {}", sw);
+			long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
+			int blockingCount = root.sceneLoadGroup.getPendingCount();
+			root.sceneLoadGroup.complete();
+
+			int totalOpaque = 0;
+			int totalAlpha = 0;
+			for (int x = 0; x < NUM_ZONES; ++x) {
+				for (int z = 0; z < NUM_ZONES; ++z) {
+					totalOpaque += nextZones[x][z].bufLen;
+					totalAlpha += nextZones[x][z].bufLenA;
+				}
+			}
+
+			root.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS) - sceneUploadTimeStart;
+			log.debug(
+				"upload time {} reused {} deferred {} map {} sceneLoad {} len opaque {} size opaque {} KiB len alpha {} size alpha {} KiB",
+				TimeUnit.MILLISECONDS.convert(root.uploadTime, TimeUnit.NANOSECONDS),
+				nextSceneContext.totalReused,
+				nextSceneContext.totalDeferred,
+				nextSceneContext.totalMapZones,
+				blockingCount,
+				totalOpaque,
+				(totalOpaque * Zone.VERT_SIZE * 3L) / KiB,
+				totalAlpha,
+				(totalAlpha * Zone.VERT_SIZE * 3L) / KiB
+			);
+
+			for (int x = 0; x < ctx.sizeX; ++x) {
+				for (int z = 0; z < ctx.sizeZ; ++z) {
+					Zone preZone = ctx.zones[x][z];
+					Zone nextZone = nextZones[x][z];
+
+					assert !preZone.cull || preZone != nextZone : "Zone which is marked for culling was reused!";
+					if (preZone.cull)
+						DestructibleHandler.queueDestruction(preZone);
+
+					nextZone.setMetadata(ctx, nextSceneContext, x, z);
+					if (preZone.rebuild)
+						nextZone.rebuild = true;
+					nextSceneContext.animatedDynamicObjectIds.addAll(nextZone.animatedDynamicObjectIds);
+				}
+			}
+
+			ctx.zones = nextZones;
+			root.sceneContext = nextSceneContext;
+			root.isLoading = false;
+
+			nextZones = null;
+			nextSceneContext = null;
+
+			if (isFirst) {
+				root.initBuffers();
+
+				// Load all pre-existing sub scenes on the first scene load
+				for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
+					WorldView sub = subEntity.getWorldView();
+					Scene subScene = sub.getScene();
+					log.debug(
+						"Loading worldview: id={}, sizeX={}, sizeZ={}",
+						sub.getId(),
+						sub.getSizeX(),
+						sub.getSizeY()
+					);
+					loadSubScene(sub, subScene);
+					swapSubScene(subScene);
+				}
+			}
+
+			checkGLErrors();
+			root.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
+			log.debug("swapScene time: {}", sw);
+		}
 	}
 
 	private void loadSubScene(WorldView worldView, Scene scene) {

@@ -102,7 +102,8 @@ public enum PooledArrayType {
 			CURRENT_POOL_BYTES.set(0);
 		long endCacheSize = getCurrentTotalCacheSize();
 		long diff = endCacheSize - startCacheSize;
-		log.debug("PooledArrayType - Prev: {} New: {} Diff: {}", formatBytes(startCacheSize), formatBytes(endCacheSize), (diff < 0 ? "-" : "") + formatBytes(abs(diff)));
+		if(diff != 0)
+			log.debug("PooledArrayType - Prev: {} New: {} Diff: {}", formatBytes(startCacheSize), formatBytes(endCacheSize), (diff < 0 ? "-" : "") + formatBytes(abs(diff)));
 	}
 
 	public static void printDetailedStats() {
