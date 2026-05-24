@@ -76,7 +76,6 @@ public enum PooledArrayType {
 	}
 
 	public static void forceCleanup(boolean full) {
-		long startCacheSize = getCurrentTotalCacheSize();
 		for(int v = 0; v < VALUES.length; v++) {
 			final PooledArrayType type = VALUES[v];
 			for (int b = 0; b < type.buckets.length; b++) {
@@ -100,10 +99,6 @@ public enum PooledArrayType {
 		}
 		if(full)
 			CURRENT_POOL_BYTES.set(0);
-		long endCacheSize = getCurrentTotalCacheSize();
-		long diff = endCacheSize - startCacheSize;
-		if(diff != 0)
-			log.debug("PooledArrayType - Prev: {} New: {} Diff: {}", formatBytes(startCacheSize), formatBytes(endCacheSize), (diff < 0 ? "-" : "") + formatBytes(abs(diff)));
 	}
 
 	public static void printDetailedStats() {
