@@ -64,7 +64,8 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	private long nextHeapLogTime = 0;
 	private float warningAlpha = 0f;
 	private long lastRenderTime = System.currentTimeMillis();
-	private List<SuspendHandle> suspendHandles = new ArrayList<>();
+	private long lastFullGCAvailHeap = Long.MAX_VALUE;
+	private final List<SuspendHandle> suspendHandles = new ArrayList<>();
 
 	@Inject
 	private HdPlugin plugin;
@@ -97,6 +98,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		gcCount = 0;
 		gcDurationMs = 0;
 		nextHeapLogTime = 0;
+		lastFullGCAvailHeap = Long.MAX_VALUE;
 
 		for (GCSample sample : gcSamples) {
 			sample.timestamp = 0;
@@ -108,9 +110,11 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	}
 
 	public SuspendHandle acquireSuspendHandle() {
-		SuspendHandle suspendHandle = new SuspendHandle();
-		suspendHandles.add(suspendHandle);
-		return suspendHandle;
+		synchronized (suspendHandles) {
+			SuspendHandle suspendHandle = new SuspendHandle();
+			suspendHandles.add(suspendHandle);
+			return suspendHandle;
+		}
 	}
 
 	public void update() {
@@ -126,8 +130,11 @@ public class GCMonitor extends Overlay implements NotificationListener {
 			}
 		}
 
+		synchronized (suspendHandles) {
+			suspendHandles.clear();
+		}
+
 		emitters.clear();
-		suspendHandles.clear();
 		overlayManager.remove(this);
 	}
 
@@ -150,7 +157,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 			return 0;
 
 		final long recommendedIncrease = (long) (deficit * 1.25f);
-		return (int) Math.ceil(recommendedIncrease / (1024f * 1024f));
+		return ceil(recommendedIncrease / (1024f * 1024f));
 	}
 
 	private int calculateRecommendedExpandedMapLoading(long averageAvailHeap) {
@@ -198,7 +205,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 			totalWeight += sample.weight;
 		}
 
-		return totalWeight > 0 ? accum / totalWeight : RUNTIME.maxMemory();
+		return totalWeight > 0 ? min(accum / totalWeight, lastFullGCAvailHeap) : RUNTIME.maxMemory();
 	}
 
 	@Override
@@ -223,7 +230,10 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		final long availableHeap = RUNTIME.maxMemory() - usedHeap;
 		final long now = System.currentTimeMillis();
 
-		if(suspendHandles.isEmpty()) {
+		if (suspendHandles.isEmpty()) {
+			if (isFullGC)
+				lastFullGCAvailHeap = availableHeap;
+
 			final GCSample sample = gcSamples[gcCount % gcSamples.length];
 			sample.timestamp = now;
 			sample.availableHeap = availableHeap;
@@ -269,9 +279,9 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		final float fadeSpeed = deltaSeconds / (FADE_DURATION_MS / 1000f);
 
 		if (averageGCAvail <= calculateRecommendedHeapSize()) {
-			warningAlpha = Math.min(1f, warningAlpha + fadeSpeed);
+			warningAlpha = min(1f, warningAlpha + fadeSpeed);
 		} else {
-			warningAlpha = Math.max(0f, warningAlpha - fadeSpeed);
+			warningAlpha = max(0f, warningAlpha - fadeSpeed);
 		}
 		lastRenderTime = now;
 
@@ -321,7 +331,9 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	public class SuspendHandle implements AutoCloseable {
 		@Override
 		public void close() {
-			suspendHandles.remove(this);
+			synchronized (suspendHandles) {
+				suspendHandles.remove(this);
+			}
 		}
 	}
 }
