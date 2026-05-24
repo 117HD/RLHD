@@ -264,7 +264,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 
 		drawStringShadowed(
 			g,
-			"Please either reduce active plugins/extended loaded chunks or increase client memory",
+			"Please either reduce active plugins/extended map loading or increase client memory",
 			8,
 			28,
 			fadedShadowColor
