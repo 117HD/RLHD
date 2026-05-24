@@ -2047,6 +2047,14 @@
     ]
   },
   {
+    "name": "BRIMHAVEN_AGILITY_ARENA_LIGHTEN_HANDHOLDS",
+    "description": "For lightening some handholds that are too dark in the Brimhaven Agility Arena",
+    "aabbs": [
+      [ 2759, 9559, 2759, 9566 ],
+      [ 2785, 9544, 2792, 9544 ]
+    ]
+  },
+  {
     "name": "Brimhaven Dungeon",
     "aabbs": [
       [ 2624, 9408, 2732, 9599 ],

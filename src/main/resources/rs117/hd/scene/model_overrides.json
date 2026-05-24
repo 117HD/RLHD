@@ -64722,6 +64722,223 @@
     ]
   },
   {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Walls",
+    "baseMaterial": "SMOOTH_STONE",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "AGILITY_WALL",
+      "AGILITY_CRUMBLYWALL1",
+      "AGILITY_CRUMBLYWALL1R",
+      "AGILITY_ARCH_LEFT",
+      "AGILITY_ARCH_RIGHT",
+      "AGILITY_CRUMBLYWALL2",
+      "AGILITY_BRIDGE5_REVERSE",
+      "AGILITY_BRIDGE2",
+      "AGILITY_BRIDGE",
+      "AGILITY_BRIDGE5",
+      "AGILITY_ARCH",
+      "AGILITYARENA_LOWWALL",
+      "AGILITYARENA_HANDHOLDS",
+      "AGILITYARENA_HANDHOLDS_MIDDLE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Lighten Handholds",
+    "baseMaterial": "SMOOTH_STONE_VERY_LIGHT",
+    "areas": [ "BRIMHAVEN_AGILITY_ARENA_LIGHTEN_HANDHOLDS" ],
+    "objectIds": [
+      "AGILITYARENA_HANDHOLDS",
+      "AGILITYARENA_HANDHOLDS_MIDDLE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "AGILITYARENA_PLANK3",
+      "AGILITYARENA_PLANK",
+      "AGILITYARENA_PLANK2",
+      "AGILITYARENA_PLANK_MIDDLE",
+      "AGILITYARENA_PLANK2_MIDDLE",
+      "AGILITYARENA_PLANK3_MIDDLE",
+      "AGILITYARENA_PLANK_BROKE1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Trap Door",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "AGILITY_TRAPDOOR_NONACTIVE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Spikes",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "AGILITY_SPIKES1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Pillars and Ledge",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "AGILITY_PILLAR",
+      "AGILITYARENA_PILLAR_TOP",
+      "AGILITYARENA_PILLAR_TOP_MIDDLE",
+      "AGILITYARENA_LEDGEBALANCE",
+      "AGILITYARENA_LEDGEBALANCE2_MIDDLE",
+      "AGILITYARENA_LEDGEBALANCE_MIDDLE",
+      "AGILITYARENA_LEDGEBALANCE2",
+      "AGILITYARENA_PILLAR_SAWBLADES",
+      "AGILITY_TICKETPILLAR",
+      "AGILITYARENA_POISONDARTS"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Saw Pillar",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "AGILITYARENA_SAWBLADES"
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+        "flatNormals": false
+      }
+    ]
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Spike Trap and Saw Hole",
+    "baseMaterial": "SMOOTH_STONE",
+    "objectIds": [
+      "AGILITYARENA_FLOORSPIKES",
+      "AGILITYARENA_TIMEDBLADE2_FLOORL",
+      "AGILITYARENA_TIMEDBLADE2_FLOOR",
+      "AGILITYARENA_TRAP_TIMEDBLADE2"
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Log",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "AGILITYARENA_LOGBALANCE1",
+      "AGILITYARENA_LOGBALANCE2_MIDDLE",
+      "AGILITYARENA_LOGBALANCE3_MIDDLE",
+      "AGILITYARENA_LOGBALANCE1_MIDDLE",
+      "AGILITYARENA_LOGBALANCE3"
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Balance Robe",
+    "baseMaterial": "ROPE_LIGHT",
+    "objectIds": [
+      "AGILITYARENA_ROPEBALANCE",
+      "AGILITYARENA_ROPEBALANCE_MIDDLE"
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "SMOOTH_STONE_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Fix Square Shadow on Darts",
+    "baseMaterial": "ROPE_LIGHT",
+    "projectileIds": [
+      "BULLETTIME_DART"
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "NONE",
+        "castShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Swing Frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "ROPE_SWING_SUPPORT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Swing Rope",
+    "baseMaterial": "ROPE_LIGHT",
+    "objectIds": [
+      "AGILITYARENA_ROPESWING"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Karamja -  Brimhaven Agility Dungeon - Escape Rope",
+    "baseMaterial": "ROPE_LIGHT",
+    "uvScale": 0.5,
+    "uvOrientation": -20,
+    "objectIds": [
+      "CLIMBING_ROPE_TOP",
+      "AGILITYARENA_CLIMBINGROPE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "SMOOTH_STONE_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
     "description": "Karamja -  Brimhaven Dungeon - Tropical Tree Log Agility Shortcut",
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
