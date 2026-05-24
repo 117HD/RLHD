@@ -679,11 +679,12 @@ public class SceneManager {
 		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
 
 		if(gcMonitor.isCloseToRunningOutOfMemory()) {
+			long sceneCleanupTime = sw.elapsed(TimeUnit.MILLISECONDS);
 			log.warn("Running low on memory, clearing current scene context & triggering GC");
 			long availBefore = Runtime.getRuntime().freeMemory();
 			root.sceneContext = null;
 			System.gc();
-			log.debug("Freed Memory: {} bytes", formatBytes(Runtime.getRuntime().freeMemory() - availBefore));
+			log.debug("Freed Memory: {} - {} ms", formatBytes(Runtime.getRuntime().freeMemory() - availBefore), sw.elapsed(TimeUnit.MILLISECONDS) - sceneCleanupTime);
 		}
 
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
