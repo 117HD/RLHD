@@ -217,34 +217,42 @@ public final class FacePrioritySorter implements AutoCloseable {
 			return;
 
 		final int faceCount = m.packedFaces.length;
+		ensureCapacity(diameter, faceCount);
+
+		final int[] packedFaces = m.packedFaces;
+		final int[] sortedFaces = m.sortedFaces;
+		final int[] zsortHead = this.zsortHead;
+		final int[] zsortTail = this.zsortTail;
+		final int[] zsortNext = this.zsortNext;
+
+		Arrays.fill(zsortHead, 0, diameter, -1);
+		Arrays.fill(zsortTail, 0, diameter, -1);
+
 		final int m02 = -(yawSin * pitchCos) >> 16;
 		final int m12 = pitchSin;
 		final int m22 = (yawCos * pitchCos) >> 16;
 
-		ensureCapacity(diameter, faceCount);
-		Arrays.fill(zsortHead, 0, diameter, -1);
-		Arrays.fill(zsortTail, 0, diameter, -1);
-
 		int minFz = diameter, maxFz = 0;
 		for (int i = 0; i < faceCount; ++i) {
-			final int packed = m.packedFaces[i];
-			final int x = packed >> 21;
-			final int y = (packed << 11) >> 22;
-			final int z = (packed << 21) >> 21;
+			final int packed = packedFaces[i];
+			final short x = (short)(packed >> 21);
+			final short y = (short)((packed << 11) >> 22);
+			final short z = (short)((packed << 21) >> 21);
 
 			final int fz = ((x * m02 + y * m12 + z * m22) >> 16) + radius;
 
-			if (zsortTail[fz] == -1) {
-				zsortHead[fz] = zsortTail[fz] = i;
-				zsortNext[i] = -1;
-
+			final int tailFaceIdx = zsortTail[fz];
+			if (tailFaceIdx == -1) {
+				zsortHead[fz] = i;
+				zsortTail[fz] = i;
 				minFz = min(minFz, fz);
 				maxFz = max(maxFz, fz);
 			} else {
-				zsortNext[zsortTail[fz]] = i;
-				zsortNext[i] = -1;
+				zsortNext[tailFaceIdx] = i;
 				zsortTail[fz] = i;
 			}
+
+			zsortNext[i] = -1;
 		}
 
 		final int start = m.startpos / (VERT_SIZE >> 2);
@@ -255,12 +263,12 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 				final int sortedOffset = m.sortedFacesLen;
 				final int faceStart = f * 3 + start;
-				m.sortedFaces[sortedOffset] = faceStart;
-				m.sortedFaces[sortedOffset + 1] = faceStart + 1;
-				m.sortedFaces[sortedOffset + 2] = faceStart + 2;
+				sortedFaces[sortedOffset] = faceStart;
+				sortedFaces[sortedOffset + 1] = faceStart + 1;
+				sortedFaces[sortedOffset + 2] = faceStart + 2;
 				m.sortedFacesLen += 3;
 
-				if (m.sortedFacesLen >= m.sortedFaces.length)
+				if (m.sortedFacesLen >= sortedFaces.length)
 					return;
 			}
 		}
