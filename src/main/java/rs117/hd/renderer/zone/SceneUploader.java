@@ -1803,15 +1803,15 @@ public class SceneUploader implements AutoCloseable {
 			if (pZ <= 0.0f)
 				visibility[v] = allVertsVisible = false;
 
-			modelVertices[vertexOffset] = Float.floatToIntBits(vertexX);
+			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexX);
 			modelProjected[vertexOffset] = pX / pZ;
 			vertexOffset++;
 
-			modelVertices[vertexOffset] = Float.floatToIntBits(vertexY);
+			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexY);
 			modelProjected[vertexOffset] = pY / pZ;
 			vertexOffset++;
 
-			modelVertices[vertexOffset] = Float.floatToIntBits(vertexZ);
+			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexZ);
 			modelProjected[vertexOffset] = pZ;
 			vertexOffset++;
 
