@@ -75,7 +75,6 @@ public class SceneUploader implements AutoCloseable {
 		0, 1, 0, 0
 	};
 
-	private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
 	// subtracts the X lowest lightness levels from the formula.
 	// helps keep darker colors appropriately dark
 	private static final int IGNORE_LOW_LIGHTNESS = 3;
@@ -86,9 +85,12 @@ public class SceneUploader implements AutoCloseable {
 	private static final int BASE_LIGHTEN = 10;
 
 	static {
-		for (int i = 0; i < 8; i++)
-			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
+		for (int i = 0; i < 8; i++) {
+			int brightness = (int) (127 - 72 * Math.pow(i / 7f, .05));
+			assert brightness == getMaxBrightness(i);
+		}
 	}
+
 
 	@Inject
 	private RenderCallbackManager renderCallbackManager;
@@ -2325,10 +2327,30 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		// Clamp brightness as detailed above
-		l = min(l, legacyGreyColors ? 55 : MAX_BRIGHTNESS_LOOKUP_TABLE[s]);
+		l = min(l, legacyGreyColors ? 55 : getMaxBrightness(s));
 
 		// Preserve H, replace S & L
 		return (color & 0xFC00) | (s << 7) | l;
+	}
+
+	private static int getMaxBrightness(int s) {
+		// MAX_BRIGHTNESS_LOOKUP_TABLE
+		// [127, 61, 59, 57, 56, 56, 55, 55]
+		switch (s) {
+			case 0:
+				return 127;
+			case 1:
+				return 61;
+			case 2:
+				return 59;
+			case 3:
+				return 57;
+			case 4:
+			case 5:
+				return 56;
+			default:
+				return 55;
+		}
 	}
 
 	public static void rotateNormals(int[] normals, int orientSin, int orientCos) {
