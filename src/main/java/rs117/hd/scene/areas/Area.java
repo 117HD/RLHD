@@ -3,13 +3,12 @@ package rs117.hd.scene.areas;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import rs117.hd.scene.AreaManager;
 
-public class Area {
-	private static final ThreadLocal<AABB[]> SORT_SCRATCH = ThreadLocal.withInitial(() -> new AABB[16]);
+import static rs117.hd.utils.collections.Util.quickSort;
 
+public class Area {
 	public static final Area NONE = new Area("NONE", 0, 0, 0, 0);
 	public static final Area ALL = new Area("ALL", Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
 	public static Area OVERWORLD = NONE;
@@ -114,19 +113,13 @@ public class Area {
 	}
 
 	private void buildCorner(int c, int cx, int cy) {
-		AABB[] scratch = SORT_SCRATCH.get();
-		if (scratch.length < aabbs.length)
-			SORT_SCRATCH.set(scratch = new AABB[aabbs.length]);
+		System.arraycopy(aabbs, 0, sortedAabbs, c * aabbs.length, aabbs.length);
 
-		System.arraycopy(aabbs, 0, scratch, 0, aabbs.length);
-
-		Arrays.sort(scratch, 0, aabbs.length, (a1, a2) -> {
+		quickSort(sortedAabbs, c * aabbs.length, aabbs.length - 1, (a1, a2) -> {
 			final float s1 = score(a1, cx, cy);
 			final float s2 = score(a2, cx, cy);
 			return Float.compare(s1, s2);
 		});
-
-		System.arraycopy(scratch, 0, sortedAabbs, c * aabbs.length, aabbs.length);
 	}
 
 	private static float score(AABB aabb, int cx, int cy) {

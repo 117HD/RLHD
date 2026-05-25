@@ -60,7 +60,7 @@ public final class Util {
 		final Object[] buf = PooledArrayType.OBJECT.borrow(size);
 		try {
 			list.toArray(buf);
-			quickSort(buf, 0, size - 1, comparator);
+			quickSortInternal(buf, 0, size - 1, comparator);
 			for (int i = 0; i < size; i++)
 				list.set(i, (T) buf[i]);
 		} finally {
@@ -68,14 +68,18 @@ public final class Util {
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static void quickSort(Object[] a, Comparator comparator) {
+	public static <T> void quickSort(T[] a, Comparator<T> comparator) {
 		if (a.length > 1)
-			quickSort(a, 0, a.length - 1, comparator);
+			quickSortInternal(a, 0, a.length - 1, comparator);
+	}
+
+	public static <T> void quickSort(T[] a, int left, int right, Comparator<T> comparator) {
+		if (a.length > 1)
+			quickSortInternal(a, left, right, comparator);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static void quickSort( Object[] a, int left, int right, Comparator comparator) {
+	private static void quickSortInternal( Object[] a, int left, int right, Comparator comparator) {
 		if (right <= left) return;
 
 		/*
