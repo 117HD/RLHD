@@ -94,7 +94,7 @@ public class ZoneRenderer implements Renderer {
 	public static final int TEXTURE_UNIT_SKYBOX = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	private int skyboxShaderProgramId;
 	private int customSkyboxTextureId;
-	private rs117.hd.config.SkyboxTheme loadedSkyboxTheme = rs117.hd.config.SkyboxTheme.NONE; // <-- ADD THIS LINE
+	private rs117.hd.config.SkyboxTheme loadedSkyboxTheme = rs117.hd.config.SkyboxTheme.NONE;
 	private int lastCameraYaw = -1;
 	private float continuousSkyboxYaw = 0f;
 
