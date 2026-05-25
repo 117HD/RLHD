@@ -500,4 +500,6 @@ public class EnvironmentManager {
 	public boolean allowRoofShadows() {
 		return currentEnvironment.allowRoofShadows;
 	}
+
+	public boolean isOverworld() { return currentEnvironment.isOverworld; }
 }
