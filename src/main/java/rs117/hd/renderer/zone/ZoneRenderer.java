@@ -94,7 +94,7 @@ public class ZoneRenderer implements Renderer {
 	public static final int TEXTURE_UNIT_SKYBOX = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	private int skyboxShaderProgramId;
 	private int customSkyboxTextureId;
-	private rs117.hd.config.SkyboxTheme loadedSkyboxTheme = rs117.hd.config.SkyboxTheme.NONE;
+	private rs117.hd.config.SkyboxTheme loadedSkyboxTheme = rs117.hd.config.SkyboxTheme.NONE; // <-- ADD THIS LINE
 	private int lastCameraYaw = -1;
 	private float continuousSkyboxYaw = 0f;
 
@@ -200,6 +200,7 @@ public class ZoneRenderer implements Renderer {
 		sceneManager.initialize(renderState, uboWorldViews);
 		modelStreamingManager.initialize();
 
+		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
 		directionalCamera.setDirty();
 	}
@@ -241,6 +242,7 @@ public class ZoneRenderer implements Renderer {
 		detailedShadowProgram.compile(includes);
 
 		skyboxShaderProgramId = compileSkyboxShader();
+		// Pass the absolute resource path string to your loading method
 		customSkyboxTextureId = loadSkyboxTexture("/rs117/hd/skybox3d/sunflowers_puresky_4k.png");
 	}
 
@@ -763,22 +765,26 @@ public class ZoneRenderer implements Renderer {
 
 		if (hasActiveSkyboxTheme && environmentManager.isOverworld()) {
 
+			// INTERCEPT: Check if the user changed the dropdown selection mid-game
 			if (currentTheme != loadedSkyboxTheme) {
-
+				// Free the old texture handle from GPU memory if it exists
 				if (customSkyboxTextureId != 0) {
 					glDeleteTextures(customSkyboxTextureId);
 					customSkyboxTextureId = 0;
 				}
 
+				// Stream the new asset path specified by the active enum selection
 				customSkyboxTextureId = loadSkyboxTexture(currentTheme.getResourcePath());
 				loadedSkyboxTheme = currentTheme;
 			}
 
+			// Only run drawing commands if the selected asset file loaded successfully
 			if (customSkyboxTextureId != 0) {
 				glDisable(GL_DEPTH_TEST);
 				glDepthMask(false);
 				glUseProgram(skyboxShaderProgramId);
 
+				// [ Your original texture coordinate math stays exactly here ]
 				float horizontalSpeed = 1.0f;
 				float verticalSpeed = 1.0f;
 
@@ -1295,7 +1301,7 @@ public class ZoneRenderer implements Renderer {
 		              "    \n" +
 		              "    vec3 dir = normalize(finalDir);\n" +
 		              "    \n" +
-		              "    // ---  ---\n" +
+		              "    // --- APPLY VERTICAL SHIFT HERE ---\n" +
 		              "    // Slightly offsetting the Y lookup pushes the panorama horizon downwards\n" +
 		              "    float shiftedY = dir.y - 0.12;\n" +
 		              "    \n" +
@@ -1333,6 +1339,7 @@ public class ZoneRenderer implements Renderer {
 				return 0;
 			}
 
+			// Fully qualified variable initialization:
 			java.awt.image.BufferedImage img = javax.imageio.ImageIO.read(is);
 			is.close();
 
