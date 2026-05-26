@@ -438,25 +438,29 @@ public final class HDUtils {
 	}
 
 	public static boolean isAABBIntersectingFrustum(
-		int minX,
-		int minY,
-		int minZ,
-		int maxX,
-		int maxY,
-		int maxZ,
+		float minX,
+		float minY,
+		float minZ,
+		float maxX,
+		float maxY,
+		float maxZ,
 		float[][] cullingPlanes
 	) {
 		for (int i = 0; i < cullingPlanes.length; i++) {
 			final float[] plane = cullingPlanes[i];
+			final float nx = plane[0];
+			final float ny = plane[1];
+			final float nz = plane[2];
+			final float d  = plane[3];
 			if (
-				plane[0] * minX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0
+				nx * minX + ny * minY + nz * minZ + d < 0.0 &&
+				nx * maxX + ny * minY + nz * minZ + d < 0.0 &&
+				nx * minX + ny * maxY + nz * minZ + d < 0.0 &&
+				nx * maxX + ny * maxY + nz * minZ + d < 0.0 &&
+				nx * minX + ny * minY + nz * maxZ + d < 0.0 &&
+				nx * maxX + ny * minY + nz * maxZ + d < 0.0 &&
+				nx * minX + ny * maxY + nz * maxZ + d < 0.0 &&
+				nx * maxX + ny * maxY + nz * maxZ + d < 0.0
 			) {
 				return false;
 			}
