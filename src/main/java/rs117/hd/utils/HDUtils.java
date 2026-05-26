@@ -446,7 +446,8 @@ public final class HDUtils {
 		int maxZ,
 		float[][] cullingPlanes
 	) {
-		for (float[] plane : cullingPlanes) {
+		for (int i = 0; i < cullingPlanes.length; i++) {
+			final float[] plane = cullingPlanes[i];
 			if (
 				plane[0] * minX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
 				plane[0] * maxX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
