@@ -835,6 +835,21 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_GC_MONITOR = "enableGCMonitor";
+	@ConfigItem(
+		keyName = KEY_GC_MONITOR,
+		name = "Enable GC Monitor",
+		description = "Monitors the Memory state of the client to avoid running out of memory and crashing.",
+		warning =
+			"This option monitors the amount of memory available in order to detect insufficient<br>" +
+			"memory available and tries to shutdown the plugin gracefully before running out.",
+		section = miscellaneousSettings
+	)
+	default boolean enableGCMonitor()
+	{
+		return true;
+	}
+
 	String KEY_MACOS_INTEL_WORKAROUND = "macosIntelWorkaround";
 	@ConfigItem(
 		keyName = KEY_MACOS_INTEL_WORKAROUND,

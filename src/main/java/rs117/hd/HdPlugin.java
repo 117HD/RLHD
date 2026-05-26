@@ -424,6 +424,7 @@ public class HdPlugin extends Plugin {
 	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
+	public boolean configEnableGCMonitor;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
 	public DynamicLights configDynamicLights;
@@ -1688,6 +1689,7 @@ public class HdPlugin extends Plugin {
 		configHideVanillaWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
+		configEnableGCMonitor = config.enableGCMonitor();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {

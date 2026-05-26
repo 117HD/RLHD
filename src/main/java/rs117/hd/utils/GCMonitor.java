@@ -236,25 +236,6 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		}
 
 		final long averageGCAvail = getAvgAvailHeap();
-		final int recentSampleWeight = getRecentSampleWeight();
-		if (recentSampleWeight >= 8 && averageGCAvail < calculateMinimalHeapSize()) {
-			log.warn("Detected Average Avail Heap after GC: {}", formatBytes(averageGCAvail));
-
-			final int recommendedIncreaseMB = calculateRecommendedMemoryIncreaseMB(averageGCAvail);
-			final int recommendedEML = calculateRecommendedExpandedMapLoading(averageGCAvail);
-
-			plugin.requestPluginStop(
-				"117HD has turned off due to avoid running out of memory, try:\n" +
-				(recommendedIncreaseMB > 0 ? " * Increase Client Memory by at least " + recommendedIncreaseMB + " MB\n" : "") +
-				" * Reduce Extended Map Loading to " + recommendedEML + "\n" +
-				" * Reduce enabled plugins\n" +
-				"If the issue persists even after all of the above, please join our discord server:\n" +
-				HdPlugin.DISCORD_URL
-			);
-
-			return;
-		}
-
 		if (nextHeapLogTime <= now) {
 			nextHeapLogTime = now + 30_000;
 
@@ -263,10 +244,32 @@ public class GCMonitor extends Overlay implements NotificationListener {
 				formatBytes(averageGCAvail)
 			);
 		}
+
+		if(plugin.configEnableGCMonitor) {
+			final int recentSampleWeight = getRecentSampleWeight();
+			if (recentSampleWeight >= 8 && averageGCAvail < calculateMinimalHeapSize()) {
+				log.warn("Detected Average Avail Heap after GC: {}", formatBytes(averageGCAvail));
+
+				final int recommendedIncreaseMB = calculateRecommendedMemoryIncreaseMB(averageGCAvail);
+				final int recommendedEML = calculateRecommendedExpandedMapLoading(averageGCAvail);
+
+				plugin.requestPluginStop(
+					"117HD has turned off due to avoid running out of memory, try:\n" +
+					(recommendedIncreaseMB > 0 ? " * Increase Client Memory by at least " + recommendedIncreaseMB + " MB\n" : "") +
+					" * Reduce Extended Map Loading to " + recommendedEML + "\n" +
+					" * Reduce enabled plugins\n" +
+					"If the issue persists even after all of the above, please join our discord server:\n" +
+					HdPlugin.DISCORD_URL
+				);
+			}
+		}
 	}
 
 	@Override
 	public Dimension render(Graphics2D g) {
+		if(!plugin.configEnableGCMonitor)
+			return null;
+
 		final long averageGCAvail = getAvgAvailHeap();
 
 		final long now = System.currentTimeMillis();
