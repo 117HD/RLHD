@@ -677,10 +677,6 @@ public class LegacySceneUploader {
 						nwColor = override.modifyColor(nwColor);
 						neColor = override.modifyColor(neColor);
 					}
-					swHeight -= override.heightOffset;
-					seHeight -= override.heightOffset;
-					neHeight -= override.heightOffset;
-					nwHeight -= override.heightOffset;
 				} else if (textureId == -1) {
 					// Fall back to the default ground material if the tile is untextured
 					groundMaterial = override.groundMaterial;
@@ -730,6 +726,10 @@ public class LegacySceneUploader {
 			if (sceneContext.vertexIsOverlay.containsKey(swVertexKey) && sceneContext.vertexIsUnderlay.containsKey(swVertexKey))
 				swVertexIsOverlay = true;
 
+			swHeight -= override.heightOffset;
+			seHeight -= override.heightOffset;
+			neHeight -= override.heightOffset;
+			nwHeight -= override.heightOffset;
 
 			float terrainData = Float.intBitsToFloat(packTerrainData(true, 0, waterType, tileZ));
 

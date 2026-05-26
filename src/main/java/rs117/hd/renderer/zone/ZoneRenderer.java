@@ -36,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
 import org.lwjgl.opengl.*;
@@ -105,6 +106,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private Client client;
+
+	@Inject
+	private ClientThread clientThread;
 
 	@Inject
 	private DrawManager drawManager;
@@ -321,8 +325,12 @@ public class ZoneRenderer implements Renderer {
 
 		try {
 			WorldViewContext ctx = sceneManager.getContext(scene);
-			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
+			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading) {
+				// When triggering plugin restarts in rapid succession, it can end up in a state where no scene is loaded initially
+				if (scene.getWorldViewId() == WorldView.TOPLEVEL && client.getGameState() == GameState.LOGGED_IN)
+					clientThread.invokeLater(() -> client.setGameState(GameState.LOADING));
 				return;
+			}
 
 			frameTimer.begin(Timer.DRAW_PRESCENE);
 			ctx.minLevel = minLevel;

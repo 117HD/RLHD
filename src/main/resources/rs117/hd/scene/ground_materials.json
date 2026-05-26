@@ -546,7 +546,7 @@
     "name": "ROCK_PILES",
     "materials": [
       "STONE_NORMALED",
-      "GRAVEL",
+      "GRAVEL_LIGHT",
       "GRUNGE_1"
     ]
   },
