@@ -1,5 +1,6 @@
 package rs117.hd.utils.collections;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -8,12 +9,13 @@ import java.util.function.Supplier;
 import javax.annotation.Nonnull;
 import rs117.hd.utils.Destructible;
 import rs117.hd.utils.DestructibleHandler;
+import rs117.hd.utils.Props;
 
 public final class ConcurrentPool<T> {
 	public static List<ConcurrentPool<?>> ALL_POOLS = new ArrayList<>();
 
-	private final ConcurrentLinkedQueue<T> pool = new ConcurrentLinkedQueue<>();
 	private final ConcurrentLinkedQueue<Thread> parkedThreads;
+	private final ArrayDeque<T> pool = new ArrayDeque<>();
 
 	private final Supplier<T> supplier;
 	private final int fixedSize;
@@ -30,8 +32,21 @@ public final class ConcurrentPool<T> {
 		ALL_POOLS.add(this);
 	}
 
+	private T poll() {
+		synchronized (pool) {
+			return pool.poll();
+		}
+	}
+
+	private void offer(T obj) {
+		synchronized (pool) {
+			assert !Props.DEVELOPMENT || pool.isEmpty() || !pool.contains(obj) :"Object already in pool: " + obj;
+			pool.offer(obj);
+		}
+	}
+
 	public T acquire() {
-		T obj = pool.poll();
+		T obj = poll();
 		if (obj == null && (fixedSize == 0 || created < fixedSize)) {
 			obj = supplier.get();
 			created++;
@@ -44,7 +59,7 @@ public final class ConcurrentPool<T> {
 		if (obj == null && parkedThreads != null) {
 			final Thread currentThread = Thread.currentThread();
 			final long deadline = System.nanoTime() + timeoutNanos;
-			while ((obj = pool.poll()) == null) {
+			while ((obj = poll()) == null) {
 				if (!parkedThreads.contains(currentThread))
 					parkedThreads.add(currentThread);
 				LockSupport.parkNanos(1000);
@@ -65,8 +80,7 @@ public final class ConcurrentPool<T> {
 			return;
 		}
 
-		assert !pool.contains(obj) : "Object already in pool: " + obj;
-		pool.offer(obj);
+		offer(obj);
 
 		if (parkedThreads != null) {
 			Thread parkedThread = parkedThreads.poll();
@@ -77,7 +91,7 @@ public final class ConcurrentPool<T> {
 
 	public void destroy() {
 		T obj;
-		while ((obj = pool.poll()) != null) {
+		while ((obj = poll()) != null) {
 			if (obj instanceof Destructible)
 				((Destructible) obj).destroy();
 		}

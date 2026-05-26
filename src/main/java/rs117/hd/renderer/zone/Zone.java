@@ -25,6 +25,7 @@ import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.Int2IntHashMap;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -38,6 +39,8 @@ import static rs117.hd.utils.collections.Util.quickSort;
 
 @Slf4j
 public class Zone implements Destructible {
+	private static final ConcurrentPool<AlphaModel> ALPHA_MODEL_POOL = new ConcurrentPool<>(AlphaModel::new);
+
 	@Inject
 	private Client client;
 
@@ -456,8 +459,6 @@ public class Zone implements Destructible {
 		}
 	}
 
-	static final ConcurrentLinkedQueue<AlphaModel> modelCache = new ConcurrentLinkedQueue<>();
-
 	void addAlphaModel(
 		HdPlugin plugin,
 		MaterialManager materialManager,
@@ -622,9 +623,7 @@ public class Zone implements Destructible {
 	}
 
 	synchronized AlphaModel requestTempAlphaModel(ModelOverride modelOverride, int level, int x, int y, int z) {
-		AlphaModel m = modelCache.poll();
-		if (m == null)
-			m = new AlphaModel();
+		AlphaModel m = ALPHA_MODEL_POOL.acquire();
 		m.id = -1;
 		m.modelOverride = modelOverride;
 		m.x = (short) x;
@@ -648,7 +647,7 @@ public class Zone implements Destructible {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.sortedFaces = null;
-				modelCache.add(m);
+				ALPHA_MODEL_POOL.recycle(m);
 			}
 			m.asyncSortIdx = -1;
 			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
@@ -879,9 +878,7 @@ public class Zone implements Destructible {
 				assert z != null;
 				assert z != this;
 
-				AlphaModel m2 = modelCache.poll();
-				if (m2 == null)
-					m2 = new AlphaModel();
+				AlphaModel m2 = ALPHA_MODEL_POOL.acquire();
 				m2.id = m.id;
 				m2.modelOverride = m.modelOverride;
 				m2.startpos = m.startpos;
