@@ -117,7 +117,7 @@ vec3 proceduralStarfield(vec3 dir) {
     // Near-black background with faint blue tint
     vec3 color = vec3(0.00304, 0.00304, 0.00521);
 
-    // --- STAR GENERATION ---
+    // Star Generation
     // Two layers: bright/sparse + dim/dense for visual depth
     vec3 starColor = vec3(0.0);
 
@@ -187,7 +187,7 @@ vec3 proceduralStarfield(vec3 dir) {
 
     color += starColor;
 
-    // --- NEBULA / MILKY WAY ---
+    // Nebulas
     // A few large sweeping regions with wispy internal structure
     {
         // Very low frequency — creates only 2-3 broad regions across the sky
