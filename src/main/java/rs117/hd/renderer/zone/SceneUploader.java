@@ -1086,7 +1086,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx
 		);
 
-		writeCache.flush();
+		writeCache.release();
 	}
 
 	private void uploadTileModel(
@@ -1377,7 +1377,7 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx
 			);
 		}
-		writeCache.flush();
+		writeCache.release();
 	}
 
 	// scene upload
@@ -1732,7 +1732,7 @@ public class SceneUploader implements AutoCloseable {
 			);
 			len += 3;
 		}
-		writeCache.flush();
+		writeCache.release();
 		return len;
 	}
 
@@ -2146,7 +2146,7 @@ public class SceneUploader implements AutoCloseable {
 			);
 		}
 
-		writeCache.flush();
+		writeCache.release();
 	}
 
 	public static void calculateFaceNormalInt(

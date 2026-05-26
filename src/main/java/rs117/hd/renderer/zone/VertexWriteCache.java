@@ -3,6 +3,7 @@ package rs117.hd.renderer.zone;
 import java.nio.IntBuffer;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.collections.PooledArrayType;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -11,6 +12,7 @@ public final class VertexWriteCache {
 	private IntBuffer outputBuffer;
 
 	private final String name;
+	private final int initialCapacity;
 	private final int maxCapacity;
 	private int[] stagingBuffer;
 	private int stagingPosition;
@@ -21,13 +23,22 @@ public final class VertexWriteCache {
 
 	public VertexWriteCache(String name, int initialCapacity, int maxCapacity) {
 		this.name = name;
+		this.initialCapacity = initialCapacity;
 		this.maxCapacity = maxCapacity;
-		stagingBuffer = new int[initialCapacity];
 	}
 
 	public void setOutputBuffer(IntBuffer outputBuffer) {
 		this.outputBuffer = outputBuffer;
 		stagingPosition = 0;
+		stagingBuffer = PooledArrayType.INT.ensureCapacity(stagingBuffer, initialCapacity);
+	}
+
+	private void release(){
+		flush();
+
+		if(stagingBuffer != null)
+			PooledArrayType.INT.release(stagingBuffer);
+		stagingBuffer = null;
 	}
 
 	private void flushAndGrow() {
@@ -35,7 +46,7 @@ public final class VertexWriteCache {
 		flush();
 
 		if (stagingBuffer.length < maxCapacity)
-			stagingBuffer = new int[min(stagingBuffer.length * 2, maxCapacity)];
+			stagingBuffer = PooledArrayType.INT.ensureCapacity(stagingBuffer, min(stagingBuffer.length * 2, maxCapacity));
 	}
 
 	public int putFace(
@@ -124,7 +135,7 @@ public final class VertexWriteCache {
 	}
 
 	public static class Collection {
-		private static final int CAPACITY = (int) (8 * KiB / Integer.BYTES);
+		private static final int CAPACITY = (int) (32 * KiB / Integer.BYTES);
 
 		public final VertexWriteCache opaque = new VertexWriteCache("OPAQUE", CAPACITY);
 		public final VertexWriteCache alpha = new VertexWriteCache("ALPHA", CAPACITY);
@@ -169,11 +180,11 @@ public final class VertexWriteCache {
 			return useAlphaBuffer && hasAlpha ? alphaTex : opaqueTex;
 		}
 
-		public void flush() {
-			opaque.flush();
-			alpha.flush();
-			opaqueTex.flush();
-			alphaTex.flush();
+		public void release() {
+			opaque.release();
+			alpha.release();
+			opaqueTex.release();
+			alphaTex.release();
 		}
 	}
 }
