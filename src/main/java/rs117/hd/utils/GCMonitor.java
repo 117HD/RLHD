@@ -42,6 +42,8 @@ public class GCMonitor extends Overlay implements NotificationListener {
 
 	private static final long GC_SAMPLE_WINDOW_MS = 60_000;
 
+	private static final long WARNING_DELAY_MS = 10_000;
+	private static final float CRITICAL_THRESHOLD = 0.5f;
 	private static final long FADE_DURATION_MS = 1_000;
 
 	private static final Color[] WARNING_COLORS = {
@@ -63,7 +65,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	private long gcDurationMs = 0;
 	private long nextHeapLogTime = 0;
 	private float warningAlpha = 0f;
-	private long lastRenderTime = System.currentTimeMillis();
+	private long warningStartTime = -1;
 	private final List<SuspendHandle> suspendHandles = new ArrayList<>();
 
 	@Inject
@@ -271,25 +273,35 @@ public class GCMonitor extends Overlay implements NotificationListener {
 			return null;
 
 		final long averageGCAvail = getAvgAvailHeap();
+		final long minHeapSize = calculateMinimalHeapSize();
+		final float shutdownFrac = saturate((float) (averageGCAvail - minHeapSize) / minHeapSize);
 
 		final long now = System.currentTimeMillis();
-		final float deltaSeconds = (now - lastRenderTime) / 1000f;
-		final float fadeSpeed = deltaSeconds / (FADE_DURATION_MS / 1000f);
+		final float fadeSpeed = plugin.deltaTime / (FADE_DURATION_MS / 1000f);
 
 		if (averageGCAvail <= calculateRecommendedHeapSize()) {
+			if (warningStartTime == -1)
+				warningStartTime = now;
+		} else {
+			warningStartTime = -1;
+		}
+
+		boolean shouldFadeIn = warningStartTime != -1 && now - warningStartTime >= WARNING_DELAY_MS;
+		if(!shouldFadeIn && shutdownFrac <= CRITICAL_THRESHOLD) {
+			warningStartTime = now - WARNING_DELAY_MS;
+			shouldFadeIn = true;
+		}
+
+		if (shouldFadeIn) {
 			warningAlpha = min(1f, warningAlpha + fadeSpeed);
 		} else {
 			warningAlpha = max(0f, warningAlpha - fadeSpeed);
 		}
-		lastRenderTime = now;
 
 		if (warningAlpha <= 0f)
 			return null;
 
-		final long minHeapSize = calculateMinimalHeapSize();
-		final float shutdownFrac = saturate((float) (averageGCAvail - minHeapSize) / minHeapSize);
 		final int colorIndex = min(WARNING_COLORS.length - 1, (int) (shutdownFrac * WARNING_COLORS.length));
-
 		final Color fadedShadowColor = new Color(0, 0, 0, (int) (warningAlpha * 255));
 		final Color fadedBaseColor = new Color(
 			WARNING_COLORS[colorIndex].getRed(),
