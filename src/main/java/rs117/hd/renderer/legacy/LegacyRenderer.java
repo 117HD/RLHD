@@ -67,7 +67,6 @@ import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_REFLECTION_MAP;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
@@ -1133,68 +1132,6 @@ public class LegacyRenderer implements Renderer {
 			glEnable(GL_BLEND);
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
-			boolean renderWaterReflections = plugin.configPlanarReflections && sceneContext.hasWater;
-			if (renderWaterReflections) {
-				sceneProgram.uniWaterHeight.set(sceneContext.mostPrevalentWaterLevel);
-
-				// Calculate water reflection projection matrix
-				float[] reflectionProjectionMatrix = Mat4.scale(1, -1, 1);
-				Mat4.mul(reflectionProjectionMatrix, plugin.projMatrix);
-				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateX(-plugin.cameraOrientation[1]));
-				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateY(plugin.cameraOrientation[0]));
-				Mat4.mul(
-					reflectionProjectionMatrix, Mat4.translate(
-						-plugin.cameraPosition[0],
-						-(plugin.cameraPosition[1] + (sceneContext.mostPrevalentWaterLevel - plugin.cameraPosition[1]) * 2),
-						-plugin.cameraPosition[2]
-					)
-				);
-				plugin.uboGlobal.projectionMatrix.set(reflectionProjectionMatrix);
-				plugin.uboGlobal.cameraPos.set(
-					plugin.cameraPosition[0],
-					(plugin.cameraPosition[1] + (sceneContext.mostPrevalentWaterLevel - plugin.cameraPosition[1]) * 2),
-					plugin.cameraPosition[2]
-				);
-				plugin.uboGlobal.upload();
-
-				frameTimer.begin(Timer.RENDER_REFLECTIONS);
-
-				glViewport(0, 0, plugin.waterReflectionResolution[0], plugin.waterReflectionResolution[1]);
-
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboWaterReflection);
-				glClearDepth(0);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-				// Since the game was never designed to be viewed from below, a lot of
-				// things are missing triangles underneath. In most cases, it's fine
-				// visually to render the top face from below.
-				glDisable(GL_CULL_FACE);
-
-				glEnable(GL_DEPTH_TEST);
-				// With LEQUAL, the insides of paper thin walls are visible from the outside
-				glDepthFunc(GL_GEQUAL);
-
-				sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_REFLECTION);
-				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
-
-				// Bind the water reflection texture to index 4
-				glActiveTexture(TEXTURE_UNIT_WATER_REFLECTION_MAP);
-				glBindTexture(GL_TEXTURE_2D, plugin.texWaterReflection);
-				frameTimer.begin(Timer.REFLECTION_MIPMAPS);
-				glGenerateMipmap(GL_TEXTURE_2D);
-				frameTimer.end(Timer.REFLECTION_MIPMAPS);
-
-				// Reset everything back to the main pass' state
-				glDisable(GL_DEPTH_TEST);
-				glEnable(GL_CULL_FACE);
-
-				frameTimer.end(Timer.RENDER_REFLECTIONS);
-
-				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
-				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
-				plugin.uboGlobal.upload();
-			}
-
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 			if (plugin.msaaSamples > 1) {
 				glEnable(GL_MULTISAMPLE);
@@ -1229,7 +1166,6 @@ public class LegacyRenderer implements Renderer {
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 			sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_MAIN);
-			sceneProgram.uniWaterReflectionEnabled.set(renderWaterReflections);
 
 			// When there are custom tiles, we need depth testing to draw them in the correct order, but the rest of the
 			// scene doesn't support depth testing, so we only write depths for custom tiles.
