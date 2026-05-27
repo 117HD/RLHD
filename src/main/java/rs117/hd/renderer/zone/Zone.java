@@ -28,7 +28,6 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
 
-import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
@@ -83,8 +82,7 @@ public class Zone implements Destructible {
 	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean isFirstLoadingAttempt = true;
-	int[] tileWaterHeights = new int[CHUNK_SIZE * CHUNK_SIZE];
-	int mostPrevalentWaterLevel = -1;
+	public int mostPrevalentWaterLevel = -1;
 
 	public HashSet<Integer> animatedDynamicObjectIds = new HashSet<>();
 
@@ -99,10 +97,6 @@ public class Zone implements Destructible {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
-
-	{
-		Arrays.fill(tileWaterHeights, -1);
-	}
 
 	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
 		assert glVao == 0;

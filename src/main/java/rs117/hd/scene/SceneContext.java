@@ -71,7 +71,6 @@ public class SceneContext {
 	public int[][][] underwaterDepthLevels;
 	public int sceneEdge0, sceneEdge1;
 	// Initialize array for counting the most prevalent water level
-	public int mostPrevalentWaterLevel;
 	public boolean hasWater;
 
 	// Thread safe tile override variables

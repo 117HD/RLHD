@@ -27,6 +27,8 @@ package rs117.hd.renderer.zone;
 import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -151,6 +153,8 @@ public class ZoneRenderer implements Renderer {
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
+
+	private final HashMap<Integer, Float> waterLevelWeights = new HashMap<>();
 
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -734,6 +738,38 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
+	private int calculateBestWaterLevel(WorldViewContext ctx) {
+		final int offset = ctx.sceneContext.sceneOffset >> 3;
+		final int camPosX = (int) sceneCamera.getPositionX();
+		final int camPosZ = (int) sceneCamera.getPositionZ();
+
+		waterLevelWeights.clear();
+		// Calculate most prevalent water level based on the visible zones
+		for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
+			for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
+				final Zone zone = ctx.zones[x][z];
+				if(!zone.hasWater || !zone.inSceneFrustum)
+					continue;
+
+				final int dx = camPosX - ((x - offset) << 10);
+				final int dz = camPosZ - ((z - offset) << 10);
+
+				final int distSq = dx * dx + dz * dz;
+				final float weight = 1.0f / (1.0f + distSq);
+
+				waterLevelWeights.merge(zone.mostPrevalentWaterLevel, weight, Float::sum);
+			}
+		}
+
+		Map.Entry<Integer, Float> best = null;
+		for (var entry : waterLevelWeights.entrySet()) {
+			if (best == null || entry.getValue() > best.getValue())
+				best = entry;
+		}
+
+		return -best.getKey();
+	}
+
 	private void scenePass() {
 		sceneProgram.use();
 		sceneProgram.uniLegacyWaterColor.set(environmentManager.currentWaterColor);
@@ -748,11 +784,12 @@ public class ZoneRenderer implements Renderer {
 		}
 		glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
 
-		var ctx = sceneManager.getRoot().sceneContext;
+		WorldViewContext ctx = sceneManager.getRoot();
 
-		boolean renderWaterReflections = plugin.configPlanarReflections && ctx.hasWater;
+		boolean renderWaterReflections = plugin.configPlanarReflections && ctx.sceneContext.hasWater;
 		if (renderWaterReflections) {
-			sceneProgram.uniWaterHeight.set(ctx.mostPrevalentWaterLevel);
+			final int mostPrevalentWaterLevel = calculateBestWaterLevel(ctx);
+			sceneProgram.uniWaterHeight.set(mostPrevalentWaterLevel);
 
 			// Calculate water reflection projection matrix
 			float[] reflectionProjectionMatrix = Mat4.scale(1, -1, 1);
@@ -762,14 +799,14 @@ public class ZoneRenderer implements Renderer {
 			Mat4.mul(
 				reflectionProjectionMatrix, Mat4.translate(
 					-plugin.cameraPosition[0],
-					-(plugin.cameraPosition[1] + (ctx.mostPrevalentWaterLevel - plugin.cameraPosition[1]) * 2),
+					-(plugin.cameraPosition[1] + (mostPrevalentWaterLevel - plugin.cameraPosition[1]) * 2),
 					-plugin.cameraPosition[2]
 				)
 			);
 			plugin.uboGlobal.projectionMatrix.set(reflectionProjectionMatrix);
 			plugin.uboGlobal.cameraPos.set(
 				plugin.cameraPosition[0],
-				(plugin.cameraPosition[1] + (ctx.mostPrevalentWaterLevel - plugin.cameraPosition[1]) * 2),
+				(plugin.cameraPosition[1] + (mostPrevalentWaterLevel - plugin.cameraPosition[1]) * 2),
 				plugin.cameraPosition[2]
 			);
 			plugin.uboGlobal.upload();
@@ -796,10 +833,7 @@ public class ZoneRenderer implements Renderer {
 
 			sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_REFLECTION);
 
-			CommandBuffer.SKIP_DEPTH_MASKING = true;
 			sceneCmd.execute();
-			directionalCmd.execute();
-			CommandBuffer.SKIP_DEPTH_MASKING = false;
 
 			// Bind the water reflection texture to index 4
 			glActiveTexture(TEXTURE_UNIT_WATER_REFLECTION_MAP);

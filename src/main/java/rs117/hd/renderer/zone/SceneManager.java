@@ -682,17 +682,10 @@ public class SceneManager {
 				totalOpaque += zone.bufLen;
 				totalAlpha += zone.bufLenA;
 
-				if (zone.mostPrevalentWaterLevel != -1)
-					waterLevels.compute(zone.mostPrevalentWaterLevel, (k, v) -> v == null ? 1 : v + 1);
+				if(zone.hasWater)
+					nextSceneContext.hasWater = true;
 			}
 		}
-
-		Map.Entry<Integer, Integer> mostPrevalentWaterLevel = null;
-		for (var entry : waterLevels.entrySet())
-			if (mostPrevalentWaterLevel == null || entry.getValue() > mostPrevalentWaterLevel.getValue())
-				mostPrevalentWaterLevel = entry;
-		if (mostPrevalentWaterLevel != null)
-			nextSceneContext.mostPrevalentWaterLevel = mostPrevalentWaterLevel.getKey();
 
 		root.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS) - sceneUploadTimeStart;
 		log.debug(
@@ -728,23 +721,6 @@ public class SceneManager {
 
 		nextZones = null;
 		nextSceneContext = null;
-
-		HashMap<Integer, Integer> waterLevelPrevalence = new HashMap<>();
-		for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
-			for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
-				Zone zone = ctx.zones[x][z];
-				if (zone.hasWater)
-					waterLevelPrevalence.compute(zone.mostPrevalentWaterLevel, (level, count) -> (count == null ? 0 : count) + 1);
-			}
-		}
-		Map.Entry<Integer, Integer> mostPrevalent = null;
-		for (var entry : waterLevelPrevalence.entrySet())
-			if (mostPrevalent == null || mostPrevalent.getValue() < entry.getValue())
-				mostPrevalent = entry;
-		if (mostPrevalent != null) {
-			ctx.sceneContext.hasWater = true;
-			ctx.sceneContext.mostPrevalentWaterLevel = -mostPrevalent.getKey();
-		}
 
 		if (isFirst) {
 			root.initBuffers();

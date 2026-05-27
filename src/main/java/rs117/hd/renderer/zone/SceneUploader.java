@@ -24,9 +24,8 @@
  */
 package rs117.hd.renderer.zone;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -129,6 +128,7 @@ public class SceneUploader implements AutoCloseable {
 	private short[][][] underlayIds;
 	private int[][][] tileHeights;
 
+	private final int[] tileWaterHeights = new int[CHUNK_SIZE * CHUNK_SIZE];
 	private final int[] worldPos = new int[3];
 	private final int[][] vertices = new int[4][3];
 	private final int[] vertexKeys = new int[4];
@@ -200,6 +200,8 @@ public class SceneUploader implements AutoCloseable {
 		var fb = zone.tboF != null ? new GpuIntBuffer(zone.tboF.mapped()) : null;
 		assert fb != null;
 
+		Arrays.fill(tileWaterHeights, -1);
+
 		roofIds.clear();
 		for (int level = 0; level <= 3; ++level) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
@@ -239,16 +241,25 @@ public class SceneUploader implements AutoCloseable {
 			uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 
-			HashMap<Integer, Integer> prevalence = new HashMap<>();
-			for (int height : zone.tileWaterHeights)
-				if (height != -1)
-					prevalence.compute(height, (k, v) -> v == null ? 1 : v + 1);
-			Map.Entry<Integer, Integer> mostPrevalent = null;
-			for (var entry : prevalence.entrySet())
-				if (mostPrevalent == null || entry.getValue() > mostPrevalent.getValue())
-					mostPrevalent = entry;
-			if (mostPrevalent != null)
-				zone.mostPrevalentWaterLevel = mostPrevalent.getKey();
+			int bestHeight = -1;
+			int bestCount = 0;
+			for (int i = 0; i < tileWaterHeights.length; ++i) {
+				final int h = tileWaterHeights[i];
+				if (h == -1) continue;
+
+				int count = 0;
+				for (int j = 0; j < tileWaterHeights.length; ++j)
+					if (tileWaterHeights[j] == h)
+						++count;
+
+				if (count > bestCount) {
+					bestCount = count;
+					bestHeight = h;
+				}
+			}
+
+			if (bestHeight != -1)
+				zone.mostPrevalentWaterLevel = bestHeight;
 		}
 	}
 
@@ -969,7 +980,7 @@ public class SceneUploader implements AutoCloseable {
 			if (seColor == 0 && nwColor == 0 && (neColor == 0 || swColor == 0))
 				swColor = seColor = nwColor = neColor = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
 
-			zone.tileWaterHeights[(tileExX % CHUNK_SIZE) * CHUNK_SIZE | (tileExY % CHUNK_SIZE)] = Math.abs(swHeight);
+			tileWaterHeights[(tileExX % CHUNK_SIZE) * CHUNK_SIZE | (tileExY % CHUNK_SIZE)] = Math.abs(swHeight);
 		} else {
 			// Underwater geometry
 			swColor = seColor = neColor = nwColor = UNDERWATER_HSL;
