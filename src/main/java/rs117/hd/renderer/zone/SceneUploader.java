@@ -920,10 +920,6 @@ public class SceneUploader implements AutoCloseable {
 					nwColor = override.modifyColor(nwColor);
 					neColor = override.modifyColor(neColor);
 				}
-				swHeight -= override.heightOffset;
-				seHeight -= override.heightOffset;
-				neHeight -= override.heightOffset;
-				nwHeight -= override.heightOffset;
 			} else if (textureId == -1) {
 				// Fall back to the default ground material if the tile is untextured
 				groundMaterial = override.groundMaterial;
@@ -1011,6 +1007,11 @@ public class SceneUploader implements AutoCloseable {
 			nwTerrainData = HDUtils.packTerrainData(true, max(1, nwDepth), waterType, tileZ);
 			neTerrainData = HDUtils.packTerrainData(true, max(1, neDepth), waterType, tileZ);
 		}
+
+		swHeight -= override.heightOffset;
+		seHeight -= override.heightOffset;
+		neHeight -= override.heightOffset;
+		nwHeight -= override.heightOffset;
 
 		int swMaterialData = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
 		int seMaterialData = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
@@ -1675,25 +1676,30 @@ public class SceneUploader implements AutoCloseable {
 			}
 
 			final boolean shouldRotateNormals;
+			boolean shouldCalculateFaceNormal;
 			if (!modelHasNormals || faceOverride.flatNormals || !plugin.configPreserveVanillaNormals && color3s[face] == -1) {
 				shouldRotateNormals = false;
+				shouldCalculateFaceNormal = true;
+			} else {
+				shouldRotateNormals = orientation != 0;
+				shouldCalculateFaceNormal = (modelNormals[0] = xVertexNormals[triangleA]) == 0;
+				shouldCalculateFaceNormal &= (modelNormals[1] = yVertexNormals[triangleA]) == 0;
+				shouldCalculateFaceNormal &= (modelNormals[2] = zVertexNormals[triangleA]) == 0;
+				shouldCalculateFaceNormal &= (modelNormals[3] = xVertexNormals[triangleB]) == 0;
+				shouldCalculateFaceNormal &= (modelNormals[4] = yVertexNormals[triangleB]) == 0;
+				shouldCalculateFaceNormal &= (modelNormals[5] = zVertexNormals[triangleB]) == 0;
+				shouldCalculateFaceNormal &= (modelNormals[6] = xVertexNormals[triangleC]) == 0;
+				shouldCalculateFaceNormal &= (modelNormals[7] = yVertexNormals[triangleC]) == 0;
+				shouldCalculateFaceNormal &= (modelNormals[8] = zVertexNormals[triangleC]) == 0;
+			}
+
+			if (shouldCalculateFaceNormal) {
 				calculateFaceNormal(
 					modelNormals,
 					vx1, vy1, vz1,
 					vx2, vy2, vz2,
 					vx3, vy3, vz3
 				);
-			} else {
-				shouldRotateNormals = orientation != 0;
-				modelNormals[0] = xVertexNormals[triangleA];
-				modelNormals[1] = yVertexNormals[triangleA];
-				modelNormals[2] = zVertexNormals[triangleA];
-				modelNormals[3] = xVertexNormals[triangleB];
-				modelNormals[4] = yVertexNormals[triangleB];
-				modelNormals[5] = zVertexNormals[triangleB];
-				modelNormals[6] = xVertexNormals[triangleC];
-				modelNormals[7] = yVertexNormals[triangleC];
-				modelNormals[8] = zVertexNormals[triangleC];
 			}
 
 			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && !keepShading) {

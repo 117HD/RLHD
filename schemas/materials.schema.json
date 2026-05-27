@@ -14,6 +14,10 @@
         "type": "string",
         "description": "Identifier used to refer to the material."
       },
+      "description": {
+        "type": "string",
+        "description": "Optional description of what this applies to or is used for."
+      },
       "parent": {
         "type": "string",
         "description": "The material which this material should inherit default values from."
