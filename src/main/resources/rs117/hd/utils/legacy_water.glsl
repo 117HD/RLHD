@@ -30,6 +30,7 @@
 #include <utils/misc.glsl>
 #include <utils/fresnel.glsl>
 
+#if LEGACY_WATER
 vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
@@ -215,3 +216,4 @@ void sampleLegacyUnderwater(inout vec3 outputColor, vec3 depthColor, float depth
 
     outputColor = srgbToLinear(outputColor);
 }
+#endif

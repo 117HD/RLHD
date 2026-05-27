@@ -32,10 +32,9 @@
 #include <utils/water_reflection.glsl>
 #include <utils/shadows.glsl>
 #include <utils/fresnel.glsl>
-
-// TODO: Fix pragma once by actually processing preprocessor directives before compilation
-//#if LEGACY_WATER
 #include <utils/legacy_water.glsl>
+
+#if !LEGACY_WATER
 
 vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
     WaterType waterType = getWaterType(waterTypeIndex);
@@ -531,3 +530,4 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     return dst;
 }
+#endif
