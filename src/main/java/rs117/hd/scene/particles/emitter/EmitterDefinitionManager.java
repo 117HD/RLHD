@@ -206,7 +206,13 @@ public class EmitterDefinitionManager {
 
 	private static List<String> getParticleIds(EmitterConfigEntry entry) {
 		if (entry.particleIds != null && !entry.particleIds.isEmpty()) {
-			return entry.particleIds.stream().map(String::toUpperCase).toList();
+			List<String> upperCaseIds = new ArrayList<>();
+
+			for (String particleId : entry.particleIds) {
+				upperCaseIds.add(particleId.toUpperCase());
+			}
+
+			return upperCaseIds;
 		}
 		if (entry.particleId != null && !entry.particleId.isEmpty()) {
 			return List.of(entry.particleId.toUpperCase());
