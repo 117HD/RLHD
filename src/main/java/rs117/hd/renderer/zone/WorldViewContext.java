@@ -27,6 +27,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.DynamicModelVAO.METADATA_SIZE;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 import static rs117.hd.renderer.zone.ZoneRenderer.FRAMES_IN_FLIGHT;
+import static rs117.hd.renderer.zone.ZoneRenderer.SCENE_CAMERA_ID;
 
 @Slf4j
 public class WorldViewContext {
@@ -170,7 +171,7 @@ public class WorldViewContext {
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
-				if (z.alphaModels.isEmpty() || (worldViewId == WorldView.TOPLEVEL && !z.inSceneFrustum))
+				if (z.alphaModels.isEmpty() || (worldViewId == WorldView.TOPLEVEL && !z.isVisible(SCENE_CAMERA_ID)))
 					continue;
 
 				final int dx = camPosX - ((zx - offset) << 10);
@@ -213,8 +214,7 @@ public class WorldViewContext {
 				clientThread.invoke(curZone::unmap);
 
 				if (prevZone != curZone) {
-					curZone.inSceneFrustum = prevZone.inSceneFrustum;
-					curZone.inShadowFrustum = prevZone.inShadowFrustum;
+					curZone.visibilityFlags = prevZone.visibilityFlags;
 					DestructibleHandler.queueDestruction(prevZone);
 				}
 

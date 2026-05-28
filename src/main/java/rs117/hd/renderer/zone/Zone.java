@@ -32,6 +32,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.renderer.zone.ZoneRenderer.SCENE_CAMERA_ID;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 import static rs117.hd.utils.MathUtils.*;
@@ -79,9 +80,8 @@ public class Zone implements Destructible {
 	public boolean dirty; // whether the zone has temporary modifications
 	public boolean hasWater; // whether the zone has any water tiles
 	public boolean onlyWater; // whether the zone only contains water tiles
-	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
-	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean isFirstLoadingAttempt = true;
+	public byte visibilityFlags = (byte) 0xFF;
 	public int mostPrevalentWaterLevel = -1;
 
 	public HashSet<Integer> animatedDynamicObjectIds = new HashSet<>();
@@ -97,6 +97,23 @@ public class Zone implements Destructible {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
+
+	public boolean setVisibility(Camera camera, boolean visible) {
+		if(visible) {
+			visibilityFlags |= (byte) camera.getCullingMask();
+		} else {
+			visibilityFlags &= (byte) ~camera.getCullingMask();
+		}
+		return visible;
+	}
+
+	public boolean isVisible(Camera camera)  {
+		return (visibilityFlags & camera.getCullingMask()) != 0;
+	}
+
+	public boolean isVisible(int cameraId) {
+		return (visibilityFlags & (1 << cameraId)) != 0;
+	}
 
 	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
 		assert glVao == 0;
@@ -184,13 +201,12 @@ public class Zone implements Destructible {
 		sizeF = 0;
 		bufLen = 0;
 		bufLenA = 0;
+		visibilityFlags = 0;
 
 		initialized = false;
 		cull = false;
 		hasWater = false;
 		onlyWater = false;
-		inSceneFrustum = false;
-		inShadowFrustum = false;
 
 		Arrays.fill(levelOffsets, 0);
 		rids = null;
@@ -850,7 +866,7 @@ public class Zone implements Destructible {
 						int zx2 = (centerX >> 10) + offset;
 						int zz2 = (centerZ >> 10) + offset;
 						if (zx2 >= 0 && zx2 < zones.length && zz2 >= 0 && zz2 < zones[0].length) {
-							if (zones[zx2][zz2].inSceneFrustum && zones[zx2][zz2].initialized) {
+							if (zones[zx2][zz2].isVisible(SCENE_CAMERA_ID) && zones[zx2][zz2].initialized) {
 								max = distance;
 								closestZoneX = centerX >> 10;
 								closestZoneZ = centerZ >> 10;

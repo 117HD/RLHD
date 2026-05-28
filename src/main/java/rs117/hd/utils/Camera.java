@@ -47,9 +47,13 @@ public final class Camera {
 	@Getter
 	private float farPlane = 0.0f;
 	@Getter
+	private int cullingMask = 0;
+	@Getter
 	private boolean orthographic = false;
 	@Getter
 	private boolean reverseZ = false;
+	@Getter
+	private boolean flipY = false;
 
 	public boolean isDirty() {
 		return dirtyFlags != 0;
@@ -80,6 +84,22 @@ public final class Camera {
 				dirtyFlags |= PROJ_CHANGED;
 			}
 		}
+		return this;
+	}
+
+	public Camera setFlipY(boolean newFlipY) {
+		if (flipY != newFlipY) {
+			synchronized (this) {
+				flipY = newFlipY;
+				dirtyFlags |= PROJ_CHANGED;
+			}
+		}
+		return this;
+	}
+
+	public Camera setCullingId(int id) {
+		assert id >= 0 && id <= 8;
+		cullingMask = 1 << id;
 		return this;
 	}
 
@@ -400,6 +420,10 @@ public final class Camera {
 						projectionMatrix = Mat4.perspectiveInfinite(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
 					}
 				}
+			}
+			if (flipY) {
+				for (int i = 1; i < 16; i += 4)
+					projectionMatrix[i] = -projectionMatrix[i];
 			}
 			try {
 				invProjectionMatrix = Mat4.inverse(projectionMatrix);

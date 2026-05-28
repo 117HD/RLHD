@@ -32,6 +32,8 @@ import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.renderer.zone.ZoneRenderer.DIRECTIONAL_CAMERA_ID;
+import static rs117.hd.renderer.zone.ZoneRenderer.SCENE_CAMERA_ID;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -198,7 +200,7 @@ public class ModelStreamingManager {
 
 		final boolean hasAlpha =
 			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
-			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+			zone.isVisible(SCENE_CAMERA_ID);
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				modelOverride,
@@ -325,7 +327,7 @@ public class ModelStreamingManager {
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
 				plugin.configShadowMode != ShadowMode.OFF &&
-				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
+				zone.isVisible(DIRECTIONAL_CAMERA_ID)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
@@ -462,7 +464,7 @@ public class ModelStreamingManager {
 
 		final boolean hasAlpha =
 			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
-			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+			zone.isVisible(SCENE_CAMERA_ID);
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				modelOverride,
@@ -587,7 +589,7 @@ public class ModelStreamingManager {
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
 				plugin.configShadowMode != ShadowMode.OFF &&
-				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
+				zone.isVisible(DIRECTIONAL_CAMERA_ID)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
