@@ -28,6 +28,7 @@
 #include <utils/color_blindness.glsl>
 #include <utils/misc.glsl>
 #include <utils/starfield.glsl>
+#include <utils/aurora.glsl>
 
 in vec2 fScreenPos;
 
@@ -196,6 +197,9 @@ void main() {
         if (viewDir.y < -0.05) {
             skyColor += shootingStars(viewDir, elapsedTime) * nightSkyBlend;
         }
+
+        // Aurora borealis — animated curtains near the northern horizon
+        skyColor += proceduralAurora(viewDir, elapsedTime) * nightSkyBlend;
     }
 
     // === MOON DISK ===
