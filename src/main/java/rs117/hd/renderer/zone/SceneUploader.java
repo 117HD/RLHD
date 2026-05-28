@@ -1767,7 +1767,8 @@ public class SceneUploader implements AutoCloseable {
 
 	public boolean preprocessTempModel(
 		Projection proj,
-		float[][] sceneFrustumPlanes,
+		float[][][] cullingFrustumPlanes,
+		int cullingFrustumPlanesCount,
 		int[] faceDistances,
 		PrimitiveIntArray visibleFaces,
 		PrimitiveIntArray culledFaces,
@@ -1821,7 +1822,15 @@ public class SceneUploader implements AutoCloseable {
 
 			if (isModelPartiallyVisible) {
 				// Ignore near & far plane, only test against the side planes
-				if (!(visibility[v] = HDUtils.isPointWithinFrustum(vertexX, vertexY, vertexZ, sceneFrustumPlanes, 4)))
+				boolean isVisible = cullingFrustumPlanesCount == 0;
+				for(int c = 0; c < cullingFrustumPlanesCount; c++) {
+					if (HDUtils.isPointWithinFrustum(vertexX, vertexY, vertexZ, cullingFrustumPlanes[c], 4)) {
+						isVisible = true;
+						break;
+					}
+				}
+				visibility[v] = isVisible;
+				if(!isVisible)
 					allVertsVisible = false;
 			}
 

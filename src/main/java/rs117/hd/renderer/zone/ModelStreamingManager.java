@@ -20,6 +20,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.utils.Camera;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.ConcurrentPool;
@@ -74,12 +75,19 @@ public class ModelStreamingManager {
 
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
+	private final float[][][] modelCullingFrustums = new float[2][6][4];
+	private int modelCullingFrustumCount = 0;
 	private int numRenderThreads = -1;
 
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
 		final float[] objectWorldPos = new float[4];
 		int renderableCount;
+	}
+
+	public void addModelCullingFrustums(Camera camera) {
+		assert modelCullingFrustumCount < modelCullingFrustums.length;
+		camera.getFrustumPlanes(modelCullingFrustums[modelCullingFrustumCount++]);
 	}
 
 	public void initialize() {
@@ -134,6 +142,7 @@ public class ModelStreamingManager {
 	public void onBeforeRender(BeforeRender event) {
 		for (int i = 0; i < streamingContexts.length; i++)
 			streamingContexts[i].renderableCount = 0;
+		modelCullingFrustumCount = 0;
 
 		updateRenderThreads();
 	}
@@ -307,7 +316,8 @@ public class ModelStreamingManager {
 		) {
 			shouldSort &= sceneUploader.preprocessTempModel(
 				worldProjection,
-				plugin.cameraFrustum,
+				modelCullingFrustums,
+				modelCullingFrustumCount,
 				shouldSort ? facePrioritySorter.faceDistances : null,
 				visibleFaces,
 				culledFaces,
@@ -569,7 +579,8 @@ public class ModelStreamingManager {
 		) {
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,
-				plugin.cameraFrustum,
+				modelCullingFrustums,
+				modelCullingFrustumCount,
 				shouldSort ? facePrioritySorter.faceDistances : null,
 				visibleFaces,
 				culledFaces,

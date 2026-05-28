@@ -622,6 +622,11 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 		}
 
+		modelStreamingManager.addModelCullingFrustums(sceneCamera);
+
+		if(plugin.configPlanarReflections && !plugin.configLegacyWater)
+			modelStreamingManager.addModelCullingFrustums(reflectionCamera);
+
 		plugin.uboGlobal.upload();
 
 		// Reset buffers for the next frame
@@ -953,13 +958,15 @@ public class ZoneRenderer implements Renderer {
 				minY -= ProceduralGenerator.MAX_DEPTH;
 			}
 
+			final boolean waterReflectionsEnabled = plugin.configPlanarReflections && !plugin.configLegacyWater;
 			if (zone.setVisibility(sceneCamera, sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ))) {
-				zone.setVisibility(reflectionCamera, true);
+				zone.setVisibility(reflectionCamera, waterReflectionsEnabled);
 				zone.setVisibility(directionalCamera, true);
 				return true;
 			}
 
-			zone.setVisibility(reflectionCamera, reflectionCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ));
+			if(waterReflectionsEnabled)
+				zone.setVisibility(reflectionCamera, reflectionCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ));
 
 			if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
 				if (zone.setVisibility(directionalCamera, directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ))) {
