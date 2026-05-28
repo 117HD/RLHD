@@ -967,6 +967,8 @@ public class HdPlugin extends Plugin {
 			.define("LINEAR_ALPHA_BLENDING", configLinearAlphaBlending)
 			.define("WATER_FOAM", config.enableWaterFoam())
 			.define("PLANAR_REFLECTIONS", configPlanarReflections)
+			.define("SHORELINE_CAUSTICS", config.shorelineCaustics())
+			.define("WATER_TRANSPARENCY", configWaterTransparency)
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -2009,6 +2011,8 @@ public class HdPlugin extends Plugin {
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
 							case KEY_WATER_FOAM:
+							case KEY_SHORELINE_CAUSTICS:
+							case KEY_WATER_TRANSPARENCY:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

@@ -35,6 +35,9 @@ layout(std140) uniform UBOGlobal {
     bool underwaterCaustics;
     vec3 underwaterCausticsColor;
 
+    int waterHeight;
+    vec3 legacyWaterColor;
+
     vec3 lightDir;
 
     int pointLightsCount;

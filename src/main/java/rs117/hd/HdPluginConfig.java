@@ -794,8 +794,9 @@ public interface HdPluginConfig extends Config
 	)
 	String waterSettings = "waterSettings";
 
+	String KEY_WATER_TRANSPARENCY = "waterTransparency";
 	@ConfigItem(
-		keyName = "waterTransparency",
+		keyName = KEY_WATER_TRANSPARENCY,
 		name = "Water Transparency",
 		description = "Choose whether water should be transparent. Some water will be opaque regardless of this setting.",
 		position = 1,
@@ -834,8 +835,9 @@ public interface HdPluginConfig extends Config
 		return 100;
 	}
 
+	String KEY_SHORELINE_CAUSTICS = "shorelineCaustics";
 	@ConfigItem(
-		keyName = "shorelineCaustics",
+		keyName = KEY_SHORELINE_CAUSTICS,
 		name = "Shoreline Caustics",
 		description = "Imitate sunlight passing through waves on the water surface near shorelines.",
 		position = 4,

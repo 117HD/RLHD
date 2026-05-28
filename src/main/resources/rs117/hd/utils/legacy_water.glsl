@@ -168,7 +168,7 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
 
     float alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
 
-    bool isOpaque = !waterTransparency || waterType.isFlat;
+    bool isOpaque = WATER_TRANSPARENCY == 0 || waterType.isFlat;
     if (isOpaque) {
         baseColor = mix(waterType.depthColor, baseColor, alpha);
         alpha = 1;
@@ -194,7 +194,7 @@ void sampleLegacyUnderwater(inout vec3 outputColor, vec3 depthColor, float depth
         outputColor = vec3(0);
     }
 
-    if (shorelineCaustics) {
+    if (SHORELINE_CAUSTICS == 1) {
         const float scale = 1.75;
         const float maxCausticsDepth = 128 * 4;
 

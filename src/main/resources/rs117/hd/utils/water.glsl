@@ -225,7 +225,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     L_directional *= 1 - calculateFresnel(max(0, dot(-sunDir, surfaceNormal)), IOR_WATER);
 
     // Add underwater caustics as additional directional light
-    if (shorelineCaustics) {
+    if (SHORELINE_CAUSTICS == 1) {
         vec2 causticsUv = worldUvs(3.333);
         const vec2 direction = vec2(1, -2);
         vec2 flow1 = causticsUv + animationFrame(13) * direction;
@@ -251,7 +251,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     }
 
     // Account for shadowing of the directional light
-    if (waterTransparency && !waterType.isFlat /* Disable shadows for flat water, as it needs more work */) {
+    if (WATER_TRANSPARENCY == 0 && !waterType.isFlat /* Disable shadows for flat water, as it needs more work */) {
         // For shadows, we can take refraction into account, since sunlight is parallel
         vec3 surfaceSunPos = fragPos - refractedSunDir * sunToFragDist;
         surfaceSunPos += refractedSunDir * 32; // Push the position a short distance below the surface
@@ -487,7 +487,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         dst.rgb = surfaceColor * (ambientLight + directionalLight * max(0, dot(N, omega_o)));
         dst.rgb = mix(dst.rgb, src.rgb, src.a);
         dst.a = 1;
-    } else if (waterType.isFlat || !waterTransparency) { // If the water is opaque, blend in a fake underwater surface
+    } else if (waterType.isFlat || WATER_TRANSPARENCY == 0) { // If the water is opaque, blend in a fake underwater surface
         // Computed from packedHslToSrgb(6676)
         const vec3 underwaterColor = vec3(0.04856183, 0.025971446, 0.005794384);
         int depth = 768; // Works for boat cutscenes such as when going diving with Murphy

@@ -160,7 +160,6 @@ public class ZoneRenderer implements Renderer {
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
 
 	private final HashMap<Integer, Float> waterLevelWeights = new HashMap<>();
-	private int mostPrevalentWaterLevel = 0;
 
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -387,10 +386,11 @@ public class ZoneRenderer implements Renderer {
 			sceneCamera.setNearPlane(plugin.orthographicProjection ? -40000 : NEAR_PLANE);
 			sceneCamera.setZoom(zoom);
 
-			mostPrevalentWaterLevel = calculateBestWaterLevel(ctx);
+			int mostPrevalentWaterLevel = calculateBestWaterLevel(ctx);
 			reflectionCamera.copyFrom(sceneCamera);
 			reflectionCamera.setPositionY(mostPrevalentWaterLevel * 2 - sceneCamera.getPositionY());
 			reflectionCamera.setPitch(-sceneCamera.getPitch());
+			plugin.uboGlobal.waterHeight.set(mostPrevalentWaterLevel);
 
 			// Calculate view matrix, view proj & inv matrix
 			boolean hasSceneCameraChanged = sceneCamera.isViewDirty() || sceneCamera.isProjDirty();
@@ -602,6 +602,7 @@ public class ZoneRenderer implements Renderer {
 			environmentManager.currentUnderwaterCausticsColor,
 			environmentManager.currentUnderwaterCausticsStrength
 		));
+		plugin.uboGlobal.legacyWaterColor.set(environmentManager.currentWaterColor);
 		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
 		if (plugin.configColorFilter != ColorFilter.NONE) {
@@ -788,7 +789,6 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		sceneProgram.use();
-		sceneProgram.uniWaterHeight.set(mostPrevalentWaterLevel);
 
 		plugin.uboGlobal.projectionMatrix.set(reflectionCamera.getViewProjMatrix());
 		plugin.uboGlobal.cameraPos.set(
@@ -819,7 +819,6 @@ public class ZoneRenderer implements Renderer {
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 		sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_REFLECTION);
-		sceneProgram.uniWaterReflectionEnabled.set(true);
 
 		reflectionCmd.execute();
 
@@ -838,11 +837,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void scenePass() {
-		final WorldViewContext ctx = sceneManager.getRoot();
 		sceneProgram.use();
-		sceneProgram.uniLegacyWaterColor.set(environmentManager.currentWaterColor);
-		sceneProgram.uniShorelineCaustics.set(config.shorelineCaustics());
-		sceneProgram.uniWaterTransparency.set(plugin.configWaterTransparency);
 
 		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		if (plugin.configLinearAlphaBlending) {
@@ -892,7 +887,6 @@ public class ZoneRenderer implements Renderer {
 		// Render the scene
 		sceneProgram.use();
 		sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_MAIN);
-		sceneProgram.uniWaterReflectionEnabled.set(plugin.configPlanarReflections && ctx.sceneContext.hasWater);
 
 		// Bind water normal maps before rendering
 		if (plugin.texWaterNormalMaps != 0) {

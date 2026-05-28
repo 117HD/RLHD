@@ -1043,6 +1043,7 @@ public class LegacyRenderer implements Renderer {
 				environmentManager.currentUnderwaterCausticsColor,
 				environmentManager.currentUnderwaterCausticsStrength
 			));
+			plugin.uboGlobal.legacyWaterColor.set(environmentManager.currentWaterColor);
 			plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
@@ -1114,9 +1115,6 @@ public class LegacyRenderer implements Renderer {
 
 			plugin.uboGlobal.upload();
 			sceneProgram.use();
-			sceneProgram.uniLegacyWaterColor.set(environmentManager.currentWaterColor);
-			sceneProgram.uniShorelineCaustics.set(config.shorelineCaustics());
-			sceneProgram.uniWaterTransparency.set(plugin.configWaterTransparency);
 
 			// Draw with buffers bound to scene VAO
 			glBindVertexArray(vaoScene);

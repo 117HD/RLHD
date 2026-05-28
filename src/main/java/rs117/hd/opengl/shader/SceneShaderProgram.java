@@ -21,11 +21,6 @@ public class SceneShaderProgram extends ShaderProgram {
 
 	// TODO: Compile different shaders for different combinations of these
 	public Uniform1i uniRenderPass = addUniform1i("renderPass");
-	public Uniform1i uniWaterHeight = addUniform1i("waterHeight");
-	public UniformBool uniWaterReflectionEnabled = addUniformBool("waterReflectionEnabled");
-	public UniformBool uniShorelineCaustics = addUniformBool("shorelineCaustics");
-	public UniformBool uniWaterTransparency = addUniformBool("waterTransparency");
-	public Uniform3f uniLegacyWaterColor = addUniform3f("legacyWaterColor");
 
 	public SceneShaderProgram() {
 		super(t -> t

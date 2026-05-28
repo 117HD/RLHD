@@ -27,9 +27,6 @@
 
 #include <uniforms/global.glsl>
 
-uniform int renderPass;
-uniform int waterHeight;
-
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
@@ -58,22 +55,6 @@ out FragmentData {
     vec3 flatNormal;
     vec3 texBlend;
 } OUT;
-
-void displaceUnderwaterPosition(inout vec3 position, int waterDepth) {
-    if (waterDepth <= 1 || position.y < waterHeight)
-        return;
-
-    // Only displace underwater surfaces viewed from above
-    vec3 I = normalize(position - cameraPos);
-    if (I.y < .15)
-        return;
-
-    // This is quite arbitrary, but a correct solution is non-trivial
-    // See https://en.wikipedia.org/wiki/Fermat%27s_principle#/media/File:Fermat_Snellius.svg
-    // which boils down to a quartic equation when solving for x given A, B and b
-    vec3 refracted = 1.3 * I + vec3(0, .3, 0);
-    position += (I - refracted / refracted.y) * waterDepth;
-}
 
 void main() {
     fWorldViewId = -1;
@@ -120,18 +101,8 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
-
-        // Apply some arbitrary displacement to mimic refraction
-        // TODO: Solve the quartic equation numerically
-        int waterDepth = vTerrainData[i] >> 8 & 0x7FF;
-//        displaceUnderwaterPosition(position, waterDepth);
-
-        if (renderPass == RENDER_PASS_WATER_REFLECTION && isWaterSurface) {
-            // Hide some Z-fighting issues with waterfalls
-            pos.xyz += 16 * N * vec3(1, 0, 1);
-        }
-
         pos = projectionMatrix * pos;
+
         gl_Position = pos;
         EmitVertex();
     }

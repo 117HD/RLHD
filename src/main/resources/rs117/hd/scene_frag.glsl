@@ -41,11 +41,6 @@ uniform sampler2D waterReflectionMap;
 uniform sampler2DArray waterNormalMaps;
 
 uniform int renderPass;
-uniform int waterHeight;
-uniform bool waterReflectionEnabled;
-uniform bool shorelineCaustics;
-uniform bool waterTransparency;
-uniform vec3 legacyWaterColor;
 
 flat in int fWorldViewId;
 flat in ivec3 fAlphaBiasHsl;
