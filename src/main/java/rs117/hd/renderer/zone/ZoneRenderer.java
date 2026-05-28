@@ -396,11 +396,13 @@ public class ZoneRenderer implements Renderer {
 			sceneCamera.setNearPlane(plugin.orthographicProjection ? -40000 : NEAR_PLANE);
 			sceneCamera.setZoom(zoom);
 
-			int mostPrevalentWaterLevel = calculateBestWaterLevel(ctx);
-			reflectionCamera.copyFrom(sceneCamera);
-			reflectionCamera.setPositionY(mostPrevalentWaterLevel * 2 - sceneCamera.getPositionY());
-			reflectionCamera.setPitch(-sceneCamera.getPitch());
-			plugin.uboGlobal.waterHeight.set(mostPrevalentWaterLevel);
+			if(ctx.sceneContext.hasWater) {
+				int mostPrevalentWaterLevel = calculateBestWaterLevel(ctx);
+				reflectionCamera.copyFrom(sceneCamera);
+				reflectionCamera.setPositionY(mostPrevalentWaterLevel * 2 - sceneCamera.getPositionY());
+				reflectionCamera.setPitch(-sceneCamera.getPitch());
+				plugin.uboGlobal.waterHeight.set(mostPrevalentWaterLevel);
+			}
 
 			// Calculate view matrix, view proj & inv matrix
 			boolean hasSceneCameraChanged = sceneCamera.isViewDirty() || sceneCamera.isProjDirty();
@@ -767,6 +769,9 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private int calculateBestWaterLevel(WorldViewContext ctx) {
+		if(!ctx.sceneContext.hasWater)
+			return 0;
+
 		final int offset = ctx.sceneContext.sceneOffset >> 3;
 		final int camPosX = (int) sceneCamera.getPositionX();
 		final int camPosZ = (int) sceneCamera.getPositionZ();
