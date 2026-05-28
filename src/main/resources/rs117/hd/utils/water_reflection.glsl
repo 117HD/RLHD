@@ -27,7 +27,7 @@
 vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     // Only use the reflection map when enabled, the height difference is negligible & the surface is roughly flat
     // TODO: decide which tris to enable the reflection for in the geometry shader
-    if (renderPass == RENDER_PASS_WATER_REFLECTION ||
+    if (RENDER_PASS == RENDER_PASS_WATER_REFLECTION ||
         PLANAR_REFLECTIONS == 0 ||
         abs(IN.position.y - waterHeight) > WATER_REFLECTION_HEIGHT_THRESHOLD ||
         #if ZONE_RENDERER

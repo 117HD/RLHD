@@ -33,14 +33,13 @@
 #include <uniforms/water_types.glsl>
 
 #include MATERIAL_CONSTANTS
+#include RENDER_PASS
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 uniform usampler2DArray tiledLightingArray;
 uniform sampler2D waterReflectionMap;
 uniform sampler2DArray waterNormalMaps;
-
-uniform int renderPass;
 
 flat in int fWorldViewId;
 flat in ivec3 fAlphaBiasHsl;
@@ -129,25 +128,23 @@ void main() {
 
     vec4 outputColor = vec4(1);
 
-    if (renderPass == RENDER_PASS_WATER_REFLECTION) {
-        // Discard water surface fragments (zone renderer has no geometry shader to cull them)
-        #if ZONE_RENDERER
-        if (isWaterSurface)
-            discard;
-        #endif
-
-        // Discard underwater geometry so it doesn't appear in the reflection
-        if (IN.position.y > waterHeight)
-            discard;
-    }
-
-    if (isWaterSurface) {
+    if (RENDER_PASS == RENDER_PASS_WATER) {
         #if LEGACY_WATER
             outputColor = sampleLegacyWater(waterTypeIndex, viewDir);
         #else
             outputColor = sampleWater(waterTypeIndex, viewDir);
         #endif
-    } else {
+    } else if(isWaterSurface) {
+        discard;
+    }
+
+    if (RENDER_PASS == RENDER_PASS_WATER_REFLECTION) {
+        // Discard underwater geometry so it doesn't appear in the reflection
+        if (IN.position.y > waterHeight)
+            discard;
+    }
+
+    if (RENDER_PASS != RENDER_PASS_WATER) {
         vec2 uv = IN.uv;
 
         float mipBias = 0;
@@ -187,7 +184,7 @@ void main() {
         // Invert the normal for back-faces rendered in reflections, in order to add shading
         // to the underside of docks. This actually needs to check for front-faces instead,
         // since the projection matrix reverses winding order when flipping vertically
-        if (renderPass == RENDER_PASS_WATER_REFLECTION && gl_FrontFacing)
+        if (RENDER_PASS == RENDER_PASS_WATER_REFLECTION && gl_FrontFacing)
             N *= -1;
         #if ZONE_RENDERER
             mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
@@ -426,7 +423,7 @@ void main() {
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
-        if (renderPass == RENDER_PASS_MAIN)
+        if (RENDER_PASS == RENDER_PASS_MAIN)
             calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
 
         // sky light

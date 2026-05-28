@@ -1163,8 +1163,6 @@ public class LegacyRenderer implements Renderer {
 			glEnable(GL_BLEND);
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
-			sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_MAIN);
-
 			// When there are custom tiles, we need depth testing to draw them in the correct order, but the rest of the
 			// scene doesn't support depth testing, so we only write depths for custom tiles.
 			if (sceneContext.staticCustomTilesVertexCount > 0) {

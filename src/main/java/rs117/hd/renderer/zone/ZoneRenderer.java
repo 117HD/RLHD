@@ -135,7 +135,13 @@ public class ZoneRenderer implements Renderer {
 	private FrameTimer frameTimer;
 
 	@Inject
-	private SceneShaderProgram sceneProgram;
+	private SceneShaderProgram.ZoneMain sceneMainProgram;
+
+	@Inject
+	private SceneShaderProgram.ZoneWater sceneWaterProgram;
+
+	@Inject
+	private SceneShaderProgram.ZoneReflection sceneReflectionProgram;
 
 	@Inject
 	private ShadowShaderProgram.Fast fastShadowProgram;
@@ -240,14 +246,18 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
-		sceneProgram.compile(includes);
+		sceneMainProgram.compile(includes);
+		sceneWaterProgram.compile(includes);
+		sceneReflectionProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
 	}
 
 	@Override
 	public void destroyShaders() {
-		sceneProgram.destroy();
+		sceneMainProgram.destroy();
+		sceneWaterProgram.destroy();
+		sceneReflectionProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
 	}
@@ -788,7 +798,7 @@ public class ZoneRenderer implements Renderer {
 		if (!plugin.configPlanarReflections || !ctx.sceneContext.hasWater)
 			return;
 
-		sceneProgram.use();
+		sceneReflectionProgram.use();
 
 		plugin.uboGlobal.projectionMatrix.set(reflectionCamera.getViewProjMatrix());
 		plugin.uboGlobal.cameraPos.set(
@@ -818,8 +828,6 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_BLEND);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
-		sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_REFLECTION);
-
 		reflectionCmd.execute();
 
 		// Bind the water reflection texture to index 4
@@ -837,7 +845,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void scenePass() {
-		sceneProgram.use();
+		sceneMainProgram.use();
 
 		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		if (plugin.configLinearAlphaBlending) {
@@ -883,10 +891,6 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-
-		// Render the scene
-		sceneProgram.use();
-		sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_MAIN);
 
 		// Bind water normal maps before rendering
 		if (plugin.texWaterNormalMaps != 0) {
@@ -1031,8 +1035,12 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
 			final boolean renderWater = z.isVisible(sceneCamera) && level == 0 && z.hasWater;
-			if (renderWater)
+			if (renderWater) {
+				sceneCmd.SetShader(sceneWaterProgram);
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
+
+				sceneCmd.SetShader(sceneMainProgram);
+			}
 
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
 

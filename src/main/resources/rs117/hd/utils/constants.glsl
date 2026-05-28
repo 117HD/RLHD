@@ -18,6 +18,7 @@
 
 #define RENDER_PASS_MAIN 0
 #define RENDER_PASS_WATER_REFLECTION 1
+#define RENDER_PASS_WATER 2
 
 // Any changes here may need to be reflected in OpenCL's constants.cl
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
