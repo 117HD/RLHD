@@ -19,7 +19,6 @@ public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
-	private final UniformTexture uniWaterReflectionMap = addUniformTexture("waterReflectionMap");
 	private final UniformTexture uniWaterNormalMaps = addUniformTexture("waterNormalMaps");
 
 	private final int renderPass;
@@ -43,7 +42,6 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP);
 		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
-		uniWaterReflectionMap.set(TEXTURE_UNIT_WATER_REFLECTION_MAP);
 		uniWaterNormalMaps.set(TEXTURE_UNIT_WATER_NORMAL_MAPS);
 	}
 
@@ -68,8 +66,18 @@ public class SceneShaderProgram extends ShaderProgram {
 	}
 
 	public static class ZoneWater extends SceneShaderProgram {
+		private final UniformTexture uniWaterReflectionMap = addUniformTexture("waterReflectionMap");
+
 		public ZoneWater() {
 			super(RENDER_PASS_WATER);
+			uniShadowMap.ignoreMissing = true;
+		}
+
+		@Override
+		protected void initialize() {
+			super.initialize();
+
+			uniWaterReflectionMap.set(TEXTURE_UNIT_WATER_REFLECTION_MAP);
 		}
 	}
 }

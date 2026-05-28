@@ -795,7 +795,7 @@ public class ZoneRenderer implements Renderer {
 
 	private void reflectionPass() {
 		final WorldViewContext ctx = sceneManager.getRoot();
-		if (!plugin.configPlanarReflections || !ctx.sceneContext.hasWater)
+		if (!plugin.configPlanarReflections || plugin.configLegacyWater || !ctx.sceneContext.hasWater)
 			return;
 
 		sceneReflectionProgram.use();
