@@ -15,7 +15,6 @@ import net.runelite.api.TileObject;
 import net.runelite.api.coords.WorldPoint;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
-import rs117.hd.scene.particles.core.Particle;
 import rs117.hd.scene.particles.definition.ParticleDefinition;
 
 import static rs117.hd.utils.MathUtils.*;
@@ -277,15 +276,9 @@ public class ParticleEmitter {
 		out[2] = -cos(yaw) * cp;
 	}
 
-	@Nullable
-	public Particle spawn(float originLocalX, float originLocalY, float originLocalZ, int plane) {
-		if (!isActive()) return null;
-		Particle into = new Particle();
-		return spawnInto(into, originLocalX, originLocalY, originLocalZ, plane) ? into : null;
-	}
-
-	public boolean spawnInto(Particle into, float originLocalX, float originLocalY, float originLocalZ, int plane) {
-		if (!isActive()) return false;
+	public boolean spawnIntoBuffer(ParticleBuffer buf, float originLocalX, float originLocalY, float originLocalZ, int plane) {
+		if (!isActive() || buf.count >= buf.capacity)
+			return false;
 
 		ThreadLocalRandom rng = ThreadLocalRandom.current();
 		randomDirectionFromRanges(TMP_DIR, rng);
@@ -298,38 +291,36 @@ public class ParticleEmitter {
 		float life = particleLifeMin + (particleLifeMax - particleLifeMin) * rng.nextFloat();
 		float size = sizeMin + (sizeMax - sizeMin) * rng.nextFloat();
 
-		into.setPosition(originLocalX, originLocalY, originLocalZ);
-		into.setVelocity(vx, vy, vz);
-		into.life = life;
-		into.maxLife = life;
-		into.size = size;
-		into.targetScale = targetScale;
-		into.scaleTransition = scaleTransition;
-		into.targetSpeed = targetSpeed;
-		into.speedTransition = speedTransition;
-		into.plane = plane;
+		float r, g, b, a;
 		if (uniformColorVariation) {
 			float u = rng.nextFloat();
-			for (int i = 0; i < 4; i++)
-				into.initialColor[i] = colorMin[i] + (colorMax[i] - colorMin[i]) * u;
+			r = colorMin[0] + (colorMax[0] - colorMin[0]) * u;
+			g = colorMin[1] + (colorMax[1] - colorMin[1]) * u;
+			b = colorMin[2] + (colorMax[2] - colorMin[2]) * u;
+			a = (colorMin[3] + (colorMax[3] - colorMin[3]) * u) * alphaScale;
 		} else {
-			for (int i = 0; i < 4; i++)
-				into.initialColor[i] = colorMin[i] + (colorMax[i] - colorMin[i]) * rng.nextFloat();
+			r = colorMin[0] + (colorMax[0] - colorMin[0]) * rng.nextFloat();
+			g = colorMin[1] + (colorMax[1] - colorMin[1]) * rng.nextFloat();
+			b = colorMin[2] + (colorMax[2] - colorMin[2]) * rng.nextFloat();
+			a = (colorMin[3] + (colorMax[3] - colorMin[3]) * rng.nextFloat()) * alphaScale;
 		}
-		into.initialColor[3] *= alphaScale;
-		into.color[0] = into.initialColor[0];
-		into.color[1] = into.initialColor[1];
-		into.color[2] = into.initialColor[2];
-		into.color[3] = into.initialColor[3];
-		into.targetColor = targetColor;
-		into.colorTransitionPct = colorTransitionPct;
-		into.alphaTransitionPct = alphaTransitionPct;
+
+		int flipbookFrameIndex = -1;
 		ParticleDefinition def = getDefinition();
-		if (def != null && def.texture.flipbook.flipbookColumns > 0 && def.texture.flipbook.flipbookRows > 0 && "random".equalsIgnoreCase(def.texture.flipbook.flipbookMode)) {
-			int totalFrames = def.texture.flipbook.flipbookColumns * def.texture.flipbook.flipbookRows;
-			into.flipbookRandomFrame = rng.nextInt(totalFrames);
+		if (def != null && def.texture.flipbook.flipbookColumns > 0 && def.texture.flipbook.flipbookRows > 0
+			&& "random".equalsIgnoreCase(def.texture.flipbook.flipbookMode)) {
+			flipbookFrameIndex = rng.nextInt(def.texture.flipbook.flipbookColumns * def.texture.flipbook.flipbookRows);
 		}
-		return true;
+
+		return buf.addSpawn(
+			this,
+			originLocalX, originLocalY, originLocalZ,
+			vx, vy, vz,
+			life, size,
+			r, g, b, a,
+			plane, flipbookFrameIndex,
+			originLocalX, originLocalY, originLocalZ
+		);
 	}
 
 	public int advanceEmission(float dt) {
@@ -355,14 +346,7 @@ public class ParticleEmitter {
 		ParticleBuffer buf = manager.getParticleBuffer();
 		int maxParticles = manager.getMaxParticles();
 		int toSpawn = advanceEmission(dt);
-		for (int i = 0; i < toSpawn && buf.count < maxParticles; i++) {
-			Particle p = manager.obtainParticle();
-			if (p == null) continue;
-			if (!spawnInto(p, originX, originY, originZ, plane)) {
-				manager.releaseParticle(p);
-				continue;
-			}
-			manager.addSpawnedParticleToBuffer(p, originX, originY, originZ, this);
-		}
+		for (int i = 0; i < toSpawn && buf.count < maxParticles; i++)
+			spawnIntoBuffer(buf, originX, originY, originZ, plane);
 	}
 }

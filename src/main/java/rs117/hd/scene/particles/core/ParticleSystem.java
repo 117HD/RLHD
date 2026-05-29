@@ -16,11 +16,10 @@ import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;
 import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
-import rs117.hd.scene.particles.core.buffer.ParticlePool;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 
 /**
- * Holds emitters, pre-allocated pool, and render buffer.
+ * Holds emitters and the live particle buffer.
  */
 public final class ParticleSystem {
 
@@ -32,9 +31,6 @@ public final class ParticleSystem {
 
 	@Getter
 	private final ParticleBuffer renderBuffer;
-
-	@Getter
-	private final ParticlePool pool;
 
 	@Getter
 	private final Set<ParticleEmitter> emittersCulledThisFrame = new HashSet<>();
@@ -50,7 +46,6 @@ public final class ParticleSystem {
 	private int lastEmittersCulled;
 
 	public ParticleSystem(int maxParticles) {
-		this.pool = new ParticlePool(maxParticles);
 		this.renderBuffer = new ParticleBuffer(maxParticles);
 	}
 

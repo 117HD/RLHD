@@ -414,11 +414,11 @@ public class ParticleGizmoOverlay extends Overlay implements MouseListener
 				ParticleEmitter em = buf.emitter[i];
 				if (em == null || !matchesParticleId(em.getParticleId(), pid))
 					continue;
-				if (buf.plane[i] != currentPlane)
+				if (buf.getPlane(i) != currentPlane)
 					continue;
-				float px = buf.posX[i];
-				float py = buf.posY[i];
-				float pz = buf.posZ[i];
+				float px = buf.getPosX(i);
+				float py = buf.getPosY(i);
+				float pz = buf.getPosZ(i);
 				point[0] = px;
 				point[1] = py;
 				point[2] = pz;
@@ -571,9 +571,9 @@ public class ParticleGizmoOverlay extends Overlay implements MouseListener
 		float dy = (float) (dyFixed * remaining) / 4096f;
 		float dz = (float) (dzFixed * remaining) / 4096f;
 		return new float[] {
-			buf.posX[i] + dx,
-			buf.posY[i] + dy,
-			buf.posZ[i] + dz
+			buf.getPosX(i) + dx,
+			buf.getPosY(i) + dy,
+			buf.getPosZ(i) + dz
 		};
 	}
 

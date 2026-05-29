@@ -96,11 +96,14 @@ public class ParticleDebugOverlay extends Overlay {
 		int[] cameraShift = plugin.cameraShift;
 		g.setColor(PARTICLE_COLOR);
 		for (int i = 0; i < buf.count; i++) {
-			if (buf.plane[i] != currentPlane)
+			if (buf.getPlane(i) != currentPlane)
 				continue;
-			point[0] = buf.posX[i] + cameraShift[0];
-			point[1] = buf.posY[i];
-			point[2] = buf.posZ[i] + cameraShift[1];
+			float px = buf.getPosX(i);
+			float py = buf.getPosY(i);
+			float pz = buf.getPosZ(i);
+			point[0] = px + cameraShift[0];
+			point[1] = py;
+			point[2] = pz + cameraShift[1];
 			point[3] = 1f;
 			Mat4.projectVec(point, proj, point);
 			if (point[3] <= 0) continue;

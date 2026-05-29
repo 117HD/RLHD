@@ -22,6 +22,8 @@ import rs117.hd.scene.particles.effector.EffectorDefinitionManager;
  */
 public final class MovingParticle {
 
+	private static final double[] VELOCITY_SCRATCH = new double[3];
+
 	private static int clampColour16(int value) {
 		if (value < 0) return 0;
 		if (value > 65535) return 65535;
@@ -102,7 +104,10 @@ public final class MovingParticle {
 			buf.speedRef[i] -= (long) buf.speedRef[i] * falloff >> 28;
 		}
 
-		double[] v = { buf.velocityX[i], buf.velocityY[i], buf.velocityZ[i] };
+		double[] v = VELOCITY_SCRATCH;
+		v[0] = buf.velocityX[i];
+		v[1] = buf.velocityY[i];
+		v[2] = buf.velocityZ[i];
 		boolean velocityUpdated = false;
 
 		if (emitter != null && activeEffectorsById != null && !activeEffectorsById.isEmpty()) {

@@ -7,7 +7,6 @@ package rs117.hd.renderer.zone.pass.impl;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -80,7 +79,8 @@ public class ParticlePass implements ScenePass {
 	private int instanceBufferSlot;
 	private FloatBuffer particleStagingBuffer;
 	private final float[] particleDistSq = new float[MAX_PARTICLES];
-	private final Integer[] particleSortOrder = new Integer[MAX_PARTICLES];
+	private final int[] particleSortOrder = new int[MAX_PARTICLES];
+	private final float[] particleColorScratch = new float[4];
 
 	private final String[] textureForVisibleIndex = new String[MAX_PARTICLES];
 	private ByteBuffer batchUploadBuffer;
@@ -283,21 +283,19 @@ public class ParticlePass implements ScenePass {
 
 		for (int i = 0; i < instanceCount; i++)
 			particleSortOrder[i] = i;
-		Arrays.sort(particleSortOrder, 0, instanceCount, (a, b) -> Float.compare(particleDistSq[b], particleDistSq[a]));
+		sortIndicesByDistance(instanceCount);
 
-		// Build render list from filtered particles, back-to-front order
-		float[] particleColor = new float[4];
 		particleStagingBuffer.clear();
 		for (int k = 0; k < instanceCount; k++) {
 			int bufIndex = visibleIndices[particleSortOrder[k]];
 			textureForVisibleIndex[k] = getTextureNameForParticle(buf, bufIndex);
-			buf.getCurrentColor(bufIndex, particleColor);
-			float cx = buf.posX[bufIndex] + plugin.cameraShift[0];
-			float cy = buf.posY[bufIndex];
-			float cz = buf.posZ[bufIndex] + plugin.cameraShift[1];
+			buf.getCurrentColor(bufIndex, particleColorScratch);
+			float cx = buf.getPosX(bufIndex) + plugin.cameraShift[0];
+			float cy = buf.getPosY(bufIndex);
+			float cz = buf.getPosZ(bufIndex) + plugin.cameraShift[1];
 			particleStagingBuffer.put(cx).put(cy).put(cz);
-			particleStagingBuffer.put(particleColor[0]).put(particleColor[1]).put(particleColor[2]).put(particleColor[3]);
-			particleStagingBuffer.put(buf.size[bufIndex]);
+			particleStagingBuffer.put(particleColorScratch[0]).put(particleColorScratch[1]).put(particleColorScratch[2]).put(particleColorScratch[3]);
+			particleStagingBuffer.put(buf.getSize(bufIndex));
 			String tex = textureForVisibleIndex[k];
 			particleStagingBuffer.put((float) particleTextureLoader.getTextureLayer(tex != null ? tex : ""));
 			float flipbookCols = 0f;
@@ -309,9 +307,9 @@ public class ParticlePass implements ScenePass {
 				flipbookRows = def.texture.flipbook.flipbookRows;
 				String mode = def.texture.flipbook.flipbookMode;
 				if (mode != null && "order".equalsIgnoreCase(mode)) {
-					float maxL = buf.maxLife[bufIndex];
-					flipbookFrameVal = maxL > 0 ? (1f - buf.life[bufIndex] / maxL) : 0f;
-				} else if (mode != null && "random".equalsIgnoreCase(mode) && buf.flipbookFrame[bufIndex] >= 0f) {
+					float maxL = buf.getMaxLife(bufIndex);
+					flipbookFrameVal = maxL > 0 ? (1f - buf.getLife(bufIndex) / maxL) : 0f;
+				} else if (mode != null && "random".equalsIgnoreCase(mode) && buf.flipbookFrame[bufIndex] >= 0) {
 					flipbookFrameVal = 1f + buf.flipbookFrame[bufIndex];
 				}
 			}
@@ -332,6 +330,19 @@ public class ParticlePass implements ScenePass {
 		}
 		lastUploadedInstanceCount = instanceCount;
 		return instanceCount;
+	}
+
+	private void sortIndicesByDistance(int count) {
+		for (int i = 1; i < count; i++) {
+			int idx = particleSortOrder[i];
+			float dist = particleDistSq[idx];
+			int j = i - 1;
+			while (j >= 0 && particleDistSq[particleSortOrder[j]] < dist) {
+				particleSortOrder[j + 1] = particleSortOrder[j];
+				j--;
+			}
+			particleSortOrder[j + 1] = idx;
+		}
 	}
 
 	private static String getTextureNameForParticle(ParticleBuffer buf, int bufIndex) {

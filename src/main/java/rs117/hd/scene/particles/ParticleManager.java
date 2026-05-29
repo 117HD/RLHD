@@ -7,7 +7,6 @@ package rs117.hd.scene.particles;
 import com.google.common.base.Stopwatch;
 import rs117.hd.scene.particles.core.buffer.ParticleBuffer;
 import rs117.hd.scene.particles.core.MovingParticle;
-import rs117.hd.scene.particles.core.Particle;
 import rs117.hd.scene.particles.core.ParticleSystem;
 import rs117.hd.scene.particles.definition.ParticleDefinition;
 import rs117.hd.scene.particles.core.ParticleTextureLoader;
@@ -51,7 +50,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 public class ParticleManager {
 
-	private static final int MAX_PARTICLES = 7096;
+	private static final int MAX_PARTICLES = 4096;
 
 	public ParticleManager() {
 		this.particleSystem = new ParticleSystem(MAX_PARTICLES);
@@ -80,18 +79,21 @@ public class ParticleManager {
 		int maxDistSqLen = outDistSq != null ? outDistSq.length : 0;
 		int frustumLen = ctx.frustum != null ? ctx.frustum.length : 0;
 		for (int i = 0; i < buf.count; i++) {
-			if (buf.plane[i] != plane)
+			if (buf.getPlane(i) != plane)
 				continue;
 			ctx.totalOnPlane++;
-			float dx = buf.posX[i] - ctx.cameraX;
-			float dy = buf.posY[i] - ctx.cameraY;
-			float dz = buf.posZ[i] - ctx.cameraZ;
+			float px = buf.getPosX(i);
+			float py = buf.getPosY(i);
+			float pz = buf.getPosZ(i);
+			float dx = px - ctx.cameraX;
+			float dy = py - ctx.cameraY;
+			float dz = pz - ctx.cameraZ;
 			float dSq = dx * dx + dy * dy + dz * dz;
 			if (dSq > ctx.maxDistSq) {
 				ctx.culledDistance++;
 				continue;
 			}
-			if (frustumLen > 0 && !HDUtils.isSphereIntersectingFrustum(buf.posX[i], buf.posY[i], buf.posZ[i], buf.size[i], ctx.frustum, frustumLen)) {
+			if (frustumLen > 0 && !HDUtils.isSphereIntersectingFrustum(px, py, pz, buf.getSize(i), ctx.frustum, frustumLen)) {
 				ctx.culledFrustum++;
 				continue;
 			}
@@ -143,6 +145,7 @@ public class ParticleManager {
 	private final List<ParticleEmitter> performanceTestEmitters = new ArrayList<>();
 	private final List<WeatherCylinderInstance> weatherCylinderInstances = new ArrayList<>();
 	private final Random weatherRng = new Random();
+	private final Map<String, List<ActiveEffectorState>> activeEffectorsById = new HashMap<>();
 
 	@Getter
 	private boolean continuousRandomSpawn;
@@ -170,46 +173,8 @@ public class ParticleManager {
 		return particleSystem.getEmittersCulledThisFrame();
 	}
 
-	public Particle obtainParticle() {
-		return particleSystem.getPool().obtain();
-	}
-
-	public void releaseParticle(Particle p) {
-		particleSystem.getPool().release(p);
-	}
-
 	public int getMaxParticles() {
 		return MAX_PARTICLES;
-	}
-
-	public void addSpawnedParticleToBuffer(Particle p, float ox, float oy, float oz, ParticleEmitter emitter) {
-		ParticleDefinition def = emitter.getDefinition();
-		p.emitter = emitter;
-		p.emitterOriginX = ox;
-		p.emitterOriginY = oy;
-		p.emitterOriginZ = oz;
-		if (def != null) {
-			if (def.colourIncrementPerSecond != null) {
-				p.colourIncrementPerSecond = def.colourIncrementPerSecond;
-				p.colourTransitionEndLife = p.maxLife - def.colourTransitionSecondsConstant;
-			}
-			if (def.scale.targetScale >= 0) {
-				p.scaleIncrementPerSecond = def.scaleIncrementPerSecondCached;
-				p.scaleTransitionEndLife = p.maxLife - def.scaleTransitionSecondsConstant;
-			}
-			if (def.speed.targetSpeed >= 0) {
-				p.speedIncrementPerSecond = def.speedIncrementPerSecondCached;
-				p.speedTransitionEndLife = p.maxLife - def.speedTransitionSecondsConstant;
-			}
-			p.distanceFalloffType = def.physics.distanceFalloffType;
-			p.distanceFalloffStrength = def.physics.distanceFalloffStrength;
-			p.clipToTerrain = def.physics.clipToTerrain;
-			p.hasLevelBounds = def.hasLevelBounds;
-			p.upperBoundLevel = def.physics.upperBoundLevel;
-			p.lowerBoundLevel = def.physics.lowerBoundLevel;
-		}
-		particleSystem.getRenderBuffer().addFrom(p);
-		releaseParticle(p);
 	}
 
 	public void addEmitter(ParticleEmitter emitter) {
@@ -603,17 +568,11 @@ public class ParticleManager {
 		int target = Math.min(count, MAX_PARTICLES);
 		for (int i = 0; i < target; i++) {
 			if (buf.count >= MAX_PARTICLES) break;
-			Particle p = obtainParticle();
-			if (p == null) break;
 			float ox = baseX + (rng.nextFloat() * 2f - 1f) * radius;
 			float oy = baseY + (rng.nextFloat() * 2f - 1f) * radius * 0.5f;
 			float oz = baseZ + (rng.nextFloat() * 2f - 1f) * radius;
-			if (!emitter.spawnInto(p, ox, oy, oz, plane)) {
-				releaseParticle(p);
-				continue;
-			}
-			addSpawnedParticleToBuffer(p, ox, oy, oz, emitter);
-			spawned++;
+			if (emitter.spawnIntoBuffer(buf, ox, oy, oz, plane))
+				spawned++;
 		}
 		if (logResult && spawned > 0)
 			log.info("[Particles] Spawned {} random particles around player", spawned);
@@ -806,13 +765,12 @@ public class ParticleManager {
 			}
 		}
 		buf.count = n;
-
-		for (int i = 0; i < buf.count; i++)
-			buf.syncRefToFloat(i);
 	}
 
 	private Map<String, List<ActiveEffectorState>> buildActiveEffectorsById(@Nonnull SceneContext ctx) {
-		Map<String, List<ActiveEffectorState>> byId = new HashMap<>();
+		for (List<ActiveEffectorState> states : activeEffectorsById.values())
+			states.clear();
+		activeEffectorsById.clear();
 		int[] local = new int[3];
 		float halfTile = LOCAL_TILE_SIZE / 2f;
 		for (var placement : effectorDefinitions.getPlacements()) {
@@ -824,10 +782,10 @@ public class ParticleManager {
 			float x = loc[0] + halfTile;
 			float z = loc[1] + halfTile;
 			float y = getTerrainHeight(ctx, (int) x, (int) z, loc[2]) - def.heightOffset;
-			byId.computeIfAbsent(def.id, k -> new ArrayList<>())
+			activeEffectorsById.computeIfAbsent(def.id, k -> new ArrayList<>())
 				.add(new ActiveEffectorState(def.id, x, y, z, def));
 		}
-		return byId;
+		return activeEffectorsById;
 	}
 
 	private void tickWeatherCylinders(@Nonnull SceneContext ctx, float dt, long gameCycle, @Nonnull ParticleBuffer buf) {
@@ -929,13 +887,7 @@ public class ParticleManager {
 				float ox = local[0] + halfTile;
 				float oz = local[1] + halfTile;
 
-				Particle p = obtainParticle();
-				if (p == null) continue;
-				if (!emitter.spawnInto(p, ox, spawnY, oz, plane)) {
-					releaseParticle(p);
-					continue;
-				}
-				addSpawnedParticleToBuffer(p, ox, spawnY, oz, emitter);
+				emitter.spawnIntoBuffer(buf, ox, spawnY, oz, plane);
 			}
 		}
 	}
@@ -1109,8 +1061,15 @@ public class ParticleManager {
 		if (outPlane != null && outPlane.length >= 1)
 			outPlane[0] = plane;
 		if (obj != null && positionCache != null) {
-			float[] cached = new float[] { outPos[0], outPos[1], outPos[2], plane };
-			positionCache.put(obj, cached);
+			float[] cached = positionCache.get(obj);
+			if (cached == null) {
+				cached = new float[4];
+				positionCache.put(obj, cached);
+			}
+			cached[0] = outPos[0];
+			cached[1] = outPos[1];
+			cached[2] = outPos[2];
+			cached[3] = plane;
 		}
 		return true;
 	}

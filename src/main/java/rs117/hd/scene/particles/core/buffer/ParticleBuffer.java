@@ -4,66 +4,21 @@
  */
 package rs117.hd.scene.particles.core.buffer;
 
-import rs117.hd.scene.particles.core.Particle;
 import rs117.hd.scene.particles.emitter.ParticleEmitter;
 
 /**
- * SoA particle buffer. Fixed capacity, pre-allocated at construction. No runtime resize.
+ * Structure-of-arrays particle buffer. Fixed capacity, pre-allocated at construction.
+ * Simulation uses fixed-point fields; render reads them via accessors (no duplicate float columns).
  */
 public final class ParticleBuffer {
 
-	public static final int FLAG_COLOUR_INCREMENT = 1;
-	public static final int FLAG_HAS_TARGET_COLOR = 2;
+	public static final int PLANE_SHIFT = 0;
+	public static final int PLANE_MASK = 0x3;
 
 	public int count;
 	public int capacity;
 
-	public float[] posX;
-	public float[] posY;
-	public float[] posZ;
-	public float[] velX;
-	public float[] velY;
-	public float[] velZ;
-	public float[] life;
-	public float[] maxLife;
-	public float[] size;
-	public int[] plane;
-
-	public float[] colorR;
-	public float[] colorG;
-	public float[] colorB;
-	public float[] colorA;
-
-	public float[] initialColorR;
-	public float[] initialColorG;
-	public float[] initialColorB;
-	public float[] initialColorA;
-	public float[] targetColorR;
-	public float[] targetColorG;
-	public float[] targetColorB;
-	public float[] targetColorA;
-	public float[] colorTransitionPct;
-	public float[] alphaTransitionPct;
-
-	public float[] colourIncR;
-	public float[] colourIncG;
-	public float[] colourIncB;
-	public float[] colourIncA;
-	public float[] colourTransitionEndLife;
-	public float[] scaleTransitionEndLife;
-	public float[] speedTransitionEndLife;
-	public float[] scaleIncPerSec;
-	public float[] speedIncPerSec;
-
-	public float[] emitterOriginX;
-	public float[] emitterOriginY;
-	public float[] emitterOriginZ;
-	public int[] distanceFalloffType;
-	public int[] distanceFalloffStrength;
-	public boolean[] hasLevelBounds;
-	public int[] upperBoundLevel;
-	public int[] lowerBoundLevel;
-
+	/** Packed plane index (bits 0-1). */
 	public int[] flags;
 	public ParticleEmitter[] emitter;
 
@@ -80,52 +35,16 @@ public final class ParticleBuffer {
 	public int[] colourRgbLowRef;
 	public int[] scaleRef;
 
-	public float[] flipbookFrame;
+	public float[] emitterOriginX;
+	public float[] emitterOriginY;
+	public float[] emitterOriginZ;
+
+	/** Random flipbook frame index, or -1 when unused. */
+	public int[] flipbookFrame;
 	public float[] yaw;
 
 	public ParticleBuffer(int capacity) {
 		this.capacity = capacity;
-		posX = new float[capacity];
-		posY = new float[capacity];
-		posZ = new float[capacity];
-		velX = new float[capacity];
-		velY = new float[capacity];
-		velZ = new float[capacity];
-		life = new float[capacity];
-		maxLife = new float[capacity];
-		size = new float[capacity];
-		plane = new int[capacity];
-		colorR = new float[capacity];
-		colorG = new float[capacity];
-		colorB = new float[capacity];
-		colorA = new float[capacity];
-		initialColorR = new float[capacity];
-		initialColorG = new float[capacity];
-		initialColorB = new float[capacity];
-		initialColorA = new float[capacity];
-		targetColorR = new float[capacity];
-		targetColorG = new float[capacity];
-		targetColorB = new float[capacity];
-		targetColorA = new float[capacity];
-		colorTransitionPct = new float[capacity];
-		alphaTransitionPct = new float[capacity];
-		colourIncR = new float[capacity];
-		colourIncG = new float[capacity];
-		colourIncB = new float[capacity];
-		colourIncA = new float[capacity];
-		colourTransitionEndLife = new float[capacity];
-		scaleTransitionEndLife = new float[capacity];
-		speedTransitionEndLife = new float[capacity];
-		scaleIncPerSec = new float[capacity];
-		speedIncPerSec = new float[capacity];
-		emitterOriginX = new float[capacity];
-		emitterOriginY = new float[capacity];
-		emitterOriginZ = new float[capacity];
-		distanceFalloffType = new int[capacity];
-		distanceFalloffStrength = new int[capacity];
-		hasLevelBounds = new boolean[capacity];
-		upperBoundLevel = new int[capacity];
-		lowerBoundLevel = new int[capacity];
 		flags = new int[capacity];
 		emitter = new ParticleEmitter[capacity];
 		xFixed = new long[capacity];
@@ -140,79 +59,69 @@ public final class ParticleBuffer {
 		colourArgbRef = new int[capacity];
 		colourRgbLowRef = new int[capacity];
 		scaleRef = new int[capacity];
-		flipbookFrame = new float[capacity];
+		emitterOriginX = new float[capacity];
+		emitterOriginY = new float[capacity];
+		emitterOriginZ = new float[capacity];
+		flipbookFrame = new int[capacity];
 		yaw = new float[capacity];
 	}
 
-
 	public void ensureCapacity(int min) {}
 
-	public void addFrom(Particle p) {
-		if (count >= capacity) return;
-		int i = count++;
-		posX[i] = p.position[0];
-		posY[i] = p.position[1];
-		posZ[i] = p.position[2];
-		velX[i] = p.velocity[0];
-		velY[i] = p.velocity[1];
-		velZ[i] = p.velocity[2];
-		life[i] = p.life;
-		maxLife[i] = p.maxLife;
-		size[i] = p.size;
-		plane[i] = p.plane;
-		colorR[i] = p.color[0];
-		colorG[i] = p.color[1];
-		colorB[i] = p.color[2];
-		colorA[i] = p.color[3];
-		initialColorR[i] = p.initialColor[0];
-		initialColorG[i] = p.initialColor[1];
-		initialColorB[i] = p.initialColor[2];
-		initialColorA[i] = p.initialColor[3];
-		colorTransitionPct[i] = p.colorTransitionPct;
-		alphaTransitionPct[i] = p.alphaTransitionPct;
-		emitterOriginX[i] = p.emitterOriginX;
-		emitterOriginY[i] = p.emitterOriginY;
-		emitterOriginZ[i] = p.emitterOriginZ;
-		distanceFalloffType[i] = p.distanceFalloffType;
-		distanceFalloffStrength[i] = p.distanceFalloffStrength;
-		hasLevelBounds[i] = p.hasLevelBounds;
-		upperBoundLevel[i] = p.upperBoundLevel;
-		lowerBoundLevel[i] = p.lowerBoundLevel;
-		emitter[i] = p.emitter;
+	public int getPlane(int i) {
+		return flags[i] & PLANE_MASK;
+	}
 
-		int f = 0;
-		if (p.colourIncrementPerSecond != null) {
-			f |= FLAG_COLOUR_INCREMENT;
-			colourIncR[i] = p.colourIncrementPerSecond[0];
-			colourIncG[i] = p.colourIncrementPerSecond[1];
-			colourIncB[i] = p.colourIncrementPerSecond[2];
-			colourIncA[i] = p.colourIncrementPerSecond[3];
-			colourTransitionEndLife[i] = p.colourTransitionEndLife;
-		} else {
-			colourTransitionEndLife[i] = -1f;
-		}
-		if (p.targetColor != null) {
-			f |= FLAG_HAS_TARGET_COLOR;
-			targetColorR[i] = p.targetColor[0];
-			targetColorG[i] = p.targetColor[1];
-			targetColorB[i] = p.targetColor[2];
-			targetColorA[i] = p.targetColor[3];
-		}
-		flags[i] = f;
-		scaleIncPerSec[i] = p.scaleIncrementPerSecond;
-		speedIncPerSec[i] = p.speedIncrementPerSecond;
-		scaleTransitionEndLife[i] = p.scaleTransitionEndLife;
-		speedTransitionEndLife[i] = p.speedTransitionEndLife;
-		// Ref state from float (so MovingParticle.tick 1:1 can run)
-		xFixed[i] = (long) (p.position[0] * 4096);
-		yFixed[i] = (long) (p.position[1] * 4096);
-		zFixed[i] = (long) (p.position[2] * 4096);
-		float vx = p.velocity[0], vy = p.velocity[1], vz = p.velocity[2];
-		float mag = (float) Math.sqrt((double) (vx * vx + vy * vy + vz * vz));
+	public float getPosX(int i) {
+		return (float) (xFixed[i] >> 12);
+	}
+
+	public float getPosY(int i) {
+		return (float) (yFixed[i] >> 12);
+	}
+
+	public float getPosZ(int i) {
+		return (float) (zFixed[i] >> 12);
+	}
+
+	public float getLife(int i) {
+		return (float) remainingTicks[i] / 50f;
+	}
+
+	public float getMaxLife(int i) {
+		return (float) lifetimeTicks[i] / 50f;
+	}
+
+	public float getSize(int i) {
+		return (float) scaleRef[i] / 16384f * 4f;
+	}
+
+	public boolean addSpawn(
+		ParticleEmitter emitter,
+		float posX, float posY, float posZ,
+		float velX, float velY, float velZ,
+		float life, float size,
+		float colorR, float colorG, float colorB, float colorA,
+		int plane, int flipbookFrameIndex,
+		float originX, float originY, float originZ
+	) {
+		if (count >= capacity)
+			return false;
+		int i = count++;
+		flags[i] = plane & PLANE_MASK;
+		this.emitter[i] = emitter;
+		emitterOriginX[i] = originX;
+		emitterOriginY[i] = originY;
+		emitterOriginZ[i] = originZ;
+
+		xFixed[i] = (long) (posX * 4096);
+		yFixed[i] = (long) (posY * 4096);
+		zFixed[i] = (long) (posZ * 4096);
+		float mag = (float) Math.sqrt((double) (velX * velX + velY * velY + velZ * velZ));
 		if (mag > 1e-6f) {
-			velocityX[i] = (short) Math.max(-32768, Math.min(32767, (int) (vx / mag * 32767)));
-			velocityY[i] = (short) Math.max(-32768, Math.min(32767, (int) (vy / mag * 32767)));
-			velocityZ[i] = (short) Math.max(-32768, Math.min(32767, (int) (vz / mag * 32767)));
+			velocityX[i] = (short) Math.max(-32768, Math.min(32767, (int) (velX / mag * 32767)));
+			velocityY[i] = (short) Math.max(-32768, Math.min(32767, (int) (velY / mag * 32767)));
+			velocityZ[i] = (short) Math.max(-32768, Math.min(32767, (int) (velZ / mag * 32767)));
 			speedRef[i] = (int) (mag * 16384);
 		} else {
 			velocityX[i] = 0;
@@ -220,87 +129,39 @@ public final class ParticleBuffer {
 			velocityZ[i] = 0;
 			speedRef[i] = 0;
 		}
-		lifetimeTicks[i] = (int) (p.maxLife * 50f);
-		remainingTicks[i] = (int) (p.life * 50f);
-		int r = (int) (p.color[0] * 255f) & 0xff;
-		int g = (int) (p.color[1] * 255f) & 0xff;
-		int b = (int) (p.color[2] * 255f) & 0xff;
-		int a = (int) (p.color[3] * 255f) & 0xff;
+		lifetimeTicks[i] = (int) (life * 50f);
+		remainingTicks[i] = lifetimeTicks[i];
+		int r = (int) (colorR * 255f) & 0xff;
+		int g = (int) (colorG * 255f) & 0xff;
+		int b = (int) (colorB * 255f) & 0xff;
+		int a = (int) (colorA * 255f) & 0xff;
 		colourArgbRef[i] = (a << 24) | (r << 16) | (g << 8) | b;
 		colourRgbLowRef[i] = 0;
-		scaleRef[i] = (int) (p.size / 4f * 16384);
-		flipbookFrame[i] = p.flipbookRandomFrame >= 0 ? (float) p.flipbookRandomFrame : -1f;
+		scaleRef[i] = (int) (size / 4f * 16384);
+		flipbookFrame[i] = flipbookFrameIndex;
 		yaw[i] = 0f;
+		return true;
 	}
 
 	/**
-	 * Writes ref state (fixed-point) to float arrays for rendering.
+	 * Writes current RGBA of particle at slot i into out[0..3].
 	 */
-	public void syncRefToFloat(int i) {
-		posX[i] = (float) (xFixed[i] >> 12);
-		posY[i] = (float) (yFixed[i] >> 12);
-		posZ[i] = (float) (zFixed[i] >> 12);
-		life[i] = (float) remainingTicks[i] / 50f;
-		maxLife[i] = (float) lifetimeTicks[i] / 50f;
-		size[i] = (float) scaleRef[i] / 16384f * 4f;
+	public void getCurrentColor(int i, float[] out) {
 		int argb = colourArgbRef[i];
 		int low = colourRgbLowRef[i];
 		int red16 = (argb >> 8 & 0xff00) + (low >> 16 & 0xff);
 		int green16 = (argb & 0xff00) + (low >> 8 & 0xff);
 		int blue16 = (argb << 8 & 0xff00) + (low & 0xff);
 		int alpha16 = (argb >> 16 & 0xff00) + (low >> 24 & 0xff);
-		colorR[i] = (red16 >> 8) / 255f;
-		colorG[i] = (green16 >> 8) / 255f;
-		colorB[i] = (blue16 >> 8) / 255f;
-		colorA[i] = (alpha16 >> 8) / 255f;
+		out[0] = (red16 >> 8) / 255f;
+		out[1] = (green16 >> 8) / 255f;
+		out[2] = (blue16 >> 8) / 255f;
+		out[3] = (alpha16 >> 8) / 255f;
 	}
 
 	public void swap(int i, int j) {
-		swapFloat(posX, i, j);
-		swapFloat(posY, i, j);
-		swapFloat(posZ, i, j);
-		swapFloat(velX, i, j);
-		swapFloat(velY, i, j);
-		swapFloat(velZ, i, j);
-		swapFloat(life, i, j);
-		swapFloat(maxLife, i, j);
-		swapFloat(size, i, j);
-		swapInt(plane, i, j);
-		swapFloat(colorR, i, j);
-		swapFloat(colorG, i, j);
-		swapFloat(colorB, i, j);
-		swapFloat(colorA, i, j);
-		swapFloat(initialColorR, i, j);
-		swapFloat(initialColorG, i, j);
-		swapFloat(initialColorB, i, j);
-		swapFloat(initialColorA, i, j);
-		swapFloat(targetColorR, i, j);
-		swapFloat(targetColorG, i, j);
-		swapFloat(targetColorB, i, j);
-		swapFloat(targetColorA, i, j);
-		swapFloat(colorTransitionPct, i, j);
-		swapFloat(alphaTransitionPct, i, j);
-		swapFloat(colourIncR, i, j);
-		swapFloat(colourIncG, i, j);
-		swapFloat(colourIncB, i, j);
-		swapFloat(colourIncA, i, j);
-		swapFloat(colourTransitionEndLife, i, j);
-		swapFloat(scaleTransitionEndLife, i, j);
-		swapFloat(speedTransitionEndLife, i, j);
-		swapFloat(scaleIncPerSec, i, j);
-		swapFloat(speedIncPerSec, i, j);
-		swapFloat(emitterOriginX, i, j);
-		swapFloat(emitterOriginY, i, j);
-		swapFloat(emitterOriginZ, i, j);
-		swapInt(distanceFalloffType, i, j);
-		swapInt(distanceFalloffStrength, i, j);
-		swapBool(hasLevelBounds, i, j);
-		swapInt(upperBoundLevel, i, j);
-		swapInt(lowerBoundLevel, i, j);
 		swapInt(flags, i, j);
-		ParticleEmitter e = emitter[i];
-		emitter[i] = emitter[j];
-		emitter[j] = e;
+		swapRef(emitter, i, j);
 		swapLong(xFixed, i, j);
 		swapLong(yFixed, i, j);
 		swapLong(zFixed, i, j);
@@ -313,8 +174,15 @@ public final class ParticleBuffer {
 		swapInt(colourArgbRef, i, j);
 		swapInt(colourRgbLowRef, i, j);
 		swapInt(scaleRef, i, j);
-		swapFloat(flipbookFrame, i, j);
+		swapFloat(emitterOriginX, i, j);
+		swapFloat(emitterOriginY, i, j);
+		swapFloat(emitterOriginZ, i, j);
+		swapInt(flipbookFrame, i, j);
 		swapFloat(yaw, i, j);
+	}
+
+	public void clear() {
+		count = 0;
 	}
 
 	private static void swapLong(long[] a, int i, int j) {
@@ -341,48 +209,9 @@ public final class ParticleBuffer {
 		a[j] = t;
 	}
 
-	private static void swapBool(boolean[] a, int i, int j) {
-		boolean t = a[i];
+	private static void swapRef(ParticleEmitter[] a, int i, int j) {
+		ParticleEmitter t = a[i];
 		a[i] = a[j];
 		a[j] = t;
-	}
-
-	/**
-	 * Writes current RGBA of particle at slot i into out[0..3].
-	 */
-	public void getCurrentColor(int i, float[] out) {
-		if ((flags[i] & FLAG_COLOUR_INCREMENT) != 0) {
-			out[0] = colorR[i];
-			out[1] = colorG[i];
-			out[2] = colorB[i];
-			out[3] = colorA[i];
-			return;
-		}
-		float m = maxLife[i];
-		if (m <= 0) {
-			out[0] = colorR[i];
-			out[1] = colorG[i];
-			out[2] = colorB[i];
-			out[3] = Math.max(0f, Math.min(1f, colorA[i]));
-			return;
-		}
-		float t = 1f - life[i] / m;
-		if ((flags[i] & FLAG_HAS_TARGET_COLOR) == 0 || colorTransitionPct[i] <= 0) {
-			out[0] = colorR[i];
-			out[1] = colorG[i];
-			out[2] = colorB[i];
-			out[3] = Math.max(0f, Math.min(1f, colorA[i]));
-			return;
-		}
-		float blend = Particle.transitionBlend(t, colorTransitionPct[i]);
-		float aBlend = Particle.transitionBlend(t, alphaTransitionPct[i]);
-		out[0] = initialColorR[i] + (targetColorR[i] - initialColorR[i]) * blend;
-		out[1] = initialColorG[i] + (targetColorG[i] - initialColorG[i]) * blend;
-		out[2] = initialColorB[i] + (targetColorB[i] - initialColorB[i]) * blend;
-		out[3] = initialColorA[i] + (targetColorA[i] - initialColorA[i]) * aBlend;
-	}
-
-	public void clear() {
-		count = 0;
 	}
 }
