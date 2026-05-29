@@ -9,7 +9,6 @@ import rs117.hd.utils.buffer.GLTextureBuffer;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
@@ -21,7 +20,7 @@ public final class ZoneUploadJob extends Job {
 
 	Zone zone;
 	int x, z;
-	float delay;
+	long revealAfterTimestampMs;
 	boolean shouldUnmap;
 
 	@Override
@@ -78,7 +77,7 @@ public final class ZoneUploadJob extends Job {
 				f.map(MAP_WRITE);
 			}
 
-			zone.initialize(o, a, f, eboAlpha.id);
+			zone.initialize(o, a, f);
 			zone.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(
@@ -109,7 +108,7 @@ public final class ZoneUploadJob extends Job {
 		sceneContext = null;
 		zone.uploadJob = null;
 		zone = null;
-		delay = -1.0f;
+		revealAfterTimestampMs = 0;
 		assert !POOL.contains(this) : "Task is already in pool";
 		POOL.add(this);
 	}

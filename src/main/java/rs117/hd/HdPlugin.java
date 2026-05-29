@@ -73,6 +73,7 @@ import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.Version;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
@@ -135,6 +136,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
 import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
@@ -329,6 +331,7 @@ public class HdPlugin extends Plugin {
 	public static boolean APPLE_ARM;
 
 	public static boolean SUPPORTS_INDIRECT_DRAW;
+	public static boolean SUPPORTS_STORAGE_BUFFERS;
 
 	public Canvas canvas;
 	public JFrame clientJFrame;
@@ -429,6 +432,8 @@ public class HdPlugin extends Plugin {
 	public boolean freezeCulling;
 
 	@Getter
+	private boolean isPluginStopPending;
+	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
@@ -460,6 +465,7 @@ public class HdPlugin extends Plugin {
 	@Getter
 	public long garbageCollectionCount;
 
+	private int startupCount;
 	public int frame;
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -506,7 +512,23 @@ public class HdPlugin extends Plugin {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
+				AWTContext.loadNatives();
+				canvas = client.getCanvas();
+				synchronized (canvas.getTreeLock()) {
+					// Delay plugin startup until the client's canvas is valid
+					if (!canvas.isValid())
+						return false;
+
+					awtContext = new AWTContext(canvas);
+					awtContext.configurePixelFormat(0, 0, 0);
+				}
+				awtContext.createGLContext();
+				canvas.setIgnoreRepaint(true);
+				clientJFrame = HDUtils.getJFrame(canvas);
+
+				isPluginStopPending = false;
 				isActive = true;
+				startupCount++;
 
 				fboScene = 0;
 				rboSceneColor = 0;
@@ -522,23 +544,6 @@ public class HdPlugin extends Plugin {
 				lastFrameTimeMillis = 0;
 				lastFrameClientTime = 0;
 
-				AWTContext.loadNatives();
-				canvas = client.getCanvas();
-				clientJFrame = HDUtils.getJFrame(canvas);
-
-				synchronized (canvas.getTreeLock()) {
-					// Delay plugin startup until the client's canvas is valid
-					if (!canvas.isValid())
-						return false;
-
-					awtContext = new AWTContext(canvas);
-					awtContext.configurePixelFormat(0, 0, 0);
-				}
-
-				awtContext.createGLContext();
-
-				canvas.setIgnoreRepaint(true);
-
 				// lwjgl defaults to lwjgl- + user.name, but this breaks if the username would cause an invalid path
 				// to be created.
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl");
@@ -548,31 +553,43 @@ public class HdPlugin extends Plugin {
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
+				var rendererClass = config.legacyRenderer() ? LegacyRenderer.class : ZoneRenderer.class;
+				String rlawtVersion = System.getProperty("runelite.rlawtpath", "Release");
+				String javaVmName = System.getProperty("java.vm.name", "Unknown");
+				String javaVersion = System.getProperty("java.version", "Unknown");
 				OSType osType = OSType.getOSType();
-				String arch = System.getProperty("os.arch", "Unknown");
+				String osArch = System.getProperty("os.arch", "Unknown");
+				String osVersion = System.getProperty("os.version", "Unknown");
 				String wordSize = System.getProperty("sun.arch.data.model", "Unknown");
-				log.info("Operating system: {}", osType);
-				log.info("Architecture: {}", arch);
-				log.info("Client is {}-bit", wordSize);
-				APPLE = osType == OSType.MacOS;
-				APPLE_ARM = APPLE && arch.equals("aarch64");
-
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
-				log.info("Using device: {} ({})", glRenderer, glVendor);
-				log.info("Using driver: {}", glGetString(GL_VERSION));
+				var runtime = Runtime.getRuntime();
+
+				APPLE = osType == OSType.MacOS;
+				APPLE_ARM = APPLE && osArch.equals("aarch64");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				INTEL_GPU = glRenderer.contains("Intel");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
-				SUPPORTS_INDIRECT_DRAW = NVIDIA_GPU && !APPLE || config.forceIndirectDraw();
+				SUPPORTS_INDIRECT_DRAW = config.indirectDraw().get(NVIDIA_GPU && !APPLE);
+				SUPPORTS_STORAGE_BUFFERS = GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS && config.storageBuffers().get(!INTEL_GPU);
 
-				renderer = config.legacyRenderer() ?
-					injector.getInstance(LegacyRenderer.class) :
-					injector.getInstance(ZoneRenderer.class);
-				log.info("Using renderer: {}", renderer.getClass().getSimpleName());
+				log.info("Starting 117 HD... (count: {})", startupCount);
+				log.info("Renderer:          {}", rendererClass.getSimpleName());
+				log.info("rlawt version:     {}", rlawtVersion);
+				log.info("LWJGL Version:     {}", Version.getVersion());
+				log.info("Java version:      {} ({})", javaVmName, javaVersion);
+				log.info("Java memory limit: {} (free: {})", formatBytes(runtime.maxMemory()), formatBytes(runtime.freeMemory()));
+				log.info("Operating system:  {} {} ({}-bit {})", osType, osVersion, wordSize, osArch);
+				log.info("CPU:               {} ({} threads)", HDUtils.getCpuName(), runtime.availableProcessors());
+				log.info("Memory:            {}", formatBytes(HDUtils.getTotalSystemMemory()));
+				log.info("GPU:               {} ({})", glRenderer, glVendor);
+				log.info("GPU driver:        {}", glGetString(GL_VERSION));
+				log.info("Indirect draw:     {}", SUPPORTS_INDIRECT_DRAW);
+				log.info("Storage buffers:   {}", SUPPORTS_STORAGE_BUFFERS);
+				log.info("Low memory mode:   {}", useLowMemoryMode);
 
-				log.info("Low memory mode: {}", useLowMemoryMode);
+				renderer = injector.getInstance(rendererClass);
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
@@ -665,13 +682,17 @@ public class HdPlugin extends Plugin {
 				waterTypeManager.startUp();
 				gamevalManager.startUp();
 
-				renderer.initialize();
-				eventBus.register(renderer);
 				gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
 				if (configShadingMode.unlitFaceColors)
 					gpuFlags |= DrawCallbacks.UNLIT_FACE_COLORS;
+				client.setGpuFlags(gpuFlags);
+
+				// Initialize the renderer after setting initial GPU flags,
+				// to let the renderer override GPU flags even during startup
+				renderer.initialize();
+				eventBus.register(renderer);
 
 				initializeShaders();
 				initializeShaderHotswapping();
@@ -681,7 +702,6 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				client.setDrawCallbacks(renderer);
-				client.setGpuFlags(gpuFlags);
 				client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
@@ -707,6 +727,8 @@ public class HdPlugin extends Plugin {
 				checkGLErrors();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
+
+				log.info("117 HD started successfully!");
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
 				stopPlugin();
@@ -785,6 +807,13 @@ public class HdPlugin extends Plugin {
 			if (client.getGameState() == GameState.LOGGED_IN)
 				client.setGameState(GameState.LOADING);
 		});
+	}
+
+	public void requestPluginStop() {
+		if (isPluginStopPending)
+			return;
+		log.debug("Requesting plugin to stop when safe");
+		isPluginStopPending = true;
 	}
 
 	public void stopPlugin() {
@@ -1439,7 +1468,7 @@ public class HdPlugin extends Plugin {
 
 	public void prepareInterfaceTexture() {
 		if (uiCopyJob != null)
-			uiCopyJob.waitForCompletion();
+			uiCopyJob.waitForCompletion(true);
 		uiCopyJob = null;
 
 		int[] resolution = {
@@ -1471,8 +1500,7 @@ public class HdPlugin extends Plugin {
 
 		frameTimer.begin(Timer.MAP_UI_BUFFER);
 		final GLBuffer pbo = pboUi[frame % 3];
-		pbo.ensureCapacity(uiResolution[0] * uiResolution[1] * 4L);
-		pbo.map(MAP_WRITE);
+		pbo.map(MAP_WRITE, 0, uiWidth * uiHeight * 4L);
 		frameTimer.end(Timer.MAP_UI_BUFFER);
 		if (!pbo.isMapped()) {
 			log.error("Unable to map interface PBO. Skipping UI...");
@@ -1528,7 +1556,7 @@ public class HdPlugin extends Plugin {
 
 		if (uiCopyJob != null) {
 			frameTimer.begin(Timer.COPY_UI);
-			uiCopyJob.waitForCompletion();
+			uiCopyJob.waitForCompletion(true);
 			uiCopyJob = null;
 			frameTimer.end(Timer.COPY_UI);
 
@@ -1734,7 +1762,8 @@ public class HdPlugin extends Plugin {
 							case KEY_LOW_MEMORY_MODE:
 							case KEY_REMOVE_VERTEX_SNAPPING:
 							case KEY_LEGACY_RENDERER:
-							case KEY_FORCE_INDIRECT_DRAW:
+							case KEY_INDIRECT_DRAW:
+							case KEY_STORAGE_BUFFERS:
 							case KEY_SHADING_MODE:
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
@@ -1795,6 +1824,7 @@ public class HdPlugin extends Plugin {
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
+							case KEY_POH_THEME_ENVIRONMENTS:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
 								break;
@@ -1946,6 +1976,13 @@ public class HdPlugin extends Plugin {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 
 		frame = (frame + 1) & Integer.MAX_VALUE;
+
+		if (isPluginStopPending) {
+			log.debug("Shutdown has been requested, stopping plugin");
+			isPluginStopPending = false;
+			stopPlugin();
+			return;
+		}
 
 		if (lastFrameTimeMillis > 0) {
 			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);

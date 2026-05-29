@@ -715,6 +715,10 @@ public final class MathUtils {
 		return min(max(v, min), max);
 	}
 
+	public static long clamp(long v, long min, long max) {
+		return min(max(v, min), max);
+	}
+
 	public static float[] clamp(float[] out, float[] v, float[] min, float[] max) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = clamp(v[i % v.length], min[i % min.length], max[i % max.length]);
@@ -873,5 +877,17 @@ public final class MathUtils {
 		}
 
 		return sign | exponent << 10 | mantissa >> 13;
+	}
+
+	public static String formatBytes(long bytes) {
+		if (bytes < 0)
+			return "-" + formatBytes(bytes == Long.MIN_VALUE ? Long.MAX_VALUE : -bytes);
+		if (bytes == Long.MAX_VALUE)
+			return "infinity";
+		if (bytes < 1024)
+			return bytes + " B";
+		int i = (63 - Long.numberOfLeadingZeros(bytes)) / 10 - 1;
+		int decimal = (10 * (int) (bytes >> i * 10) / 1024) % 10;
+		return String.format("%d%s %siB", bytes >> (i + 1) * 10, decimal == 0 ? "" : "." + decimal, "KMGTPE".charAt(i));
 	}
 }

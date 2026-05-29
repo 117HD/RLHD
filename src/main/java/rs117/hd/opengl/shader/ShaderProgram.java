@@ -12,6 +12,7 @@ import rs117.hd.utils.Destructible;
 import rs117.hd.utils.DestructibleHandler;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.APPLE;
 
 @Slf4j
 public class ShaderProgram implements Destructible {
@@ -65,10 +66,13 @@ public class ShaderProgram implements Destructible {
 		use();
 		initialize();
 
-		glValidateProgram(program);
-		if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
-			String err = glGetProgramInfoLog(program);
-			log.error("Failed to validate shader program: {}", getClass().getSimpleName(), new ShaderException(err));
+		// Shader validation can be horribly slow on macOS with AMD GPUs
+		if (!APPLE || log.isDebugEnabled()) {
+			glValidateProgram(program);
+			if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
+				String err = glGetProgramInfoLog(program);
+				log.error("Failed to validate shader program: {}", getClass().getSimpleName(), new ShaderException(err));
+			}
 		}
 	}
 

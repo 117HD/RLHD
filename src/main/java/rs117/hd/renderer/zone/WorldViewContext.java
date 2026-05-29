@@ -85,7 +85,7 @@ public class WorldViewContext {
 		@Nullable ZoneSceneContext sceneContext,
 		UBOWorldViews uboWorldViews
 	) {
-		this.worldViewId = worldView == null ? -1 : worldView.getId();
+		this.worldViewId = worldView == null ? WorldView.TOPLEVEL : worldView.getId();
 		this.sceneContext = sceneContext;
 		this.sizeX = worldView == null ? NUM_ZONES : worldView.getSizeX() >> 3;
 		this.sizeZ = worldView == null ? NUM_ZONES : worldView.getSizeY() >> 3;
@@ -121,11 +121,11 @@ public class WorldViewContext {
 
 		long start = System.nanoTime();
 		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_SHADOW;
+			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
 			final var POOL = needsStaging ? DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
 				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = POOL.acquire();
-				if (dynamicModelVao.vao == 0)
+				if (dynamicModelVao.getVao() == 0)
 					dynamicModelVao.initialize();
 				dynamicModelVao.bindMetadataVAO(vboM);
 			}
@@ -142,13 +142,21 @@ public class WorldViewContext {
 		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
 	}
 
+	DynamicModelVAO.View beginDraw(int type, int playerDrawIndex, int faces) {
+		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(playerDrawIndex, faces);
+	}
+
+	int obtainDrawIndex(int type) {
+		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].obtainDrawIndex();
+	}
+
 	void drawAll(int type, CommandBuffer cmd) {
 		dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].draw(cmd);
 	}
 
 	void unmap() {
 		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_SHADOW;
+			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
 			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
 		}
 	}
@@ -162,7 +170,7 @@ public class WorldViewContext {
 		for (int zx = 0; zx < sizeX; zx++) {
 			for (int zz = 0; zz < sizeZ; zz++) {
 				final Zone z = zones[zx][zz];
-				if (z.alphaModels.isEmpty() || (worldViewId == -1 && !z.inSceneFrustum))
+				if (z.alphaModels.isEmpty() || (worldViewId == WorldView.TOPLEVEL && !z.inSceneFrustum))
 					continue;
 
 				final int dx = camPosX - ((zx - offset) << 10);
@@ -179,20 +187,17 @@ public class WorldViewContext {
 		}
 	}
 
-	void handleZoneSwap(float deltaTime, int zx, int zz) {
+	void handleZoneSwap(int zx, int zz, boolean queue) {
 		Zone curZone = zones[zx][zz];
 		ZoneUploadJob uploadTask = curZone.uploadJob;
 		if (uploadTask == null)
 			return;
 
 		if (!uploadTask.isQueued()) {
-			if (deltaTime > 0.0f && uploadTask.delay >= 0.0f) {
-				uploadTask.delay -= deltaTime;
-				if (uploadTask.delay <= 0.0f) {
-					log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
-					uploadTask.delay = -1.0f;
-					uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
-				}
+			if (queue && uploadTask.revealAfterTimestampMs < System.currentTimeMillis()) {
+				log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
+				uploadTask.revealAfterTimestampMs = 0;
+				uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
 			}
 			return;
 		}
@@ -235,11 +240,15 @@ public class WorldViewContext {
 		}
 	}
 
-	void update(float deltaTime) {
+	void processZoneSwaps() {
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
+				handleZoneSwap(x, z, true);
+	}
+
+	void processZoneRebuilds() {
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
-				handleZoneSwap(deltaTime, x, z);
-
 				if (zones[x][z].rebuild) {
 					zones[x][z].rebuild = false;
 					invalidateZone(x, z);
@@ -256,7 +265,7 @@ public class WorldViewContext {
 
 		for (int x = 0; x < sizeX; x++)
 			for (int z = 0; z < sizeZ; z++)
-				handleZoneSwap(-1.0f, x, z);
+				handleZoneSwap(x, z, false);
 	}
 
 	void free() {
@@ -302,27 +311,33 @@ public class WorldViewContext {
 
 	void invalidateZone(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
-		float prevUploadDelay = -1.0f;
+		long revealAfterTimestampMs = 0;
 		if (curZone.uploadJob != null) {
+			Zone pendingZone = curZone.uploadJob.zone;
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
 				curZone.hashCode(),
 				worldViewId,
 				zx,
 				zz,
-				curZone.uploadJob.zone.hashCode()
+				pendingZone.hashCode()
 			);
-			prevUploadDelay = curZone.uploadJob.delay;
+			revealAfterTimestampMs = curZone.uploadJob.revealAfterTimestampMs;
 			curZone.uploadJob.cancel();
 			curZone.uploadJob.release();
+
+			if (pendingZone != curZone)
+				DestructibleHandler.destroy(pendingZone);
 		}
 
 		Zone newZone = injector.getInstance(Zone.class);
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
-		curZone.uploadJob.delay = prevUploadDelay;
-		if (curZone.uploadJob.delay < 0.0f)
+		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
+
+		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders
+		if (sceneContext.isInHouse || revealAfterTimestampMs <= 0)
 			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }

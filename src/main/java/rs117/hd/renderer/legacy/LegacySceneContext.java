@@ -11,6 +11,7 @@ import static rs117.hd.utils.MathUtils.*;
 public class LegacySceneContext extends SceneContext {
 	public final int id = RAND.nextInt() & LegacySceneUploader.SCENE_ID_MASK;
 
+	public boolean isPrepared;
 	public boolean forceDisableAreaHiding;
 
 	public GpuIntBuffer staticUnorderedModelBuffer;

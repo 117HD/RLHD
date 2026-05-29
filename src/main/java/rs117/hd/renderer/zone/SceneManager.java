@@ -17,7 +17,10 @@ import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
@@ -58,6 +61,9 @@ public class SceneManager {
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private EventBus eventBus;
 
 	@Inject
 	private HdPlugin plugin;
@@ -126,7 +132,7 @@ public class SceneManager {
 	}
 
 	public WorldViewContext getContext(int worldViewId) {
-		if (worldViewId != -1)
+		if (worldViewId != WorldView.TOPLEVEL)
 			return subs[worldViewId];
 		if (root.sceneContext == null)
 			return null;
@@ -137,9 +143,12 @@ public class SceneManager {
 		this.renderState = renderState;
 		this.uboWorldViews = uboWorldViews;
 		root.initialize(renderState, injector);
+		eventBus.register(this);
 	}
 
 	public void destroy() {
+		eventBus.unregister(this);
+
 		root.free();
 		for (int i = 0; i < subs.length; i++) {
 			if (subs[i] != null)
@@ -157,6 +166,21 @@ public class SceneManager {
 		nextSceneContext = null;
 
 		uboWorldViews = null;
+	}
+
+	@Subscribe
+	public void onPostClientTick(PostClientTick event) {
+		if (!root.isLoading && root.streamingGroup.getPendingCount() == 0)
+			root.processZoneRebuilds();
+
+		WorldView wv = client.getTopLevelWorldView();
+		if (wv != null) {
+			for (WorldEntity we : wv.worldEntities()) {
+				WorldViewContext ctx = getContext(we.getWorldView());
+				if (ctx != null && !ctx.isLoading && ctx.streamingGroup.getPendingCount() == 0)
+					ctx.processZoneRebuilds();
+			}
+		}
 	}
 
 	public void update() {
@@ -199,14 +223,14 @@ public class SceneManager {
 		if (root.sceneContext == null)
 			return;
 
-		root.update(plugin.deltaTime);
+		root.processZoneSwaps();
 
 		WorldView wv = client.getTopLevelWorldView();
 		if (wv != null) {
 			for (WorldEntity we : wv.worldEntities()) {
 				WorldViewContext ctx = getContext(we.getWorldView());
 				if (ctx != null) {
-					ctx.update(plugin.deltaTime);
+					ctx.processZoneSwaps();
 					root.sceneContext.animatedDynamicObjectIds.addAll(
 						ctx.sceneContext.animatedDynamicObjectIds);
 				}
@@ -223,6 +247,8 @@ public class SceneManager {
 			}
 			root.sceneContext.animatedDynamicObjectImpostors.put(objectId, impostorId);
 		}
+
+		root.completeInvalidation();
 	}
 
 	private void updateAreaHiding() {
@@ -279,7 +305,7 @@ public class SceneManager {
 
 	public void despawnWorldView(WorldView worldView) {
 		int worldViewId = worldView.getId();
-		if (worldViewId > -1) {
+		if (worldViewId != WorldView.TOPLEVEL) {
 			log.debug("WorldView despawn: {}", worldViewId);
 			if (subs[worldViewId] == null) {
 				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
@@ -403,12 +429,12 @@ public class SceneManager {
 	public synchronized void loadScene(WorldView worldView, Scene scene) {
 		try {
 			loadingLock.lock();
-			if (scene.getWorldViewId() > -1) {
+			if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
 				loadSubScene(worldView, scene);
 				return;
 			}
 
-			assert worldView.getId() == -1;
+			assert worldView.getId() == WorldView.TOPLEVEL;
 			if (nextZones != null)
 				throw new RuntimeException("Double zone load!"); // does this happen?
 
@@ -497,7 +523,7 @@ public class SceneManager {
 					curZone.cull = true;
 
 					// Last minute chance for a streamed in zone to be reused
-					ctx.handleZoneSwap(-1.0f, x, z);
+					ctx.handleZoneSwap(x, z, false);
 					// Mark all zones to be culled, unless they get reused later
 					ctx.zones[x][z].cull = true;
 				}
@@ -513,7 +539,9 @@ public class SceneManager {
 				prev.isInstance() == scene.isInstance() &&
 				client.getGameState() == GameState.LOGGED_IN && // only reuse for async loads to respect roof removal state changes
 				ctx.sceneContext.expandedMapLoadingChunks == nextSceneContext.expandedMapLoadingChunks &&
-				ctx.sceneContext.currentArea == nextSceneContext.currentArea) {
+				ctx.sceneContext.currentArea == nextSceneContext.currentArea &&
+				!nextSceneContext.isInChambersOfXeric
+			) {
 				for (int x = 0; x < NUM_ZONES; ++x) {
 					for (int z = 0; z < NUM_ZONES; ++z) {
 						int ox = x + dx;
@@ -568,6 +596,7 @@ public class SceneManager {
 				}
 			}
 
+			long timeMs = System.currentTimeMillis();
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = injector.getInstance(Zone.class);
 				newZone.dirty = sorted.zone.dirty;
@@ -576,7 +605,8 @@ public class SceneManager {
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z);
-					sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
+					sorted.zone.uploadJob.revealAfterTimestampMs =
+						timeMs + ceil(clamp(sorted.dist / 15.0f, 0.25f, 1.5f) * 1000.0f);
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
@@ -601,7 +631,7 @@ public class SceneManager {
 			return;
 		}
 
-		if (scene.getWorldViewId() > -1) {
+		if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
 			swapSubScene(scene);
 			return;
 		}
@@ -638,11 +668,10 @@ public class SceneManager {
 
 		// Handle object spawns that must be processed on the client thread
 		loadSceneLightsTask.waitForCompletion();
-		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
-
 		for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)
 			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
 		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
+		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
 
 		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
 		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
@@ -720,7 +749,7 @@ public class SceneManager {
 
 	private void loadSubScene(WorldView worldView, Scene scene) {
 		int worldViewId = worldView.getId();
-		assert worldViewId != -1;
+		assert worldViewId != WorldView.TOPLEVEL;
 
 		log.debug("Loading world view {}", worldViewId);
 		Stopwatch sw = Stopwatch.createStarted();

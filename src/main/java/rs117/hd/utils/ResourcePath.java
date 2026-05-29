@@ -166,7 +166,7 @@ public class ResourcePath {
 		return extension;
 	}
 
-	public ResourcePath setExtension(String extension) {
+	public ResourcePath setExtension(@Nullable String extension) {
 		if (path == null)
 			throw new IllegalStateException("Cannot set extension for root path: " + this);
 
