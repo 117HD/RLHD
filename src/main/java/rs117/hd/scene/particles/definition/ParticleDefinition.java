@@ -6,6 +6,10 @@ package rs117.hd.scene.particles.definition;
 
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -41,6 +45,12 @@ public class ParticleDefinition {
 		() -> path(ParticleDefinition.class, "..", "particles.json")
 	);
 
+	/** Raw JSON URL (not the gist.github.com page — use {@code gist.githubusercontent.com/.../raw/...}). */
+	public static final String RS3_PARTICLES_GIST_URL =
+		"https://gist.githubusercontent.com/Mark7625/9f281702afae95f9e099a49dffe44dda/raw/rs3_particles.json";
+
+	private static final String RS3_PARTICLES_GIST_FILENAME = "rs3_particles.json";
+
 	@Inject
 	transient HdPlugin plugin;
 	@Inject
@@ -53,6 +63,9 @@ public class ParticleDefinition {
 	private transient int lastDefinitionCount;
 	@Getter
 	private transient long lastLoadTimeMs;
+	@Getter
+	private transient boolean rs3DefinitionsImported;
+	private final transient Set<String> rs3DefinitionIds = new LinkedHashSet<>();
 
 	public String id;
 	@Nullable
@@ -316,6 +329,8 @@ public class ParticleDefinition {
 			return;
 		}
 		definitions.clear();
+		rs3DefinitionsImported = false;
+		rs3DefinitionIds.clear();
 		List<ParticleDefinition> ordered = new ArrayList<>();
 		if (defs != null) {
 			for (ParticleDefinition def : defs) {
@@ -334,6 +349,108 @@ public class ParticleDefinition {
 		}
 		lastDefinitionCount = definitions.size();
 		lastLoadTimeMs = (System.nanoTime() - start) / 1_000_000;
+	}
+
+	public static String getRs3ParticlesGistUrl() {
+		return normalizeGistUrl(RS3_PARTICLES_GIST_URL);
+	}
+
+	/**
+	 * Converts a gist page link ({@code gist.github.com/user/id}) to a raw file URL.
+	 */
+	static String normalizeGistUrl(String url) {
+		if (url == null || url.isBlank())
+			return url;
+		String trimmed = url.trim();
+		// Already a raw content URL
+		if (trimmed.contains("gist.githubusercontent.com") && trimmed.contains("/raw/"))
+			return trimmed;
+		// gist.github.com/{user}/{id} or gist.github.com/{id}
+		final String prefix = "https://gist.github.com/";
+		if (trimmed.startsWith(prefix)) {
+			String rest = trimmed.substring(prefix.length());
+			if (rest.endsWith("/"))
+				rest = rest.substring(0, rest.length() - 1);
+			int slash = rest.indexOf('/');
+			String user = "";
+			String gistId = rest;
+			if (slash >= 0) {
+				user = rest.substring(0, slash);
+				gistId = rest.substring(slash + 1);
+			}
+			if (!gistId.isEmpty()) {
+				if (!user.isEmpty())
+					return "https://gist.githubusercontent.com/" + user + "/" + gistId + "/raw/" + RS3_PARTICLES_GIST_FILENAME;
+				return "https://gist.githubusercontent.com/" + gistId + "/raw/" + RS3_PARTICLES_GIST_FILENAME;
+			}
+		}
+		return trimmed;
+	}
+
+	/**
+	 * Fetches RS3 particle definitions from a raw gist URL. Does not modify the in-memory map.
+	 */
+	public ParticleDefinition[] fetchDefinitionsFromUrl(String url) throws IOException {
+		String fetchUrl = normalizeGistUrl(url);
+		HttpURLConnection conn = (HttpURLConnection) new URL(fetchUrl).openConnection();
+		conn.setConnectTimeout(10_000);
+		conn.setReadTimeout(30_000);
+		conn.setRequestProperty("Accept", "application/json");
+		try {
+			int code = conn.getResponseCode();
+			if (code != HttpURLConnection.HTTP_OK) {
+				throw new IOException("HTTP " + code + " fetching RS3 particles from " + fetchUrl);
+			}
+			try (var reader = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8)) {
+				ParticleDefinition[] defs = plugin.getGson().fromJson(reader, ParticleDefinition[].class);
+				return defs != null ? defs : new ParticleDefinition[0];
+			}
+		} finally {
+			conn.disconnect();
+		}
+	}
+
+	/**
+	 * Merges definitions into the live map (overwrites same id). Returns number of ids merged.
+	 */
+	public int mergeDefinitions(ParticleDefinition[] defs) {
+		if (defs == null || defs.length == 0)
+			return 0;
+		int merged = 0;
+		for (ParticleDefinition def : defs) {
+			if (def == null)
+				continue;
+			if (def.id != null && !def.id.isEmpty())
+				def.id = def.id.toUpperCase();
+			def.parseHexColours();
+			def.postDecode();
+			if (def.id == null || def.id.isEmpty()) {
+				log.warn("[Particles] Skipping RS3 definition with missing id");
+				continue;
+			}
+			definitions.put(def.id, def);
+			rs3DefinitionIds.add(def.id);
+			merged++;
+		}
+		if (merged > 0)
+			rs3DefinitionsImported = true;
+		lastDefinitionCount = definitions.size();
+		return merged;
+	}
+
+	/** Removes definitions that were merged from the RS3 gist import. */
+	public int removeImportedRs3Definitions() {
+		if (!rs3DefinitionsImported || rs3DefinitionIds.isEmpty())
+			return 0;
+		int removed = 0;
+		for (String id : rs3DefinitionIds) {
+			if (definitions.remove(id) != null)
+				removed++;
+		}
+		rs3DefinitionIds.clear();
+		rs3DefinitionsImported = false;
+		lastDefinitionCount = definitions.size();
+		return removed;
 	}
 
 	@Nullable

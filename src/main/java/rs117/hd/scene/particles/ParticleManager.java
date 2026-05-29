@@ -432,6 +432,49 @@ public class ParticleManager {
 		return particleDefinitions.getDefinition(id);
 	}
 
+	public boolean isRs3DefinitionsImported() {
+		return particleDefinitions.isRs3DefinitionsImported();
+	}
+
+	/**
+	 * Downloads RS3 particle definitions from the configured gist URL and merges them in memory.
+	 * Does not reload bundled particles.json (so startup stays light).
+	 */
+	public void importRs3Particles(@Nullable Runnable onComplete) {
+		String url = ParticleDefinition.getRs3ParticlesGistUrl();
+		new Thread(() -> {
+			try {
+				ParticleDefinition[] defs = particleDefinitions.fetchDefinitionsFromUrl(url);
+				clientThread.invoke(() -> {
+					int merged = particleDefinitions.mergeDefinitions(defs);
+					particleTextureLoader.setActiveTextureName(particleDefinitions.getDefaultTexturePath());
+					loadSceneParticles(plugin.getSceneContext());
+					log.info("[Particles] Imported {} RS3 definitions from gist (total definitions={})",
+						merged, particleDefinitions.getLastDefinitionCount());
+					if (onComplete != null)
+						onComplete.run();
+				});
+			} catch (Exception ex) {
+				log.error("[Particles] Failed to import RS3 definitions from {}", url, ex);
+				if (onComplete != null)
+					clientThread.invoke(onComplete);
+			}
+		}, "rlhd-rs3-particles-import").start();
+	}
+
+	/** Drops RS3 gist definitions from memory and refreshes emitters (custom particles.json entries remain). */
+	public void removeRs3Particles() {
+		int removed = particleDefinitions.removeImportedRs3Definitions();
+		if (removed == 0)
+			return;
+		despawnPerformanceTestEmitters();
+		if (continuousRandomSpawn)
+			setContinuousRandomSpawn(false);
+		particleTextureLoader.setActiveTextureName(particleDefinitions.getDefaultTexturePath());
+		loadSceneParticles(plugin.getSceneContext());
+		log.info("[Particles] Removed {} RS3 definitions (remaining={})", removed, particleDefinitions.getLastDefinitionCount());
+	}
+
 	public List<String> getDefinitionIdsOrdered() {
 		return particleDefinitions.getDefinitionIdsOrdered();
 	}

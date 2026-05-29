@@ -452,7 +452,7 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		selectDefaultParticle(particleDropdownRef);
 	}
 
-	private static final String DEFAULT_PARTICLE_ID = "7";
+	private static final String DEFAULT_PARTICLE_ID = "TORCH_SMOKE";
 
 	private static void selectDefaultParticle(JComboBox<String> dropdown) {
 		for (int i = 0; i < dropdown.getItemCount(); i++) {
@@ -478,7 +478,7 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		p.setBackground(ColorScheme.DARK_GRAY_COLOR);
 		p.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		// Top: dropdown + Load + New in one row (default to test emitter "7" from emitters.json)
+		// Top: dropdown + Load + New in one row (default to TORCH_SMOKE from particles.json)
 		java.util.List<String> orderedIds = particleManager.getDefinitionIdsOrdered();
 		// Show human-labeled IDs first (not just numeric), while preserving original relative order
 		java.util.List<String> textIds = new java.util.ArrayList<>();
@@ -2352,7 +2352,7 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		pitchSpinner.addChangeListener(changePush);
 		culledCheck.addItemListener(e -> pushToGame.run());
 
-		// Initial load from default selection ("7")
+		// Initial load from default selection (TORCH_SMOKE)
 		loadFromDef.itemStateChanged(new ItemEvent(particleDropdown, ItemEvent.ITEM_STATE_CHANGED, particleDropdown.getSelectedItem(), ItemEvent.SELECTED));
 
 		section.add(content, BorderLayout.CENTER);
@@ -2398,6 +2398,16 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		btn.setBorderPainted(true);
 		btn.setContentAreaFilled(true);
 		btn.setOpaque(true);
+	}
+
+	private void updateRs3ParticlesButton(JButton btn) {
+		if (particleManager.isRs3DefinitionsImported()) {
+			setButtonActive(btn, true);
+			btn.setText("Remove RS3 particles");
+		} else {
+			setButtonActive(btn, false);
+			btn.setText("Import RS3 particles");
+		}
 	}
 
 	private static void setButtonActive(JButton btn, boolean active) {
@@ -2473,6 +2483,33 @@ public class ParticleSidebarPanel extends PluginPanel  {
 			});
 		});
 		buttons.add(spawnMaxBtn);
+
+		JButton importRs3Btn = new JButton("Import RS3 particles");
+		importRs3Btn.setToolTipText(
+			"Load or unload RS3 particle definitions from the hardcoded GitHub gist (custom particles.json is unchanged)."
+		);
+		styleButton(importRs3Btn);
+		updateRs3ParticlesButton(importRs3Btn);
+		importRs3Btn.addActionListener(e -> {
+			if (particleManager.isRs3DefinitionsImported()) {
+				clientThread.invoke(() -> {
+					particleManager.removeRs3Particles();
+					SwingUtilities.invokeLater(() -> {
+						refreshParticleDropdownAndLoadDefault();
+						updateRs3ParticlesButton(importRs3Btn);
+					});
+				});
+				return;
+			}
+			importRs3Btn.setEnabled(false);
+			importRs3Btn.setText("Importing…");
+			particleManager.importRs3Particles(() -> SwingUtilities.invokeLater(() -> {
+				refreshParticleDropdownAndLoadDefault();
+				importRs3Btn.setEnabled(true);
+				updateRs3ParticlesButton(importRs3Btn);
+			}));
+		});
+		buttons.add(importRs3Btn);
 
 		p.add(buttons, BorderLayout.NORTH);
 		return p;
