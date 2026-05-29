@@ -47,6 +47,8 @@ layout(std140) uniform UBOGlobal {
     mat4 projectionMatrix;
     mat4 invProjectionMatrix;
     mat4 lightProjectionMatrix;
+    mat4 prevReflectionProjection;
+    ivec2 prevSceneResolution;
 
     float lightningBrightness;
     float elapsedTime;

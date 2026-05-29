@@ -816,6 +816,8 @@ public class ZoneRenderer implements Renderer {
 			reflectionCamera.getPositionY(),
 			reflectionCamera.getPositionZ()
 		);
+		plugin.uboGlobal.prevReflectionProjection.set(reflectionCamera.getViewProjMatrix());
+		plugin.uboGlobal.prevSceneResolution.set(plugin.sceneResolution);
 		plugin.uboGlobal.upload();
 
 		frameTimer.begin(Timer.RENDER_REFLECTIONS);
@@ -1214,7 +1216,6 @@ public class ZoneRenderer implements Renderer {
 			if (shouldRenderScene) {
 				tiledLightingPass();
 				directionalShadowPass();
-				reflectionPass();
 				scenePass();
 			}
 
@@ -1273,6 +1274,7 @@ public class ZoneRenderer implements Renderer {
 
 				log.error("Unable to swap buffers:", ex);
 			}
+			reflectionPass();
 
 			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 

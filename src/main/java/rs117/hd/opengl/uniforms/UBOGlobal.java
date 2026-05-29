@@ -54,6 +54,9 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
 	public Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");
 
+	public Property prevReflectionProjection = addProperty(PropertyType.Mat4, "prevReflectionProjection");
+	public Property prevSceneResolution = addProperty(PropertyType.IVec2, "prevSceneResolution");
+
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
 

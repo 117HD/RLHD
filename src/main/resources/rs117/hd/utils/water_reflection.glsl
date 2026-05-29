@@ -24,6 +24,8 @@
  */
 #include <utils/constants.glsl>
 
+#define REPROJECT_REFLECTION_UV 1
+
 vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     // Only use the reflection map when enabled, the height difference is negligible & the surface is roughly flat
     // TODO: decide which tris to enable the reflection for in the geometry shader
@@ -44,6 +46,23 @@ vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     float shoreLineMask = 1 - dot(IN.texBlend, fAlphaBiasHsl / 127.f);
     distortionFactor *= 1 - shoreLineMask * 1.1; // safety factor to remove artifacts
 
+    // Estimate the world position of the reflected point.
+    // Assume a fixed reflection depth; tweak this constant for your scene scale.
+    const float REFLECTION_DEPTH = 20.0;
+    vec3 reflectedPos = IN.position + flatR * REFLECTION_DEPTH;
+
+#if REPROJECT_REFLECTION_UV
+    // Project through previous frame's mirrored viewProj
+    // TODO: THis should be stored in a reflection UBO for each plane
+    vec4 prevClip = prevReflectionProjection * vec4(reflectedPos, 1.0);
+    vec2 prevNDC  = prevClip.xy / prevClip.w;
+    vec2 prevUV   = prevNDC * 0.5 + 0.5;
+    vec2 baseUV   = prevUV * prevSceneResolution;
+#else
+    vec2 baseUV = gl_FragCoord.xy;
+#endif
+
+    // Distortion (same as before)
     vec3 flatRhoriz = flatR * vec3(1, 0, 1);
     vec2 distortion = vec2(0);
     if (dot(flatRhoriz, flatRhoriz) > 0.001) {
@@ -57,10 +76,7 @@ vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
         distortion = (R.xz - flatR.xz) * distortionFactor;
     }
 
-    vec2 uv = gl_FragCoord.xy + distortion;
-    uv /= sceneResolution;
-
-    // This will be linear or sRGB depending on the linear alpha blending setting
+    vec2 uv = (baseUV + distortion) / sceneResolution;
     vec3 c = texture(waterReflectionMap, uv).rgb;
 
     #if !LINEAR_ALPHA_BLENDING
