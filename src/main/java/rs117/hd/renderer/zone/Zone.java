@@ -68,7 +68,7 @@ public class Zone implements Destructible {
 	public int glVaoA;
 	public int bufLenA;
 
-	public int sizeO, sizeA, sizeF;
+	public int sizeO, sizeA, sizeF, modelCount;
 	@Nullable
 	public GLBuffer vboO, vboA, vboM;
 	public GLTextureBuffer tboF;

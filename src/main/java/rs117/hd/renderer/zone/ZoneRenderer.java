@@ -1014,7 +1014,7 @@ public class ZoneRenderer implements Renderer {
 			if (z.isVisible(sceneCamera))
 				z.renderOpaque(sceneCmd, ctx, false);
 
-			if(z.isVisible(reflectionCamera))
+			if(z.isVisible(reflectionCamera) && (!z.hasWater || z.modelCount > 1))
 				z.renderOpaque(reflectionCmd, ctx, true);
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
@@ -1069,7 +1069,7 @@ public class ZoneRenderer implements Renderer {
 					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
 				}
 
-				if(z.isVisible(reflectionCamera))
+				if(z.isVisible(reflectionCamera) && (!z.hasWater || z.modelCount > 1))
 					z.renderAlpha(reflectionCmd, zx - offset, zz - offset, level, ctx, true, true);
 
 				if (z.isVisible(sceneCamera))

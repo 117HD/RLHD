@@ -713,6 +713,7 @@ public class SceneUploader implements AutoCloseable {
 			z.sizeA += faceCount;
 		}
 		z.sizeF += faceCount;
+		z.modelCount++;
 	}
 
 	private void uploadZoneRenderable(
