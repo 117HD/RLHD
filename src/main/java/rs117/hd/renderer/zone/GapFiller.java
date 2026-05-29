@@ -1,159 +1,385 @@
 package rs117.hd.renderer.zone;
 
-import java.nio.IntBuffer;
 import javax.annotation.Nullable;
-import lombok.extern.slf4j.Slf4j;
-import org.lwjgl.system.MemoryStack;
-import rs117.hd.utils.Destructible;
-import rs117.hd.utils.RenderState;
-import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.buffer.GLTextureBuffer;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import net.runelite.api.SceneTileModel;
+import net.runelite.api.SceneTilePaint;
+import net.runelite.api.Tile;
+import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.materials.Material;
+import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.UvType;
+import rs117.hd.scene.water_types.WaterType;
+import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
-import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.checkGLErrors;
-import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
+import static net.runelite.api.Constants.CHUNK_SIZE;
+import static net.runelite.api.Constants.EXTENDED_SCENE_SIZE;
+import static net.runelite.api.Constants.SCENE_SIZE;
+import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
+import static org.lwjgl.opengl.GL33C.GL_DEPTH_TEST;
+import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 
-@Slf4j
-public class GapFiller implements Destructible {
-	public int glVao;
-	int vertexCount;
-	int faceCount;
+@Singleton
+public class GapFiller {
+	private static final int TILES_PER_ZONE = CHUNK_SIZE;
 
-	@Nullable
-	GLBuffer vboO;
-	@Nullable
-	GLBuffer vboM;
-	@Nullable
-	GLTextureBuffer tboF;
+	@Inject
+	private MaterialManager materialManager;
 
-	public boolean hasGeometry() {
-		return vertexCount > 0;
+	private Material blackMaterial;
+
+	public void estimateForZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
+		zone.hasGapFiller = false;
+		forEachZoneTile(ctx, mzx, mzz, (area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY) -> {
+			int faces = countTileFaces(ctx, area, extendedTiles, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane);
+			if (faces > 0) {
+				zone.hasGapFiller = true;
+				zone.sizeO += faces;
+				zone.sizeF += faces;
+			}
+		});
 	}
 
-	public void rebuild(SceneUploader uploader, WorldViewContext viewContext, ZoneSceneContext sceneContext) {
-		destroy();
+	public void uploadForZone(
+		SceneUploader uploader,
+		ZoneSceneContext ctx,
+		Zone zone,
+		int mzx,
+		int mzz,
+		GpuIntBuffer vb,
+		GpuIntBuffer fb
+	) {
+		int basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
+		int basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
+		var tileHeights = ctx.scene.getTileHeights();
+		var blackMaterial = getBlackMaterial();
 
-		GpuIntBuffer vb = new GpuIntBuffer();
-		GpuIntBuffer fb = new GpuIntBuffer();
-		try {
-			uploader.fillGaps(sceneContext, vb, fb);
-			vertexCount = vb.position() / (Zone.VERT_SIZE >> 2);
-			faceCount = fb.position() / (Zone.TEXTURE_SIZE >> 2);
-			if (vertexCount == 0)
-				return;
-
-			vb.flip();
-			fb.flip();
-
-			vboO = new GLBuffer("GapFiller::VBO", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
-			vboO.initialize(vertexCount * Zone.VERT_SIZE);
-			vboO.upload(vb);
-
-			tboF = new GLTextureBuffer("GapFiller::TBO", GL_STATIC_DRAW);
-			tboF.initialize(faceCount * Zone.TEXTURE_SIZE);
-			tboF.upload(fb);
-
-			vboM = new GLBuffer("GapFiller::Metadata", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW);
-			vboM.initialize(Zone.METADATA_SIZE);
-
-			glVao = glGenVertexArrays();
-			setupVao(glVao, vboO.id, vboM.id);
-			setMetadata(viewContext);
-		} finally {
-			vb.destroy();
-			fb.destroy();
-		}
+		int posBefore = vb.position();
+		forEachZoneTile(ctx, mzx, mzz, (area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY) -> {
+			uploadTile(
+				uploader,
+				ctx,
+				area,
+				extendedTiles,
+				tileHeights,
+				tileExX,
+				tileExY,
+				sceneMin,
+				sceneMax,
+				baseExX,
+				baseExY,
+				basePlane,
+				blackMaterial,
+				basex,
+				basez,
+				vb,
+				fb
+			);
+		});
+		zone.hasGapFiller = vb.position() > posBefore;
+		zone.levelOffsets[Zone.LEVEL_GAP_FILLER] = vb.position();
 	}
 
-	private void setupVao(int vao, int buffer, int metadata) {
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_SHORT, false, Zone.VERT_SIZE, 0);
-
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, Zone.VERT_SIZE, 8);
-
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_SHORT, false, Zone.VERT_SIZE, 16);
-
-		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, Zone.VERT_SIZE, 24);
-
-		glBindBuffer(GL_ARRAY_BUFFER, metadata);
-
-		glEnableVertexAttribArray(6);
-		glVertexAttribDivisor(6, 1);
-		glVertexAttribIPointer(6, 1, GL_INT, Zone.METADATA_SIZE, 0);
-
-		glEnableVertexAttribArray(7);
-		glVertexAttribDivisor(7, 1);
-		glVertexAttribIPointer(7, 2, GL_INT, Zone.METADATA_SIZE, 4);
-
-		checkGLErrors();
-
-		glBindVertexArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
-	private void setMetadata(WorldViewContext viewContext) {
-		if (vboM == null)
+	public void recordDraws(CommandBuffer cmd, WorldViewContext ctx) {
+		if (!ctx.sceneContext.fillGaps)
 			return;
 
-		try (MemoryStack stack = MemoryStack.stackPush()) {
-			IntBuffer buf = stack.mallocInt(3)
-				.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0)
-				.put(0)
-				.put(0);
-			buf.flip();
-			vboM.upload(buf);
+		cmd.DepthMask(false);
+		cmd.Disable(GL_DEPTH_TEST);
+		for (int x = 0; x < ctx.sizeX; ++x) {
+			for (int z = 0; z < ctx.sizeZ; ++z) {
+				Zone zone = ctx.zones[x][z];
+				if (zone.initialized && zone.hasGapFiller)
+					zone.renderGapFiller(cmd);
+			}
 		}
+		cmd.Enable(GL_DEPTH_TEST);
+		cmd.DepthMask(true);
 	}
 
-	public void renderBeforeScene(RenderState renderState) {
-		if (glVao == 0 || vertexCount == 0)
+	@FunctionalInterface
+	private interface GapTileConsumer {
+		void accept(
+			@Nullable Area area,
+			Tile[][][] extendedTiles,
+			int sceneMin,
+			int sceneMax,
+			int baseExX,
+			int baseExY,
+			int basePlane,
+			int tileExX,
+			int tileExY
+		);
+	}
+
+	private void forEachZoneTile(ZoneSceneContext ctx, int mzx, int mzz, GapTileConsumer consumer) {
+		if (!prepareContext(ctx))
 			return;
 
-		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.depthMask.set(false);
-		renderState.vao.setVao(glVao);
-		renderState.apply();
+		var area = ctx.currentArea;
+		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int baseExX = ctx.sceneBase[0];
+		int baseExY = ctx.sceneBase[1];
+		int basePlane = ctx.sceneBase[2];
+		var extendedTiles = ctx.scene.getExtendedTiles();
 
-		glActiveTexture(TEXTURE_UNIT_TEXTURED_FACES);
-		glBindTexture(GL_TEXTURE_BUFFER, tboF.getTexId());
-		glDrawArrays(GL_TRIANGLES, 0, vertexCount);
-		glBindTexture(GL_TEXTURE_BUFFER, 0);
-
-		renderState.enable.set(GL_DEPTH_TEST);
-		renderState.depthMask.set(true);
-		renderState.apply();
+		for (int xoff = 0; xoff < TILES_PER_ZONE; ++xoff) {
+			for (int zoff = 0; zoff < TILES_PER_ZONE; ++zoff) {
+				int tileExX = (mzx << 3) + xoff + ctx.sceneOffset;
+				int tileExY = (mzz << 3) + zoff + ctx.sceneOffset;
+				consumer.accept(area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY);
+			}
+		}
 	}
 
-	@Override
-	public void destroy() {
-		if (vboO != null) {
-			vboO.destroy();
-			vboO = null;
+	private Material getBlackMaterial() {
+		if (blackMaterial == null)
+			blackMaterial = materialManager.getMaterial("BLACK");
+		return blackMaterial;
+	}
+
+	private boolean prepareContext(ZoneSceneContext ctx) {
+		if (ctx.sceneBase == null)
+			return false;
+
+		resolveCurrentArea(ctx);
+		var area = ctx.currentArea;
+		return area == null || area.fillGaps;
+	}
+
+	private void resolveCurrentArea(ZoneSceneContext ctx) {
+		if (!ctx.enableAreaHiding) {
+			ctx.currentArea = null;
+			return;
 		}
 
-		if (vboM != null) {
-			vboM.destroy();
-			vboM = null;
+		assert ctx.sceneBase != null;
+		var localPlayer = ctx.client.getLocalPlayer();
+		if (localPlayer == null)
+			return;
+
+		var lp = localPlayer.getLocalLocation();
+		int[] worldPos = {
+			ctx.sceneBase[0] + lp.getSceneX(),
+			ctx.sceneBase[1] + lp.getSceneY(),
+			ctx.sceneBase[2] + ctx.client.getTopLevelWorldView().getPlane()
+		};
+
+		if (ctx.currentArea == null || !ctx.currentArea.containsPoint(false, worldPos)) {
+			ctx.currentArea = null;
+			for (var possibleArea : ctx.possibleAreas) {
+				if (possibleArea.containsPoint(false, worldPos)) {
+					ctx.currentArea = possibleArea;
+					break;
+				}
+			}
+		}
+	}
+
+	private int countTileFaces(
+		ZoneSceneContext ctx,
+		@Nullable Area area,
+		Tile[][][] extendedTiles,
+		int tileExX,
+		int tileExY,
+		int sceneMin,
+		int sceneMax,
+		int baseExX,
+		int baseExY,
+		int basePlane
+	) {
+		GapTile gapTile = evaluateTile(ctx, area, extendedTiles, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane);
+		if (!gapTile.shouldFill)
+			return 0;
+		return gapTile.model == null ? 2 : gapTile.model.getFaceX().length;
+	}
+
+	private void uploadTile(
+		SceneUploader uploader,
+		ZoneSceneContext ctx,
+		@Nullable Area area,
+		Tile[][][] extendedTiles,
+		int[][][] tileHeights,
+		int tileExX,
+		int tileExY,
+		int sceneMin,
+		int sceneMax,
+		int baseExX,
+		int baseExY,
+		int basePlane,
+		Material blackMaterial,
+		int basex,
+		int basez,
+		GpuIntBuffer vb,
+		GpuIntBuffer fb
+	) {
+		GapTile gapTile = evaluateTile(ctx, area, extendedTiles, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane);
+		if (!gapTile.shouldFill)
+			return;
+
+		if (gapTile.model == null) {
+			uploadCustomTile(
+				tileHeights,
+				tileExX,
+				tileExY,
+				gapTile.renderLevel,
+				blackMaterial,
+				gapTile.tileX,
+				gapTile.tileY,
+				basex,
+				basez,
+				vb,
+				fb
+			);
+		} else if (gapTile.tile != null) {
+			uploader.uploadGapTileModel(
+				ctx,
+				gapTile.tile,
+				gapTile.model,
+				tileExX,
+				tileExY,
+				gapTile.tileX,
+				gapTile.tileY,
+				basex,
+				basez,
+				vb,
+				fb
+			);
+		}
+	}
+
+	private static final class GapTile {
+		boolean shouldFill;
+		@Nullable Tile tile;
+		@Nullable SceneTileModel model;
+		int renderLevel;
+		int tileX;
+		int tileY;
+	}
+
+	private GapTile evaluateTile(
+		ZoneSceneContext ctx,
+		@Nullable Area area,
+		Tile[][][] extendedTiles,
+		int tileExX,
+		int tileExY,
+		int sceneMin,
+		int sceneMax,
+		int baseExX,
+		int baseExY,
+		int basePlane
+	) {
+		GapTile gapTile = new GapTile();
+		if (tileExX < 0 || tileExY < 0 ||
+			tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
+			return gapTile;
+
+		if (area != null && !area.containsPoint(baseExX + tileExX, baseExY + tileExY, basePlane))
+			return gapTile;
+
+		gapTile.tileX = tileExX - ctx.sceneOffset;
+		gapTile.tileY = tileExY - ctx.sceneOffset;
+		Tile tile = extendedTiles[0][tileExX][tileExY];
+
+		SceneTilePaint paint;
+		SceneTileModel model = null;
+		int renderLevel = 0;
+		if (tile != null) {
+			renderLevel = tile.getRenderLevel();
+			paint = tile.getSceneTilePaint();
+			model = tile.getSceneTileModel();
+
+			if (model == null) {
+				boolean hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
+				if (!hasTilePaint) {
+					tile = tile.getBridge();
+					if (tile != null) {
+						renderLevel = tile.getRenderLevel();
+						paint = tile.getSceneTilePaint();
+						model = tile.getSceneTileModel();
+						hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
+					}
+				}
+
+				if (hasTilePaint)
+					return gapTile;
+			}
 		}
 
-		if (tboF != null) {
-			tboF.destroy();
-			tboF = null;
+		int[] worldPoint = ctx.sceneToWorld(gapTile.tileX, gapTile.tileY, 0);
+		boolean shouldFill =
+			gapTile.tileX > sceneMin &&
+			gapTile.tileY > sceneMin &&
+			gapTile.tileX < sceneMax - 1 &&
+			gapTile.tileY < sceneMax - 1 &&
+			Area.OVERWORLD.containsPoint(worldPoint);
+
+		if (shouldFill) {
+			int tileRegionID = HDUtils.worldToRegionID(worldPoint);
+			int[] regions = ctx.client.getMapRegions();
+
+			shouldFill = false;
+			for (int region : regions) {
+				if (region == tileRegionID) {
+					shouldFill = true;
+					break;
+				}
+			}
 		}
 
-		if (glVao != 0) {
-			glDeleteVertexArrays(glVao);
-			glVao = 0;
-		}
+		if (!shouldFill)
+			return gapTile;
 
-		vertexCount = 0;
-		faceCount = 0;
+		// Custom gap tiles sample heights at tileExX+1/tileExY+1
+		if (model == null && (tileExX >= EXTENDED_SCENE_SIZE - 1 || tileExY >= EXTENDED_SCENE_SIZE - 1))
+			return gapTile;
+
+		gapTile.shouldFill = true;
+		gapTile.tile = tile;
+		gapTile.model = model;
+		gapTile.renderLevel = renderLevel;
+		return gapTile;
+	}
+
+	private void uploadCustomTile(
+		int[][][] tileHeights,
+		int tileExX,
+		int tileExY,
+		int tileZ,
+		Material material,
+		int tileX,
+		int tileY,
+		int zoneBasex,
+		int zoneBasez,
+		GpuIntBuffer vb,
+		GpuIntBuffer fb
+	) {
+		int swHeight = tileHeights[tileZ][tileExX][tileExY];
+		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
+		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
+		int nwHeight = tileHeights[tileZ][tileExX][tileExY + 1];
+
+		int terrainData = HDUtils.packTerrainData(true, 0, WaterType.NONE, tileZ);
+		int packedMaterialData = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+
+		int baseX = tileX * LOCAL_TILE_SIZE - zoneBasex;
+		int baseZ = tileY * LOCAL_TILE_SIZE - zoneBasez;
+
+		int texturedFaceIdx = fb.putFace(0, 0, 0, packedMaterialData, packedMaterialData, packedMaterialData, terrainData, terrainData, terrainData);
+
+		vb.putVertex(baseX + LOCAL_TILE_SIZE, neHeight, baseZ + LOCAL_TILE_SIZE, 0, 0, 0, 0, -1, 0, texturedFaceIdx);
+		vb.putVertex(baseX, nwHeight, baseZ + LOCAL_TILE_SIZE, 1, 0, 0, 0, -1, 0, texturedFaceIdx);
+		vb.putVertex(baseX + LOCAL_TILE_SIZE, seHeight, baseZ, 0, 1, 0, 0, -1, 0, texturedFaceIdx);
+
+		texturedFaceIdx = fb.putFace(0, 0, 0, packedMaterialData, packedMaterialData, packedMaterialData, terrainData, terrainData, terrainData);
+
+		vb.putVertex(baseX, swHeight, baseZ, 1, 1, 0, 0, -1, 0, texturedFaceIdx);
+		vb.putVertex(baseX + LOCAL_TILE_SIZE, seHeight, baseZ, 0, 1, 0, 0, -1, 0, texturedFaceIdx);
+		vb.putVertex(baseX, nwHeight, baseZ + LOCAL_TILE_SIZE, 1, 0, 0, 0, -1, 0, texturedFaceIdx);
 	}
 }

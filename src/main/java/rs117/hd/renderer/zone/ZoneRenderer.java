@@ -143,6 +143,9 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
+	@Inject
+	private GapFiller gapFiller;
+
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
@@ -615,6 +618,9 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.reset();
 		renderState.reset();
 
+		if (sceneManager.isTopLevelValid())
+			gapFiller.recordDraws(sceneCmd, sceneManager.getRoot());
+
 		eboAlpha.orphan();
 		eboAlphaWriter.map(true);
 
@@ -781,10 +787,6 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-
-		if (sceneManager.isTopLevelValid()) {
-			sceneManager.getRoot().gapFiller.renderBeforeScene(renderState);
-		}
 
 		sceneCmd.execute();
 

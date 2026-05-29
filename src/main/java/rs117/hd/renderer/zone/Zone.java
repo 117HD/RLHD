@@ -59,6 +59,8 @@ public class Zone implements Destructible {
 	public static final int METADATA_SIZE = 12;
 
 	public static final int LEVEL_WATER_SURFACE = 4;
+	public static final int LEVEL_GAP_FILLER = 5;
+	public static final int NUM_LEVEL_OFFSETS = LEVEL_GAP_FILLER + 1;
 
 	public int glVao;
 	int bufLen;
@@ -79,6 +81,7 @@ public class Zone implements Destructible {
 	public boolean dirty; // whether the zone has temporary modifications
 	public boolean hasWater; // whether the zone has any water tiles
 	public boolean onlyWater; // whether the zone only contains water tiles
+	public boolean hasGapFiller; // whether the zone has any gap filler geometry
 	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean isFirstLoadingAttempt = true;
@@ -88,7 +91,7 @@ public class Zone implements Destructible {
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
 
-	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
+	int[] levelOffsets = new int[NUM_LEVEL_OFFSETS]; // buffer pos in ints for the end of the level
 
 	int[][] rids;
 	int[][] roofStart;
@@ -188,6 +191,7 @@ public class Zone implements Destructible {
 		cull = false;
 		hasWater = false;
 		onlyWater = false;
+		hasGapFiller = false;
 		inSceneFrustum = false;
 		inShadowFrustum = false;
 
@@ -373,6 +377,12 @@ public class Zone implements Destructible {
 		lastVao = glVao;
 		lastTboF = tboF.getTexId();
 		flush(cmd);
+	}
+
+	void renderGapFiller(CommandBuffer cmd) {
+		if (!hasGapFiller || levelOffsets[LEVEL_GAP_FILLER] <= levelOffsets[LEVEL_WATER_SURFACE])
+			return;
+		renderOpaqueLevel(cmd, LEVEL_GAP_FILLER);
 	}
 
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {

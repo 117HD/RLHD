@@ -372,11 +372,7 @@ public class SceneManager {
 	@Getter
 	private final GenericJob generateSceneDataTask = GenericJob.build(
 		"ProceduralGenerator::generateSceneData",
-		task -> {
-			SceneContext ctx = nextSceneContext != null ? nextSceneContext : root.sceneContext;
-			if (ctx != null)
-				proceduralGenerator.ensureSceneData(ctx);
-		}
+		(task) -> proceduralGenerator.generateSceneData(nextSceneContext != null ? nextSceneContext : root.sceneContext)
 	);
 
 	@Getter
@@ -689,15 +685,6 @@ public class SceneManager {
 		}
 
 		root.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS) - sceneUploadTimeStart;
-
-		if (nextSceneContext.fillGaps) {
-			try (SceneUploader sceneUploader = SceneUploader.POOL.acquire()) {
-				sceneUploader.setScene(scene);
-				root.gapFiller.rebuild(sceneUploader, root, nextSceneContext);
-			}
-		} else {
-			root.gapFiller.destroy();
-		}
 
 		log.debug(
 			"upload time {} reused {} deferred {} map {} sceneLoad {} len opaque {} size opaque {} KiB len alpha {} size alpha {} KiB",
