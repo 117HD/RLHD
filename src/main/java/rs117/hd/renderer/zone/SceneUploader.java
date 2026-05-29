@@ -36,6 +36,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
@@ -2008,8 +2009,10 @@ public class SceneUploader implements AutoCloseable {
 
 	// temp draw
 	public void uploadTempModel(
+		SceneContext ctx,
 		PrimitiveIntArray faces,
 		Model model,
+		TileObject tileObject,
 		ModelOverride modelOverride,
 		int preOrientation,
 		int orientation,
@@ -2057,6 +2060,28 @@ public class SceneUploader implements AutoCloseable {
 		final byte overrideLum = model.getOverrideLuminance();
 
 		final boolean isVanillaTextured = faceTextures != null;
+
+
+		final int plane = tileObject.getPlane();
+		final int tileExX = (tileObject.getX() >> Perspective.LOCAL_COORD_BITS) + ctx.sceneOffset;
+		final int tileExY = (tileObject.getY() >> Perspective.LOCAL_COORD_BITS) + ctx.sceneOffset;
+
+		final int terrainData;
+		if (0 <= tileExX && tileExX < Constants.EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < Constants.EXTENDED_SCENE_SIZE) {
+			final Tile tile = ctx.scene.getExtendedTiles()[plane][tileExX][tileExY];
+			final SceneTilePaint tilePaint = tile.getSceneTilePaint();
+
+			if(tilePaint != null) {
+				TileOverride tileOverride = tileOverrideManager.getOverride(ctx, tile, worldPos);
+				WaterType waterType = proceduralGenerator.seasonalWaterType(tileOverride, tilePaint.getTexture());
+
+				terrainData = HDUtils.packTerrainData(false, 0, waterType, tile.getRenderLevel());
+			} else {
+				terrainData = 0;
+			}
+		} else {
+			terrainData = 0;
+		}
 
 		int orientSin = 0;
 		int orientCos = 0;
@@ -2179,7 +2204,7 @@ public class SceneUploader implements AutoCloseable {
 			final int texturedFaceIdx = tb.putFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
-				0, 0, 0
+				terrainData, terrainData, terrainData
 			);
 
 			vb.putVertex(

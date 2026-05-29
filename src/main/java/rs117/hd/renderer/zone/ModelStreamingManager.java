@@ -341,8 +341,10 @@ public class ModelStreamingManager {
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
+					ctx.sceneContext,
 					culledFaces,
 					m,
+					gameObject,
 					modelOverride,
 					preOrientation,
 					orientation,
@@ -364,8 +366,10 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
+					ctx.sceneContext,
 					visibleFaces,
 					m,
+					gameObject,
 					modelOverride,
 					preOrientation,
 					orientation,
@@ -604,8 +608,10 @@ public class ModelStreamingManager {
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
+					ctx.sceneContext,
 					culledFaces,
 					m,
+					tileObject,
 					modelOverride,
 					preOrientation,
 					orient,
@@ -624,8 +630,10 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
+					ctx.sceneContext,
 					visibleFaces,
 					m,
+					tileObject,
 					modelOverride,
 					preOrientation,
 					orient,
