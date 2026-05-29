@@ -457,6 +457,7 @@ public class SceneManager {
 			Scene prev = client.getTopLevelWorldView().getScene();
 
 			nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
+			nextSceneContext.fillGaps = config.fillGapsInTerrain();
 
 			if (nextSceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 				nextSceneContext.isInHouse = true;
@@ -683,6 +684,16 @@ public class SceneManager {
 		}
 
 		root.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS) - sceneUploadTimeStart;
+
+		if (nextSceneContext.fillGaps) {
+			try (SceneUploader sceneUploader = SceneUploader.POOL.acquire()) {
+				sceneUploader.setScene(scene);
+				root.gapFiller.rebuild(sceneUploader, root, nextSceneContext);
+			}
+		} else {
+			root.gapFiller.destroy();
+		}
+
 		log.debug(
 			"upload time {} reused {} deferred {} map {} sceneLoad {} len opaque {} size opaque {} KiB len alpha {} size alpha {} KiB",
 			TimeUnit.MILLISECONDS.convert(root.uploadTime, TimeUnit.NANOSECONDS),

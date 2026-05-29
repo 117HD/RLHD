@@ -782,10 +782,12 @@ public class ZoneRenderer implements Renderer {
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
-		// Render the scene
+		if (sceneManager.isTopLevelValid()) {
+			sceneManager.getRoot().gapFiller.renderBeforeScene(renderState);
+		}
+
 		sceneCmd.execute();
 
-		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
 
 		glBindVertexArray(0);

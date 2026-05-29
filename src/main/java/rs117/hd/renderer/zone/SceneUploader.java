@@ -36,6 +36,7 @@ import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
@@ -51,6 +52,8 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.CHUNK_SIZE;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.renderer.zone.FacePrioritySorter.MAX_FACE_COUNT;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
@@ -493,7 +496,7 @@ public class SceneUploader implements AutoCloseable {
 
 		SceneTileModel model = t.getSceneTileModel();
 		if (model != null && drawTile)
-			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
+			uploadTileModel(ctx, t, model, onlyWaterSurface, false, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
 
 		if (!onlyWaterSurface)
 			uploadZoneTileRenderables(ctx, zone, t, vertexBuffer, alphaBuffer, textureBuffer);
@@ -1062,6 +1065,7 @@ public class SceneUploader implements AutoCloseable {
 		Tile tile,
 		SceneTileModel model,
 		boolean onlyWaterSurface,
+		boolean onlyGapFillFaces,
 		int tileExX, int tileExY, int tileZ,
 		int basex, int basez,
 		GpuIntBuffer vb,
@@ -1088,7 +1092,8 @@ public class SceneUploader implements AutoCloseable {
 		if (onlyWaterSurface && !isFallbackWater && !isOverlayWater && !isUnderlayWater)
 			return;
 
-		ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
+		if (!onlyGapFillFaces)
+			ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
 
 		final int[] faceX = model.getFaceX();
 		final int[] faceY = model.getFaceY();
@@ -1112,8 +1117,14 @@ public class SceneUploader implements AutoCloseable {
 			int colorA = triangleColorA[face];
 			int colorB = triangleColorB[face];
 			int colorC = triangleColorC[face];
-			if (colorA == HIDDEN_HSL)
+			boolean isHidden = colorA == HIDDEN_HSL;
+			if (onlyGapFillFaces) {
+				if (!isHidden)
+					continue;
+				colorA = colorB = colorC = 0;
+			} else if (isHidden) {
 				continue;
+			}
 
 			int textureId = triangleTextures == null ? -1 : triangleTextures[face];
 			boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
@@ -2310,6 +2321,172 @@ public class SceneUploader implements AutoCloseable {
 		nz = normals[8];
 		normals[6] = (nz * orientSin + nx * orientCos) >> 16;
 		normals[8] = (nz * orientCos - nx * orientSin) >> 16;
+	}
+
+	public void fillGaps(ZoneSceneContext ctx, GpuIntBuffer vb, GpuIntBuffer fb) {
+		if (ctx.sceneBase == null)
+			return;
+
+		resolveCurrentArea(ctx);
+
+		var area = ctx.currentArea;
+		if (area != null && !area.fillGaps)
+			return;
+
+		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int baseExX = ctx.sceneBase[0];
+		int baseExY = ctx.sceneBase[1];
+		int basePlane = ctx.sceneBase[2];
+		Material blackMaterial = materialManager.getMaterial("BLACK");
+
+		Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
+		for (int tileZ = 0; tileZ < MAX_Z; ++tileZ) {
+			for (int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; ++tileExX) {
+				for (int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; ++tileExY) {
+					if (area != null && !area.containsPoint(baseExX + tileExX, baseExY + tileExY, basePlane + tileZ))
+						continue;
+
+					int tileX = tileExX - ctx.sceneOffset;
+					int tileY = tileExY - ctx.sceneOffset;
+					Tile tile = extendedTiles[tileZ][tileExX][tileExY];
+
+					SceneTilePaint paint;
+					SceneTileModel model = null;
+					int renderLevel = tileZ;
+					if (tile != null) {
+						renderLevel = tile.getRenderLevel();
+						paint = tile.getSceneTilePaint();
+						model = tile.getSceneTileModel();
+
+						if (model == null) {
+							boolean hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
+							if (!hasTilePaint) {
+								tile = tile.getBridge();
+								if (tile != null) {
+									renderLevel = tile.getRenderLevel();
+									paint = tile.getSceneTilePaint();
+									model = tile.getSceneTileModel();
+									hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
+								}
+							}
+
+							if (hasTilePaint)
+								continue;
+						}
+					}
+
+					int[] worldPoint = ctx.sceneToWorld(tileX, tileY, tileZ);
+					boolean shouldFill =
+						tileZ == 0 &&
+						tileX > sceneMin &&
+						tileY > sceneMin &&
+						tileX < sceneMax - 1 &&
+						tileY < sceneMax - 1 &&
+						Area.OVERWORLD.containsPoint(worldPoint);
+
+					if (shouldFill) {
+						int tileRegionID = HDUtils.worldToRegionID(worldPoint);
+						int[] regions = ctx.client.getMapRegions();
+
+						shouldFill = false;
+						for (int region : regions) {
+							if (region == tileRegionID) {
+								shouldFill = true;
+								break;
+							}
+						}
+					}
+
+					if (!shouldFill)
+						continue;
+
+					if (model == null) {
+						uploadCustomGapTile(ctx, tileExX, tileExY, renderLevel, blackMaterial, tileX, tileY, vb, fb);
+					} else if (tile != null) {
+						ctx.sceneToWorld(tileX, tileY, tileZ, worldPos);
+						uploadTileModel(
+							ctx,
+							tile,
+							model,
+							false,
+							true,
+							tileExX,
+							tileExY,
+							tileZ,
+							0,
+							0,
+							vb,
+							fb
+						);
+					}
+				}
+			}
+		}
+	}
+
+	private void resolveCurrentArea(ZoneSceneContext ctx) {
+		if (!ctx.enableAreaHiding) {
+			ctx.currentArea = null;
+			return;
+		}
+
+		assert ctx.sceneBase != null;
+		var localPlayer = ctx.client.getLocalPlayer();
+		if (localPlayer == null)
+			return;
+
+		var lp = localPlayer.getLocalLocation();
+		int[] worldPos = {
+			ctx.sceneBase[0] + lp.getSceneX(),
+			ctx.sceneBase[1] + lp.getSceneY(),
+			ctx.sceneBase[2] + ctx.client.getTopLevelWorldView().getPlane()
+		};
+
+		if (ctx.currentArea == null || !ctx.currentArea.containsPoint(false, worldPos)) {
+			ctx.currentArea = null;
+			for (var possibleArea : ctx.possibleAreas) {
+				if (possibleArea.containsPoint(false, worldPos)) {
+					ctx.currentArea = possibleArea;
+					break;
+				}
+			}
+		}
+	}
+
+	private void uploadCustomGapTile(
+		ZoneSceneContext ctx,
+		int tileExX,
+		int tileExY,
+		int tileZ,
+		Material material,
+		int tileX,
+		int tileY,
+		GpuIntBuffer vb,
+		GpuIntBuffer fb
+	) {
+		int swHeight = tileHeights[tileZ][tileExX][tileExY];
+		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
+		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
+		int nwHeight = tileHeights[tileZ][tileExX][tileExY + 1];
+
+		int terrainData = HDUtils.packTerrainData(true, 0, WaterType.NONE, tileZ);
+		int packedMaterialData = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+
+		int baseX = tileX * LOCAL_TILE_SIZE;
+		int baseZ = tileY * LOCAL_TILE_SIZE;
+
+		int texturedFaceIdx = fb.putFace(0, 0, 0, packedMaterialData, packedMaterialData, packedMaterialData, terrainData, terrainData, terrainData);
+
+		vb.putVertex(baseX + LOCAL_TILE_SIZE, neHeight, baseZ + LOCAL_TILE_SIZE, 0, 0, 0, 0, -1, 0, texturedFaceIdx);
+		vb.putVertex(baseX, nwHeight, baseZ + LOCAL_TILE_SIZE, 1, 0, 0, 0, -1, 0, texturedFaceIdx);
+		vb.putVertex(baseX + LOCAL_TILE_SIZE, seHeight, baseZ, 0, 1, 0, 0, -1, 0, texturedFaceIdx);
+
+		texturedFaceIdx = fb.putFace(0, 0, 0, packedMaterialData, packedMaterialData, packedMaterialData, terrainData, terrainData, terrainData);
+
+		vb.putVertex(baseX, swHeight, baseZ, 1, 1, 0, 0, -1, 0, texturedFaceIdx);
+		vb.putVertex(baseX + LOCAL_TILE_SIZE, seHeight, baseZ, 0, 1, 0, 0, -1, 0, texturedFaceIdx);
+		vb.putVertex(baseX, nwHeight, baseZ + LOCAL_TILE_SIZE, 1, 0, 0, 0, -1, 0, texturedFaceIdx);
 	}
 
 	@Override
