@@ -130,8 +130,8 @@ public class GapFiller {
 
 		for (int xoff = 0; xoff < TILES_PER_ZONE; ++xoff) {
 			for (int zoff = 0; zoff < TILES_PER_ZONE; ++zoff) {
-				int tileExX = (mzx << 3) + xoff + ctx.sceneOffset;
-				int tileExY = (mzz << 3) + zoff + ctx.sceneOffset;
+				int tileExX = (mzx << 3) + xoff;
+				int tileExY = (mzz << 3) + zoff;
 				consumer.accept(area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY);
 			}
 		}
@@ -279,11 +279,12 @@ public class GapFiller {
 			tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
 			return gapTile;
 
-		if (area != null && !area.containsPoint(baseExX + tileExX, baseExY + tileExY, basePlane))
-			return gapTile;
-
 		gapTile.tileX = tileExX - ctx.sceneOffset;
 		gapTile.tileY = tileExY - ctx.sceneOffset;
+
+		if (area != null && !area.containsPoint(baseExX + gapTile.tileX, baseExY + gapTile.tileY, basePlane))
+			return gapTile;
+
 		Tile tile = extendedTiles[0][tileExX][tileExY];
 
 		SceneTilePaint paint;
@@ -321,7 +322,7 @@ public class GapFiller {
 
 		if (shouldFill) {
 			int tileRegionID = HDUtils.worldToRegionID(worldPoint);
-			int[] regions = ctx.client.getMapRegions();
+			int[] regions = ctx.scene.getMapRegions();
 
 			shouldFill = false;
 			for (int region : regions) {
@@ -330,6 +331,10 @@ public class GapFiller {
 					break;
 				}
 			}
+
+			if (!shouldFill && ctx.expandedMapLoadingChunks > 0)
+				shouldFill = true;
+
 		}
 
 		if (!shouldFill)
