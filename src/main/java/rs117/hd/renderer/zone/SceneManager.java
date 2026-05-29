@@ -36,6 +36,7 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
+import rs117.hd.scene.SceneContext;
 import rs117.hd.utils.jobs.GenericJob;
 
 import static net.runelite.api.Constants.*;
@@ -371,7 +372,11 @@ public class SceneManager {
 	@Getter
 	private final GenericJob generateSceneDataTask = GenericJob.build(
 		"ProceduralGenerator::generateSceneData",
-		(task) -> proceduralGenerator.generateSceneData(nextSceneContext != null ? nextSceneContext : root.sceneContext)
+		task -> {
+			SceneContext ctx = nextSceneContext != null ? nextSceneContext : root.sceneContext;
+			if (ctx != null)
+				proceduralGenerator.ensureSceneData(ctx);
+		}
 	);
 
 	@Getter

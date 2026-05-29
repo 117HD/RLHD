@@ -2327,6 +2327,8 @@ public class SceneUploader implements AutoCloseable {
 		if (ctx.sceneBase == null)
 			return;
 
+		proceduralGenerator.ensureSceneData(ctx);
+
 		resolveCurrentArea(ctx);
 
 		var area = ctx.currentArea;
