@@ -2574,7 +2574,9 @@
       "BRAIN_ROCK_POOL_BITS",
       "FAIRYTALE2_ROCK_POOL_SMALL",
       "STALKER_DEN_STEPPING_STONE",
-      "FRISD_IZSO_ROCK_POOL_SMALL"
+      "FRISD_IZSO_ROCK_POOL_SMALL",
+      "POLLI_STEPPING_STONE",
+      "BCS_STEPPING_STONE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -12834,7 +12836,6 @@
     "objectIds": [
       "RIMMINGTON_WOODEN_TABLE",
       "RIMMINGTON_SMALL_WOODEN_TABLE",
-      "ELID_WOODEN_TABLE",
       "FAI_WIZTOWER_WOODEN_TABLE_SMALL",
       "WILD_TABLE",
       "AIDE_WOODEN_TABLE",
@@ -19786,7 +19787,6 @@
       "FARMING_CHAIR",
       "RIMMINGTON_CHAIR",
       "ELID_CHAIR1",
-      "ELID_CHAIR2",
       "DRAYNOR_CHAIR",
       "BURGH_CHAIR1",
       "FISHING_CONTEST_CHAIR",
@@ -21735,7 +21735,7 @@
   },
   {
     "description": "Nardah Sophanem - Walls - Rock",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_DARK",
     "objectIds": [
       "ICTHALARINS_EXTERIOR_WALL",
       "ICTHALARINS_EXTERIOR_WALL_LVL2",
@@ -21748,11 +21748,12 @@
       "ICTHALARINS_WINDOW"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "flatNormals": false
   },
   {
     "description": "Nardah Walls - Flipped",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_DARK",
     "objectIds": [
       "ICTHALARINS_DOOR_ARCH",
       "ICTHALARINS_DOOR_ARCH_MIRROR"
@@ -21762,7 +21763,8 @@
   },
   {
     "description": "Nardah Walls Rubble",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "undoVanillaShading": false,
     "objectIds": [
       "ELID_PILE_BICKS"
     ],
@@ -21771,24 +21773,26 @@
   },
   {
     "description": "Nardah - Cart and Water Barrels",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "ELID_CART_WATER",
       "ELID_WATERBARREL"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
+    "uvOrientation": 512,
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "STONE_NORMALED_VERY_DARK",
         "uvType": "BOX",
         "uvScale": 0.6
       },
       {
         "colors": "h == 37",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
-        "uvType": "MODEL_XZ"
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
       }
     ]
   },
@@ -21811,6 +21815,27 @@
         "uvScale": 0.2
       }
     ]
+  },
+  {
+    "description": "Nardah - Table with Key",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "ELID_WOODEN_TABLE"
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Nardah - Chair - No cushion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "ELID_CHAIR1",
+      "ELID_CHAIR2"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.6
   },
   {
     "description": "Potted Plants",
@@ -21972,14 +21997,18 @@
     "description": "Nardah - Eldinis Statue",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.6,
+    "undoVanillaShading": false,
     "objectIds": [
+      "ELID_STATUETTE_BASE",
       "ELID_STATUETTE_PLACED"
     ],
     "colorOverrides": [
       {
         "colors": "h == 6",
-        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+        "baseMaterial": "SMOOTH_STONE_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -22495,7 +22524,7 @@
     "objectIds": [
       "ELID_STONE_PEW"
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Nardah Clay Oven",
@@ -49712,6 +49741,8 @@
       "CANAFIS_BOOKSHELF_OLD_SHORT3"
     ],
     "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
     "colorOverrides": [
       {
         "description": "Paper",
