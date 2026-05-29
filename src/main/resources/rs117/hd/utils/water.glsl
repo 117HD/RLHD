@@ -89,6 +89,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
 
     // Ignore refraction for the underwater position, since it would require computing a quartic equation
     vec3 fragPos = IN.position;
+    float fragDist = length(fragPos - cameraPos);
     vec3 underwaterNormal = normalize(IN.normal);
     vec3 surfaceNormal = vec3(0, -1, 0); // Assume a flat surface
 
@@ -265,31 +266,34 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
             distortion = uvFlow * .001 * (1 - exp(-.01 * depth));
         }
 
+        const float SHADOW_FALLBACK_DIST = 8192.0;
+        const float SHADOW_FALLBACK_BLEND = 512.0;
+        float fallbackWeight = saturate((fragDist - SHADOW_FALLBACK_DIST) / SHADOW_FALLBACK_BLEND);
         float shadow = 0.0;
-        #if 0 // TODO: Could be a lower quality fallback, but the perf difference seems negligable
-        shadow = sampleShadowMap(surfaceSunPos, distortion, dot(-sunDir, underwaterNormal));
-        #else
-        // Calculate optical depth using relative luminance to avoid over bluring
-        float opticalDepth = dot(sigma_t, vec3(0.2126, 0.7152, 0.0722)) * sunToFragDist;
+        if(fallbackWeight < 1.0) {
+            // Calculate optical depth using relative luminance to avoid over bluring
+            float opticalDepth = dot(sigma_t, vec3(0.2126, 0.7152, 0.0722)) * sunToFragDist;
 
-        // Blur radius in shadow map UV space
-        const float SHADOW_MAX_BLUR = 0.009;
-        const float SHADOW_BLUR_OPTICAL_DEPTH_INV = 1.0 / 6.0;
-        float blurRadius = SHADOW_MAX_BLUR * saturate(opticalDepth * SHADOW_BLUR_OPTICAL_DEPTH_INV);
+            // Blur radius in shadow map UV space
+            const float SHADOW_MAX_BLUR = 0.009;
+            const float SHADOW_BLUR_OPTICAL_DEPTH_INV = 1.0 / 6.0;
+            float blurRadius = SHADOW_MAX_BLUR * saturate(opticalDepth * SHADOW_BLUR_OPTICAL_DEPTH_INV);
 
-        // Rotate the Poisson disk per fragment to break up repeated patterns.
-        float angle = noise * 2.0 * PI;
-        float s = sin(angle);
-        float c = cos(angle);
-        mat2 rot = mat2(c, -s, s, c);
+            // Rotate the Poisson disk per fragment to break up repeated patterns.
+            float angle = noise * 2.0 * PI;
+            float s = sin(angle);
+            float c = cos(angle);
+            mat2 rot = mat2(c, -s, s, c);
 
-        int numSamples = 1 + int(floor(float(POISSON_DISK_LENGTH - 1) * saturate(opticalDepth * SHADOW_BLUR_OPTICAL_DEPTH_INV)));
-        for (int i = 0; i < numSamples; i++) {
-            vec2 offset = rot * getPoissonDisk(i) * blurRadius;
-            shadow += sampleShadowMap(surfaceSunPos, distortion + offset, dot(-sunDir, underwaterNormal));
+            int numSamples = 1 + int(floor(float(POISSON_DISK_LENGTH - 1) * saturate(opticalDepth * SHADOW_BLUR_OPTICAL_DEPTH_INV)));
+            for (int i = 0; i < numSamples; i++) {
+                vec2 offset = rot * getPoissonDisk(i) * blurRadius;
+                shadow += sampleShadowMap(surfaceSunPos, distortion + offset, dot(-sunDir, underwaterNormal));
+            }
+            shadow /= float(numSamples);
+        } else {
+            shadow = sampleShadowMap(surfaceSunPos, distortion, dot(-sunDir, underwaterNormal));
         }
-        shadow /= float(numSamples);
-        #endif
 
         // Apply shadow to directional light
         L_directional *= 1.0 - shadow;
