@@ -76,16 +76,6 @@ public class ProceduralGenerator {
 	@Inject
 	private WaterTypeManager waterTypeManager;
 
-	public void ensureSceneData(SceneContext sceneContext) {
-		if (sceneContext.vertexTerrainNormals != null)
-			return;
-		synchronized (sceneContext) {
-			if (sceneContext.vertexTerrainNormals != null)
-				return;
-			generateSceneData(sceneContext);
-		}
-	}
-
 	public void generateSceneData(SceneContext sceneContext)
 	{
 		long timerTotal = System.currentTimeMillis();

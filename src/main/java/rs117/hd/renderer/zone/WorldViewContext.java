@@ -70,7 +70,6 @@ public class WorldViewContext {
 
 	CommandBuffer vaoSceneCmd;
 	CommandBuffer vaoDirectionalCmd;
-	final GapFiller gapFiller = new GapFiller();
 	final DynamicModelVAO[][] dynamicModelVaos = new DynamicModelVAO[FRAMES_IN_FLIGHT][VAO_COUNT];
 
 	public long loadTime;
@@ -299,8 +298,6 @@ public class WorldViewContext {
 		if (vboM != null)
 			vboM.destroy();
 		vboM = null;
-
-		gapFiller.destroy();
 
 		isLoading = true;
 	}
