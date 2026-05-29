@@ -136,12 +136,6 @@ void main() {
         #endif
     }
 
-    if (RENDER_PASS == RENDER_PASS_WATER_REFLECTION) {
-        // Discard underwater geometry so it doesn't appear in the reflection
-        if (IN.position.y > waterHeight)
-            discard;
-    }
-
     if (RENDER_PASS != RENDER_PASS_WATER) {
         vec2 uv = IN.uv;
 

@@ -25,6 +25,8 @@
  */
 #version 330
 
+#include RENDER_PASS
+
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 
@@ -111,6 +113,9 @@ layout (location = 0) in vec3 vPosition;
             clipPosition.z += depthBias / 128.0;
 
         gl_Position = clipPosition;
+#if RENDER_PASS == RENDER_PASS_WATER_REFLECTION
+        gl_ClipDistance[0] = dot(vec4(worldPosition, 1.0), vec4(0, -1, 0, waterHeight));
+#endif
     }
 #else
     out vec3 gPosition;

@@ -834,10 +834,9 @@ public class ZoneRenderer implements Renderer {
 		renderState.disable.set(GL_CULL_FACE);
 
 		renderState.enable.set(GL_DEPTH_TEST);
-		// With LEQUAL, the insides of paper thin walls are visible from the outside
-		renderState.depthFunc.set(GL_GEQUAL);
-
 		renderState.enable.set(GL_BLEND);
+		renderState.enable.set(GL_CLIP_DISTANCE0);
+		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 		reflectionCmd.execute();
@@ -851,7 +850,8 @@ public class ZoneRenderer implements Renderer {
 
 		// Reset everything back to the main pass' state
 		renderState.disable.set(GL_DEPTH_TEST);
-		renderState.enable.set(GL_CULL_FACE);
+		renderState.disable.set(GL_CLIP_DISTANCE0);
+		renderState.disable.set(GL_CULL_FACE);
 
 		frameTimer.end(Timer.RENDER_REFLECTIONS);
 	}
@@ -1274,7 +1274,9 @@ public class ZoneRenderer implements Renderer {
 
 				log.error("Unable to swap buffers:", ex);
 			}
-			reflectionPass();
+
+			if(shouldRenderScene)
+				reflectionPass();
 
 			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
