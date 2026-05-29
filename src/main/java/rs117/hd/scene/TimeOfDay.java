@@ -17,7 +17,9 @@ public class TimeOfDay
 	// Static variables to maintain cycle state across config changes
 	private static float lastDayLength = MINUTES_PER_DAY;
 	private static long lastUpdateTime = 0;
-	private static double accumulatedCycleTime = 0.0;
+	// Start the dynamic cycle at midday. cyclePosition 0.35 maps to 12:00pm
+	// in getModifiedDate()'s afternoon range (0.35-0.55 -> 12pm-5pm).
+	private static double accumulatedCycleTime = 0.35;
 	private static long completedCycles = 0; // Each completed cycle = one simulated day
 
 	// Current cycle mode — set once per frame by ZoneRenderer before any TimeOfDay calls
