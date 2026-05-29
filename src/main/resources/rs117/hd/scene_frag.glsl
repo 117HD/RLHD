@@ -112,8 +112,11 @@ void main() {
         waterDepth2 * IN.texBlend.y +
         waterDepth3 * IN.texBlend.z;
     int waterTypeIndex = fTerrainData[0] >> 3 & 0xFF;
-
     bool isWater = waterTypeIndex > 0;
+
+    if(isWater && !isTerrain)
+       waterDepth = max(0, IN.position.y - waterHeight);
+
     bool isUnderwaterTile = waterDepth != 0;
     bool isWaterSurface = isWater && !isUnderwaterTile;
 

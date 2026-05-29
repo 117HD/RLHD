@@ -1448,6 +1448,19 @@ public class SceneUploader implements AutoCloseable {
 		final byte[] transparencies = model.getFaceTransparencies();
 		final float modelHeight = model.getModelHeight();
 
+		final SceneTileModel tileModel = tile.getSceneTileModel();
+		final SceneTilePaint tilePaint = tile.getSceneTilePaint();
+
+		final int terrainData;
+		if(tilePaint != null) {
+			TileOverride tileOverride = tileOverrideManager.getOverride(ctx, tile, worldPos);
+			WaterType waterType = tilePaint != null ? proceduralGenerator.seasonalWaterType(tileOverride, tilePaint.getTexture()) : WaterType.NONE;
+
+			terrainData = HDUtils.packTerrainData(false, 0, waterType, tile.getRenderLevel());
+		} else {
+			terrainData = 0;
+		}
+
 		int orientSin = 0;
 		int orientCos = 0;
 		if (orientation != 0) {
@@ -1583,8 +1596,6 @@ public class SceneUploader implements AutoCloseable {
 
 				if (modelOverride.inheritTileColorType != InheritTileColorType.NONE) {
 					final Scene scene = ctx.scene;
-					SceneTileModel tileModel = tile.getSceneTileModel();
-					SceneTilePaint tilePaint = tile.getSceneTilePaint();
 
 					if (tilePaint != null || tileModel != null) {
 						// No point in inheriting tilepaint color if the ground tile does not have a color, for example above a cave wall
@@ -1737,7 +1748,7 @@ public class SceneUploader implements AutoCloseable {
 			final int texturedFaceIdx = tb.putFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
-				0, 0, 0
+				terrainData, terrainData, terrainData
 			);
 
 			vb.putStaticVertex(
