@@ -135,6 +135,8 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     // Taken from https://www.researchgate.net/figure/a-Correlation-of-Mie-scattering-coefficient-and-wavelength-and-b-anisotropy-factor_fig5_337670010
     float g = .924;
 
+    float noise = gradientNoise(gl_FragCoord.xy);
+
     switch (waterTypeIndex) {
         default:
         case WATER_TYPE_WATER:
@@ -251,7 +253,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     }
 
     // Account for shadowing of the directional light
-    if (WATER_TRANSPARENCY == 0 && !waterType.isFlat /* Disable shadows for flat water, as it needs more work */) {
+    if (WATER_TRANSPARENCY == 1 && !waterType.isFlat /* Disable shadows for flat water, as it needs more work */) {
         // For shadows, we can take refraction into account, since sunlight is parallel
         vec3 surfaceSunPos = fragPos - refractedSunDir * sunToFragDist;
         surfaceSunPos += refractedSunDir * 32; // Push the position a short distance below the surface
@@ -262,10 +264,35 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
             vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
             distortion = uvFlow * .001 * (1 - exp(-.01 * depth));
         }
-        // TODO: This would be nicer if blurred based on optical depth
-        float shadow = sampleShadowMap(surfaceSunPos, distortion, dot(-sunDir, underwaterNormal));
+
+        float shadow = 0.0;
+        #if 0 // TODO: Could be a lower quality fallback, but the perf difference seems negligable
+        shadow = sampleShadowMap(surfaceSunPos, distortion, dot(-sunDir, underwaterNormal));
+        #else
+        // Calculate optical depth using relative luminance to avoid over bluring
+        float opticalDepth = dot(sigma_t, vec3(0.2126, 0.7152, 0.0722)) * sunToFragDist;
+
+        // Blur radius in shadow map UV space
+        const float SHADOW_MAX_BLUR = 0.009;
+        const float SHADOW_BLUR_OPTICAL_DEPTH_INV = 1.0 / 6.0;
+        float blurRadius = SHADOW_MAX_BLUR * saturate(opticalDepth * SHADOW_BLUR_OPTICAL_DEPTH_INV);
+
+        // Rotate the Poisson disk per fragment to break up repeated patterns.
+        float angle = noise * 2.0 * PI;
+        float s = sin(angle);
+        float c = cos(angle);
+        mat2 rot = mat2(c, -s, s, c);
+
+        int numSamples = 1 + int(floor(float(POISSON_DISK_LENGTH - 1) * saturate(opticalDepth * SHADOW_BLUR_OPTICAL_DEPTH_INV)));
+        for (int i = 0; i < numSamples; i++) {
+            vec2 offset = rot * getPoissonDisk(i) * blurRadius;
+            shadow += sampleShadowMap(surfaceSunPos, distortion + offset, dot(-sunDir, underwaterNormal));
+        }
+        shadow /= float(numSamples);
+        #endif
+
         // Apply shadow to directional light
-        L_directional *= 1 - shadow;
+        L_directional *= 1.0 - shadow;
     }
 
     // Attenuate the directional light as it travels down to the seabed
