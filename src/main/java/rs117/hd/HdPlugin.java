@@ -1837,6 +1837,7 @@ public class HdPlugin extends Plugin {
 					boolean reloadModelOverrides = false;
 					boolean reloadTileOverrides = false;
 					boolean reloadScene = false;
+					boolean reloadParticles = false;
 
 					for (var key : pendingConfigChanges) {
 						switch (key) {
@@ -1894,6 +1895,11 @@ public class HdPlugin extends Plugin {
 							case KEY_WINDOWS_HDR_CORRECTION:
 							case KEY_PARTICLE_AMBIENT_LIGHT:
 								recompilePrograms = true;
+								break;
+							case KEY_PARTICLE_AMOUNT:
+							case KEY_PARTICLE_OBJECTS:
+							case KEY_PARTICLE_WEATHER:
+								reloadParticles = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
 							case KEY_SCENE_RESOLUTION_SCALE:
@@ -1981,6 +1987,9 @@ public class HdPlugin extends Plugin {
 
 					if (reloadEnvironments)
 						environmentManager.reload();
+
+					if (reloadParticles)
+						particleManager.loadSceneParticles(getSceneContext());
 				}
 			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);

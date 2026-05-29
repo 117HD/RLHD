@@ -47,7 +47,6 @@ public class ParticlePass implements ScenePass {
 	@Inject
 	private HdPlugin plugin;
 
-	private static final int MAX_PARTICLES = 4096;
 	private static final int MAX_DRAWN = 2048;
 
 	private final ParticleManager.ParticleRenderContext renderContext = new ParticleManager.ParticleRenderContext();
@@ -78,11 +77,11 @@ public class ParticlePass implements ScenePass {
 	private final GLFence[] instanceFences = new GLFence[INSTANCE_BUFFER_COUNT];
 	private int instanceBufferSlot;
 	private FloatBuffer particleStagingBuffer;
-	private final float[] particleDistSq = new float[MAX_PARTICLES];
-	private final int[] particleSortOrder = new int[MAX_PARTICLES];
+	private final float[] particleDistSq = new float[ParticleManager.MAX_PARTICLES];
+	private final int[] particleSortOrder = new int[ParticleManager.MAX_PARTICLES];
 	private final float[] particleColorScratch = new float[4];
 
-	private final String[] textureForVisibleIndex = new String[MAX_PARTICLES];
+	private final String[] textureForVisibleIndex = new String[ParticleManager.MAX_PARTICLES];
 	private ByteBuffer batchUploadBuffer;
 
 	@Getter
@@ -161,7 +160,7 @@ public class ParticlePass implements ScenePass {
 		glVertexAttribDivisor(9, 1);
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		particleStagingBuffer = BufferUtils.createFloatBuffer(MAX_PARTICLES * FLOATS_PER_INSTANCE);
+		particleStagingBuffer = BufferUtils.createFloatBuffer(ParticleManager.MAX_PARTICLES * FLOATS_PER_INSTANCE);
 		batchUploadBuffer = BufferUtils.createByteBuffer(MAX_DRAWN * INSTANCE_STRIDE_BYTES);
 	}
 
@@ -205,7 +204,7 @@ public class ParticlePass implements ScenePass {
 
 	@Override
 	public void beforeDraw(ScenePassContext ctx) {
-		if (plugin.isLoadingScene()) {
+		if (plugin.isLoadingScene() || !particleManager.areParticlesEnabled()) {
 			return;
 		}
 		if (ctx.getSceneContext() != null) {
@@ -217,6 +216,8 @@ public class ParticlePass implements ScenePass {
 
 	@Override
 	public void draw(ScenePassContext ctx) {
+		if (!particleManager.areParticlesEnabled())
+			return;
 		int currentPlane = client.getTopLevelWorldView().getPlane();
 		int instanceCount = prepareBatches(currentPlane);
 		if (instanceCount == 0)

@@ -39,6 +39,7 @@ import rs117.hd.config.CpuUsageLimit;
 import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.ParticleAmount;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.InfernalCape;
 import rs117.hd.config.Saturation;
@@ -796,13 +797,51 @@ public interface HdPluginConfig extends Config
 	)
 	String particlesSettings = "particlesSettings";
 
+	String KEY_PARTICLE_AMOUNT = "particleAmount";
+	@ConfigItem(
+		keyName = KEY_PARTICLE_AMOUNT,
+		name = "Particle Amount",
+		description =
+			"The maximum number of particles visible at once.<br>" +
+			"Reducing this may improve performance.",
+		position = 0,
+		section = particlesSettings
+	)
+	default ParticleAmount particleAmount() {
+		return ParticleAmount.SOME;
+	}
+
+	String KEY_PARTICLE_OBJECTS = "particleObjects";
+	@ConfigItem(
+		keyName = KEY_PARTICLE_OBJECTS,
+		name = "Object Particles",
+		description = "Spawn particles attached to scene objects, such as torches and fireplaces.",
+		section = particlesSettings,
+		position = 1
+	)
+	default boolean particleObjects() {
+		return true;
+	}
+
+	String KEY_PARTICLE_WEATHER = "particleWeather";
+	@ConfigItem(
+		keyName = KEY_PARTICLE_WEATHER,
+		name = "Weather Particles",
+		description = "Spawn weather effects like rain and snow in configured areas.",
+		section = particlesSettings,
+		position = 2
+	)
+	default boolean particleWeather() {
+		return true;
+	}
+
 	String KEY_PARTICLE_AMBIENT_LIGHT = "particleAmbientLight";
 	@ConfigItem(
 		keyName = KEY_PARTICLE_AMBIENT_LIGHT,
 		name = "Scene ambient light",
 		description = "Apply scene ambient lighting to particles so they match the area's light and color.",
 		section = particlesSettings,
-		position = 0
+		position = 3
 	)
 	default boolean particleAmbientLight() {
 		return true;

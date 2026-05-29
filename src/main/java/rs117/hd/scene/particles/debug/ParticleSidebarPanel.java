@@ -1529,7 +1529,7 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		minSpawnLabel.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
 		minSpawnLabel.setMaximumSize(new Dimension(emissionLabelMaxWidth, 24));
 		content.add(minSpawnLabel, labelConstraints(row));
-		JSpinner minSpawnSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 4096, 1));
+		JSpinner minSpawnSpinner = new JSpinner(new SpinnerNumberModel(0, 0, ParticleManager.MAX_PARTICLES, 1));
 		minSpawnSpinner.setPreferredSize(smallSpinnerSize);
 		minSpawnSpinner.setMinimumSize(smallSpinnerSize);
 		content.add(minSpawnSpinner, controlConstraints(row));
@@ -1539,7 +1539,7 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		maxSpawnLabel.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
 		maxSpawnLabel.setMaximumSize(new Dimension(emissionLabelMaxWidth, 24));
 		content.add(maxSpawnLabel, labelConstraints(row));
-		JSpinner maxSpawnSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 4096, 1));
+		JSpinner maxSpawnSpinner = new JSpinner(new SpinnerNumberModel(0, 0, ParticleManager.MAX_PARTICLES, 1));
 		maxSpawnSpinner.setPreferredSize(smallSpinnerSize);
 		maxSpawnSpinner.setMinimumSize(smallSpinnerSize);
 		content.add(maxSpawnSpinner, controlConstraints(row));
@@ -1549,7 +1549,7 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		initialSpawnLabel.setForeground(ColorScheme.LIGHT_GRAY_COLOR);
 		initialSpawnLabel.setMaximumSize(new Dimension(emissionLabelMaxWidth, 24));
 		content.add(initialSpawnLabel, labelConstraints(row));
-		JSpinner initialSpawnSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 4096, 1));
+		JSpinner initialSpawnSpinner = new JSpinner(new SpinnerNumberModel(0, 0, ParticleManager.MAX_PARTICLES, 1));
 		initialSpawnSpinner.setPreferredSize(smallSpinnerSize);
 		initialSpawnSpinner.setMinimumSize(smallSpinnerSize);
 		content.add(initialSpawnSpinner, controlConstraints(row));
@@ -2456,21 +2456,23 @@ public class ParticleSidebarPanel extends PluginPanel  {
 		});
 		buttons.add(testParticlesBtn);
 
-		JButton spawn4096Btn = new JButton("Spawn 4096 particles");
-		spawn4096Btn.setToolTipText("Toggle continuous spawning of particles around the player (maintains ~4096 until turned off)");
-		styleButton(spawn4096Btn);
+		String spawnMaxLabel = "Spawn " + ParticleManager.MAX_PARTICLES + " particles";
+		JButton spawnMaxBtn = new JButton(spawnMaxLabel);
+		spawnMaxBtn.setToolTipText("Toggle continuous spawning of particles around the player (maintains ~"
+			+ ParticleManager.MAX_PARTICLES + " until turned off)");
+		styleButton(spawnMaxBtn);
 		boolean initialSpawn = particleManager.isContinuousRandomSpawn();
-		setButtonActive(spawn4096Btn, initialSpawn);
-		spawn4096Btn.setText(initialSpawn ? "Stop spawning" : "Spawn 4096 particles");
-		spawn4096Btn.addActionListener(e -> {
+		setButtonActive(spawnMaxBtn, initialSpawn);
+		spawnMaxBtn.setText(initialSpawn ? "Stop spawning" : spawnMaxLabel);
+		spawnMaxBtn.addActionListener(e -> {
 			clientThread.invoke(() -> {
 				boolean on = !particleManager.isContinuousRandomSpawn();
 				particleManager.setContinuousRandomSpawn(on);
-				setButtonActive(spawn4096Btn, on);
-				spawn4096Btn.setText(on ? "Stop spawning" : "Spawn 4096 particles");
+				setButtonActive(spawnMaxBtn, on);
+				spawnMaxBtn.setText(on ? "Stop spawning" : spawnMaxLabel);
 			});
 		});
-		buttons.add(spawn4096Btn);
+		buttons.add(spawnMaxBtn);
 
 		p.add(buttons, BorderLayout.NORTH);
 		return p;
