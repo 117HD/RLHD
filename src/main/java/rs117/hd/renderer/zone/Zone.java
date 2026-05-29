@@ -380,9 +380,21 @@ public class Zone implements Destructible {
 	}
 
 	void renderGapFiller(CommandBuffer cmd) {
-		if (!hasGapFiller || levelOffsets[LEVEL_GAP_FILLER] <= levelOffsets[LEVEL_WATER_SURFACE])
+		if (!hasGapFiller)
 			return;
-		renderOpaqueLevel(cmd, LEVEL_GAP_FILLER);
+
+		int start = levelOffsets[LEVEL_WATER_SURFACE];
+		int end = levelOffsets[LEVEL_GAP_FILLER];
+		if (end <= start)
+			return;
+
+		drawIdx = 0;
+		pushRange(start, end);
+
+		lastDrawMode = STATIC_UNSORTED;
+		lastVao = glVao;
+		lastTboF = tboF.getTexId();
+		flush(cmd);
 	}
 
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
