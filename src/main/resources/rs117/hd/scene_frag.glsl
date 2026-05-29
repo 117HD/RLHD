@@ -134,8 +134,6 @@ void main() {
         #else
             outputColor = sampleWater(waterTypeIndex, viewDir);
         #endif
-    } else if(isWaterSurface) {
-        discard;
     }
 
     if (RENDER_PASS == RENDER_PASS_WATER_REFLECTION) {
@@ -194,7 +192,7 @@ void main() {
 
         float selfShadowing = 0;
         vec3 fragPos = IN.position;
-        #if PARALLAX_OCCLUSION_MAPPING
+        #if PARALLAX_OCCLUSION_MAPPING && RENDER_PASS == RENDER_PASS_MAIN
             mat3 invTBN = inverse(TBN);
             vec3 tsViewDir = invTBN * viewDir;
             vec3 tsLightDir = invTBN * -lightDir;
@@ -423,8 +421,9 @@ void main() {
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
-        if (RENDER_PASS == RENDER_PASS_MAIN)
+        #if RENDER_PASS == RENDER_PASS_MAIN
             calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
+        #endif
 
         // sky light
         vec3 skyLightColor = fogColor;
@@ -462,6 +461,7 @@ void main() {
             getMaterialIsUnlit(material3)
         ));
 
+    #if RENDER_PASS == RENDER_PASS_MAIN
         #if LEGACY_WATER
             if (tint.w > 0) {
                 outputColor.rgb *= 1.0 + skyLightOut;
@@ -482,6 +482,7 @@ void main() {
                 }
             }
         #endif
+    #endif
 
         #if LINEAR_ALPHA_BLENDING
             // Try to match old alpha with linear blending
