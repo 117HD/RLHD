@@ -90,8 +90,9 @@ public class Zone implements Destructible {
 
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
-
+	
 	int[] levelOffsets = new int[NUM_LEVEL_OFFSETS]; // buffer pos in ints for the end of the level
+
 
 	int[][] rids;
 	int[][] roofStart;
