@@ -40,6 +40,46 @@
     }
   },
   {
+    "id": "WILD_FALLING_ASH",
+    "general": {
+      "randomYawRotation": 2.0
+    },
+    "spread": {
+      "yawMin": 947,
+      "yawMax": 1061,
+      "pitchMin": 451,
+      "pitchMax": 511
+    },
+    "speed": {
+      "minSpeed": 262144,
+      "maxSpeed": 524288,
+      "targetSpeed": 2097152
+    },
+    "scale": {
+      "minScale": 2,
+      "maxScale": 8
+    },
+    "colours": {
+      "minColour": "#3a3a3a99",
+      "maxColour": "#6e6e6ecc",
+      "targetColour": "#2a2a2a88",
+      "colourTransitionPercent": 25,
+      "useSceneAmbientLight": false,
+      "uniformColourVariation": false
+    },
+    "emission": {
+      "minDelay": 1000,
+      "maxDelay": 1200,
+      "minSpawn": 2,
+      "maxSpawn": 4,
+      "emissionTimeThreshold": 32767,
+      "emissionCycleDuration": 32767
+    },
+    "texture": {
+      "file": "850.png"
+    }
+  },
+  {
     "id": "TORCH_SMOKE",
     "general": {
       "heightOffset": 250
@@ -75,6 +115,272 @@
     },
     "texture": {
       "file": "850.png"
+    }
+  },
+  {
+    "id": "WILD_CRATER_SMOKE_L",
+    "general": {
+      "randomYawRotation": 5.5,
+      "directionPitch": 400,
+      "directionYaw": 1024
+    },
+    "spread": {
+      "yawMin": 0,
+      "yawMax": 2047,
+      "pitchMin": 180,
+      "pitchMax": 620
+    },
+    "speed": {
+      "minSpeed": 49152,
+      "maxSpeed": 458752
+    },
+    "scale": {
+      "minScale": 28,
+      "maxScale": 48,
+      "targetScale": 64
+    },
+    "colours": {
+      "minColourArgb": 1177760563,
+      "maxColourArgb": 1509949440,
+      "targetColourArgb": 6710886,
+      "colourTransitionPercent": 45,
+      "useSceneAmbientLight": false,
+      "uniformColourVariation": false
+    },
+    "emission": {
+      "minDelay": 90,
+      "maxDelay": 140,
+      "minSpawn": 18,
+      "maxSpawn": 32,
+      "initialSpawn": 280,
+      "emissionTimeThreshold": 32767,
+      "emissionCycleDuration": 32767
+    },
+    "texture": {
+      "file": "850.png"
+    }
+  },
+  {
+    "id": "WILD_CRATER_SMOKE_S",
+    "general": {
+      "randomYawRotation": 4.5,
+      "directionPitch": 400,
+      "directionYaw": 1024
+    },
+    "spread": {
+      "yawMin": 0,
+      "yawMax": 2047,
+      "pitchMin": 200,
+      "pitchMax": 600
+    },
+    "speed": {
+      "minSpeed": 49152,
+      "maxSpeed": 393216
+    },
+    "scale": {
+      "minScale": 18,
+      "maxScale": 30,
+      "targetScale": 40
+    },
+    "colours": {
+      "minColourArgb": 1177760563,
+      "maxColourArgb": 1509949440,
+      "targetColourArgb": 6710886,
+      "colourTransitionPercent": 45,
+      "useSceneAmbientLight": false,
+      "uniformColourVariation": false
+    },
+    "emission": {
+      "minDelay": 110,
+      "maxDelay": 160,
+      "minSpawn": 8,
+      "maxSpawn": 14,
+      "initialSpawn": 120,
+      "emissionTimeThreshold": 32767,
+      "emissionCycleDuration": 32767
+    },
+    "texture": {
+      "file": "850.png"
+    }
+  },
+  {
+    "id": "WILD_CRATER_FIRE_L",
+    "general": {
+      "randomYawRotation": 2.5,
+      "directionPitch": 520
+    },
+    "spread": {
+      "yawMax": 2047,
+      "pitchMin": 560,
+      "pitchMax": 680
+    },
+    "speed": {
+      "minSpeed": 262144,
+      "maxSpeed": 655360,
+      "targetSpeed": 1048576
+    },
+    "scale": {
+      "minScale": 18,
+      "maxScale": 28,
+      "targetScale": 10
+    },
+    "colours": {
+      "minColourArgb": 2030016768,
+      "maxColourArgb": 1694498662,
+      "targetColourArgb": 1264975872,
+      "colourTransitionPercent": 35,
+      "alphaTransitionPercent": 25,
+      "useSceneAmbientLight": false,
+      "uniformColourVariation": false
+    },
+    "emission": {
+      "minDelay": 20,
+      "maxDelay": 35,
+      "minSpawn": 96,
+      "maxSpawn": 160,
+      "initialSpawn": 200,
+      "emissionTimeThreshold": 32767,
+      "emissionCycleDuration": 32767
+    },
+    "physics": {
+      "upperBoundLevel": -1,
+      "lowerBoundLevel": -1
+    },
+    "texture": {
+      "file": "718.png"
+    }
+  },
+  {
+    "id": "WILD_CRATER_FIRE_S",
+    "general": {
+      "randomYawRotation": 2.0,
+      "directionPitch": 520
+    },
+    "spread": {
+      "yawMax": 2047,
+      "pitchMin": 560,
+      "pitchMax": 680
+    },
+    "speed": {
+      "minSpeed": 262144,
+      "maxSpeed": 655360,
+      "targetSpeed": 1048576
+    },
+    "scale": {
+      "minScale": 12,
+      "maxScale": 20,
+      "targetScale": 8
+    },
+    "colours": {
+      "minColourArgb": 2030016768,
+      "maxColourArgb": 1694498662,
+      "targetColourArgb": 1264975872,
+      "colourTransitionPercent": 35,
+      "alphaTransitionPercent": 25,
+      "useSceneAmbientLight": false,
+      "uniformColourVariation": false
+    },
+    "emission": {
+      "minDelay": 25,
+      "maxDelay": 40,
+      "minSpawn": 40,
+      "maxSpawn": 72,
+      "initialSpawn": 100,
+      "emissionTimeThreshold": 32767,
+      "emissionCycleDuration": 32767
+    },
+    "physics": {
+      "upperBoundLevel": -1,
+      "lowerBoundLevel": -1
+    },
+    "texture": {
+      "file": "718.png"
+    }
+  },
+  {
+    "id": "WILD_CRATER_EMBER_L",
+    "general": {
+      "randomYawRotation": 0,
+      "directionPitch": 400,
+      "directionYaw": 1024
+    },
+    "spread": {
+      "yawMin": 0,
+      "yawMax": 2047,
+      "pitchMin": 180,
+      "pitchMax": 620
+    },
+    "speed": {
+      "minSpeed": 131072,
+      "maxSpeed": 393216
+    },
+    "scale": {
+      "minScale": 10,
+      "maxScale": 14,
+      "targetScale": 12
+    },
+    "colours": {
+      "minColour": "#ff6622cc",
+      "maxColour": "#ffcc44ee",
+      "targetColour": "#ff330088",
+      "colourTransitionPercent": 40,
+      "useSceneAmbientLight": false,
+      "uniformColourVariation": true
+    },
+    "emission": {
+      "minDelay": 90,
+      "maxDelay": 140,
+      "minSpawn": 2,
+      "maxSpawn": 4,
+      "initialSpawn": 8,
+      "emissionTimeThreshold": 32767,
+      "emissionCycleDuration": 32767
+    },
+    "texture": {
+      "file": "718.png"
+    }
+  },
+  {
+    "id": "WILD_CRATER_EMBER_S",
+    "general": {
+      "randomYawRotation": 0,
+      "directionPitch": 400,
+      "directionYaw": 1024
+    },
+    "spread": {
+      "yawMin": 0,
+      "yawMax": 2047,
+      "pitchMin": 200,
+      "pitchMax": 600
+    },
+    "speed": {
+      "minSpeed": 98304,
+      "maxSpeed": 327680
+    },
+    "scale": {
+      "minScale": 8,
+      "maxScale": 11,
+      "targetScale": 9
+    },
+    "colours": {
+      "minColour": "#ff6622cc",
+      "maxColour": "#ffcc44ee",
+      "targetColour": "#ff330088",
+      "colourTransitionPercent": 40,
+      "useSceneAmbientLight": false,
+      "uniformColourVariation": true
+    },
+    "emission": {
+      "minDelay": 100,
+      "maxDelay": 150,
+      "minSpawn": 1,
+      "maxSpawn": 3,
+      "initialSpawn": 4,
+      "emissionTimeThreshold": 32767,
+      "emissionCycleDuration": 32767
+    },
+    "texture": {
+      "file": "718.png"
     }
   }
 ]

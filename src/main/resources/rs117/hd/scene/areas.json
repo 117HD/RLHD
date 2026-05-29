@@ -7551,6 +7551,12 @@
     ]
   },
   {
+    "name": "WILD_FALLOFF_ASH_AREA",
+    "aabbs": [
+      [ 3780, 3782, 3816, 3814 ]
+    ]
+  },
+  {
     "name": "FOSSIL_ISLAND",
     "aabbs": [
       [ 3683, 3801, 3769, 3903 ],

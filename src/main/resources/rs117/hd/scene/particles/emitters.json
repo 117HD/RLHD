@@ -12,6 +12,56 @@
     "particleId": "TORCH_SMOKE"
   },
   {
+    "description": "WILD_FALLOFF_CRATER_VENTS",
+    "particleIds": [ "WILD_CRATER_SMOKE_L", "WILD_CRATER_FIRE_L" ],
+    "objectEmitters": [
+      {
+        "object": "WILD_FALLOFF_CRATER",
+        "offsetX": 0,
+        "offsetY": 170,
+        "offsetZ": 40,
+        "alignment": "CENTER"
+      }
+    ]
+  },
+  {
+    "description": "WILD_FALLOFF_CRATER_EMBER_L",
+    "particleIds": [ "WILD_CRATER_EMBER_L" ],
+    "objectEmitters": [
+      {
+        "object": "WILD_FALLOFF_CRATER",
+        "offsetX": 0,
+        "offsetY": 170,
+        "offsetZ": -20
+      }
+    ]
+  },
+  {
+    "description": "WILD_FALLOFF_CRATER_VENTS_S",
+    "particleIds": [ "WILD_CRATER_SMOKE_S" ],
+    "objectEmitters": [
+      {
+        "object": "WILD_FALLOFF_CRATER_SMALL",
+        "offsetX": 0,
+        "offsetY": 90,
+        "offsetZ": 10,
+        "alignment": "CENTER"
+      }
+    ]
+  },
+  {
+    "description": "WILD_FALLOFF_CRATER_EMBER_S",
+    "particleIds": [ "WILD_CRATER_EMBER_S" ],
+    "objectEmitters": [
+      {
+        "object": "WILD_FALLOFF_CRATER_SMALL",
+        "offsetX": 0,
+        "offsetY": 90,
+        "offsetZ": -20
+      }
+    ]
+  },
+  {
     "particleIds": [ "3test" ],
     "description": "Particles 3 and 4 emitters",
     "weatherAreas": [ "ICE_MOUNTAIN","WES","WATERBIRTH_ISLAND","DSDSDSDFSDDF" ],
@@ -19,5 +69,14 @@
     "globalEffectors": [ "WIND_DEFAULT" ],
     "embeddedEffectors": [],
     "localEffectorFilter": [ "WIND_DEFAULT" ]
+  },
+  {
+    "description": "WILD_FALLOFF_FALLING_ASH",
+    "particleIds": [ "WILD_FALLING_ASH" ],
+    "weatherAreas": [ "WILD_FALLOFF_ASH_AREA" ],
+    "weatherParticlesPerTile": 3,
+    "globalEffectors": [],
+    "embeddedEffectors": [],
+    "localEffectorFilter": []
   }
 ]
