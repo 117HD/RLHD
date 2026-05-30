@@ -114,7 +114,8 @@ void main() {
     int waterTypeIndex = fTerrainData[0] >> 3 & 0xFF;
     bool isWater = waterTypeIndex > 0;
 
-    if(isWater && !isTerrain)
+    // Not Terrain, but has water which means its a model that is intersecting with water!
+    if(isWater && !isTerrain) // TODO: Note! Shadows seem to break now that this is supported
        waterDepth = max(0, IN.position.y - waterHeight);
 
     bool isUnderwaterTile = waterDepth != 0;
