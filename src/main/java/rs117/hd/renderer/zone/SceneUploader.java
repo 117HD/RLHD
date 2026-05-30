@@ -182,8 +182,8 @@ public class SceneUploader implements AutoCloseable {
 		zone.onlyWater = true;
 
 		for (int z = 3; z >= 0; --z) {
-			for (int xoff = 0; xoff < 8; ++xoff) {
-				for (int zoff = 0; zoff < 8; ++zoff) {
+			for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+				for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 					Tile t = tiles[z][(mzx << 3) + xoff][(mzz << 3) + zoff];
 					if (t != null) {
 						if (onBeforeProcessTile != null)
@@ -206,8 +206,8 @@ public class SceneUploader implements AutoCloseable {
 
 		roofIds.clear();
 		for (int level = 0; level <= 3; ++level) {
-			for (int xoff = 0; xoff < 8; ++xoff) {
-				for (int zoff = 0; zoff < 8; ++zoff) {
+			for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+				for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 					int rid = roofs[level][(mzx << 3) + xoff][(mzz << 3) + zoff];
 					if (rid > 0)
 						roofIds.add(rid);
@@ -297,8 +297,8 @@ public class SceneUploader implements AutoCloseable {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
-		for (int xoff = 0; xoff < 8; ++xoff) {
-			for (int zoff = 0; zoff < 8; ++zoff) {
+		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				int msx = (mzx << 3) + xoff;
 				int msz = (mzz << 3) + zoff;
 
@@ -345,8 +345,8 @@ public class SceneUploader implements AutoCloseable {
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
 		for (int level = 0; level < MAX_Z; level++) {
-			for (int xoff = 0; xoff < 8; ++xoff) {
-				for (int zoff = 0; zoff < 8; ++zoff) {
+			for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+				for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 					int msx = (mzx << 3) + xoff;
 					int msz = (mzz << 3) + zoff;
 					Tile t = tiles[level][msx][msz];

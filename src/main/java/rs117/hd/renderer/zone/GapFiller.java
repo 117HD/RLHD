@@ -21,13 +21,10 @@ import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 
 @Singleton
 public class GapFiller {
-	private static final int TILES_PER_ZONE = CHUNK_SIZE;
-
 	@Inject
 	private MaterialManager materialManager;
 
 	public void estimateForZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		zone.hasGapFiller = false;
 		if (!prepareContext(ctx))
 			return;
 
@@ -39,8 +36,8 @@ public class GapFiller {
 		int basePlane = ctx.sceneBase[2];
 		Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
 
-		for (int xoff = 0; xoff < TILES_PER_ZONE; ++xoff) {
-			for (int zoff = 0; zoff < TILES_PER_ZONE; ++zoff) {
+		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				int tileExX = (mzx << 3) + xoff;
 				int tileExY = (mzz << 3) + zoff;
 				int faces = processGapTile(ctx, area, extendedTiles, null, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane, null, 0, 0, null, null);
@@ -76,8 +73,8 @@ public class GapFiller {
 			int basePlane = ctx.sceneBase[2];
 			Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
 
-			for (int xoff = 0; xoff < TILES_PER_ZONE; ++xoff) {
-				for (int zoff = 0; zoff < TILES_PER_ZONE; ++zoff) {
+			for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+				for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 					int tileExX = (mzx << 3) + xoff;
 					int tileExY = (mzz << 3) + zoff;
 					processGapTile(
