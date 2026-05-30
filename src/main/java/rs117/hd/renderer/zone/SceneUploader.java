@@ -107,7 +107,10 @@ public class SceneUploader implements AutoCloseable {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
-	public ProceduralGenerator proceduralGenerator;
+	private ProceduralGenerator proceduralGenerator;
+
+	@Inject
+	private GapFiller gapFiller;
 
 	@FunctionalInterface
 	public interface OnBeforeProcessTileFunc {
@@ -179,8 +182,8 @@ public class SceneUploader implements AutoCloseable {
 		zone.onlyWater = true;
 
 		for (int z = 3; z >= 0; --z) {
-			for (int xoff = 0; xoff < 8; ++xoff) {
-				for (int zoff = 0; zoff < 8; ++zoff) {
+			for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+				for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 					Tile t = tiles[z][(mzx << 3) + xoff][(mzz << 3) + zoff];
 					if (t != null) {
 						if (onBeforeProcessTile != null)
@@ -190,6 +193,9 @@ public class SceneUploader implements AutoCloseable {
 				}
 			}
 		}
+
+		if (ctx.fillGaps)
+			gapFiller.estimateForZone(ctx, zone, mzx, mzz);
 	}
 
 	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
@@ -200,8 +206,8 @@ public class SceneUploader implements AutoCloseable {
 
 		roofIds.clear();
 		for (int level = 0; level <= 3; ++level) {
-			for (int xoff = 0; xoff < 8; ++xoff) {
-				for (int zoff = 0; zoff < 8; ++zoff) {
+			for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+				for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 					int rid = roofs[level][(mzx << 3) + xoff][(mzz << 3) + zoff];
 					if (rid > 0)
 						roofIds.add(rid);
@@ -226,16 +232,19 @@ public class SceneUploader implements AutoCloseable {
 				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab, fb);
 			}
 
-			if (vb != null) {
-				int pos = vb.position();
-				zone.levelOffsets[z] = pos;
-			}
+			if (vb != null)
+				zone.levelOffsets[z] = vb.position();
 		}
 
-		// Upload water surface tiles to be drawn after everything else
-		if (zone.hasWater && vb != null) {
-			uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
+		if (vb != null) {
+			// Upload water surface tiles to be drawn after everything else
+			if (zone.hasWater)
+				uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
+
+			if (ctx.fillGaps)
+				gapFiller.uploadForZone(ctx, zone, mzx, mzz, vb, fb);
+			zone.levelOffsets[Zone.LEVEL_GAP_FILLER] = vb.position();
 		}
 	}
 
@@ -288,8 +297,8 @@ public class SceneUploader implements AutoCloseable {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
-		for (int xoff = 0; xoff < 8; ++xoff) {
-			for (int zoff = 0; zoff < 8; ++zoff) {
+		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				int msx = (mzx << 3) + xoff;
 				int msz = (mzz << 3) + zoff;
 
@@ -336,8 +345,8 @@ public class SceneUploader implements AutoCloseable {
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
 		for (int level = 0; level < MAX_Z; level++) {
-			for (int xoff = 0; xoff < 8; ++xoff) {
-				for (int zoff = 0; zoff < 8; ++zoff) {
+			for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+				for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 					int msx = (mzx << 3) + xoff;
 					int msz = (mzz << 3) + zoff;
 					Tile t = tiles[level][msx][msz];
