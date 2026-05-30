@@ -2061,16 +2061,17 @@ public class SceneUploader implements AutoCloseable {
 
 		final boolean isVanillaTextured = faceTextures != null;
 
-
 		final int plane = tileObject.getPlane();
 		final int tileExX = (tileObject.getX() >> Perspective.LOCAL_COORD_BITS) + ctx.sceneOffset;
 		final int tileExY = (tileObject.getY() >> Perspective.LOCAL_COORD_BITS) + ctx.sceneOffset;
 
 		final int terrainData;
 		if (0 <= tileExX && tileExX < Constants.EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < Constants.EXTENDED_SCENE_SIZE) {
-			final Tile tile = ctx.scene.getExtendedTiles()[plane][tileExX][tileExY];
-			final SceneTilePaint tilePaint = tile.getSceneTilePaint();
+			Tile tile = ctx.scene.getExtendedTiles()[plane][tileExX][tileExY];
+			if(tile.getBridge() != null)
+				tile = tile.getBridge();
 
+			SceneTilePaint tilePaint = tile.getSceneTilePaint();
 			if(tilePaint != null) {
 				TileOverride tileOverride = tileOverrideManager.getOverride(ctx, tile, worldPos);
 				WaterType waterType = proceduralGenerator.seasonalWaterType(tileOverride, tilePaint.getTexture());
