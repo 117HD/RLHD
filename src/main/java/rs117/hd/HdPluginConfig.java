@@ -25,6 +25,8 @@
  */
 package rs117.hd;
 
+import java.awt.Color;
+import net.runelite.client.config.Alpha;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -41,6 +43,8 @@ import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.NPCSilhouetteMode;
+import rs117.hd.config.PlayerSilhouetteMode;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -785,7 +789,7 @@ public interface HdPluginConfig extends Config
 		section = environmentSettings
 	)
 	default boolean hideVanillaWaterEffects() { return true; }
-
+	
 	String KEY_POH_THEME_ENVIRONMENTS = "pohThemeEnvironments";
 	@ConfigItem(
 		keyName = KEY_POH_THEME_ENVIRONMENTS,
@@ -797,12 +801,103 @@ public interface HdPluginConfig extends Config
 	default boolean pohThemeEnvironments() { return true; }
 
 
+	/*====== Silhouette & Canopy settings ======*/
+
+	@ConfigSection(
+		name = "Silhouette & Canopy",
+		description = "Silhouette settings",
+		position = 4,
+		closedByDefault = true
+	)
+	String playerSilhouetteSettings = "playerSilhouetteSettings";
+
+	String KEY_PLAYER_CANOPY = "playerCanopy";
+	@ConfigItem(
+		keyName = KEY_PLAYER_CANOPY,
+		position = 0,
+		name = "Canopy Fade Enabled",
+		description = "Fades Canopy when it is occluding the player",
+		section = playerSilhouetteSettings
+	)
+	default boolean playerCanopy() {
+		return true;
+	}
+
+	String KEY_SILHOUETTE_THRESHOLD = "silhouetteThreshold";
+	@Units(Units.PERCENT)
+	@Range(min = 1, max = 100)
+	@ConfigItem(
+		keyName = KEY_SILHOUETTE_THRESHOLD,
+		position = 1,
+		name = "Silhouette Threshold",
+		description = "Threshold of how much of the actor is occluded, at which the silhouette should begin being drawn at (Default 50%)",
+		section = playerSilhouetteSettings
+	)
+	default int silhouetteThreshold() {
+		return 50;
+	}
+
+	String KEY_PLAYER_SILHOUETTE = "playerSilhouette";
+	@ConfigItem(
+		keyName = KEY_PLAYER_SILHOUETTE,
+		position = 2,
+		name = "Player Silhouette",
+		description = "Draws the players silhouette whilst they are occluded by scene geometry",
+		section = playerSilhouetteSettings
+	)
+	default PlayerSilhouetteMode playerSilhouette() { return PlayerSilhouetteMode.Player; }
+
+	String KEY_NPC_SILHOUETTE = "npcSilhouette";
+	@ConfigItem(
+		keyName = KEY_NPC_SILHOUETTE,
+		position = 3,
+		name = "NPC Silhouette",
+		description = "Draws the npcs silhouette whilst they are occluded by scene geometry",
+		section = playerSilhouetteSettings
+	)
+	default NPCSilhouetteMode npcSilhouette() { return NPCSilhouetteMode.Interacting; }
+
+	String KEY_PLAYER_SILHOUETTE_COLOR = "playerSilhouetteColor";
+	@Alpha
+	@ConfigItem(
+		keyName = KEY_PLAYER_SILHOUETTE_COLOR,
+		position = 4,
+		name = "Player Color",
+		description = "Controls the colour of the players silhouette",
+		section = playerSilhouetteSettings
+	)
+	default Color playerSilhouetteColor() { return new Color(20, 20, 20, 128); }
+
+	String KEY_FRIENDLY_PLAYER_SILHOUETTE_COLOR = "friendlyNpcSilhouetteColor";
+	@Alpha
+	@ConfigItem(
+		keyName = KEY_FRIENDLY_PLAYER_SILHOUETTE_COLOR,
+		position = 5,
+		name = "Friendly NPC Color",
+		description = "Controls the colour of the players silhouette",
+		section = playerSilhouetteSettings
+	)
+	default Color friendlyNpcSilhouetteColor() { return new Color(16, 44, 58, 128); }
+
+	String KEY_HOSTILE_NPC_SILHOUETTE_COLOR = "hostileNpcSilhouetteColor";
+	@Alpha
+	@ConfigItem(
+		keyName = KEY_HOSTILE_NPC_SILHOUETTE_COLOR,
+		position = 6,
+		name = "Hostile NPC Color",
+		description = "Controls the colour of the npcs silhouette",
+		section = playerSilhouetteSettings
+	)
+	default Color hostileNpcSilhouetteColor() {
+		return new Color(39, 5, 5, 128);
+	}
+
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -956,7 +1051,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
@@ -1109,7 +1204,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
-		position = 6,
+		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";

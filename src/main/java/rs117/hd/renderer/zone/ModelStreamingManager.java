@@ -18,6 +18,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.zone.renderpass.SilhouettePass;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
@@ -69,6 +70,9 @@ public class ModelStreamingManager {
 
 	@Inject
 	private ZoneRenderer renderer;
+
+	@Inject
+	private SilhouettePass silhouettePass;
 
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
@@ -363,6 +367,8 @@ public class ModelStreamingManager {
 				);
 
 				// Fix rendering projectiles from boats with hide roofs enabled
+				if (renderable instanceof Actor && silhouettePass.isSilhouetteEnabled((Actor) renderable))
+					silhouettePass.addSilhouetteDraw(gameObject, (Actor) renderable, opaqueView, x, y, z);
 				if (opaqueView != alphaView && alphaView.getEndOffset() > alphaView.getStartOffset()) {
 					alphaModel.setView(alphaView);
 					alphaView.end();

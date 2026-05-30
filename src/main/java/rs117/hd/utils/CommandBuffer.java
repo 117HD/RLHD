@@ -36,13 +36,18 @@ public class CommandBuffer {
 	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
 	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
 	private static final int GL_DEPTH_MASK_TYPE = 10;
-	private static final int GL_COLOR_MASK_TYPE = 11;
-	private static final int GL_USE_PROGRAM = 12;
+	private static final int GL_DEPTH_FUNC_TYPE = 11;
+	private static final int GL_COLOR_MASK_TYPE = 12;
+	private static final int GL_USE_PROGRAM = 13;
 
-	private static final int GL_TOGGLE_TYPE = 13; // Combined glEnable & glDisable
-	private static final int GL_FENCE_SYNC = 14;
+	private static final int GL_STENCIL_MASK = 14;
+	private static final int GL_STENCIL_FUNC = 15;
+	private static final int GL_STENCIL_OP = 16;
 
-	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 15;
+	private static final int GL_TOGGLE_TYPE = 17; // Combined glEnable & glDisable
+	private static final int GL_FENCE_SYNC = 18;
+
+	private static final int GL_EXECUTE_SUB_COMMAND_BUFFER = 19;
 
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 	private static final int DRAW_MODE_MASK = 0xF;
@@ -132,6 +137,28 @@ public class CommandBuffer {
 	public void DepthMask(boolean writeDepth) {
 		ensureCapacity(1);
 		cmd[writeHead++] = GL_DEPTH_MASK_TYPE & 0xFF | (writeDepth ? 1 : 0) << 8;
+	}
+
+	public void DepthFunc(int depthMode) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_DEPTH_FUNC_TYPE & 0xFF | (long) depthMode << 8;
+	}
+
+	public void StencilMask(int mask) {
+		ensureCapacity(1);
+		cmd[writeHead++] = GL_STENCIL_MASK & 0xFF | (long) mask << 8;
+	}
+
+	public void StencilFunc(int func, int ref, int mask) {
+		ensureCapacity(2);
+		cmd[writeHead++] = GL_STENCIL_FUNC & 0xFF | (long) func << 8;
+		cmd[writeHead++] = ref | (long) mask << 32;
+	}
+
+	public void StencilOp(int sfail, int dpfail, int dppass) {
+		ensureCapacity(2);
+		cmd[writeHead++] = GL_STENCIL_OP & 0xFF | (long) sfail << 8;
+		cmd[writeHead++] = dppass | (long) dpfail << 32;
 	}
 
 	public void ColorMask(boolean writeRed, boolean writeGreen, boolean writeBlue, boolean writeAlpha) {
@@ -299,6 +326,30 @@ public class CommandBuffer {
 						if (SKIP_DEPTH_MASKING)
 							continue;
 						renderState.depthMask.set(state == 1);
+						break;
+					}
+					case GL_DEPTH_FUNC_TYPE: {
+						renderState.depthFunc.set((int) (data >> 8));
+						break;
+					}
+					case GL_STENCIL_MASK: {
+						renderState.stencilMask.set((int) (data >> 8));
+						break;
+					}
+					case GL_STENCIL_FUNC: {
+						long packed = cmd[readHead++];
+						int func = (int) (data >> 8);
+						int ref = (int) packed;
+						int mask = (int) (packed >> 32);
+						renderState.stencilFunc.set(func, ref, mask);
+						break;
+					}
+					case GL_STENCIL_OP: {
+						long packed = cmd[readHead++];
+						int sfail = (int) (data >> 8);
+						int dpfail = (int) packed;
+						int dppass = (int) (packed >> 32);
+						renderState.stencilOp.set(sfail, dpfail, dppass);
 						break;
 					}
 					case GL_COLOR_MASK_TYPE: {

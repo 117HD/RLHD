@@ -43,6 +43,8 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.ShadowMode;
+import rs117.hd.opengl.shader.BasicSceneProgram;
+import rs117.hd.opengl.shader.DepthSceneShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -52,6 +54,7 @@ import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.renderer.zone.renderpass.SilhouettePass;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -87,6 +90,10 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class ZoneRenderer implements Renderer {
+	public static final byte OPAQUE_STENCIL_REF = 1;
+	public static final byte CANOPY_STENCIL_REF = 1 << 1;
+	public static final byte ACTOR_STENCIL_REF = 1 << 2;
+
 	public static final int FRAMES_IN_FLIGHT = 3;
 
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
@@ -132,6 +139,12 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
+	private DepthSceneShaderProgram depthSceneProgram;
+
+	@Inject
+	private BasicSceneProgram basicSceneProgram;
+
+	@Inject
 	private ShadowShaderProgram.Fast fastShadowProgram;
 
 	@Inject
@@ -143,15 +156,21 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
+	@Inject
+	private SilhouettePass silhouettePass;
+
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
+	public final CommandBuffer alphaDepthCmd = new CommandBuffer("SceneAlphaDepth", renderState);
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
 
-	private GLBuffer indirectDrawCmds;
+	private final float[] playerPosition = new float[3];
+
+	public GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
 
 	public static GLBuffer.EBO eboAlpha;
@@ -192,6 +211,7 @@ public class ZoneRenderer implements Renderer {
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 		sceneManager.initialize(renderState, uboWorldViews);
 		modelStreamingManager.initialize();
+		silhouettePass.initialize(renderState, depthSceneProgram, basicSceneProgram);
 
 		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
@@ -206,6 +226,7 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
+		silhouettePass.destroy();
 
 		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
@@ -231,6 +252,8 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
+		depthSceneProgram.compile(includes);
+		basicSceneProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
 	}
@@ -238,6 +261,8 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
+		depthSceneProgram.destroy();
+		basicSceneProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
 	}
@@ -273,6 +298,8 @@ public class ZoneRenderer implements Renderer {
 	public void processConfigChanges(Set<String> keys) {
 		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING) || keys.contains(KEY_ASYNC_MODEL_CACHE_SIZE))
 			modelStreamingManager.reinitialize();
+
+		silhouettePass.updateCachedConfigs();
 	}
 
 	@Override
@@ -599,6 +626,8 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
 		plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
+		plugin.uboGlobal.canopyFadeStrength.set(silhouettePass.getCanopyFadeStrength());
+		plugin.uboGlobal.upload();
 
 		if (plugin.configColorFilter != ColorFilter.NONE) {
 			plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
@@ -612,6 +641,7 @@ public class ZoneRenderer implements Renderer {
 		// Reset buffers for the next frame
 		indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
+		alphaDepthCmd.reset();
 		directionalCmd.reset();
 		renderState.reset();
 
@@ -648,10 +678,6 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		sceneFboValid = true;
-
-		// Upload world views before rendering
-		uboWorldViews.upload();
-
 		if (eboAlphaWriter != null)
 			eboAlphaWriter.flush();
 
@@ -730,6 +756,7 @@ public class ZoneRenderer implements Renderer {
 
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
+		renderState.disable.set(GL_STENCIL_TEST);
 		renderState.depthFunc.set(GL_LEQUAL);
 		renderState.ido.set(indirectDrawCmds.id);
 
@@ -757,6 +784,7 @@ public class ZoneRenderer implements Renderer {
 		}
 		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
 		renderState.ido.set(indirectDrawCmds.id);
+		renderState.depthMask.set(true);
 		renderState.apply();
 
 		// Clear scene
@@ -771,7 +799,8 @@ public class ZoneRenderer implements Renderer {
 			1f
 		);
 		glClearDepth(0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearStencil(0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		frameTimer.end(Timer.CLEAR_SCENE);
 
 		frameTimer.begin(Timer.RENDER_SCENE);
@@ -779,24 +808,64 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
+		renderState.enable.set(GL_STENCIL_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		renderState.stencilMask.set(0xFF);
+		renderState.stencilFunc.set(GL_ALWAYS, OPAQUE_STENCIL_REF, 0xFF);
+		renderState.stencilOp.set(GL_KEEP, GL_KEEP, GL_REPLACE);
+		renderState.apply();
 
-		// Render the scene
 		sceneCmd.execute();
 
-		// TODO: Filler tiles
 		frameTimer.end(Timer.RENDER_SCENE);
 
 		glBindVertexArray(0);
 
 		// Done rendering the scene
+		renderState.stencilMask.set(0);
 		renderState.disable.set(GL_BLEND);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.disable.set(GL_STENCIL_TEST);
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
+	}
+
+	private void sceneAlphaDepthPass() {
+		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
+		if (plugin.msaaSamples > 1) {
+			renderState.enable.set(GL_MULTISAMPLE);
+		} else {
+			renderState.disable.set(GL_MULTISAMPLE);
+		}
+		renderState.viewport.set(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
+		renderState.ido.set(indirectDrawCmds.id);
+		renderState.apply();
+
+		depthSceneProgram.use();
+
+		renderState.enable.set(GL_DEPTH_TEST);
+		renderState.enable.set(GL_BLEND);
+		renderState.enable.set(GL_CULL_FACE);
+		renderState.enable.set(GL_STENCIL_TEST);
+		renderState.colorMask.set(false, false, false, false);
+		renderState.depthMask.set(true);
+		renderState.stencilMask.set(0xFF);
+		renderState.stencilFunc.set(GL_ALWAYS, 0, 0xFF);
+		renderState.stencilOp.set(GL_KEEP, GL_KEEP, GL_REPLACE);
+		renderState.apply();
+
+		alphaDepthCmd.execute();
+
+		renderState.colorMask.set(true, true, true, true);
+		renderState.stencilMask.set(0);
+		renderState.disable.set(GL_BLEND);
+		renderState.disable.set(GL_STENCIL_TEST);
+		renderState.disable.set(GL_CULL_FACE);
+		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.apply();
 	}
 
 	@Override
@@ -933,11 +1002,16 @@ public class ZoneRenderer implements Renderer {
 				final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 				if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
+					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, false, shouldDrawRoofShadows);
 				}
 
-				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
-					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+					sceneCmd.DepthMask(false);
+					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
+					sceneCmd.DepthMask(true);
+
+					z.renderAlpha(alphaDepthCmd, zx - offset, zz - offset, level, ctx, false, false);
+				}
 			}
 			frameTimer.end(Timer.DRAW_ZONE_ALPHA);
 
@@ -980,6 +1054,7 @@ public class ZoneRenderer implements Renderer {
 
 					// Draw opaque
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
+
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoDirectionalCmd);
 
@@ -992,8 +1067,12 @@ public class ZoneRenderer implements Renderer {
 					ctx.vaoSceneCmd.DepthMask(true);
 
 					// Redraw players, this time only writing depth, for correct ordering with the background
+					ctx.vaoSceneCmd.SetShader(depthSceneProgram);
 					ctx.vaoSceneCmd.ColorMask(false, false, false, false);
+
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
+
+					ctx.vaoSceneCmd.SetShader(sceneProgram);
 					ctx.vaoSceneCmd.ColorMask(true, true, true, true);
 
 					for (int zx = 0; zx < ctx.sizeX; ++zx)
@@ -1042,6 +1121,15 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		frameTimer.begin(Timer.DRAW_TEMP);
+
+		if(gameObject.getRenderable() == client.getLocalPlayer()) {
+			if(scene.getWorldViewId() != WorldView.TOPLEVEL) {
+				worldProjection.project(x, y, z, playerPosition);
+			} else {
+				vec3(playerPosition, x, y, z);
+			}
+		}
+
 		try {
 			modelStreamingManager.drawTemp(worldProjection, scene, gameObject, m, orientation, x, y, z);
 		} catch (Exception ex) {
@@ -1075,9 +1163,15 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_SUBMIT);
 			if (shouldRenderScene) {
+			plugin.uboGlobal.playerPosition.set(playerPosition);
+			plugin.uboGlobal.playerHeight.set((float) client.getLocalPlayer().getModelHeight());
+			uboWorldViews.upload();
+
 				tiledLightingPass();
 				directionalShadowPass();
 				scenePass();
+			sceneAlphaDepthPass();
+			silhouettePass.draw();
 			}
 
 			if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
