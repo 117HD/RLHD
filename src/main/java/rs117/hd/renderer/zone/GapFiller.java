@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.materials.Material;
@@ -25,7 +24,7 @@ public class GapFiller {
 	private MaterialManager materialManager;
 
 	public void estimateForZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		if (!prepareContext(ctx))
+		if (ctx.sceneBase == null || ctx.currentArea != null && !ctx.currentArea.fillGaps)
 			return;
 
 		Area area = ctx.currentArea;
@@ -58,85 +57,48 @@ public class GapFiller {
 		GpuIntBuffer vb,
 		GpuIntBuffer fb
 	) {
+		if (ctx.sceneBase == null || ctx.currentArea != null && !ctx.currentArea.fillGaps)
+			return;
+
 		int basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		int basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 		int[][][] tileHeights = ctx.scene.getTileHeights();
 		Material blackMaterial = materialManager.getMaterial("BLACK");
 
 		int posBefore = vb.position();
-		if (prepareContext(ctx)) {
-			Area area = ctx.currentArea;
-			int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
-			int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
-			int baseExX = ctx.sceneBase[0];
-			int baseExY = ctx.sceneBase[1];
-			int basePlane = ctx.sceneBase[2];
-			Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
+		Area area = ctx.currentArea;
+		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int baseExX = ctx.sceneBase[0];
+		int baseExY = ctx.sceneBase[1];
+		int basePlane = ctx.sceneBase[2];
+		Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
 
-			for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
-				for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
-					int tileExX = (mzx << 3) + xoff;
-					int tileExY = (mzz << 3) + zoff;
-					processGapTile(
-						ctx,
-						area,
-						extendedTiles,
-						tileHeights,
-						tileExX,
-						tileExY,
-						sceneMin,
-						sceneMax,
-						baseExX,
-						baseExY,
-						basePlane,
-						blackMaterial,
-						basex,
-						basez,
-						vb,
-						fb
-					);
-				}
+		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
+			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
+				int tileExX = (mzx << 3) + xoff;
+				int tileExY = (mzz << 3) + zoff;
+				processGapTile(
+					ctx,
+					area,
+					extendedTiles,
+					tileHeights,
+					tileExX,
+					tileExY,
+					sceneMin,
+					sceneMax,
+					baseExX,
+					baseExY,
+					basePlane,
+					blackMaterial,
+					basex,
+					basez,
+					vb,
+					fb
+				);
 			}
 		}
 		zone.hasGapFiller = vb.position() > posBefore;
-	}
-
-	private boolean prepareContext(ZoneSceneContext ctx) {
-		if (ctx.sceneBase == null)
-			return false;
-
-		resolveCurrentArea(ctx);
-		Area area = ctx.currentArea;
-		return area == null || area.fillGaps;
-	}
-
-	private void resolveCurrentArea(ZoneSceneContext ctx) {
-		if (!ctx.enableAreaHiding) {
-			ctx.currentArea = null;
-			return;
-		}
-
-		assert ctx.sceneBase != null;
-		Player localPlayer = ctx.client.getLocalPlayer();
-		if (localPlayer == null)
-			return;
-
-		LocalPoint lp = localPlayer.getLocalLocation();
-		int[] worldPos = {
-			ctx.sceneBase[0] + lp.getSceneX(),
-			ctx.sceneBase[1] + lp.getSceneY(),
-			ctx.sceneBase[2] + ctx.client.getTopLevelWorldView().getPlane()
-		};
-
-		if (ctx.currentArea == null || !ctx.currentArea.containsPoint(false, worldPos)) {
-			ctx.currentArea = null;
-			for (Area possibleArea : ctx.possibleAreas) {
-				if (possibleArea.containsPoint(false, worldPos)) {
-					ctx.currentArea = possibleArea;
-					break;
-				}
-			}
-		}
 	}
 
 	/**
