@@ -20,9 +20,17 @@ public final class PrimitiveIntArray {
 		return this;
 	}
 
-	public void put(int i) {
+	public void put(int v) {
 		if (length < array.length)
-			array[length++] = i;
+			array[length++] = v;
+	}
+
+	public void putUnique(int v) {
+		if (length < array.length) {
+			for(int i = 0; i < length; i++)
+				if (array[i] == v) return;
+			array[length++] = v;
+		}
 	}
 
 	public void put(int[] ints, int offset, int count) {

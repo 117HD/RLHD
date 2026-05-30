@@ -45,10 +45,10 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.collections.IntHashSet;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.collections.PooledObjectArray;
 import rs117.hd.utils.collections.PrimitiveCharArray;
+import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -119,7 +119,7 @@ public class SceneUploader implements AutoCloseable {
 
 	private int basex, basez, rid, level;
 
-	private final IntHashSet roofIds = new IntHashSet();
+	private final PrimitiveIntArray roofIds = new PrimitiveIntArray();
 	private Scene currentScene;
 	private Tile[][][] tiles;
 	private byte[][][] settings;
@@ -206,20 +206,23 @@ public class SceneUploader implements AutoCloseable {
 		var fb = zone.tboF != null ? zoneTboF.setBuffer(zone.tboF.mapped()) : null;
 		assert zone.tboF != null;
 
-		roofIds.clear();
+		roofIds.length = 0;
 		for (int level = 0; level <= 3; ++level) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					int rid = roofs[level][(mzx << 3) + xoff][(mzz << 3) + zoff];
-					if (rid > 0)
-						roofIds.add(rid);
+					if (rid > 0) {
+						roofIds
+							.ensureCapacity(1)
+							.putUnique(rid);
+					}
 				}
 			}
 		}
 
-		zone.rids = new int[4][roofIds.size()];
-		zone.roofStart = new int[4][roofIds.size()];
-		zone.roofEnd = new int[4][roofIds.size()];
+		zone.rids = new int[4][roofIds.length];
+		zone.roofStart = new int[4][roofIds.length];
+		zone.roofEnd = new int[4][roofIds.length];
 
 		for (int z = 0; z <= 3; ++z) {
 			this.level = z;
@@ -261,7 +264,8 @@ public class SceneUploader implements AutoCloseable {
 		int ridx = 0;
 
 		// upload the roofs and save their positions
-		for (int id : roofIds) {
+		for (int i = 0; i < roofIds.length; ++i ) {
+			final int id = roofIds.array[i];
 			int pos = vb != null ? vb.position() : 0;
 
 			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, vb, ab, fb);
