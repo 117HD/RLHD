@@ -1,9 +1,11 @@
 package rs117.hd.utils.jobs;
 
 import com.google.inject.Injector;
+import java.util.ArrayDeque;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -42,20 +44,16 @@ public final class JobSystem {
 
 	private int workerCount;
 
-	final ConcurrentLinkedDeque<JobHandle> workQueue = new ConcurrentLinkedDeque<>();
-	private final ConcurrentLinkedDeque<ClientCallbackJob> clientCallbacks = new ConcurrentLinkedDeque<>();
-
+	private final ArrayDeque<ClientCallbackJob> clientCallbacks = new ArrayDeque<>();
 	private final HashMap<Thread, Worker> threadToWorker = new HashMap<>();
-
-	private boolean clientInvokeScheduled;
+	private final AtomicInteger roundRobinIdx = new AtomicInteger();
+	private final AtomicBoolean clientInvokeScheduled = new AtomicBoolean();
 
 	Worker[] workers;
-	Semaphore workerSemaphore;
 
 	public void startUp(CpuUsageLimit cpuUsageLimit) {
 		workerCount = max(1, ceil((PROCESSOR_COUNT - 1) * cpuUsageLimit.threadRatio));
 		workers = new Worker[workerCount];
-		workerSemaphore = new Semaphore(workerCount);
 		active = true;
 
 		for (int i = 0; i < workerCount; i++) {
@@ -75,20 +73,33 @@ public final class JobSystem {
 		log.debug("Initialized JobSystem with {} workers", workerCount);
 	}
 
-	void signalWorkAvailable(int workCount) {
-		int availPermits = workerSemaphore.availablePermits();
-		if (availPermits >= workCount)
-			return;
-		workerSemaphore.release(min(workCount, workCount - availPermits));
+	void pushWork(JobHandle handle) {
+		// Simple RR with randomization fallback for contention spreading
+		int idx = Math.floorMod(
+			roundRobinIdx.getAndIncrement() + ThreadLocalRandom.current().nextInt(workerCount),
+			workerCount
+		);
+
+		Worker best = workers[idx];
+		int bestDepth = best.queueDepth.get();
+
+		// Small scan window for lower contention + decent balancing
+		for (int i = 1; i < min(workerCount, 3); i++) {
+			Worker worker = workers[(idx + i) % workerCount];
+			int depth = worker.queueDepth.get();
+
+			if (depth < bestDepth) {
+				best = worker;
+				bestDepth = depth;
+			}
+		}
+
+		best.push(handle);
 	}
 
-	public int getWorkQueueSize() {
-		return workQueue.size();
-	}
-
-	private void cancelAllWork(ConcurrentLinkedDeque<JobHandle> queue) {
+	private void cancelAllWork(ArrayDeque<JobHandle> queue) {
 		JobHandle handle;
-		while ((handle = queue.poll()) != null) {
+		while ((handle = queue.pollFirst()) != null) {
 			try {
 				handle.cancel(false);
 				handle.setCompleted();
@@ -101,7 +112,6 @@ public final class JobSystem {
 
 	public void shutDown() {
 		active = false;
-		cancelAllWork(workQueue);
 
 		for (Worker worker : workers) {
 			cancelAllWork(worker.localWorkQueue);
@@ -148,16 +158,7 @@ public final class JobSystem {
 		return threadToWorker.containsKey(Thread.currentThread());
 	}
 
-	public boolean hasIdleWorkers() {
-		for (Worker worker : workers) {
-			if (!worker.inflight.get())
-				return true;
-		}
-		return false;
-	}
-
 	public void printWorkersState() {
-		log.debug("WorkQueue Size: {}", workQueue.size());
 		for (Worker worker : workers)
 			worker.printState();
 	}
@@ -200,15 +201,9 @@ public final class JobSystem {
 
 		if (shouldQueue) {
 			newHandle.setInQueue();
-			if (VALIDATE) log.debug("Handle [{}] Added to queue (Dep Count: {{}})", newHandle, dependencies);
-			if (highPriority) {
-				workQueue.addFirst(newHandle);
-			} else {
-				workQueue.addLast(newHandle);
-			}
+			if (VALIDATE) log.debug("Handle [{}] Added to queue", newHandle);
+			pushWork(newHandle);
 		}
-
-		signalWorkAvailable(1);
 	}
 
 	void invokeClientCallback(Runnable callback) throws InterruptedException {
@@ -221,38 +216,40 @@ public final class JobSystem {
 		final ClientCallbackJob clientCallback = ClientCallbackJob.current();
 		clientCallback.callback = callback;
 
-		clientCallbacks.add(clientCallback);
+		synchronized (clientCallbacks) {
+			clientCallbacks.add(clientCallback);
+		}
 
-		if (!clientInvokeScheduled) {
-			clientInvokeScheduled = true;
+		if (clientInvokeScheduled.compareAndSet(false, true)) {
 			clientThread.invoke(() -> {
-				clientInvokeScheduled = false;
 				processPendingClientCallbacks();
+				clientInvokeScheduled.set(false);
 			});
 		}
 
 		try {
 			clientCallback.semaphore.acquire();
 		} catch (InterruptedException e) {
-			clientCallbacks.remove(clientCallback);
-			throw new InterruptedException();
+			synchronized (clientCallbacks) {
+				clientCallbacks.remove(clientCallback);
+				throw new InterruptedException();
+			}
 		}
 	}
 
 	public void processPendingClientCallbacks() {
-		int size = clientCallbacks.size();
-		if (size == 0)
-			return;
-
-		ClientCallbackJob pair;
-		while (size-- > 0 && (pair = clientCallbacks.poll()) != null) {
-			try {
-				pair.callback.run();
-			} catch (Throwable ex) {
-				log.warn("Encountered exception whilst processing client callback", ex);
-			} finally {
-				pair.semaphore.release();
+		synchronized (clientCallbacks) {
+			ClientCallbackJob pair;
+			while ((pair = clientCallbacks.poll()) != null) {
+				try {
+					pair.callback.run();
+				} catch (Throwable ex) {
+					log.warn("Encountered exception whilst processing client callback", ex);
+				} finally {
+					pair.semaphore.release();
+				}
 			}
 		}
+
 	}
 }

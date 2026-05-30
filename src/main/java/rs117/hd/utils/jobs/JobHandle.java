@@ -154,7 +154,6 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		if (VALIDATE)
 			log.debug("Handle [{}] Completed", this);
 
-		int queuedWork = 0;
 		JobHandle dep;
 		while ((dep = dependants.poll()) != null) {
 			if (wasCancelled) {
@@ -166,19 +165,9 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 				dep.setInQueue();
 				if (VALIDATE)
 					log.debug("Handle [{}] Adding: [{}] to queue", this, dep);
-
-				if (dep.isHighPriority()) {
-					worker.localWorkQueue.addFirst(dep);
-				} else {
-					worker.localWorkQueue.addLast(dep);
-				}
-
-				queuedWork++;
+				JOB_SYSTEM.pushWork(dep);
 			}
 		}
-
-		if (queuedWork > 1)
-			JOB_SYSTEM.signalWorkAvailable(queuedWork - 1);
 	}
 
 	private void setJobState(int newState) {
@@ -223,7 +212,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 		if (VALIDATE) log.debug("Cancelling [{}] state: [{}]", this, STATE_NAMES[prevState]);
 
-		if (prevState == STATE_NONE || (prevState == STATE_QUEUED && JOB_SYSTEM.workQueue.remove(this))) {
+		if (prevState == STATE_NONE || prevState == STATE_QUEUED) {
 			setCompleted();
 			return;
 		}

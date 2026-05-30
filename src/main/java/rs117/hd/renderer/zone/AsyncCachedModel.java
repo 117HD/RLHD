@@ -297,12 +297,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		texIndices3.cache(model, model.getTexIndices3());
 	}
 
-	@Override
-	protected boolean canStart() {
-		if (processing.get()) // Work has been stolen, so pop it off the queue
-			return true;
-
-		return
+	boolean canStart() {
+		return !processing.get() &&
 			verticesX.cached && verticesY.cached && verticesZ.cached &&
 			faceIndices1.cached && faceIndices2.cached && faceIndices3.cached &&
 			faceColors3.cached;
