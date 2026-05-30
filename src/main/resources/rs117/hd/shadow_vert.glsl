@@ -28,6 +28,7 @@
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
+#include <uniforms/texture_faces.glsl>
 
 #include <utils/constants.glsl>
 
@@ -35,11 +36,9 @@ layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
     layout (location = 1) in vec4 vUv;
-    layout (location = 3) in int vTextureFaceIdx;
+    layout (location = 3) in int vPackedTextureFace;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
-
-    uniform isamplerBuffer textureFaces;
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         out vec4 fUvw;
@@ -52,9 +51,22 @@ layout (location = 0) in vec3 vPosition;
 
     void main() {
         int vertex = gl_VertexID % 3;
-        int alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
-        int materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
-        int terrainData = texelFetch(textureFaces, vTextureFaceIdx + 2)[vertex];
+        int alphaBiasHsl;
+        int materialData;
+        int terrainData;
+        int faceDataOffset;
+
+        if(isModelFace(vPackedTextureFace)) {
+            ModelFaceData faceData = getModelFaceData(getFaceOffset(vPackedTextureFace));
+            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+            materialData = faceData.MaterialData;
+            terrainData = 0;
+        } else {
+            StaticFaceData faceData = getStaticFaceData(getFaceOffset(vPackedTextureFace));
+            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+            materialData = faceData.MaterialData[vertex];
+            terrainData = faceData.TerrainData[vertex];
+        }
 
         int waterTypeIndex = terrainData >> 3 & 0xFF;
         float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
