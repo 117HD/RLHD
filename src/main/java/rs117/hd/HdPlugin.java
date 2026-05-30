@@ -147,7 +147,6 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_PERSISTENT;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 
-@SuppressWarnings("ALL")
 @Slf4j
 @Singleton
 @PluginDescriptor(

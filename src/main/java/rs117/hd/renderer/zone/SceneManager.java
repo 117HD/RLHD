@@ -34,7 +34,6 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.GCMonitor;
 import rs117.hd.utils.NpcDisplacementCache;
-import rs117.hd.utils.RenderState;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
@@ -96,7 +95,6 @@ public class SceneManager {
 	@Inject
 	private GCMonitor gcMonitor;
 
-	private RenderState renderState;
 	private UBOWorldViews uboWorldViews;
 
 	@Getter
@@ -143,10 +141,9 @@ public class SceneManager {
 		return root;
 	}
 
-	public void initialize(RenderState renderState, UBOWorldViews uboWorldViews) {
-		this.renderState = renderState;
+	public void initialize(UBOWorldViews uboWorldViews) {
 		this.uboWorldViews = uboWorldViews;
-		root.initialize(renderState, injector);
+		root.initialize(injector);
 		eventBus.register(this);
 	}
 
@@ -193,15 +190,20 @@ public class SceneManager {
 		updateAreaHiding();
 		frameTimer.end(Timer.UPDATE_AREA_HIDING);
 
+		if (root.sceneContext == null)
+			return;
+
 		if (reloadRequested && loadingLock.getHoldCount() == 0) {
 			reloadRequested = false;
 			try {
 				loadingLock.lock();
 
 				completeAllStreaming();
-
 				if (!generateSceneDataTask.isDone())
 					generateSceneDataTask.waitForCompletion();
+
+				root.sceneContext.fillGaps = config.fillGapsInTerrain();
+
 				generateSceneDataTask.queue();
 
 				root.invalidate();
@@ -217,9 +219,6 @@ public class SceneManager {
 				log.trace("loadingLock unlocked - holdCount: {}", loadingLock.getHoldCount());
 			}
 		}
-
-		if (root.sceneContext == null)
-			return;
 
 		root.processZoneSwaps();
 
@@ -466,6 +465,7 @@ public class SceneManager {
 			Scene prev = client.getTopLevelWorldView().getScene();
 
 			nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
+			nextSceneContext.fillGaps = config.fillGapsInTerrain();
 
 			if (nextSceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 				nextSceneContext.isInHouse = true;
@@ -787,7 +787,7 @@ public class SceneManager {
 		proceduralGenerator.generateSceneData(sceneContext, null);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
-		ctx.initialize(renderState, injector);
+		ctx.initialize(injector);
 		subs[worldViewId] = ctx;
 
 		for (int x = 0; x < ctx.sizeX; ++x)

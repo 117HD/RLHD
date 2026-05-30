@@ -19,7 +19,6 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.GCMonitor;
-import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.JobGroup;
@@ -97,11 +96,11 @@ public class WorldViewContext {
 		zones = new Zone[sizeX][sizeZ];
 	}
 
-	public void initialize(RenderState renderState, Injector injector) {
+	public void initialize(Injector injector) {
 		injector.injectMembers(this);
 
-		vaoSceneCmd = new CommandBuffer("WorldViewScene", renderState);
-		vaoDirectionalCmd = new CommandBuffer("WorldViewDirectional", renderState);
+		vaoSceneCmd = new CommandBuffer("WorldViewScene");
+		vaoDirectionalCmd = new CommandBuffer("WorldViewDirectional");
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
