@@ -1,0 +1,19 @@
+/*
+ * Copyright (c) 2025
+ * All rights reserved.
+ */
+package rs117.hd.scene.particles.emitter;
+
+import java.util.List;
+import lombok.Value;
+import rs117.hd.scene.areas.AABB;
+
+/** Resolved weather area config: AABBs from area names + particle IDs. Used for debug overlay. */
+@Value
+public class WeatherAreaConfig {
+	List<AABB> aabbs;
+	List<String> particleIds;
+	List<String> globalEffectors;
+	List<String> embeddedEffectors;
+	List<String> localEffectorFilter;
+}

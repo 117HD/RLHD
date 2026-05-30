@@ -2,8 +2,10 @@ package rs117.hd.utils;
 
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
+import javax.swing.JFrame;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.Keybind;
@@ -14,6 +16,7 @@ import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
+import rs117.hd.scene.particles.debug.ParticleDebugOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
@@ -37,6 +40,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
 	private static final Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
+	private static final Keybind KEY_OPEN_PARTICLE_DEV = new Keybind(KeyEvent.VK_P, CTRL_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -68,6 +72,9 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
 
+	@Inject
+	private ParticleDebugOverlay particleDebugOverlay;
+
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
 	@Getter
@@ -77,6 +84,8 @@ public class DeveloperTools implements KeyListener {
 	@Getter
 	private boolean hideUiEnabled;
 	private boolean tiledLightingOverlayEnabled;
+
+	private JFrame particleDevFrame;
 
 	public void activate() {
 		// Listen for commands
@@ -115,9 +124,15 @@ public class DeveloperTools implements KeyListener {
 	public void deactivate() {
 		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(this);
+		if (particleDevFrame != null) {
+			particleDevFrame.setVisible(false);
+			particleDevFrame.dispose();
+			particleDevFrame = null;
+		}
 		tileInfoOverlay.setActive(false);
 		frameTimerOverlay.setActive(false);
 		shadowMapOverlay.setActive(false);
+		particleDebugOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
 		hideUiEnabled = false;
@@ -168,6 +183,13 @@ public class DeveloperTools implements KeyListener {
 				break;
 			case "culling":
 				plugin.freezeCulling = !plugin.freezeCulling;
+				break;
+			case "pt":
+				clientThread.invoke(() -> {
+					int n = plugin.getParticleManager().spawnPerformanceTestEmitters();
+					plugin.client.addChatMessage(ChatMessageType.GAMEMESSAGE, "117 HD",
+						"<col=ffff00>[117 HD] Spawned " + n + " particle test emitters.</col>", "117 HD");
+				});
 				break;
 		}
 	}
