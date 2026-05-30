@@ -27,6 +27,7 @@ public enum Timer {
 	DRAW_SUBMIT,
 
 	// Miscellaneous
+	CLIENT,
 	SWAP_BUFFERS,
 	EXECUTE_COMMAND_BUFFER,
 	MAP_UI_BUFFER("Map UI Buffer"),

@@ -231,15 +231,15 @@ public class SceneManager {
 			}
 		}
 
-		for (int objectId : root.sceneContext.animatedDynamicObjectIds) {
-			int impostorId = objectId;
+		for (Integer objectId : root.sceneContext.animatedDynamicObjectIds) {
+			Integer impostorId = objectId;
 			var def = client.getObjectDefinition(objectId);
 			if (def != null && def.getImpostorIds() != null) {
 				var impostor = def.getImpostor();
 				if (impostor != null)
 					impostorId = impostor.getId();
 			}
-			root.sceneContext.animatedDynamicObjectImpostors.put(objectId, impostorId);
+			root.sceneContext.animatedDynamicObjectImpostors.putIfAbsent(objectId, impostorId);
 		}
 
 		root.completeInvalidation();
@@ -247,19 +247,22 @@ public class SceneManager {
 
 	private void updateAreaHiding() {
 		Player localPlayer = client.getLocalPlayer();
-		if (!isTopLevelValid() || localPlayer == null || root.isLoading)
+		if (!isTopLevelValid() || localPlayer == null || root.isLoading || !root.sceneContext.enableAreaHiding) {
+			plugin.justChangedArea = false;
 			return;
+		}
 
+		var base = root.sceneContext.sceneBase;
+		assert base != null;
 		var lp = localPlayer.getLocalLocation();
-		if (root.sceneContext.enableAreaHiding) {
-			var base = root.sceneContext.sceneBase;
-			assert base != null;
-			int[] worldPos = {
+
+		try (
+			var worldPosHandle = ivec3(
 				base[0] + lp.getSceneX(),
 				base[1] + lp.getSceneY(),
 				base[2] + client.getTopLevelWorldView().getPlane()
-			};
-
+			)) {
+			final int[] worldPos = worldPosHandle.data();
 			// We need to check all areas contained in the scene in the order they appear in the list,
 			// in order to ensure lower floors can take precedence over higher floors which include tiny
 			// portions of the floor beneath around stairs and ladders
@@ -292,8 +295,6 @@ public class SceneManager {
 			} else {
 				plugin.justChangedArea = false;
 			}
-		} else {
-			plugin.justChangedArea = false;
 		}
 	}
 

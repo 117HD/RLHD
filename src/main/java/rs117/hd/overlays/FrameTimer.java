@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.utils.HDUtils;
 
 import static org.lwjgl.opengl.GL33C.*;
 
@@ -40,6 +41,8 @@ public class FrameTimer {
 	private final AutoTimer[] autoTimers = new AutoTimer[NUM_TIMERS];
 	private final boolean[] activeTimers = new boolean[NUM_TIMERS];
 	private final long[] timings = new long[NUM_TIMERS];
+	private final long[] memoryUsage = new long[NUM_TIMERS];
+	private final long[] allocations = new long[NUM_TIMERS];
 	private final int[] gpuQueries = new int[NUM_TIMERS * 2];
 	private final ArrayDeque<Timer> glDebugGroupStack = new ArrayDeque<>(NUM_GPU_DEBUG_GROUPS);
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
@@ -136,6 +139,7 @@ public class FrameTimer {
 
 	public void reset() {
 		Arrays.fill(timings, 0);
+		Arrays.fill(allocations, 0);
 		Arrays.fill(activeTimers, false);
 		cumulativeError = 0;
 	}
@@ -161,6 +165,7 @@ public class FrameTimer {
 		} else if (!activeTimers[index]) {
 			cumulativeError += errorCompensation + 1 >> 1;
 			timings[index] -= System.nanoTime() - cumulativeError;
+			memoryUsage[index] = HDUtils.getUsedMemory(timer != Timer.CLIENT);
 		}
 		activeTimers[index] = true;
 
@@ -185,15 +190,36 @@ public class FrameTimer {
 			glQueryCounter(gpuQueries[timer.ordinal() * 2 + 1], GL_TIMESTAMP);
 			// leave the GPU timer active, since it needs to be gathered at a later point
 		} else {
+			long allocated = HDUtils.getUsedMemory(timer != Timer.CLIENT) - memoryUsage[timer.ordinal()];
 			cumulativeError += errorCompensation >> 1;
 			timings[timer.ordinal()] += System.nanoTime() - cumulativeError;
 			activeTimers[timer.ordinal()] = false;
+			allocations[timer.ordinal()] += allocated > 0 ? allocated : 0;
 		}
 	}
 
-	public void add(Timer timer, long nanos) {
-		if (isActive)
+	public long getTimeStamp() { return isActive ? System.nanoTime() : 0; }
+
+	public long getUsedMemory() { return isActive ? HDUtils.getUsedMemory(true) : 0; }
+
+	public void addDuration(Timer timer, long nanos) {
+		if (isActive) {
 			timings[timer.ordinal()] += nanos;
+		}
+	}
+
+	public void add(Timer timer, long startNanos) {
+		if (isActive) {
+			timings[timer.ordinal()] += System.nanoTime() - startNanos;
+		}
+	}
+
+	public void add(Timer timer, long startNanos, long startMemory) {
+		if (isActive) {
+			long allocation = HDUtils.getUsedMemory(true) - startMemory;
+			timings[timer.ordinal()] += System.nanoTime() - startNanos;
+			allocations[timer.ordinal()] += allocation > 0 ? allocation : 0;
+		}
 	}
 
 	public void endFrameAndReset() {
@@ -234,7 +260,7 @@ public class FrameTimer {
 		}
 
 		final float cpuLoad = (float) osBean.getSystemLoadAverage() / osBean.getAvailableProcessors();
-		var frameTimings = new FrameTimings(frameEndTimestamp, timings, cpuLoad);
+		var frameTimings = new FrameTimings(frameEndTimestamp, timings, allocations, cpuLoad);
 		for (var listener : listeners)
 			listener.onFrameCompletion(frameTimings);
 
@@ -242,6 +268,9 @@ public class FrameTimer {
 	}
 
 	private void trackGarbageCollection() {
+		if(!isActive)
+			return;
+
 		List<GarbageCollectorMXBean> garbageCollectors = ManagementFactory.getGarbageCollectorMXBeans();
 		if (lastGCTimes == null || lastGCTimes.length != garbageCollectors.size())
 			lastGCTimes = new long[garbageCollectors.size()];
@@ -259,6 +288,6 @@ public class FrameTimer {
 			plugin.garbageCollectionCount += gc.getCollectionCount();
 		}
 
-		add(Timer.GARBAGE_COLLECTION, elapsedDuration * 1_000_000L);
+		addDuration(Timer.GARBAGE_COLLECTION, elapsedDuration * 1_000_000L);
 	}
 }

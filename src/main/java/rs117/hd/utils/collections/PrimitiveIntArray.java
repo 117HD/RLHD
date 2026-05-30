@@ -20,6 +20,37 @@ public final class PrimitiveIntArray {
 		return this;
 	}
 
+	public void add(int val) {
+		ensureCapacity(1);
+		array[length++] = val;
+	}
+
+	public boolean contains(int val) {
+		for(int i = 0; i < length; i++){
+			if(array[i] == val) return true;
+		}
+		return false;
+	}
+
+	public boolean isEmpty() {
+		return length == 0;
+	}
+
+	public void addUnique(int val) {
+		if(contains(val)) return;
+		ensureCapacity(1);
+		array[length++] = val;
+	}
+
+	public void remove(int val) {
+		for(int i = 0; i < length; i++){
+			if(array[i] == val) {
+				removeAtSwap(i);
+				return;
+			}
+		}
+	}
+
 	public void put(int i) {
 		if (length < array.length)
 			array[length++] = i;

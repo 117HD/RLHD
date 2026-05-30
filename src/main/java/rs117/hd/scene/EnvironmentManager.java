@@ -73,7 +73,7 @@ public class EnvironmentManager {
 	// when the current transition began, relative to plugin startup
 	private boolean transitionComplete = true;
 	private double transitionStartTime = 0;
-	private int[] previousPosition = new int[3];
+	private final int[] previousPosition = new int[3];
 
 	private float[] startFogColor = new float[] { 0, 0, 0 };
 	public float[] currentFogColor = new float[] { 0, 0, 0 };
@@ -235,23 +235,32 @@ public class EnvironmentManager {
 	public void update(SceneContext sceneContext) {
 		assert client.isClientThread();
 
-		int[] focalPoint = sceneContext.localToWorld(
-			plugin.cameraFocalPoint[0],
-			plugin.cameraFocalPoint[1],
-			client.getPlane()
-		);
-
 		// skip the transitional fade if the player has moved too far
 		// since the previous frame. results in an instant transition when
 		// teleporting, entering dungeons, etc.
-		int tileChange = (int) max(abs(subtract(vec(focalPoint), vec(previousPosition))));
-		previousPosition = focalPoint;
+		try (var focalPointHandle = ivec3())
+		{
+			final var focalPoint = sceneContext.localToWorld(
+				plugin.cameraFocalPoint[0],
+				plugin.cameraFocalPoint[1],
+				client.getPlane(),
+				focalPointHandle.data()
+			);
 
-		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
-		for (var environment : sceneContext.environments) {
-			if (environment.area.containsPoint(focalPoint)) {
-				changeEnvironment(environment, skipTransition);
-				break;
+			try (
+				var vecFocalPointHandle = vec3(focalPoint);
+				var vecPreviousPosition = vec3(previousPosition);
+				) {
+				int tileChange = (int) max(abs(vecFocalPointHandle.data(), subtract(vecFocalPointHandle.data(), vecPreviousPosition.data())));
+				copyTo(previousPosition, focalPoint);
+
+				boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
+				for (var environment : sceneContext.environments) {
+					if (environment.area.containsPoint(focalPoint)) {
+						changeEnvironment(environment, skipTransition);
+						break;
+					}
+				}
 			}
 		}
 

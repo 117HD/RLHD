@@ -391,6 +391,7 @@ public class HdPlugin extends Plugin {
 	public UBOLights uboLightsCulling;
 
 	// Configs used frequently enough to be worth caching
+	public boolean configLegacyBrightness;
 	public boolean configGroundTextures;
 	public boolean configGroundBlending;
 	public boolean configModelTextures;
@@ -416,6 +417,8 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public int configDetailDrawDistance;
+	public int configDrawDistance;
+	public int configBrightness;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -668,6 +671,8 @@ public class HdPlugin extends Plugin {
 						);
 					}
 				}
+
+				HDUtils.setupThreadAllocatedBytesMonitoring();
 
 				updateCachedConfigs();
 				developerTools.activate();
@@ -1511,9 +1516,9 @@ public class HdPlugin extends Plugin {
 				.build(
 					"AsyncUICopy",
 					t -> {
-						long start = System.nanoTime();
+						long start = frameTimer.getTimeStamp();
 						pbo.mapped().intView().put(pixels, 0, uiWidth * uiHeight);
-						frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
+						frameTimer.add(Timer.COPY_UI_ASYNC, start);
 					}
 				)
 				.setExecuteAsync(!isPowerSaving)
@@ -1637,6 +1642,8 @@ public class HdPlugin extends Plugin {
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configRoofShadows = config.roofShadows();
+		configLegacyBrightness = config.useLegacyBrightness();
+		configBrightness = config.brightness();
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
@@ -1652,6 +1659,7 @@ public class HdPlugin extends Plugin {
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configDetailDrawDistance = config.detailDrawDistance();
+		configDrawDistance = config.drawDistance();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configZoneStreaming = config.zoneStreaming();
@@ -1956,13 +1964,13 @@ public class HdPlugin extends Plugin {
 	}
 
 	public int getDrawDistance() {
-		return clamp(config.drawDistance(), 0, MAX_DISTANCE);
+		return clamp(configDrawDistance, 0, MAX_DISTANCE);
 	}
 
 	public float getGammaCorrection() {
-		if (config.useLegacyBrightness())
+		if (configLegacyBrightness)
 			return 1;
-		return 100f / config.brightness();
+		return 100f / configBrightness;
 	}
 
 	public int getExpandedMapLoadingChunks() {
@@ -1983,6 +1991,8 @@ public class HdPlugin extends Plugin {
 			stopPlugin();
 			return;
 		}
+
+		frameTimer.end(Timer.CLIENT);
 
 		if (lastFrameTimeMillis > 0) {
 			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);

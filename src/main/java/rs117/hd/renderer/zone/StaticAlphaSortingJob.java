@@ -58,7 +58,8 @@ public final class StaticAlphaSortingJob extends Job {
 
 	@Override
 	protected void onRun() {
-		long start = System.nanoTime();
+		long start = frameTimer.getTimeStamp();
+		long used = frameTimer.getUsedMemory();
 		try (FacePrioritySorter sorter = FacePrioritySorter.POOL.acquire()) {
 			for (int i = 0; i < size; i++) {
 				if (!states.compareAndSet(i, 0, 1))
@@ -66,7 +67,7 @@ public final class StaticAlphaSortingJob extends Job {
 				processModel(sorter, models[i]);
 			}
 		}
-		frameTimer.add(Timer.STATIC_ALPHA_SORT, System.nanoTime() - start);
+		frameTimer.add(Timer.STATIC_ALPHA_SORT, start, used);
 	}
 
 	private void processModel(FacePrioritySorter sorter, AlphaModel m) {
