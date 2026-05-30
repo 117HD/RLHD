@@ -192,7 +192,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		}
 	}
 
-	void sortStaticModelFacesByDistance(
+	public void sortStaticModelFacesByDistance(
 		Zone.AlphaModel m,
 		int yawCos, int yawSin,
 		int pitchCos, int pitchSin
