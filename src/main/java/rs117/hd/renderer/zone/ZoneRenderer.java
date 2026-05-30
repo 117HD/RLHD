@@ -91,6 +91,7 @@ public class ZoneRenderer implements Renderer {
 
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_MODEL_DATA = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
@@ -606,6 +607,13 @@ public class ZoneRenderer implements Renderer {
 			long timeSinceChange = System.currentTimeMillis() - plugin.colorFilterChangedAt;
 			plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 		}
+
+		// Wind uniforms
+		plugin.uboGlobal.windDirectionX.set(cos(environmentManager.currentWindAngle));
+		plugin.uboGlobal.windDirectionZ.set(sin(environmentManager.currentWindAngle));
+		plugin.uboGlobal.windStrength.set(environmentManager.currentWindStrength);
+		plugin.uboGlobal.windCeiling.set(environmentManager.currentWindCeiling);
+		plugin.uboGlobal.windOffset.set(plugin.windOffset);
 
 		plugin.uboGlobal.upload();
 

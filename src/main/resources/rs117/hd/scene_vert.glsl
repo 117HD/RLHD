@@ -27,20 +27,25 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
+#include <uniforms/texture_faces.glsl>
+#include <uniforms/model_data.glsl>
 
 #include <utils/constants.glsl>
 #include <utils/uvs.glsl>
+#include <utils/misc.glsl>
+
+#if ZONE_RENDERER
+    #include <utils/wind.glsl>
+#endif
 
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
     layout (location = 1) in vec4 vUv;
     layout (location = 2) in vec4 vNormal;
-    layout (location = 3) in int vTextureFaceIdx;
+    layout (location = 3) in int vPackedTextureFace;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
-
-    uniform isamplerBuffer textureFaces;
 #else
     layout (location = 1) in vec3 vUv;
     layout (location = 2) in vec3 vNormal;
@@ -67,37 +72,47 @@ layout (location = 0) in vec3 vPosition;
     } OUT;
 
     void main() {
-        int vertex = gl_VertexID % 3;
-        bool isProvoking = vertex == 2;
-        int materialData = 0;
-        int alphaBiasHsl = 0;
+        fWorldViewId = vWorldViewId;
 
-        if (isProvoking) {
-            // Only the Provoking vertex needs to fetch the face data
-            fAlphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx).xyz;
-            fMaterialData = texelFetch(textureFaces, vTextureFaceIdx + 1).xyz;
-            fTerrainData = texelFetch(textureFaces, vTextureFaceIdx + 2).xyz;
-            fWorldViewId = vWorldViewId;
-            alphaBiasHsl = fAlphaBiasHsl[vertex];
-            materialData = fMaterialData[vertex];
+        int vertex = gl_VertexID % 3;
+        int alphaBiasHsl;
+        int materialData;
+
+        if(isModelFace(vPackedTextureFace)) {
+            ModelFaceData faceData = getModelFaceData(getFaceOffset(vPackedTextureFace));
+            fAlphaBiasHsl = faceData.AlphaBiasHsl;
+            fMaterialData = ivec3(faceData.MaterialData);
+            fTerrainData = ivec3(0);
+            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+            materialData = faceData.MaterialData;
         } else {
-            // All outputs must be written to for macOS compatibility
-            fAlphaBiasHsl = ivec3(0);
-            fMaterialData = ivec3(0);
-            fTerrainData  = ivec3(0);
-            fWorldViewId  = 0;
-            alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
-            materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
+            StaticFaceData faceData = getStaticFaceData(getFaceOffset(vPackedTextureFace));
+            fAlphaBiasHsl = faceData.AlphaBiasHsl;
+            fMaterialData = faceData.MaterialData;
+            fTerrainData = faceData.TerrainData;
+            alphaBiasHsl = faceData.AlphaBiasHsl[vertex];
+            materialData = faceData.MaterialData[vertex];
         }
 
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
         vec3 worldNormal = vNormal.xyz;
         vec3 worldPosition = sceneOffset + vPosition;
+
+        int modelIdx = int(vNormal.w);
+        if(modelIdx > 0) {
+            //ModelData modelData = getModelData(modelIdx);
+
+        }
+
         if (vWorldViewId != -1) {
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);
             worldNormal = mat3(worldViewProjection) * worldNormal;
         }
+
+        #if WIND_DISPLACEMENT
+            // TODO: wind data needs a new vertex slot — vNormal.w is now modelIdx
+        #endif
 
         OUT.position = worldPosition;
         OUT.uv = computeVertexUvs(materialData, worldPosition, vUv.xyz);

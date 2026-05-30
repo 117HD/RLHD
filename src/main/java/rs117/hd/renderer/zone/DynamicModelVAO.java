@@ -17,6 +17,7 @@ import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NVIDIA_GPU;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
@@ -44,13 +45,15 @@ public class DynamicModelVAO implements Destructible {
 
 	private final GLBuffer vboRender;
 	private final GLBuffer vboStaging;
-	private final GLTextureBuffer tbo;
+	private final GLTextureBuffer tboF;
+	private final GLTextureBuffer tboM;
 
 	private final ArrayDeque<View> usedViews = new ArrayDeque<>();
 	private final ArrayDeque<View> freeViews = new ArrayDeque<>();
 
 	private final GLMappedBufferIntWriter vboWriter;
-	private final GLMappedBufferIntWriter tboWriter;
+	private final GLMappedBufferIntWriter tboFWriter;
+	private final GLMappedBufferIntWriter tboMWriter;
 
 	private boolean isMapped = false;
 	private int[] drawOffsets = new int[16];
@@ -81,15 +84,18 @@ public class DynamicModelVAO implements Destructible {
 		}
 		this.vboWriter = new GLMappedBufferIntWriter(this.vboStaging);
 
-		this.tbo = new GLTextureBuffer("VAO::TBO::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
-		this.tboWriter = new GLMappedBufferIntWriter(this.tbo);
+		this.tboF = new GLTextureBuffer("VAO::TexturedFaces::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
+		this.tboM = new GLTextureBuffer("VAO::ModelData::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
+		this.tboFWriter = new GLMappedBufferIntWriter(this.tboF);
+		this.tboMWriter = new GLMappedBufferIntWriter(this.tboM);
 	}
 
 	public boolean hasStagingBuffer() { return vboRender != vboStaging; }
 
 	void initialize() {
 		vao = glGenVertexArrays();
-		tbo.initialize(INITIAL_SIZE);
+		tboF.initialize(INITIAL_SIZE);
+		tboM.initialize(INITIAL_SIZE);
 		vboRender.initialize(INITIAL_SIZE);
 		if (vboRender != vboStaging)
 			vboStaging.initialize(INITIAL_SIZE);
@@ -143,7 +149,8 @@ public class DynamicModelVAO implements Destructible {
 
 	void map() {
 		vboWriter.map(false);
-		tboWriter.map(false);
+		tboFWriter.map(false);
+		tboMWriter.map(false);
 
 		reset();
 		isMapped = true;
@@ -152,7 +159,8 @@ public class DynamicModelVAO implements Destructible {
 	synchronized void unmap(boolean coalesce) {
 		final int renderVBOId = vboRender.id;
 		long vboWrittenBytes = vboWriter.flush();
-		tboWriter.flush();
+		tboFWriter.flush();
+		tboMWriter.flush();
 
 		if (drawRangeCount > 0) {
 			mergeRanges();
@@ -192,10 +200,12 @@ public class DynamicModelVAO implements Destructible {
 	@Override
 	public void destroy() {
 		vboWriter.destroy();
-		tboWriter.destroy();
+		tboFWriter.destroy();
+		tboMWriter.destroy();
 		vboRender.destroy();
 		vboStaging.destroy();
-		tbo.destroy();
+		tboF.destroy();
+		tboM.destroy();
 
 		if (vao != 0)
 			glDeleteVertexArrays(vao);
@@ -231,9 +241,11 @@ public class DynamicModelVAO implements Destructible {
 		if (view == null)
 			view = new View();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
-		view.tbo = tboWriter.reserve(faceCount * 9);
+		view.tboF = tboFWriter.reserve(faceCount * 4);
+		view.tboM = tboMWriter.reserve(4);
 		view.vao = vao;
-		view.tboTexId = tbo.getTexId();
+		view.tboFId = tboF.getTexId();
+		view.tboMId = tboM.getTexId();
 		view.drawIdx = drawIdx;
 
 		return view;
@@ -252,7 +264,7 @@ public class DynamicModelVAO implements Destructible {
 
 		// Clear ReservedViews before returning to pool
 		view.vbo = null;
-		view.tbo = null;
+		view.tboF = null;
 
 		usedViews.add(view);
 	}
@@ -280,7 +292,8 @@ public class DynamicModelVAO implements Destructible {
 			return;
 
 		cmd.BindVertexArray(vao);
-		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tbo.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
+		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
+		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboM.getTexId(), TEXTURE_UNIT_MODEL_DATA);
 
 		if (drawRangeCount == 1) {
 			if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
@@ -307,9 +320,11 @@ public class DynamicModelVAO implements Destructible {
 
 	public final class View {
 		public ReservedView vbo;
-		public ReservedView tbo;
+		public ReservedView tboF;
+		public ReservedView tboM;
 		public int vao;
-		public int tboTexId;
+		public int tboFId;
+		public int tboMId;
 		private int drawIdx;
 
 		public int getStartOffset() {
