@@ -375,9 +375,7 @@
     "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
-    "moonColor": "#FF0000",
-	  "sunStrength": 0.05,
-    "minBrightnessBoost": 0.4
+    "moonColor": "#FF0000"
   },
   {
     "description": "Needs to be above the non-legacy version",
@@ -563,8 +561,8 @@
     "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
-    "starVisibility": 0.3,
-	"moonVisibility": 0.5,
+    "starVisibility": 0.25,
+    "moonVisibility": 0.35,
     "sunStrength": 0.025,
     "sunlightStrength": 0.15,
     "windAngle": 40,
