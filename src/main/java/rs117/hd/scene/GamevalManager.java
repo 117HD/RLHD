@@ -62,7 +62,7 @@ public class GamevalManager {
 	}
 
 	public void update() {
-		if(!loaded || clearTime == 0 || System.currentTimeMillis() < clearTime)
+		if (!loaded || clearTime == 0 || System.currentTimeMillis() < clearTime)
 			return;
 
 		log.debug("Clearing gameval mappings");
@@ -83,7 +83,7 @@ public class GamevalManager {
 	}
 
 	public Handle obtainHandle() {
-		if(!loaded)
+		if (!loaded)
 			loadGamevals();
 		Handle handle = new Handle();
 		handles.add(handle);
@@ -99,7 +99,7 @@ public class GamevalManager {
 	}
 
 	private String getName(String key, int id) {
-		if(!loaded)
+		if (!loaded)
 			log.warn("Gamevals not loaded yet, will fail to resolve name.");
 
 		return GAMEVALS
@@ -213,7 +213,6 @@ public class GamevalManager {
 	}
 
 	public class Handle implements AutoCloseable {
-
 		public Map<String, Integer> getNpcs() {
 			return GAMEVALS.get(NPC_KEY);
 		}
@@ -265,7 +264,7 @@ public class GamevalManager {
 		@Override
 		public void close() {
 			handles.remove(this);
-			if(handles.isEmpty())
+			if (handles.isEmpty())
 				clearTime = System.currentTimeMillis() + 10000; // Set the clear time to 10 seconds from now
 		}
 	}

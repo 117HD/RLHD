@@ -13,7 +13,7 @@ public final class PooledObjectArray<T> {
 	}
 
 	public void release() {
-		if(array != null)
+		if (array != null)
 			PooledArrayType.OBJECT.release(array);
 		array = null;
 	}

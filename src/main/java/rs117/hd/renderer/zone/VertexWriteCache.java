@@ -36,7 +36,7 @@ public final class VertexWriteCache {
 	private void release(){
 		flush();
 
-		if(stagingBuffer != null)
+		if (stagingBuffer != null)
 			PooledArrayType.INT.release(stagingBuffer);
 		stagingBuffer = null;
 	}
@@ -170,6 +170,7 @@ public final class VertexWriteCache {
 		}
 
 		public VertexWriteCache getVertexBuffer() { return opaque; }
+
 		public VertexWriteCache getTextureBuffer() { return opaqueTex; }
 
 		public VertexWriteCache getVertexBuffer(boolean hasAlpha) {

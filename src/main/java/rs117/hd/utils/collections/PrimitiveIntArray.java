@@ -27,7 +27,7 @@ public final class PrimitiveIntArray {
 
 	public void putUnique(int v) {
 		if (length < array.length) {
-			for(int i = 0; i < length; i++)
+			for (int i = 0; i < length; i++)
 				if (array[i] == v) return;
 			array[length++] = v;
 		}

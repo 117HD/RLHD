@@ -411,8 +411,13 @@ public class SceneManager {
 							if (prevRoofId > 0 && newRoofId > 0 && prevRoofId != newRoofId) {
 								int oldIdx = nextRoofChanges.find(prevRoofId);
 								if (oldIdx != -1) {
-									if(nextRoofChanges.getValue(oldIdx) != newRoofId)
-										log.debug("Roof change mismatch: {} -> {} vs {}", prevRoofId, newRoofId, nextRoofChanges.getValue(oldIdx));
+									if (nextRoofChanges.getValue(oldIdx) != newRoofId)
+										log.debug(
+											"Roof change mismatch: {} -> {} vs {}",
+											prevRoofId,
+											newRoofId,
+											nextRoofChanges.getValue(oldIdx)
+										);
 								} else {
 									log.trace("Roof change: {} -> {}", prevRoofId, newRoofId);
 									nextRoofChanges.put(prevRoofId, newRoofId);
@@ -739,7 +744,7 @@ public class SceneManager {
 		root.sceneContext = nextSceneContext;
 		root.isLoading = false;
 
-		if(root.gcSuspendHandle != null)
+		if (root.gcSuspendHandle != null)
 			root.gcSuspendHandle.close();
 		root.gcSuspendHandle = null;
 

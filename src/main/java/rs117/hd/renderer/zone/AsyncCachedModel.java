@@ -1,6 +1,7 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
+import java.lang.reflect.Array;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.LockSupport;
@@ -17,20 +18,18 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.Job;
 
-import static java.lang.reflect.Array.getLength;
 import static rs117.hd.utils.collections.PooledArrayType.BYTE;
 import static rs117.hd.utils.collections.PooledArrayType.FLOAT;
 import static rs117.hd.utils.collections.PooledArrayType.INT;
 import static rs117.hd.utils.collections.PooledArrayType.SHORT;
 
-@SuppressWarnings("jol")
 @Slf4j
 @Getter
 @Setter
 @Accessors(chain = false)
+@SuppressWarnings("jol")
 public final class AsyncCachedModel extends Job implements Model {
-	public static final Runtime runtime = Runtime.getRuntime();
-
+	public static final Runtime RUNTIME = Runtime.getRuntime();
 	public static final ConcurrentLinkedQueue<AsyncCachedModel> INFLIGHT = new ConcurrentLinkedQueue<>();
 	public static ConcurrentPool<AsyncCachedModel> POOL;
 
@@ -103,7 +102,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private final CachedArrayField<int[]> vertexNormalsZ = addField(INT, VERTEX_TYPE);
 
 	private final AtomicBoolean processing = new AtomicBoolean(false);
-	private final AtomicBoolean isCompleted = new AtomicBoolean(false);
+	private final AtomicBoolean completed = new AtomicBoolean(false);
 	private WorldViewContext ctx;
 	private Projection projection;
 	private TileObject tileObject;
@@ -196,8 +195,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
 		waitForCompletion(true);
 
-		availMemory = runtime.freeMemory();
-		if(processCachedFields(model, false))
+		availMemory = RUNTIME.freeMemory();
+		if (processCachedFields(model, false))
 			return true;
 
 		// We've failed to obtain arrays to cache the model, return any we obtained and return false
@@ -267,7 +266,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			zone.pendingModelJobs.add(this);
 
 		processing.set(false);
-		isCompleted.set(false);
+		completed.set(false);
 
 		INFLIGHT.add(this);
 		queue();
@@ -346,7 +345,7 @@ public final class AsyncCachedModel extends Job implements Model {
 				orientation,
 				x, y, z
 			);
-			isCompleted.set(true);
+			completed.set(true);
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
 		} finally {
@@ -474,7 +473,9 @@ public final class AsyncCachedModel extends Job implements Model {
 		private T value;
 		private final AtomicBoolean cached = new AtomicBoolean(false);
 
-		public boolean isCached() {return cached.get();}
+		public boolean isCached() {
+			return cached.get();
+		}
 
 		public void ensureCached() {
 			while (!cached.get())
@@ -487,15 +488,15 @@ public final class AsyncCachedModel extends Job implements Model {
 		}
 
 		public void reset() {
-			if(value != null)
+			if (value != null)
 				arrayType.release(value);
 			value = null;
 			cached.set(false);
 		}
 
 		public boolean cache(final Model m, T src, boolean cache) {
-			if(src == null) {
-				if(cache)
+			if (src == null) {
+				if (cache)
 					cached.set(true);
 				return true;
 			}
@@ -509,16 +510,16 @@ public final class AsyncCachedModel extends Job implements Model {
 					arraySize = m.getFaceCount();
 					break;
 				default:
-					arraySize = getLength(src);
+					arraySize = Array.getLength(src);
 					break;
 			}
 
-			if(!cache) {
+			if (!cache) {
 				// Attempt to get an array from the pool, if we fail check if enough memory is available before creating
 				final long requested = (long) arraySize * arrayType.stride;
 				value = arrayType.borrow(arraySize, false);
 
-				if(value == null && requested < availMemory) {
+				if (value == null && requested < availMemory) {
 					availMemory -= requested;
 					value = arrayType.create(arraySize);
 				}
@@ -526,7 +527,7 @@ public final class AsyncCachedModel extends Job implements Model {
 				return value != null;
 			}
 
-			if (!model.isCompleted.get())
+			if (!model.completed.get())
 				System.arraycopy(src, 0, value, 0, arraySize);
 
 			cached.set(true);

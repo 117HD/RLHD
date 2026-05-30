@@ -27,7 +27,6 @@ import rs117.hd.utils.collections.PooledArrayType;
 
 import static com.sun.management.GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION;
 import static net.runelite.client.ui.overlay.OverlayPosition.ABOVE_CHATBOX_RIGHT;
-import static net.runelite.client.ui.overlay.OverlayPriority.HIGHEST;
 import static rs117.hd.utils.HDUtils.drawStringShadowed;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -93,7 +92,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 
 		overlayManager.add(this);
 
-		setPriority(HIGHEST);
+		setPriority(PRIORITY_HIGHEST);
 		setPosition(ABOVE_CHATBOX_RIGHT);
 
 		gcCount = 0;
@@ -247,7 +246,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 			);
 		}
 
-		if(plugin.configEnableGCMonitor) {
+		if (plugin.configEnableGCMonitor) {
 			final int recentSampleWeight = getRecentSampleWeight();
 			if (recentSampleWeight >= 8 && averageGCAvail < calculateMinimalHeapSize()) {
 				log.warn("Detected Average Avail Heap after GC: {}", formatBytes(averageGCAvail));
@@ -269,7 +268,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 
 	@Override
 	public Dimension render(Graphics2D g) {
-		if(!plugin.configEnableGCMonitor)
+		if (!plugin.configEnableGCMonitor)
 			return null;
 
 		final long averageGCAvail = getAvgAvailHeap();
@@ -287,7 +286,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		}
 
 		boolean shouldFadeIn = warningStartTime != -1 && now - warningStartTime >= WARNING_DELAY_MS;
-		if(!shouldFadeIn && shutdownFrac <= CRITICAL_THRESHOLD) {
+		if (!shouldFadeIn && shutdownFrac <= CRITICAL_THRESHOLD) {
 			warningStartTime = now - WARNING_DELAY_MS;
 			shouldFadeIn = true;
 		}

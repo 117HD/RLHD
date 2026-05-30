@@ -68,7 +68,6 @@ import static rs117.hd.utils.MathUtils.*;
 public class SceneUploader implements AutoCloseable {
 	public static ConcurrentPool<SceneUploader> POOL;
 
-	public static final int MAX_VERTEX_COUNT = 6500;
 	private static final short[] UP_NORMAL = { 0, -1, 0 };
 	private final int[] EMPTY_NORMALS = new int[9];
 
@@ -93,7 +92,6 @@ public class SceneUploader implements AutoCloseable {
 			assert brightness == getMaxBrightness(i);
 		}
 	}
-
 
 	@Inject
 	private RenderCallbackManager renderCallbackManager;
@@ -777,7 +775,7 @@ public class SceneUploader implements AutoCloseable {
 				textureBuffer
 			);
 		} catch (Throwable ex) {
-			try(GamevalManager.Handle handle = gamevalManager.obtainHandle()) {
+			try (GamevalManager.Handle handle = gamevalManager.obtainHandle()) {
 				log.warn(
 					"Error uploading {} {} {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
 					r instanceof DynamicObject ? "dynamic" : "static",
@@ -817,7 +815,7 @@ public class SceneUploader implements AutoCloseable {
 					rid, level, id
 				);
 			} catch (Throwable ex) {
-				try(GamevalManager.Handle handle = gamevalManager.obtainHandle()) {
+				try (GamevalManager.Handle handle = gamevalManager.obtainHandle()) {
 					log.warn(
 						"Error adding alpha model for {} {} {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
 						r instanceof DynamicObject ? "dynamic" : "static",
@@ -1913,7 +1911,7 @@ public class SceneUploader implements AutoCloseable {
 				}
 			}
 
-			faceOverrides.set(f,faceOverride);
+			faceOverrides.set(f, faceOverride);
 			faceMaterials.set(f, material);
 			faceUVTypes.set(f, uvType);
 
@@ -2035,7 +2033,8 @@ public class SceneUploader implements AutoCloseable {
 
 		for (int f = 0; f < faces.length; ++f) {
 			final int face = faces.array[f];
-			if(face >= faceCount) continue;
+			if (face >= faceCount)
+				continue;
 
 			int color1 = color1s[face];
 			int color2 = color2s[face];

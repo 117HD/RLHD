@@ -138,7 +138,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private int hoveredGamevalsHash;
 	private int copiedGamevalsHash;
 
-	private GamevalManager.Handle gameValHandle;
+	private GamevalManager.Handle gamevalHandle;
 
 	public TileInfoOverlay() {
 		setLayer(OverlayLayer.ABOVE_SCENE);
@@ -152,14 +152,14 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			// Listen to events before they're possibly consumed in DeveloperTools
 			mouseManager.registerMouseListener(0, this);
 			mouseManager.registerMouseWheelListener(this);
-			gameValHandle = gamevalManager.obtainHandle();
+			gamevalHandle = gamevalManager.obtainHandle();
 		} else {
 			overlayManager.remove(this);
 			mouseManager.unregisterMouseListener(this);
 			mouseManager.unregisterMouseWheelListener(this);
-			if(gameValHandle != null)
-				gameValHandle.close();
-			gameValHandle = null;
+			if (gamevalHandle != null)
+				gamevalHandle.close();
+			gamevalHandle = null;
 		}
 		tileOverrideManager.setTrackReplacements(activate);
 	}
@@ -725,7 +725,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				for (var spotanim : actor.getSpotAnims()) {
 					sb
 						.append(separator)
-						.append(gameValHandle.getSpotanimName(spotanim.getId()))
+						.append(gamevalHandle.getSpotanimName(spotanim.getId()))
 						.append(" (").append(spotanim.getId()).append(")")
 						.append(" frame=").append(spotanim.getFrame())
 						.append(" cycle=").append(client.getGameCycle() - spotanim.getStartCycle());
@@ -744,7 +744,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			int x = lp.getSceneX();
 			int y = lp.getSceneY();
 			if (x - size <= tileX && tileX <= x + size && y - size <= tileY && tileY <= y + size) {
-				var name = gameValHandle.getNpcName(npc.getId());
+				var name = gamevalHandle.getNpcName(npc.getId());
 				hoveredGamevals.add(name);
 				lines.add(String.format(
 					"NPC: %s (%d) name=%s ori=[%d,%d] anim=%d impostor=?%s",
@@ -762,7 +762,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		for (GraphicsObject graphicsObject : client.getGraphicsObjects()) {
 			var lp = graphicsObject.getLocation();
 			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY) {
-				var name = gameValHandle.getSpotanimName(graphicsObject.getId());
+				var name = gamevalHandle.getSpotanimName(graphicsObject.getId());
 				var anim = graphicsObject.getAnimation();
 				hoveredGamevals.add(name);
 				lines.add(String.format(
@@ -905,13 +905,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private String getIdAndImpostorId(TileObject object, @Nullable Renderable renderable) {
 		int id = object.getId();
 		int impostorId = getIdOrImpostorId(object, renderable);
-		String name = gameValHandle.getObjectName(id);
+		String name = gamevalHandle.getObjectName(id);
 		if (id == impostorId) {
 			hoveredGamevals.add(name);
 			return String.format("%s (%d)", name, id);
 		}
 
-		String impostorName = gameValHandle.getObjectName(impostorId);
+		String impostorName = gamevalHandle.getObjectName(impostorId);
 		hoveredGamevals.add(impostorName);
 		return String.format("%s (%d) -> %s (%d)", name, id, impostorName, impostorId);
 	}

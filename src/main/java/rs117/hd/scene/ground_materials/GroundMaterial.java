@@ -33,7 +33,6 @@ public class GroundMaterial {
 				materials[j] = Material.NONE;
 	}
 
-
 	public Material getRandomMaterial(int[] worldPos) {
 		assert worldPos.length == 3;
 		return getRandomMaterial(worldPos[0], worldPos[1], worldPos[2]);

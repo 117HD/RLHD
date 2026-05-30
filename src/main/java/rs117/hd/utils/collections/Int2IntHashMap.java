@@ -56,7 +56,7 @@ public final class Int2IntHashMap {
 
 	private void resizeTo(int newCapacity) {
 		newCapacity = HDUtils.ceilPow2(newCapacity);
-		if(newCapacity == keys.length)
+		if (newCapacity == keys.length)
 			return;
 
 		int[] oldKeys = keys;
@@ -265,7 +265,7 @@ public final class Int2IntHashMap {
 	}
 
 	public void clear() {
-		if(size == 0)
+		if (size == 0)
 			return;
 		Arrays.fill(keys, lowTide, highTide, EMPTY);
 		Arrays.fill(values, lowTide, highTide, 0);

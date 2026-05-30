@@ -100,7 +100,7 @@ public final class ConcurrentPool<T> {
 	}
 
 	public static void destroyAll() {
-		ConcurrentPool pool;
+		ConcurrentPool<?> pool;
 		while (!ALL_POOLS.isEmpty() && (pool = ALL_POOLS.remove(0)) != null)
 			pool.destroy();
 		ALL_POOLS.clear();

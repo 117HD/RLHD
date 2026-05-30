@@ -133,7 +133,7 @@ public class SceneContext {
 	}
 
 	public short[] getVertexNormalOrDefault(int hash, short[] result, short[] defaultNormal) {
-		if(getVertexNormal(hash, result) != null)
+		if (getVertexNormal(hash, result) != null)
 			return result;
 
 		result[0] = defaultNormal[0];
@@ -145,7 +145,7 @@ public class SceneContext {
 
 	public short[] getVertexNormal(int hash, short[] result) {
 		int index = vertexTerrainNormalIndices.getOrDefault(hash, -1);
-		if(index == -1)
+		if (index == -1)
 			return null;
 
 		final int offset = index * 3;
@@ -191,13 +191,13 @@ public class SceneContext {
 	) {
 		final int offset = getTileIdx(plane, x, y) * TILE_OVERRIDE_COUNT;
 
-		if(mainOverride != null && mainOverride != TileOverride.NONE)
+		if (mainOverride != null && mainOverride != TileOverride.NONE)
 			tileOverrideIndices[offset + TILE_OVERRIDE_MAIN] = (char) (mainOverride.index + 1);
 
-		if(underlayOverride != null && underlayOverride != TileOverride.NONE)
+		if (underlayOverride != null && underlayOverride != TileOverride.NONE)
 			tileOverrideIndices[offset + TILE_OVERRIDE_UNDERLAY] = (char) (underlayOverride.index + 1);
 
-		if(overlayOverride != null && overlayOverride != TileOverride.NONE)
+		if (overlayOverride != null && overlayOverride != TileOverride.NONE)
 			tileOverrideIndices[offset + TILE_OVERRIDE_OVERLAY] = (char) (overlayOverride.index + 1);
 	}
 
@@ -208,7 +208,7 @@ public class SceneContext {
 		for (int i = 0; i < TILE_OVERRIDE_COUNT; i++) {
 			final int idx = tileOverrideIndices[offset + i];
 			result[i] = idx > 0 ? TileOverrideManager.OVERRIDES[idx - 1] : TileOverride.NONE;
-			if(idx > 0)
+			if (idx > 0)
 				hasOverrides = true;
 		}
 

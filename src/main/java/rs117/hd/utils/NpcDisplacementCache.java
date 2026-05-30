@@ -38,7 +38,7 @@ public class NpcDisplacementCache {
 	private Set<Integer> ANIM_ID_IGNORE_LIST = Collections.emptySet();
 
 	public void initialize() {
-		try(GamevalManager.Handle handle = gamevalManager.obtainHandle()) {
+		try (GamevalManager.Handle handle = gamevalManager.obtainHandle()) {
 			HashSet<Integer> idsToIgnore = new HashSet<>();
 			for (var substringToIgnore : ANIM_IGNORE_LIST)
 				for (var entry : handle.getAnims().entrySet())

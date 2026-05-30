@@ -76,7 +76,7 @@ public enum PooledArrayType {
 	}
 
 	public static void forceCleanup(boolean full) {
-		for(int v = 0; v < VALUES.length; v++) {
+		for (int v = 0; v < VALUES.length; v++) {
 			final PooledArrayType type = VALUES[v];
 			for (int b = 0; b < type.buckets.length; b++) {
 				for (int s = 0; s < STRIPES; s++) {
@@ -84,7 +84,7 @@ public enum PooledArrayType {
 					final long stamp = bucket.lock.writeLock();
 					try {
 						bucket.opCounter = 0;
-						if(full) {
+						if (full) {
 							bucket.inUse = 0;
 							bucket.isEmpty = true;
 							bucket.stack.clear();
@@ -97,7 +97,7 @@ public enum PooledArrayType {
 				}
 			}
 		}
-		if(full)
+		if (full)
 			CURRENT_POOL_BYTES.set(0);
 	}
 
@@ -278,7 +278,7 @@ public enum PooledArrayType {
 		final int roundedSize = ceilPow2(requestedSize);
 		final int b = bucket(roundedSize);
 
-		if(b >= 0 && b < buckets.length) {
+		if (b >= 0 && b < buckets.length) {
 			final long bytes = bytesFor(roundedSize);
 			final Bucket[] bucketStripes = buckets[b];
 			final int startStripe = stripeIndex();

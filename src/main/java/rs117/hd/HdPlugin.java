@@ -2002,7 +2002,7 @@ public class HdPlugin extends Plugin {
 		frame = (frame + 1) & Integer.MAX_VALUE;
 
 		if (isPluginStopPending) {
-			if(pluginStopReason != null) {
+			if (pluginStopReason != null) {
 				String[] lines = pluginStopReason.split("\n");
 				for (String line : lines)
 					client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", ColorUtil.prependColorTag(line, Color.RED), null);

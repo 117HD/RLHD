@@ -215,10 +215,9 @@ public class ModelOverride
 		projectileIds = null;
 		graphicsObjectIds = null;
 
-		if (colorOverrides != null) {
+		if (colorOverrides != null)
 			for (var override : colorOverrides)
 				override.clearIds();
-		}
 	}
 
 	public ModelOverride copy() {

@@ -108,9 +108,8 @@ public final class FacePrioritySorter implements AutoCloseable {
 			}
 		}
 
-		if (visibleFaces.length - unsortedCount == 0) {
+		if (visibleFaces.length - unsortedCount == 0)
 			return; // No faces to sort, so don't modify the visible faces array
-		}
 
 		visibleFaces.reset();
 		if (unsortedCount > 0) // Push unsorted faces to be drawn first
@@ -205,7 +204,6 @@ public final class FacePrioritySorter implements AutoCloseable {
 		}
 	}
 
-
 	void sortStaticModelFacesByDistance(
 		Zone.AlphaModel m,
 		int yawCos, int yawSin,
@@ -235,9 +233,9 @@ public final class FacePrioritySorter implements AutoCloseable {
 		int minFz = diameter, maxFz = 0;
 		for (int i = 0; i < faceCount; ++i) {
 			final int packed = packedFaces[i];
-			final short x = (short)(packed >> 21);
-			final short y = (short)((packed << 11) >> 22);
-			final short z = (short)((packed << 21) >> 21);
+			final short x = (short) (packed >> 21);
+			final short y = (short) ((packed << 11) >> 22);
+			final short z = (short) ((packed << 21) >> 21);
 
 			final int fz = ((x * m02 + y * m12 + z * m22) >> 16) + radius;
 

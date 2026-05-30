@@ -451,9 +451,7 @@ public class Zone implements Destructible {
 		int calculateDepth(int cx, int cy, int cz, int zx, int zz) {
 			final int mx = (x + ((zx - zofx) << 10));
 			final int mz = (z + ((zz - zofz) << 10));
-			return (mx - cx) * (mx - cx) +
-			       (y - cy) * (y - cy) +
-			       (mz - cz) * (mz - cz);
+			return (mx - cx) * (mx - cx) + (y - cy) * (y - cy) + (mz - cz) * (mz - cz);
 		}
 
 		void setView(DynamicModelVAO.View view) {
@@ -675,8 +673,7 @@ public class Zone implements Destructible {
 		int cx, cy, cz;
 
 		@Override
-		public int compare(AlphaModel modelA, AlphaModel modelB)
-		{
+		public int compare(AlphaModel modelA, AlphaModel modelB) {
 			return Integer.compare(
 				modelB.calculateDepth(cx, cy, cz, zx, zz),
 				modelA.calculateDepth(cx, cy, cz, zx, zz)

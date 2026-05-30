@@ -323,8 +323,8 @@ public class ModelStreamingManager {
 			if (shouldSort && !isSquashed)
 				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances);
 
-			if(facePrioritySorter != null)
-				PooledArrayType.INT.release( faceDistances);
+			if (facePrioritySorter != null)
+				PooledArrayType.INT.release(faceDistances);
 
 			final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 			if (culledFaces.length > 0 &&
@@ -590,7 +590,7 @@ public class ModelStreamingManager {
 			if (shouldSort && !isSquashed)
 				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances, true);
 
-			if(facePrioritySorter != null)
+			if (facePrioritySorter != null)
 				PooledArrayType.INT.release(faceDistances);
 
 			if (culledFaces.length > 0 &&
@@ -689,13 +689,13 @@ public class ModelStreamingManager {
 			return null;
 
 		AsyncCachedModel result = AsyncCachedModel.POOL.acquire();
-		if(result == null)
+		if (result == null)
 			return null;
 
-		if(result.setup(model))
+		if (result.setup(model))
 			return result;
 
-		// We failed to reserve space to cache the model, so retun the model back to the pool
+		// We failed to reserve space to cache the model, so return the model back to the pool
 		AsyncCachedModel.POOL.recycle(result);
 
 		return null;

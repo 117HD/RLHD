@@ -117,7 +117,7 @@ public class TileOverrideManager {
 				if (override.ids != null) {
 					for (int id : override.ids) {
 						List<TileOverride> overrides = idMatch.get(id);
-						if(overrides == null)
+						if (overrides == null)
 							idMatch.put(id, overrides = new ArrayList<>());
 						overrides.add(override);
 					}
@@ -260,7 +260,7 @@ public class TileOverrideManager {
 		for (int i = 0; i < ids.length; i++) {
 			final int id = ids[i];
 			final var entries = idMatchOverrides.get(id);
-			if(entries == null)
+			if (entries == null)
 				continue;
 			for (int k = 0; k < entries.size(); k++) {
 				final var entry = entries.get(k);
