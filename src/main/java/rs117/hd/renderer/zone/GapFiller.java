@@ -45,7 +45,7 @@ public class GapFiller {
 			for (int zoff = 0; zoff < TILES_PER_ZONE; ++zoff) {
 				int tileExX = (mzx << 3) + xoff;
 				int tileExY = (mzz << 3) + zoff;
-				int faces = countTileFaces(ctx, area, extendedTiles, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane);
+				int faces = processGapTile(ctx, area, extendedTiles, null, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane, null, 0, 0, null, null);
 				if (faces > 0) {
 					zone.hasGapFiller = true;
 					zone.sizeO += faces;
@@ -82,7 +82,7 @@ public class GapFiller {
 				for (int zoff = 0; zoff < TILES_PER_ZONE; ++zoff) {
 					int tileExX = (mzx << 3) + xoff;
 					int tileExY = (mzz << 3) + zoff;
-					uploadTile(
+					processGapTile(
 						ctx,
 						area,
 						extendedTiles,
@@ -161,29 +161,14 @@ public class GapFiller {
 		}
 	}
 
-	private int countTileFaces(
+	/**
+	 * @return face count if the tile should be gap-filled, otherwise 0
+	 */
+	private int processGapTile(
 		ZoneSceneContext ctx,
 		@Nullable Area area,
 		Tile[][][] extendedTiles,
-		int tileExX,
-		int tileExY,
-		int sceneMin,
-		int sceneMax,
-		int baseExX,
-		int baseExY,
-		int basePlane
-	) {
-		GapTile gapTile = evaluateTile(ctx, area, extendedTiles, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane);
-		if (!gapTile.shouldFill)
-			return 0;
-		return gapTile.model == null ? 2 : gapTile.model.getFaceX().length;
-	}
-
-	private void uploadTile(
-		ZoneSceneContext ctx,
-		@Nullable Area area,
-		Tile[][][] extendedTiles,
-		int[][][] tileHeights,
+		@Nullable int[][][] tileHeights,
 		int tileExX,
 		int tileExY,
 		int sceneMin,
@@ -191,33 +176,90 @@ public class GapFiller {
 		int baseExX,
 		int baseExY,
 		int basePlane,
-		Material blackMaterial,
+		@Nullable Material blackMaterial,
 		int basex,
 		int basez,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb
+		@Nullable GpuIntBuffer vb,
+		@Nullable GpuIntBuffer fb
 	) {
-		GapTile gapTile = evaluateTile(ctx, area, extendedTiles, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane);
-		if (!gapTile.shouldFill)
-			return;
+		if (tileExX < 0 || tileExY < 0 ||
+			tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
+			return 0;
 
-		if (gapTile.model == null) {
-			uploadCustomTile(
-				tileHeights,
-				tileExX,
-				tileExY,
-				gapTile.renderLevel,
-				blackMaterial,
-				gapTile.tileX,
-				gapTile.tileY,
-				basex,
-				basez,
-				vb,
-				fb
-			);
-		} else if (gapTile.tile != null) {
-			uploadGapFillTileModel(gapTile.tile, gapTile.model, basex, basez, vb, fb);
+		int tileX = tileExX - ctx.sceneOffset;
+		int tileY = tileExY - ctx.sceneOffset;
+
+		if (area != null && !area.containsPoint(baseExX + tileX, baseExY + tileY, basePlane))
+			return 0;
+
+		Tile tile = extendedTiles[0][tileExX][tileExY];
+
+		SceneTilePaint paint;
+		SceneTileModel model = null;
+		int renderLevel = 0;
+		if (tile != null) {
+			renderLevel = tile.getRenderLevel();
+			paint = tile.getSceneTilePaint();
+			model = tile.getSceneTileModel();
+
+			if (model == null) {
+				boolean hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
+				if (!hasTilePaint) {
+					tile = tile.getBridge();
+					if (tile != null) {
+						renderLevel = tile.getRenderLevel();
+						paint = tile.getSceneTilePaint();
+						model = tile.getSceneTileModel();
+						hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
+					}
+				}
+
+				if (hasTilePaint)
+					return 0;
+			}
 		}
+
+		int[] worldPoint = ctx.sceneToWorld(tileX, tileY, 0);
+		boolean shouldFill =
+			tileX > sceneMin &&
+			tileY > sceneMin &&
+			tileX < sceneMax - 1 &&
+			tileY < sceneMax - 1 &&
+			Area.OVERWORLD.containsPoint(worldPoint);
+
+		if (shouldFill) {
+			int tileRegionID = HDUtils.worldToRegionID(worldPoint);
+			int[] regions = ctx.scene.getMapRegions();
+
+			shouldFill = false;
+			for (int region : regions) {
+				if (region == tileRegionID) {
+					shouldFill = true;
+					break;
+				}
+			}
+
+			if (!shouldFill && ctx.expandedMapLoadingChunks > 0)
+				shouldFill = true;
+		}
+
+		if (!shouldFill)
+			return 0;
+
+		// Custom gap tiles sample heights at tileExX+1/tileExY+1
+		if (model == null && (tileExX >= EXTENDED_SCENE_SIZE - 1 || tileExY >= EXTENDED_SCENE_SIZE - 1))
+			return 0;
+
+		int faces = model == null ? 2 : model.getFaceX().length;
+		if (vb != null) {
+			assert tileHeights != null && blackMaterial != null && fb != null;
+			if (model == null) {
+				uploadCustomTile(tileHeights, tileExX, tileExY, renderLevel, blackMaterial, tileX, tileY, basex, basez, vb, fb);
+			} else if (tile != null) {
+				uploadGapFillTileModel(tile, model, basex, basez, vb, fb);
+			}
+		}
+		return faces;
 	}
 
 	private void uploadGapFillTileModel(
@@ -280,104 +322,6 @@ public class GapFiller {
 		vb.putVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx);
 		vb.putVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx);
 		vb.putVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx);
-	}
-
-	private static final class GapTile {
-		boolean shouldFill;
-		@Nullable Tile tile;
-		@Nullable SceneTileModel model;
-		int renderLevel;
-		int tileX;
-		int tileY;
-	}
-
-	private GapTile evaluateTile(
-		ZoneSceneContext ctx,
-		@Nullable Area area,
-		Tile[][][] extendedTiles,
-		int tileExX,
-		int tileExY,
-		int sceneMin,
-		int sceneMax,
-		int baseExX,
-		int baseExY,
-		int basePlane
-	) {
-		GapTile gapTile = new GapTile();
-		if (tileExX < 0 || tileExY < 0 ||
-			tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
-			return gapTile;
-
-		gapTile.tileX = tileExX - ctx.sceneOffset;
-		gapTile.tileY = tileExY - ctx.sceneOffset;
-
-		if (area != null && !area.containsPoint(baseExX + gapTile.tileX, baseExY + gapTile.tileY, basePlane))
-			return gapTile;
-
-		Tile tile = extendedTiles[0][tileExX][tileExY];
-
-		SceneTilePaint paint;
-		SceneTileModel model = null;
-		int renderLevel = 0;
-		if (tile != null) {
-			renderLevel = tile.getRenderLevel();
-			paint = tile.getSceneTilePaint();
-			model = tile.getSceneTileModel();
-
-			if (model == null) {
-				boolean hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
-				if (!hasTilePaint) {
-					tile = tile.getBridge();
-					if (tile != null) {
-						renderLevel = tile.getRenderLevel();
-						paint = tile.getSceneTilePaint();
-						model = tile.getSceneTileModel();
-						hasTilePaint = paint != null && paint.getNeColor() != HIDDEN_HSL;
-					}
-				}
-
-				if (hasTilePaint)
-					return gapTile;
-			}
-		}
-
-		int[] worldPoint = ctx.sceneToWorld(gapTile.tileX, gapTile.tileY, 0);
-		boolean shouldFill =
-			gapTile.tileX > sceneMin &&
-			gapTile.tileY > sceneMin &&
-			gapTile.tileX < sceneMax - 1 &&
-			gapTile.tileY < sceneMax - 1 &&
-			Area.OVERWORLD.containsPoint(worldPoint);
-
-		if (shouldFill) {
-			int tileRegionID = HDUtils.worldToRegionID(worldPoint);
-			int[] regions = ctx.scene.getMapRegions();
-
-			shouldFill = false;
-			for (int region : regions) {
-				if (region == tileRegionID) {
-					shouldFill = true;
-					break;
-				}
-			}
-
-			if (!shouldFill && ctx.expandedMapLoadingChunks > 0)
-				shouldFill = true;
-
-		}
-
-		if (!shouldFill)
-			return gapTile;
-
-		// Custom gap tiles sample heights at tileExX+1/tileExY+1
-		if (model == null && (tileExX >= EXTENDED_SCENE_SIZE - 1 || tileExY >= EXTENDED_SCENE_SIZE - 1))
-			return gapTile;
-
-		gapTile.shouldFill = true;
-		gapTile.tile = tile;
-		gapTile.model = model;
-		gapTile.renderLevel = renderLevel;
-		return gapTile;
 	}
 
 	private void uploadCustomTile(
