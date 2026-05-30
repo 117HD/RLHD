@@ -81,6 +81,8 @@ public class ModelOverride
 	public boolean invertDisplacementStrength = false;
 	public int depthBias = -1;
 	public boolean disablePrioritySorting = false;
+	public boolean modelOffsetRelative = false;
+	public int[] modelOffset = { 0, 0, 0, };
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -249,6 +251,8 @@ public class ModelOverride
 			invertDisplacementStrength,
 			depthBias,
 			disablePrioritySorting,
+			modelOffsetRelative,
+			modelOffset,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
@@ -623,6 +627,25 @@ public class ModelOverride
 				model.rotateY90Ccw();
 				break;
 		}
+	}
+
+	public void applyModelOffset(int[] result, int preOrientation, int orientation) {
+		int offsetX = modelOffset[0];
+		int offsetY = modelOffset[1];
+		int offsetZ = modelOffset[2];
+
+		if (modelOffsetRelative && (offsetX != 0 || offsetZ != 0) && (preOrientation != 0 || orientation != 0)) {
+			final int offsetOrientSin = SINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
+			final int offsetOrientCos = COSINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
+
+			final int offsetXTemp = offsetX;
+			offsetX = offsetZ * offsetOrientSin + offsetXTemp * offsetOrientCos >> 16;
+			offsetZ = offsetZ * offsetOrientCos - offsetXTemp * offsetOrientSin >> 16;
+		}
+
+		result[0] = offsetX;
+		result[1] = offsetY;
+		result[2] = offsetZ;
 	}
 
 	@Nullable

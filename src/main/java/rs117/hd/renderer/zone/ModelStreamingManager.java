@@ -303,6 +303,7 @@ public class ModelStreamingManager {
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
 		) {
+			final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 			shouldSort &= sceneUploader.preprocessTempModel(
 				worldProjection,
 				plugin.cameraFrustum,
@@ -313,6 +314,7 @@ public class ModelStreamingManager {
 				modelOverride,
 				m,
 				isPlayer,
+				preOrientation,
 				orientation,
 				x, y, z
 			);
@@ -321,7 +323,6 @@ public class ModelStreamingManager {
 			if (shouldSort && !isSquashed)
 				facePrioritySorter.sortModelFaces(visibleFaces, m);
 
-			final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
 				plugin.configShadowMode != ShadowMode.OFF &&
@@ -565,6 +566,7 @@ public class ModelStreamingManager {
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
 		) {
+			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,
 				plugin.cameraFrustum,
@@ -575,11 +577,11 @@ public class ModelStreamingManager {
 				modelOverride,
 				m,
 				false,
+				preOrientation,
 				orient,
 				x, y, z
 			);
 
-			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (shouldSort && !isSquashed)
 				facePrioritySorter.sortModelFaces(visibleFaces, m, true);

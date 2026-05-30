@@ -145,6 +145,7 @@ public class SceneUploader implements AutoCloseable {
 	private final Material[] faceMaterials = new Material[MAX_FACE_COUNT];
 	private final UvType[] faceUVTypes = new UvType[MAX_FACE_COUNT];
 
+	private final int[] modelOffset = new int[3];
 	private final float[] projected = new float[4];
 
 	// Lazily initialized staging buffers, only used by uploadTempModel
@@ -772,13 +773,14 @@ public class SceneUploader implements AutoCloseable {
 				assert uz < 25 : uz;
 			}
 			try {
+				modelOverride.applyModelOffset(modelOffset, preOrientation, orient);
 				zone.addAlphaModel(
 					plugin,
 					materialManager,
 					zone.glVaoA,
 					zone.tboF.getTexId(),
 					model, modelOverride, alphaStart, alphaEnd,
-					x - basex, y, z - basez,
+					(x - basex) + modelOffset[0], y + modelOffset[1], (z - basez) + modelOffset[2],
 					lx, lz, ux, uz,
 					rid, level, id
 				);
@@ -1396,6 +1398,11 @@ public class SceneUploader implements AutoCloseable {
 			orientCos = COSINE[orientation];
 		}
 
+		modelOverride.applyModelOffset(modelOffset, preOrientation, orientation);
+		x += modelOffset[0];
+		y += modelOffset[1];
+		z += modelOffset[2];
+
 		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
 			int vx = (int) vertexX[v];
 			int vy = (int) vertexY[v];
@@ -1716,6 +1723,7 @@ public class SceneUploader implements AutoCloseable {
 		ModelOverride modelOverride,
 		Model model,
 		boolean sortAllFaces,
+		int preOrientation,
 		int orientation,
 		int x, int y, int z
 	) {
@@ -1740,6 +1748,11 @@ public class SceneUploader implements AutoCloseable {
 			orientSinf = SINE[orientation] / 65536f;
 			orientCosf = COSINE[orientation] / 65536f;
 		}
+
+		modelOverride.applyModelOffset(modelOffset, preOrientation, orientation);
+		x += modelOffset[0];
+		y += modelOffset[1];
+		z += modelOffset[2];
 
 		boolean shouldSort = true;
 		boolean allVertsVisible = true;
