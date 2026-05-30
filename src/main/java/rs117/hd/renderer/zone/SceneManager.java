@@ -200,6 +200,8 @@ public class SceneManager {
 					generateSceneDataTask.waitForCompletion();
 				generateSceneDataTask.queue();
 
+				root.sceneContext.fillGaps = config.fillGapsInTerrain();
+
 				root.invalidate();
 				for (var sub : subs)
 					if (sub != null)
