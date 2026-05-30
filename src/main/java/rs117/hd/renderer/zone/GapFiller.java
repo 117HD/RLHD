@@ -3,9 +3,7 @@ package rs117.hd.renderer.zone;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import net.runelite.api.SceneTileModel;
-import net.runelite.api.SceneTilePaint;
-import net.runelite.api.Tile;
+import net.runelite.api.*;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.materials.Material;
@@ -16,11 +14,10 @@ import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
-import static net.runelite.api.Constants.CHUNK_SIZE;
-import static net.runelite.api.Constants.EXTENDED_SCENE_SIZE;
+import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
-import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
-import static org.lwjgl.opengl.GL33C.GL_DEPTH_TEST;
+import static net.runelite.api.Perspective.*;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 
 @Singleton
@@ -79,7 +76,7 @@ public class GapFiller {
 		zone.hasGapFiller = vb.position() > posBefore;
 	}
 
-	public void recordDraws(CommandBuffer cmd, WorldViewContext ctx) {
+	public void drawGapFillers(CommandBuffer cmd, WorldViewContext ctx) {
 		if (!ctx.sceneContext.fillGaps)
 			return;
 
@@ -89,7 +86,7 @@ public class GapFiller {
 			for (int z = 0; z < ctx.sizeZ; ++z) {
 				Zone zone = ctx.zones[x][z];
 				if (zone.initialized && zone.hasGapFiller)
-					zone.renderGapFiller(cmd);
+					zone.renderOpaqueLevel(cmd, Zone.LEVEL_GAP_FILLER);
 			}
 		}
 		cmd.Enable(GL_DEPTH_TEST);

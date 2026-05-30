@@ -36,7 +36,6 @@ import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.TileOverrideManager;
-import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
@@ -52,8 +51,6 @@ import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static net.runelite.api.Constants.*;
-import static net.runelite.api.Constants.CHUNK_SIZE;
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.renderer.zone.FacePrioritySorter.MAX_FACE_COUNT;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
@@ -110,7 +107,7 @@ public class SceneUploader implements AutoCloseable {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
-	public ProceduralGenerator proceduralGenerator;
+	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
 	private GapFiller gapFiller;
@@ -242,17 +239,15 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		// Upload water surface tiles to be drawn after everything else
-		if (zone.hasWater && vb != null)
+		if (zone.hasWater && vb != null) {
 			uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
-
-		if (vb != null)
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
+		}
 
-		if (ctx.fillGaps && vb != null)
+		if (ctx.fillGaps && vb != null) {
 			gapFiller.uploadForZone(ctx, zone, mzx, mzz, vb, fb);
-
-		if (vb != null)
 			zone.levelOffsets[Zone.LEVEL_GAP_FILLER] = vb.position();
+		}
 	}
 
 	private void uploadZoneLevel(

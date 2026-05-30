@@ -618,11 +618,12 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.reset();
 		renderState.reset();
 
-		if (sceneManager.isTopLevelValid())
-			gapFiller.recordDraws(sceneCmd, sceneManager.getRoot());
-
 		eboAlpha.orphan();
 		eboAlphaWriter.map(true);
+
+		// TODO: Maybe add a new CommandBuffer for this, so it can be drawn to in drawZoneOpaque
+		//		 after the zoneInFrustum check
+		gapFiller.drawGapFillers(sceneCmd, ctx);
 
 		checkGLErrors();
 	}

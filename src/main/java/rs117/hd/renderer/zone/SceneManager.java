@@ -36,7 +36,6 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
-import rs117.hd.scene.SceneContext;
 import rs117.hd.utils.jobs.GenericJob;
 
 import static net.runelite.api.Constants.*;
@@ -195,8 +194,6 @@ public class SceneManager {
 			try {
 				loadingLock.lock();
 
-				applyFillGapsConfig();
-
 				completeAllStreaming();
 
 				if (!generateSceneDataTask.isDone())
@@ -319,16 +316,6 @@ public class SceneManager {
 
 		reloadRequested = true;
 		log.debug("Scene reload requested");
-	}
-
-	private void applyFillGapsConfig() {
-		boolean fillGaps = config.fillGapsInTerrain();
-		if (root.sceneContext != null)
-			root.sceneContext.fillGaps = fillGaps;
-		for (var sub : subs) {
-			if (sub != null && sub.sceneContext != null)
-				sub.sceneContext.fillGaps = fillGaps;
-		}
 	}
 
 	public boolean isLoadingScene() { return nextSceneContext != null; }
@@ -697,7 +684,6 @@ public class SceneManager {
 		}
 
 		root.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS) - sceneUploadTimeStart;
-
 		log.debug(
 			"upload time {} reused {} deferred {} map {} sceneLoad {} len opaque {} size opaque {} KiB len alpha {} size alpha {} KiB",
 			TimeUnit.MILLISECONDS.convert(root.uploadTime, TimeUnit.NANOSECONDS),
@@ -770,7 +756,6 @@ public class SceneManager {
 		}
 
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
-		sceneContext.fillGaps = config.fillGapsInTerrain();
 		proceduralGenerator.generateSceneData(sceneContext);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);

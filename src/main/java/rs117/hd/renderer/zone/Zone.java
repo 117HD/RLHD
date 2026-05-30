@@ -28,6 +28,7 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
 
+import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
@@ -58,9 +59,9 @@ public class Zone implements Destructible {
 	// sceneOffset int vec2(x, y)
 	public static final int METADATA_SIZE = 12;
 
-	public static final int LEVEL_WATER_SURFACE = 4;
-	public static final int LEVEL_GAP_FILLER = 5;
-	public static final int NUM_LEVEL_OFFSETS = LEVEL_GAP_FILLER + 1;
+	public static int LEVEL_COUNT = MAX_Z;
+	public static final int LEVEL_WATER_SURFACE = LEVEL_COUNT++;
+	public static final int LEVEL_GAP_FILLER = LEVEL_COUNT++;
 
 	public int glVao;
 	int bufLen;
@@ -91,7 +92,7 @@ public class Zone implements Destructible {
 	final StaticAlphaSortingJob alphaSortingJob = new StaticAlphaSortingJob();
 	ZoneUploadJob uploadJob;
 
-	int[] levelOffsets = new int[NUM_LEVEL_OFFSETS]; // buffer pos in ints for the end of the level
+	int[] levelOffsets = new int[LEVEL_COUNT]; // buffer pos in ints for the end of the level
 
 	int[][] rids;
 	int[][] roofStart;
@@ -372,24 +373,6 @@ public class Zone implements Destructible {
 
 		if (drawIdx == 0)
 			return;
-
-		lastDrawMode = STATIC_UNSORTED;
-		lastVao = glVao;
-		lastTboF = tboF.getTexId();
-		flush(cmd);
-	}
-
-	void renderGapFiller(CommandBuffer cmd) {
-		if (!hasGapFiller)
-			return;
-
-		int start = levelOffsets[LEVEL_WATER_SURFACE];
-		int end = levelOffsets[LEVEL_GAP_FILLER];
-		if (end <= start)
-			return;
-
-		drawIdx = 0;
-		pushRange(start, end);
 
 		lastDrawMode = STATIC_UNSORTED;
 		lastVao = glVao;
