@@ -30,8 +30,6 @@ public class GapFiller {
 	@Inject
 	private MaterialManager materialManager;
 
-	private Material blackMaterial;
-
 	public void estimateForZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		zone.hasGapFiller = false;
 		forEachZoneTile(ctx, mzx, mzz, (area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY) -> {
@@ -56,7 +54,7 @@ public class GapFiller {
 		int basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		int basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 		var tileHeights = ctx.scene.getTileHeights();
-		var blackMaterial = getBlackMaterial();
+		var blackMaterial = materialManager.getMaterial("BLACK");
 
 		int posBefore = vb.position();
 		forEachZoneTile(ctx, mzx, mzz, (area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY) -> {
@@ -135,12 +133,6 @@ public class GapFiller {
 				consumer.accept(area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY);
 			}
 		}
-	}
-
-	private Material getBlackMaterial() {
-		if (blackMaterial == null)
-			blackMaterial = materialManager.getMaterial("BLACK");
-		return blackMaterial;
 	}
 
 	private boolean prepareContext(ZoneSceneContext ctx) {
