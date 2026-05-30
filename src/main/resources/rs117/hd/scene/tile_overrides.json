@@ -1542,6 +1542,16 @@
     ]
   },
   {
+    "name": "SLEPE_WATERPUMP_TILE_FIX",
+    "area": "SLEPE_WATERPUMP_TILE_FIX",
+    "groundMaterial": "GRAVEL",
+    "blended": false,
+    "setLightness": 17,
+    "overlayIds": [
+      110
+    ]
+  },
+  {
     "name": "TAG - FIXES - END"
   },
   {
