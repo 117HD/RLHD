@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.*;
+import net.runelite.api.coords.LocalPoint;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.materials.Material;
@@ -29,14 +30,29 @@ public class GapFiller {
 
 	public void estimateForZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		zone.hasGapFiller = false;
-		forEachZoneTile(ctx, mzx, mzz, (area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY) -> {
-			int faces = countTileFaces(ctx, area, extendedTiles, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane);
-			if (faces > 0) {
-				zone.hasGapFiller = true;
-				zone.sizeO += faces;
-				zone.sizeF += faces;
+		if (!prepareContext(ctx))
+			return;
+
+		Area area = ctx.currentArea;
+		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+		int baseExX = ctx.sceneBase[0];
+		int baseExY = ctx.sceneBase[1];
+		int basePlane = ctx.sceneBase[2];
+		Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
+
+		for (int xoff = 0; xoff < TILES_PER_ZONE; ++xoff) {
+			for (int zoff = 0; zoff < TILES_PER_ZONE; ++zoff) {
+				int tileExX = (mzx << 3) + xoff;
+				int tileExY = (mzz << 3) + zoff;
+				int faces = countTileFaces(ctx, area, extendedTiles, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane);
+				if (faces > 0) {
+					zone.hasGapFiller = true;
+					zone.sizeO += faces;
+					zone.sizeF += faces;
+				}
 			}
-		});
+		}
 	}
 
 	public void uploadForZone(
@@ -49,30 +65,44 @@ public class GapFiller {
 	) {
 		int basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		int basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
-		var tileHeights = ctx.scene.getTileHeights();
-		var blackMaterial = materialManager.getMaterial("BLACK");
+		int[][][] tileHeights = ctx.scene.getTileHeights();
+		Material blackMaterial = materialManager.getMaterial("BLACK");
 
 		int posBefore = vb.position();
-		forEachZoneTile(ctx, mzx, mzz, (area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY) -> {
-			uploadTile(
-				ctx,
-				area,
-				extendedTiles,
-				tileHeights,
-				tileExX,
-				tileExY,
-				sceneMin,
-				sceneMax,
-				baseExX,
-				baseExY,
-				basePlane,
-				blackMaterial,
-				basex,
-				basez,
-				vb,
-				fb
-			);
-		});
+		if (prepareContext(ctx)) {
+			Area area = ctx.currentArea;
+			int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+			int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
+			int baseExX = ctx.sceneBase[0];
+			int baseExY = ctx.sceneBase[1];
+			int basePlane = ctx.sceneBase[2];
+			Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
+
+			for (int xoff = 0; xoff < TILES_PER_ZONE; ++xoff) {
+				for (int zoff = 0; zoff < TILES_PER_ZONE; ++zoff) {
+					int tileExX = (mzx << 3) + xoff;
+					int tileExY = (mzz << 3) + zoff;
+					uploadTile(
+						ctx,
+						area,
+						extendedTiles,
+						tileHeights,
+						tileExX,
+						tileExY,
+						sceneMin,
+						sceneMax,
+						baseExX,
+						baseExY,
+						basePlane,
+						blackMaterial,
+						basex,
+						basez,
+						vb,
+						fb
+					);
+				}
+			}
+		}
 		zone.hasGapFiller = vb.position() > posBefore;
 	}
 
@@ -86,47 +116,11 @@ public class GapFiller {
 			for (int z = 0; z < ctx.sizeZ; ++z) {
 				Zone zone = ctx.zones[x][z];
 				if (zone.initialized && zone.hasGapFiller)
-					zone.renderOpaqueLevel(cmd, Zone.LEVEL_GAP_FILLER);
+					zone.renderGapFiller(cmd, Zone.LEVEL_GAP_FILLER);
 			}
 		}
 		cmd.Enable(GL_DEPTH_TEST);
 		cmd.DepthMask(true);
-	}
-
-	@FunctionalInterface
-	private interface GapTileConsumer {
-		void accept(
-			@Nullable Area area,
-			Tile[][][] extendedTiles,
-			int sceneMin,
-			int sceneMax,
-			int baseExX,
-			int baseExY,
-			int basePlane,
-			int tileExX,
-			int tileExY
-		);
-	}
-
-	private void forEachZoneTile(ZoneSceneContext ctx, int mzx, int mzz, GapTileConsumer consumer) {
-		if (!prepareContext(ctx))
-			return;
-
-		var area = ctx.currentArea;
-		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
-		int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
-		int baseExX = ctx.sceneBase[0];
-		int baseExY = ctx.sceneBase[1];
-		int basePlane = ctx.sceneBase[2];
-		var extendedTiles = ctx.scene.getExtendedTiles();
-
-		for (int xoff = 0; xoff < TILES_PER_ZONE; ++xoff) {
-			for (int zoff = 0; zoff < TILES_PER_ZONE; ++zoff) {
-				int tileExX = (mzx << 3) + xoff;
-				int tileExY = (mzz << 3) + zoff;
-				consumer.accept(area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY);
-			}
-		}
 	}
 
 	private boolean prepareContext(ZoneSceneContext ctx) {
@@ -134,7 +128,7 @@ public class GapFiller {
 			return false;
 
 		resolveCurrentArea(ctx);
-		var area = ctx.currentArea;
+		Area area = ctx.currentArea;
 		return area == null || area.fillGaps;
 	}
 
@@ -145,11 +139,11 @@ public class GapFiller {
 		}
 
 		assert ctx.sceneBase != null;
-		var localPlayer = ctx.client.getLocalPlayer();
+		Player localPlayer = ctx.client.getLocalPlayer();
 		if (localPlayer == null)
 			return;
 
-		var lp = localPlayer.getLocalLocation();
+		LocalPoint lp = localPlayer.getLocalLocation();
 		int[] worldPos = {
 			ctx.sceneBase[0] + lp.getSceneX(),
 			ctx.sceneBase[1] + lp.getSceneY(),
@@ -158,7 +152,7 @@ public class GapFiller {
 
 		if (ctx.currentArea == null || !ctx.currentArea.containsPoint(false, worldPos)) {
 			ctx.currentArea = null;
-			for (var possibleArea : ctx.possibleAreas) {
+			for (Area possibleArea : ctx.possibleAreas) {
 				if (possibleArea.containsPoint(false, worldPos)) {
 					ctx.currentArea = possibleArea;
 					break;
