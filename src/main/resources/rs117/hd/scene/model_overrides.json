@@ -10027,7 +10027,10 @@
       "CONCH_ROWBOAT_SOUTH",
       "FOSSIL_ROWBOAT_CAMP",
       "FOSSIL_ROWBOAT_NORTH",
-      "FOSSIL_ROWBOAT_DIVING"
+      "FOSSIL_ROWBOAT_DIVING",
+      "SLEPE_BOAT",
+      "SLEPE_BOAT_RETURN",
+      "DEAL_BOAT"
     ]
   },
   {
@@ -13594,7 +13597,9 @@
       "DT2_HIDEOUT_PRISONBARS01",
       "DT2_HIDEOUT_PRISONGATE",
       "DT2_HIDEOUT_PRISONGATE_NOOP",
-      "DT2_HIDEOUT_PRISONGATE_OPEN"
+      "DT2_HIDEOUT_PRISONGATE_OPEN",
+      "SANCTUARY_GATE_OPEN",
+      "SANCTUARY_GATE_OPEN_M"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -45975,7 +45980,7 @@
     "colorOverrides": [
       {
         "description": "Metal bands",
-        "colors": "h == 3 && s == 2",
+        "colors": [ "h == 3 && s == 2", "h == 5 && s == 0" ],
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.66
@@ -45985,7 +45990,8 @@
       "HOS_BARREL_ASGARNIAN_ALE",
       "SHAYZIEN_BARREL_LARGE_TAP",
       "SHAYZIEN_BARREL_LARGE",
-      "AP_BARREL"
+      "AP_BARREL",
+      "DEAL_BARREL"
     ]
   },
   {
@@ -78701,9 +78707,10 @@
     "description": "Slepe - Wooden - Metallic - Church door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "uvOrientationY": 512,
     "colorOverrides": [
       {
-        "colors": "h == 21",
+        "colors": [ "h == 21", "h == 10" ],
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.6,
