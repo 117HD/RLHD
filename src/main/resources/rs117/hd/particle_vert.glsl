@@ -1,4 +1,3 @@
-/* Copyright (c) 2025, Mark7625. Instanced billboard particles: one quad mesh, per-instance center/size/color. */
 #version 330
 
 #include <uniforms/global.glsl>
@@ -19,6 +18,7 @@ out vec2 vUV;
 out float vLayer;
 out vec3 vFlipbook;
 out float vUseSceneAmbientLight;
+out vec3 vWorldPos;
 
 void main() {
 	vec3 toCamera = cameraPos - aCenter;
@@ -34,6 +34,7 @@ void main() {
 	vec3 upR = -right * s + up * c;
 	vec3 worldPos = aCenter + (rightR * aCorner.x + upR * aCorner.y) * aSize;
 	gl_Position = projectionMatrix * vec4(worldPos, 1.0);
+	vWorldPos = worldPos;
 	vColor = aColor;
 	vUV = aCorner * 0.5 + 0.5;
 	vLayer = aLayer;

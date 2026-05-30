@@ -226,7 +226,7 @@ public class ParticlePass implements ScenePass {
 		renderState.program.set(particleProgram);
 		renderState.enable.set(GL_BLEND);
 		renderState.blendFunc.reset();
-		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		renderState.blendFunc.set(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthMask.set(false);
 		renderState.apply();

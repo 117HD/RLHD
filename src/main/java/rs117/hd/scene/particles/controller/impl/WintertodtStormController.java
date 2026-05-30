@@ -6,11 +6,13 @@ package rs117.hd.scene.particles.controller.impl;
 
 import java.util.List;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import javax.inject.Singleton;
-import net.runelite.api.GameObject;
-import net.runelite.api.Tile;
-import net.runelite.api.events.GameObjectDespawned;
-import net.runelite.api.events.GameObjectSpawned;
+import net.runelite.api.*;
+import net.runelite.api.events.*;
+import net.runelite.api.gameval.*;
+import net.runelite.api.gameval.InterfaceID;
+import net.runelite.api.widgets.*;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.particles.controller.AbstractParticleController;
@@ -20,6 +22,11 @@ import rs117.hd.scene.particles.effector.EffectorRef;
 
 @Singleton
 public class WintertodtStormController extends AbstractParticleController {
+
+	@Inject
+	Client client;
+
+	boolean stormActive;
 
 	public static final EffectorRef STORM = EffectorRef.json("WINTERTODT_STORM");
 
@@ -63,9 +70,7 @@ public class WintertodtStormController extends AbstractParticleController {
 		.colorRange(SNOW_COLOR_MIN, SNOW_COLOR_MAX)
 		.targetColor(SNOW_COLOR_TARGET, 25f, 25f);
 
-	private int stormObjectCount;
-	@Nullable
-	private Boolean lastStormState;
+	private Boolean lastStormState = false;
 
 	@Override
 	public String getName() {
@@ -89,74 +94,44 @@ public class WintertodtStormController extends AbstractParticleController {
 		super.onDeactivate();
 	}
 
-	@Override
-	public void onSceneLoaded(@Nullable SceneContext ctx) {
-		resetStormState();
-		if (ctx == null || ctx.scene == null) {
-			return;
-		}
-		for (Tile[][] plane : ctx.scene.getExtendedTiles()) {
-			for (Tile[] column : plane) {
-				if (column == null) {
-					continue;
-				}
-				for (Tile tile : column) {
-					if (tile == null) {
-						continue;
-					}
-					for (GameObject go : tile.getGameObjects()) {
-						if (go != null && go.getId() == STORM_OBJECT_ID) {
-							stormObjectCount++;
-						}
-					}
-				}
-			}
-		}
-		applyStormIntensity();
-	}
-
 	@Subscribe
-	public void onGameObjectSpawned(GameObjectSpawned event) {
-		GameObject go = event.getGameObject();
-		if (go == null || go.getId() != STORM_OBJECT_ID) {
-			return;
-		}
-		stormObjectCount++;
-		applyStormIntensity();
-	}
+	public void onGameTick(GameTick event) {
 
-	@Subscribe
-	public void onGameObjectDespawned(GameObjectDespawned event) {
-		GameObject go = event.getGameObject();
-		if (go == null || go.getId() != STORM_OBJECT_ID) {
-			return;
+		Widget widget = client.getWidget(InterfaceID.WintStatus.ENERGY_TITLE);
+		boolean winterToadSpawned =
+			widget != null &&
+			widget.getText() != null &&
+			widget.getText().contains("%");
+
+		if (winterToadSpawned && !stormActive) {
+			stormActive = true;
+			applyStormIntensity();
+		} else if (!winterToadSpawned && stormActive) {
+			stormActive = false;
+			applyStormIntensity();
 		}
-		stormObjectCount = Math.max(0, stormObjectCount - 1);
-		applyStormIntensity();
 	}
 
 	private void resetStormState() {
-		stormObjectCount = 0;
 		lastStormState = null;
 		clearRuntimeEffectors();
 	}
 
 	private void applyStormIntensity() {
-		boolean storm = stormObjectCount > 0;
 
-		if (lastStormState != null && lastStormState != storm && particleManager != null) {
+		if (lastStormState != null && lastStormState != stormActive && particleManager != null) {
 			particleManager.clearParticleInstances();
 		}
-		lastStormState = storm;
+		lastStormState = stormActive;
 
 		clearRuntimeEffectors();
-		if (storm) {
+		if (stormActive) {
 			addRuntimeEffector(STORM_VORTEX_X, STORM_VORTEX_Y, STORM_VORTEX_PLANE, STORM);
 			for (int[] wind : STORM_WIND_PLACEMENTS) {
 				addRuntimeEffector(wind[0], wind[1], wind[2], STORM_WIND);
 			}
 		}
 
-		applyModifierToMatching(storm ? STORM_MODIFIER : CALM_MODIFIER);
+		applyModifierToMatching(stormActive ? STORM_MODIFIER : CALM_MODIFIER);
 	}
 }
