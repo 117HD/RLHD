@@ -11,14 +11,12 @@ import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.scene.water_types.WaterType;
-import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
-import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 
 @Singleton
@@ -104,23 +102,6 @@ public class GapFiller {
 			}
 		}
 		zone.hasGapFiller = vb.position() > posBefore;
-	}
-
-	public void drawGapFillers(CommandBuffer cmd, WorldViewContext ctx) {
-		if (!ctx.sceneContext.fillGaps)
-			return;
-
-		cmd.DepthMask(false);
-		cmd.Disable(GL_DEPTH_TEST);
-		for (int x = 0; x < ctx.sizeX; ++x) {
-			for (int z = 0; z < ctx.sizeZ; ++z) {
-				Zone zone = ctx.zones[x][z];
-				if (zone.initialized && zone.hasGapFiller)
-					zone.renderOpaqueLevel(cmd, Zone.LEVEL_GAP_FILLER);
-			}
-		}
-		cmd.Enable(GL_DEPTH_TEST);
-		cmd.DepthMask(true);
 	}
 
 	private boolean prepareContext(ZoneSceneContext ctx) {

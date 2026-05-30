@@ -143,9 +143,6 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
-	@Inject
-	private GapFiller gapFiller;
-
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
@@ -153,6 +150,9 @@ public class ZoneRenderer implements Renderer {
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene", renderState);
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional", renderState);
+	public final CommandBuffer gapFillerCmd = new CommandBuffer("GapFiller", renderState);
+
+	private boolean gapFillerDepthStateRecorded;
 
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -190,6 +190,7 @@ public class ZoneRenderer implements Renderer {
 
 		sceneCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
+		gapFillerCmd.setFrameTimer(frameTimer);
 
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
@@ -616,14 +617,12 @@ public class ZoneRenderer implements Renderer {
 		indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
 		directionalCmd.reset();
+		gapFillerCmd.reset();
+		gapFillerDepthStateRecorded = false;
 		renderState.reset();
 
 		eboAlpha.orphan();
 		eboAlphaWriter.map(true);
-
-		// TODO: Maybe add a new CommandBuffer for this, so it can be drawn to in drawZoneOpaque
-		//		 after the zoneInFrustum check
-		gapFiller.drawGapFillers(sceneCmd, ctx);
 
 		checkGLErrors();
 	}
@@ -789,6 +788,11 @@ public class ZoneRenderer implements Renderer {
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
+		if (gapFillerDepthStateRecorded) {
+			gapFillerCmd.Enable(GL_DEPTH_TEST);
+			gapFillerCmd.DepthMask(true);
+			gapFillerCmd.execute();
+		}
 		sceneCmd.execute();
 
 		frameTimer.end(Timer.RENDER_SCENE);
@@ -890,8 +894,18 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
-			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
+			final boolean inSceneFrustum = !sceneManager.isRoot(ctx) || z.inSceneFrustum;
+			if (inSceneFrustum)
 				z.renderOpaque(sceneCmd, ctx, false);
+
+			if (ctx.sceneContext.fillGaps && z.hasGapFiller && inSceneFrustum) {
+				if (!gapFillerDepthStateRecorded) {
+					gapFillerCmd.DepthMask(false);
+					gapFillerCmd.Disable(GL_DEPTH_TEST);
+					gapFillerDepthStateRecorded = true;
+				}
+				z.renderOpaqueLevel(gapFillerCmd, Zone.LEVEL_GAP_FILLER);
+			}
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
