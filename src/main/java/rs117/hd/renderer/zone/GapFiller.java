@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.*;
-import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.*;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.materials.Material;
