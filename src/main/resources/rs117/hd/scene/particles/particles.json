@@ -40,6 +40,46 @@
     }
   },
   {
+    "id": "3test1",
+    "general": {
+      "randomYawRotation": 2.0
+    },
+    "spread": {
+      "yawMin": 947,
+      "yawMax": 1061,
+      "pitchMin": 451,
+      "pitchMax": 511
+    },
+    "speed": {
+      "minSpeed": 524288,
+      "maxSpeed": 1048576,
+      "targetSpeed": 4194304
+    },
+    "scale": {
+      "minScale": 10,
+      "maxScale": 18
+    },
+    "colours": {
+      "minColour": "#bdd4f5ee",
+      "maxColour": "#d8e8fcff",
+      "targetColour": "#9bb8d8cc",
+      "colourTransitionPercent": 25,
+      "useSceneAmbientLight": false,
+      "uniformColourVariation": false
+    },
+    "emission": {
+      "minDelay": 1000,
+      "maxDelay": 1200,
+      "minSpawn": 2,
+      "maxSpawn": 4,
+      "emissionTimeThreshold": 32767,
+      "emissionCycleDuration": 32767
+    },
+    "texture": {
+      "file": "720.png"
+    }
+  },
+  {
     "id": "WILD_FALLING_ASH",
     "general": {
       "randomYawRotation": 2.0

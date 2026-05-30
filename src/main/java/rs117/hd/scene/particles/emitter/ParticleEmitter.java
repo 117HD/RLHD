@@ -94,6 +94,9 @@ public class ParticleEmitter {
 	private float emissionSpawnMax = 1f;
 	@Builder.Default
 	private float alphaScale = 1f;
+	/** Multiplier on weather {@code particlesPerTile} for procedural weather emitters. */
+	@Builder.Default
+	private float weatherDensityScale = 1f;
 	/** When true, spawn at fixed top-of-world height (for weather). Ignores tile height. */
 	@Builder.Default
 	private boolean spawnAtTopOfWorld = false;

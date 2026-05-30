@@ -42,6 +42,7 @@ public class EffectorDefinitionManager {
 	private final Map<String, EffectorDefinition> definitions = new LinkedHashMap<>();
 	@Getter
 	private final List<EffectorPlacement> placements = new ArrayList<>();
+	private final Map<String, List<EffectorPlacement>> runtimePlacementsByOwner = new LinkedHashMap<>();
 
 	private FileWatcher.UnregisterCallback watcher;
 
@@ -104,6 +105,9 @@ public class EffectorDefinitionManager {
 			}
 		}
 
+		registerBuiltInEffectors();
+		validateJsonRefs();
+
 		lastDefinitionCount = definitions.size();
 		lastLoadTimeMs = (System.nanoTime() - start) / 1_000_000;
 	}
@@ -114,5 +118,67 @@ public class EffectorDefinitionManager {
 			return null;
 		}
 		return definitions.get(id.toUpperCase());
+	}
+
+	private void registerBuiltInEffectors() {
+		for (EffectorDefinition def : EffectorRef.builtInRegistry()) {
+			registerBuiltIn(def);
+		}
+	}
+
+	private void validateJsonRefs() {
+		try {
+			EffectorRef.validateJsonRefs(definitions);
+		} catch (IllegalStateException ex) {
+			log.error(ex.getMessage());
+			throw ex;
+		}
+	}
+
+	public void registerBuiltIn(EffectorDefinition def) {
+		if (def == null || def.id == null || def.id.isEmpty()) {
+			return;
+		}
+		def.id = def.id.toUpperCase();
+		def.postDecode();
+		if (definitions.put(def.id, def) != null) {
+			log.debug("[Particles] Built-in effector {} replaced JSON entry", def.id);
+		}
+	}
+
+	public void clearRuntimePlacements(String ownerId) {
+		if (ownerId == null) {
+			return;
+		}
+		runtimePlacementsByOwner.remove(ownerId.toUpperCase());
+	}
+
+	public void clearAllRuntimePlacements() {
+		runtimePlacementsByOwner.clear();
+	}
+
+	public void addRuntimePlacement(String ownerId, int worldX, int worldY, int plane, String effectorId) {
+		if (ownerId == null || ownerId.isEmpty() || effectorId == null || effectorId.isEmpty()) {
+			return;
+		}
+		runtimePlacementsByOwner
+			.computeIfAbsent(ownerId.toUpperCase(), k -> new ArrayList<>())
+			.add(new EffectorPlacement(worldX, worldY, plane, effectorId.toUpperCase()));
+	}
+
+	public List<EffectorPlacement> getAllPlacements() {
+		if (runtimePlacementsByOwner.isEmpty()) {
+			return placements;
+		}
+		int runtimeCount = 0;
+		for (List<EffectorPlacement> list : runtimePlacementsByOwner.values()) {
+			runtimeCount += list.size();
+		}
+		List<EffectorPlacement> all = new ArrayList<>(placements.size() + runtimeCount);
+		all.addAll(placements);
+		for (List<EffectorPlacement> list : runtimePlacementsByOwner.values()) {
+			all.addAll(list);
+		}
+		return all;
 	}
 }

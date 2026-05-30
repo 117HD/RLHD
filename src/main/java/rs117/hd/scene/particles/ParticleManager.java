@@ -42,6 +42,7 @@ import rs117.hd.scene.particles.emitter.WeatherAreaConfig;
 import rs117.hd.scene.particles.emitter.WeatherCylinderConfig;
 import rs117.hd.scene.particles.effector.ActiveEffectorState;
 import rs117.hd.scene.particles.effector.EffectorDefinitionManager;
+import rs117.hd.scene.particles.controller.ParticleControllerManager;
 import rs117.hd.data.ObjectType;
 import rs117.hd.utils.HDUtils;
 
@@ -132,6 +133,9 @@ public class ParticleManager {
 	private EffectorDefinitionManager effectorDefinitions;
 
 	@Inject
+	private ParticleControllerManager controllerManager;
+
+	@Inject
 	private ParticleTextureLoader particleTextureLoader;
 
 	@Inject
@@ -164,6 +168,40 @@ public class ParticleManager {
 
 	public List<ParticleEmitter> getSceneEmitters() {
 		return particleSystem.getEmitters();
+	}
+
+	/** Scene + weather-cylinder emitters whose {@link ParticleEmitter#getParticleId()} is in {@code particleIds}. */
+	public List<ParticleEmitter> getEmittersForParticleIds(List<String> particleIds) {
+		if (particleIds == null || particleIds.isEmpty()) {
+			return List.of();
+		}
+		java.util.Set<String> ids = new java.util.HashSet<>();
+		for (String id : particleIds) {
+			if (id != null && !id.isEmpty()) {
+				ids.add(id.toUpperCase());
+			}
+		}
+		if (ids.isEmpty()) {
+			return List.of();
+		}
+		List<ParticleEmitter> out = new ArrayList<>();
+		for (ParticleEmitter emitter : particleSystem.getEmitters()) {
+			String pid = emitter.getParticleId();
+			if (pid != null && ids.contains(pid.toUpperCase())) {
+				out.add(emitter);
+			}
+		}
+		for (WeatherCylinderInstance inst : weatherCylinderInstances) {
+			ParticleEmitter emitter = inst.emitter;
+			if (emitter == null) {
+				continue;
+			}
+			String pid = emitter.getParticleId();
+			if (pid != null && ids.contains(pid.toUpperCase())) {
+				out.add(emitter);
+			}
+		}
+		return out;
 	}
 
 	public Map<TileObject, List<ParticleEmitter>> getEmittersByTileObject() {
@@ -225,11 +263,13 @@ public class ParticleManager {
 
 	public void startUp() {
 		eventBus.register(this);
+		controllerManager.startUp(this);
 		loadConfig();
 	}
 
 	public void shutDown() {
 		eventBus.unregister(this);
+		controllerManager.shutDown();
 		removeAllObjectSpawnedEmitters();
 		emitterDefinitionManager.shutdown();
 		particleDefinitions.shutdown();
@@ -267,6 +307,7 @@ public class ParticleManager {
 			}
 		}
 		log.info("Finished loading scene particle emitters (count={}, took={}ms)", particleSystem.getEmitters().size(), sw.elapsed(TimeUnit.MILLISECONDS));
+		controllerManager.onEmittersReloaded(ctx);
 	}
 
 	private void loadConfig() {
@@ -784,6 +825,7 @@ public class ParticleManager {
 			ParticleBuffer buf = particleSystem.getRenderBuffer();
 
 			tickWeatherCylinders(ctx, dt, gameCycle, buf);
+			controllerManager.update(ctx, dt);
 
 			int maxParticles = getMaxParticles();
 			int numEmitters = particleSystem.getEmitters().size();
@@ -851,7 +893,7 @@ public class ParticleManager {
 		activeEffectorsById.clear();
 		int[] local = new int[3];
 		float halfTile = LOCAL_TILE_SIZE / 2f;
-		for (var placement : effectorDefinitions.getPlacements()) {
+		for (var placement : effectorDefinitions.getAllPlacements()) {
 			var def = effectorDefinitions.getDefinition(placement.getEffectorId());
 			if (def == null) continue;
 			var wp = new WorldPoint(placement.getWorldX(), placement.getWorldY(), placement.getPlane());
@@ -882,7 +924,7 @@ public class ParticleManager {
 			var aabb = cfg.getAabb();
 			if (aabb == null) continue;
 			if (!ctx.intersects(aabb)) continue;
-			float ppt = cfg.getParticlesPerTile();
+			float ppt = cfg.getParticlesPerTile() * inst.emitter.getWeatherDensityScale();
 			if (ppt <= 0f) continue;
 			int width = aabb.maxX - aabb.minX + 1;
 			int height = aabb.maxY - aabb.minY + 1;
@@ -916,7 +958,7 @@ public class ParticleManager {
 
 			if (!emitter.isEmissionAllowedAtCycle(gameCycle)) continue;
 			int toSpawn;
-			float ppt = cfg.getParticlesPerTile();
+			float ppt = cfg.getParticlesPerTile() * emitter.getWeatherDensityScale();
 			if (ppt > 0f) {
 				int width = aabb.maxX - aabb.minX + 1;
 				int height = aabb.maxY - aabb.minY + 1;

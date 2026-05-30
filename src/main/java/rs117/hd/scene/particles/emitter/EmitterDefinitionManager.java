@@ -10,7 +10,9 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -64,6 +66,9 @@ public class EmitterDefinitionManager {
 	@Getter
 	private final List<WeatherCylinderConfig> weatherCylinderConfigs = new ArrayList<>();
 
+	@Getter
+	private final Map<String, List<String>> controllerBindings = new LinkedHashMap<>();
+
 	private FileWatcher.UnregisterCallback watcher;
 
 	@Getter
@@ -101,11 +106,16 @@ public class EmitterDefinitionManager {
 			objectBindingsByType.clear();
 			weatherAreaConfigs.clear();
 			weatherCylinderConfigs.clear();
+			controllerBindings.clear();
 			if (entries != null) {
 				var objects = gamevalManager.getObjects();
 				for (EmitterConfigEntry entry : entries) {
 					List<String> pids = getParticleIds(entry);
 					if (pids.isEmpty()) continue;
+					if (entry.controller != null && !entry.controller.isEmpty()) {
+						String controllerId = entry.controller.toUpperCase();
+						controllerBindings.computeIfAbsent(controllerId, k -> new ArrayList<>()).addAll(pids);
+					}
 					String pid = pids.get(0);
 					if (entry.placements != null) {
 						for (int[] p : entry.placements) {
@@ -175,12 +185,16 @@ public class EmitterDefinitionManager {
 			lastPlacements = placements.size();
 			lastObjectBindings = objectBindingsByType.size();
 			lastLoadTimeMs = (System.nanoTime() - start) / 1_000_000;
+			for (List<String> ids : controllerBindings.values()) {
+				ids.replaceAll(String::toUpperCase);
+			}
 		} catch (IOException ex) {
 			log.error("[Particles] Failed to load emitters.json from {}", EMITTERS_CONFIG_PATH, ex);
 			placements.clear();
 			objectBindingsByType.clear();
 			weatherAreaConfigs.clear();
 			weatherCylinderConfigs.clear();
+			controllerBindings.clear();
 		}
 	}
 

@@ -64,11 +64,20 @@
   {
     "particleIds": [ "3test" ],
     "description": "Particles 3 and 4 emitters",
-    "weatherAreas": [ "ICE_MOUNTAIN","WES","WATERBIRTH_ISLAND","DSDSDSDFSDDF" ],
+    "weatherAreas": [ "ICE_MOUNTAIN","WES","WATERBIRTH_ISLAND","DSDSDSDFSDDF","WINTERTODT_ARENA" ],
     "weatherParticlesPerTile": 3,
     "globalEffectors": [ "WIND_DEFAULT" ],
     "embeddedEffectors": [],
     "localEffectorFilter": [ "WIND_DEFAULT" ]
+  },
+  {
+    "particleIds": [ "3test1" ],
+    "controller": "wintertodt_storm",
+    "description": "Wintertodt snow — scripted storm intensity",
+    "weatherAreas": [ "WINTERTODT_ARENA" ],
+    "weatherParticlesPerTile": 10,
+    "embeddedEffectors": [],
+    "localEffectorFilter": []
   },
   {
     "description": "WILD_FALLOFF_FALLING_ASH",

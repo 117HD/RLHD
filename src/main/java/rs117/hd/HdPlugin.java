@@ -118,6 +118,7 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.particles.ParticleManager;
+import rs117.hd.scene.particles.controller.ParticleControllerManager;
 import rs117.hd.scene.particles.debug.EffectorDebugOverlay;
 import rs117.hd.scene.particles.debug.ParticleGizmoOverlay;
 import rs117.hd.scene.particles.debug.ParticleSidebarPanel;
@@ -239,7 +240,8 @@ public class HdPlugin extends Plugin {
 		TileOverrideManager.class,
 		WaterTypeManager.class,
 		SceneManager.class,
-		ParticleManager.class
+		ParticleManager.class,
+		ParticleControllerManager.class
 	);
 
 	@Getter

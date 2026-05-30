@@ -40,6 +40,10 @@ public class EmitterConfigEntry {
 	@Nullable
 	public List<String> localEffectorFilter;
 
+	/** Optional controller script id from controllers.json (links particle emitters to runtime logic). */
+	@Nullable
+	public String controller;
+
 	@Data
 	public static class ObjectBinding {
 		@Nullable
