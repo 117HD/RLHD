@@ -27,19 +27,15 @@ public class GapFiller {
 		if (ctx.sceneBase == null || ctx.currentArea != null && !ctx.currentArea.fillGaps)
 			return;
 
-		Area area = ctx.currentArea;
 		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
 		int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
-		int baseExX = ctx.sceneBase[0];
-		int baseExY = ctx.sceneBase[1];
-		int basePlane = ctx.sceneBase[2];
 		Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
 
 		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
 			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				int tileExX = (mzx << 3) + xoff;
 				int tileExY = (mzz << 3) + zoff;
-				int faces = processGapTile(ctx, area, extendedTiles, null, tileExX, tileExY, sceneMin, sceneMax, baseExX, baseExY, basePlane, null, 0, 0, null, null);
+				int faces = processGapTile(ctx, extendedTiles, null, tileExX, tileExY, sceneMin, sceneMax, null, 0, 0, null, null);
 				if (faces > 0) {
 					zone.hasGapFiller = true;
 					zone.sizeO += faces;
@@ -65,31 +61,23 @@ public class GapFiller {
 		int[][][] tileHeights = ctx.scene.getTileHeights();
 		Material blackMaterial = materialManager.getMaterial("BLACK");
 
-		int posBefore = vb.position();
-		Area area = ctx.currentArea;
 		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
 		int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
-		int baseExX = ctx.sceneBase[0];
-		int baseExY = ctx.sceneBase[1];
-		int basePlane = ctx.sceneBase[2];
 		Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
 
+		int posBefore = vb.position();
 		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
 			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				int tileExX = (mzx << 3) + xoff;
 				int tileExY = (mzz << 3) + zoff;
 				processGapTile(
 					ctx,
-					area,
 					extendedTiles,
 					tileHeights,
 					tileExX,
 					tileExY,
 					sceneMin,
 					sceneMax,
-					baseExX,
-					baseExY,
-					basePlane,
 					blackMaterial,
 					basex,
 					basez,
@@ -106,30 +94,27 @@ public class GapFiller {
 	 */
 	private int processGapTile(
 		ZoneSceneContext ctx,
-		@Nullable Area area,
 		Tile[][][] extendedTiles,
 		@Nullable int[][][] tileHeights,
 		int tileExX,
 		int tileExY,
 		int sceneMin,
 		int sceneMax,
-		int baseExX,
-		int baseExY,
-		int basePlane,
 		@Nullable Material blackMaterial,
 		int basex,
 		int basez,
 		@Nullable GpuIntBuffer vb,
 		@Nullable GpuIntBuffer fb
 	) {
-		if (tileExX < 0 || tileExY < 0 ||
-			tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
+		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
 			return 0;
 
+		assert ctx.sceneBase != null;
 		int tileX = tileExX - ctx.sceneOffset;
 		int tileY = tileExY - ctx.sceneOffset;
 
-		if (area != null && !area.containsPoint(baseExX + tileX, baseExY + tileY, basePlane))
+		int[] worldPos = ctx.sceneToWorld(tileX, tileY, 0);
+		if (ctx.currentArea != null && !ctx.currentArea.containsPoint(worldPos))
 			return 0;
 
 		Tile tile = extendedTiles[0][tileExX][tileExY];
@@ -159,16 +144,15 @@ public class GapFiller {
 			}
 		}
 
-		int[] worldPoint = ctx.sceneToWorld(tileX, tileY, 0);
 		boolean shouldFill =
 			tileX > sceneMin &&
 			tileY > sceneMin &&
 			tileX < sceneMax - 1 &&
 			tileY < sceneMax - 1 &&
-			Area.OVERWORLD.containsPoint(worldPoint);
+			Area.OVERWORLD.containsPoint(worldPos);
 
 		if (shouldFill) {
-			int tileRegionID = HDUtils.worldToRegionID(worldPoint);
+			int tileRegionID = HDUtils.worldToRegionID(worldPos);
 			int[] regions = ctx.scene.getMapRegions();
 
 			shouldFill = false;
@@ -186,17 +170,13 @@ public class GapFiller {
 		if (!shouldFill)
 			return 0;
 
-		// Custom gap tiles sample heights at tileExX+1/tileExY+1
-		if (model == null && (tileExX >= EXTENDED_SCENE_SIZE - 1 || tileExY >= EXTENDED_SCENE_SIZE - 1))
-			return 0;
-
-		int faces = model == null ? 2 : model.getFaceX().length;
+		int faces = model != null ? model.getFaceX().length : 2;
 		if (vb != null) {
 			assert tileHeights != null && blackMaterial != null && fb != null;
-			if (model == null) {
-				uploadCustomTile(tileHeights, tileExX, tileExY, renderLevel, blackMaterial, tileX, tileY, basex, basez, vb, fb);
-			} else if (tile != null) {
+			if (model != null) {
 				uploadGapFillTileModel(tile, model, basex, basez, vb, fb);
+			} else {
+				uploadCustomTile(tileHeights, tileExX, tileExY, renderLevel, blackMaterial, tileX, tileY, basex, basez, vb, fb);
 			}
 		}
 		return faces;
