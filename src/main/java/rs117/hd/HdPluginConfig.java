@@ -53,6 +53,7 @@ import rs117.hd.config.ShadowResolution;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.config.SkyboxTheme;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
@@ -797,12 +798,36 @@ public interface HdPluginConfig extends Config
 	default boolean pohThemeEnvironments() { return true; }
 
 
+	/*====== 3D Skybox settings ======*/
+
+	@ConfigSection(
+		name = "3D Skybox",
+		description = "Settings for high-resolution 3D panoramic skybox rendering templates.",
+		position = 4,
+		closedByDefault = true
+	)
+	String skyboxSettings = "skyboxSettings";
+
+	String KEY_SELECTED_SKYBOX_THEME = "selectedSkyboxTheme";
+	@ConfigItem(
+		keyName = KEY_SELECTED_SKYBOX_THEME,
+		name = "Skybox Style",
+		description = "Select the panoramic 3D skybox style.<br>Select 'None' to use default 117 skybox.",
+		position = 0,
+		section = skyboxSettings
+	)
+	default SkyboxTheme selectedSkyboxTheme()
+	{
+		return SkyboxTheme.PARTLY_CLOUDY;
+	}
+
+
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -956,7 +981,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
@@ -1109,7 +1134,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
-		position = 6,
+		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
