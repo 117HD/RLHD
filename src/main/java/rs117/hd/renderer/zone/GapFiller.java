@@ -43,7 +43,6 @@ public class GapFiller {
 	}
 
 	public void uploadForZone(
-		SceneUploader uploader,
 		ZoneSceneContext ctx,
 		Zone zone,
 		int mzx,
@@ -59,7 +58,6 @@ public class GapFiller {
 		int posBefore = vb.position();
 		forEachZoneTile(ctx, mzx, mzz, (area, extendedTiles, sceneMin, sceneMax, baseExX, baseExY, basePlane, tileExX, tileExY) -> {
 			uploadTile(
-				uploader,
 				ctx,
 				area,
 				extendedTiles,
@@ -79,7 +77,6 @@ public class GapFiller {
 			);
 		});
 		zone.hasGapFiller = vb.position() > posBefore;
-		zone.levelOffsets[Zone.LEVEL_GAP_FILLER] = vb.position();
 	}
 
 	public void recordDraws(CommandBuffer cmd, WorldViewContext ctx) {
@@ -192,7 +189,6 @@ public class GapFiller {
 	}
 
 	private void uploadTile(
-		SceneUploader uploader,
 		ZoneSceneContext ctx,
 		@Nullable Area area,
 		Tile[][][] extendedTiles,
@@ -229,20 +225,70 @@ public class GapFiller {
 				fb
 			);
 		} else if (gapTile.tile != null) {
-			uploader.uploadGapTileModel(
-				ctx,
-				gapTile.tile,
-				gapTile.model,
-				tileExX,
-				tileExY,
-				gapTile.tileX,
-				gapTile.tileY,
-				basex,
-				basez,
-				vb,
-				fb
+			uploadGapFillTileModel(gapTile.tile, gapTile.model, basex, basez, vb, fb);
+		}
+	}
+
+	private void uploadGapFillTileModel(
+		Tile tile,
+		SceneTileModel model,
+		int basex,
+		int basez,
+		GpuIntBuffer vb,
+		GpuIntBuffer fb
+	) {
+		int tileZ = tile.getRenderLevel();
+		Material black = materialManager.getMaterial("BLACK");
+		int packedMaterial = black.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+		int terrainData = HDUtils.packTerrainData(true, 0, WaterType.NONE, tileZ);
+
+		final int[] faceX = model.getFaceX();
+		final int[] faceY = model.getFaceY();
+		final int[] faceZ = model.getFaceZ();
+		final int[] vertexX = model.getVertexX();
+		final int[] vertexY = model.getVertexY();
+		final int[] vertexZ = model.getVertexZ();
+		final int[] triangleColorA = model.getTriangleColorA();
+
+		for (int face = 0; face < faceX.length; ++face) {
+			if (triangleColorA[face] != HIDDEN_HSL)
+				continue;
+
+			int v0 = faceX[face];
+			int v1 = faceY[face];
+			int v2 = faceZ[face];
+
+			putTerrainTriangle(
+				vb, fb,
+				0, 0, 0,
+				packedMaterial, terrainData,
+				vertexX[v0] - basex, vertexY[v0], vertexZ[v0] - basez, 0, 0,
+				vertexX[v1] - basex, vertexY[v1], vertexZ[v1] - basez, 0, 0,
+				vertexX[v2] - basex, vertexY[v2], vertexZ[v2] - basez, 0, 0
 			);
 		}
+	}
+
+	private static void putTerrainTriangle(
+		GpuIntBuffer vb,
+		GpuIntBuffer fb,
+		int colorA,
+		int colorB,
+		int colorC,
+		int packedMaterial,
+		int terrainData,
+		int x0, int y0, int z0, float u0, float v0,
+		int x1, int y1, int z1, float u1, float v1,
+		int x2, int y2, int z2, float u2, float v2
+	) {
+		int faceIdx = fb.putFace(
+			colorA, colorB, colorC,
+			packedMaterial, packedMaterial, packedMaterial,
+			terrainData, terrainData, terrainData
+		);
+		vb.putVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx);
+		vb.putVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx);
+		vb.putVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx);
 	}
 
 	private static final class GapTile {
@@ -362,21 +408,26 @@ public class GapFiller {
 		int nwHeight = tileHeights[tileZ][tileExX][tileExY + 1];
 
 		int terrainData = HDUtils.packTerrainData(true, 0, WaterType.NONE, tileZ);
-		int packedMaterialData = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+		int packedMaterial = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 		int baseX = tileX * LOCAL_TILE_SIZE - zoneBasex;
 		int baseZ = tileY * LOCAL_TILE_SIZE - zoneBasez;
 
-		int texturedFaceIdx = fb.putFace(0, 0, 0, packedMaterialData, packedMaterialData, packedMaterialData, terrainData, terrainData, terrainData);
-
-		vb.putVertex(baseX + LOCAL_TILE_SIZE, neHeight, baseZ + LOCAL_TILE_SIZE, 0, 0, 0, 0, -1, 0, texturedFaceIdx);
-		vb.putVertex(baseX, nwHeight, baseZ + LOCAL_TILE_SIZE, 1, 0, 0, 0, -1, 0, texturedFaceIdx);
-		vb.putVertex(baseX + LOCAL_TILE_SIZE, seHeight, baseZ, 0, 1, 0, 0, -1, 0, texturedFaceIdx);
-
-		texturedFaceIdx = fb.putFace(0, 0, 0, packedMaterialData, packedMaterialData, packedMaterialData, terrainData, terrainData, terrainData);
-
-		vb.putVertex(baseX, swHeight, baseZ, 1, 1, 0, 0, -1, 0, texturedFaceIdx);
-		vb.putVertex(baseX + LOCAL_TILE_SIZE, seHeight, baseZ, 0, 1, 0, 0, -1, 0, texturedFaceIdx);
-		vb.putVertex(baseX, nwHeight, baseZ + LOCAL_TILE_SIZE, 1, 0, 0, 0, -1, 0, texturedFaceIdx);
+		putTerrainTriangle(
+			vb, fb,
+			0, 0, 0,
+			packedMaterial, terrainData,
+			baseX + LOCAL_TILE_SIZE, neHeight, baseZ + LOCAL_TILE_SIZE, 0, 0,
+			baseX, nwHeight, baseZ + LOCAL_TILE_SIZE, 1, 0,
+			baseX + LOCAL_TILE_SIZE, seHeight, baseZ, 0, 1
+		);
+		putTerrainTriangle(
+			vb, fb,
+			0, 0, 0,
+			packedMaterial, terrainData,
+			baseX, swHeight, baseZ, 1, 1,
+			baseX + LOCAL_TILE_SIZE, seHeight, baseZ, 0, 1,
+			baseX, nwHeight, baseZ + LOCAL_TILE_SIZE, 1, 0
+		);
 	}
 }

@@ -249,24 +249,10 @@ public class SceneUploader implements AutoCloseable {
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 
 		if (ctx.fillGaps && vb != null)
-			gapFiller.uploadForZone(this, ctx, zone, mzx, mzz, vb, fb);
-	}
+			gapFiller.uploadForZone(ctx, zone, mzx, mzz, vb, fb);
 
-	void uploadGapTileModel(
-		ZoneSceneContext ctx,
-		Tile tile,
-		SceneTileModel model,
-		int tileExX,
-		int tileExY,
-		int tileX,
-		int tileY,
-		int basex,
-		int basez,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb
-	) {
-		ctx.sceneToWorld(tileX, tileY, 0, worldPos);
-		uploadTileModel(ctx, tile, model, false, true, tileExX, tileExY, 0, basex, basez, vb, fb);
+		if (vb != null)
+			zone.levelOffsets[Zone.LEVEL_GAP_FILLER] = vb.position();
 	}
 
 	private void uploadZoneLevel(
@@ -523,7 +509,7 @@ public class SceneUploader implements AutoCloseable {
 
 		SceneTileModel model = t.getSceneTileModel();
 		if (model != null && drawTile)
-			uploadTileModel(ctx, t, model, onlyWaterSurface, false, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
+			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
 
 		if (!onlyWaterSurface)
 			uploadZoneTileRenderables(ctx, zone, t, vertexBuffer, alphaBuffer, textureBuffer);
@@ -1092,7 +1078,6 @@ public class SceneUploader implements AutoCloseable {
 		Tile tile,
 		SceneTileModel model,
 		boolean onlyWaterSurface,
-		boolean onlyGapFillFaces,
 		int tileExX, int tileExY, int tileZ,
 		int basex, int basez,
 		GpuIntBuffer vb,
@@ -1119,8 +1104,7 @@ public class SceneUploader implements AutoCloseable {
 		if (onlyWaterSurface && !isFallbackWater && !isOverlayWater && !isUnderlayWater)
 			return;
 
-		if (!onlyGapFillFaces)
-			ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
+		ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
 
 		final int[] faceX = model.getFaceX();
 		final int[] faceY = model.getFaceY();
@@ -1144,14 +1128,8 @@ public class SceneUploader implements AutoCloseable {
 			int colorA = triangleColorA[face];
 			int colorB = triangleColorB[face];
 			int colorC = triangleColorC[face];
-			boolean isHidden = colorA == HIDDEN_HSL;
-			if (onlyGapFillFaces) {
-				if (!isHidden)
-					continue;
-				colorA = colorB = colorC = 0;
-			} else if (isHidden) {
+			if (colorA == HIDDEN_HSL)
 				continue;
-			}
 
 			int textureId = triangleTextures == null ? -1 : triangleTextures[face];
 			boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
