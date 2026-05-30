@@ -563,13 +563,13 @@
     "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
-	  "starVisibility": 0.1,
-	  "sunStrength":0.025,
-	  "sunlightStrength": 0.2,
+    "starVisibility": 0.1,
+    "sunStrength": 0.025,
+    "sunlightStrength": 0.15,
     "windAngle": 40,
     "windSpeed": 7,
     "windStrength": 26,
-    "minBrightnessBoost": 0.4
+    "minBrightnessBoost": 0.75
   },
   {
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
