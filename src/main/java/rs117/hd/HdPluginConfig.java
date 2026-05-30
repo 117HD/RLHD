@@ -314,12 +314,22 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_DITHER_FADING = "ditherFading";
+	@ConfigItem(
+		keyName = KEY_DITHER_FADING,
+		name = "Dither Fading",
+		description = "Whether to dither fade near plane geometry that would normally clip.",
+		position = 16,
+		section = generalSettings
+	)
+	default boolean ditherFading() { return true; }
+
 	@ConfigItem(
 		keyName = "fSaturation",
 		name = "Saturation",
 		description = "Controls the saturation of the final rendered image.<br>" +
 			"Intended to be kept between 0% and 120%.",
-		position = 16,
+		position = 17,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -339,7 +349,7 @@ public interface HdPluginConfig extends Config
 		name = "Contrast",
 		description = "Controls the contrast of the final rendered image.<br>" +
 			"Intended to be kept between 90% and 110%.",
-		position = 17,
+		position = 18,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -366,7 +376,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the brightness of the game, excluding UI.<br>" +
 			"Adjust until the circle on the left is barely visible.",
-		position = 18,
+		position = 19,
 		section = generalSettings
 	)
 	default int brightness() {

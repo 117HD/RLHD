@@ -174,6 +174,9 @@ public class ModelStreamingManager {
 		int zz = (gameObject.getY() >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
+		if(!zone.initialized || zone.fadingAlpha > 1.0f)
+			return;
+
 		m.calculateBoundsCylinder();
 
 		final float[] objectWorldPos = vec4(streamingContext.objectWorldPos, x, y, z, 1.0f);
@@ -328,12 +331,15 @@ public class ModelStreamingManager {
 				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
+				int shadowModelIdx = SceneUploader.writeDynamicModelData(shadowView.tboM, x, y, z, m, modelOverride, zone);
 				sceneUploader.uploadTempModel(
 					culledFaces,
 					m,
 					modelOverride,
 					preOrientation,
 					orientation,
+					shadowModelIdx,
+					shadowModelIdx,
 					true,
 					shadowView,
 					shadowView
@@ -351,12 +357,17 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View opaqueView = ctx.beginDraw(isPlayer ? VAO_PLAYER : VAO_OPAQUE, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
+				final int opaqueModelIdx = SceneUploader.writeDynamicModelData(opaqueView.tboM, x, y, z, m, modelOverride, zone);
+				final int alphaModelIdx = alphaFaceCount > 0 ? SceneUploader.writeDynamicModelData(alphaView.tboM, x, y, z, m, modelOverride, zone) : opaqueModelIdx;
+
 				sceneUploader.uploadTempModel(
 					visibleFaces,
 					m,
 					modelOverride,
 					preOrientation,
 					orientation,
+					opaqueModelIdx,
+					alphaModelIdx,
 					isSquashed,
 					opaqueView,
 					alphaView
@@ -401,7 +412,7 @@ public class ModelStreamingManager {
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
-		if (!zone.initialized)
+		if (!zone.initialized || zone.fadingAlpha > 1.0f)
 			return;
 
 		final StreamingContext streamingContext = context(renderThreadId);
@@ -590,12 +601,15 @@ public class ModelStreamingManager {
 				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
+				final int shadowModelIdx = SceneUploader.writeDynamicModelData(shadowView.tboM, x, y, z, m, modelOverride, zone);
 				sceneUploader.uploadTempModel(
 					culledFaces,
 					m,
 					modelOverride,
 					preOrientation,
 					orient,
+					shadowModelIdx,
+					shadowModelIdx,
 					true,
 					shadowView,
 					shadowView
@@ -610,12 +624,17 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View opaqueView = ctx.beginDraw(VAO_OPAQUE, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
+				final int opaqueModelIdx = SceneUploader.writeDynamicModelData(opaqueView.tboM, x, y, z, m, modelOverride, zone);
+				final int alphaModelIdx = alphaFaceCount > 0 ? SceneUploader.writeDynamicModelData(alphaView.tboM, x, y, z, m, modelOverride, zone) : opaqueModelIdx;
+
 				sceneUploader.uploadTempModel(
 					visibleFaces,
 					m,
 					modelOverride,
 					preOrientation,
 					orient,
+					opaqueModelIdx,
+					alphaModelIdx,
 					isSquashed,
 					opaqueView,
 					alphaView

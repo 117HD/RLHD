@@ -20,7 +20,6 @@ public final class ZoneUploadJob extends Job {
 
 	Zone zone;
 	int x, z;
-	long revealAfterTimestampMs;
 	boolean shouldUnmap;
 
 	@Override
@@ -72,12 +71,20 @@ public final class ZoneUploadJob extends Job {
 			GLTextureBuffer f = null;
 			sz = zone.sizeF * Zone.TEXTURE_SIZE;
 			if (sz > 0) {
-				f = new GLTextureBuffer("Zone::TBO", GL_STATIC_DRAW);
+				f = new GLTextureBuffer("Zone::TexturedFaces", GL_STATIC_DRAW);
 				f.initialize(sz);
 				f.map(MAP_WRITE);
 			}
 
-			zone.initialize(o, a, f);
+			GLTextureBuffer m = null;
+			sz = zone.sizeM * Zone.MODEL_DATA_SIZE;
+			if (sz > 0) {
+				m = new GLTextureBuffer("Zone::ModelData", GL_STATIC_DRAW);
+				m.initialize(sz);
+				m.map(MAP_WRITE);
+			}
+
+			zone.initialize(o, a, f, m);
 			zone.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(
@@ -108,7 +115,6 @@ public final class ZoneUploadJob extends Job {
 		sceneContext = null;
 		zone.uploadJob = null;
 		zone = null;
-		revealAfterTimestampMs = 0;
 		assert !POOL.contains(this) : "Task is already in pool";
 		POOL.add(this);
 	}

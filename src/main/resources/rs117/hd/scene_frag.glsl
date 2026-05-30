@@ -32,6 +32,8 @@
 #define DISPLAY_SHADOWS 0
 #define DISPLAY_LIGHTING 0
 
+#define NEAR_PLANE_DITHER_START 0.2
+
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
@@ -50,8 +52,11 @@ flat in ivec3 fAlphaBiasHsl;
 flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
 
-#if FLAT_SHADING && ZONE_RENDERER
-    flat in vec3 fFlatNormal;
+#if ZONE_RENDERER
+    #if FLAT_SHADING
+        flat in vec3 fFlatNormal;
+    #endif
+    flat in float fFade;
 #endif
 
 in FragmentData {
@@ -84,6 +89,17 @@ vec2 worldUvs(float scale) {
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
+#if DITHER_FADE && ZONE_RENDERER
+    float viewZ = 1.0 - gl_FragCoord.z;
+    if (fFade > 0.0 || viewZ < NEAR_PLANE_DITHER_START) {
+        float fadeAmount = mix(1.0 - saturate(viewZ / NEAR_PLANE_DITHER_START), fFade, saturate(fFade));
+        float threshold = smoothstep(0.0, 1.0, pow(fadeAmount, 1.35));
+        float noise = interleavedGradientNoise(gl_FragCoord.xy);
+        if (noise < threshold)
+            discard;
+    }
+#endif
+
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
 

@@ -27,6 +27,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.DynamicModelVAO.METADATA_SIZE;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 import static rs117.hd.renderer.zone.ZoneRenderer.FRAMES_IN_FLIGHT;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class WorldViewContext {
@@ -193,15 +194,6 @@ public class WorldViewContext {
 		if (uploadTask == null)
 			return;
 
-		if (!uploadTask.isQueued()) {
-			if (queue && uploadTask.revealAfterTimestampMs < System.currentTimeMillis()) {
-				log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
-				uploadTask.revealAfterTimestampMs = 0;
-				uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
-			}
-			return;
-		}
-
 		if (uploadTask.isDone()) {
 			curZone.uploadJob = null;
 			if (uploadTask.ranToCompletion() && !uploadTask.wasCancelled()) {
@@ -241,9 +233,18 @@ public class WorldViewContext {
 	}
 
 	void processZoneSwaps() {
-		for (int x = 0; x < sizeX; x++)
-			for (int z = 0; z < sizeZ; z++)
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
 				handleZoneSwap(x, z, true);
+
+				final Zone zone = zones[x][z];
+				if(zone.fadingAlpha <= 0)
+					continue;
+
+				zone.fadingAlpha = max(0.0f, zone.fadingAlpha - plugin.deltaTime);
+				zone.setMetadata(this, sceneContext, x, z);
+			}
+		}
 	}
 
 	void processZoneRebuilds() {
@@ -311,7 +312,6 @@ public class WorldViewContext {
 
 	void invalidateZone(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
-		long revealAfterTimestampMs = 0;
 		if (curZone.uploadJob != null) {
 			Zone pendingZone = curZone.uploadJob.zone;
 			log.trace(
@@ -322,7 +322,6 @@ public class WorldViewContext {
 				zz,
 				pendingZone.hashCode()
 			);
-			revealAfterTimestampMs = curZone.uploadJob.revealAfterTimestampMs;
 			curZone.uploadJob.cancel();
 			curZone.uploadJob.release();
 
@@ -334,10 +333,6 @@ public class WorldViewContext {
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
-		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
-
-		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders
-		if (sceneContext.isInHouse || revealAfterTimestampMs <= 0)
-			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
+		curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
