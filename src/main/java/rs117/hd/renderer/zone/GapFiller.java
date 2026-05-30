@@ -116,7 +116,7 @@ public class GapFiller {
 			for (int z = 0; z < ctx.sizeZ; ++z) {
 				Zone zone = ctx.zones[x][z];
 				if (zone.initialized && zone.hasGapFiller)
-					zone.renderGapFiller(cmd, Zone.LEVEL_GAP_FILLER);
+					zone.renderOpaqueLevel(cmd, Zone.LEVEL_GAP_FILLER);
 			}
 		}
 		cmd.Enable(GL_DEPTH_TEST);
