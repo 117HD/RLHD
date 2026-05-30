@@ -232,20 +232,18 @@ public class SceneUploader implements AutoCloseable {
 				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab, fb);
 			}
 
-			if (vb != null) {
-				int pos = vb.position();
-				zone.levelOffsets[z] = pos;
-			}
+			if (vb != null)
+				zone.levelOffsets[z] = vb.position();
 		}
 
-		// Upload water surface tiles to be drawn after everything else
-		if (zone.hasWater && vb != null) {
-			uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
+		if (vb != null) {
+			// Upload water surface tiles to be drawn after everything else
+			if (zone.hasWater)
+				uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
-		}
 
-		if (ctx.fillGaps && vb != null) {
-			gapFiller.uploadForZone(ctx, zone, mzx, mzz, vb, fb);
+			if (ctx.fillGaps)
+				gapFiller.uploadForZone(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_GAP_FILLER] = vb.position();
 		}
 	}
