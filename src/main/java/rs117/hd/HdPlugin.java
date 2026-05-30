@@ -1548,7 +1548,7 @@ public class HdPlugin extends Plugin {
 		// Create texture
 		texWaterReflectionDepthMap = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texWaterReflectionDepthMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, resolution[0], resolution[1], 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, resolution[0], resolution[1], 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
 		checkGLErrors();
 
 		// Bind texture
