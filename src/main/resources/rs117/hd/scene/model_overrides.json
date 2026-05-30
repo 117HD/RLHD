@@ -13599,7 +13599,11 @@
       "DT2_HIDEOUT_PRISONGATE_NOOP",
       "DT2_HIDEOUT_PRISONGATE_OPEN",
       "SANCTUARY_GATE_OPEN",
-      "SANCTUARY_GATE_OPEN_M"
+      "SANCTUARY_GATE_OPEN_M",
+      "SLP_DUNGEON_DOOR_NOOP",
+      "SLP_DUNGEON_DOOR",
+      "SLP_DUNGEON_DOOR_OPEN",
+      "SLP_DUNGEON_DOOR_2"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -16489,7 +16493,9 @@
       "BURGH_BARREL",
       "CANAFIS_BARREL_TAP",
       "KR_BARREL",
-      "LUNAR_PIRATE_BARREL_CLOSED"
+      "LUNAR_PIRATE_BARREL_CLOSED",
+      "MYQ5_BARREL_NOOP",
+      "MYQ5_BARREL_OP"
     ]
   },
   {
@@ -23046,15 +23052,14 @@
     ]
   },
   {
-    "description": "PvP Arena blood",
-    "baseMaterial": "METALLIC_NONE_GLOSS",
+    "description": "Emirs Arena - Slepe - Operating table",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "uvOrientation": -152,
     "objectIds": [
-      "ARENA_BLOODSPLAT01_LARGE01",
-      "ARENA_BLOODSPLAT01_LARGE02",
-      "ARENA_BLOODSPLAT01_SMALL01",
-      "ARENA_BLOODSPLAT01_SMALL02"
-    ],
-    "uvType": "MODEL_XZ"
+      "ARENA_HOSPITAL_OPERATING_TABLE"
+    ]
   },
   {
     "description": "Wall Decoration - Blood",
@@ -25193,12 +25198,85 @@
   {
     "description": "Objects - Wooden - Poor Lab tables",
     "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "uvScale": 0.6,
     "objectIds": [
       "MYQ3_LAB_TABLE_04"
-    ],
+    ]
+  },
+  {
+    "description": "Objects - Wooden - Poor Lab tables with items",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "depthBias": 15,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512,
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "MYQ5_KROY_TABLE_NOOP",
+      "MYQ5_KROY_TABLE_OP",
+      "MYQ5_KROY_TABLE_BROKEN"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Poor Lab shelf with items",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "depthBias": 15,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512,
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "MYQ3_LAB_SHELF"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Blood filled barrels",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512,
+        "uvScale": 0.6
+      },
+      {
+        "description": "Blood",
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.6,
+        "depthBias": 15
+      }
+    ],
+    "objectIds": [
+      "BURGH_BLOOD_BARREL"
+    ]
   },
   {
     "description": "Objects - Wooden - Meiyerdith Trapdoor",
@@ -26440,6 +26518,40 @@
       "SANCTUARY_TABLE_MID",
       "SANCTUARY_TABLE_END1",
       "SANCTUARY_TABLE_END2"
+    ]
+  },
+  {
+    "description": "Slepe - Varrock - Notice board",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "depthBias": 110,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": [ "h == 6", "h == 10" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_YZ",
+        "depthBias": 120
+      },
+      {
+        "description": "Metal",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "depthBias": 111
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_GENERAL_STORE_NOTICEBOARD_OFFSET1"
+    ]
+  },
+  {
+    "description": "Slepe - wooden step ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.80,
+    "objectIds": [
+      "SLP_LADDER_NOOP"
     ]
   },
   {
@@ -45969,7 +46081,8 @@
       "MM2_EXPLOSIVES_BARREL_OPEN",
       "QIP_DIGSITE_BARREL_BASIC",
       "BARREL_EMPTY",
-      "BARREL_TAP"
+      "BARREL_TAP",
+      "MYQ3_LAB_BARREL"
     ]
   },
   {
@@ -53485,7 +53598,9 @@
   },
   {
     "description": "Ground decoration blood",
-    "baseMaterial": "METALLIC_NONE_GLOSS",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvScale": 0.5,
+    "uvType": "MODEL_XZ",
     "objectIds": [
       "BLOODSPLATTER3",
       "DEATH_TROLLBLOODSPLAT1",
@@ -53493,9 +53608,15 @@
       "DEATH_TROLLBLOODSPLAT3",
       "CONCH_GRYPHON_BLOODSPLATTER01",
       "CONCH_GRYPHON_BLOODSPLATTER02",
-      "CONCH_GRYPHON_BLOODSPLATTER03"
-    ],
-    "uvType": "MODEL_XZ"
+      "CONCH_GRYPHON_BLOODSPLATTER03",
+      "BLOODSPLATTER1",
+      "BLOODSPLATTER2",
+      "BLOODSPLATTER3",
+      "ARENA_BLOODSPLAT01_LARGE01",
+      "ARENA_BLOODSPLAT01_LARGE02",
+      "ARENA_BLOODSPLAT01_SMALL01",
+      "ARENA_BLOODSPLAT01_SMALL02"
+    ]
   },
   {
     "description": "Table with no visible legs and a golden candleholder",
@@ -60211,6 +60332,8 @@
     "uvOrientation": -256,
     "objectIds": [
       "SLP_CHURCH_CRYPT_SOUTH_LADDER_DOWN",
+      "SLP_CHURCH_CRYPT_SOUTH_LADDER_DOWN_NOOP",
+      "SLP_CHURCH_CRYPT_SOUTH_LADDER_DOWN_MYQ5",
       "SLP_CHURCH_CRYPT_SOUTH_LADDER_EXIT",
       "SANCTUARY_STAIRS_TALL_2X3",
       "SANCTUARY_STAIRS_TALL_3X3"
@@ -75144,12 +75267,12 @@
     "uvOrientation": 512,
     "colorOverrides": [
       {
-        "description": "Metal",
+        "description": "Wood",
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.8,
-        "uvOrientation": -128
+        "uvScale": 0.6911,
+        "uvOrientation": -200
       },
       {
         "description": "Metal",
@@ -78718,7 +78841,10 @@
       }
     ],
     "objectIds": [
-      "WARGUILD_BASEMENT_DOOR_INACTIVE"
+      "WARGUILD_BASEMENT_DOOR_INACTIVE",
+      "SLP_PUB_DOOR",
+      "SLP_PUB_DOOR_NOOP",
+      "SLP_PUB_DOOR_NOOP_REVERSE"
     ]
   },
   {
@@ -79102,6 +79228,36 @@
     ],
     "objectIds": [
       "ZIG_FLOWER_RED"
+    ]
+  },
+  {
+    "description": "Slepe - Canafis - Bar with glasses, bottles, and cash register",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": -272,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "CANAFIS_INN_BAR_MIDDLE",
+      "CANAFIS_INN_BAR_MIDDLE2",
+      "CANAFIS_INN_BAR_MIDDLE2",
+      "CANAFIS_INN_BAR_LEFT",
+      "CANAFIS_INN_BAR_RIGHT"
     ]
   },
   {
