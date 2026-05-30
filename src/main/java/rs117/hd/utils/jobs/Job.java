@@ -46,8 +46,10 @@ public abstract class Job {
 				log.warn("Job {} was interrupted while waiting for completion", this);
 				throw new RuntimeException(e);
 			} finally {
-				if (completed)
+				if (completed) {
 					handle.release();
+					onCompletion();
+				}
 			}
 		} else {
 			completed = true;
