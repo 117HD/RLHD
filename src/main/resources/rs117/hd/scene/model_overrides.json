@@ -12178,7 +12178,8 @@
       "GRANDTREE_LADDERMIDDLE_TOP",
       "GRANDTREE_LADDERTOP",
       "REHNISON_LADDER_UP",
-      "MOURNER_HIDEOUT_LADDER1_BATTLE"
+      "MOURNER_HIDEOUT_LADDER1_BATTLE",
+      "BURGH_TEMPLE_LIBRARY_LADDER_UP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -16246,7 +16247,8 @@
       "FOSSIL_CRATE3_INACTIVE",
       "FAI_WIZTOWER_CRATE",
       "SLUG2_CRATE_STACK2",
-      "TOA_LOBBY_CRATE02_DEFAULT"
+      "TOA_LOBBY_CRATE02_DEFAULT",
+      "BURGH_LIBRARY_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -31878,7 +31880,8 @@
     "description": "Objects - Wood - Ladder - Edgeville Dungeon Ladder",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "TRAPDOOR_OPEN"
+      "TRAPDOOR_OPEN",
+      "PIPEASTSIDETRAPDOOR_OPEN"
     ],
     "uvType": "BOX"
   },
@@ -31900,7 +31903,8 @@
       "IKOV_TRAPDOOR",
       "MOURNING_HIDEOUT_TRAP_DOOR_BATTLE",
       "CHAMPIONS_TRAP_DOOR_OPEN",
-      "CHAMPIONS_TRAP_DOOR_CLOSED"
+      "CHAMPIONS_TRAP_DOOR_CLOSED",
+      "PIPEASTSIDETRAPDOOR"
     ]
   },
   {
@@ -49823,7 +49827,9 @@
       "SARIM_BOOKCASE2_OFFSET_WESTFACING",
       "BOOKCASE_POLYBOOKS",
       "CANAFIS_BOOKSHELF_OLD_SHORT",
-      "CANAFIS_BOOKSHELF_OLD_SHORT3"
+      "CANAFIS_BOOKSHELF_OLD_SHORT3",
+      "BURGH_LIBRARY_BOOKCASE",
+      "BURGH_LIBRARY_BOOKCASE_IVANDIS"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -56273,12 +56279,36 @@
   {
     "description": "Paterdomus Temple basement walls - textured",
     "baseMaterial": "DIRT_1",
-    "uvType": "MODEL_XZ_MIRROR_B",
+    "uvType": "BOX",
+    "uvScale": 0.99999,
+    "retainVanillaUvs": false,
     "objectIds": [
       "UNDERGROUND_WALL_SIDE",
       "UNDERGROUND_WALL_OUTSIDECORNER",
       "UNDERGROUND_WALL_INSIDECORNER",
       "BURGH_LIBRARY_KEYHOLE"
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement - trapdoor",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h >= 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Void",
+        "colors": "h == 0 && s == 0 && l <10",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "BURGH_TEMPLE_LIBRARY_TRAPDOOR_OPEN"
     ]
   },
   {
@@ -67860,6 +67890,15 @@
     "retainVanillaUvs": false,
     "objectIds": [
       "PRIESTPERIL_COFFIN_NOANIM"
+    ]
+  },
+  {
+    "description": "Paterdomus Temple - Stone - River statue",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "objectIds": [
+      "PRIESTPERIL_STATUE"
     ]
   },
   {
