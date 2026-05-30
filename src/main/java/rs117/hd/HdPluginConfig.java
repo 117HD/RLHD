@@ -36,11 +36,13 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.CpuUsageLimit;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -593,6 +595,111 @@ public interface HdPluginConfig extends Config
 	)
 	String environmentSettings = "environmentSettings";
 
+	@ConfigSection(
+		name = "Day/Night Cycle",
+		description = "Dynamic day and night cycle settings",
+		position = 3,
+		closedByDefault = true
+	)
+	String daylightCycleSettings = "daylightCycleSettings";
+
+	@ConfigItem(
+		keyName = "enableDaylightCycle",
+		name = "Enable Day/Night Cycle",
+		description = "Enables the dynamic day/night cycle with realistic sun positioning and brightness changes",
+		position = 0,
+		section = daylightCycleSettings
+	)
+	default boolean enableDaylightCycle() {
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "daylightCycle",
+		name = "Cycle Mode",
+		description = "Controls the day/night cycle behavior.<br>" +
+			"• Dynamic = Full day/night cycling<br>" +
+			"• Fixed Dawn = Sun locked at dawn<br>" +
+			"• Fixed Sunset = Sun locked at sunset<br>" +
+			"• Always Night = Permanent night, moon still cycles",
+		position = 1,
+		section = daylightCycleSettings
+	)
+	default DaylightCycle daylightCycle() {
+		return DaylightCycle.DYNAMIC;
+	}
+
+	@Range(min = 1, max = 720)
+	@ConfigItem(
+		keyName = "cycleDurationMinutes",
+		name = "Cycle Duration (minutes)",
+		description = "How long a complete day/night cycle should take in real-time minutes.<br>" +
+			"• 1 minute = Very fast cycle for testing<br>" +
+			"• 12 minutes = Default cycle<br>" +
+			"• 30 minutes = Quick atmospheric changes<br>" +
+			"• 60 minutes = Slow hourly cycle<br>" +
+			"• 180+ minutes = Very slow, immersive cycle",
+		position = 2,
+		section = daylightCycleSettings
+	)
+	default int cycleDurationMinutes() {
+		return 12;
+	}
+
+	@Range(min = 10, max = 200)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = "minimumBrightness",
+		name = "Minimum Brightness",
+		description = "The minimum brightness level during nighttime.<br>" +
+			"• 10% = Very dark nights<br>" +
+			"• 25% = Dark but playable<br>" +
+			"• 35% = Dark but comfortable<br>" +
+			"• 50% = Default balanced darkness<br>" +
+			"• 70%+ = Very bright nights (minimal difference from day)<br>" +
+			"• 100% = No brightness change at night",
+		position = 3,
+		section = daylightCycleSettings
+	)
+	default int minimumBrightness() {
+		return 50;
+	}
+
+	@ConfigItem(
+		keyName = "enableStarMap",
+		name = "Stars",
+		description = "Show the star map texture in the night sky. When disabled, the night sky uses only the gradient skybox.",
+		position = 4,
+		section = daylightCycleSettings
+	)
+	default boolean enableStarMap() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "enableMoon",
+		name = "Moon",
+		description = "Show the moon in the night sky.",
+		position = 5,
+		section = daylightCycleSettings
+	)
+	default boolean enableMoon() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "moonBehavior",
+		name = "Moon Behavior",
+		description = "How the moon moves across the sky.<br>" +
+			"Realistic = Astronomical moon with realistic phases and independent orbit<br>" +
+			"Night Synced = Moon always rises when sun sets and sets when sun rises (always full)",
+		position = 6,
+		section = daylightCycleSettings
+	)
+	default MoonBehavior moonBehavior() {
+		return MoonBehavior.NIGHT_SYNCED;
+	}
+
 	String KEY_SEASONAL_THEME = "seasonalTheme";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_THEME,
@@ -802,7 +909,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -1184,6 +1291,24 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_ASYNC_UI_COPY = "experimentalAsyncUICopy";
+	String KEY_ENABLE_DAYLIGHT_CYCLE = "enableDaylightCycle";
+	String KEY_DAYLIGHT_CYCLE = "daylightCycle";
+	String KEY_CYCLE_DURATION = "cycleDurationMinutes";
+	String KEY_MINIMUM_BRIGHTNESS = "minimumBrightness";
+	String KEY_ENABLE_STAR_MAP = "enableStarMap";
+	String KEY_ENABLE_MOON = "enableMoon";
+	String KEY_MOON_BEHAVIOR = "moonBehavior";
+	@ConfigItem(
+		keyName = KEY_ASYNC_UI_COPY,
+		name = "Perform UI copy asynchronously",
+		description = "Slightly improves performance by delaying the UI by one frame.",
+		section = experimentalSettings
+	)
+	default boolean asyncUICopy() {
+		return false;
+	}
+
 	String KEY_TILED_LIGHTING_IMAGE_STORE = "experimentalTiledLightingImageStore";
 	@ConfigItem(
 		keyName = KEY_TILED_LIGHTING_IMAGE_STORE,
@@ -1193,6 +1318,18 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean tiledLightingImageLoadStore() {
 		return true;
+	}
+
+	String KEY_TERRAIN_SHADOWS = "experimentalTerrainShadows";
+	@ConfigItem(
+		keyName = KEY_TERRAIN_SHADOWS,
+		name = "Terrain Shadows",
+		description = "Allow terrain to cast shadows on other terrain. May cause visual artifacts on slopes.",
+		position = 7,
+		section = shadowSettings
+	)
+	default boolean terrainShadows() {
+		return false;
 	}
 
 	String KEY_INDIRECT_DRAW = "experimentalIndirectDraw";
