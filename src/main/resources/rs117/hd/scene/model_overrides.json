@@ -2578,12 +2578,15 @@
       "SLAYER_CAVE_POOLROCK_1",
       "SLAYER_CAVE_POOLROCK_2",
       "POLLI_STEPPING_STONE",
-      "BCS_STEPPING_STONE"
+      "BCS_STEPPING_STONE",
+      "BR_ROCK_POOL",
+      "BR_ROCK_POOL_SMALL",
+      "BR_ROCK_POOL_BITS"
     ],
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": [ "h == 42", "h == 35" ],
+        "colors": [ "h == 42", "h == 35", "h == 29 && s == 4" ],
         "baseMaterial": "GRAY_70",
         "hideAsWaterEffect": true
       }
@@ -46811,6 +46814,13 @@
       "TROLLRESCUE_ICESLIDE2",
       "TROLLRESCUE_ICESLIDE3",
       "KOUREND_ARCH_FOOTPATH_10"
+    ]
+  },
+  {
+    "description": "Camdozaal Waterfall",
+    "baseMaterial": "GRAY_60",
+    "objectIds": [
+      "CAVEKIT_WATERFALL_CAMDOZAAL"
     ]
   },
   {
