@@ -15170,6 +15170,7 @@
       "BARROWS_ROCKSLIDE1",
       "BARROWS_ROCKSLIDE2",
       "BARROWS_ROCKSLIDE3",
+      "BARROWS_ROCKSLIDE4",
       "SUROK_TUNNEL_ROCKS_SMALL_01",
       "SUROK_TUNNEL_ROCKS_SMALL_02",
       "SUROK_TUNNEL_ROCKS_SMALL_03",
@@ -17041,18 +17042,8 @@
     "uvScale": 0.6
   },
   {
-    "description": "Mort'ton Shade Catacombs - Walls - Stone",
+    "description": "Mort'ton Shade Catacombs - Meiyerditch Labs - Walls - Stone",
     "baseMaterial": "STONE",
-    "objectIds": [
-      "MYQ3_LAB_WALL",
-      "MYQ3_LAB_WALL_EXPOSED_PLASTER",
-      "MYQ5_WALL_JOIN_R",
-      "MYQ5_WALL_JOIN_L",
-      "MYQ5_WALL_CAVE_SUPPORT_RIGHT",
-      "MYQ5_WALL_CAVE_SUPPORT_LEFT",
-      "MYQ5_WALL_CAVE_MID",
-      "MYQ3_HIDEOUT_WALL_TOP"
-    ],
     "uvType": "BOX",
     "uvScale": 0.6,
     "colorOverrides": [
@@ -17066,6 +17057,35 @@
         "colors": "l == 2",
         "baseMaterial": "PURE_BLACK"
       }
+    ],
+    "objectIds": [
+      "MYQ3_LAB_WALL",
+      "MYQ3_LAB_WALL_TOP",
+      "MYQ3_LAB_WALL_EXPOSED_PLASTER",
+      "MYQ5_WALL_JOIN_R",
+      "MYQ5_WALL_JOIN_L",
+      "MYQ5_WALL_CAVE_SUPPORT_RIGHT",
+      "MYQ5_WALL_CAVE_SUPPORT_LEFT",
+      "MYQ5_WALL_CAVE_SUPPORT_MID",
+      "MYQ5_WALL_CAVE_SUPPORT_MID_POST",
+      "MYQ5_WALL_CAVE_MID",
+      "MYQ5_WALL_CAVE_EXIT",
+      "MYQ5_WALL_CAVE_SHORTCUT_1",
+      "MYQ5_WALL_CAVE_SHORTCUT_2",
+      "MYQ5_WALL_CAVE_SHORTCUT_3",
+      "MYQ5_WALL_CAVE_SHORTCUT_4",
+      "MYQ5_WALL_CAVE_SHORTCUT_6_CHILD_BLOCKED",
+      "MYQ5_WALL_CAVE_SHORTCUT_6_CHILD_CLEARED",
+      "MYQ5_WALL_CAVE_SHORTCUT_7",
+      "MYQ5_WALL_CAVE_SHORTCUT_8"
+    ]
+  },
+  {
+    "description": "Mort'ton Shade Catacombs - Meiyerditch Labs - Wall toppers",
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "MYQ3_LAB_WALL_TOP",
+      "MYQ3_HIDEOUT_WALL_TOP"
     ]
   },
   {
@@ -17655,7 +17675,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "BURGH_CRATES_2",
-      "BURGH_CRATE"
+      "BURGH_CRATE",
+      "MYQ3_FISHSHOP_CRATE_STACK"
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -24893,14 +24914,15 @@
     ]
   },
   {
-    "description": "Meiyerditch Boat",
+    "description": "Meiyerditch - Icyene Graveyard - Repaired Boat",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      "SANG_BOAT_IN_WATER"
-    ],
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.77
+    "uvScale": 0.77,
+    "objectIds": [
+      "SANG_BOAT_IN_WATER",
+      "MYQ5_BOAT_VIS"
+    ]
   },
   {
     "description": "Meiyerditch Walls",
@@ -25092,7 +25114,20 @@
   },
   {
     "description": "Meiyerditch House Walls",
-    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "description": "Posts",
+        "colors": [ "h == 5 && s == 1", "h == 10 && s == 1" ],
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 1536,
+        "uvScale": 0.58
+      }
+    ],
     "objectIds": [
       "AREA_SANGUINE_GHETTO_WINDOW1",
       "AREA_SANGUINE_GHETTO_WINDOW2",
@@ -25126,18 +25161,51 @@
       "MYQ3_AGIL_6_PUSHWALL_WEST_ANIM",
       "MYQ3_AGIL_11_CRAWL_WALL",
       "MYQ3_AGIL_24_PUSHWALL_NORTH",
-      "MYQ3_AGIL_24_PUSHWALL_NORTH_ANIM"
-    ],
+      "MYQ3_AGIL_24_PUSHWALL_NORTH_ANIM",
+      "MYQ3_AGIL_4_PUSHWALL_MULTI",
+      "MYQ3_AGIL_4_ACTIVE_FLOOR_1",
+      "MYQ3_AGIL_4_ACTIVE_FLOOR_2",
+      "MYQ3_AGIL_6_ACTIVE_FLOOR_1",
+      "MYQ3_AGIL_6_ACTIVE_FLOOR_2",
+      "MYQ3_AGIL_24_ACTIVE_FLOOR_1",
+      "MYQ3_AGIL_24_ACTIVE_FLOOR_2"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - House Walls - Tapestry",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
-    "uvOrientation": 1536,
-    "uvScale": 0.58
+    "uvOrientation": 512,
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 404,
+        "uvScale": 0.58
+      },
+      {
+        "description": "Posts",
+        "colors": [ "h == 5 && s == 1", "h == 10 && s == 1" ],
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 1536,
+        "uvScale": 0.58
+      }
+    ],
+    "objectIds": [
+      "MYQ3_LAB_TAPESTRY_FULL",
+      "MYQ3_LAB_TAPESTRY_SLASHED"
+    ]
   },
   {
     "description": "Meiyerditch - Wooden - Metallic- House Walls - Myreque Symbol",
-    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
-    "uvOrientation": 1536,
-    "uvScale": 0.58,
+    "uvOrientation": 512,
+    "uvScale": 1.1,
     "objectIds": [
       "SANG_MYREQUE_HIDEOUT_SYMBOL_ACTIVE_OUT",
       "SANG_MYREQUE_HIDEOUT_SYMBOL_ACTIVE_IN"
@@ -25150,6 +25218,14 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 212
+      },
+      {
+        "description": "Posts",
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 1536,
+        "uvScale": 0.58
       }
     ]
   },
@@ -25181,21 +25257,6 @@
     ]
   },
   {
-    "description": "Meiyerditch - Wooden - House Walls - Agility",
-    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
-    "objectIds": [
-      "MYQ3_AGIL_4_PUSHWALL_MULTI",
-      "MYQ3_AGIL_4_ACTIVE_FLOOR_1",
-      "MYQ3_AGIL_4_ACTIVE_FLOOR_2",
-      "MYQ3_AGIL_6_ACTIVE_FLOOR_1",
-      "MYQ3_AGIL_6_ACTIVE_FLOOR_2",
-      "MYQ3_AGIL_24_ACTIVE_FLOOR_1",
-      "MYQ3_AGIL_24_ACTIVE_FLOOR_2"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.58
-  },
-  {
     "description": "Meiyerditch - Paint - Myreque symbol",
     "baseMaterial": "GRUNGE_3_SHINY",
     "uvType": "BOX",
@@ -25216,6 +25277,8 @@
   {
     "description": "Objects - Wooden - Poor Looking tables - Wide",
     "baseMaterial": "WOOD_GRAIN_2_WIDE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "AREA_SANGUINE_GHETTO_TABLE",
       "AREA_SANGUINE_GHETTO_TABLE1",
@@ -25223,10 +25286,9 @@
       "MYQ3_AGIL_TRAPDOOR_TABLE",
       "MYQ3_AGIL_TABLE_02",
       "MYQ3_AGIL_TRAPDOOR_TABLE_02",
-      "MYQ3_AGIL_TRAPDOOR_TUNNEL_02"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
+      "MYQ3_AGIL_TRAPDOOR_TUNNEL_02",
+      "MYQ3_FISHMONGER_CUTTING_TABLE"
+    ]
   },
   {
     "description": "Objects - Wooden - Poor Lab tables",
@@ -25257,13 +25319,73 @@
       }
     ],
     "objectIds": [
+      "MYQ3_LAB_TABLE",
+      "MYQ3_LAB_TABLE_02",
+      "MYQ3_LAB_TABLE_03",
       "MYQ5_KROY_TABLE_NOOP",
       "MYQ5_KROY_TABLE_OP",
       "MYQ5_KROY_TABLE_BROKEN"
     ]
   },
   {
-    "description": "Slepe - Wooden - Poor Lab shelf with items",
+    "description": "Meiyerditch - Broken equipment",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "depthBias": 15,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "MYQ3_LAB_TUBE",
+      "MYQ3_LAB_TUBE_02"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Pulse equipment",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "depthBias": 15,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "MYQ3_LAB_PULSE_MACHINE"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Lab equipment",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -87,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "MYQ3_BROKEN_RUNE_CASE",
+      "MYQ3_EXPERIMENT_BOOTH"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Slepe - Wooden - Poor Lab shelf with items",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -25280,7 +25402,129 @@
       }
     ],
     "objectIds": [
-      "MYQ3_LAB_SHELF"
+      "MYQ3_LAB_SHELF",
+      "MYQ3_LAB_SHELF_02",
+      "MYQ3_LAB_SINGLE_SHELF",
+      "MYQ5_LAB_SHELF_FAKE",
+      "MYQ5_LAB_SHELF"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Lab mess on ground",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "depthBias": 15,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ],
+    "objectIds": [
+      "MYQ3_LAB_MESS_01",
+      "MYQ3_LAB_MESS_02",
+      "MYQ3_LAB_MESS_03"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Lab skeleton",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Bone",
+        "colors": "h == 16",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvOrientation": -187,
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "MYQ3_LAB_SKELETON_02"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Lab door",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "colorOverrides": [
+      {
+        "colors": "h == 16",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -187,
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "MYQ3_LAB_DOOR_LOCKED_R",
+      "MYQ3_LAB_DOOR_LOCKED_L"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Lab cages",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": -87,
+    "objectIds": [
+      "MYQ5_LAB_CAGE_SMALL",
+      "MYQ5_LAB_CAGE_TALL",
+      "MYQ5_LAB_CAGE_TALL_BROKEN",
+      "MYQ5_LAB_CAGE_SMALL_BROKEN",
+      "MYQ5_LAB_BROKEN_BARS",
+      "MYQ5_LAB_TABLE_RESTRAINT"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Lab restraints with skeleton",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": -87,
+    "colorOverrides": [
+      {
+        "colors": "h == 16",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvOrientation": -187,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "MYQ5_LAB_TABLE_RESTRAINT_SKELETON"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Lab restraints with skeleton",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": -87,
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": -187,
+        "uvScale": 0.8
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": -162,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "MYQ5_LAB_TABLE_TOOLS_BROKEN",
+      "MYQ5_LAB_TABLE_TOOLS"
     ]
   },
   {
@@ -25518,6 +25762,14 @@
     ]
   },
   {
+    "description": "Meiyerditch - Floor papers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "AREA_SANGUINE_GHETTO_PAGES1"
+    ]
+  },
+  {
     "description": "Meiyerditch Stone Brick Fireplace",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -25623,6 +25875,143 @@
         "uvScale": 0.6,
         "uvOrientation": 89
       }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden table with cash register",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h >= 10",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "MYQ3_GHETTO_SMALL_TABLE"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden display case",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ3_FISHMONGER_TABLE_MELT"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden display case - Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 428,
+    "objectIds": [
+      "MYQ3_FISHMONGER_TABLE_BROKEN"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden display case - Corner",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientationY": 512,
+    "uvOrientationX": -228,
+    "uvOrientationZ": -256,
+    "objectIds": [
+      "MYQ3_FISHMONGER_TABLE_CRNR"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Barrel with fish bones - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "MYQ3_FISHBONE_BARREL"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 111
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Barrel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 111
+      }
+    ],
+    "objectIds": [
+      "MYQ3_FISHSHOP_BARREL"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Barrel Broken",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 111
+      }
+    ],
+    "objectIds": [
+      "MYQ3_FISHSHOP_BARREL_BROKEN"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Barrel Stacked",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 111
+      }
+    ],
+    "objectIds": [
+      "MYQ3_BARREL_STACKED"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wall net - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 111
+      }
+    ],
+    "objectIds": [
+      "MYQ3_WALLNET"
     ]
   },
   {
@@ -26077,17 +26466,32 @@
   {
     "description": "Meiyerditch Poor Wooden Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
     "objectIds": [
       "AREA_SANGUINE_GHETTO_STAIRS_UP_BROKEN",
       "AREA_SANGUINE_GHETTO_STAIRS_DOWN_BROKEN",
       "AREA_SANGUINE_GHETTO_STAIRS_UP",
       "AREA_SANGUINE_GHETTO_STAIRS_DOWN",
-      "MYQ3_LAB_STAIRS_DOWN",
       "MYQ3_LAB_STAIRS_UP",
       "MYQ4_SERAFINA_STAIRS_UP",
       "MYQ4_HIDEOUT_EXIT"
+    ]
+  },
+  {
+    "description": "Meiyerditch Poor Wooden Stairs with fake shadow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 1.15
+      }
     ],
-    "uvType": "BOX"
+    "objectIds": [
+      "MYQ3_LAB_STAIRS_DOWN"
+    ]
   },
   {
     "description": "Meiyerditch Poor Wooden Stairs going into the ground",
@@ -26719,7 +27123,14 @@
     "colorOverrides": [
       {
         "description": "Daeyalt Ore",
-        "colors": "h > 26",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Daeyalt Ore",
+        "colors": "a == 255 && h > 26",
         "baseMaterial": "ROCK_5_ORE",
         "uvType": "BOX",
         "uvScale": 0.5
@@ -27044,6 +27455,89 @@
     ],
     "objectIds": [
       "IG_MAUSOLEUM_STATUE"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Mausoleum Statue",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 303,
+    "colorOverrides": [
+      {
+        "colors": "s >= 2",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "IG_MAUSOLEUM_COFFIN"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Tree and plant combined model",
+    "baseMaterial": "BARK",
+    "uvOrientation": 89,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 14",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "MODEL_XZ",
+        "windDisplacementMode": "VERTEX"
+      }
+    ],
+    "objectIds": [
+      "IG_BIG_BUSH"
+    ]
+  },
+  {
+    "description": "Meiyerditch labs - Blood Altar - Gravestones",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -86,
+    "objectIds": [
+      "MYQ5_LAB_GRAVESTONE1",
+      "MYQ5_LAB_GRAVESTONE2"
+    ]
+  },
+  {
+    "description": "Meiyerditch labs - Blood Altar - Coffins",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 187,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvScale": 0.75,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "MYQ5_LAB_COFFIN1_OPEN",
+      "MYQ5_LAB_COFFIN2_OPEN"
+    ]
+  },
+  {
+    "description": "Meiyerditch labs - Blood Altar - Coffin on a stone slab",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 187,
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "ROCK_3",
+        "uvScale": 0.75,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "MYQ5_LAB_COFFIN_RAISED"
     ]
   },
   {
@@ -27849,7 +28343,8 @@
       "DARKM_RICH_RANGE",
       "DARKM_MIDDLE_RANGE",
       "DARKM_POOR_RANGE",
-      "DARKM_POOR_POTTERY_OVEN"
+      "DARKM_POOR_POTTERY_OVEN",
+      "MYQ5_LAB_BROKEN_RANGE"
     ]
   },
   {
@@ -28053,8 +28548,17 @@
     ]
   },
   {
-    "description": "Vampyre Statue",
+    "description": "Meiyerditch - Vampyre Statue with key",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ],
     "objectIds": [
       "MYQ3_LAB_VAMP_STATUE_EMPTY",
       "MYQ3_LAB_VAMP_STATUE_KEY"
@@ -34227,7 +34731,9 @@
       "DS2_DRAGONKIN_BONES1",
       "WILD4_SKELETON_2",
       "LITHKREN_DUNGEON_SKELETON_OP",
-      "LITHKREN_DUNGEON_SKELETON_NO_OP"
+      "LITHKREN_DUNGEON_SKELETON_NO_OP",
+      "AHOY_SKELETON_2",
+      "BLOOD_ALTAR_SKELETON"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -79129,7 +79635,9 @@
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "objectIds": [
-      "MUSHROOM_DARK"
+      "MUSHROOM_DARK",
+      "AREA_SANGUINE_GHETTO_WALL_PLANT3",
+      "AREA_SANGUINE_GHETTO_WALL_PLANT4"
     ]
   },
   {
