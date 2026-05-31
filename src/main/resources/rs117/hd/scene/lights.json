@@ -26640,10 +26640,10 @@
   },
   {
     "description": "CAMDOZAAL_SACRED_FORGE",
-    "offset": [ 0, 100, -70 ],
+    "offset": [ 0, 100, -120 ],
     "alignment": "CENTER",
     "radius": 800,
-    "strength": 12.5,
+    "strength": 14,
     "color": [
       252,
       148,
@@ -26651,7 +26651,25 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 30,
+    "range": 15,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_SACRED_FORGE_OP",
+      "BIM_RUINS_WALLKIT_SACRED_FORGE"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_STATUE_SHORT",
+    "offset": [ 0, 400, -90 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
     "objectIds": [
       "BIM_RUINS_WALLKIT_SACRED_FORGE_OP",
       "BIM_RUINS_WALLKIT_SACRED_FORGE"
@@ -26676,10 +26694,9 @@
   },
   {
     "description": "camdozaal lantern",
-    "height": 175,
-    "alignment": "BACK",
-    "radius": 300,
-    "strength": 25,
+    "offset": [ -34, 180, 26 ],
+    "radius": 325,
+    "strength": 20,
     "color": [
       252,
       148,

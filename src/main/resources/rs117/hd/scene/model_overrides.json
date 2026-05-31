@@ -46167,7 +46167,7 @@
   },
   {
     "description": "Camdozaal Carved Walls and Pillars",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "BIM_RUINS_WALLKIT_WORKSHOP01",
       "BIM_RUINS_WALLKIT_CORNER01",
@@ -46177,14 +46177,36 @@
       "BIM_RUINS_WALLKIT_FILLER01",
       "BIM_RUINS_WALLKIT_FILLER02",
       "BIM_RUINS_WALLKIT_FILLER03",
+      "BIM_RUINS_WALLKIT_WALLTOP01",
+      "BIM_RUINS_WALLKIT_WALLTOP02",
       "BIM_RUINS_ENTRANCE_STATUE",
+      "BIM_RUINS_WALLKIT_WALLTOP05",
+      "BIM_RUINS_WALLKIT_WALLTOP03",
+      "BIM_RUINS_WALLKIT_WALLTOP04",
       "DUNGEONKIT_IMCANDO_PILLAR01"
     ],
     "uvType": "BOX"
   },
   {
+    "description": "Camdozaal Crystals",
+    "upwardsNormals": true,
+    "objectIds": [
+      "DECOKIT_CRYSTAL_BARRONITE01",
+      "DECOKIT_CRYSTAL_BARRONITE02",
+      "DECOKIT_CRYSTAL_BARRONITE03"
+    ]
+  },
+  {
+    "description": "Camdozaal Golem",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "RUBBLE_GOLEM_2X2",
+      "RUBBLE_GOLEM_1X1"
+    ]
+  },
+  {
     "description": "Camdozaal Vault Walls",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "BIM_VAULT_WALL01",
       "BIM_VAULT_WALL02",
@@ -46194,7 +46216,9 @@
       "BIM_VAULT_WALL06",
       "BIM_VAULT_CORNER01",
       "BIM_VAULT_CORNER02",
-      "BIM_VAULT_CORNER03"
+      "BIM_VAULT_CORNER03",
+      "BIM_VAULT_WALLKIT_WALLTOP01",
+      "BIM_RUINS_PRESSUREPLATE"
     ],
     "uvType": "BOX"
   },
@@ -46210,7 +46234,7 @@
   },
   {
     "description": "Camdozaal House Walls",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "colorOverrides": [
       {
@@ -46218,7 +46242,8 @@
         "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
-        "uvOrientation": 700
+        "uvScale": 0.2,
+        "uvOrientation": 512
       }
     ],
     "objectIds": [
@@ -46231,7 +46256,7 @@
   },
   {
     "description": "Camdozaal Wall Statue - static",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "colorOverrides": [
       {
@@ -46249,7 +46274,7 @@
   },
   {
     "description": "Camdozaal Wall Statues - Dynamic",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "objectIds": [
       "BIM_RUINS_WALLKIT_STREETLAMP01"
@@ -46264,7 +46289,7 @@
   },
   {
     "description": "Camdozaal Barronite Walls",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "objectIds": [
       "CAMDOZAALROCK1", "CAMDOZAALROCK2"
     ],
@@ -46273,14 +46298,24 @@
   },
   {
     "description": "Camdozaal Sacred Forge",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "BIM_RUINS_WALLKIT_SACRED_FORGE_MULTI",
       "BIM_RUINS_WALLKIT_SACRED_FORGE_OP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "a < 255 || h == 7",
+        "baseMaterial": "NONE"
+      }
+    ]
   },
   {
     "description": "Camdozaal Rock Piles - Large",
@@ -46434,18 +46469,12 @@
     "objectIds": [
       "CAMDOZAAL_PREPARATION_TABLE"
     ],
-    "uvType": "BOX",
-    "uvOrientation": 768,
-    "uvScale": 0.6
+    "uvType": "BOX"
   },
   {
     "description": "Camdozaal Altar",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvOrientationY": 256,
-    "uvOrientationZ": 768,
-    "uvOrientationX": 768,
-    "uvScale": 0.6,
     "colorOverrides": [
       {
         "description": "Metal",
@@ -46676,9 +46705,7 @@
   },
   {
     "description": "Camdozaal Stalactite post and lamp",
-    "baseMaterial": "GRUNGE_3",
-    "uvType": "BOX",
-    "uvOrientation": 343,
+    "baseMaterial": "METALLIC_1_LIGHT",
     "colorOverrides": [
       {
         "description": "Rock",
@@ -46698,7 +46725,8 @@
         "colors": "h == 6 && s == 4",
         "baseMaterial": "ROPE",
         "uvType": "BOX",
-        "uvOrientation": 42
+        "uvOrientation": 42,
+        "uvScale": 0.5
       }
     ],
     "objectIds": [
