@@ -17562,6 +17562,9 @@
   {
     "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burgh De Rott",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.44,
     "objectIds": [
       "BURGH_INN_CLIMB_OVER",
       "BURGH_STONE",
@@ -17573,7 +17576,6 @@
       "BURGH_STONE_CRUMBLY_LOW_LEFT",
       "BURGH_STONE_CRUMBLY_LOW_RIGHT",
       "BURGH_STONE_CRUMBLY_LOW2_LEFT",
-      "BURGH_STONE_WINDOW",
       "BURGH_DUNGEON",
       "BURGH_DUNGEON_EXPOSED_PLASTER",
       "BURGH_STONE_CRUMBLY_RIGHT_LEV2",
@@ -17582,10 +17584,27 @@
       "BURGH_STONE_CRUMBLY_HALF_LEFT_LEV2",
       "BURGH_STONE_LEV2",
       "BURGH_STONE_WALL_BROKEN"
-    ],
+    ]
+  },
+  {
+    "description": "Morytania - Burgh De Rott - Stone Brick Wall with window",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.44
+    "uvScale": 0.44,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 21 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 404,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "BURGH_STONE_WINDOW"
+    ]
   },
   {
     "description": "Morytania - Objects  - Stone - Stone Brick Wall Rubble",
@@ -26845,6 +26864,189 @@
     ]
   },
   {
+    "description": "Icyene Graveyard - Fence",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "colors": "l <= 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "flatNormals": true
+      }
+    ],
+    "objectIds": [
+      "IG_FENCE"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Gravestones - Large",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 404,
+    "objectIds": [
+      "IG_GRAVESTONE_02",
+      "IG_GRAVESTONE_03"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Gravestones",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 80,
+    "objectIds": [
+      "IG_GRAVESTONE_01",
+      "IG_GRAVESTONE_04",
+      "IG_GRAVESTONE_05",
+      "IG_GRAVESTONE_06",
+      "IG_GRAVESTONE_07"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Pool",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "uvType": "BOX",
+    "uvOrientation": 80,
+    "objectIds": [
+      "IG_MAUSOLEUM_POOL"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Mausoleum ivy",
+    "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "VERTEX_JIGGLE",
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 144,
+    "uvScale": 0.1,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 17",
+        "baseMaterial": "GRUNGE_1",
+        "flatNormals": true
+      }
+    ],
+    "objectIds": [
+      "IG_IVY_TALL",
+      "IG_IVY_TALL_M",
+      "IG_IVY_SHORT",
+      "IG_IVY_SHORT_M",
+      "IG_IVY_TALL_UPPER",
+      "IG_IVY_TALL_UPPER_M",
+      "IG_IVY_SHORT_UPPER_M"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Loose leaves",
+    "baseMaterial": "LEAF_VEINS_LIGHT",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 144,
+    "uvScale": 0.1,
+    "flatNormals": true,
+    "objectIds": [
+      "IG_PLANT_MORTMYRE_LEAVES",
+      "IG_PLANT_MORTMYRE_LEAVES_EDGE",
+      "IG_PLANT_MORTMYRE_LEAVES_CORNER"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Grave bed",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 144,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "IG_GRAVEBED"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Mausoleum",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvOrientation": 192,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "IG_MAUSOLEUM_WALL",
+      "IG_MAUSOLEUM_WALL_CORNER",
+      "IG_MAUSOLEUM_WALL_EDGE_L",
+      "IG_MAUSOLEUM_WALL_EDGE_R",
+      "IG_MAUSOLEUM_ROOF_CENTER",
+      "IG_MAUSOLEUM_ROOF_CORNER",
+      "IG_MAUSOLEUM_ROOF_EDGE",
+      "IG_MAUSOLEUM_ROOF_ARCH"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Mausoleum Door",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvOrientation": 192,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s >= 2",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 187
+      },
+      {
+        "colors": "s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "IG_MAUSOLEUM_DOOR_SMALL",
+      "IG_MAUSOLEUM_DOOR_NOOP"
+    ]
+  },
+  {
+    "description": "Icyene Graveyard - Mausoleum Statue",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvOrientation": -192,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s >= 2",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 187
+      },
+      {
+        "colors": "s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "IG_MAUSOLEUM_STATUE"
+    ]
+  },
+  {
     "description": "Hallowed Sepulcher - Mausoleum - Building",
     "baseMaterial": "STONE_NORMALED_LIGHT",
     "objectIds": [
@@ -28061,7 +28263,8 @@
       "DOV_HUNTING_PLANT1",
       "DOV_HUNTING_PLANT1_OP",
       "DOV_HUNTING_PLANT_INITIAL",
-      "PLANT_TROPICAL_01"
+      "PLANT_TROPICAL_01",
+      "IG_PLANT_FLAT"
     ]
   },
   {
@@ -29250,7 +29453,8 @@
   },
   {
     "description": "Morytania - Ground  - Stone - Stone Steps",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
     "objectIds": [
       "BARROWS_SKEWSTEPS",
       "BARROWS_SKEWSTEPS_CORNER",
