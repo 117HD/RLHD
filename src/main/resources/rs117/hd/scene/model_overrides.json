@@ -60326,7 +60326,9 @@
     "objectIds": [
       "CANAFIS_WINDOW_OPEN",
       "CANAFIS_WINDOW_OPEN2",
-      "CANAFIS_WINDOW_OPEN3"
+      "CANAFIS_WINDOW_OPEN3",
+      "CANAFIS_WINDOW_CLOSED",
+      "CANAFIS_WINDOW_CLOSED2"
     ]
   },
   {
