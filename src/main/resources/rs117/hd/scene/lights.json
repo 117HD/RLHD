@@ -26540,10 +26540,10 @@
     ]
   },
   {
-    "description": "CAMDOZAAL_STATUE",
-    "offset": [ 0, 200, -50 ],
-    "radius": 250,
-    "strength": 30,
+    "description": "CAMDOZAAL_STATUE_SHORT",
+    "offset": [ 0, 245, -50 ],
+    "radius": 300,
+    "strength": 20,
     "color": [
       0,
       140,
@@ -26557,8 +26557,55 @@
     ]
   },
   {
+    "description": "CAMDOZAAL_STATUE_WIDE",
+    "offset": [ 0, 270, -50 ],
+    "radius": 600,
+    "strength": 5,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_STREETLAMP01"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_BARRIER_OPEN",
+    "offset": [ 0, 150, 0 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      0,
+      150,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "CAMDOZAAL_VAULT_BARRIER_OPEN"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_BARRIER_CLOSED",
+    "offset": [ 0, 150, 0 ],
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      190,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "CAMDOZAAL_VAULT_BARRIER_CLOSED"
+    ]
+  },
+  {
     "description": "CAMDOZAAL_CRYSTALS",
-    "height": 30,
+    "height": 75,
     "alignment": "CENTER",
     "radius": 220,
     "strength": 12.5,
@@ -26569,25 +26616,23 @@
     ],
     "type": "PULSE",
     "duration": 1700,
-    "range": 30,
+    "range": 15,
     "objectIds": [
       "DECOKIT_CRYSTAL_BARRONITE01"
     ]
   },
   {
     "description": "BARRONITE_ROCK",
-    "height": 100,
+    "offset": [ 0, 140, 30 ],
     "alignment": "CENTER",
     "radius": 220,
-    "strength": 17.5,
+    "strength": 10,
     "color": [
       150,
       0,
       255
     ],
-    "type": "PULSE",
-    "duration": 2200,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "CAMDOZAALROCK1",
       "CAMDOZAALROCK2"
@@ -26595,9 +26640,9 @@
   },
   {
     "description": "CAMDOZAAL_SACRED_FORGE",
-    "height": 100,
+    "offset": [ 0, 100, -70 ],
     "alignment": "CENTER",
-    "radius": 1400,
+    "radius": 800,
     "strength": 12.5,
     "color": [
       252,
@@ -26614,18 +26659,17 @@
   },
   {
     "description": "CAMDOZAAL_VAULT_ORANGE_LIGHT",
-    "height": 30,
-    "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ 0, 50, 70 ],
+    "radius": 220,
+    "strength": 30,
     "color": [
       252,
       190,
       0
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
     "duration": 0,
-    "range": 0,
+    "range": 10,
     "objectIds": [
       "BIM_VAULT_WALL01"
     ]
