@@ -26540,6 +26540,84 @@
     ]
   },
   {
+    "description": "CAMDOZAAL_SMALL_TORCH_ON_HOUSE_1",
+    "areas": [ "CAMDOZAAL_HOUSE_LIGHTS_LOW" ],
+    "offset": [ 63, 255, -85 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_RESIDENTIAL01",
+      "BIM_RUINS_WALLKIT_RESIDENTIAL02"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_SMALL_TORCH_ON_HOUSE_2",
+    "areas": [ "CAMDOZAAL_HOUSE_LIGHTS_LOW" ],
+    "offset": [ -63, 255, -85 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_RESIDENTIAL01",
+      "BIM_RUINS_WALLKIT_RESIDENTIAL02"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_SMALL_TORCH_ON_HOUSE_3",
+    "areas": [ "CAMDOZAAL_HOUSE_LIGHTS_HIGH" ],
+    "offset": [ -183, 405, -85 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_RESIDENTIAL01",
+      "BIM_RUINS_WALLKIT_RESIDENTIAL02",
+      "BIM_RUINS_WALLKIT_WORKSHOP01"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_SMALL_TORCH_ON_HOUSE_4",
+    "areas": [ "CAMDOZAAL_HOUSE_LIGHTS_HIGH" ],
+    "offset": [ 183, 405, -85 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_RESIDENTIAL01",
+      "BIM_RUINS_WALLKIT_RESIDENTIAL02",
+      "BIM_RUINS_WALLKIT_WORKSHOP01"
+    ]
+  },
+  {
     "description": "CAMDOZAAL_STATUE_SHORT",
     "offset": [ 0, 245, -50 ],
     "radius": 300,
@@ -26558,9 +26636,9 @@
   },
   {
     "description": "CAMDOZAAL_STATUE_WIDE",
-    "offset": [ 0, 270, -50 ],
-    "radius": 600,
-    "strength": 5,
+    "offset": [ 0, 280, -80 ],
+    "radius": 570,
+    "strength": 7,
     "color": [
       0,
       140,
