@@ -153,8 +153,11 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     shadowPos.xy *= shadowRes;
     shadowPos.xy += .5; // Shift to texel center
 
-    // Scale bias with surface angle to light - steeper angles need more bias
-    float slopeBias = clamp(tan(acos(clamp(lightDotNormals, 0.0, 1.0))), 1.0, 16.0);
+    // Scale bias with surface angle to light - steeper angles need more bias.
+    // tan(acos(x)) == sqrt(1 - x*x) / x (algebraic identity), avoiding two SFU ops.
+    // Lower-clamp x by 1e-3 to avoid divide-by-zero; that region already saturates to 16.
+    float c = clamp(lightDotNormals, 1e-3, 1.0);
+    float slopeBias = clamp(sqrt(1.0 - c * c) / c, 1.0, 16.0);
     float shadowBias = MIN_SHADOW_BIAS * slopeBias;
     float fragDepth = shadowPos.z + shadowBias;
 

@@ -149,12 +149,19 @@ void main() {
     // Calculate angle between view direction and sun direction (full 3D)
     float sunDot = dot(viewDir, sunDir);
 
-    // Create sun glow with multiple layers (smaller sun, less intense glow)
+    // Create sun glow with multiple layers (smaller sun, less intense glow).
+    // pow(x, 128/32/8) folded to repeated squaring; pow(x, 2.5) to x*x*sqrt(x).
     if (sunDot > 0.0) {
-        float coreGlow = pow(sunDot, 128.0) * 0.4;     // Tighter, smaller core
-        float innerGlow = pow(sunDot, 32.0) * 0.25;    // Smaller inner glow
-        float midGlow = pow(sunDot, 8.0) * 0.15;       // Reduced medium spread
-        float outerGlow = pow(sunDot, 2.5) * 0.08;     // Subtler atmospheric glow
+        float s2 = sunDot * sunDot;       // ^2
+        float s4 = s2 * s2;               // ^4
+        float s8 = s4 * s4;               // ^8
+        float s16 = s8 * s8;              // ^16
+        float s32 = s16 * s16;            // ^32
+        float s128 = s32 * s32; s128 = s128 * s128; // ^128
+        float coreGlow = s128 * 0.4;                  // Tighter, smaller core
+        float innerGlow = s32 * 0.25;                 // Smaller inner glow
+        float midGlow = s8 * 0.15;                    // Reduced medium spread
+        float outerGlow = s2 * sunDot * sqrt(sunDot) * 0.08; // ^2.5 — subtler atmospheric glow
 
         float totalGlow = coreGlow + innerGlow + midGlow + outerGlow;
         skyColor += skySunColor * totalGlow;
@@ -374,7 +381,7 @@ void main() {
     // === HORIZON HAZE ===
     // Make the horizon slightly hazier/brighter, especially on the sun side
     float horizonHaze = 1.0 - abs(upAmount);
-    horizonHaze = pow(horizonHaze, 2.5) * 0.15;
+    horizonHaze = horizonHaze * horizonHaze * sqrt(horizonHaze) * 0.15; // ^2.5
     vec3 hazeColor = mix(skyHorizonColor * 0.8, skyHorizonColor * 1.3, sunSideBlend);
     skyColor = mix(skyColor, hazeColor, horizonHaze);
 

@@ -532,72 +532,90 @@ void main() {
         }
 
         if (skyGradientEnabled == 1) {
-            // Compute the sky gradient color at this fragment's view direction
-            // so fog blends geometry into the exact sky color behind it
-            vec3 viewDir = normalize(IN.position - cameraPos);
+            // Default to the fragment's own color so the mix below is a no-op
+            // when there's no fog. The full sky-gradient reconstruction is only
+            // needed where fog actually blends geometry toward the sky, so it's
+            // gated on combinedFog to skip the pow/smoothstep/normalize chain on
+            // the unfogged majority of scene pixels.
+            vec3 skyColorAtFragment = outputColor.rgb;
 
-            // Match sky shader's sun direction transform (with horizon offset)
-            float horizonOffset = 0.087;
-            vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y + horizonOffset, skySunDir.z));
+            if (combinedFog > 1e-4) {
+                // Compute the sky gradient color at this fragment's view direction
+                // so fog blends geometry into the exact sky color behind it
+                vec3 viewDir = normalize(IN.position - cameraPos);
 
-            float upAmount = -viewDir.y;
+                // Match sky shader's sun direction transform (with horizon offset)
+                float horizonOffset = 0.087;
+                vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y + horizonOffset, skySunDir.z));
 
-            // Horizontal sun-facing gradient
-            vec3 viewHorizontal = normalize(vec3(viewDir.x, 0.0, viewDir.z));
-            vec3 sunHorizontal = normalize(vec3(sunDir.x, 0.0, sunDir.z));
-            float sunFacing = dot(viewHorizontal, sunHorizontal);
-            float sunSideBlend = smoothstep(0.0, 1.0, (sunFacing + 1.0) * 0.5);
+                float upAmount = -viewDir.y;
 
-            // Vertical zenith-to-horizon blend
-            float zenithBlend = smoothstep(-0.1, 0.7, upAmount);
+                // Horizontal sun-facing gradient
+                vec3 viewHorizontal = normalize(vec3(viewDir.x, 0.0, viewDir.z));
+                vec3 sunHorizontal = normalize(vec3(sunDir.x, 0.0, sunDir.z));
+                float sunFacing = dot(viewHorizontal, sunHorizontal);
+                float sunSideBlend = smoothstep(0.0, 1.0, (sunFacing + 1.0) * 0.5);
 
-            // Sun altitude factors
-            float sunAltitude = clamp(skySunDir.y, 0.0, 1.0);
-            float daytimeFactor = smoothstep(0.0, 0.64, sunAltitude);
-            float dimFadeout = smoothstep(0.0, 0.34, sunAltitude);
-            float darkSideDim = mix(0.7, 1.0, dimFadeout);
-            vec3 darkSideColor = mix(skyZenithColor * darkSideDim, skyHorizonColor, daytimeFactor);
-            vec3 sunSideColor = skyHorizonColor;
+                // Vertical zenith-to-horizon blend
+                float zenithBlend = smoothstep(-0.1, 0.7, upAmount);
 
-            // Night fade for uniform sky at night
-            float nightFade = smoothstep(-0.26, 0.0, skySunDir.y);
+                // Sun altitude factors
+                float sunAltitude = clamp(skySunDir.y, 0.0, 1.0);
+                float daytimeFactor = smoothstep(0.0, 0.64, sunAltitude);
+                float dimFadeout = smoothstep(0.0, 0.34, sunAltitude);
+                float darkSideDim = mix(0.7, 1.0, dimFadeout);
+                vec3 darkSideColor = mix(skyZenithColor * darkSideDim, skyHorizonColor, daytimeFactor);
+                vec3 sunSideColor = skyHorizonColor;
 
-            vec3 horizonColor = mix(darkSideColor, sunSideColor, sunSideBlend);
-            horizonColor = mix(skyZenithColor, horizonColor, nightFade);
+                // Night fade for uniform sky at night
+                float nightFade = smoothstep(-0.26, 0.0, skySunDir.y);
 
-            vec3 skyColorAtFragment = mix(horizonColor, skyZenithColor, zenithBlend);
+                vec3 horizonColor = mix(darkSideColor, sunSideColor, sunSideBlend);
+                horizonColor = mix(skyZenithColor, horizonColor, nightFade);
 
-            // Add sun glow contribution
-            float sunDot = dot(viewDir, sunDir);
-            if (sunDot > 0.0) {
-                float coreGlow = pow(sunDot, 128.0) * 0.4;
-                float innerGlow = pow(sunDot, 32.0) * 0.25;
-                float midGlow = pow(sunDot, 8.0) * 0.15;
-                float outerGlow = pow(sunDot, 2.5) * 0.08;
-                skyColorAtFragment += skySunColor * (coreGlow + innerGlow + midGlow + outerGlow);
-            }
+                skyColorAtFragment = mix(horizonColor, skyZenithColor, zenithBlend);
 
-            // Horizon haze (must match sky_frag.glsl)
-            float horizonHaze = 1.0 - abs(upAmount);
-            horizonHaze = pow(horizonHaze, 2.5) * 0.15;
-            vec3 hazeColor = mix(skyHorizonColor * 0.8, skyHorizonColor * 1.3, sunSideBlend);
-            skyColorAtFragment = mix(skyColorAtFragment, hazeColor, horizonHaze);
+                // Add sun glow contribution.
+                // pow(x, 128/32/8) folded to repeated squaring; pow(x, 2.5) to x*x*sqrt(x).
+                float sunDot = dot(viewDir, sunDir);
+                if (sunDot > 0.0) {
+                    float s2 = sunDot * sunDot;       // ^2
+                    float s4 = s2 * s2;               // ^4
+                    float s8 = s4 * s4;               // ^8
+                    float s16 = s8 * s8;              // ^16
+                    float s32 = s16 * s16;            // ^32
+                    float s128 = s32 * s32; s128 = s128 * s128; // ^128
+                    float coreGlow = s128 * 0.4;
+                    float innerGlow = s32 * 0.25;
+                    float midGlow = s8 * 0.15;
+                    float outerGlow = s2 * sunDot * sqrt(sunDot) * 0.08; // ^2.5
+                    skyColorAtFragment += skySunColor * (coreGlow + innerGlow + midGlow + outerGlow);
+                }
 
-            // Atmospheric scattering (must match sky_frag.glsl)
-            float atmosphericScatter = sunSideBlend * (1.0 - zenithBlend) * 0.2;
-            skyColorAtFragment = mix(skyColorAtFragment, skySunColor * 0.5 + skyHorizonColor * 0.5, atmosphericScatter);
+                // Horizon haze (must match sky_frag.glsl)
+                float horizonHaze = 1.0 - abs(upAmount);
+                horizonHaze = horizonHaze * horizonHaze * sqrt(horizonHaze) * 0.15; // ^2.5
+                vec3 hazeColor = mix(skyHorizonColor * 0.8, skyHorizonColor * 1.3, sunSideBlend);
+                skyColorAtFragment = mix(skyColorAtFragment, hazeColor, horizonHaze);
 
-            // Night sky blend: darken fog toward skyZenithColor, which is what
-            // the sky converges to at the horizon at night (stars are faded out
-            // near the horizon in sky_frag.glsl)
-            float nightSkyBlend = (1.0 - nightFade) * starVisibility;
-            if (nightSkyBlend > 0.001) {
-                skyColorAtFragment = mix(skyColorAtFragment, skyZenithColor, nightSkyBlend);
+                // Atmospheric scattering (must match sky_frag.glsl)
+                float atmosphericScatter = sunSideBlend * (1.0 - zenithBlend) * 0.2;
+                skyColorAtFragment = mix(skyColorAtFragment, skySunColor * 0.5 + skyHorizonColor * 0.5, atmosphericScatter);
+
+                // Night sky blend: darken fog toward skyZenithColor, which is what
+                // the sky converges to at the horizon at night (stars are faded out
+                // near the horizon in sky_frag.glsl)
+                float nightSkyBlend = (1.0 - nightFade) * starVisibility;
+                if (nightSkyBlend > 0.001) {
+                    skyColorAtFragment = mix(skyColorAtFragment, skyZenithColor, nightSkyBlend);
+                }
             }
 
             outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
 
-            // Dithering to reduce color banding in fog gradients
+            // Dithering to reduce color banding. Kept OUTSIDE the fog gate above:
+            // this is the scene's only anti-banding noise and is independent of fog,
+            // so it must run on every fragment regardless of combinedFog.
             float dither = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453123) - 0.5;
             outputColor.rgb += dither / 255.0;
         } else {

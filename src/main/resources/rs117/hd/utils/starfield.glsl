@@ -131,11 +131,24 @@ vec3 proceduralStarfield(vec3 dir) {
         vec3 scaledDir = dir * gridScale;
         vec3 cell = floor(scaledDir);
 
-        // Check current cell and 26 neighbors to prevent boundary artifacts
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                for (int dz = -1; dz <= 1; dz++) {
-                    vec3 neighborCell = cell + vec3(dx, dy, dz);
+        // A star lives at cell + sf_hash3(cell) (offset in [0,1) per axis) and has
+        // max effective radius starRadius * 1.0 < 0.5. So along each axis the query
+        // point can only be reached by a star in its own cell or the ONE neighbor on
+        // the side the fractional position leans toward. That's an 8-cell footprint
+        // (own cell + nearer neighbor per axis) instead of the full 27, and it is
+        // bit-identical to the 27-cell search while max starRadius < 0.5.
+        // EXACT ONLY WHILE max starRadius < 0.5 — current max is 0.45.
+        vec3 frac = scaledDir - cell;                 // in [0,1)
+        // step() gives 0 for frac<0.5 and 1 for frac>=0.5; map to -1/+1 so the offset
+        // is always non-zero (avoids re-testing the own cell, which would double-count).
+        // At exactly frac==0.5 the chosen neighbor can't contain a reaching star
+        // (any star there is >=0.5 away > starRadius), so the +1 tie-break is safe.
+        vec3 nearStep = step(0.5, frac) * 2.0 - 1.0;  // -1 toward lower neighbor, +1 toward upper
+        // Iterate the 2x2x2 footprint: index 0 = own cell, index 1 = nearer neighbor.
+        for (int ix = 0; ix <= 1; ix++) {
+            for (int iy = 0; iy <= 1; iy++) {
+                for (int iz = 0; iz <= 1; iz++) {
+                    vec3 neighborCell = cell + vec3(ix, iy, iz) * nearStep;
 
                     // Does this cell contain a star?
                     float cellRand = sf_hash(neighborCell);

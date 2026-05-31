@@ -25,6 +25,70 @@ public class TimeOfDay
 	// Current cycle mode — set once per frame by ZoneRenderer before any TimeOfDay calls
 	private static DaylightCycle currentCycleMode = DaylightCycle.DYNAMIC;
 
+	// Sky color keyframe tables. These are read-only constant data consumed by
+	// AtmosphereUtils.interpolateSrgb (which only reads and builds fresh float[]
+	// per call). Hoisted to static final so they aren't reallocated every frame.
+	private static final Object[][] ENHANCED_SKY_KEYFRAMES = {
+		// Deep night (sun well below horizon) - lightened and gradual progression
+		{ -30.0, new java.awt.Color(35, 42, 58) },    // Deepest night (lightened)
+		{ -15.0, new java.awt.Color(35, 42, 58) },    // Stable deep night (lightened)
+		{ -8.0,  new java.awt.Color(42, 30, 80) },    // Early twilight brightening (lightened)
+		{ 0.0,   new java.awt.Color(210, 135, 95) },  // Peak sunset red
+		{ 8.0,   new java.awt.Color(220, 170, 115) }, // Late golden hour (dimmed)
+		{ 12.0,  new java.awt.Color(220, 180, 145) }, // Warm late afternoon
+		{ 15.0,  new java.awt.Color(200, 175, 160) }, // Soft warm light
+		{ 18.0,  new java.awt.Color(180, 170, 175) }, // Afternoon transition
+		{ 22.0,  new java.awt.Color(165, 167, 185) }, // Subtle warm tint
+		{ 25.0,  new java.awt.Color(150, 165, 190) }, // Very subtle warmth
+		{ 30.0,  new java.awt.Color(135, 165, 200) }, // Midday blue (natural)
+		{ 50.0,  new java.awt.Color(125, 160, 195) }, // Clear blue (muted)
+		{ 70.0,  new java.awt.Color(120, 155, 190) }, // High sun blue (subdued)
+		{ 90.0,  new java.awt.Color(115, 150, 185) }  // Zenith blue (realistic)
+	};
+
+	// Zenith color keyframes (top of sky)
+	private static final Object[][] ZENITH_KEYFRAMES = {
+		{ -30.0, new java.awt.Color(1, 1, 4) },       // Deep night - near black
+		{ -15.0, new java.awt.Color(3, 4, 10) },      // Late night
+		{ -8.0,  new java.awt.Color(45, 35, 70) },    // Early twilight - purple tint
+		{ -3.0,  new java.awt.Color(80, 60, 100) },   // Twilight
+		{ 0.0,   new java.awt.Color(100, 80, 120) },  // Horizon sun
+		{ 5.0,   new java.awt.Color(120, 140, 180) }, // Early sunrise
+		{ 15.0,  new java.awt.Color(100, 150, 200) }, // Morning
+		{ 30.0,  new java.awt.Color(90, 145, 200) },  // Mid-morning
+		{ 50.0,  new java.awt.Color(85, 140, 195) },  // Midday
+		{ 90.0,  new java.awt.Color(80, 135, 190) }   // High noon
+	};
+
+	// Horizon color keyframes (sides/bottom of sky)
+	private static final Object[][] HORIZON_KEYFRAMES = {
+		{ -30.0, new java.awt.Color(1, 2, 5) },       // Deep night - near black
+		{ -15.0, new java.awt.Color(4, 5, 12) },      // Late night
+		{ -8.0,  new java.awt.Color(60, 45, 65) },    // Early twilight
+		{ -3.0,  new java.awt.Color(140, 80, 70) },   // Twilight - orange/red
+		{ 0.0,   new java.awt.Color(220, 130, 80) },  // Sunrise/sunset - golden
+		{ 5.0,   new java.awt.Color(230, 170, 120) }, // Early morning golden
+		{ 10.0,  new java.awt.Color(200, 180, 160) }, // Morning warm
+		{ 20.0,  new java.awt.Color(170, 175, 185) }, // Late morning
+		{ 30.0,  new java.awt.Color(150, 165, 190) }, // Midday haze
+		{ 50.0,  new java.awt.Color(140, 160, 190) }, // Afternoon
+		{ 90.0,  new java.awt.Color(135, 155, 185) }  // High noon
+	};
+
+	// Sun glow color keyframes (color of the glow around the sun)
+	private static final Object[][] SUN_GLOW_KEYFRAMES = {
+		{ -30.0, new java.awt.Color(0, 0, 0) },       // No glow at night
+		{ -10.0, new java.awt.Color(20, 10, 30) },    // Very faint purple
+		{ -5.0,  new java.awt.Color(80, 40, 60) },    // Purple/pink
+		{ -2.0,  new java.awt.Color(180, 80, 50) },   // Deep orange/red
+		{ 0.0,   new java.awt.Color(255, 150, 80) },  // Bright orange
+		{ 5.0,   new java.awt.Color(255, 200, 130) }, // Golden yellow
+		{ 15.0,  new java.awt.Color(255, 230, 180) }, // Warm white
+		{ 30.0,  new java.awt.Color(255, 250, 220) }, // Nearly white
+		{ 50.0,  new java.awt.Color(255, 255, 240) }, // White with slight warmth
+		{ 90.0,  new java.awt.Color(255, 255, 250) }  // Pure white
+	};
+
 	// Night Synced mode: day offset advances only while the moon is below the horizon,
 	// so phase changes are never visible. We track pending increments and apply them
 	// only when the mirrored moon altitude is negative.
@@ -156,27 +220,8 @@ public class TimeOfDay
 		// Convert sun altitude to degrees (-90 to +90)
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 		
-		// Enhanced sky color palette with gradual sunset to night transition
-		Object[][] skyColorKeyframes = {
-			// Deep night (sun well below horizon) - lightened and gradual progression
-			{ -30.0, new java.awt.Color(35, 42, 58) },    // Deepest night (lightened)
-			{ -15.0, new java.awt.Color(35, 42, 58) },    // Stable deep night (lightened)
-			{ -8.0,  new java.awt.Color(42, 30, 80) },    // Early twilight brightening (lightened)
-			{ 0.0,   new java.awt.Color(210, 135, 95) },  // Peak sunset red
-			{ 8.0,   new java.awt.Color(220, 170, 115) }, // Late golden hour (dimmed)
-			{ 12.0,  new java.awt.Color(220, 180, 145) }, // Warm late afternoon
-			{ 15.0,  new java.awt.Color(200, 175, 160) }, // Soft warm light
-			{ 18.0,  new java.awt.Color(180, 170, 175) }, // Afternoon transition
-			{ 22.0,  new java.awt.Color(165, 167, 185) }, // Subtle warm tint
-			{ 25.0,  new java.awt.Color(150, 165, 190) }, // Very subtle warmth
-			{ 30.0,  new java.awt.Color(135, 165, 200) }, // Midday blue (natural)
-			{ 50.0,  new java.awt.Color(125, 160, 195) }, // Clear blue (muted)
-			{ 70.0,  new java.awt.Color(120, 155, 190) }, // High sun blue (subdued)
-			{ 90.0,  new java.awt.Color(115, 150, 185) }  // Zenith blue (realistic)
-		};
-		
 		// Get the enhanced color for current sun altitude (returns sRGB values)
-		float[] enhancedColorSrgb = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, skyColorKeyframes);
+		float[] enhancedColorSrgb = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, ENHANCED_SKY_KEYFRAMES);
 		// Convert to linear for blending
 		float[] enhancedColor = rs117.hd.utils.ColorUtils.srgbToLinear(enhancedColorSrgb);
 
@@ -260,52 +305,9 @@ public class TimeOfDay
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 
-		// Zenith color keyframes (top of sky)
-		Object[][] zenithKeyframes = {
-			{ -30.0, new java.awt.Color(1, 1, 4) },       // Deep night - near black
-			{ -15.0, new java.awt.Color(3, 4, 10) },      // Late night
-			{ -8.0,  new java.awt.Color(45, 35, 70) },    // Early twilight - purple tint
-			{ -3.0,  new java.awt.Color(80, 60, 100) },   // Twilight
-			{ 0.0,   new java.awt.Color(100, 80, 120) },  // Horizon sun
-			{ 5.0,   new java.awt.Color(120, 140, 180) }, // Early sunrise
-			{ 15.0,  new java.awt.Color(100, 150, 200) }, // Morning
-			{ 30.0,  new java.awt.Color(90, 145, 200) },  // Mid-morning
-			{ 50.0,  new java.awt.Color(85, 140, 195) },  // Midday
-			{ 90.0,  new java.awt.Color(80, 135, 190) }   // High noon
-		};
-
-		// Horizon color keyframes (sides/bottom of sky)
-		Object[][] horizonKeyframes = {
-			{ -30.0, new java.awt.Color(1, 2, 5) },       // Deep night - near black
-			{ -15.0, new java.awt.Color(4, 5, 12) },      // Late night
-			{ -8.0,  new java.awt.Color(60, 45, 65) },    // Early twilight
-			{ -3.0,  new java.awt.Color(140, 80, 70) },   // Twilight - orange/red
-			{ 0.0,   new java.awt.Color(220, 130, 80) },  // Sunrise/sunset - golden
-			{ 5.0,   new java.awt.Color(230, 170, 120) }, // Early morning golden
-			{ 10.0,  new java.awt.Color(200, 180, 160) }, // Morning warm
-			{ 20.0,  new java.awt.Color(170, 175, 185) }, // Late morning
-			{ 30.0,  new java.awt.Color(150, 165, 190) }, // Midday haze
-			{ 50.0,  new java.awt.Color(140, 160, 190) }, // Afternoon
-			{ 90.0,  new java.awt.Color(135, 155, 185) }  // High noon
-		};
-
-		// Sun glow color keyframes (color of the glow around the sun)
-		Object[][] sunGlowKeyframes = {
-			{ -30.0, new java.awt.Color(0, 0, 0) },       // No glow at night
-			{ -10.0, new java.awt.Color(20, 10, 30) },    // Very faint purple
-			{ -5.0,  new java.awt.Color(80, 40, 60) },    // Purple/pink
-			{ -2.0,  new java.awt.Color(180, 80, 50) },   // Deep orange/red
-			{ 0.0,   new java.awt.Color(255, 150, 80) },  // Bright orange
-			{ 5.0,   new java.awt.Color(255, 200, 130) }, // Golden yellow
-			{ 15.0,  new java.awt.Color(255, 230, 180) }, // Warm white
-			{ 30.0,  new java.awt.Color(255, 250, 220) }, // Nearly white
-			{ 50.0,  new java.awt.Color(255, 255, 240) }, // White with slight warmth
-			{ 90.0,  new java.awt.Color(255, 255, 250) }  // Pure white
-		};
-
-		float[] zenithColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, zenithKeyframes);
-		float[] horizonColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, horizonKeyframes);
-		float[] sunGlowColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, sunGlowKeyframes);
+		float[] zenithColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, ZENITH_KEYFRAMES);
+		float[] horizonColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, HORIZON_KEYFRAMES);
+		float[] sunGlowColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, SUN_GLOW_KEYFRAMES);
 
 		// Apply sunStrength: suppress procedural sunset colors for dark environments
 		// For positive altitudes, keep full suppression — the regional blend will take over.
