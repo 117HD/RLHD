@@ -20043,14 +20043,31 @@
   {
     "description": "Ugly combined backed wooden rocking chair - Broken",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
     "objectIds": [
       "FAI_VARROCK_POOR_CHAIR2",
-      "AREA_SANGUINE_GHETTO_CHAIR1",
+      "AREA_SANGUINE_GHETTO_CHAIR1"
+    ]
+  },
+  {
+    "description": "Gothic chair with cushion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h == 0 && s >= 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ],
+    "objectIds": [
       "AREA_SANGUINE_GOTHIC_CHAIR1",
       "AREA_SANGUINE_GOTHIC_CHAIR2",
+      "AREA_SANGUINE_GOTHIC_CHAIR4",
       "AREA_SANGUINE_GOTHIC_CHAIR5"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
     "description": "Objects - Wooden - Chair - High poly mesh",
@@ -61107,7 +61124,9 @@
       "CANAFIS_WALL_DOOR_OFFSET",
       "CANAFIS_WALL_DOOR_RT_OFFSET",
       "CANAFIS_WALL_LVL1_DOOR_RT",
-      "SLEPE_CHURCH_WALL_INNER"
+      "SLEPE_CHURCH_WALL_INNER",
+      "CANAFIS_WALL_DOOR_RT",
+      "CANAFIS_WALL_DOOR"
     ]
   },
   {
@@ -64083,6 +64102,7 @@
     "objectIds": [
       "FAI_VARROCK_PAGES1",
       "FAI_VARROCK_PAGES2",
+      "FAI_VARROCK_LIBRARY_PAGES2",
       "ARCHEEUS_HOUSE_BOOKS",
       "ARCHEEUS_HOUSE_BOOKS_02"
     ]
@@ -67669,17 +67689,18 @@
     ]
   },
   {
-    "description": "Aldarin - Wooden - Metallic - Fancy Mirror",
+    "description": "Aldarin - Varrock - Falador - Wooden - Metallic - Fancy Mirror",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
-      "ALDARIN_MIRROR_DEFAULT01"
+      "ALDARIN_MIRROR_DEFAULT01",
+      "FAI_VARROCK_POSH_MIRROR"
     ],
     "colorOverrides": [
       {
         "description": "Mirror",
-        "colors": "h == 36",
+        "colors": "h >= 32",
         "baseMaterial": "BLANK_GLOSS",
         "uvType": "MODEL_XY"
       },
@@ -79851,6 +79872,64 @@
     ]
   },
   {
+    "description": "Slepe - Metallic -  Ornate Vase",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "objectIds": [
+      "AREA_SANGUINE_GOTHIC_ORNATE_VASE"
+    ]
+  },
+  {
+    "description": "Slepe - Metallic -  Bath",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "objectIds": [
+      "PISCARILIUS_TIN_BATH_02"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Cloth - Bed",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SPOOKYBED"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Manor stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SLP_MANOR_STAIRS",
+      "SLP_MANOR_STAIRS_TOP"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "objectIds": [
+      "AREA_SANGUINE_GOTHIC_BENCH"
+    ]
+  },
+  {
     "description": "Morytania - Wooden - Nature Spirit Grotto Jump Planks",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -80085,13 +80164,14 @@
     ]
   },
   {
-    "description": "Canafis - Slepe - Table with thread scissors and other items",
+    "description": "Canafis - Slepe - Ladder",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.4,
     "objectIds": [
-      "SLP_BASEMENT_EXIT"
+      "SLP_BASEMENT_EXIT",
+      "SLP_BASEMENT_MANOR_EXIT"
     ]
   },
   {
