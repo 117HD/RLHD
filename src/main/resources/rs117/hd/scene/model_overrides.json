@@ -1556,7 +1556,8 @@
       "DRAGON_SLAYER_QIP_WILD5_TREE_STUMP",
       "SOTN_HUNTING_TREESTUMP_NOOP",
       "MM_BUSH_KHARAZI_JUNGLESTUMP",
-      "DEADTREE_BURNT_STUMP"
+      "DEADTREE_BURNT_STUMP",
+      "DEADTREE2_STUMP_SWAMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -15713,6 +15714,9 @@
   {
     "description": "Ground Decoration - Grunge - Tiny - Uncolored",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.68,
+    "castShadows": false,
     "objectIds": [
       "DUGUPSOIL2_LIGHT",
       "SWAMP_DIGDUGUPSOIL2",
@@ -15721,11 +15725,14 @@
       "TEMPLETREK_SWAMP_EVADE_PATH",
       "TEMPLETREK_SWAMP_SUCCESS_PATH",
       "TEMPLETREK_SWAMP_FAIL_PATH",
-      "ALDARIN_DUGUPSOIL02"
-    ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.68,
-    "castShadows": false
+      "ALDARIN_DUGUPSOIL02",
+      "MYQ5_SWAMP_FAIL_PATH",
+      "MYQ5_SWAMP_FAIL_PATH_QUICK",
+      "MYQ5_SWAMP_SUCCESS_PATH_1",
+      "MYQ5_SWAMP_SUCCESS_PATH_2",
+      "MYQ5_SWAMP_SUCCESS_PATH_3",
+      "MYQ5_SWAMP_SUCCESS_PATH_4"
+    ]
   },
   {
     "description": "Ground Decoration - Grunge - Tiny - Colored",
@@ -26584,6 +26591,17 @@
     "castShadows": false
   },
   {
+    "description": "Temple Trekking - Log bridge repair",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "TEMPLETREK_BRIDGE_FIXED_1",
+      "TEMPLETREK_BRIDGE_FIXED_2",
+      "TEMPLETREK_BRIDGE_FIXED_3"
+    ]
+  },
+  {
     "description": "Temple Trekking & Kebos Swamp Trees",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -26598,6 +26616,17 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.85
+  },
+  {
+    "description": "Quest - Sins of the Father Vine branch",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ5_SWAMPTREE_BRANCH",
+      "MYQ5_SWAMPTREE_BRANCH_VINE"
+    ]
   },
   {
     "description": "Meiyerditch - Rock - Wooden - Mine Walls - With supports",
