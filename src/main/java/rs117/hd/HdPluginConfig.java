@@ -138,6 +138,20 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_HORIZON_TILES = "horizonTiles";
+	@ConfigItem(
+		keyName = KEY_HORIZON_TILES,
+		name = "Horizon tiles",
+		description =
+			"Expands terrain at the edge of the loaded map outside hidden areas so scenery is not cut off abruptly.<br>" +
+			"Only applies while Hide unrelated areas is enabled.",
+		position = 5,
+		section = generalSettings
+	)
+	default boolean horizonTiles() {
+		return true;
+	}
+
 	String KEY_ANTI_ALIASING_MODE = "antiAliasingMode";
 	@ConfigItem(
 		keyName = KEY_ANTI_ALIASING_MODE,
@@ -145,7 +159,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Improves pixelated edges at the cost of significantly higher GPU usage.<br>" +
 			"MSAA x16 is very expensive, so x8 is recommended if anti-aliasing is desired.",
-		position = 5,
+		position = 6,
 		section = generalSettings
 	)
 	default AntiAliasingMode antiAliasingMode()
@@ -160,7 +174,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Render the game at a different resolution and stretch it to fit the screen.<br>" +
 			"Reducing this can improve performance, particularly on very high resolution displays.",
-		position = 6,
+		position = 7,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -173,7 +187,7 @@ public interface HdPluginConfig extends Config
 		keyName = "sceneScalingMode",
 		name = "Game Scaling Mode",
 		description = "The sampling function to use when upscaling the above reduced game resolution.",
-		position = 7,
+		position = 8,
 		section = generalSettings
 	)
 	default SceneScalingMode sceneScalingMode()

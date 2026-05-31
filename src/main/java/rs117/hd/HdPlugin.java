@@ -1794,6 +1794,7 @@ public class HdPlugin extends Plugin {
 								client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 								// fall-through
 							case KEY_HIDE_UNRELATED_AREAS:
+							case KEY_HORIZON_TILES:
 								if (client.getGameState() == GameState.LOGGED_IN)
 									client.setGameState(GameState.LOADING);
 								break;

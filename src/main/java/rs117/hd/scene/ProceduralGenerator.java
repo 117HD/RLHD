@@ -27,10 +27,12 @@ package rs117.hd.scene;
 import java.util.Arrays;
 import java.util.HashMap;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.renderer.legacy.LegacySceneContext;
+import rs117.hd.renderer.zone.WaterExtender;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
@@ -76,6 +78,9 @@ public class ProceduralGenerator {
 	@Inject
 	private WaterTypeManager waterTypeManager;
 
+	@Inject
+	private Provider<WaterExtender> waterExtender;
+
 	public void generateSceneData(SceneContext sceneContext)
 	{
 		long timerTotal = System.currentTimeMillis();
@@ -107,6 +112,8 @@ public class ProceduralGenerator {
 		sceneContext.vertexUnderwaterDepth = null;
 		if (!(sceneContext instanceof LegacySceneContext))
 			sceneContext.underwaterDepthLevels = null;
+		sceneContext.horizonTileMask = null;
+		sceneContext.extendWaterSample = null;
 	}
 
 	/**
@@ -534,6 +541,8 @@ public class ProceduralGenerator {
 			}
 		}
 
+		waterExtender.get().prepareSceneTerrain(sceneContext, tiles);
+
 		// Sink terrain further from shore by desired levels.
 		for (int level = 0; level < DEPTH_LEVEL_SLOPE.length - 1; level++)
 		{
@@ -551,9 +560,13 @@ public class ProceduralGenerator {
 						// If it's on the edge of the scene, reset the depth so
 						// it creates a 'wall' to prevent fog from passing through.
 						// Not incredibly effective, but better than nothing.
-						if (x == 0 || y == 0 || x == EXTENDED_SCENE_SIZE || y == EXTENDED_SCENE_SIZE) {
-							sceneContext.underwaterDepthLevels[z][x][y] = 0;
-							continue;
+						if (x == 0 || y == 0 || x == sizeX || y == sizeY) {
+							if (!(ExtendWaterTileUtil.isEnabled(sceneContext) &&
+								ExtendWaterTileUtil.shouldExtendWaterAtTile(sceneContext, x, y, z)))
+							{
+								sceneContext.underwaterDepthLevels[z][x][y] = 0;
+								continue;
+							}
 						}
 
 						int tileHeight = sceneContext.underwaterDepthLevels[z][x][y];

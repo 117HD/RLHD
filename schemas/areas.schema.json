@@ -24,6 +24,19 @@
         "type": "boolean",
         "description": "Whether to fill gaps in the ground. Can only be disabled if hideOtherAreas is true."
       },
+      "extendWater": {
+        "type": "boolean",
+        "description": "Whether to fill empty scene tiles outside this area's AABBs with water matching extendWaterReferenceTile."
+      },
+      "extendWaterReferenceTile": {
+        "type": "array",
+        "description": "World tile coordinates [x, y] or [x, y, plane] used to sample water type, height and material.",
+        "items": {
+          "type": "integer"
+        },
+        "minItems": 2,
+        "maxItems": 3
+      },
       "areas": {
         "type": "array",
         "description": "A list of other areas to include in this area.",

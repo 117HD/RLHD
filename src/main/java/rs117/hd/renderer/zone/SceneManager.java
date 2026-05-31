@@ -31,6 +31,7 @@ import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.DestructibleHandler;
@@ -350,6 +351,18 @@ public class SceneManager {
 		log.trace("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
 	}
 
+	@Nullable
+	private Area resolveExtendWaterArea(SceneContext ctx) {
+		if (ctx.sceneBase == null)
+			return null;
+
+		for (Area area : areaManager.areasWithAreaHiding) {
+			if (area.extendWater && ctx.intersects(area))
+				return area;
+		}
+		return null;
+	}
+
 	private static boolean isEdgeTile(Zone[][] zones, int zx, int zz) {
 		for (int x = zx - 2; x <= zx + 2; ++x) {
 			if (x < 0 || x >= NUM_ZONES)
@@ -457,6 +470,10 @@ public class SceneManager {
 
 			nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
 			nextSceneContext.fillGaps = config.fillGapsInTerrain();
+			nextSceneContext.enableExtendWater =
+				nextSceneContext.enableAreaHiding && config.horizonTiles();
+			nextSceneContext.extendWaterArea = nextSceneContext.enableExtendWater ?
+				resolveExtendWaterArea(nextSceneContext) : null;
 
 			if (nextSceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 				nextSceneContext.isInHouse = true;
@@ -548,7 +565,7 @@ public class SceneManager {
 
 						old.needsRoofUpdate = true;
 
-						if (old.hasWater || old.dirty || isEdgeTile(ctx.zones, ox, oz)) {
+						if (old.hasWater || old.dirty || isEdgeTile(ctx.zones, ox, oz) || nextSceneContext.extendWaterArea != null) {
 							float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 							sortedZones.add(SortedZone.getZone(old, x, z, dist));
 							nextSceneContext.totalDeferred++;

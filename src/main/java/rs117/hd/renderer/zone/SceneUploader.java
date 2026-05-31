@@ -112,6 +112,9 @@ public class SceneUploader implements AutoCloseable {
 	@Inject
 	private GapFiller gapFiller;
 
+	@Inject
+	private WaterExtender waterExtender;
+
 	@FunctionalInterface
 	public interface OnBeforeProcessTileFunc {
 		void invoke(Tile t, boolean isEstimate) throws InterruptedException;
@@ -196,6 +199,8 @@ public class SceneUploader implements AutoCloseable {
 
 		if (ctx.fillGaps)
 			gapFiller.estimateForZone(ctx, zone, mzx, mzz);
+
+		waterExtender.estimateForZone(ctx, zone, mzx, mzz);
 	}
 
 	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
@@ -224,6 +229,8 @@ public class SceneUploader implements AutoCloseable {
 
 			if (z == 0) {
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, roofIds, vb, ab, fb);
+				if (vb != null)
+					waterExtender.uploadUnderwaterForZone(ctx, zone, mzx, mzz, vb, fb);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, roofIds, vb, ab, fb);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, roofIds, vb, ab, fb);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, roofIds, vb, ab, fb);
@@ -240,6 +247,7 @@ public class SceneUploader implements AutoCloseable {
 			// Upload water surface tiles to be drawn after everything else
 			if (zone.hasWater)
 				uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
+			waterExtender.uploadSurfaceForZone(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 
 			if (ctx.fillGaps)

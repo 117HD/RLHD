@@ -8494,9 +8494,11 @@
   {
     "name": "WATER_ALTAR",
     "aabbs": [
-      [ 2688, 4800, 2750, 4862 ]
+      [ 2689, 4859, 2748, 4802 ]
     ],
-    "hideOtherAreas": true
+    "hideOtherAreas": true,
+    "extendWater": true,
+    "extendWaterReferenceTile": [ 2709, 4804 ]
   },
   {
     "name": "MIND_ALTAR",
@@ -8518,7 +8520,9 @@
     "aabbs": [
       [ 3202, 4800, 3263, 4863 ]
     ],
-    "hideOtherAreas": true
+    "hideOtherAreas": true,
+    "extendWater": true,
+    "extendWaterReferenceTile": [ 3216, 3437 ]
   },
   {
     "name": "TRUE_BLOOD_ALTAR_CRYSTAL_POOL",

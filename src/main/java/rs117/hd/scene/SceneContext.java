@@ -34,11 +34,19 @@ public class SceneContext {
 
 	public boolean enableAreaHiding;
 	public boolean fillGaps;
+	public boolean enableExtendWater;
+
+	@Nullable
+	public ExtendWaterSample extendWaterSample;
+	@Nullable
+	public boolean[][] horizonTileMask;
 	public boolean isInChambersOfXeric;
 	public boolean isInHouse;
 
 	@Nullable
 	public Area currentArea;
+	@Nullable
+	public Area extendWaterArea;
 	public Area[] possibleAreas = new Area[0];
 	public final ArrayList<Environment> environments = new ArrayList<>();
 	public byte[][] filledTiles = new byte[EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
