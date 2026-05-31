@@ -7665,7 +7665,8 @@
       "SLAYERTOWER_CRUMBLYWALLLOW2",
       "SLAYERTOWER_WINDOW_WALL",
       "SLAYERTOWER_WINDOW_WALL_LVL2",
-      "SLAYERTOWER_PILE_BICKS"
+      "SLAYERTOWER_PILE_BICKS",
+      "SLAYERTOWER_WINDOW_SHORTCUT_THROUGH"
     ]
   },
   {
@@ -7695,7 +7696,7 @@
     ]
   },
   {
-    "description": "Morytania Slayer Tower doors with metal hinges",
+    "description": "Morytania Slayer Tower - doors with metal hinges",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -7720,7 +7721,11 @@
       "SLAYERTOWER_DOOR",
       "SLAYERTOWER_DOOR_MIRROR",
       "SLAYERTOWER_DOOR_OPEN",
-      "SLAYERTOWER_DOOR_OPEN_MIRROR"
+      "SLAYERTOWER_DOOR_OPEN_MIRROR",
+      "FENK_DOOR",
+      "FENK_DOOR_MIRROR",
+      "FENK_DOOR_OPEN",
+      "FENK_DOOR_OPEN_MIRROR"
     ]
   },
   {
@@ -29374,7 +29379,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Morytania - Walls - Metallic - Frankenstrains Gate",
+    "description": "Morytania - Walls - Metallic - Fenkenstrains Gate",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "FENK_TOWER_DOOR",
@@ -29406,8 +29411,11 @@
     "uvScale": 1.2
   },
   {
-    "description": "Morytania - Frankenstrains Castle - Walls - Brick Stone",
+    "description": "Morytania - Fenkenstrains Castle - Walls - Brick Stone",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.66,
     "objectIds": [
       "FENK_EXTERIOR_WALL",
       "FENK_EXTERIOR_WALL_LVL2",
@@ -29417,22 +29425,42 @@
       "FENK_CRUMBLYWALL2",
       "FENK_CRUMBLYWALL2_TOP",
       "FENK_WINDOW_WALL",
-      "FENK_WINDOW_WALL_LVL2"
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 1536,
-    "uvScale": 0.66
+      "FENK_WINDOW_WALL_LVL2",
+      "FENK_DOOR_ARCH",
+      "FENK_DOOR_ARCH_MIRROR"
+    ]
   },
   {
-    "description": "Morytania - Frankenstrains Castle - Walls - Brick Stone Rubble",
+    "description": "Morytania - Fenkenstrains Castle - Walls - Brick Stone Rubble",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.66,
     "objectIds": [
       "FENK_CRUMBLYWALLLOW",
       "FENK_CRUMBLYWALLLOW2"
-    ],
+    ]
+  },
+  {
+    "description": "Morytania - Fenkenstrains Castle - Graves",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvOrientation": 1536,
-    "uvScale": 0.66
+    "uvOrientation": -303,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 536,
+        "uvScale": 0.656
+      }
+    ],
+    "objectIds": [
+      "FENK_GRAVE",
+      "FENK_COFFIN"
+    ]
   },
   {
     "description": "Blast Furnace",
@@ -39117,7 +39145,10 @@
       "AHOY_GHOSTSHIPHULL",
       "AHOY_GHOSTSHIPHULL_DIAG",
       "AHOY_GHOSTSHIPHULL_FILLER",
-      "AHOY_GHOSTSHIPHIGHERWALL_LOW"
+      "AHOY_GHOSTSHIPHIGHERWALL_LOW",
+      "AHOY_GHOSTSHIPHULL_RIB_PLANKS_RIGHT",
+      "AHOY_GHOSTSHIPHULL_RIB_PLANKS_LEFT",
+      "AHOY_GHOSTSHIP_TALL_WALL_FLIPPED"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -39136,7 +39167,9 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "AHOY_GHOSTSHIPFRONTMAST_SUPPORTL",
-      "AHOY_GHOSTSHIPFRONTMAST_SUPPORTR"
+      "AHOY_GHOSTSHIPFRONTMAST_SUPPORTR",
+      "AHOY_GHOSTSHIPFRONTMAST_SUPPORT_BUST",
+      "AHOY_GHOSTSHIPHULL_RIB"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -39148,7 +39181,13 @@
     "objectIds": [
       "AHOY_GHOSTSHIPFLOOR",
       "AHOY_GHOSTSHIPFLOOR_MIRROR",
-      "AHOY_GHOSTSHIPFLOOR_HALF"
+      "AHOY_GHOSTSHIPFLOOR_HALF",
+      "AHOY_GHOSTSHIPFLOOR_SUNK",
+      "AHOY_GHOSTSHIPFLOOR_SUNK_MIRROR",
+      "AHOY_GHOSTSHIPFLOOR_BROKEN1",
+      "AHOY_GHOSTSHIPFLOOR_BROKEN1_MIRROR",
+      "AHOY_GHOSTSHIPFLOOR_BROKEN2",
+      "AHOY_GHOSTSHIPFLOOR_BROKEN2_MIRROR"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -60271,11 +60310,75 @@
       "CANAFIS_INSIDE_WALL_TRM",
       "CANAFIS_INSIDE_WALL_TRM2",
       "CANAFIS_INSIDE_WALL_CRNR",
+      "CANAFIS_INSIDE_WALLLVL1_CRNR",
       "CANAFIS_WALL_LVL1_DOOR",
       "CANAFIS_WALL_DOOR_OFFSET",
       "CANAFIS_WALL_DOOR_RT_OFFSET",
       "CANAFIS_WALL_LVL1_DOOR_RT",
       "SLEPE_CHURCH_WALL_INNER"
+    ]
+  },
+  {
+    "description": "Canifis - Wooden - window shutters",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "CANAFIS_WINDOW_OPEN",
+      "CANAFIS_WINDOW_OPEN2",
+      "CANAFIS_WINDOW_OPEN3"
+    ]
+  },
+  {
+    "description": "Canifis - Wooden house stilts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "CANAFIS_STILTS"
+    ]
+  },
+  {
+    "description": "Canifis - Wooden - Clothes shop sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 187
+      }
+    ],
+    "objectIds": [
+      "CANAFIS_CLOTHESSHOPSIGN"
+    ]
+  },
+  {
+    "description": "Canifis - Wooden - General Store Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 187,
+        "upwardsNormals": true
+      }
+    ],
+    "objectIds": [
+      "CANAFIS_GENERALSTORESIGN"
     ]
   },
   {
@@ -79270,7 +79373,7 @@
     ]
   },
   {
-    "description": "Slepe - Canafis - Bar with glasses, bottles, and cash register",
+    "description": "Slepe - Canifis - Bar with glasses, bottles, and cash register",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvOrientation": -272,
@@ -79296,7 +79399,11 @@
       "CANAFIS_INN_BAR_MIDDLE2",
       "CANAFIS_INN_BAR_MIDDLE3",
       "CANAFIS_INN_BAR_LEFT",
-      "CANAFIS_INN_BAR_RIGHT"
+      "CANAFIS_INN_BAR_RIGHT",
+      "CANAFIS_INN_DRINKS_BAR_RIGHT",
+      "CANAFIS_INN_DRINKS_BAR_MIDDLE",
+      "CANAFIS_INN_DRINKS_BAR_MIDDLE2",
+      "CANAFIS_INN_DRINKS_BAR_LEFT"
     ]
   },
   {
