@@ -1,6 +1,5 @@
 package rs117.hd.utils;
 
-import com.sun.management.GarbageCollectionNotificationInfo;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -25,7 +24,6 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.utils.collections.PooledArrayType;
 
-import static com.sun.management.GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION;
 import static net.runelite.client.ui.overlay.OverlayPosition.ABOVE_CHATBOX_RIGHT;
 import static rs117.hd.utils.HDUtils.drawStringShadowed;
 import static rs117.hd.utils.MathUtils.*;
@@ -212,14 +210,22 @@ public class GCMonitor extends Overlay implements NotificationListener {
 		if (!plugin.isActive() || plugin.isPluginStopPending())
 			return;
 
-		if (!GARBAGE_COLLECTION_NOTIFICATION.equals(notification.getType()))
+		final String action;
+		try {
+			if (!com.sun.management.GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION.equals(notification.getType()))
+				return;
+
+			final var info = com.sun.management.GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
+			gcDurationMs = info.getGcInfo().getDuration();
+			gcCount++;
+
+			action = info.getGcAction().toLowerCase();
+		} catch (Throwable ex) {
+			log.error("Unsupported JVM:", ex);
+			shutdown();
 			return;
+		}
 
-		final GarbageCollectionNotificationInfo info = GarbageCollectionNotificationInfo.from((CompositeData) notification.getUserData());
-		gcDurationMs = info.getGcInfo().getDuration();
-		gcCount++;
-
-		final String action = info.getGcAction().toLowerCase();
 		final boolean isFullGC = action.contains("major") || action.contains("full") || action.contains("old");
 		final int gcWeight = isFullGC ? GC_WEIGHT_FULL : GC_WEIGHT_MINOR;
 
