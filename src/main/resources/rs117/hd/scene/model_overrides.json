@@ -25308,7 +25308,8 @@
     "objectIds": [
       "SANG_MYREQUE_HIDEOUT_RUG_TRAPDOOR_UNHIDDEN_OPEN",
       "AREA_SANGUINE_MYREQUE_HIDEOUT_LADDER_UP",
-      "MYQ4_HIDEOUT_TRAPDOOR_OPEN"
+      "MYQ4_HIDEOUT_TRAPDOOR_OPEN",
+      "SLP_BASEMENT_TRAPDOOR_MANOR_OPEN"
     ],
     "colorOverrides": [
       {
@@ -26544,7 +26545,8 @@
       "AREA_SANGUINE_GHETTO_STAIRS_DOWN",
       "MYQ3_LAB_STAIRS_UP",
       "MYQ4_SERAFINA_STAIRS_UP",
-      "MYQ4_HIDEOUT_EXIT"
+      "MYQ4_HIDEOUT_EXIT",
+      "MYQ4_HIDEOUT_EXIT_NOOP"
     ]
   },
   {
@@ -27887,6 +27889,15 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.65
+  },
+  {
+    "description": "Darkmeyer Prison wall and gate connector - needs proper UV",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "DARKM_PRISON_WALL_CONNECTOR"
+    ]
   },
   {
     "description": "Darkmeyer Houses - Rich Walls",
