@@ -5662,6 +5662,11 @@
     "description": "STONE_WALL_FENCES",
     "baseMaterial": "STONE_NORMALED",
     "textureMaterial": "HD_CONCRETE",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "flatNormals": true,
+    "uvOrientation": 250,
+    "uvScale": 0.8,
     "objectIds": [
       "VIKING_DRYSTONEWALL",
       "DRYSTONEWALL",
@@ -5673,6 +5678,7 @@
       "BARROW_LOW_WALLS_PILLARL",
       "BARROW_LOW_WALLS_PILLARTOP",
       "BARROWS_DRYSTONEWALL_GRASS",
+      "BARROWS_DRYSTONEWALL_SHORTCUT",
       "FAI_VARROCK_STONE_SHORT_WALL",
       "FAI_VARROCK_STONE_SHORT_WALL_CUT",
       "FAI_VARROCK_CASTLE_WALL_SHORT_WALL_BLEND",
@@ -5680,12 +5686,7 @@
       "FAI_VARROCK_STONE_SHORT_WALL_CUT_MIRROR",
       "DRYSTONEWALL_PILE",
       "POH_FENCING3"
-    ],
-    "uvType": "BOX",
-    "retainVanillaUvs": false,
-    "flatNormals": true,
-    "uvOrientation": 250,
-    "uvScale": 0.8
+    ]
   },
   {
     "description": "STATUE_OF_A_WARRIOR_1",
@@ -17505,6 +17506,20 @@
     "uvScale": 0.76
   },
   {
+    "description": "Morytania - Walls - Wooden - Plank - Burgh De Rott",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.76,
+    "objectIds": [
+      "SANG_BOATHOUSE_POOR_ROOF_A",
+      "SANG_BOATHOUSE_POOR_ROOF_H",
+      "SANG_BOATHOUSE_POOR_ROOF_Z",
+      "SANG_BOATHOUSE_POOR_ROOF_D",
+      "SANG_BOATHOUSE_POOR_ROOF_G",
+      "SANG_BOATHOUSE_POOR_ROOF_S"
+    ]
+  },
+  {
     "description": "Morytania - Floor - Wooden - Plank - Burgh De Rott",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
@@ -17558,12 +17573,13 @@
   {
     "description": "Morytania - Wall  - Wooden - Plank - Repaired Wall - Burgh De Rott",
     "baseMaterial": "WOOD_GRAIN_2",
-    "objectIds": [
-      "BURGH_BOARED_UP_WALL"
-    ],
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.66
+    "uvScale": 0.66,
+    "objectIds": [
+      "BURGH_BOARED_UP_WALL",
+      "BURGH_STORE_ROOF_FIXED"
+    ]
   },
   {
     "description": "Morytania - Wall  - Wooden - Plank - Door",
@@ -17604,6 +17620,43 @@
       "BURGH_STONE_CRUMBLY_HALF_LEFT_LEV2",
       "BURGH_STONE_LEV2",
       "BURGH_STONE_WALL_BROKEN"
+    ]
+  },
+  {
+    "description": "Morytania - Burgh De Rott - Roof edge and wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.44,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 12",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "BURGH_STONE_ROOF_MID_EDGE2",
+      "BURGH_STONE_ROOF_EDGE_2_MIRROR",
+      "BURGH_STONE_ROOF_EDGE",
+      "BURGH_STONE_ROOF_EDGE_2",
+      "BURGH_STONE_ROOF_EDGE_MIRROR"
+    ]
+  },
+  {
+    "description": "Morytania - Burgh De Rott - Roof edge and wall",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "BURGH_WOODEN_ROOF1",
+      "BURGH_WOODEN_ROOF2",
+      "BURGH_WOODEN_ROOF_MID2",
+      "BURGH_STORE_ROOF_INACTIVE",
+      "BURGH_WOODEN_ROOF"
     ]
   },
   {
@@ -25850,7 +25903,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h >= 8",
+        "colors": "h >= 8 && s == 2",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.6,
