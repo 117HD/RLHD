@@ -5749,21 +5749,9 @@
     "name": "CAMDOZAAL_STONE_PATH",
     "area": "CAMDOZAAL",
     "overlayIds": [
-      182
+      2, 83, 127, 182
     ],
-    "groundMaterial": "GRUNGE_2",
-    "uvOrientation": 117,
-    "uvScale": 1.2
-  },
-  {
-    "name": "CAMDOZAAL_GRAVEL_PATH",
-    "area": "CAMDOZAAL",
-    "overlayIds": [
-      2, 83, 127
-    ],
-    "groundMaterial": "GRAVEL",
-    "uvOrientation": 270,
-    "uvScale": 1.25
+    "groundMaterial": "PACKED_EARTH"
   },
   {
     "name": "CAMDOZAAL_CAVE_FLOOR",
