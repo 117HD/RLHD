@@ -4241,17 +4241,19 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "PLAIN_DIRT",
+    "groundMaterial": "BRICK_PATHS",
     "minLightness": 8
   },
   {
     "name": "DARKMEYER_PATH_LOWER",
     "area": "DARKMEYER_LOWER",
+    "groundMaterial": "GRAVEL",
+    "shiftLightness": -2,
+    "uvScale": 1.1,
+    "uvOrientation": -42,
     "overlayIds": [
       11
-    ],
-    "groundMaterial": "PACKED_EARTH",
-    "shiftLightness": -2
+    ]
   },
   {
     "name": "DARKMEYER_UPPER_HOUSE_FLOORS",
