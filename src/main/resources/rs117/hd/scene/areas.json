@@ -8713,6 +8713,19 @@
     ]
   },
   {
+    "name": "CAMDOZAAL_HOUSE_LIGHTS_HIGH",
+    "aabbs": [
+      [ 2950, 5800, 2966, 5805 ],
+      [ 2985, 5787, 2990, 5791 ]
+    ]
+  },
+  {
+    "name": "CAMDOZAAL_HOUSE_LIGHTS_LOW",
+    "aabbs": [
+      [ 2950, 5800, 2966, 5805 ]
+    ]
+  },
+  {
     "name": "CAMDOZAAL",
     "aabbs": [
       [ 2897, 5760, 3036, 5848 ]
