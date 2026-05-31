@@ -24,7 +24,7 @@ public class GapFiller {
 	private MaterialManager materialManager;
 
 	public void estimateForZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		if (ctx.sceneBase == null || ctx.currentArea != null && (!ctx.currentArea.fillGaps || ctx.currentArea.extendWater))
+		if (ctx.sceneBase == null || ctx.currentArea != null && (!ctx.currentArea.fillGaps || ctx.currentArea.hasHorizonTiles()))
 			return;
 
 		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
@@ -53,7 +53,7 @@ public class GapFiller {
 		GpuIntBuffer vb,
 		GpuIntBuffer fb
 	) {
-		if (ctx.sceneBase == null || ctx.currentArea != null && (!ctx.currentArea.fillGaps || ctx.currentArea.extendWater))
+		if (ctx.sceneBase == null || ctx.currentArea != null && (!ctx.currentArea.fillGaps || ctx.currentArea.hasHorizonTiles()))
 			return;
 
 		int basex = (mzx - (ctx.sceneOffset >> 3)) << 10;

@@ -27,12 +27,11 @@ package rs117.hd.scene;
 import java.util.Arrays;
 import java.util.HashMap;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.renderer.legacy.LegacySceneContext;
-import rs117.hd.renderer.zone.WaterExtender;
+import rs117.hd.renderer.zone.HorizonExtender;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
@@ -79,7 +78,7 @@ public class ProceduralGenerator {
 	private WaterTypeManager waterTypeManager;
 
 	@Inject
-	private Provider<WaterExtender> waterExtender;
+	private HorizonExtender horizonExtender;
 
 	public void generateSceneData(SceneContext sceneContext)
 	{
@@ -113,7 +112,7 @@ public class ProceduralGenerator {
 		if (!(sceneContext instanceof LegacySceneContext))
 			sceneContext.underwaterDepthLevels = null;
 		sceneContext.horizonTileMask = null;
-		sceneContext.extendWaterSample = null;
+		sceneContext.horizonTileSample = null;
 	}
 
 	/**
@@ -541,7 +540,7 @@ public class ProceduralGenerator {
 			}
 		}
 
-		waterExtender.get().prepareSceneTerrain(sceneContext, tiles);
+		horizonExtender.prepareSceneTerrain(sceneContext, tiles);
 
 		// Sink terrain further from shore by desired levels.
 		for (int level = 0; level < DEPTH_LEVEL_SLOPE.length - 1; level++)
@@ -561,8 +560,8 @@ public class ProceduralGenerator {
 						// it creates a 'wall' to prevent fog from passing through.
 						// Not incredibly effective, but better than nothing.
 						if (x == 0 || y == 0 || x == sizeX || y == sizeY) {
-							if (!(ExtendWaterTileUtil.isEnabled(sceneContext) &&
-								ExtendWaterTileUtil.shouldExtendWaterAtTile(sceneContext, x, y, z)))
+							if (!(HorizonExtender.isEnabled(sceneContext) &&
+								HorizonExtender.shouldPatchWaterAtTile(sceneContext, x, y, z)))
 							{
 								sceneContext.underwaterDepthLevels[z][x][y] = 0;
 								continue;

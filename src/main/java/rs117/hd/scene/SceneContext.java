@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import rs117.hd.HdPluginConfig;
+import rs117.hd.renderer.zone.HorizonExtender;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
@@ -34,10 +36,13 @@ public class SceneContext {
 
 	public boolean enableAreaHiding;
 	public boolean fillGaps;
-	public boolean enableExtendWater;
+	public boolean enableHorizonTiles;
+
+	/** Nanoseconds spent on horizon tile work during the current scene load. */
+	public long horizonTileNs;
 
 	@Nullable
-	public ExtendWaterSample extendWaterSample;
+	public HorizonExtender.Sample horizonTileSample;
 	@Nullable
 	public boolean[][] horizonTileMask;
 	public boolean isInChambersOfXeric;
@@ -46,7 +51,7 @@ public class SceneContext {
 	@Nullable
 	public Area currentArea;
 	@Nullable
-	public Area extendWaterArea;
+	public Area horizonTileArea;
 	public Area[] possibleAreas = new Area[0];
 	public final ArrayList<Environment> environments = new ArrayList<>();
 	public byte[][] filledTiles = new byte[EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];

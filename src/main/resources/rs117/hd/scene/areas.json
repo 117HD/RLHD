@@ -8421,7 +8421,9 @@
     "aabbs": [
       [ 2553, 4802, 2622, 4864 ]
     ],
-    "hideOtherAreas": true
+    "hideOtherAreas": true,
+    "horizonTileReference": [ 2580, 4825 ],
+    "horizonFlatTerrain": true
   },
   {
     "name": "FIRE_ALTAR_CULL_FIRE_LIGHTS",
@@ -8497,8 +8499,7 @@
       [ 2689, 4859, 2748, 4802 ]
     ],
     "hideOtherAreas": true,
-    "extendWater": true,
-    "extendWaterReferenceTile": [ 2709, 4804 ]
+    "horizonTileReference": [ 2709, 4804 ]
   },
   {
     "name": "MIND_ALTAR",
@@ -8521,8 +8522,7 @@
       [ 3202, 4800, 3263, 4863 ]
     ],
     "hideOtherAreas": true,
-    "extendWater": true,
-    "extendWaterReferenceTile": [ 3216, 3437 ]
+    "horizonTileReference": [ 3216, 3437 ]
   },
   {
     "name": "TRUE_BLOOD_ALTAR_CRYSTAL_POOL",

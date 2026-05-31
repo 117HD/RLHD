@@ -143,7 +143,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_HORIZON_TILES,
 		name = "Horizon tiles",
 		description =
-			"Expands terrain at the edge of the loaded map outside hidden areas so scenery is not cut off abruptly.<br>" +
+			"Expands water outside hidden areas to the loaded map edge so scenery is not cut off abruptly.<br>" +
 			"Only applies while Hide unrelated areas is enabled.",
 		position = 5,
 		section = generalSettings

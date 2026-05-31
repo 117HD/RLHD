@@ -14,8 +14,11 @@ public class Area {
 	public String name;
 	public boolean hideOtherAreas;
 	public boolean fillGaps = true;
-	public boolean extendWater;
-	public int[] extendWaterReferenceTile;
+	@SerializedName(value = "horizonTileReference", alternate = { "extendWaterReferenceTile" })
+	public int[] horizonTileReference;
+
+	/** When true, extend flat land instead of water (no procgen patching). */
+	public boolean horizonFlatTerrain;
 
 	public String[] areas;
 	public int[] regions;
@@ -37,6 +40,10 @@ public class Area {
 	public Area(String name, int x1, int y1, int x2, int y2) {
 		this(name);
 		aabbs = new AABB[] { new AABB(x1, y1, x2, y2) };
+	}
+
+	public boolean hasHorizonTiles() {
+		return horizonTileReference != null && horizonTileReference.length >= 2;
 	}
 
 	public void normalize() {

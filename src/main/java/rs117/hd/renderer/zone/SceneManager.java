@@ -23,6 +23,7 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.renderer.zone.HorizonExtender;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -82,6 +83,9 @@ public class SceneManager {
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
+
+	@Inject
+	private HorizonExtender horizonExtender;
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
@@ -352,12 +356,12 @@ public class SceneManager {
 	}
 
 	@Nullable
-	private Area resolveExtendWaterArea(SceneContext ctx) {
+	private Area resolveHorizonTileArea(SceneContext ctx) {
 		if (ctx.sceneBase == null)
 			return null;
 
 		for (Area area : areaManager.areasWithAreaHiding) {
-			if (area.extendWater && ctx.intersects(area))
+			if (area.hasHorizonTiles() && ctx.intersects(area))
 				return area;
 		}
 		return null;
@@ -470,10 +474,11 @@ public class SceneManager {
 
 			nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
 			nextSceneContext.fillGaps = config.fillGapsInTerrain();
-			nextSceneContext.enableExtendWater =
-				nextSceneContext.enableAreaHiding && config.horizonTiles();
-			nextSceneContext.extendWaterArea = nextSceneContext.enableExtendWater ?
-				resolveExtendWaterArea(nextSceneContext) : null;
+			nextSceneContext.enableHorizonTiles =
+				nextSceneContext.enableAreaHiding &&
+				config.horizonTiles();
+			nextSceneContext.horizonTileArea = nextSceneContext.enableHorizonTiles ?
+				resolveHorizonTileArea(nextSceneContext) : null;
 
 			if (nextSceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 				nextSceneContext.isInHouse = true;
@@ -565,7 +570,7 @@ public class SceneManager {
 
 						old.needsRoofUpdate = true;
 
-						if (old.hasWater || old.dirty || isEdgeTile(ctx.zones, ox, oz) || nextSceneContext.extendWaterArea != null) {
+						if (old.hasWater || old.dirty || isEdgeTile(ctx.zones, ox, oz) || nextSceneContext.horizonTileArea != null) {
 							float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 							sortedZones.add(SortedZone.getZone(old, x, z, dist));
 							nextSceneContext.totalDeferred++;
@@ -755,6 +760,8 @@ public class SceneManager {
 		checkGLErrors();
 		root.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		log.debug("swapScene time: {}", sw);
+		if (root.sceneContext != null)
+			horizonExtender.logSceneLoadTiming(root.sceneContext);
 	}
 
 	private void loadSubScene(WorldView worldView, Scene scene) {
