@@ -27,7 +27,6 @@ import static rs117.hd.utils.collections.PooledArrayType.SHORT;
 @Getter
 @Setter
 @Accessors(chain = false)
-@SuppressWarnings("jol")
 public final class AsyncCachedModel extends Job implements Model {
 	public static final Runtime RUNTIME = Runtime.getRuntime();
 	public static final ConcurrentLinkedQueue<AsyncCachedModel> INFLIGHT = new ConcurrentLinkedQueue<>();
@@ -101,8 +100,8 @@ public final class AsyncCachedModel extends Job implements Model {
 	private final CachedArrayField<int[]> vertexNormalsY = addField(INT, VERTEX_TYPE);
 	private final CachedArrayField<int[]> vertexNormalsZ = addField(INT, VERTEX_TYPE);
 
-	private final AtomicBoolean processing = new AtomicBoolean(false);
-	private final AtomicBoolean completed = new AtomicBoolean(false);
+	private final AtomicBoolean isProcessing = new AtomicBoolean(false);
+	private final AtomicBoolean isCompleted = new AtomicBoolean(false);
 	private WorldViewContext ctx;
 	private Projection projection;
 	private TileObject tileObject;
@@ -117,14 +116,13 @@ public final class AsyncCachedModel extends Job implements Model {
 	private int y;
 	private int z;
 	private UploadModelFunc uploadFunc;
-	private long availMemory;
+	private long availableMemory;
 
 	@SuppressWarnings("unchecked")
 	private <T> CachedArrayField<T> addField(PooledArrayType arrayType, int fieldType) {
-		for (int i = 0; i < cachedFields.length; i++) {
+		for (int i = 0; i < cachedFields.length; i++)
 			if (cachedFields[i] == null)
 				return (CachedArrayField<T>) (cachedFields[i] = new CachedArrayField<>(this, arrayType, fieldType));
-		}
 		throw new RuntimeException("Created too many fields, only expected: " + cachedFields.length);
 	}
 
@@ -192,10 +190,10 @@ public final class AsyncCachedModel extends Job implements Model {
 	public short[] getFaceTextures() { return faceTextures.getValue(); }
 
 	public synchronized boolean setup(Model model) {
-		// Wait for completion so that the job has cleared the job system before clearing the `processing` flag
+		// Wait for completion so that the job has cleared the job system before clearing the isProcessing flag
 		waitForCompletion(true);
 
-		availMemory = RUNTIME.freeMemory();
+		availableMemory = RUNTIME.freeMemory();
 		if (processCachedFields(model, false))
 			return true;
 
@@ -265,8 +263,8 @@ public final class AsyncCachedModel extends Job implements Model {
 		if (alphaModel != null)
 			zone.pendingModelJobs.add(this);
 
-		processing.set(false);
-		completed.set(false);
+		isProcessing.set(false);
+		isCompleted.set(false);
 
 		INFLIGHT.add(this);
 		queue();
@@ -312,7 +310,7 @@ public final class AsyncCachedModel extends Job implements Model {
 
 	@Override
 	protected boolean canStart() {
-		if (processing.get()) // Work has been stolen, so pop it off the queue
+		if (isProcessing.get()) // Work has been stolen, so pop it off the queue
 			return true;
 
 		return
@@ -327,7 +325,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	}
 
 	public boolean processModel() {
-		if (!processing.compareAndSet(false, true))
+		if (!isProcessing.compareAndSet(false, true))
 			return false;
 
 		try {
@@ -345,7 +343,7 @@ public final class AsyncCachedModel extends Job implements Model {
 				orientation,
 				x, y, z
 			);
-			completed.set(true);
+			isCompleted.set(true);
 		} catch (Exception e) {
 			log.error("Error drawing temp object", e);
 		} finally {
@@ -494,6 +492,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			cached.set(false);
 		}
 
+		@SuppressWarnings("SuspiciousSystemArraycopy")
 		public boolean cache(final Model m, T src, boolean cache) {
 			if (src == null) {
 				if (cache)
@@ -519,15 +518,15 @@ public final class AsyncCachedModel extends Job implements Model {
 				final long requested = (long) arraySize * arrayType.stride;
 				value = arrayType.borrow(arraySize, false);
 
-				if (value == null && requested < availMemory) {
-					availMemory -= requested;
+				if (value == null && requested < availableMemory) {
+					availableMemory -= requested;
 					value = arrayType.create(arraySize);
 				}
 
 				return value != null;
 			}
 
-			if (!model.completed.get())
+			if (!model.isCompleted.get())
 				System.arraycopy(src, 0, value, 0, arraySize);
 
 			cached.set(true);

@@ -252,7 +252,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 			);
 		}
 
-		if (plugin.configEnableGCMonitor) {
+		if (plugin.configMemoryMonitoring) {
 			final int recentSampleWeight = getRecentSampleWeight();
 			if (recentSampleWeight >= 8 && averageGCAvail < calculateMinimalHeapSize()) {
 				log.warn("Detected Average Avail Heap after GC: {}", formatBytes(averageGCAvail));
@@ -274,7 +274,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 
 	@Override
 	public Dimension render(Graphics2D g) {
-		if (!plugin.configEnableGCMonitor)
+		if (!plugin.configMemoryMonitoring)
 			return null;
 
 		final long averageGCAvail = getAvgAvailHeap();

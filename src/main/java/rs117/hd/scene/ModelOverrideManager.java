@@ -55,7 +55,7 @@ public class ModelOverrideManager {
 
 	public void startUp() {
 		fileWatcher = MODEL_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> {
-			try (GamevalManager.Handle gamevalHandle = gamevalManager.obtainHandle()) {
+			try (var gamevals = gamevalManager.obtainHandle()) {
 				sceneManager.getLoadingLock().lock();
 				sceneManager.completeAllStreaming();
 
@@ -72,18 +72,18 @@ public class ModelOverrideManager {
 						continue;
 					}
 
-					addOverride(override, gamevalHandle);
+					addOverride(override, gamevals);
 
 					if (override.hideInAreas.length > 0) {
 						var hider = override.copy();
 						hider.hide = true;
 						hider.areas = override.hideInAreas;
-						addOverride(hider, gamevalHandle);
+						addOverride(hider, gamevals);
 					}
 				}
 
-				addOverride(fishingSpotReplacer.getModelOverride(), gamevalHandle);
-				addSailingCullingOverrides(gamevalHandle);
+				addOverride(fishingSpotReplacer.getModelOverride(), gamevals);
+				addSailingCullingOverrides(gamevals);
 
 				detailCullingBlacklist.clear();
 				for (var entry : modelOverrides) {
@@ -126,21 +126,21 @@ public class ModelOverrideManager {
 		startUp();
 	}
 
-	private void addOverride(@Nullable ModelOverride override, GamevalManager.Handle gamevalHandle) {
+	private void addOverride(@Nullable ModelOverride override, GamevalManager.Handle gamevals) {
 		if (override == null || override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme)
 			return;
 
 		for (int id : override.npcIds)
-			addEntry(ModelHash.TYPE_NPC, id, override, gamevalHandle);
+			addEntry(ModelHash.TYPE_NPC, id, override, gamevals);
 		for (int id : override.objectIds)
-			addEntry(ModelHash.TYPE_OBJECT, id, override, gamevalHandle);
+			addEntry(ModelHash.TYPE_OBJECT, id, override, gamevals);
 		for (int id : override.projectileIds)
-			addEntry(ModelHash.TYPE_PROJECTILE, id, override, gamevalHandle);
+			addEntry(ModelHash.TYPE_PROJECTILE, id, override, gamevals);
 		for (int id : override.graphicsObjectIds)
-			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, id, override, gamevalHandle);
+			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, id, override, gamevals);
 	}
 
-	private void addEntry(int type, int id, ModelOverride entry, GamevalManager.Handle gamevalHandle) {
+	private void addEntry(int type, int id, ModelOverride entry, GamevalManager.Handle gamevals) {
 		int uuid = ModelHash.packUuid(type, id);
 		ModelOverride current = modelOverrides.get(uuid);
 
@@ -164,14 +164,14 @@ public class ModelOverrideManager {
 				String name = null;
 				switch (type) {
 					case ModelHash.TYPE_NPC:
-						name = gamevalHandle.getNpcName(id);
+						name = gamevals.getNpcName(id);
 						break;
 					case ModelHash.TYPE_OBJECT:
-						name = gamevalHandle.getObjectName(id);
+						name = gamevals.getObjectName(id);
 						break;
 					case ModelHash.TYPE_PROJECTILE:
 					case ModelHash.TYPE_GRAPHICS_OBJECT:
-						name = gamevalHandle.getSpotanimName(id);
+						name = gamevals.getSpotanimName(id);
 						break;
 				}
 
@@ -214,7 +214,7 @@ public class ModelOverrideManager {
 		}
 	}
 
-	private void addSailingCullingOverrides(GamevalManager.Handle gamevalHandle) {
+	private void addSailingCullingOverrides(GamevalManager.Handle gamevals) {
 		try {
 			for (Integer row : client.getDBTableRows(DBTableID.SailingBoatSail.ID)) {
 				Integer sailId = (Integer) client.getDBTableField(row, DBTableID.SailingBoatSail.COL_LOC, 0)[0];
@@ -226,7 +226,7 @@ public class ModelOverrideManager {
 				sailOverride.objectIds = Set.of(sailId);
 				sailOverride.disableDetailCulling = true;
 				sailOverride.normalize(plugin);
-				addOverride(sailOverride, gamevalHandle);
+				addOverride(sailOverride, gamevals);
 			}
 		} catch (Exception ex) {
 			log.error("Error while setting up model overrides for disabling detail culling of sails:", ex);

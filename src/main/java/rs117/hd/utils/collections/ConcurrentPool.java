@@ -40,7 +40,7 @@ public final class ConcurrentPool<T> {
 
 	private void offer(T obj) {
 		synchronized (pool) {
-			assert !Props.DEVELOPMENT || pool.isEmpty() || !pool.contains(obj) :"Object already in pool: " + obj;
+			assert !Props.DEVELOPMENT || pool.isEmpty() || !pool.contains(obj) : "Object already in pool: " + obj;
 			pool.offer(obj);
 		}
 	}

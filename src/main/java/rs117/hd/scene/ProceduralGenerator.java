@@ -338,10 +338,7 @@ public class ProceduralGenerator {
 	public boolean useDefaultColor(Tile tile, TileOverride override) {
 		if ((tile.getSceneTilePaint() != null && tile.getSceneTilePaint().getTexture() >= 0) ||
 			(tile.getSceneTileModel() != null && tile.getSceneTileModel().getTriangleTextureId() != null))
-		{
-			// skip tiles with textures provided by default
-			return true;
-		}
+			return true; // skip tiles with textures provided by default
 
 		if (override == TileOverride.NONE)
 			return false;
@@ -788,12 +785,12 @@ public class ProceduralGenerator {
 				int lightness = color & 0x7F;
 
 				float lightFactor = Math.max(dot, 0f);
-				int adjustedLight = (int)((Math.max(lightness - lightenAdd, 0) * lightenMultiplier) + lightenBase);
-				lightness = (int)mix(lightness, adjustedLight, lightFactor);
+				int adjustedLight = (int) (Math.max(lightness - lightenAdd, 0) * lightenMultiplier + lightenBase);
+				lightness = (int) mix(lightness, adjustedLight, lightFactor);
 
 				float darkFactor = -Math.min(dot, 0f);
-				int darkened = (int)(lightness * darkenMultiplier);
-				lightness = (int)(1.25f * mix(lightness, darkened, darkFactor));
+				int darkened = (int) (lightness * darkenMultiplier);
+				lightness = (int) (1.25f * mix(lightness, darkened, darkFactor));
 
 				lightness = Math.min(lightness, 55); // reduces overexposure
 				color = (color & ~0x7F) | lightness;
@@ -861,7 +858,7 @@ public class ProceduralGenerator {
 					// set the array to 1 initially
 					// this assumes that all vertices are water;
 					// we will set non-water vertices to 0 in the next loop
-					Arrays.fill(underwaterDepthLevels[z][x], (byte)1);
+					Arrays.fill(underwaterDepthLevels[z][x], (byte) 1);
 				}
 			}
 
@@ -1027,16 +1024,16 @@ public class ProceduralGenerator {
 			}
 
 			// Sink terrain further from shore by desired levels.
+			// noinspection ConstantValue
+			assert DEPTH_LEVEL_SLOPE.length <= Byte.MAX_VALUE;
 			for (int level = 0; level < DEPTH_LEVEL_SLOPE.length - 1; level++) {
 				for (int z = minZ; z <= maxZ; ++z) {
 					final byte[][] zUnderwaterDepthLevels = underwaterDepthLevels[z];
 					for (int x = minX[z]; x <= maxX[z]; x++) {
 						for (int y = minY[z]; y <= maxY[z]; y++) {
 							int tileHeight = zUnderwaterDepthLevels[x][y];
-							if (tileHeight == 0 || tileHeight >= Byte.MAX_VALUE) {
-								// Skip the tile if it isn't water.
-								continue;
-							}
+							if (tileHeight == 0)
+								continue; // Skip the tile if it isn't water.
 
 							// If it's on the edge of the scene, reset the depth so
 							// it creates a 'wall' to prevent fog from passing through.
@@ -1046,22 +1043,12 @@ public class ProceduralGenerator {
 								continue;
 							}
 
-							if (zUnderwaterDepthLevels[x - 1][y] < tileHeight) {
-								// West
+							if (zUnderwaterDepthLevels[x - 1][y] < tileHeight ||
+								zUnderwaterDepthLevels[x][y - 1] < tileHeight ||
+								x < zUnderwaterDepthLevels.length - 1 && zUnderwaterDepthLevels[x + 1][y] < tileHeight ||
+								y < zUnderwaterDepthLevels.length - 1 && zUnderwaterDepthLevels[x][y + 1] < tileHeight)
 								continue;
-							}
-							if (x < zUnderwaterDepthLevels.length - 1 && zUnderwaterDepthLevels[x + 1][y] < tileHeight) {
-								// East
-								continue;
-							}
-							if (zUnderwaterDepthLevels[x][y - 1] < tileHeight) {
-								// South
-								continue;
-							}
-							if (y < zUnderwaterDepthLevels.length - 1 && zUnderwaterDepthLevels[x][y + 1] < tileHeight) {
-								// North
-								continue;
-							}
+
 							// At this point, it's surrounded only by other depth-adjusted vertices.
 							zUnderwaterDepthLevels[x][y]++;
 						}

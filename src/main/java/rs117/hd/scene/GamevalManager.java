@@ -87,7 +87,7 @@ public class GamevalManager {
 			loadGamevals();
 		Handle handle = new Handle();
 		handles.add(handle);
-		clearTime = 0; // Clear the clear time since we've requeued the handle
+		clearTime = 0; // Clear the clearTime since we've requeued the handle
 		return handle;
 	}
 

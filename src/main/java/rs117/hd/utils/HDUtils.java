@@ -60,22 +60,13 @@ public final class HDUtils {
 
 	public static int fastVertex3Hash(int[] vPos) {
 		int hash = vPos[0];
-		hash = 31 * hash + 44;
+		hash = 31 * hash + ',';
 
 		hash = 31 * hash + vPos[1];
-		hash = 31 * hash + 44;
+		hash = 31 * hash + ',';
 
 		hash = 31 * hash + vPos[2];
-		return 31 * hash + 44;
-	}
-
-	public static int fastVertexHash(int[] vPos) {
-		int hash = 0;
-		for (int i = 0; i < vPos.length; i++) {
-			hash = 31 * hash + vPos[i];
-			hash = 31 * hash + ','; // preserve the comma separator effect
-		}
-		return hash;
+		return 31 * hash + ',';
 	}
 
 	public static int[] calculateSurfaceNormals(int[] out, int[] a, int[] b, int[] c) {
@@ -453,14 +444,14 @@ public final class HDUtils {
 			final float nz = plane[2];
 			final float d  = plane[3];
 			if (
-				nx * minX + ny * minY + nz * minZ + d < 0.0 &&
-				nx * maxX + ny * minY + nz * minZ + d < 0.0 &&
-				nx * minX + ny * maxY + nz * minZ + d < 0.0 &&
-				nx * maxX + ny * maxY + nz * minZ + d < 0.0 &&
-				nx * minX + ny * minY + nz * maxZ + d < 0.0 &&
-				nx * maxX + ny * minY + nz * maxZ + d < 0.0 &&
-				nx * minX + ny * maxY + nz * maxZ + d < 0.0 &&
-				nx * maxX + ny * maxY + nz * maxZ + d < 0.0
+				nx * minX + ny * minY + nz * minZ + d < 0.0f &&
+				nx * maxX + ny * minY + nz * minZ + d < 0.0f &&
+				nx * minX + ny * maxY + nz * minZ + d < 0.0f &&
+				nx * maxX + ny * maxY + nz * minZ + d < 0.0f &&
+				nx * minX + ny * minY + nz * maxZ + d < 0.0f &&
+				nx * maxX + ny * minY + nz * maxZ + d < 0.0f &&
+				nx * minX + ny * maxY + nz * maxZ + d < 0.0f &&
+				nx * maxX + ny * maxY + nz * maxZ + d < 0.0f
 			) {
 				return false;
 			}

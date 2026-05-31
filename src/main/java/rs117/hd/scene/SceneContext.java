@@ -41,7 +41,7 @@ public class SceneContext {
 	public static final int VERTEX_UNDER_WATER_DEPTH_MASK = 0x3FFFFFF;
 
 	// Thread safe tile override variables
-	public final static ThreadLocal<TileOverrideVariables> tileOverrideVars = ThreadLocal.withInitial(TileOverrideVariables::new);
+	public final static ThreadLocal<TileOverrideVariables> TILE_OVERRIDE_VARIABLES = ThreadLocal.withInitial(TileOverrideVariables::new);
 	public final Client client;
 	public final Scene scene;
 	public final int expandedMapLoadingChunks;
@@ -172,12 +172,7 @@ public class SceneContext {
 		return (tileFlags[getTileIdx(plane, x, y)] & flag) != 0;
 	}
 
-	public void setTileOverride(
-		int plane,
-		int x,
-		int y,
-		TileOverride[] overrides
-	) {
+	public void setTileOverride(int plane, int x, int y, TileOverride[] overrides) {
 		setTileOverride(plane, x, y, overrides[0], overrides[1], overrides[2]);
 	}
 

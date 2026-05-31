@@ -775,13 +775,13 @@ public class SceneUploader implements AutoCloseable {
 				textureBuffer
 			);
 		} catch (Throwable ex) {
-			try (GamevalManager.Handle handle = gamevalManager.obtainHandle()) {
+			try (var gamevals = gamevalManager.obtainHandle()) {
 				log.warn(
 					"Error uploading {} {} {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
 					r instanceof DynamicObject ? "dynamic" : "static",
 					ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
 					ModelHash.getUuidSubType(uuid),
-					handle.getObjectName(id),
+					gamevals.getObjectName(id),
 					id,
 					modelOverride.description,
 					opaqueBuffer,
@@ -815,13 +815,13 @@ public class SceneUploader implements AutoCloseable {
 					rid, level, id
 				);
 			} catch (Throwable ex) {
-				try (GamevalManager.Handle handle = gamevalManager.obtainHandle()) {
+				try (var gamevals = gamevalManager.obtainHandle()) {
 					log.warn(
 						"Error adding alpha model for {} {} {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
 						r instanceof DynamicObject ? "dynamic" : "static",
 						ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
 						ModelHash.getUuidSubType(uuid),
-						handle.getObjectName(id),
+						gamevals.getObjectName(id),
 						id,
 						modelOverride.description,
 						opaqueBuffer,
