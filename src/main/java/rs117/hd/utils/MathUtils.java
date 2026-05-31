@@ -22,6 +22,10 @@ import javax.annotation.Nullable;
 public final class MathUtils {
 	public static final Random RAND = new Random();
 
+	public static final long KB = 1000;
+	public static final long MB = KB * KB;
+	public static final long GB = MB * KB;
+
 	public static final long KiB = 1024;
 	public static final long MiB = KiB * KiB;
 	public static final long GiB = MiB * KiB;

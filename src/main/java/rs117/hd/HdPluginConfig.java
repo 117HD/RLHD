@@ -844,7 +844,7 @@ public interface HdPluginConfig extends Config
 			"RuneLite has a default memory limit of 768 MB, which can lead to crashing while loading scenes,<br>" +
 			"if you have too many plugins installed using up most of the memory.",
 		warning =
-			"This option monitors the amount of memory available in order to prevent crashing.<br>" +
+			"This option monitors the amount of memory available in order to prevent crashing.\n" +
 			"By turning this off, your client may crash when loading large scenes.",
 		section = miscellaneousSettings
 	)

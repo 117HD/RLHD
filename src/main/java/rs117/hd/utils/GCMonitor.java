@@ -3,7 +3,6 @@ package rs117.hd.utils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.utils.collections.PooledArrayType;
 
 import static net.runelite.client.ui.overlay.OverlayPosition.ABOVE_CHATBOX_RIGHT;
+import static rs117.hd.HdPlugin.MAX_EXPANDED_CHUNKS;
 import static rs117.hd.utils.HDUtils.drawStringShadowed;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -33,9 +33,8 @@ import static rs117.hd.utils.MathUtils.*;
 public class GCMonitor extends Overlay implements NotificationListener {
 	private static final Runtime RUNTIME = Runtime.getRuntime();
 
-	private static final int MAX_EXPANDED_CHUNKS = 5;
-	private static final long RECOMMENDED_HEAP_AVAIL = (long) 2e+8; // 200 MB
-	private static final long MIN_HEAP_AVAIL = (long) 1e+8; // 100 MB
+	private static final long RECOMMENDED_HEAP_AVAIL = 200 * MB;
+	private static final long MINIMUM_HEAP_AVAIL = 170 * MB;
 
 	private static final long GC_SAMPLE_WINDOW_MS = 60_000;
 
@@ -66,10 +65,10 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	private final List<SuspendHandle> suspendHandles = new ArrayList<>();
 
 	@Inject
-	private HdPlugin plugin;
+	private OverlayManager overlayManager;
 
 	@Inject
-	private OverlayManager overlayManager;
+	private HdPlugin plugin;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -80,7 +79,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	}
 
 	public void startup() {
-		for (GarbageCollectorMXBean gcBean : ManagementFactory.getGarbageCollectorMXBeans()) {
+		for (var gcBean : ManagementFactory.getGarbageCollectorMXBeans()) {
 			if (gcBean instanceof NotificationEmitter) {
 				NotificationEmitter emitter = (NotificationEmitter) gcBean;
 				emitter.addNotificationListener(this, null, null);
@@ -103,7 +102,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 			sample.weight = 0;
 		}
 
-		log.info("Registered {} GC notification listeners", emitters.size());
+		log.debug("Registered {} GC notification listeners", emitters.size());
 	}
 
 	public SuspendHandle acquireSuspendHandle() {
@@ -136,7 +135,7 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	}
 
 	private double calculateExpandedMapLoadingFrac() {
-		return mix(0.6f, 1.0f, (plugin.configExpandedMapLoadingChunks + 1) / (MAX_EXPANDED_CHUNKS + 1.0f));
+		return mix(0.6f, 1.0f, (float) plugin.configExpandedMapLoadingChunks / MAX_EXPANDED_CHUNKS);
 	}
 
 	private long calculateRecommendedHeapSize() {
@@ -144,24 +143,21 @@ public class GCMonitor extends Overlay implements NotificationListener {
 	}
 
 	private long calculateMinimalHeapSize() {
-		return (long) (MIN_HEAP_AVAIL * calculateExpandedMapLoadingFrac());
+		return (long) (MINIMUM_HEAP_AVAIL * calculateExpandedMapLoadingFrac());
 	}
 
 	private int calculateRecommendedMemoryIncreaseMB(long averageAvailHeap) {
 		final long deficit = calculateRecommendedHeapSize() - averageAvailHeap;
-
 		if (deficit <= 0)
 			return 0;
 
-		final long recommendedIncrease = (long) (deficit * 1.25f);
-		return ceil(recommendedIncrease / (1024f * 1024f));
+		return ceil(deficit * 1.25f / MB);
 	}
 
 	private int calculateRecommendedExpandedMapLoading(long averageAvailHeap) {
 		for (int chunks = MAX_EXPANDED_CHUNKS; chunks >= 0; chunks--) {
-			final float frac = mix(0.6f, 1.0f, (chunks + 1) / (MAX_EXPANDED_CHUNKS + 1.0f));
+			final float frac = mix(0.6f, 1.0f, (float) chunks / MAX_EXPANDED_CHUNKS);
 			final long requiredHeap = (long) (RECOMMENDED_HEAP_AVAIL * frac);
-
 			if (averageAvailHeap >= requiredHeap)
 				return chunks;
 		}
