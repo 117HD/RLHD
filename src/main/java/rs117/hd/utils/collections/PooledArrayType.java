@@ -222,32 +222,30 @@ public enum PooledArrayType {
 		final int roundedSize = ceilPow2(requestedSize);
 		final int b = bucket(roundedSize);
 
-		if (b >= 0 && b < buckets.length) {
-			final long bytes = bytesFor(roundedSize);
-			final Bucket[] bucketStripes = buckets[b];
-			final int startStripe = stripeIndex();
+		final long bytes = bytesFor(roundedSize);
+		final Bucket[] bucketStripes = buckets[b];
+		final int startStripe = stripeIndex();
 
-			for (int i = 0; i < STRIPES * 2; i++) {
-				final int s = (startStripe + i) & STRIPES_MASK;
-				final Bucket bucket = bucketStripes[s];
-				if (bucket.isEmpty)
-					continue;
+		for (int i = 0; i < STRIPES * 2; i++) {
+			final int s = (startStripe + i) & STRIPES_MASK;
+			final Bucket bucket = bucketStripes[s];
+			if (bucket.isEmpty)
+				continue;
 
-				final long stamp = i < STRIPES ? bucket.lock.tryWriteLock() : bucket.lock.writeLock();
-				if (stamp == 0)
-					continue;
+			final long stamp = i < STRIPES ? bucket.lock.tryWriteLock() : bucket.lock.writeLock();
+			if (stamp == 0)
+				continue;
 
-				try {
-					final T arr = (T) bucket.poll(bytes);
-					if (arr != null) {
-						bucket.inUse++;
-						bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
-						maybeCleanup(b, s, bucket);
-						return arr;
-					}
-				} finally {
-					bucket.lock.unlockWrite(stamp);
+			try {
+				final T arr = (T) bucket.poll(bytes);
+				if (arr != null) {
+					bucket.inUse++;
+					bucket.peakInUse = Math.max(bucket.peakInUse, bucket.inUse);
+					maybeCleanup(b, s, bucket);
+					return arr;
 				}
+			} finally {
+				bucket.lock.unlockWrite(stamp);
 			}
 		}
 
@@ -263,8 +261,6 @@ public enum PooledArrayType {
 			return;
 
 		final int b = bucket(len);
-		if (b < 0 || b >= buckets.length)
-			return;
 
 		final long bytes = bytesFor(len);
 		if (isPoolFull(bytes))
@@ -278,10 +274,9 @@ public enum PooledArrayType {
 			final int s = (startStripe + i) & STRIPES_MASK;
 			final Bucket bucket = bucketStripes[s];
 
-			final long stamp =
-				i < STRIPES
-					? bucket.lock.tryWriteLock()
-					: bucket.lock.writeLock();
+			final long stamp = i < STRIPES
+				? bucket.lock.tryWriteLock()
+				: bucket.lock.writeLock();
 			if (stamp == 0)
 				continue;
 
