@@ -137,7 +137,7 @@ public final class Int2IntHashMap {
 
 	public boolean test(int key, int maskBits) {
 		int idx = findIndex(key, mask, keys, distances);
-		return idx >= 0 && (values[idx] & maskBits) != 0;
+		return idx >= 0 && (values[idx] & maskBits) == maskBits;
 	}
 
 	public int getBits(int key, int maskBits, int shift, int defaultValue) {
