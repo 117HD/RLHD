@@ -304,6 +304,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 
 			removeIndex(index);
 			index = -1;
+			nextIndex--;
 		}
 	}
 }
