@@ -589,12 +589,16 @@ public final class Camera {
 	}
 
 	public static class CameraStruct extends UniformBuffer.StructProperty {
+		public static final int REVERSE_Z = 1;
+		public static final int ORTHOGRAPHIC = 2;
+		public static final int INFINITE_FAR = 4;
+
 		public Property position = addProperty(PropertyType.FVec3, "position");
 
 		public Property nearPlane = addProperty(PropertyType.Float, "nearPlane");
 		public Property farPlane = addProperty(PropertyType.Float, "farPlane");
 
-		public Property isReverseZ = addProperty(PropertyType.Int, "isReverseZ");
+		public Property flags = addProperty(PropertyType.Int, "flags");
 		public Property viewport = addProperty(PropertyType.IVec2, "viewport");
 
 		public Property viewMatrix = addProperty(PropertyType.Mat4, "viewMatrix");
@@ -608,11 +612,19 @@ public final class Camera {
 			camera.calculateViewProjMatrix();
 			camera.calculateInvViewProjMatrix();
 
+			int cameraFlags = 0;
+			if (camera.reverseZ)
+				cameraFlags |= REVERSE_Z;
+			if (camera.orthographic)
+				cameraFlags |= ORTHOGRAPHIC;
+			if (camera.farPlane > 0.0f)
+				cameraFlags |= INFINITE_FAR;
+
 			position.set(camera.position);
 			nearPlane.set(camera.nearPlane);
 			farPlane.set(camera.farPlane);
 			viewport.set(camera.viewportWidth, camera.viewportHeight);
-			isReverseZ.set(camera.reverseZ ? 1 : 0);
+			flags.set(cameraFlags);
 			viewMatrix.set(camera.viewMatrix);
 			projMatrix.set(camera.projectionMatrix);
 			viewProjMatrix.set(camera.viewProjMatrix);

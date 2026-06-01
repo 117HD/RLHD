@@ -1,12 +1,16 @@
 #pragma once
 
+#define CAMERA_REVERSE_Z 1
+#define CAMERA_ORTHOGRAPHIC 2
+#define CAMERA_INFINITE_FAR 4
+
 struct Camera {
     vec3 position;
 
     float nearPlane;
     float farPlane;
 
-    int  isReverseZ;
+    int  flags;
     ivec2 viewport;
 
     mat4 viewMatrix;
@@ -16,23 +20,19 @@ struct Camera {
 };
 
 bool Camera_isInfiniteFar(const Camera cam) {
-    return cam.farPlane == 0.0; // TODO: isReverseZ should become flags
+    return (cam.flags & CAMERA_INFINITE_FAR) != 0;
 }
 
 bool Camera_isReverseZ(const Camera cam) {
-    return cam.isReverseZ != 0;
-}
-
-bool Camera_isStandard(const Camera cam) {
-    return !Camera_isReverseZ(cam) && !Camera_isInfiniteFar(cam);
+    return (cam.flags & CAMERA_REVERSE_Z) != 0;
 }
 
 bool Camera_isPerspective(const Camera cam) {
-    return cam.viewProjMatrix[2][3] != 0; // TODO: isReverseZ should become flags;
+    return (cam.flags & CAMERA_ORTHOGRAPHIC) == 0;
 }
 
 bool Camera_isOrthographic(const Camera cam) {
-    return cam.viewProjMatrix[2][3] == 0; // TODO: isReverseZ should become flags
+    return (cam.flags & CAMERA_ORTHOGRAPHIC) != 0;
 }
 
 vec3 Camera_getForward(const Camera cam) {
