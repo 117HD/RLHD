@@ -3,6 +3,7 @@ package rs117.hd.utils.collections;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import lombok.NonNull;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.MathUtils.*;
@@ -33,7 +34,7 @@ public final class IntHashSet implements Iterable<Integer> {
 	}
 
 	public IntHashSet(int initialCapacity, float growthFactor) {
-		int cap = max((int) HDUtils.ceilPow2(initialCapacity), DEFAULT_CAPACITY);
+		int cap = max(HDUtils.ceilPow2(initialCapacity), DEFAULT_CAPACITY);
 
 		keys = new int[cap];
 		distances = new int[cap];
@@ -66,10 +67,9 @@ public final class IntHashSet implements Iterable<Integer> {
 		size = 0;
 		mask = newCapacity - 1;
 
-		for (int i = 0; i < min(oldKeys.length, newCapacity); i++) {
+		for (int i = 0; i < min(oldKeys.length, newCapacity); i++)
 			if (oldKeys[i] != EMPTY)
 				add(oldKeys[i]);
-		}
 	}
 
 	public boolean addAll(Iterable<Integer> collection) {
@@ -201,6 +201,7 @@ public final class IntHashSet implements Iterable<Integer> {
 	public int capacity() { return keys.length; }
 
 	@Override
+	@NonNull
 	public Iterator<Integer> iterator() {
 		return new Iterator<>() {
 			private int index = -1;

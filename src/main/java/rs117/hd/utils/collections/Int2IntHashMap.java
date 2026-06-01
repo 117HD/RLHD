@@ -33,7 +33,7 @@ public final class Int2IntHashMap {
 	}
 
 	public Int2IntHashMap(int initialCapacity, float growthFactor) {
-		int cap = max((int) HDUtils.ceilPow2(initialCapacity), DEFAULT_CAPACITY);
+		int cap = max(HDUtils.ceilPow2(initialCapacity), DEFAULT_CAPACITY);
 
 		keys = new int[cap];
 		values = new int[cap];
@@ -71,14 +71,10 @@ public final class Int2IntHashMap {
 		mask = newCapacity - 1;
 		size = 0;
 
-		for (int i = 0; i < min(oldKeys.length, newCapacity); i++) {
-			if (oldKeys[i] != EMPTY) {
+		for (int i = 0; i < min(oldKeys.length, newCapacity); i++)
+			if (oldKeys[i] != EMPTY)
 				put(oldKeys[i], oldValues[i]);
-			}
-		}
 	}
-
-	public boolean put(Object key, int value) { return key != null && put(key.hashCode(), value); }
 
 	public boolean put(int key, int value) {
 		return put(key, value, true);
@@ -283,5 +279,7 @@ public final class Int2IntHashMap {
 		return size;
 	}
 
-	public int capacity() { return keys.length; }
+	public int capacity() {
+		return keys.length;
+	}
 }
