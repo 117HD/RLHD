@@ -84,6 +84,11 @@ vec3 Camera_rayDirection(const Camera cam, vec2 uv) {
     return normalize(target.xyz / target.w - cam.position);
 }
 
+vec3 Camera_ndcToPixel(vec3 ndc, vec2 resolution) {
+    vec2 px = (ndc.xy * 0.5 + 0.5) * resolution;
+    return vec3(px, ndc.z * 0.5 + 0.5);
+}
+
 vec2 Camera_worldToPixel(const Camera cam, vec3 worldPos) {
     vec3 ndc = Camera_projectWorld(cam, worldPos);
     vec2 uv  = ndc.xy * 0.5 + 0.5;
