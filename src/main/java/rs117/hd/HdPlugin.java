@@ -429,6 +429,7 @@ public class HdPlugin extends Plugin {
 	public boolean configCharacterDisplacement;
 	public boolean configLinearAlphaBlending;
 	public boolean configPlanarReflections;
+	public boolean configRoofReflections;
 	public boolean configWaterTransparency;
 	public boolean configLegacyWater;
 	public boolean configHideVanillaWaterEffects;
@@ -1835,6 +1836,7 @@ public class HdPlugin extends Plugin {
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
 		configPlanarReflections = config.enablePlanarReflections();
+		configRoofReflections = config.enableRoofReflections();
 		configWaterTransparency = config.waterTransparency();
 
 		var newColorFilter = config.colorFilter();

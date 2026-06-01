@@ -818,6 +818,18 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_ROOF_REFLECTIONS = "planarRoofReflections";
+	@ConfigItem(
+		keyName = KEY_ROOF_REFLECTIONS,
+		name = "Water Roof Reflections",
+		description = "Always render roofs in the reflection regardless of removal.",
+		position = 3,
+		section = waterSettings
+	)
+	default boolean enableRoofReflections() {
+		return true;
+	}
+
 	String KEY_WATER_REFLECTION_RESOLUTION = "waterReflectionResolution";
 	@ConfigItem(
 		keyName = KEY_WATER_REFLECTION_RESOLUTION,
@@ -826,7 +838,7 @@ public interface HdPluginConfig extends Config
 			"Render water reflections at a different resolution.<br>" +
 			"50% is better for performance, but produces more shimmering artifacts.<br>" +
 			"Resolutions above 100% may improve visual quality, at the expense of performance.",
-		position = 3,
+		position = 4,
 		section = waterSettings
 	)
 	@Units(Units.PERCENT)
@@ -840,7 +852,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_SHORELINE_CAUSTICS,
 		name = "Shoreline Caustics",
 		description = "Imitate sunlight passing through waves on the water surface near shorelines.",
-		position = 4,
+		position = 5,
 		section = waterSettings
 	)
 	default boolean shorelineCaustics() {
@@ -853,7 +865,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Imitate sunlight passing through waves on the surface in underwater environments.<br>" +
 			"This applies for example when diving and in Guardians of the Rift.",
-		position = 5,
+		position = 6,
 		section = waterSettings
 	)
 	default boolean underwaterCaustics() {
@@ -865,7 +877,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_WATER_FOAM,
 		name = "Foam",
 		description = "Add foam around the edges of water bodies.",
-		position = 6,
+		position = 7,
 		section = waterSettings
 	)
 	default boolean enableWaterFoam() {
@@ -877,7 +889,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_LEGACY_WATER,
 		name = "Legacy Water",
 		description = "Use the water style which was included in the initial release of the plugin.",
-		position = 7,
+		position = 8,
 		section = waterSettings
 	)
 	default boolean legacyWater() {
