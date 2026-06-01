@@ -102,7 +102,7 @@ public class ReflectionPass implements RenderPass {
 
 	@Override
 	public void drawZoneOpaque(WorldViewContext ctx, Zone z, int zx, int zz) {
-		if(z.onlyWater || z.modelCount == 0)
+		if(z.onlyWater && z.modelCount == 0)
 			return;
 
 		for(int i = 0; i < activePlanes; i++) {
@@ -113,7 +113,7 @@ public class ReflectionPass implements RenderPass {
 
 	@Override
 	public void drawZoneAlpha(WorldViewContext ctx, Zone z, int level, int zx, int zz) {
-		if(z.onlyWater || z.modelCount == 0)
+		if(z.onlyWater && z.modelCount == 0)
 			return;
 
 		final int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -224,6 +224,7 @@ public class ReflectionPass implements RenderPass {
 		public final Camera camera;
 		public final CommandBuffer cmd;
 		public final int layer;
+		public int zoneCount;
 		public float waterHeight;
 		public boolean shouldRender;
 
