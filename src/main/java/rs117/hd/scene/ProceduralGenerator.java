@@ -953,7 +953,7 @@ public class ProceduralGenerator {
 
 										if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 && vertices[vertex][1] % LOCAL_TILE_SIZE == 0) {
 											int vX = (vertices[vertex][0] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
-											int vY = (vertices[vertex][1] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
+											int vY = (vertices[vertex][2] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 
 											zUnderwaterDepthLevels[vX][vY] = 0;
 										}
@@ -1057,7 +1057,7 @@ public class ProceduralGenerator {
 										// simply use the offset in the tile grid array.
 
 										int vX = (vertices[vertex][0] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
-										int vY = (vertices[vertex][1] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
+										int vY = (vertices[vertex][2] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 
 										int height = getHeightOffset(z, vX, vY);
 										sceneContext.setVertexUnderwaterDepth(hashes[vertex], height);
