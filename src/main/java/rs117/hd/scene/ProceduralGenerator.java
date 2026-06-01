@@ -237,9 +237,9 @@ public class ProceduralGenerator {
 		 */
 		private void calculateNormalsForTile(SceneContext sceneContext, Tile tile, boolean isBridge) {
 			int faceCount = 2;
-			if (tile.getSceneTileModel() != null) {
+			final SceneTileModel tileModel = tile.getSceneTileModel();
+			if (tileModel != null) {
 				// Tile model
-				SceneTileModel tileModel = tile.getSceneTileModel();
 				faceCount = tileModel.getFaceX().length;
 				if (faceVertices.length < faceCount) {
 					faceVertices = new int[faceCount][VERTICES_PER_FACE][3];
@@ -611,10 +611,12 @@ public class ProceduralGenerator {
 		 */
 		private void generateDataForTile(SceneContext sceneContext, Tile tile, int tileExX, int tileExY, int plane) {
 			int faceCount;
-			if (tile.getSceneTilePaint() != null) {
+			final SceneTilePaint tilePaint = tile.getSceneTilePaint();
+			final SceneTileModel tileModel = tilePaint == null ? tile.getSceneTileModel() : null;
+			if (tilePaint != null) {
 				faceCount = 2;
-			} else if (tile.getSceneTileModel() != null) {
-				faceCount = tile.getSceneTileModel().getFaceX().length;
+			} else if (tileModel != null) {
+				faceCount = tileModel.getFaceX().length;
 			} else {
 				return;
 			}
@@ -636,17 +638,17 @@ public class ProceduralGenerator {
 			Arrays.fill(vertexIsOverlay, 0, faceCount * VERTICES_PER_FACE, false);
 			Arrays.fill(vertexDefaultColor, 0, faceCount * VERTICES_PER_FACE, false);
 
-			if (tile.getSceneTilePaint() != null) {
+			if (tilePaint != null) {
 				var override = sceneContext.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_MAIN);
 				if (override.waterType != WaterType.NONE) {
 					// skip water tiles
 					return;
 				}
 
-				int swColor = tile.getSceneTilePaint().getSwColor();
-				int seColor = tile.getSceneTilePaint().getSeColor();
-				int nwColor = tile.getSceneTilePaint().getNwColor();
-				int neColor = tile.getSceneTilePaint().getNeColor();
+				int swColor = tilePaint.getSwColor();
+				int seColor = tilePaint.getSeColor();
+				int nwColor = tilePaint.getNwColor();
+				int neColor = tilePaint.getNeColor();
 
 				tileVertexKeys(sceneContext, tile, vertices, vertexHashes);
 
@@ -675,12 +677,10 @@ public class ProceduralGenerator {
 					if (useDefaultColor)
 						vertexDefaultColor[i] = true;
 				}
-			} else if (tile.getSceneTileModel() != null) {
-				SceneTileModel sceneTileModel = tile.getSceneTileModel();
-
-				final int[] faceColorsA = sceneTileModel.getTriangleColorA();
-				final int[] faceColorsB = sceneTileModel.getTriangleColorB();
-				final int[] faceColorsC = sceneTileModel.getTriangleColorC();
+			} else {
+				final int[] faceColorsA = tileModel.getTriangleColorA();
+				final int[] faceColorsB = tileModel.getTriangleColorB();
+				final int[] faceColorsC = tileModel.getTriangleColorC();
 
 				var overlayOverride = sceneContext.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_OVERLAY);
 				var underlayOverride = sceneContext.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_UNDERLAY);
@@ -845,14 +845,17 @@ public class ProceduralGenerator {
 						if (tile.getBridge() != null)
 							tile = tile.getBridge();
 
-						int tileZ = tile.getRenderLevel();
-						if (tile.getSceneTilePaint() != null) {
+						final int tileZ = tile.getRenderLevel();
+						final SceneTilePaint tilePaint = tile.getSceneTilePaint();
+						final SceneTileModel tileModel = tilePaint == null ? tile.getSceneTileModel() : null;
+
+						if (tilePaint != null) {
 							tileVertexKeys(sceneContext, tile, vertices, hashes);
 
 							var override = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_MAIN);
-							if (seasonalWaterType(override, tile.getSceneTilePaint().getTexture()) == WaterType.NONE) {
+							if (seasonalWaterType(override, tilePaint.getTexture()) == WaterType.NONE) {
 								for (int i = 0; i < hashes.length; i++)
-									if (tile.getSceneTilePaint().getNeColor() != HIDDEN_HSL || override.forced)
+									if (tilePaint.getNeColor() != HIDDEN_HSL || override.forced)
 										sceneContext.setVertexIsLand(hashes[i]);
 
 								zUnderwaterDepthLevels[x][y] = 0;
@@ -895,10 +898,8 @@ public class ProceduralGenerator {
 								for (int i = 0; i < hashes.length; i++)
 									sceneContext.setVertexIsWater(hashes[i]);
 							}
-						} else if (tile.getSceneTileModel() != null) {
-							SceneTileModel model = tile.getSceneTileModel();
-
-							int faceCount = model.getFaceX().length;
+						} else if (tileModel != null) {
+							int faceCount = tileModel.getFaceX().length;
 
 							var overlayOverride = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_OVERLAY);
 							var underlayOverride = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_UNDERLAY);
@@ -909,8 +910,8 @@ public class ProceduralGenerator {
 								boolean tileIncludesWater = false;
 								for (int face = 0; face < faceCount; face++) {
 									var override = ProceduralGenerator.isOverlayFace(tile, face) ? overlayOverride : underlayOverride;
-									int textureId = model.getTriangleTextureId() == null ? -1 :
-										model.getTriangleTextureId()[face];
+									int textureId = tileModel.getTriangleTextureId() == null ? -1 :
+										tileModel.getTriangleTextureId()[face];
 									if (seasonalWaterType(override, textureId) != WaterType.NONE) {
 										tileIncludesWater = true;
 										break;
@@ -944,11 +945,11 @@ public class ProceduralGenerator {
 								faceVertexKeys(tile, face, vertices, hashes);
 
 								var override = ProceduralGenerator.isOverlayFace(tile, face) ? overlayOverride : underlayOverride;
-								int textureId = model.getTriangleTextureId() == null ? -1 :
-									model.getTriangleTextureId()[face];
+								int textureId = tileModel.getTriangleTextureId() == null ? -1 :
+									tileModel.getTriangleTextureId()[face];
 								if (seasonalWaterType(override, textureId) == WaterType.NONE) {
 									for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-										if (model.getTriangleColorA()[face] != HIDDEN_HSL || override.forced)
+										if (tileModel.getTriangleColorA()[face] != HIDDEN_HSL || override.forced)
 											sceneContext.setVertexIsLand(hashes[vertex]);
 
 										if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 && vertices[vertex][2] % LOCAL_TILE_SIZE == 0) {
