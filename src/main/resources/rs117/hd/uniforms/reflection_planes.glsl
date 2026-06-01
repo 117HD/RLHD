@@ -19,7 +19,7 @@ layout(std140) uniform UBOReflectionPlanes {
 
 int findClosestPlane(float height) {
     for(int i = 0; i < activePlanes; i++) {
-        if(planes[i].height - height <= WATER_HEIGHT_THRESHOLD) {
+        if(distance(planes[i].height, height) <= WATER_HEIGHT_THRESHOLD) {
             return i;
         }
     }

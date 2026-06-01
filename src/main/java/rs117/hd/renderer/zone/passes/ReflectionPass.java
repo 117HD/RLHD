@@ -189,14 +189,6 @@ public class ReflectionPass implements RenderPass {
 
 			activePlanes++;
 		}
-
-		for(int i = 0; i < activePlanes; i++) {
-			for(int j = 0; j < activePlanes; j++) {
-				if(i == j) continue;
-				if(abs(planes[i].waterHeight - planes[j].waterHeight) <= WATER_HEIGHT_THRESHOLD)
-					log.debug("Water reflection planes {} and {} are too close to each other", i, j); // This is being hit
-			}
-		}
 		uboReflectionPlanes.activePlanes.set(activePlanes);
 	}
 
