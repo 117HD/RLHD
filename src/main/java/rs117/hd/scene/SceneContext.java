@@ -32,13 +32,14 @@ public class SceneContext {
 	public static final int TILE_OVERRIDE_OVERLAY = 2;
 	public static final int TILE_OVERRIDE_COUNT = 3;
 
-	public static final int VERTEX_IS_LAND = 1 << 1;
-	public static final int VERTEX_IS_WATER = 1 << 2;
-	public static final int VERTEX_IS_OVERLAY = 1 << 3;
-	public static final int VERTEX_IS_UNDERLAY = 1 << 4;
-	public static final int VERTEX_IS_HIGH_PRIORITY_COLOR = 1 << 5;
-	public static final int VERTEX_UNDER_WATER_DEPTH_SHIFT = 6;
-	public static final int VERTEX_UNDER_WATER_DEPTH_MASK = 0x3FFFFFF;
+	public static final int VERTEX_IS_LAND = 1;
+	public static final int VERTEX_IS_WATER = 1 << 1;
+	public static final int VERTEX_IS_OVERLAY = 1 << 2;
+	public static final int VERTEX_IS_UNDERLAY = 1 << 3;
+	public static final int VERTEX_IS_HIGH_PRIORITY_COLOR = 1 << 4;
+	public static final int VERTEX_UNDER_WATER_DEPTH_SHIFT = 5;
+	// This only needs 10 bits, since depth slope 1380 * .55 = 9.6 bits, but reserve 16 to be safe
+	public static final int VERTEX_UNDER_WATER_DEPTH_MASK = 0xFFFF;
 
 	// Thread safe tile override variables
 	public final static ThreadLocal<TileOverrideVariables> TILE_OVERRIDE_VARIABLES = ThreadLocal.withInitial(TileOverrideVariables::new);
@@ -108,7 +109,6 @@ public class SceneContext {
 	public void setVertexUnderwaterDepth(int hash, int depth) {
 		int value = (depth << VERTEX_UNDER_WATER_DEPTH_SHIFT);
 		int mask = VERTEX_UNDER_WATER_DEPTH_MASK << VERTEX_UNDER_WATER_DEPTH_SHIFT;
-
 		vertexTerrainData.setBits(hash, value, mask, 0);
 	}
 
