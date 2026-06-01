@@ -186,6 +186,8 @@ public final class IntHashSet implements Iterable<Integer> {
 			return;
 		Arrays.fill(keys, lowTide, highTide + 1, EMPTY);
 		Arrays.fill(distances, lowTide, highTide + 1, 0);
+		lowTide = keys.length;
+		highTide = 0;
 		size = 0;
 	}
 
