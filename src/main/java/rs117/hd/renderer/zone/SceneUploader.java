@@ -1052,21 +1052,21 @@ public class SceneUploader implements AutoCloseable {
 		vb.putStaticVertex(
 			lx2, neHeight, lz2,
 			uvx, uvy, 0,
-			neNormals[0], neNormals[2], neNormals[1],
+			neNormals[0], neNormals[1], neNormals[2],
 			texturedFaceIdx
 		);
 
 		vb.putStaticVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
-			nwNormals[0], nwNormals[2], nwNormals[1],
+			nwNormals[0], nwNormals[1], nwNormals[2],
 			texturedFaceIdx
 		);
 
 		vb.putStaticVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
-			seNormals[0], seNormals[2], seNormals[1],
+			seNormals[0], seNormals[1], seNormals[2],
 			texturedFaceIdx
 		);
 
@@ -1079,21 +1079,21 @@ public class SceneUploader implements AutoCloseable {
 		vb.putStaticVertex(
 			lx0, swHeight, lz0,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
-			swNormals[0], swNormals[2], swNormals[1],
+			swNormals[0], swNormals[1], swNormals[2],
 			texturedFaceIdx
 		);
 
 		vb.putStaticVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
-			seNormals[0], seNormals[2], seNormals[1],
+			seNormals[0], seNormals[1], seNormals[2],
 			texturedFaceIdx
 		);
 
 		vb.putStaticVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
-			nwNormals[0], nwNormals[2], nwNormals[1],
+			nwNormals[0], nwNormals[1], nwNormals[2],
 			texturedFaceIdx
 		);
 
@@ -1259,17 +1259,17 @@ public class SceneUploader implements AutoCloseable {
 				} else if (plugin.configGroundTextures && groundMaterial != null) {
 					materialA = groundMaterial.getRandomMaterial(
 						worldPos[0] + (vertices[0][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[0][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[0][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialB = groundMaterial.getRandomMaterial(
 						worldPos[0] + (vertices[1][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[1][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[1][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialC = groundMaterial.getRandomMaterial(
 						worldPos[0] + (vertices[2][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[2][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[2][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 				}
@@ -1292,17 +1292,17 @@ public class SceneUploader implements AutoCloseable {
 					GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
 					materialA = groundMaterial.getRandomMaterial(
 						worldPos[0] + (vertices[0][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[0][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[0][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialB = groundMaterial.getRandomMaterial(
 						worldPos[0] + (vertices[1][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[1][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[1][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialC = groundMaterial.getRandomMaterial(
 						worldPos[0] + (vertices[2][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[2][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[2][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 				}
@@ -1370,21 +1370,21 @@ public class SceneUploader implements AutoCloseable {
 			vb.putStaticVertex(
 				lx0, ly0, lz0,
 				uvAx, uvAy, 0,
-				normalsA[0], normalsA[2], normalsA[1],
+				normalsA[0], normalsA[1], normalsA[2],
 				texturedFaceIdx
 			);
 
 			vb.putStaticVertex(
 				lx1, ly1, lz1,
 				uvBx, uvBy, 0,
-				normalsB[0], normalsB[2], normalsB[1],
+				normalsB[0], normalsB[1], normalsB[2],
 				texturedFaceIdx
 			);
 
 			vb.putStaticVertex(
 				lx2, ly2, lz2,
 				uvCx, uvCy, 0,
-				normalsC[0], normalsC[2], normalsC[1],
+				normalsC[0], normalsC[1], normalsC[2],
 				texturedFaceIdx
 			);
 		}

@@ -47,8 +47,6 @@ import rs117.hd.scene.water_types.WaterType;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
-import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -365,19 +363,32 @@ public final class HDUtils {
 			final int[] faceColorsB = model.getTriangleColorB();
 			final int[] faceColorsC = model.getTriangleColorC();
 
-			outer:
+			int x = tile.getSceneLocation().getX();
+			int y = tile.getSceneLocation().getY();
+			int baseX = x * LOCAL_TILE_SIZE;
+			int baseY = y * LOCAL_TILE_SIZE;
+
 			for (int face = 0; face < faceCount; face++) {
 				if (isOverlayFace(tile, face))
 					continue;
 
-				int[][] vertices = faceLocalVertices(tile, face);
-				int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
+				final int vertexFaceA = model.getFaceX()[face];
+				hsl = faceColorsA[face];
+				if (model.getVertexX()[vertexFaceA] - baseX != LOCAL_TILE_SIZE &&
+					model.getVertexZ()[vertexFaceA] - baseY != LOCAL_TILE_SIZE)
+					break;
 
-				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-					hsl = faceColors[vertex];
-					if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
-						break outer;
-				}
+				final int vertexFaceB = model.getFaceY()[face];
+				hsl = faceColorsB[face];
+				if (model.getVertexX()[vertexFaceB] - baseX != LOCAL_TILE_SIZE &&
+					model.getVertexZ()[vertexFaceB] - baseY != LOCAL_TILE_SIZE)
+					break;
+
+				final int vertexFaceC = model.getFaceZ()[face];
+				hsl = faceColorsC[face];
+				if (model.getVertexX()[vertexFaceC] - baseX != LOCAL_TILE_SIZE &&
+					model.getVertexZ()[vertexFaceC] - baseY != LOCAL_TILE_SIZE)
+					break;
 			}
 
 			ColorUtils.unpackRawHsl(out, hsl);

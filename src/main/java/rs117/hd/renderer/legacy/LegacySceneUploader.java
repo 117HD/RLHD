@@ -736,13 +736,13 @@ public class LegacySceneUploader {
 			float terrainData = Float.intBitsToFloat(packTerrainData(true, 0, waterType, tileZ));
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
-			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], terrainData);
-			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], terrainData);
-			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], terrainData);
+			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[1], neNormals[2], terrainData);
+			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[1], nwNormals[2], terrainData);
+			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[1], seNormals[2], terrainData);
 
-			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[2], swNormals[1], terrainData);
-			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], terrainData);
-			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], terrainData);
+			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[1], swNormals[2], terrainData);
+			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[1], seNormals[2], terrainData);
+			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[1], nwNormals[2], terrainData);
 
 
 			sceneContext.stagingBufferVertices.ensureCapacity(24);
@@ -869,13 +869,13 @@ public class LegacySceneUploader {
 			float neTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, neDepth), waterType, tileZ));
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
-			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
-			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData);
-			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], seTerrainData);
+			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[1], neNormals[2], neTerrainData);
+			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[1], nwNormals[2], nwTerrainData);
+			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[1], seNormals[2], seTerrainData);
 
-			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[2], swNormals[1], swTerrainData);
-			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], seTerrainData);
-			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData);
+			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[1], swNormals[2], swTerrainData);
+			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[1], seNormals[2], seTerrainData);
+			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[1], nwNormals[2], nwTerrainData);
 
 			sceneContext.stagingBufferVertices.ensureCapacity(24);
 			sceneContext.stagingBufferVertices.put((float) localNeVertexX, neHeight + neDepth, localNeVertexY, neColor);
@@ -968,7 +968,8 @@ public class LegacySceneUploader {
 			int colorB = faceColorB[face];
 			int colorC = faceColorC[face];
 
-			int[][] localVertices = ProceduralGenerator.faceLocalVertices(tile, face);
+			int[][] localVertices = new int[3][3];
+			ProceduralGenerator.faceLocalVertices(tile, face, localVertices);
 
 			int[] vertexKeys = ProceduralGenerator.faceVertexKeys(tile, face);
 			int vertexKeyA = vertexKeys[0];
@@ -1053,17 +1054,17 @@ public class LegacySceneUploader {
 					} else if (plugin.configGroundTextures && groundMaterial != null) {
 						materialA = groundMaterial.getRandomMaterial(
 							worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
+							worldPos[1] + (localVertices[0][2] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 						materialB = groundMaterial.getRandomMaterial(
 							worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
+							worldPos[1] + (localVertices[1][2] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 						materialC = groundMaterial.getRandomMaterial(
 							worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
+							worldPos[1] + (localVertices[2][2] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 					}
@@ -1086,20 +1087,20 @@ public class LegacySceneUploader {
 					vertexCIsOverlay = true;
 
 				for (int i = 0; i < 3; i++)
-					localVertices[i][2] -= override.heightOffset;
+					localVertices[i][1] -= override.heightOffset;
 			}
 
 			float terrainData = Float.intBitsToFloat(packTerrainData(true, 0, waterType, tileZ));
 
 			sceneContext.stagingBufferNormals.ensureCapacity(12);
-			sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], terrainData);
-			sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[2], normalsB[1], terrainData);
-			sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[2], normalsC[1], terrainData);
+			sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[1], normalsA[2], terrainData);
+			sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[1], normalsB[2], terrainData);
+			sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[1], normalsC[2], terrainData);
 
 			sceneContext.stagingBufferVertices.ensureCapacity(12);
-			sceneContext.stagingBufferVertices.put((float) localVertices[0][0], localVertices[0][2], localVertices[0][1], colorA);
-			sceneContext.stagingBufferVertices.put((float) localVertices[1][0], localVertices[1][2], localVertices[1][1], colorB);
-			sceneContext.stagingBufferVertices.put((float) localVertices[2][0], localVertices[2][2], localVertices[2][1], colorC);
+			sceneContext.stagingBufferVertices.put((float) localVertices[0][0], localVertices[0][1], localVertices[0][2], colorA);
+			sceneContext.stagingBufferVertices.put((float) localVertices[1][0], localVertices[1][1], localVertices[1][2], colorB);
+			sceneContext.stagingBufferVertices.put((float) localVertices[2][0], localVertices[2][1], localVertices[2][2], colorC);
 
 			bufferLength += 3;
 
@@ -1119,7 +1120,7 @@ public class LegacySceneUploader {
 			sceneContext.stagingBufferUvs.ensureCapacity(12);
 			for (int i = 0; i < 3; i++) {
 				float uvx = worldPos[0] + localVertices[i][0] / 128f - 1;
-				float uvy = worldPos[1] + localVertices[i][1] / 128f - 1;
+				float uvy = worldPos[1] + localVertices[i][2] / 128f - 1;
 				float tmp = uvx;
 				uvx = uvx * uvcos - uvy * uvsin;
 				uvy = tmp * uvsin + uvy * uvcos;
@@ -1179,7 +1180,8 @@ public class LegacySceneUploader {
 				if (faceColorA[face] == HIDDEN_HSL && !override.forced)
 					continue;
 
-				int[][] localVertices = ProceduralGenerator.faceLocalVertices(tile, face);
+				int[][] localVertices = new int[3][3];
+				ProceduralGenerator.faceLocalVertices(tile, face, localVertices);
 
 				Material materialA = Material.NONE;
 				Material materialB = Material.NONE;
@@ -1198,17 +1200,17 @@ public class LegacySceneUploader {
 					GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
 					materialA = groundMaterial.getRandomMaterial(
 						worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (localVertices[0][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialB = groundMaterial.getRandomMaterial(
 						worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (localVertices[1][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialC = groundMaterial.getRandomMaterial(
 						worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (localVertices[2][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 				}
@@ -1225,27 +1227,27 @@ public class LegacySceneUploader {
 				float cTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, depthC), waterType, tileZ));
 
 				sceneContext.stagingBufferNormals.ensureCapacity(12);
-				sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
-				sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[2], normalsB[1], bTerrainData);
-				sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[2], normalsC[1], cTerrainData);
+				sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[1], normalsA[2], aTerrainData);
+				sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[1], normalsB[2], bTerrainData);
+				sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[1], normalsC[2], cTerrainData);
 
 				sceneContext.stagingBufferVertices.ensureCapacity(12);
 				sceneContext.stagingBufferVertices.put(
 					(float) localVertices[0][0],
-					localVertices[0][2] + depthA,
-					localVertices[0][1],
+					localVertices[0][1] + depthA,
+					localVertices[0][2],
 					colorA
 				);
 				sceneContext.stagingBufferVertices.put(
 					(float) localVertices[1][0],
-					localVertices[1][2] + depthB,
-					localVertices[1][1],
+					localVertices[1][1] + depthB,
+					localVertices[1][2],
 					colorB
 				);
 				sceneContext.stagingBufferVertices.put(
 					(float) localVertices[2][0],
-					localVertices[2][2] + depthC,
-					localVertices[2][1],
+					localVertices[2][1] + depthC,
+					localVertices[2][2],
 					colorC
 				);
 
@@ -1256,9 +1258,9 @@ public class LegacySceneUploader {
 				int packedMaterialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 				sceneContext.stagingBufferUvs.ensureCapacity(12);
-				sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
-				sceneContext.stagingBufferUvs.put(1 - localVertices[1][0] / 128f, 1 - localVertices[1][1] / 128f, 0, packedMaterialDataB);
-				sceneContext.stagingBufferUvs.put(1 - localVertices[2][0] / 128f, 1 - localVertices[2][1] / 128f, 0, packedMaterialDataC);
+				sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][2] / 128f, 0, packedMaterialDataA);
+				sceneContext.stagingBufferUvs.put(1 - localVertices[1][0] / 128f, 1 - localVertices[1][2] / 128f, 0, packedMaterialDataB);
+				sceneContext.stagingBufferUvs.put(1 - localVertices[2][0] / 128f, 1 - localVertices[2][2] / 128f, 0, packedMaterialDataC);
 
 				uvBufferLength += 3;
 			}

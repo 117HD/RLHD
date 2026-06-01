@@ -167,11 +167,7 @@ public class ProceduralGenerator {
 		private final int[][] vertices = new int[4][3];
 		private final int[] hashes = new int[4];
 
-		private final int[] vertexHeights = new int[4];
 		private final int[] surfaceNormal = new int[3];
-		private final int[] normalA = new int[3];
-		private final int[] normalB = new int[3];
-		private final int[] normalC = new int[3];
 
 		private int[][][] faceVertices = new int[2][VERTICES_PER_FACE][3];
 		private int[][] faceVertexKeys = new int[VERTICES_PER_FACE][3];
@@ -253,22 +249,25 @@ public class ProceduralGenerator {
 				for (int face = 0; face < faceCount; face++) {
 					faceVertexKeys(tile, face, vertices, hashes);
 
+					// Winding order: 0, 1, 2
 					ivec3(faceVertices[face][0], vertices[0][0], vertices[0][1], vertices[0][2]);
-					ivec3(faceVertices[face][2], vertices[1][0], vertices[1][1], vertices[1][2]);
-					ivec3(faceVertices[face][1], vertices[2][0], vertices[2][1], vertices[2][2]);
+					ivec3(faceVertices[face][1], vertices[1][0], vertices[1][1], vertices[1][2]);
+					ivec3(faceVertices[face][2], vertices[2][0], vertices[2][1], vertices[2][2]);
 
 					ivec3(faceVertexKeys[face], hashes[0], hashes[1], hashes[2]);
 				}
 			} else {
 				tileVertexKeys(sceneContext, tile, vertices, hashes);
 
+				// Winding order: ne, nw, se => 3, 2, 1
 				ivec3(faceVertices[0][0], vertices[3][0], vertices[3][1], vertices[3][2]);
-				ivec3(faceVertices[0][1], vertices[1][0], vertices[1][1], vertices[1][2]);
-				ivec3(faceVertices[0][2], vertices[2][0], vertices[2][1], vertices[2][2]);
+				ivec3(faceVertices[0][1], vertices[2][0], vertices[2][1], vertices[2][2]);
+				ivec3(faceVertices[0][2], vertices[1][0], vertices[1][1], vertices[1][2]);
 
+				// Winding order: sw, se, nw => 0, 1, 2
 				ivec3(faceVertices[1][0], vertices[0][0], vertices[0][1], vertices[0][2]);
-				ivec3(faceVertices[1][1], vertices[2][0], vertices[2][1], vertices[2][2]);
-				ivec3(faceVertices[1][2], vertices[1][0], vertices[1][1], vertices[1][2]);
+				ivec3(faceVertices[1][1], vertices[1][0], vertices[1][1], vertices[1][2]);
+				ivec3(faceVertices[1][2], vertices[2][0], vertices[2][1], vertices[2][2]);
 
 				ivec3(faceVertexKeys[0], hashes[3], hashes[1], hashes[2]);
 				ivec3(faceVertexKeys[1], hashes[0], hashes[2], hashes[1]);
@@ -277,35 +276,13 @@ public class ProceduralGenerator {
 			// Loop through tris to calculate and accumulate normals
 			for (int face = 0; face < faceCount; face++) {
 				// XYZ
-				ivec3(vertexHeights, faceVertices[face][0][2], faceVertices[face][1][2], faceVertices[face][2][2]);
 				if (!isBridge) {
-					vertexHeights[0] += sceneContext.getVertexUnderwaterDepth(faceVertexKeys[face][0]);
-					vertexHeights[1] += sceneContext.getVertexUnderwaterDepth(faceVertexKeys[face][1]);
-					vertexHeights[2] += sceneContext.getVertexUnderwaterDepth(faceVertexKeys[face][2]);
+					faceVertices[face][0][1] += sceneContext.getVertexUnderwaterDepth(faceVertexKeys[face][0]);
+					faceVertices[face][1][1] += sceneContext.getVertexUnderwaterDepth(faceVertexKeys[face][1]);
+					faceVertices[face][2][1] += sceneContext.getVertexUnderwaterDepth(faceVertexKeys[face][2]);
 				}
 
-				ivec3(
-					normalA,
-					faceVertices[face][0][0],
-					faceVertices[face][0][1],
-					vertexHeights[0]
-				);
-
-				ivec3(
-					normalB,
-					faceVertices[face][1][0],
-					faceVertices[face][1][1],
-					vertexHeights[1]
-				);
-
-				ivec3(
-					normalC,
-					faceVertices[face][2][0],
-					faceVertices[face][2][1],
-					vertexHeights[2]
-				);
-
-				calculateSurfaceNormals(surfaceNormal, normalA, normalB, normalC);
+				calculateSurfaceNormals(surfaceNormal, faceVertices[face][0], faceVertices[face][1], faceVertices[face][2]);
 
 				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
 					final int vertexKey = faceVertexKeys[face][vertex];
@@ -386,9 +363,8 @@ public class ProceduralGenerator {
 
 	public static boolean isOverlayFace(Tile tile, int face) {
 		int tileShapeIndex = tile.getSceneTileModel().getShape() - 1;
-		if (face >= getTileOverlayTris(tileShapeIndex).length) {
+		if (face >= getTileOverlayTris(tileShapeIndex).length)
 			return false;
-		}
 		return getTileOverlayTris(tileShapeIndex)[face];
 	}
 
@@ -400,43 +376,41 @@ public class ProceduralGenerator {
 		final int tileExY = tileY + ctx.sceneOffset;
 		final int[][] tileHeights = ctx.scene.getTileHeights()[tile.getRenderLevel()];
 
+		// Winding order:
+		// ne, nw, se => 3, 2, 1
+		// sw, se, nw => 0, 1, 2
+
 		// South-west
 		ivec3(
 			vertices[0],
 			tileX * LOCAL_TILE_SIZE,
-			tileY * LOCAL_TILE_SIZE,
-			tileHeights[tileExX][tileExY]
+			tileHeights[tileExX][tileExY],
+			tileY * LOCAL_TILE_SIZE
 		);
 
 		// South-east
 		ivec3(
 			vertices[1],
 			(tileX + 1) * LOCAL_TILE_SIZE,
-			tileY * LOCAL_TILE_SIZE,
-			tileHeights[tileExX + 1][tileExY]
+			tileHeights[tileExX + 1][tileExY],
+			tileY * LOCAL_TILE_SIZE
 		);
 
 		// North-west
 		ivec3(
 			vertices[2],
 			tileX * LOCAL_TILE_SIZE,
-			(tileY + 1) * LOCAL_TILE_SIZE,
-			tileHeights[tileExX][tileExY + 1]
+			tileHeights[tileExX][tileExY + 1],
+			(tileY + 1) * LOCAL_TILE_SIZE
 		);
 
 		// North-east
 		ivec3(
 			vertices[3],
 			(tileX + 1) * LOCAL_TILE_SIZE,
-			(tileY + 1) * LOCAL_TILE_SIZE,
-			tileHeights[tileExX + 1][tileExY + 1]
+			tileHeights[tileExX + 1][tileExY + 1],
+			(tileY + 1) * LOCAL_TILE_SIZE
 		);
-	}
-
-	private static int[][] tileVertices(SceneContext ctx, Tile tile) {
-		int[][] vertices = new int[4][3];
-		tileVertices(ctx, tile, vertices);
-		return vertices;
 	}
 
 	private static void faceVertices(Tile tile, int face, int[][] vertices) {
@@ -453,38 +427,32 @@ public class ProceduralGenerator {
 		ivec3(
 			vertices[0],
 			vertexX[vertexFacesA],
-			vertexZ[vertexFacesA],
-			vertexY[vertexFacesA]
+			vertexY[vertexFacesA],
+			vertexZ[vertexFacesA]
 		);
 
 		ivec3(
 			vertices[1],
 			vertexX[vertexFacesB],
-			vertexZ[vertexFacesB],
-			vertexY[vertexFacesB]
+			vertexY[vertexFacesB],
+			vertexZ[vertexFacesB]
 		);
 
 		ivec3(
 			vertices[2],
 			vertexX[vertexFacesC],
-			vertexZ[vertexFacesC],
-			vertexY[vertexFacesC]
+			vertexY[vertexFacesC],
+			vertexZ[vertexFacesC]
 		);
 	}
 
-	private static int[][] faceVertices(Tile tile, int face) {
-		int[][] vertices = new int[3][3];
-		faceVertices(tile, face, vertices);
-		return vertices;
-	}
-
 	/**
-	 * Returns vertex positions in local coordinates, between 0 and 128.
+	 * Returns vertex positions in local coordinates, between 0 and 128, inclusive.
 	 */
 	public static void faceLocalVertices(Tile tile, int face, int[][] vertices) {
 		if (tile.getSceneTileModel() == null) {
-			for (int[] vertex : vertices)
-				Arrays.fill(vertex, 0);
+			for (int i = 0; i < vertices.length; i++)
+				Arrays.fill(vertices[i], 0);
 			return;
 		}
 
@@ -494,16 +462,10 @@ public class ProceduralGenerator {
 		int baseY = y * LOCAL_TILE_SIZE;
 
 		faceVertices(tile, face, vertices);
-		for (int[] vertex : vertices) {
-			vertex[0] -= baseX;
-			vertex[1] -= baseY;
+		for (int i = 0; i < vertices.length; i++) {
+			vertices[i][0] -= baseX;
+			vertices[i][2] -= baseY;
 		}
-	}
-
-	public static int[][] faceLocalVertices(Tile tile, int face) {
-		int[][] vertices = new int[3][3];
-		faceLocalVertices(tile, face, vertices);
-		return vertices;
 	}
 
 	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[] vertexHashes) {
@@ -774,7 +736,7 @@ public class ProceduralGenerator {
 					dot = dot(vNormals);
 					if (dot >= EPSILON) {
 						// Approximately reverse vanilla tile lighting
-						dot = (vNormals[0] + vNormals[1]) / sqrt(2 * dot);
+						dot = (vNormals[0] + vNormals[2]) / sqrt(2 * dot);
 					}
 				}
 
