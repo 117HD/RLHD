@@ -24,7 +24,7 @@ public enum PooledArrayType {
 	public static final PooledArrayType[] VALUES = values();
 
 	private static final double MAX_HEAP_FRACTION = 0.05; // 768 MB * 0.05 = 38.4 MB
-	private static final long MAX_POOL_BYTES = Math.max((long) (Runtime.getRuntime().maxMemory() * MAX_HEAP_FRACTION), (long) 1e+7);
+	private static final long MAX_POOL_BYTES = max((long) (Runtime.getRuntime().maxMemory() * MAX_HEAP_FRACTION), 10 * MB);
 
 	private static final int MAX_BUCKET = 30;
 	private static final int STRIPES = 8;
