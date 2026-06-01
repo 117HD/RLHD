@@ -3,7 +3,7 @@ package rs117.hd.utils.collections;
 import java.util.Arrays;
 
 import static java.lang.System.arraycopy;
-import static rs117.hd.utils.HDUtils.ceilPow2;
+import static rs117.hd.utils.MathUtils.*;
 
 public final class PrimitiveIntArray {
 	public int[] array = new int[16];

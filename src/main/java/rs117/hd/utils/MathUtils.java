@@ -581,6 +581,18 @@ public final class MathUtils {
 		return ceil(new int[v.length], v);
 	}
 
+	public static int ceilPow2(int x) {
+		if (x <= 1) return 1;
+		if (x > (1 << 30)) return 1 << 30;
+		return 1 << (32 - Integer.numberOfLeadingZeros(x - 1));
+	}
+
+	public static long ceilPow2(long x) {
+		if (x <= 1) return 1;
+		if (x > (1L << 62)) return 1L << 62;
+		return 1L << (64 - Long.numberOfLeadingZeros(x - 1));
+	}
+
 	public static int round(float v) {
 		return Math.round(v);
 	}

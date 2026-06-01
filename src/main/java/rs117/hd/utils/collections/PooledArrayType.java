@@ -54,12 +54,6 @@ public enum PooledArrayType {
 		}
 	}
 
-	private static int ceilPow2(int x) {
-		if (x <= 1) return 1;
-		if (x > (1 << 30)) return Integer.MAX_VALUE;
-		return 1 << (32 - numberOfLeadingZeros(x - 1));
-	}
-
 	private static int bucket(int size) {
 		if (size <= 1) return 0;
 		int b = 32 - numberOfLeadingZeros(size - 1);

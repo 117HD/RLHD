@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import lombok.NonNull;
-import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.collections.Util.DEFAULT_CAPACITY;
@@ -34,7 +33,7 @@ public final class IntHashSet implements Iterable<Integer> {
 	}
 
 	public IntHashSet(int initialCapacity, float growthFactor) {
-		int cap = max(HDUtils.ceilPow2(initialCapacity), DEFAULT_CAPACITY);
+		int cap = max(ceilPow2(initialCapacity), DEFAULT_CAPACITY);
 
 		keys = new int[cap];
 		distances = new int[cap];
@@ -55,7 +54,7 @@ public final class IntHashSet implements Iterable<Integer> {
 	}
 
 	private void resizeTo(int newCapacity) {
-		newCapacity = HDUtils.ceilPow2(newCapacity);
+		newCapacity = ceilPow2(newCapacity);
 		if (newCapacity == keys.length)
 			return;
 
@@ -77,7 +76,7 @@ public final class IntHashSet implements Iterable<Integer> {
 			return false;
 
 		if (size + other.size >= keys.length * LOAD_FACTOR)
-			resizeTo(HDUtils.ceilPow2( (int) ((size + other.size) / LOAD_FACTOR)));
+			resizeTo(ceilPow2((int) ((size + other.size) / LOAD_FACTOR)));
 
 		boolean modified = false;
 		for (int i = 0; i < other.keys.length; i++) {

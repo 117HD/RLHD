@@ -73,19 +73,6 @@ public final class HDUtils {
 		return cross(out, b, c);
 	}
 
-	public static int ceilPow2(int i) {
-		return (int) ceilPow2((long) i);
-	}
-
-	public static long ceilPow2(long l) {
-		assert l >= 0;
-		l--; // Reduce by 1 in case it's already a power of 2
-		// Fill in all bits below the highest active bit
-		for (int i = 1; i <= 32; i *= 2)
-			l |= l >> i;
-		return l + 1; // Bump it up to the next power of 2
-	}
-
 	public static float[] sunAngles(float altitude, float azimuth) {
 		return multiply(vec(altitude, azimuth), DEG_TO_RAD);
 	}

@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 import java.util.function.UnaryOperator;
 import lombok.Getter;
 import lombok.NonNull;
-import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.collections.Util.DEFAULT_CAPACITY;
@@ -56,7 +55,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 
 		this.growthFactor = growthFactor;
 
-		int cap = max(HDUtils.ceilPow2(initialCapacity), DEFAULT_CAPACITY);
+		int cap = max(ceilPow2(initialCapacity), DEFAULT_CAPACITY);
 
 		keys = new int[cap];
 		values = this.defaultValueSupplier.get(cap);
@@ -77,7 +76,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 	}
 
 	private void resizeTo(int newCapacity) {
-		newCapacity = HDUtils.ceilPow2(newCapacity);
+		newCapacity = ceilPow2(newCapacity);
 		if (newCapacity == keys.length)
 			return;
 

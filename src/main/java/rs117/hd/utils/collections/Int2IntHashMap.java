@@ -2,7 +2,6 @@ package rs117.hd.utils.collections;
 
 import java.util.Arrays;
 import java.util.function.IntUnaryOperator;
-import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.collections.Util.DEFAULT_CAPACITY;
@@ -33,7 +32,7 @@ public final class Int2IntHashMap {
 	}
 
 	public Int2IntHashMap(int initialCapacity, float growthFactor) {
-		int cap = max(HDUtils.ceilPow2(initialCapacity), DEFAULT_CAPACITY);
+		int cap = max(ceilPow2(initialCapacity), DEFAULT_CAPACITY);
 
 		keys = new int[cap];
 		values = new int[cap];
@@ -55,7 +54,7 @@ public final class Int2IntHashMap {
 	}
 
 	private void resizeTo(int newCapacity) {
-		newCapacity = HDUtils.ceilPow2(newCapacity);
+		newCapacity = ceilPow2(newCapacity);
 		if (newCapacity == keys.length)
 			return;
 
