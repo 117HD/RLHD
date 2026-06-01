@@ -52,7 +52,7 @@ import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.calculateSurfaceNormals;
-import static rs117.hd.utils.HDUtils.fastVertex3Hash;
+import static rs117.hd.utils.HDUtils.fastVec3Hash;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -64,7 +64,7 @@ public class ProceduralGenerator {
 	public static final int VERTICES_PER_FACE = 3;
 	public static final boolean[][] TILE_OVERLAY_TRIS = new boolean[][]
 		{
-			/*  0 */ { true, true, true, true }, // Used by tilemodels of varying tri counts?
+			/*  0 */ { true, true, true, true }, // Used by tile models of varying tri counts?
 			/*  1 */ { false, true },
 			/*  2 */ { false, false, true },
 			/*  3 */ { false, false, true },
@@ -108,10 +108,10 @@ public class ProceduralGenerator {
 	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[][] tileVertices, int[] vertexHashes) {
 		tileVertices(ctx, tile, tileVertices);
 
-		vertexHashes[0] = fastVertex3Hash(tileVertices[0]);
-		vertexHashes[1] = fastVertex3Hash(tileVertices[1]);
-		vertexHashes[2] = fastVertex3Hash(tileVertices[2]);
-		vertexHashes[3] = fastVertex3Hash(tileVertices[3]);
+		vertexHashes[0] = fastVec3Hash(tileVertices[0]);
+		vertexHashes[1] = fastVec3Hash(tileVertices[1]);
+		vertexHashes[2] = fastVec3Hash(tileVertices[2]);
+		vertexHashes[3] = fastVec3Hash(tileVertices[3]);
 	}
 
 	public void clearSceneData(SceneContext sceneContext) {
@@ -125,9 +125,9 @@ public class ProceduralGenerator {
 	public static void faceVertexKeys(Tile tile, int face, int[][] vertices, int[] vertexHashes) {
 		faceVertices(tile, face, vertices);
 
-		vertexHashes[0] = fastVertex3Hash(vertices[0]);
-		vertexHashes[1] = fastVertex3Hash(vertices[1]);
-		vertexHashes[2] = fastVertex3Hash(vertices[2]);
+		vertexHashes[0] = fastVec3Hash(vertices[0]);
+		vertexHashes[1] = fastVec3Hash(vertices[1]);
+		vertexHashes[2] = fastVec3Hash(vertices[2]);
 	}
 
 	public static int[] faceVertexKeys(Tile tile, int face) {
@@ -400,7 +400,7 @@ public class ProceduralGenerator {
 		final int tileExY = tileY + ctx.sceneOffset;
 		final int[][] tileHeights = ctx.scene.getTileHeights()[tile.getRenderLevel()];
 
-		// swVertex
+		// South-west
 		ivec3(
 			vertices[0],
 			tileX * LOCAL_TILE_SIZE,
@@ -408,7 +408,7 @@ public class ProceduralGenerator {
 			tileHeights[tileExX][tileExY]
 		);
 
-		// seVertex
+		// South-east
 		ivec3(
 			vertices[1],
 			(tileX + 1) * LOCAL_TILE_SIZE,
@@ -416,7 +416,7 @@ public class ProceduralGenerator {
 			tileHeights[tileExX + 1][tileExY]
 		);
 
-		// nwVertex
+		// North-west
 		ivec3(
 			vertices[2],
 			tileX * LOCAL_TILE_SIZE,
@@ -424,7 +424,7 @@ public class ProceduralGenerator {
 			tileHeights[tileExX][tileExY + 1]
 		);
 
-		//neVertex
+		// North-east
 		ivec3(
 			vertices[3],
 			(tileX + 1) * LOCAL_TILE_SIZE,
@@ -675,8 +675,6 @@ public class ProceduralGenerator {
 			Arrays.fill(vertexDefaultColor, 0, faceCount * VERTICES_PER_FACE, false);
 
 			if (tile.getSceneTilePaint() != null) {
-				// tile paint
-
 				var override = sceneContext.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_MAIN);
 				if (override.waterType != WaterType.NONE) {
 					// skip water tiles
@@ -716,8 +714,6 @@ public class ProceduralGenerator {
 						vertexDefaultColor[i] = true;
 				}
 			} else if (tile.getSceneTileModel() != null) {
-				// tile model
-
 				SceneTileModel sceneTileModel = tile.getSceneTileModel();
 
 				final int[] faceColorsA = sceneTileModel.getTriangleColorA();
@@ -1094,9 +1090,7 @@ public class ProceduralGenerator {
 								faceVertexKeys(tile, face, vertices, hashes);
 
 								for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-									if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 &&
-									    vertices[vertex][1] % LOCAL_TILE_SIZE == 0
-									) {
+									if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 && vertices[vertex][1] % LOCAL_TILE_SIZE == 0) {
 										// The vertex is at the corner of the tile;
 										// simply use the offset in the tile grid array.
 
@@ -1134,7 +1128,7 @@ public class ProceduralGenerator {
 			}
 
 			if (sceneContext instanceof LegacySceneContext) {
-				byte[][][] sceneUnderwaterDepthLevels = ((LegacySceneContext)sceneContext).underwaterDepthLevels;
+				byte[][][] sceneUnderwaterDepthLevels = ((LegacySceneContext) sceneContext).underwaterDepthLevels;
 				for (int z = 0; z < MAX_Z; ++z)
 					for (int x = 0; x < sizeX; ++x)
 						System.arraycopy(this.underwaterDepthLevels[z][x], 0, sceneUnderwaterDepthLevels[z][x], 0, sizeY);
@@ -1172,8 +1166,7 @@ public class ProceduralGenerator {
 		int[] hsl3 = ColorUtils.unpackRawHsl(color3);
 
 		// shift model hues from red->yellow
-		int hue = 7;
-		hsl1[0] = hsl2[0] = hsl3[0] = hue;
+		hsl1[0] = hsl2[0] = hsl3[0] = 7;
 
 		if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.GRADIENT) {
 			final int triA = model.getFaceIndices1()[face];
