@@ -65,6 +65,8 @@ public final class IntHashSet implements Iterable<Integer> {
 		Arrays.fill(keys, EMPTY);
 
 		mask = newCapacity - 1;
+		lowTide = Integer.MAX_VALUE;
+		highTide = 0;
 
 		// The size will remain the same after, but we make
 		// it negative to avoid growth while repopulating
