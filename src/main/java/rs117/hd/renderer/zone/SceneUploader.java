@@ -1452,14 +1452,28 @@ public class SceneUploader implements AutoCloseable {
 		final SceneTileModel tileModel = tile.getSceneTileModel();
 		final SceneTilePaint tilePaint = tile.getSceneTilePaint();
 
-		final int terrainData;
+		final WaterType waterType;
+		final int waterDepth;
+		final int plane;
 		if(tilePaint != null) {
 			TileOverride tileOverride = tileOverrideManager.getOverride(ctx, tile, worldPos);
-			WaterType waterType = tilePaint != null ? proceduralGenerator.seasonalWaterType(tileOverride, tilePaint.getTexture()) : WaterType.NONE;
+			waterType = tilePaint != null ? proceduralGenerator.seasonalWaterType(tileOverride, tilePaint.getTexture()) : WaterType.NONE;
+			plane = tile.getRenderLevel();
 
-			terrainData = HDUtils.packTerrainData(false, 0, waterType, tile.getRenderLevel());
+			if(waterType == WaterType.NONE) {
+				ProceduralGenerator.tileVertexKeys(ctx, tile, vertices, vertexKeys);
+				int swDepth = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeys[0], 0);
+				int seDepth = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeys[1], 0);
+				int nwDepth = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeys[2], 0);
+				int neDepth = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeys[3], 0);
+				waterDepth = ceil((swDepth + seDepth + nwDepth + neDepth) / 4.0f);
+			} else {
+				waterDepth = 0;
+			}
 		} else {
-			terrainData = 0;
+			waterType = WaterType.NONE;
+			waterDepth = 0;
+			plane = 0;
 		}
 
 		int orientSin = 0;
@@ -1487,7 +1501,6 @@ public class SceneUploader implements AutoCloseable {
 			vz += z;
 
 			if (modelOverride.terrainVertexSnap && heightFrac <= modelOverride.terrainVertexSnapThreshold) {
-				int plane = tile.getRenderLevel();
 				int tileExX = clamp(ctx.sceneOffset + ((vx + basex) / 128), 0, EXTENDED_SCENE_SIZE - 1);
 				int tileExY = clamp(ctx.sceneOffset + ((vz + basez) / 128), 0, EXTENDED_SCENE_SIZE - 1);
 
@@ -1746,10 +1759,18 @@ public class SceneUploader implements AutoCloseable {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
+			final int faceWaterDepthA = waterType != WaterType.NONE ? max(0, vy1 - waterDepth) : 0;
+			final int faceWaterDepthB = waterType != WaterType.NONE ? max(0, vy2 - waterDepth) : 0;
+			final int faceWaterDepthC = waterType != WaterType.NONE ? max(0, vy3 - waterDepth) : 0;
+
+			final int terrainDataA = HDUtils.packTerrainData(false, faceWaterDepthA, waterType, plane);
+			final int terrainDataB = HDUtils.packTerrainData(false, faceWaterDepthB, waterType, plane);
+			final int terrainDataC = HDUtils.packTerrainData(false, faceWaterDepthC, waterType, plane);
+
 			final int texturedFaceIdx = tb.putFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
-				terrainData, terrainData, terrainData
+				terrainDataA, terrainDataB, terrainDataC
 			);
 
 			vb.putStaticVertex(
@@ -2065,7 +2086,9 @@ public class SceneUploader implements AutoCloseable {
 		final int tileExX = (tileObject.getX() >> Perspective.LOCAL_COORD_BITS) + ctx.sceneOffset;
 		final int tileExY = (tileObject.getY() >> Perspective.LOCAL_COORD_BITS) + ctx.sceneOffset;
 
-		final int terrainData;
+
+		final WaterType waterType;
+		final int waterDepth;
 		if (0 <= tileExX && tileExX < Constants.EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < Constants.EXTENDED_SCENE_SIZE) {
 			Tile tile = ctx.scene.getExtendedTiles()[plane][tileExX][tileExY];
 			if(tile.getBridge() != null)
@@ -2074,15 +2097,27 @@ public class SceneUploader implements AutoCloseable {
 			SceneTilePaint tilePaint = tile.getSceneTilePaint();
 			if(tilePaint != null) {
 				TileOverride tileOverride = tileOverrideManager.getOverride(ctx, tile, worldPos);
-				WaterType waterType = proceduralGenerator.seasonalWaterType(tileOverride, tilePaint.getTexture());
+				waterType = proceduralGenerator.seasonalWaterType(tileOverride, tilePaint.getTexture());
 
-				terrainData = HDUtils.packTerrainData(false, 0, waterType, tile.getRenderLevel());
+				if(waterType == WaterType.NONE) {
+					ProceduralGenerator.tileVertexKeys(ctx, tile, vertices, vertexKeys);
+					int swDepth = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeys[0], 0);
+					int seDepth = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeys[1], 0);
+					int nwDepth = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeys[2], 0);
+					int neDepth = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeys[3], 0);
+					waterDepth = ceil((swDepth + seDepth + nwDepth + neDepth) / 4.0f);
+				} else {
+					waterDepth = 0;
+				}
 			} else {
-				terrainData = 0;
+				waterType = WaterType.NONE;
+				waterDepth = 0;
 			}
 		} else {
-			terrainData = 0;
+			waterType = WaterType.NONE;
+			waterDepth = 0;
 		}
+
 
 		int orientSin = 0;
 		int orientCos = 0;
@@ -2202,10 +2237,18 @@ public class SceneUploader implements AutoCloseable {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
+			final int faceWaterDepthA = waterType != WaterType.NONE ? (int) max(0, modelLocal[vertexOffsetA + 1] - waterDepth) : 0;
+			final int faceWaterDepthB = waterType != WaterType.NONE ? (int) max(0, modelLocal[vertexOffsetB + 1] - waterDepth) : 0;
+			final int faceWaterDepthC = waterType != WaterType.NONE ? (int) max(0, modelLocal[vertexOffsetC + 1] - waterDepth) : 0;
+
+			final int terrainDataA = HDUtils.packTerrainData(false, faceWaterDepthA, waterType, plane);
+			final int terrainDataB = HDUtils.packTerrainData(false, faceWaterDepthB, waterType, plane);
+			final int terrainDataC = HDUtils.packTerrainData(false, faceWaterDepthC, waterType, plane);
+
 			final int texturedFaceIdx = tb.putFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
-				terrainData, terrainData, terrainData
+				terrainDataA, terrainDataB, terrainDataC
 			);
 
 			vb.putVertex(
