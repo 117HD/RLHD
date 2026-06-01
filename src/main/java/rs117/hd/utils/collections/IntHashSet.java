@@ -85,6 +85,7 @@ public final class IntHashSet implements Iterable<Integer> {
 		if (other == null || other.size == 0)
 			return false;
 
+		int originalSize = size;
 		if (size + other.size >= keys.length * LOAD_FACTOR)
 			resizeTo(ceilPow2((int) ((size + other.size) / LOAD_FACTOR)));
 
@@ -100,7 +101,7 @@ public final class IntHashSet implements Iterable<Integer> {
 				modified = true;
 		}
 
-		size += newSize;
+		size += newSize + originalSize;
 		return modified;
 	}
 
