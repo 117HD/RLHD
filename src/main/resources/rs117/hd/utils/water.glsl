@@ -88,12 +88,13 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
     // Ignore refraction for the underwater position, since it would require computing a quartic equation
+    vec3 cameraPos = sceneCamera.position;
     vec3 fragPos = IN.position;
     float fragDist = length(fragPos - cameraPos);
     vec3 underwaterNormal = normalize(IN.normal);
     vec3 surfaceNormal = vec3(0, -1, 0); // Assume a flat surface
 
-    vec3 sunDir = -lightDir; // The light's direction from the sun towards any fragment
+    vec3 sunDir = -Camera_getForward(directionalCamera); // The light's direction from the sun towards any fragment
     vec3 refractedSunDir = refract(sunDir, surfaceNormal, IOR_AIR_TO_WATER);
     float sunToFragDist = depth / refractedSunDir.y;
 
@@ -412,6 +413,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec4 src = vec4(0);
 
         vec3 light = lightColor * lightStrength + ambientColor * ambientStrength;
+        vec3 lightDir = Camera_getForward(directionalCamera);
 
         src.rgb = mix(bgColor, bgColor2, cosAngle) * light;
 //        src += srgbToLinear(fogColor) * fresnel;
@@ -465,6 +467,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     reflection.a += (gradientNoise(gl_FragCoord.xy) - .5) / 0xFF;
 
     vec3 additionalLight = vec3(0);
+    vec3 lightDir = Camera_getForward(directionalCamera);
 
     vec3 omega_i = lightDir; // Incoming = frag to sun
     vec3 omega_o = viewDir; // Outgoing = frag to camera

@@ -107,9 +107,9 @@ layout (location = 0) in vec3 vPosition;
 
         fFlatNormal = worldNormal;
 
-        vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
+        vec4 clipPosition = sceneCamera.viewProjMatrix * vec4(worldPosition, 1.0);
         int depthBias = (alphaBiasHsl >> 16) & 0xff;
-        if (projectionMatrix[2][3] != 0) // Disable depth bias for orthographic projection
+        if (Camera_isPerspective(sceneCamera)) // Disable depth bias for orthographic projection
             clipPosition.z += depthBias / 128.0;
 
         gl_Position = clipPosition;

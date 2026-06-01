@@ -24,8 +24,6 @@
  */
 #include <utils/constants.glsl>
 
-#define REPROJECT_REFLECTION_UV 1
-
 vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     // Only use the reflection map when enabled, the height difference is negligible & the surface is roughly flat
     // TODO: decide which tris to enable the reflection for in the geometry shader
@@ -39,7 +37,7 @@ vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
         #endif
         return srgbToLinear(fogColor);
 
-    float dist = length(IN.position - cameraPos);
+    float dist = length(IN.position - sceneCamera.position);
     distortionFactor *= 1 - exp(-dist * .0004);
 
     // Don't distort too close to the shore
@@ -50,17 +48,7 @@ vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     // Assume a fixed reflection depth; tweak this constant for your scene scale.
     const float REFLECTION_DEPTH = 20.0;
     vec3 reflectedPos = IN.position + flatR * REFLECTION_DEPTH;
-
-#if REPROJECT_REFLECTION_UV
-    // Project through previous frame's mirrored viewProj
-    // TODO: THis should be stored in a reflection UBO for each plane
-    vec4 prevClip = prevReflectionProjection * vec4(reflectedPos, 1.0);
-    vec2 prevNDC  = prevClip.xy / prevClip.w;
-    vec2 prevUV   = prevNDC * 0.5 + 0.5;
-    vec2 baseUV   = prevUV * prevSceneResolution;
-#else
-    vec2 baseUV = gl_FragCoord.xy;
-#endif
+    vec2 baseUV = Camera_worldToPixel(reflectionCamera, reflectedPos, prevSceneResolution);
 
     // Distortion (same as before)
     vec3 flatRhoriz = flatR * vec3(1, 0, 1);

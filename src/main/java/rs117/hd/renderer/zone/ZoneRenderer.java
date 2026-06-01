@@ -506,8 +506,7 @@ public class ZoneRenderer implements Renderer {
 				directionalCamera.setZoom(1.0f);
 				directionalCamera.setViewportWidth(directionalSize);
 				directionalCamera.setViewportHeight(directionalSize);
-
-				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
+				plugin.uboGlobal.directionalCamera.write(directionalCamera);
 			}
 
 			shouldDrawRoofShadows =
@@ -515,11 +514,8 @@ public class ZoneRenderer implements Renderer {
 				plugin.configRoofShadows &&
 				environmentManager.allowRoofShadows();
 
-			plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
-			plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
-			plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
-			plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
-			plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+			plugin.uboGlobal.sceneCamera.write(sceneCamera);
+			plugin.uboGlobal.directionalCamera.write(directionalCamera);
 
 			if (plugin.configDynamicLights != DynamicLights.NONE) {
 				// Update lights UBO
@@ -810,14 +806,8 @@ public class ZoneRenderer implements Renderer {
 
 		sceneReflectionProgram.use();
 
-		plugin.uboGlobal.projectionMatrix.set(reflectionCamera.getViewProjMatrix());
-		plugin.uboGlobal.cameraPos.set(
-			reflectionCamera.getPositionX(),
-			reflectionCamera.getPositionY(),
-			reflectionCamera.getPositionZ()
-		);
-		plugin.uboGlobal.prevReflectionProjection.set(reflectionCamera.getViewProjMatrix());
-		plugin.uboGlobal.prevSceneResolution.set(plugin.sceneResolution);
+		plugin.uboGlobal.sceneCamera.write(reflectionCamera);
+		plugin.uboGlobal.reflectionCamera.write(reflectionCamera);
 		plugin.uboGlobal.upload();
 
 		frameTimer.begin(Timer.RENDER_REFLECTIONS);
@@ -867,8 +857,7 @@ public class ZoneRenderer implements Renderer {
 		}
 		glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
 
-		plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
-		plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
+		plugin.uboGlobal.sceneCamera.write(sceneCamera);
 		plugin.uboGlobal.upload();
 
 		frameTimer.begin(Timer.DRAW_SCENE);

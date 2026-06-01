@@ -101,7 +101,7 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
-        pos = projectionMatrix * pos;
+        pos = sceneCamera.viewProjMatrix * pos;
 
         gl_Position = pos;
         EmitVertex();

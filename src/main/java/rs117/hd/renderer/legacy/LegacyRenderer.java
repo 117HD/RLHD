@@ -698,10 +698,11 @@ public class LegacyRenderer implements Renderer {
 					}
 				}
 
-				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
-				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
-				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
-				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+				plugin.uboGlobal.sceneCamera.position.set(plugin.cameraPosition);
+				plugin.uboGlobal.sceneCamera.viewMatrix.set(plugin.viewMatrix);
+				plugin.uboGlobal.sceneCamera.projMatrix.set(plugin.projMatrix);
+				plugin.uboGlobal.sceneCamera.viewProjMatrix.set(plugin.viewProjMatrix);
+				plugin.uboGlobal.sceneCamera.invViewProjMatrix.set(plugin.invViewProjMatrix);
 				plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 				plugin.uboGlobal.upload();
 			}
@@ -1051,7 +1052,6 @@ public class LegacyRenderer implements Renderer {
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to
 			// get the light's direction vector pointing away from each fragment
-			plugin.uboGlobal.lightDir.set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
 
 			if (plugin.configColorFilter != ColorFilter.NONE) {
 				plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
@@ -1098,7 +1098,8 @@ public class LegacyRenderer implements Renderer {
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 
-				plugin.uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
+				plugin.uboGlobal.directionalCamera.viewMatrix.set(lightViewMatrix);
+				plugin.uboGlobal.directionalCamera.viewProjMatrix.set(lightProjectionMatrix);
 				plugin.uboGlobal.upload();
 
 				glEnable(GL_CULL_FACE);

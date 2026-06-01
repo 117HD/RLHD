@@ -105,7 +105,7 @@ layout (location = 0) in vec3 vPosition;
             fOpacity = opacity;
         #endif
 
-        vec4 clipPosition = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
+        vec4 clipPosition = directionalCamera.viewProjMatrix * vec4(worldPosition, shouldCastShadow);
         if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
             clipPosition.z += SHADOW_TRANSPARENCY_BIAS;
         gl_Position = clipPosition;
@@ -161,7 +161,7 @@ layout (location = 0) in vec3 vPosition;
                 gOpacity = opacity;
             #endif
         #else
-            gl_Position = lightProjectionMatrix * vec4(vPosition, shouldCastShadow);
+            gl_Position = directionalCamera.viewProjMatrix * vec4(vPosition, shouldCastShadow);
             #if SHADOW_TRANSPARENCY
                 fOpacity = opacity;
             #endif

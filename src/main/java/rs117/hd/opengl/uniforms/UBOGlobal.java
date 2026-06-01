@@ -1,5 +1,6 @@
 package rs117.hd.opengl.uniforms;
 
+import rs117.hd.utils.Camera;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -21,6 +22,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property colorFilterFade = addProperty(PropertyType.Float, "colorFilterFade");
 
 	public Property sceneResolution = addProperty(PropertyType.IVec2, "sceneResolution");
+	public Property prevSceneResolution = addProperty(PropertyType.IVec2, "prevSceneResolution");
 	public Property tiledLightingResolution = addProperty(PropertyType.IVec2, "tiledLightingResolution");
 
 	public Property ambientColor = addProperty(PropertyType.FVec3, "ambientColor");
@@ -44,18 +46,11 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property waterHeight = addProperty(PropertyType.Int, "waterHeight");
 	public Property legacyWaterColor = addProperty(PropertyType.FVec3, "legacyWaterColor");
 
-	public Property lightDir = addProperty(PropertyType.FVec3, "lightDir");
-
 	public Property pointLightsCount = addProperty(PropertyType.Int, "pointLightsCount");
 
-	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");
-	public Property viewMatrix = addProperty(PropertyType.Mat4, "viewMatrix");
-	public Property projectionMatrix = addProperty(PropertyType.Mat4, "projectionMatrix");
-	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
-	public Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");
-
-	public Property prevReflectionProjection = addProperty(PropertyType.Mat4, "prevReflectionProjection");
-	public Property prevSceneResolution = addProperty(PropertyType.IVec2, "prevSceneResolution");
+	public Camera.CameraStruct sceneCamera = addStruct(new Camera.CameraStruct());
+	public Camera.CameraStruct directionalCamera = addStruct(new Camera.CameraStruct());
+	public Camera.CameraStruct reflectionCamera = addStruct(new Camera.CameraStruct());
 
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");

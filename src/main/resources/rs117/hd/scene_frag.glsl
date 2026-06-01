@@ -86,6 +86,7 @@ vec2 worldUvs(float scale) {
 #include <utils/lights.glsl>
 
 void main() {
+    vec3 cameraPos = sceneCamera.position;
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
@@ -174,6 +175,7 @@ void main() {
             uv2 += uvFlow * flowMapStrength;
             uv3 += uvFlow * flowMapStrength;
         }
+        vec3 lightDir = Camera_getForward(directionalCamera);
 
         // Set up tangent-space transformation matrix
         vec3 N = normalize(IN.normal);

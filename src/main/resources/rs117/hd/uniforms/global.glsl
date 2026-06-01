@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utils/constants.glsl>
+#include <utils/camera.glsl>
 
 layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
@@ -15,6 +16,7 @@ layout(std140) uniform UBOGlobal {
     float colorFilterFade;
 
     ivec2 sceneResolution;
+    ivec2 prevSceneResolution;
     ivec2 tiledLightingResolution;
 
     vec3 ambientColor;
@@ -38,17 +40,11 @@ layout(std140) uniform UBOGlobal {
     int waterHeight;
     vec3 legacyWaterColor;
 
-    vec3 lightDir;
-
     int pointLightsCount;
 
-    vec3 cameraPos;
-    mat4 viewMatrix;
-    mat4 projectionMatrix;
-    mat4 invProjectionMatrix;
-    mat4 lightProjectionMatrix;
-    mat4 prevReflectionProjection;
-    ivec2 prevSceneResolution;
+    Camera sceneCamera;
+    Camera directionalCamera;
+    Camera reflectionCamera; // TODO: Move to a reflection UBO
 
     float lightningBrightness;
     float elapsedTime;
