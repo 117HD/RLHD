@@ -171,10 +171,11 @@ public class Area {
 		final int length = aabbs.length;
 		if (sortedAabbs != null && areaBounds != null) {
 			final int corner = getClosestCorner(worldPoint[0], worldPoint[1]);
-			final int offset = corner * length;
+			final int start = corner * length;
+			final int end = start + length;
 
-			for (int i = 0; i < length; i++) {
-				if (sortedAabbs[offset + i].contains(worldPoint))
+			for (int i = start; i < end; i++) {
+				if (sortedAabbs[i].contains(worldPoint))
 					return true;
 			}
 		} else {

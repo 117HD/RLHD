@@ -135,11 +135,15 @@ public class AABB {
 	}
 
 	public boolean contains(int... worldPos) {
-		assert worldPos.length >= 2 : "Expected X, Y & possibly a plane, got: " + Arrays.toString(worldPos);
+		final int length = worldPos.length;
+		assert length >= 2 : "Expected X, Y & possibly a plane, got: " + Arrays.toString(worldPos);
+		final int x = worldPos[0];
+		final int y = worldPos[1];
+		final int z = length > 2 ? worldPos[2] : 0;
 		return
-			minX <= worldPos[0] && worldPos[0] <= maxX &&
-			minY <= worldPos[1] && worldPos[1] <= maxY &&
-			(worldPos.length < 3 || minZ <= worldPos[2] && worldPos[2] <= maxZ);
+			minX <= x && x <= maxX &&
+			minY <= y && y <= maxY &&
+			(length < 3 || minZ <= z && z <= maxZ);
 	}
 
 	public boolean contains(WorldPoint location) {
