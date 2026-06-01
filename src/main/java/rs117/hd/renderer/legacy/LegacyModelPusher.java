@@ -22,7 +22,6 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
@@ -150,8 +149,8 @@ public class LegacyModelPusher {
 	}
 
 	/**
-	 * Pushes model data to staging buffers in the provided {@link SceneContext}, and writes the pushed number of
-	 * vertices and UVs to {@link SceneContext#modelPusherResults}.
+	 * Pushes model data to staging buffers in the provided {@link LegacySceneContext}, and writes the pushed number of
+	 * vertices and UVs to {@link LegacySceneContext#modelPusherResults}.
 	 *
 	 * @param sceneContext   object for the scene to push model data for
 	 * @param tile           that the model is associated with, if any

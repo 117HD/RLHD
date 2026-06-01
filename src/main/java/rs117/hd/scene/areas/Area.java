@@ -184,12 +184,10 @@ public class Area {
 			}
 		}
 
-		if (includeUnhiding) {
-			for (AABB aabb : unhideAreas) {
+		if (includeUnhiding)
+			for (AABB aabb : unhideAreas)
 				if (aabb.contains(worldPoint))
 					return true;
-			}
-		}
 
 		return false;
 	}
