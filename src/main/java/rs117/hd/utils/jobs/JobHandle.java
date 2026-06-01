@@ -45,6 +45,13 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 	static JobHandle obtain() {
 		JobHandle handle = POOL.acquire();
+		if (handle.refCounter.get() > 0) {
+			// Handle is still referenced by another thread (IE: ClientThread)
+			// It needs to be released before it can be reused within the job system
+			// Add to the end of the queue and create a new Handle for the time being
+			POOL.recycle(handle);
+			handle = new JobHandle();
+		}
 		handle.setJobState(STATE_NONE);
 		handle.refCounter.set(1);
 		handle.dependants.clear();
