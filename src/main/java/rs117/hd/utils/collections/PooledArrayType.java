@@ -2,13 +2,10 @@ package rs117.hd.utils.collections;
 
 import java.lang.reflect.Array;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.StampedLock;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 
 import static java.lang.Integer.numberOfLeadingZeros;
@@ -95,33 +92,6 @@ public enum PooledArrayType {
 			CURRENT_POOL_BYTES.set(0);
 	}
 
-	public static void printDetailedStats() {
-		final List<String> columnNames = new ArrayList<>();
-		final List<List<String>> data = new ArrayList<>();
-
-		columnNames.add("Type");
-		columnNames.add("Items");
-		columnNames.add("Allocated");
-
-		for (int v = 0; v < VALUES.length; v++) {
-			final PooledArrayType type = VALUES[v];
-			final List<String> row = new ArrayList<>();
-			row.add(type.name());
-			row.add(String.valueOf(type.getElementCount()));
-			row.add(formatBytes(type.getCurrentCacheSize()));
-			data.add(row);
-		}
-
-		log.debug("\n{}",
-			HDUtils.buildTable(
-				"PooledArrayType stats (" + formatBytes(getCurrentTotalCacheSize()) + ")",
-				columnNames,
-				null,
-				data
-			)
-		);
-	}
-
 	public static void shutdown() {
 		CURRENT_POOL_BYTES.set(0);
 
@@ -147,26 +117,6 @@ public enum PooledArrayType {
 
 	public static long getCurrentTotalCacheSize() {
 		return CURRENT_POOL_BYTES.get();
-	}
-
-	public int getElementCount() {
-		int size = 0;
-		for (int b = 0; b < buckets.length; b++) {
-			for (int s = 0; s < STRIPES; s++)
-				size += buckets[b][s].stack.size();
-		}
-		return size;
-	}
-
-	public long getCurrentCacheSize() {
-		long size = 0;
-		for (int b = 0; b < buckets.length; b++) {
-			for (int s = 0; s < STRIPES; s++) {
-				Bucket bucket = buckets[b][s];
-				size += (long) bucket.stack.size() * bucket.size;
-			}
-		}
-		return size * stride;
 	}
 
 	private void maybeCleanup(int b, int s, Bucket bucket) {
