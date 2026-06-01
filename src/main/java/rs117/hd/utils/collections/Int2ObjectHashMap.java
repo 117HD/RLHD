@@ -91,11 +91,17 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 		Arrays.fill(keys, EMPTY);
 
 		mask = newCapacity - 1;
-		size = 0;
+
+		// The size will remain the same after, but we make
+		// it negative to avoid growth while repopulating
+		int newSize = size;
+		size = -newSize;
 
 		for (int i = 0; i < oldKeys.length; i++)
 			if (oldKeys[i] != EMPTY)
 				put(oldKeys[i], oldValues[i]);
+
+		size = newSize;
 	}
 
 	public boolean put(int key, T value) {

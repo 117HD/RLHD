@@ -64,12 +64,18 @@ public final class IntHashSet implements Iterable<Integer> {
 		distances = new int[newCapacity];
 		Arrays.fill(keys, EMPTY);
 
-		size = 0;
 		mask = newCapacity - 1;
+
+		// The size will remain the same after, but we make
+		// it negative to avoid growth while repopulating
+		int newSize = size;
+		size = -newSize;
 
 		for (int i = 0; i < oldKeys.length; i++)
 			if (oldKeys[i] != EMPTY)
 				add(oldKeys[i]);
+
+		size = newSize;
 	}
 
 	public boolean addAll(IntHashSet other) {
