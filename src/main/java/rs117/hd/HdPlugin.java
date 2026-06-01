@@ -1350,6 +1350,7 @@ public class HdPlugin extends Plugin {
 
 		float resolutionScale = config.sceneResolution() / 100f;
 		sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
+		uboGlobal.sceneResolution.set(sceneResolution);
 		uboGlobal.upload(); // Ensure this is up to date with rendering
 
 		// Create and bind the FBO
