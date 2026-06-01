@@ -169,8 +169,8 @@ public final class IntHashSet implements Iterable<Integer> {
 	public void clear() {
 		if (size == 0)
 			return;
-		Arrays.fill(keys, lowTide, highTide, EMPTY);
-		Arrays.fill(distances, lowTide, highTide, 0);
+		Arrays.fill(keys, lowTide, highTide + 1, EMPTY);
+		Arrays.fill(distances, lowTide, highTide + 1, 0);
 		size = 0;
 	}
 

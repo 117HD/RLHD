@@ -223,9 +223,9 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 	public void clear() {
 		if (size == 0)
 			return;
-		Arrays.fill(keys, lowTide, highTide, EMPTY);
-		Arrays.fill(values, lowTide, highTide, null);
-		Arrays.fill(distances, lowTide, highTide, 0);
+		Arrays.fill(keys, lowTide, highTide + 1, EMPTY);
+		Arrays.fill(values, lowTide, highTide + 1, null);
+		Arrays.fill(distances, lowTide, highTide + 1, 0);
 		lowTide = keys.length;
 		highTide = 0;
 		size = 0;
