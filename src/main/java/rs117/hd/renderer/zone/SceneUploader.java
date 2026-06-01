@@ -58,7 +58,6 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_MAIN;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_OVERLAY;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_UNDERLAY;
-import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.UNDERWATER_HSL;
@@ -359,7 +358,7 @@ public class SceneUploader implements AutoCloseable {
 					final int msx = (mzx << 3) + xoff;
 					final int msz = (mzz << 3) + zoff;
 					final Tile t = tiles[level][msx][msz];
-					if (t == null || !ctx.isTileFlagSet(level, msx, msz, TILE_WATER_FLAG))
+					if (t == null /* || !ctx.isTileFlagSet(level, msx, msz, TILE_WATER_FLAG) */) // Disabled doesn't work for some tiles (IE: Alloviz Estuary)
 						continue;
 
 					if (onBeforeProcessTile != null)
