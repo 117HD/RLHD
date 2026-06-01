@@ -33,6 +33,7 @@ public final class IntHashSet implements Iterable<Integer> {
 	}
 
 	public IntHashSet(int initialCapacity, float growthFactor) {
+		assert growthFactor > 1;
 		int cap = max(ceilPow2(initialCapacity), DEFAULT_CAPACITY);
 
 		keys = new int[cap];
@@ -66,7 +67,7 @@ public final class IntHashSet implements Iterable<Integer> {
 		size = 0;
 		mask = newCapacity - 1;
 
-		for (int i = 0; i < min(oldKeys.length, newCapacity); i++)
+		for (int i = 0; i < oldKeys.length; i++)
 			if (oldKeys[i] != EMPTY)
 				add(oldKeys[i]);
 	}

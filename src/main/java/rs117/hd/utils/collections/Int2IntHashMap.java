@@ -32,6 +32,7 @@ public final class Int2IntHashMap {
 	}
 
 	public Int2IntHashMap(int initialCapacity, float growthFactor) {
+		assert growthFactor > 1;
 		int cap = max(ceilPow2(initialCapacity), DEFAULT_CAPACITY);
 
 		keys = new int[cap];
@@ -70,7 +71,7 @@ public final class Int2IntHashMap {
 		mask = newCapacity - 1;
 		size = 0;
 
-		for (int i = 0; i < min(oldKeys.length, newCapacity); i++)
+		for (int i = 0; i < oldKeys.length; i++)
 			if (oldKeys[i] != EMPTY)
 				put(oldKeys[i], oldValues[i]);
 	}

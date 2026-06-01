@@ -48,6 +48,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 
 	@SuppressWarnings("unchecked")
 	public Int2ObjectHashMap(int initialCapacity, float growthFactor, Supplier<T> defaultValueSupplier) {
+		assert growthFactor > 1;
 		this.defaultValueSupplier =
 			defaultValueSupplier != null
 				? defaultValueSupplier
@@ -92,7 +93,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 		mask = newCapacity - 1;
 		size = 0;
 
-		for (int i = 0; i < min(oldKeys.length, newCapacity); i++)
+		for (int i = 0; i < oldKeys.length; i++)
 			if (oldKeys[i] != EMPTY)
 				put(oldKeys[i], oldValues[i]);
 	}
