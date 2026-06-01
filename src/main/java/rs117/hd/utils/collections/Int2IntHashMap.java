@@ -146,7 +146,7 @@ public final class Int2IntHashMap {
 	}
 
 	private boolean put(int key, int value, boolean overwrite) {
-		if (size + 1.0 >= keys.length * LOAD_FACTOR)
+		if (size >= (int) (keys.length * LOAD_FACTOR))
 			grow();
 
 		final int[] keys = this.keys;

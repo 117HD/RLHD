@@ -116,7 +116,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 	}
 
 	private boolean put(int key, T value, boolean overwrite) {
-		if (size + 1.0 >= keys.length * LOAD_FACTOR)
+		if (size >= (int) (keys.length * LOAD_FACTOR))
 			grow();
 
 		final int[] keys = this.keys;

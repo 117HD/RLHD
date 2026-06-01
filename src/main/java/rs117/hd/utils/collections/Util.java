@@ -9,6 +9,11 @@ public final class Util {
 	public static final float LOAD_FACTOR = 0.7f;
 	public static final float DEFAULT_GROWTH = 1.5f;
 
+	static {
+		// noinspection ConstantValue
+		assert LOAD_FACTOR < 1 : "Must be less than 1 for to avoid infinite loops";
+	}
+
 	public static int murmurHash3(int x) {
 		x ^= x >>> 16;
 		x *= 0x85ebca6b;

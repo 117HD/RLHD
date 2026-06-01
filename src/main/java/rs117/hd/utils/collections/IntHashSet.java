@@ -90,7 +90,7 @@ public final class IntHashSet implements Iterable<Integer> {
 	}
 
 	public boolean add(int key) {
-		if (size + 1.0 >= keys.length * LOAD_FACTOR)
+		if (size >= (int) (keys.length * LOAD_FACTOR))
 			grow();
 
 		final int[] keys = this.keys;
