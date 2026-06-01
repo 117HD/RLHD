@@ -82,6 +82,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.ReflectionMode;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
@@ -429,7 +430,6 @@ public class HdPlugin extends Plugin {
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
 	public boolean configLinearAlphaBlending;
-	public boolean configPlanarReflections;
 	public boolean configRoofReflections;
 	public boolean configWaterTransparency;
 	public boolean configLegacyWater;
@@ -437,6 +437,7 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public int configDetailDrawDistance;
+	public ReflectionMode configPlanarReflections;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -1511,11 +1512,11 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void updateWaterReflectionsFbo() {
-		if (!configPlanarReflections || sceneViewport == null)
+		if (configPlanarReflections == ReflectionMode.DISABLED || sceneViewport == null)
 			return;
 
 		// Clamp this to our target range since RuneLite allows manually typing numbers outside the range
-		float resolutionScale = config.waterReflectionResolution() / 100f;
+		float resolutionScale = config.planarReflections().resolutionFrac;
 		int[] resolution = {
 			Math.max(1, Math.round(sceneViewport[2] * resolutionScale)),
 			Math.max(1, Math.round(sceneViewport[3] * resolutionScale))
@@ -1839,7 +1840,7 @@ public class HdPlugin extends Plugin {
 		configHideVanillaWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
-		configPlanarReflections = config.enablePlanarReflections();
+		configPlanarReflections = config.planarReflections();
 		configRoofReflections = config.enableRoofReflections();
 		configWaterTransparency = config.waterTransparency();
 

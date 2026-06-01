@@ -41,6 +41,7 @@ import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.ReflectionMode;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -814,8 +815,8 @@ public interface HdPluginConfig extends Config
 		position = 2,
 		section = waterSettings
 	)
-	default boolean enablePlanarReflections() {
-		return true;
+	default ReflectionMode planarReflections() {
+		return ReflectionMode.HIGH;
 	}
 
 	String KEY_ROOF_REFLECTIONS = "planarRoofReflections";
@@ -828,23 +829,6 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean enableRoofReflections() {
 		return true;
-	}
-
-	String KEY_WATER_REFLECTION_RESOLUTION = "waterReflectionResolution";
-	@ConfigItem(
-		keyName = KEY_WATER_REFLECTION_RESOLUTION,
-		name = "Reflection Resolution",
-		description =
-			"Render water reflections at a different resolution.<br>" +
-			"50% is better for performance, but produces more shimmering artifacts.<br>" +
-			"Resolutions above 100% may improve visual quality, at the expense of performance.",
-		position = 4,
-		section = waterSettings
-	)
-	@Units(Units.PERCENT)
-	@Range(min = 1, max = 200)
-	default int waterReflectionResolution() {
-		return 100;
 	}
 
 	String KEY_SHORELINE_CAUSTICS = "shorelineCaustics";

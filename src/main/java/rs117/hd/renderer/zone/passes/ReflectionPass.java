@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.hooks.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.config.ReflectionMode;
 import rs117.hd.opengl.uniforms.UBOReflectionPlanes;
 import rs117.hd.opengl.uniforms.UBOReflectionPlanes.WaterPlaneStruct;
 import rs117.hd.overlays.FrameTimer;
@@ -141,7 +142,7 @@ public class ReflectionPass implements RenderPass {
 			return;
 		}
 
-		waterReflectionsEnabled = plugin.configPlanarReflections && !plugin.configLegacyWater;
+		waterReflectionsEnabled = plugin.configPlanarReflections != ReflectionMode.DISABLED && !plugin.configLegacyWater;
 		if(!waterReflectionsEnabled)
 			return;
 
@@ -224,7 +225,6 @@ public class ReflectionPass implements RenderPass {
 		public final Camera camera;
 		public final CommandBuffer cmd;
 		public final int layer;
-		public int zoneCount;
 		public float waterHeight;
 		public boolean shouldRender;
 
@@ -249,8 +249,7 @@ public class ReflectionPass implements RenderPass {
 		}
 
 		public void render() {
-			final WorldViewContext ctx = sceneManager.getRoot();
-			if (!shouldRender || !plugin.configPlanarReflections || plugin.configLegacyWater || !ctx.sceneContext.hasWater)
+			if(!shouldRender)
 				return;
 			shouldRender = false;
 
