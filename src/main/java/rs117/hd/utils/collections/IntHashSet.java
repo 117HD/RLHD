@@ -194,30 +194,47 @@ public final class IntHashSet implements Iterable<Integer> {
 	@Override
 	@NonNull
 	public Iterator<Integer> iterator() {
-		return new Iterator<>() {
-			private int index = -1;
-			private int visited = 0;
+		return new Iter();
+	}
 
-			@Override
-			public boolean hasNext() {
-				return visited < size;
-			}
+	private class Iter implements Iterator<Integer> {
+		private int index = -1;
+		private int nextIndex = -1;
 
-			@Override
-			public Integer next() {
-				if (!hasNext())
-					throw new NoSuchElementException();
+		Iter() {
+			advance();
+		}
 
-				while (++index < keys.length) {
-					int key = keys[index];
-					if (key != EMPTY) {
-						visited++;
-						return key;
-					}
-				}
+		private void advance() {
+			do {
+				nextIndex++;
+			} while (nextIndex < keys.length && keys[nextIndex] == EMPTY);
+		}
 
+		@Override
+		public boolean hasNext() {
+			return nextIndex < keys.length;
+		}
+
+		@Override
+		public Integer next() {
+			if (!hasNext())
 				throw new NoSuchElementException();
-			}
-		};
+
+			index = nextIndex;
+			advance();
+
+			return keys[index];
+		}
+
+		@Override
+		public void remove() {
+			if (index == -1)
+				throw new IllegalStateException();
+
+			removeIndex(index);
+			nextIndex = index;
+			index = -1;
+		}
 	}
 }

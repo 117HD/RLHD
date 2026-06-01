@@ -253,7 +253,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 	@Override
 	@NonNull
 	public Iterator<Entry<T>> iterator() {
-		return new EntryIterator();
+		return new Iter();
 	}
 
 	public static class Entry<T> {
@@ -263,13 +263,13 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 		private T value;
 	}
 
-	private class EntryIterator implements Iterator<Entry<T>> {
+	private class Iter implements Iterator<Entry<T>> {
 		private int index = -1;
 		private int nextIndex = -1;
 
 		private final Entry<T> entry = new Entry<>();
 
-		EntryIterator() {
+		Iter() {
 			advance();
 		}
 
@@ -303,8 +303,8 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 				throw new IllegalStateException();
 
 			removeIndex(index);
+			nextIndex = index;
 			index = -1;
-			nextIndex--;
 		}
 	}
 }
