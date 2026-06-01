@@ -835,24 +835,6 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_MEMORY_MONITORING = "memoryMonitoring";
-	@ConfigItem(
-		keyName = KEY_MEMORY_MONITORING,
-		name = "Crash prevention",
-		description =
-			"Warns and potentially turns off the plugin to prevent crashing due to running out of memory.<br>" +
-			"RuneLite has a default memory limit of 768 MB, which can lead to crashing while loading scenes,<br>" +
-			"if you have too many plugins installed using up most of the memory.",
-		warning =
-			"This option monitors the amount of memory available in order to prevent crashing.\n" +
-			"By turning this off, your client may crash when loading large scenes.",
-		section = miscellaneousSettings
-	)
-	default boolean memoryMonitoring()
-	{
-		return true;
-	}
-
 	String KEY_MACOS_INTEL_WORKAROUND = "macosIntelWorkaround";
 	@ConfigItem(
 		keyName = KEY_MACOS_INTEL_WORKAROUND,

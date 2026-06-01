@@ -31,7 +31,6 @@ import com.google.inject.Binder;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
@@ -70,7 +69,6 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
-import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -120,7 +118,6 @@ import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
-import rs117.hd.utils.GCMonitor;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.HDVariables;
@@ -160,7 +157,7 @@ public class HdPlugin extends Plugin {
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
 
-	public static final String DISCORD_URL = "http://117hd.github.io/discord";
+	public static final String DISCORD_URL = "https://discord.gg/U4p6ChjgSE";
 	public static final String RUNELITE_URL = "https://runelite.net";
 	public static final String AMD_DRIVER_URL = "https://www.amd.com/en/support";
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
@@ -189,7 +186,6 @@ public class HdPlugin extends Plugin {
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
 	public static final int MAX_DISTANCE = EXTENDED_SCENE_SIZE;
-	public static final int MAX_EXPANDED_CHUNKS = 5;
 	public static final int MAX_FOG_DEPTH = 100;
 	public static final int TILED_LIGHTING_TILE_SIZE = 16;
 
@@ -308,9 +304,6 @@ public class HdPlugin extends Plugin {
 	@Inject
 	private JobSystem jobSystem;
 
-	@Inject
-	private GCMonitor gcMonitor;
-
 	@Getter
 	@Inject
 	public TiledLightingShaderProgram tiledLightingImageStoreProgram;
@@ -424,7 +417,6 @@ public class HdPlugin extends Plugin {
 	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
-	public boolean configMemoryMonitoring;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
 	public DynamicLights configDynamicLights;
@@ -444,7 +436,6 @@ public class HdPlugin extends Plugin {
 
 	@Getter
 	private boolean isPluginStopPending;
-	private String pluginStopReason;
 	@Getter
 	private boolean isActive;
 	private boolean lwjglInitialized;
@@ -474,6 +465,8 @@ public class HdPlugin extends Plugin {
 	public int drawnTempRenderableCount;
 	@Getter
 	public int drawnDynamicRenderableCount;
+	@Getter
+	public long garbageCollectionCount;
 
 	private int startupCount;
 	public int frame;
@@ -518,7 +511,7 @@ public class HdPlugin extends Plugin {
 		gson = GsonUtils.wrap(injector.getInstance(Gson.class));
 
 		clientThread.invoke(() -> {
-			try (var ignored = gcMonitor.acquireSuspendHandle()) {
+			try {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
@@ -716,7 +709,6 @@ public class HdPlugin extends Plugin {
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
-				gcMonitor.startup();
 				areaManager.startUp();
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
@@ -800,7 +792,6 @@ public class HdPlugin extends Plugin {
 			waterTypeManager.shutDown();
 			materialManager.shutDown();
 			textureManager.shutDown();
-			gcMonitor.shutdown();
 
 			ConcurrentPool.destroyAll();
 			PooledArrayType.shutdown();
@@ -814,29 +805,20 @@ public class HdPlugin extends Plugin {
 				debugCallback.free();
 			debugCallback = null;
 
-			System.gc();
+			// force main buffer provider rebuild to turn off alpha channel
+			client.resizeCanvas();
 
-			clientThread.invokeLater(() -> {
-				// force main buffer provider rebuild to turn off alpha channel
-				client.resizeCanvas();
-
-				// Force the client to reload the scene to reset any scene modifications & update GPU flags
-				if (client.getGameState() == GameState.LOGGED_IN)
-					client.setGameState(GameState.LOADING);
-			});
+			// Force the client to reload the scene to reset any scene modifications & update GPU flags
+			if (client.getGameState() == GameState.LOGGED_IN)
+				client.setGameState(GameState.LOADING);
 		});
 	}
 
 	public void requestPluginStop() {
-		requestPluginStop(null);
-	}
-
-	public void requestPluginStop(String reason) {
 		if (isPluginStopPending)
 			return;
-		isPluginStopPending = true;
-		pluginStopReason = reason;
 		log.debug("Requesting plugin to stop when safe");
+		isPluginStopPending = true;
 	}
 
 	public void stopPlugin() {
@@ -1689,7 +1671,6 @@ public class HdPlugin extends Plugin {
 		configHideVanillaWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
-		configMemoryMonitoring = config.memoryMonitoring();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -2003,15 +1984,8 @@ public class HdPlugin extends Plugin {
 		frame = (frame + 1) & Integer.MAX_VALUE;
 
 		if (isPluginStopPending) {
-			if (pluginStopReason != null) {
-				String[] lines = pluginStopReason.split("\n");
-				for (String line : lines)
-					client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", ColorUtil.prependColorTag(line, Color.RED), null);
-			}
-			log.debug("Shutdown has been requested, stopping plugin due to reason: {}", pluginStopReason != null ? pluginStopReason : "unknown");
-			pluginStopReason = null;
+			log.debug("Shutdown has been requested, stopping plugin");
 			isPluginStopPending = false;
-
 			stopPlugin();
 			return;
 		}
@@ -2051,7 +2025,6 @@ public class HdPlugin extends Plugin {
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
 
 		gamevalManager.update();
-		gcMonitor.update();
 		DestructibleHandler.flushPendingDestruction();
 	}
 

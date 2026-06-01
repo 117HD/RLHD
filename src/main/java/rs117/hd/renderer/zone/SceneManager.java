@@ -32,7 +32,6 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.DestructibleHandler;
-import rs117.hd.utils.GCMonitor;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.PooledArrayType;
@@ -91,9 +90,6 @@ public class SceneManager {
 
 	@Inject
 	private FrameTimer frameTimer;
-
-	@Inject
-	private GCMonitor gcMonitor;
 
 	private UBOWorldViews uboWorldViews;
 
@@ -444,7 +440,6 @@ public class SceneManager {
 
 			Stopwatch sw = Stopwatch.createStarted();
 			root.loadTime = root.uploadTime = root.sceneSwapTime = 0;
-			root.gcSuspendHandle = gcMonitor.acquireSuspendHandle();
 			root.isLoading = true;
 
 			root.sceneLoadGroup.complete();
@@ -684,19 +679,6 @@ public class SceneManager {
 		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
 		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
 
-		if (gcMonitor.isCloseToRunningOutOfMemory()) {
-			long sceneCleanupTime = sw.elapsed(TimeUnit.MILLISECONDS);
-			log.warn("Running low on memory, clearing current scene context & triggering GC");
-			long availBefore = Runtime.getRuntime().freeMemory();
-			root.sceneContext = null;
-			System.gc();
-			log.debug(
-				"Freed Memory: {} - {} ms",
-				formatBytes(Runtime.getRuntime().freeMemory() - availBefore),
-				sw.elapsed(TimeUnit.MILLISECONDS) - sceneCleanupTime
-			);
-		}
-
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
 		int blockingCount = root.sceneLoadGroup.getPendingCount();
 		root.sceneLoadGroup.complete();
@@ -743,10 +725,6 @@ public class SceneManager {
 		ctx.zones = nextZones;
 		root.sceneContext = nextSceneContext;
 		root.isLoading = false;
-
-		if (root.gcSuspendHandle != null)
-			root.gcSuspendHandle.close();
-		root.gcSuspendHandle = null;
 
 		nextZones = null;
 		nextSceneContext = null;

@@ -18,7 +18,6 @@ import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.DestructibleHandler;
-import rs117.hd.utils.GCMonitor;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.JobGroup;
@@ -62,7 +61,6 @@ public class WorldViewContext {
 	Zone[][] zones;
 	GLBuffer vboM;
 	boolean isLoading = true;
-	GCMonitor.SuspendHandle gcSuspendHandle;
 
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;
