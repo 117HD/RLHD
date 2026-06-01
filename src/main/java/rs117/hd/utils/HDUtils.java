@@ -56,14 +56,7 @@ public final class HDUtils {
 	public static final int UNDERWATER_HSL = 6676;
 
 	public static int fastVec3Hash(int[] vPos) {
-		int hash = vPos[0];
-		hash = 31 * hash + ',';
-
-		hash = 31 * hash + vPos[1];
-		hash = 31 * hash + ',';
-
-		hash = 31 * hash + vPos[2];
-		return 31 * hash + ',';
+		return (vPos[1] >> 2) << 20 | (vPos[2] + 40 * 128 >> 5) << 10 | (vPos[0] + 40 * 128 >> 5);
 	}
 
 	public static int[] calculateSurfaceNormals(int[] out, int[] a, int[] b, int[] c) {
