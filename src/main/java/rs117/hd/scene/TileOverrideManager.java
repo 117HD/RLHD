@@ -256,19 +256,19 @@ public class TileOverrideManager {
 		var match = TileOverride.NONE;
 		int index = match.index;
 
+		outer:
 		for (int i = 0; i < ids.length; i++) {
 			final int id = ids[i];
 			final var entries = idMatchOverrides.get(id);
 			if (entries == null)
 				continue;
-			for (int k = 0; k < entries.size(); k++) {
-				final var entry = entries.get(k);
+			for (int j = 0; j < entries.size(); j++) {
+				final var entry = entries.get(j);
 				if (entry.area.containsPoint(worldPos)) {
 					index = entry.index;
 					match = entry.replacement;
 					match.queriedAsOverlay = (id & OVERLAY_FLAG) != 0;
-					i = ids.length;
-					break;
+					break outer;
 				}
 			}
 		}
