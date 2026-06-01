@@ -951,7 +951,7 @@ public class ProceduralGenerator {
 										if (model.getTriangleColorA()[face] != HIDDEN_HSL || override.forced)
 											sceneContext.setVertexIsLand(hashes[vertex]);
 
-										if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 && vertices[vertex][1] % LOCAL_TILE_SIZE == 0) {
+										if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 && vertices[vertex][2] % LOCAL_TILE_SIZE == 0) {
 											int vX = (vertices[vertex][0] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 											int vY = (vertices[vertex][2] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 
@@ -1052,7 +1052,7 @@ public class ProceduralGenerator {
 								faceVertexKeys(tile, face, vertices, hashes);
 
 								for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-									if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 && vertices[vertex][1] % LOCAL_TILE_SIZE == 0) {
+									if (vertices[vertex][0] % LOCAL_TILE_SIZE == 0 && vertices[vertex][2] % LOCAL_TILE_SIZE == 0) {
 										// The vertex is at the corner of the tile;
 										// simply use the offset in the tile grid array.
 
@@ -1067,7 +1067,7 @@ public class ProceduralGenerator {
 										// of the vertex.
 
 										float lerpX = fract(vertices[vertex][0] / (float) LOCAL_TILE_SIZE);
-										float lerpY = fract(vertices[vertex][1] / (float) LOCAL_TILE_SIZE);
+										float lerpY = fract(vertices[vertex][2] / (float) LOCAL_TILE_SIZE);
 										float northHeightOffset = mix(
 											getHeightOffset(z, x, y + 1),
 											getHeightOffset(z, x + 1, y + 1),
