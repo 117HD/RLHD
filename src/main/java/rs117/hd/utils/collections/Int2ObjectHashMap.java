@@ -77,6 +77,7 @@ public final class Int2ObjectHashMap<T> implements Iterable<Int2ObjectHashMap.En
 	}
 
 	private void resizeTo(int newCapacity) {
+		assert size <= newCapacity;
 		newCapacity = ceilPow2(newCapacity);
 		if (newCapacity == keys.length)
 			return;
