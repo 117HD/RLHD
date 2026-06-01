@@ -38,7 +38,6 @@
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 uniform usampler2DArray tiledLightingArray;
-uniform sampler2D waterReflectionMap;
 uniform sampler2DArray waterNormalMaps;
 
 flat in int fWorldViewId;

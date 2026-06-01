@@ -35,15 +35,12 @@ layout(std140) uniform UBOGlobal {
     bool underwaterEnvironment;
     bool underwaterCaustics;
     vec3 underwaterCausticsColor;
-
-    int waterHeight;
     vec3 legacyWaterColor;
 
     int pointLightsCount;
 
     Camera sceneCamera;
     Camera directionalCamera;
-    Camera reflectionCamera; // TODO: Move to a reflection UBO
 
     float lightningBrightness;
     float elapsedTime;

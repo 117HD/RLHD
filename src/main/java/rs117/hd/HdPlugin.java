@@ -104,6 +104,7 @@ import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
+import rs117.hd.renderer.zone.passes.ReflectionPass;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -396,7 +397,7 @@ public class HdPlugin extends Plugin {
 	public int[] waterReflectionResolution;
 	public int fboWaterReflection;
 	public int texWaterReflection;
-	private int texWaterReflectionDepthMap;
+	public int texWaterReflectionDepthMap;
 
 	public int texWaterNormalMaps;
 
@@ -1525,6 +1526,8 @@ public class HdPlugin extends Plugin {
 		destroyWaterReflectionsFbo();
 		waterReflectionResolution = resolution;
 
+		// TODO: Move into ZoneRenderer
+
 		// Create and bind the FBO
 		fboWaterReflection = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fboWaterReflection);
@@ -1532,28 +1535,28 @@ public class HdPlugin extends Plugin {
 		// Both of these are required color-renderable texture formats
 		int format = configLinearAlphaBlending ? GL_SRGB8 : GL_RGB8;
 
-		// Create texture
+		// Create color texture array
 		texWaterReflection = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, texWaterReflection);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, resolution[0], resolution[1], 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterReflection);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		checkGLErrors();
 
-		// Bind texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texWaterReflection, 0);
+		// Bind layer 0 of the color texture array to COLOR_ATTACHMENT0
+		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texWaterReflection, 0, 0);
 		glReadBuffer(GL_NONE);
 
-		// Create texture
+		// Create depth texture array
 		texWaterReflectionDepthMap = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, texWaterReflectionDepthMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, resolution[0], resolution[1], 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterReflectionDepthMap);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT16, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
 		checkGLErrors();
 
-		// Bind texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texWaterReflectionDepthMap, 0);
+		// Bind layer 0 of the depth texture array to DEPTH_ATTACHMENT
+		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texWaterReflectionDepthMap, 0, 0);
 		checkGLErrors();
 	}
 

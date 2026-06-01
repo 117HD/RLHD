@@ -75,7 +75,7 @@ public class ModelStreamingManager {
 
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
-	private final float[][][] modelCullingFrustums = new float[2][6][4];
+	private float[][][] modelCullingFrustums = new float[2][6][4];
 	private int modelCullingFrustumCount = 0;
 	private int numRenderThreads = -1;
 
@@ -86,7 +86,15 @@ public class ModelStreamingManager {
 	}
 
 	public void addModelCullingFrustums(Camera camera) {
-		assert modelCullingFrustumCount < modelCullingFrustums.length;
+		if(modelCullingFrustumCount >= modelCullingFrustums.length) {
+			float[][][] newCullingFrustums = new float[modelCullingFrustums.length + 1][6][4];
+			for(int i = 0; i < modelCullingFrustumCount; i++) {
+				for (int j = 0; j < 6; j++)
+					System.arraycopy(modelCullingFrustums[i][j], 0, newCullingFrustums[i + 1][j], 0, 4);
+			}
+			modelCullingFrustums = newCullingFrustums;
+		}
+
 		camera.getFrustumPlanes(modelCullingFrustums[modelCullingFrustumCount++]);
 	}
 

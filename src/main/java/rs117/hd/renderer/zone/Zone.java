@@ -335,7 +335,7 @@ public class Zone implements Destructible {
 		copyTo(glDrawLength, drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
+	public void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
 		drawIdx = 0;
 
 		int currentLevel = ctx.level;
@@ -715,7 +715,7 @@ public class Zone implements Destructible {
 		alphaSortingJob.queue(camera);
 	}
 
-	void renderAlpha(
+	public void renderAlpha(
 		CommandBuffer cmd,
 		int zx,
 		int zz,

@@ -41,15 +41,12 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property underwaterEnvironment = addProperty(PropertyType.Int, "underwaterEnvironment");
 	public Property underwaterCaustics = addProperty(PropertyType.Int, "underwaterCaustics");
 	public Property underwaterCausticsColor = addProperty(PropertyType.FVec3, "underwaterCausticsColor");
-
-	public Property waterHeight = addProperty(PropertyType.Int, "waterHeight");
 	public Property legacyWaterColor = addProperty(PropertyType.FVec3, "legacyWaterColor");
 
 	public Property pointLightsCount = addProperty(PropertyType.Int, "pointLightsCount");
 
 	public Camera.CameraStruct sceneCamera = addStruct(new Camera.CameraStruct());
 	public Camera.CameraStruct directionalCamera = addStruct(new Camera.CameraStruct());
-	public Camera.CameraStruct reflectionCamera = addStruct(new Camera.CameraStruct());
 
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
