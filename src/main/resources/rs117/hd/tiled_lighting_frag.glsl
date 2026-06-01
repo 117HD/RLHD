@@ -93,6 +93,7 @@ void main() {
 #endif
 
     const vec2 tileSize = vec2(TILED_LIGHTING_TILE_SIZE);
+    vec2 sceneResolution = sceneCamera.viewport;
     vec2 screenUV = fUv * sceneResolution;
     vec2 tileOrigin = floor(screenUV / tileSize) * tileSize;
 

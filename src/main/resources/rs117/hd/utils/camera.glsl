@@ -7,6 +7,7 @@ struct Camera {
     float farPlane;
 
     int  isReverseZ;
+    ivec2 viewport;
 
     mat4 viewMatrix;
     mat4 projMatrix;
@@ -83,8 +84,8 @@ vec3 Camera_rayDirection(const Camera cam, vec2 uv) {
     return normalize(target.xyz / target.w - cam.position);
 }
 
-vec2 Camera_worldToPixel(const Camera cam, vec3 worldPos, vec2 resolution) {
+vec2 Camera_worldToPixel(const Camera cam, vec3 worldPos) {
     vec3 ndc = Camera_projectWorld(cam, worldPos);
     vec2 uv  = ndc.xy * 0.5 + 0.5;
-    return uv * resolution;
+    return uv * cam.viewport;
 }

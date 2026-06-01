@@ -595,6 +595,7 @@ public final class Camera {
 		public Property farPlane = addProperty(PropertyType.Float, "farPlane");
 
 		public Property isReverseZ = addProperty(PropertyType.Int, "isReverseZ");
+		public Property viewport = addProperty(PropertyType.IVec2, "viewport");
 
 		public Property viewMatrix = addProperty(PropertyType.Mat4, "viewMatrix");
 		public Property projMatrix = addProperty(PropertyType.Mat4, "projMatrix");
@@ -610,6 +611,7 @@ public final class Camera {
 			position.set(camera.position);
 			nearPlane.set(camera.nearPlane);
 			farPlane.set(camera.farPlane);
+			viewport.set(camera.viewportWidth, camera.viewportHeight);
 			isReverseZ.set(camera.reverseZ ? 1 : 0);
 			viewMatrix.set(camera.viewMatrix);
 			projMatrix.set(camera.projectionMatrix);

@@ -48,7 +48,7 @@ vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     // Assume a fixed reflection depth; tweak this constant for your scene scale.
     const float REFLECTION_DEPTH = 20.0;
     vec3 reflectedPos = IN.position + flatR * REFLECTION_DEPTH;
-    vec2 baseUV = Camera_worldToPixel(reflectionCamera, reflectedPos, prevSceneResolution);
+    vec2 baseUV = Camera_worldToPixel(reflectionCamera, reflectedPos);
 
     // Distortion (same as before)
     vec3 flatRhoriz = flatR * vec3(1, 0, 1);
@@ -64,7 +64,7 @@ vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
         distortion = (R.xz - flatR.xz) * distortionFactor;
     }
 
-    vec2 uv = (baseUV + distortion) / sceneResolution;
+    vec2 uv = (baseUV + distortion) / sceneCamera.viewport;
     vec3 c = texture(waterReflectionMap, uv).rgb;
 
     #if !LINEAR_ALPHA_BLENDING

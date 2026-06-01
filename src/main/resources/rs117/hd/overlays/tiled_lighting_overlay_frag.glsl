@@ -53,7 +53,7 @@ void main() {
         // When both tests fail to include the light, the unincluded portion is colored white
 
         // Draw texel centers
-        if (all(equal(floor(fUv * sceneResolution), floor(texelCenter * sceneResolution)))) {
+        if (all(equal(floor(fUv * sceneCamera.viewport), floor(texelCenter * sceneCamera.viewport)))) {
             FragColor = vec4(1);
             return;
         }

@@ -15,8 +15,6 @@ layout(std140) uniform UBOGlobal {
     int colorFilter;
     float colorFilterFade;
 
-    ivec2 sceneResolution;
-    ivec2 prevSceneResolution;
     ivec2 tiledLightingResolution;
 
     vec3 ambientColor;
