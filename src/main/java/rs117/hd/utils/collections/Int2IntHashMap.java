@@ -153,7 +153,8 @@ public final class Int2IntHashMap {
 		final int[] distances = this.distances;
 
 		int idx = murmurHash3(key) & mask;
-		for (int dist = 0; ; dist++) {
+		int dist = 0;
+		while (true) {
 			final int k = keys[idx];
 
 			if (k == EMPTY) {
