@@ -55,8 +55,15 @@ public final class HDUtils {
 	public static final int HIDDEN_HSL = 12345678;
 	public static final int UNDERWATER_HSL = 6676;
 
-	public static int fastVec3Hash(int[] vPos) {
-		return (vPos[1] >> 2) << 20 | (vPos[2] + 40 * 128 >> 5) << 10 | (vPos[0] + 40 * 128 >> 5);
+	public static final int EXTENDED_SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
+
+	public static int tileVertexUuid(Tile tile, int[] vertex) {
+		// Tile X and Z coordinates are always multiples of 32, so 10 bits is sufficient for 184 tiles.
+		// The render level is the tile's original plane prior to setting up bridge tiles, and should be unique.
+		return
+			tile.getRenderLevel() << 20 |
+			(vertex[2] + EXTENDED_SCENE_OFFSET * LOCAL_TILE_SIZE >> 5) << 10 |
+			(vertex[0] + EXTENDED_SCENE_OFFSET * LOCAL_TILE_SIZE >> 5);
 	}
 
 	public static int[] calculateSurfaceNormals(int[] out, int[] a, int[] b, int[] c) {

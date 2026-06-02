@@ -52,7 +52,7 @@ import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.calculateSurfaceNormals;
-import static rs117.hd.utils.HDUtils.fastVec3Hash;
+import static rs117.hd.utils.HDUtils.tileVertexUuid;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -108,10 +108,10 @@ public class ProceduralGenerator {
 	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[][] tileVertices, int[] vertexHashes) {
 		tileVertices(ctx, tile, tileVertices);
 
-		vertexHashes[0] = fastVec3Hash(tileVertices[0]);
-		vertexHashes[1] = fastVec3Hash(tileVertices[1]);
-		vertexHashes[2] = fastVec3Hash(tileVertices[2]);
-		vertexHashes[3] = fastVec3Hash(tileVertices[3]);
+		vertexHashes[0] = tileVertexUuid(tile, tileVertices[0]);
+		vertexHashes[1] = tileVertexUuid(tile, tileVertices[1]);
+		vertexHashes[2] = tileVertexUuid(tile, tileVertices[2]);
+		vertexHashes[3] = tileVertexUuid(tile, tileVertices[3]);
 	}
 
 	public void clearSceneData(SceneContext sceneContext) {
@@ -125,9 +125,9 @@ public class ProceduralGenerator {
 	public static void faceVertexKeys(Tile tile, int face, int[][] vertices, int[] vertexHashes) {
 		faceVertices(tile, face, vertices);
 
-		vertexHashes[0] = fastVec3Hash(vertices[0]);
-		vertexHashes[1] = fastVec3Hash(vertices[1]);
-		vertexHashes[2] = fastVec3Hash(vertices[2]);
+		vertexHashes[0] = tileVertexUuid(tile, vertices[0]);
+		vertexHashes[1] = tileVertexUuid(tile, vertices[1]);
+		vertexHashes[2] = tileVertexUuid(tile, vertices[2]);
 	}
 
 	public static int[] faceVertexKeys(Tile tile, int face) {
