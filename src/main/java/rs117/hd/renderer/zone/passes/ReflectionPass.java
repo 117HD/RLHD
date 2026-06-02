@@ -1,8 +1,6 @@
 package rs117.hd.renderer.zone.passes;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -80,7 +78,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
 @Slf4j
-public class ReflectionPass implements RenderPass {
+public final class ReflectionPass implements RenderPass {
 	public static final int MAX_REFLECTION_RENDERS = 4;
 	public static final int WATER_HEIGHT_THRESHOLD = LOCAL_TILE_SIZE;
 
@@ -103,7 +101,9 @@ public class ReflectionPass implements RenderPass {
 	@Inject
 	private FrameTimer frameTimer;
 
-	private final HashMap<Integer, Integer> waterLevelWeights = new HashMap<>();
+	private final int[] weightKeys   = new int[MAX_REFLECTION_RENDERS * 8];
+	private final int[] weightCounts = new int[MAX_REFLECTION_RENDERS * 8];
+
 	private final WaterPlane[] planes = new WaterPlane[MAX_REFLECTION_RENDERS];
 	private int activePlanes = 0;
 
@@ -264,8 +264,9 @@ public class ReflectionPass implements RenderPass {
 			return;
 
 		activePlanes = 0;
-		for(int i = 0; i < MAX_REFLECTION_RENDERS; i++) {
-			waterLevelWeights.clear();
+		for (int i = 0; i < MAX_REFLECTION_RENDERS; i++) {
+			int numLevels = 0;
+
 			for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
 				for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
 					final Zone zone = ctx.zones[x][z];
@@ -281,30 +282,41 @@ public class ReflectionPass implements RenderPass {
 							break;
 						}
 					}
-
-					if(isInRange)
+					if (isInRange)
 						continue;
 
-					waterLevelWeights.put(
-						zone.mostPrevalentWaterLevel,
-						waterLevelWeights.getOrDefault(zone.mostPrevalentWaterLevel, 0) + 1
-					);
+					final int level = zone.mostPrevalentWaterLevel;
+
+					// Linear scan to find or insert this level
+					int slot = -1;
+					for (int j = 0; j < numLevels; j++) {
+						if (weightKeys[j] == level) {
+							slot = j;
+							break;
+						}
+					}
+
+					if (slot == -1) {
+						slot = numLevels++;
+						weightKeys[slot] = level;
+						weightCounts[slot] = 0;
+					}
+					weightCounts[slot]++;
 				}
 			}
 
-			Map.Entry<Integer, Integer> best = null;
-			for (var entry : waterLevelWeights.entrySet()) {
-				if (best == null || entry.getValue() > best.getValue())
-					best = entry;
-			}
-
-			if(best == null)
+			if (numLevels == 0)
 				break;
 
-			final WaterPlane plane = planes[activePlanes];
-			plane.setup(zoneRenderer.sceneCamera, best.getKey());
-			streamingManager.addModelCullingFrustums(plane.camera);
+			int bestSlot = 0;
+			for (int j = 1; j < numLevels; j++) {
+				if (weightCounts[j] > weightCounts[bestSlot])
+					bestSlot = j;
+			}
 
+			final WaterPlane plane = planes[activePlanes];
+			plane.setup(zoneRenderer.sceneCamera, weightKeys[bestSlot]);
+			streamingManager.addModelCullingFrustums(plane.camera);
 			activePlanes++;
 		}
 		uboReflectionPlanes.activePlanes.set(activePlanes);
@@ -340,7 +352,7 @@ public class ReflectionPass implements RenderPass {
 		uboReflectionPlanes.destroy();
 	}
 
-	class WaterPlane {
+	final class WaterPlane {
 		public final WaterPlaneStruct struct;
 		public final Camera camera;
 		public final CommandBuffer cmd;
