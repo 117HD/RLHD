@@ -673,7 +673,6 @@ public class SceneManager {
 		int blockingCount = root.sceneLoadGroup.getPendingCount();
 		root.sceneLoadGroup.complete();
 
-		HashMap<Integer, Integer> waterLevels = new HashMap<>();
 		int totalOpaque = 0;
 		int totalAlpha = 0;
 		for (int x = 0; x < NUM_ZONES; ++x) {
@@ -766,14 +765,11 @@ public class SceneManager {
 		ctx.initialize(renderState, injector);
 		subs[worldViewId] = ctx;
 
-		for (int x = 0; x < ctx.sizeX; ++x) {
-			for (int z = 0; z < ctx.sizeZ; ++z) {
+		for (int x = 0; x < ctx.sizeX; ++x)
+			for (int z = 0; z < ctx.sizeZ; ++z)
 				ZoneUploadJob
 					.build(ctx, sceneContext, ctx.zones[x][z], true, x, z)
 					.queue(ctx.sceneLoadGroup);
-
-			}
-		}
 
 		ctx.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 	}

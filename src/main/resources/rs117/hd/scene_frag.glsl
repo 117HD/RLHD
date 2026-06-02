@@ -26,6 +26,11 @@
 #version 330
 
 #define DISPLAY_BASE_COLOR 0
+#define DISPLAY_UV 0
+#define DISPLAY_NORMAL 0
+#define DISPLAY_TANGENT 0
+#define DISPLAY_SHADOWS 0
+#define DISPLAY_LIGHTING 0
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
@@ -136,18 +141,18 @@ void main() {
     }
 
     if (RENDER_PASS != RENDER_PASS_WATER) {
-        vec2 uv = IN.uv;
+        vec2 blendedUv = IN.uv;
 
         float mipBias = 0;
         // Vanilla tree textures rely on UVs being clamped horizontally, which HD doesn't do at the texture level.
         // Instead we manually clamp vanilla textures with transparency here. Including the transparency check
         // allows texture wrapping to work correctly for the mirror shield.
-        if ((fMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
-            uv.x = clamp(uv.x, 0, .984375);
+         if ((fMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
+            blendedUv.x = clamp(blendedUv.x, 0, .984375);
 
-        vec2 uv1 = uv;
-        vec2 uv2 = uv;
-        vec2 uv3 = uv;
+        vec2 uv1 = blendedUv;
+        vec2 uv2 = blendedUv;
+        vec2 uv3 = blendedUv;
 
         // Scroll UVs
         uv1 += material1.scrollDuration * elapsedTime;
@@ -182,6 +187,21 @@ void main() {
             mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
         #else
             mat3 TBN = mat3(T, B, N * min(length(T), length(B)));
+        #endif
+
+        #if DISPLAY_UV
+            FragColor = vec4(fract(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z), 0.0, 1.0);
+            if (DISPLAY_UV == 1) return; // Redundant, for syntax highlighting in IntelliJ
+        #endif
+
+        #if DISPLAY_NORMAL
+            FragColor = vec4(N * 0.5 + 0.5, 1.0);
+            if (DISPLAY_NORMAL == 1) return; // Redundant, for syntax highlighting in IntelliJ
+        #endif
+
+        #if DISPLAY_TANGENT
+            FragColor = vec4(TBN[0] * 0.5 + 0.5, 1.0);
+            if (DISPLAY_TANGENT == 1) return; // Redundant, for syntax highlighting in IntelliJ
         #endif
 
         float selfShadowing = 0;
@@ -338,7 +358,12 @@ void main() {
         if ((fMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
             shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals);
         shadow = max(shadow, selfShadowing);
-        float inverseShadow = 1 - shadow * baseColor1.a;
+        float inverseShadow = 1 - shadow;
+
+        #if DISPLAY_SHADOWS
+            FragColor = vec4(inverseShadow, inverseShadow, inverseShadow, 1.0);
+            if (DISPLAY_SHADOWS == 1) return; // Redundant, for syntax highlighting in IntelliJ
+        #endif
 
         // specular
         vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
@@ -378,7 +403,7 @@ void main() {
         vec3 dirLightColor = lightColor * lightStrength;
 
         // underwater caustics based on directional light
-        if (underwaterEnvironment && underwaterCaustics) {
+        if (underwaterCaustics && underwaterEnvironment) {
             float scale = 12.8;
             vec2 causticsUv = worldUvs(scale);
 
@@ -449,6 +474,11 @@ void main() {
         vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
         underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
 
+        #if DISPLAY_LIGHTING
+            FragColor = vec4(compositeLight, 1.0);
+            if (DISPLAY_LIGHTING == 1) return; // Redundant, for syntax highlighting in IntelliJ
+        #endif
+
         float unlit = dot(IN.texBlend, vec3(
             getMaterialIsUnlit(material1),
             getMaterialIsUnlit(material2),
@@ -490,11 +520,12 @@ void main() {
         #endif
 
         #if VANILLA_COLOR_BANDING
+            outputColor.rgb = linearToSrgb(outputColor.rgb);
             outputColor.rgb = srgbToHsv(outputColor.rgb);
             outputColor.b = floor(outputColor.b * 127) / 127;
             outputColor.rgb = hsvToSrgb(outputColor.rgb);
+            outputColor.rgb = srgbToLinear(outputColor.rgb);
         #endif
-
     }
 
     vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(cameraPos.xz / 128));

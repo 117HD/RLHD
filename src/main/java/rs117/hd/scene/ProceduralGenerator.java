@@ -428,7 +428,7 @@ public class ProceduralGenerator {
 							for (int vertexKey : vertexKeys)
 							{
 								sceneContext.vertexIsWater.put(vertexKey, true);
-							};
+							}
 						}
 					}
 					else if (tile.getSceneTileModel() != null)
@@ -548,7 +548,6 @@ public class ProceduralGenerator {
 							// Skip the tile if it isn't water.
 							continue;
 						}
-
 						// If it's on the edge of the scene, reset the depth so
 						// it creates a 'wall' to prevent fog from passing through.
 						// Not incredibly effective, but better than nothing.
@@ -556,7 +555,6 @@ public class ProceduralGenerator {
 							sceneContext.underwaterDepthLevels[z][x][y] = 0;
 							continue;
 						}
-
 						int tileHeight = sceneContext.underwaterDepthLevels[z][x][y];
 						if (sceneContext.underwaterDepthLevels[z][x - 1][y] < tileHeight)
 						{

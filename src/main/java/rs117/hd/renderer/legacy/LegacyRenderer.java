@@ -1538,7 +1538,7 @@ public class LegacyRenderer implements Renderer {
 	 * Draw a Renderable in the scene
 	 *
 	 * @param projection  Unused
-	 * @param scene       Unused
+	 * @param scene      Unused
 	 * @param renderable  Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
 	 * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
 	 * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.
