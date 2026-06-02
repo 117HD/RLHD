@@ -10,7 +10,7 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.jobs.Job;
 
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.utils.HDUtils.ceilPow2;
+import static rs117.hd.utils.MathUtils.*;
 
 @RequiredArgsConstructor
 public final class StaticAlphaSortingJob extends Job {

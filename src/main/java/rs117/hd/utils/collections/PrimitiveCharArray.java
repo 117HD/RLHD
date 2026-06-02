@@ -5,35 +5,27 @@ import java.util.Arrays;
 import static java.lang.System.arraycopy;
 import static rs117.hd.utils.MathUtils.*;
 
-public final class PrimitiveIntArray {
-	public int[] array = new int[16];
+public final class PrimitiveCharArray {
+	public char[] array = new char[16];
 	public int length;
 
-	public PrimitiveIntArray reset() {
+	public PrimitiveCharArray reset() {
 		length = 0;
 		return this;
 	}
 
-	public PrimitiveIntArray ensureCapacity(int count) {
+	public PrimitiveCharArray ensureCapacity(int count) {
 		if (length + count > array.length)
 			array = Arrays.copyOf(array, ceilPow2(length + count));
 		return this;
 	}
 
-	public void put(int v) {
+	public void put(char i) {
 		if (length < array.length)
-			array[length++] = v;
+			array[length++] = i;
 	}
 
-	public void putUnique(int v) {
-		if (length < array.length) {
-			for (int i = 0; i < length; i++)
-				if (array[i] == v) return;
-			array[length++] = v;
-		}
-	}
-
-	public void put(int[] ints, int offset, int count) {
+	public void put(char[] ints, int offset, int count) {
 		ensureCapacity(count);
 		arraycopy(ints, offset, array, length, count);
 		length += count;

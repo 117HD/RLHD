@@ -125,7 +125,7 @@ public final class ReflectionPass implements RenderPass {
 	public void initialize(RenderState renderState) {
 		for(int i = 0; i < MAX_REFLECTION_RENDERS; i++) {
 			if(planes[i] == null)
-				planes[i] = new WaterPlane(uboReflectionPlanes.planes[i], renderState, i);
+				planes[i] = new WaterPlane(uboReflectionPlanes.planes[i], i);
 		}
 		uboReflectionPlanes.initialize(UNIFORM_BLOCK_REFLECTION_PLANES);
 	}
@@ -367,11 +367,11 @@ public final class ReflectionPass implements RenderPass {
 		public float waterHeight;
 		public boolean shouldRender;
 
-		private WaterPlane(WaterPlaneStruct struct, RenderState renderState, int layer) {
+		private WaterPlane(WaterPlaneStruct struct, int layer) {
 			this.struct = struct;
 			this.layer = layer;
 			camera = new Camera().setCullingId(ZoneRenderer.CAMERA_COUNT++).setFlipY(true).setReverseZ(true);
-			cmd = new CommandBuffer("WaterPlane", renderState);
+			cmd = new CommandBuffer("WaterPlane");
 		}
 
 		public void setup(Camera sceneCamera, int targetWaterHeight) {
@@ -428,7 +428,7 @@ public final class ReflectionPass implements RenderPass {
 			renderState.depthFunc.set(GL_GEQUAL);
 			renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
-			cmd.execute();
+			cmd.execute(renderState);
 
 			// Reset everything back to the main pass' state
 			renderState.disable.set(GL_DEPTH_TEST);

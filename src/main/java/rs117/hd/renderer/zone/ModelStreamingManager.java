@@ -24,7 +24,8 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.collections.PrimitiveIntArray;
+import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static net.runelite.api.Perspective.*;
 import static net.runelite.api.hooks.DrawCallbacks.*;
@@ -40,7 +41,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class ModelStreamingManager {
-	public static final ConcurrentPool<PrimitiveIntArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveIntArray::new);
+	public static final ConcurrentPool<PrimitiveCharArray> FACE_INDICES = new ConcurrentPool<>(PrimitiveCharArray::new);
 	public static final int RL_RENDER_THREADS = 2;
 
 	@Inject
@@ -103,7 +104,7 @@ public class ModelStreamingManager {
 			streamingContexts[i] = injector.getInstance(StreamingContext.class);
 
 		if (useMultithreading())
-			AsyncCachedModel.initialize(injector, config.asyncModelCacheSizeMiB() * MiB);
+			AsyncCachedModel.initialize(injector);
 
 		eventBus.register(this);
 		updateRenderThreads();
@@ -229,7 +230,7 @@ public class ModelStreamingManager {
 
 		final int drawIndex = ctx.obtainDrawIndex(renderable instanceof Player ? VAO_PLAYER : VAO_OPAQUE);
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
-		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(false);
+		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(m);
 		if (asyncModelCache != null) {
 			asyncModelCache.queue(
 				ctx,
@@ -311,8 +312,8 @@ public class ModelStreamingManager {
 		int orientation,
 		int x, int y, int z
 	) {
-		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
-		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
 
 		boolean shouldSort =
 			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED ||
@@ -322,11 +323,12 @@ public class ModelStreamingManager {
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
 		) {
+			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
 				worldProjection,
 				modelCullingFrustums,
 				modelCullingFrustumCount,
-				shouldSort ? facePrioritySorter.faceDistances : null,
+				faceDistances,
 				visibleFaces,
 				culledFaces,
 				isModelPartiallyVisible,
@@ -339,7 +341,10 @@ public class ModelStreamingManager {
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (shouldSort && !isSquashed)
-				facePrioritySorter.sortModelFaces(visibleFaces, m);
+				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances);
+
+			if (facePrioritySorter != null)
+				PooledArrayType.INT.release(faceDistances);
 
 			final int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 			if (culledFaces.length > 0 &&
@@ -498,7 +503,7 @@ public class ModelStreamingManager {
 
 		final int drawIndex = renderThreadId == -1 ? ctx.obtainDrawIndex(VAO_OPAQUE) : -1;
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
-		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(renderThreadId >= 0);
+		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(m);
 		if (asyncModelCache != null) {
 			// Fast path, buffer the model into the job queue to unblock rl internals
 			asyncModelCache.queue(
@@ -581,19 +586,20 @@ public class ModelStreamingManager {
 		int orient,
 		int x, int y, int z
 	) {
-		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
-		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
 
 		boolean shouldSort = renderable.getRenderMode() != Renderable.RENDERMODE_UNSORTED;
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
 		) {
+			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,
 				modelCullingFrustums,
 				modelCullingFrustumCount,
-				shouldSort ? facePrioritySorter.faceDistances : null,
+				faceDistances,
 				visibleFaces,
 				culledFaces,
 				isModelPartiallyVisible,
@@ -607,7 +613,10 @@ public class ModelStreamingManager {
 			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (shouldSort && !isSquashed)
-				facePrioritySorter.sortModelFaces(visibleFaces, m, true);
+				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances, true);
+
+			if (facePrioritySorter != null)
+				PooledArrayType.INT.release(faceDistances);
 
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
@@ -704,10 +713,20 @@ public class ModelStreamingManager {
 	}
 
 
-	private AsyncCachedModel obtainAvailableAsyncCachedModel(boolean shouldBlock) {
+	private synchronized AsyncCachedModel obtainAvailableAsyncCachedModel(Model model) {
 		if (AsyncCachedModel.POOL == null || numRenderThreads <= 0)
 			return null;
 
-		return shouldBlock ? AsyncCachedModel.POOL.acquireBlocking(5000) : AsyncCachedModel.POOL.acquire();
+		AsyncCachedModel result = AsyncCachedModel.POOL.acquire();
+		if (result == null)
+			return null;
+
+		if (result.setup(model))
+			return result;
+
+		// We failed to reserve space to cache the model, so return the model back to the pool
+		AsyncCachedModel.POOL.recycle(result);
+
+		return null;
 	}
 }
