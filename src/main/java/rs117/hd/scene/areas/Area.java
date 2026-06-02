@@ -4,10 +4,13 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.utils.Props;
 
 import static rs117.hd.utils.collections.Util.quickSort;
 
+@Slf4j
 public class Area {
 	public static final Area NONE = new Area("NONE", 0, 0, 0, 0);
 	public static final Area ALL = new Area("ALL", Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -113,13 +116,36 @@ public class Area {
 	}
 
 	private void buildCorner(int c, int cx, int cy) {
-		System.arraycopy(aabbs, 0, sortedAabbs, c * aabbs.length, aabbs.length);
+		final int left = c * aabbs.length;
+		final int right = left + aabbs.length;
 
-		quickSort(sortedAabbs, c * aabbs.length, aabbs.length - 1, (a1, a2) -> {
+		// Copy AABS to destination ready for sorting
+		System.arraycopy(aabbs, 0, sortedAabbs, left, right - left);
+
+		// Sort AABS in place for this corner
+		quickSort(sortedAabbs, left, right - 1, (a1, a2) -> {
 			final float s1 = score(a1, cx, cy);
 			final float s2 = score(a2, cx, cy);
 			return Float.compare(s1, s2);
 		});
+
+		if(Props.DEVELOPMENT)
+			validateCorner(c, cx, cy);
+	}
+
+	private void validateCorner(int c, int cx, int cy) {
+		final int left = c * aabbs.length;
+		final int right = left + aabbs.length;
+
+		for (int i = left; i < right - 1; i++) {
+			final float current = score(sortedAabbs[i], cx, cy);
+			final float next = score(sortedAabbs[i + 1], cx, cy);
+
+			if (current > next) {
+				log.error("Area {}: Corner {} not sorted at index {}: {} > {}", name, c, i - left, current, next);
+				return;
+			}
+		}
 	}
 
 	private static float score(AABB aabb, int cx, int cy) {
