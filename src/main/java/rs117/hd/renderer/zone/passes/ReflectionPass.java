@@ -22,7 +22,6 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.RenderState;
 
-import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11C.GL_BLEND;
@@ -267,8 +266,8 @@ public final class ReflectionPass implements RenderPass {
 		for (int i = 0; i < MAX_REFLECTION_RENDERS; i++) {
 			int numLevels = 0;
 
-			for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
-				for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
+			for (int x = 0; x < ctx.sceneContext.sizeX; ++x) {
+				for (int z = 0; z < ctx.sceneContext.sizeZ; ++z) {
 					final Zone zone = ctx.zones[x][z];
 					if (!zone.hasWater || !zone.isVisible(zoneRenderer.sceneCamera))
 						continue;
@@ -368,6 +367,7 @@ public final class ReflectionPass implements RenderPass {
 		}
 
 		public void setup(Camera sceneCamera, int targetWaterHeight) {
+			// TODO: Plane Camera can be further refined down to encompasses only the zones its rendering reflections for
 			camera.copyFrom(sceneCamera);
 			camera.setPositionY(-targetWaterHeight * 2 - sceneCamera.getPositionY());
 			camera.setPitch(-sceneCamera.getPitch());
