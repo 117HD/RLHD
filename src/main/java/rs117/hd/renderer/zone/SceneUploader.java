@@ -1000,16 +1000,6 @@ public class SceneUploader implements AutoCloseable {
 			int nwDepth = ctx.vertexUnderwaterDepth.getOrDefault(nwVertexKey, 0);
 			int neDepth = ctx.vertexUnderwaterDepth.getOrDefault(neVertexKey, 0);
 
-			// Clamp underwater terrain to the edge of the scene
-			if (tileExX == ctx.sceneEdge0)
-				swDepth = nwDepth = 0;
-			if (tileExY == ctx.sceneEdge0)
-				swDepth = seDepth = 0;
-			if (tileExX == ctx.sceneEdge1)
-				seDepth = neDepth = 0;
-			if (tileExY == ctx.sceneEdge1)
-				nwDepth = neDepth = 0;
-
 			swHeight += swDepth;
 			seHeight += seDepth;
 			nwHeight += nwDepth;
@@ -1148,10 +1138,6 @@ public class SceneUploader implements AutoCloseable {
 		var sceneLoc = tile.getSceneLocation();
 		int tileX = sceneLoc.getX();
 		int tileY = sceneLoc.getY();
-
-		boolean isEdge =
-			Math.min(tileExX, tileExY) == ctx.sceneEdge0 ||
-			Math.max(tileExX, tileExY) == ctx.sceneEdge1;
 
 		for (int face = 0; face < faceCount; ++face) {
 			int colorA = triangleColorA[face];
@@ -1307,32 +1293,16 @@ public class SceneUploader implements AutoCloseable {
 					);
 				}
 
-				int[] depths = {
-					ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyA, 0),
-					ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyB, 0),
-					ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0)
-				};
-				;
-				// Clamp underwater terrain to the edge of the scene
-				if (isEdge) {
-					for (int i = 0; i < 3; i++) {
-						if (tileExX == ctx.sceneEdge0 && vertices[i][0] == 0)
-							depths[i] = 0;
-						if (tileExY == ctx.sceneEdge0 && vertices[i][1] == 0)
-							depths[i] = 0;
-						if (tileExX == ctx.sceneEdge1 && vertices[i][0] == LOCAL_TILE_SIZE)
-							depths[i] = 0;
-						if (tileExY == ctx.sceneEdge1 && vertices[i][1] == LOCAL_TILE_SIZE)
-							depths[i] = 0;
-					}
-				}
-				ly0 += depths[0];
-				ly1 += depths[1];
-				ly2 += depths[2];
+				int depthA = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyA, 0);
+				int depthB = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyB, 0);
+				int depthC = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0);
+				ly0 += depthA;
+				ly1 += depthB;
+				ly2 += depthC;
 
-				terrainDataA = HDUtils.packTerrainData(true, max(1, depths[0]), waterType, tileZ);
-				terrainDataB = HDUtils.packTerrainData(true, max(1, depths[1]), waterType, tileZ);
-				terrainDataC = HDUtils.packTerrainData(true, max(1, depths[2]), waterType, tileZ);
+				terrainDataA = HDUtils.packTerrainData(true, max(1, depthA), waterType, tileZ);
+				terrainDataB = HDUtils.packTerrainData(true, max(1, depthB), waterType, tileZ);
+				terrainDataC = HDUtils.packTerrainData(true, max(1, depthC), waterType, tileZ);
 			}
 
 			if (ctx.vertexIsOverlay.containsKey(vertexKeyA) && ctx.vertexIsUnderlay.containsKey(vertexKeyA))

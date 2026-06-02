@@ -69,7 +69,6 @@ public class SceneContext {
 	public boolean[][][] skipTile;
 	public HashMap<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
-	public int sceneEdge0, sceneEdge1;
 	// Initialize array for counting the most prevalent water level
 	public boolean hasWater;
 
@@ -97,10 +96,6 @@ public class SceneContext {
 		sceneOffset = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
 		sceneBase = findSceneBase();
 		sceneBounds = findSceneBounds(sceneBase);
-
-		final int pad = expandedMapLoadingChunks * CHUNK_SIZE;
-		sceneEdge0 = max(1, sceneOffset - pad);
-		sceneEdge1 = min(EXTENDED_SCENE_SIZE - 2, sceneOffset + SCENE_SIZE + pad - 1);
 	}
 
 	public synchronized void destroy() {}

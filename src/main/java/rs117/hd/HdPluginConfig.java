@@ -166,7 +166,7 @@ public interface HdPluginConfig extends Config
 	)
 	@Units(Units.PERCENT)
 	@Range(min = 1, max = 200)
-	default int sceneResolution() {
+	default int sceneResolutionScale() {
 		return 100;
 	}
 
