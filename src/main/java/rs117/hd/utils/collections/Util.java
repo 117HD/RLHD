@@ -84,7 +84,7 @@ public final class Util {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private static void quickSortInternal( Object[] a, int left, int right, Comparator comparator) {
+	private static void quickSortInternal(Object[] a, int left, int right, Comparator comparator) {
 		if (right <= left) return;
 
 		/*
