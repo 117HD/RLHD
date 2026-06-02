@@ -26,7 +26,9 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,6 +56,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.zone.passes.ReflectionPass;
+import rs117.hd.renderer.zone.passes.RenderPass;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -181,6 +184,8 @@ public class ZoneRenderer implements Renderer {
 	private boolean shouldClearShadowFbo;
 	private boolean shouldDrawRoofShadows;
 
+	private List<RenderPass> renderPasses = new ArrayList<>();
+
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
 		return glCaps.OpenGL33;
@@ -198,6 +203,12 @@ public class ZoneRenderer implements Renderer {
 	public void initialize() {
 		initializeBuffers();
 
+		renderPasses.add(reflectionPass);
+		renderPasses.sort(RenderPass.ORDER_COMPARATOR);
+
+		for(int i = 0; i < renderPasses.size(); ++i)
+			renderPasses.get(i).initialize(renderState);
+
 		if (SceneUploader.POOL == null)
 			SceneUploader.POOL = new ConcurrentPool<>(() -> injector.getInstance(SceneUploader.class));
 
@@ -212,7 +223,6 @@ public class ZoneRenderer implements Renderer {
 		uboReflectionPlanes.initialize(UNIFORM_BLOCK_REFLECTION_PLANES);
 		sceneManager.initialize(renderState, uboWorldViews);
 		modelStreamingManager.initialize();
-		reflectionPass.initialize(renderState);  // TODO: Replace with generic render pass system
 
 		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
@@ -223,12 +233,15 @@ public class ZoneRenderer implements Renderer {
 	public void destroy() {
 		destroyBuffers();
 
+		for(int i = 0; i < renderPasses.size(); ++i)
+			renderPasses.get(i).destroy();
+		renderPasses.clear();
+
 		jobSystem.shutDown();
 		modelStreamingManager.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
 		uboReflectionPlanes.destroy();
-		reflectionPass.shutdown(); // TODO: Replace with generic render pass system
 
 		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
@@ -250,6 +263,9 @@ public class ZoneRenderer implements Renderer {
 			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS))
 			.addUniformBuffer(uboReflectionPlanes)
 			.addUniformBuffer(uboWorldViews);
+
+		for(int i = 0; i < renderPasses.size(); i++)
+			renderPasses.get(i).addShaderIncludes(includes);
 	}
 
 	@Override
@@ -259,6 +275,9 @@ public class ZoneRenderer implements Renderer {
 		sceneReflectionProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
+
+		for(int i = 0; i < renderPasses.size(); i++)
+			renderPasses.get(i).initializeShaders(includes);
 	}
 
 	@Override
@@ -268,6 +287,9 @@ public class ZoneRenderer implements Renderer {
 		sceneReflectionProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
+
+		for(int i = 0; i < renderPasses.size(); i++)
+			renderPasses.get(i).destroyShaders();
 	}
 
 	private void initializeBuffers() {
@@ -301,6 +323,9 @@ public class ZoneRenderer implements Renderer {
 	public void processConfigChanges(Set<String> keys) {
 		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING) || keys.contains(KEY_ASYNC_MODEL_CACHE_SIZE))
 			modelStreamingManager.reinitialize();
+
+		for(int i = 0; i < renderPasses.size(); i++)
+			renderPasses.get(i).processConfigChanges(keys);
 	}
 
 	@Override
@@ -334,6 +359,9 @@ public class ZoneRenderer implements Renderer {
 
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 				preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
+
+			for(int i = 0; i < renderPasses.size(); i++)
+				renderPasses.get(i).preSceneDraw(ctx);
 
 			ctx.completeInvalidation();
 
@@ -620,8 +648,6 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 		}
 
-		reflectionPass.preTopLevelDraw(); // TODO: Replace with RenderPass Logic
-
 		modelStreamingManager.addModelCullingFrustums(sceneCamera);
 
 		plugin.uboGlobal.upload();
@@ -651,8 +677,13 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_POSTSCENE);
+
+			for(int i = 0; i < renderPasses.size(); i++)
+				renderPasses.get(i).postSceneDraw(ctx);
+
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 				postDrawTopLevel();
+
 			frameTimer.end(Timer.DRAW_POSTSCENE);
 		} catch (Throwable ex) {
 			log.error("Error in postSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
@@ -883,7 +914,8 @@ public class ZoneRenderer implements Renderer {
 				}
 			}
 
-			reflectionPass.zoneInFrustum(zone, zx, zz, minX, minY, minZ, maxX, maxY, maxZ); // TODO: Replace with RenderPass Logic
+			for(int i = 0; i < renderPasses.size(); i++)
+				renderPasses.get(i).zoneInFrustum(zone, zx, zz, minX, minY, minZ, maxX, maxY, maxZ);
 
 			if (plugin.orthographicProjection)
 				return zone.setVisibility(sceneCamera, true);
@@ -917,7 +949,8 @@ public class ZoneRenderer implements Renderer {
 			if (z.isVisible(sceneCamera))
 				z.renderOpaque(sceneCmd, ctx, false);
 
-			reflectionPass.drawZoneOpaque(ctx, z, zx, zz); // TODO: Replace with RenderPass Logic
+			for(int i = 0; i < renderPasses.size(); i++)
+				renderPasses.get(i).drawZoneOpaque(ctx, z, zx, zz);
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (!isSquashed && z.isVisible(directionalCamera)) {
@@ -958,6 +991,9 @@ public class ZoneRenderer implements Renderer {
 
 			modelStreamingManager.ensureAsyncUploadsComplete(z);
 
+			for(int i = 0; i < renderPasses.size(); i++)
+				renderPasses.get(i).drawZoneAlpha(ctx, z, level, zx, zz);
+
 			final boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 			if (hasAlpha) {
 				final int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -970,8 +1006,6 @@ public class ZoneRenderer implements Renderer {
 					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
 					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
 				}
-
-				reflectionPass.drawZoneAlpha(ctx, z, level, zx, zz); // TODO: Replace with RenderPass Logic
 
 				if (z.isVisible(sceneCamera))
 					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
@@ -996,7 +1030,9 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_PASS);
-			reflectionPass.drawPass(ctx, pass); // TODO: Replace with RenderPass Logic
+
+			for(int i = 0; i < renderPasses.size(); i++)
+				renderPasses.get(i).drawPass(ctx, pass);
 
 			switch (pass) {
 				case DrawCallbacks.PASS_OPAQUE:
@@ -1115,7 +1151,8 @@ public class ZoneRenderer implements Renderer {
 			if (shouldRenderScene) {
 				tiledLightingPass();
 				directionalShadowPass();
-				reflectionPass.draw(); // TODO: Swap out for generic callback
+				for(int i = 0; i < renderPasses.size(); i++)
+					renderPasses.get(i).draw(renderState);
 				scenePass();
 			}
 
@@ -1176,7 +1213,8 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			if(shouldRenderScene) {
-				reflectionPass.postDraw(); // TODO: Replace with RenderPass Logic
+				for(int i = 0; i < renderPasses.size(); i++)
+					renderPasses.get(i).postDraw(renderState);
 			}
 
 

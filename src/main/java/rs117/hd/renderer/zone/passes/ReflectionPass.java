@@ -73,20 +73,18 @@ public class ReflectionPass implements RenderPass {
 	@Inject
 	private FrameTimer frameTimer;
 
-	private RenderState renderState = new RenderState();
-
 	private final HashMap<Integer, Integer> waterLevelWeights = new HashMap<>();
 	private final WaterPlane[] planes = new WaterPlane[MAX_REFLECTION_RENDERS];
 	private int activePlanes = 0;
 
 	private boolean waterReflectionsEnabled;
 
+	@Override
 	public void initialize(RenderState renderState) {
 		for(int i = 0; i < MAX_REFLECTION_RENDERS; i++) {
 			if(planes[i] == null)
 				planes[i] = new WaterPlane(uboReflectionPlanes.planes[i], renderState, i);
 		}
-		this.renderState = renderState;
 	}
 
 	@Override
@@ -128,15 +126,18 @@ public class ReflectionPass implements RenderPass {
 	public void drawPass(WorldViewContext ctx, int pass) {
 		if(pass == DrawCallbacks.PASS_OPAQUE) {
 			for(int i = 0; i < activePlanes; i++) {
-				if(planes[i].shouldRender)
+				if(planes[i].shouldRender && !planes[i].cmd.isEmpty()) {
 					planes[i].cmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
+				}
 			}
 		}
 	}
 
 	@Override
-	public void preTopLevelDraw() {
-		WorldViewContext ctx = sceneManager.getRoot();
+	public void preSceneDraw(WorldViewContext ctx) {
+		if(ctx != sceneManager.getRoot())
+			return;
+
 		if(!ctx.sceneContext.hasWater) {
 			waterReflectionsEnabled = false;
 			return;
@@ -194,7 +195,7 @@ public class ReflectionPass implements RenderPass {
 	}
 
 	@Override
-	public void postDraw() {
+	public void postDraw(RenderState renderState) {
 		if(!waterReflectionsEnabled || activePlanes <= 0)
 			return;
 
@@ -202,7 +203,7 @@ public class ReflectionPass implements RenderPass {
 
 		zoneRenderer.sceneReflectionProgram.use();
 		for(int i = 0; i < activePlanes; i++)
-			planes[i].render();
+			planes[i].render(renderState);
 		activePlanes = 0;
 
 		frameTimer.end(Timer.RENDER_REFLECTIONS);
@@ -216,7 +217,8 @@ public class ReflectionPass implements RenderPass {
 		frameTimer.end(Timer.REFLECTION_MIPMAPS);
 	}
 
-	public void shutdown() {
+	@Override
+	public void destroy() {
 
 	}
 
@@ -248,7 +250,7 @@ public class ReflectionPass implements RenderPass {
 			shouldRender = true;
 		}
 
-		public void render() {
+		public void render(RenderState renderState) {
 			if(!shouldRender)
 				return;
 			shouldRender = false;
