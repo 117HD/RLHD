@@ -35881,11 +35881,10 @@
     ]
   },
   {
-    "description": "TOA_INVOCATION_BOARD_LEFT",
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 130,
-    "strength": 100,
+    "description": "TOA_INVOCATION_BOARD_1",
+    "offset": [ -35, 205, 116 ],
+    "radius": 55,
+    "strength": 165,
     "color": [
       175,
       18,
@@ -35894,17 +35893,15 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3362,
-    "worldY": 9115,
-    "plane": 0,
-    "fadeInDuration": 0
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
   },
   {
-    "description": "TOA_INVOCATION_BOARD_MIDDLE",
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 150,
-    "strength": 100,
+    "description": "TOA_INVOCATION_BOARD_2",
+    "offset": [ -35, 205, 35 ],
+    "radius": 50,
+    "strength": 165,
     "color": [
       175,
       18,
@@ -35913,17 +35910,15 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3363,
-    "worldY": 9115,
-    "plane": 0,
-    "fadeInDuration": 0
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
   },
   {
-    "description": "TOA_INVOCATION_BOARD_RIGHT",
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 130,
-    "strength": 100,
+    "description": "TOA_INVOCATION_BOARD_3",
+    "offset": [ -35, 208, -28 ],
+    "radius": 50,
+    "strength": 90,
     "color": [
       175,
       18,
@@ -35932,17 +35927,237 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3364,
-    "worldY": 9115,
-    "plane": 0,
-    "fadeInDuration": 0
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_4",
+    "offset": [ -40, 208, -52 ],
+    "radius": 50,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_5",
+    "offset": [ -35, 205, -123 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_6",
+    "offset": [ -50, 128, -123 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_7",
+    "offset": [ -50, 128, -47 ],
+    "radius": 50,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_8",
+    "offset": [ -50, 124, 36 ],
+    "radius": 50,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_9",
+    "offset": [ -50, 124, 116 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_10",
+    "offset": [ -65, 52, 116 ],
+    "radius": 60,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_11",
+    "offset": [ -65, 39, 45 ],
+    "radius": 57,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_12",
+    "offset": [ -65, 59, 26 ],
+    "radius": 60,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_13",
+    "offset": [ -65, 45, -30 ],
+    "radius": 53,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_14",
+    "offset": [ -65, 45, -55 ],
+    "radius": 60,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_15",
+    "offset": [ -65, 45, -123 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_15",
+    "offset": [ 0, 130, 0 ],
+    "radius": 200,
+    "strength": 140,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
   },
   {
     "description": "TOA_GROUPING_OBELISK_NE",
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 10,
     "color": [
       175,
       18,
@@ -35961,7 +36176,7 @@
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 50,
     "color": [
       175,
       18,
@@ -35980,7 +36195,7 @@
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 110,
     "color": [
       175,
       18,
@@ -35999,7 +36214,7 @@
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 30,
     "color": [
       175,
       18,
