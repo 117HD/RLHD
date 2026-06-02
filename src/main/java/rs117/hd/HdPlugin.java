@@ -139,6 +139,7 @@ import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_WATER_NORMAL_MAPS;
+import static rs117.hd.utils.HDUtils.setAnisotropicFilteringLevel;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
@@ -1893,14 +1894,6 @@ public class HdPlugin extends Plugin {
 									initWaterNormalMaps();
 								}
 								break;
-							case KEY_ANISOTROPIC_FILTERING_LEVEL:
-
-								// TODO
-//								if (textureManager.textureArray != 0) {
-//									glActiveTexture(TEXTURE_UNIT_GAME);
-//									setAnisotropicFilteringAndMipMapping(GL_TEXTURE_2D_ARRAY, level);
-//								}
-								break;
 							case KEY_CPU_USAGE_LIMIT:
 								if (jobSystem.isActive()) {
 									// Restart the job system with the new worker count
@@ -1959,6 +1952,7 @@ public class HdPlugin extends Plugin {
 								reloadEnvironments = true;
 								reloadModelOverrides = true;
 								// fall-through
+							case KEY_ANISOTROPIC_FILTERING_LEVEL:
 							case KEY_GROUND_TEXTURES:
 							case KEY_MODEL_TEXTURES:
 							case KEY_TEXTURE_RESOLUTION:
@@ -2160,32 +2154,6 @@ public class HdPlugin extends Plugin {
 			return;
 
 		fishingSpotReplacer.update();
-	}
-
-	public static void setAnisotropicFilteringAndMipMapping(int target, float level) {
-		setAnisotropicFilteringLevel(target, level);
-		if (level == 0) {
-			// level = 0 means no mipmaps and no anisotropic filtering
-			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		} else {
-			// level = 1 means with mipmaps but without anisotropic filtering GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT defaults to 1.0 which is off
-			// level > 1 enables anisotropic filtering. It's up to the vendor what the values mean
-			// Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
-			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
-			// that are very noticeable on terrain
-			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		}
-	}
-
-	public static void setAnisotropicFilteringLevel(int target, float level) {
-		if (!GL_CAPS.GL_EXT_texture_filter_anisotropic)
-			return;
-
-		float max = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-		level = clamp(level, 1, max);
-		glTexParameterf(target, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, level);
 	}
 
 	@Subscribe
