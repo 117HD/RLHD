@@ -129,7 +129,7 @@ public class Area {
 			return Float.compare(s1, s2);
 		});
 
-		if(Props.DEVELOPMENT)
+		if (Props.DEVELOPMENT)
 			validateCorner(c, cx, cy);
 	}
 
