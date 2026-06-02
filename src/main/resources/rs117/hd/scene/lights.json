@@ -18608,10 +18608,10 @@
   },
   {
     "description": "ABHORRENT_SPECTRE",
-    "height": 530,
+    "height": 545,
     "alignment": "CENTER",
-    "radius": 700,
-    "strength": 25,
+    "radius": 750,
+    "strength": 10,
     "color": [
       200.6236,
       255,
@@ -18629,10 +18629,10 @@
   },
   {
     "description": "REPUGNANT_SPECTRE",
-    "height": 530,
+    "height": 545,
     "alignment": "CENTER",
-    "radius": 700,
-    "strength": 25,
+    "radius": 750,
+    "strength": 15,
     "color": [
       255,
       85.348495,
