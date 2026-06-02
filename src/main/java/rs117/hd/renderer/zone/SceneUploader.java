@@ -358,7 +358,7 @@ public class SceneUploader implements AutoCloseable {
 					final int msx = (mzx << 3) + xoff;
 					final int msz = (mzz << 3) + zoff;
 					final Tile t = tiles[level][msx][msz];
-					if (t == null /* || !ctx.isTileFlagSet(level, msx, msz, TILE_WATER_FLAG) */) // Disabled doesn't work for some tiles (IE: Alloviz Estuary)
+					if (t == null)
 						continue;
 
 					if (onBeforeProcessTile != null)

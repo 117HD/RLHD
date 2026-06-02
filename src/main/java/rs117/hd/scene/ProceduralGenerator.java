@@ -803,13 +803,14 @@ public class ProceduralGenerator {
 			final int sizeX = sceneContext.sizeX;
 			final int sizeY = sceneContext.sizeZ;
 			// bit 1 set if a tile contains at least 1 face which qualifies as water
-			// bit 2 set if a tile will be skipped when the scene is drawn, this is due to certain edge cases with water on the same X/Y on different planes
+			// bit 2 set if a tile will be skipped when the scene is drawn,
+			// 	this is due to certain edge cases with water on the same X/Y on different planes
 			sceneContext.tileFlags = new byte[MAX_Z * sizeX * sizeY];
 			sceneContext.vertexTerrainData = new Int2IntHashMap(
 				prevSceneCtx != null && prevSceneCtx.vertexTerrainData != null ?
 					prevSceneCtx.vertexTerrainData.capacity() : 0);
 			// the world-space height offsets of each vertex on the tile grid
-			// these offsets are interpolated to calculate offsets for vertices not on the grid (tilemodels)
+			// these offsets are interpolated to calculate offsets for vertices not on the grid (tile models)
 
 			for (int z = 0; z < MAX_Z; ++z) {
 				for (int x = 0; x < sizeX; ++x) {
