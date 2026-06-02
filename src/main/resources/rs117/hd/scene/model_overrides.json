@@ -30341,13 +30341,6 @@
   },
   {
     "description": "Lassar Undercity - Hide Wall Filler to Prevent zFighting",
-    "hideInAreas": [ "LASSAR_UNDERCITY_DRAIN_DEPTH_FIX_FILLER" ],
-    "objectIds": [
-      "BIM_RUINS_WALLKIT_WALLTOP05"
-    ]
-  },
-  {
-    "description": "Lassar Undercity - Hide Wall Filler to Prevent zFighting",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "depthBias": 10,
@@ -46168,6 +46161,7 @@
   {
     "description": "Camdozaal Carved Walls and Pillars",
     "baseMaterial": "SMOOTH_STONE",
+    "hideInAreas": [ "LASSAR_UNDERCITY_DRAIN_DEPTH_FIX_FILLER" ],
     "objectIds": [
       "BIM_RUINS_WALLKIT_WORKSHOP01",
       "BIM_RUINS_WALLKIT_CORNER01",
