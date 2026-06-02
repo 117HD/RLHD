@@ -2,9 +2,11 @@ package rs117.hd.overlays;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -19,6 +21,13 @@ import static org.lwjgl.opengl.GL33C.*;
 @Slf4j
 @Singleton
 public class FrameTimer {
+	public static final int CPU_TIMER = 0;
+	public static final int ASYNC_CPU_TIMER = 1;
+	public static final int GPU_TIMER = 2;
+	public static final int ASYNC_GPU_TIMER = 3;
+
+	private static final OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
+
 	@Inject
 	private ClientThread clientThread;
 
@@ -26,8 +35,8 @@ public class FrameTimer {
 	private HdPlugin plugin;
 
 	private static final int NUM_TIMERS = Timer.TIMERS.length;
-	private static final int NUM_GPU_TIMERS = (int) Arrays.stream(Timer.TIMERS).filter(t -> t.isGpuTimer).count();
-	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(Timer.TIMERS).filter(t -> t.gpuDebugGroup).count();
+	private static final int NUM_GPU_TIMERS = (int) Arrays.stream(Timer.TIMERS).filter(Timer::isGpuTimer).count();
+	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(Timer.TIMERS).filter(Timer::hasGpuDebugGroup).count();
 
 	private final AutoTimer[] autoTimers = new AutoTimer[NUM_TIMERS];
 	private final boolean[] activeTimers = new boolean[NUM_TIMERS];
@@ -65,7 +74,7 @@ public class FrameTimer {
 			glGenQueries(queryNames);
 			int queryIndex = 0;
 			for (var timer : Timer.TIMERS)
-				if (timer.isGpuTimer)
+				if (timer.isGpuTimer())
 					for (int j = 0; j < 2; ++j)
 						gpuQueries[timer.ordinal() * 2 + j] = queryNames[queryIndex++];
 
@@ -134,7 +143,7 @@ public class FrameTimer {
 
 	public AutoTimer begin(Timer timer) {
 		int index = timer.ordinal();
-		if (log.isDebugEnabled() && timer.gpuDebugGroup && HdPlugin.GL_CAPS.OpenGL43) {
+		if (log.isDebugEnabled() && timer.hasGpuDebugGroup() && HdPlugin.GL_CAPS.OpenGL43) {
 			if (glDebugGroupStack.contains(timer)) {
 				log.warn("The debug group {} is already on the stack", timer.name());
 			} else {
@@ -146,7 +155,7 @@ public class FrameTimer {
 		if (!isActive)
 			return null;
 
-		if (timer.isGpuTimer) {
+		if (timer.isGpuTimer()) {
 			if (activeTimers[index])
 				throw new UnsupportedOperationException("Cumulative GPU timing isn't supported");
 			glQueryCounter(gpuQueries[index * 2], GL_TIMESTAMP);
@@ -160,9 +169,10 @@ public class FrameTimer {
 	}
 
 	public void end(Timer timer) {
-		if (log.isDebugEnabled() && timer.gpuDebugGroup && HdPlugin.GL_CAPS.OpenGL43) {
+		if (log.isDebugEnabled() && timer.hasGpuDebugGroup() && HdPlugin.GL_CAPS.OpenGL43) {
 			if (glDebugGroupStack.peek() != timer) {
-				log.warn("The debug group {} was popped out of order", timer.name());
+				if (glDebugGroupStack.contains(timer))
+					log.warn("The debug group {} was popped out of order", timer.name());
 			} else {
 				glDebugGroupStack.pop();
 				GL43C.glPopDebugGroup();
@@ -172,7 +182,7 @@ public class FrameTimer {
 		if (!isActive || !activeTimers[timer.ordinal()])
 			return;
 
-		if (timer.isGpuTimer) {
+		if (timer.isGpuTimer()) {
 			glQueryCounter(gpuQueries[timer.ordinal() * 2 + 1], GL_TIMESTAMP);
 			// leave the GPU timer active, since it needs to be gathered at a later point
 		} else {
@@ -185,6 +195,11 @@ public class FrameTimer {
 	public void add(Timer timer, long nanos) {
 		if (isActive)
 			timings[timer.ordinal()] += nanos;
+	}
+
+	public void add(Timer timer, long duration, TimeUnit unit) {
+		if (isActive)
+			timings[timer.ordinal()] += TimeUnit.NANOSECONDS.convert(duration, unit);
 	}
 
 	public void endFrameAndReset() {
@@ -206,7 +221,7 @@ public class FrameTimer {
 		int[] available = { 0 };
 		for (var timer : Timer.TIMERS) {
 			int i = timer.ordinal();
-			if (timer.isGpuTimer) {
+			if (timer.isGpuTimer()) {
 				if (!activeTimers[i])
 					continue;
 
@@ -224,7 +239,8 @@ public class FrameTimer {
 			}
 		}
 
-		var frameTimings = new FrameTimings(frameEndTimestamp, timings);
+		final float cpuLoad = (float) osBean.getSystemLoadAverage() / osBean.getAvailableProcessors();
+		var frameTimings = new FrameTimings(frameEndTimestamp, timings, cpuLoad);
 		for (var listener : listeners)
 			listener.onFrameCompletion(frameTimings);
 

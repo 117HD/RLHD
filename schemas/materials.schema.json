@@ -14,6 +14,10 @@
         "type": "string",
         "description": "Identifier used to refer to the material."
       },
+      "description": {
+        "type": "string",
+        "description": "Optional description of what this applies to or is used for."
+      },
       "parent": {
         "type": "string",
         "description": "The material which this material should inherit default values from."
@@ -37,6 +41,10 @@
       "flowMap": {
         "type": [ "string", "null" ],
         "description": "A material whose texture should be used as this material's flow map. Setting this to `null` will remove the flow map inherited from the parent."
+      },
+      "shadowAlphaMap": {
+        "type": [ "string", "null" ],
+        "description": "A material whose texture should be used as this material's shadow alpha map. Setting this to `null` will remove the alpha map inherited from the parent."
       },
       "vanillaTextureIndex": {
         "type": "number",
@@ -111,7 +119,7 @@
       },
       "replacementCondition": {
         "type": [ "boolean", "string", "array" ],
-        "description": "One or more boolean expressions. If any of them evaluate to true, the replacements are applied.\nSupported operators: !, %, *, /, +, -, <, <=, >, >=, !=, ==, &&, ||, ?.\nSupported variables: `modelTextures`, `groundTextures`, `blending`, `hdInfernalCape`, `season`, `SeasonalTheme.*`.",
+        "description": "One or more boolean expressions. If any of them evaluate to true, the replacements are applied.\nSupported operators: !, %, *, /, +, -, <, <=, >, >=, !=, ==, &&, ||, ?.\nSupported variables: `modelTextures`, `groundTextures`, `blending`, `hdInfernalCape`, `legacyInfernalCape`, `season`, `SeasonalTheme.*`.",
         "items": {
           "type": "string"
         }

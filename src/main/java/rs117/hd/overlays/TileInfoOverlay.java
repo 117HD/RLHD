@@ -138,6 +138,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private int hoveredGamevalsHash;
 	private int copiedGamevalsHash;
 
+	private GamevalManager.Handle gamevals;
+
 	public TileInfoOverlay() {
 		setLayer(OverlayLayer.ABOVE_SCENE);
 		setPosition(OverlayPosition.DYNAMIC);
@@ -150,10 +152,14 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			// Listen to events before they're possibly consumed in DeveloperTools
 			mouseManager.registerMouseListener(0, this);
 			mouseManager.registerMouseWheelListener(this);
+			gamevals = gamevalManager.obtainHandle();
 		} else {
 			overlayManager.remove(this);
 			mouseManager.unregisterMouseListener(this);
 			mouseManager.unregisterMouseWheelListener(this);
+			if (gamevals != null)
+				gamevals.close();
+			gamevals = null;
 		}
 		tileOverrideManager.setTrackReplacements(activate);
 	}
@@ -490,7 +496,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (mode == MODE_TILE_INFO) {
-			ctx.tileOverrideVars.get().setTile(tile);
+			SceneContext.TILE_OVERRIDE_VARIABLES.get().setTile(tile);
 			if (tile.getBridge() != null)
 				lines.add("Bridge");
 
@@ -515,7 +521,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
 			var replacementPath = new StringBuilder(overlay.toString());
 			while (true) {
-				var replacement = overlay.resolveNextReplacement(ctx.tileOverrideVars.get());
+				var replacement = overlay.resolveNextReplacement(SceneContext.TILE_OVERRIDE_VARIABLES.get());
 				if (replacement == overlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -532,7 +538,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
 			replacementPath = new StringBuilder(underlay.toString());
 			while (true) {
-				var replacement = underlay.resolveNextReplacement(ctx.tileOverrideVars.get());
+				var replacement = underlay.resolveNextReplacement(SceneContext.TILE_OVERRIDE_VARIABLES.get());
 				if (replacement == underlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -598,22 +604,36 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				lines.add(String.format("HSL: %s", hslString(tile)));
 			}
 
-			ctx.tileOverrideVars.get().setTile(null); // Avoid accidentally keeping the old scene in memory
+			SceneContext.TILE_OVERRIDE_VARIABLES.get().setTile(null); // Avoid accidentally keeping the old scene in memory
 		}
 
 		var decorObject = tile.getDecorativeObject();
 		if (decorObject != null) {
-			lines.add(String.format(
-				"Decor Object: %s preori=%d ori=%d offset=[%d, %d] type=%s %s",
-				getIdAndImpostorId(decorObject, decorObject.getRenderable()),
-				HDUtils.getModelPreOrientation(decorObject.getConfig()),
-				HDUtils.getModelOrientation(decorObject.getConfig()),
-				decorObject.getXOffset(),
-				decorObject.getYOffset(),
-				ObjectType.fromConfig(decorObject.getConfig()),
-				getModelInfo(decorObject.getRenderable())
-			));
-			lines.add("Decor Type: " + ObjectType.fromConfig(decorObject.getConfig()));
+			int config = decorObject.getConfig();
+			if (decorObject.getRenderable() != null) {
+				lines.add(String.format(
+					"Decor Object 1: %s preori=%d ori=%d offset=[%d, %d] type=%s %s",
+					getIdAndImpostorId(decorObject, decorObject.getRenderable()),
+					HDUtils.getModelPreOrientation(config),
+					HDUtils.getModelOrientation(config),
+					decorObject.getXOffset(),
+					decorObject.getYOffset(),
+					ObjectType.fromConfig(config),
+					getModelInfo(decorObject.getRenderable())
+				));
+			}
+			if (decorObject.getRenderable2() != null) {
+				lines.add(String.format(
+					"Decor Object 2: %s preori=%d ori=%d offset=[%d, %d] type=%s %s",
+					getIdAndImpostorId(decorObject, decorObject.getRenderable2()),
+					HDUtils.getModelPreOrientation(config),
+					HDUtils.getModelOrientation(config),
+					decorObject.getXOffset(),
+					decorObject.getYOffset(),
+					ObjectType.fromConfig(config),
+					getModelInfo(decorObject.getRenderable2())
+				));
+			}
 		}
 
 		GroundObject groundObject = tile.getGroundObject();
@@ -697,7 +717,25 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				faceCount,
 				getModelInfo(renderable)
 			));
-			lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
+
+			if (renderable instanceof Actor) {
+				Actor actor = (Actor) renderable;
+				StringBuilder sb = new StringBuilder();
+				String separator = "";
+				for (var spotanim : actor.getSpotAnims()) {
+					sb
+						.append(separator)
+						.append(gamevals.getSpotanimName(spotanim.getId()))
+						.append(" (").append(spotanim.getId()).append(")")
+						.append(" frame=").append(spotanim.getFrame())
+						.append(" cycle=").append(client.getGameCycle() - spotanim.getStartCycle());
+					separator = "\n\t";
+				}
+				if (sb.length() > 0)
+					lines.add("Spotanims: " + sb);
+			} else {
+				lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
+			}
 		}
 
 		for (var npc : client.getTopLevelWorldView().npcs()) {
@@ -706,7 +744,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			int x = lp.getSceneX();
 			int y = lp.getSceneY();
 			if (x - size <= tileX && tileX <= x + size && y - size <= tileY && tileY <= y + size) {
-				var name = gamevalManager.getNpcName(npc.getId());
+				var name = gamevals.getNpcName(npc.getId());
 				hoveredGamevals.add(name);
 				lines.add(String.format(
 					"NPC: %s (%d) name=%s ori=[%d,%d] anim=%d impostor=?%s",
@@ -724,12 +762,16 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		for (GraphicsObject graphicsObject : client.getGraphicsObjects()) {
 			var lp = graphicsObject.getLocation();
 			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY) {
-				var name = gamevalManager.getSpotanimName(graphicsObject.getId());
+				var name = gamevals.getSpotanimName(graphicsObject.getId());
+				var anim = graphicsObject.getAnimation();
 				hoveredGamevals.add(name);
 				lines.add(String.format(
-					"Graphics Object: %s (%d)%s",
+					"Graphics Object: %s (%d) anim=%d frame=%d cycle=%d%s",
 					name,
 					graphicsObject.getId(),
+					anim == null ? -1 : anim.getId(),
+					graphicsObject.getAnimationFrame(),
+					client.getGameCycle() - graphicsObject.getStartCycle(),
 					getModelInfo(graphicsObject)
 				));
 			}
@@ -863,37 +905,50 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private String getIdAndImpostorId(TileObject object, @Nullable Renderable renderable) {
 		int id = object.getId();
 		int impostorId = getIdOrImpostorId(object, renderable);
-		String name = gamevalManager.getObjectName(id);
+		String name = gamevals.getObjectName(id);
 		if (id == impostorId) {
 			hoveredGamevals.add(name);
 			return String.format("%s (%d)", name, id);
 		}
 
-		String impostorName = gamevalManager.getObjectName(impostorId);
+		String impostorName = gamevals.getObjectName(impostorId);
 		hoveredGamevals.add(impostorName);
 		return String.format("%s (%d) -> %s (%d)", name, id, impostorName, impostorId);
 	}
 
 	private int getIdOrImpostorId(TileObject object, @Nullable Renderable renderable) {
+		assert client.isClientThread();
+		if (renderable instanceof DynamicObject) {
+			var def = client.getObjectDefinition(object.getId());
+			if (def != null && def.getImpostorIds() != null) {
+				var impostor = def.getImpostor();
+				if (impostor != null)
+					return impostor.getId();
+			}
+			return object.getId();
+		}
+
 		return ModelHash.getUuidId(ModelHash.generateUuid(client, object.getHash(), renderable));
 	}
 
-	private String getModelInfo(Renderable renderable) {
-		if (renderable == null)
+	private String getModelInfo(Renderable r) {
+		if (r == null)
 			return " null renderable";
 
-		Model model = renderable instanceof Model ? (Model) renderable : renderable.getModel();
+		Model model = r instanceof Model ? (Model) r : r.getModel();
 		if (model == null)
 			return " null model";
 
+		boolean isStatic =
+			r instanceof Model ||
+			r instanceof DynamicObject && ((DynamicObject) r).getModelZbuf() != null;
+		boolean isDynamic = r instanceof DynamicObject || r instanceof Actor;
+
 		switch (mode) {
 			case MODE_TILE_INFO:
-				return
-					"  " + (
-						renderable instanceof Model ? "<col=#00ff00>static</col>" :
-						(renderable instanceof DynamicObject || renderable instanceof Actor) ?
-							"<col=#ff0000>dynamic</col>" : "<col=#ffff00>maybe dynamic</col>"
-					);
+				return isStatic ? " <col=#00ff00>static</col>" :
+					isDynamic ? " <col=#ff0000>dynamic</col>" :
+						" <col=#ffff00>maybe dynamic</col>";
 			case MODE_MODEL_INFO:
 				int[] faceColors = model.getFaceColors1();
 				byte[] faceTransparencies = model.getFaceTransparencies();
@@ -1502,7 +1557,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				g.setColor(TRANSPARENT_YELLOW_50);
 				drawLocalAabb(g, localAabb);
 				g.setColor(TRANSPARENT_YELLOW_100);
-				drawLocalAabbLabel(g, localAabb, "Region ID\n" + regionId, false);
+				drawLocalAabbLabel(
+					g, localAabb,
+					"Region ID\n" +
+					regionId + "\n" +
+					regionX + ", " + regionY,
+					false
+				);
 			}
 		}
 	}

@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.InfernalCape;
 import rs117.hd.config.SeasonalTheme;
 
 @Singleton
@@ -14,6 +15,7 @@ public class HDVariables implements VariableSupplier {
 	public static final String VAR_GROUND_TEXTURES = "groundTextures";
 	public static final String VAR_GROUND_BLENDING = "blending";
 	public static final String VAR_HD_INFERNAL_TEXTURE = "hdInfernalCape";
+	public static final String VAR_LEGACY_INFERNAL_TEXTURE = "legacyInfernalCape";
 
 	@Inject
 	private HdPlugin plugin;
@@ -37,7 +39,9 @@ public class HDVariables implements VariableSupplier {
 			case VAR_GROUND_BLENDING:
 				return plugin.configGroundBlending;
 			case VAR_HD_INFERNAL_TEXTURE:
-				return config.hdInfernalTexture();
+				return config.infernalCape() == InfernalCape.HD;
+			case VAR_LEGACY_INFERNAL_TEXTURE:
+				return config.infernalCape() == InfernalCape.LEGACY;
 		}
 
 		int i = name.indexOf('.');

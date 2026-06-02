@@ -66,9 +66,9 @@
   {
     "name": "BLACK_TAR_FLAT",
     "flat": true,
-    "specularStrength": 0.05,
-    "specularGloss": 300.0,
-    "normalStrength": 0.05,
+    "specularStrength": 0.045,
+    "specularGloss": 250,
+    "normalStrength": 0.075,
     "baseOpacity": 0.9,
     "fresnelAmount": 0.02,
     "surfaceColor": [
@@ -82,7 +82,7 @@
       5.41,
       6.16
     ],
-    "duration": 1.6
+    "duration": 4
   },
   {
     "name": "BLOOD",
@@ -140,15 +140,14 @@
   },
   {
     "name": "SCAR_SLUDGE",
-    "specularStrength": 0.0,
+    "specularStrength": 0.2,
     "specularGloss": 100.0,
     "normalStrength": 0.05,
-    "baseOpacity": 0.85,
-    "fresnelAmount": 0.3,
-    "surfaceColor": "#262623",
-    "foamColor": "#69775e",
-    "depthColor": "#69775e",
-    "duration": 1.2
+    "baseOpacity": 0.95,
+    "fresnelAmount": 0.03,
+    "surfaceColor": "#242824",
+    "foamColor": "#21231F",
+    "duration": 2
   },
   {
     "name": "ABYSS_BILE",
@@ -183,6 +182,17 @@
       13.07
     ],
     "depthColor": "#000000"
+  },
+  {
+    "name": "WHISPERER_WATER",
+    "flat": true,
+    "surfaceColor": "#181823",
+    "foamColor": [
+      13.07,
+      13.07,
+      13.07
+    ],
+    "depthColor": "#0A0A0F"
   },
   {
     "name": "DARK_BLUE_WATER",
@@ -269,6 +279,29 @@
       0.77,
       0.77,
       0.77
+    ],
+    "depthColor": [
+      10.79,
+      36.75,
+      41.32
+    ]
+  },
+  {
+    "name": "CAVE_WATER_MURKY",
+    "specularStrength": 0.1,
+    "specularGloss": 75.0,
+    "normalStrength": 0.3,
+    "baseOpacity": 0.86,
+    "fresnelAmount": 0.1,
+    "surfaceColor": [
+      5.17,
+      13.07,
+      16.99
+    ],
+    "foamColor": [
+      85,
+      85,
+      85
     ],
     "depthColor": [
       10.79,

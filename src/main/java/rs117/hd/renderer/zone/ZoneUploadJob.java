@@ -1,46 +1,34 @@
 package rs117.hd.renderer.zone;
 
-import java.util.concurrent.ConcurrentLinkedDeque;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.utils.DestructibleHandler;
+import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
+import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
 public final class ZoneUploadJob extends Job {
-	private static final ConcurrentLinkedDeque<ZoneUploadJob> POOL = new ConcurrentLinkedDeque<>();
-	private static final ThreadLocal<ZoneUploader> THREAD_LOCAL_SCENE_UPLOADER =
-		ThreadLocal.withInitial(() -> getInjector().getInstance(ZoneUploader.class));
-
-	private static class ZoneUploader extends SceneUploader {
-		ZoneUploadJob job;
-
-		@SneakyThrows
-		@Override
-		protected void onBeforeProcessTile(Tile t, boolean isEstimate) {
-			job.workerHandleCancel();
-		}
-	}
+	private static final ConcurrentPool<ZoneUploadJob> POOL = new ConcurrentPool<>(ZoneUploadJob::new);
 
 	private WorldViewContext viewContext;
 	private ZoneSceneContext sceneContext;
 
 	Zone zone;
 	int x, z;
-	float delay;
+	long revealAfterTimestampMs;
 	boolean shouldUnmap;
 
 	@Override
 	protected void onRun() throws InterruptedException {
-		final ZoneUploader sceneUploader = THREAD_LOCAL_SCENE_UPLOADER.get();
-		try {
+		try (SceneUploader sceneUploader = SceneUploader.POOL.acquire()) {
 			workerHandleCancel();
 
-			sceneUploader.job = this;
+			sceneUploader.onBeforeProcessTile = this::onBeforeProcessTile;
 			sceneUploader.setScene(sceneContext.scene);
 			sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
 
@@ -57,37 +45,39 @@ public final class ZoneUploadJob extends Job {
 					invokeClientCallback(zone::unmap);
 			}
 			zone.initialized = true;
-		} finally {
-			sceneUploader.clear();
 		}
+	}
+
+	private void onBeforeProcessTile(Tile t, boolean isEstimate) throws InterruptedException {
+		workerHandleCancel();
 	}
 
 	private void mapZoneVertexBuffers() {
 		try {
-			VBO o = null, a = null;
+			GLBuffer o = null, a = null;
 			int sz = zone.sizeO * Zone.VERT_SIZE * 3;
 			if (sz > 0) {
-				o = new VBO(sz);
-				o.initialize(GL_STATIC_DRAW);
-				o.map();
+				o = new GLBuffer("Zone::VBO::Opaque", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+				o.initialize(sz);
+				o.map(MAP_WRITE);
 			}
 
 			sz = zone.sizeA * Zone.VERT_SIZE * 3;
 			if (sz > 0) {
-				a = new VBO(sz);
-				a.initialize(GL_STATIC_DRAW);
-				a.map();
+				a = new GLBuffer("Zone::VBO::Alpha", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
+				a.initialize(sz);
+				a.map(MAP_WRITE);
 			}
 
 			GLTextureBuffer f = null;
 			sz = zone.sizeF * Zone.TEXTURE_SIZE;
 			if (sz > 0) {
-				f = new GLTextureBuffer("Textured Faces", GL_STATIC_DRAW);
+				f = new GLTextureBuffer("Zone::TBO", GL_STATIC_DRAW);
 				f.initialize(sz);
-				f.map();
+				f.map(MAP_WRITE);
 			}
 
-			zone.initialize(o, a, f, eboAlpha);
+			zone.initialize(o, a, f);
 			zone.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(
@@ -105,7 +95,7 @@ public final class ZoneUploadJob extends Job {
 	@Override
 	protected void onCancel() {
 		if (viewContext.zones[x][z] != zone)
-			viewContext.pendingCull.add(zone);
+			DestructibleHandler.queueDestruction(zone);
 
 		// Avoid holding a reference to the context after the job is done
 		viewContext = null;
@@ -116,10 +106,10 @@ public final class ZoneUploadJob extends Job {
 	protected void onReleased() {
 		viewContext = null;
 		sceneContext = null;
+		zone.uploadJob = null;
 		zone = null;
-		delay = -1.0f;
-		assert !POOL.contains(this) : "Task is already in pool";
-		POOL.add(this);
+		revealAfterTimestampMs = 0;
+		POOL.recycle(this);
 	}
 
 	public static ZoneUploadJob build(
@@ -135,9 +125,7 @@ public final class ZoneUploadJob extends Job {
 		assert zone != null : "Zone cant be null";
 		assert !zone.initialized : "Zone is already initialized";
 
-		ZoneUploadJob newTask = POOL.poll();
-		if (newTask == null)
-			newTask = new ZoneUploadJob();
+		ZoneUploadJob newTask = POOL.acquire();
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
 		newTask.zone = zone;

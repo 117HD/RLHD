@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -72,6 +73,7 @@ import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
+@Singleton
 public class LegacyRenderer implements Renderer {
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
@@ -194,7 +196,7 @@ public class LegacyRenderer implements Renderer {
 	public void initialize() {
 		modelPusher.startUp();
 
-		jobSystem.initialize();
+		jobSystem.startUp(config.cpuUsageLimit());
 
 		renderBufferOffset = 0;
 		numPassthroughModels = 0;
@@ -223,7 +225,7 @@ public class LegacyRenderer implements Renderer {
 			glDeleteVertexArrays(vaoScene);
 		vaoScene = 0;
 
-		jobSystem.destroy();
+		jobSystem.shutDown();
 
 		destroyBuffers();
 		destroyTileHeightMap();
@@ -533,8 +535,8 @@ public class LegacyRenderer implements Renderer {
 		boolean updateUniforms = true;
 
 		Player localPlayer = client.getLocalPlayer();
-		var lp = localPlayer.getLocalLocation();
-		if (sceneContext.enableAreaHiding) {
+		if (sceneContext.enableAreaHiding && localPlayer != null) {
+			var lp = localPlayer.getLocalLocation();
 			assert sceneContext.sceneBase != null;
 			int[] worldPos = {
 				sceneContext.sceneBase[0] + lp.getSceneX(),
@@ -644,8 +646,9 @@ public class LegacyRenderer implements Renderer {
 				uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
 				uboCompute.windOffset.set(plugin.windOffset);
 
-				if (plugin.configCharacterDisplacement) {
+				if (plugin.configCharacterDisplacement && localPlayer != null) {
 					// The local player needs to be added first for distance culling
+					var lp = localPlayer.getLocalLocation();
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
@@ -661,7 +664,7 @@ public class LegacyRenderer implements Renderer {
 					Mat4.mul(plugin.projMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
 					Mat4.mul(plugin.projMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 				} else {
-					Mat4.mul(plugin.projMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+					Mat4.mul(projectionMatrix, Mat4.perspectiveInfiniteReverseZ(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
 
 
@@ -1308,6 +1311,9 @@ public class LegacyRenderer implements Renderer {
 
 		plugin.drawUi(overlayColor);
 
+		frameTimer.end(Timer.DRAW_FRAME);
+		frameTimer.end(Timer.RENDER_FRAME);
+
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);
 			plugin.awtContext.swapBuffers();
@@ -1325,8 +1331,6 @@ public class LegacyRenderer implements Renderer {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
-		frameTimer.end(Timer.DRAW_FRAME);
-		frameTimer.end(Timer.RENDER_FRAME);
 		frameTimer.endFrameAndReset();
 		frameModelInfoMap.clear();
 		checkGLErrors();
@@ -1429,7 +1433,8 @@ public class LegacyRenderer implements Renderer {
 		}
 
 		tileVisibilityCached = false;
-		lightManager.loadSceneLights(nextSceneContext, sceneContext);
+		lightManager.loadSceneLights(nextSceneContext);
+		lightManager.swapSceneLights(nextSceneContext, sceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
 
@@ -1715,6 +1720,14 @@ public class LegacyRenderer implements Renderer {
 			plugin.drawnStaticRenderableCount = plugin.drawnStaticRenderableCount + 1;
 		} else {
 			int uuid = ModelHash.generateUuid(client, hash, renderable);
+			if (renderable instanceof DynamicObject) {
+				var def = client.getObjectDefinition(ModelHash.getUuidId(uuid));
+				if (def != null && def.getImpostorIds() != null) {
+					var impostor = def.getImpostor();
+					if (impostor != null)
+						uuid = ModelHash.packUuid(ModelHash.getUuidType(uuid), impostor.getId());
+				}
+			}
 			int[] worldPos = sceneContext.localToWorld(x, z, plane);
 			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 			if (modelOverride.hide)

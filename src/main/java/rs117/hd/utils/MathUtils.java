@@ -22,6 +22,10 @@ import javax.annotation.Nullable;
 public final class MathUtils {
 	public static final Random RAND = new Random();
 
+	public static final long KB = 1000;
+	public static final long MB = KB * KB;
+	public static final long GB = MB * KB;
+
 	public static final long KiB = 1024;
 	public static final long MiB = KiB * KiB;
 	public static final long GiB = MiB * KiB;
@@ -56,6 +60,27 @@ public final class MathUtils {
 		return vec;
 	}
 
+	public static int[] ivec2(int[] out, int x, int y) {
+		out[0] = x;
+		out[1] = y;
+		return out;
+	}
+
+	public static int[] ivec3(int[] out, int x, int y, int z) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		return out;
+	}
+
+	public static int[] ivec4(int[] out, int x, int y, int z, int w) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		out[3] = w;
+		return out;
+	}
+
 	public static int[] ivec(float... vec) {
 		int[] ivec = new int[vec.length];
 		for (int i = 0; i < vec.length; i++)
@@ -63,11 +88,36 @@ public final class MathUtils {
 		return ivec;
 	}
 
+	public static float[] vec2(float[] out, float x, float y) {
+		out[0] = x;
+		out[1] = y;
+		return out;
+	}
+
+	public static float[] vec3(float[] out, float x, float y, float z) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		return out;
+	}
+
+	public static float[] vec4(float[] out, float x, float y, float z, float w) {
+		out[0] = x;
+		out[1] = y;
+		out[2] = z;
+		out[3] = w;
+		return out;
+	}
+
 	public static float[] copy(float[] v) {
 		return Arrays.copyOf(v, v.length);
 	}
 
 	public static int[] copy(int[] v) {
+		return Arrays.copyOf(v, v.length);
+	}
+
+	public static short[] copy(short[] v) {
 		return Arrays.copyOf(v, v.length);
 	}
 
@@ -101,6 +151,25 @@ public final class MathUtils {
 
 	public static int[] ensureDefaults(@Nullable int[] in, int[] defaults) {
 		return in != null && in.length == defaults.length ? in : copyTo(copy(defaults), in);
+	}
+
+	public static boolean[] ensureCapacity(boolean[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new boolean[size];
+	}
+
+	public static float[] ensureCapacity(float[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new float[size];
+	}
+
+	public static int[] ensureCapacity(int[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new int[size];
+	}
+
+	@FunctionalInterface
+	public interface ArraySupplier<T> { T[] get(int size); }
+
+	public static <T> T[] ensureCapacity(T[] in, int size, ArraySupplier<T> supplier) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : supplier.get(size);
 	}
 
 	public static int[] slice(int[] v, int offset) {
@@ -258,6 +327,14 @@ public final class MathUtils {
 		return pow2(new float[v.length], v);
 	}
 
+	public static long pow10(int power) {
+		assert power >= 0;
+		long n = 1;
+		for (int i = 0; i < power; i++)
+			n *= 10;
+		return n;
+	}
+
 	public static float exp(float v) {
 		return (float) Math.exp(v);
 	}
@@ -304,6 +381,20 @@ public final class MathUtils {
 		return 1.0f / v;
 	}
 
+	public static float square(float v) {
+		return v * v;
+	}
+
+	public static float[] square(float[] out, float... v) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = square(v[i % v.length]);
+		return out;
+	}
+
+	public static float[] square(float... v) {
+		return square(new float[v.length], v);
+	}
+
 	public static float sqrt(float v) {
 		return (float) Math.sqrt(v);
 	}
@@ -347,6 +438,22 @@ public final class MathUtils {
 	}
 
 	public static float dot(int... v) {
+		return dot(v, v);
+	}
+
+	public static float dot(short[] a, short[] b, int n) {
+		assert a.length >= n && b.length >= n;
+		float f = 0;
+		for (int i = 0; i < n; i++)
+			f += a[i] * b[i];
+		return f;
+	}
+
+	public static float dot(short[] a, short... b) {
+		return dot(a, b, min(a.length, b.length));
+	}
+
+	public static float dot(short... v) {
 		return dot(v, v);
 	}
 
@@ -474,6 +581,18 @@ public final class MathUtils {
 		return ceil(new int[v.length], v);
 	}
 
+	public static int ceilPow2(int x) {
+		if (x <= 1) return 1;
+		if (x > (1 << 30)) return 1 << 30;
+		return 1 << (32 - Integer.numberOfLeadingZeros(x - 1));
+	}
+
+	public static long ceilPow2(long x) {
+		if (x <= 1) return 1;
+		if (x > (1L << 62)) return 1L << 62;
+		return 1L << (64 - Long.numberOfLeadingZeros(x - 1));
+	}
+
 	public static int round(float v) {
 		return Math.round(v);
 	}
@@ -502,12 +621,49 @@ public final class MathUtils {
 		return roundf(new float[v.length], v);
 	}
 
+	public static double round(int numDecimals, double v) {
+		double n = pow10(numDecimals);
+		return (double) Math.round(v * n) / n;
+	}
+
+	public static double[] round(double[] out, int numDecimals, double... v) {
+		double n = pow10(numDecimals);
+		double divisor = 1.0 / n;
+		for (int i = 0; i < out.length; i++)
+			out[i] = Math.round(v[i % v.length] * n) * divisor;
+		return out;
+	}
+
+	public static double[] round(int numDecimals, double... v) {
+		return round(new double[v.length], numDecimals, v);
+	}
+
+	public static float round(int numDecimals, float v) {
+		return (float) round(numDecimals, (double) v);
+	}
+
+	public static float[] round(float[] out, int numDecimals, float... v) {
+		double n = pow10(numDecimals);
+		double divisor = 1.0 / n;
+		for (int i = 0; i < out.length; i++)
+			out[i] = (float) (Math.round(v[i % v.length] * n) * divisor);
+		return out;
+	}
+
+	public static float[] round(int numDecimals, float... v) {
+		return round(new float[v.length], numDecimals, v);
+	}
+
 	public static float min(float a, float b) {
 		return Math.min(a, b);
 	}
 
 	public static int min(int a, int b) {
 		return Math.min(a, b);
+	}
+
+	public static char min(char a, char b) {
+		return (char) Math.min(a, b);
 	}
 
 	public static long min(long a, long b) {
@@ -556,6 +712,10 @@ public final class MathUtils {
 
 	public static int max(int a, int b) {
 		return Math.max(a, b);
+	}
+
+	public static char max(char a, char b) {
+		return (char) Math.max(a, b);
 	}
 
 	public static long max(long a, long b) {
@@ -607,6 +767,10 @@ public final class MathUtils {
 	}
 
 	public static int clamp(int v, int min, int max) {
+		return min(max(v, min), max);
+	}
+
+	public static long clamp(long v, long min, long max) {
 		return min(max(v, min), max);
 	}
 
@@ -726,6 +890,10 @@ public final class MathUtils {
 		return (float) Math.tan(rad);
 	}
 
+	public static short normShort(float f) {
+		return (short) round(clamp(f, -1, 1) * Short.MAX_VALUE);
+	}
+
 	public static int float16(float value) {
 		if (value == 0)
 			return 0;
@@ -768,5 +936,17 @@ public final class MathUtils {
 		}
 
 		return sign | exponent << 10 | mantissa >> 13;
+	}
+
+	public static String formatBytes(long bytes) {
+		if (bytes < 0)
+			return "-" + formatBytes(bytes == Long.MIN_VALUE ? Long.MAX_VALUE : -bytes);
+		if (bytes == Long.MAX_VALUE)
+			return "infinity";
+		if (bytes < 1024)
+			return bytes + " B";
+		int i = (63 - Long.numberOfLeadingZeros(bytes)) / 10 - 1;
+		int decimal = (10 * (int) (bytes >> i * 10) / 1024) % 10;
+		return String.format("%d%s %siB", bytes >> (i + 1) * 10, decimal == 0 ? "" : "." + decimal, "KMGTPE".charAt(i));
 	}
 }

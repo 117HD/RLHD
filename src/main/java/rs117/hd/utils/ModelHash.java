@@ -113,24 +113,8 @@ public class ModelHash {
 		} else {
 			type = ModelHash.getType(hash);
 			id = ModelHash.getIdOrIndex(hash);
-
-			if (renderable instanceof DynamicObject) {
-				var def = client.getObjectDefinition(id);
-				if (def.getImpostorIds() != null) {
-					var impostor = def.getImpostor();
-					if (impostor != null)
-						id = impostor.getId();
-				}
-			} else if (type == TYPE_NPC) {
-				int index = id;
-				id = UNKNOWN_ID;
-				var npcs = client.getTopLevelWorldView().npcs();
-				if (index >= 0 && index < 65536) {
-					NPC npc = npcs.byIndex(index);
-					if (npc != null)
-						id = npc.getId();
-				}
-			}
+			if (type == TYPE_NPC)
+				id = renderable instanceof NPC ? ((NPC) renderable).getId() : UNKNOWN_ID;
 		}
 
 		return packUuid(type, id);

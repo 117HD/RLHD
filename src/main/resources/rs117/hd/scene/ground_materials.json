@@ -64,7 +64,7 @@
       "SNOW_1",
       "SNOW_3",
       "GRAVEL_LIGHT",
-      "SNOW_4",
+      "SNOW_2",
       "DIRT_1",
       "GRAVEL_LIGHT",
       "SNOW_2"
@@ -78,14 +78,14 @@
       "SNOW_2",
       "SNOW_3",
       "SNOW_3",
-      "SNOW_4"
+      "SNOW_2"
     ]
   },
   {
     "name": "SNOW_2",
     "materials": [
       "SNOW_2",
-      "SNOW_4"
+      "SNOW_3"
     ]
   },
   {
@@ -123,9 +123,15 @@
     ]
   },
   {
+    "name": "DIRT_1",
+    "materials": [
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "VARIED_DIRT",
     "materials": [
-      "GRAVEL",
+      "GRAVEL_LIGHT",
       "DIRT_1",
       "DIRT_2"
     ]
@@ -133,7 +139,7 @@
   {
     "name": "VARIED_DIRT_SHINY",
     "materials": [
-      "GRAVEL_SHINY",
+      "GRAVEL_SHINY_LIGHT",
       "DIRT_1_SHINY",
       "DIRT_2_SHINY"
     ]
@@ -205,6 +211,12 @@
     "name": "GRUNGE_3",
     "materials": [
       "GRUNGE_3"
+    ]
+  },
+  {
+    "name": "GRUNGE_3_LIGHT_SHINY",
+    "materials": [
+      "GRUNGE_3_LIGHT_SHINY"
     ]
   },
   {
@@ -360,6 +372,16 @@
     ]
   },
   {
+    "name": "BEACH_SAND",
+    "materials": [
+      "SAND_4",
+      "GRAVEL_LIGHT",
+      "DIRT_1",
+      "SAND_4",
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "WOOD_PLANKS_1",
     "materials": [
       "WOOD_PLANKS_1"
@@ -472,6 +494,22 @@
     ]
   },
   {
+    "name": "ROCKY_CAVE_FLOOR_2",
+    "materials": [
+      "DIRT_1",
+      "DIRT_1",
+      "GRAVEL_LIGHT",
+      "DIRT_2",
+      "ROCK_2"
+    ]
+  },
+  {
+    "name": "ROCK_6",
+    "materials": [
+      "ROCK_6"
+    ]
+  },
+  {
     "name": "EARTHEN_CAVE_FLOOR",
     "materials": [
       "GRUNGE_1",
@@ -499,10 +537,16 @@
     ]
   },
   {
+    "name": "ROCK_1",
+    "materials": [
+      "ROCK_1"
+    ]
+  },
+  {
     "name": "ROCK_PILES",
     "materials": [
       "STONE_NORMALED",
-      "GRAVEL",
+      "GRAVEL_LIGHT",
       "GRUNGE_1"
     ]
   },
@@ -634,6 +678,12 @@
     "name": "STONE",
     "materials": [
       "STONE_NORMALED"
+    ]
+  },
+  {
+    "name": "SMOOTH_STONE",
+    "materials": [
+      "SMOOTH_STONE"
     ]
   }
 ]

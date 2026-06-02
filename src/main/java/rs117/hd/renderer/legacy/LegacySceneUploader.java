@@ -54,6 +54,8 @@ import rs117.hd.utils.ModelHash;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.scene.SceneContext.TILE_SKIP_FLAG;
+import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
@@ -68,7 +70,7 @@ public class LegacySceneUploader {
 	public static final int SCENE_ID_MASK = 0xFFFF;
 	public static final int EXCLUDED_FROM_SCENE_BUFFER = 0xFFFFFFFF;
 
-	private static final int[] UP_NORMAL = { 0, -1, 0 };
+	private static final short[] UP_NORMAL = { 0, -1, 0 };
 
 	@Inject
 	private Client client;
@@ -98,7 +100,7 @@ public class LegacySceneUploader {
 	private LegacyModelPusher modelPusher;
 
 	public void upload(LegacySceneContext sceneContext) {
-		proceduralGenerator.generateSceneData(sceneContext);
+		proceduralGenerator.generateSceneData(sceneContext, null);
 
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
@@ -185,7 +187,10 @@ public class LegacySceneUploader {
 		}
 
 		assert sceneContext.sceneBase != null;
-		var lp = client.getLocalPlayer().getLocalLocation();
+		var localPlayer = client.getLocalPlayer();
+		if (localPlayer == null)
+			return;
+		var lp = localPlayer.getLocalLocation();
 		int[] worldPos = {
 			sceneContext.sceneBase[0] + lp.getSceneX(),
 			sceneContext.sceneBase[1] + lp.getSceneY(),
@@ -640,10 +645,10 @@ public class LegacySceneUploader {
 			Material neMaterial = Material.NONE;
 			Material nwMaterial = Material.NONE;
 
-			int[] swNormals = UP_NORMAL;
-			int[] seNormals = UP_NORMAL;
-			int[] neNormals = UP_NORMAL;
-			int[] nwNormals = UP_NORMAL;
+			short[] swNormals = UP_NORMAL;
+			short[] seNormals = UP_NORMAL;
+			short[] neNormals = UP_NORMAL;
+			short[] nwNormals = UP_NORMAL;
 
 			if (waterType == WaterType.NONE) {
 				if (textureId != -1) {
@@ -654,10 +659,10 @@ public class LegacySceneUploader {
 					swMaterial = seMaterial = neMaterial = nwMaterial = material;
 				}
 
-				swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, swNormals);
-				seNormals = sceneContext.vertexTerrainNormals.getOrDefault(seVertexKey, seNormals);
-				neNormals = sceneContext.vertexTerrainNormals.getOrDefault(neVertexKey, neNormals);
-				nwNormals = sceneContext.vertexTerrainNormals.getOrDefault(nwVertexKey, nwNormals);
+				swNormals = sceneContext.getVertexNormalOrDefault(swVertexKey, new short[3], UP_NORMAL);
+				seNormals = sceneContext.getVertexNormalOrDefault(seVertexKey, new short[3], UP_NORMAL);
+				neNormals = sceneContext.getVertexNormalOrDefault(neVertexKey, new short[3], UP_NORMAL);
+				nwNormals = sceneContext.getVertexNormalOrDefault(nwVertexKey, new short[3], UP_NORMAL);
 
 				boolean useBlendedMaterialAndColor =
 					plugin.configGroundBlending &&
@@ -674,10 +679,6 @@ public class LegacySceneUploader {
 						nwColor = override.modifyColor(nwColor);
 						neColor = override.modifyColor(neColor);
 					}
-					swHeight -= override.heightOffset;
-					seHeight -= override.heightOffset;
-					neHeight -= override.heightOffset;
-					nwHeight -= override.heightOffset;
 				} else if (textureId == -1) {
 					// Fall back to the default ground material if the tile is untextured
 					groundMaterial = override.groundMaterial;
@@ -708,36 +709,40 @@ public class LegacySceneUploader {
 				// set colors for the shoreline to create a foam effect in the water shader
 				swColor = seColor = nwColor = neColor = 127;
 
-				if (sceneContext.vertexIsWater.containsKey(swVertexKey) && sceneContext.vertexIsLand.containsKey(swVertexKey))
+				if (sceneContext.isVertexWater(swVertexKey) && sceneContext.isVertexLand(swVertexKey))
 					swColor = 0;
-				if (sceneContext.vertexIsWater.containsKey(seVertexKey) && sceneContext.vertexIsLand.containsKey(seVertexKey))
+				if (sceneContext.isVertexWater(seVertexKey) && sceneContext.isVertexLand(seVertexKey))
 					seColor = 0;
-				if (sceneContext.vertexIsWater.containsKey(nwVertexKey) && sceneContext.vertexIsLand.containsKey(nwVertexKey))
+				if (sceneContext.isVertexWater(nwVertexKey) && sceneContext.isVertexLand(nwVertexKey))
 					nwColor = 0;
-				if (sceneContext.vertexIsWater.containsKey(neVertexKey) && sceneContext.vertexIsLand.containsKey(neVertexKey))
+				if (sceneContext.isVertexWater(neVertexKey) && sceneContext.isVertexLand(neVertexKey))
 					neColor = 0;
 			}
 
-			if (sceneContext.vertexIsOverlay.containsKey(neVertexKey) && sceneContext.vertexIsUnderlay.containsKey(neVertexKey))
+			if (sceneContext.isVertexOverlay(neVertexKey) && sceneContext.isVertexUnderlay(neVertexKey))
 				neVertexIsOverlay = true;
-			if (sceneContext.vertexIsOverlay.containsKey(nwVertexKey) && sceneContext.vertexIsUnderlay.containsKey(nwVertexKey))
+			if (sceneContext.isVertexOverlay(nwVertexKey) && sceneContext.isVertexUnderlay(nwVertexKey))
 				nwVertexIsOverlay = true;
-			if (sceneContext.vertexIsOverlay.containsKey(seVertexKey) && sceneContext.vertexIsUnderlay.containsKey(seVertexKey))
+			if (sceneContext.isVertexOverlay(seVertexKey) && sceneContext.isVertexUnderlay(seVertexKey))
 				seVertexIsOverlay = true;
-			if (sceneContext.vertexIsOverlay.containsKey(swVertexKey) && sceneContext.vertexIsUnderlay.containsKey(swVertexKey))
+			if (sceneContext.isVertexOverlay(swVertexKey) && sceneContext.isVertexUnderlay(swVertexKey))
 				swVertexIsOverlay = true;
 
+			swHeight -= override.heightOffset;
+			seHeight -= override.heightOffset;
+			neHeight -= override.heightOffset;
+			nwHeight -= override.heightOffset;
 
 			float terrainData = Float.intBitsToFloat(packTerrainData(true, 0, waterType, tileZ));
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
-			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], terrainData);
-			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], terrainData);
-			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], terrainData);
+			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[1], neNormals[2], terrainData);
+			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[1], nwNormals[2], terrainData);
+			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[1], seNormals[2], terrainData);
 
-			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[2], swNormals[1], terrainData);
-			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], terrainData);
-			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], terrainData);
+			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[1], swNormals[2], terrainData);
+			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[1], seNormals[2], terrainData);
+			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[1], nwNormals[2], terrainData);
 
 
 			sceneContext.stagingBufferVertices.ensureCapacity(24);
@@ -826,7 +831,7 @@ public class LegacySceneUploader {
 		int nwVertexKey = vertexKeys[2];
 		int neVertexKey = vertexKeys[3];
 
-		if (sceneContext.tileIsWater[tileZ][tileExX][tileExY]) {
+		if (sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_WATER_FLAG)) {
 			// underwater terrain
 
 			underwaterTerrain = 1;
@@ -834,15 +839,15 @@ public class LegacySceneUploader {
 			int swColor, seColor, neColor, nwColor;
 			swColor = seColor = neColor = nwColor = UNDERWATER_HSL;
 
-			int swDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(swVertexKey, 0);
-			int seDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(seVertexKey, 0);
-			int nwDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(nwVertexKey, 0);
-			int neDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(neVertexKey, 0);
+			int swDepth = sceneContext.getVertexUnderwaterDepth(swVertexKey);
+			int seDepth = sceneContext.getVertexUnderwaterDepth(seVertexKey);
+			int nwDepth = sceneContext.getVertexUnderwaterDepth(nwVertexKey);
+			int neDepth = sceneContext.getVertexUnderwaterDepth(neVertexKey);
 
-			int[] swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, UP_NORMAL);
-			int[] seNormals = sceneContext.vertexTerrainNormals.getOrDefault(seVertexKey, UP_NORMAL);
-			int[] nwNormals = sceneContext.vertexTerrainNormals.getOrDefault(nwVertexKey, UP_NORMAL);
-			int[] neNormals = sceneContext.vertexTerrainNormals.getOrDefault(neVertexKey, UP_NORMAL);
+			short[] swNormals = sceneContext.getVertexNormalOrDefault(swVertexKey, new short[3], UP_NORMAL);
+			short[] seNormals = sceneContext.getVertexNormalOrDefault(seVertexKey, new short[3], UP_NORMAL);
+			short[] nwNormals = sceneContext.getVertexNormalOrDefault(nwVertexKey, new short[3], UP_NORMAL);
+			short[] neNormals = sceneContext.getVertexNormalOrDefault(neVertexKey, new short[3], UP_NORMAL);
 
 			Material swMaterial = Material.NONE;
 			Material seMaterial = Material.NONE;
@@ -864,13 +869,13 @@ public class LegacySceneUploader {
 			float neTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, neDepth), waterType, tileZ));
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
-			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
-			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData);
-			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], seTerrainData);
+			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[1], neNormals[2], neTerrainData);
+			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[1], nwNormals[2], nwTerrainData);
+			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[1], seNormals[2], seTerrainData);
 
-			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[2], swNormals[1], swTerrainData);
-			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[2], seNormals[1], seTerrainData);
-			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData);
+			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[1], swNormals[2], swTerrainData);
+			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[1], seNormals[2], seTerrainData);
+			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[1], nwNormals[2], nwTerrainData);
 
 			// Clamp underwater terrain to the edge of the scene
 			if (tileExX == sceneContext.sceneEdge0)
@@ -950,7 +955,7 @@ public class LegacySceneUploader {
 		final int tileExY = tileY + sceneContext.sceneOffset;
 		final int tileZ = tile.getRenderLevel();
 
-		if (!fillGaps && sceneContext.skipTile[tileZ][tileExX][tileExY])
+		if (!fillGaps && sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_SKIP_FLAG))
 			return new int[3];
 
 		int bufferLength = 0;
@@ -973,7 +978,8 @@ public class LegacySceneUploader {
 			int colorB = faceColorB[face];
 			int colorC = faceColorC[face];
 
-			int[][] localVertices = ProceduralGenerator.faceLocalVertices(tile, face);
+			int[][] localVertices = new int[3][3];
+			ProceduralGenerator.faceLocalVertices(tile, face, localVertices);
 
 			int[] vertexKeys = ProceduralGenerator.faceVertexKeys(tile, face);
 			int vertexKeyA = vertexKeys[0];
@@ -992,9 +998,9 @@ public class LegacySceneUploader {
 			int uvOrientation = 0;
 			float uvScale = 1;
 
-			int[] normalsA = UP_NORMAL;
-			int[] normalsB = UP_NORMAL;
-			int[] normalsC = UP_NORMAL;
+			short[] normalsA = UP_NORMAL;
+			short[] normalsB = UP_NORMAL;
+			short[] normalsC = UP_NORMAL;
 
 			WaterType waterType = WaterType.NONE;
 
@@ -1020,9 +1026,9 @@ public class LegacySceneUploader {
 						materialA = materialB = materialC = material;
 					}
 
-					normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, normalsA);
-					normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, normalsB);
-					normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, normalsC);
+					normalsA = sceneContext.getVertexNormalOrDefault(vertexKeyA, new short[3], UP_NORMAL);
+					normalsB = sceneContext.getVertexNormalOrDefault(vertexKeyB, new short[3], UP_NORMAL);
+					normalsC = sceneContext.getVertexNormalOrDefault(vertexKeyC, new short[3], UP_NORMAL);
 
 					GroundMaterial groundMaterial = null;
 
@@ -1058,53 +1064,53 @@ public class LegacySceneUploader {
 					} else if (plugin.configGroundTextures && groundMaterial != null) {
 						materialA = groundMaterial.getRandomMaterial(
 							worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
+							worldPos[1] + (localVertices[0][2] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 						materialB = groundMaterial.getRandomMaterial(
 							worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
+							worldPos[1] + (localVertices[1][2] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 						materialC = groundMaterial.getRandomMaterial(
 							worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
-							worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
+							worldPos[1] + (localVertices[2][2] >> LOCAL_COORD_BITS),
 							worldPos[2]
 						);
 					}
 				} else {
 					// set colors for the shoreline to create a foam effect in the water shader
 					colorA = colorB = colorC = 127;
-					if (sceneContext.vertexIsWater.containsKey(vertexKeyA) && sceneContext.vertexIsLand.containsKey(vertexKeyA))
+					if (sceneContext.isVertexWater(vertexKeyA) && sceneContext.isVertexLand(vertexKeyA))
 						colorA = 0;
-					if (sceneContext.vertexIsWater.containsKey(vertexKeyB) && sceneContext.vertexIsLand.containsKey(vertexKeyB))
+					if (sceneContext.isVertexWater(vertexKeyB) && sceneContext.isVertexLand(vertexKeyB))
 						colorB = 0;
-					if (sceneContext.vertexIsWater.containsKey(vertexKeyC) && sceneContext.vertexIsLand.containsKey(vertexKeyC))
+					if (sceneContext.isVertexWater(vertexKeyC) && sceneContext.isVertexLand(vertexKeyC))
 						colorC = 0;
 				}
 
-				if (sceneContext.vertexIsOverlay.containsKey(vertexKeyA) && sceneContext.vertexIsUnderlay.containsKey(vertexKeyA))
+				if (sceneContext.isVertexOverlay(vertexKeyA) && sceneContext.isVertexUnderlay(vertexKeyA))
 					vertexAIsOverlay = true;
-				if (sceneContext.vertexIsOverlay.containsKey(vertexKeyB) && sceneContext.vertexIsUnderlay.containsKey(vertexKeyB))
+				if (sceneContext.isVertexOverlay(vertexKeyB) && sceneContext.isVertexUnderlay(vertexKeyB))
 					vertexBIsOverlay = true;
-				if (sceneContext.vertexIsOverlay.containsKey(vertexKeyC) && sceneContext.vertexIsUnderlay.containsKey(vertexKeyC))
+				if (sceneContext.isVertexOverlay(vertexKeyC) && sceneContext.isVertexUnderlay(vertexKeyC))
 					vertexCIsOverlay = true;
 
 				for (int i = 0; i < 3; i++)
-					localVertices[i][2] -= override.heightOffset;
+					localVertices[i][1] -= override.heightOffset;
 			}
 
 			float terrainData = Float.intBitsToFloat(packTerrainData(true, 0, waterType, tileZ));
 
 			sceneContext.stagingBufferNormals.ensureCapacity(12);
-			sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], terrainData);
-			sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[2], normalsB[1], terrainData);
-			sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[2], normalsC[1], terrainData);
+			sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[1], normalsA[2], terrainData);
+			sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[1], normalsB[2], terrainData);
+			sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[1], normalsC[2], terrainData);
 
 			sceneContext.stagingBufferVertices.ensureCapacity(12);
-			sceneContext.stagingBufferVertices.put((float) localVertices[0][0], localVertices[0][2], localVertices[0][1], colorA);
-			sceneContext.stagingBufferVertices.put((float) localVertices[1][0], localVertices[1][2], localVertices[1][1], colorB);
-			sceneContext.stagingBufferVertices.put((float) localVertices[2][0], localVertices[2][2], localVertices[2][1], colorC);
+			sceneContext.stagingBufferVertices.put((float) localVertices[0][0], localVertices[0][1], localVertices[0][2], colorA);
+			sceneContext.stagingBufferVertices.put((float) localVertices[1][0], localVertices[1][1], localVertices[1][2], colorB);
+			sceneContext.stagingBufferVertices.put((float) localVertices[2][0], localVertices[2][1], localVertices[2][2], colorC);
 
 			bufferLength += 3;
 
@@ -1124,7 +1130,7 @@ public class LegacySceneUploader {
 			sceneContext.stagingBufferUvs.ensureCapacity(12);
 			for (int i = 0; i < 3; i++) {
 				float uvx = worldPos[0] + localVertices[i][0] / 128f - 1;
-				float uvy = worldPos[1] + localVertices[i][1] / 128f - 1;
+				float uvy = worldPos[1] + localVertices[i][2] / 128f - 1;
 				float tmp = uvx;
 				uvx = uvx * uvcos - uvy * uvsin;
 				uvy = tmp * uvsin + uvy * uvcos;
@@ -1151,7 +1157,7 @@ public class LegacySceneUploader {
 		int uvBufferLength = 0;
 		int underwaterTerrain = 0;
 
-		if (sceneContext.skipTile[tileZ][tileExX][tileExY])
+		if (sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_SKIP_FLAG))
 			return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 
 		final int[] faceColorA = model.getTriangleColorA();
@@ -1170,7 +1176,7 @@ public class LegacySceneUploader {
 			Math.min(tileExX, tileExY) == sceneContext.sceneEdge0 ||
 			Math.max(tileExX, tileExY) == sceneContext.sceneEdge1;
 
-		if (sceneContext.tileIsWater[tileZ][tileExX][tileExY]) {
+		if (sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_WATER_FLAG)) {
 			underwaterTerrain = 1;
 
 			int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];
@@ -1188,7 +1194,8 @@ public class LegacySceneUploader {
 				if (faceColorA[face] == HIDDEN_HSL && !override.forced)
 					continue;
 
-				int[][] localVertices = ProceduralGenerator.faceLocalVertices(tile, face);
+				int[][] localVertices = new int[3][3];
+				ProceduralGenerator.faceLocalVertices(tile, face, localVertices);
 
 				Material materialA = Material.NONE;
 				Material materialB = Material.NONE;
@@ -1199,34 +1206,32 @@ public class LegacySceneUploader {
 				int vertexKeyB = vertexKeys[1];
 				int vertexKeyC = vertexKeys[2];
 
-				int[] depths = {
-					sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyA, 0),
-					sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyB, 0),
-					sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0)
-				};
+				int depthA = sceneContext.getVertexUnderwaterDepth(vertexKeyA);
+				int depthB = sceneContext.getVertexUnderwaterDepth(vertexKeyB);
+				int depthC = sceneContext.getVertexUnderwaterDepth(vertexKeyC);
 
 				if (plugin.configGroundTextures) {
 					GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
 					materialA = groundMaterial.getRandomMaterial(
 						worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (localVertices[0][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialB = groundMaterial.getRandomMaterial(
 						worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (localVertices[1][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialC = groundMaterial.getRandomMaterial(
 						worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
+						worldPos[1] + (localVertices[2][2] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 				}
 
-				int[] normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, UP_NORMAL);
-				int[] normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, UP_NORMAL);
-				int[] normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, UP_NORMAL);
+				short[] normalsA = sceneContext.getVertexNormalOrDefault(vertexKeyA, new short[3], UP_NORMAL);
+				short[] normalsB = sceneContext.getVertexNormalOrDefault(vertexKeyB, new short[3], UP_NORMAL);
+				short[] normalsC = sceneContext.getVertexNormalOrDefault(vertexKeyC, new short[3], UP_NORMAL);
 
 				int textureId = faceTextures == null ? -1 : faceTextures[face];
 				WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
@@ -1236,9 +1241,9 @@ public class LegacySceneUploader {
 				float cTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, depths[2]), waterType, tileZ));
 
 				sceneContext.stagingBufferNormals.ensureCapacity(12);
-				sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
-				sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[2], normalsB[1], bTerrainData);
-				sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[2], normalsC[1], cTerrainData);
+				sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[1], normalsA[2], aTerrainData);
+				sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[1], normalsB[2], bTerrainData);
+				sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[1], normalsC[2], cTerrainData);
 
 				// Clamp underwater terrain to the edge of the scene
 				if (isEdge) {
@@ -1257,20 +1262,20 @@ public class LegacySceneUploader {
 				sceneContext.stagingBufferVertices.ensureCapacity(12);
 				sceneContext.stagingBufferVertices.put(
 					(float) localVertices[0][0],
-					localVertices[0][2] + depths[0],
-					localVertices[0][1],
+					localVertices[0][1] + depthA,
+					localVertices[0][2],
 					colorA
 				);
 				sceneContext.stagingBufferVertices.put(
 					(float) localVertices[1][0],
-					localVertices[1][2] + depths[1],
-					localVertices[1][1],
+					localVertices[1][1] + depthB,
+					localVertices[1][2],
 					colorB
 				);
 				sceneContext.stagingBufferVertices.put(
 					(float) localVertices[2][0],
-					localVertices[2][2] + depths[2],
-					localVertices[2][1],
+					localVertices[2][1] + depthC,
+					localVertices[2][2],
 					colorC
 				);
 
@@ -1281,9 +1286,9 @@ public class LegacySceneUploader {
 				int packedMaterialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 				sceneContext.stagingBufferUvs.ensureCapacity(12);
-				sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
-				sceneContext.stagingBufferUvs.put(1 - localVertices[1][0] / 128f, 1 - localVertices[1][1] / 128f, 0, packedMaterialDataB);
-				sceneContext.stagingBufferUvs.put(1 - localVertices[2][0] / 128f, 1 - localVertices[2][1] / 128f, 0, packedMaterialDataC);
+				sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][2] / 128f, 0, packedMaterialDataA);
+				sceneContext.stagingBufferUvs.put(1 - localVertices[1][0] / 128f, 1 - localVertices[1][2] / 128f, 0, packedMaterialDataB);
+				sceneContext.stagingBufferUvs.put(1 - localVertices[2][0] / 128f, 1 - localVertices[2][2] / 128f, 0, packedMaterialDataC);
 
 				uvBufferLength += 3;
 			}

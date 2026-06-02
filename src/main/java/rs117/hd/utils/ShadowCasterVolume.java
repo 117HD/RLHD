@@ -1,5 +1,7 @@
 package rs117.hd.utils;
 
+import static net.runelite.api.Perspective.*;
+import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
 
 public class ShadowCasterVolume {
@@ -31,9 +33,11 @@ public class ShadowCasterVolume {
 		6, 7, 4
 	};
 
+	private final Camera tempSceneCamera = new Camera();
 	private final Camera shadowCamera;
 	private final float[] lightDir = new float[3];
 	private final VolumeTriangle[] volumeTriangles = new VolumeTriangle[VOLUME_TRIANGLE_COUNT];
+	private final float[][] volumeCorners = new float[8][3];
 
 	public ShadowCasterVolume(Camera shadowCamera) {
 		this.shadowCamera = shadowCamera;
@@ -41,7 +45,15 @@ public class ShadowCasterVolume {
 			volumeTriangles[t] = new VolumeTriangle();
 	}
 
-	public void build(float[][] volumeCorners) {
+	public float[][] build(Camera sceneCamera, float drawDistance, int shadowDrawDistance) {
+		tempSceneCamera.copyFrom(sceneCamera);
+		tempSceneCamera.setReverseZ(false);
+		tempSceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
+
+		int maxDistance = Math.min(shadowDrawDistance, (int) tempSceneCamera.getFarPlane());
+		tempSceneCamera.getFrustumCorners(volumeCorners);
+		clipFrustumToDistance(volumeCorners, maxDistance);
+
 		shadowCamera.getForwardDirection(lightDir);
 
 		// Invert Light Direction
@@ -57,6 +69,7 @@ public class ShadowCasterVolume {
 
 			volumeTriangles[t].build(v0, v1, v2);
 		}
+		return volumeCorners;
 	}
 
 	public boolean intersectsPoint(int x, int y, int z) {
