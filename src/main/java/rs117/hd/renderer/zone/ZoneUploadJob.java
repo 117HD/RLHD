@@ -1,11 +1,11 @@
 package rs117.hd.renderer.zone;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GLTextureBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -13,7 +13,7 @@ import static rs117.hd.utils.buffer.GLBuffer.MAP_WRITE;
 
 @Slf4j
 public final class ZoneUploadJob extends Job {
-	private static final ConcurrentLinkedQueue<ZoneUploadJob> POOL = new ConcurrentLinkedQueue<>();
+	private static final ConcurrentPool<ZoneUploadJob> POOL = new ConcurrentPool<>(ZoneUploadJob::new);
 
 	private WorldViewContext viewContext;
 	private ZoneSceneContext sceneContext;
@@ -109,8 +109,7 @@ public final class ZoneUploadJob extends Job {
 		zone.uploadJob = null;
 		zone = null;
 		revealAfterTimestampMs = 0;
-		assert !POOL.contains(this) : "Task is already in pool";
-		POOL.add(this);
+		POOL.recycle(this);
 	}
 
 	public static ZoneUploadJob build(
@@ -126,9 +125,7 @@ public final class ZoneUploadJob extends Job {
 		assert zone != null : "Zone cant be null";
 		assert !zone.initialized : "Zone is already initialized";
 
-		ZoneUploadJob newTask = POOL.poll();
-		if (newTask == null)
-			newTask = new ZoneUploadJob();
+		ZoneUploadJob newTask = POOL.acquire();
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
 		newTask.zone = zone;

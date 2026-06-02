@@ -25,8 +25,10 @@
 package rs117.hd.utils;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Frame;
+import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.lang.management.ManagementFactory;
@@ -44,8 +46,6 @@ import rs117.hd.scene.water_types.WaterType;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
-import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -55,32 +55,30 @@ public final class HDUtils {
 	public static final int HIDDEN_HSL = 12345678;
 	public static final int UNDERWATER_HSL = 6676;
 
-	public static int fastVertexHash(int[] vPos) {
-		int hash = 0;
-		for (int part : vPos) {
-			hash = 31 * hash + part;
-			hash = 31 * hash + ','; // preserve the comma separator effect
-		}
-		return hash;
+	public static final int EXTENDED_SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
+
+	public static int tileVertexHash(int[] vertex) {
+		// Tile X and Z coordinates are always multiples of 32, so 10 bits is sufficient for 184 tiles.
+		// The tile height does not strictly fit in 12 bits, so we allow collisions beyond 4096 units.
+		return
+			(vertex[1] & 0xFFF) << 20 |
+			(vertex[2] + EXTENDED_SCENE_OFFSET * LOCAL_TILE_SIZE >> 5) << 10 |
+			(vertex[0] + EXTENDED_SCENE_OFFSET * LOCAL_TILE_SIZE >> 5);
 	}
 
-	public static int[] calculateSurfaceNormals(int[] a, int[] b, int[] c) {
+	public static int tileVertexUuid(Tile tile, int[] vertex) {
+		// Tile X and Z coordinates are always multiples of 32, so 10 bits is sufficient for 184 tiles.
+		// The render level is the tile's original plane prior to setting up bridge tiles, and should be unique.
+		return
+			tile.getRenderLevel() << 20 |
+			(vertex[2] + EXTENDED_SCENE_OFFSET * LOCAL_TILE_SIZE >> 5) << 10 |
+			(vertex[0] + EXTENDED_SCENE_OFFSET * LOCAL_TILE_SIZE >> 5);
+	}
+
+	public static int[] calculateSurfaceNormals(int[] out, int[] a, int[] b, int[] c) {
 		subtract(b, a, b);
 		subtract(c, a, c);
-		return cross(b, c);
-	}
-
-	public static int ceilPow2(int i) {
-		return (int) ceilPow2((long) i);
-	}
-
-	public static long ceilPow2(long l) {
-		assert l >= 0;
-		l--; // Reduce by 1 in case it's already a power of 2
-		// Fill in all bits below the highest active bit
-		for (int i = 1; i <= 32; i *= 2)
-			l |= l >> i;
-		return l + 1; // Bump it up to the next power of 2
+		return cross(out, b, c);
 	}
 
 	public static float[] sunAngles(float altitude, float azimuth) {
@@ -360,19 +358,32 @@ public final class HDUtils {
 			final int[] faceColorsB = model.getTriangleColorB();
 			final int[] faceColorsC = model.getTriangleColorC();
 
-			outer:
+			int x = tile.getSceneLocation().getX();
+			int y = tile.getSceneLocation().getY();
+			int baseX = x * LOCAL_TILE_SIZE;
+			int baseY = y * LOCAL_TILE_SIZE;
+
 			for (int face = 0; face < faceCount; face++) {
 				if (isOverlayFace(tile, face))
 					continue;
 
-				int[][] vertices = faceLocalVertices(tile, face);
-				int[] faceColors = new int[] { faceColorsA[face], faceColorsB[face], faceColorsC[face] };
+				final int vertexFaceA = model.getFaceX()[face];
+				hsl = faceColorsA[face];
+				if (model.getVertexX()[vertexFaceA] - baseX != LOCAL_TILE_SIZE &&
+					model.getVertexZ()[vertexFaceA] - baseY != LOCAL_TILE_SIZE)
+					break;
 
-				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
-					hsl = faceColors[vertex];
-					if (vertices[vertex][0] != LOCAL_TILE_SIZE && vertices[vertex][1] != LOCAL_TILE_SIZE)
-						break outer;
-				}
+				final int vertexFaceB = model.getFaceY()[face];
+				hsl = faceColorsB[face];
+				if (model.getVertexX()[vertexFaceB] - baseX != LOCAL_TILE_SIZE &&
+					model.getVertexZ()[vertexFaceB] - baseY != LOCAL_TILE_SIZE)
+					break;
+
+				final int vertexFaceC = model.getFaceZ()[face];
+				hsl = faceColorsC[face];
+				if (model.getVertexX()[vertexFaceC] - baseX != LOCAL_TILE_SIZE &&
+					model.getVertexZ()[vertexFaceC] - baseY != LOCAL_TILE_SIZE)
+					break;
 			}
 
 			ColorUtils.unpackRawHsl(out, hsl);
@@ -424,24 +435,29 @@ public final class HDUtils {
 	}
 
 	public static boolean isAABBIntersectingFrustum(
-		int minX,
-		int minY,
-		int minZ,
-		int maxX,
-		int maxY,
-		int maxZ,
+		float minX,
+		float minY,
+		float minZ,
+		float maxX,
+		float maxY,
+		float maxZ,
 		float[][] cullingPlanes
 	) {
-		for (float[] plane : cullingPlanes) {
+		for (int i = 0; i < cullingPlanes.length; i++) {
+			final float[] plane = cullingPlanes[i];
+			final float nx = plane[0];
+			final float ny = plane[1];
+			final float nz = plane[2];
+			final float d  = plane[3];
 			if (
-				plane[0] * minX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * minX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0 &&
-				plane[0] * maxX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0
+				nx * minX + ny * minY + nz * minZ + d < 0.0f &&
+				nx * maxX + ny * minY + nz * minZ + d < 0.0f &&
+				nx * minX + ny * maxY + nz * minZ + d < 0.0f &&
+				nx * maxX + ny * maxY + nz * minZ + d < 0.0f &&
+				nx * minX + ny * minY + nz * maxZ + d < 0.0f &&
+				nx * maxX + ny * minY + nz * maxZ + d < 0.0f &&
+				nx * minX + ny * maxY + nz * maxZ + d < 0.0f &&
+				nx * maxX + ny * maxY + nz * maxZ + d < 0.0f
 			) {
 				return false;
 			}
@@ -539,5 +555,27 @@ public final class HDUtils {
 		} catch (Throwable ignored) {
 			return Long.MAX_VALUE;
 		}
+	}
+
+	public static void drawStringShadowed(Graphics2D g, String s, float x, float y, Color shadowColor) {
+		var c = g.getColor();
+		g.setColor(shadowColor);
+		g.drawString(s, x + 1, y + 1);
+		g.setColor(c);
+		g.drawString(s, x, y);
+	}
+
+	public static void drawStringShadowed(Graphics2D g, String s, float x, float y) {
+		drawStringShadowed(g, s, x, y, Color.BLACK);
+	}
+
+	public static void drawStringCentered(Graphics2D g, String s, float x, float y) {
+		var m = g.getFontMetrics();
+		drawStringShadowed(g, s, x - m.stringWidth(s) / 2.f, y + m.getHeight() / 2.f);
+	}
+
+	public static void drawStringCentered(Graphics2D g, String s) {
+		var b = g.getClipBounds();
+		drawStringCentered(g, s, b.width / 2.f, b.height / 2.f);
 	}
 }
