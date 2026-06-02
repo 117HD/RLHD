@@ -50,7 +50,6 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
-import rs117.hd.opengl.uniforms.UBOReflectionPlanes;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -100,6 +99,8 @@ public class ZoneRenderer implements Renderer {
 
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_WATER_REFLECTION_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_WATER_NORMAL_MAPS = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
@@ -162,9 +163,6 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
-	@Inject
-	private UBOReflectionPlanes uboReflectionPlanes;
-
 	public final Camera sceneCamera = new Camera().setCullingId(SCENE_CAMERA_ID).setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setCullingId(DIRECTIONAL_CAMERA_ID).setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
@@ -184,7 +182,7 @@ public class ZoneRenderer implements Renderer {
 	private boolean shouldClearShadowFbo;
 	private boolean shouldDrawRoofShadows;
 
-	private List<RenderPass> renderPasses = new ArrayList<>();
+	private final List<RenderPass> renderPasses = new ArrayList<>();
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -220,7 +218,6 @@ public class ZoneRenderer implements Renderer {
 
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
-		uboReflectionPlanes.initialize(UNIFORM_BLOCK_REFLECTION_PLANES);
 		sceneManager.initialize(renderState, uboWorldViews);
 		modelStreamingManager.initialize();
 
@@ -241,7 +238,6 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
-		uboReflectionPlanes.destroy();
 
 		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
@@ -261,7 +257,6 @@ public class ZoneRenderer implements Renderer {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
 			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS))
-			.addUniformBuffer(uboReflectionPlanes)
 			.addUniformBuffer(uboWorldViews);
 
 		for(int i = 0; i < renderPasses.size(); i++)
@@ -397,8 +392,6 @@ public class ZoneRenderer implements Renderer {
 
 		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
-
-		plugin.updateWaterReflectionsFbo();
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
 
@@ -842,7 +835,7 @@ public class ZoneRenderer implements Renderer {
 
 		// Bind water normal maps before rendering
 		if (plugin.texWaterNormalMaps != 0) {
-			glActiveTexture(HdPlugin.TEXTURE_UNIT_WATER_NORMAL_MAPS);
+			glActiveTexture(TEXTURE_UNIT_WATER_NORMAL_MAPS);
 			glBindTexture(GL_TEXTURE_2D_ARRAY, plugin.texWaterNormalMaps);
 		}
 

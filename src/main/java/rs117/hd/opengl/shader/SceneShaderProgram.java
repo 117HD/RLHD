@@ -6,9 +6,9 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_NORMAL_MAPS;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_REFLECTION_MAP;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_WATER_NORMAL_MAPS;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_WATER_REFLECTION_MAP;
 
 public class SceneShaderProgram extends ShaderProgram {
 	public static final int RENDER_PASS_MAIN = 0;

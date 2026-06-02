@@ -105,7 +105,6 @@ import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
-import rs117.hd.renderer.zone.passes.ReflectionPass;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -139,6 +138,7 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_WATER_NORMAL_MAPS;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
@@ -173,8 +173,6 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_WATER_REFLECTION_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_WATER_NORMAL_MAPS = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -394,11 +392,6 @@ public class HdPlugin extends Plugin {
 	public int tiledLightingLayerCount;
 	public int fboTiledLighting;
 	public int texTiledLighting;
-
-	public int[] waterReflectionResolution;
-	public int fboWaterReflection;
-	public int texWaterReflection;
-	public int texWaterReflectionDepthMap;
 
 	public int texWaterNormalMaps;
 
@@ -802,7 +795,6 @@ public class HdPlugin extends Plugin {
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
-				destroyWaterReflectionsFbo();
 				destroyWaterNormalMaps();
 
 				if (renderer != null) {
@@ -1511,72 +1503,6 @@ public class HdPlugin extends Plugin {
 		);
 	}
 
-	public void updateWaterReflectionsFbo() {
-		if (configPlanarReflections == ReflectionMode.DISABLED || sceneViewport == null)
-			return;
-
-		// Clamp this to our target range since RuneLite allows manually typing numbers outside the range
-		float resolutionScale = config.planarReflections().resolutionFrac;
-		int[] resolution = {
-			Math.max(1, Math.round(sceneViewport[2] * resolutionScale)),
-			Math.max(1, Math.round(sceneViewport[3] * resolutionScale))
-		};
-		if (Arrays.equals(waterReflectionResolution, resolution))
-			return;
-
-		destroyWaterReflectionsFbo();
-		waterReflectionResolution = resolution;
-
-		// TODO: Move into ZoneRenderer
-
-		// Create and bind the FBO
-		fboWaterReflection = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboWaterReflection);
-
-		// Both of these are required color-renderable texture formats
-		int format = configLinearAlphaBlending ? GL_SRGB8 : GL_RGB8;
-
-		// Create color texture array
-		texWaterReflection = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterReflection);
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		checkGLErrors();
-
-		// Bind layer 0 of the color texture array to COLOR_ATTACHMENT0
-		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texWaterReflection, 0, 0);
-		glReadBuffer(GL_NONE);
-
-		// Create depth texture array
-		texWaterReflectionDepthMap = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterReflectionDepthMap);
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT16, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
-		checkGLErrors();
-
-		// Bind layer 0 of the depth texture array to DEPTH_ATTACHMENT
-		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texWaterReflectionDepthMap, 0, 0);
-		checkGLErrors();
-	}
-
-	private void destroyWaterReflectionsFbo() {
-		waterReflectionResolution = null;
-
-		if (texWaterReflection != 0)
-			glDeleteTextures(texWaterReflection);
-		texWaterReflection = 0;
-
-		if (texWaterReflectionDepthMap != 0)
-			glDeleteTextures(texWaterReflectionDepthMap);
-		texWaterReflectionDepthMap = 0;
-
-		if (fboWaterReflection != 0)
-			glDeleteFramebuffers(fboWaterReflection);
-		fboWaterReflection = 0;
-	}
-
 	private void initWaterNormalMaps() {
 		if (configLegacyWater || texWaterNormalMaps != 0)
 			return;
@@ -1929,7 +1855,6 @@ public class HdPlugin extends Plugin {
 					boolean recompilePrograms = false;
 					boolean recreateSceneFbo = false;
 					boolean recreateShadowMapFbo = false;
-					boolean recreateWaterReflectionsFbo = false;
 					boolean reloadTexturesAndMaterials = false;
 					boolean reloadEnvironments = false;
 					boolean reloadModelOverrides = false;
@@ -1961,7 +1886,6 @@ public class HdPlugin extends Plugin {
 								break;
 							case KEY_LEGACY_WATER:
 								recreateSceneFbo = true;
-								recreateWaterReflectionsFbo = true;
 								recompilePrograms = true;
 								if (configLegacyWater) {
 									destroyWaterNormalMaps();
@@ -1970,12 +1894,7 @@ public class HdPlugin extends Plugin {
 								}
 								break;
 							case KEY_ANISOTROPIC_FILTERING_LEVEL:
-								int level = config.anisotropicFilteringLevel();
-								if (texWaterNormalMaps != 0) {
-									glActiveTexture(TEXTURE_UNIT_WATER_NORMAL_MAPS);
-									glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterNormalMaps);
-									setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, level);
-								}
+
 								// TODO
 //								if (textureManager.textureArray != 0) {
 //									glActiveTexture(TEXTURE_UNIT_GAME);
@@ -1999,8 +1918,6 @@ public class HdPlugin extends Plugin {
 								if (client.getGameState() == GameState.LOGGED_IN)
 									client.setGameState(GameState.LOADING);
 								break;
-							case KEY_PLANAR_REFLECTIONS:
-								recreateWaterReflectionsFbo = true;
 								// fall-through
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
@@ -2019,6 +1936,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WATER_FOAM:
 							case KEY_SHORELINE_CAUSTICS:
 							case KEY_WATER_TRANSPARENCY:
+							case KEY_PLANAR_REFLECTIONS:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
@@ -2102,11 +2020,6 @@ public class HdPlugin extends Plugin {
 					if (recreateShadowMapFbo) {
 						destroyShadowMapFbo();
 						initializeShadowMapFbo();
-					}
-
-					if (recreateWaterReflectionsFbo) {
-						destroyWaterReflectionsFbo();
-						updateWaterReflectionsFbo();
 					}
 
 					if (reloadEnvironments)

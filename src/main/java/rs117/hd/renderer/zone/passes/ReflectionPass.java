@@ -1,13 +1,17 @@
 package rs117.hd.renderer.zone.passes;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.hooks.*;
+import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.ReflectionMode;
+import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.uniforms.UBOReflectionPlanes;
 import rs117.hd.opengl.uniforms.UBOReflectionPlanes.WaterPlaneStruct;
 import rs117.hd.overlays.FrameTimer;
@@ -23,30 +27,56 @@ import rs117.hd.utils.RenderState;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11C.GL_BLEND;
 import static org.lwjgl.opengl.GL11C.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11C.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11C.GL_DEPTH_COMPONENT;
 import static org.lwjgl.opengl.GL11C.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11C.GL_GEQUAL;
+import static org.lwjgl.opengl.GL11C.GL_LINEAR;
+import static org.lwjgl.opengl.GL11C.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11C.GL_NONE;
 import static org.lwjgl.opengl.GL11C.GL_ONE;
 import static org.lwjgl.opengl.GL11C.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11C.GL_RGB;
+import static org.lwjgl.opengl.GL11C.GL_RGB8;
 import static org.lwjgl.opengl.GL11C.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_WRAP_S;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_WRAP_T;
+import static org.lwjgl.opengl.GL11C.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11C.GL_UNSIGNED_SHORT;
 import static org.lwjgl.opengl.GL11C.GL_ZERO;
 import static org.lwjgl.opengl.GL11C.glBindTexture;
 import static org.lwjgl.opengl.GL11C.glClear;
 import static org.lwjgl.opengl.GL11C.glClearDepth;
+import static org.lwjgl.opengl.GL11C.glGenTextures;
+import static org.lwjgl.opengl.GL11C.glReadBuffer;
+import static org.lwjgl.opengl.GL11C.glTexParameteri;
 import static org.lwjgl.opengl.GL11C.glViewport;
+import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL12C.glTexImage3D;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
+import static org.lwjgl.opengl.GL14C.GL_DEPTH_COMPONENT16;
+import static org.lwjgl.opengl.GL21C.GL_SRGB8;
 import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D_ARRAY;
+import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
 import static org.lwjgl.opengl.GL30.glFramebufferTextureLayer;
 import static org.lwjgl.opengl.GL30C.GL_CLIP_DISTANCE0;
 import static org.lwjgl.opengl.GL30C.GL_DRAW_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30C.GL_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30C.glBindFramebuffer;
+import static org.lwjgl.opengl.GL30C.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_REFLECTION_MAP;
+import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_WATER_REFLECTION_MAP;
+import static rs117.hd.renderer.zone.ZoneRenderer.UNIFORM_BLOCK_REFLECTION_PLANES;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
@@ -54,6 +84,7 @@ import static rs117.hd.utils.MathUtils.*;
 public class ReflectionPass implements RenderPass {
 	public static final int MAX_REFLECTION_RENDERS = 4; // TODO: Increase once the FrameBuffer supports it
 	public static final int WATER_HEIGHT_THRESHOLD = LOCAL_TILE_SIZE;
+
 
 	@Inject
 	private HdPlugin plugin;
@@ -77,6 +108,11 @@ public class ReflectionPass implements RenderPass {
 	private final WaterPlane[] planes = new WaterPlane[MAX_REFLECTION_RENDERS];
 	private int activePlanes = 0;
 
+	private int[] waterReflectionResolution;
+	private int fboWaterReflection;
+	private int texWaterReflection;
+	private int texWaterReflectionDepthMap;
+
 	private boolean waterReflectionsEnabled;
 
 	@Override
@@ -85,6 +121,86 @@ public class ReflectionPass implements RenderPass {
 			if(planes[i] == null)
 				planes[i] = new WaterPlane(uboReflectionPlanes.planes[i], renderState, i);
 		}
+		uboReflectionPlanes.initialize(UNIFORM_BLOCK_REFLECTION_PLANES);
+	}
+
+	@Override
+	public void addShaderIncludes(ShaderIncludes includes) {
+		includes
+			.define("MAX_REFLECTION_RENDERS", MAX_REFLECTION_RENDERS)
+			.define("WATER_HEIGHT_THRESHOLD", WATER_HEIGHT_THRESHOLD)
+			.addUniformBuffer(uboReflectionPlanes);
+	}
+
+	@Override
+	public void processConfigChanges(Set<String> keys) {
+		if(keys.contains(KEY_PLANAR_REFLECTIONS)) {
+			updateWaterReflectionsFbo();
+		}
+	}
+
+	private void updateWaterReflectionsFbo() {
+		if (plugin.configPlanarReflections == ReflectionMode.DISABLED || plugin.sceneViewport == null)
+			return;
+
+		// Clamp this to our target range since RuneLite allows manually typing numbers outside the range
+		float resolutionScale = plugin.configPlanarReflections.resolutionFrac;
+		int[] resolution = {
+			Math.max(1, Math.round(plugin.sceneViewport[2] * resolutionScale)),
+			Math.max(1, Math.round(plugin.sceneViewport[3] * resolutionScale))
+		};
+		if (Arrays.equals(waterReflectionResolution, resolution))
+			return;
+
+		destroyWaterReflectionsFbo();
+		waterReflectionResolution = resolution;
+
+		// Create and bind the FBO
+		fboWaterReflection = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboWaterReflection);
+
+		// Both of these are required color-renderable texture formats
+		int format = plugin.configLinearAlphaBlending ? GL_SRGB8 : GL_RGB8;
+
+		// Create color texture array
+		texWaterReflection = glGenTextures();
+		glBindTexture(GL30C.GL_TEXTURE_2D_ARRAY, texWaterReflection);
+		glTexImage3D(GL30C.GL_TEXTURE_2D_ARRAY, 0, format, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL30C.GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL30C.GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL30C.GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL30C.GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		checkGLErrors();
+
+		// Bind layer 0 of the color texture array to COLOR_ATTACHMENT0
+		GL30C.glFramebufferTextureLayer(GL_FRAMEBUFFER, GL30C.GL_COLOR_ATTACHMENT0, texWaterReflection, 0, 0);
+		glReadBuffer(GL_NONE);
+
+		// Create depth texture array
+		texWaterReflectionDepthMap = glGenTextures();
+		glBindTexture(GL30C.GL_TEXTURE_2D_ARRAY, texWaterReflectionDepthMap);
+		glTexImage3D(GL30C.GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT16, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
+		checkGLErrors();
+
+		// Bind layer 0 of the depth texture array to DEPTH_ATTACHMENT
+		GL30C.glFramebufferTextureLayer(GL_FRAMEBUFFER, GL30C.GL_DEPTH_ATTACHMENT, texWaterReflectionDepthMap, 0, 0);
+		checkGLErrors();
+	}
+
+	private void destroyWaterReflectionsFbo() {
+		waterReflectionResolution = null;
+
+		if (texWaterReflection != 0)
+			glDeleteTextures(texWaterReflection);
+		texWaterReflection = 0;
+
+		if (texWaterReflectionDepthMap != 0)
+			glDeleteTextures(texWaterReflectionDepthMap);
+		texWaterReflectionDepthMap = 0;
+
+		if (fboWaterReflection != 0)
+			glDeleteFramebuffers(fboWaterReflection);
+		fboWaterReflection = 0;
 	}
 
 	@Override
@@ -142,6 +258,8 @@ public class ReflectionPass implements RenderPass {
 			waterReflectionsEnabled = false;
 			return;
 		}
+
+		updateWaterReflectionsFbo();
 
 		waterReflectionsEnabled = plugin.configPlanarReflections != ReflectionMode.DISABLED && !plugin.configLegacyWater;
 		if(!waterReflectionsEnabled)
@@ -210,16 +328,18 @@ public class ReflectionPass implements RenderPass {
 
 		// Bind the water reflection texture array to the reflection map unit
 		glActiveTexture(TEXTURE_UNIT_WATER_REFLECTION_MAP);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, plugin.texWaterReflection);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterReflection);
 
 		frameTimer.begin(Timer.REFLECTION_MIPMAPS);
-		glGenerateMipmap(GL_TEXTURE_2D_ARRAY); // TODO: Do it per level? Since ActivePlanes might be less than the amount of available layers
+		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 		frameTimer.end(Timer.REFLECTION_MIPMAPS);
 	}
 
 	@Override
 	public void destroy() {
+		destroyWaterReflectionsFbo();
 
+		uboReflectionPlanes.destroy();
 	}
 
 	class WaterPlane {
@@ -261,13 +381,13 @@ public class ReflectionPass implements RenderPass {
 			plugin.uboGlobal.sceneCamera.write(camera);
 			plugin.uboGlobal.upload();
 
-			glViewport(0, 0, plugin.waterReflectionResolution[0], plugin.waterReflectionResolution[1]);
+			glViewport(0, 0, waterReflectionResolution[0], waterReflectionResolution[1]);
 
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboWaterReflection);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboWaterReflection);
 
 			// Redirect both attachments to this plane's layer before clearing/drawing
-			glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, plugin.texWaterReflection, 0, layer);
-			glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, plugin.texWaterReflectionDepthMap, 0, layer);
+			glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texWaterReflection, 0, layer);
+			glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texWaterReflectionDepthMap, 0, layer);
 
 			glClearDepth(0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -989,8 +989,6 @@ public class LegacyRenderer implements Renderer {
 				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
-			plugin.updateWaterReflectionsFbo();
-
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
