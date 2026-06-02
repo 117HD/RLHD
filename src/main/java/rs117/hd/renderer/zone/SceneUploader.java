@@ -2323,7 +2323,7 @@ public class SceneUploader implements AutoCloseable {
 			return 0;
 
 		int faces = model != null ? model.getFaceX().length : 2;
-		if(!isEstimate) {
+		if (!isEstimate) {
 			assert tileHeights != null && blackMaterial != null;
 			if (model != null) {
 				uploadGapFillTileModel(tile, model, basex, basez);
@@ -2340,7 +2340,6 @@ public class SceneUploader implements AutoCloseable {
 		int basex,
 		int basez
 	) {
-
 		int tileZ = tile.getRenderLevel();
 		Material black = materialManager.getMaterial("BLACK");
 		int packedMaterial = black.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
@@ -2430,7 +2429,6 @@ public class SceneUploader implements AutoCloseable {
 		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx);
 		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx);
 		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx);
-		vb.flush();
 	}
 
 	public static void calculateFaceNormalInt(
