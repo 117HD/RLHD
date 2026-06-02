@@ -57,6 +57,15 @@ public final class HDUtils {
 
 	public static final int EXTENDED_SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
 
+	public static int tileVertexHash(int[] vertex) {
+		// Tile X and Z coordinates are always multiples of 32, so 10 bits is sufficient for 184 tiles.
+		// The tile height does not strictly fit in 12 bits, so we allow collisions beyond 4096 units.
+		return
+			(vertex[1] & 0xFFF) << 20 |
+			(vertex[2] + EXTENDED_SCENE_OFFSET * LOCAL_TILE_SIZE >> 5) << 10 |
+			(vertex[0] + EXTENDED_SCENE_OFFSET * LOCAL_TILE_SIZE >> 5);
+	}
+
 	public static int tileVertexUuid(Tile tile, int[] vertex) {
 		// Tile X and Z coordinates are always multiples of 32, so 10 bits is sufficient for 184 tiles.
 		// The render level is the tile's original plane prior to setting up bridge tiles, and should be unique.
