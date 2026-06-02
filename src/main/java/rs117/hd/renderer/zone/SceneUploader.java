@@ -2137,19 +2137,19 @@ public class SceneUploader implements AutoCloseable {
 				0, 0, 0
 			);
 
-			vb.putVertex(
+			vb.putDynamicVertex(
 				modelVertices[vertexOffsetA], modelVertices[vertexOffsetA + 1], modelVertices[vertexOffsetA + 2],
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				faceNormals[0], faceNormals[1], faceNormals[2],
 				texturedFaceIdx
 			);
-			vb.putVertex(
+			vb.putDynamicVertex(
 				modelVertices[vertexOffsetB], modelVertices[vertexOffsetB + 1], modelVertices[vertexOffsetB + 2],
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				faceNormals[3], faceNormals[4], faceNormals[5],
 				texturedFaceIdx
 			);
-			vb.putVertex(
+			vb.putDynamicVertex(
 				modelVertices[vertexOffsetC], modelVertices[vertexOffsetC + 1], modelVertices[vertexOffsetC + 2],
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				faceNormals[6], faceNormals[7], faceNormals[8],

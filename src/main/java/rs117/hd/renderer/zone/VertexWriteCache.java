@@ -78,7 +78,7 @@ public final class VertexWriteCache {
 		return textureFaceIdx;
 	}
 
-	public void putVertex(
+	public void putDynamicVertex(
 		int x, int y, int z,
 		float u, float v, float w,
 		int nx, int ny, int nz,
