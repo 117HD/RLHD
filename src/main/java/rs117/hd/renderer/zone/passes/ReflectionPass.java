@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.hooks.*;
-import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.ReflectionMode;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -57,8 +56,8 @@ import static org.lwjgl.opengl.GL11C.glGenTextures;
 import static org.lwjgl.opengl.GL11C.glReadBuffer;
 import static org.lwjgl.opengl.GL11C.glTexParameteri;
 import static org.lwjgl.opengl.GL11C.glViewport;
+import static org.lwjgl.opengl.GL12.glTexImage3D;
 import static org.lwjgl.opengl.GL12C.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL12C.glTexImage3D;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL14C.GL_DEPTH_COMPONENT16;
 import static org.lwjgl.opengl.GL21C.GL_SRGB8;
@@ -82,7 +81,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 @Slf4j
 public class ReflectionPass implements RenderPass {
-	public static final int MAX_REFLECTION_RENDERS = 4; // TODO: Increase once the FrameBuffer supports it
+	public static final int MAX_REFLECTION_RENDERS = 4;
 	public static final int WATER_HEIGHT_THRESHOLD = LOCAL_TILE_SIZE;
 
 
@@ -164,26 +163,25 @@ public class ReflectionPass implements RenderPass {
 
 		// Create color texture array
 		texWaterReflection = glGenTextures();
-		glBindTexture(GL30C.GL_TEXTURE_2D_ARRAY, texWaterReflection);
-		glTexImage3D(GL30C.GL_TEXTURE_2D_ARRAY, 0, format, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-		glTexParameteri(GL30C.GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL30C.GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL30C.GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL30C.GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterReflection);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		checkGLErrors();
 
 		// Bind layer 0 of the color texture array to COLOR_ATTACHMENT0
-		GL30C.glFramebufferTextureLayer(GL_FRAMEBUFFER, GL30C.GL_COLOR_ATTACHMENT0, texWaterReflection, 0, 0);
+		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texWaterReflection, 0, 0);
 		glReadBuffer(GL_NONE);
 
 		// Create depth texture array
 		texWaterReflectionDepthMap = glGenTextures();
-		glBindTexture(GL30C.GL_TEXTURE_2D_ARRAY, texWaterReflectionDepthMap);
-		glTexImage3D(GL30C.GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT16, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterReflectionDepthMap);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT16, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
 		checkGLErrors();
 
-		// Bind layer 0 of the depth texture array to DEPTH_ATTACHMENT
-		GL30C.glFramebufferTextureLayer(GL_FRAMEBUFFER, GL30C.GL_DEPTH_ATTACHMENT, texWaterReflectionDepthMap, 0, 0);
+		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texWaterReflectionDepthMap, 0, 0);
 		checkGLErrors();
 	}
 

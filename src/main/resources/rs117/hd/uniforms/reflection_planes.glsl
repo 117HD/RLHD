@@ -2,9 +2,8 @@
 
 #include <utils/camera.glsl>
 
-// TODO: Move to Constants
-#define MAX_REFLECTION_RENDERS 4
-#define WATER_HEIGHT_THRESHOLD 128
+#include MAX_REFLECTION_RENDERS
+#include WATER_HEIGHT_THRESHOLD
 
 struct ReflectionPlane {
     Camera camera;
