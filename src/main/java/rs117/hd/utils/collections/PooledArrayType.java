@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.StampedLock;
+import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.Props;
@@ -207,7 +208,7 @@ public enum PooledArrayType {
 	}
 
 	@SuppressWarnings("SuspiciousSystemArraycopy")
-	public <T> T cache(Object array, int offset, int size) {
+	public <T> T cache(@Nonnull Object array, int offset, int size) {
 		final T cached = borrow(size);
 		System.arraycopy(array, offset, cached, 0, size);
 		return cached;
