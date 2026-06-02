@@ -18,7 +18,9 @@ import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.Zone;
 import rs117.hd.renderer.zone.ZoneRenderer;
+import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.utils.Camera;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.RenderState;
 
@@ -48,7 +50,9 @@ import static org.lwjgl.opengl.GL11C.GL_UNSIGNED_SHORT;
 import static org.lwjgl.opengl.GL11C.GL_ZERO;
 import static org.lwjgl.opengl.GL11C.glBindTexture;
 import static org.lwjgl.opengl.GL11C.glClear;
+import static org.lwjgl.opengl.GL11C.glClearColor;
 import static org.lwjgl.opengl.GL11C.glClearDepth;
+import static org.lwjgl.opengl.GL11C.glEnable;
 import static org.lwjgl.opengl.GL11C.glGenTextures;
 import static org.lwjgl.opengl.GL11C.glReadBuffer;
 import static org.lwjgl.opengl.GL11C.glTexParameteri;
@@ -66,6 +70,7 @@ import static org.lwjgl.opengl.GL30.glFramebufferTextureLayer;
 import static org.lwjgl.opengl.GL30C.GL_CLIP_DISTANCE0;
 import static org.lwjgl.opengl.GL30C.GL_DRAW_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30C.GL_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30C.GL_FRAMEBUFFER_SRGB;
 import static org.lwjgl.opengl.GL30C.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30C.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30C.glGenerateMipmap;
@@ -87,6 +92,9 @@ public final class ReflectionPass implements RenderPass {
 
 	@Inject
 	private SceneManager sceneManager;
+
+	@Inject
+	private EnvironmentManager environmentManager;
 
 	@Inject
 	private ZoneRenderer zoneRenderer;
@@ -398,6 +406,14 @@ public final class ReflectionPass implements RenderPass {
 			glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texWaterReflection, 0, layer);
 			glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texWaterReflectionDepthMap, 0, layer);
 
+			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+			if (plugin.configLinearAlphaBlending) {
+				glEnable(GL_FRAMEBUFFER_SRGB);
+				// This is kind of stupid, but our shader expects fogColor in sRGB, so we transform it back here
+				fogColor = ColorUtils.srgbToLinear(fogColor);
+			}
+			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
+
 			glClearDepth(0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -417,7 +433,8 @@ public final class ReflectionPass implements RenderPass {
 			// Reset everything back to the main pass' state
 			renderState.disable.set(GL_DEPTH_TEST);
 			renderState.disable.set(GL_CLIP_DISTANCE0);
-			renderState.disable.set(GL_CULL_FACE);
+			renderState.disable.set(GL_FRAMEBUFFER_SRGB);
+			renderState.apply();
 		}
 	}
 }
