@@ -56,6 +56,7 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
     n2 = -vec3((n2.x * 2 - 1) * waterType.normalStrength, n2.z, (n2.y * 2 - 1) * waterType.normalStrength);
     vec3 normals = normalize(n1 + n2);
 
+    vec3 lightDir = Camera_getForward(directionalCamera);
     float lightDotNormals = dot(normals, lightDir);
     float downDotNormals = -normals.y;
     float viewDotNormals = dot(viewDir, normals);

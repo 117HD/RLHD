@@ -266,8 +266,8 @@ public final class ReflectionPass implements RenderPass {
 		for (int i = 0; i < MAX_REFLECTION_RENDERS; i++) {
 			int numLevels = 0;
 
-			for (int x = 0; x < ctx.sceneContext.sizeX; ++x) {
-				for (int z = 0; z < ctx.sceneContext.sizeZ; ++z) {
+			for (int x = 0; x < ctx.getSizeX(); x++) {
+				for (int z = 0; z < ctx.getSizeZ(); z++) {
 					final Zone zone = ctx.zones[x][z];
 					if (!zone.hasWater || !zone.isVisible(zoneRenderer.sceneCamera))
 						continue;
@@ -322,7 +322,7 @@ public final class ReflectionPass implements RenderPass {
 	}
 
 	@Override
-	public void postDraw(RenderState renderState) {
+	public void draw(RenderState renderState) {
 		if(!waterReflectionsEnabled || activePlanes <= 0)
 			return;
 
@@ -372,10 +372,6 @@ public final class ReflectionPass implements RenderPass {
 			camera.setPositionY(-targetWaterHeight * 2 - sceneCamera.getPositionY());
 			camera.setPitch(-sceneCamera.getPitch());
 			waterHeight = targetWaterHeight;
-
-			struct.camera.write(camera);
-			struct.height.set(-waterHeight);
-
 			cmd.reset();
 			shouldRender = true;
 		}
@@ -384,6 +380,9 @@ public final class ReflectionPass implements RenderPass {
 			if(!shouldRender)
 				return;
 			shouldRender = false;
+
+			struct.camera.write(camera);
+			struct.height.set(-waterHeight);
 
 			uboReflectionPlanes.cullingPlane.set(0.0f, -1.0f, 0.0f, -waterHeight);
 			uboReflectionPlanes.upload();
