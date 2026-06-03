@@ -124,21 +124,6 @@ layout (location = 0) in vec3 vPosition;
             bool isWater = waterTypeIndex > 0;
             bool isUnderwater = waterDepth != 0;
             bool isWaterSurface = isWater && !isUnderwater;
-
-            bool shouldDiscard = false;
-            if (isWater) {
-                shouldDiscard =
-                    // Hide flat water surface tiles in the reflection
-                    isWaterSurface && -worldNormal.y > .7 ||
-                    // Hide underwater tiles from the reflection
-                    isUnderwater && mostPrevalentWaterLevel - minY <= WATER_REFLECTION_HEIGHT_THRESHOLD;
-            } else {
-                // Hide stuff which is under the water from the reflection
-                shouldDiscard = mostPrevalentWaterLevel - minY <= 0;
-            }
-
-            if (shouldDiscard)
-                clipPosition = vec4(1e38);
         }
 
         gl_Position = clipPosition;
