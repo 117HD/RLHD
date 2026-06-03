@@ -29,7 +29,6 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_REFLECTION_MAP;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_WATER_REFLECTION_MAP;
 import static rs117.hd.renderer.zone.ZoneRenderer.UNIFORM_BLOCK_REFLECTION_PLANES;
 import static rs117.hd.utils.MathUtils.*;
 

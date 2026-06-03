@@ -81,6 +81,7 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_NORMAL_MAPS;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -99,8 +100,6 @@ public class ZoneRenderer implements Renderer {
 
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_WATER_REFLECTION_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_WATER_NORMAL_MAPS = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;

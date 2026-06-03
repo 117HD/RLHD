@@ -1645,6 +1645,9 @@ public class HdPlugin extends Plugin {
 		glViewport(0, 0, actualUiResolution[0], actualUiResolution[1]);
 
 		tiledLightingOverlay.render();
+		shadowMapOverlay.render();
+		reflectionMapOverlay.render();
+		gammaCalibrationOverlay.render();
 
 		uiProgram.use();
 		uboUI.sourceDimensions.set(uiResolution);
@@ -1683,10 +1686,6 @@ public class HdPlugin extends Plugin {
 		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		glBindVertexArray(vaoTri);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		shadowMapOverlay.render();
-		reflectionMapOverlay.render();
-		gammaCalibrationOverlay.render();
 
 		// Reset
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
