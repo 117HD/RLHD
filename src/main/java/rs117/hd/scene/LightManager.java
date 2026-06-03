@@ -94,6 +94,9 @@ public class LightManager {
 	private HdPlugin plugin;
 
 	@Inject
+	private GamevalManager gamevalManager;
+
+	@Inject
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
@@ -112,7 +115,7 @@ public class LightManager {
 
 	public void loadConfig(Gson gson, ResourcePath path) {
 		LightDefinition[] lights;
-		try {
+		try (var ignored = gamevalManager.obtainHandle()) {
 			lights = path.loadJson(gson, LightDefinition[].class);
 			if (lights == null) {
 				log.warn("Skipping empty lights.json");
