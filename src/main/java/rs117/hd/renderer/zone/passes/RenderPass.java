@@ -8,7 +8,6 @@ import rs117.hd.renderer.zone.Zone;
 import rs117.hd.utils.RenderState;
 
 public interface RenderPass {
-
 	default int order() {
 		return 0;
 	}

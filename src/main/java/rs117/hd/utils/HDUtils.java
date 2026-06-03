@@ -47,14 +47,7 @@ import rs117.hd.scene.water_types.WaterType;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
-import static org.lwjgl.opengl.GL11C.GL_LINEAR;
-import static org.lwjgl.opengl.GL11C.GL_LINEAR_MIPMAP_LINEAR;
-import static org.lwjgl.opengl.GL11C.GL_NEAREST;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11C.glGetFloat;
-import static org.lwjgl.opengl.GL11C.glTexParameterf;
-import static org.lwjgl.opengl.GL11C.glTexParameteri;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
 import static rs117.hd.utils.MathUtils.*;
 
