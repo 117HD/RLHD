@@ -854,6 +854,7 @@ public class ZoneRenderer implements Renderer {
 			renderState.depthMask.set(true);
 		}
 
+		sceneProgram.use();
 		sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_MAIN);
 		sceneProgram.uniWaterReflectionEnabled.set(renderWaterReflections);
 

@@ -55,16 +55,12 @@ flat in int fWorldViewId;
 flat in ivec3 fAlphaBiasHsl;
 flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
-
-#if FLAT_SHADING && ZONE_RENDERER
-    flat in vec3 fFlatNormal;
-#endif
+flat in vec3 fFlatNormal;
 
 in FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
-    vec3 flatNormal;
     vec3 texBlend;
 } IN;
 
@@ -108,7 +104,6 @@ void main() {
         waterDepth2 * IN.texBlend.y +
         waterDepth3 * IN.texBlend.z;
     int waterTypeIndex = isTerrain ? fTerrainData[0] >> 3 & 0xFF : 0;
-    WaterType waterType = getWaterType(waterTypeIndex);
 
     // set initial texture map ids
     int colorMap1 = material1.colorMap;
@@ -152,7 +147,7 @@ void main() {
         // Instead we manually clamp vanilla textures with transparency here. Including the transparency check
         // allows texture wrapping to work correctly for the mirror shield.
         if ((fMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
-            blendedUv.x = clamp(blendedUv.x, 0, .984375);
+            uv.x = clamp(uv.x, 0, .984375);
 
         vec2 uv1 = uv;
         vec2 uv2 = uv;
@@ -517,7 +512,7 @@ void main() {
             if (outputColor.a < 1 && outputColor.a >= .004) {
                 // Blending in linear color space makes transparent glass overly opaque.
                 // Bias the opacity somewhat to look closer to vanilla colors overall.
-                vec3 hsl = convertHsl(unpackRawHsl(vAlphaBiasHsl[0]));
+                vec3 hsl = convertHsl(unpackRawHsl(fAlphaBiasHsl[0]));
                 float alphaCorrectionMask = (1 - pow(hsl.y, 5.f)) * (1 - pow(outputColor.a, 3.f));
                 outputColor.a = pow(outputColor.a, 1 + alphaCorrectionMask);
             }

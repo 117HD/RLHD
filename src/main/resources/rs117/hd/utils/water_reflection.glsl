@@ -30,14 +30,14 @@ vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     if (renderPass == RENDER_PASS_WATER_REFLECTION ||
         !waterReflectionEnabled ||
         abs(IN.position.y - mostPrevalentWaterLevel) > WATER_REFLECTION_HEIGHT_THRESHOLD ||
-        -IN.flatNormal.y < .7)
+        -fFlatNormal.y < .7)
         return srgbToLinear(fogColor);
 
     float dist = length(IN.position - cameraPos);
     distortionFactor *= 1 - exp(-dist * .0004);
 
     // Don't distort too close to the shore
-    float shoreLineMask = 1 - dot(IN.texBlend, vAlphaBiasHsl / 127.f);
+    float shoreLineMask = 1 - dot(IN.texBlend, fAlphaBiasHsl / 127.f);
     distortionFactor *= 1 - shoreLineMask * 1.1; // safety factor to remove artifacts
 
     vec3 uvX = normalize(cross(flatR * vec3(1, 0, 1), flatR));

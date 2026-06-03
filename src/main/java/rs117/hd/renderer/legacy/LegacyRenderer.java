@@ -659,14 +659,13 @@ public class LegacyRenderer implements Renderer {
 				int viewportHeight = (int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]);
 
 				// Calculate projection matrix
-				plugin.projMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 				if (plugin.orthographicProjection) {
-					Mat4.mul(plugin.projMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-					Mat4.mul(plugin.projMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 				} else {
 					Mat4.mul(projectionMatrix, Mat4.perspectiveInfiniteReverseZ(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
-
 
 				// Calculate view matrix
 				plugin.viewMatrix = Mat4.rotateX(plugin.cameraOrientation[1]);
@@ -678,7 +677,7 @@ public class LegacyRenderer implements Renderer {
 
 				// Calculate view proj & inv matrix
 				plugin.viewProjMatrix = Mat4.identity();
-				Mat4.mul(plugin.viewProjMatrix, plugin.projMatrix);
+				Mat4.mul(plugin.viewProjMatrix, projectionMatrix);
 				Mat4.mul(plugin.viewProjMatrix, plugin.viewMatrix);
 				Mat4.extractPlanes(plugin.viewProjMatrix, plugin.cameraFrustum);
 				plugin.invViewProjMatrix = Mat4.inverse(plugin.viewProjMatrix);
@@ -1137,9 +1136,22 @@ public class LegacyRenderer implements Renderer {
 			if (renderWaterReflections) {
 				plugin.uboGlobal.mostPrevalentWaterLevel.set(sceneContext.mostPrevalentWaterLevel);
 
+				// Calculate the viewport dimensions before scaling in order to include the extra padding
+				int viewportWidth = (int) (plugin.sceneViewport[2] / plugin.sceneViewportScale[0]);
+				int viewportHeight = (int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]);
+
+				// Calculate projection matrix
+				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+				if (plugin.orthographicProjection) {
+					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+				} else {
+					Mat4.mul(projectionMatrix, Mat4.perspectiveInfiniteReverseZ(viewportWidth, viewportHeight, NEAR_PLANE));
+				}
+
 				// Calculate water reflection projection matrix
 				float[] reflectionProjectionMatrix = Mat4.scale(1, -1, 1);
-				Mat4.mul(reflectionProjectionMatrix, plugin.projMatrix);
+				Mat4.mul(reflectionProjectionMatrix, projectionMatrix);
 				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateX(-plugin.cameraOrientation[1]));
 				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateY(plugin.cameraOrientation[0]));
 				Mat4.mul(

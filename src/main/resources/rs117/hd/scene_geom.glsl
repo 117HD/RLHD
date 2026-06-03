@@ -49,12 +49,12 @@ flat out int fWorldViewId;
 flat out ivec3 fAlphaBiasHsl;
 flat out ivec3 fMaterialData;
 flat out ivec3 fTerrainData;
+flat out  vec3 fFlatNormal;
 
 out FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
-    vec3 flatNormal;
     vec3 texBlend;
 } OUT;
 
@@ -111,14 +111,14 @@ void main() {
     vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
 
     // Water data
-    bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
-    int waterDepth = vTerrainData[0] >> 8 & 0x7FF;
+    bool isTerrain = (gTerrainData[0] & 1) != 0; // 1 = 0b1
+    int waterDepth = gTerrainData[0] >> 8 & 0x7FF;
     int waterTypeIndex = 0;
     if (isTerrain) {
         #ifdef DEVELOPMENT_WATER_TYPE
             waterTypeIndex = DEVELOPMENT_WATER_TYPE;
         #else
-            waterTypeIndex = vTerrainData[0] >> 3 & 0x1F;
+            waterTypeIndex = gTerrainData[0] >> 3 & 0x1F;
         #endif
     }
 
@@ -152,7 +152,7 @@ void main() {
 
         OUT.position = pos.xyz;
         OUT.uv = vUv[i].xy;
-        OUT.flatNormal = N;
+        fFlatNormal = N;
         #if FLAT_SHADING
             OUT.normal = N;
         #else
@@ -163,7 +163,7 @@ void main() {
 
         // Apply some arbitrary displacement to mimic refraction
         // TODO: Solve the quartic equation numerically
-        int waterDepth = vTerrainData[i] >> 8 & 0x7FF;
+        int waterDepth = gTerrainData[i] >> 8 & 0x7FF;
 //        displaceUnderwaterPosition(position, waterDepth);
 
         if (renderPass == RENDER_PASS_WATER_REFLECTION && isWaterSurface) {

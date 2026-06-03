@@ -28,6 +28,8 @@
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 
+uniform int renderPass;
+
 #include <utils/constants.glsl>
 #include <utils/uvs.glsl>
 
@@ -55,9 +57,7 @@ layout (location = 0) in vec3 vPosition;
     flat out ivec3 fMaterialData;
     flat out ivec3 fTerrainData;
 
-    #if FLAT_SHADING
-        flat out vec3 fFlatNormal;
-    #endif
+    flat out vec3 fFlatNormal;
 
     out FragmentData {
         vec3 position;
@@ -105,14 +105,40 @@ layout (location = 0) in vec3 vPosition;
         OUT.texBlend = vec3(0);
         OUT.texBlend[vertex] = 1.0;
 
-        #if FLAT_SHADING
-            fFlatNormal = worldNormal;
-        #endif
+        fFlatNormal = worldNormal;
 
         vec4 clipPosition = projectionMatrix * vec4(worldPosition, 1.0);
         int depthBias = (alphaBiasHsl >> 16) & 0xff;
         if (projectionMatrix[2][3] != 0) // Disable depth bias for orthographic projection
             clipPosition.z += depthBias / 128.0;
+
+        if (renderPass == RENDER_PASS_WATER_REFLECTION) {
+            float minY = worldPosition.y;
+
+            // Water data
+            bool isTerrain = (fTerrainData[vertex] & 1) != 0; // 1 = 0b1
+            int waterDepth = fTerrainData[vertex] >> 11 & 0xFFF;
+            int waterTypeIndex = isTerrain ? fTerrainData[vertex] >> 3 & 0xFF : 0;
+
+            bool isWater = waterTypeIndex > 0;
+            bool isUnderwater = waterDepth != 0;
+            bool isWaterSurface = isWater && !isUnderwater;
+
+            bool shouldDiscard = false;
+            if (isWater) {
+                shouldDiscard =
+                    // Hide flat water surface tiles in the reflection
+                    isWaterSurface && -worldNormal.y > .7 ||
+                    // Hide underwater tiles from the reflection
+                    isUnderwater && mostPrevalentWaterLevel - minY <= WATER_REFLECTION_HEIGHT_THRESHOLD;
+            } else {
+                // Hide stuff which is under the water from the reflection
+                shouldDiscard = mostPrevalentWaterLevel - minY <= 0;
+            }
+
+            if (shouldDiscard)
+                clipPosition = vec4(1e38);
+        }
 
         gl_Position = clipPosition;
     }

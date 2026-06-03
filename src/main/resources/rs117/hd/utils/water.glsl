@@ -327,7 +327,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
-    float slope = abs(IN.flatNormal.y);
+    float slope = abs(fFlatNormal.y);
     if (slope < .8) {
         float waterfallMask = smoothstep(.8, .6, slope);
 
@@ -335,7 +335,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec3 bgColor2 = srgbToLinear(vec3(.063, .2, .3));
         vec3 fgColor = srgbToLinear(vec3(.9));
 
-        vec3 N = IN.flatNormal;
+        vec3 N = fFlatNormal;
         const float discretize = 5;
         N = floor(N * discretize) / discretize;
         vec3 T = normalize(vec3(-N.z, 0, N.x)); // Up cross normal
@@ -515,7 +515,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
             vec2 uv = IN.uv + uvFlow * flowMapStrength;
             float foamMask = texture(textureArray, vec3(uv, MAT_WATER_FOAM.colorMap)).r;
-            float shoreLineMask = 1 - dot(IN.texBlend, vAlphaBiasHsl / 127.f);
+            float shoreLineMask = 1 - dot(IN.texBlend, fAlphaBiasHsl / 127.f);
             shoreLineMask *= shoreLineMask;
             shoreLineMask *= shoreLineMask;
             shoreLineMask *= shoreLineMask;
