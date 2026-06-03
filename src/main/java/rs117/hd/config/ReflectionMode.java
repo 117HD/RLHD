@@ -8,7 +8,8 @@ public enum ReflectionMode {
 	LOW(0.25f),
 	MEDIUM(0.35f),
 	HIGH(0.5f),
-	ULTRA(0.65f);
+	ULTRA(0.65f),
+	EXTREME(1);
 
 	public final float resolutionFrac;
 }
