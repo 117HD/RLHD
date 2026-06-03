@@ -89430,7 +89430,6 @@
       "FIREWAVE_TRAVEL",
       "FIREBLAST_TRAVEL",
       "FIREBOLT_TRAVEL",
-      "AIRSURGE_TRAVEL",
       "AIRWAVE_TRAVEL",
       "AIRBLAST_TRAVEL",
       "AIRBOLT_TRAVEL",
@@ -89438,6 +89437,14 @@
       "EARTHWAVE_TRAVEL",
       "EARTHBLAST_TRAVEL",
       "EARTHBOLT_TRAVEL"
+    ]
+  },
+  {
+    "description": "Spell Projectile - Normal Spellbook - Darken",
+    "baseMaterial": "GRAY_80",
+    "undoVanillaShading": false,
+    "projectileIds": [
+      "AIRSURGE_TRAVEL"
     ]
   }
 ]
