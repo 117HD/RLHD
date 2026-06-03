@@ -144,6 +144,14 @@ public class ModelStreamingManager {
 		return count;
 	}
 
+	public boolean shouldSortModel(Renderable renderable, Model model, ModelOverride modelOverride) {
+		final int renderMode = renderable.getRenderMode();
+		return model.getFaceTransparencies() != null
+			   || modelOverride.mightHaveTransparency
+			   || renderable instanceof Player
+			   || (renderMode != Renderable.RENDERMODE_UNSORTED && renderMode != Renderable.RENDERMODE_DEFAULT);
+	}
+
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading || !renderCallbackManager.drawObject(scene, gameObject))
@@ -296,9 +304,8 @@ public class ModelStreamingManager {
 		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
 
-		boolean shouldSort =
-			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED ||
-			renderable.getRenderMode() == Renderable.RENDERMODE_SORTED_NO_DEPTH;
+
+		boolean shouldSort = shouldSortModel(renderable, m, modelOverride);
 		boolean isPlayer = renderable instanceof Player;
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
@@ -565,7 +572,7 @@ public class ModelStreamingManager {
 		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
 
-		boolean shouldSort = renderable.getRenderMode() != Renderable.RENDERMODE_UNSORTED;
+		boolean shouldSort = shouldSortModel(renderable, m, modelOverride);
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
