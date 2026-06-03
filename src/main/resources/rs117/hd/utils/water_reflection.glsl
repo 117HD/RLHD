@@ -29,11 +29,7 @@ uniform sampler2DArray waterReflectionMap;
 
 vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     // Only use the reflection map when enabled, the height difference is negligible & the surface is roughly flat
-#if ZONE_RENDERER
-   bool isNormalPlanar = -fFlatNormal.z > .7;
-#else
-  bool isNormalPlanar = -IN.flatNormal.y > .7;
-#endif
+    bool isNormalPlanar = -fFlatNormal.y > .7;
     if (RENDER_PASS == RENDER_PASS_WATER_REFLECTION || PLANAR_REFLECTIONS == 0 || !isNormalPlanar)
         return srgbToLinear(fogColor);
 

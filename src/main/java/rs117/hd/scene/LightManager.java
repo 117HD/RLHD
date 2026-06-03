@@ -67,6 +67,7 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.utils.collections.Util.quickSort;
 
 @Singleton
 @Slf4j
@@ -158,6 +159,12 @@ public class LightManager {
 	}
 
 	public void shutDown() {
+		WORLD_LIGHTS.clear();
+		NPC_LIGHTS.clear();
+		OBJECT_LIGHTS.clear();
+		PROJECTILE_LIGHTS.clear();
+		GRAPHICS_OBJECT_LIGHTS.clear();
+
 		eventBus.unregister(this);
 	}
 
@@ -483,9 +490,11 @@ public class LightManager {
 		}
 
 		// Order visible lights first, then by distance. Leave hidden lights unordered at the end.
-		sceneContext.lights.sort((a, b) -> a.visible && b.visible ?
-			Float.compare(a.distanceSquared, b.distanceSquared) :
-			Boolean.compare(b.visible, a.visible));
+		quickSort(sceneContext.lights,
+			(a, b) -> a.visible && b.visible ?
+				Float.compare(a.distanceSquared, b.distanceSquared) :
+				Boolean.compare(b.visible, a.visible)
+		);
 
 		// Count number of visible lights
 		sceneContext.numVisibleLights = 0;

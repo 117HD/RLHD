@@ -1305,25 +1305,6 @@ public interface HdPluginConfig extends Config
 		return DefaultBoolean.DEFAULT;
 	}
 
-	String KEY_ASYNC_MODEL_CACHE_SIZE = "asyncModelCacheSizeMiB";
-	@Range(
-		min = 16,
-		max = 64
-	)
-	@Units(" MiB")
-	@ConfigItem(
-		keyName = KEY_ASYNC_MODEL_CACHE_SIZE,
-		name = "Model cache size",
-		description =
-			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
-			"Generally, 32 MiB is plenty, with diminishing returns the higher you go.<br>" +
-			"Minimum=16 MiB, maximum=64 MiB",
-		section = experimentalSettings
-	)
-	default int asyncModelCacheSizeMiB() {
-		return 32;
-	}
-
 	String KEY_ASYNC_MODEL_PROCESSING = "asyncModelProcessing";
 	@ConfigItem(
 		keyName = KEY_ASYNC_MODEL_PROCESSING,
