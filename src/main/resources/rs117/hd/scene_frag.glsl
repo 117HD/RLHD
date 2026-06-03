@@ -136,7 +136,7 @@ void main() {
         #if LEGACY_WATER
             outputColor = sampleLegacyWater(waterTypeIndex, viewDir);
         #else
-            outputColor = sampleWater(waterTypeIndex, viewDir);
+            outputColor = sampleWater(waterTypeIndex, waterDepth, viewDir);
         #endif
     }
 

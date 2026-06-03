@@ -36,6 +36,8 @@
 
 #if !LEGACY_WATER
 
+#define LEGEACY_FOAM 1
+
 vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
     WaterType waterType = getWaterType(waterTypeIndex);
     vec2 worldUv = -position.xz / 128;
@@ -358,7 +360,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     outputColor.rgb += (gradientNoise(gl_FragCoord.xy) - .5) / 0xFF;
 }
 
-vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
+vec4 sampleWater(int waterTypeIndex, float waterDeth, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
     #if ZONE_RENDERER
@@ -542,28 +544,93 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         dst.a = 1;
     }
 
-    #if WATER_FOAM
-        if (waterType.hasFoam == 1) {
-            vec2 flowMapUv = worldUvs(5) + animationFrame(30 * waterType.duration);
-            float flowMapStrength = .25;
-            vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
-            vec2 uv = IN.uv + uvFlow * flowMapStrength;
-            float foamMask = texture(textureArray, vec3(uv, MAT_WATER_FOAM.colorMap)).r;
-            float shoreLineMask = 1 - dot(IN.texBlend, fAlphaBiasHsl / 127.f);
-            shoreLineMask *= shoreLineMask;
-            shoreLineMask *= shoreLineMask;
-            shoreLineMask *= shoreLineMask;
+#if WATER_FOAM
+    if (waterType.hasFoam == 1) {
+    #if LEGEACY_FOAM
+        vec2 flowMapUv = worldUvs(5) + animationFrame(30 * waterType.duration);
+        float flowMapStrength = .25;
+        vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
+        vec2 uv = IN.uv + uvFlow * flowMapStrength;
+        float foamMask = texture(textureArray, vec3(uv, MAT_WATER_FOAM.colorMap)).r;
+        float shoreLineMask = 1.0 - saturate(waterDeth / 128);
+        shoreLineMask *= shoreLineMask;
 
-            vec3 light = ambientColor * ambientStrength + lightColor * lightStrength;
-            vec4 foam = vec4(light, shoreLineMask * foamMask * .04);
-            foam.rgb *= waterType.foamColor;
+        vec3 light = ambientColor * ambientStrength + lightColor * lightStrength;
+        vec4 foam = vec4(light, shoreLineMask * foamMask * .1);
+        foam.rgb *= waterType.foamColor;
+    #else
+        // --- Wave shape & speed ---
+        const float WAVE_BAND_DEPTH    = 512.0;  // depth-space distance between crests
+        const float WAVE_BAND_FALL     = 2.5;    // falloff sharpness higher = tighter crest
+        const float WAVE_SPEED         = 0.15;   // wave travel speed (UV units/sec)
 
-            // Blend in foam at the very end as an overlay
-            dst.rgb = foam.rgb * foam.a + dst.rgb * dst.a * (1 - foam.a);
-            dst.a = foam.a + dst.a * (1 - foam.a);
-            dst.rgb /= dst.a;
-        }
+        // --- Wave fade distances ---
+        const float WAVE_FADE_START    = 256.0; // depth where rolling waves begin fading
+        const float WAVE_FADE_END      = 512.0; // depth where rolling waves are fully gone
+
+        // --- Shoreline band ---
+        const float SHORE_EDGE_DIST    = 128.0;  // tight inner-edge foam depth
+        const float SHORE_OUTER_DIST   = 1024.0; // outer falloff depth
+
+        // --- Foam texture ---
+        const float FLOW_STRENGTH      = 0.25;   // flow-map warp strength
+        const float FOAM_SCALE_B       = 1.70;   // UV scale of second foam layer
+
+        // ---- shore direction ----
+        vec2 depthGrad     = vec2(dFdx(waterDeth), dFdy(waterDeth));
+        vec3 dPosdx        = dFdx(IN.position);
+        vec3 dPosdy        = dFdy(IN.position);
+        vec2 worldDepthGrad = depthGrad.x * dPosdx.xz + depthGrad.y * dPosdy.xz;
+        float worldGradLen  = length(worldDepthGrad);
+        vec2 shoreDir       = worldGradLen > 0.001 ? -normalize(worldDepthGrad) : vec2(0.0);
+
+        // ---- wave phases ----
+        float basePhase  = waterDeth / WAVE_BAND_DEPTH + elapsedTime * WAVE_SPEED;
+        float wavePhase  = fract(basePhase);
+        float wavePhasB  = fract(basePhase * 0.7 + 0.5);
+
+        // ---- flow map ----
+        vec2 flowMapUv = worldUvs(5) + animationFrame(30.0 * waterType.duration);
+        vec2 uvFlow    = (texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy * 2.0 - 1.0)
+                       * FLOW_STRENGTH;
+
+        // ---- foam UVs ----
+        vec2 uv1 = IN.uv + uvFlow + shoreDir * (wavePhase  * 2.0);
+        vec2 uv2 = IN.uv * FOAM_SCALE_B
+                 + uvFlow * 0.6
+                 + animationFrame(47.0 * waterType.duration)
+                 + shoreDir * (wavePhasB * 2.0);
+
+        float foamA    = texture(textureArray, vec3(uv1, MAT_WATER_FOAM.colorMap)).r;
+        float foamB    = texture(textureArray, vec3(uv2, MAT_WATER_FOAM.colorMap)).r;
+        float foamMask = max(foamA, foamB * 0.6);
+
+        // ---- wave band ----
+        float waveBand = smoothstep(0.0, 0.25, wavePhase)
+                       * pow(1.0 - wavePhase, WAVE_BAND_FALL)
+                       * smoothstep(0.0, 0.18, wavePhase)       // outer edge fade
+                       * saturate(length(depthGrad) * 8.0)      // slope mask
+                       * (1.0 - smoothstep(WAVE_FADE_START, WAVE_FADE_END, waterDeth));
+
+        // ---- shoreline ----
+        float edgeBand  = 1.0 - saturate(waterDeth / SHORE_EDGE_DIST);
+        float outerBand = 1.0 - saturate(waterDeth / SHORE_OUTER_DIST);
+
+        // ---- combine ----
+        float shoreLineMask = edgeBand + outerBand * 0.35;  // saturate deferred to foamAlpha
+        float foamAlpha = saturate(
+            (shoreLineMask + waveBand * 0.70) * foamMask
+            * (0.06 + edgeBand * 0.10 + waveBand * 0.80)
+        );
+
+        vec4 foam = vec4(waterType.foamColor, foamAlpha);
     #endif
+
+        dst.rgb = foam.rgb * foam.a + dst.rgb * dst.a * (1.0 - foam.a);
+        dst.a   = foam.a + dst.a * (1.0 - foam.a);
+        dst.rgb /= max(dst.a, 1e-4);
+    }
+#endif
 
     return dst;
 }

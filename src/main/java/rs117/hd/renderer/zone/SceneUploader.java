@@ -1007,14 +1007,29 @@ public class SceneUploader implements AutoCloseable {
 			// set colors for the shoreline to create a foam effect in the water shader
 			swColor = seColor = nwColor = neColor = 127;
 
-			if (ctx.isVertexWater(swVertexKey) && ctx.isVertexLand(swVertexKey))
+			if (ctx.isVertexWater(swVertexKey) && ctx.isVertexLand(swVertexKey)) {
 				swColor = 0;
-			if (ctx.isVertexWater(seVertexKey) && ctx.isVertexLand(seVertexKey))
+			} else {
+				swTerrainData = HDUtils.packTerrainData(true, ctx.getVertexUnderwaterDepth(swVertexKey), waterType, tileZ);
+			}
+
+			if (ctx.isVertexWater(seVertexKey) && ctx.isVertexLand(seVertexKey)) {
 				seColor = 0;
-			if (ctx.isVertexWater(nwVertexKey) && ctx.isVertexLand(nwVertexKey))
+			} else {
+				seTerrainData = HDUtils.packTerrainData(true, ctx.getVertexUnderwaterDepth(seVertexKey), waterType, tileZ);
+			}
+
+			if (ctx.isVertexWater(nwVertexKey) && ctx.isVertexLand(nwVertexKey)) {
 				nwColor = 0;
-			if (ctx.isVertexWater(neVertexKey) && ctx.isVertexLand(neVertexKey))
+			} else {
+				nwTerrainData = HDUtils.packTerrainData(true, ctx.getVertexUnderwaterDepth(nwVertexKey), waterType, tileZ);
+			}
+
+			if (ctx.isVertexWater(neVertexKey) && ctx.isVertexLand(neVertexKey)) {
 				neColor = 0;
+			} else {
+				neTerrainData = HDUtils.packTerrainData(true, ctx.getVertexUnderwaterDepth(neVertexKey), waterType, tileZ);
+			}
 
 			if (seColor == 0 && nwColor == 0 && (neColor == 0 || swColor == 0))
 				swColor = seColor = nwColor = neColor = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
@@ -1306,12 +1321,24 @@ public class SceneUploader implements AutoCloseable {
 			} else if (onlyWaterSurface) {
 				// set colors for the shoreline to create a foam effect in the water shader
 				colorA = colorB = colorC = 127;
-				if (ctx.isVertexWater(vertexKeyA) && ctx.isVertexLand(vertexKeyA))
+				if (ctx.isVertexWater(vertexKeyA) && ctx.isVertexLand(vertexKeyA)) {
 					colorA = 0;
-				if (ctx.isVertexWater(vertexKeyB) && ctx.isVertexLand(vertexKeyB))
+				} else {
+					terrainDataA = HDUtils.packTerrainData(true, ctx.getVertexUnderwaterDepth(vertexKeyA), waterType, tileZ);
+				}
+
+				if (ctx.isVertexWater(vertexKeyB) && ctx.isVertexLand(vertexKeyB)) {
 					colorB = 0;
-				if (ctx.isVertexWater(vertexKeyC) && ctx.isVertexLand(vertexKeyC))
+				} else {
+					terrainDataB = HDUtils.packTerrainData(true, ctx.getVertexUnderwaterDepth(vertexKeyB), waterType, tileZ);
+				}
+
+				if (ctx.isVertexWater(vertexKeyC) && ctx.isVertexLand(vertexKeyC)) {
 					colorC = 0;
+				} else {
+					terrainDataC = HDUtils.packTerrainData(true, ctx.getVertexUnderwaterDepth(vertexKeyC), waterType, tileZ);
+				}
+
 				if (colorA == 0 && colorB == 0 && colorC == 0)
 					colorA = colorB = colorC = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
 			} else {
