@@ -37,19 +37,13 @@
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
+#include RENDER_PASS
 #include MATERIAL_CONSTANTS
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 uniform usampler2DArray tiledLightingArray;
-uniform sampler2D waterReflectionMap;
 uniform sampler2DArray waterNormalMaps;
-
-uniform int renderPass;
-uniform bool waterReflectionEnabled;
-uniform bool shorelineCaustics;
-uniform bool waterTransparency;
-uniform vec3 legacyWaterColor;
 
 flat in int fWorldViewId;
 flat in ivec3 fAlphaBiasHsl;
@@ -57,10 +51,22 @@ flat in ivec3 fMaterialData;
 flat in ivec3 fTerrainData;
 flat in vec3 fFlatNormal;
 
+//#if !ZONE_RENDERER
+//    flat in vec3 T;
+//    flat in vec3 B;
+//#endif
+//
+//#if ZONE_RENDERER
+//    flat in vec3 fFlatNormal;
+//#endif
+
 in FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
+    #if !ZONE_RENDERER
+        vec3 flatNormal;
+    #endif
     vec3 texBlend;
 } IN;
 
@@ -86,6 +92,7 @@ vec2 worldUvs(float scale) {
 #include <utils/lights.glsl>
 
 void main() {
+    vec3 cameraPos = sceneCamera.position;
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
@@ -93,6 +100,14 @@ void main() {
     Material material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     Material material2 = getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
     Material material3 = getMaterial(fMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+
+    // Get initial texture map ids
+    int colorMap1 = material1.colorMap;
+    int colorMap2 = material2.colorMap;
+    int colorMap3 = material3.colorMap;
+
+    // Only use one flow map
+    int flowMap = material1.flowMap;
 
     // Water data
     bool isTerrain = (fTerrainData[0] & 1) != 0; // 1 = 0b1
@@ -103,24 +118,15 @@ void main() {
         waterDepth1 * IN.texBlend.x +
         waterDepth2 * IN.texBlend.y +
         waterDepth3 * IN.texBlend.z;
-    int waterTypeIndex = isTerrain ? fTerrainData[0] >> 3 & 0xFF : 0;
-
-    // set initial texture map ids
-    int colorMap1 = material1.colorMap;
-    int colorMap2 = material2.colorMap;
-    int colorMap3 = material3.colorMap;
-
-    // Only use one flow mapx
-    int flowMap = material1.flowMap;
-
+    int waterTypeIndex = fTerrainData[0] >> 3 & 0xFF;
     bool isWater = waterTypeIndex > 0;
-    bool isUnderwater = waterDepth != 0;
-    bool isWaterSurface = isWater && !isUnderwater;
+    bool isUnderwaterTile = waterDepth != 0;
+    bool isWaterSurface = isWater && !isUnderwaterTile;
 
-    if (IN.position.y > mostPrevalentWaterLevel) {
-        isUnderwater = true;
-        waterDepth = IN.position.y - mostPrevalentWaterLevel;
-    }
+//    if (IN.position.y > mostPrevalentWaterLevel) {
+//        isUnderwater = true;
+//        waterDepth = IN.position.y - mostPrevalentWaterLevel;
+//    }
 
     #ifdef DEVELOPMENT_WATER_TYPE
         if (isWater)
@@ -133,13 +139,15 @@ void main() {
 
     vec4 outputColor = vec4(1);
 
-    if (isWaterSurface) {
+    if (RENDER_PASS == RENDER_PASS_WATER) {
         #if LEGACY_WATER
             outputColor = sampleLegacyWater(waterTypeIndex, viewDir);
         #else
-            outputColor = sampleWater(waterTypeIndex, viewDir);
+            outputColor = sampleWater(waterTypeIndex, waterDepth, viewDir);
         #endif
-    } else {
+    }
+
+    if (RENDER_PASS != RENDER_PASS_WATER) {
         vec2 uv = IN.uv;
 
         float mipBias = 0;
@@ -173,23 +181,22 @@ void main() {
             uv2 += uvFlow * flowMapStrength;
             uv3 += uvFlow * flowMapStrength;
         }
+        vec3 lightDir = Camera_getForward(directionalCamera);
 
         // Set up tangent-space transformation matrix
-
-        vec3 N;
-        #if FLAT_SHADING && ZONE_RENDERER
-            N = normalize(fFlatNormal);
-        #else
-            N = normalize(IN.normal);
-        #endif
+        vec3 N = normalize(IN.normal);
 
         // Invert the normal for back-faces rendered in reflections, in order to add shading
         // to the underside of docks. This actually needs to check for front-faces instead,
         // since the projection matrix reverses winding order when flipping vertically
-        if (renderPass == RENDER_PASS_WATER_REFLECTION && gl_FrontFacing)
+        if (RENDER_PASS == RENDER_PASS_WATER_REFLECTION && gl_FrontFacing)
             N *= -1;
 
-        mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
+//        #if ZONE_RENDERER
+            mat3 TBN = cotangent_frame(N, IN.position, IN.uv * -1.0);
+//        #else
+//            mat3 TBN = mat3(T, B, N * min(length(T), length(B)));
+//        #endif
 
         #if DISPLAY_UV
             FragColor = vec4(fract(uv1 * IN.texBlend.x + uv2 * IN.texBlend.y + uv3 * IN.texBlend.z), 0.0, 1.0);
@@ -208,7 +215,7 @@ void main() {
 
         float selfShadowing = 0;
         vec3 fragPos = IN.position;
-        #if PARALLAX_OCCLUSION_MAPPING
+        #if PARALLAX_OCCLUSION_MAPPING && RENDER_PASS == RENDER_PASS_MAIN
             mat3 invTBN = inverse(TBN);
             vec3 tsViewDir = invTBN * viewDir;
             vec3 tsLightDir = invTBN * -lightDir;
@@ -442,8 +449,9 @@ void main() {
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
-        if (renderPass == RENDER_PASS_MAIN)
+        #if RENDER_PASS == RENDER_PASS_MAIN
             calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
+        #endif
 
         // sky light
         vec3 skyLightColor = fogColor;
@@ -486,6 +494,7 @@ void main() {
             getMaterialIsUnlit(material3)
         ));
 
+    #if RENDER_PASS == RENDER_PASS_MAIN
         #if LEGACY_WATER
             if (tint.w > 0) {
                 outputColor.rgb *= 1.0 + skyLightOut;
@@ -493,10 +502,10 @@ void main() {
                 outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
             }
 
-            if (isUnderwater)
+            if (isUnderwaterTile)
                 sampleLegacyUnderwater(outputColor.rgb, waterType.depthColor, waterDepth, lightDotNormals);
         #else
-            if (isUnderwater) {
+            if (isUnderwaterTile) {
                 sampleUnderwater(outputColor.rgb, waterTypeIndex, waterDepth);
             } else {
                 if (tint.w > 0) {
@@ -506,6 +515,7 @@ void main() {
                 }
             }
         #endif
+    #endif
 
         #if LINEAR_ALPHA_BLENDING
             // Try to match old alpha with linear blending
@@ -570,7 +580,7 @@ void main() {
     #endif
 
     // apply fog
-    if (!isUnderwater) {
+    if (!isUnderwaterTile) {
         // ground fog
         float distance = distance(IN.position, cameraPos);
         float closeFadeDistance = 1500;

@@ -7,7 +7,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import javax.annotation.Nullable;
-import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +20,10 @@ import rs117.hd.utils.GsonUtils;
 import static rs117.hd.utils.ColorUtils.linearToSrgb;
 import static rs117.hd.utils.ColorUtils.rgb;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @GsonUtils.ExcludeDefaults
-@Setter(AccessLevel.PROTECTED)
 public class WaterType {
 	public String name;
 	public int vanillaTextureIndex = -1;

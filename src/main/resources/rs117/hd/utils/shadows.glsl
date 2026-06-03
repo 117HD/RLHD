@@ -67,29 +67,25 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     if (lightStrength <= 0)
         return 0.f;
 
-    vec4 shadowPos = lightProjectionMatrix * vec4(fragPos, 1);
-    shadowPos.xyz /= shadowPos.w;
+    vec3 shadowNDC = Camera_projectWorld(directionalCamera, fragPos);
 
     // Fade out shadows near the shadow map edges
     #if ZONE_RENDERER
         // TODO: Make this configurable if we make the Shadow Distance Variable
         const float fadeStart = 55.0 * TILE_SIZE;
         const float fadeEnd   = 65.0 * TILE_SIZE;
-        float fadeOut = smoothstep(fadeStart, fadeEnd, length(fragPos - cameraPos));
+        float fadeOut = smoothstep(fadeStart, fadeEnd, length(fragPos - sceneCamera.position));
     #else
-        float fadeOut = smoothstep(.75, 1., dot(shadowPos.xy, shadowPos.xy));
+        float fadeOut = smoothstep(.75, 1., dot(shadowNDC.xy, shadowNDC.xy));
     #endif
     if (fadeOut >= 1)
         return 0.f;
 
-    // NDC to texture space
     ivec2 shadowRes = textureSize(shadowMap, 0);
-    shadowPos.xyz += 1;
-    shadowPos.xyz /= 2;
-    shadowPos.xy += distortion;
-    shadowPos.xy = clamp(shadowPos.xy, 0, 1);
-    shadowPos.xy *= shadowRes;
-    shadowPos.xy += .5; // Shift to texel center
+    vec3 shadowPos  = Camera_ndcToPixel(shadowNDC, vec2(shadowRes));
+    shadowPos.xy   += distortion * vec2(shadowRes); // distortion in UV space → pixel space
+    shadowPos.xy    = clamp(shadowPos.xy, vec2(0), vec2(shadowRes));
+    shadowPos.xy   += .5; // shift to texel center
 
     float shadowBias = MIN_SHADOW_BIAS * max(1, 1.0 - lightDotNormals);
     float fragDepth = shadowPos.z + shadowBias;

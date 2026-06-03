@@ -82,6 +82,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.ReflectionMode;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
@@ -399,12 +400,7 @@ public class HdPlugin extends Plugin {
 	public int fboTiledLighting;
 	public int texTiledLighting;
 
-	public int[] waterReflectionResolution;
-	public int fboWaterReflection;
-	public int texWaterReflection;
-	private int texWaterReflectionDepthMap;
-
-	private int texWaterNormalMaps;
+	public int texWaterNormalMaps;
 
 	public UBOGlobal uboGlobal;
 	public UBOUI uboUI;
@@ -433,14 +429,15 @@ public class HdPlugin extends Plugin {
 	public boolean configPreserveVanillaNormals;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
-	public boolean configHideVanillaWaterEffects;
 	public boolean configLinearAlphaBlending;
-	public boolean configPlanarReflections;
+	public boolean configRoofReflections;
 	public boolean configWaterTransparency;
 	public boolean configLegacyWater;
+	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public int configDetailDrawDistance;
+	public ReflectionMode configPlanarReflections;
 	public int configExpandedMapLoadingChunks;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
@@ -477,6 +474,7 @@ public class HdPlugin extends Plugin {
 	public final float[] cameraOrientation = new float[2];
 	public final float[][] cameraFrustum = new float[6][4];
 	public float[] viewMatrix = Mat4.zero();
+	public float[] projMatrix = new float[16];
 	public float[] viewProjMatrix = Mat4.zero();
 	public float[] invViewProjMatrix = Mat4.zero();
 
@@ -805,7 +803,6 @@ public class HdPlugin extends Plugin {
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
-				destroyWaterReflectionsFbo();
 				destroyWaterNormalMaps();
 
 				if (renderer != null) {
@@ -974,7 +971,9 @@ public class HdPlugin extends Plugin {
 			.define("WORLD_VIEW_GETTER", "")
 			.define("LINEAR_ALPHA_BLENDING", configLinearAlphaBlending)
 			.define("WATER_FOAM", config.enableWaterFoam())
-			.define("PLANAR_REFLECTIONS", configPlanarReflections)
+			.define("PLANAR_REFLECTIONS", configPlanarReflections != ReflectionMode.DISABLED)
+			.define("SHORELINE_CAUSTICS", config.shorelineCaustics())
+			.define("WATER_TRANSPARENCY", configWaterTransparency)
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -1353,7 +1352,7 @@ public class HdPlugin extends Plugin {
 			alpha ? RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA : RENDERBUFFER_FORMATS_SRGB :
 			alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
 
-		float resolutionScale = config.sceneResolution() / 100f;
+		float resolutionScale = config.sceneResolutionScale() / 100f;
 		sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
 		uboGlobal.sceneResolution.set(sceneResolution);
 		uboGlobal.upload(); // Ensure this is up to date with rendering
@@ -1514,70 +1513,6 @@ public class HdPlugin extends Plugin {
 		);
 	}
 
-	public void updateWaterReflectionsFbo() {
-		if (!configPlanarReflections || sceneViewport == null)
-			return;
-
-		// Clamp this to our target range since RuneLite allows manually typing numbers outside the range
-		float resolutionScale = config.waterReflectionResolution() / 100f;
-		int[] resolution = {
-			Math.max(1, Math.round(sceneViewport[2] * resolutionScale)),
-			Math.max(1, Math.round(sceneViewport[3] * resolutionScale))
-		};
-		if (Arrays.equals(waterReflectionResolution, resolution))
-			return;
-
-		destroyWaterReflectionsFbo();
-		waterReflectionResolution = resolution;
-
-		// Create and bind the FBO
-		fboWaterReflection = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboWaterReflection);
-
-		// Both of these are required color-renderable texture formats
-		int format = configLinearAlphaBlending ? GL_SRGB8 : GL_RGB8;
-
-		// Create texture
-		texWaterReflection = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, texWaterReflection);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, resolution[0], resolution[1], 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		checkGLErrors();
-
-		// Bind texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texWaterReflection, 0);
-		glReadBuffer(GL_NONE);
-
-		// Create texture
-		texWaterReflectionDepthMap = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, texWaterReflectionDepthMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, resolution[0], resolution[1], 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
-		checkGLErrors();
-
-		// Bind texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texWaterReflectionDepthMap, 0);
-		checkGLErrors();
-	}
-
-	private void destroyWaterReflectionsFbo() {
-		waterReflectionResolution = null;
-
-		if (texWaterReflection != 0)
-			glDeleteTextures(texWaterReflection);
-		texWaterReflection = 0;
-
-		if (texWaterReflectionDepthMap != 0)
-			glDeleteTextures(texWaterReflectionDepthMap);
-		texWaterReflectionDepthMap = 0;
-
-		if (fboWaterReflection != 0)
-			glDeleteFramebuffers(fboWaterReflection);
-		fboWaterReflection = 0;
-	}
-
 	private void initWaterNormalMaps() {
 		if (configLegacyWater || texWaterNormalMaps != 0)
 			return;
@@ -1629,6 +1564,9 @@ public class HdPlugin extends Plugin {
 		setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
 
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+
+		// Reset active texture unit so subsequent glBindTexture calls don't overwrite this unit
+		glActiveTexture(GL_TEXTURE0);
 	}
 
 	private void destroyWaterNormalMaps() {
@@ -1840,7 +1778,8 @@ public class HdPlugin extends Plugin {
 		configHideVanillaWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
-		configPlanarReflections = config.enablePlanarReflections();
+		configPlanarReflections = config.planarReflections();
+		configRoofReflections = config.enableRoofReflections();
 		configWaterTransparency = config.waterTransparency();
 
 		var newColorFilter = config.colorFilter();
@@ -1960,26 +1899,12 @@ public class HdPlugin extends Plugin {
 								break;
 							case KEY_LEGACY_WATER:
 								recreateSceneFbo = true;
-								recreateWaterReflectionsFbo = true;
 								recompilePrograms = true;
 								if (configLegacyWater) {
 									destroyWaterNormalMaps();
 								} else {
 									initWaterNormalMaps();
 								}
-								break;
-							case KEY_ANISOTROPIC_FILTERING_LEVEL:
-								int level = config.anisotropicFilteringLevel();
-								if (texWaterNormalMaps != 0) {
-									glActiveTexture(TEXTURE_UNIT_WATER_NORMAL_MAPS);
-									glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterNormalMaps);
-									setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, level);
-								}
-								// TODO
-//								if (textureManager.textureArray != 0) {
-//									glActiveTexture(TEXTURE_UNIT_GAME);
-//									setAnisotropicFilteringAndMipMapping(GL_TEXTURE_2D_ARRAY, level);
-//								}
 								break;
 							case KEY_CPU_USAGE_LIMIT:
 								if (jobSystem.isActive()) {
@@ -1998,9 +1923,6 @@ public class HdPlugin extends Plugin {
 								if (client.getGameState() == GameState.LOGGED_IN)
 									client.setGameState(GameState.LOADING);
 								break;
-							case KEY_PLANAR_REFLECTIONS:
-								recreateWaterReflectionsFbo = true;
-								// fall-through
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
 							case KEY_DYNAMIC_LIGHTS:
@@ -2016,6 +1938,9 @@ public class HdPlugin extends Plugin {
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
 							case KEY_WATER_FOAM:
+							case KEY_SHORELINE_CAUSTICS:
+							case KEY_WATER_TRANSPARENCY:
+							case KEY_PLANAR_REFLECTIONS:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
@@ -2101,10 +2026,10 @@ public class HdPlugin extends Plugin {
 						initializeShadowMapFbo();
 					}
 
-					if (recreateWaterReflectionsFbo) {
-						destroyWaterReflectionsFbo();
-						updateWaterReflectionsFbo();
-					}
+//					if (recreateWaterReflectionsFbo) {
+//						destroyWaterReflectionsFbo();
+//						updateWaterReflectionsFbo();
+//					}
 
 					if (reloadEnvironments)
 						environmentManager.reload();

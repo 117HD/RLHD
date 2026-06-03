@@ -3,6 +3,9 @@ package rs117.hd.utils;
 import java.util.Arrays;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.uniforms.UniformBuffer;
+import rs117.hd.opengl.uniforms.UniformBuffer.Property;
+import rs117.hd.opengl.uniforms.UniformBuffer.PropertyType;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -47,9 +50,13 @@ public final class Camera {
 	@Getter
 	private float farPlane = 0.0f;
 	@Getter
+	private int cullingMask = 0;
+	@Getter
 	private boolean orthographic = false;
 	@Getter
 	private boolean reverseZ = false;
+	@Getter
+	private boolean flipY = false;
 
 	public boolean isDirty() {
 		return dirtyFlags != 0;
@@ -80,6 +87,22 @@ public final class Camera {
 				dirtyFlags |= PROJ_CHANGED;
 			}
 		}
+		return this;
+	}
+
+	public Camera setFlipY(boolean newFlipY) {
+		if (flipY != newFlipY) {
+			synchronized (this) {
+				flipY = newFlipY;
+				dirtyFlags |= PROJ_CHANGED;
+			}
+		}
+		return this;
+	}
+
+	public Camera setCullingId(int id) {
+		assert id >= 0 && id <= 8;
+		cullingMask = 1 << id;
 		return this;
 	}
 
@@ -401,6 +424,10 @@ public final class Camera {
 					}
 				}
 			}
+			if (flipY) {
+				for (int i = 1; i < 16; i += 4)
+					projectionMatrix[i] = -projectionMatrix[i];
+			}
 			try {
 				invProjectionMatrix = Mat4.inverse(projectionMatrix);
 			} catch (Exception ex) {
@@ -559,5 +586,49 @@ public final class Camera {
 		copyTo(fixedOrientation, other.fixedOrientation);
 
 		dirtyFlags = PROJ_CHANGED | VIEW_CHANGED;
+	}
+
+	public static class CameraStruct extends UniformBuffer.StructProperty {
+		public static final int REVERSE_Z = 1;
+		public static final int ORTHOGRAPHIC = 2;
+		public static final int INFINITE_FAR = 4;
+
+		public Property position = addProperty(PropertyType.FVec3, "position");
+
+		public Property nearPlane = addProperty(PropertyType.Float, "nearPlane");
+		public Property farPlane = addProperty(PropertyType.Float, "farPlane");
+
+		public Property flags = addProperty(PropertyType.Int, "flags");
+		public Property viewport = addProperty(PropertyType.IVec2, "viewport");
+
+		public Property viewMatrix = addProperty(PropertyType.Mat4, "viewMatrix");
+		public Property projMatrix = addProperty(PropertyType.Mat4, "projMatrix");
+		public Property viewProjMatrix = addProperty(PropertyType.Mat4, "viewProjMatrix");
+		public Property invViewProjMatrix = addProperty(PropertyType.Mat4, "invViewProjMatrix");
+
+		public void write(Camera camera) {
+			camera.calculateViewProjMatrix();
+			camera.calculateProjectionMatrix();
+			camera.calculateViewProjMatrix();
+			camera.calculateInvViewProjMatrix();
+
+			int cameraFlags = 0;
+			if (camera.reverseZ)
+				cameraFlags |= REVERSE_Z;
+			if (camera.orthographic)
+				cameraFlags |= ORTHOGRAPHIC;
+			if (camera.farPlane > 0.0f)
+				cameraFlags |= INFINITE_FAR;
+
+			position.set(camera.position);
+			nearPlane.set(camera.nearPlane);
+			farPlane.set(camera.farPlane);
+			viewport.set(camera.viewportWidth, camera.viewportHeight);
+			flags.set(cameraFlags);
+			viewMatrix.set(camera.viewMatrix);
+			projMatrix.set(camera.projectionMatrix);
+			viewProjMatrix.set(camera.viewProjMatrix);
+			invViewProjMatrix.set(camera.invViewProjMatrix);
+		}
 	}
 }

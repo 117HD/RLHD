@@ -30,6 +30,7 @@
 #include <utils/misc.glsl>
 #include <utils/fresnel.glsl>
 
+#if LEGACY_WATER
 vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
@@ -55,6 +56,7 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
     n2 = -vec3((n2.x * 2 - 1) * waterType.normalStrength, n2.z, (n2.y * 2 - 1) * waterType.normalStrength);
     vec3 normals = normalize(n1 + n2);
 
+    vec3 lightDir = Camera_getForward(directionalCamera);
     float lightDotNormals = dot(normals, lightDir);
     float downDotNormals = -normals.y;
     float viewDotNormals = dot(viewDir, normals);
@@ -167,7 +169,7 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
 
     float alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
 
-    bool isOpaque = !waterTransparency || waterType.isFlat;
+    bool isOpaque = WATER_TRANSPARENCY == 0 || waterType.isFlat;
     if (isOpaque) {
         baseColor = mix(waterType.depthColor, baseColor, alpha);
         alpha = 1;
@@ -193,7 +195,7 @@ void sampleLegacyUnderwater(inout vec3 outputColor, vec3 depthColor, float depth
         outputColor = vec3(0);
     }
 
-    if (shorelineCaustics) {
+    if (SHORELINE_CAUSTICS == 1) {
         const float scale = 1.75;
         const float maxCausticsDepth = 128 * 4;
 
@@ -215,3 +217,4 @@ void sampleLegacyUnderwater(inout vec3 outputColor, vec3 depthColor, float depth
 
     outputColor = srgbToLinear(outputColor);
 }
+#endif

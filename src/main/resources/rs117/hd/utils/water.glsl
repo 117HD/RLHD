@@ -37,6 +37,8 @@
 //#if LEGACY_WATER
 #include <utils/legacy_water.glsl>
 
+#if !LEGACY_WATER
+
 vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
     WaterType waterType = getWaterType(waterTypeIndex);
     vec2 worldUv = -position.xz / 128;
@@ -86,10 +88,14 @@ vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
 }
 
 void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
+    vec3 lightDir = Camera_getForward(directionalCamera);
+
     WaterType waterType = getWaterType(waterTypeIndex);
 
     // Ignore refraction for the underwater position, since it would require computing a quartic equation
+    vec3 cameraPos = sceneCamera.position;
     vec3 fragPos = IN.position;
+    float fragDist = length(fragPos - cameraPos);
     vec3 underwaterNormal = normalize(IN.normal);
     vec3 surfaceNormal = vec3(0, -1, 0); // Assume a flat surface
 
@@ -135,6 +141,8 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     // Scattering anisotropy factor (average cosine), used in the Henyey-Greenstein phase function
     // Taken from https://www.researchgate.net/figure/a-Correlation-of-Mie-scattering-coefficient-and-wavelength-and-b-anisotropy-factor_fig5_337670010
     float g = .924;
+
+    float noise = gradientNoise(gl_FragCoord.xy);
 
     switch (waterTypeIndex) {
         default:
@@ -226,7 +234,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     L_directional *= 1 - calculateFresnel(max(0, dot(-sunDir, surfaceNormal)), IOR_WATER);
 
     // Add underwater caustics as additional directional light
-    if (shorelineCaustics) {
+    if (SHORELINE_CAUSTICS == 1) {
         vec2 causticsUv = worldUvs(3.333);
         const vec2 direction = vec2(1, -2);
         vec2 flow1 = causticsUv + animationFrame(13) * direction;
@@ -252,7 +260,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     }
 
     // Account for shadowing of the directional light
-    if (waterTransparency && !waterType.isFlat /* Disable shadows for flat water, as it needs more work */) {
+    if (WATER_TRANSPARENCY == 1 && !waterType.isFlat /* Disable shadows for flat water, as it needs more work */) {
         // For shadows, we can take refraction into account, since sunlight is parallel
         vec3 surfaceSunPos = fragPos - refractedSunDir * sunToFragDist;
         surfaceSunPos += refractedSunDir * 32; // Push the position a short distance below the surface
@@ -263,17 +271,55 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
             vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
             distortion = uvFlow * .001 * (1 - exp(-.01 * depth));
         }
-        // TODO: This would be nicer if blurred based on optical depth
-        float shadow = sampleShadowMap(surfaceSunPos, distortion, dot(-sunDir, underwaterNormal));
+
+//        // TODO: This would be nicer if blurred based on optical depth
+//        float shadow = sampleShadowMap(surfaceSunPos, distortion, dot(-sunDir, underwaterNormal));
+//        // Apply shadow to directional light
+//        L_directional *= 1 - shadow;
+
+
+        const float SHADOW_FALLBACK_DIST = 8192.0;
+        const float SHADOW_FALLBACK_BLEND = 512.0;
+        float fallbackWeight = saturate((fragDist - SHADOW_FALLBACK_DIST) / SHADOW_FALLBACK_BLEND);
+        float shadow = 0.0;
+        if(fallbackWeight < 1.0) {
+            // Calculate optical depth using relative luminance to avoid over bluring
+            float opticalDepth = dot(sigma_t, vec3(0.2126, 0.7152, 0.0722)) * sunToFragDist;
+
+            // Blur radius in shadow map UV space
+            const float SHADOW_MAX_BLUR = 0.009;
+            const float SHADOW_BLUR_OPTICAL_DEPTH_INV = 1.0 / 6.0;
+            float blurRadius = SHADOW_MAX_BLUR * saturate(opticalDepth * SHADOW_BLUR_OPTICAL_DEPTH_INV);
+
+            // Rotate the Poisson disk per fragment to break up repeated patterns.
+            float angle = noise * 2.0 * PI;
+            float s = sin(angle);
+            float c = cos(angle);
+            mat2 rot = mat2(c, -s, s, c);
+
+            int numSamples = 1 + int(floor(float(POISSON_DISK_LENGTH - 1) * saturate(opticalDepth * SHADOW_BLUR_OPTICAL_DEPTH_INV)));
+            for (int i = 0; i < numSamples; i++) {
+                vec2 offset = rot * getPoissonDisk(i) * blurRadius;
+                shadow += sampleShadowMap(surfaceSunPos, distortion + offset, dot(-sunDir, underwaterNormal));
+            }
+            shadow /= float(numSamples);
+        } else {
+            shadow = sampleShadowMap(surfaceSunPos, distortion, dot(-sunDir, underwaterNormal));
+        }
+
         // Apply shadow to directional light
-        L_directional *= 1 - shadow;
+        L_directional *= 1.0 - shadow * 0.9; // Clamp Shadow to avoid being fully black
     }
+
+    // Wrap lighting around to add a fraction of ambient lighting to side which are perpendicular
+    const float wrap = 0.55;
 
     // Attenuate the directional light as it travels down to the seabed
     L_directional *= exp(-sigma_t * sunToFragDist);
 
     // Calculate Lambertian reflection from the seabed
-    L_directional *= max(0, dot(omega_i, underwaterNormal));
+//    L_directional *= max(0, dot(omega_i, underwaterNormal));
+    L_directional *= max(0, (dot(omega_i, underwaterNormal) + wrap) / (1.0 + wrap));
 
     // Also calculate the amount of ambient lighting reaching the fragment
     vec3 L_ambient = ambientLight;
@@ -286,7 +332,8 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     L_ambient *= exp(-K_d * depth);
 
     // Rough approximation of Lambertian reflection from the seabed
-    L_ambient *= max(0, dot(vec3(0, -1, 0), underwaterNormal));
+//    L_ambient *= max(0, dot(vec3(0, -1, 0), underwaterNormal));
+    L_ambient *= max(0, (dot(vec3(0, -1, 0), underwaterNormal) + wrap) / (1.0 + wrap));
 
     // Now we're ready to start assembling the outgoing light L
 
@@ -324,10 +371,23 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     outputColor.rgb += (gradientNoise(gl_FragCoord.xy) - .5) / 0xFF;
 }
 
-vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
+vec4 sampleWater(int waterTypeIndex, float waterDepth, vec3 viewDir) {
+    vec3 lightDir = Camera_getForward(directionalCamera);
+
     WaterType waterType = getWaterType(waterTypeIndex);
 
-    float slope = abs(fFlatNormal.y);
+    #if ZONE_RENDERER
+        // Compute the face normal from screen-space derivatives of the world position.
+        // This gives the true geometric normal of the triangle, which is needed to
+        // distinguish flat water (slope ~1) from waterfalls (slope ~0).
+        // Stored normals can't be used because water surfaces use UP_NORMAL.
+        vec3 waterFlatNormal = normalize(cross(dFdx(IN.position), dFdy(IN.position)));
+    #else
+        vec3 waterFlatNormal = IN.flatNormal;
+    #endif
+
+    float slope = abs(waterFlatNormal.y);
+//    float slope = abs(fFlatNormal.y);
     if (slope < .8) {
         float waterfallMask = smoothstep(.8, .6, slope);
 
@@ -335,7 +395,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec3 bgColor2 = srgbToLinear(vec3(.063, .2, .3));
         vec3 fgColor = srgbToLinear(vec3(.9));
 
-        vec3 N = fFlatNormal;
+        vec3 N = waterFlatNormal;
+//        vec3 N = fFlatNormal;
         const float discretize = 5;
         N = floor(N * discretize) / discretize;
         vec3 T = normalize(vec3(-N.z, 0, N.x)); // Up cross normal
@@ -366,7 +427,6 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         float fresnel = calculateFresnel(cosAngle, IOR_WATER);
 
         vec4 dst = vec4(0);
-
         vec4 src = vec4(0);
 
         vec3 light = lightColor * lightStrength + ambientColor * ambientStrength;
@@ -490,7 +550,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         dst.rgb = surfaceColor * (ambientLight + directionalLight * max(0, dot(N, omega_o)));
         dst.rgb = mix(dst.rgb, src.rgb, src.a);
         dst.a = 1;
-    } else if (waterType.isFlat || !waterTransparency) { // If the water is opaque, blend in a fake underwater surface
+    } else if (waterType.isFlat || WATER_TRANSPARENCY == 0) { // If the water is opaque, blend in a fake underwater surface
         // Computed from packedHslToSrgb(6676)
         const vec3 underwaterColor = vec3(0.04856183, 0.025971446, 0.005794384);
         int depth = 768; // Works for boat cutscenes such as when going diving with Murphy
@@ -508,28 +568,117 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         dst.a = 1;
     }
 
-    #if WATER_FOAM
-        if (waterType.hasFoam == 1) {
-            vec2 flowMapUv = worldUvs(5) + animationFrame(30 * waterType.duration);
-            float flowMapStrength = .25;
-            vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
-            vec2 uv = IN.uv + uvFlow * flowMapStrength;
-            float foamMask = texture(textureArray, vec3(uv, MAT_WATER_FOAM.colorMap)).r;
-            float shoreLineMask = 1 - dot(IN.texBlend, fAlphaBiasHsl / 127.f);
-            shoreLineMask *= shoreLineMask;
-            shoreLineMask *= shoreLineMask;
-            shoreLineMask *= shoreLineMask;
+//    #if WATER_FOAM
+//        if (waterType.hasFoam == 1) {
+//            vec2 flowMapUv = worldUvs(5) + animationFrame(30 * waterType.duration);
+//            float flowMapStrength = .25;
+//            vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
+//            vec2 uv = IN.uv + uvFlow * flowMapStrength;
+//            float foamMask = texture(textureArray, vec3(uv, MAT_WATER_FOAM.colorMap)).r;
+//            float shoreLineMask = 1 - dot(IN.texBlend, fAlphaBiasHsl / 127.f);
+//            shoreLineMask *= shoreLineMask;
+//            shoreLineMask *= shoreLineMask;
+//            shoreLineMask *= shoreLineMask;
+//
+//            vec3 light = ambientColor * ambientStrength + lightColor * lightStrength;
+//            vec4 foam = vec4(light, shoreLineMask * foamMask * .04);
+//            foam.rgb *= waterType.foamColor;
+//
+//            // Blend in foam at the very end as an overlay
+//            dst.rgb = foam.rgb * foam.a + dst.rgb * dst.a * (1 - foam.a);
+//            dst.a = foam.a + dst.a * (1 - foam.a);
+//            dst.rgb /= dst.a;
+//        }
+//    #endif
 
-            vec3 light = ambientColor * ambientStrength + lightColor * lightStrength;
-            vec4 foam = vec4(light, shoreLineMask * foamMask * .04);
-            foam.rgb *= waterType.foamColor;
+#if WATER_FOAM
+    if (waterType.hasFoam == 1) {
+    #if LEGEACY_FOAM
+        vec2 flowMapUv = worldUvs(5) + animationFrame(30 * waterType.duration);
+        float flowMapStrength = .25;
+        vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
+        vec2 uv = IN.uv + uvFlow * flowMapStrength;
+        float foamMask = texture(textureArray, vec3(uv, MAT_WATER_FOAM.colorMap)).r;
+        float shoreLineMask = 1.0 - saturate(waterDepth / 128);
+        shoreLineMask *= shoreLineMask;
 
-            // Blend in foam at the very end as an overlay
-            dst.rgb = foam.rgb * foam.a + dst.rgb * dst.a * (1 - foam.a);
-            dst.a = foam.a + dst.a * (1 - foam.a);
-            dst.rgb /= dst.a;
-        }
+        vec3 light = ambientColor * ambientStrength + lightColor * lightStrength;
+        vec4 foam = vec4(light, shoreLineMask * foamMask * .1);
+        foam.rgb *= waterType.foamColor;
+    #else
+        // --- Wave shape & speed ---
+        const float WAVE_BAND_DEPTH    = 512.0;  // depth-space distance between crests
+        const float WAVE_BAND_FALL     = 2.5;    // falloff sharpness higher = tighter crest
+        const float WAVE_SPEED         = 0.15;   // wave travel speed (UV units/sec)
+
+        // --- Wave fade distances ---
+        const float WAVE_FADE_START    = 256.0; // depth where rolling waves begin fading
+        const float WAVE_FADE_END      = 512.0; // depth where rolling waves are fully gone
+
+        // --- Shoreline band ---
+        const float SHORE_EDGE_DIST    = 128.0;  // tight inner-edge foam depth
+        const float SHORE_OUTER_DIST   = 1024.0; // outer falloff depth
+
+        // --- Foam texture ---
+        const float FLOW_STRENGTH      = 0.25;   // flow-map warp strength
+        const float FOAM_SCALE_B       = 1.70;   // UV scale of second foam layer
+
+        // ---- shore direction ----
+        vec2 depthGrad     = vec2(dFdx(waterDepth), dFdy(waterDepth));
+        vec3 dPosdx        = dFdx(IN.position);
+        vec3 dPosdy        = dFdy(IN.position);
+        vec2 worldDepthGrad = depthGrad.x * dPosdx.xz + depthGrad.y * dPosdy.xz;
+        float worldGradLen  = length(worldDepthGrad);
+        vec2 shoreDir       = worldGradLen > 0.001 ? -normalize(worldDepthGrad) : vec2(0.0);
+
+        // ---- wave phases ----
+        float basePhase  = waterDepth / WAVE_BAND_DEPTH + elapsedTime * WAVE_SPEED;
+        float wavePhase  = fract(basePhase);
+        float wavePhasB  = fract(basePhase * 0.7 + 0.5);
+
+        // ---- flow map ----
+        vec2 flowMapUv = worldUvs(5) + animationFrame(30.0 * waterType.duration);
+        vec2 uvFlow    = (texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy * 2.0 - 1.0)
+                       * FLOW_STRENGTH;
+
+        // ---- foam UVs ----
+        vec2 uv1 = IN.uv + uvFlow + shoreDir * (wavePhase  * 2.0);
+        vec2 uv2 = IN.uv * FOAM_SCALE_B
+                 + uvFlow * 0.6
+                 + animationFrame(47.0 * waterType.duration)
+                 + shoreDir * (wavePhasB * 2.0);
+
+        float foamA    = texture(textureArray, vec3(uv1, MAT_WATER_FOAM.colorMap)).r;
+        float foamB    = texture(textureArray, vec3(uv2, MAT_WATER_FOAM.colorMap)).r;
+        float foamMask = max(foamA, foamB * 0.6);
+
+        // ---- wave band ----
+        float waveBand = smoothstep(0.0, 0.25, wavePhase)
+                       * pow(1.0 - wavePhase, WAVE_BAND_FALL)
+                       * smoothstep(0.0, 0.18, wavePhase)       // outer edge fade
+                       * saturate(length(depthGrad) * 8.0)      // slope mask
+                       * (1.0 - smoothstep(WAVE_FADE_START, WAVE_FADE_END, waterDepth));
+
+        // ---- shoreline ----
+        float edgeBand  = 1.0 - saturate(waterDepth / SHORE_EDGE_DIST);
+        float outerBand = 1.0 - saturate(waterDepth / SHORE_OUTER_DIST);
+
+        // ---- combine ----
+        float shoreLineMask = edgeBand + outerBand * 0.35;  // saturate deferred to foamAlpha
+        float foamAlpha = saturate(
+            (shoreLineMask + waveBand * 0.70) * foamMask
+            * (0.06 + edgeBand * 0.10 + waveBand * 0.80)
+        );
+
+        vec4 foam = vec4(waterType.foamColor, foamAlpha);
     #endif
+
+        dst.rgb = foam.rgb * foam.a + dst.rgb * dst.a * (1.0 - foam.a);
+        dst.a   = foam.a + dst.a * (1.0 - foam.a);
+        dst.rgb /= max(dst.a, 1e-4);
+    }
+#endif
 
     return dst;
 }
+#endif

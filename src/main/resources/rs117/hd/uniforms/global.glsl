@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utils/constants.glsl>
+#include <utils/camera.glsl>
 
 layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
@@ -35,16 +36,12 @@ layout(std140) uniform UBOGlobal {
     bool underwaterEnvironment;
     bool underwaterCaustics;
     vec3 underwaterCausticsColor;
-
-    vec3 lightDir;
+    vec3 legacyWaterColor;
 
     int pointLightsCount;
 
-    vec3 cameraPos;
-    mat4 viewMatrix;
-    mat4 projectionMatrix;
-    mat4 invProjectionMatrix;
-    mat4 lightProjectionMatrix;
+    Camera sceneCamera;
+    Camera directionalCamera;
 
     float lightningBrightness;
     float elapsedTime;

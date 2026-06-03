@@ -18,6 +18,7 @@
 
 #define RENDER_PASS_MAIN 0
 #define RENDER_PASS_WATER_REFLECTION 1
+#define RENDER_PASS_WATER 2
 
 // Any changes here may need to be reflected in OpenCL's constants.cl
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
@@ -85,4 +86,6 @@
 #define TILED_LIGHTING_MAX_TILE_LIGHT_COUNT (TILED_LIGHTING_LAYER_COUNT * 4 * 2)
 #include WINDOWS_HDR_CORRECTION
 #include PLANAR_REFLECTIONS
+#include SHORELINE_CAUSTICS
+#include WATER_TRANSPARENCY
 #include WATER_FOAM

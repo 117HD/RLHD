@@ -1034,6 +1034,18 @@
     ]
   },
   {
+    "description": "Hide objects causing issues with water reflections, such as grapple shortcuts",
+    "objectIds": [ "XBOWS_INV_FLOOR" ],
+    "hide": true
+  },
+  {
+    "description": "Hide black boxes in God Wars Dungeon messing up the water reflection",
+    "objectIds": [ "CAVEWALL_TOP_SUPERBLACK" ],
+    "hideInAreas": [
+      [ 2899, 5301, 2911, 5311 ]
+    ]
+  },
+  {
     "description": "Unicorn Overbrightness and vanilla shadow removal Fix",
     "hideVanillaShadows": true,
     "baseMaterial": "GRAY_65",
@@ -1082,18 +1094,6 @@
       "KOUREND_JELLY",
       "SUPERIOR_KOUREND_JELLY",
       "WILD_CAVE_JELLY_1"
-    ]
-  },
-  {
-    "description": "Hide objects causing issues with water reflections, such as grapple shortcuts",
-    "objectIds": [ "XBOWS_INV_FLOOR" ],
-    "hide": true
-  },
-  {
-    "description": "Hide black boxes in God Wars Dungeon messing up the water reflection",
-    "objectIds": [ "CAVEWALL_TOP_SUPERBLACK" ],
-    "hideInAreas": [
-      [ 2899, 5301, 2911, 5311 ]
     ]
   },
   {

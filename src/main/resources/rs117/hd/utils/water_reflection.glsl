@@ -23,34 +23,63 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <utils/constants.glsl>
+#include <uniforms/reflection_planes.glsl>
+
+uniform sampler2DArray waterReflectionMap;
 
 vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     // Only use the reflection map when enabled, the height difference is negligible & the surface is roughly flat
-    // TODO: decide which tris to enable the reflection for in the geometry shader
-    if (renderPass == RENDER_PASS_WATER_REFLECTION ||
-        !waterReflectionEnabled ||
-        abs(IN.position.y - mostPrevalentWaterLevel) > WATER_REFLECTION_HEIGHT_THRESHOLD ||
-        -fFlatNormal.y < .7)
+    bool isNormalPlanar = -fFlatNormal.y > .7;
+    if (RENDER_PASS == RENDER_PASS_WATER_REFLECTION || PLANAR_REFLECTIONS == 0 || !isNormalPlanar)
+        return srgbToLinear(fogColor);
+//    // TODO: decide which tris to enable the reflection for in the geometry shader
+//    if (renderPass == RENDER_PASS_WATER_REFLECTION ||
+//        !waterReflectionEnabled ||
+//        abs(IN.position.y - mostPrevalentWaterLevel) > WATER_REFLECTION_HEIGHT_THRESHOLD ||
+//        -fFlatNormal.y < .7)
+//        return srgbToLinear(fogColor);
+
+    // Find the closest Water plane
+    int planeIdx = findClosestPlane(IN.position.y);
+    if(planeIdx == -1)
         return srgbToLinear(fogColor);
 
-    float dist = length(IN.position - cameraPos);
+    ReflectionPlane plane = planes[planeIdx];
+    //waterHeight is present as a uniform, it repersents the height for which the planar reflections we're rendered at
+
+    float dist = length(IN.position - sceneCamera.position);
     distortionFactor *= 1 - exp(-dist * .0004);
 
     // Don't distort too close to the shore
     float shoreLineMask = 1 - dot(IN.texBlend, fAlphaBiasHsl / 127.f);
     distortionFactor *= 1 - shoreLineMask * 1.1; // safety factor to remove artifacts
 
-    vec3 uvX = normalize(cross(flatR * vec3(1, 0, 1), flatR));
-    vec3 uvY = cross(uvX, flatR);
-    float x = dot(R, uvX);
-    float y = dot(R, uvY);
-    vec2 distortion = vec2(x, y) * distortionFactor;
+    // Compute the height difference between this water tile and the plane
+    // the reflection was rendered at, then shift the reflected point up by
+    // twice that delta (reflection geometry moves 2px per 1 unit of height).
+    const float REFLECTION_DEPTH = 20.0;
+    float heightDelta = plane.height - IN.position.y;
+    vec3 reflectedPos = IN.position + flatR * REFLECTION_DEPTH;
+    reflectedPos.y += 2.0 * heightDelta;
 
-    vec2 uv = gl_FragCoord.xy + distortion;
-    uv /= sceneResolution;
+    vec2 baseUV = Camera_worldToPixel(plane.camera, reflectedPos);
 
-    // This will be linear or sRGB depending on the linear alpha blending setting
-    vec3 c = texture(waterReflectionMap, uv).rgb;
+    // Distortion (same as before)
+    vec3 flatRhoriz = flatR * vec3(1, 0, 1);
+    vec2 distortion = vec2(0);
+    if (dot(flatRhoriz, flatRhoriz) > 0.001) {
+        vec3 uvX = normalize(cross(flatRhoriz, flatR));
+        vec3 uvY = cross(uvX, flatR);
+        float x = dot(R, uvX);
+        float y = dot(R, uvY);
+        distortion = vec2(x, y) * distortionFactor;
+    } else {
+        // Near-vertical view: use normal's XZ deviation as distortion
+        distortion = (R.xz - flatR.xz) * distortionFactor;
+    }
+
+    vec2 uv = (baseUV + distortion) / sceneCamera.viewport;
+    vec3 c = texture(waterReflectionMap, vec3(uv, planeIdx)).rgb;
 
     #if !LINEAR_ALPHA_BLENDING
         // When linear alpha blending is on, the texture is in sRGB, and OpenGL will automatically convert it to linear

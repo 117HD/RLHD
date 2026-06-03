@@ -61,6 +61,7 @@ public class SceneContext {
 	public boolean fillGaps;
 	public boolean isInChambersOfXeric;
 	public boolean isInHouse;
+	public boolean hasWater;
 
 	@Nullable
 	public Area currentArea;
@@ -79,7 +80,6 @@ public class SceneContext {
 	public int sceneEdge0, sceneEdge1;
 	// Initialize array for counting the most prevalent water level
 	public int mostPrevalentWaterLevel;
-	public boolean hasWater;
 
 	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;

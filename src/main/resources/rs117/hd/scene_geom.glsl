@@ -27,7 +27,7 @@
 
 #include <uniforms/global.glsl>
 
-uniform int renderPass;
+#include RENDER_PASS
 
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
@@ -126,7 +126,7 @@ void main() {
     bool isUnderwaterTile = waterDepth != 0;
     bool isWaterSurface = isWater && !isUnderwaterTile;
 
-    if (renderPass == RENDER_PASS_WATER_REFLECTION) {
+    if (RENDER_PASS == RENDER_PASS_WATER_REFLECTION) {
         float minY = min(min(gPosition[0].y, gPosition[1].y), gPosition[2].y);
 
         if (isWater) {
@@ -171,7 +171,7 @@ void main() {
             pos.xyz += 16 * N * vec3(1, 0, 1);
         }
 
-        pos = projectionMatrix * pos;
+        pos = sceneCamera.viewProjMatrix * pos;
         gl_Position = pos;
         EmitVertex();
     }

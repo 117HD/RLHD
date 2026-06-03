@@ -38,6 +38,7 @@ import javax.swing.JFrame;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.util.OSType;
+import org.lwjgl.opengl.*;
 import rs117.hd.data.ObjectType;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -46,6 +47,14 @@ import rs117.hd.scene.water_types.WaterType;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
+import static org.lwjgl.opengl.GL11C.GL_LINEAR;
+import static org.lwjgl.opengl.GL11C.GL_LINEAR_MIPMAP_LINEAR;
+import static org.lwjgl.opengl.GL11C.GL_NEAREST;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11C.glGetFloat;
+import static org.lwjgl.opengl.GL11C.glTexParameterf;
+import static org.lwjgl.opengl.GL11C.glTexParameteri;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -557,6 +566,27 @@ public final class HDUtils {
 		}
 	}
 
+	public static void setAnisotropicFilteringLevel(int target, int level) {
+		if (level == 0) {
+			//level = 0 means no mipmaps and no anisotropic filtering
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		} else {
+			// level = 1 means with mipmaps but without anisotropic filtering GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT defaults to 1.0 which is off
+			// level > 1 enables anisotropic filtering. It's up to the vendor what the values mean
+			// Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
+			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
+			// that are very noticeable on terrain
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+
+		if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
+			final float maxSamples = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+			glTexParameterf(target, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, clamp(level, 1, maxSamples));
+		}
+	}
+	
 	public static void drawStringShadowed(Graphics2D g, String s, float x, float y, Color shadowColor) {
 		var c = g.getColor();
 		g.setColor(shadowColor);
