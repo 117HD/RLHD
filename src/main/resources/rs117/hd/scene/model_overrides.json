@@ -89333,6 +89333,13 @@
     "baseMaterial": "GRAY_150",
     "projectileIds": [
       "TUMEKENS_SHADOW_TRAVEL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "NONE",
+        "depthBias": 150
+      }
     ]
   },
   {
