@@ -30814,6 +30814,27 @@
     ]
   },
   {
+    "description": "TRIDENT_SWAMP_CAST",
+    "offset": [ 10, 350, 15 ],
+    "radius": 400,
+    "strength": 7,
+    "color": [
+      0,
+      167,
+      204
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2000,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "TOXIC_TOTS_CASTING"
+    ]
+  },
+  {
     "description": "TRIDENT_SEA_SPELL",
     "radius": 400,
     "strength": 7.5,

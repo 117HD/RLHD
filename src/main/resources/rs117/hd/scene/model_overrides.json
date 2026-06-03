@@ -89399,5 +89399,45 @@
       "ARENA_SCAFFOLD_PLANKS_RIGHT",
       "ARENA_SCAFFOLD_PLANKS_LEFT"
     ]
+  },
+  {
+    "description": "Spell Projectile - Tumeken's Shadow",
+    "baseMaterial": "GRAY_150",
+    "projectileIds": [
+      "TUMEKENS_SHADOW_TRAVEL"
+    ]
+  },
+  {
+    "description": "Spell Projectile - Trident of the Swamp",
+    "baseMaterial": "GRAY_110",
+    "undoVanillaShading": false,
+    "upwardsNormals": true,
+    "flatNormals": true,
+    "projectileIds": [
+      "TOXIC_TOTS_PROJECTILE"
+    ]
+  },
+  {
+    "description": "Spell Projectile - Normal Spellbook",
+    "baseMaterial": "GRAY_90",
+    "undoVanillaShading": false,
+    "projectileIds": [
+      "WATERSURGE_TRAVEL",
+      "WATERWAVE_TRAVEL",
+      "WATERBLAST_TRAVEL",
+      "WATERBOLT_TRAVEL",
+      "FIRESURGE_TRAVEL",
+      "FIREWAVE_TRAVEL",
+      "FIREBLAST_TRAVEL",
+      "FIREBOLT_TRAVEL",
+      "AIRSURGE_TRAVEL",
+      "AIRWAVE_TRAVEL",
+      "AIRBLAST_TRAVEL",
+      "AIRBOLT_TRAVEL",
+      "EARTHSURGE_TRAVEL",
+      "EARTHWAVE_TRAVEL",
+      "EARTHBLAST_TRAVEL",
+      "EARTHBOLT_TRAVEL"
+    ]
   }
 ]
