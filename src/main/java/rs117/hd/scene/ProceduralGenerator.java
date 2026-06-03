@@ -138,19 +138,19 @@ public class ProceduralGenerator {
 	}
 
 	public void generateSceneData(SceneContext sceneCtx, SceneContext prevSceneCtx) {
-		{
-			float minDepth = 96;
-			float maxDepth = 3200;
-			// TODO: Implement refraction vertex displacement. Until then, reduce the max depth
-			maxDepth = 2400;
-			DEPTH_LEVEL_SLOPE[0] = 128;
-			float B = 3.f;
-			float A = B * (maxDepth - minDepth) / (1 - (float) Math.exp(-B));
-			for (int i = 1; i < DEPTH_LEVEL_SLOPE.length; i++)
-				ProceduralGenerator.DEPTH_LEVEL_SLOPE[i] =
-					round(A / B * (1 - (float) Math.exp(-B * (float) i / DEPTH_LEVEL_SLOPE.length)) + minDepth);
-			MAX_DEPTH = DEPTH_LEVEL_SLOPE[DEPTH_LEVEL_SLOPE.length - 1];
-		}
+//		{
+//			float minDepth = 96;
+//			float maxDepth = 3200;
+//			// TODO: Implement refraction vertex displacement. Until then, reduce the max depth
+////			maxDepth = 2400;
+//			DEPTH_LEVEL_SLOPE[0] = 128;
+//			float B = 3.f;
+//			float A = B * (maxDepth - minDepth) / (1 - (float) Math.exp(-B));
+//			for (int i = 1; i < DEPTH_LEVEL_SLOPE.length; i++)
+//				ProceduralGenerator.DEPTH_LEVEL_SLOPE[i] =
+//					round(A / B * (1 - (float) Math.exp(-B * (float) i / DEPTH_LEVEL_SLOPE.length)) + minDepth);
+//			MAX_DEPTH = DEPTH_LEVEL_SLOPE[DEPTH_LEVEL_SLOPE.length - 1];
+//		}
 
 		try (GeneratorContext ctx = GENERATOR_POOL.acquire()) {
 			long timerTotal = System.currentTimeMillis();
