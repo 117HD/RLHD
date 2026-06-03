@@ -218,7 +218,7 @@ public final class ReflectionPass implements RenderPass {
 
 		updateWaterReflectionsFbo();
 
-		waterReflectionsEnabled = plugin.configPlanarReflections != ReflectionMode.DISABLED && !plugin.configLegacyWater;
+		waterReflectionsEnabled = plugin.configPlanarReflections != ReflectionMode.DISABLED;
 		if(!waterReflectionsEnabled)
 			return;
 
