@@ -97,6 +97,7 @@ import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
+import rs117.hd.overlays.ReflectionMapOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
@@ -320,6 +321,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private ShadowMapOverlay shadowMapOverlay;
+
+	@Inject
+	private ReflectionMapOverlay reflectionMapOverlay;
 
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
@@ -1746,6 +1750,7 @@ public class HdPlugin extends Plugin {
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		shadowMapOverlay.render();
+		reflectionMapOverlay.render();
 		gammaCalibrationOverlay.render();
 
 		// Reset

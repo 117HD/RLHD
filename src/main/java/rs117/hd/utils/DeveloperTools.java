@@ -14,6 +14,7 @@ import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
+import rs117.hd.overlays.ReflectionMapOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
@@ -33,6 +34,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_REFLECTION_MAP_OVERLAY = new Keybind(KeyEvent.VK_F8, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
@@ -63,6 +65,9 @@ public class DeveloperTools implements KeyListener {
 	private ShadowMapOverlay shadowMapOverlay;
 
 	@Inject
+	private ReflectionMapOverlay reflectionMapOverlay;
+
+	@Inject
 	private LightGizmoOverlay lightGizmoOverlay;
 
 	@Inject
@@ -73,6 +78,7 @@ public class DeveloperTools implements KeyListener {
 	@Getter
 	private boolean frameTimingsOverlayEnabled;
 	private boolean shadowMapOverlayEnabled;
+	private boolean reflectionMapOverlayEnabled;
 	private boolean lightGizmoOverlayEnabled;
 	@Getter
 	private boolean hideUiEnabled;
@@ -94,6 +100,7 @@ public class DeveloperTools implements KeyListener {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled);
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
+			reflectionMapOverlay.setActive(reflectionMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
 		});
@@ -118,6 +125,7 @@ public class DeveloperTools implements KeyListener {
 		tileInfoOverlay.setActive(false);
 		frameTimerOverlay.setActive(false);
 		shadowMapOverlay.setActive(false);
+		reflectionMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
 		hideUiEnabled = false;
@@ -146,6 +154,9 @@ public class DeveloperTools implements KeyListener {
 				break;
 			case "shadowmap":
 				shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
+				break;
+			case "reflectionmap":
+				reflectionMapOverlay.setActive(reflectionMapOverlayEnabled = !reflectionMapOverlayEnabled);
 				break;
 			case "lights":
 				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
@@ -182,6 +193,8 @@ public class DeveloperTools implements KeyListener {
 			frameTimingsRecorder.recordSnapshot();
 		} else if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(e)) {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
+		} else if (KEY_TOGGLE_REFLECTION_MAP_OVERLAY.matches(e)) {
+			reflectionMapOverlay.setActive(reflectionMapOverlayEnabled = !reflectionMapOverlayEnabled);
 		} else if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(e)) {
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
 		} else if (KEY_TOGGLE_TILED_LIGHTING_OVERLAY.matches(e)) {
