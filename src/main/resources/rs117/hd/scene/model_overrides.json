@@ -80551,6 +80551,10 @@
     "baseMaterial": "GEM_STONE",
     "uvScale": 1.1,
     "uvOrientation": 512,
+    "shiftSaturation": -7,
+    "shiftLightness": 30,
+    "maxLightness": 100,
+    "shiftAlpha": 175,
     "areas": [
       "SHILO_VILLAGE_MINE",
       "SHILO_VILLAGE_MINE_SURFACE"
@@ -80641,6 +80645,9 @@
     "description": "Rock - Gems - Gem rocks - Small",
     "baseMaterial": "GRUNGE_3_SHINY",
     "uvType": "BOX",
+    "shiftSaturation": -7,
+    "shiftLightness": 30,
+    "maxLightness": 100,
     "colorOverrides": [
       {
         "description": "Rock",
@@ -80660,6 +80667,9 @@
     "description": "Rock - Gems - Gem rocks - Large",
     "baseMaterial": "GRUNGE_3_SHINY",
     "uvType": "BOX",
+    "shiftSaturation": -70,
+    "shiftLightness": 30,
+    "maxLightness": 100,
     "colorOverrides": [
       {
         "description": "Rock",
