@@ -34700,6 +34700,19 @@
     "description": "Magic Tree",
     "baseMaterial": "BARK_STONEPINE",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "uvType": "BOX",
+    "uvOrientation": 150,
+    "uvScale": 0.35,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_MAGIC_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_MAGIC_TOP"
+      }
+    },
     "objectIds": [
       "MAGIC_TREE_SEEDLING",
       "MAGIC_TREE_1",
@@ -34716,10 +34729,7 @@
       "MAGIC_TREE_FULLYGROWN_1",
       "MAGIC_TREE_FULLYGROWN_2",
       "MAGICTREE"
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 150,
-    "uvScale": 0.35
+    ]
   },
   {
     "description": "Magic Tree Stump",
@@ -38146,6 +38156,7 @@
       "DUNGEONKIT_BARS03_SLOPE02",
       "DUNGEONKIT_BARS01_LEFT01",
       "DUNGEONKIT_BARS01_RIGHT01",
+
       "DUNGEONKIT_BARS03_LEFT01",
       "DUNGEONKIT_BARS03_RIGHT01",
       "DUNGEONKIT_BARS03_BROKEN01"
@@ -44262,8 +44273,7 @@
       "DAGANNOTH_PUDDLE"
     ],
     "uvType": "BOX"
-  },
-  {
+  }, {
   "description": "Waterbirth Water Leak",
   "baseMaterial": "GRAY_60",
   "objectIds": [
@@ -45216,7 +45226,8 @@
     "description": "Plain Rowboat with Ripples",
     "objectIds": [
       "MISTMYST_BOAT_LUMBRIDGE",
-      "MISTMYST_BOAT_ISLAND",
+      "MISTMYST_BOAT_ISLAND"
+   ,
       "SEASLUG_ROWBOAT",
       "MM2_MONKEY_BOAT",
       "SLUG2_ROWBOAT",
@@ -51055,7 +51066,9 @@
         "uvScale": 0.75
       },
       {
-        "colors": "a < 255",
+        "colors":
+          "a < 255"
+        ,
         "baseMaterial": "GRAY_85",
         "flatNormals": true,
         "receiveShadows": false
