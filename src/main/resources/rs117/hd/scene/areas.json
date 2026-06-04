@@ -3597,6 +3597,12 @@
     ]
   },
   {
+    "name": "SLEPE_WATERPUMP_TILE_FIX",
+    "aabbs": [
+      [ 3705, 3313 ]
+    ]
+  },
+  {
     "name": "SLEPE_CHURCH",
     "aabbs": [
       [ 3734, 3306, 3742, 3324 ],
