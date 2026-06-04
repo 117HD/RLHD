@@ -117,8 +117,7 @@ void main() {
         waterDepth3 * IN.texBlend.z;
     int waterTypeIndex = fTerrainData[0] >> 3 & 0xFF;
     bool isWater = waterTypeIndex > 0;
-    bool isUnderwaterTile = waterDepth != 0;
-    bool isWaterSurface = isWater && !isUnderwaterTile;
+    bool isUnderwater = RENDER_PASS != RENDER_PASS_WATER && waterDepth != 0;
 
 //    if (IN.position.y > mostPrevalentWaterLevel) {
 //        isUnderwater = true;
@@ -499,10 +498,10 @@ void main() {
                 outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
             }
 
-            if (isUnderwaterTile)
+            if (isUnderwater)
                 sampleLegacyUnderwater(outputColor.rgb, waterType.depthColor, waterDepth, lightDotNormals);
         #else
-            if (isUnderwaterTile) {
+            if (isUnderwater) {
                 sampleUnderwater(outputColor.rgb, waterTypeIndex, waterDepth);
             } else {
                 if (tint.w > 0) {
@@ -577,7 +576,7 @@ void main() {
     #endif
 
     // apply fog
-    if (!isUnderwaterTile) {
+    if (!isUnderwater) {
         // ground fog
         float distance = distance(IN.position, cameraPos);
         float closeFadeDistance = 1500;
@@ -590,16 +589,21 @@ void main() {
         float combinedFog = 1 - (1 - fogAmount) * (1 - groundFog);
 
         #if LINEAR_ALPHA_BLENDING
-            if (isWaterSurface) {
-                outputColor.rgb = mix(outputColor.rgb * outputColor.a, srgbToLinear(fogColor), srgbToLinear(combinedFog));
+            #if RENDER_PASS == RENDER_PASS_WATER
+                outputColor.rgb = mix(
+                    outputColor.rgb * outputColor.a,
+                    srgbToLinear(fogColor),
+                    srgbToLinear(combinedFog)
+                );
                 outputColor.a = mix(outputColor.a, 1, combinedFog);
                 outputColor.rgb /= outputColor.a;
-            } else {
+            #else
                 outputColor.rgb = srgbToLinear(mix(linearToSrgb(outputColor.rgb), fogColor, combinedFog));
-            }
+            #endif
         #else
-            if (isWaterSurface)
+            #if RENDER_PASS == RENDER_PASS_WATER
                 outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
+            #endif
             outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
         #endif
     }
