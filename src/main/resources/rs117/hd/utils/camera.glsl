@@ -52,13 +52,13 @@ float Camera_lineariseDepth(const Camera cam, float depth) {
         if (Camera_isInfiniteFar(cam))
             return cam.nearPlane / depth;
 
-        return (cam.nearPlane * cam.farPlane) / (cam.nearPlane - depth * (cam.nearPlane - cam.farPlane));
+        return cam.nearPlane * cam.farPlane / (cam.nearPlane - depth * (cam.nearPlane - cam.farPlane));
     }
 
     if (Camera_isInfiniteFar(cam))
         return cam.nearPlane / (1.0 - depth);
 
-    return (cam.nearPlane * cam.farPlane) / (cam.farPlane - depth * (cam.farPlane - cam.nearPlane));
+    return cam.nearPlane * cam.farPlane / (cam.farPlane - depth * (cam.farPlane - cam.nearPlane));
 }
 
 vec3 Camera_reconstructViewPos(const Camera cam, vec2 uv, float depth) {

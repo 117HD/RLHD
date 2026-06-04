@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
@@ -55,9 +54,8 @@ public class WorldViewContext {
 	@Inject
 	private SceneManager sceneManager;
 
-	final int worldViewId;
-	@Getter
-	final int sizeX, sizeZ;
+	public final int worldViewId;
+	public final int sizeX, sizeZ;
 	@Nullable
 	WorldViewStruct uboWorldViewStruct;
 	public ZoneSceneContext sceneContext;

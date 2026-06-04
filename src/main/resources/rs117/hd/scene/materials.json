@@ -591,28 +591,28 @@
   },
   {
     "name": "FOG_VERY_SLOW",
-    "vanillaTextureIndex": 99,
-    "parent": "FOG_STATIC"
+    "parent": "FOG_STATIC",
+    "vanillaTextureIndex": 99
   },
   {
     "name": "FOG_SLOW",
-    "vanillaTextureIndex": 100,
-    "parent": "FOG_STATIC"
+    "parent": "FOG_STATIC",
+    "vanillaTextureIndex": 100
   },
   {
     "name": "FOG_MEDIUM",
-    "vanillaTextureIndex": 101,
-    "parent": "FOG_STATIC"
+    "parent": "FOG_STATIC",
+    "vanillaTextureIndex": 101
   },
   {
     "name": "FOG_FAST",
-    "vanillaTextureIndex": 102,
-    "parent": "FOG_STATIC"
+    "parent": "FOG_STATIC",
+    "vanillaTextureIndex": 102
   },
   {
     "name": "FOG_VERY_FAST",
-    "vanillaTextureIndex": 103,
-    "parent": "FOG_STATIC"
+    "parent": "FOG_STATIC",
+    "vanillaTextureIndex": 103
   },
   {
     "name": "FOG_LIGHT_STATIC",
@@ -621,28 +621,28 @@
   },
   {
     "name": "FOG_LIGHT_VERY_SLOW",
-    "vanillaTextureIndex": 105,
-    "parent": "FOG_LIGHT_STATIC"
+    "parent": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 105
   },
   {
     "name": "FOG_LIGHT_SLOW",
-    "vanillaTextureIndex": 106,
-    "parent": "FOG_LIGHT_STATIC"
+    "parent": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 106
   },
   {
     "name": "FOG_LIGHT_MEDIUM",
-    "vanillaTextureIndex": 107,
-    "parent": "FOG_LIGHT_STATIC"
+    "parent": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 107
   },
   {
     "name": "FOG_LIGHT_FAST",
-    "vanillaTextureIndex": 108,
-    "parent": "FOG_LIGHT_STATIC"
+    "parent": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 108
   },
   {
     "name": "FOG_LIGHT_VERY_FAST",
-    "vanillaTextureIndex": 109,
-    "parent": "FOG_LIGHT_STATIC"
+    "parent": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 109
   },
   {
     "name": "FOG_HEAVY_STATIC",
@@ -651,28 +651,28 @@
   },
   {
     "name": "FOG_HEAVY_VERY_SLOW",
-    "vanillaTextureIndex": 111,
-    "parent": "FOG_HEAVY_STATIC"
+    "parent": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 111
   },
   {
     "name": "FOG_HEAVY_SLOW",
-    "vanillaTextureIndex": 112,
-    "parent": "FOG_HEAVY_STATIC"
+    "parent": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 112
   },
   {
     "name": "FOG_HEAVY_MEDIUM",
-    "vanillaTextureIndex": 113,
-    "parent": "FOG_HEAVY_STATIC"
+    "parent": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 113
   },
   {
     "name": "FOG_HEAVY_FAST",
-    "vanillaTextureIndex": 114,
-    "parent": "FOG_HEAVY_STATIC"
+    "parent": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 114
   },
   {
     "name": "FOG_HEAVY_VERY_FAST",
-    "vanillaTextureIndex": 115,
-    "parent": "FOG_HEAVY_STATIC"
+    "parent": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 115
   },
   {
     "name": "SKULLS",

@@ -106,7 +106,7 @@ public class Zone implements Destructible {
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
 
 	public boolean setVisibility(Camera camera, boolean visible) {
-		if(visible) {
+		if (visible) {
 			visibilityFlags |= (byte) camera.getCullingMask();
 		} else {
 			visibilityFlags &= (byte) ~camera.getCullingMask();
@@ -114,7 +114,7 @@ public class Zone implements Destructible {
 		return visible;
 	}
 
-	public boolean isVisible(Camera camera)  {
+	public boolean isVisible(Camera camera) {
 		return (visibilityFlags & camera.getCullingMask()) != 0;
 	}
 

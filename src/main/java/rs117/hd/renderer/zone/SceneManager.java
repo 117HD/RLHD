@@ -5,9 +5,7 @@ import com.google.inject.Injector;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -693,7 +691,7 @@ public class SceneManager {
 				totalOpaque += zone.bufLen;
 				totalAlpha += zone.bufLenA;
 
-				if(zone.hasWater)
+				if (zone.hasWater)
 					nextSceneContext.hasWater = true;
 			}
 		}

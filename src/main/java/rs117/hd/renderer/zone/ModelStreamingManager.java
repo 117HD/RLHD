@@ -87,9 +87,9 @@ public class ModelStreamingManager {
 	}
 
 	public void addModelCullingFrustums(Camera camera) {
-		if(modelCullingFrustumCount >= modelCullingFrustums.length) {
+		if (modelCullingFrustumCount >= modelCullingFrustums.length) {
 			float[][][] newCullingFrustums = new float[modelCullingFrustums.length + 1][6][4];
-			for(int i = 0; i < modelCullingFrustumCount; i++) {
+			for (int i = 0; i < modelCullingFrustumCount; i++) {
 				for (int j = 0; j < 6; j++)
 					System.arraycopy(modelCullingFrustums[i][j], 0, newCullingFrustums[i + 1][j], 0, 4);
 			}

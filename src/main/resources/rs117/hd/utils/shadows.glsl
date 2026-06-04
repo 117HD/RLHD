@@ -83,7 +83,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
 
     ivec2 shadowRes = textureSize(shadowMap, 0);
     vec3 shadowPos  = Camera_ndcToPixel(shadowNDC, vec2(shadowRes));
-    shadowPos.xy   += distortion * vec2(shadowRes); // distortion in UV space → pixel space
+    shadowPos.xy   += distortion * vec2(shadowRes); // distortion in UV space -> pixel space
     shadowPos.xy    = clamp(shadowPos.xy, vec2(0), vec2(shadowRes));
     shadowPos.xy   += .5; // shift to texel center
 

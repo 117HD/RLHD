@@ -44,13 +44,13 @@ public final class ReflectionPass implements RenderPass {
 	private HdPlugin plugin;
 
 	@Inject
+	private ZoneRenderer zoneRenderer;
+
+	@Inject
 	private SceneManager sceneManager;
 
 	@Inject
 	private EnvironmentManager environmentManager;
-
-	@Inject
-	private ZoneRenderer zoneRenderer;
 
 	@Inject
 	private ModelStreamingManager streamingManager;
@@ -61,7 +61,7 @@ public final class ReflectionPass implements RenderPass {
 	@Inject
 	private FrameTimer frameTimer;
 
-	private final int[] weightKeys   = new int[MAX_REFLECTION_RENDERS * 8];
+	private final int[] weightKeys = new int[MAX_REFLECTION_RENDERS * 8];
 	private final int[] weightCounts = new int[MAX_REFLECTION_RENDERS * 8];
 
 	private final WaterPlane[] planes = new WaterPlane[MAX_REFLECTION_RENDERS];
@@ -76,8 +76,8 @@ public final class ReflectionPass implements RenderPass {
 
 	@Override
 	public void initialize(RenderState renderState) {
-		for(int i = 0; i < MAX_REFLECTION_RENDERS; i++) {
-			if(planes[i] == null)
+		for (int i = 0; i < MAX_REFLECTION_RENDERS; i++) {
+			if (planes[i] == null)
 				planes[i] = new WaterPlane(uboReflectionPlanes.planes[i], i);
 		}
 		uboReflectionPlanes.initialize(UNIFORM_BLOCK_REFLECTION_PLANES);
@@ -93,7 +93,7 @@ public final class ReflectionPass implements RenderPass {
 
 	@Override
 	public void processConfigChanges(Set<String> keys) {
-		if(keys.contains(KEY_PLANAR_REFLECTIONS)) {
+		if (keys.contains(KEY_PLANAR_REFLECTIONS)) {
 			updateWaterReflectionsFbo();
 		}
 	}
@@ -124,7 +124,18 @@ public final class ReflectionPass implements RenderPass {
 		// Create color texture array
 		texWaterReflection = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterReflection);
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, format, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		glTexImage3D(
+			GL_TEXTURE_2D_ARRAY,
+			0,
+			format,
+			resolution[0],
+			resolution[1],
+			ReflectionPass.MAX_REFLECTION_RENDERS,
+			0,
+			GL_RGB,
+			GL_UNSIGNED_BYTE,
+			0
+		);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -138,7 +149,18 @@ public final class ReflectionPass implements RenderPass {
 		// Create depth texture array
 		texWaterReflectionDepthMap = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterReflectionDepthMap);
-		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT16, resolution[0], resolution[1], ReflectionPass.MAX_REFLECTION_RENDERS, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
+		glTexImage3D(
+			GL_TEXTURE_2D_ARRAY,
+			0,
+			GL_DEPTH_COMPONENT16,
+			resolution[0],
+			resolution[1],
+			ReflectionPass.MAX_REFLECTION_RENDERS,
+			0,
+			GL_DEPTH_COMPONENT,
+			GL_UNSIGNED_SHORT,
+			0
+		);
 		checkGLErrors();
 
 		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texWaterReflectionDepthMap, 0, 0);
@@ -163,7 +185,7 @@ public final class ReflectionPass implements RenderPass {
 
 	@Override
 	public boolean zoneInFrustum(Zone z, int zx, int zz, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
-		if(!waterReflectionsEnabled)
+		if (!waterReflectionsEnabled)
 			return false;
 
 		boolean anyVisible = false;
@@ -175,33 +197,33 @@ public final class ReflectionPass implements RenderPass {
 
 	@Override
 	public void drawZoneOpaque(WorldViewContext ctx, Zone z, int zx, int zz) {
-		if(z.onlyWater && z.modelCount == 0)
+		if (z.onlyWater && z.modelCount == 0)
 			return;
 
-		for(int i = 0; i < activePlanes; i++) {
-			if(z.isVisible(planes[i].camera))
+		for (int i = 0; i < activePlanes; i++) {
+			if (z.isVisible(planes[i].camera))
 				z.renderOpaque(planes[i].cmd, ctx, plugin.configRoofReflections);
 		}
 	}
 
 	@Override
 	public void drawZoneAlpha(WorldViewContext ctx, Zone z, int level, int zx, int zz) {
-		if(z.onlyWater && z.modelCount == 0)
+		if (z.onlyWater && z.modelCount == 0)
 			return;
 
 		final int offset = ctx.sceneContext.sceneOffset >> 3;
-		for(int i = 0; i < activePlanes; i++) {
-			if(z.isVisible(planes[i].camera))
+		for (int i = 0; i < activePlanes; i++) {
+			if (z.isVisible(planes[i].camera))
 				z.renderAlpha(planes[i].cmd, zx - offset, zz - offset, level, ctx, true, plugin.configRoofReflections);
 		}
 	}
 
 	@Override
 	public void drawPass(WorldViewContext ctx, int pass) {
-		if(pass == DrawCallbacks.PASS_OPAQUE) {
-			for(int i = 0; i < activePlanes; i++) {
+		if (pass == DrawCallbacks.PASS_OPAQUE) {
+			for (int i = 0; i < activePlanes; i++) {
 				final WaterPlane plane = planes[i];
-				if(plane.zoneCount > 0 && !plane.cmd.isEmpty())
+				if (plane.zoneCount > 0 && !plane.cmd.isEmpty())
 					plane.cmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 			}
 		}
@@ -209,10 +231,10 @@ public final class ReflectionPass implements RenderPass {
 
 	@Override
 	public void preSceneDraw(WorldViewContext ctx) {
-		if(ctx != sceneManager.getRoot())
+		if (ctx != sceneManager.getRoot())
 			return;
 
-		if(!ctx.sceneContext.hasWater) {
+		if (!ctx.sceneContext.hasWater) {
 			waterReflectionsEnabled = false;
 			return;
 		}
@@ -220,7 +242,7 @@ public final class ReflectionPass implements RenderPass {
 		updateWaterReflectionsFbo();
 
 		waterReflectionsEnabled = plugin.configPlanarReflections != ReflectionMode.DISABLED;
-		if(!waterReflectionsEnabled)
+		if (!waterReflectionsEnabled)
 			return;
 
 		for(int i = 0; i < activePlanes; i++)
@@ -230,8 +252,8 @@ public final class ReflectionPass implements RenderPass {
 		for (int i = 0; i < MAX_REFLECTION_RENDERS; i++) {
 			int numLevels = 0;
 
-			for (int zx = 0; zx < ctx.getSizeX(); zx++) {
-				for (int zz = 0; zz < ctx.getSizeZ(); zz++) {
+			for (int zx = 0; zx < ctx.sizeX; zx++) {
+				for (int zz = 0; zz < ctx.sizeZ; zz++) {
 					final Zone zone = ctx.zones[zx][zz];
 					if (!zone.hasWater || !zone.isVisible(zoneRenderer.sceneCamera))
 						continue;
@@ -277,8 +299,8 @@ public final class ReflectionPass implements RenderPass {
 			plane.camera.setPitch(-zoneRenderer.sceneCamera.getPitch());
 			plane.waterHeight = winningLevel;
 
-			for (int zx = 0; zx < ctx.getSizeX(); zx++) {
-				for (int zz = 0; zz < ctx.getSizeZ(); zz++) {
+			for (int zx = 0; zx < ctx.sizeX; zx++) {
+				for (int zz = 0; zz < ctx.sizeZ; zz++) {
 					final Zone zone = ctx.zones[zx][zz];
 					if (!zone.hasWater || !zone.isVisible(zoneRenderer.sceneCamera))
 						continue;
@@ -296,13 +318,13 @@ public final class ReflectionPass implements RenderPass {
 
 	@Override
 	public void draw(RenderState renderState) {
-		if(!waterReflectionsEnabled || activePlanes <= 0)
+		if (!waterReflectionsEnabled || activePlanes <= 0)
 			return;
 
 		frameTimer.begin(Timer.RENDER_REFLECTIONS);
 
 		zoneRenderer.sceneReflectionProgram.use();
-		for(int i = 0; i < activePlanes; i++)
+		for (int i = 0; i < activePlanes; i++)
 			planes[i].render(renderState);
 
 		frameTimer.end(Timer.RENDER_REFLECTIONS);
@@ -454,7 +476,7 @@ public final class ReflectionPass implements RenderPass {
 		}
 
 		public void render(RenderState renderState) {
-			if(zoneCount <= 0)
+			if (zoneCount <= 0)
 				return;
 
 			struct.camera.write(camera);

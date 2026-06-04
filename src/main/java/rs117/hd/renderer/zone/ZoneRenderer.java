@@ -394,8 +394,6 @@ public class ZoneRenderer implements Renderer {
 		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
 
-//		plugin.updateWaterReflectionsFbo();
-
 		WorldViewContext ctx = sceneManager.getContext(scene);
 
 		frameTimer.begin(Timer.DRAW_FRAME);
@@ -849,10 +847,6 @@ public class ZoneRenderer implements Renderer {
 			renderState.depthMask.set(true);
 		}
 
-//		sceneProgram.use();
-//		sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_MAIN);
-//		sceneProgram.uniWaterReflectionEnabled.set(renderWaterReflections);
-
 		sceneCmd.execute(renderState);
 
 		frameTimer.end(Timer.RENDER_SCENE);
@@ -995,7 +989,6 @@ public class ZoneRenderer implements Renderer {
 			if (renderWater) {
 				sceneCmd.SetShader(sceneWaterProgram);
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
-
 				sceneCmd.SetShader(sceneMainProgram);
 			}
 
@@ -1226,7 +1219,6 @@ public class ZoneRenderer implements Renderer {
 				for (int i = 0; i < renderPasses.size(); i++)
 					renderPasses.get(i).postDraw(renderState);
 			}
-
 
 			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 

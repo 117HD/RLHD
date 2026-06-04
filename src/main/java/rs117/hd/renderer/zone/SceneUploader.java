@@ -25,8 +25,6 @@
 package rs117.hd.renderer.zone;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -1548,12 +1546,12 @@ public class SceneUploader implements AutoCloseable {
 		final WaterType waterType;
 		final int waterDepth;
 		final int plane;
-		if(tilePaint != null) {
+		if (tilePaint != null) {
 			TileOverride tileOverride = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_MAIN);
 			waterType = tilePaint != null ? proceduralGenerator.seasonalWaterType(tileOverride, tilePaint.getTexture()) : WaterType.NONE;
 			plane = tile.getRenderLevel();
 
-			if(waterType == WaterType.NONE) {
+			if (waterType == WaterType.NONE) {
 				ProceduralGenerator.tileVertexKeys(ctx, tile, vertices, vertexKeys);
 				int swDepth = ctx.getVertexUnderwaterDepth(vertexKeys[0]);
 				int seDepth = ctx.getVertexUnderwaterDepth(vertexKeys[1]);
@@ -1703,62 +1701,60 @@ public class SceneUploader implements AutoCloseable {
 				if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
 					continue;
 
-				if (modelOverride.inheritTileColorType != InheritTileColorType.NONE) {
-					final Scene scene = ctx.scene;
+				if (modelOverride.inheritTileColorType != InheritTileColorType.NONE && (tilePaint != null || tileModel != null)) {
+					// No point in inheriting tilepaint color if the ground tile does not have a color, for example above a cave wall
+					if (
+						tilePaint != null &&
+						tilePaint.getTexture() == -1 &&
+						tilePaint.getRBG() != 0 &&
+						tilePaint.getNeColor() != HIDDEN_HSL
+					) {
+						// Since tile colors are guaranteed to have the same hue and saturation per face,
+						// we can blend without converting from HSL to RGB
+						int averageColor =
+							(tilePaint.getSwColor() + tilePaint.getNwColor() + tilePaint.getNeColor() + tilePaint.getSeColor()) / 4;
 
-					if (tilePaint != null || tileModel != null) {
-						// No point in inheriting tilepaint color if the ground tile does not have a color, for example above a cave wall
-						if (
-							tilePaint != null &&
-							tilePaint.getTexture() == -1 &&
-							tilePaint.getRBG() != 0 &&
-							tilePaint.getNeColor() != HIDDEN_HSL
-						) {
-							// Since tile colors are guaranteed to have the same hue and saturation per face,
-							// we can blend without converting from HSL to RGB
-							int averageColor =
-								(tilePaint.getSwColor() + tilePaint.getNwColor() + tilePaint.getNeColor() + tilePaint.getSeColor()) / 4;
+						averageColor = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_MAIN).modifyColor(averageColor);
+						color1 = color2 = color3 = averageColor;
 
-							averageColor = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_MAIN).modifyColor(averageColor);
-							color1 = color2 = color3 = averageColor;
-
-							// Let the shader know vanilla shading reversal should be skipped for this face
-							keepShading = true;
-						} else if (tileModel != null && tileModel.getTriangleTextureId() == null) {
-							int faceColorIndex = -1;
-							for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
-								boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, i);
-								// Use underlay if the tile does not have an overlay, useful for rocks in cave corners.
-								if (modelOverride.inheritTileColorType == InheritTileColorType.UNDERLAY
-									|| tileModel.getModelOverlay() == 0) {
-									// pulling the color from UNDERLAY is more desirable for green grass tiles
-									// OVERLAY pulls in path color which is not desirable for grass next to paths
-									if (!isOverlay) {
-										faceColorIndex = i;
-										break;
-									}
-								} else if (modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY) {
-									if (isOverlay) {
-										// OVERLAY used in dirt/path/house tile color blend better with rubbles/rocks
-										faceColorIndex = i;
-										break;
-									}
+						// Let the shader know vanilla shading reversal should be skipped for this face
+						keepShading = true;
+					} else if (tileModel != null && tileModel.getTriangleTextureId() == null) {
+						int faceColorIndex = -1;
+						for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
+							boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, i);
+							// Use underlay if the tile does not have an overlay, useful for rocks in cave corners.
+							if (modelOverride.inheritTileColorType == InheritTileColorType.UNDERLAY
+								|| tileModel.getModelOverlay() == 0) {
+								// pulling the color from UNDERLAY is more desirable for green grass tiles
+								// OVERLAY pulls in path color which is not desirable for grass next to paths
+								if (!isOverlay) {
+									faceColorIndex = i;
+									break;
+								}
+							} else if (modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY) {
+								if (isOverlay) {
+									// OVERLAY used in dirt/path/house tile color blend better with rubbles/rocks
+									faceColorIndex = i;
+									break;
 								}
 							}
+						}
 
-							if (faceColorIndex != -1) {
-								int color = tileModel.getTriangleColorA()[faceColorIndex];
-								if (color != HIDDEN_HSL) {
-									var override = ctx.getTileOverride(tileZ, tileExX, tileExY,
-										modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
-										TILE_OVERRIDE_OVERLAY : TILE_OVERRIDE_UNDERLAY);
+						if (faceColorIndex != -1) {
+							int color = tileModel.getTriangleColorA()[faceColorIndex];
+							if (color != HIDDEN_HSL) {
+								var override = ctx.getTileOverride(
+									tileZ, tileExX, tileExY,
+									modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
+										TILE_OVERRIDE_OVERLAY : TILE_OVERRIDE_UNDERLAY
+								);
 
-									color = override.modifyColor(color);
-									color1 = color2 = color3 = color;
+								color = override.modifyColor(color);
+								color1 = color2 = color3 = color;
 
-									// Let the shader know vanilla shading reversal should be skipped for this face
-									keepShading = true;
-								}
+								// Let the shader know vanilla shading reversal should be skipped for this face
+								keepShading = true;
 							}
 						}
 					}
@@ -1941,14 +1937,14 @@ public class SceneUploader implements AutoCloseable {
 			if (isModelPartiallyVisible) {
 				// Ignore near & far plane, only test against the side planes
 				boolean isVisible = cullingFrustumPlanesCount == 0;
-				for(int c = 0; c < cullingFrustumPlanesCount; c++) {
+				for (int c = 0; c < cullingFrustumPlanesCount; c++) {
 					if (HDUtils.isPointWithinFrustum(vertexX, vertexY, vertexZ, cullingFrustumPlanes[c], 4)) {
 						isVisible = true;
 						break;
 					}
 				}
 				visibility[v] = isVisible;
-				if(!isVisible)
+				if (!isVisible)
 					allVertsVisible = false;
 			}
 
@@ -2172,23 +2168,23 @@ public class SceneUploader implements AutoCloseable {
 		final boolean isVanillaTextured = faceTextures != null;
 
 		final int plane = tileObject.getPlane();
-		final int tileExX = (tileObject.getX() >> Perspective.LOCAL_COORD_BITS) + ctx.sceneOffset;
-		final int tileExY = (tileObject.getY() >> Perspective.LOCAL_COORD_BITS) + ctx.sceneOffset;
+		final int tileExX = (tileObject.getX() >> LOCAL_COORD_BITS) + ctx.sceneOffset;
+		final int tileExY = (tileObject.getY() >> LOCAL_COORD_BITS) + ctx.sceneOffset;
 
 
 		final WaterType waterType;
 		final int waterDepth;
-		if (0 <= tileExX && tileExX < Constants.EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < Constants.EXTENDED_SCENE_SIZE) {
+		if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
 			Tile tile = ctx.scene.getExtendedTiles()[plane][tileExX][tileExY];
-			if(tile.getBridge() != null)
+			if (tile.getBridge() != null)
 				tile = tile.getBridge();
 
 			SceneTilePaint tilePaint = tile.getSceneTilePaint();
-			if(tilePaint != null) {
+			if (tilePaint != null) {
 				TileOverride tileOverride = ctx.getTileOverride(plane, tileExX, tileExY, TILE_OVERRIDE_MAIN);
 				waterType = proceduralGenerator.seasonalWaterType(tileOverride, tilePaint.getTexture());
 
-				if(waterType == WaterType.NONE) {
+				if (waterType == WaterType.NONE) {
 					ProceduralGenerator.tileVertexKeys(ctx, tile, vertices, vertexKeys);
 					int swDepth = ctx.getVertexUnderwaterDepth(vertexKeys[0]);
 					int seDepth = ctx.getVertexUnderwaterDepth(vertexKeys[1]);
@@ -2317,9 +2313,12 @@ public class SceneUploader implements AutoCloseable {
 			final VertexWriteCache vb = writeCache.getVertexBuffer(hasAlpha);
 			final VertexWriteCache tb = writeCache.getTextureBuffer(hasAlpha);
 
-			final int faceWaterDepthA = waterType != WaterType.NONE ? (int) max(0, Float.intBitsToFloat(modelVertices[vertexOffsetA + 1]) - waterDepth) : 0;
-			final int faceWaterDepthB = waterType != WaterType.NONE ? (int) max(0, Float.intBitsToFloat(modelVertices[vertexOffsetB + 1]) - waterDepth) : 0;
-			final int faceWaterDepthC = waterType != WaterType.NONE ? (int) max(0, Float.intBitsToFloat(modelVertices[vertexOffsetC + 1]) - waterDepth) : 0;
+			final int faceWaterDepthA = waterType != WaterType.NONE ?
+				(int) max(0, Float.intBitsToFloat(modelVertices[vertexOffsetA + 1]) - waterDepth) : 0;
+			final int faceWaterDepthB = waterType != WaterType.NONE ?
+				(int) max(0, Float.intBitsToFloat(modelVertices[vertexOffsetB + 1]) - waterDepth) : 0;
+			final int faceWaterDepthC = waterType != WaterType.NONE ?
+				(int) max(0, Float.intBitsToFloat(modelVertices[vertexOffsetC + 1]) - waterDepth) : 0;
 
 			final int terrainDataA = HDUtils.packTerrainData(false, faceWaterDepthA, waterType, plane);
 			final int terrainDataB = HDUtils.packTerrainData(false, faceWaterDepthB, waterType, plane);

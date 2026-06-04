@@ -1540,6 +1540,10 @@ public class HdPlugin extends Plugin {
 		var image = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
 		for (int i = 0; i < numCascades; i++) {
 			var rawImage = textureManager.loadTexture(String.format("water_normal_map_%d", i + 1));
+			if (rawImage == null) {
+				log.error("Failed to load water normal map {}", i);
+				continue;
+			}
 
 			var t = new AffineTransform();
 			// Flip non-vanilla textures horizontally to match vanilla UV orientation
@@ -1561,7 +1565,7 @@ public class HdPlugin extends Plugin {
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
+		HDUtils.setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
 
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 	}
@@ -1863,7 +1867,6 @@ public class HdPlugin extends Plugin {
 					boolean recompilePrograms = false;
 					boolean recreateSceneFbo = false;
 					boolean recreateShadowMapFbo = false;
-					boolean recreateWaterReflectionsFbo = false;
 					boolean reloadTexturesAndMaterials = false;
 					boolean reloadEnvironments = false;
 					boolean reloadModelOverrides = false;
@@ -2022,11 +2025,6 @@ public class HdPlugin extends Plugin {
 						initializeShadowMapFbo();
 					}
 
-//					if (recreateWaterReflectionsFbo) {
-//						destroyWaterReflectionsFbo();
-//						updateWaterReflectionsFbo();
-//					}
-
 					if (reloadEnvironments)
 						environmentManager.reload();
 				}
@@ -2171,32 +2169,6 @@ public class HdPlugin extends Plugin {
 	@Subscribe
 	public void onFocusChanged(FocusChanged event) {
 		isClientInFocus = event.isFocused();
-	}
-
-	public static void setAnisotropicFilteringAndMipMapping(int target, float level) {
-		setAnisotropicFilteringLevel(target, level);
-		if (level == 0) {
-			// level = 0 means no mipmaps and no anisotropic filtering
-			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		} else {
-			// level = 1 means with mipmaps but without anisotropic filtering GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT defaults to 1.0 which is off
-			// level > 1 enables anisotropic filtering. It's up to the vendor what the values mean
-			// Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
-			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
-			// that are very noticeable on terrain
-			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		}
-	}
-
-	public static void setAnisotropicFilteringLevel(int target, float level) {
-		if (!GL_CAPS.GL_EXT_texture_filter_anisotropic)
-			return;
-
-		float max = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-		level = clamp(level, 1, max);
-		glTexParameterf(target, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, level);
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")

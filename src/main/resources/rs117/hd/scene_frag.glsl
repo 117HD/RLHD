@@ -64,9 +64,6 @@ in FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
-    #if !ZONE_RENDERER
-        vec3 flatNormal;
-    #endif
     vec3 texBlend;
 } IN;
 
