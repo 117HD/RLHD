@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.config.HexTilingMode;
 import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -60,6 +61,9 @@ public class Material {
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
 	private float displacementScale = .1f;
+	private float hexTilingScale = 0.0f;
+	private float hexTilingBlend = 4.0f;
+	private HexTilingMode hexTilingMode = HexTilingMode.OFFSET_WITH_ROTATION;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
 	private float specularStrength;
@@ -209,6 +213,7 @@ public class Material {
 		struct.flowMap.set(getTextureLayer(flowMap));
 		struct.shadowAlphaMap.set(getTextureLayer(shadowAlphaMap));
 		struct.flags.set(
+			(hexTilingMode.ordinal() & 0x3) << 3 |
 			(overrideBaseColor ? 1 : 0) << 2 |
 			(unlit ? 1 : 0) << 1 |
 			(hasTransparency ? 1 : 0)
@@ -217,6 +222,8 @@ public class Material {
 		struct.displacementScale.set(displacementScale);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);
+		struct.hexTilingScale.set(hexTilingScale);
+		struct.hexTilingBlend.set(hexTilingBlend);
 		struct.flowMapStrength.set(flowMapStrength);
 		struct.flowMapDuration.set(flowMapDuration);
 		struct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
