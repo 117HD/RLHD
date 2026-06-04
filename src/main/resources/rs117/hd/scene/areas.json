@@ -9102,6 +9102,12 @@
     ]
   },
   {
+    "name": "TOA_LOOT_ROOM_CHEST_PLATFORM",
+    "aabbs": [
+      [ 3678, 5138, 3682, 5143 ]
+    ]
+  },
+  {
     "name": "TOA_FINAL_BOSS_PHASE_1",
     "aabbs": [
       [ 3776, 5120, 3839, 5183 ]

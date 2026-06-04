@@ -30488,7 +30488,6 @@
       "DT2_HIDEOUT_RUBBLE02",
       "DT2_HIDEOUT_RUBBLE01",
       "DT2_WALL_TOMB01_TORCH01",
-      "TOA_WALL_BLACK",
       "ENAKH_TEMPLE_CAVEWALL_TOP"
     ],
     "colorOverrides": [
@@ -86201,6 +86200,12 @@
     "uvOrientation": 256,
     "objectIds": [
       "TOA_LOBBY_WALL01_SAND01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "GRAY_60"
+      }
     ]
   },
   {
@@ -86289,18 +86294,16 @@
     ]
   },
   {
-    "description": "ToA - Lobby and Nexus Area - Stone Brick Wall",
+    "description": "ToA - Nexus Area - Stone Brick Wall",
     "uvScale": 1.2,
     "baseMaterial": "MARBLE_3",
     "uvType": "BOX",
     "uvOrientation": -128,
     "objectIds": [
-      "TOA_LOBBY_WALL01",
       "TOA_LOBBY_WALL02",
       "TOA_LOBBY_WALL02_TRANSITION01",
       "TOA_WALL_LOBBY01_DAMAGED01",
-      "TOA_LOBBY_WALL01_BROKEN02",
-      "TOA_LOBBY_WALL01_BROKEN02_MIRROR",
+      "TOA_WALL_LOBBY01_DAMAGED01",
       "TOA_WALL_TOMB01_VARIANT01",
       "TOA_WALL_TOMB01_VARIANT02",
       "TOA_WALL_TOMB01_VARIANT01_DARK01",
@@ -86331,11 +86334,95 @@
     ]
   },
   {
+    "description": "ToA - Lobby - Stone Brick Wall",
+    "uvScale": 1.2,
+    "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvOrientation": -128,
+    "objectIds": [
+      "TOA_LOBBY_WALL01",
+      "TOA_LOBBY_WALL01_BROKEN02",
+      "TOA_LOBBY_WALL01_BROKEN02_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "l == 2",
+        "baseMaterial": "GRAY_50"
+      }
+    ]
+  },
+  {
+    "description": "ToA - Lobby and Nexus Area - Boss Doors",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": -160,
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 39",
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX",
+        "uvOrientation": -128,
+        "uvScale": 1.2
+      },
+      {
+        "description": "Flames",
+        "colors": "h == 63",
+        "baseMaterial": "UNLIT"
+      },
+      {
+        "description": "Flames",
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "TOA_NEXUS_SCABARAS_DOOR",
+      "TOA_NEXUS_APMEKEN_DOOR",
+      "TOA_NEXUS_CRONDIS_DOOR",
+      "TOA_NEXUS_HET_DOOR"
+    ]
+  },
+  {
+    "description": "ToA - Lobby and Nexus Area - Warden Door",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": -160,
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 0 || h == 39",
+        "baseMaterial": "MARBLE_3",
+        "uvType": "BOX",
+        "uvOrientation": -128,
+        "uvScale": 1.2
+      },
+      {
+        "description": "Flames",
+        "colors": "h == 63",
+        "baseMaterial": "UNLIT"
+      },
+      {
+        "description": "Flames",
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "TOA_NEXUS_WARDENS_DOOR",
+      "TOA_NEXUS_WARDENS_DOOR_OPEN",
+      "TOA_NEXUS_WARDENS_DOOR_SIDE01"
+    ]
+  },
+  {
     "description": "ToA - Lobby and Nexus Area - Boss Doors - Closed",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": -189,
+    "uvScale": 0.3,
+    "uvOrientation": -160,
     "colorOverrides": [
       {
         "description": "Wall",
@@ -86405,6 +86492,11 @@
         "uvType": "BOX",
         "uvOrientation": -128,
         "uvScale": 1.2
+      },
+      {
+        "description": "Wall",
+        "colors": "l == 2",
+        "baseMaterial": "NONE"
       }
     ],
     "objectIds": [
@@ -86528,6 +86620,7 @@
   },
   {
     "description": "ToA - Lobby Exit",
+    "areas": [ "TOA_ENTRANCE_LOBBY" ],
     "uvScale": 1.2,
     "baseMaterial": "MARBLE_3",
     "uvType": "BOX",
@@ -86539,11 +86632,18 @@
         "description": "Outside",
         "colors": "h == 7",
         "baseMaterial": "NONE"
+      },
+      {
+        "description": "Back of Exit",
+        "colors": "l == 2",
+        "baseMaterial": "GRAY_60",
+        "flatNormals": true
       }
     ],
     "objectIds": [
       "TOA_LOBBY_EXIT",
-      "TOA_LOBBY_EXIT_NOOP"
+      "TOA_LOBBY_EXIT_NOOP",
+      "GREYBOX_TOMB_WALL01_DARK02"
     ]
   },
   {
@@ -86791,6 +86891,37 @@
     "objectIds": [
       "TOA_WALL_BABA05_TRIM01",
       "TOA_WALL_BABA05_TRIM02"
+    ]
+  },
+  {
+    "description": "ToA - Ba-Ba - Floor Tiles",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.9,
+    "depthBias": 1,
+    "objectIds": [
+      "TOA_BABA_TILES04",
+      "TOA_BABA_TILES05",
+      "TOA_BABA_TILES08",
+      "TOA_BABA_TILES07",
+      "TOA_BABA_TILES01",
+      "TOA_BABA_TILES02",
+      "TOA_BABA_TILES11",
+      "TOA_BABA_TILES03",
+      "TOA_BABA_TILES06",
+      "TOA_BABA_TILES12",
+      "TOA_BABA_TILES10",
+      "TOA_BABA_TILES09"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "GRAVEL",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   },
   {
@@ -87544,10 +87675,10 @@
   },
   {
     "description": "ToA - Amascut Burial Chamber - Wall",
-    "baseMaterial": "MARBLE_3",
+    "baseMaterial": "MARBLE_2",
     "uvType": "BOX",
     "uvScale": 1.2,
-    "uvOrientation": -256,
+    "uvOrientation": 175,
     "objectIds": [
       "TOA_VAULT_WALL01",
       "TOA_VAULT_WALL02",
@@ -87557,10 +87688,9 @@
   },
   {
     "description": "ToA - Amascut Burial Chamber - Wall with golden symbols",
-    "baseMaterial": "MARBLE_3",
+    "baseMaterial": "MARBLE_1",
     "uvType": "BOX",
     "uvScale": 1.2,
-    "uvOrientation": -256,
     "colorOverrides": [
       {
         "description": "Stone",
@@ -87572,8 +87702,141 @@
     "objectIds": [
       "TOA_VAULT_WALL_TRIM01",
       "TOA_VAULT_WALL_TRIM02",
+      "TOA_VAULT_WALL_TRIM03",
       "TOA_VAULT_WALL_TRIM04",
-      "TOA_VAULT_WALL_TRIM04"
+      "TOA_VAULT_ENTRY"
+    ]
+  },
+  {
+    "description": "ToA - Amascut Burial Chamber - Secret Door",
+    "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6 || h == 0 && l == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 120
+      }
+    ],
+    "objectIds": [
+      "TOA_VAULT_STRANGE_WALL",
+      "TOA_VAULT_STRANGE_WALL_OP_HIDDEN",
+      "TOA_VAULT_STRANGE_WALL_OP_VIS"
+    ]
+  },
+  {
+    "description": "ToA - Amascut Burial Chamber - Pillar",
+    "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "colors": "h == 21 || h == 6 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ],
+    "objectIds": [
+      "TOA_VAULT_PILLAR02_MIRROR",
+      "TOA_VAULT_PILLAR03_MIRROR",
+      "TOA_VAULT_PILLAR02",
+      "TOA_VAULT_PILLAR03",
+      "TOA_VAULT_PILLAR01",
+      "TOA_VAULT_PILLAR03_BROKEN03",
+      "TOA_VAULT_PILLAR03_BROKEN03_MIRROR",
+      "TOA_VAULT_PILLAR03_BROKEN02",
+      "TOA_VAULT_PILLAR03_BROKEN01"
+    ]
+  },
+  {
+    "description": "ToA - Amascut Burial Chamber - Chest",
+    "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && a < 255",
+        "baseMaterial": "GRAY_45",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ],
+    "objectIds": [
+      "TOA_VAULT_CHEST_OPEN02",
+      "TOA_VAULT_CHEST_EMPTY",
+      "TOA_VAULT_CHEST_OPEN",
+      "TOA_VAULT_CHEST_EMPTY02",
+      "TOA_VAULT_CHEST_EMPTY03",
+      "TOA_VAULT_CHEST_OPEN03",
+      "TOA_VAULT_CHEST_MINE_STANDARD"
+    ]
+  },
+  {
+    "description": "ToA - Rare Purple Chest Flames",
+    "baseMaterial": "GRAY_400",
+    "uvType": "BOX",
+    "upwardsNormals": true,
+    "objectIds": [
+      "TOA_VAULT_BARRIER_RARE"
+    ]
+  },
+  {
+    "description": "ToA - Rare Purple Chest Tiles",
+    "baseMaterial": "GRAY_400",
+    "uvType": "BOX",
+    "upwardsNormals": true,
+    "objectIds": [
+      "TOA_VAULT_TILE_GLOW_RARE"
+    ]
+  },
+  {
+    "description": "ToA Reward Room - Wall Filler Black and Disable Shadows for Performance",
+    "areas": [ "TOA_LOOT_ROOM", "TOA_FINAL_BOSS_PHASE_1" ],
+    "castShadows": false,
+    "receiveShadows": false,
+    "baseMaterial": "BLACK",
+    "objectIds": [
+      "TOA_WALL_BLACK",
+      "TOA_WALL_BLACK_TALL"
+    ]
+  },
+  {
+    "description": "ToA - Wall Filler - Disable Shadows for Performance",
+    "castShadows": false,
+    "receiveShadows": false,
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "TOA_WALL_BLACK",
+      "TOA_WALL_BLACK_TALL",
+      "GREYBOX_TOMB_WALL01"
     ]
   },
   {

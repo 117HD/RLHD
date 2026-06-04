@@ -5848,33 +5848,17 @@
     "blended": false
   },
   {
-    "name": "TOA_DISABLE_BLENDING_4",
+    "name": "TOA_BOSS_ENTRANCE_FLOOR_PATTERN",
     "area": "TOA_PATH_HUB",
+    "uvOrientation": -256,
+    "uvScale": 1.5,
+    "groundMaterial": "MARBLE_2",
+    "shiftLightness": 1,
+    "blended": false,
     "overlayIds": [
-      4
-    ],
-    "blended": false
-  },
-  {
-    "name": "TOA_DISABLE_BLENDING_11",
-    "area": "TOA_PATH_HUB",
-    "overlayIds": [
-      11
-    ],
-    "blended": false
-  },
-  {
-    "name": "TOA_DISABLE_BLENDING_86",
-    "area": "TOA_PATH_HUB",
-    "overlayIds": [
-      86
-    ],
-    "blended": false
-  },
-  {
-    "name": "TOA_DISABLE_BLENDING_N23",
-    "area": "TOA_PATH_HUB",
-    "overlayIds": [
+      4,
+      11,
+      86,
       233
     ],
     "blended": false
@@ -5898,6 +5882,8 @@
   {
     "name": "TOA_DISABLE_BLENDING_30",
     "area": "TOA_PATH_OF_APMEKEN_BOSS",
+    "groundMaterial": "MARBLE_1",
+    "shiftLightness": -4,
     "overlayIds": [
       30
     ],
@@ -5920,8 +5906,16 @@
     "blended": false
   },
   {
+    "name": "TOA_DISABLE_BLENDING_LOOT_ROOM_CHEST_PLATFORM",
+    "area": "TOA_LOOT_ROOM_CHEST_PLATFORM",
+    "groundMaterial": "MARBLE_1_GLOSS",
+    "minLightness": 70,
+    "blended": false
+  },
+  {
     "name": "TOA_DISABLE_BLENDING_LOOT_ROOM",
     "area": "TOA_LOOT_ROOM",
+    "groundMaterial": "MARBLE_1_GLOSS",
     "blended": false
   },
   {
@@ -5998,6 +5992,7 @@
   {
     "name": "TOA_KEPHRI_FLOOR",
     "area": "TOMBS_OF_AMASCUT",
+    "groundMaterial": "DIRT_1",
     "underlayIds": [
       6, 90, 124
     ],
@@ -6156,6 +6151,9 @@
     "groundMaterial": "GRAVEL",
     "underlayIds": [
       156
+    ],
+    "overlayIds": [
+      134
     ]
   },
   {
