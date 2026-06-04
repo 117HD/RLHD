@@ -77036,6 +77036,8 @@
   {
     "description": "The Pandemonium - Dock Support",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.008,
     "objectIds": [
       "PANDEMONIUM_PIER_SUPPORT_PILLAR",
       "PANDEMONIUM_PIER_SUPPORT_STRAIGHT01",
