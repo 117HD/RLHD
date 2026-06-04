@@ -43,7 +43,7 @@ vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
     WaterType waterType = getWaterType(waterTypeIndex);
     vec2 worldUv = -position.xz / 128;
 
-    float waveHeight = 1;
+    float waveHeight = 2;
     float waveSpeed = .0072;
     switch (waterTypeIndex) {
         case WATER_TYPE_BLACK_TAR_FLAT:
