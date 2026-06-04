@@ -60,6 +60,7 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_MAIN;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_OVERLAY;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_UNDERLAY;
+import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.UNDERWATER_HSL;
@@ -1514,6 +1515,7 @@ public class SceneUploader implements AutoCloseable {
 		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		final int faceCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
+		final int bottomY = model.getBottomY();
 
 		final float[] vertexX = model.getVerticesX();
 		final float[] vertexY = model.getVerticesY();
@@ -1581,7 +1583,7 @@ public class SceneUploader implements AutoCloseable {
 			int vx = (int) vertexX[v];
 			int vy = (int) vertexY[v];
 			int vz = (int) vertexZ[v];
-			float heightFrac = modelOverride.terrainVertexSnap ? abs(vy / modelHeight) : 0.0f;
+			float heightFrac = modelOverride.terrainVertexSnap ? abs((bottomY - vy) / modelHeight) : 0.0f;
 
 			if (orientation != 0) {
 				int x0 = vx;
@@ -1601,6 +1603,18 @@ public class SceneUploader implements AutoCloseable {
 				float h10 = tileHeights[tileZ][vertexTileExX + 1][vertexTileExY];
 				float h01 = tileHeights[tileZ][vertexTileExX][vertexTileExY + 1];
 				float h11 = tileHeights[tileZ][vertexTileExX + 1][vertexTileExY + 1];
+
+				if(ctx.isTileFlagSet(tileZ, vertexTileExX, vertexTileExY, TILE_WATER_FLAG))
+					h00 += ctx.getVertexUnderwaterDepth(vertexKeys[0]);
+
+				if(ctx.isTileFlagSet(tileZ, vertexTileExX + 1, vertexTileExY, TILE_WATER_FLAG))
+					h10 += ctx.getVertexUnderwaterDepth(vertexKeys[1]);
+
+				if(ctx.isTileFlagSet(tileZ, vertexTileExX, vertexTileExY + 1, TILE_WATER_FLAG))
+					h01 += ctx.getVertexUnderwaterDepth(vertexKeys[2]);
+
+				if(ctx.isTileFlagSet(tileZ, vertexTileExX + 1, vertexTileExY + 1, TILE_WATER_FLAG))
+					h11 += ctx.getVertexUnderwaterDepth(vertexKeys[3]);
 
 				float hx0 = mix(h00, h10, (vx % 128.0f) / 128.0f);
 				float hx1 = mix(h01, h11, (vx % 128.0f) / 128.0f);

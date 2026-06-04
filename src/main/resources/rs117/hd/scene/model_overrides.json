@@ -30731,6 +30731,7 @@
   {
     "description": "Object - Wooden - Support Post",
     "baseMaterial": "WOOD_GRAIN_2",
+    "terrainVertexSnap": true,
     "objectIds": [
       "WOODENSUPPORT1",
       "FAI_BARBARIAN_WOODENSUPPORT",
