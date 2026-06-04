@@ -211,80 +211,82 @@ vec2 getPoissonDisk(int idx) {
     }
 }
 
-// Generated with:
-// import scipy, numpy as np
-// points = scipy.stats.qmc.PoissonDisk(d=2, radius=0.8/np.sqrt(n), seed=117).random(n=64)
-// disk = scipy.stats.qmc.scale(points, l_bounds=[-1, -1], u_bounds=[1, 1])
-// print("\n".join(map(
-//     lambda x: (
-//         f"case {x[0]:>2}:" if x[0] + 1 < n else "default:") +
-//         f" return vec2({x[1][0]:> 1.9f}, {x[1][0]:> 1.9f});",
-//     enumerate(disk))))
+/* Generated with:
+import scipy, numpy as np
+n = 64
+points = scipy.stats.qmc.PoissonDisk(d=2, radius=0.8/np.sqrt(n), seed=117).random(n=64)
+disk = scipy.stats.qmc.scale(points, l_bounds=[-1, -1], u_bounds=[1, 1])
+print("\n".join(map(
+    lambda x: (
+        f"case {x[0]:>2}:" if x[0] + 1 < n else "default:") +
+        f" return vec2({x[1][0]:> 1.9f}, {x[1][1]:> 1.9f});",
+    enumerate(disk))))
+*/
 vec2 getPoissonDisk64(int idx) {
     switch(idx) {
-        case  0: return vec2( 0.750023520,  0.750023520);
-        case  1: return vec2( 0.502976671,  0.502976671);
-        case  2: return vec2( 0.657981790,  0.657981790);
-        case  3: return vec2( 0.451917650,  0.451917650);
-        case  4: return vec2( 0.871047563,  0.871047563);
-        case  5: return vec2( 0.860952370,  0.860952370);
-        case  6: return vec2( 0.207114298,  0.207114298);
-        case  7: return vec2( 0.283295401,  0.283295401);
-        case  8: return vec2( 0.529814174,  0.529814174);
-        case  9: return vec2( 0.284758737,  0.284758737);
-        case 10: return vec2(-0.047109168, -0.047109168);
-        case 11: return vec2( 0.122156062,  0.122156062);
-        case 12: return vec2(-0.075134247, -0.075134247);
-        case 13: return vec2( 0.204903033,  0.204903033);
-        case 14: return vec2( 0.432993958,  0.432993958);
-        case 15: return vec2(-0.341272520, -0.341272520);
-        case 16: return vec2(-0.312829951, -0.312829951);
-        case 17: return vec2( 0.748542624,  0.748542624);
-        case 18: return vec2( 0.452800643,  0.452800643);
-        case 19: return vec2( 0.224176865,  0.224176865);
-        case 20: return vec2( 0.678823972,  0.678823972);
-        case 21: return vec2(-0.547376053, -0.547376053);
-        case 22: return vec2(-0.585164720, -0.585164720);
-        case 23: return vec2(-0.280773851, -0.280773851);
-        case 24: return vec2(-0.553444946, -0.553444946);
-        case 25: return vec2( 0.818683781,  0.818683781);
-        case 26: return vec2( 0.625954527,  0.625954527);
-        case 27: return vec2( 0.962270050,  0.962270050);
-        case 28: return vec2(-0.121725806, -0.121725806);
-        case 29: return vec2(-0.002301573, -0.002301573);
-        case 30: return vec2(-0.352705696, -0.352705696);
-        case 31: return vec2(-0.165971283, -0.165971283);
-        case 32: return vec2( 0.236102170,  0.236102170);
-        case 33: return vec2( 0.509084558,  0.509084558);
-        case 34: return vec2(-0.023721081, -0.023721081);
-        case 35: return vec2( 0.996882955,  0.996882955);
-        case 36: return vec2( 0.983567136,  0.983567136);
-        case 37: return vec2(-0.933542166, -0.933542166);
-        case 38: return vec2(-0.707136638, -0.707136638);
-        case 39: return vec2( 0.848993283,  0.848993283);
-        case 40: return vec2(-0.989169512, -0.989169512);
-        case 41: return vec2(-0.902890269, -0.902890269);
-        case 42: return vec2( 0.757516248,  0.757516248);
-        case 43: return vec2( 0.990627838,  0.990627838);
-        case 44: return vec2(-0.605999313, -0.605999313);
-        case 45: return vec2(-0.938425078, -0.938425078);
-        case 46: return vec2(-0.842864800, -0.842864800);
-        case 47: return vec2(-0.610393122, -0.610393122);
-        case 48: return vec2( 0.050308977,  0.050308977);
-        case 49: return vec2(-0.305092171, -0.305092171);
-        case 50: return vec2(-0.255095509, -0.255095509);
-        case 51: return vec2( 0.544467930,  0.544467930);
-        case 52: return vec2( 0.258671150,  0.258671150);
-        case 53: return vec2( 0.231880166,  0.231880166);
-        case 54: return vec2( 0.003748166,  0.003748166);
-        case 55: return vec2(-0.223969842, -0.223969842);
-        case 56: return vec2(-0.835244720, -0.835244720);
-        case 57: return vec2(-0.647520250, -0.647520250);
-        case 58: return vec2(-0.485123936, -0.485123936);
-        case 59: return vec2(-0.466031912, -0.466031912);
-        case 60: return vec2(-0.637934462, -0.637934462);
-        case 61: return vec2(-0.843401269, -0.843401269);
-        case 62: return vec2(-0.444208129, -0.444208129);
-        default: return vec2(-0.947311349, -0.947311349);
+        case  0: return vec2( 0.750023520, -0.684238029);
+        case  1: return vec2( 0.502976671, -0.402302974);
+        case  2: return vec2( 0.657981790, -0.985169560);
+        case  3: return vec2( 0.451917650, -0.839056464);
+        case  4: return vec2( 0.871047563, -0.982620849);
+        case  5: return vec2( 0.860952370, -0.421628069);
+        case  6: return vec2( 0.207114298, -0.966633837);
+        case  7: return vec2( 0.283295401, -0.704024010);
+        case  8: return vec2( 0.529814174, -0.636279157);
+        case  9: return vec2( 0.284758737, -0.480536754);
+        case 10: return vec2(-0.047109168, -0.801857327);
+        case 11: return vec2( 0.122156062, -0.342263665);
+        case 12: return vec2(-0.075134247, -0.580918221);
+        case 13: return vec2( 0.204903033, -0.093351366);
+        case 14: return vec2( 0.432993958, -0.148624436);
+        case 15: return vec2(-0.341272520, -0.695768319);
+        case 16: return vec2(-0.312829951, -0.984865292);
+        case 17: return vec2( 0.748542624, -0.207737911);
+        case 18: return vec2( 0.452800643,  0.209270410);
+        case 19: return vec2( 0.224176865,  0.105986207);
+        case 20: return vec2( 0.678823972,  0.035559801);
+        case 21: return vec2(-0.547376053, -0.735054697);
+        case 22: return vec2(-0.585164720, -0.401083329);
+        case 23: return vec2(-0.280773851, -0.345509140);
+        case 24: return vec2(-0.553444946, -0.948385812);
+        case 25: return vec2( 0.818683781,  0.217183851);
+        case 26: return vec2( 0.625954527,  0.371876191);
+        case 27: return vec2( 0.962270050,  0.024191663);
+        case 28: return vec2(-0.121725806, -0.219097934);
+        case 29: return vec2(-0.002301573, -0.054053913);
+        case 30: return vec2(-0.352705696, -0.084864470);
+        case 31: return vec2(-0.165971283,  0.148359037);
+        case 32: return vec2( 0.236102170,  0.337871720);
+        case 33: return vec2( 0.509084558,  0.577361089);
+        case 34: return vec2(-0.023721081,  0.312303503);
+        case 35: return vec2( 0.996882955, -0.241132325);
+        case 36: return vec2( 0.983567136, -0.586471948);
+        case 37: return vec2(-0.933542166, -0.947131069);
+        case 38: return vec2(-0.707136638, -0.580145134);
+        case 39: return vec2( 0.848993283,  0.551424218);
+        case 40: return vec2(-0.989169512, -0.591812515);
+        case 41: return vec2(-0.902890269, -0.272472568);
+        case 42: return vec2( 0.757516248,  0.855961707);
+        case 43: return vec2( 0.990627838,  0.764846370);
+        case 44: return vec2(-0.605999313, -0.137490003);
+        case 45: return vec2(-0.938425078,  0.052428479);
+        case 46: return vec2(-0.842864800,  0.428388500);
+        case 47: return vec2(-0.610393122,  0.199388147);
+        case 48: return vec2( 0.050308977,  0.616673055);
+        case 49: return vec2(-0.305092171,  0.332995872);
+        case 50: return vec2(-0.255095509,  0.637569782);
+        case 51: return vec2( 0.544467930,  0.832747637);
+        case 52: return vec2( 0.258671150,  0.695545656);
+        case 53: return vec2( 0.231880166,  0.915024892);
+        case 54: return vec2( 0.003748166,  0.856037391);
+        case 55: return vec2(-0.223969842,  0.869012100);
+        case 56: return vec2(-0.835244720, -0.743108266);
+        case 57: return vec2(-0.647520250,  0.586271079);
+        case 58: return vec2(-0.485123936,  0.452107199);
+        case 59: return vec2(-0.466031912,  0.998685890);
+        case 60: return vec2(-0.637934462,  0.793457357);
+        case 61: return vec2(-0.843401269,  0.774693320);
+        case 62: return vec2(-0.444208129,  0.705139059);
+        default: return vec2(-0.947311349,  0.961819476);
     }
 }

@@ -284,12 +284,6 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
             const float SHADOW_BLUR_OPTICAL_DEPTH_INV = 1.0 / 10.0;
             float blurRadius = SHADOW_MAX_BLUR * saturate(opticalDepth * SHADOW_BLUR_OPTICAL_DEPTH_INV);
 
-            // Rotate the Poisson disk per fragment to break up repeated patterns.
-            float angle = noise * 2.0 * PI;
-            float s = sin(angle);
-            float c = cos(angle);
-            mat2 rot = mat2(c, -s, s, c);
-
             int numSamples = 64; // TODO: optimize sample count
             for (int i = 0; i < numSamples; i++) {
                 vec2 offset = getPoissonDisk64(i) * blurRadius;
