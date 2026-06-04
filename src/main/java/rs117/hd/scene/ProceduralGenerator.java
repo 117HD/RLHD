@@ -114,6 +114,15 @@ public class ProceduralGenerator {
 		vertexHashes[3] = tileVertexHash(tileVertices[3]);
 	}
 
+	public static void tileVertexKeys(SceneContext ctx, int tileExX, int tileExY, int tileZ, int[][] tileVertices, int[] vertexHashes) {
+		tileVertices(ctx, tileExX, tileExY, tileZ, tileVertices);
+
+		vertexHashes[0] = tileVertexHash(tileVertices[0]);
+		vertexHashes[1] = tileVertexHash(tileVertices[1]);
+		vertexHashes[2] = tileVertexHash(tileVertices[2]);
+		vertexHashes[3] = tileVertexHash(tileVertices[3]);
+	}
+
 	public void clearSceneData(SceneContext sceneContext) {
 		sceneContext.tileFlags = null;
 		sceneContext.vertexTerrainData = null;
@@ -383,13 +392,10 @@ public class ProceduralGenerator {
 		return getTileOverlayTris(tileShapeIndex)[face];
 	}
 
-	private static void tileVertices(SceneContext ctx, Tile tile, int[][] vertices) {
-		final Point tileLocation = tile.getSceneLocation();
-		final int tileX = tileLocation.getX();
-		final int tileY = tileLocation.getY();
-		final int tileExX = tileX + ctx.sceneOffset;
-		final int tileExY = tileY + ctx.sceneOffset;
-		final int[][] tileHeights = ctx.scene.getTileHeights()[tile.getRenderLevel()];
+	private static void tileVertices(SceneContext ctx, int tileExX, int tileExY, int tileZ, int[][] vertices) {
+		final int tileX = tileExX - ctx.sceneOffset;
+		final int tileY = tileExY - ctx.sceneOffset;
+		final int[][] tileHeights = ctx.scene.getTileHeights()[tileZ];
 
 		// Winding order:
 		// ne, nw, se => 3, 2, 1
@@ -426,6 +432,15 @@ public class ProceduralGenerator {
 			tileHeights[tileExX + 1][tileExY + 1],
 			(tileY + 1) * LOCAL_TILE_SIZE
 		);
+	}
+
+	private static void tileVertices(SceneContext ctx, Tile tile, int[][] vertices) {
+		final Point tileLocation = tile.getSceneLocation();
+		final int tileX = tileLocation.getX();
+		final int tileY = tileLocation.getY();
+		final int tileExX = tileX + ctx.sceneOffset;
+		final int tileExY = tileY + ctx.sceneOffset;
+		tileVertices(ctx, tileExX, tileExY, tile.getRenderLevel(), vertices);
 	}
 
 	private static void faceVertices(Tile tile, int face, int[][] vertices) {

@@ -325,6 +325,7 @@ public class ModelStreamingManager {
 		) {
 			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
+				ctx.sceneContext,
 				worldProjection,
 				modelCullingFrustums,
 				modelCullingFrustumCount,
@@ -334,6 +335,7 @@ public class ModelStreamingManager {
 				isModelPartiallyVisible,
 				modelOverride,
 				m,
+				gameObject,
 				isPlayer,
 				orientation,
 				x, y, z
@@ -596,6 +598,7 @@ public class ModelStreamingManager {
 		) {
 			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
+				ctx.sceneContext,
 				projection,
 				modelCullingFrustums,
 				modelCullingFrustumCount,
@@ -605,6 +608,7 @@ public class ModelStreamingManager {
 				isModelPartiallyVisible,
 				modelOverride,
 				m,
+				tileObject,
 				false,
 				orient,
 				x, y, z
