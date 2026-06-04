@@ -7749,10 +7749,58 @@
       "TOX_TEMPLE_ROOF_SE",
       "TOX_TEMPLE_ROOF_NE",
       "TOX_TEMPLE_ROOF_SW",
-      "TOX_GATES_OF_XERIC_LEFT",
-      "TOX_GATES_OF_XERIC_RIGHT",
       "TOX_XERICIAN_ALTAR",
-      "TOX_XERIC_STATUE"
+      "TOX_RUBBLE1",
+      "TOX_RUBBLE2",
+      "TOX_RUBBLE3",
+      "TOX_RUBBLE4"
+    ]
+  },
+  {
+    "description": "CoX - Mount Quidamortem - Statues",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TOX_XERIC_STATUE",
+      "TOX_OLMIC_STATUE",
+      "TOX_OLMIC_STATUE_BROKEN"
+    ]
+  },
+  {
+    "description": "CoX - Mount Quidamortem - Raid Entrance",
+    "flatNormals": true,
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h >= 16 && s <= 2",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Sand",
+        "colors": "h == 17 && s >= 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "TOX_GATES_OF_XERIC_LEFT",
+      "TOX_GATES_OF_XERIC_RIGHT"
+    ]
+  },
+  {
+    "description": "CoX - Plant - Fern",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25,
+    "uvOrientation": 187,
+    "objectIds": [
+      "RAIDS_PLANT1",
+      "RAIDS_PLANT2"
     ]
   },
   {
@@ -7767,6 +7815,136 @@
       "RAIDS_PILLAR3",
       "RAIDS_PILLAR4",
       "RAIDS_PILLAR5"
+    ]
+  },
+  {
+    "description": "CoX - Mount Quidamortem - Ground tiles and sand",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h == 8 && s == 3",
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "WORLD_XZ"
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 2",
+        "baseMaterial": "GRAVEL",
+        "uvType": "WORLD_XZ",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "TOX_TILES_EDGE_A",
+      "TOX_TILES_EDGE_B",
+      "TOX_TILES_CORNER_A",
+      "TOX_TILES_DIAG_SM",
+      "TOX_TILES_DIAG_LG",
+      "TOX_TILES_INNER_A",
+      "TOX_TILES_A",
+      "TOX_TILES_B",
+      "TOX_TILES_C",
+      "TOX_TILES_D",
+      "TOX_TILES_E"
+    ]
+  },
+  {
+    "description": "CoX - Mount Quidamortem - Red Ground tiles and sand",
+    "baseMaterial": "MARBLE_3",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Sand",
+        "colors": "h == 8 && s == 3",
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "WORLD_XZ"
+      }
+    ],
+    "objectIds": [
+      "TOX_TILES_RED_1",
+      "TOX_TILES_RED_2",
+      "TOX_TILES_RED_3",
+      "TOX_TILES_RED_5",
+      "TOX_TILES_RED_6",
+      "TOX_TILES_RED_7",
+      "TOX_TILES_RED_9",
+      "TOX_TILES_RED_10",
+      "TOX_TILES_RED_11"
+    ]
+  },
+  {
+    "description": "CoX - Mount Quidamortem - Minecart shortcut",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Tracks",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "planks",
+        "colors": "s >= 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "LOVAKENGJ_MINECART_SIDE_R_SAND",
+      "LOVAKENGJ_MINECART_TUNNEL_SAND",
+      "LOVAKENGJ_MINECART_SIDE_L_SAND"
+    ]
+  },
+  {
+    "description": "Zeah - Minecart shortcut tracks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Tracks",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "RIDABLE_TRACKSTRAIGHT_GDECOR",
+      "MOURNING_TRACKBUFFER"
+    ]
+  },
+  {
+    "description": "CoX - Mount Quidamortem - Crystal Outcrop",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "objectIds": [
+      "TOX_DEAD_CRYSTAL"
+    ]
+  },
+  {
+    "description": "CoX - Mount Quidamortem - Crystal in sandstone",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Tracks",
+        "colors": "a == 255",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 189
+      }
+    ],
+    "objectIds": [
+      "TOX_DEAD_CRYSTAL_2X2"
     ]
   },
   {
@@ -7860,7 +8038,8 @@
       "LUC2_MOV_DUGUPSOIL5",
       "LUC2_MOV_DUGUPSOIL6",
       "LUC2_MOV_DUGUPSOIL7",
-      "FERTILESOIL"
+      "FERTILESOIL",
+      "RAIDS_PATCH_GROUNDDECOR"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.44
@@ -22469,12 +22648,14 @@
   },
   {
     "description": "Nardah Worn Stone Stairs",
-    "baseMaterial": "STONE_LOWGLOSS",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "DESERT_TREASURE_SKEWSTEPS",
       "ELID_SKEW_STEPS"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Elid Tent",
@@ -76076,7 +76257,7 @@
     "colorOverrides": [
       {
         "description": "Wood",
-        "colors": "h == 5",
+        "colors": "h == 5 && s > 1",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.75
@@ -78632,6 +78813,8 @@
     "uvType": "BOX",
     "objectIds": [
       "GOBLIN_OUTPOST_FORT_WALL",
+      "GOBLIN_OUTPOST_GATE_RIGHT_CAP",
+      "GOBLIN_OUTPOST_GATE_LEFT_CAP",
       "SLEPE_CHURCH_RAIL"
     ]
   },
