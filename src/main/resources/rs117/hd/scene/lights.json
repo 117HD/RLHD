@@ -14201,6 +14201,816 @@
     "range": 10
   },
   {
+    "description": "Brimhaven Agility Arena - Lava 1",
+    "worldX": 2812,
+    "worldY": 9568,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 2",
+    "worldX": 2811,
+    "worldY": 9557,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 3",
+    "worldX": 2811,
+    "worldY": 9545,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 4",
+    "worldX": 2811,
+    "worldY": 9579,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 5",
+    "worldX": 2811,
+    "worldY": 9590,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 6",
+    "worldX": 2805,
+    "worldY": 9596,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 7",
+    "worldX": 2794,
+    "worldY": 9596,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 8",
+    "worldX": 2784,
+    "worldY": 9596,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 9",
+    "worldX": 2772,
+    "worldY": 9596,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 10",
+    "worldX": 2761,
+    "worldY": 9596,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 11",
+    "worldX": 2755,
+    "worldY": 9590,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 12",
+    "worldX": 2755,
+    "worldY": 9579,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 13",
+    "worldX": 2755,
+    "worldY": 9568,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 14",
+    "worldX": 2755,
+    "worldY": 9556,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 15",
+    "worldX": 2755,
+    "worldY": 9546,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 16",
+    "worldX": 2762,
+    "worldY": 9540,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 17",
+    "worldX": 2772,
+    "worldY": 9540,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 18",
+    "worldX": 2783,
+    "worldY": 9540,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 19",
+    "worldX": 2794,
+    "worldY": 9540,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 20",
+    "worldX": 2805,
+    "worldY": 9540,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 20",
+    "worldX": 2799,
+    "worldY": 9584,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 21",
+    "worldX": 2788,
+    "worldY": 9584,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 22",
+    "worldX": 2777,
+    "worldY": 9584,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 23",
+    "worldX": 2766,
+    "worldY": 9584,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 24",
+    "worldX": 2799,
+    "worldY": 9573,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 25",
+    "worldX": 2788,
+    "worldY": 9573,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 26",
+    "worldX": 2777,
+    "worldY": 9573,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 27",
+    "worldX": 2766,
+    "worldY": 9573,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 28",
+    "worldX": 2799,
+    "worldY": 9562,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 29",
+    "worldX": 2788,
+    "worldY": 9562,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 30",
+    "worldX": 2777,
+    "worldY": 9562,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 31",
+    "worldX": 2766,
+    "worldY": 9562,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 32",
+    "worldX": 2799,
+    "worldY": 9552,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 33",
+    "worldX": 2788,
+    "worldY": 9552,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 34",
+    "worldX": 2777,
+    "worldY": 9552,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 35",
+    "worldX": 2766,
+    "worldY": 9552,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 36",
+    "worldX": 2788,
+    "worldY": 9601,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 37",
+    "worldX": 2814,
+    "worldY": 9583,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 38",
+    "worldX": 2814,
+    "worldY": 9558,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 39",
+    "worldX": 2811,
+    "worldY": 9538,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 40",
+    "worldX": 2789,
+    "worldY": 9534,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 41",
+    "worldX": 2759,
+    "worldY": 9535,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 42",
+    "worldX": 2750,
+    "worldY": 9547,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 43",
+    "worldX": 2750,
+    "worldY": 9562,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 44",
+    "worldX": 2750,
+    "worldY": 9595,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
     "description": "Gu'Tanoth",
     "worldX": 2494,
     "worldY": 3019,
