@@ -75435,6 +75435,7 @@
     "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "BOATKIT_SHIPHULL_FIGUREHEAD01",
+      "BOATKIT_SHIPHULL_FIGUREHEAD01_INACTIVE",
       "BOATKIT_SHIPHULL_PORTHOLE01",
       "BOATKIT_MAST_FRONTMAST_HOISTED",
       "BOATKIT_SHIPHULL_RAILING01",
@@ -75735,7 +75736,8 @@
       "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT",
       "SEASLUG_CRATE_IN_WATER2",
       "SEASLUG_CRATE_IN_WATER",
-      "SEASLUG_MESSGAE_BOTTLE"
+      "SEASLUG_MESSGAE_BOTTLE",
+      "LOTR_MINE_CRATE_IN_WATER"
     ],
     "colorOverrides": [
       {
@@ -76143,6 +76145,7 @@
     "objectIds": [
       "SAILING_MOORING_EMBARK",
       "SAILING_MOORING_DISEMBARK",
+      "SAILING_MOORING_LAST_LIGHT_ESCAPE",
       "TT_PEARL_MOORING_POINT_FIGHT"
     ],
     "uvType": "BOX",
@@ -82733,10 +82736,12 @@
     ]
   },
   {
-    "description": "Red Rock - Ship - Wood with Sails - Hoisted",
+    "description": "Red Rock - Ship - Wood with Sails",
+    "disableDetailCulling": true,
     "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
-      "BOATKIT_MAST_MIDDLEMAST_HOISTED_RED_REEF"
+      "BOATKIT_MAST_MIDDLEMAST_HOISTED_RED_REEF",
+      "BOATKIT_MAST_MIDDLEMAST_FULL_RED_REEF"
     ],
     "colorOverrides": [
       {
@@ -82756,6 +82761,7 @@
   },
   {
     "description": "Red Rock - Ship - Bowsprit",
+    "disableDetailCulling": true,
     "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "BOATKIT_MAST_FRONTMAST_HOISTED_RED_REEF"
@@ -82773,6 +82779,21 @@
         "description": "Sail",
         "colors": "h == 0 && s == 3",
         "baseMaterial": "CARPET_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Ship - Diving Bell Crane",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "TRR_DIVING_BELL_CRANE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65
       }
     ]
   },
