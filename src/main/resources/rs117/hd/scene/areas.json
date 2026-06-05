@@ -11726,6 +11726,12 @@
     ]
   },
   {
+    "name": "RED_REEF_UNDERWATER",
+    "regions": [
+      11403
+    ]
+  },
+  {
     "name": "ISLE_OF_BONES",
     "regions": [ 10023 ]
   },
