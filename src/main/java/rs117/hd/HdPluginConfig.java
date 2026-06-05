@@ -41,6 +41,7 @@ import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.ReflectionMode;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -740,18 +741,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-		keyName = "underwaterCaustics",
-		name = "Underwater Caustics",
-		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 11,
-		section = environmentSettings
-	)
-	default boolean underwaterCaustics()
-	{
-		return true;
-	}
-
 	String KEY_WIND_DISPLACEMENT = "windDisplacement";
 	@ConfigItem(
 		keyName = KEY_WIND_DISPLACEMENT,
@@ -797,12 +786,107 @@ public interface HdPluginConfig extends Config
 	default boolean pohThemeEnvironments() { return true; }
 
 
+	/*====== Water settings ======*/
+
+	@ConfigSection(
+		name = "Water",
+		description = "Various options which control the appearance of water.",
+		position = 3
+	)
+	String waterSettings = "waterSettings";
+
+	String KEY_WATER_TRANSPARENCY = "waterTransparency";
+	@ConfigItem(
+		keyName = KEY_WATER_TRANSPARENCY,
+		name = "Water Transparency",
+		description = "Choose whether water should be transparent. Some water will be opaque regardless of this setting.",
+		position = 1,
+		section = waterSettings
+	)
+	default boolean waterTransparency() {
+		return true;
+	}
+
+	String KEY_PLANAR_REFLECTIONS = "planarReflections";
+	@ConfigItem(
+		keyName = KEY_PLANAR_REFLECTIONS,
+		name = "Water Reflections",
+		description = "Render a reflection for the main water surface in the scene.<br><b>GPU intensive</b>.",
+		position = 2,
+		section = waterSettings
+	)
+	default ReflectionMode planarReflections() {
+		return ReflectionMode.HIGH;
+	}
+
+	String KEY_ROOF_REFLECTIONS = "planarRoofReflections";
+	@ConfigItem(
+		keyName = KEY_ROOF_REFLECTIONS,
+		name = "Water Roof Reflections",
+		description = "Always render roofs in the reflection regardless of removal.",
+		position = 3,
+		section = waterSettings
+	)
+	default boolean enableRoofReflections() {
+		return true;
+	}
+
+	String KEY_SHORELINE_CAUSTICS = "shorelineCaustics";
+	@ConfigItem(
+		keyName = KEY_SHORELINE_CAUSTICS,
+		name = "Shoreline Caustics",
+		description = "Imitate sunlight passing through waves on the water surface near shorelines.",
+		position = 5,
+		section = waterSettings
+	)
+	default boolean shorelineCaustics() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "underwaterCaustics",
+		name = "Underwater Caustics",
+		description =
+			"Imitate sunlight passing through waves on the surface in underwater environments.<br>" +
+			"This applies for example when diving and in Guardians of the Rift.",
+		position = 6,
+		section = waterSettings
+	)
+	default boolean underwaterCaustics() {
+		return true;
+	}
+
+	String KEY_WATER_FOAM = "waterFoam";
+	@ConfigItem(
+		keyName = KEY_WATER_FOAM,
+		name = "Foam",
+		description = "Add foam around the edges of water bodies.",
+		position = 7,
+		section = waterSettings
+	)
+	default boolean enableWaterFoam() {
+		return true;
+	}
+
+	String KEY_LEGACY_WATER = "legacyWater";
+	@ConfigItem(
+		keyName = KEY_LEGACY_WATER,
+		name = "Legacy Water",
+		description = "Use the water style which was included in the initial release of the plugin.",
+		position = 8,
+		section = waterSettings
+	)
+	default boolean legacyWater() {
+		return false;
+	}
+
+
 	/*====== Miscellaneous settings ======*/
 
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";

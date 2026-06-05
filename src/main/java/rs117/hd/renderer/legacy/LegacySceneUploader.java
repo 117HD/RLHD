@@ -132,6 +132,9 @@ public class LegacySceneUploader {
 		if (client.isClientThread())
 			prepareBeforeSwap(sceneContext);
 
+		// Initialize array for counting the most prevalent water level
+		sceneContext.waterHeightCounters = new int[10000]; // Probably large enough
+
 		sceneContext.staticCustomTilesOffset = sceneContext.staticVertexCount;
 		var tiles = scene.getExtendedTiles();
 		for (int z = 0; z < MAX_Z; ++z) {
@@ -144,6 +147,24 @@ public class LegacySceneUploader {
 			}
 		}
 		sceneContext.staticCustomTilesVertexCount = sceneContext.staticVertexCount - sceneContext.staticCustomTilesOffset;
+
+		// Find the most prevalent water height
+		int mostPrevalentIndex = 0;
+		int mostPrevalentCount = 0;
+		for (int i = 0; i < sceneContext.waterHeightCounters.length; i++) {
+			int count = sceneContext.waterHeightCounters[i];
+			if (count > mostPrevalentCount) {
+				mostPrevalentIndex = i;
+				mostPrevalentCount = count;
+			}
+		}
+		if (mostPrevalentCount > 0) {
+			sceneContext.hasWater = true;
+			sceneContext.mostPrevalentWaterLevel = -mostPrevalentIndex;
+		} else {
+			sceneContext.hasWater = false;
+		}
+		sceneContext.waterHeightCounters = null;
 
 		stopwatch.stop();
 		log.debug(
@@ -717,6 +738,15 @@ public class LegacySceneUploader {
 					nwColor = 0;
 				if (sceneContext.isVertexWater(neVertexKey) && sceneContext.isVertexLand(neVertexKey))
 					neColor = 0;
+
+				// Increment the corresponding water height value in array which tracks frequency
+				int i = Math.abs(swHeight);
+				if (i >= sceneContext.waterHeightCounters.length && i < 1e6) {
+					// This probably won't happen, but if it does, grow the array
+					sceneContext.waterHeightCounters = slice(
+						sceneContext.waterHeightCounters, 0, sceneContext.waterHeightCounters.length * 2);
+				}
+				sceneContext.waterHeightCounters[i]++;
 			}
 
 			if (sceneContext.isVertexOverlay(neVertexKey) && sceneContext.isVertexUnderlay(neVertexKey))
@@ -876,6 +906,16 @@ public class LegacySceneUploader {
 			sceneContext.stagingBufferNormals.put(swNormals[0], swNormals[1], swNormals[2], swTerrainData);
 			sceneContext.stagingBufferNormals.put(seNormals[0], seNormals[1], seNormals[2], seTerrainData);
 			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[1], nwNormals[2], nwTerrainData);
+
+			// Clamp underwater terrain to the edge of the scene
+			if (tileExX == sceneContext.sceneEdge0)
+				swDepth = nwDepth = 0;
+			if (tileExY == sceneContext.sceneEdge0)
+				swDepth = seDepth = 0;
+			if (tileExX == sceneContext.sceneEdge1)
+				seDepth = neDepth = 0;
+			if (tileExY == sceneContext.sceneEdge1)
+				nwDepth = neDepth = 0;
 
 			sceneContext.stagingBufferVertices.ensureCapacity(24);
 			sceneContext.stagingBufferVertices.put((float) localNeVertexX, neHeight + neDepth, localNeVertexY, neColor);
@@ -1162,6 +1202,10 @@ public class LegacySceneUploader {
 			return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 		}
 
+		boolean isEdge =
+			Math.min(tileExX, tileExY) == sceneContext.sceneEdge0 ||
+			Math.max(tileExX, tileExY) == sceneContext.sceneEdge1;
+
 		if (sceneContext.isTileFlagSet(tileZ, tileExX, tileExY, TILE_WATER_FLAG)) {
 			underwaterTerrain = 1;
 
@@ -1230,6 +1274,36 @@ public class LegacySceneUploader {
 				sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[1], normalsA[2], aTerrainData);
 				sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[1], normalsB[2], bTerrainData);
 				sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[1], normalsC[2], cTerrainData);
+
+				// Clamp underwater terrain to the edge of the scene
+				if (isEdge) {
+					if (tileExX == sceneContext.sceneEdge0 && localVertices[0][0] == 0)
+						depthA = 0;
+					if (tileExY == sceneContext.sceneEdge0 && localVertices[0][1] == 0)
+						depthA = 0;
+					if (tileExX == sceneContext.sceneEdge1 && localVertices[0][0] == LOCAL_TILE_SIZE)
+						depthA = 0;
+					if (tileExY == sceneContext.sceneEdge1 && localVertices[0][1] == LOCAL_TILE_SIZE)
+						depthA = 0;
+
+					if (tileExX == sceneContext.sceneEdge0 && localVertices[1][0] == 0)
+						depthB = 0;
+					if (tileExY == sceneContext.sceneEdge0 && localVertices[1][1] == 0)
+						depthB = 0;
+					if (tileExX == sceneContext.sceneEdge1 && localVertices[1][0] == LOCAL_TILE_SIZE)
+						depthB = 0;
+					if (tileExY == sceneContext.sceneEdge1 && localVertices[1][1] == LOCAL_TILE_SIZE)
+						depthB = 0;
+
+					if (tileExX == sceneContext.sceneEdge0 && localVertices[2][0] == 0)
+						depthC = 0;
+					if (tileExY == sceneContext.sceneEdge0 && localVertices[2][1] == 0)
+						depthC = 0;
+					if (tileExX == sceneContext.sceneEdge1 && localVertices[2][0] == LOCAL_TILE_SIZE)
+						depthC = 0;
+					if (tileExY == sceneContext.sceneEdge1 && localVertices[2][1] == LOCAL_TILE_SIZE)
+						depthC = 0;
+				}
 
 				sceneContext.stagingBufferVertices.ensureCapacity(12);
 				sceneContext.stagingBufferVertices.put(

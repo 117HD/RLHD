@@ -37,6 +37,8 @@ public class LegacySceneContext extends SceneContext {
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 
+	public int[] waterHeightCounters;
+
 	public LegacySceneContext(
 		Client client,
 		Scene scene,

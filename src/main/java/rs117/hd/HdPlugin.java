@@ -31,10 +31,12 @@ import com.google.inject.Binder;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
@@ -69,6 +71,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
+import net.runelite.client.ui.components.colorpicker.ColorPickerManager;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -79,6 +82,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.ReflectionMode;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
@@ -94,6 +98,7 @@ import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
+import rs117.hd.overlays.ReflectionMapOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
@@ -170,6 +175,8 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_WATER_REFLECTION_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_WATER_NORMAL_MAPS = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -317,7 +324,13 @@ public class HdPlugin extends Plugin {
 	private ShadowMapOverlay shadowMapOverlay;
 
 	@Inject
+	private ReflectionMapOverlay reflectionMapOverlay;
+
+	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
+
+	@Inject
+	private ColorPickerManager colorPickerManager;
 
 	@Inject
 	public HDVariables vars;
@@ -387,6 +400,8 @@ public class HdPlugin extends Plugin {
 	public int fboTiledLighting;
 	public int texTiledLighting;
 
+	public int texWaterNormalMaps;
+
 	public UBOGlobal uboGlobal;
 	public UBOUI uboUI;
 	public UBOLights uboLights;
@@ -414,10 +429,15 @@ public class HdPlugin extends Plugin {
 	public boolean configPreserveVanillaNormals;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
+	public boolean configLinearAlphaBlending;
+	public boolean configRoofReflections;
+	public boolean configWaterTransparency;
+	public boolean configLegacyWater;
 	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public int configDetailDrawDistance;
+	public ReflectionMode configPlanarReflections;
 	public int configExpandedMapLoadingChunks;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
@@ -454,6 +474,7 @@ public class HdPlugin extends Plugin {
 	public final float[] cameraOrientation = new float[2];
 	public final float[][] cameraFrustum = new float[6][4];
 	public float[] viewMatrix = Mat4.zero();
+	public float[] projMatrix = new float[16];
 	public float[] viewProjMatrix = Mat4.zero();
 	public float[] invViewProjMatrix = Mat4.zero();
 
@@ -701,6 +722,7 @@ public class HdPlugin extends Plugin {
 				initializeShaderHotswapping();
 				initializeUiTexture();
 				initializeShadowMapFbo();
+				initWaterNormalMaps();
 
 				checkGLErrors();
 
@@ -728,6 +750,17 @@ public class HdPlugin extends Plugin {
 					client.setGameState(GameState.LOADING);
 
 				checkGLErrors();
+
+				var colorPicker = colorPickerManager.create(
+					client,
+					Color.WHITE,
+					"Shader Color Picker",
+					false
+				);
+				colorPicker.setLocationRelativeTo(canvas);
+				colorPicker.setOnColorChange(c -> clientThread.invoke(() ->
+					uboGlobal.COLOR_PICKER.set(ColorUtils.rgba(c))));
+//				colorPicker.setVisible(true);
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 
@@ -770,6 +803,7 @@ public class HdPlugin extends Plugin {
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
+				destroyWaterNormalMaps();
 
 				if (renderer != null) {
 					eventBus.unregister(renderer);
@@ -922,6 +956,7 @@ public class HdPlugin extends Plugin {
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configShadingMode.undoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
+			.define("LEGACY_WATER", configLegacyWater)
 			.define("DISABLE_DIRECTIONAL_SHADING", !configShadingMode.directionalShading)
 			.define("FLAT_SHADING", config.flatShading())
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
@@ -934,6 +969,11 @@ public class HdPlugin extends Plugin {
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
+			.define("LINEAR_ALPHA_BLENDING", configLinearAlphaBlending)
+			.define("WATER_FOAM", config.enableWaterFoam())
+			.define("PLANAR_REFLECTIONS", configPlanarReflections != ReflectionMode.DISABLED)
+			.define("SHORELINE_CAUSTICS", config.shorelineCaustics())
+			.define("WATER_TRANSPARENCY", configWaterTransparency)
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -1299,7 +1339,7 @@ public class HdPlugin extends Plugin {
 		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
 		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
 		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
-		boolean sRGB = false; // This is currently unused
+		boolean sRGB = configLinearAlphaBlending;
 
 		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
 		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
@@ -1465,10 +1505,75 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void initializeShaderHotswapping() {
-		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
-			log.info("Recompiling shaders: {}", path);
-			recompilePrograms();
-		});
+		SHADER_PATH.watch(
+			"\\.(glsl|cl)$", path -> {
+				log.info("Recompiling shaders: {}", path);
+				recompilePrograms();
+			}
+		);
+	}
+
+	private void initWaterNormalMaps() {
+		if (configLegacyWater || texWaterNormalMaps != 0)
+			return;
+
+		glActiveTexture(TEXTURE_UNIT_WATER_NORMAL_MAPS);
+
+		texWaterNormalMaps = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterNormalMaps);
+
+		int numCascades = 2;
+		int format = GL_RGB8;
+		int textureSize = 512;
+		int mipLevels = 1 + floor(log2(textureSize));
+
+		if (GL_CAPS.glTexStorage3D != 0) {
+			ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, numCascades);
+		} else {
+			// Allocate each mip level separately
+			for (int i = 0; i < mipLevels; i++) {
+				int size = textureSize >> i;
+				glTexImage3D(GL_TEXTURE_2D_ARRAY, i, format, size, size, numCascades, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+			}
+		}
+
+		var image = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
+		for (int i = 0; i < numCascades; i++) {
+			var rawImage = textureManager.loadTexture(String.format("water_normal_map_%d", i + 1));
+			if (rawImage == null) {
+				log.error("Failed to load water normal map {}", i);
+				continue;
+			}
+
+			var t = new AffineTransform();
+			// Flip non-vanilla textures horizontally to match vanilla UV orientation
+			t.translate(textureSize, 0);
+			t.scale(-1, 1);
+			t.scale((double) textureSize / rawImage.getWidth(), (double) textureSize / rawImage.getHeight());
+			var scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BILINEAR);
+			scaleOp.filter(rawImage, image);
+			rawImage = image;
+
+			int[] pixels = ((DataBufferInt) rawImage.getRaster().getDataBuffer()).getData();
+			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0,
+				i, textureSize, textureSize, 1,
+				GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels
+			);
+		}
+
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		HDUtils.setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
+
+		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+	}
+
+	private void destroyWaterNormalMaps() {
+		if (texWaterNormalMaps != 0)
+			glDeleteTextures(texWaterNormalMaps);
+		texWaterNormalMaps = 0;
 	}
 
 	public void prepareInterfaceTexture() {
@@ -1544,6 +1649,9 @@ public class HdPlugin extends Plugin {
 		glViewport(0, 0, actualUiResolution[0], actualUiResolution[1]);
 
 		tiledLightingOverlay.render();
+		shadowMapOverlay.render();
+		reflectionMapOverlay.render();
+		gammaCalibrationOverlay.render();
 
 		uiProgram.use();
 		uboUI.sourceDimensions.set(uiResolution);
@@ -1582,9 +1690,6 @@ public class HdPlugin extends Plugin {
 		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		glBindVertexArray(vaoTri);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		shadowMapOverlay.render();
-		gammaCalibrationOverlay.render();
 
 		// Reset
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
@@ -1652,6 +1757,8 @@ public class HdPlugin extends Plugin {
 		configVanillaShadowMode = config.vanillaShadowMode();
 		configHideFakeShadows = configVanillaShadowMode != VanillaShadowMode.SHOW;
 		configLegacyGreyColors = config.legacyGreyColors();
+		configLegacyWater = config.legacyWater();
+		configLinearAlphaBlending = !configLegacyWater;
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
 		configDynamicLights = config.dynamicLights();
@@ -1671,6 +1778,9 @@ public class HdPlugin extends Plugin {
 		configHideVanillaWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
+		configPlanarReflections = config.planarReflections();
+		configRoofReflections = config.enableRoofReflections();
+		configWaterTransparency = config.waterTransparency();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -1786,6 +1896,15 @@ public class HdPlugin extends Plugin {
 								if (configColorFilter == ColorFilter.CEL_SHADING || configColorFilterPrevious == ColorFilter.CEL_SHADING)
 									reloadScene = true;
 								break;
+							case KEY_LEGACY_WATER:
+								recreateSceneFbo = true;
+								recompilePrograms = true;
+								if (configLegacyWater) {
+									destroyWaterNormalMaps();
+								} else {
+									initWaterNormalMaps();
+								}
+								break;
 							case KEY_CPU_USAGE_LIMIT:
 								if (jobSystem.isActive()) {
 									// Restart the job system with the new worker count
@@ -1817,6 +1936,10 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_WATER_FOAM:
+							case KEY_SHORELINE_CAUSTICS:
+							case KEY_WATER_TRANSPARENCY:
+							case KEY_PLANAR_REFLECTIONS:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
@@ -1839,7 +1962,6 @@ public class HdPlugin extends Plugin {
 								reloadEnvironments = true;
 								reloadModelOverrides = true;
 								// fall-through
-							case KEY_ANISOTROPIC_FILTERING_LEVEL:
 							case KEY_GROUND_TEXTURES:
 							case KEY_MODEL_TEXTURES:
 							case KEY_TEXTURE_RESOLUTION:

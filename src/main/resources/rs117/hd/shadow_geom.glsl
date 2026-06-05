@@ -77,7 +77,7 @@ void main() {
             fOpacity = gOpacity[i];
         #endif
 
-        gl_Position = lightProjectionMatrix * vec4(gPosition[i], 1);
+        gl_Position = directionalCamera.viewProjMatrix * vec4(gPosition[i], 1);
         EmitVertex();
     }
     EndPrimitive();

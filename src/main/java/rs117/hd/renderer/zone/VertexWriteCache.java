@@ -69,7 +69,7 @@ public final class VertexWriteCache {
 		stagingBuffer[stagingPosition + 4] = materialDataB;
 		stagingBuffer[stagingPosition + 5] = materialDataC;
 
-		stagingBuffer[stagingPosition + 6] = terrainDataA; // TODO: Remove?
+		stagingBuffer[stagingPosition + 6] = terrainDataA;
 		stagingBuffer[stagingPosition + 7] = terrainDataB;
 		stagingBuffer[stagingPosition + 8] = terrainDataC;
 

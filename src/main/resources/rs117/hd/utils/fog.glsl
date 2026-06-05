@@ -39,6 +39,7 @@ float calculateFogAmount(vec3 position) {
     if (fogDepth == 0)
         return 0.f;
 
+    vec3 cameraPos = sceneCamera.position;
     float drawDistance2 = drawDistance * TILE_SIZE;
 
     // the client draws one less tile to the north and east than it does to the south

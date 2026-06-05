@@ -58,8 +58,8 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class ProceduralGenerator {
-	public static final int[] DEPTH_LEVEL_SLOPE = new int[] { 150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380 };
-	public static final int MAX_DEPTH = DEPTH_LEVEL_SLOPE[DEPTH_LEVEL_SLOPE.length - 1];
+	public static int[] DEPTH_LEVEL_SLOPE = new int[] { 150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380 };
+	public static int MAX_DEPTH = DEPTH_LEVEL_SLOPE[DEPTH_LEVEL_SLOPE.length - 1];
 
 	public static final int VERTICES_PER_FACE = 3;
 	public static final boolean[][] TILE_OVERLAY_TRIS = new boolean[][]
@@ -138,6 +138,21 @@ public class ProceduralGenerator {
 	}
 
 	public void generateSceneData(SceneContext sceneCtx, SceneContext prevSceneCtx) {
+		// TODO: This is experimental. Decide if we want this at all
+		{
+			float B = -1f; // slope strength & shape
+			float minDepth = 160;
+			float maxDepth = 3200;
+			// TODO: Could be interesting to do a piece-wise slope for a steep descent, then plateau, then much deeper
+			// TODO: Implement refraction vertex displacement
+			DEPTH_LEVEL_SLOPE = new int[50];
+			float A = B * (maxDepth - minDepth) / (1 - (float) Math.exp(-B));
+			for (int i = 0; i < DEPTH_LEVEL_SLOPE.length; i++)
+				ProceduralGenerator.DEPTH_LEVEL_SLOPE[i] =
+					round(A / B * (1 - (float) Math.exp(-B * (float) i / DEPTH_LEVEL_SLOPE.length)) + minDepth);
+			MAX_DEPTH = DEPTH_LEVEL_SLOPE[DEPTH_LEVEL_SLOPE.length - 1];
+		}
+
 		try (GeneratorContext ctx = GENERATOR_POOL.acquire()) {
 			long timerTotal = System.currentTimeMillis();
 			long timerCalculateMainOverrides, timerCalculateTerrainNormals, timerGenerateTerrainData, timerGenerateUnderwaterTerrain;
@@ -835,13 +850,8 @@ public class ProceduralGenerator {
 					final Tile[] xTiles = zTiles[x];
 					for (int y = 0; y < sizeY; ++y) {
 						Tile tile = xTiles[y];
-						if (tile == null) {
-							zUnderwaterDepthLevels[x][y] = 0;
-							zUnderwaterDepthLevels[x + 1][y] = 0;
-							zUnderwaterDepthLevels[x][y + 1] = 0;
-							zUnderwaterDepthLevels[x + 1][y + 1] = 0;
+						if (tile == null)
 							continue;
-						}
 
 						if (tile.getBridge() != null)
 							tile = tile.getBridge();

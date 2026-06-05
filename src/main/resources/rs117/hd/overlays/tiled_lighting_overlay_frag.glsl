@@ -18,7 +18,7 @@ void main() {
 
     const float eps = 1e-10;
     vec2 ndcUv = fUv * 2 - 1;
-    vec4 farPos = invProjectionMatrix * vec4(ndcUv, eps, 1);
+    vec4 farPos = sceneCamera.invViewProjMatrix * vec4(ndcUv, eps, 1);
     vec3 viewDir = normalize(farPos.xyz / farPos.w);
 
     vec4 c = vec4(0);
@@ -53,7 +53,7 @@ void main() {
         // When both tests fail to include the light, the unincluded portion is colored white
 
         // Draw texel centers
-        if (all(equal(floor(fUv * sceneResolution), floor(texelCenter * sceneResolution)))) {
+        if (all(equal(floor(fUv * sceneCamera.viewport), floor(texelCenter * sceneCamera.viewport)))) {
             FragColor = vec4(1);
             return;
         }
@@ -62,7 +62,7 @@ void main() {
             PointLight light = PointLightArray[lightIdx];
             vec3 lightWorldPos = light.position.xyz;
             float lightRadiusSq = light.position.w;
-            vec3 cameraToLight = lightWorldPos - cameraPos;
+            vec3 cameraToLight = lightWorldPos - sceneCamera.position;
 
             // Calculate the distance from the camera to the point closest to the light along the view ray
             float t = dot(cameraToLight, viewDir);
