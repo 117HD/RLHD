@@ -435,6 +435,7 @@ public class HdPlugin extends Plugin {
 	public boolean enableFreezeFrame;
 	public boolean orthographicProjection;
 	public boolean freezeCulling;
+	public boolean showCulling;
 
 	@Getter
 	private boolean isPluginStopPending;
