@@ -82545,7 +82545,6 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
-    "flatNormals": true,
     "uvOrientationX": 512,
     "uvOrientationZ": 512,
     "colorOverrides": [
@@ -82563,7 +82562,6 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "flatNormals": true,
     "uvOrientationX": 512,
     "uvOrientationZ": 512,
     "uvOrientationY": 100,
@@ -82646,6 +82644,50 @@
         "baseMaterial": "GRUNGE_2",
         "uvType": "BOX",
         "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Ship - Wood with Sails or Metal - Rotated",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "BOATKIT_MAST_MIDDLEMAST_HOISTED_RED_REEF"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Hull",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Sail",
+        "colors": "h == 0 && s == 3",
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Ship - Wood with Sails or Metal",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "BOATKIT_MAST_FRONTMAST_HOISTED_RED_REEF"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Hull",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Sail",
+        "colors": "h == 0 && s == 3",
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
       }
     ]
   },
