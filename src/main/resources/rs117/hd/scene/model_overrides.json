@@ -82597,7 +82597,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Red ROck - Dock Support - Rotated",
+    "description": "Red Rock - Dock Support - Rotated",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "objectIds": [
       "TRR_PIER_SUPPORT_PILLAR01A",
@@ -82623,7 +82623,7 @@
     ]
   },
   {
-    "description": "Red ROck - Dock Support",
+    "description": "Red Rock - Dock Support",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "TRR_PIER_SUPPORT_PILLAR01D",
@@ -82648,7 +82648,7 @@
     ]
   },
   {
-    "description": "Red Rock - Ship - Wood with Sails or Metal - Rotated",
+    "description": "Red Rock - Ship - Wood with Sails - Hoisted",
     "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "BOATKIT_MAST_MIDDLEMAST_HOISTED_RED_REEF"
@@ -82670,7 +82670,7 @@
     ]
   },
   {
-    "description": "Red Rock - Ship - Wood with Sails or Metal",
+    "description": "Red Rock - Ship - Bowsprit",
     "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "BOATKIT_MAST_FRONTMAST_HOISTED_RED_REEF"
@@ -82688,6 +82688,57 @@
         "description": "Sail",
         "colors": "h == 0 && s == 3",
         "baseMaterial": "CARPET_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Building Walls and Doors",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "WALLKIT_RED_ROCK_INTERNAL01_WALL01",
+      "WALLKIT_RED_ROCK_WINDOW01",
+      "WALLKIT_RED_ROCK_WALL01",
+      "WALLKIT_RED_ROCK_WALL01_RESIZE01",
+      "WALLKIT_RED_ROCK_DOOR01_OPEN_R_NOOP",
+      "WALLKIT_RED_ROCK_DOOR01_OPEN_L_NOOP",
+      "WALLKIT_RED_ROCK_DOOR01_OPEN_NOOP",
+      "WALLKIT_RED_ROCK_DOOR01_LOCKED",
+      "WALLKIT_RED_ROCK_DOOR01_OPEN_L",
+      "WALLKIT_RED_ROCK_DOOR01_OPEN_R",
+      "WALLKIT_RED_ROCK_DOOR01_CLOSED_L",
+      "WALLKIT_RED_ROCK_DOOR01_CLOSED_R"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 1 && s == 3",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Pully",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "WALLKIT_RED_ROCK_PULLEY01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
