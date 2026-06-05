@@ -32971,6 +32971,7 @@
       "FAI_VARROCK_SHELVES1",
       "FAI_VARROCK_SHELVES2",
       "FAI_VARROCK_SHELVES3",
+      "FAI_VARROCK_SHELVES4_MIRROR",
       "FAI_VARROCK_SINGLE_SHELF_FLOWERS",
       "FAI_VARROCK_SHELF_TANKARDS"
     ],
@@ -49718,7 +49719,8 @@
       "SARIM_BOOKCASE2_OFFSET_WESTFACING",
       "BOOKCASE_POLYBOOKS",
       "CANAFIS_BOOKSHELF_OLD_SHORT",
-      "CANAFIS_BOOKSHELF_OLD_SHORT3"
+      "CANAFIS_BOOKSHELF_OLD_SHORT3",
+      "FAI_VARROCK_BOOKCASE_NOOP"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -51277,7 +51279,8 @@
       }
     ],
     "objectIds": [
-      "FAI_VARROCK_APOTHECARY_CABINET_TWO"
+      "FAI_VARROCK_APOTHECARY_CABINET_TWO",
+      "FAI_VARROCK_APOTHECARY_CABINET_ALT"
     ]
   },
   {
@@ -82536,12 +82539,32 @@
     ]
   },
   {
+    "description": "Red Rock - Pallet Leaning on Wall",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "RED_ROCK_PALLET02_LEANING01",
+      "RED_ROCK_PALLET02_LEANING01_OFFSET_X"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 650,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "colors": "h < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "Red Rock - Crate - Single",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "objectIds": [
       "RED_ROCK_CRATE01_SINGLE01",
       "RED_ROCK_CRATE03",
-      "RED_ROCK_PALLET01_BAG01"
+      "RED_ROCK_CRATE02",
+      "RED_ROCK_PALLET01_BAG01",
+      "RED_ROCK_PALLET02_BAG01"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -82692,13 +82715,37 @@
     ]
   },
   {
-    "description": "Red Rock - Building Walls and Doors",
+    "description": "Red Rock - Building Walls",
     "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "WALLKIT_RED_ROCK_INTERNAL01_WALL01",
       "WALLKIT_RED_ROCK_WINDOW01",
       "WALLKIT_RED_ROCK_WALL01",
-      "WALLKIT_RED_ROCK_WALL01_RESIZE01",
+      "WALLKIT_RED_ROCK_WALL01_RESIZE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 1 && s == 3",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Doors",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
       "WALLKIT_RED_ROCK_DOOR01_OPEN_R_NOOP",
       "WALLKIT_RED_ROCK_DOOR01_OPEN_L_NOOP",
       "WALLKIT_RED_ROCK_DOOR01_OPEN_NOOP",
@@ -82713,8 +82760,7 @@
         "colors": "h == 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.5,
-        "uvOrientation": 512
+        "uvScale": 0.8
       },
       {
         "colors": "h == 1 && s == 3",
@@ -82739,6 +82785,57 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Tables with Various Items",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "RED_ROCK_TABLE01_1X1",
+      "RED_ROCK_TABLE01_2X3",
+      "RED_ROCK_TABLE01_1X3",
+      "RED_ROCK_TABLE01_1X2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Display Cases",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TRR_DISPLAY_CASE_1",
+      "TRR_DISPLAY_CASE_2",
+      "TRR_DISPLAY_CASE_3",
+      "TRR_DISPLAY_CASE_4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
       }
     ]
   },
