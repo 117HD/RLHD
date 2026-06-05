@@ -29182,7 +29182,8 @@
       "FAIRY_CHEST_BANK",
       "BARBASSAULT_BANK_CHEST",
       "TEMPOROSS_LOBBY_BANK_CHEST",
-      "LUNAR_BASIC_CHEST"
+      "LUNAR_BASIC_CHEST",
+      "BANK_CHEST_SMALL"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -75886,7 +75887,9 @@
       {
         "description": "Cloth",
         "colors": "h == 6",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.2
       },
       {
         "description": "Seaweed",
@@ -75910,7 +75913,7 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 0",
+        "colors": "h == 0 || h  == 5 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.1
@@ -82530,6 +82533,120 @@
     ],
     "objectIds": [
       "GREAT_CONCH_SHRINE"
+    ]
+  },
+  {
+    "description": "Red Rock - Crate - Single",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "RED_ROCK_CRATE01_SINGLE01",
+      "RED_ROCK_CRATE03",
+      "RED_ROCK_PALLET01_BAG01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "colors": "h < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Crate - Stack",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "RED_ROCK_CRATE01_STACKED01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Docks - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "TRR_PIER_SUPPORT_STRAIGHT01A",
+      "TRR_PIER_SUPPORT_CORNER_OUTSIDE01A",
+      "SKEWSTEPS_WOOD01_REDROCK01",
+      "TRR_PIER_SUPPORT_CORNER_OUTSIDE01C",
+      "TRR_PIER_SUPPORT_STRAIGHT01C"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Red Rock - Docks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "TRR_PIER_SUPPORT_CORNER_OUTSIDE01B",
+      "TRR_PIER_SUPPORT_STRAIGHT01B",
+      "TRR_PIER_SUPPORT_STRAIGHT01D",
+      "TRR_PIER_SUPPORT_CORNER_OUTSIDE01D"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Red ROck - Dock Support - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "TRR_PIER_SUPPORT_PILLAR01A",
+      "TRR_PIER_SUPPORT_PILLAR01C"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 32",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Algae",
+        "colors": "h == 12",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Red ROck - Dock Support",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "TRR_PIER_SUPPORT_PILLAR01D",
+      "TRR_PIER_SUPPORT_PILLAR01B"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 32",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Algae",
+        "colors": "h == 12",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
     ]
   },
   {
