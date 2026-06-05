@@ -18,7 +18,10 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.zone.passes.RenderPass;
+import rs117.hd.renderer.zone.passes.RenderPipeline;
 import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.SceneCullingManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
@@ -70,6 +73,9 @@ public class ModelStreamingManager {
 
 	@Inject
 	private ZoneRenderer renderer;
+
+	@Inject
+	private RenderPipeline renderPipeline;
 
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
@@ -213,23 +219,18 @@ public class ModelStreamingManager {
 
 		final int modelClassification = renderer.sceneCamera.classifySphere(
 			objectWorldPos[0], objectWorldPos[1], objectWorldPos[2], m.getRadius());
-		boolean isOffScreen = modelClassification == -1;
+		boolean isOnScreen = modelClassification != -1;
 		// Additional Culling checks to help reduce dynamic object perf impact when off-screen
-		if (isOffScreen && (
-			!modelOverride.castShadows ||
-			!renderer.directionalShadowCasterVolume.intersectsPoint(
-				(int) objectWorldPos[0],
-				(int) objectWorldPos[1],
-				(int) objectWorldPos[2]
-			)
-		)) {
-			return;
+		if (!isOnScreen) {
+			isOnScreen = renderPipeline.dynamicInFrustum.execute(ctx, r, m, modelOverride, x, y, z);
+			if(!isOnScreen)
+				return;
 		}
 		streamingContext.renderableCount++;
 
 		final boolean hasAlpha =
 			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
-			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+			(!sceneManager.isRoot(ctx) || zone.isVisible(renderer.sceneCamera));
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				modelOverride,
@@ -372,8 +373,7 @@ public class ModelStreamingManager {
 
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
-				plugin.configShadowMode != ShadowMode.OFF &&
-				(!sceneManager.isRoot(ctx) || zone != null && zone.inShadowFrustum)
+				plugin.configShadowMode != ShadowMode.OFF
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(

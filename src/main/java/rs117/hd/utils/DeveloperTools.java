@@ -167,7 +167,16 @@ public class DeveloperTools implements KeyListener {
 				plugin.renderer.reloadScene();
 				break;
 			case "culling":
-				plugin.freezeCulling = !plugin.freezeCulling;
+				if(args.length < 2) {
+					log.debug("Usage: ::117hd culling freeze|show");
+					return;
+				}
+
+				if(args[1].equalsIgnoreCase("freeze"))
+					plugin.freezeCulling = !plugin.freezeCulling;
+
+				if(args[1].equalsIgnoreCase("show"))
+					plugin.showCulling = !plugin.showCulling;
 				break;
 		}
 	}

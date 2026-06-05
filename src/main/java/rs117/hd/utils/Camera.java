@@ -48,9 +48,13 @@ public final class Camera implements Projection {
 	@Getter
 	private float farPlane = 0.0f;
 	@Getter
+	private int cullingMask = 0;
+	@Getter
 	private boolean orthographic = false;
 	@Getter
 	private boolean reverseZ = false;
+	@Getter
+	private boolean flipY = false;
 
 	@Override
 	public float[] project(float x, float y, float z) {
@@ -95,6 +99,22 @@ public final class Camera implements Projection {
 				dirtyFlags |= PROJ_CHANGED;
 			}
 		}
+		return this;
+	}
+
+	public Camera setFlipY(boolean newFlipY) {
+		if (flipY != newFlipY) {
+			synchronized (this) {
+				flipY = newFlipY;
+				dirtyFlags |= PROJ_CHANGED;
+			}
+		}
+		return this;
+	}
+
+	public Camera setCullingId(int id) {
+		assert id >= 0 && id <= 8;
+		cullingMask = 1 << id;
 		return this;
 	}
 
@@ -416,6 +436,10 @@ public final class Camera implements Projection {
 					}
 				}
 			}
+			if (flipY) {
+				for (int i = 1; i < 16; i += 4)
+					projectionMatrix[i] = -projectionMatrix[i];
+			}
 			try {
 				invProjectionMatrix = Mat4.inverse(projectionMatrix);
 			} catch (Exception ex) {
@@ -545,7 +569,7 @@ public final class Camera implements Projection {
 		return getFrustumCorners(new float[8][3]);
 	}
 
-	public boolean intersectsAABB(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+	public boolean intersectsAABB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
 		calculateFrustumPlanes();
 		return HDUtils.isAABBIntersectingFrustum(minX, minY, minZ, maxX, maxY, maxZ, frustumPlanes);
 	}
