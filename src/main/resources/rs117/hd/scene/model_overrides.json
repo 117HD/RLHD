@@ -56340,21 +56340,74 @@
       "_100_CORAL_TUBE_TOP2",
       "_100_CORAL_TUBE_TOP3",
       "_100_CORAL_TUBE_ROCK1",
-      "_100_CORAL_TUBE_ROCK2"
+      "_100_CORAL_TUBE_ROCK2",
+      "_100_CORAL_LACE_SIDE1_PURPLE",
+      "_100_CORAL_LACE_CORNER2_PURPLE",
+      "_100_CORAL_LACE_INVERSE_PURPLE",
+      "_100_CORAL_LACE_SIDE2_PURPLE",
+      "_100_CORAL_LACE_CORNER1_PURPLE",
+      "_100_CORAL_LACE_ROCK2_PURPLE",
+      "_100_CORAL_LACE_TOP3_PURPLE",
+      "_100_CORAL_LACE_ROCK1_PURPLE",
+      "_100_CORAL_LACE_TOP2_PURPLE"
     ],
     "colorOverrides": [
       {
         "colors": "h == 7 && s == 1 || h == 8 && s == 1 || h == 9 && s == 2",
         "baseMaterial": "DIRT_1",
         "uvType": "BOX",
-        "uvScale": 0.75
+        "uvScale": 0.6
       },
       {
-        "colors": "h == 6 && s == 7 || h == 7 && s == 7 || h == 8 && s == 7",
-        "baseMaterial": "PLANT_GRUNGE_2",
-        "uvType": "BOX",
-        "uvScale": 0.75
+        "colors": "h == 6 && s == 7 || h == 7 && s == 7 || h == 8 && s == 7 || h > 20",
+        "baseMaterial": "GRUNGE_1"
       }
+    ]
+  },
+  {
+    "description": "Red Reef Coral",
+    "baseMaterial": "ROCK_2",
+    "areas": [ "RED_REEF_UNDERWATER" ],
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "RED_CORAL01_2X2",
+      "RED_CORAL01_1X1",
+      "RED_CORAL01_3X2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s != 0",
+        "baseMaterial": "GRUNGE_1_VERY_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Red Reef Rocks",
+    "baseMaterial": "ROCK_2",
+    "areas": [ "RED_REEF_UNDERWATER" ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DI2_CAVE_ROCKS_SMALL1_ICE",
+      "DI2_CAVE_ROCKS_BIG3_ICE",
+      "TRR_ROCKS_BIG02",
+      "DI2_CAVE_ROCKS_BIG1_ICE",
+      "DI2_CAVE_ROCKS_BIG2_ICE",
+      "TRR_ROCKS_BIG01"
+    ]
+  },
+  {
+    "description": "Underwater Ocean Rocks",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "OCEAN_OUTCROP_UNDERWATER01",
+      "OCEAN_OUTCROP_UNDERWATER02",
+      "OCEAN_OUTCROP_UNDERWATER03",
+      "OCEAN_OUTCROP_UNDERWATER04"
     ]
   },
   {
@@ -82920,6 +82973,46 @@
         "colors": "a < 255",
         "baseMaterial": "GRAY_75"
       }
+    ]
+  },
+  {
+    "description": "Red Reef - Diving Bell",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TRR_DIVING_BELL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Red Reef - Dredger",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TRR_CORAL_DREDGER_FIXED",
+      "TRR_CORAL_DREDGER_BROKEN",
+      "TRR_CORAL_DREDGER_BROKEN_OP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Red Reef - Cliff",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "CORAL_SEABED_LOW_WALL"
     ]
   },
   {
