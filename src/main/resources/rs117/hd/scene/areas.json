@@ -9484,6 +9484,12 @@
     ]
   },
   {
+    "name": "ENCHANTED_VALLEY_WATERFALL_FIX",
+    "aabbs": [
+      [ 3040, 4522, 3042, 4525, 1 ]
+    ]
+  },
+  {
     "name": "GIANTS_PLATEAU_CABBAGE_PATCH",
     "aabbs": [
       [ 3412, 3179, 3413, 3181 ]
