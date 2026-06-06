@@ -29882,6 +29882,29 @@
     ]
   },
   {
+    "description": "Enchanted Valley - Fix Waterfall Position",
+    "textureMaterial": "WATER_DROPS",
+    "flatNormals": true,
+    "baseMaterial": "GRAY_90",
+    "modelOffset": [ 0, 288, 0 ],
+    "objectIds": [
+      "FAIRY2_WATERFALL_BOTTOM"
+    ]
+  },
+  {
+    "description": "Enchanted Valley - Fix Waterfall Cliff Position",
+    "areas": [ "ENCHANTED_VALLEY_WATERFALL_FIX" ],
+    "baseMaterial": "GRAVEL",
+    "modelOffset": [ 0, 20, 0 ],
+    "receiveShadows": false,
+    "terrainVertexSnap": true,
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "objectIds": [
+      "FAIRY2_CLIFFWALL"
+    ]
+  },
+  {
     "description": "Giants Foundry -  Wooden - WheelBarrow",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "GIANTS_FOUNDRY_WHEEL_BARROW" ],
