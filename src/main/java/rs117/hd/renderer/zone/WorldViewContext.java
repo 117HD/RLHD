@@ -26,6 +26,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.DynamicModelVAO.METADATA_SIZE;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 import static rs117.hd.renderer.zone.ZoneRenderer.FRAMES_IN_FLIGHT;
+import static rs117.hd.utils.collections.Util.quickSort;
 
 @Slf4j
 public class WorldViewContext {
@@ -180,9 +181,9 @@ public class WorldViewContext {
 		}
 
 		if (!alphaZones.isEmpty()) {
-			alphaZones.sort(alphaSortComparator);
-			for (Zone z : alphaZones)
-				z.alphaStaticModelSort(camera);
+			quickSort(alphaZones, alphaSortComparator);
+			for (int i = 0; i < alphaZones.size(); i++)
+				alphaZones.get(i).alphaStaticModelSort(camera);
 		}
 	}
 

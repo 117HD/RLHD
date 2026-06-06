@@ -31,7 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.opengl.*;
 import rs117.hd.utils.Destructible;
 import rs117.hd.utils.DestructibleHandler;
-import rs117.hd.utils.HDUtils;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL44.GL_CLIENT_STORAGE_BIT;
@@ -428,7 +427,7 @@ public class GLBuffer implements Destructible {
 			return false;
 		}
 
-		numBytes = HDUtils.ceilPow2(numBytes);
+		numBytes = ceilPow2(numBytes);
 		if (log.isTraceEnabled()) {
 			log.trace(
 				"{} buffer '{}'\t{}",

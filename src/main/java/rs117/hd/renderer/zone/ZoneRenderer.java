@@ -273,7 +273,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void processConfigChanges(Set<String> keys) {
-		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING) || keys.contains(KEY_ASYNC_MODEL_CACHE_SIZE))
+		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING))
 			modelStreamingManager.reinitialize();
 	}
 
