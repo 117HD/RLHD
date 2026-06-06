@@ -1,7 +1,6 @@
 package rs117.hd.renderer.zone;
 
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,9 +29,11 @@ import static net.runelite.api.Constants.CHUNK_SIZE;
 import static net.runelite.api.Constants.EXTENDED_SCENE_SIZE;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.LOCAL_TILE_SIZE;
+import static rs117.hd.scene.SceneContext.TILE_WATER_FLAG;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.UNDERWATER_HSL;
+import static rs117.hd.utils.HDUtils.tileVertexHash;
 import static rs117.hd.utils.MathUtils.fract;
 
 @Slf4j
@@ -40,8 +41,13 @@ import static rs117.hd.utils.MathUtils.fract;
 public class HorizonExtender {
 	private static final int EDGE_INSET = 4;
 	private static final int GPU_EXTRA_CHUNKS = 4;
-	private static final int[] UP_NORMAL = { 0, -1, 0 };
-	private static final int WATER_COLOR = 127;
+	private static final int[][] CORNER_TILES = {
+		{ 0, 0, 0 },
+		{ -1, 0, 1 },
+		{ 0, -1, 2 },
+		{ -1, -1, 3 },
+	};
+	private static final ThreadLocal<UploadScratch> UPLOAD_SCRATCH = ThreadLocal.withInitial(UploadScratch::new);
 
 	@Inject
 	private HdPlugin plugin;
@@ -54,6 +60,31 @@ public class HorizonExtender {
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
+
+	private enum ZoneUploadMode {
+		WATER_SURFACE,
+		WATER_UNDERWATER,
+		TERRAIN
+	}
+
+	private static final class UploadScratch {
+		final VertexWriteCache.Collection writeCache = new VertexWriteCache.Collection();
+		final int[][] cornerHeights = new int[CHUNK_SIZE + 1][CHUNK_SIZE + 1];
+		final int[] clipBounds = new int[4];
+
+		void begin(GpuIntBuffer vb, GpuIntBuffer fb) {
+			writeCache.setOutputBuffers(vb, vb, fb);
+		}
+
+		void end() {
+			writeCache.release();
+		}
+	}
+
+	@FunctionalInterface
+	private interface ShellStripFn {
+		void apply(int minLocalX, int minLocalZ, int maxLocalX, int maxLocalZ);
+	}
 
 	public static final class Sample {
 		public final int plane;
@@ -128,10 +159,6 @@ public class HorizonExtender {
 				plane, flatHeight, waterType, boundarySurfaceHeights, flatHeight, null,
 				material, groundMaterial, swColor, seColor, neColor, nwColor
 			);
-		}
-
-		public boolean isWaterHorizon() {
-			return boundaryUnderwaterHeights != null;
 		}
 
 		public boolean isWaterSurface() {
@@ -232,19 +259,9 @@ public class HorizonExtender {
 			isEligiblePatchTile(tile);
 	}
 
-	public void logSceneLoadTiming(SceneContext ctx) {
-		if (!ctx.enableHorizonTiles)
-			return;
-		log.debug("horizon tile time: {} ms", TimeUnit.NANOSECONDS.toMillis(ctx.horizonTileNs));
-	}
-
 	private static boolean isFlatTerrain(SceneContext ctx) {
 		Area area = getArea(ctx);
 		return area != null && area.horizonFlatTerrain;
-	}
-
-	private static void addTiming(SceneContext ctx, long start) {
-		ctx.horizonTileNs += System.nanoTime() - start;
 	}
 
 	@Nullable
@@ -380,7 +397,29 @@ public class HorizonExtender {
 		return isOutsideAreaBounds(ctx, tileExX, tileExY, plane);
 	}
 
-	private static int[] clipLocal(
+	private static boolean shouldExtendFlatTerrainTile(
+		ZoneSceneContext ctx,
+		int tileExX,
+		int tileExY,
+		int plane
+	) {
+		if (!isEnabled(ctx) || plane != getPlane(ctx))
+			return false;
+
+		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE) {
+			if (!isOutsideAreaBounds(ctx, tileExX, tileExY, plane))
+				return false;
+			return isWithinGpuRange(ctx, tileExX, tileExY);
+		}
+
+		if (isOutsideAreaBounds(ctx, tileExX, tileExY, plane))
+			return true;
+
+		Tile tile = ctx.scene.getExtendedTiles()[plane][tileExX][tileExY];
+		return tile == null || isHiddenGroundTile(tile);
+	}
+
+	private static boolean clipLocal(
 		ZoneSceneContext ctx,
 		Area area,
 		int mzx,
@@ -389,10 +428,11 @@ public class HorizonExtender {
 		int minLocalX,
 		int minLocalZ,
 		int maxLocalX,
-		int maxLocalZ
+		int maxLocalZ,
+		int[] out
 	) {
 		if (ctx.sceneBase == null)
-			return null;
+			return false;
 
 		int zoneBaseTileX = (mzx << 3) - ctx.sceneOffset;
 		int zoneBaseTileY = (mzz << 3) - ctx.sceneOffset;
@@ -426,9 +466,13 @@ public class HorizonExtender {
 		}
 
 		if (clipMinX >= clipMaxX || clipMinZ >= clipMaxZ)
-			return null;
+			return false;
 
-		return new int[] { (int) clipMinX, (int) clipMinZ, (int) clipMaxX, (int) clipMaxZ };
+		out[0] = (int) clipMinX;
+		out[1] = (int) clipMinZ;
+		out[2] = (int) clipMaxX;
+		out[3] = (int) clipMaxZ;
+		return true;
 	}
 
 	private static int countTiles(int minX, int minZ, int maxX, int maxZ) {
@@ -496,43 +540,8 @@ public class HorizonExtender {
 		return Math.min(Math.max(worldY, aabb.minY), aabb.maxY + 1);
 	}
 
-	private static void putWaterSurface(
-		GpuIntBuffer vb,
-		GpuIntBuffer fb,
-		WaterType waterType,
-		int plane,
-		int minX,
-		int minZ,
-		int maxX,
-		int maxZ,
-		int height
-	) {
-		int terrainData = HDUtils.packTerrainData(true, 0, waterType, plane);
-		int packedMaterial = Material.NONE.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
-
-		putTriangle(
-			vb, fb,
-			WATER_COLOR, WATER_COLOR, WATER_COLOR,
-			packedMaterial, packedMaterial, packedMaterial,
-			terrainData, terrainData, terrainData,
-			maxX, height, maxZ, 0, 0,
-			minX, height, maxZ, 0, 0,
-			maxX, height, minZ, 0, 0
-		);
-		putTriangle(
-			vb, fb,
-			WATER_COLOR, WATER_COLOR, WATER_COLOR,
-			packedMaterial, packedMaterial, packedMaterial,
-			terrainData, terrainData, terrainData,
-			minX, height, minZ, 0, 0,
-			maxX, height, minZ, 0, 0,
-			minX, height, maxZ, 0, 0
-		);
-	}
-
-	private static void putUnderwaterFlat(
-		GpuIntBuffer vb,
-		GpuIntBuffer fb,
+	private static void putFlatQuad(
+		VertexWriteCache.Collection writeCache,
 		WaterType waterType,
 		int plane,
 		int minX,
@@ -540,14 +549,15 @@ public class HorizonExtender {
 		int maxX,
 		int maxZ,
 		int height,
+		int color,
 		int depth
 	) {
 		int terrainData = HDUtils.packTerrainData(true, depth, waterType, plane);
 		int packedMaterial = Material.NONE.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 		putTriangle(
-			vb, fb,
-			UNDERWATER_HSL, UNDERWATER_HSL, UNDERWATER_HSL,
+			writeCache,
+			color, color, color,
 			packedMaterial, packedMaterial, packedMaterial,
 			terrainData, terrainData, terrainData,
 			maxX, height, maxZ, 0, 0,
@@ -555,8 +565,8 @@ public class HorizonExtender {
 			maxX, height, minZ, 0, 0
 		);
 		putTriangle(
-			vb, fb,
-			UNDERWATER_HSL, UNDERWATER_HSL, UNDERWATER_HSL,
+			writeCache,
+			color, color, color,
 			packedMaterial, packedMaterial, packedMaterial,
 			terrainData, terrainData, terrainData,
 			minX, height, minZ, 0, 0,
@@ -566,8 +576,7 @@ public class HorizonExtender {
 	}
 
 	private static void putTriangle(
-		GpuIntBuffer vb,
-		GpuIntBuffer fb,
+		VertexWriteCache.Collection writeCache,
 		int colorA,
 		int colorB,
 		int colorC,
@@ -581,14 +590,40 @@ public class HorizonExtender {
 		int x1, int y1, int z1, float u1, float v1,
 		int x2, int y2, int z2, float u2, float v2
 	) {
-		int faceIdx = fb.putFace(
+		var vb = writeCache.getVertexBuffer();
+		var tb = writeCache.getTextureBuffer();
+		int faceIdx = tb.putFace(
 			colorA, colorB, colorC,
 			packedMaterialA, packedMaterialB, packedMaterialC,
 			terrainDataA, terrainDataB, terrainDataC
 		);
-		vb.putVertex(x0, y0, z0, u0, v0, 0, UP_NORMAL[0], UP_NORMAL[2], UP_NORMAL[1], faceIdx);
-		vb.putVertex(x1, y1, z1, u1, v1, 0, UP_NORMAL[0], UP_NORMAL[2], UP_NORMAL[1], faceIdx);
-		vb.putVertex(x2, y2, z2, u2, v2, 0, UP_NORMAL[0], UP_NORMAL[2], UP_NORMAL[1], faceIdx);
+		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, 0, -1, faceIdx);
+		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, 0, -1, faceIdx);
+		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, 0, -1, faceIdx);
+	}
+
+	private static void forEachShellStrip(@Nullable ShellEdges shell, ShellStripFn fn) {
+		if (shell == null)
+			return;
+
+		int x = shell.extra;
+		int z = shell.extent;
+		if (shell.west)
+			fn.apply(-x, 0, 0, z);
+		if (shell.east)
+			fn.apply(z, 0, z + x, z);
+		if (shell.north)
+			fn.apply(0, -x, z, 0);
+		if (shell.south)
+			fn.apply(0, z, z, z + x);
+		if (shell.west && shell.north)
+			fn.apply(-x, -x, 0, 0);
+		if (shell.east && shell.north)
+			fn.apply(z, -x, z + x, 0);
+		if (shell.west && shell.south)
+			fn.apply(-x, z, 0, z + x);
+		if (shell.east && shell.south)
+			fn.apply(z, z, z + x, z + x);
 	}
 
 	private Reference resolveReference(ZoneSceneContext ctx, Area area) {
@@ -700,28 +735,13 @@ public class HorizonExtender {
 		return new ShellEdges(ctx, mzx, mzz);
 	}
 
-	private static int countShellQuads(ShellEdges e) {
-		if (e == null || !e.any())
+	private static int countShellQuads(ShellEdges shell) {
+		if (shell == null || !shell.any())
 			return 0;
 
-		int quads = 0;
-		if (e.west)
-			quads++;
-		if (e.east)
-			quads++;
-		if (e.north)
-			quads++;
-		if (e.south)
-			quads++;
-		if (e.west && e.north)
-			quads++;
-		if (e.east && e.north)
-			quads++;
-		if (e.west && e.south)
-			quads++;
-		if (e.east && e.south)
-			quads++;
-		return quads;
+		int[] quads = { 0 };
+		forEachShellStrip(shell, (minX, minZ, maxX, maxZ) -> quads[0]++);
+		return quads[0];
 	}
 
 	private static int countShellStripTiles(
@@ -733,21 +753,25 @@ public class HorizonExtender {
 		int minLocalX,
 		int minLocalZ,
 		int maxLocalX,
-		int maxLocalZ
+		int maxLocalZ,
+		int[] clipBounds
 	) {
-		int[] bounds = clipLocal(ctx, area, mzx, mzz, plane, minLocalX, minLocalZ, maxLocalX, maxLocalZ);
-		if (bounds == null)
+		if (!clipLocal(ctx, area, mzx, mzz, plane, minLocalX, minLocalZ, maxLocalX, maxLocalZ, clipBounds))
 			return 0;
-		return countTiles(bounds[0], bounds[1], bounds[2], bounds[3]);
+		return countTiles(clipBounds[0], clipBounds[1], clipBounds[2], clipBounds[3]);
 	}
 
-	private ZonePlan planZone(ZoneSceneContext ctx, int mzx, int mzz) {
+	private ZonePlan planZone(ZoneSceneContext ctx, int mzx, int mzz, Sample sample) {
 		ZonePlan plan = new ZonePlan();
+		boolean flatTerrain = isFlatTerrain(ctx);
 		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
 			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				int tileExX = (mzx << 3) + xoff;
 				int tileExY = (mzz << 3) + zoff;
-				if (shouldExtendTile(ctx, tileExX, tileExY) > 0) {
+				boolean extend = flatTerrain ?
+					shouldExtendFlatTerrainTile(ctx, tileExX, tileExY, sample.plane) :
+					shouldExtendTile(ctx, sample, tileExX, tileExY) > 0;
+				if (extend) {
 					plan.tileMask |= 1L << (xoff * CHUNK_SIZE + zoff);
 					plan.tileCount++;
 				}
@@ -821,18 +845,6 @@ public class HorizonExtender {
 		return live != null ? live : fallback;
 	}
 
-	private static int baseShouldExtend(ZoneSceneContext ctx, Sample sample, int tileExX, int tileExY) {
-		if (!shouldRenderAtTile(ctx, tileExX, tileExY, sample.plane))
-			return 0;
-		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
-			return 2;
-
-		Tile tile = ctx.scene.getExtendedTiles()[sample.plane][tileExX][tileExY];
-		if (tile == null || isHiddenGroundTile(tile))
-			return 2;
-		return 2;
-	}
-
 	public void prepareSceneTerrain(SceneContext ctx, Tile[][][] tiles) {
 		Area area = getArea(ctx);
 		if (isFlatTerrain(ctx))
@@ -840,62 +852,57 @@ public class HorizonExtender {
 		if (!isEnabled(ctx))
 			return;
 
-		long start = System.nanoTime();
-		try {
-			buildPatchMask(ctx, tiles);
-			boolean[][] mask = ctx.horizonTileMask;
-			if (mask == null)
-				return;
+		buildPatchMask(ctx, tiles);
+		boolean[][] mask = ctx.horizonTileMask;
+		if (mask == null || ctx.underwaterDepthLevels == null)
+			return;
 
-			int z = getPlane(ctx);
-			int sizeX = ctx.sizeX;
-			int sizeY = ctx.sizeZ;
+		int z = getPlane(ctx);
+		int sizeX = ctx.sizeX;
+		int sizeY = ctx.sizeZ;
 
-			for (int x = 0; x < sizeX; ++x) {
-				for (int y = 0; y < sizeY; ++y) {
-					if (!mask[x][y] || ctx.tileIsWater[z][x][y])
-						continue;
+		for (int x = 0; x < sizeX; ++x) {
+			for (int y = 0; y < sizeY; ++y) {
+				if (!mask[x][y] || ctx.isTileFlagSet(z, x, y, TILE_WATER_FLAG))
+					continue;
 
-					ctx.tileIsWater[z][x][y] = true;
-					Tile tile = tiles[z][x][y];
-					if (tile == null || isHiddenGroundTile(tile)) {
-						ctx.underwaterDepthLevels[z][x][y] = 1;
-						ctx.underwaterDepthLevels[z][x + 1][y] = 1;
-						ctx.underwaterDepthLevels[z][x][y + 1] = 1;
-						ctx.underwaterDepthLevels[z][x + 1][y + 1] = 1;
+				ctx.setTileFlag(z, x, y, TILE_WATER_FLAG);
+				Tile tile = tiles[z][x][y];
+				if (tile == null || isHiddenGroundTile(tile)) {
+					ctx.underwaterDepthLevels[z][x][y] = 1;
+					ctx.underwaterDepthLevels[z][x + 1][y] = 1;
+					ctx.underwaterDepthLevels[z][x][y + 1] = 1;
+					ctx.underwaterDepthLevels[z][x + 1][y + 1] = 1;
+				}
+			}
+		}
+
+		for (int x = 0; x < sizeX; ++x) {
+			for (int y = 0; y < sizeY; ++y) {
+				if (!mask[x][y])
+					continue;
+
+				Tile tile = tiles[z][x][y];
+				if (tile != null && !isHiddenGroundTile(tile))
+					continue;
+
+				for (int nx = x - 1; nx <= x + 1; ++nx) {
+					for (int ny = y - 1; ny <= y + 1; ++ny) {
+						if (nx == x && ny == y)
+							continue;
+						if (nx < 0 || ny < 0 || nx >= sizeX || ny >= sizeY)
+							continue;
+						if (!ctx.isTileFlagSet(z, nx, ny, TILE_WATER_FLAG))
+							continue;
+
+						Tile neighbor = tiles[z][nx][ny];
+						if (neighbor == null)
+							continue;
+
+						clearLandFlagsOnWaterFaces(ctx, neighbor, nx, ny, z);
 					}
 				}
 			}
-
-			for (int x = 0; x < sizeX; ++x) {
-				for (int y = 0; y < sizeY; ++y) {
-					if (!mask[x][y])
-						continue;
-
-					Tile tile = tiles[z][x][y];
-					if (tile != null && !isHiddenGroundTile(tile))
-						continue;
-
-					for (int nx = x - 1; nx <= x + 1; ++nx) {
-						for (int ny = y - 1; ny <= y + 1; ++ny) {
-							if (nx == x && ny == y)
-								continue;
-							if (nx < 0 || ny < 0 || nx >= sizeX || ny >= sizeY)
-								continue;
-							if (!ctx.tileIsWater[z][nx][ny])
-								continue;
-
-							Tile neighbor = tiles[z][nx][ny];
-							if (neighbor == null)
-								continue;
-
-							clearLandFlagsOnWaterFaces(ctx, neighbor, nx, ny, z);
-						}
-					}
-				}
-			}
-		} finally {
-			addTiming(ctx, start);
 		}
 	}
 
@@ -909,7 +916,7 @@ public class HorizonExtender {
 			var override = tileOverrideManager.getOverride(ctx, tile, worldPos);
 			if (proceduralGenerator.seasonalWaterType(override, paint.getTexture()) != WaterType.NONE) {
 				for (int key : ProceduralGenerator.tileVertexKeys(ctx, tile))
-					ctx.vertexIsLand.remove(key);
+					ctx.clearVertexIsLand(key);
 			}
 			return;
 		}
@@ -936,39 +943,37 @@ public class HorizonExtender {
 				continue;
 
 			for (int key : ProceduralGenerator.faceVertexKeys(tile, face))
-				ctx.vertexIsLand.remove(key);
+				ctx.clearVertexIsLand(key);
 		}
 	}
 
 	public void estimateForZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		if (!isEnabled(ctx))
 			return;
-		if (isFlatTerrain(ctx))
-			estimateTerrainForZone(ctx, zone, mzx, mzz);
-		else
-			estimateWaterForZone(ctx, zone, mzx, mzz);
-	}
 
-	private void estimateWaterForZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		if (!isEnabled(ctx))
+		Sample sample = resolveSample(ctx);
+		if (sample == null)
 			return;
 
-		long start = System.nanoTime();
-		try {
-			if (resolveSample(ctx) == null)
-				return;
+		boolean terrain = isFlatTerrain(ctx);
+		ZonePlan plan = planZone(ctx, mzx, mzz, sample);
+		ShellEdges shell = shellEdges(ctx, mzx, mzz);
+		int shellFaces = terrain ?
+			countTerrainShellFaces(ctx, getArea(ctx), sample, mzx, mzz, shell, UPLOAD_SCRATCH.get().clipBounds) :
+			countShellQuads(shell) * 2;
+		if (plan.tileCount == 0 && shellFaces == 0)
+			return;
 
-			ZonePlan plan = planZone(ctx, mzx, mzz);
-			int shellQuads = countShellQuads(shellEdges(ctx, mzx, mzz));
-			if (plan.tileCount == 0 && shellQuads == 0)
-				return;
-
+		int faces = plan.tileCount * 2 + shellFaces;
+		if (terrain) {
+			zone.sizeO += faces;
+			zone.sizeF += faces;
+			if (faces > 0)
+				zone.hasWater = true;
+		} else {
 			zone.hasWater = true;
-			int facesPerLayer = plan.tileCount * 2 + shellQuads * 2;
-			zone.sizeO += facesPerLayer * 2;
-			zone.sizeF += facesPerLayer * 2;
-		} finally {
-			addTiming(ctx, start);
+			zone.sizeO += faces * 2;
+			zone.sizeF += faces * 2;
 		}
 	}
 
@@ -982,7 +987,7 @@ public class HorizonExtender {
 	) {
 		if (!isEnabled(ctx) || isFlatTerrain(ctx))
 			return;
-		uploadWaterForZone(ctx, zone, mzx, mzz, vb, fb, true);
+		uploadForZone(ctx, zone, mzx, mzz, vb, fb, ZoneUploadMode.WATER_UNDERWATER);
 	}
 
 	public void uploadSurfaceForZone(
@@ -995,25 +1000,26 @@ public class HorizonExtender {
 	) {
 		if (!isEnabled(ctx))
 			return;
-		if (isFlatTerrain(ctx))
-			uploadTerrainForZone(ctx, zone, mzx, mzz, vb, fb);
-		else
-			uploadWaterForZone(ctx, zone, mzx, mzz, vb, fb, false);
+		uploadForZone(
+			ctx, zone, mzx, mzz, vb, fb,
+			isFlatTerrain(ctx) ? ZoneUploadMode.TERRAIN : ZoneUploadMode.WATER_SURFACE
+		);
 	}
 
-	private void uploadWaterForZone(
+	private void uploadForZone(
 		ZoneSceneContext ctx,
 		Zone zone,
 		int mzx,
 		int mzz,
 		GpuIntBuffer vb,
 		GpuIntBuffer fb,
-		boolean underwater
+		ZoneUploadMode mode
 	) {
-		if (!isEnabled(ctx))
+		if (!isEnabled(ctx) || vb == null)
 			return;
 
-		long start = System.nanoTime();
+		var scratch = UPLOAD_SCRATCH.get();
+		scratch.begin(vb, fb);
 		try {
 			Sample sample = resolveSample(ctx);
 			if (sample == null)
@@ -1023,101 +1029,93 @@ public class HorizonExtender {
 			assert area != null;
 
 			int posBefore = vb.position();
-			ZonePlan plan = planZone(ctx, mzx, mzz);
+			ZonePlan plan = planZone(ctx, mzx, mzz, sample);
 			if (plan.tileCount > 0) {
-				int[][] cornerHeights = buildZoneCornerHeights(ctx, area, sample, mzx, mzz, underwater);
-				if (plan.fullZone && isUniformHeightGrid(cornerHeights)) {
-					uploadZoneQuad(ctx, sample, cornerHeights, mzx, mzz, underwater, vb, fb);
-				} else {
-					uploadZoneGrid(ctx, sample, plan, cornerHeights, mzx, mzz, underwater, vb, fb);
-				}
+				boolean underwater = mode == ZoneUploadMode.WATER_UNDERWATER;
+				fillZoneCornerHeights(ctx, area, sample, mzx, mzz, scratch.cornerHeights, underwater);
+				if (mode == ZoneUploadMode.TERRAIN)
+					uploadTerrainZoneTiles(scratch.writeCache, ctx, sample, plan, scratch.cornerHeights, mzx, mzz);
+				else if (plan.fullZone && isUniformHeightGrid(scratch.cornerHeights))
+					uploadZoneQuad(scratch.writeCache, ctx, sample, scratch.cornerHeights, mzx, mzz, underwater);
+				else
+					uploadWaterZoneTiles(scratch.writeCache, ctx, sample, plan, scratch.cornerHeights, mzx, mzz, underwater);
 			}
 
-			uploadWaterShell(ctx, area, sample, mzx, mzz, underwater, vb, fb);
+			uploadShell(scratch.writeCache, ctx, area, sample, mzx, mzz, mode);
 
 			if (vb.position() > posBefore)
 				zone.hasWater = true;
 		} finally {
-			addTiming(ctx, start);
+			scratch.end();
 		}
 	}
 
-	private void uploadWaterShell(
+	private void uploadShell(
+		VertexWriteCache.Collection writeCache,
 		ZoneSceneContext ctx,
 		Area area,
 		Sample sample,
 		int mzx,
 		int mzz,
-		boolean underwater,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb
+		ZoneUploadMode mode
 	) {
-		ShellEdges shell = shellEdges(ctx, mzx, mzz);
-		if (shell == null)
-			return;
-
-		int x = shell.extra;
-		int z = shell.extent;
-		if (shell.west)
-			uploadWaterShellStrip(ctx, area, sample, mzx, mzz, underwater, vb, fb, -x, 0, 0, z);
-		if (shell.east)
-			uploadWaterShellStrip(ctx, area, sample, mzx, mzz, underwater, vb, fb, z, 0, z + x, z);
-		if (shell.north)
-			uploadWaterShellStrip(ctx, area, sample, mzx, mzz, underwater, vb, fb, 0, -x, z, 0);
-		if (shell.south)
-			uploadWaterShellStrip(ctx, area, sample, mzx, mzz, underwater, vb, fb, 0, z, z, z + x);
-		if (shell.west && shell.north)
-			uploadWaterShellStrip(ctx, area, sample, mzx, mzz, underwater, vb, fb, -x, -x, 0, 0);
-		if (shell.east && shell.north)
-			uploadWaterShellStrip(ctx, area, sample, mzx, mzz, underwater, vb, fb, z, -x, z + x, 0);
-		if (shell.west && shell.south)
-			uploadWaterShellStrip(ctx, area, sample, mzx, mzz, underwater, vb, fb, -x, z, 0, z + x);
-		if (shell.east && shell.south)
-			uploadWaterShellStrip(ctx, area, sample, mzx, mzz, underwater, vb, fb, z, z, z + x, z + x);
+		int[] clipBounds = UPLOAD_SCRATCH.get().clipBounds;
+		forEachShellStrip(shellEdges(ctx, mzx, mzz), (minLocalX, minLocalZ, maxLocalX, maxLocalZ) ->
+			uploadShellStrip(writeCache, ctx, area, sample, mzx, mzz, minLocalX, minLocalZ, maxLocalX, maxLocalZ, mode, clipBounds));
 	}
 
-	private void uploadWaterShellStrip(
+	private void uploadShellStrip(
+		VertexWriteCache.Collection writeCache,
 		ZoneSceneContext ctx,
 		Area area,
 		Sample sample,
 		int mzx,
 		int mzz,
-		boolean underwater,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb,
 		int minLocalX,
 		int minLocalZ,
 		int maxLocalX,
-		int maxLocalZ
+		int maxLocalZ,
+		ZoneUploadMode mode,
+		int[] clipBounds
 	) {
-		int[] bounds = clipLocal(ctx, area, mzx, mzz, sample.plane, minLocalX, minLocalZ, maxLocalX, maxLocalZ);
-		if (bounds == null)
+		if (!clipLocal(ctx, area, mzx, mzz, sample.plane, minLocalX, minLocalZ, maxLocalX, maxLocalZ, clipBounds))
 			return;
 
-		if (underwater) {
-			int depth = max(1, sample.flatUnderwaterHeight - sample.flatHeight);
-			putUnderwaterFlat(
-				vb, fb, sample.waterType, sample.plane,
-				bounds[0], bounds[1], bounds[2], bounds[3],
-				sample.flatUnderwaterHeight, depth
-			);
-		} else {
-			putWaterSurface(
-				vb, fb, sample.waterType, sample.plane,
-				bounds[0], bounds[1], bounds[2], bounds[3], sample.flatHeight
-			);
+		switch (mode) {
+			case TERRAIN:
+				uploadFlatTilesInBounds(
+					writeCache, ctx, sample, mzx, mzz,
+					clipBounds[0], clipBounds[1], clipBounds[2], clipBounds[3], sample.flatHeight
+				);
+				break;
+			case WATER_UNDERWATER:
+				putFlatQuad(
+					writeCache,
+					sample.waterType, sample.plane,
+					clipBounds[0], clipBounds[1], clipBounds[2], clipBounds[3],
+					sample.flatUnderwaterHeight, UNDERWATER_HSL, max(1, sample.flatUnderwaterHeight - sample.flatHeight)
+				);
+				break;
+			case WATER_SURFACE:
+				putFlatQuad(
+					writeCache,
+					sample.waterType, sample.plane,
+					clipBounds[0], clipBounds[1], clipBounds[2], clipBounds[3],
+					sample.flatHeight, 127, 0
+				);
+				break;
 		}
 	}
 
-	private int[][] buildZoneCornerHeights(
+	private static void fillZoneCornerHeights(
 		ZoneSceneContext ctx,
 		Area area,
 		Sample sample,
 		int mzx,
 		int mzz,
+		int[][] heights,
 		boolean underwater
 	) {
-		int[][] heights = new int[CHUNK_SIZE + 1][CHUNK_SIZE + 1];
 		int plane = sample.plane;
 		for (int vx = 0; vx <= CHUNK_SIZE; ++vx) {
 			for (int vz = 0; vz <= CHUNK_SIZE; ++vz) {
@@ -1134,18 +1132,16 @@ public class HorizonExtender {
 					resolveCornerSurfaceHeight(ctx, sample, aabb, worldPos[0], worldPos[1]);
 			}
 		}
-		return heights;
 	}
 
 	private void uploadZoneQuad(
+		VertexWriteCache.Collection writeCache,
 		ZoneSceneContext ctx,
 		Sample sample,
 		int[][] cornerHeights,
 		int mzx,
 		int mzz,
-		boolean underwater,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb
+		boolean underwater
 	) {
 		int sw = cornerHeights[0][0];
 		int se = cornerHeights[CHUNK_SIZE][0];
@@ -1153,27 +1149,22 @@ public class HorizonExtender {
 		int ne = cornerHeights[CHUNK_SIZE][CHUNK_SIZE];
 		int extent = CHUNK_SIZE * LOCAL_TILE_SIZE;
 
-		if (underwater) {
-			uploadUnderwaterTile(ctx, sample, vb, fb, 0, 0, extent, extent, sw, se, nw, ne, mzx, mzz);
-		} else {
-			putWaterSurface(vb, fb, sample.waterType, sample.plane, 0, 0, extent, extent, sw);
-		}
+		if (underwater)
+			uploadUnderwaterTile(writeCache, ctx, sample, 0, 0, extent, extent, sw, se, nw, ne, mzx, mzz);
+		else
+			putFlatQuad(writeCache, sample.waterType, sample.plane, 0, 0, extent, extent, sw, 127, 0);
 	}
 
-	private void uploadZoneGrid(
+	private void uploadWaterZoneTiles(
+		VertexWriteCache.Collection writeCache,
 		ZoneSceneContext ctx,
 		Sample sample,
 		ZonePlan plan,
 		int[][] cornerHeights,
 		int mzx,
 		int mzz,
-		boolean underwater,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb
+		boolean underwater
 	) {
-		int baseTileX = (mzx << 3) - ctx.sceneOffset;
-		int baseTileY = (mzz << 3) - ctx.sceneOffset;
-
 		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
 			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				if (!plan.hasTile(xoff, zoff))
@@ -1186,23 +1177,18 @@ public class HorizonExtender {
 				int baseX = xoff * LOCAL_TILE_SIZE;
 				int baseZ = zoff * LOCAL_TILE_SIZE;
 
-				if (underwater) {
-					uploadUnderwaterTile(ctx, sample, vb, fb, baseX, baseZ, baseX + LOCAL_TILE_SIZE, baseZ + LOCAL_TILE_SIZE, sw, se, nw, ne, mzx, mzz);
-				} else {
-					putWaterSurface(
-						vb, fb, sample.waterType, sample.plane,
-						baseX, baseZ, baseX + LOCAL_TILE_SIZE, baseZ + LOCAL_TILE_SIZE, sw
-					);
-				}
+				if (underwater)
+					uploadUnderwaterTile(writeCache, ctx, sample, baseX, baseZ, baseX + LOCAL_TILE_SIZE, baseZ + LOCAL_TILE_SIZE, sw, se, nw, ne, mzx, mzz);
+				else
+					putFlatQuad(writeCache, sample.waterType, sample.plane, baseX, baseZ, baseX + LOCAL_TILE_SIZE, baseZ + LOCAL_TILE_SIZE, sw, 127, 0);
 			}
 		}
 	}
 
 	private void uploadUnderwaterTile(
+		VertexWriteCache.Collection writeCache,
 		ZoneSceneContext ctx,
 		Sample sample,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb,
 		int minX,
 		int minZ,
 		int maxX,
@@ -1243,7 +1229,7 @@ public class HorizonExtender {
 		float uvy = fract(swWorld[1]);
 
 		putTriangle(
-			vb, fb,
+			writeCache,
 			UNDERWATER_HSL, UNDERWATER_HSL, UNDERWATER_HSL,
 			neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false),
 			nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false),
@@ -1256,7 +1242,7 @@ public class HorizonExtender {
 			maxX, se, minZ, fract(seWorld[0]), uvy - 1
 		);
 		putTriangle(
-			vb, fb,
+			writeCache,
 			UNDERWATER_HSL, UNDERWATER_HSL, UNDERWATER_HSL,
 			swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false),
 			seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false),
@@ -1286,26 +1272,39 @@ public class HorizonExtender {
 			return null;
 		if (ctx.horizonTileSample != null)
 			return ctx.horizonTileSample;
-		if (isFlatTerrain(ctx))
-			return resolveTerrainSample(ctx);
-		return resolveWaterSample(ctx);
-	}
 
-	@Nullable
-	private Sample resolveWaterSample(ZoneSceneContext ctx) {
-		long start = System.nanoTime();
-		try {
-			Area area = getArea(ctx);
-			assert area != null;
+		Area area = getArea(ctx);
+		assert area != null;
 
-			Reference ref = resolveReference(ctx, area);
+		Reference ref = resolveReference(ctx, area);
+		HashMap<Long, Integer> boundarySurfaceHeights = new HashMap<>();
+		boolean terrain = isFlatTerrain(ctx);
+
+		if (terrain) {
+			buildBoundaryHeightMaps(ctx, area, ref.plane, ref.flatHeight, boundarySurfaceHeights, null);
+			ctx.horizonTileSample = Sample.terrain(
+				ref.plane,
+				ref.flatHeight,
+				boundarySurfaceHeights,
+				ref.waterType,
+				ref.material,
+				ref.groundMaterial,
+				ref.swColor,
+				ref.seColor,
+				ref.neColor,
+				ref.nwColor
+			);
+			log.info(
+				"Horizon terrain enabled for {} using reference tile [{}, {}, {}]: {} at height {}",
+				area.name, ref.worldX, ref.worldY, ref.plane, ref.waterType, ref.flatHeight
+			);
+		} else {
+			HashMap<Long, Integer> boundaryUnderwaterHeights = new HashMap<>();
+			buildBoundaryHeightMaps(ctx, area, ref.plane, ref.flatHeight, boundarySurfaceHeights, boundaryUnderwaterHeights);
+
 			WaterType waterType = ref.waterType;
 			if (waterType == WaterType.NONE)
 				waterType = WaterType.WATER;
-
-			HashMap<Long, Integer> boundarySurfaceHeights = new HashMap<>();
-			HashMap<Long, Integer> boundaryUnderwaterHeights = new HashMap<>();
-			buildBoundaryHeightMaps(ctx, area, ref.plane, ref.flatHeight, boundarySurfaceHeights, boundaryUnderwaterHeights);
 
 			int flatUnderwaterHeight = ref.flatHeight + (int) (ProceduralGenerator.MAX_DEPTH * .55f);
 			if (!boundaryUnderwaterHeights.isEmpty()) {
@@ -1327,43 +1326,8 @@ public class HorizonExtender {
 				"Horizon water enabled for {} using reference tile [{}, {}, {}]: {} at height {}, {} boundary vertices sampled",
 				area.name, ref.worldX, ref.worldY, ref.plane, waterType, ref.flatHeight, boundaryUnderwaterHeights.size()
 			);
-			return ctx.horizonTileSample;
-		} finally {
-			addTiming(ctx, start);
 		}
-	}
-
-	@Nullable
-	private Sample resolveTerrainSample(ZoneSceneContext ctx) {
-		long start = System.nanoTime();
-		try {
-			Area area = getArea(ctx);
-			assert area != null;
-
-			Reference ref = resolveReference(ctx, area);
-			HashMap<Long, Integer> boundarySurfaceHeights = new HashMap<>();
-			buildBoundarySurfaceHeights(ctx, area, ref.plane, ref.flatHeight, boundarySurfaceHeights);
-
-			ctx.horizonTileSample = Sample.terrain(
-				ref.plane,
-				ref.flatHeight,
-				boundarySurfaceHeights,
-				ref.waterType,
-				ref.material,
-				ref.groundMaterial,
-				ref.swColor,
-				ref.seColor,
-				ref.neColor,
-				ref.nwColor
-			);
-			log.info(
-				"Horizon terrain enabled for {} using reference tile [{}, {}, {}]: {} at height {}",
-				area.name, ref.worldX, ref.worldY, ref.plane, ref.waterType, ref.flatHeight
-			);
-			return ctx.horizonTileSample;
-		} finally {
-			addTiming(ctx, start);
-		}
+		return ctx.horizonTileSample;
 	}
 
 	private static void buildBoundaryHeightMaps(
@@ -1401,11 +1365,19 @@ public class HorizonExtender {
 		int stepY,
 		int flatHeight,
 		HashMap<Long, Integer> surfaceHeights,
-		HashMap<Long, Integer> underwaterHeights
+		@Nullable HashMap<Long, Integer> underwaterHeights
 	) {
 		long boundaryKey = Sample.packWorldVertex(boundaryX, boundaryY);
-		if (underwaterHeights.containsKey(boundaryKey))
+		if (underwaterHeights != null && underwaterHeights.containsKey(boundaryKey))
 			return;
+
+		if (underwaterHeights == null) {
+			surfaceHeights.putIfAbsent(
+				boundaryKey,
+				cornerSurfaceHeightAtWorldVertex(ctx, plane, boundaryX, boundaryY, flatHeight)
+			);
+			return;
+		}
 
 		for (int i = 0; i <= EDGE_INSET; i++) {
 			int worldX = boundaryX + stepX * i;
@@ -1494,7 +1466,7 @@ public class HorizonExtender {
 		int worldX,
 		int worldY
 	) {
-		if (ctx.sceneBase == null || ctx.vertexUnderwaterDepth == null)
+		if (ctx.sceneBase == null || ctx.vertexTerrainData == null)
 			return 0;
 
 		int sceneX = worldX - ctx.sceneBase[0];
@@ -1502,15 +1474,8 @@ public class HorizonExtender {
 		int tileExX = sceneX + ctx.sceneOffset;
 		int tileExY = sceneY + ctx.sceneOffset;
 
-		int[][] cornerTiles = {
-			{ 0, 0, 0 },
-			{ -1, 0, 1 },
-			{ 0, -1, 2 },
-			{ -1, -1, 3 },
-		};
-
 		Tile[][][] tiles = ctx.scene.getExtendedTiles();
-		for (int[] corner : cornerTiles) {
+		for (int[] corner : CORNER_TILES) {
 			int tx = tileExX + corner[0];
 			int ty = tileExY + corner[1];
 			int vertexIndex = corner[2];
@@ -1528,9 +1493,11 @@ public class HorizonExtender {
 				continue;
 
 			int[] keys = ProceduralGenerator.tileVertexKeys(ctx, tile);
-			Integer depth = ctx.vertexUnderwaterDepth.get(keys[vertexIndex]);
-			if (depth != null && depth > 0)
-				return depth;
+			if (ctx.vertexTerrainData.containsKey(keys[vertexIndex])) {
+				int depth = ctx.getVertexUnderwaterDepth(keys[vertexIndex]);
+				if (depth > 0)
+					return depth;
+			}
 		}
 
 		return 0;
@@ -1562,27 +1529,27 @@ public class HorizonExtender {
 			}
 		}
 
-		if (ctx.vertexUnderwaterDepth != null) {
+		if (ctx.vertexTerrainData != null) {
 			int height = cornerSurfaceHeightAtWorldVertex(ctx, plane, worldX, worldY, 0);
-			int key = HDUtils.fastVertexHash(new int[] {
+			int key = tileVertexHash(new int[] {
 				sceneX * LOCAL_TILE_SIZE,
-				sceneY * LOCAL_TILE_SIZE,
-				height
+				height,
+				sceneY * LOCAL_TILE_SIZE
 			});
-			Integer depth = ctx.vertexUnderwaterDepth.get(key);
-			if (depth != null && depth > 0)
-				return depth;
+			if (ctx.vertexTerrainData.containsKey(key)) {
+				int depth = ctx.getVertexUnderwaterDepth(key);
+				if (depth > 0)
+					return depth;
+			}
 		}
 
 		return 0;
 	}
 
-	private int shouldExtendTile(ZoneSceneContext ctx, int tileExX, int tileExY) {
-		Sample sample = resolveSample(ctx);
-		if (sample == null)
-			return 0;
+	private int shouldExtendTile(ZoneSceneContext ctx, Sample sample, int tileExX, int tileExY) {
 		if (isFlatTerrain(ctx))
-			return baseShouldExtend(ctx, sample, tileExX, tileExY);
+			return shouldExtendFlatTerrainTile(ctx, tileExX, tileExY, sample.plane) ? 2 : 0;
+
 		int tileZ = sample.plane;
 		if (!shouldRenderAtTile(ctx, tileExX, tileExY, tileZ))
 			return 0;
@@ -1590,8 +1557,7 @@ public class HorizonExtender {
 		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
 			return 2;
 
-		if (ctx.tileIsWater != null &&
-			ctx.tileIsWater[tileZ][tileExX][tileExY] &&
+		if (ctx.isTileFlagSet(tileZ, tileExX, tileExY, TILE_WATER_FLAG) &&
 			(ctx.filledTiles[tileExX][tileExY] & (1 << tileZ)) != 0)
 			return 0;
 
@@ -1645,130 +1611,29 @@ public class HorizonExtender {
 		return false;
 	}
 
-	private void estimateTerrainForZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		long start = System.nanoTime();
-		try {
-			Sample sample = resolveSample(ctx);
-			if (sample == null)
-				return;
-
-			Area area = getArea(ctx);
-			assert area != null;
-
-			ZonePlan plan = planZone(ctx, mzx, mzz);
-			ShellEdges shell = shellEdges(ctx, mzx, mzz);
-			int shellFaces = countTerrainShellFaces(ctx, area, sample, mzx, mzz, shell);
-			if (plan.tileCount == 0 && shellFaces == 0)
-				return;
-
-			int faces = plan.tileCount * 2 + shellFaces;
-			zone.sizeO += faces;
-			zone.sizeF += faces;
-		} finally {
-			addTiming(ctx, start);
-		}
-	}
-
 	private int countTerrainShellFaces(
 		ZoneSceneContext ctx,
 		Area area,
 		Sample sample,
 		int mzx,
 		int mzz,
-		ShellEdges shell
+		ShellEdges shell,
+		int[] clipBounds
 	) {
-		if (shell == null)
-			return 0;
-
-		int faces = 0;
-		int x = shell.extra;
-		int z = shell.extent;
-		if (shell.west)
-			faces += countShellStripTiles(ctx, area, mzx, mzz, sample.plane, -x, 0, 0, z) * 2;
-		if (shell.east)
-			faces += countShellStripTiles(ctx, area, mzx, mzz, sample.plane, z, 0, z + x, z) * 2;
-		if (shell.north)
-			faces += countShellStripTiles(ctx, area, mzx, mzz, sample.plane, 0, -x, z, 0) * 2;
-		if (shell.south)
-			faces += countShellStripTiles(ctx, area, mzx, mzz, sample.plane, 0, z, z, z + x) * 2;
-		if (shell.west && shell.north)
-			faces += countShellStripTiles(ctx, area, mzx, mzz, sample.plane, -x, -x, 0, 0) * 2;
-		if (shell.east && shell.north)
-			faces += countShellStripTiles(ctx, area, mzx, mzz, sample.plane, z, -x, z + x, 0) * 2;
-		if (shell.west && shell.south)
-			faces += countShellStripTiles(ctx, area, mzx, mzz, sample.plane, -x, z, 0, z + x) * 2;
-		if (shell.east && shell.south)
-			faces += countShellStripTiles(ctx, area, mzx, mzz, sample.plane, z, z, z + x, z + x) * 2;
-		return faces;
+		int[] faces = { 0 };
+		forEachShellStrip(shell, (minX, minZ, maxX, maxZ) ->
+			faces[0] += countShellStripTiles(ctx, area, mzx, mzz, sample.plane, minX, minZ, maxX, maxZ, clipBounds) * 2);
+		return faces[0];
 	}
 
-	private void uploadTerrainForZone(
-		ZoneSceneContext ctx,
-		Zone zone,
-		int mzx,
-		int mzz,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb
-	) {
-		long start = System.nanoTime();
-		try {
-			Sample sample = resolveSample(ctx);
-			if (sample == null)
-				return;
-
-			Area area = getArea(ctx);
-			assert area != null;
-
-			int posBefore = vb.position();
-			ZonePlan plan = planZone(ctx, mzx, mzz);
-			if (plan.tileCount > 0) {
-				int[][] cornerHeights = buildTerrainZoneCornerHeights(ctx, area, sample, mzx, mzz);
-				uploadTerrainZoneGrid(ctx, sample, plan, cornerHeights, mzx, mzz, vb, fb);
-			}
-
-			uploadTerrainShell(ctx, area, sample, mzx, mzz, vb, fb);
-
-			if (vb.position() > posBefore)
-				zone.hasWater = true;
-		} finally {
-			addTiming(ctx, start);
-		}
-	}
-
-	private int[][] buildTerrainZoneCornerHeights(
-		ZoneSceneContext ctx,
-		Area area,
-		Sample sample,
-		int mzx,
-		int mzz
-	) {
-		int[][] heights = new int[CHUNK_SIZE + 1][CHUNK_SIZE + 1];
-		int plane = sample.plane;
-		for (int vx = 0; vx <= CHUNK_SIZE; ++vx) {
-			for (int vz = 0; vz <= CHUNK_SIZE; ++vz) {
-				int tileX = (mzx << 3) + vx - ctx.sceneOffset;
-				int tileY = (mzz << 3) + vz - ctx.sceneOffset;
-				int[] worldPos = ctx.sceneToWorld(tileX, tileY, plane);
-				AABB aabb = nearestAabb(area, worldPos[0], worldPos[1], plane);
-				if (aabb == null) {
-					heights[vx][vz] = sample.flatHeight;
-				} else {
-					heights[vx][vz] = resolveCornerSurfaceHeight(ctx, sample, aabb, worldPos[0], worldPos[1]);
-				}
-			}
-		}
-		return heights;
-	}
-
-	private void uploadTerrainZoneGrid(
+	private void uploadTerrainZoneTiles(
+		VertexWriteCache.Collection writeCache,
 		ZoneSceneContext ctx,
 		Sample sample,
 		ZonePlan plan,
 		int[][] cornerHeights,
 		int mzx,
-		int mzz,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb
+		int mzz
 	) {
 		int baseTileX = (mzx << 3) - ctx.sceneOffset;
 		int baseTileY = (mzz << 3) - ctx.sceneOffset;
@@ -1790,64 +1655,13 @@ public class HorizonExtender {
 				int[] nwWorld = ctx.sceneToWorld(baseTileX + xoff, baseTileY + zoff + 1, sample.plane);
 				int[] neWorld = ctx.sceneToWorld(baseTileX + xoff + 1, baseTileY + zoff + 1, sample.plane);
 
-				uploadTerrainTile(ctx, sample, vb, fb, baseX, baseZ, sw, se, nw, ne, swWorld, seWorld, nwWorld, neWorld);
+				uploadTerrainTile(writeCache, ctx, sample, baseX, baseZ, sw, se, nw, ne, swWorld, seWorld, nwWorld, neWorld);
 			}
 		}
 	}
 
-	private void uploadTerrainShell(
-		ZoneSceneContext ctx,
-		Area area,
-		Sample sample,
-		int mzx,
-		int mzz,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb
-	) {
-		ShellEdges shell = shellEdges(ctx, mzx, mzz);
-		if (shell == null)
-			return;
-
-		int x = shell.extra;
-		int z = shell.extent;
-		if (shell.west)
-			uploadTerrainShellStrip(ctx, area, sample, mzx, mzz, vb, fb, -x, 0, 0, z);
-		if (shell.east)
-			uploadTerrainShellStrip(ctx, area, sample, mzx, mzz, vb, fb, z, 0, z + x, z);
-		if (shell.north)
-			uploadTerrainShellStrip(ctx, area, sample, mzx, mzz, vb, fb, 0, -x, z, 0);
-		if (shell.south)
-			uploadTerrainShellStrip(ctx, area, sample, mzx, mzz, vb, fb, 0, z, z, z + x);
-		if (shell.west && shell.north)
-			uploadTerrainShellStrip(ctx, area, sample, mzx, mzz, vb, fb, -x, -x, 0, 0);
-		if (shell.east && shell.north)
-			uploadTerrainShellStrip(ctx, area, sample, mzx, mzz, vb, fb, z, -x, z + x, 0);
-		if (shell.west && shell.south)
-			uploadTerrainShellStrip(ctx, area, sample, mzx, mzz, vb, fb, -x, z, 0, z + x);
-		if (shell.east && shell.south)
-			uploadTerrainShellStrip(ctx, area, sample, mzx, mzz, vb, fb, z, z, z + x, z + x);
-	}
-
-	private void uploadTerrainShellStrip(
-		ZoneSceneContext ctx,
-		Area area,
-		Sample sample,
-		int mzx,
-		int mzz,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb,
-		int minLocalX,
-		int minLocalZ,
-		int maxLocalX,
-		int maxLocalZ
-	) {
-		int[] bounds = clipLocal(ctx, area, mzx, mzz, sample.plane, minLocalX, minLocalZ, maxLocalX, maxLocalZ);
-		if (bounds == null)
-			return;
-		uploadFlatTilesInBounds(ctx, sample, mzx, mzz, bounds[0], bounds[1], bounds[2], bounds[3], sample.flatHeight, vb, fb);
-	}
-
 	private void uploadFlatTilesInBounds(
+		VertexWriteCache.Collection writeCache,
 		ZoneSceneContext ctx,
 		Sample sample,
 		int mzx,
@@ -1856,9 +1670,7 @@ public class HorizonExtender {
 		int minZ,
 		int maxX,
 		int maxZ,
-		int height,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb
+		int height
 	) {
 		int baseTileX = (mzx << 3) - ctx.sceneOffset;
 		int baseTileY = (mzz << 3) - ctx.sceneOffset;
@@ -1882,7 +1694,7 @@ public class HorizonExtender {
 				int[] nwWorld = ctx.sceneToWorld(baseTileX + baseX / LOCAL_TILE_SIZE, baseTileY + baseZ / LOCAL_TILE_SIZE + 1, plane);
 				int[] neWorld = ctx.sceneToWorld(baseTileX + baseX / LOCAL_TILE_SIZE + 1, baseTileY + baseZ / LOCAL_TILE_SIZE + 1, plane);
 
-				uploadTerrainTile(ctx, sample, vb, fb, baseX, baseZ, height, height, height, height, swWorld, seWorld, nwWorld, neWorld);
+				uploadTerrainTile(writeCache, ctx, sample, baseX, baseZ, height, height, height, height, swWorld, seWorld, nwWorld, neWorld);
 			}
 		}
 	}
@@ -1894,10 +1706,9 @@ public class HorizonExtender {
 	}
 
 	private void uploadTerrainTile(
+		VertexWriteCache.Collection writeCache,
 		ZoneSceneContext ctx,
 		Sample sample,
-		GpuIntBuffer vb,
-		GpuIntBuffer fb,
 		int baseX,
 		int baseZ,
 		int sw,
@@ -1910,9 +1721,11 @@ public class HorizonExtender {
 		int[] neWorld
 	) {
 		if (sample.isWaterSurface()) {
-			putWaterSurface(
-				vb, fb, sample.waterType, sample.plane,
-				baseX, baseZ, baseX + LOCAL_TILE_SIZE, baseZ + LOCAL_TILE_SIZE, sw
+			putFlatQuad(
+				writeCache,
+				sample.waterType, sample.plane,
+				baseX, baseZ, baseX + LOCAL_TILE_SIZE, baseZ + LOCAL_TILE_SIZE,
+				sw, 127, 0
 			);
 			return;
 		}
@@ -1926,7 +1739,7 @@ public class HorizonExtender {
 		float uvy = fract(swWorld[1]);
 
 		putTriangle(
-			vb, fb,
+			writeCache,
 			sample.neColor, sample.nwColor, sample.seColor,
 			neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false),
 			nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false),
@@ -1937,7 +1750,7 @@ public class HorizonExtender {
 			baseX + LOCAL_TILE_SIZE, se, baseZ, fract(seWorld[0]), uvy - 1
 		);
 		putTriangle(
-			vb, fb,
+			writeCache,
 			sample.swColor, sample.seColor, sample.nwColor,
 			swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false),
 			seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false),
@@ -1946,45 +1759,6 @@ public class HorizonExtender {
 			baseX, sw, baseZ, uvx - 1, uvy - 1,
 			baseX + LOCAL_TILE_SIZE, se, baseZ, fract(seWorld[0]), uvy - 1,
 			baseX, nw, baseZ + LOCAL_TILE_SIZE, uvx - 1, uvy
-		);
-	}
-
-	private static void buildBoundarySurfaceHeights(
-		ZoneSceneContext ctx,
-		Area area,
-		int plane,
-		int flatHeight,
-		HashMap<Long, Integer> surfaceHeights
-	) {
-		area.normalize();
-		for (AABB aabb : area.aabbs) {
-			if (aabb.minZ != Integer.MIN_VALUE && aabb.maxZ != Integer.MAX_VALUE &&
-				(plane < aabb.minZ || plane > aabb.maxZ))
-				continue;
-
-			for (int x = aabb.minX; x <= aabb.maxX + 1; x++) {
-				sampleBoundaryVertex(ctx, plane, x, aabb.minY, flatHeight, surfaceHeights);
-				sampleBoundaryVertex(ctx, plane, x, aabb.maxY + 1, flatHeight, surfaceHeights);
-			}
-			for (int y = aabb.minY + 1; y <= aabb.maxY; y++) {
-				sampleBoundaryVertex(ctx, plane, aabb.minX, y, flatHeight, surfaceHeights);
-				sampleBoundaryVertex(ctx, plane, aabb.maxX + 1, y, flatHeight, surfaceHeights);
-			}
-		}
-	}
-
-	private static void sampleBoundaryVertex(
-		ZoneSceneContext ctx,
-		int plane,
-		int boundaryX,
-		int boundaryY,
-		int flatHeight,
-		HashMap<Long, Integer> surfaceHeights
-	) {
-		long key = Sample.packWorldVertex(boundaryX, boundaryY);
-		surfaceHeights.putIfAbsent(
-			key,
-			cornerSurfaceHeightAtWorldVertex(ctx, plane, boundaryX, boundaryY, flatHeight)
 		);
 	}
 }

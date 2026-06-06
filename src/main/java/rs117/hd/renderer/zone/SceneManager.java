@@ -21,7 +21,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.renderer.zone.HorizonExtender;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -772,8 +771,6 @@ public class SceneManager {
 		checkGLErrors();
 		root.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		log.debug("swapScene time: {}", sw);
-		if (root.sceneContext != null)
-			horizonExtender.logSceneLoadTiming(root.sceneContext);
 	}
 
 	private void loadSubScene(WorldView worldView, Scene scene) {

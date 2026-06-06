@@ -110,6 +110,9 @@ public class SceneUploader implements AutoCloseable {
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
 
+	@Inject
+	private HorizonExtender horizonExtender;
+
 	@FunctionalInterface
 	public interface OnBeforeProcessTileFunc {
 		void invoke(Tile t, boolean isEstimate) throws InterruptedException;
@@ -176,6 +179,11 @@ public class SceneUploader implements AutoCloseable {
 		faceOverrides.release();
 		faceMaterials.release();
 		faceUVTypes.release();
+
+		if (writeCache != null) {
+			writeCache.release();
+			writeCache = null;
+		}
 	}
 
 	private void ensureVerticesAllocated(int vertexCount) {
@@ -201,6 +209,7 @@ public class SceneUploader implements AutoCloseable {
 
 		if (ctx.fillGaps)
 			estimateZoneGapFillers(ctx, zone, mzx, mzz);
+		horizonExtender.estimateForZone(ctx, zone, mzx, mzz);
 	}
 
 	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
@@ -232,6 +241,8 @@ public class SceneUploader implements AutoCloseable {
 
 			if (z == 0) {
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, vb, ab, fb);
+				if (vb != null)
+					horizonExtender.uploadUnderwaterForZone(ctx, zone, mzx, mzz, vb, fb);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, vb, ab, fb);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, vb, ab, fb);
 				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, vb, ab, fb);
@@ -248,6 +259,7 @@ public class SceneUploader implements AutoCloseable {
 			// Upload water surface tiles to be drawn after everything else
 			if (zone.hasWater)
 				uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
+			horizonExtender.uploadSurfaceForZone(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 
 			if (ctx.fillGaps)
@@ -2161,7 +2173,7 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	public void estimateZoneGapFillers(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		if (ctx.sceneBase == null || ctx.currentArea != null && !ctx.currentArea.fillGaps)
+		if (ctx.sceneBase == null || ctx.currentArea != null && (!ctx.currentArea.fillGaps || ctx.currentArea.hasHorizonTiles()))
 			return;
 
 		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
@@ -2202,7 +2214,8 @@ public class SceneUploader implements AutoCloseable {
 		GpuIntBuffer vb,
 		GpuIntBuffer fb
 	) {
-		if (ctx.sceneBase == null || !zone.hasGapFiller || ctx.currentArea != null && !ctx.currentArea.fillGaps)
+		if (ctx.sceneBase == null || !zone.hasGapFiller ||
+			ctx.currentArea != null && (!ctx.currentArea.fillGaps || ctx.currentArea.hasHorizonTiles()))
 			return;
 
 		assert vb != null && fb != null;

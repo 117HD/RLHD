@@ -30,6 +30,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.renderer.legacy.LegacySceneContext;
+import rs117.hd.renderer.zone.HorizonExtender;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
@@ -84,6 +85,9 @@ public class ProceduralGenerator {
 	@Inject
 	private WaterTypeManager waterTypeManager;
 
+	@Inject
+	private HorizonExtender horizonExtender;
+
 	private final ConcurrentPool<GeneratorContext> GENERATOR_POOL = new ConcurrentPool<>(GeneratorContext::new);
 
 	final class GeneratorContext implements AutoCloseable {
@@ -120,6 +124,9 @@ public class ProceduralGenerator {
 		sceneContext.tileOverrideIndices = null;
 		sceneContext.vertexTerrainTexture = null;
 		sceneContext.vertexTerrainNormals = null;
+		sceneContext.horizonTileSample = null;
+		sceneContext.horizonTileMask = null;
+		sceneContext.underwaterDepthLevels = null;
 	}
 
 	public static void faceVertexKeys(Tile tile, int face, int[][] vertices, int[] vertexHashes) {
@@ -138,6 +145,9 @@ public class ProceduralGenerator {
 	}
 
 	public void generateSceneData(SceneContext sceneCtx, SceneContext prevSceneCtx) {
+		sceneCtx.horizonTileSample = null;
+		sceneCtx.horizonTileMask = null;
+		sceneCtx.underwaterDepthLevels = null;
 		try (GeneratorContext ctx = GENERATOR_POOL.acquire()) {
 			long timerTotal = System.currentTimeMillis();
 			long timerCalculateMainOverrides, timerCalculateTerrainNormals, timerGenerateTerrainData, timerGenerateUnderwaterTerrain;
@@ -821,6 +831,8 @@ public class ProceduralGenerator {
 				}
 			}
 
+			sceneContext.underwaterDepthLevels = underwaterDepthLevels;
+
 			int minZ = MAX_Z, maxZ = 0;
 			Arrays.fill(minX, sizeX);
 			Arrays.fill(minY, sizeY);
@@ -983,6 +995,8 @@ public class ProceduralGenerator {
 				}
 			}
 
+			horizonExtender.prepareSceneTerrain(sceneContext, tiles);
+
 			// Sink terrain further from shore by desired levels.
 			// noinspection ConstantValue
 			assert DEPTH_LEVEL_SLOPE.length <= Byte.MAX_VALUE;
@@ -999,8 +1013,12 @@ public class ProceduralGenerator {
 							// it creates a 'wall' to prevent fog from passing through.
 							// Not incredibly effective, but better than nothing.
 							if (x == 0 || y == 0 || x == EXTENDED_SCENE_SIZE || y == EXTENDED_SCENE_SIZE) {
-								zUnderwaterDepthLevels[x][y] = 0;
-								continue;
+								if (!(HorizonExtender.isEnabled(sceneContext) &&
+									HorizonExtender.shouldPatchWaterAtTile(sceneContext, x, y, z)))
+								{
+									zUnderwaterDepthLevels[x][y] = 0;
+									continue;
+								}
 							}
 
 							if (zUnderwaterDepthLevels[x - 1][y] < tileHeight ||
