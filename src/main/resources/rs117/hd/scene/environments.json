@@ -1539,6 +1539,20 @@
     "waterCausticsStrength": 4
   },
   {
+    "area": "RED_REEF_UNDERWATER",
+    "isUnderwater": true,
+    "ambientColor": "#255590",
+    "ambientStrength": 9,
+    "directionalColor": "#71a3d0",
+    "directionalStrength": 0.6,
+    "fogColor": "#133156",
+    "fogDepth": 35,
+    "groundFogStart": -50,
+    "groundFogEnd": -700,
+    "groundFogOpacity": 0.5,
+    "waterCausticsStrength": 42
+  },
+  {
     "area": "LUNAR_DREAM_WORLD",
     "allowSkyOverride": false,
     "ambientColor": "#77a0ff",
