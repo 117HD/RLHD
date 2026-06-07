@@ -75484,9 +75484,8 @@
   },
   {
     "description": "Ocean Rocks - Plain",
-    "baseMaterial": "ROCK_3_SEMI_SMOOTH_LIGHT",
+    "baseMaterial": "ROCK_7_LIGHT",
     "uvType": "BOX",
-    "uvScale": 1.2,
     "objectIds": [
       "OCEAN_OUTCROP_ROCK01",
       "OCEAN_OUTCROP_ROCK02",
@@ -75507,7 +75506,7 @@
   },
   {
     "description": "Ocean Rocks - Skeleton",
-    "baseMaterial": "ROCK_3_LIGHT",
+    "baseMaterial": "ROCK_7_LIGHT",
     "uvType": "BOX",
     "objectIds": [
       "SAILING_CHARTING_GENERIC_ROCK_BAY_OF_SARIM",
