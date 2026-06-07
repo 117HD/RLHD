@@ -76687,6 +76687,11 @@
         "colors": "h == 19"
       },
       {
+        "description": "Metal - Dragon",
+        "baseMaterial": "METALLIC_1_LIGHTER_SMOOTH",
+        "colors": "h == 0 && s == 7"
+      },
+      {
         "description": "Metal",
         "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
         "colors": "h == 0 || h > 10"
@@ -76720,6 +76725,31 @@
     ]
   },
   {
+    "description": "Sailing - Facility - Cargo Hold - Dragon",
+    "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_RAFT_CARGO",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_RAFT_NO_CARGO",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_2X5",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_2X5_CARGO",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_2X5_NO_CARGO",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE_CARGO",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE_NO_CARGO"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
     "description": "Sailing - Facility - Cargo Hold & Cannon - All Others",
     "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT",
     "uvType": "BOX",
@@ -76748,9 +76778,6 @@
       "SAILING_BOAT_CARGO_HOLD_IRONWOOD_RAFT",
       "SAILING_BOAT_CARGO_HOLD_IRONWOOD_RAFT_CARGO",
       "SAILING_BOAT_CARGO_HOLD_IRONWOOD_RAFT_NO_CARGO",
-      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_RAFT",
-      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_RAFT_CARGO",
-      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_RAFT_NO_CARGO",
       "SAILING_BOAT_CARGO_HOLD_OAK_2X5",
       "SAILING_BOAT_CARGO_HOLD_OAK_2X5_CARGO",
       "SAILING_BOAT_CARGO_HOLD_OAK_2X5_NO_CARGO",
@@ -76766,9 +76793,6 @@
       "SAILING_BOAT_CARGO_HOLD_IRONWOOD_2X5",
       "SAILING_BOAT_CARGO_HOLD_IRONWOOD_2X5_CARGO",
       "SAILING_BOAT_CARGO_HOLD_IRONWOOD_2X5_NO_CARGO",
-      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_2X5",
-      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_2X5_CARGO",
-      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_2X5_NO_CARGO",
       "SAILING_BOAT_CARGO_HOLD_OAK_LARGE",
       "SAILING_BOAT_CARGO_HOLD_OAK_LARGE_CARGO",
       "SAILING_BOAT_CARGO_HOLD_OAK_LARGE_NO_CARGO",
@@ -76783,10 +76807,7 @@
       "SAILING_BOAT_CARGO_HOLD_CAMPHOR_LARGE_NO_CARGO",
       "SAILING_BOAT_CARGO_HOLD_IRONWOOD_LARGE",
       "SAILING_BOAT_CARGO_HOLD_IRONWOOD_LARGE_CARGO",
-      "SAILING_BOAT_CARGO_HOLD_IRONWOOD_LARGE_NO_CARGO",
-      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE",
-      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE_CARGO",
-      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE_NO_CARGO"
+      "SAILING_BOAT_CARGO_HOLD_IRONWOOD_LARGE_NO_CARGO"
     ],
     "colorOverrides": [
       {
@@ -76795,7 +76816,12 @@
         "baseMaterial": "GRUNGE_3_SMOOTH"
       },
       {
-        "description": "Metal",
+        "description": "Metal - Dragon",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH"
+      },
+      {
+        "description": "Metal - All Others",
         "colors": "h == 0 || h > 10 || h == 7 && s == 7",
         "baseMaterial": "METALLIC_1_LIGHTER_SMOOTH"
       }
