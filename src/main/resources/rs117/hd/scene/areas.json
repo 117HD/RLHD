@@ -7713,7 +7713,9 @@
     "name": "PEST_CONTROL",
     "regions": [
       10536
-    ]
+    ],
+    "horizonTileReference": [ 2666, 6212 ],
+    "hideOtherAreas": true
   },
   {
     "name": "CRASH_ISLAND",
@@ -8326,6 +8328,7 @@
     "aabbs": [
       [ 1856, 4800, 1919, 4862 ]
     ],
+    "horizonTileReference": [ 1886, 4818 ],
     "hideOtherAreas": true
   },
   {
@@ -8333,6 +8336,7 @@
     "aabbs": [
       [ 1984, 4800, 2047, 4862 ]
     ],
+    "horizonTileReference": [ 2014, 4819 ],
     "hideOtherAreas": true
   },
   {
@@ -8340,6 +8344,7 @@
     "aabbs": [
       [ 1920, 4800, 1983, 4862 ]
     ],
+    "horizonTileReference": [ 2014, 4819 ],
     "hideOtherAreas": true
   },
   {
@@ -8421,7 +8426,9 @@
     "aabbs": [
       [ 2553, 4802, 2622, 4864 ]
     ],
-    "hideOtherAreas": true
+    "hideOtherAreas": true,
+    "horizonTileReference": [ 2580, 4825 ],
+    "horizonFlatTerrain": true
   },
   {
     "name": "FIRE_ALTAR_CULL_FIRE_LIGHTS",
@@ -8494,9 +8501,10 @@
   {
     "name": "WATER_ALTAR",
     "aabbs": [
-      [ 2688, 4800, 2750, 4862 ]
+      [ 2689, 4859, 2748, 4802 ]
     ],
-    "hideOtherAreas": true
+    "hideOtherAreas": true,
+    "horizonTileReference": [ 2709, 4804 ]
   },
   {
     "name": "MIND_ALTAR",
@@ -8518,7 +8526,8 @@
     "aabbs": [
       [ 3202, 4800, 3263, 4863 ]
     ],
-    "hideOtherAreas": true
+    "hideOtherAreas": true,
+    "horizonTileReference": [ 3216, 3437 ]
   },
   {
     "name": "TRUE_BLOOD_ALTAR_CRYSTAL_POOL",

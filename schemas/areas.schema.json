@@ -24,6 +24,19 @@
         "type": "boolean",
         "description": "Whether to fill gaps in the ground. Can only be disabled if hideOtherAreas is true."
       },
+      "horizonTileReference": {
+        "type": "array",
+        "description": "World tile coordinates [x, y] or [x, y, plane] used to sample horizon fill height and material. When set, empty tiles outside this area's AABBs are filled to the scene edge.",
+        "items": {
+          "type": "integer"
+        },
+        "minItems": 2,
+        "maxItems": 3
+      },
+      "horizonFlatTerrain": {
+        "type": "boolean",
+        "description": "When true with horizonTileReference set, extend flat land instead of water (no underwater procgen)."
+      },
       "areas": {
         "type": "array",
         "description": "A list of other areas to include in this area.",
