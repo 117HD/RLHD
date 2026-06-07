@@ -80525,7 +80525,11 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 7" ],
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 7",
         "baseMaterial": "ROPE_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.41
