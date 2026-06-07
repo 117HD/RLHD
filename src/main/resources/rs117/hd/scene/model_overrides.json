@@ -22517,6 +22517,7 @@
     "objectIds": [
       "JUNGLETREE1",
       "JUNGLETREE2",
+      "JUNGLETREE2_SHORT",
       "JUNGLETREE1_KARAMJA",
       "JUNGLETREE2_KARAMJA",
       "JUNGLETREE2BIG_KARAMJA",
@@ -80293,7 +80294,8 @@
   },
   {
     "description": "The Crown Jewel - Dungeon Entrance",
-    "baseMaterial": "GRAVEL",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "terrainVertexSnap": true,
     "uvScale": 0.6,
     "uvType": "BOX",
     "objectIds": [
@@ -82348,8 +82350,10 @@
     ]
   },
   {
-    "description": "The Great Conch - Plant - Rock - Rocks with plants",
-    "baseMaterial": "SAND_3",
+    "description": "Unbuilt Crab Trap",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "terrainVertexSnap": true,
+    "depthBias": 50,
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 478,
