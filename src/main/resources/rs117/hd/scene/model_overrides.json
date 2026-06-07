@@ -76676,11 +76676,6 @@
     ],
     "colorOverrides": [
       {
-        "description": "Metal",
-        "colors": "h == 1",
-        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
-      },
-      {
         "description": "Rope",
         "colors": "h == 8",
         "baseMaterial": "ROPE",
@@ -76688,7 +76683,7 @@
         "uvScale": 0.5
       },
       {
-        "description": "Metal",
+        "description": "Triangle that should be hidden",
         "baseMaterial": "TRANSPARENT",
         "colors": "h == 19"
       },
