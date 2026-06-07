@@ -7713,7 +7713,9 @@
     "name": "PEST_CONTROL",
     "regions": [
       10536
-    ]
+    ],
+    "horizonTileReference": [ 2666, 6212 ],
+    "hideOtherAreas": true
   },
   {
     "name": "CRASH_ISLAND",
@@ -8326,6 +8328,7 @@
     "aabbs": [
       [ 1856, 4800, 1919, 4862 ]
     ],
+    "horizonTileReference": [ 1886, 4818 ],
     "hideOtherAreas": true
   },
   {
@@ -8333,6 +8336,7 @@
     "aabbs": [
       [ 1984, 4800, 2047, 4862 ]
     ],
+    "horizonTileReference": [ 2014, 4819 ],
     "hideOtherAreas": true
   },
   {
@@ -8340,6 +8344,7 @@
     "aabbs": [
       [ 1920, 4800, 1983, 4862 ]
     ],
+    "horizonTileReference": [ 2014, 4819 ],
     "hideOtherAreas": true
   },
   {

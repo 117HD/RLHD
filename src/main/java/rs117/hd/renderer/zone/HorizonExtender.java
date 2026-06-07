@@ -234,14 +234,20 @@ public class HorizonExtender {
 	}
 
 	public static boolean isEnabled(SceneContext ctx) {
-		if (!ctx.enableHorizonTiles)
+		if (!ctx.enableHorizonTiles || ctx.sceneBase == null)
 			return false;
-		Area area = getArea(ctx);
-		return ctx.sceneBase != null && area != null && area.hasHorizonTiles();
+		Area playArea = getPlayArea(ctx);
+		return playArea != null && playArea.hasHorizonTiles();
+	}
+
+	public static boolean shouldDiscardVisibleZone(SceneContext ctx) {
+		if (!ctx.enableHorizonTiles || ctx.horizonTileArea == null)
+			return false;
+		return getPlayArea(ctx) == null;
 	}
 
 	public static boolean shouldPatchWaterAtTile(SceneContext ctx, int tileExX, int tileExY, int plane) {
-		Area area = getArea(ctx);
+		Area area = getPlayArea(ctx);
 		if (area != null && area.horizonFlatTerrain)
 			return false;
 		if (!isEnabled(ctx) || plane != getPlane(ctx))
@@ -254,13 +260,13 @@ public class HorizonExtender {
 			return mask[tileExX][tileExY];
 
 		Tile tile = ctx.scene.getExtendedTiles()[plane][tileExX][tileExY];
-		return isWithinLoadedRange(ctx, tileExX, tileExY) &&
-			isOutsideAreaBounds(ctx, tileExX, tileExY, plane) &&
+		return isWithinGpuRange(ctx, tileExX, tileExY) &&
+			isOutsidePlayAreaBounds(ctx, tileExX, tileExY, plane) &&
 			isEligiblePatchTile(tile);
 	}
 
 	private static boolean isFlatTerrain(SceneContext ctx) {
-		Area area = getArea(ctx);
+		Area area = getPlayArea(ctx);
 		return area != null && area.horizonFlatTerrain;
 	}
 
@@ -275,8 +281,21 @@ public class HorizonExtender {
 		return null;
 	}
 
+	@Nullable
+	private static Area getPlayArea(SceneContext ctx) {
+		if (ctx.currentArea != null && ctx.currentArea.hasHorizonTiles())
+			return ctx.currentArea;
+		return null;
+	}
+
+	@Nullable
+	private static Area getReferenceArea(SceneContext ctx) {
+		Area playArea = getPlayArea(ctx);
+		return playArea != null ? playArea : getArea(ctx);
+	}
+
 	private static int getPlane(SceneContext ctx) {
-		Area area = getArea(ctx);
+		Area area = getReferenceArea(ctx);
 		if (area == null || area.horizonTileReference == null)
 			return 0;
 		int[] ref = area.horizonTileReference;
@@ -301,16 +320,6 @@ public class HorizonExtender {
 
 	private static int gpuExtraLocalExtent(SceneContext ctx) {
 		return GPU_EXTRA_CHUNKS * CHUNK_SIZE * LOCAL_TILE_SIZE;
-	}
-
-	private static boolean isWithinLoadedRange(SceneContext ctx, int tileExX, int tileExY) {
-		if (ctx.sceneBase == null)
-			return true;
-		int tileX = tileExX - ctx.sceneOffset;
-		int tileY = tileExY - ctx.sceneOffset;
-		int min = loadedSceneMin(ctx);
-		int max = loadedSceneMax(ctx);
-		return tileX > min && tileY > min && tileX < max && tileY < max;
 	}
 
 	private static boolean isWithinGpuRange(SceneContext ctx, int tileExX, int tileExY) {
@@ -362,8 +371,8 @@ public class HorizonExtender {
 		return tile == null || isHiddenGroundTile(tile);
 	}
 
-	private static boolean isOutsideAreaBounds(SceneContext ctx, int tileExX, int tileExY, int plane) {
-		Area area = getArea(ctx);
+	private static boolean isOutsidePlayAreaBounds(SceneContext ctx, int tileExX, int tileExY, int plane) {
+		Area area = getPlayArea(ctx);
 		if (area == null)
 			return true;
 		int[] worldPos = ctx.extendedSceneToWorld(tileExX, tileExY, plane);
@@ -381,8 +390,8 @@ public class HorizonExtender {
 		Tile[][] planeTiles = tiles[plane];
 		for (int x = 0; x < ctx.sizeX; ++x) {
 			for (int y = 0; y < ctx.sizeZ; ++y) {
-				mask[x][y] = isWithinLoadedRange(ctx, x, y) &&
-					isOutsideAreaBounds(ctx, x, y, plane) &&
+				mask[x][y] = isWithinGpuRange(ctx, x, y) &&
+					isOutsidePlayAreaBounds(ctx, x, y, plane) &&
 					isEligiblePatchTile(planeTiles[x][y]);
 			}
 		}
@@ -394,7 +403,7 @@ public class HorizonExtender {
 			return false;
 		if (!isWithinGpuRange(ctx, tileExX, tileExY))
 			return false;
-		return isOutsideAreaBounds(ctx, tileExX, tileExY, plane);
+		return isOutsidePlayAreaBounds(ctx, tileExX, tileExY, plane);
 	}
 
 	private static boolean shouldExtendFlatTerrainTile(
@@ -407,12 +416,12 @@ public class HorizonExtender {
 			return false;
 
 		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE) {
-			if (!isOutsideAreaBounds(ctx, tileExX, tileExY, plane))
+			if (!isOutsidePlayAreaBounds(ctx, tileExX, tileExY, plane))
 				return false;
 			return isWithinGpuRange(ctx, tileExX, tileExY);
 		}
 
-		if (isOutsideAreaBounds(ctx, tileExX, tileExY, plane))
+		if (isOutsidePlayAreaBounds(ctx, tileExX, tileExY, plane))
 			return true;
 
 		Tile tile = ctx.scene.getExtendedTiles()[plane][tileExX][tileExY];
@@ -846,7 +855,7 @@ public class HorizonExtender {
 	}
 
 	public void prepareSceneTerrain(SceneContext ctx, Tile[][][] tiles) {
-		Area area = getArea(ctx);
+		Area area = getPlayArea(ctx);
 		if (isFlatTerrain(ctx))
 			return;
 		if (!isEnabled(ctx))
@@ -959,7 +968,7 @@ public class HorizonExtender {
 		ZonePlan plan = planZone(ctx, mzx, mzz, sample);
 		ShellEdges shell = shellEdges(ctx, mzx, mzz);
 		int shellFaces = terrain ?
-			countTerrainShellFaces(ctx, getArea(ctx), sample, mzx, mzz, shell, UPLOAD_SCRATCH.get().clipBounds) :
+			countTerrainShellFaces(ctx, getPlayArea(ctx), sample, mzx, mzz, shell, UPLOAD_SCRATCH.get().clipBounds) :
 			countShellQuads(shell) * 2;
 		if (plan.tileCount == 0 && shellFaces == 0)
 			return;
@@ -1025,7 +1034,7 @@ public class HorizonExtender {
 			if (sample == null)
 				return;
 
-			Area area = getArea(ctx);
+			Area area = getPlayArea(ctx);
 			assert area != null;
 
 			int posBefore = vb.position();
@@ -1257,7 +1266,7 @@ public class HorizonExtender {
 	}
 
 	private static int resolveSurfaceAt(ZoneSceneContext ctx, Sample sample, int worldX, int worldY) {
-		Area area = getArea(ctx);
+		Area area = getPlayArea(ctx);
 		if (area == null)
 			return sample.flatHeight;
 		AABB aabb = nearestAabb(area, worldX, worldY, sample.plane);
@@ -1273,7 +1282,7 @@ public class HorizonExtender {
 		if (ctx.horizonTileSample != null)
 			return ctx.horizonTileSample;
 
-		Area area = getArea(ctx);
+		Area area = getReferenceArea(ctx);
 		assert area != null;
 
 		Reference ref = resolveReference(ctx, area);
@@ -1550,65 +1559,7 @@ public class HorizonExtender {
 		if (isFlatTerrain(ctx))
 			return shouldExtendFlatTerrainTile(ctx, tileExX, tileExY, sample.plane) ? 2 : 0;
 
-		int tileZ = sample.plane;
-		if (!shouldRenderAtTile(ctx, tileExX, tileExY, tileZ))
-			return 0;
-
-		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
-			return 2;
-
-		if (ctx.isTileFlagSet(tileZ, tileExX, tileExY, TILE_WATER_FLAG) &&
-			(ctx.filledTiles[tileExX][tileExY] & (1 << tileZ)) != 0)
-			return 0;
-
-		Tile tile = ctx.scene.getExtendedTiles()[tileZ][tileExX][tileExY];
-		if (tile == null || isHiddenGroundTile(tile))
-			return 2;
-
-		if ((ctx.filledTiles[tileExX][tileExY] & (1 << tileZ)) != 0 && hasVisibleLand(ctx, tile, tileExX, tileExY, tileZ))
-			return 0;
-
-		return 2;
-	}
-
-	private boolean hasVisibleLand(SceneContext ctx, Tile tile, int tileExX, int tileExY, int tileZ) {
-		if (tile.getBridge() != null)
-			tile = tile.getBridge();
-
-		SceneTilePaint paint = tile.getSceneTilePaint();
-		if (paint != null && paint.getNeColor() != HIDDEN_HSL) {
-			int[] worldPos = ctx.extendedSceneToWorld(tileExX, tileExY, tileZ);
-			var override = tileOverrideManager.getOverride(ctx, tile, worldPos);
-			if (proceduralGenerator.seasonalWaterType(override, paint.getTexture()) != WaterType.NONE)
-				return false;
-			return true;
-		}
-
-		SceneTileModel model = tile.getSceneTileModel();
-		if (model == null)
-			return false;
-
-		int[] worldPos = ctx.extendedSceneToWorld(tileExX, tileExY, tileZ);
-		int overlayId = OVERLAY_FLAG | ctx.scene.getOverlayIds()[tileZ][tileExX][tileExY];
-		int underlayId = ctx.scene.getUnderlayIds()[tileZ][tileExX][tileExY];
-		var overlayOverride = tileOverrideManager.getOverride(ctx, tile, worldPos, overlayId);
-		var underlayOverride = tileOverrideManager.getOverride(ctx, tile, worldPos, underlayId);
-
-		final int[] triangleTextures = model.getTriangleTextureId();
-		final int[] triangleColorA = model.getTriangleColorA();
-		for (int face = 0; face < triangleColorA.length; face++) {
-			if (triangleColorA[face] == HIDDEN_HSL)
-				continue;
-
-			int textureId = triangleTextures == null ? -1 : triangleTextures[face];
-			boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
-			var override = isOverlay ? overlayOverride : underlayOverride;
-			if (proceduralGenerator.seasonalWaterType(override, textureId) != WaterType.NONE)
-				continue;
-
-			return true;
-		}
-		return false;
+		return shouldRenderAtTile(ctx, tileExX, tileExY, sample.plane) ? 2 : 0;
 	}
 
 	private int countTerrainShellFaces(
