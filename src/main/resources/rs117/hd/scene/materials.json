@@ -1886,6 +1886,23 @@
     "brightness": 1.5
   },
   {
+    "name": "ROCK_7",
+    "normalMap": "ROCK_3_N",
+    "displacementScale": 0.0,
+    "specularStrength": 0.3,
+    "specularGloss": 40.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.4
+    ]
+  },
+  {
+    "name": "ROCK_7_LIGHT",
+    "parent": "ROCK_7",
+    "brightness": 1.194
+  },
+  {
     "name": "ROPE"
   },
   {
@@ -1928,6 +1945,11 @@
     "brightness": 1.35
   },
   {
+    "name": "CARPET_ULTRA_LIGHT",
+    "parent": "CARPET",
+    "brightness": 1.45
+  },
+  {
     "name": "CARPET_LIGHT_SMOOTH",
     "parent": "CARPET_LIGHT",
     "normalMap": null
@@ -1940,6 +1962,11 @@
   {
     "name": "CARPET_SUPER_LIGHT_SMOOTH",
     "parent": "CARPET_SUPER_LIGHT",
+    "normalMap": null
+  },
+  {
+    "name": "CARPET_ULTRA_LIGHT_SMOOTH",
+    "parent": "CARPET_ULTRA_LIGHT",
     "normalMap": null
   },
   {
