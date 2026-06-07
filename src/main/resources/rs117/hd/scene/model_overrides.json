@@ -76791,6 +76791,11 @@
     ],
     "colorOverrides": [
       {
+        "description": "Fuse",
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
+      },
+      {
         "description": "Metal",
         "colors": "h == 0 || h > 10 || h == 7 && s == 7",
         "baseMaterial": "METALLIC_1_LIGHTER_SMOOTH"
