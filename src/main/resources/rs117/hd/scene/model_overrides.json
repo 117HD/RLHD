@@ -36341,9 +36341,16 @@
   },
   {
     "description": "Eternal Light Fire Pit",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "METALLIC_1_SMOOTH",
     "objectIds": [
       "MY2ARM_FIRE_ETERNALLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_175",
+        "upwardsNormals": true
+      }
     ]
   },
   {
