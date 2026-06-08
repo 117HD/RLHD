@@ -46927,6 +46927,13 @@
     "uvScale": 0.6
   },
   {
+    "description": "Falador Park - Hide floating floor trim",
+    "hideInAreas": [ "FALADOR_PARK_HIDE_FLOOR_TRIM" ],
+    "objectIds": [
+      "FLOOR_DEPTH2"
+    ]
+  },
+  {
     "description": "Train Cart",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [

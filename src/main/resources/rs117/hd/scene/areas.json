@@ -1903,6 +1903,12 @@
     ]
   },
   {
+    "name": "FALADOR_PARK_HIDE_FLOOR_TRIM",
+    "aabbs": [
+      [ 3005, 3376 ]
+    ]
+  },
+  {
     "name": "ASGARNIA_ICE_DUNGEON_NORMAL",
     "aabbs": [
       [ 2984, 9536, 3019, 9601 ],
