@@ -9360,12 +9360,20 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "ENAKH_LADDER_ON_GROUND",
-      "ENAKH_WHEEL_BARROW",
       "ELID_WHEEL_BARROW"
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
     "uvOrientation": 512
+  },
+  {
+    "description": "Desert Quarry Wheelbarrow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "ENAKH_WHEEL_BARROW"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
   },
   {
     "description": "Desert Quarry Scaffold",
@@ -29239,7 +29247,19 @@
       "FAIRY_CHEST_BANK",
       "BARBASSAULT_BANK_CHEST",
       "TEMPOROSS_LOBBY_BANK_CHEST",
-      "LUNAR_BASIC_CHEST"
+      "LUNAR_BASIC_CHEST",
+      "BANK_CHEST_SMALL"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.65
+  },
+  {
+    "description": "Wooden Bank Chest - Lighter",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "BANK_CHEST",
+      "AMENITY_BANKCHEST_BUILT"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -79912,6 +79932,7 @@
     "baseMaterial": "DIRT_1_LIGHT",
     "uvType": "BOX",
     "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.6,
     "objectIds": [
       "SUNBLEAK_CAVE_ENTRANCE"
     ],
@@ -80473,6 +80494,45 @@
         "baseMaterial": "ROPE_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.41
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Island Water Pump",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "AMENITY_WATER_PUMP_BUILT"
+    ]
+  },
+  {
+    "description": "Sailing - Island Cooking Pot",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "AMENITY_COOKING_POT_BUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 42 && s == 1",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0 && a == 255 && l < 35 || h == 10 || h == 21 || h == 32 || h == 42",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   },
