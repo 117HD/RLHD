@@ -1051,6 +1051,11 @@
     "brightness": 2
   },
   {
+    "name": "GRAY_175",
+    "parent": "NONE",
+    "brightness": 1.75
+  },
+  {
     "name": "GRAY_150",
     "parent": "NONE",
     "brightness": 1.5
@@ -2673,6 +2678,11 @@
     "specularGloss": 30.0
   },
   {
+    "name": "STONE_NORMALED_VERY_DARK",
+    "parent": "STONE_NORMALED",
+    "brightness": 0.8
+  },
+  {
     "name": "STONE_NORMALED_DARK",
     "parent": "STONE_NORMALED",
     "brightness": 0.945
@@ -2941,6 +2951,11 @@
     "parent": "GRUNGE_1",
     "specularStrength": 4.1,
     "specularGloss": 60.0
+  },
+  {
+    "name": "SLIME_GRUNGE_LIGHT",
+    "parent": "SLIME_GRUNGE",
+    "brightness": 1.15
   },
   {
     "name": "WATER_PUDDLE",

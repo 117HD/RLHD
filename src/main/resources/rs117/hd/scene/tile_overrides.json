@@ -5729,7 +5729,7 @@
     "overlayIds": [
       181
     ],
-    "waterType": "WATER",
+    "waterType": "CAVE_WATER_MURKY",
     "blended": false
   },
   {
@@ -5749,21 +5749,9 @@
     "name": "CAMDOZAAL_STONE_PATH",
     "area": "CAMDOZAAL",
     "overlayIds": [
-      182
+      2, 83, 127, 182
     ],
-    "groundMaterial": "GRUNGE_2",
-    "uvOrientation": 117,
-    "uvScale": 1.2
-  },
-  {
-    "name": "CAMDOZAAL_GRAVEL_PATH",
-    "area": "CAMDOZAAL",
-    "overlayIds": [
-      2, 83, 127
-    ],
-    "groundMaterial": "GRAVEL",
-    "uvOrientation": 270,
-    "uvScale": 1.25
+    "groundMaterial": "PACKED_EARTH"
   },
   {
     "name": "CAMDOZAAL_CAVE_FLOOR",
@@ -10621,6 +10609,19 @@
     "shiftLightness": 6
   },
   {
+    "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
+    "area": "KRAKEN_COVE_HIDE_WATER_EDGE",
+    "overlayIds": [ 7 ],
+    "waterType": "SWAMP_WATER",
+    "heightOffset": -150
+  },
+  {
+    "name": "KRAKEN_COVE_WATER_FIX",
+    "area": "KRAKEN_COVE_WALL_FIX",
+    "underlayIds": [ 53, 54 ],
+    "waterType": "SWAMP_WATER"
+  },
+  {
     "name": "TAG - CLIMATE - START"
   },
   {
@@ -10930,6 +10931,17 @@
       196
     ],
     "waterType": "WATER"
+  },
+  {
+    "name": "OVERLAY_SWAMP_WATER",
+    "area": "ALL",
+    "overlayIds": [
+      7,
+      128,
+      156
+    ],
+    "waterType": "SWAMP_WATER",
+    "blended": false
   },
   {
     "name": "OVERLAY_SWAMP_WATER",
