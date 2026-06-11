@@ -31258,6 +31258,63 @@
     ]
   },
   {
+    "description": "TRIDENT_SEA_SPELL_LEAGUES",
+    "radius": 400,
+    "height": 75,
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 300,
+    "projectileIds": [
+      "SLAYER_TOTS_PROJECTILE_ORN_LEAGUES6"
+    ]
+  },
+  {
+    "description": "TRIDENT_SEA_SPELL_LEAGUES_CAST",
+    "radius": 400,
+    "offset": [ 0, 240, 10 ],
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1400,
+    "spawnDelay": 350,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [ "SLAYER_TOTS_CASTING_ORN_LEAGUES6" ]
+  },
+  {
+    "description": "TRIDENT_SEA_SPELL_LEAGUES_IMPACT",
+    "offset": [ 0, 240, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      255,
+      70,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [ "SLAYER_TOTS_IMPACT_ORN_LEAGUES6" ]
+  },
+  {
     "description": "WARPED_SCEPTER_SPELL",
     "alignment": "CENTER",
     "height": 10,
