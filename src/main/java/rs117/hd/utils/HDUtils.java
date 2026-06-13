@@ -467,6 +467,8 @@ public final class HDUtils {
 		return true;
 	}
 
+	public static final int SKYBOX_TERRAIN_FLAG = 1 << 23;
+
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
 		// Up to 12-bit water depth | 8-bit water type | 2-bit plane | terrain flag
 		assert waterType.index < 1 << 7 : "Too many water types";
