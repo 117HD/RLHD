@@ -1,10 +1,5 @@
 [
   {
-    "name": "WATER",
-    "surfaceColor": "#69809C",
-    "fresnelAmount": 0.85
-  },
-  {
     "name": "WATER_FLAT",
     "surfaceColor": "#69809C",
     "fresnelAmount": 0.85,
@@ -310,34 +305,45 @@
     ]
   },
   {
+    "name": "WATER",
+    "surfaceColor": "#69809C",
+    "fresnelAmount": 0.85,
+    "depth": 150
+  },
+  {
     "name": "WATER_OPEN",
     "vanillaTextureIndex": 130,
     "surfaceColor": "#556F8F",
-    "fresnelAmount": 0.85
+    "fresnelAmount": 0.85,
+    "depth": 180
   },
   {
     "name": "WATER_SHELF",
     "vanillaTextureIndex": 131,
     "surfaceColor": "#536B88",
-    "fresnelAmount": 0.85
+    "fresnelAmount": 0.85,
+    "depth": 256
   },
   {
     "name": "WATER_DROPOFF",
     "vanillaTextureIndex": 132,
     "surfaceColor": "#4D5D81",
-    "fresnelAmount": 0.85
+    "fresnelAmount": 0.85,
+    "depth": 600
   },
   {
     "name": "WATER_DEEP",
     "vanillaTextureIndex": 133,
     "surfaceColor": "#3C4B71",
-    "fresnelAmount": 0.85
+    "fresnelAmount": 0.85,
+    "depth": 800
   },
   {
     "name": "WATER_TRENCH",
     "vanillaTextureIndex": 134,
     "surfaceColor": "#374467",
-    "fresnelAmount": 0.85
+    "fresnelAmount": 0.85,
+    "depth": 10000
   },
   {
     "name": "WATER_STORMY",

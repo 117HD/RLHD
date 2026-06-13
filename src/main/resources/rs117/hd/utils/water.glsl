@@ -470,6 +470,7 @@ vec4 sampleWater(int waterTypeIndex, float waterDepth, vec3 viewDir) {
         sampleWaterReflection(flatR, R, distortionFactor),
         calculateFresnel(dot(fragToCam, N), IOR_WATER)
     );
+//    if (true) return vec4(0);
 
     switch (waterTypeIndex) {
         case WATER_TYPE_BLOOD:

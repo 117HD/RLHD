@@ -126,18 +126,20 @@ public class WaterTypeManager {
 				fishingSpotReplacer.despawnRuneLiteObjects();
 				fishingSpotReplacer.update();
 
-				boolean indicesChanged = oldWaterTypes == null || oldWaterTypes.length != waterTypes.length;
-				if (!indicesChanged) {
+				boolean reloadScene = oldWaterTypes == null || oldWaterTypes.length != waterTypes.length;
+				if (!reloadScene) {
 					for (int i = 0; i < waterTypes.length; i++) {
-						if (!waterTypes[i].name.equals(oldWaterTypes[i].name)) {
-							indicesChanged = true;
+						if (!waterTypes[i].name.equals(oldWaterTypes[i].name) ||
+							waterTypes[i].depth != oldWaterTypes[i].depth
+						) {
+							reloadScene = true;
 							break;
 						}
 					}
 				}
 
-				if (indicesChanged) {
-					// Reload everything which depends on water type indices
+				if (reloadScene) {
+					// Reload everything which depends on water type indices & water depths
 					tileOverrideManager.shutDown();
 					tileOverrideManager.startUp();
 					plugin.renderer.clearCaches();
