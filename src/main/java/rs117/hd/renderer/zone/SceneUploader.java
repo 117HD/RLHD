@@ -136,6 +136,8 @@ public class SceneUploader implements AutoCloseable {
 
 	private int[] modelVertices;
 	public int tempModelAlphaFaces = 0;
+	// When set, faces uploaded by uploadTempModel are tagged as skybox so the shader skips fogging them.
+	public boolean uploadAsSkybox = false;
 
 	private final PooledObjectArray<ModelOverride> faceOverrides = new PooledObjectArray<>();
 	private final PooledObjectArray<Material> faceMaterials = new PooledObjectArray<>();
@@ -2131,10 +2133,11 @@ public class SceneUploader implements AutoCloseable {
 			final VertexWriteCache vb = writeCache.getVertexBuffer(hasAlpha);
 			final VertexWriteCache tb = writeCache.getTextureBuffer(hasAlpha);
 
+			final int terrainData = uploadAsSkybox ? HDUtils.SKYBOX_TERRAIN_FLAG : 0;
 			final int texturedFaceIdx = tb.putFace(
 				color1, color2, color3,
 				materialData, materialData, materialData,
-				0, 0, 0
+				terrainData, terrainData, terrainData
 			);
 
 			vb.putDynamicVertex(

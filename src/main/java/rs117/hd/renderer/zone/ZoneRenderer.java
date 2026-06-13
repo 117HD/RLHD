@@ -82,6 +82,7 @@ import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_SKYBOX;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -160,6 +161,7 @@ public class ZoneRenderer implements Renderer {
 
 	private boolean sceneFboValid;
 	private boolean shouldRenderScene;
+	private boolean skyboxVisible;
 	private boolean shouldClearShadowFbo;
 	private boolean shouldDrawRoofShadows;
 
@@ -319,6 +321,12 @@ public class ZoneRenderer implements Renderer {
 			ctx.sortStaticAlphaModels(sceneCamera);
 
 			ctx.map();
+
+			// Upload the camera-anchored skybox (if the scene has one) into VAO_SKYBOX now that the
+			// dynamic model buffers are mapped. It is drawn first, before opaque geometry, in drawPass.
+			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
+				skyboxVisible = modelStreamingManager.drawSkybox(scene);
+
 			frameTimer.end(Timer.DRAW_PRESCENE);
 		} catch (Throwable ex) {
 			log.error("Error in preSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
@@ -988,6 +996,14 @@ public class ZoneRenderer implements Renderer {
 
 					if (sceneManager.isRoot(ctx))
 						frameTimer.end(Timer.UNMAP_ROOT_CTX);
+
+					// Draw the camera-anchored skybox first as the background, without writing depth so
+					// all scene geometry overdraws it. Only the root scene supplies a skybox.
+					if (skyboxVisible && sceneManager.isRoot(ctx)) {
+						ctx.vaoSceneCmd.DepthMask(false);
+						ctx.drawAll(VAO_SKYBOX, ctx.vaoSceneCmd);
+						ctx.vaoSceneCmd.DepthMask(true);
+					}
 
 					// Draw opaque
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);

@@ -34,7 +34,8 @@ public class WorldViewContext {
 	public static final int VAO_ALPHA = 1;
 	public static final int VAO_PLAYER = 2;
 	public static final int VAO_SHADOW = 3;
-	public static final int VAO_COUNT = 4;
+	public static final int VAO_SKYBOX = 4;
+	public static final int VAO_COUNT = 5;
 
 	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL =
 		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO::Staging", true));
@@ -121,7 +122,7 @@ public class WorldViewContext {
 
 		long start = System.nanoTime();
 		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
+			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW || i == VAO_SKYBOX;
 			final var POOL = needsStaging ? DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
 			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
 				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = POOL.acquire();
@@ -156,7 +157,7 @@ public class WorldViewContext {
 
 	void unmap() {
 		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
+			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW || i == VAO_SKYBOX;
 			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
 		}
 	}

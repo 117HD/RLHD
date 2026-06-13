@@ -21,6 +21,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
@@ -33,6 +34,7 @@ import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_SKYBOX;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -143,6 +145,87 @@ public class ModelStreamingManager {
 			count += streamingContexts[i].renderableCount;
 		return count;
 	}
+
+
+	public boolean drawSkybox(Scene scene) {
+		Model skybox = scene.getSkybox();
+		if (skybox == null)
+			return false;
+
+		WorldViewContext ctx = sceneManager.getContext(scene);
+		if (ctx == null || ctx.isLoading)
+			return false;
+
+		final int camX = (int) plugin.cameraPosition[0];
+		final int camY = (int) plugin.cameraPosition[1];
+		final int camZ = (int) plugin.cameraPosition[2];
+
+		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
+		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
+		try (SceneUploader sceneUploader = SceneUploader.POOL.acquire()) {
+			skybox.calculateBoundsCylinder();
+
+			sceneUploader.preprocessTempModel(
+				skyboxProjection,
+				plugin.cameraFrustum,
+				null,
+				visibleFaces,
+				culledFaces,
+				false,
+				ModelOverride.NONE,
+				skybox,
+				false,
+				0,
+				camX, camY, camZ
+			);
+
+			if (visibleFaces.length == 0)
+				return true;
+
+			final DynamicModelVAO.View view = ctx.beginDraw(VAO_SKYBOX, visibleFaces.length);
+			sceneUploader.uploadAsSkybox = true;
+			try {
+				sceneUploader.uploadTempModel(
+					visibleFaces,
+					skybox,
+					ModelOverride.NONE,
+					0,
+					0,
+					false,
+					view,
+					view
+				);
+			} finally {
+				sceneUploader.uploadAsSkybox = false;
+			}
+			view.end();
+		} catch (Exception ex) {
+			log.error("Error uploading skybox", ex);
+		} finally {
+			FACE_INDICES.recycle(visibleFaces);
+			FACE_INDICES.recycle(culledFaces);
+		}
+		return true;
+	}
+
+
+	private final float[] skyboxProjectionVec = new float[4];
+	private final Projection skyboxProjection = new Projection() {
+		@Override
+		public float[] project(float x, float y, float z) {
+			return project(x, y, z, new float[4]);
+		}
+
+		@Override
+		public float[] project(float x, float y, float z, float[] out) {
+			skyboxProjectionVec[0] = x;
+			skyboxProjectionVec[1] = y;
+			skyboxProjectionVec[2] = z;
+			skyboxProjectionVec[3] = 1;
+			Mat4.mulVec(out, plugin.viewProjMatrix, skyboxProjectionVec);
+			return out;
+		}
+	};
 
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		WorldViewContext ctx = sceneManager.getContext(scene);

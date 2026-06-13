@@ -93,6 +93,8 @@ void main() {
 
     // Water data
     bool isTerrain = (fTerrainData[0] & 1) != 0; // 1 = 0b1
+    // Skybox faces are anchored to the camera and act as the background; they must not be fogged.
+    bool isSkybox = (fTerrainData[0] & (1 << 23)) != 0;
     int waterDepth1 = fTerrainData[0] >> 11 & 0xFFF;
     int waterDepth2 = fTerrainData[1] >> 11 & 0xFFF;
     int waterDepth3 = fTerrainData[2] >> 11 & 0xFFF;
@@ -511,7 +513,7 @@ void main() {
     #endif
 
     // apply fog
-    if (!isUnderwater) {
+    if (!isUnderwater && !isSkybox) {
         // ground fog
         float distance = distance(IN.position, cameraPos);
         float closeFadeDistance = 1500;
