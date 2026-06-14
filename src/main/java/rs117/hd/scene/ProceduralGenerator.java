@@ -885,8 +885,9 @@ public class ProceduralGenerator {
 								tileVertexKeys(sceneContext, x, y, tileZ, vertices, hashes);
 
 								var override = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_MAIN);
-								if (tilePaint.getNeColor() == HIDDEN_HSL && !override.forced)
-									continue;
+								// TODO: Skipping these breaks at the Shipyard
+//								if (tilePaint.getNeColor() == HIDDEN_HSL && !override.forced)
+//									continue;
 
 								var waterType = seasonalWaterType(override, tilePaint.getTexture());
 								if (waterType == WaterType.NONE) {
