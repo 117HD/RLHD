@@ -39,7 +39,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
 	private static final Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_WATER_TYPE_EDITOR = new Keybind(KeyEvent.VK_F8, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_WATER_TYPE_EDITOR = new Keybind(KeyEvent.VK_F9, CTRL_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
