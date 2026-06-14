@@ -20,7 +20,10 @@ vec3 sf_hash3(vec3 p) {
 float sf_noise(vec3 p) {
     vec3 i = floor(p);
     vec3 f = fract(p);
-    f = f * f * (3.0 - 2.0 * f);
+    // Quintic interpolant (6t^5 - 15t^4 + 10t^3). Unlike the cubic smoothstep,
+    // its 1st AND 2nd derivatives vanish at cell boundaries, so adjacent cells
+    // join without the visible faceting/creasing that makes value noise look blocky.
+    f = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
 
     return mix(
         mix(mix(sf_hash(i + vec3(0,0,0)), sf_hash(i + vec3(1,0,0)), f.x),
@@ -29,6 +32,22 @@ float sf_noise(vec3 p) {
             mix(sf_hash(i + vec3(0,1,1)), sf_hash(i + vec3(1,1,1)), f.x), f.y),
         f.z
     );
+}
+
+// Fractal Brownian Motion — sums octaves of noise at increasing frequency and
+// decreasing amplitude to build organic, multi-scale structure. Output is
+// normalized to roughly [0,1].
+float sf_fbm(vec3 p, int octaves) {
+    float sum = 0.0;
+    float amp = 0.5;
+    float norm = 0.0;
+    for (int o = 0; o < octaves; o++) {
+        sum += amp * sf_noise(p);
+        norm += amp;
+        p *= 2.02;   // slightly off 2.0 to avoid octaves aligning on the lattice
+        amp *= 0.5;
+    }
+    return sum / norm;
 }
 
 // Procedural shooting stars — returns additive color contribution
@@ -111,6 +130,46 @@ vec3 shootingStars(vec3 viewDir, float time) {
     }
 
     return color;
+}
+
+// Shared nebula contribution, used by both the full starfield and the
+// background-only variant so they stay perfectly in sync.
+vec3 proceduralNebula(vec3 dir) {
+    // Domain warping: perturb the sample coordinate with a low-frequency fBm so
+    // the large-scale structure no longer aligns to the noise lattice. This is
+    // what turns blocky blobs into organic, drifting filaments. The warp is
+    // low frequency, so 2 octaves are plenty — keeps the per-pixel cost down.
+    vec3 warp = vec3(
+        sf_fbm(dir * 2.0 + vec3(11.3), 2),
+        sf_fbm(dir * 2.0 + vec3(47.1), 2),
+        sf_fbm(dir * 2.0 + vec3(83.7), 2)
+    );
+    vec3 wdir = dir + (warp - 0.5) * 0.9;
+
+    // Broad cloud regions (a few across the sky) built from multi-octave fBm
+    // rather than a single low-frequency lookup, so edges are soft and varied.
+    float region = sf_fbm(wdir * 2.5 + vec3(50.0), 5);
+    region = smoothstep(0.45, 0.78, region);
+
+    // Finer filamentary structure inside the regions, also fBm + warped.
+    float wisps = sf_fbm(wdir * 9.0 + vec3(100.0), 4);
+    wisps = smoothstep(0.35, 0.75, wisps);
+
+    // High-frequency texture for graininess near the bright cores.
+    float detail = sf_fbm(wdir * 28.0 + vec3(200.0), 3);
+
+    // Combine: region gates everything, wisps carve filaments, detail adds
+    // texture. Bias toward region*wisps so the cloud reads as continuous gas
+    // rather than scattered specks.
+    float nebulaIntensity = region * (0.55 + 0.45 * wisps) * (0.6 + 0.4 * detail) * 1.9;
+
+    // Two-tone nebula color: teal dominant with subtle purple variation
+    vec3 tealColor = vec3(0.008, 0.025, 0.035);
+    float colorVariation = sf_fbm(wdir * 4.0 + vec3(77.0), 3);
+    vec3 purpleColor = vec3(0.02, 0.01, 0.035);
+    vec3 nebulaColor = mix(tealColor, purpleColor, colorVariation * 0.5);
+
+    return nebulaColor * nebulaIntensity;
 }
 
 vec3 proceduralStarfield(vec3 dir) {
@@ -202,29 +261,7 @@ vec3 proceduralStarfield(vec3 dir) {
 
     // Nebulas
     // A few large sweeping regions with wispy internal structure
-    {
-        // Very low frequency — creates only 2-3 broad regions across the sky
-        float nebulaRegion = sf_noise(dir * 2.5 + vec3(50.0));
-        nebulaRegion = smoothstep(0.52, 0.8, nebulaRegion);
-
-        // Internal structure at medium scale
-        float wisps = sf_noise(dir * 12.0 + vec3(100.0));
-        wisps = smoothstep(0.3, 0.7, wisps);
-
-        // Softer detail within the regions
-        float detail = sf_noise(dir * 30.0 + vec3(200.0)) * 0.7
-                      + sf_noise(dir * 60.0 + vec3(300.0)) * 0.3;
-
-        float nebulaIntensity = nebulaRegion * wisps * detail * 1.8;
-
-        // Two-tone nebula color: teal dominant with subtle purple variation
-        vec3 tealColor = vec3(0.008, 0.025, 0.035);
-        float colorVariation = sf_noise(dir * 5.0 + vec3(77.0));
-        vec3 purpleColor = vec3(0.02, 0.01, 0.035);
-        vec3 nebulaColor = mix(tealColor, purpleColor, colorVariation * 0.3);
-
-        color += nebulaColor * nebulaIntensity;
-    }
+    color += proceduralNebula(dir);
 
     return color;
 }
@@ -234,24 +271,6 @@ vec3 proceduralStarfield(vec3 dir) {
 // showing star points through terrain.
 vec3 proceduralStarfieldBackground(vec3 dir) {
     vec3 color = vec3(0.00304, 0.00304, 0.00521);
-
-    float nebulaRegion = sf_noise(dir * 2.5 + vec3(50.0));
-    nebulaRegion = smoothstep(0.52, 0.8, nebulaRegion);
-
-    float wisps = sf_noise(dir * 12.0 + vec3(100.0));
-    wisps = smoothstep(0.3, 0.7, wisps);
-
-    float detail = sf_noise(dir * 30.0 + vec3(200.0)) * 0.7
-                  + sf_noise(dir * 60.0 + vec3(300.0)) * 0.3;
-
-    float nebulaIntensity = nebulaRegion * wisps * detail * 1.8;
-
-    vec3 tealColor = vec3(0.008, 0.025, 0.035);
-    float colorVariation = sf_noise(dir * 5.0 + vec3(77.0));
-    vec3 purpleColor = vec3(0.02, 0.01, 0.035);
-    vec3 nebulaColor = mix(tealColor, purpleColor, colorVariation * 0.3);
-
-    color += nebulaColor * nebulaIntensity;
-
+    color += proceduralNebula(dir);
     return color;
 }
