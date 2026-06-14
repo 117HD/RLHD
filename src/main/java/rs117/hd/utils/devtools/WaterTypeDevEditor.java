@@ -118,6 +118,8 @@ public class WaterTypeDevEditor {
 				return new SliderConfig(-1, 255, 1, "%d");
 			if ("fishingSpotRecolor".equals(fieldName))
 				return new SliderConfig(-1, 65535, 1, "%d");
+			if ("depth".equals(fieldName))
+				return new SliderConfig(0, 4095, 1, "%d");
 			return new SliderConfig(-9999, 9999, 1, "%d");
 		}
 
