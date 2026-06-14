@@ -152,6 +152,8 @@ public class ZoneRenderer implements Renderer {
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional");
 	public final CommandBuffer gapFillerCmd = new CommandBuffer("GapFiller");
+	// The skybox is recorded separately and executed before the scene so it acts as the background.
+	public final CommandBuffer skyboxCmd = new CommandBuffer("Skybox");
 
 	private GLBuffer indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -191,6 +193,7 @@ public class ZoneRenderer implements Renderer {
 		sceneCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
 		gapFillerCmd.setFrameTimer(frameTimer);
+		skyboxCmd.setFrameTimer(frameTimer);
 
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
@@ -323,7 +326,8 @@ public class ZoneRenderer implements Renderer {
 			ctx.map();
 
 			// Upload the camera-anchored skybox (if the scene has one) into VAO_SKYBOX now that the
-			// dynamic model buffers are mapped. It is drawn first, before opaque geometry, in drawPass.
+			// dynamic model buffers are mapped. It is recorded into skyboxCmd in the alpha pass (after
+			// unmap) and executed before the scene in scenePass() so it acts as the background.
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
 				skyboxVisible = modelStreamingManager.drawSkybox(scene);
 
@@ -624,6 +628,7 @@ public class ZoneRenderer implements Renderer {
 		sceneCmd.reset();
 		directionalCmd.reset();
 		gapFillerCmd.reset();
+		skyboxCmd.reset();
 		renderState.reset();
 
 		eboAlpha.orphan();
@@ -798,6 +803,10 @@ public class ZoneRenderer implements Renderer {
 			gapFillerCmd.execute(renderState);
 			renderState.depthMask.set(true);
 		}
+
+		// Draw the skybox as the background, before the scene, so all scene geometry overdraws it.
+		if (!skyboxCmd.isEmpty())
+			skyboxCmd.execute(renderState);
 
 		sceneCmd.execute(renderState);
 
@@ -997,18 +1006,15 @@ public class ZoneRenderer implements Renderer {
 					if (sceneManager.isRoot(ctx))
 						frameTimer.end(Timer.UNMAP_ROOT_CTX);
 
-					// Draw the camera-anchored skybox first as the pure background. Depth testing AND writing
-					// are disabled so it never occludes scene geometry and never writes depth; everything
-					// else is drawn afterwards with depth testing and paints over it. Back-face culling is
-					// disabled because the skybox is viewed from the inside. Only the root scene has a skybox.
+					// Record the camera-anchored skybox into its own command buffer, executed before the
+					// scene in scenePass() so it acts as the background. Depth writes and back-face culling
+					// are disabled (it's viewed from inside and must not occlude); the scene draws over it.
 					if (skyboxVisible && sceneManager.isRoot(ctx)) {
-						ctx.vaoSceneCmd.Disable(GL_DEPTH_TEST);
-						ctx.vaoSceneCmd.DepthMask(false);
-						ctx.vaoSceneCmd.Disable(GL_CULL_FACE);
-						ctx.drawAll(VAO_SKYBOX, ctx.vaoSceneCmd);
-						ctx.vaoSceneCmd.Enable(GL_CULL_FACE);
-						ctx.vaoSceneCmd.DepthMask(true);
-						ctx.vaoSceneCmd.Enable(GL_DEPTH_TEST);
+						skyboxCmd.DepthMask(false);
+						skyboxCmd.Disable(GL_CULL_FACE);
+						ctx.drawAll(VAO_SKYBOX, skyboxCmd);
+						skyboxCmd.Enable(GL_CULL_FACE);
+						skyboxCmd.DepthMask(true);
 					}
 
 					// Draw opaque
