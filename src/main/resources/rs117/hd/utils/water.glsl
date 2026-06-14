@@ -43,28 +43,29 @@ vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
     WaterType waterType = getWaterType(waterTypeIndex);
     vec2 worldUv = worldBase + position.xz / 128;
 
-    float waveHeight = 2;
-    float waveSpeed = .0072;
-    switch (waterTypeIndex) {
-        case WATER_TYPE_BLACK_TAR_FLAT:
-            waveHeight = .1;
-            waveSpeed *= .42;
-            break;
-        case WATER_TYPE_MUDDY_WATER:
-            waveHeight = .1;
-            break;
-        case WATER_TYPE_BLOOD:
-            waveHeight = .75;
-            break;
-        case WATER_TYPE_ICE:
-        case WATER_TYPE_ICE_FLAT:
-            waveHeight = .3;
-            waveSpeed = 0;
-            break;
-        case WATER_TYPE_ABYSS_BILE:
-            waveHeight = .7;
-            break;
-    }
+    float waveHeight = waterType.waveHeight;
+    float waveSpeed = waterType.waveSpeed;
+    // TODO: maybe port these over
+//    switch (waterTypeIndex) {
+//        case WATER_TYPE_BLACK_TAR_FLAT:
+//            waveHeight = .1;
+//            waveSpeed *= .42;
+//            break;
+//        case WATER_TYPE_MUDDY_WATER:
+//            waveHeight = .1;
+//            break;
+//        case WATER_TYPE_BLOOD:
+//            waveHeight = .75;
+//            break;
+//        case WATER_TYPE_ICE:
+//        case WATER_TYPE_ICE_FLAT:
+//            waveHeight = .3;
+//            waveSpeed = 0;
+//            break;
+//        case WATER_TYPE_ABYSS_BILE:
+//            waveHeight = .7;
+//            break;
+//    }
 
     vec2 uv1 = -worldUv / 26 + waveSpeed * elapsedTime * vec2( 1, -4);
     vec2 uv2 = -worldUv /  6 + waveSpeed * elapsedTime * vec2(-2,  1);
@@ -142,51 +143,56 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
 
     float noise = gradientNoise(gl_FragCoord.xy);
 
-    switch (waterTypeIndex) {
-        default:
-        case WATER_TYPE_WATER:
-        case WATER_TYPE_PLAIN_WATER:
-            // Coefficients for Jerlov water types, taken from https://doi.org/10.1364/AO.54.005392
-            // https://www.researchgate.net/figure/Left-Jerlov-water-types-based-on-the-attenuation-coefficients-bl-Types-I-III-are_fig1_338015606
+    sigma_a_particles = waterType.absorption;
+    sigma_s_particles = waterType.scattering;
+    g = waterType.scatteringAnisotropy;
 
-            // Jerlov I
-            sigma_a_particles = vec3(.228, .062, .018);
-            sigma_s_particles = vec3(1.22E-03, 1.70E-03, 3.81E-03);
-            g = .88;
-
-            // Jerlov 1C
-            sigma_a_particles = vec3(.236, .076, .105);
-            sigma_s_particles = vec3(.314, .365, .514);
-            g = .89;
-            break;
-        case WATER_TYPE_BLOOD:
-            sigma_a_particles = (1 - vec3(.9, .1, .2)) * 7;
-            sigma_s_particles = vec3(1, .1, .1) * .05;
-            g = .2;
-            break;
-        case WATER_TYPE_SCAR_SLUDGE:
-            sigma_a_particles = vec3(.309, .3, .1548) * .35;
-            sigma_a_particles += vec3(0.005, 0.0175, 0.0275) * 20;
-            break;
-        case WATER_TYPE_CYAN_WATER:
-            sigma_a_particles = sigma_a_pureWater * 4;
-            sigma_s_particles = vec3(.325, .659, .675);
-            g = .01;
-            break;
-        case WATER_TYPE_GREEN_CAVE_WATER:
-            sigma_a_particles = (1.1 - vec3(0, .973, .718)) * .2;
-            sigma_s_particles = vec3(.01, .973, .418) * .01;
-            break;
-        case WATER_TYPE_SWAMP_WATER:
-        case WATER_TYPE_POISON_WASTE:
-        case WATER_TYPE_ABYSS_BILE:
-        case WATER_TYPE_DARK_BLUE_WATER:
-            // Jerlov 1C
-            sigma_a_particles = vec3(.236, .076, .105);
-            sigma_s_particles = vec3(.314, .365, .514);
-            g = .89;
-            break;
-    }
+    // TODO: maybe port these over
+//    switch (waterTypeIndex) {
+//        default:
+//        case WATER_TYPE_WATER:
+//        case WATER_TYPE_PLAIN_WATER:
+//            // Coefficients for Jerlov water types, taken from https://doi.org/10.1364/AO.54.005392
+//            // https://www.researchgate.net/figure/Left-Jerlov-water-types-based-on-the-attenuation-coefficients-bl-Types-I-III-are_fig1_338015606
+//
+//            // Jerlov I
+//            sigma_a_particles = vec3(.228, .062, .018);
+//            sigma_s_particles = vec3(1.22E-03, 1.70E-03, 3.81E-03);
+//            g = .88;
+//
+//            // Jerlov 1C
+//            sigma_a_particles = vec3(.236, .076, .105);
+//            sigma_s_particles = vec3(.314, .365, .514);
+//            g = .89;
+//            break;
+//        case WATER_TYPE_BLOOD:
+//            sigma_a_particles = (1 - vec3(.9, .1, .2)) * 7;
+//            sigma_s_particles = vec3(1, .1, .1) * .05;
+//            g = .2;
+//            break;
+//        case WATER_TYPE_SCAR_SLUDGE:
+//            sigma_a_particles = vec3(.309, .3, .1548) * .35;
+//            sigma_a_particles += vec3(0.005, 0.0175, 0.0275) * 20;
+//            break;
+//        case WATER_TYPE_CYAN_WATER:
+//            sigma_a_particles = sigma_a_pureWater * 4;
+//            sigma_s_particles = vec3(.325, .659, .675);
+//            g = .01;
+//            break;
+//        case WATER_TYPE_GREEN_CAVE_WATER:
+//            sigma_a_particles = (1.1 - vec3(0, .973, .718)) * .2;
+//            sigma_s_particles = vec3(.01, .973, .418) * .01;
+//            break;
+//        case WATER_TYPE_SWAMP_WATER:
+//        case WATER_TYPE_POISON_WASTE:
+//        case WATER_TYPE_ABYSS_BILE:
+//        case WATER_TYPE_DARK_BLUE_WATER:
+//            // Jerlov 1C
+//            sigma_a_particles = vec3(.236, .076, .105);
+//            sigma_s_particles = vec3(.314, .365, .514);
+//            g = .89;
+//            break;
+//    }
 
 //    sigma_a_pureWater *= max(COLOR_PICKER.r, 1e-7);
 //    sigma_s_pureWater *= max(COLOR_PICKER.g, 1e-7);
@@ -194,19 +200,20 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
 //    sigma_s_particles *= max(COLOR_PICKER.a, 1e-7);
 
     // Kind of hacky way to fix the edges for some water types
-    switch (waterTypeIndex) {
-        case WATER_TYPE_BLOOD:
-        case WATER_TYPE_SWAMP_WATER:
-        case WATER_TYPE_POISON_WASTE:
-        case WATER_TYPE_MUDDY_WATER:
-        case WATER_TYPE_SCAR_SLUDGE:
-        case WATER_TYPE_CYAN_WATER:
-        case WATER_TYPE_ARAXXOR_WASTE:
-            depth += 48;
-            sunToFragDist = depth / refractedSunDir.y;
-            fragToSurfaceDist = abs(depth / camToFrag.y);
-            break;
-    }
+    // TODO: consider porting this
+//    switch (waterTypeIndex) {
+//        case WATER_TYPE_BLOOD:
+//        case WATER_TYPE_SWAMP_WATER:
+//        case WATER_TYPE_POISON_WASTE:
+//        case WATER_TYPE_MUDDY_WATER:
+//        case WATER_TYPE_SCAR_SLUDGE:
+//        case WATER_TYPE_CYAN_WATER:
+//        case WATER_TYPE_ARAXXOR_WASTE:
+//            depth += 48;
+//            sunToFragDist = depth / refractedSunDir.y;
+//            fragToSurfaceDist = abs(depth / camToFrag.y);
+//            break;
+//    }
 
     // Convert coefficients from per meter to in-game units
     sigma_a_particles /= 128;
@@ -461,7 +468,7 @@ vec4 sampleWater(int waterTypeIndex, float waterDepth, vec3 viewDir) {
     // Assume the water is level
     vec3 flatR = reflect(I, vec3(0, -1, 0));
     vec3 R = reflect(I, N);
-    float distortionFactor = 50;
+    float distortionFactor = 50; // TODO: infer from waveHeight and/or waveSpeed?
     float reflectionBias = 0;
 
     switch (waterTypeIndex) {
@@ -477,8 +484,8 @@ vec4 sampleWater(int waterTypeIndex, float waterDepth, vec3 viewDir) {
         sampleWaterReflection(flatR, R, distortionFactor),
         calculateFresnel(dot(fragToCam, N), IOR_WATER)
     );
-//    if (true) return vec4(0);
 
+    // TODO: maybe support tinting in WaterType
     switch (waterTypeIndex) {
         case WATER_TYPE_BLOOD:
             reflection.r = max(reflection.r, .4f);
@@ -521,7 +528,7 @@ vec4 sampleWater(int waterTypeIndex, float waterDepth, vec3 viewDir) {
         dst.a = min(1, dst.a);
     }
 
-    // TODO: specify transparent, faked depth or lambertian per water type
+    // TODO: Consider whether we should specify transparent, faked depth or lambertian per WaterType
     // A highly scattering medium roughly approaches a Lambertian reflector
     bool lambertian =
         waterTypeIndex == WATER_TYPE_MUDDY_WATER ||

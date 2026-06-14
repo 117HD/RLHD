@@ -1,5 +1,10 @@
-package rs117.hd.utils;
+package rs117.hd.utils.devtools;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.annotations.JsonAdapter;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -11,19 +16,12 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import com.google.gson.annotations.JsonAdapter;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -55,7 +53,7 @@ import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Client;
+import net.runelite.api.*;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.ui.components.colorpicker.ColorPickerManager;
 import net.runelite.client.ui.components.colorpicker.RuneliteColorPicker;
@@ -65,6 +63,9 @@ import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.water_types.WaterType;
+import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.Props;
+import rs117.hd.utils.ResourcePath;
 
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -100,12 +101,12 @@ public class WaterTypeDevEditor {
 	}
 
 	private static final class SliderConfig {
-		final int min;
-		final int max;
-		final int scale;
+		final float min;
+		final float max;
+		final float scale;
 		final String format;
 
-		SliderConfig(int min, int max, int scale, String format) {
+		SliderConfig(float min, float max, float scale, String format) {
 			this.min = min;
 			this.max = max;
 			this.scale = scale;
@@ -124,13 +125,19 @@ public class WaterTypeDevEditor {
 			if ("specularStrength".equals(fieldName)
 				|| "normalStrength".equals(fieldName)
 				|| "baseOpacity".equals(fieldName)
-				|| "fresnelAmount".equals(fieldName)) {
-				return new SliderConfig(0, 1, 1000, "%.3f");
+				|| "fresnelAmount".equals(fieldName)
+				|| "scatteringAnisotropy".equals(fieldName)
+			) {
+				return new SliderConfig(0, 1, 1, "%.3f");
 			}
 			if ("specularGloss".equals(fieldName))
 				return new SliderConfig(0, 500, 1, "%.0f");
 			if ("duration".equals(fieldName))
 				return new SliderConfig(0, 10, 10, "%.1f");
+			if ("waveHeight".equals(fieldName))
+				return new SliderConfig(0, 10, 1, "%.3f");
+			if ("waveSpeed".equals(fieldName))
+				return new SliderConfig(0, 0.05f, 1, "%.3f");
 			return new SliderConfig(0, 1000, 100, "%.3f");
 		}
 	}
@@ -243,6 +250,8 @@ public class WaterTypeDevEditor {
 		frame.setContentPane(root);
 		frame.pack();
 		frame.setLocationRelativeTo(client.getCanvas());
+		frame.setAlwaysOnTop(true);
+		frame.requestFocus();
 	}
 
 	private void refreshWaterTypeList() {
@@ -356,7 +365,7 @@ public class WaterTypeDevEditor {
 			} else if (fieldType == int.class) {
 				SliderConfig cfg = SliderConfig.forInt(label);
 				addIntSliderRow(
-					gbc, label, field.getInt(type), cfg.min, cfg.max,
+					gbc, label, field.getInt(type), (int) cfg.min, (int) cfg.max,
 					v -> updateField(field, type, v)
 				);
 			} else if (fieldType == float.class) {
@@ -482,7 +491,7 @@ public class WaterTypeDevEditor {
 		float value,
 		float min,
 		float max,
-		int scale,
+		float scale,
 		String format,
 		Consumer<Float> setter
 	) {
@@ -491,38 +500,14 @@ public class WaterTypeDevEditor {
 		gbc.weightx = 0;
 		fieldsPanel.add(new JLabel(label + ":"), gbc);
 
-		float clamped = Math.max(min, Math.min(max, value));
-		int scaledMin = Math.round(min * scale);
-		int scaledMax = Math.round(max * scale);
-		int scaledValue = Math.round(clamped * scale);
-
-		var slider = new JSlider(scaledMin, scaledMax, scaledValue);
-		var input = new JTextField(String.format(format, clamped), 8);
-
-		slider.addChangeListener(e -> {
+		Slider slider = new Slider(value, min, max, false);
+		slider.addUpdateListener(newValue -> {
 			if (suppressEvents || selected == null)
 				return;
-			float v = slider.getValue() / (float) scale;
-			suppressEvents = true;
-			input.setText(String.format(format, v));
-			suppressEvents = false;
+			float v = slider.getValue() / scale;
 			setter.accept(v);
 			applyChanges();
 		});
-
-		input.getDocument().addDocumentListener(simpleDocumentListener(() -> {
-			if (suppressEvents || selected == null)
-				return;
-			try {
-				float v = Float.parseFloat(input.getText().trim());
-				v = Math.max(min, Math.min(max, v));
-				suppressEvents = true;
-				slider.setValue(Math.round(v * scale));
-				suppressEvents = false;
-				setter.accept(v);
-				applyChanges();
-			} catch (NumberFormatException ignored) {}
-		}));
 
 		gbc.gridx = 1;
 		gbc.gridwidth = 1;
@@ -532,7 +517,7 @@ public class WaterTypeDevEditor {
 		gbc.gridx = 2;
 		gbc.gridwidth = 1;
 		gbc.weightx = 0;
-		fieldsPanel.add(input, gbc);
+		fieldsPanel.add(slider.getInputTextField(), gbc);
 		gbc.gridy++;
 	}
 

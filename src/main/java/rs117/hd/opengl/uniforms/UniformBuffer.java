@@ -170,7 +170,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(float x) {
+		public final void set(float f) {
 			if (isUninitialized())
 				return;
 
@@ -179,7 +179,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataFloat.position(offset).put(x);
+			owner.dataFloat.position(offset).put(f);
 			owner.markWaterLine(position, type.size);
 		}
 
