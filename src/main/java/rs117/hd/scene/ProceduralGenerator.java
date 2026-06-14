@@ -825,6 +825,8 @@ public class ProceduralGenerator {
 
 		private void generate(SceneContext sceneContext, SceneContext prevSceneCtx) {
 			// TODO: Currently does not handle separate water on different planes
+			// TODO: Fix underwater terrain where non-water tiles are needed, e.g. Lady Zay & Pest Control boats
+
 			solver.reset();
 
 			final Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
