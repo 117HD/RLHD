@@ -188,10 +188,10 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
             break;
     }
 
-    sigma_a_pureWater *= max(COLOR_PICKER.r, 1e-7);
-    sigma_s_pureWater *= max(COLOR_PICKER.g, 1e-7);
-    sigma_a_particles *= max(COLOR_PICKER.b, 1e-7);
-    sigma_s_particles *= max(COLOR_PICKER.a, 1e-7);
+//    sigma_a_pureWater *= max(COLOR_PICKER.r, 1e-7);
+//    sigma_s_pureWater *= max(COLOR_PICKER.g, 1e-7);
+//    sigma_a_particles *= max(COLOR_PICKER.b, 1e-7);
+//    sigma_s_particles *= max(COLOR_PICKER.a, 1e-7);
 
     // Kind of hacky way to fix the edges for some water types
     switch (waterTypeIndex) {
@@ -310,15 +310,11 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
         L_directional *= 1.0 - shadow; // Clamp Shadow to avoid being fully black
     }
 
-    // Wrap lighting around to add a fraction of ambient lighting to side which are perpendicular
-    const float wrap = 0.55;
-
     // Attenuate the directional light as it travels down to the seabed
     L_directional *= exp(-sigma_t * sunToFragDist);
 
     // Calculate Lambertian reflection from the seabed
-//    L_directional *= max(0, dot(omega_i, underwaterNormal));
-    L_directional *= max(0, (dot(omega_i, underwaterNormal) + wrap) / (1.0 + wrap));
+    L_directional *= max(0, dot(omega_i, underwaterNormal));
 
     // Also calculate the amount of ambient lighting reaching the fragment
     vec3 L_ambient = ambientLight;
@@ -331,8 +327,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     L_ambient *= exp(-K_d * depth);
 
     // Rough approximation of Lambertian reflection from the seabed
-//    L_ambient *= max(0, dot(vec3(0, -1, 0), underwaterNormal));
-    L_ambient *= max(0, (dot(vec3(0, -1, 0), underwaterNormal) + wrap) / (1.0 + wrap));
+    L_ambient *= max(0, dot(vec3(0, -1, 0), underwaterNormal));
 
     // Now we're ready to start assembling the outgoing light L
 
