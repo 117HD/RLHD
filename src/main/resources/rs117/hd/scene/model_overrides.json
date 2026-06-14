@@ -89355,5 +89355,25 @@
       "ARENA_SCAFFOLD_PLANKS_RIGHT",
       "ARENA_SCAFFOLD_PLANKS_LEFT"
     ]
+  },
+  {
+    "description": "Tangled kelp clamp to the seabed",
+    "objectIds": [
+      "OCEAN_PLANT_KELP01",
+      "OCEAN_PLANT_KELP02",
+      "OCEAN_PLANT_KELP03",
+      "OCEAN_PLANT_KELP04",
+      "OCEAN_PLANT_KELP05"
+    ],
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.5
+  },
+  {
+    "description": "",
+    "objectIds": [
+      "PORTKIT_PILLAR01_BOTTOM01"
+    ],
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.001
   }
 ]
