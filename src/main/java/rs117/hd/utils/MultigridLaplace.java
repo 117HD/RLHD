@@ -33,9 +33,8 @@ public class MultigridLaplace {
 	 *                     1.0 = pure Jacobi (always stable, safe default).
 	 *                     Values in (1, 2) converge faster but can diverge
 	 *                     from a cold start; use 1.0 when unsure.
-	 * @return New flattened (H×W) array with free cells solved.
 	 */
-	public static float[] solve(
+	public static void solve(
 		float[]   heights,
 		boolean[] fixed,
 		int       width,
@@ -212,9 +211,7 @@ public class MultigridLaplace {
 		}
 
 		// Return a copy of the finest-level working buffer
-		float[] result = new float[width * height];
-		System.arraycopy(WORK[nLevels - 1], 0, result, 0, result.length);
-		return result;
+		System.arraycopy(WORK[nLevels - 1], 0, heights, 0, heights.length);
 	}
 
 	// ── convenience overload with sensible defaults ───────────────────────
@@ -222,12 +219,10 @@ public class MultigridLaplace {
 	/**
 	 * Solve with default parameters (4 levels, iters = {50,30,15,6}, ω = 1.0).
 	 */
-	public static float[] solve(
-		float[]   heights,
-		boolean[] fixed,
-		int       width,
-		int       height) {
-		return solve(heights, fixed, width, height,
-			5, new int[]{100, 100, 50, 50, 25}, 1.f);
+	public static void solve(float[] heights, boolean[] fixed, int width, int height) {
+		solve(
+			heights, fixed, width, height,
+			4, new int[] { 50, 30, 15, 6 }, 1.f
+		);
 	}
 }

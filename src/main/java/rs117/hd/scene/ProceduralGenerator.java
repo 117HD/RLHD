@@ -859,11 +859,21 @@ public class ProceduralGenerator {
 							if (tile == null)
 								continue;
 
-							if (checkBridge == 1) {
+//							if (checkBridge == 1) {
+//								tile = tile.getBridge();
+//								if (tile == null)
+//									continue;
+//							}
+
+							// Explicitly handling only bridge tiles works around shoreline issues south of Kastori
+							if (checkBridge == 1)
+								continue;
+							if (tile.getBridge() != null)
 								tile = tile.getBridge();
-								if (tile == null)
-									continue;
-							}
+
+							// Handling higher planes breaks, e.g. Port Piscarilius south-west
+							if (z > 1)
+								break;
 
 							final int tileZ = tile.getRenderLevel();
 							final SceneTilePaint tilePaint = tile.getSceneTilePaint();
@@ -898,17 +908,13 @@ public class ProceduralGenerator {
 										float tx = sx / 4.f;
 										float ty = sy / 4.f;
 										float interpolatedHeight =
-											tileHeights[tileZ][x][y] * (1 - tx) * (1 - ty) +
-											tileHeights[tileZ][x + 1][y] * tx * (1 - ty) +
-											tileHeights[tileZ][x][y + 1] * (1 - tx) * ty +
-											tileHeights[tileZ][x + 1][y + 1] * tx * ty;
+											tileHeights[z][x][y] * (1 - tx) * (1 - ty) +
+											tileHeights[z][x + 1][y] * tx * (1 - ty) +
+											tileHeights[z][x][y + 1] * (1 - tx) * ty +
+											tileHeights[z][x + 1][y + 1] * tx * ty;
 										solver.setVertex(x * 4 + sx, y * 4 + sy, interpolatedHeight, waterType);
 									}
 								}
-//								solver.setVertex(x * 4, y * 4, tileHeights[tileZ][x][y], waterType);
-//								solver.setVertex((x + 1) * 4, y * 4, tileHeights[tileZ][x + 1][y], waterType);
-//								solver.setVertex(x * 4, (y + 1) * 4, tileHeights[tileZ][x][y + 1], waterType);
-//								solver.setVertex((x + 1) * 4, (y + 1) * 4, tileHeights[tileZ][x + 1][y + 1], waterType);
 							} else if (tileModel != null) {
 								var overlayOverride = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_OVERLAY);
 								var underlayOverride = sceneContext.getTileOverride(tileZ, x, y, TILE_OVERRIDE_UNDERLAY);
@@ -952,24 +958,7 @@ public class ProceduralGenerator {
 				}
 			}
 
-			solver.pinContourLines();
-			solver.fillUninitialized();
-
-//			try {
-//				if (sceneContext.sceneOffset != 0) {
-////					var copy = copy(solver.heights);
-////					for (int i = 0; i < copy.length; i++)
-////						if (!solver.pinned[i])
-////							solver.heights[i] = Float.NaN;
-//					path("terrain-dump.json").writeString(gson.newBuilder().serializeSpecialFloatingPointValues().create().toJson(solver));
-////					copyTo(solver.heights, copy);
-//				}
-//			} catch (IOException ex) {
-//				throw new RuntimeException(ex);
-//			}
-//			System.out.println("Initial conditions:\n" + Matrix.format(solver.getHeightMap(), GRID_SIZE, GRID_SIZE));
-			solver.solve(10, 1e-2f);
-//			System.out.println("Solution:\n" + Matrix.format(solver.getHeightMap(), GRID_SIZE, GRID_SIZE));
+			solver.solve();
 
 			// Store the height offsets in a hashmap and calculate interpolated
 			// height offsets for non-corner vertices.
@@ -986,20 +975,30 @@ public class ProceduralGenerator {
 							if (!sceneContext.isTileFlagSet(z, x, y, TILE_WATER_FLAG))
 								continue;
 
-							if (checkBridge == 1) {
+							// Explicitly handling only bridge tiles works around shoreline issues south of Kastori
+							if (checkBridge == 1)
+								continue;
+							if (tile.getBridge() != null)
 								tile = tile.getBridge();
-								if (tile == null)
-									continue;
-							}
+
+							// Handling higher planes breaks, e.g. Port Piscarilius south-west
+							if (z > 1)
+								break;
+
+//							if (checkBridge == 1) {
+//								tile = tile.getBridge();
+//								if (tile == null)
+//									continue;
+//							}
 
 							if (tile.getSceneTilePaint() != null) {
 								int tileZ = tile.getRenderLevel();
 								tileVertexKeys(sceneContext, x, y, tileZ, vertices, hashes);
 
-								final int swVertex = solver.getHeight(x * 4, y * 4) - tileHeights[tileZ][x][y];
-								final int seVertex = solver.getHeight((x + 1) * 4, y * 4) - tileHeights[tileZ][x + 1][y];
-								final int nwVertex = solver.getHeight(x * 4, (y + 1) * 4) - tileHeights[tileZ][x][y + 1];
-								final int neVertex = solver.getHeight((x + 1) * 4, (y + 1) * 4) - tileHeights[tileZ][x + 1][y + 1];
+								final int swVertex = solver.getHeight(x * 4, y * 4) - tileHeights[z][x][y];
+								final int seVertex = solver.getHeight((x + 1) * 4, y * 4) - tileHeights[z][x + 1][y];
+								final int nwVertex = solver.getHeight(x * 4, (y + 1) * 4) - tileHeights[z][x][y + 1];
+								final int neVertex = solver.getHeight((x + 1) * 4, (y + 1) * 4) - tileHeights[z][x + 1][y + 1];
 
 								sceneContext.setVertexUnderwaterDepth(hashes[0], swVertex);
 								sceneContext.setVertexUnderwaterDepth(hashes[1], seVertex);
