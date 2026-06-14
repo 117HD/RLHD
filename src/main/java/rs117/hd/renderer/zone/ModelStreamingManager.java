@@ -216,6 +216,24 @@ public class ModelStreamingManager {
 		}
 		plugin.drawnTempRenderableCount++;
 
+		if (renderable instanceof NPC) {
+			String name = ((NPC) renderable).getName();
+			if ("Eagle ray".equals(name) ||
+				"Manta ray".equals(name) ||
+				"Stingray".equals(name) ||
+				"Veiled kraken".equals(name) ||
+				"Spined kraken".equals(name) ||
+				"Pygmy kraken".equals(name) ||
+				"Mogre".equals(name)
+			) {
+				y += 64;
+			}
+//			if ("Veiled kraken".equals(name))
+//				y += 360;
+			if ("Veiled kraken".equals(name))
+				y += 64;
+		}
+
 		final boolean hasAlpha =
 			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
 			zone.isVisible(SCENE_CAMERA_ID);
