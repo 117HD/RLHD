@@ -234,7 +234,10 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
 
     // Add underwater caustics as additional directional light
     if (SHORELINE_CAUSTICS == 1) {
-        vec2 causticsUv = worldUvs(3.333);
+        vec2 causticsUv = worldBase + IN.position.xz / 128;
+        causticsUv += lightDir.xz * IN.position.y / 128 * 0.5;
+        causticsUv /= 3.333;
+
         const vec2 direction = vec2(1, -2);
         vec2 flow1 = causticsUv + animationFrame(13) * direction;
         vec2 flow2 = causticsUv * 1.5 + animationFrame(17) * -direction;
