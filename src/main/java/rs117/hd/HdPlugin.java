@@ -761,6 +761,7 @@ public class HdPlugin extends Plugin {
 				colorPicker.setOnColorChange(c -> clientThread.invoke(() ->
 					uboGlobal.COLOR_PICKER.set(ColorUtils.rgba(c))));
 				colorPicker.setVisible(true);
+				uboGlobal.COLOR_PICKER.set(1, 1, 1, 1.f);
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 
