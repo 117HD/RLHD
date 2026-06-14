@@ -38,7 +38,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 public final class ReflectionPass implements RenderPass {
 	public static final int MAX_REFLECTION_RENDERS = 4;
-	public static final int WATER_HEIGHT_THRESHOLD = LOCAL_TILE_SIZE;
+	public static final int WATER_HEIGHT_THRESHOLD = 16;
 
 	@Inject
 	private HdPlugin plugin;
