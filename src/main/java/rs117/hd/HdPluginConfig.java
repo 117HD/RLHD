@@ -635,15 +635,15 @@ public interface HdPluginConfig extends Config
 		name = "Cycle Duration (minutes)",
 		description = "How long a complete day/night cycle should take in real-time minutes.<br>" +
 			"• 1 minute = Very fast cycle for testing<br>" +
-			"• 12 minutes = Default cycle<br>" +
-			"• 30 minutes = Quick atmospheric changes<br>" +
+			"• 12 minutes = Quick atmospheric changes<br>" +
+			"• 30 minutes = Default cycle<br>" +
 			"• 60 minutes = Slow hourly cycle<br>" +
 			"• 180+ minutes = Very slow, immersive cycle",
 		position = 2,
 		section = daylightCycleSettings
 	)
 	default int cycleDurationMinutes() {
-		return 12;
+		return 30;
 	}
 
 	@Range(min = 10, max = 200)
@@ -655,14 +655,14 @@ public interface HdPluginConfig extends Config
 			"• 10% = Very dark nights<br>" +
 			"• 25% = Dark but playable<br>" +
 			"• 35% = Dark but comfortable<br>" +
-			"• 50% = Default balanced darkness<br>" +
-			"• 70%+ = Very bright nights (minimal difference from day)<br>" +
+			"• 50% = Balanced darkness<br>" +
+			"• 70% = Default bright nights (minimal difference from day)<br>" +
 			"• 100% = No brightness change at night",
 		position = 3,
 		section = daylightCycleSettings
 	)
 	default int minimumBrightness() {
-		return 50;
+		return 70;
 	}
 
 	@ConfigItem(
