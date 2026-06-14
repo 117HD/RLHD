@@ -18,6 +18,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
@@ -66,6 +67,9 @@ public class ModelStreamingManager {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private MaterialManager materialManager;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -147,7 +151,20 @@ public class ModelStreamingManager {
 	}
 
 
-	private boolean skyboxFacesLogged; // DEV-ONLY diagnostic, remove once skybox is confirmed working
+	// Reusable override for the skybox: an unlit material so the model's authored vertex colors are shown
+	// directly (e.g. the sky's color banding and white moon), without 117HD's lighting or vanilla-shading
+	// adjustments. Built lazily because the material manager isn't loaded when this class is constructed.
+	private ModelOverride skyboxOverride;
+
+	private ModelOverride getSkyboxOverride() {
+		if (skyboxOverride == null) {
+			skyboxOverride = new ModelOverride();
+			skyboxOverride.baseMaterial = materialManager.getMaterial("UNLIT");
+			skyboxOverride.undoVanillaShading = false;
+			skyboxOverride.castShadows = false;
+		}
+		return skyboxOverride;
+	}
 
 	public boolean drawSkybox(Scene scene) {
 		Model skybox = scene.getSkybox();
@@ -157,6 +174,8 @@ public class ModelStreamingManager {
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null || ctx.isLoading)
 			return false;
+
+		final ModelOverride override = getSkyboxOverride();
 
 		final int camX = (int) plugin.cameraPosition[0];
 		final int camY = (int) plugin.cameraPosition[1];
@@ -178,7 +197,7 @@ public class ModelStreamingManager {
 					visibleFaces,
 					culledFaces,
 					false,
-					ModelOverride.NONE,
+					override,
 					skybox,
 					false,
 					0,
@@ -186,11 +205,6 @@ public class ModelStreamingManager {
 				);
 			} finally {
 				sceneUploader.skipBackfaceCull = false;
-			}
-
-			if (!skyboxFacesLogged) {
-				log.warn("DEBUG skybox faces={} visible={} culled={}", skybox.getFaceCount(), visibleFaces.length, culledFaces.length);
-				skyboxFacesLogged = true;
 			}
 
 			if (visibleFaces.length == 0)
@@ -202,7 +216,7 @@ public class ModelStreamingManager {
 				sceneUploader.uploadTempModel(
 					visibleFaces,
 					skybox,
-					ModelOverride.NONE,
+					override,
 					0,
 					0,
 					false,

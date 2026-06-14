@@ -775,17 +775,22 @@ public class ZoneRenderer implements Renderer {
 		renderState.ido.set(indirectDrawCmds.id);
 		renderState.apply();
 
-		// Clear scene
+		// Clear scene. When a skybox is present, clear to black so the sky color doesn't bleed through any
+		// pixels the skybox model doesn't cover; otherwise clear to the environment's fog/sky color.
 		frameTimer.begin(Timer.CLEAR_SCENE);
 
-		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-		float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
-		glClearColor(
-			gammaCorrectedFogColor[0],
-			gammaCorrectedFogColor[1],
-			gammaCorrectedFogColor[2],
-			1f
-		);
+		if (skyboxVisible) {
+			glClearColor(0, 0, 0, 1f);
+		} else {
+			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
+			glClearColor(
+				gammaCorrectedFogColor[0],
+				gammaCorrectedFogColor[1],
+				gammaCorrectedFogColor[2],
+				1f
+			);
+		}
 		glClearDepth(0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		frameTimer.end(Timer.CLEAR_SCENE);
