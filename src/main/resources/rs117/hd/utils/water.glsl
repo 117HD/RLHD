@@ -154,6 +154,11 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
             sigma_a_particles = vec3(.228, .062, .018);
             sigma_s_particles = vec3(1.22E-03, 1.70E-03, 3.81E-03);
             g = .88;
+
+            // Jerlov 1C
+            sigma_a_particles = vec3(.236, .076, .105);
+            sigma_s_particles = vec3(.314, .365, .514);
+            g = .89;
             break;
         case WATER_TYPE_BLOOD:
             sigma_a_particles = (1 - vec3(.9, .1, .2)) * 7;
@@ -183,6 +188,11 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
             g = .89;
             break;
     }
+
+    sigma_a_pureWater *= max(COLOR_PICKER.r, 1e-7);
+    sigma_s_pureWater *= max(COLOR_PICKER.g, 1e-7);
+    sigma_a_particles *= max(COLOR_PICKER.b, 1e-7);
+    sigma_s_particles *= max(COLOR_PICKER.a, 1e-7);
 
     // Kind of hacky way to fix the edges for some water types
     switch (waterTypeIndex) {
