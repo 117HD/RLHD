@@ -110,7 +110,6 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     vec3 omega_o = -camToFrag;
 
     vec3 surfacePos = fragPos - camToFrag * fragToSurfaceDist;
-    surfaceNormal = sampleWaterSurfaceNormal(waterTypeIndex, surfacePos);
     omega_o = -refract(camToFrag, surfaceNormal, IOR_AIR_TO_WATER);
 
     // Initialize light intensities with linear RGB colors
