@@ -153,16 +153,18 @@ public class ModelStreamingManager {
 
 	// Reusable override for the skybox: an unlit material so the model's authored vertex colors are shown
 	// directly (e.g. the sky's color banding and white moon), without 117HD's lighting or vanilla-shading
-	// adjustments. Built lazily because the material manager isn't loaded when this class is constructed.
+	// adjustments. The override shell is reused, but the UNLIT material is re-fetched each call: a cached
+	// Material reference is invalidated when materials reload (its UBO index can change), which would throw
+	// "Material UNLIT used after invalidation".
 	private ModelOverride skyboxOverride;
 
 	private ModelOverride getSkyboxOverride() {
 		if (skyboxOverride == null) {
 			skyboxOverride = new ModelOverride();
-			skyboxOverride.baseMaterial = materialManager.getMaterial("UNLIT");
 			skyboxOverride.undoVanillaShading = false;
 			skyboxOverride.castShadows = false;
 		}
+		skyboxOverride.baseMaterial = materialManager.getMaterial("UNLIT");
 		return skyboxOverride;
 	}
 

@@ -550,6 +550,11 @@ public class ZoneRenderer implements Renderer {
 				break;
 		}
 		fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
+		// Disable fog while a skybox is present: fog fades distant geometry to the sky/fog color, which
+		// clashes with the skybox's colors. Zeroing fogDepth short-circuits all distance fog in the shader.
+		// (A proper fix would fade to transparency instead of a color.)
+		if (scene.getSkybox() != null)
+			fogDepth = 0;
 		plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 		plugin.uboGlobal.fogDepth.set(fogDepth);
 		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
