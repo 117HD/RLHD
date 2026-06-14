@@ -66,6 +66,7 @@ layout (location = 0) in vec3 vPosition;
         bool isTransparent = opacity <= opacityThreshold;
         bool isGroundPlaneTile = (terrainData & 0xF) == 1; // plane == 0 && isTerrain
         bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
+        isWaterSurfaceOrUnderwaterTile = false; // TODO: fix properly, causes underwater models to cast shadows
 
         // TODO: Fix this hack.
         // Sometimes, bridge tiles are used along shorelines for the non-water portion,
