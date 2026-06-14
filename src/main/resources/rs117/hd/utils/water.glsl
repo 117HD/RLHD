@@ -41,7 +41,7 @@
 
 vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
     WaterType waterType = getWaterType(waterTypeIndex);
-    vec2 worldUv = -position.xz / 128;
+    vec2 worldUv = worldBase + position.xz / 128;
 
     float waveHeight = 2;
     float waveSpeed = .0072;
@@ -66,8 +66,8 @@ vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
             break;
     }
 
-    vec2 uv1 = worldUv / 26 + waveSpeed * elapsedTime * vec2( 1, -4);
-    vec2 uv2 = worldUv /  6 + waveSpeed * elapsedTime * vec2(-2,  1);
+    vec2 uv1 = -worldUv / 26 + waveSpeed * elapsedTime * vec2( 1, -4);
+    vec2 uv2 = -worldUv /  6 + waveSpeed * elapsedTime * vec2(-2,  1);
 
     vec3 n1 = texture(waterNormalMaps, vec3(uv1, 0)).xyz;
     vec3 n2 = texture(waterNormalMaps, vec3(uv2, 1)).xyz;

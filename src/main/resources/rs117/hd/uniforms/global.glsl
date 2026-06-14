@@ -40,6 +40,8 @@ layout(std140) uniform UBOGlobal {
 
     int pointLightsCount;
 
+    ivec2 worldBase;
+
     Camera sceneCamera;
     Camera directionalCamera;
 

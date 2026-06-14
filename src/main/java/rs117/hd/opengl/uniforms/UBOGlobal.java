@@ -46,6 +46,8 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public Property pointLightsCount = addProperty(PropertyType.Int, "pointLightsCount");
 
+	public Property worldBase = addProperty(PropertyType.IVec2, "worldBase");
+
 	public Camera.CameraStruct sceneCamera = addStruct(new Camera.CameraStruct());
 	public Camera.CameraStruct directionalCamera = addStruct(new Camera.CameraStruct());
 

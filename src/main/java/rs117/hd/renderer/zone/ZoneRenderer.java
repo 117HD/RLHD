@@ -536,6 +536,8 @@ public class ZoneRenderer implements Renderer {
 				plugin.configRoofShadows &&
 				environmentManager.allowRoofShadows();
 
+			plugin.uboGlobal.worldBase.set(ctx.sceneContext.sceneBounds.minX, ctx.sceneContext.sceneBounds.minY);
+
 			plugin.uboGlobal.sceneCamera.write(sceneCamera);
 			plugin.uboGlobal.directionalCamera.write(directionalCamera);
 
