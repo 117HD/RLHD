@@ -55002,6 +55002,16 @@
     ]
   },
   {
+    "description": "Post with rope",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "PISCARILIUS_PIER_POST_01"
+    ],
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 1
+  },
+  {
     "description": "Textured brick wooden post wall",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
