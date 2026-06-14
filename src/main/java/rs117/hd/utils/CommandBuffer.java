@@ -53,7 +53,6 @@ public class CommandBuffer {
 	private int objectCount = 0;
 
 	public final String name;
-	private final RenderState renderState;
 
 	@Setter
 	private FrameTimer frameTimer;
@@ -61,9 +60,8 @@ public class CommandBuffer {
 	private long[] cmd = new long[(int) KiB];
 	private int writeHead = 0;
 
-	public CommandBuffer(String name, RenderState renderState) {
+	public CommandBuffer(String name) {
 		this.name = name;
-		this.renderState = renderState;
 	}
 
 	private void ensureCapacity(int numLongs) {
@@ -277,7 +275,7 @@ public class CommandBuffer {
 		cmd[writeHead++] = (enabled ? 1L : 0) << 32 | capability & INT_MASK;
 	}
 
-	public void execute() {
+	public void execute(RenderState renderState) {
 		// Force VAO state to reapply to ensure it is in sync with the render state
 		renderState.vao.invalidate();
 
@@ -424,7 +422,7 @@ public class CommandBuffer {
 							));
 						callStack.push(this);
 						try {
-							subCmd.execute();
+							subCmd.execute(renderState);
 						} finally {
 							callStack.pop();
 						}
@@ -456,7 +454,6 @@ public class CommandBuffer {
 
 	public void reset() {
 		Arrays.fill(objects, 0, objectCount, null);
-		renderState.reset();
 
 		writeHead = 0;
 		objectCount = 0;

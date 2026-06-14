@@ -129,6 +129,8 @@ import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
 import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
@@ -424,6 +426,7 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public int configDetailDrawDistance;
+	public int configExpandedMapLoadingChunks;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -520,6 +523,20 @@ public class HdPlugin extends Plugin {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
+				AWTContext.loadNatives();
+				canvas = client.getCanvas();
+				synchronized (canvas.getTreeLock()) {
+					// Delay plugin startup until the client's canvas is valid
+					if (!canvas.isValid())
+						return false;
+
+					awtContext = new AWTContext(canvas);
+					awtContext.configurePixelFormat(0, 0, 0);
+				}
+				awtContext.createGLContext();
+				canvas.setIgnoreRepaint(true);
+				clientJFrame = HDUtils.getJFrame(canvas);
+
 				isPluginStopPending = false;
 				isActive = true;
 				startupCount++;
@@ -537,23 +554,6 @@ public class HdPlugin extends Plugin {
 				deltaClientTime = 0;
 				lastFrameTimeMillis = 0;
 				lastFrameClientTime = 0;
-
-				AWTContext.loadNatives();
-				canvas = client.getCanvas();
-				clientJFrame = HDUtils.getJFrame(canvas);
-
-				synchronized (canvas.getTreeLock()) {
-					// Delay plugin startup until the client's canvas is valid
-					if (!canvas.isValid())
-						return false;
-
-					awtContext = new AWTContext(canvas);
-					awtContext.configurePixelFormat(0, 0, 0);
-				}
-
-				awtContext.createGLContext();
-
-				canvas.setIgnoreRepaint(true);
 
 				// lwjgl defaults to lwjgl- + user.name, but this breaks if the username would cause an invalid path
 				// to be created.
@@ -801,6 +801,8 @@ public class HdPlugin extends Plugin {
 			materialManager.shutDown();
 			textureManager.shutDown();
 
+			ConcurrentPool.destroyAll();
+			PooledArrayType.shutdown();
 			DestructibleHandler.flushPendingDestruction(true);
 
 			if (awtContext != null)
@@ -1701,6 +1703,7 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void updateCachedConfigs() {
+		configExpandedMapLoadingChunks = config.expandedMapLoadingChunks();
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configRoofShadows = config.roofShadows();
@@ -2094,6 +2097,7 @@ public class HdPlugin extends Plugin {
 		if (ctx != null)
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
 
+		gamevalManager.update();
 		DestructibleHandler.flushPendingDestruction();
 	}
 
