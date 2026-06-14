@@ -147,6 +147,8 @@ public class ModelStreamingManager {
 	}
 
 
+	private boolean skyboxFacesLogged; // DEV-ONLY diagnostic, remove once skybox is confirmed working
+
 	public boolean drawSkybox(Scene scene) {
 		Model skybox = scene.getSkybox();
 		if (skybox == null)
@@ -165,19 +167,31 @@ public class ModelStreamingManager {
 		try (SceneUploader sceneUploader = SceneUploader.POOL.acquire()) {
 			skybox.calculateBoundsCylinder();
 
-			sceneUploader.preprocessTempModel(
-				skyboxProjection,
-				plugin.cameraFrustum,
-				null,
-				visibleFaces,
-				culledFaces,
-				false,
-				ModelOverride.NONE,
-				skybox,
-				false,
-				0,
-				camX, camY, camZ
-			);
+			// The skybox is viewed from inside, so its faces are "back-facing" by the usual winding test;
+			// disable back-face culling so they aren't all rejected.
+			sceneUploader.skipBackfaceCull = true;
+			try {
+				sceneUploader.preprocessTempModel(
+					skyboxProjection,
+					plugin.cameraFrustum,
+					null,
+					visibleFaces,
+					culledFaces,
+					false,
+					ModelOverride.NONE,
+					skybox,
+					false,
+					0,
+					camX, camY, camZ
+				);
+			} finally {
+				sceneUploader.skipBackfaceCull = false;
+			}
+
+			if (!skyboxFacesLogged) {
+				log.warn("DEBUG skybox faces={} visible={} culled={}", skybox.getFaceCount(), visibleFaces.length, culledFaces.length);
+				skyboxFacesLogged = true;
+			}
 
 			if (visibleFaces.length == 0)
 				return true;

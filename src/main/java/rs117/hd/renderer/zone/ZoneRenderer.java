@@ -998,10 +998,13 @@ public class ZoneRenderer implements Renderer {
 						frameTimer.end(Timer.UNMAP_ROOT_CTX);
 
 					// Draw the camera-anchored skybox first as the background, without writing depth so
-					// all scene geometry overdraws it. Only the root scene supplies a skybox.
+					// all scene geometry overdraws it. Back-face culling is disabled because the skybox is
+					// viewed from the inside. Only the root scene supplies a skybox.
 					if (skyboxVisible && sceneManager.isRoot(ctx)) {
 						ctx.vaoSceneCmd.DepthMask(false);
+						ctx.vaoSceneCmd.Disable(GL_CULL_FACE);
 						ctx.drawAll(VAO_SKYBOX, ctx.vaoSceneCmd);
+						ctx.vaoSceneCmd.Enable(GL_CULL_FACE);
 						ctx.vaoSceneCmd.DepthMask(true);
 					}
 

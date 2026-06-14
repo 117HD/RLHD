@@ -138,6 +138,9 @@ public class SceneUploader implements AutoCloseable {
 	public int tempModelAlphaFaces = 0;
 	// When set, faces uploaded by uploadTempModel are tagged as skybox so the shader skips fogging them.
 	public boolean uploadAsSkybox = false;
+	// When set, preprocessTempModel skips back-face culling. The skybox surrounds the camera and is viewed
+	// from the inside, so its faces are "back-facing" by the usual test and would otherwise all be culled.
+	public boolean skipBackfaceCull = false;
 
 	private final PooledObjectArray<ModelOverride> faceOverrides = new PooledObjectArray<>();
 	private final PooledObjectArray<Material> faceMaterials = new PooledObjectArray<>();
@@ -1941,7 +1944,7 @@ public class SceneUploader implements AutoCloseable {
 			final float cY = modelProjected[offsetC + 1];
 
 			// back face culling
-			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0) {
+			if (!skipBackfaceCull && (aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0) {
 				culledFaces.put(f);
 				continue;
 			}
