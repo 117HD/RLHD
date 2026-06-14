@@ -872,7 +872,7 @@ public class ProceduralGenerator {
 								tile = tile.getBridge();
 
 							// Handling higher planes breaks, e.g. Port Piscarilius south-west
-							if (z > 1)
+							if (z > 0)
 								break;
 
 							final int tileZ = tile.getRenderLevel();
@@ -982,7 +982,7 @@ public class ProceduralGenerator {
 								tile = tile.getBridge();
 
 							// Handling higher planes breaks, e.g. Port Piscarilius south-west
-							if (z > 1)
+							if (z > 0)
 								break;
 
 //							if (checkBridge == 1) {
