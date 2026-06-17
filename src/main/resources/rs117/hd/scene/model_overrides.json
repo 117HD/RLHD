@@ -77154,8 +77154,7 @@
     "colorOverrides": [
       {
         "colors": "h == 32 && s == 0",
-        "baseMaterial": "GRAY_90",
-        "receiveShadows": false
+        "baseMaterial": "GRAY_90"
       },
       {
         "colors": "h == 32",
