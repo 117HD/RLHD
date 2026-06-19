@@ -76556,6 +76556,31 @@
     ]
   },
   {
+    "description": "Sailing - Skiff and Sloop - Mast - Rosewood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 525,
+    "uvScale": 0.5,
+    "objectIds": [
+      "SAILING_BOAT_SAIL_KANDARIN_2X5_ROSEWOOD",
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_ROSEWOOD"
+    ],
+    "disableDetailCulling": true,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
     "description": "Sailing - Skiff and Sloop - Mast - All others",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -76567,13 +76592,11 @@
       "SAILING_BOAT_SAIL_KANDARIN_2X5_MAHOGANY",
       "SAILING_BOAT_SAIL_KANDARIN_2X5_CAMPHOR",
       "SAILING_BOAT_SAIL_KANDARIN_2X5_IRONWOOD",
-      "SAILING_BOAT_SAIL_KANDARIN_2X5_ROSEWOOD",
       "SAILING_BOAT_SAIL_KANDARIN_3X8_OAK",
       "SAILING_BOAT_SAIL_KANDARIN_3X8_TEAK",
       "SAILING_BOAT_SAIL_KANDARIN_3X8_MAHOGANY",
       "SAILING_BOAT_SAIL_KANDARIN_3X8_CAMPHOR",
-      "SAILING_BOAT_SAIL_KANDARIN_3X8_IRONWOOD",
-      "SAILING_BOAT_SAIL_KANDARIN_3X8_ROSEWOOD"
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_IRONWOOD"
     ],
     "disableDetailCulling": true,
     "colorOverrides": [
