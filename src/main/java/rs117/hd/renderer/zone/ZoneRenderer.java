@@ -438,7 +438,14 @@ public class ZoneRenderer implements Renderer {
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 				MoonBehavior shadowMoonBehavior = config.moonBehavior();
 
-				if (sunAltDeg < 2.0) {
+				if (config.daylightCycle() == DaylightCycle.FIXED_FULL_MOON) {
+					// Shadows must be cast from the same fixed point as the rendered
+					// moon disk, otherwise they drift while the moon stays put.
+					double[] moonAnglesD = TimeOfDay.getFixedFullMoonAngles();
+					shadowSunAngles = new float[] {
+						(float) moonAnglesD[1], (float) moonAnglesD[0]
+					};
+				} else if (sunAltDeg < 2.0) {
 					// Below +2° sun shadows are faded out, switch to moon direction
 					// early so the shadow map is already oriented when moon shadows
 					// start fading in via smoothstep — prevents brightness pop
