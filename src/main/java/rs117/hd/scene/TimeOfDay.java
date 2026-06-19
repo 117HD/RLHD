@@ -761,16 +761,20 @@ public class TimeOfDay
 		// For non-dynamic modes, return a fixed date at the appropriate time of day.
 		// Cycle tracking above still runs so getMoonDate() advances normally.
 		if (currentCycleMode != DaylightCycle.DYNAMIC) {
-			// March 20, 2025 (spring equinox) — balanced day/night lengths
+			// March 20, 2025 (spring equinox) — balanced day/night lengths.
+			// Used by all fixed modes except Fixed Midday (see below).
 			long equinoxEpochMs = 1742428800000L;
-			Instant equinoxDay = Instant.ofEpochMilli(equinoxEpochMs);
+			// June 10, 2025 (near summer solstice) — higher midday sun arc.
+			long fixedMiddayEpochMs = 1749513600000L;
+			long baseEpochMs = currentCycleMode == DaylightCycle.FIXED_MIDDAY ? fixedMiddayEpochMs : equinoxEpochMs;
+			Instant baseDay = Instant.ofEpochMilli(baseEpochMs);
 			double fixedHour;
 			switch (currentCycleMode) {
 				case FIXED_DAWN:
 					fixedHour = 6.65;  // 6:00 AM
 					break;
 				case FIXED_MIDDAY:
-					fixedHour = 15.0;  // Mid-afternoon — sun high but not at its peak
+					fixedHour = 14;  // Mid-afternoon — sun high but not at its peak
 					break;
 				case FIXED_SUNSET:
 					fixedHour = 18.3; // 5:30 PM — sun near horizon at equinox latitude
@@ -783,7 +787,7 @@ public class TimeOfDay
 					fixedHour = 12.0;
 					break;
 			}
-			return equinoxDay.plusMillis((long) (fixedHour * 60 * 60 * 1000));
+			return baseDay.plusMillis((long) (fixedHour * 60 * 60 * 1000));
 		}
 
 		// Warp the linear cycle clock so day/night occupy the configured share
