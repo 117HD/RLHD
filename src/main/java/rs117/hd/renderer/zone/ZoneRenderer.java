@@ -497,10 +497,13 @@ public class ZoneRenderer implements Renderer {
 				WorldView wv = client.getTopLevelWorldView();
 				if (wv != null) {
 					for (WorldEntity we : wv.worldEntities()) {
-						ZoneSceneContext subCtx = sceneManager.getLoadedSubSceneContext(we.getWorldView());
-						if (subCtx != null) {
-							for (int i = 0; i < subCtx.numVisibleLights; i++)
-								visibleLights.add(subCtx.lights.get(i));
+						WorldViewContext subCtx = sceneManager.getContext(we.getWorldView());
+						if (subCtx != null && subCtx.uboWorldViewStruct != null) {
+							if(subCtx.uboWorldViewStruct.isSquashed())
+								continue;
+
+							for (int i = 0; i < subCtx.sceneContext.numVisibleLights; i++)
+								visibleLights.add(subCtx.sceneContext.lights.get(i));
 						}
 					}
 				}
