@@ -84,11 +84,11 @@
     "windAngle": 40,
     "windSpeed": 10,
     "windStrength": 20,
-	  "sunStrength": 0.05,
+    "sunStrength": 0.05,
     "sunlightStrength": 0.5,
     "starVisibility": 0.01,
     "moonVisibility": 0.1,
-	  "minBrightnessBoost": 0.8
+    "minBrightnessBoost": 0.8
   },
   {
     "area": "WILDERNESS_LOW",
@@ -101,11 +101,11 @@
     "windAngle": 40,
     "windSpeed": 15,
     "windStrength": 40,
-	  "sunStrength": 0.1,
+    "sunStrength": 0.1,
     "sunlightStrength": 0.7,
     "starVisibility": 0.3,
     "moonVisibility": 0.3,
-	  "minBrightnessBoost": 0.8
+    "minBrightnessBoost": 0.8
   },
   {
     "area": "WILDERNESS_MID",
@@ -121,11 +121,11 @@
     "windAngle": 40,
     "windSpeed": 15,
     "windStrength": 25,
-	  "sunStrength": 0.05,
+    "sunStrength": 0.05,
     "sunlightStrength": 0.5,
     "starVisibility": 0.2,
     "moonVisibility": 0.2,
-	  "minBrightnessBoost": 0.8
+    "minBrightnessBoost": 0.8
   },
   {
     "area": "HUNTER_GUILD",
@@ -899,7 +899,7 @@
     "groundFogEnd": -900,
     "groundFogOpacity": 0.4,
     "sunStrength": 0.6,
-	  "sunlightStrength": 0.4,
+    "sunlightStrength": 0.4,
     "minBrightnessBoost": 0.3,
     "starVisibility": 0.5,
     "moonVisibility": 0.5
@@ -915,7 +915,7 @@
     "groundFogEnd": -1600,
     "groundFogOpacity": 0.5,
     "sunStrength": 0.6,
-	  "sunlightStrength": 0.4,
+    "sunlightStrength": 0.4,
     "minBrightnessBoost": 0.3,
     "starVisibility": 0.5,
     "moonVisibility": 0.5
@@ -932,8 +932,8 @@
     "groundFogOpacity": 0.3,
     "windSpeed": 17.5,
     "windStrength": 60,
-	  "sunStrength": 0.6,
-	  "sunlightStrength": 0.4,
+    "sunStrength": 0.6,
+    "sunlightStrength": 0.4,
     "minBrightnessBoost": 0.3,
     "starVisibility": 0.5,
     "moonVisibility": 0.5
@@ -1163,7 +1163,7 @@
     "windAngle": 40,
     "windSpeed": 10,
     "windStrength": 40,
-	  "sunStrength": 0.1,
+    "sunStrength": 0.1,
     "sunlightStrength": 0.7,
     "starVisibility": 0.3,
     "moonVisibility": 0.3,
@@ -1298,8 +1298,8 @@
     "fogDepth": 50,
     "windStrength": 30,
     "windSpeed": 10,
-	  "sunlightStrength": 0.5,
-	  "sunStrength": 0.1
+    "sunlightStrength": 0.5,
+    "sunStrength": 0.1
   },
   {
     "area": "LIZARDMAN_TEMPLE",
@@ -1324,10 +1324,10 @@
     "directionalStrength": 1.5,
     "fogColor": "#aebde0",
     "fogDepth": 50,
-	  "sunStrength": 0.1,
+    "sunStrength": 0.1,
     "sunlightStrength": 0.8,
     "starVisibility": 0.3,
-	  "moonVisibility": 0.3
+    "moonVisibility": 0.3
   },
   {
     "area": "WINTERTODT_ARENA",
@@ -1342,7 +1342,7 @@
     "groundFogStart": -1750,
     "groundFogEnd": -2250,
     "groundFogOpacity": 0.65,
-	  "sunStrength": 0.1,
+    "sunStrength": 0.1,
     "sunlightStrength": 0.8,
     "starVisibility": 0.3
   },
@@ -1365,10 +1365,10 @@
     "fogColor": "#150a05",
     "fogDepth": 40,
     "waterColor": "#b9d6ff",
-	  "starVisibility": 0.05,
-	  "sunlightStrength": 0.01,
-	  "sunStrength": 0.01,
-	  "moonVisibility": 0.01
+    "starVisibility": 0.05,
+    "sunlightStrength": 0.01,
+    "sunStrength": 0.01,
+    "moonVisibility": 0.01
   },
   {
     "area": "THE_STRANGLEWOOD",
@@ -1378,9 +1378,9 @@
     "directionalStrength": 2.5,
     "fogColor": "#af979f",
     "fogDepth": 35,
-	  "sunStrength": 0.8,
-	  "sunlightStrength": 0.8,
-	  "starVisibility": 0.3
+    "sunStrength": 0.8,
+    "sunlightStrength": 0.8,
+    "starVisibility": 0.3
   },
   {
     "area": "THE_STRANGLEWOOD_QUEST_UNDERGROUND_AREAS",
@@ -2114,7 +2114,7 @@
     "groundFogOpacity": 0.3,
     "groundFogEnd": -1800,
     "sunStrength": 0.6,
-	  "sunlightStrength": 0.4,
+    "sunlightStrength": 0.4,
     "minBrightnessBoost": 0.3,
     "starVisibility": 0.5,
     "moonVisibility": 0.5
@@ -2128,7 +2128,7 @@
     "fogColor": "#aebde0",
     "fogDepth": 50,
     "sunStrength": 0.6,
-	  "sunlightStrength": 0.4,
+    "sunlightStrength": 0.4,
     "minBrightnessBoost": 0.3,
     "starVisibility": 0.5,
     "moonVisibility": 0.5
@@ -2143,7 +2143,7 @@
     "fogColor": "#aebde0",
     "fogDepth": 30,
     "sunStrength": 0.6,
-	  "sunlightStrength": 0.4,
+    "sunlightStrength": 0.4,
     "minBrightnessBoost": 0.3,
     "starVisibility": 0.5,
     "moonVisibility": 0.5
@@ -2167,7 +2167,8 @@
     "instantTransition": true,
     "windAngle": 40,
     "windSpeed": 13,
-    "windStrength": 65
+    "windStrength": 65,
+    "moonVisibility": 0
   },
   {
     "area": "AUBURNVALE",
@@ -2185,7 +2186,7 @@
     "directionalStrength": 2,
     "fogColor": "#fddcb4",
     "fogDepth": 6.5,
-	  "minBrightnessBoost": 0.4,
+    "minBrightnessBoost": 0.4,
     "windStrength": 50
   },
   {
@@ -2332,7 +2333,11 @@
     "groundFogOpacity": 0.3,
     "windAngle": 40,
     "windSpeed": 10,
-    "windStrength": 20
+    "windStrength": 20,
+    "sunlightStrength": 0.8,
+    "sunStrength": 0.05,
+    "starVisibility": 0.3,
+    "moonVisibility": 0.4
   },
   {
     "area": "PLAYER_OWNED_HOUSE_FREM",
@@ -2346,7 +2351,12 @@
     "groundFogEnd": -400,
     "groundFogOpacity": 0.3,
     "windSpeed": 17.5,
-    "windStrength": 60
+    "windStrength": 60,
+    "sunStrength": 0.6,
+    "sunlightStrength": 0.4,
+    "minBrightnessBoost": 0.3,
+    "starVisibility": 0.5,
+    "moonVisibility": 0.5
   },
   {
     "area": "PLAYER_OWNED_HOUSE_MORY",
@@ -2362,7 +2372,12 @@
     "groundFogOpacity": 0.5,
     "windAngle": 40,
     "windSpeed": 7,
-    "windStrength": 26
+    "windStrength": 26,
+    "minBrightnessBoost": 0.75,
+    "starVisibility": 0.25,
+    "moonVisibility": 0.35,
+    "sunStrength": 0.025,
+    "sunlightStrength": 0.15
   },
   {
     "area": "PLAYER_OWNED_HOUSE_DEATH",
@@ -2373,7 +2388,8 @@
     "directionalStrength": 0.75,
     "fogColor": "#000000",
     "fogDepth": 25,
-	"cycleMode": "FIXED_FULL_MOON"
+	"cycleMode": "FIXED_FULL_MOON",
+    "starVisibility": 0.5
   },
   {
     "area": "PLAYER_OWNED_HOUSE_SNOWY",
