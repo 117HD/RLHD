@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -38,6 +39,7 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.FileWatcher;
@@ -522,6 +524,15 @@ public class EnvironmentManager {
 		if (currentEnvironment == Environment.OVERWORLD)
 			return getOverworldEnvironment();
 		return currentEnvironment;
+	}
+
+	/**
+	 * The day/night cycle mode forced by the current environment, or null to use
+	 * the player's configured mode.
+	 */
+	@Nullable
+	public DaylightCycle getForcedCycleMode() {
+		return getCurrentEnvironment().cycleMode;
 	}
 
 	private Environment getOverworldEnvironment() {

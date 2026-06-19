@@ -433,13 +433,16 @@ public class ZoneRenderer implements Renderer {
 			// Use Day/Night-Cycle sun/moon angles if enabled
 			float[] shadowSunAngles = environmentManager.currentSunAngles;
 			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
-				TimeOfDay.setCycleMode(config.daylightCycle());
+				// The environment may force a specific cycle mode, overriding the config.
+				DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
+				DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
+				TimeOfDay.setCycleMode(daylightCycle);
 				TimeOfDay.setDayLength(config.dayLength());
 				double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 				MoonBehavior shadowMoonBehavior = config.moonBehavior();
 
-				if (config.daylightCycle() == DaylightCycle.FIXED_FULL_MOON) {
+				if (daylightCycle == DaylightCycle.FIXED_FULL_MOON) {
 					// Shadows must be cast from the same fixed point as the rendered
 					// moon disk, otherwise they drift while the moon stays put.
 					double[] moonAnglesD = TimeOfDay.getFixedFullMoonAngles();
@@ -610,7 +613,10 @@ public class ZoneRenderer implements Renderer {
 		float[] sunAngles = environmentManager.currentSunAngles;
 
 		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
-			TimeOfDay.setCycleMode(config.daylightCycle());
+			// The environment may force a specific cycle mode, overriding the config.
+			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
+			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
+			TimeOfDay.setCycleMode(daylightCycle);
 			TimeOfDay.setDayLength(config.dayLength());
 			int minimumBrightness = config.minimumBrightness();
 			float cycleDuration = config.cycleDurationMinutes();
@@ -662,10 +668,9 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skyMoonIllumination.set(moonIllumination);
 			plugin.uboGlobal.starVisibility.set(config.enableStarMap() ? environmentManager.currentStarVisibility : 0f);
 			plugin.uboGlobal.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
-			DaylightCycle cycleMode = config.daylightCycle();
-			boolean hideMoon = cycleMode == DaylightCycle.FIXED_DAWN
-				|| cycleMode == DaylightCycle.FIXED_MIDDAY
-				|| cycleMode == DaylightCycle.FIXED_SUNSET;
+			boolean hideMoon = daylightCycle == DaylightCycle.FIXED_DAWN
+				|| daylightCycle == DaylightCycle.FIXED_MIDDAY
+				|| daylightCycle == DaylightCycle.FIXED_SUNSET;
 			plugin.uboGlobal.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
 			// Auroras appear on nights the per-night random roll selects. The roll
 			// switches only at the cycle boundary (daytime), so it's invisible

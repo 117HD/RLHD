@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.GsonUtils.DegreesToRadians;
@@ -44,6 +45,10 @@ public class Environment {
 	public boolean allowRoofShadows = true;
 	public boolean lightningEffects = false;
 	public boolean instantTransition = false;
+	// When set, forces the day/night cycle mode for this environment, overriding
+	// the player's config setting. Null = use the configured mode.
+	@Nullable
+	public DaylightCycle cycleMode = null;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] ambientColor = rgb("#ffffff");
 	public float ambientStrength = 1;
