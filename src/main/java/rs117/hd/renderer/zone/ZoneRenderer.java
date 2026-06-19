@@ -652,6 +652,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skyMoonColor.set(moonColor);
 			plugin.uboGlobal.skyMoonIllumination.set(moonIllumination);
 			plugin.uboGlobal.starVisibility.set(config.enableStarMap() ? environmentManager.currentStarVisibility : 0f);
+			plugin.uboGlobal.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
 			DaylightCycle cycleMode = config.daylightCycle();
 			boolean hideMoon = cycleMode == DaylightCycle.FIXED_DAWN || cycleMode == DaylightCycle.FIXED_SUNSET;
 			plugin.uboGlobal.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
@@ -760,6 +761,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skyMoonColor.set(new float[]{ 0, 0, 0 });
 			plugin.uboGlobal.skyMoonIllumination.set(0.0f);
 			plugin.uboGlobal.starVisibility.set(1.0f);
+			plugin.uboGlobal.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
 		}
 
 		float fogDepth = 0;

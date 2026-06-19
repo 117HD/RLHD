@@ -261,7 +261,7 @@ vec3 proceduralStarfield(vec3 dir) {
 
     // Nebulas
     // A few large sweeping regions with wispy internal structure
-    color += proceduralNebula(dir);
+    color += proceduralNebula(dir) * nebulaVisibility;
 
     return color;
 }
@@ -271,6 +271,6 @@ vec3 proceduralStarfield(vec3 dir) {
 // showing star points through terrain.
 vec3 proceduralStarfieldBackground(vec3 dir) {
     vec3 color = vec3(0.00304, 0.00304, 0.00521);
-    color += proceduralNebula(dir);
+    color += proceduralNebula(dir) * nebulaVisibility;
     return color;
 }

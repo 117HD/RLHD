@@ -677,10 +677,21 @@ public interface HdPluginConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "enableNebulas",
+		name = "Nebulas",
+		description = "Show procedural nebula clouds in the night sky. When disabled, the night sky shows only stars and the gradient skybox.",
+		position = 5,
+		section = daylightCycleSettings
+	)
+	default boolean enableNebulas() {
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "enableMoon",
 		name = "Moon",
 		description = "Show the moon in the night sky.",
-		position = 5,
+		position = 6,
 		section = daylightCycleSettings
 	)
 	default boolean enableMoon() {
@@ -693,7 +704,7 @@ public interface HdPluginConfig extends Config
 		description = "How the moon moves across the sky.<br>" +
 			"Realistic = Astronomical moon with realistic phases and independent orbit<br>" +
 			"Night Synced = Moon always rises when sun sets and sets when sun rises (always full)",
-		position = 6,
+		position = 7,
 		section = daylightCycleSettings
 	)
 	default MoonBehavior moonBehavior() {
@@ -1297,6 +1308,7 @@ public interface HdPluginConfig extends Config
 	String KEY_CYCLE_DURATION = "cycleDurationMinutes";
 	String KEY_MINIMUM_BRIGHTNESS = "minimumBrightness";
 	String KEY_ENABLE_STAR_MAP = "enableStarMap";
+	String KEY_ENABLE_NEBULAS = "enableNebulas";
 	String KEY_ENABLE_MOON = "enableMoon";
 	String KEY_MOON_BEHAVIOR = "moonBehavior";
 	@ConfigItem(

@@ -68,6 +68,9 @@ layout(std140) uniform UBOGlobal {
     // Star visibility (from environment override)
     float starVisibility;
 
+    // Nebula visibility (toggled via config)
+    float nebulaVisibility;
+
     // Moon visibility (from environment override)
     float moonVisibility;
 };

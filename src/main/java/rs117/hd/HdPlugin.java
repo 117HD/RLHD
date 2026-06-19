@@ -1903,6 +1903,7 @@ public class HdPlugin extends Plugin {
 							case KEY_CYCLE_DURATION:
 							case KEY_MINIMUM_BRIGHTNESS:
 							case KEY_ENABLE_STAR_MAP:
+							case KEY_ENABLE_NEBULAS:
 							case KEY_ENABLE_MOON:
 							case KEY_MOON_BEHAVIOR:
 								reloadEnvironments = true;
