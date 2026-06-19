@@ -1479,6 +1479,7 @@
       "DEADTREE2",
       "DEADTREE2_DARK",
       "DEADTREE2_SWAMP",
+      "DEADTREE2_DARK_NOOP",
       "DEADTREE6",
       "DEADTREE4SWAMP",
       "COPPICETREE_SWAMP",
@@ -2574,7 +2575,8 @@
       "BRAIN_ROCK_POOL_BITS",
       "FAIRYTALE2_ROCK_POOL_SMALL",
       "STALKER_DEN_STEPPING_STONE",
-      "FRISD_IZSO_ROCK_POOL_SMALL"
+      "FRISD_IZSO_ROCK_POOL_SMALL",
+      "GREAT_CONCH_STEPPING_STONE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -11000,7 +11002,8 @@
       "BRUT_PIER3_OPPABLE",
       "BRUT_PIER_HILLSKEW",
       "BRUT_PIER2_HILLSKEW",
-      "BRUT_PIER3_HILLSKEW"
+      "BRUT_PIER3_HILLSKEW",
+      "BRUT_PIER_BROKEN"
     ],
     "uvType": "BOX"
   },
@@ -15663,7 +15666,9 @@
       "LAGUNA_DUGUPSOIL01_SAND01",
       "LAGUNA_DUGUPSOIL02_SAND01",
       "LAGUNA_DUGUPSOIL03_SAND01",
-      "CLIMBINGCAVEROCKS1"
+      "CLIMBINGCAVEROCKS1",
+      "GREAT_CONCH_CLIFF_SHORTCUT_SOUTHEAST_BOTTOM",
+      "GREAT_CONCH_CLIFF_SHORTCUT_SOUTHEAST_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -18579,6 +18584,25 @@
         "colors": "h == 5",
         "uvType": "BOX",
         "uvScale": 0.33
+      }
+    ]
+  },
+  {
+    "description": "Corsair Cove - Rope Bridge Rails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "DS2_OGRE_CORSAIR_BRIDGE_MIDDLE",
+      "DS2_OGRE_CORSAIR_BRIDGE_END_LEFT",
+      "DS2_OGRE_CORSAIR_BRIDGE_END_RIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "ROPE",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   },
@@ -42669,7 +42693,8 @@
       "BARREL_WOODEN01_AVIUM01",
       "BARREL_WOODEN01_ALDARIN01",
       "TWILIGHT_TEMPLE_LOWER_BARREL",
-      "TWILIGHT_TEMPLE_LOWER_BARREL_EMPTY"
+      "TWILIGHT_TEMPLE_LOWER_BARREL_EMPTY",
+      "SAILING_CHARTING_GENERIC_HALBERD_POLES"
     ],
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
@@ -44042,6 +44067,29 @@
     "uvOrientation": 480
   },
   {
+    "description": "Hollow Log with Mushrooms",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "EASTER24_FALLEN_TRUNK_02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_2"
+      },
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "terrainVertexSnap": true
+      }
+    ]
+  },
+  {
     "description": "Old Ones Hole",
     "baseMaterial": "DIRT_2",
     "objectIds": [
@@ -45252,7 +45300,8 @@
       "SEASLUG_ROWBOAT",
       "MM2_MONKEY_BOAT",
       "SLUG2_ROWBOAT",
-      "SLUG2_ROWBOAT_DMG"
+      "SLUG2_ROWBOAT_DMG",
+      "SAILING_CHARTING_GENERIC_EDGE_BOAT"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -52716,7 +52765,8 @@
       "ALDARIN_PIER_RAISED",
       "ALDARIN_PIER_RAISED_SHIPWRIGHT_ICON",
       "ALDARIN_PIER_RAISED_PORT_TASK_BOARD_ICON",
-      "ALDARIN_PIER_RAISED_SALVAGING_STATION_ICON"
+      "ALDARIN_PIER_RAISED_SALVAGING_STATION_ICON",
+      "ALDARIN_PIER_RAISED_LEDGER_TABLE_ICON"
     ]
   },
   {
@@ -62914,9 +62964,12 @@
     ]
   },
   {
-    "description": "Kebos Lowlands - Corsair Cove - Bark - Root - Large",
+    "description": "Kebos Lowlands - Corsair Cove - Charting - Bark - Root - Large",
     "baseMaterial": "LIGHT_BARK",
-    "objectIds": [ "DS2_OGRE_CORSAIR_ROOT_LARGE" ],
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_TREE_ROOTS",
+      "DS2_OGRE_CORSAIR_ROOT_LARGE"
+    ],
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 342
@@ -70904,7 +70957,7 @@
     ]
   },
   {
-    "description": "Quetzacalli Gorge - Rp[e - Metallic - Bridge Supports with anchor",
+    "description": "Quetzacalli Gorge - Rope - Metallic - Bridge Supports with anchor",
     "baseMaterial": "ROPE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -75545,19 +75598,66 @@
     ]
   },
   {
-    "description": "Ocean Rocks - Skeleton",
+    "description": "Ocean Rocks - Skeleton or Conch",
     "baseMaterial": "ROCK_7_LIGHT",
     "uvType": "BOX",
     "objectIds": [
       "SAILING_CHARTING_GENERIC_ROCK_BAY_OF_SARIM",
       "SAILING_CHARTING_GENERIC_ROCK_LUMBRIDGE_BASIN",
-      "SAILING_CHARTING_GENERIC_ROCK_RIMMINGTON_STRAIT"
+      "SAILING_CHARTING_GENERIC_ROCK_RIMMINGTON_STRAIT",
+      "SAILING_CHARTING_GENERIC_FELDIP_RIDGE",
+      "SAILING_CHARTING_GENERIC_MINOR_CONCH"
     ],
     "colorOverrides": [
       {
-        "description": "Skeleton",
-        "colors": "h == 10",
+        "description": "Skeleton and Conch",
+        "colors": "h == 8 || h == 10",
         "baseMaterial": "BONE"
+      }
+    ]
+  },
+  {
+    "description": "Ocean Rocks - Speared Kraken",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_KRAKEN_SKELETON"
+    ],
+    "colorOverrides": [
+      {
+        "description": "ROCK",
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX"
+      },
+      {
+        "description": "ROCK",
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_7_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Ocean Rocks - Sign",
+    "baseMaterial": "ROCK_7_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_NOTHING_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Sign",
+        "colors": "h == 2 || h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 430
+      },
+      {
+        "description": "Sign",
+        "colors": "h > 5",
+        "baseMaterial": "GRUNGE_3_SMOOTH_LIGHT",
+        "castShadows": false
       }
     ]
   },
@@ -75817,12 +75917,14 @@
       "DUCK_NOOP",
       "DUCK_FEMALE_NOOP",
       "SWAN",
-      "DUCKLING"
+      "DUCKLING",
+      "SAILING_CHARTING_CURRENT_DUCK_MOVING",
+      "SAILING_CHARTING_CURRENT_DUCK_STOPPED"
     ],
     "colorOverrides": [
       {
         "description": "Fake Ripples",
-        "colors": "a < 255 || h == 37 && l == 71 || h == 42",
+        "colors": "a < 255 || h == 37 && l == 71 || h == 42 || h == 39 && s < 3",
         "baseMaterial": "NONE",
         "hideAsWaterEffect": true
       }
@@ -75871,15 +75973,16 @@
     ]
   },
   {
-    "description": "Floating Jellyfish - Hide Ripples",
+    "description": "Floating Jellyfish & Map Bottle - Hide Ripples",
     "objectIds": [
-      "SAILING_CHARTING_GENERIC_LARGE_JELLYFISH"
+      "SAILING_CHARTING_GENERIC_LARGE_JELLYFISH",
+      "SAILING_CHARTING_GENERIC_MAP_BOTTLE"
     ],
     "colorOverrides": [
       {
         "description": "Fake Ripples",
         "colors": "h == 37",
-        "baseMaterial": "NONE",
+        "baseMaterial": "GRAY_85",
         "hideAsWaterEffect": true
       }
     ]
@@ -80619,12 +80722,13 @@
       "AMENITY_POTTERYOVEN_UNBUILT",
       "AMENITY_BANKCHEST_UNBUILT",
       "AMENITY_COOKING_POT_UNBUILT",
-      "AMENITY_LOOM_UNBUILT"
+      "AMENITY_LOOM_UNBUILT",
+      "AMENITY_SPINNING_WHEEL_UNBUILT"
     ],
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_150"
       },
       {
         "colors": "h == 7",
@@ -80645,11 +80749,43 @@
     ]
   },
   {
+    "description": "Sailing - Charting - Purse",
+    "baseMaterial": "BURLAP_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_SHARHAIS_PURSE"
+    ]
+  },
+  {
     "description": "Sailing - Charting - Crab Statue",
     "baseMaterial": "SMOOTH_STONE_DARK",
     "uvType": "BOX",
     "objectIds": [
       "SAILING_CHARTING_GENERIC_CRAB_STATUE"
+    ]
+  },
+  {
+    "description": "Charting - Sign",
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_BEGINNING_SIGN",
+      "SAILING_CHARTING_GENERIC_BARRACUDA_ADVERT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Sign",
+        "colors": "h == 2 || h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Sign",
+        "colors": "h > 5",
+        "baseMaterial": "GRUNGE_3_SMOOTH_LIGHT",
+        "castShadows": false
+      }
     ]
   },
   {
@@ -80909,10 +81045,6 @@
     "baseMaterial": "GEM_STONE",
     "uvScale": 1.1,
     "uvOrientation": 512,
-    "areas": [
-      "SHILO_VILLAGE_MINE",
-      "SHILO_VILLAGE_MINE_SURFACE"
-    ],
     "uvType": "BOX",
     "objectIds": [
       "GEMROCK",
@@ -82939,6 +83071,17 @@
     ]
   },
   {
+    "description": "Broken Rowboat",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 610,
+    "objectIds": [
+      "PISCARILIUS_WRECKAGE_LAND_01",
+      "WRECKED_BOAT"
+    ]
+  },
+  {
     "description": "Charting - Rock - Collasped Gem Crab Burrow",
     "baseMaterial": "ROCK_5",
     "uvType": "BOX",
@@ -82946,6 +83089,102 @@
     "uvScale": 0.8,
     "objectIds": [
       "SAILING_CHARTING_GENERIC_CRAB_HOLE"
+    ]
+  },
+  {
+    "description": "Charting - Tent",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.4111111111111,
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_ABANDONED_CAMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 7 && s == 1 || l > 90",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Charting - Diseased Coral",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_DISEASED_CORAL"
+    ]
+  },
+  {
+    "description": "Charting - Random Rope Anchor Point",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_BARRACUDA_ROPE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Charting - Sled",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -200,
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_DISCARDED_SLED"
+    ]
+  },
+  {
+    "description": "Charting - Shark Corpse",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_SHARK_CORPSE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 1 || h == 2",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Charting - Plough",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 300,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 920,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_DISCARDED_PLOUGH"
     ]
   },
   {

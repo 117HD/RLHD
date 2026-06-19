@@ -47868,5 +47868,19 @@
     "projectileIds": [
       "SNAKEBOSS_FIREBALL"
     ]
+  },
+  {
+    "description": "Charting Sea Lure Light",
+    "offset": [ -150, 175, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_LARGE_LIGHT"
+    ]
   }
 ]
