@@ -29,7 +29,7 @@ public class TimeOfDay
 	// south-east sky and always rendered full. Stored as {azimuth, altitude} radians,
 	// matching the convention used by AtmosphereUtils.getMoonPosition().
 	private static final double FIXED_FULL_MOON_AZIMUTH = Math.toRadians(135); // south-east
-	private static final double FIXED_FULL_MOON_ALTITUDE = Math.toRadians(25);  // low in the sky
+	private static final double FIXED_FULL_MOON_ALTITUDE = Math.toRadians(15);  // low in the sky
 
 	/**
 	 * Fixed Full Moon angles {azimuth, altitude} in radians, matching the
