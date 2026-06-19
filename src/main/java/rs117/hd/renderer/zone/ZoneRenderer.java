@@ -434,6 +434,7 @@ public class ZoneRenderer implements Renderer {
 			float[] shadowSunAngles = environmentManager.currentSunAngles;
 			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
 				TimeOfDay.setCycleMode(config.daylightCycle());
+				TimeOfDay.setDayLength(config.dayLength());
 				double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 				MoonBehavior shadowMoonBehavior = config.moonBehavior();
@@ -610,6 +611,7 @@ public class ZoneRenderer implements Renderer {
 
 		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
 			TimeOfDay.setCycleMode(config.daylightCycle());
+			TimeOfDay.setDayLength(config.dayLength());
 			int minimumBrightness = config.minimumBrightness();
 			float cycleDuration = config.cycleDurationMinutes();
 
