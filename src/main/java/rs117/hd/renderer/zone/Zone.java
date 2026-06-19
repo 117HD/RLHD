@@ -23,7 +23,6 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 
-import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
@@ -702,10 +701,10 @@ public class Zone {
 
 		drawIdx = 0;
 
-		int yawSin = SINE[camera.getFixedYaw()];
-		int yawCos = COSINE[camera.getFixedYaw()];
-		int pitchSin = SINE[camera.getFixedPitch()];
-		int pitchCos = COSINE[camera.getFixedPitch()];
+		final int yawSin = camera.getFixedYawSin();
+		final int yawCos = camera.getFixedYawCos();
+		final int pitchSin = camera.getFixedPitchSin();
+		final int pitchCos = camera.getFixedPitchCos();
 		for (AlphaModel m : alphaModels) {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
 				continue;

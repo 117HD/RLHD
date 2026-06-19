@@ -797,10 +797,10 @@ public class ZoneRenderer implements Renderer {
 		final int topClip = client.getRasterizer3D_clipNegativeMidY();
 		final int bottomClip = client.getRasterizer3D_clipMidY2();
 
-		final int cameraYawCos = Perspective.COSINE[sceneCamera.getFixedYaw()];
-		final int cameraYawSin = SINE[sceneCamera.getFixedYaw()];
-		final int cameraPitchCos = COSINE[sceneCamera.getFixedPitch()];
-		final int cameraPitchSin = SINE[sceneCamera.getFixedPitch()];
+		final int cameraYawCos = sceneCamera.getFixedYawCos();
+		final int cameraYawSin = sceneCamera.getFixedYawSin();
+		final int cameraPitchCos = sceneCamera.getFixedPitchCos();
+		final int cameraPitchSin = sceneCamera.getFixedPitchSin();
 		final int cameraZoom = (int) sceneCamera.getZoom();
 
 		// Check if the tile is within the near plane of the frustum

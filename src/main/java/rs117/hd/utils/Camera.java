@@ -3,7 +3,9 @@ package rs117.hd.utils;
 import java.util.Arrays;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 
+import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -214,6 +216,14 @@ public class Camera {
 
 	public int getFixedYaw() { return fixedOrientation[0]; }
 
+	public int getFixedYawCos() { return Perspective.COSINE14[mod(getFixedYaw(), 16384)]; }
+
+	public int getFixedYawSin() { return Perspective.SINE14[mod(getFixedYaw(), 16384)]; }
+
+	public float getFixedYawCosF() { return Perspective.COSINEF14[mod(getFixedYaw(), 16384)]; }
+
+	public float getFixedYawSinF() { return SINEF14[mod(getFixedYaw(), 16384)]; }
+
 	public Camera setPitch(float pitch) {
 		if (orientation[1] != pitch) {
 			orientation[1] = pitch;
@@ -226,6 +236,14 @@ public class Camera {
 		fixedOrientation[1] = pitch;
 		return this;
 	}
+
+	public int getFixedPitchCos() { return Perspective.COSINE14[mod(getFixedPitch(), 16384)]; }
+
+	public int getFixedPitchSin() { return Perspective.SINE14[mod(getFixedPitch(), 16384)]; }
+
+	public float getFixedPitchCosF() { return Perspective.COSINEF14[mod(getFixedPitch(), 16384)]; }
+
+	public float getFixedPitchSinF() { return SINEF14[mod(getFixedPitch(), 16384)]; }
 
 	public float getPitch() {
 		return orientation[1];
