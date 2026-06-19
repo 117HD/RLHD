@@ -612,7 +612,7 @@ public interface HdPluginConfig extends Config
 		section = daylightCycleSettings
 	)
 	default boolean enableDaylightCycle() {
-		return false;
+		return true;
 	}
 
 	@ConfigItem(
@@ -1359,7 +1359,7 @@ public interface HdPluginConfig extends Config
 		section = shadowSettings
 	)
 	default boolean terrainShadows() {
-		return false;
+		return true;
 	}
 
 	String KEY_INDIRECT_DRAW = "experimentalIndirectDraw";
