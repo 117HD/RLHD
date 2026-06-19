@@ -630,7 +630,7 @@ public class TimeOfDay
 
 	// Probability that any given simulated night is an "aurora night", in
 	// environments flagged aurora-eligible. Rolled deterministically per night.
-	private static final double AURORA_NIGHT_CHANCE = 0.15;
+	private static final double AURORA_NIGHT_CHANCE = 0.08;
 
 	/**
 	 * Whether the current simulated night is an "aurora night".
