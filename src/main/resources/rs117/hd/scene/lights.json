@@ -24238,22 +24238,23 @@
     "description": "ELVEN_LAMP",
     "height": 160,
     "alignment": "CENTER",
-    "radius": 350,
+    "radius": 275,
     "strength": 10,
+    "visibleFromOtherPlanes": true,
     "color": [
       255,
       255,
       255
     ],
-    "type": "PULSE",
-    "duration": 2000,
-    "range": 7,
+    "type": "FLICKER",
+    "range": 10,
     "objectIds": [
       "SOTE_HUNTING_LAMP_OP",
       "SOTE_HUNTING_LAMP_NOOP",
       "REGICIDE_CRYSTAL_LAMP",
       "REGICIDE_CRYSTAL_LAMP_BLOCKWALK_ONLY",
-      "ELF_VILLAGE_RAIL_LAMP"
+      "ELF_VILLAGE_RAIL_LAMP",
+      "PRIF_CRYSTAL_LAMP"
     ]
   },
   {
@@ -37373,8 +37374,8 @@
   {
     "description": "GNOME_LAMP",
     "offset": [ -60, 120, 0 ],
-    "radius": 400,
-    "strength": 7,
+    "radius": 550,
+    "strength": 4,
     "color": [
       255,
       255,
