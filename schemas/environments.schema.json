@@ -47,6 +47,10 @@
         "type": "boolean",
         "description": "Whether transitions to and from this area should always be instant."
       },
+      "aurora": {
+        "type": "boolean",
+        "description": "Whether to show animated aurora borealis curtains in the night sky. Defaults to false."
+      },
       "ambientColor": {
         "type": [ "string", "array" ],
         "description": "Ambient light color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",

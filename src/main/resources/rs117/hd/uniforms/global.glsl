@@ -73,4 +73,7 @@ layout(std140) uniform UBOGlobal {
 
     // Moon visibility (from environment override)
     float moonVisibility;
+
+    // Aurora visibility (from environment override)
+    float auroraVisibility;
 };

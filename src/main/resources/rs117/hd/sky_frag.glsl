@@ -205,8 +205,10 @@ void main() {
             skyColor += shootingStars(viewDir, elapsedTime) * nightSkyBlend;
         }
 
-        // Aurora borealis — animated curtains near the northern horizon
-        skyColor += proceduralAurora(viewDir, elapsedTime) * nightSkyBlend;
+        // Aurora borealis — animated curtains near the northern horizon.
+        // Only shown in environments flagged with "aurora": true (auroraVisibility
+        // blends 0->1 across environment transitions).
+        skyColor += proceduralAurora(viewDir, elapsedTime) * nightSkyBlend * auroraVisibility;
     }
 
     // === MOON DISK ===
