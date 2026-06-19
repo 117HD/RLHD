@@ -115,8 +115,40 @@ public class SceneManager {
 	}
 
 	@Nullable
-	public ZoneSceneContext getSceneContext() {
-		return root.sceneContext;
+	public ZoneSceneContext getSceneContext(@Nullable WorldView worldView) {
+		if (worldView == null || worldView.getId() == WorldView.TOPLEVEL)
+			return root.sceneContext;
+		WorldViewContext ctx = getContext(worldView);
+		return ctx != null ? ctx.sceneContext : null;
+	}
+
+	@Nullable
+	public ZoneSceneContext getLoadedSubSceneContext(WorldView worldView) {
+		WorldViewContext ctx = getContext(worldView);
+		if (ctx == null || ctx.isLoading)
+			return null;
+		return ctx.sceneContext;
+	}
+
+	@Nullable
+	public rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct getWorldViewStruct(int worldViewId) {
+		if (worldViewId == WorldView.TOPLEVEL)
+			return null;
+		WorldViewContext ctx = getContext(worldViewId);
+		return ctx != null ? ctx.uboWorldViewStruct : null;
+	}
+
+	public void forEachLoadedSceneContext(java.util.function.Consumer<ZoneSceneContext> consumer) {
+		if (root.sceneContext != null)
+			consumer.accept(root.sceneContext);
+		WorldView wv = client.getTopLevelWorldView();
+		if (wv != null) {
+			for (WorldEntity we : wv.worldEntities()) {
+				ZoneSceneContext sub = getLoadedSubSceneContext(we.getWorldView());
+				if (sub != null)
+					consumer.accept(sub);
+			}
+		}
 	}
 
 	public boolean isRoot(WorldViewContext context) { return root == context; }
@@ -768,6 +800,7 @@ public class SceneManager {
 
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
 		proceduralGenerator.generateSceneData(sceneContext, null);
+		lightManager.loadSceneLights(sceneContext);
 
 		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
 		ctx.initialize(injector);
@@ -788,8 +821,15 @@ public class SceneManager {
 			return;
 
 		Stopwatch sw = Stopwatch.createStarted();
-		ctx.initBuffers();
 		ctx.sceneLoadGroup.complete();
+
+		for (var tileObject : ctx.sceneContext.lightSpawnsToHandleOnClientThread)
+			lightManager.handleObjectSpawn(ctx.sceneContext, tileObject);
+		ctx.sceneContext.lightSpawnsToHandleOnClientThread.clear();
+		ctx.sceneContext.lightSpawnsToHandleOnClientThread.trimToSize();
+		lightManager.swapSceneLights(ctx.sceneContext, null);
+
+		ctx.initBuffers();
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.isLoading = false;

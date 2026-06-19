@@ -33,6 +33,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.util.ColorUtil;
 import org.apache.commons.lang3.NotImplementedException;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightType;
@@ -63,6 +64,9 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private SceneManager sceneManager;
 
 	private boolean hideInvisibleLights;
 	private boolean hideRadiusRings = true;
@@ -119,8 +123,12 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 
 	@Override
 	public Dimension render(Graphics2D g) {
-		var sceneContext = plugin.getSceneContext();
-		if (sceneContext == null)
+		if (plugin.getSceneContext() == null)
+			return null;
+
+		final ArrayList<Light> lights = new ArrayList<>();
+		sceneManager.forEachLoadedSceneContext(ctx -> lights.addAll(ctx.lights));
+		if (lights.isEmpty())
 			return null;
 
 		// If the orientation changed, don't consider mouse movement
@@ -188,14 +196,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			0, new float[] { 3 }, 0
 		);
 
-		float[] projectionMatrix = Mat4.identity();
-		int viewportWidth = client.getViewportWidth();
-		int viewportHeight = client.getViewportHeight();
-		Mat4.mul(projectionMatrix, Mat4.translate(client.getViewportXOffset(), client.getViewportYOffset(), 0));
-		Mat4.mul(projectionMatrix, Mat4.scale(viewportWidth, viewportHeight, 1));
-		Mat4.mul(projectionMatrix, Mat4.translate(.5f, .5f, .5f));
-		Mat4.mul(projectionMatrix, Mat4.scale(.5f, -.5f, .5f));
-		Mat4.mul(projectionMatrix, plugin.viewProjMatrix);
+		float[] projectionMatrix = SubSceneOverlayHelper.buildScreenProjectionMatrix(client, plugin);
 
 		float[] inverseProjection = null;
 		try {
@@ -213,7 +214,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 		hovers.clear();
 		int counter = 0;
 		final float[] lightToCamera = new float[3];
-		var lights = sceneContext.lights;
+		final float[] displayPos = new float[3];
 
 		float[] point = new float[4];
 		int selectedIndex = -1;
@@ -377,7 +378,10 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 				}
 			}
 
-			copyTo(point, l.pos);
+			copyTo(displayPos, l.pos);
+			SubSceneOverlayHelper.projectScenePoint(sceneManager.getWorldViewStruct(l.worldViewId), displayPos);
+
+			copyTo(point, displayPos);
 			point[3] = 1;
 
 			subtract(lightToCamera, plugin.cameraPosition, point);
@@ -507,7 +511,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 						}
 					}
 
-					copyTo(point, l.pos);
+					copyTo(point, displayPos);
 					point[3] = 1;
 					float[] pos = new float[4];
 					Mat4.projectVec(pos, projectionMatrix, point);
