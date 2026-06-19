@@ -96,13 +96,24 @@ void main() {
     // Calculate the angular relationship between view direction and sun direction
     // This creates the effect where the sun side of the sky is brighter/warmer
 
-    // Project both vectors onto the horizontal plane for horizontal gradient
-    vec3 viewHorizontal = normalize(vec3(viewDir.x, 0.0, viewDir.z));
+    // Project both vectors onto the horizontal plane for horizontal gradient.
+    // Near straight up/down the horizontal component of viewDir collapses to ~0,
+    // so normalize() becomes unstable and produces a visible "pinch" seam at the
+    // nadir/zenith. Guard the normalize and fade the directional bias toward
+    // neutral (0.5) as the view approaches vertical, removing the singularity.
+    vec2 viewHoriz = vec2(viewDir.x, viewDir.z);
+    float viewHorizLen = length(viewHoriz);
+    vec3 viewHorizontal = viewHorizLen > 1e-4 ? vec3(viewHoriz.x, 0.0, viewHoriz.y) / viewHorizLen : vec3(0.0);
     vec3 sunHorizontal = normalize(vec3(sunDir.x, 0.0, sunDir.z));
 
     // Dot product gives us how much we're facing toward/away from sun horizontally
     // Range: -1 (facing away from sun) to +1 (facing toward sun)
     float sunFacing = dot(viewHorizontal, sunHorizontal);
+
+    // Fade the horizontal gradient out as the view nears vertical, so the pole
+    // converges smoothly to a single neutral color instead of pinching.
+    float poleFade = smoothstep(0.0, 0.35, viewHorizLen);
+    sunFacing *= poleFade;
 
     // Convert to 0-1 range: 0 = facing away from sun, 1 = facing toward sun
     float sunSideBlend = (sunFacing + 1.0) * 0.5;

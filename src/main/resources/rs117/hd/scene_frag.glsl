@@ -550,10 +550,14 @@ void main() {
 
                 float upAmount = -viewDir.y;
 
-                // Horizontal sun-facing gradient
-                vec3 viewHorizontal = normalize(vec3(viewDir.x, 0.0, viewDir.z));
+                // Horizontal sun-facing gradient. Guard the normalize and fade the
+                // directional bias toward neutral as the view nears vertical, so the
+                // fog color doesn't pinch at the nadir/zenith (matches sky_frag.glsl).
+                vec2 viewHoriz = vec2(viewDir.x, viewDir.z);
+                float viewHorizLen = length(viewHoriz);
+                vec3 viewHorizontal = viewHorizLen > 1e-4 ? vec3(viewHoriz.x, 0.0, viewHoriz.y) / viewHorizLen : vec3(0.0);
                 vec3 sunHorizontal = normalize(vec3(sunDir.x, 0.0, sunDir.z));
-                float sunFacing = dot(viewHorizontal, sunHorizontal);
+                float sunFacing = dot(viewHorizontal, sunHorizontal) * smoothstep(0.0, 0.35, viewHorizLen);
                 float sunSideBlend = smoothstep(0.0, 1.0, (sunFacing + 1.0) * 0.5);
 
                 // Vertical zenith-to-horizon blend
