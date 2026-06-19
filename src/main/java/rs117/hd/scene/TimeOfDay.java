@@ -13,7 +13,7 @@ import static rs117.hd.utils.MathUtils.*;
 public class TimeOfDay
 {
 	public static final float MINUTES_PER_DAY = 30 / 60.f;
-	
+
 	// Static variables to maintain cycle state across config changes
 	private static float lastDayLength = MINUTES_PER_DAY;
 	private static long lastUpdateTime = 0;
@@ -24,6 +24,22 @@ public class TimeOfDay
 
 	// Current cycle mode — set once per frame by ZoneRenderer before any TimeOfDay calls
 	private static DaylightCycle currentCycleMode = DaylightCycle.DYNAMIC;
+
+	// Fixed Full Moon mode: the moon is locked at a prominent position in the
+	// south-east sky and always rendered full. Stored as {azimuth, altitude} radians,
+	// matching the convention used by AtmosphereUtils.getMoonPosition().
+	private static final double FIXED_FULL_MOON_AZIMUTH = Math.toRadians(135); // south-east
+	private static final double FIXED_FULL_MOON_ALTITUDE = Math.toRadians(25);  // low in the sky
+
+	/**
+	 * Fixed Full Moon angles {azimuth, altitude} in radians, matching the
+	 * convention returned by AtmosphereUtils.getMoonPosition(). Used both for
+	 * the sky moon direction and the shadow-casting light direction so the moon
+	 * disk and the shadows it casts stay locked together.
+	 */
+	public static double[] getFixedFullMoonAngles() {
+		return new double[] { FIXED_FULL_MOON_AZIMUTH, FIXED_FULL_MOON_ALTITUDE };
+	}
 
 	// Sky color keyframe tables. These are read-only constant data consumed by
 	// AtmosphereUtils.interpolateSrgb (which only reads and builds fresh float[]
@@ -128,15 +144,15 @@ public class TimeOfDay
 		Instant modifiedDate = getModifiedDate(dayLength);
 		return AtmosphereUtils.getDirectionalLight(modifiedDate.toEpochMilli(), latLong);
 	}
-	
+
 	public static float[] getRegionalDirectionalLight(double[] latLong, float dayLength, float[] regionalDirectionalColor) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
-		
+
 		// Get the dynamic directional light color
 		float[] dynamicLight = AtmosphereUtils.getDirectionalLight(modifiedDate.toEpochMilli(), latLong);
-		
+
 		// Calculate blend factor - same as skybox and ambient for consistency
 		float blendFactor;
 		if (sunAltitudeDegrees >= 30) {
@@ -155,14 +171,14 @@ public class TimeOfDay
 			// Night/twilight - minimal regional influence (0-30% regional)
 			blendFactor = (float) Math.max(0.0, 0.30 + sunAltitudeDegrees / 10.0 * 0.30);
 		}
-		
+
 		// Regional color is already in linear space from environment manager
 		// Blend the colors in linear space
 		float[] blended = new float[3];
 		for (int i = 0; i < 3; i++) {
 			blended[i] = dynamicLight[i] * (1 - blendFactor) + regionalDirectionalColor[i] * blendFactor;
 		}
-		
+
 		return blended;
 	}
 
@@ -170,15 +186,15 @@ public class TimeOfDay
 		Instant modifiedDate = getModifiedDate(dayLength);
 		return AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
 	}
-	
+
 	public static float[] getRegionalAmbientLight(double[] latLong, float dayLength, float[] regionalAmbientColor) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
-		
+
 		// Get the dynamic ambient light color
 		float[] dynamicAmbient = AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
-		
+
 		// Calculate blend factor based on sun altitude - same as skybox for consistency
 		float blendFactor;
 		if (sunAltitudeDegrees >= 30) {
@@ -197,13 +213,13 @@ public class TimeOfDay
 			// Night/twilight - minimal regional influence (0-30% regional)
 			blendFactor = (float) Math.max(0.0, 0.30 + sunAltitudeDegrees / 10.0 * 0.30);
 		}
-		
+
 		// Blend the colors in linear space
 		float[] blended = new float[3];
 		for (int i = 0; i < 3; i++) {
 			blended[i] = dynamicAmbient[i] * (1 - blendFactor) + regionalAmbientColor[i] * blendFactor;
 		}
-		
+
 		return blended;
 	}
 
@@ -216,10 +232,10 @@ public class TimeOfDay
 	public static float[] getEnhancedSkyColor(double[] latLong, float dayLength, float[] regionalFogColor, float sunStrength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
-		
+
 		// Convert sun altitude to degrees (-90 to +90)
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
-		
+
 		// Get the enhanced color for current sun altitude (returns sRGB values)
 		float[] enhancedColorSrgb = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, ENHANCED_SKY_KEYFRAMES);
 		// Convert to linear for blending
@@ -280,16 +296,16 @@ public class TimeOfDay
 
 		// Convert regional fog color from sRGB to linear RGB for proper blending
 		float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
-		
+
 		// Use the regional color directly without desaturation to preserve vivid colors
 		float[] desaturatedRegional = regionalLinear;
-		
+
 		// Blend between enhanced color and desaturated regional color (in linear space)
 		float[] resultLinear = new float[3];
 		for (int i = 0; i < 3; i++) {
 			resultLinear[i] = enhancedColor[i] * (1 - blendFactor) + desaturatedRegional[i] * blendFactor;
 		}
-		
+
 		// Convert back to sRGB for return
 		return rs117.hd.utils.ColorUtils.linearToSrgb(resultLinear);
 	}
@@ -500,6 +516,22 @@ public class TimeOfDay
 	 * Get the moon direction vector for sky rendering, respecting moon behavior mode.
 	 */
 	public static float[] getMoonDirectionForSky(double[] latLong, float dayLength, MoonBehavior moonBehavior) {
+		if (currentCycleMode == DaylightCycle.FIXED_FULL_MOON) {
+			double altitude = FIXED_FULL_MOON_ALTITUDE;
+			double yaw = Math.PI - FIXED_FULL_MOON_AZIMUTH;
+
+			float x = (float) (Math.sin(yaw) * Math.cos(altitude));
+			float y = (float) Math.sin(altitude);
+			float z = (float) (-Math.cos(yaw) * Math.cos(altitude));
+
+			float length = (float) Math.sqrt(x * x + y * y + z * z);
+			if (length > 0.0001f) {
+				x /= length;
+				y /= length;
+				z /= length;
+			}
+			return new float[] { x, y, z };
+		}
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
 			double[] angles = getNightSyncedMoonAngles(latLong, dayLength);
 			double altitude = angles[1];
@@ -526,6 +558,9 @@ public class TimeOfDay
 	 * so the phase cycles naturally (each game cycle = +1 day of lunar phase).
 	 */
 	public static float getMoonIlluminationFraction(float dayLength, MoonBehavior moonBehavior) {
+		if (currentCycleMode == DaylightCycle.FIXED_FULL_MOON) {
+			return 1.0f; // Always a full moon
+		}
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
 			long equinoxEpochMs = 1742428800000L;
 			long dayMs = 24L * 60 * 60 * 1000;
@@ -539,6 +574,9 @@ public class TimeOfDay
 	 * Get the moon altitude in degrees, respecting moon behavior mode.
 	 */
 	public static double getMoonAltitudeDegrees(double[] latLong, float dayLength, MoonBehavior moonBehavior) {
+		if (currentCycleMode == DaylightCycle.FIXED_FULL_MOON) {
+			return Math.toDegrees(FIXED_FULL_MOON_ALTITUDE);
+		}
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
 			double[] angles = getNightSyncedMoonAngles(latLong, dayLength);
 			return Math.toDegrees(angles[1]);
@@ -652,6 +690,7 @@ public class TimeOfDay
 				case FIXED_SUNSET:
 					fixedHour = 18.3; // 5:30 PM — sun near horizon at equinox latitude
 					break;
+				case FIXED_FULL_MOON:
 				case ALWAYS_NIGHT:
 					fixedHour = 0.0;  // Midnight — sun well below horizon
 					break;
