@@ -667,7 +667,10 @@ public class ZoneRenderer implements Renderer {
 				|| cycleMode == DaylightCycle.FIXED_MIDDAY
 				|| cycleMode == DaylightCycle.FIXED_SUNSET;
 			plugin.uboGlobal.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
-			plugin.uboGlobal.auroraVisibility.set(environmentManager.currentAuroraVisibility);
+			// Auroras appear on nights the per-night random roll selects. The roll
+			// switches only at the cycle boundary (daytime), so it's invisible
+			// behind nightSkyBlend.
+			plugin.uboGlobal.auroraVisibility.set(TimeOfDay.isAuroraNight() ? 1f : 0f);
 
 			skyGradientEnabled = true;
 
