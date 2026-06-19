@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import net.runelite.http.api.worlds.WorldRegion;
 import rs117.hd.config.DaylightCycle;
+import rs117.hd.config.DayLength;
 import rs117.hd.config.MoonBehavior;
 import rs117.hd.utils.AtmosphereUtils;
 
@@ -24,6 +25,11 @@ public class TimeOfDay
 
 	// Current cycle mode — set once per frame by ZoneRenderer before any TimeOfDay calls
 	private static DaylightCycle currentCycleMode = DaylightCycle.DYNAMIC;
+
+	// Current day length skew — set once per frame alongside the cycle mode.
+	// Warps the linear cycle clock so day/night occupy different shares of the
+	// fixed total cycle time (see applyDayLengthWarp).
+	private static DayLength currentDayLength = DayLength.STANDARD;
 
 	// Fixed Full Moon mode: the moon is locked at a prominent position in the
 	// south-east sky and always rendered full. Stored as {azimuth, altitude} radians,
@@ -117,6 +123,44 @@ public class TimeOfDay
 	 */
 	public static void setCycleMode(DaylightCycle mode) {
 		currentCycleMode = mode;
+	}
+
+	/**
+	 * Set the day length skew for this frame. Call before any other TimeOfDay methods.
+	 */
+	public static void setDayLength(DayLength dayLength) {
+		currentDayLength = dayLength;
+	}
+
+	// The natural (unwarped) cycle position where daytime ends and night begins.
+	// 0.0-0.70 maps to 5am-7pm (day, incl. twilight), 0.70-1.0 maps to 7pm-5am (night).
+	private static final double NATURAL_DAY_BOUNDARY = 0.70;
+
+	/**
+	 * Warp a linear cycle position (0..1) so day and night occupy a different
+	 * share of the cycle, without changing the total cycle length.
+	 *
+	 * The cycle clock advances at a constant real-time rate; this remaps where
+	 * that clock "is" in the day. The day segment [0, dayFraction) is stretched
+	 * or compressed onto the natural day segment [0, NATURAL_DAY_BOUNDARY), and
+	 * likewise for night. Net effect: the favored period elapses in slow motion
+	 * while the other period is fast-forwarded, and a full cycle still takes
+	 * exactly cycleDurationMinutes.
+	 */
+	private static double applyDayLengthWarp(double cyclePosition) {
+		double dayFraction = currentDayLength.dayFraction;
+		// STANDARD (and any config matching the natural split) is the identity map.
+		if (Math.abs(dayFraction - NATURAL_DAY_BOUNDARY) < 1e-6)
+			return cyclePosition;
+
+		if (cyclePosition < dayFraction) {
+			// Within the (re-sized) day: scale into the natural day segment.
+			return (cyclePosition / dayFraction) * NATURAL_DAY_BOUNDARY;
+		} else {
+			// Within the (re-sized) night: scale into the natural night segment.
+			double nightProgress = (cyclePosition - dayFraction) / (1.0 - dayFraction);
+			return NATURAL_DAY_BOUNDARY + nightProgress * (1.0 - NATURAL_DAY_BOUNDARY);
+		}
 	}
 
 	/**
@@ -598,7 +642,9 @@ public class TimeOfDay
 		// Call getModifiedDate to keep accumulatedCycleTime/completedCycles updated
 		getModifiedDate(dayLength);
 
-		double cyclePosition = accumulatedCycleTime;
+		// Warp identically to the sun so the night-synced moon stays aligned with
+		// the (now re-sized) day/night periods — moonrise still tracks visual sunset.
+		double cyclePosition = applyDayLengthWarp(accumulatedCycleTime);
 
 		// Use a uniform linear mapping: cycle 0→1 maps to a full 24-hour day.
 		// This gives the moon constant angular speed across its whole arc,
@@ -704,7 +750,9 @@ public class TimeOfDay
 			return equinoxDay.plusMillis((long) (fixedHour * 60 * 60 * 1000));
 		}
 
-		double cyclePosition = accumulatedCycleTime;
+		// Warp the linear cycle clock so day/night occupy the configured share
+		// of the cycle, then feed the result into the time-of-day mapping below.
+		double cyclePosition = applyDayLengthWarp(accumulatedCycleTime);
 
 		// Map cycle position to time of day with extended twilight periods
 		// 0.0-0.15 = dawn/sunrise twilight (maps to 5am-7am)
@@ -761,9 +809,11 @@ public class TimeOfDay
 		Instant currentInstant = Instant.ofEpochMilli(System.currentTimeMillis());
 		Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS);
 
-		// Total simulated days elapsed = completed whole cycles + current cycle progress
-		// This advances continuously, preventing the moon from jumping at cycle boundaries.
-		double totalSimulatedDays = completedCycles + accumulatedCycleTime;
+		// Total simulated days elapsed = completed whole cycles + current cycle progress.
+		// Warp only the within-cycle fraction so the realistic moon's position tracks
+		// the re-sized day/night, while whole completed cycles still advance the lunar
+		// phase linearly (preventing phase jitter from the warp).
+		double totalSimulatedDays = completedCycles + applyDayLengthWarp(accumulatedCycleTime);
 		long totalOffsetMillis = (long) (totalSimulatedDays * 24 * 60 * 60 * 1000);
 
 		return startOfDay.plusMillis(totalOffsetMillis);

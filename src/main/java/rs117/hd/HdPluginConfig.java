@@ -37,6 +37,7 @@ import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.CpuUsageLimit;
 import rs117.hd.config.DaylightCycle;
+import rs117.hd.config.DayLength;
 import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
@@ -648,6 +649,20 @@ public interface HdPluginConfig extends Config
 		return 30;
 	}
 
+	@ConfigItem(
+		keyName = "dayLength",
+		name = "Day Length",
+		description = "Adjusts how the cycle time is split between day and night, without changing the total cycle duration.<br>" +
+			"• Standard = Natural day/night balance<br>" +
+			"• Longer Days = Sun stays up longer; nights pass quickly<br>" +
+			"• Longer Nights = Nights last longer; days pass quickly",
+		position = 3,
+		section = daylightCycleSettings
+	)
+	default DayLength dayLength() {
+		return DayLength.STANDARD;
+	}
+
 	@Range(min = 10, max = 200)
 	@Units(Units.PERCENT)
 	@ConfigItem(
@@ -660,7 +675,7 @@ public interface HdPluginConfig extends Config
 			"• 50% = Balanced darkness<br>" +
 			"• 70% = Default bright nights (minimal difference from day)<br>" +
 			"• 100% = No brightness change at night",
-		position = 3,
+		position = 4,
 		section = daylightCycleSettings
 	)
 	default int minimumBrightness() {
@@ -671,7 +686,7 @@ public interface HdPluginConfig extends Config
 		keyName = "enableStarMap",
 		name = "Stars",
 		description = "Show the star map texture in the night sky. When disabled, the night sky uses only the gradient skybox.",
-		position = 4,
+		position = 5,
 		section = daylightCycleSettings
 	)
 	default boolean enableStarMap() {
@@ -682,7 +697,7 @@ public interface HdPluginConfig extends Config
 		keyName = "enableNebulas",
 		name = "Nebulas",
 		description = "Show procedural nebula clouds in the night sky. When disabled, the night sky shows only stars and the gradient skybox.",
-		position = 5,
+		position = 6,
 		section = daylightCycleSettings
 	)
 	default boolean enableNebulas() {
@@ -693,7 +708,7 @@ public interface HdPluginConfig extends Config
 		keyName = "enableMoon",
 		name = "Moon",
 		description = "Show the moon in the night sky.",
-		position = 6,
+		position = 7,
 		section = daylightCycleSettings
 	)
 	default boolean enableMoon() {
@@ -706,7 +721,7 @@ public interface HdPluginConfig extends Config
 		description = "How the moon moves across the sky.<br>" +
 			"Realistic = Astronomical moon with realistic phases and independent orbit<br>" +
 			"Night Synced = Moon always rises when sun sets and sets when sun rises (always full)",
-		position = 7,
+		position = 8,
 		section = daylightCycleSettings
 	)
 	default MoonBehavior moonBehavior() {
@@ -1308,6 +1323,7 @@ public interface HdPluginConfig extends Config
 	String KEY_ENABLE_DAYLIGHT_CYCLE = "enableDaylightCycle";
 	String KEY_DAYLIGHT_CYCLE = "daylightCycle";
 	String KEY_CYCLE_DURATION = "cycleDurationMinutes";
+	String KEY_DAY_LENGTH = "dayLength";
 	String KEY_MINIMUM_BRIGHTNESS = "minimumBrightness";
 	String KEY_ENABLE_STAR_MAP = "enableStarMap";
 	String KEY_ENABLE_NEBULAS = "enableNebulas";

@@ -1014,6 +1014,7 @@ public class LegacyRenderer implements Renderer {
 
 			boolean skyGradientEnabled = false;
 			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+				TimeOfDay.setDayLength(config.dayLength());
 				int minimumBrightness = (int) (config.minimumBrightness() * (1 + environmentManager.currentMinBrightnessBoost));
 				float cycleDuration = config.cycleDurationMinutes();
 
