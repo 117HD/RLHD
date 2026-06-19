@@ -628,6 +628,42 @@ public class TimeOfDay
 		return getMoonAltitudeDegrees(latLong, dayLength);
 	}
 
+	// Probability that any given simulated night is an "aurora night", in
+	// environments flagged aurora-eligible. Rolled deterministically per night.
+	private static final double AURORA_NIGHT_CHANCE = 0.15;
+
+	/**
+	 * Whether the current simulated night is an "aurora night".
+	 *
+	 * Each cycle contains one night; we hash that night's index to a stable
+	 * pseudo-random value in [0,1) and compare against AURORA_NIGHT_CHANCE.
+	 * The result is constant for the whole night (no flicker) and re-rolled once
+	 * per cycle. Deterministic — no Math.random() — so it survives config changes
+	 * and resumes consistently.
+	 *
+	 * The index increments at cycle position 0.35 (~midday), the point furthest
+	 * from any night, so the roll never flips while auroras are on screen — the
+	 * switch happens in broad daylight where nightSkyBlend (and thus the aurora)
+	 * is already zero. This avoids a pop at the natural 5am cycle boundary.
+	 */
+	public static boolean isAuroraNight() {
+		// Continuous simulated-day time, with the integer boundary shifted to
+		// midday (cycle pos 0.35) so a night and its index never straddle a flip.
+		double continuousTime = completedCycles + accumulatedCycleTime;
+		long nightIndex = (long) Math.floor(continuousTime - 0.35);
+
+		// Cheap integer hash (splitmix64-style finalizer) -> uniform 53-bit mantissa.
+		long h = nightIndex * 0x9E3779B97F4A7C15L;
+		h ^= (h >>> 30);
+		h *= 0xBF58476D1CE4E5B9L;
+		h ^= (h >>> 27);
+		h *= 0x94D049BB133111EBL;
+		h ^= (h >>> 31);
+		double roll = (h >>> 11) * (1.0 / (1L << 53)); // [0, 1)
+
+		return roll < AURORA_NIGHT_CHANCE;
+	}
+
 	/**
 	 * Get night synced moon angles {azimuth, altitude} by mirroring the sun.
 	 * The moon is placed opposite the sun (azimuth + PI) with negated altitude,
