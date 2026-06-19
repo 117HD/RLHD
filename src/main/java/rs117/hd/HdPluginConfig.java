@@ -620,6 +620,7 @@ public interface HdPluginConfig extends Config
 		description = "Controls the day/night cycle behavior.<br>" +
 			"• Dynamic = Full day/night cycling<br>" +
 			"• Fixed Dawn = Sun locked at dawn<br>" +
+			"• Fixed Midday = Sun locked at noon<br>" +
 			"• Fixed Sunset = Sun locked at sunset<br>" +
 			"• Fixed Full Moon = Permanent night with a full moon locked in place<br>" +
 			"• Always Night = Permanent night, moon still cycles",

@@ -687,6 +687,9 @@ public class TimeOfDay
 				case FIXED_DAWN:
 					fixedHour = 6.65;  // 6:00 AM
 					break;
+				case FIXED_MIDDAY:
+					fixedHour = 15.0;  // Mid-afternoon — sun high but not at its peak
+					break;
 				case FIXED_SUNSET:
 					fixedHour = 18.3; // 5:30 PM — sun near horizon at equinox latitude
 					break;

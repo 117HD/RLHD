@@ -661,7 +661,9 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.starVisibility.set(config.enableStarMap() ? environmentManager.currentStarVisibility : 0f);
 			plugin.uboGlobal.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
 			DaylightCycle cycleMode = config.daylightCycle();
-			boolean hideMoon = cycleMode == DaylightCycle.FIXED_DAWN || cycleMode == DaylightCycle.FIXED_SUNSET;
+			boolean hideMoon = cycleMode == DaylightCycle.FIXED_DAWN
+				|| cycleMode == DaylightCycle.FIXED_MIDDAY
+				|| cycleMode == DaylightCycle.FIXED_SUNSET;
 			plugin.uboGlobal.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
 
 			skyGradientEnabled = true;
