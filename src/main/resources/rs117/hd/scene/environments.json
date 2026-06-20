@@ -2388,7 +2388,7 @@
     "directionalStrength": 0.75,
     "fogColor": "#000000",
     "fogDepth": 25,
-	"cycleMode": "FIXED_FULL_MOON",
+	"cycleMode": "FIXED_NIGHT",
     "starVisibility": 0.5
   },
   {

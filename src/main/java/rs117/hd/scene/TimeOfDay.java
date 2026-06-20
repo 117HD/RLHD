@@ -36,20 +36,20 @@ public class TimeOfDay
 	// naturally; any other value locks the moon's illumination fraction.
 	private static MoonPhase currentMoonPhase = MoonPhase.DYNAMIC;
 
-	// Fixed Full Moon mode: the moon is locked at a prominent position in the
+	// Fixed Night mode: the moon is locked at a prominent position in the
 	// south-east sky and always rendered full. Stored as {azimuth, altitude} radians,
 	// matching the convention used by AtmosphereUtils.getMoonPosition().
-	private static final double FIXED_FULL_MOON_AZIMUTH = Math.toRadians(135); // south-east
-	private static final double FIXED_FULL_MOON_ALTITUDE = Math.toRadians(25);  // low in the sky
+	private static final double FIXED_NIGHT_MOON_AZIMUTH = Math.toRadians(135); // south-east
+	private static final double FIXED_NIGHT_MOON_ALTITUDE = Math.toRadians(25);  // low in the sky
 
 	/**
-	 * Fixed Full Moon angles {azimuth, altitude} in radians, matching the
+	 * Fixed Night moon angles {azimuth, altitude} in radians, matching the
 	 * convention returned by AtmosphereUtils.getMoonPosition(). Used both for
 	 * the sky moon direction and the shadow-casting light direction so the moon
 	 * disk and the shadows it casts stay locked together.
 	 */
-	public static double[] getFixedFullMoonAngles() {
-		return new double[] { FIXED_FULL_MOON_AZIMUTH, FIXED_FULL_MOON_ALTITUDE };
+	public static double[] getFixedNightMoonAngles() {
+		return new double[] { FIXED_NIGHT_MOON_AZIMUTH, FIXED_NIGHT_MOON_ALTITUDE };
 	}
 
 	// Sky color keyframe tables. These are read-only constant data consumed by
@@ -572,9 +572,9 @@ public class TimeOfDay
 	 * Get the moon direction vector for sky rendering, respecting moon behavior mode.
 	 */
 	public static float[] getMoonDirectionForSky(double[] latLong, float dayLength, MoonBehavior moonBehavior) {
-		if (currentCycleMode == DaylightCycle.FIXED_FULL_MOON) {
-			double altitude = FIXED_FULL_MOON_ALTITUDE;
-			double yaw = Math.PI - FIXED_FULL_MOON_AZIMUTH;
+		if (currentCycleMode == DaylightCycle.FIXED_NIGHT) {
+			double altitude = FIXED_NIGHT_MOON_ALTITUDE;
+			double yaw = Math.PI - FIXED_NIGHT_MOON_AZIMUTH;
 
 			float x = (float) (Math.sin(yaw) * Math.cos(altitude));
 			float y = (float) Math.sin(altitude);
@@ -617,7 +617,7 @@ public class TimeOfDay
 		if (currentMoonPhase.isLocked()) {
 			return currentMoonPhase.illumination; // Phase locked via config
 		}
-		if (currentCycleMode == DaylightCycle.FIXED_FULL_MOON) {
+		if (currentCycleMode == DaylightCycle.FIXED_NIGHT) {
 			return 1.0f; // Always a full moon
 		}
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
@@ -633,8 +633,8 @@ public class TimeOfDay
 	 * Get the moon altitude in degrees, respecting moon behavior mode.
 	 */
 	public static double getMoonAltitudeDegrees(double[] latLong, float dayLength, MoonBehavior moonBehavior) {
-		if (currentCycleMode == DaylightCycle.FIXED_FULL_MOON) {
-			return Math.toDegrees(FIXED_FULL_MOON_ALTITUDE);
+		if (currentCycleMode == DaylightCycle.FIXED_NIGHT) {
+			return Math.toDegrees(FIXED_NIGHT_MOON_ALTITUDE);
 		}
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
 			double[] angles = getNightSyncedMoonAngles(latLong, dayLength);
@@ -794,7 +794,7 @@ public class TimeOfDay
 				case FIXED_SUNSET:
 					fixedHour = 18.3; // 5:30 PM — sun near horizon at equinox latitude
 					break;
-				case FIXED_FULL_MOON:
+				case FIXED_NIGHT:
 				case ALWAYS_NIGHT:
 					fixedHour = 0.0;  // Midnight — sun well below horizon
 					break;

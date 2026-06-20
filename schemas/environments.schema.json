@@ -50,7 +50,7 @@
       "cycleMode": {
         "type": "string",
         "description": "Forces the day/night cycle mode for this environment, overriding the player's config setting.",
-        "enum": [ "DYNAMIC", "FIXED_DAWN", "FIXED_MIDDAY", "FIXED_SUNSET", "FIXED_FULL_MOON", "ALWAYS_NIGHT" ]
+        "enum": [ "DYNAMIC", "FIXED_DAWN", "FIXED_MIDDAY", "FIXED_SUNSET", "FIXED_NIGHT", "ALWAYS_NIGHT" ]
       },
       "ambientColor": {
         "type": [ "string", "array" ],

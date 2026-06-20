@@ -443,10 +443,10 @@ public class ZoneRenderer implements Renderer {
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 				MoonBehavior shadowMoonBehavior = config.moonBehavior();
 
-				if (daylightCycle == DaylightCycle.FIXED_FULL_MOON) {
+				if (daylightCycle == DaylightCycle.FIXED_NIGHT) {
 					// Shadows must be cast from the same fixed point as the rendered
 					// moon disk, otherwise they drift while the moon stays put.
-					double[] moonAnglesD = TimeOfDay.getFixedFullMoonAngles();
+					double[] moonAnglesD = TimeOfDay.getFixedNightMoonAngles();
 					shadowSunAngles = new float[] {
 						(float) moonAnglesD[1], (float) moonAnglesD[0]
 					};
