@@ -20686,6 +20686,7 @@
     "range": 20,
     "timeOfDay": "DUSK",
     "staggered": true,
+    "dayNightOnly": true,
     "objectIds": [
       "FAI_VARROCK_POSH_CANDLESTICK",
       "FAI_VARROCK_TWO_CANDLES"
@@ -20805,6 +20806,7 @@
     "range": 20,
     "timeOfDay": "DUSK",
     "staggered": true,
+    "dayNightOnly": true,
     "nightMultiplier": 1.5,
     "objectIds": [
       "FAI_VARROCK_SWING_LANTERN_UNLIT"
@@ -20825,6 +20827,7 @@
     "duration": 0,
     "range": 20,
     "timeOfDay": "DUSK",
+    "dayNightOnly": true,
     "staggered": true,
     "objectIds": [
       "GOLDCANDLES",
@@ -20846,6 +20849,7 @@
     "range": 20,
     "timeOfDay": "DUSK",
     "staggered": true,
+    "dayNightOnly": true,
     "nightMultiplier": 1.5,
     "objectIds": [
       "LANTERN_OFF"
