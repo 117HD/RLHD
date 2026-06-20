@@ -4,17 +4,35 @@
 // Operates on a 3D direction vector for seamless spherical mapping
 // with no polar distortion artifacts.
 
-// Private hash functions (sf_ prefix avoids conflicts with misc.glsl)
-float sf_hash(vec3 p) {
-    return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453123);
+// Private hash functions (sf_ prefix avoids conflicts with misc.glsl).
+//
+// These use integer bit-mixing (PCG3D) instead of the classic sin(dot())*large
+// trick. sin() is comparatively expensive on the GPU and is the dominant cost
+// inside fBm (8 hashes per noise sample), so the sin-free variant is noticeably
+// faster while staying well-distributed. Coordinates are hashed by their exact
+// bit pattern via floatBitsToUint, so integer lattice coords and arbitrary float
+// seeds both hash cleanly.
+uvec3 sf_pcg3d(uvec3 v) {
+    v = v * 1664525u + 1013904223u;
+    v.x += v.y * v.z;
+    v.y += v.z * v.x;
+    v.z += v.x * v.y;
+    v ^= v >> 16u;
+    v.x += v.y * v.z;
+    v.y += v.z * v.x;
+    v.z += v.x * v.y;
+    return v;
 }
 
+// 3 independent values in [0,1) from a 3D coordinate.
 vec3 sf_hash3(vec3 p) {
-    return vec3(
-        fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453),
-        fract(sin(dot(p, vec3(269.5, 183.3, 246.1))) * 43758.5453),
-        fract(sin(dot(p, vec3(113.5, 271.9, 124.6))) * 43758.5453)
-    );
+    uvec3 h = sf_pcg3d(floatBitsToUint(p));
+    return vec3(h) * (1.0 / 4294967296.0); // / 2^32
+}
+
+// Single value in [0,1) from a 3D coordinate.
+float sf_hash(vec3 p) {
+    return sf_hash3(p).x;
 }
 
 float sf_noise(vec3 p) {
@@ -137,32 +155,34 @@ vec3 shootingStars(vec3 viewDir, float time) {
 vec3 proceduralNebula(vec3 dir) {
     // Domain warping: perturb the sample coordinate with a low-frequency fBm so
     // the large-scale structure no longer aligns to the noise lattice. This is
-    // what turns blocky blobs into organic, drifting filaments. The warp is
-    // low frequency, so 2 octaves are plenty — keeps the per-pixel cost down.
+    // what turns blocky blobs into organic, drifting filaments. The warp is very
+    // low frequency, so a single octave is enough — and since it runs for EVERY
+    // sky pixel (before the region early-out), keeping it at 1 octave matters.
     vec3 warp = vec3(
-        sf_fbm(dir * 2.0 + vec3(11.3), 2),
-        sf_fbm(dir * 2.0 + vec3(47.1), 2),
-        sf_fbm(dir * 2.0 + vec3(83.7), 2)
+        sf_fbm(dir * 2.0 + vec3(11.3), 1),
+        sf_fbm(dir * 2.0 + vec3(47.1), 1),
+        sf_fbm(dir * 2.0 + vec3(83.7), 1)
     );
     vec3 wdir = dir + (warp - 0.5) * 0.9;
 
     // Broad cloud regions (a few across the sky) built from multi-octave fBm
     // rather than a single low-frequency lookup, so edges are soft and varied.
-    float region = sf_fbm(wdir * 2.5 + vec3(50.0), 5);
+    // Also runs for every sky pixel, so kept to 3 octaves.
+    float region = sf_fbm(wdir * 2.5 + vec3(50.0), 3);
     region = smoothstep(0.45, 0.78, region);
 
     // Most of the sky has no nebula (region == 0). The remaining detail/wisp/
-    // color fBm lookups (~10 noise samples) would just be multiplied by zero
-    // there, so bail out early — this is the bulk of the per-pixel savings.
+    // color fBm lookups would just be multiplied by zero there, so bail out
+    // early — this is the bulk of the per-pixel savings.
     if (region <= 0.0)
         return vec3(0.0);
 
     // Finer filamentary structure inside the regions, also fBm + warped.
-    float wisps = sf_fbm(wdir * 9.0 + vec3(100.0), 4);
+    float wisps = sf_fbm(wdir * 9.0 + vec3(100.0), 3);
     wisps = smoothstep(0.35, 0.75, wisps);
 
     // High-frequency texture for graininess near the bright cores.
-    float detail = sf_fbm(wdir * 28.0 + vec3(200.0), 3);
+    float detail = sf_fbm(wdir * 28.0 + vec3(200.0), 2);
 
     // Combine: region gates everything, wisps carve filaments, detail adds
     // texture. Bias toward region*wisps so the cloud reads as continuous gas
@@ -171,7 +191,7 @@ vec3 proceduralNebula(vec3 dir) {
 
     // Two-tone nebula color: teal dominant with subtle purple variation
     vec3 tealColor = vec3(0.008, 0.025, 0.035);
-    float colorVariation = sf_fbm(wdir * 4.0 + vec3(77.0), 3);
+    float colorVariation = sf_fbm(wdir * 4.0 + vec3(77.0), 2);
     vec3 purpleColor = vec3(0.02, 0.01, 0.035);
     vec3 nebulaColor = mix(tealColor, purpleColor, colorVariation * 0.5);
 
