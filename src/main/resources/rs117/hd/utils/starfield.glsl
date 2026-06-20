@@ -30,9 +30,18 @@ vec3 sf_hash3(vec3 p) {
     return vec3(h) * (1.0 / 4294967296.0); // / 2^32
 }
 
-// Single value in [0,1) from a 3D coordinate.
+// Single value in [0,1) from a 3D coordinate. This is called 8x per noise sample
+// (once per lattice corner), so it uses a cheaper single-output integer mix
+// instead of the full 3-component PCG (which would compute two values we discard).
 float sf_hash(vec3 p) {
-    return sf_hash3(p).x;
+    uvec3 q = floatBitsToUint(p);
+    uint h = q.x * 1664525u + q.y * 1013904223u + q.z * 1u;
+    h ^= h >> 16u;
+    h *= 0x7feb352du;
+    h ^= h >> 15u;
+    h *= 0x846ca68bu;
+    h ^= h >> 16u;
+    return float(h) * (1.0 / 4294967296.0); // / 2^32
 }
 
 float sf_noise(vec3 p) {
