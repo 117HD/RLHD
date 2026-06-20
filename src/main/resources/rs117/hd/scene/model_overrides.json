@@ -14015,7 +14015,6 @@
     "description": "Metal Lanturn",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
-      "HANGINGLANTERN",
       "FAI_VARROCK_OILLAMP",
       "FAI_VARROCK_SWING_LANTERN_UNLIT",
       "FAI_FALADOR_LANTERN",
@@ -14063,6 +14062,34 @@
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Animated Round Lantern - Brighten Flame and Texture Metal",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "LANTERN_GLOWS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Animated Square Lantern - Brighten Flame and Texture Metal",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "HANGINGLANTERN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_200"
       }
     ]
   },

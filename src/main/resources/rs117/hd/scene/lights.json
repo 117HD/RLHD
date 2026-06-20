@@ -20667,7 +20667,8 @@
       "VM_BASEMENT_WALL_FIRST_FLOOR_LAMP",
       "SLAYER_TORCH",
       "MISTMYST_CANDLE_LIT",
-      "GOLEM_TORCH"
+      "GOLEM_TORCH",
+      "FAI_FALADOR_TORCH"
     ]
   },
   {
@@ -21039,6 +21040,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
+    "nightMultiplier": 1.5,
     "range": 20,
     "objectIds": [
       "DRAYNOR_OUTSIDE_LAMP"
@@ -21519,6 +21521,23 @@
     "range": 20,
     "objectIds": [
       "FIREPLACE"
+    ]
+  },
+  {
+    "description": "Falador Party Room Fireplace",
+    "offset": [ 0, 90, 0 ],
+    "radius": 270,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_FIREPLACE"
     ]
   },
   {
@@ -23030,6 +23049,7 @@
     "alignment": "CENTER",
     "radius": 700,
     "strength": 7.5,
+    "nightMultiplier": 2,
     "color": [
       93,
       0,
@@ -28093,6 +28113,47 @@
     "visibleFromOtherPlanes": true,
     "objectIds": [
       "LANTERN"
+    ]
+  },
+  {
+    "description": "Lantern with Glass - Ardougne Spotlight",
+    "offset": [ 20, 110, 0 ],
+    "areas": [ "EAST_ARDOUGNE_LANTERNS" ],
+    "radius": 450,
+    "strength": 7.5,
+    "timeOfDay": "DAWN",
+    "staggered": true,
+    "color": [
+      255,
+      180,
+      103
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "nightMultiplier": 1.5,
+    "range": 20,
+    "visibleFromOtherPlanes": true,
+    "objectIds": [
+      "LANTERN"
+    ]
+  },
+  {
+    "description": "Round Lantern with Flame",
+    "offset": [ -5, 220, 0 ],
+    "radius": 350,
+    "strength": 7.5,
+    "color": [
+      255,
+      180,
+      103
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "nightMultiplier": 1.5,
+    "range": 20,
+    "visibleFromOtherPlanes": true,
+    "objectIds": [
+      "LANTERN_GLOWS"
     ]
   },
   {
@@ -37625,6 +37686,24 @@
     ]
   },
   {
+    "description": "Will o' the Wisp",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 160,
+    "strength": 6.25,
+    "color": [
+      255,
+      255,
+      195
+    ],
+    "type": "PULSE",
+    "duration": 1250,
+    "range": 20,
+    "npcIds": [
+      "WILLOTHEWISP"
+    ]
+  },
+  {
     "description": "ZANARIS_GREEN_MUSHROOM_CEILING",
     "height": 290,
     "alignment": "CENTER",
@@ -37874,6 +37953,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
+    "nightMultiplier": 1.25,
     "range": 24,
     "objectIds": [
       "FAI_FALADOR_LANTERN"
@@ -38396,6 +38476,23 @@
     ]
   },
   {
+    "description": "POTTERY_OVEN_GLOW_BRICKS",
+    "offset": [ 70, 165, 0 ],
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "POTTERYOVEN"
+    ]
+  },
+  {
     "description": "Mysterious Figure's Hideout - Purple Magic Attack - Projectile",
     "radius": 275,
     "strength": 10,
@@ -38537,7 +38634,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "MAGICTRAINING_CANDLE_STAND"
+      "MAGICTRAINING_CANDLE_STAND",
+      "BRAIN_MON_CANDLES"
     ]
   },
   {
@@ -47084,6 +47182,42 @@
     "range": 20,
     "objectIds": [
       "FAI_VARROCK_RANGE_WITH_PIPE"
+    ]
+  },
+  {
+    "description": "RIMMINGTON_RANGE_1",
+    "offset": [ 0, 95, -45 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 5,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "RIMMINGTON_POOR_RANGE"
+    ]
+  },
+  {
+    "description": "RIMMINGTON_RANGE_2",
+    "offset": [ 65, 50, 48 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 3,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "RIMMINGTON_POOR_RANGE"
     ]
   },
   {

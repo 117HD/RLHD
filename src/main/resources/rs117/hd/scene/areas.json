@@ -2285,6 +2285,13 @@
     ]
   },
   {
+    "name": "EAST_ARDOUGNE_LANTERNS",
+    "aabbs": [
+      [ 2606, 3294, 2623, 3299 ],
+      [ 2649, 3294, 2675, 3318 ]
+    ]
+  },
+  {
     "name": "EAST_ARDOUGNE_CASTLE_DIRT_FIX",
     "aabbs": [
       [ 2565, 3279, 2592, 3313 ]
