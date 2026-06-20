@@ -41237,6 +41237,7 @@
     "duration": 0,
     "range": 20,
     "timeOfDay": "DUSK",
+    "dayNightOnly": true,
     "objectIds": [
       "FAI_VARROCK_PRETTY_OILLAMP"
     ]
@@ -46520,7 +46521,45 @@
     ]
   },
   {
-    "description": "Varrock - Great Conch - Metal cooking  Range",
+    "description": "Varrock - Great Conch - Metal cooking  Range 1",
+    "height": 100,
+    "offset": [ 46, -50, -68 ],
+    "radius": 200,
+    "strength": 3,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "FAI_VARROCK_RANGE",
+      "KR_SIN_RANGE"
+    ]
+  },
+  {
+    "description": "Varrock - Great Conch - Metal cooking  Range 2",
+    "height": 100,
+    "offset": [ 46, -50, -94 ],
+    "radius": 200,
+    "strength": 3,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "FAI_VARROCK_RANGE",
+      "KR_SIN_RANGE"
+    ]
+  },
+  {
+    "description": "Varrock - Great Conch - Metal cooking Range 2",
     "height": 100,
     "offset": [ 20, 0, 64 ],
     "radius": 200,

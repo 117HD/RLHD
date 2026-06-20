@@ -2336,8 +2336,9 @@
     "windStrength": 20,
     "sunlightStrength": 0.8,
     "sunStrength": 0.05,
-    "starVisibility": 0.3,
-    "moonVisibility": 0.4
+    "starVisibility": 0.55,
+    "moonVisibility": 0.7,
+    "cycleMode": "FIXED_NIGHT"
   },
   {
     "area": "PLAYER_OWNED_HOUSE_FREM",
