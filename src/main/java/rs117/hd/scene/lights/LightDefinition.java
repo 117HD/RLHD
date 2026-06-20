@@ -32,6 +32,12 @@ public class LightDefinition {
 	public boolean ignoreActorHiding;
 	public int renderableIndex = -1;
 	public boolean waitForAnimation;
+	public float nightBoost = 2;
+	@JsonAdapter(LightTimeOfDay.Adapter.class)
+	public LightTimeOfDay timeOfDay;
+	@JsonAdapter(LightTimeOfDay.Adapter.class)
+	public LightTimeOfDay timeOfDayOff;
+	public boolean staggered;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] areas = {};

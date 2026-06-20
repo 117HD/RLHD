@@ -908,6 +908,32 @@ public class TimeOfDay
 		return angleFromZenith > Math.PI / 2;
 	}
 
+	public static float getNightLightFactor(double[] latLong, float dayLength) {
+		switch (currentCycleMode) {
+			case FIXED_DAWN:
+			case FIXED_MIDDAY:
+			case FIXED_SUNSET:
+				return 0f;
+			case FIXED_NIGHT:
+			case ALWAYS_NIGHT:
+				return 1f;
+			default:
+				break;
+		}
+
+		Instant modifiedDate = getModifiedDate(dayLength);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
+
+		if (sunAltitudeDegrees >= 5)
+			return 0f;
+		if (sunAltitudeDegrees <= -18)
+			return 1f;
+
+		float t = (float) ((5.0 - sunAltitudeDegrees) / 23.0);
+		return t * t * (3.0f - 2.0f * t);
+	}
+
 	public static float getDynamicBrightnessMultiplier(double[] latLong, float dayLength, int minimumBrightness) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
