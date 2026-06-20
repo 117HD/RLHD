@@ -32,7 +32,7 @@ public class LightDefinition {
 	public boolean ignoreActorHiding;
 	public int renderableIndex = -1;
 	public boolean waitForAnimation;
-	public float nightBoost = 2;
+	public float nightBoost = 1;
 	@JsonAdapter(LightTimeOfDay.Adapter.class)
 	public LightTimeOfDay timeOfDay;
 	@JsonAdapter(LightTimeOfDay.Adapter.class)
