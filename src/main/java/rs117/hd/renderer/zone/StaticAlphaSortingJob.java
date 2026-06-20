@@ -44,11 +44,11 @@ public final class StaticAlphaSortingJob extends Job {
 		if (frameTimer == null)
 			frameTimer = getInjector().getInstance(FrameTimer.class);
 		yaw = camera.getFixedYaw();
-		yawSin = SINE[yaw];
-		yawCos = COSINE[yaw];
+		yawSin = SINE14[yaw];
+		yawCos = COSINE14[yaw];
 		pitch = camera.getFixedPitch();
-		pitchSin = SINE[pitch];
-		pitchCos = COSINE[pitch];
+		pitchSin = SINE14[pitch];
+		pitchCos = COSINE14[pitch];
 		queue();
 	}
 
