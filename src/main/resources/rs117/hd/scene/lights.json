@@ -20439,6 +20439,7 @@
     "alignment": "CENTER",
     "radius": 500,
     "strength": 9,
+    "nightMultiplier": 1.35,
     "color": [
       252,
       148,
@@ -23115,6 +23116,7 @@
     "alignment": "CENTER",
     "radius": 475,
     "strength": 25,
+    "nightMultiplier": 1.15,
     "color": [
       255,
       200,
@@ -23212,6 +23214,7 @@
     "alignment": "CENTER",
     "radius": 235,
     "strength": 3.5,
+    "nightMultiplier": 2,
     "color": [
       255,
       0,
@@ -23248,6 +23251,7 @@
     "alignment": "CENTER",
     "radius": 235,
     "strength": 3.5,
+    "nightMultiplier": 2,
     "color": [
       255,
       179,
@@ -23284,6 +23288,7 @@
     "alignment": "CENTER",
     "radius": 235,
     "strength": 3.5,
+    "nightMultiplier": 2,
     "color": [
       31,
       225,
@@ -23320,6 +23325,7 @@
     "alignment": "CENTER",
     "radius": 225,
     "strength": 2.5,
+    "nightMultiplier": 2,
     "color": [
       255,
       0,
@@ -23377,6 +23383,7 @@
     "alignment": "CENTER",
     "radius": 225,
     "strength": 13.5,
+    "nightMultiplier": 1.5,
     "color": [
       252,
       148,
@@ -23391,7 +23398,7 @@
   },
   {
     "description": "POH_FIERY_ORNATE_REJUVENATION_POOL_RIM",
-    "height": 160,
+    "height": 180,
     "alignment": "CENTER",
     "radius": 75,
     "strength": 200,
@@ -23452,6 +23459,7 @@
     "alignment": "CENTER",
     "radius": 250,
     "strength": 15,
+    "nightMultiplier": 1.15,
     "color": [
       253.63197,
       182.39111,
@@ -23470,6 +23478,7 @@
     "alignment": "CENTER",
     "radius": 275,
     "strength": 20,
+    "nightMultiplier": 1.15,
     "color": [
       253.63197,
       182.39111,
@@ -23525,6 +23534,7 @@
     "offset": [ 0, 75, 0 ],
     "radius": 200,
     "strength": 15,
+    "nightMultiplier": 1.35,
     "color": [
       255,
       0,

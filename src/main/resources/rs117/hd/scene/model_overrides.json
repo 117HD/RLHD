@@ -54174,7 +54174,8 @@
       },
       {
         "colors": "a < 106",
-        "baseMaterial": "NONE",
+        "baseMaterial": "GRAY_80",
+        "upwardsNormals": true,
         "depthBias": 210,
         "uvType": "MODEL_XZ",
         "castShadows": false,
