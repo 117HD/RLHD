@@ -772,7 +772,14 @@ public class ZoneRenderer implements Renderer {
 			float boostedFloor = (minimumBrightness / 100.0f) * (1 + environmentManager.currentMinBrightnessBoost * boostScale);
 			ambientStrength = Math.max(ambientStrength, boostedFloor);
 
-			add(ambientColor, ambientColor, multiply(directionalColor, 1 - shadowVisibility));
+			// Fold a fraction of the unshadowed directional light into ambient to
+			// simulate sky-fill in shadows. This fill is physically strongest at
+			// night/twilight (soft moon/sky light fills shadows) and minimal under
+			// a high sun (harsh light, crisp dark shadows). Scale it down as the sun
+			// climbs so high-noon shadows stay as dark as with the cycle disabled,
+			// while keeping the existing soft look near the horizon and at night.
+			float skyFill = 1.0f - smoothstep(0.0f, 45.0f, (float) sunAltitudeDegrees);
+			add(ambientColor, ambientColor, multiply(directionalColor, (1 - shadowVisibility) * skyFill));
 			directionalStrength *= shadowVisibility;
 		} else {
 			// Reset stored fog color when daylight cycle is disabled
