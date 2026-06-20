@@ -151,6 +151,12 @@ vec3 proceduralNebula(vec3 dir) {
     float region = sf_fbm(wdir * 2.5 + vec3(50.0), 5);
     region = smoothstep(0.45, 0.78, region);
 
+    // Most of the sky has no nebula (region == 0). The remaining detail/wisp/
+    // color fBm lookups (~10 noise samples) would just be multiplied by zero
+    // there, so bail out early — this is the bulk of the per-pixel savings.
+    if (region <= 0.0)
+        return vec3(0.0);
+
     // Finer filamentary structure inside the regions, also fBm + warped.
     float wisps = sf_fbm(wdir * 9.0 + vec3(100.0), 4);
     wisps = smoothstep(0.35, 0.75, wisps);
@@ -260,8 +266,10 @@ vec3 proceduralStarfield(vec3 dir) {
     color += starColor;
 
     // Nebulas
-    // A few large sweeping regions with wispy internal structure
-    color += proceduralNebula(dir) * nebulaVisibility;
+    // A few large sweeping regions with wispy internal structure.
+    // Skip the (expensive) nebula evaluation entirely when it's disabled.
+    if (nebulaVisibility > 0.0)
+        color += proceduralNebula(dir) * nebulaVisibility;
 
     return color;
 }
@@ -271,6 +279,7 @@ vec3 proceduralStarfield(vec3 dir) {
 // showing star points through terrain.
 vec3 proceduralStarfieldBackground(vec3 dir) {
     vec3 color = vec3(0.00304, 0.00304, 0.00521);
-    color += proceduralNebula(dir) * nebulaVisibility;
+    if (nebulaVisibility > 0.0)
+        color += proceduralNebula(dir) * nebulaVisibility;
     return color;
 }
