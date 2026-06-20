@@ -923,9 +923,11 @@ public class TimeOfDay
 			float s = t * t * (3.0f - 2.0f * t);
 			return twilightBrightness + (earlyDayBrightness - twilightBrightness) * s;
 		} else {
-			// Daytime: sine curve from earlyDayBrightness at +5° to peak at 90°
+			// Daytime: sine curve from earlyDayBrightness at +5° to peak at 90°.
+			// Peak is 1.0 so the brightest part of the day matches the environment's
+			// base strengths (i.e. how the world looks with the cycle disabled).
 			float earlyDayBrightness = horizonBrightness + 0.05f;
-			float peakBrightness = 1.2f;
+			float peakBrightness = 1.0f;
 			double sineFactor = Math.sin(Math.toRadians(sunAltitudeDegrees));
 			// Scale so that at 5°, we match earlyDayBrightness
 			double sineAt5 = Math.sin(Math.toRadians(5.0));
