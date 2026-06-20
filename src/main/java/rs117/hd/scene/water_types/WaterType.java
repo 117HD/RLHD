@@ -7,7 +7,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import javax.annotation.Nullable;
-import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +20,10 @@ import rs117.hd.utils.GsonUtils;
 import static rs117.hd.utils.ColorUtils.linearToSrgb;
 import static rs117.hd.utils.ColorUtils.rgb;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @GsonUtils.ExcludeDefaults
-@Setter(AccessLevel.PROTECTED)
 public class WaterType {
 	public String name;
 	public int vanillaTextureIndex = -1;
@@ -43,6 +44,14 @@ public class WaterType {
 	private boolean hasFoam = true;
 	private float duration = 1;
 	public int fishingSpotRecolor = -1;
+	public int depth = 256;
+	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
+	private float[] absorption = { .236f, .076f, .105f };
+	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
+	private float[] scattering = { .314f, .365f, .514f };
+	private float scatteringAnisotropy = .89f;
+	private float waveHeight = 1;
+	private float waveSpeed = .0072f;
 
 	public transient int index;
 
@@ -88,6 +97,11 @@ public class WaterType {
 		struct.foamColor.set(linearToSrgb(foamColor));
 		struct.depthColor.set(linearToSrgb(depthColor));
 		struct.normalMap.set(Material.getTextureLayer(normalMap));
+		struct.absorption.set(absorption);
+		struct.scattering.set(scattering);
+		struct.scatteringAnisotropy.set(scatteringAnisotropy);
+		struct.waveHeight.set(waveHeight);
+		struct.waveSpeed.set(waveSpeed);
 	}
 
 	@Slf4j

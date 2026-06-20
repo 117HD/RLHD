@@ -658,14 +658,13 @@ public class LegacyRenderer implements Renderer {
 				int viewportHeight = (int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]);
 
 				// Calculate projection matrix
-				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+				plugin.projMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 				if (plugin.orthographicProjection) {
-					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+					Mat4.mul(plugin.projMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(plugin.projMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspectiveInfiniteReverseZ(viewportWidth, viewportHeight, NEAR_PLANE));
+					Mat4.mul(plugin.projMatrix, Mat4.perspectiveInfiniteReverseZ(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
-
 
 				// Calculate view matrix
 				plugin.viewMatrix = Mat4.rotateX(plugin.cameraOrientation[1]);
@@ -677,7 +676,7 @@ public class LegacyRenderer implements Renderer {
 
 				// Calculate view proj & inv matrix
 				plugin.viewProjMatrix = Mat4.identity();
-				Mat4.mul(plugin.viewProjMatrix, projectionMatrix);
+				Mat4.mul(plugin.viewProjMatrix, plugin.projMatrix);
 				Mat4.mul(plugin.viewProjMatrix, plugin.viewMatrix);
 				Mat4.extractPlanes(plugin.viewProjMatrix, plugin.cameraFrustum);
 				plugin.invViewProjMatrix = Mat4.inverse(plugin.viewProjMatrix);
@@ -698,10 +697,11 @@ public class LegacyRenderer implements Renderer {
 					}
 				}
 
-				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
-				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
-				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
-				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+				plugin.uboGlobal.sceneCamera.position.set(plugin.cameraPosition);
+				plugin.uboGlobal.sceneCamera.viewMatrix.set(plugin.viewMatrix);
+				plugin.uboGlobal.sceneCamera.projMatrix.set(plugin.projMatrix);
+				plugin.uboGlobal.sceneCamera.viewProjMatrix.set(plugin.viewProjMatrix);
+				plugin.uboGlobal.sceneCamera.invViewProjMatrix.set(plugin.invViewProjMatrix);
 				plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 				plugin.uboGlobal.upload();
 			}
@@ -988,6 +988,8 @@ public class LegacyRenderer implements Renderer {
 				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
+//			plugin.updateWaterReflectionsFbo();
+
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
@@ -1006,29 +1008,6 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 			plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
-
-			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
-			float lightBrightnessMultiplier = 0.8f;
-			float midBrightnessMultiplier = 0.45f;
-			float darkBrightnessMultiplier = 0.05f;
-			float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * lightBrightnessMultiplier
-			}));
-			float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * midBrightnessMultiplier
-			}));
-			float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * darkBrightnessMultiplier
-			}));
-			plugin.uboGlobal.waterColorLight.set(waterColorLight);
-			plugin.uboGlobal.waterColorMid.set(waterColorMid);
-			plugin.uboGlobal.waterColorDark.set(waterColorDark);
 
 			plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
 			float ambientStrength = environmentManager.currentAmbientStrength;
@@ -1060,8 +1039,11 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.contrast.set(config.contrast() / 100f);
 			plugin.uboGlobal.underwaterEnvironment.set(environmentManager.isUnderwater() ? 1 : 0);
 			plugin.uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
-			plugin.uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
-			plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
+			plugin.uboGlobal.underwaterCausticsColor.set(multiply(
+				environmentManager.currentUnderwaterCausticsColor,
+				environmentManager.currentUnderwaterCausticsStrength
+			));
+			plugin.uboGlobal.legacyWaterColor.set(environmentManager.currentWaterColor);
 			plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
@@ -1069,7 +1051,6 @@ public class LegacyRenderer implements Renderer {
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to
 			// get the light's direction vector pointing away from each fragment
-			plugin.uboGlobal.lightDir.set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
 
 			if (plugin.configColorFilter != ColorFilter.NONE) {
 				plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
@@ -1116,7 +1097,8 @@ public class LegacyRenderer implements Renderer {
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 
-				plugin.uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
+				plugin.uboGlobal.directionalCamera.viewMatrix.set(lightViewMatrix);
+				plugin.uboGlobal.directionalCamera.viewProjMatrix.set(lightProjectionMatrix);
 				plugin.uboGlobal.upload();
 
 				glEnable(GL_CULL_FACE);
@@ -1133,6 +1115,112 @@ public class LegacyRenderer implements Renderer {
 
 			plugin.uboGlobal.upload();
 			sceneProgram.use();
+//			sceneProgram.uniLegacyWaterColor.set(environmentManager.currentWaterColor);
+//			sceneProgram.uniShorelineCaustics.set(config.shorelineCaustics());
+//			sceneProgram.uniWaterTransparency.set(plugin.configWaterTransparency);
+
+			// Draw with buffers bound to scene VAO
+			glBindVertexArray(vaoScene);
+
+			if (plugin.configLinearAlphaBlending) {
+				glEnable(GL_FRAMEBUFFER_SRGB);
+				// This is kind of stupid, but our shader expects fogColor in sRGB, so we transform it back here
+				fogColor = ColorUtils.srgbToLinear(fogColor);
+			}
+
+			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
+
+			glEnable(GL_BLEND);
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+
+//			boolean renderWaterReflections = plugin.configPlanarReflections != ReflectionMode.DISABLED && sceneContext.hasWater;
+//			if (renderWaterReflections) {
+//				plugin.uboGlobal.mostPrevalentWaterLevel.set(sceneContext.mostPrevalentWaterLevel);
+//
+//				// Calculate the viewport dimensions before scaling in order to include the extra padding
+//				int viewportWidth = (int) (plugin.sceneViewport[2] / plugin.sceneViewportScale[0]);
+//				int viewportHeight = (int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]);
+//
+//				// Calculate projection matrix
+//				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+//				if (plugin.orthographicProjection) {
+//					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+//					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+//				} else {
+//					Mat4.mul(projectionMatrix, Mat4.perspectiveInfiniteReverseZ(viewportWidth, viewportHeight, NEAR_PLANE));
+//				}
+//
+//				// Calculate water reflection projection matrix
+//				float[] reflectionProjectionMatrix = Mat4.scale(1, -1, 1);
+//				Mat4.mul(reflectionProjectionMatrix, projectionMatrix);
+//				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateX(-plugin.cameraOrientation[1]));
+//				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateY(plugin.cameraOrientation[0]));
+//				Mat4.mul(
+//					reflectionProjectionMatrix, Mat4.translate(
+//						-plugin.cameraPosition[0],
+//						-(plugin.cameraPosition[1] + (sceneContext.mostPrevalentWaterLevel - plugin.cameraPosition[1]) * 2),
+//						-plugin.cameraPosition[2]
+//					)
+//				);
+//				plugin.uboGlobal.projectionMatrix.set(reflectionProjectionMatrix);
+//				plugin.uboGlobal.cameraPos.set(
+//					plugin.cameraPosition[0],
+//					(plugin.cameraPosition[1] + (sceneContext.mostPrevalentWaterLevel - plugin.cameraPosition[1]) * 2),
+//					plugin.cameraPosition[2]
+//				);
+//				plugin.uboGlobal.upload();
+//
+//				frameTimer.begin(Timer.RENDER_REFLECTIONS);
+//
+//				glViewport(0, 0, plugin.waterReflectionResolution[0], plugin.waterReflectionResolution[1]);
+//
+//				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboWaterReflection);
+//				glClearDepth(0);
+//				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//
+//				// Since the game was never designed to be viewed from below, a lot of
+//				// things are missing triangles underneath. In most cases, it's fine
+//				// visually to render the top face from below.
+//				glDisable(GL_CULL_FACE);
+//
+//				glEnable(GL_DEPTH_TEST);
+//				// With LEQUAL, the insides of paper thin walls are visible from the outside
+//				glDepthFunc(GL_GEQUAL);
+//
+//				sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_REFLECTION);
+//				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
+//
+//				// Bind the water reflection texture to index 4
+//				glActiveTexture(TEXTURE_UNIT_WATER_REFLECTION_MAP);
+//				glBindTexture(GL_TEXTURE_2D, plugin.texWaterReflection);
+//				frameTimer.begin(Timer.REFLECTION_MIPMAPS);
+//				glGenerateMipmap(GL_TEXTURE_2D);
+//				frameTimer.end(Timer.REFLECTION_MIPMAPS);
+//
+//				// Reset everything back to the main pass' state
+//				glDisable(GL_DEPTH_TEST);
+//				glEnable(GL_CULL_FACE);
+//
+//				frameTimer.end(Timer.RENDER_REFLECTIONS);
+//
+//				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
+//				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
+//				plugin.uboGlobal.upload();
+//			}
+
+			// Draw with buffers bound to scene VAO
+			glBindVertexArray(vaoScene);
+
+			if (plugin.configLinearAlphaBlending) {
+				glEnable(GL_FRAMEBUFFER_SRGB);
+				// This is kind of stupid, but our shader expects fogColor in sRGB, so we transform it back here
+				fogColor = ColorUtils.srgbToLinear(fogColor);
+			}
+
+			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
+
+			glEnable(GL_BLEND);
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 			if (plugin.msaaSamples > 1) {
@@ -1167,8 +1255,8 @@ public class LegacyRenderer implements Renderer {
 			glEnable(GL_BLEND);
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
-			// Draw with buffers bound to scene VAO
-			glBindVertexArray(vaoScene);
+//			sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_MAIN);
+//			sceneProgram.uniWaterReflectionEnabled.set(renderWaterReflections);
 
 			// When there are custom tiles, we need depth testing to draw them in the correct order, but the rest of the
 			// scene doesn't support depth testing, so we only write depths for custom tiles.
@@ -1212,6 +1300,7 @@ public class LegacyRenderer implements Renderer {
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_MULTISAMPLE);
+			glDisable(GL_FRAMEBUFFER_SRGB);
 			glDisable(GL_DEPTH_TEST);
 			glDepthMask(true);
 			glUseProgram(0);
@@ -1545,7 +1634,7 @@ public class LegacyRenderer implements Renderer {
 	 * Draw a Renderable in the scene
 	 *
 	 * @param projection  Unused
-	 * @param scene      Unused
+	 * @param scene       Unused
 	 * @param renderable  Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
 	 * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
 	 * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.

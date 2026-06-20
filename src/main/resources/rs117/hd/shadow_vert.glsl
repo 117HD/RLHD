@@ -66,6 +66,17 @@ layout (location = 0) in vec3 vPosition;
         bool isTransparent = opacity <= opacityThreshold;
         bool isGroundPlaneTile = (terrainData & 0xF) == 1; // plane == 0 && isTerrain
         bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
+        isWaterSurfaceOrUnderwaterTile = false; // TODO: fix properly, causes underwater models to cast shadows
+
+        // TODO: Fix this hack.
+        // Sometimes, bridge tiles are used along shorelines for the non-water portion,
+        // and since bridge tiles have the terrain data plane written from tile.getRenderLevel(),
+        // these end up on plane 1, i.e. counted as not on the ground plane, even though they should
+        // be counted as the ground plane for shadows specifically. We can probably fix this easily,
+        // but we have to be careful with replacing renderLevel with the actual plane.
+        // Without this hack, these bridge tiles cast shadows, which looks weird on underwater tiles
+        // near "The Node".
+        isGroundPlaneTile = (terrainData & 1) == 1;
 
         bool isShadowDisabled =
             isGroundPlaneTile ||
@@ -105,7 +116,7 @@ layout (location = 0) in vec3 vPosition;
             fOpacity = opacity;
         #endif
 
-        vec4 clipPosition = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
+        vec4 clipPosition = directionalCamera.viewProjMatrix * vec4(worldPosition, shouldCastShadow);
         if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
             clipPosition.z += SHADOW_TRANSPARENCY_BIAS;
         gl_Position = clipPosition;
@@ -161,7 +172,7 @@ layout (location = 0) in vec3 vPosition;
                 gOpacity = opacity;
             #endif
         #else
-            gl_Position = lightProjectionMatrix * vec4(vPosition, shouldCastShadow);
+            gl_Position = directionalCamera.viewProjMatrix * vec4(vPosition, shouldCastShadow);
             #if SHADOW_TRANSPARENCY
                 fOpacity = opacity;
             #endif

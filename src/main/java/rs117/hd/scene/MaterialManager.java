@@ -51,6 +51,7 @@ import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.HDVariables;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -419,7 +420,7 @@ public class MaterialManager {
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		}
-		textureManager.setAnisotropicFilteringLevel();
+		HDUtils.setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
 
 		uploadTextures();
 

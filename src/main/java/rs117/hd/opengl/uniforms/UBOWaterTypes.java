@@ -20,6 +20,11 @@ public class UBOWaterTypes extends UniformBuffer<GLBuffer> {
 		public final Property foamColor = addProperty(PropertyType.FVec3, "foamColor");
 		public final Property depthColor = addProperty(PropertyType.FVec3, "depthColor");
 		public final Property normalMap = addProperty(PropertyType.Int, "normalMap");
+		public final Property absorption = addProperty(PropertyType.FVec3, "absorption");
+		public final Property scattering = addProperty(PropertyType.FVec3, "scattering");
+		public final Property scatteringAnisotropy = addProperty(PropertyType.Float, "scatteringAnisotropy");
+		public final Property waveHeight = addProperty(PropertyType.Float, "waveHeight");
+		public final Property waveSpeed = addProperty(PropertyType.Float, "waveSpeed");
 	}
 
 	private final WaterTypeStruct[] uboStructs;

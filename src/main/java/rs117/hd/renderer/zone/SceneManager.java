@@ -687,8 +687,12 @@ public class SceneManager {
 		int totalAlpha = 0;
 		for (int x = 0; x < NUM_ZONES; ++x) {
 			for (int z = 0; z < NUM_ZONES; ++z) {
-				totalOpaque += nextZones[x][z].bufLen;
-				totalAlpha += nextZones[x][z].bufLenA;
+				Zone zone = nextZones[x][z];
+				totalOpaque += zone.bufLen;
+				totalAlpha += zone.bufLenA;
+
+				if (zone.hasWater)
+					nextSceneContext.hasWater = true;
 			}
 		}
 

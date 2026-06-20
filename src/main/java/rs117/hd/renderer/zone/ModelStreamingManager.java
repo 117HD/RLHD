@@ -20,6 +20,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.utils.Camera;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.collections.ConcurrentPool;
@@ -33,6 +34,8 @@ import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.renderer.zone.ZoneRenderer.DIRECTIONAL_CAMERA_ID;
+import static rs117.hd.renderer.zone.ZoneRenderer.SCENE_CAMERA_ID;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -73,12 +76,27 @@ public class ModelStreamingManager {
 
 	private final ArrayList<AsyncCachedModel> pending = new ArrayList<>();
 	private final StreamingContext[] streamingContexts = new StreamingContext[RL_RENDER_THREADS + 1];
+	private float[][][] modelCullingFrustums = new float[2][6][4];
+	private int modelCullingFrustumCount = 0;
 	private int numRenderThreads = -1;
 
 	static final class StreamingContext {
 		final int[] worldPos = new int[3];
 		final float[] objectWorldPos = new float[4];
 		int renderableCount;
+	}
+
+	public void addModelCullingFrustums(Camera camera) {
+		if (modelCullingFrustumCount >= modelCullingFrustums.length) {
+			float[][][] newCullingFrustums = new float[modelCullingFrustums.length + 1][6][4];
+			for (int i = 0; i < modelCullingFrustumCount; i++) {
+				for (int j = 0; j < 6; j++)
+					System.arraycopy(modelCullingFrustums[i][j], 0, newCullingFrustums[i + 1][j], 0, 4);
+			}
+			modelCullingFrustums = newCullingFrustums;
+		}
+
+		camera.getFrustumPlanes(modelCullingFrustums[modelCullingFrustumCount++]);
 	}
 
 	public void initialize() {
@@ -133,6 +151,7 @@ public class ModelStreamingManager {
 	public void onBeforeRender(BeforeRender event) {
 		for (int i = 0; i < streamingContexts.length; i++)
 			streamingContexts[i].renderableCount = 0;
+		modelCullingFrustumCount = 0;
 
 		updateRenderThreads();
 	}
@@ -197,9 +216,27 @@ public class ModelStreamingManager {
 		}
 		plugin.drawnTempRenderableCount++;
 
+		if (renderable instanceof NPC) {
+			String name = ((NPC) renderable).getName();
+			if ("Eagle ray".equals(name) ||
+				"Manta ray".equals(name) ||
+				"Stingray".equals(name) ||
+				"Veiled kraken".equals(name) ||
+				"Spined kraken".equals(name) ||
+				"Pygmy kraken".equals(name) ||
+				"Mogre".equals(name)
+			) {
+				y += 64;
+			}
+//			if ("Veiled kraken".equals(name))
+//				y += 360;
+			if ("Veiled kraken".equals(name))
+				y += 64;
+		}
+
 		final boolean hasAlpha =
 			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
-			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+			zone.isVisible(SCENE_CAMERA_ID);
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				modelOverride,
@@ -306,14 +343,17 @@ public class ModelStreamingManager {
 		) {
 			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
+				ctx.sceneContext,
 				worldProjection,
-				plugin.cameraFrustum,
+				modelCullingFrustums,
+				modelCullingFrustumCount,
 				faceDistances,
 				visibleFaces,
 				culledFaces,
 				isModelPartiallyVisible,
 				modelOverride,
 				m,
+				gameObject,
 				isPlayer,
 				orientation,
 				x, y, z
@@ -330,12 +370,14 @@ public class ModelStreamingManager {
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
 				plugin.configShadowMode != ShadowMode.OFF &&
-				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
+				zone.isVisible(DIRECTIONAL_CAMERA_ID)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
+					ctx.sceneContext,
 					culledFaces,
 					m,
+					gameObject,
 					modelOverride,
 					preOrientation,
 					orientation,
@@ -357,8 +399,10 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
+					ctx.sceneContext,
 					visibleFaces,
 					m,
+					gameObject,
 					modelOverride,
 					preOrientation,
 					orientation,
@@ -467,7 +511,7 @@ public class ModelStreamingManager {
 
 		final boolean hasAlpha =
 			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
-			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
+			zone.isVisible(SCENE_CAMERA_ID);
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
 				modelOverride,
@@ -572,14 +616,17 @@ public class ModelStreamingManager {
 		) {
 			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
 			shouldSort &= sceneUploader.preprocessTempModel(
+				ctx.sceneContext,
 				projection,
-				plugin.cameraFrustum,
+				modelCullingFrustums,
+				modelCullingFrustumCount,
 				faceDistances,
 				visibleFaces,
 				culledFaces,
 				isModelPartiallyVisible,
 				modelOverride,
 				m,
+				tileObject,
 				false,
 				orient,
 				x, y, z
@@ -596,12 +643,14 @@ public class ModelStreamingManager {
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
 				plugin.configShadowMode != ShadowMode.OFF &&
-				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
+				zone.isVisible(DIRECTIONAL_CAMERA_ID)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
+					ctx.sceneContext,
 					culledFaces,
 					m,
+					tileObject,
 					modelOverride,
 					preOrientation,
 					orient,
@@ -620,8 +669,10 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
+					ctx.sceneContext,
 					visibleFaces,
 					m,
+					tileObject,
 					modelOverride,
 					preOrientation,
 					orient,

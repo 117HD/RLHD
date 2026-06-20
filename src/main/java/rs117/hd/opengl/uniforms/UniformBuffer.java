@@ -21,7 +21,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	@RequiredArgsConstructor
-	protected enum PropertyType {
+	public enum PropertyType {
 		Int(4, 4, 1),
 		IVec2(8, 8, 2),
 		IVec3(12, 16, 3),
@@ -170,7 +170,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(float x) {
+		public final void set(float f) {
 			if (isUninitialized())
 				return;
 
@@ -179,7 +179,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			owner.dataFloat.position(offset).put(x);
+			owner.dataFloat.position(offset).put(f);
 			owner.markWaterLine(position, type.size);
 		}
 

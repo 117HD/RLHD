@@ -1034,6 +1034,18 @@
     ]
   },
   {
+    "description": "Hide objects causing issues with water reflections, such as grapple shortcuts",
+    "objectIds": [ "XBOWS_INV_FLOOR" ],
+    "hide": true
+  },
+  {
+    "description": "Hide black boxes in God Wars Dungeon messing up the water reflection",
+    "objectIds": [ "CAVEWALL_TOP_SUPERBLACK" ],
+    "hideInAreas": [
+      [ 2899, 5301, 2911, 5311 ]
+    ]
+  },
+  {
     "description": "Unicorn Overbrightness and vanilla shadow removal Fix",
     "hideVanillaShadows": true,
     "baseMaterial": "GRAY_65",
@@ -29879,6 +29891,9 @@
       "WATERFALL_OVERLAY_1_BRIGHTER",
       "MYARM_WATER_MOVING_1",
       "FAIRY2_WATERFALL_BOTTOM"
+    ],
+    "hideInAreas": [
+      "SHIP_SAILING"
     ]
   },
   {
@@ -30716,6 +30731,7 @@
   {
     "description": "Object - Wooden - Support Post",
     "baseMaterial": "WOOD_GRAIN_2",
+    "terrainVertexSnap": true,
     "objectIds": [
       "WOODENSUPPORT1",
       "FAI_BARBARIAN_WOODENSUPPORT",
@@ -54986,6 +55002,16 @@
     ]
   },
   {
+    "description": "Post with rope",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "PISCARILIUS_PIER_POST_01"
+    ],
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 1
+  },
+  {
     "description": "Textured brick wooden post wall",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -77020,6 +77046,8 @@
   {
     "description": "The Pandemonium - Dock Support",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.008,
     "objectIds": [
       "PANDEMONIUM_PIER_SUPPORT_PILLAR",
       "PANDEMONIUM_PIER_SUPPORT_STRAIGHT01",
@@ -89327,5 +89355,25 @@
       "ARENA_SCAFFOLD_PLANKS_RIGHT",
       "ARENA_SCAFFOLD_PLANKS_LEFT"
     ]
+  },
+  {
+    "description": "Tangled kelp clamp to the seabed",
+    "objectIds": [
+      "OCEAN_PLANT_KELP01",
+      "OCEAN_PLANT_KELP02",
+      "OCEAN_PLANT_KELP03",
+      "OCEAN_PLANT_KELP04",
+      "OCEAN_PLANT_KELP05"
+    ],
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.5
+  },
+  {
+    "description": "",
+    "objectIds": [
+      "PORTKIT_PILLAR01_BOTTOM01"
+    ],
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.001
   }
 ]
