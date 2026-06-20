@@ -20733,7 +20733,7 @@
   },
   {
     "description": "Varrock Castle Candelabra",
-    "height": 210,
+    "height": 175,
     "alignment": "CENTER",
     "radius": 500,
     "strength": 5,
@@ -27802,15 +27802,16 @@
     "description": "MAGIC_GUILD_ORBS",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 350,
-    "strength": 20,
+    "radius": 375,
+    "strength": 15,
     "color": [
       255,
       255,
       255
     ],
     "type": "PULSE",
-    "duration": 800,
+    "duration": 1200,
+    "nightMultiplier": 1.5,
     "range": 5,
     "objectIds": [
       "RUNETEMPLE_STANDINGSTONE_GLOW"
@@ -28087,7 +28088,9 @@
     ],
     "type": "STATIC",
     "duration": 0,
+    "nightMultiplier": 1.5,
     "range": 20,
+    "visibleFromOtherPlanes": true,
     "objectIds": [
       "LANTERN"
     ]
