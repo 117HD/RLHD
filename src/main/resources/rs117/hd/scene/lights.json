@@ -20700,9 +20700,9 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "timeOfDay": "DUSK",
+    "timeOfDay": "NIGHT",
     "staggered": true,
-    "nightBoost": 2,
+    "nightMultiplier": 2,
     "objectIds": [
       "FAI_VARROCK_OILLAMP"
     ]

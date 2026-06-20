@@ -491,10 +491,10 @@ public class LightManager {
 
 				float maxRadius = light.def.radius;
 				if (nightLightsActive) {
-					float factor = getEffectiveNightFactor(light, nightLightFactor, nightFactorRising);
-					float radiusScale = getNightRadiusScale(light.def, factor);
+					float phaseFactor = getEffectiveNightFactor(light, nightLightFactor, nightFactorRising);
+					float radiusScale = getNightRadiusScale(light.def, phaseFactor, nightLightFactor);
 					maxRadius *= radiusScale;
-					if (isTimeRestricted(light.def) && getNightStrengthScale(light.def, factor) < 0.001f)
+					if (isTimeRestricted(light.def) && getNightStrengthScale(light.def, phaseFactor, nightLightFactor) < 0.001f)
 						light.visible = false;
 				}
 				switch (light.def.type) {
@@ -587,9 +587,9 @@ public class LightManager {
 				light.strength *= saturate((light.lifetime - light.elapsedTime) / light.fadeOutDuration);
 
 			if (nightLightsActive) {
-				float factor = getEffectiveNightFactor(light, nightLightFactor, nightFactorRising);
-				light.strength *= getNightStrengthScale(light.def, factor);
-				light.radius *= getNightRadiusScale(light.def, factor);
+				float phaseFactor = getEffectiveNightFactor(light, nightLightFactor, nightFactorRising);
+				light.strength *= getNightStrengthScale(light.def, phaseFactor, nightLightFactor);
+				light.radius *= getNightRadiusScale(light.def, phaseFactor, nightLightFactor);
 			}
 
 			light.applyTemporaryVisibilityFade();
@@ -674,26 +674,45 @@ public class LightManager {
 
 	/**
 	 * Strength scale when the day/night cycle is active.
-	 * nightBoost applies fully; timeOfDay also scales from zero before its phase.
+	 * nightMultiplier is the peak-darkness target: 0 = off, 0.5 = half default, 1 = default, >1 = boosted.
+	 * Always-on lights blend from default (day) toward that target.
+	 * timeOfDay / staggered lights multiply their phase fade by the same night target curve.
 	 */
-	private static float getNightStrengthScale(LightDefinition def, float nightLightFactor) {
-		float boost = def.nightBoost > 0 ? def.nightBoost : 1f;
-		float scale = 1 + (boost - 1) * nightLightFactor;
+	private static float getNightStrengthScale(LightDefinition def, float phaseFactor, float globalNightFactor) {
+		float nightScale = lerpNightScale(def.nightMultiplier, globalNightFactor);
 		if (isTimeRestricted(def))
-			scale *= nightLightFactor;
-		return scale;
+			return phaseFactor * nightScale;
+		return nightScale;
 	}
 
 	/**
 	 * Radius scale when the day/night cycle is active.
-	 * Uses a fraction of the strength boost so reach grows less than brightness.
+	 * Values below 1 only reduce strength; radius stays at default unless the light is fully off (0).
+	 * Values above 1 grow radius by a smaller fraction than brightness.
 	 */
-	private static float getNightRadiusScale(LightDefinition def, float nightLightFactor) {
-		float boost = def.nightBoost > 0 ? def.nightBoost : 1f;
-		float scale = 1 + (boost - 1) * nightLightFactor * NIGHT_RADIUS_BOOST_FRACTION;
-		if (isTimeRestricted(def))
-			scale *= nightLightFactor;
-		return scale;
+	private static float getNightRadiusScale(LightDefinition def, float phaseFactor, float globalNightFactor) {
+		float multiplier = def.nightMultiplier;
+		if (isTimeRestricted(def)) {
+			if (multiplier <= 0)
+				return 0;
+			if (multiplier < 1)
+				return phaseFactor;
+			return phaseFactor * lerpNightRadiusScale(multiplier, globalNightFactor);
+		}
+		if (multiplier <= 0)
+			return lerpNightScale(0, globalNightFactor);
+		if (multiplier < 1)
+			return 1;
+		return lerpNightRadiusScale(multiplier, globalNightFactor);
+	}
+
+	private static float lerpNightScale(float multiplier, float nightLightFactor) {
+		return 1 + (multiplier - 1) * nightLightFactor;
+	}
+
+	private static float lerpNightRadiusScale(float multiplier, float nightLightFactor) {
+		float radiusFraction = multiplier > 1f ? NIGHT_RADIUS_BOOST_FRACTION : 1f;
+		return 1 + (multiplier - 1) * nightLightFactor * radiusFraction;
 	}
 
 	private boolean isActorLightVisible(@Nonnull Actor actor) {

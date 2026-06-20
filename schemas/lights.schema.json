@@ -151,10 +151,11 @@
         "type": "boolean",
         "description": "Whether the light should spawn only when an animation starts playing. Only works for `GraphicsObject`s and `Projectile`s. Defaults to false."
       },
-      "nightBoost": {
+      "nightMultiplier": {
         "type": "number",
         "default": 1,
-        "description": "Strength multiplier at peak darkness when the day/night cycle is active. Radius grows by a smaller fraction of this boost."
+        "minimum": 0,
+        "description": "Peak-darkness strength target when the day/night cycle is active. 1 = default, 0.5 = half default brightness, 0 = off. Values above 1 boost brightness at night"
       },
       "timeOfDay": {
         "type": "string",
