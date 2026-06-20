@@ -942,7 +942,7 @@ public class TimeOfDay
 			// Peak is 1.0 so the brightest part of the day matches the environment's
 			// base strengths (i.e. how the world looks with the cycle disabled).
 			float earlyDayBrightness = horizonBrightness + 0.05f;
-			float peakBrightness = 1.0f;
+			float peakBrightness = 1.2f;
 			double sineFactor = Math.sin(Math.toRadians(sunAltitudeDegrees));
 			// Scale so that at 5°, we match earlyDayBrightness
 			double sineAt5 = Math.sin(Math.toRadians(5.0));
