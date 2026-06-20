@@ -48341,7 +48341,8 @@
     "description": "Magic Tree Top",
     "offset": [ 10, 600, -10 ],
     "radius": 300,
-    "strength": 5,
+    "strength": 2,
+    "nightMultiplier": 2,
     "fadeInDuration": 200,
     "color": [
       255,
@@ -48359,7 +48360,7 @@
   {
     "description": "Magic Tree North",
     "offset": [ 120, 480, -10 ],
-    "radius": 300,
+    "radius": 250,
     "strength": 3,
     "fadeInDuration": 200,
     "color": [
@@ -48378,7 +48379,7 @@
   {
     "description": "Magic Tree South",
     "offset": [ -170, 500, -10 ],
-    "radius": 300,
+    "radius": 250,
     "strength": 3,
     "fadeInDuration": 200,
     "color": [
@@ -48397,7 +48398,7 @@
   {
     "description": "Magic Tree West",
     "offset": [ 10, 500, 170 ],
-    "radius": 300,
+    "radius": 250,
     "strength": 3,
     "fadeInDuration": 200,
     "color": [
@@ -48416,7 +48417,7 @@
   {
     "description": "Magic Tree East",
     "offset": [ 10, 500, -170 ],
-    "radius": 300,
+    "radius": 250,
     "strength": 3,
     "fadeInDuration": 200,
     "color": [
@@ -48434,7 +48435,7 @@
   },
   {
     "description": "Magic Tree Under North",
-    "offset": [ 170, 280, -10 ],
+    "offset": [ 160, 280, -20 ],
     "radius": 280,
     "strength": 7,
     "fadeInDuration": 200,
@@ -48453,9 +48454,28 @@
   },
   {
     "description": "Magic Tree Under South",
-    "offset": [ -110, 250, -10 ],
-    "radius": 300,
-    "strength": 2,
+    "offset": [ -160, 260, -10 ],
+    "radius": 320,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 35,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Under South East",
+    "offset": [ -90, 270, -120 ],
+    "radius": 150,
+    "strength": 3,
     "fadeInDuration": 200,
     "color": [
       255,
@@ -48472,8 +48492,46 @@
   },
   {
     "description": "Magic Tree Under West",
-    "offset": [ 10, 250, 100 ],
-    "radius": 300,
+    "offset": [ 10, 280, 140 ],
+    "radius": 250,
+    "strength": 2,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Under North West",
+    "offset": [ 100, 300, 100 ],
+    "radius": 150,
+    "strength": 2,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Under South West",
+    "offset": [ -100, 300, 100 ],
+    "radius": 150,
     "strength": 2,
     "fadeInDuration": 200,
     "color": [
@@ -48492,7 +48550,7 @@
   {
     "description": "Magic Tree Under East",
     "offset": [ 50, 290, -150 ],
-    "radius": 300,
+    "radius": 250,
     "strength": 2,
     "fadeInDuration": 200,
     "color": [
