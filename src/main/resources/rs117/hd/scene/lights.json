@@ -20692,6 +20692,84 @@
     ]
   },
   {
+    "description": "Varrock Rune Shop Sign",
+    "offset": [ 0, 185, 0 ],
+    "radius": 215,
+    "strength": 8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 3,
+    "nightMultiplier": 1.6,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHOP_SIGN"
+    ]
+  },
+  {
+    "description": "Varrock Rune Shop Sign Sparkle 1",
+    "offset": [ -30, 135, 0 ],
+    "radius": 40,
+    "strength": 12,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 60,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "dayNightOnly": true,
+    "nightMultiplier": 1.4,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHOP_SIGN"
+    ]
+  },
+  {
+    "description": "Varrock Rune Shop Sign Sparkle 2",
+    "offset": [ -30, 53, 0 ],
+    "radius": 30,
+    "strength": 7,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "dayNightOnly": true,
+    "nightMultiplier": 1.4,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHOP_SIGN"
+    ]
+  },
+  {
+    "description": "Varrock Rune Shop Sign Sparkle 3",
+    "offset": [ -30, 87, 0 ],
+    "radius": 30,
+    "strength": 12,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 60,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "dayNightOnly": true,
+    "nightMultiplier": 1.4,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHOP_SIGN"
+    ]
+  },
+  {
     "description": "Varrock Lantern",
     "offset": [ 0, 155, 0 ],
     "radius": 220,
@@ -20704,7 +20782,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "timeOfDay": "NIGHT",
+    "timeOfDay": "DUSK",
     "staggered": true,
     "dayNightOnly": true,
     "nightMultiplier": 1.5,

@@ -14094,6 +14094,27 @@
     ]
   },
   {
+    "description": "VARROCK_RUNE_SHOP_SIGN",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHOP_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.43,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_300"
+      }
+    ]
+  },
+  {
     "description": "Wooden Door 1 - Fake Plank",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
