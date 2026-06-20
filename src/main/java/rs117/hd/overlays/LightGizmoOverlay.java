@@ -249,6 +249,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 				if (action == Action.GRAB) {
 					float[] oldLightPos = new float[4];
 					float[] newLightPos = new float[4];
+					var wv = sceneManager.getWorldViewStruct(l.worldViewId);
 
 					float radians = l.orientation * JAU_TO_RAD;
 					float sin = sin(radians);
@@ -261,6 +262,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 					oldLightPos[0] += -cos * x - sin * z;
 					oldLightPos[1] += currentLightOffset[1];
 					oldLightPos[2] += -cos * z + sin * x;
+					SubSceneOverlayHelper.projectScenePoint(wv, oldLightPos);
 					oldLightPos[3] = 1;
 					Mat4.projectVec(point, projectionMatrix, oldLightPos);
 
@@ -304,10 +306,17 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 							if (freezeMode == RELATIVE_TO_ORIGIN) {
 								copyTo(oldLightPos, l.origin);
 								oldLightPos[3] = 1;
+								SubSceneOverlayHelper.projectScenePoint(wv, oldLightPos);
 								Mat4.projectVec(point, projectionMatrix, oldLightPos);
 							}
 
-							float d = dot(n, oldLightPos);
+							float[] planePt = new float[3];
+							System.arraycopy(l.origin, 0, planePt, 0, 3);
+							planePt[0] += -cos * x - sin * z;
+							planePt[1] += currentLightOffset[1];
+							planePt[2] += -cos * z + sin * x;
+							SubSceneOverlayHelper.projectScenePoint(wv, planePt);
+							float d = dot(n, planePt);
 
 							// dot(p1 + v1 * t, n) = d
 							// dot(p1, n) + dot(v1 * t, n) = d
@@ -328,7 +337,9 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 							}
 
 							// p2 & v2 = ray from the light's origin in the direction of the target axis
-							var p2 = freezeMode == RELATIVE_TO_ORIGIN ? l.origin : originalLightPosition;
+							float[] p2 = new float[3];
+							copyTo(p2, freezeMode == RELATIVE_TO_ORIGIN ? l.origin : originalLightPosition);
+							SubSceneOverlayHelper.projectScenePoint(wv, p2);
 							var v2 = new float[3];
 							v2[axis] = 1;
 
@@ -355,6 +366,9 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 							}
 						}
 					}
+
+					if (wv != null)
+						wv.inverseProject(newLightPos);
 
 					int gridSize = isCtrlHeld ? 128 / (isShiftHeld ? 8 : 1) : 1;
 
@@ -481,8 +495,10 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			switch (action) {
 				case GRAB:
 					Light l = selections.get(0);
+					var wv = sceneManager.getWorldViewStruct(l.worldViewId);
 					var lightOrigin = freezeMode == RELATIVE_TO_ORIGIN ? l.origin : originalLightPosition;
 					System.arraycopy(lightOrigin, 0, point, 0, 3);
+					SubSceneOverlayHelper.projectScenePoint(wv, point);
 					point[3] = 1;
 					float[] origin = new float[4];
 					Mat4.projectVec(origin, projectionMatrix, point);
@@ -501,9 +517,11 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 						for (int i = 0; i < 3; i++) {
 							if (!frozenAxes[i]) {
 								int stepSize = 1000;
+								copyTo(point, displayPos);
 								point[i] += stepSize;
+								SubSceneOverlayHelper.projectScenePoint(wv, point);
+								point[3] = 1;
 								Mat4.projectVec(stepAlongAxis, projectionMatrix, point);
-								point[i] -= stepSize;
 
 								g.setColor(axisColors[i]);
 								drawLineSpan(g, origin, stepAlongAxis);
@@ -512,6 +530,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 					}
 
 					copyTo(point, displayPos);
+					SubSceneOverlayHelper.projectScenePoint(wv, point);
 					point[3] = 1;
 					float[] pos = new float[4];
 					Mat4.projectVec(pos, projectionMatrix, point);
