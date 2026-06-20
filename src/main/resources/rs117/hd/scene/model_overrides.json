@@ -20473,10 +20473,11 @@
       {
         "description": "Lamp",
         "colors": "s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT"
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "upwardsNormals": true
       },
       {
-        "description": "Lamp",
+        "description": "Moths",
         "colors": "a < 255",
         "baseMaterial": "NONE",
         "upwardsNormals": false,

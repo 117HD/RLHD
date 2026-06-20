@@ -27792,7 +27792,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 500,
+    "duration": 1500,
     "range": 20,
     "objectIds": [
       "NZONE_LOBBY_WALLBLOCK"
@@ -37558,6 +37558,24 @@
     "offset": [ -60, 120, 0 ],
     "radius": 550,
     "strength": 2,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "nightMultiplier": 2.5,
+    "range": 10,
+    "objectIds": [
+      "GNOME_LAMP2"
+    ]
+  },
+  {
+    "description": "GNOME_LAMP_HIGHLIGHT",
+    "offset": [ -30, 125, 40 ],
+    "radius": 50,
+    "strength": 20,
     "color": [
       255,
       255,
