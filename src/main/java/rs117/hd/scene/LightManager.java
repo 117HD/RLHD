@@ -243,6 +243,7 @@ public class LightManager {
 		if (plane != currentPlane) {
 			currentPlane = plane;
 			changedPlanes = true;
+			reloadObjectLights(sceneContext);
 		}
 
 		for (Light light : sceneContext.lights) {
@@ -786,6 +787,28 @@ public class LightManager {
 				addWorldLight(sceneContext, light);
 		}
 
+		scanSceneObjectLights(sceneContext);
+	}
+
+	/**
+	 * Rebuild tile object lights after a plane change or zone reload.
+	 * Spawn events are not fired for objects already in the scene, so we rescan manually.
+	 */
+	public void reloadObjectLights(SceneContext sceneContext) {
+		sceneContext.lights.removeIf(light -> light.tileObject != null);
+		scanSceneObjectLights(sceneContext);
+
+		for (Light light : sceneContext.lights) {
+			if (light.tileObject != null) {
+				light.fadeInDuration = 0;
+				light.hiddenTemporarily = false;
+				light.changedVisibilityAt = -1;
+				light.prevPlane = -1;
+			}
+		}
+	}
+
+	private void scanSceneObjectLights(SceneContext sceneContext) {
 		for (Tile[][] plane : sceneContext.scene.getExtendedTiles()) {
 			for (Tile[] column : plane) {
 				for (Tile tile : column) {

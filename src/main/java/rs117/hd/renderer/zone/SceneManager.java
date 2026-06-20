@@ -675,6 +675,7 @@ public class SceneManager {
 		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
 		nextSceneContext.lightSpawnsToHandleOnClientThread.trimToSize();
 		lightManager.swapSceneLights(nextSceneContext, root.sceneContext);
+		lightManager.reloadObjectLights(nextSceneContext);
 
 		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
 		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
