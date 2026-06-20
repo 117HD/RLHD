@@ -20726,7 +20726,7 @@
     "range": 20,
     "timeOfDay": "DUSK",
     "staggered": true,
-    "nightMultiplier": 1,
+    "nightMultiplier": 1.5,
     "objectIds": [
       "FAI_VARROCK_SWING_LANTERN_UNLIT"
     ]
@@ -20750,6 +20750,26 @@
     "objectIds": [
       "GOLDCANDLES",
       "CANDLES"
+    ]
+  },
+  {
+    "description": "Camelot Lantern",
+    "offset": [ -17, 205, 0 ],
+    "radius": 220,
+    "strength": 8.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "nightMultiplier": 1.5,
+    "objectIds": [
+      "LANTERN_OFF"
     ]
   },
   {
@@ -40903,6 +40923,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "timeOfDay": "DUSK",
     "objectIds": [
       "FAI_VARROCK_PRETTY_OILLAMP"
     ]
