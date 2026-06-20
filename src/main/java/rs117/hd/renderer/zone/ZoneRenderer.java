@@ -438,6 +438,7 @@ public class ZoneRenderer implements Renderer {
 				DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
 				TimeOfDay.setCycleMode(daylightCycle);
 				TimeOfDay.setDayLength(config.dayLength());
+				TimeOfDay.setMoonPhase(config.moonPhase());
 				double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 				MoonBehavior shadowMoonBehavior = config.moonBehavior();
@@ -618,6 +619,7 @@ public class ZoneRenderer implements Renderer {
 			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
 			TimeOfDay.setCycleMode(daylightCycle);
 			TimeOfDay.setDayLength(config.dayLength());
+			TimeOfDay.setMoonPhase(config.moonPhase());
 			int minimumBrightness = config.minimumBrightness();
 			float cycleDuration = config.cycleDurationMinutes();
 

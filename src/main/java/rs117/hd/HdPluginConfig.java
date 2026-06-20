@@ -44,6 +44,7 @@ import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.InfernalCape;
 import rs117.hd.config.MoonBehavior;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -623,7 +624,7 @@ public interface HdPluginConfig extends Config
 			"• Fixed Dawn = Sun locked at dawn<br>" +
 			"• Fixed Midday = Sun locked at noon<br>" +
 			"• Fixed Sunset = Sun locked at sunset<br>" +
-			"• Fixed Full Moon = Permanent night with a full moon locked in place<br>" +
+			"• Fixed Night = Permanent night with the moon locked in place<br>" +
 			"• Always Night = Permanent night, moon still cycles",
 		position = 1,
 		section = daylightCycleSettings
@@ -726,6 +727,19 @@ public interface HdPluginConfig extends Config
 	)
 	default MoonBehavior moonBehavior() {
 		return MoonBehavior.NIGHT_SYNCED;
+	}
+
+	@ConfigItem(
+		keyName = "moonPhase",
+		name = "Moon Phase",
+		description = "Locks the moon at a fixed phase.<br>" +
+			"Dynamic = Phase changes naturally over time<br>" +
+			"Full Moon / Gibbous / Half Moon / Crescent / New Moon = Locked at that phase",
+		position = 9,
+		section = daylightCycleSettings
+	)
+	default MoonPhase moonPhase() {
+		return MoonPhase.DYNAMIC;
 	}
 
 	String KEY_SEASONAL_THEME = "seasonalTheme";
@@ -1329,6 +1343,7 @@ public interface HdPluginConfig extends Config
 	String KEY_ENABLE_NEBULAS = "enableNebulas";
 	String KEY_ENABLE_MOON = "enableMoon";
 	String KEY_MOON_BEHAVIOR = "moonBehavior";
+	String KEY_MOON_PHASE = "moonPhase";
 	@ConfigItem(
 		keyName = KEY_ASYNC_UI_COPY,
 		name = "Perform UI copy asynchronously",

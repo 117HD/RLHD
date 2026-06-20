@@ -1907,6 +1907,7 @@ public class HdPlugin extends Plugin {
 							case KEY_ENABLE_NEBULAS:
 							case KEY_ENABLE_MOON:
 							case KEY_MOON_BEHAVIOR:
+							case KEY_MOON_PHASE:
 								reloadEnvironments = true;
 								break;
 							case KEY_SEASONAL_THEME:

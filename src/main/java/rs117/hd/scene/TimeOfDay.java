@@ -6,6 +6,7 @@ import net.runelite.http.api.worlds.WorldRegion;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DayLength;
 import rs117.hd.config.MoonBehavior;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.utils.AtmosphereUtils;
 
 import static rs117.hd.utils.ColorUtils.rgb;
@@ -30,6 +31,10 @@ public class TimeOfDay
 	// Warps the linear cycle clock so day/night occupy different shares of the
 	// fixed total cycle time (see applyDayLengthWarp).
 	private static DayLength currentDayLength = DayLength.STANDARD;
+
+	// Current moon phase lock — set once per frame. DYNAMIC = phase advances
+	// naturally; any other value locks the moon's illumination fraction.
+	private static MoonPhase currentMoonPhase = MoonPhase.DYNAMIC;
 
 	// Fixed Full Moon mode: the moon is locked at a prominent position in the
 	// south-east sky and always rendered full. Stored as {azimuth, altitude} radians,
@@ -130,6 +135,13 @@ public class TimeOfDay
 	 */
 	public static void setDayLength(DayLength dayLength) {
 		currentDayLength = dayLength;
+	}
+
+	/**
+	 * Set the moon phase lock for this frame. Call before any other TimeOfDay methods.
+	 */
+	public static void setMoonPhase(MoonPhase moonPhase) {
+		currentMoonPhase = moonPhase;
 	}
 
 	// The natural (unwarped) cycle position where daytime ends and night begins.
@@ -602,6 +614,9 @@ public class TimeOfDay
 	 * so the phase cycles naturally (each game cycle = +1 day of lunar phase).
 	 */
 	public static float getMoonIlluminationFraction(float dayLength, MoonBehavior moonBehavior) {
+		if (currentMoonPhase.isLocked()) {
+			return currentMoonPhase.illumination; // Phase locked via config
+		}
 		if (currentCycleMode == DaylightCycle.FIXED_FULL_MOON) {
 			return 1.0f; // Always a full moon
 		}
