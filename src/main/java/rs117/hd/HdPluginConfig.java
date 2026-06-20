@@ -739,7 +739,7 @@ public interface HdPluginConfig extends Config
 		section = daylightCycleSettings
 	)
 	default MoonPhase moonPhase() {
-		return MoonPhase.DYNAMIC;
+		return MoonPhase.FULL_MOON;
 	}
 
 	String KEY_SEASONAL_THEME = "seasonalTheme";
