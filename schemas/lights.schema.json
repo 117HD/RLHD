@@ -171,6 +171,11 @@
         "type": "boolean",
         "description": "When true, each instance turns on and off at a different time within the timeOfDay / timeOfDayOff phases based on its world position. Requires timeOfDay. Defaults to false."
       },
+      "dayNightOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "When true, the light is disabled while the day/night cycle is turned off in plugin settings."
+      },
       "areas": {
         "type": "array",
         "description": "An array of bounding boxes and/or area enums specifying which areas the light should be limited to.",

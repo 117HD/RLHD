@@ -38,6 +38,7 @@ public class LightDefinition {
 	@JsonAdapter(LightTimeOfDay.Adapter.class)
 	public LightTimeOfDay timeOfDayOff;
 	public boolean staggered;
+	public boolean dayNightOnly;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] areas = {};

@@ -20705,6 +20705,7 @@
     "range": 20,
     "timeOfDay": "NIGHT",
     "staggered": true,
+    "dayNightOnly": true,
     "nightMultiplier": 1.5,
     "objectIds": [
       "FAI_VARROCK_OILLAMP"
