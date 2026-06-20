@@ -20683,13 +20683,16 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "timeOfDay": "DUSK",
+    "staggered": true,
     "objectIds": [
-      "FAI_VARROCK_POSH_CANDLESTICK"
+      "FAI_VARROCK_POSH_CANDLESTICK",
+      "FAI_VARROCK_TWO_CANDLES"
     ]
   },
   {
     "description": "Varrock Lantern",
-    "offset": [ -10, 155, 0 ],
+    "offset": [ 0, 155, 0 ],
     "radius": 220,
     "strength": 8.5,
     "color": [
@@ -20702,9 +20705,50 @@
     "range": 20,
     "timeOfDay": "NIGHT",
     "staggered": true,
-    "nightMultiplier": 2,
+    "nightMultiplier": 1.5,
     "objectIds": [
       "FAI_VARROCK_OILLAMP"
+    ]
+  },
+  {
+    "description": "Varrock Lantern 2",
+    "offset": [ -20, 185, 0 ],
+    "radius": 220,
+    "strength": 8.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "nightMultiplier": 1,
+    "objectIds": [
+      "FAI_VARROCK_SWING_LANTERN_UNLIT"
+    ]
+  },
+  {
+    "description": "Varrock Castle Candelabra",
+    "height": 210,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "objectIds": [
+      "GOLDCANDLES",
+      "CANDLES"
     ]
   },
   {
