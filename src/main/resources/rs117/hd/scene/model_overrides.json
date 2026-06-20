@@ -85829,6 +85829,69 @@
     ]
   },
   {
+    "description": "Shayzien Church - Brazier",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "SHAYZIEN_CHURCH_BRAZIER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_250"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien Church - Candle Stand",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "BRAIN_MON_CANDLE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3_DARK"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien Church - Candle Stand",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SHAYZIEN_CHURCH_ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 6",
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+      },
+      {
+        "colors": "h == 9",
+        "baseMaterial": "GRUNGE_3_DARK"
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "Myths Guild - Metallic - Ladder",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",

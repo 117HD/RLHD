@@ -21066,6 +21066,116 @@
     ]
   },
   {
+    "description": "Shayzien Church Brazier",
+    "height": 130,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "SHAYZIEN_CHURCH_BRAZIER"
+    ]
+  },
+  {
+    "description": "Shayzien Church Candle Stand 1",
+    "offset": [ 35, 165, 42 ],
+    "alignment": "CENTER",
+    "radius": 90,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "BRAIN_MON_CANDLE_TABLE"
+    ]
+  },
+  {
+    "description": "Shayzien Church Candle Stand 2",
+    "offset": [ -35, 170, 43 ],
+    "alignment": "CENTER",
+    "radius": 90,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "BRAIN_MON_CANDLE_TABLE"
+    ]
+  },
+  {
+    "description": "Shayzien Church Candle Stand 3",
+    "offset": [ 0, 140, -10 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "BRAIN_MON_CANDLE_TABLE"
+    ]
+  },
+  {
+    "description": "Shayzien Church Altar 1",
+    "offset": [ 93, 195, -60 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "timeOfDay": "DAWN",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "SHAYZIEN_CHURCH_ALTAR"
+    ]
+  },
+  {
+    "description": "Shayzien Church Altar 2",
+    "offset": [ -93, 195, -60 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "timeOfDay": "DAWN",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "SHAYZIEN_CHURCH_ALTAR"
+    ]
+  },
+  {
     "description": "GAMES_ROOM_FIREPLACE",
     "height": 185,
     "alignment": "CENTER",
