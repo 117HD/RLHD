@@ -85,6 +85,6 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	// Moon visibility (from environment override)
 	public Property moonVisibility = addProperty(PropertyType.Float, "moonVisibility");
 
-	// Aurora visibility (from environment override)
+	// Aurora visibility (1 on randomly-selected aurora nights, else 0)
 	public Property auroraVisibility = addProperty(PropertyType.Float, "auroraVisibility");
 }

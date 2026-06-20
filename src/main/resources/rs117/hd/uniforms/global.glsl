@@ -74,6 +74,6 @@ layout(std140) uniform UBOGlobal {
     // Moon visibility (from environment override)
     float moonVisibility;
 
-    // Aurora visibility (from environment override)
+    // Aurora visibility (1 on randomly-selected aurora nights, else 0)
     float auroraVisibility;
 };

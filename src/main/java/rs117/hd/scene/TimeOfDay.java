@@ -609,9 +609,9 @@ public class TimeOfDay
 	}
 
 	/**
-	 * Get the moon illumination fraction, respecting moon behavior mode.
-	 * Night Synced mode derives illumination from the advancing equinox date
-	 * so the phase cycles naturally (each game cycle = +1 day of lunar phase).
+	 * Get the moon illumination fraction, respecting the moon phase lock and behavior mode.
+	 * A config phase lock takes precedence; otherwise Night Synced mode derives illumination
+	 * from the advancing equinox date so the phase cycles naturally (each game cycle = +1 day).
 	 */
 	public static float getMoonIlluminationFraction(float dayLength, MoonBehavior moonBehavior) {
 		if (currentMoonPhase.isLocked()) {

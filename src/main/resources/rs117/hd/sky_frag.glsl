@@ -217,8 +217,7 @@ void main() {
         }
 
         // Aurora borealis — animated curtains near the northern horizon.
-        // Only shown in environments flagged with "aurora": true (auroraVisibility
-        // blends 0->1 across environment transitions).
+        // Only shown on randomly-selected aurora nights (auroraVisibility is 0 or 1).
         skyColor += proceduralAurora(viewDir, elapsedTime) * nightSkyBlend * auroraVisibility;
     }
 
