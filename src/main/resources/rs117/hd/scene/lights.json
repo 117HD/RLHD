@@ -24306,9 +24306,10 @@
     "description": "ELVEN_LAMP",
     "height": 160,
     "alignment": "CENTER",
-    "radius": 275,
-    "strength": 10,
+    "radius": 300,
+    "strength": 6,
     "visibleFromOtherPlanes": true,
+    "nightMultiplier": 2.4,
     "color": [
       255,
       255,
@@ -37443,7 +37444,7 @@
     "description": "GNOME_LAMP",
     "offset": [ -60, 120, 0 ],
     "radius": 550,
-    "strength": 4,
+    "strength": 2,
     "color": [
       255,
       255,
@@ -37451,6 +37452,7 @@
     ],
     "type": "FLICKER",
     "duration": 600,
+    "nightMultiplier": 2.5,
     "range": 10,
     "objectIds": [
       "GNOME_LAMP2"
