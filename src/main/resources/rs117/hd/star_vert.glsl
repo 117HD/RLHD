@@ -90,8 +90,9 @@ void main() {
     float sunProximity = sunSideBlend * (1.0 - zenithBlend);
     float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * starVisibility;
 
-    // Fade near the horizon to match the sky's star/nebula horizon fade.
-    float horizonStarFade = smoothstep(-0.1, 0.07, upAmount);
+    // Fade out at the horizon. Slightly higher band than the sky's nebula fade so
+    // individual stars don't linger visibly below the horizon line.
+    float horizonStarFade = smoothstep(0.0, 0.12, upAmount);
 
     float visibility = nightSkyBlend * horizonStarFade;
 
