@@ -330,18 +330,19 @@ public class ModelStreamingManager {
 		final PrimitiveCharArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveCharArray culledFaces = FACE_INDICES.acquire();
 
-		// TODO: Simplify, while ensuring correct behavior
-		boolean shouldSort;
 		boolean isActor = renderable instanceof Actor;
-		boolean isPlayer = false;
-		if (isActor) {
-			isPlayer = renderable instanceof Player;
-			shouldSort =
-				renderable.getRenderMode() == Renderable.RENDERMODE_SORTED ||
-				renderable.getRenderMode() == Renderable.RENDERMODE_SORTED_NO_DEPTH;
-		} else {
-			shouldSort = renderable.getRenderMode() != Renderable.RENDERMODE_UNSORTED;
-		}
+		boolean isPlayer = renderable instanceof Player;
+		final int renderMode = renderable.getRenderMode();
+		boolean shouldSort =
+			m.getFaceTransparencies() != null ||
+			modelOverride.mightHaveTransparency ||
+			renderable instanceof Player ||
+			(
+				renderMode != Renderable.RENDERMODE_UNSORTED &&
+				renderMode != Renderable.RENDERMODE_DEFAULT &&
+				renderMode != Renderable.RENDERMODE_UNSORTED_NO_DEPTH
+			);
+
 		try (
 			SceneUploader sceneUploader = SceneUploader.POOL.acquire();
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
