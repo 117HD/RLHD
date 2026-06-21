@@ -207,6 +207,21 @@ vec3 proceduralNebula(vec3 dir) {
     return nebulaColor * nebulaIntensity;
 }
 
+// The nebula is a static function of direction, so it is baked into a cubemap
+// once and sampled cheaply instead of recomputing its fBm per pixel. Normal
+// shaders sample the prebaked cubemap; only the bake shader itself defines
+// NEBULA_BAKE to evaluate the nebula procedurally (to fill the cubemap).
+#ifdef NEBULA_BAKE
+vec3 sampleNebula(vec3 dir) {
+    return proceduralNebula(dir);
+}
+#else
+uniform samplerCube nebulaMap;
+vec3 sampleNebula(vec3 dir) {
+    return texture(nebulaMap, dir).rgb;
+}
+#endif
+
 vec3 proceduralStarfield(vec3 dir) {
     // Near-black background with faint blue tint
     vec3 color = vec3(0.00304, 0.00304, 0.00521);
@@ -298,7 +313,7 @@ vec3 proceduralStarfield(vec3 dir) {
     // A few large sweeping regions with wispy internal structure.
     // Skip the (expensive) nebula evaluation entirely when it's disabled.
     if (nebulaVisibility > 0.0)
-        color += proceduralNebula(dir) * nebulaVisibility;
+        color += sampleNebula(dir) * nebulaVisibility;
 
     return color;
 }
@@ -309,6 +324,6 @@ vec3 proceduralStarfield(vec3 dir) {
 vec3 proceduralStarfieldBackground(vec3 dir) {
     vec3 color = vec3(0.00304, 0.00304, 0.00521);
     if (nebulaVisibility > 0.0)
-        color += proceduralNebula(dir) * nebulaVisibility;
+        color += sampleNebula(dir) * nebulaVisibility;
     return color;
 }

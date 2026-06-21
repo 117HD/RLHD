@@ -49,6 +49,7 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.shader.NebulaBakeShaderProgram;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.SkyShaderProgram;
 import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
@@ -84,6 +85,7 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -152,7 +154,18 @@ public class ZoneRenderer implements Renderer {
 	private SkyShaderProgram skyProgram;
 
 	@Inject
+	private NebulaBakeShaderProgram nebulaBakeProgram;
+
+	@Inject
 	private JobSystem jobSystem;
+
+	// Baked nebula cubemap. The nebula is a static function of view direction, so
+	// we evaluate its multi-octave fBm once into this cubemap and sample it each
+	// frame instead of recomputing per pixel.
+	private static final int NEBULA_CUBEMAP_RESOLUTION = 256;
+	private int texNebulaCubemap = 0;
+	private int fboNebulaBake = 0;
+	private boolean nebulaBaked = false;
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
@@ -262,6 +275,11 @@ public class ZoneRenderer implements Renderer {
 		detailedShadowProgram.compile(includes);
 		terrainShadowProgram.compile(includes);
 		skyProgram.compile(includes);
+		nebulaBakeProgram.compile(includes);
+
+		// Bake the nebula cubemap once. Its content is a pure function of view
+		// direction (no config/time dependence), so it survives shader recompiles.
+		bakeNebulaCubemap();
 	}
 
 	@Override
@@ -271,6 +289,73 @@ public class ZoneRenderer implements Renderer {
 		detailedShadowProgram.destroy();
 		terrainShadowProgram.destroy();
 		skyProgram.destroy();
+		nebulaBakeProgram.destroy();
+	}
+
+	// Standard OpenGL cubemap face orientation: {forward, right, up} per face,
+	// where dir = normalize(forward + u*right + v*up) for u,v in [-1, 1].
+	private static final float[][][] NEBULA_CUBE_FACES = {
+		{ { 1, 0, 0 }, { 0, 0, -1 }, { 0, -1, 0 } }, // +X
+		{ { -1, 0, 0 }, { 0, 0, 1 }, { 0, -1, 0 } }, // -X
+		{ { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0, 1 } },   // +Y
+		{ { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } }, // -Y
+		{ { 0, 0, 1 }, { 1, 0, 0 }, { 0, -1, 0 } },  // +Z
+		{ { 0, 0, -1 }, { -1, 0, 0 }, { 0, -1, 0 } } // -Z
+	};
+
+	private void bakeNebulaCubemap() {
+		if (nebulaBaked || !nebulaBakeProgram.isValid())
+			return;
+
+		// Create the cubemap texture (RGBA16F to preserve the nebula's small HDR values).
+		if (texNebulaCubemap == 0) {
+			texNebulaCubemap = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_NEBULA);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, texNebulaCubemap);
+			for (int face = 0; face < 6; face++) {
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA16F,
+					NEBULA_CUBEMAP_RESOLUTION, NEBULA_CUBEMAP_RESOLUTION, 0, GL_RGBA, GL_FLOAT, 0);
+			}
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		}
+
+		if (fboNebulaBake == 0)
+			fboNebulaBake = glGenFramebuffers();
+
+		// Save state we touch so we don't disturb whatever the caller had bound.
+		int prevFbo = glGetInteger(GL_FRAMEBUFFER_BINDING);
+		int[] prevViewport = new int[4];
+		glGetIntegerv(GL_VIEWPORT, prevViewport);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fboNebulaBake);
+		glViewport(0, 0, NEBULA_CUBEMAP_RESOLUTION, NEBULA_CUBEMAP_RESOLUTION);
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_BLEND);
+		glDisable(GL_CULL_FACE);
+
+		nebulaBakeProgram.use();
+		glBindVertexArray(plugin.vaoTri);
+
+		for (int face = 0; face < 6; face++) {
+			float[][] basis = NEBULA_CUBE_FACES[face];
+			nebulaBakeProgram.uniFaceForward.set(basis[0][0], basis[0][1], basis[0][2]);
+			nebulaBakeProgram.uniFaceRight.set(basis[1][0], basis[1][1], basis[1][2]);
+			nebulaBakeProgram.uniFaceUp.set(basis[2][0], basis[2][1], basis[2][2]);
+
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, texNebulaCubemap, 0);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+		}
+
+		// Restore previous state.
+		glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
+		glViewport(prevViewport[0], prevViewport[1], prevViewport[2], prevViewport[3]);
+
+		nebulaBaked = true;
 	}
 
 	private void initializeBuffers() {
@@ -298,6 +383,16 @@ public class ZoneRenderer implements Renderer {
 		if (indirectDrawCmdsStaging != null)
 			indirectDrawCmdsStaging.destroy();
 		indirectDrawCmdsStaging = null;
+
+		if (fboNebulaBake != 0) {
+			glDeleteFramebuffers(fboNebulaBake);
+			fboNebulaBake = 0;
+		}
+		if (texNebulaCubemap != 0) {
+			glDeleteTextures(texNebulaCubemap);
+			texNebulaCubemap = 0;
+		}
+		nebulaBaked = false;
 	}
 
 	@Override
@@ -1057,6 +1152,11 @@ public class ZoneRenderer implements Renderer {
 			renderState.disable.set(GL_DEPTH_TEST);
 			renderState.disable.set(GL_CULL_FACE);
 			renderState.apply();
+
+			// Bind the baked nebula cubemap so the sky shader can sample it
+			// instead of recomputing the nebula's fBm per pixel.
+			glActiveTexture(TEXTURE_UNIT_NEBULA);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, texNebulaCubemap);
 
 			skyProgram.use();
 
