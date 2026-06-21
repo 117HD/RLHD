@@ -32,7 +32,6 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 		private boolean squashed;
 
 		private final float[] currentProjection = Mat4.zero();
-		private final float[] invProjection = Mat4.identity();
 		private final int[] currentTint = new int[4];
 		private final int[] newTint = new int[4];
 
@@ -47,11 +46,6 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 			if (!Arrays.equals(currentProjection, newProjection)) {
 				projection.set(newProjection);
 				copyTo(currentProjection, newProjection);
-				try {
-					copyTo(invProjection, Mat4.inverse(newProjection));
-				} catch (IllegalArgumentException ex) {
-					copyTo(invProjection, IDENTITY_MATRIX);
-				}
 			}
 
 			newTint[3] = 0;
@@ -70,14 +64,6 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 
 		public void project(float[] out) {
 			Mat4.mulVec(out, currentProjection, out);
-		}
-
-		public void inverseProject(float[] out) {
-			float[] v = { out[0], out[1], out[2], 1.0f };
-			Mat4.mulVec(v, invProjection, v);
-			out[0] = v[0];
-			out[1] = v[1];
-			out[2] = v[2];
 		}
 
 		public synchronized void free() {
