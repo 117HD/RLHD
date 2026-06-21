@@ -204,9 +204,12 @@ void main() {
         starDir = vec3(cosY * starDir.x + sinY * starDir.z, starDir.y, -sinY * starDir.x + cosY * starDir.z);
         starDir = vec3(starDir.x, cosX * starDir.y - sinX * starDir.z, sinX * starDir.y + cosX * starDir.z);
 
-        vec3 nightSkyColor = proceduralStarfield(starDir);
+        // Background sky + nebula only. Individual stars are drawn separately as
+        // point sprites (star_vert/frag.glsl), so the costly per-pixel star-field
+        // search is gone — this just provides the dark night base + nebula.
+        vec3 nightSkyColor = proceduralStarfieldBackground(starDir);
 
-        // Fade out stars and nebula near the horizon so the sky converges
+        // Fade out the night sky/nebula near the horizon so the sky converges
         // to the plain gradient color that the fog uses, hiding the world edge
         float horizonStarFade = smoothstep(-0.1, 0.07, upAmount);
         skyColor = mix(skyColor, nightSkyColor, nightSkyBlend * horizonStarFade);

@@ -38,6 +38,8 @@ import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
+import java.nio.FloatBuffer;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
@@ -52,6 +54,7 @@ import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.NebulaBakeShaderProgram;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.SkyShaderProgram;
+import rs117.hd.opengl.shader.StarShaderProgram;
 import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
@@ -60,6 +63,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
+import rs117.hd.scene.StarField;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TimeOfDay;
@@ -157,6 +161,9 @@ public class ZoneRenderer implements Renderer {
 	private NebulaBakeShaderProgram nebulaBakeProgram;
 
 	@Inject
+	private StarShaderProgram starProgram;
+
+	@Inject
 	private JobSystem jobSystem;
 
 	// Baked nebula cubemap. The nebula is a static function of view direction, so
@@ -166,6 +173,12 @@ public class ZoneRenderer implements Renderer {
 	private int texNebulaCubemap = 0;
 	private int fboNebulaBake = 0;
 	private boolean nebulaBaked = false;
+
+	// Star point sprites. A fixed star list is generated once and drawn as
+	// GL_POINTS, so cost scales with star count rather than screen pixels.
+	private int vaoStars = 0;
+	private int vboStars = 0;
+	private int starCount = 0;
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
@@ -276,6 +289,7 @@ public class ZoneRenderer implements Renderer {
 		terrainShadowProgram.compile(includes);
 		skyProgram.compile(includes);
 		nebulaBakeProgram.compile(includes);
+		starProgram.compile(includes);
 
 		// Bake the nebula cubemap once. Its content is a pure function of view
 		// direction (no config/time dependence), so it survives shader recompiles.
@@ -290,6 +304,7 @@ public class ZoneRenderer implements Renderer {
 		terrainShadowProgram.destroy();
 		skyProgram.destroy();
 		nebulaBakeProgram.destroy();
+		starProgram.destroy();
 	}
 
 	// Standard OpenGL cubemap face orientation: {forward, right, up} per face,
@@ -351,11 +366,46 @@ public class ZoneRenderer implements Renderer {
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		}
 
-		// Restore previous state.
+		// Restore previous state. The bake used raw GL calls (FBO, viewport, depth/
+		// blend/cull, VAO) that bypass renderState, so invalidate its whole cache to
+		// force a clean re-apply on the next frame.
 		glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
 		glViewport(prevViewport[0], prevViewport[1], prevViewport[2], prevViewport[3]);
+		renderState.reset();
 
 		nebulaBaked = true;
+	}
+
+	private void buildStarBuffer() {
+		if (vaoStars != 0)
+			return;
+
+		var stars = new StarField();
+		starCount = stars.starCount;
+
+		FloatBuffer data = BufferUtils.createFloatBuffer(stars.vertexData.length);
+		data.put(stars.vertexData).flip();
+
+		vaoStars = glGenVertexArrays();
+		vboStars = glGenBuffers();
+		glBindVertexArray(vaoStars);
+		glBindBuffer(GL_ARRAY_BUFFER, vboStars);
+		glBufferData(GL_ARRAY_BUFFER, data, GL_STATIC_DRAW);
+
+		int stride = StarField.FLOATS_PER_STAR * Float.BYTES;
+		// location 0: dir.xyz, 1: size, 2: brightness, 3: color.rgb
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 1, GL_FLOAT, false, stride, 3L * Float.BYTES);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 1, GL_FLOAT, false, stride, 4L * Float.BYTES);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, 5L * Float.BYTES);
+		glEnableVertexAttribArray(3);
+
+		glBindVertexArray(0);
+		// Raw VAO binds above bypass renderState; invalidate its cache.
+		renderState.vao.reset();
 	}
 
 	private void initializeBuffers() {
@@ -365,6 +415,8 @@ public class ZoneRenderer implements Renderer {
 
 		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
 		indirectDrawCmdsStaging = new GpuIntBuffer();
+
+		buildStarBuffer();
 	}
 
 	private void destroyBuffers() {
@@ -393,6 +445,16 @@ public class ZoneRenderer implements Renderer {
 			texNebulaCubemap = 0;
 		}
 		nebulaBaked = false;
+
+		if (vboStars != 0) {
+			glDeleteBuffers(vboStars);
+			vboStars = 0;
+		}
+		if (vaoStars != 0) {
+			glDeleteVertexArrays(vaoStars);
+			vaoStars = 0;
+		}
+		starCount = 0;
 	}
 
 	@Override
@@ -1163,6 +1225,33 @@ public class ZoneRenderer implements Renderer {
 			renderState.vao.setVao(plugin.vaoTri);
 			renderState.apply();
 			glDrawArrays(GL_TRIANGLES, 0, 3);
+
+			// Star point sprites, drawn additively over the sky. Cost scales with
+			// star count rather than screen pixels (unlike the old per-pixel field).
+			if (starProgram.isValid() && vaoStars != 0) {
+				renderState.enable.set(GL_BLEND);
+				renderState.blendFunc.set(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+				renderState.apply();
+
+				starProgram.use();
+				starProgram.uniViewportSize.set((float) plugin.sceneResolution[0], (float) plugin.sceneResolution[1]);
+
+				glEnable(GL_PROGRAM_POINT_SIZE);
+				// GL_POINT_SPRITE is required on some compatibility-profile drivers for
+				// gl_PointCoord to be generated. It was removed from core 3.2+ (where
+				// gl_PointCoord is always available), so ignore the error if unsupported.
+				try { glEnable(GL20.GL_POINT_SPRITE); } catch (Exception ignored) {}
+				// Bind the star VAO directly, then invalidate renderState's cached VAO
+				// so it re-binds whatever it needs next (avoids a stale-cache desync).
+				glBindVertexArray(vaoStars);
+				glDrawArrays(GL_POINTS, 0, starCount);
+				try { glDisable(GL20.GL_POINT_SPRITE); } catch (Exception ignored) {}
+				glDisable(GL_PROGRAM_POINT_SIZE);
+				renderState.vao.reset();
+
+				renderState.disable.set(GL_BLEND);
+				renderState.apply();
+			}
 
 			// Switch back to scene program
 			sceneProgram.use();
