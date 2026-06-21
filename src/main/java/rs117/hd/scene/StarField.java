@@ -41,8 +41,8 @@ public class StarField {
 	// Star counts per layer. The procedural field had ~18-24% of cells populated
 	// across grids of scale 80 and 200; these counts reproduce a similar on-sky
 	// density without being tied to screen resolution.
-	private static final int BRIGHT_STAR_COUNT = 1500; // layer 0: sparse/bright/large
-	private static final int DIM_STAR_COUNT = 6000;    // layer 1: dense/dim/small
+	private static final int BRIGHT_STAR_COUNT = 600;  // layer 0: sparse/bright/large
+	private static final int DIM_STAR_COUNT = 2000;    // layer 1: dense/dim/small
 
 	private static final long SEED = 0x117D511A5L;
 
