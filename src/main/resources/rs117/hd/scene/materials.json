@@ -1,7 +1,8 @@
 [
   {
     "name": "UNLIT_125",
-    "parent": "UNLIT",
+    "parent": "NONE",
+    "unlit": true,
     "brightness": 1.25
   },
   {
