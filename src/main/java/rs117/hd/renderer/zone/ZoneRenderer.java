@@ -57,6 +57,7 @@ import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.lights.Light;
+import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
@@ -81,6 +82,7 @@ import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -159,6 +161,7 @@ public class ZoneRenderer implements Renderer {
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
 	private boolean sceneFboValid;
+	private boolean shouldRenderSkybox;
 	private boolean shouldRenderScene;
 	private boolean shouldClearShadowFbo;
 	private boolean shouldDrawRoofShadows;
@@ -319,6 +322,33 @@ public class ZoneRenderer implements Renderer {
 			ctx.sortStaticAlphaModels(sceneCamera);
 
 			ctx.map();
+
+			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
+				Model skybox = scene.getSkybox();
+				if (skybox != null) {
+					skybox.calculateBoundsCylinder();
+					modelStreamingManager.uploadTempModel(
+						ctx,
+						sceneCamera,
+						null,
+						skybox,
+						ModelOverride.UNLIT,
+						skybox,
+						null,
+						null,
+						true,
+						VAO_PRESCENE,
+						-1,
+						0,
+						cameraX, cameraY, cameraZ
+					);
+				}
+
+				sceneCmd.DepthMask(false);
+				ctx.drawAll(VAO_PRESCENE, sceneCmd);
+				sceneCmd.DepthMask(true);
+			}
+
 			frameTimer.end(Timer.DRAW_PRESCENE);
 		} catch (Throwable ex) {
 			log.error("Error in preSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
@@ -528,16 +558,20 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
+		shouldRenderSkybox = scene.getSkybox() != null;
+
 		float fogDepth = 0;
-		switch (config.fogDepthMode()) {
-			case USER_DEFINED:
-				fogDepth = config.fogDepth();
-				break;
-			case DYNAMIC:
-				fogDepth = environmentManager.currentFogDepth;
-				break;
+		if (!shouldRenderSkybox) {
+			switch (config.fogDepthMode()) {
+				case USER_DEFINED:
+					fogDepth = config.fogDepth();
+					break;
+				case DYNAMIC:
+					fogDepth = environmentManager.currentFogDepth;
+					break;
+			}
+			fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 		}
-		fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 		plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 		plugin.uboGlobal.fogDepth.set(fogDepth);
 		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
@@ -765,14 +799,12 @@ public class ZoneRenderer implements Renderer {
 		// Clear scene
 		frameTimer.begin(Timer.CLEAR_SCENE);
 
-		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-		float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
-		glClearColor(
-			gammaCorrectedFogColor[0],
-			gammaCorrectedFogColor[1],
-			gammaCorrectedFogColor[2],
-			1f
-		);
+		float[] clearColor = { 0, 0, 0 };
+		if (!shouldRenderSkybox) {
+			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+			pow(clearColor, fogColor, plugin.getGammaCorrection());
+		}
+		glClearColor(clearColor[0], clearColor[1], clearColor[2], 1f);
 		glClearDepth(0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		frameTimer.end(Timer.CLEAR_SCENE);

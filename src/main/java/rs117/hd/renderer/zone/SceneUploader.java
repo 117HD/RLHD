@@ -24,6 +24,7 @@
  */
 package rs117.hd.renderer.zone;
 
+import java.util.Arrays;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -1757,7 +1758,7 @@ public class SceneUploader implements AutoCloseable {
 		Model model,
 		boolean sortAllFaces,
 		int orientation,
-		int x, int y, int z
+		float x, float y, float z
 	) {
 		final int vertexCount = model.getVerticesCount();
 
@@ -1767,6 +1768,9 @@ public class SceneUploader implements AutoCloseable {
 
 		final boolean[] visibility = PooledArrayType.BOOL.borrow(vertexCount);
 		final float[] modelProjected = PooledArrayType.FLOAT.borrow(vertexCount * 3);
+
+		if (isModelPartiallyVisible)
+			Arrays.fill(visibility, 0, vertexCount, true);
 
 		// Identity orient, will result in no rotation
 		float orientSinf = 0;
@@ -1807,11 +1811,15 @@ public class SceneUploader implements AutoCloseable {
 
 			final float pX = projected[0];
 			final float pY = projected[1];
-			final float pZ = projected[2];
+			float pZ = projected[2];
 
 			// Vertex is behind the camera and therefore isn't visible
-			if (pZ <= 0.0f)
-				visibility[v] = allVertsVisible = false;
+			if (pZ <= 0.0f) {
+				if (pZ == 0.0f)
+					pZ = -1e-6f; // Avoid division by zero
+				if (isModelPartiallyVisible)
+					visibility[v] = allVertsVisible = false;
+			}
 
 			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexX);
 			modelProjected[vertexOffset] = pX / pZ;

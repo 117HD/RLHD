@@ -35,7 +35,7 @@ import static rs117.hd.utils.MathUtils.*;
 public class ModelOverride
 {
 	public static final ModelOverride NONE = new ModelOverride(true);
-	public static final ModelOverride UNLIT = new ModelOverride(true).baseMaterial(Material.UNLIT);
+	public static final ModelOverride UNLIT = new ModelOverride(true).baseMaterial(Material.UNLIT).undoVanillaShading(false);
 
 	private static final Set<Integer> EMPTY = new HashSet<>();
 

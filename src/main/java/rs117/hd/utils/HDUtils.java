@@ -130,7 +130,7 @@ public final class HDUtils {
 		return -1;
 	}
 
-	public static int getObjectConfig(TileObject tileObject) {
+	public static int getObjectConfig(@Nullable TileObject tileObject) {
 		if (tileObject instanceof WallObject)
 			return ((WallObject) tileObject).getConfig();
 		if (tileObject instanceof DecorativeObject)
