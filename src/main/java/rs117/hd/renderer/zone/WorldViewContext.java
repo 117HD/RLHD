@@ -34,7 +34,8 @@ public class WorldViewContext {
 	public static final int VAO_ALPHA = 1;
 	public static final int VAO_PLAYER = 2;
 	public static final int VAO_SHADOW = 3;
-	public static final int VAO_COUNT = 4;
+	public static final int VAO_PRESCENE = 4;
+	public static final int VAO_COUNT = 5;
 
 	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL =
 		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO::Staging", true));

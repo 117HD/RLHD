@@ -203,7 +203,7 @@ public class ModelStreamingManager {
 				return;
 		}
 
-		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), streamingContext.worldPos);
+		ctx.sceneContext.localToWorld(x, z, tileObject.getPlane(), streamingContext.worldPos);
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, streamingContext.worldPos);
 		if (modelOverride.hide)
 			return;
@@ -271,6 +271,7 @@ public class ModelStreamingManager {
 			zone,
 			alphaModel,
 			isModelPartiallyVisible,
+			-1,
 			drawIndex,
 			orient,
 			x, y, z
@@ -302,6 +303,7 @@ public class ModelStreamingManager {
 			zone,
 			alphaModel,
 			isModelPartiallyVisible,
+			-1,
 			drawIndex,
 			orientation,
 			x, y, z
@@ -309,19 +311,20 @@ public class ModelStreamingManager {
 		frameTimer.add(renderable instanceof Actor ? Timer.DRAW_TEMP_ASYNC : Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - t);
 	}
 
-	private void uploadTempModel(
+	public void uploadTempModel(
 		WorldViewContext ctx,
 		Projection projection,
-		TileObject tileObject,
+		@Nullable TileObject tileObject,
 		Renderable renderable,
 		ModelOverride modelOverride,
 		Model m,
-		Zone zone,
-		Zone.AlphaModel alphaModel,
+		@Nullable Zone zone,
+		@Nullable Zone.AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
+		int vaoType,
 		int drawIndex,
 		int orient,
-		int x, int y, int z
+		float x, float y, float z
 	) {
 		final PrimitiveIntArray visibleFaces = FACE_INDICES.acquire();
 		final PrimitiveIntArray culledFaces = FACE_INDICES.acquire();
@@ -364,7 +367,7 @@ public class ModelStreamingManager {
 			if (culledFaces.length > 0 &&
 				modelOverride.castShadows &&
 				plugin.configShadowMode != ShadowMode.OFF &&
-				(!sceneManager.isRoot(ctx) || zone.inShadowFrustum)
+				(!sceneManager.isRoot(ctx) || zone != null && zone.inShadowFrustum)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
 				sceneUploader.uploadTempModel(
@@ -387,7 +390,9 @@ public class ModelStreamingManager {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
-				final DynamicModelVAO.View opaqueView = ctx.beginDraw(isPlayer ? VAO_PLAYER : VAO_OPAQUE, drawIndex, opaqueFaceCount);
+				if (vaoType == -1)
+					vaoType = isPlayer ? VAO_PLAYER : VAO_OPAQUE;
+				final DynamicModelVAO.View opaqueView = ctx.beginDraw(vaoType, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
 				sceneUploader.uploadTempModel(
