@@ -59,10 +59,6 @@ public final class FacePrioritySorter implements AutoCloseable {
 		zsortNext = PooledArrayType.INT.ensureCapacity(zsortNext, min(MAX_FACE_COUNT, faceCount));
 	}
 
-	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model, int[] faceDistances) {
-		sortModelFaces(visibleFaces, model, faceDistances, false);
-	}
-
 	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model, int[] faceDistances, boolean depthOnly) {
 		final int diameter = model.getDiameter();
 		if (diameter <= 0 || diameter >= MAX_DIAMETER)
