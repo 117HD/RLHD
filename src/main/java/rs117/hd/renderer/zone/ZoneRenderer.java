@@ -393,7 +393,7 @@ public class ZoneRenderer implements Renderer {
 		glBufferData(GL_ARRAY_BUFFER, data, GL_STATIC_DRAW);
 
 		int stride = StarField.FLOATS_PER_STAR * Float.BYTES;
-		// location 0: dir.xyz, 1: size, 2: brightness, 3: color.rgb
+		// location 0: dir.xyz, 1: size, 2: brightness, 3: color.rgb, 4: speed
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(1, 1, GL_FLOAT, false, stride, 3L * Float.BYTES);
@@ -402,6 +402,8 @@ public class ZoneRenderer implements Renderer {
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, 5L * Float.BYTES);
 		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(4, 1, GL_FLOAT, false, stride, 8L * Float.BYTES);
+		glEnableVertexAttribArray(4);
 
 		glBindVertexArray(0);
 		// Raw VAO binds above bypass renderState; invalidate its cache.

@@ -35,8 +35,9 @@ import java.util.Random;
  */
 public class StarField {
 	// Per-vertex layout written to the VBO, in floats:
-	//   position.xyz (unit direction), size, brightness, color.rgb  => 8 floats
-	public static final int FLOATS_PER_STAR = 8;
+	//   position.xyz (unit direction), size, brightness, color.rgb, speed => 9 floats
+	// speed scales the celestial rotation so the layers parallax (depth effect).
+	public static final int FLOATS_PER_STAR = 9;
 
 	// Star counts per layer. The procedural field had ~18-24% of cells populated
 	// across grids of scale 80 and 200; these counts reproduce a similar on-sky
@@ -53,12 +54,13 @@ public class StarField {
 		vertexData = new float[starCount * FLOATS_PER_STAR];
 		var rng = new Random(SEED);
 		int offset = 0;
-		// Layer 0: bright, sparse, larger.  Layer 1: dim, dense, smaller.
-		offset = generateLayer(rng, vertexData, offset, BRIGHT_STAR_COUNT, 1.2f, 1.0f);
-		generateLayer(rng, vertexData, offset, DIM_STAR_COUNT, 0.4f, 0.66f);
+		// Layer 0: bright, sparse, larger, full rotation speed (the "near" layer).
+		// Layer 1: dim, dense, smaller, rotating ~30% slower for a parallax depth feel.
+		offset = generateLayer(rng, vertexData, offset, BRIGHT_STAR_COUNT, 1.2f, 1.0f, 1.0f);
+		generateLayer(rng, vertexData, offset, DIM_STAR_COUNT, 0.4f, 0.66f, 0.7f);
 	}
 
-	private static int generateLayer(Random rng, float[] out, int offset, int count, float maxBrightness, float sizeScale) {
+	private static int generateLayer(Random rng, float[] out, int offset, int count, float maxBrightness, float sizeScale, float speed) {
 		for (int i = 0; i < count; i++) {
 			// Uniform point on the unit sphere.
 			double z = rng.nextDouble() * 2.0 - 1.0;
@@ -93,6 +95,7 @@ public class StarField {
 			out[offset++] = tr;
 			out[offset++] = tg;
 			out[offset++] = tb;
+			out[offset++] = speed;
 		}
 		return offset;
 	}

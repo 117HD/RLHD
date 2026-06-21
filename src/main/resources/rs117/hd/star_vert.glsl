@@ -35,6 +35,7 @@ layout(location = 0) in vec3 aStarDir;     // field-space unit direction
 layout(location = 1) in float aStarSize;   // relative size
 layout(location = 2) in float aStarBright; // base brightness
 layout(location = 3) in vec3 aStarColor;   // tint
+layout(location = 4) in float aStarSpeed;  // rotation speed multiplier (parallax)
 
 uniform vec2 viewportSize;
 
@@ -47,8 +48,10 @@ void main() {
     // The procedural field was sampled at starDir = R * viewDir, so a star fixed
     // at field-direction aStarDir appears along viewDir = R^-1 * aStarDir. Apply
     // the inverse of the sky shader's two rotations (negate the angles).
-    float rotY = -elapsedTime * (2.0 * 3.14159265 / 3600.0);
-    float rotX = -elapsedTime * (2.0 * 3.14159265 / 10800.0);
+    // aStarSpeed scales the rotation per layer so dim/distant stars drift slower
+    // than bright/near ones, giving the sky a subtle parallax depth.
+    float rotY = -elapsedTime * (2.0 * 3.14159265 / 1800.0) * aStarSpeed;
+    float rotX = -elapsedTime * (2.0 * 3.14159265 / 5400.0) * aStarSpeed;
     float cosY = cos(rotY), sinY = sin(rotY);
     float cosX = cos(rotX), sinX = sin(rotX);
 
@@ -56,6 +59,19 @@ void main() {
     vec3 dir = aStarDir;
     dir = vec3(dir.x, cosX * dir.y - sinX * dir.z, sinX * dir.y + cosX * dir.z);
     dir = vec3(cosY * dir.x + sinY * dir.z, dir.y, -sinY * dir.x + cosY * dir.z);
+
+    // Occlude stars behind the moon disk. The moon is drawn opaque in the sky base
+    // pass; without this, the additively-blended stars would show through it. Fade
+    // smoothly across the rim (rather than a hard cut) so stars don't pop in/out as
+    // the sky rotates them past the moon's edge.
+    float moonOcclusion = 1.0;
+    if (skyMoonIllumination > 0.001 && moonVisibility > 0.0) {
+        vec3 moonDir = normalize(vec3(skyMoonDir.x, -skyMoonDir.y + SKY_HORIZON_OFFSET, skyMoonDir.z));
+        float moonDot = dot(dir, moonDir);
+        // 0 inside the disk (occluded), 1 outside a slightly larger soft rim.
+        // cos values: 0.99951 = disk edge, smaller cos = wider angle from center.
+        moonOcclusion = smoothstep(0.99951, 0.9991, moonDot);
+    }
 
     // Project a far-but-finite point along the star direction. projectionMatrix is
     // world->clip (same as scene geometry), so we offset from the camera position.
@@ -94,7 +110,7 @@ void main() {
     // individual stars don't linger visibly below the horizon line.
     float horizonStarFade = smoothstep(0.0, 0.12, upAmount);
 
-    float visibility = nightSkyBlend * horizonStarFade;
+    float visibility = nightSkyBlend * horizonStarFade * moonOcclusion;
 
     vColor = aStarColor;
     vBrightness = aStarBright * visibility;
