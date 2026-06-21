@@ -1028,7 +1028,7 @@ public class ZoneRenderer implements Renderer {
 
 		final long start = System.nanoTime();
 		try {
-			modelStreamingManager.drawDynamic(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
+			modelStreamingManager.drawTemp(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
 		} catch (Exception ex) {
 			log.error("Error in drawDynamic:", ex);
 		} finally {
@@ -1043,7 +1043,7 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.DRAW_TEMP);
 		try {
-			modelStreamingManager.drawTemp(worldProjection, scene, gameObject, m, orientation, x, y, z);
+			modelStreamingManager.drawTemp(-1, worldProjection, scene, gameObject, gameObject.getRenderable(), m, orientation, x, y, z);
 		} catch (Exception ex) {
 			log.error("Error in drawTemp:", ex);
 		} finally {
