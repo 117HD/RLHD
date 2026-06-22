@@ -222,10 +222,6 @@ public final class FacePrioritySorter implements AutoCloseable {
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
 
-		final int m02 = -(yawSin * pitchCos) >> 16;
-		final int m12 = pitchSin;
-		final int m22 = (yawCos * pitchCos) >> 16;
-
 		int minFz = diameter, maxFz = 0;
 		for (int i = 0; i < faceCount; ++i) {
 			final int packed = packedFaces[i];
@@ -233,7 +229,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 			final short y = (short) ((packed << 11) >> 22);
 			final short z = (short) ((packed << 21) >> 21);
 
-			final int fz = ((x * m02 + y * m12 + z * m22) >> 16) + radius;
+			// We do rotations with 16 bits of extra precision, which we discard post-rotation.
+			// Very little of this can actually be pre-computed without discarding that precision.
+			int fz = (z * yawCos - x * yawSin) >> 16;
+			fz = ((y * pitchSin + fz * pitchCos) >> 16) + radius;
 
 			final int tailFaceIdx = zsortTail[fz];
 			if (tailFaceIdx == -1) {
