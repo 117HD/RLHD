@@ -2326,7 +2326,19 @@
     "colorOverrides": [
       {
         "colors": "h == 40",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_300"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Elven Lamp - Bulb only",
+    "objectIds": [
+      "PRIF_CRYSTAL_LAMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 40",
+        "baseMaterial": "GRAY_300"
       }
     ]
   },
@@ -68135,6 +68147,26 @@
     ]
   },
   {
+    "description": "Varlamore - Ship Wreak Near Twilight Temple - Green Fire",
+    "objectIds": [
+      "SHIPWRECK_COVE_STRANGE_CAMPFIRE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 15 && a == 255",
+        "baseMaterial": "GRAY_50",
+        "upwardsNormals": true,
+        "flatNormals": true
+      },
+      {
+        "colors": "h == 15",
+        "baseMaterial": "GRAY_75",
+        "upwardsNormals": true,
+        "flatNormals": true
+      }
+    ]
+  },
+  {
     "description": "Varlamore - Twilight Temple",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
@@ -74809,6 +74841,21 @@
         "colors": "a < 255",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Rematch Brazier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "MM2_POSTQUEST_BRAZIER_LIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125",
+        "receiveShadows": false,
+        "upwardsNormals": true
       }
     ]
   },

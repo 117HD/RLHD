@@ -35944,6 +35944,25 @@
     ]
   },
   {
+    "description": "MM2_REMATCH_BRAZIER",
+    "height": 115,
+    "alignment": "CENTER",
+    "radius": 270,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MM2_POSTQUEST_BRAZIER_LIT"
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
     "description": "LITHKREN_LAVA_1",
     "worldX": 3531,
     "worldY": 4013,
@@ -48583,6 +48602,93 @@
     "objectIds": [
       "MAGIC_TREE_FULLYGROWN_2",
       "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Feldip Airstrip Red",
+    "offset": [ 10, 160, 10 ],
+    "radius": 370,
+    "strength": 25,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 10,
+    "objectIds": [
+      "FAVOUR_LANDING_LIGHT_REDTOPAZ"
+    ]
+  },
+  {
+    "description": "Feldip Airstrip White",
+    "offset": [ 10, 160, 10 ],
+    "radius": 310,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 5,
+    "objectIds": [
+      "FAVOUR_LANDING_LIGHT_OPAL"
+    ]
+  },
+  {
+    "description": "Feldip Airstrip Blue",
+    "offset": [ 10, 160, 10 ],
+    "radius": 360,
+    "strength": 100,
+    "nightMultiplier": 1.5,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 10,
+    "objectIds": [
+      "FAVOUR_LANDING_LIGHT_SAPPHIRE"
+    ]
+  },
+  {
+    "description": "Feldip Airstrip Green",
+    "offset": [ 10, 160, 10 ],
+    "radius": 320,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 5,
+    "objectIds": [
+      "FAVOUR_LANDING_LIGHT_JADE"
+    ]
+  },
+  {
+    "description": "Green Camp Fire",
+    "height": 175,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SHIPWRECK_COVE_STRANGE_CAMPFIRE"
     ]
   }
 ]
