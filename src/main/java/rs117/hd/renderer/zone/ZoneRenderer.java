@@ -64,6 +64,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.utils.AtmosphereUtils;
+import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
@@ -88,6 +89,7 @@ import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
+import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
@@ -182,6 +184,7 @@ public class ZoneRenderer implements Renderer {
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
 	private boolean sceneFboValid;
+	private boolean shouldRenderSkybox;
 	private boolean shouldRenderScene;
 	private boolean shouldClearShadowFbo;
 	private boolean shouldDrawRoofShadows;
@@ -348,6 +351,33 @@ public class ZoneRenderer implements Renderer {
 			ctx.sortStaticAlphaModels(sceneCamera);
 
 			ctx.map();
+
+			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
+				Model skybox = scene.getSkybox();
+				if (skybox != null) {
+					skybox.calculateBoundsCylinder();
+					modelStreamingManager.uploadTempModel(
+						ctx,
+						sceneCamera,
+						null,
+						skybox,
+						ModelOverride.UNLIT,
+						skybox,
+						null,
+						null,
+						true,
+						VAO_PRESCENE,
+						-1,
+						0,
+						cameraX, cameraY, cameraZ
+					);
+				}
+
+				sceneCmd.DepthMask(false);
+				ctx.drawAll(VAO_PRESCENE, sceneCmd);
+				sceneCmd.DepthMask(true);
+			}
+
 			frameTimer.end(Timer.DRAW_PRESCENE);
 		} catch (Throwable ex) {
 			log.error("Error in preSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
@@ -794,16 +824,20 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.auroraVisibility.set(0f);
 		}
 
+		shouldRenderSkybox = scene.getSkybox() != null;
+
 		float fogDepth = 0;
-		switch (config.fogDepthMode()) {
-			case USER_DEFINED:
-				fogDepth = config.fogDepth();
-				break;
-			case DYNAMIC:
-				fogDepth = environmentManager.currentFogDepth;
-				break;
+		if (!shouldRenderSkybox) {
+			switch (config.fogDepthMode()) {
+				case USER_DEFINED:
+					fogDepth = config.fogDepth();
+					break;
+				case DYNAMIC:
+					fogDepth = environmentManager.currentFogDepth;
+					break;
+			}
+			fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 		}
-		fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 		plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 		plugin.uboGlobal.fogDepth.set(fogDepth);
 		plugin.uboGlobal.fogColor.set(fogColor);
@@ -1068,7 +1102,12 @@ public class ZoneRenderer implements Renderer {
 			sceneProgram.use();
 		} else {
 			// Use Day/Night Cycle fog color if available, otherwise use environment manager's fog color
-			float[] fogColor = calculatedFogColorSrgb != null ? calculatedFogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+			float[] fogColor = { 0, 0, 0 };
+			if (!shouldRenderSkybox) {
+				fogColor = calculatedFogColorSrgb != null ? calculatedFogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+				pow(fogColor, fogColor, plugin.getGammaCorrection());
+			}
+
 			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
 			glClearColor(
 				gammaCorrectedFogColor[0],
@@ -1347,7 +1386,7 @@ public class ZoneRenderer implements Renderer {
 
 		final long start = System.nanoTime();
 		try {
-			modelStreamingManager.drawDynamic(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
+			modelStreamingManager.drawTemp(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
 		} catch (Exception ex) {
 			log.error("Error in drawDynamic:", ex);
 		} finally {
@@ -1362,7 +1401,7 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.DRAW_TEMP);
 		try {
-			modelStreamingManager.drawTemp(worldProjection, scene, gameObject, m, orientation, x, y, z);
+			modelStreamingManager.drawTemp(-1, worldProjection, scene, gameObject, gameObject.getRenderable(), m, orientation, x, y, z);
 		} catch (Exception ex) {
 			log.error("Error in drawTemp:", ex);
 		} finally {

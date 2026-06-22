@@ -1110,7 +1110,7 @@ public interface HdPluginConfig extends Config
 	)
 	String legacySettings = "legacySettings";
 
-	String KEY_LEGACY_RENDERER = "legacyRenderer";
+	String KEY_LEGACY_RENDERER = "legacyRenderer2";
 	@ConfigItem(
 		keyName = KEY_LEGACY_RENDERER,
 		name = "Use legacy renderer",
