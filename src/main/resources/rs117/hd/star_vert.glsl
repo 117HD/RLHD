@@ -122,10 +122,17 @@ void main() {
     float starHash = fract(sin(dot(aStarDir, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
     float starHash2 = fract(sin(dot(aStarDir, vec3(93.989, 41.123, 19.37))) * 24634.6345);
     float twinklePhase = starHash * 6.2831853;
-    float twinkleRate = mix(1.5, 3.5, starHash2);     // per-star speed (varied so they desync)
+    float twinkleRate = mix(1.5, 3.5, starHash2);     // per-star base speed (varied so they desync)
     float twinkleAmt = mix(0.4, 0.9, starHash);       // per-star depth (all twinkle, some strongly)
-    float osc = 0.5 + 0.5 * sin(elapsedTime * twinkleRate + twinklePhase);
-    float twinkle = 1.0 + twinkleAmt * (osc - 0.5) * 2.0; // swing around baseline
+    // Two sines at incommensurate rates (the second ~0.37x) so the shimmer never
+    // repeats cleanly — reads as irregular/pseudo-random rather than a steady
+    // pulse. Weighted toward the dominant wave (0.7/0.3) so it still reaches its
+    // extremes often, with the slower second sine just adding wobble. Stays in
+    // [-1, 1] since 0.7 + 0.3 = 1.
+    float s1 = sin(elapsedTime * twinkleRate + twinklePhase);
+    float s2 = sin(elapsedTime * twinkleRate * 0.37 + twinklePhase * 2.13);
+    float osc = s1 * 0.7 + s2 * 0.3; // [-1, 1]
+    float twinkle = 1.0 + twinkleAmt * osc; // swing around baseline
 
     // Compress the top end so the brightest stars don't read as harsh hotspots,
     // while leaving the dim/mid stars essentially untouched.
