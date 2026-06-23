@@ -74,8 +74,11 @@ public class StarField {
 			float brightnessSeed = rng.nextFloat();
 			float brightness = (float) Math.pow(brightnessSeed, 2.5) * maxBrightness;
 
-			// Per-star size variation (0.5x to 1.0x), scaled per layer.
-			float size = (0.5f + rng.nextFloat() * 0.5f) * sizeScale;
+			// Per-star size variation, skewed toward the small end (squaring the
+			// random factor biases most stars small with only a few larger ones),
+			// scaled per layer. Range ~0.4x to 1.0x.
+			float sizeSeed = rng.nextFloat();
+			float size = (0.4f + sizeSeed * sizeSeed * 0.6f) * sizeScale;
 
 			// Stellar color tint by population fraction (same bands as the shader).
 			float c = rng.nextFloat();

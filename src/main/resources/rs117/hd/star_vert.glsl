@@ -113,12 +113,20 @@ void main() {
     float visibility = nightSkyBlend * horizonStarFade * moonOcclusion;
 
     vColor = aStarColor;
-    vBrightness = aStarBright * visibility;
+    // Compress the top end so the brightest stars don't read as harsh hotspots,
+    // while leaving the dim/mid stars essentially untouched.
+    vBrightness = min(aStarBright, 0.7) * visibility;
 
     // Point size in pixels. Scales with vertical resolution so stars keep a
     // consistent apparent size, plus a gentle brightness term so brighter stars
-    // read a touch larger. Clamped to a few pixels minimum so faint stars stay
-    // visible, and a modest maximum so the brightest stars don't read as blobs.
-    float sizePixels = aStarSize * viewportSize.y * 0.003 * (0.9 + 0.25 * vBrightness);
-    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 1.5, 4.0) : 0.0;
+    // read a touch larger.
+    //
+    // The MINIMUM is the key anti-twinkle knob: a sprite only a pixel or two wide
+    // can't hold a stable soft profile, so on lower-res displays it flickers as it
+    // drifts sub-pixel. Clamping to a few pixels minimum guarantees every star
+    // spreads across enough pixels for its smooth falloff to redistribute energy
+    // under motion instead of toggling it. The maximum keeps the brightest stars
+    // from reading as blobs.
+    float sizePixels = aStarSize * viewportSize.y * 0.003 * (0.9 + 0.15 * vBrightness);
+    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 2, 4.0) : 0.0;
 }
