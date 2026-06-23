@@ -128,5 +128,5 @@ void main() {
     // under motion instead of toggling it. The maximum keeps the brightest stars
     // from reading as blobs.
     float sizePixels = aStarSize * viewportSize.y * 0.003 * (0.9 + 0.15 * vBrightness);
-    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 2, 3.5) : 0.0;
+    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 1.75, 3.5) : 0.0;
 }
