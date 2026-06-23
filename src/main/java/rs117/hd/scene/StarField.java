@@ -42,7 +42,7 @@ public class StarField {
 	// Star counts per layer. The procedural field had ~18-24% of cells populated
 	// across grids of scale 80 and 200; these counts reproduce a similar on-sky
 	// density without being tied to screen resolution.
-	private static final int BRIGHT_STAR_COUNT = 600;  // layer 0: sparse/bright/large
+	private static final int BRIGHT_STAR_COUNT = 350;  // layer 0: sparse/bright/large
 	private static final int DIM_STAR_COUNT = 2200;    // layer 1: dense/dim/small
 
 	private static final long SEED = 0x117D511A5L;
@@ -57,7 +57,7 @@ public class StarField {
 		// Layer 0: bright, sparse, larger, full rotation speed (the "near" layer).
 		// Layer 1: dim, dense, smaller, rotating ~30% slower for a parallax depth feel.
 		offset = generateLayer(rng, vertexData, offset, BRIGHT_STAR_COUNT, 1.2f, 1.0f, 1.0f);
-		generateLayer(rng, vertexData, offset, DIM_STAR_COUNT, 0.4f, 0.66f, 0.7f);
+		generateLayer(rng, vertexData, offset, DIM_STAR_COUNT, 0.4f, 0.8f, 0.7f);
 	}
 
 	private static int generateLayer(Random rng, float[] out, int offset, int count, float maxBrightness, float sizeScale, float speed) {
