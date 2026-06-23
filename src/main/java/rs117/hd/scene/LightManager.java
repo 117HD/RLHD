@@ -522,22 +522,24 @@ public class LightManager {
 
 				// Hide lights which cannot possibly affect the visible scene,
 				// by either being behind the camera, or too far beyond the edge of the scene
-				float near = -maxRadius * maxRadius;
-				float far = drawDistance + LOCAL_HALF_TILE_SIZE + maxRadius;
-				far *= far;
-				light.visible = near < light.distanceSquared && light.distanceSquared < far;
+				if (!plugin.orthographicProjection) {
+					float near = -maxRadius * maxRadius;
+					float far = drawDistance + LOCAL_HALF_TILE_SIZE + maxRadius;
+					far *= far;
+					light.visible = near < light.distanceSquared && light.distanceSquared < far;
 
-				// Check that the light is within the camera's frustum specifically: left, right, bottom, top
-				// The above check already covers the near plane
-				if (plugin.configTiledLighting && light.visible) {
-					light.visible = isSphereIntersectingFrustum(
-						light.pos[0] + cameraShift[0],
-						light.pos[1],
-						light.pos[2] + cameraShift[1],
-						maxRadius, // use max radius, since the radius hasn't been updated yet
-						cameraFrustum,
-						4
-					);
+					// Check that the light is within the camera's frustum specifically: left, right, bottom, top
+					// The above check already covers the near plane
+					if (plugin.configTiledLighting && light.visible) {
+						light.visible = isSphereIntersectingFrustum(
+							light.pos[0] + cameraShift[0],
+							light.pos[1],
+							light.pos[2] + cameraShift[1],
+							maxRadius, // use max radius, since the radius hasn't been updated yet
+							cameraFrustum,
+							4
+						);
+					}
 				}
 			}
 		}
@@ -678,10 +680,16 @@ public class LightManager {
 	}
 
 	private static float getNightStaggerOffset(Light light) {
-		int hash = Float.floatToIntBits(light.pos[0])
-			^ Float.floatToIntBits(light.pos[2])
-			^ light.plane * 668265263;
-		return (hash & 0xFFFF) / 65535f;
+		int hash = Float.floatToIntBits(light.pos[0]);
+		hash ^= Float.floatToIntBits(light.pos[1]) * 374761393;
+		hash ^= Float.floatToIntBits(light.pos[2]) * 668265263;
+		hash ^= light.plane * 912271;
+		hash ^= hash >>> 16;
+		hash *= 0x85ebca6b;
+		hash ^= hash >>> 13;
+		hash *= 0xc2b2ae35;
+		hash ^= hash >>> 16;
+		return (hash & 0x7FFFFFFF) / 2147483647f;
 	}
 
 	private static boolean isTimeRestricted(LightDefinition def) {

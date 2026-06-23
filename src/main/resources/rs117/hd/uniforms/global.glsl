@@ -76,4 +76,6 @@ layout(std140) uniform UBOGlobal {
 
     // Aurora visibility (1 on randomly-selected aurora nights, else 0)
     float auroraVisibility;
+
+    int orthographicProjection;
 };

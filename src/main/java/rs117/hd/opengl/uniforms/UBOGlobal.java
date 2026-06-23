@@ -87,4 +87,6 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	// Aurora visibility (1 on randomly-selected aurora nights, else 0)
 	public Property auroraVisibility = addProperty(PropertyType.Float, "auroraVisibility");
+
+	public Property orthographicProjection = addProperty(PropertyType.Int, "orthographicProjection");
 }

@@ -122,6 +122,15 @@ void main() {
     float tileCos = min(min(dot(tileCenterVec, rTL), dot(tileCenterVec, rTR)), min(dot(tileCenterVec, rBL), dot(tileCenterVec, rBR)));
     float tileSin = sqrt(max(0.0, 1.0 - tileCos * tileCos));
 
+    mat4 viewToClip;
+    vec2 tileNDCMin;
+    vec2 tileNDCMax;
+    if (orthographicProjection != 0) {
+        viewToClip = projectionMatrix * inverse(viewMatrix);
+        tileNDCMin = min(min(ndcTL, ndcTR), min(ndcBL, ndcBR));
+        tileNDCMax = max(max(ndcTL, ndcTR), max(ndcBL, ndcBR));
+    }
+
     SortedLight sortingBin[SORTING_BIN_SIZE];
     int sortingBinSize = 0;
 
@@ -138,8 +147,29 @@ void main() {
         float lightCos = sqrt(0.999 - lightSinSqr);
         float lightTileCos = dot(lightCenterVec, tileCenterVec);
 
-        float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
-        if (lightTileCos < sumCos)
+        bool lightAffectsTile;
+        float combinedScore;
+        const float PROXIMITY_WEIGHT = 0.75;
+        float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
+
+        if (orthographicProjection != 0) {
+            vec4 lightClip = viewToClip * vec4(lightViewPos, 1.0);
+            vec2 lightNDC = lightClip.xy / max(abs(lightClip.w), 1e-5);
+
+            vec4 radiusClip = viewToClip * vec4(lightViewPos + vec3(sqrt(lightRadiusSqr), 0.0, 0.0), 1.0);
+            vec2 radiusNDC = radiusClip.xy / max(abs(radiusClip.w), 1e-5);
+            float lightNDCRadius = length(radiusNDC - lightNDC);
+
+            vec2 closest = clamp(lightNDC, tileNDCMin, tileNDCMax);
+            lightAffectsTile = length(lightNDC - closest) <= lightNDCRadius;
+            combinedScore = distanceScore;
+        } else {
+            float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
+            lightAffectsTile = lightTileCos >= sumCos;
+            combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
+        }
+
+        if (!lightAffectsTile)
             continue;
 
         #if USE_LIGHTS_MASK
@@ -148,10 +178,6 @@ void main() {
             if ((LightsMask[word] & mask) != 0u)
                 continue;
         #endif
-
-        const float PROXIMITY_WEIGHT = 0.75;
-        float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
-        float combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
 
         int idx = 0;
         for (; idx < sortingBinSize; idx++) {
