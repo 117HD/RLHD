@@ -63,6 +63,7 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
+import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.StarField;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -137,6 +138,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private SceneManager sceneManager;
+
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
 	private ModelStreamingManager modelStreamingManager;
@@ -802,6 +806,8 @@ public class ZoneRenderer implements Renderer {
 		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		float[] waterColor = environmentManager.currentWaterColor;
 		float[] sunAngles = environmentManager.currentSunAngles;
+
+		modelOverrideManager.updateTimeOfDayPhase();
 
 		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
 			// The environment may force a specific cycle mode, overriding the config.

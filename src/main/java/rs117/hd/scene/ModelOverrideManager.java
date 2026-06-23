@@ -14,6 +14,7 @@ import net.runelite.api.gameval.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.renderer.zone.SceneManager;
+import rs117.hd.scene.lights.LightTimeOfDay;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.ModelHash;
@@ -50,6 +51,10 @@ public class ModelOverrideManager {
 
 	private final Int2ObjectHashMap<ModelOverride> modelOverrides = new Int2ObjectHashMap<>();
 	private final IntHashSet detailCullingBlacklist = new IntHashSet();
+	private boolean hasTimeOfDayOverrides;
+	private boolean dayNightWasActive;
+	@Nullable
+	private LightTimeOfDay currentTimeOfDayPhase;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
@@ -64,6 +69,7 @@ public class ModelOverrideManager {
 					throw new IOException("Empty or invalid: " + path);
 
 				modelOverrides.clear();
+				hasTimeOfDayOverrides = false;
 				for (ModelOverride override : parsedOverrides) {
 					try {
 						override.normalize(plugin);
@@ -73,6 +79,9 @@ public class ModelOverrideManager {
 					}
 
 					addOverride(override, gamevals);
+
+					if (!hasTimeOfDayOverrides && ModelOverride.hasTimeOfDaySchedule(override))
+						hasTimeOfDayOverrides = true;
 
 					if (override.hideInAreas.length > 0) {
 						var hider = override.copy();
@@ -119,6 +128,9 @@ public class ModelOverrideManager {
 
 		detailCullingBlacklist.clear();
 		detailCullingBlacklist.trimToSize();
+		hasTimeOfDayOverrides = false;
+		dayNightWasActive = false;
+		currentTimeOfDayPhase = null;
 	}
 
 	public void reload() {
@@ -246,13 +258,41 @@ public class ModelOverrideManager {
 		if (override.areaOverrides != null)
 			for (var entry : override.areaOverrides.entrySet())
 				if (entry.getKey().contains(worldPos))
-					return entry.getValue();
+					return resolveForTimeOfDay(entry.getValue());
 
-		return override;
+		return resolveForTimeOfDay(override);
+	}
+
+	@Nonnull
+	private ModelOverride resolveForTimeOfDay(ModelOverride override) {
+		if (override.isDummy || !plugin.isDayNightCycleActive())
+			return override;
+		if (override.timeOfDay == null || override.timeOfDay.length == 0)
+			return override;
+		return override.resolveTimeOfDay(plugin.getNightLightFactor());
 	}
 
 	@Nonnull
 	public ModelOverride getOverride(TileObject tileObject, int[] worldPos) {
 		return getOverride(ModelHash.packUuid(ModelHash.TYPE_OBJECT, tileObject.getId()), worldPos);
+	}
+
+	public void updateTimeOfDayPhase() {
+		if (!hasTimeOfDayOverrides || !plugin.isDayNightCycleActive()) {
+			if (dayNightWasActive) {
+				dayNightWasActive = false;
+				currentTimeOfDayPhase = null;
+				sceneManager.invalidateAllZones();
+			} else {
+				currentTimeOfDayPhase = null;
+			}
+			return;
+		}
+
+		LightTimeOfDay phase = LightTimeOfDay.fromNightLightFactor(plugin.getNightLightFactor());
+		if (!dayNightWasActive || phase != currentTimeOfDayPhase)
+			sceneManager.invalidateAllZones();
+		dayNightWasActive = true;
+		currentTimeOfDayPhase = phase;
 	}
 }

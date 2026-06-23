@@ -350,6 +350,17 @@ public class SceneManager {
 		log.trace("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
 	}
 
+	public void invalidateAllZones() {
+		if (root.sceneContext == null)
+			return;
+
+		root.invalidate();
+		for (var sub : subs) {
+			if (sub != null)
+				sub.invalidate();
+		}
+	}
+
 	private static boolean isEdgeTile(Zone[][] zones, int zx, int zz) {
 		for (int x = zx - 2; x <= zx + 2; ++x) {
 			if (x < 0 || x >= NUM_ZONES)

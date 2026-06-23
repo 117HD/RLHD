@@ -218,6 +218,147 @@
         "type": "boolean",
         "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
       },
+      "timeOfDay": {
+        "description": "Optional per-cycle-phase overrides for this model override. When the current phase matches, properties from the matching entry take priority over the base override.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "time" ],
+          "properties": {
+            "time": {
+              "type": "string",
+              "enum": [ "DAY", "DAWN", "DUSK", "TWILIGHT", "NIGHT", "DEEP_NIGHT" ],
+              "description": "Cycle phase when these overrides apply. Requires the day/night cycle to be enabled."
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of what these phase-specific properties apply to."
+            },
+            "baseMaterial": {
+              "type": "string",
+              "description": "Case-sensitive name of the material to apply during this phase."
+            },
+            "textureMaterial": {
+              "type": "string",
+              "description": "Case-sensitive name of the material to apply to textured faces during this phase."
+            },
+            "uvType": {
+              "type": "string",
+              "description": "What to base UV coordinates on for object texturing during this phase.",
+              "enum": [
+                "VANILLA",
+                "GEOMETRY",
+                "MODEL_XY",
+                "MODEL_XY_MIRROR_A",
+                "MODEL_XY_MIRROR_B",
+                "MODEL_XZ",
+                "MODEL_XZ_MIRROR_A",
+                "MODEL_XZ_MIRROR_B",
+                "MODEL_YZ",
+                "MODEL_YZ_MIRROR_A",
+                "MODEL_YZ_MIRROR_B",
+                "WORLD_XY",
+                "WORLD_XZ",
+                "WORLD_YZ",
+                "BOX"
+              ]
+            },
+            "uvScale": {
+              "type": "number",
+              "description": "A scaling factor to apply to UV coordinates during this phase."
+            },
+            "uvOrientation": {
+              "type": "integer",
+              "description": "Extra rotation to apply to UVs during this phase, with 2048 corresponding to a complete rotation."
+            },
+            "uvOrientationX": {
+              "type": "integer",
+              "description": "Rotation around the X axis during this phase, with 2048 corresponding to a complete rotation."
+            },
+            "uvOrientationY": {
+              "type": "integer",
+              "description": "Rotation around the Y axis during this phase, with 2048 corresponding to a complete rotation."
+            },
+            "uvOrientationZ": {
+              "type": "integer",
+              "description": "Rotation around the Z axis during this phase, with 2048 corresponding to a complete rotation."
+            },
+            "hide": {
+              "type": "boolean",
+              "description": "Whether the model should be hidden during this phase."
+            },
+            "retainVanillaUvs": {
+              "type": "boolean",
+              "description": "Retain vanilla UVs on already textured areas during this phase."
+            },
+            "flatNormals": {
+              "type": "boolean",
+              "description": "Whether flat normals should be used instead of smooth normals during this phase."
+            },
+            "upwardsNormals": {
+              "type": "boolean",
+              "description": "Whether normals should always point directly up during this phase."
+            },
+            "castShadows": {
+              "type": "boolean",
+              "description": "Whether the model cast shadows during this phase."
+            },
+            "receiveShadows": {
+              "type": "boolean",
+              "description": "Whether the model receive shadows during this phase."
+            },
+            "terrainVertexSnap": {
+              "type": "boolean",
+              "description": "Whether the bottom-most vertices of the model should snap to the tile height during this phase."
+            },
+            "terrainVertexSnapThreshold": {
+              "type": "number",
+              "description": "The fraction along the models height defining the region of which vertices blend to the terrain surface during this phase."
+            },
+            "undoVanillaShading": {
+              "type": "boolean",
+              "description": "Whether the model should undo the baked phong shading in the vertex colours during this phase."
+            },
+            "hideAsWaterEffect": {
+              "type": "boolean",
+              "description": "Whether the faces should be hidden when \"Hide vanilla water ripples\" is enabled during this phase."
+            },
+            "shadowOpacityThreshold": {
+              "type": "number",
+              "description": "Specify an opacity threshold for shadow casting during this phase. Between 0 and 1."
+            },
+            "windDisplacementMode": {
+              "type": "string",
+              "description": "What type of wind displacement should be applied during this phase.",
+              "enum": [
+                "DISABLED",
+                "OBJECT",
+                "OBJECT_NO_GROUND_DISPLACEMENT",
+                "VERTEX",
+                "VERTEX_WITH_HEMISPHERE_BLEND",
+                "VERTEX_JIGGLE"
+              ]
+            },
+            "windDisplacementModifier": {
+              "type": "integer",
+              "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model during this phase."
+            },
+            "invertDisplacementStrength": {
+              "type": "boolean",
+              "description": "Will invert the strength blend applied to the model during this phase."
+            },
+            "depthBias": {
+              "type": "integer",
+              "description": "Specify our own depth bias during this phase, replacing the bias set by Jagex. Between 0-255."
+            },
+            "disablePrioritySorting": {
+              "type": "boolean",
+              "description": "Disable priority sorting during this phase, instead sorting solely based on distance."
+            }
+          }
+        }
+      },
       "materialOverrides": {
         "type": "object",
         "description": "A subset of options can be tweaked separately for specific materials of the model.",
@@ -485,6 +626,143 @@
             "disablePrioritySorting": {
               "type": "boolean",
               "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
+            },
+            "timeOfDay": {
+              "description": "Optional per-cycle-phase overrides for this color override. When the current phase matches, properties from the matching entry take priority over the parent color override.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [ "time" ],
+                "properties": {
+                  "time": {
+                    "type": "string",
+                    "enum": [ "DAY", "DAWN", "DUSK", "TWILIGHT", "NIGHT", "DEEP_NIGHT" ],
+                    "description": "Cycle phase when these overrides apply. Requires the day/night cycle to be enabled."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of what these phase-specific properties apply to."
+                  },
+                  "baseMaterial": {
+                    "type": "string",
+                    "description": "Case-sensitive name of the material to apply during this phase."
+                  },
+                  "uvType": {
+                    "type": "string",
+                    "description": "What to base UV coordinates on for object texturing during this phase.",
+                    "enum": [
+                      "VANILLA",
+                      "GEOMETRY",
+                      "MODEL_XY",
+                      "MODEL_XY_MIRROR_A",
+                      "MODEL_XY_MIRROR_B",
+                      "MODEL_XZ",
+                      "MODEL_XZ_MIRROR_A",
+                      "MODEL_XZ_MIRROR_B",
+                      "MODEL_YZ",
+                      "MODEL_YZ_MIRROR_A",
+                      "MODEL_YZ_MIRROR_B",
+                      "WORLD_XY",
+                      "WORLD_XZ",
+                      "WORLD_YZ",
+                      "BOX"
+                    ]
+                  },
+                  "uvScale": {
+                    "type": "number",
+                    "description": "A scaling factor to apply to UV coordinates during this phase."
+                  },
+                  "uvOrientation": {
+                    "type": "integer",
+                    "description": "Extra rotation to apply to UVs during this phase, with 2048 corresponding to a complete rotation."
+                  },
+                  "uvOrientationX": {
+                    "type": "integer",
+                    "description": "Rotation around the X axis during this phase, with 2048 corresponding to a complete rotation."
+                  },
+                  "uvOrientationY": {
+                    "type": "integer",
+                    "description": "Rotation around the Y axis during this phase, with 2048 corresponding to a complete rotation."
+                  },
+                  "uvOrientationZ": {
+                    "type": "integer",
+                    "description": "Rotation around the Z axis during this phase, with 2048 corresponding to a complete rotation."
+                  },
+                  "hide": {
+                    "type": "boolean",
+                    "description": "Whether matching faces should be hidden during this phase."
+                  },
+                  "retainVanillaUvs": {
+                    "type": "boolean",
+                    "description": "Retain vanilla UVs on already textured areas during this phase."
+                  },
+                  "flatNormals": {
+                    "type": "boolean",
+                    "description": "Whether flat normals should be used instead of smooth normals during this phase."
+                  },
+                  "upwardsNormals": {
+                    "type": "boolean",
+                    "description": "Whether normals should always point directly up during this phase."
+                  },
+                  "castShadows": {
+                    "type": "boolean",
+                    "description": "Whether the model cast shadows during this phase."
+                  },
+                  "receiveShadows": {
+                    "type": "boolean",
+                    "description": "Whether the model receive shadows during this phase."
+                  },
+                  "terrainVertexSnap": {
+                    "type": "boolean",
+                    "description": "Whether the bottom-most vertices should snap to the tile height during this phase."
+                  },
+                  "terrainVertexSnapThreshold": {
+                    "type": "number",
+                    "description": "The fraction along the models height defining the region of which vertices blend to the terrain surface during this phase."
+                  },
+                  "undoVanillaShading": {
+                    "type": "boolean",
+                    "description": "Whether the model should undo the baked phong shading in the vertex colours during this phase."
+                  },
+                  "hideAsWaterEffect": {
+                    "type": "boolean",
+                    "description": "Whether the faces should be hidden when \"Hide vanilla water ripples\" is enabled during this phase."
+                  },
+                  "shadowOpacityThreshold": {
+                    "type": "number",
+                    "description": "Specify an opacity threshold for shadow casting during this phase. Between 0 and 1."
+                  },
+                  "windDisplacementMode": {
+                    "type": "string",
+                    "description": "What type of wind displacement should be applied during this phase.",
+                    "enum": [
+                      "DISABLED",
+                      "OBJECT",
+                      "OBJECT_NO_GROUND_DISPLACEMENT",
+                      "VERTEX",
+                      "VERTEX_WITH_HEMISPHERE_BLEND",
+                      "VERTEX_JIGGLE"
+                    ]
+                  },
+                  "windDisplacementModifier": {
+                    "type": "integer",
+                    "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model during this phase."
+                  },
+                  "invertDisplacementStrength": {
+                    "type": "boolean",
+                    "description": "Will invert the strength blend applied to the model during this phase."
+                  },
+                  "depthBias": {
+                    "type": "integer",
+                    "description": "Specify our own depth bias during this phase, replacing the bias set by Jagex. Between 0-255."
+                  },
+                  "disablePrioritySorting": {
+                    "type": "boolean",
+                    "description": "Disable priority sorting during this phase, instead sorting solely based on distance."
+                  }
+                }
+              }
             }
           }
         }
