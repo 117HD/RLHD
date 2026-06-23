@@ -11796,9 +11796,9 @@
       {
         "description": "Ore",
         "colors": "h == 0",
-        "baseMaterial": "GRAVEL_SHINY",
+        "baseMaterial": "ROCK_4_ORE",
         "uvType": "BOX",
-        "uvScale": 0.711
+        "uvOrientation": 187
       }
     ],
     "objectIds": [
@@ -11845,7 +11845,7 @@
       {
         "description": "Ore",
         "colors": "h == 0",
-        "baseMaterial": "GRAVEL_SHINY",
+        "baseMaterial": "ROCK_4_ORE",
         "uvType": "BOX",
         "uvScale": 0.711
       }
