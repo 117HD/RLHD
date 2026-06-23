@@ -60,6 +60,7 @@ import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
 import rs117.hd.scene.lights.LightTimeOfDay;
 import rs117.hd.scene.lights.LightType;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
@@ -75,6 +76,7 @@ import static rs117.hd.utils.collections.Util.quickSort;
 @Singleton
 @Slf4j
 public class LightManager {
+	private static final float[] SKY_LUMA_WEIGHTS = { 0.2126f, 0.7152f, 0.0722f };
 	private static final float NIGHT_RADIUS_BOOST_FRACTION = 0.25f;
 	private static final float NIGHT_STAGGER_RAMP_WIDTH = 0.08f;
 
@@ -206,10 +208,10 @@ public class LightManager {
 		}
 
 		float nightLightFactor = 1f;
-		boolean nightLightsActive = false;
+		boolean overworldDayNightActive = false;
 		boolean nightFactorRising = true;
 		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
-			nightLightsActive = true;
+			overworldDayNightActive = true;
 			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
 			TimeOfDay.setCycleMode(daylightCycle);
@@ -219,6 +221,13 @@ public class LightManager {
 			previousNightLightFactor = nightLightFactor;
 		} else {
 			previousNightLightFactor = -1f;
+		}
+
+		if (config.enableDaylightCycle()) {
+			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
+			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
+			TimeOfDay.setCycleMode(daylightCycle);
+			TimeOfDay.setDayLength(config.dayLength());
 		}
 
 		// These should never occur, but just in case...
@@ -484,7 +493,8 @@ public class LightManager {
 			if (light.visible && light.hiddenTemporarily)
 				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
-			if (light.visible && light.def.dayNightOnly && !nightLightsActive)
+			// dayNightOnly lights require the cycle setting; outside overworld they behave as static lights
+			if (light.visible && light.def.dayNightOnly && !config.enableDaylightCycle())
 				light.visible = false;
 
 			if (light.visible) {
@@ -494,7 +504,7 @@ public class LightManager {
 				light.distanceSquared = distX * distX + distZ * distZ;
 
 				float maxRadius = light.def.radius;
-				if (nightLightsActive) {
+				if (overworldDayNightActive) {
 					float phaseFactor = getEffectiveNightFactor(light, nightLightFactor, nightFactorRising);
 					float radiusScale = getNightRadiusScale(light.def, phaseFactor, nightLightFactor);
 					maxRadius *= radiusScale;
@@ -584,13 +594,15 @@ public class LightManager {
 				light.color = light.def.color;
 			}
 
+			applyTimeOfDayColor(sceneContext, light);
+
 			// Spawn & despawn fade-in and fade-out
 			if (light.fadeInDuration > 0)
 				light.strength *= saturate((light.elapsedTime - light.spawnDelay) / light.fadeInDuration);
 			if (light.fadeOutDuration > 0 && light.lifetime != -1)
 				light.strength *= saturate((light.lifetime - light.elapsedTime) / light.fadeOutDuration);
 
-			if (nightLightsActive) {
+			if (overworldDayNightActive) {
 				float phaseFactor = getEffectiveNightFactor(light, nightLightFactor, nightFactorRising);
 				light.strength *= getNightStrengthScale(light.def, phaseFactor, nightLightFactor);
 				light.radius *= getNightRadiusScale(light.def, phaseFactor, nightLightFactor);
@@ -676,8 +688,38 @@ public class LightManager {
 		return def.timeOfDay != null;
 	}
 
+	private int[] getLightWorldPos(SceneContext sceneContext, Light light) {
+		if (light.worldPoint != null)
+			return new int[] { light.worldPoint.getX(), light.worldPoint.getY(), light.worldPoint.getPlane() };
+		return sceneContext.localToWorld((int) light.pos[0], (int) light.pos[2], light.plane);
+	}
+
+	private void applyTimeOfDayColor(SceneContext sceneContext, Light light) {
+		System.arraycopy(light.def.color, 0, light.color, 0, 3);
+
+		if (!light.def.followDayNight || !config.enableDaylightCycle())
+			return;
+
+		EnvironmentManager.OutdoorSkySample sky = environmentManager.sampleOutdoorSky(
+			getLightWorldPos(sceneContext, light),
+			plugin.latLong,
+			config.cycleDurationMinutes(),
+			config.minimumBrightness()
+		);
+
+		float defLuma = dot(light.def.color, SKY_LUMA_WEIGHTS);
+		float noonLuma = dot(sky.noonHorizonLinear, SKY_LUMA_WEIGHTS);
+		float horizonLuma = dot(sky.horizonLinear, SKY_LUMA_WEIGHTS);
+
+		System.arraycopy(sky.horizonLinear, 0, light.color, 0, 3);
+
+		float peakScale = defLuma / max(noonLuma, 1e-4f);
+		float timeScale = min(horizonLuma / max(noonLuma, 1e-4f), 1f) * sky.brightnessMultiplier;
+		light.strength *= peakScale * timeScale;
+	}
+
 	/**
-	 * Strength scale when the day/night cycle is active.
+	 * Strength scale when the day/night cycle is active in overworld areas.
 	 * nightMultiplier is the peak-darkness target: 0 = off, 0.5 = half default, 1 = default, >1 = boosted.
 	 * Always-on lights blend from default (day) toward that target.
 	 * timeOfDay / staggered lights multiply their phase fade by the same night target curve.

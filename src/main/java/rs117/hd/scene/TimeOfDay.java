@@ -492,6 +492,18 @@ public class TimeOfDay
 	}
 
 	/**
+	 * Reference horizon color at peak daytime, matching the skybox at high sun.
+	 * Returns sRGB, same space as {@link #getSkyGradientColors} horizon output.
+	 */
+	public static float[] getReferenceHorizonColor(float[] regionalFogColor) {
+		if (regionalFogColor != null)
+			return regionalFogColor;
+
+		float[] horizonLinear = AtmosphereUtils.interpolateSrgb(90f, HORIZON_KEYFRAMES);
+		return rs117.hd.utils.ColorUtils.linearToSrgb(horizonLinear);
+	}
+
+	/**
 	 * Get the sun direction vector for sky gradient rendering.
 	 * Returns normalized direction FROM the camera TO the sun.
 	 * Uses the same coordinate transformation as the shadow light direction.

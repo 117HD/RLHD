@@ -41,7 +41,9 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.scene.environments.Environment;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -556,5 +558,111 @@ public class EnvironmentManager {
 
 	public boolean allowRoofShadows() {
 		return currentEnvironment.allowRoofShadows;
+	}
+
+	public static final int OUTDOOR_WORLD_Y_OFFSET = 3602;
+
+	public int[] getOutdoorWorldPos(int[] worldPos) {
+		return new int[] {
+			worldPos[0],
+			worldPos[1] - OUTDOOR_WORLD_Y_OFFSET,
+			0
+		};
+	}
+
+	@Nonnull
+	public Environment getOverworldEnvironmentForTheme() {
+		return getOverworldEnvironment();
+	}
+
+	/**
+	 * Find the environment whose area contains {@code worldPos}.
+	 * When {@code preferOverworld} is true, returns the first matching overworld environment,
+	 * otherwise the first match of any kind. Falls back to the seasonal overworld or DEFAULT.
+	 */
+	@Nonnull
+	public Environment getEnvironmentAt(int[] worldPos, boolean preferOverworld) {
+		Environment anyMatch = null;
+		Environment overworldMatch = null;
+
+		if (environments != null) {
+			for (var environment : environments) {
+				if (environment == Environment.DEFAULT)
+					continue;
+				if (!environment.area.containsPoint(worldPos))
+					continue;
+				if (anyMatch == null)
+					anyMatch = environment;
+				if (environment.isOverworld)
+					overworldMatch = environment;
+			}
+		}
+
+		if (preferOverworld) {
+			if (overworldMatch != null)
+				return overworldMatch;
+			return getOverworldEnvironment();
+		}
+
+		if (anyMatch != null)
+			return anyMatch;
+		return Environment.DEFAULT;
+	}
+
+	public static final class OutdoorSkySample {
+		public final float[] horizonLinear;
+		public final float[] noonHorizonLinear;
+		public final float brightnessMultiplier;
+
+		public OutdoorSkySample(float[] horizonLinear, float[] noonHorizonLinear, float brightnessMultiplier) {
+			this.horizonLinear = horizonLinear;
+			this.noonHorizonLinear = noonHorizonLinear;
+			this.brightnessMultiplier = brightnessMultiplier;
+		}
+	}
+
+	/**
+	 * Sample outdoor sky/fog for a world position, using the overworld environment above {@code worldPos}.
+	 */
+	@Nonnull
+	public OutdoorSkySample sampleOutdoorSky(int[] worldPos, double[] latLong, float cycleDuration, int minimumBrightness) {
+		Environment env = getEnvironmentAt(getOutdoorWorldPos(worldPos), true);
+
+		float[] regionalFogSrgb = resolveOutdoorRegionalFogSrgb(env);
+
+		float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(
+			latLong,
+			cycleDuration,
+			regionalFogSrgb,
+			env.sunStrength
+		);
+		float[] horizonLinear = ColorUtils.srgbToLinear(skyGradientColors[1]);
+		float[] noonHorizonLinear = ColorUtils.srgbToLinear(
+			TimeOfDay.getReferenceHorizonColor(regionalFogSrgb)
+		);
+		float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(latLong, cycleDuration, minimumBrightness);
+
+		return new OutdoorSkySample(horizonLinear, noonHorizonLinear, brightnessMultiplier);
+	}
+
+	/**
+	 * Regional fog for outdoor sky sampling. Never uses the current indoor/cave fog —
+	 * that caused dawn to blend toward static cave colors while dusk still used procedural twilight.
+	 */
+	private float[] resolveOutdoorRegionalFogSrgb(Environment env) {
+		if (env.fogColor != null)
+			return ColorUtils.linearToSrgb(env.fogColor);
+
+		if (env.allowSkyOverride) {
+			DefaultSkyColor sky = config.defaultSkyColor();
+			float[] regionalFogSrgb = sky.getRgb(client);
+			if (sky == DefaultSkyColor.OSRS)
+				regionalFogSrgb = DefaultSkyColor.DEFAULT.getRgb(client);
+			return regionalFogSrgb;
+		}
+
+		Environment themeEnv = getOverworldEnvironmentForTheme();
+		float[] themeFog = themeEnv.fogColor != null ? themeEnv.fogColor : Environment.DEFAULT.fogColor;
+		return ColorUtils.linearToSrgb(themeFog);
 	}
 }

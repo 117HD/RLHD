@@ -1719,6 +1719,11 @@
     "brightness": 0.827
   },
   {
+    "name": "ROCK_3_VERY_DARK",
+    "parent": "ROCK_3",
+    "brightness": 0.73
+  },
+  {
     "name": "ROCK_3_LIGHT",
     "parent": "ROCK_3",
     "brightness": 1.194

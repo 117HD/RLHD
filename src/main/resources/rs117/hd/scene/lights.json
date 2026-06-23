@@ -26648,13 +26648,13 @@
   },
   {
     "description": "TUNNEL_EXIT",
-    "height": 50,
-    "alignment": "FRONT",
-    "radius": 800,
-    "strength": 12.5,
+    "offset": [ 0, 70, -80 ],
+    "radius": 450,
+    "strength": 10,
+    "followDayNight": true,
     "color": [
-      150,
-      220,
+      255,
+      255,
       255
     ],
     "type": "STATIC",

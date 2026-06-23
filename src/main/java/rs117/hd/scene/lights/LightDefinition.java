@@ -19,6 +19,7 @@ public class LightDefinition {
 	public float strength = 5;
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
 	public float[] color;
+	public boolean followDayNight;
 	public LightType type = LightType.STATIC;
 	public float duration;
 	public float range;

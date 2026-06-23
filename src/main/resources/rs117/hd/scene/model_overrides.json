@@ -14016,6 +14016,27 @@
     ]
   },
   {
+    "description": "SLAYER_DUNGEON_EXIT",
+    "baseMaterial": "ROCK_3_VERY_DARK",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "SLAYER_DUNGEON_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "s == 0 && l < 65",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
     "description": "Fire Remains",
     "baseMaterial": "ROCK_1",
     "objectIds": [
