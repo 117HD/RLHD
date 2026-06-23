@@ -113,9 +113,23 @@ void main() {
     float visibility = nightSkyBlend * horizonStarFade * moonOcclusion;
 
     vColor = aStarColor;
+
+    // Deliberate twinkle. Unlike the sub-pixel flicker we avoid via the size floor,
+    // this is a slow, intentional brightness shimmer. Every star can twinkle, but
+    // each gets its own random phase, speed and amplitude (from a stable per-star
+    // hash of the fixed field direction) so they shimmer independently and to
+    // different degrees rather than pulsing in unison.
+    float starHash = fract(sin(dot(aStarDir, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
+    float starHash2 = fract(sin(dot(aStarDir, vec3(93.989, 41.123, 19.37))) * 24634.6345);
+    float twinklePhase = starHash * 6.2831853;
+    float twinkleRate = mix(1.5, 3.5, starHash2);     // per-star speed (varied so they desync)
+    float twinkleAmt = mix(0.4, 0.9, starHash);       // per-star depth (all twinkle, some strongly)
+    float osc = 0.5 + 0.5 * sin(elapsedTime * twinkleRate + twinklePhase);
+    float twinkle = 1.0 + twinkleAmt * (osc - 0.5) * 2.0; // swing around baseline
+
     // Compress the top end so the brightest stars don't read as harsh hotspots,
     // while leaving the dim/mid stars essentially untouched.
-    vBrightness = min(aStarBright, 0.4) * visibility;
+    vBrightness = min(aStarBright, 0.4) * visibility * twinkle;
 
     // Point size in pixels. Scales with vertical resolution so stars keep a
     // consistent apparent size, plus a gentle brightness term so brighter stars
@@ -128,5 +142,5 @@ void main() {
     // under motion instead of toggling it. The maximum keeps the brightest stars
     // from reading as blobs.
     float sizePixels = aStarSize * viewportSize.y * 0.003 * (0.9 + 0.15 * vBrightness);
-    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 1.75, 3.5) : 0.0;
+    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 2, 3.5) : 0.0;
 }
