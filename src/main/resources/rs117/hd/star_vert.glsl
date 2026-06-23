@@ -119,6 +119,6 @@ void main() {
     // consistent apparent size, plus a gentle brightness term so brighter stars
     // read a touch larger. Clamped to a few pixels minimum so faint stars stay
     // visible, and a modest maximum so the brightest stars don't read as blobs.
-    float sizePixels = aStarSize * viewportSize.y * 0.0035 * (0.85 + 0.35 * vBrightness);
-    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 1.2, 6.0) : 0.0;
+    float sizePixels = aStarSize * viewportSize.y * 0.003 * (0.85 + 0.35 * vBrightness);
+    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 1.0, 5.0) : 0.0;
 }
