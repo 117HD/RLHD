@@ -78,7 +78,6 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.ColorFilter;
-import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
@@ -1829,7 +1828,6 @@ public class HdPlugin extends Plugin {
 					boolean reloadModelOverrides = false;
 					boolean reloadTileOverrides = false;
 					boolean reloadScene = false;
-					boolean reloadDayNightLights = false;
 
 					for (var key : pendingConfigChanges) {
 						switch (key) {
@@ -1853,9 +1851,6 @@ public class HdPlugin extends Plugin {
 									recompilePrograms = true;
 								if (configColorFilter == ColorFilter.CEL_SHADING || configColorFilterPrevious == ColorFilter.CEL_SHADING)
 									reloadScene = true;
-								break;
-							case KEY_ENABLE_DAYLIGHT_CYCLE:
-								reloadDayNightLights = true;
 								break;
 							case KEY_CPU_USAGE_LIMIT:
 								if (jobSystem.isActive()) {
@@ -1987,12 +1982,6 @@ public class HdPlugin extends Plugin {
 
 					if (reloadEnvironments)
 						environmentManager.reload();
-
-					if (reloadDayNightLights) {
-						var sceneContext = getSceneContext();
-						if (sceneContext != null)
-							lightManager.reloadObjectLights(sceneContext);
-					}
 				}
 			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);
@@ -2051,18 +2040,6 @@ public class HdPlugin extends Plugin {
 
 	public int getDrawDistance() {
 		return clamp(config.drawDistance(), 0, MAX_DISTANCE);
-	}
-
-	public float getNightLightFactor() {
-		DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
-		DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
-		TimeOfDay.setCycleMode(daylightCycle);
-		TimeOfDay.setDayLength(config.dayLength());
-		return TimeOfDay.getNightLightFactor(latLong, config.cycleDurationMinutes());
-	}
-
-	public boolean isDayNightCycleActive() {
-		return config.enableDaylightCycle();
 	}
 
 	public float getGammaCorrection() {

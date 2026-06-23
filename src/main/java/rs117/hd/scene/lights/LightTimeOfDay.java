@@ -30,31 +30,6 @@ public enum LightTimeOfDay {
 		return valueOf(value.trim().toUpperCase().replace(' ', '_'));
 	}
 
-	public boolean containsNightFactor(float nightLightFactor) {
-		if (this == DAY)
-			return nightLightFactor <= 0;
-		if (this == DEEP_NIGHT)
-			return nightLightFactor >= start;
-		return nightLightFactor >= start && nightLightFactor < end;
-	}
-
-	@Nullable
-	public static LightTimeOfDay fromNightLightFactor(float nightLightFactor) {
-		if (nightLightFactor <= 0)
-			return DAY;
-		if (DEEP_NIGHT.containsNightFactor(nightLightFactor))
-			return DEEP_NIGHT;
-		if (NIGHT.containsNightFactor(nightLightFactor))
-			return NIGHT;
-		if (TWILIGHT.containsNightFactor(nightLightFactor))
-			return TWILIGHT;
-		if (DAWN.containsNightFactor(nightLightFactor))
-			return DAWN;
-		if (DUSK.containsNightFactor(nightLightFactor))
-			return DUSK;
-		return DAY;
-	}
-
 	public static class Adapter extends TypeAdapter<LightTimeOfDay> {
 		@Override
 		public LightTimeOfDay read(JsonReader in) throws IOException {

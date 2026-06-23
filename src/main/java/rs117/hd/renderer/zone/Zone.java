@@ -589,13 +589,7 @@ public class Zone implements Destructible {
 				}
 			} else if (modelOverride.colorOverrides != null) {
 				final int ahsl = (0xFF - transparency) << 16 | (unlitColor != null ? unlitColor[f] & 0xFFFF : color1[f]);
-				final boolean dayNight = plugin.isDayNightCycleActive();
-				final var override = modelOverride.testColorOverrides(
-					ahsl,
-					dayNight,
-					dayNight ? plugin.getNightLightFactor() : 0f,
-					modelOverride
-				);
+				final var override = modelOverride.testColorOverrides(ahsl);
 				if (override != null) {
 					faceOverride = override;
 					material = override.baseMaterial;

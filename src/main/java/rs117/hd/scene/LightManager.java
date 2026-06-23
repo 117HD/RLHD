@@ -493,8 +493,8 @@ public class LightManager {
 			if (light.visible && light.hiddenTemporarily)
 				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
-			// dayNightOnly / followDayNight lights require the cycle setting
-			if (light.visible && !config.enableDaylightCycle() && (light.def.dayNightOnly || light.def.followDayNight))
+			// dayNightOnly lights require the cycle setting; outside overworld they behave as static lights
+			if (light.visible && light.def.dayNightOnly && !config.enableDaylightCycle())
 				light.visible = false;
 
 			if (light.visible) {
@@ -1168,9 +1168,6 @@ public class LightManager {
 				} else if (def.renderableIndex != i) {
 					continue;
 				}
-
-				if (def.followDayNight && !config.enableDaylightCycle())
-					continue;
 
 				int tileExX = clamp(lp.getSceneX() + sceneContext.sceneOffset, 0, EXTENDED_SCENE_SIZE - 2);
 				int tileExY = clamp(lp.getSceneY() + sceneContext.sceneOffset, 0, EXTENDED_SCENE_SIZE - 2);

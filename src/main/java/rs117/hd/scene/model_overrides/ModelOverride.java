@@ -19,7 +19,6 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
-import rs117.hd.scene.lights.LightTimeOfDay;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.Props;
 
@@ -94,10 +93,6 @@ public class ModelOverride
 	public Map<Material, ModelOverride> materialOverrides;
 	public ModelOverride[] colorOverrides;
 
-	@JsonAdapter(LightTimeOfDay.Adapter.class)
-	public LightTimeOfDay time;
-	public ModelOverride[] timeOfDay;
-
 	private JsonElement colors;
 
 	public transient boolean isDummy;
@@ -110,7 +105,6 @@ public class ModelOverride
 
 	// Transient not volatile, since access order can be random as it'll mean we'll just fall back to the full lookup
 	private transient long cachedColorOverrideAhsl = -1;
-	public transient boolean colorOverridesCacheable = true;
 
 	@FunctionalInterface
 	public interface AhslPredicate {
@@ -193,36 +187,11 @@ public class ModelOverride
 			materialOverrides = normalized;
 		}
 
-		if (timeOfDay != null) {
-			for (var timeEntry : timeOfDay) {
-				if (timeEntry.time == null) {
-					if (Props.DEVELOPMENT)
-						throw new IllegalStateException("timeOfDay entry missing time in override '" + description + "'");
-					continue;
-				}
-				timeEntry.normalize(plugin);
-				mightHaveTransparency |= timeEntry.mightHaveTransparency;
-			}
-		}
-
 		if (colorOverrides != null) {
-			colorOverridesCacheable = true;
 			for (var override : colorOverrides) {
 				override.normalize(plugin);
 				mightHaveTransparency |= override.mightHaveTransparency;
 				override.ahslCondition = parseAhslConditions(override.colors);
-				if (override.timeOfDay != null) {
-					colorOverridesCacheable = false;
-					for (var timeEntry : override.timeOfDay) {
-						if (timeEntry.time == null) {
-							if (Props.DEVELOPMENT)
-								throw new IllegalStateException("timeOfDay entry missing time in override '" + description + "'");
-							continue;
-						}
-						timeEntry.normalize(plugin);
-						mightHaveTransparency |= timeEntry.mightHaveTransparency;
-					}
-				}
 			}
 		}
 
@@ -252,16 +221,8 @@ public class ModelOverride
 		graphicsObjectIds = null;
 
 		if (colorOverrides != null)
-			for (var override : colorOverrides) {
+			for (var override : colorOverrides)
 				override.clearIds();
-				if (override.timeOfDay != null)
-					for (var timeEntry : override.timeOfDay)
-						timeEntry.clearIds();
-			}
-
-		if (timeOfDay != null)
-			for (var timeEntry : timeOfDay)
-				timeEntry.clearIds();
 	}
 
 	public ModelOverride copy() {
@@ -308,8 +269,6 @@ public class ModelOverride
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
-			time,
-			timeOfDay,
 			colors,
 			isDummy,
 			isGenerated,
@@ -318,8 +277,8 @@ public class ModelOverride
 			hasTransparency,
 			mightHaveTransparency,
 			modifiesVanillaTexture,
-			-1,
-			colorOverridesCacheable
+			// Runtime caching fields
+			-1
 		);
 	}
 
@@ -684,136 +643,24 @@ public class ModelOverride
 	}
 
 	@Nullable
-	public final ModelOverride testColorOverrides(int ahsl, boolean applyTimeOfDay, float nightLightFactor, ModelOverride parent) {
-		if (colorOverrides == null)
-			return null;
-
+	public final ModelOverride testColorOverrides(int ahsl) {
 		ModelOverride override = null;
-		if (colorOverridesCacheable) {
-			final long packedAhl = cachedColorOverrideAhsl;
-			if (packedAhl != -1 && ahsl == (int) packedAhl) {
-				override = colorOverrides[(int) (packedAhl >> 32)];
-			}
-		}
+		final long packedAhl = cachedColorOverrideAhsl;
+		if (packedAhl != -1 && ahsl == (int) packedAhl)
+			override = colorOverrides[(int) (packedAhl >> 32)];
 
 		if (override == null) {
 			final int len = colorOverrides.length;
 			for (int i = 0; i < len; ++i) {
 				final var inner = colorOverrides[i];
 				if (inner.ahslCondition.test(ahsl)) {
-					if (colorOverridesCacheable)
-						cachedColorOverrideAhsl = ahsl | (long) i << 32;
+					cachedColorOverrideAhsl = ahsl | (long) i << 32;
 					override = inner;
 					break;
 				}
 			}
 		}
 
-		if (override == null)
-			return null;
-
-		ModelOverride result = applyTimeOfDay ? override.resolveTimeOfDay(nightLightFactor) : override;
-		return result.inheritFromParent(parent);
-	}
-
-	private ModelOverride inheritFromParent(ModelOverride parent) {
-		if (parent == null)
-			return this;
-
-		ModelOverride merged = copy();
-		var defaults = NONE;
-		if (merged.uvType == defaults.uvType && parent.uvType != defaults.uvType)
-			merged.uvType = parent.uvType;
-		if (merged.uvScale == defaults.uvScale && parent.uvScale != defaults.uvScale)
-			merged.uvScale = parent.uvScale;
-		if (merged.uvOrientation == defaults.uvOrientation && parent.uvOrientation != defaults.uvOrientation)
-			merged.uvOrientation = parent.uvOrientation;
-		if (merged.uvOrientationX == defaults.uvOrientationX && parent.uvOrientationX != defaults.uvOrientationX)
-			merged.uvOrientationX = parent.uvOrientationX;
-		if (merged.uvOrientationY == defaults.uvOrientationY && parent.uvOrientationY != defaults.uvOrientationY)
-			merged.uvOrientationY = parent.uvOrientationY;
-		if (merged.uvOrientationZ == defaults.uvOrientationZ && parent.uvOrientationZ != defaults.uvOrientationZ)
-			merged.uvOrientationZ = parent.uvOrientationZ;
-		if (merged.undoVanillaShading == defaults.undoVanillaShading && parent.undoVanillaShading != defaults.undoVanillaShading)
-			merged.undoVanillaShading = parent.undoVanillaShading;
-		return merged;
-	}
-
-	public ModelOverride resolveTimeOfDay(float nightLightFactor) {
-		if (timeOfDay == null || timeOfDay.length == 0)
-			return this;
-
-		ModelOverride resolved = copy();
-		for (var entry : timeOfDay) {
-			if (entry.time != null && entry.time.containsNightFactor(nightLightFactor)) {
-				resolved.mergeTimeOfDayEntry(entry);
-				break;
-			}
-		}
-		return resolved;
-	}
-
-	public static boolean hasTimeOfDaySchedule(@Nullable ModelOverride override) {
-		if (override == null)
-			return false;
-		if (override.timeOfDay != null && override.timeOfDay.length > 0)
-			return true;
-		if (override.colorOverrides != null)
-			for (var colorOverride : override.colorOverrides)
-				if (colorOverride.timeOfDay != null && colorOverride.timeOfDay.length > 0)
-					return true;
-		return false;
-	}
-
-	private void mergeTimeOfDayEntry(ModelOverride entry) {
-		var defaults = NONE;
-		if (entry.baseMaterial != defaults.baseMaterial)
-			baseMaterial = entry.baseMaterial;
-		if (entry.textureMaterial != defaults.textureMaterial)
-			textureMaterial = entry.textureMaterial;
-		if (entry.uvType != defaults.uvType)
-			uvType = entry.uvType;
-		if (entry.uvScale != defaults.uvScale)
-			uvScale = entry.uvScale;
-		if (entry.uvOrientation != defaults.uvOrientation)
-			uvOrientation = entry.uvOrientation;
-		if (entry.uvOrientationX != defaults.uvOrientationX)
-			uvOrientationX = entry.uvOrientationX;
-		if (entry.uvOrientationY != defaults.uvOrientationY)
-			uvOrientationY = entry.uvOrientationY;
-		if (entry.uvOrientationZ != defaults.uvOrientationZ)
-			uvOrientationZ = entry.uvOrientationZ;
-		if (entry.rotate != defaults.rotate)
-			rotate = entry.rotate;
-		if (entry.hide != defaults.hide)
-			hide = entry.hide;
-		if (entry.retainVanillaUvs != defaults.retainVanillaUvs)
-			retainVanillaUvs = entry.retainVanillaUvs;
-		if (entry.flatNormals != defaults.flatNormals)
-			flatNormals = entry.flatNormals;
-		if (entry.upwardsNormals != defaults.upwardsNormals)
-			upwardsNormals = entry.upwardsNormals;
-		if (entry.castShadows != defaults.castShadows)
-			castShadows = entry.castShadows;
-		if (entry.receiveShadows != defaults.receiveShadows)
-			receiveShadows = entry.receiveShadows;
-		if (entry.terrainVertexSnap != defaults.terrainVertexSnap)
-			terrainVertexSnap = entry.terrainVertexSnap;
-		if (entry.terrainVertexSnapThreshold != defaults.terrainVertexSnapThreshold)
-			terrainVertexSnapThreshold = entry.terrainVertexSnapThreshold;
-		if (entry.undoVanillaShading != defaults.undoVanillaShading)
-			undoVanillaShading = entry.undoVanillaShading;
-		if (entry.shadowOpacityThreshold != defaults.shadowOpacityThreshold)
-			shadowOpacityThreshold = entry.shadowOpacityThreshold;
-		if (entry.windDisplacementMode != defaults.windDisplacementMode)
-			windDisplacementMode = entry.windDisplacementMode;
-		if (entry.windDisplacementModifier != defaults.windDisplacementModifier)
-			windDisplacementModifier = entry.windDisplacementModifier;
-		if (entry.invertDisplacementStrength != defaults.invertDisplacementStrength)
-			invertDisplacementStrength = entry.invertDisplacementStrength;
-		if (entry.depthBias != defaults.depthBias)
-			depthBias = entry.depthBias;
-		if (entry.disablePrioritySorting != defaults.disablePrioritySorting)
-			disablePrioritySorting = entry.disablePrioritySorting;
+		return override;
 	}
 }

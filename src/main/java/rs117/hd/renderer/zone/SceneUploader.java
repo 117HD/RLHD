@@ -1532,13 +1532,7 @@ public class SceneUploader implements AutoCloseable {
 				}
 			} else if (modelOverride.colorOverrides != null) {
 				final int ahsl = (0xFF - transparency) << 16 | color1;
-				final boolean dayNight = plugin.isDayNightCycleActive();
-				final var override = modelOverride.testColorOverrides(
-					ahsl,
-					dayNight,
-					dayNight ? plugin.getNightLightFactor() : 0f,
-					modelOverride
-				);
+				final var override = modelOverride.testColorOverrides(ahsl);
 				if (override != null) {
 					faceOverride = override;
 					material = faceOverride.baseMaterial;
@@ -1906,13 +1900,7 @@ public class SceneUploader implements AutoCloseable {
 				}
 			} else if (modelOverride.colorOverrides != null) {
 				final int ahsl = (0xFF - transparency) << 16 | model.getFaceColors1()[f];
-				final boolean dayNight = plugin.isDayNightCycleActive();
-				final var override = modelOverride.testColorOverrides(
-					ahsl,
-					dayNight,
-					dayNight ? plugin.getNightLightFactor() : 0f,
-					modelOverride
-				);
+				final var override = modelOverride.testColorOverrides(ahsl);
 				if (override != null) {
 					faceOverride = override;
 					material = faceOverride.baseMaterial;
