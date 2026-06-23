@@ -192,8 +192,8 @@ void main() {
     float sunProximity = sunSideBlend * (1.0 - zenithBlend);
     float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * starVisibility;
     // Precompute starfield rotation (also needed for moon dark side sampling)
-    float rotY = elapsedTime * (2.0 * 3.14159265 / 2700.0);
-    float rotX = elapsedTime * (2.0 * 3.14159265 / 8100.0);
+    float rotY = elapsedTime * (2.0 * 3.14159265 / 3600.0);
+    float rotX = elapsedTime * (2.0 * 3.14159265 / 10800.0);
     float cosY = cos(rotY), sinY = sin(rotY);
     float cosX = cos(rotX), sinX = sin(rotX);
     if (nightSkyBlend > 0.001) {

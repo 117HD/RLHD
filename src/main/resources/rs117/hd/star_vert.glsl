@@ -50,8 +50,8 @@ void main() {
     // the inverse of the sky shader's two rotations (negate the angles).
     // aStarSpeed scales the rotation per layer so dim/distant stars drift slower
     // than bright/near ones, giving the sky a subtle parallax depth.
-    float rotY = -elapsedTime * (2.0 * 3.14159265 / 2700.0) * aStarSpeed;
-    float rotX = -elapsedTime * (2.0 * 3.14159265 / 8100.0) * aStarSpeed;
+    float rotY = -elapsedTime * (2.0 * 3.14159265 / 3600.0) * aStarSpeed;
+    float rotX = -elapsedTime * (2.0 * 3.14159265 / 10800.0) * aStarSpeed;
     float cosY = cos(rotY), sinY = sin(rotY);
     float cosX = cos(rotX), sinX = sin(rotX);
 
@@ -119,6 +119,6 @@ void main() {
     // consistent apparent size, plus a gentle brightness term so brighter stars
     // read a touch larger. Clamped to a few pixels minimum so faint stars stay
     // visible, and a modest maximum so the brightest stars don't read as blobs.
-    float sizePixels = aStarSize * viewportSize.y * 0.003 * (0.85 + 0.35 * vBrightness);
-    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 1.0, 5.0) : 0.0;
+    float sizePixels = aStarSize * viewportSize.y * 0.003 * (0.9 + 0.25 * vBrightness);
+    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 1.0, 4.0) : 0.0;
 }
