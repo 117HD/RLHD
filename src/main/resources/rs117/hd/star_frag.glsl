@@ -48,7 +48,7 @@ void main() {
     // that fades smoothly to zero at the rim spreads the star across enough pixels
     // that sub-pixel motion redistributes energy rather than toggling it, which
     // removes the flicker.
-    float falloff = exp(-d * d * 4.0); // smooth bell, ~0 by the sprite edge
+    float falloff = exp(-d * d * 2.0); // smooth bell, ~0 by the sprite edge (wider = softer)
     // Fade the very edge to exactly zero so the discard boundary isn't visible.
     falloff *= 1.0 - smoothstep(0.8, 1.0, d);
 
@@ -56,7 +56,7 @@ void main() {
     // do NOT gamma-correct here (that would crush these small values to nothing).
     // A brightness boost compensates for energy spread across the sprite vs. the
     // old crisp ~1px analytic star.
-    vec3 starColor = colorBlindnessCompensation(vColor) * vBrightness * falloff * 6.0;
+    vec3 starColor = colorBlindnessCompensation(vColor) * vBrightness * falloff * 4.0;
 
     // Additive blending (GL_ONE, GL_ONE); alpha carries falloff for AA at edges.
     FragColor = vec4(starColor, falloff);

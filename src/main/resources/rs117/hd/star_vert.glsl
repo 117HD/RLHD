@@ -115,7 +115,7 @@ void main() {
     vColor = aStarColor;
     // Compress the top end so the brightest stars don't read as harsh hotspots,
     // while leaving the dim/mid stars essentially untouched.
-    vBrightness = min(aStarBright, 0.7) * visibility;
+    vBrightness = min(aStarBright, 0.4) * visibility;
 
     // Point size in pixels. Scales with vertical resolution so stars keep a
     // consistent apparent size, plus a gentle brightness term so brighter stars
@@ -128,5 +128,5 @@ void main() {
     // under motion instead of toggling it. The maximum keeps the brightest stars
     // from reading as blobs.
     float sizePixels = aStarSize * viewportSize.y * 0.003 * (0.9 + 0.15 * vBrightness);
-    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 2, 4.0) : 0.0;
+    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 2, 3.5) : 0.0;
 }
