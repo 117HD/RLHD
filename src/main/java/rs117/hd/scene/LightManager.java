@@ -254,6 +254,7 @@ public class LightManager {
 			currentPlane = plane;
 			changedPlanes = true;
 			reloadObjectLights(sceneContext);
+			reloadWorldLights(sceneContext);
 		}
 
 		for (Light light : sceneContext.lights) {
@@ -896,6 +897,22 @@ public class LightManager {
 		}
 	}
 
+	private void reloadWorldLights(SceneContext sceneContext) {
+		sceneContext.lights.removeIf(light -> light.worldPoint != null);
+		for (Light light : WORLD_LIGHTS) {
+			if (sceneContext.sceneBounds.contains(light.worldPoint))
+				addWorldLight(sceneContext, light);
+		}
+		for (Light light : sceneContext.lights) {
+			if (light.worldPoint != null) {
+				light.fadeInDuration = 0;
+				light.hiddenTemporarily = false;
+				light.changedVisibilityAt = -1;
+				light.prevPlane = -1;
+			}
+		}
+	}
+
 	private void scanSceneObjectLights(SceneContext sceneContext) {
 		for (Tile[][] plane : sceneContext.scene.getExtendedTiles()) {
 			for (Tile[] column : plane) {
@@ -1255,6 +1272,7 @@ public class LightManager {
 				return;
 
 			var copy = new Light(light.def);
+			copy.worldPoint = light.worldPoint;
 			copy.plane = local[2];
 			copy.persistent = light.persistent;
 			copy.origin[0] = local[0] + LOCAL_HALF_TILE_SIZE;
