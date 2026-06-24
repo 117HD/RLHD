@@ -17156,436 +17156,41 @@
     "type": "STATIC"
   },
   {
-    "description": "ver sinhaza",
-    "worldX": 3656,
-    "worldY": 3227,
-    "plane": 0,
-    "height": 580,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
+    "description": "Ver Sinhaza Windows",
+    "offset": [ 0, 220, 100 ],
+    "radius": 400,
+    "strength": 20,
     "color": [
-      238.4492,
-      132.10184,
+      255,
+      50,
       0
     ],
     "type": "PULSE",
     "duration": 3200,
-    "range": 5
+    "visibleFromOtherPlanes": true,
+    "range": 5,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR"
+    ]
   },
   {
-    "description": "ver sinhaza",
-    "worldX": 3661,
-    "worldY": 3225,
-    "plane": 0,
-    "height": 580,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
+    "description": "Ver Sinhaza Door",
+    "offset": [ -65, 100, 20 ],
+    "radius": 400,
+    "strength": 15,
     "color": [
-      238.4492,
-      132.10184,
+      255,
+      50,
       0
     ],
     "type": "PULSE",
     "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3664,
-    "worldY": 3225,
-    "plane": 0,
-    "height": 580,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3660,
-    "worldY": 3234,
-    "plane": 0,
-    "height": 580,
-    "alignment": "SOUTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3665,
-    "worldY": 3234,
-    "plane": 0,
-    "height": 580,
-    "alignment": "SOUTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3664,
-    "worldY": 3213,
-    "plane": 0,
-    "height": 580,
-    "alignment": "SOUTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3661,
-    "worldY": 3213,
-    "plane": 0,
-    "height": 580,
-    "alignment": "SOUTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3669,
-    "worldY": 3211,
-    "plane": 0,
-    "height": 580,
-    "alignment": "WEST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3665,
-    "worldY": 3204,
-    "plane": 0,
-    "height": 580,
-    "alignment": "NORTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3660,
-    "worldY": 3204,
-    "plane": 0,
-    "height": 580,
-    "alignment": "NORTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3685,
-    "worldY": 3207,
-    "plane": 0,
-    "height": 580,
-    "alignment": "WEST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3678,
-    "worldY": 3215,
-    "plane": 0,
-    "height": 580,
-    "alignment": "WEST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3678,
-    "worldY": 3223,
-    "plane": 0,
-    "height": 580,
-    "alignment": "WEST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3684,
-    "worldY": 3231,
-    "plane": 0,
-    "height": 580,
-    "alignment": "EAST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3668,
-    "worldY": 3227,
-    "plane": 0,
-    "height": 580,
-    "alignment": "EAST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3656,
-    "worldY": 3211,
-    "plane": 0,
-    "height": 580,
-    "alignment": "EAST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3679,
-    "worldY": 3219,
-    "plane": 0,
-    "height": 920,
-    "alignment": "EAST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3687,
-    "worldY": 3222,
-    "plane": 0,
-    "height": 920,
-    "alignment": "SOUTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3687,
-    "worldY": 3216,
-    "plane": 0,
-    "height": 920,
-    "alignment": "NORTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3662,
-    "worldY": 3226,
-    "plane": 0,
-    "height": 500,
-    "alignment": "EAST",
-    "radius": 500,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3644,
-    "worldY": 3213,
-    "plane": 0,
-    "height": 540,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3640,
-    "worldY": 3203,
-    "plane": 0,
-    "height": 540,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3644,
-    "worldY": 3225,
-    "plane": 0,
-    "height": 540,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3640,
-    "worldY": 3235,
-    "plane": 0,
-    "height": 540,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
+    "visibleFromOtherPlanes": true,
+    "range": 5,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
+      "MYQ4_WINDOW"
+    ]
   },
   {
     "description": "Lithkren basement sunlight",
@@ -21541,13 +21146,8 @@
       "DWARF_KELDAGRIM_BIG_FIREPLACE",
       "TWOCATS_FIREPLACE_LIT",
       "TWOCATS_FIREPLACE_GOT_WOOD",
-      "MYQ3_GHETTO_FIREPLACE_BOTTOM",
-      "MYQ3_GHETTO_FIREPLACE_MIDDLE",
-      "MYQ3_GHETTO_FIREPLACE_TOP",
-      "MYQ3_GHETTO_FIREPLACE_TOP_NOOFFSET",
       "FENK_FIREPLACE",
       "QIP_DIGSITE_FIREPLACE",
-      "MYQ3_FIREPLACE_LOOSE_TILE",
       "MISTMYST_FIREPLACE_UNLIT",
       "MISTMYST_FIREPLACE_REVEALED",
       "MISTMYST_FIREPLACE_LIT",
