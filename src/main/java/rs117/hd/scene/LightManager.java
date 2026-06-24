@@ -53,6 +53,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.MoonBehavior;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.scene.lights.Alignment;
@@ -717,12 +718,49 @@ public class LightManager {
 
 		float defLuma = dot(light.def.color, SKY_LUMA_WEIGHTS);
 		float noonLuma = dot(sky.noonHorizonLinear, SKY_LUMA_WEIGHTS);
-		float horizonLuma = dot(sky.horizonLinear, SKY_LUMA_WEIGHTS);
 
-		System.arraycopy(sky.horizonLinear, 0, light.color, 0, 3);
+		float[] lightColor = Arrays.copyOf(sky.horizonLinear, 3);
 
+		double sunAltDeg = Math.toDegrees(TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes())[1]);
+
+		// At night, blend the dark sky horizon toward moonColor: reduces the blue cast
+		// and adds silver moonlight filtering through tunnel openings.
+		// moonStrengthFloor drives a minimum timeScale so deep-night lights are
+		// visibly lit by the moon even when brightnessMultiplier is near zero.
+		float moonStrengthFloor = 0;
+		if (sunAltDeg < 5) {
+			MoonBehavior moonBehavior = config.moonBehavior();
+			// ALWAYS_NIGHT freezes getModifiedDate at midnight on a fixed epoch, so getMoonDate
+			// returns a static date where the moon may be below the horizon. Use the same fixed
+			// position that FIXED_NIGHT uses so moonlight is always visible in both modes.
+			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
+			DaylightCycle effectiveCycle = forcedMode != null ? forcedMode : config.daylightCycle();
+			double moonAltDeg = (effectiveCycle == DaylightCycle.ALWAYS_NIGHT)
+				? Math.toDegrees(TimeOfDay.getFixedNightMoonAngles()[1])
+				: TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, config.cycleDurationMinutes(), moonBehavior);
+			float moonIllumFrac = TimeOfDay.getMoonIlluminationFraction(config.cycleDurationMinutes(), moonBehavior);
+			if (moonAltDeg > -5 && moonIllumFrac > 0.01f) {
+				float sunFade = (float) Math.max(0.0, Math.min(1.0, (5.0 - sunAltDeg) / 10.0));
+				float moonEl = (float) Math.min(1.0, Math.max(0.0, (moonAltDeg + 5.0) / 25.0));
+				float moonElSmooth = moonEl * moonEl * (3 - 2 * moonEl);
+				float moonBlend = moonIllumFrac * 0.25f * moonElSmooth * sunFade;
+				lightColor = mix(lightColor, environmentManager.currentMoonColor, moonBlend);
+				moonStrengthFloor = moonIllumFrac * 0.12f * moonElSmooth;
+			}
+		}
+
+		// Desaturate toward gray as the sun climbs — high sun produces whiter, more neutral light.
+		if (sunAltDeg > 0) {
+			float desat = smoothstep(0f, 90f, (float) sunAltDeg) * 0.75f;
+			float luma = dot(lightColor, SKY_LUMA_WEIGHTS);
+			for (int i = 0; i < 3; i++)
+				lightColor[i] = mix(lightColor[i], luma, desat);
+		}
+
+		System.arraycopy(lightColor, 0, light.color, 0, 3);
+		float horizonLuma = dot(lightColor, SKY_LUMA_WEIGHTS);
 		float peakScale = defLuma / max(noonLuma, 1e-4f);
-		float timeScale = min(horizonLuma / max(noonLuma, 1e-4f), 1f) * sky.brightnessMultiplier;
+		float timeScale = max(min(horizonLuma / max(noonLuma, 1e-4f), 1f) * sky.brightnessMultiplier, moonStrengthFloor);
 		light.strength *= peakScale * timeScale;
 	}
 
