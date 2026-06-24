@@ -21129,7 +21129,9 @@
       "VMQ4_CRYPT_ASSAULT_FIRE",
       "VMQ4_CRYPT_ENNIUS_EXIT",
       "VMQ4_CRYPT_ENNIUS_ITZLA_BLOCKAGE",
-      "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER"
+      "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER",
+      "CHOMPYBIRD_SPITROAST_EMPTY",
+      "BONES_IN_PASTE_FIRE"
     ]
   },
   {
@@ -28370,10 +28372,89 @@
   },
   {
     "description": "DEMONIC_PACTS_HOME_TELEPORT_START",
-    "height": 50,
-    "alignment": "CENTER",
-    "radius": 250,
-    "strength": 20,
+    "offset": [ 0, 50, 0 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_1",
+    "offset": [ -45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_2",
+    "offset": [ 45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_3",
+    "offset": [ -45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_4",
+    "offset": [ 45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -28393,8 +28474,88 @@
     "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE",
     "height": 50,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 20,
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_1",
+    "offset": [ -45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_2",
+    "offset": [ 45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_3",
+    "offset": [ -45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_4",
+    "offset": [ 45, 40, -40 ],
+    "radius": 100,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -28414,8 +28575,84 @@
     "description": "DEMONIC_PACTS_HOME_TELEPORT_END",
     "height": 50,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 20,
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_1",
+    "offset": [ 45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_2",
+    "offset": [ -45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_3",
+    "offset": [ -45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_4",
+    "offset": [ 45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -30597,11 +30834,12 @@
   {
     "description": "WARPED_SCEPTER_SPELL",
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 10,
+    "height": 10,
+    "radius": 180,
+    "strength": 50,
     "color": [
-      170,
-      20,
+      70,
+      10,
       255
     ],
     "type": "FLICKER",
@@ -35994,7 +36232,7 @@
   },
   {
     "description": "TOA_ORANGE_FLAME_PROJECTILE",
-    "radius": 600,
+    "radius": 375,
     "strength": 7,
     "color": [
       255,
@@ -36005,6 +36243,7 @@
     "duration": 600,
     "range": 3,
     "fadeInDuration": 0,
+    "fadeOutDuration": 350,
     "projectileIds": [
       "VORKATH_AREA_TRAVEL",
       "VORKATH_AREA_TRAVEL_SMALL"
@@ -36221,7 +36460,7 @@
     "description": "TOA_CRONDIS_MAGE_ORB",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 500,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -36231,6 +36470,7 @@
     "type": "FLICKER",
     "duration": 300,
     "range": 3,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "ZEBAK_MAGE_PROJANIM_SPLIT"
     ]
@@ -36451,7 +36691,7 @@
   },
   {
     "description": "TOA_WARDEN_P2_MAGE_SKULL_BASIC",
-    "radius": 500,
+    "radius": 350,
     "strength": 15,
     "color": [
       255,
@@ -36460,6 +36700,7 @@
     ],
     "type": "PULSE",
     "duration": 300,
+    "fadeOutDuration": 200,
     "range": 2,
     "projectileIds": [
       "FX_WARDENS_BOMB01"
@@ -36467,8 +36708,9 @@
   },
   {
     "description": "TOA_WARDEN_P2_OBELISK_LIGHTNING_BALL",
-    "radius": 500,
-    "strength": 50,
+    "radius": 350,
+    "height": 30,
+    "strength": 30,
     "color": [
       255,
       200,
@@ -36476,6 +36718,7 @@
     ],
     "type": "PULSE",
     "duration": 300,
+    "fadeOutDuration": 200,
     "range": 2,
     "projectileIds": [
       "FX_WARDENS_BOMB02"
@@ -43970,6 +44213,7 @@
       3
     ],
     "type": "FLICKER",
+    "despawnWithParent": true,
     "duration": 0,
     "range": 20,
     "npcIds": [ "VMQ4_METZLI_FIRE_WAVE" ]
@@ -44073,6 +44317,7 @@
     "radius": 275,
     "strength": 8,
     "fadeInDuration": 200,
+    "despawnWithParent": true,
     "color": [
       0,
       140,
@@ -44095,6 +44340,70 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "VFX_VMQ4_METZLI_RANGED_FIRE_PROJECTILE_ENRAGED_01"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Range Projectile",
+    "radius": 275,
+    "strength": 11,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_STANDARD_PROJECTILE_RANGE"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Magic Projectile",
+    "radius": 275,
+    "strength": 25,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_STANDARD_PROJECTILE_MAGIC"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Melee Projectile",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_STANDARD_PROJECTILE_MELEE"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Charge Beam Projectile",
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      255,
+      90,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_BEAM_ATTACK_HEAD_01"
     ]
   },
   {
@@ -45778,9 +46087,9 @@
   },
   {
     "description": "Piscatoris - Press Light",
-    "offset": [ 25, 120, 0 ],
+    "offset": [ 65, 120, 0 ],
     "radius": 200,
-    "strength": 5,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -45795,7 +46104,7 @@
   },
   {
     "description": "Piscatoris - Furnace",
-    "offset": [ 0, 60, 20 ],
+    "offset": [ 0, 70, 50 ],
     "radius": 200,
     "strength": 5,
     "color": [
@@ -47388,6 +47697,28 @@
     ]
   },
   {
+    "description": "LEAGUES_6_SOUL_HARVEST_ANIMATION",
+    "offset": [ 0, 225, -35 ],
+    "radius": 150,
+    "strength": 20,
+    "color": [
+      150,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "ignoreActorHiding": true,
+    "graphicsObjectIds": [
+      "LEAGUES_6_SOUL_HARVEST"
+    ]
+  },
+  {
     "description": "Dragon Slayer 2 - Robert the Strong Barrier 1",
     "offset": [ -54, 64, 0 ],
     "radius": 250,
@@ -47454,6 +47785,88 @@
     "objectIds": [
       "HOS_COOKING_RANGE_02",
       "DS2_GUILD_COOKING_RANGE"
+    ]
+  },
+  {
+    "description": "Zulrah - Pillar Torch East - Wide",
+    "offset": [ 70, 140, -80 ],
+    "worldX": 2271,
+    "worldY": 3071,
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Pillar Torch West - Wide",
+    "offset": [ -70, 140, -80 ],
+    "worldX": 2265,
+    "worldY": 3071,
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Pillar Torch East - Narrow",
+    "offset": [ 30, 180, -30 ],
+    "worldX": 2271,
+    "worldY": 3071,
+    "radius": 120,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Pillar Torch West - Narrow",
+    "offset": [ -30, 180, -30 ],
+    "worldX": 2265,
+    "worldY": 3071,
+    "radius": 120,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Fire Attack",
+    "offset": [ 0, 20, 0 ],
+    "radius": 265,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 200,
+    "projectileIds": [
+      "SNAKEBOSS_FIREBALL"
     ]
   }
 ]

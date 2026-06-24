@@ -10,6 +10,8 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
@@ -26,11 +28,14 @@ import static rs117.hd.utils.ExpressionParser.parseExpression;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
+@Setter
+@Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ModelOverride
 {
 	public static final ModelOverride NONE = new ModelOverride(true);
+	public static final ModelOverride UNLIT = new ModelOverride(true).baseMaterial(Material.UNLIT).undoVanillaShading(false);
 
 	private static final Set<Integer> EMPTY = new HashSet<>();
 
@@ -218,6 +223,18 @@ public class ModelOverride
 
 		if (!castShadows && shadowOpacityThreshold == 0)
 			shadowOpacityThreshold = 1;
+	}
+
+	public void clearIds(){
+		areas = null;
+		npcIds = null;
+		objectIds = null;
+		projectileIds = null;
+		graphicsObjectIds = null;
+
+		if (colorOverrides != null)
+			for (var override : colorOverrides)
+				override.clearIds();
 	}
 
 	public ModelOverride copy() {

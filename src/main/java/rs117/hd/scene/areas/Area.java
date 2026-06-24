@@ -4,8 +4,13 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Collections;
+import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.utils.Props;
 
+import static rs117.hd.utils.collections.Util.quickSort;
+
+@Slf4j
 public class Area {
 	public static final Area NONE = new Area("NONE", 0, 0, 0, 0);
 	public static final Area ALL = new Area("ALL", Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -17,15 +22,21 @@ public class Area {
 
 	public String[] areas;
 	public int[] regions;
+
 	@JsonAdapter(RegionBox.Adapter.class)
 	public RegionBox[] regionBoxes;
+
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	@SerializedName("aabbs")
 	public AABB[] rawAabbs;
+
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] unhideAreas = {};
 
 	public transient AABB[] aabbs;
+	public transient AABB areaBounds;
+
+	private transient AABB[] sortedAabbs;
 	private transient boolean normalized;
 
 	public Area(String name) {
@@ -42,41 +53,169 @@ public class Area {
 			return;
 		normalized = true;
 
-		ArrayList<AABB> aabbs = new ArrayList<>();
+		ArrayList<AABB> list = new ArrayList<>();
+
 		if (rawAabbs != null)
-			Collections.addAll(aabbs, rawAabbs);
+			Collections.addAll(list, rawAabbs);
+
 		if (regions != null)
 			for (int regionId : regions)
-				aabbs.add(AABB.fromRegionId(regionId));
+				list.add(AABB.fromRegionId(regionId));
+
 		if (regionBoxes != null)
 			for (var box : regionBoxes)
-				aabbs.add(box.toAabb());
+				list.add(box.toAabb());
+
 		if (areas != null) {
-			for (String area : areas) {
+			for (String areaName : areas) {
 				for (Area other : AreaManager.AREAS) {
-					if (area.equals(other.name)) {
+					if (areaName.equals(other.name)) {
 						other.normalize();
-						Collections.addAll(aabbs, other.aabbs);
+						Collections.addAll(list, other.aabbs);
 						break;
 					}
 				}
 			}
 		}
 
-		this.aabbs = aabbs.toArray(AABB[]::new);
+		this.aabbs = list.toArray(AABB[]::new);
+
+		// Compute bounds
+		if (aabbs.length > 0) {
+			int minX = Integer.MAX_VALUE;
+			int minY = Integer.MAX_VALUE;
+			int minZ = Integer.MAX_VALUE;
+
+			int maxX = Integer.MIN_VALUE;
+			int maxY = Integer.MIN_VALUE;
+			int maxZ = Integer.MIN_VALUE;
+
+			for (AABB aabb : aabbs) {
+				minX = Math.min(minX, aabb.minX);
+				minY = Math.min(minY, aabb.minY);
+				minZ = Math.min(minZ, aabb.minZ);
+				maxX = Math.max(maxX, aabb.maxX);
+				maxY = Math.max(maxY, aabb.maxY);
+				maxZ = Math.max(maxZ, aabb.maxZ);
+			}
+
+			areaBounds = new AABB(minX, minY, minZ, maxX, maxY, maxZ);
+
+			if (aabbs.length > 4) {
+				sortedAabbs = new AABB[4 * aabbs.length];
+
+				buildCorner(0, areaBounds.minX, areaBounds.minY);
+				buildCorner(1, areaBounds.minX, areaBounds.maxY);
+				buildCorner(2, areaBounds.maxX, areaBounds.minY);
+				buildCorner(3, areaBounds.maxX, areaBounds.maxY);
+			}
+		}
 
 		if (unhideAreas == null)
 			unhideAreas = new AABB[0];
 	}
 
+	private void buildCorner(int c, int cx, int cy) {
+		final int left = c * aabbs.length;
+		final int right = left + aabbs.length;
+
+		// Copy AABS to destination ready for sorting
+		System.arraycopy(aabbs, 0, sortedAabbs, left, right - left);
+
+		// Sort AABS in place for this corner
+		quickSort(sortedAabbs, left, right - 1, (a1, a2) -> {
+			final float s1 = score(a1, cx, cy);
+			final float s2 = score(a2, cx, cy);
+			return Float.compare(s1, s2);
+		});
+
+		if (Props.DEVELOPMENT)
+			validateCorner(c, cx, cy);
+	}
+
+	private void validateCorner(int c, int cx, int cy) {
+		final int left = c * aabbs.length;
+		final int right = left + aabbs.length;
+
+		for (int i = left; i < right - 1; i++) {
+			final float current = score(sortedAabbs[i], cx, cy);
+			final float next = score(sortedAabbs[i + 1], cx, cy);
+
+			if (current > next) {
+				log.error("Area {}: Corner {} not sorted at index {}: {} > {}", name, c, i - left, current, next);
+				return;
+			}
+		}
+	}
+
+	private static float score(AABB aabb, int cx, int cy) {
+		float distance = aabb.distanceToPoint(cx, cy);
+
+		int w = aabb.maxX - aabb.minX;
+		int h = aabb.maxY - aabb.minY;
+		int area = w * h;
+
+		final float SIZE_WEIGHT = 1e-6F;
+		return distance - (area * SIZE_WEIGHT);
+	}
+
+	private int getClosestCorner(int x, int y) {
+		int dx = x - areaBounds.minX;
+		int dy = y - areaBounds.minY;
+		int best = dx * dx + dy * dy;
+		int corner = 0;
+
+		dx = x - areaBounds.minX;
+		dy = y - areaBounds.maxY;
+		int d = dx * dx + dy * dy;
+		if (d < best) {
+			best = d;
+			corner = 1;
+		}
+
+		dx = x - areaBounds.maxX;
+		dy = y - areaBounds.minY;
+		d = dx * dx + dy * dy;
+		if (d < best) {
+			best = d;
+			corner = 2;
+		}
+
+		dx = x - areaBounds.maxX;
+		dy = y - areaBounds.maxY;
+		d = dx * dx + dy * dy;
+		if (d < best)
+			corner = 3;
+
+		return corner;
+	}
+
 	public boolean containsPoint(boolean includeUnhiding, int... worldPoint) {
-		for (var aabb : aabbs)
-			if (aabb.contains(worldPoint))
-				return true;
+		if (areaBounds != null && !areaBounds.contains(worldPoint))
+			return false;
+
+		final int length = aabbs.length;
+		if (sortedAabbs != null && areaBounds != null) {
+			final int corner = getClosestCorner(worldPoint[0], worldPoint[1]);
+			final int start = corner * length;
+			final int end = start + length;
+
+			for (int i = start; i < end; i++) {
+				if (sortedAabbs[i].contains(worldPoint))
+					return true;
+			}
+		} else {
+			for (int i = 0; i < length; i++) {
+				if (aabbs[i].contains(worldPoint))
+					return true;
+			}
+		}
+
 		if (includeUnhiding)
-			for (var aabb : unhideAreas)
+			for (AABB aabb : unhideAreas)
 				if (aabb.contains(worldPoint))
 					return true;
+
 		return false;
 	}
 
@@ -88,10 +227,12 @@ public class Area {
 		for (AABB aabb : aabbs)
 			if (aabb.intersects(minX, minY, maxX, maxY))
 				return true;
+
 		if (includeUnhiding)
-			for (var aabb : unhideAreas)
+			for (AABB aabb : unhideAreas)
 				if (aabb.intersects(minX, minY, maxX, maxY))
 					return true;
+
 		return false;
 	}
 
