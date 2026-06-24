@@ -243,9 +243,9 @@ void main() {
         moonDayAlpha *= sunProximityFade;
 
         if (moonDot > 0.0 && moonDayAlpha > 0.001) {
-            // Moon angular radius: ~3.6 degrees diameter = 1.8 degrees half-angle
-            // cos(1.8 deg) ≈ 0.99951 — about 1.5x larger than realistic for visual impact
-            float moonAngularRadius = 0.99951;
+            // Moon angular radius: ~4.2 degrees diameter = 2.1 degrees half-angle
+            // cos(2.1 deg) ≈ 0.99933 — enlarged beyond realistic for visual impact
+            float moonAngularRadius = 0.99933;
             float edgeWidth = fwidth(moonDot) * 1.5;
 
             // Sharp disk with anti-aliased edge
