@@ -17170,7 +17170,8 @@
     "visibleFromOtherPlanes": true,
     "range": 5,
     "objectIds": [
-      "TOB_SURFACE_CASTLE_BALCONY_DOOR"
+      "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
+      "MYQ4_WINDOW"
     ]
   },
   {
@@ -17188,8 +17189,7 @@
     "visibleFromOtherPlanes": true,
     "range": 5,
     "objectIds": [
-      "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
-      "MYQ4_WINDOW"
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR"
     ]
   },
   {
