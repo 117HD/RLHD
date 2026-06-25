@@ -25759,8 +25759,6 @@
     "description": "Ver Sinhaza - Metallic - Stone - Bank",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvOrientation": 256,
-    "uvScale": 0.6,
     "objectIds": [
       "TOB_SURFACE_BANKBOOTH",
       "TOB_SURFACE_BANKBOOTH_CLOSED",
@@ -25768,8 +25766,20 @@
     ],
     "colorOverrides": [
       {
-        "baseMaterial": "BLANK_GLOSS",
+        "baseMaterial": "GRAY_45",
         "colors": "a < 255"
+      },
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "s == 3 && l == 22 || s == 4 && l == 20 || s == 3 && l == 8 || s == 4 && l == 7",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.5
+      },
+      {
+        "baseMaterial": "SMOOTH_STONE",
+        "colors": "s > 2",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.6
       }
     ]
   },
