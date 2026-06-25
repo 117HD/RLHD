@@ -27,6 +27,7 @@
 #include <uniforms/global.glsl>
 #include <uniforms/ui.glsl>
 
+uniform sampler2D sceneTexture;
 uniform sampler2D uiTexture;
 
 #include <scaling/bicubic.glsl>
@@ -54,23 +55,34 @@ vec4 alphaBlend(vec4 src, vec4 dst) {
 }
 
 void main() {
-    vec4 c;
+    vec4 uiColor;
     #if UI_SCALING_MODE == UI_SCALING_MODE_MITCHELL || UI_SCALING_MODE == UI_SCALING_MODE_CATROM
-        c = textureCubic(uiTexture, fUv);
+        uiColor = textureCubic(uiTexture, fUv);
     #elif UI_SCALING_MODE == UI_SCALING_MODE_XBR
-        c = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
+        uiColor = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
     #elif UI_SCALING_MODE == UI_SCALING_MODE_HYBRID
-        c = textureHybrid(uiTexture, fUv);
-    #else // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
-        c = texture(uiTexture, fUv);
+        uiColor = textureHybrid(uiTexture, fUv);
+    #else
+        uiColor = texture(uiTexture, fUv);
     #endif
 
-    c = alphaBlend(c, alphaOverlay);
-    c.rgb = colorBlindnessCompensation(c.rgb);
+    vec2 scenePixel = vec2(fUv.x, 1.0 - fUv.y) * vec2(targetDimensions);
+    vec3 sceneColor = vec3(0.0);
+    if (contains(scenePixel, sceneViewport.xy, sceneViewport.xy + sceneViewport.zw)) {
+        vec2 sceneUV = saturate((scenePixel - sceneViewport.xy) / vec2(sceneViewport.zw));
+        sceneColor = texture(sceneTexture, sceneUV).rgb;
 
     #if WINDOWS_HDR_CORRECTION
-        c.rgb = windowsHdrCorrection(c.rgb);
+        sceneColor = windowsHdrCorrection(sceneColor);
+    #endif
+    }
+
+    uiColor = alphaBlend(uiColor, alphaOverlay);
+    uiColor.rgb = colorBlindnessCompensation(uiColor.rgb);
+
+    #if WINDOWS_HDR_CORRECTION
+        uiColor.rgb = windowsHdrCorrection(uiColor.rgb);
     #endif
 
-    FragColor = c;
+    FragColor = vec4(mix(sceneColor, uiColor.rgb, uiColor.a), 1.0);
 }
