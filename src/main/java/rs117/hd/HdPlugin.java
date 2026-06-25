@@ -374,7 +374,7 @@ public class HdPlugin extends Plugin {
 	private int rboSceneColor;
 	private int texSceneColor;
 	private int rboSceneDepth;
-	public int fboSceneResolve;
+	private int fboSceneResolve;
 
 	public int shadowMapResolution;
 	public int fboShadowMap;
@@ -1401,22 +1401,6 @@ public class HdPlugin extends Plugin {
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
-	private void resolveSceneFbo() {
-		if(fboSceneResolve == 0)
-			return;
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, fboScene);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneResolve);
-		glBlitFramebuffer(
-			0, 0, sceneResolution[0], sceneResolution[1],
-			0, 0, sceneResolution[0], sceneResolution[1],
-			GL_COLOR_BUFFER_BIT, GL_NEAREST
-		);
-
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-	}
-
 	private void destroySceneFbo() {
 		sceneViewport = null;
 
@@ -1580,9 +1564,20 @@ public class HdPlugin extends Plugin {
 		if (client.getGameState().getState() < GameState.LOADING.getState())
 			overlayColor = 0;
 
-		resolveSceneFbo();
-
 		frameTimer.begin(Timer.RENDER_UI);
+
+		if(fboSceneResolve != 0) {
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, fboScene);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneResolve);
+			glBlitFramebuffer(
+				0, 0, sceneResolution[0], sceneResolution[1],
+				0, 0, sceneResolution[0], sceneResolution[1],
+				GL_COLOR_BUFFER_BIT, GL_NEAREST
+			);
+
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 		glViewport(0, 0, actualUiResolution[0], actualUiResolution[1]);
