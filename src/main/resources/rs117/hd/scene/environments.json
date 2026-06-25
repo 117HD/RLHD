@@ -598,7 +598,6 @@
     "fogColor": "#1e314b",
     "fogDepth": 40,
     "groundFogStart": -150,
-    "groundFogStart": -150,
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
     "starVisibility": 0.25,
