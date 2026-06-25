@@ -3683,6 +3683,19 @@
     ]
   },
   {
+    "name": "VER_SINHAZA_BALCONY",
+    "aabbs": [
+      [ 3660, 3211, 3665, 3214, 1 ],
+      [ 3660, 3224, 3665, 3227, 1 ]
+    ]
+  },
+  {
+    "name": "VER_SINHAZA_BLOOD_POOL",
+    "aabbs": [
+      [ 3660, 3224, 3665, 3227 ]
+    ]
+  },
+  {
     "name": "VER_SINHAZA",
     "areas": [
       "VER_SINHAZA_CUTSCENE"
