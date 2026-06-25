@@ -81,18 +81,16 @@ void main() {
             vec2 sceneUV = saturate((scenePixel - sceneViewport.xy) / sceneViewport.zw);
             sceneColor = texture(sceneTexture, sceneUV).rgb;
         #endif
-
-        #if WINDOWS_HDR_CORRECTION
-            sceneColor = windowsHdrCorrection(sceneColor);
-        #endif
     }
 
     uiColor = alphaBlend(uiColor, alphaOverlay);
     uiColor.rgb = colorBlindnessCompensation(uiColor.rgb);
 
+    vec3 outputColor = mix(sceneColor, uiColor.rgb, uiColor.a);
+
     #if WINDOWS_HDR_CORRECTION
-        uiColor.rgb = windowsHdrCorrection(uiColor.rgb);
+        outputColor = windowsHdrCorrection(outputColor);
     #endif
 
-    FragColor = vec4(mix(sceneColor, uiColor.rgb, uiColor.a), 1.0);
+    FragColor = vec4(outputColor, 1.0);
 }
