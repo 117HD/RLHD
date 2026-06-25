@@ -77,6 +77,7 @@ import org.lwjgl.Version;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
+import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.SeasonalHemisphere;
@@ -911,6 +912,7 @@ public class HdPlugin extends Plugin {
 			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
+			.define("FXAA_ENABLED", config.antiAliasingMode() == AntiAliasingMode.FXAA)
 			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.shadowTransparency())
 			.define("SHADOW_FILTERING", config.shadowFiltering())
@@ -1857,6 +1859,7 @@ public class HdPlugin extends Plugin {
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
+								recompilePrograms = true;
 							case KEY_SCENE_RESOLUTION_SCALE:
 								recreateSceneFbo = true;
 								break;

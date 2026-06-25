@@ -34,6 +34,7 @@ uniform sampler2D uiTexture;
 #include <utils/constants.glsl>
 #include <utils/color_blindness.glsl>
 #include <utils/misc.glsl>
+#include <utils/fxaa.glsl>
 
 #if UI_SCALING_MODE == UI_SCALING_MODE_XBR
     #include <scaling/xbr_lv2_frag.glsl>
@@ -44,6 +45,10 @@ uniform sampler2D uiTexture;
 #endif
 
 in vec2 fUv;
+
+#if FXAA_ENABLED
+    in FXAACoords sceneFxaaCoords;
+#endif
 
 out vec4 FragColor;
 
@@ -69,12 +74,17 @@ void main() {
     vec2 scenePixel = vec2(fUv.x, 1.0 - fUv.y) * vec2(targetDimensions);
     vec3 sceneColor = vec3(0.0);
     if (contains(scenePixel, sceneViewport.xy, sceneViewport.xy + sceneViewport.zw)) {
-        vec2 sceneUV = saturate((scenePixel - sceneViewport.xy) / vec2(sceneViewport.zw));
-        sceneColor = texture(sceneTexture, sceneUV).rgb;
+        #if FXAA_ENABLED
+            vec2 sceneFragCoord = scenePixel - sceneViewport.xy;
+            sceneColor = fxaa(sceneTexture, sceneFragCoord, sceneViewport.zw, sceneFxaaCoords).rgb;
+        #else
+            vec2 sceneUV = saturate((scenePixel - sceneViewport.xy) / sceneViewport.zw);
+            sceneColor = texture(sceneTexture, sceneUV).rgb;
+        #endif
 
-    #if WINDOWS_HDR_CORRECTION
-        sceneColor = windowsHdrCorrection(sceneColor);
-    #endif
+        #if WINDOWS_HDR_CORRECTION
+            sceneColor = windowsHdrCorrection(sceneColor);
+        #endif
     }
 
     uiColor = alphaBlend(uiColor, alphaOverlay);
