@@ -37,9 +37,6 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-// Enable GL_ARB_gpu_shader5 for textureGather support
-#extension GL_ARB_gpu_shader5 : enable
-
 #if GL_ARB_gpu_shader5
     #define FXAA_TEX_GATHER 1
 #endif

@@ -24,6 +24,8 @@
  */
 #version 330
 
+#extension GL_ARB_gpu_shader5 : enable
+
 #include <uniforms/global.glsl>
 #include <uniforms/ui.glsl>
 
