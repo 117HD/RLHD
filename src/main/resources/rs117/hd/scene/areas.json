@@ -3693,6 +3693,14 @@
     ]
   },
   {
+    "description": "This is used to brighten north facing windows and doors",
+    "name": "VER_SINHAZA_BRIGHTEN_WINDOWS_DOORS",
+    "aabbs": [
+      [ 3659, 3201, 3673, 3214 ],
+      [ 3668, 3224, 3672, 3232 ]
+    ]
+  },
+  {
     "name": "VER_SINHAZA",
     "areas": [
       "VER_SINHAZA_CUTSCENE"

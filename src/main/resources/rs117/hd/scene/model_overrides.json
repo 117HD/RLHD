@@ -25807,13 +25807,35 @@
       "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
       "MYQ4_OBSTACLE_VENT",
       "MYQ4_OBSTACLE_VENT_BROKEN",
-      "MYQ4_WINDOW"
+      "MYQ4_WINDOW",
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR",
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR_MIRROR"
     ],
     "colorOverrides": [
       {
         "description": "GLASS",
         "colors": "s >= 5",
-        "baseMaterial": "BLANK_GLOSS"
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Walls with Window or Open Door - Brighten North/East Facing",
+    "baseMaterial": "STONE_NORMALED",
+    "areas": [ "VER_SINHAZA_BRIGHTEN_WINDOWS_DOORS" ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR",
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "GLASS",
+        "colors": "s >= 5",
+        "baseMaterial": "GRAY_150"
       }
     ]
   },
