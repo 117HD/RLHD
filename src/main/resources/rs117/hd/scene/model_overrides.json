@@ -3271,7 +3271,10 @@
       "GRASS_LIGHT_2",
       "GRASS_LIGHT_3",
       "GRASS_LIGHT_4",
-      "GRASS_2"
+      "GRASS_2",
+      "SHAGGY_GRASS1",
+      "SHAGGY_GRASS2",
+      "SHAGGY_GRASS3"
     ]
   },
   {
@@ -20706,6 +20709,7 @@
       }
     ],
     "objectIds": [
+      "GNOME_LAMP",
       "GNOME_LAMP2"
     ]
   },

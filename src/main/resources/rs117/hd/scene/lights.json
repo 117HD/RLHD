@@ -37432,6 +37432,7 @@
     "nightMultiplier": 2.5,
     "range": 10,
     "objectIds": [
+      "GNOME_LAMP",
       "GNOME_LAMP2"
     ]
   },
