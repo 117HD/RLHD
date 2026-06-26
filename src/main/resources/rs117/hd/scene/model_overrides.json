@@ -3135,9 +3135,12 @@
   },
   {
     "description": "Tlati Rainforest Grass",
-    "baseMaterial": "GRAY_45",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "BOX",
+    "uvOrientation": 512,
     "upwardsNormals": true,
     "windDisplacementMode": "OBJECT",
+    "inheritTileColorType": "UNDERLAY",
     "castShadows": false,
     "objectIds": [
       "GEMSTONE_GRASS_TALL1",
@@ -3151,6 +3154,27 @@
       "TLATI_GRASS_VERYLONG_1",
       "TLATI_GRASS_VERYLONG_2",
       "TLATI_GRASS_VERYLONG_3"
+    ]
+  },
+  {
+    "description": "Hunter Grass with Vines, TODO: Grass passable until proper fix via inheritTileColorType",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TLATI_VINE01_END01_DIAG01",
+      "TLATI_VINE01_DIAG03",
+      "TLATI_VINE01_DIAG02",
+      "TLATI_VINE01_END01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "s == 3",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "baseMaterial": "GRAY_65",
+        "windDisplacementMode": "OBJECT"
+      }
     ]
   },
   {
