@@ -38293,7 +38293,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "POTTERYOVEN"
+      "POTTERYOVEN",
+      "VIKING_POTTERYOVEN"
     ]
   },
   {
@@ -47515,6 +47516,7 @@
     "radius": 300,
     "strength": 17,
     "fadeOutDuration": 200,
+    "nightMultiplier": 2.5,
     "color": [
       252,
       148,
