@@ -2650,11 +2650,6 @@
       "FLOWERBED_YELLOW",
       "RAREFLOWER_YELLOW",
       "RAREFLOWERS_YELLOW",
-      "BULLRUSHES",
-      "BULLRUSHES2",
-      "BULLRUSHES3",
-      "BULLRUSHES4",
-      "BULLRUSHES5",
       "NETTLES",
       "NETTLES1",
       "NETTLES2",
@@ -2698,6 +2693,28 @@
       "LUNAR_LITTLE_FLOWERS_1",
       "LUNAR_LITTLE_FLOWERS_2",
       "LUNAR_LITTLE_FLOWERS_3"
+    ]
+  },
+  {
+    "description": "Bullrushes",
+    "baseMaterial": "GRAY_90",
+    "undoVanillaShading": true,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "BULLRUSHES",
+      "BULLRUSHES2",
+      "BULLRUSHES3",
+      "BULLRUSHES4",
+      "BULLRUSHES5"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRASS_BLADE_85",
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
+        "castShadows": false
+      }
     ]
   },
   {
@@ -2873,9 +2890,6 @@
       "GRASS_1_SWAMP",
       "GRASS_2_SWAMP",
       "GRASS_3_SWAMP",
-      "REGICIDE_GRASS1",
-      "REGICIDE_GRASS2",
-      "REGICIDE_GRASS3",
       "DEATH_GRASS_1",
       "DEATH_GRASS_2",
       "DEATH_GRASS_3",
@@ -3014,7 +3028,10 @@
       "PMOON_SHORT_GRASS_3",
       "NIGHTMARE_GARDEN_GRASS_LONG",
       "NIGHTMARE_GARDEN_GRASS_SPARSE",
-      "NIGHTMARE_GARDEN_GRASS_SHORT"
+      "NIGHTMARE_GARDEN_GRASS_SHORT",
+      "LONG_GRASS_4_WALL_EDGE",
+      "LONG_GRASS_WALL_EDGE_2",
+      "LONG_GRASS_2_WALL_CORNER"
     ]
   },
   {
@@ -3031,7 +3048,10 @@
     "objectIds": [
       "REGICIDE_GRASS1_RIVER",
       "REGICIDE_GRASS2_RIVER",
-      "REGICIDE_GRASS2L_RIVER"
+      "REGICIDE_GRASS2L_RIVER",
+      "REGICIDE_GRASS1",
+      "REGICIDE_GRASS2",
+      "REGICIDE_GRASS3"
     ]
   },
   {
@@ -4217,7 +4237,10 @@
       "AVIUM_GRASS_TALL2_DRY",
       "AVIUM_GRASS_TALL3_DRY",
       "AVIUM_GRASS_TALL4_DRY",
-      "POH_GRASS"
+      "POH_GRASS",
+      "LONG_GRASS_4_WALL_EDGE",
+      "LONG_GRASS_WALL_EDGE_2",
+      "LONG_GRASS_2_WALL_CORNER"
     ]
   },
   {
