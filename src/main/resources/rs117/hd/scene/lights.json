@@ -39014,12 +39014,13 @@
   },
   {
     "description": "FIRE_OF_DEHUMIDIFICATION",
-    "height": 300,
-    "radius": 750,
-    "strength": 4,
+    "height": 270,
+    "radius": 600,
+    "strength": 15,
     "color": [ 219, 252, 3 ],
     "type": "FLICKER",
     "range": 10,
+    "nightMultiplier": 2,
     "objectIds": [
       "MY2ARM_FIRE_DEHUMIDIFICATION"
     ]
