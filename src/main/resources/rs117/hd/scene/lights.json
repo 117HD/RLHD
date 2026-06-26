@@ -37731,6 +37731,7 @@
     "alignment": "CENTER",
     "radius": 330,
     "strength": 5,
+    "nightMultiplier": 2,
     "color": [
       252,
       168,
