@@ -1757,6 +1757,14 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
+    "name": "Brimhaven Agility Arena - Clamp Dirt to Remove Baked in Shading",
+    "area": "BRIMHAVEN_AGILITY_ARENA_DIRT_CLAMP",
+    "overlayIds": [ 80 ],
+    "groundMaterial": "VARIED_DIRT",
+    "minLightness": 28,
+    "maxLightness": 40
+  },
+  {
     "name": "TUTORIAL_ISLAND_KITCHEN_TILE_1",
     "area": "TUTORIAL_ISLAND_KITCHEN",
     "overlayIds": [

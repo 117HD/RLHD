@@ -2034,8 +2034,31 @@
   },
   {
     "name": "BRIMHAVEN_AGILITY_ARENA",
-    "regions": [
-      11157
+    "hideOtherAreas": true,
+    "aabbs": [
+      [ 2812, 9536, 2818, 9604 ],
+      [ 2812, 9605, 2815, 9612 ],
+      [ 2736, 9536, 2811, 9612 ],
+      [ 2811, 9527, 2815, 9535 ],
+      [ 2742, 9524, 2810, 9535 ],
+      [ 2740, 9527, 2741, 9535 ],
+      [ 2738, 9531, 2739, 9535 ],
+      [ 2736, 9534, 2737, 9535 ]
+    ]
+  },
+  {
+    "name": "BRIMHAVEN_AGILITY_ARENA_LIGHTEN_HANDHOLDS",
+    "description": "For lightening some handholds that are too dark in the Brimhaven Agility Arena",
+    "aabbs": [
+      [ 2759, 9559, 2759, 9566 ],
+      [ 2785, 9544, 2792, 9544 ]
+    ]
+  },
+  {
+    "name": "BRIMHAVEN_AGILITY_ARENA_DIRT_CLAMP",
+    "description": "For clamping the brightness and darkness at the base of the pillars to remove baked in shading",
+    "aabbs": [
+      [ 2757, 9542, 2809, 9594 ]
     ]
   },
   {
