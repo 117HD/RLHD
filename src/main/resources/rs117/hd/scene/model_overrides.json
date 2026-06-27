@@ -9641,12 +9641,27 @@
   {
     "description": "Lighthouse Door",
     "baseMaterial": "WALL_STONE",
+    "uvType": "BOX",
+    "uvScale": 1.25,
+    "colorOverrides": [
+      {
+        "description": "Door",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Door",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ],
     "objectIds": [
       "HORROR_LIGHTHOUSE_DOORWAY",
-      "HORROR_LIGHTHOUSE_INACTIVE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 1.25
+      "HORROR_LIGHTHOUSE_INACTIVE",
+      "LAST_LIGHT_DOORWAY",
+      "LAST_LIGHT_DOORWAY_INACTIVE"
+    ]
   },
   {
     "description": "Lighthouse Roof",
@@ -12820,9 +12835,13 @@
   },
   {
     "description": "Wooden Spiral Stairs",
-    "baseMaterial": "MARBLE_2",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
     "objectIds": [
-      "KR_SPIRALSTAIRS"
+      "KR_SPIRALSTAIRS",
+      "LAST_LIGHT_SPIRALSTAIRS_BASE",
+      "LAST_LIGHT_SPIRALSTAIRS_MIDDLE",
+      "LAST_LIGHT_SPIRALSTAIRS_TOP"
     ]
   },
   {
@@ -14641,14 +14660,16 @@
     ]
   },
   {
-    "description": "Varrock Wall ivy",
+    "description": "Varrock - Last Light - Wall ivy",
     "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.3,
+    "windDisplacementMode": "VERTEX_JIGGLE",
     "objectIds": [
       "FAI_VARROCK_IVY_MEDIUM",
-      "FAI_VARROCK_IVY_SMALL"
-    ],
-    "uvType": "MODEL_YZ",
-    "uvScale": 0.3
+      "FAI_VARROCK_IVY_SMALL",
+      "LIGHTHOUSE_IVY01_LARGE01"
+    ]
   },
   {
     "description": "Khandarian Eagles Landing",
@@ -16276,7 +16297,9 @@
       "DT2_WAR_ROOM_CELL_CRATE",
       "TOA_LOBBY_LAMP_CRATE_OP",
       "TOA_LOBBY_CRATE01_DEFAULT01",
-      "TOA_LOBBY_CRATE01_STACK01"
+      "TOA_LOBBY_CRATE01_STACK01",
+      "PIRATE_CRATE_1",
+      "PIRATE_CRATE_EMPTY"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -16370,7 +16393,8 @@
       "LUC2_DWT_CRATE3",
       "CRATE_WOODEN01_REINFORCED01_STACKED01_IMCANDO01",
       "CRATE_WOODEN01_REINFORCED01_IMCANDO01",
-      "CRATE_WOODEN01_REINFORCED01_OPEN01_IMCANDO01"
+      "CRATE_WOODEN01_REINFORCED01_OPEN01_IMCANDO01",
+      "SLUG2_LIGHTHOUSE_CRATE_STACK"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -16444,7 +16468,8 @@
       "CRATE_ALDARIN01_STACK01",
       "MYQ4_EMPTY_CRATES_SMALL",
       "GRAB_EVIL_TWIN_SMALL_CRATES",
-      "PEST_SMALL_CRATES"
+      "PEST_SMALL_CRATES",
+      "ELEM_LIGHTHOUSE_CRATE_3"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -18292,10 +18317,23 @@
       "FISHING_CONTEST_WOODEN_TABLE",
       "FISHING_CONTEST_JACK_TABLE",
       "QUEST_LUNAR_TABLE_SMALL",
-      "POG_WOODEN_TABLE"
+      "POG_WOODEN_TABLE",
+      "AKD_PROTEST_BROKENTABLE01",
+      "AKD_PROTEST_BROKENTABLE02"
     ],
     "uvType": "BOX",
     "uvScale": 0.75
+  },
+  {
+    "description": "Objects - Wooden - Plank tables - Rotated top",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "flatNormals": true,
+    "uvScale": 0.6,
+    "objectIds": [
+      "SAILING_TABLE_1_NOOP"
+    ]
   },
   {
     "description": "Objects - Wooden - Plank tables - Long",
@@ -35113,7 +35151,8 @@
       "LITHKREN_DUNGEON_SKELETON_OP",
       "LITHKREN_DUNGEON_SKELETON_NO_OP",
       "AHOY_SKELETON_2",
-      "BLOOD_ALTAR_SKELETON"
+      "BLOOD_ALTAR_SKELETON",
+      "DEADMAN_WALL_SKELETON"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -47325,7 +47364,8 @@
       "QIP_DIGSITE_BARREL_BASIC",
       "BARREL_EMPTY",
       "BARREL_TAP",
-      "MYQ3_LAB_BARREL"
+      "MYQ3_LAB_BARREL",
+      "SLUG2_BARREL_RODS_ACTIVE"
     ]
   },
   {
@@ -92620,6 +92660,135 @@
     "objectIds": [
       "ARENA_SCAFFOLD_PLANKS_RIGHT",
       "ARENA_SCAFFOLD_PLANKS_LEFT"
+    ]
+  },
+  {
+    "description": "Last Light - Ruined Plank Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "SAILING_WALL_CRUMBLY_RIGHT_MIRRORED",
+      "SAILING_WALL_CRUMBLY2_RIGHT",
+      "SAILING_WALL_CRUMBLY2_LEFT",
+      "SAILING_WALL_CRUMBLY_LEFT",
+      "SAILING_WALL_CRUMBLY_DAMAGED_RIGHT",
+      "SAILING_WALL_CRUMBLY_DAMAGED_LEFT",
+      "SAILING_WALL_CRUMBLY2_RIGHT_MIRRORED"
+    ]
+  },
+  {
+    "description": "Last Light - wooden - Leaning wall planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_LIGHTHOUSE_PLANKS1",
+      "FAI_LIGHTHOUSE_PLANKS2"
+    ]
+  },
+  {
+    "description": "Last Light - webs",
+    "baseMaterial": "GROUND_WEB_2_LIGHT",
+    "objectIds": [
+      "DT2_LIGHTHOUSE_SPIDERWEB01",
+      "DT2_LIGHTHOUSE_SPIDERWEB02",
+      "DT2_VAULT_SPIDERWEB02",
+      "DECOKIT_WEB01_STRAIGHT04",
+      "DECOKIT_WEB01_STRAIGHT05",
+      "DECOKIT_LIGHTHOUSE_WEB01_STRAIGHT04",
+      "DECOKIT_LIGHTHOUSE_WEB01_STRAIGHT05"
+    ]
+  },
+  {
+    "description": "Last Light - Wall poster",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "LIGHTHOUSE_WALL_POSTER_GENERIC02_SLOPED",
+      "LIGHTHOUSE_WALL_POSTER_GENERIC03_SLOPED",
+      "QUEST_LUNAR_WALLCHART3"
+    ]
+  },
+  {
+    "description": "Last Light - wooden - Barrels with metal bands - sideways",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "PIRATE_LIGHTHOUSE_BARRELS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 86
+      }
+    ]
+  },
+  {
+    "description": "Last Light - wooden - Crates with metal bands",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "DWARF_LIGHTHOUSE_METAL_CRATES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 86
+      }
+    ]
+  },
+  {
+    "description": "Last Light - wooden - Table with fish on it",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 86,
+    "objectIds": [
+      "PIRATE_FISH_TABLE_OFFSET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationX": 512,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Last Light - wooden - Crate with bone and hay",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "BONE_CRATE_1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 86
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "HD_HAY",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5,
+        "uvOrientation": 313
+      }
     ]
   },
   {
