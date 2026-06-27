@@ -24,6 +24,8 @@ public class UBOMaterials extends UniformBuffer<GLBuffer> {
 		public Property displacementScale = addProperty(PropertyType.Float, "displacementScale");
 		public Property specularStrength = addProperty(PropertyType.Float, "specularStrength");
 		public Property specularGloss = addProperty(PropertyType.Float, "specularGloss");
+		public Property hexTilingScale = addProperty(PropertyType.Float, "hexTilingScale");
+		public Property hexTilingBlend = addProperty(PropertyType.Float, "hexTilingBlend");
 		public Property flowMapStrength = addProperty(PropertyType.Float, "flowMapStrength");
 		public Property flowMapDuration = addProperty(PropertyType.FVec2, "flowMapDuration");
 		public Property scrollDuration = addProperty(PropertyType.FVec2, "scrollDuration");

@@ -10,11 +10,13 @@ struct Material {
     int ambientOcclusionMap;
     int flowMap;
     int shadowAlphaMap;
-    int flags; // overrideBaseColor << 2 | unlit << 1 | hasTransparency
+    int flags; // hexTilingMode (3 bits) << 3 | overrideBaseColor << 2 | unlit << 1 | hasTransparency
     float brightness;
     float displacementScale;
     float specularStrength;
     float specularGloss;
+    float hexTilingScale;
+    float hexTilingBlend;
     float flowMapStrength;
     vec2 flowMapDuration;
     vec2 scrollDuration;
@@ -37,4 +39,8 @@ int getMaterialIsUnlit(const Material material) {
 
 bool getMaterialHasTransparency(const Material material) {
     return (material.flags & 1) == 1;
+}
+
+int getMaterialHexTilingMode(const Material material) {
+    return (material.flags >> 3) & 0x3;
 }
