@@ -2525,7 +2525,6 @@
     "shiftSaturation": -5,
     "shiftLightness": 23
   },
-
   {
     "name": "SOPHANEM_TEMPLE_LIGHTNESS_FIX_25",
     "area": "SOPHANEM_TEMPLE_UPPER_FLOORS",
@@ -2733,7 +2732,6 @@
     "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
   },
-
   {
     "name": "FALADOR_BUILDING_FLOOR_1",
     "area": "FALADOR",
@@ -2846,7 +2844,6 @@
     "groundMaterial": "MARBLE_1_GLOSS",
     "blended": false
   },
-
   {
     "name": "EDGEVILLE_BANK_TILE_1",
     "area": "EDGEVILLE_BANK",
@@ -3140,7 +3137,6 @@
     ],
     "groundMaterial": "SNOW_1"
   },
-
   {
     "name": "TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN",
     "area": "TAVERLEY_DUNGEON_BLACK_KNIGHT_KITCHEN",
@@ -4024,7 +4020,6 @@
     "groundMaterial": "CARPET",
     "blended": false
   },
-
   {
     "name": "DRAYNOR_MANOR_ENTRANCE_PATH",
     "area": "DRAYNOR_MANOR",
@@ -6564,7 +6559,6 @@
     "groundMaterial": "MARBLE_2",
     "blended": false
   },
-
   {
     "name": "KELDAGRIM_PATHS",
     "area": "KELDAGRIM",
