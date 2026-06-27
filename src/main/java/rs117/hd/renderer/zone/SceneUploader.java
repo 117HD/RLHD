@@ -1651,6 +1651,12 @@ public class SceneUploader implements AutoCloseable {
 				}
 			}
 
+			if (faceOverride.modifiesColor) {
+				color1 = faceOverride.modifyColor(color1);
+				color2 = faceOverride.modifyColor(color2);
+				color3 = faceOverride.modifyColor(color3);
+			}
+
 			int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			if (material != Material.NONE) {
 				uvType = faceOverride.uvType;
@@ -1704,6 +1710,9 @@ public class SceneUploader implements AutoCloseable {
 
 			if (shouldRotateNormals)
 				rotateNormals(modelNormals, orientSin, orientCos);
+
+			if (faceOverride.modifiesAlpha)
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				bias == null ? 0 : bias[face] & 0xFF;
@@ -2052,7 +2061,7 @@ public class SceneUploader implements AutoCloseable {
 			else if (color3 == -1)
 				color2 = color3 = color1;
 
-			final int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
+			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			final int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			final int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			final UvType uvType = faceUVTypes.get(face);
@@ -2061,6 +2070,12 @@ public class SceneUploader implements AutoCloseable {
 
 			if (textureId != -1)
 				color1 = color2 = color3 = 90;
+
+			if (faceOverride.modifiesColor) {
+				color1 = faceOverride.modifyColor(color1);
+				color2 = faceOverride.modifyColor(color2);
+				color3 = faceOverride.modifyColor(color3);
+			}
 
 			final int materialData = material.packMaterialData(faceOverride, uvType, false);
 
@@ -2126,6 +2141,9 @@ public class SceneUploader implements AutoCloseable {
 				color2 = interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
 				color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
 			}
+
+			if (faceOverride.modifiesAlpha)
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
 
 			final int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				hasBias ? bias[face] & 0xFF : 0;
