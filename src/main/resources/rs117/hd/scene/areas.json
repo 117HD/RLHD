@@ -2824,22 +2824,22 @@
   },
   {
     "name": "MAGE_TRAINING_ARENA_ENCHANTERS",
-    "aabbs": [
-      [ 3328, 9600, 3391, 9663, 0 ]
+    "regionBoxes": [
+      [ 13462, 13462, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "MAGE_TRAINING_ARENA_GRAVEYARD",
-    "aabbs": [
-      [ 3328, 9600, 3391, 9663, 1 ]
+    "regionBoxes": [
+      [ 13462, 13462, 1 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "MAGE_TRAINING_ARENA_ALCHEMIST",
-    "aabbs": [
-      [ 3328, 9600, 3391, 9663, 2 ]
+    "regionBoxes": [
+      [ 13462, 13462, 2 ]
     ],
     "hideOtherAreas": true
   },
