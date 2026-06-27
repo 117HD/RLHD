@@ -17126,7 +17126,6 @@
     "description": "Mort'ton Shade Catacombs - Meiyerditch Labs - Wall toppers",
     "baseMaterial": "PURE_BLACK",
     "objectIds": [
-      "MYQ3_LAB_WALL_TOP",
       "MYQ3_HIDEOUT_WALL_TOP"
     ]
   },
