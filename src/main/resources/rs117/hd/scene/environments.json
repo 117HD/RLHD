@@ -416,7 +416,6 @@
     "area": "TOA_LOOT_ROOM",
     "ambientStrength": 1.2,
     "directionalStrength": 0.5,
-    "fogColor": "#050505",
     "fogDepth": 20
   },
   {
@@ -424,9 +423,15 @@
     "directionalStrength": 0.75,
     "fogColor": "#050505",
     "sunAngles": [
-      125,
+      137,
       180
     ],
+    "fogDepth": 20
+  },
+  {
+    "area": "TOA_FINAL_BOSS_PHASE_2",
+    "directionalStrength": 0.75,
+    "fogColor": "#000000",
     "fogDepth": 20
   },
   {

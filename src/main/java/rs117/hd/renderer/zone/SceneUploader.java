@@ -24,6 +24,7 @@
  */
 package rs117.hd.renderer.zone;
 
+import java.util.Arrays;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -1650,6 +1651,12 @@ public class SceneUploader implements AutoCloseable {
 				}
 			}
 
+			if (faceOverride.modifiesColor) {
+				color1 = faceOverride.modifyColor(color1);
+				color2 = faceOverride.modifyColor(color2);
+				color3 = faceOverride.modifyColor(color3);
+			}
+
 			int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			if (material != Material.NONE) {
 				uvType = faceOverride.uvType;
@@ -1704,6 +1711,9 @@ public class SceneUploader implements AutoCloseable {
 			if (shouldRotateNormals)
 				rotateNormals(modelNormals, orientSin, orientCos);
 
+			if (faceOverride.modifiesAlpha)
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
+
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				bias == null ? 0 : bias[face] & 0xFF;
 			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
@@ -1757,7 +1767,7 @@ public class SceneUploader implements AutoCloseable {
 		Model model,
 		boolean sortAllFaces,
 		int orientation,
-		int x, int y, int z
+		float x, float y, float z
 	) {
 		final int vertexCount = model.getVerticesCount();
 
@@ -1767,6 +1777,9 @@ public class SceneUploader implements AutoCloseable {
 
 		final boolean[] visibility = PooledArrayType.BOOL.borrow(vertexCount);
 		final float[] modelProjected = PooledArrayType.FLOAT.borrow(vertexCount * 3);
+
+		if (isModelPartiallyVisible)
+			Arrays.fill(visibility, 0, vertexCount, true);
 
 		// Identity orient, will result in no rotation
 		float orientSinf = 0;
@@ -1807,11 +1820,15 @@ public class SceneUploader implements AutoCloseable {
 
 			final float pX = projected[0];
 			final float pY = projected[1];
-			final float pZ = projected[2];
+			float pZ = projected[2];
 
 			// Vertex is behind the camera and therefore isn't visible
-			if (pZ <= 0.0f)
-				visibility[v] = allVertsVisible = false;
+			if (pZ <= 0.0f) {
+				if (pZ == 0.0f)
+					pZ = -1e-6f; // Avoid division by zero
+				if (isModelPartiallyVisible)
+					visibility[v] = allVertsVisible = false;
+			}
 
 			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexX);
 			modelProjected[vertexOffset] = pX / pZ;
@@ -2044,7 +2061,7 @@ public class SceneUploader implements AutoCloseable {
 			else if (color3 == -1)
 				color2 = color3 = color1;
 
-			final int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
+			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			final int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			final int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			final UvType uvType = faceUVTypes.get(face);
@@ -2053,6 +2070,12 @@ public class SceneUploader implements AutoCloseable {
 
 			if (textureId != -1)
 				color1 = color2 = color3 = 90;
+
+			if (faceOverride.modifiesColor) {
+				color1 = faceOverride.modifyColor(color1);
+				color2 = faceOverride.modifyColor(color2);
+				color3 = faceOverride.modifyColor(color3);
+			}
 
 			final int materialData = material.packMaterialData(faceOverride, uvType, false);
 
@@ -2118,6 +2141,9 @@ public class SceneUploader implements AutoCloseable {
 				color2 = interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
 				color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
 			}
+
+			if (faceOverride.modifiesAlpha)
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
 
 			final int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				hasBias ? bias[face] & 0xFF : 0;
