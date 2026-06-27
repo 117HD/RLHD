@@ -67,6 +67,7 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.utils.collections.Util.quickSort;
 
 @Singleton
 @Slf4j
@@ -93,6 +94,9 @@ public class LightManager {
 	private HdPlugin plugin;
 
 	@Inject
+	private GamevalManager gamevalManager;
+
+	@Inject
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
@@ -111,7 +115,7 @@ public class LightManager {
 
 	public void loadConfig(Gson gson, ResourcePath path) {
 		LightDefinition[] lights;
-		try {
+		try (var ignored = gamevalManager.obtainHandle()) {
 			lights = path.loadJson(gson, LightDefinition[].class);
 			if (lights == null) {
 				log.warn("Skipping empty lights.json");
@@ -158,6 +162,12 @@ public class LightManager {
 	}
 
 	public void shutDown() {
+		WORLD_LIGHTS.clear();
+		NPC_LIGHTS.clear();
+		OBJECT_LIGHTS.clear();
+		PROJECTILE_LIGHTS.clear();
+		GRAPHICS_OBJECT_LIGHTS.clear();
+
 		eventBus.unregister(this);
 	}
 
@@ -225,7 +235,7 @@ public class LightManager {
 
 			// Whatever the light is attached to is presumed to exist if it's not marked for removal yet
 			boolean parentExists = !light.markedForRemoval;
-			boolean hiddenTemporarily = false;
+			boolean hiddenTemporarily = light.hiddenTemporarily;
 
 			if (light.tileObject != null) {
 				if (!light.markedForRemoval && light.animationSpecific && light.tileObject instanceof GameObject) {
@@ -242,10 +252,10 @@ public class LightManager {
 				light.origin[0] = (int) light.projectile.getX();
 				light.origin[1] = (int) light.projectile.getZ() - light.def.height;
 				light.origin[2] = (int) light.projectile.getY();
+				hiddenTemporarily = !shouldShowProjectileLights();
 				if (light.projectile.getRemainingCycles() <= 0) {
 					light.markedForRemoval = true;
 				} else {
-					hiddenTemporarily = !shouldShowProjectileLights();
 					if (light.animationSpecific) {
 						if (light.def.waitForAnimation && gameCycle < light.projectile.getStartCycle()) {
 							parentExists = false;
@@ -310,6 +320,8 @@ public class LightManager {
 						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
 						(tile = tiles[plane][tileExX][tileExY]) != null
 					) {
+						hiddenTemporarily = !isActorLightVisible(light.actor);
+
 						if (!light.def.ignoreActorHiding &&
 							!(light.actor instanceof NPC && ((NPC) light.actor).getComposition().getSize() > 1)
 						) {
@@ -328,9 +340,6 @@ public class LightManager {
 								}
 							}
 						}
-
-						if (!hiddenTemporarily)
-							hiddenTemporarily = !isActorLightVisible(light.actor);
 
 						// Interpolate between tile heights based on specific scene coordinates
 						int tileZ = plane;
@@ -484,9 +493,11 @@ public class LightManager {
 		}
 
 		// Order visible lights first, then by distance. Leave hidden lights unordered at the end.
-		sceneContext.lights.sort((a, b) -> a.visible && b.visible ?
-			Float.compare(a.distanceSquared, b.distanceSquared) :
-			Boolean.compare(b.visible, a.visible));
+		quickSort(sceneContext.lights,
+			(a, b) -> a.visible && b.visible ?
+				Float.compare(a.distanceSquared, b.distanceSquared) :
+				Boolean.compare(b.visible, a.visible)
+		);
 
 		// Count number of visible lights
 		sceneContext.numVisibleLights = 0;

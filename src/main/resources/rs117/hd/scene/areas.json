@@ -2891,6 +2891,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "PVP_ARENA_UPSTAIRS",
+    "aabbs": [
+      [ 3360, 3279, 3374, 3271, 1 ]
+    ]
+  },
+  {
     "name": "PVP_ARENA",
     "aabbs": [
       [ 3312, 3199, 3407, 3290 ]
@@ -3604,7 +3610,7 @@
   {
     "name": "RIVER_ELID_WATERFALL",
     "aabbs": [
-      [ 3369, 3131, 3370, 3133 ]
+      [ 3369, 3130, 3370, 3135 ]
     ]
   },
   {
@@ -10726,6 +10732,10 @@
     ]
   },
   {
+    "name": "Stalker Den",
+    "regionBoxes": [ [ 5017, 5272 ] ]
+  },
+  {
     "name": "Tal Teok temple path blending fix",
     "aabbs": [
       [ 1231, 3152, 1262, 3183 ],
@@ -10983,6 +10993,10 @@
   {
     "name": "Ruins of Tapoyauik Ice",
     "aabbs": [ [ 1620, 9619, 1645, 9643 ] ]
+  },
+  {
+    "name": "Ruins of Tapoyauik Lever Fix",
+    "aabbs": [ [ 1695, 9603, 3 ] ]
   },
   {
     "name": "HUNTER_GUILD",
@@ -11521,7 +11535,7 @@
   {
     "name": "FORTIS_BRIDGE",
     "aabbs": [
-      [ 1730, 3106, 1746, 3107 ]
+      [ 1731, 3106, 1745, 3107 ]
     ]
   },
   {
@@ -11529,6 +11543,15 @@
     "aabbs": [
       [ 1730, 3106, 1730, 3107 ],
       [ 1746, 3106, 1746, 3108 ]
+    ]
+  },
+  {
+    "name": "FORTIS_ROADS_TRIM_DARKEN",
+    "aabbs": [
+      [ 1680, 3073, 1681, 3073 ],
+      [ 1759, 3081, 1760, 3081 ],
+      [ 1620, 3106, 1620, 3107 ],
+      [ 1651, 3147, 1651, 3148 ]
     ]
   },
   {
@@ -11882,7 +11905,8 @@
     "name": "SEWER_ENTRANCE_FIXES",
     "aabbs": [
       [ 2632, 3294 ],
-      [ 1813, 3745 ]
+      [ 1813, 3745 ],
+      [ 2561, 3222 ]
     ]
   },
   {

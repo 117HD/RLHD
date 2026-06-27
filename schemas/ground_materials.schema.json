@@ -11,6 +11,10 @@
         "type": "string",
         "description": "Identifier used to refer to the ground material from tile overrides."
       },
+      "description": {
+        "type": "string",
+        "description": "Optional description of what this applies to or is used for."
+      },
       "materials": {
         "type": "array",
         "description": "A list of materials to choose from when randomizing tiles with this ground material applied. Duplicates may be used to increase prevalence.",

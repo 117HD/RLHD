@@ -1905,6 +1905,25 @@
     "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
+    "name": "DORGESHKAAN_FLOOR",
+    "area": "DORGESHKAAN",
+    "minLightness": 14,
+    "maxLightness": 20,
+    "underlayIds": [
+      10,
+      12
+    ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "DORGESHKAAN_DIRT",
+    "area": "DORGESHKAAN",
+    "overlayIds": [
+      120
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "LUMBRIDGE_CHRISTMAS_EVENT",
     "area": "LUMBRIDGE",
     "overlayIds": [
@@ -2561,6 +2580,15 @@
     ],
     "groundMaterial": "DIRT",
     "blended": false
+  },
+  {
+    "name": "PVP_ARENA_TILES",
+    "area": "PVP_ARENA_UPSTAIRS",
+    "groundMaterial": "STONE",
+    "overlayIds": [
+      226,
+      227
+    ]
   },
   {
     "name": "PVP_ARENA_PATH",
@@ -5648,6 +5676,7 @@
   {
     "name": "DREAM_WORLD_GROUND",
     "area": "LUNAR_DREAM_WORLD",
+    "blended": false,
     "overlayIds": [
       160
     ]
@@ -6748,9 +6777,8 @@
   {
     "name": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
     "area": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
-    "overlayIds": [ 336 ],
-    "groundMaterial": "GRASS_1",
-    "blended": false
+    "overlayIds": [ 336, 377 ],
+    "groundMaterial": "GRASS_1"
   },
   {
     "name": "HUNTER_GUILD_POND",
@@ -7508,6 +7536,12 @@
     "replacements": {
       "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
+  },
+  {
+    "name": "Varlamore - Stalker Den - Water",
+    "area": "Stalker Den",
+    "overlayIds": [ 41 ],
+    "waterType": "CAVE_WATER"
   },
   {
     "name": "Varlamore - Auburn Valley - Dirt path",
@@ -9307,6 +9341,15 @@
     "shiftLightness": 7
   },
   {
+    "name": "LITHKREN_VAULT_FLOOR_SYMBOL",
+    "area": "LITHKREN_DUNGEON",
+    "overlayIds": [ 99 ],
+    "groundMaterial": "WORN_TILES",
+    "uvScale": 2,
+    "blended": false,
+    "shiftLightness": 7
+  },
+  {
     "name": "LOVAKENGJ_GROUND_UNDERLAY",
     "area": "LOVAKENGJ",
     "underlayIds": [
@@ -9385,19 +9428,6 @@
       96
     ],
     "groundMaterial": "OVERWORLD_GRASS_1"
-  },
-  {
-    "name": "Farming Guild Tiled Path",
-    "area": "Farming Guild",
-    "overlayIds": [
-      174
-    ],
-    "groundMaterial": "WORN_TILES",
-    "shiftLightness": -35,
-    "minLightness": 20,
-    "replacements": {
-      "NONE": "!textures"
-    }
   },
   {
     "name": "ZEAH_DIRT_UNDERLAY",
@@ -10594,7 +10624,7 @@
       1,
       90
     ],
-    "groundMaterial": "VARIED_DIRT",
+    "groundMaterial": "ROCK_PILES",
     "shiftLightness": -5,
     "minLightness": 15,
     "replacements": {
@@ -10606,7 +10636,7 @@
     "name": "Ungael Cliffs Blending",
     "area": "UNGAEL",
     "overlayIds": [ 1 ],
-    "groundMaterial": "VARIED_DIRT",
+    "groundMaterial": "ROCK_PILES",
     "shiftLightness": -5
   },
   {
@@ -10951,8 +10981,10 @@
       6,
       41,
       104,
+      136,
       151,
-      158
+      158,
+      196
     ],
     "waterType": "WATER"
   },

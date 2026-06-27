@@ -22,6 +22,10 @@ import javax.annotation.Nullable;
 public final class MathUtils {
 	public static final Random RAND = new Random();
 
+	public static final long KB = 1000;
+	public static final long MB = KB * KB;
+	public static final long GB = MB * KB;
+
 	public static final long KiB = 1024;
 	public static final long MiB = KiB * KiB;
 	public static final long GiB = MiB * KiB;
@@ -39,7 +43,7 @@ public final class MathUtils {
 	public static final float DEG_TO_RAD = TWO_PI / 360;
 	public static final float RAD_TO_DEG = 1 / DEG_TO_RAD;
 	public static final float JAU_TO_RAD = TWO_PI / 2048;
-	public static final float RAD_TO_JAU = 1 / JAU_TO_RAD;
+	public static final float JAU_TO_RAD_FINE = TWO_PI / 16384;
 
 	public static float[] vec(float... vec) {
 		return vec;
@@ -113,6 +117,10 @@ public final class MathUtils {
 		return Arrays.copyOf(v, v.length);
 	}
 
+	public static short[] copy(short[] v) {
+		return Arrays.copyOf(v, v.length);
+	}
+
 	public static float[] copyTo(float[] out, @Nullable float[] in, int offset, int len) {
 		if (in != null) {
 			assert offset + len <= min(out.length, in.length);
@@ -143,6 +151,25 @@ public final class MathUtils {
 
 	public static int[] ensureDefaults(@Nullable int[] in, int[] defaults) {
 		return in != null && in.length == defaults.length ? in : copyTo(copy(defaults), in);
+	}
+
+	public static boolean[] ensureCapacity(boolean[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new boolean[size];
+	}
+
+	public static float[] ensureCapacity(float[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new float[size];
+	}
+
+	public static int[] ensureCapacity(int[] in, int size) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : new int[size];
+	}
+
+	@FunctionalInterface
+	public interface ArraySupplier<T> { T[] get(int size); }
+
+	public static <T> T[] ensureCapacity(T[] in, int size, ArraySupplier<T> supplier) {
+		return in != null ? in.length >= size ? in : Arrays.copyOf(in, size) : supplier.get(size);
 	}
 
 	public static int[] slice(int[] v, int offset) {
@@ -414,6 +441,22 @@ public final class MathUtils {
 		return dot(v, v);
 	}
 
+	public static float dot(short[] a, short[] b, int n) {
+		assert a.length >= n && b.length >= n;
+		float f = 0;
+		for (int i = 0; i < n; i++)
+			f += a[i] * b[i];
+		return f;
+	}
+
+	public static float dot(short[] a, short... b) {
+		return dot(a, b, min(a.length, b.length));
+	}
+
+	public static float dot(short... v) {
+		return dot(v, v);
+	}
+
 	public static int product(int... v) {
 		int product = 1;
 		for (int factor : v)
@@ -536,6 +579,18 @@ public final class MathUtils {
 
 	public static int[] ceil(float[] v) {
 		return ceil(new int[v.length], v);
+	}
+
+	public static int ceilPow2(int x) {
+		if (x <= 1) return 1;
+		if (x > (1 << 30)) return 1 << 30;
+		return 1 << (32 - Integer.numberOfLeadingZeros(x - 1));
+	}
+
+	public static long ceilPow2(long x) {
+		if (x <= 1) return 1;
+		if (x > (1L << 62)) return 1L << 62;
+		return 1L << (64 - Long.numberOfLeadingZeros(x - 1));
 	}
 
 	public static int round(float v) {
@@ -835,6 +890,10 @@ public final class MathUtils {
 		return (float) Math.tan(rad);
 	}
 
+	public static short normShort(float f) {
+		return (short) round(clamp(f, -1, 1) * Short.MAX_VALUE);
+	}
+
 	public static int float16(float value) {
 		if (value == 0)
 			return 0;
@@ -877,5 +936,17 @@ public final class MathUtils {
 		}
 
 		return sign | exponent << 10 | mantissa >> 13;
+	}
+
+	public static String formatBytes(long bytes) {
+		if (bytes < 0)
+			return "-" + formatBytes(bytes == Long.MIN_VALUE ? Long.MAX_VALUE : -bytes);
+		if (bytes == Long.MAX_VALUE)
+			return "infinity";
+		if (bytes < 1024)
+			return bytes + " B";
+		int i = (63 - Long.numberOfLeadingZeros(bytes)) / 10 - 1;
+		int decimal = (10 * (int) (bytes >> i * 10) / 1024) % 10;
+		return String.format("%d%s %siB", bytes >> (i + 1) * 10, decimal == 0 ? "" : "." + decimal, "KMGTPE".charAt(i));
 	}
 }
