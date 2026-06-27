@@ -2823,9 +2823,46 @@
     ]
   },
   {
-    "name": "MAGE_TRAINING_ARENA",
+    "name": "MAGE_TRAINING_ARENA_ENCHANTERS",
+    "regionBoxes": [
+      [ 13462, 13462, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_GRAVEYARD",
+    "regionBoxes": [
+      [ 13462, 13462, 1 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_ALCHEMIST",
+    "regionBoxes": [
+      [ 13462, 13462, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_TELEKENTIC",
+    "regions": [ 13463 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_LOBBY",
     "aabbs": [
-      [ 3347, 3288, 3374, 3327 ]
+      [ 3347, 3288, 3374, 3327 ],
+      [ 3356, 3283, 3365, 3285 ],
+      [ 3375, 3289, 3375, 3290 ]
+    ]
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_PLAYGROUNDS",
+    "areas": [
+      "MAGE_TRAINING_ARENA_GRAVEYARD",
+      "MAGE_TRAINING_ARENA_ENCHANTERS",
+      "MAGE_TRAINING_ARENA_ALCHEMIST",
+      "MAGE_TRAINING_ARENA_TELEKENTIC"
     ]
   },
   {

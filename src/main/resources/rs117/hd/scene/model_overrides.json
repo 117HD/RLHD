@@ -32384,7 +32384,6 @@
       "MAGICTRAINING_DOORWAY_L",
       "MAGICTRAINING_DOORWAY_R",
       "MAGICTRAINING_DUNGEONWALL_LIGHT",
-      "MAGICTRAINING_DUNGEONWALL_LIGHTING",
       "MAGICTRAINING_DUNGEONWALL",
       "MAGICTRAINING_DUNGEONWALL_TOP",
       "MAGICTRAINING_WALL",
@@ -32393,13 +32392,48 @@
       "MAGICTRAINING_WALL_WINDOW"
     ],
     "uvType": "BOX",
-    "flatNormals": true
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Mage Training Arena - Wall Light",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "MAGICTRAINING_DUNGEONWALL_LIGHTING"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 40 && a == 255",
+        "baseMaterial": "GRAY_70",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "upwardsNormals": true
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
   },
   {
     "description": "Mage Training Arena - Walls - Doorway of Light",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
       "MAGICTRAINING_TEMPLE_DOOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "UNLIT"
+      }
     ]
   },
   {
@@ -32448,7 +32482,8 @@
       "MAGICTRAINING_STAIRS_TOP_MIRROR"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "uvScale": 0.35
   },
   {
     "description": "Mage Training Arena - Telekinetic Fence",
@@ -32471,6 +32506,38 @@
     "uvType": "BOX"
   },
   {
+    "description": "Mage Training Arena - Alchemist Cupboards",
+    "baseMaterial": "MARBLE_2",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MAGICTRAINING_ALCHEM_CUPBOARD0_OPEN",
+      "MAGICTRAINING_ALCHEM_CUPBOARD1_OPEN",
+      "MAGICTRAINING_ALCHEM_CUPBOARD2_OPEN",
+      "MAGICTRAINING_ALCHEM_CUPBOARD3_OPEN",
+      "MAGICTRAINING_ALCHEM_CUPBOARD4_OPEN",
+      "MAGICTRAINING_ALCHEM_CUPBOARD5_OPEN",
+      "MAGICTRAINING_ALCHEM_CUPBOARD0",
+      "MAGICTRAINING_ALCHEM_CUPBOARD1",
+      "MAGICTRAINING_ALCHEM_CUPBOARD2",
+      "MAGICTRAINING_ALCHEM_CUPBOARD3",
+      "MAGICTRAINING_ALCHEM_CUPBOARD4",
+      "MAGICTRAINING_ALCHEM_CUPBOARD5"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
     "description": "Mage Training Arena - Entrance Statues",
     "baseMaterial": "MARBLE_3",
     "objectIds": [
@@ -32488,7 +32555,7 @@
     ],
     "colorOverrides": [
       {
-        "description": "Wooden base",
+        "description": "Flame",
         "colors": "a < 255",
         "baseMaterial": "GRAY_125",
         "upwardsNormals": true
@@ -32513,26 +32580,16 @@
   },
   {
     "description": "Falador - Mage Training Arena - Marble - Steps",
-    "baseMaterial": "MARBLE_3",
+    "baseMaterial": "MARBLE_1",
     "objectIds": [
       "MAGICTRAINING_SKEWSTEPS1",
       "MAGICTRAINING_SKEWSTEPS_R",
-      "MAGICTRAINING_SKEWSTEPS_L"
-    ],
-    "uvType": "BOX",
-    "uvOrientation": 640,
-    "flatNormals": true
-  },
-  {
-    "description": "Falador - Mage Training Arena - Marble - Steps - Corner",
-    "baseMaterial": "MARBLE_3",
-    "objectIds": [
+      "MAGICTRAINING_SKEWSTEPS_L",
       "MAGICTRAINING_SKEWSTEPS_DIAG"
     ],
     "uvType": "BOX",
-    "uvOrientationZ": 640,
-    "uvOrientationX": 640,
-    "flatNormals": true
+    "uvOrientation": 640,
+    "uvScale": 0.75
   },
   {
     "description": "Objects - Bush - Dead",
@@ -32587,7 +32644,14 @@
       "MAGICTRAINING_GRAVEDOOR",
       "MAGICTRAINING_RETURNDOOR"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      }
+    ]
   },
   {
     "description": "Mage Training Arena - Ground Decoration - Carpets",
@@ -32599,6 +32663,7 @@
     ],
     "baseMaterial": "CARPET",
     "uvType": "WORLD_XZ",
+    "uvScale": 0.6,
     "flatNormals": true,
     "castShadows": false
   },
@@ -45233,9 +45298,20 @@
     "objectIds": [ "DRAYNOR_OUTSIDE_LAMP" ],
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 42,
-    "hideVanillaShadows": true
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "hideVanillaShadows": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 2",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 10 && a > 100",
+        "baseMaterial": "GRAY_75",
+        "upwardsNormals": true
+      }
+    ]
   },
   {
     "description": "Plain Rowboat with no Ripples",
