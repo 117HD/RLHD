@@ -213,6 +213,7 @@ public class ModelOverride
 		hasTransparency = mightHaveTransparency =
 			baseMaterial.hasTransparency ||
 			textureMaterial.hasTransparency ||
+			modifiesAlpha && minAlpha < 255 ||
 			tzHaarRecolorType != TzHaarRecolorType.NONE;
 
 		hide |= hideAsWaterEffect && plugin.configHideVanillaWaterEffects;
