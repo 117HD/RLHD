@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public enum AntiAliasingMode
 {
 	DISABLED("Disabled", 0),
+	FXAA("FXAA", 0),
 	MSAA_2("MSAA x2", 2),
 	MSAA_4("MSAA x4", 4),
 	MSAA_8("MSAA x8", 8),
