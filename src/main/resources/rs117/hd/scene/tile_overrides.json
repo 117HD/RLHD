@@ -11034,17 +11034,6 @@
     "blended": false
   },
   {
-    "name": "OVERLAY_SWAMP_WATER",
-    "area": "ALL",
-    "overlayIds": [
-      7,
-      128,
-      156
-    ],
-    "waterType": "SWAMP_WATER",
-    "blended": false
-  },
-  {
     "name": "OVERLAY_WOOD_PLANKS",
     "area": "ALL",
     "overlayIds": [
