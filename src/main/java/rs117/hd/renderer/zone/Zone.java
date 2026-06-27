@@ -385,7 +385,7 @@ public class Zone implements Destructible {
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
 		drawIdx = 0;
 
-		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
+		pushRange(level > 0 ? this.levelOffsets[level - 1] : 0, this.levelOffsets[level]);
 
 		if (drawIdx == 0)
 			return;
@@ -403,7 +403,7 @@ public class Zone implements Destructible {
 			drawEnd[drawIdx - 1] = end;
 		} else if (drawIdx >= NUM_DRAW_RANGES) {
 			log.debug("draw ranges exhausted");
-		} else {
+		} else if(end > start){
 			drawOff[drawIdx] = start;
 			drawEnd[drawIdx] = end;
 			drawIdx++;

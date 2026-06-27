@@ -12,7 +12,7 @@ public class TerrainShadowShaderProgram extends ShaderProgram {
 	public TerrainShadowShaderProgram() {
 		super(t -> t
 			.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
-			.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl"));
+			.add(GL_FRAGMENT_SHADER, "stub_frag.glsl"));
 	}
 
 	@Override

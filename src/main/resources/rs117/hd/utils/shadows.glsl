@@ -45,33 +45,23 @@
 #endif
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
-float fetchShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
+float fetchShadowTexel(sampler2D tex, bool hasTransparency, ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
     #if SHADOW_FILTERING == SHADOW_FILTERING_DITHER
         int index = int(hash(vec4(floor(fragPos.xyz), i)) * POISSON_DISK_LENGTH) % POISSON_DISK_LENGTH;
         pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
     #endif
 
-    #if SHADOW_TRANSPARENCY
-        int alphaDepth = int(texelFetch(shadowMap, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
+    if(hasTransparency) {
+        int alphaDepth = int(texelFetch(tex, pixelCoord, 0).r * SHADOW_COMBINED_MAX);
         float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
         float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
         return depth < fragDepth ? alpha : 0.f;
-    #else
-        return texelFetch(shadowMap, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
-    #endif
+    }
+
+    return texelFetch(tex, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
 }
 
-#if TERRAIN_SHADOWS
-float fetchTerrainShadowTexel(ivec2 pixelCoord, float fragDepth, vec3 fragPos, int i) {
-    #if SHADOW_FILTERING == SHADOW_FILTERING_DITHER
-        int index = int(hash(vec4(floor(fragPos.xyz), i)) * POISSON_DISK_LENGTH) % POISSON_DISK_LENGTH;
-        pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
-    #endif
-
-    return texelFetch(terrainShadowMap, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
-}
-
-float sampleTerrainShadowMap(ivec2 kernelOffset, float fragDepth, vec3 fragPos
+float sampleShadowTexture(sampler2D tex, bool hasTransparency, ivec2 kernelOffset, float fragDepth, vec3 fragPos
     #if SHADOW_FILTERING != SHADOW_FILTERING_AVERAGE
         , vec3 lerpX, vec3 lerpY
     #endif
@@ -83,47 +73,43 @@ float sampleTerrainShadowMap(ivec2 kernelOffset, float fragDepth, vec3 fragPos
         const float kernelAreaReciprocal = .25;
     #endif
 
-    float c00 = fetchTerrainShadowTexel(kernelOffset + ivec2(0, 0), fragDepth, fragPos, 0);
-    float c02 = fetchTerrainShadowTexel(kernelOffset + ivec2(0, kernelSize - 1), fragDepth, fragPos, 1);
-    float c20 = fetchTerrainShadowTexel(kernelOffset + ivec2(kernelSize - 1, 0), fragDepth, fragPos, 2);
-    float c22 = fetchTerrainShadowTexel(kernelOffset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth, fragPos, 3);
+    float c00 = fetchShadowTexel(tex, hasTransparency, kernelOffset + ivec2(0, 0),              fragDepth, fragPos, 0);
+    float c02 = fetchShadowTexel(tex, hasTransparency, kernelOffset + ivec2(0, kernelSize - 1), fragDepth, fragPos, 1);
+    float c20 = fetchShadowTexel(tex, hasTransparency, kernelOffset + ivec2(kernelSize - 1, 0), fragDepth, fragPos, 2);
+    float c22 = fetchShadowTexel(tex, hasTransparency, kernelOffset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth, fragPos, 3);
 
     bool allShadowed = (c00 == 0.0 && c02 == 0.0 && c20 == 0.0 && c22 == 0.0);
     bool allLit      = (c00 == 1.0 && c02 == 1.0 && c20 == 1.0 && c22 == 1.0);
 
-    float shadow = 0.0;
-    if (allShadowed || allLit) {
-        shadow = (c00 + c02 + c20 + c22) * 0.25;
-    } else {
-        float s01 = fetchTerrainShadowTexel(kernelOffset + ivec2(0, 1), fragDepth, fragPos, 4);
-        float s10 = fetchTerrainShadowTexel(kernelOffset + ivec2(1, 0), fragDepth, fragPos, 5);
-        float s11 = fetchTerrainShadowTexel(kernelOffset + ivec2(1, 1), fragDepth, fragPos, 6);
-        float s12 = fetchTerrainShadowTexel(kernelOffset + ivec2(1, 2), fragDepth, fragPos, 7);
-        float s21 = fetchTerrainShadowTexel(kernelOffset + ivec2(2, 1), fragDepth, fragPos, 8);
+    if (allShadowed || allLit)
+        return (c00 + c02 + c20 + c22) * 0.25;
 
-        #if SHADOW_FILTERING == SHADOW_FILTERING_AVERAGE
-            shadow =
-                c00 + s01 + c02 +
-                s10 + s11 + s12 +
-                c20 + s21 + c22;
-        #else
-            shadow =
-                c00 * lerpX[0] * lerpY[0] +
-                s01 * lerpX[0] * lerpY[1] +
-                c02 * lerpX[0] * lerpY[2] +
-                s10 * lerpX[1] * lerpY[0] +
-                s11 * lerpX[1] * lerpY[1] +
-                s12 * lerpX[1] * lerpY[2] +
-                c20 * lerpX[2] * lerpY[0] +
-                s21 * lerpX[2] * lerpY[1] +
-                c22 * lerpX[2] * lerpY[2];
-        #endif
-        shadow *= kernelAreaReciprocal;
-    }
+    float s01 = fetchShadowTexel(tex, hasTransparency, kernelOffset + ivec2(0, 1), fragDepth, fragPos, 4);
+    float s10 = fetchShadowTexel(tex, hasTransparency, kernelOffset + ivec2(1, 0), fragDepth, fragPos, 5);
+    float s11 = fetchShadowTexel(tex, hasTransparency, kernelOffset + ivec2(1, 1), fragDepth, fragPos, 6);
+    float s12 = fetchShadowTexel(tex, hasTransparency, kernelOffset + ivec2(1, 2), fragDepth, fragPos, 7);
+    float s21 = fetchShadowTexel(tex, hasTransparency, kernelOffset + ivec2(2, 1), fragDepth, fragPos, 8);
 
-    return shadow;
+    float shadow;
+    #if SHADOW_FILTERING == SHADOW_FILTERING_AVERAGE
+        shadow =
+            c00 + s01 + c02 +
+            s10 + s11 + s12 +
+            c20 + s21 + c22;
+    #else
+        shadow =
+            c00 * lerpX[0] * lerpY[0] +
+            s01 * lerpX[0] * lerpY[1] +
+            c02 * lerpX[0] * lerpY[2] +
+            s10 * lerpX[1] * lerpY[0] +
+            s11 * lerpX[1] * lerpY[1] +
+            s12 * lerpX[1] * lerpY[2] +
+            c20 * lerpX[2] * lerpY[0] +
+            s21 * lerpX[2] * lerpY[1] +
+            c22 * lerpX[2] * lerpY[2];
+    #endif
+    return shadow * kernelAreaReciprocal;
 }
-#endif
 
 float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     if (lightStrength <= 0)
@@ -163,64 +149,29 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
 
     const int kernelSize = 3;
     ivec2 kernelOffset = ivec2(shadowPos.xy - kernelSize / 2);
-    #if SHADOW_FILTERING == SHADOW_FILTERING_AVERAGE
-        const float kernelAreaReciprocal = 1. / (kernelSize * kernelSize);
-    #else
-        const float kernelAreaReciprocal = .25; // This is effectively a 2x2 kernel
+
+    #if SHADOW_FILTERING != SHADOW_FILTERING_AVERAGE
         vec2 lerp = fract(shadowPos.xy);
         vec3 lerpX = vec3(1 - lerp.x, 1, lerp.x);
         vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
     #endif
 
-    // Sample 4 corners first
-    float c00 = fetchShadowTexel(kernelOffset + ivec2(0, 0), fragDepth, fragPos, 0);
-    float c02 = fetchShadowTexel(kernelOffset + ivec2(0, kernelSize - 1), fragDepth, fragPos, 1);
-    float c20 = fetchShadowTexel(kernelOffset + ivec2(kernelSize - 1, 0), fragDepth, fragPos, 2);
-    float c22 = fetchShadowTexel(kernelOffset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth, fragPos, 3);
-
-    // Early exit if all corners are the same (fully shadowed or fully lit)
-    bool allShadowed = (c00 == 0.0 && c02 == 0.0 && c20 == 0.0 && c22 == 0.0);
-    bool allLit      = (c00 == 1.0 && c02 == 1.0 && c20 == 1.0 && c22 == 1.0);
-
-    float shadow = 0.0;
-    if (allShadowed || allLit) {
-        shadow = (c00 + c02 + c20 + c22) * 0.25;
-    } else {
-        // Finish sampling the reset of the kernal
-        float s01 = fetchShadowTexel(kernelOffset + ivec2(0, 1), fragDepth, fragPos, 4);
-        float s10 = fetchShadowTexel(kernelOffset + ivec2(1, 0), fragDepth, fragPos, 5);
-        float s11 = fetchShadowTexel(kernelOffset + ivec2(1, 1), fragDepth, fragPos, 6);
-        float s12 = fetchShadowTexel(kernelOffset + ivec2(1, 2), fragDepth, fragPos, 7);
-        float s21 = fetchShadowTexel(kernelOffset + ivec2(2, 1), fragDepth, fragPos, 8);
-
-        #if SHADOW_FILTERING == SHADOW_FILTERING_AVERAGE
-            shadow =
-                c00 + s01 + c02 +
-                s10 + s11 + s12 +
-                c20 + s21 + c22;
-        #else
-            shadow =
-                c00 * lerpX[0] * lerpY[0] +
-                s01 * lerpX[0] * lerpY[1] +
-                c02 * lerpX[0] * lerpY[2] +
-                s10 * lerpX[1] * lerpY[0] +
-                s11 * lerpX[1] * lerpY[1] +
-                s12 * lerpX[1] * lerpY[2] +
-                c20 * lerpX[2] * lerpY[0] +
-                s21 * lerpX[2] * lerpY[1] +
-                c22 * lerpX[2] * lerpY[2];
+    float shadow = sampleShadowTexture(shadowMap, SHADOW_TRANSPARENCY == 1, kernelOffset, fragDepth, fragPos
+        #if SHADOW_FILTERING != SHADOW_FILTERING_AVERAGE
+            , lerpX, lerpY
         #endif
-        shadow *= kernelAreaReciprocal;
-    }
+    );
 
     #if TERRAIN_SHADOWS
-        // Sample terrain shadow map and combine
-        float terrainShadow = sampleTerrainShadowMap(kernelOffset, fragDepth, fragPos
-            #if SHADOW_FILTERING != SHADOW_FILTERING_AVERAGE
-                , lerpX, lerpY
-            #endif
-        );
-        shadow = max(shadow, terrainShadow);
+        if(shadow < 1.0) {
+            // Sample terrain shadow map and combine
+            float terrainShadow = sampleShadowTexture(terrainShadowMap, false, kernelOffset, fragDepth, fragPos
+                #if SHADOW_FILTERING != SHADOW_FILTERING_AVERAGE
+                    , lerpX, lerpY
+                #endif
+            );
+            shadow = max(shadow, terrainShadow);
+        }
     #endif
 
     return shadow * (1 - fadeOut);

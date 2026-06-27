@@ -113,7 +113,6 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
-import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DestructibleHandler;
@@ -1428,7 +1427,7 @@ public class HdPlugin extends Plugin {
 		glTexImage2D(
 			GL_TEXTURE_2D,
 			0,
-			GL_DEPTH_COMPONENT24,
+			config.shadowTransparency() ? GL_DEPTH_COMPONENT24 : GL_DEPTH_COMPONENT16,
 			shadowMapResolution,
 			shadowMapResolution,
 			0,
@@ -1461,12 +1460,12 @@ public class HdPlugin extends Plugin {
 			glTexImage2D(
 				GL_TEXTURE_2D,
 				0,
-				GL_DEPTH_COMPONENT24,
+				GL_DEPTH_COMPONENT16,
 				shadowMapResolution,
 				shadowMapResolution,
 				0,
 				GL_DEPTH_COMPONENT,
-				GL_FLOAT,
+				GL_SHORT,
 				0
 			);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

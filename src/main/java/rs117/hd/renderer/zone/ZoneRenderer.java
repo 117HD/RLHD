@@ -26,6 +26,7 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Set;
@@ -38,7 +39,6 @@ import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
-import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
@@ -48,10 +48,10 @@ import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.ShadowMode;
+import rs117.hd.opengl.shader.NebulaBakeShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.shader.NebulaBakeShaderProgram;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.SkyShaderProgram;
 import rs117.hd.opengl.shader.StarShaderProgram;
@@ -63,13 +63,13 @@ import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
-import rs117.hd.scene.StarField;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.StarField;
 import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.lights.Light;
-import rs117.hd.utils.AtmosphereUtils;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.utils.AtmosphereUtils;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
@@ -98,7 +98,6 @@ import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
-import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
 @Singleton
@@ -1177,6 +1176,14 @@ public class ZoneRenderer implements Renderer {
 			environmentManager.currentDirectionalStrength > 0;
 
 		if (shouldRenderShadows || shouldClearShadowFbo) {
+			if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
+				renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
+				renderState.apply();
+
+				glClearDepth(1);
+				glClear(GL_DEPTH_BUFFER_BIT);
+			}
+
 			// Render to the shadow depth map
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
 			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
@@ -1206,15 +1213,8 @@ public class ZoneRenderer implements Renderer {
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
 			renderState.apply();
 
-			glClearDepth(1);
-			glClear(GL_DEPTH_BUFFER_BIT);
-
-			renderState.enable.set(GL_DEPTH_TEST);
-			renderState.depthFunc.set(GL_LEQUAL);
-
-			CommandBuffer.SKIP_DEPTH_MASKING = true;
+			terrainShadowProgram.use();
 			terrainShadowCmd.execute(renderState);
-			CommandBuffer.SKIP_DEPTH_MASKING = false;
 		}
 
 		glBindVertexArray(0);
@@ -1440,8 +1440,7 @@ public class ZoneRenderer implements Renderer {
 				z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
 
 				if (plugin.configTerrainShadows) {
-					terrainShadowCmd.SetShader(terrainShadowProgram);
-					z.renderOpaque(terrainShadowCmd, ctx, shouldDrawRoofShadows);
+					z.renderOpaqueLevel(terrainShadowCmd, 0);
 				}
 			}
 			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
