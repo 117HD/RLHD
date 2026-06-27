@@ -30184,7 +30184,8 @@
       "FAIRY_CHEST_BANK",
       "BARBASSAULT_BANK_CHEST",
       "TEMPOROSS_LOBBY_BANK_CHEST",
-      "LUNAR_BASIC_CHEST"
+      "LUNAR_BASIC_CHEST",
+      "BANK_CHEST_SMALL"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -34089,6 +34090,7 @@
       "FAI_VARROCK_SHELVES1",
       "FAI_VARROCK_SHELVES2",
       "FAI_VARROCK_SHELVES3",
+      "FAI_VARROCK_SHELVES4_MIRROR",
       "FAI_VARROCK_SINGLE_SHELF_FLOWERS",
       "FAI_VARROCK_SHELF_TANKARDS"
     ],
@@ -44026,9 +44028,22 @@
     "uvScale": 0.4,
     "colorOverrides": [
       {
-        "colors": [ "h == 6" ],
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvType": "BOX"
+      },
+      {
+        "colors": "h == 4",
+        "baseMaterial": "ROPE_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
       }
     ]
   },
@@ -50878,7 +50893,8 @@
       "CANAFIS_BOOKSHELF_OLD_SHORT",
       "CANAFIS_BOOKSHELF_OLD_SHORT3",
       "BURGH_LIBRARY_BOOKCASE",
-      "BURGH_LIBRARY_BOOKCASE_IVANDIS"
+      "BURGH_LIBRARY_BOOKCASE_IVANDIS",
+      "FAI_VARROCK_BOOKCASE_NOOP"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -52437,7 +52453,8 @@
       }
     ],
     "objectIds": [
-      "FAI_VARROCK_APOTHECARY_CABINET_TWO"
+      "FAI_VARROCK_APOTHECARY_CABINET_TWO",
+      "FAI_VARROCK_APOTHECARY_CABINET_ALT"
     ]
   },
   {
@@ -57549,21 +57566,74 @@
       "_100_CORAL_TUBE_TOP2",
       "_100_CORAL_TUBE_TOP3",
       "_100_CORAL_TUBE_ROCK1",
-      "_100_CORAL_TUBE_ROCK2"
+      "_100_CORAL_TUBE_ROCK2",
+      "_100_CORAL_LACE_SIDE1_PURPLE",
+      "_100_CORAL_LACE_CORNER2_PURPLE",
+      "_100_CORAL_LACE_INVERSE_PURPLE",
+      "_100_CORAL_LACE_SIDE2_PURPLE",
+      "_100_CORAL_LACE_CORNER1_PURPLE",
+      "_100_CORAL_LACE_ROCK2_PURPLE",
+      "_100_CORAL_LACE_TOP3_PURPLE",
+      "_100_CORAL_LACE_ROCK1_PURPLE",
+      "_100_CORAL_LACE_TOP2_PURPLE"
     ],
     "colorOverrides": [
       {
         "colors": "h == 7 && s == 1 || h == 8 && s == 1 || h == 9 && s == 2",
         "baseMaterial": "DIRT_1",
         "uvType": "BOX",
-        "uvScale": 0.75
+        "uvScale": 0.6
       },
       {
-        "colors": "h == 6 && s == 7 || h == 7 && s == 7 || h == 8 && s == 7",
-        "baseMaterial": "PLANT_GRUNGE_2",
-        "uvType": "BOX",
-        "uvScale": 0.75
+        "colors": "h == 6 && s == 7 || h == 7 && s == 7 || h == 8 && s == 7 || h > 20",
+        "baseMaterial": "GRUNGE_1"
       }
+    ]
+  },
+  {
+    "description": "Red Reef Coral",
+    "baseMaterial": "ROCK_2",
+    "areas": [ "RED_REEF_UNDERWATER" ],
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "RED_CORAL01_2X2",
+      "RED_CORAL01_1X1",
+      "RED_CORAL01_3X2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s != 0",
+        "baseMaterial": "GRUNGE_1_VERY_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Red Reef Rocks",
+    "baseMaterial": "ROCK_2",
+    "areas": [ "RED_REEF_UNDERWATER" ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DI2_CAVE_ROCKS_SMALL1_ICE",
+      "DI2_CAVE_ROCKS_BIG3_ICE",
+      "TRR_ROCKS_BIG02",
+      "DI2_CAVE_ROCKS_BIG1_ICE",
+      "DI2_CAVE_ROCKS_BIG2_ICE",
+      "TRR_ROCKS_BIG01"
+    ]
+  },
+  {
+    "description": "Underwater Ocean Rocks",
+    "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "OCEAN_OUTCROP_UNDERWATER01",
+      "OCEAN_OUTCROP_UNDERWATER02",
+      "OCEAN_OUTCROP_UNDERWATER03",
+      "OCEAN_OUTCROP_UNDERWATER04"
     ]
   },
   {
@@ -76949,6 +77019,7 @@
     "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "BOATKIT_SHIPHULL_FIGUREHEAD01",
+      "BOATKIT_SHIPHULL_FIGUREHEAD01_INACTIVE",
       "BOATKIT_SHIPHULL_PORTHOLE01",
       "BOATKIT_MAST_FRONTMAST_HOISTED",
       "BOATKIT_SHIPHULL_RAILING01",
@@ -77296,7 +77367,8 @@
       "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT",
       "SEASLUG_CRATE_IN_WATER2",
       "SEASLUG_CRATE_IN_WATER",
-      "SEASLUG_MESSGAE_BOTTLE"
+      "SEASLUG_MESSGAE_BOTTLE",
+      "LOTR_MINE_CRATE_IN_WATER"
     ],
     "colorOverrides": [
       {
@@ -77454,7 +77526,9 @@
       {
         "description": "Cloth",
         "colors": "h == 6",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.2
       },
       {
         "description": "Seaweed",
@@ -77478,7 +77552,7 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 0",
+        "colors": "h == 0 || h  == 5 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.1
@@ -77705,6 +77779,7 @@
     "objectIds": [
       "SAILING_MOORING_EMBARK",
       "SAILING_MOORING_DISEMBARK",
+      "SAILING_MOORING_LAST_LIGHT_ESCAPE",
       "TT_PEARL_MOORING_POINT_FIGHT"
     ],
     "uvType": "BOX",
@@ -77956,7 +78031,26 @@
     ]
   },
   {
-    "description": "Sailing - Skiff and Sloop - Mast - Bronze",
+    "description": "Sailing - Sloop - Hull - Pirate",
+    "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "SAILING_BOAT_HULL_KANDARIN_3X8_PIRATE",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_MIDSHIPS_DOWN_PIRATE",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_MIDSHIPS_UP_PIRATE",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_STERN_DOWN_PIRATE",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_PORT_STERN_UP_PIRATE",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_MIDSHIPS_DOWN_PIRATE",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_MIDSHIPS_UP_PIRATE",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_STERN_DOWN_PIRATE",
+      "SAILING_BOAT_HULL_GUNPORTS_KANDARIN_3X8_STARBOARD_STERN_UP_PIRATE",
+      "SAILING_BOAT_SLOOP_TRIM_PIRATE"
+    ]
+  },
+  {
+    "description": "Sailing - Skiff and Sloop - Sail - Bronze",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientationY": 500,
@@ -78083,6 +78177,31 @@
     ]
   },
   {
+    "description": "Sailing - Sloop - Sail - Pirate",
+    "objectIds": [
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_PIRATE"
+    ],
+    "disableDetailCulling": true,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      },
+      {
+        "description": "Metal",
+        "colors": "h > 15",
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
     "description": "Sailing - Skiff and Sloop - Keel & Metallic Trims",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvOrientation": 512,
@@ -78164,7 +78283,8 @@
       "SAILING_KEG_KRAKEN_INK_STOUT",
       "SAILING_KEG_PERILDANCE_BITTER",
       "SAILING_KEG_TRAWLERS_TRUST",
-      "SAILING_KEG_HORIZONS_LURE"
+      "SAILING_KEG_HORIZONS_LURE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_PIRATE"
     ],
     "colorOverrides": [
       {
@@ -78550,6 +78670,23 @@
         "uvType": "BOX",
         "uvScale": 0.45,
         "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Cannon - Pirate",
+    "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SAILING_PIRATE_CANNON"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 && s != 0",
+        "baseMaterial": "METALLIC_1_LIGHTER_SMOOTH"
       }
     ]
   },
@@ -79104,7 +79241,7 @@
     "description": "The Pandemonium - Palm Tree",
     "baseMaterial": "LEAF_VEINS_PALM_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.3,
+    "uvScale": 0.25,
     "objectIds": [
       "PALM_UPDATE01",
       "PALM_UPDATE02",
@@ -84179,7 +84316,7 @@
     "description": "Tropical - Great Conch - Bromelia",
     "windDisplacementMode": "VERTEX",
     "baseMaterial": "GRUNGE_3",
-    "uvScale": 0.5,
+    "uvScale": 0.3,
     "uvType": "BOX",
     "colorOverrides": [
       {
@@ -84205,10 +84342,10 @@
     "colorOverrides": [
       {
         "description": "Stem and leaves",
-        "colors": "h == 20 || h == 24",
+        "colors": "h == 19 || h == 20 || h == 24",
         "windDisplacementMode": "VERTEX",
         "baseMaterial": "LEAF_VEINS",
-        "uvScale": 0.25,
+        "uvScale": 0.2,
         "uvType": "BOX"
       }
     ],
@@ -84229,6 +84366,15 @@
       "PLANT_TROPICAL_LEAFY07",
       "PLANT_TROPICAL_LEAFY08",
       "PLANT_TROPICAL_LEAFY09"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 9",
+        "windDisplacementMode": "VERTEX",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvScale": 0.2,
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -84245,17 +84391,34 @@
       "PLANT_TROPICAL_FAN04_MEDIUM02",
       "PLANT_TROPICAL_FAN02_MEDIUM",
       "PLANT_TROPICAL_FAN04_MEDIUM01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 9",
+        "windDisplacementMode": "VERTEX",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvScale": 0.2,
+        "uvType": "BOX"
+      }
     ]
   },
   {
     "description": "Tropical - Great Conch - Tropcial Palm - Purple and red",
     "windDisplacementMode": "VERTEX",
     "baseMaterial": "LEAF_VEINS_PALM",
-    "uvScale": 0.25,
+    "uvScale": 0.2,
     "uvType": "BOX",
     "uvOrientation": -313,
     "objectIds": [
       "PLANT_TROPICAL_FAN01_SMALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 58 && s > 3",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -84275,7 +84438,7 @@
     "description": "Great Conch - Wooden - Rope - Rope Fence",
     "windDisplacementMode": "VERTEX",
     "baseMaterial": "WOOD_GRAIN_3",
-    "uvScale": 0.8,
+    "uvScale": 0.5,
     "uvType": "BOX",
     "colorOverrides": [
       {
@@ -84303,12 +84466,12 @@
     "description": "Great Conch - Wooden - Shell - Wheelbarrow",
     "baseMaterial": "GRUNGE_2_MATTE",
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.3,
     "uvOrientation": 313,
     "colorOverrides": [
       {
         "description": "Wood",
-        "colors": "h == 6",
+        "colors": "h == 6 && s == 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientation": 512,
@@ -84516,14 +84679,379 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": "h >= 10 || h <= 12",
+        "colors": "h >= 10 && h <= 15",
         "baseMaterial": "PLANT_GRUNGE_2",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "uvScale": 0.35
       }
     ],
     "objectIds": [
       "GREAT_CONCH_SHRINE"
+    ]
+  },
+  {
+    "description": "Red Rock - Pallet Leaning on Wall",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "RED_ROCK_PALLET02_LEANING01",
+      "RED_ROCK_PALLET02_LEANING01_OFFSET_X"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 650,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "colors": "h < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Crate - Single",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "RED_ROCK_CRATE01_SINGLE01",
+      "RED_ROCK_CRATE03",
+      "RED_ROCK_CRATE02",
+      "RED_ROCK_PALLET01_BAG01",
+      "RED_ROCK_PALLET02_BAG01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "colors": "h < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Crate - Stack",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "RED_ROCK_CRATE01_STACKED01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Docks - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "TRR_PIER_SUPPORT_STRAIGHT01A",
+      "TRR_PIER_SUPPORT_CORNER_OUTSIDE01A",
+      "SKEWSTEPS_WOOD01_REDROCK01",
+      "TRR_PIER_SUPPORT_CORNER_OUTSIDE01C",
+      "TRR_PIER_SUPPORT_STRAIGHT01C"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512
+  },
+  {
+    "description": "Red Rock - Docks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "TRR_PIER_SUPPORT_CORNER_OUTSIDE01B",
+      "TRR_PIER_SUPPORT_STRAIGHT01B",
+      "TRR_PIER_SUPPORT_STRAIGHT01D",
+      "TRR_PIER_SUPPORT_CORNER_OUTSIDE01D"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Red Rock - Dock Support - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "TRR_PIER_SUPPORT_PILLAR01A",
+      "TRR_PIER_SUPPORT_PILLAR01C"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 32",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Algae",
+        "colors": "h == 12",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Dock Support",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "TRR_PIER_SUPPORT_PILLAR01D",
+      "TRR_PIER_SUPPORT_PILLAR01B"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 32",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Algae",
+        "colors": "h == 12",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Ship - Wood with Sails",
+    "disableDetailCulling": true,
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "BOATKIT_MAST_MIDDLEMAST_HOISTED_RED_REEF",
+      "BOATKIT_MAST_MIDDLEMAST_FULL_RED_REEF"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Hull",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Sail",
+        "colors": "h == 0 && s == 3",
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Ship - Bowsprit",
+    "disableDetailCulling": true,
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "BOATKIT_MAST_FRONTMAST_HOISTED_RED_REEF"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Hull",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Sail",
+        "colors": "h == 0 && s == 3",
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Ship - Diving Bell Crane",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "TRR_DIVING_BELL_CRANE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Building Walls",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "WALLKIT_RED_ROCK_INTERNAL01_WALL01",
+      "WALLKIT_RED_ROCK_WINDOW01",
+      "WALLKIT_RED_ROCK_WALL01",
+      "WALLKIT_RED_ROCK_WALL01_RESIZE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 1 && s == 3",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Doors",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "WALLKIT_RED_ROCK_DOOR01_OPEN_R_NOOP",
+      "WALLKIT_RED_ROCK_DOOR01_OPEN_L_NOOP",
+      "WALLKIT_RED_ROCK_DOOR01_OPEN_NOOP",
+      "WALLKIT_RED_ROCK_DOOR01_LOCKED",
+      "WALLKIT_RED_ROCK_DOOR01_OPEN_L",
+      "WALLKIT_RED_ROCK_DOOR01_OPEN_R",
+      "WALLKIT_RED_ROCK_DOOR01_CLOSED_L",
+      "WALLKIT_RED_ROCK_DOOR01_CLOSED_R"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "colors": "h == 1 && s == 3",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Pully",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "WALLKIT_RED_ROCK_PULLEY01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Tables with Various Items",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "RED_ROCK_TABLE01_1X1",
+      "RED_ROCK_TABLE01_2X3",
+      "RED_ROCK_TABLE01_1X3",
+      "RED_ROCK_TABLE01_1X2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Red Rock - Display Cases",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TRR_DISPLAY_CASE_1",
+      "TRR_DISPLAY_CASE_2",
+      "TRR_DISPLAY_CASE_3",
+      "TRR_DISPLAY_CASE_4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Red Reef - Diving Bell",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TRR_DIVING_BELL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Red Reef - Dredger",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TRR_CORAL_DREDGER_FIXED",
+      "TRR_CORAL_DREDGER_BROKEN",
+      "TRR_CORAL_DREDGER_BROKEN_OP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Red Reef - Cliff",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "CORAL_SEABED_LOW_WALL"
     ]
   },
   {

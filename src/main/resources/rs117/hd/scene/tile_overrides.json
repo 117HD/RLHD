@@ -10677,6 +10677,14 @@
     "shiftLightness": 6
   },
   {
+    "name": "RED_REEF_GRAVEL",
+    "area": "RED_REEF_UNDERWATER",
+    "overlayIds": [
+      137
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
     "name": "Icyene Graveyard tiles",
     "area": "MORYTANIA",
     "overlayIds": [
