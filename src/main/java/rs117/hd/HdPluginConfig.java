@@ -752,6 +752,19 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_WATER_REFLECTIONS = "waterReflections";
+	@ConfigItem(
+		keyName = KEY_WATER_REFLECTIONS,
+		name = "Water Reflections",
+		description = "Adds reflective highlights to water surfaces.",
+		position = 12,
+		section = environmentSettings
+	)
+	default boolean waterReflections()
+	{
+		return true;
+	}
+
 	String KEY_WIND_DISPLACEMENT = "windDisplacement";
 	@ConfigItem(
 		keyName = KEY_WIND_DISPLACEMENT,

@@ -37,6 +37,7 @@ layout(std140) uniform UBOGlobal {
 
     bool underwaterEnvironment;
     bool underwaterCaustics;
+    bool waterReflections;
     vec3 underwaterCausticsColor;
     float underwaterCausticsStrength;
 
