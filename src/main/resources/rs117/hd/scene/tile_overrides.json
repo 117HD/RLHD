@@ -8,6 +8,10 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "DEFAULT_VARIED_DIRT",
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
     "name": "DEFAULT_SAND",
     "groundMaterial": "SAND"
   },
@@ -10655,6 +10659,32 @@
     "groundMaterial": "PACKED_EARTH",
     "blended": false,
     "shiftLightness": 6
+  },
+  {
+    "name": "CoX - Chambers of Xeric Overlay - Dirt",
+    "area": "CHAMBERS_OF_XERIC",
+    "groundMaterial": "DIRT",
+    "overlayIds": [
+      17
+    ]
+  },
+  {
+    "name": "CoX - Chambers of Xeric Ground - Complex",
+    "area": "CHAMBERS_OF_XERIC",
+    "underlayIds": [
+      63,
+      66,
+      99,
+      103,
+      115
+    ],
+    "replacements": {
+      "DEFAULT_GRUNGE": [
+        "h >= 21 && h <=23",
+        "s == 0 || h <= 10 && s < 2"
+      ],
+      "DEFAULT_VARIED_DIRT": true
+    }
   },
   {
     "name": "TAG - CLIMATE - START"
