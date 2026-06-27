@@ -480,7 +480,7 @@ public class ProceduralGenerator {
 	}
 
 	final class MainTileOverridesGenerator {
-		private static final int SCENE_EDGE_PADDING = 2;
+		private static final int SCENE_EDGE_PADDING = 1;
 
 		private final TileOverride[] overrides = new TileOverride[TILE_OVERRIDE_COUNT];
 		private final int[] worldPos = new int[3];
