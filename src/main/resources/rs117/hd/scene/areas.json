@@ -9139,6 +9139,12 @@
     ]
   },
   {
+    "name": "TOA_LOOT_ROOM_CHEST_PLATFORM",
+    "aabbs": [
+      [ 3678, 5138, 3682, 5143 ]
+    ]
+  },
+  {
     "name": "TOA_FINAL_BOSS_PHASE_1",
     "aabbs": [
       [ 3776, 5120, 3839, 5183 ]
@@ -9269,6 +9275,13 @@
       [ 3913, 5392, 3913, 5424 ],
       [ 3912, 5398, 3912, 5418 ],
       [ 3906, 5399, 3911, 5417 ]
+    ]
+  },
+  {
+    "name": "TOMBS_OF_AMASCUT_LOBBY",
+    "areas": [
+      "TOA_ENTRANCE_LOBBY",
+      "TOA_PATH_HUB"
     ]
   },
   {

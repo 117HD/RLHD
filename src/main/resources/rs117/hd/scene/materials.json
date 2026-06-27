@@ -1032,6 +1032,11 @@
     "parent": "NONE"
   },
   {
+    "name": "GRAY_400",
+    "parent": "NONE",
+    "brightness": 4
+  },
+  {
     "name": "GRAY_300",
     "parent": "NONE",
     "brightness": 3
