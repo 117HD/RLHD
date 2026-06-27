@@ -384,6 +384,7 @@ public class HdPlugin extends Plugin {
 	private int rboSceneResolveColor;
 
 	public int shadowMapResolution;
+	public int terrainShadowMapResolution;
 	public int fboShadowMap;
 	private int texShadowMap;
 	public int fboTerrainShadowMap;
@@ -1457,12 +1458,13 @@ public class HdPlugin extends Plugin {
 			glActiveTexture(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
 			glBindTexture(GL_TEXTURE_2D, texTerrainShadowMap);
 
+			terrainShadowMapResolution = (int)(shadowMapResolution * 0.5f);
 			glTexImage2D(
 				GL_TEXTURE_2D,
 				0,
 				GL_DEPTH_COMPONENT16,
-				shadowMapResolution,
-				shadowMapResolution,
+				terrainShadowMapResolution,
+				terrainShadowMapResolution,
 				0,
 				GL_DEPTH_COMPONENT,
 				GL_SHORT,

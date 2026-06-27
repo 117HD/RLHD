@@ -61,16 +61,20 @@ float fetchShadowTexel(sampler2D tex, bool hasTransparency, ivec2 pixelCoord, fl
     return texelFetch(tex, pixelCoord, 0).r < fragDepth ? 1.f : 0.f;
 }
 
-float sampleShadowTexture(sampler2D tex, bool hasTransparency, ivec2 kernelOffset, float fragDepth, vec3 fragPos
-    #if SHADOW_FILTERING != SHADOW_FILTERING_AVERAGE
-        , vec3 lerpX, vec3 lerpY
-    #endif
-) {
+float sampleShadowTexture(sampler2D tex, bool hasTransparency, float fragDepth, vec4 shadowPos, vec3 fragPos) {
+    shadowPos.xy *= textureSize(tex, 0);
+    shadowPos.xy += .5; // Shift to texel center
+
     const int kernelSize = 3;
+    ivec2 kernelOffset = ivec2(shadowPos.xy - kernelSize / 2);
+
     #if SHADOW_FILTERING == SHADOW_FILTERING_AVERAGE
         const float kernelAreaReciprocal = 1. / (kernelSize * kernelSize);
     #else
         const float kernelAreaReciprocal = .25;
+        vec2 lerp = fract(shadowPos.xy);
+        vec3 lerpX = vec3(1 - lerp.x, 1, lerp.x);
+        vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
     #endif
 
     float c00 = fetchShadowTexel(tex, hasTransparency, kernelOffset + ivec2(0, 0),              fragDepth, fragPos, 0);
@@ -131,13 +135,10 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
         return 0.f;
 
     // NDC to texture space
-    ivec2 shadowRes = textureSize(shadowMap, 0);
     shadowPos.xyz += 1;
     shadowPos.xyz /= 2;
     shadowPos.xy += distortion;
     shadowPos.xy = clamp(shadowPos.xy, 0, 1);
-    shadowPos.xy *= shadowRes;
-    shadowPos.xy += .5; // Shift to texel center
 
     // Scale bias with surface angle to light - steeper angles need more bias.
     // tan(acos(x)) == sqrt(1 - x*x) / x (algebraic identity), avoiding two SFU ops.
@@ -147,29 +148,12 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     float shadowBias = MIN_SHADOW_BIAS * slopeBias;
     float fragDepth = shadowPos.z + shadowBias;
 
-    const int kernelSize = 3;
-    ivec2 kernelOffset = ivec2(shadowPos.xy - kernelSize / 2);
-
-    #if SHADOW_FILTERING != SHADOW_FILTERING_AVERAGE
-        vec2 lerp = fract(shadowPos.xy);
-        vec3 lerpX = vec3(1 - lerp.x, 1, lerp.x);
-        vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
-    #endif
-
-    float shadow = sampleShadowTexture(shadowMap, SHADOW_TRANSPARENCY == 1, kernelOffset, fragDepth, fragPos
-        #if SHADOW_FILTERING != SHADOW_FILTERING_AVERAGE
-            , lerpX, lerpY
-        #endif
-    );
+    float shadow = sampleShadowTexture(shadowMap, SHADOW_TRANSPARENCY == 1, fragDepth, shadowPos, fragPos);
 
     #if TERRAIN_SHADOWS
         if(shadow < 1.0) {
             // Sample terrain shadow map and combine
-            float terrainShadow = sampleShadowTexture(terrainShadowMap, false, kernelOffset, fragDepth, fragPos
-                #if SHADOW_FILTERING != SHADOW_FILTERING_AVERAGE
-                    , lerpX, lerpY
-                #endif
-            );
+            float terrainShadow = sampleShadowTexture(terrainShadowMap, false, fragDepth, shadowPos, fragPos);
             shadow = max(shadow, terrainShadow);
         }
     #endif

@@ -1211,6 +1211,7 @@ public class ZoneRenderer implements Renderer {
 		// Render terrain-only shadow map
 		if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
+			renderState.viewport.set(0, 0, plugin.terrainShadowMapResolution, plugin.terrainShadowMapResolution);
 			renderState.apply();
 
 			terrainShadowProgram.use();

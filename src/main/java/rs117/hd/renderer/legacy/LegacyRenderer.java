@@ -1214,6 +1214,7 @@ public class LegacyRenderer implements Renderer {
 				// Render terrain-only shadow map
 				if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
 					glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
+					glViewport(0, 0, plugin.terrainShadowMapResolution, plugin.terrainShadowMapResolution);
 					glClearDepth(1);
 					glClear(GL_DEPTH_BUFFER_BIT);
 
