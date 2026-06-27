@@ -22,7 +22,6 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
@@ -72,6 +71,7 @@ public class LegacyModelPusher {
 
 	private static final int[] ZEROED_INTS = new int[12];
 
+	private final int[] tzHaarRecolored = new int[3];
 	private ModelCache modelCache;
 
 	public void startUp() {
@@ -149,8 +149,8 @@ public class LegacyModelPusher {
 	}
 
 	/**
-	 * Pushes model data to staging buffers in the provided {@link SceneContext}, and writes the pushed number of
-	 * vertices and UVs to {@link SceneContext#modelPusherResults}.
+	 * Pushes model data to staging buffers in the provided {@link LegacySceneContext}, and writes the pushed number of
+	 * vertices and UVs to {@link LegacySceneContext#modelPusherResults}.
 	 *
 	 * @param sceneContext   object for the scene to push model data for
 	 * @param tile           that the model is associated with, if any
@@ -387,7 +387,7 @@ public class LegacyModelPusher {
 		sceneContext.modelPusherResults[1] = texturedFaceCount;
 	}
 
-	private void getNormalDataForFace(SceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
+	private void getNormalDataForFace(LegacySceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
 		assert packTerrainData(false, 0, WaterType.NONE, 0) == 0;
 		if (modelOverride.flatNormals || !plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1) {
 			Arrays.fill(sceneContext.modelFaceNormals, 0);
@@ -424,7 +424,7 @@ public class LegacyModelPusher {
 
 	@SuppressWarnings({ "ReassignedVariable" })
 	private int[] getFaceVertices(
-		SceneContext sceneContext,
+		LegacySceneContext sceneContext,
 		Tile tile,
 		int uuid,
 		Model model,
@@ -587,13 +587,14 @@ public class LegacyModelPusher {
 				}
 
 				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
-					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
+					ProceduralGenerator.recolorTzHaar(
 						modelOverride,
 						model,
 						face,
 						color1,
 						color2,
-						color3
+						color3,
+						tzHaarRecolored
 					);
 					color1 = tzHaarRecolored[0];
 					color2 = tzHaarRecolored[1];

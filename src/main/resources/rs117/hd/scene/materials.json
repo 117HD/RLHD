@@ -1,12 +1,8 @@
 [
   {
-    "name": "UNLIT",
-    "parent": "NONE",
-    "unlit": true
-  },
-  {
     "name": "UNLIT_125",
-    "parent": "UNLIT",
+    "parent": "NONE",
+    "unlit": true,
     "brightness": 1.25
   },
   {
@@ -1034,6 +1030,11 @@
   {
     "name": "WHITE",
     "parent": "NONE"
+  },
+  {
+    "name": "GRAY_400",
+    "parent": "NONE",
+    "brightness": 4
   },
   {
     "name": "GRAY_300",

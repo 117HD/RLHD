@@ -128,6 +128,8 @@ import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
 import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
@@ -416,6 +418,7 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public int configDetailDrawDistance;
+	public int configExpandedMapLoadingChunks;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -790,6 +793,8 @@ public class HdPlugin extends Plugin {
 			materialManager.shutDown();
 			textureManager.shutDown();
 
+			ConcurrentPool.destroyAll();
+			PooledArrayType.shutdown();
 			DestructibleHandler.flushPendingDestruction(true);
 
 			if (awtContext != null)
@@ -1634,6 +1639,7 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void updateCachedConfigs() {
+		configExpandedMapLoadingChunks = config.expandedMapLoadingChunks();
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configRoofShadows = config.roofShadows();
@@ -2018,6 +2024,7 @@ public class HdPlugin extends Plugin {
 		if (ctx != null)
 			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
 
+		gamevalManager.update();
 		DestructibleHandler.flushPendingDestruction();
 	}
 
