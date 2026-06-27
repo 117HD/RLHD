@@ -460,7 +460,6 @@
     "area": "TOA_LOOT_ROOM",
     "ambientStrength": 1.2,
     "directionalStrength": 0.5,
-    "fogColor": "#050505",
     "fogDepth": 20
   },
   {
@@ -468,9 +467,15 @@
     "directionalStrength": 0.75,
     "fogColor": "#050505",
     "sunAngles": [
-      125,
+      137,
       180
     ],
+    "fogDepth": 20
+  },
+  {
+    "area": "TOA_FINAL_BOSS_PHASE_2",
+    "directionalStrength": 0.75,
+    "fogColor": "#000000",
     "fogDepth": 20
   },
   {
@@ -1688,6 +1693,20 @@
     "groundFogEnd": -700,
     "groundFogOpacity": 0.65,
     "waterCausticsStrength": 4
+  },
+  {
+    "area": "RED_REEF_UNDERWATER",
+    "isUnderwater": true,
+    "ambientColor": "#255590",
+    "ambientStrength": 9,
+    "directionalColor": "#71a3d0",
+    "directionalStrength": 0.6,
+    "fogColor": "#133156",
+    "fogDepth": 35,
+    "groundFogStart": -50,
+    "groundFogEnd": -700,
+    "groundFogOpacity": 0.5,
+    "waterCausticsStrength": 42
   },
   {
     "area": "LUNAR_DREAM_WORLD",
