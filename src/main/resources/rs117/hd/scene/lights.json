@@ -20960,7 +20960,7 @@
   },
   {
     "description": "LANTERN_CANDLE",
-    "offset": [ 10, 260, -12 ],
+    "offset": [ 16, 265, 0 ],
     "alignment": "CENTER",
     "radius": 550,
     "strength": 15.5,
@@ -30853,35 +30853,53 @@
   {
     "description": "Tumeken's Shadow Projectile",
     "alignment": "CENTER",
-    "height": -100,
+    "height": -50,
     "radius": 200,
     "strength": 20,
     "color": "#ffb570",
     "type": "FLICKER",
     "duration": 0,
     "range": 30,
-    "spawnDelay": 700,
     "fadeInDuration": 400,
-    "fadeOutDuration": 600,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "TUMEKENS_SHADOW_TRAVEL"
     ]
   },
   {
-    "description": "Tumeken's Shadow Cast",
+    "description": "Tumeken's Shadow Impact",
     "alignment": "CENTER",
-    "height": 210,
+    "height": 60,
+    "radius": 300,
+    "strength": 20,
+    "color": "#ffb570",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "waitForAnimation": true,
+    "fixedDespawnTime": true,
+    "despawnDelay": 650,
+    "spawnDelay": 200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "TUMEKENS_SHADOW_IMPACT"
+    ]
+  },
+  {
+    "description": "Tumeken's Shadow Cast",
+    "offset": [ 0, 210, 60 ],
     "radius": 250,
-    "fixedDespawnTime": false,
+    "fixedDespawnTime": true,
     "strength": 15,
     "color": "#FFA756",
     "type": "FLICKER",
     "duration": 0,
     "range": 0,
-    "spawnDelay": 700,
-    "despawnDelay": 25,
-    "fadeInDuration": 100,
-    "fadeOutDuration": 175,
+    "spawnDelay": 750,
+    "despawnDelay": 700,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 200,
     "graphicsObjectIds": [
       "TUMEKENS_SHADOW_CASTING"
     ]
@@ -35806,9 +35824,26 @@
     ]
   },
   {
-    "description": "TOA_FLAME_ENTRANCE",
-    "height": 140,
-    "alignment": "CENTER",
+    "description": "TOA_FLAME_ENTRANCE_DIAGONAL",
+    "offset": [ -45, 140, -45 ],
+    "radius": 400,
+    "strength": 100,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 10,
+    "objectIds": [
+      "TOA_NEXUS_CRONDIS_DOOR",
+      "TOA_NEXUS_SCABARAS_DOOR"
+    ]
+  },
+  {
+    "description": "TOA_FLAME_ENTRANCE_HORIZONTAL",
+    "offset": [ 0, 140, -90 ],
     "radius": 400,
     "strength": 100,
     "color": [
@@ -35823,10 +35858,8 @@
       "TOA_LOBBY_RAID_ENTRY",
       "TOA_LOBBY_RAID_ENTRY_NOOP",
       "TOA_NEXUS_HET_DOOR",
-      "TOA_NEXUS_CRONDIS_DOOR",
-      "TOA_NEXUS_SCABARAS_DOOR",
       "TOA_NEXUS_APMEKEN_DOOR",
-      "TOA_NEXUS_WARDENS_DOOR"
+      "TOA_NEXUS_WARDENS_DOOR_OPEN"
     ]
   },
   {
@@ -35848,11 +35881,10 @@
     ]
   },
   {
-    "description": "TOA_INVOCATION_BOARD_LEFT",
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 130,
-    "strength": 100,
+    "description": "TOA_INVOCATION_BOARD_1",
+    "offset": [ -35, 205, 116 ],
+    "radius": 55,
+    "strength": 165,
     "color": [
       175,
       18,
@@ -35861,17 +35893,15 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3362,
-    "worldY": 9115,
-    "plane": 0,
-    "fadeInDuration": 0
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
   },
   {
-    "description": "TOA_INVOCATION_BOARD_MIDDLE",
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 150,
-    "strength": 100,
+    "description": "TOA_INVOCATION_BOARD_2",
+    "offset": [ -35, 205, 35 ],
+    "radius": 50,
+    "strength": 165,
     "color": [
       175,
       18,
@@ -35880,17 +35910,15 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3363,
-    "worldY": 9115,
-    "plane": 0,
-    "fadeInDuration": 0
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
   },
   {
-    "description": "TOA_INVOCATION_BOARD_RIGHT",
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 130,
-    "strength": 100,
+    "description": "TOA_INVOCATION_BOARD_3",
+    "offset": [ -35, 208, -28 ],
+    "radius": 50,
+    "strength": 90,
     "color": [
       175,
       18,
@@ -35899,17 +35927,237 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3364,
-    "worldY": 9115,
-    "plane": 0,
-    "fadeInDuration": 0
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_4",
+    "offset": [ -40, 208, -52 ],
+    "radius": 50,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_5",
+    "offset": [ -35, 205, -123 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_6",
+    "offset": [ -50, 128, -123 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_7",
+    "offset": [ -50, 128, -47 ],
+    "radius": 50,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_8",
+    "offset": [ -50, 124, 36 ],
+    "radius": 50,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_9",
+    "offset": [ -50, 124, 116 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_10",
+    "offset": [ -65, 52, 116 ],
+    "radius": 60,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_11",
+    "offset": [ -65, 39, 45 ],
+    "radius": 57,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_12",
+    "offset": [ -65, 59, 26 ],
+    "radius": 60,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_13",
+    "offset": [ -65, 45, -30 ],
+    "radius": 53,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_14",
+    "offset": [ -65, 45, -55 ],
+    "radius": 60,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_15",
+    "offset": [ -65, 45, -123 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_15",
+    "offset": [ 0, 130, 0 ],
+    "radius": 200,
+    "strength": 140,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
   },
   {
     "description": "TOA_GROUPING_OBELISK_NE",
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 10,
     "color": [
       175,
       18,
@@ -35928,7 +36176,7 @@
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 50,
     "color": [
       175,
       18,
@@ -35947,7 +36195,7 @@
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 110,
     "color": [
       175,
       18,
@@ -35966,7 +36214,7 @@
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 30,
     "color": [
       175,
       18,
@@ -35984,16 +36232,14 @@
     "description": "TOA_TELEPORT_CRYSTAL",
     "height": 220,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 50,
+    "radius": 400,
+    "strength": 60,
     "color": [
       175,
       18,
       9
     ],
-    "type": "PULSE",
-    "duration": 1800,
-    "range": 9,
+    "type": "STATIC",
     "objectIds": [
       "KEPHRI_TELEPORT",
       "ZEBAK_TELEPORT",
@@ -36543,8 +36789,7 @@
       50
     ],
     "type": "FLICKER",
-    "duration": 600,
-    "range": 2,
+    "range": 50,
     "npcIds": [
       "TOA_WARDENS_ENERGY"
     ]
@@ -36734,9 +36979,8 @@
       25,
       25
     ],
-    "type": "PULSE",
-    "duration": 300,
-    "range": 2,
+    "type": "FLICKER",
+    "range": 50,
     "projectileIds": [
       "PROJECTILE_WARDEN_TUMEKEN_CORE",
       "PROJECTILE_WARDEN_ELIDINIS_CORE"
@@ -36926,19 +37170,61 @@
   },
   {
     "description": "TOA_LOOT_SARCOPHAGUS_PURPLE",
-    "height": 100,
+    "height": 250,
     "alignment": "CENTER",
     "radius": 700,
     "strength": 30,
     "color": [
-      145,
+      200,
       55,
-      197
+      255
     ],
     "type": "STATIC",
     "duration": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 10000,
     "range": 3,
-    "objectIds": [ ]
+    "objectIds": [
+      "TOA_VAULT_SARCOPHAGUS_CLOSED_RARE",
+      "TOA_VAULT_SARCOPHAGUS_OPEN"
+    ]
+  },
+  {
+    "description": "TOA_LOBBY_EXIT",
+    "offset": [ 0, 215, -35 ],
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "TOA_LOBBY_EXIT"
+    ]
+  },
+  {
+    "description": "TOA_OSMUMTEN_GHOST",
+    "offset": [ 0, 100, 0 ],
+    "radius": 250,
+    "strength": 7,
+    "spawnDelay": 200,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "npcIds": [
+      "TOA_OSMUMTEN_VAULT_VIS_2",
+      "TOA_OSMUMTEN_VIS"
+    ]
   },
   {
     "description": "CAVE_WALL_LANTERN",
@@ -38303,10 +38589,9 @@
   },
   {
     "description": "MAGE_TRAIN_ARENA_WALL_CRYSTALS",
-    "height": 210,
-    "alignment": "FRONT",
+    "offset": [ 0, 210, 100 ],
     "radius": 300,
-    "strength": 5.5,
+    "strength": 4.5,
     "color": [
       252,
       252,
@@ -38322,10 +38607,11 @@
   },
   {
     "description": "MAGE_TRAIN_ARENA_CANDLEABRA",
-    "height": 210,
+    "height": 267,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 10,
+    "visibleFromOtherPlanes": true,
+    "radius": 330,
+    "strength": 7,
     "color": [
       252,
       148,
@@ -38340,24 +38626,23 @@
   },
   {
     "description": "MAGE_TRAIN_ARENA_AREA_PORTALS",
-    "height": 140,
-    "alignment": "CENTER",
-    "radius": 220,
+    "offset": [ 0, 140, 0 ],
+    "radius": 180,
     "strength": 11,
     "color": [
-      143,
-      0,
-      255
+      200,
+      70,
+      200
     ],
-    "type": "PULSE",
-    "duration": 1100,
+    "type": "FLICKER",
     "range": 20,
     "objectIds": [
       "MAGICTRAINING_TELEDOOR",
       "MAGICTRAINING_ENCHANTDOOR",
       "MAGICTRAINING_ALCHEMDOOR",
       "MAGICTRAINING_GRAVEDOOR",
-      "MAGICTRAINING_RETURNDOOR"
+      "MAGICTRAINING_RETURNDOOR",
+      "MAGICTRAINING_HIDDEN_PORTAL_ENTRANCE1"
     ]
   },
   {
@@ -38397,19 +38682,23 @@
     ]
   },
   {
-    "description": "MAGE_TRAIN_ARENA_EGG_STATUE",
+    "description": "MAGE_TRAIN_ARENA_BONE_DROP",
     "height": 200,
     "alignment": "CENTER",
     "radius": 220,
-    "strength": 11,
+    "strength": 9,
     "color": [
       255,
       255,
       255
     ],
-    "type": "PULSE",
-    "duration": 1254,
-    "range": 15,
+    "type": "FLICKER",
+    "range": 40,
+    "spawnDelay": 200,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400,
+    "despawnDelay": 1200,
+    "fixedDespawnTime": true,
     "graphicsObjectIds": [
       "MAGICTRAINING_BONE_DROP1",
       "MAGICTRAINING_BONE_DROP2",
@@ -38419,10 +38708,9 @@
   },
   {
     "description": "MAGE_TRAIN_ARENA_DOORWAY",
-    "height": 20,
-    "alignment": "CENTER",
+    "offset": [ -13.3, 100, 0 ],
     "radius": 220,
-    "strength": 44,
+    "strength": 20,
     "color": [
       255,
       255,
@@ -47121,7 +47409,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "fadeInDuration": 150,
+    "fadeInDuration": 0,
     "fadeOutDuration": 150
   },
   {
@@ -47141,7 +47429,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
-    "fadeInDuration": 150,
+    "fadeInDuration": 0,
     "fadeOutDuration": 250
   },
   {
@@ -47193,7 +47481,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
-    "fadeInDuration": 150,
+    "fadeInDuration": 0,
     "fadeOutDuration": 250
   },
   {
@@ -47421,23 +47709,6 @@
     ],
     "npcIds": [
       "DT2_WAR_ROOM_SHADOW_TOTEM_ACTIVE"
-    ]
-  },
-  {
-    "description": "TOA_LOBBY_EXIT",
-    "offset": [ 0, 215, -35 ],
-    "radius": 450,
-    "strength": 15,
-    "color": [
-      255,
-      255,
-      255
-    ],
-    "type": "STATIC",
-    "duration": 0,
-    "range": 0,
-    "objectIds": [
-      "TOA_LOBBY_EXIT"
     ]
   },
   {
@@ -47867,6 +48138,20 @@
     "fadeOutDuration": 200,
     "projectileIds": [
       "SNAKEBOSS_FIREBALL"
+    ]
+  },
+  {
+    "description": "Charting Sea Lure Light",
+    "offset": [ -150, 175, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_LARGE_LIGHT"
     ]
   }
 ]
