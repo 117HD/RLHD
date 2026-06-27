@@ -18,7 +18,6 @@ import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.DestructibleHandler;
-import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.jobs.JobGroup;
@@ -27,6 +26,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.DynamicModelVAO.METADATA_SIZE;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 import static rs117.hd.renderer.zone.ZoneRenderer.FRAMES_IN_FLIGHT;
+import static rs117.hd.utils.collections.Util.quickSort;
 
 @Slf4j
 public class WorldViewContext {
@@ -34,7 +34,8 @@ public class WorldViewContext {
 	public static final int VAO_ALPHA = 1;
 	public static final int VAO_PLAYER = 2;
 	public static final int VAO_SHADOW = 3;
-	public static final int VAO_COUNT = 4;
+	public static final int VAO_PRESCENE = 4;
+	public static final int VAO_COUNT = 5;
 
 	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL =
 		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO::Staging", true));
@@ -94,11 +95,11 @@ public class WorldViewContext {
 		zones = new Zone[sizeX][sizeZ];
 	}
 
-	public void initialize(RenderState renderState, Injector injector) {
+	public void initialize(Injector injector) {
 		injector.injectMembers(this);
 
-		vaoSceneCmd = new CommandBuffer("WorldViewScene", renderState);
-		vaoDirectionalCmd = new CommandBuffer("WorldViewDirectional", renderState);
+		vaoSceneCmd = new CommandBuffer("WorldViewScene");
+		vaoDirectionalCmd = new CommandBuffer("WorldViewDirectional");
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
@@ -181,9 +182,9 @@ public class WorldViewContext {
 		}
 
 		if (!alphaZones.isEmpty()) {
-			alphaZones.sort(alphaSortComparator);
-			for (Zone z : alphaZones)
-				z.alphaStaticModelSort(camera);
+			quickSort(alphaZones, alphaSortComparator);
+			for (int i = 0; i < alphaZones.size(); i++)
+				alphaZones.get(i).alphaStaticModelSort(camera);
 		}
 	}
 
