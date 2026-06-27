@@ -1651,7 +1651,7 @@ public class SceneUploader implements AutoCloseable {
 				}
 			}
 
-			if (faceOverride.shiftsColor()) {
+			if (faceOverride.modifiesColor) {
 				color1 = faceOverride.modifyColor(color1);
 				color2 = faceOverride.modifyColor(color2);
 				color3 = faceOverride.modifyColor(color3);
@@ -1711,8 +1711,8 @@ public class SceneUploader implements AutoCloseable {
 			if (shouldRotateNormals)
 				rotateNormals(modelNormals, orientSin, orientCos);
 
-			if (faceOverride.shiftsAlpha())
-				transparency = faceOverride.modifyAlpha(transparency);
+			if (faceOverride.modifiesAlpha)
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				bias == null ? 0 : bias[face] & 0xFF;
@@ -2071,7 +2071,7 @@ public class SceneUploader implements AutoCloseable {
 			if (textureId != -1)
 				color1 = color2 = color3 = 90;
 
-			if (faceOverride.shiftsColor()) {
+			if (faceOverride.modifiesColor) {
 				color1 = faceOverride.modifyColor(color1);
 				color2 = faceOverride.modifyColor(color2);
 				color3 = faceOverride.modifyColor(color3);
@@ -2142,8 +2142,8 @@ public class SceneUploader implements AutoCloseable {
 				color3 = interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
 			}
 
-			if (faceOverride.shiftsAlpha())
-				transparency = faceOverride.modifyAlpha(transparency);
+			if (faceOverride.modifiesAlpha)
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
 
 			final int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				hasBias ? bias[face] & 0xFF : 0;
