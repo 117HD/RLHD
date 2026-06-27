@@ -63,4 +63,30 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
+
+	// Sky gradient uniforms for Day/Night Cycle
+	public Property skyGradientEnabled = addProperty(PropertyType.Int, "skyGradientEnabled");
+	public Property skyZenithColor = addProperty(PropertyType.FVec3, "skyZenithColor");
+	public Property skyHorizonColor = addProperty(PropertyType.FVec3, "skyHorizonColor");
+	public Property skySunColor = addProperty(PropertyType.FVec3, "skySunColor");
+	public Property skySunDir = addProperty(PropertyType.FVec3, "skySunDir");
+
+	// Moon uniforms for Day/Night Cycle
+	public Property skyMoonDir = addProperty(PropertyType.FVec3, "skyMoonDir");
+	public Property skyMoonColor = addProperty(PropertyType.FVec3, "skyMoonColor");
+	public Property skyMoonIllumination = addProperty(PropertyType.Float, "skyMoonIllumination");
+
+	// Star visibility (from environment override)
+	public Property starVisibility = addProperty(PropertyType.Float, "starVisibility");
+
+	// Nebula visibility (toggled via config)
+	public Property nebulaVisibility = addProperty(PropertyType.Float, "nebulaVisibility");
+
+	// Moon visibility (from environment override)
+	public Property moonVisibility = addProperty(PropertyType.Float, "moonVisibility");
+
+	// Aurora visibility (1 on randomly-selected aurora nights, else 0)
+	public Property auroraVisibility = addProperty(PropertyType.Float, "auroraVisibility");
+
+	public Property orthographicProjection = addProperty(PropertyType.Int, "orthographicProjection");
 }

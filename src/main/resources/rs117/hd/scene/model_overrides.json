@@ -2137,8 +2137,9 @@
     ]
   },
   {
-    "description": "Tirannwn - Wood Debris",
+    "description": "Tirannwn - Wood Debris, TODO: Grass passable until proper fix via inheritTileColorType",
     "baseMaterial": "BARK",
+    "undoVanillaShading": false,
     "objectIds": [
       "REGICIDE_TWIGS1",
       "REGICIDE_TWIGS2",
@@ -2155,6 +2156,7 @@
         "colors": "h == 12",
         "baseMaterial": "GRAY_75",
         "flatNormals": true,
+        "upwardsNormals": true,
         "castShadows": false
       }
     ]
@@ -2185,12 +2187,13 @@
       "REGICIDE_ROCK1_TRAP"
     ],
     "retainVanillaUvs": false,
+    "undoVanillaShading": false,
     "uvType": "BOX",
     "uvScale": 0.45,
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "PLANT_GRUNGE_1",
+        "baseMaterial": "PLANT_GRUNGE_2_DARK",
         "uvScale": 0.5,
         "upwardsNormals": true,
         "uvType": "MODEL_XZ",
@@ -2328,7 +2331,19 @@
     "colorOverrides": [
       {
         "colors": "h == 40",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_300"
+      }
+    ]
+  },
+  {
+    "description": "Tirannwn - Elven Lamp - Bulb only",
+    "objectIds": [
+      "PRIF_CRYSTAL_LAMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 40",
+        "baseMaterial": "GRAY_300"
       }
     ]
   },
@@ -2638,11 +2653,6 @@
       "FLOWERBED_YELLOW",
       "RAREFLOWER_YELLOW",
       "RAREFLOWERS_YELLOW",
-      "BULLRUSHES",
-      "BULLRUSHES2",
-      "BULLRUSHES3",
-      "BULLRUSHES4",
-      "BULLRUSHES5",
       "NETTLES",
       "NETTLES1",
       "NETTLES2",
@@ -2686,6 +2696,28 @@
       "LUNAR_LITTLE_FLOWERS_1",
       "LUNAR_LITTLE_FLOWERS_2",
       "LUNAR_LITTLE_FLOWERS_3"
+    ]
+  },
+  {
+    "description": "Bullrushes",
+    "baseMaterial": "GRAY_90",
+    "undoVanillaShading": true,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "BULLRUSHES",
+      "BULLRUSHES2",
+      "BULLRUSHES3",
+      "BULLRUSHES4",
+      "BULLRUSHES5"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRASS_BLADE_85",
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
+        "castShadows": false
+      }
     ]
   },
   {
@@ -2803,9 +2835,14 @@
   },
   {
     "description": "Hunter Grass",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRASS_BLADE",
     "windDisplacementMode": "OBJECT",
     "flatNormals": true,
+    "uvOrientation": 512,
+    "castShadows": false,
+    "upwardsNormals": true,
+    "inheritTileColorType": "UNDERLAY",
+    "uvType": "MODEL_XY",
     "objectIds": [
       "HUNTING_LONG_JUNGLE_GRASS1",
       "HUNTING_LONG_JUNGLE_GRASS2",
@@ -2816,8 +2853,9 @@
     ]
   },
   {
-    "description": "Hunter Grass with Vines",
+    "description": "Hunter Grass with Vines, TODO: Grass passable until proper fix via inheritTileColorType",
     "baseMaterial": "GRUNGE_1",
+    "undoVanillaShading": false,
     "objectIds": [
       "HUNTING_GREENVINE_STRAIGHT",
       "HUNTING_GREENVINE_CORNER",
@@ -2834,26 +2872,27 @@
         "description": "Grass",
         "colors": "h == 12",
         "upwardsNormals": true,
-        "baseMaterial": "GRAY_75",
+        "castShadows": false,
+        "baseMaterial": "GRAY_70",
         "windDisplacementMode": "OBJECT"
       }
     ]
   },
   {
     "description": "Short grass which shouldn't cast shadows",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
     "flatNormals": true,
+    "upwardsNormals": true,
     "windDisplacementMode": "OBJECT",
     "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
     "terrainVertexSnap": true,
     "objectIds": [
       "GRASS_1",
       "GRASS_1_SWAMP",
       "GRASS_2_SWAMP",
       "GRASS_3_SWAMP",
-      "REGICIDE_GRASS1",
-      "REGICIDE_GRASS2",
-      "REGICIDE_GRASS3",
       "DEATH_GRASS_1",
       "DEATH_GRASS_2",
       "DEATH_GRASS_3",
@@ -2892,6 +2931,7 @@
       "SHORT_GRASS_DARK_4",
       "SHORT_GRASS_DARK_3_CASTLE_EDGE",
       "SHORT_GRASS_DARK_4_CASTLE_EDGE",
+      "SHORT_GRASS_DARK_4_CASTLE_CORNER",
       "SHORT_GRASS_DARK_4_CASTLE_EDGE2",
       "SHORT_GRASS_DARK_3_WALL_EDGE",
       "SHORT_GRASS_DARK_4_WALL_EDGE",
@@ -2989,21 +3029,44 @@
       "PMOON_SHORT_GRASS_1",
       "PMOON_SHORT_GRASS_2",
       "PMOON_SHORT_GRASS_3",
+      "NIGHTMARE_GARDEN_GRASS_LONG",
+      "NIGHTMARE_GARDEN_GRASS_SPARSE",
+      "NIGHTMARE_GARDEN_GRASS_SHORT",
+      "LONG_GRASS_4_WALL_EDGE",
+      "LONG_GRASS_WALL_EDGE_2",
+      "LONG_GRASS_2_WALL_CORNER"
+    ]
+  },
+  {
+    "description": "River grass which shouldn't cast shadows",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
+    "flatNormals": true,
+    "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "undoVanillaShading": false,
+    "inheritTileColorType": "UNDERLAY",
+    "terrainVertexSnap": true,
+    "objectIds": [
       "REGICIDE_GRASS1_RIVER",
       "REGICIDE_GRASS2_RIVER",
       "REGICIDE_GRASS2L_RIVER",
-      "NIGHTMARE_GARDEN_GRASS_LONG",
-      "NIGHTMARE_GARDEN_GRASS_SPARSE",
-      "NIGHTMARE_GARDEN_GRASS_SHORT"
+      "REGICIDE_GRASS1",
+      "REGICIDE_GRASS2",
+      "REGICIDE_GRASS3"
     ]
   },
   {
     "description": "Fremmenik Isles, Lighten Grass",
     "areas": [ "FREMENNIK_ISLES" ],
-    "baseMaterial": "GRAY_90",
+    "baseMaterial": "GRASS_BLADE_90",
     "flatNormals": true,
     "castShadows": false,
+    "upwardsNormals": true,
+    "uvType": "MODEL_XY",
     "windDisplacementMode": "OBJECT",
+    "inheritTileColorType": "UNDERLAY",
     "objectIds": [
       "FRIS_LONG_GRASS_1",
       "FRIS_SHORT_GRASS_1",
@@ -3049,9 +3112,12 @@
   },
   {
     "description": "Varlamore, Fortis and Avium Grass",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRASS_BLADE_85",
+    "uvType": "MODEL_XY",
+    "inheritTileColorType": "UNDERLAY",
     "flatNormals": true,
     "castShadows": false,
+    "upwardsNormals": true,
     "windDisplacementMode": "OBJECT",
     "objectIds": [
       "AVIUM_GRASS_1",
@@ -3072,9 +3138,12 @@
   },
   {
     "description": "Tlati Rainforest Grass",
-    "baseMaterial": "GRAY_45",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "BOX",
+    "uvOrientation": 512,
     "upwardsNormals": true,
     "windDisplacementMode": "OBJECT",
+    "inheritTileColorType": "UNDERLAY",
     "castShadows": false,
     "objectIds": [
       "GEMSTONE_GRASS_TALL1",
@@ -3088,6 +3157,27 @@
       "TLATI_GRASS_VERYLONG_1",
       "TLATI_GRASS_VERYLONG_2",
       "TLATI_GRASS_VERYLONG_3"
+    ]
+  },
+  {
+    "description": "Hunter Grass with Vines, TODO: Grass passable until proper fix via inheritTileColorType",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "TLATI_VINE01_END01_DIAG01",
+      "TLATI_VINE01_DIAG03",
+      "TLATI_VINE01_DIAG02",
+      "TLATI_VINE01_END01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "s == 3",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "baseMaterial": "GRAY_65",
+        "windDisplacementMode": "OBJECT"
+      }
     ]
   },
   {
@@ -3208,7 +3298,10 @@
       "GRASS_LIGHT_2",
       "GRASS_LIGHT_3",
       "GRASS_LIGHT_4",
-      "GRASS_2"
+      "GRASS_2",
+      "SHAGGY_GRASS1",
+      "SHAGGY_GRASS2",
+      "SHAGGY_GRASS3"
     ]
   },
   {
@@ -3864,8 +3957,9 @@
     ]
   },
   {
-    "description": "Objects - Rocks - Medium",
+    "description": "Objects - Rocks - Medium, TODO: Grass passable until proper fix via inheritTileColorType",
     "baseMaterial": "ROCK_1_LIGHT",
+    "undoVanillaShading": false,
     "objectIds": [
       "TROLL_ROCKS_GRASS",
       "TROLL_ROCKS_GRASS_FALLOFF"
@@ -3873,10 +3967,11 @@
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "GRAY_65",
+        "baseMaterial": "GRAY_55",
         "windDisplacementMode": "OBJECT",
         "uvType": "BOX",
         "upwardsNormals": true,
+        "castShadows": false,
         "uvScale": 0.6
       }
     ],
@@ -3884,10 +3979,11 @@
     "uvScale": 0.32
   },
   {
-    "description": "Farming Guild - Farming patch Edges with grass made of stone and edged with wood",
-    "baseMaterial": "GRAY_75",
-    "flatNormals": true,
+    "description": "Farming Guild - Farming patch Edges with grass made of stone and edged with wood, TODO: Grass passable until proper fix via inheritTileColorType",
+    "baseMaterial": "GRAY_65",
     "castShadows": false,
+    "flatNormals": true,
+    "undoVanillaShading": false,
     "windDisplacementMode": "OBJECT",
     "objectIds": [
       "KEBOS_FARMING_GUILD_BORDER_STRAIGHT",
@@ -3913,10 +4009,12 @@
     ]
   },
   {
-    "description": "Varrock - Farming Patch Edges with grass around them",
-    "baseMaterial": "GRAY_75",
+    "description": "Varrock - Farming Patch Edges with grass around them, TODO: Grass passable until proper fix via inheritTileColorType",
+    "baseMaterial": "GRAY_55",
     "flatNormals": true,
     "castShadows": false,
+    "undoVanillaShading": false,
+    "upwardsNormals": true,
     "windDisplacementMode": "OBJECT",
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
@@ -3965,9 +4063,10 @@
     ]
   },
   {
-    "description": "Short grass with rock objects Morytania Farming Patches",
-    "baseMaterial": "GRAY_75",
+    "description": "Short grass with rock objects Morytania Farming Patches, TODO: Grass passable until proper fix via inheritTileColorType",
+    "baseMaterial": "GRAY_65",
     "flatNormals": true,
+    "undoVanillaShading": false,
     "castShadows": false,
     "objectIds": [
       "FARMING_BORDER_STRAIGHT_DARK",
@@ -3984,9 +4083,12 @@
   },
   {
     "description": "Hunter guild grass, that's also used elsewhere so restrict this to Varlamore",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
+    "inheritTileColorType": "UNDERLAY",
     "flatNormals": true,
     "castShadows": false,
+    "upwardsNormals": true,
     "areas": [ "VARLAMORE" ],
     "objectIds": [
       "HUNTING_JUNGLE_GRASS3"
@@ -4064,6 +4166,7 @@
       "SHORT_GRASS_DARK_2",
       "SHORT_GRASS_DARK_3",
       "SHORT_GRASS_DARK_4",
+      "SHORT_GRASS_DARK_4_CASTLE_CORNER",
       "SHORT_GRASS_DARK_3_CASTLE_EDGE",
       "SHORT_GRASS_DARK_4_CASTLE_EDGE",
       "SHORT_GRASS_DARK_4_CASTLE_EDGE2",
@@ -4118,6 +4221,9 @@
       "FRIS_SHORT_GRASS_2",
       "FRIS_SHORT_GRASS_1",
       "FRIS_LONG_GRASS_4",
+      "FRIS_LONG_GRASS_3",
+      "FRIS_SHORT_GRASS_3",
+      "FRIS_LONG_GRASS_1",
       "FRIS_SHORT_GRASS_4_CASTLE_EDGE",
       "FRIS_SHORT_GRASS_4_CASTLE_EDGE2",
       "FRIS_SHORT_GRASS_3_CASTLE_EDGE",
@@ -4161,7 +4267,10 @@
       "AVIUM_GRASS_TALL2_DRY",
       "AVIUM_GRASS_TALL3_DRY",
       "AVIUM_GRASS_TALL4_DRY",
-      "POH_GRASS"
+      "POH_GRASS",
+      "LONG_GRASS_4_WALL_EDGE",
+      "LONG_GRASS_WALL_EDGE_2",
+      "LONG_GRASS_2_WALL_CORNER"
     ]
   },
   {
@@ -4899,7 +5008,8 @@
     ],
     "colorOverrides": [
       {
-        "description": "Grass",
+        "description": "Grass, TODO: Grass hidden until proper fix via inheritTileColorType",
+        "hide": true,
         "colors": "h == 17",
         "baseMaterial": "GRAY_65",
         "flatNormals": true,
@@ -5662,7 +5772,7 @@
   },
   {
     "description": "STONE_WALL_FENCES",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_DARK",
     "textureMaterial": "HD_CONCRETE",
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -5688,6 +5798,57 @@
       "FAI_VARROCK_STONE_SHORT_WALL_CUT_MIRROR",
       "DRYSTONEWALL_PILE",
       "POH_FENCING3"
+    ]
+  },
+  {
+    "description": "Stone Walls, with Grass, TODO: Grass passable until proper fix via inheritTileColorType",
+    "baseMaterial": "STONE_NORMALED",
+    "textureMaterial": "HD_CONCRETE",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "DRYSTONEWALL_GRASS",
+      "FAI_VARROCK_STONE_SHORT_WALL",
+      "FAI_VARROCK_STONE_SHORT_WALL_CUT",
+      "FAI_VARROCK_CASTLE_WALL_SHORT_WALL_BLEND",
+      "FAI_VARROCK_CASTLE_WALL_SHORT_WALL_BLEND_MIRROR",
+      "FAI_VARROCK_STONE_SHORT_WALL_CUT_MIRROR"
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 250,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 13 || h == 17",
+        "baseMaterial": "GRASS_BLADE_85",
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
+        "castShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Barrows Walls, with Grass",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "BARROW_LOW_WALLS_PILLAR",
+      "BARROW_LOW_WALLS_PILLARL",
+      "BARROW_LOW_WALLS_PILLARTOP",
+      "BARROWS_DRYSTONEWALL_SHORTCUT",
+      "BARROWS_DRYSTONEWALL_GRASS"
+    ],
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvOrientation": 250,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 17",
+        "baseMaterial": "GRAY_50",
+        "upwardsNormals": true,
+        "castShadows": false
+      }
     ]
   },
   {
@@ -13779,10 +13940,32 @@
     "description": "Mysterious Statue",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvScale": 0.66,
+    "uvScale": 0.75,
     "uvOrientation": 255,
     "objectIds": [
-      "GRIM_JUNGLESTATUE"
+      "GRIM_JUNGLESTATUE",
+      "JUNGLESTATUE"
+    ]
+  },
+  {
+    "description": "Mysterious Statue with Grass",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 255,
+    "uvScale": 0.75,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "RIMMINGTON_JUNGLESTATUE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass, TODO: Grass hidden until proper fix via inheritTileColorType",
+        "colors": "h == 13",
+        "baseMaterial": "LAVA",
+        "castShadows": false,
+        "hide": true,
+        "upwardsNormals": true
+      }
     ]
   },
   {
@@ -14079,6 +14262,27 @@
     ]
   },
   {
+    "description": "SLAYER_DUNGEON_EXIT",
+    "baseMaterial": "ROCK_3_VERY_DARK",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "SLAYER_DUNGEON_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "s == 0 && l < 65",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
     "description": "Fire Remains",
     "baseMaterial": "ROCK_1",
     "objectIds": [
@@ -14090,7 +14294,6 @@
     "description": "Metal Lanturn",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "objectIds": [
-      "HANGINGLANTERN",
       "FAI_VARROCK_OILLAMP",
       "FAI_VARROCK_SWING_LANTERN_UNLIT",
       "FAI_FALADOR_LANTERN",
@@ -14138,6 +14341,55 @@
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Animated Round Lantern - Brighten Flame and Texture Metal",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "LANTERN_GLOWS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Animated Square Lantern - Brighten Flame and Texture Metal",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "HANGINGLANTERN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_200"
+      }
+    ]
+  },
+  {
+    "description": "VARROCK_RUNE_SHOP_SIGN",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHOP_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.43,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_300"
       }
     ]
   },
@@ -17235,14 +17487,15 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Objects - Vines with grass",
+    "description": "Objects - Vines with grass, TODO: Grass passable until proper fix via inheritTileColorType",
     "baseMaterial": "GRUNGE_3_DARK",
     "uvType": "BOX",
+    "undoVanillaShading": false,
     "colorOverrides": [
       {
         "description": "Grass",
         "colors": "s == 7",
-        "baseMaterial": "GRAY_65",
+        "baseMaterial": "GRAY_85",
         "windDisplacementMode": "OBJECT",
         "upwardsNormals": true,
         "castShadows": false
@@ -17266,17 +17519,18 @@
     ]
   },
   {
-    "description": "Objects - Ape Atoll - Vines with grass",
+    "description": "Objects - Ape Atoll - Vines with grass, TODO: Grass passable until proper fix via inheritTileColorType",
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
+    "undoVanillaShading": false,
     "colorOverrides": [
       {
         "description": "Grass",
         "colors": "h == 12",
-        "upwardsNormals": true,
-        "baseMaterial": "GRAY_75",
+        "baseMaterial": "GRAY_80",
         "windDisplacementMode": "OBJECT",
-        "castShadows": false
+        "castShadows": false,
+        "flatNormals": true
       }
     ],
     "objectIds": [
@@ -17292,11 +17546,12 @@
     ]
   },
   {
-    "description": "Karamja - Mos le Harmless  - Plant - Jungle grass",
+    "description": "Karamja - Mos le Harmless  - Plant - Jungle grass, TODO: Grass passable until proper fix via inheritTileColorType",
     "windDisplacementMode": "OBJECT",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "GRAY_85",
     "castShadows": false,
     "upwardsNormals": true,
+    "undoVanillaShading": false,
     "objectIds": [
       "JUNGLEFLOOR1",
       "JUNGLEFLOOR2",
@@ -17309,8 +17564,12 @@
   {
     "description": "Ape Atoll  - Plant - Jungle grass",
     "windDisplacementMode": "OBJECT",
-    "baseMaterial": "GRAY_50",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "inheritTileColorType": "UNDERLAY",
     "castShadows": false,
+    "flatNormals": true,
     "upwardsNormals": true,
     "terrainVertexSnap": true,
     "objectIds": [
@@ -20705,10 +20964,11 @@
       {
         "description": "Lamp",
         "colors": "s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT"
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "upwardsNormals": true
       },
       {
-        "description": "Lamp",
+        "description": "Moths",
         "colors": "a < 255",
         "baseMaterial": "NONE",
         "upwardsNormals": false,
@@ -20716,6 +20976,7 @@
       }
     ],
     "objectIds": [
+      "GNOME_LAMP",
       "GNOME_LAMP2"
     ]
   },
@@ -26282,13 +26543,35 @@
       "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
       "MYQ4_OBSTACLE_VENT",
       "MYQ4_OBSTACLE_VENT_BROKEN",
-      "MYQ4_WINDOW"
+      "MYQ4_WINDOW",
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR",
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR_MIRROR"
     ],
     "colorOverrides": [
       {
         "description": "GLASS",
         "colors": "s >= 5",
-        "baseMaterial": "BLANK_GLOSS"
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Walls with Window or Open Door - Brighten North/East Facing",
+    "baseMaterial": "STONE_NORMALED",
+    "areas": [ "VER_SINHAZA_BRIGHTEN_WINDOWS_DOORS" ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR",
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "GLASS",
+        "colors": "s >= 5",
+        "baseMaterial": "GRAY_150"
       }
     ]
   },
@@ -29772,9 +30055,6 @@
       "FAI_ANDROMEDA_ROCK_04",
       "FAI_ANDROMEDA_ROCK_05",
       "FAI_ANDROMEDA_ROCK_06",
-      "FAI_ROCK_VSMALL_01",
-      "FAI_ROCK_VSMALL_02",
-      "FAI_ROCK_VSMALL_03",
       "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_MIDDLE",
       "TOURTRAP_QIP_ROCKS1",
       "TOURTRAP_QIP_ROCKS2",
@@ -29792,9 +30072,6 @@
       "CAVEROCKS2",
       "ROCKSLIDE_LIGHTGREY5",
       "ROCKSLIDE_LIGHTGREY6",
-      "FAI_ROCK_SMALL_01",
-      "FAI_ROCK_SMALL_02",
-      "FAI_ROCK_SMALL_03",
       "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_BOTTOM",
       "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_TOP"
     ],
@@ -29832,15 +30109,38 @@
     "description": "Rocks - Large",
     "baseMaterial": "ROCK_1",
     "objectIds": [
-      "FAI_ROCK_BIG_01",
-      "FAI_ROCK_BIG_02",
-      "FAI_ROCK_BIG_03",
-      "FAI_ROCK_BIG_04",
       "TOURTRAP_QIP_MINE_ROCKS_BIG_02",
       "TOURTRAP_QIP_MINE_ROCKS_BIG_01"
     ],
     "uvType": "BOX",
     "uvScale": 0.22
+  },
+  {
+    "description": "Falador - Rock Formation/Standing Stones",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "objectIds": [
+      "FAI_ROCK_BIG_01",
+      "FAI_ROCK_BIG_02",
+      "FAI_ROCK_BIG_03",
+      "FAI_ROCK_BIG_04",
+      "FAI_ROCK_SMALL_01",
+      "FAI_ROCK_SMALL_02",
+      "FAI_ROCK_SMALL_03",
+      "FAI_ROCK_VSMALL_01",
+      "FAI_ROCK_VSMALL_02",
+      "FAI_ROCK_VSMALL_03"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Grass, TODO: Grass hidden until proper fix via inheritTileColorType",
+        "hide": true,
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_55",
+        "upwardsNormals": true
+      }
+    ]
   },
   {
     "description": "Crashed Star",
@@ -52047,6 +52347,12 @@
         "baseMaterial": "BARK",
         "uvType": "BOX",
         "uvScale": 0.6
+      },
+      {
+        "colors": [ "h == 13 && l > 10" ],
+        "baseMaterial": "GRASS_BLADE_85",
+        "upwardsNormals": true,
+        "uvType": "MODEL_XY"
       }
     ]
   },
@@ -55384,7 +55690,8 @@
       },
       {
         "colors": "a < 106",
-        "baseMaterial": "NONE",
+        "baseMaterial": "GRAY_80",
+        "upwardsNormals": true,
         "depthBias": 210,
         "uvType": "MODEL_XZ",
         "castShadows": false,
@@ -59892,7 +60199,7 @@
     ]
   },
   {
-    "description": "Morytania Spider Cave",
+    "description": "Morytania Spider Cave, TODO: Grass passable until proper fix via inheritTileColorTypea",
     "baseMaterial": "GRASS_3",
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -59912,10 +60219,10 @@
         "windDisplacementModifier": -3
       },
       {
-        "description": "Grass that needs flat normals to fix",
+        "description": "Grass, TODO: Grass passable until proper fix via inheritTileColorType",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_70",
-        "flatNormals": true,
+        "baseMaterial": "GRAY_50",
+        "upwardsNormals": true,
         "castShadows": false
       }
     ],
@@ -59924,7 +60231,7 @@
     ]
   },
   {
-    "description": "Morytania webbed trees",
+    "description": "Morytania webbed trees, TODO: Grass passable until proper fix via inheritTileColorType",
     "baseMaterial": "BARK",
     "uvOrientation": 188,
     "uvType": "BOX",
@@ -59934,6 +60241,12 @@
         "description": "Web",
         "colors": "h == 10",
         "baseMaterial": "GROUND_WEB_2_LIGHT"
+      },
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_35",
+        "upwardsNormals": true
       }
     ],
     "objectIds": [
@@ -69726,6 +70039,26 @@
     ]
   },
   {
+    "description": "Varlamore - Ship Wreak Near Twilight Temple - Green Fire",
+    "objectIds": [
+      "SHIPWRECK_COVE_STRANGE_CAMPFIRE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 15 && a == 255",
+        "baseMaterial": "GRAY_50",
+        "upwardsNormals": true,
+        "flatNormals": true
+      },
+      {
+        "colors": "h == 15",
+        "baseMaterial": "GRAY_75",
+        "upwardsNormals": true,
+        "flatNormals": true
+      }
+    ]
+  },
+  {
     "description": "Varlamore - Twilight Temple",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
@@ -70575,10 +70908,14 @@
   {
     "description": "Tempoross - Grass - Override Wind Strength",
     "areas": [ "TEMPOROSS_COVE" ],
-    "baseMaterial": "GRAY_75",
-    "windDisplacementMode": "OBJECT",
-    "windDisplacementModifier": 2,
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
+    "inheritTileColorType": "UNDERLAY",
+    "uvOrientation": 512,
     "flatNormals": true,
+    "castShadows": false,
+    "upwardsNormals": true,
+    "windDisplacementModifier": 2,
     "objectIds": [
       "HUNTING_JUNGLE_GRASS1",
       "HUNTING_JUNGLE_GRASS3"
@@ -72513,8 +72850,9 @@
     ]
   },
   {
-    "description": "WGS - Broav Trap - Edge",
+    "description": "WGS - Broav Trap - Edge, TODO: Grass passable until proper fix via inheritTileColorType",
     "baseMaterial": "DIRT_1",
+    "undoVanillaShading": false,
     "uvType": "BOX",
     "uvScale": 0.65,
     "objectIds": [
@@ -72525,7 +72863,8 @@
       {
         "colors": "h == 12",
         "upwardsNormals": true,
-        "baseMaterial": "GRAY_75",
+        "baseMaterial": "GRAY_70",
+        "castShadows": false,
         "windDisplacementMode": "OBJECT"
       }
     ]
@@ -76400,6 +76739,21 @@
         "colors": "a < 255",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Monkey Madness 2 - Rematch Brazier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "MM2_POSTQUEST_BRAZIER_LIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125",
+        "receiveShadows": false,
+        "upwardsNormals": true
       }
     ]
   },
@@ -83267,7 +83621,7 @@
       {
         "description": "Grass",
         "colors": "h == 12 && s == 7",
-        "baseMaterial": "GRAY_65",
+        "baseMaterial": "GRAY_60",
         "flatNormals": true,
         "windDisplacementMode": "OBJECT",
         "castShadows": false,
@@ -88540,6 +88894,69 @@
       "DS2_TOMB_LADDER_RIGHT",
       "DS2_TOMB_LADDER_TOP_LEFT",
       "DS2_TOMB_LADDER_BROKEN"
+    ]
+  },
+  {
+    "description": "Shayzien Church - Brazier",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "SHAYZIEN_CHURCH_BRAZIER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_250"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien Church - Candle Stand",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "BRAIN_MON_CANDLE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3_DARK"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien Church - Candle Stand",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SHAYZIEN_CHURCH_ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 6",
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+      },
+      {
+        "colors": "h == 9",
+        "baseMaterial": "GRUNGE_3_DARK"
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
     ]
   },
   {

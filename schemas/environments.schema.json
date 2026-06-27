@@ -47,6 +47,11 @@
         "type": "boolean",
         "description": "Whether transitions to and from this area should always be instant."
       },
+      "cycleMode": {
+        "type": "string",
+        "description": "Forces the day/night cycle mode for this environment, overriding the player's config setting.",
+        "enum": [ "DYNAMIC", "FIXED_DAWN", "FIXED_MIDDAY", "FIXED_SUNSET", "FIXED_NIGHT", "ALWAYS_NIGHT" ]
+      },
       "ambientColor": {
         "type": [ "string", "array" ],
         "description": "Ambient light color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
@@ -112,6 +117,16 @@
       "underglowStrength": {
         "type": "number",
         "description": "Underglow strength multiplier. Acts as light emanating from the ground."
+      },
+      "moonColor": {
+        "type": [ "string", "array" ],
+        "description": "Moon color in sRGB, specified as a hex color code or an array in the range 0-255. Affects both the visible moon disk and the light it casts. Defaults to a cool silver (~4100K).",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
       },
       "sunAngles": {
         "type": "array",

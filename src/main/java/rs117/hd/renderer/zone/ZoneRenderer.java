@@ -26,6 +26,8 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Set;
 import javax.inject.Inject;
@@ -37,16 +39,23 @@ import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.ShadowMode;
+import rs117.hd.opengl.shader.NebulaBakeShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.shader.SkyShaderProgram;
+import rs117.hd.opengl.shader.StarShaderProgram;
+import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
@@ -56,8 +65,11 @@ import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.StarField;
+import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.utils.AtmosphereUtils;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
@@ -78,6 +90,7 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -140,7 +153,33 @@ public class ZoneRenderer implements Renderer {
 	private ShadowShaderProgram.Detailed detailedShadowProgram;
 
 	@Inject
+	private TerrainShadowShaderProgram terrainShadowProgram;
+
+	@Inject
+	private SkyShaderProgram skyProgram;
+
+	@Inject
+	private NebulaBakeShaderProgram nebulaBakeProgram;
+
+	@Inject
+	private StarShaderProgram starProgram;
+
+	@Inject
 	private JobSystem jobSystem;
+
+	// Baked nebula cubemap. The nebula is a static function of view direction, so
+	// we evaluate its multi-octave fBm once into this cubemap and sample it each
+	// frame instead of recomputing per pixel.
+	private static final int NEBULA_CUBEMAP_RESOLUTION = 256;
+	private int texNebulaCubemap = 0;
+	private int fboNebulaBake = 0;
+	private boolean nebulaBaked = false;
+
+	// Star point sprites. A fixed star list is generated once and drawn as
+	// GL_POINTS, so cost scales with star count rather than screen pixels.
+	private int vaoStars = 0;
+	private int vboStars = 0;
+	private int starCount = 0;
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
@@ -149,9 +188,18 @@ public class ZoneRenderer implements Renderer {
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
+	// Day/Night Cycle - stored fog color for skybox clear
+	private float[] calculatedFogColorSrgb = null;
+	// Day/Night Cycle - sky gradient enabled flag
+	private boolean skyGradientEnabled = false;
+
+	private final int[] worldPos = new int[3];
+
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional");
+	public final CommandBuffer terrainShadowCmd = new CommandBuffer("TerrainShadow");
+	public final CommandBuffer playerCmd = new CommandBuffer("Player");
 	public final CommandBuffer gapFillerCmd = new CommandBuffer("GapFiller");
 
 	private GLBuffer indirectDrawCmds;
@@ -191,6 +239,7 @@ public class ZoneRenderer implements Renderer {
 
 		sceneCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
+		terrainShadowCmd.setFrameTimer(frameTimer);
 		gapFillerCmd.setFrameTimer(frameTimer);
 
 		jobSystem.startUp(config.cpuUsageLimit());
@@ -201,6 +250,7 @@ public class ZoneRenderer implements Renderer {
 		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
 		directionalCamera.setDirty();
+
 	}
 
 	@Override
@@ -238,6 +288,14 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.compile(includes);
 		fastShadowProgram.compile(includes);
 		detailedShadowProgram.compile(includes);
+		terrainShadowProgram.compile(includes);
+		skyProgram.compile(includes);
+		nebulaBakeProgram.compile(includes);
+		starProgram.compile(includes);
+
+		// Bake the nebula cubemap once. Its content is a pure function of view
+		// direction (no config/time dependence), so it survives shader recompiles.
+		bakeNebulaCubemap();
 	}
 
 	@Override
@@ -245,6 +303,113 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
+		terrainShadowProgram.destroy();
+		skyProgram.destroy();
+		nebulaBakeProgram.destroy();
+		starProgram.destroy();
+	}
+
+	// Standard OpenGL cubemap face orientation: {forward, right, up} per face,
+	// where dir = normalize(forward + u*right + v*up) for u,v in [-1, 1].
+	private static final float[][][] NEBULA_CUBE_FACES = {
+		{ { 1, 0, 0 }, { 0, 0, -1 }, { 0, -1, 0 } }, // +X
+		{ { -1, 0, 0 }, { 0, 0, 1 }, { 0, -1, 0 } }, // -X
+		{ { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0, 1 } },   // +Y
+		{ { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } }, // -Y
+		{ { 0, 0, 1 }, { 1, 0, 0 }, { 0, -1, 0 } },  // +Z
+		{ { 0, 0, -1 }, { -1, 0, 0 }, { 0, -1, 0 } } // -Z
+	};
+
+	private void bakeNebulaCubemap() {
+		if (nebulaBaked || !nebulaBakeProgram.isValid())
+			return;
+
+		// Create the cubemap texture (RGBA16F to preserve the nebula's small HDR values).
+		if (texNebulaCubemap == 0) {
+			texNebulaCubemap = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_NEBULA);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, texNebulaCubemap);
+			for (int face = 0; face < 6; face++) {
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA16F,
+					NEBULA_CUBEMAP_RESOLUTION, NEBULA_CUBEMAP_RESOLUTION, 0, GL_RGBA, GL_FLOAT, 0);
+			}
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		}
+
+		if (fboNebulaBake == 0)
+			fboNebulaBake = glGenFramebuffers();
+
+		// Save state we touch so we don't disturb whatever the caller had bound.
+		int prevFbo = glGetInteger(GL_FRAMEBUFFER_BINDING);
+		int[] prevViewport = new int[4];
+		glGetIntegerv(GL_VIEWPORT, prevViewport);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fboNebulaBake);
+		glViewport(0, 0, NEBULA_CUBEMAP_RESOLUTION, NEBULA_CUBEMAP_RESOLUTION);
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_BLEND);
+		glDisable(GL_CULL_FACE);
+
+		nebulaBakeProgram.use();
+		glBindVertexArray(plugin.vaoTri);
+
+		for (int face = 0; face < 6; face++) {
+			float[][] basis = NEBULA_CUBE_FACES[face];
+			nebulaBakeProgram.uniFaceForward.set(basis[0][0], basis[0][1], basis[0][2]);
+			nebulaBakeProgram.uniFaceRight.set(basis[1][0], basis[1][1], basis[1][2]);
+			nebulaBakeProgram.uniFaceUp.set(basis[2][0], basis[2][1], basis[2][2]);
+
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+				GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, texNebulaCubemap, 0);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+		}
+
+		// Restore previous state. The bake used raw GL calls (FBO, viewport, depth/
+		// blend/cull, VAO) that bypass renderState, so invalidate its whole cache to
+		// force a clean re-apply on the next frame.
+		glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
+		glViewport(prevViewport[0], prevViewport[1], prevViewport[2], prevViewport[3]);
+		renderState.reset();
+
+		nebulaBaked = true;
+	}
+
+	private void buildStarBuffer() {
+		if (vaoStars != 0)
+			return;
+
+		var stars = new StarField();
+		starCount = stars.starCount;
+
+		FloatBuffer data = BufferUtils.createFloatBuffer(stars.vertexData.length);
+		data.put(stars.vertexData).flip();
+
+		vaoStars = glGenVertexArrays();
+		vboStars = glGenBuffers();
+		glBindVertexArray(vaoStars);
+		glBindBuffer(GL_ARRAY_BUFFER, vboStars);
+		glBufferData(GL_ARRAY_BUFFER, data, GL_STATIC_DRAW);
+
+		int stride = StarField.FLOATS_PER_STAR * Float.BYTES;
+		// location 0: dir.xyz, 1: size, 2: brightness, 3: color.rgb, 4: speed
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 1, GL_FLOAT, false, stride, 3L * Float.BYTES);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 1, GL_FLOAT, false, stride, 4L * Float.BYTES);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, 5L * Float.BYTES);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(4, 1, GL_FLOAT, false, stride, 8L * Float.BYTES);
+		glEnableVertexAttribArray(4);
+
+		glBindVertexArray(0);
+		// Raw VAO binds above bypass renderState; invalidate its cache.
+		renderState.vao.reset();
 	}
 
 	private void initializeBuffers() {
@@ -254,6 +419,8 @@ public class ZoneRenderer implements Renderer {
 
 		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
 		indirectDrawCmdsStaging = new GpuIntBuffer();
+
+		buildStarBuffer();
 	}
 
 	private void destroyBuffers() {
@@ -272,6 +439,26 @@ public class ZoneRenderer implements Renderer {
 		if (indirectDrawCmdsStaging != null)
 			indirectDrawCmdsStaging.destroy();
 		indirectDrawCmdsStaging = null;
+
+		if (fboNebulaBake != 0) {
+			glDeleteFramebuffers(fboNebulaBake);
+			fboNebulaBake = 0;
+		}
+		if (texNebulaCubemap != 0) {
+			glDeleteTextures(texNebulaCubemap);
+			texNebulaCubemap = 0;
+		}
+		nebulaBaked = false;
+
+		if (vboStars != 0) {
+			glDeleteBuffers(vboStars);
+			vboStars = 0;
+		}
+		if (vaoStars != 0) {
+			glDeleteVertexArrays(vaoStars);
+			vaoStars = 0;
+		}
+		starCount = 0;
 	}
 
 	@Override
@@ -431,8 +618,55 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
-			directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
+			// Use Day/Night-Cycle sun/moon angles if enabled
+			float[] shadowSunAngles = environmentManager.currentSunAngles;
+			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+				// The environment may force a specific cycle mode, overriding the config.
+				DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
+				DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
+				TimeOfDay.setCycleMode(daylightCycle);
+				TimeOfDay.setDayLength(config.dayLength());
+				TimeOfDay.setMoonPhase(config.moonPhase());
+				double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
+				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
+				MoonBehavior shadowMoonBehavior = config.moonBehavior();
+
+				if (daylightCycle == DaylightCycle.FIXED_NIGHT) {
+					// Shadows must be cast from the same fixed point as the rendered
+					// moon disk, otherwise they drift while the moon stays put.
+					double[] moonAnglesD = TimeOfDay.getFixedNightMoonAngles();
+					shadowSunAngles = new float[] {
+						(float) moonAnglesD[1], (float) moonAnglesD[0]
+					};
+				} else if (sunAltDeg < 2.0) {
+					// Below +2° sun shadows are faded out, switch to moon direction
+					// early so the shadow map is already oriented when moon shadows
+					// start fading in via smoothstep — prevents brightness pop
+					double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, config.cycleDurationMinutes(), shadowMoonBehavior);
+					if (moonAltDeg > -10) {
+						if (shadowMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
+							double[] moonAnglesD = TimeOfDay.getNightSyncedMoonAngles(
+								plugin.latLong, config.cycleDurationMinutes());
+							shadowSunAngles = new float[] {
+								(float) moonAnglesD[1], (float) moonAnglesD[0]
+							};
+						} else {
+							Instant moonDate = TimeOfDay.getMoonDate(config.cycleDurationMinutes());
+							double[] moonAnglesD = AtmosphereUtils.getMoonPosition(
+								moonDate.toEpochMilli(), plugin.latLong);
+							shadowSunAngles = new float[] {
+								(float) moonAnglesD[1], (float) moonAnglesD[0]
+							};
+						}
+					} else {
+						shadowSunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
+					}
+				} else {
+					shadowSunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
+				}
+			}
+			directionalCamera.setPitch(shadowSunAngles[0]);
+			directionalCamera.setYaw(PI - shadowSunAngles[1]);
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
 			if (plugin.configShadowsEnabled &&
@@ -515,6 +749,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
 			plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
 			plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+			plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 
 			if (plugin.configDynamicLights != DynamicLights.NONE) {
 				// Update lights UBO
@@ -558,6 +793,196 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
+		// Day/Night Cycle - calculate modified lighting values
+		float[] directionalColor = environmentManager.currentDirectionalColor;
+		float directionalStrength = environmentManager.currentDirectionalStrength;
+		float[] ambientColor = environmentManager.currentAmbientColor;
+		float ambientStrength = environmentManager.currentAmbientStrength;
+		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+		float[] waterColor = environmentManager.currentWaterColor;
+		float[] sunAngles = environmentManager.currentSunAngles;
+
+		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+			// The environment may force a specific cycle mode, overriding the config.
+			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
+			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
+			TimeOfDay.setCycleMode(daylightCycle);
+			TimeOfDay.setDayLength(config.dayLength());
+			TimeOfDay.setMoonPhase(config.moonPhase());
+			int minimumBrightness = config.minimumBrightness();
+			float cycleDuration = config.cycleDurationMinutes();
+
+			float[] originalRegionalDirectionalColor = environmentManager.currentDirectionalColor;
+			float[] originalRegionalAmbientColor = new float[3];
+			System.arraycopy(environmentManager.currentAmbientColor, 0, originalRegionalAmbientColor, 0, 3);
+
+			directionalColor = TimeOfDay.getRegionalDirectionalLight(plugin.latLong, cycleDuration, originalRegionalDirectionalColor);
+			ambientColor = TimeOfDay.getRegionalAmbientLight(plugin.latLong, cycleDuration, originalRegionalAmbientColor);
+
+			float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(plugin.latLong, cycleDuration, minimumBrightness);
+			directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier * environmentManager.currentSunlightStrength;
+			// When Day/Night is active, ignore the environment's ambientStrength
+			// (e.g. WINTER=3.5, AUTUMN=0.3) so the cycle's brightness multiplier
+			// controls night darkness without seasonal values making nights
+			// too dark or too bright.
+			ambientStrength = brightnessMultiplier;
+
+			double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, cycleDuration);
+			sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
+
+			float[] originalRegionalFogColor = fogColor;
+
+			// Calculate sky gradient colors for realistic sky rendering
+			// Pass regional fog color to blend with during peak daytime
+			float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(plugin.latLong, cycleDuration, originalRegionalFogColor, environmentManager.currentSunStrength);
+
+			// Use the sky horizon color as fog color so geometry fading into
+			// fog seamlessly matches the skybox at the horizon
+			fogColor = skyGradientColors[1];
+			waterColor = ColorUtils.srgbToLinear(fogColor);
+			calculatedFogColorSrgb = fogColor;
+			float[] sunDirForSky = TimeOfDay.getSunDirectionForSky(plugin.latLong, cycleDuration);
+
+			plugin.uboGlobal.skyGradientEnabled.set(1);
+			plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
+			plugin.uboGlobal.skyHorizonColor.set(skyGradientColors[1]);
+			plugin.uboGlobal.skySunColor.set(skyGradientColors[2]);
+			plugin.uboGlobal.skySunDir.set(sunDirForSky);
+
+			// Set moon uniforms
+			MoonBehavior moonBehavior = config.moonBehavior();
+			float[] moonDir = TimeOfDay.getMoonDirectionForSky(plugin.latLong, cycleDuration, moonBehavior);
+			float moonIllumination = TimeOfDay.getMoonIlluminationFraction(cycleDuration, moonBehavior);
+			float[] moonColor = environmentManager.currentMoonColor;
+			plugin.uboGlobal.skyMoonDir.set(moonDir);
+			plugin.uboGlobal.skyMoonColor.set(moonColor);
+			plugin.uboGlobal.skyMoonIllumination.set(moonIllumination);
+			plugin.uboGlobal.starVisibility.set(config.enableStarMap() ? environmentManager.currentStarVisibility : 0f);
+			plugin.uboGlobal.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
+			boolean hideMoon = daylightCycle == DaylightCycle.FIXED_DAWN
+				|| daylightCycle == DaylightCycle.FIXED_MIDDAY
+				|| daylightCycle == DaylightCycle.FIXED_SUNSET;
+			plugin.uboGlobal.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
+			// Auroras appear on nights the per-night random roll selects. The roll
+			// switches only at the cycle boundary (daytime), so it's invisible
+			// behind nightSkyBlend.
+			plugin.uboGlobal.auroraVisibility.set(TimeOfDay.isAuroraNight() ? 1f : 0f);
+
+			skyGradientEnabled = true;
+
+			// Calculate shadow visibility based on sun and moon altitude
+			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
+			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(plugin.latLong, cycleDuration, moonBehavior);
+			float moonIllumFrac = moonIllumination;
+			float shadowVisibility;
+
+			float sunStrength = environmentManager.currentSunStrength;
+			if (sunAltitudeDegrees > 2) {
+				// Sun shadows (existing behavior)
+				if (sunAltitudeDegrees <= 12) {
+					shadowVisibility = (float) ((sunAltitudeDegrees - 2) / 10.0 * 0.6);
+				} else if (sunAltitudeDegrees <= 15) {
+					shadowVisibility = (float) (0.6 + ((sunAltitudeDegrees - 12) / 3.0) * 0.3);
+				} else {
+					double sineFactor = Math.sin(sunAnglesD[1]);
+					shadowVisibility = (float) Math.max(0.9, Math.min(1.0, sineFactor));
+				}
+			} else {
+				// Night: sun below +2 degrees
+				// Moon shadow ramps in via smoothstep from +2° to -15°, then stays constant
+				float moonBaseShadow = 0;
+				if (moonAltDeg > -10 && moonIllumFrac > 0.01f) {
+					// Smoothstep elevation factor: starts at -10deg (zero derivative),
+					// reaches full strength at +20deg. C1 continuous onset prevents pop-in.
+					float me = (float) Math.min(1.0, Math.max(0, (moonAltDeg + 10.0) / 30.0));
+					float moonElevationFactor = me * me * (3.0f - 2.0f * me); // smoothstep
+					moonBaseShadow = moonIllumFrac * 0.2f * moonElevationFactor;
+				}
+
+				// Smoothstep blend from 0 at +2° to full moonBaseShadow at -15°
+				// Uses smoothstep so derivative is zero at both ends (no pop at -15°)
+				float t = (float) Math.min(1.0, Math.max(0, (2.0 - sunAltitudeDegrees) / 17.0));
+				float moonBlend = t * t * (3.0f - 2.0f * t); // smoothstep instead of quadratic
+				shadowVisibility = moonBlend * moonBaseShadow;
+			}
+
+			// Smooth sun-to-moon directional light color crossfade
+			// Begin moon color influence ABOVE the horizon (+5°) with a gentle ramp,
+			// overlapping with the sun's natural warm-color fade-out near the horizon.
+			// This prevents the color "pop" at 0° where warm sun tones vanish while
+			// cool moon tones appear simultaneously.
+			float moonInfluence = 0;
+			if (sunAltitudeDegrees < 5.0 && moonAltDeg > -10 && moonIllumFrac > 0.01f) {
+				if (sunAltitudeDegrees >= 0.0) {
+					// Pre-horizon: smoothstep from 0.0 at +5° to 0.05 at 0°
+					float pt = (float) ((5.0 - sunAltitudeDegrees) / 5.0);
+					float ps = pt * pt * (3.0f - 2.0f * pt);
+					moonInfluence = ps * 0.05f;
+				} else if (sunAltitudeDegrees >= -15.0) {
+					// Main twilight: smoothstep from 0.05 at 0° to 0.8 at -15°
+					float tt = (float) (-sunAltitudeDegrees / 15.0);
+					float ts = tt * tt * (3.0f - 2.0f * tt);
+					moonInfluence = 0.05f + ts * 0.75f;
+				} else {
+					// Deep night: cap at 0.8 so the moon tints but doesn't fully replace
+					// the base nighttime directional color
+					moonInfluence = 0.8f;
+				}
+
+				// Fade moon influence based on moon's own altitude (smoothstep)
+				float ht = (float) Math.min(1.0, Math.max(0, (moonAltDeg + 10.0) / 30.0));
+				float moonHorizonFade = ht * ht * (3.0f - 2.0f * ht);
+				moonInfluence *= moonHorizonFade;
+
+				// Scale by moon phase — full moon has strongest color tint, new moon has none
+				moonInfluence *= moonIllumFrac;
+
+				for (int i = 0; i < 3; i++) {
+					directionalColor[i] = directionalColor[i] * (1 - moonInfluence)
+						+ moonColor[i] * moonInfluence;
+				}
+			}
+
+			// Tint night sky toward regional moon color as moon directional strength increases
+			if (moonInfluence > 0) {
+				float skyTint = moonInfluence * 0.05f;
+				for (int i = 0; i < 3; i++) {
+					skyGradientColors[0][i] = skyGradientColors[0][i] * (1 - skyTint) + moonColor[i] * skyTint;
+					skyGradientColors[1][i] = skyGradientColors[1][i] * (1 - skyTint) + moonColor[i] * skyTint;
+				}
+				plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
+				plugin.uboGlobal.skyHorizonColor.set(skyGradientColors[1]);
+				fogColor = skyGradientColors[1];
+			}
+
+			// Scale minBrightnessBoost down as moon directional light increases,
+			// so the boost only raises minimum brightness without stacking with moonlight
+			float boostScale = 1.0f - shadowVisibility;
+			float boostedFloor = (minimumBrightness / 100.0f) * (1 + environmentManager.currentMinBrightnessBoost * boostScale);
+			ambientStrength = Math.max(ambientStrength, boostedFloor);
+
+			// Fold a fraction of the unshadowed directional light into ambient to
+			// simulate sky-fill in shadows. This fill is physically strongest at
+			// night/twilight (soft moon/sky light fills shadows) and minimal under
+			// a high sun (harsh light, crisp dark shadows). Scale it down as the sun
+			// climbs so high-noon shadows stay as dark as with the cycle disabled,
+			// while keeping the existing soft look near the horizon and at night.
+			float skyFill = 1.0f - smoothstep(0.0f, 45.0f, (float) sunAltitudeDegrees);
+			add(ambientColor, ambientColor, multiply(directionalColor, (1 - shadowVisibility) * skyFill));
+			directionalStrength *= shadowVisibility;
+		} else {
+			// Reset stored fog color when daylight cycle is disabled
+			calculatedFogColorSrgb = null;
+			skyGradientEnabled = false;
+			plugin.uboGlobal.skyGradientEnabled.set(0);
+			plugin.uboGlobal.skyMoonDir.set(new float[]{ 0, 0, 0 });
+			plugin.uboGlobal.skyMoonColor.set(new float[]{ 0, 0, 0 });
+			plugin.uboGlobal.skyMoonIllumination.set(0.0f);
+			plugin.uboGlobal.starVisibility.set(1.0f);
+			plugin.uboGlobal.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
+			plugin.uboGlobal.auroraVisibility.set(0f);
+		}
+
 		shouldRenderSkybox = scene.getSkybox() != null;
 
 		float fogDepth = 0;
@@ -574,13 +999,13 @@ public class ZoneRenderer implements Renderer {
 		}
 		plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 		plugin.uboGlobal.fogDepth.set(fogDepth);
-		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
+		plugin.uboGlobal.fogColor.set(fogColor);
 
 		plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 		plugin.uboGlobal.expandedMapLoadingChunks.set(ctx.sceneContext.expandedMapLoadingChunks);
 		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
-		float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
+		float[] waterColorHsv = ColorUtils.srgbToHsv(waterColor);
 		float lightBrightnessMultiplier = 0.8f;
 		float midBrightnessMultiplier = 0.45f;
 		float darkBrightnessMultiplier = 0.05f;
@@ -604,17 +1029,16 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.waterColorDark.set(waterColorDark);
 
 		plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
-		float ambientStrength = environmentManager.currentAmbientStrength;
-		float directionalStrength = environmentManager.currentDirectionalStrength;
+		// Apply legacy brightness if enabled
 		if (config.useLegacyBrightness()) {
 			float factor = config.legacyBrightness() / 20f;
 			ambientStrength *= factor;
 			directionalStrength *= factor;
 		}
 		plugin.uboGlobal.ambientStrength.set(ambientStrength);
-		plugin.uboGlobal.ambientColor.set(environmentManager.currentAmbientColor);
+		plugin.uboGlobal.ambientColor.set(ambientColor);
 		plugin.uboGlobal.lightStrength.set(directionalStrength);
-		plugin.uboGlobal.lightColor.set(environmentManager.currentDirectionalColor);
+		plugin.uboGlobal.lightColor.set(directionalColor);
 
 		plugin.uboGlobal.underglowStrength.set(environmentManager.currentUnderglowStrength);
 		plugin.uboGlobal.underglowColor.set(environmentManager.currentUnderglowColor);
@@ -635,6 +1059,7 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
 		plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
+		plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 
 		if (plugin.configColorFilter != ColorFilter.NONE) {
 			plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
@@ -649,6 +1074,7 @@ public class ZoneRenderer implements Renderer {
 		indirectDrawCmdsStaging.clear();
 		sceneCmd.reset();
 		directionalCmd.reset();
+		terrainShadowCmd.reset();
 		gapFillerCmd.reset();
 		renderState.reset();
 
@@ -750,6 +1176,14 @@ public class ZoneRenderer implements Renderer {
 			environmentManager.currentDirectionalStrength > 0;
 
 		if (shouldRenderShadows || shouldClearShadowFbo) {
+			if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
+				renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
+				renderState.apply();
+
+				glClearDepth(1);
+				glClear(GL_DEPTH_BUFFER_BIT);
+			}
+
 			// Render to the shadow depth map
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
 			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
@@ -773,6 +1207,16 @@ public class ZoneRenderer implements Renderer {
 		CommandBuffer.SKIP_DEPTH_MASKING = true;
 		directionalCmd.execute(renderState);
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
+
+		// Render terrain-only shadow map
+		if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
+			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
+			renderState.viewport.set(0, 0, plugin.terrainShadowMapResolution, plugin.terrainShadowMapResolution);
+			renderState.apply();
+
+			terrainShadowProgram.use();
+			terrainShadowCmd.execute(renderState);
+		}
 
 		glBindVertexArray(0);
 
@@ -799,14 +1243,74 @@ public class ZoneRenderer implements Renderer {
 		// Clear scene
 		frameTimer.begin(Timer.CLEAR_SCENE);
 
-		float[] clearColor = { 0, 0, 0 };
-		if (!shouldRenderSkybox) {
-			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-			pow(clearColor, fogColor, plugin.getGammaCorrection());
-		}
-		glClearColor(clearColor[0], clearColor[1], clearColor[2], 1f);
+		// Clear depth buffer
 		glClearDepth(0);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		// Render sky gradient if Day/Night Cycle is enabled, otherwise use solid color clear
+		if (skyGradientEnabled && skyProgram.isValid()) {
+			// Render sky gradient using fullscreen triangle
+			renderState.disable.set(GL_DEPTH_TEST);
+			renderState.disable.set(GL_CULL_FACE);
+			renderState.apply();
+
+			// Bind the baked nebula cubemap so the sky shader can sample it
+			// instead of recomputing the nebula's fBm per pixel.
+			glActiveTexture(TEXTURE_UNIT_NEBULA);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, texNebulaCubemap);
+
+			skyProgram.use();
+
+			renderState.vao.setVao(plugin.vaoTri);
+			renderState.apply();
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+
+			// Star point sprites, drawn additively over the sky. Cost scales with
+			// star count rather than screen pixels (unlike the old per-pixel field).
+			if (starProgram.isValid() && vaoStars != 0) {
+				renderState.enable.set(GL_BLEND);
+				renderState.blendFunc.set(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+				renderState.apply();
+
+				starProgram.use();
+				starProgram.uniViewportSize.set((float) plugin.sceneResolution[0], (float) plugin.sceneResolution[1]);
+
+				glEnable(GL_PROGRAM_POINT_SIZE);
+				// GL_POINT_SPRITE is required on some compatibility-profile drivers for
+				// gl_PointCoord to be generated. It was removed from core 3.2+ (where
+				// gl_PointCoord is always available), so ignore the error if unsupported.
+				try { glEnable(GL20.GL_POINT_SPRITE); } catch (Exception ignored) {}
+				// Bind the star VAO directly, then invalidate renderState's cached VAO
+				// so it re-binds whatever it needs next (avoids a stale-cache desync).
+				glBindVertexArray(vaoStars);
+				glDrawArrays(GL_POINTS, 0, starCount);
+				try { glDisable(GL20.GL_POINT_SPRITE); } catch (Exception ignored) {}
+				glDisable(GL_PROGRAM_POINT_SIZE);
+				renderState.vao.reset();
+
+				renderState.disable.set(GL_BLEND);
+				renderState.apply();
+			}
+
+			// Switch back to scene program
+			sceneProgram.use();
+		} else {
+			// Use Day/Night Cycle fog color if available, otherwise use environment manager's fog color
+			float[] fogColor = { 0, 0, 0 };
+			if (!shouldRenderSkybox) {
+				fogColor = calculatedFogColorSrgb != null ? calculatedFogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+				pow(fogColor, fogColor, plugin.getGammaCorrection());
+			}
+
+			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
+			glClearColor(
+				gammaCorrectedFogColor[0],
+				gammaCorrectedFogColor[1],
+				gammaCorrectedFogColor[2],
+				1f
+			);
+			glClear(GL_COLOR_BUFFER_BIT);
+		}
 		frameTimer.end(Timer.CLEAR_SCENE);
 
 		frameTimer.begin(Timer.RENDER_SCENE);
@@ -935,6 +1439,10 @@ public class ZoneRenderer implements Renderer {
 			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 				directionalCmd.SetShader(fastShadowProgram);
 				z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
+
+				if (plugin.configTerrainShadows) {
+					z.renderOpaqueLevel(terrainShadowCmd, 0);
+				}
 			}
 			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);
 

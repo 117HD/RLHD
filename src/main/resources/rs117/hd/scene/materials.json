@@ -1263,6 +1263,19 @@
     ]
   },
   {
+    "name": "GRASS_BLADE"
+  },
+  {
+    "name": "GRASS_BLADE_90",
+    "parent": "GRASS_BLADE",
+    "brightness": 0.9
+  },
+  {
+    "name": "GRASS_BLADE_85",
+    "parent": "GRASS_BLADE",
+    "brightness": 0.85
+  },
+  {
     "name": "COLORED_GRASS",
     "overrideBaseColor": true
   },
@@ -1722,6 +1735,11 @@
     "name": "ROCK_3_DARK",
     "parent": "ROCK_3",
     "brightness": 0.827
+  },
+  {
+    "name": "ROCK_3_VERY_DARK",
+    "parent": "ROCK_3",
+    "brightness": 0.73
   },
   {
     "name": "ROCK_3_LIGHT",
@@ -3059,6 +3077,11 @@
     "parent": "GRUNGE_2",
     "specularStrength": 0.2,
     "specularGloss": 20.0
+  },
+  {
+    "name": "PLANT_GRUNGE_2_DARK",
+    "parent": "PLANT_GRUNGE_2",
+    "brightness": 0.8
   },
   {
     "name": "HD_CONCRETE_D"

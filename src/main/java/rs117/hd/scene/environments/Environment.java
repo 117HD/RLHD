@@ -6,11 +6,13 @@ import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.GsonUtils.DegreesToRadians;
 import rs117.hd.utils.HDUtils;
 
+import rs117.hd.utils.ColorUtils;
 import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
 import static rs117.hd.utils.ColorUtils.rgb;
 
@@ -43,6 +45,10 @@ public class Environment {
 	public boolean allowRoofShadows = true;
 	public boolean lightningEffects = false;
 	public boolean instantTransition = false;
+	// When set, forces the day/night cycle mode for this environment, overriding
+	// the player's config setting. Null = use the configured mode.
+	@Nullable
+	public DaylightCycle cycleMode = null;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] ambientColor = rgb("#ffffff");
 	public float ambientStrength = 1;
@@ -59,6 +65,9 @@ public class Environment {
 	public float[] underglowColor = rgb("#000000");
 	public float underglowStrength = 0;
 	@Nullable
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] moonColor;
+	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
 	@Nullable
@@ -73,6 +82,11 @@ public class Environment {
 	public float windSpeed = 15.0f;
 	public float windStrength = 0.0f;
 	public float windCeiling = 1280.0f;
+	public float starVisibility = 1;
+	public float moonVisibility = 1;
+	public float sunStrength = 1;
+	public float sunlightStrength = 1;
+	public float minBrightnessBoost = 0;
 
 	public Environment normalize() {
 		if (area != Area.ALL && area != Area.NONE) {
@@ -89,6 +103,10 @@ public class Environment {
 
 		if (sunAngles != null)
 			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
+
+		// Default moon color to slightly cool white (~8000K)
+		if (moonColor == null)
+			moonColor = ColorUtils.colorTemperatureToLinearRgb(8000);
 
 		// Base water caustics on directional lighting by default
 		if (waterCausticsColor == null)
