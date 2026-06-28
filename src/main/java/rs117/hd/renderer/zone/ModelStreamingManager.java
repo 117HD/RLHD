@@ -348,6 +348,7 @@ public class ModelStreamingManager {
 			FacePrioritySorter facePrioritySorter = shouldSort ? FacePrioritySorter.POOL.acquire() : null
 		) {
 			final int[] faceDistances = shouldSort ? PooledArrayType.INT.borrow(m.getFaceCount()) : null;
+			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 			shouldSort &= sceneUploader.preprocessTempModel(
 				projection,
 				plugin.cameraFrustum,
@@ -355,6 +356,7 @@ public class ModelStreamingManager {
 				visibleFaces,
 				culledFaces,
 				isModelPartiallyVisible,
+				tileObject,
 				modelOverride,
 				m,
 				isPlayer,
@@ -362,7 +364,6 @@ public class ModelStreamingManager {
 				x, y, z
 			);
 
-			final int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (shouldSort && !isSquashed)
 				facePrioritySorter.sortModelFaces(visibleFaces, m, faceDistances, !isActor);

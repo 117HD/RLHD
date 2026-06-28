@@ -143,6 +143,7 @@ public class SceneUploader implements AutoCloseable {
 	private final PooledObjectArray<UvType> faceUVTypes = new PooledObjectArray<>();
 
 	private final int[] tzHaarRecolored = new int[3];
+	private final int[] modelOffset = new int[3];
 	private final float[] projected = new float[4];
 
 	private final GpuIntBuffer zoneVboO = new GpuIntBuffer(false);
@@ -540,6 +541,7 @@ public class SceneUploader implements AutoCloseable {
 				ctx,
 				zone,
 				t,
+				wallObject,
 				renderable1,
 				uuid,
 				HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
@@ -563,6 +565,7 @@ public class SceneUploader implements AutoCloseable {
 				ctx,
 				zone,
 				t,
+				wallObject,
 				renderable2,
 				uuid,
 				HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
@@ -591,6 +594,7 @@ public class SceneUploader implements AutoCloseable {
 				ctx,
 				zone,
 				t,
+				decorativeObject,
 				renderable,
 				uuid,
 				preOrientation,
@@ -614,6 +618,7 @@ public class SceneUploader implements AutoCloseable {
 				ctx,
 				zone,
 				t,
+				decorativeObject,
 				renderable2,
 				uuid,
 				preOrientation,
@@ -640,6 +645,7 @@ public class SceneUploader implements AutoCloseable {
 				ctx,
 				zone,
 				t,
+				groundObject,
 				renderable,
 				ModelHash.packUuid(ModelHash.TYPE_GROUND_OBJECT, groundObject.getId()),
 				HDUtils.getModelPreOrientation(groundObject.getConfig()),
@@ -675,6 +681,7 @@ public class SceneUploader implements AutoCloseable {
 				ctx,
 				zone,
 				t,
+				gameObject,
 				renderable,
 				ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, gameObject.getId()),
 				HDUtils.getModelPreOrientation(gameObject.getConfig()),
@@ -722,6 +729,7 @@ public class SceneUploader implements AutoCloseable {
 		ZoneSceneContext ctx,
 		Zone zone,
 		Tile tile,
+		TileObject tileObject,
 		Renderable r,
 		int uuid,
 		int preOrientation,
@@ -766,7 +774,7 @@ public class SceneUploader implements AutoCloseable {
 		int alphaStart = alphaBuffer != null ? alphaBuffer.position() : 0;
 		try {
 			uploadStaticModel(
-				ctx, tile, model, modelOverride, uuid,
+				ctx, tile, tileObject, model, modelOverride, uuid,
 				preOrientation, orient,
 				x - basex, y, z - basez,
 				tileExX, tileExY, tileZ,
@@ -804,13 +812,14 @@ public class SceneUploader implements AutoCloseable {
 				assert uz < 25 : uz;
 			}
 			try {
+				modelOverride.applyModelOffset(tileObject, orient, modelOffset);
 				zone.addAlphaModel(
 					plugin,
 					materialManager,
 					zone.glVaoA,
 					zone.tboF.getTexId(),
 					model, modelOverride, alphaStart, alphaEnd,
-					x - basex, y, z - basez,
+					(x - basex) + modelOffset[0], y + modelOffset[1], (z - basez) + modelOffset[2],
 					lx, lz, ux, uz,
 					rid, level, id
 				);
@@ -1395,6 +1404,7 @@ public class SceneUploader implements AutoCloseable {
 	private int uploadStaticModel(
 		ZoneSceneContext ctx,
 		Tile tile,
+		TileObject tileObject,
 		Model model,
 		ModelOverride modelOverride,
 		int uuid,
@@ -1447,6 +1457,11 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		ensureVerticesAllocated(vertexCount);
+
+		modelOverride.applyModelOffset(tileObject, orientation, modelOffset);
+		x += modelOffset[0];
+		y += modelOffset[1];
+		z += modelOffset[2];
 
 		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
 			int vx = (int) vertexX[v];
@@ -1763,6 +1778,7 @@ public class SceneUploader implements AutoCloseable {
 		PrimitiveCharArray visibleFaces,
 		PrimitiveCharArray culledFaces,
 		boolean isModelPartiallyVisible,
+		TileObject tileObject,
 		ModelOverride modelOverride,
 		Model model,
 		boolean sortAllFaces,
@@ -1792,6 +1808,11 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		ensureVerticesAllocated(vertexCount);
+
+		modelOverride.applyModelOffset(tileObject, orientation, modelOffset);
+		x += modelOffset[0];
+		y += modelOffset[1];
+		z += modelOffset[2];
 
 		boolean shouldSort = true;
 		boolean allVertsVisible = true;
