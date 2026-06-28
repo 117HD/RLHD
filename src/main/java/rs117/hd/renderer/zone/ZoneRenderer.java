@@ -26,8 +26,10 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -84,6 +86,7 @@ import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.utils.collections.Util.quickSort;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -517,18 +520,39 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
 
 			if (plugin.configDynamicLights != DynamicLights.NONE) {
-				// Update lights UBO
-				assert ctx.sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
-
 				frameTimer.begin(Timer.UPDATE_LIGHTS);
+				final ArrayList<Light> visibleLights = new ArrayList<>();
+				for (int i = 0; i < ctx.sceneContext.numVisibleLights; i++)
+					visibleLights.add(ctx.sceneContext.lights.get(i));
+				WorldView wv = client.getTopLevelWorldView();
+				if (wv != null) {
+					for (WorldEntity we : wv.worldEntities()) {
+						WorldViewContext subCtx = sceneManager.getContext(we.getWorldView());
+						if (subCtx != null && subCtx.uboWorldViewStruct != null) {
+							if(subCtx.uboWorldViewStruct.isSquashed())
+								continue;
+
+							for (int i = 0; i < subCtx.sceneContext.numVisibleLights; i++)
+								visibleLights.add(subCtx.sceneContext.lights.get(i));
+						}
+					}
+				}
+				quickSort(visibleLights, (a, b) -> Float.compare(a.distanceSquared, b.distanceSquared));
+
+				int maxLights = plugin.configTiledLighting ?
+					UBOLights.MAX_LIGHTS :
+					plugin.configDynamicLights.getMaxSceneLights();
+				int numVisibleLights = min(visibleLights.size(), maxLights);
+				assert numVisibleLights <= UBOLights.MAX_LIGHTS;
+
 				final float[] lightPosition = new float[4];
 				final float[] lightColor = new float[4];
-				for (int i = 0; i < ctx.sceneContext.numVisibleLights; i++) {
-					final Light light = ctx.sceneContext.lights.get(i);
+				for (int i = 0; i < numVisibleLights; i++) {
+					final Light light = visibleLights.get(i);
 					final float lightRadiusSq = light.radius * light.radius;
-					lightPosition[0] = light.pos[0] + plugin.cameraShift[0];
-					lightPosition[1] = light.pos[1];
-					lightPosition[2] = light.pos[2] + plugin.cameraShift[1];
+					lightPosition[0] = light.renderPos[0] + plugin.cameraShift[0];
+					lightPosition[1] = light.renderPos[1];
+					lightPosition[2] = light.renderPos[2] + plugin.cameraShift[1];
 					lightPosition[3] = lightRadiusSq;
 
 					lightColor[0] = light.color[0] * light.strength;
@@ -549,7 +573,7 @@ public class ZoneRenderer implements Renderer {
 
 				plugin.uboLights.upload();
 				plugin.uboLightsCulling.upload();
-				plugin.uboGlobal.pointLightsCount.set(ctx.sceneContext.numVisibleLights);
+				plugin.uboGlobal.pointLightsCount.set(numVisibleLights);
 				frameTimer.end(Timer.UPDATE_LIGHTS);
 			}
 		}
@@ -1214,7 +1238,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public SceneContext getSceneContext() {
-		return sceneManager.getSceneContext();
+		return sceneManager.getSceneContext(null);
 	}
 
 	@Override

@@ -49,6 +49,8 @@ public class Light
 	public float[] origin = new float[3];
 	public float[] offset = new float[3];
 	public float[] pos = new float[3];
+	public float[] renderPos = new float[3];
+	public int worldViewId;
 	public int orientation;
 	public float distanceSquared;
 
