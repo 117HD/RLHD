@@ -356,10 +356,10 @@ public class ModelStreamingManager {
 				visibleFaces,
 				culledFaces,
 				isModelPartiallyVisible,
+				tileObject,
 				modelOverride,
 				m,
 				isPlayer,
-				preOrientation,
 				orient,
 				x, y, z
 			);

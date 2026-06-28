@@ -20,11 +20,13 @@ import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.materials.Material;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.ExpressionParser.asExpression;
 import static rs117.hd.utils.ExpressionParser.parseExpression;
+import static rs117.hd.utils.HDUtils.applyRotationToOffset;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -727,23 +729,19 @@ public class ModelOverride
 		return h << 10 | s << 7 | l;
 	}
 
-	public void applyModelOffset(int[] result, int preOrientation, int orientation) {
-		int offsetX = modelOffset[0];
-		int offsetY = modelOffset[1];
-		int offsetZ = modelOffset[2];
+	public void applyModelOffset(TileObject tileObject, int orientation, int[] result) {
+		result[0] = modelOffset[0];
+		result[1] = modelOffset[1];
+		result[2] = modelOffset[2];
 
-		if (modelOffsetRelative && (offsetX != 0 || offsetZ != 0) && (preOrientation != 0 || orientation != 0)) {
-			final int offsetOrientSin = SINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
-			final int offsetOrientCos = COSINE[mod(orientation != 0 ? orientation : preOrientation, 2048)];
+		if (modelOffsetRelative && (result[0] != 0 || result[2] != 0)) {
+			if(orientation != 0)
+				applyRotationToOffset(orientation, result);
 
-			final int offsetXTemp = offsetX;
-			offsetX = offsetZ * offsetOrientSin + offsetXTemp * offsetOrientCos >> 16;
-			offsetZ = offsetZ * offsetOrientCos - offsetXTemp * offsetOrientSin >> 16;
+			final int bakedOrientation = HDUtils.getOrientationFromConfig(HDUtils.getObjectConfig(tileObject));
+			if(bakedOrientation != 0)
+				applyRotationToOffset(bakedOrientation, result);
 		}
-
-		result[0] = offsetX;
-		result[1] = offsetY;
-		result[2] = offsetZ;
 	}
 
 	@Nullable
