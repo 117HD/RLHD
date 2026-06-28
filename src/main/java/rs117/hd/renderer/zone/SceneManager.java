@@ -29,6 +29,7 @@ import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.DestructibleHandler;
@@ -81,6 +82,9 @@ public class SceneManager {
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
+
+	@Inject
+	private HorizonExtender horizonExtender;
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
@@ -287,6 +291,8 @@ public class SceneManager {
 					// This should happen very rarely, so we invalidate all zones for simplicity
 					root.invalidate();
 				}
+				root.sceneContext.horizonTileSample = null;
+				root.sceneContext.horizonTileMask = null;
 				root.sceneContext.currentArea = newArea;
 			} else {
 				plugin.justChangedArea = false;
@@ -348,6 +354,26 @@ public class SceneManager {
 
 		zone.rebuild = true;
 		log.trace("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
+	}
+
+	@Nullable
+	private Area resolveHorizonTileArea(SceneContext ctx) {
+		if (ctx.sceneBase == null)
+			return null;
+
+		for (Area area : areaManager.areasWithAreaHiding) {
+			if (area.hasHorizonTiles() && ctx.intersects(area))
+				return area;
+		}
+		return null;
+	}
+
+	private static boolean horizonRenderingChanged(@Nullable SceneContext prev, SceneContext next) {
+		if (prev == null)
+			return next.horizonTileArea != null;
+		boolean prevHorizon = prev.enableHorizonTiles && prev.horizonTileArea != null;
+		boolean nextHorizon = next.enableHorizonTiles && next.horizonTileArea != null;
+		return prevHorizon != nextHorizon;
 	}
 
 	private static boolean isEdgeTile(Zone[][] zones, int zx, int zz) {
@@ -466,6 +492,11 @@ public class SceneManager {
 
 			nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
 			nextSceneContext.fillGaps = config.fillGapsInTerrain();
+			nextSceneContext.enableHorizonTiles =
+				nextSceneContext.enableAreaHiding &&
+				config.horizonTiles();
+			nextSceneContext.horizonTileArea = nextSceneContext.enableHorizonTiles ?
+				resolveHorizonTileArea(nextSceneContext) : null;
 
 			if (nextSceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 				nextSceneContext.isInHouse = true;
@@ -542,7 +573,8 @@ public class SceneManager {
 				client.getGameState() == GameState.LOGGED_IN && // only reuse for async loads to respect roof removal state changes
 				ctx.sceneContext.expandedMapLoadingChunks == nextSceneContext.expandedMapLoadingChunks &&
 				ctx.sceneContext.currentArea == nextSceneContext.currentArea &&
-				!nextSceneContext.isInChambersOfXeric
+				!nextSceneContext.isInChambersOfXeric &&
+				!horizonRenderingChanged(ctx.sceneContext, nextSceneContext)
 			) {
 				for (int x = 0; x < NUM_ZONES; ++x) {
 					for (int z = 0; z < NUM_ZONES; ++z) {
@@ -557,7 +589,7 @@ public class SceneManager {
 
 						old.needsRoofUpdate = true;
 
-						if (old.hasWater || old.dirty || isEdgeTile(ctx.zones, ox, oz)) {
+						if (old.hasWater || old.dirty || isEdgeTile(ctx.zones, ox, oz) || nextSceneContext.horizonTileArea != null) {
 							float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 							sortedZones.add(SortedZone.getZone(old, x, z, dist));
 							nextSceneContext.totalDeferred++;
@@ -577,6 +609,9 @@ public class SceneManager {
 				!nextSceneContext.isInHouse &&
 				root.sceneContext != null &&
 				nextSceneContext.totalReused + nextSceneContext.totalDeferred > 0;
+			boolean leavingHorizon = ctx.sceneContext != null &&
+				ctx.sceneContext.horizonTileArea != null &&
+				nextSceneContext.horizonTileArea == null;
 			for (int x = 0; x < NUM_ZONES; ++x) {
 				for (int z = 0; z < NUM_ZONES; ++z) {
 					Zone zone = nextZones[x][z];
@@ -602,7 +637,7 @@ public class SceneManager {
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = injector.getInstance(Zone.class);
 				newZone.dirty = sorted.zone.dirty;
-				if (staggerLoad) {
+				if (staggerLoad && !leavingHorizon) {
 					// Reuse the old zone while uploading a correct one
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
@@ -610,6 +645,8 @@ public class SceneManager {
 					sorted.zone.uploadJob.revealAfterTimestampMs =
 						timeMs + ceil(clamp(sorted.dist / 15.0f, 0.25f, 1.5f) * 1000.0f);
 				} else {
+					if (leavingHorizon)
+						sorted.zone.cull = true;
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, true, sorted.x, sorted.z)

@@ -851,7 +851,7 @@ public class ZoneRenderer implements Renderer {
 			if (plugin.enableDetailedTimers) frameTimer.begin(Timer.VISIBILITY_CHECK);
 			int minX = zx * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
 			int minZ = zz * CHUNK_SIZE - ctx.sceneContext.sceneOffset;
-			if (ctx.sceneContext.currentArea != null) {
+			if (ctx.sceneContext.currentArea != null && ctx.sceneContext.horizonTileArea == null) {
 				var base = ctx.sceneContext.sceneBase;
 				assert base != null;
 				boolean inArea = ctx.sceneContext.currentArea.intersects(
