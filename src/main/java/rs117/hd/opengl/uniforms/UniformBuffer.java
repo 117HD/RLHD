@@ -315,6 +315,16 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		dirtyHighTide = max(dirtyHighTide, position + size);
 	}
 
+	protected void setSize(int size) {
+		assert properties.isEmpty() : "Uniform buffer size can only be set, if your not using addStruct() or addProperty()!";
+		this.size = size;
+	}
+
+	public void write(int position, int x) {
+		dataInt.put(x);
+		markWaterLine(position, 4);
+	}
+
 	public void initialize() {
 		if (data != null)
 			destroy();

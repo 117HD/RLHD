@@ -15,6 +15,9 @@ import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.SceneCullingManager;
+import rs117.hd.scene.SceneCullingManager.CullingResult;
+import rs117.hd.scene.SceneCullingManager.CullingSphere;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
@@ -86,9 +89,9 @@ public class Zone implements Destructible {
 	public boolean hasWater; // whether the zone has any water tiles
 	public boolean onlyWater; // whether the zone only contains water tiles
 	public boolean hasGapFiller; // whether the zone has any gap filler geometry
-	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
-	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 	public boolean isFirstLoadingAttempt = true;
+
+	public byte visibilityFlags = (byte) 0xFF;
 
 	public IntHashSet animatedDynamicObjectIds = new IntHashSet();
 
@@ -96,13 +99,31 @@ public class Zone implements Destructible {
 	ZoneUploadJob uploadJob;
 
 	int[] levelOffsets = new int[LEVEL_COUNT]; // buffer pos in ints for the end of the level
+	CullingResult[] levelCullingResults = new CullingResult[LEVEL_COUNT];
 
 	int[][] rids;
 	int[][] roofStart;
 	int[][] roofEnd;
 
-	final List<AlphaModel> alphaModels = new ArrayList<>(0);
+	public final List<AlphaModel> alphaModels = new ArrayList<>(0);
 	final ConcurrentLinkedQueue<AsyncCachedModel> pendingModelJobs = new ConcurrentLinkedQueue<>();
+
+	public boolean setVisibility(Camera camera, boolean visible) {
+		if (visible) {
+			visibilityFlags |= (byte) camera.getCullingMask();
+		} else {
+			visibilityFlags &= (byte) ~camera.getCullingMask();
+		}
+		return visible;
+	}
+
+	public boolean isVisible(Camera camera) {
+		return (visibilityFlags & camera.getCullingMask()) != 0;
+	}
+
+	public boolean isVisible(int cameraId) {
+		return (visibilityFlags & (1 << cameraId)) != 0;
+	}
 
 	public void initialize(GLBuffer o, GLBuffer a, GLTextureBuffer f) {
 		assert glVao == 0;
@@ -185,19 +206,23 @@ public class Zone implements Destructible {
 
 		sortedAlphaFacesUpload.release();
 
+		for(int i = 0; i < LEVEL_COUNT; i++) {
+			if(levelCullingResults[i] != null)
+				levelCullingResults[i].release();
+		}
+
 		sizeO = 0;
 		sizeA = 0;
 		sizeF = 0;
 		bufLen = 0;
 		bufLenA = 0;
+		visibilityFlags = 0;
 
 		initialized = false;
 		cull = false;
 		hasWater = false;
 		onlyWater = false;
 		hasGapFiller = false;
-		inSceneFrustum = false;
-		inShadowFrustum = false;
 
 		Arrays.fill(levelOffsets, 0);
 		rids = null;
@@ -274,12 +299,12 @@ public class Zone implements Destructible {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
+	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int zx, int zz) {
 		if (vboM == null)
 			return;
 
-		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
-		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
+		final int baseX = (zx - (sceneContext.sceneOffset >> 3)) << 10;
+		final int baseZ = (zz - (sceneContext.sceneOffset >> 3)) << 10;
 
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer buf = stack.mallocInt(3)
@@ -325,18 +350,21 @@ public class Zone implements Destructible {
 		copyTo(glDrawLength, drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
+	public void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, Camera camera, boolean ignoreRoofRemoval) {
 		drawIdx = 0;
 
 		int currentLevel = ctx.level;
 		int maxLevel = ctx.maxLevel;
 		var hiddenRoofIds = ctx.hideRoofIds;
-		if (roofShadows) {
+		if (ignoreRoofRemoval) {
 			maxLevel = 3;
 			hiddenRoofIds = Collections.emptySet();
 		}
 
 		for (int level = ctx.minLevel; level <= maxLevel; ++level) {
+			if(camera != null && (levelCullingResults[level] != null && !levelCullingResults[level].isVisible(camera)))
+				continue;
+
 			int[] rids = this.rids[level];
 			int[] roofStart = this.roofStart[level];
 			int[] roofEnd = this.roofEnd[level];
@@ -382,7 +410,7 @@ public class Zone implements Destructible {
 		flush(cmd);
 	}
 
-	void renderOpaqueLevel(CommandBuffer cmd, int level) {
+	public void renderOpaqueLevel(CommandBuffer cmd, int level) {
 		drawIdx = 0;
 
 		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
@@ -413,6 +441,7 @@ public class Zone implements Destructible {
 	public static final class AlphaModel {
 		int id;
 		ModelOverride modelOverride;
+		CullingSphere cullingSphere;
 		int startpos, endpos;
 		short x, y, z; // local position
 		short rid;
@@ -462,8 +491,53 @@ public class Zone implements Destructible {
 		}
 	}
 
+	void queueVisibility(WorldViewContext ctx, int zx, int zz) {
+
+		final Projection projection = ctx.uboWorldViewStruct != null ? ctx.uboWorldViewStruct.worldView.getMainWorldProjection() : null;
+		final int baseX = (zx - (ctx.sceneContext.sceneOffset >> 3)) << 10;
+		final int baseZ = (zz - (ctx.sceneContext.sceneOffset >> 3)) << 10;
+
+		for(int i = 0; i < alphaModels.size(); i++) {
+			final AlphaModel m = alphaModels.get(i);
+			if(m.cullingSphere != null) {
+				m.cullingSphere.offsetX = baseX;
+				m.cullingSphere.offsetZ = baseZ;
+				m.cullingSphere.projection = projection;
+				m.cullingSphere.queue();
+			}
+		}
+
+		for(int i = 0; i < LEVEL_COUNT; i++) {
+			final CullingResult result = levelCullingResults[i];
+			if(result != null) {
+				result.projection = projection;
+				result.offsetX = baseX;
+				result.offsetZ = baseZ;
+				result.queue();
+			}
+		}
+	}
+
+	void debugDrawVisibility(SceneCullingManager sceneCullingManager) {
+		sceneCullingManager.debugDraw(levelCullingResults);
+
+		for(int i = 0; i < alphaModels.size(); i++)
+			sceneCullingManager.debugDraw(alphaModels.get(i).cullingSphere);
+	}
+
+	void resolveVisibility(){
+		visibilityFlags = 0;
+		for(int i = 0; i < LEVEL_COUNT; i++) {
+			if(levelCullingResults[i] != null)
+				visibilityFlags |= levelCullingResults[i].getVisibilityFlags();
+		}
+
+		// TODO: We build a "visible" set of alpha models
+	}
+
 	void addAlphaModel(
 		HdPlugin plugin,
+		SceneCullingManager sceneCullingManager,
 		MaterialManager materialManager,
 		int vao,
 		int tboF,
@@ -617,6 +691,7 @@ public class Zone implements Destructible {
 
 		m.radius = 2 + (int) Math.sqrt(radius);
 		m.sortedFaces = new int[bufferIdx * 3];
+		m.cullingSphere = sceneCullingManager.obtainSphere(x + cx, y + cy, z + cz, m.radius * 2);
 
 		assert packedFaces.length > 0;
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
@@ -710,12 +785,13 @@ public class Zone implements Destructible {
 		alphaSortingJob.queue(camera);
 	}
 
-	void renderAlpha(
+	public void renderAlpha(
 		CommandBuffer cmd,
 		int zx,
 		int zz,
 		int level,
 		WorldViewContext ctx,
+		Camera camera,
 		boolean isShadowPass,
 		boolean includeRoof
 	) {
@@ -747,6 +823,16 @@ public class Zone implements Destructible {
 			if (level < minLevel || level > maxLevel ||
 				level > currentLevel && !hiddenRoofIds.isEmpty() && hiddenRoofIds.contains((int) m.rid))
 				continue;
+
+			if(camera != null) {
+				if(m.cullingSphere != null) {
+					if(!m.cullingSphere.isVisible(camera))
+						continue;
+				} else {
+					if((levelCullingResults[m.level] != null && !levelCullingResults[m.level].isVisible(camera)))
+						continue;
+				}
+			}
 
 			int drawMode = STATIC;
 			if (m.isTemp()) {
@@ -847,6 +933,9 @@ public class Zone implements Destructible {
 			if (m.lx == -1)
 				continue;
 
+			if(m.cullingSphere != null && !m.cullingSphere.isVisible(camera))
+				continue;
+
 			// calculate which zone this model should be drawn from
 			// TODO fix for boats
 			int max = Integer.MAX_VALUE;
@@ -861,7 +950,7 @@ public class Zone implements Destructible {
 						int zx2 = (centerX >> 10) + offset;
 						int zz2 = (centerZ >> 10) + offset;
 						if (zx2 >= 0 && zx2 < zones.length && zz2 >= 0 && zz2 < zones[0].length) {
-							if (zones[zx2][zz2].inSceneFrustum && zones[zx2][zz2].initialized) {
+							if (visibilityFlags != 0 && zones[zx2][zz2].initialized) {
 								max = distance;
 								closestZoneX = centerX >> 10;
 								closestZoneZ = centerZ >> 10;
@@ -883,6 +972,7 @@ public class Zone implements Destructible {
 				AlphaModel m2 = ALPHA_MODEL_POOL.acquire();
 				m2.id = m.id;
 				m2.modelOverride = m.modelOverride;
+				m2.cullingSphere = m.cullingSphere;
 				m2.startpos = m.startpos;
 				m2.endpos = m.endpos;
 				m2.x = m.x;

@@ -948,7 +948,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			case MODE_TILE_INFO:
 				return isStatic ? " <col=#00ff00>static</col>" :
 					isDynamic ? " <col=#ff0000>dynamic</col>" :
-						" <col=#ffff00>maybe dynamic</col>";
+					" <col=#ffff00>maybe dynamic</col>";
 			case MODE_MODEL_INFO:
 				int[] faceColors = model.getFaceColors1();
 				byte[] faceTransparencies = model.getFaceTransparencies();
@@ -1046,9 +1046,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		int x = localX & (LOCAL_TILE_SIZE - 1);
 		int y = localY & (LOCAL_TILE_SIZE - 1);
 		int var8 = x * tileHeights[plane][sceneExX + 1][sceneExY] +
-				   (LOCAL_TILE_SIZE - x) * tileHeights[plane][sceneExX][sceneExY] >> LOCAL_COORD_BITS;
+		           (LOCAL_TILE_SIZE - x) * tileHeights[plane][sceneExX][sceneExY] >> LOCAL_COORD_BITS;
 		int var9 = x * tileHeights[plane][sceneExX + 1][sceneExY + 1] +
-				   (LOCAL_TILE_SIZE - x) * tileHeights[plane][sceneExX][sceneExY + 1] >> LOCAL_COORD_BITS;
+		           (LOCAL_TILE_SIZE - x) * tileHeights[plane][sceneExX][sceneExY + 1] >> LOCAL_COORD_BITS;
 		return y * var9 + (LOCAL_TILE_SIZE - y) * var8 >> 7;
 	}
 
