@@ -29,6 +29,20 @@ import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.IntHashSet;
 
 import static net.runelite.api.Constants.*;
+import static org.lwjgl.opengl.GL11C.GL_INT;
+import static org.lwjgl.opengl.GL11C.GL_SHORT;
+import static org.lwjgl.opengl.GL11C.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL15C.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15C.GL_DYNAMIC_DRAW;
+import static org.lwjgl.opengl.GL15C.glBindBuffer;
+import static org.lwjgl.opengl.GL20C.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30C.GL_HALF_FLOAT;
+import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.opengl.GL30C.glDeleteVertexArrays;
+import static org.lwjgl.opengl.GL30C.glGenVertexArrays;
+import static org.lwjgl.opengl.GL30C.glVertexAttribIPointer;
+import static org.lwjgl.opengl.GL31C.GL_TEXTURE_BUFFER;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
@@ -598,6 +612,9 @@ public class Zone implements Destructible {
 
 			if (faceOverride.hide)
 				continue;
+
+			if (faceOverride.modifiesAlpha)
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
 
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
 			if (!hasAlpha)
