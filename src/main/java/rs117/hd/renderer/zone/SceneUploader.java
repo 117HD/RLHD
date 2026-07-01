@@ -1961,6 +1961,12 @@ public class SceneUploader implements AutoCloseable {
 				continue;
 			}
 
+			// Apply the alpha shift before classifying the face as alpha/opaque, so this count matches
+			// the post-shift buffer routing in uploadTempModel. Otherwise a face made transparent purely
+			// by the shift is miscounted, desyncing the alpha/opaque views and making the model invisible.
+			if (faceOverride.modifiesAlpha)
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
+
 			if (material.hasTransparency || transparency != 0)
 				tempModelAlphaFaces++;
 
