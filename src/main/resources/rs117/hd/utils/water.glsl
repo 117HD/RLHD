@@ -65,6 +65,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 vSpecularStrength = vec3(waterType.specularStrength);
     vec3 vSpecularGloss = vec3(waterType.specularGloss);
     float combinedSpecularStrength = waterType.specularStrength;
+    float specularStrength = waterReflections ? 1.0 : 0.0;
 
     // calculate lighting
 
@@ -82,12 +83,12 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     // directional light specular
     vec3 lightReflectDir = reflect(-lightDir, normals);
-    vec3 lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
+    vec3 lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength * specularStrength);
 
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
-    calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
+    calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength * specularStrength, pointLightsOut, pointLightsSpecularOut);
 
     // sky light
     vec3 skyLightColor = fogColor.rgb;
