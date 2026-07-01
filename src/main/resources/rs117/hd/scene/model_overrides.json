@@ -57046,8 +57046,7 @@
     "uvScale": 0.4,
     "uvOrientation": 512,
     "objectIds": [
-      "VAMPIRE_TRAP1",
-      "WIN05_TRAPDOOR_CLOSED"
+      "VAMPIRE_TRAP1"
     ]
   },
   {
@@ -57056,7 +57055,6 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
-      "WIN05_TRAPDOOR_OPEN",
       "VAMPIRE_TRAP2"
     ],
     "colorOverrides": [
