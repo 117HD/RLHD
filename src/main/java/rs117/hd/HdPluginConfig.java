@@ -36,8 +36,8 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.CpuUsageLimit;
-import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DayLength;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
@@ -424,14 +424,16 @@ public interface HdPluginConfig extends Config
 		name = "Shadow filtering",
 		description =
 			"Filtering technique used when smoothing the edges of shadows.<br>" +
-			"'Smooth' smooths the shadow pixels evenly (PCF 3x3).<br>" +
-			"'Dithered' smooths out pixelation using dithering.<br>" +
+			"'Smooth Low' smooths the shadow pixels evenly (PCF 2x2).<br>" +
+			"'Smooth High' smooths the shadow pixels evenly (PCF 3x3).<br>" +
+			"'Dithered Low' smooths out pixelation using dithering.<br>" +
+			"'Dithered High' smooths out pixelation using dithering (PCF 2x2).<br>" +
 			"'Pixelated' retains slightly pixelated shadow edges.",
 		position = 3,
 		section = shadowSettings
 	)
 	default ShadowFiltering shadowFiltering() {
-		return ShadowFiltering.SMOOTH;
+		return ShadowFiltering.SMOOTH_HIGH;
 	}
 
 	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";

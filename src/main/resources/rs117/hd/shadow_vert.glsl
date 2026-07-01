@@ -35,6 +35,7 @@ layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
     layout (location = 1) in vec4 vUv;
+    layout (location = 2) in vec4 vNormal;
     layout (location = 3) in int vTextureFaceIdx;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
@@ -112,10 +113,20 @@ layout (location = 0) in vec3 vPosition;
 
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
         vec3 worldPosition = sceneOffset + vPosition;
-        if (vWorldViewId != -1) {
+        if (vWorldViewId != -1 && !isShadowDisabled) {
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
         }
+
+        #if TERRAIN_ONLY_PASS
+        if(!isShadowDisabled) {
+            // Terrain only slope bias to reduce shadow achne
+            float lightDotNormals = dot(vNormal.xyz, lightDir);
+            float c = clamp(lightDotNormals, 1e-3, 1.0);
+            float slopeBias = clamp(sqrt(1.0 - c * c) / c, 1.0, 16.0);
+            worldPosition -= vNormal.xyz * MIN_TERRAIN_BIAS * slopeBias;
+        }
+        #endif
 
         #if SHADOW_TRANSPARENCY && !TERRAIN_ONLY_PASS
             fOpacity = opacity;

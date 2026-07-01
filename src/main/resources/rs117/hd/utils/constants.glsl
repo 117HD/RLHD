@@ -6,6 +6,7 @@
 #define TAU (2*PI)
 
 #define SHORT_MAX 32767 // 2^15 - 1
+#define TILE_SIZE 128
 
 #include SHADER_TYPE
 #include LEGACY_RENDERER
@@ -43,6 +44,7 @@
 
 #include SHADOW_RESOLUTION
 
+#include SHADOW_FILTERING_KERNAL
 #include SHADOW_FILTERING
 #define SHADOW_FILTERING_PCF 0
 #define SHADOW_FILTERING_DITHER 1
@@ -55,6 +57,23 @@
     #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.01 // Remove shadows from clickboxes
 #else
     #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.71 // Lowest while keeping Prifddinas glass walkways transparent
+#endif
+
+#if SHADOW_RESOLUTION == 0
+    #define MIN_SHADOW_BIAS -0.00125f
+    #define MIN_TERRAIN_BIAS 0.001
+#elif SHADOW_RESOLUTION == 1
+    #define MIN_SHADOW_BIAS -0.0007f
+    #define MIN_TERRAIN_BIAS 0.0005
+#elif SHADOW_RESOLUTION == 2
+    #define MIN_SHADOW_BIAS -0.00035
+    #define MIN_TERRAIN_BIAS 0.00025
+#elif SHADOW_RESOLUTION == 3
+    #define MIN_SHADOW_BIAS -0.0003
+    #define MIN_TERRAIN_BIAS 0.0002
+#elif SHADOW_RESOLUTION >= 4
+    #define MIN_SHADOW_BIAS -0.00025
+    #define MIN_TERRAIN_BIAS 0.0001
 #endif
 
 #include VANILLA_COLOR_BANDING

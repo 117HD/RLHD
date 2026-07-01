@@ -42,7 +42,7 @@
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 #if TERRAIN_SHADOWS
-uniform sampler2D terrainShadowMap;
+uniform sampler2DShadow terrainShadowMap;
 #endif
 uniform usampler2DArray tiledLightingArray;
 
