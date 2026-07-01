@@ -8665,6 +8665,23 @@
     "uvType": "BOX"
   },
   {
+    "description": "Dirt Cave Wall - Ivandis Tomb Exit",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_IVANDIS_TOMB_TUNNEL_BLOCKED_INVESTIGATE",
+      "MYQ6_IVANDIS_TOMB_TUNNEL_BLOCKED_MINE",
+      "MYQ6_IVANDIS_TOMB_TUNNEL_UNBLOCKED",
+      "BURGH_IVANDIS_TOMB_EXIT"
+    ]
+  },
+  {
     "description": "Obors lair exit",
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX",
@@ -12118,7 +12135,8 @@
       "SUNBLEAK_CAVE_ROCKS_2",
       "SUNBLEAK_CAVE_ROCKS_2X2_1",
       "SUNBLEAK_CAVE_ROCKS_2X2_2",
-      "SUNBLEAK_CAVE_ROCKS_2X2_3"
+      "SUNBLEAK_CAVE_ROCKS_2X2_3",
+      "ROUTE_STALAGMITE_SMALL"
     ],
     "uvType": "BOX",
     "uvOrientation": 256
@@ -45938,7 +45956,12 @@
       "BOOKCASE",
       "SPOOKYBOOKSHELVES",
       "HORROR_BOOKCASE",
-      "TWOCATS_BOOKCASE"
+      "TWOCATS_BOOKCASE",
+      "MYQ6_BOOKCASE_PATERDOMUS_1",
+      "MYQ6_BOOKCASE_PATERDOMUS_2",
+      "MYQ6_BOOKCASE_PATERDOMUS_3",
+      "MYQ6_BOOKCASE_PATERDOMUS_4",
+      "MYQ6_BOOKCASE_PATERDOMUS_5"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -69635,7 +69658,19 @@
     "baseMaterial": "BLANK_GLOSS",
     "uvType": "MODEL_YZ",
     "objectIds": [
-      "TEMPLE_WINDOW"
+      "TEMPLE_WINDOW",
+      "MYQ6_WINDOW_ERYSAIL_ACTIVE",
+      "MYQ6_WINDOW_ERYSAIL_INACTIVE",
+      "MYQ6_WINDOW_FRIAR_ACTIVE",
+      "MYQ6_WINDOW_FRIAR_INACTIVE",
+      "MYQ6_WINDOW_DERYGULL_ACTIVE",
+      "MYQ6_WINDOW_DERYGULL_INACTIVE",
+      "MYQ6_WINDOW_IRIANDUL_ACTIVE",
+      "MYQ6_WINDOW_IRIANDUL_INACTIVE",
+      "MYQ6_WINDOW_SARL_ACTIVE",
+      "MYQ6_WINDOW_SARL_INACTIVE",
+      "MYQ6_WINDOW_ESSIANDAR_ACTIVE",
+      "MYQ6_WINDOW_ESSIANDAR_INACTIVE"
     ],
     "colorOverrides": [
       {
@@ -92874,6 +92909,127 @@
     ],
     "objectIds": [
       "MYQ6_HIDEOUT_SHRINE_VIS"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Glass - Table with glasses",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Glasses",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_VELIAF_DRINK_TABLE_GLASSES"
+    ]
+  },
+  {
+    "description": "Slepe - Metallic - Church bell tower",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Bell",
+        "colors": [ "h == 15", "h == 16" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      },
+      {
+        "description": "Bricks",
+        "colors": "h == 21",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 768
+      },
+      {
+        "description": "Rope",
+        "colors": [ "h == 10" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SLP_CHURCH_BELLTOWER"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Coat rack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.41111,
+    "objectIds": [
+      "SLP_CHURCH_COAT_RACK"
+    ]
+  },
+  {
+    "description": "Slepe - Vampyre corpse",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": [ "h == 0 && s == 7" ],
+        "baseMaterial": "GRUNGE_3_SHINY"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_CORPSE_VAMPYRE_JUVENILE01",
+      "MYQ6_CORPSE_VAMPYRE_JUVINATE02",
+      "MYQ6_CORPSE_VAMPYRE_JUVINATE03",
+      "MYQ6_CORPSE_VAMPYRE_JUVINATE04",
+      "MYQ6_CORPSE_VAMPYRE_JUVINATE05",
+      "MYQ6_CORPSE_VAMPYRE_VYREWATCH01",
+      "MYQ6_CORPSE_VAMPYRE_VYREWATCH02",
+      "MYQ6_CORPSE_VAMPYRE_VYREWATCH03",
+      "MYQ6_CORPSE_VAMPYRE_VYREWATCH04",
+      "MYQ6_CORPSE_VAMPYRE_VYREWATCH05"
+    ]
+  },
+  {
+    "description": "Paterdomus - Bloodmoon Rises Plinths",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Plinth",
+        "colors": [ "h == 42" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Plack",
+        "colors": [ "h == 8 && s == 7" ],
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_PLINTH_EMPTY",
+      "MYQ6_PLINTH_BOOK_FRIAR",
+      "MYQ6_PLINTH_BOOK_ERYSAIL",
+      "MYQ6_PLINTH_BOOK_DERYGULL",
+      "MYQ6_PLINTH_BOOK_IRIANDUL",
+      "MYQ6_PLINTH_BOOK_SARL",
+      "MYQ6_PLINTH_BOOK_ESSIANDAR"
+    ]
+  },
+  {
+    "description": "Ivandis Coffin",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.41111,
+    "objectIds": [
+      "BURGH_ANCIENT_COFFIN"
     ]
   }
 ]
