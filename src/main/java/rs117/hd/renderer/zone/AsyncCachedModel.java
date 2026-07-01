@@ -113,6 +113,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private AlphaModel alphaModel;
 	private boolean isModelPartiallyVisible;
 	private int drawIndex;
+	private float fade;
 	private int orientation;
 	private int x;
 	private int y;
@@ -217,6 +218,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
 		int drawIndex,
+		float fade,
 		int orientation,
 		int x, int y, int z,
 		@Nonnull UploadModelFunc uploadFunc
@@ -230,6 +232,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		this.alphaModel = alphaModel;
 		this.isModelPartiallyVisible = isModelPartiallyVisible;
 		this.drawIndex = drawIndex;
+		this.fade = fade;
 		this.orientation = orientation;
 		this.x = x;
 		this.y = y;
@@ -342,6 +345,7 @@ public final class AsyncCachedModel extends Job implements Model {
 				alphaModel,
 				isModelPartiallyVisible,
 				drawIndex,
+				fade,
 				orientation,
 				x, y, z
 			);
@@ -455,6 +459,7 @@ public final class AsyncCachedModel extends Job implements Model {
 			AlphaModel alphaModel,
 			boolean isModelPartiallyVisible,
 			int drawIndex,
+			float fade,
 			int orientation,
 			int x, int y, int z
 		);
