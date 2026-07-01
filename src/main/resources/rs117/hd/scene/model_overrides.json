@@ -17127,7 +17127,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Mort'ton Shade Catacombs - Meiyerditch Labs - Walls - Stone",
+    "description": "Mort'ton Shade Catacombs - Meiyerditch Labs - Walls - Stone - Needs proper UV",
     "baseMaterial": "STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -92827,6 +92827,53 @@
       "EARTHWAVE_TRAVEL",
       "EARTHBLAST_TRAVEL",
       "EARTHBOLT_TRAVEL"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Myreque Hideout - Shrine of the fallen",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Candle",
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 192
+      },
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 168
+      },
+      {
+        "colors": [ "h == 5 && s > 1", "h == 4 && s == 6" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 128
+      },
+      {
+        "colors": "h == 4 && s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_HIDEOUT_SHRINE_VIS"
     ]
   }
 ]
