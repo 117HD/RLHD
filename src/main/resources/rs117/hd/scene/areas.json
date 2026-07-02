@@ -12081,6 +12081,20 @@
     ]
   },
   {
+    "name": "PATERDOMUS_MAUSOLEUM",
+    "aabbs": [
+      [ 3392, 9871, 3455, 9917 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PATERDOMUS_MAUSOLEUM_BASEMENT",
+    "aabbs": [
+      [ 3340, 9888, 3373, 9916 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",

@@ -49446,5 +49446,111 @@
     "objectIds": [
       "SAILING_CHARTING_GENERIC_LARGE_LIGHT"
     ]
+  },
+  {
+    "description": "Meiyerditch - Myreque Hideout - Shrine Candles 1",
+    "offset": [ 50, 140, -40 ],
+    "radius": 135,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
+      "MYQ6_HIDEOUT_SHRINE_VIS"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Myreque Hideout - Shrine Candles 2",
+    "offset": [ -40, 140, -40 ],
+    "radius": 135,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
+      "MYQ6_HIDEOUT_SHRINE_VIS"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Myreque Hideout - Shrine Candles 3",
+    "offset": [ 50, 140, 40 ],
+    "radius": 110,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
+      "MYQ6_HIDEOUT_SHRINE_VIS"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Myreque Hideout - Shrine Candles 4",
+    "offset": [ -40, 140, 40 ],
+    "radius": 110,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
+      "MYQ6_HIDEOUT_SHRINE_VIS"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Cart Tunnel Lantern - Left",
+    "offset": [ -25, 152, 117 ],
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_MINE_CART_TUNNEL"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Cart Tunnel Lantern - Right",
+    "offset": [ -25, 152, -130 ],
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_MINE_CART_TUNNEL"
+    ]
   }
 ]
