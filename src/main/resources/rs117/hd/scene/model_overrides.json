@@ -27410,7 +27410,127 @@
       "AREA_SANGUINE_MINE_WALL_END_02",
       "AREA_SANGUINE_MINE_WALL_END_NO_MAP",
       "AREA_SANGUINE_MINE_WALL_FOR_MINING",
-      "AREA_SANGUINE_MINE_WALL_TOP"
+      "AREA_SANGUINE_MINE_WALL_TOP",
+      "DAEYALT_MINE_CAVETOP_EDGE_STRAIGHT",
+      "DAEYALT_MINE_CAVETOP_EDGE_INSIDE_CORNER",
+      "DAEYALT_MINE_CAVETOP_EDGE_OUTSIDE_CORNER"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Rock - Mine Walls with hole",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Edges/hole",
+        "colors": "h == 0",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_IVANDIS_TOMB_TUNNEL_OUT"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Rock - Mine Walls with wooden supports",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Supports",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "DAEYALT_MINE_WALL_SUPPORT_RIGHT",
+      "DAEYALT_MINE_WALL_SUPPORT_MID",
+      "DAEYALT_MINE_WALL_SUPPORT_LEFT"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Rock - Mine Walls with lamps",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Lamp frame",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 189
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_LIGHT"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_MINE_CART_TUNNEL"
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Ground walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.85,
+    "objectIds": [
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_1",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_2",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_3",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_4",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_5",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_6",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_7",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_8",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_9",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_10",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_11"
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Rock with pickaxe and shovel in it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "ROCK_5",
+        "uvType": "BOX",
+        "uvOrientation": 240,
+        "uvScale": 1.1
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ],
+    "objectIds": [
+      "DAEYALT_STONE_PICKAXE_AND_SPADE"
     ]
   },
   {
@@ -27522,7 +27642,8 @@
       "AREA_SANGUINE_MINECART_EMPTY",
       "AREA_SANGUINE_MINECART_LOAD1",
       "AREA_SANGUINE_MINECART_LOAD2",
-      "AREA_SANGUINE_MINECART_LOAD3"
+      "AREA_SANGUINE_MINECART_LOAD3",
+      "DAEYALT_MINE_CART_NOOP"
     ],
     "colorOverrides": [
       {
