@@ -49602,9 +49602,10 @@
   },
   {
     "description": "Blood Moon Rises - Castle ground floor wall torch",
-    "offset": [ -9.0, 285.0, 0.0 ],
-    "radius": 135,
-    "strength": 8,
+    "offset": [ -9.0, 305.0, 0.0 ],
+    "radius": 160,
+    "strength": 10,
+    "visibleFromOtherPlanes": true,
     "color": [
       255,
       85,
