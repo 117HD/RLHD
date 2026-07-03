@@ -1870,6 +1870,7 @@ public class SceneUploader implements AutoCloseable {
 
 		final int zero = (int) proj.project(x, y, z, projected)[2];
 		final int radius = model.getRadius();
+		final byte modelTransparency = model.getTransparency();
 
 		faceOverrides.ensureCapacity(triangleCount);
 		faceMaterials.ensureCapacity(triangleCount);
@@ -1880,7 +1881,7 @@ public class SceneUploader implements AutoCloseable {
 			if (color3s[f] == -2)
 				continue;
 
-			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;
+			int transparency = readFaceTransparency(modelTransparency, transparencies, f);
 			if (transparency == 255)
 				continue;
 
@@ -1925,6 +1926,12 @@ public class SceneUploader implements AutoCloseable {
 					final int textureFace = textureFaces != null ? textureFaces[f] : -1;
 					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 				}
+			}
+
+			if (faceOverride.modifiesAlpha) {
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
+				if (transparency == 255)
+					continue;
 			}
 
 			faceOverrides.set(f, faceOverride);
@@ -2036,6 +2043,7 @@ public class SceneUploader implements AutoCloseable {
 		final byte overrideHue = model.getOverrideHue();
 		final byte overrideSat = model.getOverrideSaturation();
 		final byte overrideLum = model.getOverrideLuminance();
+		final byte modelTransparency = model.getTransparency();
 
 		final boolean isVanillaTextured = faceTextures != null;
 
@@ -2061,7 +2069,7 @@ public class SceneUploader implements AutoCloseable {
 			else if (color3 == -1)
 				color2 = color3 = color1;
 
-			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
+			int transparency = readFaceTransparency(modelTransparency, transparencies, face);
 			final int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			final int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			final UvType uvType = faceUVTypes.get(face);
@@ -2659,6 +2667,21 @@ public class SceneUploader implements AutoCloseable {
 			default:
 				return 55;
 		}
+	}
+
+	private static int readFaceTransparency(byte modelTransparency, byte[] transparencies, int f) {
+		if (modelTransparency == -1)
+			return 255;
+
+		int t = modelTransparency & 255;
+		int faceTransparency = transparencies != null ? transparencies[f] & 0xFF : 0;
+		if (t > 0 && faceTransparency < 253) {
+			int a = (253 - faceTransparency) * t >> 8;
+			assert (faceTransparency & 255) == faceTransparency;
+			return faceTransparency + a;
+		}
+
+		return faceTransparency;
 	}
 
 	public static void rotateNormals(int[] normals, int orientSin, int orientCos) {
