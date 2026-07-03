@@ -10696,6 +10696,14 @@
     "blended": false
   },
   {
+    "name": "Castle Draken Basement floor",
+    "area": "UNDER_CASTLE_DRAKEN",
+    "underlayIds": [
+      27
+    ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
     "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
     "area": "KRAKEN_COVE_HIDE_WATER_EDGE",
     "overlayIds": [ 7 ],

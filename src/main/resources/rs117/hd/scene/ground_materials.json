@@ -580,7 +580,7 @@
     "name": "PACKED_EARTH",
     "materials": [
       "DIRT_1",
-      "GRAVEL",
+      "GRAVEL_LIGHT",
       "DIRT_1",
       "DIRT_1",
       "DIRT_2"
