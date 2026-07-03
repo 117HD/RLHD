@@ -93579,18 +93579,12 @@
       {
         "description": "Device",
         "colors": [ "h == 0 && s == 0", "h == 7" ],
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 404
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
         "description": "Blood",
         "colors": [ "h == 7" ],
-        "baseMaterial": "GRUNGE_3_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": -256
+        "baseMaterial": "GRUNGE_3_LIGHT"
       },
       {
         "description": "Skulls",
@@ -93655,15 +93649,201 @@
       "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_B_DARKMEYER",
       "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_C_DARKMEYER",
       "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_D_DARKMEYER",
-      "MYQ6_CASTLE_DRAKAN_EXIT_TO_LAB",
+      "MYQ6_CASTLE_DRAKAN_EXIT_TO_LAB"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement top",
+    "baseMaterial": "BLACK",
+    "objectIds": [
       "WALLKIT_DRAKAN01_WALLTOP01"
     ]
   },
   {
-    "description": "Castle Draken Basement Walls - Stone - Wooden",
-    "baseMaterial": "BLACK",
+    "description": "Castle Draken Basement - Wooden - Chest with gem",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Gem",
+        "colors": [ "h == 7" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
     "objectIds": [
-      "WALLKIT_DRAKAN01_WALLTOP01"
+      "CHEST_SANGVESTI01_DEFAULT01_DARKMEYER",
+      "CHEST_SANGVESTI01_DEFAULT01_2X2_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement Walls - Wooden",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Webs",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Metal",
+        "colors": [ "a == 255 && h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "ARMOURY_DRAKAN01_RACK01_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK02_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK03_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK01_1X3_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK02_1X3_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK03_1X3_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK01_2X2_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK02_2X2_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK03_2X2_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement Wall shield - Wooden - Painted",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ARMOURY_WALL_DRAKAN01_SHIELD01_N",
+      "ARMOURY_WALL_DRAKAN01_SHIELD01_S"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement Wall spear - Wooden - Metallic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "ARMOURY_WALL_DRAKAN01_SPEAR02_E",
+      "ARMOURY_WALL_DRAKAN01_SPEAR01_E"
+    ]
+  },
+  {
+    "description": "Draken Lab torches - Animated - Dynamic",
+    "baseMaterial": "GRAY_80",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "TORCH_DAEYALT_LAB01",
+      "TORCH_DAEYALT_LAB01_NE",
+      "TORCH_DAEYALT_LAB01_NW",
+      "TORCH_DAEYALT_LAB01_E",
+      "TORCH_DAEYALT_LAB01_S",
+      "TORCH_DAEYALT_LAB01_SW"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement torches - Animated - Dynamic",
+    "baseMaterial": "GRAY_80",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "TORCH_DRAKAN01_DARKMEYER",
+      "TORCH_DRAKAN01_W_DARKMEYER",
+      "TORCH_DRAKAN01_E_DARKMEYER",
+      "TORCH_DRAKAN01_S_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement - Prison bars",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": -142,
+    "objectIds": [
+      "WALLKIT_DRAKAN01_PRISON01",
+      "WALLKIT_DRAKAN01_PRISON01_DOOR_L",
+      "WALLKIT_DRAKAN01_PRISON01_DOOR_L_OPEN",
+      "WALLKIT_DRAKAN01_PRISON01_END01",
+      "WALLKIT_DRAKAN01_PRISON01_END02"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement - Metallic bowl",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 313,
+    "objectIds": [
+      "AREA_SANGUINE_GHETTO_TRAY2"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement - Metal beds",
+    "baseMaterial": "GRAY_80",
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.66,
+        "uvOrientation": 142
+      },
+      {
+        "colors": "h < 8 && s > 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "MYQ6_BED01"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement - Wooden - Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Bat wings",
+        "colors": [ "h == 7" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_NORTH",
+      "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_SOUTH"
     ]
   }
 ]
