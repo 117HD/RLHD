@@ -49575,5 +49575,26 @@
       "TORCH_DAEYALT_LAB01_S",
       "TORCH_DAEYALT_LAB01_SW"
     ]
+  },
+  {
+    "description": "Blood Moon Rises - Castle Basement wall torch",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TORCH_DRAKAN01_DARKMEYER",
+      "TORCH_DRAKAN01_W_DARKMEYER",
+      "TORCH_DRAKAN01_E_DARKMEYER",
+      "TORCH_DRAKAN01_S_DARKMEYER"
+    ]
   }
 ]
