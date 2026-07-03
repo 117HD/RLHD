@@ -3913,7 +3913,7 @@
   },
   {
     "name": "CASTLE_DRAKEN_INTERIOR_VAMPYRIUM",
-    "regions": [ 9331, 9843 ],
+    "regions": [ 9331, 9443, 9843 ],
     "hideOtherAreas": true
   },
   {

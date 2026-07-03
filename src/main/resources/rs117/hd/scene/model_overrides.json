@@ -64909,7 +64909,9 @@
       "FAI_VARROCK_PAGES2",
       "FAI_VARROCK_LIBRARY_PAGES2",
       "ARCHEEUS_HOUSE_BOOKS",
-      "ARCHEEUS_HOUSE_BOOKS_02"
+      "ARCHEEUS_HOUSE_BOOKS_02",
+      "DRAKAN_PAGES1",
+      "DRAKAN_PAGES2"
     ]
   },
   {
@@ -93450,6 +93452,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
+    "shiftLightness": 3,
     "objectIds": [
       "CRATE_SANGVESTI01_DEFAULT01",
       "CRATE_SANGVESTI01_STACKED01",
@@ -93881,6 +93884,7 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512,
+    "shiftLightness": 3,
     "colorOverrides": [
       {
         "description": "Carpet",
@@ -93892,7 +93896,8 @@
       }
     ],
     "objectIds": [
-      "CASTLE_DRAKAN_STAIRS_UP_NOOP_DARKMEYER"
+      "CASTLE_DRAKAN_STAIRS_UP_NOOP_DARKMEYER",
+      "CASTLE_DRAKAN_STAIRS_UP"
     ]
   },
   {
@@ -94035,7 +94040,10 @@
       "STATUE_DRAKAN01_DEFAULT01_DARKMEYER",
       "STATUE_DRAKAN01_DEFAULT07_M_DARKMEYER",
       "STATUE_DRAKAN01_DEFAULT06_DARKMEYER",
-      "STATUE_DRAKAN01_DEFAULT05_M_DARKMEYER"
+      "STATUE_DRAKAN01_DEFAULT05_M_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT01_M",
+      "STATUE_DRAKAN01_DEFAULT05_M",
+      "STATUE_DRAKAN01_DEFAULT07_M"
     ]
   },
   {
@@ -94096,7 +94104,9 @@
     "description": "Castle Draken - Blood portal - DYNAMIC - ANIMATED",
     "baseMaterial": "BLANK_GLOSS",
     "objectIds": [
-      "MYQ6_VAMPYRIUM_PORTAL_VIS"
+      "MYQ6_VAMPYRIUM_PORTAL_VIS",
+      "MYQ6_VAMPYRIUM_RETURN_PORTAL",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_D"
     ]
   },
   {
@@ -94168,7 +94178,8 @@
     ],
     "objectIds": [
       "WALLKIT_DRAKAN01_NOBLE01_WINDOW01",
-      "WALLKIT_DRAKAN01_NOBLE01_WINDOW01_MIRROR"
+      "WALLKIT_DRAKAN01_NOBLE01_WINDOW01_MIRROR",
+      "WALLKIT_DRAKAN01_WINDOW02"
     ]
   },
   {
@@ -94208,7 +94219,33 @@
       "CASTLE_DRAKAN_DOOR_ALT",
       "CASTLE_DRAKAN_DOOR_ALT_M",
       "CASTLE_DRAKAN_ROOF_DOOR",
-      "CASTLE_DRAKAN_ROOF_DOOR_M"
+      "CASTLE_DRAKAN_ROOF_DOOR_M",
+      "CASTLE_DRAKAN_DOOR_TO_OUTSIDE"
+    ]
+  },
+  {
+    "description": "Castle Draken - Wooden - Metallic - Golden door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": [ "h == 6" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": -187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_GILDED_LIBRARY_DOOR",
+      "CASTLE_DRAKAN_GILDED_LIBRARY_DOOR_M"
     ]
   },
   {
@@ -94245,7 +94282,9 @@
       "CASTLE_DRAKAN_DOOR_MOON_HALF",
       "CASTLE_DRAKAN_DOOR_MOON_HALF_M",
       "CASTLE_DRAKAN_DOOR_MOON_FULL",
-      "CASTLE_DRAKAN_DOOR_MOON_NEW"
+      "CASTLE_DRAKAN_DOOR_MOON_NEW",
+      "CASTLE_DRAKAN_DOOR_MOON_CRESCENT",
+      "CASTLE_DRAKAN_DOOR_MOON_CRESCENT_M"
     ]
   },
   {
@@ -94293,8 +94332,13 @@
       "STATUE_DRAKAN01_DEFAULT03",
       "STATUE_DRAKAN01_DEFAULT04",
       "STATUE_DRAKAN01_DEFAULT05",
+      "STATUE_DRAKAN01_DEFAULT06",
+      "STATUE_DRAKAN01_DEFAULT07",
+      "PILLAR_DRAKAN02_BROKEN01",
       "CASTLE_DRAKAN_TELEPORTER_STATUE_A",
-      "CASTLE_DRAKAN_TELEPORTER_STATUE_B"
+      "CASTLE_DRAKAN_TELEPORTER_STATUE_B",
+      "CASTLE_DRAKAN_TELEPORTER_STATUE_C",
+      "CASTLE_DRAKAN_TELEPORTER_STATUE_D"
     ]
   },
   {
@@ -94359,10 +94403,17 @@
         "uvType": "BOX",
         "uvScale": 0.8,
         "uvOrientation": 187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
       }
     ],
     "objectIds": [
-      "CASTLE_DRAKAN_DINING_ROOM_FIREPLACE"
+      "CASTLE_DRAKAN_DINING_ROOM_FIREPLACE",
+      "CASTLE_DRAKAN_VANESCULA_FIREPLACE",
+      "CASTLE_DRAKAN_PARLOUR_FIREPLACE_EMPTY"
     ]
   },
   {
@@ -94851,6 +94902,98 @@
     ],
     "objectIds": [
       "CABINET_SANGVESTI01_CONTENTS02"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium table with cloth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "s >= 4",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 313,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "TABLE_SANGVESTI01_CONTENTS03"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Leaver with brown handle",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 9,
+    "objectIds": [
+      "CASTLE_DRAKAN_TELEPORT_LEVER_UP_E"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Emblem holder - DYNAMIC",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Cobwebs",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_EMBLEM_HOLDER_EMPTY",
+      "CASTLE_DRAKAN_EMBLEM_HOLDER_FILLED"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium wooden shelf with clutter",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "DRAKAN01_SHELVES02",
+      "DRAKAN01_SHELVES03"
     ]
   }
 ]
