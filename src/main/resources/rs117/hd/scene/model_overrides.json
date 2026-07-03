@@ -93845,5 +93845,226 @@
       "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_NORTH",
       "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_SOUTH"
     ]
+  },
+  {
+    "description": "Castle Draken - Wooden - Stairs with carpet",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Carpet",
+        "colors": [ "s == 4", " s == 7" ],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_STAIRS_UP_NOOP_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Draken - Wooden - Railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Bat wings",
+        "colors": [ "h == 7" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN04_DEFAULT01_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Draken - Wooden - Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Wood panels",
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Grunge",
+        "colors": [ "h == 4" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_DEFAULT01_DARKMEYER",
+      "WALLKIT_DRAKAN01_DAMAGED01_DARKMEYER",
+      "WALLKIT_DRAKAN01_DAMAGED03_DARKMEYER",
+      "WALLKIT_DRAKAN01_DAMAGED03_M_DARKMEYER",
+      "WALLKIT_DRAKAN01_UPPER01_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Draken - Wooden - Wall with windows",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Wood panels",
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Glass",
+        "colors": [ "h == 0 && s >= 6" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_WINDOW01_DARKMEYER",
+      "WALLKIT_DRAKAN01_WINDOW02_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Draken - Wooden - Metallic - Wall with door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": [ "h == 0", "s >= 7" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": -187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_MORY_DOOR_NOOP",
+      "CASTLE_DRAKAN_MORY_DOOR_M_NOOP",
+      "MYQ6_CASTLE_DRAKAN_DOORS_NOOP"
+    ]
+  },
+  {
+    "description": "Castle Draken - Pillars and statues with cobwebs",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Webs",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "PILLAR_DRAKAN02_DEFAULT01_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT07_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT03_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT01_M_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT05_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT01_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT07_M_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT06_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT05_M_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Draken - Incense burner",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "metal",
+        "colors": [ "s >= 2" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "CANDELABRA_SANGVESTI01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Castle Draken - Wall crest",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "objectIds": [
+      "CREST_DARKMEYER01_DEFAULT01_OFFSET01"
+    ]
+  },
+  {
+    "description": "Castle Draken - Shrine - DYNAMIC - ANIMATED",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "MYQ6_CASTLE_DRAKAN_SHRINE",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_NOOP"
+    ]
+  },
+  {
+    "description": "Castle Draken - Blood portal - DYNAMIC - ANIMATED",
+    "baseMaterial": "BLANK_GLOSS",
+    "objectIds": [
+      "MYQ6_VAMPYRIUM_PORTAL_VIS"
+    ]
   }
 ]
