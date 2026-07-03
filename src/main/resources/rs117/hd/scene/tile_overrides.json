@@ -10697,7 +10697,7 @@
   },
   {
     "name": "Castle Draken Basement floor",
-    "area": "UNDER_CASTLE_DRAKEN",
+    "area": "DRAKEN_LAB",
     "underlayIds": [
       27
     ],
