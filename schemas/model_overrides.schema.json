@@ -526,7 +526,7 @@
               "type": "number",
               "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
             },
-            "uvOrientation": {
+            "DRAKAN01_MIRROR_DEFAULT01""uvOrientation": {
               "type": "integer",
               "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
             },

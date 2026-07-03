@@ -63664,12 +63664,13 @@
     "uvScale": 0.6,
     "uvOrientationY": 512,
     "objectIds": [
-      "DRESSER"
+      "DRESSER",
+      "DRAKAN01_VANITY_DEFAULT01"
     ],
     "colorOverrides": [
       {
         "description": "GLASS",
-        "colors": "h == 35 && s == 0",
+        "colors": "h == 35 && s == 0 || h == 55 && l == 83",
         "baseMaterial": "BLANK_GLOSS",
         "uvType": "BOX"
       }
@@ -68746,7 +68747,8 @@
     "uvScale": 0.4,
     "objectIds": [
       "ALDARIN_MIRROR_DEFAULT01",
-      "FAI_VARROCK_POSH_MIRROR"
+      "FAI_VARROCK_POSH_MIRROR",
+      "DRAKAN01_MIRROR_DEFAULT01"
     ],
     "colorOverrides": [
       {
@@ -93893,12 +93895,18 @@
         "uvType": "BOX",
         "uvScale": 0.6,
         "uvOrientation": -256
+      },
+      {
+        "description": "Blackness",
+        "colors": [ "h == 0 && s == 0" ],
+        "baseMaterial": "GRAY_70"
       }
     ],
     "objectIds": [
       "CASTLE_DRAKAN_STAIRS_UP_NOOP_DARKMEYER",
       "CASTLE_DRAKAN_STAIRS_UP",
-      "CASTLE_DRAKAN_STAIRS_UP_NORUG"
+      "CASTLE_DRAKAN_STAIRS_UP_NORUG",
+      "CASTLE_DRAKAN_STAIRS_DOWN_3X5"
     ]
   },
   {
@@ -94146,7 +94154,9 @@
       "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_B",
       "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_C",
       "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_B_MIRROR",
-      "WALLKIT_DRAKAN01_NOBLE02"
+      "WALLKIT_DRAKAN01_NOBLE02",
+      "CASTLE_DRAKAN_WALL_CRACKED",
+      "CASTLE_DRAKAN_WALL_DESTROYED"
     ]
   },
   {
@@ -94382,7 +94392,8 @@
     ],
     "objectIds": [
       "CASTLE_DRAKAN_CLOCK_BIG_HAND",
-      "CASTLE_DRAKAN_CLOCK_SMALL_HAND"
+      "CASTLE_DRAKAN_CLOCK_SMALL_HAND",
+      "CASTLE_DRAKAN_CLOCK_BOTH_HANDS"
     ]
   },
   {
@@ -95009,6 +95020,35 @@
     "objectIds": [
       "DRAKAN01_SHELVES02",
       "DRAKAN01_SHELVES03"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium - Coffin",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+    "shiftLightness": 7,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "COFFIN_DRAKAN01_VANESCULA01"
     ]
   }
 ]
