@@ -94822,7 +94822,7 @@
   },
   {
     "description": "Castle Draken - Vampyrium table with cloth",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientation": 512,
@@ -94838,6 +94838,18 @@
     ],
     "objectIds": [
       "TABLE_SANGVESTI01_DEFAULT04"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "shiftLightness": 4,
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "CHEST_SANGVESTI01_DEFAULT01",
+      "CHEST_SANGVESTI01_DEFAULT01_2X2"
     ]
   },
   {
