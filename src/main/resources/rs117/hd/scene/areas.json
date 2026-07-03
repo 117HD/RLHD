@@ -12114,6 +12114,10 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Vampyrium",
+    "regionBoxes": [ [ 9597, 11128 ] ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",

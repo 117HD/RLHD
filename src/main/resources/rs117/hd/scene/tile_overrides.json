@@ -10744,6 +10744,15 @@
     "groundMaterial": "DIRT_1"
   },
   {
+    "name": "Vampyrium - Blood",
+    "area": "Vampyrium",
+    "uvOrientation": 512,
+    "overlayIds": [
+      636
+    ],
+    "waterType": "BLOOD"
+  },
+  {
     "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
     "area": "KRAKEN_COVE_HIDE_WATER_EDGE",
     "overlayIds": [ 7 ],
