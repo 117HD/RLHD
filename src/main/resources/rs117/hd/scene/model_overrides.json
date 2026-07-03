@@ -32041,13 +32041,15 @@
     "description": "Hide fake brick tiles to replace them with tile overrides",
     "objectIds": [
       "TILEKIT_BRICK01_DEFAULT01",
-      "TILEKIT_BRICK01_DEFAULT02"
+      "TILEKIT_BRICK01_DEFAULT02",
+      "TILEKIT_DRAKAN_BRICK01_DEFAULT01"
     ],
     "baseMaterial": "LASSAR_UNDERCITY_TILES",
     "hideInAreas": [
       "LASSAR_UNDERCITY",
       "VARLAMORE_TEMPLE_CRYPT",
-      "CAM_TORUM"
+      "CAM_TORUM",
+      "CASTLE_DRAKEN_INTERIOR"
     ]
   },
   {
@@ -93591,7 +93593,7 @@
         "uvOrientation": -256
       },
       {
-        "description": "Blood",
+        "description": "Skulls",
         "colors": [ "h == 5" ],
         "baseMaterial": "BONE",
         "uvType": "BOX",
@@ -93611,6 +93613,57 @@
     "uvOrientation": 303,
     "objectIds": [
       "GLYPH_DRAKAN01_LAB01_FLOOR"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement Walls - Stone - Wooden",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Supports",
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Blood",
+        "colors": [ "h == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_SERVANT01_A_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_B_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_C_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_D_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_A_TYPE8A_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_A_TYPE8B_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_A_TYPE8C_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_A_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_B_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_C_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_D_DARKMEYER",
+      "MYQ6_CASTLE_DRAKAN_EXIT_TO_LAB",
+      "WALLKIT_DRAKAN01_WALLTOP01"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement Walls - Stone - Wooden",
+    "baseMaterial": "BLACK",
+    "objectIds": [
+      "WALLKIT_DRAKAN01_WALLTOP01"
     ]
   }
 ]
