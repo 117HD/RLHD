@@ -8667,6 +8667,8 @@
   {
     "description": "Dirt Cave Wall - Ivandis Tomb Exit",
     "baseMaterial": "GRUNGE_1",
+    "shiftLightness": -1,
+    "uvOrientation": 512,
     "uvType": "BOX",
     "colorOverrides": [
       {
@@ -9306,7 +9308,6 @@
       "ROUTE_CAVEWALLTUNNEL",
       "MDAUGHTER_CAVEEXIT",
       "DWARF_CAVEWALL_TUNNEL",
-      "BURGH_IVANDIS_TOMB_ENTRANCE",
       "HELLHOUND_CAVE_ENTRANCE_A_01",
       "HELLHOUND_CAVE_ENTRANCE_B_02",
       "HELLHOUND_CAVE_ENTRANCE_C_03",
@@ -9318,7 +9319,17 @@
     "uvScale": 0.5
   },
   {
-    "description": "Grunge Caves",
+    "description": "Grunge Caves - Lighten",
+    "baseMaterial": "GRUNGE_1",
+    "uvOrientation": 512,
+    "shiftLightness": 2,
+    "objectIds": [
+      "BURGH_IVANDIS_TOMB_ENTRANCE"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Grunge Caves - Entrance/Exit",
     "baseMaterial": "GRUNGE_1",
     "terrainVertexSnap": true,
     "objectIds": [
@@ -16991,8 +17002,6 @@
       "FENK_STAGAMITE_SMALL",
       "LOTR_MINE_STALAGTITE_01",
       "LOTR_MINE_STALAGTITE_02",
-      "AREA_SANGUINE_MINE_STALAGTITE_01",
-      "AREA_SANGUINE_MINE_STALAGTITE_02",
       "STALAGMITE_ROCK01_DEFAULT01",
       "STALAGMITE_ROCK01_DEFAULT02",
       "STALAGMITE_ROCK01_TOP01",
@@ -17006,6 +17015,16 @@
       "EYEGLO_MINE_STALAGTITE_01",
       "EYEGLO_MINE_STALAGTITE_02",
       "EYEGLO_MINE_STALAGTITE_FALLOFF"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Objects - Stone - Stalagmite - Darken",
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": -5,
+    "objectIds": [
+      "AREA_SANGUINE_MINE_STALAGTITE_01",
+      "AREA_SANGUINE_MINE_STALAGTITE_02"
     ],
     "uvType": "BOX"
   },
@@ -93256,6 +93275,7 @@
       "MYQ6_WALL_CAVE_SUPPORT_RIGHT",
       "MYQ6_WALL_CAVE_SUPPORT_LEFT",
       "MYQ6_VAMPYRIFICATION_LAB_CASTLE_EXIT_NOOP",
+      "MYQ6_VAMPYRIFICATION_LAB_CASTLE_EXIT_OP",
       "MYQ6_VAMPYRIFICATION_LAB_EXIT"
     ]
   },
@@ -93486,7 +93506,8 @@
       }
     ],
     "objectIds": [
-      "TABLE_DRAKAN01_LAB01"
+      "TABLE_DRAKAN01_LAB01",
+      "TABLE_DRAKAN01_LAB01_2X2"
     ]
   },
   {
