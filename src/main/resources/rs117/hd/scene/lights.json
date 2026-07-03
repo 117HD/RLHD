@@ -28173,7 +28173,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "DARKM_ALTAR"
+      "DARKM_ALTAR",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_OP"
     ]
   },
   {
@@ -28190,7 +28191,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "DARKM_ALTAR"
+      "DARKM_ALTAR",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_OP"
     ]
   },
   {

@@ -93808,7 +93808,7 @@
     "description": "Castle Draken Basement - Prison bars",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
-    "uvScale": 0.66,
+    "uvScale": 0.33,
     "uvOrientation": -142,
     "objectIds": [
       "WALLKIT_DRAKAN01_PRISON01",
@@ -93822,7 +93822,7 @@
     "description": "Castle Draken Basement - Metallic bowl",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvType": "BOX",
-    "uvScale": 0.66,
+    "uvScale": 0.33,
     "uvOrientation": 313,
     "objectIds": [
       "AREA_SANGUINE_GHETTO_TRAY2"
@@ -93836,7 +93836,7 @@
         "colors": "s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.66,
+        "uvScale": 0.3,
         "uvOrientation": 142
       },
       {
@@ -93868,7 +93868,9 @@
     ],
     "objectIds": [
       "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_NORTH",
-      "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_SOUTH"
+      "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_SOUTH",
+      "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_NORTH_TOP",
+      "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_SOUTH_TOP"
     ]
   },
   {
@@ -93900,7 +93902,7 @@
     "colorOverrides": [
       {
         "description": "Bat wings",
-        "colors": [ "h == 7" ],
+        "colors": [ "s == 4" ],
         "baseMaterial": "GRUNGE_3_SHINY",
         "uvType": "BOX",
         "uvScale": 0.6,
@@ -94075,6 +94077,7 @@
         "description": "Blood",
         "colors": [ "s == 7" ],
         "baseMaterial": "GRUNGE_3_SHINY",
+        "shiftLightness": -4,
         "uvType": "BOX",
         "uvScale": 0.6,
         "uvOrientation": -256
@@ -94082,6 +94085,7 @@
     ],
     "objectIds": [
       "MYQ6_CASTLE_DRAKAN_SHRINE",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_OP",
       "MYQ6_CASTLE_DRAKAN_SHRINE_NOOP"
     ]
   },
