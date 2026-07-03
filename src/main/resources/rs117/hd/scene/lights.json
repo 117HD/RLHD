@@ -49552,5 +49552,28 @@
     "objectIds": [
       "MYQ6_MINE_CART_TUNNEL"
     ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyre Lab Wall Torch",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TORCH_DAEYALT_LAB01",
+      "TORCH_DAEYALT_LAB01_NE",
+      "TORCH_DAEYALT_LAB01_NW",
+      "TORCH_DAEYALT_LAB01_E",
+      "TORCH_DAEYALT_LAB01_S",
+      "TORCH_DAEYALT_LAB01_SW"
+    ]
   }
 ]
