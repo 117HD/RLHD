@@ -3026,7 +3026,8 @@
       "GRASS_VAMPYRIUM01_TALL05",
       "GRASS_VAMPYRIUM01_SHORT05",
       "GRASS_VAMPYRIUM01_SHORT06",
-      "GRASS_VAMPYRIUM01_SHORT04"
+      "GRASS_VAMPYRIUM01_SHORT04",
+      "GRASS_VAMPYRIUM01_TALL06"
     ]
   },
   {
@@ -95129,16 +95130,22 @@
     "uvScale": 0.7,
     "shiftLightness": 6,
     "objectIds": [
-      "DARKWOOD_TREE_DEFAULT02"
+      "DARKWOOD_TREE_DEFAULT02",
+      "DARKWOOD_TREE_DEFAULT01",
+      "DARKWOOD_TREE_DEFAULT04_2X4",
+      "DARKWOOD_TREE_DEFAULT05",
+      "DARKWOOD_TREE_DEFAULT03",
+      "DARKWOOD_TREE_DEFAULT04",
+      "DARKWOOD_TREE_TRUNK02",
+      "DARKWOOD_TREE_TRUNK02_2X2",
+      "DARKWOOD_TREE_DEFAULT06",
+      "DARKWOOD_TREE_TRUNK01_FALLEN01"
     ],
     "colorOverrides": [
       {
-        "description": "Grass",
-        "colors": "s > 5",
-        "baseMaterial": "NONE",
-        "uvType": "BOX",
-        "uvScale": 0.8,
-        "uvOrientation": 404
+        "description": "Grass - Temp hide till better solution",
+        "colors": "s == 7",
+        "hide": true
       }
     ]
   }
