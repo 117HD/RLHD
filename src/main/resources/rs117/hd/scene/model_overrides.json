@@ -94107,6 +94107,9 @@
     "objectIds": [
       "MYQ6_VAMPYRIUM_PORTAL_VIS",
       "MYQ6_VAMPYRIUM_RETURN_PORTAL",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_A",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_B",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_C",
       "CASTLE_DRAKAN_TELEPORTER_ACTIVE_D"
     ]
   },
@@ -94995,6 +94998,35 @@
     "objectIds": [
       "DRAKAN01_SHELVES02",
       "DRAKAN01_SHELVES03"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium wooden shelf with clutter",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "s == 5",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "shiftLightness": 8
+      }
+    ],
+    "objectIds": [
+      "CHEST_SANGVESTI01_DEFAULT01_2X2"
     ]
   }
 ]
