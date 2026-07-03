@@ -3005,6 +3005,31 @@
     ]
   },
   {
+    "description": "Short grass which shouldn't cast shadows - Vampyrium",
+    "baseMaterial": "GRAY_125",
+    "flatNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
+    "objectIds": [
+      "GRASS_VAMPYRIUM01_CORNER01",
+      "GRASS_VAMPYRIUM01_CENTRE01",
+      "GRASS_VAMPYRIUM01_EDGE01",
+      "GRASS_VAMPYRIUM01_TALL01",
+      "GRASS_VAMPYRIUM01_TALL02",
+      "GRASS_VAMPYRIUM01_SHORT03",
+      "GRASS_VAMPYRIUM01_SHORT02",
+      "GRASS_VAMPYRIUM01_SHORT01",
+      "GRASS_VAMPYRIUM01_TALL03",
+      "GRASS_VAMPYRIUM01_TALL02",
+      "GRASS_VAMPYRIUM01_TALL04",
+      "GRASS_VAMPYRIUM01_TALL05",
+      "GRASS_VAMPYRIUM01_SHORT05",
+      "GRASS_VAMPYRIUM01_SHORT06",
+      "GRASS_VAMPYRIUM01_SHORT04"
+    ]
+  },
+  {
     "description": "Fremmenik Isles, Lighten Grass",
     "areas": [ "FREMENNIK_ISLES" ],
     "baseMaterial": "GRAY_90",
@@ -95095,6 +95120,26 @@
     "uvOrientation": 512,
     "objectIds": [
       "TABLE_SANGVESTI01_DEFAULT03"
+    ]
+  },
+  {
+    "description": "Vampyrium Trees",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 6,
+    "objectIds": [
+      "DARKWOOD_TREE_DEFAULT02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "s > 5",
+        "baseMaterial": "NONE",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      }
     ]
   }
 ]
