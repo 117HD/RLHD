@@ -10696,12 +10696,31 @@
     "blended": false
   },
   {
-    "name": "Castle Draken Basement floor",
+    "name": "Draken Lab Floor",
     "area": "DRAKEN_LAB",
     "underlayIds": [
       27
     ],
     "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "Castle Draken Interior Floors",
+    "area": "CASTLE_DRAKEN_INTERIOR",
+    "uvOrientation": 512,
+    "underlayIds": [
+      72,
+      190
+    ],
+    "groundMaterial": "DARKMEYER_BRICK_PATH"
+  },
+  {
+    "name": "Castle Draken Interior Floors - Dust overlay",
+    "area": "CASTLE_DRAKEN_INTERIOR",
+    "uvOrientation": 512,
+    "overlayIds": [
+      228
+    ],
+    "groundMaterial": "DIRT_1"
   },
   {
     "name": "KRAKEN_COVE_HIDE_WATER_EDGE",

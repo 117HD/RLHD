@@ -3905,6 +3905,12 @@
     ]
   },
   {
+    "name": "CASTLE_DRAKEN_INTERIOR",
+    "aabbs": [
+      [ 3140, 7467, 3187, 7607 ]
+    ]
+  },
+  {
     "name": "PORT_PHASMATYS",
     "aabbs": [
       [ 3649, 3456, 3688, 3508 ],
