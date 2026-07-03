@@ -49674,5 +49674,23 @@
       "MYQ6_CASTLE_DRAKAN_SHRINE",
       "MYQ6_CASTLE_DRAKAN_SHRINE_NOOP"
     ]
+  },
+  {
+    "description": "Blood Moon Rises - Castle Drakan Lit Fireplace",
+    "offset": [ 0, 55, -55 ],
+    "radius": 600,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "CASTLE_DRAKAN_LOWERNIEL_FIREPLACE_LIT",
+      "CASTLE_DRAKAN_FIRE"
+    ]
   }
 ]
