@@ -3912,6 +3912,13 @@
     ]
   },
   {
+    "name": "CASTLE_DRAKEN_INTERIOR_VAMPYRIUM",
+    "aabbs": [
+      [ 2300, 7350, 2450, 7500 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "PORT_PHASMATYS",
     "aabbs": [
       [ 3649, 3456, 3688, 3508 ],
