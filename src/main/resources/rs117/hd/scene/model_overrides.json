@@ -95180,11 +95180,11 @@
       },
       {
         "description": "Spike",
-        "colors": "h == 0 && s > 2",
-        "baseMaterial": "BARK",
+        "colors": "h == 0 && s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
         "shiftSaturation": -1,
         "uvType": "BOX",
-        "uvScale": 0.4,
+        "uvScale": 0.45,
         "uvOrientation": 512
       }
     ]
@@ -95224,10 +95224,10 @@
       {
         "description": "Spike",
         "colors": "h == 0 && s > 2",
-        "baseMaterial": "BARK",
+        "baseMaterial": "WOOD_GRAIN_3",
         "shiftSaturation": -1,
         "uvType": "BOX",
-        "uvScale": 0.4,
+        "uvScale": 0.45,
         "uvOrientation": 512
       }
     ]
