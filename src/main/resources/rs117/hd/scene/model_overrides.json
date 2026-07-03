@@ -93452,7 +93452,9 @@
     "uvScale": 0.6,
     "objectIds": [
       "CRATE_SANGVESTI01_DEFAULT01",
-      "CRATE_SANGVESTI01_STACKED01"
+      "CRATE_SANGVESTI01_STACKED01",
+      "CASTLE_DRAKAN_SEARCHABLE_CRATE",
+      "CASTLE_DRAKAN_TINDERBOX_CRATE"
     ]
   },
   {
@@ -94053,7 +94055,8 @@
       }
     ],
     "objectIds": [
-      "CANDELABRA_SANGVESTI01_DEFAULT01"
+      "CANDELABRA_SANGVESTI01_DEFAULT01",
+      "CANDELABRA_SANGVESTI01_DEFAULT02"
     ]
   },
   {
@@ -94131,7 +94134,8 @@
       "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_A",
       "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_B",
       "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_C",
-      "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_B_MIRROR"
+      "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_B_MIRROR",
+      "WALLKIT_DRAKAN01_NOBLE02"
     ]
   },
   {
@@ -94163,7 +94167,8 @@
       }
     ],
     "objectIds": [
-      "WALLKIT_DRAKAN01_NOBLE01_WINDOW01"
+      "WALLKIT_DRAKAN01_NOBLE01_WINDOW01",
+      "WALLKIT_DRAKAN01_NOBLE01_WINDOW01_MIRROR"
     ]
   },
   {
@@ -94173,6 +94178,7 @@
     "uvScale": 0.8,
     "uvOrientation": 404,
     "objectIds": [
+      "MYQ6_SPIDERWEB02",
       "MYQ6_SPIDERWEB02_A"
     ]
   },
@@ -94199,6 +94205,7 @@
     "objectIds": [
       "CASTLE_DRAKAN_DOOR",
       "CASTLE_DRAKAN_DOOR_M",
+      "CASTLE_DRAKAN_DOOR_ALT",
       "CASTLE_DRAKAN_DOOR_ALT_M"
     ]
   },
@@ -94233,7 +94240,9 @@
     "objectIds": [
       "CASTLE_DRAKAN_DOOR_MOON_GIBBOUS",
       "CASTLE_DRAKAN_DOOR_MOON_GIBBOUS_M",
-      "CASTLE_DRAKAN_DOOR_MOON_HALF"
+      "CASTLE_DRAKAN_DOOR_MOON_HALF",
+      "CASTLE_DRAKAN_DOOR_MOON_HALF_M",
+      "CASTLE_DRAKAN_DOOR_MOON_FULL"
     ]
   },
   {
@@ -94258,7 +94267,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Pillars",
+    "description": "Castle Draken - Vampyrium Pillars and statues",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94275,7 +94284,12 @@
     ],
     "objectIds": [
       "PILLAR_DRAKAN02_DEFAULT01",
-      "PILLAR_DRAKAN02_DEFAULT02"
+      "PILLAR_DRAKAN02_DEFAULT02",
+      "STATUE_DRAKAN01_DEFAULT01",
+      "STATUE_DRAKAN01_DEFAULT02",
+      "STATUE_DRAKAN01_DEFAULT03",
+      "STATUE_DRAKAN01_DEFAULT04",
+      "STATUE_DRAKAN01_DEFAULT05"
     ]
   },
   {
@@ -94414,7 +94428,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium book case with books",
+    "description": "Castle Draken - Vampyrium table with bowl",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94452,6 +94466,299 @@
     ],
     "objectIds": [
       "DRAKAN_TABLE01_DINNING01"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Throne",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Carpet",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_THRONE"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Throne Carpet",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Skull banner",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "BANNER_SANGVESTI02_DRAKAN01"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Bust levers",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+    "colorOverrides": [
+      {
+        "description": "Bust",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_BUST01_LEVER_HIDDEN",
+      "CASTLE_DRAKAN_BUST02_LEVER_HIDDEN",
+      "CASTLE_DRAKAN_BUST03_LEVER_HIDDEN",
+      "CASTLE_DRAKAN_BUST04_LEVER_HIDDEN",
+      "CASTLE_DRAKAN_BUST01_LEVER_DOWN",
+      "CASTLE_DRAKAN_BUST02_LEVER_DOWN",
+      "CASTLE_DRAKAN_BUST03_LEVER_DOWN",
+      "CASTLE_DRAKAN_BUST04_LEVER_DOWN",
+      "CASTLE_DRAKAN_BUST01_LEVER_UP",
+      "CASTLE_DRAKAN_BUST02_LEVER_UP",
+      "CASTLE_DRAKAN_BUST03_LEVER_UP",
+      "CASTLE_DRAKAN_BUST04_LEVER_UP"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium shelves with bottles",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255 && h == 5",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "a == 255 && h == 0 && s >= 2 && s <= 3",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_SEARCHABLE_SHELVES"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium fancy chair",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "a == 255 && h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "DRAKAN01_CHAIR02"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Game tables",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "a == 255 && h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "DRAKAN01_TABLE_GAME01",
+      "DRAKAN01_TABLE_GAME02"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium floor trap",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "CASTLE_DRAKAN_FLOORTRAP"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Barrel",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s <= 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.31111,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "BARREL_SANGVESTI01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Brick and wooden post wall",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_SERVANT01_A",
+      "WALLKIT_DRAKAN01_SERVANT01_B"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Brick and wooden post wall with window",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Glass",
+        "colors": "s >= 6",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_SERVANT01_WINDOW01"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Spiral Stairs",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_SPIRAL_STAIRS_UP"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium table with cloth",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 313
+      }
+    ],
+    "objectIds": [
+      "TABLE_SANGVESTI01_DEFAULT04"
     ]
   }
 ]
