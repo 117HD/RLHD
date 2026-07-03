@@ -94796,6 +94796,10 @@
     "uvOrientation": 512,
     "colorOverrides": [
       {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      },
+      {
         "description": "Wood",
         "colors": "s == 2",
         "baseMaterial": "WOOD_GRAIN_3_LIGHT",
@@ -94812,7 +94816,8 @@
       }
     ],
     "objectIds": [
-      "WALLKIT_DRAKAN01_SERVANT01_WINDOW01"
+      "WALLKIT_DRAKAN01_SERVANT01_WINDOW01",
+      "WALLKIT_DRAKAN01_SERVANT01_WINDOW01_MIRROR"
     ]
   },
   {
