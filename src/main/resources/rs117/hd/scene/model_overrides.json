@@ -95145,8 +95145,102 @@
       {
         "description": "Grass - Temp hide till better solution",
         "colors": "s == 7",
-        "hide": true
+        "hide": true,
+        "baseMaterial": "NONE"
       }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_SANGVESTI01_CORNER01_BROKEN01_M",
+      "WALLKIT_SANGVESTI01_DEFAULT02",
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN01",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN03",
+      "WALLKIT_SANGVESTI01_RUBBLE01",
+      "WALLKIT_SANGVESTI01_DEFAULT01",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN01_M",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN01",
+      "WALLKIT_SANGVESTI01_CORNER01_BROKEN01",
+      "WALLKIT_SANGVESTI01_FENCE01_BROKEN01_M",
+      "WALLKIT_SANGVESTI01_FENCE01_BROKEN03_M"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2 && l < 14",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 6,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 2",
+        "baseMaterial": "BARK",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - alt",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 1,
+    "objectIds": [
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN01_M",
+      "WALLKIT_SANGVESTI01_CORNER01",
+      "WALLKIT_SANGVESTI01_WINDOW01",
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN03",
+      "WALLKIT_SANGVESTI01_FRAME01",
+      "ROOFKIT_SANGVESTI02_FACADE01_5X1",
+      "ROOFKIT_SANGVESTI02_BROKEN01",
+      "ROOFKIT_SANGVESTI02_DEFAULT01",
+      "ROOFKIT_SANGVESTI02_WINDOW01",
+      "ROOFKIT_SANGVESTI02_BROKEN02",
+      "ROOFKIT_SANGVESTI02_BROKEN03",
+      "ROOFKIT_SANGVESTI02_DEFAULT02",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN03_M",
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 6,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 2",
+        "baseMaterial": "BARK",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Door",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "shiftLightness": 6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SANGVESTI_GENERAL_STORE_DOOR"
     ]
   }
 ]
