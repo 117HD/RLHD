@@ -3006,9 +3006,10 @@
   },
   {
     "description": "Short grass which shouldn't cast shadows - Vampyrium",
-    "baseMaterial": "GRAY_125",
     "flatNormals": true,
     "windDisplacementMode": "OBJECT",
+    "shiftSaturation": 2,
+    "shiftLightness": 3,
     "castShadows": false,
     "inheritTileColorType": "UNDERLAY",
     "objectIds": [
