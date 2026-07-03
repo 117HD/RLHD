@@ -10709,7 +10709,8 @@
     "uvOrientation": 512,
     "underlayIds": [
       72,
-      190
+      190,
+      241
     ],
     "groundMaterial": "DARKMEYER_BRICK_PATH"
   },
