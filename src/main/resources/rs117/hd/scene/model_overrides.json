@@ -95057,5 +95057,16 @@
     "objectIds": [
       "COFFIN_DRAKAN01_VANESCULA01"
     ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium table with cloth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "TABLE_SANGVESTI01_DEFAULT03"
+    ]
   }
 ]
