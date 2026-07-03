@@ -10709,13 +10709,34 @@
     "uvOrientation": 512,
     "underlayIds": [
       72,
-      190
+      190,
+      241
     ],
     "groundMaterial": "DARKMEYER_BRICK_PATH"
   },
   {
     "name": "Castle Draken Interior Floors - Dust overlay",
     "area": "CASTLE_DRAKEN_INTERIOR",
+    "uvOrientation": 512,
+    "overlayIds": [
+      228
+    ],
+    "groundMaterial": "DIRT_1"
+  },
+  {
+    "name": "Castle Draken Interior Floors - Vampyrium",
+    "area": "CASTLE_DRAKEN_INTERIOR_VAMPYRIUM",
+    "uvOrientation": 512,
+    "underlayIds": [
+      72,
+      190,
+      241
+    ],
+    "groundMaterial": "DARKMEYER_BRICK_PATH"
+  },
+  {
+    "name": "Castle Draken Interior Floors-  Vampyrium - Dust overlay",
+    "area": "CASTLE_DRAKEN_INTERIOR_VAMPYRIUM",
     "uvOrientation": 512,
     "overlayIds": [
       228

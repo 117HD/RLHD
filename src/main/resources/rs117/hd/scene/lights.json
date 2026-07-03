@@ -28155,7 +28155,8 @@
     "objectIds": [
       "DARKM_ALTAR_CANDLES_01",
       "DARKM_ALTAR_CANDLES_02",
-      "DARKM_ALTAR_CANDLES_03"
+      "DARKM_ALTAR_CANDLES_03",
+      "DARKM_ALTAR_CANDLES_04"
     ]
   },
   {
@@ -49595,6 +49596,80 @@
       "TORCH_DRAKAN01_W_DARKMEYER",
       "TORCH_DRAKAN01_E_DARKMEYER",
       "TORCH_DRAKAN01_S_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Castle ground floor wall torch",
+    "offset": [ -9.0, 285.0, 0.0 ],
+    "radius": 135,
+    "strength": 8,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TORCH_DRAKAN01_N",
+      "TORCH_DRAKAN01_E",
+      "TORCH_DRAKAN01_S",
+      "TORCH_DRAKAN01_W"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Shrine 1",
+    "offset": [ -170.0, 225.0, -3.0 ],
+    "radius": 180,
+    "strength": 12,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_CASTLE_DRAKAN_SHRINE",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_NOOP"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Shrine 2",
+    "offset": [ 170.0, 225.0, -3.0 ],
+    "radius": 180,
+    "strength": 12,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_CASTLE_DRAKAN_SHRINE",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_NOOP"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Shrine 3",
+    "offset": [ 0.0, 225.0, 100.0 ],
+    "radius": 180,
+    "strength": 12,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_CASTLE_DRAKAN_SHRINE",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_NOOP"
     ]
   }
 ]
