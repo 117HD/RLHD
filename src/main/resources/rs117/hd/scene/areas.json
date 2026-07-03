@@ -3899,6 +3899,12 @@
     ]
   },
   {
+    "name": "UNDER_CASTLE_DRAKE",
+    "aabbs": [
+      [ 3148, 7424, 3220, 7486 ]
+    ]
+  },
+  {
     "name": "PORT_PHASMATYS",
     "aabbs": [
       [ 3649, 3456, 3688, 3508 ],
