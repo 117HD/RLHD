@@ -94290,7 +94290,9 @@
       "STATUE_DRAKAN01_DEFAULT02",
       "STATUE_DRAKAN01_DEFAULT03",
       "STATUE_DRAKAN01_DEFAULT04",
-      "STATUE_DRAKAN01_DEFAULT05"
+      "STATUE_DRAKAN01_DEFAULT05",
+      "CASTLE_DRAKAN_TELEPORTER_STATUE_A",
+      "CASTLE_DRAKAN_TELEPORTER_STATUE_B"
     ]
   },
   {
@@ -94369,7 +94371,7 @@
     "colorOverrides": [
       {
         "description": "Cobwebs",
-        "colors": "a < 255",
+        "colors": "a < 255 && s == 0",
         "baseMaterial": "GROUND_WEB_2",
         "uvType": "BOX",
         "uvScale": 0.8,
@@ -94394,7 +94396,8 @@
     ],
     "objectIds": [
       "CASTLE_DRAKAN_BOOKCASE01",
-      "CASTLE_DRAKAN_BOOKCASE02"
+      "CASTLE_DRAKAN_BOOKCASE02",
+      "DRAKAN01_SHELVES01"
     ]
   },
   {
