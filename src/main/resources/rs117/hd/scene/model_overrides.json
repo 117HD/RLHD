@@ -94189,17 +94189,17 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
         "description": "Metal",
         "colors": [ "h == 0 && s == 0", "s == 4" ],
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.25,
         "uvOrientation": -187
-      },
-      {
-        "description": "Black",
-        "colors": [ "s == 0 && l <= 2" ],
-        "baseMaterial": "BLACK"
       }
     ],
     "objectIds": [
@@ -94218,6 +94218,11 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
         "description": "Metal",
         "colors": [ "h == 0 && s == 0", "s == 4" ],
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
@@ -94232,11 +94237,6 @@
         "uvType": "BOX",
         "uvScale": 0.25,
         "uvOrientation": -187
-      },
-      {
-        "description": "Black",
-        "colors": [ "s == 0 && l <= 2" ],
-        "baseMaterial": "BLACK"
       }
     ],
     "objectIds": [
@@ -94702,6 +94702,11 @@
     "uvOrientation": 512,
     "colorOverrides": [
       {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
         "description": "Wood",
         "colors": "s == 2",
         "baseMaterial": "WOOD_GRAIN_3_LIGHT",
@@ -94711,7 +94716,9 @@
     ],
     "objectIds": [
       "WALLKIT_DRAKAN01_SERVANT01_A",
-      "WALLKIT_DRAKAN01_SERVANT01_B"
+      "WALLKIT_DRAKAN01_SERVANT01_B",
+      "WALLKIT_DRAKAN01_SERVANT01_C",
+      "WALLKIT_DRAKAN01_SERVANT01_D"
     ]
   },
   {
