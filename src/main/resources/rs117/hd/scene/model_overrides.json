@@ -55136,7 +55136,10 @@
       "ARENA_BLOODSPLAT01_LARGE01",
       "ARENA_BLOODSPLAT01_LARGE02",
       "ARENA_BLOODSPLAT01_SMALL01",
-      "ARENA_BLOODSPLAT01_SMALL02"
+      "ARENA_BLOODSPLAT01_SMALL02",
+      "BLOODSPLATTER1_LIGHT",
+      "BLOODSPLATTER2_LIGHT",
+      "BLOODSPLATTER3_LIGHT"
     ]
   },
   {
@@ -93169,6 +93172,97 @@
     "uvScale": 0.41111,
     "objectIds": [
       "BURGH_ANCIENT_COFFIN"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Cages",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 192,
+    "objectIds": [
+      "HAVEN_TOWER_BASEMENT_CAGE_TALL",
+      "HAVEN_TOWER_BASEMENT_CAGE_SMALL"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Restraints",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 96,
+    "objectIds": [
+      "HAVEN_TOWER_BASEMENT_TABLE_RESTRAINT"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Pipes",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "PIPES_DRAKAN01_LAB01",
+      "PIPES_DRAKAN02_LAB01",
+      "PIPES_DRAKAN03_LAB0",
+      "PIPES_DRAKAN03_LAB0_OFFSET",
+      "PIPES_DRAKAN01_WALLPIPES01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Booth",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "BOOTH_DRAKAN01_LAB01",
+      "BOOTH_DRAKAN01_LAB01_2X2_OFFSET"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Walls with wooden supports - Needs proper UV",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Supports",
+        "colors": [ "s == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Hole",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "PURE_BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_WALL_CAVE_SUPPORT_MID",
+      "MYQ6_WALL_CAVE_SUPPORT_RIGHT",
+      "MYQ6_WALL_CAVE_SUPPORT_LEFT",
+      "MYQ6_VAMPYRIFICATION_LAB_CASTLE_EXIT_NOOP",
+      "MYQ6_VAMPYRIFICATION_LAB_EXIT"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ6_WALL_CAVE",
+      "MYQ6_WALL_JOIN_R",
+      "MYQ6_WALL_JOIN_L"
     ]
   }
 ]
