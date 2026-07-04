@@ -15681,20 +15681,21 @@
   {
     "description": "Ground Decoration - Dirt Clump - Tiny - Uncolored",
     "baseMaterial": "DIRT_2",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "castShadows": false,
     "objectIds": [
       "VIKING_DUGUPSOIL_BROWN_2",
       "FAVOUR_DUGUPSOIL_2",
       "EYEGLO_DUGUPSOIL_2",
       "DUGUPSOIL2_BROWNMUD",
       "PEST_OUTPOST_SOIL_2",
+      "VAMPYRIUM01_MAGGOT01_DUGUPSOIL01",
       "VAMPYRIUM01_MAGGOT01_DUGUPSOIL02",
       "VAMPYRIUM01_DUGUPSOIL02",
       "VAMPYRIUM01_SANGVESTI01_DUGUPSOIL02",
       "VAMPYRIUM01_DUGUPSOIL05"
-    ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.65,
-    "castShadows": false
+    ]
   },
   {
     "description": "Ground Decoration - Dirt Clump - Tiny - Colored",
@@ -15715,6 +15716,8 @@
   {
     "description": "Ground Decoration - Dirt Clump - Small - Uncolored",
     "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.65,
     "objectIds": [
       "DUGUPSOIL3_UPASS",
       "DUGUPSOIL3_LIGHT",
@@ -15749,10 +15752,9 @@
       "VAMPYRIUM01_DUGUPSOIL03",
       "VAMPYRIUM01_SANGVESTI01_DUGUPSOIL01",
       "VAMPYRIUM01_SANGVESTI01_DUGUPSOIL03",
-      "VAMPYRIUM01_DUGUPSOIL06"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.65
+      "VAMPYRIUM01_DUGUPSOIL06",
+      "VAMPYRIUM01_DUGUPSOIL04"
+    ]
   },
   {
     "description": "Ground Decoration - Dirt Clump - Small - Colored",
@@ -97031,6 +97033,106 @@
     ],
     "objectIds": [
       "BOOTH_SANGVESTI01_POLL01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Corpse on a spike",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 222,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "description": "Skewer",
+        "colors": "h >= 58 && s == 0",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 10
+      }
+    ],
+    "objectIds": [
+      "CORPSE_DRAKAN01_SKEWER01",
+      "CORPSE_DRAKAN01_SKEWER02",
+      "CORPSE_DRAKAN01_SKEWER03"
+    ]
+  },
+  {
+    "description": "Vampyrium - Tree arch with skull",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Skewer",
+        "colors": "h == 5 || h == 7",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "ARCHWAY_DRAKAN01_RUINED01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Tree pillar in dirt",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "PILLAR_DRAKAN01_RUINED01",
+      "PILLAR_DRAKAN01_RUINED02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Broken fences",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "objectIds": [
+      "FENCE_DRAKAN01_RUINED02",
+      "FENCE_DRAKAN01_RUINED03"
+    ]
+  },
+  {
+    "description": "Vampyrium - Broken shelter",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Red covering",
+        "colors": "h == 1 && s >= 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "SHELTER_DRAKAN01_RUINED04",
+      "SHELTER_DRAKAN01_RUINED05"
     ]
   }
 ]
