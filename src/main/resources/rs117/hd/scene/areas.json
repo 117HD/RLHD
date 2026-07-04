@@ -12107,6 +12107,10 @@
     ]
   },
   {
+    "name": "VAMPYRIUM",
+    "regionBoxes": [ [ 9597, 11128 ] ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
@@ -12193,6 +12197,7 @@
   {
     "name": "MAINLAND_EXTENSIONS",
     "areas": [
+      "VAMPYRIUM",
       "PANDEMONIUM_QUEST_INSTANCE",
       "BRAINDEATH_ISLAND",
       "CLAN_HALL",
