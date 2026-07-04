@@ -377,6 +377,7 @@
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
     "moonColor": "#FF0000",
+    "moonLightColor": "#FF6D6D",
     "sunStrength": 0.020,
     "starVisibility": 0.3,
     "sunlightStrength": 0.4,
@@ -397,6 +398,7 @@
     "groundFogEnd": -350,
     "groundFogOpacity": 0.5,
     "moonColor": "#FF0000",
+    "moonLightColor": "#FF6D6D",
     "sunStrength": 0.020,
     "starVisibility": 0.3,
     "sunlightStrength": 0.4,
@@ -2366,7 +2368,8 @@
     "sunStrength": 0,
     "sunlightStrength": 0.8,
     "starVisibility": 0.8,
-    "minBrightnessBoost": 0.5
+    "minBrightnessBoost": 0.5,
+    "nightSkyColor": "#ff0000"
   },
   {
     "area": "PLAYER_OWNED_HOUSE_WILDY",
