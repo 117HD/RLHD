@@ -2670,6 +2670,7 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	private static int readFaceTransparency(byte modelTransparency, byte[] transparencies, int f) {
+		// Based on https://github.com/runelite/runelite/commit/a88ac64d5a154020cdc21612fc0f1eb32aa8d0f8#diff-2495d11499767f573d041baf080ee6b50dddd325e37b34a402f4c23efc3c2324R464-R478
 		if (modelTransparency == -1)
 			return 255;
 
