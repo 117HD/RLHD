@@ -412,6 +412,7 @@ public class HdPlugin extends Plugin {
 	public boolean configModelBatching;
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
+	public boolean configShadowTransparency;
 	public boolean configRoofShadows;
 	public boolean configTerrainShadows;
 	public boolean configExpandShadowDraw;
@@ -1711,6 +1712,7 @@ public class HdPlugin extends Plugin {
 		configExpandedMapLoadingChunks = config.expandedMapLoadingChunks();
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
+		configShadowTransparency = config.shadowTransparency();
 		configRoofShadows = config.roofShadows();
 		configTerrainShadows = config.terrainShadows();
 		configGroundTextures = config.groundTextures();

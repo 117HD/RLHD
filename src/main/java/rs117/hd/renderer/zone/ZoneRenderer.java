@@ -1219,7 +1219,7 @@ public class ZoneRenderer implements Renderer {
 
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
-		renderState.depthFunc.set(GL_LEQUAL);
+		renderState.depthFunc.set(plugin.configShadowTransparency ? GL_LEQUAL : GL_LESS);
 		renderState.ido.set(indirectDrawCmds.id);
 
 		CommandBuffer.SKIP_DEPTH_MASKING = true;
@@ -1230,6 +1230,8 @@ public class ZoneRenderer implements Renderer {
 		if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
 			renderState.viewport.set(0, 0, plugin.terrainShadowMapResolution, plugin.terrainShadowMapResolution);
+			renderState.depthFunc.set(GL_LESS);
+			renderState.enable.set(GL_CULL_FACE);
 			renderState.apply();
 
 			terrainShadowProgram.use();
@@ -1238,6 +1240,7 @@ public class ZoneRenderer implements Renderer {
 
 		glBindVertexArray(0);
 
+		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
 
 		shouldClearShadowFbo = true;
