@@ -96904,7 +96904,7 @@
     ]
   },
   {
-    "description": "Vampyrium - Silver Leafy plant with red stalk",
+    "description": "Vampyrium - Silver Leafy plant with white stalk",
     "baseMaterial": "PLANT_GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.45,
@@ -96923,6 +96923,28 @@
     ],
     "objectIds": [
       "PLANT_VAMPYRIUM_PLANT03"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bell flower",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 5,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "PLANT_VAMPYRIUM_PLANT06"
     ]
   },
   {
