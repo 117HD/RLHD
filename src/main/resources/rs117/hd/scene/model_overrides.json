@@ -95078,7 +95078,9 @@
       }
     ],
     "objectIds": [
-      "BARREL_SANGVESTI01_DEFAULT01"
+      "BARREL_SANGVESTI01_DEFAULT01",
+      "BARREL_SANGVESTI01_OPEN01",
+      "BARREL_SANGVESTI01_OPEN02"
     ]
   },
   {
@@ -95944,6 +95946,35 @@
     ]
   },
   {
+    "description": "Vampyrium - Sangvesti Large Table",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Bones",
+        "colors": "h == 3",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Wood",
+        "colors": "s == 4 || s == 1 || s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "TABLE_SANGVESTI01_DEFAULT02_5X2"
+    ]
+  },
+  {
     "description": "Vampyrium - Creature hanging over a bowl of blood",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
@@ -96344,7 +96375,10 @@
       "SANGVESTI_DOOR_L_NOOP_VITUR",
       "SANGVESTI_DOOR_R_NOOP_VITUR",
       "SANGVESTI_CHAPEL_BACK_DOOR_1",
-      "SANGVESTI_CLOTHES_SHOP_BACK_DOOR"
+      "SANGVESTI_CLOTHES_SHOP_BACK_DOOR",
+      "SANGVESTI_PUB_BACK_DOOR",
+      "SANGVESTI_FANCY_HOUSE_2_BACK_DOOR",
+      "SANGVESTI_FANCY_HOUSE_2_DOOR"
     ]
   },
   {
@@ -96417,6 +96451,61 @@
     ],
     "objectIds": [
       "CURTAIN_SANGVESTI01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Draken Statue",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "shiftLightness": 3,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "STATUES_SANGVESTI01_DRAKAN01_AGILITY01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass 1",
+        "colors": "s == 5 && l > 15",
+        "baseMaterial": "NONE",
+        "maxLightness": 6
+      },
+      {
+        "description": "Grass 2",
+        "colors": "h == 2",
+        "baseMaterial": "NONE",
+        "maxLightness": 15
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Wall Stakes",
+    "baseMaterial": "BARK",
+    "undoVanillaShading": false,
+    "shiftLightness": 8,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FENCE_SANGVESTI01_STAKES01",
+      "FENCE_SANGVESTI01_STAKES02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass 1",
+        "colors": "s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": 8
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Darken Blood Waterfall Foam SLightly",
+    "baseMaterial": "NONE",
+    "shiftLightness": -5,
+    "objectIds": [
+      "VOROS_WATERFALL01_FOAM01"
     ]
   },
   {
