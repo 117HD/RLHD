@@ -679,7 +679,12 @@ public class TimeOfDay
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
 			long equinoxEpochMs = 1742428800000L;
 			long dayMs = 24L * 60 * 60 * 1000;
-			long phaseMillis = equinoxEpochMs + nightSyncedDayOffset * dayMs;
+			// Synced Days: advance the phase by the UTC-synced day count so the phase
+			// is identical for all players; otherwise use the stateful night offset.
+			long phaseDay = currentCycleMode == DaylightCycle.SYNCED_DAYS
+				? System.currentTimeMillis() / SYNCED_DAYS_PERIOD_MS
+				: nightSyncedDayOffset;
+			long phaseMillis = equinoxEpochMs + phaseDay * dayMs;
 			return (float) AtmosphereUtils.getMoonIllumination(phaseMillis)[0];
 		}
 		return getMoonIlluminationFraction(dayLength);
@@ -751,6 +756,25 @@ public class TimeOfDay
 		// Call getModifiedDate to keep accumulatedCycleTime/completedCycles updated
 		getModifiedDate(dayLength);
 
+		// March 20, 2025 00:00 UTC (spring equinox)
+		final long equinoxEpochMs = 1742428800000L;
+		final long dayMs = 24L * 60 * 60 * 1000;
+
+		// Synced Days: derive the moon's mirror position and phase purely from the
+		// UTC clock so the night-synced moon is identical for every player, matching
+		// the UTC-synced sun. Stateless — bypasses the pending-increment machinery.
+		if (currentCycleMode == DaylightCycle.SYNCED_DAYS) {
+			long currentTimeMillis = System.currentTimeMillis();
+			double cyclePosition = getSyncedDaysCyclePosition(currentTimeMillis);
+			double mappedHour = 3.4 + cyclePosition * 24.0;
+			if (mappedHour >= 24.0) mappedHour -= 24.0;
+			long syncedDay = currentTimeMillis / SYNCED_DAYS_PERIOD_MS;
+			long fixedMillis = equinoxEpochMs + syncedDay * dayMs
+				+ (long) (mappedHour * 60 * 60 * 1000);
+			double[] sa = AtmosphereUtils.getSunAngles(fixedMillis, latLong);
+			return new double[] { sa[0] + Math.PI, -sa[1] };
+		}
+
 		// Warp identically to the sun so the night-synced moon stays aligned with
 		// the (now re-sized) day/night periods — moonrise still tracks visual sunset.
 		double cyclePosition = applyDayLengthWarp(accumulatedCycleTime);
@@ -773,9 +797,6 @@ public class TimeOfDay
 			lastNightSyncedCycles = completedCycles;
 		}
 
-		// March 20, 2025 00:00 UTC (spring equinox)
-		long equinoxEpochMs = 1742428800000L;
-		long dayMs = 24L * 60 * 60 * 1000;
 		long fixedMillis = equinoxEpochMs + nightSyncedDayOffset * dayMs
 			+ (long) (mappedHour * 60 * 60 * 1000);
 
@@ -810,6 +831,46 @@ public class TimeOfDay
 			+ now.getMinute() / 60.0
 			+ now.getSecond() / 3600.0
 			+ now.getNano() / 3.6e12;
+	}
+
+	// Length of one Synced Days cycle: a full day/night every real hour, phase-locked
+	// to the UTC clock so every player sees the same sun position at the same moment.
+	private static final long SYNCED_DAYS_PERIOD_MS = 60L * 60 * 1000;
+
+	/**
+	 * Map a normalized cycle position [0, 1) to an hour-of-day [0, 24) using the
+	 * project's twilight-weighted mapping (extended dawn/dusk, compressed deep
+	 * night). Shared by the Dynamic cycle and Synced Days so both share the same
+	 * sun arc shape.
+	 */
+	private static double cyclePositionToHour(double cyclePosition) {
+		// 0.0-0.15  dawn/sunrise twilight -> 5am-7am
+		// 0.15-0.35 morning               -> 7am-12pm
+		// 0.35-0.55 afternoon             -> 12pm-5pm
+		// 0.55-0.70 sunset twilight       -> 5pm-7pm
+		// 0.70-0.85 early night           -> 7pm-12am
+		// 0.85-1.0  late night/pre-dawn   -> 12am-5am
+		if (cyclePosition < 0.15) {
+			return 5.0 + (cyclePosition / 0.15) * 2.0;
+		} else if (cyclePosition < 0.35) {
+			return 7.0 + ((cyclePosition - 0.15) / 0.20) * 5.0;
+		} else if (cyclePosition < 0.55) {
+			return 12.0 + ((cyclePosition - 0.35) / 0.20) * 5.0;
+		} else if (cyclePosition < 0.70) {
+			return 17.0 + ((cyclePosition - 0.55) / 0.15) * 2.0;
+		} else if (cyclePosition < 0.85) {
+			return 19.0 + ((cyclePosition - 0.70) / 0.15) * 5.0;
+		} else {
+			return ((cyclePosition - 0.85) / 0.15) * 5.0;
+		}
+	}
+
+	/**
+	 * Synced Days cycle position in [0, 1): where we are within the current UTC
+	 * hour. Stateless and identical for every player at a given UTC instant.
+	 */
+	private static double getSyncedDaysCyclePosition(long currentTimeMillis) {
+		return (currentTimeMillis % SYNCED_DAYS_PERIOD_MS) / (double) SYNCED_DAYS_PERIOD_MS;
 	}
 
 	public static Instant getModifiedDate(float dayLength) {
@@ -854,6 +915,20 @@ public class TimeOfDay
 			return startOfDay.plusMillis((long) (localHour * 60 * 60 * 1000));
 		}
 
+		// Synced Days mode: a full day/night every real UTC hour, phase-locked to the
+		// UTC clock and independent of Cycle Duration. Purely a function of the UTC
+		// epoch, so every player worldwide sees the same sun position at the same
+		// instant. Stateless — no accumulatedCycleTime — so it can't drift.
+		if (currentCycleMode == DaylightCycle.SYNCED_DAYS) {
+			double cyclePosition = getSyncedDaysCyclePosition(currentTimeMillis);
+			double mappedHour = cyclePositionToHour(cyclePosition);
+			// Advance the date one simulated day per completed UTC hour so the moon's
+			// phase progresses; this is also identical for all users.
+			long syncedDay = currentTimeMillis / SYNCED_DAYS_PERIOD_MS;
+			Instant startOfDay = Instant.EPOCH.plus(syncedDay, ChronoUnit.DAYS);
+			return startOfDay.plusMillis((long) (mappedHour * 60 * 60 * 1000));
+		}
+
 		// For non-dynamic modes, return a fixed date at the appropriate time of day.
 		// Cycle tracking above still runs so getMoonDate() advances normally.
 		if (currentCycleMode != DaylightCycle.DYNAMIC) {
@@ -887,38 +962,9 @@ public class TimeOfDay
 		}
 
 		// Warp the linear cycle clock so day/night occupy the configured share
-		// of the cycle, then feed the result into the time-of-day mapping below.
+		// of the cycle, then feed the result into the twilight-weighted mapping.
 		double cyclePosition = applyDayLengthWarp(accumulatedCycleTime);
-
-		// Map cycle position to time of day with extended twilight periods
-		// 0.0-0.15 = dawn/sunrise twilight (maps to 5am-7am)
-		// 0.15-0.35 = morning (maps to 7am-12pm)
-		// 0.35-0.55 = afternoon (maps to 12pm-5pm)
-		// 0.55-0.70 = sunset twilight (maps to 5pm-7pm)
-		// 0.70-0.85 = early night (maps to 7pm-12am)
-		// 0.85-1.0 = late night/pre-dawn (maps to 12am-5am)
-		double mappedHour;
-
-		if (cyclePosition < 0.15) {
-			// Dawn twilight: map 0-0.15 to 5am-7am (2 hours of twilight)
-			mappedHour = 5.0 + (cyclePosition / 0.15) * 2.0;
-		} else if (cyclePosition < 0.35) {
-			// Morning: map 0.15-0.35 to 7am-12pm (5 hours)
-			mappedHour = 7.0 + ((cyclePosition - 0.15) / 0.20) * 5.0;
-		} else if (cyclePosition < 0.55) {
-			// Afternoon: map 0.35-0.55 to 12pm-5pm (5 hours)
-			mappedHour = 12.0 + ((cyclePosition - 0.35) / 0.20) * 5.0;
-		} else if (cyclePosition < 0.70) {
-			// Sunset twilight: map 0.55-0.70 to 5pm-7pm (2 hours of twilight)
-			mappedHour = 17.0 + ((cyclePosition - 0.55) / 0.15) * 2.0;
-		} else if (cyclePosition < 0.85) {
-			// Early night: map 0.70-0.85 to 7pm-12am (5 hours)
-			mappedHour = 19.0 + ((cyclePosition - 0.70) / 0.15) * 5.0;
-		} else {
-			// Late night/pre-dawn: map 0.85-1.0 to 12am-5am (5 hours)
-			double lateNightProgress = (cyclePosition - 0.85) / 0.15;
-			mappedHour = 0.0 + lateNightProgress * 5.0;
-		}
+		double mappedHour = cyclePositionToHour(cyclePosition);
 
 		// Convert mapped hour to actual time
 		// Use completedCycles to advance the base date by 1 day per finished cycle,
@@ -950,6 +996,18 @@ public class TimeOfDay
 		if (currentCycleMode == DaylightCycle.REAL_TIME) {
 			double localHour = getLocalHourOfDay();
 			return startOfDay.plusMillis((long) (localHour * 60 * 60 * 1000));
+		}
+
+		// Synced Days mode: use the same UTC-derived instant as the sun so the moon
+		// stays coherent with it and is identical for every player. One simulated
+		// day advances per completed UTC hour.
+		if (currentCycleMode == DaylightCycle.SYNCED_DAYS) {
+			long currentTimeMillis = System.currentTimeMillis();
+			double cyclePosition = getSyncedDaysCyclePosition(currentTimeMillis);
+			double mappedHour = cyclePositionToHour(cyclePosition);
+			long syncedDay = currentTimeMillis / SYNCED_DAYS_PERIOD_MS;
+			Instant syncedStartOfDay = Instant.EPOCH.plus(syncedDay, ChronoUnit.DAYS);
+			return syncedStartOfDay.plusMillis((long) (mappedHour * 60 * 60 * 1000));
 		}
 
 		// Total simulated days elapsed = completed whole cycles + current cycle progress.

@@ -624,6 +624,7 @@ public interface HdPluginConfig extends Config
 		description = "Controls the day/night cycle behavior.<br>" +
 			"• Dynamic = Full day/night cycling<br>" +
 			"• Real Time = Sun and moon follow your computer's local clock<br>" +
+			"• Synced Days = A full day every real hour, synced to UTC so all players see the same sky<br>" +
 			"• Fixed Dawn = Sun locked at dawn<br>" +
 			"• Fixed Midday = Sun locked at noon<br>" +
 			"• Fixed Sunset = Sun locked at sunset<br>" +

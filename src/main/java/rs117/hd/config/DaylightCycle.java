@@ -7,6 +7,7 @@ public enum DaylightCycle
 {
 	DYNAMIC("Dynamic"),
 	REAL_TIME("Real Time"),
+	SYNCED_DAYS("Synced Days"),
 	FIXED_DAWN("Fixed Dawn"),
 	FIXED_MIDDAY("Fixed Midday"),
 	FIXED_SUNSET("Fixed Sunset"),
