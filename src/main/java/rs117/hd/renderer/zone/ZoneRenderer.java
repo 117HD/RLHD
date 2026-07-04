@@ -1464,8 +1464,10 @@ public class ZoneRenderer implements Renderer {
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
 			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
-				directionalCmd.SetShader(fastShadowProgram);
-				z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
+				if(!z.onlyWater || z.modelCount > 0) {
+					directionalCmd.SetShader(fastShadowProgram);
+					z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
+				}
 
 				if (plugin.configTerrainShadows) {
 					z.renderOpaqueLevel(terrainShadowCmd, 0);

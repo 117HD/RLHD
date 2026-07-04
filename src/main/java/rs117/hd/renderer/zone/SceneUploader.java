@@ -714,6 +714,7 @@ public class SceneUploader implements AutoCloseable {
 		z.sizeF += faceCount;
 		if (transparencies != null || faceTextures != null || modelTransparency != 0 || mightHaveTransparency)
 			z.sizeA += faceCount;
+		z.modelCount++;
 	}
 
 	private void uploadZoneRenderable(
