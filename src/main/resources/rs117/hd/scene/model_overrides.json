@@ -95115,7 +95115,7 @@
     "objectIds": [
       "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_EMPTY",
       "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_HOURGLASS",
-      " CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_KNIFE",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_KNIFE",
       "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_SKULL",
       "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_HOURGLASS_KNIFE",
       "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_KNIFE_SKULL",
@@ -95173,11 +95173,10 @@
   },
   {
     "description": "Castle Draken - Vampyrium Red shelf with clutter",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientation": 313,
-    "shiftLightness": 10,
+    "shiftLightness": 5,
     "colorOverrides": [
       {
         "description": "Cobwebs",
@@ -95214,6 +95213,7 @@
       }
     ],
     "objectIds": [
+      "CABINET_SANGVESTI01_CONTENTS01",
       "CABINET_SANGVESTI01_CONTENTS02"
     ]
   },
@@ -95247,6 +95247,7 @@
       "TABLE_SANGVESTI01_DEFAULT01",
       "TABLE_SANGVESTI01_CONTENTS02",
       "TABLE_SANGVESTI01_CONTENTS03_OFFSET",
+      "TABLE_SANGVESTI01_CONTENTS03_2X2",
       "TABLE_SANGVESTI01_CONTENTS03"
     ]
   },
@@ -95754,7 +95755,7 @@
       {
         "description": "Cloth",
         "colors": [ "h == 39" ],
-        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.5,
         "shiftLightness": 6
@@ -95762,6 +95763,45 @@
     ],
     "objectIds": [
       "CASTLE_DRAKAN_CHAPEL_ALTAR"
+    ]
+  },
+  {
+    "description": "Vampyrium Castle white coffins and dirt",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 404,
+        "shiftLightness": 8
+      },
+      {
+        "description": "Wood",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Metal",
+        "colors": [ "h == 0 && s == 4" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "COFFIN_SANGVESTI01_BROKEN01",
+      "COFFIN_SANGVESTI01_OPEN01"
     ]
   }
 ]
