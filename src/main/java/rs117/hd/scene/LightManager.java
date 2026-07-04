@@ -744,7 +744,7 @@ public class LightManager {
 				float moonEl = (float) Math.min(1.0, Math.max(0.0, (moonAltDeg + 5.0) / 25.0));
 				float moonElSmooth = moonEl * moonEl * (3 - 2 * moonEl);
 				float moonBlend = moonIllumFrac * 0.25f * moonElSmooth * sunFade;
-				lightColor = mix(lightColor, environmentManager.currentMoonColor, moonBlend);
+				lightColor = mix(lightColor, environmentManager.currentMoonLightColor, moonBlend);
 				moonStrengthFloor = moonIllumFrac * 0.12f * moonElSmooth;
 			}
 		}

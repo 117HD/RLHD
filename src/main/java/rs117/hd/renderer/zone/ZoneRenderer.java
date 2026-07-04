@@ -865,6 +865,10 @@ public class ZoneRenderer implements Renderer {
 			float[] moonDir = TimeOfDay.getMoonDirectionForSky(plugin.latLong, cycleDuration, moonBehavior);
 			float moonIllumination = TimeOfDay.getMoonIlluminationFraction(cycleDuration, moonBehavior);
 			float[] moonColor = environmentManager.currentMoonColor;
+			// Cast-light (moonlight) color; matches moonColor unless the environment
+			// specifies a distinct moonLightColor. Drives the light on geometry, not
+			// the visible moon disk (which stays moonColor below).
+			float[] moonLightColor = environmentManager.currentMoonLightColor;
 			plugin.uboGlobal.skyMoonDir.set(moonDir);
 			plugin.uboGlobal.skyMoonColor.set(moonColor);
 			plugin.uboGlobal.skyMoonIllumination.set(moonIllumination);
@@ -950,7 +954,7 @@ public class ZoneRenderer implements Renderer {
 
 				for (int i = 0; i < 3; i++) {
 					directionalColor[i] = directionalColor[i] * (1 - moonInfluence)
-						+ moonColor[i] * moonInfluence;
+						+ moonLightColor[i] * moonInfluence;
 				}
 			}
 

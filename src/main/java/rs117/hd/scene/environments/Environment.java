@@ -67,6 +67,12 @@ public class Environment {
 	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] moonColor;
+	// Color of the light the moon casts on the scene (moonlight). When unset,
+	// falls back to moonColor so the cast light matches the moon disk (current
+	// behavior). Set this to give moonlight a different tint than the visible moon.
+	@Nullable
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] moonLightColor;
 	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
@@ -123,6 +129,11 @@ public class Environment {
 		// Default moon color to slightly cool white (~8000K)
 		if (moonColor == null)
 			moonColor = ColorUtils.colorTemperatureToLinearRgb(8000);
+
+		// When no distinct moonlight color is given, the cast light matches the
+		// moon disk (moonColor) — preserving the original single-color behavior.
+		if (moonLightColor == null)
+			moonLightColor = moonColor;
 
 		// Base water caustics on directional lighting by default
 		if (waterCausticsColor == null)
