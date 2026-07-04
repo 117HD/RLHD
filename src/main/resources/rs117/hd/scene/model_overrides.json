@@ -94460,7 +94460,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Pillars and statues",
+    "description": "Castle Draken - Vampyrium Pillars",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94478,18 +94478,96 @@
     "objectIds": [
       "PILLAR_DRAKAN02_DEFAULT01",
       "PILLAR_DRAKAN02_DEFAULT02",
+      "PILLAR_DRAKAN02_BROKEN01",
+      "ARCHWAY_SANGVESTI01_LEFT01",
+      "ARCHWAY_SANGVESTI01_RIGHT01"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium statues",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Fangs",
+        "colors": "a == 255 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 8
+      },
+      {
+        "description": "Eyes",
+        "colors": "s == 5",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 8
+      }
+    ],
+    "objectIds": [
       "STATUE_DRAKAN01_DEFAULT01",
       "STATUE_DRAKAN01_DEFAULT02",
       "STATUE_DRAKAN01_DEFAULT03",
       "STATUE_DRAKAN01_DEFAULT04",
       "STATUE_DRAKAN01_DEFAULT05",
       "STATUE_DRAKAN01_DEFAULT06",
-      "STATUE_DRAKAN01_DEFAULT07",
-      "PILLAR_DRAKAN02_BROKEN01",
+      "STATUE_DRAKAN01_DEFAULT07"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium Pillars and statues without cobwebs",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Fangs",
+        "colors": "a == 255 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 8
+      },
+      {
+        "description": "Eyes",
+        "colors": "s == 5",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 8
+      }
+    ],
+    "objectIds": [
       "CASTLE_DRAKAN_TELEPORTER_STATUE_A",
       "CASTLE_DRAKAN_TELEPORTER_STATUE_B",
       "CASTLE_DRAKAN_TELEPORTER_STATUE_C",
-      "CASTLE_DRAKAN_TELEPORTER_STATUE_D"
+      "CASTLE_DRAKAN_TELEPORTER_STATUE_D",
+      "STATUE_SANGVESTI_TALLBAT01_DEFAULT01",
+      "STATUE_SANGVESTI01_DRAKAN01",
+      "STATUE_SANGVESTI01_JOVKAI01",
+      "STATUE_SANGVESTI01_MYRMEL01",
+      "STATUE_SANGVESTI01_SHADUM01",
+      "STATUE_SANGVESTI01_VITUR01"
     ]
   },
   {
@@ -95233,18 +95311,19 @@
         "shiftLightness": -5
       },
       {
-        "description": "Red metal",
+        "description": "Frame",
         "colors": "h == 0 && s >= 1",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "baseMaterial": "BARK",
         "uvType": "BOX",
-        "uvScale": 0.7,
-        "uvOrientation": 512,
-        "shiftLightness": 4
+        "uvScale": 0.5,
+        "uvOrientation": 313,
+        "shiftLightness": 5
       }
     ],
     "objectIds": [
       "CABINET_SANGVESTI01_CONTENTS01",
-      "CABINET_SANGVESTI01_CONTENTS02"
+      "CABINET_SANGVESTI01_CONTENTS02",
+      "CABINET_SANGVESTI01_BROKEN02"
     ]
   },
   {
@@ -95266,9 +95345,9 @@
       {
         "description": "Frame",
         "colors": "s >= 4",
-        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "baseMaterial": "BARK",
         "uvType": "BOX",
-        "uvScale": 0.3,
+        "uvScale": 0.5,
         "uvOrientation": 313,
         "shiftLightness": 5
       }
@@ -95425,6 +95504,52 @@
     ]
   },
   {
+    "description": "Vampyrium - Sangvesti Buildings - Stone only",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "objectIds": [
+      "BRIDGEKIT_SANGVESTI01_SIDE01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Roof",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2 && l < 14",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 6,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Red accents",
+        "colors": "h == 0 && s >= 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "BRIDGEKIT_SANGVESTI01_ROOF01",
+      "ROOFKIT_SANGVESTI02_FACADE01_5X1",
+      "ROOFKIT_SANGVESTI02_BROKEN01",
+      "ROOFKIT_SANGVESTI02_DEFAULT01",
+      "ROOFKIT_SANGVESTI02_WINDOW01",
+      "ROOFKIT_SANGVESTI02_BROKEN02",
+      "ROOFKIT_SANGVESTI02_BROKEN03",
+      "ROOFKIT_SANGVESTI02_DEFAULT02"
+    ]
+  },
+  {
     "description": "Vampyrium - Sangvesti Buildings",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
@@ -95475,15 +95600,10 @@
       "WALLKIT_SANGVESTI01_WINDOW01",
       "WALLKIT_SANGVESTI01_WINDOW01_BROKEN03",
       "WALLKIT_SANGVESTI01_FRAME01",
-      "ROOFKIT_SANGVESTI02_FACADE01_5X1",
-      "ROOFKIT_SANGVESTI02_BROKEN01",
-      "ROOFKIT_SANGVESTI02_DEFAULT01",
-      "ROOFKIT_SANGVESTI02_WINDOW01",
-      "ROOFKIT_SANGVESTI02_BROKEN02",
-      "ROOFKIT_SANGVESTI02_BROKEN03",
-      "ROOFKIT_SANGVESTI02_DEFAULT02",
       "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN03_M",
-      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN02"
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN02",
+      "BRIDGEKIT_SANGVESTI01_SIDE02",
+      "WALLKIT_SANGVESTI01_DEFAULT01_RUBBLE01"
     ],
     "colorOverrides": [
       {
@@ -95912,6 +96032,59 @@
     "objectIds": [
       "CASTLE_DRAKAN_BLOOD_STOCKPILE",
       "CASTLE_DRAKAN_BLOOD_STOCKPILE_BROKEN"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Drawbridge Mechanism",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": -187,
+    "shiftLightness": 8,
+    "colorOverrides": [
+      {
+        "description": "Chains",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 8
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SANGVESTI_DRAWBRIDGE_MECHANISM_BROKEN"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti House Door with symbols",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 187,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Planks",
+        "colors": "h == 0 && s > 0 && s < 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "SANGVESTI_CLOTHES_SHOP_DOOR_CHAINED",
+      "SANGVESTI_BASIC_HOUSE_2_DOOR",
+      "SANGVESTI_BASIC_HOUSE_3_DOOR",
+      "SANGVESTI_FANCY_HOUSE_1_DOOR",
+      "SANGVESTI_FANCY_HOUSE_1_BACK_DOOR",
+      "SANGVESTI_FANCY_HOUSE_3_DOOR",
+      "SANGVESTI_MYRMEL_MANOR_DOOR",
+      "SANGVESTI_SHADUM_MANOR_DOOR",
+      "SANGVESTI_SHADUM_MANOR_DOOR_M",
+      "SANGVESTI_VITUR_MANOR_DOOR",
+      "SANGVESTI_VITUR_MANOR_DOOR_M",
+      "SANGVESTI_CHAPEL_BACK_DOOR_1"
     ]
   }
 ]
