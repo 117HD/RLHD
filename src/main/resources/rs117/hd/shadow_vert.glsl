@@ -67,14 +67,13 @@ layout (location = 0) in vec3 vPosition;
             opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 
         bool isTransparent = opacity <= opacityThreshold;
+        bool isTerrain = (terrainData & 1) == 1;
         bool isGroundPlaneTile = (terrainData & 0xF) == 1; // plane == 0 && isTerrain
         bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
         #if TERRAIN_ONLY_PASS
-            // Terrain-only pass: only ground plane tiles cast shadows
-            bool isShadowDisabled =
-                !isGroundPlaneTile ||
-                isWaterSurfaceOrUnderwaterTile;
+            // Terrain-only pass: only tiles which are marked as terain should be drawn
+            bool isShadowDisabled = !isTerrain;
         #elif TERRAIN_SHADOWS
             // Main pass with terrain shadows: terrain goes to its own map
             bool isShadowDisabled =
@@ -119,13 +118,8 @@ layout (location = 0) in vec3 vPosition;
         }
 
         #if TERRAIN_ONLY_PASS
-        if(!isShadowDisabled) {
-            // Terrain only slope bias to reduce shadow achne
-            float lightDotNormals = dot(vNormal.xyz, lightDir);
-            float c = clamp(lightDotNormals, 1e-3, 1.0);
-            float slopeBias = clamp(sqrt(1.0 - c * c) / c, 1.0, 16.0);
-            worldPosition -= vNormal.xyz * MIN_TERRAIN_BIAS * slopeBias;
-        }
+        if(!isShadowDisabled)
+            worldPosition -= vNormal.xyz * 0.0002;
         #endif
 
         #if SHADOW_TRANSPARENCY && !TERRAIN_ONLY_PASS

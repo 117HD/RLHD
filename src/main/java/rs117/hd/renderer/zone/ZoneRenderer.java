@@ -1231,6 +1231,8 @@ public class ZoneRenderer implements Renderer {
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
 			renderState.viewport.set(0, 0, plugin.terrainShadowMapResolution, plugin.terrainShadowMapResolution);
 			renderState.depthFunc.set(GL_LESS);
+			renderState.cullFace.set(GL_FRONT);
+			renderState.enable.set(GL_CULL_FACE);
 			renderState.apply();
 
 			terrainShadowProgram.use();
@@ -1239,6 +1241,8 @@ public class ZoneRenderer implements Renderer {
 
 		glBindVertexArray(0);
 
+		renderState.cullFace.set(GL_BACK);
+		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
 
 		shouldClearShadowFbo = true;
