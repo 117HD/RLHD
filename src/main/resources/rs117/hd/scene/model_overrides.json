@@ -95669,6 +95669,43 @@
     ]
   },
   {
+    "description": "Vampyrium - Sangvesti Buildings Second floor walls with fake windows - Needs proper UV",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 1,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2 && l < 15",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 6,
+        "uvOrientation": 313
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Fake window shadow",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "NONE",
+        "shiftLightness": -4,
+        "flatNormals": true
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_SANGVESTI02_DEFAULT01"
+    ]
+  },
+  {
     "description": "Vampyrium - Sangvesti Buildings - Door",
     "baseMaterial": "BARK",
     "uvType": "BOX",
