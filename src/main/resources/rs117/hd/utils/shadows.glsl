@@ -31,10 +31,13 @@
 
 #if SHADOW_FILTERING_KERNAL == 3
     #define sampleShadow sampleShadowPCF3x3
+    #define sampleHardwareShadow sampleHardwareShadow3x3
 #elif SHADOW_FILTERING_KERNAL == 2
     #define sampleShadow sampleShadowPCF2x2
+    #define sampleHardwareShadow sampleHardwareShadow2x2
 #else
     #define sampleShadow sampleShadowPCF1x1
+    #define sampleHardwareShadow sampleHardwareShadow1x1
 #endif
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
@@ -76,7 +79,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
         if(shadow < 1.0) {
             // Sample terrain shadow map and combine
             float terrainBias = 0.00002 * slopeBias;
-            float terrainShadow = sampleHardwareShadow2x2(terrainShadowMap, shadowPos.z + terrainBias, shadowPos, fragPos);
+            float terrainShadow = sampleHardwareShadow(terrainShadowMap, shadowPos.z + terrainBias, shadowPos, fragPos);
             shadow = max(shadow, terrainShadow);
         }
     #endif
