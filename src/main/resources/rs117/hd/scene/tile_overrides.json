@@ -1542,6 +1542,16 @@
     ]
   },
   {
+    "name": "SLEPE_WATERPUMP_TILE_FIX",
+    "area": "SLEPE_WATERPUMP_TILE_FIX",
+    "groundMaterial": "GRAVEL",
+    "blended": false,
+    "setLightness": 17,
+    "overlayIds": [
+      110
+    ]
+  },
+  {
     "name": "TAG - FIXES - END"
   },
   {
@@ -1755,6 +1765,14 @@
     "area": "Brimhaven Dungeon",
     "underlayIds": [ 63, 64, 65, 66 ],
     "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "Brimhaven Agility Arena - Clamp Dirt to Remove Baked in Shading",
+    "area": "BRIMHAVEN_AGILITY_ARENA_DIRT_CLAMP",
+    "overlayIds": [ 80 ],
+    "groundMaterial": "VARIED_DIRT",
+    "minLightness": 28,
+    "maxLightness": 40
   },
   {
     "name": "TUTORIAL_ISLAND_KITCHEN_TILE_1",
@@ -2352,13 +2370,50 @@
     "blended": false
   },
   {
-    "name": "MAGE_TRAINING_ARENA_FLOOR",
-    "area": "MAGE_TRAINING_ARENA",
+    "name": "MAGE_TRAINING_ARENA_LOBBY_FLOOR",
+    "area": "MAGE_TRAINING_ARENA_LOBBY",
     "overlayIds": [
       134
     ],
     "groundMaterial": "TILES_2X2_2_GLOSS",
-    "blended": false
+    "blended": false,
+    "uvScale": 2,
+    "shiftLightness": 2
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_LOBBY_FLOOR_PATTERN",
+    "area": "MAGE_TRAINING_ARENA_LOBBY",
+    "underlayIds": [
+      56
+    ],
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "blended": false,
+    "uvScale": 2
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_PLAYGROUNDS_FLOOR",
+    "area": "MAGE_TRAINING_ARENA_PLAYGROUNDS",
+    "overlayIds": [
+      134
+    ],
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "blended": false,
+    "uvScale": 2
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_PLAYGROUNDS_FLOOR_BLACK",
+    "area": "MAGE_TRAINING_ARENA_PLAYGROUNDS",
+    "underlayIds": [ 72 ],
+    "setLightness": 0
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_PLAYGROUNDS_FLOOR_MARBLE",
+    "area": "MAGE_TRAINING_ARENA_PLAYGROUNDS",
+    "groundMaterial": "MARBLE_4_GLOSS",
+    "overlayIds": [ 20 ],
+    "minLightness": 20,
+    "shiftLightness": 25,
+    "shiftHue": 4
   },
   {
     "name": "AL_KHARID_FLOOR_1",
@@ -4231,17 +4286,19 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "PLAIN_DIRT",
+    "groundMaterial": "BRICK_PATHS",
     "minLightness": 8
   },
   {
     "name": "DARKMEYER_PATH_LOWER",
     "area": "DARKMEYER_LOWER",
+    "groundMaterial": "GRAVEL",
+    "shiftLightness": -2,
+    "uvScale": 1.1,
+    "uvOrientation": -42,
     "overlayIds": [
       11
-    ],
-    "groundMaterial": "PACKED_EARTH",
-    "shiftLightness": -2
+    ]
   },
   {
     "name": "DARKMEYER_UPPER_HOUSE_FLOORS",
@@ -4289,6 +4346,13 @@
       49
     ],
     "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "VER_SINHAZA_BALCONY",
+    "area": "VER_SINHAZA_BALCONY",
+    "groundMaterial": "TILES_2X2_1_GLOSS",
+    "shiftLightness": 10,
+    "blended": false
   },
   {
     "name": "ABANDONED_MINE_ROCK",
@@ -5729,7 +5793,7 @@
     "overlayIds": [
       181
     ],
-    "waterType": "WATER",
+    "waterType": "CAVE_WATER_MURKY",
     "blended": false
   },
   {
@@ -5749,21 +5813,9 @@
     "name": "CAMDOZAAL_STONE_PATH",
     "area": "CAMDOZAAL",
     "overlayIds": [
-      182
+      2, 83, 127, 182
     ],
-    "groundMaterial": "GRUNGE_2",
-    "uvOrientation": 117,
-    "uvScale": 1.2
-  },
-  {
-    "name": "CAMDOZAAL_GRAVEL_PATH",
-    "area": "CAMDOZAAL",
-    "overlayIds": [
-      2, 83, 127
-    ],
-    "groundMaterial": "GRAVEL",
-    "uvOrientation": 270,
-    "uvScale": 1.25
+    "groundMaterial": "PACKED_EARTH"
   },
   {
     "name": "CAMDOZAAL_CAVE_FLOOR",
@@ -5848,36 +5900,19 @@
     "blended": false
   },
   {
-    "name": "TOA_DISABLE_BLENDING_4",
+    "name": "TOA_BOSS_ENTRANCE_FLOOR_PATTERN",
     "area": "TOA_PATH_HUB",
+    "uvOrientation": -256,
+    "uvScale": 1.5,
+    "groundMaterial": "MARBLE_2",
+    "shiftLightness": 1,
+    "blended": false,
     "overlayIds": [
-      4
-    ],
-    "blended": false
-  },
-  {
-    "name": "TOA_DISABLE_BLENDING_11",
-    "area": "TOA_PATH_HUB",
-    "overlayIds": [
-      11
-    ],
-    "blended": false
-  },
-  {
-    "name": "TOA_DISABLE_BLENDING_86",
-    "area": "TOA_PATH_HUB",
-    "overlayIds": [
-      86
-    ],
-    "blended": false
-  },
-  {
-    "name": "TOA_DISABLE_BLENDING_N23",
-    "area": "TOA_PATH_HUB",
-    "overlayIds": [
+      4,
+      11,
+      86,
       233
-    ],
-    "blended": false
+    ]
   },
   {
     "name": "TOA_DISABLE_BLENDING_50",
@@ -5898,6 +5933,8 @@
   {
     "name": "TOA_DISABLE_BLENDING_30",
     "area": "TOA_PATH_OF_APMEKEN_BOSS",
+    "groundMaterial": "MARBLE_1",
+    "shiftLightness": -4,
     "overlayIds": [
       30
     ],
@@ -5920,8 +5957,16 @@
     "blended": false
   },
   {
+    "name": "TOA_DISABLE_BLENDING_LOOT_ROOM_CHEST_PLATFORM",
+    "area": "TOA_LOOT_ROOM_CHEST_PLATFORM",
+    "groundMaterial": "MARBLE_1_GLOSS",
+    "minLightness": 70,
+    "blended": false
+  },
+  {
     "name": "TOA_DISABLE_BLENDING_LOOT_ROOM",
     "area": "TOA_LOOT_ROOM",
+    "groundMaterial": "MARBLE_1_GLOSS",
     "blended": false
   },
   {
@@ -5998,6 +6043,7 @@
   {
     "name": "TOA_KEPHRI_FLOOR",
     "area": "TOMBS_OF_AMASCUT",
+    "groundMaterial": "DIRT_1",
     "underlayIds": [
       6, 90, 124
     ],
@@ -6156,6 +6202,9 @@
     "groundMaterial": "GRAVEL",
     "underlayIds": [
       156
+    ],
+    "overlayIds": [
+      134
     ]
   },
   {
@@ -6173,13 +6222,24 @@
     ]
   },
   {
-    "name": "TOA_AMASCUT_FLOOR_STONE_RED",
-    "area": "TOMBS_OF_AMASCUT",
+    "name": "TOA_AMASCUT_FLOOR_STONE_RED_LOBBY",
+    "area": "TOMBS_OF_AMASCUT_LOBBY",
     "uvOrientation": 256,
     "uvScale": 1.3,
     "groundMaterial": "MARBLE_2",
     "setSaturation": 2,
     "shiftHue": 39,
+    "overlayIds": [
+      72,
+      194
+    ],
+    "blended": false
+  },
+  {
+    "name": "TOA_AMASCUT_FLOOR_STONE_RED",
+    "area": "TOMBS_OF_AMASCUT",
+    "uvOrientation": 256,
+    "groundMaterial": "MARBLE_2",
     "overlayIds": [
       72,
       194
@@ -7926,15 +7986,6 @@
     }
   },
   {
-    "name": "MAGE_TRAINING_ARENA_FLOOR_PATTERN",
-    "area": "MAGE_TRAINING_ARENA",
-    "underlayIds": [
-      56
-    ],
-    "groundMaterial": "TILES_2X2_2_GLOSS",
-    "blended": false
-  },
-  {
     "name": "MAGE_TRAINING_ARENA_AND_KHARID_MINE_DIRT_FIX",
     "area": "MAGE_TRAINING_ARENA_AND_KHARID_MINE_DIRT_FIX",
     "groundMaterial": "SAND",
@@ -8782,6 +8833,13 @@
       54
     ],
     "waterType": "WATER",
+    "blended": false
+  },
+  {
+    "name": "VER_SINHAZA_BLOOD",
+    "area": "VER_SINHAZA_BLOOD_POOL",
+    "overlayIds": [ 72 ],
+    "groundMaterial": "GRUNGE_3_LIGHT_SHINY",
     "blended": false
   },
   {
@@ -10619,6 +10677,39 @@
     "groundMaterial": "PACKED_EARTH",
     "blended": false,
     "shiftLightness": 6
+  },
+  {
+    "name": "RED_REEF_GRAVEL",
+    "area": "RED_REEF_UNDERWATER",
+    "overlayIds": [
+      137
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Icyene Graveyard tiles",
+    "area": "MORYTANIA",
+    "overlayIds": [
+      133
+    ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
+    "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
+    "area": "KRAKEN_COVE_HIDE_WATER_EDGE",
+    "overlayIds": [ 7 ],
+    "waterType": "SWAMP_WATER",
+    "heightOffset": -150
+  },
+  {
+    "name": "KRAKEN_COVE_WATER_FIX",
+    "area": "KRAKEN_COVE_WALL_FIX",
+    "underlayIds": [ 53, 54 ],
+    "waterType": "SWAMP_WATER"
+  },
+  {
+    "name": "TAG - Areas - END"
   },
   {
     "name": "TAG - CLIMATE - START"

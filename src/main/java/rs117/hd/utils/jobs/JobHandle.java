@@ -9,6 +9,7 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.utils.collections.ConcurrentPool;
 
 import static rs117.hd.utils.HDUtils.getThreadStackTrace;
 import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
@@ -25,7 +26,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 	private static final String[] STATE_NAMES = { "NONE", "QUEUED", "RUNNING", "CANCELLED", "COMPLETED" };
 	private static final long DEADLOCK_TIMEOUT_SECONDS = 10;
-	private static final ConcurrentLinkedQueue<JobHandle> POOL = new ConcurrentLinkedQueue<>();
+	private static final ConcurrentPool<JobHandle> POOL = new ConcurrentPool<>(JobHandle::new);
 
 	private static final ThreadLocal<ArrayDeque<JobHandle>> CYCLE_STACK = ThreadLocal.withInitial(ArrayDeque::new);
 	private static final ThreadLocal<HashSet<JobHandle>> VISITED = ThreadLocal.withInitial(HashSet::new);
@@ -43,14 +44,14 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	boolean highPriority;
 
 	static JobHandle obtain() {
-		JobHandle handle = POOL.poll();
-		if (handle == null || handle.refCounter.get() > 0) {
-			if (handle != null) {
-				POOL.add(handle); // Re-add to the end of the pool
-			}
+		JobHandle handle = POOL.acquire();
+		if (handle.refCounter.get() > 0) {
+			// Handle is still referenced by another thread (IE: ClientThread)
+			// It needs to be released before it can be reused within the job system
+			// Add to the end of the queue and create a new Handle for the time being
+			POOL.recycle(handle);
 			handle = new JobHandle();
 		}
-
 		handle.setJobState(STATE_NONE);
 		handle.refCounter.set(1);
 		handle.dependants.clear();
@@ -200,7 +201,6 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 		assert item != null : "Double Release, item is already null";
 		assert isCompleted() : "Release before setCompleted() has been called?!";
-		assert !VALIDATE || !POOL.contains(this) : "POOL already contains this Handle?!";
 
 		if (VALIDATE) log.debug("Releasing [{}] state: [{}]", this, STATE_NAMES[jobState.get()]);
 		setJobState(STATE_NONE);
@@ -208,7 +208,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		item = null;
 		worker = null;
 
-		POOL.add(this);
+		POOL.recycle(this);
 	}
 
 	void cancel(boolean block) throws InterruptedException {

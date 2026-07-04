@@ -463,10 +463,15 @@ public class MaterialManager {
 
 	private void invalidateMaterials(Material[] materials) {
 		// Invalidate old materials to highlight issues with keeping them around accidentally
-		if (materials != null)
-			for (var mat : materials)
-				if (mat != Material.NONE)
-					mat.isValid = false;
+		if (materials != null) {
+			outer:
+			for (var mat : materials) {
+				for (var req : Material.REQUIRED_MATERIALS)
+					if (mat == req)
+						continue outer;
+				mat.isValid = false;
+			}
+		}
 	}
 
 	public void uploadTextures() {
