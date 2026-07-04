@@ -1268,13 +1268,14 @@ public class ZoneRenderer implements Renderer {
 
 		// Clear depth buffer
 		glClearDepth(0);
-		glClear(GL_DEPTH_BUFFER_BIT);
 
 		// Render sky gradient if Day/Night Cycle is enabled, otherwise use solid color clear
 		if (skyGradientEnabled && skyProgram.isValid()) {
 			frameTimer.end(Timer.CLEAR_SCENE);
 
 			frameTimer.begin(Timer.RENDER_SKYBOX);
+
+			glClear(GL_DEPTH_BUFFER_BIT);
 
 			// Render sky gradient using fullscreen triangle
 			renderState.disable.set(GL_DEPTH_TEST);
@@ -1338,7 +1339,7 @@ public class ZoneRenderer implements Renderer {
 				gammaCorrectedFogColor[2],
 				1f
 			);
-			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
 		}
 
