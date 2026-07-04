@@ -70,6 +70,18 @@ public class Environment {
 	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
+	// When set, and the active day/night cycle is a fixed mode (FIXED_DAWN,
+	// FIXED_MIDDAY, FIXED_SUNSET, FIXED_NIGHT, ALWAYS_NIGHT), these lock the
+	// sun/moon disk and their shadow directions to a fixed point in the sky,
+	// overriding the astronomically-derived angles. {azimuth, altitude} in
+	// degrees (converted to radians), matching the convention used by
+	// AtmosphereUtils.getSunAngles()/getMoonPosition(). Null = astronomical.
+	@Nullable
+	@JsonAdapter(DegreesToRadians.class)
+	public float[] fixedSunAngles;
+	@Nullable
+	@JsonAdapter(DegreesToRadians.class)
+	public float[] fixedMoonAngles;
 	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] fogColor;
@@ -103,6 +115,10 @@ public class Environment {
 
 		if (sunAngles != null)
 			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
+		if (fixedSunAngles != null)
+			fixedSunAngles = HDUtils.ensureArrayLength(fixedSunAngles, 2);
+		if (fixedMoonAngles != null)
+			fixedMoonAngles = HDUtils.ensureArrayLength(fixedMoonAngles, 2);
 
 		// Default moon color to slightly cool white (~8000K)
 		if (moonColor == null)

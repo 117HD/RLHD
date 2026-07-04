@@ -537,6 +537,26 @@ public class EnvironmentManager {
 		return getCurrentEnvironment().cycleMode;
 	}
 
+	/**
+	 * The fixed sun angles {azimuth, altitude} in radians forced by the current
+	 * environment, or null for none. Read directly (not blended) so the locked
+	 * sun snaps to the new environment rather than swinging across the sky during
+	 * a transition — matching how {@link #getForcedCycleMode()} is handled.
+	 */
+	@Nullable
+	public float[] getForcedFixedSunAngles() {
+		return getCurrentEnvironment().fixedSunAngles;
+	}
+
+	/**
+	 * The fixed moon angles {azimuth, altitude} in radians forced by the current
+	 * environment, or null for none. See {@link #getForcedFixedSunAngles()}.
+	 */
+	@Nullable
+	public float[] getForcedFixedMoonAngles() {
+		return getCurrentEnvironment().fixedMoonAngles;
+	}
+
 	private Environment getOverworldEnvironment() {
 		switch (plugin.configSeasonalTheme) {
 			case AUTUMN:

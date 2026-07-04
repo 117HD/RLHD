@@ -25,6 +25,7 @@ import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
@@ -1015,6 +1016,15 @@ public class LegacyRenderer implements Renderer {
 
 			boolean skyGradientEnabled = false;
 			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+				// Establish the cycle mode and any fixed-angle overrides so
+				// TimeOfDay's static state is correct for this renderer (and not
+				// stale from a prior zone-renderer frame).
+				DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
+				TimeOfDay.setCycleMode(forcedMode != null ? forcedMode : config.daylightCycle());
+				TimeOfDay.setFixedAngleOverrides(
+					environmentManager.getForcedFixedSunAngles(),
+					environmentManager.getForcedFixedMoonAngles()
+				);
 				TimeOfDay.setDayLength(config.dayLength());
 				int minimumBrightness = (int) (config.minimumBrightness() * (1 + environmentManager.currentMinBrightnessBoost));
 				float cycleDuration = config.cycleDurationMinutes();

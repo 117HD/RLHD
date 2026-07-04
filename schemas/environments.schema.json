@@ -144,6 +144,38 @@
           }
         ]
       },
+      "fixedSunAngles": {
+        "type": "array",
+        "description": "Locks the sun disk and its shadow direction to a fixed altitude and azimuth (degrees) while a fixed cycle mode (FIXED_DAWN/FIXED_MIDDAY/FIXED_SUNSET/FIXED_NIGHT/ALWAYS_NIGHT) is active, overriding the astronomically-derived position. Altitude is from the ground up (negative places the sun below the horizon), azimuth is clockwise from north. Ignored in DYNAMIC mode.",
+        "items": [
+          {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 360
+          }
+        ]
+      },
+      "fixedMoonAngles": {
+        "type": "array",
+        "description": "Locks the moon disk and its shadow direction to a fixed altitude and azimuth (degrees) while a fixed cycle mode is active, overriding the default fixed-night moon position. Altitude is from the ground up, azimuth is clockwise from north. Ignored in DYNAMIC mode.",
+        "items": [
+          {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 360
+          }
+        ]
+      },
       "fogColor": {
         "type": [ "string", "array" ],
         "description": "Sky/fog color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",

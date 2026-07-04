@@ -627,11 +627,22 @@ public class ZoneRenderer implements Renderer {
 				TimeOfDay.setCycleMode(daylightCycle);
 				TimeOfDay.setDayLength(config.dayLength());
 				TimeOfDay.setMoonPhase(config.moonPhase());
+				TimeOfDay.setFixedAngleOverrides(
+					environmentManager.getForcedFixedSunAngles(),
+					environmentManager.getForcedFixedMoonAngles()
+				);
 				double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 				MoonBehavior shadowMoonBehavior = config.moonBehavior();
 
-				if (daylightCycle == DaylightCycle.FIXED_NIGHT) {
+				if (TimeOfDay.hasFixedSunOverride()) {
+					// A fixed-mode sun override locks the sun disk; cast shadows from
+					// the same point so the sun disk and its shadows stay aligned.
+					double[] fixedSun = TimeOfDay.getFixedSunAngles();
+					shadowSunAngles = new float[] {
+						(float) fixedSun[1], (float) fixedSun[0]
+					};
+				} else if (daylightCycle == DaylightCycle.FIXED_NIGHT || TimeOfDay.hasFixedMoonOverride()) {
 					// Shadows must be cast from the same fixed point as the rendered
 					// moon disk, otherwise they drift while the moon stays put.
 					double[] moonAnglesD = TimeOfDay.getFixedNightMoonAngles();
