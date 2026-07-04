@@ -24,6 +24,7 @@ public final class RenderState {
 	public final GLDepthFunc depthFunc = addState(GLDepthFunc::new);
 	public final GLColorMask colorMask = addState(GLColorMask::new);
 	public final GLBlendFunc blendFunc = addState(GLBlendFunc::new);
+	public final GLCullFace cullFace = addState(GLCullFace::new);
 	public final GLEnable enable = addState(GLEnable::new);
 	public final GLDisable disable = addState(GLDisable::new);
 
@@ -121,6 +122,11 @@ public final class RenderState {
 	public static final class GLDepthFunc extends GLState.Int {
 		@Override
 		protected void applyValue(int func) { glDepthFunc(func); }
+	}
+
+	public static final class GLCullFace extends GLState.Int {
+		@Override
+		protected void applyValue(int mode) { glCullFace(mode); }
 	}
 
 	public static final class GLBlendFunc extends GLState.IntArray {
