@@ -1,6 +1,7 @@
 package rs117.hd.scene;
 
 import java.time.Instant;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import javax.annotation.Nullable;
 import net.runelite.http.api.worlds.WorldRegion;
@@ -73,11 +74,21 @@ public class TimeOfDay
 	}
 
 	/**
-	 * Whether the current cycle mode is one of the fixed (non-dynamic) modes.
-	 * Fixed-angle overrides only apply in these modes.
+	 * Whether the current cycle mode is one of the fixed modes (the sun/moon sit
+	 * at a fixed time of day). Fixed-angle overrides only apply in these modes.
+	 * DYNAMIC and REAL_TIME are excluded — both compute a moving astronomical sun.
 	 */
 	public static boolean isFixedMode() {
-		return currentCycleMode != DaylightCycle.DYNAMIC;
+		switch (currentCycleMode) {
+			case FIXED_DAWN:
+			case FIXED_MIDDAY:
+			case FIXED_SUNSET:
+			case FIXED_NIGHT:
+			case ALWAYS_NIGHT:
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	/**
@@ -788,6 +799,19 @@ public class TimeOfDay
 		return multiply(rgb(181, 205, 255), 0.25f);
 	}
 
+	/**
+	 * The player's local wall-clock time as a fractional hour in [0, 24).
+	 * Uses the system default time zone so REAL_TIME mode matches the clock on
+	 * the player's machine (noon on their clock -> sun at its peak in-game).
+	 */
+	private static double getLocalHourOfDay() {
+		LocalTime now = LocalTime.now();
+		return now.getHour()
+			+ now.getMinute() / 60.0
+			+ now.getSecond() / 3600.0
+			+ now.getNano() / 3.6e12;
+	}
+
 	public static Instant getModifiedDate(float dayLength) {
 		long currentTimeMillis = System.currentTimeMillis();
 		Instant currentInstant = Instant.ofEpochMilli(currentTimeMillis);
@@ -819,6 +843,16 @@ public class TimeOfDay
 		// Update tracking variables for next call
 		lastUpdateTime = currentTimeMillis;
 		lastDayLength = dayLength;
+
+		// Real Time mode: drive the sun directly from the player's local clock.
+		// We map today's real local hour onto today's UTC start-of-day, the same
+		// construction the dynamic path uses (a local hour interpreted at latLong),
+		// so noon on the player's clock puts the sun at its peak in-game.
+		if (currentCycleMode == DaylightCycle.REAL_TIME) {
+			double localHour = getLocalHourOfDay();
+			Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS);
+			return startOfDay.plusMillis((long) (localHour * 60 * 60 * 1000));
+		}
 
 		// For non-dynamic modes, return a fixed date at the appropriate time of day.
 		// Cycle tracking above still runs so getMoonDate() advances normally.
@@ -910,6 +944,13 @@ public class TimeOfDay
 
 		Instant currentInstant = Instant.ofEpochMilli(System.currentTimeMillis());
 		Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS);
+
+		// Real Time mode: the moon's phase and position are astronomically real for
+		// today at the player's local hour, matching the real-clock sun.
+		if (currentCycleMode == DaylightCycle.REAL_TIME) {
+			double localHour = getLocalHourOfDay();
+			return startOfDay.plusMillis((long) (localHour * 60 * 60 * 1000));
+		}
 
 		// Total simulated days elapsed = completed whole cycles + current cycle progress.
 		// Warp only the within-cycle fraction so the realistic moon's position tracks

@@ -623,6 +623,7 @@ public interface HdPluginConfig extends Config
 		name = "Cycle Mode",
 		description = "Controls the day/night cycle behavior.<br>" +
 			"• Dynamic = Full day/night cycling<br>" +
+			"• Real Time = Sun and moon follow your computer's local clock<br>" +
 			"• Fixed Dawn = Sun locked at dawn<br>" +
 			"• Fixed Midday = Sun locked at noon<br>" +
 			"• Fixed Sunset = Sun locked at sunset<br>" +
