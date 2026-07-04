@@ -93623,7 +93623,7 @@
     ]
   },
   {
-    "description": "Vampyre Lab - Blood Candles",
+    "description": "Vampyre Blood Candles",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -93820,7 +93820,8 @@
     "uvScale": 0.6,
     "objectIds": [
       "ARMOURY_WALL_DRAKAN01_SHIELD01_N",
-      "ARMOURY_WALL_DRAKAN01_SHIELD01_S"
+      "ARMOURY_WALL_DRAKAN01_SHIELD01_S",
+      "CASTLE_DRAKAN_LOWERNIEL_SHIELD"
     ]
   },
   {
@@ -94149,7 +94150,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Incense burner",
+    "description": "Castle Draken - Candelabra",
     "baseMaterial": "DIRT_1",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94167,7 +94168,8 @@
     ],
     "objectIds": [
       "CANDELABRA_SANGVESTI01_DEFAULT01",
-      "CANDELABRA_SANGVESTI01_DEFAULT02"
+      "CANDELABRA_SANGVESTI01_DEFAULT02",
+      "CASTLE_DRAKAN_LOWERNIEL_CANDLESTICK"
     ]
   },
   {
@@ -94661,10 +94663,11 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium book case with books",
-    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "description": "Castle Draken - Vampyrium chairs",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
+    "shiftLightness": 4,
     "colorOverrides": [
       {
         "description": "Carpet",
@@ -94677,10 +94680,30 @@
     ],
     "objectIds": [
       "CHAIR_SANGVESTI01_DEFAULT01",
-      "CHAIR_SANGVESTI01_DEFAULT02",
       "CHAIR_SANGVESTI01_BROKEN01",
       "CHAIR_SANGVESTI01_BROKEN02",
       "CHAIR_SANGVESTI01_BROKEN02_2X2"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium chairs On side",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Carpet",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "CHAIR_SANGVESTI01_DEFAULT02"
     ]
   },
   {
@@ -94792,7 +94815,10 @@
       }
     ],
     "objectIds": [
-      "BANNER_SANGVESTI02_DRAKAN01"
+      "BANNER_SANGVESTI02_DRAKAN01",
+      "CASTLE_DRAKAN_LOWERNIEL_BANNER_N",
+      "CASTLE_DRAKAN_LOWERNIEL_BANNER_S",
+      "CASTLE_DRAKAN_LOWERNIEL_BANNER_W"
     ]
   },
   {
@@ -95087,7 +95113,15 @@
       }
     ],
     "objectIds": [
-      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_EMPTY"
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_EMPTY",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_HOURGLASS",
+      " CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_KNIFE",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_SKULL",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_HOURGLASS_KNIFE",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_KNIFE_SKULL",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_HOURGLASS_KNIFE",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_HOURGLASS_SKULL",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_FULL"
     ]
   },
   {
@@ -95114,7 +95148,8 @@
       "CASTLE_DRAKAN_GALLERY_CHEST",
       "CASTLE_DRAKAN_KITCHEN_CHEST",
       "CASTLE_DRAKAN_ARMOURY_CHEST",
-      "CASTLE_DRAKAN_DEPOSIT_CHEST"
+      "CASTLE_DRAKAN_DEPOSIT_CHEST",
+      "CASTLE_DRAKAN_LOWERNIEL_CHEST"
     ]
   },
   {
@@ -95574,7 +95609,7 @@
     "shiftLightness": 5,
     "colorOverrides": [
       {
-        "description": "Bowl",
+        "description": "Grunge",
         "colors": [ "h >= 5" ],
         "baseMaterial": "PLANT_GRUNGE_1",
         "uvType": "BOX",
@@ -95599,6 +95634,38 @@
     ]
   },
   {
+    "description": "Vampyrium - Castle Draken - Chapen Basin - DYNAMIC",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Grunge",
+        "colors": [ "h >= 5" ],
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Blood",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_CHAPEL_BLOOD_BASIN",
+      "CASTLE_DRAKAN_CHAPEL_SMOKE_BASIN",
+      "CASTLE_DRAKAN_CHAPEL_ICE_BASIN",
+      "CASTLE_DRAKAN_CHAPEL_SHADOW_BASIN"
+    ]
+  },
+  {
     "description": "Vampyrium - Castle Draken - Metal Grate",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
@@ -95607,6 +95674,94 @@
     "shiftLightness": 8,
     "objectIds": [
       "LASSAR_CHURCH_GRATE01_CORNER01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Venator head trophy",
+    "baseMaterial": "GRAY_90",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": [ "h == 0 && s == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Gems",
+        "colors": [ "s == 5" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_VENATOR_HEAD_NO_EYES",
+      "CASTLE_DRAKAN_VENATOR_HEAD_ONE_EYE",
+      "CASTLE_DRAKAN_VENATOR_HEAD_BOTH_EYES"
+    ]
+  },
+  {
+    "description": "Blood Candle on Candelabra",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "CANDELABRA_DRAKAN01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Vampyrium Castle Chapel Altar",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Stone",
+        "colors": [ "h == 0 && s <= 2 && s >= 1" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 128
+      },
+      {
+        "description": "Metal",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 7
+      },
+      {
+        "description": "Cloth",
+        "colors": [ "h == 39" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_CHAPEL_ALTAR"
     ]
   }
 ]
