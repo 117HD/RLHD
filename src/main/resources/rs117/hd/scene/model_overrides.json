@@ -2592,12 +2592,19 @@
       "FAIRYTALE2_ROCK_POOL_SMALL",
       "STALKER_DEN_STEPPING_STONE",
       "FRISD_IZSO_ROCK_POOL_SMALL",
-      "GREAT_CONCH_STEPPING_STONE"
+      "GREAT_CONCH_STEPPING_STONE",
+      "SLAYER_CAVE_POOLROCK_1",
+      "SLAYER_CAVE_POOLROCK_2",
+      "POLLI_STEPPING_STONE",
+      "BCS_STEPPING_STONE",
+      "BR_ROCK_POOL",
+      "BR_ROCK_POOL_SMALL",
+      "BR_ROCK_POOL_BITS"
     ],
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": [ "h == 42", "h == 35" ],
+        "colors": [ "h == 42", "h == 35", "h == 29 && s == 4" ],
         "baseMaterial": "GRAY_70",
         "hideAsWaterEffect": true
       }
@@ -4367,9 +4374,7 @@
       "RIMMINGTON_SKEWSTEPS",
       "RIMMINGTON_SKEWSTEPS_CORNER",
       "RIMMINGTON_FLOORSTEPS",
-      "RIMMINGTON_FLOORSTEPS_WATER_SOURCE",
-      "NTK_SKEWSTEPS",
-      "NTK_SKEWSTEPS_CORNER"
+      "RIMMINGTON_FLOORSTEPS_WATER_SOURCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.75
@@ -9526,12 +9531,20 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "ENAKH_LADDER_ON_GROUND",
-      "ENAKH_WHEEL_BARROW",
       "ELID_WHEEL_BARROW"
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
     "uvOrientation": 512
+  },
+  {
+    "description": "Desert Quarry Wheelbarrow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "ENAKH_WHEEL_BARROW"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.66
   },
   {
     "description": "Desert Quarry Scaffold",
@@ -9635,22 +9648,26 @@
   },
   {
     "description": "Pyramid Plunder Walls - Exit Doors",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "objectIds": [
       "NTK_TOMB_DOOR_EXIT",
       "NTK_ANTECHAMBER_EXIT"
     ],
     "uvType": "BOX",
+    "depthBias": 1,
     "colorOverrides": [
       {
-        "colors": [ "l == 103", "l == 23" ],
-        "baseMaterial": "NONE"
+        "colors": [ "l == 103", "l == 23"],
+        "baseMaterial": "GRAY_200",
+        "depthBias": 1
       }
     ]
   },
   {
     "description": "Pyramid Plunder Walls - Interior",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
     "objectIds": [
       "NTK_TOMB_WALL",
       "NTK_TOMB_WALL_DAMAGE",
@@ -9665,18 +9682,21 @@
   },
   {
     "description": "Pyramid Plunder Walls - Interior - Bias Fix",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "depthBias": 2,
+    "uvType": "BOX",
+    "uvScale": 0.75,
     "objectIds": [
-      "NTK_TOMB_WALL_TOP",
       "NTK_TOMB_DOOR_NOANIM",
       "NTK_TOMB_DOOR1",
       "NTK_TOMB_DOOR2",
       "NTK_TOMB_DOOR3",
       "NTK_TOMB_DOOR4",
-      "NTK_TOMB_DOOR_ANIM"
-    ],
-    "uvType": "BOX"
+      "NTK_TOMB_DOOR_ANIM",
+      "NTK_TOMB_WALL_TOP",
+      "NTK_SKEWSTEPS",
+      "NTK_SKEWSTEPS_CORNER"
+    ]
   },
   {
     "description": "Pyramid Plunder Obelisk, Busts and Wall symbol",
@@ -11335,7 +11355,8 @@
       "PISCARILIUS_FLOOR_TILE_01_SHIPWRIGHT",
       "PISCARILIUS_FLOOR_TILE_01_PUB",
       "PISCARILIUS_FLOOR_TILE_01_BANK",
-      "PISCARILIUS_FLOOR_TILE_01_GENERAL_STORE"
+      "PISCARILIUS_FLOOR_TILE_01_GENERAL_STORE",
+      "PISCARILIUS_PIER_SIDE_04_SALVAGING_STATION"
     ]
   },
   {
@@ -11344,7 +11365,6 @@
     "uvType": "BOX",
     "uvScale": 1.1,
     "objectIds": [
-      "PISCARILIUS_WALL_LOWER_FLOOR_02",
       "PISCARILIUS_WALL_LOWER_FLOOR_03",
       "PISCARILIUS_WALL_LOWER_FLOOR_04",
       "PISCARILIUS_WALL_LOWER_FLOOR_END_LEFT_01",
@@ -11385,7 +11405,8 @@
       "PISCARILIUS_WALL_TOP_PILLAR_01",
       "PISCARILIUS_WALL_TOP_PILLAR_02",
       "PISCARILIUS_WALL_TOP_PILLAR_03",
-      "PISCARILIUS_WALL_TOP_PILLAR_04"
+      "PISCARILIUS_WALL_TOP_PILLAR_04",
+      "PISCARILIUS_WALL_LOWER_FLOOR_02"
     ],
     "colorOverrides": [
       {
@@ -13059,7 +13080,6 @@
     "objectIds": [
       "RIMMINGTON_WOODEN_TABLE",
       "RIMMINGTON_SMALL_WOODEN_TABLE",
-      "ELID_WOODEN_TABLE",
       "FAI_WIZTOWER_WOODEN_TABLE_SMALL",
       "WILD_TABLE",
       "AIDE_WOODEN_TABLE",
@@ -15487,8 +15507,6 @@
       "SUROK_TUNNEL_ROCKS_SMALL_01",
       "SUROK_TUNNEL_ROCKS_SMALL_02",
       "SUROK_TUNNEL_ROCKS_SMALL_03",
-      "SLAYER_CAVE_POOLROCK_1",
-      "SLAYER_CAVE_POOLROCK_2",
       "ARCHEUUS_RUNESTONE_SHORTCUT_GREY_TOP",
       "ARCHEUUS_RUNESTONE_SHORTCUT_GREY_BOTTOM",
       "ARCHEUUS_RUNESTONE_SHORTCUT_GREY_MIDDLE",
@@ -20254,8 +20272,6 @@
       "VIKING_LONGHALL_CHAIR",
       "FARMING_CHAIR",
       "RIMMINGTON_CHAIR",
-      "ELID_CHAIR1",
-      "ELID_CHAIR2",
       "DRAYNOR_CHAIR",
       "BURGH_CHAIR1",
       "FISHING_CONTEST_CHAIR",
@@ -22223,7 +22239,7 @@
   },
   {
     "description": "Nardah Sophanem - Walls - Rock",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_DARK",
     "objectIds": [
       "ICTHALARINS_EXTERIOR_WALL",
       "ICTHALARINS_EXTERIOR_WALL_LVL2",
@@ -22236,11 +22252,12 @@
       "ICTHALARINS_WINDOW"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "flatNormals": false
   },
   {
     "description": "Nardah Walls - Flipped",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_DARK",
     "objectIds": [
       "ICTHALARINS_DOOR_ARCH",
       "ICTHALARINS_DOOR_ARCH_MIRROR"
@@ -22250,7 +22267,8 @@
   },
   {
     "description": "Nardah Walls Rubble",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_DARK",
+    "undoVanillaShading": false,
     "objectIds": [
       "ELID_PILE_BICKS"
     ],
@@ -22259,24 +22277,26 @@
   },
   {
     "description": "Nardah - Cart and Water Barrels",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "ELID_CART_WATER",
       "ELID_WATERBARREL"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
+    "uvOrientation": 512,
     "colorOverrides": [
       {
         "colors": "h == 7",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "STONE_NORMALED_VERY_DARK",
         "uvType": "BOX",
         "uvScale": 0.6
       },
       {
         "colors": "h == 37",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
-        "uvType": "MODEL_XZ"
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
       }
     ]
   },
@@ -22299,6 +22319,27 @@
         "uvScale": 0.2
       }
     ]
+  },
+  {
+    "description": "Nardah - Table with Key",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "ELID_WOODEN_TABLE"
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Nardah - Chair - No cushion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "ELID_CHAIR1",
+      "ELID_CHAIR2"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.6
   },
   {
     "description": "Potted Plants",
@@ -22460,14 +22501,18 @@
     "description": "Nardah - Eldinis Statue",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.6,
+    "undoVanillaShading": false,
     "objectIds": [
+      "ELID_STATUETTE_BASE",
       "ELID_STATUETTE_PLACED"
     ],
     "colorOverrides": [
       {
         "colors": "h == 6",
-        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+        "baseMaterial": "SMOOTH_STONE_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -22983,7 +23028,7 @@
     "objectIds": [
       "ELID_STONE_PEW"
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX"
   },
   {
     "description": "Nardah Clay Oven",
@@ -23546,9 +23591,16 @@
   },
   {
     "description": "Wall Decoration - Blood",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "GRAY_55",
     "objectIds": [
       "_100_DAVE_WALL_BLOOD"
+    ]
+  },
+  {
+    "description": "Wall Decoration - Blood - Lighter",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "CAVE_BLOOD1"
     ]
   },
   {
@@ -26481,7 +26533,8 @@
       "AREA_SANGUINE_CASTLE_LOWER_WALL1",
       "AREA_SANGUINE_CASTLE_L3_WALL1",
       "MYQ4_OBSTACLE_RUBBLE_01_OP",
-      "MYQ3_CASTLE_WALL_TOP_HIGH"
+      "MYQ3_CASTLE_WALL_TOP_HIGH",
+      "TOB_SURFACE_BALCONY_SUPPORT"
     ]
   },
   {
@@ -26498,8 +26551,9 @@
       {
         "description": "Cloth",
         "colors": "s == 2",
-        "baseMaterial": "CARPET",
-        "uvType": "MODEL_YZ"
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.5
       },
       {
         "description": "Paper",
@@ -26596,7 +26650,7 @@
   },
   {
     "description": "Ver Sinhaza - Metallic - Roof",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -26664,8 +26718,6 @@
     "description": "Ver Sinhaza - Metallic - Stone - Bank",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvOrientation": 256,
-    "uvScale": 0.6,
     "objectIds": [
       "TOB_SURFACE_BANKBOOTH",
       "TOB_SURFACE_BANKBOOTH_CLOSED",
@@ -26673,8 +26725,20 @@
     ],
     "colorOverrides": [
       {
-        "baseMaterial": "BLANK_GLOSS",
+        "baseMaterial": "GRAY_45",
         "colors": "a < 255"
+      },
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "s == 3 && l == 22 || s == 4 && l == 20 || s == 3 && l == 8 || s == 4 && l == 7",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.5
+      },
+      {
+        "baseMaterial": "SMOOTH_STONE",
+        "colors": "s > 2",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.6
       }
     ]
   },
@@ -26735,7 +26799,6 @@
       "TOB_REWARDS_CHEST_LOBBY_MULTI_NOOP",
       "TOB_REWARDS_CHEST_LOBBY_OPEN",
       "TOB_REWARDS_CHEST_LOBBY_OPEN_NOOP",
-      "TOB_SURFACE_GRAVESTONE_CHEST",
       "SHAYZIEN_CHEST_STOLEN",
       "SHAYZIEN_CHEST_CLOSED"
     ],
@@ -26750,7 +26813,23 @@
     ]
   },
   {
-    "description": "Ver Sinhaza - Stone - Wooden  - Freestanding Noticeboard",
+    "description": "Ver Sinhaza - Shayzien - Metallic - Wooden - Plank - Chest with metallic banding",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "TOB_SURFACE_GRAVESTONE_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 || h == 6 && s == 6",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Wooden - Freestanding Noticeboard",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -26769,6 +26848,43 @@
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.6
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "s > 1 && s < 6",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Wooden - Noticeboard Steps",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "TOB_SURFACE_CENTRAL_STEPS_STRAIGHT",
+      "TOB_SURFACE_CENTRAL_STEPS_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
   },
@@ -28992,7 +29108,7 @@
   },
   {
     "description": "Darkmeyer Teleport Platform",
-    "baseMaterial": "ROCK_3_SMOOTH",
+    "baseMaterial": "ROCK_3_SMOOTH_LIGHT",
     "uvType": "BOX",
     "objectIds": [
       "TOB_SURFACE_TELEPORT_PAD_01",
@@ -30144,7 +30260,6 @@
   },
   {
     "description": "Crashed Star",
-    "baseMaterial": "ROCK_5_ORE",
     "objectIds": [
       "STAR_SIZE_NINE_STAR",
       "STAR_SIZE_EIGHT_STAR",
@@ -30156,7 +30271,21 @@
       "STAR_SIZE_TWO_STAR",
       "STAR_SIZE_ONE_STAR"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 17 || h == 28 || h == 48 || h == 0 && s == 1",
+        "baseMaterial": "ROCK_3_ORE",
+        "uvScale": 0.85,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 6 || h == 8 || h == 36",
+        "baseMaterial": "ROCK_3_SEMI_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Seers Village Courthouse Metal Cage",
@@ -30533,7 +30662,8 @@
     "description": "Wooden Bank Chest - Lighter",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "objectIds": [
-      "BANK_CHEST"
+      "BANK_CHEST",
+      "AMENITY_BANKCHEST_BUILT"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -31251,8 +31381,28 @@
       "BRUT_WATERFALL_OVERLAY_R",
       "WATERFALL_OVERLAY",
       "WATERFALL_OVERLAY_1_BRIGHTER",
-      "MYARM_WATER_MOVING_1",
+      "MYARM_WATER_MOVING_1"
+    ]
+  },
+  {
+    "description": "Enchanted Valley - Fix Waterfall Position",
+    "textureMaterial": "WATER_DROPS",
+    "flatNormals": true,
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
       "FAIRY2_WATERFALL_BOTTOM"
+    ]
+  },
+  {
+    "description": "Enchanted Valley - Fix Waterfall Cliff Position",
+    "areas": [ "ENCHANTED_VALLEY_WATERFALL_FIX" ],
+    "baseMaterial": "GRAVEL",
+    "receiveShadows": false,
+    "terrainVertexSnap": true,
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "objectIds": [
+      "FAIRY2_CLIFFWALL"
     ]
   },
   {
@@ -31708,13 +31858,6 @@
         "baseMaterial": "NONE",
         "flatNormals": true
       }
-    ]
-  },
-  {
-    "description": "Lassar Undercity - Hide Wall Filler to Prevent zFighting",
-    "hideInAreas": [ "LASSAR_UNDERCITY_DRAIN_DEPTH_FIX_FILLER" ],
-    "objectIds": [
-      "BIM_RUINS_WALLKIT_WALLTOP05"
     ]
   },
   {
@@ -37731,9 +37874,16 @@
   },
   {
     "description": "Eternal Light Fire Pit",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "METALLIC_1_SMOOTH",
     "objectIds": [
       "MY2ARM_FIRE_ETERNALLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_175",
+        "upwardsNormals": true
+      }
     ]
   },
   {
@@ -42374,13 +42524,36 @@
     "uvScale": 0.86
   },
   {
-    "description": "Varlamore - quetzal landing site",
+    "description": "Varlamore - Quetzal Landing Site - Built",
     "baseMaterial": "HAY",
     "objectIds": [
       "QUETZAL_LANDING_SITE_BUILT"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Varlamore - Quetzal Landing Site- Unbuilt",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "QUETZAL_LANDING_SITE_UNBUILT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.45
+      },
+      {
+        "colors": "h == 16",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
   },
   {
     "description": "Acacia Tree",
@@ -47691,7 +47864,8 @@
   },
   {
     "description": "Camdozaal Carved Walls and Pillars",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
+    "hideInAreas": [ "LASSAR_UNDERCITY_DRAIN_DEPTH_FIX_FILLER" ],
     "objectIds": [
       "BIM_RUINS_WALLKIT_WORKSHOP01",
       "BIM_RUINS_WALLKIT_CORNER01",
@@ -47701,14 +47875,36 @@
       "BIM_RUINS_WALLKIT_FILLER01",
       "BIM_RUINS_WALLKIT_FILLER02",
       "BIM_RUINS_WALLKIT_FILLER03",
+      "BIM_RUINS_WALLKIT_WALLTOP01",
+      "BIM_RUINS_WALLKIT_WALLTOP02",
       "BIM_RUINS_ENTRANCE_STATUE",
+      "BIM_RUINS_WALLKIT_WALLTOP05",
+      "BIM_RUINS_WALLKIT_WALLTOP03",
+      "BIM_RUINS_WALLKIT_WALLTOP04",
       "DUNGEONKIT_IMCANDO_PILLAR01"
     ],
     "uvType": "BOX"
   },
   {
+    "description": "Camdozaal Crystals",
+    "upwardsNormals": true,
+    "objectIds": [
+      "DECOKIT_CRYSTAL_BARRONITE01",
+      "DECOKIT_CRYSTAL_BARRONITE02",
+      "DECOKIT_CRYSTAL_BARRONITE03"
+    ]
+  },
+  {
+    "description": "Camdozaal Golem",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "RUBBLE_GOLEM_2X2",
+      "RUBBLE_GOLEM_1X1"
+    ]
+  },
+  {
     "description": "Camdozaal Vault Walls",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "BIM_VAULT_WALL01",
       "BIM_VAULT_WALL02",
@@ -47718,7 +47914,9 @@
       "BIM_VAULT_WALL06",
       "BIM_VAULT_CORNER01",
       "BIM_VAULT_CORNER02",
-      "BIM_VAULT_CORNER03"
+      "BIM_VAULT_CORNER03",
+      "BIM_VAULT_WALLKIT_WALLTOP01",
+      "BIM_RUINS_PRESSUREPLATE"
     ],
     "uvType": "BOX"
   },
@@ -47734,7 +47932,7 @@
   },
   {
     "description": "Camdozaal House Walls",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "colorOverrides": [
       {
@@ -47742,7 +47940,8 @@
         "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
-        "uvOrientation": 700
+        "uvScale": 0.2,
+        "uvOrientation": 512
       }
     ],
     "objectIds": [
@@ -47755,7 +47954,7 @@
   },
   {
     "description": "Camdozaal Wall Statue - static",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "colorOverrides": [
       {
@@ -47773,7 +47972,7 @@
   },
   {
     "description": "Camdozaal Wall Statues - Dynamic",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "objectIds": [
       "BIM_RUINS_WALLKIT_STREETLAMP01"
@@ -47781,13 +47980,14 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
       }
     ]
   },
   {
     "description": "Camdozaal Barronite Walls",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH",
     "objectIds": [
       "CAMDOZAALROCK1", "CAMDOZAALROCK2"
     ],
@@ -47796,14 +47996,24 @@
   },
   {
     "description": "Camdozaal Sacred Forge",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "BIM_RUINS_WALLKIT_SACRED_FORGE_MULTI",
       "BIM_RUINS_WALLKIT_SACRED_FORGE_OP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "a < 255 || h == 7",
+        "baseMaterial": "NONE"
+      }
+    ]
   },
   {
     "description": "Camdozaal Rock Piles - Large",
@@ -47957,18 +48167,12 @@
     "objectIds": [
       "CAMDOZAAL_PREPARATION_TABLE"
     ],
-    "uvType": "BOX",
-    "uvOrientation": 768,
-    "uvScale": 0.6
+    "uvType": "BOX"
   },
   {
     "description": "Camdozaal Altar",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvOrientationY": 256,
-    "uvOrientationZ": 768,
-    "uvOrientationX": 768,
-    "uvScale": 0.6,
     "colorOverrides": [
       {
         "description": "Metal",
@@ -48199,9 +48403,7 @@
   },
   {
     "description": "Camdozaal Stalactite post and lamp",
-    "baseMaterial": "GRUNGE_3",
-    "uvType": "BOX",
-    "uvOrientation": 343,
+    "baseMaterial": "METALLIC_1_LIGHT",
     "colorOverrides": [
       {
         "description": "Rock",
@@ -48221,7 +48423,8 @@
         "colors": "h == 6 && s == 4",
         "baseMaterial": "ROPE",
         "uvType": "BOX",
-        "uvOrientation": 42
+        "uvOrientation": 42,
+        "uvScale": 0.5
       }
     ],
     "objectIds": [
@@ -48239,6 +48442,13 @@
       "TROLLRESCUE_ICESLIDE2",
       "TROLLRESCUE_ICESLIDE3",
       "KOUREND_ARCH_FOOTPATH_10"
+    ]
+  },
+  {
+    "description": "Camdozaal Waterfall",
+    "baseMaterial": "GRAY_60",
+    "objectIds": [
+      "CAVEKIT_WATERFALL_CAMDOZAAL"
     ]
   },
   {
@@ -48313,6 +48523,13 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Falador Park - Hide floating floor trim",
+    "hideInAreas": [ "FALADOR_PARK_HIDE_FLOOR_TRIM" ],
+    "objectIds": [
+      "FLOOR_DEPTH2"
+    ]
   },
   {
     "description": "Train Cart",
@@ -49676,6 +49893,17 @@
     "uvScale": 1.25
   },
   {
+    "description": "Kraken Cove - Wall Offset Fix",
+    "baseMaterial": "STONE_NORMALED",
+    "areas": [ "KRAKEN_COVE_WALL_FIX" ],
+    "objectIds": [
+      "ROYAL_CAVEWALL_FACE_GLOW",
+      "ROYAL_CAVEWALL_FACE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.25
+  },
+  {
     "description": "Kraken Cove - Stalagmites",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -49693,23 +49921,38 @@
       "SLAYER_KRAKENCAVE_SHIPWRECK"
     ],
     "uvType": "BOX",
-    "uvScale": 0.44
+    "uvScale": 0.6
   },
   {
-    "description": "Kraken Cove - Floating Body and Hole",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Kraken Cove - Floating Body",
+    "baseMaterial": "DIRT_1",
     "objectIds": [
-      "GODWARS_UWATER_DEADGUY02",
+      "GODWARS_UWATER_DEADGUY02"
+    ]
+  },
+  {
+    "description": "Kraken Cove - Inaccessible Hole",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "depthBias": 200,
+    "objectIds": [
       "SLAYER_CAVE_KRAKEN_HOLE"
     ]
   },
   {
     "description": "Kraken Cove - Darken Whirlpools",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "GRAY_70",
     "npcIds": [
       "SLAYER_KRAKEN_SUB",
       "SLAYER_KRAKEN_BOSS_WHIRLPOOL",
       "SLAYER_KRAKEN_BOSS_TENTACLE_WHIRLPOOL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32 || h == 37",
+        "baseMaterial": "GRAY_90"
+      }
     ]
   },
   {
@@ -51237,6 +51480,8 @@
       "FAI_VARROCK_BOOKCASE_NOOP"
     ],
     "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
     "colorOverrides": [
       {
         "description": "Paper",
@@ -56451,7 +56696,49 @@
       "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_5_MITHRIL",
       "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_5_ADAMANT",
       "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_5_RUNE",
-      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_5_DRAGON"
+      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_5_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_1_SIMPLE_LEAGUE_6_BRONZE",
+      "POH_LEAGUEHALL_PEDESTAL_1_SIMPLE_LEAGUE_6_IRON",
+      "POH_LEAGUEHALL_PEDESTAL_1_SIMPLE_LEAGUE_6_STEEL",
+      "POH_LEAGUEHALL_PEDESTAL_1_SIMPLE_LEAGUE_6_MITHRIL",
+      "POH_LEAGUEHALL_PEDESTAL_1_SIMPLE_LEAGUE_6_ADAMANT",
+      "POH_LEAGUEHALL_PEDESTAL_1_SIMPLE_LEAGUE_6_RUNE",
+      "POH_LEAGUEHALL_PEDESTAL_1_SIMPLE_LEAGUE_6_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_1_DECORATIVE_LEAGUE_6_BRONZE",
+      "POH_LEAGUEHALL_PEDESTAL_1_DECORATIVE_LEAGUE_6_IRON",
+      "POH_LEAGUEHALL_PEDESTAL_1_DECORATIVE_LEAGUE_6_STEEL",
+      "POH_LEAGUEHALL_PEDESTAL_1_DECORATIVE_LEAGUE_6_MITHRIL",
+      "POH_LEAGUEHALL_PEDESTAL_1_DECORATIVE_LEAGUE_6_ADAMANT",
+      "POH_LEAGUEHALL_PEDESTAL_1_DECORATIVE_LEAGUE_6_RUNE",
+      "POH_LEAGUEHALL_PEDESTAL_1_DECORATIVE_LEAGUE_6_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_6_BRONZE",
+      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_6_IRON",
+      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_6_STEEL",
+      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_6_MITHRIL",
+      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_6_ADAMANT",
+      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_6_RUNE",
+      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_6_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_2_DECORATIVE_LEAGUE_6_BRONZE",
+      "POH_LEAGUEHALL_PEDESTAL_2_DECORATIVE_LEAGUE_6_IRON",
+      "POH_LEAGUEHALL_PEDESTAL_2_DECORATIVE_LEAGUE_6_STEEL",
+      "POH_LEAGUEHALL_PEDESTAL_2_DECORATIVE_LEAGUE_6_MITHRIL",
+      "POH_LEAGUEHALL_PEDESTAL_2_DECORATIVE_LEAGUE_6_ADAMANT",
+      "POH_LEAGUEHALL_PEDESTAL_2_DECORATIVE_LEAGUE_6_RUNE",
+      "POH_LEAGUEHALL_PEDESTAL_2_DECORATIVE_LEAGUE_6_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_6_BRONZE",
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_6_IRON",
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_6_STEEL",
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_6_MITHRIL",
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_6_ADAMANT",
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_6_RUNE",
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_6_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_6_BRONZE",
+      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_6_IRON",
+      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_6_STEEL",
+      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_6_MITHRIL",
+      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_6_ADAMANT",
+      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_6_RUNE",
+      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_6_DRAGON"
     ],
     "colorOverrides": [
       {
@@ -57066,8 +57353,7 @@
     "uvScale": 0.4,
     "uvOrientation": 512,
     "objectIds": [
-      "VAMPIRE_TRAP1",
-      "WIN05_TRAPDOOR_CLOSED"
+      "VAMPIRE_TRAP1"
     ]
   },
   {
@@ -57076,7 +57362,6 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
-      "WIN05_TRAPDOOR_OPEN",
       "VAMPIRE_TRAP2"
     ],
     "colorOverrides": [
@@ -66821,7 +67106,7 @@
       {
         "description": "Pestle and Mortar",
         "colors": "h == 7 && s == 1",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
         "uvScale": 0.4
       }
@@ -66975,7 +67260,7 @@
   },
   {
     "description": "Varlamore - Mastering Mixology - Mixing Vessel",
-    "baseMaterial": "SLIME_GRUNGE",
+    "baseMaterial": "SLIME_GRUNGE_LIGHT",
     "objectIds": [
       "MM_LAB_VESSEL_EMPTY",
       "MM_LAB_VESSEL_READY_MAL",
@@ -66996,17 +67281,19 @@
       },
       {
         "description": "Wood base",
-        "colors": "h == 5 && s == 4 || s == 5",
-        "baseMaterial": "WOOD_GRAIN_2",
+        "colors": "h == 5 && s == 4 || h == 5 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.4,
+        "uvOrientation": 512
       },
       {
+        "description": "Stone body",
         "colors": "h == 5 || h == 6",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 343
+        "uvScale": 0.8,
+        "uvOrientation": 768
       },
       {
         "colors": "a < 255 && s == 0",
@@ -67016,7 +67303,7 @@
   },
   {
     "description": "Varlamore - Mastering Mixology - Retort",
-    "baseMaterial": "SLIME_GRUNGE",
+    "baseMaterial": "SLIME_GRUNGE_LIGHT",
     "objectIds": [
       "MM_LAB_MACHINE_RETORT_EMPTY",
       "MM_LAB_MACHINE_RETORT_MAL",
@@ -67037,28 +67324,33 @@
       },
       {
         "description": "Wood base",
-        "colors": "h == 5 && s == 4 || s == 5",
-        "baseMaterial": "WOOD_GRAIN_2",
+        "colors": "h == 5 && s == 4 || h == 5 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.4,
+        "uvOrientation": 512
       },
       {
         "description": "Stone body",
         "colors": "h == 5 || h == 6",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 192
+        "uvScale": 0.8,
+        "uvOrientation": 768
       },
       {
         "colors": "a < 255 && s == 0",
         "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "colors": "h == 4 || h == 8",
+        "baseMaterial": "GRUNGE_3_SMOOTH"
       }
     ]
   },
   {
     "description": "Varlamore - Mastering Mixology - Agitator",
-    "baseMaterial": "SLIME_GRUNGE",
+    "baseMaterial": "SLIME_GRUNGE_LIGHT",
     "objectIds": [
       "MM_LAB_MACHINE_AGITATOR_AAA",
       "MM_LAB_MACHINE_AGITATOR_AA1",
@@ -67079,28 +67371,30 @@
       },
       {
         "description": "Wood base",
-        "colors": "h == 5 && s == 4 || s == 5",
-        "baseMaterial": "WOOD_GRAIN_2",
+        "colors": "h == 5 && s == 4 || h == 5 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.4,
+        "uvOrientation": 512
       },
       {
         "description": "Stone body",
         "colors": "h == 5 || h == 6",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
-        "uvScale": 0.6,
+        "uvScale": 0.8,
         "uvOrientation": 768
       },
       {
         "colors": "a < 255 && s == 0",
-        "baseMaterial": "BLANK_GLOSS"
+        "baseMaterial": "BLANK_GLOSS",
+        "depthBias": 50
       }
     ]
   },
   {
     "description": "Varlamore - Mastering Mixology - Alembic",
-    "baseMaterial": "SLIME_GRUNGE",
+    "baseMaterial": "SLIME_GRUNGE_LIGHT",
     "objectIds": [
       "MM_LAB_MACHINE_ALEMBIC_EMPTY",
       "MM_LAB_MACHINE_ALEMBIC_MAL",
@@ -67121,26 +67415,35 @@
       },
       {
         "description": "Wood base",
-        "colors": "h == 5 && s == 4 || s == 5",
-        "baseMaterial": "WOOD_GRAIN_2",
-        "uvOrientationY": 512,
+        "colors": "h == 5 && s == 4 || h == 5 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.4,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
       },
       {
         "description": "Stone body",
         "colors": "h == 5 || h == 6",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 512
+        "uvScale": 0.8,
+        "uvOrientation": 768
       },
       {
         "description": "Bellows",
-        "colors": "h == 7 || h == 8",
+        "colors": "h == 7",
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.4,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Tube",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.05,
         "uvOrientation": 89
       },
       {
@@ -67151,7 +67454,7 @@
   },
   {
     "description": "Varlamore - Mastering Mixology - Mixer",
-    "baseMaterial": "SLIME_GRUNGE",
+    "baseMaterial": "SLIME_GRUNGE_LIGHT",
     "objectIds": [
       "MM_LAB_MIXER01_EMPTY",
       "MM_LAB_MIXER02_EMPTY",
@@ -67177,18 +67480,19 @@
       },
       {
         "description": "Wood base",
-        "colors": "h == 5 && s == 4 || s == 5",
-        "baseMaterial": "WOOD_GRAIN_2",
+        "colors": "h == 5 && s == 4 || h == 5 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.4,
+        "uvOrientation": 512
       },
       {
         "description": "Stone body",
         "colors": "h == 5 || h == 6",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 512
+        "uvScale": 0.8,
+        "uvOrientation": 768
       },
       {
         "description": "Paper",
@@ -67204,7 +67508,7 @@
   },
   {
     "description": "Varlamore - Mastering Mixology - Hopper",
-    "baseMaterial": "SLIME_GRUNGE",
+    "baseMaterial": "SLIME_GRUNGE_LIGHT",
     "objectIds": [
       "MM_LAB_HOPPER"
     ],
@@ -67215,18 +67519,19 @@
       },
       {
         "description": "Wood base",
-        "colors": "h == 5 && s == 4 || s == 5",
-        "baseMaterial": "WOOD_GRAIN_2",
+        "colors": "h == 5 && s == 4 || h == 5 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.4,
+        "uvOrientation": 512
       },
       {
         "description": "Stone body",
         "colors": "h == 5 || h == 6",
-        "baseMaterial": "STONE_NORMALED_LIGHT",
+        "baseMaterial": "SMOOTH_STONE_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 512
+        "uvScale": 0.8,
+        "uvOrientation": 768
       }
     ]
   },
@@ -67243,19 +67548,20 @@
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
-        "description": "Stone body",
-        "colors": "h == 5 && s < 3 || h == 6",
-        "baseMaterial": "STONE_NORMALED",
+        "description": "Wood base",
+        "colors": "h == 5 && s == 4 || h == 5 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.6,
+        "uvScale": 0.4,
         "uvOrientation": 512
       },
       {
-        "description": "Wood base",
-        "colors": "h == 5 && s == 4 || s == 5",
-        "baseMaterial": "WOOD_GRAIN_2",
+        "description": "Stone body",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.8,
+        "uvOrientation": 768
       }
     ]
   },
@@ -67272,18 +67578,19 @@
       },
       {
         "description": "Wood base",
-        "colors": "h == 5 && s == 4 || s == 5",
-        "baseMaterial": "WOOD_GRAIN_2",
+        "colors": "h == 5 && s == 4 || h == 5 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.4,
+        "uvOrientation": 512
       },
       {
         "description": "Stone body",
         "colors": "h == 5 || h == 6",
-        "baseMaterial": "STONE_NORMALED",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 162
+        "uvScale": 0.8,
+        "uvOrientation": 768
       }
     ]
   },
@@ -68231,9 +68538,10 @@
       {
         "description": "Needles",
         "windDisplacementMode": "VERTEX",
-        "baseMaterial": "LEAF_VEINS",
+        "baseMaterial": "PLANT_GRUNGE_2",
         "colors": "h > 10",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -79411,7 +79719,8 @@
     "objectIds": [
       "PANDEMONIUM_PIER",
       "PANDEMONIUM_LEDGER_TABLE_ICON",
-      "PANDEMONIUM_PORT_TASK_BOARD_ICON"
+      "PANDEMONIUM_PORT_TASK_BOARD_ICON",
+      "PANDEMONIUM_PIER_PUB_ICON"
     ],
     "uvType": "BOX"
   },
@@ -82216,6 +82525,7 @@
     "baseMaterial": "DIRT_1_LIGHT",
     "uvType": "BOX",
     "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.6,
     "objectIds": [
       "SUNBLEAK_CAVE_ENTRANCE"
     ],
@@ -82813,6 +83123,45 @@
         "baseMaterial": "ROPE_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.41
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Island Water Pump",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "AMENITY_WATER_PUMP_BUILT"
+    ]
+  },
+  {
+    "description": "Sailing - Island Cooking Pot",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "AMENITY_COOKING_POT_BUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 42 && s == 1",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0 && a == 255 && l < 35 || h == 10 || h == 21 || h == 32 || h == 42",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   },
@@ -86471,6 +86820,8 @@
       "SLAYER_ABBERANT_SPECTRE_2",
       "SLAYER_ABBERANT_SPECTRE_3",
       "SLAYER_ABBERANT_SPECTRE_4",
+      "SLAYER_ABERRANTSPECTRE_1_STRONGHOLDCAVE",
+      "SLAYER_ABERRANTSPECTRE_2_STRONGHOLDCAVE",
       "SUPERIOR_ABBERANT_SPECTRE",
       "KOUREND_SPECTRE",
       "SUPERIOR_KOUREND_SPECTRE"
@@ -92850,6 +93201,49 @@
         "uvScale": 0.5,
         "uvOrientation": 313
       }
+    ]
+  },
+  {
+    "description": "Spell Projectile - Tumeken's Shadow",
+    "baseMaterial": "GRAY_150",
+    "projectileIds": [
+      "TUMEKENS_SHADOW_TRAVEL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "NONE",
+        "depthBias": 150
+      }
+    ]
+  },
+  {
+    "description": "Spell Projectile - Trident of the Swamp",
+    "baseMaterial": "GRAY_110",
+    "undoVanillaShading": false,
+    "upwardsNormals": true,
+    "flatNormals": true,
+    "projectileIds": [
+      "TOXIC_TOTS_PROJECTILE"
+    ]
+  },
+  {
+    "description": "Spell Projectile - Normal Spellbook",
+    "baseMaterial": "GRAY_90",
+    "undoVanillaShading": false,
+    "projectileIds": [
+      "WATERSURGE_TRAVEL",
+      "WATERWAVE_TRAVEL",
+      "WATERBLAST_TRAVEL",
+      "WATERBOLT_TRAVEL",
+      "FIRESURGE_TRAVEL",
+      "FIREWAVE_TRAVEL",
+      "FIREBLAST_TRAVEL",
+      "FIREBOLT_TRAVEL",
+      "EARTHSURGE_TRAVEL",
+      "EARTHWAVE_TRAVEL",
+      "EARTHBLAST_TRAVEL",
+      "EARTHBOLT_TRAVEL"
     ]
   }
 ]

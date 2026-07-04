@@ -627,11 +627,22 @@ public class ZoneRenderer implements Renderer {
 				TimeOfDay.setCycleMode(daylightCycle);
 				TimeOfDay.setDayLength(config.dayLength());
 				TimeOfDay.setMoonPhase(config.moonPhase());
+				TimeOfDay.setFixedAngleOverrides(
+					environmentManager.getForcedFixedSunAngles(),
+					environmentManager.getForcedFixedMoonAngles()
+				);
 				double[] sunAnglesD = TimeOfDay.getSunAngles(plugin.latLong, config.cycleDurationMinutes());
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 				MoonBehavior shadowMoonBehavior = config.moonBehavior();
 
-				if (daylightCycle == DaylightCycle.FIXED_NIGHT) {
+				if (TimeOfDay.hasFixedSunOverride()) {
+					// A fixed-mode sun override locks the sun disk; cast shadows from
+					// the same point so the sun disk and its shadows stay aligned.
+					double[] fixedSun = TimeOfDay.getFixedSunAngles();
+					shadowSunAngles = new float[] {
+						(float) fixedSun[1], (float) fixedSun[0]
+					};
+				} else if (daylightCycle == DaylightCycle.FIXED_NIGHT || TimeOfDay.hasFixedMoonOverride()) {
 					// Shadows must be cast from the same fixed point as the rendered
 					// moon disk, otherwise they drift while the moon stays put.
 					double[] moonAnglesD = TimeOfDay.getFixedNightMoonAngles();
@@ -854,6 +865,10 @@ public class ZoneRenderer implements Renderer {
 			float[] moonDir = TimeOfDay.getMoonDirectionForSky(plugin.latLong, cycleDuration, moonBehavior);
 			float moonIllumination = TimeOfDay.getMoonIlluminationFraction(cycleDuration, moonBehavior);
 			float[] moonColor = environmentManager.currentMoonColor;
+			// Cast-light (moonlight) color; matches moonColor unless the environment
+			// specifies a distinct moonLightColor. Drives the light on geometry, not
+			// the visible moon disk (which stays moonColor below).
+			float[] moonLightColor = environmentManager.currentMoonLightColor;
 			plugin.uboGlobal.skyMoonDir.set(moonDir);
 			plugin.uboGlobal.skyMoonColor.set(moonColor);
 			plugin.uboGlobal.skyMoonIllumination.set(moonIllumination);
@@ -939,16 +954,19 @@ public class ZoneRenderer implements Renderer {
 
 				for (int i = 0; i < 3; i++) {
 					directionalColor[i] = directionalColor[i] * (1 - moonInfluence)
-						+ moonColor[i] * moonInfluence;
+						+ moonLightColor[i] * moonInfluence;
 				}
 			}
 
-			// Tint night sky toward regional moon color as moon directional strength increases
+			// Tint night sky toward the night-sky color as moon directional
+			// strength increases. Defaults to moonColor unless the environment
+			// specifies a distinct nightSkyColor.
 			if (moonInfluence > 0) {
+				float[] nightSkyColor = environmentManager.currentNightSkyColor;
 				float skyTint = moonInfluence * 0.05f;
 				for (int i = 0; i < 3; i++) {
-					skyGradientColors[0][i] = skyGradientColors[0][i] * (1 - skyTint) + moonColor[i] * skyTint;
-					skyGradientColors[1][i] = skyGradientColors[1][i] * (1 - skyTint) + moonColor[i] * skyTint;
+					skyGradientColors[0][i] = skyGradientColors[0][i] * (1 - skyTint) + nightSkyColor[i] * skyTint;
+					skyGradientColors[1][i] = skyGradientColors[1][i] * (1 - skyTint) + nightSkyColor[i] * skyTint;
 				}
 				plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
 				plugin.uboGlobal.skyHorizonColor.set(skyGradientColors[1]);

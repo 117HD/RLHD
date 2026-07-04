@@ -127,6 +127,18 @@ public class EnvironmentManager {
 	public float[] currentMoonColor = new float[] { 0, 0, 0 };
 	private float[] targetMoonColor = new float[] { 0, 0, 0 };
 
+	// Color of the light the moon casts (moonlight). Falls back to moonColor when
+	// the environment doesn't specify moonLightColor (handled in Environment.normalize).
+	private float[] startMoonLightColor = new float[] { 0, 0, 0 };
+	public float[] currentMoonLightColor = new float[] { 0, 0, 0 };
+	private float[] targetMoonLightColor = new float[] { 0, 0, 0 };
+
+	// Color the night sky is tinted toward as the moon rises. Falls back to moonColor
+	// when the environment doesn't specify nightSkyColor (handled in Environment.normalize).
+	private float[] startNightSkyColor = new float[] { 0, 0, 0 };
+	public float[] currentNightSkyColor = new float[] { 0, 0, 0 };
+	private float[] targetNightSkyColor = new float[] { 0, 0, 0 };
+
 	private float startGroundFogStart = 0f;
 	public float currentGroundFogStart = 0f;
 	private float targetGroundFogStart = 0f;
@@ -304,6 +316,8 @@ public class EnvironmentManager {
 			currentUnderglowStrength = mix(startUnderglowStrength, targetUnderglowStrength, t);
 			currentUnderglowColor = mix(startUnderglowColor, targetUnderglowColor, t);
 			currentMoonColor = mix(startMoonColor, targetMoonColor, t);
+			currentMoonLightColor = mix(startMoonLightColor, targetMoonLightColor, t);
+			currentNightSkyColor = mix(startNightSkyColor, targetNightSkyColor, t);
 			currentGroundFogStart = mix(startGroundFogStart, targetGroundFogStart, t);
 			currentGroundFogEnd = mix(startGroundFogEnd, targetGroundFogEnd, t);
 			currentGroundFogOpacity = mix(startGroundFogOpacity, targetGroundFogOpacity, t);
@@ -363,6 +377,8 @@ public class EnvironmentManager {
 		startUnderglowStrength = currentUnderglowStrength;
 		startUnderglowColor = currentUnderglowColor;
 		startMoonColor = currentMoonColor;
+		startMoonLightColor = currentMoonLightColor;
+		startNightSkyColor = currentNightSkyColor;
 		startGroundFogStart = currentGroundFogStart;
 		startGroundFogEnd = currentGroundFogEnd;
 		startGroundFogOpacity = currentGroundFogOpacity;
@@ -404,6 +420,8 @@ public class EnvironmentManager {
 		targetUnderglowStrength = env.underglowStrength;
 		targetUnderglowColor = env.underglowColor;
 		targetMoonColor = env.moonColor;
+		targetMoonLightColor = env.moonLightColor;
+		targetNightSkyColor = env.nightSkyColor;
 		targetUnderwaterCausticsColor = env.waterCausticsColor;
 		targetUnderwaterCausticsStrength = env.waterCausticsStrength;
 		targetWindAngle = env.windAngle;
@@ -535,6 +553,26 @@ public class EnvironmentManager {
 	@Nullable
 	public DaylightCycle getForcedCycleMode() {
 		return getCurrentEnvironment().cycleMode;
+	}
+
+	/**
+	 * The fixed sun angles {azimuth, altitude} in radians forced by the current
+	 * environment, or null for none. Read directly (not blended) so the locked
+	 * sun snaps to the new environment rather than swinging across the sky during
+	 * a transition — matching how {@link #getForcedCycleMode()} is handled.
+	 */
+	@Nullable
+	public float[] getForcedFixedSunAngles() {
+		return getCurrentEnvironment().fixedSunAngles;
+	}
+
+	/**
+	 * The fixed moon angles {azimuth, altitude} in radians forced by the current
+	 * environment, or null for none. See {@link #getForcedFixedSunAngles()}.
+	 */
+	@Nullable
+	public float[] getForcedFixedMoonAngles() {
+		return getCurrentEnvironment().fixedMoonAngles;
 	}
 
 	private Environment getOverworldEnvironment() {

@@ -1,7 +1,9 @@
 package rs117.hd.scene;
 
 import java.time.Instant;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import javax.annotation.Nullable;
 import net.runelite.http.api.worlds.WorldRegion;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DayLength;
@@ -39,17 +41,110 @@ public class TimeOfDay
 	// Fixed Night mode: the moon is locked at a prominent position in the
 	// south-east sky and always rendered full. Stored as {azimuth, altitude} radians,
 	// matching the convention used by AtmosphereUtils.getMoonPosition().
+	// These are the defaults; an environment may override them per-area via
+	// fixedMoonAngles (see setFixedAngleOverrides).
 	private static final double FIXED_NIGHT_MOON_AZIMUTH = Math.toRadians(135); // south-east
 	private static final double FIXED_NIGHT_MOON_ALTITUDE = Math.toRadians(25);  // low in the sky
 
+	// Per-environment fixed-angle overrides {azimuth, altitude} in radians, or
+	// null to use astronomical/default angles. Set once per frame by the renderer
+	// from the current environment. Only consulted while a fixed cycle mode is
+	// active (see isFixedMode) — the dynamic cycle always computes angles.
+	private static double[] fixedSunAnglesOverride = null;
+	private static double[] fixedMoonAnglesOverride = null;
+
 	/**
-	 * Fixed Night moon angles {azimuth, altitude} in radians, matching the
-	 * convention returned by AtmosphereUtils.getMoonPosition(). Used both for
-	 * the sky moon direction and the shadow-casting light direction so the moon
-	 * disk and the shadows it casts stay locked together.
+	 * Set the per-environment fixed sun/moon angle overrides for this frame.
+	 *
+	 * Inputs are in the environment-file convention {altitude, azimuth} in radians
+	 * (the same order as Environment.sunAngles), or null for no override. They are
+	 * stored internally as {azimuth, altitude} to match the convention returned by
+	 * AtmosphereUtils.getSunAngles()/getMoonPosition() and consumed by the rest of
+	 * this class.
+	 *
+	 * Call before any other TimeOfDay methods. Only takes effect under a fixed
+	 * cycle mode; the dynamic cycle ignores these.
+	 */
+	public static void setFixedAngleOverrides(@Nullable float[] sunAngles, @Nullable float[] moonAngles) {
+		// sunAngles/moonAngles are {altitude, azimuth}; store {azimuth, altitude}.
+		fixedSunAnglesOverride = sunAngles == null ? null :
+			new double[] { sunAngles[1], sunAngles[0] };
+		fixedMoonAnglesOverride = moonAngles == null ? null :
+			new double[] { moonAngles[1], moonAngles[0] };
+	}
+
+	/**
+	 * Whether the current cycle mode is one of the fixed modes (the sun/moon sit
+	 * at a fixed time of day). Fixed-angle overrides only apply in these modes.
+	 * DYNAMIC and REAL_TIME are excluded — both compute a moving astronomical sun.
+	 */
+	public static boolean isFixedMode() {
+		switch (currentCycleMode) {
+			case FIXED_DAWN:
+			case FIXED_MIDDAY:
+			case FIXED_SUNSET:
+			case FIXED_NIGHT:
+			case ALWAYS_NIGHT:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	/**
+	 * Fixed moon angles {azimuth, altitude} in radians for the current fixed
+	 * mode. Returns the environment's fixedMoonAngles override when set,
+	 * otherwise the default Fixed Night position. Used both for the sky moon
+	 * direction and the shadow-casting light direction so the moon disk and the
+	 * shadows it casts stay locked together.
 	 */
 	public static double[] getFixedNightMoonAngles() {
+		if (fixedMoonAnglesOverride != null)
+			return new double[] { fixedMoonAnglesOverride[0], fixedMoonAnglesOverride[1] };
 		return new double[] { FIXED_NIGHT_MOON_AZIMUTH, FIXED_NIGHT_MOON_ALTITUDE };
+	}
+
+	/**
+	 * Whether the current environment supplies a fixed sun-angle override that
+	 * should be honored (i.e. a fixed mode is active and an override is set).
+	 */
+	public static boolean hasFixedSunOverride() {
+		return isFixedMode() && fixedSunAnglesOverride != null;
+	}
+
+	/**
+	 * Whether the current environment supplies a fixed moon-angle override that
+	 * should be honored (i.e. a fixed mode is active and an override is set).
+	 */
+	public static boolean hasFixedMoonOverride() {
+		return isFixedMode() && fixedMoonAnglesOverride != null;
+	}
+
+	/** The fixed sun angles {azimuth, altitude} in radians. Only valid when {@link #hasFixedSunOverride()}. */
+	public static double[] getFixedSunAngles() {
+		return new double[] { fixedSunAnglesOverride[0], fixedSunAnglesOverride[1] };
+	}
+
+	/**
+	 * Build a normalized direction vector FROM the camera TO the given
+	 * {azimuth, altitude} sky position, using the renderer/light convention
+	 * (pitch = altitude, yaw = PI - azimuth). Shared by the sun/moon sky
+	 * direction getters.
+	 */
+	private static float[] anglesToSkyDirection(double azimuth, double altitude) {
+		double yaw = Math.PI - azimuth;
+
+		float x = (float) (Math.sin(yaw) * Math.cos(altitude));
+		float y = (float) Math.sin(altitude);
+		float z = (float) (-Math.cos(yaw) * Math.cos(altitude));
+
+		float length = (float) Math.sqrt(x * x + y * y + z * z);
+		if (length > 0.0001f) {
+			x /= length;
+			y /= length;
+			z /= length;
+		}
+		return new float[] { x, y, z };
 	}
 
 	// Sky color keyframe tables. These are read-only constant data consumed by
@@ -509,31 +604,18 @@ public class TimeOfDay
 	 * Uses the same coordinate transformation as the shadow light direction.
 	 */
 	public static float[] getSunDirectionForSky(double[] latLong, float dayLength) {
+		// Under a fixed mode with a per-environment override, lock the sun disk
+		// to the configured angles instead of the astronomical position.
+		if (hasFixedSunOverride())
+			return anglesToSkyDirection(fixedSunAnglesOverride[0], fixedSunAnglesOverride[1]);
+
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 
 		// sunAngles[0] = azimuth, sunAngles[1] = altitude
 		// The renderers use: pitch = altitude, yaw = PI - azimuth
 		// This matches how lightDir is calculated in ZoneRenderer and LegacyRenderer
-		double altitude = sunAngles[1];
-		double yaw = Math.PI - sunAngles[0];
-
-		// Calculate direction vector using the same convention as the camera/light system
-		// The forward direction for yaw=0 is along negative Z
-		// pitch rotates around X axis, yaw rotates around Y axis
-		float x = (float) (Math.sin(yaw) * Math.cos(altitude));
-		float y = (float) Math.sin(altitude);
-		float z = (float) (-Math.cos(yaw) * Math.cos(altitude));
-
-		// Normalize (should already be unit length, but just to be safe)
-		float length = (float) Math.sqrt(x * x + y * y + z * z);
-		if (length > 0.0001f) {
-			x /= length;
-			y /= length;
-			z /= length;
-		}
-
-		return new float[] { x, y, z };
+		return anglesToSkyDirection(sunAngles[0], sunAngles[1]);
 	}
 
 	/**
@@ -544,23 +626,8 @@ public class TimeOfDay
 	public static float[] getMoonDirectionForSky(double[] latLong, float dayLength) {
 		Instant moonDate = getMoonDate(dayLength);
 		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), latLong);
-
 		// moonAngles[0] = azimuth, moonAngles[1] = altitude
-		double altitude = moonAngles[1];
-		double yaw = Math.PI - moonAngles[0];
-
-		float x = (float) (Math.sin(yaw) * Math.cos(altitude));
-		float y = (float) Math.sin(altitude);
-		float z = (float) (-Math.cos(yaw) * Math.cos(altitude));
-
-		float length = (float) Math.sqrt(x * x + y * y + z * z);
-		if (length > 0.0001f) {
-			x /= length;
-			y /= length;
-			z /= length;
-		}
-
-		return new float[] { x, y, z };
+		return anglesToSkyDirection(moonAngles[0], moonAngles[1]);
 	}
 
 	/**
@@ -584,38 +651,15 @@ public class TimeOfDay
 	 * Get the moon direction vector for sky rendering, respecting moon behavior mode.
 	 */
 	public static float[] getMoonDirectionForSky(double[] latLong, float dayLength, MoonBehavior moonBehavior) {
-		if (currentCycleMode == DaylightCycle.FIXED_NIGHT) {
-			double altitude = FIXED_NIGHT_MOON_ALTITUDE;
-			double yaw = Math.PI - FIXED_NIGHT_MOON_AZIMUTH;
-
-			float x = (float) (Math.sin(yaw) * Math.cos(altitude));
-			float y = (float) Math.sin(altitude);
-			float z = (float) (-Math.cos(yaw) * Math.cos(altitude));
-
-			float length = (float) Math.sqrt(x * x + y * y + z * z);
-			if (length > 0.0001f) {
-				x /= length;
-				y /= length;
-				z /= length;
-			}
-			return new float[] { x, y, z };
+		// A fixed-mode moon override (or the default Fixed Night position) locks
+		// the moon disk to a fixed point regardless of moon behavior.
+		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
+			double[] angles = getFixedNightMoonAngles();
+			return anglesToSkyDirection(angles[0], angles[1]);
 		}
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
 			double[] angles = getNightSyncedMoonAngles(latLong, dayLength);
-			double altitude = angles[1];
-			double yaw = Math.PI - angles[0];
-
-			float x = (float) (Math.sin(yaw) * Math.cos(altitude));
-			float y = (float) Math.sin(altitude);
-			float z = (float) (-Math.cos(yaw) * Math.cos(altitude));
-
-			float length = (float) Math.sqrt(x * x + y * y + z * z);
-			if (length > 0.0001f) {
-				x /= length;
-				y /= length;
-				z /= length;
-			}
-			return new float[] { x, y, z };
+			return anglesToSkyDirection(angles[0], angles[1]);
 		}
 		return getMoonDirectionForSky(latLong, dayLength);
 	}
@@ -645,8 +689,10 @@ public class TimeOfDay
 	 * Get the moon altitude in degrees, respecting moon behavior mode.
 	 */
 	public static double getMoonAltitudeDegrees(double[] latLong, float dayLength, MoonBehavior moonBehavior) {
-		if (currentCycleMode == DaylightCycle.FIXED_NIGHT) {
-			return Math.toDegrees(FIXED_NIGHT_MOON_ALTITUDE);
+		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
+			// getFixedNightMoonAngles() returns {azimuth, altitude}; use the override
+			// altitude when present so shadow visibility tracks the locked moon.
+			return Math.toDegrees(getFixedNightMoonAngles()[1]);
 		}
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
 			double[] angles = getNightSyncedMoonAngles(latLong, dayLength);
@@ -753,6 +799,19 @@ public class TimeOfDay
 		return multiply(rgb(181, 205, 255), 0.25f);
 	}
 
+	/**
+	 * The player's local wall-clock time as a fractional hour in [0, 24).
+	 * Uses the system default time zone so REAL_TIME mode matches the clock on
+	 * the player's machine (noon on their clock -> sun at its peak in-game).
+	 */
+	private static double getLocalHourOfDay() {
+		LocalTime now = LocalTime.now();
+		return now.getHour()
+			+ now.getMinute() / 60.0
+			+ now.getSecond() / 3600.0
+			+ now.getNano() / 3.6e12;
+	}
+
 	public static Instant getModifiedDate(float dayLength) {
 		long currentTimeMillis = System.currentTimeMillis();
 		Instant currentInstant = Instant.ofEpochMilli(currentTimeMillis);
@@ -784,6 +843,16 @@ public class TimeOfDay
 		// Update tracking variables for next call
 		lastUpdateTime = currentTimeMillis;
 		lastDayLength = dayLength;
+
+		// Real Time mode: drive the sun directly from the player's local clock.
+		// We map today's real local hour onto today's UTC start-of-day, the same
+		// construction the dynamic path uses (a local hour interpreted at latLong),
+		// so noon on the player's clock puts the sun at its peak in-game.
+		if (currentCycleMode == DaylightCycle.REAL_TIME) {
+			double localHour = getLocalHourOfDay();
+			Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS);
+			return startOfDay.plusMillis((long) (localHour * 60 * 60 * 1000));
+		}
 
 		// For non-dynamic modes, return a fixed date at the appropriate time of day.
 		// Cycle tracking above still runs so getMoonDate() advances normally.
@@ -875,6 +944,13 @@ public class TimeOfDay
 
 		Instant currentInstant = Instant.ofEpochMilli(System.currentTimeMillis());
 		Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS);
+
+		// Real Time mode: the moon's phase and position are astronomically real for
+		// today at the player's local hour, matching the real-clock sun.
+		if (currentCycleMode == DaylightCycle.REAL_TIME) {
+			double localHour = getLocalHourOfDay();
+			return startOfDay.plusMillis((long) (localHour * 60 * 60 * 1000));
+		}
 
 		// Total simulated days elapsed = completed whole cycles + current cycle progress.
 		// Warp only the within-cycle fraction so the realistic moon's position tracks

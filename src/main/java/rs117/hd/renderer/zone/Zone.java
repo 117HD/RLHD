@@ -599,6 +599,9 @@ public class Zone implements Destructible {
 			if (faceOverride.hide)
 				continue;
 
+			if (faceOverride.modifiesAlpha)
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
+
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
 			if (!hasAlpha)
 				continue;

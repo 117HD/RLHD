@@ -120,7 +120,27 @@
       },
       "moonColor": {
         "type": [ "string", "array" ],
-        "description": "Moon color in sRGB, specified as a hex color code or an array in the range 0-255. Affects both the visible moon disk and the light it casts. Defaults to a cool silver (~4100K).",
+        "description": "Moon color in sRGB, specified as a hex color code or an array in the range 0-255. Controls the visible moon disk and its glow, and (unless moonLightColor is set) the light it casts. Defaults to a cool silver (~8000K).",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "moonLightColor": {
+        "type": [ "string", "array" ],
+        "description": "Color of the light the moon casts on the scene, in sRGB, as a hex color code or an array in the range 0-255. Lets moonlight be tinted differently than the visible moon disk. When omitted, falls back to moonColor.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "nightSkyColor": {
+        "type": [ "string", "array" ],
+        "description": "Color the night sky (zenith and horizon) is tinted toward as the moon rises, in sRGB, as a hex color code or an array in the range 0-255. Lets the night sky color be set independently of the moon disk. When omitted, falls back to moonColor.",
         "pattern": "^#[A-Fa-f0-9]{6}$",
         "minItems": 3,
         "maxItems": 3,
@@ -135,6 +155,38 @@
           {
             "type": "number",
             "minimum": 0,
+            "maximum": 90
+          },
+          {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 360
+          }
+        ]
+      },
+      "fixedSunAngles": {
+        "type": "array",
+        "description": "Locks the sun disk and its shadow direction to a fixed altitude and azimuth (degrees) while a fixed cycle mode (FIXED_DAWN/FIXED_MIDDAY/FIXED_SUNSET/FIXED_NIGHT/ALWAYS_NIGHT) is active, overriding the astronomically-derived position. Altitude is from the ground up (negative places the sun below the horizon), azimuth is clockwise from north. Ignored in DYNAMIC mode.",
+        "items": [
+          {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 360
+          }
+        ]
+      },
+      "fixedMoonAngles": {
+        "type": "array",
+        "description": "Locks the moon disk and its shadow direction to a fixed altitude and azimuth (degrees) while a fixed cycle mode is active, overriding the default fixed-night moon position. Altitude is from the ground up, azimuth is clockwise from north. Ignored in DYNAMIC mode.",
+        "items": [
+          {
+            "type": "number",
+            "minimum": -90,
             "maximum": 90
           },
           {

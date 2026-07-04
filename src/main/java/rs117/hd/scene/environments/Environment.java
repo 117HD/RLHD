@@ -67,9 +67,33 @@ public class Environment {
 	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] moonColor;
+	// Color of the light the moon casts on the scene (moonlight). When unset,
+	// falls back to moonColor so the cast light matches the moon disk (current
+	// behavior). Set this to give moonlight a different tint than the visible moon.
+	@Nullable
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] moonLightColor;
+	// Color the night sky (zenith/horizon) is tinted toward as the moon rises.
+	// When unset, falls back to moonColor so the sky color matches the moon disk
+	// (current behavior). Set this to color the night sky independently of the moon.
+	@Nullable
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] nightSkyColor;
 	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
+	// When set, and the active day/night cycle is a fixed mode (FIXED_DAWN,
+	// FIXED_MIDDAY, FIXED_SUNSET, FIXED_NIGHT, ALWAYS_NIGHT), these lock the
+	// sun/moon disk and their shadow directions to a fixed point in the sky,
+	// overriding the astronomically-derived angles. {azimuth, altitude} in
+	// degrees (converted to radians), matching the convention used by
+	// AtmosphereUtils.getSunAngles()/getMoonPosition(). Null = astronomical.
+	@Nullable
+	@JsonAdapter(DegreesToRadians.class)
+	public float[] fixedSunAngles;
+	@Nullable
+	@JsonAdapter(DegreesToRadians.class)
+	public float[] fixedMoonAngles;
 	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] fogColor;
@@ -103,10 +127,24 @@ public class Environment {
 
 		if (sunAngles != null)
 			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
+		if (fixedSunAngles != null)
+			fixedSunAngles = HDUtils.ensureArrayLength(fixedSunAngles, 2);
+		if (fixedMoonAngles != null)
+			fixedMoonAngles = HDUtils.ensureArrayLength(fixedMoonAngles, 2);
 
 		// Default moon color to slightly cool white (~8000K)
 		if (moonColor == null)
 			moonColor = ColorUtils.colorTemperatureToLinearRgb(8000);
+
+		// When no distinct moonlight color is given, the cast light matches the
+		// moon disk (moonColor) — preserving the original single-color behavior.
+		if (moonLightColor == null)
+			moonLightColor = moonColor;
+
+		// When no distinct night-sky color is given, the sky matches the moon
+		// disk (moonColor) — preserving the original single-color behavior.
+		if (nightSkyColor == null)
+			nightSkyColor = moonColor;
 
 		// Base water caustics on directional lighting by default
 		if (waterCausticsColor == null)
