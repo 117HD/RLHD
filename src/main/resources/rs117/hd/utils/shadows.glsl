@@ -75,7 +75,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     #if TERRAIN_SHADOWS
         if(shadow < 1.0) {
             // Sample terrain shadow map and combine
-            const float terrainBias = 0.0005;
+            float terrainBias = 0.00002 * slopeBias;
             float terrainShadow = sampleHardwareShadow2x2(terrainShadowMap, shadowPos.z + terrainBias, shadowPos, fragPos);
             shadow = max(shadow, terrainShadow);
         }
