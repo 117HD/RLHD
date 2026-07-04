@@ -95575,8 +95575,9 @@
     "description": "Vampyrium Trees",
     "baseMaterial": "BARK",
     "uvType": "BOX",
+    "undoVanillaShading": false,
     "uvScale": 0.7,
-    "shiftLightness": 6,
+    "shiftLightness": 7,
     "objectIds": [
       "DARKWOOD_TREE_DEFAULT02",
       "DARKWOOD_TREE_DEFAULT01",
@@ -95599,10 +95600,29 @@
     ]
   },
   {
+    "description": "Vampyrium Rocks",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 6,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "ROCKS_VOROS02_LARGE01",
+      "ROCKS_VOROS02_CHUNK01",
+      "ROCKS_VOROS04_CHUNK01",
+      "ROCKS_VOROS03_CHUNK01",
+      "ROCKS_VOROS01_CHUNK01",
+      "ROCKS_VOROS01_LARGE01",
+      "ROCKS_VOROS02_DEFAULT01",
+      "VOROS_ROCKSLIDE01"
+    ]
+  },
+  {
     "description": "Vampyrium - Sangvesti Buildings - Stone only",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.75,
+    "undoVanillaShading": false,
     "uvOrientation": 256,
     "objectIds": [
       "BRIDGEKIT_SANGVESTI01_SIDE01"
@@ -95612,6 +95632,7 @@
     "description": "Vampyrium - Sangvesti Buildings - Roof",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
+    "undoVanillaShading": false,
     "uvScale": 0.75,
     "uvOrientation": -256,
     "colorOverrides": [
@@ -95654,6 +95675,7 @@
   {
     "description": "Vampyrium - Sangvesti Buildings - Roof Facade - Needs UV",
     "baseMaterial": "STONE_NORMALED",
+    "undoVanillaShading": false,
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": -256,
@@ -95774,20 +95796,16 @@
     ]
   },
   {
-    "description": "Vampyrium - Sangvesti Buildings - alt",
+    "description": "Vampyrium - Sangvesti Buildings - Bridge",
     "baseMaterial": "STONE_NORMALED",
+    "undoVanillaShading": false,
     "uvType": "BOX",
     "uvScale": 0.75,
     "shiftLightness": 1,
     "objectIds": [
       "BRIDGEKIT_SANGVESTI01_SIDE02",
       "BRIDGEKIT_SANGVESTI01_CHAINS02",
-      "BRIDGEKIT_SANGVESTI01_STAKES02",
-      "BRIDGEKIT_SANGVESTI01_FLOOR01",
-      "BRIDGEKIT_SANGVESTI01_FLOOR02",
-      "BRIDGEKIT_SANGVESTI01_FLOOR03",
-      "BRIDGEKIT_SANGVESTI01_FLOOR04_M",
-      "BRIDGEKIT_SANGVESTI01_FLOOR04"
+      "BRIDGEKIT_SANGVESTI01_STAKES02"
     ],
     "colorOverrides": [
       {
@@ -95815,6 +95833,21 @@
         "uvScale": 0.45,
         "uvOrientation": 512
       }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Bridge Floor",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 4,
+    "objectIds": [
+      "BRIDGEKIT_SANGVESTI01_FLOOR01",
+      "BRIDGEKIT_SANGVESTI01_FLOOR02",
+      "BRIDGEKIT_SANGVESTI01_FLOOR03",
+      "BRIDGEKIT_SANGVESTI01_FLOOR04_M",
+      "BRIDGEKIT_SANGVESTI01_FLOOR04"
     ]
   },
   {
@@ -96399,6 +96432,7 @@
     "description": "Vampyrium - Sangvesti House Roof fences on stone",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
+    "undoVanillaShading": false,
     "uvScale": 0.66,
     "uvOrientation": 256,
     "colorOverrides": [
@@ -96409,8 +96443,7 @@
         "uvType": "BOX",
         "uvScale": 0.25,
         "uvOrientation": 187,
-        "shiftLightness": 4,
-        "shiftSaturation": -1
+        "shiftLightness": 6
       }
     ],
     "objectIds": [
