@@ -709,13 +709,11 @@ public class SceneUploader implements AutoCloseable {
 		int faceCount = m.getFaceCount();
 		byte[] transparencies = m.getFaceTransparencies();
 		short[] faceTextures = m.getFaceTextures();
-		if (transparencies == null && faceTextures == null && !mightHaveTransparency) {
-			z.sizeO += faceCount;
-		} else {
-			z.sizeO += faceCount;
-			z.sizeA += faceCount;
-		}
+		byte modelTransparency = m.getTransparency();
+		z.sizeO += faceCount;
 		z.sizeF += faceCount;
+		if (transparencies != null || faceTextures != null || modelTransparency != 0 || mightHaveTransparency)
+			z.sizeA += faceCount;
 	}
 
 	private void uploadZoneRenderable(
@@ -1437,6 +1435,7 @@ public class SceneUploader implements AutoCloseable {
 		final byte[] bias = model.getFaceBias();
 		final byte[] transparencies = model.getFaceTransparencies();
 		final float modelHeight = model.getModelHeight();
+		final byte modelTransparency = model.getTransparency();
 
 		int orientSin = 0;
 		int orientCos = 0;
@@ -1513,7 +1512,7 @@ public class SceneUploader implements AutoCloseable {
 			Material material = baseMaterial;
 			ModelOverride faceOverride = modelOverride;
 
-			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
+			int transparency = readFaceTransparency(modelTransparency, transparencies, face);
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			boolean isTextured = textureId != -1;
 			if (isTextured) {
@@ -1870,6 +1869,7 @@ public class SceneUploader implements AutoCloseable {
 
 		final int zero = (int) proj.project(x, y, z, projected)[2];
 		final int radius = model.getRadius();
+		final byte modelTransparency = model.getTransparency();
 
 		faceOverrides.ensureCapacity(triangleCount);
 		faceMaterials.ensureCapacity(triangleCount);
@@ -1880,7 +1880,7 @@ public class SceneUploader implements AutoCloseable {
 			if (color3s[f] == -2)
 				continue;
 
-			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;
+			int transparency = readFaceTransparency(modelTransparency, transparencies, f);
 			if (transparency == 255)
 				continue;
 
@@ -1925,6 +1925,12 @@ public class SceneUploader implements AutoCloseable {
 					final int textureFace = textureFaces != null ? textureFaces[f] : -1;
 					uvType = isVanillaUVMapped && textureFace != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 				}
+			}
+
+			if (faceOverride.modifiesAlpha) {
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
+				if (transparency == 255)
+					continue;
 			}
 
 			faceOverrides.set(f, faceOverride);
@@ -2036,6 +2042,7 @@ public class SceneUploader implements AutoCloseable {
 		final byte overrideHue = model.getOverrideHue();
 		final byte overrideSat = model.getOverrideSaturation();
 		final byte overrideLum = model.getOverrideLuminance();
+		final byte modelTransparency = model.getTransparency();
 
 		final boolean isVanillaTextured = faceTextures != null;
 
@@ -2061,7 +2068,7 @@ public class SceneUploader implements AutoCloseable {
 			else if (color3 == -1)
 				color2 = color3 = color1;
 
-			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
+			int transparency = readFaceTransparency(modelTransparency, transparencies, face);
 			final int textureFace = textureFaces != null ? textureFaces[face] : -1;
 			final int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			final UvType uvType = faceUVTypes.get(face);
@@ -2659,6 +2666,22 @@ public class SceneUploader implements AutoCloseable {
 			default:
 				return 55;
 		}
+	}
+
+	private static int readFaceTransparency(byte modelTransparency, byte[] transparencies, int f) {
+		// Based on https://github.com/runelite/runelite/commit/a88ac64d5a154020cdc21612fc0f1eb32aa8d0f8#diff-2495d11499767f573d041baf080ee6b50dddd325e37b34a402f4c23efc3c2324R464-R478
+		if (modelTransparency == -1)
+			return 255;
+
+		int t = modelTransparency & 255;
+		int faceTransparency = transparencies != null ? transparencies[f] & 0xFF : 0;
+		if (t > 0 && faceTransparency < 253) {
+			int a = (253 - faceTransparency) * t >> 8;
+			assert (faceTransparency & 255) == faceTransparency;
+			return faceTransparency + a;
+		}
+
+		return faceTransparency;
 	}
 
 	public static void rotateNormals(int[] normals, int orientSin, int orientCos) {

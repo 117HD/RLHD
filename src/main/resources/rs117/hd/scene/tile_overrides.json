@@ -4348,6 +4348,13 @@
     "groundMaterial": "GRUNGE"
   },
   {
+    "name": "VER_SINHAZA_BALCONY",
+    "area": "VER_SINHAZA_BALCONY",
+    "groundMaterial": "TILES_2X2_1_GLOSS",
+    "shiftLightness": 10,
+    "blended": false
+  },
+  {
     "name": "ABANDONED_MINE_ROCK",
     "area": "MORYTANIA",
     "overlayIds": [
@@ -5786,7 +5793,7 @@
     "overlayIds": [
       181
     ],
-    "waterType": "WATER",
+    "waterType": "CAVE_WATER_MURKY",
     "blended": false
   },
   {
@@ -5806,21 +5813,9 @@
     "name": "CAMDOZAAL_STONE_PATH",
     "area": "CAMDOZAAL",
     "overlayIds": [
-      182
+      2, 83, 127, 182
     ],
-    "groundMaterial": "GRUNGE_2",
-    "uvOrientation": 117,
-    "uvScale": 1.2
-  },
-  {
-    "name": "CAMDOZAAL_GRAVEL_PATH",
-    "area": "CAMDOZAAL",
-    "overlayIds": [
-      2, 83, 127
-    ],
-    "groundMaterial": "GRAVEL",
-    "uvOrientation": 270,
-    "uvScale": 1.25
+    "groundMaterial": "PACKED_EARTH"
   },
   {
     "name": "CAMDOZAAL_CAVE_FLOOR",
@@ -8841,6 +8836,13 @@
     "blended": false
   },
   {
+    "name": "VER_SINHAZA_BLOOD",
+    "area": "VER_SINHAZA_BLOOD_POOL",
+    "overlayIds": [ 72 ],
+    "groundMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "blended": false
+  },
+  {
     "name": "MEIYERDITCH_MINES",
     "area": "MEIYERDITCH_MINES",
     "underlayIds": [
@@ -10692,6 +10694,19 @@
     ],
     "groundMaterial": "MARBLE_2",
     "blended": false
+  },
+  {
+    "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
+    "area": "KRAKEN_COVE_HIDE_WATER_EDGE",
+    "overlayIds": [ 7 ],
+    "waterType": "SWAMP_WATER",
+    "heightOffset": -150
+  },
+  {
+    "name": "KRAKEN_COVE_WATER_FIX",
+    "area": "KRAKEN_COVE_WALL_FIX",
+    "underlayIds": [ 53, 54 ],
+    "waterType": "SWAMP_WATER"
   },
   {
     "name": "TAG - Areas - END"

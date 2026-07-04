@@ -130,8 +130,13 @@ public final class VertexWriteCache {
 		if (stagingPosition == 0 || outputBuffer == null)
 			return;
 
-		outputBuffer.put(stagingBuffer, 0, stagingPosition);
-		stagingPosition = 0;
+		try {
+			outputBuffer.put(stagingBuffer, 0, stagingPosition);
+		} catch (Exception e) {
+			log.error("Failed to flush vertex write cache {} written: {} remaining: {}", name, stagingPosition, outputBuffer.remaining(), e);
+		} finally {
+			stagingPosition = 0;
+		}
 	}
 
 	public static class Collection {
