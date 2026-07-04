@@ -95323,7 +95323,9 @@
     "objectIds": [
       "CABINET_SANGVESTI01_CONTENTS01",
       "CABINET_SANGVESTI01_CONTENTS02",
-      "CABINET_SANGVESTI01_BROKEN02"
+      "CABINET_SANGVESTI01_CONTENTS03",
+      "CABINET_SANGVESTI01_BROKEN02",
+      "SANGVESTI_BOOKSHELF_2"
     ]
   },
   {
@@ -95354,10 +95356,12 @@
     ],
     "objectIds": [
       "TABLE_SANGVESTI01_DEFAULT01",
+      "TABLE_SANGVESTI01_CONTENTS01_2X2",
       "TABLE_SANGVESTI01_CONTENTS02",
       "TABLE_SANGVESTI01_CONTENTS03_OFFSET",
       "TABLE_SANGVESTI01_CONTENTS03_2X2",
       "TABLE_SANGVESTI01_CONTENTS03"
+
     ]
   },
   {
@@ -95527,26 +95531,62 @@
         "uvType": "BOX",
         "uvScale": 0.8,
         "shiftLightness": 6,
-        "uvOrientation": 512
+        "uvOrientationX": 512
       },
       {
         "description": "Red accents",
         "colors": "h == 0 && s >= 4",
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.8,
-        "uvOrientation": 512
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "shiftLightness": 4
       }
     ],
     "objectIds": [
       "BRIDGEKIT_SANGVESTI01_ROOF01",
-      "ROOFKIT_SANGVESTI02_FACADE01_5X1",
       "ROOFKIT_SANGVESTI02_BROKEN01",
       "ROOFKIT_SANGVESTI02_DEFAULT01",
       "ROOFKIT_SANGVESTI02_WINDOW01",
       "ROOFKIT_SANGVESTI02_BROKEN02",
       "ROOFKIT_SANGVESTI02_BROKEN03",
-      "ROOFKIT_SANGVESTI02_DEFAULT02"
+      "ROOFKIT_SANGVESTI02_DEFAULT02",
+      "ROOFKIT_SANGVESTI01_DEFAULT01",
+      "ROOFKIT_SANGVESTI01_DEFAULT02",
+      "ROOFKIT_SANGVESTI01_DEFAULT03",
+      "ROOFKIT_SANGVESTI01_BROKEN01",
+      "ROOFKIT_SANGVESTI01_BROKEN02",
+      "ROOFKIT_SANGVESTI01_BROKEN03"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Roof Facade - Needs UV",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2 && l < 14",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 6,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Window",
+        "colors": "h == 0 && s >= 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512,
+        "shiftLightness": 1
+      }
+    ],
+    "objectIds": [
+      "ROOFKIT_SANGVESTI02_FACADE01_5X1"
     ]
   },
   {
@@ -95603,7 +95643,9 @@
       "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN03_M",
       "WALLKIT_SANGVESTI01_WINDOW01_BROKEN02",
       "BRIDGEKIT_SANGVESTI01_SIDE02",
-      "WALLKIT_SANGVESTI01_DEFAULT01_RUBBLE01"
+      "WALLKIT_SANGVESTI01_DEFAULT01_RUBBLE01",
+      "WALLKIT_SANGVESTI01_RUBBLE06",
+      "WALLKIT_SANGVESTI01_WINDOW01_RUBBLE01"
     ],
     "colorOverrides": [
       {
@@ -96085,6 +96127,44 @@
       "SANGVESTI_VITUR_MANOR_DOOR",
       "SANGVESTI_VITUR_MANOR_DOOR_M",
       "SANGVESTI_CHAPEL_BACK_DOOR_1"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti House Roof Stone",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "ROOFKIT_SANGVESTI03_BROKEN01",
+      "ROOFKIT_SANGVESTI03_BROKEN02",
+      "ROOFKIT_SANGVESTI03_BROKEN03",
+      "ROOFKIT_SANGVESTI03_BROKEN04",
+      "ROOFKIT_SANGVESTI03_BROKEN05",
+      "ROOFKIT_SANGVESTI03_BROKEN06"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti House Roof fences on stone",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Fence",
+        "colors": "s == 6",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 187,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_SANGVESTI02_FENCE01",
+      "WALLKIT_SANGVESTI02_FENCE01_BROKEN01",
+      "WALLKIT_SANGVESTI02_FENCE01_BROKEN02",
+      "WALLKIT_SANGVESTI02_FENCE02"
     ]
   }
 ]
