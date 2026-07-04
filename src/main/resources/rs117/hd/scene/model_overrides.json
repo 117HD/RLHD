@@ -13886,7 +13886,11 @@
   },
   {
     "description": "Anvil",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "flatNormals": true,
+    "shiftLightness": 8,
     "objectIds": [
       "DORICS_ANVIL",
       "ANVIL",
@@ -13896,11 +13900,9 @@
       "LOVAKENGJ_ANVIL",
       "DARKM_ANVIL",
       "DS2_GUILD_BLACKSMITH_ANVIL",
-      "DORGESH_BLACKSMITH_ANVIL"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "flatNormals": true
+      "DORGESH_BLACKSMITH_ANVIL",
+      "SANGVESTI_ANVIL"
+    ]
   },
   {
     "description": "Anvil 2",
@@ -15686,7 +15688,9 @@
       "DUGUPSOIL2_BROWNMUD",
       "PEST_OUTPOST_SOIL_2",
       "VAMPYRIUM01_MAGGOT01_DUGUPSOIL02",
-      "VAMPYRIUM01_DUGUPSOIL02"
+      "VAMPYRIUM01_DUGUPSOIL02",
+      "VAMPYRIUM01_SANGVESTI01_DUGUPSOIL02",
+      "VAMPYRIUM01_DUGUPSOIL05"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.65,
@@ -15742,7 +15746,10 @@
       "PEST_OUTPOST_SOIL_1",
       "PEST_OUTPOST_SOIL_3",
       "VAMPYRIUM01_DUGUPSOIL01",
-      "VAMPYRIUM01_DUGUPSOIL03"
+      "VAMPYRIUM01_DUGUPSOIL03",
+      "VAMPYRIUM01_SANGVESTI01_DUGUPSOIL01",
+      "VAMPYRIUM01_SANGVESTI01_DUGUPSOIL03",
+      "VAMPYRIUM01_DUGUPSOIL06"
     ],
     "uvType": "BOX",
     "uvScale": 0.65
@@ -93861,10 +93868,12 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.61111,
-        "uvOrientation": -64
+        "uvOrientation": -64,
+        "shiftLightness": 3
       }
     ],
     "objectIds": [
+      "WEAPONS_SANGVESTI01_LEANING01",
       "WEAPONS_SANGVESTI01_LEANING01_OFFSET_X"
     ]
   },
@@ -94783,7 +94792,8 @@
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.8,
-        "uvOrientation": 404
+        "uvOrientation": 404,
+        "shiftLightness": 4
       },
       {
         "description": "Legs",
@@ -94799,7 +94809,12 @@
       "CHAIR_SANGVESTI01_DEFAULT01",
       "CHAIR_SANGVESTI01_BROKEN01",
       "CHAIR_SANGVESTI01_BROKEN02",
-      "CHAIR_SANGVESTI01_BROKEN02_2X2"
+      "CHAIR_SANGVESTI01_BROKEN02_2X2",
+      "CHAIR_SANGVESTI_INTERACTABLE_1",
+      "CHAIR_SANGVESTI_INTERACTABLE_2",
+      "CHAIR_SANGVESTI_INTERACTABLE_3",
+      "CHAIR_SANGVESTI_INTERACTABLE_4",
+      "CHAIR_SANGVESTI_INTERACTABLE_5"
     ]
   },
   {
@@ -95105,6 +95120,34 @@
     ]
   },
   {
+    "description": "Castle Draken - Vampyrium Barrel Full - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 37",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Metal",
+        "colors": "s <= 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.31111,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "SANGVESTI_PUB_BARREL_FULL_B"
+    ]
+  },
+  {
     "description": "Castle Draken - Vampyrium Brick and wooden post wall",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
@@ -95339,7 +95382,8 @@
       "CASTLE_DRAKAN_KITCHEN_CHEST",
       "CASTLE_DRAKAN_ARMOURY_CHEST",
       "CASTLE_DRAKAN_DEPOSIT_CHEST",
-      "CASTLE_DRAKAN_LOWERNIEL_CHEST"
+      "CASTLE_DRAKAN_LOWERNIEL_CHEST",
+      "SANGVESTI_CHAPEL_CHEST"
     ]
   },
   {
@@ -95712,6 +95756,7 @@
       "WALLKIT_SANGVESTI01_CORNER01_BROKEN01_M",
       "WALLKIT_SANGVESTI01_DEFAULT02",
       "WALLKIT_SANGVESTI01_WINDOW01_BROKEN01",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN02_M",
       "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN03",
       "WALLKIT_SANGVESTI01_RUBBLE01",
       "WALLKIT_SANGVESTI01_DEFAULT01",
@@ -95731,6 +95776,7 @@
       "WALLKIT_SANGVESTI01_FENCE01_BROKEN03",
       "WALLKIT_SANGVESTI01_FENCE01_BROKEN03_M",
       "WALLKIT_SANGVESTI01_FENCE01_RUBBLE01",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN02",
       "SANGVESTI_SHED"
     ],
     "colorOverrides": [
@@ -95770,7 +95816,6 @@
       "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN03_M",
       "WALLKIT_SANGVESTI01_WINDOW01_BROKEN02",
       "WALLKIT_SANGVESTI01_DEFAULT01_RUBBLE01",
-      "WALLKIT_SANGVESTI01_RUBBLE06",
       "WALLKIT_SANGVESTI01_WINDOW01_RUBBLE01",
       "WALLKIT_SANGVESTI01_WINDOW01_BROKEN02_M"
     ],
@@ -95793,6 +95838,36 @@
         "uvScale": 0.45,
         "uvOrientation": 512
       }
+    ]
+  },
+  {
+    "description": "Vampyrium - Bank - Window with Bars",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 404,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "shiftLightness": 1
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 6,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_SANGVESTI01_WINDOW02"
     ]
   },
   {
@@ -96229,7 +96304,8 @@
       }
     ],
     "objectIds": [
-      "CASTLE_DRAKAN_CHAPEL_ALTAR"
+      "CASTLE_DRAKAN_CHAPEL_ALTAR",
+      "ALTAR_DRAKAN01_CHAPEL01_USABLE"
     ]
   },
   {
@@ -96400,6 +96476,7 @@
       "SANGVESTI_FANCY_HOUSE_3_DOOR",
       "SANGVESTI_FANCY_HOUSE_3_BACK_DOOR",
       "SANGVESTI_MYRMEL_MANOR_DOOR",
+      "SANGVESTI_MYRMEL_MANOR_BACK_DOOR",
       "SANGVESTI_DOOR_L_NOOP_MYRMEL",
       "SANGVESTI_SHADUM_MANOR_DOOR",
       "SANGVESTI_SHADUM_MANOR_DOOR_M",
@@ -96408,10 +96485,13 @@
       "SANGVESTI_DOOR_L_NOOP_VITUR",
       "SANGVESTI_DOOR_R_NOOP_VITUR",
       "SANGVESTI_CHAPEL_BACK_DOOR_1",
+      "SANGVESTI_CHAPEL_BACK_DOOR_2",
       "SANGVESTI_CLOTHES_SHOP_BACK_DOOR",
       "SANGVESTI_PUB_BACK_DOOR",
       "SANGVESTI_FANCY_HOUSE_2_BACK_DOOR",
-      "SANGVESTI_FANCY_HOUSE_2_DOOR"
+      "SANGVESTI_FANCY_HOUSE_2_DOOR",
+      "SANGVESTI_BANK_DOOR",
+      "SANGVESTI_BLACKSMITH_DOOR"
     ]
   },
   {
@@ -96470,7 +96550,7 @@
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientation": 512,
+    "uvOrientationX": 512,
     "shiftLightness": 5,
     "colorOverrides": [
       {
@@ -96563,7 +96643,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Cloth banner",
+    "description": "Castle Draken - Vampyrium Crank",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -96580,6 +96660,7 @@
       }
     ],
     "objectIds": [
+      "SANGVESTI_BANK_CRANK_BASE",
       "SANGVESTI_FANCY_HOUSE_CRANK_BASE"
     ]
   },
@@ -96725,6 +96806,231 @@
     ],
     "objectIds": [
       "DRUM_SANGVESTI01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Kiln - Needs UV",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "KILN_SANGVESTI01_CONTENTS01",
+      "KILN_SANGVESTI01_CONTENTS02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Workbench- Needs UV",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Handles",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "TABLE_SANGVESTI01_WORKBENCH01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti wood shelf",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4111,
+        "shiftLightness": 6,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "SHELF_SANGVESTI01_EMPTY01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Silver Leafy plant with red stalk",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 6,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "PLANT_VAMPYRIUM_PLANT01",
+      "PLANT_VAMPYRIUM_PLANT02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Silver Leafy plant with red stalk",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 5,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "PLANT_VAMPYRIUM_PLANT03"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bank - Metal bars",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 404,
+    "shiftLightness": 6,
+    "objectIds": [
+      "WALLKIT_DRAKAN01_PRISON01_BANK01",
+      "SANGVESTI_INTERIOR_BANK_DOOR",
+      "SANGVESTI_INTERIOR_BANK_DOOR_NOOP"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bank - Bank booths",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 404,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Symbol",
+        "colors": "s >= 2",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 42,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "BOOTH_SANGVESTI01_BANK01",
+      "BOOTH_SANGVESTI02_BANK01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bank and Chapel Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 404,
+        "shiftLightness": 6
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 6",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "SANGVESTI_BANK_TRAPDOOR_CLOSED",
+      "SANGVESTI_BANK_TRAPDOOR_OPEN",
+      "SANGVESTI_CHAPEL_TRAPDOOR"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bank - Pollbooth - DYNAMIC - ANIMATED",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 8
+      },
+      {
+        "description": "BLOOD",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 404,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "BOOTH_SANGVESTI01_POLL01"
     ]
   }
 ]
