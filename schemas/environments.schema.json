@@ -138,6 +138,16 @@
           "type": "number"
         }
       },
+      "nightSkyColor": {
+        "type": [ "string", "array" ],
+        "description": "Color the night sky (zenith and horizon) is tinted toward as the moon rises, in sRGB, as a hex color code or an array in the range 0-255. Lets the night sky color be set independently of the moon disk. When omitted, falls back to moonColor.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
       "sunAngles": {
         "type": "array",
         "description": "The sun's altitude and azimuth specified in degrees in the horizontal coordinate system. Altitude is from the ground up, azimuth is clockwise from north.",

@@ -73,6 +73,12 @@ public class Environment {
 	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] moonLightColor;
+	// Color the night sky (zenith/horizon) is tinted toward as the moon rises.
+	// When unset, falls back to moonColor so the sky color matches the moon disk
+	// (current behavior). Set this to color the night sky independently of the moon.
+	@Nullable
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] nightSkyColor;
 	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
@@ -134,6 +140,11 @@ public class Environment {
 		// moon disk (moonColor) — preserving the original single-color behavior.
 		if (moonLightColor == null)
 			moonLightColor = moonColor;
+
+		// When no distinct night-sky color is given, the sky matches the moon
+		// disk (moonColor) — preserving the original single-color behavior.
+		if (nightSkyColor == null)
+			nightSkyColor = moonColor;
 
 		// Base water caustics on directional lighting by default
 		if (waterCausticsColor == null)

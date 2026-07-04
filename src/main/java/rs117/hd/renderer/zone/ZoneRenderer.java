@@ -958,12 +958,15 @@ public class ZoneRenderer implements Renderer {
 				}
 			}
 
-			// Tint night sky toward regional moon color as moon directional strength increases
+			// Tint night sky toward the night-sky color as moon directional
+			// strength increases. Defaults to moonColor unless the environment
+			// specifies a distinct nightSkyColor.
 			if (moonInfluence > 0) {
+				float[] nightSkyColor = environmentManager.currentNightSkyColor;
 				float skyTint = moonInfluence * 0.05f;
 				for (int i = 0; i < 3; i++) {
-					skyGradientColors[0][i] = skyGradientColors[0][i] * (1 - skyTint) + moonColor[i] * skyTint;
-					skyGradientColors[1][i] = skyGradientColors[1][i] * (1 - skyTint) + moonColor[i] * skyTint;
+					skyGradientColors[0][i] = skyGradientColors[0][i] * (1 - skyTint) + nightSkyColor[i] * skyTint;
+					skyGradientColors[1][i] = skyGradientColors[1][i] * (1 - skyTint) + nightSkyColor[i] * skyTint;
 				}
 				plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
 				plugin.uboGlobal.skyHorizonColor.set(skyGradientColors[1]);
