@@ -18019,7 +18019,8 @@
       "HOS_STOOL_03",
       "BR_STOOL",
       "LUC2_MOV_STOOL",
-      "PEST_STOOL"
+      "PEST_STOOL",
+      "MYQ6_STOOL01"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -32091,7 +32092,9 @@
     "objectIds": [
       "TILEKIT_BRICK01_DEFAULT01",
       "TILEKIT_BRICK01_DEFAULT02",
-      "TILEKIT_DRAKAN_BRICK01_DEFAULT01"
+      "TILEKIT_DRAKAN_BRICK01_DEFAULT01",
+      "TILEKIT_DRAKAN_BRICK01_DEFAULT02",
+      "TILEKIT_DRAKAN_BRICK01_DEFAULT03"
     ],
     "baseMaterial": "LASSAR_UNDERCITY_TILES",
     "hideInAreas": [
@@ -93741,7 +93744,7 @@
     ]
   },
   {
-    "description": "Castle Draken Basement Walls - Wooden",
+    "description": "Castle Draken - Wooden Racks with weapons",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -93773,6 +93776,36 @@
       "ARMOURY_DRAKAN01_RACK01_2X2_DARKMEYER",
       "ARMOURY_DRAKAN01_RACK02_2X2_DARKMEYER",
       "ARMOURY_DRAKAN01_RACK03_2X2_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Vampyrium - Wooden Racks with weapons",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Webs",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Metal",
+        "colors": [ "a == 255 && h == 0 && s == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "ARMOURY_DRAKAN01_RACK01_2X2",
+      "ARMOURY_DRAKAN01_RACK02_1X3",
+      "CASTLE_DRAKAN_ARMOURY_WEAPON_CASE"
     ]
   },
   {
@@ -94915,15 +94948,50 @@
     ]
   },
   {
+    "description": "Castle Draken - Vampyrium Display Case - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "s == 5",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 313,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "DISPLAY_CASE_SANGVESTI01_DEFAULT01"
+    ]
+  },
+  {
     "description": "Castle Draken - Vampyrium Chest",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "shiftLightness": 4,
     "uvScale": 0.7,
     "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 5",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 313,
+        "shiftLightness": 6
+      }
+    ],
     "objectIds": [
       "CHEST_SANGVESTI01_DEFAULT01",
-      "CHEST_SANGVESTI01_DEFAULT01_2X2"
+      "CHEST_SANGVESTI01_DEFAULT01_2X2",
+      "CASTLE_DRAKAN_GALLERY_CHEST",
+      "CASTLE_DRAKAN_KITCHEN_CHEST",
+      "CASTLE_DRAKAN_ARMOURY_CHEST"
     ]
   },
   {
@@ -95000,6 +95068,14 @@
     "shiftLightness": 5,
     "colorOverrides": [
       {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
         "description": "Frame",
         "colors": "s >= 4",
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
@@ -95010,6 +95086,9 @@
       }
     ],
     "objectIds": [
+      "TABLE_SANGVESTI01_DEFAULT01",
+      "TABLE_SANGVESTI01_CONTENTS02",
+      "TABLE_SANGVESTI01_CONTENTS03_OFFSET",
       "TABLE_SANGVESTI01_CONTENTS03"
     ]
   },
@@ -95114,7 +95193,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium table with cloth",
+    "description": "Castle Draken - Vampyrium table",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -95242,6 +95321,164 @@
     "uvOrientation": 512,
     "objectIds": [
       "SANGVESTI_GENERAL_STORE_DOOR"
+    ]
+  },
+  {
+    "description": "Castle Draken - Vampyrium - Paintings",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "CASTLE_DRAKAN_GALLERY_PLAQUE",
+      "PAINTING_DRAKAN01",
+      "PAINTING_DRAKAN02",
+      "PAINTING_DRAKAN03",
+      "PAINTING_DRAKAN04",
+      "PAINTING_DRAKAN05",
+      "CASTLE_DRAKAN_GALLERY_PAINTING_LOWERNIEL",
+      "CASTLE_DRAKAN_GALLERY_PAINTING_VANESCULA",
+      "CASTLE_DRAKAN_GALLERY_PAINTING_ARAMINDUS",
+      "CASTLE_DRAKAN_GALLERY_PAINTING_DRAYNOR",
+      "CASTLE_DRAKAN_GALLERY_PAINTING_RANIS"
+    ]
+  },
+  {
+    "description": "Vampyrium - Blood cabinet with bowl of blood and scrolls",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Bowl",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Scroll",
+        "colors": [ "h == 37" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Blood",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CABINET_DRAKAN01_DEFAULT01",
+      "CASTLE_DRAKAN_LARDER_CABINET"
+    ]
+  },
+  {
+    "description": "Vampyrium - Creature hanging over a bowl of blood",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Bowl",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Body",
+        "colors": [ "h >= 1" ],
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "description": "Blood",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CORPSE_DRAKAN01_STYMPHIKE01",
+      "CORPSE_DRAKAN01_STYMPHIKE02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Venator on a slab",
+    "baseMaterial": "GRAY_90",
+    "colorOverrides": [
+      {
+        "description": "Slab",
+        "colors": [ "h == 0 && s == 2" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Blood",
+        "colors": [ "s == 6" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512,
+        "shiftLightness": 9
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_KITCHEN_VENATOR_CLOSED",
+      "CASTLE_DRAKAN_KITCHEN_VENATOR_OPENED"
+    ]
+  },
+  {
+    "description": "Vampyrium - Castle Draken - Kitchen Sink",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Bowl",
+        "colors": [ "h >= 5" ],
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Blood",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_KITCHEN_SINK_FULL",
+      "CASTLE_DRAKAN_KITCHEN_SINK_EMPTY",
+      "CASTLE_DRAKAN_LARDER_SINK_UNPLUGGED",
+      "CASTLE_DRAKAN_LARDER_SINK_PLUGGED",
+      "CASTLE_DRAKAN_LARDER_SINK_COLLAPSED"
+    ]
+  },
+  {
+    "description": "Vampyrium - Castle Draken - Metal Grate",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 8,
+    "objectIds": [
+      "LASSAR_CHURCH_GRATE01_CORNER01"
     ]
   }
 ]
