@@ -709,13 +709,11 @@ public class SceneUploader implements AutoCloseable {
 		int faceCount = m.getFaceCount();
 		byte[] transparencies = m.getFaceTransparencies();
 		short[] faceTextures = m.getFaceTextures();
-		if (transparencies == null && faceTextures == null && !mightHaveTransparency) {
-			z.sizeO += faceCount;
-		} else {
-			z.sizeO += faceCount;
-			z.sizeA += faceCount;
-		}
+		byte modelTransparency = m.getTransparency();
+		z.sizeO += faceCount;
 		z.sizeF += faceCount;
+		if (transparencies != null || faceTextures != null || modelTransparency != 0 || mightHaveTransparency)
+			z.sizeA += faceCount;
 	}
 
 	private void uploadZoneRenderable(
@@ -1437,6 +1435,7 @@ public class SceneUploader implements AutoCloseable {
 		final byte[] bias = model.getFaceBias();
 		final byte[] transparencies = model.getFaceTransparencies();
 		final float modelHeight = model.getModelHeight();
+		final byte modelTransparency = model.getTransparency();
 
 		int orientSin = 0;
 		int orientCos = 0;
@@ -1513,7 +1512,7 @@ public class SceneUploader implements AutoCloseable {
 			Material material = baseMaterial;
 			ModelOverride faceOverride = modelOverride;
 
-			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
+			int transparency = readFaceTransparency(modelTransparency, transparencies, face);
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			boolean isTextured = textureId != -1;
 			if (isTextured) {
