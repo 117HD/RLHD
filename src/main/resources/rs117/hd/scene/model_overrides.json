@@ -95392,12 +95392,17 @@
       },
       {
         "description": "Frame",
-        "colors": "h == 0 && s >= 1",
+        "colors": "h == 0 && s != 2 && s > 1",
         "baseMaterial": "BARK",
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 313,
         "shiftLightness": 5
+      },
+      {
+        "description": "Blue Books",
+        "colors": "h > 38",
+        "baseMaterial": "GRUNGE_3"
       }
     ],
     "objectIds": [
@@ -95640,7 +95645,8 @@
       "ROOFKIT_SANGVESTI01_DEFAULT03",
       "ROOFKIT_SANGVESTI01_BROKEN01",
       "ROOFKIT_SANGVESTI01_BROKEN02",
-      "ROOFKIT_SANGVESTI01_BROKEN03"
+      "ROOFKIT_SANGVESTI01_BROKEN03",
+      "BRIDGEKIT_SANGVESTI01_ROOF02"
     ]
   },
   {
@@ -95691,6 +95697,7 @@
       "WALLKIT_SANGVESTI01_JUNCTION01",
       "WALLKIT_SANGVESTI01_JUNCTION01_M",
       "WALLKIT_SANGVESTI01_INTERIOR01",
+      "WALLKIT_SANGVESTI01_INTERIOR02",
       "WALLKIT_SANGVESTI01_INTERIOR01_DOORWAY01",
       "WALLKIT_SANGVESTI01_FENCE01",
       "WALLKIT_SANGVESTI01_FENCE01_BROKEN01",
@@ -95738,7 +95745,6 @@
       "WALLKIT_SANGVESTI01_FRAME01",
       "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN03_M",
       "WALLKIT_SANGVESTI01_WINDOW01_BROKEN02",
-      "BRIDGEKIT_SANGVESTI01_SIDE02",
       "WALLKIT_SANGVESTI01_DEFAULT01_RUBBLE01",
       "WALLKIT_SANGVESTI01_RUBBLE06",
       "WALLKIT_SANGVESTI01_WINDOW01_RUBBLE01",
@@ -95763,6 +95769,63 @@
         "uvScale": 0.45,
         "uvOrientation": 512
       }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - alt",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 1,
+    "objectIds": [
+      "BRIDGEKIT_SANGVESTI01_SIDE02",
+      "BRIDGEKIT_SANGVESTI01_CHAINS02",
+      "BRIDGEKIT_SANGVESTI01_STAKES02",
+      "BRIDGEKIT_SANGVESTI01_FLOOR01",
+      "BRIDGEKIT_SANGVESTI01_FLOOR02",
+      "BRIDGEKIT_SANGVESTI01_FLOOR03",
+      "BRIDGEKIT_SANGVESTI01_FLOOR04_M",
+      "BRIDGEKIT_SANGVESTI01_FLOOR04"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 6
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 2
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Bridge Arch",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 6,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "BRIDGEKIT_SANGVESTI01_ARCH01",
+      "BRIDGEKIT_SANGVESTI01_ARCH02"
     ]
   },
   {
@@ -96312,7 +96375,8 @@
         "uvType": "BOX",
         "uvScale": 0.25,
         "uvOrientation": 187,
-        "shiftLightness": 6
+        "shiftLightness": 4,
+        "shiftSaturation": -1
       }
     ],
     "objectIds": [
@@ -96347,7 +96411,7 @@
         "colors": "h == 39",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
-        "uvScale": 0.8,
+        "uvScale": 0.65,
         "shiftLightness": 2
       }
     ],
