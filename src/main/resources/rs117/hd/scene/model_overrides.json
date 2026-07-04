@@ -93536,7 +93536,7 @@
         "colors": [ "s == 0" ],
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.3
       },
       {
         "description": "Table",
@@ -93549,7 +93549,9 @@
     ],
     "objectIds": [
       "TABLE_DRAKAN01_LAB01",
-      "TABLE_DRAKAN01_LAB01_2X2"
+      "TABLE_DRAKAN01_LAB01_2X2",
+      "CASTLE_DRAKAN_LAB_REFINER",
+      "CASTLE_DRAKAN_LAB_ANALYSER"
     ]
   },
   {
@@ -94341,6 +94343,36 @@
     ]
   },
   {
+    "description": "Castle Draken - Wooden - Metallic - Castle exit open",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
+        "description": "Outside",
+        "colors": [ "h == 0 && s == 7" ],
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "description": "Metal",
+        "colors": [ "h == 0 && s == 0", "s == 4" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": -187
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_DOOR_TO_OUTSIDE_OPEN",
+      "CASTLE_DRAKAN_DOOR_TO_OUTSIDE_OPEN_NOOP"
+    ]
+  },
+  {
     "description": "Castle Draken - Wooden - Metallic - Golden door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -94403,9 +94435,7 @@
       "CASTLE_DRAKAN_DOOR_MOON_NEW",
       "CASTLE_DRAKAN_DOOR_MOON_NEW_M",
       "CASTLE_DRAKAN_DOOR_MOON_CRESCENT",
-      "CASTLE_DRAKAN_DOOR_MOON_CRESCENT_M",
-      "CASTLE_DRAKAN_DOOR_SOLID",
-      "CASTLE_DRAKAN_DOOR_SOLID_M"
+      "CASTLE_DRAKAN_DOOR_MOON_CRESCENT_M"
     ]
   },
   {
@@ -95631,7 +95661,8 @@
       "CASTLE_DRAKAN_KITCHEN_SINK_EMPTY",
       "CASTLE_DRAKAN_LARDER_SINK_UNPLUGGED",
       "CASTLE_DRAKAN_LARDER_SINK_PLUGGED",
-      "CASTLE_DRAKAN_LARDER_SINK_COLLAPSED"
+      "CASTLE_DRAKAN_LARDER_SINK_COLLAPSED",
+      "CASTLE_DRAKAN_LAB_BASIN"
     ]
   },
   {
@@ -95802,6 +95833,85 @@
     "objectIds": [
       "COFFIN_SANGVESTI01_BROKEN01",
       "COFFIN_SANGVESTI01_OPEN01"
+    ]
+  },
+  {
+    "description": "Vampyrium Castle Drakens coffin - Needs UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "s == 3",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 404,
+        "shiftLightness": 8
+      },
+      {
+        "description": "Metal",
+        "colors": [ "h == 7 && s == 7" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "COFFIN_DRAKAN01_LOWERNIEL01"
+    ]
+  },
+  {
+    "description": "Castle Draken - Wooden - Metallic - Solid wooden door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
+        "description": "Metal",
+        "colors": [ "s == 4" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": -187,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_DOOR_SOLID",
+      "CASTLE_DRAKAN_DOOR_SOLID_M"
+    ]
+  },
+  {
+    "description": "Vampyrium - Blood stockpile",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Guage",
+        "colors": [ "s > 0" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_BLOOD_STOCKPILE",
+      "CASTLE_DRAKAN_BLOOD_STOCKPILE_BROKEN"
     ]
   }
 ]
