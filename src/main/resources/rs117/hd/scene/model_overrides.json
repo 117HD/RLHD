@@ -5693,6 +5693,13 @@
       "FAI_VARROCK_STONE_SHORT_WALL_CUT_MIRROR",
       "DRYSTONEWALL_PILE",
       "POH_FENCING3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 17",
+        "baseMaterial": "NONE",
+        "inheritTileColorType": "UNDERLAY"
+      }
     ]
   },
   {

@@ -1568,10 +1568,10 @@ public class SceneUploader implements AutoCloseable {
 				color1 = color2 = color3 = 90;
 			} else {
 				// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-				if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
+				if (plugin.configHideFakeShadows && faceOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
 					continue;
 
-				if (modelOverride.inheritTileColorType != InheritTileColorType.NONE) {
+				if (faceOverride.inheritTileColorType != InheritTileColorType.NONE) {
 					final Scene scene = ctx.scene;
 					SceneTileModel tileModel = tile.getSceneTileModel();
 					SceneTilePaint tilePaint = tile.getSceneTilePaint();
@@ -1599,7 +1599,7 @@ public class SceneUploader implements AutoCloseable {
 							for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
 								boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, i);
 								// Use underlay if the tile does not have an overlay, useful for rocks in cave corners.
-								if (modelOverride.inheritTileColorType == InheritTileColorType.UNDERLAY
+								if (faceOverride.inheritTileColorType == InheritTileColorType.UNDERLAY
 									|| tileModel.getModelOverlay() == 0) {
 									// pulling the color from UNDERLAY is more desirable for green grass tiles
 									// OVERLAY pulls in path color which is not desirable for grass next to paths
@@ -1607,7 +1607,7 @@ public class SceneUploader implements AutoCloseable {
 										faceColorIndex = i;
 										break;
 									}
-								} else if (modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY) {
+								} else if (faceOverride.inheritTileColorType == InheritTileColorType.OVERLAY) {
 									if (isOverlay) {
 										// OVERLAY used in dirt/path/house tile color blend better with rubbles/rocks
 										faceColorIndex = i;
@@ -1620,7 +1620,7 @@ public class SceneUploader implements AutoCloseable {
 								int color = tileModel.getTriangleColorA()[faceColorIndex];
 								if (color != HIDDEN_HSL) {
 									var override = ctx.getTileOverride(tileZ, tileExX, tileExY,
-										modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
+										faceOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
 										TILE_OVERRIDE_OVERLAY : TILE_OVERRIDE_UNDERLAY);
 
 									color = override.modifyColor(color);
@@ -1634,9 +1634,9 @@ public class SceneUploader implements AutoCloseable {
 					}
 				}
 
-				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
+				if (plugin.configLegacyTzHaarReskin && faceOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
 					ProceduralGenerator.recolorTzHaar(
-						modelOverride,
+						faceOverride,
 						model,
 						face,
 						color1,
@@ -1701,7 +1701,7 @@ public class SceneUploader implements AutoCloseable {
 				);
 			}
 
-			if (plugin.configUndoVanillaShading && modelOverride.undoVanillaShading && !keepShading) {
+			if (plugin.configUndoVanillaShading && faceOverride.undoVanillaShading && !keepShading) {
 				color1 = undoVanillaShading(color1, plugin.configLegacyGreyColors, modelNormals[0], modelNormals[1], modelNormals[2]);
 				color2 = undoVanillaShading(color2, plugin.configLegacyGreyColors, modelNormals[3], modelNormals[4], modelNormals[5]);
 				color3 = undoVanillaShading(color3, plugin.configLegacyGreyColors, modelNormals[6], modelNormals[7], modelNormals[8]);
