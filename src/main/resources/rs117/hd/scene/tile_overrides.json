@@ -10789,7 +10789,7 @@
     "name": "Vampyrium - Sugadinti Hideout - underlay",
     "area": "VAMPYRIUM_SUGADINTI_HIDEOUT",
     "uvScale": 2,
-    "shiftLightness": 4,
+    "shiftLightness": 5,
     "underlayIds": [
       5,
       6,
@@ -10804,7 +10804,7 @@
     "area": "VAMPYRIUM_SUGADINTI_HIDEOUT",
     "uvOrientation": 256,
     "uvScale": 1.5,
-    "shiftLightness": 1,
+    "shiftLightness": 2,
     "overlayIds": [
       634
     ],
