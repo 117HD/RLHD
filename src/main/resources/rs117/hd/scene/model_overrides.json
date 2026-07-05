@@ -95259,7 +95259,8 @@
     ],
     "objectIds": [
       "CASTLE_DRAKAN_SPIRAL_STAIRS_UP",
-      "CASTLE_DRAKAN_SPIRAL_STAIRS_DOWN"
+      "CASTLE_DRAKAN_SPIRAL_STAIRS_DOWN",
+      "MYQ6_SUGADINTI_HIDEOUT_STAIRS"
     ]
   },
   {
@@ -97644,7 +97645,7 @@
       },
       {
         "description": "Grout",
-        "colors": "s == 1 && l < 8",
+        "colors": "s == 1 && l < 6",
         "baseMaterial": "GRAVEL",
         "shiftLightness": 3,
         "uvType": "BOX",
@@ -97666,40 +97667,7 @@
       "WALLKIT_JOVKAI01_DOOR01_R",
       "WALLKIT_JOVKAI01_DOOR01_L",
       "WALLKIT_JOVKAI01_DOOR01_MIDDLE",
-      "WALLKIT_JOVKAI01_WINDOW02"
-    ]
-  },
-  {
-    "description": "Vampyrium - Sugadinti Hideout - Walls - Darker",
-    "baseMaterial": "STONE_NORMALED",
-    "shiftLightness": 2,
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 256,
-    "colorOverrides": [
-      {
-        "description": "Bottom trim",
-        "colors": "s == 2",
-        "baseMaterial": "STONE_NORMALED",
-        "uvType": "BOX",
-        "uvOrientation": -256
-      },
-      {
-        "description": "Grout",
-        "colors": "s == 1 && l < 6",
-        "baseMaterial": "GRAVEL",
-        "shiftLightness": 3,
-        "uvType": "BOX",
-        "uvScale": 0.5,
-        "uvOrientation": -256
-      },
-      {
-        "description": "Shadow",
-        "colors": "h == 0 && s == 0 && l < 3",
-        "baseMaterial": "BLACK"
-      }
-    ],
-    "objectIds": [
+      "WALLKIT_JOVKAI01_WINDOW02",
       "WALLKIT_JOVKAI01_JUNCTION02",
       "WALLKIT_JOVKAI01_JUNCTION03",
       "WALLKIT_JOVKAI01_JUNCTION04"
