@@ -49693,5 +49693,42 @@
       "CASTLE_DRAKAN_LOWERNIEL_FIREPLACE_LIT",
       "CASTLE_DRAKAN_FIRE"
     ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyrium - Sugadinti Hideout Torches",
+    "offset": [ -50.0, 298.0, 0.0 ],
+    "radius": 600,
+    "strength": 7.5,
+    "color": [
+      70,
+      60,
+      225
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_TORCH01_A",
+      "MYQ6_TORCH01_B",
+      "MYQ6_TORCH01_C",
+      "MYQ6_TORCH01_D"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyrium - Sugadinti Hideout - Crucible Fire",
+    "offset": [ -0.0, 7.0, 0.0 ],
+    "radius": 400,
+    "strength": 18.5,
+    "color": [
+      70,
+      60,
+      225
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_FIRE01_CRUCIBLE01"
+    ]
   }
 ]
