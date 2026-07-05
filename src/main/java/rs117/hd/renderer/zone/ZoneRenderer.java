@@ -987,7 +987,7 @@ public class ZoneRenderer implements Renderer {
 					sceneCmd.DepthMask(true);
 					sceneCmd.ColorMask(false, false, false, false);
 
-					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
 
 					// Restore Color Writes
 					sceneCmd.ColorMask(true, true, true, true);
