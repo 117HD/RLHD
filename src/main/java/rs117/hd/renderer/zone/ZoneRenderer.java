@@ -769,10 +769,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthFunc.set(GL_LEQUAL);
 		renderState.ido.set(indirectDrawCmds.id);
-
-		CommandBuffer.SKIP_DEPTH_MASKING = true;
 		directionalCmd.execute(renderState);
-		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
 		glBindVertexArray(0);
 
@@ -979,8 +976,22 @@ public class ZoneRenderer implements Renderer {
 					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
 				}
 
-				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
+				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+					// Write Color without Depth Writes
+					sceneCmd.DepthMask(false);
+					sceneCmd.ColorMask(true, true, true, true);
+
 					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+
+					// Write Depth without Color
+					sceneCmd.DepthMask(true);
+					sceneCmd.ColorMask(false, false, false, false);
+
+					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+
+					// Restore Color Writes
+					sceneCmd.ColorMask(true, true, true, true);
+				}
 			}
 			frameTimer.end(Timer.DRAW_ZONE_ALPHA);
 

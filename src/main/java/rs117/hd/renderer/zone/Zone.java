@@ -736,8 +736,6 @@ public class Zone implements Destructible {
 
 		drawIdx = 0;
 
-		cmd.DepthMask(false);
-
 		if (!isShadowPass)
 			sortedAlphaFacesUpload.waitForCompletion();
 
@@ -801,8 +799,6 @@ public class Zone implements Destructible {
 		}
 
 		flush(cmd);
-
-		cmd.DepthMask(true);
 	}
 
 	private void flush(CommandBuffer cmd) {
