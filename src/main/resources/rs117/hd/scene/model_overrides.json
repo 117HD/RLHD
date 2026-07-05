@@ -95642,8 +95642,10 @@
       {
         "description": "Grass - Temp hide till better solution",
         "colors": "s == 7",
-        "hide": true,
-        "baseMaterial": "NONE"
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": -2,
+        "castShadows": false
       }
     ]
   },
@@ -95658,17 +95660,16 @@
     "objectIds": [
       "DARKWOOD_TREE_DARK01",
       "DARKWOOD_TREE_DARK02",
-      "DARKWOOD_TREE_DARK03",
-      "DARKWOOD_TREE_DARKER01",
-      "DARKWOOD_TREE_DARKER02",
-      "DARKWOOD_TREE_DARKER03"
+      "DARKWOOD_TREE_DARK03"
     ],
     "colorOverrides": [
       {
         "description": "Grass - Temp hide till better solution",
         "colors": "s == 7",
-        "hide": true,
-        "baseMaterial": "NONE"
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": -2,
+        "castShadows": false
       }
     ]
   },
@@ -95688,8 +95689,11 @@
       {
         "description": "Grass - Temp hide till better solution",
         "colors": "s == 7",
-        "hide": true,
-        "baseMaterial": "NONE"
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": -3,
+        "shiftLightness": -5,
+        "castShadows": false
       }
     ]
   },
@@ -96968,7 +96972,8 @@
     ],
     "objectIds": [
       "PLANT_VAMPYRIUM_PLANT01",
-      "PLANT_VAMPYRIUM_PLANT02"
+      "PLANT_VAMPYRIUM_PLANT02",
+      "PLANT_VAMPYRIUM_PLANT05"
     ]
   },
   {
@@ -97317,6 +97322,65 @@
     "objectIds": [
       "PLANT_VAMPYRIUM_THORNS06",
       "PLANT_VAMPYRIUM_THORNS07"
+    ]
+  },
+  {
+    "description": "Vampyrium - Thrones",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "shiftLightness": 3,
+    "uvOrientation": 186,
+    "objectIds": [
+      "SOTFA_FOREST_CORPSE01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Thrones",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "shiftLightness": 8,
+    "uvOrientation": 186,
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "SOTFA_FOREST_SLEEPING_BAG"
+    ]
+  },
+  {
+    "description": "Vampyrium - Thrones",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "shiftLightness": 5,
+    "uvOrientation": 186,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": -4,
+        "castShadows": false
+      },
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SOTFA_FOREST_SIGNPOST"
     ]
   }
 ]
