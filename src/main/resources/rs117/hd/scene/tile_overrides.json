@@ -1,15 +1,5 @@
 [
   {
-    "name": "GOTR_BACKFILLING_FIX",
-    "area": "GOTR_BACKFILLING_FIX",
-    "doubleSidedFaces": true,
-    "groundMaterial": "BLACK",
-    "maxLightness": 0,
-    "underlayIds": [
-     72
-    ]
-  },
-  {
     "name": "DEFAULT_GRASS",
     "groundMaterial": "OVERWORLD_GRASS_1"
   },
@@ -5208,6 +5198,16 @@
     "area": "HUNTER_GUILD",
     "overlayIds": [ 181 ],
     "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "GOTR_PORTAL_BACKFILLING_FIX",
+    "area": "GOTR_PORTAL_BACKFILLING_FIX",
+    "doubleSidedFaces": true,
+    "setLightness": 0,
+    "groundMaterial": "BLACK",
+    "underlayIds": [
+      72
+    ]
   },
   {
     "name": "TEMPLE_OF_THE_EYE_ABYSSAL_FLOOR",
