@@ -97283,9 +97283,9 @@
     "description": "Vampyrium - Silver Leafy plant with red stalk",
     "baseMaterial": "PLANT_GRUNGE_2",
     "uvType": "BOX",
-    "uvScale": 0.45,
+    "uvScale": 0.3,
     "uvOrientation": 404,
-    "shiftLightness": 4,
+    "shiftLightness": 2,
     "colorOverrides": [
       {
         "description": "Leaf",
@@ -97293,7 +97293,7 @@
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
         "uvScale": 0.25,
-        "shiftLightness": 6,
+        "shiftLightness": 20,
         "uvOrientationX": 512
       }
     ],
@@ -97371,12 +97371,12 @@
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 404,
-    "shiftLightness": 2,
+    "shiftLightness": -2,
     "colorOverrides": [
       {
         "description": "Leaf",
-        "colors": "h == 0 && s == 0",
-        "baseMaterial": "LEAF_VEINS",
+        "colors": "h == 48",
+        "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.25,
         "shiftLightness": 5,
@@ -97791,6 +97791,7 @@
       "PLANT_VAMPYRIUM_THORNS03_DARKER01",
       "PLANT_VAMPYRIUM_THORNS03",
       "PLANT_VAMPYRIUM_THORNS04_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS04",
       "PLANT_VAMPYRIUM_THORNS05",
       "PLANT_VAMPYRIUM_THORNS05_DARKER01",
       "PLANT_VAMPYRIUM_THORNS06",
