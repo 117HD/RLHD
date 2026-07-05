@@ -428,6 +428,7 @@ public class Zone implements Destructible {
 		int radius;
 		int[] packedFaces;
 		int[] sortedFaces;
+		int[] backFaceBitSet;
 		int sortedFacesLen;
 
 		int dist;
@@ -561,7 +562,11 @@ public class Zone implements Destructible {
 		int packedFaceCount = (endpos - startpos) / ((3 * VERT_SIZE) >> 2);
 		if(modelOverride.doubleSidedFaces)
 			packedFaceCount *= 2;
+
 		final int[] packedFaces = PooledArrayType.INT.borrow(packedFaceCount);
+		final int[] backFaceBitSet = modelOverride.doubleSidedFaces ? PooledArrayType.INT.borrow(packedFaceCount) : null;
+		if(backFaceBitSet != null)
+			Arrays.fill(backFaceBitSet, 0);
 
 		int radius = 0;
 		char bufferIdx = 0;
@@ -611,19 +616,21 @@ public class Zone implements Destructible {
 			if (!hasAlpha)
 				continue;
 
-			int fx = (((int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]) / 3) - cx) >> shift;
-			int fy = (((int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]) / 3) - cy) >> shift;
-			int fz = (((int) (vertexZ[indices1[f]] + vertexZ[indices2[f]] + vertexZ[indices3[f]]) / 3) - cz) >> shift;
+			final int fx = (((int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]) / 3) - cx) >> shift;
+			final int fy = (((int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]) / 3) - cy) >> shift;
+			final int fz = (((int) (vertexZ[indices1[f]] + vertexZ[indices2[f]] + vertexZ[indices3[f]]) / 3) - cz) >> shift;
+
+			final int packed = ((fx & ((1 << 11) - 1)) << 21)
+			                   | ((fy & ((1 << 10) - 1)) << 11)
+			                   | (fz & ((1 << 11) - 1));
 
 			radius = Math.max(radius, fx * fx + fy * fy + fz * fz);
-
-			packedFaces[bufferIdx] = ((fx & ((1 << 11) - 1)) << 21)
-									 | ((fy & ((1 << 10) - 1)) << 11)
-									 | (fz & ((1 << 11) - 1));
+			packedFaces[bufferIdx] = packed;
 			bufferIdx++;
 
-			if(faceOverride.doubleSidedFaces) {
-				packedFaces[bufferIdx] = packedFaces[bufferIdx - 1];
+			if (backFaceBitSet != null && faceOverride.doubleSidedFaces) {
+				packedFaces[bufferIdx] = packed;
+				backFaceBitSet[bufferIdx >> 5] |= 1 << (bufferIdx & 31);
 				bufferIdx++;
 			}
 		}
@@ -635,10 +642,12 @@ public class Zone implements Destructible {
 		m.radius = 2 + (int) Math.sqrt(radius);
 		m.sortedFaces = new int[bufferIdx * 3];
 		m.packedFaces = Arrays.copyOf(packedFaces, bufferIdx);
+		m.backFaceBitSet = backFaceBitSet != null ? Arrays.copyOf(backFaceBitSet, ceil(bufferIdx / 32.0f)) : null;
 
 		alphaModels.add(m);
 
-		PooledArrayType.INT.release( packedFaces);
+		PooledArrayType.INT.release(packedFaces);
+		PooledArrayType.INT.release(backFaceBitSet);
 	}
 
 	synchronized AlphaModel requestTempAlphaModel(ModelOverride modelOverride, int level, int x, int y, int z) {
@@ -665,6 +674,7 @@ public class Zone implements Destructible {
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
 				alphaModels.remove(i);
 				m.packedFaces = null;
+				m.backFaceBitSet = null;
 				m.sortedFaces = null;
 				ALPHA_MODEL_POOL.recycle(m);
 			}
@@ -912,6 +922,7 @@ public class Zone implements Destructible {
 				m2.zofz = (byte) (closestZoneZ - zz);
 
 				m2.packedFaces = m.packedFaces;
+				m2.backFaceBitSet = m.backFaceBitSet;
 				m2.radius = m.radius;
 				m2.asyncSortIdx = m.asyncSortIdx;
 				m2.sortedFaces = m.sortedFaces;

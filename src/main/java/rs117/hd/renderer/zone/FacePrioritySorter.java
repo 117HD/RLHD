@@ -206,7 +206,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		int pitchCos, int pitchSin
 	) {
 		final int radius = m.radius;
-		final int diameter = 1 + radius * 2;
+		final int diameter = 1 + (radius * (m.backFaceBitSet != null ? 2 : 1)) * 2;
 		if (diameter >= MAX_DIAMETER)
 			return;
 
@@ -214,6 +214,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		ensureCapacity(diameter, faceCount);
 
 		final int[] packedFaces = m.packedFaces;
+		final int[] backFaceBitSet = m.backFaceBitSet;
 		final int[] sortedFaces = m.sortedFaces;
 		final int[] zsortHead = this.zsortHead;
 		final int[] zsortTail = this.zsortTail;
@@ -222,6 +223,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
 
+		int backfaceWord = 0;
 		int minFz = diameter, maxFz = 0;
 		for (int i = 0; i < faceCount; ++i) {
 			final int packed = packedFaces[i];
@@ -233,6 +235,15 @@ public final class FacePrioritySorter implements AutoCloseable {
 			// Very little of this can actually be pre-computed without discarding that precision.
 			int fz = (z * yawCos - x * yawSin) >> 16;
 			fz = ((y * pitchSin + fz * pitchCos) >> 16) + radius;
+
+			if (backFaceBitSet != null) {
+				int bitIdx = i & 31;
+				if (bitIdx == 0)
+					backfaceWord = backFaceBitSet[i >> 5];
+
+				if ((backfaceWord & (1 << bitIdx)) != 0)
+					fz += radius * 2;
+			}
 
 			final int tailFaceIdx = zsortTail[fz];
 			if (tailFaceIdx == -1) {
