@@ -26,7 +26,6 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.io.IOException;
-import java.nio.FloatBuffer;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Set;
@@ -39,7 +38,6 @@ import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
@@ -166,6 +164,9 @@ public class ZoneRenderer implements Renderer {
 	private StarShaderProgram starProgram;
 
 	@Inject
+	private StarField starField;
+
+	@Inject
 	private JobSystem jobSystem;
 
 	// Baked nebula cubemap. The nebula is a static function of view direction, so
@@ -175,12 +176,6 @@ public class ZoneRenderer implements Renderer {
 	private int texNebulaCubemap = 0;
 	private int fboNebulaBake = 0;
 	private boolean nebulaBaked = false;
-
-	// Star point sprites. A fixed star list is generated once and drawn as
-	// GL_POINTS, so cost scales with star count rather than screen pixels.
-	private int vaoStars = 0;
-	private int vboStars = 0;
-	private int starCount = 0;
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
@@ -193,8 +188,6 @@ public class ZoneRenderer implements Renderer {
 	private float[] calculatedFogColorSrgb = null;
 	// Day/Night Cycle - sky gradient enabled flag
 	private boolean skyGradientEnabled = false;
-
-	private final int[] worldPos = new int[3];
 
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
@@ -379,41 +372,6 @@ public class ZoneRenderer implements Renderer {
 		nebulaBaked = true;
 	}
 
-	private void buildStarBuffer() {
-		if (vaoStars != 0)
-			return;
-
-		var stars = new StarField();
-		starCount = stars.starCount;
-
-		FloatBuffer data = BufferUtils.createFloatBuffer(stars.vertexData.length);
-		data.put(stars.vertexData).flip();
-
-		vaoStars = glGenVertexArrays();
-		vboStars = glGenBuffers();
-		glBindVertexArray(vaoStars);
-		glBindBuffer(GL_ARRAY_BUFFER, vboStars);
-		glBufferData(GL_ARRAY_BUFFER, data, GL_STATIC_DRAW);
-
-		int stride = StarField.FLOATS_PER_STAR * Float.BYTES;
-		// location 0: dir.xyz, 1: size, 2: brightness, 3: color.rgb, 4: speed
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, stride, 0L);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(1, 1, GL_FLOAT, false, stride, 3L * Float.BYTES);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(2, 1, GL_FLOAT, false, stride, 4L * Float.BYTES);
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(3, 3, GL_FLOAT, false, stride, 5L * Float.BYTES);
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(4, 1, GL_FLOAT, false, stride, 8L * Float.BYTES);
-		glEnableVertexAttribArray(4);
-
-		glBindVertexArray(0);
-		// Raw VAO binds above bypass renderState; invalidate its cache.
-		renderState.vao.reset();
-		skyboxCmd.reset();
-	}
-
 	private void buildSkyboxCmd() {
 		if(!skyboxCmd.isEmpty())
 			return;
@@ -428,14 +386,14 @@ public class ZoneRenderer implements Renderer {
 
 		// Star point sprites, drawn additively over the sky. Cost scales with
 		// star count rather than screen pixels (unlike the old per-pixel field).
-		if (starProgram.isValid() && vaoStars != 0) {
+		if (starProgram.isValid() && starField.getVaoStars() != 0) {
 			skyboxCmd.SetShader(starProgram);
 			skyboxCmd.Enable(GL_PROGRAM_POINT_SIZE);
 			skyboxCmd.Enable(GL_POINT_SPRITE);
 			skyboxCmd.BlendFunc(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
 
-			skyboxCmd.BindVertexArray(vaoStars);
-			skyboxCmd.DrawArrays(GL_POINTS, 0, starCount);
+			skyboxCmd.BindVertexArray(starField.getVaoStars());
+			skyboxCmd.DrawArrays(GL_POINTS, 0, starField.starCount);
 
 			skyboxCmd.BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 			skyboxCmd.Disable(GL_POINT_SPRITE);
@@ -455,7 +413,8 @@ public class ZoneRenderer implements Renderer {
 		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
 		indirectDrawCmdsStaging = new GpuIntBuffer();
 
-		buildStarBuffer();
+		starField.initialize();
+		skyboxCmd.reset();
 	}
 
 	private void destroyBuffers() {
@@ -485,15 +444,7 @@ public class ZoneRenderer implements Renderer {
 		}
 		nebulaBaked = false;
 
-		if (vboStars != 0) {
-			glDeleteBuffers(vboStars);
-			vboStars = 0;
-		}
-		if (vaoStars != 0) {
-			glDeleteVertexArrays(vaoStars);
-			vaoStars = 0;
-		}
-		starCount = 0;
+		starField.destroy();
 	}
 
 	@Override
