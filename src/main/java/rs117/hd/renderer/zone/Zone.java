@@ -27,6 +27,7 @@ import rs117.hd.utils.buffer.GLTextureBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.IntHashSet;
+import rs117.hd.utils.collections.PooledArrayType;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -557,7 +558,11 @@ public class Zone implements Destructible {
 			shift++;
 		}
 
-		int[] packedFaces = m.packedFaces = new int[(endpos - startpos) / ((3 * VERT_SIZE) >> 2)];
+		int packedFaceCount = (endpos - startpos) / ((3 * VERT_SIZE) >> 2);
+		if(modelOverride.doubleSidedFaces)
+			packedFaceCount *= 2;
+		final int[] packedFaces = PooledArrayType.INT.borrow(packedFaceCount);
+
 		int radius = 0;
 		char bufferIdx = 0;
 		for (int f = 0; f < faceCount; ++f) {
@@ -616,16 +621,24 @@ public class Zone implements Destructible {
 									 | ((fy & ((1 << 10) - 1)) << 11)
 									 | (fz & ((1 << 11) - 1));
 			bufferIdx++;
-		}
 
-		m.radius = 2 + (int) Math.sqrt(radius);
-		m.sortedFaces = new int[bufferIdx * 3];
+			if(faceOverride.doubleSidedFaces) {
+				packedFaces[bufferIdx] = packedFaces[bufferIdx - 1];
+				bufferIdx++;
+			}
+		}
 
 		assert packedFaces.length > 0;
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
+		m.radius = 2 + (int) Math.sqrt(radius);
+		m.sortedFaces = new int[bufferIdx * 3];
+		m.packedFaces = Arrays.copyOf(packedFaces, bufferIdx);
+
 		alphaModels.add(m);
+
+		PooledArrayType.INT.release( packedFaces);
 	}
 
 	synchronized AlphaModel requestTempAlphaModel(ModelOverride modelOverride, int level, int x, int y, int z) {
