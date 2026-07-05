@@ -2455,6 +2455,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "GOTR_BACKFILLING_FIX",
+    "aabbs": [
+      [ 3589, 9528, 3651, 9535 ]
+    ]
+  },
+  {
     "name": "KHAZARD_BATTLEFIELD_COBBLE_OUTSIDE",
     "aabbs": [
       [ 2507, 3254, 2512, 3259 ],

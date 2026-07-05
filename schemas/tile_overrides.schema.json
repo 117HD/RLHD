@@ -49,6 +49,10 @@
         "type": "boolean",
         "description": "Blending is applied slightly differently for overlays and underlays. Defaults to false."
       },
+      "doubleSidedFaces": {
+        "type": "boolean",
+        "description": "Whether the faces should be double sided. Defaults to false."
+      },
       "forced": {
         "type": "boolean",
         "description": "Force the tile to render even if it has the special hidden color code. Defaults to false."

@@ -1,5 +1,15 @@
 [
   {
+    "name": "GOTR_BACKFILLING_FIX",
+    "area": "GOTR_BACKFILLING_FIX",
+    "doubleSidedFaces": true,
+    "groundMaterial": "BLACK",
+    "maxLightness": 0,
+    "underlayIds": [
+     72
+    ]
+  },
+  {
     "name": "DEFAULT_GRASS",
     "groundMaterial": "OVERWORLD_GRASS_1"
   },

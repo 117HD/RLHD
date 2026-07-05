@@ -49,6 +49,7 @@ public class TileOverride {
 	public boolean blendedAsOpposite;
 	public boolean forced;
 	public boolean depthTested;
+	public boolean doubleSidedFaces;
 	private int setHue = -1;
 	private int shiftHue;
 	private int minHue;

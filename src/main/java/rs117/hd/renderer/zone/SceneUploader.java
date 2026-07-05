@@ -402,6 +402,9 @@ public class SceneUploader implements AutoCloseable {
 				z.sizeF += 2;
 			} else {
 				z.onlyWater = false;
+
+				if(override.doubleSidedFaces)
+					z.sizeO += 2;
 			}
 		}
 
@@ -717,10 +720,12 @@ public class SceneUploader implements AutoCloseable {
 		byte[] transparencies = m.getFaceTransparencies();
 		short[] faceTextures = m.getFaceTextures();
 		byte modelTransparency = m.getTransparency();
-		if(modelOverride.mightBeDoubleSided)
-			faceCount *= 2;
-		z.sizeO += faceCount;
 		z.sizeF += faceCount;
+
+		if(modelOverride.mightBeDoubleSided)
+			faceCount *= 2; // sizeF remains the same, since the double sided faces will reuse the textureFaceIdx
+
+		z.sizeO += faceCount;
 		if (transparencies != null || faceTextures != null || modelTransparency != 0 || mightHaveTransparency)
 			z.sizeA += faceCount;
 	}
@@ -1081,6 +1086,29 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx
 		);
 
+		if(override.doubleSidedFaces) {
+			vb.putStaticVertex(
+				lx1, seHeight, lz1,
+				uvx + uvsin, uvy - uvcos, 0,
+				-seNormals[0], -seNormals[1], -seNormals[2],
+				texturedFaceIdx
+			);
+
+			vb.putStaticVertex(
+				lx3, nwHeight, lz3,
+				uvx - uvcos, uvy - uvsin, 0,
+				-nwNormals[0], -nwNormals[1], -nwNormals[2],
+				texturedFaceIdx
+			);
+
+			vb.putStaticVertex(
+				lx2, neHeight, lz2,
+				uvx, uvy, 0,
+				-neNormals[0], -neNormals[1], -neNormals[2],
+				texturedFaceIdx
+			);
+		}
+
 		texturedFaceIdx = tb.putFace(
 			swColor, seColor, nwColor,
 			swMaterialData, seMaterialData, nwMaterialData,
@@ -1107,6 +1135,30 @@ public class SceneUploader implements AutoCloseable {
 			nwNormals[0], nwNormals[1], nwNormals[2],
 			texturedFaceIdx
 		);
+
+		if(override.doubleSidedFaces) {
+			vb.putStaticVertex(
+				lx3, nwHeight, lz3,
+				uvx - uvcos, uvy - uvsin, 0,
+				-nwNormals[0], -nwNormals[1], -nwNormals[2],
+				texturedFaceIdx
+			);
+
+			vb.putStaticVertex(
+				lx1, seHeight, lz1,
+				uvx + uvsin, uvy - uvcos, 0,
+				-seNormals[0], -seNormals[1], -seNormals[2],
+				texturedFaceIdx
+			);
+
+			vb.putStaticVertex(
+				lx0, swHeight, lz0,
+				uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
+				-swNormals[0], -swNormals[1], -swNormals[2],
+				texturedFaceIdx
+			);
+		}
+
 
 		writeCache.release();
 	}
