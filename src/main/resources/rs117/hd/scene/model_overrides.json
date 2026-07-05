@@ -93523,7 +93523,8 @@
       "CRATE_SANGVESTI01_DEFAULT01",
       "CRATE_SANGVESTI01_STACKED01",
       "CASTLE_DRAKAN_SEARCHABLE_CRATE",
-      "CASTLE_DRAKAN_TINDERBOX_CRATE"
+      "CASTLE_DRAKAN_TINDERBOX_CRATE",
+      "CRATE_SANGVESTI01_EMPTY01_SMALL01"
     ]
   },
   {
@@ -94346,7 +94347,10 @@
     "uvOrientation": 404,
     "objectIds": [
       "MYQ6_SPIDERWEB02",
-      "MYQ6_SPIDERWEB02_A"
+      "MYQ6_SPIDERWEB02_A",
+      "MYQ6_SPIDERWEB02_B",
+      "MYQ6_SPIDERWEB02_C",
+      "MYQ6_SPIDERWEB02_D"
     ]
   },
   {
@@ -94966,20 +94970,23 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 404,
+    "shiftLightness": 4,
     "colorOverrides": [
       {
-        "description": "Wood",
+        "description": "Skull",
         "colors": "h == 5 && s == 1",
         "baseMaterial": "BONE",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.6,
+        "shiftLightness": -1
       }
     ],
     "objectIds": [
       "BANNER_SANGVESTI02_DRAKAN01",
       "CASTLE_DRAKAN_LOWERNIEL_BANNER_N",
       "CASTLE_DRAKAN_LOWERNIEL_BANNER_S",
-      "CASTLE_DRAKAN_LOWERNIEL_BANNER_W"
+      "CASTLE_DRAKAN_LOWERNIEL_BANNER_W",
+      "MYQ6_BANNER01"
     ]
   },
   {
@@ -95412,16 +95419,22 @@
       "CASTLE_DRAKAN_ARMOURY_CHEST",
       "CASTLE_DRAKAN_DEPOSIT_CHEST",
       "CASTLE_DRAKAN_LOWERNIEL_CHEST",
-      "SANGVESTI_CHAPEL_CHEST"
+      "SANGVESTI_CHAPEL_CHEST",
+      "MYQ6_SUGADINTI_HIDEOUT_TABLET_CHEST",
+      "MYQ6_SUGADINTI_HIDEOUT_DIAMOND_CHEST"
     ]
   },
   {
     "description": "Castle Draken - Vampyrium Wall plank",
-    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
+    "shiftLightness": 4,
     "objectIds": [
-      "MYQ6_PLANKS01A"
+      "MYQ6_PLANKS01A",
+      "MYQ6_PLANKS02A",
+      "MYQ6_PLANKS03_A",
+      "MYQ6_PLANKS02B"
     ]
   },
   {
@@ -97591,7 +97604,7 @@
     ]
   },
   {
-    "description": "ROCK_CAVE_ENTRANCES",
+    "description": "Vamprium - Webbed up cave",
     "baseMaterial": "ROCK_2",
     "shiftLightness": 2,
     "uvType": "BOX",
@@ -97612,6 +97625,84 @@
     ],
     "objectIds": [
       "SOTFA_NYLOCAS_CAVE_ENTRY"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Bottom trim",
+        "colors": "s == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 1 && l < 8",
+        "baseMaterial": "GRAVEL",
+        "shiftLightness": 3,
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_JOVKAI01_INTERIOR01",
+      "WALLKIT_JOVKAI01_INTERIOR02",
+      "WALLKIT_JOVKAI01_JUNCTION01",
+      "WALLKIT_JOVKAI01_WALL01",
+      "WALLKIT_JOVKAI01_WALL02",
+      "WALLKIT_JOVKAI01_DOOR01_R",
+      "WALLKIT_JOVKAI01_DOOR01_L",
+      "WALLKIT_JOVKAI01_DOOR01_MIDDLE",
+      "WALLKIT_JOVKAI01_WINDOW02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout - Walls - Darker",
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Bottom trim",
+        "colors": "s == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 1 && l < 6",
+        "baseMaterial": "GRAVEL",
+        "shiftLightness": 3,
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_JOVKAI01_JUNCTION02",
+      "WALLKIT_JOVKAI01_JUNCTION03",
+      "WALLKIT_JOVKAI01_JUNCTION04"
     ]
   }
 ]
