@@ -28840,17 +28840,20 @@
       },
       {
         "colors": "s == 2",
-        "baseMaterial": "CARPET_LIGHT",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "MODEL_XZ",
-        "uvScale": 0.5
+        "uvScale": 0.5,
+        "shiftLightness": 4,
+        "uvOrientation": 512
       }
     ]
   },
   {
     "description": "Darkmeyer Range",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
     "uvScale": 0.2,
+    "shiftLightness": 6,
     "objectIds": [
       "DARKM_RICH_RANGE",
       "DARKM_MIDDLE_RANGE",
@@ -55205,9 +55208,10 @@
   },
   {
     "description": "Ground decoration blood",
-    "baseMaterial": "GRUNGE_3_SHINY",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
     "uvScale": 0.5,
     "uvType": "MODEL_XZ",
+    "shiftLightness": 3,
     "objectIds": [
       "BLOODSPLATTER3",
       "DEATH_TROLLBLOODSPLAT1",
@@ -64964,7 +64968,7 @@
     ]
   },
   {
-    "description": "Varrock library - Arceuus - book and papers on floor",
+    "description": "Various -  book and papers on floor",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -64976,7 +64980,9 @@
       "ARCHEEUS_HOUSE_BOOKS",
       "ARCHEEUS_HOUSE_BOOKS_02",
       "DRAKAN_PAGES1",
-      "DRAKAN_PAGES2"
+      "DRAKAN_PAGES2",
+      "BURGH_PAGES1",
+      "BURGH_PAGES2"
     ]
   },
   {
@@ -94029,7 +94035,18 @@
     ],
     "objectIds": [
       "MYQ6_BED01",
+      "MYQ6_BED01_OFFSET",
       "MYQ6_BED02"
+    ]
+  },
+  {
+    "description": "Castle Draken Basement - Sleeping bag",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "shiftLightness": 3,
+    "objectIds": [
+      "MYQ6_BED03_2X2"
     ]
   },
   {
@@ -94825,6 +94842,7 @@
       "CASTLE_DRAKAN_BOOKCASE01",
       "CASTLE_DRAKAN_BOOKCASE02",
       "DRAKAN01_SHELVES01",
+      "DRAKAN01_SHELVES01_2X2",
       "CASTLE_DRAKAN_SEARCHABLE_BOOKCASE_4",
       "CASTLE_DRAKAN_SEARCHABLE_BOOKCASE_3",
       "CASTLE_DRAKAN_GILDED_BOOKCASE_MISSING_BOOK",
@@ -97198,6 +97216,45 @@
     ]
   },
   {
+    "description": "Vampyrium - Silver Leafy plant with red stalk - Potted",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 6,
+        "uvOrientationX": 512
+      },
+      {
+        "description": "Stalk",
+        "colors": [ "h == 0 && s == 6", "h == 0 && s == 7" ],
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 42,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 2 && s == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_PLANT_POTTED03"
+    ]
+  },
+  {
     "description": "Vampyrium - Silver Leafy plant with white stalk",
     "baseMaterial": "PLANT_GRUNGE_2",
     "uvType": "BOX",
@@ -97242,6 +97299,44 @@
     ]
   },
   {
+    "description": "Vampyrium - Bell flower - Potted",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 5,
+        "uvOrientationX": 512
+      },
+      {
+        "description": "Stalk",
+        "colors": [ "h == 0 && s == 6", "h == 0 && s == 7" ],
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 42,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 2 && s == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_PLANT_POTTED01"
+    ]
+  },
+  {
     "description": "Vampyrium - Purple grass and webbed plant",
     "baseMaterial": "LEAF_VEINS",
     "uvType": "BOX",
@@ -97251,6 +97346,45 @@
     "objectIds": [
       "PLANT_VAMPYRIUM_PLANT04",
       "SOTFA_SHRUB"
+    ]
+  },
+  {
+    "description": "Vampyrium - Purple plant - Potted",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": [ "h == 47", "h == 52" ],
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 6,
+        "uvOrientationX": 512
+      },
+      {
+        "description": "Stalk",
+        "colors": "h == 61",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 42,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 2 && s == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_PLANT_POTTED02"
     ]
   },
   {
@@ -97865,6 +97999,242 @@
     ],
     "objectIds": [
       "MYQ6_PLANT_PLANTER02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sink - DYNAMIC",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 32",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_KITCHEN01_SINK01"
+    ]
+  },
+  {
+    "description": "Vampyrium Tables with body parts",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 6
+      },
+      {
+        "colors": "h == 1 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5,
+        "shiftLightness": 4,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_PREP_TABLE"
+    ]
+  },
+  {
+    "description": "Vampyrium Tables with supplies",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Metal",
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 6
+      },
+      {
+        "colors": "h == 1 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5,
+        "shiftLightness": 4,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_SUPPLY_TABLE"
+    ]
+  },
+  {
+    "description": "Vampyrium - Wooden shelves with various objects",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Metal",
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 6
+      },
+      {
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 4,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 0 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_SHELVES",
+      "MYQ6_SUGADINTI_HIDEOUT_SHELVES_NOOP"
+    ]
+  },
+  {
+    "description": "Vampyrium - Metal shelves with beakers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Metal",
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 6
+      },
+      {
+        "colors": [ "h == 0 && s == 1" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_CUPBOARD"
+    ]
+  },
+  {
+    "description": "Vampyrium - Fur rack",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationX": 512,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Carpet",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_RACK01_FUR01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Wall cracks",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.4,
+    "uvOrientation": 222,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": -188,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_WALL01_CRACKS01A",
+      "MYQ6_WALL01_CRACKS02A",
+      "MYQ6_WALL01_CRACKS02B",
+      "MYQ6_WALL01_CRACKS03B"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Carpet",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientation": 222,
+    "shiftLightness": 8,
+    "objectIds": [
+      "MYQ6_CARPET_MIDDLE",
+      "MYQ6_CARPET_CORNER",
+      "MYQ6_CARPET_END",
+      "MYQ6_CARPET_CORNER_ALT",
+      "MYQ6_CARPET_SIDE",
+      "MYQ6_CARPET_SIDE_ALT"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Throne",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "MYQ6_THRONE01"
     ]
   }
 ]
