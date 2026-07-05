@@ -63,6 +63,7 @@ public class Zone implements Destructible {
 	public static final int METADATA_SIZE = 12;
 
 	public static int LEVEL_COUNT = MAX_Z;
+	public static final int LEVEL_TERRAIN = LEVEL_COUNT++;
 	public static final int LEVEL_WATER_SURFACE = LEVEL_COUNT++;
 	public static final int LEVEL_GAP_FILLER = LEVEL_COUNT++;
 

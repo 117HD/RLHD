@@ -1212,8 +1212,13 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.execute(renderState);
 		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
+		frameTimer.end(Timer.RENDER_SHADOWS);
+
 		// Render terrain-only shadow map
 		if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
+
+			frameTimer.begin(Timer.RENDER_TERRAIN_SHADOWS);
+
 			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboTerrainShadowMap);
 			renderState.viewport.set(0, 0, plugin.terrainShadowMapResolution, plugin.terrainShadowMapResolution);
 			renderState.depthFunc.set(GL_LESS);
@@ -1223,6 +1228,8 @@ public class ZoneRenderer implements Renderer {
 
 			terrainShadowProgram.use();
 			terrainShadowCmd.execute(renderState);
+
+			frameTimer.end(Timer.RENDER_TERRAIN_SHADOWS);
 		}
 
 		glBindVertexArray(0);
@@ -1232,7 +1239,6 @@ public class ZoneRenderer implements Renderer {
 		renderState.disable.set(GL_DEPTH_TEST);
 
 		shouldClearShadowFbo = true;
-		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
 	private void scenePass() {
@@ -1399,6 +1405,7 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
 				z.renderOpaque(sceneCmd, ctx, false);
 
 				if (z.hasGapFiller)
@@ -1413,7 +1420,7 @@ public class ZoneRenderer implements Renderer {
 				}
 
 				if (plugin.configTerrainShadows) {
-					z.renderOpaqueLevel(terrainShadowCmd, 0);
+					z.renderOpaqueLevel(terrainShadowCmd, Zone.LEVEL_TERRAIN);
 				}
 			}
 			frameTimer.end(Timer.DRAW_ZONE_OPAQUE);

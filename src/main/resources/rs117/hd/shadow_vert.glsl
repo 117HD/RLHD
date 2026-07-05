@@ -54,47 +54,21 @@ layout (location = 0) in vec3 vPosition;
 #endif
 
     void main() {
+    #if !TERRAIN_ONLY_PASS
         int vertex = gl_VertexID % 3;
         int alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
         int materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
-        int terrainData = texelFetch(textureFaces, vTextureFaceIdx + 2)[vertex];
 
-        int waterTypeIndex = terrainData >> 3 & 0xFF;
         float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
         float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
         if (opacityThreshold == 0)
             opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 
-        bool isTransparent = opacity <= opacityThreshold;
-        bool isTerrain = (terrainData & 1) == 1;
-        bool isGroundPlaneTile = (terrainData & 0xF) == 1; // plane == 0 && isTerrain
-        bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
-
-        #if TERRAIN_ONLY_PASS
-            // Terrain-only pass: only tiles which are marked as terain should be drawn
-            bool isShadowDisabled = !isTerrain;
-        #elif TERRAIN_SHADOWS
-            // Main pass with terrain shadows: terrain goes to its own map
-            bool isShadowDisabled =
-                isGroundPlaneTile ||
-                isWaterSurfaceOrUnderwaterTile ||
-                isTransparent;
-        #else
-            // Exclude ground plane tiles from casting shadows (original behavior)
-            bool isShadowDisabled =
-                isGroundPlaneTile ||
-                isWaterSurfaceOrUnderwaterTile ||
-                isTransparent;
-        #endif
-
-        if (!isShadowDisabled && vWorldViewId > 0) {
-            ivec4 tint = getWorldViewTint(vWorldViewId);
-            isShadowDisabled = tint.w > 0;
-        }
+        bool isShadowDisabled = opacity <= opacityThreshold;
 
         Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-        #if SHADOW_MODE == SHADOW_MODE_DETAILED && !TERRAIN_ONLY_PASS
+        #if SHADOW_MODE == SHADOW_MODE_DETAILED
             if (!isShadowDisabled) {
                 fUvw = vec4(vUv.xy, material.colorMap, material.shadowAlphaMap);
                 // Scroll UVs
@@ -108,6 +82,18 @@ layout (location = 0) in vec3 vPosition;
             fMaterialData = materialData;
         #endif
 
+        #if SHADOW_TRANSPARENCY
+            fOpacity = opacity;
+        #endif
+    #else
+        bool isShadowDisabled = false;
+    #endif
+
+        if (!isShadowDisabled && vWorldViewId > 0) {
+            ivec4 tint = getWorldViewTint(vWorldViewId);
+            isShadowDisabled = tint.w > 0;
+        }
+
         int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
@@ -117,18 +103,16 @@ layout (location = 0) in vec3 vPosition;
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
         }
 
-        #if TERRAIN_ONLY_PASS
+    #if TERRAIN_ONLY_PASS
         if(!isShadowDisabled)
             worldPosition -= vNormal.xyz * 0.0002;
-        #endif
-
-        #if SHADOW_TRANSPARENCY && !TERRAIN_ONLY_PASS
-            fOpacity = opacity;
-        #endif
+    #endif
 
         vec4 clipPosition = lightProjectionMatrix * vec4(worldPosition, shouldCastShadow);
+    #if !TERRAIN_ONLY_PASS
         if (getMaterialHasTransparency(material)) // bias face if it has transparency to avoid self-shadowing
             clipPosition.z += SHADOW_TRANSPARENCY_BIAS;
+    #endif
         gl_Position = clipPosition;
     }
 #else
