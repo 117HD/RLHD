@@ -3028,7 +3028,10 @@
       "GRASS_VAMPYRIUM01_SHORT05",
       "GRASS_VAMPYRIUM01_SHORT06",
       "GRASS_VAMPYRIUM01_SHORT04",
-      "GRASS_VAMPYRIUM01_TALL06"
+      "GRASS_VAMPYRIUM01_TALL06",
+      "GRASS_VAMPYRIUM01_DEFAULT01",
+      "GRASS_VAMPYRIUM01_DEFAULT02",
+      "GRASS_VAMPYRIUM01_DEFAULT04"
     ]
   },
   {
@@ -95781,7 +95784,8 @@
         "baseMaterial": "NONE",
         "windDisplacementMode": "OBJECT",
         "shiftSaturation": -2,
-        "castShadows": false
+        "castShadows": false,
+        "hide": true
       }
     ]
   },
@@ -95835,7 +95839,8 @@
         "baseMaterial": "NONE",
         "windDisplacementMode": "OBJECT",
         "shiftSaturation": -2,
-        "castShadows": false
+        "castShadows": false,
+        "hide": true
       }
     ]
   },
@@ -95870,7 +95875,8 @@
         "baseMaterial": "NONE",
         "windDisplacementMode": "OBJECT",
         "shiftSaturation": -2,
-        "castShadows": false
+        "castShadows": false,
+        "hide": true
       }
     ]
   },
@@ -95894,7 +95900,8 @@
         "windDisplacementMode": "OBJECT",
         "shiftSaturation": -3,
         "shiftLightness": -5,
-        "castShadows": false
+        "castShadows": false,
+        "hide": true
       }
     ]
   },
@@ -96084,6 +96091,7 @@
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvOrientation": 256,
+    "shiftLightness": 3,
     "objectIds": [
       "VAMPYRIUM_JOVKAI01_BRIDGE01",
       "VAMPYRIUM_JOVKAI01_BRIDGE02",
@@ -96093,6 +96101,15 @@
       "VAMPYRIUM_JOVKAI01_BRIDGE06"
     ],
     "colorOverrides": [
+      {
+        "description": "Path",
+        "colors": "h == 5 && s >= 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 1.5,
+        "uvOrientation": 256,
+        "shiftLightness": 3
+      },
       {
         "description": "Wood",
         "colors": "h == 0 && s == 2 && l < 14",
@@ -96917,7 +96934,7 @@
     ],
     "colorOverrides": [
       {
-        "description": "Grass 1",
+        "description": "Wood",
         "colors": "s > 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
@@ -97066,7 +97083,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium - Fur stand",
+    "description": "Castle Draken - Vampyrium - Well - Vampyrium Grass",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -97075,8 +97092,12 @@
     "colorOverrides": [
       {
         "description": "Grass",
-        "colors": "s == 7",
-        "baseMaterial": "NONE"
+        "colors": "h == 0 && s >= 5 && s <=7",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftLightness": 2,
+        "castShadows": false,
+        "undoVanillaShading": false
       },
       {
         "description": "Logs",
@@ -97584,8 +97605,12 @@
     "colorOverrides": [
       {
         "description": "Grass",
-        "colors": "h == 0 && s == 7",
-        "baseMaterial": "NONE"
+        "colors": "h == 0 && s >= 5 && s <=7",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftLightness": 2,
+        "castShadows": false,
+        "undoVanillaShading": false
       },
       {
         "description": "Red covering",
@@ -97612,8 +97637,12 @@
     "colorOverrides": [
       {
         "description": "Grass",
-        "colors": "h == 0 && s == 7",
-        "baseMaterial": "NONE"
+        "colors": "h == 0 && s >= 5 && s <=7",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftLightness": 2,
+        "castShadows": false,
+        "undoVanillaShading": false
       },
       {
         "description": "Red covering",
@@ -97656,12 +97685,12 @@
     "colorOverrides": [
       {
         "description": "Grass",
-        "colors": "h == 0 && s == 7",
+        "colors": "h == 0 && s >= 5 && s <=7",
         "baseMaterial": "NONE",
         "windDisplacementMode": "OBJECT",
-        "shiftSaturation": 2,
-        "shiftLightness": -4,
-        "castShadows": false
+        "shiftLightness": 2,
+        "castShadows": false,
+        "undoVanillaShading": false
       }
     ],
     "objectIds": [
@@ -97669,7 +97698,7 @@
     ]
   },
   {
-    "description": "Vampyrium - Thrones",
+    "description": "Vampyrium - Thornes - Vampyrium Grass",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -97678,12 +97707,12 @@
     "colorOverrides": [
       {
         "description": "Grass",
-        "colors": "h == 0 && s == 7",
+        "colors": "h == 0 && s >= 5 && s <=7",
         "baseMaterial": "NONE",
         "windDisplacementMode": "OBJECT",
-        "shiftSaturation": 2,
-        "shiftLightness": -4,
-        "castShadows": false
+        "shiftLightness": 2,
+        "castShadows": false,
+        "undoVanillaShading": false
       }
     ],
     "objectIds": [
@@ -97699,7 +97728,9 @@
       "PLANT_VAMPYRIUM_THORNS06",
       "PLANT_VAMPYRIUM_THORNS06_DARKER01",
       "PLANT_VAMPYRIUM_THORNS07",
-      "PLANT_VAMPYRIUM_THORNS07_DARKER01"
+      "PLANT_VAMPYRIUM_THORNS07_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS08A",
+      "PLANT_VAMPYRIUM_THORNS08B"
     ]
   },
   {
@@ -98157,23 +98188,31 @@
   },
   {
     "description": "Vampyrium - Fur rack",
-    "baseMaterial": "BARK",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientationX": 512,
-    "shiftLightness": 5,
+    "shiftLightness": 4,
     "colorOverrides": [
       {
-        "description": "Carpet",
+        "description": "Fur",
         "colors": "h == 39",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.65,
         "shiftLightness": 2
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 6
       }
     ],
     "objectIds": [
-      "MYQ6_SUGADINTI_RACK01_FUR01"
+      "MYQ6_SUGADINTI_RACK01_FUR01",
+      "MYQ6_SUGADINTI_RACK01_FUR02"
     ]
   },
   {
