@@ -95623,7 +95623,8 @@
     "uvType": "BOX",
     "undoVanillaShading": false,
     "uvScale": 0.7,
-    "shiftLightness": 7,
+    "shiftLightness": 16,
+    "shiftSaturation": -1,
     "objectIds": [
       "DARKWOOD_TREE_DEFAULT02",
       "DARKWOOD_TREE_DEFAULT01",
@@ -95634,7 +95635,8 @@
       "DARKWOOD_TREE_TRUNK02",
       "DARKWOOD_TREE_TRUNK02_2X2",
       "DARKWOOD_TREE_DEFAULT06",
-      "DARKWOOD_TREE_TRUNK01_FALLEN01"
+      "DARKWOOD_TREE_TRUNK01_FALLEN01",
+      "SOTFA_FOREST_TREE_STUMP02"
     ],
     "colorOverrides": [
       {
@@ -95646,14 +95648,62 @@
     ]
   },
   {
-    "description": "Vampyrium Trees",
+    "description": "Vampyrium Trees - Dark",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 7,
+    "shiftSaturation": -1,
+    "objectIds": [
+      "DARKWOOD_TREE_DARK01",
+      "DARKWOOD_TREE_DARK02",
+      "DARKWOOD_TREE_DARK03",
+      "DARKWOOD_TREE_DARKER01",
+      "DARKWOOD_TREE_DARKER02",
+      "DARKWOOD_TREE_DARKER03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass - Temp hide till better solution",
+        "colors": "s == 7",
+        "hide": true,
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees - Darker",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftSaturation": -1,
+    "objectIds": [
+      "DARKWOOD_TREE_DARKER01",
+      "DARKWOOD_TREE_DARKER02",
+      "DARKWOOD_TREE_DARKER03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass - Temp hide till better solution",
+        "colors": "s == 7",
+        "hide": true,
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees Doorway",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "undoVanillaShading": false,
     "uvScale": 0.7,
     "shiftLightness": 7,
     "objectIds": [
-      "DARKWOOD_TREE_DOORWAY01"
+      "DARKWOOD_TREE_DOORWAY01",
+      "DARKWOOD_TREE_DOORWAY01_NOOP_4X3",
+      "DARKWOOD_TREE_DOORWAY01_NOOP"
     ],
     "colorOverrides": [
       {
@@ -97174,6 +97224,9 @@
       }
     ],
     "objectIds": [
+      "SHELTER_DRAKAN01_RUINED01",
+      "SHELTER_DRAKAN01_RUINED02",
+      "SHELTER_DRAKAN01_RUINED03",
       "SHELTER_DRAKAN01_RUINED04",
       "SHELTER_DRAKAN01_RUINED05"
     ]
@@ -97203,7 +97256,7 @@
     ]
   },
   {
-    "description": "Vampyrium - Broken shelter",
+    "description": "Vampyrium - Campfire",
     "baseMaterial": "DIRT_1",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -97218,6 +97271,7 @@
       }
     ],
     "objectIds": [
+      "SOTFA_FOREST_CAMPFIRE02",
       "SOTFA_FOREST_CAMPFIRE02_OFFSET"
     ]
   },
