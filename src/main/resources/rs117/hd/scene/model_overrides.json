@@ -95811,10 +95811,11 @@
         "colors": "s == 7",
         "baseMaterial": "GRASS_BLADE",
         "uvType": "BOX",
-        "flatNormals": true,
+        "uvScale": 1.2,
+        "upwardsNormals": true,
         "windDisplacementMode": "OBJECT",
         "shiftSaturation": 2,
-        "shiftLightness": 6,
+        "shiftLightness": 5,
         "castShadows": false,
         "inheritTileColorType": "UNDERLAY"
       }
