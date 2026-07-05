@@ -10777,6 +10777,17 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
+    "name": "Vampyrium - Gravel paths",
+    "area": "VAMPYRIUM",
+    "uvOrientation": 127,
+    "uvScale": 1.2,
+    "shiftLightness": 7,
+    "overlayIds": [
+      278
+    ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
     "name": "Vampyrium - Blood",
     "area": "VAMPYRIUM",
     "uvOrientation": 512,
