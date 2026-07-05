@@ -1035,7 +1035,6 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
 			float ambientStrength = environmentManager.currentAmbientStrength;
 			float directionalStrength = environmentManager.currentDirectionalStrength;
-			// Apply legacy brightness if enabled
 			if (config.useLegacyBrightness()) {
 				float factor = config.legacyBrightness() / 20f;
 				ambientStrength *= factor;
@@ -1149,7 +1148,6 @@ public class LegacyRenderer implements Renderer {
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
 
-			// Clear depth buffer
 			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
 			glClearColor(
 				gammaCorrectedFogColor[0],
