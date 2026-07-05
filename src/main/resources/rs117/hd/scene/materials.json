@@ -1268,6 +1268,19 @@
     ]
   },
   {
+    "name": "GRASS_BLADE"
+  },
+  {
+    "name": "GRASS_BLADE_90",
+    "parent": "GRASS_BLADE",
+    "brightness": 0.9
+  },
+  {
+    "name": "GRASS_BLADE_85",
+    "parent": "GRASS_BLADE",
+    "brightness": 0.85
+  },
+  {
     "name": "COLORED_GRASS",
     "overrideBaseColor": true
   },

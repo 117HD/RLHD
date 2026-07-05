@@ -3005,33 +3005,49 @@
     ]
   },
   {
-    "description": "Short grass which shouldn't cast shadows - Vampyrium",
+    "description": "Short grass which shouldn't cast shadows - Vampyrium - Short",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "BOX",
     "flatNormals": true,
     "windDisplacementMode": "OBJECT",
     "shiftSaturation": 2,
-    "shiftLightness": 3,
+    "shiftLightness": 6,
     "castShadows": false,
     "inheritTileColorType": "UNDERLAY",
     "objectIds": [
       "GRASS_VAMPYRIUM01_CORNER01",
       "GRASS_VAMPYRIUM01_CENTRE01",
       "GRASS_VAMPYRIUM01_EDGE01",
-      "GRASS_VAMPYRIUM01_TALL01",
-      "GRASS_VAMPYRIUM01_TALL02",
       "GRASS_VAMPYRIUM01_SHORT03",
       "GRASS_VAMPYRIUM01_SHORT02",
       "GRASS_VAMPYRIUM01_SHORT01",
+      "GRASS_VAMPYRIUM01_SHORT05",
+      "GRASS_VAMPYRIUM01_SHORT06",
+      "GRASS_VAMPYRIUM01_SHORT04",
+      "GRASS_VAMPYRIUM01_DEFAULT01",
+      "GRASS_VAMPYRIUM01_DEFAULT02",
+      "GRASS_VAMPYRIUM01_DEFAULT04"
+    ]
+  },
+  {
+    "description": "Short grass which shouldn't cast shadows - Vampyrium - Tall",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "shiftSaturation": 2,
+    "shiftLightness": 6,
+    "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
+    "objectIds": [
+      "GRASS_VAMPYRIUM01_TALL01",
+      "GRASS_VAMPYRIUM01_TALL02",
       "GRASS_VAMPYRIUM01_TALL03",
       "GRASS_VAMPYRIUM01_TALL02",
       "GRASS_VAMPYRIUM01_TALL04",
       "GRASS_VAMPYRIUM01_TALL05",
-      "GRASS_VAMPYRIUM01_SHORT05",
-      "GRASS_VAMPYRIUM01_SHORT06",
-      "GRASS_VAMPYRIUM01_SHORT04",
-      "GRASS_VAMPYRIUM01_TALL06",
-      "GRASS_VAMPYRIUM01_DEFAULT01",
-      "GRASS_VAMPYRIUM01_DEFAULT02",
-      "GRASS_VAMPYRIUM01_DEFAULT04"
+      "GRASS_VAMPYRIUM01_TALL06"
     ]
   },
   {
@@ -95793,11 +95809,50 @@
       {
         "description": "Grass - Temp hide till better solution",
         "colors": "s == 7",
-        "baseMaterial": "NONE",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "flatNormals": true,
         "windDisplacementMode": "OBJECT",
-        "shiftSaturation": -2,
+        "shiftSaturation": 2,
+        "shiftLightness": 6,
         "castShadows": false,
-        "hide": true
+        "inheritTileColorType": "UNDERLAY"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Tall Vines",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "shiftLightness": 2,
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "objectIds": [
+      "PLANT_VAMPYRIUM_SWAMP01_INACTIVE",
+      "PLANT_VAMPYRIUM_SWAMP01",
+      "PLANT_VAMPYRIUM_SWAMP02",
+      "PLANT_VAMPYRIUM_SWAMP03",
+      "PLANT_VAMPYRIUM_BULLRUSH01",
+      "PLANT_VAMPYRIUM_BULLRUSH01_INACTIVE",
+      "PLANT_VAMPYRIUM_SWAMP04"
+    ]
+  },
+  {
+    "description": "Vampyrium - Lilypad",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "shiftLightness": 1,
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "objectIds": [
+      "PLANT_VAMPYRIUM_LILYPAD01",
+      "PLANT_VAMPYRIUM_LILYPAD02",
+      "PLANT_VAMPYRIUM_LILYPAD03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Snake rope",
+        "colors": "s == 7",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "shiftLightness": 8
       }
     ]
   },
@@ -97912,9 +97967,7 @@
       "WALLKIT_JOVKAI01_JUNCTION02",
       "WALLKIT_JOVKAI01_JUNCTION03",
       "WALLKIT_JOVKAI01_JUNCTION04",
-      "WALLKIT_JOVKAI01_INTERIOR01_DOORWAY01",
-      "MYQ6_ENTRY_HALL_WINDOW",
-      "MYQ6_ENTRY_HALL_WINDOW_DAMAGED"
+      "WALLKIT_JOVKAI01_INTERIOR01_DOORWAY01"
     ]
   },
   {
@@ -98497,7 +98550,7 @@
     ]
   },
   {
-    "description": "Sangvesti -Jovkai hideout door",
+    "description": "Sangvesti - Jovkai hideout door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
