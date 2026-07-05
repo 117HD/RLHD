@@ -5203,8 +5203,9 @@
     "name": "GOTR_PORTAL_BACKFILLING_FIX",
     "area": "GOTR_PORTAL_BACKFILLING_FIX",
     "doubleSidedFaces": true,
-    "setLightness": 0,
-    "groundMaterial": "BLACK",
+    "groundMaterial": "PURE_BLACK",
+    "blended": false,
+    "maxLightness": 0,
     "underlayIds": [
       72
     ]
