@@ -95343,7 +95343,10 @@
     "objectIds": [
       "CASTLE_DRAKAN_SPIRAL_STAIRS_UP",
       "CASTLE_DRAKAN_SPIRAL_STAIRS_DOWN",
-      "MYQ6_SUGADINTI_HIDEOUT_STAIRS"
+      "MYQ6_SUGADINTI_HIDEOUT_STAIRS",
+      "MYQ6_SUGADINTI_HIDEOUT_STAIRS_M",
+      "MYQ6_SUGADINTI_HIDEOUT_STAIRS_DOWN",
+      "MYQ6_SUGADINTI_HIDEOUT_STAIRS_DOWN_M"
     ]
   },
   {
@@ -97900,7 +97903,45 @@
       "WALLKIT_JOVKAI01_JUNCTION02",
       "WALLKIT_JOVKAI01_JUNCTION03",
       "WALLKIT_JOVKAI01_JUNCTION04",
-      "WALLKIT_JOVKAI01_INTERIOR01_DOORWAY01"
+      "WALLKIT_JOVKAI01_INTERIOR01_DOORWAY01",
+      "MYQ6_ENTRY_HALL_WINDOW",
+      "MYQ6_ENTRY_HALL_WINDOW_DAMAGED"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Windows - DYNAMIC",
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Bottom trim",
+        "colors": "s == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 1 && l < 6",
+        "baseMaterial": "GRAVEL",
+        "shiftLightness": 3,
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_WINDOW",
+      "MYQ6_ENTRY_HALL_WINDOW_DAMAGED",
+      "MYQ6_ENTRY_HALL_WINDOW_DAMAGED_INACTIVE"
     ]
   },
   {
@@ -97927,7 +97968,37 @@
       }
     ],
     "objectIds": [
-      "WALLKIT_JOVKAI01_PILLAR01"
+      "WALLKIT_JOVKAI01_PILLAR01",
+      "MYQ6_ENTRY_HALL_PILLAR_DAMAGED_INACTIVE"
+
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Supports - DYNAMIC",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Bottom trim",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 2,
+        "flatNormals": true
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_PILLAR",
+      "MYQ6_ENTRY_HALL_PILLAR_DAMAGED"
     ]
   },
   {
@@ -98323,6 +98394,131 @@
       "VAMPYRIUM_JOVKAI01_FACADE03",
       "VAMPYRIUM_JOVKAI01_WATCHTOWER01",
       "VAMPYRIUM_JOVKAI01_WATCHTOWER02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Portal glyph - Needs emissive",
+    "baseMaterial": "GRUNGE_3_GLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "shiftLightness": 5,
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_PORTAL_GLYPH_APPEARING",
+      "MYQ6_ENTRY_HALL_PORTAL_GLYPH"
+    ]
+  },
+  {
+    "description": "Sangvesti - Crates with Hammers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Handle",
+        "colors": "s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512,
+        "shiftLightness": 3
+      },
+      {
+        "description": "Metal",
+        "colors": "s == 0 && l >= 3",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "shiftLightness": 3
+      },
+      {
+        "description": "Fake shadow",
+        "colors": [ "s == 0 && l < 3" ],
+        "baseMaterial": "BLACK",
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_HAMMER_CRATE"
+    ]
+  },
+  {
+    "description": "Sangvesti - Crates with Potions",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 3
+      },
+      {
+        "description": "Cork",
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": 1
+      },
+      {
+        "description": "Fake shadow",
+        "colors": "s == 0 && l < 3",
+        "baseMaterial": "BLACK",
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_POTION_CRATE"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises Barricade",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_BARRICADE_ESCAPE"
+    ]
+  },
+  {
+    "description": "Sangvesti -Jovkai hideout door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_EXIT",
+      "MYQ6_SUGADINTI_HIDEOUT_EXIT_NOOP",
+      "MYQ6_SUGADINTI_HIDEOUT_EXIT_OPEN_NOOP",
+      "MYQ6_SUGADINTI_HIDEOUT_ENTRY",
+      "MYQ6_SUGADINTI_HIDEOUT_ENTRY_NOOP",
+      "MYQ6_SUGADINTI_HIDEOUT_ENTRY_ESCAPE"
+    ]
+  },
+  {
+    "description": "Jovkai hideout Torches - Animated - Dynamic",
+    "baseMaterial": "NONE",
+    "shiftLightness": -1,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "MYQ6_TORCH01_A",
+      "MYQ6_TORCH01_B",
+      "MYQ6_TORCH01_C",
+      "MYQ6_TORCH01_D"
     ]
   }
 ]

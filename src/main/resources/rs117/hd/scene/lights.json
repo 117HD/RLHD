@@ -49730,5 +49730,57 @@
     "objectIds": [
       "MYQ6_FIRE01_CRUCIBLE01"
     ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyrium - Portal Glyph",
+    "offset": [ -0.0, 50.0, 0.0 ],
+    "radius": 600,
+    "strength": 12.5,
+    "color": [
+      154,
+      46,
+      144
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_PORTAL_GLYPH_APPEARING",
+      "MYQ6_ENTRY_HALL_PORTAL_GLYPH"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyrium - Defence Door 1",
+    "offset": [ -75.0, 128.0, -96.0 ],
+    "radius": 600,
+    "strength": 12.5,
+    "color": [
+      0,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_DEFENCE_DOOR"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyrium - Defence Door 1",
+    "offset": [ -75.0, 128.0, 96.0 ],
+    "radius": 600,
+    "strength": 12.5,
+    "color": [
+      0,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_DEFENCE_DOOR"
+    ]
   }
 ]
