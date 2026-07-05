@@ -717,6 +717,8 @@ public class SceneUploader implements AutoCloseable {
 		byte[] transparencies = m.getFaceTransparencies();
 		short[] faceTextures = m.getFaceTextures();
 		byte modelTransparency = m.getTransparency();
+		if(modelOverride.mightBeDoubleSided)
+			faceCount *= 2;
 		z.sizeO += faceCount;
 		z.sizeF += faceCount;
 		if (transparencies != null || faceTextures != null || modelTransparency != 0 || mightHaveTransparency)
@@ -1766,6 +1768,29 @@ public class SceneUploader implements AutoCloseable {
 				modelNormals[6], modelNormals[7], modelNormals[8],
 				texturedFaceIdx
 			);
+
+			if(modelOverride.doubleSidedFaces || faceOverride.doubleSidedFaces) {
+				vb.putStaticVertex(
+					vx3, vy3, vz3,
+					faceUVs[8], faceUVs[9], faceUVs[10],
+					-modelNormals[6], -modelNormals[7], -modelNormals[8],
+					texturedFaceIdx
+				);
+
+				vb.putStaticVertex(
+					vx2, vy2, vz2,
+					faceUVs[4], faceUVs[5], faceUVs[6],
+					-modelNormals[3], -modelNormals[4], -modelNormals[5],
+					texturedFaceIdx
+				);
+
+				vb.putStaticVertex(
+					vx1, vy1, vz1,
+					faceUVs[0], faceUVs[1], faceUVs[2],
+					-modelNormals[0], -modelNormals[1], -modelNormals[2],
+					texturedFaceIdx
+				);
+			}
 			len += 3;
 		}
 		writeCache.release();

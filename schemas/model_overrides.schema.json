@@ -153,6 +153,10 @@
         "type": "boolean",
         "description": "Whether the model receive shadows cast by other objects. Defaults to true."
       },
+      "doubleSidedFaces": {
+        "type": "boolean",
+        "description": "Whether the faces should be double sided. Defaults to false."
+      },
       "terrainVertexSnap": {
         "type": "boolean",
         "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
@@ -363,6 +367,10 @@
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
             },
+            "doubleSidedFaces": {
+              "type": "boolean",
+              "description": "Whether the faces should be double sided. Defaults to false."
+            },
             "terrainVertexSnap": {
               "type": "boolean",
               "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
@@ -565,6 +573,10 @@
             "receiveShadows": {
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+            },
+            "doubleSidedFaces": {
+              "type": "boolean",
+              "description": "Whether the faces should be double sided. Defaults to false."
             },
             "terrainVertexSnap": {
               "type": "boolean",
