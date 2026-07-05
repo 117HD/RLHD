@@ -1406,6 +1406,7 @@
   {
     "description": "Gnome Stronghold Tree Leaves - Top",
     "baseMaterial": "BARK",
+    "doubleSidedFaces": true,
     "textureMaterial": "LEAVES_TOP_ALT",
     "objectIds": [
       "TKCANOPYMIDDLE",
@@ -1418,6 +1419,7 @@
   {
     "description": "Gnome Stronghold Tree Leaves - Side",
     "baseMaterial": "BARK",
+    "doubleSidedFaces": true,
     "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "TKCANOPYCORNER2",
@@ -42360,6 +42362,7 @@
   {
     "description": "Acacia Tree",
     "baseMaterial": "LIGHT_BARK_STONEPINE",
+    "doubleSidedFaces": true,
     "objectIds": [
       "AVIUM_ACACIA_1",
       "AVIUM_ACACIA_CANOPY_1"
@@ -42370,6 +42373,7 @@
   {
     "description": "Stonepine Tree",
     "baseMaterial": "LIGHT_BARK_STONEPINE",
+    "doubleSidedFaces": true,
     "objectIds": [
       "ROR_TEMPLE_TREE01_CANOPY01",
       "ROR_TEMPLE_TREE01_TRUNK01",
