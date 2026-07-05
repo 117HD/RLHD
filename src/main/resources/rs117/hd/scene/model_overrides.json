@@ -97670,7 +97670,54 @@
       "WALLKIT_JOVKAI01_WINDOW02",
       "WALLKIT_JOVKAI01_JUNCTION02",
       "WALLKIT_JOVKAI01_JUNCTION03",
-      "WALLKIT_JOVKAI01_JUNCTION04"
+      "WALLKIT_JOVKAI01_JUNCTION04",
+      "WALLKIT_JOVKAI01_INTERIOR01_DOORWAY01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Supports",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Bottom trim",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 2,
+        "flatNormals": true
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_JOVKAI01_PILLAR01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Floor rubble",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "shiftLightness": 2,
+    "objectIds": [
+      "WALLKIT_JOVKAI01_RUBBLE01_A",
+      "WALLKIT_JOVKAI01_RUBBLE01_B",
+      "WALLKIT_JOVKAI01_RUBBLE01_C",
+      "WALLKIT_JOVKAI01_RUBBLE02",
+      "WALLKIT_JOVKAI01_RUBBLE01_TILE01",
+      "WALLKIT_JOVKAI01_RUBBLE02_TILE01",
+      "WALLKIT_JOVKAI01_RUBBLE03_TILE01",
+      "WALLKIT_JOVKAI01_RUBBLE04_TILE01",
+      "WALLKIT_JOVKAI01_RUBBLE06_TILE01_END"
     ]
   }
 ]
