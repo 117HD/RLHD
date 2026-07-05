@@ -54,6 +54,10 @@
         "type": "boolean",
         "description": "Indicates whether the texture includes transparency."
       },
+      "doubleSidedFaces": {
+        "type": "boolean",
+        "description": "If specified, will make models that use this material render both sides of faces, Defaults to false."
+      },
       "overrideBaseColor": {
         "type": "boolean",
         "description": "Whether the material's color texture should override the colors of the underlying model."
