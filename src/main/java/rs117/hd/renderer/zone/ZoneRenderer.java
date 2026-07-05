@@ -85,6 +85,7 @@ import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
+import static org.lwjgl.opengl.GL20.GL_POINT_SPRITE;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
@@ -199,7 +200,7 @@ public class ZoneRenderer implements Renderer {
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
 	public final CommandBuffer directionalCmd = new CommandBuffer("Directional");
 	public final CommandBuffer terrainShadowCmd = new CommandBuffer("TerrainShadow");
-	public final CommandBuffer playerCmd = new CommandBuffer("Player");
+	public final CommandBuffer skyboxCmd = new CommandBuffer("Skybox");
 	public final CommandBuffer gapFillerCmd = new CommandBuffer("GapFiller");
 
 	private GLBuffer indirectDrawCmds;
@@ -238,6 +239,7 @@ public class ZoneRenderer implements Renderer {
 			FacePrioritySorter.POOL = new ConcurrentPool<>(() -> injector.getInstance(FacePrioritySorter.class));
 
 		sceneCmd.setFrameTimer(frameTimer);
+		skyboxCmd.setFrameTimer(frameTimer);
 		directionalCmd.setFrameTimer(frameTimer);
 		terrainShadowCmd.setFrameTimer(frameTimer);
 		gapFillerCmd.setFrameTimer(frameTimer);
@@ -250,7 +252,6 @@ public class ZoneRenderer implements Renderer {
 		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
 		directionalCamera.setDirty();
-
 	}
 
 	@Override
@@ -410,6 +411,40 @@ public class ZoneRenderer implements Renderer {
 		glBindVertexArray(0);
 		// Raw VAO binds above bypass renderState; invalidate its cache.
 		renderState.vao.reset();
+		skyboxCmd.reset();
+	}
+
+	private void buildSkyboxCmd() {
+		if(!skyboxCmd.isEmpty())
+			return;
+
+		skyboxCmd.PushTimer(Timer.RENDER_SKYBOX);
+		skyboxCmd.SetShader(skyProgram);
+		skyboxCmd.DepthMask(false);
+
+		// Render sky gradient using fullscreen triangle
+		skyboxCmd.BindVertexArray(plugin.vaoTri);
+		skyboxCmd.DrawArrays(GL_TRIANGLES, 0, 3);
+
+		// Star point sprites, drawn additively over the sky. Cost scales with
+		// star count rather than screen pixels (unlike the old per-pixel field).
+		if (starProgram.isValid() && vaoStars != 0) {
+			skyboxCmd.SetShader(starProgram);
+			skyboxCmd.Enable(GL_PROGRAM_POINT_SIZE);
+			skyboxCmd.Enable(GL_POINT_SPRITE);
+			skyboxCmd.BlendFunc(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
+
+			skyboxCmd.BindVertexArray(vaoStars);
+			skyboxCmd.DrawArrays(GL_POINTS, 0, starCount);
+
+			skyboxCmd.BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+			skyboxCmd.Disable(GL_POINT_SPRITE);
+			skyboxCmd.Disable(GL_PROGRAM_POINT_SIZE);
+		}
+
+		// Restore Scene Shader
+		skyboxCmd.DepthMask(true);
+		skyboxCmd.PopTimer(Timer.RENDER_SKYBOX);
 	}
 
 	private void initializeBuffers() {
@@ -1266,64 +1301,18 @@ public class ZoneRenderer implements Renderer {
 		// Clear scene
 		frameTimer.begin(Timer.CLEAR_SCENE);
 
-		// Clear depth buffer
-		glClearDepth(0);
-
 		// Render sky gradient if Day/Night Cycle is enabled, otherwise use solid color clear
 		if (skyGradientEnabled && skyProgram.isValid()) {
+			glClearDepth(0);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
-
-			frameTimer.begin(Timer.RENDER_SKYBOX);
-
-			glClear(GL_DEPTH_BUFFER_BIT);
-
-			// Render sky gradient using fullscreen triangle
-			renderState.disable.set(GL_DEPTH_TEST);
-			renderState.disable.set(GL_CULL_FACE);
-			renderState.apply();
 
 			// Bind the baked nebula cubemap so the sky shader can sample it
 			// instead of recomputing the nebula's fBm per pixel.
 			glActiveTexture(TEXTURE_UNIT_NEBULA);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, texNebulaCubemap);
 
-			skyProgram.use();
-
-			renderState.vao.setVao(plugin.vaoTri);
-			renderState.apply();
-			glDrawArrays(GL_TRIANGLES, 0, 3);
-
-			// Star point sprites, drawn additively over the sky. Cost scales with
-			// star count rather than screen pixels (unlike the old per-pixel field).
-			if (starProgram.isValid() && vaoStars != 0) {
-				renderState.enable.set(GL_BLEND);
-				renderState.blendFunc.set(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
-				renderState.apply();
-
-				starProgram.use();
-				starProgram.uniViewportSize.set((float) plugin.sceneResolution[0], (float) plugin.sceneResolution[1]);
-
-				glEnable(GL_PROGRAM_POINT_SIZE);
-				// GL_POINT_SPRITE is required on some compatibility-profile drivers for
-				// gl_PointCoord to be generated. It was removed from core 3.2+ (where
-				// gl_PointCoord is always available), so ignore the error if unsupported.
-				try { glEnable(GL20.GL_POINT_SPRITE); } catch (Exception ignored) {}
-				// Bind the star VAO directly, then invalidate renderState's cached VAO
-				// so it re-binds whatever it needs next (avoids a stale-cache desync).
-				glBindVertexArray(vaoStars);
-				glDrawArrays(GL_POINTS, 0, starCount);
-				try { glDisable(GL20.GL_POINT_SPRITE); } catch (Exception ignored) {}
-				glDisable(GL_PROGRAM_POINT_SIZE);
-				renderState.vao.reset();
-
-				renderState.disable.set(GL_BLEND);
-				renderState.apply();
-			}
-
-			frameTimer.end(Timer.RENDER_SKYBOX);
-
-			// Switch back to scene program
-			sceneProgram.use();
+			buildSkyboxCmd();
 		} else {
 			// Use Day/Night Cycle fog color if available, otherwise use environment manager's fog color
 			float[] fogColor = { 0, 0, 0 };
@@ -1549,6 +1538,12 @@ public class ZoneRenderer implements Renderer {
 					directionalCmd.ExecuteSubCommandBuffer(ctx.vaoDirectionalCmd);
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
+
+					if (sceneManager.isRoot(ctx) && skyGradientEnabled && skyProgram.isValid()) {
+						// Draw Skybox after drawing Top Level Scene Opaque
+						sceneCmd.ExecuteSubCommandBuffer(skyboxCmd);
+						sceneCmd.SetShader(sceneProgram);
+					}
 					break;
 				case DrawCallbacks.PASS_ALPHA:
 					modelStreamingManager.ensureAsyncUploadsComplete(null);

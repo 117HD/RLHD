@@ -141,6 +141,11 @@ public class FrameTimer {
 		cumulativeError = 0;
 	}
 
+	public AutoTimer begin(int timerOrdinal) {
+		assert timerOrdinal >= 0 && timerOrdinal < Timer.TIMERS.length;
+		return begin(Timer.TIMERS[timerOrdinal]);
+	}
+
 	public AutoTimer begin(Timer timer) {
 		int index = timer.ordinal();
 		if (log.isDebugEnabled() && timer.hasGpuDebugGroup() && HdPlugin.GL_CAPS.OpenGL43) {
@@ -166,6 +171,11 @@ public class FrameTimer {
 		activeTimers[index] = true;
 
 		return autoTimers[index];
+	}
+
+	public void end(int timerOrdinal) {
+		assert timerOrdinal >= 0 && timerOrdinal < Timer.TIMERS.length;
+		end(Timer.TIMERS[timerOrdinal]);
 	}
 
 	public void end(Timer timer) {
