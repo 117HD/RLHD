@@ -17782,8 +17782,8 @@
     "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burgh De Rott",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.44,
+    "uvOrientation": 256,
+    "uvScale": 0.66,
     "objectIds": [
       "BURGH_INN_CLIMB_OVER",
       "BURGH_STONE",
@@ -17852,10 +17852,11 @@
       {
         "description": "Metal",
         "colors": "h == 21 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT",
+        "baseMaterial": "METALLIC_1",
         "uvType": "BOX",
         "uvOrientation": 404,
-        "uvScale": 0.8
+        "uvScale": 0.4,
+        "shiftLightness": 6
       }
     ],
     "objectIds": [
