@@ -212,7 +212,7 @@ public class ModelOverride
 		if (hideInAreas == null)
 			hideInAreas = new AABB[0];
 
-		baseMaterial.doubleSidedFaces = mightBeDoubleSided =
+		doubleSidedFaces = mightBeDoubleSided =
 			doubleSidedFaces ||
 			baseMaterial.doubleSidedFaces ||
 			textureMaterial.doubleSidedFaces;
