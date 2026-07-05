@@ -12122,6 +12122,10 @@
     "regions": [ 11898 ]
   },
   {
+    "name": "VAMPYRIUM_SUGADINTI_HIDEOUT",
+    "regions": [ 12666 ]
+  },
+  {
     "name": "VAMPYRIUM",
     "regionBoxes": [ [ 9597, 11128 ] ],
     "areas": [ "VAMPYRIUM_FOREST_INSTANCE" ]

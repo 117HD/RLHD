@@ -10786,6 +10786,31 @@
     "waterType": "BLOOD"
   },
   {
+    "name": "Vampyrium - Sugadinti Hideout - underlay",
+    "area": "VAMPYRIUM_SUGADINTI_HIDEOUT",
+    "uvScale": 2,
+    "shiftLightness": 4,
+    "underlayIds": [
+      5,
+      6,
+      234,
+      241,
+      242
+    ],
+    "groundMaterial": "WORN_TILES"
+  },
+  {
+    "name": "Vampyrium - Sugadinti Hideout - overlay",
+    "area": "VAMPYRIUM_SUGADINTI_HIDEOUT",
+    "uvOrientation": 256,
+    "uvScale": 2,
+    "shiftLightness": 1,
+    "overlayIds": [
+      634
+    ],
+    "groundMaterial": "STONE"
+  },
+  {
     "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
     "area": "KRAKEN_COVE_HIDE_WATER_EDGE",
     "overlayIds": [ 7 ],
