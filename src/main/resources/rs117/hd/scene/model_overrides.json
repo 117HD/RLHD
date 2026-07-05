@@ -16665,9 +16665,10 @@
   },
   {
     "description": "Objects - Wooden - Barrel with Metal Band",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientation": 100,
     "uvType": "BOX",
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": [ "h == 5 && s < 2", "h == 42" ],
@@ -16677,6 +16678,7 @@
     "objectIds": [
       "AGGIE_COURTYARD_BARREL",
       "BURGH_BARREL",
+      "BURGH_BARREL_TAP",
       "CANAFIS_BARREL_TAP",
       "KR_BARREL",
       "LUNAR_PIRATE_BARREL_CLOSED",
@@ -18081,7 +18083,8 @@
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_EDITABLE",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_REGULAR",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_MAHOGANY",
-      "AIDE_TABLE_SMALL"
+      "AIDE_TABLE_SMALL",
+      "MYQ6_VANESCULA_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -94311,11 +94314,16 @@
   },
   {
     "description": "Castle Draken - Blood portal - DYNAMIC - ANIMATED",
-    "baseMaterial": "BLANK_GLOSS",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "shiftLightness": 2,
     "objectIds": [
       "MYQ6_VAMPYRIUM_PORTAL_VIS",
       "MYQ6_VAMPYRIUM_RETURN_PORTAL",
-      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_D"
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_A",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_B",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_C",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_D",
+      "MYQ6_HIDEOUT_PORTAL"
     ]
   },
   {
