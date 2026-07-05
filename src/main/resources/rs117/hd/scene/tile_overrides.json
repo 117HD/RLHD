@@ -10803,12 +10803,12 @@
     "name": "Vampyrium - Sugadinti Hideout - overlay",
     "area": "VAMPYRIUM_SUGADINTI_HIDEOUT",
     "uvOrientation": 256,
-    "uvScale": 2,
+    "uvScale": 1.5,
     "shiftLightness": 1,
     "overlayIds": [
       634
     ],
-    "groundMaterial": "STONE"
+    "groundMaterial": "SMOOTH_STONE"
   },
   {
     "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
