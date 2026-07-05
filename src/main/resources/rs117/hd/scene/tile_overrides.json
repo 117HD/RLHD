@@ -10757,8 +10757,17 @@
     "area": "VAMPYRIUM",
     "uvOrientation": 512,
     "underlayIds": [
+      235,
       238,
       239
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Vampyrium - Dirt Overlay",
+    "area": "VAMPYRIUM",
+    "overlayIds": [
+      634
     ],
     "groundMaterial": "VARIED_DIRT"
   },

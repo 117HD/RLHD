@@ -8280,6 +8280,15 @@
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
     "shiftLightness": 3,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
     "objectIds": [
       "FOSSIL_WYVERN_CAVE_ENTRANCE",
       "TZHAAR_KARAMJADUNGEON_WALL_ENTRANCE",
@@ -8288,10 +8297,9 @@
       "WILD_CAVE_ENTRANCE_MID",
       "WILDERNESS_GWD_ENTRANCE",
       "TROLL_STRONGHOLD_DOOR",
-      "SOTFA_CAVE_ENTRANCE_OP"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5
+      "SOTFA_CAVE_ENTRANCE_OP",
+      "SOTFA_CAVE_ENTRANCE_ESCAPE"
+    ]
   },
   {
     "description": "SMOKEDEVIL_CAVE_ENTRANCE",
@@ -60462,14 +60470,21 @@
   },
   {
     "description": "Morytania ground webs",
-    "baseMaterial": "GROUND_WEB_2_LIGHT",
+    "baseMaterial": "GROUND_WEB_2",
+    "shiftLightness": 15,
     "objectIds": [
       "CAVEKIT_WEB01_FLOOR01",
       "CAVEKIT_WEB01_FLOOR02",
       "CAVEKIT_WEB01_FLOOR03",
       "CAVEKIT_WEB01_FLOOR04",
       "CAVEKIT_WEB01_FLOOR05",
-      "CAVEKIT_WEB01_FLOOR06"
+      "CAVEKIT_WEB01_FLOOR06",
+      "SOTFA_WEB01_FLOOR01",
+      "SOTFA_WEB01_FLOOR02",
+      "SOTFA_WEB01_FLOOR03",
+      "SOTFA_WEB01_FLOOR04",
+      "SOTFA_WEB01_FLOOR05",
+      "SOTFA_WEB01_FLOOR06"
     ]
   },
   {
@@ -95658,9 +95673,67 @@
       "DARKWOOD_TREE_TRUNK01_FALLEN01",
       "SOTFA_FOREST_TREE_STUMP02",
       "DARKWOOD_TREE_SAPLING02",
-      "DARKWOOD_TREE_SAPLING04"
+      "DARKWOOD_TREE_SAPLING04",
+      "DARKWOOD_TREE_STUMP_AXE01",
+      "DARKWOOD_TREE_STUMP_NOAXE01",
+      "SOTFA_FOREST_ROPESWING_TREE_BODY",
+      "SOTFA_FOREST_ROPESWING_TREE_NOROPE"
     ],
     "colorOverrides": [
+      {
+        "description": "Grass - Temp hide till better solution",
+        "colors": "s == 7",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": -2,
+        "castShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees - Snake rope",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 14,
+    "objectIds": [
+      "SOTFA_FOREST_ROPESWING_TREE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Snake rope",
+        "colors": "s >= 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 6
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees with webs",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 14,
+    "objectIds": [
+      "DARKWOOD_TREE_DEFAULT01_WEB01",
+      "DARKWOOD_TREE_DEFAULT02_WEB01",
+      "DARKWOOD_TREE_DEFAULT03_WEB01",
+      "DARKWOOD_TREE_DEFAULT04_WEB01",
+      "DARKWOOD_TREE_DEFAULT05_WEB01",
+      "DARKWOOD_TREE_DARK01_WEB01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_3",
+        "uvType": "BOX",
+        "uvOrientation": 404
+      },
       {
         "description": "Grass - Temp hide till better solution",
         "colors": "s == 7",
@@ -95680,28 +95753,6 @@
     "shiftLightness": 14,
     "npcIds": [
       "SOTFA_FOREST_NASTY_TREE"
-    ]
-  },
-  {
-    "description": "Vampyrium Trees",
-    "baseMaterial": "BARK",
-    "uvType": "BOX",
-    "undoVanillaShading": false,
-    "uvScale": 0.7,
-    "shiftLightness": 14,
-    "objectIds": [
-      "DARKWOOD_TREE_STUMP_AXE01",
-      "DARKWOOD_TREE_STUMP_NOAXE01"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Grass - Temp hide till better solution",
-        "colors": "s == 7",
-        "baseMaterial": "NONE",
-        "windDisplacementMode": "OBJECT",
-        "shiftSaturation": -2,
-        "castShadows": false
-      }
     ]
   },
   {
@@ -95790,7 +95841,6 @@
       "ROCKS_VOROS02_DEFAULT01",
       "VOROS_ROCKSLIDE01",
       "VOROS_ROCKSLIDE02",
-      "VOROS_ROCKSLIDE03",
       "VOROS_ROCKSLIDE04"
     ]
   },
@@ -97503,6 +97553,30 @@
       "SOTFA_CAVE_PAINTING01",
       "SOTFA_CAVE_PAINTING02",
       "SOTFA_CAVE_PAINTING03"
+    ]
+  },
+  {
+    "description": "ROCK_CAVE_ENTRANCES",
+    "baseMaterial": "ROCK_2",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_3",
+        "uvType": "BOX",
+        "uvOrientation": 404
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "SOTFA_NYLOCAS_CAVE_ENTRY"
     ]
   }
 ]

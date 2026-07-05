@@ -12115,7 +12115,7 @@
   },
   {
     "name": "VAMPYRIUM_FOREST_INSTANCE",
-    "regions": [ 11899 ]
+    "regions": [ 11642, 11899, 12155 ]
   },
   {
     "name": "VAMPYRIUM_CAVES",
