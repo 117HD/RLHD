@@ -12114,8 +12114,17 @@
     "hideOtherAreas": true
   },
   {
+    "name": "VAMPYRIUM_FOREST_INSTANCE",
+    "regions": [ 11899 ]
+  },
+  {
+    "name": "VAMPYRIUM_CAVES",
+    "regions": [ 11898 ]
+  },
+  {
     "name": "VAMPYRIUM",
-    "regionBoxes": [ [ 9597, 11128 ] ]
+    "regionBoxes": [ [ 9597, 11128 ] ],
+    "areas": [ "VAMPYRIUM_FOREST_INSTANCE" ]
   },
   {
     "name": "SNOWY_REGIONS",

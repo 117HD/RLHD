@@ -10744,6 +10744,25 @@
     "groundMaterial": "DIRT_1"
   },
   {
+    "name": "Vampyrium - Cave Floor",
+    "area": "VAMPYRIUM_CAVES",
+    "uvOrientation": 512,
+    "underlayIds": [
+      242
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Vampyrium - Dirt",
+    "area": "VAMPYRIUM",
+    "uvOrientation": 512,
+    "underlayIds": [
+      238,
+      239
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
     "name": "Vampyrium - Blood",
     "area": "VAMPYRIUM",
     "uvOrientation": 512,

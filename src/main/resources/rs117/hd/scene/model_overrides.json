@@ -8279,6 +8279,7 @@
   {
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
+    "shiftLightness": 3,
     "objectIds": [
       "FOSSIL_WYVERN_CAVE_ENTRANCE",
       "TZHAAR_KARAMJADUNGEON_WALL_ENTRANCE",
@@ -8286,7 +8287,8 @@
       "TOG_CAVE_DOWN",
       "WILD_CAVE_ENTRANCE_MID",
       "WILDERNESS_GWD_ENTRANCE",
-      "TROLL_STRONGHOLD_DOOR"
+      "TROLL_STRONGHOLD_DOOR",
+      "SOTFA_CAVE_ENTRANCE_OP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -15829,7 +15831,8 @@
       "LAGUNA_DUGUPSOIL03_SAND01",
       "CLIMBINGCAVEROCKS1",
       "GREAT_CONCH_CLIFF_SHORTCUT_SOUTHEAST_BOTTOM",
-      "GREAT_CONCH_CLIFF_SHORTCUT_SOUTHEAST_TOP"
+      "GREAT_CONCH_CLIFF_SHORTCUT_SOUTHEAST_TOP",
+      "VOROS_ROCKSLIDE03"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -17034,6 +17037,7 @@
   {
     "description": "Objects - Stone - Stalagmite",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
     "objectIds": [
       "HORROR_STALAGMITE_TWIN_GREY",
       "HORROR_STALAGMITE_SMALL_GREY",
@@ -17053,9 +17057,12 @@
       "STALAGMITE_ROCK01_DEFAULT02_DARK02",
       "EYEGLO_MINE_STALAGTITE_01",
       "EYEGLO_MINE_STALAGTITE_02",
-      "EYEGLO_MINE_STALAGTITE_FALLOFF"
-    ],
-    "uvType": "BOX"
+      "EYEGLO_MINE_STALAGTITE_FALLOFF",
+      "CAVEKIT_SOTFA_STALAGMITES01",
+      "CAVEKIT_SOTFA_STALAGMITES_TWIN",
+      "CAVEKIT_SOTFA_STALAGMITES_LARGE",
+      "CAVEKIT_SOTFA_STALAGMITES_LARGE_BIG"
+    ]
   },
   {
     "description": "Objects - Stone - Stalagmite - Darken",
@@ -35426,7 +35433,10 @@
       "LARGEBONE_BURNT",
       "ANIMALSKULL_BURNT",
       "CARCASS_BURNT",
-      "SW_BONES_LARGE_RIBCAGE"
+      "SW_BONES_LARGE_RIBCAGE",
+      "GHORROCK_BONES03",
+      "ARAXXOR_BONES01",
+      "ARAXXOR_BONES02"
     ]
   },
   {
@@ -93876,7 +93886,9 @@
     ],
     "objectIds": [
       "WEAPONS_SANGVESTI01_LEANING01",
-      "WEAPONS_SANGVESTI01_LEANING01_OFFSET_X"
+      "WEAPONS_SANGVESTI01_LEANING01_OFFSET_X",
+      "MYQ6_WEAPONS01_CAVE_LEANING01",
+      "MYQ6_WEAPONS01_CAVE_LEANING02"
     ]
   },
   {
@@ -95623,8 +95635,7 @@
     "uvType": "BOX",
     "undoVanillaShading": false,
     "uvScale": 0.7,
-    "shiftLightness": 16,
-    "shiftSaturation": -1,
+    "shiftLightness": 14,
     "objectIds": [
       "DARKWOOD_TREE_DEFAULT02",
       "DARKWOOD_TREE_DEFAULT01",
@@ -95635,8 +95646,52 @@
       "DARKWOOD_TREE_TRUNK02",
       "DARKWOOD_TREE_TRUNK02_2X2",
       "DARKWOOD_TREE_DEFAULT06",
+      "SOTFA_FOREST_DENSE_TREE",
+      "SOTFA_FOREST_DENSE_TREE02",
+      "SOTFA_FOREST_DENSE_TREE03",
+      "SOTFA_FOREST_DENSE_TREE_CHOPPED",
+      "SOTFA_FOREST_DENSE_TREE_CHOPPED02",
+      "SOTFA_FOREST_DENSE_TREE_CHOPPED03",
+      "SOTFA_FOREST_DENSE_TREE_STUMP",
+      "SOTFA_FOREST_DENSE_TREE_STUMP02",
+      "SOTFA_FOREST_DENSE_TREE_STUMP03",
       "DARKWOOD_TREE_TRUNK01_FALLEN01",
-      "SOTFA_FOREST_TREE_STUMP02"
+      "SOTFA_FOREST_TREE_STUMP02",
+      "DARKWOOD_TREE_SAPLING02",
+      "DARKWOOD_TREE_SAPLING04"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass - Temp hide till better solution",
+        "colors": "s == 7",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": -2,
+        "castShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 14,
+    "npcIds": [
+      "SOTFA_FOREST_NASTY_TREE"
+    ]
+  },
+  {
+    "description": "Vampyrium Trees",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 14,
+    "objectIds": [
+      "DARKWOOD_TREE_STUMP_AXE01",
+      "DARKWOOD_TREE_STUMP_NOAXE01"
     ],
     "colorOverrides": [
       {
@@ -95703,11 +95758,12 @@
     "uvType": "BOX",
     "undoVanillaShading": false,
     "uvScale": 0.7,
-    "shiftLightness": 7,
+    "shiftLightness": 14,
     "objectIds": [
       "DARKWOOD_TREE_DOORWAY01",
       "DARKWOOD_TREE_DOORWAY01_NOOP_4X3",
-      "DARKWOOD_TREE_DOORWAY01_NOOP"
+      "DARKWOOD_TREE_DOORWAY01_NOOP",
+      "DARKWOOD_TREE_DOORWAY01_ESCAPE"
     ],
     "colorOverrides": [
       {
@@ -95732,7 +95788,10 @@
       "ROCKS_VOROS01_CHUNK01",
       "ROCKS_VOROS01_LARGE01",
       "ROCKS_VOROS02_DEFAULT01",
-      "VOROS_ROCKSLIDE01"
+      "VOROS_ROCKSLIDE01",
+      "VOROS_ROCKSLIDE02",
+      "VOROS_ROCKSLIDE03",
+      "VOROS_ROCKSLIDE04"
     ]
   },
   {
@@ -97021,6 +97080,18 @@
     ]
   },
   {
+    "description": "Vampyrium - Purple grass and webbed plant",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "shiftLightness": 6,
+    "objectIds": [
+      "PLANT_VAMPYRIUM_PLANT04",
+      "SOTFA_SHRUB"
+    ]
+  },
+  {
     "description": "Vampyrium - Bank - Metal bars",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
@@ -97320,8 +97391,19 @@
       }
     ],
     "objectIds": [
+      "PLANT_VAMPYRIUM_THORNS01",
+      "PLANT_VAMPYRIUM_THORNS01_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS02",
+      "PLANT_VAMPYRIUM_THORNS02_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS03_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS03",
+      "PLANT_VAMPYRIUM_THORNS04_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS05",
+      "PLANT_VAMPYRIUM_THORNS05_DARKER01",
       "PLANT_VAMPYRIUM_THORNS06",
-      "PLANT_VAMPYRIUM_THORNS07"
+      "PLANT_VAMPYRIUM_THORNS06_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS07",
+      "PLANT_VAMPYRIUM_THORNS07_DARKER01"
     ]
   },
   {
@@ -97372,7 +97454,7 @@
         "castShadows": false
       },
       {
-        "description": "Grass",
+        "description": "Grain",
         "colors": "h == 0 && s == 2",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
@@ -97381,6 +97463,46 @@
     ],
     "objectIds": [
       "SOTFA_FOREST_SIGNPOST"
+    ]
+  },
+  {
+    "description": "Vampyrium - Cave walls",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "shiftLightness": 5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": -4,
+        "castShadows": false
+      },
+      {
+        "description": "Wall edge",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_WALL_CAVE_MID",
+      "MYQ6_WALL_CAVE02",
+      "SOTFA_CAVE_EXIT_NOOP",
+      "SOTFA_CAVE_EXIT_OP"
+    ]
+  },
+  {
+    "description": "Vampyrium - Cave walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "shiftLightness": 2,
+    "objectIds": [
+      "SOTFA_CAVE_PAINTING01",
+      "SOTFA_CAVE_PAINTING02",
+      "SOTFA_CAVE_PAINTING03"
     ]
   }
 ]
