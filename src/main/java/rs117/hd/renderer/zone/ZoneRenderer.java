@@ -1251,10 +1251,10 @@ public class ZoneRenderer implements Renderer {
 
 		// Clear scene
 		frameTimer.begin(Timer.CLEAR_SCENE);
+		glClearDepth(0);
 
 		// Render sky gradient if Day/Night Cycle is enabled, otherwise use solid color clear
 		if (skyGradientEnabled && skyProgram.isValid()) {
-			glClearDepth(0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
 
