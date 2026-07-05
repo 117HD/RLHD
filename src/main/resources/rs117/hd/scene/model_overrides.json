@@ -95839,6 +95839,7 @@
       "ROCKS_VOROS01_CHUNK01",
       "ROCKS_VOROS01_LARGE01",
       "ROCKS_VOROS02_DEFAULT01",
+      "ROCKS_VOROS01_LARGE01_3X3",
       "VOROS_ROCKSLIDE01",
       "VOROS_ROCKSLIDE02",
       "VOROS_ROCKSLIDE04"
@@ -95961,6 +95962,40 @@
       "WALLKIT_SANGVESTI01_FENCE01_RUBBLE01",
       "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN02",
       "SANGVESTI_SHED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2 && l < 14",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 6,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Bridge",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      "VAMPYRIUM_JOVKAI01_BRIDGE01",
+      "VAMPYRIUM_JOVKAI01_BRIDGE02",
+      "VAMPYRIUM_JOVKAI01_BRIDGE03",
+      "VAMPYRIUM_JOVKAI01_BRIDGE04",
+      "VAMPYRIUM_JOVKAI01_BRIDGE05",
+      "VAMPYRIUM_JOVKAI01_BRIDGE06"
     ],
     "colorOverrides": [
       {
