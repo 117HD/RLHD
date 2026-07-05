@@ -198,7 +198,7 @@ public class SceneManager {
 				if (!generateSceneDataTask.isDone())
 					generateSceneDataTask.waitForCompletion();
 
-				root.sceneContext.fillGaps = config.fillGapsInTerrain();
+				root.sceneContext.fillGaps = config.fillGapsInTerrain() && !root.sceneContext.scene.isInstance();
 
 				generateSceneDataTask.queue();
 
@@ -465,7 +465,7 @@ public class SceneManager {
 			Scene prev = client.getTopLevelWorldView().getScene();
 
 			nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
-			nextSceneContext.fillGaps = config.fillGapsInTerrain();
+			nextSceneContext.fillGaps = config.fillGapsInTerrain() && !nextSceneContext.scene.isInstance();
 
 			if (nextSceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 				nextSceneContext.isInHouse = true;

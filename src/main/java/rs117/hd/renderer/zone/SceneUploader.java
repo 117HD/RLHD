@@ -2205,14 +2205,16 @@ public class SceneUploader implements AutoCloseable {
 			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				int tileExX = (mzx << 3) + xoff;
 				int tileExY = (mzz << 3) + zoff;
+				int tileX = tileExX - ctx.sceneOffset;
+				int tileY = tileExY - ctx.sceneOffset;
+				if (tileX <= sceneMin || tileY <= sceneMin || tileX >= sceneMax - 1 || tileY >= sceneMax - 1)
+					continue;
 				int faces = processGapTile(
 					ctx,
 					extendedTiles,
 					null,
 					tileExX,
 					tileExY,
-					sceneMin,
-					sceneMax,
 					null,
 					0,
 					0,
@@ -2257,14 +2259,16 @@ public class SceneUploader implements AutoCloseable {
 			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				int tileExX = (mzx << 3) + xoff;
 				int tileExY = (mzz << 3) + zoff;
+				int tileX = tileExX - ctx.sceneOffset;
+				int tileY = tileExY - ctx.sceneOffset;
+				if (tileX <= sceneMin || tileY <= sceneMin || tileX >= sceneMax - 1 || tileY >= sceneMax - 1)
+					continue;
 				processGapTile(
 					ctx,
 					extendedTiles,
 					tileHeights,
 					tileExX,
 					tileExY,
-					sceneMin,
-					sceneMax,
 					blackMaterial,
 					basex,
 					basez,
@@ -2285,8 +2289,6 @@ public class SceneUploader implements AutoCloseable {
 		@Nullable int[][][] tileHeights,
 		int tileExX,
 		int tileExY,
-		int sceneMin,
-		int sceneMax,
 		@Nullable Material blackMaterial,
 		int basex,
 		int basez,
@@ -2329,12 +2331,7 @@ public class SceneUploader implements AutoCloseable {
 			}
 		}
 
-		boolean shouldFill =
-			tileX > sceneMin &&
-			tileY > sceneMin &&
-			tileX < sceneMax - 1 &&
-			tileY < sceneMax - 1 &&
-			Area.OVERWORLD.containsPoint(worldPos);
+		boolean shouldFill = Area.OVERWORLD.containsPoint(worldPos);
 
 		if (shouldFill) {
 			int tileRegionID = HDUtils.worldToRegionID(worldPos);

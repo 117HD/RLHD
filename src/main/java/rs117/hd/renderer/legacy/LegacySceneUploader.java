@@ -109,7 +109,7 @@ public class LegacySceneUploader {
 			config.hideUnrelatedAreas() &&
 			sceneContext.sceneBase != null &&
 			!sceneContext.forceDisableAreaHiding;
-		sceneContext.fillGaps = config.fillGapsInTerrain();
+		sceneContext.fillGaps = config.fillGapsInTerrain() && !scene.isInstance();
 
 		if (sceneContext.enableAreaHiding) {
 			sceneContext.possibleAreas = Arrays
