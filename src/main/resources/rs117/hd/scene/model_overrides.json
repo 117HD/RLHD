@@ -96092,14 +96092,6 @@
     "uvType": "BOX",
     "uvOrientation": 256,
     "shiftLightness": 3,
-    "objectIds": [
-      "VAMPYRIUM_JOVKAI01_BRIDGE01",
-      "VAMPYRIUM_JOVKAI01_BRIDGE02",
-      "VAMPYRIUM_JOVKAI01_BRIDGE03",
-      "VAMPYRIUM_JOVKAI01_BRIDGE04",
-      "VAMPYRIUM_JOVKAI01_BRIDGE05",
-      "VAMPYRIUM_JOVKAI01_BRIDGE06"
-    ],
     "colorOverrides": [
       {
         "description": "Path",
@@ -96128,6 +96120,14 @@
         "uvScale": 0.45,
         "uvOrientation": 512
       }
+    ],
+    "objectIds": [
+      "VAMPYRIUM_JOVKAI01_BRIDGE01",
+      "VAMPYRIUM_JOVKAI01_BRIDGE02",
+      "VAMPYRIUM_JOVKAI01_BRIDGE03",
+      "VAMPYRIUM_JOVKAI01_BRIDGE04",
+      "VAMPYRIUM_JOVKAI01_BRIDGE05",
+      "VAMPYRIUM_JOVKAI01_BRIDGE06"
     ]
   },
   {
@@ -97294,7 +97294,8 @@
       }
     ],
     "objectIds": [
-      "PLANT_VAMPYRIUM_PLANT03"
+      "PLANT_VAMPYRIUM_PLANT03",
+      "MYQ6_SUGADINTI_HIDEOUT_VINES_OP"
     ]
   },
   {
@@ -97945,7 +97946,11 @@
       "WALLKIT_JOVKAI01_RUBBLE02_TILE01",
       "WALLKIT_JOVKAI01_RUBBLE03_TILE01",
       "WALLKIT_JOVKAI01_RUBBLE04_TILE01",
-      "WALLKIT_JOVKAI01_RUBBLE06_TILE01_END"
+      "WALLKIT_JOVKAI01_RUBBLE06_TILE01_END",
+      "VAMPYRIUM_JOVKAI01_RUBBLE01",
+      "VAMPYRIUM_JOVKAI01_RUBBLE02",
+      "VAMPYRIUM_JOVKAI01_RUBBLE03A",
+      "VAMPYRIUM_JOVKAI01_RUBBLE04A"
     ]
   },
   {
@@ -98274,6 +98279,50 @@
     ],
     "objectIds": [
       "MYQ6_THRONE01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti - Crumbling stone arch",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 3,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "VAMPYRIUM_JOVKAI01_ARCH01",
+      "VAMPYRIUM_JOVKAI01_ARCH02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti - Castle Hideout - Needs UV",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Fake shadow",
+        "colors": "h == 0 && s == 0 && l <= 3",
+        "baseMaterial": "BLACK",
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "VAMPYRIUM_JOVKAI01_FACADE01",
+      "VAMPYRIUM_JOVKAI01_FACADE02",
+      "VAMPYRIUM_JOVKAI01_FACADE03",
+      "VAMPYRIUM_JOVKAI01_WATCHTOWER01",
+      "VAMPYRIUM_JOVKAI01_WATCHTOWER02"
     ]
   }
 ]
