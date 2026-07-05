@@ -49697,7 +49697,7 @@
   {
     "description": "Blood Moon Rises - Vampyrium - Sugadinti Hideout Torches",
     "offset": [ -50.0, 298.0, 0.0 ],
-    "radius": 600,
+    "radius": 250,
     "strength": 7.5,
     "color": [
       70,
