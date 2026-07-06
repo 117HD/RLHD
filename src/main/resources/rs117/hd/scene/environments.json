@@ -2372,6 +2372,19 @@
     "nightSkyColor": "#ff0000"
   },
   {
+    "area": "VAMPYRIUM_FOREST_CLEARING",
+    "fogDepth": 70,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#100000",
+    "sunStrength": 0,
+    "sunlightStrength": 0.8,
+    "starVisibility": 0.8,
+    "minBrightnessBoost": 0.5,
+    "nightSkyColor": "#000000"
+  },
+  {
     "area": "PLAYER_OWNED_HOUSE_WILDY",
     "isPohTheme": true,
     "ambientColor": "#d7d2d2",

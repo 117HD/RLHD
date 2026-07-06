@@ -12142,10 +12142,6 @@
     ]
   },
   {
-    "name": "VAMPYRIUM",
-    "regionBoxes": [ [ 9597, 11128 ] ]
-  },
-  {
     "name": "KRAKEN_COVE",
     "regions": [ 9116 ]
   },
@@ -12187,6 +12183,55 @@
       [ 2300, 9998 ],
       [ 2299, 10001 ],
       [ 2256, 10004 ]
+    ]
+  },
+  {
+    "name": "PATERDOMUS_MAUSOLEUM",
+    "aabbs": [
+      [ 3392, 9871, 3455, 9917 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "PATERDOMUS_MAUSOLEUM_BASEMENT",
+    "aabbs": [
+      [ 3340, 9888, 3373, 9916 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "VAMPYRIUM",
+    "regionBoxes": [ [ 9597, 11128 ] ]
+  },
+  {
+    "name": "VAMPYRIUM_FOREST_CLEARING",
+    "regions": [ 11383 ]
+  },
+  {
+    "name": "VAMPYRIUM_FOREST_CLEARING_TREE_FIX",
+    "aabbs": [ [ 2836, 7645, 2839, 7648 ] ]
+  },
+  {
+    "name": "VAMPYRIUM_FOREST_INSTANCE",
+    "regions": [ 11642, 11899, 12155 ]
+  },
+  {
+    "name": "VAMPYRIUM_FOREST_HIDEOUT",
+    "regions": [ 11640, 11895, 11896, 12152 ]
+  },
+  {
+    "name": "VAMPYRIUM_CAVES",
+    "regions": [ 11898 ]
+  },
+  {
+    "name": "VAMPYRIUM_SUGADINTI_HIDEOUT",
+    "regions": [ 12666 ]
+  },
+  {
+    "name": "VAMPYRIUM",
+    "regionBoxes": [ [ 9597, 11128 ] ],
+    "areas": [
+      "VAMPYRIUM_FOREST_INSTANCE", "VAMPYRIUM_FOREST_HIDEOUT"
     ]
   },
   {
@@ -12277,6 +12322,7 @@
     "name": "MAINLAND_EXTENSIONS",
     "areas": [
       "VAMPYRIUM",
+      "VAMPYRIUM_FOREST_CLEARING",
       "PANDEMONIUM_QUEST_INSTANCE",
       "BRAINDEATH_ISLAND",
       "CLAN_HALL",
