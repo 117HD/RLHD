@@ -10790,7 +10790,14 @@
   {
     "name": "Vampyrium - Blood",
     "area": "VAMPYRIUM",
-    "uvOrientation": 512,
+    "overlayIds": [
+      636
+    ],
+    "waterType": "BLOOD"
+  },
+  {
+    "name": "Vampyrium - Blood",
+    "area": "VAMPYRIUM_DEEP_FORESTS",
     "overlayIds": [
       636
     ],
