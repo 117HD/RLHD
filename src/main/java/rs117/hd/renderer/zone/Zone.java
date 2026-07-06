@@ -622,12 +622,10 @@ public class Zone implements Destructible {
 			final int fy = (((int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]) / 3) - cy) >> shift;
 			final int fz = (((int) (vertexZ[indices1[f]] + vertexZ[indices2[f]] + vertexZ[indices3[f]]) / 3) - cz) >> shift;
 
-			final int packed = ((fx & ((1 << 11) - 1)) << 21)
-			                   | ((fy & ((1 << 10) - 1)) << 11)
-			                   | (fz & ((1 << 11) - 1));
-
 			radius = Math.max(radius, fx * fx + fy * fy + fz * fz);
-			packedFaces[bufferIdx] = packed;
+			packedFaces[bufferIdx] = ((fx & ((1 << 11) - 1)) << 21)
+			                         | ((fy & ((1 << 10) - 1)) << 11)
+			                         | (fz & ((1 << 11) - 1));
 
 			if (doubleSidedBitSet != null && (modelOverride.doubleSidedFaces || faceOverride.doubleSidedFaces || material.doubleSidedFaces)) {
 				doubleSidedBitSet[bufferIdx >> 5] |= 1 << (bufferIdx & 31);
