@@ -216,6 +216,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		final int[] packedFaces = m.packedFaces;
 		final int[] doubleSidedBitSet = m.doubleSidedBitSet;
+		final int[] sortedFaces = m.tempSortedFaces;
 		final int[] zsortHead = this.zsortHead;
 		final int[] zsortTail = this.zsortTail;
 		final int[] zsortNext = this.zsortNext;
@@ -223,11 +224,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
 
-		int[] unsortedFaces = m.doubleSidedCount > 0 ? PooledArrayType.INT.borrow(m.doubleSidedCount * 3) : null;
-		int unsortedOffset = 0;
-
+		int sortedOffset = 0;
 		int backfaceWord = 0;
 		int minFz = diameter, maxFz = 0;
+
 		for (int i = 0, f = 0; i < m.packedFaces.length; ++i, ++f) {
 			final int packed = packedFaces[i];
 			final short x = (short) (packed >> 21);
@@ -252,25 +252,19 @@ public final class FacePrioritySorter implements AutoCloseable {
 			zsortNext[f] = -1;
 
 			// Backfaces are not sorted, so we skip over them if this face is marked as double sided
-			if (unsortedFaces != null && doubleSidedBitSet != null) {
+			if (doubleSidedBitSet != null) {
 				int bitIdx = i & 31;
 				if (bitIdx == 0)
 					backfaceWord = doubleSidedBitSet[i >> 5];
 
 				if ((backfaceWord & (1 << bitIdx)) != 0) {
 					final int faceStart = ++f * 3 + start;
-					unsortedFaces[unsortedOffset++] = faceStart;
-					unsortedFaces[unsortedOffset++] = faceStart + 1;
-					unsortedFaces[unsortedOffset++] = faceStart + 2;
+					sortedFaces[sortedOffset++] = faceStart;
+					sortedFaces[sortedOffset++] = faceStart + 1;
+					sortedFaces[sortedOffset++] = faceStart + 2;
 				}
 			}
 		}
-
-		int[] sortedFaces = PooledArrayType.INT.borrow(unsortedOffset + (m.packedFaces.length * 3));
-		int sortedOffset = unsortedOffset;
-
-		if(unsortedFaces != null && unsortedOffset > 0)
-			System.arraycopy(unsortedFaces, 0, sortedFaces, 0, unsortedOffset);
 
 		for (int i = maxFz; i >= minFz; --i) {
 			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
@@ -283,11 +277,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 				sortedFaces[sortedOffset++] = faceStart + 2;
 			}
 		}
-
-		m.tempSortedFaces = sortedFaces;
 		m.sortedFacesLen = sortedOffset;
-
-		PooledArrayType.INT.release(unsortedFaces);
 	}
 
 	@Override

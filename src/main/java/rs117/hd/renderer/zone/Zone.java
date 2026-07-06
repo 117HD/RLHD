@@ -564,7 +564,7 @@ public class Zone implements Destructible {
 		final int bucketCapacity = ceil(packedFaceCount / 32.0f);
 
 		final int[] packedFaces = PooledArrayType.INT.borrow(packedFaceCount);
-		final int[] doubleSidedBitSet = modelOverride.doubleSidedFaces ? PooledArrayType.INT.borrow(bucketCapacity) : null;
+		final int[] doubleSidedBitSet = modelOverride.mightBeDoubleSided ? PooledArrayType.INT.borrow(bucketCapacity) : null;
 
 		if(doubleSidedBitSet != null)
 			Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
@@ -685,8 +685,8 @@ public class Zone implements Destructible {
 			} {
 				if(m.tempSortedFaces != null)
 					PooledArrayType.INT.release(m.tempSortedFaces);
-				m.tempSortedFaces = null;
 			}
+			m.tempSortedFaces = null;
 		}
 	}
 
