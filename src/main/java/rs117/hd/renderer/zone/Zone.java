@@ -427,11 +427,12 @@ public class Zone implements Destructible {
 		// only set for static geometry as they require sorting
 		int radius;
 		int[] packedFaces;
-		int[] backFaceBitSet;
-		int sortedFacesLen;
+		int[] doubleSidedBitSet;
+		char doubleSidedCount;
 
 		int dist;
 		int asyncSortIdx = -1;
+		int sortedFacesLen;
 		int[] tempSortedFaces;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
@@ -559,17 +560,18 @@ public class Zone implements Destructible {
 			shift++;
 		}
 
-		int packedFaceCount = (endpos - startpos) / ((3 * VERT_SIZE) >> 2);
-		if(modelOverride.doubleSidedFaces)
-			packedFaceCount *= 2;
+		final int packedFaceCount = (endpos - startpos) / ((3 * VERT_SIZE) >> 2);
+		final int bucketCapacity = ceil(packedFaceCount / 32.0f);
 
 		final int[] packedFaces = PooledArrayType.INT.borrow(packedFaceCount);
-		final int[] backFaceBitSet = modelOverride.doubleSidedFaces ? PooledArrayType.INT.borrow(packedFaceCount) : null;
-		if(backFaceBitSet != null)
-			Arrays.fill(backFaceBitSet, 0);
+		final int[] doubleSidedBitSet = modelOverride.doubleSidedFaces ? PooledArrayType.INT.borrow(bucketCapacity) : null;
+
+		if(doubleSidedBitSet != null)
+			Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
 
 		int radius = 0;
 		char bufferIdx = 0;
+		char doubleSidedCount = 0;
 		for (int f = 0; f < faceCount; ++f) {
 			if (color3[f] == -2)
 				continue;
@@ -626,13 +628,13 @@ public class Zone implements Destructible {
 
 			radius = Math.max(radius, fx * fx + fy * fy + fz * fz);
 			packedFaces[bufferIdx] = packed;
-			bufferIdx++;
 
-			if (backFaceBitSet != null && faceOverride.doubleSidedFaces) {
-				packedFaces[bufferIdx] = packed;
-				backFaceBitSet[bufferIdx >> 5] |= 1 << (bufferIdx & 31);
-				bufferIdx++;
+			if (doubleSidedBitSet != null && faceOverride.doubleSidedFaces) {
+				doubleSidedBitSet[bufferIdx >> 5] |= 1 << (bufferIdx & 31);
+				doubleSidedCount++;
 			}
+
+			bufferIdx++;
 		}
 
 		assert packedFaces.length > 0;
@@ -641,12 +643,14 @@ public class Zone implements Destructible {
 
 		m.radius = 2 + (int) Math.sqrt(radius);
 		m.packedFaces = Arrays.copyOf(packedFaces, bufferIdx);
-		m.backFaceBitSet = backFaceBitSet != null ? Arrays.copyOf(backFaceBitSet, ceil(bufferIdx / 32.0f)) : null;
+		if(doubleSidedCount > 0)
+			m.doubleSidedBitSet = doubleSidedBitSet != null ? Arrays.copyOf(doubleSidedBitSet, ceil(bufferIdx / 32.0f)) : null;
+		m.doubleSidedCount = doubleSidedCount;
 
 		alphaModels.add(m);
 
 		PooledArrayType.INT.release(packedFaces);
-		PooledArrayType.INT.release(backFaceBitSet);
+		PooledArrayType.INT.release(doubleSidedBitSet);
 	}
 
 	synchronized AlphaModel requestTempAlphaModel(ModelOverride modelOverride, int level, int x, int y, int z) {
@@ -676,7 +680,7 @@ public class Zone implements Destructible {
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
 				alphaModels.remove(i);
 				m.packedFaces = null;
-				m.backFaceBitSet = null;
+				m.doubleSidedBitSet = null;
 				ALPHA_MODEL_POOL.recycle(m);
 			} {
 				if(m.tempSortedFaces != null)
@@ -734,7 +738,7 @@ public class Zone implements Destructible {
 				continue;
 
 			m.dist = dist;
-			m.tempSortedFaces = PooledArrayType.INT.borrow(m.packedFaces.length * 3);
+			m.tempSortedFaces = PooledArrayType.INT.borrow((m.packedFaces.length + m.doubleSidedCount) * 3);
 			alphaSortingJob.addAlphaModel(m);
 		}
 		alphaSortingJob.queue(camera);
@@ -926,8 +930,9 @@ public class Zone implements Destructible {
 				m2.zofz = (byte) (closestZoneZ - zz);
 
 				m2.packedFaces = m.packedFaces;
-				m2.backFaceBitSet = m.backFaceBitSet;
+				m2.doubleSidedBitSet = m.doubleSidedBitSet;
 				m2.radius = m.radius;
+				m2.doubleSidedCount = m.doubleSidedCount;
 				m2.asyncSortIdx = m.asyncSortIdx;
 				m2.tempSortedFaces = m.tempSortedFaces;
 				m2.sortedFacesLen = m.sortedFacesLen;

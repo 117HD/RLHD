@@ -206,16 +206,16 @@ public final class FacePrioritySorter implements AutoCloseable {
 		int pitchCos, int pitchSin
 	) {
 		final int radius = m.radius;
-		final int diameter = 1 + (radius * (m.backFaceBitSet != null ? 2 : 1)) * 2;
+		final int diameter = 1 + radius * 2;
 		if (diameter >= MAX_DIAMETER)
 			return;
 
-		final int faceCount = m.packedFaces.length;
+		final int start = m.startpos / (VERT_SIZE >> 2);
+		final int faceCount = m.packedFaces.length + m.doubleSidedCount;
 		ensureCapacity(diameter, faceCount);
 
 		final int[] packedFaces = m.packedFaces;
-		final int[] backFaceBitSet = m.backFaceBitSet;
-		final int[] sortedFaces = m.tempSortedFaces;
+		final int[] doubleSidedBitSet = m.doubleSidedBitSet;
 		final int[] zsortHead = this.zsortHead;
 		final int[] zsortTail = this.zsortTail;
 		final int[] zsortNext = this.zsortNext;
@@ -223,9 +223,12 @@ public final class FacePrioritySorter implements AutoCloseable {
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
 
+		int[] unsortedFaces = m.doubleSidedCount > 0 ? PooledArrayType.INT.borrow(m.doubleSidedCount * 3) : null;
+		int unsortedOffset = 0;
+
 		int backfaceWord = 0;
 		int minFz = diameter, maxFz = 0;
-		for (int i = 0; i < faceCount; ++i) {
+		for (int i = 0, f = 0; i < m.packedFaces.length; ++i, ++f) {
 			final int packed = packedFaces[i];
 			final short x = (short) (packed >> 21);
 			final short y = (short) ((packed << 11) >> 22);
@@ -236,46 +239,55 @@ public final class FacePrioritySorter implements AutoCloseable {
 			int fz = (z * yawCos - x * yawSin) >> 16;
 			fz = ((y * pitchSin + fz * pitchCos) >> 16) + radius;
 
-			if (backFaceBitSet != null) {
-				int bitIdx = i & 31;
-				if (bitIdx == 0)
-					backfaceWord = backFaceBitSet[i >> 5];
-
-				if ((backfaceWord & (1 << bitIdx)) != 0)
-					fz += radius * 2;
-			}
-
 			final int tailFaceIdx = zsortTail[fz];
 			if (tailFaceIdx == -1) {
-				zsortHead[fz] = i;
-				zsortTail[fz] = i;
+				zsortHead[fz] = f;
+				zsortTail[fz] = f;
 				minFz = min(minFz, fz);
 				maxFz = max(maxFz, fz);
 			} else {
-				zsortNext[tailFaceIdx] = i;
-				zsortTail[fz] = i;
+				zsortNext[tailFaceIdx] = f;
+				zsortTail[fz] = f;
 			}
+			zsortNext[f] = -1;
 
-			zsortNext[i] = -1;
+			// Backfaces are not sorted, so we skip over them if this face is marked as double sided
+			if (unsortedFaces != null && doubleSidedBitSet != null) {
+				int bitIdx = i & 31;
+				if (bitIdx == 0)
+					backfaceWord = doubleSidedBitSet[i >> 5];
+
+				if ((backfaceWord & (1 << bitIdx)) != 0) {
+					final int faceStart = ++f * 3 + start;
+					unsortedFaces[unsortedOffset++] = faceStart;
+					unsortedFaces[unsortedOffset++] = faceStart + 1;
+					unsortedFaces[unsortedOffset++] = faceStart + 2;
+				}
+			}
 		}
 
-		final int start = m.startpos / (VERT_SIZE >> 2);
+		int[] sortedFaces = PooledArrayType.INT.borrow(unsortedOffset + (m.packedFaces.length * 3));
+		int sortedOffset = unsortedOffset;
+
+		if(unsortedFaces != null && unsortedOffset > 0)
+			System.arraycopy(unsortedFaces, 0, sortedFaces, 0, unsortedOffset);
+
 		for (int i = maxFz; i >= minFz; --i) {
 			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
 				if (f >= faceCount)
 					continue;
 
-				final int sortedOffset = m.sortedFacesLen;
 				final int faceStart = f * 3 + start;
-				sortedFaces[sortedOffset] = faceStart;
-				sortedFaces[sortedOffset + 1] = faceStart + 1;
-				sortedFaces[sortedOffset + 2] = faceStart + 2;
-				m.sortedFacesLen += 3;
-
-				if (m.sortedFacesLen >= sortedFaces.length)
-					return;
+				sortedFaces[sortedOffset++] = faceStart;
+				sortedFaces[sortedOffset++] = faceStart + 1;
+				sortedFaces[sortedOffset++] = faceStart + 2;
 			}
 		}
+
+		m.tempSortedFaces = sortedFaces;
+		m.sortedFacesLen = sortedOffset;
+
+		PooledArrayType.INT.release(unsortedFaces);
 	}
 
 	@Override
