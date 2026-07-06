@@ -1821,7 +1821,7 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx
 			);
 
-			if(modelOverride.doubleSidedFaces || faceOverride.doubleSidedFaces) {
+			if(modelOverride.doubleSidedFaces || faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
 				vb.putStaticVertex(
 					vx3, vy3, vz3,
 					faceUVs[8], faceUVs[9], faceUVs[10],

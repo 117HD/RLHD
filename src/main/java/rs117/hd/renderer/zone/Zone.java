@@ -629,7 +629,7 @@ public class Zone implements Destructible {
 			radius = Math.max(radius, fx * fx + fy * fy + fz * fz);
 			packedFaces[bufferIdx] = packed;
 
-			if (doubleSidedBitSet != null && faceOverride.doubleSidedFaces) {
+			if (doubleSidedBitSet != null && (modelOverride.doubleSidedFaces || faceOverride.doubleSidedFaces || material.doubleSidedFaces)) {
 				doubleSidedBitSet[bufferIdx >> 5] |= 1 << (bufferIdx & 31);
 				doubleSidedCount++;
 			}
