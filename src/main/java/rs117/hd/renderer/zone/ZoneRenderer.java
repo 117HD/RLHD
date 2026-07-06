@@ -1291,7 +1291,8 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.RENDER_SCENE);
 
-		renderState.enable.set(GL_BLEND);
+		// Blend will be enabled before & after alpha draws
+		renderState.disable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
@@ -1502,8 +1503,14 @@ public class ZoneRenderer implements Renderer {
 						sceneCmd.ExecuteSubCommandBuffer(skyboxCmd);
 						sceneCmd.SetShader(sceneProgram);
 					}
+
+					// Allow Blending for Alpha Draw
+					sceneCmd.Enable(GL_BLEND);
 					break;
 				case DrawCallbacks.PASS_ALPHA:
+					// Disable Blending for Opaque Draw
+					sceneCmd.Disable(GL_BLEND);
+
 					modelStreamingManager.ensureAsyncUploadsComplete(null);
 
 					if (sceneManager.isRoot(ctx))
