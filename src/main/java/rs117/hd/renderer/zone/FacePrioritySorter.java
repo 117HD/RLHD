@@ -253,16 +253,16 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 			// Backfaces are not sorted, so we skip over them if this face is marked as double sided
 			if (doubleSidedBitSet != null) {
-				int bitIdx = i & 31;
-				if (bitIdx == 0)
+				if ((i & 31) == 0)
 					backfaceWord = doubleSidedBitSet[i >> 5];
 
-				if ((backfaceWord & (1 << bitIdx)) != 0) {
+				if ((backfaceWord & 1) != 0) {
 					final int faceStart = ++f * 3 + start;
 					sortedFaces[sortedOffset++] = faceStart;
 					sortedFaces[sortedOffset++] = faceStart + 1;
 					sortedFaces[sortedOffset++] = faceStart + 2;
 				}
+				backfaceWord >>>= 1;
 			}
 		}
 
