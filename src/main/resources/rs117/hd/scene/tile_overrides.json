@@ -2144,6 +2144,7 @@
       8
     ],
     "groundMaterial": "GRAVEL",
+    "doubleSidedFaces": true,
     "replacements": {
       "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }

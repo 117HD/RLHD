@@ -4479,6 +4479,7 @@
     "baseMaterial": "MARBLE_2",
     "uvType": "BOX",
     "flatNormals": true,
+    "doubleSidedFaces": true,
     "objectIds": [
       "EXCHANGE_LOWER_CENTRE_PILLAR",
       "EXCHANGE_UPPER_CENTRAL_PILLAR",
@@ -36008,11 +36009,13 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_SIDE"
+        "textureMaterial": "LEAVES_SIDE",
+        "doubleSidedFaces": true
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_TOP"
+        "textureMaterial": "LEAVES_TOP",
+        "doubleSidedFaces": true
       }
     }
   },
