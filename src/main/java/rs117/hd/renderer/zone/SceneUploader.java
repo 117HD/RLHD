@@ -437,6 +437,9 @@ public class SceneUploader implements AutoCloseable {
 				z.sizeF += len;
 			} else {
 				z.onlyWater = false;
+
+				if(overlayOverride.doubleSidedFaces || underlayOverride.doubleSidedFaces)
+					z.sizeO += len;
 			}
 		}
 
@@ -1454,6 +1457,29 @@ public class SceneUploader implements AutoCloseable {
 				normalsC[0], normalsC[1], normalsC[2],
 				texturedFaceIdx
 			);
+
+			if(override.doubleSidedFaces) {
+				vb.putStaticVertex(
+					lx2, ly2, lz2,
+					uvCx, uvCy, 0,
+					-normalsC[0], -normalsC[1], -normalsC[2],
+					texturedFaceIdx
+				);
+
+				vb.putStaticVertex(
+					lx1, ly1, lz1,
+					uvBx, uvBy, 0,
+					-normalsB[0], -normalsB[1], -normalsB[2],
+					texturedFaceIdx
+				);
+
+				vb.putStaticVertex(
+					lx0, ly0, lz0,
+					uvAx, uvAy, 0,
+					-normalsA[0], -normalsA[1], -normalsA[2],
+					texturedFaceIdx
+				);
+			}
 		}
 		writeCache.release();
 	}
