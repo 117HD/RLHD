@@ -29052,9 +29052,7 @@
     ],
     "objectIds": [
       "PLANT1",
-      "PLANT2",
       "PLANT3",
-      "PLANT4",
       "AHOY_PLANT_1_INACTIVE",
       "AHOY_PLANT_1",
       "AHOY_PLANT_2",
@@ -29070,6 +29068,25 @@
       "DOV_HUNTING_PLANT_INITIAL",
       "PLANT_TROPICAL_01",
       "IG_PLANT_FLAT"
+    ]
+  },
+  {
+    "description": "Generic - Plant - Leafy Shrub - DoubleSided",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "MODEL_XZ",
+        "windDisplacementMode": "VERTEX",
+        "doubleSidedFaces": true
+      }
+    ],
+    "objectIds": [
+      "PLANT2",
+      "PLANT4"
     ]
   },
   {
