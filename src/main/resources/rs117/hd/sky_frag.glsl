@@ -5,6 +5,7 @@
 #include <utils/misc.glsl>
 #include <utils/starfield.glsl>
 #include <utils/aurora.glsl>
+#include <utils/sky.glsl>
 
 in vec2 fScreenPos;
 
@@ -57,103 +58,9 @@ void main() {
     // The view direction is from near to far
     vec3 viewDir = normalize(farWorld.xyz - nearWorld.xyz);
 
-    // Transform sun direction to view space
-    // The player's perceived horizon is below the astronomical 0° due to camera angle
-    // Add an offset to lower the sun so it visually sets at the perceived horizon
-    // sin(5°) ≈ 0.087, meaning the sun will appear at horizon when actually at +5°
-    float horizonOffset = 0.087;
-    vec3 sunDir = normalize(vec3(skySunDir.x, -skySunDir.y + horizonOffset, skySunDir.z));
-
-    // Calculate how much the view is looking up vs down
-    // viewDir.y is negative when looking up (due to coordinate system)
-    float upAmount = -viewDir.y;
-
-    // === DIRECTIONAL GRADIENT BASED ON SUN POSITION ===
-    // Calculate the angular relationship between view direction and sun direction
-    // This creates the effect where the sun side of the sky is brighter/warmer
-
-    // Project both vectors onto the horizontal plane for horizontal gradient.
-    // Near straight up/down the horizontal component of viewDir collapses to ~0,
-    // so normalize() becomes unstable and produces a visible "pinch" seam at the
-    // nadir/zenith. Guard the normalize and fade the directional bias toward
-    // neutral (0.5) as the view approaches vertical, removing the singularity.
-    vec2 viewHoriz = vec2(viewDir.x, viewDir.z);
-    float viewHorizLen = length(viewHoriz);
-    vec3 viewHorizontal = viewHorizLen > 1e-4 ? vec3(viewHoriz.x, 0.0, viewHoriz.y) / viewHorizLen : vec3(0.0);
-    vec3 sunHorizontal = normalize(vec3(sunDir.x, 0.0, sunDir.z));
-
-    // Dot product gives us how much we're facing toward/away from sun horizontally
-    // Range: -1 (facing away from sun) to +1 (facing toward sun)
-    float sunFacing = dot(viewHorizontal, sunHorizontal);
-
-    // Fade the horizontal gradient out as the view nears vertical, so the pole
-    // converges smoothly to a single neutral color instead of pinching.
-    float poleFade = smoothstep(0.0, 0.35, viewHorizLen);
-    sunFacing *= poleFade;
-
-    // Convert to 0-1 range: 0 = facing away from sun, 1 = facing toward sun
-    float sunSideBlend = (sunFacing + 1.0) * 0.5;
-
-    // Make the gradient more pronounced with smoothstep
-    sunSideBlend = smoothstep(0.0, 1.0, sunSideBlend);
-
-    // === VERTICAL GRADIENT (ZENITH TO HORIZON) ===
-    float zenithBlend = smoothstep(-0.1, 0.7, upAmount);
-
-    // === COMBINE COLORS ===
-    // Use sun altitude to determine how much directional gradient to apply
-    // skySunDir.y = sin(altitude), positive when sun is up, negative when below horizon
-    float sunAltitude = clamp(skySunDir.y, 0.0, 1.0); // 0 at horizon, 1 when high
-    // sin(40°) ≈ 0.64, so we reach 100% at ~40 degrees sun altitude
-    float daytimeFactor = smoothstep(0.0, 0.64, sunAltitude); // Ramps up as sun rises
-
-    // During sunrise/sunset (low daytimeFactor): use darker zenith for dark side
-    // During daytime (high daytimeFactor): both sides use horizon color for uniform sky
-    // sin(20°) ≈ 0.34, so dimming fades out by ~20° sun altitude (faster than daytimeFactor)
-    float dimFadeout = smoothstep(0.0, 0.34, sunAltitude);
-    float darkSideDim = mix(0.7, 1.0, dimFadeout); // Reaches 1.0 at ~20° sun altitude
-    vec3 darkSideColor = mix(skyZenithColor * darkSideDim, skyHorizonColor, daytimeFactor);
-
-    // Create a "sun side" color that's the warm horizon color
-    vec3 sunSideColor = skyHorizonColor;
-
-    // Fade out directional gradient at night so sky becomes uniform
-    // skySunDir.y = sin(altitude): 0 at horizon, negative below
-    // Ramp from full effect at 0° to no effect at -15° (matching night sky blend)
-    float nightFade = smoothstep(-0.26, 0.0, skySunDir.y); // sin(-15°) ≈ -0.26
-
-    // Blend horizontally between dark side and sun side based on sun facing direction
-    // At night, blend toward uniform skyZenithColor instead
-    vec3 horizonColor = mix(darkSideColor, sunSideColor, sunSideBlend);
-    horizonColor = mix(skyZenithColor, horizonColor, nightFade);
-
-    // The zenith color - during daytime use full brightness, during sunset allow some dimming
-    vec3 zenithColor = skyZenithColor;
-
-    // Blend vertically between horizon and zenith
-    vec3 skyColor = mix(horizonColor, zenithColor, zenithBlend);
-
-    // === SUN GLOW EFFECT ===
-    // Calculate angle between view direction and sun direction (full 3D)
-    float sunDot = dot(viewDir, sunDir);
-
-    // Create sun glow with multiple layers (smaller sun, less intense glow).
-    // pow(x, 128/32/8) folded to repeated squaring; pow(x, 2.5) to x*x*sqrt(x).
-    if (sunDot > 0.0) {
-        float s2 = sunDot * sunDot;       // ^2
-        float s4 = s2 * s2;               // ^4
-        float s8 = s4 * s4;               // ^8
-        float s16 = s8 * s8;              // ^16
-        float s32 = s16 * s16;            // ^32
-        float s128 = s32 * s32; s128 = s128 * s128; // ^128
-        float coreGlow = s128 * 0.4;                  // Tighter, smaller core
-        float innerGlow = s32 * 0.25;                 // Smaller inner glow
-        float midGlow = s8 * 0.15;                    // Reduced medium spread
-        float outerGlow = s2 * sunDot * sqrt(sunDot) * 0.08; // ^2.5 — subtler atmospheric glow
-
-        float totalGlow = coreGlow + innerGlow + midGlow + outerGlow;
-        skyColor += skySunColor * totalGlow;
-    }
+    // Shared gradient math (sun direction, sun-facing/zenith blends, base horizon/zenith color, and sun glow)
+    SkyGradient sky = computeSkyGradient(viewDir);
+    vec3 skyColor = sky.color;
 
     // Save sky color before stars are blended in, for opaque moon dark side
     vec3 skyColorPreStars = skyColor;
@@ -164,8 +71,8 @@ void main() {
     // starVisibility (from environment override): 0 = no stars (opaque skybox), 1 = full stars
     // Directional starfield blend: stars appear first on the anti-sun side
     // and creep toward the sun-side horizon as twilight deepens
-    float baseProgress = 1.0 - nightFade;
-    float sunProximity = sunSideBlend * (1.0 - zenithBlend);
+    float baseProgress = 1.0 - sky.nightFade;
+    float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
     float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * starVisibility;
     // Precompute starfield rotation (also needed for moon dark side sampling)
     float rotY = elapsedTime * (2.0 * 3.14159265 / 3600.0);
@@ -187,7 +94,7 @@ void main() {
 
         // Fade out the night sky/nebula near the horizon so the sky converges
         // to the plain gradient color that the fog uses, hiding the world edge
-        float horizonStarFade = smoothstep(-0.1, 0.07, upAmount);
+        float horizonStarFade = smoothstep(-0.1, 0.07, sky.upAmount);
         skyColor = mix(skyColor, nightSkyColor, nightSkyBlend * horizonStarFade);
 
         // Shooting stars (atmospheric, use un-rotated viewDir)
@@ -203,7 +110,7 @@ void main() {
     // === MOON DISK ===
     if (skyMoonIllumination > 0.001) {
         // Apply the same horizon offset transformation as the sun
-        vec3 moonDir = normalize(vec3(skyMoonDir.x, -skyMoonDir.y + horizonOffset, skyMoonDir.z));
+        vec3 moonDir = normalize(vec3(skyMoonDir.x, -skyMoonDir.y + HORIZON_OFFSET, skyMoonDir.z));
 
         float moonDot = dot(viewDir, moonDir);
 
@@ -214,7 +121,7 @@ void main() {
         float moonDayAlpha = 1.0 - smoothstep(-0.17, 0.5, skySunDir.y);
 
         // Fade moon when it's close to the sun in the sky
-        float sunMoonDot = dot(moonDir, sunDir);
+        float sunMoonDot = dot(moonDir, sky.sunDir);
         float sunProximityFade = smoothstep(0.9, 0.7, sunMoonDot);
         moonDayAlpha *= sunProximityFade;
 
@@ -360,30 +267,20 @@ void main() {
                 vec3 darkSideMoon = darkSideBase + skyMoonColor * 0.02;
                 vec3 moonFinalColor = mix(darkSideMoon, litColor, isLit);
                 // Fade moon near the horizon to match the star/nebula horizon fade
-                float moonHorizonFade = smoothstep(-0.1, 0.07, upAmount);
+                float moonHorizonFade = smoothstep(-0.1, 0.07, sky.upAmount);
                 float moonAlpha = moonDisk * moonDayAlpha * moonVisibility * moonHorizonFade;
 
                 skyColor = mix(skyColor, moonFinalColor, moonAlpha);
             }
 
             // Subtle atmospheric glow around the moon (also faded by daytime transparency)
-            float glowHorizonFade = smoothstep(-0.1, 0.07, upAmount);
+            float glowHorizonFade = smoothstep(-0.1, 0.07, sky.upAmount);
             float moonGlow = pow(moonDot, 256.0) * 0.05 * skyMoonIllumination * moonDayAlpha * moonVisibility * glowHorizonFade;
             skyColor += skyMoonColor * moonGlow;
         }
     }
 
-    // === HORIZON HAZE ===
-    // Make the horizon slightly hazier/brighter, especially on the sun side
-    float horizonHaze = 1.0 - abs(upAmount);
-    horizonHaze = horizonHaze * horizonHaze * sqrt(horizonHaze) * 0.15; // ^2.5
-    vec3 hazeColor = mix(skyHorizonColor * 0.8, skyHorizonColor * 1.3, sunSideBlend);
-    skyColor = mix(skyColor, hazeColor, horizonHaze);
-
-    // === ATMOSPHERIC SCATTERING EFFECT ===
-    // Add subtle warm tint on the sun side at the horizon during sunrise/sunset
-    float atmosphericScatter = sunSideBlend * (1.0 - zenithBlend) * 0.2;
-    skyColor = mix(skyColor, skySunColor * 0.5 + skyHorizonColor * 0.5, atmosphericScatter);
+    skyColor = applySkyHaze(skyColor, sky.upAmount, sky.sunSideBlend, sky.zenithBlend);
 
     // Apply gamma correction
     skyColor = pow(skyColor, vec3(gammaCorrection));
