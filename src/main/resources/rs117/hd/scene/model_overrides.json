@@ -2137,7 +2137,7 @@
     ]
   },
   {
-    "description": "Tirannwn - Wood Debris, TODO: Grass passable until proper fix via inheritTileColorType",
+    "description": "Tirannwn - Wood Debris",
     "baseMaterial": "BARK",
     "undoVanillaShading": false,
     "objectIds": [
@@ -2154,10 +2154,13 @@
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "GRAY_75",
-        "flatNormals": true,
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "MODEL_XY",
         "upwardsNormals": true,
-        "castShadows": false
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY",
+        "terrainVertexSnap": true
       }
     ]
   },
@@ -2860,9 +2863,10 @@
     ]
   },
   {
-    "description": "Hunter Grass with Vines, TODO: Grass passable until proper fix via inheritTileColorType",
+    "description": "Hunter Grass with Vines",
     "baseMaterial": "GRUNGE_1",
     "undoVanillaShading": false,
+    "minLightness": 8,
     "objectIds": [
       "HUNTING_GREENVINE_STRAIGHT",
       "HUNTING_GREENVINE_CORNER",
@@ -2878,10 +2882,14 @@
       {
         "description": "Grass",
         "colors": "h == 12",
-        "upwardsNormals": true,
+        "baseMaterial": "GRASS_BLADE",
+        "windDisplacementMode": "OBJECT",
+        "flatNormals": true,
+        "uvOrientation": 512,
         "castShadows": false,
-        "baseMaterial": "GRAY_70",
-        "windDisplacementMode": "OBJECT"
+        "upwardsNormals": true,
+        "inheritTileColorType": "UNDERLAY",
+        "uvType": "MODEL_XY"
       }
     ]
   },
@@ -2889,7 +2897,6 @@
     "description": "Short grass which shouldn't cast shadows",
     "baseMaterial": "GRASS_BLADE",
     "uvType": "MODEL_XY",
-    "flatNormals": true,
     "upwardsNormals": true,
     "windDisplacementMode": "OBJECT",
     "castShadows": false,
@@ -3167,7 +3174,7 @@
     ]
   },
   {
-    "description": "Hunter Grass with Vines, TODO: Grass passable until proper fix via inheritTileColorType",
+    "description": "Hunter Grass with Vines",
     "baseMaterial": "GRUNGE_1_LIGHT",
     "undoVanillaShading": false,
     "objectIds": [
@@ -3180,10 +3187,13 @@
       {
         "description": "Grass",
         "colors": "s == 3",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvOrientation": 512,
         "upwardsNormals": true,
-        "castShadows": false,
-        "baseMaterial": "GRAY_65",
-        "windDisplacementMode": "OBJECT"
+        "windDisplacementMode": "OBJECT",
+        "inheritTileColorType": "UNDERLAY",
+        "castShadows": false
       }
     ]
   },
@@ -3964,7 +3974,7 @@
     ]
   },
   {
-    "description": "Objects - Rocks - Medium, TODO: Grass passable until proper fix via inheritTileColorType",
+    "description": "Objects - Rocks - Medium",
     "baseMaterial": "ROCK_1_LIGHT",
     "undoVanillaShading": false,
     "objectIds": [
@@ -3986,12 +3996,14 @@
     "uvScale": 0.32
   },
   {
-    "description": "Farming Guild - Farming patch Edges with grass made of stone and edged with wood, TODO: Grass passable until proper fix via inheritTileColorType",
-    "baseMaterial": "GRAY_65",
-    "castShadows": false,
-    "flatNormals": true,
-    "undoVanillaShading": false,
+    "description": "Farming Guild - Farming patch Edges with grass made of stone and edged with wood",
+    "baseMaterial": "GRASS_BLADE",
+    "shiftLightness": 2,
+    "uvType": "MODEL_XY",
+    "upwardsNormals": true,
     "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
     "objectIds": [
       "KEBOS_FARMING_GUILD_BORDER_STRAIGHT",
       "KEBOS_FARMING_GUILD_BORDER_CORNER",
@@ -4016,13 +4028,13 @@
     ]
   },
   {
-    "description": "Varrock - Farming Patch Edges with grass around them, TODO: Grass passable until proper fix via inheritTileColorType",
-    "baseMaterial": "GRAY_55",
-    "flatNormals": true,
-    "castShadows": false,
-    "undoVanillaShading": false,
+    "description": "Varrock - Farming Patch Edges with grass around them",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
     "upwardsNormals": true,
     "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
       "FARMING_BORDER_STRAIGHT",
@@ -4070,9 +4082,13 @@
     ]
   },
   {
-    "description": "Short grass with rock objects Morytania Farming Patches, TODO: Grass passable until proper fix via inheritTileColorType",
-    "baseMaterial": "GRAY_65",
-    "flatNormals": true,
+    "description": "Short grass with rock objects Morytania Farming Patches",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "BOX",
+    "upwardsNormals": true,
+    "shiftLightness": 2,
+    "inheritTileColorType": "UNDERLAY",
+    "windDisplacementMode": "OBJECT",
     "undoVanillaShading": false,
     "castShadows": false,
     "objectIds": [
@@ -5013,11 +5029,13 @@
     ],
     "colorOverrides": [
       {
-        "description": "Grass, TODO: Grass hidden until proper fix via inheritTileColorType",
-        "hide": true,
+        "description": "Grass",
         "colors": "h == 17",
-        "baseMaterial": "GRAY_65",
-        "flatNormals": true,
+        "uvType": "BOX",
+        "baseMaterial": "GRASS_BLADE",
+        "upwardsNormals": true,
+        "inheritTileColorType": "UNDERLAY",
+        "windDisplacementMode": "OBJECT",
         "castShadows": false
       }
     ]
@@ -5790,23 +5808,12 @@
       "DRYSTONEWALL_BUST",
       "DRYSTONEWALL_FALL",
       "DRYSTONEWALL_FALL_MIRR",
-      "DRYSTONEWALL_GRASS",
-      "BARROW_LOW_WALLS_PILLAR",
-      "BARROW_LOW_WALLS_PILLARL",
-      "BARROW_LOW_WALLS_PILLARTOP",
-      "BARROWS_DRYSTONEWALL_GRASS",
-      "BARROWS_DRYSTONEWALL_SHORTCUT",
-      "FAI_VARROCK_STONE_SHORT_WALL",
-      "FAI_VARROCK_STONE_SHORT_WALL_CUT",
-      "FAI_VARROCK_CASTLE_WALL_SHORT_WALL_BLEND",
-      "FAI_VARROCK_CASTLE_WALL_SHORT_WALL_BLEND_MIRROR",
-      "FAI_VARROCK_STONE_SHORT_WALL_CUT_MIRROR",
       "DRYSTONEWALL_PILE",
       "POH_FENCING3"
     ]
   },
   {
-    "description": "Stone Walls, with Grass, TODO: Grass passable until proper fix via inheritTileColorType",
+    "description": "Stone Walls, with Grass",
     "baseMaterial": "STONE_NORMALED",
     "textureMaterial": "HD_CONCRETE",
     "undoVanillaShading": false,
@@ -5826,10 +5833,13 @@
       {
         "description": "Grass",
         "colors": "h == 13 || h == 17",
-        "baseMaterial": "GRASS_BLADE_85",
+        "baseMaterial": "GRASS_BLADE",
+        "shiftLightness": 2,
         "uvType": "MODEL_XY",
         "upwardsNormals": true,
-        "castShadows": false
+        "castShadows": false,
+        "windDisplacementMode": "OBJECT",
+        "inheritTileColorType": "UNDERLAY"
       }
     ]
   },
@@ -9341,7 +9351,6 @@
     "description": "Pale rock walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      "SLAYER_DUNGEON_EXIT",
       "DEATH_TROLLROCKSUPPLY",
       "DEATH_MOUNTAIN_CAVEWALL_FACE1",
       "DEATH_MOUNTAINCAVEWALL_TOP_HIGHER",
@@ -13979,12 +13988,14 @@
     ],
     "colorOverrides": [
       {
-        "description": "Grass, TODO: Grass hidden until proper fix via inheritTileColorType",
+        "description": "Grass",
         "colors": "h == 13",
-        "baseMaterial": "LAVA",
+        "baseMaterial": "NONE",
+        "maxLightness": 10,
+        "minLightness": 10,
         "castShadows": false,
-        "hide": true,
-        "upwardsNormals": true
+        "upwardsNormals": true,
+        "inheritTileColorType": "UNDERLAY"
       }
     ]
   },
@@ -17505,7 +17516,7 @@
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Objects - Vines with grass, TODO: Grass passable until proper fix via inheritTileColorType",
+    "description": "Objects - Vines with grass",
     "baseMaterial": "GRUNGE_3_DARK",
     "uvType": "BOX",
     "undoVanillaShading": false,
@@ -17513,9 +17524,13 @@
       {
         "description": "Grass",
         "colors": "s == 7",
-        "baseMaterial": "GRAY_85",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "uvScale": 1.5,
         "windDisplacementMode": "OBJECT",
         "upwardsNormals": true,
+        "inheritTileColorType": "UNDERLAY",
         "castShadows": false
       },
       {
@@ -17537,18 +17552,22 @@
     ]
   },
   {
-    "description": "Objects - Ape Atoll - Vines with grass, TODO: Grass passable until proper fix via inheritTileColorType",
+    "description": "Objects - Ape Atoll - Vines with grass",
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "undoVanillaShading": false,
+    "minLightness": 7,
     "colorOverrides": [
       {
         "description": "Grass",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_80",
         "windDisplacementMode": "OBJECT",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "MODEL_XY",
+        "uvOrientation": 512,
+        "inheritTileColorType": "UNDERLAY",
         "castShadows": false,
-        "flatNormals": true
+        "upwardsNormals": true
       }
     ],
     "objectIds": [
@@ -17564,9 +17583,13 @@
     ]
   },
   {
-    "description": "Karamja - Mos le Harmless  - Plant - Jungle grass, TODO: Grass passable until proper fix via inheritTileColorType",
+    "description": "Karamja - Mos le Harmless  - Plant - Jungle grass",
     "windDisplacementMode": "OBJECT",
-    "baseMaterial": "GRAY_85",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "inheritTileColorType": "UNDERLAY",
+    "shiftLightness": 2,
     "castShadows": false,
     "upwardsNormals": true,
     "undoVanillaShading": false,
@@ -30250,11 +30273,14 @@
     "uvScale": 0.6,
     "colorOverrides": [
       {
-        "description": "Grass, TODO: Grass hidden until proper fix via inheritTileColorType",
-        "hide": true,
+        "description": "Grass",
         "colors": "h == 13",
-        "baseMaterial": "GRAY_55",
-        "upwardsNormals": true
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
       }
     ]
   },
@@ -52594,10 +52620,12 @@
         "uvScale": 0.6
       },
       {
-        "colors": [ "h == 13 && l > 10" ],
-        "baseMaterial": "GRASS_BLADE_85",
+        "colors": [ "h == 13 && l > 8" ],
+        "baseMaterial": "GRASS_BLADE",
         "upwardsNormals": true,
-        "uvType": "MODEL_XY"
+        "maxLightness": 14,
+        "uvType": "MODEL_XY",
+        "undoVanillaShading": false
       }
     ]
   },
@@ -52776,7 +52804,13 @@
     "colorOverrides": [
       {
         "colors": "h == 13",
-        "baseMaterial": "GRAY_65"
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "MODEL_XY",
+        "shiftLightness": -10,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "undoVanillaShading": true
       }
     ]
   },
@@ -60484,7 +60518,7 @@
     ]
   },
   {
-    "description": "Morytania Spider Cave, TODO: Grass passable until proper fix via inheritTileColorTypea",
+    "description": "Morytania Spider Cave",
     "baseMaterial": "GRASS_3",
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -60504,11 +60538,14 @@
         "windDisplacementModifier": -3
       },
       {
-        "description": "Grass, TODO: Grass passable until proper fix via inheritTileColorType",
+        "description": "Grass",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_50",
+        "baseMaterial": "GRASS_BLADE",
+        "shiftLightness": -1,
+        "uvType": "MODEL_XY",
         "upwardsNormals": true,
-        "castShadows": false
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
       }
     ],
     "objectIds": [
@@ -60516,7 +60553,7 @@
     ]
   },
   {
-    "description": "Morytania webbed trees, TODO: Grass passable until proper fix via inheritTileColorType",
+    "description": "Morytania webbed trees",
     "baseMaterial": "BARK",
     "uvOrientation": 188,
     "uvType": "BOX",
@@ -60530,8 +60567,12 @@
       {
         "description": "Grass",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_35",
-        "upwardsNormals": true
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
       }
     ],
     "objectIds": [
@@ -73158,7 +73199,7 @@
     ]
   },
   {
-    "description": "WGS - Broav Trap - Edge, TODO: Grass passable until proper fix via inheritTileColorType",
+    "description": "WGS - Broav Trap - Edge",
     "baseMaterial": "DIRT_1",
     "undoVanillaShading": false,
     "uvType": "BOX",
@@ -73170,10 +73211,14 @@
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "upwardsNormals": true,
-        "baseMaterial": "GRAY_70",
+        "baseMaterial": "GRASS_BLADE",
+        "windDisplacementMode": "OBJECT",
+        "flatNormals": true,
+        "uvOrientation": 512,
         "castShadows": false,
-        "windDisplacementMode": "OBJECT"
+        "upwardsNormals": true,
+        "inheritTileColorType": "UNDERLAY",
+        "uvType": "MODEL_XY"
       }
     ]
   },
@@ -76514,9 +76559,13 @@
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "GRAY_80",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "MODEL_XY",
+        "uvOrientation": 512,
+        "inheritTileColorType": "UNDERLAY",
         "castShadows": false,
-        "flatNormals": true
+        "flatNormals": true,
+        "upwardsNormals": true
       }
     ]
   },
@@ -83970,11 +84019,12 @@
       {
         "description": "Grass",
         "colors": "h == 12 && s == 7",
-        "baseMaterial": "GRAY_60",
-        "flatNormals": true,
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
         "windDisplacementMode": "OBJECT",
         "castShadows": false,
-        "terrainVertexSnap": true
+        "inheritTileColorType": "UNDERLAY"
       }
     ],
     "objectIds": [
@@ -84009,8 +84059,6 @@
       "PRIF_WALL_GATE_LEFT_EXIT",
       "PRIF_WALL_GATE_RIGHT_EXIT",
       "PRIF_AMLODD_WOODEN_RAILING",
-      "SPIRITTREE_PRIF_1OP",
-      "SPIRITTREE_PRIF_2OPS",
       "PRIF_AMLODD_HOUSE_SUPPORT_NE",
       "PRIF_AMLODD_HOUSE_SUPPORT_SW",
       "PRIF_AMLODD_HOUSE_SUPPORT_SE",
@@ -84018,6 +84066,39 @@
       "PRIF_YEWTREE",
       "PRIF_YEWTREE_STUMP",
       "PRIF_BENCH"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Bark - Spirit Tree",
+    "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Trunk",
+        "colors": "h < 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "terrainVertexSnap": true,
+        "uvScale": 0.6
+      },
+      {
+        "description": "Grass",
+        "colors": "h == 12 && s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "shiftLightness": -6,
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "undoVanillaShading": false,
+        "castShadows": false,
+        "terrainVertexSnap": true
+      }
+    ],
+    "objectIds": [
+      "SPIRITTREE_PRIF_1OP",
+      "SPIRITTREE_PRIF_2OPS"
     ]
   },
   {
