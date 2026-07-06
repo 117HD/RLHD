@@ -84578,12 +84578,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "GRASS_BLADE",
-        "shiftLightness": -5,
-        "uvType": "MODEL_XY",
-        "upwardsNormals": true,
-        "castShadows": false,
-        "inheritTileColorType": "UNDERLAY"
+        "baseMaterial": "GRAY_90"
       },
       {
         "colors": "h == 8",
@@ -84605,7 +84600,12 @@
       },
       {
         "colors": "h == 12 || h == 13",
-        "baseMaterial": "GRUNGE_3_SMOOTH"
+        "baseMaterial": "GRASS_BLADE",
+        "shiftLightness": -5,
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
       }
     ]
   },
