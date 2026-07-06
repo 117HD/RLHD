@@ -390,12 +390,14 @@ public class ZoneRenderer implements Renderer {
 			skyboxCmd.SetShader(starProgram);
 			skyboxCmd.Enable(GL_PROGRAM_POINT_SIZE);
 			skyboxCmd.Enable(GL_POINT_SPRITE);
+			skyboxCmd.Enable(GL_BLEND);
 			skyboxCmd.BlendFunc(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
 
 			skyboxCmd.BindVertexArray(starField.getVaoStars());
 			skyboxCmd.DrawArrays(GL_POINTS, 0, starField.starCount);
 
 			skyboxCmd.BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+			skyboxCmd.Disable(GL_BLEND);
 			skyboxCmd.Disable(GL_POINT_SPRITE);
 			skyboxCmd.Disable(GL_PROGRAM_POINT_SIZE);
 		}
@@ -1292,7 +1294,6 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.begin(Timer.RENDER_SCENE);
 
 		// Blend will be enabled before & after alpha draws
-		renderState.disable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
@@ -1406,6 +1407,7 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_ZONE_OPAQUE);
 			if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
+				sceneCmd.Disable(GL_BLEND);
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_TERRAIN);
 				z.renderOpaque(sceneCmd, ctx, false);
 
@@ -1448,6 +1450,8 @@ public class ZoneRenderer implements Renderer {
 				return;
 
 			frameTimer.begin(Timer.DRAW_ZONE_ALPHA);
+			sceneCmd.Enable(GL_BLEND);
+			
 			final boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
 			if (renderWater)
 				z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
@@ -1503,14 +1507,8 @@ public class ZoneRenderer implements Renderer {
 						sceneCmd.ExecuteSubCommandBuffer(skyboxCmd);
 						sceneCmd.SetShader(sceneProgram);
 					}
-
-					// Allow Blending for Alpha Draw
-					sceneCmd.Enable(GL_BLEND);
 					break;
 				case DrawCallbacks.PASS_ALPHA:
-					// Disable Blending for Opaque Draw
-					sceneCmd.Disable(GL_BLEND);
-
 					modelStreamingManager.ensureAsyncUploadsComplete(null);
 
 					if (sceneManager.isRoot(ctx))
