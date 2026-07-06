@@ -20,14 +20,14 @@ public final class EboAlphaWriterJob extends Job {
 
 			Zone.AlphaModel m;
 			while ((m = alphaModels.poll()) != null) {
-				if (m.sortedFacesLen <= 0 || m.sortedFaces == null)
+				if (m.sortedFacesLen <= 0 || m.tempSortedFaces == null)
 					continue;
 
 				if (eboAlphaBuffer.remaining() < m.sortedFacesLen) {
 					log.warn("Not enough space in eboAlphaBuffer for alpha faces");
 					break;
 				}
-				eboAlphaBuffer.put(m.sortedFaces, 0, m.sortedFacesLen);
+				eboAlphaBuffer.put(m.tempSortedFaces, 0, m.sortedFacesLen);
 			}
 		} finally {
 			eboAlphaView = null;

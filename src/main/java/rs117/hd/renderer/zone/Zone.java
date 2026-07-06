@@ -427,12 +427,12 @@ public class Zone implements Destructible {
 		// only set for static geometry as they require sorting
 		int radius;
 		int[] packedFaces;
-		int[] sortedFaces;
 		int[] backFaceBitSet;
 		int sortedFacesLen;
 
 		int dist;
 		int asyncSortIdx = -1;
+		int[] tempSortedFaces;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
@@ -447,7 +447,7 @@ public class Zone implements Destructible {
 		}
 
 		boolean isTemp() {
-			return packedFaces == null || sortedFaces == null;
+			return packedFaces == null;
 		}
 
 		int calculateDepth(int cx, int cy, int cz, int zx, int zz) {
@@ -640,7 +640,6 @@ public class Zone implements Destructible {
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
 		m.radius = 2 + (int) Math.sqrt(radius);
-		m.sortedFaces = new int[bufferIdx * 3];
 		m.packedFaces = Arrays.copyOf(packedFaces, bufferIdx);
 		m.backFaceBitSet = backFaceBitSet != null ? Arrays.copyOf(backFaceBitSet, ceil(bufferIdx / 32.0f)) : null;
 
@@ -671,15 +670,19 @@ public class Zone implements Destructible {
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);
+			m.asyncSortIdx = -1;
+			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
+
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
 				alphaModels.remove(i);
 				m.packedFaces = null;
 				m.backFaceBitSet = null;
-				m.sortedFaces = null;
 				ALPHA_MODEL_POOL.recycle(m);
+			} {
+				if(m.tempSortedFaces != null)
+					PooledArrayType.INT.release(m.tempSortedFaces);
+				m.tempSortedFaces = null;
 			}
-			m.asyncSortIdx = -1;
-			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
 		}
 	}
 
@@ -731,6 +734,7 @@ public class Zone implements Destructible {
 				continue;
 
 			m.dist = dist;
+			m.tempSortedFaces = PooledArrayType.INT.borrow(m.packedFaces.length * 3);
 			alphaSortingJob.addAlphaModel(m);
 		}
 		alphaSortingJob.queue(camera);
@@ -806,7 +810,7 @@ public class Zone implements Destructible {
 					alphaSortingJob.waitForCompletion(10);
 			}
 
-			if (m.sortedFaces == null || m.sortedFacesLen <= 0)
+			if (m.tempSortedFaces == null || m.sortedFacesLen <= 0)
 				continue;
 
 			sortedAlphaFacesUpload.alphaModels.add(m);
@@ -925,7 +929,7 @@ public class Zone implements Destructible {
 				m2.backFaceBitSet = m.backFaceBitSet;
 				m2.radius = m.radius;
 				m2.asyncSortIdx = m.asyncSortIdx;
-				m2.sortedFaces = m.sortedFaces;
+				m2.tempSortedFaces = m.tempSortedFaces;
 				m2.sortedFacesLen = m.sortedFacesLen;
 
 				m2.flags = AlphaModel.TEMP;
