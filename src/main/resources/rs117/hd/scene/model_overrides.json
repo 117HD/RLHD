@@ -84578,7 +84578,12 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "GRAY_90"
+        "baseMaterial": "GRASS_BLADE",
+        "shiftLightness": -5,
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
       },
       {
         "colors": "h == 8",
