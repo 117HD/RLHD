@@ -707,6 +707,7 @@ public class SceneUploader implements AutoCloseable {
 
 	private void estimateRenderableSize(Zone z, Renderable r, ModelOverride modelOverride) {
 		boolean mightHaveTransparency = modelOverride.mightHaveTransparency;
+		boolean mightBeDoubleSided = modelOverride.mightBeDoubleSided;
 		Model m = null;
 		if (r instanceof Model) {
 			m = (Model) r;
@@ -725,7 +726,8 @@ public class SceneUploader implements AutoCloseable {
 		byte modelTransparency = m.getTransparency();
 		z.sizeF += faceCount;
 
-		if(modelOverride.mightBeDoubleSided)
+		mightBeDoubleSided |= m.getFaceTextures() != null;
+		if(mightBeDoubleSided)
 			faceCount *= 2; // sizeF remains the same, since the double sided faces will reuse the textureFaceIdx
 
 		z.sizeO += faceCount;
@@ -1847,7 +1849,7 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx
 			);
 
-			if(modelOverride.doubleSidedFaces || faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
+			if(faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
 				vb.putStaticVertex(
 					vx3, vy3, vz3,
 					faceUVs[8], faceUVs[9], faceUVs[10],

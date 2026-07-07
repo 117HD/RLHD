@@ -564,10 +564,9 @@ public class Zone implements Destructible {
 		final int bucketCapacity = ceil(packedFaceCount / 32.0f);
 
 		final int[] packedFaces = PooledArrayType.INT.borrow(packedFaceCount);
-		final int[] doubleSidedBitSet = modelOverride.mightBeDoubleSided ? PooledArrayType.INT.borrow(bucketCapacity) : null;
+		final int[] doubleSidedBitSet = PooledArrayType.INT.borrow(bucketCapacity);
 
-		if(doubleSidedBitSet != null)
-			Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
+		Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
 
 		int radius = 0;
 		char bufferIdx = 0;
@@ -627,7 +626,7 @@ public class Zone implements Destructible {
 			                         | ((fy & ((1 << 10) - 1)) << 11)
 			                         | (fz & ((1 << 11) - 1));
 
-			if (doubleSidedBitSet != null && (modelOverride.doubleSidedFaces || faceOverride.doubleSidedFaces || material.doubleSidedFaces)) {
+			if (faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
 				doubleSidedBitSet[bufferIdx >> 5] |= 1 << (bufferIdx & 31);
 				doubleSidedCount++;
 			}
@@ -641,8 +640,7 @@ public class Zone implements Destructible {
 
 		m.radius = 2 + (int) Math.sqrt(radius);
 		m.packedFaces = Arrays.copyOf(packedFaces, bufferIdx);
-		if(doubleSidedCount > 0)
-			m.doubleSidedBitSet = doubleSidedBitSet != null ? Arrays.copyOf(doubleSidedBitSet, ceil(bufferIdx / 32.0f)) : null;
+		m.doubleSidedBitSet = doubleSidedCount > 0 ? Arrays.copyOf(doubleSidedBitSet, ceil(bufferIdx / 32.0f)) : null;
 		m.doubleSidedCount = doubleSidedCount;
 
 		alphaModels.add(m);
