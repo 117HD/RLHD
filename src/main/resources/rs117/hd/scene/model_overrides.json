@@ -21002,9 +21002,16 @@
     "colorOverrides": [
       {
         "description": "Lamp",
-        "colors": "s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 42",
+        "baseMaterial": "NONE",
+        "minLightness": 80,
         "upwardsNormals": true
+      },
+      {
+        "description": "Lamp Housing",
+        "maxLightness": 50,
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
       },
       {
         "description": "Moths",

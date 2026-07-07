@@ -39016,24 +39016,6 @@
     ]
   },
   {
-    "description": "GNOME_LAMP_HIGHLIGHT",
-    "offset": [ -30, 125, 40 ],
-    "radius": 50,
-    "strength": 20,
-    "color": [
-      255,
-      255,
-      255
-    ],
-    "type": "FLICKER",
-    "duration": 600,
-    "nightMultiplier": 2.5,
-    "range": 10,
-    "objectIds": [
-      "GNOME_LAMP2"
-    ]
-  },
-  {
     "description": "PENGUIN_BASE_LAMP",
     "height": 140,
     "radius": 140,
