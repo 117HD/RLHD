@@ -210,3 +210,37 @@ vec2 getPoissonDisk(int idx) {
         default: return vec2( 0.14383161,  -0.14100790);
     }
 }
+
+float halfToFloat(uint h) {
+    uint sign = (h >> 15u) & 0x1u;
+    uint exponent = (h >> 10u) & 0x1Fu;
+    uint mantissa = h & 0x3FFu;
+
+    uint f32sign = sign << 31u;
+    uint f32;
+
+    if (exponent == 0u) {
+        if (mantissa == 0u) {
+            // Signed zero
+            f32 = f32sign;
+        } else {
+            // Subnormal half -> normalize into float32
+            exponent = 127u - 15u + 1u;
+            while ((mantissa & 0x400u) == 0u) {
+                mantissa <<= 1u;
+                exponent -= 1u;
+            }
+            mantissa &= 0x3FFu; // clear the leading 1 we just normalized out
+            f32 = f32sign | (exponent << 23u) | (mantissa << 13u);
+        }
+    } else if (exponent == 0x1Fu) {
+        // Inf / NaN
+        f32 = f32sign | 0x7F800000u | (mantissa << 13u);
+    } else {
+        // Normalized
+        uint newExponent = exponent - 15u + 127u;
+        f32 = f32sign | (newExponent << 23u) | (mantissa << 13u);
+    }
+
+    return uintBitsToFloat(f32);
+}

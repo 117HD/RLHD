@@ -1028,6 +1028,11 @@
     "vanillaTextureIndex": 201
   },
   {
+    "name": "GLASS_1",
+    "parent": "NONE",
+    "subsurface": 1.0
+  },
+  {
     "name": "WHITE",
     "parent": "NONE"
   },
@@ -1981,6 +1986,8 @@
   {
     "name": "CARPET_VERY_LIGHT_SMOOTH",
     "parent": "CARPET_VERY_LIGHT",
+    "subsurface": 0.25,
+    "subsurfaceGlow": 2.0,
     "normalMap": null
   },
   {

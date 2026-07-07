@@ -430,6 +430,35 @@ void main() {
         float lightningDotNormals = downDotNormals;
         vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
 
+       // fake/simple Subsurface scattering
+       float subsurface = getMaterialSubsurface(material1);
+
+       vec3 transmissionOut = vec3(0.0);
+       if (subsurface > 0.0) {
+           float backLightDotNormals = max(dot(-normals, lightDir), 0.0);
+           vec3 backLightOut = backLightDotNormals * lightColor;
+
+           float subsurfaceGlow = getMaterialSubsurfaceGlow(material1);
+
+           float transmissionFocus = 0.0;
+           if (subsurfaceGlow > 1.0) {
+               float viewTowardLight = max(dot(-viewDir, lightDir), 0.0);
+               // Sharpen into a small hotspot rather than a broad highlight.
+               // pow(x, 8) folded via repeated squaring.
+               float t2 = viewTowardLight * viewTowardLight;
+               float t4 = t2 * t2;
+               transmissionFocus = t4 * t4;
+           }
+
+           const float SUBSURFACE_BASE_FRACTION = 0.35;
+           transmissionOut += backLightOut * (subsurface * SUBSURFACE_BASE_FRACTION + transmissionFocus * subsurfaceGlow);
+
+           vec3 backPointLightsOut = vec3(0);
+           vec3 backPointLightsSpecularOut = vec3(0); // Ignored — specular doesn't make sense for backside lighting
+           calculateLighting(IN.position, -normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, backPointLightsOut, backPointLightsSpecularOut);
+
+           transmissionOut += backPointLightsOut * subsurface;
+       }
 
         // underglow
         vec3 underglowOut = underglowColor * max(normals.y, 0) * underglowStrength;
@@ -445,7 +474,7 @@ void main() {
 
         // apply lighting
         vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
-        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
+        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut + transmissionOut;
 
         #if DISPLAY_LIGHTING
             FragColor = vec4(compositeLight, 1.0);

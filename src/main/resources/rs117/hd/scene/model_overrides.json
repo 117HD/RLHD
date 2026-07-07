@@ -4808,7 +4808,7 @@
       {
         "description": "Glass",
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GLASS_1"
       }
     ],
     "objectIds": [

@@ -66,6 +66,14 @@
         "type": "number",
         "description": "A brightness multiplier for the material's color."
       },
+      "subsurface": {
+        "type": "number",
+        "description": "Strength of fake subsurface scattering, letting light bleed through thin geometry from behind (e.g. leaves, sails & glass). Defaults to 0."
+      },
+      "subsurfaceGlow": {
+        "type": "number",
+        "description": "Strength of the tight 'sun through the material' hotspot seen when looking toward the light source through the surface. Defaults to 0."
+      },
       "displacementScale": {
         "type": "number",
         "description": "Specifies the maximum displacement height of the displacement map. Defaults to 0.1, i.e. one tenth of a tile."

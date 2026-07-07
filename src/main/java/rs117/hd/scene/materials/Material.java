@@ -59,6 +59,8 @@ public class Material {
 	private boolean unlit;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
 	public float brightness = 1;
+	public float subsurface = 0;
+	public float subsurfaceGlow = 0;
 	private float displacementScale = .1f;
 	private float flowMapStrength;
 	private float[] flowMapDuration = { 0, 0 };
@@ -215,6 +217,7 @@ public class Material {
 			(hasTransparency ? 1 : 0)
 		);
 		struct.brightness.set(brightness);
+		struct.subsurfaceAndGlow.set((float16(subsurfaceGlow) << 16) | float16(subsurface));
 		struct.displacementScale.set(displacementScale);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);
