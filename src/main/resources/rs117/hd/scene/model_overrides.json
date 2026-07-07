@@ -1240,6 +1240,7 @@
   {
     "description": "Ardougne Agility Balance Plank",
     "baseMaterial": "WOOD_GRAIN_3",
+    "doubleSidedFaces": true,
     "objectIds": [
       "ROOFTOPS_ARDY_PLANK_MIDDLE",
       "ROOFTOPS_ARDY_PLANK"
