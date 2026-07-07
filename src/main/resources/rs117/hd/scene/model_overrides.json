@@ -36026,13 +36026,11 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_SIDE",
-        "doubleSidedFaces": true
+        "textureMaterial": "LEAVES_SIDE"
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_TOP",
-        "doubleSidedFaces": true
+        "textureMaterial": "LEAVES_TOP"
       }
     }
   },
