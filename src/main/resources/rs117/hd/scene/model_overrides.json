@@ -95809,7 +95809,7 @@
     ],
     "colorOverrides": [
       {
-        "description": "Grass - Temp hide till better solution",
+        "description": "Grass",
         "colors": "s == 7",
         "baseMaterial": "GRASS_BLADE",
         "uvType": "BOX",
@@ -95820,6 +95820,34 @@
         "shiftLightness": 5,
         "castShadows": false,
         "inheritTileColorType": "UNDERLAY"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Tree Stump with Axe",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 14,
+    "objectIds": [
+      "DARKWOOD_TREE_STUMP_AXE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 0 && s == 7",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 15,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3,
+        "undoVanillaShading": false,
+        "shiftLightness": 5
       }
     ]
   },
@@ -95893,7 +95921,11 @@
       "DARKWOOD_TREE_DEFAULT03_WEB01",
       "DARKWOOD_TREE_DEFAULT04_WEB01",
       "DARKWOOD_TREE_DEFAULT05_WEB01",
-      "DARKWOOD_TREE_DARK01_WEB01"
+      "DARKWOOD_TREE_DARK02_WEB01",
+      "DARKWOOD_TREE_DARK05_WEB01",
+      "DARKWOOD_TREE_DARK01_WEB01",
+      "DARKWOOD_TREE_DARK03_WEB01",
+      "DARKWOOD_TREE_DARK04_WEB01"
     ],
     "colorOverrides": [
       {
@@ -95904,13 +95936,17 @@
         "uvOrientation": 404
       },
       {
-        "description": "Grass - Temp hide till better solution",
+        "description": "Grass",
         "colors": "s == 7",
-        "baseMaterial": "NONE",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
         "windDisplacementMode": "OBJECT",
-        "shiftSaturation": -2,
+        "shiftSaturation": 2,
+        "shiftLightness": 5,
         "castShadows": false,
-        "hide": true
+        "inheritTileColorType": "UNDERLAY"
       }
     ]
   },
@@ -97387,14 +97423,16 @@
     "uvScale": 0.3,
     "uvOrientation": 404,
     "shiftLightness": 2,
+    "undoVanillaShading": false,
     "colorOverrides": [
       {
         "description": "Leaf",
         "colors": "h == 42 && s == 0",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
+        "undoVanillaShading": false,
         "uvScale": 0.25,
-        "shiftLightness": 16,
+        "shiftLightness": 20,
         "uvOrientationX": 512
       }
     ],
@@ -97949,7 +97987,7 @@
     ]
   },
   {
-    "description": "Vampyrium - Thrones",
+    "description": "Vampyrium - Sleeping Bag",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -97968,7 +98006,7 @@
     ]
   },
   {
-    "description": "Vampyrium - Thrones",
+    "description": "Vampyrium - Signpost",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -98192,6 +98230,19 @@
         "description": "Shadow",
         "colors": "h == 0 && s == 0 && l < 3",
         "baseMaterial": "BLACK"
+      },
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s >= 5 && s <=7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 8,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
       }
     ],
     "objectIds": [
