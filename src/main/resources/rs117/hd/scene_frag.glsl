@@ -565,46 +565,37 @@ void main() {
             // Default to the fragment's own color so the mix below is a no-op
             // when there's no fog. The full sky-gradient reconstruction is only
             // needed where fog actually blends geometry toward the sky, so it's
-            // gated on combinedFog to skip the pow/smoothstep/normalize chain on
-            // the unfogged majority of scene pixels.
+            // gated on combinedFog to skip the gradient/glow chain on the
+            // unfogged majority of scene pixels.
             vec3 skyColorAtFragment = outputColor.rgb;
 
-            if (skyGradientEnabled == 1) {
-                // Default to the fragment's own color so the mix below is a no-op
-                // when there's no fog. The full sky-gradient reconstruction is only
-                // needed where fog actually blends geometry toward the sky, so it's
-                // gated on combinedFog to skip the gradient/glow chain on the
-                // unfogged majority of scene pixels.
-                vec3 skyColorAtFragment = outputColor.rgb;
+            if (combinedFog > 1e-4) {
+                // Compute the sky gradient color at this fragment's view direction
+                vec3 fogViewDir = normalize(IN.position - cameraPos);
+                SkyGradient sky = computeSkyGradient(fogViewDir);
+                skyColorAtFragment = sky.color;
 
-                if (combinedFog > 1e-4) {
-                    // Compute the sky gradient color at this fragment's view direction
-                    vec3 fogViewDir = normalize(IN.position - cameraPos);
-                    SkyGradient sky = computeSkyGradient(fogViewDir);
-                    skyColorAtFragment = sky.color;
-
-                    // Night sky blend: darken fog toward skyZenithColor, which is what
-                    // the sky converges to at the horizon at night (stars are faded out
-                    // near the horizon in sky_frag.glsl)
-                    float nightSkyBlend = (1.0 - sky.nightFade) * starVisibility;
-                    if (nightSkyBlend > 0.001) {
-                        skyColorAtFragment = mix(skyColorAtFragment, skyZenithColor, nightSkyBlend);
-                    }
-
-                    // Shared horizon haze + atmospheric scattering
-                    skyColorAtFragment = applySkyHaze(skyColorAtFragment, sky.upAmount, sky.sunSideBlend, sky.zenithBlend);
+                // Night sky blend: darken fog toward skyZenithColor, which is what
+                // the sky converges to at the horizon at night (stars are faded out
+                // near the horizon in sky_frag.glsl)
+                float nightSkyBlend = (1.0 - sky.nightFade) * starVisibility;
+                if (nightSkyBlend > 0.001) {
+                    skyColorAtFragment = mix(skyColorAtFragment, skyZenithColor, nightSkyBlend);
                 }
 
-                outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
-
-                // Dithering to reduce color banding. Kept OUTSIDE the fog gate above:
-                // this is the scene's only anti-banding noise and is independent of fog,
-                // so it must run on every fragment regardless of combinedFog.
-                float dither = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453123) - 0.5;
-                outputColor.rgb += dither / 255.0;
-            } else {
-                outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+                // Shared horizon haze + atmospheric scattering
+                skyColorAtFragment = applySkyHaze(skyColorAtFragment, sky.upAmount, sky.sunSideBlend, sky.zenithBlend);
             }
+
+            outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
+
+            // Dithering to reduce color banding. Kept OUTSIDE the fog gate above:
+            // this is the scene's only anti-banding noise and is independent of fog,
+            // so it must run on every fragment regardless of combinedFog.
+            float dither = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453123) - 0.5;
+            outputColor.rgb += dither / 255.0;
+        } else {
+            outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
         }
     }
 
