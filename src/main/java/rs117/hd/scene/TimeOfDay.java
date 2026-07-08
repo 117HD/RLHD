@@ -677,6 +677,11 @@ public class TimeOfDay
 			return 1.0f; // Always a full moon
 		}
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
+			// Real Time: use today's real lunar phase so illumination matches the
+			// real-clock moon position (mirrored sun) and the realistic moon.
+			if (currentCycleMode == DaylightCycle.REAL_TIME) {
+				return (float) AtmosphereUtils.getMoonIllumination(System.currentTimeMillis())[0];
+			}
 			long equinoxEpochMs = 1742428800000L;
 			long dayMs = 24L * 60 * 60 * 1000;
 			// Synced Days: advance the phase by the UTC-synced day count so the phase
@@ -759,6 +764,20 @@ public class TimeOfDay
 		// March 20, 2025 00:00 UTC (spring equinox)
 		final long equinoxEpochMs = 1742428800000L;
 		final long dayMs = 24L * 60 * 60 * 1000;
+
+		// Real Time: mirror the sun computed from the player's real local clock —
+		// the same instant the REAL_TIME sun/realistic-moon use — so moonrise tracks
+		// the real sunset and the moon spans the real night's length. Bypasses the
+		// cycle-duration accumulator entirely; without this, the night-synced moon
+		// would follow Cycle Duration while the sky follows the real clock.
+		if (currentCycleMode == DaylightCycle.REAL_TIME) {
+			double localHour = getLocalHourOfDay();
+			Instant startOfDay = Instant.ofEpochMilli(System.currentTimeMillis())
+				.truncatedTo(ChronoUnit.DAYS);
+			long fixedMillis = startOfDay.toEpochMilli() + (long) (localHour * 60 * 60 * 1000);
+			double[] sa = AtmosphereUtils.getSunAngles(fixedMillis, latLong);
+			return new double[] { sa[0] + Math.PI, -sa[1] };
+		}
 
 		// Synced Days: derive the moon's mirror position and phase purely from the
 		// UTC clock so the night-synced moon is identical for every player, matching
