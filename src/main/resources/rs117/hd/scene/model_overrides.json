@@ -98313,6 +98313,7 @@
     "uvType": "BOX",
     "uvScale": 0.2,
     "uvOrientation": -187,
+    "undoVanillaShading": false,
     "shiftLightness": 2,
     "colorOverrides": [
       {
@@ -98350,13 +98351,21 @@
     "uvType": "BOX",
     "uvScale": 0.2,
     "uvOrientation": -187,
-    "shiftLightness": 2,
+    "undoVanillaShading": false,
     "colorOverrides": [
+      {
+        "description": "BLOOD",
+        "colors": "h == 0 && l < 4",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "shiftLightness": 7,
+        "uvType": "MODEL_XZ"
+      },
       {
         "description": "BLOOD",
         "colors": "a < 255",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
-        "uvType": "MODEL_XZ"
+        "uvType": "MODEL_XZ",
+        "hideAsWaterEffect": true
       },
       {
         "description": "Wood",
