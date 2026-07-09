@@ -468,6 +468,16 @@ public class TimeOfDay
 	 * @param regionalFogColor The regional fog color to blend with during peak daytime (sRGB)
 	 */
 	public static float[][] getSkyGradientColors(double[] latLong, float dayLength, float[] regionalFogColor, float sunStrength) {
+		return getSkyGradientColors(latLong, dayLength, regionalFogColor, sunStrength, 1.0f);
+	}
+
+	public static float[][] getSkyGradientColors(
+		double[] latLong,
+		float dayLength,
+		float[] regionalFogColor,
+		float sunStrength,
+		float sunriseSunsetStrength
+	) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
@@ -520,6 +530,35 @@ public class TimeOfDay
 				// Suppress sun glow toward zero (it's additive)
 				for (int i = 0; i < 3; i++) {
 					sunGlowColor[i] = sunGlowColor[i] * (1 - suppression);
+				}
+			}
+		}
+
+		// Apply sunriseSunsetStrength: an independent per-area knob that tones down
+		// ONLY the warm sunrise/sunset sky gradient (horizon + zenith), without
+		// touching the sun glow or daytime colors. It fades the warm tint toward the
+		// neutral regional fog color, but only inside the sunrise/sunset window
+		// (~ -6° to +12° sun altitude) where those warm colors actually appear.
+		if (sunriseSunsetStrength < 1.0f && regionalFogColor != null) {
+			// Window peaks at the horizon (0°) and tapers to 0 by -6° (into night,
+			// where the night blend below takes over) and +12° (into full daylight).
+			float sunsetWindow;
+			if (sunAltitudeDegrees <= -6 || sunAltitudeDegrees >= 12) {
+				sunsetWindow = 0.0f;
+			} else if (sunAltitudeDegrees < 0) {
+				float w = (float) ((sunAltitudeDegrees + 6.0) / 6.0); // 0 at -6°, 1 at 0°
+				sunsetWindow = w * w * (3.0f - 2.0f * w);
+			} else {
+				float w = (float) ((12.0 - sunAltitudeDegrees) / 12.0); // 1 at 0°, 0 at +12°
+				sunsetWindow = w * w * (3.0f - 2.0f * w);
+			}
+
+			float sunsetSuppression = (1.0f - sunriseSunsetStrength) * sunsetWindow;
+			if (sunsetSuppression > 0.0f) {
+				float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
+				for (int i = 0; i < 3; i++) {
+					zenithColor[i] = zenithColor[i] * (1 - sunsetSuppression) + regionalLin[i] * sunsetSuppression;
+					horizonColor[i] = horizonColor[i] * (1 - sunsetSuppression) + regionalLin[i] * sunsetSuppression;
 				}
 			}
 		}

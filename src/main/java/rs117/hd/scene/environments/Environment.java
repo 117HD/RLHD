@@ -109,6 +109,11 @@ public class Environment {
 	public float starVisibility = 1;
 	public float moonVisibility = 1;
 	public float sunStrength = 1;
+	// Independent multiplier (0..1) that tones down ONLY the warm sunrise/sunset
+	// sky-gradient colors (horizon/zenith) for this area, without touching
+	// sunStrength, the sun glow, or daytime behavior. 1 = full procedural
+	// sunrise/sunset; 0 = fully suppressed toward the regional/night sky.
+	public float sunriseSunsetStrength = 1;
 	public float sunlightStrength = 1;
 	public float minBrightnessBoost = 0;
 

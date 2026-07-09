@@ -833,7 +833,7 @@ public class ZoneRenderer implements Renderer {
 
 			// Calculate sky gradient colors for realistic sky rendering
 			// Pass regional fog color to blend with during peak daytime
-			float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(plugin.latLong, cycleDuration, originalRegionalFogColor, environmentManager.currentSunStrength);
+			float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(plugin.latLong, cycleDuration, originalRegionalFogColor, environmentManager.currentSunStrength, environmentManager.currentSunriseSunsetStrength);
 
 			// Use the sky horizon color as fog color so geometry fading into
 			// fog seamlessly matches the skybox at the horizon

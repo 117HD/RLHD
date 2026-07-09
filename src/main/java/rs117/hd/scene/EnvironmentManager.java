@@ -183,6 +183,10 @@ public class EnvironmentManager {
 	public float currentSunStrength = 1f;
 	private float targetSunStrength = 1f;
 
+	private float startSunriseSunsetStrength = 1f;
+	public float currentSunriseSunsetStrength = 1f;
+	private float targetSunriseSunsetStrength = 1f;
+
 	private float startSunlightStrength = 1f;
 	public float currentSunlightStrength = 1f;
 	private float targetSunlightStrength = 1f;
@@ -332,6 +336,7 @@ public class EnvironmentManager {
 			currentStarVisibility = mix(startStarVisibility, targetStarVisibility, t);
 			currentMoonVisibility = mix(startMoonVisibility, targetMoonVisibility, t);
 			currentSunStrength = mix(startSunStrength, targetSunStrength, t);
+			currentSunriseSunsetStrength = mix(startSunriseSunsetStrength, targetSunriseSunsetStrength, t);
 			currentSunlightStrength = mix(startSunlightStrength, targetSunlightStrength, t);
 			currentMinBrightnessBoost = mix(startMinBrightnessBoost, targetMinBrightnessBoost, t);
 		}
@@ -391,6 +396,7 @@ public class EnvironmentManager {
 		startStarVisibility = currentStarVisibility;
 		startMoonVisibility = currentMoonVisibility;
 		startSunStrength = currentSunStrength;
+		startSunriseSunsetStrength = currentSunriseSunsetStrength;
 		startSunlightStrength = currentSunlightStrength;
 		startMinBrightnessBoost = currentMinBrightnessBoost;
 		for (int i = 0; i < 2; i++)
@@ -431,6 +437,7 @@ public class EnvironmentManager {
 		targetStarVisibility = env.starVisibility;
 		targetMoonVisibility = env.moonVisibility;
 		targetSunStrength = env.sunStrength;
+		targetSunriseSunsetStrength = env.sunriseSunsetStrength;
 		targetSunlightStrength = env.sunlightStrength;
 		targetMinBrightnessBoost = env.minBrightnessBoost;
 
@@ -672,7 +679,8 @@ public class EnvironmentManager {
 			latLong,
 			cycleDuration,
 			regionalFogSrgb,
-			env.sunStrength
+			env.sunStrength,
+			env.sunriseSunsetStrength
 		);
 		float[] horizonLinear = ColorUtils.srgbToLinear(skyGradientColors[1]);
 		float[] noonHorizonLinear = ColorUtils.srgbToLinear(
