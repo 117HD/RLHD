@@ -240,7 +240,7 @@
       },
       "sunriseSunsetStrength": {
         "type": "number",
-        "description": "Independent multiplier (0 to 1) that tones down only the warm sunrise/sunset sky gradient (horizon and zenith) for this area, without affecting sunStrength, the sun glow, or daytime colors. 1 = full procedural sunrise/sunset; lower values fade the warm tint toward the regional sky. Defaults to 1.",
+        "description": "How strongly the procedural day/night sunrise/sunset is allowed to paint this area's sky (0 to 1). 1 = full procedural sunrise/sunset (default). Lower values hold the sky at the area's own regional (fogColor) color through the twilight window and fade the procedural sun glow, so a vividly-colored area (e.g. a blood-red sky) doesn't turn orange/blue at sunrise/sunset. Independent of sunStrength; affects only the sky gradient and sun glow, not daytime or nighttime colors.",
         "minimum": 0,
         "maximum": 1
       }

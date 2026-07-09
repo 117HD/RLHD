@@ -109,10 +109,13 @@ public class Environment {
 	public float starVisibility = 1;
 	public float moonVisibility = 1;
 	public float sunStrength = 1;
-	// Independent multiplier (0..1) that tones down ONLY the warm sunrise/sunset
-	// sky-gradient colors (horizon/zenith) for this area, without touching
-	// sunStrength, the sun glow, or daytime behavior. 1 = full procedural
-	// sunrise/sunset; 0 = fully suppressed toward the regional/night sky.
+	// How strongly the procedural day/night sunrise/sunset is allowed to paint this
+	// area's sky, in [0, 1]. 1 = full procedural sunrise/sunset (default). Lower
+	// values hold the sky at the area's own regional (fogColor) color through the
+	// twilight window instead, and fade the procedural sun glow. Use this for areas
+	// with a vivid intended sky (e.g. Tolna's blood-red #290000) that shouldn't turn
+	// orange/blue at sunrise/sunset. Independent of sunStrength; only affects the
+	// sky gradient + sun glow, not daytime or nighttime colors.
 	public float sunriseSunsetStrength = 1;
 	public float sunlightStrength = 1;
 	public float minBrightnessBoost = 0;

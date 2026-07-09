@@ -534,60 +534,49 @@ public class TimeOfDay
 			}
 		}
 
-		// Apply sunriseSunsetStrength: an independent per-area knob that tones down
-		// ONLY the warm sunrise/sunset sky gradient (horizon + zenith), without
-		// touching the sun glow or daytime colors. Only acts inside the sunrise/sunset
-		// window (~ -12° to +12° sun altitude) where those warm colors appear.
+		// Apply sunriseSunsetStrength: an independent per-area knob that stops the
+		// procedural sunrise/sunset from overriding a strongly-colored area's own sky.
 		//
-		// The blend TARGET must track what the sky is heading toward at that altitude:
-		// the regional color above the horizon, crossfading to the deep-night sky below
-		// it. Blending toward a single (regional) target caused a brightness bump at
-		// twilight — in a dark area, regional is lighter than deep night, so suppression
-		// pulled the sky UP toward regional just as the night blend was pulling it DOWN,
-		// producing a lighten-then-darken artifact. Matching the sunStrength path's
-		// crossfade keeps the descent into night monotonic.
+		// Some areas set a vivid regional sky (e.g. Tolna's blood-red #290000) that is
+		// meant to be the mood all day. The day/night cycle's procedural twilight paints
+		// its own orange->blue gradient over that, so at sunrise/sunset the intended red
+		// "turns blue". Lowering this knob holds the sky at the area's OWN regional color
+		// through the twilight window instead — at strength 0 the procedural sunrise/set
+		// gradient and sun glow are fully replaced by the regional color, so the area
+		// keeps its look. The blend target is the regional color itself (NOT the night
+		// sky) so the area's color is preserved rather than muted to black. The separate
+		// night blend below still darkens things toward deep night once the sun is well
+		// down, so nights stay dark regardless of this knob.
 		if (sunriseSunsetStrength < 1.0f && regionalFogColor != null) {
-			// Window peaks at the horizon (0°) and tapers to 0 by -12° (fully night,
-			// where the night blend below owns the color) and +12° (full daylight).
+			// Window covers the twilight span where the procedural gradient diverges
+			// from the regional color. Peaks (full effect) from the horizon up through
+			// the golden-hour altitudes, tapering out by +20° (full daylight, where the
+			// gradient already blends to regional on its own) and by -15° (deep night,
+			// owned by the night blend below).
 			float sunsetWindow;
-			if (sunAltitudeDegrees <= -12 || sunAltitudeDegrees >= 12) {
+			if (sunAltitudeDegrees <= -15 || sunAltitudeDegrees >= 20) {
 				sunsetWindow = 0.0f;
 			} else if (sunAltitudeDegrees < 0) {
-				float w = (float) ((sunAltitudeDegrees + 12.0) / 12.0); // 0 at -12°, 1 at 0°
+				float w = (float) ((sunAltitudeDegrees + 15.0) / 15.0); // 0 at -15°, 1 at 0°
 				sunsetWindow = w * w * (3.0f - 2.0f * w);
 			} else {
-				float w = (float) ((12.0 - sunAltitudeDegrees) / 12.0); // 1 at 0°, 0 at +12°
+				float w = (float) ((20.0 - sunAltitudeDegrees) / 20.0); // 1 at 0°, 0 at +20°
 				sunsetWindow = w * w * (3.0f - 2.0f * w);
 			}
 
 			float sunsetSuppression = (1.0f - sunriseSunsetStrength) * sunsetWindow;
 			if (sunsetSuppression > 0.0f) {
 				float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
-				float[] nightSkyLin = rs117.hd.utils.ColorUtils.srgbToLinear(
-					new float[] { 5f / 255f, 7f / 255f, 15f / 255f }
-				);
 
-				// Crossfade the blend target from regional (>= +5°) to night sky (<= -5°),
-				// so below the horizon we tone warm colors toward night, not toward a
-				// lighter regional color.
-				float nightMix;
-				if (sunAltitudeDegrees <= -5) {
-					nightMix = 1.0f;
-				} else if (sunAltitudeDegrees >= 5) {
-					nightMix = 0.0f;
-				} else {
-					float nm = (float) ((5.0 - sunAltitudeDegrees) / 10.0);
-					nightMix = nm * nm * (3.0f - 2.0f * nm);
-				}
-
-				float[] blendTarget = new float[3];
+				// Hold the horizon/zenith at the area's regional color.
 				for (int i = 0; i < 3; i++) {
-					blendTarget[i] = regionalLin[i] * (1 - nightMix) + nightSkyLin[i] * nightMix;
+					zenithColor[i] = zenithColor[i] * (1 - sunsetSuppression) + regionalLin[i] * sunsetSuppression;
+					horizonColor[i] = horizonColor[i] * (1 - sunsetSuppression) + regionalLin[i] * sunsetSuppression;
 				}
-
+				// Fade the procedural sun glow (additive orange/red halo) toward zero so
+				// it doesn't fight the regional color the sky is being held at.
 				for (int i = 0; i < 3; i++) {
-					zenithColor[i] = zenithColor[i] * (1 - sunsetSuppression) + blendTarget[i] * sunsetSuppression;
-					horizonColor[i] = horizonColor[i] * (1 - sunsetSuppression) + blendTarget[i] * sunsetSuppression;
+					sunGlowColor[i] = sunGlowColor[i] * (1 - sunsetSuppression);
 				}
 			}
 		}
