@@ -58,12 +58,16 @@ vec3 auroraLayer(vec3 ro, vec3 rd, float planeY, float time, float layerSeed) {
     float distFromCurtain = abs(curtainZ - wave);
 
     // Sharp falloff away from the curtain line — thin ribbon, not a blob
-    float curtainMask = exp(-distFromCurtain * distFromCurtain * 40.0);
+    float curtainMask = exp(-distFromCurtain * distFromCurtain * 55.0);
 
-    // Vertical ray structure: use noise along the curtain to create
-    // the characteristic individual "rays" hanging down
+    // Vertical ray structure: use noise along the curtain to create the
+    // characteristic "rays". Keep a low floor so the ribbon stays continuous
+    // (a flowing wave), rather than breaking into disconnected vertical lines.
     float rayNoise = au_noise(vec2(curtainX * 12.0 + layerSeed * 10.0, time * 0.1));
     float rays = smoothstep(0.2, 0.8, rayNoise);
+    // Keep the ray texture subtle so it modulates the curtain rather than
+    // carving it up — the wave shape remains the dominant read.
+    rays = mix(0.55, 1.0, rays);
 
     // Brightness variation along the curtain — some sections brighter
     float brightness = au_noise(vec2(curtainX * 2.0 - time * 0.02, layerSeed));
@@ -74,11 +78,22 @@ vec3 auroraLayer(vec3 ro, vec3 rd, float planeY, float time, float layerSeed) {
 
     float intensity = curtainMask * rays * brightness * distFade;
 
-    // Color: green base with purple/blue tips
+    // Color: vivid green base with magenta/purple tips.
+    // Boosted primaries so the curtains read as emissive light against the
+    // near-black night sky rather than a muted tint.
+
+    // Vary the green base along the curtain so it isn't one flat tone.
+    // A slow, low-frequency noise (independent of the ray/brightness noise)
+    // drifts the base between a cool teal and a warm yellow-green, the way a
+    // real aurora shifts hue along its length.
+    float hueNoise = au_noise(vec2(curtainX * 1.3 + layerSeed * 4.0, time * 0.04 + layerSeed));
+    vec3 tealGreen = vec3(0.0, 1.5, 0.9);   // cool cyan-green
+    vec3 warmGreen = vec3(0.35, 1.7, 0.25); // warm yellow-green
+    vec3 green = mix(tealGreen, warmGreen, smoothstep(0.25, 0.75, hueNoise));
+
     // Use a proxy for "height within the curtain" based on the plane height
     float heightBlend = (planeY - 600.0) / 600.0; // 0 at bottom, 1 at top of aurora range
-    vec3 green = vec3(0.15, 1.0, 0.4);
-    vec3 purple = vec3(0.5, 0.15, 0.8);
+    vec3 purple = vec3(0.9, 0.2, 1.2);
     vec3 col = mix(green, purple, smoothstep(0.0, 1.0, heightBlend));
 
     return col * intensity;
@@ -103,17 +118,16 @@ vec3 proceduralAurora(vec3 viewDir, float time) {
     vec3 ro = vec3(0.0, 0.0, 0.0);
     vec3 rd = normalize(viewDir);
 
-    // Sample multiple horizontal planes at different heights
-    // This creates depth and the layered curtain look
+    // Sample a few horizontal planes at different heights for depth. Fewer
+    // layers keeps the individual flowing waves distinct instead of stacking
+    // into a dense, busy mass.
     vec3 aurora = vec3(0.0);
-    aurora += auroraLayer(ro, rd, -400.0, time, 0.0) * 0.5;
-    aurora += auroraLayer(ro, rd, -600.0, time, 1.0) * 0.7;
+    aurora += auroraLayer(ro, rd, -600.0, time, 1.0) * 0.75;
     aurora += auroraLayer(ro, rd, -800.0, time, 2.0) * 1.0;
-    aurora += auroraLayer(ro, rd, -1000.0, time, 3.0) * 0.6;
-    aurora += auroraLayer(ro, rd, -1200.0, time, 4.0) * 0.3;
+    aurora += auroraLayer(ro, rd, -1050.0, time, 3.0) * 0.5;
 
     aurora *= northBlend * horizonFade;
 
-    // Overall brightness — visible but not overpowering
-    return aurora * 0.08;
+    // Overall brightness — bright enough to clearly pop against the night sky.
+    return aurora * 0.26;
 }
