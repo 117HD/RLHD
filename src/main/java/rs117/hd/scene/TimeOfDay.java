@@ -536,17 +536,24 @@ public class TimeOfDay
 
 		// Apply sunriseSunsetStrength: an independent per-area knob that tones down
 		// ONLY the warm sunrise/sunset sky gradient (horizon + zenith), without
-		// touching the sun glow or daytime colors. It fades the warm tint toward the
-		// neutral regional fog color, but only inside the sunrise/sunset window
-		// (~ -6° to +12° sun altitude) where those warm colors actually appear.
+		// touching the sun glow or daytime colors. Only acts inside the sunrise/sunset
+		// window (~ -12° to +12° sun altitude) where those warm colors appear.
+		//
+		// The blend TARGET must track what the sky is heading toward at that altitude:
+		// the regional color above the horizon, crossfading to the deep-night sky below
+		// it. Blending toward a single (regional) target caused a brightness bump at
+		// twilight — in a dark area, regional is lighter than deep night, so suppression
+		// pulled the sky UP toward regional just as the night blend was pulling it DOWN,
+		// producing a lighten-then-darken artifact. Matching the sunStrength path's
+		// crossfade keeps the descent into night monotonic.
 		if (sunriseSunsetStrength < 1.0f && regionalFogColor != null) {
-			// Window peaks at the horizon (0°) and tapers to 0 by -6° (into night,
-			// where the night blend below takes over) and +12° (into full daylight).
+			// Window peaks at the horizon (0°) and tapers to 0 by -12° (fully night,
+			// where the night blend below owns the color) and +12° (full daylight).
 			float sunsetWindow;
-			if (sunAltitudeDegrees <= -6 || sunAltitudeDegrees >= 12) {
+			if (sunAltitudeDegrees <= -12 || sunAltitudeDegrees >= 12) {
 				sunsetWindow = 0.0f;
 			} else if (sunAltitudeDegrees < 0) {
-				float w = (float) ((sunAltitudeDegrees + 6.0) / 6.0); // 0 at -6°, 1 at 0°
+				float w = (float) ((sunAltitudeDegrees + 12.0) / 12.0); // 0 at -12°, 1 at 0°
 				sunsetWindow = w * w * (3.0f - 2.0f * w);
 			} else {
 				float w = (float) ((12.0 - sunAltitudeDegrees) / 12.0); // 1 at 0°, 0 at +12°
@@ -556,9 +563,31 @@ public class TimeOfDay
 			float sunsetSuppression = (1.0f - sunriseSunsetStrength) * sunsetWindow;
 			if (sunsetSuppression > 0.0f) {
 				float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
+				float[] nightSkyLin = rs117.hd.utils.ColorUtils.srgbToLinear(
+					new float[] { 5f / 255f, 7f / 255f, 15f / 255f }
+				);
+
+				// Crossfade the blend target from regional (>= +5°) to night sky (<= -5°),
+				// so below the horizon we tone warm colors toward night, not toward a
+				// lighter regional color.
+				float nightMix;
+				if (sunAltitudeDegrees <= -5) {
+					nightMix = 1.0f;
+				} else if (sunAltitudeDegrees >= 5) {
+					nightMix = 0.0f;
+				} else {
+					float nm = (float) ((5.0 - sunAltitudeDegrees) / 10.0);
+					nightMix = nm * nm * (3.0f - 2.0f * nm);
+				}
+
+				float[] blendTarget = new float[3];
 				for (int i = 0; i < 3; i++) {
-					zenithColor[i] = zenithColor[i] * (1 - sunsetSuppression) + regionalLin[i] * sunsetSuppression;
-					horizonColor[i] = horizonColor[i] * (1 - sunsetSuppression) + regionalLin[i] * sunsetSuppression;
+					blendTarget[i] = regionalLin[i] * (1 - nightMix) + nightSkyLin[i] * nightMix;
+				}
+
+				for (int i = 0; i < 3; i++) {
+					zenithColor[i] = zenithColor[i] * (1 - sunsetSuppression) + blendTarget[i] * sunsetSuppression;
+					horizonColor[i] = horizonColor[i] * (1 - sunsetSuppression) + blendTarget[i] * sunsetSuppression;
 				}
 			}
 		}
