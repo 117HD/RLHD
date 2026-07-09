@@ -549,18 +549,25 @@ public class TimeOfDay
 		// down, so nights stay dark regardless of this knob.
 		if (sunriseSunsetStrength < 1.0f && regionalFogColor != null) {
 			// Window covers the twilight span where the procedural gradient diverges
-			// from the regional color. Peaks (full effect) from the horizon up through
-			// the golden-hour altitudes, tapering out by +20° (full daylight, where the
-			// gradient already blends to regional on its own) and by -15° (deep night,
-			// owned by the night blend below).
+			// from the regional color. Full effect from the horizon up, tapering out by
+			// +40° and -15° (deep night, owned by the night blend below).
+			//
+			// The upper edge MUST reach +40° to meet the daytime regional blend below,
+			// which only ramps to full regional by +40°. If this window closes earlier
+			// (e.g. +20°), there is a gap between +20° and +40° where NEITHER the
+			// suppression nor the daytime blend holds the color, so the raw procedural
+			// keyframes show through — and those are strongly blue at mid-high sun
+			// (e.g. the +15° zenith keyframe is 100,150,200). That gap is the "sky goes
+			// blue after sunrise before settling into the environment's color" seen in
+			// red-sky areas. Extending to +40° closes it.
 			float sunsetWindow;
-			if (sunAltitudeDegrees <= -15 || sunAltitudeDegrees >= 20) {
+			if (sunAltitudeDegrees <= -15 || sunAltitudeDegrees >= 40) {
 				sunsetWindow = 0.0f;
 			} else if (sunAltitudeDegrees < 0) {
 				float w = (float) ((sunAltitudeDegrees + 15.0) / 15.0); // 0 at -15°, 1 at 0°
 				sunsetWindow = w * w * (3.0f - 2.0f * w);
 			} else {
-				float w = (float) ((20.0 - sunAltitudeDegrees) / 20.0); // 1 at 0°, 0 at +20°
+				float w = (float) ((40.0 - sunAltitudeDegrees) / 40.0); // 1 at 0°, 0 at +40°
 				sunsetWindow = w * w * (3.0f - 2.0f * w);
 			}
 
@@ -622,7 +629,12 @@ public class TimeOfDay
 		}
 
 		if (nightBlendFactor > 0.0f) {
-			// Deep night zenith color (15, 20, 35) converted to linear
+			// Deep night zenith color (cold blue) converted to linear. The night sky
+			// always resolves to this generic night base so that, once the sun is well
+			// down, the moon-color night-sky tint (applied downstream in the renderer)
+			// and the procedural starfield take over — including in reduced
+			// sunriseSunsetStrength areas, where the regional hold only spans the
+			// visible sunrise/sunset (above) and must not persist into deep night.
 			float[] nightSkyLinear = rs117.hd.utils.ColorUtils.srgbToLinear(
 				new float[] { 5f / 255f, 7f / 255f, 15f / 255f }
 			);
