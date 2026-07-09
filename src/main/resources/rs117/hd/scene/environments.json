@@ -552,7 +552,7 @@
     "minBrightnessBoost": 1.2,
     "windSpeed": 10,
     "windStrength": 30,
-	"sunriseSunsetStrength": 0
+	"sunriseSunsetStrength": 0.2
   },
   {
     "area": "MEIYERDITCH",
