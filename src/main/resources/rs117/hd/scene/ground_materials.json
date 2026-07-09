@@ -696,5 +696,12 @@
     "materials": [
       "SMOOTH_STONE"
     ]
+  },
+  {
+    "name": "DIRTY_SMOOTH_STONE",
+    "materials": [
+      "SMOOTH_STONE",
+      "DIRT_1"
+    ]
   }
 ]

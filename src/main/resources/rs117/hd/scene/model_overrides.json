@@ -98103,7 +98103,7 @@
     "baseMaterial": "STONE_NORMALED",
     "shiftLightness": 2,
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.75,
     "uvOrientation": 256,
     "colorOverrides": [
       {
@@ -98119,7 +98119,7 @@
         "baseMaterial": "GRAVEL",
         "shiftLightness": 3,
         "uvType": "BOX",
-        "uvScale": 0.5,
+        "uvScale": 0.7,
         "uvOrientation": -256
       },
       {
@@ -98740,9 +98740,8 @@
     "description": "Sangvesti - Jovkai hideout door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.8,
     "shiftLightness": 3,
-    "uvOrientation": 512,
     "objectIds": [
       "MYQ6_SUGADINTI_HIDEOUT_EXIT",
       "MYQ6_SUGADINTI_HIDEOUT_EXIT_NOOP",
@@ -98754,13 +98753,20 @@
   },
   {
     "description": "Jovkai hideout Torches - Animated - Dynamic",
-    "baseMaterial": "NONE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
     "shiftLightness": -1,
     "colorOverrides": [
       {
-        "colors": "h == 0",
+        "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_GLOSS",
         "shiftLightness": 3
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "shiftLightness": 10
       }
     ],
     "objectIds": [

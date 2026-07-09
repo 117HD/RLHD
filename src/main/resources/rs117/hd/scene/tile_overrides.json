@@ -10808,6 +10808,7 @@
     "area": "VAMPYRIUM_SUGADINTI_HIDEOUT",
     "uvScale": 2,
     "shiftLightness": 5,
+    "blended": false,
     "underlayIds": [
       5,
       6,
@@ -10826,7 +10827,7 @@
     "overlayIds": [
       634
     ],
-    "groundMaterial": "SMOOTH_STONE"
+    "groundMaterial": "DIRTY_SMOOTH_STONE"
   },
   {
     "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
