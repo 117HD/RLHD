@@ -10797,7 +10797,7 @@
   },
   {
     "name": "Vampyrium - Blood",
-    "area": "VAMPYRIUM_DEEP_FORESTS",
+    "area": "VAMPYRIUM_FOREST_INSTANCE",
     "overlayIds": [
       636
     ],
