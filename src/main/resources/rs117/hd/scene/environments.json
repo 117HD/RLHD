@@ -2361,29 +2361,29 @@
   },
   {
     "area": "VAMPYRIUM",
-    "fogDepth": 6.5,
+    "fogDepth": 10,
     "windAngle": 40,
     "windSpeed": 15,
     "windStrength": 50,
-    "fogColor": "#100000",
-    "sunStrength": 0,
-    "sunlightStrength": 0.8,
+    "fogColor": "#330D0D",
+    "sunStrength": 0.2,
+    "sunlightStrength": 2,
     "starVisibility": 0.8,
     "minBrightnessBoost": 0.5,
-    "nightSkyColor": "#ff0000"
+    "nightSkyColor": "#FF0000"
   },
   {
-    "area": "VAMPYRIUM_FOREST_CLEARING",
-    "fogDepth": 70,
+    "area": "VAMPYRIUM_FOREST_INSTANCE",
+    "fogDepth": 40,
     "windAngle": 40,
     "windSpeed": 15,
     "windStrength": 50,
-    "fogColor": "#100000",
-    "sunStrength": 0,
-    "sunlightStrength": 0.8,
+    "fogColor": "#330D0D",
+    "sunStrength": 0.2,
+    "sunlightStrength": 2,
     "starVisibility": 0.8,
     "minBrightnessBoost": 0.5,
-    "nightSkyColor": "#000000"
+    "nightSkyColor": "#FF0000"
   },
   {
     "area": "PLAYER_OWNED_HOUSE_WILDY",
