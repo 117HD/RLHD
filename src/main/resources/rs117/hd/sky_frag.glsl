@@ -73,7 +73,11 @@ void main() {
     // and creep toward the sun-side horizon as twilight deepens
     float baseProgress = 1.0 - sky.nightFade;
     float sunProximity = sky.sunSideBlend * (1.0 - sky.zenithBlend);
-    float nightSkyBlend = pow(baseProgress, mix(0.4, 0.9, sunProximity)) * starVisibility;
+    // Night factor shared by the star field and (below) the aurora. The star field
+    // additionally scales by starVisibility; the aurora deliberately does NOT, so
+    // aurora visibility is controlled independently via auroraVisibility.
+    float nightFactor = pow(baseProgress, mix(0.4, 0.9, sunProximity));
+    float nightSkyBlend = nightFactor * starVisibility;
     // Precompute starfield rotation (also needed for moon dark side sampling)
     float rotY = elapsedTime * (2.0 * 3.14159265 / 3600.0);
     float rotX = elapsedTime * (2.0 * 3.14159265 / 10800.0);
@@ -101,10 +105,16 @@ void main() {
         if (viewDir.y < -0.05) {
             skyColor += shootingStars(viewDir, elapsedTime) * nightSkyBlend;
         }
+    }
 
-        // Aurora borealis — animated curtains near the northern horizon.
-        // Only shown on randomly-selected aurora nights (auroraVisibility is 0 or 1).
-        skyColor += proceduralAurora(viewDir, elapsedTime) * nightSkyBlend * auroraVisibility;
+    // Aurora borealis — animated curtains near the northern horizon. Shown on the
+    // randomly-selected aurora nights and faded with the night, but decoupled from
+    // starVisibility so it can be scaled independently per environment via
+    // auroraVisibility (0 on non-aurora nights or aurora-hidden areas). Uses
+    // nightFactor (the star-independent night fade) in place of the previous
+    // nightSkyBlend so it no longer disappears when starVisibility is 0.
+    if (auroraVisibility > 0.001 && nightFactor > 0.001) {
+        skyColor += proceduralAurora(viewDir, elapsedTime) * nightFactor * auroraVisibility;
     }
 
     // === MOON DISK ===

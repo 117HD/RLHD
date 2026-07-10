@@ -249,6 +249,12 @@
         "description": "Sun altitude in degrees at which this area's own sky color (fogColor) has fully taken over from the procedural sunrise/sunset gradient as the sun climbs. Lower values pull the area color in earlier in the morning (and hold it later in the evening), compressing the procedural twilight; higher values let the procedural gradient persist further up the sky. Applies to all areas regardless of sunriseSunsetStrength. Defaults to 40.",
         "minimum": 5,
         "maximum": 90
+      },
+      "auroraVisibility": {
+        "type": "number",
+        "description": "Aurora visibility multiplier for this area (0 to 1), controllable independently of starVisibility. Auroras still only appear on the randomly-selected aurora nights and fade with the night; this scales how visible they are when they do. When omitted it falls back to starVisibility (the original behavior, where hiding stars also hides auroras). Set it explicitly to decouple: 0 hides auroras while keeping stars, 1 shows full auroras even where stars are dimmed.",
+        "minimum": 0,
+        "maximum": 1
       }
     }
   }

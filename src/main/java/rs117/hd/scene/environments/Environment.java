@@ -108,6 +108,14 @@ public class Environment {
 	public float windCeiling = 1280.0f;
 	public float starVisibility = 1;
 	public float moonVisibility = 1;
+	// Aurora visibility multiplier for this area, controllable independently of
+	// starVisibility. Auroras still only appear on the randomly-selected aurora
+	// nights and fade with the night; this just scales how visible they are when they
+	// do. When left unset (sentinel -1), it falls back to starVisibility — the
+	// original behavior, where hiding stars also hid auroras. Set it explicitly to
+	// decouple: e.g. 0 hides auroras while keeping stars, 1 shows full auroras even
+	// where stars are dimmed. Resolved to a concrete value in normalize().
+	public float auroraVisibility = -1;
 	public float sunStrength = 1;
 	// How strongly the procedural day/night sunrise/sunset is allowed to paint this
 	// area's sky, in [0, 1]. 1 = full procedural sunrise/sunset (default). Lower
@@ -166,6 +174,12 @@ public class Environment {
 			waterCausticsColor = directionalColor;
 		if (waterCausticsStrength == -1)
 			waterCausticsStrength = directionalStrength;
+
+		// When aurora visibility isn't specified, fall back to star visibility so
+		// hiding stars also hides auroras (the original coupled behavior). An explicit
+		// value decouples the two.
+		if (auroraVisibility == -1)
+			auroraVisibility = starVisibility;
 		return this;
 	}
 
