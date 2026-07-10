@@ -1741,7 +1741,7 @@ public class LegacyRenderer implements Renderer {
 			if (eightIntWrite[0] != -1)
 				plugin.drawnDynamicRenderableCount = plugin.drawnDynamicRenderableCount + 1;
 
-			displacementManager.addCharacterPosition(x, z, renderable, model);
+			displacementManager.addCharacterPosition(scene, x, z, renderable, model);
 		}
 
 		if (plugin.enableDetailedTimers)

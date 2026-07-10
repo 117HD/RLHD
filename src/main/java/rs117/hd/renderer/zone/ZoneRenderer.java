@@ -1131,7 +1131,7 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.DRAW_TEMP);
 		}
 
-		displacementManager.addCharacterPosition(x, z, gameObject.getRenderable(), m);
+		displacementManager.addCharacterPosition(scene, x, z, gameObject.getRenderable(), m);
 	}
 
 	@Override

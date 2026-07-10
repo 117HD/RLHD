@@ -11,6 +11,8 @@ import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UniformBuffer.Property;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.zone.SceneManager;
+import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.utils.NpcDisplacementCache;
 
 import static rs117.hd.utils.MathUtils.*;
@@ -31,6 +33,9 @@ public class DisplacementManager {
 
 	@Inject
 	private FrameTimer frameTimer;
+
+	@Inject
+	private SceneManager sceneManager;
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
@@ -60,12 +65,21 @@ public class DisplacementManager {
 		// The local player needs to be added first for distance culling
 		var lp = localPlayer.getLocalLocation();
 		Model playerModel = localPlayer.getModel();
-		if (playerModel != null)
+		if (playerModel != null) {
+			WorldViewContext ctx = sceneManager.getContext(localPlayer.getWorldView().getScene());
+			if(ctx != null && !sceneManager.isRoot(ctx))
+				return;
+
 			addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+		}
 	}
 
-	public void addCharacterPosition(int x, int z, Renderable renderable, Model m) {
+	public void addCharacterPosition(Scene scene, int x, int z, Renderable renderable, Model m) {
 		if(!plugin.configCharacterDisplacement || !(renderable instanceof Actor))
+			return;
+
+		WorldViewContext ctx = sceneManager.getContext(scene);
+		if(ctx != null && !sceneManager.isRoot(ctx))
 			return;
 
 		if (plugin.enableDetailedTimers)

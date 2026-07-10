@@ -122,7 +122,7 @@ public class SceneManager {
 	public boolean isRoot(WorldViewContext context) { return root == context; }
 
 	public WorldViewContext getContext(Scene scene) {
-		return getContext(scene.getWorldViewId());
+		return scene != null ? getContext(scene.getWorldViewId()) : null;
 	}
 
 	public WorldViewContext getContext(WorldView wv) {
