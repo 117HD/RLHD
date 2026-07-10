@@ -75,7 +75,7 @@ public class AtmosphereUtils
 		return new double[] { azimuth, altitude };
 	}
 
-	public static float[] getDirectionalLight(long millis, double[] latLong) {
+	public static float[] getDirectionalLight(TimeOfDay timeOfDay, long millis, double[] latLong) {
 		double[] angles = getSunAngles(millis, latLong);
 
 		// Use a fixed dim nighttime base color (4100K at low intensity).
@@ -86,7 +86,7 @@ public class AtmosphereUtils
 			0.1f
 		);
 
-		if (!TimeOfDay.isNight(angles)) {
+		if (!timeOfDay.isNight(angles)) {
 			float[][] altitudeTemperatureRange = {
 				{ 3, 2500 },
 				{ 5, 2600 },

@@ -167,6 +167,9 @@ public class ZoneRenderer implements Renderer {
 	private StarField starField;
 
 	@Inject
+	private TimeOfDay timeOfDay;
+
+	@Inject
 	private JobSystem jobSystem;
 
 	// Baked nebula cubemap. The nebula is a static function of view direction, so
@@ -614,29 +617,29 @@ public class ZoneRenderer implements Renderer {
 				// The environment may force a specific cycle mode, overriding the config.
 				DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 				DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
-				TimeOfDay.setCycleMode(daylightCycle);
-				TimeOfDay.setDayLength(config.dayLength());
-				TimeOfDay.setMoonPhase(config.moonPhase());
-				TimeOfDay.setMoonBehavior(config.moonBehavior());
-				TimeOfDay.setCycleDurationMinutes(config.cycleDurationMinutes());
-				TimeOfDay.setFixedAngleOverrides(
+				timeOfDay.setCycleMode(daylightCycle);
+				timeOfDay.setDayLength(config.dayLength());
+				timeOfDay.setMoonPhase(config.moonPhase());
+				timeOfDay.setMoonBehavior(config.moonBehavior());
+				timeOfDay.setCycleDurationMinutes(config.cycleDurationMinutes());
+				timeOfDay.setFixedAngleOverrides(
 					environmentManager.getForcedFixedSunAngles(),
 					environmentManager.getForcedFixedMoonAngles()
 				);
-				double[] sunAnglesD = TimeOfDay.getSunAngles();
+				double[] sunAnglesD = timeOfDay.getSunAngles();
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 
-				if (TimeOfDay.hasFixedSunOverride()) {
+				if (timeOfDay.hasFixedSunOverride()) {
 					// A fixed-mode sun override locks the sun disk; cast shadows from
 					// the same point so the sun disk and its shadows stay aligned.
-					double[] fixedSun = TimeOfDay.getFixedSunAngles();
+					double[] fixedSun = timeOfDay.getFixedSunAngles();
 					shadowSunAngles = new float[] {
 						(float) fixedSun[1], (float) fixedSun[0]
 					};
-				} else if (daylightCycle == DaylightCycle.FIXED_NIGHT || TimeOfDay.hasFixedMoonOverride()) {
+				} else if (daylightCycle == DaylightCycle.FIXED_NIGHT || timeOfDay.hasFixedMoonOverride()) {
 					// Shadows must be cast from the same fixed point as the rendered
 					// moon disk, otherwise they drift while the moon stays put.
-					double[] moonAnglesD = TimeOfDay.getFixedNightMoonAngles();
+					double[] moonAnglesD = timeOfDay.getFixedNightMoonAngles();
 					shadowSunAngles = new float[] {
 						(float) moonAnglesD[1], (float) moonAnglesD[0]
 					};
@@ -644,17 +647,17 @@ public class ZoneRenderer implements Renderer {
 					// Below +2° sun shadows are faded out, switch to moon direction
 					// early so the shadow map is already oriented when moon shadows
 					// start fading in via smoothstep — prevents brightness pop
-					double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees();
+					double moonAltDeg = timeOfDay.getMoonAltitudeDegrees();
 					if (moonAltDeg > -10) {
-						if (TimeOfDay.getCurrentMoonBehavior() == MoonBehavior.NIGHT_SYNCED) {
-							double[] moonAnglesD = TimeOfDay.getNightSyncedMoonAngles();
+						if (timeOfDay.getCurrentMoonBehavior() == MoonBehavior.NIGHT_SYNCED) {
+							double[] moonAnglesD = timeOfDay.getNightSyncedMoonAngles();
 							shadowSunAngles = new float[] {
 								(float) moonAnglesD[1], (float) moonAnglesD[0]
 							};
 						} else {
-							Instant moonDate = TimeOfDay.getMoonDate();
+							Instant moonDate = timeOfDay.getMoonDate();
 							double[] moonAnglesD = AtmosphereUtils.getMoonPosition(
-								moonDate.toEpochMilli(), TimeOfDay.getCurrentLatLong());
+								moonDate.toEpochMilli(), timeOfDay.getCurrentLatLong());
 							shadowSunAngles = new float[] {
 								(float) moonAnglesD[1], (float) moonAnglesD[0]
 							};
@@ -807,19 +810,19 @@ public class ZoneRenderer implements Renderer {
 			// The environment may force a specific cycle mode, overriding the config.
 			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
-			TimeOfDay.setCycleMode(daylightCycle);
-			TimeOfDay.setDayLength(config.dayLength());
-			TimeOfDay.setMoonPhase(config.moonPhase());
+			timeOfDay.setCycleMode(daylightCycle);
+			timeOfDay.setDayLength(config.dayLength());
+			timeOfDay.setMoonPhase(config.moonPhase());
 			int minimumBrightness = config.minimumBrightness();
 
 			float[] originalRegionalDirectionalColor = environmentManager.currentDirectionalColor;
 			float[] originalRegionalAmbientColor = new float[3];
 			System.arraycopy(environmentManager.currentAmbientColor, 0, originalRegionalAmbientColor, 0, 3);
 
-			directionalColor = TimeOfDay.getRegionalDirectionalLight(originalRegionalDirectionalColor);
-			ambientColor = TimeOfDay.getRegionalAmbientLight(originalRegionalAmbientColor);
+			directionalColor = timeOfDay.getRegionalDirectionalLight(originalRegionalDirectionalColor);
+			ambientColor = timeOfDay.getRegionalAmbientLight(originalRegionalAmbientColor);
 
-			float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(minimumBrightness);
+			float brightnessMultiplier = timeOfDay.getDynamicBrightnessMultiplier(minimumBrightness);
 			directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier * environmentManager.currentSunlightStrength;
 			// When Day/Night is active, ignore the environment's ambientStrength
 			// (e.g. WINTER=3.5, AUTUMN=0.3) so the cycle's brightness multiplier
@@ -827,21 +830,21 @@ public class ZoneRenderer implements Renderer {
 			// too dark or too bright.
 			ambientStrength = brightnessMultiplier;
 
-			double[] sunAnglesD = TimeOfDay.getSunAngles();
+			double[] sunAnglesD = timeOfDay.getSunAngles();
 			sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
 
 			float[] originalRegionalFogColor = fogColor;
 
 			// Calculate sky gradient colors for realistic sky rendering
 			// Pass regional fog color to blend with during peak daytime
-			float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(originalRegionalFogColor, environmentManager.currentSunStrength, environmentManager.currentSunriseSunsetStrength);
+			float[][] skyGradientColors = timeOfDay.getSkyGradientColors(originalRegionalFogColor, environmentManager.currentSunStrength, environmentManager.currentSunriseSunsetStrength);
 
 			// Use the sky horizon color as fog color so geometry fading into
 			// fog seamlessly matches the skybox at the horizon
 			fogColor = skyGradientColors[1];
 			waterColor = ColorUtils.srgbToLinear(fogColor);
 			calculatedFogColorSrgb = fogColor;
-			float[] sunDirForSky = TimeOfDay.getSunDirectionForSky();
+			float[] sunDirForSky = timeOfDay.getSunDirectionForSky();
 
 			plugin.uboGlobal.skyGradientEnabled.set(1);
 			plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
@@ -850,8 +853,8 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skySunDir.set(sunDirForSky);
 
 			// Set moon uniforms
-			float[] moonDir = TimeOfDay.getMoonDirectionForSky();
-			float moonIllumination = TimeOfDay.getMoonIlluminationFraction();
+			float[] moonDir = timeOfDay.getMoonDirectionForSky();
+			float moonIllumination = timeOfDay.getMoonIlluminationFraction();
 			float[] moonColor = environmentManager.currentMoonColor;
 			// Cast-light (moonlight) color; matches moonColor unless the environment
 			// specifies a distinct moonLightColor. Drives the light on geometry, not
@@ -869,13 +872,13 @@ public class ZoneRenderer implements Renderer {
 			// Auroras appear on nights the per-night random roll selects. The roll
 			// switches only at the cycle boundary (daytime), so it's invisible
 			// behind nightSkyBlend.
-			plugin.uboGlobal.auroraVisibility.set(TimeOfDay.isAuroraNight() ? 1f : 0f);
+			plugin.uboGlobal.auroraVisibility.set(timeOfDay.isAuroraNight() ? 1f : 0f);
 
 			skyGradientEnabled = true;
 
 			// Calculate shadow visibility based on sun and moon altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
-			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees();
+			double moonAltDeg = timeOfDay.getMoonAltitudeDegrees();
 			float moonIllumFrac = moonIllumination;
 			float shadowVisibility;
 

@@ -112,6 +112,9 @@ public class LightManager {
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
+	private TimeOfDay timeOfDay;
+
+	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
 
 	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
@@ -212,9 +215,9 @@ public class LightManager {
 			overworldDayNightActive = true;
 			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
-			TimeOfDay.setCycleMode(daylightCycle);
-			TimeOfDay.setDayLength(config.dayLength());
-			nightLightFactor = TimeOfDay.getNightLightFactor();
+			timeOfDay.setCycleMode(daylightCycle);
+			timeOfDay.setDayLength(config.dayLength());
+			nightLightFactor = timeOfDay.getNightLightFactor();
 			nightFactorRising = previousNightLightFactor < 0 || nightLightFactor >= previousNightLightFactor;
 			previousNightLightFactor = nightLightFactor;
 		} else {
@@ -224,8 +227,8 @@ public class LightManager {
 		if (config.enableDaylightCycle()) {
 			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
-			TimeOfDay.setCycleMode(daylightCycle);
-			TimeOfDay.setDayLength(config.dayLength());
+			timeOfDay.setCycleMode(daylightCycle);
+			timeOfDay.setDayLength(config.dayLength());
 		}
 
 		// These should never occur, but just in case...
@@ -717,7 +720,7 @@ public class LightManager {
 
 		float[] lightColor = Arrays.copyOf(sky.horizonLinear, 3);
 
-		double sunAltDeg = Math.toDegrees(TimeOfDay.getSunAngles()[1]);
+		double sunAltDeg = Math.toDegrees(timeOfDay.getSunAngles()[1]);
 
 		// At night, blend the dark sky horizon toward moonColor: reduces the blue cast
 		// and adds silver moonlight filtering through tunnel openings.
@@ -731,9 +734,9 @@ public class LightManager {
 			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 			DaylightCycle effectiveCycle = forcedMode != null ? forcedMode : config.daylightCycle();
 			double moonAltDeg = (effectiveCycle == DaylightCycle.ALWAYS_NIGHT)
-				? Math.toDegrees(TimeOfDay.getFixedNightMoonAngles()[1])
-				: TimeOfDay.getMoonAltitudeDegrees();
-			float moonIllumFrac = TimeOfDay.getMoonIlluminationFraction();
+				? Math.toDegrees(timeOfDay.getFixedNightMoonAngles()[1])
+				: timeOfDay.getMoonAltitudeDegrees();
+			float moonIllumFrac = timeOfDay.getMoonIlluminationFraction();
 			if (moonAltDeg > -5 && moonIllumFrac > 0.01f) {
 				float sunFade = (float) Math.max(0.0, Math.min(1.0, (5.0 - sunAltDeg) / 10.0));
 				float moonEl = (float) Math.min(1.0, Math.max(0.0, (moonAltDeg + 5.0) / 25.0));
