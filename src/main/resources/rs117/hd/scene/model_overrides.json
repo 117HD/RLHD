@@ -13307,13 +13307,19 @@
     "colorOverrides": [
       {
         "colors": "h == 5 && s == 0 && l == 48 || h == 5 && s == 0 && l == 126 || h == 5 && s == 0 && l == 102",
-        "baseMaterial": "WATTLE_1_DARK",
-        "uvType": "BOX"
+        "baseMaterial": "WATTLE_1",
+        "minLightness": 80,
+        "maxLightness": 80,
+        "uvType": "BOX",
+        "undoVanillaShading": false
       },
       {
         "colors": "h == 5 && l == 21",
         "baseMaterial": "WATTLE_1_VERY_LIGHT",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "minLightness": 55,
+        "maxLightness": 55,
+        "undoVanillaShading": false
       }
     ],
     "objectIds": [
