@@ -129,8 +129,10 @@ public class Environment {
 	// from the procedural sunrise/sunset gradient as the sun climbs. Lower values pull
 	// the area color in earlier in the morning (and hold it later in the evening),
 	// compressing the procedural twilight window; higher values let the procedural
-	// gradient persist further up. Governs the daytime regional blend for ALL areas,
-	// independent of sunriseSunsetStrength. Default 40 preserves prior behavior.
+	// gradient persist further up. 0 means the area color takes over immediately at
+	// the horizon (no procedural daytime gradient at all). Governs the daytime
+	// regional blend for ALL areas, independent of sunriseSunsetStrength. Default 40
+	// preserves prior behavior.
 	public float skyColorTakeoverAngle = 40;
 	public float sunlightStrength = 1;
 	public float minBrightnessBoost = 0;

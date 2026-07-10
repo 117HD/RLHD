@@ -516,10 +516,11 @@ public class TimeOfDay {
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 
 		// Sun altitude at which the area's own color has fully taken over from the
-		// procedural sunrise/sunset gradient. Clamped to a sane minimum so the blend
-		// ramps never divide by zero or invert. Shared by the sunrise/sunset
-		// suppression window and the daytime regional blend so they stay in sync.
-		float takeover = Math.max(5.0f, skyColorTakeoverAngle);
+		// procedural sunrise/sunset gradient. Shared by the sunrise/sunset suppression
+		// window and the daytime regional blend so they stay in sync. Clamped to >= 0;
+		// a value of 0 means the regional color takes over immediately at the horizon
+		// (handled as a special case below to avoid dividing by zero in the ramps).
+		float takeover = Math.max(0.0f, skyColorTakeoverAngle);
 
 		float[] zenithColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, ZENITH_KEYFRAMES);
 		float[] horizonColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, HORIZON_KEYFRAMES);
