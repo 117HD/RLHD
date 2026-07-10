@@ -127,13 +127,24 @@ public class Environment {
 	public float sunriseSunsetStrength = 1;
 	// Sun altitude (degrees) at which this area's own sky color has FULLY taken over
 	// from the procedural sunrise/sunset gradient as the sun climbs. Lower values pull
-	// the area color in earlier in the morning (and hold it later in the evening),
-	// compressing the procedural twilight window; higher values let the procedural
-	// gradient persist further up. 0 means the area color takes over immediately at
-	// the horizon (no procedural daytime gradient at all). Governs the daytime
-	// regional blend for ALL areas, independent of sunriseSunsetStrength. Default 40
-	// preserves prior behavior.
-	public float skyColorTakeoverAngle = 40;
+	// the area color in earlier in the morning (and hold it later in the evening);
+	// higher values let the procedural gradient persist further up. 0 means the area
+	// color takes over immediately at the horizon (no procedural daytime gradient).
+	//
+	// When set (>= 0), it ALSO raises a "regional floor" on the daytime blend so the
+	// area color is mixed into the keyframes from the horizon up — the blue daytime
+	// keyframe is diluted toward regional immediately rather than shown at full and
+	// then compressed, which removes the "blue flash after sunrise" (a low takeover
+	// angle otherwise just speeds up the same keyframe march). The floor scales with
+	// the angle: takeover 0 -> full regional at the horizon, takeover 40 -> no floor.
+	//
+	// Left unset (sentinel -1) it behaves as 40 with NO floor — exactly the prior
+	// behavior. Governs the daytime regional blend for ALL areas, independent of
+	// sunriseSunsetStrength. Resolved in normalize().
+	public float skyColorTakeoverAngle = -1;
+	// Whether skyColorTakeoverAngle was explicitly set in JSON (vs. defaulted). Only
+	// an explicitly-set angle applies the regional floor above. Set in normalize().
+	public transient boolean skyColorTakeoverAngleDefined = false;
 	public float sunlightStrength = 1;
 	public float minBrightnessBoost = 0;
 
@@ -182,7 +193,28 @@ public class Environment {
 		// value decouples the two.
 		if (auroraVisibility == -1)
 			auroraVisibility = starVisibility;
+
+		// Sky-color takeover angle: sentinel -1 means "unset" — behave as 40 with no
+		// regional floor (prior behavior). An explicitly-set value enables the floor.
+		if (skyColorTakeoverAngle == -1) {
+			skyColorTakeoverAngle = 40;
+			skyColorTakeoverAngleDefined = false;
+		} else {
+			skyColorTakeoverAngleDefined = true;
+		}
 		return this;
+	}
+
+	/**
+	 * The daytime regional-color floor for this environment: the minimum amount of
+	 * the area's own color always mixed into the daytime sky (0 = none). Only nonzero
+	 * when skyColorTakeoverAngle was explicitly set; scales inversely with the angle
+	 * (0° -> 1, 40°+ -> 0). See skyColorTakeoverAngle for why this exists.
+	 */
+	public float skyColorFloor() {
+		if (!skyColorTakeoverAngleDefined)
+			return 0f;
+		return Math.max(0f, Math.min(1f, 1f - skyColorTakeoverAngle / 40f));
 	}
 
 	@Override

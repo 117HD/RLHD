@@ -494,7 +494,7 @@ public class TimeOfDay {
 	 * @param regionalFogColor The regional fog color to blend with during peak daytime (sRGB)
 	 */
 	public float[][] getSkyGradientColors(float[] regionalFogColor, float sunStrength) {
-		return getSkyGradientColors(regionalFogColor, sunStrength, 1.0f, 40.0f);
+		return getSkyGradientColors(regionalFogColor, sunStrength, 1.0f, 40.0f, 0.0f);
 	}
 
 	public float[][] getSkyGradientColors(
@@ -502,7 +502,7 @@ public class TimeOfDay {
 		float sunStrength,
 		float sunriseSunsetStrength
 	) {
-		return getSkyGradientColors(regionalFogColor, sunStrength, sunriseSunsetStrength, 40.0f);
+		return getSkyGradientColors(regionalFogColor, sunStrength, sunriseSunsetStrength, 40.0f, 0.0f);
 	}
 
 	public float[][] getSkyGradientColors(
@@ -510,6 +510,16 @@ public class TimeOfDay {
 		float sunStrength,
 		float sunriseSunsetStrength,
 		float skyColorTakeoverAngle
+	) {
+		return getSkyGradientColors(regionalFogColor, sunStrength, sunriseSunsetStrength, skyColorTakeoverAngle, 0.0f);
+	}
+
+	public float[][] getSkyGradientColors(
+		float[] regionalFogColor,
+		float sunStrength,
+		float sunriseSunsetStrength,
+		float skyColorTakeoverAngle,
+		float skyColorFloor
 	) {
 		Instant modifiedDate = getModifiedDate();
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
@@ -629,15 +639,26 @@ public class TimeOfDay {
 			}
 		}
 
-		// Smoothstep blend from peak sunset (0°) to full regional (takeover angle).
-		// Lowering the takeover angle per-area pulls the regional color in earlier as
-		// the sun climbs, so a strongly-colored sky wins sooner in the morning.
+		// Smoothstep blend from peak sunset (0°) to full regional (takeover angle),
+		// lifted by skyColorFloor so a minimum amount of regional is ALWAYS mixed in
+		// while the sun is up (even at the horizon). Without the floor, blendFactor is
+		// 0 at the horizon, so the raw (often blue) daytime keyframe shows at full there
+		// and a low takeover angle merely compresses that same keyframe march — the
+		// "blue flash". The floor dilutes the keyframe toward the area color from 0°
+		// onward instead. floor=0 (angle unset) reproduces the prior curve exactly.
 		float blendFactor;
 		if (sunAltitudeDegrees >= takeover) {
 			blendFactor = 1.0f;
 		} else if (sunAltitudeDegrees >= 0) {
 			float t = (float) (sunAltitudeDegrees / takeover);
-			blendFactor = t * t * (3.0f - 2.0f * t); // Smoothstep curve
+			float ramp = t * t * (3.0f - 2.0f * t); // Smoothstep curve
+			// Fade the floor in over the first few degrees above the horizon so it
+			// doesn't step-change from 0 at exactly 0°, which would seam against the
+			// warm sunset keyframe still present right at the horizon.
+			float fh = (float) Math.min(1.0, sunAltitudeDegrees / 3.0);
+			float floorFade = fh * fh * (3.0f - 2.0f * fh);
+			float floor = skyColorFloor * floorFade;
+			blendFactor = floor + (1.0f - floor) * ramp;
 		} else {
 			blendFactor = 0.0f;
 		}
