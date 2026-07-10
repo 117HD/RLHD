@@ -197,13 +197,6 @@ public class EnvironmentManager {
 	public float currentSkyColorTakeoverAngle = 40f;
 	private float targetSkyColorTakeoverAngle = 40f;
 
-	// 1 when the current environment explicitly set skyColorTakeoverAngle (enabling
-	// the no-blue "sunrise oranges -> area color" daytime path), 0 otherwise. Blended
-	// across transitions so the cap eases in/out rather than popping.
-	private float startSkyKeyframeCap = 0f;
-	public float currentSkyKeyframeCap = 0f;
-	private float targetSkyKeyframeCap = 0f;
-
 	private float startSunlightStrength = 1f;
 	public float currentSunlightStrength = 1f;
 	private float targetSunlightStrength = 1f;
@@ -356,7 +349,6 @@ public class EnvironmentManager {
 			currentSunStrength = mix(startSunStrength, targetSunStrength, t);
 			currentSunriseSunsetStrength = mix(startSunriseSunsetStrength, targetSunriseSunsetStrength, t);
 			currentSkyColorTakeoverAngle = mix(startSkyColorTakeoverAngle, targetSkyColorTakeoverAngle, t);
-			currentSkyKeyframeCap = mix(startSkyKeyframeCap, targetSkyKeyframeCap, t);
 			currentSunlightStrength = mix(startSunlightStrength, targetSunlightStrength, t);
 			currentMinBrightnessBoost = mix(startMinBrightnessBoost, targetMinBrightnessBoost, t);
 		}
@@ -419,7 +411,6 @@ public class EnvironmentManager {
 		startSunStrength = currentSunStrength;
 		startSunriseSunsetStrength = currentSunriseSunsetStrength;
 		startSkyColorTakeoverAngle = currentSkyColorTakeoverAngle;
-		startSkyKeyframeCap = currentSkyKeyframeCap;
 		startSunlightStrength = currentSunlightStrength;
 		startMinBrightnessBoost = currentMinBrightnessBoost;
 		for (int i = 0; i < 2; i++)
@@ -463,7 +454,6 @@ public class EnvironmentManager {
 		targetSunStrength = env.sunStrength;
 		targetSunriseSunsetStrength = env.sunriseSunsetStrength;
 		targetSkyColorTakeoverAngle = env.skyColorTakeoverAngle;
-		targetSkyKeyframeCap = env.skyColorTakeoverAngleDefined ? 1f : 0f;
 		targetSunlightStrength = env.sunlightStrength;
 		targetMinBrightnessBoost = env.minBrightnessBoost;
 
@@ -705,8 +695,7 @@ public class EnvironmentManager {
 			regionalFogSrgb,
 			env.sunStrength,
 			env.sunriseSunsetStrength,
-			env.skyColorTakeoverAngle,
-			env.skyColorTakeoverAngleDefined ? 1f : 0f
+			env.skyColorTakeoverAngle
 		);
 		float[] horizonLinear = ColorUtils.srgbToLinear(skyGradientColors[1]);
 		float[] noonHorizonLinear = ColorUtils.srgbToLinear(
