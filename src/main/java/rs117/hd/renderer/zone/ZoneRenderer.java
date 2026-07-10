@@ -203,7 +203,7 @@ public class ZoneRenderer implements Renderer {
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
 	private boolean sceneFboValid;
-	private boolean shouldRenderSkybox;
+	private boolean shouldRenderRSSkybox;
 	private boolean shouldRenderScene;
 	private boolean shouldClearShadowFbo;
 	private boolean shouldDrawRoofShadows;
@@ -988,10 +988,10 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.auroraVisibility.set(0f);
 		}
 
-		shouldRenderSkybox = scene.getSkybox() != null;
+		shouldRenderRSSkybox = scene.getSkybox() != null;
 
 		float fogDepth = 0;
-		if (!shouldRenderSkybox) {
+		if (!shouldRenderRSSkybox) {
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
 					fogDepth = config.fogDepth();
@@ -1261,7 +1261,7 @@ public class ZoneRenderer implements Renderer {
 		glClearDepth(0);
 
 		// Render sky gradient if Day/Night Cycle is enabled, otherwise use solid color clear
-		if (skyGradientEnabled && skyProgram.isValid()) {
+		if (skyGradientEnabled && !shouldRenderRSSkybox && skyProgram.isValid()) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
 
@@ -1274,7 +1274,7 @@ public class ZoneRenderer implements Renderer {
 		} else {
 			// Use Day/Night Cycle fog color if available, otherwise use environment manager's fog color
 			float[] fogColor = { 0, 0, 0 };
-			if (!shouldRenderSkybox) {
+			if (!shouldRenderRSSkybox) {
 				fogColor = calculatedFogColorSrgb != null ? calculatedFogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 				pow(fogColor, fogColor, plugin.getGammaCorrection());
 			}
@@ -1501,7 +1501,7 @@ public class ZoneRenderer implements Renderer {
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 
-					if (sceneManager.isRoot(ctx) && skyGradientEnabled && skyProgram.isValid()) {
+					if (sceneManager.isRoot(ctx) && skyGradientEnabled && !shouldRenderRSSkybox && skyProgram.isValid()) {
 						// Draw Skybox after drawing Top Level Scene Opaque
 						sceneCmd.ExecuteSubCommandBuffer(skyboxCmd);
 						sceneCmd.SetShader(sceneProgram);
