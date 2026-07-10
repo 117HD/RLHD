@@ -4331,6 +4331,13 @@
     ]
   },
   {
+    "description": "Varrok Roofs - DoubleSided",
+    "doubleSidedFaces": true,
+    "objectIds": [
+      "FAI_VARROCK_ROOFKIT_SLATE"
+    ]
+  },
+  {
     "description": "VARROCK_FOUNTAIN_FLOOR",
     "baseMaterial": "STONE",
     "objectIds": [
