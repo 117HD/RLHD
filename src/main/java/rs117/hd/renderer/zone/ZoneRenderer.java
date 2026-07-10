@@ -501,7 +501,7 @@ public class ZoneRenderer implements Renderer {
 
 			ctx.map();
 
-			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
+			if (scene.getWorldViewId() == WorldView.TOPLEVEL && shouldRenderRSSkybox) {
 				Model skybox = scene.getSkybox();
 				if (skybox != null) {
 					skybox.calculateBoundsCylinder();
@@ -804,7 +804,6 @@ public class ZoneRenderer implements Renderer {
 		float ambientStrength = environmentManager.currentAmbientStrength;
 		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		float[] waterColor = environmentManager.currentWaterColor;
-		float[] sunAngles = environmentManager.currentSunAngles;
 
 		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
 			// The environment may force a specific cycle mode, overriding the config.
@@ -831,13 +830,10 @@ public class ZoneRenderer implements Renderer {
 			ambientStrength = brightnessMultiplier;
 
 			double[] sunAnglesD = timeOfDay.getSunAngles();
-			sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
-
-			float[] originalRegionalFogColor = fogColor;
 
 			// Calculate sky gradient colors for realistic sky rendering
 			// Pass regional fog color to blend with during peak daytime
-			float[][] skyGradientColors = timeOfDay.getSkyGradientColors(originalRegionalFogColor, environmentManager.currentSunStrength, environmentManager.currentSunriseSunsetStrength);
+			float[][] skyGradientColors = timeOfDay.getSkyGradientColors(fogColor, environmentManager.currentSunStrength, environmentManager.currentSunriseSunsetStrength);
 
 			// Use the sky horizon color as fog color so geometry fading into
 			// fog seamlessly matches the skybox at the horizon
@@ -879,10 +875,8 @@ public class ZoneRenderer implements Renderer {
 			// Calculate shadow visibility based on sun and moon altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
 			double moonAltDeg = timeOfDay.getMoonAltitudeDegrees();
-			float moonIllumFrac = moonIllumination;
 			float shadowVisibility;
 
-			float sunStrength = environmentManager.currentSunStrength;
 			if (sunAltitudeDegrees > 2) {
 				// Sun shadows (existing behavior)
 				if (sunAltitudeDegrees <= 12) {
@@ -897,12 +891,12 @@ public class ZoneRenderer implements Renderer {
 				// Night: sun below +2 degrees
 				// Moon shadow ramps in via smoothstep from +2° to -15°, then stays constant
 				float moonBaseShadow = 0;
-				if (moonAltDeg > -10 && moonIllumFrac > 0.01f) {
+				if (moonAltDeg > -10 && moonIllumination > 0.01f) {
 					// Smoothstep elevation factor: starts at -10deg (zero derivative),
 					// reaches full strength at +20deg. C1 continuous onset prevents pop-in.
 					float me = (float) Math.min(1.0, Math.max(0, (moonAltDeg + 10.0) / 30.0));
 					float moonElevationFactor = me * me * (3.0f - 2.0f * me); // smoothstep
-					moonBaseShadow = moonIllumFrac * 0.2f * moonElevationFactor;
+					moonBaseShadow = moonIllumination * 0.2f * moonElevationFactor;
 				}
 
 				// Smoothstep blend from 0 at +2° to full moonBaseShadow at -15°
@@ -918,7 +912,7 @@ public class ZoneRenderer implements Renderer {
 			// This prevents the color "pop" at 0° where warm sun tones vanish while
 			// cool moon tones appear simultaneously.
 			float moonInfluence = 0;
-			if (sunAltitudeDegrees < 5.0 && moonAltDeg > -10 && moonIllumFrac > 0.01f) {
+			if (sunAltitudeDegrees < 5.0 && moonAltDeg > -10 && moonIllumination > 0.01f) {
 				if (sunAltitudeDegrees >= 0.0) {
 					// Pre-horizon: smoothstep from 0.0 at +5° to 0.05 at 0°
 					float pt = (float) ((5.0 - sunAltitudeDegrees) / 5.0);
@@ -941,7 +935,7 @@ public class ZoneRenderer implements Renderer {
 				moonInfluence *= moonHorizonFade;
 
 				// Scale by moon phase — full moon has strongest color tint, new moon has none
-				moonInfluence *= moonIllumFrac;
+				moonInfluence *= moonIllumination;
 
 				for (int i = 0; i < 3; i++) {
 					directionalColor[i] = directionalColor[i] * (1 - moonInfluence)
