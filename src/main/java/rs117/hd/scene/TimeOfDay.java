@@ -5,8 +5,8 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import javax.annotation.Nullable;
 import net.runelite.http.api.worlds.WorldRegion;
-import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DayLength;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.MoonPhase;
 import rs117.hd.utils.AtmosphereUtils;
@@ -14,9 +14,85 @@ import rs117.hd.utils.AtmosphereUtils;
 import static rs117.hd.utils.ColorUtils.rgb;
 import static rs117.hd.utils.MathUtils.*;
 
-public class TimeOfDay
-{
+public class TimeOfDay {
+
+	// Sky color keyframe tables. These are read-only constant data consumed by
+	// AtmosphereUtils.interpolateSrgb (which only reads and builds fresh float[]
+	// per call). Hoisted to static final so they aren't reallocated every frame.
+	private static final Object[][] ENHANCED_SKY_KEYFRAMES = {
+		// Deep night (sun well below horizon) - lightened and gradual progression
+		{ -30.0, new java.awt.Color(35, 42, 58) },    // Deepest night (lightened)
+		{ -15.0, new java.awt.Color(35, 42, 58) },    // Stable deep night (lightened)
+		{ -8.0,  new java.awt.Color(42, 30, 80) },    // Early twilight brightening (lightened)
+		{ 0.0,   new java.awt.Color(210, 135, 95) },  // Peak sunset red
+		{ 8.0,   new java.awt.Color(220, 170, 115) }, // Late golden hour (dimmed)
+		{ 12.0,  new java.awt.Color(220, 180, 145) }, // Warm late afternoon
+		{ 15.0,  new java.awt.Color(200, 175, 160) }, // Soft warm light
+		{ 18.0,  new java.awt.Color(180, 170, 175) }, // Afternoon transition
+		{ 22.0,  new java.awt.Color(165, 167, 185) }, // Subtle warm tint
+		{ 25.0,  new java.awt.Color(150, 165, 190) }, // Very subtle warmth
+		{ 30.0,  new java.awt.Color(135, 165, 200) }, // Midday blue (natural)
+		{ 50.0,  new java.awt.Color(125, 160, 195) }, // Clear blue (muted)
+		{ 70.0,  new java.awt.Color(120, 155, 190) }, // High sun blue (subdued)
+		{ 90.0,  new java.awt.Color(115, 150, 185) }  // Zenith blue (realistic)
+	};
+
+	// Zenith color keyframes (top of sky)
+	private static final Object[][] ZENITH_KEYFRAMES = {
+		{ -30.0, new java.awt.Color(1, 1, 4) },       // Deep night - near black
+		{ -15.0, new java.awt.Color(3, 4, 10) },      // Late night
+		{ -8.0,  new java.awt.Color(45, 35, 70) },    // Early twilight - purple tint
+		{ -3.0,  new java.awt.Color(80, 60, 100) },   // Twilight
+		{ 0.0,   new java.awt.Color(100, 80, 120) },  // Horizon sun
+		{ 5.0,   new java.awt.Color(120, 140, 180) }, // Early sunrise
+		{ 15.0,  new java.awt.Color(100, 150, 200) }, // Morning
+		{ 30.0,  new java.awt.Color(90, 145, 200) },  // Mid-morning
+		{ 50.0,  new java.awt.Color(85, 140, 195) },  // Midday
+		{ 90.0,  new java.awt.Color(80, 135, 190) }   // High noon
+	};
+
+	// Horizon color keyframes (sides/bottom of sky)
+	private static final Object[][] HORIZON_KEYFRAMES = {
+		{ -30.0, new java.awt.Color(1, 2, 5) },       // Deep night - near black
+		{ -15.0, new java.awt.Color(4, 5, 12) },      // Late night
+		{ -8.0,  new java.awt.Color(60, 45, 65) },    // Early twilight
+		{ -3.0,  new java.awt.Color(140, 80, 70) },   // Twilight - orange/red
+		{ 0.0,   new java.awt.Color(220, 130, 80) },  // Sunrise/sunset - golden
+		{ 5.0,   new java.awt.Color(230, 170, 120) }, // Early morning golden
+		{ 10.0,  new java.awt.Color(200, 180, 160) }, // Morning warm
+		{ 20.0,  new java.awt.Color(170, 175, 185) }, // Late morning
+		{ 30.0,  new java.awt.Color(150, 165, 190) }, // Midday haze
+		{ 50.0,  new java.awt.Color(140, 160, 190) }, // Afternoon
+		{ 90.0,  new java.awt.Color(135, 155, 185) }  // High noon
+	};
+
+	// Sun glow color keyframes (color of the glow around the sun)
+	private static final Object[][] SUN_GLOW_KEYFRAMES = {
+		{ -30.0, new java.awt.Color(0, 0, 0) },       // No glow at night
+		{ -10.0, new java.awt.Color(20, 10, 30) },    // Very faint purple
+		{ -5.0,  new java.awt.Color(80, 40, 60) },    // Purple/pink
+		{ -2.0,  new java.awt.Color(180, 80, 50) },   // Deep orange/red
+		{ 0.0,   new java.awt.Color(255, 150, 80) },  // Bright orange
+		{ 5.0,   new java.awt.Color(255, 200, 130) }, // Golden yellow
+		{ 15.0,  new java.awt.Color(255, 230, 180) }, // Warm white
+		{ 30.0,  new java.awt.Color(255, 250, 220) }, // Nearly white
+		{ 50.0,  new java.awt.Color(255, 255, 240) }, // White with slight warmth
+		{ 90.0,  new java.awt.Color(255, 255, 250) }  // Pure white
+	};
+
+	// Length of one Synced Days cycle: a full day/night every real hour, phase-locked
+	// to the UTC clock so every player sees the same sun position at the same moment.
+	private static final long SYNCED_DAYS_PERIOD_MS = 60L * 60 * 1000;
+
+	// The natural (unwarped) cycle position where daytime ends and night begins.
+	// 0.0-0.70 maps to 5am-7pm (day, incl. twilight), 0.70-1.0 maps to 7pm-5am (night).
+	private static final double NATURAL_DAY_BOUNDARY = 0.70;
+
 	public static final float MINUTES_PER_DAY = 30 / 60.f;
+
+	// Probability that any given simulated night is an "aurora night", in
+	// environments flagged aurora-eligible. Rolled deterministically per night.
+	private static final double AURORA_NIGHT_CHANCE = 0.03;
 
 	// Static variables to maintain cycle state across config changes
 	private static float lastDayLength = MINUTES_PER_DAY;
@@ -52,6 +128,13 @@ public class TimeOfDay
 	// active (see isFixedMode) — the dynamic cycle always computes angles.
 	private static double[] fixedSunAnglesOverride = null;
 	private static double[] fixedMoonAnglesOverride = null;
+
+	// Night Synced mode: day offset advances only while the moon is below the horizon,
+	// so phase changes are never visible. We track pending increments and apply them
+	// only when the mirrored moon altitude is negative.
+	private static long nightSyncedDayOffset = 0;
+	private static long lastNightSyncedCycles = 0;
+	private static long pendingDayIncrements = 0;
 
 	/**
 	 * Set the per-environment fixed sun/moon angle overrides for this frame.
@@ -147,77 +230,6 @@ public class TimeOfDay
 		return new float[] { x, y, z };
 	}
 
-	// Sky color keyframe tables. These are read-only constant data consumed by
-	// AtmosphereUtils.interpolateSrgb (which only reads and builds fresh float[]
-	// per call). Hoisted to static final so they aren't reallocated every frame.
-	private static final Object[][] ENHANCED_SKY_KEYFRAMES = {
-		// Deep night (sun well below horizon) - lightened and gradual progression
-		{ -30.0, new java.awt.Color(35, 42, 58) },    // Deepest night (lightened)
-		{ -15.0, new java.awt.Color(35, 42, 58) },    // Stable deep night (lightened)
-		{ -8.0,  new java.awt.Color(42, 30, 80) },    // Early twilight brightening (lightened)
-		{ 0.0,   new java.awt.Color(210, 135, 95) },  // Peak sunset red
-		{ 8.0,   new java.awt.Color(220, 170, 115) }, // Late golden hour (dimmed)
-		{ 12.0,  new java.awt.Color(220, 180, 145) }, // Warm late afternoon
-		{ 15.0,  new java.awt.Color(200, 175, 160) }, // Soft warm light
-		{ 18.0,  new java.awt.Color(180, 170, 175) }, // Afternoon transition
-		{ 22.0,  new java.awt.Color(165, 167, 185) }, // Subtle warm tint
-		{ 25.0,  new java.awt.Color(150, 165, 190) }, // Very subtle warmth
-		{ 30.0,  new java.awt.Color(135, 165, 200) }, // Midday blue (natural)
-		{ 50.0,  new java.awt.Color(125, 160, 195) }, // Clear blue (muted)
-		{ 70.0,  new java.awt.Color(120, 155, 190) }, // High sun blue (subdued)
-		{ 90.0,  new java.awt.Color(115, 150, 185) }  // Zenith blue (realistic)
-	};
-
-	// Zenith color keyframes (top of sky)
-	private static final Object[][] ZENITH_KEYFRAMES = {
-		{ -30.0, new java.awt.Color(1, 1, 4) },       // Deep night - near black
-		{ -15.0, new java.awt.Color(3, 4, 10) },      // Late night
-		{ -8.0,  new java.awt.Color(45, 35, 70) },    // Early twilight - purple tint
-		{ -3.0,  new java.awt.Color(80, 60, 100) },   // Twilight
-		{ 0.0,   new java.awt.Color(100, 80, 120) },  // Horizon sun
-		{ 5.0,   new java.awt.Color(120, 140, 180) }, // Early sunrise
-		{ 15.0,  new java.awt.Color(100, 150, 200) }, // Morning
-		{ 30.0,  new java.awt.Color(90, 145, 200) },  // Mid-morning
-		{ 50.0,  new java.awt.Color(85, 140, 195) },  // Midday
-		{ 90.0,  new java.awt.Color(80, 135, 190) }   // High noon
-	};
-
-	// Horizon color keyframes (sides/bottom of sky)
-	private static final Object[][] HORIZON_KEYFRAMES = {
-		{ -30.0, new java.awt.Color(1, 2, 5) },       // Deep night - near black
-		{ -15.0, new java.awt.Color(4, 5, 12) },      // Late night
-		{ -8.0,  new java.awt.Color(60, 45, 65) },    // Early twilight
-		{ -3.0,  new java.awt.Color(140, 80, 70) },   // Twilight - orange/red
-		{ 0.0,   new java.awt.Color(220, 130, 80) },  // Sunrise/sunset - golden
-		{ 5.0,   new java.awt.Color(230, 170, 120) }, // Early morning golden
-		{ 10.0,  new java.awt.Color(200, 180, 160) }, // Morning warm
-		{ 20.0,  new java.awt.Color(170, 175, 185) }, // Late morning
-		{ 30.0,  new java.awt.Color(150, 165, 190) }, // Midday haze
-		{ 50.0,  new java.awt.Color(140, 160, 190) }, // Afternoon
-		{ 90.0,  new java.awt.Color(135, 155, 185) }  // High noon
-	};
-
-	// Sun glow color keyframes (color of the glow around the sun)
-	private static final Object[][] SUN_GLOW_KEYFRAMES = {
-		{ -30.0, new java.awt.Color(0, 0, 0) },       // No glow at night
-		{ -10.0, new java.awt.Color(20, 10, 30) },    // Very faint purple
-		{ -5.0,  new java.awt.Color(80, 40, 60) },    // Purple/pink
-		{ -2.0,  new java.awt.Color(180, 80, 50) },   // Deep orange/red
-		{ 0.0,   new java.awt.Color(255, 150, 80) },  // Bright orange
-		{ 5.0,   new java.awt.Color(255, 200, 130) }, // Golden yellow
-		{ 15.0,  new java.awt.Color(255, 230, 180) }, // Warm white
-		{ 30.0,  new java.awt.Color(255, 250, 220) }, // Nearly white
-		{ 50.0,  new java.awt.Color(255, 255, 240) }, // White with slight warmth
-		{ 90.0,  new java.awt.Color(255, 255, 250) }  // Pure white
-	};
-
-	// Night Synced mode: day offset advances only while the moon is below the horizon,
-	// so phase changes are never visible. We track pending increments and apply them
-	// only when the mirrored moon altitude is negative.
-	private static long nightSyncedDayOffset = 0;
-	private static long lastNightSyncedCycles = 0;
-	private static long pendingDayIncrements = 0;
-
 	/**
 	 * Set the cycle mode for this frame. Call before any other TimeOfDay methods.
 	 */
@@ -238,10 +250,6 @@ public class TimeOfDay
 	public static void setMoonPhase(MoonPhase moonPhase) {
 		currentMoonPhase = moonPhase;
 	}
-
-	// The natural (unwarped) cycle position where daytime ends and night begins.
-	// 0.0-0.70 maps to 5am-7pm (day, incl. twilight), 0.70-1.0 maps to 7pm-5am (night).
-	private static final double NATURAL_DAY_BOUNDARY = 0.70;
 
 	/**
 	 * Warp a linear cycle position (0..1) so day and night occupy a different
@@ -780,10 +788,6 @@ public class TimeOfDay
 		return getMoonAltitudeDegrees(latLong, dayLength);
 	}
 
-	// Probability that any given simulated night is an "aurora night", in
-	// environments flagged aurora-eligible. Rolled deterministically per night.
-	private static final double AURORA_NIGHT_CHANCE = 0.03;
-
 	/**
 	 * Whether the current simulated night is an "aurora night".
 	 *
@@ -920,10 +924,6 @@ public class TimeOfDay
 			+ now.getSecond() / 3600.0
 			+ now.getNano() / 3.6e12;
 	}
-
-	// Length of one Synced Days cycle: a full day/night every real hour, phase-locked
-	// to the UTC clock so every player sees the same sun position at the same moment.
-	private static final long SYNCED_DAYS_PERIOD_MS = 60L * 60 * 1000;
 
 	/**
 	 * Map a normalized cycle position [0, 1) to an hour-of-day [0, 24) using the
