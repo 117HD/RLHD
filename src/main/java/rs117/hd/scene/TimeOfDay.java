@@ -403,7 +403,6 @@ public class TimeOfDay {
 		return AtmosphereUtils.getSkyColor(modifiedDate.toEpochMilli(), currentLatLong);
 	}
 
-
 	public static float[] getEnhancedSkyColor(float[] regionalFogColor, float sunStrength) {
 		Instant modifiedDate = getModifiedDate();
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
@@ -710,11 +709,20 @@ public class TimeOfDay {
 	}
 
 	/**
-	 * Get the moon direction vector for sky rendering.
-	 * Returns normalized direction FROM the camera TO the moon.
-	 * Uses the same coordinate transformation as getSunDirectionForSky().
+	 * Get the moon direction vector for sky rendering, respecting moon behavior mode.
 	 */
 	public static float[] getMoonDirectionForSky() {
+		// A fixed-mode moon override (or the default Fixed Night position) locks
+		// the moon disk to a fixed point regardless of moon behavior.
+		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
+			double[] angles = getFixedNightMoonAngles();
+			return anglesToSkyDirection(angles[0], angles[1]);
+		}
+		if (currentMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
+			double[] angles = getNightSyncedMoonAngles();
+			return anglesToSkyDirection(angles[0], angles[1]);
+		}
+
 		Instant moonDate = getMoonDate();
 		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), currentLatLong);
 		// moonAngles[0] = azimuth, moonAngles[1] = altitude
@@ -722,52 +730,18 @@ public class TimeOfDay {
 	}
 
 	/**
-	 * Get the moon illumination fraction (0 = new moon, 1 = full moon).
-	 */
-	public static float getMoonIlluminationFraction() {
-		Instant moonDate = getMoonDate();
-		return (float) AtmosphereUtils.getMoonIllumination(moonDate.toEpochMilli())[0];
-	}
-
-	/**
-	 * Get the moon altitude in degrees.
-	 */
-	public static double getMoonAltitudeDegrees() {
-		Instant moonDate = getMoonDate();
-		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), currentLatLong);
-		return Math.toDegrees(moonAngles[1]);
-	}
-
-	/**
-	 * Get the moon direction vector for sky rendering, respecting moon behavior mode.
-	 */
-	public static float[] getMoonDirectionForSky(MoonBehavior moonBehavior) {
-		// A fixed-mode moon override (or the default Fixed Night position) locks
-		// the moon disk to a fixed point regardless of moon behavior.
-		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
-			double[] angles = getFixedNightMoonAngles();
-			return anglesToSkyDirection(angles[0], angles[1]);
-		}
-		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
-			double[] angles = getNightSyncedMoonAngles();
-			return anglesToSkyDirection(angles[0], angles[1]);
-		}
-		return getMoonDirectionForSky();
-	}
-
-	/**
 	 * Get the moon illumination fraction, respecting the moon phase lock and behavior mode.
 	 * A config phase lock takes precedence; otherwise Night Synced mode derives illumination
 	 * from the advancing equinox date so the phase cycles naturally (each game cycle = +1 day).
 	 */
-	public static float getMoonIlluminationFraction(MoonBehavior moonBehavior) {
+	public static float getMoonIlluminationFraction() {
 		if (currentMoonPhase.isLocked()) {
 			return currentMoonPhase.illumination; // Phase locked via config
 		}
 		if (currentCycleMode == DaylightCycle.FIXED_NIGHT) {
 			return 1.0f; // Always a full moon
 		}
-		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
+		if (currentMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
 			// Real Time: use today's real lunar phase so illumination matches the
 			// real-clock moon position (mirrored sun) and the realistic moon.
 			if (currentCycleMode == DaylightCycle.REAL_TIME) {
@@ -783,13 +757,15 @@ public class TimeOfDay {
 			long phaseMillis = equinoxEpochMs + phaseDay * dayMs;
 			return (float) AtmosphereUtils.getMoonIllumination(phaseMillis)[0];
 		}
-		return getMoonIlluminationFraction();
+
+		Instant moonDate = getMoonDate();
+		return (float) AtmosphereUtils.getMoonIllumination(moonDate.toEpochMilli())[0];
 	}
 
 	/**
 	 * Get the moon altitude in degrees, respecting moon behavior mode.
 	 */
-	public static double getMoonAltitudeDegreesForBehavior() {
+	public static double getMoonAltitudeDegrees() {
 		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
 			// getFixedNightMoonAngles() returns {azimuth, altitude}; use the override
 			// altitude when present so shadow visibility tracks the locked moon.
@@ -799,7 +775,10 @@ public class TimeOfDay {
 			double[] angles = getNightSyncedMoonAngles();
 			return Math.toDegrees(angles[1]);
 		}
-		return getMoonAltitudeDegrees();
+
+		Instant moonDate = getMoonDate();
+		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), currentLatLong);
+		return Math.toDegrees(moonAngles[1]);
 	}
 
 	/**

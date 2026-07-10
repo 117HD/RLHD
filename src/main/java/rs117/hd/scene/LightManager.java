@@ -52,7 +52,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DynamicLights;
-import rs117.hd.config.MoonBehavior;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.scene.lights.Alignment;
@@ -726,7 +725,6 @@ public class LightManager {
 		// visibly lit by the moon even when brightnessMultiplier is near zero.
 		float moonStrengthFloor = 0;
 		if (sunAltDeg < 5) {
-			MoonBehavior moonBehavior = config.moonBehavior();
 			// ALWAYS_NIGHT freezes getModifiedDate at midnight on a fixed epoch, so getMoonDate
 			// returns a static date where the moon may be below the horizon. Use the same fixed
 			// position that FIXED_NIGHT uses so moonlight is always visible in both modes.
@@ -734,8 +732,8 @@ public class LightManager {
 			DaylightCycle effectiveCycle = forcedMode != null ? forcedMode : config.daylightCycle();
 			double moonAltDeg = (effectiveCycle == DaylightCycle.ALWAYS_NIGHT)
 				? Math.toDegrees(TimeOfDay.getFixedNightMoonAngles()[1])
-				: TimeOfDay.getMoonAltitudeDegreesForBehavior();
-			float moonIllumFrac = TimeOfDay.getMoonIlluminationFraction(moonBehavior);
+				: TimeOfDay.getMoonAltitudeDegrees();
+			float moonIllumFrac = TimeOfDay.getMoonIlluminationFraction();
 			if (moonAltDeg > -5 && moonIllumFrac > 0.01f) {
 				float sunFade = (float) Math.max(0.0, Math.min(1.0, (5.0 - sunAltDeg) / 10.0));
 				float moonEl = (float) Math.min(1.0, Math.max(0.0, (moonAltDeg + 5.0) / 25.0));

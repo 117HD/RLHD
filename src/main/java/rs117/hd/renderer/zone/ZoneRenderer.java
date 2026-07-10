@@ -642,7 +642,7 @@ public class ZoneRenderer implements Renderer {
 					// Below +2° sun shadows are faded out, switch to moon direction
 					// early so the shadow map is already oriented when moon shadows
 					// start fading in via smoothstep — prevents brightness pop
-					double moonAltDeg = TimeOfDay.getMoonAltitudeDegreesForBehavior();
+					double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees();
 					if (moonAltDeg > -10) {
 						if (TimeOfDay.getCurrentMoonBehavior() == MoonBehavior.NIGHT_SYNCED) {
 							double[] moonAnglesD = TimeOfDay.getNightSyncedMoonAngles();
@@ -848,9 +848,8 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.skySunDir.set(sunDirForSky);
 
 			// Set moon uniforms
-			MoonBehavior moonBehavior = config.moonBehavior();
-			float[] moonDir = TimeOfDay.getMoonDirectionForSky(moonBehavior);
-			float moonIllumination = TimeOfDay.getMoonIlluminationFraction(moonBehavior);
+			float[] moonDir = TimeOfDay.getMoonDirectionForSky();
+			float moonIllumination = TimeOfDay.getMoonIlluminationFraction();
 			float[] moonColor = environmentManager.currentMoonColor;
 			// Cast-light (moonlight) color; matches moonColor unless the environment
 			// specifies a distinct moonLightColor. Drives the light on geometry, not
@@ -874,7 +873,7 @@ public class ZoneRenderer implements Renderer {
 
 			// Calculate shadow visibility based on sun and moon altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
-			double moonAltDeg = TimeOfDay.getMoonAltitudeDegreesForBehavior();
+			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees();
 			float moonIllumFrac = moonIllumination;
 			float shadowVisibility;
 
