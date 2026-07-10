@@ -127,13 +127,20 @@ public class Environment {
 	public float sunriseSunsetStrength = 1;
 	// Sun altitude (degrees) at which this area's own sky color has FULLY taken over
 	// from the procedural sunrise/sunset gradient as the sun climbs. Lower values pull
-	// the area color in earlier in the morning (and hold it later in the evening),
-	// compressing the procedural twilight window; higher values let the procedural
-	// gradient persist further up. 0 means the area color takes over immediately at
-	// the horizon (no procedural daytime gradient at all). Governs the daytime
-	// regional blend for ALL areas, independent of sunriseSunsetStrength. Default 40
-	// preserves prior behavior.
-	public float skyColorTakeoverAngle = 40;
+	// the area color in earlier in the morning (and hold it later in the evening);
+	// higher values let the procedural gradient persist further up. 0 means the area
+	// color takes over immediately at the horizon.
+	//
+	// When set (>= 0) it also changes the daytime transition PATH: the base gradient
+	// is capped at the warm sunrise keyframe instead of advancing into the blue
+	// midday keyframes, so the sky goes "sunrise oranges -> area color" as the sun
+	// climbs, with no blue flash in between. Left unset (sentinel -1) it behaves as
+	// 40 and samples the full keyframe progression (prior behavior, incl. the blue).
+	// Resolved in normalize().
+	public float skyColorTakeoverAngle = -1;
+	// Whether skyColorTakeoverAngle was explicitly set in JSON (vs. defaulted). Only
+	// an explicitly-set angle enables the no-blue daytime path. Set in normalize().
+	public transient boolean skyColorTakeoverAngleDefined = false;
 	public float sunlightStrength = 1;
 	public float minBrightnessBoost = 0;
 
@@ -182,6 +189,16 @@ public class Environment {
 		// value decouples the two.
 		if (auroraVisibility == -1)
 			auroraVisibility = starVisibility;
+
+		// Sky-color takeover angle: sentinel -1 means "unset" — behave as 40 and use
+		// the full keyframe progression (prior behavior). An explicit value enables the
+		// no-blue daytime path (warm sunrise keyframe -> area color).
+		if (skyColorTakeoverAngle == -1) {
+			skyColorTakeoverAngle = 40;
+			skyColorTakeoverAngleDefined = false;
+		} else {
+			skyColorTakeoverAngleDefined = true;
+		}
 		return this;
 	}
 

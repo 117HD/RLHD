@@ -494,7 +494,7 @@ public class TimeOfDay {
 	 * @param regionalFogColor The regional fog color to blend with during peak daytime (sRGB)
 	 */
 	public float[][] getSkyGradientColors(float[] regionalFogColor, float sunStrength) {
-		return getSkyGradientColors(regionalFogColor, sunStrength, 1.0f, 40.0f);
+		return getSkyGradientColors(regionalFogColor, sunStrength, 1.0f, 40.0f, 0.0f);
 	}
 
 	public float[][] getSkyGradientColors(
@@ -502,7 +502,7 @@ public class TimeOfDay {
 		float sunStrength,
 		float sunriseSunsetStrength
 	) {
-		return getSkyGradientColors(regionalFogColor, sunStrength, sunriseSunsetStrength, 40.0f);
+		return getSkyGradientColors(regionalFogColor, sunStrength, sunriseSunsetStrength, 40.0f, 0.0f);
 	}
 
 	public float[][] getSkyGradientColors(
@@ -510,6 +510,16 @@ public class TimeOfDay {
 		float sunStrength,
 		float sunriseSunsetStrength,
 		float skyColorTakeoverAngle
+	) {
+		return getSkyGradientColors(regionalFogColor, sunStrength, sunriseSunsetStrength, skyColorTakeoverAngle, 0.0f);
+	}
+
+	public float[][] getSkyGradientColors(
+		float[] regionalFogColor,
+		float sunStrength,
+		float sunriseSunsetStrength,
+		float skyColorTakeoverAngle,
+		float keyframeCap
 	) {
 		Instant modifiedDate = getModifiedDate();
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
@@ -525,6 +535,28 @@ public class TimeOfDay {
 		float[] zenithColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, ZENITH_KEYFRAMES);
 		float[] horizonColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, HORIZON_KEYFRAMES);
 		float[] sunGlowColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, SUN_GLOW_KEYFRAMES);
+
+		// No-blue daytime path (keyframeCap > 0, set only for areas that define
+		// skyColorTakeoverAngle). The ZENITH keyframes have no warm stage — they go
+		// purple -> blue as the sun rises — so the top of the sky can never reach the
+		// area's (e.g. red) color from the keyframes alone. Here we drive the zenith
+		// straight to the area's regional color as the sun climbs above the horizon,
+		// bypassing the blue zenith keyframes entirely. The HORIZON keyframes DO have a
+		// warm sunrise stage, so the horizon is left to its normal keyframe -> regional
+		// blend below (sunrise oranges -> area color). The sun glow is untouched, so
+		// this doesn't disturb the sun disk/halo. keyframeCap in (0,1) cross-fades the
+		// override during environment transitions.
+		if (keyframeCap > 0.0f && regionalFogColor != null && sunAltitudeDegrees > 0.0) {
+			float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
+			// Ramp the override in over the first few degrees above the horizon so it
+			// eases out of the twilight zenith rather than stepping at exactly 0°.
+			float rh = (float) Math.min(1.0, sunAltitudeDegrees / 6.0);
+			float rampToRegional = rh * rh * (3.0f - 2.0f * rh);
+			float amount = keyframeCap * rampToRegional;
+			for (int i = 0; i < 3; i++) {
+				zenithColor[i] = zenithColor[i] * (1 - amount) + regionalLin[i] * amount;
+			}
+		}
 
 		// Apply sunStrength: suppress procedural sunset colors for dark environments
 		// For positive altitudes, keep full suppression — the regional blend will take over.
