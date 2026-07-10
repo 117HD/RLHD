@@ -189,6 +189,10 @@ public class EnvironmentManager {
 	public float currentSunriseSunsetStrength = 1f;
 	private float targetSunriseSunsetStrength = 1f;
 
+	private float startSkyColorTakeoverAngle = 40f;
+	public float currentSkyColorTakeoverAngle = 40f;
+	private float targetSkyColorTakeoverAngle = 40f;
+
 	private float startSunlightStrength = 1f;
 	public float currentSunlightStrength = 1f;
 	private float targetSunlightStrength = 1f;
@@ -339,6 +343,7 @@ public class EnvironmentManager {
 			currentMoonVisibility = mix(startMoonVisibility, targetMoonVisibility, t);
 			currentSunStrength = mix(startSunStrength, targetSunStrength, t);
 			currentSunriseSunsetStrength = mix(startSunriseSunsetStrength, targetSunriseSunsetStrength, t);
+			currentSkyColorTakeoverAngle = mix(startSkyColorTakeoverAngle, targetSkyColorTakeoverAngle, t);
 			currentSunlightStrength = mix(startSunlightStrength, targetSunlightStrength, t);
 			currentMinBrightnessBoost = mix(startMinBrightnessBoost, targetMinBrightnessBoost, t);
 		}
@@ -399,6 +404,7 @@ public class EnvironmentManager {
 		startMoonVisibility = currentMoonVisibility;
 		startSunStrength = currentSunStrength;
 		startSunriseSunsetStrength = currentSunriseSunsetStrength;
+		startSkyColorTakeoverAngle = currentSkyColorTakeoverAngle;
 		startSunlightStrength = currentSunlightStrength;
 		startMinBrightnessBoost = currentMinBrightnessBoost;
 		for (int i = 0; i < 2; i++)
@@ -440,6 +446,7 @@ public class EnvironmentManager {
 		targetMoonVisibility = env.moonVisibility;
 		targetSunStrength = env.sunStrength;
 		targetSunriseSunsetStrength = env.sunriseSunsetStrength;
+		targetSkyColorTakeoverAngle = env.skyColorTakeoverAngle;
 		targetSunlightStrength = env.sunlightStrength;
 		targetMinBrightnessBoost = env.minBrightnessBoost;
 
@@ -680,7 +687,8 @@ public class EnvironmentManager {
 		float[][] skyGradientColors = timeOfDay.getSkyGradientColors(
 			regionalFogSrgb,
 			env.sunStrength,
-			env.sunriseSunsetStrength
+			env.sunriseSunsetStrength,
+			env.skyColorTakeoverAngle
 		);
 		float[] horizonLinear = ColorUtils.srgbToLinear(skyGradientColors[1]);
 		float[] noonHorizonLinear = ColorUtils.srgbToLinear(

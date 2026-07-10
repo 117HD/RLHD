@@ -243,6 +243,12 @@
         "description": "How strongly the procedural day/night sunrise/sunset is allowed to paint this area's sky (0 to 1). 1 = full procedural sunrise/sunset (default). Lower values hold the sky at the area's own regional (fogColor) color through the twilight window and fade the procedural sun glow, so a vividly-colored area (e.g. a blood-red sky) doesn't turn orange/blue at sunrise/sunset. Independent of sunStrength; affects only the sky gradient and sun glow, not daytime or nighttime colors.",
         "minimum": 0,
         "maximum": 1
+      },
+      "skyColorTakeoverAngle": {
+        "type": "number",
+        "description": "Sun altitude in degrees at which this area's own sky color (fogColor) has fully taken over from the procedural sunrise/sunset gradient as the sun climbs. Lower values pull the area color in earlier in the morning (and hold it later in the evening), compressing the procedural twilight; higher values let the procedural gradient persist further up the sky. Applies to all areas regardless of sunriseSunsetStrength. Defaults to 40.",
+        "minimum": 5,
+        "maximum": 90
       }
     }
   }

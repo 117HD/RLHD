@@ -117,6 +117,13 @@ public class Environment {
 	// orange/blue at sunrise/sunset. Independent of sunStrength; only affects the
 	// sky gradient + sun glow, not daytime or nighttime colors.
 	public float sunriseSunsetStrength = 1;
+	// Sun altitude (degrees) at which this area's own sky color has FULLY taken over
+	// from the procedural sunrise/sunset gradient as the sun climbs. Lower values pull
+	// the area color in earlier in the morning (and hold it later in the evening),
+	// compressing the procedural twilight window; higher values let the procedural
+	// gradient persist further up. Governs the daytime regional blend for ALL areas,
+	// independent of sunriseSunsetStrength. Default 40 preserves prior behavior.
+	public float skyColorTakeoverAngle = 40;
 	public float sunlightStrength = 1;
 	public float minBrightnessBoost = 0;
 

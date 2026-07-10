@@ -494,7 +494,7 @@ public class TimeOfDay {
 	 * @param regionalFogColor The regional fog color to blend with during peak daytime (sRGB)
 	 */
 	public float[][] getSkyGradientColors(float[] regionalFogColor, float sunStrength) {
-		return getSkyGradientColors(regionalFogColor, sunStrength, 1.0f);
+		return getSkyGradientColors(regionalFogColor, sunStrength, 1.0f, 40.0f);
 	}
 
 	public float[][] getSkyGradientColors(
@@ -502,9 +502,24 @@ public class TimeOfDay {
 		float sunStrength,
 		float sunriseSunsetStrength
 	) {
+		return getSkyGradientColors(regionalFogColor, sunStrength, sunriseSunsetStrength, 40.0f);
+	}
+
+	public float[][] getSkyGradientColors(
+		float[] regionalFogColor,
+		float sunStrength,
+		float sunriseSunsetStrength,
+		float skyColorTakeoverAngle
+	) {
 		Instant modifiedDate = getModifiedDate();
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
+
+		// Sun altitude at which the area's own color has fully taken over from the
+		// procedural sunrise/sunset gradient. Clamped to a sane minimum so the blend
+		// ramps never divide by zero or invert. Shared by the sunrise/sunset
+		// suppression window and the daytime regional blend so they stay in sync.
+		float takeover = Math.max(5.0f, skyColorTakeoverAngle);
 
 		float[] zenithColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, ZENITH_KEYFRAMES);
 		float[] horizonColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, HORIZON_KEYFRAMES);
@@ -574,24 +589,25 @@ public class TimeOfDay {
 		if (sunriseSunsetStrength < 1.0f && regionalFogColor != null) {
 			// Window covers the twilight span where the procedural gradient diverges
 			// from the regional color. Full effect from the horizon up, tapering out by
-			// +40° and -15° (deep night, owned by the night blend below).
+			// the takeover angle and -15° (deep night, owned by the night blend below).
 			//
-			// The upper edge MUST reach +40° to meet the daytime regional blend below,
-			// which only ramps to full regional by +40°. If this window closes earlier
-			// (e.g. +20°), there is a gap between +20° and +40° where NEITHER the
-			// suppression nor the daytime blend holds the color, so the raw procedural
-			// keyframes show through — and those are strongly blue at mid-high sun
-			// (e.g. the +15° zenith keyframe is 100,150,200). That gap is the "sky goes
-			// blue after sunrise before settling into the environment's color" seen in
-			// red-sky areas. Extending to +40° closes it.
+			// The upper edge MUST match the daytime regional blend's takeover angle
+			// (below), which only ramps to full regional by that same angle. If this
+			// window closes earlier, there is a gap where NEITHER the suppression nor
+			// the daytime blend holds the color, so the raw procedural keyframes show
+			// through — and those are strongly blue at mid-high sun (e.g. the +15°
+			// zenith keyframe is 100,150,200). That gap is the "sky goes blue after
+			// sunrise before settling into the environment's color". Sharing the
+			// takeover angle closes it, and lowering the angle per-area pulls the area
+			// color in earlier in the morning.
 			float sunsetWindow;
-			if (sunAltitudeDegrees <= -15 || sunAltitudeDegrees >= 40) {
+			if (sunAltitudeDegrees <= -15 || sunAltitudeDegrees >= takeover) {
 				sunsetWindow = 0.0f;
 			} else if (sunAltitudeDegrees < 0) {
 				float w = (float) ((sunAltitudeDegrees + 15.0) / 15.0); // 0 at -15°, 1 at 0°
 				sunsetWindow = w * w * (3.0f - 2.0f * w);
 			} else {
-				float w = (float) ((40.0 - sunAltitudeDegrees) / 40.0); // 1 at 0°, 0 at +40°
+				float w = (float) ((takeover - sunAltitudeDegrees) / takeover); // 1 at 0°, 0 at takeover
 				sunsetWindow = w * w * (3.0f - 2.0f * w);
 			}
 
@@ -612,12 +628,14 @@ public class TimeOfDay {
 			}
 		}
 
-		// Smoothstep blend from peak sunset (0°) to full regional (40°)
+		// Smoothstep blend from peak sunset (0°) to full regional (takeover angle).
+		// Lowering the takeover angle per-area pulls the regional color in earlier as
+		// the sun climbs, so a strongly-colored sky wins sooner in the morning.
 		float blendFactor;
-		if (sunAltitudeDegrees >= 40) {
+		if (sunAltitudeDegrees >= takeover) {
 			blendFactor = 1.0f;
 		} else if (sunAltitudeDegrees >= 0) {
-			float t = (float) (sunAltitudeDegrees / 40.0);
+			float t = (float) (sunAltitudeDegrees / takeover);
 			blendFactor = t * t * (3.0f - 2.0f * t); // Smoothstep curve
 		} else {
 			blendFactor = 0.0f;

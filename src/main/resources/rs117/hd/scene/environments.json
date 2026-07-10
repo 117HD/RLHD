@@ -1393,7 +1393,9 @@
     "waterColor": "#b9d6ff",
     "starVisibility": 0.05,
     "sunlightStrength": 0.01,
-    "sunStrength": 0.01,
+    "sunStrength": 0.1,
+	"skyColorTakeoverAngle": 10,
+	"sunriseSunsetStrength": 0.2,
     "moonVisibility": 0.01
   },
   {
