@@ -612,7 +612,8 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			// Use Day/Night-Cycle sun/moon angles if enabled
-			float[] shadowSunAngles = environmentManager.currentSunAngles;
+			float directionalPitch = environmentManager.currentSunAngles[0];
+			float directionalYaw = environmentManager.currentSunAngles[1];
 			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
 				// The environment may force a specific cycle mode, overriding the config.
 				DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
@@ -629,20 +630,21 @@ public class ZoneRenderer implements Renderer {
 				double[] sunAnglesD = timeOfDay.getSunAngles();
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 
+				directionalPitch = (float) sunAnglesD[1];
+				directionalYaw = (float) sunAnglesD[0];
+
 				if (timeOfDay.hasFixedSunOverride()) {
 					// A fixed-mode sun override locks the sun disk; cast shadows from
 					// the same point so the sun disk and its shadows stay aligned.
 					double[] fixedSun = timeOfDay.getFixedSunAngles();
-					shadowSunAngles = new float[] {
-						(float) fixedSun[1], (float) fixedSun[0]
-					};
+					directionalPitch = (float) fixedSun[0];
+					directionalYaw = (float) fixedSun[1];
 				} else if (daylightCycle == DaylightCycle.FIXED_NIGHT || timeOfDay.hasFixedMoonOverride()) {
 					// Shadows must be cast from the same fixed point as the rendered
 					// moon disk, otherwise they drift while the moon stays put.
 					double[] moonAnglesD = timeOfDay.getFixedNightMoonAngles();
-					shadowSunAngles = new float[] {
-						(float) moonAnglesD[1], (float) moonAnglesD[0]
-					};
+					directionalPitch = (float) moonAnglesD[1];
+					directionalYaw = (float) moonAnglesD[0];
 				} else if (sunAltDeg < 2.0) {
 					// Below +2° sun shadows are faded out, switch to moon direction
 					// early so the shadow map is already oriented when moon shadows
@@ -651,26 +653,20 @@ public class ZoneRenderer implements Renderer {
 					if (moonAltDeg > -10) {
 						if (timeOfDay.getCurrentMoonBehavior() == MoonBehavior.NIGHT_SYNCED) {
 							double[] moonAnglesD = timeOfDay.getNightSyncedMoonAngles();
-							shadowSunAngles = new float[] {
-								(float) moonAnglesD[1], (float) moonAnglesD[0]
-							};
+							directionalPitch = (float) moonAnglesD[1];
+							directionalYaw = (float) moonAnglesD[0];
 						} else {
 							Instant moonDate = timeOfDay.getMoonDate();
-							double[] moonAnglesD = AtmosphereUtils.getMoonPosition(
-								moonDate.toEpochMilli(), timeOfDay.getCurrentLatLong());
-							shadowSunAngles = new float[] {
-								(float) moonAnglesD[1], (float) moonAnglesD[0]
-							};
+							double[] moonAnglesD = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), timeOfDay.getCurrentLatLong());
+							directionalPitch = (float) moonAnglesD[1];
+							directionalYaw = (float) moonAnglesD[0];
 						}
-					} else {
-						shadowSunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
 					}
-				} else {
-					shadowSunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
 				}
 			}
-			directionalCamera.setPitch(shadowSunAngles[0]);
-			directionalCamera.setYaw(PI - shadowSunAngles[1]);
+
+			directionalCamera.setPitch(directionalPitch);
+			directionalCamera.setYaw(PI - directionalYaw);
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
 			if (plugin.configShadowsEnabled &&
@@ -806,6 +802,8 @@ public class ZoneRenderer implements Renderer {
 		float[] waterColor = environmentManager.currentWaterColor;
 
 		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+			skyGradientEnabled = true;
+
 			// The environment may force a specific cycle mode, overriding the config.
 			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
@@ -814,12 +812,8 @@ public class ZoneRenderer implements Renderer {
 			timeOfDay.setMoonPhase(config.moonPhase());
 			int minimumBrightness = config.minimumBrightness();
 
-			float[] originalRegionalDirectionalColor = environmentManager.currentDirectionalColor;
-			float[] originalRegionalAmbientColor = new float[3];
-			System.arraycopy(environmentManager.currentAmbientColor, 0, originalRegionalAmbientColor, 0, 3);
-
-			directionalColor = timeOfDay.getRegionalDirectionalLight(originalRegionalDirectionalColor);
-			ambientColor = timeOfDay.getRegionalAmbientLight(originalRegionalAmbientColor);
+			directionalColor = timeOfDay.getRegionalDirectionalLight(environmentManager.currentDirectionalColor);
+			ambientColor = timeOfDay.getRegionalAmbientLight(environmentManager.currentAmbientColor);
 
 			float brightnessMultiplier = timeOfDay.getDynamicBrightnessMultiplier(minimumBrightness);
 			directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier * environmentManager.currentSunlightStrength;
@@ -869,8 +863,6 @@ public class ZoneRenderer implements Renderer {
 			// switches only at the cycle boundary (daytime), so it's invisible
 			// behind nightSkyBlend.
 			plugin.uboGlobal.auroraVisibility.set(timeOfDay.isAuroraNight() ? 1f : 0f);
-
-			skyGradientEnabled = true;
 
 			// Calculate shadow visibility based on sun and moon altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
