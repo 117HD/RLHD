@@ -11,6 +11,11 @@
     #error TEXEL_SIZE must be between 1 and 4
 #endif
 
+#ifdef GL_KHR_shader_subgroup_vote
+    #extension GL_KHR_shader_subgroup_vote : enable
+    #extension GL_KHR_shader_subgroup_ballot : enable
+#endif
+
 // Sequential reader for tightly-packed scalar data stored in a buffer texture.
 //
 // Layout assumptions:
@@ -23,6 +28,9 @@
 //
 // This reader caches the currently loaded texel to avoid redundant texelFetch
 // calls during sequential access.
+//
+// If GL_KHR_shader_subgroup_vote is supported & then data reads can be scalarized
+// when the starting position is the same across all invoked lanes
 
 struct TexBufferReader {
     // Cached texel data.
@@ -34,17 +42,29 @@ struct TexBufferReader {
 
     // Currently cached texel index.
     int loadedTexel;
+
+#ifdef GL_KHR_shader_subgroup_vote
+    // if true texel fetches are scalarized via subgroup ops
+    bool scalar;
+
+    // if true then this lene has been elected to peform reads
+    bool elected;
+#endif
 };
 
-TexBufferReader buildTexBufferReader(
-    int position
-) {
+TexBufferReader buildTexBufferReader(int position, bool scalar) {
     TexBufferReader reader;
-
     reader.position = position;
-
     reader.data = ivec4(0);
     reader.loadedTexel = -1;
+
+#ifdef GL_KHR_shader_subgroup_vote
+    reader.scalar = scalar && subgroupAllEqual(position);
+    reader.elected = subgroupElect();
+#else
+    reader.scalar = false;
+    reader.elected = false;
+#endif
 
     return reader;
 }
@@ -59,7 +79,17 @@ int readInt(isamplerBuffer buf, inout TexBufferReader reader) {
 #endif
 
     if (texelIndex != reader.loadedTexel) {
-        reader.data = texelFetch(buf, texelIndex);
+#ifdef GL_KHR_shader_subgroup_vote
+        if (reader.scalar) {
+            ivec4 fetched;
+            if (reader.elected)
+                fetched = texelFetch(buf, texelIndex);
+            reader.data = subgroupBroadcastFirst(fetched);
+        } else
+#endif
+        {
+            reader.data = texelFetch(buf, texelIndex);
+        }
         reader.loadedTexel = texelIndex;
     }
 
@@ -165,11 +195,11 @@ void rewindReader(inout TexBufferReader reader, int position) {
     reader.position = position;
 }
 
-#define BEGIN_BUFFER_PARSER(FuncName, StructType) \
-StructType FuncName(int offset) {                 \
-    TexBufferReader reader =                      \
-        buildTexBufferReader(offset);             \
-                                                  \
+#define BEGIN_BUFFER_PARSER(FuncName, StructType, Scalar) \
+StructType FuncName(int offset) {                         \
+    TexBufferReader reader =                              \
+        buildTexBufferReader(offset, Scalar);             \
+                                                          \
     StructType data;
 
 #define END_BUFFER_PARSER() \

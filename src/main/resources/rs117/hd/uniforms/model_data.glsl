@@ -13,8 +13,7 @@ struct ModelData {
     float fade; // Used by Dynamic Models
 };
 
-
-BEGIN_BUFFER_PARSER(readModelData, ModelData)
+BEGIN_BUFFER_PARSER(readModelData, ModelData, true)
     READ_VEC3(position)
     READ_INT(height)
     READ_FLOAT(fade)
