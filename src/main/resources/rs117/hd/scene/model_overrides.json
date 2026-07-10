@@ -18066,8 +18066,7 @@
       "HOS_STOOL_03",
       "BR_STOOL",
       "LUC2_MOV_STOOL",
-      "PEST_STOOL",
-      "MYQ6_STOOL01"
+      "PEST_STOOL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -93548,7 +93547,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "shiftLightness": 3,
+    "shiftLightness": 5,
+    "undoVanillaShading": false,
     "objectIds": [
       "CRATE_SANGVESTI01_DEFAULT01",
       "CRATE_SANGVESTI01_STACKED01",
@@ -93589,6 +93589,7 @@
         "colors": [ "s == 0 && l > 3" ],
         "baseMaterial": "BARK",
         "uvType": "BOX",
+        "undoVanillaShading": false,
         "uvScale": 0.5,
         "shiftLightness": 25
       }
@@ -95065,6 +95066,7 @@
         "description": "Skull",
         "colors": "h == 5 && s == 1",
         "baseMaterial": "BONE",
+        "undoVanillaShading": false,
         "uvType": "BOX",
         "uvScale": 0.6,
         "shiftLightness": -1
@@ -95207,6 +95209,8 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientationY": 512,
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
     "colorOverrides": [
       {
         "description": "Metal",
@@ -95229,6 +95233,8 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientationY": 512,
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
     "colorOverrides": [
       {
         "description": "Metal",
@@ -96610,6 +96616,17 @@
     ]
   },
   {
+    "description": "Vampyrium - Sangvesti Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "MYQ6_STOOL01"
+    ],
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.80,
+    "shiftLightness": 4
+  },
+  {
     "description": "Vampyrium - Creature hanging over a bowl of blood",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
@@ -97448,6 +97465,7 @@
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 404,
+    "undoVanillaShading": false,
     "shiftLightness": 4,
     "colorOverrides": [
       {
@@ -97489,7 +97507,7 @@
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 404,
-    "shiftLightness": 14,
+    "shiftLightness": 19,
     "colorOverrides": [
       {
         "description": "Leaf",
@@ -97502,8 +97520,40 @@
       }
     ],
     "objectIds": [
-      "PLANT_VAMPYRIUM_PLANT03",
-      "MYQ6_SUGADINTI_HIDEOUT_VINES_OP"
+      "PLANT_VAMPYRIUM_PLANT03"
+    ]
+  },
+  {
+    "description": "Vampyrium - Silver Leafy plant with white stalk",
+    "baseMaterial": "DIRT_1",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 0 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.075,
+        "shiftLightness": 2,
+        "uvOrientationX": 512,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Trunk",
+        "colors": "h == 0 && s == 0 || h == 42",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "undoVanillaShading": false,
+        "uvScale": 0.35,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_VINES_OP",
+      "MYQ6_SUGADINTI_HIDEOUT_VINES",
+      "MYQ6_SUGADINTI_HIDEOUT_VINES_NOOP"
     ]
   },
   {
@@ -97532,19 +97582,10 @@
     "description": "Vampyrium - Bell flower - Potted",
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "shiftLightness": 2,
+    "uvScale": 0.3,
+    "undoVanillaShading": false,
+    "shiftLightness": 6,
     "colorOverrides": [
-      {
-        "description": "Leaf",
-        "colors": "h == 0 && s == 0",
-        "baseMaterial": "LEAF_VEINS",
-        "undoVanillaShading": false,
-        "uvType": "BOX",
-        "uvScale": 0.25,
-        "shiftLightness": 5,
-        "uvOrientationX": 512
-      },
       {
         "description": "Stalk",
         "colors": [ "h == 0 && s == 6", "h == 0 && s == 7" ],
@@ -97552,14 +97593,24 @@
         "uvType": "BOX",
         "uvScale": 0.45,
         "uvOrientation": 42,
-        "shiftLightness": 4
+        "shiftLightness": 5,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Stalk",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false,
+        "shiftLightness": 6
       },
       {
         "description": "Dirt",
-        "colors": "h == 2 && s == 5",
+        "colors": "h == 37 && s == 2 && l < 14",
         "baseMaterial": "DIRT_1",
         "uvType": "BOX",
-        "uvScale": 0.8,
+        "uvScale": 0.3,
         "shiftLightness": 2
       }
     ],
@@ -97586,6 +97637,7 @@
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 404,
+    "undoVanillaShading": false,
     "shiftLightness": 4,
     "colorOverrides": [
       {
@@ -97604,7 +97656,8 @@
         "uvType": "BOX",
         "uvScale": 0.45,
         "uvOrientation": 42,
-        "shiftLightness": 4
+        "undoVanillaShading": false,
+        "shiftLightness": 6
       },
       {
         "description": "Dirt",
@@ -98285,7 +98338,9 @@
         "description": "Table contents",
         "colors": "s == 0",
         "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "undoVanillaShading": false,
+        "uvType": "MODEL_XZ",
+        "shiftLightness": 4
       }
     ],
     "objectIds": [
@@ -98313,8 +98368,9 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientation": 512,
+        "undoVanillaShading": false,
         "uvScale": 0.8,
-        "shiftLightness": 4
+        "shiftLightness": 9
       },
       {
         "description": "Dirt",
@@ -98568,6 +98624,7 @@
   {
     "description": "Vampyrium - Sugadinti Carpet",
     "baseMaterial": "CARPET",
+    "undoVanillaShading": false,
     "uvType": "BOX",
     "uvScale": 0.65,
     "uvOrientation": 222,
@@ -98616,8 +98673,9 @@
   },
   {
     "description": "Vampyrium - Sangvesti - Castle Hideout - Needs UV",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
+    "uvScale": 1.5,
     "uvOrientation": 256,
     "shiftLightness": 3,
     "colorOverrides": [
