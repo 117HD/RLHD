@@ -215,7 +215,7 @@ public class LightManager {
 			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
 			TimeOfDay.setCycleMode(daylightCycle);
 			TimeOfDay.setDayLength(config.dayLength());
-			nightLightFactor = TimeOfDay.getNightLightFactor(config.cycleDurationMinutes());
+			nightLightFactor = TimeOfDay.getNightLightFactor();
 			nightFactorRising = previousNightLightFactor < 0 || nightLightFactor >= previousNightLightFactor;
 			previousNightLightFactor = nightLightFactor;
 		} else {
@@ -710,7 +710,6 @@ public class LightManager {
 
 		EnvironmentManager.OutdoorSkySample sky = environmentManager.sampleOutdoorSky(
 			getLightWorldPos(sceneContext, light),
-			config.cycleDurationMinutes(),
 			config.minimumBrightness()
 		);
 
@@ -719,7 +718,7 @@ public class LightManager {
 
 		float[] lightColor = Arrays.copyOf(sky.horizonLinear, 3);
 
-		double sunAltDeg = Math.toDegrees(TimeOfDay.getSunAngles(config.cycleDurationMinutes())[1]);
+		double sunAltDeg = Math.toDegrees(TimeOfDay.getSunAngles()[1]);
 
 		// At night, blend the dark sky horizon toward moonColor: reduces the blue cast
 		// and adds silver moonlight filtering through tunnel openings.
@@ -735,8 +734,8 @@ public class LightManager {
 			DaylightCycle effectiveCycle = forcedMode != null ? forcedMode : config.daylightCycle();
 			double moonAltDeg = (effectiveCycle == DaylightCycle.ALWAYS_NIGHT)
 				? Math.toDegrees(TimeOfDay.getFixedNightMoonAngles()[1])
-				: TimeOfDay.getMoonAltitudeDegrees(config.cycleDurationMinutes(), moonBehavior);
-			float moonIllumFrac = TimeOfDay.getMoonIlluminationFraction(config.cycleDurationMinutes(), moonBehavior);
+				: TimeOfDay.getMoonAltitudeDegrees(moonBehavior);
+			float moonIllumFrac = TimeOfDay.getMoonIlluminationFraction(moonBehavior);
 			if (moonAltDeg > -5 && moonIllumFrac > 0.01f) {
 				float sunFade = (float) Math.max(0.0, Math.min(1.0, (5.0 - sunAltDeg) / 10.0));
 				float moonEl = (float) Math.min(1.0, Math.max(0.0, (moonAltDeg + 5.0) / 25.0));

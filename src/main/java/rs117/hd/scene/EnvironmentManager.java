@@ -669,13 +669,12 @@ public class EnvironmentManager {
 	 * Sample outdoor sky/fog for a world position, using the overworld environment above {@code worldPos}.
 	 */
 	@Nonnull
-	public OutdoorSkySample sampleOutdoorSky(int[] worldPos, float cycleDuration, int minimumBrightness) {
+	public OutdoorSkySample sampleOutdoorSky(int[] worldPos, int minimumBrightness) {
 		Environment env = getEnvironmentAt(getOutdoorWorldPos(worldPos), true);
 
 		float[] regionalFogSrgb = resolveOutdoorRegionalFogSrgb(env);
 
 		float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(
-			cycleDuration,
 			regionalFogSrgb,
 			env.sunStrength,
 			env.sunriseSunsetStrength
@@ -684,7 +683,7 @@ public class EnvironmentManager {
 		float[] noonHorizonLinear = ColorUtils.srgbToLinear(
 			TimeOfDay.getReferenceHorizonColor(regionalFogSrgb)
 		);
-		float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(cycleDuration, minimumBrightness);
+		float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(minimumBrightness);
 
 		return new OutdoorSkySample(horizonLinear, noonHorizonLinear, brightnessMultiplier);
 	}

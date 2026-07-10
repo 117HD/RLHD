@@ -615,11 +615,12 @@ public class ZoneRenderer implements Renderer {
 				TimeOfDay.setCycleMode(daylightCycle);
 				TimeOfDay.setDayLength(config.dayLength());
 				TimeOfDay.setMoonPhase(config.moonPhase());
+				TimeOfDay.setCycleDurationMinutes(config.cycleDurationMinutes());
 				TimeOfDay.setFixedAngleOverrides(
 					environmentManager.getForcedFixedSunAngles(),
 					environmentManager.getForcedFixedMoonAngles()
 				);
-				double[] sunAnglesD = TimeOfDay.getSunAngles(config.cycleDurationMinutes());
+				double[] sunAnglesD = TimeOfDay.getSunAngles();
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 				MoonBehavior shadowMoonBehavior = config.moonBehavior();
 
@@ -641,16 +642,15 @@ public class ZoneRenderer implements Renderer {
 					// Below +2° sun shadows are faded out, switch to moon direction
 					// early so the shadow map is already oriented when moon shadows
 					// start fading in via smoothstep — prevents brightness pop
-					double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(config.cycleDurationMinutes(), shadowMoonBehavior);
+					double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(shadowMoonBehavior);
 					if (moonAltDeg > -10) {
 						if (shadowMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
-							double[] moonAnglesD = TimeOfDay.getNightSyncedMoonAngles(
-								config.cycleDurationMinutes());
+							double[] moonAnglesD = TimeOfDay.getNightSyncedMoonAngles();
 							shadowSunAngles = new float[] {
 								(float) moonAnglesD[1], (float) moonAnglesD[0]
 							};
 						} else {
-							Instant moonDate = TimeOfDay.getMoonDate(config.cycleDurationMinutes());
+							Instant moonDate = TimeOfDay.getMoonDate();
 							double[] moonAnglesD = AtmosphereUtils.getMoonPosition(
 								moonDate.toEpochMilli(), TimeOfDay.getCurrentLatLong());
 							shadowSunAngles = new float[] {
@@ -809,16 +809,15 @@ public class ZoneRenderer implements Renderer {
 			TimeOfDay.setDayLength(config.dayLength());
 			TimeOfDay.setMoonPhase(config.moonPhase());
 			int minimumBrightness = config.minimumBrightness();
-			float cycleDuration = config.cycleDurationMinutes();
 
 			float[] originalRegionalDirectionalColor = environmentManager.currentDirectionalColor;
 			float[] originalRegionalAmbientColor = new float[3];
 			System.arraycopy(environmentManager.currentAmbientColor, 0, originalRegionalAmbientColor, 0, 3);
 
-			directionalColor = TimeOfDay.getRegionalDirectionalLight(cycleDuration, originalRegionalDirectionalColor);
-			ambientColor = TimeOfDay.getRegionalAmbientLight(cycleDuration, originalRegionalAmbientColor);
+			directionalColor = TimeOfDay.getRegionalDirectionalLight(originalRegionalDirectionalColor);
+			ambientColor = TimeOfDay.getRegionalAmbientLight(originalRegionalAmbientColor);
 
-			float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(cycleDuration, minimumBrightness);
+			float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(minimumBrightness);
 			directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier * environmentManager.currentSunlightStrength;
 			// When Day/Night is active, ignore the environment's ambientStrength
 			// (e.g. WINTER=3.5, AUTUMN=0.3) so the cycle's brightness multiplier
@@ -826,21 +825,21 @@ public class ZoneRenderer implements Renderer {
 			// too dark or too bright.
 			ambientStrength = brightnessMultiplier;
 
-			double[] sunAnglesD = TimeOfDay.getSunAngles(cycleDuration);
+			double[] sunAnglesD = TimeOfDay.getSunAngles();
 			sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
 
 			float[] originalRegionalFogColor = fogColor;
 
 			// Calculate sky gradient colors for realistic sky rendering
 			// Pass regional fog color to blend with during peak daytime
-			float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(cycleDuration, originalRegionalFogColor, environmentManager.currentSunStrength, environmentManager.currentSunriseSunsetStrength);
+			float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(originalRegionalFogColor, environmentManager.currentSunStrength, environmentManager.currentSunriseSunsetStrength);
 
 			// Use the sky horizon color as fog color so geometry fading into
 			// fog seamlessly matches the skybox at the horizon
 			fogColor = skyGradientColors[1];
 			waterColor = ColorUtils.srgbToLinear(fogColor);
 			calculatedFogColorSrgb = fogColor;
-			float[] sunDirForSky = TimeOfDay.getSunDirectionForSky(cycleDuration);
+			float[] sunDirForSky = TimeOfDay.getSunDirectionForSky();
 
 			plugin.uboGlobal.skyGradientEnabled.set(1);
 			plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
@@ -850,8 +849,8 @@ public class ZoneRenderer implements Renderer {
 
 			// Set moon uniforms
 			MoonBehavior moonBehavior = config.moonBehavior();
-			float[] moonDir = TimeOfDay.getMoonDirectionForSky(cycleDuration, moonBehavior);
-			float moonIllumination = TimeOfDay.getMoonIlluminationFraction(cycleDuration, moonBehavior);
+			float[] moonDir = TimeOfDay.getMoonDirectionForSky(moonBehavior);
+			float moonIllumination = TimeOfDay.getMoonIlluminationFraction(moonBehavior);
 			float[] moonColor = environmentManager.currentMoonColor;
 			// Cast-light (moonlight) color; matches moonColor unless the environment
 			// specifies a distinct moonLightColor. Drives the light on geometry, not
@@ -875,7 +874,7 @@ public class ZoneRenderer implements Renderer {
 
 			// Calculate shadow visibility based on sun and moon altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
-			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(cycleDuration, moonBehavior);
+			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(moonBehavior);
 			float moonIllumFrac = moonIllumination;
 			float shadowVisibility;
 
