@@ -95808,7 +95808,6 @@
       "SOTFA_FOREST_TREE_STUMP02",
       "DARKWOOD_TREE_SAPLING02",
       "DARKWOOD_TREE_SAPLING04",
-      "DARKWOOD_TREE_STUMP_AXE01",
       "DARKWOOD_TREE_STUMP_NOAXE01",
       "SOTFA_FOREST_ROPESWING_TREE_BODY",
       "SOTFA_FOREST_ROPESWING_TREE_NOROPE"
@@ -96147,7 +96146,9 @@
       "ROCKS_VOROS01_LARGE01_3X3",
       "VOROS_ROCKSLIDE01",
       "VOROS_ROCKSLIDE02",
-      "VOROS_ROCKSLIDE04"
+      "VOROS_ROCKSLIDE04",
+      "ROCKS_VOROS02_LARGE01_3X3",
+      "ROCKS_VOROS01_DEFAULT01"
     ]
   },
   {
@@ -96292,33 +96293,45 @@
   {
     "description": "Vampyrium - Sangvesti Bridge",
     "baseMaterial": "STONE_NORMALED",
+    "undoVanillaShading": false,
     "uvType": "BOX",
     "uvOrientation": 256,
-    "shiftLightness": 3,
+    "uvScale": 0.8,
+    "shiftLightness": 7,
     "colorOverrides": [
       {
         "description": "Path",
         "colors": "h == 5 && s >= 1",
         "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
-        "uvScale": 1.5,
+        "uvScale": 2,
         "uvOrientation": 256,
         "shiftLightness": 3
       },
       {
-        "description": "Wood",
-        "colors": "h == 0 && s == 2 && l < 14",
-        "baseMaterial": "BARK",
+        "description": "Stone",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
-        "uvScale": 0.4,
-        "shiftLightness": 6,
+        "shiftLightness": 4,
         "uvOrientation": 512
+      },
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s == 5 || s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "shiftSaturation": 2,
+        "shiftLightness": 1,
+        "uvType": "BOX",
+        "undoVanillaShading": false
       },
       {
         "description": "Spike",
         "colors": "h == 0 && s > 3",
         "baseMaterial": "WOOD_GRAIN_3",
+        "undoVanillaShading": false,
         "shiftSaturation": -1,
+        "shiftLightness": 2,
         "uvType": "BOX",
         "uvScale": 0.45,
         "uvOrientation": 512
@@ -96330,7 +96343,9 @@
       "VAMPYRIUM_JOVKAI01_BRIDGE03",
       "VAMPYRIUM_JOVKAI01_BRIDGE04",
       "VAMPYRIUM_JOVKAI01_BRIDGE05",
-      "VAMPYRIUM_JOVKAI01_BRIDGE06"
+      "VAMPYRIUM_JOVKAI01_BRIDGE06",
+      "VAMPYRIUM_JOVKAI01_BRIDGE01_FENCE06_STAIRS01",
+      "VAMPYRIUM_JOVKAI01_BRIDGE01_FENCE06_STAIRS01_MIRROR"
     ]
   },
   {
@@ -98353,6 +98368,7 @@
     "uvType": "BOX",
     "uvScale": 0.2,
     "uvOrientation": -187,
+    "undoVanillaShading": false,
     "shiftLightness": 2,
     "colorOverrides": [
       {
@@ -98391,13 +98407,21 @@
     "uvType": "BOX",
     "uvScale": 0.2,
     "uvOrientation": -187,
-    "shiftLightness": 2,
+    "undoVanillaShading": false,
     "colorOverrides": [
+      {
+        "description": "BLOOD",
+        "colors": "h == 0 && l < 4",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "shiftLightness": 7,
+        "uvType": "MODEL_XZ"
+      },
       {
         "description": "BLOOD",
         "colors": "a < 255",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
-        "uvType": "MODEL_XZ"
+        "uvType": "MODEL_XZ",
+        "hideAsWaterEffect": true
       },
       {
         "description": "Wood",
