@@ -29,10 +29,12 @@
 #include <uniforms/world_views.glsl>
 #include <uniforms/texture_faces.glsl>
 #include <uniforms/model_data.glsl>
+#include <uniforms/displacement.glsl>
 
 #include <utils/constants.glsl>
 #include <utils/uvs.glsl>
 #include <utils/misc.glsl>
+#include <utils/wind_character_displacement.glsl>
 
 layout (location = 0) in vec3 vPosition;
 
@@ -99,9 +101,21 @@ layout (location = 0) in vec3 vPosition;
         vec3 worldPosition = sceneOffset + vPosition;
 
         int modelIdx = int(vNormal.w);
-        if(modelIdx > 0) {
+        if (modelIdx > 0) {
             ModelData modelData = getModelData(modelIdx);
             fFade = max(modelData.fade, fFade);
+
+            vec3 approxLocalPos = worldPosition - modelData.position;
+
+            ObjectWindSample windSample = computeWindSample(modelData.position, modelData.height);
+            worldPosition += applyWindDisplacementVertex(
+                windSample,
+                materialData,
+                float(modelData.height),
+                worldPosition,
+                approxLocalPos,
+                vNormal.xyz
+            );
         }
 
         if (vWorldViewId != -1) {

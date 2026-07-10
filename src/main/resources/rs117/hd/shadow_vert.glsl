@@ -28,14 +28,18 @@
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
+#include <uniforms/model_data.glsl>
 #include <uniforms/texture_faces.glsl>
+#include <uniforms/displacement.glsl>
 
 #include <utils/constants.glsl>
+#include <utils/wind_character_displacement.glsl>
 
 layout (location = 0) in vec3 vPosition;
 
 #if ZONE_RENDERER
     layout (location = 1) in vec4 vUv;
+    layout (location = 2) in vec4 vNormal;
     layout (location = 3) in int vPackedTextureFace;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
@@ -111,6 +115,21 @@ layout (location = 0) in vec3 vPosition;
         if (vWorldViewId != -1) {
             mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
+        }
+
+        int modelIdx = int(vNormal.w);
+        if (modelIdx > 0) {
+            ModelData modelData = getModelData(modelIdx);
+
+            ObjectWindSample windSample = computeWindSample(modelData.position, modelData.height);
+            worldPosition += applyWindDisplacementVertex(
+                windSample,
+                materialData,
+                float(modelData.height),
+                worldPosition,
+                worldPosition - modelData.position,
+                vNormal.xyz
+            );
         }
 
         #if SHADOW_TRANSPARENCY

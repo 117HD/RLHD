@@ -26,6 +26,7 @@
 
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
+#include <utils/wind_character_displacement.glsl>
 
 uniform isampler3D tileHeightMap;
 
@@ -204,132 +205,6 @@ void hillskew_vertex(inout vec3 v, int hillskewMode, float modelPosY, float mode
     }
 }
 
-vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, float strength, inout float offsetAccum) {
-    vec2 offset = vertPos - characterPos.xy;
-    float offsetLen = length(offset);
-
-    if (offsetLen >= characterPos.z)
-        return vec3(0);
-
-    float offsetFrac = saturate(1.0 - (offsetLen / characterPos.z));
-    float displacementFrac = offsetFrac * offsetFrac;
-
-    vec3 horizontalDisplacement = normalize(vec3(offset.x, 0.0, offset.y)) * (height * strength * displacementFrac * 0.5);
-    vec3 verticalDisplacement = vec3(0.0, height * strength * displacementFrac, 0.0);
-
-    offsetAccum += offsetFrac;
-
-    return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
-}
-
-float getModelWindDisplacementMod(int vertexFlags) {
-    const float modifiers[7] = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0};
-    int modifierIDx = (vertexFlags >> MATERIAL_FLAG_WIND_MODIFIER) & 0x7;
-    return modifiers[modifierIDx];
-}
-
-void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float modelHeight, vec3 worldPos,
-    in vec3 vertA, in vec3 vertB, in vec3 vertC,
-    in vec3 normA, in vec3 normB, in vec3 normC,
-    inout vec3 displacementA, inout vec3 displacementB, inout vec3 displacementC
-) {
-    int windDisplacementMode = (vertexFlags >> MATERIAL_FLAG_WIND_SWAYING) & 0x7;
-    if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
-        return;
-
-    float strengthA = saturate(abs(vertA.y) / modelHeight);
-    float strengthB = saturate(abs(vertB.y) / modelHeight);
-    float strengthC = saturate(abs(vertC.y) / modelHeight);
-
-    if ((vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH & 1) == 1) {
-        strengthA = 1.0 - strengthA;
-        strengthB = 1.0 - strengthB;
-        strengthC = 1.0 - strengthC;
-    }
-
-    float modelDisplacementMod = getModelWindDisplacementMod(vertexFlags);
-#if WIND_DISPLACEMENT
-    if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
-        const float VertexSnapping = 150.0; // Snap so vertices which are almost overlapping will obtain the same noise value
-        const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
-        float windNoiseA = mix(-0.5, 0.5, noise((snap(vertA, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-        float windNoiseB = mix(-0.5, 0.5, noise((snap(vertB, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-        float windNoiseC = mix(-0.5, 0.5, noise((snap(vertC, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-
-        if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND) {
-            const float minDist = 50;
-            const float blendDist = 10.0;
-
-            float distBlendA = saturate(((abs(vertA.x) + abs(vertA.z)) - minDist) / blendDist);
-            float distBlendB = saturate(((abs(vertB.x) + abs(vertB.z)) - minDist) / blendDist);
-            float distBlendC = saturate(((abs(vertC.x) + abs(vertC.z)) - minDist) / blendDist);
-
-            float heightFadeA = saturate((strengthA - 0.5) / 0.2);
-            float heightFadeB = saturate((strengthB - 0.5) / 0.2);
-            float heightFadeC = saturate((strengthC - 0.5) / 0.2);
-
-            strengthA *= mix(0.0, mix(distBlendA, 1.0, heightFadeA), step(0.3, strengthA));
-            strengthB *= mix(0.0, mix(distBlendB, 1.0, heightFadeB), step(0.3, strengthB));
-            strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC));
-        } else {
-            if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
-                vec3 vertASkew = safe_normalize(cross(normA.xyz, vec3(0, 1, 0)));
-                vec3 vertBSkew = safe_normalize(cross(normB.xyz, vec3(0, 1, 0)));
-                vec3 vertCSkew = safe_normalize(cross(normC.xyz, vec3(0, 1, 0)));
-
-                strengthA *= modelDisplacementMod;
-                strengthB *= modelDisplacementMod;
-                strengthC *= modelDisplacementMod;
-
-                displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA) * 0.5) * vertASkew);
-                displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB) * 0.5) * vertBSkew);
-                displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC) * 0.5) * vertCSkew);
-
-                vertASkew = safe_normalize(cross(normA.xyz, vec3(1, 0, 0)));
-                vertBSkew = safe_normalize(cross(normB.xyz, vec3(1, 0, 0)));
-                vertCSkew = safe_normalize(cross(normC.xyz, vec3(1, 0, 0)));
-
-                displacementA += (((1.0 - windNoiseA) * (windSample.heightBasedStrength * strengthA) * 0.5) * vertASkew);
-                displacementB += (((1.0 - windNoiseB) * (windSample.heightBasedStrength * strengthB) * 0.5) * vertBSkew);
-                displacementC += (((1.0 - windNoiseC) * (windSample.heightBasedStrength * strengthC) * 0.5) * vertCSkew);
-            } else {
-                displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA * VertexDisplacementMod)) * windSample.direction);
-                displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod)) * windSample.direction);
-                displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC * VertexDisplacementMod)) * windSample.direction);
-
-                strengthA = saturate(strengthA - VertexDisplacementMod) * modelDisplacementMod;
-                strengthB = saturate(strengthB - VertexDisplacementMod) * modelDisplacementMod;
-                strengthC = saturate(strengthC - VertexDisplacementMod) * modelDisplacementMod;
-            }
-        }
-    }
-
-    if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
-        // Object Displacement
-        displacementA += windSample.displacement * strengthA * modelDisplacementMod;
-        displacementB += windSample.displacement * strengthB * modelDisplacementMod;
-        displacementC += windSample.displacement * strengthC * modelDisplacementMod;
-    }
-#endif
-
-#if CHARACTER_DISPLACEMENT
-    if (windDisplacementMode == WIND_DISPLACEMENT_OBJECT) {
-        vec2 worldVertA = (worldPos + vertA).xz;
-        vec2 worldVertB = (worldPos + vertB).xz;
-        vec2 worldVertC = (worldPos + vertC).xz;
-
-        float fractAccum = 0.0;
-        for (int i = 0; i < characterPositionCount; i++) {
-            displacementA += applyCharacterDisplacement(characterPositions[i], worldVertA, modelHeight, strengthA, fractAccum);
-            displacementB += applyCharacterDisplacement(characterPositions[i], worldVertB, modelHeight, strengthB, fractAccum);
-            displacementC += applyCharacterDisplacement(characterPositions[i], worldVertC, modelHeight, strengthC, fractAccum);
-            if (fractAccum >= 2.0)
-                break;
-        }
-    }
-#endif
-}
-
 void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, ObjectWindSample windSample) {
     int offset = minfo.offset;
     int size = minfo.size;
@@ -370,7 +245,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vec4 normB = normal[offset + localId * 3 + 1];
         vec4 normC = normal[offset + localId * 3 + 2];
 
-        applyWindDisplacement(windSample, vertexFlags, height, modelPos,
+        applyWindDisplacementFace(windSample, vertexFlags, height, modelPos,
             thisrvA.pos, thisrvB.pos, thisrvC.pos,
             normA.xyz, normB.xyz, normC.xyz,
             displacementA, displacementB, displacementC);

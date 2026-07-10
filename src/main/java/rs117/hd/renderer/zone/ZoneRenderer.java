@@ -47,11 +47,13 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.uniforms.UBODisplacement;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.scene.DisplacementManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -63,6 +65,7 @@ import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
+import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -97,6 +100,7 @@ public class ZoneRenderer implements Renderer {
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_DISPLACEMENT = UNIFORM_BLOCK_COUNT++;
 
 	@Inject
 	private Injector injector;
@@ -129,6 +133,12 @@ public class ZoneRenderer implements Renderer {
 	private ModelStreamingManager modelStreamingManager;
 
 	@Inject
+	private DisplacementManager displacementManager;
+
+	@Inject
+	private NpcDisplacementCache npcDisplacementCache;
+
+	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
@@ -145,6 +155,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
+
+	@Inject
+	private UBODisplacement uboDisplacement;
 
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
@@ -196,6 +209,7 @@ public class ZoneRenderer implements Renderer {
 
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
+		uboDisplacement.initialize(UNIFORM_BLOCK_DISPLACEMENT);
 		sceneManager.initialize(uboWorldViews);
 		modelStreamingManager.initialize();
 
@@ -212,6 +226,7 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
+		uboDisplacement.destroy();
 
 		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
@@ -231,7 +246,8 @@ public class ZoneRenderer implements Renderer {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
 			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS))
-			.addUniformBuffer(uboWorldViews);
+			.addUniformBuffer(uboWorldViews)
+			.addUniformBuffer(uboDisplacement);
 	}
 
 	@Override
@@ -637,6 +653,15 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
 		plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
+
+		displacementManager.addLocalPlayer();
+
+		uboDisplacement.windDirectionX.set(cos(environmentManager.currentWindAngle));
+		uboDisplacement.windDirectionZ.set(sin(environmentManager.currentWindAngle));
+		uboDisplacement.windStrength.set(environmentManager.currentWindStrength);
+		uboDisplacement.windCeiling.set(environmentManager.currentWindCeiling);
+		uboDisplacement.windOffset.set(plugin.windOffset);
+		uboDisplacement.upload();
 
 		if (plugin.configColorFilter != ColorFilter.NONE) {
 			plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
@@ -1105,6 +1130,8 @@ public class ZoneRenderer implements Renderer {
 		} finally {
 			frameTimer.end(Timer.DRAW_TEMP);
 		}
+
+		displacementManager.addCharacterPosition(x, z, gameObject.getRenderable(), m);
 	}
 
 	@Override
@@ -1269,6 +1296,7 @@ public class ZoneRenderer implements Renderer {
 	public void swapScene(Scene scene) {
 		try {
 			sceneManager.swapScene(scene);
+			npcDisplacementCache.clear();
 		} catch (Throwable ex) {
 			log.error("Error during swapScene:", ex);
 			plugin.stopPlugin();

@@ -57,11 +57,11 @@ public class NpcDisplacementCache {
 		return cache.size();
 	}
 
-	public void clear() {
+	public synchronized void clear() {
 		cache.clear();
 	}
 
-	public Entry get(NPC npc) {
+	public synchronized Entry get(NPC npc) {
 		int npcId = npc.getId();
 		var entry = cache.get(npcId);
 
