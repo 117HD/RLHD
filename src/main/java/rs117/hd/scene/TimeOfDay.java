@@ -97,7 +97,7 @@ public class TimeOfDay {
 
 	// Probability that any given simulated night is an "aurora night", in
 	// environments flagged aurora-eligible. Rolled deterministically per night.
-	private static final double AURORA_NIGHT_CHANCE = 0.03;
+	private static final double AURORA_NIGHT_CHANCE = 0.02;
 
 	// Fixed Night mode: the moon is locked at a prominent position in the
 	// south-east sky and always rendered full. Stored as {azimuth, altitude} radians,
@@ -832,6 +832,53 @@ public class TimeOfDay {
 		double roll = (h >>> 11) * (1.0 / (1L << 53)); // [0, 1)
 
 		return roll < AURORA_NIGHT_CHANCE;
+	}
+
+	/**
+	 * Aurora intensity envelope in [0, 1] for the current frame, combining the
+	 * per-cycle aurora roll with a time-of-cycle shape.
+	 *
+	 * In modes with a natural day/night arc, the sun goes down and comes back up, so
+	 * the sky's own nightFactor fades auroras in and out — here we just return 1 on an
+	 * aurora night and let the shader's nightFactor do the shaping.
+	 *
+	 * In the always-night modes (Fixed Night / Always Night) the sun is pinned below
+	 * the horizon, so nightFactor is ~1 the whole cycle and a binary on/off would leave
+	 * auroras blazing for the entire cycle. Instead we apply an explicit envelope: on an
+	 * aurora cycle the auroras ramp up and back down within the cycle (peaking mid-cycle,
+	 * zero at the edges) so they come and go; off-cycle it's zero.
+	 */
+	public float getAuroraStrength() {
+		if (!isAuroraNight())
+			return 0f;
+
+		boolean alwaysNight = currentCycleMode == DaylightCycle.FIXED_NIGHT
+			|| currentCycleMode == DaylightCycle.ALWAYS_NIGHT;
+		if (!alwaysNight)
+			return 1f;
+
+		// Position within the current cycle. The night index flips at 0.35 (midday),
+		// so re-center the envelope on that boundary: auroras are absent right after a
+		// flip, swell to full a bit past mid-cycle, then fade back out before the next
+		// flip. phase in [0,1) measured from the 0.35 flip point.
+		double phase = accumulatedCycleTime - 0.35;
+		phase -= Math.floor(phase); // wrap into [0, 1)
+
+		// Smooth bump: only visible over a fraction of the cycle. Ramp in over
+		// [0.15, 0.40], hold near full through mid-cycle, ramp out over [0.60, 0.85].
+		float env;
+		if (phase < 0.15 || phase > 0.85) {
+			env = 0f;
+		} else if (phase < 0.40) {
+			float t = (float) ((phase - 0.15) / 0.25);
+			env = t * t * (3.0f - 2.0f * t);
+		} else if (phase <= 0.60) {
+			env = 1f;
+		} else {
+			float t = (float) ((0.85 - phase) / 0.25);
+			env = t * t * (3.0f - 2.0f * t);
+		}
+		return env;
 	}
 
 	/**

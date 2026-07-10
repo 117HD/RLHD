@@ -859,11 +859,13 @@ public class ZoneRenderer implements Renderer {
 				|| daylightCycle == DaylightCycle.FIXED_MIDDAY
 				|| daylightCycle == DaylightCycle.FIXED_SUNSET;
 			plugin.uboGlobal.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
-			// Auroras appear on nights the per-night random roll selects. The roll
-			// switches only at the cycle boundary (daytime), so it's invisible
-			// behind nightSkyBlend. The per-environment auroraVisibility scales how
-			// visible they are when they do appear (independent of starVisibility).
-			plugin.uboGlobal.auroraVisibility.set(timeOfDay.isAuroraNight() ? environmentManager.currentAuroraVisibility : 0f);
+			// Auroras appear on nights the per-night random roll selects. In modes
+			// with a day/night arc the roll switches during daytime so it's invisible
+			// behind nightSkyBlend; in always-night modes getAuroraStrength() applies a
+			// time-of-cycle envelope so they come and go instead of blazing all cycle.
+			// The per-environment auroraVisibility scales how visible they are when
+			// they do appear (independent of starVisibility).
+			plugin.uboGlobal.auroraVisibility.set(timeOfDay.getAuroraStrength() * environmentManager.currentAuroraVisibility);
 
 			// Calculate shadow visibility based on sun and moon altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
