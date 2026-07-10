@@ -246,7 +246,7 @@
       },
       "skyColorTakeoverAngle": {
         "type": "number",
-        "description": "Sun altitude in degrees at which this area's own sky color (fogColor) has fully taken over from the procedural sunrise/sunset gradient as the sun climbs. Lower values pull the area color in earlier in the morning (and hold it later in the evening); higher values let the procedural gradient persist further up the sky. 0 means the area color takes over immediately at the horizon. When set, it also mixes the area color into the daytime keyframes from the horizon up (a 'regional floor' that scales inversely with the angle) so the procedural blue is diluted immediately instead of flashing before it is replaced. Left unset it behaves as 40 with no floor (prior behavior). Applies to all areas regardless of sunriseSunsetStrength.",
+        "description": "Sun altitude in degrees at which this area's own sky color (fogColor) has fully taken over from the procedural sunrise/sunset gradient as the sun climbs. Lower values pull the area color in earlier in the morning (and hold it later in the evening), compressing the procedural twilight; higher values let the procedural gradient persist further up the sky. 0 means the area color takes over immediately at the horizon (no procedural sunrise/sunset gradient during the day). Applies to all areas regardless of sunriseSunsetStrength. Defaults to 40.",
         "minimum": 0,
         "maximum": 90
       },
