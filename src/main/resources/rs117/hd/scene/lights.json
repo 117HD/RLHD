@@ -47809,7 +47809,7 @@
     ]
   },
   {
-    "description": "Varrock - Great Conch - Metal cooking  Range 1",
+    "description": "Varrock - Great Conch - Metal cooking Range 1",
     "height": 100,
     "offset": [ 46, -50, -68 ],
     "radius": 200,
@@ -47828,7 +47828,7 @@
     ]
   },
   {
-    "description": "Varrock - Great Conch - Metal cooking  Range 2",
+    "description": "Varrock - Great Conch - Metal cooking Range 2",
     "height": 100,
     "offset": [ 46, -50, -94 ],
     "radius": 200,
@@ -47847,7 +47847,7 @@
     ]
   },
   {
-    "description": "Varrock - Great Conch - Metal cooking Range 2",
+    "description": "Varrock - Great Conch - Metal cooking Range 3",
     "height": 100,
     "offset": [ 20, 0, 64 ],
     "radius": 200,
@@ -47863,6 +47863,57 @@
     "objectIds": [
       "FAI_VARROCK_RANGE",
       "KR_SIN_RANGE"
+    ]
+  },
+  {
+    "description": "Varrock Castle Ovens 1",
+    "offset": [ 35, 25, 0 ],
+    "radius": 200,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_POSH_STOVE"
+    ]
+  },
+  {
+    "description": "Varrock Castle Ovens 3",
+    "offset": [ 35, 100, 0 ],
+    "radius": 85,
+    "strength": 15,
+    "color": [
+      255,
+      110,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_POSH_STOVE"
+    ]
+  },
+  {
+    "description": "Varrock Castle Ovens 4",
+    "offset": [ -10, 125, -80 ],
+    "radius": 75,
+    "strength": 7,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_POSH_STOVE"
     ]
   },
   {

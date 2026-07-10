@@ -15872,8 +15872,7 @@
   },
   {
     "description": "Varrock Drains",
-    "baseMaterial": "GRAY_65",
-    "flatNormals": true,
+    "baseMaterial": "METALLIC_1",
     "windDisplacementMode": "OBJECT",
     "castShadows": false,
     "terrainVertexSnap": true,
@@ -15881,6 +15880,18 @@
     "objectIds": [
       "FAI_VARROCK_DRAINS1",
       "FAI_VARROCK_DRAINS2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 17",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY",
+        "terrainVertexSnap": true
+      }
     ]
   },
   {
@@ -17060,6 +17071,27 @@
     "objectIds": [
       "FAI_VARROCK_RANGE",
       "FAI_VARROCK_RANGE_WITH_PIPE"
+    ]
+  },
+  {
+    "description": "Objects - Stone - Oven",
+    "baseMaterial": "SMOOTH_STONE",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_POSH_STOVE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150"
+      },
+      {
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "SMOOTH_STONE",
+        "shiftLightness": 25
+      }
     ]
   },
   {
