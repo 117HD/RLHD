@@ -734,7 +734,7 @@ public class LightManager {
 			DaylightCycle effectiveCycle = forcedMode != null ? forcedMode : config.daylightCycle();
 			double moonAltDeg = (effectiveCycle == DaylightCycle.ALWAYS_NIGHT)
 				? Math.toDegrees(TimeOfDay.getFixedNightMoonAngles()[1])
-				: TimeOfDay.getMoonAltitudeDegrees(moonBehavior);
+				: TimeOfDay.getMoonAltitudeDegreesForBehavior();
 			float moonIllumFrac = TimeOfDay.getMoonIlluminationFraction(moonBehavior);
 			if (moonAltDeg > -5 && moonIllumFrac > 0.01f) {
 				float sunFade = (float) Math.max(0.0, Math.min(1.0, (5.0 - sunAltDeg) / 10.0));

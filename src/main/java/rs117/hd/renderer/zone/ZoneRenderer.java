@@ -615,6 +615,7 @@ public class ZoneRenderer implements Renderer {
 				TimeOfDay.setCycleMode(daylightCycle);
 				TimeOfDay.setDayLength(config.dayLength());
 				TimeOfDay.setMoonPhase(config.moonPhase());
+				TimeOfDay.setMoonBehavior(config.moonBehavior());
 				TimeOfDay.setCycleDurationMinutes(config.cycleDurationMinutes());
 				TimeOfDay.setFixedAngleOverrides(
 					environmentManager.getForcedFixedSunAngles(),
@@ -622,7 +623,6 @@ public class ZoneRenderer implements Renderer {
 				);
 				double[] sunAnglesD = TimeOfDay.getSunAngles();
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
-				MoonBehavior shadowMoonBehavior = config.moonBehavior();
 
 				if (TimeOfDay.hasFixedSunOverride()) {
 					// A fixed-mode sun override locks the sun disk; cast shadows from
@@ -642,9 +642,9 @@ public class ZoneRenderer implements Renderer {
 					// Below +2° sun shadows are faded out, switch to moon direction
 					// early so the shadow map is already oriented when moon shadows
 					// start fading in via smoothstep — prevents brightness pop
-					double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(shadowMoonBehavior);
+					double moonAltDeg = TimeOfDay.getMoonAltitudeDegreesForBehavior();
 					if (moonAltDeg > -10) {
-						if (shadowMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
+						if (TimeOfDay.getCurrentMoonBehavior() == MoonBehavior.NIGHT_SYNCED) {
 							double[] moonAnglesD = TimeOfDay.getNightSyncedMoonAngles();
 							shadowSunAngles = new float[] {
 								(float) moonAnglesD[1], (float) moonAnglesD[0]
@@ -874,7 +874,7 @@ public class ZoneRenderer implements Renderer {
 
 			// Calculate shadow visibility based on sun and moon altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
-			double moonAltDeg = TimeOfDay.getMoonAltitudeDegrees(moonBehavior);
+			double moonAltDeg = TimeOfDay.getMoonAltitudeDegreesForBehavior();
 			float moonIllumFrac = moonIllumination;
 			float shadowVisibility;
 

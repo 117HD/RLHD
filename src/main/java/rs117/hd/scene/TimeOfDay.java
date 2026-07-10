@@ -115,6 +115,9 @@ public class TimeOfDay {
 	// naturally; any other value locks the moon's illumination fraction.
 	private static MoonPhase currentMoonPhase = MoonPhase.DYNAMIC;
 
+	@Getter
+	private static MoonBehavior currentMoonBehavior = MoonBehavior.NIGHT_SYNCED;
+
 	private static float currentCycleDuration = 700;
 
 	// Fixed Night mode: the moon is locked at a prominent position in the
@@ -259,6 +262,10 @@ public class TimeOfDay {
 	 */
 	public static void setMoonPhase(MoonPhase moonPhase) {
 		currentMoonPhase = moonPhase;
+	}
+
+	public static void setMoonBehavior(MoonBehavior moonBehavior) {
+		currentMoonBehavior = moonBehavior;
 	}
 
 	/**
@@ -782,13 +789,13 @@ public class TimeOfDay {
 	/**
 	 * Get the moon altitude in degrees, respecting moon behavior mode.
 	 */
-	public static double getMoonAltitudeDegrees(MoonBehavior moonBehavior) {
+	public static double getMoonAltitudeDegreesForBehavior() {
 		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
 			// getFixedNightMoonAngles() returns {azimuth, altitude}; use the override
 			// altitude when present so shadow visibility tracks the locked moon.
 			return Math.toDegrees(getFixedNightMoonAngles()[1]);
 		}
-		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
+		if (currentMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
 			double[] angles = getNightSyncedMoonAngles();
 			return Math.toDegrees(angles[1]);
 		}
