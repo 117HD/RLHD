@@ -41,7 +41,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.FileWatcher;
@@ -670,13 +669,12 @@ public class EnvironmentManager {
 	 * Sample outdoor sky/fog for a world position, using the overworld environment above {@code worldPos}.
 	 */
 	@Nonnull
-	public OutdoorSkySample sampleOutdoorSky(int[] worldPos, double[] latLong, float cycleDuration, int minimumBrightness) {
+	public OutdoorSkySample sampleOutdoorSky(int[] worldPos, float cycleDuration, int minimumBrightness) {
 		Environment env = getEnvironmentAt(getOutdoorWorldPos(worldPos), true);
 
 		float[] regionalFogSrgb = resolveOutdoorRegionalFogSrgb(env);
 
 		float[][] skyGradientColors = TimeOfDay.getSkyGradientColors(
-			latLong,
 			cycleDuration,
 			regionalFogSrgb,
 			env.sunStrength,
@@ -686,7 +684,7 @@ public class EnvironmentManager {
 		float[] noonHorizonLinear = ColorUtils.srgbToLinear(
 			TimeOfDay.getReferenceHorizonColor(regionalFogSrgb)
 		);
-		float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(latLong, cycleDuration, minimumBrightness);
+		float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(cycleDuration, minimumBrightness);
 
 		return new OutdoorSkySample(horizonLinear, noonHorizonLinear, brightnessMultiplier);
 	}

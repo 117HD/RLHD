@@ -372,8 +372,6 @@ public class HdPlugin extends Plugin {
 	public int[] sceneViewport;
 	public final float[] sceneViewportScale = { 1, 1 };
 
-	// Day/Night Cycle
-	public double[] latLong = { 0, 0 };
 	public int msaaSamples;
 
 	public int[] sceneResolution;

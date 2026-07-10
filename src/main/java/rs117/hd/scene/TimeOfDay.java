@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import javax.annotation.Nullable;
+import lombok.Getter;
 import net.runelite.http.api.worlds.WorldRegion;
 import rs117.hd.config.DayLength;
 import rs117.hd.config.DaylightCycle;
@@ -135,6 +136,9 @@ public class TimeOfDay {
 	private static long nightSyncedDayOffset = 0;
 	private static long lastNightSyncedCycles = 0;
 	private static long pendingDayIncrements = 0;
+
+	@Getter
+	private static final double[] currentLatLong = { 0, 0 };
 
 	/**
 	 * Set the per-environment fixed sun/moon angle overrides for this frame.
@@ -281,36 +285,35 @@ public class TimeOfDay {
 	/**
 	 * Get the current sun or moon angles for a given set of coordinates and simulated day length in minutes.
 	 *
-	 * @param latLong   array of latitude and longitude coordinates
 	 * @param dayLength in minutes per day
 	 * @return the azimuth and altitude angles in radians
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 */
-	public static double[] getShadowAngles(double[] latLong, float dayLength) {
+	public static double[] getShadowAngles(float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] angles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double[] angles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 		return isNight(angles) ?
-			AtmosphereUtils.getMoonPosition(modifiedDate.toEpochMilli(), latLong) :
+			AtmosphereUtils.getMoonPosition(modifiedDate.toEpochMilli(), currentLatLong) :
 			angles;
 	}
 
-	public static double[] getSunAngles(double[] latLong, float dayLength) {
+	public static double[] getSunAngles(float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		return AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		return AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 	}
 
-	public static float[] getLightColor(double[] latLong, float dayLength) {
+	public static float[] getLightColor(float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		return AtmosphereUtils.getDirectionalLight(modifiedDate.toEpochMilli(), latLong);
+		return AtmosphereUtils.getDirectionalLight(modifiedDate.toEpochMilli(), currentLatLong);
 	}
 
-	public static float[] getRegionalDirectionalLight(double[] latLong, float dayLength, float[] regionalDirectionalColor) {
+	public static float[] getRegionalDirectionalLight( float dayLength, float[] regionalDirectionalColor) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 
 		// Get the dynamic directional light color
-		float[] dynamicLight = AtmosphereUtils.getDirectionalLight(modifiedDate.toEpochMilli(), latLong);
+		float[] dynamicLight = AtmosphereUtils.getDirectionalLight(modifiedDate.toEpochMilli(), currentLatLong);
 
 		// Calculate blend factor - same as skybox and ambient for consistency
 		float blendFactor;
@@ -341,18 +344,18 @@ public class TimeOfDay {
 		return blended;
 	}
 
-	public static float[] getAmbientColor(double[] latLong, float dayLength) {
+	public static float[] getAmbientColor( float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		return AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
+		return AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), currentLatLong);
 	}
 
-	public static float[] getRegionalAmbientLight(double[] latLong, float dayLength, float[] regionalAmbientColor) {
+	public static float[] getRegionalAmbientLight( float dayLength, float[] regionalAmbientColor) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 
 		// Get the dynamic ambient light color
-		float[] dynamicAmbient = AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
+		float[] dynamicAmbient = AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), currentLatLong);
 
 		// Calculate blend factor based on sun altitude - same as skybox for consistency
 		float blendFactor;
@@ -382,15 +385,15 @@ public class TimeOfDay {
 		return blended;
 	}
 
-	public static float[] getSkyColor(double[] latLong, float dayLength) {
+	public static float[] getSkyColor( float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		return AtmosphereUtils.getSkyColor(modifiedDate.toEpochMilli(), latLong);
+		return AtmosphereUtils.getSkyColor(modifiedDate.toEpochMilli(), currentLatLong);
 	}
 
 
-	public static float[] getEnhancedSkyColor(double[] latLong, float dayLength, float[] regionalFogColor, float sunStrength) {
+	public static float[] getEnhancedSkyColor( float dayLength, float[] regionalFogColor, float sunStrength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 
 		// Convert sun altitude to degrees (-90 to +90)
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
@@ -475,19 +478,19 @@ public class TimeOfDay {
 	 * All colors are in sRGB space.
 	 * @param regionalFogColor The regional fog color to blend with during peak daytime (sRGB)
 	 */
-	public static float[][] getSkyGradientColors(double[] latLong, float dayLength, float[] regionalFogColor, float sunStrength) {
-		return getSkyGradientColors(latLong, dayLength, regionalFogColor, sunStrength, 1.0f);
+	public static float[][] getSkyGradientColors( float dayLength, float[] regionalFogColor, float sunStrength) {
+		return getSkyGradientColors(dayLength, regionalFogColor, sunStrength, 1.0f);
 	}
 
 	public static float[][] getSkyGradientColors(
-		double[] latLong,
+		
 		float dayLength,
 		float[] regionalFogColor,
 		float sunStrength,
 		float sunriseSunsetStrength
 	) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 
 		float[] zenithColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, ZENITH_KEYFRAMES);
@@ -680,14 +683,14 @@ public class TimeOfDay {
 	 * Returns normalized direction FROM the camera TO the sun.
 	 * Uses the same coordinate transformation as the shadow light direction.
 	 */
-	public static float[] getSunDirectionForSky(double[] latLong, float dayLength) {
+	public static float[] getSunDirectionForSky( float dayLength) {
 		// Under a fixed mode with a per-environment override, lock the sun disk
 		// to the configured angles instead of the astronomical position.
 		if (hasFixedSunOverride())
 			return anglesToSkyDirection(fixedSunAnglesOverride[0], fixedSunAnglesOverride[1]);
 
 		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 
 		// sunAngles[0] = azimuth, sunAngles[1] = altitude
 		// The renderers use: pitch = altitude, yaw = PI - azimuth
@@ -700,9 +703,9 @@ public class TimeOfDay {
 	 * Returns normalized direction FROM the camera TO the moon.
 	 * Uses the same coordinate transformation as getSunDirectionForSky().
 	 */
-	public static float[] getMoonDirectionForSky(double[] latLong, float dayLength) {
+	public static float[] getMoonDirectionForSky( float dayLength) {
 		Instant moonDate = getMoonDate(dayLength);
-		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), latLong);
+		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), currentLatLong);
 		// moonAngles[0] = azimuth, moonAngles[1] = altitude
 		return anglesToSkyDirection(moonAngles[0], moonAngles[1]);
 	}
@@ -718,16 +721,16 @@ public class TimeOfDay {
 	/**
 	 * Get the moon altitude in degrees.
 	 */
-	public static double getMoonAltitudeDegrees(double[] latLong, float dayLength) {
+	public static double getMoonAltitudeDegrees( float dayLength) {
 		Instant moonDate = getMoonDate(dayLength);
-		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), latLong);
+		double[] moonAngles = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), currentLatLong);
 		return Math.toDegrees(moonAngles[1]);
 	}
 
 	/**
 	 * Get the moon direction vector for sky rendering, respecting moon behavior mode.
 	 */
-	public static float[] getMoonDirectionForSky(double[] latLong, float dayLength, MoonBehavior moonBehavior) {
+	public static float[] getMoonDirectionForSky(float dayLength, MoonBehavior moonBehavior) {
 		// A fixed-mode moon override (or the default Fixed Night position) locks
 		// the moon disk to a fixed point regardless of moon behavior.
 		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
@@ -735,10 +738,10 @@ public class TimeOfDay {
 			return anglesToSkyDirection(angles[0], angles[1]);
 		}
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
-			double[] angles = getNightSyncedMoonAngles(latLong, dayLength);
+			double[] angles = getNightSyncedMoonAngles(dayLength);
 			return anglesToSkyDirection(angles[0], angles[1]);
 		}
-		return getMoonDirectionForSky(latLong, dayLength);
+		return getMoonDirectionForSky(dayLength);
 	}
 
 	/**
@@ -775,17 +778,17 @@ public class TimeOfDay {
 	/**
 	 * Get the moon altitude in degrees, respecting moon behavior mode.
 	 */
-	public static double getMoonAltitudeDegrees(double[] latLong, float dayLength, MoonBehavior moonBehavior) {
+	public static double getMoonAltitudeDegrees( float dayLength, MoonBehavior moonBehavior) {
 		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
 			// getFixedNightMoonAngles() returns {azimuth, altitude}; use the override
 			// altitude when present so shadow visibility tracks the locked moon.
 			return Math.toDegrees(getFixedNightMoonAngles()[1]);
 		}
 		if (moonBehavior == MoonBehavior.NIGHT_SYNCED) {
-			double[] angles = getNightSyncedMoonAngles(latLong, dayLength);
+			double[] angles = getNightSyncedMoonAngles(dayLength);
 			return Math.toDegrees(angles[1]);
 		}
-		return getMoonAltitudeDegrees(latLong, dayLength);
+		return getMoonAltitudeDegrees(dayLength);
 	}
 
 	/**
@@ -830,7 +833,7 @@ public class TimeOfDay {
 	 * changes cycle-to-cycle, but the shift is never visible because it
 	 * only happens when the moon can't be seen.
 	 */
-	public static double[] getNightSyncedMoonAngles(double[] latLong, float dayLength) {
+	public static double[] getNightSyncedMoonAngles( float dayLength) {
 		// Call getModifiedDate to keep accumulatedCycleTime/completedCycles updated
 		getModifiedDate(dayLength);
 
@@ -848,7 +851,7 @@ public class TimeOfDay {
 			Instant startOfDay = Instant.ofEpochMilli(System.currentTimeMillis())
 				.truncatedTo(ChronoUnit.DAYS);
 			long fixedMillis = startOfDay.toEpochMilli() + (long) (localHour * 60 * 60 * 1000);
-			double[] sa = AtmosphereUtils.getSunAngles(fixedMillis, latLong);
+			double[] sa = AtmosphereUtils.getSunAngles(fixedMillis, currentLatLong);
 			return new double[] { sa[0] + Math.PI, -sa[1] };
 		}
 
@@ -863,7 +866,7 @@ public class TimeOfDay {
 			long syncedDay = currentTimeMillis / SYNCED_DAYS_PERIOD_MS;
 			long fixedMillis = equinoxEpochMs + syncedDay * dayMs
 				+ (long) (mappedHour * 60 * 60 * 1000);
-			double[] sa = AtmosphereUtils.getSunAngles(fixedMillis, latLong);
+			double[] sa = AtmosphereUtils.getSunAngles(fixedMillis, currentLatLong);
 			return new double[] { sa[0] + Math.PI, -sa[1] };
 		}
 
@@ -892,7 +895,7 @@ public class TimeOfDay {
 		long fixedMillis = equinoxEpochMs + nightSyncedDayOffset * dayMs
 			+ (long) (mappedHour * 60 * 60 * 1000);
 
-		double[] sunAngles = AtmosphereUtils.getSunAngles(fixedMillis, latLong);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(fixedMillis, currentLatLong);
 		double moonAltitude = -sunAngles[1];
 
 		// Apply pending day increments only while the moon is below the horizon
@@ -1108,7 +1111,7 @@ public class TimeOfDay {
 		return startOfDay.plusMillis(totalOffsetMillis);
 	}
 
-	public static double[] getLatLong(WorldRegion currentRegion) {
+	public static double[] getLatLongForRegion(WorldRegion currentRegion) {
 		double latitude;
 		double longitude;
 		switch (currentRegion) {
@@ -1142,7 +1145,7 @@ public class TimeOfDay {
 		return angleFromZenith > Math.PI / 2;
 	}
 
-	public static float getNightLightFactor(double[] latLong, float dayLength) {
+	public static float getNightLightFactor( float dayLength) {
 		switch (currentCycleMode) {
 			case FIXED_DAWN:
 			case FIXED_MIDDAY:
@@ -1156,7 +1159,7 @@ public class TimeOfDay {
 		}
 
 		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 
 		if (sunAltitudeDegrees >= 5)
@@ -1168,9 +1171,9 @@ public class TimeOfDay {
 		return t * t * (3.0f - 2.0f * t);
 	}
 
-	public static float getDynamicBrightnessMultiplier(double[] latLong, float dayLength, int minimumBrightness) {
+	public static float getDynamicBrightnessMultiplier( float dayLength, int minimumBrightness) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 
 		// Calculate sun altitude in degrees (-90 to 90, where 90 is directly overhead)
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
