@@ -599,6 +599,28 @@
     "fogDepth": 70
   },
   {
+    "area": "BMR_MORYTANIA_MOON_CUTSCENE",
+    "fogDepth": 0,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#4B1715",
+    "groundFogStart": -150,
+    "groundFogEnd": -350,
+    "groundFogOpacity": 0.6,
+    "sunStrength": 0.2,
+    "sunlightStrength": 2,
+    "starVisibility": 0.2,
+    "minBrightnessBoost": 1,
+    "nightSkyColor": "#FF0000",
+    "moonColor": "#E40000",
+    "moonLightColor": "#EF7C7C",
+    "cycleMode": "FIXED_NIGHT",
+    "fixedMoonAngles": [ 18, 90 ],
+    "sunriseSunsetStrength": 0,
+    "skyColorTakeoverAngle": 2
+  },
+  {
     "area": "MORYTANIA",
     "ambientColor": "#5a8cc0",
     "ambientStrength": 1.5,

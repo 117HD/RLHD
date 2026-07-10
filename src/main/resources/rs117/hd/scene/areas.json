@@ -12231,6 +12231,13 @@
     ]
   },
   {
+    "name": "BMR_MORYTANIA_MOON_CUTSCENE",
+    "aabbs": [
+      [ 3593, 3408, 3605, 3427 ],
+      [ 3606, 3408, 3608, 3421 ]
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
