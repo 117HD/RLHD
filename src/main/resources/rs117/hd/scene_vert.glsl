@@ -72,8 +72,6 @@ layout (location = 0) in vec3 vPosition;
     } OUT;
 
     void main() {
-        fWorldViewId = vWorldViewId;
-
         int vertex = gl_VertexID % 3;
         int alphaBiasHsl;
         int materialData;
@@ -96,34 +94,41 @@ layout (location = 0) in vec3 vPosition;
         }
         fTerrainData = texelFetch(textureFaces, vTextureFaceIdx + 2).xyz;
 
+        int worldViewIdx = vWorldViewId;
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-        vec3 worldNormal = vNormal.xyz;
-        vec3 worldPosition = sceneOffset + vPosition;
+        ModelData modelData;
 
         int modelIdx = int(vNormal.w);
         if (modelIdx > 0) {
-            ModelData modelData = getModelData(modelIdx);
-            fFade = max(modelData.fade, fFade);
+            modelData = getModelData(modelIdx);
+            fFade     = max(modelData.fade, fFade);
+            if(isModelDynamic(modelData)) {
+                worldViewIdx = modelData.worldViewIdx;
+                sceneOffset = vec3(0);
+            }
+        }
 
-            vec3 approxLocalPos = worldPosition - modelData.position;
+        vec3 worldNormal = vNormal.xyz;
+        vec3 worldPosition = vPosition + sceneOffset;
 
+        if (modelIdx > 0) {
             ObjectWindSample windSample = computeWindSample(modelData.position, modelData.height);
             worldPosition += applyWindDisplacementVertex(
                 windSample,
                 materialData,
                 float(modelData.height),
                 worldPosition,
-                approxLocalPos,
+                worldPosition - modelData.position,
                 vNormal.xyz
             );
         }
 
-        if (vWorldViewId != -1) {
-            mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
+        if (worldViewIdx != -1) {
+            mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(worldViewIdx));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);
             worldNormal = mat3(worldViewProjection) * worldNormal;
         }
-
+        fWorldViewId = worldViewIdx;
 
         OUT.position = worldPosition;
         OUT.uv = computeVertexUvs(materialData, worldPosition, vUv.xyz);

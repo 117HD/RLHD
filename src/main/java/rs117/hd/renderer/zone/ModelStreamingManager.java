@@ -30,10 +30,10 @@ import rs117.hd.utils.collections.PrimitiveCharArray;
 import static net.runelite.api.Perspective.*;
 import static net.runelite.api.hooks.DrawCallbacks.*;
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.renderer.zone.FrameContext.VAO_ALPHA;
+import static rs117.hd.renderer.zone.FrameContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.FrameContext.VAO_PLAYER;
+import static rs117.hd.renderer.zone.FrameContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -265,7 +265,7 @@ public class ModelStreamingManager {
 				z & 1023
 			) : null;
 
-		final int drawIndex = renderThreadId != -1 ? -1 : ctx.obtainDrawIndex(r instanceof Player ? VAO_PLAYER : VAO_OPAQUE);
+		final int drawIndex = renderThreadId != -1 ? -1 : renderer.frameContext().obtainDrawIndex(r instanceof Player ? VAO_PLAYER : VAO_OPAQUE);
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(m);
 		if (asyncModelCache != null) {
@@ -408,7 +408,7 @@ public class ModelStreamingManager {
 				(!sceneManager.isRoot(ctx) || zone != null && zone.inShadowFrustum)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
-				final int shadowModelIdx = SceneUploader.writeDynamicModelData(shadowView.tboM, x, y, z, modelFade, m, modelOverride, zone);
+				final int shadowModelIdx = SceneUploader.writeDynamicModelData(shadowView.tboM, x, y, z, modelFade, m, modelOverride, ctx, zone);
 				sceneUploader.uploadTempModel(
 					culledFaces,
 					m,
@@ -437,8 +437,8 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View opaqueView = ctx.beginDraw(vaoType, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
-				final int opaqueModelIdx = SceneUploader.writeDynamicModelData(opaqueView.tboM, x, y, z, modelFade, m, modelOverride, zone);
-				final int alphaModelIdx = alphaFaceCount > 0 ? SceneUploader.writeDynamicModelData(alphaView.tboM, x, y, z, modelFade, m, modelOverride, zone) : opaqueModelIdx;
+				final int opaqueModelIdx = SceneUploader.writeDynamicModelData(opaqueView.tboM, x, y, z, modelFade, m, modelOverride, ctx, zone);
+				final int alphaModelIdx = alphaFaceCount > 0 ? SceneUploader.writeDynamicModelData(alphaView.tboM, x, y, z, modelFade, m, modelOverride, ctx, zone) : opaqueModelIdx;
 
 				sceneUploader.uploadTempModel(
 					visibleFaces,

@@ -61,7 +61,7 @@ public class Zone implements Destructible {
 	// position vec3
 	// height float
 	// fade float
-	public static final int MODEL_DATA_SIZE = 20;
+	public static final int MODEL_DATA_SIZE = 28;
 
 	// Metadata format
 	// worldViewIndex int int

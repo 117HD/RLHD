@@ -72,6 +72,19 @@ layout (location = 0) in vec3 vPosition;
             terrainData = faceData.TerrainData[vertex];
         }
 
+        int worldViewIdx = vWorldViewId;
+        vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
+        ModelData modelData;
+
+        int modelIdx = int(vNormal.w);
+        if (modelIdx > 0) {
+            modelData = getModelData(modelIdx);
+            if(isModelDynamic(modelData)) {
+                worldViewIdx = modelData.worldViewIdx;
+                sceneOffset = vec3(0);
+            }
+        }
+
         int waterTypeIndex = terrainData >> 3 & 0xFF;
         float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
@@ -110,17 +123,13 @@ layout (location = 0) in vec3 vPosition;
 
         int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
-        vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
         vec3 worldPosition = sceneOffset + vPosition;
-        if (vWorldViewId != -1) {
-            mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(vWorldViewId));
+        if (worldViewIdx != -1) {
+            mat4x3 worldViewProjection = mat4x3(getWorldViewProjection(worldViewIdx));
             worldPosition = worldViewProjection * vec4(worldPosition, 1.0);;
         }
 
-        int modelIdx = int(vNormal.w);
         if (modelIdx > 0) {
-            ModelData modelData = getModelData(modelIdx);
-
             ObjectWindSample windSample = computeWindSample(modelData.position, modelData.height);
             worldPosition += applyWindDisplacementVertex(
                 windSample,

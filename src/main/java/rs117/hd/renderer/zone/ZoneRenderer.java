@@ -83,10 +83,10 @@ import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.renderer.zone.FrameContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.FrameContext.VAO_PLAYER;
+import static rs117.hd.renderer.zone.FrameContext.VAO_PRESCENE;
+import static rs117.hd.renderer.zone.FrameContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -159,6 +159,8 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBODisplacement uboDisplacement;
 
+	public final FrameContext[] frameContexts = new FrameContext[FRAMES_IN_FLIGHT];
+
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
@@ -179,6 +181,10 @@ public class ZoneRenderer implements Renderer {
 	private boolean shouldRenderScene;
 	private boolean shouldClearShadowFbo;
 	private boolean shouldDrawRoofShadows;
+
+	public FrameContext frameContext() {
+		return frameContexts[plugin.frame % FRAMES_IN_FLIGHT];
+	}
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -271,9 +277,20 @@ public class ZoneRenderer implements Renderer {
 
 		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
 		indirectDrawCmdsStaging = new GpuIntBuffer();
+
+		for(int i = 0; i < FRAMES_IN_FLIGHT; i++) {
+			frameContexts[i] = new FrameContext();
+			frameContexts[i].initBuffers();
+		}
 	}
 
 	private void destroyBuffers() {
+		for(int i = 0; i < FRAMES_IN_FLIGHT; i++) {
+			if(frameContexts[i] != null)
+				frameContexts[i].destroy();
+			frameContexts[i] = null;
+		}
+
 		if (eboAlpha != null)
 			eboAlpha.destroy();
 		eboAlpha = null;
@@ -322,12 +339,15 @@ public class ZoneRenderer implements Renderer {
 			ctx.hideRoofIds = hideRoofIds;
 			ctx.vaoSceneCmd.reset();
 			ctx.vaoDirectionalCmd.reset();
+			ctx.resetDrawRanges();
 
 			if (ctx.uboWorldViewStruct != null)
 				ctx.uboWorldViewStruct.update();
 
-			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
+			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
+				frameContext().map();
 				preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
+			}
 
 			ctx.completeInvalidation();
 
@@ -337,8 +357,6 @@ public class ZoneRenderer implements Renderer {
 					ctx.zones[zx][zz].multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
 
 			ctx.sortStaticAlphaModels(sceneCamera);
-
-			ctx.map();
 
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 				Model skybox = scene.getSkybox();
@@ -1051,14 +1069,6 @@ public class ZoneRenderer implements Renderer {
 				case DrawCallbacks.PASS_ALPHA:
 					modelStreamingManager.ensureAsyncUploadsComplete(null);
 
-					if (sceneManager.isRoot(ctx))
-						frameTimer.begin(Timer.UNMAP_ROOT_CTX);
-
-					ctx.unmap();
-
-					if (sceneManager.isRoot(ctx))
-						frameTimer.end(Timer.UNMAP_ROOT_CTX);
-
 					// Draw opaque
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
@@ -1158,6 +1168,10 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_SUBMIT);
 			if (shouldRenderScene) {
+				frameTimer.begin(Timer.FRAME_CONTEXT_UNMAP);
+				frameContext().unmap();
+				frameTimer.end(Timer.FRAME_CONTEXT_UNMAP);
+
 				tiledLightingPass();
 				directionalShadowPass();
 				scenePass();

@@ -40,8 +40,6 @@ import rs117.hd.utils.jobs.GenericJob;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.SCENE_SIZE;
 import static rs117.hd.HdPlugin.checkGLErrors;
-import static rs117.hd.renderer.zone.WorldViewContext.DYNAMIC_MODEL_VAO_POOL;
-import static rs117.hd.renderer.zone.WorldViewContext.DYNAMIC_MODEL_VAO_STAGING_POOL;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -152,9 +150,6 @@ public class SceneManager {
 				subs[i].free();
 			subs[i] = null;
 		}
-
-		DYNAMIC_MODEL_VAO_STAGING_POOL.destroy();
-		DYNAMIC_MODEL_VAO_POOL.destroy();
 
 		Zone.freeZones(nextZones);
 		nextZones = null;
@@ -732,8 +727,6 @@ public class SceneManager {
 		nextSceneContext = null;
 
 		if (isFirst) {
-			root.initBuffers();
-
 			// Load all pre-existing sub scenes on the first scene load
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 				WorldView sub = subEntity.getWorldView();
@@ -790,7 +783,6 @@ public class SceneManager {
 			return;
 
 		Stopwatch sw = Stopwatch.createStarted();
-		ctx.initBuffers();
 		ctx.sceneLoadGroup.complete();
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);

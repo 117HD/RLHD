@@ -1422,30 +1422,39 @@ public class SceneUploader implements AutoCloseable {
 		writeCache.release();
 	}
 
-	private static void writeModelData(IntBuffer modelBuffer, float x, float y, float z, float fade, Model model, ModelOverride override, Zone zone, boolean isStatic) {
+	private static void writeModelData(IntBuffer modelBuffer, float x, float y, float z, float fade, Model model, ModelOverride override, WorldViewContext viewCtx, Zone zone) {
+		// Model Data Struct:
+		// int WorldViewIdx
+		// int Flags
+		// vec3 Position
+		// int Height
+		// float Fade
+
 		modelBuffer
+			.put(viewCtx != null && viewCtx.uboWorldViewStruct != null ? viewCtx.uboWorldViewStruct.worldViewIdx + 1 : 0)
+			.put(viewCtx != null ? 0 : 1)
 			.put(Float.floatToIntBits(x))
 			.put(Float.floatToIntBits(y))
 			.put(Float.floatToIntBits(z))
 			.put(model.getModelHeight())
-			.put(Float.floatToIntBits(isStatic ? -1.0f : saturate(max(zone.fadingAlpha, fade))));
+			.put(Float.floatToIntBits(viewCtx != null ? saturate(max(zone.fadingAlpha, fade)) : -1.0f));
 	}
 
 	public static int writeStaticModelData(IntBuffer modelBuffer, int x, int y, int z, Model model, ModelOverride override, Zone zone) {
 		final int modelDataSizeInts = Zone.MODEL_DATA_SIZE / Integer.BYTES;
 		final int modelIdx = modelBuffer.position() / modelDataSizeInts;
 
-		writeModelData(modelBuffer, x, y, z, 0.0f, model, override, zone, true);
+		writeModelData(modelBuffer, x, y, z, 0.0f, model, override, null, zone);
 
 		assert modelBuffer.position() % modelDataSizeInts == 0;
 		return modelIdx + 1;
 	}
 
-	public static int writeDynamicModelData(GLMappedBufferIntWriter.ReservedView view, float x, float y, float z, float fade, Model model, ModelOverride override, Zone zone) {
+	public static int writeDynamicModelData(GLMappedBufferIntWriter.ReservedView view, float x, float y, float z, float fade, Model model, ModelOverride override, WorldViewContext viewCtx, Zone zone) {
 		final int modelDataSizeInts = Zone.MODEL_DATA_SIZE / Integer.BYTES;
 		final int modelIdx = view.getBufferOffsetInts() / modelDataSizeInts;
 
-		writeModelData(view.getBuffer(), x, y, z, fade, model, override, zone, false);
+		writeModelData(view.getBuffer(), x, y, z, fade, model, override, viewCtx, zone);
 
 		assert view.getBufferOffsetInts() % modelDataSizeInts == 0;
 		return modelIdx + 1;
