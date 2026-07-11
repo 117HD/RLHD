@@ -1227,6 +1227,14 @@
     ]
   },
   {
+    "description": "Wooden Roofs",
+    "doubleSidedFaces": true,
+    "objectIds": [
+      "ROOF_WOODEN",
+      "OLDROOF_WOODEN"
+    ]
+  },
+  {
     "description": "Ardougne Log Balance",
     "baseMaterial": "BARK",
     "objectIds": [
