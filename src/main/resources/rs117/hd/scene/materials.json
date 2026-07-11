@@ -255,7 +255,8 @@
     "vanillaTextureIndex": 34,
     "hasTransparency": true,
     "overrideBaseColor": true,
-    "unlit": true
+    "unlit": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "SAND_BRICK",

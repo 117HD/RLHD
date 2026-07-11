@@ -4334,7 +4334,9 @@
     "description": "Varrok Roofs - DoubleSided",
     "doubleSidedFaces": true,
     "objectIds": [
-      "FAI_VARROCK_ROOFKIT_SLATE"
+      "FAI_VARROCK_ROOFKIT_SLATE",
+      "FAI_VARROCK_ROOFKIT_SLATE_RAISED",
+      "FAI_VARROCK_ROOFKIT_SLATE_CUT_CORNER"
     ]
   },
   {
