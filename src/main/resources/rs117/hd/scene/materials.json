@@ -1986,8 +1986,6 @@
   {
     "name": "CARPET_VERY_LIGHT_SMOOTH",
     "parent": "CARPET_VERY_LIGHT",
-    "subsurface": 0.25,
-    "subsurfaceGlow": 2.0,
     "normalMap": null
   },
   {
@@ -2017,6 +2015,22 @@
     "name": "BURLAP_LIGHT",
     "parent": "BURLAP",
     "brightness": 1.1
+  },
+  {
+    "name": "SAIL_CLOTH",
+    "parent": "CARPET",
+    "brightness": 1.22,
+    "subsurface": 0.25,
+    "subsurfaceGlow": 2.0,
+    "normalMap": null
+  },
+  {
+    "name": "SAIL_CLOTH_LIGHT",
+    "parent": "CARPET",
+    "brightness": 1.45,
+    "subsurface": 0.25,
+    "subsurfaceGlow": 2.0,
+    "normalMap": null
   },
   {
     "name": "FALADOR_PATH_BRICK_N"

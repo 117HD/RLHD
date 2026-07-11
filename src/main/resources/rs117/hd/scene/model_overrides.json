@@ -78930,7 +78930,7 @@
   },
   {
     "description": "Sailing - Raft, Skiff and Sloop - Sails Linen And Yellow",
-    "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+    "baseMaterial": "SAIL_CLOTH",
     "disableDetailCulling": true,
     "objectIds": [
       "SAILING_BOAT_SAIL_KANDARIN_1X3_LINEN",
@@ -78943,7 +78943,7 @@
   },
   {
     "description": "Sailing - Raft, Skiff and Sloop - Sails - Canvas, Cotton and Other Colors",
-    "baseMaterial": "CARPET_ULTRA_LIGHT_SMOOTH",
+    "baseMaterial": "SAIL_CLOTH_LIGHT",
     "disableDetailCulling": true,
     "objectIds": [
       "SAILING_BOAT_SAIL_KANDARIN_1X3_CANVAS",
