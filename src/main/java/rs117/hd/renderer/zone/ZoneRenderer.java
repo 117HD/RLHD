@@ -341,8 +341,12 @@ public class ZoneRenderer implements Renderer {
 			ctx.vaoDirectionalCmd.reset();
 			ctx.resetDrawRanges();
 
-			if (ctx.uboWorldViewStruct != null)
+			if (ctx.uboWorldViewStruct != null) {
 				ctx.uboWorldViewStruct.update();
+
+				if(ctx.isBoat)
+					displacementManager.addBoat(ctx.uboWorldViewStruct, ctx.boatAABB);
+			}
 
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 				frameContext().map();
@@ -679,7 +683,6 @@ public class ZoneRenderer implements Renderer {
 		uboDisplacement.windStrength.set(environmentManager.currentWindStrength);
 		uboDisplacement.windCeiling.set(environmentManager.currentWindCeiling);
 		uboDisplacement.windOffset.set(plugin.windOffset);
-		uboDisplacement.upload();
 
 		if (plugin.configColorFilter != ColorFilter.NONE) {
 			plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
@@ -751,6 +754,8 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
+
+		uboDisplacement.upload();
 
 		// TODO: Add proper support for stat tracking to the FrameTimer or elsewhere
 		plugin.drawnDynamicRenderableCount += modelStreamingManager.getDrawnDynamicRenderableCount();

@@ -8,11 +8,13 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UniformBuffer.Property;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
+import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.NpcDisplacementCache;
 
 import static rs117.hd.utils.MathUtils.*;
@@ -21,6 +23,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 public class DisplacementManager {
 	public static final int MAX_CHARACTER_POSITION_COUNT = 50;
+	public static final int MAX_BOAT_COUNT = 20;
 
 	private static final Comparator<CharacterPositionPair> CHARACTER_POSITION_PAIR_COMPARATOR =
 		Comparator.comparingDouble(p -> p.dist);
@@ -40,6 +43,13 @@ public class DisplacementManager {
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
 
+	private final float[] cornerX = new float[4];
+	private final float[] cornerZ = new float[4];
+	private final float[] projected = new float[4];
+
+	private final float[] boatData = new float[MAX_BOAT_COUNT * 8];
+	private int writtenBoats;
+
 	private final ArrayList<CharacterPositionPair> characterPositionsPairs = new ArrayList<>(MAX_CHARACTER_POSITION_COUNT);
 	private int writtenCharacterPositions;
 	private float playerPosX, playerPosZ;
@@ -52,6 +62,52 @@ public class DisplacementManager {
 		}
 
 		return characterPositionsPairs.get(writtenCharacterPositions);
+	}
+
+	public void addBoat(UBOWorldViews.WorldViewStruct worldViewStruct, AABB aabb) {
+		if (writtenBoats >= MAX_BOAT_COUNT)
+			return;
+
+		cornerX[0] = aabb.minX;
+		cornerZ[0] = aabb.minZ;
+
+		cornerX[1] = aabb.maxX;
+		cornerZ[1] = aabb.minZ;
+
+		cornerX[2] = aabb.maxX;
+		cornerZ[2] = aabb.maxZ;
+
+		cornerX[3] = aabb.minX;
+		cornerZ[3] = aabb.maxZ;
+
+		int index = writtenBoats * 8;
+		float minY = Float.POSITIVE_INFINITY;
+		float maxY = Float.NEGATIVE_INFINITY;
+
+		for (int i = 0; i < 4; i++) {
+			// Bottom corner
+			worldViewStruct.project(vec4(projected, cornerX[i], aabb.minY, cornerZ[i], 1.0f));
+
+			if (i < 3) {
+				boatData[index + i * 2]     = projected[0];
+				boatData[index + i * 2 + 1] = projected[2];
+			}
+
+			if (projected[1] < minY) minY = projected[1];
+			if (projected[1] > maxY) maxY = projected[1];
+
+			// Top corner
+			worldViewStruct.project(vec4(projected, cornerX[i], aabb.maxY, cornerZ[i], 1.0f));
+
+			if (projected[1] < minY) minY = projected[1];
+			if (projected[1] > maxY) maxY = projected[1];
+		}
+
+		// Store vertical thickness
+		boatData[index + 6] = maxY - minY;
+		boatData[index + 7] = 0.0f;
+
+		writtenBoats++;
 	}
 
 	public void addLocalPlayer() {
@@ -141,16 +197,29 @@ public class DisplacementManager {
 		writtenCharacterPositions++;
 	}
 
+	public void writeBoatAABBs(Property[] boatData, Property boatCount) {
+		final int count = min(writtenBoats, MAX_BOAT_COUNT);
+		boatCount.set(count);
+		writtenBoats = 0;
+
+		for(int i = 0; i < count; i++) {
+			boatData[i * 2].set(this.boatData, i * 8, 4);
+			boatData[i * 2 + 1].set(this.boatData, i * 8 + 4, 4);
+		}
+	}
+
 	public void writeCharacterPositions(Property[] characterPositions, Property characterPositionCount) {
-		for (int i = 0; i < writtenCharacterPositions; i++) {
+		final int count = min(writtenCharacterPositions, characterPositions.length);
+		characterPositionCount.set(count);
+		writtenCharacterPositions = 0;
+
+		for (int i = 0; i < count; i++) {
 			CharacterPositionPair pair = characterPositionsPairs.get(i);
 			pair.dist = Float.MAX_VALUE;
 
 			if (i < characterPositions.length)
 				characterPositions[i].set(pair.x, pair.z, pair.radius);
 		}
-		characterPositionCount.set(min(writtenCharacterPositions, characterPositions.length));
-		writtenCharacterPositions = 0;
 	}
 
 	private static class CharacterPositionPair {

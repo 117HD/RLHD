@@ -783,6 +783,8 @@ public class SceneManager {
 			return;
 
 		Stopwatch sw = Stopwatch.createStarted();
+		ctx.buildBoatDisplacement();
+
 		ctx.sceneLoadGroup.complete();
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);

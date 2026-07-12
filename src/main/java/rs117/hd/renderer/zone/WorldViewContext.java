@@ -13,11 +13,14 @@ import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
+import rs117.hd.scene.GamevalManager;
+import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.DestructibleHandler;
 import rs117.hd.utils.jobs.JobGroup;
 
+import static net.runelite.api.Constants.*;
 import static rs117.hd.renderer.zone.FrameContext.VAO_COUNT;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 import static rs117.hd.utils.MathUtils.*;
@@ -40,6 +43,9 @@ public class WorldViewContext {
 	@Inject
 	private ZoneRenderer zoneRenderer;
 
+	@Inject
+	private GamevalManager gamevalManager;
+
 	final int worldViewId;
 	final int sizeX, sizeZ;
 	@Nullable
@@ -47,6 +53,9 @@ public class WorldViewContext {
 	ZoneSceneContext sceneContext;
 	Zone[][] zones;
 	boolean isLoading = true;
+
+	boolean isBoat = false;
+	rs117.hd.scene.areas.AABB boatAABB = null;
 
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;
@@ -278,5 +287,61 @@ public class WorldViewContext {
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
 		curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
+	}
+
+	void buildBoatDisplacement() {
+		try (var handle = gamevalManager.obtainHandle()) {
+			Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+			for (int z = 0; z < MAX_Z; z++) {
+				for (int x = 0; x < sceneContext.sizeX; x++) {
+					for (int y = 0; y < sceneContext.sizeZ; y++) {
+						final Tile tile = tiles[z][x][y];
+						if (tile == null)
+							continue;
+
+						GameObject[] gameObjects = tile.getGameObjects();
+						for (int g = 0; g < gameObjects.length; g++) {
+							GameObject gameObject = gameObjects[g];
+							if(gameObject == null)
+								continue;
+
+							Renderable renderable = gameObject.getRenderable();
+							if(renderable == null)
+								continue;
+
+							String gameObjectName = handle.getObjectName(gameObject.getId());
+							if(gameObjectName.contains("BOAT")) {
+								Model model = null;
+								if(renderable instanceof Model) {
+									model = (Model) renderable;
+								} else if(renderable instanceof DynamicObject) {
+									model = ((DynamicObject) renderable).getModelZbuf();
+								}
+
+								if ( model != null) {
+									final var modelAABB = model.getAABB(0);
+
+									final int centerX = gameObject.getX() + modelAABB.getCenterX();
+									final int centerY = gameObject.getZ() + modelAABB.getCenterY();
+									final int centerZ = gameObject.getY() + modelAABB.getCenterZ();
+
+									isBoat = true;
+									boatAABB = new AABB(
+										centerX - modelAABB.getExtremeX(),
+										centerY - modelAABB.getExtremeY(),
+										centerZ - modelAABB.getExtremeZ(),
+
+										centerX + modelAABB.getExtremeX(),
+										centerY + modelAABB.getExtremeY(),
+										centerZ + modelAABB.getExtremeZ()
+									);
+									return;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

@@ -1,8 +1,12 @@
 #pragma once
 
 #include <uniforms/global.glsl>
+#include <uniforms/displacement.glsl>
+
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
+
+#define BOAT_DISPLACEMENT_MARGIN 128.0
 
 // Needs to match Ordinal Values of WindDisplacement.Java
 #define WIND_DISPLACEMENT_DISABLED 0
@@ -62,6 +66,21 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
     return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
 }
 
+vec3 applyBoatDisplacement(Boat boat, vec2 vertPos, float height, float strength, inout float offsetAccum) {
+    float d = boatDistance(vertPos, boat);
+
+    float falloffRadius = BOAT_DISPLACEMENT_MARGIN;
+    if (d >= falloffRadius)
+        return vec3(0.0);
+
+    float offsetFrac = saturate(1.0 - (d / falloffRadius));
+    float displacementFrac = offsetFrac * offsetFrac;
+
+    offsetAccum += offsetFrac;
+
+    return vec3(0.0, height * strength * displacementFrac, 0.0);
+}
+
 vec3 applyWindDisplacementVertex(
     const ObjectWindSample windSample,
     int vertexFlags,
@@ -119,17 +138,25 @@ vec3 applyWindDisplacementVertex(
     }
 #endif
 
-#if CHARACTER_DISPLACEMENT
     if (windDisplacementMode == WIND_DISPLACEMENT_OBJECT) {
         vec2 worldVert = worldVertPos.xz;
         float fractAccum = 0.0;
+#if CHARACTER_DISPLACEMENT
         for (int i = 0; i < characterPositionCount; i++) {
             displacement += applyCharacterDisplacement(characterPositions[i], worldVert, modelHeight, strength, fractAccum);
             if (fractAccum >= 1.0)
                 break;
         }
-    }
+
+        if (fractAccum < 1.0) {
+            for (int i = 0; i < boatCount; i++) {
+                displacement += applyBoatDisplacement(boatData[i], worldVert, modelHeight, 1.25, fractAccum);
+                if (fractAccum >= 1.0)
+                    break;
+            }
+        }
 #endif
+    }
 
     return displacement;
 }

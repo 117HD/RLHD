@@ -249,6 +249,10 @@ vec4 saturate(vec4 value) {
     return clamp(value, vec4(0.0), vec4(1.0));
 }
 
+float cross2D(vec2 a, vec2 b) {
+    return a.x * b.y - a.y * b.x;
+}
+
 #define POISSON_DISK_LENGTH 16
 vec2 getPoissonDisk(int idx) {
     switch(idx) {
@@ -269,4 +273,16 @@ vec2 getPoissonDisk(int idx) {
         case 14: return vec2( 0.19984126,   0.78641367);
         default: return vec2( 0.14383161,  -0.14100790);
     }
+}
+
+bool contains(vec3 p, vec3 min, vec3 max) {
+    return all(greaterThanEqual(p, min)) &&
+           all(lessThanEqual(p, max));
+}
+
+bool insideQuad(vec2 p, vec2 a, vec2 b, vec2 c, vec2 d) {
+    return cross2D(b - a, p - a) >= 0.0 &&
+           cross2D(c - b, p - b) >= 0.0 &&
+           cross2D(d - c, p - c) >= 0.0 &&
+           cross2D(a - d, p - d) >= 0.0;
 }
