@@ -744,6 +744,10 @@ public class ZoneRenderer implements Renderer {
 			indirectDrawCmds.upload(indirectDrawCmdsStaging);
 		}
 
+		frameTimer.begin(Timer.FRAME_CONTEXT_UNMAP);
+		frameContext().unmap();
+		frameTimer.end(Timer.FRAME_CONTEXT_UNMAP);
+
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
@@ -1168,10 +1172,6 @@ public class ZoneRenderer implements Renderer {
 
 			frameTimer.begin(Timer.DRAW_SUBMIT);
 			if (shouldRenderScene) {
-				frameTimer.begin(Timer.FRAME_CONTEXT_UNMAP);
-				frameContext().unmap();
-				frameTimer.end(Timer.FRAME_CONTEXT_UNMAP);
-
 				tiledLightingPass();
 				directionalShadowPass();
 				scenePass();
