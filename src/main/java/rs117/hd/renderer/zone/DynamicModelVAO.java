@@ -53,8 +53,15 @@ public class DynamicModelVAO implements Destructible {
 	private int[] drawOffsets = new int[16];
 	private int[] drawCounts = new int[16];
 
+	private int[] packedOffsets = new int[16];
 	private int[] mergedOffsets = new int[16];
 	private int[] mergedCounts = new int[16];
+
+	private long[] pendingCopySrcOffsets = new long[16];
+	private long[] pendingCopyDstOffsets = new long[16];
+	private long[] pendingCopyNumBytes = new long[16];
+	private int pendingCopyCount;
+	private int nextPackedOffset;
 
 	private int allocatedDrawCount;
 	private int writtenRangeCount;
@@ -82,6 +89,8 @@ public class DynamicModelVAO implements Destructible {
 		this.tboM = new GLTextureBuffer("VAO::ModelData::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
 		this.tboFWriter = new GLMappedBufferIntWriter(this.tboF);
 		this.tboMWriter = new GLMappedBufferIntWriter(this.tboM);
+
+		Arrays.fill(packedOffsets, -1);
 	}
 
 	public boolean hasStagingBuffer() { return vboRender != vboStaging; }
@@ -122,6 +131,9 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	void map() {
+		if(!vboRender.isStorageBuffer())
+			vboRender.orphan();
+
 		vboWriter.map(false);
 		tboFWriter.map(false);
 		tboMWriter.map(false);
@@ -132,14 +144,13 @@ public class DynamicModelVAO implements Destructible {
 
 	synchronized void unmap() {
 		final int renderVBOId = vboRender.id;
-		long vboWrittenBytes = vboWriter.flush();
+		vboWriter.flush();
 		tboFWriter.flush();
 		tboMWriter.flush();
 
-		if (writtenRangeCount > 0 && hasStagingBuffer()) {
-			vboRender.orphan();
-			vboStaging.copyTo(vboRender, 0, 0, vboWrittenBytes);
-		}
+		if (pendingCopyCount > 0)
+			vboStaging.copyMultiTo(vboRender, pendingCopySrcOffsets, pendingCopyDstOffsets, pendingCopyNumBytes, pendingCopyCount);
+		pendingCopyCount = 0;
 
 		if (renderVBOId != vboRender.id)
 			bindRenderVAO();
@@ -162,11 +173,16 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	synchronized int obtainDrawIndex() {
-		int drawIndex = allocatedDrawCount++;
+		final int drawIndex = allocatedDrawCount++;
 		if (allocatedDrawCount >= drawOffsets.length) {
-			int oldLength = drawOffsets.length;
+			final int oldLength = drawOffsets.length;
+			final int oldPackedLength = packedOffsets.length;
+
 			drawOffsets = Arrays.copyOf(drawOffsets, oldLength * 2);
 			drawCounts = Arrays.copyOf(drawCounts, oldLength * 2);
+			packedOffsets = Arrays.copyOf(packedOffsets, oldLength * 2);
+
+			Arrays.fill(packedOffsets, oldPackedLength, packedOffsets.length, -1);
 		}
 		return drawIndex;
 	}
@@ -219,6 +235,34 @@ public class DynamicModelVAO implements Destructible {
 		usedViews.add(view);
 	}
 
+	private void addPendingCopy(int srcOffsetInts, int dstOffsetInts, int countInts) {
+		long srcBytes = srcOffsetInts * (long) VERT_SIZE;
+		long dstBytes = dstOffsetInts * (long) VERT_SIZE;
+		long numBytes = countInts * (long) VERT_SIZE;
+
+		if (pendingCopyCount > 0) {
+			int last = pendingCopyCount - 1;
+			if (
+				pendingCopySrcOffsets[last] + pendingCopyNumBytes[last] == srcBytes &&
+				pendingCopyDstOffsets[last] + pendingCopyNumBytes[last] == dstBytes
+			) {
+				pendingCopyNumBytes[last] += numBytes;
+				return;
+			}
+		}
+
+		if (pendingCopyCount >= pendingCopySrcOffsets.length) {
+			pendingCopySrcOffsets = Arrays.copyOf(pendingCopySrcOffsets, pendingCopySrcOffsets.length * 2);
+			pendingCopyDstOffsets = Arrays.copyOf(pendingCopyDstOffsets, pendingCopyDstOffsets.length * 2);
+			pendingCopyNumBytes = Arrays.copyOf(pendingCopyNumBytes, pendingCopyNumBytes.length * 2);
+		}
+
+		pendingCopySrcOffsets[pendingCopyCount] = srcBytes;
+		pendingCopyDstOffsets[pendingCopyCount] = dstBytes;
+		pendingCopyNumBytes[pendingCopyCount] = numBytes;
+		pendingCopyCount++;
+	}
+
 	private int mergeRanges(int fromDrawIdx, int toDrawIdx) {
 		int count = 0;
 		for (int i = fromDrawIdx; i < toDrawIdx; i++) {
@@ -226,15 +270,27 @@ public class DynamicModelVAO implements Destructible {
 			if (c <= 0)
 				continue;
 
-			int o = drawOffsets[i];
-			if (count > 0 && mergedOffsets[count - 1] + mergedCounts[count - 1] == o) {
+			int offset;
+			if (hasStagingBuffer()) {
+				if (packedOffsets[i] == -1) {
+					int dstOffset = nextPackedOffset;
+					nextPackedOffset += c;
+					addPendingCopy(drawOffsets[i], dstOffset, c);
+					packedOffsets[i] = dstOffset;
+				}
+				offset = packedOffsets[i];
+			} else {
+				offset = drawOffsets[i];
+			}
+
+			if (count > 0 && mergedOffsets[count - 1] + mergedCounts[count - 1] == offset) {
 				mergedCounts[count - 1] += c;
 			} else {
 				if (count >= mergedOffsets.length) {
 					mergedOffsets = Arrays.copyOf(mergedOffsets, mergedOffsets.length * 2);
 					mergedCounts = Arrays.copyOf(mergedCounts, mergedCounts.length * 2);
 				}
-				mergedOffsets[count] = o;
+				mergedOffsets[count] = offset;
 				mergedCounts[count] = c;
 				count++;
 			}
@@ -269,8 +325,11 @@ public class DynamicModelVAO implements Destructible {
 	void reset() {
 		Arrays.fill(drawOffsets, 0, writtenRangeCount, 0);
 		Arrays.fill(drawCounts, 0, writtenRangeCount, 0);
+		Arrays.fill(packedOffsets, 0, writtenRangeCount, -1);
 		allocatedDrawCount = 0;
 		writtenRangeCount = 0;
+		nextPackedOffset = 0;
+		pendingCopyCount = 0;
 		freeViews.addAll(usedViews);
 		usedViews.clear();
 	}

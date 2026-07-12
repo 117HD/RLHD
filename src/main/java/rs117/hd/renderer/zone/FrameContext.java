@@ -12,7 +12,7 @@ public class FrameContext {
 
 	void initBuffers() {
 		for (int i = 0; i < VAO_COUNT; i++) {
-			dynamicModelVaos[i] = new DynamicModelVAO("DynamicModelVAO_" + i, true);
+			dynamicModelVaos[i] = new DynamicModelVAO("DynamicModelVAO_" + i, i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW);
 			if (dynamicModelVaos[i].getVao() == 0)
 				dynamicModelVaos[i].initialize();
 		}

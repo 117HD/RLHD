@@ -372,7 +372,7 @@ public class ZoneRenderer implements Renderer {
 						null,
 						null,
 						true,
-						VAO_PRESCENE,
+						VAO_OPAQUE,
 						-1,
 						0,
 						0,
