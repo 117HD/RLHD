@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.opengl.GLFence;
 import rs117.hd.opengl.shader.ShaderProgram;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -56,7 +56,7 @@ public class CommandBuffer {
 	public final String name;
 
 	@Setter
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	private long[] cmd = new long[(int) KiB];
 	private int writeHead = 0;
@@ -305,8 +305,8 @@ public class CommandBuffer {
 		// Force VAO state to reapply to ensure it is in sync with the render state
 		renderState.vao.invalidate();
 
-		if (frameTimer != null)
-			frameTimer.begin(Timer.EXECUTE_COMMAND_BUFFER);
+		if (profiler != null)
+			profiler.begin(Timer.EXECUTE_COMMAND_BUFFER);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer offsets = null, counts = null;
 			int readHead = 0;
@@ -489,8 +489,8 @@ public class CommandBuffer {
 			}
 			renderState.apply();
 		}
-		if (frameTimer != null)
-			frameTimer.end(Timer.EXECUTE_COMMAND_BUFFER);
+		if (profiler != null)
+			profiler.end(Timer.EXECUTE_COMMAND_BUFFER);
 	}
 
 	private int writeObject(Object obj) {

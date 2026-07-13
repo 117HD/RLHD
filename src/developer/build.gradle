@@ -1,0 +1,26 @@
+sourceSets {
+	developer
+}
+
+configurations {
+	developerCompileOnly.extendsFrom(compileOnly)
+	developerAnnotationProcessor.extendsFrom(annotationProcessor)
+}
+
+sourceSets.developer.compileClasspath = sourceSets.main.output + sourceSets.main.compileClasspath
+sourceSets.developer.runtimeClasspath = sourceSets.developer.output + sourceSets.main.output + sourceSets.main.runtimeClasspath
+sourceSets.test.runtimeClasspath += sourceSets.developer.output
+
+tasks.named('processDeveloperResources') {
+	filesMatching('runelite-plugin.properties') {
+		expand(version: project.version)
+	}
+}
+
+tasks.register('developerJar', Jar) {
+	dependsOn tasks.named('classes'), tasks.named('developerClasses'), tasks.named('processDeveloperResources')
+	from sourceSets.developer.output
+	archiveClassifier.set('developer')
+	archiveFileName.set("${rootProject.name}-${project.version}-developer.jar")
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
