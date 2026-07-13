@@ -12,11 +12,11 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
-import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
+import rs117.hd.profiling.Profiler;
 
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.InputEvent.SHIFT_DOWN_MASK;
@@ -25,7 +25,6 @@ import static java.awt.event.InputEvent.SHIFT_DOWN_MASK;
 public class DeveloperTools implements KeyListener {
 	// This could be part of the config if we had developer mode config sections
 	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK);
 	private static final Keybind KEY_RECORD_TIMINGS_SNAPSHOT = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, CTRL_DOWN_MASK);
@@ -51,12 +50,6 @@ public class DeveloperTools implements KeyListener {
 	private TileInfoOverlay tileInfoOverlay;
 
 	@Inject
-	private FrameTimerOverlay frameTimerOverlay;
-
-	@Inject
-	private FrameTimingsRecorder frameTimingsRecorder;
-
-	@Inject
 	private ShadowMapOverlay shadowMapOverlay;
 
 	@Inject
@@ -65,10 +58,11 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
 
+	@Inject
+	private FrameTimingsRecorder frameTimingsRecorder;
+
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
-	@Getter
-	private boolean frameTimingsOverlayEnabled;
 	private boolean shadowMapOverlayEnabled;
 	private boolean lightGizmoOverlayEnabled;
 	@Getter
@@ -86,10 +80,8 @@ public class DeveloperTools implements KeyListener {
 		// Enable 117 HD's keybindings by default during development
 		keyBindingsEnabled = true;
 		keyManager.registerKeyListener(this);
-
 		clientThread.invokeLater(() -> {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled);
-			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
@@ -100,12 +92,13 @@ public class DeveloperTools implements KeyListener {
 		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(this);
 		tileInfoOverlay.setActive(false);
-		frameTimerOverlay.setActive(false);
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
 		hideUiEnabled = false;
 	}
+
+	public boolean isFrameTimingsOverlayEnabled() { return Profiler.isActive(); }
 
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted commandExecuted) {
@@ -116,17 +109,12 @@ public class DeveloperTools implements KeyListener {
 		if (args.length < 1)
 			return;
 
-		String action = args[0].toLowerCase();
-		switch (action) {
-			case "tileinfo":
-				tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
-				break;
-			case "timers":
-			case "timings":
-				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
-				break;
+		switch (args[0].toLowerCase()) {
 			case "snapshot":
 				frameTimingsRecorder.recordSnapshot();
+				break;
+			case "tileinfo":
+				tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
 				break;
 			case "shadowmap":
 				shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
@@ -141,11 +129,10 @@ public class DeveloperTools implements KeyListener {
 			case "keybinds":
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;
-				if (keyBindingsEnabled) {
+				if (keyBindingsEnabled)
 					keyManager.registerKeyListener(this);
-				} else {
+				else
 					keyManager.unregisterKeyListener(this);
-				}
 				break;
 			case "reload":
 				plugin.renderer.reloadScene();
@@ -157,13 +144,12 @@ public class DeveloperTools implements KeyListener {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-		if (KEY_TOGGLE_TILE_INFO.matches(e)) {
-			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
-		} else if (KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
-			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
-		} else if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
+	public void keyPressed(KeyEvent e)
+	{
+		if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
 			frameTimingsRecorder.recordSnapshot();
+		} else if (KEY_TOGGLE_TILE_INFO.matches(e)) {
+			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
 		} else if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(e)) {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
 		} else if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(e)) {
