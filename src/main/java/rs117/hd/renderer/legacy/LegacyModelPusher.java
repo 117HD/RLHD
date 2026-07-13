@@ -18,8 +18,8 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.model.ModelCache;
 import rs117.hd.model.ModelHasher;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.TileOverrideManager;
@@ -65,7 +65,7 @@ public class LegacyModelPusher {
 	private ModelHasher modelHasher;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	public static final int DATUM_PER_FACE = 12;
 
@@ -278,7 +278,7 @@ public class LegacyModelPusher {
 
 		if (!foundCachedVertexData) {
 			if (plugin.enableDetailedTimers)
-				frameTimer.begin(Timer.MODEL_PUSHING_VERTEX);
+				profiler.begin(Timer.MODEL_PUSHING_VERTEX);
 
 			modelOverride.applyRotation(model);
 			for (int face = 0; face < faceCount; face++) {
@@ -290,12 +290,12 @@ public class LegacyModelPusher {
 			modelOverride.revertRotation(model);
 
 			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.MODEL_PUSHING_VERTEX);
+				profiler.end(Timer.MODEL_PUSHING_VERTEX);
 		}
 
 		if (!foundCachedNormalData) {
 			if (plugin.enableDetailedTimers)
-				frameTimer.begin(Timer.MODEL_PUSHING_NORMAL);
+				profiler.begin(Timer.MODEL_PUSHING_NORMAL);
 
 			for (int face = 0; face < faceCount; face++) {
 				getNormalDataForFace(sceneContext, model, modelOverride, face);
@@ -305,12 +305,12 @@ public class LegacyModelPusher {
 			}
 
 			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.MODEL_PUSHING_NORMAL);
+				profiler.end(Timer.MODEL_PUSHING_NORMAL);
 		}
 
 		if (!foundCachedUvData) {
 			if (plugin.enableDetailedTimers)
-				frameTimer.begin(Timer.MODEL_PUSHING_UV);
+				profiler.begin(Timer.MODEL_PUSHING_UV);
 
 			int[] faceColors = model.getFaceColors1();
 			byte[] faceTransparencies = model.getFaceTransparencies();
@@ -373,7 +373,7 @@ public class LegacyModelPusher {
 			}
 
 			if (plugin.enableDetailedTimers)
-				frameTimer.end(Timer.MODEL_PUSHING_UV);
+				profiler.end(Timer.MODEL_PUSHING_UV);
 		}
 
 		if (cacheVertexData)
