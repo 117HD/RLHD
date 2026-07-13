@@ -102,6 +102,7 @@ import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.DisplacementManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.GamevalManager;
@@ -324,6 +325,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	public HDVariables vars;
+
+	@Inject
+	private DisplacementManager displacementManager;
 
 	public Renderer renderer;
 
@@ -724,6 +728,7 @@ public class HdPlugin extends Plugin {
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
+				displacementManager.initialize();
 
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;

@@ -16,6 +16,7 @@ import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.NpcDisplacementCache;
+import rs117.hd.utils.collections.IntHashSet;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -41,6 +42,9 @@ public class DisplacementManager {
 	private SceneManager sceneManager;
 
 	@Inject
+	private GamevalManager gamevalManager;
+
+	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
 
 	private final float[] cornerX = new float[4];
@@ -50,9 +54,20 @@ public class DisplacementManager {
 	private final float[] boatData = new float[MAX_BOAT_COUNT * 8];
 	private int writtenBoats;
 
+	public final IntHashSet boatIds = new IntHashSet();
+
 	private final ArrayList<CharacterPositionPair> characterPositionsPairs = new ArrayList<>(MAX_CHARACTER_POSITION_COUNT);
 	private int writtenCharacterPositions;
 	private float playerPosX, playerPosZ;
+
+	public void initialize() {
+		try (var handle = gamevalManager.obtainHandle()) {
+			for(var entry : handle.getObjects().entrySet()) {
+				if(entry.getKey().contains("BOAT"))
+					boatIds.add(entry.getValue());
+			}
+		}
+	}
 
 	private CharacterPositionPair getCharacterPositionPair() {
 		if (writtenCharacterPositions >= characterPositionsPairs.size()) {
