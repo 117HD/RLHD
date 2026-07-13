@@ -607,7 +607,9 @@ public class SceneManager {
 					sorted.zone.uploadJob = ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z)
 						.queue(ctx.streamingGroup, prevStreamingJob != null ? prevStreamingJob : generateSceneDataTask);
-					prevStreamingJob = sorted.zone.uploadJob;
+
+					// Make half the streaming zones depend on a previous job to reduce thrashing the job system
+					prevStreamingJob = prevStreamingJob == null ? sorted.zone.uploadJob : null;
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
