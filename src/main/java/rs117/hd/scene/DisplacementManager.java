@@ -63,7 +63,7 @@ public class DisplacementManager {
 	public void initialize() {
 		try (var handle = gamevalManager.obtainHandle()) {
 			for(var entry : handle.getObjects().entrySet()) {
-				if(entry.getKey().contains("BOAT"))
+				if(entry.getKey().contains("SAILING_BOAT_HULL_"))
 					boatIds.add(entry.getValue());
 			}
 		}
