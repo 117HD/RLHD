@@ -1,11 +1,14 @@
 package rs117.hd;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.RuneLite;
 import net.runelite.client.RuneLiteProperties;
 import net.runelite.client.externalplugins.ExternalPluginManager;
+import net.runelite.client.plugins.Plugin;
 import rs117.hd.utils.Props;
 
 @Slf4j
@@ -23,7 +26,7 @@ public class HdPluginTest
 		Props.set("rlhd.resource-path", "src/main/resources");
 		ClassLoader.getSystemClassLoader().setDefaultAssertionStatus(true);
 		useLatestPluginHub();
-		ExternalPluginManager.loadBuiltin(HdPlugin.class);
+		ExternalPluginManager.loadBuiltin(buildPluginList());
 		RuneLite.main(args);
 	}
 
@@ -55,5 +58,17 @@ public class HdPluginTest
 				log.error("Failed to automatically use latest plugin-hub version", ex);
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Class<? extends Plugin>[] buildPluginList() {
+		List<Class<? extends Plugin>> plugins = new ArrayList<>();
+		plugins.add(HdPlugin.class);
+		try {
+			plugins.add((Class<? extends Plugin>) Class.forName("rs117.hd.DeveloperPlugin"));
+		} catch (ClassNotFoundException ex) {
+			log.info("117 HD Developer plugin is not available in this checkout");
+		}
+		return plugins.toArray(new Class[0]);
 	}
 }

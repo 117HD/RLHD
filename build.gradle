@@ -75,3 +75,8 @@ tasks.register('shadowJar', Jar) {
 	archiveClassifier.set('shadow')
 	archiveFileName.set("${rootProject.name}-${project.version}-all.jar")
 }
+
+def developerBuild = file('src/developer/build.gradle')
+if (developerBuild.isFile()) {
+	apply from: developerBuild
+}

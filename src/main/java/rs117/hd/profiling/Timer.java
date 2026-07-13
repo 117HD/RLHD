@@ -1,16 +1,18 @@
-package rs117.hd.overlays;
+package rs117.hd.profiling;
 
+import java.awt.Color;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 
-import static rs117.hd.overlays.FrameTimer.ASYNC_CPU_TIMER;
-import static rs117.hd.overlays.FrameTimer.ASYNC_GPU_TIMER;
-import static rs117.hd.overlays.FrameTimer.CPU_TIMER;
-import static rs117.hd.overlays.FrameTimer.GPU_TIMER;
+import static rs117.hd.profiling.Profiler.ASYNC_CPU_TIMER;
+import static rs117.hd.profiling.Profiler.ASYNC_GPU_TIMER;
+import static rs117.hd.profiling.Profiler.CPU_TIMER;
+import static rs117.hd.profiling.Profiler.GPU_TIMER;
 
 @RequiredArgsConstructor
 public enum Timer {
 	// CPU timers
+	CLIENT,
 
 	// Draw callbacks
 	DRAW_FLUSH,
@@ -32,6 +34,7 @@ public enum Timer {
 	MAP_UI_BUFFER("Map UI Buffer"),
 	COPY_UI("Copy UI"),
 	MODEL_UPLOAD_COMPLETE,
+	ASYNC_MODEL_CACHE,
 
 	// Logic
 	VISIBILITY_CHECK,
@@ -59,6 +62,7 @@ public enum Timer {
 	DRAW_TEMP_ASYNC(ASYNC_CPU_TIMER),
 	DRAW_DYNAMIC_ASYNC(ASYNC_CPU_TIMER),
 	STATIC_ALPHA_SORT(ASYNC_CPU_TIMER),
+	ZONE_UPLOAD(ASYNC_CPU_TIMER),
 
 	// GPU timers
 	RENDER_FRAME(GPU_TIMER),
@@ -76,6 +80,7 @@ public enum Timer {
 	public static final Timer[] TIMERS = values();
 	public final String name;
 	public final int type;
+	public final Color color = Color.getHSBColor((ordinal() * 0.618033988749895f) % 1f, 0.65f, 0.95f);
 
 	Timer() {
 		name = enumToName(name());
