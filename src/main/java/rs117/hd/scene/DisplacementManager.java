@@ -135,10 +135,9 @@ public class DisplacementManager {
 
 		// The local player needs to be added first for distance culling
 		var lp = localPlayer.getLocalLocation();
-		Model playerModel = localPlayer.getModel();
-		if (playerModel != null) {
+		if(lp != null) {
 			WorldViewContext ctx = sceneManager.getContext(localPlayer.getWorldView().getScene());
-			if(ctx != null && !sceneManager.isRoot(ctx))
+			if (ctx != null && !sceneManager.isRoot(ctx))
 				return;
 
 			addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
