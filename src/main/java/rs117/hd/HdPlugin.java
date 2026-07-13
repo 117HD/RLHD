@@ -572,6 +572,8 @@ public class HdPlugin extends Plugin {
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
 				var runtime = Runtime.getRuntime();
 
+				boolean supportsThreadAllocationTracking = HDUtils.setupThreadAllocatedBytesMonitoring();
+
 				APPLE = osType == OSType.MacOS;
 				APPLE_ARM = APPLE && osArch.equals("aarch64");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
@@ -582,19 +584,20 @@ public class HdPlugin extends Plugin {
 				SUPPORTS_STORAGE_BUFFERS = GL_CAPS.GL_ARB_buffer_storage && !DEBUG_MAC_OS && config.storageBuffers().get(!INTEL_GPU);
 
 				log.info("Starting 117 HD... (count: {})", startupCount);
-				log.info("Renderer:          {}", rendererClass.getSimpleName());
-				log.info("rlawt version:     {}", rlawtVersion);
-				log.info("LWJGL Version:     {}", Version.getVersion());
-				log.info("Java version:      {} ({})", javaVmName, javaVersion);
-				log.info("Java memory limit: {} (free: {})", formatBytes(runtime.maxMemory()), formatBytes(runtime.freeMemory()));
-				log.info("Operating system:  {} {} ({}-bit {})", osType, osVersion, wordSize, osArch);
-				log.info("CPU:               {} ({} threads)", HDUtils.getCpuName(), runtime.availableProcessors());
-				log.info("Memory:            {}", formatBytes(HDUtils.getTotalSystemMemory()));
-				log.info("GPU:               {} ({})", glRenderer, glVendor);
-				log.info("GPU driver:        {}", glGetString(GL_VERSION));
-				log.info("Indirect draw:     {}", SUPPORTS_INDIRECT_DRAW);
-				log.info("Storage buffers:   {}", SUPPORTS_STORAGE_BUFFERS);
-				log.info("Low memory mode:   {}", useLowMemoryMode);
+				log.info("Renderer:            {}", rendererClass.getSimpleName());
+				log.info("rlawt version:       {}", rlawtVersion);
+				log.info("LWJGL Version:       {}", Version.getVersion());
+				log.info("Java version:        {} ({})", javaVmName, javaVersion);
+				log.info("Java memory limit:   {} (free: {})", formatBytes(runtime.maxMemory()), formatBytes(runtime.freeMemory()));
+				log.info("Operating system:    {} {} ({}-bit {})", osType, osVersion, wordSize, osArch);
+				log.info("CPU:                 {} ({} threads)", HDUtils.getCpuName(), runtime.availableProcessors());
+				log.info("Memory:              {}", formatBytes(HDUtils.getTotalSystemMemory()));
+				log.info("GPU:                 {} ({})", glRenderer, glVendor);
+				log.info("GPU driver:          {}", glGetString(GL_VERSION));
+				log.info("Indirect draw:       {}", SUPPORTS_INDIRECT_DRAW);
+				log.info("Storage buffers:     {}", SUPPORTS_STORAGE_BUFFERS);
+				log.info("Allocation Tracking: {}", supportsThreadAllocationTracking);
+				log.info("Low memory mode:     {}", useLowMemoryMode);
 
 				renderer = injector.getInstance(rendererClass);
 
@@ -1520,9 +1523,9 @@ public class HdPlugin extends Plugin {
 				.build(
 					"AsyncUICopy",
 					t -> {
-						long start = System.nanoTime();
+						long timestamp = frameTimer.getTimeStamp();
 						pbo.mapped().intView().put(pixels, 0, uiWidth * uiHeight);
-						frameTimer.add(Timer.COPY_UI_ASYNC, System.nanoTime() - start);
+						frameTimer.add(Timer.COPY_UI_ASYNC, timestamp);
 					}
 				)
 				.setExecuteAsync(!isPowerSaving)

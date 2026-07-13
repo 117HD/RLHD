@@ -1,5 +1,6 @@
 package rs117.hd.overlays;
 
+import java.awt.Color;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 
@@ -11,6 +12,7 @@ import static rs117.hd.overlays.FrameTimer.GPU_TIMER;
 @RequiredArgsConstructor
 public enum Timer {
 	// CPU timers
+	CLIENT,
 
 	// Draw callbacks
 	DRAW_FLUSH,
@@ -76,6 +78,7 @@ public enum Timer {
 	public static final Timer[] TIMERS = values();
 	public final String name;
 	public final int type;
+	public final Color color = Color.getHSBColor((ordinal() * 0.618033988749895f) % 1f, 0.65f, 0.95f);
 
 	Timer() {
 		name = enumToName(name());

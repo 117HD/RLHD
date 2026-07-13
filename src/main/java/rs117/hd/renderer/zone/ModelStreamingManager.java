@@ -309,7 +309,8 @@ public class ModelStreamingManager {
 		int orientation,
 		int x, int y, int z
 	) {
-		final long t = System.nanoTime();
+		final long timestamp = frameTimer.getTimeStamp();
+		final long allocated = frameTimer.getUsedMemory();
 		uploadTempModel(
 			ctx,
 			projection,
@@ -325,7 +326,7 @@ public class ModelStreamingManager {
 			orientation,
 			x, y, z
 		);
-		frameTimer.add(renderable instanceof Actor ? Timer.DRAW_TEMP_ASYNC : Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - t);
+		frameTimer.add(renderable instanceof Actor ? Timer.DRAW_TEMP_ASYNC : Timer.DRAW_DYNAMIC_ASYNC, timestamp, allocated);
 	}
 
 	public void uploadTempModel(

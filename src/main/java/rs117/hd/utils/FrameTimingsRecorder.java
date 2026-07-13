@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.overlays.FrameTimer;
@@ -132,6 +133,30 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 		if (isCapturingSnapshot())
 			return round((float) (System.currentTimeMillis() - snapshot.timestamp) / SNAPSHOT_DURATION_MS * 100);
 		return 100;
+	}
+
+	public long getRemainingMs() {
+		if (!isCapturingSnapshot())
+			return 0;
+		return Math.max(0, SNAPSHOT_DURATION_MS - (System.currentTimeMillis() - snapshot.timestamp));
+	}
+
+	public int getRemainingSeconds() {
+		return (int) Math.ceil(getRemainingMs() / 1000.0);
+	}
+
+	public int getSnapshotDurationSeconds() {
+		return SNAPSHOT_DURATION_MS / 1000;
+	}
+
+	public void openSnapshotsDirectory() {
+		try {
+			SNAPSHOTS_PATH.mkdirs();
+			LinkBrowser.open(SNAPSHOTS_PATH.toPath().toAbsolutePath().toString());
+		} catch (Exception ex) {
+			log.error("Failed to open snapshots directory:", ex);
+			sendGameMessage("Failed to open snapshots folder.");
+		}
 	}
 
 	@Override
