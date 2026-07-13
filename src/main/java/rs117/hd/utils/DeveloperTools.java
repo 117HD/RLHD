@@ -13,6 +13,7 @@ import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimerOverlay;
+import rs117.hd.overlays.FrameTimerUI;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
@@ -54,6 +55,9 @@ public class DeveloperTools implements KeyListener {
 	private FrameTimerOverlay frameTimerOverlay;
 
 	@Inject
+	private FrameTimerUI frameTimerUI;
+
+	@Inject
 	private FrameTimingsRecorder frameTimingsRecorder;
 
 	@Inject
@@ -87,9 +91,14 @@ public class DeveloperTools implements KeyListener {
 		keyBindingsEnabled = true;
 		keyManager.registerKeyListener(this);
 
+		frameTimerUI.load();
+		frameTimingsOverlayEnabled = frameTimerUI.loadOverlayEnabled();
+
 		clientThread.invokeLater(() -> {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled);
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
+			if (frameTimingsOverlayEnabled)
+				frameTimerUI.applyGraphOverlayState();
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
@@ -101,6 +110,7 @@ public class DeveloperTools implements KeyListener {
 		keyManager.unregisterKeyListener(this);
 		tileInfoOverlay.setActive(false);
 		frameTimerOverlay.setActive(false);
+		frameTimerUI.setGraphOverlayActive(false);
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
@@ -124,6 +134,16 @@ public class DeveloperTools implements KeyListener {
 			case "timers":
 			case "timings":
 				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
+				frameTimerUI.saveOverlayEnabled(frameTimingsOverlayEnabled);
+				if (!frameTimingsOverlayEnabled)
+					frameTimerUI.setGraphOverlayActive(false);
+				else
+					frameTimerUI.applyGraphOverlayState();
+				break;
+			case "graph":
+				frameTimerUI.toggleGraph();
+				if (frameTimerUI.isGraphEnabled())
+					frameTimerOverlay.setActive(frameTimingsOverlayEnabled = true);
 				break;
 			case "snapshot":
 				frameTimingsRecorder.recordSnapshot();
@@ -162,6 +182,11 @@ public class DeveloperTools implements KeyListener {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
 		} else if (KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
+			frameTimerUI.saveOverlayEnabled(frameTimingsOverlayEnabled);
+			if (!frameTimingsOverlayEnabled)
+				frameTimerUI.setGraphOverlayActive(false);
+			else
+				frameTimerUI.applyGraphOverlayState();
 		} else if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
 			frameTimingsRecorder.recordSnapshot();
 		} else if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(e)) {

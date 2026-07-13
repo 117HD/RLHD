@@ -288,6 +288,7 @@ public class ZoneRenderer implements Renderer {
 	) {
 		if (plugin.isPluginStopPending())
 			return;
+		frameTimer.end(Timer.CLIENT);
 
 		try {
 			WorldViewContext ctx = sceneManager.getContext(scene);
@@ -354,6 +355,8 @@ public class ZoneRenderer implements Renderer {
 			log.error("Error in preSceneDraw({}):", scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
 		}
+
+		frameTimer.begin(Timer.CLIENT);
 	}
 
 	private void preSceneDrawTopLevel(
@@ -840,6 +843,8 @@ public class ZoneRenderer implements Renderer {
 		if (plugin.isPluginStopPending())
 			return false;
 
+		frameTimer.end(Timer.CLIENT);
+
 		try {
 			if (!sceneManager.isTopLevelValid())
 				return false;
@@ -902,6 +907,8 @@ public class ZoneRenderer implements Renderer {
 		} catch (Throwable ex) {
 			log.error("Error in zoneInFrustum({}, {}, {}, {}):", zx, zz, maxY, minY, ex);
 			plugin.requestPluginStop();
+		} finally {
+			frameTimer.begin(Timer.CLIENT);
 		}
 		return false;
 	}
@@ -910,6 +917,8 @@ public class ZoneRenderer implements Renderer {
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
 		if (plugin.isPluginStopPending())
 			return;
+
+		frameTimer.end(Timer.CLIENT);
 
 		try {
 			WorldViewContext ctx = sceneManager.getContext(scene);
@@ -939,6 +948,8 @@ public class ZoneRenderer implements Renderer {
 		} catch (Throwable ex) {
 			log.error("Error in drawZoneOpaque({}, {}, {}):", zx, zz, scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
+		} finally {
+			frameTimer.begin(Timer.CLIENT);
 		}
 	}
 
@@ -946,6 +957,8 @@ public class ZoneRenderer implements Renderer {
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
 		if (plugin.isPluginStopPending())
 			return;
+
+		frameTimer.end(Timer.CLIENT);
 
 		try {
 			final WorldViewContext ctx = sceneManager.getContext(scene);
@@ -999,6 +1012,8 @@ public class ZoneRenderer implements Renderer {
 		} catch (Throwable ex) {
 			log.error("Error in drawZoneAlpha({}, {}, {}, {}):", zx, zz, level, scene != null ? scene.getWorldViewId() : null, ex);
 			plugin.requestPluginStop();
+		} finally {
+			frameTimer.begin(Timer.CLIENT);
 		}
 	}
 
@@ -1006,6 +1021,8 @@ public class ZoneRenderer implements Renderer {
 	public void drawPass(Projection projection, Scene scene, int pass) {
 		if (plugin.isPluginStopPending())
 			return;
+
+		frameTimer.end(Timer.CLIENT);
 
 		try {
 			WorldViewContext ctx = sceneManager.getContext(scene);
@@ -1061,6 +1078,8 @@ public class ZoneRenderer implements Renderer {
 		} catch (Throwable ex) {
 			log.error("Error in drawPass({}, {}, {}):", projection, scene != null ? scene.getWorldViewId() : null, pass, ex);
 			plugin.requestPluginStop();
+		} finally {
+			frameTimer.begin(Timer.CLIENT);
 		}
 	}
 
@@ -1080,13 +1099,20 @@ public class ZoneRenderer implements Renderer {
 		if (plugin.isPluginStopPending())
 			return;
 
-		final long start = System.nanoTime();
+		if(renderThreadId == -1)
+			frameTimer.end(Timer.CLIENT);
+
+		final long timestamp = frameTimer.getTimeStamp();
+		final long usedMemory = frameTimer.getUsedMemory();
 		try {
 			modelStreamingManager.drawTemp(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
 		} catch (Exception ex) {
 			log.error("Error in drawDynamic:", ex);
 		} finally {
-			frameTimer.add(renderThreadId == -1 ? Timer.DRAW_DYNAMIC : Timer.DRAW_DYNAMIC_ASYNC, System.nanoTime() - start);
+			frameTimer.add(renderThreadId == -1 ? Timer.DRAW_DYNAMIC : Timer.DRAW_DYNAMIC_ASYNC, timestamp, usedMemory);
+
+			if(renderThreadId == -1)
+				frameTimer.begin(Timer.CLIENT);
 		}
 	}
 
@@ -1094,14 +1120,16 @@ public class ZoneRenderer implements Renderer {
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		if (plugin.isPluginStopPending())
 			return;
-
+		frameTimer.end(Timer.CLIENT);
 		frameTimer.begin(Timer.DRAW_TEMP);
+
 		try {
 			modelStreamingManager.drawTemp(-1, worldProjection, scene, gameObject, gameObject.getRenderable(), m, orientation, x, y, z);
 		} catch (Exception ex) {
 			log.error("Error in drawTemp:", ex);
 		} finally {
 			frameTimer.end(Timer.DRAW_TEMP);
+			frameTimer.begin(Timer.CLIENT);
 		}
 	}
 
@@ -1109,6 +1137,8 @@ public class ZoneRenderer implements Renderer {
 	public void draw(int overlayColor) {
 		if (plugin.isPluginStopPending())
 			return;
+
+		frameTimer.end(Timer.CLIENT);
 
 		try {
 			final GameState gameState = client.getGameState();
@@ -1200,6 +1230,8 @@ public class ZoneRenderer implements Renderer {
 			log.error("Error in draw({}):", overlayColor, ex);
 			plugin.requestPluginStop();
 		}
+
+		frameTimer.begin(Timer.CLIENT);
 	}
 
 	@Subscribe
