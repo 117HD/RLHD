@@ -200,18 +200,26 @@ public class ModelStreamingManager {
 			uuid = ModelHash.packUuid(ModelHash.getType(tileObject.getHash()), impostorId);
 
 			// Cull dynamic models based on detail draw distance
-			final int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
-			final float squaredDistance = renderer.sceneCamera.squaredDistanceTo(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2]);
-			final float detailDrawDistanceTilesSquared = detailDrawDistanceTiles * detailDrawDistanceTiles;
-			if (squaredDistance > detailDrawDistanceTilesSquared && modelOverrideManager.allowDetailCulling(uuid))
-				return;
+			if(modelOverrideManager.allowDetailCulling(uuid)) {
+				final int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
+				final float squaredDistance = renderer.sceneCamera.squaredDistanceTo(
+					objectWorldPos[0],
+					objectWorldPos[1],
+					objectWorldPos[2]
+				);
+				final float detailDrawDistanceTilesSquared = detailDrawDistanceTiles * detailDrawDistanceTiles;
+				if (squaredDistance > detailDrawDistanceTilesSquared)
+					return;
 
-			// Fade dynamic models that are close to the detail draw distance so that they don't pop in/out
-			final float fadeRange = 8.0f * LOCAL_TILE_SIZE;
-			final float fadeEndSq = detailDrawDistanceTiles * detailDrawDistanceTiles;
-			final float fadeStart = max(0.0f, detailDrawDistanceTiles - fadeRange);
-			final float fadeStartSq = fadeStart * fadeStart;
-			modelFade = saturate((squaredDistance - fadeStartSq) / (fadeEndSq - fadeStartSq));
+				// Fade dynamic models that are close to the detail draw distance so that they don't pop in/out
+				final float fadeRange = 8.0f * LOCAL_TILE_SIZE;
+				final float fadeEndSq = detailDrawDistanceTiles * detailDrawDistanceTiles;
+				final float fadeStart = max(0.0f, detailDrawDistanceTiles - fadeRange);
+				final float fadeStartSq = fadeStart * fadeStart;
+				modelFade = saturate((squaredDistance - fadeStartSq) / (fadeEndSq - fadeStartSq));
+			} else {
+				modelFade = 0;
+			}
 		} else {
 			uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
 			modelFade = 0;
