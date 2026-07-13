@@ -594,6 +594,7 @@ public class SceneManager {
 			}
 
 			//long timeMs = System.currentTimeMillis();
+			ZoneUploadJob prevStreamingJob = null;
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = injector.getInstance(Zone.class);
 				newZone.dirty = sorted.zone.dirty;
@@ -605,7 +606,8 @@ public class SceneManager {
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z)
-						.queue(ctx.streamingGroup, generateSceneDataTask);
+						.queue(ctx.streamingGroup, prevStreamingJob != null ? prevStreamingJob : generateSceneDataTask);
+					prevStreamingJob = sorted.zone.uploadJob;
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob

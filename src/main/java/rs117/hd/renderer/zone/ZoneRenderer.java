@@ -400,7 +400,6 @@ public class ZoneRenderer implements Renderer {
 		Scene scene,
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw
 	) {
-		jobSystem.processPendingClientCallbacks();
 
 		scene.setDrawDistance(plugin.getDrawDistance());
 
@@ -712,8 +711,6 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		try {
-			jobSystem.processPendingClientCallbacks();
-
 			WorldViewContext ctx = sceneManager.getContext(scene);
 			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
@@ -1217,8 +1214,6 @@ public class ZoneRenderer implements Renderer {
 
 			plugin.drawUi(overlayColor);
 			frameTimer.end(Timer.DRAW_SUBMIT);
-
-			jobSystem.processPendingClientCallbacks();
 
 			frameTimer.end(Timer.DRAW_FRAME);
 			frameTimer.end(Timer.RENDER_FRAME);
