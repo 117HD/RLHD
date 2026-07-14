@@ -8960,8 +8960,7 @@
     "description": "Chinchompa Hunting Grounds Dirt Cave Wall",
     "objectIds": [
       "EAGLEPEAK_JUNGLE_CAVE_WALL",
-      "EAGLEPEAK_JUNGLE_CAVE_WALL_TOP",
-      "CHINCHOMPA_JUNGLE_CAVE_EXIT"
+      "EAGLEPEAK_JUNGLE_CAVE_WALL_TOP"
     ],
     "baseMaterial": "DIRT_1",
     "uvType": "BOX",
