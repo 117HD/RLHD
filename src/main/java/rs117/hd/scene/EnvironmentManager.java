@@ -303,10 +303,17 @@ public class EnvironmentManager {
 
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
 		for (var environment : sceneContext.environments) {
-			if (environment.area.containsPoint(focalPoint)) {
-				changeEnvironment(environment, skipTransition);
-				break;
-			}
+			if (!environment.area.containsPoint(focalPoint))
+				continue;
+			// An environment with a varbit gate (e.g. the Blood Moon Rises cutscene
+			// area, which overlaps the overworld) only applies while its gate is
+			// satisfied; otherwise fall through to the next matching environment so the
+			// normal overworld sky shows outside the gated state.
+			if (environment.hasVarbitGate()
+				&& !environment.isVarbitGateSatisfied(client.getVarbitValue(environment.requiredVarbit)))
+				continue;
+			changeEnvironment(environment, skipTransition);
+			break;
 		}
 
 		updateTargetSkyColor(); // Update every frame, since other plugins may control it
@@ -619,6 +626,10 @@ public class EnvironmentManager {
 
 	public boolean allowRoofShadows() {
 		return currentEnvironment.allowRoofShadows;
+	}
+
+	public boolean hideVanillaSkyboxes() {
+		return currentEnvironment.hideVanillaSkyboxes;
 	}
 
 	public static final int OUTDOOR_WORLD_Y_OFFSET = 3602;

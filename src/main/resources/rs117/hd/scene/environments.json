@@ -600,6 +600,8 @@
   },
   {
     "area": "BMR_MORYTANIA_MOON_CUTSCENE",
+    "requiredVarbit": 542,
+    "hideVanillaSkyboxes": true,
     "fogDepth": 0,
     "windAngle": 40,
     "windSpeed": 15,

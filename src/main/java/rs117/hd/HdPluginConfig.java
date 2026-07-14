@@ -767,6 +767,22 @@ public interface HdPluginConfig extends Config
 		return MoonPhase.FULL_MOON;
 	}
 
+	String KEY_HIDE_VANILLA_SKYBOXES = "hideVanillaSkyboxes";
+	@ConfigItem(
+		keyName = KEY_HIDE_VANILLA_SKYBOXES,
+		name = "Hide Vanilla Skyboxes",
+		description =
+			"Allows areas that opt in to hide the game's built-in skybox models (such as the one added for Blood " +
+			"Moon Rises) so the day/night cycle's own sky is shown in their place.<br>" +
+			"When enabled, vanilla skyboxes are hidden only in areas configured to hide them.<br>" +
+			"When disabled, vanilla skyboxes are always shown, even in those areas.",
+		position = 10,
+		section = daylightCycleSettings
+	)
+	default boolean hideVanillaSkyboxes() {
+		return true;
+	}
+
 
 	/*====== Environment settings ======*/
 

@@ -981,7 +981,22 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.auroraVisibility.set(0f);
 		}
 
-		shouldRenderRSSkybox = scene.getSkybox() != null;
+		// Hide the game's built-in skybox models when requested, so the day/night
+		// cycle's own sky renders in their place. Hiding requires BOTH the per-area
+		// environment flag (which areas opt into) AND the config toggle (default on),
+		// which acts as a global master switch: an area is only affected if it sets
+		// hideVanillaSkyboxes, and a user can turn the toggle off to force ALL vanilla
+		// skyboxes back on regardless of the flag. Treating the skybox as absent here
+		// makes the existing !shouldRenderRSSkybox paths (skip the vanilla model
+		// upload, enable the gradient sky) do the swap automatically.
+		//
+		// Only hide when our gradient sky will actually render in its place
+		// (skyGradientEnabled) — otherwise hiding would leave a flat fog-colored sky
+		// where the vanilla skybox used to be.
+		boolean hideVanillaSkyboxes = skyGradientEnabled
+			&& config.hideVanillaSkyboxes()
+			&& environmentManager.hideVanillaSkyboxes();
+		shouldRenderRSSkybox = scene.getSkybox() != null && !hideVanillaSkyboxes;
 
 		float fogDepth = 0;
 		if (!shouldRenderRSSkybox) {
