@@ -477,6 +477,13 @@
     ]
   },
   {
+    "name": "VARROCK_CASTLE_OUTDOOR_BANNERS",
+    "aabbs": [
+      [ 3202, 3462, 3202, 3464 ],
+      [ 3223, 3461 ]
+    ]
+  },
+  {
     "name": "VARROCK_CASTLE_DIRT_PATH_FIXES_1",
     "aabbs": [
       [ 3198, 3499, 3198, 3500 ],

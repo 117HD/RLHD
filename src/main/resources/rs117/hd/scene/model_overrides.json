@@ -1087,6 +1087,8 @@
   {
     "description": "Kourend - Hosidius - Apple Tree",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -1,
     "objectIds": [
       "KORE2_ORCHARD_APPLETREE"
     ],
@@ -1095,9 +1097,13 @@
     "uvOrientation": 89,
     "materialOverrides": {
       "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "windDisplacementModifier": -1,
         "textureMaterial": "LEAVES_YELLOW_SIDE"
       },
       "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "windDisplacementModifier": -1,
         "textureMaterial": "LEAVES_YELLOW_TOP"
       }
     },
@@ -1106,7 +1112,9 @@
         "description": "Apple",
         "colors": "h == 16",
         "baseMaterial": "GRUNGE_3_DARK",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -1
       }
     ]
   },
@@ -1587,6 +1595,7 @@
     "areas": [ "WARM_REGIONS" ],
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -1,
     "objectIds": [
       "YEW_TREE_SEEDLING",
       "YEW_TREE_1",
@@ -1662,6 +1671,7 @@
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -1,
     "objectIds": [
       "YEW_TREE_SEEDLING",
       "YEW_TREE_1",
@@ -1989,6 +1999,7 @@
     "description": "Jatoba Tree",
     "baseMaterial": "LIGHT_BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -1,
     "objectIds": [
       "JATOBA_TREE"
     ],
@@ -2000,7 +2011,8 @@
         "baseMaterial": "GRUNGE_1_DARK",
         "uvType": "BOX",
         "uvScale": 0.3,
-        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND"
+        "windDisplacementMode": "VERTEX",
+        "windDisplacementModifier": -1
       }
     ]
   },
@@ -2031,6 +2043,7 @@
     "description": "Campohr Tree",
     "baseMaterial": "LIGHT_BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -1,
     "objectIds": [
       "CAMPHOR_TREE"
     ],
@@ -2690,6 +2703,7 @@
       "POH_PLANTBSMALL2B",
       "DARKM_BRAMBLE_BUSH_2",
       "FLOWERS_LILLIES_RED01",
+      "FLOWERS_LILLIES_RED02",
       "LUNAR_LITTLE_FLOWERS_1",
       "LUNAR_LITTLE_FLOWERS_2",
       "LUNAR_LITTLE_FLOWERS_3"
@@ -2714,11 +2728,12 @@
     "description": "Wheat",
     "baseMaterial": "GRAY_90",
     "windDisplacementMode": "OBJECT",
-    "windDisplacementModifier": 1,
+    "windDisplacementModifier": 3,
     "objectIds": [
       "FAI_VARROCK_WHEAT_CORNER",
       "FAI_VARROCK_WHEAT_SMALL",
-      "FAI_VARROCK_WHEAT"
+      "FAI_VARROCK_WHEAT",
+      "WHEAT"
     ]
   },
   {
@@ -2779,7 +2794,6 @@
     "baseMaterial": "GRAY_90",
     "windDisplacementMode": "VERTEX",
     "objectIds": [
-      "SUNFLOWER",
       "FAIRY2_BULLRUSH_FALLOFF",
       "FAIRY2_BULLRUSH_SMALL",
       "FAIRY2_BULLRUSH_TILE",
@@ -2789,6 +2803,7 @@
       "FAI_VARROCK_ROSES_EDGE_SHAPE_8",
       "FAI_VARROCK_ROSES_EDGE_B_SHAPE_8",
       "FAI_VARROCK_ROSES_EDGE_B",
+      "KOUREND_ROSES_WHITE",
       "AVIUM_CORN01",
       "AVIUM_CORN02",
       "WATERLILY1",
@@ -15390,7 +15405,7 @@
     "uvScale": 0.8
   },
   {
-    "description": "Inconspicuous Rocks",
+    "description": "Inconspicuous Bush",
     "baseMaterial": "BARK",
     "objectIds": [
       "HIDEY_UNBUILT_BUSH_EASY",
@@ -15423,8 +15438,11 @@
   },
   {
     "description": "Inconspicuous Crate",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "windDisplacementMode": "VERTEX_JIGGLE",
+    "windDisplacementModifier": -2,
     "objectIds": [
+      "HIDEY_UNBUILT_BUSH_BEGINNER",
+      "HIDEY_BUSH_BEGINNER",
       "HIDEY_UNBUILT_CRATE_EASY",
       "HIDEY_CRATE_EASY",
       "HIDEY_UNBUILT_CRATE_MEDIUM",
@@ -15439,6 +15457,12 @@
     "uvType": "BOX",
     "uvScale": 0.65,
     "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
       {
         "colors": "h > 6",
         "baseMaterial": "METALLIC_1_SMOOTH"
@@ -20445,7 +20469,12 @@
   },
   {
     "description": "Objects - Ardougne Castle - Standard",
-    "baseMaterial": "GRUNGE_3_DARK",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "invertDisplacementStrength": true,
+    "windDisplacementModifier": -2,
     "upwardsNormals": true,
     "objectIds": [
       "STANDARD1_KANDARIN",
@@ -20458,6 +20487,18 @@
         "uvType": "BOX",
         "uvScale": 0.33,
         "uvOrientation": 512
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "CARPET",
+        "maxLightness": 37,
+        "upwardsNormals": true,
+        "uvType": "BOX",
+        "depthBias": 255,
+        "uvScale": 0.33,
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -2
       }
     ]
   },
@@ -22052,7 +22093,9 @@
         "colors": "s == 7",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
-        "uvScale": 0.2
+        "uvScale": 0.2,
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -2
       }
     ]
   },
@@ -27609,6 +27652,7 @@
     "description": "Icyene Graveyard - Mausoleum ivy",
     "baseMaterial": "LEAF_VEINS",
     "windDisplacementMode": "VERTEX_JIGGLE",
+    "windDisplacementModifier": -3,
     "uvType": "MODEL_YZ",
     "uvOrientation": 144,
     "uvScale": 0.1,
@@ -27617,7 +27661,9 @@
       {
         "colors": "h == 17",
         "baseMaterial": "GRUNGE_1",
-        "flatNormals": true
+        "flatNormals": true,
+        "windDisplacementMode": "VERTEX_JIGGLE",
+        "windDisplacementModifier": -3
       }
     ],
     "objectIds": [
@@ -27765,13 +27811,16 @@
     "uvOrientation": 89,
     "uvType": "BOX",
     "uvScale": 0.8,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -3,
     "colorOverrides": [
       {
         "colors": "h == 14",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.25,
         "uvType": "MODEL_XZ",
-        "windDisplacementMode": "VERTEX"
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -3
       }
     ],
     "objectIds": [
@@ -28984,7 +29033,6 @@
       "FERN",
       "FERN1",
       "FERN2",
-      "AREA_SANGUINE_OUTER_WALL_PLANT",
       "FAIRY2_PLANT_2",
       "FAIRY2_PLANT_4",
       "TLATI_PLANT_FERN01",
@@ -28992,6 +29040,18 @@
       "PLANT_FERN_TLATI02",
       "PLANT_FERN_TLATI03",
       "PLANT_FERN_TLATI04"
+    ]
+  },
+  {
+    "description": "Generic - Plant - Fern - On Wall",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_XZ",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -2,
+    "invertDisplacementStrength": true,
+    "uvScale": 0.25,
+    "objectIds": [
+      "AREA_SANGUINE_OUTER_WALL_PLANT"
     ]
   },
   {
@@ -35952,6 +36012,7 @@
   {
     "description": "Textured Bushes",
     "windDisplacementMode": "VERTEX_JIGGLE",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "HEDGE",
       "HEDGECORNER",
@@ -42825,6 +42886,8 @@
   {
     "description": "Varlmaore - Auburnvale - Pine Tree 1",
     "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "TREE_PINE_BRACKENTOP01",
       "TREE_PINE_BRACKENTOP02",
@@ -42835,22 +42898,54 @@
         "colors": "h == 3",
         "baseMaterial": "BARK",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.5,
+        "windDisplacementMode": "VERTEX",
+        "windDisplacementModifier": -2
       }
     ]
   },
   {
     "description": "Varlmaore - Auburnvale - Pine Tree 2",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "TREE_PINE_DEFAULT02",
       "TREE_PINE_DEFAULT04",
+      "TREE_PINE_DEFAULT03",
       "TREE_PINE_DEFAULT01",
       "TREE_PINE_DEFAULT05"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 3",
+        "colors": "h == 3 && s == 2 || h == 3 && s == 3 && l < 15 || s == 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "windDisplacementMode": "VERTEX",
+        "windDisplacementModifier": -2
+      },
+      {
+        "colors": "h <= 12",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "windDisplacementMode": "OBJECT",
+        "windDisplacementModifier": 3
+      }
+    ]
+  },
+  {
+    "description": "Varlmaore - Auburnvale - Stump",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      "TREE_PINE_STUMP01",
+      "TREE_PINE_STUMP02",
+      "TREE_PINE_BRACKENTOP01_STUMP01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 10",
         "baseMaterial": "BARK",
         "uvType": "BOX",
         "uvScale": 0.4
@@ -42862,6 +42957,8 @@
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.6,
+    "windDisplacementMode": "VERTEX",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "TREE_PINE_DEAD02",
       "TREE_PINE_DEAD01"
@@ -45013,13 +45110,13 @@
   },
   {
     "description": "Zeah - Varlamore - Plant - Withered Leafy Shrub",
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "baseMaterial": "PLANT_GRUNGE_1",
     "colorOverrides": [
       {
         "colors": "h > 3",
         "baseMaterial": "LEAF_VEINS",
-        "windDisplacementMode": "OBJECT",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "uvScale": 0.25,
         "uvType": "MODEL_XZ"
       }
@@ -64882,6 +64979,50 @@
     ]
   },
   {
+    "description": "Varrock - Decoration - Wall - Varrock Castle wall flag - Outdoors with Wind Displacement",
+    "areas": [ "VARROCK_CASTLE_OUTDOOR_BANNERS" ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "objectIds": [
+      "FAI_VARROCK_PALACE_WALLHANGING"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Yellow fabric",
+        "colors": "s == 7",
+        "baseMaterial": "CARPET_DARK",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -1,
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      },
+      {
+        "description": "Black fabric",
+        "colors": "s == 0",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_YZ",
+        "depthBias": 50,
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -1,
+        "upwardsNormals": true
+      },
+      {
+        "description": "White fabric",
+        "colors": "h == 42",
+        "baseMaterial": "CARPET_DARK",
+        "uvOrientation": 280,
+        "uvType": "MODEL_YZ",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -1,
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
     "description": "Varrock - Decoration - Varrock Castle Standing flag",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -64893,20 +65034,30 @@
         "description": "Yellow fabric",
         "colors": "s == 7",
         "baseMaterial": "CARPET",
-        "uvType": "MODEL_XY"
+        "uvType": "MODEL_XY",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -1
       },
       {
         "description": "Black fabric",
         "colors": "s == 0",
         "baseMaterial": "CARPET",
-        "uvType": "MODEL_XY"
+        "uvType": "MODEL_XY",
+        "depthBias": 50,
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -1
       },
       {
         "description": "White fabric",
         "colors": "h == 42",
         "baseMaterial": "CARPET",
         "uvOrientation": 280,
-        "uvType": "MODEL_XY"
+        "uvType": "MODEL_XY",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -1
       }
     ]
   },
@@ -65064,6 +65215,46 @@
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
         "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Hanging Plants",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "uvOrientation": 42,
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "invertDisplacementStrength": true,
+    "windDisplacementModifier": -1,
+    "objectIds": [
+      "FAI_VARROCK_HANGING_PLANT1",
+      "FAI_VARROCK_HANGING_PLANT2",
+      "FAI_VARROCK_HANGING_PLANT3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s < 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 20 || h == 21",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -1
+      },
+      {
+        "colors": "h == 7 || h == 10",
+        "baseMaterial": "DIRT_1",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -1,
+        "uvScale": 0.3,
+        "uvType": "MODEL_XZ"
       }
     ]
   },
@@ -65232,6 +65423,8 @@
     "description": "Varrock - Castle Tree",
     "baseMaterial": "BARK",
     "uvType": "BOX",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -3,
     "uvScale": 0.75,
     "objectIds": [
       "FAI_VARROCK_COURTYARD_TREE_BASE",
@@ -65242,6 +65435,8 @@
         "description": "Leaves",
         "colors": "h > 10",
         "baseMaterial": "GRUNGE_3_DARK",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -3,
         "uvType": "BOX",
         "uvScale": 0.3
       }
@@ -65358,6 +65553,8 @@
     "description": "Varrock - Castle Garden - Stone - Dirt - Flower - Orchids in Stone Pots",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "GARDEN_ORCHIDS_FULLYGROWN",
       "GARDEN_ORCHIDS_FULLYGROWN_YELLOW",
@@ -65383,7 +65580,9 @@
         "colors": "h == 24",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
-        "uvScale": 0.4
+        "uvScale": 0.4,
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -2
       }
     ]
   },
@@ -65432,6 +65631,8 @@
     "uvType": "BOX",
     "uvOrientation": 89,
     "uvScale": 0.8,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -3,
     "objectIds": [
       "GARDEN_VINES_FULLYGROWN"
     ],
@@ -65440,20 +65641,26 @@
         "description": "Grapes",
         "colors": "h == 50",
         "baseMaterial": "GRUNGE_3_SHINY",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -3,
         "uvType": "BOX"
       },
       {
         "description": "Leaves",
         "colors": "h == 16",
         "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -3,
         "uvType": "BOX",
-        "uvScale": 0.4
+        "uvScale": 0.25
       }
     ]
   },
   {
     "description": "Varrock - Castle Garden - Flower - Snow Drops",
     "baseMaterial": "GRUNGE_3",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -2,
     "uvType": "BOX",
     "uvOrientation": 89,
     "uvScale": 0.4,
@@ -65466,13 +65673,17 @@
         "colors": "h == 19",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.6,
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -2
       }
     ]
   },
   {
     "description": "Varrock - Castle Garden - Flower - Delphiniums",
     "baseMaterial": "GRUNGE_3_DARK",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -2,
     "uvType": "BOX",
     "objectIds": [
       "GARDEN_DELPHINIUMS_FULLYGROWN"
@@ -65483,13 +65694,17 @@
         "colors": "h == 21",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.6,
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -2
       }
     ]
   },
   {
     "description": "Varrock - Hosidius - Castle Garden - Flower - Rose Bushes",
     "baseMaterial": "GRUNGE_3",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -2,
     "uvType": "BOX",
     "objectIds": [
       "GARDEN_ROSEBUSH_PINK_FULLYGROWN",
@@ -65504,6 +65719,8 @@
         "description": "Leaves",
         "colors": "h == 21",
         "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -2,
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -65540,19 +65757,45 @@
     ]
   },
   {
+    "description": "Zeah - Kourend - Hosidius - Rocks with Flowers",
+    "objectIds": [
+      "ZIG_ROCKERY_4X4_01",
+      "ZIG_ROCKERY_4X4_02",
+      "ZIG_ROCKERY_1X1_02",
+      "ZIG_ROCKERY_1X1_01",
+      "ZIG_ROCKERY_2X2",
+      "ZIG_ROCKERY_1X1_03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h >= 0",
+        "baseMaterial": "GRAY_90",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -2
+      }
+    ]
+  },
+  {
     "description": "Zeah - Kourend - Hosidius - Flower - Rose",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -1,
     "objectIds": [
-      "KOURENDWOODLAND_ROSES"
+      "KOURENDWOODLAND_ROSES",
+      "KEBOS_FARMING_GUILD_FLOWERS_ROSES_01",
+      "AKD_HUGHES_ROSES_1_NOOP"
     ],
     "colorOverrides": [
       {
         "description": "Leaves",
         "colors": "h == 17",
-        "baseMaterial": "LEAF_VEINS",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "shiftLightness": -8,
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -1,
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.2
       }
     ]
   },
@@ -66152,6 +66395,8 @@
   {
     "description": "Generic - Cabbage",
     "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -3,
     "objectIds": [
       "CABBAGE",
       "AVIUM_CABBAGE01",
@@ -79688,6 +79933,7 @@
     "uvType": "BOX",
     "uvScale": 0.25,
     "windDisplacementMode": "VERTEX",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "PALM_UPDATE01",
       "PALM_UPDATE02",
@@ -79704,7 +79950,8 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 512,
-        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND"
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -2
       }
     ]
   },
@@ -81604,6 +81851,8 @@
   {
     "description": "Slepe - Plant - Red Flower",
     "baseMaterial": "GRUNGE_3",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -2,
     "uvType": "BOX",
     "uvOrientation": -272,
     "uvScale": 0.4,
@@ -81613,7 +81862,9 @@
         "colors": "h == 21",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.5,
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -2
       }
     ],
     "objectIds": [
@@ -83364,50 +83615,66 @@
     "description": "Ardougne - Red, Yellow, and blue flowers and tulips",
     "baseMaterial": "GRAY_90",
     "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -1,
     "colorOverrides": [
       {
         "description": "Leaves",
         "colors": "h == 21",
-        "baseMaterial": "LEAF_VEINS",
+        "baseMaterial": "GRUNGE_3",
+        "minLightness": 7,
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.15,
+        "windDisplacementMode": "OBJECT",
+        "windDisplacementModifier": -1
       }
     ],
     "objectIds": [
       "RAREFLOWER_1",
       "RAREFLOWERS_1",
       "RAREFLOWERS_BLUE",
-      "TULIPS"
+      "TULIPS",
+      "REGICIDE_RAREFLOWER_2",
+      "REGICIDE_RAREFLOWERS_1",
+      "REGICIDE_RAREFLOWER_1"
     ]
   },
   {
     "description": "Ardougne - Sunflowers",
     "baseMaterial": "GRAY_90",
-    "windDisplacementMode": "VERTEX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "colorOverrides": [
       {
         "description": "Leaves",
         "colors": "h == 21",
-        "baseMaterial": "LEAF_VEINS",
+        "baseMaterial": "GRUNGE_3",
+        "shiftLightness": -2,
         "uvType": "BOX",
-        "uvScale": 0.6
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "uvScale": 0.2
       }
     ],
     "objectIds": [
-      "SUNFLOWERS"
+      "SUNFLOWER",
+      "SUNFLOWERS",
+      "QIP_OBS_FLOWERA1_BIG",
+      "QIP_OBS_FLOWERA1_SMALL"
     ]
   },
   {
     "description": "Ardougne - small  Red and blue flowers and Daisies",
     "baseMaterial": "GRAY_90",
     "windDisplacementMode": "OBJECT",
+    "depthBias": 50,
+    "terrainVertexSnap": true,
     "colorOverrides": [
       {
         "description": "Leaves",
         "colors": "h == 14",
-        "baseMaterial": "LEAF_VEINS",
+        "baseMaterial": "GRUNGE_3",
+        "shiftLightness": -2,
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.2,
+        "windDisplacementMode": "OBJECT"
       }
     ],
     "objectIds": [
@@ -84817,7 +85084,8 @@
     ],
     "objectIds": [
       "PLANT_TROPICAL_BROMELIA01",
-      "TT_HUNTING_PLANT_03_OP"
+      "TT_HUNTING_PLANT_03_OP",
+      "TT_HUNTING_PLANT_03_NOOP"
     ]
   },
   {
@@ -84867,6 +85135,7 @@
   {
     "description": "Tropical - Great Conch - Tropcial Palm",
     "windDisplacementMode": "VERTEX",
+    "windDisplacementModifier": -1,
     "baseMaterial": "LEAF_VEINS_PALM",
     "uvScale": 0.25,
     "uvType": "BOX",
@@ -84883,6 +85152,7 @@
       {
         "colors": "h == 5 || h == 9",
         "windDisplacementMode": "VERTEX",
+        "windDisplacementModifier": -1,
         "baseMaterial": "PLANT_GRUNGE_2",
         "uvScale": 0.2,
         "uvType": "BOX"
@@ -84892,6 +85162,7 @@
   {
     "description": "Tropical - Great Conch - Tropcial Palm - Purple and red",
     "windDisplacementMode": "VERTEX",
+    "windDisplacementModifier": -1,
     "baseMaterial": "LEAF_VEINS_PALM",
     "uvScale": 0.2,
     "uvType": "BOX",
@@ -84903,6 +85174,8 @@
       {
         "colors": "h == 58 && s > 3",
         "baseMaterial": "PLANT_GRUNGE_2",
+        "windDisplacementMode": "VERTEX",
+        "windDisplacementModifier": -1,
         "uvScale": 0.4,
         "uvType": "BOX"
       }
@@ -87598,18 +87871,17 @@
     "uvOrientation": 89,
     "uvScale": 0.5,
     "windDisplacementMode": "OBJECT",
-    "castShadows": false,
     "objectIds": [
       "THISTLE"
     ],
     "colorOverrides": [
       {
         "colors": "h == 16",
-        "baseMaterial": "LEAF_VEINS",
+        "baseMaterial": "GRUNGE_3",
+        "shiftLightness": -1,
         "uvType": "BOX",
-        "uvScale": 0.5,
+        "uvScale": 0.2,
         "windDisplacementMode": "OBJECT",
-        "castShadows": false,
         "terrainVertexSnap": true
       }
     ]
