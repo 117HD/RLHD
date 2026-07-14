@@ -2113,6 +2113,8 @@ public class HdPlugin extends Plugin {
 	public void onClientTick(ClientTick clientTick) {
 		elapsedClientTime += 1 / 50f;
 
+		//System.out.println("Is In Cutscene: " + client.getVarbitValue(542));
+
 		if (!enableFreezeFrame && skipScene != client.getScene())
 			redrawPreviousFrame = false;
 	}
