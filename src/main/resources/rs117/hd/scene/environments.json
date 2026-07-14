@@ -2162,6 +2162,9 @@
     "ambientStrength": 0.45,
     "directionalColor": "#FFFEB0",
     "directionalStrength": 0.65,
+    "windAngle": 240,
+    "windSpeed": 15,
+    "windStrength": 55,
     "sunAngles": [
       65,
       102
