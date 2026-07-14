@@ -1,7 +1,6 @@
 #pragma once
 
 #include <uniforms/global.glsl>
-#include <uniforms/displacement.glsl>
 
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
@@ -66,6 +65,7 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
     return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
 }
 
+#if ZONE_RENDERER
 vec3 applyBoatDisplacement(Boat boat, vec2 vertPos, float height, float strength, inout float offsetAccum) {
     float d = boatDistance(vertPos, boat);
 
@@ -80,6 +80,7 @@ vec3 applyBoatDisplacement(Boat boat, vec2 vertPos, float height, float strength
 
     return vec3(0.0, height * strength * displacementFrac, 0.0);
 }
+#endif
 
 vec3 applyWindDisplacementVertex(
     const ObjectWindSample windSample,
@@ -148,6 +149,7 @@ vec3 applyWindDisplacementVertex(
                 break;
         }
 
+#if ZONE_RENDERER
         if (fractAccum < 1.0) {
             for (int i = 0; i < boatCount; i++) {
                 displacement += applyBoatDisplacement(boatData[i], worldVert, modelHeight, 1.25, fractAccum);
@@ -155,6 +157,7 @@ vec3 applyWindDisplacementVertex(
                     break;
             }
         }
+#endif
 #endif
     }
 
