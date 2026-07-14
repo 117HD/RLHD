@@ -3116,9 +3116,6 @@
     "description": "Sailing objects that shouldn't cast any shadows",
     "castShadows": false,
     "objectIds": [
-      "OCEAN_OUTCROP_SEAWEED01",
-      "OCEAN_OUTCROP_SEAWEED02",
-      "OCEAN_OUTCROP_SEAWEED03",
       "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3_FAST",
       "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3_SLOW",
       "SAILING_HAZARD_FETID_WATERS_AMBIENT_1X1",
@@ -3204,6 +3201,22 @@
       "SAILING_CHARTING_HINT_MARKER_SPYGLASS",
       "XBOWS_INV_FLOOR_NOBLOCK",
       "XBOWS_INV_FLOOR"
+    ]
+  },
+  {
+    "description": "Sailing - Kelp and Seaweed - Displacement",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "castShadows": false,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "OCEAN_OUTCROP_SEAWEED01",
+      "OCEAN_OUTCROP_SEAWEED02",
+      "OCEAN_OUTCROP_SEAWEED03",
+      "OCEAN_PLANT_KELP01",
+      "OCEAN_PLANT_KELP02",
+      "OCEAN_PLANT_KELP03",
+      "OCEAN_PLANT_KELP04",
+      "OCEAN_PLANT_KELP05"
     ]
   },
   {
