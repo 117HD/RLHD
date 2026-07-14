@@ -79734,6 +79734,7 @@
   {
     "description": "The Pandemonium - Palm Tree",
     "baseMaterial": "LEAF_VEINS_PALM_LIGHT",
+    "doubleSidedFaces": true,
     "uvType": "BOX",
     "uvScale": 0.25,
     "objectIds": [
