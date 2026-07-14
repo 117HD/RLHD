@@ -2847,7 +2847,6 @@
     "description": "Hunter Grass",
     "baseMaterial": "GRASS_BLADE",
     "windDisplacementMode": "OBJECT",
-    "flatNormals": true,
     "uvOrientation": 512,
     "castShadows": false,
     "upwardsNormals": true,
@@ -2884,13 +2883,105 @@
         "colors": "h == 12",
         "baseMaterial": "GRASS_BLADE",
         "windDisplacementMode": "OBJECT",
-        "flatNormals": true,
         "uvOrientation": 512,
         "castShadows": false,
         "upwardsNormals": true,
         "inheritTileColorType": "UNDERLAY",
         "uvType": "MODEL_XY"
       }
+    ]
+  },
+  {
+    "description": "Hunter Grass - Chinchompa Hunting Ground - Base",
+    "areas": [ "RED_CHINCHOMPA_HUNTING_GROUND" ],
+    "baseMaterial": "GRASS_BLADE",
+    "windDisplacementMode": "OBJECT",
+    "uvOrientation": 512,
+    "castShadows": false,
+    "upwardsNormals": true,
+    "inheritTileColorType": "UNDERLAY",
+    "uvType": "MODEL_XY",
+    "windDisplacementModifier": -3,
+    "objectIds": [
+      "HUNTING_LONG_JUNGLE_GRASS1",
+      "HUNTING_LONG_JUNGLE_GRASS2",
+      "HUNTING_LONG_JUNGLE_GRASS3",
+      "HUNTING_JUNGLE_GRASS1",
+      "HUNTING_JUNGLE_GRASS2",
+      "HUNTING_JUNGLE_GRASS3"
+    ]
+  },
+  {
+    "description": "Hunter Fern - Chinchompa Hunting Ground",
+    "areas": [ "RED_CHINCHOMPA_HUNTING_GROUND" ],
+    "baseMaterial": "LEAF_VEINS_DARK",
+    "windDisplacementMode": "DISABLED",
+    "uvScale": 0.25,
+    "uvType": "MODEL_XZ",
+    "windDisplacementModifier": -3,
+    "objectIds": [
+      "HUNTING_JUNGLE_PLANT1"
+    ]
+  },
+  {
+    "description": "Hunter Grass with Vines - Chinchompa Hunting Ground",
+    "areas": [ "RED_CHINCHOMPA_HUNTING_GROUND" ],
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      "HUNTING_GREENVINE_STRAIGHT",
+      "HUNTING_GREENVINE_CORNER",
+      "HUNTING_GREENVINE_JUNCTION",
+      "HUNTING_GREENVINE_DIAG1",
+      "HUNTING_GREENVINE_DIAG2",
+      "HUNTING_GREENVINE_END",
+      "HUNTING_GREENVINE_END_DIAG"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "baseMaterial": "GRASS_BLADE",
+        "windDisplacementMode": "OBJECT",
+        "uvOrientation": 512,
+        "castShadows": false,
+        "upwardsNormals": true,
+        "inheritTileColorType": "UNDERLAY",
+        "uvType": "MODEL_XY",
+        "windDisplacementModifier": -3
+      }
+    ]
+  },
+  {
+    "description": "Hunter Grass - Chinchompa Hunting Grounds - Weak",
+    "areas": [ "RED_CHINCHOMPA_HUNTING_GROUND_GRASS_WIND_WEAK" ],
+    "windDisplacementModifier": 1,
+    "baseMaterial": "GRASS_BLADE",
+    "windDisplacementMode": "OBJECT",
+    "uvOrientation": 512,
+    "castShadows": false,
+    "upwardsNormals": true,
+    "inheritTileColorType": "UNDERLAY",
+    "uvType": "MODEL_XY",
+    "objectIds": [
+      "HUNTING_LONG_JUNGLE_GRASS1",
+      "HUNTING_LONG_JUNGLE_GRASS3"
+    ]
+  },
+  {
+    "description": "Hunter Grass - Chinchompa Hunting Grounds - Strong",
+    "areas": [ "RED_CHINCHOMPA_HUNTING_GROUND_GRASS_WIND_STRONG" ],
+    "baseMaterial": "GRASS_BLADE",
+    "windDisplacementMode": "OBJECT",
+    "uvOrientation": 512,
+    "castShadows": false,
+    "upwardsNormals": true,
+    "inheritTileColorType": "UNDERLAY",
+    "uvType": "MODEL_XY",
+    "windDisplacementModifier": 3,
+    "shiftLightness": 5,
+    "objectIds": [
+      "HUNTING_LONG_JUNGLE_GRASS1",
+      "HUNTING_LONG_JUNGLE_GRASS3"
     ]
   },
   {
@@ -8864,6 +8955,45 @@
     ],
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX"
+  },
+  {
+    "description": "Chinchompa Hunting Grounds Dirt Cave Wall",
+    "objectIds": [
+      "EAGLEPEAK_JUNGLE_CAVE_WALL",
+      "EAGLEPEAK_JUNGLE_CAVE_WALL_TOP",
+      "CHINCHOMPA_JUNGLE_CAVE_EXIT"
+    ],
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
+    "description": "Chinchompa Hunting Grounds Dirt Cave Exit",
+    "objectIds": [
+      "CHINCHOMPA_JUNGLE_CAVE_EXIT"
+    ],
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 0",
+        "baseMaterial": "GRAY_75",
+        "minLightness": 10
+      },
+      {
+        "colors": "a < 255 || h == 0",
+        "baseMaterial": "GRAY_150"
+      }
+    ]
   },
   {
     "description": "Obors lair exit",

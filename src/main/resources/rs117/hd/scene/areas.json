@@ -10442,6 +10442,20 @@
     "hideOtherAreas": true
   },
   {
+    "name": "RED_CHINCHOMPA_HUNTING_GROUND_GRASS_WIND_STRONG",
+    "aabbs": [
+      [ 2532, 9293, 2532, 9295 ]
+    ]
+  },
+  {
+    "name": "RED_CHINCHOMPA_HUNTING_GROUND_GRASS_WIND_WEAK",
+    "aabbs": [
+      [ 2530, 9292, 2531, 9296 ],
+      [ 2532, 9296 ],
+      [ 2532, 9292 ]
+    ]
+  },
+  {
     "name": "RED_CHINCHOMPA_HUNTING_GROUND",
     "aabbs": [
       [ 2509, 9285, 2534, 9309 ]

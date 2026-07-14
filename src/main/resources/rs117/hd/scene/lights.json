@@ -42439,10 +42439,22 @@
     ]
   },
   {
-    "description": "Red Chinchompa Hunting Grounds Exit",
+    "description": "Red Chinchompa Hunting Grounds Exit Main",
     "offset": [ 6, 40, 36 ],
     "radius": 350,
-    "strength": 35,
+    "strength": 15,
+    "color": "#ffffff",
+    "type": "FLICKER",
+    "range": 13,
+    "objectIds": [
+      "CHINCHOMPA_JUNGLE_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "Red Chinchompa Hunting Grounds Exit Top",
+    "offset": [ 6, 220, -100 ],
+    "radius": 300,
+    "strength": 20,
     "color": "#ffffff",
     "type": "FLICKER",
     "range": 13,
