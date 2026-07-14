@@ -2901,9 +2901,7 @@
     "windDisplacementMode": "OBJECT",
     "castShadows": false,
     "inheritTileColorType": "UNDERLAY",
-    "terrainVertexSnap": true,
     "objectIds": [
-      "GRASS_1",
       "GRASS_1_SWAMP",
       "GRASS_2_SWAMP",
       "GRASS_3_SWAMP",
@@ -3114,7 +3112,8 @@
   {
     "description": "Enchanted Valley Grass - Inherit Overlay",
     "areas": [ "ENCHANTED_VALLEY" ],
-    "baseMaterial": "GRAY_90",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
     "windDisplacementMode": "OBJECT",
     "inheritTileColorType": "OVERLAY",
     "upwardsNormals": true,
@@ -3311,14 +3310,42 @@
     "windDisplacementMode": "OBJECT",
     "windDisplacementModifier": -2,
     "objectIds": [
+      "GRASS_1",
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",
       "GRASS_LIGHT_3",
       "GRASS_LIGHT_4",
       "GRASS_2",
+      "GRASS_3",
+      "GRASS_4",
       "SHAGGY_GRASS1",
       "SHAGGY_GRASS2",
       "SHAGGY_GRASS3"
+    ]
+  },
+  {
+    "description": "Short grass with Small Stones",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
+    "flatNormals": true,
+    "shiftLightness": -1,
+    "upwardsNormals": true,
+    "inheritTileColorType": "UNDERLAY",
+    "castShadows": false,
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -2,
+    "objectIds": [
+      "SMALL_GRASS_STONES",
+      "LARGE_GRASS_STONES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "WORLD_XZ",
+        "uvScale": 0.3,
+        "castShadows": false
+      }
     ]
   },
   {
@@ -3940,10 +3967,12 @@
   },
   {
     "description": "Short grass with rock objects",
-    "baseMaterial": "GRAY_75",
-    "flatNormals": true,
-    "castShadows": false,
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
+    "upwardsNormals": true,
     "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
     "objectIds": [
       "QIP_DS_STONE_FLOOR1",
       "QIP_DS_STONE_FLOOR2",
@@ -4147,6 +4176,7 @@
       "KEBOS_FARMING_GUILD_BORDER_CORNER",
       "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE",
       "GRASS_1",
+      "GRASS_4",
       "GRASS_1_SWAMP",
       "GRASS_2_SWAMP",
       "GRASS_3_SWAMP",
@@ -46388,14 +46418,19 @@
   },
   {
     "description": "Lumbridge - Dirt - Rat Burrow",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
+    "shiftLightness": -1,
     "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
     "objectIds": [
       "RATBARROW"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 7",
+        "colors": "h <= 7",
         "baseMaterial": "DIRT_2",
         "uvType": "BOX",
         "uvScale": 0.7
@@ -77640,15 +77675,18 @@
       {
         "description": "Grass",
         "colors": "h == 17",
-        "baseMaterial": "GRAY_65",
-        "flatNormals": true,
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
         "windDisplacementMode": "OBJECT",
-        "castShadows": false
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
       }
     ],
     "objectIds": [
       "SLUG2_STONE_FLOOR_EDGE1",
-      "SLUG2_STONE_FLOOR_EDGE2"
+      "SLUG2_STONE_FLOOR_EDGE2",
+      "SLUG2_STONE_FLOOR2"
     ]
   },
   {
@@ -77659,10 +77697,12 @@
       {
         "description": "Grass",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_65",
-        "flatNormals": true,
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
         "windDisplacementMode": "OBJECT",
-        "castShadows": false
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
       }
     ],
     "objectIds": [
