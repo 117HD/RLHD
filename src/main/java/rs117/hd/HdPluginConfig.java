@@ -770,7 +770,7 @@ public interface HdPluginConfig extends Config
 	String KEY_HIDE_VANILLA_SKYBOXES = "hideVanillaSkyboxes";
 	@ConfigItem(
 		keyName = KEY_HIDE_VANILLA_SKYBOXES,
-		name = "Hide Vanilla Skyboxes",
+		name = "Override Vanilla Skyboxes",
 		description =
 			"Allows areas that opt in to hide the game's built-in skybox models (such as the one added for Blood " +
 			"Moon Rises) so the day/night cycle's own sky is shown in their place.<br>" +

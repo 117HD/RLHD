@@ -47,7 +47,7 @@ public class Environment {
 	public boolean instantTransition = false;
 	// When true, the game's built-in skybox models (e.g. the one added for Blood Moon
 	// Rises) are hidden in this area so the day/night cycle's own sky is shown instead.
-	// This only takes effect while the "Hide Vanilla Skyboxes" config toggle is on
+	// This only takes effect while the "Override Vanilla Skyboxes" config toggle is on
 	// (its default); turning that toggle off forces vanilla skyboxes back on everywhere,
 	// including areas that set this flag.
 	public boolean hideVanillaSkyboxes = false;
