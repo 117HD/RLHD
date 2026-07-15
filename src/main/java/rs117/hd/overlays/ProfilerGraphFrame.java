@@ -24,20 +24,20 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import rs117.hd.HdPlugin;
+import rs117.hd.overlays.flame.ProfilerFlamePanel;
 import rs117.hd.overlays.components.GraphComponent;
 import rs117.hd.profiling.ProfileSample;
 import rs117.hd.profiling.ProfileSampleStore;
+import rs117.hd.profiling.Timer;
 
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -49,7 +49,6 @@ public class ProfilerGraphFrame {
 	private static final Color LEGEND_BORDER = new Color(60, 60, 60);
 	private static final Color LEGEND_TEXT = new Color(220, 220, 220);
 	private static final Color LEGEND_HOVER_BG = new Color(50, 50, 50);
-	private static final Color PLACEHOLDER_TEXT = new Color(160, 160, 160);
 
 	private static final int PANEL_PADDING = 8;
 	private static final int LEGEND_WIDTH = 200;
@@ -57,6 +56,7 @@ public class ProfilerGraphFrame {
 	private static final int LEGEND_ROW_HEIGHT = 20;
 	private static final int LEGEND_PADDING = 10;
 	private static final int REPAINT_MS = 33;
+	private static final int FLAME_REFRESH_MS = 250;
 
 	@Inject
 	private Client client;
@@ -78,7 +78,9 @@ public class ProfilerGraphFrame {
 	private JFrame frame;
 	private GraphPanel graphPanel;
 	private LegendPanel legendPanel;
+	private ProfilerFlamePanel flamePanel;
 	private javax.swing.Timer repaintTimer;
+	private long lastFlameRefreshMs;
 
 	@Nullable
 	private Object hoveredLegendKey;
@@ -127,10 +129,18 @@ public class ProfilerGraphFrame {
 
 		if (repaintTimer == null) {
 			repaintTimer = new javax.swing.Timer(REPAINT_MS, e -> {
+				syncCrossHighlight();
 				if (graphPanel != null)
 					graphPanel.repaint();
 				if (legendPanel != null)
 					legendPanel.repaint();
+				if (flamePanel != null) {
+					long now = System.currentTimeMillis();
+					if (now - lastFlameRefreshMs >= FLAME_REFRESH_MS) {
+						lastFlameRefreshMs = now;
+						flamePanel.refresh();
+					}
+				}
 			});
 			repaintTimer.start();
 		} else if (!repaintTimer.isRunning()) {
@@ -189,12 +199,7 @@ public class ProfilerGraphFrame {
 		legendScroll.setPreferredSize(new Dimension(LEGEND_WIDTH, 200));
 		graphsContent.add(legendScroll, BorderLayout.WEST);
 
-		JPanel flamePanel = new JPanel(new BorderLayout());
-		flamePanel.setBackground(PANEL_BACKGROUND);
-		JLabel comingSoon = new JLabel("Coming soon", SwingConstants.CENTER);
-		comingSoon.setForeground(PLACEHOLDER_TEXT);
-		comingSoon.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
-		flamePanel.add(comingSoon, BorderLayout.CENTER);
+		flamePanel = new ProfilerFlamePanel(() -> new ArrayList<>(profileSampleStore.getFrames()));
 
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.setBackground(PANEL_BACKGROUND);
@@ -214,7 +219,37 @@ public class ProfilerGraphFrame {
 	private Object resolveHoveredKey() {
 		if (hoveredLegendKey != null)
 			return hoveredLegendKey;
+		if (flamePanel != null) {
+			Object flameHighlight = flamePanel.getHighlightKey();
+			if (flameHighlight != null)
+				return flameHighlight;
+		}
 		return profilerOverlay.getHoveredTimer();
+	}
+
+	private void syncCrossHighlight() {
+		if (flamePanel == null)
+			return;
+		Object live = hoveredLegendKey != null ? hoveredLegendKey : profilerOverlay.getHoveredTimer();
+		flamePanel.setLiveHoverKey(live);
+	}
+
+	private boolean isKeyActive(@Nullable Object key) {
+		if (key == null)
+			return false;
+		if (key.equals(hoveredLegendKey))
+			return true;
+		Object flame = flamePanel != null ? flamePanel.getHighlightKey() : null;
+		if (flame != null && (key.equals(flame) || namesMatch(key, flame)))
+			return true;
+		Object overlay = profilerOverlay.getHoveredTimer();
+		return overlay != null && (key.equals(overlay) || namesMatch(key, overlay));
+	}
+
+	private static boolean namesMatch(Object a, Object b) {
+		String na = a instanceof Timer ? ((Timer) a).name : String.valueOf(a);
+		String nb = b instanceof Timer ? ((Timer) b).name : String.valueOf(b);
+		return na.equalsIgnoreCase(nb);
 	}
 
 	private void ensureGraphs() {
@@ -398,7 +433,7 @@ public class ProfilerGraphFrame {
 					Rectangle rowBounds = new Rectangle(0, y, getWidth(), LEGEND_ROW_HEIGHT);
 					hits.add(new LegendHit(rowBounds, entry.getKey()));
 
-					boolean hovered = entry.getKey() != null && entry.getKey().equals(hoveredLegendKey);
+					boolean hovered = isKeyActive(entry.getKey());
 					if (hovered) {
 						g2d.setColor(LEGEND_HOVER_BG);
 						g2d.fillRect(rowBounds.x, rowBounds.y, rowBounds.width, rowBounds.height);
