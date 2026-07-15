@@ -228,7 +228,10 @@ public class TimeOfDay {
 	 * direction getters.
 	 */
 	private float[] anglesToSkyDirection(double azimuth, double altitude) {
-		double yaw = Math.PI - azimuth;
+		// yaw = PI + azimuth maps the (now real, non-reversed) astronomical azimuth to
+		// the renderer's sky direction so the sun/moon appear on the correct compass
+		// side — rising in the east, and north/south tracking the real season.
+		double yaw = Math.PI + azimuth;
 
 		float x = (float) (Math.sin(yaw) * Math.cos(altitude));
 		float y = (float) Math.sin(altitude);
@@ -764,12 +767,10 @@ public class TimeOfDay {
 			return 1.0f; // Always a full moon
 		}
 		// Real Time: use the actual current real-world lunar phase, regardless of moon
-		// behavior. This uses non-reversed time (getRealMoonIllumination) — the other
-		// astronomical getters reverse time so Gielinor spins backwards, which is right
-		// for positions but gives the wrong-date's phase (a real new moon otherwise
-		// shows as nearly full). Here the phase matches the moon you'd see outside.
+		// behavior, so it matches the moon you'd see outside. getMoonIllumination now
+		// uses real (non-reversed) time, so this is simply today's phase.
 		if (currentCycleMode == DaylightCycle.REAL_TIME) {
-			return (float) AtmosphereUtils.getRealMoonIllumination(System.currentTimeMillis())[0];
+			return (float) AtmosphereUtils.getMoonIllumination(System.currentTimeMillis())[0];
 		}
 		if (currentMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
 			long equinoxEpochMs = 1742428800000L;

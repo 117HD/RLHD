@@ -65,7 +65,7 @@ public class AtmosphereUtils
 		double
 			phi = rad * latLong[0],
 			lw = rad * -latLong[1],
-			d = toDays(-millis); // Reverse time, since Gielinor orbits & spins in reverse compared to Earth
+			d = toDays(millis); // Real (non-reversed) time so season, phase, and E/W match the real sky
 
 		double[] c = sunCoords(d);
 		double H = siderealTime(d, lw) - c[1];
@@ -194,7 +194,7 @@ public class AtmosphereUtils
 		double
 			phi = rad * latLong[0],
 			lw = rad * -latLong[1],
-			d = toDays(-millis); // Reverse time, since Gielinor orbits & spins in reverse compared to Earth
+			d = toDays(millis); // Real (non-reversed) time so season, phase, and E/W match the real sky
 
 		double[] c = moonCoords(d);
 		double
@@ -217,19 +217,7 @@ public class AtmosphereUtils
 	}
 
 	public static double[] getMoonIllumination(long millis) {
-		double d = toDays(-millis);
-		return getMoonIllumination(sunCoords(d), moonCoords(d));
-	}
-
-	/**
-	 * Moon illumination for real (non-reversed) time. The other astronomical getters
-	 * reverse time (toDays(-millis)) so Gielinor appears to spin/orbit backwards, which
-	 * is correct for sun/moon <em>positions</em> but yields the wrong-date's moon
-	 * <em>phase</em>. Use this in Real Time mode so the phase matches the actual
-	 * current real-world moon (a real new moon reads as a new moon in-game).
-	 */
-	public static double[] getRealMoonIllumination(long millis) {
-		double d = toDays(millis);
+		double d = toDays(millis); // Real (non-reversed) time so the phase matches the real-world moon
 		return getMoonIllumination(sunCoords(d), moonCoords(d));
 	}
 
