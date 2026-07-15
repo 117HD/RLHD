@@ -12,7 +12,7 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.CpuUsageLimit;
-import rs117.hd.overlays.FrameTimer;
+import rs117.hd.profiling.Profiler;
 
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.utils.MathUtils.*;
@@ -35,7 +35,7 @@ public final class JobSystem {
 	public HdPlugin plugin;
 
 	@Inject
-	public FrameTimer frametimer;
+	public Profiler frametimer;
 
 	@Getter
 	boolean active;

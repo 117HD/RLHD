@@ -19,7 +19,7 @@ import rs117.hd.overlays.components.GraphComponent;
 
 @Slf4j
 @Singleton
-public class FrameTimerUI {
+public class ProfilerUI {
 	@RequiredArgsConstructor
 	@Getter
 	public enum Tab {
@@ -57,7 +57,7 @@ public class FrameTimerUI {
 	private HdPluginConfig config;
 
 	@Inject
-	private FrameTimerGraphOverlay frameTimerGraphOverlay;
+	private ProfilerGraphOverlay profilerGraphOverlay;
 
 	@Getter
 	@Setter
@@ -97,7 +97,7 @@ public class FrameTimerUI {
 	private boolean loading;
 
 	@Nullable
-	private Consumer<FrameTimerUI> changeListener;
+	private Consumer<ProfilerUI> changeListener;
 
 	public boolean loadOverlayEnabled() {
 		String value = configManager.getConfiguration(
@@ -199,7 +199,7 @@ public class FrameTimerUI {
 		}
 	}
 
-	public void setChangeListener(@Nullable Consumer<FrameTimerUI> listener) {
+	public void setChangeListener(@Nullable Consumer<ProfilerUI> listener) {
 		changeListener = listener;
 	}
 
@@ -239,23 +239,23 @@ public class FrameTimerUI {
 	}
 
 	public boolean isGraphOverlayActive() {
-		return frameTimerGraphOverlay.isActive();
+		return profilerGraphOverlay.isActive();
 	}
 
 	public void applyGraphOverlayState() {
-		frameTimerGraphOverlay.setActive(graphEnabledPreference);
+		profilerGraphOverlay.setActive(graphEnabledPreference);
 	}
 
 	public void setGraphOverlayActive(boolean active) {
-		frameTimerGraphOverlay.setActive(active);
+		profilerGraphOverlay.setActive(active);
 	}
 
 	public void setGraphEnabled(boolean enabled) {
-		if (enabled == graphEnabledPreference && enabled == frameTimerGraphOverlay.isActive())
+		if (enabled == graphEnabledPreference && enabled == profilerGraphOverlay.isActive())
 			return;
 
 		graphEnabledPreference = enabled;
-		frameTimerGraphOverlay.setActive(enabled);
+		profilerGraphOverlay.setActive(enabled);
 		notifyChanged();
 	}
 

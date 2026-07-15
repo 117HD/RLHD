@@ -1,8 +1,8 @@
-package rs117.hd.overlays;
+package rs117.hd.profiling;
 
 import java.util.Arrays;
 
-public class FrameTimings {
+public class ProfileSample {
 
 	public final long frameTimestamp;
 	public final long[] timers;
@@ -12,7 +12,7 @@ public class FrameTimings {
 	public final long freeSystemMemoryKB;
 	public final long gpuUsageKB;
 
-	public FrameTimings(long frameTimestamp, long[] timers, long[] allocations, float cpuLoad, long heapUsageKB, long freeSystemMemoryKB, long gpuUsageKB) {
+	public ProfileSample(long frameTimestamp, long[] timers, long[] allocations, float cpuLoad, long heapUsageKB, long freeSystemMemoryKB, long gpuUsageKB) {
 		this.frameTimestamp = frameTimestamp;
 		this.timers = Arrays.copyOf(timers, timers.length);
 		this.allocations = Arrays.copyOf(allocations, allocations.length);

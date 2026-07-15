@@ -1,4 +1,4 @@
-package rs117.hd.overlays;
+package rs117.hd.profiling;
 
 import com.google.inject.Singleton;
 import java.util.ArrayDeque;
@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 @Singleton
-public class FrameTimingsStore implements FrameTimer.Listener {
-	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
+public class ProfileSampleStore implements Profiler.Listener {
+	private final ArrayDeque<ProfileSample> frames = new ArrayDeque<>();
 
 	private boolean capturing = true;
 
@@ -25,7 +25,7 @@ public class FrameTimingsStore implements FrameTimer.Listener {
 	}
 
 	@Override
-	public void onFrameCompletion(FrameTimings timings) {
+	public void onFrameCompletion(ProfileSample timings) {
 		if (!capturing)
 			return;
 

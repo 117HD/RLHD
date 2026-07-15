@@ -39,6 +39,10 @@ import net.runelite.client.ui.overlay.components.SplitComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.components.SwatchComponent;
+import rs117.hd.profiling.ProfileSample;
+import rs117.hd.profiling.ProfileSampleStore;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.renderer.zone.ZoneRenderer;
@@ -51,7 +55,7 @@ import static rs117.hd.renderer.zone.SceneManager.MAX_WORLDVIEWS;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
-public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listener, MouseListener {
+public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, MouseListener {
 	private static final int PANEL_HORIZONTAL_PADDING = 8;
 	private static final int SWATCH_WIDTH = 10;
 	private static final int SWATCH_GAP = 4;
@@ -66,13 +70,13 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private Client client;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	@Inject
-	private FrameTimingsStore frameTimingsStore;
+	private ProfileSampleStore profileSampleStore;
 
 	@Inject
-	private FrameTimerUI ui;
+	private ProfilerUI ui;
 
 	@Inject
 	private FrameTimingsRecorder frameTimingsRecorder;
@@ -87,7 +91,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private SceneManager sceneManager;
 
 	@Inject
-	private FrameTimerGraphOverlay frameTimerGraphOverlay;
+	private ProfilerGraphOverlay profilerGraphOverlay;
 
 	private final HdPlugin plugin;
 	private final long[] timings = new long[Timer.TIMERS.length];
@@ -96,7 +100,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private Header header;
 	private Header settingsHeader;
 	private DetachedSettingsPanel detachedSettingsPanel;
-	private final Map<FrameTimerUI.Tab, DetachedPanel> detachedPanels = new EnumMap<>(FrameTimerUI.Tab.class);
+	private final Map<ProfilerUI.Tab, DetachedPanel> detachedPanels = new EnumMap<>(ProfilerUI.Tab.class);
 
 	private final StringBuilder sb = new StringBuilder();
 	private final Formatter formatter = new Formatter(sb);
@@ -111,7 +115,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private int mainPanelHeight;
 
 	@Inject
-	public FrameTimerOverlay(HdPlugin plugin) {
+	public ProfilerOverlay(HdPlugin plugin) {
 		super(plugin);
 		this.plugin = plugin;
 		setLayer(OverlayLayer.ABOVE_SCENE);
@@ -125,7 +129,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			header = new Header(
 				ui,
 				frameTimingsRecorder,
-				frameTimingsStore,
+				profileSampleStore,
 				false,
 				ui::selectTab,
 				ui::toggleSettings,
@@ -145,7 +149,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			settingsHeader = new Header(
 				ui,
 				frameTimingsRecorder,
-				frameTimingsStore,
+				profileSampleStore,
 				true,
 				ui::selectTab,
 				ui::toggleSettings,
@@ -166,23 +170,23 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 		overlayActive = activate;
 		if (activate) {
-			frameTimer.addTimingsListener(frameTimingsStore);
+			profiler.addTimingsListener(profileSampleStore);
 			overlayManager.add(this);
 			mouseManager.registerMouseListener(0, this);
 			ui.setChangeListener(u -> syncDetachedPanels());
 			syncDetachedPanels();
 		} else {
-			frameTimer.removeTimingsListener(frameTimingsStore);
+			profiler.removeTimingsListener(profileSampleStore);
 			overlayManager.remove(this);
 			mouseManager.unregisterMouseListener(this);
-			frameTimingsStore.clear();
+			profileSampleStore.clear();
 			deactivateDetachedPanels();
 		}
 	}
 
 	private void syncDetachedPanels() {
 		int detachedIndex = 0;
-		for (FrameTimerUI.Tab tab : FrameTimerUI.Tab.values()) {
+		for (ProfilerUI.Tab tab : ProfilerUI.Tab.values()) {
 			if (!tab.isDetachable())
 				continue;
 
@@ -220,8 +224,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	}
 
 	@Override
-	public void onFrameCompletion(FrameTimings timings) {
-		frameTimingsStore.onFrameCompletion(timings);
+	public void onFrameCompletion(ProfileSample timings) {
+		profileSampleStore.onFrameCompletion(timings);
 	}
 
 	@Override
@@ -253,7 +257,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		if (result.height > 0)
 			mainPanelHeight = result.height;
 		updateHoveredLine();
-		frameTimer.cumulativeError += System.nanoTime() - time;
+		profiler.cumulativeError += System.nanoTime() - time;
 		return result;
 	}
 
@@ -278,7 +282,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	}
 
 	private boolean getAverageTimings() {
-		var frames = frameTimingsStore.getFrames();
+		var frames = profileSampleStore.getFrames();
 		if (frames.isEmpty())
 			return false;
 
@@ -298,7 +302,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	}
 
 	private void renderTab(
-		FrameTimerUI.Tab tab,
+		ProfilerUI.Tab tab,
 		PanelComponent panel,
 		LineCache cache,
 		long[] timings,
@@ -369,7 +373,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 		addLine(panel, lineWidth, LineComponent.builder()
 			.left("Error compensation:")
-			.right(format("%d ns", frameTimer.errorCompensation)));
+			.right(format("%d ns", profiler.errorCompensation)));
 
 		if (cpuLoad > 0) {
 			addLine(panel, lineWidth, LineComponent.builder()
@@ -389,7 +393,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			.left("Power saving mode:")
 			.right(plugin.isPowerSaving ? "ON" : "OFF"));
 
-		if (!frameTimingsStore.isCapturing()) {
+		if (!profileSampleStore.isCapturing()) {
 			var boldFont2 = FontManager.getRunescapeBoldFont();
 			addLine(panel, lineWidth, LineComponent.builder()
 				.leftFont(boldFont2)
@@ -538,7 +542,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			result = sb.append(round(nanos / 1e3) / 1e3).append(" ms").toString();
 		}
 
-		boolean showSwatch = swatchColor != null && frameTimerGraphOverlay.isActive();
+		boolean showSwatch = swatchColor != null && profilerGraphOverlay.isActive();
 		int textLineWidth = showSwatch ? lineWidth - SWATCH_WIDTH - SWATCH_GAP : lineWidth;
 
 		TimerLineEntry entry = cache.lineEntries.get(name);
@@ -711,18 +715,18 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		private static final Color MENU_OFF = new Color(220, 120, 120);
 		private static final Color MENU_ACTION = new Color(140, 190, 255);
 
-		private final FrameTimerUI state;
+		private final ProfilerUI state;
 		private final FrameTimingsRecorder recorder;
-		private final FrameTimingsStore timingsStore;
+		private final ProfileSampleStore timingsStore;
 		private final boolean settingsOverlay;
-		private final Consumer<FrameTimerUI.Tab> onTabSelected;
+		private final Consumer<ProfilerUI.Tab> onTabSelected;
 		private final Runnable onSettingsToggle;
 		private final Runnable onSettingsDetach;
 		private final Runnable onSettingsDock;
-		private final Consumer<FrameTimerUI.Tab> onTabDetached;
+		private final Consumer<ProfilerUI.Tab> onTabDetached;
 		private final Runnable onGraphToggle;
-		private final Consumer<FrameTimerUI.Tab> onTabVisibilityToggle;
-		private final Consumer<FrameTimerUI.Tab> onTabAttach;
+		private final Consumer<ProfilerUI.Tab> onTabVisibilityToggle;
+		private final Consumer<ProfilerUI.Tab> onTabAttach;
 
 		private final Rectangle bounds = new Rectangle();
 		private final List<HitRegion> hitRegions = new ArrayList<>();
@@ -731,18 +735,18 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		private final List<Button> tabButtons = new ArrayList<>();
 
 		Header(
-			FrameTimerUI state,
+			ProfilerUI state,
 			FrameTimingsRecorder recorder,
-			FrameTimingsStore timingsStore,
+			ProfileSampleStore timingsStore,
 			boolean settingsOverlay,
-			Consumer<FrameTimerUI.Tab> onTabSelected,
+			Consumer<ProfilerUI.Tab> onTabSelected,
 			Runnable onSettingsToggle,
 			Runnable onSettingsDetach,
 			Runnable onSettingsDock,
-			Consumer<FrameTimerUI.Tab> onTabDetached,
+			Consumer<ProfilerUI.Tab> onTabDetached,
 			Runnable onGraphToggle,
-			Consumer<FrameTimerUI.Tab> onTabVisibilityToggle,
-			Consumer<FrameTimerUI.Tab> onTabAttach
+			Consumer<ProfilerUI.Tab> onTabVisibilityToggle,
+			Consumer<ProfilerUI.Tab> onTabAttach
 		) {
 			this.state = state;
 			this.recorder = recorder;
@@ -774,7 +778,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			var fm = graphics.getFontMetrics(font);
 			int x = 0;
 
-			for (FrameTimerUI.Tab tab : state.getTabBarTabs())
+			for (ProfilerUI.Tab tab : state.getTabBarTabs())
 				x += buttonWidth(fm, tab.getLabel()) + TAB_GAP;
 
 			String settingsLabel = settingsButtonLabel();
@@ -808,7 +812,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			int y = 0;
 			int rowHeight = 0;
 
-			for (FrameTimerUI.Tab tab : state.getTabBarTabs()) {
+			for (ProfilerUI.Tab tab : state.getTabBarTabs()) {
 				var button = new Button(tab.getLabel());
 				button.setSelected(tab == state.getSelectedTab());
 				button.setPreferredLocation(new Point(x, y));
@@ -913,15 +917,15 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			contentBottom = drawSectionHeader(graphics, menuX, contentBottom, menuWidth, fm, lineHeight, "Graphs");
 			contentBottom = drawHintLine(graphics, menuX, contentBottom, menuWidth, fm, lineHeight, "Click row to show or hide");
 
-			for (FrameTimerUI.Graph graph : FrameTimerUI.Graph.values())
+			for (ProfilerUI.Graph graph : ProfilerUI.Graph.values())
 				contentBottom = drawGraphRow(graphics, menuX, contentBottom, menuWidth, fm, lineHeight, graph);
 
 			contentBottom += SECTION_GAP;
 			contentBottom = drawSectionHeader(graphics, menuX, contentBottom, menuWidth, fm, lineHeight, "Tab bar");
 			contentBottom = drawHintLine(graphics, menuX, contentBottom, menuWidth, fm, lineHeight, "Click row to show or hide");
 
-			for (FrameTimerUI.Tab tab : FrameTimerUI.Tab.values()) {
-				if (tab == FrameTimerUI.Tab.ALL)
+			for (ProfilerUI.Tab tab : ProfilerUI.Tab.values()) {
+				if (tab == ProfilerUI.Tab.ALL)
 					continue;
 				contentBottom = drawTabRow(graphics, menuX, contentBottom, menuWidth, fm, lineHeight, tab);
 			}
@@ -931,7 +935,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				contentBottom = drawSectionHeader(graphics, menuX, contentBottom, menuWidth, fm, lineHeight, "Detached panels");
 				contentBottom = drawHintLine(graphics, menuX, contentBottom, menuWidth, fm, lineHeight, "Click to dock back");
 
-				for (FrameTimerUI.Tab tab : state.getDetachedTabs()) {
+				for (ProfilerUI.Tab tab : state.getDetachedTabs()) {
 					contentBottom = drawActionRow(
 						graphics, menuX, contentBottom, menuWidth, fm, lineHeight,
 						"Dock " + tab.getLabel(),
@@ -966,7 +970,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			lines += 3; // Recording section
 			lines += 2 + getVisibleGraphCount(); // Graphs section
 			lines += 2; // Tab bar section header + hint
-			lines += FrameTimerUI.Tab.values().length - 1;
+			lines += ProfilerUI.Tab.values().length - 1;
 			if (!state.getDetachedTabs().isEmpty())
 				lines += 2 + state.getDetachedTabs().size();
 			lines += 1; // tip: middle-click tab
@@ -985,7 +989,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		}
 
 		private int getVisibleGraphCount() {
-			return FrameTimerUI.Graph.values().length;
+			return ProfilerUI.Graph.values().length;
 		}
 
 		private int drawMenuTitle(Graphics2D g, int menuX, int y, int menuWidth, FontMetrics fm, int lineHeight) {
@@ -1048,7 +1052,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			return y + lineHeight;
 		}
 
-		private int drawTabRow(Graphics2D g, int menuX, int y, int menuWidth, FontMetrics fm, int lineHeight, FrameTimerUI.Tab tab) {
+		private int drawTabRow(Graphics2D g, int menuX, int y, int menuWidth, FontMetrics fm, int lineHeight, ProfilerUI.Tab tab) {
 			boolean detached = state.isDetached(tab);
 			boolean hidden = state.isHidden(tab);
 			boolean visible = !detached && !hidden;
@@ -1090,7 +1094,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			return y + lineHeight;
 		}
 
-		private int drawGraphRow(Graphics2D g, int menuX, int y, int menuWidth, FontMetrics fm, int lineHeight, FrameTimerUI.Graph graph) {
+		private int drawGraphRow(Graphics2D g, int menuX, int y, int menuWidth, FontMetrics fm, int lineHeight, ProfilerUI.Graph graph) {
 			boolean visible = state.isGraphVisible(graph);
 			String check = visible ? "[x]" : "[ ]";
 			String label = check + " " + graph.getLabel();
@@ -1235,7 +1239,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		private boolean active;
 
 		DetachedSettingsPanel() {
-			super(FrameTimerOverlay.this.plugin);
+			super(ProfilerOverlay.this.plugin);
 			setLayer(OverlayLayer.ABOVE_WIDGETS);
 			setPosition(OverlayPosition.TOP_RIGHT);
 			panelComponent.setBackgroundColor(Header.SETTINGS_BACKGROUND);
@@ -1244,8 +1248,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		}
 
 		void setLocationOffset(int locationOffset) {
-			Rectangle mainBounds = FrameTimerOverlay.this.getBounds();
-			int headerHeight = FrameTimerOverlay.this.getHeader().getBounds().height;
+			Rectangle mainBounds = ProfilerOverlay.this.getBounds();
+			int headerHeight = ProfilerOverlay.this.getHeader().getBounds().height;
 			int yOffset = headerHeight > 0 ? headerHeight + 4 : 0;
 
 			if (mainBounds.width > 0 && mainBounds.height > 0) {
@@ -1360,7 +1364,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private class DetachedPanel extends OverlayPanel implements MouseListener {
 		private static final int PANEL_HORIZONTAL_PADDING = 8;
 
-		private final FrameTimerUI.Tab tab;
+		private final ProfilerUI.Tab tab;
 		private final long[] timings = new long[Timer.TIMERS.length];
 		private float cpuLoad;
 		private final LineCache lineCache = new LineCache();
@@ -1371,17 +1375,17 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		private int snapshotContentLineWidth;
 		private int snapshotPanelHeight;
 
-		DetachedPanel(FrameTimerUI.Tab tab) {
-			super(FrameTimerOverlay.this.plugin);
+		DetachedPanel(ProfilerUI.Tab tab) {
+			super(ProfilerOverlay.this.plugin);
 			this.tab = tab;
 			setLayer(OverlayLayer.ABOVE_WIDGETS);
 			setPosition(OverlayPosition.TOP_RIGHT);
 		}
 
 		void captureSizeFromMain() {
-			int width = FrameTimerOverlay.this.mainPanelWidth;
-			int lineWidth = FrameTimerOverlay.this.mainContentLineWidth;
-			int height = FrameTimerOverlay.this.mainPanelHeight;
+			int width = ProfilerOverlay.this.mainPanelWidth;
+			int lineWidth = ProfilerOverlay.this.mainContentLineWidth;
+			int height = ProfilerOverlay.this.mainPanelHeight;
 			if (width > 0)
 				snapshotPanelWidth = width;
 			if (lineWidth > 0)
@@ -1391,8 +1395,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		}
 
 		void setLocationOffset(int locationOffset) {
-			Rectangle mainBounds = FrameTimerOverlay.this.getBounds();
-			int headerHeight = FrameTimerOverlay.this.getHeader().getBounds().height;
+			Rectangle mainBounds = ProfilerOverlay.this.getBounds();
+			int headerHeight = ProfilerOverlay.this.getHeader().getBounds().height;
 			int yOffset = headerHeight > 0 ? headerHeight + 4 : 0;
 
 			if (mainBounds.width > 0 && mainBounds.height > 0) {
@@ -1461,7 +1465,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 			lineCache.syncGraphOverlayState(ui.isGraphEnabled());
 
-			FrameTimerOverlay.this.renderTab(tab, panelComponent, lineCache, timings, cpuLoad, lineWidth);
+			ProfilerOverlay.this.renderTab(tab, panelComponent, lineCache, timings, cpuLoad, lineWidth);
 
 			panelComponent.getChildren().add(LineComponent.builder()
 				.preferredSize(new Dimension(lineWidth, 6))
@@ -1475,7 +1479,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		}
 
 		private boolean getAverageTimings() {
-			var frames = frameTimingsStore.getFrames();
+			var frames = profileSampleStore.getFrames();
 			if (frames.isEmpty())
 				return false;
 

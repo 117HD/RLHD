@@ -1,4 +1,4 @@
-package rs117.hd.overlays;
+package rs117.hd.profiling;
 
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
@@ -25,7 +25,7 @@ import static rs117.hd.HdPlugin.GL_CAPS;
 
 @Slf4j
 @Singleton
-public class FrameTimer {
+public class Profiler {
 	public static final int CPU_TIMER = 0;
 	public static final int ASYNC_CPU_TIMER = 1;
 	public static final int GPU_TIMER = 2;
@@ -66,7 +66,7 @@ public class FrameTimer {
 	}
 
 	@SuppressWarnings("resource")
-	public FrameTimer() {
+	public Profiler() {
 		for (int i = 0; i < NUM_TIMERS; i++)
 			autoTimers[i] = new AutoTimer(Timer.TIMERS[i]);
 	}
@@ -124,7 +124,7 @@ public class FrameTimer {
 
 	@FunctionalInterface
 	public interface Listener {
-		void onFrameCompletion(FrameTimings timings);
+		void onFrameCompletion(ProfileSample timings);
 	}
 
 	public void addTimingsListener(Listener listener) {
@@ -287,7 +287,7 @@ public class FrameTimer {
 			gpuUsageKB = -1;
 		}
 
-		var frameTimings = new FrameTimings(frameEndTimestamp, timings, allocations, cpuLoad, heapUsageKB, freeSystemMemory, gpuUsageKB);
+		var frameTimings = new ProfileSample(frameEndTimestamp, timings, allocations, cpuLoad, heapUsageKB, freeSystemMemory, gpuUsageKB);
 		for (var listener : listeners)
 			listener.onFrameCompletion(frameTimings);
 

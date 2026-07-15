@@ -1,13 +1,13 @@
-package rs117.hd.overlays;
+package rs117.hd.profiling;
 
 import java.awt.Color;
 import javax.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 
-import static rs117.hd.overlays.FrameTimer.ASYNC_CPU_TIMER;
-import static rs117.hd.overlays.FrameTimer.ASYNC_GPU_TIMER;
-import static rs117.hd.overlays.FrameTimer.CPU_TIMER;
-import static rs117.hd.overlays.FrameTimer.GPU_TIMER;
+import static rs117.hd.profiling.Profiler.ASYNC_CPU_TIMER;
+import static rs117.hd.profiling.Profiler.ASYNC_GPU_TIMER;
+import static rs117.hd.profiling.Profiler.CPU_TIMER;
+import static rs117.hd.profiling.Profiler.GPU_TIMER;
 
 @RequiredArgsConstructor
 public enum Timer {
