@@ -107,16 +107,6 @@ void main() {
         }
     }
 
-    // Aurora borealis — animated curtains near the northern horizon. Shown on the
-    // randomly-selected aurora nights and faded with the night, but decoupled from
-    // starVisibility so it can be scaled independently per environment via
-    // auroraVisibility (0 on non-aurora nights or aurora-hidden areas). Uses
-    // nightFactor (the star-independent night fade) in place of the previous
-    // nightSkyBlend so it no longer disappears when starVisibility is 0.
-    if (auroraVisibility > 0.001 && nightFactor > 0.001) {
-        skyColor += proceduralAurora(viewDir, elapsedTime) * nightFactor * auroraVisibility;
-    }
-
     // === MOON DISK ===
     if (skyMoonIllumination > 0.001) {
         // Apply the same horizon offset transformation as the sun
@@ -288,6 +278,17 @@ void main() {
             float moonGlow = pow(moonDot, 256.0) * 0.05 * skyMoonIllumination * moonDayAlpha * moonVisibility * glowHorizonFade;
             skyColor += skyMoonColor * moonGlow;
         }
+    }
+
+    // Aurora borealis — animated curtains near the northern horizon. Shown on the
+    // randomly-selected aurora nights and faded with the night, but decoupled from
+    // starVisibility so it can be scaled independently per environment via
+    // auroraVisibility (0 on non-aurora nights or aurora-hidden areas). Uses
+    // nightFactor (the star-independent night fade) in place of the previous
+    // nightSkyBlend so it no longer disappears when starVisibility is 0.
+    // Drawn AFTER the moon disk so the aurora composites visually in front of the moon.
+    if (auroraVisibility > 0.001 && nightFactor > 0.001) {
+        skyColor += proceduralAurora(viewDir, elapsedTime) * nightFactor * auroraVisibility;
     }
 
     skyColor = applySkyHaze(skyColor, sky.upAmount, sky.sunSideBlend, sky.zenithBlend);

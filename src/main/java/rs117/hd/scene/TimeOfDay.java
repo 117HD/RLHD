@@ -763,12 +763,15 @@ public class TimeOfDay {
 		if (currentCycleMode == DaylightCycle.FIXED_NIGHT) {
 			return 1.0f; // Always a full moon
 		}
+		// Real Time: use the actual current real-world lunar phase, regardless of moon
+		// behavior. This uses non-reversed time (getRealMoonIllumination) — the other
+		// astronomical getters reverse time so Gielinor spins backwards, which is right
+		// for positions but gives the wrong-date's phase (a real new moon otherwise
+		// shows as nearly full). Here the phase matches the moon you'd see outside.
+		if (currentCycleMode == DaylightCycle.REAL_TIME) {
+			return (float) AtmosphereUtils.getRealMoonIllumination(System.currentTimeMillis())[0];
+		}
 		if (currentMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
-			// Real Time: use today's real lunar phase so illumination matches the
-			// real-clock moon position (mirrored sun) and the realistic moon.
-			if (currentCycleMode == DaylightCycle.REAL_TIME) {
-				return (float) AtmosphereUtils.getMoonIllumination(System.currentTimeMillis())[0];
-			}
 			long equinoxEpochMs = 1742428800000L;
 			long dayMs = 24L * 60 * 60 * 1000;
 			// Synced Days: advance the phase by the UTC-synced day count so the phase

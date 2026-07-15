@@ -221,6 +221,18 @@ public class AtmosphereUtils
 		return getMoonIllumination(sunCoords(d), moonCoords(d));
 	}
 
+	/**
+	 * Moon illumination for real (non-reversed) time. The other astronomical getters
+	 * reverse time (toDays(-millis)) so Gielinor appears to spin/orbit backwards, which
+	 * is correct for sun/moon <em>positions</em> but yields the wrong-date's moon
+	 * <em>phase</em>. Use this in Real Time mode so the phase matches the actual
+	 * current real-world moon (a real new moon reads as a new moon in-game).
+	 */
+	public static double[] getRealMoonIllumination(long millis) {
+		double d = toDays(millis);
+		return getMoonIllumination(sunCoords(d), moonCoords(d));
+	}
+
 	// https://github.com/mourner/suncalc#moon-illumination
 	public static double[] getMoonIllumination(double[] sunCoords, double[] moonCoords) {
 		double
