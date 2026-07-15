@@ -217,6 +217,21 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 		return null;
 	}
 
+	public List<LegendEntry> getLegendEntries() {
+		List<LegendEntry> entries = new ArrayList<>(series.size());
+		for (Series<T> s : series) {
+			Object key = s.key != null ? s.key : s.name;
+			entries.add(new LegendEntry(s.name, s.color, key));
+		}
+		return entries;
+	}
+
+	private static boolean matchesHoverKey(Object hoveredKey, Series<?> s) {
+		if (s.key != null)
+			return hoveredKey.equals(s.key);
+		return hoveredKey.equals(s.name);
+	}
+
 	public GraphComponent<T> setRoundStep(double roundStep) {
 		this.roundStep = roundStep;
 		return this;
@@ -376,7 +391,7 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 			g.drawLine(selX2, plotY, selX2, plotY + graphHeight);
 		}
 
-		boolean isolate = hoveredKey != null && series.stream().anyMatch(s -> hoveredKey.equals(s.key));
+		boolean isolate = hoveredKey != null && series.stream().anyMatch(s -> matchesHoverKey(hoveredKey, s));
 
 		Series<T> hoveredSeries = null;
 		for (int i = 0; i < series.size(); i++) {
@@ -386,7 +401,7 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 
 			Color color = s.color;
 			if (isolate) {
-				if (hoveredKey.equals(s.key)) {
+				if (matchesHoverKey(hoveredKey, s)) {
 					hoveredSeries = s;
 					continue;
 				}
@@ -755,6 +770,21 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 	@Override
 	public void setPreferredSize(Dimension dimension) {
 		bounds.setSize(dimension);
+	}
+
+	public static class LegendEntry {
+		@Getter
+		private final String name;
+		@Getter
+		private final Color color;
+		@Getter
+		private final Object key;
+
+		public LegendEntry(String name, Color color, Object key) {
+			this.name = name;
+			this.color = color;
+			this.key = key;
+		}
 	}
 
 	@RequiredArgsConstructor

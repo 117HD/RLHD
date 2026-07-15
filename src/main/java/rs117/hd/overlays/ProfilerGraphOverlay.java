@@ -2,14 +2,11 @@ package rs117.hd.overlays;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
+import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -25,23 +22,12 @@ import rs117.hd.overlays.components.GraphComponent;
 import rs117.hd.profiling.ProfileSample;
 import rs117.hd.profiling.ProfileSampleStore;
 import rs117.hd.profiling.Profiler;
-import rs117.hd.profiling.Timer;
-
-import static rs117.hd.HdPlugin.GL_CAPS;
 
 @Slf4j
 @Singleton
 public class ProfilerGraphOverlay extends OverlayPanel implements MouseListener {
-	private static final Color HEAP_COLOR = new Color(80, 200, 255);
-	private static final Color GPU_COLOR = new Color(80, 255, 95);
-	private static final Color MEMORY_COLOR = new Color(255, 80, 179);
-
-	private static final long BYTES_PER_KB = 1024L;
-	private static final long KB_PER_MB = 1024L;
 	private static final int SCREEN_MARGIN = 24;
 	private static final int PANEL_BORDER = 4;
-	private static final double DEFAULT_WIDTH_RATIO = 0.55;
-	private static final double DEFAULT_HEIGHT_RATIO = 0.70;
 
 	@Inject
 	private OverlayManager overlayManager;
@@ -67,25 +53,13 @@ public class ProfilerGraphOverlay extends OverlayPanel implements MouseListener 
 	@Inject
 	private Profiler profiler;
 
-	private final List<GraphEntry> timerGraphs = new ArrayList<>();
-	private final List<GraphEntry> memoryGraphs = new ArrayList<>();
-	private final List<ProfileSample> frames = new ArrayList<>();
+	private ProfilerGraphs graphs;
 
 	@Getter
 	private boolean active;
 
 	private GraphComponent<ProfileSample> dragGraph;
 	private Point dragStartPoint;
-
-	private static final class GraphEntry {
-		final ProfilerUI.Graph id;
-		final GraphComponent<ProfileSample> component;
-
-		GraphEntry(ProfilerUI.Graph id, GraphComponent<ProfileSample> component) {
-			this.id = id;
-			this.component = component;
-		}
-	}
 
 	@Inject
 	public ProfilerGraphOverlay(HdPlugin plugin) {
@@ -96,210 +70,28 @@ public class ProfilerGraphOverlay extends OverlayPanel implements MouseListener 
 		setMinimumSize(GraphComponent.MIN_GRAPH_WIDTH / 2);
 	}
 
-	boolean hasSelection() {
-		for(int i = 0; i < timerGraphs.size(); i++){
-			if(timerGraphs.get(i).component.isSelectionActive())
-				return true;
-		}
-		for(int i = 0; i < memoryGraphs.size(); i++){
-			if(memoryGraphs.get(i).component.isSelectionActive())
-				return true;
-		}
-
-		return false;
+	private ProfilerGraphs graphs() {
+		if (graphs == null)
+			graphs = new ProfilerGraphs(ui);
+		return graphs;
 	}
 
-	void createGraphs() {
-		Supplier<List<ProfileSample>> frames = () -> this.frames;
-		Supplier<Object> hoveredTimer = () -> profilerOverlay.getHoveredTimer();
-		Supplier<Point> mousePosition = () -> {
-			var p = client.getMouseCanvasPosition();
-			return p == null ? null : new Point(p.getX(), p.getY());
-		};
-
-		timerGraphs.clear();
-		memoryGraphs.clear();
-
-		var cpuGpuGraph = setupFrameTimerGraph(new GraphComponent<>("CPU/GPU", frames, hoveredTimer, mousePosition), ProfilerUI.Graph.CPU_GPU);
-		var cpuGraph = setupFrameTimerGraph(new GraphComponent<>("CPU", frames, hoveredTimer, mousePosition), ProfilerUI.Graph.CPU);
-		var asyncGraph = setupFrameTimerGraph(new GraphComponent<>("ASYNC", frames, hoveredTimer, mousePosition), ProfilerUI.Graph.ASYNC);
-		var gpuGraph = setupFrameTimerGraph(new GraphComponent<>("GPU", frames, hoveredTimer, mousePosition), ProfilerUI.Graph.GPU);
-		var allocationGraph = setupMemoryGraph(new GraphComponent<>("Allocations", frames, hoveredTimer, mousePosition), true, ProfilerUI.Graph.ALLOCATIONS);
-		var heapMemoryGraph = setupMemoryGraph(new GraphComponent<>("Heap Memory", frames, () -> null, mousePosition), false, ProfilerUI.Graph.HEAP);
-		var systemMemoryGraph = setupMemoryGraph(new GraphComponent<>("System Memory", frames, () -> null, mousePosition), false, ProfilerUI.Graph.SYSTEM_MEMORY);
-
-		if (GL_CAPS.GL_NVX_gpu_memory_info)
-			systemMemoryGraph.addSeries("GPU Memory", GPU_COLOR, f -> f.gpuUsageKB / (double) KB_PER_MB, false);
-		systemMemoryGraph.addSeries("Avail System Memory", MEMORY_COLOR, f -> f.freeSystemMemoryKB / (double) KB_PER_MB, false);
-
-		heapMemoryGraph.addSeries("Heap Memory", HEAP_COLOR, f -> (f.heapUsageKB) / (double) KB_PER_MB, false);
-
-		addMemorySeries(allocationGraph, Timer.CLIENT);
-		addTimerSeries(cpuGpuGraph, Timer.CLIENT);
-		addTimerSeries(cpuGpuGraph, Timer.DRAW_FRAME);
-		addTimerSeries(cpuGpuGraph, Timer.RENDER_FRAME);
-
-		for (Timer t : Timer.TIMERS) {
-			if (t.isCpuTimer() && !isInGraph(cpuGpuGraph, t)) {
-				addTimerSeries(cpuGraph, t);
-				addMemorySeries(allocationGraph, t);
-			}
-
-			if (t.isAsyncCpuTimer()) {
-				addTimerSeries(asyncGraph, t);
-				addMemorySeries(allocationGraph, t);
-			}
-
-			if (t.isGpuTimer())
-				addTimerSeries(gpuGraph, t);
-		}
-
-		applyGraphSizes();
-	}
-
-	private GraphComponent<ProfileSample> setupFrameTimerGraph(GraphComponent<ProfileSample> graph, ProfilerUI.Graph graphId) {
-		graph
-			.setYAxisName("ms")
-			.setAxisFormat("%.3f")
-			.setAppendAxisNameToTooltip(true);
-		timerGraphs.add(new GraphEntry(graphId, graph));
-		return graph;
-	}
-
-	private GraphComponent<ProfileSample> setupMemoryGraph(GraphComponent<ProfileSample> graph, boolean isKB, ProfilerUI.Graph graphId) {
-		graph
-			.setRoundStep(50.0)
-			.setYAxisName(isKB ? "KB" : "MB")
-			.setAppendAxisNameToTooltip(true);
-		memoryGraphs.add(new GraphEntry(graphId, graph));
-		return graph;
-	}
-
-	private void applyGraphSizes() {
-		if (timerGraphs.isEmpty() && memoryGraphs.isEmpty())
+	void ensureGraphs() {
+		ProfilerGraphs g = graphs();
+		if (!g.isEmpty())
 			return;
 
-		int visibleTimers = countVisible(timerGraphs);
-		int visibleMemory = countVisible(memoryGraphs);
-		int visibleTotal = visibleTimers + visibleMemory;
-		if (visibleTotal == 0)
-			return;
-
-		int canvasW = Math.max(1, client.getCanvasWidth());
-		int canvasH = Math.max(1, client.getCanvasHeight());
-
-		int maxPlotWidth = Math.max(
-			GraphComponent.MIN_GRAPH_WIDTH,
-			canvasW - SCREEN_MARGIN - GraphComponent.MARGIN_LEFT - GraphComponent.MARGIN_RIGHT - PANEL_BORDER * 2
-		);
-		int maxContentHeight = Math.max(
-			GraphComponent.MIN_GRAPH_HEIGHT,
-			canvasH - SCREEN_MARGIN - PANEL_BORDER * 2
-		);
-		int chromeHeight = visibleTotal * (GraphComponent.MARGIN_TOP + GraphComponent.MARGIN_BOTTOM);
-		int maxTotalPlotHeight = Math.max(GraphComponent.MIN_GRAPH_HEIGHT, maxContentHeight - chromeHeight);
-
-		Dimension preferred = getPreferredSize();
-		int plotWidth;
-		int timerHeight;
-		int memoryHeight;
-
-		if (preferred != null && preferred.width > 0 && preferred.height > 0) {
-			plotWidth = preferred.width - PANEL_BORDER * 2 - GraphComponent.MARGIN_LEFT - GraphComponent.MARGIN_RIGHT;
-			int totalPlotHeight = preferred.height - PANEL_BORDER * 2 - chromeHeight;
-
-			plotWidth = clamp(plotWidth, GraphComponent.MIN_GRAPH_WIDTH, Math.min(GraphComponent.MAX_GRAPH_WIDTH, maxPlotWidth));
-			totalPlotHeight = clamp(totalPlotHeight, GraphComponent.MIN_GRAPH_HEIGHT, maxTotalPlotHeight);
-
-			int weight = visibleTimers * 3 + visibleMemory;
-			if (weight <= 0)
-				weight = 1;
-
-			timerHeight = visibleTimers > 0
-				? clamp((totalPlotHeight * 3) / weight, GraphComponent.MIN_GRAPH_HEIGHT, GraphComponent.MAX_GRAPH_HEIGHT)
-				: GraphComponent.DEFAULT_GRAPH_HEIGHT;
-			memoryHeight = visibleMemory > 0
-				? clamp(totalPlotHeight / weight, GraphComponent.MIN_MEMORY_GRAPH_HEIGHT, GraphComponent.MAX_MEMORY_GRAPH_HEIGHT)
-				: GraphComponent.DEFAULT_MEMORY_GRAPH_HEIGHT;
-		} else {
-			plotWidth = clamp(
-				(int) (canvasW * DEFAULT_WIDTH_RATIO),
-				GraphComponent.MIN_GRAPH_WIDTH,
-				Math.min(GraphComponent.MAX_GRAPH_WIDTH, maxPlotWidth)
-			);
-
-			int preferredTimerHeight = defaultTimerHeight(canvasH, visibleTimers, visibleMemory);
-			int preferredMemoryHeight = defaultMemoryHeight(canvasH, visibleTimers, visibleMemory);
-			int preferredTotal = visibleTimers * preferredTimerHeight + visibleMemory * preferredMemoryHeight;
-
-			if (preferredTotal > maxTotalPlotHeight && preferredTotal > 0) {
-				double scale = (double) maxTotalPlotHeight / preferredTotal;
-				timerHeight = clamp(
-					(int) Math.round(preferredTimerHeight * scale),
-					GraphComponent.MIN_GRAPH_HEIGHT,
-					GraphComponent.MAX_GRAPH_HEIGHT
-				);
-				memoryHeight = clamp(
-					(int) Math.round(preferredMemoryHeight * scale),
-					GraphComponent.MIN_MEMORY_GRAPH_HEIGHT,
-					GraphComponent.MAX_MEMORY_GRAPH_HEIGHT
-				);
-			} else {
-				timerHeight = preferredTimerHeight;
-				memoryHeight = preferredMemoryHeight;
+		g.create(
+			() -> profilerOverlay.getHoveredTimer(),
+			() -> {
+				var p = client.getMouseCanvasPosition();
+				return p == null ? null : new Point(p.getX(), p.getY());
 			}
-		}
-
-		for (var entry : timerGraphs)
-			entry.component.setGraphSize(plotWidth, timerHeight);
-
-		for (var entry : memoryGraphs)
-			entry.component.setGraphSize(plotWidth, memoryHeight);
-	}
-
-	private int defaultTimerHeight(int canvasH, int visibleTimers, int visibleMemory) {
-		int usable = (int) (canvasH * DEFAULT_HEIGHT_RATIO);
-		int chrome = (visibleTimers + visibleMemory) * (GraphComponent.MARGIN_TOP + GraphComponent.MARGIN_BOTTOM);
-		int plotBudget = Math.max(GraphComponent.MIN_GRAPH_HEIGHT, usable - chrome);
-		int weight = visibleTimers * 3 + visibleMemory;
-		if (weight <= 0)
-			return GraphComponent.DEFAULT_GRAPH_HEIGHT;
-		return Math.max(GraphComponent.MIN_GRAPH_HEIGHT, (plotBudget * 3) / weight);
-	}
-
-	private int defaultMemoryHeight(int canvasH, int visibleTimers, int visibleMemory) {
-		int usable = (int) (canvasH * DEFAULT_HEIGHT_RATIO);
-		int chrome = (visibleTimers + visibleMemory) * (GraphComponent.MARGIN_TOP + GraphComponent.MARGIN_BOTTOM);
-		int plotBudget = Math.max(GraphComponent.MIN_MEMORY_GRAPH_HEIGHT, usable - chrome);
-		int weight = visibleTimers * 3 + visibleMemory;
-		if (weight <= 0)
-			return GraphComponent.DEFAULT_MEMORY_GRAPH_HEIGHT;
-		return Math.max(GraphComponent.MIN_MEMORY_GRAPH_HEIGHT, plotBudget / weight);
-	}
-
-	private int countVisible(List<GraphEntry> graphs) {
-		int count = 0;
-		for (var entry : graphs) {
-			if (ui.isGraphVisible(entry.id))
-				count++;
-		}
-		return count;
-	}
-
-	private void addTimerSeries(GraphComponent<ProfileSample> graph, Timer t) {
-		graph.addSeries(t.name(), t.color, f -> f.timers[t.ordinal()] / 1e6, false, t);
-	}
-
-	private void addMemorySeries(GraphComponent<ProfileSample> graph, Timer t) {
-		graph.addSeries(t.name(), t.color, f -> f.allocations[t.ordinal()] / (double) BYTES_PER_KB, false, t);
-	}
-
-	private boolean isInGraph(GraphComponent<ProfileSample> graph, Timer t) {
-		return graph.getSeries(t) != null;
+		);
 	}
 
 	public boolean hasGpuMemoryGraph() {
-		return GL_CAPS.GL_NVX_gpu_memory_info;
+		return graphs().hasGpuMemoryGraph();
 	}
 
 	public void setActive(boolean activate) {
@@ -319,59 +111,20 @@ public class ProfilerGraphOverlay extends OverlayPanel implements MouseListener 
 
 	@Override
 	public Dimension render(Graphics2D g) {
-		if (timerGraphs.isEmpty() && memoryGraphs.isEmpty())
-			createGraphs();
-		else
-			applyGraphSizes();
-
-		if(!hasSelection()) {
-			frames.clear();
-			frames.addAll(profileSampleStore.getFrames());
-		}
-
-		var children = panelComponent.getChildren();
-		for (var entry : timerGraphs) {
-			if (ui.isGraphVisible(entry.id))
-				children.add(entry.component);
-		}
-		for (var entry : memoryGraphs) {
-			if (ui.isGraphVisible(entry.id))
-				children.add(entry.component);
-		}
+		ensureGraphs();
+		graphs().applyOverlaySizes(
+			Math.max(1, client.getCanvasWidth()),
+			Math.max(1, client.getCanvasHeight()),
+			getPreferredSize(),
+			PANEL_BORDER,
+			SCREEN_MARGIN
+		);
+		graphs().syncFrames(profileSampleStore);
+		graphs().forEachVisible(panelComponent.getChildren()::add);
 
 		Dimension dimension = super.render(g);
-
-		for (var entry : timerGraphs) {
-			if (ui.isGraphVisible(entry.id))
-				entry.component.renderTooltip(g);
-		}
-		for (var entry : memoryGraphs) {
-			if (ui.isGraphVisible(entry.id))
-				entry.component.renderTooltip(g);
-		}
-
+		graphs().renderTooltips(g);
 		return dimension;
-	}
-
-	private static int clamp(int value, int min, int max) {
-		return Math.max(min, Math.min(max, value));
-	}
-
-	private GraphComponent<ProfileSample> findGraphAt(Point canvasPoint) {
-		var panelBounds = getBounds();
-		if (panelBounds == null || panelBounds.width <= 0 || panelBounds.height <= 0)
-			return null;
-
-		int localX = canvasPoint.x - panelBounds.x;
-		int localY = canvasPoint.y - panelBounds.y;
-
-		for (var entry : timerGraphs)
-			if (ui.isGraphVisible(entry.id) && entry.component.getBounds().contains(localX, localY))
-				return entry.component;
-		for (var entry : memoryGraphs)
-			if (ui.isGraphVisible(entry.id) && entry.component.getBounds().contains(localX, localY))
-				return entry.component;
-		return null;
 	}
 
 	@Override
@@ -398,12 +151,11 @@ public class ProfilerGraphOverlay extends OverlayPanel implements MouseListener 
 
 	@Override
 	public MouseEvent mouseReleased(MouseEvent event) {
-		if(dragGraph != null) {
-			if(dragStartPoint.distance(event.getPoint()) <= 0.01) {
+		if (dragGraph != null) {
+			if (dragStartPoint.distance(event.getPoint()) <= 0.01)
 				dragGraph.clearSelection();
-			} else {
+			else
 				dragGraph.setSelectionFromPoints(dragStartPoint, event.getPoint());
-			}
 			dragGraph = null;
 			dragStartPoint = null;
 			event.consume();
@@ -422,4 +174,16 @@ public class ProfilerGraphOverlay extends OverlayPanel implements MouseListener 
 
 	@Override
 	public MouseEvent mouseMoved(MouseEvent event) { return event; }
+
+	@Nullable
+	private GraphComponent<ProfileSample> findGraphAt(Point canvasPoint) {
+		var panelBounds = getBounds();
+		if (panelBounds == null || panelBounds.width <= 0 || panelBounds.height <= 0)
+			return null;
+
+		return graphs().findAtLocal(
+			canvasPoint.x - panelBounds.x,
+			canvasPoint.y - panelBounds.y
+		);
+	}
 }

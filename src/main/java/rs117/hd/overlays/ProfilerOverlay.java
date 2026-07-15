@@ -137,6 +137,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 				() -> ui.setSettingsDetached(false),
 				tab -> ui.setDetached(tab, true),
 				ui::toggleGraph,
+				ui::toggleGraphDetached,
 				ui::toggleHidden,
 				tab -> ui.setDetached(tab, false)
 			);
@@ -157,6 +158,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 				() -> ui.setSettingsDetached(false),
 				tab -> ui.setDetached(tab, true),
 				ui::toggleGraph,
+				ui::toggleGraphDetached,
 				ui::toggleHidden,
 				tab -> ui.setDetached(tab, false)
 			);
@@ -725,6 +727,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 		private final Runnable onSettingsDock;
 		private final Consumer<ProfilerUI.Tab> onTabDetached;
 		private final Runnable onGraphToggle;
+		private final Runnable onGraphWindowToggle;
 		private final Consumer<ProfilerUI.Tab> onTabVisibilityToggle;
 		private final Consumer<ProfilerUI.Tab> onTabAttach;
 
@@ -745,6 +748,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 			Runnable onSettingsDock,
 			Consumer<ProfilerUI.Tab> onTabDetached,
 			Runnable onGraphToggle,
+			Runnable onGraphWindowToggle,
 			Consumer<ProfilerUI.Tab> onTabVisibilityToggle,
 			Consumer<ProfilerUI.Tab> onTabAttach
 		) {
@@ -758,6 +762,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 			this.onSettingsDock = onSettingsDock;
 			this.onTabDetached = onTabDetached;
 			this.onGraphToggle = onGraphToggle;
+			this.onGraphWindowToggle = onGraphWindowToggle;
 			this.onTabVisibilityToggle = onTabVisibilityToggle;
 			this.onTabAttach = onTabAttach;
 		}
@@ -887,6 +892,12 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 			);
 			contentBottom = drawToggleRow(
 				graphics, menuX, contentBottom, menuWidth, fm, lineHeight,
+				"Separate graph",
+				state.isGraphDetached(),
+				onGraphWindowToggle
+			);
+			contentBottom = drawToggleRow(
+				graphics, menuX, contentBottom, menuWidth, fm, lineHeight,
 				"Live capture",
 				timingsStore.isCapturing(),
 				timingsStore::toggleCapturing
@@ -966,7 +977,7 @@ public class ProfilerOverlay extends OverlayPanel implements Profiler.Listener, 
 
 		private int measureSettingsMenuHeight(int lineHeight) {
 			int lines = 1;
-			lines += 3; // Overlays section
+			lines += 4; // Overlays section (header + graph toggle + detach/dock + live capture)
 			lines += 3; // Recording section
 			lines += 2 + getVisibleGraphCount(); // Graphs section
 			lines += 2; // Tab bar section header + hint
