@@ -110,6 +110,22 @@ public class TimeOfDay {
 	private static final double FIXED_NIGHT_MOON_AZIMUTH = Math.toRadians(135 + 180); // south-east
 	private static final double FIXED_NIGHT_MOON_ALTITUDE = Math.toRadians(25);  // low in the sky
 
+	// Fixed sun positions per fixed cycle mode, as {azimuth, altitude} in radians in
+	// the raw astronomical convention consumed by anglesToSkyDirection (i.e. WITHOUT
+	// the +180° that setFixedAngleOverrides applies — the built-in fixed modes feed
+	// getSunDirectionForSky/getSunAngles directly, the same path the dynamic sun uses,
+	// which already handles the azimuth mapping). These reproduce the look the old
+	// date-based fixed modes produced at the equator, but as explicit angles so the
+	// fixed modes no longer depend on incremented time. An environment's fixedSunAngles
+	// overrides these (see getFixedModeSunAngles).
+	private static final double[] FIXED_DAWN_SUN   = { Math.toRadians(-89.8), Math.toRadians(7.8) };
+	private static final double[] FIXED_MIDDAY_SUN = { Math.toRadians(130.3), Math.toRadians(52.8) };
+	private static final double[] FIXED_SUNSET_SUN = { Math.toRadians(90.0), Math.toRadians(-2.5) };
+	// FIXED_NIGHT / ALWAYS_NIGHT: sun well below the horizon (its exact azimuth is
+	// irrelevant since it isn't rendered — only its negative altitude matters for
+	// night detection and shadow fade).
+	private static final double[] FIXED_NIGHT_SUN  = { Math.toRadians(81.1), Math.toRadians(-88.0) };
+
 	// Per-environment fixed-angle overrides {azimuth, altitude} in radians, or
 	// null to use astronomical/default angles. Set once per frame by the renderer
 	// from the current environment. Only consulted while a fixed cycle mode is
@@ -193,6 +209,26 @@ public class TimeOfDay {
 				return true;
 			default:
 				return false;
+		}
+	}
+
+	/**
+	 * Resolve the fixed sun angles {azimuth, altitude} (radians, internal convention)
+	 * for the active fixed cycle mode: the environment's fixedSunAngles override when
+	 * present, otherwise the built-in per-mode constant. Only valid while isFixedMode().
+	 * Drives everything sun-related in fixed modes (disk, shadow, sky colors, brightness)
+	 * so those modes no longer depend on incremented time.
+	 */
+	public double[] getFixedModeSunAngles() {
+		if (fixedSunAnglesOverride != null)
+			return new double[] { fixedSunAnglesOverride[0], fixedSunAnglesOverride[1] };
+		switch (currentCycleMode) {
+			case FIXED_DAWN:   return FIXED_DAWN_SUN.clone();
+			case FIXED_MIDDAY: return FIXED_MIDDAY_SUN.clone();
+			case FIXED_SUNSET: return FIXED_SUNSET_SUN.clone();
+			case FIXED_NIGHT:
+			case ALWAYS_NIGHT:
+			default:           return FIXED_NIGHT_SUN.clone();
 		}
 	}
 
@@ -320,6 +356,12 @@ public class TimeOfDay {
 	 * @see <a href="https://en.wikipedia.org/wiki/Horizontal_coordinate_system">Horizontal coordinate system</a>
 	 */
 	public double[] getShadowAngles() {
+		// Fixed modes: shadows come from the fixed sun angle, or the fixed moon angle
+		// when the fixed sun is below the horizon (night). No time dependence.
+		if (isFixedMode()) {
+			double[] sun = getFixedModeSunAngles();
+			return isNight(sun) ? getFixedNightMoonAngles() : sun;
+		}
 		Instant modifiedDate = getModifiedDate();
 		double[] angles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 		return isNight(angles) ?
@@ -328,22 +370,25 @@ public class TimeOfDay {
 	}
 
 	public double[] getSunAngles() {
+		// Fixed modes return their fixed angle directly, bypassing the time machinery.
+		// Every sun-position-dependent value (sky gradient colors, brightness, blend
+		// factors) reads this, so they all use the fixed position automatically.
+		if (isFixedMode())
+			return getFixedModeSunAngles();
 		Instant modifiedDate = getModifiedDate();
 		return AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
 	}
 
 	public float[] getLightColor() {
-		Instant modifiedDate = getModifiedDate();
-		return AtmosphereUtils.getDirectionalLight(this, modifiedDate.toEpochMilli(), currentLatLong);
+		return AtmosphereUtils.getDirectionalLightForAngles(this, getSunAngles());
 	}
 
 	public float[] getRegionalDirectionalLight(float[] regionalDirectionalColor) {
-		Instant modifiedDate = getModifiedDate();
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
+		double[] sunAngles = getSunAngles();
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 
 		// Get the dynamic directional light color
-		float[] dynamicLight = AtmosphereUtils.getDirectionalLight(this, modifiedDate.toEpochMilli(), currentLatLong);
+		float[] dynamicLight = AtmosphereUtils.getDirectionalLightForAngles(this, sunAngles);
 
 		// Calculate blend factor - same as skybox and ambient for consistency
 		float blendFactor;
@@ -375,17 +420,15 @@ public class TimeOfDay {
 	}
 
 	public float[] getAmbientColor() {
-		Instant modifiedDate = getModifiedDate();
-		return AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), currentLatLong);
+		return AtmosphereUtils.getAmbientColorForAngles(getSunAngles());
 	}
 
 	public float[] getRegionalAmbientLight(float[] regionalAmbientColor) {
-		Instant modifiedDate = getModifiedDate();
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
+		double[] sunAngles = getSunAngles();
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 
 		// Get the dynamic ambient light color
-		float[] dynamicAmbient = AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), currentLatLong);
+		float[] dynamicAmbient = AtmosphereUtils.getAmbientColorForAngles(sunAngles);
 
 		// Calculate blend factor based on sun altitude - same as skybox for consistency
 		float blendFactor;
@@ -416,13 +459,11 @@ public class TimeOfDay {
 	}
 
 	public float[] getSkyColor() {
-		Instant modifiedDate = getModifiedDate();
-		return AtmosphereUtils.getSkyColor(modifiedDate.toEpochMilli(), currentLatLong);
+		return AtmosphereUtils.getSkyColorForAngles(getSunAngles());
 	}
 
 	public float[] getEnhancedSkyColor(float[] regionalFogColor, float sunStrength) {
-		Instant modifiedDate = getModifiedDate();
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
+		double[] sunAngles = getSunAngles();
 
 		// Convert sun altitude to degrees (-90 to +90)
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
@@ -525,8 +566,7 @@ public class TimeOfDay {
 		float sunriseSunsetStrength,
 		float skyColorTakeoverAngle
 	) {
-		Instant modifiedDate = getModifiedDate();
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
+		double[] sunAngles = getSunAngles();
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 
 		// Sun altitude at which the area's own color has fully taken over from the
@@ -730,10 +770,13 @@ public class TimeOfDay {
 	 * Uses the same coordinate transformation as the shadow light direction.
 	 */
 	public float[] getSunDirectionForSky() {
-		// Under a fixed mode with a per-environment override, lock the sun disk
-		// to the configured angles instead of the astronomical position.
-		if (hasFixedSunOverride())
-			return anglesToSkyDirection(fixedSunAnglesOverride[0], fixedSunAnglesOverride[1]);
+		// Fixed modes lock the sun disk to a fixed angle (per-environment override or
+		// the built-in per-mode constant) instead of the astronomical position, with no
+		// dependence on incremented time.
+		if (isFixedMode()) {
+			double[] fixed = getFixedModeSunAngles();
+			return anglesToSkyDirection(fixed[0], fixed[1]);
+		}
 
 		Instant modifiedDate = getModifiedDate();
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
@@ -749,7 +792,9 @@ public class TimeOfDay {
 	 */
 	public float[] getMoonDirectionForSky() {
 		// A fixed-mode moon override (or the default Fixed Night position) locks
-		// the moon disk to a fixed point regardless of moon behavior.
+		// the moon disk to a fixed point regardless of moon behavior. ALWAYS_NIGHT is
+		// deliberately excluded: it keeps a permanent night but the moon still moves
+		// and cycles phases like the dynamic moon (only the sun stays down).
 		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
 			double[] angles = getFixedNightMoonAngles();
 			return anglesToSkyDirection(angles[0], angles[1]);
@@ -806,6 +851,7 @@ public class TimeOfDay {
 		if (currentCycleMode == DaylightCycle.FIXED_NIGHT || hasFixedMoonOverride()) {
 			// getFixedNightMoonAngles() returns {azimuth, altitude}; use the override
 			// altitude when present so shadow visibility tracks the locked moon.
+			// ALWAYS_NIGHT is excluded — its moon keeps moving (dynamic altitude).
 			return Math.toDegrees(getFixedNightMoonAngles()[1]);
 		}
 		if (currentMoonBehavior == MoonBehavior.NIGHT_SYNCED) {
@@ -1245,8 +1291,9 @@ public class TimeOfDay {
 	}
 
 	public float getDynamicBrightnessMultiplier(int minimumBrightness) {
-		Instant modifiedDate = getModifiedDate();
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
+		// getSunAngles() returns the fixed angle in fixed modes, so brightness tracks the
+		// fixed sun altitude there instead of an incremented-time position.
+		double[] sunAngles = getSunAngles();
 
 		// Calculate sun altitude in degrees (-90 to 90, where 90 is directly overhead)
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);

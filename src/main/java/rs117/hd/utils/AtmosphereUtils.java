@@ -76,8 +76,12 @@ public class AtmosphereUtils
 	}
 
 	public static float[] getDirectionalLight(TimeOfDay timeOfDay, long millis, double[] latLong) {
-		double[] angles = getSunAngles(millis, latLong);
+		return getDirectionalLightForAngles(timeOfDay, getSunAngles(millis, latLong));
+	}
 
+	/** Directional light color from pre-computed sun {azimuth, altitude} — used so fixed
+	 * modes can derive light from their fixed angle instead of an incremented-time date. */
+	public static float[] getDirectionalLightForAngles(TimeOfDay timeOfDay, double[] angles) {
 		// Use a fixed dim nighttime base color (4100K at low intensity).
 		// Moon-phase-dependent brightness is handled in ZoneRenderer using
 		// getMoonDate() for consistent illumination values.
@@ -114,26 +118,32 @@ public class AtmosphereUtils
 	}
 
 	public static float[] getAmbientColor(long millis, double[] latLong) {
+		return getAmbientColorForAngles(getSunAngles(millis, latLong));
+	}
+
+	/** Ambient color from pre-computed sun {azimuth, altitude}. See getDirectionalLightForAngles. */
+	public static float[] getAmbientColorForAngles(double[] angles) {
 		// degrees above horizon 0-90, sRGB from 0-255
 		Object[][] altitudeColorRange = {
 			{ -5, new Color(113, 140, 180) },
 			{ 25, new Color(192, 185, 255) },
 			{ 40, new Color(185, 214, 255) },
 		};
-
-		double[] angles = getSunAngles(millis, latLong);
 		return interpolateSrgb((float) Math.toDegrees(angles[1]), altitudeColorRange);
 	}
 
 	public static float[] getSkyColor(long millis, double[] latLong) {
+		return getSkyColorForAngles(getSunAngles(millis, latLong));
+	}
+
+	/** Sky color from pre-computed sun {azimuth, altitude}. See getDirectionalLightForAngles. */
+	public static float[] getSkyColorForAngles(double[] angles) {
 		// degrees above horizon 0-90, sRGB from 0-255
 		Object[][] altitudeColorRange = {
 			{ -10, new Color(10, 10, 14) },
 			{ 25, new Color(153, 153, 201) },
 			{ 40, new Color(185, 214, 255) },
 		};
-
-		double[] angles = getSunAngles(millis, latLong);
 		var rgb = interpolateSrgb((float) Math.toDegrees(angles[1]), altitudeColorRange);
 		return ColorUtils.linearToSrgb(rgb);
 	}

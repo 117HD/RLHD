@@ -620,7 +620,8 @@
     "cycleMode": "FIXED_NIGHT",
     "fixedMoonAngles": [ 18, 90 ],
     "sunriseSunsetStrength": 0,
-    "skyColorTakeoverAngle": 2
+    "skyColorTakeoverAngle": 2,
+	"auroraVisibility": 0
   },
   {
     "area": "MORYTANIA",
