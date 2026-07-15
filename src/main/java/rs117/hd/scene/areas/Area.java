@@ -20,6 +20,9 @@ public class Area {
 	public boolean hideOtherAreas;
 	public boolean fillGaps = true;
 
+	public int[] horizonTileReference;
+	public boolean horizonFlatTerrain;
+
 	public String[] areas;
 	public int[] regions;
 
@@ -247,6 +250,10 @@ public class Area {
 			if (aabb.intersects(otherAabbs))
 				return true;
 		return false;
+	}
+
+	public boolean hasHorizonTiles() {
+		return horizonTileReference != null && horizonTileReference.length >= 2;
 	}
 
 	@Override

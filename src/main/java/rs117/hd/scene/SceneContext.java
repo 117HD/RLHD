@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import rs117.hd.renderer.zone.HorizonExtender;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
@@ -59,6 +60,16 @@ public class SceneContext {
 	public int numVisibleLights = 0;
 	public boolean enableAreaHiding;
 	public boolean fillGaps;
+	public boolean enableHorizonTiles;
+
+	@Nullable
+	public HorizonExtender.Sample horizonTileSample;
+	@Nullable
+	public boolean[][] horizonTileMask;
+	@Nullable
+	public byte[][][] underwaterDepthLevels;
+	@Nullable
+	public Area horizonTileArea;
 	public boolean isInChambersOfXeric;
 	public boolean isInHouse;
 
@@ -92,6 +103,12 @@ public class SceneContext {
 
 	public void setVertexIsLand(int hash) {
 		vertexTerrainData.or(hash, VERTEX_IS_LAND, 0);
+	}
+
+	public void clearVertexIsLand(int hash) {
+		if (vertexTerrainData == null || !vertexTerrainData.containsKey(hash))
+			return;
+		vertexTerrainData.and(hash, ~VERTEX_IS_LAND, 0);
 	}
 
 	public void setVertexIsWater(int hash) {
