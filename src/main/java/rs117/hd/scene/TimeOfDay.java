@@ -104,7 +104,10 @@ public class TimeOfDay {
 	// matching the convention used by AtmosphereUtils.getMoonPosition().
 	// These are the defaults; an environment may override them per-area via
 	// fixedMoonAngles (see setFixedAngleOverrides).
-	private static final double FIXED_NIGHT_MOON_AZIMUTH = Math.toRadians(135); // south-east
+	// The +180° matches the setFixedAngleOverrides compensation: anglesToSkyDirection
+	// was changed to correct the real astronomical sun, which rotates fixed azimuths
+	// 180°, so this default is rotated back to keep its original south-east placement.
+	private static final double FIXED_NIGHT_MOON_AZIMUTH = Math.toRadians(135 + 180); // south-east
 	private static final double FIXED_NIGHT_MOON_ALTITUDE = Math.toRadians(25);  // low in the sky
 
 	// Per-environment fixed-angle overrides {azimuth, altitude} in radians, or
@@ -163,10 +166,16 @@ public class TimeOfDay {
 	 */
 	public void setFixedAngleOverrides(@Nullable float[] sunAngles, @Nullable float[] moonAngles) {
 		// sunAngles/moonAngles are {altitude, azimuth}; store {azimuth, altitude}.
+		// Add PI to the azimuth: anglesToSkyDirection was changed (PI - az -> PI + az,
+		// with the north/south component negated) to correct the real astronomical sun,
+		// which rotates any fixed angle 180° in azimuth. These overrides were hand-
+		// authored to look right under the old transform, so we rotate them back 180°
+		// here — a single point that feeds both the disk and its shadow — so every
+		// existing fixedSunAngles/fixedMoonAngles renders exactly as before.
 		fixedSunAnglesOverride = sunAngles == null ? null :
-			new double[] { sunAngles[1], sunAngles[0] };
+			new double[] { sunAngles[1] + Math.PI, sunAngles[0] };
 		fixedMoonAnglesOverride = moonAngles == null ? null :
-			new double[] { moonAngles[1], moonAngles[0] };
+			new double[] { moonAngles[1] + Math.PI, moonAngles[0] };
 	}
 
 	/**

@@ -631,7 +631,13 @@ public class ZoneRenderer implements Renderer {
 				double sunAltDeg = Math.toDegrees(sunAnglesD[1]);
 
 				directionalPitch = (float) sunAnglesD[1];
-				directionalYaw = (float) sunAnglesD[0];
+				// Add PI to the shadow azimuth for the dynamic astronomical sun/moon.
+				// anglesToSkyDirection was changed to correct the real sun (PI + azimuth,
+				// north/south negated); the shared shadow line below is PI - directionalYaw,
+				// so feeding azimuth + PI makes the shadow render opposite the corrected
+				// disk (shadows fall AWAY from the sun). Fixed-angle overrides already
+				// carry this +PI from setFixedAngleOverrides, so they are left as-is.
+				directionalYaw = (float) (sunAnglesD[0] + PI);
 
 				if (timeOfDay.hasFixedSunOverride()) {
 					// A fixed-mode sun override locks the sun disk; cast shadows from
@@ -651,28 +657,24 @@ public class ZoneRenderer implements Renderer {
 					// start fading in via smoothstep — prevents brightness pop
 					double moonAltDeg = timeOfDay.getMoonAltitudeDegrees();
 					if (moonAltDeg > -10) {
+						// +PI matches the dynamic sun above (shared shadow line is
+						// PI - directionalYaw), so the moon shadow falls away from the disk.
 						if (timeOfDay.getCurrentMoonBehavior() == MoonBehavior.NIGHT_SYNCED) {
 							double[] moonAnglesD = timeOfDay.getNightSyncedMoonAngles();
 							directionalPitch = (float) moonAnglesD[1];
-							directionalYaw = (float) moonAnglesD[0];
+							directionalYaw = (float) (moonAnglesD[0] + PI);
 						} else {
 							Instant moonDate = timeOfDay.getMoonDate();
 							double[] moonAnglesD = AtmosphereUtils.getMoonPosition(moonDate.toEpochMilli(), timeOfDay.getCurrentLatLong());
 							directionalPitch = (float) moonAnglesD[1];
-							directionalYaw = (float) moonAnglesD[0];
+							directionalYaw = (float) (moonAnglesD[0] + PI);
 						}
 					}
 				}
 			}
 
 			directionalCamera.setPitch(directionalPitch);
-			// Shadow/light direction must point AWAY from the sun/moon disk. The shadow
-			// pipeline applies its own inversion downstream, so the yaw that actually
-			// renders shadows opposite the sun is the 180° complement of the offline
-			// "forward = -disk" solution — i.e. -azimuth. (Verified empirically in-game:
-			// PI - azimuth cast shadows straight at the sun; negating the yaw flips them
-			// to fall away from it.)
-			directionalCamera.setYaw(-directionalYaw);
+			directionalCamera.setYaw(PI - directionalYaw);
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
 			if (plugin.configShadowsEnabled &&
