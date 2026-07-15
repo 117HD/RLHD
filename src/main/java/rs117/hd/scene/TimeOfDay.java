@@ -119,7 +119,11 @@ public class TimeOfDay {
 	// fixed modes no longer depend on incremented time. An environment's fixedSunAngles
 	// overrides these (see getFixedModeSunAngles).
 	private static final double[] FIXED_DAWN_SUN   = { Math.toRadians(-89.8), Math.toRadians(7.8) };
-	private static final double[] FIXED_MIDDAY_SUN = { Math.toRadians(130.3), Math.toRadians(52.8) };
+	// Fixed Midday matches the static sun/light source used when the day/night cycle is
+	// OFF (Environment.DEFAULT_SUN_ANGLES = altitude 52°, azimuth 235°). azimuth 55° here
+	// (= 235° - 180°) makes the cycle-on shadow yaw -az equal the cycle-off yaw PI - 235°,
+	// so the light/shadow direction is identical between Fixed Midday and cycle-off.
+	private static final double[] FIXED_MIDDAY_SUN = { Math.toRadians(55.0), Math.toRadians(52.0) };
 	private static final double[] FIXED_SUNSET_SUN = { Math.toRadians(90.0), Math.toRadians(-2.5) };
 	// FIXED_NIGHT / ALWAYS_NIGHT: sun well below the horizon (its exact azimuth is
 	// irrelevant since it isn't rendered — only its negative altitude matters for
