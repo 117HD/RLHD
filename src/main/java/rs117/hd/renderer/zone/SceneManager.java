@@ -22,6 +22,7 @@ import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
+import rs117.hd.profiling.Event;
 import rs117.hd.profiling.Profiler;
 import rs117.hd.profiling.Timer;
 import rs117.hd.scene.AreaManager;
@@ -347,6 +348,7 @@ public class SceneManager {
 			return;
 
 		zone.rebuild = true;
+		profiler.pushEvent(Event.ZONE_INVALIDATE);
 		log.trace("Zone invalidated: wx={} x={} z={}", scene.getWorldViewId(), zx, zz);
 	}
 
@@ -430,6 +432,7 @@ public class SceneManager {
 		try {
 			loadingLock.lock();
 			if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
+				profiler.pushEvent(Event.ROOT_MAP_LOAD);
 				loadSubScene(worldView, scene);
 				return;
 			}
@@ -437,6 +440,8 @@ public class SceneManager {
 			assert worldView.getId() == WorldView.TOPLEVEL;
 			if (nextZones != null)
 				throw new RuntimeException("Double zone load!"); // does this happen?
+
+			profiler.pushEvent(Event.ROOT_MAP_LOAD);
 
 			Stopwatch sw = Stopwatch.createStarted();
 			root.loadTime = root.uploadTime = root.sceneSwapTime = 0;
@@ -634,6 +639,7 @@ public class SceneManager {
 		}
 
 		if (scene.getWorldViewId() != WorldView.TOPLEVEL) {
+			profiler.pushEvent(Event.SUB_SWAP_SCENE);
 			swapSubScene(scene);
 			return;
 		}
@@ -642,6 +648,7 @@ public class SceneManager {
 			return; // Return early if scene loading failed
 
 		Stopwatch sw = Stopwatch.createStarted();
+		profiler.pushEvent(Event.ROOT_SWAP_SCENE);
 
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();

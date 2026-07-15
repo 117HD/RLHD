@@ -39,6 +39,7 @@ public class Profiler {
 	@Inject
 	private HdPlugin plugin;
 
+	private static final int NUM_EVENTS = Event.EVENTS.length;
 	private static final int NUM_TIMERS = Timer.TIMERS.length;
 	private static final int NUM_GPU_TIMERS = (int) Arrays.stream(Timer.TIMERS).filter(Timer::isGpuTimer).count();
 	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(Timer.TIMERS).filter(Timer::hasGpuDebugGroup).count();
@@ -47,6 +48,7 @@ public class Profiler {
 
 	private final AutoTimer[] autoTimers = new AutoTimer[NUM_TIMERS];
 	private final boolean[] activeTimers = new boolean[NUM_TIMERS];
+	private final Event[] events = new Event[NUM_EVENTS];
 	private final long[] timings = new long[NUM_TIMERS];
 	private final long[] heap = new long[NUM_TIMERS];
 	private final long[] allocations = new long[NUM_TIMERS];
@@ -54,6 +56,7 @@ public class Profiler {
 	private final ArrayDeque<Timer> glDebugGroupStack = new ArrayDeque<>(NUM_GPU_DEBUG_GROUPS);
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
 	private long[] lastGCTimes;
+	private int nextEventIndex = 0;
 
 	@RequiredArgsConstructor
 	public class AutoTimer implements AutoCloseable {
@@ -149,6 +152,7 @@ public class Profiler {
 		Arrays.fill(allocations, 0);
 		Arrays.fill(activeTimers, false);
 		cumulativeError = 0;
+		nextEventIndex = 0;
 	}
 
 	public long getTimeStamp() { return isActive ? System.nanoTime() : 0; }
@@ -237,6 +241,11 @@ public class Profiler {
 			timings[timer.ordinal()] += TimeUnit.NANOSECONDS.convert(duration, unit);
 	}
 
+	public synchronized void pushEvent(Event event) {
+		assert nextEventIndex < NUM_EVENTS;
+		events[nextEventIndex++] = event;
+	}
+
 	public void endFrameAndReset() {
 		if (HdPlugin.GL_CAPS.OpenGL43) {
 			while (!glDebugGroupStack.isEmpty()) {
@@ -287,7 +296,7 @@ public class Profiler {
 			gpuUsageKB = -1;
 		}
 
-		var frameTimings = new ProfileSample(frameEndTimestamp, timings, allocations, cpuLoad, heapUsageKB, freeSystemMemory, gpuUsageKB);
+		var frameTimings = new ProfileSample(frameEndTimestamp, timings, allocations, events, nextEventIndex, cpuLoad, heapUsageKB, freeSystemMemory, gpuUsageKB);
 		for (var listener : listeners)
 			listener.onFrameCompletion(frameTimings);
 
@@ -299,6 +308,7 @@ public class Profiler {
 		if (lastGCTimes == null || lastGCTimes.length != garbageCollectors.size())
 			lastGCTimes = new long[garbageCollectors.size()];
 
+		long lastGcCount = plugin.garbageCollectionCount;
 		plugin.garbageCollectionCount = 0;
 		long elapsedDuration = 0;
 		for (int i = 0; i < garbageCollectors.size(); i++) {
@@ -311,6 +321,9 @@ public class Profiler {
 			}
 			plugin.garbageCollectionCount += gc.getCollectionCount();
 		}
+
+		if(lastGcCount != plugin.garbageCollectionCount)
+			pushEvent(Event.GC);
 
 		addDuration(Timer.GARBAGE_COLLECTION, elapsedDuration * 1_000_000L);
 	}
