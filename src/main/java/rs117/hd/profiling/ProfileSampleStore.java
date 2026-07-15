@@ -13,7 +13,7 @@ public class ProfileSampleStore implements Profiler.Listener {
 
 	public void setCapturing(boolean capturing) {
 		this.capturing = capturing;
-		if (capturing)
+		if (!capturing)
 			return;
 
 		// Keep a stable list snapshot while frozen.
