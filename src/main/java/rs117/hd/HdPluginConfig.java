@@ -1295,6 +1295,12 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_FRAME_TIMER_GRAPH_DETACHED = "frameTimerGraphDetached";
+	@ConfigItem(keyName = KEY_FRAME_TIMER_GRAPH_DETACHED, hidden = true, name = "", description = "")
+	default boolean frameTimerGraphDetached() {
+		return false;
+	}
+
 	String KEY_FRAME_TIMER_GRAPH_WIDTH = "frameTimerGraphWidth";
 	@ConfigItem(keyName = KEY_FRAME_TIMER_GRAPH_WIDTH, hidden = true, name = "", description = "")
 	default int frameTimerGraphWidth() {

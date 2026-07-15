@@ -59,6 +59,9 @@ public class ProfilerUI {
 	@Inject
 	private ProfilerGraphOverlay profilerGraphOverlay;
 
+	@Inject
+	private ProfilerGraphFrame profilerGraphFrame;
+
 	@Getter
 	@Setter
 	private Tab selectedTab = Tab.ALL;
@@ -69,6 +72,9 @@ public class ProfilerUI {
 
 	@Getter
 	private boolean settingsDetached;
+
+	@Getter
+	private boolean graphDetached;
 
 	@Getter
 	@Setter
@@ -171,6 +177,14 @@ public class ProfilerUI {
 				config.frameTimerSettingsDetached()
 			);
 
+			graphDetached = parseBoolean(
+				configManager.getConfiguration(
+					HdPluginConfig.CONFIG_GROUP,
+					HdPluginConfig.KEY_FRAME_TIMER_GRAPH_DETACHED
+				),
+				config.frameTimerGraphDetached()
+			);
+
 			setGraphPlotWidthInternal(parseInt(
 				configManager.getConfiguration(
 					HdPluginConfig.CONFIG_GROUP,
@@ -242,25 +256,64 @@ public class ProfilerUI {
 		return profilerGraphOverlay.isActive();
 	}
 
+	public boolean isGraphWindowActive() {
+		return profilerGraphFrame.isActive();
+	}
+
 	public void applyGraphOverlayState() {
-		profilerGraphOverlay.setActive(graphEnabledPreference);
+		applyGraphDisplayState();
 	}
 
 	public void setGraphOverlayActive(boolean active) {
-		profilerGraphOverlay.setActive(active);
+		if (active) {
+			applyGraphDisplayState();
+			return;
+		}
+		profilerGraphOverlay.setActive(false);
+		profilerGraphFrame.setActive(false);
 	}
 
 	public void setGraphEnabled(boolean enabled) {
-		if (enabled == graphEnabledPreference && enabled == profilerGraphOverlay.isActive())
+		boolean displayMatches = enabled
+			? (graphDetached ? profilerGraphFrame.isActive() : profilerGraphOverlay.isActive())
+			: (!profilerGraphOverlay.isActive() && !profilerGraphFrame.isActive());
+		if (enabled == graphEnabledPreference && displayMatches)
 			return;
 
 		graphEnabledPreference = enabled;
-		profilerGraphOverlay.setActive(enabled);
+		applyGraphDisplayState();
 		notifyChanged();
 	}
 
 	public void toggleGraph() {
 		setGraphEnabled(!graphEnabledPreference);
+	}
+
+	public void setGraphDetached(boolean detached) {
+		if (graphDetached == detached)
+			return;
+
+		graphDetached = detached;
+		applyGraphDisplayState();
+		notifyChanged();
+	}
+
+	public void detachGraphs() {
+		setGraphDetached(true);
+	}
+
+	public void dockGraphs() {
+		setGraphDetached(false);
+	}
+
+	public void toggleGraphDetached() {
+		setGraphDetached(!graphDetached);
+	}
+
+	private void applyGraphDisplayState() {
+		boolean show = graphEnabledPreference;
+		profilerGraphOverlay.setActive(show && !graphDetached);
+		profilerGraphFrame.setActive(show && graphDetached);
 	}
 
 	public boolean isGraphVisible(Graph graph) {
@@ -373,6 +426,12 @@ public class ProfilerUI {
 			HdPluginConfig.CONFIG_GROUP,
 			HdPluginConfig.KEY_FRAME_TIMER_SETTINGS_DETACHED,
 			String.valueOf(settingsDetached)
+		);
+
+		configManager.setConfiguration(
+			HdPluginConfig.CONFIG_GROUP,
+			HdPluginConfig.KEY_FRAME_TIMER_GRAPH_DETACHED,
+			String.valueOf(graphDetached)
 		);
 
 		configManager.setConfiguration(
