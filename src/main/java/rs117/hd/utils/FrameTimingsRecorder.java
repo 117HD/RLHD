@@ -18,16 +18,16 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.FrameTimings;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.ProfileSample;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class FrameTimingsRecorder implements FrameTimer.Listener {
+public class FrameTimingsRecorder implements Profiler.Listener {
 	private static final ResourcePath SNAPSHOTS_PATH = HdPlugin.PLUGIN_DIR.resolve("snapshots");
 	private static final int SNAPSHOT_DURATION_MS = 20_000;
 
@@ -47,7 +47,7 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 	private HdPlugin plugin;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
@@ -79,9 +79,9 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 
 			public transient long[] rawTimings;
 
-			public Frame(FrameTimings frameTimings) {
-				timestamp = frameTimings.frameTimestamp;
-				rawTimings = frameTimings.timers;
+			public Frame(ProfileSample profileSample) {
+				timestamp = profileSample.frameTimestamp;
+				rawTimings = profileSample.timers;
 				Runtime rt = Runtime.getRuntime();
 				memoryTotal = rt.totalMemory() / MiB;
 				memoryFree = rt.freeMemory() / MiB;
@@ -124,7 +124,7 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 				snapshot.settings.put(key, configManager.getConfiguration("hd", key));
 			}
 
-			frameTimer.addTimingsListener(this);
+			profiler.addTimingsListener(this);
 			sendGameMessage(String.format("Capturing frame timings for %.0f seconds...", SNAPSHOT_DURATION_MS / 1e3f));
 		});
 	}
@@ -160,9 +160,9 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 	}
 
 	@Override
-	public void onFrameCompletion(FrameTimings timings) {
+	public void onFrameCompletion(ProfileSample timings) {
 		if (!isCapturingSnapshot()) {
-			frameTimer.removeTimingsListener(this);
+			profiler.removeTimingsListener(this);
 			return;
 		}
 
@@ -180,7 +180,7 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 	}
 
 	private void saveSnapshot() {
-		frameTimer.removeTimingsListener(this);
+		profiler.removeTimingsListener(this);
 
 		for (var frame : snapshot.frames) {
 			frame.cpu = new LinkedHashMap<>();

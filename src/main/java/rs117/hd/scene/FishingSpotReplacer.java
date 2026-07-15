@@ -12,8 +12,8 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.scene.model_overrides.ModelOverride;
 
 import static rs117.hd.utils.ColorUtils.hsl;
@@ -48,7 +48,7 @@ public class FishingSpotReplacer {
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	private final Map<Integer, RuneLiteObject> npcIndexToModel = new HashMap<>();
 
@@ -79,7 +79,7 @@ public class FishingSpotReplacer {
 		if (sceneContext == null)
 			return;
 
-		frameTimer.begin(Timer.REPLACE_FISHING_SPOTS);
+		profiler.begin(Timer.REPLACE_FISHING_SPOTS);
 
 		var worldView = client.getTopLevelWorldView();
 		var npcs = worldView.npcs();
@@ -104,7 +104,7 @@ public class FishingSpotReplacer {
 			npcIndexToModel.remove(entry.getKey());
 		}
 
-		frameTimer.end(Timer.REPLACE_FISHING_SPOTS);
+		profiler.end(Timer.REPLACE_FISHING_SPOTS);
 	}
 
 	@Subscribe

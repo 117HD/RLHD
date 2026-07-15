@@ -22,12 +22,16 @@ import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.components.GraphComponent;
+import rs117.hd.profiling.ProfileSample;
+import rs117.hd.profiling.ProfileSampleStore;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 
 import static rs117.hd.HdPlugin.GL_CAPS;
 
 @Slf4j
 @Singleton
-public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListener {
+public class ProfilerGraphOverlay extends OverlayPanel implements MouseListener {
 	private static final Color HEAP_COLOR = new Color(80, 200, 255);
 	private static final Color GPU_COLOR = new Color(80, 255, 95);
 	private static final Color MEMORY_COLOR = new Color(255, 80, 179);
@@ -46,13 +50,13 @@ public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListene
 	private Client client;
 
 	@Inject
-	private FrameTimerOverlay frameTimerOverlay;
+	private ProfilerOverlay profilerOverlay;
 
 	@Inject
-	private FrameTimingsStore frameTimingsStore;
+	private ProfileSampleStore profileSampleStore;
 
 	@Inject
-	private FrameTimerUI ui;
+	private ProfilerUI ui;
 
 	@Inject
 	private EventBus eventBus;
@@ -61,30 +65,30 @@ public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListene
 	private MouseManager mouseManager;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	private final List<GraphEntry> timerGraphs = new ArrayList<>();
 	private final List<GraphEntry> memoryGraphs = new ArrayList<>();
-	private final List<FrameTimings> frames = new ArrayList<>();
+	private final List<ProfileSample> frames = new ArrayList<>();
 
 	@Getter
 	private boolean active;
 
-	private GraphComponent<FrameTimings> dragGraph;
+	private GraphComponent<ProfileSample> dragGraph;
 	private Point dragStartPoint;
 
 	private static final class GraphEntry {
-		final FrameTimerUI.Graph id;
-		final GraphComponent<FrameTimings> component;
+		final ProfilerUI.Graph id;
+		final GraphComponent<ProfileSample> component;
 
-		GraphEntry(FrameTimerUI.Graph id, GraphComponent<FrameTimings> component) {
+		GraphEntry(ProfilerUI.Graph id, GraphComponent<ProfileSample> component) {
 			this.id = id;
 			this.component = component;
 		}
 	}
 
 	@Inject
-	public FrameTimerGraphOverlay(HdPlugin plugin) {
+	public ProfilerGraphOverlay(HdPlugin plugin) {
 		super(plugin);
 		setLayer(OverlayLayer.ABOVE_SCENE);
 		setPosition(OverlayPosition.TOP_RIGHT);
@@ -106,8 +110,8 @@ public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListene
 	}
 
 	void createGraphs() {
-		Supplier<List<FrameTimings>> frames = () -> this.frames;
-		Supplier<Object> hoveredTimer = () -> frameTimerOverlay.getHoveredTimer();
+		Supplier<List<ProfileSample>> frames = () -> this.frames;
+		Supplier<Object> hoveredTimer = () -> profilerOverlay.getHoveredTimer();
 		Supplier<Point> mousePosition = () -> {
 			var p = client.getMouseCanvasPosition();
 			return p == null ? null : new Point(p.getX(), p.getY());
@@ -116,13 +120,13 @@ public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListene
 		timerGraphs.clear();
 		memoryGraphs.clear();
 
-		var cpuGpuGraph = setupFrameTimerGraph(new GraphComponent<>("CPU/GPU", frames, hoveredTimer, mousePosition), FrameTimerUI.Graph.CPU_GPU);
-		var cpuGraph = setupFrameTimerGraph(new GraphComponent<>("CPU", frames, hoveredTimer, mousePosition), FrameTimerUI.Graph.CPU);
-		var asyncGraph = setupFrameTimerGraph(new GraphComponent<>("ASYNC", frames, hoveredTimer, mousePosition), FrameTimerUI.Graph.ASYNC);
-		var gpuGraph = setupFrameTimerGraph(new GraphComponent<>("GPU", frames, hoveredTimer, mousePosition), FrameTimerUI.Graph.GPU);
-		var allocationGraph = setupMemoryGraph(new GraphComponent<>("Allocations", frames, hoveredTimer, mousePosition), true, FrameTimerUI.Graph.ALLOCATIONS);
-		var heapMemoryGraph = setupMemoryGraph(new GraphComponent<>("Heap Memory", frames, () -> null, mousePosition), false, FrameTimerUI.Graph.HEAP);
-		var systemMemoryGraph = setupMemoryGraph(new GraphComponent<>("System Memory", frames, () -> null, mousePosition), false, FrameTimerUI.Graph.SYSTEM_MEMORY);
+		var cpuGpuGraph = setupFrameTimerGraph(new GraphComponent<>("CPU/GPU", frames, hoveredTimer, mousePosition), ProfilerUI.Graph.CPU_GPU);
+		var cpuGraph = setupFrameTimerGraph(new GraphComponent<>("CPU", frames, hoveredTimer, mousePosition), ProfilerUI.Graph.CPU);
+		var asyncGraph = setupFrameTimerGraph(new GraphComponent<>("ASYNC", frames, hoveredTimer, mousePosition), ProfilerUI.Graph.ASYNC);
+		var gpuGraph = setupFrameTimerGraph(new GraphComponent<>("GPU", frames, hoveredTimer, mousePosition), ProfilerUI.Graph.GPU);
+		var allocationGraph = setupMemoryGraph(new GraphComponent<>("Allocations", frames, hoveredTimer, mousePosition), true, ProfilerUI.Graph.ALLOCATIONS);
+		var heapMemoryGraph = setupMemoryGraph(new GraphComponent<>("Heap Memory", frames, () -> null, mousePosition), false, ProfilerUI.Graph.HEAP);
+		var systemMemoryGraph = setupMemoryGraph(new GraphComponent<>("System Memory", frames, () -> null, mousePosition), false, ProfilerUI.Graph.SYSTEM_MEMORY);
 
 		if (GL_CAPS.GL_NVX_gpu_memory_info)
 			systemMemoryGraph.addSeries("GPU Memory", GPU_COLOR, f -> f.gpuUsageKB / (double) KB_PER_MB, false);
@@ -153,7 +157,7 @@ public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListene
 		applyGraphSizes();
 	}
 
-	private GraphComponent<FrameTimings> setupFrameTimerGraph(GraphComponent<FrameTimings> graph, FrameTimerUI.Graph graphId) {
+	private GraphComponent<ProfileSample> setupFrameTimerGraph(GraphComponent<ProfileSample> graph, ProfilerUI.Graph graphId) {
 		graph
 			.setYAxisName("ms")
 			.setAxisFormat("%.3f")
@@ -162,7 +166,7 @@ public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListene
 		return graph;
 	}
 
-	private GraphComponent<FrameTimings> setupMemoryGraph(GraphComponent<FrameTimings> graph, boolean isKB, FrameTimerUI.Graph graphId) {
+	private GraphComponent<ProfileSample> setupMemoryGraph(GraphComponent<ProfileSample> graph, boolean isKB, ProfilerUI.Graph graphId) {
 		graph
 			.setRoundStep(50.0)
 			.setYAxisName(isKB ? "KB" : "MB")
@@ -282,15 +286,15 @@ public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListene
 		return count;
 	}
 
-	private void addTimerSeries(GraphComponent<FrameTimings> graph, Timer t) {
+	private void addTimerSeries(GraphComponent<ProfileSample> graph, Timer t) {
 		graph.addSeries(t.name(), t.color, f -> f.timers[t.ordinal()] / 1e6, false, t);
 	}
 
-	private void addMemorySeries(GraphComponent<FrameTimings> graph, Timer t) {
+	private void addMemorySeries(GraphComponent<ProfileSample> graph, Timer t) {
 		graph.addSeries(t.name(), t.color, f -> f.allocations[t.ordinal()] / (double) BYTES_PER_KB, false, t);
 	}
 
-	private boolean isInGraph(GraphComponent<FrameTimings> graph, Timer t) {
+	private boolean isInGraph(GraphComponent<ProfileSample> graph, Timer t) {
 		return graph.getSeries(t) != null;
 	}
 
@@ -322,7 +326,7 @@ public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListene
 
 		if(!hasSelection()) {
 			frames.clear();
-			frames.addAll(frameTimingsStore.getFrames());
+			frames.addAll(profileSampleStore.getFrames());
 		}
 
 		var children = panelComponent.getChildren();
@@ -353,7 +357,7 @@ public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListene
 		return Math.max(min, Math.min(max, value));
 	}
 
-	private GraphComponent<FrameTimings> findGraphAt(Point canvasPoint) {
+	private GraphComponent<ProfileSample> findGraphAt(Point canvasPoint) {
 		var panelBounds = getBounds();
 		if (panelBounds == null || panelBounds.width <= 0 || panelBounds.height <= 0)
 			return null;
@@ -373,7 +377,7 @@ public class FrameTimerGraphOverlay extends OverlayPanel implements MouseListene
 	@Override
 	public MouseEvent mousePressed(MouseEvent event) {
 		if (active && event.getButton() == MouseEvent.BUTTON1) {
-			GraphComponent<FrameTimings> hit = findGraphAt(event.getPoint());
+			GraphComponent<ProfileSample> hit = findGraphAt(event.getPoint());
 			if (hit != null) {
 				dragGraph = hit;
 				dragStartPoint = event.getPoint();

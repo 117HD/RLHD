@@ -22,8 +22,8 @@ import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
+import rs117.hd.profiling.Profiler;
+import rs117.hd.profiling.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -89,7 +89,7 @@ public class SceneManager {
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private Profiler profiler;
 
 	private UBOWorldViews uboWorldViews;
 
@@ -182,9 +182,9 @@ public class SceneManager {
 
 	public void update() {
 		assert client.isClientThread();
-		frameTimer.begin(Timer.UPDATE_AREA_HIDING);
+		profiler.begin(Timer.UPDATE_AREA_HIDING);
 		updateAreaHiding();
-		frameTimer.end(Timer.UPDATE_AREA_HIDING);
+		profiler.end(Timer.UPDATE_AREA_HIDING);
 
 		if (root.sceneContext == null)
 			return;
