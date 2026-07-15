@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import rs117.hd.overlays.components.GraphComponent;
+import rs117.hd.profiling.Event;
 import rs117.hd.profiling.ProfileSample;
 import rs117.hd.profiling.ProfileSampleStore;
 import rs117.hd.profiling.Timer;
@@ -342,11 +344,17 @@ public class ProfilerGraphs {
 			entry.component.setGraphSize(plotWidth, memoryHeight);
 	}
 
+	private void addEventsToGraph(GraphComponent<ProfileSample> graph) {
+		for(Event event : Event.EVENTS)
+			graph.addEventMarker(event.name, event.color,  (f) -> f.events != null && Arrays.binarySearch(f.events, event) >= 0);
+	}
+
 	private GraphComponent<ProfileSample> setupFrameTimerGraph(GraphComponent<ProfileSample> graph, ProfilerUI.Graph graphId) {
 		graph
 			.setYAxisName("ms")
 			.setAxisFormat("%.3f")
 			.setAppendAxisNameToTooltip(true);
+		addEventsToGraph(graph);
 		timerGraphs.add(new GraphEntry(graphId, graph));
 		return graph;
 	}
@@ -356,6 +364,7 @@ public class ProfilerGraphs {
 			.setRoundStep(50.0)
 			.setYAxisName(isKB ? "KB" : "MB")
 			.setAppendAxisNameToTooltip(true);
+		addEventsToGraph(graph);
 		memoryGraphs.add(new GraphEntry(graphId, graph));
 		return graph;
 	}

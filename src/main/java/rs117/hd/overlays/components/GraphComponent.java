@@ -1,6 +1,7 @@
 package rs117.hd.overlays.components;
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Dimension;
@@ -10,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToDoubleFunction;
 import lombok.Getter;
@@ -66,12 +70,17 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 
 	private static final Composite TITLE_COMPOSITE = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, TITLE_ALPHA);
 
+	private static final float[] EVENT_MARKER_DASH = { 4f, 3f };
+	private static final Stroke EVENT_MARKER_STROKE = new BasicStroke(
+		1f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10f, EVENT_MARKER_DASH, 0f);
+
 	private final String title;
 	private final Supplier<List<T>> dataSupplier;
 	private final Supplier<Object> hoveredKeySupplier;
 	private final Supplier<Point> mousePositionSupplier;
 
 	private final List<Series<T>> series = new ArrayList<>();
+	private final List<EventMarker<T>> eventMarkers = new ArrayList<>();
 
 	private final Rectangle bounds = new Rectangle();
 
@@ -113,6 +122,7 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 
 	private final List<Series<T>> toolTipSeries = new ArrayList<>();
 	private final List<String> toolTipLines = new ArrayList<>();
+	private final List<Color> toolTipColors = new ArrayList<>();
 
 	private final StringBuilder sb = new StringBuilder();
 	private final Formatter formatter = new Formatter(sb);
@@ -240,6 +250,27 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 	public GraphComponent<T> setAxisFormat(String axisFormat) {
 		this.axisFormat = axisFormat;
 		return this;
+	}
+
+	public GraphComponent<T> addEventMarker(String name, Color color, Predicate<T> predicate) {
+		return addEventMarker(name, color, predicate, null);
+	}
+
+	public GraphComponent<T> addEventMarker(String name, Color color, Predicate<T> predicate, Function<T, String> labelExtractor) {
+		eventMarkers.add(new EventMarker<>(name, color, predicate, labelExtractor));
+		return this;
+	}
+
+	public GraphComponent<T> removeEventMarker(String name) {
+		eventMarkers.removeIf(m -> m.name.equals(name));
+		return this;
+	}
+
+	public List<LegendEntry> getEventMarkerLegendEntries() {
+		List<LegendEntry> entries = new ArrayList<>(eventMarkers.size());
+		for (EventMarker<T> m : eventMarkers)
+			entries.add(new LegendEntry(m.name, m.color, m.name));
+		return entries;
 	}
 
 	public T getHoveredData() {
@@ -391,6 +422,8 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 			g.drawLine(selX2, plotY, selX2, plotY + graphHeight);
 		}
 
+		drawEventMarkers(g, data, plotX, plotY);
+
 		boolean isolate = hoveredKey != null && series.stream().anyMatch(s -> matchesHoverKey(hoveredKey, s));
 
 		Series<T> hoveredSeries = null;
@@ -421,6 +454,34 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 		return new Dimension(totalWidth, totalHeight);
 	}
 
+	private void drawEventMarkers(Graphics2D g, List<T> data, int plotX, int plotY) {
+		if (eventMarkers.isEmpty())
+			return;
+
+		int count = data.size();
+		Stroke oldStroke = g.getStroke();
+		g.setStroke(EVENT_MARKER_STROKE);
+
+		for (int i = 0; i < count; i++) {
+			final T point = data.get(i);
+			int x = -1;
+
+			for (int m = 0; m < eventMarkers.size(); m++) {
+				final EventMarker<T> marker = eventMarkers.get(m);
+				if (!marker.predicate.test(point))
+					continue;
+
+				if (x < 0)
+					x = plotX + (int) ((double) i / (count - 1) * graphWidth);
+
+				g.setColor(marker.color);
+				g.drawLine(x, plotY, x, plotY + graphHeight);
+			}
+		}
+
+		g.setStroke(oldStroke);
+	}
+
 	public void renderTooltip(Graphics2D g) {
 		var data = dataSupplier.get();
 		if (data == null)
@@ -443,8 +504,8 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 
 		// Header + value lines shown in the tooltip box
 		String header = null;
-		toolTipSeries.clear();
 		toolTipLines.clear();
+		toolTipColors.clear();
 
 		if (hasSelection) {
 			int selectionCount = selectionEndIndex - selectionStartIndex + 1;
@@ -460,8 +521,23 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 				if (appendAxisNameToTooltip && yAxisName != null)
 					value += " " + yAxisName;
 
-				toolTipSeries.add(s);
+				toolTipColors.add(s.color);
 				toolTipLines.add(s.name + ": " + value);
+			}
+
+			// Show how many times each event marker fired within the selected range
+			for (int m = 0; m < eventMarkers.size(); m++) {
+				final EventMarker<T> marker = eventMarkers.get(m);
+				int occurrences = 0;
+				for (int i = selectionStartIndex; i <= selectionEndIndex; i++) {
+					if (marker.predicate.test(data.get(i)))
+						occurrences++;
+				}
+				if (occurrences == 0)
+					continue;
+
+				toolTipColors.add(marker.color);
+				toolTipLines.add(marker.name + ": " + occurrences + (occurrences == 1 ? "x" : "x"));
 			}
 		} else {
 			double maxValue = 1;
@@ -496,8 +572,19 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 				String value = format(axisFormat, s.valueExtractor.applyAsDouble(point));
 				if (appendAxisNameToTooltip && yAxisName != null)
 					value += " " + yAxisName;
-				toolTipSeries.add(s);
+				toolTipColors.add(s.color);
 				toolTipLines.add(s.name + ": " + value);
+			}
+
+			// Append labels for any event markers matching the hovered point
+			for (int m = 0; m < eventMarkers.size(); m++) {
+				final EventMarker<T> marker = eventMarkers.get(m);
+				if (!marker.predicate.test(point))
+					continue;
+
+				String label = marker.labelExtractor != null ? marker.labelExtractor.apply(point) : marker.name;
+				toolTipColors.add(marker.color);
+				toolTipLines.add(label);
 			}
 		}
 
@@ -546,7 +633,7 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 		}
 
 		for (int i = 0; i < toolTipLines.size(); i++) {
-			g.setColor(toolTipSeries.get(i).color);
+			g.setColor(toolTipColors.get(i));
 			g.drawString(toolTipLines.get(i), boxX + TOOLTIP_PADDING, textY + (lineIndex + i) * TOOLTIP_LINE_HEIGHT);
 		}
 
@@ -797,5 +884,13 @@ public class GraphComponent<T> implements LayoutableRenderableEntity {
 		private final Object key;
 
 		private boolean show;
+	}
+
+	@RequiredArgsConstructor
+	private static class EventMarker<T> {
+		private final String name;
+		private final Color color;
+		private final Predicate<T> predicate;
+		private final Function<T, String> labelExtractor; // nullable, falls back to name
 	}
 }
