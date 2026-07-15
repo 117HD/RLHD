@@ -133,6 +133,10 @@ public class Environment {
 	// decouple: e.g. 0 hides auroras while keeping stars, 1 shows full auroras even
 	// where stars are dimmed. Resolved to a concrete value in normalize().
 	public float auroraVisibility = -1;
+	// Moon size multiplier for this area. Scales the moon disk AND its glow and the
+	// star-occlusion mask around it, together. 1 (default) = normal size; >1 larger,
+	// <1 smaller.
+	public float moonSizeMult = 1;
 	public float sunStrength = 1;
 	// How strongly the procedural day/night sunrise/sunset is allowed to paint this
 	// area's sky, in [0, 1]. 1 = full procedural sunrise/sunset (default). Lower

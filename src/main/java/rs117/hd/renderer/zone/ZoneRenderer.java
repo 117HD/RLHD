@@ -867,6 +867,7 @@ public class ZoneRenderer implements Renderer {
 				|| daylightCycle == DaylightCycle.FIXED_MIDDAY
 				|| daylightCycle == DaylightCycle.FIXED_SUNSET;
 			plugin.uboGlobal.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
+			plugin.uboGlobal.moonSizeMult.set(environmentManager.currentMoonSizeMult);
 			// Auroras appear on nights the per-night random roll selects. In modes
 			// with a day/night arc the roll switches during daytime so it's invisible
 			// behind nightSkyBlend; in always-night modes getAuroraStrength() applies a
@@ -987,6 +988,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.starVisibility.set(1.0f);
 			plugin.uboGlobal.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
 			plugin.uboGlobal.auroraVisibility.set(0f);
+			plugin.uboGlobal.moonSizeMult.set(1.0f);
 		}
 
 		// Hide the game's built-in skybox models when requested, so the day/night

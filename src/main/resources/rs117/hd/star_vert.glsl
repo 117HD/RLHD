@@ -46,7 +46,11 @@ void main() {
         float moonDot = dot(dir, moonDir);
         // 0 inside the disk (occluded), 1 outside a slightly larger soft rim.
         // cos values: 0.99951 = disk edge, smaller cos = wider angle from center.
-        moonOcclusion = smoothstep(0.99951, 0.9991, moonDot);
+        // Scale both thresholds' angular radii by moonSizeMult so the star-occlusion
+        // mask grows/shrinks with the moon disk (kept consistent with sky_frag.glsl).
+        float innerAngle = acos(0.99951) * moonSizeMult;
+        float outerAngle = acos(0.9991) * moonSizeMult;
+        moonOcclusion = smoothstep(cos(innerAngle), cos(outerAngle), moonDot);
     }
 
     // Project a far-but-finite point along the star direction. projectionMatrix is

@@ -77,5 +77,9 @@ layout(std140) uniform UBOGlobal {
     // Aurora visibility (1 on randomly-selected aurora nights, else 0)
     float auroraVisibility;
 
+    // Moon size multiplier (from environment override). Scales the moon disk, its
+    // glow, and the star-occlusion mask around it. 1 = default size.
+    float moonSizeMult;
+
     int orthographicProjection;
 };

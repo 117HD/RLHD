@@ -127,8 +127,11 @@ void main() {
 
         if (moonDot > 0.0 && moonDayAlpha > 0.001) {
             // Moon angular radius: ~3.8 degrees diameter = 1.9 degrees half-angle
-            // cos(1.9 deg) ≈ 0.99945 — enlarged beyond realistic for visual impact
-            float moonAngularRadius = 0.99945;
+            // cos(1.9 deg) ≈ 0.99945 — enlarged beyond realistic for visual impact.
+            // Scale the angular radius by moonSizeMult, then convert back to a cosine
+            // threshold, so the per-environment size multiplier grows/shrinks the disk.
+            float moonBaseRadius = acos(0.99945);
+            float moonAngularRadius = cos(moonBaseRadius * moonSizeMult);
             float edgeWidth = moonDot > 0.01 ? fwidth(moonDot) * 1.5 : 0;
 
             // Sharp disk with anti-aliased edge
@@ -273,9 +276,11 @@ void main() {
                 skyColor = mix(skyColor, moonFinalColor, moonAlpha);
             }
 
-            // Subtle atmospheric glow around the moon (also faded by daytime transparency)
+            // Subtle atmospheric glow around the moon (also faded by daytime transparency).
+            // Divide the falloff exponent by moonSizeMult so the glow widens with a
+            // larger moon (and tightens with a smaller one), matching the disk.
             float glowHorizonFade = smoothstep(-0.1, 0.07, sky.upAmount);
-            float moonGlow = pow(moonDot, 256.0) * 0.05 * skyMoonIllumination * moonDayAlpha * moonVisibility * glowHorizonFade;
+            float moonGlow = pow(moonDot, 256.0 / max(moonSizeMult, 0.001)) * 0.05 * skyMoonIllumination * moonDayAlpha * moonVisibility * glowHorizonFade;
             skyColor += skyMoonColor * moonGlow;
         }
     }

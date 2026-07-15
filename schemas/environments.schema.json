@@ -267,6 +267,11 @@
         "description": "Aurora visibility multiplier for this area (0 to 1), controllable independently of starVisibility. Auroras still only appear on the randomly-selected aurora nights and fade with the night; this scales how visible they are when they do. When omitted it falls back to starVisibility (the original behavior, where hiding stars also hides auroras). Set it explicitly to decouple: 0 hides auroras while keeping stars, 1 shows full auroras even where stars are dimmed.",
         "minimum": 0,
         "maximum": 1
+      },
+      "moonSizeMult": {
+        "type": "number",
+        "description": "Moon size multiplier for this area. Scales the moon disk together with its glow and the star-occlusion mask around it. 1 (default) is the normal size; values above 1 make the moon larger, below 1 smaller.",
+        "minimum": 0
       }
     }
   }

@@ -88,5 +88,8 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	// Aurora visibility (1 on randomly-selected aurora nights, else 0)
 	public Property auroraVisibility = addProperty(PropertyType.Float, "auroraVisibility");
 
+	// Moon size multiplier (from environment override) — scales moon disk, glow, and star mask
+	public Property moonSizeMult = addProperty(PropertyType.Float, "moonSizeMult");
+
 	public Property orthographicProjection = addProperty(PropertyType.Int, "orthographicProjection");
 }
