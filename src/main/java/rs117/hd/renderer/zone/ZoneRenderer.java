@@ -952,7 +952,10 @@ public class ZoneRenderer implements Renderer {
 			// specifies a distinct nightSkyColor.
 			if (moonInfluence > 0) {
 				float[] nightSkyColor = environmentManager.currentNightSkyColor;
-				float skyTint = moonInfluence * 0.05f;
+				// Base tint is a subtle 5% of moonInfluence; nightSkyColorStrength scales
+				// it up for areas where that reads too weakly. Clamp to a full blend so a
+				// large strength can't overshoot past the night-sky color.
+				float skyTint = Math.min(1f, moonInfluence * 0.05f * environmentManager.currentNightSkyColorStrength);
 				for (int i = 0; i < 3; i++) {
 					skyGradientColors[0][i] = skyGradientColors[0][i] * (1 - skyTint) + nightSkyColor[i] * skyTint;
 					skyGradientColors[1][i] = skyGradientColors[1][i] * (1 - skyTint) + nightSkyColor[i] * skyTint;

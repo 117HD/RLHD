@@ -96,6 +96,10 @@ public class Environment {
 	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] nightSkyColor;
+	// How strongly nightSkyColor tints the night sky. 1 (default) preserves the
+	// original subtle tint; higher values push the sky harder toward nightSkyColor for
+	// areas where the default is too weak to read.
+	public float nightSkyColorStrength = 1;
 	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians

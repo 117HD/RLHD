@@ -160,6 +160,11 @@
           "type": "number"
         }
       },
+      "nightSkyColorStrength": {
+        "type": "number",
+        "description": "How strongly nightSkyColor tints the night sky. 1 (default) preserves the original subtle tint; higher values push the sky harder toward nightSkyColor for areas where the default is too weak to read. The resulting blend is clamped so large values can't overshoot past the night-sky color.",
+        "minimum": 0
+      },
       "sunAngles": {
         "type": "array",
         "description": "The sun's altitude and azimuth specified in degrees in the horizontal coordinate system. Altitude is from the ground up, azimuth is clockwise from north.",
