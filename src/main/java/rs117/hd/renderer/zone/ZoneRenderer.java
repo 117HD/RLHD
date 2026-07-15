@@ -666,12 +666,13 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			directionalCamera.setPitch(directionalPitch);
-			// Shadow/light direction must point AWAY from the sun/moon disk (light
-			// travels from the disk toward the scene). The disk maps azimuth via
-			// yaw = PI + azimuth (see anglesToSkyDirection); the shadow camera uses the
-			// opposite yaw (azimuth + PI) so shadows fall away from the sun rather than
-			// toward it.
-			directionalCamera.setYaw(directionalYaw + PI);
+			// Shadow/light direction must point AWAY from the sun/moon disk. The shadow
+			// pipeline applies its own inversion downstream, so the yaw that actually
+			// renders shadows opposite the sun is the 180° complement of the offline
+			// "forward = -disk" solution — i.e. -azimuth. (Verified empirically in-game:
+			// PI - azimuth cast shadows straight at the sun; negating the yaw flips them
+			// to fall away from it.)
+			directionalCamera.setYaw(-directionalYaw);
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
 			if (plugin.configShadowsEnabled &&

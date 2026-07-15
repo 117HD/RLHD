@@ -229,13 +229,15 @@ public class TimeOfDay {
 	 */
 	private float[] anglesToSkyDirection(double azimuth, double altitude) {
 		// yaw = PI + azimuth maps the (now real, non-reversed) astronomical azimuth to
-		// the renderer's sky direction so the sun/moon appear on the correct compass
-		// side — rising in the east, and north/south tracking the real season.
+		// the renderer's sky direction so the sun/moon rise in the east. The north/south
+		// (z) component is negated on top of that: without it the season rendered
+		// inverted (equatorial June sun appeared south instead of north). x (east/west)
+		// is left untouched so the correct sunrise-east direction is preserved.
 		double yaw = Math.PI + azimuth;
 
 		float x = (float) (Math.sin(yaw) * Math.cos(altitude));
 		float y = (float) Math.sin(altitude);
-		float z = (float) (-Math.cos(yaw) * Math.cos(altitude));
+		float z = (float) (Math.cos(yaw) * Math.cos(altitude));
 
 		float length = (float) Math.sqrt(x * x + y * y + z * z);
 		if (length > 0.0001f) {
