@@ -618,8 +618,6 @@
     "moonLightColor": "#ED8B8B",
     "cycleMode": "FIXED_NIGHT",
     "fixedMoonAngles": [ 23, 90 ],
-    "sunriseSunsetStrength": 0,
-    "skyColorTakeoverAngle": 2,
 	"auroraVisibility": 0,
     "nightSkyColorStrength": 4.5,
     "moonSizeMult": 3.1
@@ -2390,6 +2388,26 @@
     "windSpeed": 15,
     "windStrength": 50,
     "waterCausticsStrength": 0
+  },
+  {
+    "area": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
+    "hideVanillaSkyboxes": true,
+    "fogDepth": 10,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#330D0D",
+    "sunStrength": 0.2,
+    "sunlightStrength": 2,
+    "minBrightnessBoost": 0.5,
+    "nightSkyColor": "#FF0000",
+    "moonColor": "#ED3D3D",
+    "moonLightColor": "#ED8B8B",
+    "cycleMode": "FIXED_NIGHT",
+    "fixedMoonAngles": [ 14, 90 ],
+    "moonSizeMult": 2.8,
+    "auroraVisibility": 0,
+    "nightSkyColorStrength": 10
   },
   {
     "area": "VAMPYRIUM",

@@ -12238,6 +12238,13 @@
     "regions": [ 12666 ]
   },
   {
+    "name": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
+    "aabbs": [
+      [ 2511, 7823, 2514, 7853, 3 ],
+      [ 2495, 7829, 2510, 7847, 3 ]
+    ]
+  },
+  {
     "name": "VAMPYRIUM",
     "regionBoxes": [ [ 9597, 11128 ] ],
     "areas": [
