@@ -321,3 +321,10 @@ float unpackFloat16(int val) {
 
     return uintBitsToFloat(f);
 }
+
+vec2 unpackFloat2x16(int v) {
+    uint bits = uint(v);
+    uint lo = bits & 0xFFFFu;         // x half, low 16 bits
+    uint hi = (bits >> 16u) & 0xFFFFu; // z half, high 16 bits
+    return vec2(unpackFloat16(int(lo)), unpackFloat16(int(hi)));
+}

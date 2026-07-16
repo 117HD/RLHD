@@ -6,7 +6,7 @@
 #include MAX_BOAT_COUNT
 
 #define BOAT_CONTOUR 8
-#define BOAT_DIST_OFFSET 16.0
+#define BOAT_DIST_OFFSET 42.0
 
 struct Boat {
     // packed XY half16
@@ -28,10 +28,7 @@ layout(std140) uniform UBODisplacement {
 };
 
 vec2 unpackBoatPoint(Boat boat, int vertex) {
-    uint bits = uint(boat.boatContour[vertex / 4][vertex % 4]);
-    uint lo = bits & 0xFFFFu;         // x half, low 16 bits
-    uint hi = (bits >> 16u) & 0xFFFFu; // z half, high 16 bits
-    return vec2(unpackFloat16(int(lo)), unpackFloat16(int(hi)));
+    return unpackFloat2x16(boat.boatContour[vertex / 4][vertex % 4]);
 }
 
 float boatDistance(Boat boat, vec2 p) {
