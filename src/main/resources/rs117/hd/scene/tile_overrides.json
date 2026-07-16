@@ -10796,7 +10796,7 @@
     "waterType": "BLOOD"
   },
   {
-    "name": "Vampyrium - Blood",
+    "name": "Vampyrium - Blood- Instance",
     "area": "VAMPYRIUM_FOREST_INSTANCE",
     "overlayIds": [
       636
@@ -10828,6 +10828,17 @@
       634
     ],
     "groundMaterial": "DIRTY_SMOOTH_STONE"
+  },
+  {
+    "name": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
+    "area": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
+    "uvScale": 1.5,
+    "underlayIds": [
+      145,
+      190,
+      196
+    ],
+    "groundMaterial": "DIRTY_MARBLE_GLOSS"
   },
   {
     "name": "KRAKEN_COVE_HIDE_WATER_EDGE",

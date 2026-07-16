@@ -17647,10 +17647,15 @@
       "AHOY_OLDFENCING_4",
       "AHOY_OLDFENCING_4_MIRROR",
       "AHOY_OLDFENCING_5",
-      "AHOY_OLDFENCING_6"
+      "AHOY_OLDFENCING_6",
+      "MYQ3_OLDFENCING_CLIMB",
+      "MYQ6_BROKEN_FENCE_VIS",
+      "MYQ6_BROKEN_FENCE_VIS_M",
+      "MYQ6_BROKEN_FENCE_VIS_OP",
+      "MYQ6_BROKEN_FENCE_VIS_OP_M"
     ],
     "uvType": "BOX",
-    "uvScale": 0.78
+    "uvScale": 0.6
   },
   {
     "description": "Morytania - Walls - Triple Slat Fence Gate",
@@ -17796,7 +17801,7 @@
     "uvScale": 0.56
   },
   {
-    "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burgh De Rott",
+    "description": "Morytania - Wall - Stone - Stone Brick Wall - Burgh De Rott",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -17820,6 +17825,28 @@
       "BURGH_STONE_CRUMBLY_HALF_LEFT_LEV2",
       "BURGH_STONE_LEV2",
       "BURGH_STONE_WALL_BROKEN"
+    ]
+  },
+  {
+    "description": "Morytania - Burgh De Rott - Blood Moon Rises Trapdoor",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.66,
+    "objectIds": [
+      "MYQ6_OLD_LAB_ENTRY_VIS_NOOP",
+      "MYQ6_OLD_LAB_ENTRY_VIS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvOrientation": 404,
+        "uvScale": 0.4,
+        "shiftLightness": 6
+      }
     ]
   },
   {
@@ -93371,7 +93398,8 @@
     ],
     "objectIds": [
       "BOOTH_DRAKAN01_LAB01",
-      "BOOTH_DRAKAN01_LAB01_2X2_OFFSET"
+      "BOOTH_DRAKAN01_LAB01_2X2_OFFSET",
+      "BOOTH_DRAKAN01_LAB01_SHATTERED01"
     ]
   },
   {
@@ -93400,7 +93428,8 @@
       "MYQ6_WALL_CAVE_SUPPORT_LEFT",
       "MYQ6_VAMPYRIFICATION_LAB_CASTLE_EXIT_NOOP",
       "MYQ6_VAMPYRIFICATION_LAB_CASTLE_EXIT_OP",
-      "MYQ6_VAMPYRIFICATION_LAB_EXIT"
+      "MYQ6_VAMPYRIFICATION_LAB_EXIT",
+      "MYQ6_OLD_LAB_EXIT"
     ]
   },
   {
@@ -94294,7 +94323,12 @@
       "STATUE_DRAKAN01_DEFAULT05_M_DARKMEYER",
       "STATUE_DRAKAN01_DEFAULT01_M",
       "STATUE_DRAKAN01_DEFAULT05_M",
-      "STATUE_DRAKAN01_DEFAULT07_M"
+      "STATUE_DRAKAN01_DEFAULT07_M",
+      "STATUE_DRAKAN01_DEFAULT05_2X2",
+      "STATUE_DRAKAN01_DEFAULT07_2X2",
+      "STATUE_DRAKAN01_DEFAULT04_2X2",
+      "STATUE_DRAKAN01_DEFAULT03_2X2",
+      "STATUE_DRAKAN01_DEFAULT01_2X2"
     ]
   },
   {
