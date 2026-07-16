@@ -12,6 +12,7 @@ import rs117.hd.config.DayLength;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.MoonBehavior;
 import rs117.hd.config.MoonPhase;
+import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.utils.AtmosphereUtils;
 
 import static rs117.hd.utils.ColorUtils.rgb;
@@ -313,6 +314,36 @@ public class TimeOfDay {
 
 	public void setCycleDurationMinutes(float cycleDuration) {
 		currentCycleDuration = cycleDuration;
+	}
+
+	// Latitudes used for the seasonal-hemisphere-based sun/moon arc: New York City
+	// (northern) and Rio de Janeiro (southern). Only latitude affects the sun's
+	// altitude/seasonal arc; longitude is left at 0 since the cycle drives its own
+	// time-of-day rather than a real clock/timezone.
+	private static final double[] NORTHERN_LAT_LONG = { 40.7128, 0.0 };  // New York City
+	private static final double[] SOUTHERN_LAT_LONG = { -22.9068, 0.0 }; // Rio de Janeiro
+
+	/**
+	 * Set the observer latitude for this frame from the player's seasonal hemisphere:
+	 * northern -> New York City, southern -> Rio de Janeiro. Call before any other
+	 * TimeOfDay methods (but after setCycleMode) so the sun/moon arc reflects the
+	 * chosen hemisphere.
+	 *
+	 * Special case: Synced Days is UTC-locked so every player sees the same sky at the
+	 * same moment; to preserve that, it always uses the northern latitude regardless of
+	 * the hemisphere setting (which would otherwise make the two hemispheres diverge).
+	 */
+	public void setSeasonalHemisphere(SeasonalHemisphere hemisphere) {
+		double[] latLong;
+		if (currentCycleMode == DaylightCycle.SYNCED_DAYS) {
+			latLong = NORTHERN_LAT_LONG;
+		} else {
+			latLong = hemisphere == SeasonalHemisphere.SOUTHERN
+				? SOUTHERN_LAT_LONG
+				: NORTHERN_LAT_LONG;
+		}
+		currentLatLong[0] = latLong[0];
+		currentLatLong[1] = latLong[1];
 	}
 
 	/**
