@@ -35,7 +35,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
@@ -54,7 +54,6 @@ import rs117.hd.utils.collections.PrimitiveCharArray;
 import rs117.hd.utils.collections.PrimitiveIntArray;
 
 import static net.runelite.api.Constants.*;
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_MAIN;
 import static rs117.hd.scene.SceneContext.TILE_OVERRIDE_OVERLAY;
@@ -200,7 +199,15 @@ public class SceneUploader implements AutoCloseable {
 			}
 		}
 
-		if (ctx.fillGaps)
+		// Skip gap filling for any unloaded regions by checking if they are completely empty.
+		// This used to be more important when XTEAs prevented extended scene loading until the area had been visited,
+		// but it can still occur for scene loads while the client is initially loading the cache.
+		boolean shouldFillGaps =
+			ctx.fillGaps &&
+			zone.sizeO > 0 &&
+			ctx.sceneBase != null &&
+			(ctx.currentArea == null || ctx.currentArea.fillGaps);
+		if (shouldFillGaps)
 			estimateZoneGapFillers(ctx, zone, mzx, mzz);
 	}
 
@@ -251,8 +258,8 @@ public class SceneUploader implements AutoCloseable {
 				uploadZoneWater(ctx, zone, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 
-			if (ctx.fillGaps)
-				uploadZoneGapFillers(ctx, zone, mzx, mzz, vb, fb);
+			if (ctx.fillGaps && zone.hasGapFiller)
+				uploadZoneGapFillers(ctx, mzx, mzz, vb, fb);
 			zone.levelOffsets[Zone.LEVEL_GAP_FILLER] = vb.position();
 		}
 	}
@@ -1407,7 +1414,6 @@ public class SceneUploader implements AutoCloseable {
 			writeCache = new VertexWriteCache.Collection();
 		writeCache.setOutputBuffers(opaqueBuffer, alphaBuffer, textureBuffer);
 
-		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		final int faceCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
 
@@ -2194,30 +2200,14 @@ public class SceneUploader implements AutoCloseable {
 	}
 
 	public void estimateZoneGapFillers(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		if (ctx.sceneBase == null || ctx.currentArea != null && !ctx.currentArea.fillGaps)
-			return;
-
-		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
-		int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
-		Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
+		int basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
+		int basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
 		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
 			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				int tileExX = (mzx << 3) + xoff;
 				int tileExY = (mzz << 3) + zoff;
-				int faces = processGapTile(
-					ctx,
-					extendedTiles,
-					null,
-					tileExX,
-					tileExY,
-					sceneMin,
-					sceneMax,
-					null,
-					0,
-					0,
-					true
-				);
+				int faces = processGapTile(ctx, tileExX, tileExY, null, basex, basez, false);
 				if (faces > 0) {
 					zone.hasGapFiller = true;
 					zone.sizeO += faces;
@@ -2229,15 +2219,11 @@ public class SceneUploader implements AutoCloseable {
 
 	public void uploadZoneGapFillers(
 		ZoneSceneContext ctx,
-		Zone zone,
 		int mzx,
 		int mzz,
 		GpuIntBuffer vb,
 		GpuIntBuffer fb
 	) {
-		if (ctx.sceneBase == null || !zone.hasGapFiller || ctx.currentArea != null && !ctx.currentArea.fillGaps)
-			return;
-
 		assert vb != null && fb != null;
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
@@ -2245,35 +2231,16 @@ public class SceneUploader implements AutoCloseable {
 
 		int basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		int basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
-		int[][][] tileHeights = ctx.scene.getTileHeights();
 		Material blackMaterial = materialManager.getMaterial("BLACK");
 
-		int sceneMin = -ctx.expandedMapLoadingChunks * CHUNK_SIZE;
-		int sceneMax = SCENE_SIZE + ctx.expandedMapLoadingChunks * CHUNK_SIZE;
-		Tile[][][] extendedTiles = ctx.scene.getExtendedTiles();
-
-		int posBefore = vb.position();
 		for (int xoff = 0; xoff < CHUNK_SIZE; ++xoff) {
 			for (int zoff = 0; zoff < CHUNK_SIZE; ++zoff) {
 				int tileExX = (mzx << 3) + xoff;
 				int tileExY = (mzz << 3) + zoff;
-				processGapTile(
-					ctx,
-					extendedTiles,
-					tileHeights,
-					tileExX,
-					tileExY,
-					sceneMin,
-					sceneMax,
-					blackMaterial,
-					basex,
-					basez,
-					false
-				);
+				processGapTile(ctx, tileExX, tileExY, blackMaterial, basex, basez, true);
 			}
 		}
 		writeCache.release();
-		zone.hasGapFiller = vb.position() > posBefore;
 	}
 
 	/**
@@ -2281,28 +2248,28 @@ public class SceneUploader implements AutoCloseable {
 	 */
 	private int processGapTile(
 		ZoneSceneContext ctx,
-		Tile[][][] extendedTiles,
-		@Nullable int[][][] tileHeights,
 		int tileExX,
 		int tileExY,
-		int sceneMin,
-		int sceneMax,
 		@Nullable Material blackMaterial,
 		int basex,
 		int basez,
-		boolean isEstimate
+		boolean shouldUpload
 	) {
-		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
-			return 0;
-
+		assert tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE;
 		assert ctx.sceneBase != null;
-		int tileX = tileExX - ctx.sceneOffset;
-		int tileY = tileExY - ctx.sceneOffset;
-		ctx.sceneToWorld(tileX, tileY, 0, worldPos);
-		if (ctx.currentArea != null && !ctx.currentArea.containsPoint(worldPos))
+
+		// Skip tiles along the scene boundary, which are always empty
+		if (tileExX == 0 || tileExX == EXTENDED_SCENE_SIZE - 1 ||
+			tileExY == 0 || tileExY == EXTENDED_SCENE_SIZE - 1)
 			return 0;
 
-		Tile tile = extendedTiles[0][tileExX][tileExY];
+		if (ctx.currentArea != null) {
+			ctx.extendedSceneToWorld(tileExX, tileExY, 0, worldPos);
+			if (!ctx.currentArea.containsPoint(worldPos))
+				return 0;
+		}
+
+		Tile tile = tiles[0][tileExX][tileExY];
 
 		SceneTilePaint paint;
 		SceneTileModel model = null;
@@ -2329,53 +2296,21 @@ public class SceneUploader implements AutoCloseable {
 			}
 		}
 
-		boolean shouldFill =
-			tileX > sceneMin &&
-			tileY > sceneMin &&
-			tileX < sceneMax - 1 &&
-			tileY < sceneMax - 1 &&
-			Area.OVERWORLD.containsPoint(worldPos);
-
-		if (shouldFill) {
-			int tileRegionID = HDUtils.worldToRegionID(worldPos);
-			int[] regions = ctx.scene.getMapRegions();
-
-			shouldFill = false;
-			for (int region : regions) {
-				if (region == tileRegionID) {
-					shouldFill = true;
-					break;
-				}
-			}
-
-			if (!shouldFill && ctx.expandedMapLoadingChunks > 0)
-				shouldFill = true;
-		}
-
-		if (!shouldFill)
-			return 0;
-
-		int faces = model != null ? model.getFaceX().length : 2;
-		if (!isEstimate) {
+		if (shouldUpload) {
 			assert tileHeights != null && blackMaterial != null;
 			if (model != null) {
-				uploadGapFillTileModel(tile, model, basex, basez);
+				uploadCustomTileModel(tile, model, blackMaterial, basex, basez);
 			} else {
-				uploadCustomTile(tileHeights, tileExX, tileExY, renderLevel, blackMaterial, tileX, tileY, basex, basez);
+				uploadCustomTilePaint(ctx, tileExX, tileExY, renderLevel, blackMaterial, basex, basez);
 			}
 		}
-		return faces;
+
+		return model == null ? 2 : model.getFaceX().length;
 	}
 
-	private void uploadGapFillTileModel(
-		Tile tile,
-		SceneTileModel model,
-		int basex,
-		int basez
-	) {
+	private void uploadCustomTileModel(Tile tile, SceneTileModel model, Material material, int basex, int basez) {
 		int tileZ = tile.getRenderLevel();
-		Material black = materialManager.getMaterial("BLACK");
-		int packedMaterial = black.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+		int packedMaterial = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 		int terrainData = HDUtils.packTerrainData(true, 0, WaterType.NONE, tileZ);
 
 		final int[] faceX = model.getFaceX();
@@ -2404,14 +2339,12 @@ public class SceneUploader implements AutoCloseable {
 		}
 	}
 
-	private void uploadCustomTile(
-		int[][][] tileHeights,
+	private void uploadCustomTilePaint(
+		SceneContext ctx,
 		int tileExX,
 		int tileExY,
 		int tileZ,
 		Material material,
-		int tileX,
-		int tileY,
 		int zoneBasex,
 		int zoneBasez
 	) {
@@ -2419,26 +2352,24 @@ public class SceneUploader implements AutoCloseable {
 		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
 		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
 		int nwHeight = tileHeights[tileZ][tileExX][tileExY + 1];
-
 		int terrainData = HDUtils.packTerrainData(true, 0, WaterType.NONE, tileZ);
 		int packedMaterial = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
-		int baseX = tileX * LOCAL_TILE_SIZE - zoneBasex;
-		int baseZ = tileY * LOCAL_TILE_SIZE - zoneBasez;
-
+		int x = (tileExX - ctx.sceneOffset) * LOCAL_TILE_SIZE - zoneBasex;
+		int z = (tileExY - ctx.sceneOffset) * LOCAL_TILE_SIZE - zoneBasez;
 		putTerrainTriangle(
 			0, 0, 0,
 			packedMaterial, terrainData,
-			baseX + LOCAL_TILE_SIZE, neHeight, baseZ + LOCAL_TILE_SIZE, 0, 0,
-			baseX, nwHeight, baseZ + LOCAL_TILE_SIZE, 1, 0,
-			baseX + LOCAL_TILE_SIZE, seHeight, baseZ, 0, 1
+			x + LOCAL_TILE_SIZE, neHeight, z + LOCAL_TILE_SIZE, 0, 0,
+			x, nwHeight, z + LOCAL_TILE_SIZE, 1, 0,
+			x + LOCAL_TILE_SIZE, seHeight, z, 0, 1
 		);
 		putTerrainTriangle(
 			0, 0, 0,
 			packedMaterial, terrainData,
-			baseX, swHeight, baseZ, 1, 1,
-			baseX + LOCAL_TILE_SIZE, seHeight, baseZ, 0, 1,
-			baseX, nwHeight, baseZ + LOCAL_TILE_SIZE, 1, 0
+			x, swHeight, z, 1, 1,
+			x + LOCAL_TILE_SIZE, seHeight, z, 0, 1,
+			x, nwHeight, z + LOCAL_TILE_SIZE, 1, 0
 		);
 	}
 
