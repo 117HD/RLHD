@@ -19,7 +19,7 @@ public class UBODisplacement extends UniformBuffer<GLBuffer> {
 	private final Property boatAABBCount = addProperty(PropertyType.Int, "boatCount");
 
 	private final Property[] characterPositions = addPropertyArray(PropertyType.FVec3, "characterPositions", MAX_CHARACTER_POSITION_COUNT);
-	private final Property[] boatData = addPropertyArray(PropertyType.FVec4, "boatData", MAX_BOAT_COUNT * 2);
+	private final BoatStruct[] boatData = addStructs(new BoatStruct[MAX_BOAT_COUNT], BoatStruct::new);
 
 	@Inject
 	private DisplacementManager displacementManager;
@@ -31,6 +31,11 @@ public class UBODisplacement extends UniformBuffer<GLBuffer> {
 	@Override
 	protected void preUpload() {
 		displacementManager.writeCharacterPositions(characterPositions, characterPositionCount);
-		displacementManager.writeBoatAABBs(boatData, boatAABBCount);
+		displacementManager.writeBoatData(boatData, boatAABBCount);
+	}
+
+	public class BoatStruct extends StructProperty {
+		// Encoded Half16
+		public Property[] contour = addPropertyArray(PropertyType.IVec4, "contour", 2);
 	}
 }

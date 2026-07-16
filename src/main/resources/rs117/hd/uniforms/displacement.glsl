@@ -1,11 +1,16 @@
 #pragma once
 
+#include <utils/misc.glsl>
+
 #include MAX_CHARACTER_POSITION_COUNT
 #include MAX_BOAT_COUNT
 
+#define BOAT_CONTOUR 8
+#define BOAT_DIST_OFFSET 16.0
+
 struct Boat {
-    vec4 corners01;      // c0.xy c1.xy
-    vec4 corner2Height;  // c2.xy height padding
+    // packed XY half16
+    ivec4 boatContour[BOAT_CONTOUR / 4];
 };
 
 layout(std140) uniform UBODisplacement {
@@ -19,26 +24,39 @@ layout(std140) uniform UBODisplacement {
     int boatCount;
 
     vec3 characterPositions[MAX_CHARACTER_POSITION_COUNT];
-    Boat boatData[MAX_BOAT_COUNT];
+    Boat boats[MAX_BOAT_COUNT];
 };
 
-float boatDistance(vec2 p, Boat boat) {
-    vec2 c0 = boat.corners01.xy;
-    vec2 c1 = boat.corners01.zw;
-    vec2 c2 = boat.corner2Height.xy;
-    vec2 c3 = c0 + (c2 - c1);
+vec2 unpackBoatPoint(Boat boat, int vertex) {
+    uint bits = uint(boat.boatContour[vertex / 4][vertex % 4]);
+    uint lo = bits & 0xFFFFu;         // x half, low 16 bits
+    uint hi = (bits >> 16u) & 0xFFFFu; // z half, high 16 bits
+    return vec2(unpackFloat16(int(lo)), unpackFloat16(int(hi)));
+}
 
-    vec2 axisX = normalize(c1 - c0);
-    vec2 axisZ = normalize(c3 - c0);
+float boatDistance(Boat boat, vec2 p) {
+    vec2 v0 = unpackBoatPoint(boat, 0);
+    float d = dot(p - v0, p - v0);
+    float s = 1.0;
 
-    float width = length(c1 - c0);
-    float depth = length(c3 - c0);
+    for (int i = 0; i < BOAT_CONTOUR; i++) {
+        int j = (i + BOAT_CONTOUR - 1) % BOAT_CONTOUR;
+        vec2 vi = unpackBoatPoint(boat, i);
+        vec2 vj = unpackBoatPoint(boat, j);
 
-    vec2 rel = p - c0;
-    float x = dot(rel, axisX);
-    float z = dot(rel, axisZ);
+        vec2 e = vj - vi;
+        vec2 w = p - vi;
+        vec2 b = w - e * clamp(dot(w, e) / dot(e, e), 0.0, 1.0);
+        d = min(d, dot(b, b));
 
-    float dx = max(max(-x, x - width), 0.0);
-    float dz = max(max(-z, z - depth), 0.0);
-    return length(vec2(dx, dz));
+        // winding-number style inside/outside test
+        bvec3 c = bvec3(
+            p.y >= vi.y,
+            p.y <  vj.y,
+            e.x * w.y > e.y * w.x
+        );
+        if (all(c) || all(not(c))) s = -s;
+    }
+
+    return (s * sqrt(d)) + BOAT_DIST_OFFSET;
 }

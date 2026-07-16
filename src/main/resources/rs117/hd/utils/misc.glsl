@@ -286,3 +286,38 @@ bool insideQuad(vec2 p, vec2 a, vec2 b, vec2 c, vec2 d) {
            cross2D(d - c, p - c) >= 0.0 &&
            cross2D(a - d, p - d) >= 0.0;
 }
+
+float unpackFloat16(int val) {
+    uint h = uint(val) & 0xFFFFu;
+
+    uint sign     = (h & 0x8000u) << 16u;      // move sign into bit 31
+    uint exponent = (h >> 10u) & 0x1Fu;        // 5 bits
+    uint mantissa = h & 0x3FFu;                // 10 bits
+
+    uint f; // resulting float32 bit pattern
+
+    if (exponent == 0u) {
+        if (mantissa == 0u) {
+            f = sign; // signed zero
+        } else {
+            // Subnormal half -> normalize into a normal float32
+            exponent = 1u;
+            while ((mantissa & 0x400u) == 0u) {
+                mantissa <<= 1u;
+                exponent -= 1u;
+            }
+            mantissa &= 0x3FFu; // drop the now-implicit leading bit
+            uint exp32 = exponent - 15u + 127u;
+            f = sign | (exp32 << 23u) | (mantissa << 13u);
+        }
+    } else if (exponent == 0x1Fu) {
+        // Inf / NaN
+        f = sign | 0x7F800000u | (mantissa << 13u);
+    } else {
+        // Normalized value
+        uint exp32 = exponent - 15u + 127u;
+        f = sign | (exp32 << 23u) | (mantissa << 13u);
+    }
+
+    return uintBitsToFloat(f);
+}

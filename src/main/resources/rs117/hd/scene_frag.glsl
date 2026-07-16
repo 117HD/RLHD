@@ -38,6 +38,7 @@
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
+#include <uniforms/displacement.glsl>
 
 #include MATERIAL_CONSTANTS
 

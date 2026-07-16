@@ -471,6 +471,14 @@ public final class MathUtils {
 		return product;
 	}
 
+	public static int area2D(int aX, int aY, int bX, int bY, int cX, int cY) {
+		return (aX - cX) * (bY - cY) - (bX - cX) * (aY - cY);
+	}
+
+	public static int area2D(int[] a, int[] b, int[] c) {
+		return area2D(a[0], a[1], b[0], b[1], c[0], c[1]);
+	}
+
 	/**
 	 * Yields incorrect results if either of the input vectors is used as the output vector.
 	 */
@@ -936,6 +944,41 @@ public final class MathUtils {
 		}
 
 		return sign | exponent << 10 | mantissa >> 13;
+	}
+
+	public static float unpackFloat16(int val) {
+		int h = val & 0xFFFF;
+
+		int sign     = (h & 0x8000) << 16;   // move sign into bit 31
+		int exponent = (h >>> 10) & 0x1F;    // 5 bits
+		int mantissa = h & 0x3FF;            // 10 bits
+
+		int f; // resulting float32 bit pattern
+
+		if (exponent == 0) {
+			if (mantissa == 0) {
+				f = sign; // signed zero
+			} else {
+				// Subnormal half -> normalize into a normal float32
+				exponent = 1;
+				while ((mantissa & 0x400) == 0) {
+					mantissa <<= 1;
+					exponent -= 1;
+				}
+				mantissa &= 0x3FF; // drop the now-implicit leading bit
+				int exp32 = exponent - 15 + 127;
+				f = sign | (exp32 << 23) | (mantissa << 13);
+			}
+		} else if (exponent == 0x1F) {
+			// Inf / NaN
+			f = sign | 0x7F800000 | (mantissa << 13);
+		} else {
+			// Normalized value
+			int exp32 = exponent - 15 + 127;
+			f = sign | (exp32 << 23) | (mantissa << 13);
+		}
+
+		return Float.intBitsToFloat(f);
 	}
 
 	public static String formatBytes(long bytes) {

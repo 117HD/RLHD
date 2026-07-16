@@ -2,6 +2,7 @@ package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -9,15 +10,18 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.geometry.*;
+import net.runelite.api.model.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.scene.DisplacementManager;
-import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.DestructibleHandler;
+import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static net.runelite.api.Constants.*;
@@ -55,7 +59,7 @@ public class WorldViewContext {
 	boolean isLoading = true;
 
 	boolean isBoat = false;
-	rs117.hd.scene.areas.AABB boatAABB = null;
+	SimplePolygon boatDisplacementOctagon;
 
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;
@@ -316,23 +320,51 @@ public class WorldViewContext {
 								model = ((DynamicObject) renderable).getModelZbuf();
 							}
 
+							final int centerX = gameObject.getX();
+							final int centerY = gameObject.getZ();
+							final int centerZ = gameObject.getY();
+
 							if ( model != null) {
-								final var modelAABB = model.getAABB(0);
+								// find all verticies that are under
+								int[] xs = PooledArrayType.INT.borrow(model.getVerticesCount());
+								int[] ys = PooledArrayType.INT.borrow(model.getVerticesCount());
+								int underwaterCount = 0;
+								try {
+									final float[] xVertices = model.getVerticesX();
+									final float[] yVertices = model.getVerticesY();
+									final float[] zVertices = model.getVerticesZ();
 
-								final int centerX = gameObject.getX() + modelAABB.getCenterX();
-								final int centerY = gameObject.getZ() + modelAABB.getCenterY();
-								final int centerZ = gameObject.getY() + modelAABB.getCenterZ();
+									model.calculateBoundsCylinder();
 
-								isBoat = true;
-								boatAABB = new AABB(
-									centerX - modelAABB.getExtremeX(),
-									centerY - modelAABB.getExtremeY(),
-									centerZ - modelAABB.getExtremeZ(),
+									final int vertexCount = model.getVerticesCount();
+									final AABB modelAABB = model.getAABB(0);
 
-									centerX + modelAABB.getExtremeX(),
-									centerY + modelAABB.getExtremeY(),
-									centerZ + modelAABB.getExtremeZ()
-								);
+									final int waterLine = modelAABB.getCenterY() + (int)(modelAABB.getExtremeY() * 0.5f);
+
+									for (int i = 0; i < vertexCount; i++) {
+										final float posY = centerY + yVertices[i];
+										if (posY > waterLine) {
+											xs[underwaterCount] = centerX + (int) xVertices[i];
+											ys[underwaterCount] = centerZ + (int) zVertices[i];
+											underwaterCount++;
+										}
+									}
+
+									if(underwaterCount > 0) {
+										// Fill the rest of the array with the last vertex
+										Arrays.fill(xs, underwaterCount, xs.length, xs[underwaterCount - 1]);
+										Arrays.fill(ys, underwaterCount, ys.length, ys[underwaterCount - 1]);
+
+										// Build Convex Hull around all verticies which are below the water plane
+										// Then Reduce the convex hull down to just 8 points
+										boatDisplacementOctagon = Jarvis.convexHull(xs, ys);
+										boatDisplacementOctagon = HDUtils.reducePolygon(boatDisplacementOctagon, 8);
+										isBoat = true;
+									}
+								} finally {
+									PooledArrayType.INT.release(xs);
+									PooledArrayType.INT.release(ys);
+								}
 								return;
 							}
 						}

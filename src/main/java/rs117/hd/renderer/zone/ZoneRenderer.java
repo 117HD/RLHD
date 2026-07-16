@@ -345,7 +345,7 @@ public class ZoneRenderer implements Renderer {
 				ctx.uboWorldViewStruct.update();
 
 				if(ctx.isBoat)
-					displacementManager.addBoat(ctx.uboWorldViewStruct, ctx.boatAABB);
+					displacementManager.addBoat(ctx.uboWorldViewStruct, ctx.boatDisplacementOctagon);
 			}
 
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {

@@ -7,14 +7,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.geometry.*;
 import rs117.hd.HdPlugin;
-import rs117.hd.opengl.uniforms.UBOWorldViews;
+import rs117.hd.opengl.uniforms.UBODisplacement;
+import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 import rs117.hd.opengl.uniforms.UniformBuffer.Property;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.WorldViewContext;
-import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.collections.IntHashSet;
 
@@ -47,11 +48,11 @@ public class DisplacementManager {
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
 
-	private final float[] cornerX = new float[4];
-	private final float[] cornerZ = new float[4];
+	private final int[] packedContour = new int[4];
 	private final float[] projected = new float[4];
 
-	private final float[] boatData = new float[MAX_BOAT_COUNT * 8];
+	private final WorldViewStruct[] boatWorldViews = new WorldViewStruct[MAX_BOAT_COUNT];
+	private final SimplePolygon[] boatDisplacementPolygons = new SimplePolygon[MAX_BOAT_COUNT];
 	private int writtenBoats;
 
 	public final IntHashSet boatIds = new IntHashSet();
@@ -79,49 +80,12 @@ public class DisplacementManager {
 		return characterPositionsPairs.get(writtenCharacterPositions);
 	}
 
-	public void addBoat(UBOWorldViews.WorldViewStruct worldViewStruct, AABB aabb) {
+	public void addBoat(WorldViewStruct worldViewStruct, SimplePolygon displacedPolygon) {
 		if (writtenBoats >= MAX_BOAT_COUNT)
 			return;
 
-		cornerX[0] = aabb.minX;
-		cornerZ[0] = aabb.minZ;
-
-		cornerX[1] = aabb.maxX;
-		cornerZ[1] = aabb.minZ;
-
-		cornerX[2] = aabb.maxX;
-		cornerZ[2] = aabb.maxZ;
-
-		cornerX[3] = aabb.minX;
-		cornerZ[3] = aabb.maxZ;
-
-		int index = writtenBoats * 8;
-		float minY = Float.POSITIVE_INFINITY;
-		float maxY = Float.NEGATIVE_INFINITY;
-
-		for (int i = 0; i < 4; i++) {
-			// Bottom corner
-			worldViewStruct.project(vec4(projected, cornerX[i], aabb.minY, cornerZ[i], 1.0f));
-
-			if (i < 3) {
-				boatData[index + i * 2]     = projected[0];
-				boatData[index + i * 2 + 1] = projected[2];
-			}
-
-			if (projected[1] < minY) minY = projected[1];
-			if (projected[1] > maxY) maxY = projected[1];
-
-			// Top corner
-			worldViewStruct.project(vec4(projected, cornerX[i], aabb.maxY, cornerZ[i], 1.0f));
-
-			if (projected[1] < minY) minY = projected[1];
-			if (projected[1] > maxY) maxY = projected[1];
-		}
-
-		// Store vertical thickness
-		boatData[index + 6] = maxY - minY;
-		boatData[index + 7] = 0.0f;
-
+		boatWorldViews[writtenBoats] = worldViewStruct;
+		boatDisplacementPolygons[writtenBoats] = displacedPolygon;
 		writtenBoats++;
 	}
 
@@ -211,14 +175,24 @@ public class DisplacementManager {
 		writtenCharacterPositions++;
 	}
 
-	public void writeBoatAABBs(Property[] boatData, Property boatCount) {
+	public void writeBoatData(UBODisplacement.BoatStruct[] boatContours, Property boatCount) {
 		final int count = min(writtenBoats, MAX_BOAT_COUNT);
 		boatCount.set(count);
 		writtenBoats = 0;
 
 		for(int i = 0; i < count; i++) {
-			boatData[i * 2].set(this.boatData, i * 8, 4);
-			boatData[i * 2 + 1].set(this.boatData, i * 8 + 4, 4);
+			final WorldViewStruct worldViewStruct = boatWorldViews[i];
+			final SimplePolygon polygon = boatDisplacementPolygons[i];
+			final UBODisplacement.BoatStruct boatStruct = boatContours[i];
+
+			for (int j = 0; j < polygon.size(); j++) {
+				worldViewStruct.project(vec4(projected, polygon.getX(j), 0, polygon.getY(j), 1.0f));
+
+				packedContour[j % 4] = float16(projected[0]) | (float16(projected[2]) << 16);
+
+				if((j + 1) % 4 == 0)
+					boatStruct.contour[j / 4].set(packedContour);
+			}
 		}
 	}
 

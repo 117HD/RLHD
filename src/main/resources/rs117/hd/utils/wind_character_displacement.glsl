@@ -66,8 +66,8 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
 }
 
 #if ZONE_RENDERER
-vec3 applyBoatDisplacement(Boat boat, vec2 vertPos, float height, float strength, inout float offsetAccum) {
-    float d = boatDistance(vertPos, boat);
+vec3 applyBoatDisplacement(int boatIdx, vec2 vertPos, float height, float strength, inout float offsetAccum) {
+    float d = boatDistance(boats[boatIdx], vertPos);
 
     float falloffRadius = BOAT_DISPLACEMENT_MARGIN;
     if (d >= falloffRadius)
@@ -152,7 +152,7 @@ vec3 applyWindDisplacementVertex(
 #if ZONE_RENDERER
         if (fractAccum < 1.0) {
             for (int i = 0; i < boatCount; i++) {
-                displacement += applyBoatDisplacement(boatData[i], worldVert, modelHeight, 1.25, fractAccum);
+                displacement += applyBoatDisplacement(i, worldVert, modelHeight, 1.25, fractAccum);
                 if (fractAccum >= 1.0)
                     break;
             }
