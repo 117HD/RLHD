@@ -38,7 +38,6 @@ import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
 
 import static net.runelite.api.Constants.*;
-import static net.runelite.api.Perspective.SCENE_SIZE;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -778,6 +777,7 @@ public class SceneManager {
 					.build(ctx, sceneContext, ctx.zones[x][z], true, x, z)
 					.queue(ctx.sceneLoadGroup);
 
+		ctx.buildBoatDisplacement();
 		ctx.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 	}
 
@@ -787,8 +787,6 @@ public class SceneManager {
 			return;
 
 		Stopwatch sw = Stopwatch.createStarted();
-		ctx.buildBoatDisplacement();
-
 		ctx.sceneLoadGroup.complete();
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
