@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import javax.annotation.Nullable;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.collections.ConcurrentPool;
 
@@ -241,6 +242,25 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	boolean isCancelled() { return jobState.get() == STATE_CANCELLED; }
 	boolean isCompleted() { return jobState.get() == STATE_COMPLETED; }
 
+	@SneakyThrows
+	private boolean attemptProcessItem() {
+		if(worker != null || !isInQueue() || depCount.get() != 0 || !item.canStart() || !setRunning(null))
+			return false;
+
+		try {
+			item.onRun();
+			item.ranToCompletion.set(true);
+		} catch (Throwable ex) {
+			log.warn("Encountered an error whilst processing: {}", hashCode(), ex);
+			item.encounteredError.set(true);
+			cancel(false);
+		} finally {
+			setCompleted();
+		}
+
+		return true;
+	}
+
 	boolean await() throws InterruptedException {
 		return await(-1);
 	}
@@ -254,8 +274,11 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 				if (isClientThread) {
 					long start = System.currentTimeMillis();
 					int seconds = 0;
-					while (!tryAcquireSharedNanos(0, TimeUnit.MILLISECONDS.toNanos(1))) {
+					do {
 						JOB_SYSTEM.processPendingClientCallbacks();
+						if(attemptProcessItem())
+							return true;
+
 						Thread.yield();
 						long elapsed = System.currentTimeMillis() - start;
 						int newSeconds = (int) (elapsed / 1000);
@@ -279,8 +302,11 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 								return false;
 							}
 						}
-					}
+					} while (!tryAcquireSharedNanos(0, TimeUnit.MILLISECONDS.toNanos(1)));
 				} else {
+					if(attemptProcessItem())
+						return true;
+
 					if (timeoutNanos > 0) {
 						if (!tryAcquireSharedNanos(0, timeoutNanos))
 							return false;

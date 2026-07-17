@@ -491,7 +491,8 @@ public class ModelStreamingManager {
 		while (!pending.isEmpty()) {
 			pendingModel = pending.get(idx);
 
-			if (pendingModel.isQueued() && pendingModel.canStart() && pendingModel.processModel()) {
+			if (pendingModel.isQueued() && pendingModel.canStart()) {
+				pendingModel.waitForCompletion(); // Await will pick up work items to process synchronously if it hasn't already started
 				pending.remove(idx);
 				hasStolen = true;
 			}
