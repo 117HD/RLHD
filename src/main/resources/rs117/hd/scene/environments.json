@@ -623,6 +623,26 @@
     "moonSizeMult": 3.1
   },
   {
+    "area": "BMR_MORYTANIA_DAWN_CUTSCENE",
+    "instantTransition": true,
+    "requiredVarbit": 542,
+    "hideVanillaSkyboxes": true,
+    "fogDepth": 30,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#FFBB7F",
+    "groundFogStart": -150,
+    "groundFogEnd": -250,
+    "ambientStrength": 0.6,
+    "directionalStrength": 0,
+    "sunAngles": [ 40, 110 ],
+    "groundFogOpacity": 0.2,
+    "cycleMode": "FIXED_DAWN",
+    "fixedSunAngles": [ 3, 110 ],
+    "auroraVisibility": 0
+  },
+  {
     "area": "MORYTANIA",
     "ambientColor": "#5a8cc0",
     "ambientStrength": 1.5,

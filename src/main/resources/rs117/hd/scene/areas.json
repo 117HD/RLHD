@@ -12259,6 +12259,16 @@
     ]
   },
   {
+    "name": "BMR_MORYTANIA_DAWN_CUTSCENE",
+    "aabbs": [
+      [ 3687, 3191, 3692, 3200 ],
+      [ 3693, 3195, 3701, 3209 ],
+      [ 3689, 3201, 3692, 3206 ],
+      [ 3702, 3200, 3708, 3216 ],
+      [ 3709, 3206, 3726, 3221 ]
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
