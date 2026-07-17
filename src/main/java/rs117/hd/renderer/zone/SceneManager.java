@@ -36,8 +36,10 @@ import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
+import rs117.hd.utils.jobs.Job;
 
 import static net.runelite.api.Constants.*;
+import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -98,6 +100,7 @@ public class SceneManager {
 	private ZoneSceneContext nextSceneContext;
 	private Zone[][] nextZones;
 	private final List<SortedZone> sortedZones = new ArrayList<>();
+	private final Job[] roundRobinDependencies = new Job[PROCESSOR_COUNT];
 	private boolean reloadRequested;
 
 	public boolean isZoneStreamingEnabled() {
@@ -592,8 +595,10 @@ public class SceneManager {
 				}
 			}
 
-			//long timeMs = System.currentTimeMillis();
-			ZoneUploadJob prevStreamingJob = null;
+			int robinIdx = 0;
+			int robinSize = (int) max(1, PROCESSOR_COUNT * config.cpuUsageLimit().threadRatio * 0.5f);
+			Arrays.fill(roundRobinDependencies, 0, robinSize, generateSceneDataTask);
+
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = injector.getInstance(Zone.class);
 				newZone.dirty = sorted.zone.dirty;
@@ -605,10 +610,11 @@ public class SceneManager {
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z)
-						.queue(ctx.streamingGroup, prevStreamingJob != null ? prevStreamingJob : generateSceneDataTask);
+						.queue(ctx.streamingGroup, roundRobinDependencies[robinIdx]);
 
-					// Make half the streaming zones depend on a previous job to reduce thrashing the job system
-					prevStreamingJob = prevStreamingJob == null ? sorted.zone.uploadJob : null;
+					// Round Robin the streaming in zones to avoid saturating the Job queue
+					roundRobinDependencies[robinIdx] = sorted.zone.uploadJob;
+					robinIdx = (robinIdx + 1) % robinSize;
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
@@ -617,6 +623,7 @@ public class SceneManager {
 				}
 				sorted.free();
 			}
+			Arrays.fill(roundRobinDependencies, 0, robinSize, null);
 			sortedZones.clear();
 
 			root.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
