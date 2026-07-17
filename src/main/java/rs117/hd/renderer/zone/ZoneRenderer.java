@@ -744,10 +744,6 @@ public class ZoneRenderer implements Renderer {
 			indirectDrawCmds.upload(indirectDrawCmdsStaging);
 		}
 
-		frameTimer.begin(Timer.FRAME_CONTEXT_UNMAP);
-		frameContext().unmap();
-		frameTimer.end(Timer.FRAME_CONTEXT_UNMAP);
-
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
@@ -1092,6 +1088,12 @@ public class ZoneRenderer implements Renderer {
 					ctx.vaoSceneCmd.ColorMask(false, false, false, false);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
 					ctx.vaoSceneCmd.ColorMask(true, true, true, true);
+
+					if(sceneManager.isRoot(ctx)) {
+						frameTimer.begin(Timer.FRAME_CONTEXT_UNMAP);
+						frameContext().unmap();
+						frameTimer.end(Timer.FRAME_CONTEXT_UNMAP);
+					}
 
 					for (int zx = 0; zx < ctx.sizeX; ++zx)
 						for (int zz = 0; zz < ctx.sizeZ; ++zz)
