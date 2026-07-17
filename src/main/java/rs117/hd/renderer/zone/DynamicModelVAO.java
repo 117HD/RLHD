@@ -265,33 +265,40 @@ public class DynamicModelVAO implements Destructible {
 
 	private int mergeRanges(int fromDrawIdx, int toDrawIdx) {
 		int count = 0;
+		int maxCount = toDrawIdx - fromDrawIdx;
+		if (mergedOffsets.length < maxCount) {
+			mergedOffsets = Arrays.copyOf(mergedOffsets, maxCount);
+			mergedCounts = Arrays.copyOf(mergedCounts, maxCount);
+		}
+
+		final boolean staging = hasStagingBuffer();
+		final int[] mOffsets = mergedOffsets;
+		final int[] mCounts = mergedCounts;
+
 		for (int i = fromDrawIdx; i < toDrawIdx; i++) {
 			int c = drawCounts[i];
 			if (c <= 0)
 				continue;
 
 			int offset;
-			if (hasStagingBuffer()) {
-				if (packedOffsets[i] == -1) {
-					int dstOffset = nextPackedOffset;
+			if (staging) {
+				int packed = packedOffsets[i];
+				if (packed == -1) {
+					packed = nextPackedOffset;
 					nextPackedOffset += c;
-					addPendingCopy(drawOffsets[i], dstOffset, c);
-					packedOffsets[i] = dstOffset;
+					addPendingCopy(drawOffsets[i], packed, c);
+					packedOffsets[i] = packed;
 				}
-				offset = packedOffsets[i];
+				offset = packed;
 			} else {
 				offset = drawOffsets[i];
 			}
 
-			if (count > 0 && mergedOffsets[count - 1] + mergedCounts[count - 1] == offset) {
-				mergedCounts[count - 1] += c;
+			if (count > 0 && mOffsets[count - 1] + mCounts[count - 1] == offset) {
+				mCounts[count - 1] += c;
 			} else {
-				if (count >= mergedOffsets.length) {
-					mergedOffsets = Arrays.copyOf(mergedOffsets, mergedOffsets.length * 2);
-					mergedCounts = Arrays.copyOf(mergedCounts, mergedCounts.length * 2);
-				}
-				mergedOffsets[count] = offset;
-				mergedCounts[count] = c;
+				mOffsets[count] = offset;
+				mCounts[count] = c;
 				count++;
 			}
 		}
