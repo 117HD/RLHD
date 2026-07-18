@@ -76,6 +76,7 @@ public class EnvironmentManager {
 	private TimeOfDay timeOfDay;
 
 	private final Map<Integer, Integer> varbitOverrides = new HashMap<>();
+	private final Map<Integer, Integer> varpOverrides = new HashMap<>();
 
 	private static final float TRANSITION_DURATION = 3; // seconds
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
@@ -300,16 +301,30 @@ public class EnvironmentManager {
 		return override != null ? override : client.getVarbitValue(id);
 	}
 
+	public int getVarpValue(int id) {
+		Integer override = varpOverrides.get(id);
+		return override != null ? override : client.getVarpValue(id);
+	}
+
 	public void setVarbitOverride(int id, int state) {
 		varbitOverrides.put(id, state);
 	}
 
-	public void clearVarbitOverride(int id) {
-		varbitOverrides.remove(id);
+	public void setVarpOverride(int id, int state) {
+		varpOverrides.put(id, state);
 	}
 
 	public void clearVarbitOverrides() {
 		varbitOverrides.clear();
+	}
+
+	public void clearVarpOverrides() {
+		varpOverrides.clear();
+	}
+
+	public void clearVarOverrides() {
+		clearVarbitOverrides();
+		clearVarpOverrides();
 	}
 
 	/**
@@ -340,8 +355,8 @@ public class EnvironmentManager {
 			// area, which overlaps the overworld) only applies while its gate is
 			// satisfied; otherwise fall through to the next matching environment so the
 			// normal overworld sky shows outside the gated state.
-			if (environment.hasVarbitGate()
-				&& !environment.isVarbitGateSatisfied(this::getVarbitValue))
+			if (environment.hasVarGate()
+				&& !environment.isVarGateSatisfied(this::getVarbitValue, this::getVarpValue))
 				continue;
 			changeEnvironment(environment, skipTransition);
 			break;

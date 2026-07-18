@@ -52,8 +52,10 @@ public class Environment {
 	// (its default); turning that toggle off forces vanilla skyboxes back on everywhere,
 	// including areas that set this flag.
 	public boolean hideVanillaSkyboxes = false;
-	@JsonAdapter(VarbitRequirement.Adapter.class)
-	public VarbitRequirement[] requiredVarbit = {};
+	@JsonAdapter(VarRequirement.VarbitAdapter.class)
+	public VarRequirement[] requiredVarbit = {};
+	@JsonAdapter(VarRequirement.VarpAdapter.class)
+	public VarRequirement[] requiredVarp = {};
 	// When set, forces the day/night cycle mode for this environment, overriding
 	// the player's config setting. Null = use the configured mode.
 	@Nullable
@@ -202,16 +204,30 @@ public class Environment {
 		return this;
 	}
 
+	public boolean hasVarGate() {
+		return hasVarbitGate() || hasVarpGate();
+	}
+
 	public boolean hasVarbitGate() {
 		return requiredVarbit != null && requiredVarbit.length > 0;
 	}
 
-	public boolean isVarbitGateSatisfied(IntUnaryOperator varbitValue) {
-		if (!hasVarbitGate())
-			return true;
-		for (var req : requiredVarbit) {
-			if (!req.isSatisfied(varbitValue.applyAsInt(req.id)))
-				return false;
+	public boolean hasVarpGate() {
+		return requiredVarp != null && requiredVarp.length > 0;
+	}
+
+	public boolean isVarGateSatisfied(IntUnaryOperator varbitValue, IntUnaryOperator varpValue) {
+		if (hasVarbitGate()) {
+			for (var req : requiredVarbit) {
+				if (!req.isSatisfied(varbitValue.applyAsInt(req.id)))
+					return false;
+			}
+		}
+		if (hasVarpGate()) {
+			for (var req : requiredVarp) {
+				if (!req.isSatisfied(varpValue.applyAsInt(req.id)))
+					return false;
+			}
 		}
 		return true;
 	}

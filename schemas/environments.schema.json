@@ -52,32 +52,36 @@
         "description": "Whether to hide the game's built-in skybox models (e.g. the one added for Blood Moon Rises) in this area so the day/night cycle's own sky is shown instead. Only takes effect while the 'Override Vanilla Skyboxes' config toggle is on (its default); turning that toggle off forces vanilla skyboxes back on everywhere, including areas that set this flag. Defaults to false."
       },
       "requiredVarbit": {
-        "description": "Optional varbit condition(s) that must all be met for this environment to apply, in addition to the area check. Each entry is a varbit gameval name/id (state defaults to 1), or an object with id and optional state. Set state to -1 for any nonzero. If unmet, matching continues to the next environment.",
+        "description": "Optional varbit condition(s) that must all be met for this environment to apply, in addition to the area check. Each entry is a varbit gameval name/id (state defaults to 1, op defaults to equals), or an object with id, optional state, and optional op. Set state to -1 with equals for any nonzero. If unmet, matching continues to the next environment.",
         "oneOf": [
           { "type": "integer" },
           { "type": "string" },
-          {
-            "type": "object",
-            "required": ["id"],
-            "properties": {
-              "id": { "type": ["string", "integer"] },
-              "state": { "type": "integer", "description": "Required value. Defaults to 1. Use -1 for any nonzero." }
-            }
-          },
+          { "$ref": "#/$defs/varRequirementObject" },
           {
             "type": "array",
             "items": {
               "oneOf": [
                 { "type": "integer" },
                 { "type": "string" },
-                {
-                  "type": "object",
-                  "required": ["id"],
-                  "properties": {
-                    "id": { "type": ["string", "integer"] },
-                    "state": { "type": "integer" }
-                  }
-                }
+                { "$ref": "#/$defs/varRequirementObject" }
+              ]
+            }
+          }
+        ]
+      },
+      "requiredVarp": {
+        "description": "Optional varp condition(s), same format as requiredVarbit but resolved against varp gamevals.",
+        "oneOf": [
+          { "type": "integer" },
+          { "type": "string" },
+          { "$ref": "#/$defs/varRequirementObject" },
+          {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                { "type": "integer" },
+                { "type": "string" },
+                { "$ref": "#/$defs/varRequirementObject" }
               ]
             }
           }
@@ -301,6 +305,36 @@
         "type": "number",
         "description": "Moon size multiplier for this area. Scales the moon disk together with its glow and the star-occlusion mask around it. 1 (default) is the normal size; values above 1 make the moon larger, below 1 smaller.",
         "minimum": 0
+      }
+    }
+  },
+  "$defs": {
+    "varRequirementObject": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": ["string", "integer"],
+          "description": "Varbit/varp gameval name or raw id."
+        },
+        "state": {
+          "type": "integer",
+          "default": 1,
+          "description": "Value to compare against. Defaults to 1. Use -1 with equals for any nonzero."
+        },
+        "op": {
+          "type": "string",
+          "default": "==",
+          "description": "How to compare the current value to state. Defaults to equals (==).",
+          "enum": ["==", "!=", ">", ">=", "<", "<="]
+        },
+        "compare": {
+          "type": "string",
+          "default": "==",
+          "description": "Alias for op. Defaults to equals (==).",
+          "enum": ["==", "!=", ">", ">=", "<", "<=", "eq", "neq", "gt", "gte", "lt", "lte", "equals"]
+        }
       }
     }
   }

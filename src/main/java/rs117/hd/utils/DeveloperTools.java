@@ -134,17 +134,22 @@ public class DeveloperTools implements KeyListener {
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
 		hideUiEnabled = false;
-		environmentManager.clearVarbitOverrides();
+		environmentManager.clearVarOverrides();
 	}
 
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted commandExecuted) {
-		if (commandExecuted.getCommand().equalsIgnoreCase("varbit")) {
-			handleVarbitCommand(commandExecuted.getArguments());
+		String command = commandExecuted.getCommand();
+		if (command.equalsIgnoreCase("varbit") || command.equalsIgnoreCase("queryvarbit")) {
+			handleVarCommand("varbit", command.equalsIgnoreCase("queryvarbit"), commandExecuted.getArguments());
+			return;
+		}
+		if (command.equalsIgnoreCase("varp") || command.equalsIgnoreCase("queryvarp")) {
+			handleVarCommand("varp", command.equalsIgnoreCase("queryvarp"), commandExecuted.getArguments());
 			return;
 		}
 
-		if (!commandExecuted.getCommand().equalsIgnoreCase("117hd"))
+		if (!command.equalsIgnoreCase("117hd"))
 			return;
 
 		String[] args = commandExecuted.getArguments();
@@ -191,23 +196,54 @@ public class DeveloperTools implements KeyListener {
 		}
 	}
 
-	private void handleVarbitCommand(String[] args) {
-		if (args.length == 0 || args[0].equalsIgnoreCase("clear") && args.length == 1) {
+	private void handleVarCommand(String kind, boolean queryOnly, String[] args) {
+		boolean varp = kind.equals("varp");
+		String usage = queryOnly
+			? "Usage: ::query" + kind + " <name|id>"
+			: "Usage: ::" + kind + " <name|id> [state] | ::" + kind + " clear | ::query" + kind + " <name|id>";
+
+		if (!queryOnly && (args.length == 0 || args[0].equalsIgnoreCase("clear") && args.length == 1)) {
 			if (args.length == 1) {
-				environmentManager.clearVarbitOverrides();
-				chat("Cleared all varbit overrides");
+				if (varp)
+					environmentManager.clearVarpOverrides();
+				else
+					environmentManager.clearVarbitOverrides();
+				chat("Cleared all " + kind + " overrides");
 			} else {
-				chat("Usage: ::varbit <name|id> <state> | ::varbit clear");
+				chat(usage);
 			}
 			return;
 		}
 
-		if (args.length < 2) {
-			chat("Usage: ::varbit <name|id> <state> | ::varbit clear");
+		if (args.length < 1) {
+			chat(usage);
 			return;
 		}
 
 		String nameOrId = args[0];
+		Integer id = resolveVarId(varp, nameOrId);
+		if (id == null) {
+			chat("Unknown " + kind + ": " + nameOrId);
+			return;
+		}
+
+		if (queryOnly || args.length == 1) {
+			clientThread.invoke(() -> {
+				int real = varp ? client.getVarpValue(id) : client.getVarbitValue(id);
+				int effective = varp ? environmentManager.getVarpValue(id) : environmentManager.getVarbitValue(id);
+				String message = real == effective
+					? kind + " " + nameOrId + " (" + id + ") = " + real
+					: kind + " " + nameOrId + " (" + id + ") = " + real + " (override " + effective + ")";
+				client.addChatMessage(
+					ChatMessageType.GAMEMESSAGE,
+					"117 HD",
+					"<col=006600>[117 HD] " + message + "</col>",
+					"117 HD"
+				);
+			});
+			return;
+		}
+
 		int state;
 		try {
 			state = Integer.parseInt(args[1]);
@@ -216,24 +252,22 @@ public class DeveloperTools implements KeyListener {
 			return;
 		}
 
-		Integer id = resolveVarbitId(nameOrId);
-		if (id == null) {
-			chat("Unknown varbit: " + nameOrId);
-			return;
-		}
-
-		environmentManager.setVarbitOverride(id, state);
-		chat("Varbit override " + nameOrId + " (" + id + ") = " + state);
+		if (varp)
+			environmentManager.setVarpOverride(id, state);
+		else
+			environmentManager.setVarbitOverride(id, state);
+		chat(kind + " override " + nameOrId + " (" + id + ") = " + state);
 	}
 
-	private Integer resolveVarbitId(String nameOrId) {
+	private Integer resolveVarId(boolean varp, String nameOrId) {
 		try {
 			return Integer.parseInt(nameOrId);
 		} catch (NumberFormatException ignored) {
 		}
 
+		String name = nameOrId.toUpperCase();
 		try (var gamevals = gamevalManager.obtainHandle()) {
-			return gamevals.getVarbits().get(nameOrId);
+			return varp ? gamevals.getVarps().get(name) : gamevals.getVarbits().get(name);
 		}
 	}
 
@@ -241,7 +275,7 @@ public class DeveloperTools implements KeyListener {
 		clientThread.invoke(() -> client.addChatMessage(
 			ChatMessageType.GAMEMESSAGE,
 			"117 HD",
-			"<col=ffff00>[117 HD] " + message + "</col>",
+			"<col=006600>[117 HD] " + message + "</col>",
 			"117 HD"
 		));
 	}
