@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -73,6 +74,8 @@ public class EnvironmentManager {
 
 	@Inject
 	private TimeOfDay timeOfDay;
+
+	private final Map<Integer, Integer> varbitOverrides = new HashMap<>();
 
 	private static final float TRANSITION_DURATION = 3; // seconds
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
@@ -292,6 +295,23 @@ public class EnvironmentManager {
 		currentEnvironment = previous;
 	}
 
+	public int getVarbitValue(int id) {
+		Integer override = varbitOverrides.get(id);
+		return override != null ? override : client.getVarbitValue(id);
+	}
+
+	public void setVarbitOverride(int id, int state) {
+		varbitOverrides.put(id, state);
+	}
+
+	public void clearVarbitOverride(int id) {
+		varbitOverrides.remove(id);
+	}
+
+	public void clearVarbitOverrides() {
+		varbitOverrides.clear();
+	}
+
 	/**
 	 * Updates variables used in transition effects
 	 *
@@ -321,7 +341,7 @@ public class EnvironmentManager {
 			// satisfied; otherwise fall through to the next matching environment so the
 			// normal overworld sky shows outside the gated state.
 			if (environment.hasVarbitGate()
-				&& !environment.isVarbitGateSatisfied(client::getVarbitValue))
+				&& !environment.isVarbitGateSatisfied(this::getVarbitValue))
 				continue;
 			changeEnvironment(environment, skipTransition);
 			break;

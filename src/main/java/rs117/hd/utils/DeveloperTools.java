@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.ChatMessageType;
+import net.runelite.api.Client;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.Keybind;
@@ -18,6 +20,8 @@ import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.EnvironmentManager;
+import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 
@@ -49,6 +53,15 @@ public class DeveloperTools implements KeyListener {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private Client client;
+
+	@Inject
+	private EnvironmentManager environmentManager;
+
+	@Inject
+	private GamevalManager gamevalManager;
 
 	@Inject
 	private TileInfoOverlay tileInfoOverlay;
@@ -121,10 +134,16 @@ public class DeveloperTools implements KeyListener {
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
 		hideUiEnabled = false;
+		environmentManager.clearVarbitOverrides();
 	}
 
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted commandExecuted) {
+		if (commandExecuted.getCommand().equalsIgnoreCase("varbit")) {
+			handleVarbitCommand(commandExecuted.getArguments());
+			return;
+		}
+
 		if (!commandExecuted.getCommand().equalsIgnoreCase("117hd"))
 			return;
 
@@ -170,6 +189,61 @@ public class DeveloperTools implements KeyListener {
 				plugin.freezeCulling = !plugin.freezeCulling;
 				break;
 		}
+	}
+
+	private void handleVarbitCommand(String[] args) {
+		if (args.length == 0 || args[0].equalsIgnoreCase("clear") && args.length == 1) {
+			if (args.length == 1) {
+				environmentManager.clearVarbitOverrides();
+				chat("Cleared all varbit overrides");
+			} else {
+				chat("Usage: ::varbit <name|id> <state> | ::varbit clear");
+			}
+			return;
+		}
+
+		if (args.length < 2) {
+			chat("Usage: ::varbit <name|id> <state> | ::varbit clear");
+			return;
+		}
+
+		String nameOrId = args[0];
+		int state;
+		try {
+			state = Integer.parseInt(args[1]);
+		} catch (NumberFormatException e) {
+			chat("Invalid state: " + args[1]);
+			return;
+		}
+
+		Integer id = resolveVarbitId(nameOrId);
+		if (id == null) {
+			chat("Unknown varbit: " + nameOrId);
+			return;
+		}
+
+		environmentManager.setVarbitOverride(id, state);
+		chat("Varbit override " + nameOrId + " (" + id + ") = " + state);
+	}
+
+	private Integer resolveVarbitId(String nameOrId) {
+		try {
+			return Integer.parseInt(nameOrId);
+		} catch (NumberFormatException ignored) {
+		}
+
+		try (var gamevals = gamevalManager.obtainHandle()) {
+			return gamevals.getVarbits().get(nameOrId);
+		}
+	}
+
+	private void chat(String message) {
+		clientThread.invoke(() -> client.addChatMessage(
+			ChatMessageType.GAMEMESSAGE,
+			"117 HD",
+			"<col=ffff00>[117 HD] " + message + "</col>",
+			"117 HD"
+		));
 	}
 
 	@Override
