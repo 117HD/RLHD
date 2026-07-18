@@ -2,6 +2,7 @@ package rs117.hd.scene.environments;
 
 import com.google.gson.annotations.JsonAdapter;
 import java.util.Objects;
+import java.util.function.IntUnaryOperator;
 import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -51,17 +52,8 @@ public class Environment {
 	// (its default); turning that toggle off forces vanilla skyboxes back on everywhere,
 	// including areas that set this flag.
 	public boolean hideVanillaSkyboxes = false;
-	// Optional varbit gate. When requiredVarbit >= 0, this environment only applies
-	// while that varbit holds the required value, IN ADDITION to the area containing
-	// the player. Used for areas that overlap the regular overworld and should only
-	// take effect in a specific game state — e.g. the Blood Moon Rises cutscene area,
-	// which overlaps the overworld and is only active while cutscene varbit 542 == 1.
-	// When the gate fails, environment matching falls through to the next area (so the
-	// normal overworld sky applies outside the cutscene). requiredVarbitValue defaults
-	// to -1, meaning "any nonzero value satisfies the gate"; set it to match an exact
-	// value instead.
-	public int requiredVarbit = -1;
-	public int requiredVarbitValue = -1;
+	@JsonAdapter(VarbitRequirement.Adapter.class)
+	public VarbitRequirement[] requiredVarbit = {};
 	// When set, forces the day/night cycle mode for this environment, overriding
 	// the player's config setting. Null = use the configured mode.
 	@Nullable
@@ -210,23 +202,18 @@ public class Environment {
 		return this;
 	}
 
-	/** Whether this environment has an optional varbit gate configured. */
 	public boolean hasVarbitGate() {
-		return requiredVarbit >= 0;
+		return requiredVarbit != null && requiredVarbit.length > 0;
 	}
 
-	/**
-	 * Whether the varbit gate is satisfied for the given current varbit value.
-	 * With no gate configured, always true. With requiredVarbitValue == -1 (the
-	 * default), any nonzero value satisfies the gate; otherwise the value must match
-	 * exactly. See requiredVarbit for why this exists.
-	 */
-	public boolean isVarbitGateSatisfied(int currentVarbitValue) {
+	public boolean isVarbitGateSatisfied(IntUnaryOperator varbitValue) {
 		if (!hasVarbitGate())
 			return true;
-		if (requiredVarbitValue == -1)
-			return currentVarbitValue != 0;
-		return currentVarbitValue == requiredVarbitValue;
+		for (var req : requiredVarbit) {
+			if (!req.isSatisfied(varbitValue.applyAsInt(req.id)))
+				return false;
+		}
+		return true;
 	}
 
 	@Override

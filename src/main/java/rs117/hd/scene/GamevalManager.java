@@ -33,6 +33,7 @@ public class GamevalManager {
 	private static final String OBJECT_KEY = "objects";
 	private static final String ANIM_KEY = "anims";
 	private static final String SPOTANIM_KEY = "spotanims";
+	private static final String VARBIT_KEY = "varbit";
 
 	@Inject
 	private HdPlugin plugin;
@@ -54,6 +55,7 @@ public class GamevalManager {
 		GAMEVALS.put(OBJECT_KEY, Collections.emptyMap());
 		GAMEVALS.put(ANIM_KEY, Collections.emptyMap());
 		GAMEVALS.put(SPOTANIM_KEY, Collections.emptyMap());
+		GAMEVALS.put(VARBIT_KEY, Collections.emptyMap());
 		loaded = false;
 	}
 
@@ -212,6 +214,12 @@ public class GamevalManager {
 		}
 	}
 
+	public static class VarbitAdapter extends GamevalAdapter {
+		public VarbitAdapter() {
+			super(VARBIT_KEY);
+		}
+	}
+
 	public class Handle implements AutoCloseable {
 		public Map<String, Integer> getNpcs() {
 			return GAMEVALS.get(NPC_KEY);
@@ -227,6 +235,10 @@ public class GamevalManager {
 
 		public Map<String, Integer> getSpotanims() {
 			return GAMEVALS.get(SPOTANIM_KEY);
+		}
+
+		public Map<String, Integer> getVarbits() {
+			return GAMEVALS.get(VARBIT_KEY);
 		}
 
 		public int getNpcId(String name) {
@@ -245,6 +257,10 @@ public class GamevalManager {
 			return getSpotanims().get(name);
 		}
 
+		public int getVarbitId(String name) {
+			return getVarbits().get(name);
+		}
+
 		public String getNpcName(int id) {
 			return getName(NPC_KEY, id);
 		}
@@ -259,6 +275,10 @@ public class GamevalManager {
 
 		public String getSpotanimName(int id) {
 			return getName(SPOTANIM_KEY, id);
+		}
+
+		public String getVarbitName(int id) {
+			return getName(VARBIT_KEY, id);
 		}
 
 		@Override

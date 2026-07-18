@@ -69,6 +69,9 @@ public class EnvironmentManager {
 	private HdPluginConfig config;
 
 	@Inject
+	private GamevalManager gamevalManager;
+
+	@Inject
 	private TimeOfDay timeOfDay;
 
 	private static final float TRANSITION_DURATION = 3; // seconds
@@ -224,7 +227,7 @@ public class EnvironmentManager {
 
 	public void startUp() {
 		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> {
-			try {
+			try (var ignored = gamevalManager.obtainHandle()) {
 				environments = path.loadJson(plugin.getGson(), Environment[].class);
 				if (environments == null)
 					throw new IOException("Empty or invalid: " + path);
@@ -318,7 +321,7 @@ public class EnvironmentManager {
 			// satisfied; otherwise fall through to the next matching environment so the
 			// normal overworld sky shows outside the gated state.
 			if (environment.hasVarbitGate()
-				&& !environment.isVarbitGateSatisfied(client.getVarbitValue(environment.requiredVarbit)))
+				&& !environment.isVarbitGateSatisfied(client::getVarbitValue))
 				continue;
 			changeEnvironment(environment, skipTransition);
 			break;
