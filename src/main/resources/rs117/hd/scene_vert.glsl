@@ -92,7 +92,6 @@ layout (location = 0) in vec3 vPosition;
             materialData = faceData.MaterialData[vertex];
             fFade        = vFade;
         }
-        fTerrainData = texelFetch(textureFaces, vTextureFaceIdx + 2).xyz;
 
         int worldViewIdx = vWorldViewId;
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
@@ -121,6 +120,18 @@ layout (location = 0) in vec3 vPosition;
                 worldPosition - modelData.position,
                 vNormal.xyz
             );
+        } else {
+            // Clamp underwater vertices to the water surface along the draw distance border, excluding
+            // waterDepth == 1, which is used when the geometry already sits flush with the surface
+            int waterDepth = fTerrainData[vertex] >> 11 & 0xFFF;
+            if (waterDepth > 1) {
+                const int TILE_SIZE = 128;
+                const int CHUNK_SIZE = TILE_SIZE * 8;
+                ivec2 cam = ivec2(cameraPos.xz / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE / 2;
+                ivec2 d = ivec2(abs(worldPosition.xz - cam) / TILE_SIZE);
+                if (max(d.x, d.y) > int(drawDistance / 8) * 8 + 3)
+                    worldPosition.y -= waterDepth;
+            }
         }
 
         if (worldViewIdx != -1) {
