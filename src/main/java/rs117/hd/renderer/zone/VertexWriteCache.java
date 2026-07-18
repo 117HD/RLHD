@@ -49,6 +49,34 @@ public final class VertexWriteCache {
 			stagingBuffer = PooledArrayType.INT.ensureCapacity(stagingBuffer, min(stagingBuffer.length * 2, maxCapacity));
 	}
 
+	public int findStaticFace(
+		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
+		int materialDataA, int materialDataB, int materialDataC,
+		int terrainDataA, int terrainDataB, int terrainDataC
+	) {
+		final int[] stagingBuffer = this.stagingBuffer;
+		final int stagingPosition = this.stagingPosition;
+
+		for (int i = 0; i < stagingPosition; i += 9) {
+			if (stagingBuffer[i] == alphaBiasHslA
+			    && stagingBuffer[i + 1] == alphaBiasHslB
+			    && stagingBuffer[i + 2] == alphaBiasHslC
+
+			    && stagingBuffer[i + 3] == materialDataA
+			    && stagingBuffer[i + 4] == materialDataB
+			    && stagingBuffer[i + 5] == materialDataC
+
+			    && stagingBuffer[i + 6] == terrainDataA
+			    && stagingBuffer[i + 7] == terrainDataB
+			    && stagingBuffer[i + 8] == terrainDataC) {
+				final int textureFaceIdx = outputBuffer.position() + i;
+				return textureFaceIdx << 1;
+			}
+		}
+
+		return -1;
+	}
+
 	public int putStaticFace(
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC,
@@ -82,7 +110,6 @@ public final class VertexWriteCache {
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
-		// Search staging buffer for an existing matching face (4 ints per face)
 		for (int i = 0; i < stagingPosition; i += 4) {
 			if (stagingBuffer[i] == alphaBiasHslA
 			    && stagingBuffer[i + 1] == alphaBiasHslB

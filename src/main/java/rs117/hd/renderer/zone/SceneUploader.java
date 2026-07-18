@@ -1097,11 +1097,19 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx, 0
 		);
 
-		texturedFaceIdx = tb.putStaticFace(
+		texturedFaceIdx = tb.findStaticFace(
 			swColor, seColor, nwColor,
 			swMaterialData, seMaterialData, nwMaterialData,
 			swTerrainData, seTerrainData, nwTerrainData
 		);
+
+		if(texturedFaceIdx == -1) {
+			texturedFaceIdx = tb.putStaticFace(
+				swColor, seColor, nwColor,
+				swMaterialData, seMaterialData, nwMaterialData,
+				swTerrainData, seTerrainData, nwTerrainData
+			);
+		}
 
 		vb.putStaticVertex(
 			lx0, swHeight, lz0,
@@ -1392,11 +1400,19 @@ public class SceneUploader implements AutoCloseable {
 			final VertexWriteCache vb = writeCache.getVertexBuffer();
 			final VertexWriteCache tb = writeCache.getTextureBuffer();
 
-			int texturedFaceIdx = tb.putStaticFace(
+			int texturedFaceIdx = tb.findStaticFace(
 				colorA, colorB, colorC,
 				materialDataA, materialDataB, materialDataC,
 				terrainDataA, terrainDataB, terrainDataC
 			);
+
+			if(texturedFaceIdx == -1) {
+				texturedFaceIdx = tb.putStaticFace(
+					colorA, colorB, colorC,
+					materialDataA, materialDataB, materialDataC,
+					terrainDataA, terrainDataB, terrainDataC
+				);
+			}
 
 			vb.putStaticVertex(
 				lx0, ly0, lz0,
