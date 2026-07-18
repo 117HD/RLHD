@@ -1800,7 +1800,10 @@ public class SceneUploader implements AutoCloseable {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			final int texturedFaceIdx = tb.putModelFace(color1, color2, color3, materialData);
+			// Check if we can reuse an existing model face to dedup the amount of faces written
+			int texturedFaceIdx = tb.findModelFace(color1, color2, color3, materialData);
+			if(texturedFaceIdx == -1)
+				texturedFaceIdx = tb.putModelFace(color1, color2, color3, materialData);
 
 			vb.putStaticVertex(
 				vx1, vy1, vz1,

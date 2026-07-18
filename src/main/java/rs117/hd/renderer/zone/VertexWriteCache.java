@@ -78,6 +78,24 @@ public final class VertexWriteCache {
 		return textureFaceIdx << 1;
 	}
 
+	public int findModelFace(int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC, int materialData) {
+		final int[] stagingBuffer = this.stagingBuffer;
+		final int stagingPosition = this.stagingPosition;
+
+		// Search staging buffer for an existing matching face (4 ints per face)
+		for (int i = 0; i < stagingPosition; i += 4) {
+			if (stagingBuffer[i] == alphaBiasHslA
+			    && stagingBuffer[i + 1] == alphaBiasHslB
+			    && stagingBuffer[i + 2] == alphaBiasHslC
+			    && stagingBuffer[i + 3] == materialData) {
+				final int textureFaceIdx = outputBuffer.position() + i;
+				return 1 | textureFaceIdx << 1;
+			}
+		}
+
+		return -1;
+	}
+
 	public int putModelFace(int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC, int materialData) {
 		if (stagingPosition + 4 > stagingBuffer.length)
 			flushAndGrow();
