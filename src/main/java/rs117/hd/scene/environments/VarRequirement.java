@@ -14,8 +14,7 @@ import rs117.hd.utils.GsonUtils;
 
 public class VarRequirement {
 	public int id = -1;
-	public int state = 1;
-	public Op op = Op.EQ;
+	public Check[] checks = { new Check() };
 
 	public enum Op {
 		EQ,
@@ -63,6 +62,31 @@ public class VarRequirement {
 		}
 	}
 
+	public static class Check {
+		public int state = 1;
+		public Op op = Op.EQ;
+
+		public Check() {}
+
+		public Check(int state, Op op) {
+			this.state = state;
+			this.op = op;
+		}
+
+		public boolean isSatisfied(int currentValue) {
+			if (state == -1 && op == Op.EQ)
+				return currentValue != 0;
+			switch (op) {
+				case NEQ: return currentValue != state;
+				case GT: return currentValue > state;
+				case GTE: return currentValue >= state;
+				case LT: return currentValue < state;
+				case LTE: return currentValue <= state;
+				default: return currentValue == state;
+			}
+		}
+	}
+
 	public VarRequirement() {}
 
 	public VarRequirement(int id) {
@@ -70,16 +94,11 @@ public class VarRequirement {
 	}
 
 	public boolean isSatisfied(int currentValue) {
-		if (state == -1 && op == Op.EQ)
-			return currentValue != 0;
-		switch (op) {
-			case NEQ: return currentValue != state;
-			case GT: return currentValue > state;
-			case GTE: return currentValue >= state;
-			case LT: return currentValue < state;
-			case LTE: return currentValue <= state;
-			default: return currentValue == state;
+		for (var check : checks) {
+			if (!check.isSatisfied(currentValue))
+				return false;
 		}
+		return true;
 	}
 
 	public static class VarbitAdapter extends Adapter {
@@ -146,6 +165,11 @@ public class VarRequirement {
 
 		private VarRequirement readObject(JsonReader in) throws IOException {
 			var req = new VarRequirement();
+			int state = 1;
+			Op op = Op.EQ;
+			boolean hasSingle = false;
+			Check[] checks = null;
+
 			in.beginObject();
 			while (in.hasNext()) {
 				switch (in.nextName()) {
@@ -153,11 +177,16 @@ public class VarRequirement {
 						req.id = readId(in);
 						break;
 					case "state":
-						req.state = in.nextInt();
+						state = in.nextInt();
+						hasSingle = true;
 						break;
 					case "op":
 					case "compare":
-						req.op = Op.fromString(in.nextString());
+						op = Op.fromString(in.nextString());
+						hasSingle = true;
+						break;
+					case "checks":
+						checks = readChecks(in);
 						break;
 					default:
 						in.skipValue();
@@ -165,9 +194,49 @@ public class VarRequirement {
 				}
 			}
 			in.endObject();
+
 			if (req.id < 0)
 				throw new IOException("var requirement object missing id at " + GsonUtils.location(in));
+
+			if (checks != null && checks.length > 0)
+				req.checks = checks;
+			else if (hasSingle)
+				req.checks = new Check[] { new Check(state, op) };
 			return req;
+		}
+
+		private static Check[] readChecks(JsonReader in) throws IOException {
+			var list = new ArrayList<Check>();
+			in.beginArray();
+			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
+				if (in.peek() == JsonToken.NULL) {
+					in.skipValue();
+					continue;
+				}
+				if (in.peek() != JsonToken.BEGIN_OBJECT)
+					throw new IOException("Unexpected type in checks list: " + in.peek() + " at " + GsonUtils.location(in));
+
+				var check = new Check();
+				in.beginObject();
+				while (in.hasNext()) {
+					switch (in.nextName()) {
+						case "state":
+							check.state = in.nextInt();
+							break;
+						case "op":
+						case "compare":
+							check.op = Op.fromString(in.nextString());
+							break;
+						default:
+							in.skipValue();
+							break;
+					}
+				}
+				in.endObject();
+				list.add(check);
+			}
+			in.endArray();
+			return list.toArray(Check[]::new);
 		}
 
 		@Override
@@ -178,18 +247,32 @@ public class VarRequirement {
 			}
 			out.beginArray();
 			for (var req : value) {
-				if (req.state == 1 && req.op == Op.EQ) {
+				var checks = req.checks != null && req.checks.length > 0 ? req.checks : new Check[] { new Check() };
+				if (checks.length == 1 && checks[0].state == 1 && checks[0].op == Op.EQ) {
 					writeId(out, req.id);
-				} else {
-					out.beginObject();
-					out.name("id");
-					writeId(out, req.id);
-					if (req.state != 1)
-						out.name("state").value(req.state);
-					if (req.op != Op.EQ)
-						out.name("op").value(req.op.toJson());
-					out.endObject();
+					continue;
 				}
+				out.beginObject();
+				out.name("id");
+				writeId(out, req.id);
+				if (checks.length == 1) {
+					if (checks[0].state != 1)
+						out.name("state").value(checks[0].state);
+					if (checks[0].op != Op.EQ)
+						out.name("op").value(checks[0].op.toJson());
+				} else {
+					out.name("checks");
+					out.beginArray();
+					for (var check : checks) {
+						out.beginObject();
+						out.name("state").value(check.state);
+						if (check.op != Op.EQ)
+							out.name("op").value(check.op.toJson());
+						out.endObject();
+					}
+					out.endArray();
+				}
+				out.endObject();
 			}
 			out.endArray();
 		}
