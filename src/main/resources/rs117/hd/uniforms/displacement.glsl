@@ -23,7 +23,7 @@ layout(std140) uniform UBODisplacement {
     int characterPositionCount;
     int boatCount;
 
-    vec3 characterPositions[MAX_CHARACTER_POSITION_COUNT];
+    vec4 characterPositions[MAX_CHARACTER_POSITION_COUNT];
     Boat boats[MAX_BOAT_COUNT];
 };
 

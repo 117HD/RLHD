@@ -18,7 +18,7 @@ public class UBODisplacement extends UniformBuffer<GLBuffer> {
 	private final Property characterPositionCount = addProperty(PropertyType.Int, "characterPositionCount");
 	private final Property boatAABBCount = addProperty(PropertyType.Int, "boatCount");
 
-	private final Property[] characterPositions = addPropertyArray(PropertyType.FVec3, "characterPositions", MAX_CHARACTER_POSITION_COUNT);
+	private final Property[] characterPositions = addPropertyArray(PropertyType.FVec4, "characterPositions", MAX_CHARACTER_POSITION_COUNT);
 	private final BoatStruct[] boatData = addStructs(new BoatStruct[MAX_BOAT_COUNT], BoatStruct::new);
 
 	@Inject

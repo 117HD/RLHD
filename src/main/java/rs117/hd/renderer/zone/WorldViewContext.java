@@ -54,7 +54,7 @@ public class WorldViewContext {
 	final int sizeX, sizeZ;
 	@Nullable
 	WorldViewStruct uboWorldViewStruct;
-	ZoneSceneContext sceneContext;
+	public ZoneSceneContext sceneContext;
 	Zone[][] zones;
 	boolean isLoading = true;
 

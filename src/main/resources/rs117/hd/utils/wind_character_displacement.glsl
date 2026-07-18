@@ -47,15 +47,15 @@ float getModelWindDisplacementMod(int vertexFlags) {
     return modifiers[modifierIDx];
 }
 
-vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, float strength, inout float offsetAccum) {
-    vec2 offset = vertPos - characterPos.xy;
+vec3 applyCharacterDisplacement(vec4 characterData, vec2 vertPos, float height, float strength, inout float offsetAccum) {
+    vec2 offset = vertPos - characterData.xy;
     float offsetLen = length(offset);
 
-    if (offsetLen >= characterPos.z)
+    if (offsetLen >= characterData.z)
         return vec3(0);
 
-    float offsetFrac = saturate(1.0 - (offsetLen / characterPos.z));
-    float displacementFrac = offsetFrac * offsetFrac;
+    float offsetFrac = saturate(1.0 - (offsetLen / characterData.z));
+    float displacementFrac = offsetFrac * offsetFrac * characterData.w;
 
     vec3 horizontalDisplacement = normalize(vec3(offset.x, 0.0, offset.y)) * (height * strength * displacementFrac * 0.5);
     vec3 verticalDisplacement = vec3(0.0, height * strength * displacementFrac, 0.0);

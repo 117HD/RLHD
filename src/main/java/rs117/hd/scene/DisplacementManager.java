@@ -1,6 +1,7 @@
 package rs117.hd.scene;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import javax.inject.Inject;
@@ -19,6 +20,8 @@ import rs117.hd.renderer.zone.WorldViewContext;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.collections.IntHashSet;
 
+import static net.runelite.api.Constants.*;
+import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
@@ -53,6 +56,7 @@ public class DisplacementManager {
 
 	private final WorldViewStruct[] boatWorldViews = new WorldViewStruct[MAX_BOAT_COUNT];
 	private final SimplePolygon[] boatDisplacementPolygons = new SimplePolygon[MAX_BOAT_COUNT];
+	private final boolean[] groundItems = new boolean[EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
 	private int writtenBoats;
 
 	public final IntHashSet boatIds = new IntHashSet();
@@ -104,20 +108,17 @@ public class DisplacementManager {
 			if (ctx != null && !sceneManager.isRoot(ctx))
 				return;
 
-			addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+			addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f), 1.0f);
 		}
 	}
 
 	public void addCharacterPosition(Scene scene, int x, int z, Renderable renderable, Model m) {
-		if(!plugin.configCharacterDisplacement || !(renderable instanceof Actor))
+		if(!plugin.configCharacterDisplacement)
 			return;
 
 		WorldViewContext ctx = sceneManager.getContext(scene);
 		if(ctx != null && !sceneManager.isRoot(ctx))
 			return;
-
-		if (plugin.enableDetailedTimers)
-			frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
 
 		if (renderable instanceof NPC) {
 			var npc = (NPC) renderable;
@@ -131,19 +132,27 @@ public class DisplacementManager {
 						entry.idleRadius = displacementRadius;
 					}
 				}
-				addCharacterPosition(x, z, displacementRadius);
+				addCharacterPosition(x, z, displacementRadius, 1.0f);
 			}
 		} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
-			addCharacterPosition(x, z, (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+			addCharacterPosition(x, z, (int) (LOCAL_TILE_SIZE * 1.33f), 1.0f);
+		} else if (renderable instanceof TileItem){
+			int TileExX = clamp(ctx.sceneContext.sceneOffset + (x / 128), 0, EXTENDED_SCENE_SIZE - 1);
+			int TileExY = clamp(ctx.sceneContext.sceneOffset + (z / 128), 0, EXTENDED_SCENE_SIZE - 1);
+			final int tileIdx = TileExX * EXTENDED_SCENE_SIZE + TileExY;
+			if(!groundItems[tileIdx]) {
+				groundItems[tileIdx] = true;
+				addCharacterPosition(x, z, (int) (LOCAL_TILE_SIZE * 0.5f), 4.0f);
+			}
 		}
-
-		if (plugin.enableDetailedTimers)
-			frameTimer.end(Timer.CHARACTER_DISPLACEMENT);
 	}
 
-	public void addCharacterPosition(int localX, int localZ, int modelRadius) {
+	public void addCharacterPosition(int localX, int localZ, int modelRadius, float strength) {
 		if(!plugin.configCharacterDisplacement)
 			return;
+
+		if (plugin.enableDetailedTimers)
+			frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
 
 		int writeIndex = writtenCharacterPositions;
 		CharacterPositionPair pair = getCharacterPositionPair();
@@ -152,6 +161,7 @@ public class DisplacementManager {
 		pair.x = localX;
 		pair.z = localZ;
 		pair.radius = modelRadius * 1.25f;
+		pair.strength = strength;
 
 		if (writeIndex == 0) {
 			playerPosX = pair.x;
@@ -173,6 +183,9 @@ public class DisplacementManager {
 
 		characterPositionsPairs.add(writeIndex, pair);
 		writtenCharacterPositions++;
+
+		if (plugin.enableDetailedTimers)
+			frameTimer.end(Timer.CHARACTER_DISPLACEMENT);
 	}
 
 	public void writeBoatData(UBODisplacement.BoatStruct[] boatContours, Property boatCount) {
@@ -206,14 +219,17 @@ public class DisplacementManager {
 			pair.dist = Float.MAX_VALUE;
 
 			if (i < characterPositions.length)
-				characterPositions[i].set(pair.x, pair.z, pair.radius);
+				characterPositions[i].set(pair.x, pair.z, pair.radius, pair.strength);
 		}
+
+		Arrays.fill(groundItems, false);
 	}
 
 	private static class CharacterPositionPair {
 		public float x;
 		public float z;
 		public float radius;
+		public float strength;
 		public float dist = Float.MAX_VALUE;
 	}
 }
