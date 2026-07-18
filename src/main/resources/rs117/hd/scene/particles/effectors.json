@@ -1,0 +1,56 @@
+[
+  {
+    "id": "WIND_DEFAULT",
+    "placements": [
+      [ 3011, 3501, 0 ]
+    ],
+    "heightOffset": 250,
+    "effects": [
+      {
+        "type": "wind",
+        "direction": [ 3812, 900, 1224 ],
+        "speed": 0.65,
+        "intensity": 1.0,
+        "directionVariance": 8
+      }
+    ]
+  },
+  {
+    "id": "WINTERTODT_STORM",
+    "radiusTiles": 10,
+    "heightOffset": 1850,
+    "effects": [
+      {
+        "type": "attract",
+        "applyTo": "velocity",
+        "strength": 1000,
+        "edgeFalloff": true,
+        "falloffPower": 1.2,
+        "effectPercent": 60,
+        "immunePercent": 40
+      },
+      {
+        "type": "repel",
+        "applyTo": "velocity",
+        "strength": 1700,
+        "edgeFalloff": true,
+        "falloffPower": 1.8,
+        "effectPercent": 75,
+        "immunePercent": 35
+      },
+      {
+        "type": "whirlpool",
+        "applyTo": "velocity",
+        "strength": 2400,
+        "sink": 450,
+        "inverted": true,
+        "clockwise": false,
+        "pathVariation": 18,
+        "targetColor": "#2a1adb",
+        "colorBlend": "path",
+        "effectPercent": 100,
+        "immunePercent": 60
+      }
+    ]
+  }
+]
