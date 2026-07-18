@@ -620,7 +620,7 @@ public interface HdPluginConfig extends Config
 	String KEY_SEASONAL_FOLIAGE = "seasonalFoliage";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_FOLIAGE,
-		name = "Seasonal Foliage",
+		name = "Seasonal foliage",
 		description = "Allow seasonal themes to change the color of tree leaves.",
 		position = 2,
 		section = environmentSettings
@@ -769,7 +769,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_WIND_DISPLACEMENT,
 		name = "Wind displacement",
 		description = "Controls whether things like grass and leaves should be affected by wind.",
-		position = 14,
+		position = 13,
 		section = environmentSettings
 	)
 	default boolean windDisplacement() {
@@ -781,7 +781,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_CHARACTER_DISPLACEMENT,
 		name = "Character displacement",
 		description = "Let players & NPCs affect things like grass whilst walking around.",
-		position = 15,
+		position = 14,
 		section = environmentSettings
 	)
 	default boolean characterDisplacement() {
@@ -793,7 +793,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
 		name = "Hide vanilla water ripples",
 		description = "Hide vanilla ripples found around objects floating in the water.",
-		position = 16,
+		position = 15,
 		section = environmentSettings
 	)
 	default boolean hideVanillaWaterEffects() { return true; }
@@ -803,7 +803,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_POH_THEME_ENVIRONMENTS,
 		name = "Player-owned house themes",
 		description = "Change the environmental lighting based on the POH style.",
-		position = 17,
+		position = 16,
 		section = environmentSettings
 	)
 	default boolean pohThemeEnvironments() { return true; }
