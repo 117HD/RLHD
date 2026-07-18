@@ -617,6 +617,18 @@ public interface HdPluginConfig extends Config
 		return SeasonalHemisphere.NORTHERN;
 	}
 
+	String KEY_SEASONAL_FOLIAGE = "seasonalFoliage";
+	@ConfigItem(
+		keyName = KEY_SEASONAL_FOLIAGE,
+		name = "Seasonal foliage",
+		description = "Allow seasonal themes to change the color of tree leaves.",
+		position = 2,
+		section = environmentSettings
+	)
+	default boolean seasonalFoliage() {
+		return true;
+	}
+
 	@ConfigItem(
 		keyName = "fogDepthMode",
 		name = "Fog depth mode",
@@ -624,7 +636,7 @@ public interface HdPluginConfig extends Config
 			"Determines how the fog amount is controlled.<br>" +
 			"'Dynamic' changes fog depth based on the area, while<br>" +
 			"'Static' respects the manually defined fog depth.",
-		position = 2,
+		position = 3,
 		section = environmentSettings
 	)
 	default FogDepthMode fogDepthMode()
@@ -642,7 +654,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Specify how far from the edge fog should reach.<br>" +
 			"This applies only when 'Fog Depth Mode' is set to 'Static'.",
-		position = 3,
+		position = 4,
 		section = environmentSettings
 	)
 	default int fogDepth()
@@ -654,7 +666,7 @@ public interface HdPluginConfig extends Config
 		keyName = "groundFog",
 		name = "Ground fog",
 		description = "Enables a height-based fog effect that covers the ground in certain areas.",
-		position = 4,
+		position = 5,
 		section = environmentSettings
 	)
 	default boolean groundFog() {
@@ -670,7 +682,7 @@ public interface HdPluginConfig extends Config
 			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
 			"If set to 'Old School Black', the sky will be black and water will remain blue, but for any<br>" +
 			"other option, the water color will be influenced by the sky color.",
-		position = 5,
+		position = 6,
 		section = environmentSettings
 	)
 	default DefaultSkyColor defaultSkyColor()
@@ -682,7 +694,7 @@ public interface HdPluginConfig extends Config
 		keyName = "overrideSky",
 		name = "Override sky color",
 		description = "Forces the default sky color to be used in all environments.",
-		position = 6,
+		position = 7,
 		section = environmentSettings
 	)
 	default boolean overrideSky() {
@@ -694,7 +706,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_MODEL_TEXTURES,
 		name = "Model textures",
 		description = "Adds new textures to most models. If disabled, the standard game textures will be used instead.",
-		position = 7,
+		position = 8,
 		section = environmentSettings
 	)
 	default boolean modelTextures() {
@@ -706,7 +718,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_GROUND_TEXTURES,
 		name = "Ground textures",
 		description = "Adds new textures to most ground tiles.",
-		position = 8,
+		position = 9,
 		section = environmentSettings
 	)
 	default boolean groundTextures()
@@ -719,7 +731,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_TEXTURE_RESOLUTION,
 		name = "Texture resolution",
 		description = "Controls the resolution used for all in-game textures.",
-		position = 9,
+		position = 10,
 		section = environmentSettings
 	)
 	default TextureResolution textureResolution()
@@ -732,7 +744,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_GROUND_BLENDING,
 		name = "Ground blending",
 		description = "Controls whether ground tiles should blend into each other, or have distinct edges.",
-		position = 10,
+		position = 11,
 		section = environmentSettings
 	)
 	default boolean groundBlending()
@@ -744,7 +756,7 @@ public interface HdPluginConfig extends Config
 		keyName = "underwaterCaustics",
 		name = "Underwater caustics",
 		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 11,
+		position = 12,
 		section = environmentSettings
 	)
 	default boolean underwaterCaustics()

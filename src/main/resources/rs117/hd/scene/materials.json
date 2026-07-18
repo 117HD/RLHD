@@ -3319,7 +3319,7 @@
     "materialsToReplace": [
       "LEAVES_YELLOW_SIDE"
     ],
-    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.AUTUMN"
   },
   {
     "name": "AUTUMN_LEAVES_YELLOW_TOP",
@@ -3332,7 +3332,7 @@
     "materialsToReplace": [
       "LEAVES_YELLOW_TOP"
     ],
-    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.AUTUMN"
   },
   {
     "name": "AUTUMN_LEAVES_ORANGE_SIDE",
@@ -3345,7 +3345,7 @@
     "materialsToReplace": [
       "LEAVES_ORANGE_SIDE"
     ],
-    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.AUTUMN"
   },
   {
     "name": "AUTUMN_LEAVES_ORANGE_SIDE_ALT",
@@ -3358,7 +3358,7 @@
     "materialsToReplace": [
       "LEAVES_SIDE_ALT"
     ],
-    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.AUTUMN"
   },
   {
     "name": "AUTUMN_LEAVES_ORANGE_TOP",
@@ -3372,7 +3372,7 @@
       "LEAVES_ORANGE_TOP",
       "LEAVES_TOP_ALT"
     ],
-    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.AUTUMN"
   },
   {
     "name": "AUTUMN_LEAVES_RED_SIDE",
@@ -3385,7 +3385,7 @@
     "materialsToReplace": [
       "LEAVES_RED_SIDE"
     ],
-    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.AUTUMN"
   },
   {
     "name": "AUTUMN_LEAVES_RED_TOP",
@@ -3398,7 +3398,7 @@
     "materialsToReplace": [
       "LEAVES_RED_TOP"
     ],
-    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.AUTUMN"
   },
   {
     "name": "AUTUMN_WILLOW_LEAVES",
@@ -3411,7 +3411,7 @@
     "materialsToReplace": [
       "WILLOW_LEAVES"
     ],
-    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.AUTUMN"
   },
   {
     "name": "WINTER_WILLOW_LEAVES",
@@ -3424,7 +3424,7 @@
     "materialsToReplace": [
       "WILLOW_LEAVES"
     ],
-    "replacementCondition": "season == SeasonalTheme.WINTER"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.WINTER"
   },
   {
     "name": "WINTER_MAPLE_LEAVES",
@@ -3437,7 +3437,7 @@
     "materialsToReplace": [
       "MAPLE_LEAVES"
     ],
-    "replacementCondition": "season == SeasonalTheme.WINTER"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.WINTER"
   },
   {
     "name": "WINTER_LEAVES_SIDE",
@@ -3454,7 +3454,7 @@
       "LEAVES_ORANGE_SIDE",
       "LEAVES_RED_SIDE"
     ],
-    "replacementCondition": "season == SeasonalTheme.WINTER"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.WINTER"
   },
   {
     "name": "WINTER_LEAVES_SIDE_ALT",
@@ -3468,7 +3468,7 @@
     "materialsToReplace": [
       "LEAVES_SIDE_ALT"
     ],
-    "replacementCondition": "season == SeasonalTheme.WINTER"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.WINTER"
   },
   {
     "name": "WINTER_LEAVES_TOP",
@@ -3480,7 +3480,7 @@
       "LEAVES_RED_TOP",
       "LEAVES_TOP_ALT"
     ],
-    "replacementCondition": "season == SeasonalTheme.WINTER"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.WINTER"
   },
   {
     "name": "WINTER_LEAVES_DISEASED",
@@ -3493,7 +3493,7 @@
     "materialsToReplace": [
       "LEAVES_DISEASED"
     ],
-    "replacementCondition": "season == SeasonalTheme.WINTER"
+    "replacementCondition": "seasonalFoliage && season == SeasonalTheme.WINTER"
   },
   {
     "name": "WINTER_PAINTING_LANDSCAPE",
