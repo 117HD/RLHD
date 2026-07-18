@@ -71,8 +71,8 @@ public class VarbitRequirement {
 			return list.toArray(VarbitRequirement[]::new);
 		}
 
-		private static int readVarbitId(JsonReader in) throws IOException {
-			var el = JsonParser.parseReader(in);
+		private static int readVarbitId(JsonReader in) {
+			var el = new JsonParser().parse(in);
 			var arr = new JsonArray();
 			arr.add(el);
 			HashSet<Integer> ids = VARBITS.fromJsonTree(arr);

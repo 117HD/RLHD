@@ -33,7 +33,7 @@ public class GamevalManager {
 	private static final String OBJECT_KEY = "objects";
 	private static final String ANIM_KEY = "anims";
 	private static final String SPOTANIM_KEY = "spotanims";
-	private static final String VARBIT_KEY = "varbit";
+	private static final String VARBIT_KEY = "varbits";
 
 	@Inject
 	private HdPlugin plugin;
