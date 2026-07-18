@@ -771,7 +771,15 @@
       [ 2037, 5211, 2045, 5219 ],
       [ 2038, 5227, 2046, 5241 ],
       [ 2045, 5244, 2046, 5246 ],
-      [ 2011, 5241 ]
+      [ 2011, 5241 ],
+      [ 2023, 5206 ],
+      [ 2023, 5206 ],
+      [ 2028, 5222 ],
+      [ 2023, 5206 ],
+      [ 2030, 5207 ],
+      [ 2009, 5209 ],
+      [ 2012, 5209 ],
+      [ 2026, 5229 ]
     ]
   },
   {
@@ -1903,6 +1911,12 @@
     ]
   },
   {
+    "name": "FALADOR_PARK_HIDE_FLOOR_TRIM",
+    "aabbs": [
+      [ 3005, 3376 ]
+    ]
+  },
+  {
     "name": "ASGARNIA_ICE_DUNGEON_NORMAL",
     "aabbs": [
       [ 2984, 9536, 3019, 9601 ],
@@ -2034,8 +2048,31 @@
   },
   {
     "name": "BRIMHAVEN_AGILITY_ARENA",
-    "regions": [
-      11157
+    "hideOtherAreas": true,
+    "aabbs": [
+      [ 2812, 9536, 2818, 9604 ],
+      [ 2812, 9605, 2815, 9612 ],
+      [ 2736, 9536, 2811, 9612 ],
+      [ 2811, 9527, 2815, 9535 ],
+      [ 2742, 9524, 2810, 9535 ],
+      [ 2740, 9527, 2741, 9535 ],
+      [ 2738, 9531, 2739, 9535 ],
+      [ 2736, 9534, 2737, 9535 ]
+    ]
+  },
+  {
+    "name": "BRIMHAVEN_AGILITY_ARENA_LIGHTEN_HANDHOLDS",
+    "description": "For lightening some handholds that are too dark in the Brimhaven Agility Arena",
+    "aabbs": [
+      [ 2759, 9559, 2759, 9566 ],
+      [ 2785, 9544, 2792, 9544 ]
+    ]
+  },
+  {
+    "name": "BRIMHAVEN_AGILITY_ARENA_DIRT_CLAMP",
+    "description": "For clamping the brightness and darkness at the base of the pillars to remove baked in shading",
+    "aabbs": [
+      [ 2757, 9542, 2809, 9594 ]
     ]
   },
   {
@@ -2823,9 +2860,46 @@
     ]
   },
   {
-    "name": "MAGE_TRAINING_ARENA",
+    "name": "MAGE_TRAINING_ARENA_ENCHANTERS",
+    "regionBoxes": [
+      [ 13462, 13462, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_GRAVEYARD",
+    "regionBoxes": [
+      [ 13462, 13462, 1 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_ALCHEMIST",
+    "regionBoxes": [
+      [ 13462, 13462, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_TELEKENTIC",
+    "regions": [ 13463 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_LOBBY",
     "aabbs": [
-      [ 3347, 3288, 3374, 3327 ]
+      [ 3347, 3288, 3374, 3327 ],
+      [ 3356, 3283, 3365, 3285 ],
+      [ 3375, 3289, 3375, 3290 ]
+    ]
+  },
+  {
+    "name": "MAGE_TRAINING_ARENA_PLAYGROUNDS",
+    "areas": [
+      "MAGE_TRAINING_ARENA_GRAVEYARD",
+      "MAGE_TRAINING_ARENA_ENCHANTERS",
+      "MAGE_TRAINING_ARENA_ALCHEMIST",
+      "MAGE_TRAINING_ARENA_TELEKENTIC"
     ]
   },
   {
@@ -3421,96 +3495,93 @@
   {
     "name": "PYRAMID_PLUNDER_WRONG_LOBBY_1",
     "aabbs": [
-      [ 1924, 4448, 1943, 4467, 2 ]
+      [ 1923, 4447, 1944, 4468, 2 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_WRONG_LOBBY_2",
     "aabbs": [
-      [ 1958, 4418, 1978, 4437, 2 ]
+      [ 1957, 4417, 1979, 4438, 2 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_WRONG_LOBBY_3",
     "aabbs": [
-      [ 1957, 4447, 1978, 4468, 3 ]
+      [ 1956, 4446, 1979, 4469, 3 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_CORRECT_LOBBY",
     "aabbs": [
-      [ 1924, 4417, 1944, 4437, 3 ]
+      [ 1923, 4416, 1945, 4438, 3 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_ROOM_1",
     "aabbs": [
-      [ 1922, 4463, 1933, 4473, 0 ],
-      [ 1922, 4474, 1930, 4478, 0 ]
+      [ 1921, 4475, 1931, 4479, 0 ],
+      [ 1921, 4462, 1934, 4474, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_ROOM_2",
     "aabbs": [
-      [ 1948, 4463, 1957, 4474, 0 ],
-      [ 1952, 4475, 1957, 4478, 0 ],
-      [ 1958, 4463, 1960, 4472, 0 ]
+      [ 1947, 4462, 1961, 4473, 0 ],
+      [ 1951, 4474, 1958, 4479, 0 ],
+      [ 1947, 4474, 1950, 4475, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_ROOM_3",
     "aabbs": [
-      [ 1973, 4453, 1980, 4472, 0 ],
-      [ 1969, 4455, 1972, 4465, 0 ],
-      [ 1970, 4453, 1972, 4454, 0 ]
+      [ 1972, 4452, 1981, 4473, 0 ],
+      [ 1969, 4452, 1971, 4453, 0 ],
+      [ 1968, 4454, 1971, 4466, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_ROOM_4",
     "aabbs": [
-      [ 1923, 4450, 1930, 4455, 0 ],
-      [ 1931, 4448, 1942, 4459, 0 ]
+      [ 1930, 4447, 1943, 4460, 0 ],
+      [ 1922, 4449, 1929, 4456, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_ROOM_5",
     "aabbs": [
-      [ 1951, 4443, 1962, 4455, 0 ],
-      [ 1963, 4443, 1966, 4447, 0 ],
-      [ 1964, 4442, 1966, 4442, 0 ]
+      [ 1964, 4441, 1967, 4448, 0 ],
+      [ 1963, 4441, 0 ],
+      [ 1950, 4442, 1963, 4456, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_ROOM_6",
     "aabbs": [
-      [ 1951, 4443, 1962, 4455, 0 ],
-      [ 1963, 4443, 1966, 4447, 0 ],
-      [ 1964, 4442, 1966, 4442, 0 ],
-      [ 1921, 4423, 1932, 4440, 0 ]
+      [ 1920, 4422, 1933, 4441, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_ROOM_7",
     "aabbs": [
-      [ 1940, 4420, 1955, 4433, 0 ]
+      [ 1939, 4419, 1956, 4434, 0 ]
     ],
     "hideOtherAreas": true
   },
   {
     "name": "PYRAMID_PLUNDER_ROOM_8",
     "aabbs": [
-      [ 1967, 4426, 1979, 4437, 0 ],
-      [ 1971, 4419, 1979, 4425, 0 ]
+      [ 1966, 4425, 1980, 4438, 0 ],
+      [ 1970, 4418, 1980, 4424, 0 ]
     ],
     "hideOtherAreas": true
   },
@@ -3597,6 +3668,12 @@
     ]
   },
   {
+    "name": "SLEPE_WATERPUMP_TILE_FIX",
+    "aabbs": [
+      [ 3705, 3313 ]
+    ]
+  },
+  {
     "name": "SLEPE_CHURCH",
     "aabbs": [
       [ 3734, 3306, 3742, 3324 ],
@@ -3677,6 +3754,19 @@
     "name": "VER_SINHAZA_CUTSCENE",
     "aabbs": [
       [ 2064, 4880, 2087, 4903 ]
+    ]
+  },
+  {
+    "name": "VER_SINHAZA_BALCONY",
+    "aabbs": [
+      [ 3660, 3211, 3665, 3214, 1 ],
+      [ 3660, 3224, 3665, 3227, 1 ]
+    ]
+  },
+  {
+    "name": "VER_SINHAZA_BLOOD_POOL",
+    "aabbs": [
+      [ 3660, 3224, 3665, 3227 ]
     ]
   },
   {
@@ -8716,6 +8806,19 @@
     ]
   },
   {
+    "name": "CAMDOZAAL_HOUSE_LIGHTS_HIGH",
+    "aabbs": [
+      [ 2950, 5800, 2966, 5805 ],
+      [ 2985, 5787, 2990, 5791 ]
+    ]
+  },
+  {
+    "name": "CAMDOZAAL_HOUSE_LIGHTS_LOW",
+    "aabbs": [
+      [ 2950, 5800, 2966, 5805 ]
+    ]
+  },
+  {
     "name": "CAMDOZAAL",
     "aabbs": [
       [ 2897, 5760, 3036, 5848 ]
@@ -9102,6 +9205,12 @@
     ]
   },
   {
+    "name": "TOA_LOOT_ROOM_CHEST_PLATFORM",
+    "aabbs": [
+      [ 3678, 5138, 3682, 5143 ]
+    ]
+  },
+  {
     "name": "TOA_FINAL_BOSS_PHASE_1",
     "aabbs": [
       [ 3776, 5120, 3839, 5183 ]
@@ -9232,6 +9341,13 @@
       [ 3913, 5392, 3913, 5424 ],
       [ 3912, 5398, 3912, 5418 ],
       [ 3906, 5399, 3911, 5417 ]
+    ]
+  },
+  {
+    "name": "TOMBS_OF_AMASCUT_LOBBY",
+    "areas": [
+      "TOA_ENTRANCE_LOBBY",
+      "TOA_PATH_HUB"
     ]
   },
   {
@@ -9481,6 +9597,12 @@
     "aabbs": [
       [ 3046, 4481, 3055, 4486 ],
       [ 3028, 4525, 3051, 4537 ]
+    ]
+  },
+  {
+    "name": "ENCHANTED_VALLEY_WATERFALL_FIX",
+    "aabbs": [
+      [ 3040, 4522, 3042, 4525, 1 ]
     ]
   },
   {
@@ -11726,6 +11848,12 @@
     ]
   },
   {
+    "name": "RED_REEF_UNDERWATER",
+    "regions": [
+      11403
+    ]
+  },
+  {
     "name": "ISLE_OF_BONES",
     "regions": [ 10023 ]
   },
@@ -11914,6 +12042,50 @@
     "name": "GRIMSTONE",
     "regions": [
       11583
+    ]
+  },
+  {
+    "name": "KRAKEN_COVE",
+    "regions": [ 9116 ]
+  },
+  {
+    "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
+    "aabbs": [
+      [ 2289, 9988, 2303, 10023, 1 ],
+      [ 2263, 9985, 2274, 9992, 1 ],
+      [ 2244, 9997, 2260, 10007, 1 ],
+      [ 2252, 10008, 2257, 10010, 1 ],
+      [ 2240, 10022, 2248, 10030, 1 ]
+    ]
+  },
+  {
+    "name": "KRAKEN_COVE_WALL_FIX",
+    "aabbs": [
+      [ 2290, 10020 ],
+      [ 2291, 10021 ],
+      [ 2293, 10022 ],
+      [ 2295, 10022 ],
+      [ 2296, 10021 ],
+      [ 2299, 10020 ],
+      [ 2300, 10019 ],
+      [ 2301, 10018 ],
+      [ 2245, 10029 ],
+      [ 2244, 10028 ],
+      [ 2243, 10026 ],
+      [ 2242, 10025 ],
+      [ 2246, 9998 ],
+      [ 2246, 10000 ],
+      [ 2247, 10002 ],
+      [ 2249, 10003 ],
+      [ 2266, 9990 ],
+      [ 2268, 9989 ],
+      [ 2269, 9987 ],
+      [ 2290, 9991 ],
+      [ 2291, 9990 ],
+      [ 2295, 9989 ],
+      [ 2300, 9998 ],
+      [ 2299, 10001 ],
+      [ 2256, 10004 ]
     ]
   },
   {

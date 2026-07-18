@@ -228,7 +228,7 @@ public class ModelStreamingManager {
 		streamingContext.renderableCount++;
 
 		final boolean hasAlpha =
-			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
+			(m.getTransparency() != 0 || m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
 			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
@@ -334,6 +334,7 @@ public class ModelStreamingManager {
 		boolean isPlayer = renderable instanceof Player;
 		final int renderMode = renderable.getRenderMode();
 		boolean shouldSort =
+			m.getTransparency() != 0 ||
 			m.getFaceTransparencies() != null ||
 			modelOverride.mightHaveTransparency ||
 			renderable instanceof Player ||
@@ -392,6 +393,7 @@ public class ModelStreamingManager {
 			if (visibleFaces.length > 0) {
 				final int alphaFaceCount = alphaModel != null ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
+				assert opaqueFaceCount >= 0 && alphaFaceCount >= 0 : "Invalid face counts: " + opaqueFaceCount + ", " + alphaFaceCount;
 
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
