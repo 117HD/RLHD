@@ -1519,6 +1519,9 @@ public class SceneUploader implements AutoCloseable {
 			ModelOverride faceOverride = modelOverride;
 
 			int transparency = readFaceTransparency(modelTransparency, transparencies, face);
+			if (transparency == 255)
+				continue;
+
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			boolean isTextured = textureId != -1;
 			if (isTextured) {
@@ -2606,10 +2609,16 @@ public class SceneUploader implements AutoCloseable {
 
 		int t = modelTransparency & 255;
 		int faceTransparency = transparencies != null ? transparencies[f] & 0xFF : 0;
-		if (t > 0 && faceTransparency < 253) {
-			int a = (253 - faceTransparency) * t >> 8;
-			assert (faceTransparency & 255) == faceTransparency;
-			return faceTransparency + a;
+		if(faceTransparency < 253) {
+			if (t > 0) {
+				int a = (253 - faceTransparency) * t >> 8;
+				assert (faceTransparency & 255) == faceTransparency;
+				return faceTransparency + a;
+			}
+		} else {
+			// 253 & 254 are special faces like clickboxes which we don't want to render
+			// So force it to be 255 so that the face is completely skipped
+			return 255;
 		}
 
 		return faceTransparency;
