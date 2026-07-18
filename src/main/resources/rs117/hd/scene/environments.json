@@ -601,7 +601,7 @@
   {
     "area": "BMR_MORYTANIA_MOON_CUTSCENE",
     "instantTransition": true,
-    "varbitCondition": "CUTSCENE_STATUS",
+    "varbitCondition": "CUTSCENE_STATUS && MYQ6 !=0 && MYQ6 < 178",
     "hideVanillaSkyboxes": true,
     "fogDepth": 7,
     "windAngle": 40,
@@ -625,7 +625,7 @@
   {
     "area": "BMR_MORYTANIA_DAWN_CUTSCENE",
     "instantTransition": true,
-    "varbitCondition": "CUTSCENE_STATUS",
+    "varbitCondition": "CUTSCENE_STATUS && MYQ6 !=0 && MYQ6 < 178",
     "hideVanillaSkyboxes": true,
     "fogDepth": 30,
     "windAngle": 40,
