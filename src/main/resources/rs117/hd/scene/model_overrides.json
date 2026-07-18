@@ -47479,6 +47479,8 @@
   {
     "description": "Tent - High poly mesh",
     "baseMaterial": "CARPET",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -1,
     "objectIds": [
       "SUROK_BANDIT_CAMP_TENT",
       "SUROK_BANDIT_CAMP_TENT_DIAG",
@@ -65052,7 +65054,7 @@
         "uvType": "MODEL_XY",
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "invertDisplacementStrength": true,
-        "windDisplacementModifier": -1
+        "windDisplacementModifier": 2
       },
       {
         "description": "Black fabric",
@@ -65062,7 +65064,7 @@
         "depthBias": 50,
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "invertDisplacementStrength": true,
-        "windDisplacementModifier": -1
+        "windDisplacementModifier": 2
       },
       {
         "description": "White fabric",
@@ -65072,7 +65074,7 @@
         "uvType": "MODEL_XY",
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "invertDisplacementStrength": true,
-        "windDisplacementModifier": -1
+        "windDisplacementModifier": 2
       }
     ]
   },
