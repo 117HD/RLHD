@@ -44,9 +44,12 @@ import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.ExpressionParser;
+import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.VariableSupplier;
 
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
@@ -77,6 +80,16 @@ public class EnvironmentManager {
 
 	private final Map<Integer, Integer> varbitOverrides = new HashMap<>();
 	private final Map<Integer, Integer> varpOverrides = new HashMap<>();
+	private final Map<String, Integer> varbitConditionVars = new HashMap<>();
+	private final Map<String, Integer> varpConditionVars = new HashMap<>();
+	private final VariableSupplier varbitVariableSupplier = name -> {
+		Integer id = varbitConditionVars.get(name);
+		return id == null ? null : getVarbitValue(id);
+	};
+	private final VariableSupplier varpVariableSupplier = name -> {
+		Integer id = varpConditionVars.get(name);
+		return id == null ? null : getVarpValue(id);
+	};
 
 	private static final float TRANSITION_DURATION = 3; // seconds
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
@@ -261,6 +274,8 @@ public class EnvironmentManager {
 				for (var env : environments)
 					env.normalize();
 
+				bindConditionVars(ignored);
+
 				clientThread.invoke(() -> {
 					// Force instant transition during development
 					if (!first)
@@ -327,6 +342,47 @@ public class EnvironmentManager {
 		clearVarpOverrides();
 	}
 
+	private void bindConditionVars(GamevalManager.Handle gamevals) {
+		varbitConditionVars.clear();
+		varpConditionVars.clear();
+		if (environments == null)
+			return;
+
+		for (var env : environments) {
+			bindConditionVars(env.varbitCondition, gamevals.getVarbits(), varbitConditionVars, "varbit");
+			bindConditionVars(env.varpCondition, gamevals.getVarps(), varpConditionVars, "varp");
+		}
+	}
+
+	private void bindConditionVars(
+		ExpressionPredicate condition,
+		Map<String, Integer> gamevals,
+		Map<String, Integer> bindings,
+		String kind
+	) {
+		if (!(condition instanceof ExpressionParser.SerializableExpressionPredicate))
+			return;
+		var expr = ((ExpressionParser.SerializableExpressionPredicate) condition).expression;
+		for (String name : expr.variables) {
+			if (bindings.containsKey(name))
+				continue;
+			Integer id = gamevals.get(name.toUpperCase());
+			if (id == null) {
+				log.error("Unknown {} condition variable '{}'", kind, name, new Throwable());
+				continue;
+			}
+			bindings.put(name, id);
+		}
+	}
+
+	private boolean isConditionSatisfied(Environment environment) {
+		if (environment.varbitCondition != null && !environment.varbitCondition.test(varbitVariableSupplier))
+			return false;
+		if (environment.varpCondition != null && !environment.varpCondition.test(varpVariableSupplier))
+			return false;
+		return true;
+	}
+
 	/**
 	 * Updates variables used in transition effects
 	 *
@@ -351,12 +407,7 @@ public class EnvironmentManager {
 		for (var environment : sceneContext.environments) {
 			if (!environment.area.containsPoint(focalPoint))
 				continue;
-			// An environment with a varbit gate (e.g. the Blood Moon Rises cutscene
-			// area, which overlaps the overworld) only applies while its gate is
-			// satisfied; otherwise fall through to the next matching environment so the
-			// normal overworld sky shows outside the gated state.
-			if (environment.hasVarGate()
-				&& !environment.isVarGateSatisfied(this::getVarbitValue, this::getVarpValue))
+			if (!isConditionSatisfied(environment))
 				continue;
 			changeEnvironment(environment, skipTransition);
 			break;
