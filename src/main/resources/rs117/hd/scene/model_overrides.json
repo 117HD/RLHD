@@ -34529,7 +34529,7 @@
     "uvScale": 0.44,
     "colorOverrides": [
       {
-        "colors": [ "h == 7 && s == 6", "a < 255" ],
+        "colors": "h == 7 && s == 6 || a < 255",
         "baseMaterial": "NONE",
         "shiftLightness": 20,
         "upwardsNormals": true
@@ -34623,11 +34623,11 @@
     "uvScale": 0.75,
     "colorOverrides": [
       {
-        "colors": [ "h < 6" ],
+        "colors": "h < 6",
         "baseMaterial": "OOZE"
       },
       {
-        "colors": [ "h == 17" ],
+        "colors": "h == 17",
         "shiftLightness": 20
       }
     ]
