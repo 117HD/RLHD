@@ -19,11 +19,8 @@ import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
-import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.GamevalManager;
-import rs117.hd.scene.areas.AABB;
-import rs117.hd.scene.areas.Area;
 
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.InputEvent.SHIFT_DOWN_MASK;
@@ -110,19 +107,6 @@ public class DeveloperTools implements KeyListener {
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
 		});
-
-		// Check for any out of bounds areas
-		for (Area area : AreaManager.AREAS) {
-			if (area == Area.ALL || area == Area.NONE)
-				continue;
-
-			for (AABB aabb : area.aabbs) {
-				if (aabb.minX < -128 || aabb.minY < 1000 || aabb.maxX > 5000 || aabb.maxY > 13000) {
-					throw new IllegalArgumentException(
-						"Your definition for the area " + area + " has an incorrect AABB: " + aabb);
-				}
-			}
-		}
 	}
 
 	public void deactivate() {

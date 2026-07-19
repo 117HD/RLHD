@@ -507,13 +507,15 @@ void main() {
         }
     }
 
-    vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(cameraPos.xz / 128));
-    float maxDist = max(tiledist.x, tiledist.y);
-    if (maxDist > drawDistance) {
-        // Rapidly fade out any geometry that extends beyond the draw distance.
-        // This is required if we always draw all underwater terrain.
-        outputColor.a *= -256;
-    }
+    #if LEGACY_RENDERER
+        vec2 tiledist = abs(floor(IN.position.xz / 128) - floor(cameraPos.xz / 128));
+        float maxDist = max(tiledist.x, tiledist.y);
+        if (maxDist > drawDistance) {
+            // Rapidly fade out any geometry that extends beyond the draw distance.
+            // This is required if we always draw all underwater terrain.
+            outputColor.a *= -256;
+        }
+    #endif
 
     outputColor.rgb = clamp(outputColor.rgb, 0, 1);
 

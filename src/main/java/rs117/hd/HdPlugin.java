@@ -433,6 +433,7 @@ public class HdPlugin extends Plugin {
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public SeasonalHemisphere configSeasonalHemisphere;
+	public boolean configSeasonalFoliage;
 	public VanillaShadowMode configVanillaShadowMode;
 	public ShadingMode configShadingMode;
 	public ColorFilter configColorFilter = ColorFilter.NONE;
@@ -1743,6 +1744,7 @@ public class HdPlugin extends Plugin {
 		configHideVanillaWaterEffects = config.hideVanillaWaterEffects();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
+		configSeasonalFoliage = config.seasonalFoliage();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -1922,6 +1924,7 @@ public class HdPlugin extends Plugin {
 								reloadEnvironments = true;
 								reloadModelOverrides = true;
 								// fall-through
+							case KEY_SEASONAL_FOLIAGE:
 							case KEY_ANISOTROPIC_FILTERING_LEVEL:
 							case KEY_GROUND_TEXTURES:
 							case KEY_MODEL_TEXTURES:

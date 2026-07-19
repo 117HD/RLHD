@@ -22,8 +22,6 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class CommandBuffer {
-	public static boolean SKIP_DEPTH_MASKING;
-
 	private static final int GL_MULTI_DRAW_ARRAYS_TYPE = 0;
 	private static final int GL_MULTI_DRAW_ARRAYS_INDIRECT_TYPE = 1;
 	private static final int GL_DRAW_ARRAYS_TYPE = 2;
@@ -314,8 +312,6 @@ public class CommandBuffer {
 				switch (type) {
 					case GL_DEPTH_MASK_TYPE: {
 						int state = (int) (data >> 8) & 1;
-						if (SKIP_DEPTH_MASKING)
-							continue;
 						renderState.depthMask.set(state == 1);
 						break;
 					}

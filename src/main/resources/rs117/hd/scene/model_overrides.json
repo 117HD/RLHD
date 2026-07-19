@@ -22035,14 +22035,10 @@
       "POH_TELEROOM_3",
       "BREW_EXIT_PORTAL",
       "ASTRALTEMPLE_EXIT_PORTAL",
-      "SOS_FAM_PORTAL",
-      "SOS_WAR_PORTAL",
       "FORESTER_FORCEWALL",
       "SUROK_EXIT_PORTAL_COMPLETE",
       "SUROK_ENTRANCE_PORTAL",
       "MACRO_EVIL_BOB_PORTAL",
-      "SOS_PEST_PORTAL",
-      "SOS_DEATH_PORTAL",
       "CLANWARS_CHALLENGEPORTAL_W",
       "CLANWARS_CHALLENGEPORTAL_S",
       "CLANWARS_CHALLENGEPORTAL_E",
@@ -34870,6 +34866,18 @@
     "castShadows": false
   },
   {
+    "description": "Stronghold Of Security Portals",
+    "baseMaterial": "NONE",
+    "flatNormals": true,
+    "objectIds": [
+      "SOS_FAM_PORTAL",
+      "SOS_WAR_PORTAL",
+      "SOS_PEST_PORTAL",
+      "SOS_DEATH_PORTAL"
+    ],
+    "castShadows": false
+  },
+  {
     "description": "Stronghold Of Security Rock Entrance",
     "baseMaterial": "ROCK_5",
     "objectIds": [
@@ -34894,21 +34902,25 @@
   },
   {
     "description": "Stronghold Of Security - War - Metallic Floor",
-    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       "SOS_WAR_FLOOR1"
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
+    "depthBias": 1,
     "flatNormals": true
   },
   {
     "description": "Stronghold Of Security - War - Metallic Floor with fence",
-    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
       "SOS_WAR_RAIL_1",
       "SOS_WAR_RAIL_5"
     ],
     "uvType": "BOX",
+    "uvType": "BOX",
+    "uvScale": 0.5,
     "flatNormals": true
   },
   {
@@ -34918,8 +34930,6 @@
     "uvOrientation": 256,
     "objectIds": [
       "SOS_WAR_WALL",
-      "SOS_WAR_WALL_LIGHT",
-      "SOS_WAR_WALL_LIGHT_UP",
       "SOS_WAR_WALL_DOORFRAME",
       "SOS_WAR_WALL_TOP",
       "SOS_WAR_WALL_TOP2",
@@ -34931,6 +34941,24 @@
     ],
     "hideVanillaShadows": true,
     "uvType": "BOX"
+  },
+  {
+    "description": "Stronghold Of Security - War - Metallic Walls with Light",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "objectIds": [
+      "SOS_WAR_WALL_LIGHT",
+      "SOS_WAR_WALL_LIGHT_UP"
+    ],
+    "hideVanillaShadows": true,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "shiftLightness": 30
+      }
+    ]
   },
   {
     "description": "Stronghold Of Security - War - Metallic Overdoor",
@@ -34967,11 +34995,13 @@
       "SOS_WAR_CHAINTOP"
     ],
     "uvType": "BOX",
+    "uvScale": 0.3,
     "uvOrientation": 256
   },
   {
     "description": "Stronghold Of Security War - Objects - Bones",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "BONE",
+    "shiftLightness": -1,
     "objectIds": [
       "SOS_WAR_BONES1",
       "SOS_WAR_BONES2",
@@ -34982,10 +35012,10 @@
       "SOS_WAR_SKELETON_3"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.4
   },
   {
-    "description": "Stronghold Of Security War -  Metallic - Gift of Peace - Chest",
+    "description": "Stronghold Of Security War - Metallic - Gift of Peace - Chest",
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
       "SOS_WAR_CHEST"
@@ -34999,17 +35029,19 @@
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientation": 512,
-        "uvScale": 0.5
+        "uvOrientationY": 400,
+        "uvOrientationZ": 512,
+        "uvScale": 0.45
       }
     ]
   },
   {
     "description": "Stronghold Of Security - Famine - Walls - Dirt",
     "baseMaterial": "DIRT_1",
+    "shiftSaturation": -1,
+    "shiftLightness": 2,
     "objectIds": [
       "SOS_FAM_WALL",
-      "SOS_FAM_WALL_LITE",
       "SOS_FAM_WALL_SPIKE",
       "SOS_FAM_WALL_TOP"
     ],
@@ -35017,8 +35049,28 @@
     "uvScale": 0.44
   },
   {
+    "description": "Stronghold Of Security - Famine - Walls with Light - Dirt",
+    "baseMaterial": "DIRT_1",
+    "shiftSaturation": -1,
+    "shiftLightness": 2,
+    "objectIds": [
+      "SOS_FAM_WALL_LITE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.44,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 6 || a < 255",
+        "baseMaterial": "NONE",
+        "shiftLightness": 20,
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
     "description": "Stronghold Of Security - Famine - Bone Structures",
     "baseMaterial": "GRUNGE_1",
+    "shiftSaturation": -1,
     "objectIds": [
       "SOS_FAM_WALL_THIN",
       "SOS_FAM_DOOR_TOP"
@@ -35089,7 +35141,8 @@
       "SOS_PEST_WALL_TOP4",
       "SOS_PEST_WALL_TOP_HALF"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "Stronghold Of Security - Walls - Pestilence - Tentacle Light",
@@ -35098,10 +35151,15 @@
       "SOS_PEST_WALL_LIGHT"
     ],
     "uvType": "BOX",
+    "uvScale": 0.75,
     "colorOverrides": [
       {
-        "colors": [ "h == 2" ],
+        "colors": "h < 6",
         "baseMaterial": "OOZE"
+      },
+      {
+        "colors": "h == 17",
+        "shiftLightness": 20
       }
     ]
   },
@@ -35202,15 +35260,52 @@
       "SOS_DEATH_WALL3",
       "SOS_DEATH_WALL4",
       "SOS_DEATH_WALL_LIGHT",
-      "SOS_DEATH_WALL_LIGHT_GLOW",
       "SOS_DEATH_WALLTOP1",
       "SOS_DEATH_WALLTOP2",
       "SOS_DEATH_WALLTOP3",
       "SOS_DEATH_WALL_TOP_HALF"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 128
+    "uvScale": 0.5,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l > 20",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientation": 128
+      },
+      {
+        "colors": "s > 4 && l > 6",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 128,
+        "shiftSaturation": 2,
+        "shiftLightness": 2
+      }
+    ]
+  },
+  {
+    "description": "Stronghold Of Security - Death - Wall Light",
+    "baseMaterial": "BONE",
+    "shiftSaturation": -1,
+    "objectIds": [
+      "SOS_DEATH_WALL_LIGHT_GLOW"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 128,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true,
+        "shiftLightness": -35
+      }
+    ]
   },
   {
     "description": "Stronghold Of Security - Death - Objects - Bones",

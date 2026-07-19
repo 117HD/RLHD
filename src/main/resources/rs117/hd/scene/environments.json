@@ -199,9 +199,9 @@
   },
   {
     "area": "STRONGHOLD_OF_SECURITY_DEATH",
-    "ambientColor": "#542d22",
+    "ambientColor": "#844A5E",
     "ambientStrength": 1.5,
-    "directionalStrength": 1,
+    "directionalStrength": 0.75,
     "sunAngles": [
       80,
       190
