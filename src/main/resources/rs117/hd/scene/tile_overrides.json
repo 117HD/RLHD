@@ -1719,6 +1719,21 @@
     "groundMaterial": "ABYSSAL_FLOOR"
   },
   {
+    "name": "STRONGHOLD_OF_SECURITY_GRASS_WAR",
+    "heightOffset": -2,
+    "area": "STRONGHOLD_OF_SECURITY_WAR",
+    "underlayIds": [
+      48,
+      49,
+      58,
+      59,
+      124
+    ],
+    "groundMaterial": "GRASS_1",
+    "shiftHue": 1,
+    "shiftSaturation": 1
+  },
+  {
     "name": "STRONGHOLD_OF_SECURITY_GRASS",
     "area": "STRONGHOLD_OF_SECURITY",
     "underlayIds": [
@@ -1735,7 +1750,9 @@
   {
     "name": "STRONGHOLD_OF_SECURITY_WAR_GRAVEL",
     "area": "STRONGHOLD_OF_SECURITY",
+    "heightOffset": -2,
     "underlayIds": [
+      125,
       148
     ],
     "groundMaterial": "GRAVEL"
