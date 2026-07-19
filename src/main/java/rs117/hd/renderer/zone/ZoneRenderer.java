@@ -187,9 +187,9 @@ public class ZoneRenderer implements Renderer {
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
 	public final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
-	// Day/Night Cycle - stored fog color for skybox clear
+	// Day & night Cycle - stored fog color for skybox clear
 	private float[] calculatedFogColorSrgb = null;
-	// Day/Night Cycle - sky gradient enabled flag
+	// Day & night Cycle - sky gradient enabled flag
 	private boolean skyGradientEnabled = false;
 
 	public final RenderState renderState = new RenderState();
@@ -611,7 +611,7 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 
-			// Use Day/Night-Cycle sun/moon angles if enabled
+			// Use Day & night-Cycle sun/moon angles if enabled
 			float directionalPitch = environmentManager.currentSunAngles[0];
 			float directionalYaw = environmentManager.currentSunAngles[1];
 			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
@@ -802,7 +802,7 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
-		// Day/Night Cycle - calculate modified lighting values
+		// Day & night Cycle - calculate modified lighting values
 		float[] directionalColor = environmentManager.currentDirectionalColor;
 		float directionalStrength = environmentManager.currentDirectionalStrength;
 		float[] ambientColor = environmentManager.currentAmbientColor;
@@ -826,7 +826,7 @@ public class ZoneRenderer implements Renderer {
 
 			float brightnessMultiplier = timeOfDay.getDynamicBrightnessMultiplier(minimumBrightness);
 			directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier * environmentManager.currentSunlightStrength;
-			// When Day/Night is active, ignore the environment's ambientStrength
+			// When Day & night is active, ignore the environment's ambientStrength
 			// (e.g. WINTER=3.5, AUTUMN=0.3) so the cycle's brightness multiplier
 			// controls night darkness without seasonal values making nights
 			// too dark or too bright.
@@ -870,7 +870,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
 			plugin.uboGlobal.moonSizeMult.set(environmentManager.currentMoonSizeMult);
 			// Auroras appear on nights the per-night random roll selects. In modes
-			// with a day/night arc the roll switches during daytime so it's invisible
+			// with a day & night arc the roll switches during daytime so it's invisible
 			// behind nightSkyBlend; in always-night modes getAuroraStrength() applies a
 			// time-of-cycle envelope so they come and go instead of blazing all cycle.
 			// The per-environment auroraVisibility scales how visible they are when
@@ -995,7 +995,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.moonSizeMult.set(1.0f);
 		}
 
-		// Hide the game's built-in skybox models when requested, so the day/night
+		// Hide the game's built-in skybox models when requested, so the day & night
 		// cycle's own sky renders in their place. Hiding requires BOTH the per-area
 		// environment flag (which areas opt into) AND the config toggle (default on),
 		// which acts as a global master switch: an area is only affected if it sets
@@ -1279,7 +1279,7 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.begin(Timer.CLEAR_SCENE);
 		glClearDepth(0);
 
-		// Render sky gradient if Day/Night Cycle is enabled, otherwise use solid color clear
+		// Render sky gradient if Day & night Cycle is enabled, otherwise use solid color clear
 		if (skyGradientEnabled && !shouldRenderRSSkybox && skyProgram.isValid()) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
@@ -1291,7 +1291,7 @@ public class ZoneRenderer implements Renderer {
 
 			buildSkyboxCmd();
 		} else {
-			// Use Day/Night Cycle fog color if available, otherwise use environment manager's fog color
+			// Use Day & night Cycle fog color if available, otherwise use environment manager's fog color
 			float[] fogColor = { 0, 0, 0 };
 			if (!shouldRenderRSSkybox) {
 				fogColor = calculatedFogColorSrgb != null ? calculatedFogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);

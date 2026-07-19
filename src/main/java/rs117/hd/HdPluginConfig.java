@@ -601,10 +601,10 @@ public interface HdPluginConfig extends Config
 	}
 
 
-	/*====== Day/night cycle settings ======*/
+	/*====== Day & night cycle settings ======*/
 
 	@ConfigSection(
-		name = "Day/night cycle",
+		name = "Day & night cycle",
 		description = "Dynamic day and night cycle settings",
 		position = 3,
 		closedByDefault = true
@@ -614,8 +614,8 @@ public interface HdPluginConfig extends Config
 	String KEY_ENABLE_DAYLIGHT_CYCLE = "enableDaylightCycle";
 	@ConfigItem(
 		keyName = KEY_ENABLE_DAYLIGHT_CYCLE,
-		name = "Enable day/night cycle",
-		description = "Enables the dynamic day/night cycle with realistic sun positioning and brightness changes",
+		name = "Enable day & night cycle",
+		description = "Enables the dynamic day & night cycle with realistic sun positioning and brightness changes",
 		position = 0,
 		section = daylightCycleSettings
 	)
@@ -628,8 +628,8 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_DAYLIGHT_CYCLE,
 		name = "Cycle mode",
 		description =
-			"Controls the day/night cycle behavior.<br>" +
-			"• Dynamic = Full day/night cycling<br>" +
+			"Controls the day & night cycle behavior.<br>" +
+			"• Dynamic = Full day & night cycling<br>" +
 			"• Real Time = Sun and moon follow your computer's local clock<br>" +
 			"• Synced Days = A full day every real hour, synced to UTC so all players see the same sky<br>" +
 			"• Fixed Dawn = Sun locked at dawn<br>" +
@@ -651,7 +651,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_CYCLE_DURATION,
 		name = "Cycle duration",
 		description =
-			"How long a complete day/night cycle should take in real-time minutes.<br>" +
+			"How long a complete day & night cycle should take in real-time minutes.<br>" +
 			"• 1 minute = Very fast cycle for testing<br>" +
 			"• 12 minutes = Quick atmospheric changes<br>" +
 			"• 30 minutes = Default cycle<br>" +
@@ -773,7 +773,7 @@ public interface HdPluginConfig extends Config
 		name = "Override Vanilla Skyboxes",
 		description =
 			"Allows areas that opt in to hide the game's built-in skybox models (such as the one added for Blood " +
-			"Moon Rises) so the day/night cycle's own sky is shown in their place.<br>" +
+			"Moon Rises) so the day & night cycle's own sky is shown in their place.<br>" +
 			"When enabled, vanilla skyboxes are hidden only in areas configured to hide them.<br>" +
 			"When disabled, vanilla skyboxes are always shown, even in those areas.",
 		position = 10,

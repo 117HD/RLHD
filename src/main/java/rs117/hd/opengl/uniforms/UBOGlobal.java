@@ -64,14 +64,14 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
 
-	// Sky gradient uniforms for Day/Night Cycle
+	// Sky gradient uniforms for Day & night Cycle
 	public Property skyGradientEnabled = addProperty(PropertyType.Int, "skyGradientEnabled");
 	public Property skyZenithColor = addProperty(PropertyType.FVec3, "skyZenithColor");
 	public Property skyHorizonColor = addProperty(PropertyType.FVec3, "skyHorizonColor");
 	public Property skySunColor = addProperty(PropertyType.FVec3, "skySunColor");
 	public Property skySunDir = addProperty(PropertyType.FVec3, "skySunDir");
 
-	// Moon uniforms for Day/Night Cycle
+	// Moon uniforms for Day & night Cycle
 	public Property skyMoonDir = addProperty(PropertyType.FVec3, "skyMoonDir");
 	public Property skyMoonColor = addProperty(PropertyType.FVec3, "skyMoonColor");
 	public Property skyMoonIllumination = addProperty(PropertyType.Float, "skyMoonIllumination");

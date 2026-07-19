@@ -2,7 +2,7 @@
 
 // Star point-sprite pass. Each vertex is one star from a pre-generated list, so
 // the cost scales with star count instead of screen pixels. The celestial
-// rotation, projection, day/night fade and point size are all computed here
+// rotation, projection, day & night fade and point size are all computed here
 // (once per star) rather than per pixel.
 
 #include <uniforms/global.glsl>
@@ -66,7 +66,7 @@ void main() {
     }
     gl_Position = clip;
 
-    // === Day/night visibility (mirrors sky_frag's nightSkyBlend) ===
+    // === Day & night visibility (mirrors sky_frag's nightSkyBlend) ===
     // viewDir convention in the sky shader: upAmount = -viewDir.y. Here dir is the
     // world view direction toward the star.
     float upAmount = -dir.y;

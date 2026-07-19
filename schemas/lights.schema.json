@@ -160,7 +160,7 @@
         "type": "number",
         "default": 1,
         "minimum": 0,
-        "description": "Peak-darkness strength target when the day/night cycle is active in overworld areas. 1 = default, 0.5 = half default brightness, 0 = off. Values above 1 boost brightness at night. Ignored outside overworld."
+        "description": "Peak-darkness strength target when the day & night cycle is active in overworld areas. 1 = default, 0.5 = half default brightness, 0 = off. Values above 1 boost brightness at night. Ignored outside overworld."
       },
       "timeOfDay": {
         "type": "string",
@@ -179,7 +179,7 @@
       "dayNightOnly": {
         "type": "boolean",
         "default": false,
-        "description": "When true, the light is disabled while the day/night cycle is turned off in plugin settings. timeOfDay scheduling only applies in overworld; elsewhere the light behaves as static."
+        "description": "When true, the light is disabled while the day & night cycle is turned off in plugin settings. timeOfDay scheduling only applies in overworld; elsewhere the light behaves as static."
       },
       "areas": {
         "type": "array",

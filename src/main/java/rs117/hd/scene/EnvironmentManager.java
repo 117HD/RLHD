@@ -680,7 +680,7 @@ public class EnvironmentManager {
 	}
 
 	/**
-	 * The day/night cycle mode forced by the current environment, or null to use
+	 * The day & night cycle mode forced by the current environment, or null to use
 	 * the player's configured mode.
 	 */
 	@Nullable

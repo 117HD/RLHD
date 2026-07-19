@@ -86,7 +86,7 @@ public class TimeOfDay {
 		{ 90.0,  new java.awt.Color(255, 255, 250) }  // Pure white
 	};
 
-	// Length of one Synced Days cycle: a full day/night every real hour, phase-locked
+	// Length of one Synced Days cycle: a full day & night every real hour, phase-locked
 	// to the UTC clock so every player sees the same sun position at the same moment.
 	private static final long SYNCED_DAYS_PERIOD_MS = 60L * 60 * 1000;
 
@@ -120,7 +120,7 @@ public class TimeOfDay {
 	// fixed modes no longer depend on incremented time. An environment's fixedSunAngles
 	// overrides these (see getFixedModeSunAngles).
 	private static final double[] FIXED_DAWN_SUN   = { Math.toRadians(-89.8), Math.toRadians(7.8) };
-	// Fixed Midday matches the static sun/light source used when the day/night cycle is
+	// Fixed Midday matches the static sun/light source used when the day & night cycle is
 	// OFF (Environment.DEFAULT_SUN_ANGLES = altitude 52°, azimuth 235°). azimuth 55° here
 	// (= 235° - 180°) makes the cycle-on shadow yaw -az equal the cycle-off yaw PI - 235°,
 	// so the light/shadow direction is identical between Fixed Midday and cycle-off.
@@ -157,7 +157,7 @@ public class TimeOfDay {
 	private DaylightCycle currentCycleMode = DaylightCycle.DYNAMIC;
 
 	// Current day length skew — set once per frame alongside the cycle mode.
-	// Warps the linear cycle clock so day/night occupy different shares of the
+	// Warps the linear cycle clock so day & night occupy different shares of the
 	// fixed total cycle time (see applyDayLengthWarp).
 	private DayLength currentDayLength = DayLength.STANDARD;
 
@@ -667,7 +667,7 @@ public class TimeOfDay {
 		// procedural sunrise/sunset from overriding a strongly-colored area's own sky.
 		//
 		// Some areas set a vivid regional sky (e.g. Tolna's blood-red #290000) that is
-		// meant to be the mood all day. The day/night cycle's procedural twilight paints
+		// meant to be the mood all day. The day & night cycle's procedural twilight paints
 		// its own orange->blue gradient over that, so at sunrise/sunset the intended red
 		// "turns blue". Lowering this knob holds the sky at the area's OWN regional color
 		// through the twilight window instead — at strength 0 the procedural sunrise/set
@@ -935,7 +935,7 @@ public class TimeOfDay {
 	 * Aurora intensity envelope in [0, 1] for the current frame, combining the
 	 * per-cycle aurora roll with a time-of-cycle shape.
 	 *
-	 * In modes with a natural day/night arc, the sun goes down and comes back up, so
+	 * In modes with a natural day & night arc, the sun goes down and comes back up, so
 	 * the sky's own nightFactor fades auroras in and out — here we just return 1 on an
 	 * aurora night and let the shader's nightFactor do the shaping.
 	 *
@@ -1026,7 +1026,7 @@ public class TimeOfDay {
 		}
 
 		// Warp identically to the sun so the night-synced moon stays aligned with
-		// the (now re-sized) day/night periods — moonrise still tracks visual sunset.
+		// the (now re-sized) day & night periods — moonrise still tracks visual sunset.
 		double cyclePosition = applyDayLengthWarp(accumulatedCycleTime);
 
 		// Use a uniform linear mapping: cycle 0→1 maps to a full 24-hour day.
@@ -1161,7 +1161,7 @@ public class TimeOfDay {
 			return startOfDay.plusMillis((long) (localHour * 60 * 60 * 1000));
 		}
 
-		// Synced Days mode: a full day/night every real UTC hour, phase-locked to the
+		// Synced Days mode: a full day & night every real UTC hour, phase-locked to the
 		// UTC clock and independent of Cycle Duration. Purely a function of the UTC
 		// epoch, so every player worldwide sees the same sun position at the same
 		// instant. Stateless — no accumulatedCycleTime — so it can't drift.
@@ -1178,7 +1178,7 @@ public class TimeOfDay {
 		// For non-dynamic modes, return a fixed date at the appropriate time of day.
 		// Cycle tracking above still runs so getMoonDate() advances normally.
 		if (currentCycleMode != DaylightCycle.DYNAMIC) {
-			// March 20, 2025 (spring equinox) — balanced day/night lengths.
+			// March 20, 2025 (spring equinox) — balanced day & night lengths.
 			// Used by all fixed modes except Fixed Midday (see below).
 			long equinoxEpochMs = 1742428800000L;
 			// June 10, 2025 (near summer solstice) — higher midday sun arc.
@@ -1207,7 +1207,7 @@ public class TimeOfDay {
 			return baseDay.plusMillis((long) (fixedHour * 60 * 60 * 1000));
 		}
 
-		// Warp the linear cycle clock so day/night occupy the configured share
+		// Warp the linear cycle clock so day & night occupy the configured share
 		// of the cycle, then feed the result into the twilight-weighted mapping.
 		double cyclePosition = applyDayLengthWarp(accumulatedCycleTime);
 		double mappedHour = cyclePositionToHour(cyclePosition);
@@ -1257,7 +1257,7 @@ public class TimeOfDay {
 
 		// Total simulated days elapsed = completed whole cycles + current cycle progress.
 		// Warp only the within-cycle fraction so the realistic moon's position tracks
-		// the re-sized day/night, while whole completed cycles still advance the lunar
+		// the re-sized day & night, while whole completed cycles still advance the lunar
 		// phase linearly (preventing phase jitter from the warp).
 		double totalSimulatedDays = completedCycles + applyDayLengthWarp(accumulatedCycleTime);
 		long totalOffsetMillis = (long) (totalSimulatedDays * 24 * 60 * 60 * 1000);

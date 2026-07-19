@@ -763,7 +763,7 @@ public class LightManager {
 	}
 
 	/**
-	 * Strength scale when the day/night cycle is active in overworld areas.
+	 * Strength scale when the day & night cycle is active in overworld areas.
 	 * nightMultiplier is the peak-darkness target: 0 = off, 0.5 = half default, 1 = default, >1 = boosted.
 	 * Always-on lights blend from default (day) toward that target.
 	 * timeOfDay / staggered lights multiply their phase fade by the same night target curve.
@@ -776,7 +776,7 @@ public class LightManager {
 	}
 
 	/**
-	 * Radius scale when the day/night cycle is active.
+	 * Radius scale when the day & night cycle is active.
 	 * Values below 1 only reduce strength; radius stays at default unless the light is fully off (0).
 	 * Values above 1 grow radius by a smaller fraction than brightness.
 	 */

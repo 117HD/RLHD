@@ -9,12 +9,12 @@ import lombok.extern.slf4j.Slf4j;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.GsonUtils.DegreesToRadians;
 import rs117.hd.utils.HDUtils;
 
-import rs117.hd.utils.ColorUtils;
 import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
 import static rs117.hd.utils.ColorUtils.rgb;
 
@@ -48,7 +48,7 @@ public class Environment {
 	public boolean lightningEffects = false;
 	public boolean instantTransition = false;
 	// When true, the game's built-in skybox models (e.g. the one added for Blood Moon
-	// Rises) are hidden in this area so the day/night cycle's own sky is shown instead.
+	// Rises) are hidden in this area so the day & night cycle's own sky is shown instead.
 	// This only takes effect while the "Override Vanilla Skyboxes" config toggle is on
 	// (its default); turning that toggle off forces vanilla skyboxes back on everywhere,
 	// including areas that set this flag.
@@ -59,7 +59,7 @@ public class Environment {
 	@Nullable
 	@JsonAdapter(ExpressionParser.PredicateAdapter.class)
 	public ExpressionPredicate varpCondition;
-	// When set, forces the day/night cycle mode for this environment, overriding
+	// When set, forces the day & night cycle mode for this environment, overriding
 	// the player's config setting. Null = use the configured mode.
 	@Nullable
 	public DaylightCycle cycleMode = null;
@@ -100,7 +100,7 @@ public class Environment {
 	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
-	// When set, and the active day/night cycle is a fixed mode (FIXED_DAWN,
+	// When set, and the active day & night cycle is a fixed mode (FIXED_DAWN,
 	// FIXED_MIDDAY, FIXED_SUNSET, FIXED_NIGHT, ALWAYS_NIGHT), these lock the
 	// sun/moon disk and their shadow directions to a fixed point in the sky,
 	// overriding the astronomically-derived angles. {azimuth, altitude} in
@@ -139,7 +139,7 @@ public class Environment {
 	// <1 smaller.
 	public float moonSizeMult = 1;
 	public float sunStrength = 1;
-	// How strongly the procedural day/night sunrise/sunset is allowed to paint this
+	// How strongly the procedural day & night sunrise/sunset is allowed to paint this
 	// area's sky, in [0, 1]. 1 = full procedural sunrise/sunset (default). Lower
 	// values hold the sky at the area's own regional (fogColor) color through the
 	// twilight window instead, and fade the procedural sun glow. Use this for areas
