@@ -267,6 +267,8 @@ public class HdPlugin extends Plugin {
 	@Inject
 	private EnvironmentManager environmentManager;
 
+	private Integer debugMyq6Id;
+
 	@Inject
 	private TextureManager textureManager;
 
@@ -2123,6 +2125,18 @@ public class HdPlugin extends Plugin {
 			return;
 
 		fishingSpotReplacer.update();
+
+		if (debugMyq6Id == null) {
+			try (var gamevals = gamevalManager.obtainHandle()) {
+				debugMyq6Id = gamevals.getVarbits().get("MYQ6");
+			}
+			if (debugMyq6Id == null) {
+				log.warn("MYQ6 varbit not found");
+				debugMyq6Id = -1;
+			}
+		}
+		if (debugMyq6Id >= 0)
+			log.info("MYQ6={} (real={})", environmentManager.getVarbitValue(debugMyq6Id), client.getVarbitValue(debugMyq6Id));
 	}
 
 	@Subscribe
