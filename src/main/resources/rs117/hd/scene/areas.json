@@ -3921,7 +3921,7 @@
   },
   {
     "name": "CASTLE_DRAKAN_INTERIOR_VAMPYRIUM",
-    "regions": [ 9331, 9443, 9587, 9843, 10099, 10355 ],
+    "regions": [ 9331, 9587, 9843, 10099, 10355 ],
     "hideOtherAreas": true
   },
   {
