@@ -80,6 +80,19 @@ public class Area {
 
 		this.aabbs = list.toArray(AABB[]::new);
 
+		if (Props.DEVELOPMENT) {
+			// Check for any out of bounds areas
+			for (int i = 0; i < aabbs.length; i++) {
+				AABB aabb = aabbs[i];
+				if (aabb.minX < -128 || aabb.minY < 1000 || aabb.maxX > 5000 || aabb.maxY > 13000) {
+					throw new IllegalArgumentException(String.format(
+						"Your definition for the area \"%s\" has an incorrect AABB at index %d: %s",
+						name, i, aabb
+					));
+				}
+			}
+		}
+
 		// Compute bounds
 		if (aabbs.length > 0) {
 			int minX = Integer.MAX_VALUE;
