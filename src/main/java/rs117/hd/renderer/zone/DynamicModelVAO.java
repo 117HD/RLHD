@@ -1,9 +1,11 @@
 package rs117.hd.renderer.zone;
 
+import java.nio.IntBuffer;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.system.MemoryStack;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.Destructible;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -15,6 +17,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
+import static rs117.hd.renderer.zone.Zone.METADATA_SIZE;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
@@ -39,6 +42,7 @@ public class DynamicModelVAO implements Destructible {
 
 	private final GLBuffer vboRender;
 	private final GLBuffer vboStaging;
+	private final GLBuffer stubMetadata;
 	private final GLTextureBuffer tboF;
 	private final GLTextureBuffer tboM;
 
@@ -69,25 +73,26 @@ public class DynamicModelVAO implements Destructible {
 
 	DynamicModelVAO(String name, boolean useStagingBuffer) {
 		if (useStagingBuffer && SUPPORTS_STORAGE_BUFFERS) {
-			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
+			this.vboRender = new GLBuffer("DynamicModel::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
-				"VAO::VBO_STAGING::" + name,
+				"DynamicModel::VBO_STAGING::" + name,
 				GL_ARRAY_BUFFER,
 				GL_STREAM_DRAW,
 				STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE
 			);
 		} else {
 			this.vboRender = this.vboStaging = new GLBuffer(
-				"VAO::VBO::" + name,
+				"DynamicModel::VBO::" + name,
 				GL_ARRAY_BUFFER,
 				GL_STREAM_DRAW,
 				STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE
 			);
 		}
+		this.stubMetadata = new GLBuffer("DynamicModel::Metadata", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 		this.vboWriter = new GLMappedBufferIntWriter(this.vboStaging);
 
-		this.tboF = new GLTextureBuffer("VAO::TexturedFaces::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
-		this.tboM = new GLTextureBuffer("VAO::ModelData::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
+		this.tboF = new GLTextureBuffer("DynamicModel::TexturedFaces::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
+		this.tboM = new GLTextureBuffer("DynamicModel::ModelData::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
 		this.tboFWriter = new GLMappedBufferIntWriter(this.tboF);
 		this.tboMWriter = new GLMappedBufferIntWriter(this.tboM);
 
@@ -103,6 +108,16 @@ public class DynamicModelVAO implements Destructible {
 		vboRender.initialize(INITIAL_SIZE);
 		if (vboRender != vboStaging)
 			vboStaging.initialize(INITIAL_SIZE);
+
+		// Build Stub Metadata
+		stubMetadata.initialize(METADATA_SIZE);
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			int intsCount = METADATA_SIZE / Integer.BYTES;
+			IntBuffer buf = stack.mallocInt(intsCount);
+			for(int i = 0; i < intsCount; i++)
+				buf.put(0);
+			stubMetadata.upload(buf);
+		}
 
 		bindRenderVAO();
 	}
@@ -126,6 +141,24 @@ public class DynamicModelVAO implements Destructible {
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
 		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+
+		glBindBuffer(GL_ARRAY_BUFFER, stubMetadata.id);
+
+		// WorldView index (not ID)
+		glEnableVertexAttribArray(6);
+		glVertexAttribDivisor(6, 1);
+		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
+
+		// Scene offset
+		glEnableVertexAttribArray(7);
+		glVertexAttribDivisor(7, 1);
+		glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
+
+		// Scene offset
+		glEnableVertexAttribArray(8);
+		glVertexAttribDivisor(8, 1);
+		glVertexAttribPointer(8, 1, GL_FLOAT, false, METADATA_SIZE, 12);
+
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
