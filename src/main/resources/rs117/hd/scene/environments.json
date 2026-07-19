@@ -617,10 +617,10 @@
     "moonColor": "#ED3D3D",
     "moonLightColor": "#ED8B8B",
     "cycleMode": "FIXED_NIGHT",
-    "fixedMoonAngles": [ 23, 90 ],
+    "fixedMoonAngles": [ 22.6, 89.75 ],
 	"auroraVisibility": 0,
     "nightSkyColorStrength": 4.5,
-    "moonSizeMult": 3.1
+    "moonSizeMult": 3.05
   },
   {
     "area": "BMR_MORYTANIA_DAWN_CUTSCENE",
@@ -2425,7 +2425,7 @@
     "moonColor": "#ED3D3D",
     "moonLightColor": "#ED8B8B",
     "cycleMode": "FIXED_NIGHT",
-    "fixedMoonAngles": [ 14, 90 ],
+    "fixedMoonAngles": [ 14.05, 89.85 ],
     "moonSizeMult": 2.8,
     "auroraVisibility": 0,
     "nightSkyColorStrength": 10
