@@ -147,7 +147,7 @@ public class ModelStreamingManager {
 
 	private boolean isAlphaModel(Model m) {
 		if (m.getTransparency() != 0 || m.getFaceTransparencies() != null)
-			return false;
+			return true;
 
 		final short[] faceTextures = m.getFaceTextures();
 		if (faceTextures != null) {
