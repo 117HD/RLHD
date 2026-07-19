@@ -32174,8 +32174,8 @@
       "LASSAR_UNDERCITY",
       "VARLAMORE_TEMPLE_CRYPT",
       "CAM_TORUM",
-      "CASTLE_DRAKEN_INTERIOR",
-      "CASTLE_DRAKEN_INTERIOR_VAMPYRIUM"
+      "CASTLE_DRAKAN_INTERIOR",
+      "CASTLE_DRAKAN_INTERIOR_VAMPYRIUM"
     ]
   },
   {
@@ -93928,7 +93928,7 @@
     ]
   },
   {
-    "description": "Castle Draken Basement Walls - Stone - Wooden",
+    "description": "Castle Drakan Basement Walls - Stone - Wooden",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -93971,14 +93971,14 @@
     ]
   },
   {
-    "description": "Castle Draken Basement top",
+    "description": "Castle Drakan Basement top",
     "baseMaterial": "BLACK",
     "objectIds": [
       "WALLKIT_DRAKAN01_WALLTOP01"
     ]
   },
   {
-    "description": "Castle Draken Basement - Wooden - Chest with gem",
+    "description": "Castle Drakan Basement - Wooden - Chest with gem",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -93999,7 +93999,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden Racks with weapons",
+    "description": "Castle Drakan - Wooden Racks with weapons",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94069,7 +94069,7 @@
     ]
   },
   {
-    "description": "Castle Draken Basement Wall shield - Wooden - Painted",
+    "description": "Castle Drakan Basement Wall shield - Wooden - Painted",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94080,7 +94080,7 @@
     ]
   },
   {
-    "description": "Castle Draken Basement Wall spear - Wooden - Metallic",
+    "description": "Castle Drakan Basement Wall spear - Wooden - Metallic",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94126,7 +94126,7 @@
     ]
   },
   {
-    "description": "Draken Lab torches - Animated - Dynamic",
+    "description": "Drakan Lab torches - Animated - Dynamic",
     "baseMaterial": "GRAY_80",
     "colorOverrides": [
       {
@@ -94144,7 +94144,7 @@
     ]
   },
   {
-    "description": "Castle Draken Basement torches - Animated - Dynamic",
+    "description": "Castle Drakan Basement torches - Animated - Dynamic",
     "baseMaterial": "GRAY_80",
     "colorOverrides": [
       {
@@ -94160,7 +94160,7 @@
     ]
   },
   {
-    "description": "Castle Draken Basement - Prison bars",
+    "description": "Castle Drakan Basement - Prison bars",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -94175,7 +94175,7 @@
     ]
   },
   {
-    "description": "Castle Draken Basement - Metallic bowl",
+    "description": "Castle Drakan Basement - Metallic bowl",
     "baseMaterial": "METALLIC_1_GLOSS",
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -94186,7 +94186,7 @@
     ]
   },
   {
-    "description": "Castle Draken Basement - Metal beds",
+    "description": "Castle Drakan Basement - Metal beds",
     "baseMaterial": "GRAY_80",
     "colorOverrides": [
       {
@@ -94212,7 +94212,7 @@
     ]
   },
   {
-    "description": "Castle Draken Basement - Sleeping bag",
+    "description": "Castle Drakan Basement - Sleeping bag",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94222,7 +94222,7 @@
     ]
   },
   {
-    "description": "Castle Draken Basement - Wooden - Stairs",
+    "description": "Castle Drakan Basement - Wooden - Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94245,7 +94245,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden - Stairs with carpet",
+    "description": "Castle Drakan - Wooden - Stairs with carpet",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94275,7 +94275,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden - Railing",
+    "description": "Castle Drakan - Wooden - Railing",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94295,7 +94295,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden - Walls",
+    "description": "Castle Drakan - Wooden - Walls",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94331,7 +94331,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden - Wall with windows",
+    "description": "Castle Drakan - Wooden - Wall with windows",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94364,7 +94364,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden - Metallic - Wall with door",
+    "description": "Castle Drakan - Wooden - Metallic - Wall with door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94391,7 +94391,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Pillars and statues with cobwebs",
+    "description": "Castle Drakan - Pillars and statues with cobwebs",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94427,7 +94427,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Candelabra",
+    "description": "Castle Drakan - Candelabra",
     "baseMaterial": "DIRT_1",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94450,7 +94450,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wall crest",
+    "description": "Castle Drakan - Wall crest",
     "baseMaterial": "METALLIC_1_GLOSS",
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -94461,7 +94461,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Shrine - DYNAMIC - ANIMATED",
+    "description": "Castle Drakan - Shrine - DYNAMIC - ANIMATED",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94484,7 +94484,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Blood portal - DYNAMIC - ANIMATED",
+    "description": "Castle Drakan - Blood portal - DYNAMIC - ANIMATED",
     "baseMaterial": "WATER_FOUNTAIN_FLAT",
     "shiftLightness": 2,
     "objectIds": [
@@ -94498,7 +94498,7 @@
     ]
   },
   {
-    "description": "Castle Draken Vampyrium - Wooden - Walls",
+    "description": "Castle Drakan Vampyrium - Wooden - Walls",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94547,7 +94547,7 @@
     ]
   },
   {
-    "description": "Castle Draken Vampyrium - Wooden - Walls with windows",
+    "description": "Castle Drakan Vampyrium - Wooden - Walls with windows",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94581,7 +94581,7 @@
     ]
   },
   {
-    "description": "Castle Draken Vampyrium - cobwebs",
+    "description": "Castle Drakan Vampyrium - cobwebs",
     "baseMaterial": "GROUND_WEB_2",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94595,7 +94595,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden - Metallic - Wall with door",
+    "description": "Castle Drakan - Wooden - Metallic - Wall with door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94626,7 +94626,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden - Metallic - Castle exit open",
+    "description": "Castle Drakan - Wooden - Metallic - Castle exit open",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94656,7 +94656,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden - Metallic - Golden door",
+    "description": "Castle Drakan - Wooden - Metallic - Golden door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94681,7 +94681,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden - Metallic - Wall with door and window",
+    "description": "Castle Drakan - Wooden - Metallic - Wall with door and window",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -94743,7 +94743,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Pillars",
+    "description": "Castle Drakan - Vampyrium Pillars",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94767,7 +94767,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium statues",
+    "description": "Castle Drakan - Vampyrium statues",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94809,7 +94809,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Pillars and statues without cobwebs",
+    "description": "Castle Drakan - Vampyrium Pillars and statues without cobwebs",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94854,7 +94854,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Pillars and statues armed - DYNAMIC",
+    "description": "Castle Drakan - Vampyrium Pillars and statues armed - DYNAMIC",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94896,7 +94896,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium tables with cobwebs",
+    "description": "Castle Drakan - Vampyrium tables with cobwebs",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94917,7 +94917,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium clocks",
+    "description": "Castle Drakan - Vampyrium clocks",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94940,7 +94940,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium fireplace",
+    "description": "Castle Drakan - Vampyrium fireplace",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -94979,7 +94979,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium - Draken Crest",
+    "description": "Castle Drakan - Vampyrium - Drakan Crest",
     "baseMaterial": "METALLIC_1_GLOSS",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -94990,7 +94990,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium book case with books",
+    "description": "Castle Drakan - Vampyrium book case with books",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95036,7 +95036,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Wall map",
+    "description": "Castle Drakan - Vampyrium Wall map",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -95055,7 +95055,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium chairs",
+    "description": "Castle Drakan - Vampyrium chairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95093,7 +95093,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium chairs On side",
+    "description": "Castle Drakan - Vampyrium chairs On side",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95114,7 +95114,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium table with bowl",
+    "description": "Castle Drakan - Vampyrium table with bowl",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95155,7 +95155,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Throne",
+    "description": "Castle Drakan - Vampyrium Throne",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95196,7 +95196,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Throne Carpet",
+    "description": "Castle Drakan - Vampyrium Throne Carpet",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "shiftLightness": 3,
@@ -95207,7 +95207,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Skull banner",
+    "description": "Castle Drakan - Vampyrium Skull banner",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -95233,7 +95233,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Bust levers",
+    "description": "Castle Drakan - Vampyrium Bust levers",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95265,7 +95265,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium shelves with bottles",
+    "description": "Castle Drakan - Vampyrium shelves with bottles",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95292,7 +95292,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium fancy chair",
+    "description": "Castle Drakan - Vampyrium fancy chair",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95319,7 +95319,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Game tables",
+    "description": "Castle Drakan - Vampyrium Game tables",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95346,7 +95346,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium floor trap",
+    "description": "Castle Drakan - Vampyrium floor trap",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95356,7 +95356,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Barrel",
+    "description": "Castle Drakan - Vampyrium Barrel",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95380,7 +95380,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Barrel with staves - Needs UV",
+    "description": "Castle Drakan - Vampyrium Barrel with staves - Needs UV",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95402,7 +95402,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Barrel - DYNAMIC",
+    "description": "Castle Drakan - Vampyrium Barrel - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95423,7 +95423,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Barrel Full - DYNAMIC",
+    "description": "Castle Drakan - Vampyrium Barrel Full - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95451,7 +95451,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Brick and wooden post wall",
+    "description": "Castle Drakan - Vampyrium Brick and wooden post wall",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -95478,7 +95478,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Brick and wooden post wall with window",
+    "description": "Castle Drakan - Vampyrium Brick and wooden post wall with window",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -95510,7 +95510,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Spiral Stairs",
+    "description": "Castle Drakan - Vampyrium Spiral Stairs",
     "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -95534,7 +95534,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium table - Clothes shop",
+    "description": "Castle Drakan - Vampyrium table - Clothes shop",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -95571,7 +95571,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium table with cloth",
+    "description": "Castle Drakan - Vampyrium table with cloth",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -95602,7 +95602,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Display Case - Empty",
+    "description": "Castle Drakan - Vampyrium Display Case - Empty",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -95626,7 +95626,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Gallery Display Case - DYNAMIC",
+    "description": "Castle Drakan - Vampyrium Gallery Display Case - DYNAMIC",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -95664,7 +95664,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Chest",
+    "description": "Castle Drakan - Vampyrium Chest",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "shiftLightness": 4,
@@ -95697,7 +95697,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Wall plank",
+    "description": "Castle Drakan - Vampyrium Wall plank",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95711,7 +95711,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Railing",
+    "description": "Castle Drakan - Vampyrium Railing",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95721,7 +95721,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Red shelf with clutter",
+    "description": "Castle Drakan - Vampyrium Red shelf with clutter",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95778,7 +95778,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium tables",
+    "description": "Castle Drakan - Vampyrium tables",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95815,7 +95815,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Leaver with brown handle",
+    "description": "Castle Drakan - Vampyrium Leaver with brown handle",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95831,7 +95831,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Emblem holder - DYNAMIC",
+    "description": "Castle Drakan - Vampyrium Emblem holder - DYNAMIC",
     "baseMaterial": "METALLIC_1_GLOSS",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -95860,7 +95860,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium wooden shelf with clutter",
+    "description": "Castle Drakan - Vampyrium wooden shelf with clutter",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95890,7 +95890,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium - Coffin",
+    "description": "Castle Drakan - Vampyrium - Coffin",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -95920,7 +95920,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium table",
+    "description": "Castle Drakan - Vampyrium table",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -96753,7 +96753,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium - Paintings",
+    "description": "Castle Drakan - Vampyrium - Paintings",
     "baseMaterial": "GRAY_85",
     "objectIds": [
       "CASTLE_DRAKAN_GALLERY_PLAQUE",
@@ -96907,7 +96907,7 @@
     ]
   },
   {
-    "description": "Vampyrium - Castle Draken - Kitchen Sink",
+    "description": "Vampyrium - Castle Drakan - Kitchen Sink",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -96941,7 +96941,7 @@
     ]
   },
   {
-    "description": "Vampyrium - Castle Draken - Chapen Basin - DYNAMIC",
+    "description": "Vampyrium - Castle Drakan - Chapen Basin - DYNAMIC",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -96973,7 +96973,7 @@
     ]
   },
   {
-    "description": "Vampyrium - Castle Draken - Metal Grate",
+    "description": "Vampyrium - Castle Drakan - Metal Grate",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -97112,7 +97112,7 @@
     ]
   },
   {
-    "description": "Vampyrium Castle Drakens coffin - Needs UV",
+    "description": "Vampyrium Castle Drakans coffin - Needs UV",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -97142,7 +97142,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Wooden - Metallic - Solid wooden door",
+    "description": "Castle Drakan - Wooden - Metallic - Solid wooden door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -97338,7 +97338,7 @@
     ]
   },
   {
-    "description": "Vampyrium - Sangvesti Draken Statue",
+    "description": "Vampyrium - Sangvesti Drakan Statue",
     "baseMaterial": "SMOOTH_STONE",
     "undoVanillaShading": false,
     "shiftLightness": 3,
@@ -97393,7 +97393,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Cloth banner",
+    "description": "Castle Drakan - Vampyrium Cloth banner",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -97414,7 +97414,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium Crank",
+    "description": "Castle Drakan - Vampyrium Crank",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -97482,7 +97482,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium - Hide stand",
+    "description": "Castle Drakan - Vampyrium - Hide stand",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -97503,7 +97503,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium - Fur stand",
+    "description": "Castle Drakan - Vampyrium - Fur stand",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -97524,7 +97524,7 @@
     ]
   },
   {
-    "description": "Castle Draken - Vampyrium - Well - Vampyrium Grass",
+    "description": "Castle Drakan - Vampyrium - Well - Vampyrium Grass",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.6,

@@ -10713,16 +10713,16 @@
     "blended": false
   },
   {
-    "name": "Draken Lab Floor",
-    "area": "DRAKEN_LAB",
+    "name": "Drakan Lab Floor",
+    "area": "DRAKAN_LAB",
     "underlayIds": [
       27
     ],
     "groundMaterial": "PACKED_EARTH"
   },
   {
-    "name": "Castle Draken Interior Floors",
-    "area": "CASTLE_DRAKEN_INTERIOR",
+    "name": "Castle Drakan Interior Floors",
+    "area": "CASTLE_DRAKAN_INTERIOR",
     "uvOrientation": 512,
     "underlayIds": [
       72,
@@ -10732,8 +10732,8 @@
     "groundMaterial": "DARKMEYER_BRICK_PATH"
   },
   {
-    "name": "Castle Draken Interior Floors - Dust overlay",
-    "area": "CASTLE_DRAKEN_INTERIOR",
+    "name": "Castle Drakan Interior Floors - Dust overlay",
+    "area": "CASTLE_DRAKAN_INTERIOR",
     "uvOrientation": 512,
     "overlayIds": [
       228
@@ -10741,8 +10741,8 @@
     "groundMaterial": "DIRT_1"
   },
   {
-    "name": "Castle Draken Interior Floors - Vampyrium",
-    "area": "CASTLE_DRAKEN_INTERIOR_VAMPYRIUM",
+    "name": "Castle Drakan Interior Floors - Vampyrium",
+    "area": "CASTLE_DRAKAN_INTERIOR_VAMPYRIUM",
     "uvOrientation": 512,
     "underlayIds": [
       72,
@@ -10752,8 +10752,8 @@
     "groundMaterial": "DARKMEYER_BRICK_PATH_DIRTY"
   },
   {
-    "name": "Castle Draken Interior Floors-  Vampyrium - Dust overlay",
-    "area": "CASTLE_DRAKEN_INTERIOR_VAMPYRIUM",
+    "name": "Castle Drakan Interior Floors-  Vampyrium - Dust overlay",
+    "area": "CASTLE_DRAKAN_INTERIOR_VAMPYRIUM",
     "uvOrientation": 512,
     "overlayIds": [
       228

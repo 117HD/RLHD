@@ -3907,20 +3907,20 @@
     ]
   },
   {
-    "name": "DRAKEN_LAB",
+    "name": "DRAKAN_LAB",
     "aabbs": [
       [ 3148, 7424, 3220, 7486 ]
     ]
   },
   {
-    "name": "CASTLE_DRAKEN_INTERIOR",
+    "name": "CASTLE_DRAKAN_INTERIOR",
     "aabbs": [
       [ 3140, 7467, 3187, 7607 ],
       [ 3133, 7686, 3176, 7730 ]
     ]
   },
   {
-    "name": "CASTLE_DRAKEN_INTERIOR_VAMPYRIUM",
+    "name": "CASTLE_DRAKAN_INTERIOR_VAMPYRIUM",
     "regions": [ 9331, 9443, 9587, 9843, 10099, 10355 ],
     "hideOtherAreas": true
   },
