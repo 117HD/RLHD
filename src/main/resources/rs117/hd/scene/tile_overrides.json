@@ -10753,6 +10753,18 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
+    "name": "Vampyrium - Blood - Shore Fix",
+    "area": "VAMPYRIUM_SHORE_BLOOD_FIX",
+    "underlayIds": [
+      238
+    ],
+    "overlayIds": [
+      636
+    ],
+    "groundMaterial": "DIRT",
+    "minLightness": 6
+  },
+  {
     "name": "Vampyrium - Dirt",
     "area": "VAMPYRIUM",
     "uvOrientation": 512,
@@ -10788,12 +10800,20 @@
     "groundMaterial": "GRAVEL"
   },
   {
+    "name": "Vampyrium - Blood - Cave Fix",
+    "area": "VAMPYRIUM_CAVE_BLOOD_FIX",
+    "overlayIds": [
+      636
+    ],
+    "heightOffset": -200
+  },
+  {
     "name": "Vampyrium - Blood",
     "area": "VAMPYRIUM",
     "overlayIds": [
       636
     ],
-    "waterType": "BLOOD"
+    "waterType": "BLOOD_DARK"
   },
   {
     "name": "Vampyrium - Blood- Instance",
@@ -10801,7 +10821,7 @@
     "overlayIds": [
       636
     ],
-    "waterType": "BLOOD"
+    "waterType": "BLOOD_DARK"
   },
   {
     "name": "Vampyrium - Sugadinti Hideout - underlay",

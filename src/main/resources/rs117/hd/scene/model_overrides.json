@@ -95841,7 +95841,7 @@
     "uvType": "BOX",
     "undoVanillaShading": false,
     "uvScale": 0.7,
-    "shiftLightness": 14,
+    "shiftLightness": 10,
     "objectIds": [
       "DARKWOOD_TREE_DEFAULT02",
       "DARKWOOD_TREE_DEFAULT01",
@@ -95891,7 +95891,7 @@
     "uvType": "BOX",
     "undoVanillaShading": false,
     "uvScale": 0.7,
-    "shiftLightness": 14,
+    "shiftLightness": 10,
     "objectIds": [
       "DARKWOOD_TREE_STUMP_AXE01"
     ],
@@ -95955,7 +95955,7 @@
     "uvType": "BOX",
     "undoVanillaShading": false,
     "uvScale": 0.7,
-    "shiftLightness": 14,
+    "shiftLightness": 10,
     "objectIds": [
       "SOTFA_FOREST_ROPESWING_TREE"
     ],
@@ -95976,7 +95976,7 @@
     "uvType": "BOX",
     "undoVanillaShading": false,
     "uvScale": 0.7,
-    "shiftLightness": 14,
+    "shiftLightness": 10,
     "objectIds": [
       "DARKWOOD_TREE_DEFAULT01_WEB01",
       "DARKWOOD_TREE_DEFAULT02_WEB01",
@@ -95987,7 +95987,9 @@
       "DARKWOOD_TREE_DARK05_WEB01",
       "DARKWOOD_TREE_DARK01_WEB01",
       "DARKWOOD_TREE_DARK03_WEB01",
-      "DARKWOOD_TREE_DARK04_WEB01"
+      "DARKWOOD_TREE_DARK04_WEB01",
+      "DARKWOOD_TREE_DEFAULT04_WEB01_2X4",
+      "DARKWOOD_TREE_DEFAULT05_WEB01_3X3"
     ],
     "colorOverrides": [
       {
@@ -96013,14 +96015,29 @@
     ]
   },
   {
-    "description": "Vampyrium Trees",
+    "description": "Vampyrium Spikey Tree",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "undoVanillaShading": false,
     "uvScale": 0.7,
-    "shiftLightness": 14,
+    "shiftLightness": 10,
     "npcIds": [
       "SOTFA_FOREST_NASTY_TREE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 1,
+        "shiftLightness": 3,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      }
     ]
   },
   {
@@ -96068,7 +96085,7 @@
     ],
     "colorOverrides": [
       {
-        "description": "Grass - Temp hide till better solution",
+        "description": "Bark",
         "colors": "s == 0 && l == 2",
         "baseMaterial": "BARK",
         "uvType": "BOX",
@@ -96078,7 +96095,7 @@
         "shiftSaturation": -1
       },
       {
-        "description": "Grass - Temp hide till better solution",
+        "description": "Grass",
         "colors": "s == 7",
         "baseMaterial": "GRASS_BLADE",
         "uvType": "BOX",
@@ -96090,6 +96107,17 @@
         "castShadows": false,
         "inheritTileColorType": "UNDERLAY"
       }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees - Dark - Fix",
+    "areas": [ "VAMPYRIUM_MAGGOT_KING_TREE_FIX" ],
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "objectIds": [
+      "DARKWOOD_TREE_TRUNK02_DARK01"
     ]
   },
   {
@@ -96170,12 +96198,14 @@
     "uvType": "BOX",
     "undoVanillaShading": false,
     "uvScale": 0.7,
-    "shiftLightness": 14,
+    "shiftLightness": 10,
     "objectIds": [
       "DARKWOOD_TREE_DOORWAY01",
       "DARKWOOD_TREE_DOORWAY01_NOOP_4X3",
       "DARKWOOD_TREE_DOORWAY01_NOOP",
-      "DARKWOOD_TREE_DOORWAY01_ESCAPE"
+      "DARKWOOD_TREE_DOORWAY01_ESCAPE",
+      "DARKWOOD_TREE_DOORWAY01_4X3",
+      "DARKWOOD_TREE_DOORWAY01_EXIT"
     ],
     "colorOverrides": [
       {
@@ -96205,7 +96235,27 @@
       "VOROS_ROCKSLIDE02",
       "VOROS_ROCKSLIDE04",
       "ROCKS_VOROS02_LARGE01_3X3",
-      "ROCKS_VOROS01_DEFAULT01"
+      "ROCKS_VOROS01_DEFAULT01",
+      "VAMPYRIUM_STEPPING_STONE_NOCLEARED",
+      "VAMPYRIUM_STEPPING_STONE_HASCLEARED"
+    ]
+  },
+  {
+    "description": "Vampyrium Cave Entrance",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 6,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "VOROS_CAVE01_MOUNTAIN01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "BLACK"
+      }
     ]
   },
   {
@@ -96260,7 +96310,8 @@
       "ROOFKIT_SANGVESTI01_BROKEN01",
       "ROOFKIT_SANGVESTI01_BROKEN02",
       "ROOFKIT_SANGVESTI01_BROKEN03",
-      "BRIDGEKIT_SANGVESTI01_ROOF02"
+      "BRIDGEKIT_SANGVESTI01_ROOF02",
+      "BRIDGEKIT_SANGVESTI01_BOTTOM01"
     ]
   },
   {
@@ -96485,6 +96536,7 @@
     "objectIds": [
       "BRIDGEKIT_SANGVESTI01_SIDE02",
       "BRIDGEKIT_SANGVESTI01_CHAINS02",
+      "BRIDGEKIT_SANGVESTI01_STAKES01",
       "BRIDGEKIT_SANGVESTI01_STAKES02"
     ],
     "colorOverrides": [
@@ -96494,7 +96546,8 @@
         "baseMaterial": "BARK",
         "uvType": "BOX",
         "uvScale": 0.4,
-        "shiftLightness": 6
+        "undoVanillaShading": false,
+        "shiftLightness": 7
       },
       {
         "description": "Spike",
@@ -97239,7 +97292,7 @@
   {
     "description": "Vampyrium - Darken Blood Waterfall Foam SLightly",
     "baseMaterial": "NONE",
-    "shiftLightness": -5,
+    "shiftLightness": -7,
     "objectIds": [
       "VOROS_WATERFALL01_FOAM01"
     ]
@@ -98862,6 +98915,61 @@
     ],
     "objectIds": [
       "MYQ6_ENTRY_HALL_POTION_CRATE"
+    ]
+  },
+  {
+    "description": "Sangvesti - Bank Chest Build Spot",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "shiftLightness": 3,
+    "shiftSaturation": -1,
+    "objectIds": [
+      "AMENITY_BANKCHEST_SANGVESTI_UNBUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 0 && s == 1 && a == 255",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 3
+      },
+      {
+        "colors": "s == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": 8,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "Sangvesti - Bank Chest Built",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "shiftLightness": 5,
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 313,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "AMENITY_BANKCHEST_SANGVESTI_BUILT"
     ]
   },
   {
