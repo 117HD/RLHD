@@ -141,33 +141,7 @@ public final class VertexWriteCache {
 		return 1 | textureFaceIdx << 1;
 	}
 
-	public void putDynamicVertex(
-		int x, int y, int z,
-		float u, float v, float w,
-		int nx, int ny, int nz,
-		int textureFaceIdx, int modelIdx
-	) {
-		if (stagingPosition + 8 > stagingBuffer.length)
-			flushAndGrow();
-
-		final int[] stagingBuffer = this.stagingBuffer;
-		final int stagingPosition = this.stagingPosition;
-
-		assert modelIdx < 0xFFFF;
-
-		stagingBuffer[stagingPosition] = x;
-		stagingBuffer[stagingPosition + 1] = y;
-		stagingBuffer[stagingPosition + 2] = z;
-		stagingBuffer[stagingPosition + 3] = float16(v) << 16 | float16(u);
-		stagingBuffer[stagingPosition + 4] = float16(w);
-		stagingBuffer[stagingPosition + 5] = (ny & 0xFFFF) << 16 | nx & 0xFFFF;
-		stagingBuffer[stagingPosition + 6] = (modelIdx & 0xFFFF) << 16 | nz & 0xFFFF;
-		stagingBuffer[stagingPosition + 7] = textureFaceIdx;
-
-		this.stagingPosition += 8;
-	}
-
-	public void putStaticVertex(
+	public void putVertex(
 		int x, int y, int z,
 		float u, float v, float w,
 		int nx, int ny, int nz,

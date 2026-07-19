@@ -49,7 +49,7 @@ public class Zone implements Destructible {
 	// Zone vertex format
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
-	// normal short vec3(nx, ny, nz)
+	// normal/modelIdx short vec4(nx, ny, nz, modelIdx)
 	// texturedFaceIdx int
 	public static final int VERT_SIZE = 28;
 

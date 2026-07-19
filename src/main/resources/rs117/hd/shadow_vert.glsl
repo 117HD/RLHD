@@ -81,7 +81,7 @@ layout (location = 0) in vec3 vPosition;
             modelData = getModelData(modelIdx);
             if(isModelDynamic(modelData)) {
                 worldViewIdx = modelData.worldViewIdx;
-                sceneOffset = vec3(0);
+                sceneOffset = modelData.position;
             }
         }
 

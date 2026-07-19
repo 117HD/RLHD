@@ -103,7 +103,7 @@ layout (location = 0) in vec3 vPosition;
             fFade     = max(modelData.fade, fFade);
             if(isModelDynamic(modelData)) {
                 worldViewIdx = modelData.worldViewIdx;
-                sceneOffset = vec3(0);
+                sceneOffset = modelData.position;
             }
         }
 

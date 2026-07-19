@@ -136,7 +136,8 @@ public class SceneUploader implements AutoCloseable {
 	private final int[] modelNormals = new int[9];
 	private final short[][] tileNormals = new short[4][3];
 
-	private int[] modelVertices;
+	private int[] intModelVertices;
+	private float[] floatModelVertices;
 	public int tempModelAlphaFaces = 0;
 
 	private final PooledObjectArray<ModelOverride> faceOverrides = new PooledObjectArray<>();
@@ -173,16 +174,23 @@ public class SceneUploader implements AutoCloseable {
 		currentScene = null;
 		onBeforeProcessTile = null;
 
-		PooledArrayType.INT.release(modelVertices);
-		modelVertices = null;
+		PooledArrayType.INT.release(intModelVertices);
+		PooledArrayType.FLOAT.release(floatModelVertices);
+
+		intModelVertices = null;
+		floatModelVertices = null;
 
 		faceOverrides.release();
 		faceMaterials.release();
 		faceUVTypes.release();
 	}
 
-	private void ensureVerticesAllocated(int vertexCount) {
-		modelVertices = PooledArrayType.INT.ensureCapacity(modelVertices, vertexCount * 3);
+	private void ensureVerticesAllocated(boolean allocateInts, boolean allocateFloats, int vertexCount) {
+		if(allocateInts)
+			intModelVertices = PooledArrayType.INT.ensureCapacity(intModelVertices, vertexCount * 3);
+
+		if(allocateFloats)
+			floatModelVertices = PooledArrayType.FLOAT.ensureCapacity(floatModelVertices, vertexCount * 3);
 	}
 
 	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
@@ -1076,21 +1084,21 @@ public class SceneUploader implements AutoCloseable {
 			neTerrainData, nwTerrainData, seTerrainData
 		);
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx2, neHeight, lz2,
 			uvx, uvy, 0,
 			neNormals[0], neNormals[1], neNormals[2],
 			texturedFaceIdx, 0
 		);
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
 			texturedFaceIdx, 0
 		);
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
@@ -1111,21 +1119,21 @@ public class SceneUploader implements AutoCloseable {
 			);
 		}
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx0, swHeight, lz0,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
 			swNormals[0], swNormals[1], swNormals[2],
 			texturedFaceIdx, 0
 		);
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
 			texturedFaceIdx, 0
 		);
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
@@ -1414,21 +1422,21 @@ public class SceneUploader implements AutoCloseable {
 				);
 			}
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				lx0, ly0, lz0,
 				uvAx, uvAy, 0,
 				normalsA[0], normalsA[1], normalsA[2],
 				texturedFaceIdx, 0
 			);
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				lx1, ly1, lz1,
 				uvBx, uvBy, 0,
 				normalsB[0], normalsB[1], normalsB[2],
 				texturedFaceIdx, 0
 			);
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				lx2, ly2, lz2,
 				uvCx, uvCy, 0,
 				normalsC[0], normalsC[1], normalsC[2],
@@ -1533,7 +1541,7 @@ public class SceneUploader implements AutoCloseable {
 			orientCos = COSINE[orientation];
 		}
 
-		ensureVerticesAllocated(vertexCount);
+		ensureVerticesAllocated(true, false, vertexCount);
 
 		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
 			int vx = (int) vertexX[v];
@@ -1568,9 +1576,9 @@ public class SceneUploader implements AutoCloseable {
 				vy = (int) mix(h, vy, blend);
 			}
 
-			modelVertices[vertexOffset++] = vx;
-			modelVertices[vertexOffset++] = vy;
-			modelVertices[vertexOffset++] = vz;
+			intModelVertices[vertexOffset++] = vx;
+			intModelVertices[vertexOffset++] = vy;
+			intModelVertices[vertexOffset++] = vz;
 		}
 
 		boolean isVanillaTextured = faceTextures != null;
@@ -1639,19 +1647,19 @@ public class SceneUploader implements AutoCloseable {
 			final int triangleC = indices3[face];
 
 			int vertexOffset = triangleA * 3;
-			final int vx1 = modelVertices[vertexOffset];
-			final int vy1 = modelVertices[vertexOffset + 1];
-			final int vz1 = modelVertices[vertexOffset + 2];
+			final int vx1 = intModelVertices[vertexOffset];
+			final int vy1 = intModelVertices[vertexOffset + 1];
+			final int vz1 = intModelVertices[vertexOffset + 2];
 
 			vertexOffset = triangleB * 3;
-			final int vx2 = modelVertices[vertexOffset];
-			final int vy2 = modelVertices[vertexOffset + 1];
-			final int vz2 = modelVertices[vertexOffset + 2];
+			final int vx2 = intModelVertices[vertexOffset];
+			final int vy2 = intModelVertices[vertexOffset + 1];
+			final int vz2 = intModelVertices[vertexOffset + 2];
 
 			vertexOffset = triangleC * 3;
-			final int vx3 = modelVertices[vertexOffset];
-			final int vy3 = modelVertices[vertexOffset + 1];
-			final int vz3 = modelVertices[vertexOffset + 2];
+			final int vx3 = intModelVertices[vertexOffset];
+			final int vy3 = intModelVertices[vertexOffset + 1];
+			final int vz3 = intModelVertices[vertexOffset + 2];
 
 			boolean keepShading = isTextured;
 			if (isTextured) {
@@ -1821,21 +1829,21 @@ public class SceneUploader implements AutoCloseable {
 			if(texturedFaceIdx == -1)
 				texturedFaceIdx = tb.putModelFace(color1, color2, color3, materialData);
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				vx1, vy1, vz1,
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				modelNormals[0], modelNormals[1], modelNormals[2],
 				texturedFaceIdx, modelIdx
 			);
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				vx2, vy2, vz2,
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				modelNormals[3], modelNormals[4], modelNormals[5],
 				texturedFaceIdx, modelIdx
 			);
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				vx3, vy3, vz3,
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				modelNormals[6], modelNormals[7], modelNormals[8],
@@ -1882,7 +1890,7 @@ public class SceneUploader implements AutoCloseable {
 			orientCosf = COSINE[orientation] / 65536f;
 		}
 
-		ensureVerticesAllocated(vertexCount);
+		ensureVerticesAllocated(true, true, vertexCount);
 
 		boolean shouldSort = true;
 		boolean allVertsVisible = true;
@@ -1921,15 +1929,18 @@ public class SceneUploader implements AutoCloseable {
 					visibility[v] = allVertsVisible = false;
 			}
 
-			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexX);
+			floatModelVertices[vertexOffset] = vertexX;
+			intModelVertices[vertexOffset] = float16(vertexX - x);
 			modelProjected[vertexOffset] = pX / pZ;
 			vertexOffset++;
 
-			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexY);
+			floatModelVertices[vertexOffset] = vertexY;
+			intModelVertices[vertexOffset] = float16(vertexY - y);
 			modelProjected[vertexOffset] = pY / pZ;
 			vertexOffset++;
 
-			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexZ);
+			floatModelVertices[vertexOffset] = vertexZ;
+			intModelVertices[vertexOffset] = float16(vertexZ - z);
 			modelProjected[vertexOffset] = pZ;
 			vertexOffset++;
 
@@ -2089,6 +2100,7 @@ public class SceneUploader implements AutoCloseable {
 		PrimitiveCharArray faces,
 		Model model,
 		ModelOverride modelOverride,
+		float x, float y, float z,
 		int preOrientation,
 		int orientation,
 		int opaqueModelIdx,
@@ -2218,11 +2230,11 @@ public class SceneUploader implements AutoCloseable {
 				}
 
 				if (shouldCalculateFaceNormal) {
-					calculateFaceNormalInt(
+					calculateFaceNormal(
 						faceNormals,
-						modelVertices[vertexOffsetA], modelVertices[vertexOffsetA + 1], modelVertices[vertexOffsetA + 2],
-						modelVertices[vertexOffsetB], modelVertices[vertexOffsetB + 1], modelVertices[vertexOffsetB + 2],
-						modelVertices[vertexOffsetC], modelVertices[vertexOffsetC + 1], modelVertices[vertexOffsetC + 2]
+						floatModelVertices[vertexOffsetA], floatModelVertices[vertexOffsetA + 1], floatModelVertices[vertexOffsetA + 2],
+						floatModelVertices[vertexOffsetB], floatModelVertices[vertexOffsetB + 1], floatModelVertices[vertexOffsetB + 2],
+						floatModelVertices[vertexOffsetC], floatModelVertices[vertexOffsetC + 1], floatModelVertices[vertexOffsetC + 2]
 					);
 				}
 
@@ -2261,20 +2273,22 @@ public class SceneUploader implements AutoCloseable {
 			final int modelIdx = hasAlpha ? alphaModelIdx : opaqueModelIdx;
 			final int texturedFaceIdx = tb.putModelFace(color1, color2, color3, materialData);
 
-			vb.putDynamicVertex(
-				modelVertices[vertexOffsetA], modelVertices[vertexOffsetA + 1], modelVertices[vertexOffsetA + 2],
+			vb.putVertex(
+				intModelVertices[vertexOffsetA], intModelVertices[vertexOffsetA + 1], intModelVertices[vertexOffsetA + 2],
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				faceNormals[0], faceNormals[1], faceNormals[2],
 				texturedFaceIdx, modelIdx
 			);
-			vb.putDynamicVertex(
-				modelVertices[vertexOffsetB], modelVertices[vertexOffsetB + 1], modelVertices[vertexOffsetB + 2],
+
+			vb.putVertex(
+				intModelVertices[vertexOffsetB], intModelVertices[vertexOffsetB + 1], intModelVertices[vertexOffsetB + 2],
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				faceNormals[3], faceNormals[4], faceNormals[5],
 				texturedFaceIdx, modelIdx
 			);
-			vb.putDynamicVertex(
-				modelVertices[vertexOffsetC], modelVertices[vertexOffsetC + 1], modelVertices[vertexOffsetC + 2],
+
+			vb.putVertex(
+				intModelVertices[vertexOffsetC], intModelVertices[vertexOffsetC + 1], intModelVertices[vertexOffsetC + 2],
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				faceNormals[6], faceNormals[7], faceNormals[8],
 				texturedFaceIdx, modelIdx
@@ -2475,9 +2489,9 @@ public class SceneUploader implements AutoCloseable {
 			packedMaterial, packedMaterial, packedMaterial,
 			terrainData, terrainData, terrainData
 		);
-		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx, 0);
-		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx, 0);
-		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, 0);
+		vb.putVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx, 0);
+		vb.putVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx, 0);
+		vb.putVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, 0);
 	}
 
 	public static void calculateFaceNormalInt(
