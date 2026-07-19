@@ -33,6 +33,7 @@ import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.scene.materials.Material.hasVanillaTransparency;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -144,6 +145,22 @@ public class ModelStreamingManager {
 		return count;
 	}
 
+	private boolean isAlphaModel(Model m) {
+		if(m.getTransparency() != 0 || m.getFaceTransparencies() != null)
+			return false;
+
+		final short[] faceTextures = m.getFaceTextures();
+		if(faceTextures != null) {
+			int faceCount = m.getFaceCount();
+			for(int f = 0; f < faceCount; f++) {
+				if(hasVanillaTransparency(faceTextures[f])) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public void drawTemp(
 		int renderThreadId,
 		Projection projection,
@@ -228,7 +245,7 @@ public class ModelStreamingManager {
 		streamingContext.renderableCount++;
 
 		final boolean hasAlpha =
-			(m.getTransparency() != 0 || m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
+			(modelOverride.mightHaveTransparency || isAlphaModel(m)) &&
 			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
