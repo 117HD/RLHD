@@ -2607,18 +2607,18 @@ public class SceneUploader implements AutoCloseable {
 		if (modelTransparency == -1)
 			return 255;
 
-		int t = modelTransparency & 255;
 		int faceTransparency = transparencies != null ? transparencies[f] & 0xFF : 0;
-		if(faceTransparency < 253) {
-			if (t > 0) {
-				int a = (253 - faceTransparency) * t >> 8;
-				assert (faceTransparency & 255) == faceTransparency;
-				return faceTransparency + a;
-			}
-		} else {
-			// 253 & 254 are special faces like clickboxes which we don't want to render
-			// So force it to be 255 so that the face is completely skipped
+		if (faceTransparency >= 253) {
+			// 253 & 254 are special faces like clickboxes which we don't want to render,
+			// so force them to be 255 so that they are completely skipped
 			return 255;
+		}
+
+		if (modelTransparency != 0) {
+			assert (faceTransparency & 255) == faceTransparency;
+			int t = modelTransparency & 255;
+			int a = (253 - faceTransparency) * t >> 8;
+			return faceTransparency + a;
 		}
 
 		return faceTransparency;

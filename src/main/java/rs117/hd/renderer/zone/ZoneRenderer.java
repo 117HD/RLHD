@@ -977,19 +977,19 @@ public class ZoneRenderer implements Renderer {
 				}
 
 				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-					// Write Color without Depth Writes
+					// Write color without depth writes
 					sceneCmd.DepthMask(false);
 					sceneCmd.ColorMask(true, true, true, true);
 
 					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
 
-					// Write Depth without Color
+					// Write depth without color
 					sceneCmd.DepthMask(true);
 					sceneCmd.ColorMask(false, false, false, false);
 
 					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
 
-					// Restore Color Writes
+					// Restore color writes
 					sceneCmd.ColorMask(true, true, true, true);
 				}
 			}
