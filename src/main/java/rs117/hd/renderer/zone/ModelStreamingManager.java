@@ -156,6 +156,7 @@ public class ModelStreamingManager {
 				if (Material.hasVanillaTransparency(faceTextures[f]))
 					return true;
 		}
+
 		return false;
 	}
 
