@@ -12245,6 +12245,10 @@
     ]
   },
   {
+    "name": "MAGGOT_KING_ARENA",
+    "regionBoxes": [ [ 11645 ] ]
+  },
+  {
     "name": "VAMPYRIUM",
     "regionBoxes": [ [ 9597, 11128 ] ],
     "areas": [
@@ -12357,6 +12361,7 @@
     "areas": [
       "VAMPYRIUM",
       "VAMPYRIUM_FOREST_INSTANCE",
+      "MAGGOT_KING_ARENA",
       "PANDEMONIUM_QUEST_INSTANCE",
       "BRAINDEATH_ISLAND",
       "CLAN_HALL",

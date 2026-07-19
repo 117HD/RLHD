@@ -2432,16 +2432,18 @@
   },
   {
     "area": "VAMPYRIUM",
-    "fogDepth": 10,
+    "fogDepth": 17.5,
     "windAngle": 40,
     "windSpeed": 15,
     "windStrength": 50,
     "fogColor": "#330D0D",
-    "sunStrength": 0.2,
+    "sunStrength": 0.075,
     "sunlightStrength": 2,
     "starVisibility": 0.8,
     "minBrightnessBoost": 0.5,
-    "nightSkyColor": "#FF0000"
+    "nightSkyColor": "#FF0000",
+    "sunriseSunsetStrength": 0.2,
+    "auroraVisibility": 0
   },
   {
     "area": "VAMPYRIUM_FOREST_INSTANCE",
@@ -2450,11 +2452,28 @@
     "windSpeed": 15,
     "windStrength": 50,
     "fogColor": "#330D0D",
-    "sunStrength": 0.2,
+    "sunStrength": 0.075,
     "sunlightStrength": 2,
     "starVisibility": 0.8,
     "minBrightnessBoost": 0.5,
-    "nightSkyColor": "#FF0000"
+    "nightSkyColor": "#FF0000",
+    "sunriseSunsetStrength": 0.2,
+    "auroraVisibility": 0
+  },
+  {
+    "area": "MAGGOT_KING_ARENA",
+    "fogDepth": 50,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#160404",
+    "sunStrength": 0.01,
+    "sunlightStrength": 2,
+    "starVisibility": 0.8,
+    "minBrightnessBoost": 0.5,
+    "nightSkyColor": "#FF0000",
+    "sunriseSunsetStrength": 0.2,
+    "auroraVisibility": 0
   },
   {
     "area": "PLAYER_OWNED_HOUSE_WILDY",
