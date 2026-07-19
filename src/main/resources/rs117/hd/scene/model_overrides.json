@@ -2993,6 +2993,7 @@
     "castShadows": false,
     "inheritTileColorType": "UNDERLAY",
     "objectIds": [
+      "IG_TALL_GRASS_WALL",
       "GRASS_1_SWAMP",
       "GRASS_2_SWAMP",
       "GRASS_3_SWAMP",

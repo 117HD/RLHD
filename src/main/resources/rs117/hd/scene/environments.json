@@ -636,10 +636,11 @@
     "groundFogEnd": -250,
     "ambientStrength": 0.6,
     "directionalStrength": 0,
+    "sunStrength": 0.75,
     "sunAngles": [ 40, 110 ],
     "groundFogOpacity": 0.2,
     "cycleMode": "FIXED_DAWN",
-    "fixedSunAngles": [ 3, 110 ],
+    "fixedSunAngles": [ 3, 107 ],
     "auroraVisibility": 0
   },
   {
