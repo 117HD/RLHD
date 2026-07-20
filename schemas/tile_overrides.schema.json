@@ -122,7 +122,7 @@
         "description": "An ordered map of replacement override names and one or more conditions they should apply under.",
         "additionalProperties": {
           "type": [ "boolean", "string", "array" ],
-          "description": "The name of a replacement override and one or more replacement condition expressions. If any evaluate to true, the replacement is applied.\nSupported operators: !, %, *, /, +, -, <, <=, >, >=, !=, ==, &&, ||, ?.\nSupported variables: h, s, l, blending, textures, season.",
+          "description": "The name of a replacement override and one or more replacement condition expressions. If any evaluate to true, the replacement is applied.\nSupported operators: !, %, *, /, +, -, <, <=, >, >=, !=, ==, &&, ||, ?.\nFor the list of variables, see HDVariables.",
           "items": {
             "type": "string"
           }
