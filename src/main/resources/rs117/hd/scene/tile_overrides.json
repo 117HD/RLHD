@@ -10785,8 +10785,13 @@
     "name": "Vampyrium - Dirt",
     "area": "VAMPYRIUM",
     "uvOrientation": 512,
+    "shiftLightness": 1,
     "underlayIds": [
+      92,
+      237,
       235,
+      234,
+      236,
       238,
       239,
       240,
@@ -10798,6 +10803,7 @@
     "name": "Vampyrium - Dirt Overlay",
     "area": "VAMPYRIUM",
     "uvOrientation": -128,
+    "shiftLightness": 1,
     "overlayIds": [
       427,
       629,
