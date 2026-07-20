@@ -98132,7 +98132,6 @@
         "uvScale": 1.2,
         "upwardsNormals": true,
         "windDisplacementMode": "OBJECT",
-        "uvType": "MODEL_XY",
         "shiftLightness": 1,
         "castShadows": false,
         "inheritTileColorType": "UNDERLAY"
