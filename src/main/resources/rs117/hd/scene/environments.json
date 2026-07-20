@@ -2189,6 +2189,7 @@
   },
   {
     "area": "VAMPYRIUM",
+    "fogColor": "#330D0D",
     "fogDepth": 15,
     "windAngle": 40,
     "windSpeed": 15,
@@ -2197,6 +2198,7 @@
   },
   {
     "area": "VAMPYRIUM_FOREST_INSTANCE",
+    "fogColor": "#330D0D",
     "fogDepth": 40,
     "windAngle": 40,
     "windSpeed": 15,
@@ -2205,6 +2207,7 @@
   },
   {
     "area": "MAGGOT_KING_ARENA",
+    "fogColor": "#160404",
     "fogDepth": 50,
     "windAngle": 40,
     "windSpeed": 15,
