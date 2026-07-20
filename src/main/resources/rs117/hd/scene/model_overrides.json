@@ -99134,5 +99134,127 @@
       "MYQ6_MAIDEN_POOL_WELL_03",
       "MYQ6_MAIDEN_POOL_WELL_04"
     ]
+  },
+  {
+    "description": "Maggot King Floor",
+    "uvType": "BOX",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "objectIds": [
+      "FLOORKIT_MAGGOT01_MIDDLE01",
+      "FLOORKIT_MAGGOT01_EGGS02",
+      "FLOORKIT_MAGGOT01_EGGS01",
+      "FLOORKIT_MAGGOT01_HOLE01_2X2",
+      "FLOORKIT_MAGGOT01_HOLE03",
+      "FLOORKIT_MAGGOT02_HALF01",
+      "FLOORKIT_MAGGOT02_MIDDLE01",
+      "FLOORKIT_MAGGOT01_END01",
+      "FLOORKIT_MAGGOT03_CORNER01_M",
+      "FLOORKIT_MAGGOT03_CORNER01",
+      "FLOORKIT_MAGGOT03_DEFAULT03",
+      "FLOORKIT_MAGGOT03_HALF01",
+      "FLOORKIT_MAGGOT03_DEFAULT01",
+      "FLOORKIT_MAGGOT01_HALF01",
+      "FLOORKIT_MAGGOT03_DEFAULT02",
+      "FLOORKIT_MAGGOT01_HALF01_M",
+      "FLOORKIT_MAGGOT01_HOLE02",
+      "FLOORKIT_MAGGOT01_CORNER01_5X3",
+      "FLOORKIT_MAGGOT01_CORNER02_5X3",
+      "FLOORKIT_MAGGOT01_MIDDLE01_5X3",
+      "FLOORKIT_MAGGOT01_15X2"
+    ]
+  },
+  {
+    "description": "Maggot King Detritus",
+    "uvType": "BOX",
+    "baseMaterial": "GRUNGE_3",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "CORPSE_MAGGOT_DETRITUS01",
+      "CORPSE_MAGGOT_DETRITUS02",
+      "CORPSE_MAGGOT_DETRITUS03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s == 7",
+        "baseMaterial": "ABYSSAL",
+        "undoVanillaShading": false,
+        "shiftLightness": -1,
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Maggot King Bones",
+    "uvType": "BOX",
+    "baseMaterial": "BONE",
+    "undoVanillaShading": false,
+    "shiftLightness": 3,
+    "uvScale": 0.5,
+    "objectIds": [
+      "CORPSE_MAGGOT_DETRITUS04",
+      "CORPSE_MAGGOT_DETRITUS05"
+    ]
+  },
+  {
+    "description": "Maggot King Bone Wall",
+    "uvType": "BOX",
+    "baseMaterial": "BONE",
+    "undoVanillaShading": false,
+    "uvScale": 0.5,
+    "shiftLightness": 6,
+    "objectIds": [
+      "CORPSE_MAGGOT_BONES01",
+      "CORPSE_MAGGOT_BONES02",
+      "CORPSE_MAGGOT_BONES03",
+      "CORPSE_MAGGOT_BONES04",
+      "CORPSE_MAGGOT_BONES04_M"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 4",
+        "baseMaterial": "DIRT_1",
+        "shiftLightness": 6,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Maggot King Corpse Pile",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "CORPSE_MAGGOT_PILE01",
+      "CORPSE_MAGGOT_PILE02",
+      "CORPSE_MAGGOT_PILE03",
+      "CORPSE_MAGGOT_PILE03_M"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s > 5",
+        "baseMaterial": "ABYSSAL_2",
+        "shiftLightness": 4,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 5 && s == 5",
+        "baseMaterial": "DIRT_1",
+        "shiftLightness": 6,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "BONE",
+        "shiftLightness": 4,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
   }
 ]
