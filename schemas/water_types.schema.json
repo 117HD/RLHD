@@ -11,6 +11,10 @@
         "type": "string",
         "description": "Identifier used to refer to the water type."
       },
+      "description": {
+        "type": "string",
+        "description": "Optional description of what this applies to or is used for."
+      },
       "vanillaTextureIndex": {
         "type": "integer",
         "description": "Defines a fallback water type for a specific vanilla texture."

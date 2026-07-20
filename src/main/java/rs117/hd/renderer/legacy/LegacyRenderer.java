@@ -534,8 +534,8 @@ public class LegacyRenderer implements Renderer {
 		boolean updateUniforms = true;
 
 		Player localPlayer = client.getLocalPlayer();
-		var lp = localPlayer.getLocalLocation();
-		if (sceneContext.enableAreaHiding) {
+		if (sceneContext.enableAreaHiding && localPlayer != null) {
+			var lp = localPlayer.getLocalLocation();
 			assert sceneContext.sceneBase != null;
 			int[] worldPos = {
 				sceneContext.sceneBase[0] + lp.getSceneX(),
@@ -645,8 +645,9 @@ public class LegacyRenderer implements Renderer {
 				uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
 				uboCompute.windOffset.set(plugin.windOffset);
 
-				if (plugin.configCharacterDisplacement) {
+				if (plugin.configCharacterDisplacement && localPlayer != null) {
 					// The local player needs to be added first for distance culling
+					var lp = localPlayer.getLocalLocation();
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
@@ -1657,6 +1658,14 @@ public class LegacyRenderer implements Renderer {
 			plugin.drawnStaticRenderableCount = plugin.drawnStaticRenderableCount + 1;
 		} else {
 			int uuid = ModelHash.generateUuid(client, hash, renderable);
+			if (renderable instanceof DynamicObject) {
+				var def = client.getObjectDefinition(ModelHash.getUuidId(uuid));
+				if (def != null && def.getImpostorIds() != null) {
+					var impostor = def.getImpostor();
+					if (impostor != null)
+						uuid = ModelHash.packUuid(ModelHash.getUuidType(uuid), impostor.getId());
+				}
+			}
 			int[] worldPos = sceneContext.localToWorld(x, z, plane);
 			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 			if (modelOverride.hide)

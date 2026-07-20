@@ -1,9 +1,9 @@
 package rs117.hd.opengl;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
+import lombok.Getter;
+import rs117.hd.utils.collections.IntHashSet;
 
 public abstract class GLState {
 	protected boolean hasValue;
@@ -11,6 +11,11 @@ public abstract class GLState {
 
 	public void reset() {
 		hasValue = hasApplied = false;
+	}
+
+	public void invalidate() {
+		hasValue = true;
+		hasApplied = false;
 	}
 
 	public void apply() {
@@ -21,9 +26,10 @@ public abstract class GLState {
 		}
 	}
 
-	abstract void internalApply();
+	protected void internalApply() {}
 
 	public abstract static class Bool extends GLState {
+		@Getter
 		private boolean value;
 		private boolean appliedValue;
 
@@ -33,7 +39,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || value != appliedValue) {
 				applyValue(value);
 				appliedValue = value;
@@ -44,6 +50,7 @@ public abstract class GLState {
 	}
 
 	public abstract static class Int extends GLState {
+		@Getter
 		private int value;
 		private int appliedValue;
 
@@ -53,7 +60,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || value != appliedValue) {
 				applyValue(value);
 				appliedValue = value;
@@ -64,6 +71,7 @@ public abstract class GLState {
 	}
 
 	public abstract static class Object<T> extends GLState {
+		@Getter
 		private T value;
 		private T appliedValue;
 
@@ -73,7 +81,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || !Objects.equals(value, appliedValue)) {
 				applyValue(value);
 				appliedValue = value;
@@ -84,8 +92,9 @@ public abstract class GLState {
 	}
 
 	public abstract static class IntArray extends GLState {
+		@Getter
 		private final int[] value;
-		private final int[] appliedValue;
+		protected final int[] appliedValue;
 
 		protected IntArray(int size) {
 			value = new int[size];
@@ -98,7 +107,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || !Arrays.equals(value, appliedValue)) {
 				applyValues(value);
 				System.arraycopy(value, 0, appliedValue, 0, value.length);
@@ -109,6 +118,7 @@ public abstract class GLState {
 	}
 
 	public abstract static class BoolArray extends GLState {
+		@Getter
 		private final boolean[] value;
 		private final boolean[] appliedValue;
 
@@ -123,7 +133,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			if (!hasApplied || !Arrays.equals(value, appliedValue)) {
 				applyValues(value);
 				System.arraycopy(value, 0, appliedValue, 0, value.length);
@@ -134,7 +144,7 @@ public abstract class GLState {
 	}
 
 	public abstract static class IntSet extends GLState {
-		private final Set<Integer> targets = new HashSet<>();
+		private final IntHashSet targets = new IntHashSet();
 
 		public void add(int target) {
 			hasValue = true;
@@ -147,7 +157,7 @@ public abstract class GLState {
 		}
 
 		@Override
-		void internalApply() {
+		protected void internalApply() {
 			for (int t : targets) applyTarget(t);
 			targets.clear();
 		}

@@ -14201,6 +14201,816 @@
     "range": 10
   },
   {
+    "description": "Brimhaven Agility Arena - Lava 1",
+    "worldX": 2812,
+    "worldY": 9568,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 2",
+    "worldX": 2811,
+    "worldY": 9557,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 3",
+    "worldX": 2811,
+    "worldY": 9545,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 4",
+    "worldX": 2811,
+    "worldY": 9579,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 5",
+    "worldX": 2811,
+    "worldY": 9590,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 6",
+    "worldX": 2805,
+    "worldY": 9596,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 7",
+    "worldX": 2794,
+    "worldY": 9596,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 8",
+    "worldX": 2784,
+    "worldY": 9596,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 9",
+    "worldX": 2772,
+    "worldY": 9596,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 10",
+    "worldX": 2761,
+    "worldY": 9596,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 11",
+    "worldX": 2755,
+    "worldY": 9590,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 12",
+    "worldX": 2755,
+    "worldY": 9579,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 13",
+    "worldX": 2755,
+    "worldY": 9568,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 14",
+    "worldX": 2755,
+    "worldY": 9556,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 15",
+    "worldX": 2755,
+    "worldY": 9546,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 16",
+    "worldX": 2762,
+    "worldY": 9540,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 17",
+    "worldX": 2772,
+    "worldY": 9540,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 18",
+    "worldX": 2783,
+    "worldY": 9540,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 19",
+    "worldX": 2794,
+    "worldY": 9540,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 20",
+    "worldX": 2805,
+    "worldY": 9540,
+    "plane": 0,
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 20",
+    "worldX": 2799,
+    "worldY": 9584,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 21",
+    "worldX": 2788,
+    "worldY": 9584,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 22",
+    "worldX": 2777,
+    "worldY": 9584,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 23",
+    "worldX": 2766,
+    "worldY": 9584,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 24",
+    "worldX": 2799,
+    "worldY": 9573,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 25",
+    "worldX": 2788,
+    "worldY": 9573,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 26",
+    "worldX": 2777,
+    "worldY": 9573,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 27",
+    "worldX": 2766,
+    "worldY": 9573,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 28",
+    "worldX": 2799,
+    "worldY": 9562,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 29",
+    "worldX": 2788,
+    "worldY": 9562,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 30",
+    "worldX": 2777,
+    "worldY": 9562,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 31",
+    "worldX": 2766,
+    "worldY": 9562,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 32",
+    "worldX": 2799,
+    "worldY": 9552,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 33",
+    "worldX": 2788,
+    "worldY": 9552,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 34",
+    "worldX": 2777,
+    "worldY": 9552,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 35",
+    "worldX": 2766,
+    "worldY": 9552,
+    "plane": 0,
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 36",
+    "worldX": 2788,
+    "worldY": 9601,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 37",
+    "worldX": 2814,
+    "worldY": 9583,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 38",
+    "worldX": 2814,
+    "worldY": 9558,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 39",
+    "worldX": 2811,
+    "worldY": 9538,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 40",
+    "worldX": 2789,
+    "worldY": 9534,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 41",
+    "worldX": 2759,
+    "worldY": 9535,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 42",
+    "worldX": 2750,
+    "worldY": 9547,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 43",
+    "worldX": 2750,
+    "worldY": 9562,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Brimhaven Agility Arena - Lava 44",
+    "worldX": 2750,
+    "worldY": 9595,
+    "plane": 0,
+    "height": 550,
+    "alignment": "CENTER",
+    "radius": 1650,
+    "strength": 4,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 7000,
+    "range": 10
+  },
+  {
     "description": "Gu'Tanoth",
     "worldX": 2494,
     "worldY": 3019,
@@ -17589,13 +18399,9 @@
   },
   {
     "description": "Lithkren basement sunlight",
-    "worldX": 3549,
-    "worldY": 10477,
-    "plane": 0,
-    "height": 800,
-    "alignment": "EAST",
+    "offset": [ 0, 400, 0 ],
     "radius": 1500,
-    "strength": 10,
+    "strength": 20,
     "color": [
       255,
       249.4737,
@@ -17603,7 +18409,10 @@
     ],
     "type": "STATIC",
     "duration": 1000,
-    "range": 0.2
+    "range": 0.2,
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_GODRAY"
+    ]
   },
   {
     "description": "HELLCAT",
@@ -18562,9 +19371,9 @@
   },
   {
     "description": "ABERRANT_SPECTRES",
-    "height": 110,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 600,
+    "radius": 400,
     "strength": 15,
     "color": [
       200.6236,
@@ -18574,6 +19383,9 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 1000,
+    "animationIds": [ -1, "SPECTER_ATTACK", "SPECTER_PARRY" ],
     "npcIds": [
       "SLAYER_ABBERANT_SPECTRE_1",
       "SLAYER_ABBERANT_SPECTRE_2",
@@ -18585,10 +19397,10 @@
   },
   {
     "description": "DEVIANT_SPECTRE",
-    "height": 110,
+    "height": 300,
     "alignment": "CENTER",
-    "radius": 600,
-    "strength": 15,
+    "radius": 400,
+    "strength": 17,
     "color": [
       255,
       205.19783,
@@ -18597,16 +19409,19 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 1000,
+    "animationIds": [ -1, "SPECTER_ATTACK", "SPECTER_PARRY" ],
     "npcIds": [
       "KOUREND_SPECTRE"
     ]
   },
   {
     "description": "ABHORRENT_SPECTRE",
-    "height": 200,
+    "height": 545,
     "alignment": "CENTER",
-    "radius": 1000,
-    "strength": 25,
+    "radius": 750,
+    "strength": 10,
     "color": [
       200.6236,
       255,
@@ -18615,16 +19430,19 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 1000,
+    "animationIds": [ -1, "ABHORRENT_SPECTRE_ATTACK", "GIANT_UPDATE_ICE_DEFEND" ],
     "npcIds": [
       "SUPERIOR_ABBERANT_SPECTRE"
     ]
   },
   {
     "description": "REPUGNANT_SPECTRE",
-    "height": 200,
+    "height": 545,
     "alignment": "CENTER",
-    "radius": 1000,
-    "strength": 25,
+    "radius": 750,
+    "strength": 15,
     "color": [
       255,
       85.348495,
@@ -18633,6 +19451,9 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 1000,
+    "animationIds": [ -1, "ABHORRENT_SPECTRE_ATTACK", "GIANT_UPDATE_ICE_DEFEND" ],
     "npcIds": [
       "SUPERIOR_KOUREND_SPECTRE"
     ]
@@ -19662,6 +20483,48 @@
     ]
   },
   {
+    "description": "Mage Imp Thrall",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 25,
+    "color": [
+      0,
+      75,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "spawnDelay": 300,
+    "fadeInDuration": 600,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_MAGIC_LESSER",
+      "THRALL_IMP_MAGIC_SUPERIOR",
+      "THRALL_IMP_MAGIC_GREATER"
+    ]
+  },
+  {
+    "description": "Mage Imp Thrall - Projectile",
+    "radius": 200,
+    "strength": 15,
+    "height": 20,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "fadeOutDuration": 100,
+    "fadeInDuration": 100,
+    "range": 5,
+    "projectileIds": [
+      "LEAGUES_6_THRALL_IMP_MAGIC_ATTACK_VFX_PROJANIM"
+    ]
+  },
+  {
     "description": "Ghostly thrall projectile",
     "radius": 250,
     "strength": 8,
@@ -19673,7 +20536,7 @@
     ],
     "type": "FLICKER",
     "duration": 600,
-    "fadeOutDuration": 100,
+    "fadeOutDuration": 150,
     "fadeInDuration": 100,
     "range": 5,
     "projectileIds": [
@@ -19699,6 +20562,45 @@
       "ARCEUUS_THRALL_SKELETON_LESSER",
       "ARCEUUS_THRALL_SKELETON_SUPERIOR",
       "ARCEUUS_THRALL_SKELETON_GREATER"
+    ]
+  },
+  {
+    "description": "Ranged Imp Thrall",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 8,
+    "color": [
+      144,
+      245,
+      66
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_RANGED_LESSER",
+      "THRALL_IMP_RANGED_SUPERIOR",
+      "THRALL_IMP_RANGED_GREATER"
+    ]
+  },
+  {
+    "description": "Ranged Imp Thrall - Projectile",
+    "radius": 150,
+    "strength": 8,
+    "height": 10,
+    "color": [
+      144,
+      245,
+      66
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "fadeOutDuration": 150,
+    "range": 5,
+    "projectileIds": [
+      "LEAGUES_6_THRALL_IMP_RANGED_ATTACK_VFX_PROJANIM"
     ]
   },
   {
@@ -19738,6 +20640,209 @@
       "ARCEUUS_THRALL_ZOMBIE_LESSER",
       "ARCEUUS_THRALL_ZOMBIE_SUPERIOR",
       "ARCEUUS_THRALL_ZOMBIE_GREATER"
+    ]
+  },
+  {
+    "description": "Melee Imp Thrall",
+    "height": 30,
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 200,
+    "spawnDelay": 600,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_MELEE_LESSER",
+      "THRALL_IMP_MELEE_SUPERIOR",
+      "THRALL_IMP_MELEE_GREATER"
+    ]
+  },
+  {
+    "description": "Melee Imp Thrall - Spawn",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeOutDuration": 800,
+    "fadeInDuration": 300,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_MELEE_LESSER",
+      "THRALL_IMP_MELEE_SUPERIOR",
+      "THRALL_IMP_MELEE_GREATER"
+    ]
+  },
+  {
+    "description": "Melee Imp Thrall - Spawn Highlight Main",
+    "height": 180,
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeOutDuration": 600,
+    "fadeInDuration": 300,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_MELEE_LESSER",
+      "THRALL_IMP_MELEE_SUPERIOR",
+      "THRALL_IMP_MELEE_GREATER"
+    ]
+  },
+  {
+    "description": "Melee Imp Thrall - Spawn Highlight Top",
+    "height": 280,
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "spawnDelay": 600,
+    "despawnDelay": 800,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 300,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_MELEE_LESSER",
+      "THRALL_IMP_MELEE_SUPERIOR",
+      "THRALL_IMP_MELEE_GREATER"
+    ]
+  },
+  {
+    "description": "Melee Imp Thrall - Spawn Highlight Side 1",
+    "offset": [ 50, 150, 0 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "spawnDelay": 200,
+    "despawnDelay": 800,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 300,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_MELEE_LESSER",
+      "THRALL_IMP_MELEE_SUPERIOR",
+      "THRALL_IMP_MELEE_GREATER"
+    ]
+  },
+  {
+    "description": "Melee Imp Thrall - Spawn Highlight Side 2",
+    "offset": [ -50, 150, 0 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "spawnDelay": 200,
+    "despawnDelay": 800,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 300,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_MELEE_LESSER",
+      "THRALL_IMP_MELEE_SUPERIOR",
+      "THRALL_IMP_MELEE_GREATER"
+    ]
+  },
+  {
+    "description": "Melee Imp Thrall - Spawn Highlight Side 3",
+    "offset": [ 0, 150, 50 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "spawnDelay": 200,
+    "despawnDelay": 800,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 300,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_MELEE_LESSER",
+      "THRALL_IMP_MELEE_SUPERIOR",
+      "THRALL_IMP_MELEE_GREATER"
+    ]
+  },
+  {
+    "description": "Melee Imp Thrall - Spawn Highlight Side 4",
+    "offset": [ 0, 150, -50 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "spawnDelay": 200,
+    "despawnDelay": 200,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 300,
+    "ignoreActorHiding": true,
+    "npcIds": [
+      "THRALL_IMP_MELEE_LESSER",
+      "THRALL_IMP_MELEE_SUPERIOR",
+      "THRALL_IMP_MELEE_GREATER"
     ]
   },
   {
@@ -20526,25 +21631,6 @@
     "visibleFromOtherPlanes": true
   },
   {
-    "description": "STANDING_TORCH_SHORT_LARGE",
-    "height": 250,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 12.5,
-    "color": [
-      252,
-      148,
-      3
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
-    "visibleFromOtherPlanes": true,
-    "objectIds": [
-      "DRAGON_SLAYER_QIP_FIRE_1X1"
-    ]
-  },
-  {
     "description": "STANDING_TORCH_LARGE",
     "height": 250,
     "alignment": "CENTER",
@@ -20822,7 +21908,7 @@
     "offset": [ 3, 0, 40 ]
   },
   {
-    "description": "Altar Candles - Lumbridge and Port Sarim",
+    "description": "Altar Candles - Lumbridge, Port Sarim, Glough's",
     "offset": [ 0, 140, -33 ],
     "radius": 180,
     "strength": 7,
@@ -20836,7 +21922,8 @@
     "range": 20,
     "objectIds": [
       "CANDLES_1",
-      "CANDLES_2"
+      "CANDLES_2",
+      "MM2_GLOUGHS_CANDLES"
     ]
   },
   {
@@ -20967,7 +22054,7 @@
   },
   {
     "description": "LANTERN_CANDLE",
-    "offset": [ 10, 260, -12 ],
+    "offset": [ 16, 265, 0 ],
     "alignment": "CENTER",
     "radius": 550,
     "strength": 15.5,
@@ -21117,7 +22204,6 @@
       "SNAKEBOSS_VILLAGE_FIRE",
       "VIKING_LONGHALL_FIRE",
       "EAGLEPEAK_CAMPFIRE_TIDY",
-      "DS2_VIKING_SHIP_FIRE",
       "VIKING_HOUSE_FIRE",
       "EAGLEPEAK_CAMPFIRE_MESSY",
       "ROYAL_VILLAGE_FIRE",
@@ -21137,7 +22223,9 @@
       "VMQ4_CRYPT_ASSAULT_FIRE",
       "VMQ4_CRYPT_ENNIUS_EXIT",
       "VMQ4_CRYPT_ENNIUS_ITZLA_BLOCKAGE",
-      "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER"
+      "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER",
+      "CHOMPYBIRD_SPITROAST_EMPTY",
+      "BONES_IN_PASTE_FIRE"
     ]
   },
   {
@@ -21155,10 +22243,67 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "DRAGON_SLAYER_QIP_FIRE_2X2",
       "SOTE_FIRE_LARGE",
       "SW_CAMP_FIRE",
       "MINOTAURS_REST_CAMPFIRE"
+    ]
+  },
+  {
+    "description": "FIRE_TALL_LOW",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 20.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "FX_FIRE_TALL03",
+      "FX_FIRE_TALL02",
+      "FX_FIRE_TALL01"
+    ]
+  },
+  {
+    "description": "FIRE_TALL_MID",
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "FX_FIRE_TALL03",
+      "FX_FIRE_TALL02",
+      "FX_FIRE_TALL01"
+    ]
+  },
+  {
+    "description": "FIRE_TALL_HIGH",
+    "height": 700,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "FX_FIRE_TALL03"
     ]
   },
   {
@@ -21497,6 +22642,42 @@
       "CLIMBING_ROPE",
       "CLIMBING_ROPE2",
       "DRAGON_SLAYER_QIP_CLIMBING_ROPE"
+    ]
+  },
+  {
+    "description": "CRASH_ISLAND_ROPE",
+    "height": 450,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 25,
+    "color": [
+      200,
+      220,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "_100_ILM_LIGHT_STREAMING_WITH_ROPE"
+    ]
+  },
+  {
+    "description": "MANICHAL_MONKEY_EXIT_ROPE",
+    "height": 450,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 15,
+    "color": [
+      200,
+      220,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "MM2_MAZE_EXIT_ROPE"
     ]
   },
   {
@@ -22729,22 +23910,38 @@
     "description": "POH_EXIT_PORTAL",
     "height": 160,
     "alignment": "CENTER",
-    "radius": 350,
-    "strength": 15,
+    "radius": 450,
+    "strength": 25,
     "color": [
-      93,
-      0,
-      255
+      160,
+      80,
+      250
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "POH_EXIT_PORTAL"
     ]
   },
   {
-    "description": "POH_PORTAL",
+    "description": "POH_EXIT_PORTAL_WILDERNESS",
+    "offset": [ 0, 160, 0 ],
+    "alignment": "CENTER",
+    "radius": 475,
+    "strength": 25,
+    "color": [
+      255,
+      200,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "POH_EXIT_PORTAL_WILDERNESS"
+    ]
+  },
+  {
+    "description": "POH_ENTRANCE_PORTAL",
     "height": 180,
     "alignment": "CENTER",
     "radius": 700,
@@ -22768,7 +23965,7 @@
     ]
   },
   {
-    "description": "POH_PORTAL_PRIFDDINAS",
+    "description": "POH_PORTAL_ENTRANCE_PORTAL_PRIFDDINAS",
     "height": 120,
     "alignment": "CENTER",
     "radius": 700,
@@ -22787,10 +23984,10 @@
   },
   {
     "description": "POH_PORTAL_NEXUS",
-    "height": 200,
+    "height": 150,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 12.5,
+    "radius": 450,
+    "strength": 10,
     "color": [
       31,
       225,
@@ -22798,13 +23995,12 @@
     ],
     "type": "PULSE",
     "duration": 1250,
-    "range": 20,
+    "range": 13.5,
     "objectIds": [
-      "LEAGUE_5_POH_SPIRIT_RING",
+      "POH_NEXUS_PORTAL_LEAGUE_5",
       "POH_NEXUS_PORTAL_1",
       "POH_NEXUS_PORTAL_2",
-      "POH_NEXUS_PORTAL_3",
-      "HUNTING_TRAIL4_8L"
+      "POH_NEXUS_PORTAL_3"
     ]
   },
   {
@@ -23044,7 +24240,7 @@
     ]
   },
   {
-    "description": "SCRYING_POOL",
+    "description": "POH_PORTAL_ROOM_FOCUS_AND_SCRYING_POOL",
     "height": 170,
     "alignment": "CENTER",
     "radius": 400,
@@ -23064,10 +24260,46 @@
     ]
   },
   {
+    "description": "POH_WILDY_GARDEN_LAVA_IMP_FOUNTAIN",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "height": 125,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 15,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "range": 25,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE4"
+    ]
+  },
+  {
+    "description": "POH_WILDY_GARDEN_LAVA_ORNAMENTS_POND",
+    "areas": [ "PLAYER_OWNED_HOUSE_WILDY" ],
+    "height": 175,
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 20,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "range": 25,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE3"
+    ]
+  },
+  {
     "description": "POH_TRAILBLAZER_RELOADED_TROPHY",
     "offset": [ 0, 190, -20 ],
-    "radius": 70,
-    "strength": 30,
+    "radius": 92,
+    "strength": 20,
     "color": [
       252,
       188,
@@ -23075,9 +24307,31 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 25,
+    "range": 15,
     "objectIds": [
-      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_4_DRAGON"
+      "POH_LEAGUEHALL_PEDESTAL_1_SIMPLE_LEAGUE_4_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_1_DECORATIVE_LEAGUE_4_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_4_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_2_DECORATIVE_LEAGUE_4_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_4_DRAGON",
+      "POH_LEAGUEHALL_PEDESTAL_3_DECORATIVE_LEAGUE_4_DRAGON"
+    ]
+  },
+  {
+    "description": "POH_RAGING_ECHOES_TROPHY",
+    "offset": [ 0, 190, -20 ],
+    "radius": 92,
+    "strength": 30,
+    "color": [
+      160,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "POH_LEAGUEHALL_PEDESTAL_3_SIMPLE_LEAGUE_5_DRAGON"
     ]
   },
   {
@@ -23112,7 +24366,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_ARCEUUS_LIBRARY",
       "POH_PORTAL_MAG_ARCEUUS_LIBRARY",
-      "POH_PORTAL_MARBLE_ARCEUUS_LIBRARY"
+      "POH_PORTAL_MARBLE_ARCEUUS_LIBRARY",
+      "POH_PORTAL_LEAGUE_5_ARCEUUS_LIBRARY"
     ]
   },
   {
@@ -23132,7 +24387,8 @@
     "objectIds": [
       "POH_PORTAL_MARBLE_DRAYNOR_MANOR",
       "POH_PORTAL_MAG_DRAYNOR_MANOR",
-      "POH_PORTAL_TEAK_DRAYNOR_MANOR"
+      "POH_PORTAL_TEAK_DRAYNOR_MANOR",
+      "POH_PORTAL_LEAGUE_5_DRAYNOR_MANOR"
     ]
   },
   {
@@ -23152,7 +24408,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_BATTLEFRONT",
       "POH_PORTAL_MARBLE_BATTLEFRONT",
-      "POH_PORTAL_MAG_BATTLEFRONT"
+      "POH_PORTAL_MAG_BATTLEFRONT",
+      "POH_PORTAL_LEAGUE_5_BATTLEFRONT"
     ]
   },
   {
@@ -23171,15 +24428,13 @@
     "range": 20,
     "objectIds": [
       "POH_PORTAL_TEAK_VARROCK_VARROCK1ST",
-      "POH_PORTAL_TEAK_VARROCK_VARROCK1ST",
-      "POH_PORTAL_TEAK_VARROCK_GE1ST",
       "POH_PORTAL_TEAK_VARROCK_GE1ST",
       "POH_PORTAL_MAHOGANY_VARROCK_VARROCK1ST",
       "POH_PORTAL_MAHOGANY_VARROCK_GE1ST",
       "POH_PORTAL_MARBLE_VARROCK_VARROCK1ST",
-      "POH_PORTAL_MARBLE_VARROCK_VARROCK1ST",
       "POH_PORTAL_MARBLE_VARROCK_GE1ST",
-      "POH_PORTAL_MARBLE_VARROCK_GE1ST"
+      "POH_PORTAL_LEAGUE_5_VARROCK_VARROCK1ST",
+      "POH_PORTAL_LEAGUE_5_VARROCK_GE1ST"
     ]
   },
   {
@@ -23199,7 +24454,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_MIND_ALTAR",
       "POH_PORTAL_MARBLE_MIND_ALTAR",
-      "POH_PORTAL_MAG_MIND_ALTAR"
+      "POH_PORTAL_MAG_MIND_ALTAR",
+      "POH_PORTAL_LEAGUE_5_MIND_ALTAR"
     ]
   },
   {
@@ -23219,7 +24475,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_LUMBRIDGE",
       "POH_PORTAL_MAG_LUMBRIDGE",
-      "POH_PORTAL_MARBLE_LUMBRIDGE"
+      "POH_PORTAL_MARBLE_LUMBRIDGE",
+      "POH_PORTAL_LEAGUE_5_LUMBRIDGE"
     ]
   },
   {
@@ -23239,7 +24496,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_FALADOR",
       "POH_PORTAL_MAG_FALADOR",
-      "POH_PORTAL_MARBLE_FALADOR"
+      "POH_PORTAL_MARBLE_FALADOR",
+      "POH_PORTAL_LEAGUE_5_FALADOR"
     ]
   },
   {
@@ -23259,7 +24517,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_SALVE_GRAVEYARD",
       "POH_PORTAL_MARBLE_SALVE_GRAVEYARD",
-      "POH_PORTAL_MAG_SALVE_GRAVEYARD"
+      "POH_PORTAL_MAG_SALVE_GRAVEYARD",
+      "POH_PORTAL_LEAGUE_5_SALVE_GRAVEYARD"
     ]
   },
   {
@@ -23282,7 +24541,9 @@
       "POH_PORTAL_MAHOGANY_CAMELOT_CAMELOT1ST",
       "POH_PORTAL_MAHOGANY_CAMELOT_SEERS1ST",
       "POH_PORTAL_MARBLE_CAMELOT_CAMELOT1ST",
-      "POH_PORTAL_MARBLE_CAMELOT_SEERS1ST"
+      "POH_PORTAL_MARBLE_CAMELOT_SEERS1ST",
+      "POH_PORTAL_LEAGUE_5_CAMELOT_CAMELOT1ST",
+      "POH_PORTAL_LEAGUE_5_CAMELOT_SEERS1ST"
     ]
   },
   {
@@ -23302,7 +24563,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_FENKENSTRAIN",
       "POH_PORTAL_MARBLE_FENKENSTRAIN",
-      "POH_PORTAL_MAG_FENKENSTRAIN"
+      "POH_PORTAL_MAG_FENKENSTRAIN",
+      "POH_PORTAL_LEAGUE_5_FENKENSTRAIN"
     ]
   },
   {
@@ -23322,7 +24584,8 @@
     "objectIds": [
       "POH_PORTAL_MARBLE_ARDOUGNE",
       "POH_PORTAL_TEAK_ARDOUGNE",
-      "POH_PORTAL_MAG_ARDOUGNE"
+      "POH_PORTAL_MAG_ARDOUGNE",
+      "POH_PORTAL_LEAGUE_5_ARDOUGNE"
     ]
   },
   {
@@ -23345,7 +24608,9 @@
       "POH_PORTAL_TEAK_YANILLE_WATCHTOWER1ST",
       "POH_PORTAL_TEAK_YANILLE_YANILLE1ST",
       "POH_PORTAL_MAHOGANY_YANILLE_WATCHTOWER1ST",
-      "POH_PORTAL_MAHOGANY_YANILLE_YANILLE1ST"
+      "POH_PORTAL_MAHOGANY_YANILLE_YANILLE1ST",
+      "POH_PORTAL_LEAGUE_5_YANILLE_WATCHTOWER1ST",
+      "POH_PORTAL_LEAGUE_5_YANILLE_YANILLE1ST"
     ]
   },
   {
@@ -23365,7 +24630,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_SENNTISTEN",
       "POH_PORTAL_TEAK_SENNTISTEN",
-      "POH_PORTAL_MARBLE_SENNTISTEN"
+      "POH_PORTAL_MARBLE_SENNTISTEN",
+      "POH_PORTAL_LEAGUE_5_SENNTISTEN"
     ]
   },
   {
@@ -23385,7 +24651,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_WEST_ARDOUGNE",
       "POH_PORTAL_TEAK_WEST_ARDOUGNE",
-      "POH_PORTAL_MARBLE_WEST_ARDOUGNE"
+      "POH_PORTAL_MARBLE_WEST_ARDOUGNE",
+      "POH_PORTAL_LEAGUE_5_WEST_ARDOUGNE"
     ]
   },
   {
@@ -23405,7 +24672,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_MARIM",
       "POH_PORTAL_MARBLE_MARIM",
-      "POH_PORTAL_MAG_MARIM"
+      "POH_PORTAL_MAG_MARIM",
+      "POH_PORTAL_LEAGUE_5_MARIM"
     ]
   },
   {
@@ -23425,14 +24693,15 @@
     "objectIds": [
       "POH_PORTAL_MAG_HARMONY_ISLAND",
       "POH_PORTAL_TEAK_HARMONY_ISLAND",
-      "POH_PORTAL_MARBLE_HARMONY_ISLAND"
+      "POH_PORTAL_MARBLE_HARMONY_ISLAND",
+      "POH_PORTAL_LEAGUE_5_HARMONY_ISLAND"
     ]
   },
   {
     "description": "POH_PORTAL_KHARYLL",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 460,
     "strength": 12.5,
     "color": [
       255,
@@ -23441,19 +24710,20 @@
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "POH_PORTAL_MAG_KHARYRLL",
       "POH_PORTAL_TEAK_KHARYRLL",
-      "POH_PORTAL_MARBLE_KHARYRLL"
+      "POH_PORTAL_MARBLE_KHARYRLL",
+      "POH_PORTAL_LEAGUE_5_KHARYRLL"
     ]
   },
   {
     "description": "POH_PORTAL_LUNAR_ISLE",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 12.5,
+    "radius": 450,
+    "strength": 17.5,
     "color": [
       219,
       153,
@@ -23461,18 +24731,19 @@
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "POH_PORTAL_MAG_LUNARISLE",
       "POH_PORTAL_TEAK_LUNARISLE",
-      "POH_PORTAL_MARBLE_LUNARISLE"
+      "POH_PORTAL_MARBLE_LUNARISLE",
+      "POH_PORTAL_LEAGUE_5_LUNARISLE"
     ]
   },
   {
     "description": "POH_PORTAL_KOUREND",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 475,
     "strength": 12.5,
     "color": [
       69,
@@ -23481,11 +24752,12 @@
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "POH_PORTAL_TEAK_KOUREND",
       "POH_PORTAL_MARBLE_KOUREND",
-      "POH_PORTAL_MAG_KOUREND"
+      "POH_PORTAL_MAG_KOUREND",
+      "POH_PORTAL_LEAGUE_5_KOUREND"
     ]
   },
   {
@@ -23505,7 +24777,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_CEMETERY",
       "POH_PORTAL_TEAK_CEMETERY",
-      "POH_PORTAL_MARBLE_CEMETERY"
+      "POH_PORTAL_MARBLE_CEMETERY",
+      "POH_PORTAL_LEAGUE_5_CEMETERY"
     ]
   },
   {
@@ -23525,19 +24798,20 @@
     "objectIds": [
       "POH_PORTAL_MAG_WATERBIRTH",
       "POH_PORTAL_TEAK_WATERBIRTH",
-      "POH_PORTAL_MARBLE_WATERBIRTH"
+      "POH_PORTAL_MARBLE_WATERBIRTH",
+      "POH_PORTAL_LEAGUE_5_WATERBIRTH"
     ]
   },
   {
     "description": "POH_PORTAL_BARROWS",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 12.5,
+    "radius": 475,
+    "strength": 25,
     "color": [
-      202,
-      122,
-      255
+      160,
+      80,
+      250
     ],
     "type": "PULSE",
     "duration": 4100,
@@ -23545,7 +24819,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_BARROWS",
       "POH_PORTAL_TEAK_BARROWS",
-      "POH_PORTAL_MARBLE_BARROWS"
+      "POH_PORTAL_MARBLE_BARROWS",
+      "POH_PORTAL_LEAGUE_5_BARROWS"
     ]
   },
   {
@@ -23565,7 +24840,8 @@
     "objectIds": [
       "POH_PORTAL_MARBLE_CARRALLANGAR",
       "POH_PORTAL_TEAK_CARRALLANGAR",
-      "POH_PORTAL_MAG_CARRALLANGAR"
+      "POH_PORTAL_MAG_CARRALLANGAR",
+      "POH_PORTAL_LEAGUE_5_CARRALLANGAR"
     ]
   },
   {
@@ -23585,7 +24861,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_FISHINGGUILD",
       "POH_PORTAL_TEAK_FISHINGGUILD",
-      "POH_PORTAL_MARBLE_FISHINGGUILD"
+      "POH_PORTAL_MARBLE_FISHINGGUILD",
+      "POH_PORTAL_LEAGUE_5_FISHINGGUILD"
     ]
   },
   {
@@ -23605,7 +24882,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_CATHERBY",
       "POH_PORTAL_MAG_CATHERBY",
-      "POH_PORTAL_MARBLE_CATHERBY"
+      "POH_PORTAL_MARBLE_CATHERBY",
+      "POH_PORTAL_LEAGUE_5_CATHERBY"
     ]
   },
   {
@@ -23625,7 +24903,8 @@
     "objectIds": [
       "POH_PORTAL_MAG_ANNAKARL",
       "POH_PORTAL_TEAK_ANNAKARL",
-      "POH_PORTAL_MARBLE_ANNAKARL"
+      "POH_PORTAL_MARBLE_ANNAKARL",
+      "POH_PORTAL_LEAGUE_5_ANNAKARL"
     ]
   },
   {
@@ -23645,7 +24924,8 @@
     "objectIds": [
       "POH_PORTAL_MARBLE_APE_ATOLL",
       "POH_PORTAL_MAG_APE_ATOLL",
-      "POH_PORTAL_TEAK_APE_ATOLL"
+      "POH_PORTAL_TEAK_APE_ATOLL",
+      "POH_PORTAL_LEAGUE_5_APE_ATOLL"
     ]
   },
   {
@@ -23665,7 +24945,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_GHORROCK",
       "POH_PORTAL_MAG_GHORROCK",
-      "POH_PORTAL_MARBLE_GHORROCK"
+      "POH_PORTAL_MARBLE_GHORROCK",
+      "POH_PORTAL_LEAGUE_5_GHORROCK"
     ]
   },
   {
@@ -23685,7 +24966,8 @@
     "objectIds": [
       "POH_PORTAL_TEAK_STRONGHOLD",
       "POH_PORTAL_MAG_STRONGHOLD",
-      "POH_PORTAL_MARBLE_STRONGHOLD"
+      "POH_PORTAL_MARBLE_STRONGHOLD",
+      "POH_PORTAL_LEAGUE_5_STRONGHOLD"
     ]
   },
   {
@@ -23705,7 +24987,308 @@
     "objectIds": [
       "POH_PORTAL_MARBLE_WEISS",
       "POH_PORTAL_MAG_WEISS",
-      "POH_PORTAL_TEAK_WEISS"
+      "POH_PORTAL_TEAK_WEISS",
+      "POH_PORTAL_LEAGUE_5_WEISS"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_FORTIS",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_FORTIS",
+      "POH_PORTAL_MAG_FORTIS",
+      "POH_PORTAL_MARBLE_FORTIS",
+      "POH_PORTAL_LEAGUE_5_FORTIS"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_TROLLHEIM",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_TROLLHEIM",
+      "POH_PORTAL_MAG_TROLLHEIM",
+      "POH_PORTAL_MARBLE_TROLLHEIM",
+      "POH_PORTAL_LEAGUE_5_TROLLHEIM"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_PADDEWWA",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_PADDEWWA",
+      "POH_PORTAL_MAG_PADDEWWA",
+      "POH_PORTAL_MARBLE_PADDEWWA",
+      "POH_PORTAL_LEAGUE_5_PADDEWWA"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_LASSAR",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_LASSAR",
+      "POH_PORTAL_MAG_LASSAR",
+      "POH_PORTAL_MARBLE_LASSAR",
+      "POH_PORTAL_LEAGUE_5_LASSAR"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_DAREEYAK",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_DAREEYAK",
+      "POH_PORTAL_MAG_DAREEYAK",
+      "POH_PORTAL_MARBLE_DAREEYAK",
+      "POH_PORTAL_LEAGUE_5_DAREEYAK"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_OURANIA",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_OURANIA",
+      "POH_PORTAL_MAG_OURANIA",
+      "POH_PORTAL_MARBLE_OURANIA",
+      "POH_PORTAL_LEAGUE_5_OURANIA"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_BARBARIAN",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_BARBARIAN",
+      "POH_PORTAL_MAG_BARBARIAN",
+      "POH_PORTAL_MARBLE_BARBARIAN",
+      "POH_PORTAL_LEAGUE_5_BARBARIAN"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_KHAZARD",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_KHAZARD",
+      "POH_PORTAL_MAG_KHAZARD",
+      "POH_PORTAL_MARBLE_KHAZARD",
+      "POH_PORTAL_LEAGUE_5_KHAZARD"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_ICEPLATEAU",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_ICEPLATEAU",
+      "POH_PORTAL_MAG_ICEPLATEAU",
+      "POH_PORTAL_MARBLE_ICEPLATEAU",
+      "POH_PORTAL_LEAGUE_5_ICEPLATEAU"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_RESPAWN",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_RESPAWN",
+      "POH_PORTAL_MAG_RESPAWN",
+      "POH_PORTAL_MARBLE_RESPAWN",
+      "POH_PORTAL_LEAGUE_5_RESPAWN"
+    ]
+  },
+  {
+    "description": "POH_PORTAL_BOAT",
+    "height": 120,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [ 0, 0, 0 ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 20,
+    "objectIds": [
+      "POH_PORTAL_TEAK_BOAT",
+      "POH_PORTAL_MAG_BOAT",
+      "POH_PORTAL_MARBLE_BOAT",
+      "POH_PORTAL_LEAGUE_5_BOAT"
+    ]
+  },
+  {
+    "description": "LEAGUE_5_POH_PORTAL_ROOM_FACE",
+    "offset": [ 0, 230, 25 ],
+    "alignment": "CENTER",
+    "radius": 70,
+    "strength": 12,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      "POH_PORTAL_LEAGUE_5_VARROCK",
+      "POH_PORTAL_LEAGUE_5_VARROCK_VARROCK1ST",
+      "POH_PORTAL_LEAGUE_5_VARROCK_GE1ST",
+      "POH_PORTAL_LEAGUE_5_LUMBRIDGE",
+      "POH_PORTAL_LEAGUE_5_FALADOR",
+      "POH_PORTAL_LEAGUE_5_CAMELOT_CAMELOT1ST",
+      "POH_PORTAL_LEAGUE_5_CAMELOT_SEERS1ST",
+      "POH_PORTAL_LEAGUE_5_ARDOUGNE",
+      "POH_PORTAL_LEAGUE_5_YANILLE_WATCHTOWER1ST",
+      "POH_PORTAL_LEAGUE_5_YANILLE_YANILLE1ST",
+      "POH_PORTAL_LEAGUE_5_KHARYRLL",
+      "POH_PORTAL_LEAGUE_5_LUNARISLE",
+      "POH_PORTAL_LEAGUE_5_SENNTISTEN",
+      "POH_PORTAL_LEAGUE_5_ANNAKARL",
+      "POH_PORTAL_LEAGUE_5_WATERBIRTH",
+      "POH_PORTAL_LEAGUE_5_FISHINGGUILD",
+      "POH_PORTAL_LEAGUE_5_MARIM",
+      "POH_PORTAL_LEAGUE_5_KOUREND",
+      "POH_PORTAL_LEAGUE_5_FORTIS",
+      "POH_PORTAL_LEAGUE_5_STRONGHOLD",
+      "POH_PORTAL_LEAGUE_5_CATHERBY",
+      "POH_PORTAL_LEAGUE_5_GHORROCK",
+      "POH_PORTAL_LEAGUE_5_CARRALLANGAR",
+      "POH_PORTAL_LEAGUE_5_WEISS",
+      "POH_PORTAL_LEAGUE_5_ARCEUUS_LIBRARY",
+      "POH_PORTAL_LEAGUE_5_DRAYNOR_MANOR",
+      "POH_PORTAL_LEAGUE_5_BATTLEFRONT",
+      "POH_PORTAL_LEAGUE_5_MIND_ALTAR",
+      "POH_PORTAL_LEAGUE_5_SALVE_GRAVEYARD",
+      "POH_PORTAL_LEAGUE_5_FENKENSTRAIN",
+      "POH_PORTAL_LEAGUE_5_WEST_ARDOUGNE",
+      "POH_PORTAL_LEAGUE_5_HARMONY_ISLAND",
+      "POH_PORTAL_LEAGUE_5_CEMETERY",
+      "POH_PORTAL_LEAGUE_5_BARROWS",
+      "POH_PORTAL_LEAGUE_5_APE_ATOLL",
+      "POH_PORTAL_LEAGUE_5_EMPTY",
+      "POH_PORTAL_LEAGUE_5_TROLLHEIM",
+      "POH_PORTAL_LEAGUE_5_PADDEWWA",
+      "POH_PORTAL_LEAGUE_5_LASSAR",
+      "POH_PORTAL_LEAGUE_5_DAREEYAK",
+      "POH_PORTAL_LEAGUE_5_OURANIA",
+      "POH_PORTAL_LEAGUE_5_BARBARIAN",
+      "POH_PORTAL_LEAGUE_5_KHAZARD",
+      "POH_PORTAL_LEAGUE_5_ICEPLATEAU",
+      "POH_PORTAL_LEAGUE_5_RESPAWN",
+      "POH_PORTAL_LEAGUE_5_BOAT"
+    ]
+  },
+  {
+    "description": "LEAGUE_5_POH_SPIRIT_TREE_RIGHT_EYE",
+    "offset": [ -2, 104, -50 ],
+    "alignment": "CENTER",
+    "radius": 50,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "objectIds": [
+      "LEAGUE_5_POH_SPIRIT_TREE"
+    ]
+  },
+  {
+    "description": "LEAGUE_5_POH_SPIRIT_TREE_LEFT_EYE",
+    "offset": [ 22, 100, -50 ],
+    "alignment": "CENTER",
+    "radius": 50,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "objectIds": [
+      "LEAGUE_5_POH_SPIRIT_TREE"
+    ]
+  },
+  {
+    "description": "LEAGUE_5_POH_SPIRIT_TREE_TOP",
+    "offset": [ 15, 170, -8 ],
+    "alignment": "CENTER",
+    "radius": 70,
+    "strength": 12,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "objectIds": [
+      "LEAGUE_5_POH_SPIRIT_TREE"
     ]
   },
   {
@@ -25902,7 +27485,7 @@
     ]
   },
   {
-    "description": "LITHKREN_BRAZIER",
+    "description": "LITHKREN_BRAZIER_WIDE",
     "height": 450,
     "alignment": "CENTER",
     "radius": 1200,
@@ -25917,6 +27500,42 @@
     "range": 30,
     "objectIds": [
       "DS2_LITHKREN_DUNGEON_BRAZIER"
+    ]
+  },
+  {
+    "description": "LITHKREN_BRAZIER_SHORT",
+    "height": 350,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 100,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "DS2_LITHKREN_DUNGEON_BRAZIER"
+    ]
+  },
+  {
+    "description": "DREAM_BRAZIER",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "LUNAR_MOONCLAN_BRAZIER_LIT"
     ]
   },
   {
@@ -26015,11 +27634,88 @@
     ]
   },
   {
-    "description": "CAMDOZAAL_STATUE",
-    "height": 200,
-    "alignment": "FRONT",
-    "radius": 450,
-    "strength": 30,
+    "description": "CAMDOZAAL_SMALL_TORCH_ON_HOUSE_1",
+    "areas": [ "CAMDOZAAL_HOUSE_LIGHTS_LOW" ],
+    "offset": [ 63, 255, -85 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_RESIDENTIAL01",
+      "BIM_RUINS_WALLKIT_RESIDENTIAL02"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_SMALL_TORCH_ON_HOUSE_2",
+    "areas": [ "CAMDOZAAL_HOUSE_LIGHTS_LOW" ],
+    "offset": [ -63, 255, -85 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_RESIDENTIAL01",
+      "BIM_RUINS_WALLKIT_RESIDENTIAL02"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_SMALL_TORCH_ON_HOUSE_3",
+    "areas": [ "CAMDOZAAL_HOUSE_LIGHTS_HIGH" ],
+    "offset": [ -183, 405, -85 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_RESIDENTIAL01",
+      "BIM_RUINS_WALLKIT_RESIDENTIAL02",
+      "BIM_RUINS_WALLKIT_WORKSHOP01"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_SMALL_TORCH_ON_HOUSE_4",
+    "areas": [ "CAMDOZAAL_HOUSE_LIGHTS_HIGH" ],
+    "offset": [ 183, 405, -85 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_RESIDENTIAL01",
+      "BIM_RUINS_WALLKIT_RESIDENTIAL02",
+      "BIM_RUINS_WALLKIT_WORKSHOP01"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_STATUE_SHORT",
+    "offset": [ 0, 245, -50 ],
+    "radius": 300,
+    "strength": 20,
     "color": [
       0,
       140,
@@ -26033,8 +27729,55 @@
     ]
   },
   {
+    "description": "CAMDOZAAL_STATUE_WIDE",
+    "offset": [ 0, 280, -80 ],
+    "radius": 570,
+    "strength": 7,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_STREETLAMP01"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_BARRIER_OPEN",
+    "offset": [ 0, 150, 0 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      0,
+      150,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "CAMDOZAAL_VAULT_BARRIER_OPEN"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_BARRIER_CLOSED",
+    "offset": [ 0, 150, 0 ],
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      190,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "CAMDOZAAL_VAULT_BARRIER_CLOSED"
+    ]
+  },
+  {
     "description": "CAMDOZAAL_CRYSTALS",
-    "height": 30,
+    "height": 75,
     "alignment": "CENTER",
     "radius": 220,
     "strength": 12.5,
@@ -26045,25 +27788,23 @@
     ],
     "type": "PULSE",
     "duration": 1700,
-    "range": 30,
+    "range": 15,
     "objectIds": [
       "DECOKIT_CRYSTAL_BARRONITE01"
     ]
   },
   {
     "description": "BARRONITE_ROCK",
-    "height": 100,
+    "offset": [ 0, 140, 30 ],
     "alignment": "CENTER",
     "radius": 220,
-    "strength": 17.5,
+    "strength": 10,
     "color": [
       150,
       0,
       255
     ],
-    "type": "PULSE",
-    "duration": 2200,
-    "range": 20,
+    "type": "STATIC",
     "objectIds": [
       "CAMDOZAALROCK1",
       "CAMDOZAALROCK2"
@@ -26071,10 +27812,10 @@
   },
   {
     "description": "CAMDOZAAL_SACRED_FORGE",
-    "height": 100,
+    "offset": [ 0, 100, -120 ],
     "alignment": "CENTER",
-    "radius": 1400,
-    "strength": 12.5,
+    "radius": 800,
+    "strength": 14,
     "color": [
       252,
       148,
@@ -26082,7 +27823,25 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 30,
+    "range": 15,
+    "objectIds": [
+      "BIM_RUINS_WALLKIT_SACRED_FORGE_OP",
+      "BIM_RUINS_WALLKIT_SACRED_FORGE"
+    ]
+  },
+  {
+    "description": "CAMDOZAAL_STATUE_SHORT",
+    "offset": [ 0, 400, -90 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 7.5,
     "objectIds": [
       "BIM_RUINS_WALLKIT_SACRED_FORGE_OP",
       "BIM_RUINS_WALLKIT_SACRED_FORGE"
@@ -26090,46 +27849,26 @@
   },
   {
     "description": "CAMDOZAAL_VAULT_ORANGE_LIGHT",
-    "height": 30,
-    "alignment": "CENTER",
-    "radius": 200,
-    "strength": 12.5,
+    "offset": [ 0, 50, 70 ],
+    "radius": 220,
+    "strength": 30,
     "color": [
       252,
       190,
       0
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
     "duration": 0,
-    "range": 0,
+    "range": 10,
     "objectIds": [
       "BIM_VAULT_WALL01"
     ]
   },
   {
-    "description": "CAMDOZAAL_WATERFALL",
-    "height": 500,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 15,
-    "color": [
-      255,
-      255,
-      255
-    ],
-    "type": "STATIC",
-    "duration": 0,
-    "range": 0,
-    "objectIds": [
-      "CAVEKIT_WATERFALL_CAMDOZAAL"
-    ]
-  },
-  {
     "description": "camdozaal lantern",
-    "height": 175,
-    "alignment": "BACK",
-    "radius": 300,
-    "strength": 25,
+    "offset": [ -34, 180, 26 ],
+    "radius": 325,
+    "strength": 20,
     "color": [
       252,
       148,
@@ -27611,7 +29350,7 @@
     "description": "TELEPORT_TABLET",
     "height": 75,
     "alignment": "CENTER",
-    "radius": 120,
+    "radius": 135,
     "strength": 75,
     "fixedDespawnTime": true,
     "color": [
@@ -27653,7 +29392,7 @@
   },
   {
     "description": "TRAILBLAZER_HOME_TELEPORT_START",
-    "height": 20,
+    "height": 50,
     "alignment": "CENTER",
     "radius": 350,
     "strength": 25,
@@ -27674,7 +29413,7 @@
   },
   {
     "description": "TRAILBLAZER_HOME_TELEPORT_MIDDLE",
-    "height": 20,
+    "height": 50,
     "alignment": "CENTER",
     "radius": 350,
     "strength": 25,
@@ -27687,10 +29426,31 @@
     "duration": 0,
     "range": 20,
     "fadeInDuration": 200,
-    "fadeOutDuration": 1500,
     "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE_4_HOME_TELEPORT_SPOTANIM_4"
+    ]
+  },
+  {
+    "description": "TRAILBLAZER_HOME_TELEPORT_END",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1400,
+    "fadeOutDuration": 1500,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [
+      "LEAGUE_4_HOME_TELEPORT_SPOTANIM_5"
     ]
   },
   {
@@ -27713,7 +29473,7 @@
     ]
   },
   {
-    "description": "SHATTERED_HOME_TELEPORT_END",
+    "description": "SHATTERED_HOME_TELEPORT_MIDDLE",
     "height": 20,
     "alignment": "CENTER",
     "radius": 200,
@@ -27726,10 +29486,31 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "fadeOutDuration": 1000,
     "despawnWithParent": true,
     "graphicsObjectIds": [
       "LEAGUE03_HOME_TELEPORT_SPOTANIM_5"
+    ]
+  },
+  {
+    "description": "SHATTERED_HOME_TELEPORT_END",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 25,
+    "color": [
+      37,
+      148,
+      225
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "range": 20,
+    "fadeOutDuration": 1000,
+    "despawnWithParent": true,
+    "graphicsObjectIds": [
+      "LEAGUE03_HOME_TELEPORT_SPOTANIM_6"
     ]
   },
   {
@@ -27745,6 +29526,7 @@
     "spawnDelay": 500,
     "fixedDespawnTime": true,
     "despawnDelay": 2700,
+    "fadeOutDuration": 200,
     "fadeInDuration": 900,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_02"
@@ -27761,7 +29543,7 @@
     "duration": 0,
     "range": 20,
     "fadeInDuration": 500,
-    "fadeOutDuration": 100,
+    "fadeOutDuration": 200,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_03"
     ]
@@ -27776,10 +29558,10 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "fadeOutDuration": 900,
+    "fadeOutDuration": 2000,
     "fixedDespawnTime": true,
     "despawnWithParent": true,
-    "despawnDelay": 3800,
+    "despawnDelay": 800,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_04"
     ]
@@ -27801,6 +29583,303 @@
     "despawnDelay": 3800,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START",
+    "offset": [ 0, 50, 0 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_1",
+    "offset": [ -45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_2",
+    "offset": [ 45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_3",
+    "offset": [ -45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_START_HIGHLIGHT_4",
+    "offset": [ 45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 300,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_04"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_1",
+    "offset": [ -45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_2",
+    "offset": [ 45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_3",
+    "offset": [ -45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_MIDDLE_HIGHLIGHT_4",
+    "offset": [ 45, 40, -40 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_05",
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_06"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_1",
+    "offset": [ 45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_2",
+    "offset": [ -45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_3",
+    "offset": [ -45, 40, -45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
+    ]
+  },
+  {
+    "description": "DEMONIC_PACTS_HOME_TELEPORT_END_HIGHLIGHT_4",
+    "offset": [ 45, 40, 45 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "LEAGUES_6_HOME_TELEPORT_SPOTANIM_07"
     ]
   },
   {
@@ -29660,7 +31739,7 @@
   },
   {
     "description": "CRUMBLE_UNDEAD",
-    "radius": 225,
+    "radius": 300,
     "strength": 6,
     "color": [
       255,
@@ -29678,12 +31757,12 @@
   },
   {
     "description": "CRUMBLE_UNDEAD_CAST_RIGHT",
-    "offset": [ 40, 100, 50 ],
-    "radius": 175,
+    "offset": [ 50, 100, 50 ],
+    "radius": 185,
     "strength": 6,
     "spawnDelay": 250,
     "fixedDespawnTime": true,
-    "despawnDelay": 400,
+    "despawnDelay": 550,
     "color": [
       255,
       255,
@@ -29693,19 +31772,19 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 100,
-    "fadeOutDuration": 250,
+    "fadeOutDuration": 350,
     "graphicsObjectIds": [
       "CRUMBLEUNDEAD_CASTING"
     ]
   },
   {
     "description": "CRUMBLE_UNDEAD_CAST_LEFT",
-    "offset": [ -40, 100, 50 ],
+    "offset": [ -50, 100, 50 ],
     "radius": 175,
     "strength": 6,
     "spawnDelay": 250,
     "fixedDespawnTime": true,
-    "despawnDelay": 400,
+    "despawnDelay": 550,
     "color": [
       255,
       255,
@@ -29715,9 +31794,124 @@
     "duration": 0,
     "range": 0,
     "fadeInDuration": 100,
-    "fadeOutDuration": 250,
+    "fadeOutDuration": 350,
     "graphicsObjectIds": [
       "CRUMBLEUNDEAD_CASTING"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_IMPACT_NORTH",
+    "offset": [ 0, 100, -120 ],
+    "radius": 200,
+    "strength": 6,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 500,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_IMPACT"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_IMPACT_SOUTH",
+    "offset": [ 0, 100, 120 ],
+    "radius": 175,
+    "strength": 6,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 500,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_IMPACT"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_IMPACT_WEST",
+    "offset": [ 120, 100, 0 ],
+    "radius": 200,
+    "strength": 6,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 500,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_IMPACT"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_IMPACT_EAST",
+    "offset": [ -120, 100, 0 ],
+    "radius": 200,
+    "strength": 6,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 500,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_IMPACT"
+    ]
+  },
+  {
+    "description": "CRUMBLE_UNDEAD_IMPACT_MIDDLE",
+    "offset": [ 0, 100, 0 ],
+    "radius": 250,
+    "strength": 6,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "despawnDelay": 700,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "CRUMBLEUNDEAD_IMPACT"
     ]
   },
   {
@@ -29835,6 +32029,27 @@
     ]
   },
   {
+    "description": "TRIDENT_SWAMP_CAST",
+    "offset": [ 10, 350, 15 ],
+    "radius": 400,
+    "strength": 7,
+    "color": [
+      0,
+      167,
+      204
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2000,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "TOXIC_TOTS_CASTING"
+    ]
+  },
+  {
     "description": "TRIDENT_SEA_SPELL",
     "radius": 400,
     "strength": 7.5,
@@ -29853,13 +32068,71 @@
     ]
   },
   {
+    "description": "TRIDENT_SEA_SPELL_LEAGUES",
+    "radius": 400,
+    "height": 75,
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 300,
+    "projectileIds": [
+      "SLAYER_TOTS_PROJECTILE_ORN_LEAGUES6"
+    ]
+  },
+  {
+    "description": "TRIDENT_SEA_SPELL_LEAGUES_CAST",
+    "radius": 400,
+    "offset": [ 0, 240, 10 ],
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1400,
+    "spawnDelay": 350,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [ "SLAYER_TOTS_CASTING_ORN_LEAGUES6" ]
+  },
+  {
+    "description": "TRIDENT_SEA_SPELL_LEAGUES_IMPACT",
+    "offset": [ 0, 240, 0 ],
+    "radius": 280,
+    "strength": 7,
+    "color": [
+      255,
+      70,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "fadeInDuration": 200,
+    "graphicsObjectIds": [ "SLAYER_TOTS_IMPACT_ORN_LEAGUES6" ]
+  },
+  {
     "description": "WARPED_SCEPTER_SPELL",
     "alignment": "CENTER",
-    "radius": 200,
-    "strength": 10,
+    "height": 10,
+    "radius": 180,
+    "strength": 50,
     "color": [
-      170,
-      20,
+      70,
+      10,
       255
     ],
     "type": "FLICKER",
@@ -29873,35 +32146,53 @@
   {
     "description": "Tumeken's Shadow Projectile",
     "alignment": "CENTER",
-    "height": -100,
+    "height": -50,
     "radius": 200,
     "strength": 20,
     "color": "#ffb570",
     "type": "FLICKER",
     "duration": 0,
     "range": 30,
-    "spawnDelay": 700,
     "fadeInDuration": 400,
-    "fadeOutDuration": 600,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "TUMEKENS_SHADOW_TRAVEL"
     ]
   },
   {
-    "description": "Tumeken's Shadow Cast",
+    "description": "Tumeken's Shadow Impact",
     "alignment": "CENTER",
-    "height": 210,
+    "height": 60,
+    "radius": 300,
+    "strength": 20,
+    "color": "#ffb570",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "waitForAnimation": true,
+    "fixedDespawnTime": true,
+    "despawnDelay": 650,
+    "spawnDelay": 200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 350,
+    "graphicsObjectIds": [
+      "TUMEKENS_SHADOW_IMPACT"
+    ]
+  },
+  {
+    "description": "Tumeken's Shadow Cast",
+    "offset": [ 0, 210, 60 ],
     "radius": 250,
-    "fixedDespawnTime": false,
+    "fixedDespawnTime": true,
     "strength": 15,
     "color": "#FFA756",
     "type": "FLICKER",
     "duration": 0,
     "range": 0,
-    "spawnDelay": 700,
-    "despawnDelay": 25,
-    "fadeInDuration": 100,
-    "fadeOutDuration": 175,
+    "spawnDelay": 750,
+    "despawnDelay": 700,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 200,
     "graphicsObjectIds": [
       "TUMEKENS_SHADOW_CASTING"
     ]
@@ -30689,7 +32980,7 @@
     ]
   },
   {
-    "description": "Dragonfire Projectile",
+    "description": "Metallic Dragonfire Projectile",
     "radius": 700,
     "strength": 12.5,
     "color": [
@@ -30700,15 +32991,15 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 300,
-    "fadeOutDuration": 100,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
     "fadeOverlap": true,
     "projectileIds": [
       "FIREBREATH_TRAVEL"
     ]
   },
   {
-    "description": "Dragonfire Breath",
+    "description": "Chromatic Dragonfire Breath",
     "offset": [ 0, 200, 290 ],
     "radius": 275,
     "strength": 20,
@@ -30728,7 +33019,24 @@
     "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
   },
   {
-    "description": "Dragonfire Breath Highlight",
+    "description": "Chromatic Dragonfire Breath - Ranged",
+    "offset": [ 0, 0, 0 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 300,
+    "projectileIds": [ "DRAGON_RANGED_FIRE_ATTACK" ]
+  },
+  {
+    "description": "Chromatic Dragonfire Breath Highlight",
     "offset": [ 0, 140, 390 ],
     "radius": 100,
     "strength": 40,
@@ -30766,6 +33074,152 @@
     "fadeInDuration": 500,
     "fadeOutDuration": 300,
     "graphicsObjectIds": [ "FROSTBREATH_ATTACK" ]
+  },
+  {
+    "description": "Dragonfire Shield - Unleash",
+    "offset": [ 75, 100, 0 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [ "QIP_DRAGON_SLAYER_SHIELD_ATTACK_SPOTANIM" ]
+  },
+  {
+    "description": "Dragonfire Shield - Projectile",
+    "offset": [ 0, 30, 0 ],
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 150,
+    "projectileIds": [ "QIP_DRAGON_SLAYER_PLAYER_PROJANIM" ]
+  },
+  {
+    "description": "Dragonfire Shield - Projectile - Impact",
+    "offset": [ 0, 100, 75 ],
+    "radius": 350,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "spawnDelay": 100,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "despawnDelay": 600,
+    "fixedDespawnTime": true,
+    "waitForAnimation": true,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [ "QIP_DRAGON_SLAYER_PLAYER_IMPACT" ]
+  },
+  {
+    "description": "Dragonfire Shield - Gain Charge Short",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_ONE",
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_TWO"
+    ]
+  },
+  {
+    "description": "Dragonfire Shield - Gain Charge Medium",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1250,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_THREE"
+    ]
+  },
+  {
+    "description": "Dragonfire Shield - Gain Charge Long",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1450,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_FOUR",
+      "QIP_DRAGON_SLAYER_SHIELD_CHARGE_FIVE"
+    ]
+  },
+  {
+    "description": "Dragonfire Shield - Empty Charges",
+    "offset": [ 0, 100, 75 ],
+    "radius": 175,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 950,
+    "fadeInDuration": 325,
+    "fadeOutDuration": 250,
+    "graphicsObjectIds": [
+      "QIP_DRAGON_SLAYER_PLAYER_RELEASING_CHARGE"
+    ]
   },
   {
     "description": "UNDEAD_DRUID",
@@ -30942,10 +33396,9 @@
   },
   {
     "description": "ANCIENT_CAVERN_DRAGON_HEAD",
-    "height": 200,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 10,
+    "offset": [ 0, 185, 200 ],
+    "radius": 600,
+    "strength": 15,
     "color": [
       252,
       122,
@@ -30960,7 +33413,7 @@
   },
   {
     "description": "ANCIENT_CAVERN_LAVA_POOL",
-    "height": 200,
+    "height": 100,
     "alignment": "CENTER",
     "radius": 300,
     "strength": 7.5,
@@ -30983,10 +33436,9 @@
   },
   {
     "description": "ANCIENT_CAVERN_DRAGON_HEADS",
-    "height": 200,
-    "alignment": "FRONT",
-    "radius": 500,
-    "strength": 12.5,
+    "offset": [ 0, 150, -150 ],
+    "radius": 550,
+    "strength": 15,
     "color": [
       252,
       122,
@@ -34353,21 +36805,117 @@
     ]
   },
   {
-    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT",
-    "height": 1000,
+    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_TOP",
+    "offset": [ 40, 800, 0 ],
     "alignment": "CENTER",
-    "radius": 2000,
-    "strength": 6,
+    "radius": 1200,
+    "strength": 20,
     "color": [
       255,
       255,
       255
     ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 0,
+    "type": "STATIC",
     "objectIds": [
       "MM2_CAVE_BOSS_EXIT"
+    ]
+  },
+  {
+    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_MIDDLE_1",
+    "offset": [ 45, 500, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "MM2_CAVE_BOSS_EXIT"
+    ]
+  },
+  {
+    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_MIDDLE_2",
+    "offset": [ 45, 250, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "MM2_CAVE_BOSS_EXIT"
+    ]
+  },
+  {
+    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_FLOOR_HIGHLIGHT",
+    "offset": [ 35, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 13,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "MM2_CAVE_BOSS_EXIT"
+    ]
+  },
+  {
+    "description": "MM2_CRASH_SITE_CAVE_SKYLIGHT_FLOOR_SPOTLIGHT",
+    "offset": [ -14, 150, 0 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 4,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "MM2_CAVE_BOSS_EXIT"
+    ]
+  },
+  {
+    "description": "MM2_GORILLA_MAGIC_ATTACK_PROJECTILE",
+    "offset": [ 0, 125, 0 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      50
+    ],
+    "type": "STATIC",
+    "projectileIds": [
+      "MM2_GORILLA_SPELL" ]
+  },
+  {
+    "description": "MM2_GORILLA_MAGIC_ATTACK_IMPACT",
+    "offset": [ 0, 85, 10 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 10,
+    "waitForAnimation": true,
+    "fadeOutDuration": 300,
+    "color": [
+      0,
+      255,
+      50
+    ],
+    "type": "FLICKER",
+    "range": 40,
+    "graphicsObjectIds": [
+      "MM2_GORILLA_SPELLSPLAT"
     ]
   },
   {
@@ -34569,9 +37117,26 @@
     ]
   },
   {
-    "description": "TOA_FLAME_ENTRANCE",
-    "height": 140,
-    "alignment": "CENTER",
+    "description": "TOA_FLAME_ENTRANCE_DIAGONAL",
+    "offset": [ -45, 140, -45 ],
+    "radius": 400,
+    "strength": 100,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 10,
+    "objectIds": [
+      "TOA_NEXUS_CRONDIS_DOOR",
+      "TOA_NEXUS_SCABARAS_DOOR"
+    ]
+  },
+  {
+    "description": "TOA_FLAME_ENTRANCE_HORIZONTAL",
+    "offset": [ 0, 140, -90 ],
     "radius": 400,
     "strength": 100,
     "color": [
@@ -34586,10 +37151,8 @@
       "TOA_LOBBY_RAID_ENTRY",
       "TOA_LOBBY_RAID_ENTRY_NOOP",
       "TOA_NEXUS_HET_DOOR",
-      "TOA_NEXUS_CRONDIS_DOOR",
-      "TOA_NEXUS_SCABARAS_DOOR",
       "TOA_NEXUS_APMEKEN_DOOR",
-      "TOA_NEXUS_WARDENS_DOOR"
+      "TOA_NEXUS_WARDENS_DOOR_OPEN"
     ]
   },
   {
@@ -34611,11 +37174,10 @@
     ]
   },
   {
-    "description": "TOA_INVOCATION_BOARD_LEFT",
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 130,
-    "strength": 100,
+    "description": "TOA_INVOCATION_BOARD_1",
+    "offset": [ -35, 205, 116 ],
+    "radius": 55,
+    "strength": 165,
     "color": [
       175,
       18,
@@ -34624,17 +37186,15 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3362,
-    "worldY": 9115,
-    "plane": 0,
-    "fadeInDuration": 0
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
   },
   {
-    "description": "TOA_INVOCATION_BOARD_MIDDLE",
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 150,
-    "strength": 100,
+    "description": "TOA_INVOCATION_BOARD_2",
+    "offset": [ -35, 205, 35 ],
+    "radius": 50,
+    "strength": 165,
     "color": [
       175,
       18,
@@ -34643,17 +37203,15 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3363,
-    "worldY": 9115,
-    "plane": 0,
-    "fadeInDuration": 0
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
   },
   {
-    "description": "TOA_INVOCATION_BOARD_RIGHT",
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 130,
-    "strength": 100,
+    "description": "TOA_INVOCATION_BOARD_3",
+    "offset": [ -35, 208, -28 ],
+    "radius": 50,
+    "strength": 90,
     "color": [
       175,
       18,
@@ -34662,17 +37220,237 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "worldX": 3364,
-    "worldY": 9115,
-    "plane": 0,
-    "fadeInDuration": 0
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_4",
+    "offset": [ -40, 208, -52 ],
+    "radius": 50,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_5",
+    "offset": [ -35, 205, -123 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_6",
+    "offset": [ -50, 128, -123 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_7",
+    "offset": [ -50, 128, -47 ],
+    "radius": 50,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_8",
+    "offset": [ -50, 124, 36 ],
+    "radius": 50,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_9",
+    "offset": [ -50, 124, 116 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_10",
+    "offset": [ -65, 52, 116 ],
+    "radius": 60,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_11",
+    "offset": [ -65, 39, 45 ],
+    "radius": 57,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_12",
+    "offset": [ -65, 59, 26 ],
+    "radius": 60,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_13",
+    "offset": [ -65, 45, -30 ],
+    "radius": 53,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_14",
+    "offset": [ -65, 45, -55 ],
+    "radius": 60,
+    "strength": 90,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_15",
+    "offset": [ -65, 45, -123 ],
+    "radius": 55,
+    "strength": 165,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
+  },
+  {
+    "description": "TOA_INVOCATION_BOARD_15",
+    "offset": [ 0, 130, 0 ],
+    "radius": 200,
+    "strength": 140,
+    "color": [
+      175,
+      18,
+      9
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "objectIds": [
+      "TOA_INVOCATION_BOARD"
+    ]
   },
   {
     "description": "TOA_GROUPING_OBELISK_NE",
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 10,
     "color": [
       175,
       18,
@@ -34691,7 +37469,7 @@
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 50,
     "color": [
       175,
       18,
@@ -34710,7 +37488,7 @@
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 110,
     "color": [
       175,
       18,
@@ -34729,7 +37507,7 @@
     "height": 550,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 25,
+    "strength": 30,
     "color": [
       175,
       18,
@@ -34747,16 +37525,14 @@
     "description": "TOA_TELEPORT_CRYSTAL",
     "height": 220,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 50,
+    "radius": 400,
+    "strength": 60,
     "color": [
       175,
       18,
       9
     ],
-    "type": "PULSE",
-    "duration": 1800,
-    "range": 9,
+    "type": "STATIC",
     "objectIds": [
       "KEPHRI_TELEPORT",
       "ZEBAK_TELEPORT",
@@ -34995,7 +37771,7 @@
   },
   {
     "description": "TOA_ORANGE_FLAME_PROJECTILE",
-    "radius": 600,
+    "radius": 375,
     "strength": 7,
     "color": [
       255,
@@ -35006,9 +37782,127 @@
     "duration": 600,
     "range": 3,
     "fadeInDuration": 0,
+    "fadeOutDuration": 350,
     "projectileIds": [
       "VORKATH_AREA_TRAVEL",
       "VORKATH_AREA_TRAVEL_SMALL"
+    ]
+  },
+  {
+    "description": "Vorkath Rapid Fireballs",
+    "offset": [ 0, 5, 0 ],
+    "radius": 300,
+    "strength": 7,
+    "color": [
+      255,
+      130,
+      70
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "fadeInDuration": 150,
+    "projectileIds": [
+      "VORKATH_AREA_SMALL_TRAVEL"
+    ]
+  },
+  {
+    "description": "Vorkath Magic Attack Projectile",
+    "radius": 300,
+    "strength": 5,
+    "color": [
+      215,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "projectileIds": [
+      "VORKATH_MAGIC_TRAVEL"
+    ]
+  },
+  {
+    "description": "Vorkath Magic Attack Impact",
+    "offset": [ 0, 150, 0 ],
+    "radius": 400,
+    "strength": 5,
+    "waitForAnimation": true,
+    "color": [
+      215,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "VORKATH_MAGIC_IMPACT"
+    ]
+  },
+  {
+    "description": "Vorkath Venom Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 450,
+    "strength": 20,
+    "color": [
+      30,
+      110,
+      10
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 400,
+    "projectileIds": [
+      "DRAGON_RANGED_VENOM_ATTACK"
+    ]
+  },
+  {
+    "description": "Vorkath Venom Impact",
+    "offset": [ 0, 150, 0 ],
+    "radius": 600,
+    "strength": 6,
+    "waitForAnimation": true,
+    "color": [
+      30,
+      110,
+      10
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 600,
+    "graphicsObjectIds": [
+      "DRAGON_VENOM_IMPACT"
+    ]
+  },
+  {
+    "description": "Vorkath Prayer Corruption Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 400,
+    "projectileIds": [
+      "DRAGON_RANGED_CORRUPTING_ATTACK"
+    ]
+  },
+  {
+    "description": "Vorkath Prayer Corruption Impact",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 4,
+    "waitForAnimation": true,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [
+      "DRAGON_CORRUPTING_IMPACT"
     ]
   },
   {
@@ -35105,7 +37999,7 @@
     "description": "TOA_CRONDIS_MAGE_ORB",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 500,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -35115,6 +38009,7 @@
     "type": "FLICKER",
     "duration": 300,
     "range": 3,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "ZEBAK_MAGE_PROJANIM_SPLIT"
     ]
@@ -35187,8 +38082,7 @@
       50
     ],
     "type": "FLICKER",
-    "duration": 600,
-    "range": 2,
+    "range": 50,
     "npcIds": [
       "TOA_WARDENS_ENERGY"
     ]
@@ -35335,7 +38229,7 @@
   },
   {
     "description": "TOA_WARDEN_P2_MAGE_SKULL_BASIC",
-    "radius": 500,
+    "radius": 350,
     "strength": 15,
     "color": [
       255,
@@ -35344,6 +38238,7 @@
     ],
     "type": "PULSE",
     "duration": 300,
+    "fadeOutDuration": 200,
     "range": 2,
     "projectileIds": [
       "FX_WARDENS_BOMB01"
@@ -35351,8 +38246,9 @@
   },
   {
     "description": "TOA_WARDEN_P2_OBELISK_LIGHTNING_BALL",
-    "radius": 500,
-    "strength": 50,
+    "radius": 350,
+    "height": 30,
+    "strength": 30,
     "color": [
       255,
       200,
@@ -35360,6 +38256,7 @@
     ],
     "type": "PULSE",
     "duration": 300,
+    "fadeOutDuration": 200,
     "range": 2,
     "projectileIds": [
       "FX_WARDENS_BOMB02"
@@ -35375,9 +38272,8 @@
       25,
       25
     ],
-    "type": "PULSE",
-    "duration": 300,
-    "range": 2,
+    "type": "FLICKER",
+    "range": 50,
     "projectileIds": [
       "PROJECTILE_WARDEN_TUMEKEN_CORE",
       "PROJECTILE_WARDEN_ELIDINIS_CORE"
@@ -35567,19 +38463,61 @@
   },
   {
     "description": "TOA_LOOT_SARCOPHAGUS_PURPLE",
-    "height": 100,
+    "height": 250,
     "alignment": "CENTER",
     "radius": 700,
     "strength": 30,
     "color": [
-      145,
+      200,
       55,
-      197
+      255
     ],
     "type": "STATIC",
     "duration": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 10000,
     "range": 3,
-    "objectIds": [ ]
+    "objectIds": [
+      "TOA_VAULT_SARCOPHAGUS_CLOSED_RARE",
+      "TOA_VAULT_SARCOPHAGUS_OPEN"
+    ]
+  },
+  {
+    "description": "TOA_LOBBY_EXIT",
+    "offset": [ 0, 215, -35 ],
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "TOA_LOBBY_EXIT"
+    ]
+  },
+  {
+    "description": "TOA_OSMUMTEN_GHOST",
+    "offset": [ 0, 100, 0 ],
+    "radius": 250,
+    "strength": 7,
+    "spawnDelay": 200,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "npcIds": [
+      "TOA_OSMUMTEN_VAULT_VIS_2",
+      "TOA_OSMUMTEN_VIS"
+    ]
   },
   {
     "description": "CAVE_WALL_LANTERN",
@@ -35711,8 +38649,7 @@
   },
   {
     "description": "Secrets of the North - Candle",
-    "height": 240,
-    "alignment": "LEFT",
+    "offset": [ -75, 240, 0 ],
     "radius": 350,
     "strength": 12.5,
     "color": [
@@ -35722,9 +38659,157 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 3,
+    "range": 10,
     "objectIds": [
       "GHORROCK_WALL_CANDLE01"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Alcove Statue Candle",
+    "offset": [ -5, 180, 0 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "GHORROCK_STONE01_DECORATIVE01"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 1",
+    "offset": [ -80, 50, -50 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 2",
+    "offset": [ -155, 50, -30 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 3",
+    "offset": [ 80, 50, -40 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 4",
+    "offset": [ 160, 50, -35 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 5",
+    "offset": [ 120, 340, -55 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 6",
+    "offset": [ -120, 340, -55 ],
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_ENTRY_OP",
+      "DT2_GHORROCK_ENTRY_NOOP",
+      "DT2_GHORROCK_EXIT"
+    ]
+  },
+  {
+    "description": "Secrets of the North - Prison Door Candle 6",
+    "offset": [ 0, 100, -30 ],
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      9,
+      149,
+      199
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "DT2_GHORROCK_PRAYER_ICON"
     ]
   },
   {
@@ -36241,10 +39326,10 @@
   },
   {
     "description": "The Scar red flames",
-    "height": 30,
+    "height": 80,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 8,
+    "strength": 7,
     "color": [
       175,
       18,
@@ -36255,6 +39340,62 @@
     "range": 15,
     "objectIds": [
       "DT2_SCAR_FIRE03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 1",
+    "offset": [ -20, 75, 120 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT02",
+      "DT2_SCAR_BROKEN_BOAT03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 2",
+    "offset": [ 60, 100, -150 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT02",
+      "DT2_SCAR_BROKEN_BOAT03"
+    ]
+  },
+  {
+    "description": "The Scar Burning Boat 3",
+    "offset": [ 0, 170, 0 ],
+    "alignment": "CENTER",
+    "radius": 310,
+    "strength": 8.5,
+    "color": [
+      130,
+      0,
+      160
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [
+      "DT2_SCAR_BROKEN_BOAT01"
     ]
   },
   {
@@ -36303,7 +39444,8 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "VFX_LEVIATHAN_01_PROJECTILE_MAGIC_01"
     ]
@@ -36320,7 +39462,8 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "VFX_LEVIATHAN_01_PROJECTILE_RANGED_01"
     ]
@@ -36337,7 +39480,8 @@
     "type": "FLICKER",
     "duration": 600,
     "range": 3,
-    "fadeInDuration": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "VFX_LEVIATHAN_01_PROJECTILE_MELEE_01"
     ]
@@ -36356,10 +39500,24 @@
     ]
   },
   {
+    "description": "Lassar Undercity Shadow Blocker",
+    "radius": 375,
+    "strength": 25,
+    "height": 120,
+    "color": [
+      255, 255, 255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "DT2_LASSAR_SHADOW_BLOCKER_SHADOW",
+      "DT2_LASSAR_SHADOW_BLOCKER_NORMAL"
+    ]
+  },
+  {
     "description": "Lassar Undercity brazier",
     "radius": 400,
     "strength": 50,
-    "height": 40,
+    "height": 140,
     "color": [
       4,
       168,
@@ -36370,7 +39528,44 @@
     "range": 3,
     "fadeInDuration": 0,
     "objectIds": [
-      "DT2_LASSAR_SHADOW_BRAZIER_LIT_PERMANENTLY"
+      "DT2_LASSAR_SHADOW_BRAZIER_LIT_PERMANENTLY",
+      "DT2_LASSAR_SHADOW_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Lassar Undercity Remnant",
+    "radius": 300,
+    "strength": 25,
+    "height": 140,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "objectIds": [
+      "DT2_LASSAR_REMNANT_STRONG"
+    ]
+  },
+  {
+    "description": "Lassar Undercity Remnant",
+    "radius": 250,
+    "strength": 10,
+    "height": 140,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 3,
+    "fadeInDuration": 0,
+    "objectIds": [
+      "DT2_LASSAR_REMNANT_WEAK"
     ]
   },
   {
@@ -36408,9 +39603,9 @@
   },
   {
     "description": "Lassar Undercity teleporter",
-    "radius": 350,
-    "strength": 125,
-    "height": 128,
+    "radius": 370,
+    "strength": 300,
+    "height": 220,
     "color": [
       112, 69, 126
     ],
@@ -36440,7 +39635,7 @@
   },
   {
     "description": "Lassar Undercity lost soul",
-    "radius": 600,
+    "radius": 350,
     "strength": 15,
     "height": 140,
     "color": [
@@ -36451,6 +39646,113 @@
     "range": 5,
     "npcIds": [
       "DT2_LASSAR_GHOST"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Entry Portal",
+    "radius": 300,
+    "strength": 15,
+    "height": 140,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "objectIds": [
+      "DT2_HIDEOUT_ENTRY_VIS"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Escape Portal",
+    "radius": 500,
+    "strength": 10,
+    "offset": [ 0, 150, 35 ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "objectIds": [
+      "DT2_HIDEOUT_BARRIER_ESCAPE",
+      "DT2_HIDEOUT_BARRIER_LEAVE"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Exit Portal Middle",
+    "radius": 500,
+    "strength": 10,
+    "offset": [ -65, 150, 0 ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "objectIds": [
+      "DT2_HIDEOUT_EXIT",
+      "DT2_HIDEOUT_EXIT_NOOP"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Exit Portal Left",
+    "radius": 250,
+    "strength": 7,
+    "offset": [ -65, 150, 110 ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "objectIds": [
+      "DT2_HIDEOUT_EXIT",
+      "DT2_HIDEOUT_EXIT_NOOP"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Exit Portal Right",
+    "radius": 250,
+    "strength": 7,
+    "offset": [ -65, 150, -110 ],
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "objectIds": [
+      "DT2_HIDEOUT_EXIT",
+      "DT2_HIDEOUT_EXIT_NOOP"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Wall Torch",
+    "height": 235,
+    "offset": [ -40, -55, 0 ],
+    "radius": 275,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "DT2_WALL_TOMB01_TORCH01"
     ]
   },
   {
@@ -36471,11 +39773,118 @@
     ]
   },
   {
-    "description": "MAGE_TRAIN_ARENA_WALL_CRYSTALS",
-    "height": 210,
-    "alignment": "FRONT",
+    "description": "Mysterious Figure's Hideout - Purple Magic Attack - Projectile",
+    "radius": 275,
+    "strength": 10,
+    "offset": [ 0, 0, -0 ],
+    "color": [
+      125,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "fadeOutDuration": 200,
+    "fadeInDuration": 100,
+    "range": 5,
+    "projectileIds": [
+      "PURSUER_MAGIC_TRAVEL"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Purple Magic Attack - Impact",
+    "radius": 250,
+    "strength": 15,
+    "offset": [ 0, 40, -0 ],
+    "color": [
+      125,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "fadeOutDuration": 300,
+    "fadeInDuration": 100,
+    "range": 10,
+    "graphicsObjectIds": [
+      "PURSUER_MAGIC_IMPACT"
+    ]
+  },
+  {
+    "description": "Mysterious Figure's Hideout - Purple Magic Attack - Cast",
     "radius": 300,
-    "strength": 5.5,
+    "strength": 9,
+    "offset": [ 0, 200, -0 ],
+    "fadeInDuration": 250,
+    "fadeOutDuration": 400,
+    "color": [
+      170,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "graphicsObjectIds": [
+      "PURSUER_MAGIC_TRAVEL_SHORT"
+    ]
+  },
+  {
+    "description": "DT2 - Wights",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 10,
+    "fadeInDuration": 100,
+    "despawnWithParent": true,
+    "color": [
+      255,
+      0,
+      200
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "npcIds": [
+      "DT2_TORAG_CUTSCENE",
+      "DT2_AHRIM_CUTSCENE",
+      "DT2_DHAROK_CUTSCENE",
+      "DT2_GUTHAN_CUTSCENE",
+      "DT2_KARIL_CUTSCENE",
+      "DT2_VERAC_CUTSCENE",
+      "DT2_TORAG_COMBAT",
+      "DT2_AHRIM_COMBAT",
+      "DT2_DHAROK_COMBAT",
+      "DT2_GUTHAN_COMBAT",
+      "DT2_KARIL_COMBAT",
+      "DT2_VERAC_COMBAT",
+      "DT2_ASSASSIN_WIGHT_COMBAT",
+      "DT2_KETLA_WIGHT_COMBAT",
+      "DT2_PERSTEN_WIGHT_COMBAT",
+      "DT2_KASONDE_WIGHT_COMBAT",
+      "DT2_WIGHT_PERSTEN_PORTAL"
+    ]
+  },
+  {
+    "description": "DT2 - Elder Horn Teleporting",
+    "height": 500,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 25,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 100,
+    "color": [
+      170,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 30,
+    "objectIds": [
+      "DT2_ELDER_HORN_ANIM"
+    ]
+  },
+  {
+    "description": "MAGE_TRAIN_ARENA_WALL_CRYSTALS",
+    "offset": [ 0, 210, 100 ],
+    "radius": 300,
+    "strength": 4.5,
     "color": [
       252,
       252,
@@ -36491,10 +39900,11 @@
   },
   {
     "description": "MAGE_TRAIN_ARENA_CANDLEABRA",
-    "height": 210,
+    "height": 267,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 10,
+    "visibleFromOtherPlanes": true,
+    "radius": 330,
+    "strength": 7,
     "color": [
       252,
       148,
@@ -36509,24 +39919,23 @@
   },
   {
     "description": "MAGE_TRAIN_ARENA_AREA_PORTALS",
-    "height": 140,
-    "alignment": "CENTER",
-    "radius": 220,
+    "offset": [ 0, 140, 0 ],
+    "radius": 180,
     "strength": 11,
     "color": [
-      143,
-      0,
-      255
+      200,
+      70,
+      200
     ],
-    "type": "PULSE",
-    "duration": 1100,
+    "type": "FLICKER",
     "range": 20,
     "objectIds": [
       "MAGICTRAINING_TELEDOOR",
       "MAGICTRAINING_ENCHANTDOOR",
       "MAGICTRAINING_ALCHEMDOOR",
       "MAGICTRAINING_GRAVEDOOR",
-      "MAGICTRAINING_RETURNDOOR"
+      "MAGICTRAINING_RETURNDOOR",
+      "MAGICTRAINING_HIDDEN_PORTAL_ENTRANCE1"
     ]
   },
   {
@@ -36566,19 +39975,23 @@
     ]
   },
   {
-    "description": "MAGE_TRAIN_ARENA_EGG_STATUE",
+    "description": "MAGE_TRAIN_ARENA_BONE_DROP",
     "height": 200,
     "alignment": "CENTER",
     "radius": 220,
-    "strength": 11,
+    "strength": 9,
     "color": [
       255,
       255,
       255
     ],
-    "type": "PULSE",
-    "duration": 1254,
-    "range": 15,
+    "type": "FLICKER",
+    "range": 40,
+    "spawnDelay": 200,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 400,
+    "despawnDelay": 1200,
+    "fixedDespawnTime": true,
     "graphicsObjectIds": [
       "MAGICTRAINING_BONE_DROP1",
       "MAGICTRAINING_BONE_DROP2",
@@ -36588,10 +40001,9 @@
   },
   {
     "description": "MAGE_TRAIN_ARENA_DOORWAY",
-    "height": 20,
-    "alignment": "CENTER",
+    "offset": [ -13.3, 100, 0 ],
     "radius": 220,
-    "strength": 44,
+    "strength": 20,
     "color": [
       255,
       255,
@@ -36681,9 +40093,9 @@
   {
     "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT_LOWER",
     "areas": [ "STRONGHOLD_OF_SECURITY_WAR_LIGHT_FIX" ],
-    "height": 95,
-    "radius": 400,
-    "strength": 9.5,
+    "offset": [ -30, 50 ,0 ],
+    "radius": 220,
+    "strength": 25,
     "color": [
       255,
       80,
@@ -36696,9 +40108,9 @@
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT_UPPER",
-    "height": 80,
-    "radius": 400,
-    "strength": 9.5,
+    "offset": [ -30, 50 ,0 ],
+    "radius": 250,
+    "strength": 25,
     "color": [
       255,
       80,
@@ -36742,9 +40154,9 @@
   {
     "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
     "areas": [ "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT_FIX" ],
-    "offset": [ -30, 250, 0 ],
-    "radius": 500,
-    "strength": 4.5,
+    "offset": [ -30, 260, 0 ],
+    "radius": 375,
+    "strength": 12.5,
     "color": [
       255,
       216,
@@ -36758,10 +40170,10 @@
   {
     "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT",
     "areas": [ "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT_FIX" ],
-    "height": 64,
+    "height": 50,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 7.5,
+    "radius": 300,
+    "strength": 20,
     "color": [
       90,
       233,
@@ -36781,8 +40193,8 @@
     "strength": 20.5,
     "color": [
       255,
-      80,
-      87
+      40,
+      40
     ],
     "type": "STATIC",
     "objectIds": [
@@ -36792,13 +40204,13 @@
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_DEATH_LIGHT",
-    "offset": [ 40, 225, 0 ],
-    "radius": 550,
-    "strength": 4,
+    "offset": [ 20, 325, 0 ],
+    "radius": 300,
+    "strength": 20,
     "color": [
-      230,
-      82,
-      100
+      252,
+      148,
+      53
     ],
     "type": "FLICKER",
     "duration": 500,
@@ -36924,11 +40336,11 @@
   {
     "description": "Neural teleporter blue - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_TELEPORTER_1_1", "DT2_SCAR_MAZE_TELEPORTER_1_2" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       80,
       87,
-      187
+      255
     ],
     "strength": 10,
     "radius": 800
@@ -36936,7 +40348,7 @@
   {
     "description": "Neural teleporter green - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_TELEPORTER_2_1", "DT2_SCAR_MAZE_TELEPORTER_2_2" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       136,
       195,
@@ -36960,7 +40372,7 @@
   {
     "description": "Neural gateway - The Scar",
     "objectIds": [ "DT2_SCAR_MAZE_2_PILLAR_ATTACKER_SPAWN" ],
-    "height": 120,
+    "offset": [ 0, 120, 50 ],
     "color": [
       202,
       76,
@@ -36970,14 +40382,33 @@
     "radius": 600
   },
   {
-    "description": "Ancient Vault brazier",
-    "objectIds": [ "DT2_DESERT_VAULT_BRAZIER02" ],
+    "description": "Ancient Vault Brazier 1",
+    "objectIds": [
+      "DT2_DESERT_VAULT_BRAZIER02",
+      "DT2_DESERT_VAULT_BRAZIER03"
+    ],
     "height": 200,
     "color": [ 115, 50, 137 ],
-    "strength": 30,
+    "strength": 10,
     "radius": 750,
     "type": "FLICKER",
     "range": 20
+  },
+  {
+    "description": "Ancient Vault Brazier 2",
+    "offset": [ 0, 300, 0 ],
+    "radius": 550,
+    "strength": 30,
+    "color": [
+      80,
+      60,
+      255
+    ],
+    "objectIds": [
+      "DT2_DESERT_VAULT_BRAZIER01",
+      "DT2_DESERT_VAULT_BRAZIER02",
+      "DT2_DESERT_VAULT_BRAZIER03"
+    ]
   },
   {
     "description": "HALLOWEEN_PUMPKIN_LARGE",
@@ -42363,6 +45794,7 @@
       3
     ],
     "type": "FLICKER",
+    "despawnWithParent": true,
     "duration": 0,
     "range": 20,
     "npcIds": [ "VMQ4_METZLI_FIRE_WAVE" ]
@@ -42466,6 +45898,7 @@
     "radius": 275,
     "strength": 8,
     "fadeInDuration": 200,
+    "despawnWithParent": true,
     "color": [
       0,
       140,
@@ -42488,6 +45921,70 @@
     "fadeOutDuration": 250,
     "projectileIds": [
       "VFX_VMQ4_METZLI_RANGED_FIRE_PROJECTILE_ENRAGED_01"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Range Projectile",
+    "radius": 275,
+    "strength": 11,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_STANDARD_PROJECTILE_RANGE"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Magic Projectile",
+    "radius": 275,
+    "strength": 25,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_STANDARD_PROJECTILE_MAGIC"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Melee Projectile",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_STANDARD_PROJECTILE_MELEE"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Charge Beam Projectile",
+    "radius": 450,
+    "strength": 15,
+    "color": [
+      255,
+      90,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VFX_BEAM_ATTACK_HEAD_01"
     ]
   },
   {
@@ -44171,9 +47668,9 @@
   },
   {
     "description": "Piscatoris - Press Light",
-    "offset": [ 25, 120, 0 ],
+    "offset": [ 65, 120, 0 ],
     "radius": 200,
-    "strength": 5,
+    "strength": 10,
     "color": [
       252,
       148,
@@ -44188,7 +47685,7 @@
   },
   {
     "description": "Piscatoris - Furnace",
-    "offset": [ 0, 60, 20 ],
+    "offset": [ 0, 70, 50 ],
     "radius": 200,
     "strength": 5,
     "color": [
@@ -45205,7 +48702,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "fadeInDuration": 150,
+    "fadeInDuration": 0,
     "fadeOutDuration": 150
   },
   {
@@ -45225,7 +48722,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
-    "fadeInDuration": 150,
+    "fadeInDuration": 0,
     "fadeOutDuration": 250
   },
   {
@@ -45257,6 +48754,58 @@
     ],
     "npcIds": [
       "SMOKE_DEVIL_BOSS"
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "SUPERIOR_SMOKE_DEVIL_BOTTOM_LIGHT",
+    "offset": [ 0, 175, 0 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 20,
+    "color": [
+      116,
+      255,
+      5
+    ],
+    "npcIds": [
+      "SUPERIOR_SMOKE_DEVIL"
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 0,
+    "fadeOutDuration": 250
+  },
+  {
+    "description": "SUPERIOR_SMOKE_DEVIL_FRONT_LIGHT",
+    "offset": [ 0, 300, 115 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      116,
+      255,
+      5
+    ],
+    "npcIds": [
+      "SUPERIOR_SMOKE_DEVIL"
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "SUPERIOR_SMOKE_DEVIL_BACK_LIGHT",
+    "offset": [ 0, 300, -115 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      116,
+      255,
+      5
+    ],
+    "npcIds": [
+      "SUPERIOR_SMOKE_DEVIL"
     ],
     "type": "STATIC"
   },
@@ -45337,6 +48886,565 @@
     "waitForAnimation": true,
     "graphicsObjectIds": [
       "ZAMORAK_FLAME"
+    ]
+  },
+  {
+    "description": "DS2_MAZE_TELEPORT_EXIT",
+    "height": 280,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 22,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "color": [
+      180,
+      0,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_MAZE_PLINTH_TELEPORT"
+    ]
+  },
+  {
+    "description": "DS2_SHIP_FIRE",
+    "height": 110,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17,
+    "fadeOutDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "visibleFromOtherPlanes": true,
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_VIKING_SHIP_FIRE",
+      "DRAGON_SLAYER_QIP_FIRE_1X1"
+    ]
+  },
+  {
+    "description": "DS2_SHIP_LARGE",
+    "height": 140,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_FIRE_2X2",
+      "ZORGOTH_FIRE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Blood Totem",
+    "offset": [ 0, 230, -35 ],
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_BLOOD_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Ice Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_ICE_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Smoke Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      139,
+      69,
+      19
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_SMOKE_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "Desert Treasure 2 - War Room Shade Totem",
+    "offset": [ 0, 240, -35 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "npcIds": [
+      "DT2_WAR_ROOM_SHADOW_TOTEM_ACTIVE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_TORCH",
+    "height": 400,
+    "alignment": "CENTER",
+    "radius": 700,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TORCH_DEMONIC01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_EXIT_LEAGUES",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 35,
+    "objectIds": [
+      "LEAGUE_6_YAMA_EXIT"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_THRONE_LIGHT_1_LEAGUES",
+    "offset": [ 170, 200, 290 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_THRONE_LIGHT_2_LEAGUES",
+    "offset": [ 300, 120, 250 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_THRONE_LIGHT_3_LEAGUES",
+    "offset": [ -185, 250, 250 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_THRONE_LIGHT_4_LEAGUES",
+    "offset": [ -220, 150, 275 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_THRONE_LIGHT_5_LEAGUES",
+    "offset": [ 160, 125, -175 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 20.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "LEAGUE6_YAMA_THRONE"
+    ]
+  },
+  {
+    "description": "YAMA_LAIR_CHAIR_LIGHT_LEAGUES",
+    "offset": [ 85, 50, -20 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "LEAGUE_6_DEMONIC_CHAIR01"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_NORTH",
+    "offset": [ -110, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_SOUTH",
+    "offset": [ 110, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_EAST",
+    "offset": [ 0, 100, 110 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_TELEPORT_WAYSTONE_WEST",
+    "offset": [ 0, 100, -110 ],
+    "alignment": "CENTER",
+    "radius": 140,
+    "strength": 10,
+    "color": [
+      252,
+      100,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE_6_YAMA_WAYSTONE_ASGARNIA",
+      "LEAGUE_6_YAMA_WAYSTONE_MISTHALIN",
+      "LEAGUE_6_YAMA_WAYSTONE_KANDARIN",
+      "LEAGUE_6_YAMA_WAYSTONE_FREMENNIK",
+      "LEAGUE_6_YAMA_WAYSTONE_DESERT",
+      "LEAGUE_6_YAMA_WAYSTONE_MORYTANIA",
+      "LEAGUE_6_YAMA_WAYSTONE_TIRANNWN",
+      "LEAGUE_6_YAMA_WAYSTONE_KARAMJA",
+      "LEAGUE_6_YAMA_WAYSTONE_WILDERNESS",
+      "LEAGUE_6_YAMA_WAYSTONE_KOUREND",
+      "LEAGUE_6_YAMA_WAYSTONE_VARLAMORE"
+    ]
+  },
+  {
+    "description": "LEAGUES_6_SOUL_HARVEST_ANIMATION",
+    "offset": [ 0, 225, -35 ],
+    "radius": 150,
+    "strength": 20,
+    "color": [
+      150,
+      100,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1300,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 600,
+    "ignoreActorHiding": true,
+    "graphicsObjectIds": [
+      "LEAGUES_6_SOUL_HARVEST"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Robert the Strong Barrier 1",
+    "offset": [ -54, 64, 0 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_DREAM_BARRIER"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Robert the Strong Barrier 2",
+    "offset": [ -54, 64, -128 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_DREAM_BARRIER"
+    ]
+  },
+  {
+    "description": "Dragon Slayer 2 - Robert the Strong Barrier 3",
+    "offset": [ -54, 64, 128 ],
+    "radius": 250,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DS2_DREAM_BARRIER"
+    ]
+  },
+  {
+    "description": "Hosideus - Myths Guild - Cooking Range",
+    "offset": [ 0, 72, -18 ],
+    "radius": 180,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 19,
+    "objectIds": [
+      "HOS_COOKING_RANGE_02",
+      "DS2_GUILD_COOKING_RANGE"
+    ]
+  },
+  {
+    "description": "Zulrah - Pillar Torch East - Wide",
+    "offset": [ 70, 140, -80 ],
+    "worldX": 2271,
+    "worldY": 3071,
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Pillar Torch West - Wide",
+    "offset": [ -70, 140, -80 ],
+    "worldX": 2265,
+    "worldY": 3071,
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Pillar Torch East - Narrow",
+    "offset": [ 30, 180, -30 ],
+    "worldX": 2271,
+    "worldY": 3071,
+    "radius": 120,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Pillar Torch West - Narrow",
+    "offset": [ -30, 180, -30 ],
+    "worldX": 2265,
+    "worldY": 3071,
+    "radius": 120,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Zulrah - Fire Attack",
+    "offset": [ 0, 20, 0 ],
+    "radius": 265,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 200,
+    "projectileIds": [
+      "SNAKEBOSS_FIREBALL"
+    ]
+  },
+  {
+    "description": "Charting Sea Lure Light",
+    "offset": [ -150, 175, 0 ],
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_LARGE_LIGHT"
     ]
   }
 ]

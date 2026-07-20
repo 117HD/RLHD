@@ -11,6 +11,7 @@ import rs117.hd.opengl.GLFence;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -21,8 +22,6 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class CommandBuffer {
-	public static boolean SKIP_DEPTH_MASKING;
-
 	private static final int GL_MULTI_DRAW_ARRAYS_TYPE = 0;
 	private static final int GL_MULTI_DRAW_ARRAYS_INDIRECT_TYPE = 1;
 	private static final int GL_DRAW_ARRAYS_TYPE = 2;
@@ -32,7 +31,6 @@ public class CommandBuffer {
 	private static final int GL_DRAW_CALL_TYPE_COUNT = 6;
 
 	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 6;
-	private static final int GL_BIND_ELEMENTS_ARRAY_TYPE = 7;
 	private static final int GL_BIND_INDIRECT_ARRAY_TYPE = 8;
 	private static final int GL_BIND_TEXTURE_UNIT_TYPE = 9;
 	private static final int GL_DEPTH_MASK_TYPE = 10;
@@ -53,7 +51,6 @@ public class CommandBuffer {
 	private int objectCount = 0;
 
 	public final String name;
-	private final RenderState renderState;
 
 	@Setter
 	private FrameTimer frameTimer;
@@ -61,9 +58,8 @@ public class CommandBuffer {
 	private long[] cmd = new long[(int) KiB];
 	private int writeHead = 0;
 
-	public CommandBuffer(String name, RenderState renderState) {
+	public CommandBuffer(String name) {
 		this.name = name;
-		this.renderState = renderState;
 	}
 
 	private void ensureCapacity(int numLongs) {
@@ -89,20 +85,20 @@ public class CommandBuffer {
 		return writeHead == 0;
 	}
 
+	public void BindVertexArray(int vao, GLBuffer ebo) {
+		ensureCapacity(2);
+		cmd[writeHead++] = GL_BIND_VERTEX_ARRAY_TYPE & 0xFF;
+		cmd[writeHead++] = (long) writeObject(ebo) << 32 | vao & INT_MASK;
+	}
+
 	public void BindVertexArray(int vao) {
-		ensureCapacity(1);
-		cmd[writeHead++] = GL_BIND_VERTEX_ARRAY_TYPE & 0xFF | (long) vao << 8;
+		BindVertexArray(vao, null);
 	}
 
 	public void FenceSync(GLFence fence, int condition) {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_FENCE_SYNC & 0xFF | (long) condition << 8;
 		cmd[writeHead++] = writeObject(fence);
-	}
-
-	public void BindElementsArray(int ebo) {
-		ensureCapacity(1);
-		cmd[writeHead++] = GL_BIND_ELEMENTS_ARRAY_TYPE & 0xFF | (long) ebo << 8;
 	}
 
 	public void BindIndirectArray(int ido) {
@@ -277,16 +273,10 @@ public class CommandBuffer {
 		cmd[writeHead++] = (enabled ? 1L : 0) << 32 | capability & INT_MASK;
 	}
 
-	public void append(CommandBuffer other) {
-		if (other.isEmpty())
-			return;
+	public void execute(RenderState renderState) {
+		// Force VAO state to reapply to ensure it is in sync with the render state
+		renderState.vao.invalidate();
 
-		ensureCapacity(other.writeHead);
-		System.arraycopy(other.cmd, 0, cmd, writeHead, other.writeHead);
-		writeHead += other.writeHead;
-	}
-
-	public void execute() {
 		if (frameTimer != null)
 			frameTimer.begin(Timer.EXECUTE_COMMAND_BUFFER);
 		try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -302,8 +292,6 @@ public class CommandBuffer {
 				switch (type) {
 					case GL_DEPTH_MASK_TYPE: {
 						int state = (int) (data >> 8) & 1;
-						if (SKIP_DEPTH_MASKING)
-							continue;
 						renderState.depthMask.set(state == 1);
 						break;
 					}
@@ -316,11 +304,11 @@ public class CommandBuffer {
 						break;
 					}
 					case GL_BIND_VERTEX_ARRAY_TYPE: {
-						renderState.vao.set((int) (data >> 8));
-						break;
-					}
-					case GL_BIND_ELEMENTS_ARRAY_TYPE: {
-						renderState.ebo.set((int) (data >> 8));
+						long packed = cmd[readHead++];
+						int eboIdx = (int) (packed >> 32);
+						int vao = (int) packed;
+						int ebo = eboIdx >= 0 ? ((GLBuffer) objects[eboIdx]).id : 0;
+						renderState.vao.setVaoAndEbo(vao, ebo);
 						break;
 					}
 					case GL_BIND_INDIRECT_ARRAY_TYPE: {
@@ -430,7 +418,7 @@ public class CommandBuffer {
 							));
 						callStack.push(this);
 						try {
-							subCmd.execute();
+							subCmd.execute(renderState);
 						} finally {
 							callStack.pop();
 						}
@@ -447,6 +435,9 @@ public class CommandBuffer {
 	}
 
 	private int writeObject(Object obj) {
+		if (obj == null)
+			return -1;
+
 		for (int i = 0; i < objectCount; i++)
 			if (objects[i] == obj)
 				return i;
@@ -459,7 +450,6 @@ public class CommandBuffer {
 
 	public void reset() {
 		Arrays.fill(objects, 0, objectCount, null);
-		renderState.reset();
 
 		writeHead = 0;
 		objectCount = 0;
