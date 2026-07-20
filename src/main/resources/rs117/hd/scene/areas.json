@@ -12222,8 +12222,29 @@
     "hideOtherAreas": true
   },
   {
+    "name": "VAMPYRIUM_CAVE_BLOOD_FIX",
+    "aabbs": [
+      [ 2637, 7891 ]
+    ]
+  },
+  {
+    "name": "VAMPYRIUM_SHORE_BLOOD_FIX",
+    "aabbs": [
+      [ 2494, 7705, 2495, 7706 ]
+    ]
+  },
+  {
     "name": "VAMPYRIUM_FOREST_CLEARING_TREE_FIX",
-    "aabbs": [ [ 2836, 7645, 2839, 7648 ] ]
+    "aabbs": [
+      [ 2836, 7645, 2839, 7648 ]
+    ]
+  },
+  {
+    "name": "VAMPYRIUM_MAGGOT_KING_TREE_FIX",
+    "aabbs": [
+      [ 2900, 8018, 2902, 8019 ],
+      [ 2916, 8053, 2918, 8055 ]
+    ]
   },
   {
     "name": "VAMPYRIUM_FOREST_INSTANCE",
@@ -12261,23 +12282,6 @@
     "regionBoxes": [ [ 9597, 11128 ] ],
     "areas": [
       "VAMPYRIUM_FOREST_INSTANCE"
-    ]
-  },
-  {
-    "name": "BMR_MORYTANIA_MOON_CUTSCENE",
-    "aabbs": [
-      [ 3593, 3408, 3605, 3427 ],
-      [ 3606, 3408, 3608, 3421 ]
-    ]
-  },
-  {
-    "name": "BMR_MORYTANIA_DAWN_CUTSCENE",
-    "aabbs": [
-      [ 3687, 3191, 3692, 3200 ],
-      [ 3693, 3195, 3701, 3209 ],
-      [ 3689, 3201, 3692, 3206 ],
-      [ 3702, 3200, 3708, 3216 ],
-      [ 3709, 3206, 3726, 3221 ]
     ]
   },
   {
