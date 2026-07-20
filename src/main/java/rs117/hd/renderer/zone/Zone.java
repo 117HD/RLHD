@@ -560,10 +560,9 @@ public class Zone implements Destructible {
 			shift++;
 		}
 
-		final int packedFaceCount = (endpos - startpos) / ((3 * VERT_SIZE) >> 2);
-		final int bucketCapacity = ceil(packedFaceCount / 32.0f);
+		final int bucketCapacity = ceil(faceCount / 32.0f);
 
-		final int[] packedFaces = PooledArrayType.INT.borrow(packedFaceCount);
+		final int[] packedFaces = PooledArrayType.INT.borrow(faceCount);
 		final int[] doubleSidedBitSet = PooledArrayType.INT.borrow(bucketCapacity);
 
 		Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
