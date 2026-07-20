@@ -17,6 +17,8 @@ public class HDVariables implements VariableSupplier {
 	public static final String VAR_GROUND_BLENDING = "blending";
 	public static final String VAR_GROUND_BLENDING_COLORS = "blendingColors";
 	public static final String VAR_GROUND_BLENDING_TEXTURES = "blendingTextures";
+	public static final String VAR_GROUND_BLENDING_COLORS_ONLY = "blendingColorsOnly";
+	public static final String VAR_GROUND_BLENDING_TEXTURES_ONLY = "blendingTexturesOnly";
 	public static final String VAR_HD_INFERNAL_TEXTURE = "hdInfernalCape";
 	public static final String VAR_LEGACY_INFERNAL_TEXTURE = "legacyInfernalCape";
 
@@ -42,10 +44,15 @@ public class HDVariables implements VariableSupplier {
 			case VAR_GROUND_TEXTURES:
 				return plugin.configGroundTextures;
 			case VAR_GROUND_BLENDING:
+				return plugin.configGroundBlendingColors || plugin.configGroundBlendingTextures;
 			case VAR_GROUND_BLENDING_COLORS:
 				return plugin.configGroundBlendingColors;
 			case VAR_GROUND_BLENDING_TEXTURES:
 				return plugin.configGroundBlendingTextures;
+			case VAR_GROUND_BLENDING_COLORS_ONLY:
+				return plugin.configGroundBlendingColors && !plugin.configGroundBlendingTextures;
+			case VAR_GROUND_BLENDING_TEXTURES_ONLY:
+				return !plugin.configGroundBlendingColors && plugin.configGroundBlendingTextures;
 			case VAR_HD_INFERNAL_TEXTURE:
 				return config.infernalCape() == InfernalCape.HD;
 			case VAR_LEGACY_INFERNAL_TEXTURE:
