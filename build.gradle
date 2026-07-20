@@ -1,97 +1,77 @@
 plugins {
 	id 'java'
-//	id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 repositories {
 	mavenLocal()
 	maven {
 		url = 'https://repo.runelite.net'
+		content {
+			includeGroupByRegex("net\\.runelite.*")
+		}
 	}
 	mavenCentral()
 }
 
 def runeLiteVersion = '1.12.+'
+def pluginMainClass = 'rs117.hd.HdPluginTest'
 
 dependencies {
 	compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
 
-	compileOnly 'org.projectlombok:lombok:1.18.20'
-	annotationProcessor 'org.projectlombok:lombok:1.18.20'
+	compileOnly 'org.projectlombok:lombok:1.18.30'
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
 	testImplementation 'junit:junit:4.13.2'
 	testImplementation 'org.mockito:mockito-core:3.1.0'
 	testImplementation group: 'net.runelite', name: 'client', version: runeLiteVersion
 	testImplementation group: 'net.runelite', name: 'jshell', version: runeLiteVersion
 
-	testCompileOnly 'org.projectlombok:lombok:1.18.20'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
+	testCompileOnly 'org.projectlombok:lombok:1.18.30'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
+def props = new Properties()
+file('runelite-plugin.properties').withInputStream { props.load(it) }
+
 group = 'rs117.hd'
-version = '1.5.1'
-sourceCompatibility = '11'
+version = props.getProperty('version')
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8'
+	options.release.set(11)
 }
 
-//import groovy.json.JsonOutput
-//
-//import java.lang.reflect.Modifier
-//
-//tasks.register('exportGamevals') {
-//	doLast {
-//		def startTime = System.nanoTime()
-//		def exportMap = [
-//			'npcs'     : ['net.runelite.api.gameval.NpcID'],
-//			'objects'  : ['net.runelite.api.gameval.ObjectID', 'net.runelite.api.gameval.ObjectID1'],
-//			'anims'    : ['net.runelite.api.gameval.AnimationID'],
-//			'spotanims': ['net.runelite.api.gameval.SpotanimID']
-//		]
-//
-//		URLClassLoader loader = new URLClassLoader(
-//			configurations.compileClasspath.collect { it.toURI().toURL() } as URL[],
-//			this.class.classLoader
-//		)
-//
-//		def fullExport = [:]
-//
-//		exportMap.each { category, classList ->
-//			def constants = [:]
-//
-//			classList.each { className ->
-//				def clazz = loader.loadClass(className)
-//
-//				clazz.declaredFields.each { field ->
-//					if (Modifier.isPublic(field.modifiers) &&
-//						Modifier.isStatic(field.modifiers) &&
-//						Modifier.isFinal(field.modifiers)) {
-//
-//						field.accessible = true
-//						constants[field.name] = field.get(null)
-//					}
-//				}
-//			}
-//
-//			fullExport[category] = constants
-//		}
-//
-//		def outputFile = file('src/main/resources/rs117/hd/scene/gamevals.json')
-//		outputFile.text = "// AUTO-GENERATED FILE. DO NOT MODIFY.\n" +
-//			JsonOutput.prettyPrint(JsonOutput.toJson(fullExport))
-//		println "Exported gamevals in ${(System.nanoTime() - startTime).intdiv(1_000_000)} ms"
-//	}
-//}
-//
-//tasks.named('compileJava') {
-//	dependsOn 'exportGamevals'
-//}
-//
-//shadowJar {
-//	from sourceSets.test.output
-//	configurations = [project.configurations.testRuntimeClasspath]
-//	manifest {
-//		attributes 'Main-Class': 'rs117.hd.HdPluginTest'
-//	}
-//}
+tasks.register('run', JavaExec) {
+	classpath = sourceSets.test.runtimeClasspath
+	mainClass = pluginMainClass
+
+	jvmArgs "-ea", "-Xmx768M", "--add-opens=java.desktop/com.apple.eawt=ALL-UNNAMED"
+	args "--developer-mode", "--debug", "--disable-telemetry"
+}
+
+tasks.register('shadowJar', Jar) {
+	dependsOn configurations.testRuntimeClasspath
+	manifest {
+		attributes('Main-Class': pluginMainClass, 'Multi-Release': true)
+	}
+
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	from sourceSets.main.output
+	from sourceSets.test.output
+	from {
+		configurations.testRuntimeClasspath.collect { file ->
+			file.isDirectory() ? file : zipTree(file)
+		}
+	}
+
+	exclude 'META-INF/INDEX.LIST'
+	exclude 'META-INF/*.SF'
+	exclude 'META-INF/*.DSA'
+	exclude 'META-INF/*.RSA'
+	exclude '**/module-info.class'
+
+	group = BasePlugin.BUILD_GROUP
+	archiveClassifier.set('shadow')
+	archiveFileName.set("${rootProject.name}-${project.version}-all.jar")
+}

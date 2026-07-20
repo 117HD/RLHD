@@ -10,6 +10,8 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
@@ -26,11 +28,14 @@ import static rs117.hd.utils.ExpressionParser.parseExpression;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
+@Setter
+@Accessors(fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ModelOverride
 {
 	public static final ModelOverride NONE = new ModelOverride(true);
+	public static final ModelOverride UNLIT = new ModelOverride(true).baseMaterial(Material.UNLIT).undoVanillaShading(false);
 
 	private static final Set<Integer> EMPTY = new HashSet<>();
 
@@ -81,6 +86,25 @@ public class ModelOverride
 	public boolean invertDisplacementStrength = false;
 	public int depthBias = -1;
 	public boolean disablePrioritySorting = false;
+
+	private int setHue = -1;
+	private int shiftHue;
+	private int minHue;
+	private int maxHue = 63;
+	private int setSaturation = -1;
+	private int shiftSaturation;
+	private int minSaturation;
+	private int maxSaturation = 7;
+	private int setLightness = -1;
+	private int shiftLightness;
+	private int minLightness;
+	private int maxLightness = 127;
+	private int setAlpha = -1;
+	private int shiftAlpha;
+	private int minAlpha;
+	private int maxAlpha = 255;
+	public boolean modifiesColor;
+	public boolean modifiesAlpha;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -155,6 +179,32 @@ public class ModelOverride
 				textureMaterial = Material.NONE;
 		}
 
+		if (setHue != -1)
+			minHue = maxHue = setHue;
+		if (setSaturation != -1)
+			minSaturation = maxSaturation = setSaturation;
+		if (setLightness != -1)
+			minLightness = maxLightness = setLightness;
+		if (setAlpha != -1)
+			minAlpha = maxAlpha = setAlpha;
+
+		// Enforce sensible limits
+		minHue = clamp(minHue, 0, 0x3F);
+		maxHue = clamp(maxHue, 0, 0x3F);
+		minSaturation = clamp(minSaturation, 0, 0x7);
+		maxSaturation = clamp(maxSaturation, 0, 0x7);
+		minLightness = clamp(minLightness, 0, 0x7F);
+		maxLightness = clamp(maxLightness, 0, 0x7F);
+		minAlpha = clamp(minAlpha, 0, 0xFF);
+		maxAlpha = clamp(maxAlpha, 0, 0xFF);
+
+		modifiesColor =
+			shiftHue != 0 || minHue != 0 || maxHue != 0x3F ||
+			shiftSaturation != 0 || minSaturation != 0 || maxSaturation != 0x7 ||
+			shiftLightness != 0 || minLightness != 0 || maxLightness != 0x7F ||
+			shiftAlpha != 0 || minAlpha != 0 || maxAlpha != 0xFF;
+		modifiesAlpha = shiftAlpha != 0 || minAlpha != 0 || maxAlpha != 0xFF;
+
 		if (areas == null)
 			areas = new AABB[0];
 		if (hideInAreas == null)
@@ -163,6 +213,7 @@ public class ModelOverride
 		hasTransparency = mightHaveTransparency =
 			baseMaterial.hasTransparency ||
 			textureMaterial.hasTransparency ||
+			modifiesAlpha && minAlpha < 255 ||
 			tzHaarRecolorType != TzHaarRecolorType.NONE;
 
 		hide |= hideAsWaterEffect && plugin.configHideVanillaWaterEffects;
@@ -208,6 +259,18 @@ public class ModelOverride
 			shadowOpacityThreshold = 1;
 	}
 
+	public void clearIds(){
+		areas = null;
+		npcIds = null;
+		objectIds = null;
+		projectileIds = null;
+		graphicsObjectIds = null;
+
+		if (colorOverrides != null)
+			for (var override : colorOverrides)
+				override.clearIds();
+	}
+
 	public ModelOverride copy() {
 		return new ModelOverride(
 			description,
@@ -249,6 +312,24 @@ public class ModelOverride
 			invertDisplacementStrength,
 			depthBias,
 			disablePrioritySorting,
+			setHue,
+			shiftHue,
+			minHue,
+			maxHue,
+			setSaturation,
+			shiftSaturation,
+			minSaturation,
+			maxSaturation,
+			setLightness,
+			shiftLightness,
+			minLightness,
+			maxLightness,
+			setAlpha,
+			shiftAlpha,
+			minAlpha,
+			maxAlpha,
+			modifiesColor,
+			modifiesAlpha,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
@@ -623,6 +704,23 @@ public class ModelOverride
 				model.rotateY90Ccw();
 				break;
 		}
+	}
+
+	public int modifyAlpha(int alpha) {
+		return clamp(alpha + shiftAlpha, minAlpha, maxAlpha);
+	}
+
+	public int modifyColor(int jagexHsl) {
+		int h = jagexHsl >> 10 & 0x3F;
+		h = clamp(h + shiftHue, minHue, maxHue);
+
+		int s = jagexHsl >> 7 & 7;
+		s = clamp(s + shiftSaturation, minSaturation, maxSaturation);
+
+		int l = jagexHsl & 0x7F;
+		l = clamp(l + shiftLightness, minLightness, maxLightness);
+
+		return h << 10 | s << 7 | l;
 	}
 
 	@Nullable

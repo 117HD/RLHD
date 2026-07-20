@@ -5,6 +5,14 @@
     "fresnelAmount": 0.85
   },
   {
+    "name": "TRANSPARENT",
+    "baseOpacity": 0,
+    "specularStrength": 0,
+    "specularGloss": 0,
+    "normalStrength": 0,
+    "fresnelAmount": 0
+  },
+  {
     "name": "WATER_FLAT",
     "surfaceColor": "#69809C",
     "fresnelAmount": 0.85,

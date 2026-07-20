@@ -31,7 +31,6 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
@@ -67,6 +66,7 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.utils.collections.Util.quickSort;
 
 @Singleton
 @Slf4j
@@ -93,6 +93,9 @@ public class LightManager {
 	private HdPlugin plugin;
 
 	@Inject
+	private GamevalManager gamevalManager;
+
+	@Inject
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
@@ -111,7 +114,7 @@ public class LightManager {
 
 	public void loadConfig(Gson gson, ResourcePath path) {
 		LightDefinition[] lights;
-		try {
+		try (var ignored = gamevalManager.obtainHandle()) {
 			lights = path.loadJson(gson, LightDefinition[].class);
 			if (lights == null) {
 				log.warn("Skipping empty lights.json");
@@ -158,6 +161,12 @@ public class LightManager {
 	}
 
 	public void shutDown() {
+		WORLD_LIGHTS.clear();
+		NPC_LIGHTS.clear();
+		OBJECT_LIGHTS.clear();
+		PROJECTILE_LIGHTS.clear();
+		GRAPHICS_OBJECT_LIGHTS.clear();
+
 		eventBus.unregister(this);
 	}
 
@@ -225,7 +234,7 @@ public class LightManager {
 
 			// Whatever the light is attached to is presumed to exist if it's not marked for removal yet
 			boolean parentExists = !light.markedForRemoval;
-			boolean hiddenTemporarily = false;
+			boolean hiddenTemporarily = light.hiddenTemporarily;
 
 			if (light.tileObject != null) {
 				if (!light.markedForRemoval && light.animationSpecific && light.tileObject instanceof GameObject) {
@@ -242,10 +251,10 @@ public class LightManager {
 				light.origin[0] = (int) light.projectile.getX();
 				light.origin[1] = (int) light.projectile.getZ() - light.def.height;
 				light.origin[2] = (int) light.projectile.getY();
+				hiddenTemporarily = !shouldShowProjectileLights();
 				if (light.projectile.getRemainingCycles() <= 0) {
 					light.markedForRemoval = true;
 				} else {
-					hiddenTemporarily = !shouldShowProjectileLights();
 					if (light.animationSpecific) {
 						if (light.def.waitForAnimation && gameCycle < light.projectile.getStartCycle()) {
 							parentExists = false;
@@ -310,6 +319,8 @@ public class LightManager {
 						tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE &&
 						(tile = tiles[plane][tileExX][tileExY]) != null
 					) {
+						hiddenTemporarily = !isActorLightVisible(light.actor);
+
 						if (!light.def.ignoreActorHiding &&
 							!(light.actor instanceof NPC && ((NPC) light.actor).getComposition().getSize() > 1)
 						) {
@@ -328,9 +339,6 @@ public class LightManager {
 								}
 							}
 						}
-
-						if (!hiddenTemporarily)
-							hiddenTemporarily = !isActorLightVisible(light.actor);
 
 						// Interpolate between tile heights based on specific scene coordinates
 						int tileZ = plane;
@@ -484,9 +492,11 @@ public class LightManager {
 		}
 
 		// Order visible lights first, then by distance. Leave hidden lights unordered at the end.
-		sceneContext.lights.sort((a, b) -> a.visible && b.visible ?
-			Float.compare(a.distanceSquared, b.distanceSquared) :
-			Boolean.compare(b.visible, a.visible));
+		quickSort(sceneContext.lights,
+			(a, b) -> a.visible && b.visible ?
+				Float.compare(a.distanceSquared, b.distanceSquared) :
+				Boolean.compare(b.visible, a.visible)
+		);
 
 		// Count number of visible lights
 		sceneContext.numVisibleLights = 0;
@@ -847,28 +857,41 @@ public class LightManager {
 		int sizeX = 1;
 		int sizeY = 1;
 		int[] orientations = { 0, 0 };
-		int[] offset = { 0, 0 };
+		int[] offsets = { 0, 0, 0, 0 };
 
 		if (tileObject instanceof GroundObject) {
 			var object = (GroundObject) tileObject;
 			imposterRenderables[0] = object.getRenderable();
+			imposterRenderables[1] = null;
 			orientations[0] = HDUtils.getModelOrientation(object.getConfig());
 		} else if (tileObject instanceof DecorativeObject) {
 			var object = (DecorativeObject) tileObject;
 			imposterRenderables[0] = object.getRenderable();
 			imposterRenderables[1] = object.getRenderable2();
-			int ori = orientations[0] = orientations[1] = HDUtils.getModelOrientation(object.getConfig());
-			switch (ObjectType.fromConfig(object.getConfig())) {
-				case WallDecorDiagonalNoOffset:
-				case WallDecorDiagonalOffset:
-				case WallDecorDiagonalBoth:
-					ori = (ori + 512) % 2048;
-					offset[0] = SINE[ori] * 64 >> 16;
-					offset[1] = COSINE[ori] * 64 >> 16;
-					break;
+			int config = object.getConfig();
+			orientations[0] = orientations[1] = HDUtils.getModelOrientation(config);
+			// WallDecorDiagonalNoOffset -> +180 deg rotation for the 1st renderable
+			// WallDecorDiagonalBoth     -> +180 deg rotation for the 2nd renderable
+			// HDUtils.getModelOrientation assumes we are working with the 1st renderable, so handle the 2nd here
+			var type = ObjectType.fromConfig(config);
+			if (type == ObjectType.WallDecorDiagonalBoth)
+				orientations[1] = (orientations[1] + 1024) % 2048;
+			for (int i = 0; i < 2; i++) {
+				switch (type) {
+					case WallDecorDiagonalOffset:
+					case WallDecorDiagonalNoOffset:
+					case WallDecorDiagonalBoth:
+						int ori = (2048 - orientations[i]) % 2048;
+						// Offset the light by half a tile in the direction of the model
+						offsets[2 * i] = COSINE[ori] * 64 >> 16;
+						offsets[2 * i + 1] = SINE[ori] * 64 >> 16;
+						break;
+				}
 			}
-			offset[0] += object.getXOffset();
-			offset[1] += object.getYOffset();
+			offsets[0] += object.getXOffset();
+			offsets[1] += object.getYOffset();
+			offsets[2] += object.getXOffset2();
+			offsets[3] += object.getYOffset2();
 		} else if (tileObject instanceof WallObject) {
 			var object = (WallObject) tileObject;
 			imposterRenderables[0] = object.getRenderable1();
@@ -880,6 +903,7 @@ public class LightManager {
 			sizeX = object.sizeX();
 			sizeY = object.sizeY();
 			imposterRenderables[0] = object.getRenderable();
+			imposterRenderables[1] = null;
 			int ori = orientations[0] = HDUtils.getModelOrientation(object.getConfig());
 			int offsetDist = 64;
 			switch (ObjectType.fromConfig(object.getConfig())) {
@@ -888,9 +912,9 @@ public class LightManager {
 					ori += 1024;
 					offsetDist = round(offsetDist / sqrt(2));
 				case WallDiagonal:
-					ori = (ori + 2048 - 256) % 2048;
-					offset[0] = SINE[ori] * offsetDist >> 16;
-					offset[1] = COSINE[ori] * offsetDist >> 16;
+					ori = mod(ori - 256, 2048);
+					offsets[0] = SINE[ori] * offsetDist >> 16;
+					offsets[1] = COSINE[ori] * offsetDist >> 16;
 					break;
 			}
 		} else {
@@ -899,11 +923,8 @@ public class LightManager {
 		}
 
 		List<LightDefinition> lights = OBJECT_LIGHTS.get(impostorId == -1 ? tileObject.getId() : impostorId);
-		HashSet<LightDefinition> onlySpawnOnce = new HashSet<>();
 
 		LocalPoint lp = tileObject.getLocalLocation();
-		int lightX = lp.getX() + offset[0];
-		int lightZ = lp.getY() + offset[1];
 		int plane = tileObject.getPlane();
 
 		// Spawn animation-specific lights for each DynamicObject renderable, and non-animation-based lights
@@ -911,6 +932,9 @@ public class LightManager {
 			var renderable = imposterRenderables[i];
 			if (renderable == null)
 				continue;
+
+			int lightX = lp.getX() + offsets[2 * i];
+			int lightZ = lp.getY() + offsets[2 * i + 1];
 
 			for (LightDefinition def : lights) {
 				if (def.areas.length > 0) {
@@ -926,15 +950,9 @@ public class LightManager {
 						continue;
 				}
 
-				// Rarely, it may be necessary to specify which of the two possible renderables the light should be attached to
-				if (def.renderableIndex == -1) {
-					// If unspecified, spawn it for the first non-null renderable
-					if (onlySpawnOnce.contains(def))
-						continue;
-					onlySpawnOnce.add(def);
-				} else if (def.renderableIndex != i) {
+				// It may be necessary to specify which of the two possible renderables the light should be attached to
+				if (def.renderableIndex != -1 && def.renderableIndex != i)
 					continue;
-				}
 
 				int tileExX = clamp(lp.getSceneX() + sceneContext.sceneOffset, 0, EXTENDED_SCENE_SIZE - 2);
 				int tileExY = clamp(lp.getSceneY() + sceneContext.sceneOffset, 0, EXTENDED_SCENE_SIZE - 2);

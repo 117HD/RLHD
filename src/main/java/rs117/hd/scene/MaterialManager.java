@@ -390,9 +390,10 @@ public class MaterialManager {
 			mat.textureLayer = mat.resolveTextureOwner().textureLayer;
 
 		int textureSize = config.textureResolution().getSize();
-		textureResolution = ivec(textureSize, textureSize);
+		int[] resolution = ivec(textureSize, textureSize);
 		glActiveTexture(TEXTURE_UNIT_GAME);
-		if (texMaterialTextureArray == 0 || previousLayerCount != textureLayers.size()) {
+		if (texMaterialTextureArray == 0 || previousLayerCount != textureLayers.size() || !Arrays.equals(textureResolution, resolution)) {
+			textureResolution = resolution;
 			if (texMaterialTextureArray != 0)
 				glDeleteTextures(texMaterialTextureArray);
 			texMaterialTextureArray = glGenTextures();
@@ -462,10 +463,15 @@ public class MaterialManager {
 
 	private void invalidateMaterials(Material[] materials) {
 		// Invalidate old materials to highlight issues with keeping them around accidentally
-		if (materials != null)
-			for (var mat : materials)
-				if (mat != Material.NONE)
-					mat.isValid = false;
+		if (materials != null) {
+			outer:
+			for (var mat : materials) {
+				for (var req : Material.REQUIRED_MATERIALS)
+					if (mat == req)
+						continue outer;
+				mat.isValid = false;
+			}
+		}
 	}
 
 	public void uploadTextures() {

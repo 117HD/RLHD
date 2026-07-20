@@ -3,7 +3,7 @@ package rs117.hd.utils.collections;
 import java.util.Arrays;
 
 import static java.lang.System.arraycopy;
-import static rs117.hd.utils.HDUtils.ceilPow2;
+import static rs117.hd.utils.MathUtils.*;
 
 public final class PrimitiveIntArray {
 	public int[] array = new int[16];
@@ -20,9 +20,17 @@ public final class PrimitiveIntArray {
 		return this;
 	}
 
-	public void put(int i) {
+	public void put(int v) {
 		if (length < array.length)
-			array[length++] = i;
+			array[length++] = v;
+	}
+
+	public void putUnique(int v) {
+		if (length < array.length) {
+			for (int i = 0; i < length; i++)
+				if (array[i] == v) return;
+			array[length++] = v;
+		}
 	}
 
 	public void put(int[] ints, int offset, int count) {

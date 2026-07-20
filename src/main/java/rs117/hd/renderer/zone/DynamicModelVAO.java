@@ -2,9 +2,8 @@ package rs117.hd.renderer.zone;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nonnull;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.Destructible;
@@ -17,6 +16,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NVIDIA_GPU;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
+import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
@@ -39,22 +39,23 @@ public class DynamicModelVAO implements Destructible {
 	// dummy sceneOffset ivec2 for macOS workaround
 	static final int METADATA_SIZE = 12;
 
-	int vao;
-	boolean used;
+	@Getter
+	private int vao;
 
 	private final GLBuffer vboRender;
 	private final GLBuffer vboStaging;
 	private final GLTextureBuffer tbo;
 
-	private final AtomicInteger inflightDraws = new AtomicInteger();
-	private final ConcurrentLinkedQueue<View> usedViews = new ConcurrentLinkedQueue<>();
+	private final ArrayDeque<View> usedViews = new ArrayDeque<>();
 	private final ArrayDeque<View> freeViews = new ArrayDeque<>();
 
 	private final GLMappedBufferIntWriter vboWriter;
 	private final GLMappedBufferIntWriter tboWriter;
 
+	private boolean isMapped = false;
 	private int[] drawOffsets = new int[16];
 	private int[] drawCounts = new int[16];
+	private int writtenRangeCount;
 	private int drawRangeCount;
 
 	private long[] srcCopyOffsets = new long[16];
@@ -62,7 +63,7 @@ public class DynamicModelVAO implements Destructible {
 	private long[] copyNumBytes = new long[16];
 
 	DynamicModelVAO(String name, boolean useStagingBuffer) {
-		if (useStagingBuffer && GLBuffer.supportsStorageBuffers()) {
+		if (useStagingBuffer && SUPPORTS_STORAGE_BUFFERS) {
 			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
 				"VAO::VBO_STAGING::" + name,
@@ -145,6 +146,7 @@ public class DynamicModelVAO implements Destructible {
 		tboWriter.map(false);
 
 		reset();
+		isMapped = true;
 	}
 
 	synchronized void unmap(boolean coalesce) {
@@ -184,6 +186,7 @@ public class DynamicModelVAO implements Destructible {
 
 		if (renderVBOId != vboRender.id)
 			bindRenderVAO();
+		isMapped = false;
 	}
 
 	@Override
@@ -199,26 +202,30 @@ public class DynamicModelVAO implements Destructible {
 		vao = 0;
 	}
 
-	synchronized View beginPlayerDraw(int faceCount, int playerDrawIndex) {
-		assert playerDrawIndex != -1;
-		// Draw at a specific index, e.g. to respect player draw order
-		// mergeRanges() later skips any potentially unfilled entries
-		drawRangeCount = max(drawRangeCount, playerDrawIndex + 1);
-		return beginDraw(faceCount, playerDrawIndex);
-	}
-
-	synchronized View beginDraw(int faceCount) {
-		return beginDraw(faceCount, drawRangeCount++);
-	}
-
-	private synchronized View beginDraw(int faceCount, int drawIdx) {
+	synchronized int obtainDrawIndex() {
+		int drawIndex = drawRangeCount++;
 		if (drawRangeCount >= drawOffsets.length) {
 			int oldLength = drawOffsets.length;
 			drawOffsets = Arrays.copyOf(drawOffsets, oldLength * 2);
 			drawCounts = Arrays.copyOf(drawCounts, oldLength * 2);
-			Arrays.fill(drawOffsets, oldLength, drawOffsets.length, -1);
-			Arrays.fill(drawCounts, oldLength, drawOffsets.length, -1);
 		}
+		return drawIndex;
+	}
+
+	View beginDraw(int faceCount) {
+		return beginDraw(-1, faceCount);
+	}
+
+	public synchronized View beginDraw(int drawIdx, int faceCount) {
+		if (drawIdx == -1)
+			drawIdx = obtainDrawIndex();
+
+		assert drawIdx >= 0 && drawIdx < drawRangeCount : "drawIdx " + drawIdx + " out of bounds from 0 to " + drawRangeCount;
+		assert drawOffsets[drawIdx] == 0 && drawCounts[drawIdx] == 0 : String.format(
+			"Provided draw index is already in use: %d %d %d",
+			drawIdx, drawOffsets[drawIdx], drawCounts[drawIdx]
+		);
+		assert isMapped : "beginDraw called while not mapped, this is not allowed!";
 
 		View view = freeViews.poll();
 		if (view == null)
@@ -229,13 +236,19 @@ public class DynamicModelVAO implements Destructible {
 		view.tboTexId = tbo.getTexId();
 		view.drawIdx = drawIdx;
 
-		inflightDraws.incrementAndGet();
 		return view;
 	}
 
 	private synchronized void endDraw(View view) {
+		assert drawOffsets[view.drawIdx] == 0 && drawCounts[view.drawIdx] == 0 : String.format(
+			"Provided draw index is already in use: %d %d %d",
+			view.drawIdx, drawOffsets[view.drawIdx], drawCounts[view.drawIdx]
+		);
+		assert isMapped : "beginDraw called while not mapped, this is not allowed!";
+
 		drawOffsets[view.drawIdx] = view.getStartOffset() / VERT_SIZE_INTS;
 		drawCounts[view.drawIdx] = view.getVertexCount();
+		writtenRangeCount = max(writtenRangeCount, view.drawIdx + 1);
 
 		// Clear ReservedViews before returning to pool
 		view.vbo = null;
@@ -245,21 +258,21 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	void mergeRanges() {
-		int newDrawRangeCount = 0;
-		for (int i = 0; i < drawRangeCount; i++) {
-			if (drawOffsets[i] != -1 && drawCounts[i] != -1) {
-				if (newDrawRangeCount > 0 && drawOffsets[newDrawRangeCount - 1] + drawCounts[newDrawRangeCount - 1] == drawOffsets[i]) {
-					drawCounts[newDrawRangeCount - 1] += drawCounts[i];
-				} else {
-					if (newDrawRangeCount != i) {
-						drawOffsets[newDrawRangeCount] = drawOffsets[i];
-						drawCounts[newDrawRangeCount] = drawCounts[i];
-					}
-					newDrawRangeCount++;
+		drawRangeCount = 0;
+		for (int i = 0; i < writtenRangeCount; i++) {
+			if (drawCounts[i] <= 0)
+				continue;
+
+			if (drawRangeCount > 0 && drawOffsets[drawRangeCount - 1] + drawCounts[drawRangeCount - 1] == drawOffsets[i]) {
+				drawCounts[drawRangeCount - 1] += drawCounts[i];
+			} else {
+				if (drawRangeCount != i) {
+					drawOffsets[drawRangeCount] = drawOffsets[i];
+					drawCounts[drawRangeCount] = drawCounts[i];
 				}
+				drawRangeCount++;
 			}
 		}
-		drawRangeCount = newDrawRangeCount;
 	}
 
 	void draw(CommandBuffer cmd) {
@@ -285,9 +298,8 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	void reset() {
-		Arrays.fill(drawOffsets, 0, drawRangeCount, -1);
-		Arrays.fill(drawCounts, 0, drawRangeCount, -1);
-		used = false;
+		Arrays.fill(drawOffsets, 0, writtenRangeCount, 0);
+		Arrays.fill(drawCounts, 0, writtenRangeCount, 0);
 		drawRangeCount = 0;
 		freeViews.addAll(usedViews);
 		usedViews.clear();

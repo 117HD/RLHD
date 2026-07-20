@@ -28,7 +28,8 @@ import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.collections.ConcurrentPool;
-import rs117.hd.utils.collections.PrimitiveIntArray;
+import rs117.hd.utils.collections.PooledArrayType;
+import rs117.hd.utils.collections.PrimitiveCharArray;
 
 import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
 import static rs117.hd.utils.MathUtils.*;
@@ -42,30 +43,41 @@ public final class FacePrioritySorter implements AutoCloseable {
 	private static final int MAX_FACES_PER_PRIORITY = 4000;
 	private static final int PRIORITY_COUNT = 12;
 
-	public final int[] faceDistances = new int[MAX_FACE_COUNT];
-
-	private final int[] orderedFaces = new int[PRIORITY_COUNT * MAX_FACES_PER_PRIORITY];
 	private final int[] numOfPriority = new int[PRIORITY_COUNT];
 	private final int[] eq10 = new int[MAX_FACES_PER_PRIORITY];
 	private final int[] eq11 = new int[MAX_FACES_PER_PRIORITY];
 	private final int[] lt10 = new int[PRIORITY_COUNT];
 
-	private final int[] zsortHead = new int[MAX_DIAMETER];
-	private final int[] zsortTail = new int[MAX_DIAMETER];
-	private final int[] zsortNext = new int[MAX_FACE_COUNT];
+	private char[] orderedFaces;
+	private int[] zsortHead;
+	private int[] zsortTail;
+	private int[] zsortNext;
 
-	void sortModelFaces(PrimitiveIntArray visibleFaces, Model model) {
+	private void ensureCapacity(int diameter, int faceCount) {
+		zsortHead = PooledArrayType.INT.ensureCapacity(zsortHead, min(MAX_DIAMETER, diameter + 1));
+		zsortTail = PooledArrayType.INT.ensureCapacity(zsortTail, min(MAX_DIAMETER, diameter + 1));
+		zsortNext = PooledArrayType.INT.ensureCapacity(zsortNext, min(MAX_FACE_COUNT, faceCount));
+	}
+
+	void sortModelFaces(PrimitiveCharArray visibleFaces, Model model, int[] faceDistances, boolean depthOnly) {
 		final int diameter = model.getDiameter();
 		if (diameter <= 0 || diameter >= MAX_DIAMETER)
 			return;
+
+		final int visibleFaceCount = visibleFaces.length;
+		final int facesPerPriority = min(visibleFaceCount, MAX_FACES_PER_PRIORITY);
+		orderedFaces = PooledArrayType.CHAR.ensureCapacity(orderedFaces, PRIORITY_COUNT * facesPerPriority);
 
 		int unsortedCount = 0;
 		int minFz = diameter, maxFz = 0;
 		boolean needsClear = true;
 
+		ensureCapacity(diameter, model.getFaceCount());
+
 		// Build the z-sorted linked list of faces
-		for (int i = 0; i < visibleFaces.length; ++i) {
-			final int faceIdx = visibleFaces.array[i];
+		for (int i = 0; i < visibleFaceCount; ++i) {
+			final char faceIdx = visibleFaces.array[i];
+			assert faceIdx < faceDistances.length;
 			if (faceDistances[faceIdx] == Integer.MIN_VALUE) {
 				orderedFaces[unsortedCount++] = faceIdx;
 				continue;
@@ -99,11 +111,11 @@ public final class FacePrioritySorter implements AutoCloseable {
 		if (unsortedCount > 0) // Push unsorted faces to be drawn first
 			visibleFaces.put(orderedFaces, 0, unsortedCount);
 
-		final byte[] priorities = model.getFaceRenderPriorities();
+		final byte[] priorities = depthOnly ? null : model.getFaceRenderPriorities();
 		if (priorities == null) {
 			for (int i = maxFz; i >= minFz; --i) {
 				for (int f = zsortHead[i]; f != -1; f = zsortNext[f])
-					visibleFaces.put(f);
+					visibleFaces.put((char) f);
 			}
 			return;
 		}
@@ -116,7 +128,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 				final int pri = priorities[f];
 				final int idx = numOfPriority[pri]++;
 
-				orderedFaces[pri * MAX_FACES_PER_PRIORITY + idx] = f;
+				orderedFaces[pri * facesPerPriority + idx] = (char) f;
 
 				if (pri < 10)
 					lt10[pri] += i;
@@ -138,12 +150,12 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		int drawnFaces = 0;
 		int numDynFaces = numOfPriority[10];
-		int dynBase = 10 * MAX_FACES_PER_PRIORITY;
+		int dynBase = 10 * facesPerPriority;
 		int[] dynDist = eq10;
 
 		if (numDynFaces == 0) {
 			numDynFaces = numOfPriority[11];
-			dynBase = 11 * MAX_FACES_PER_PRIORITY;
+			dynBase = 11 * facesPerPriority;
 			dynDist = eq11;
 		}
 
@@ -157,10 +169,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 			) {
 				visibleFaces.put(orderedFaces[dynBase + drawnFaces++]);
 
-				if (drawnFaces == numDynFaces && dynBase == 10 * MAX_FACES_PER_PRIORITY) {
+				if (drawnFaces == numDynFaces && dynBase == 10 * facesPerPriority) {
 					drawnFaces = 0;
 					numDynFaces = numOfPriority[11];
-					dynBase = 11 * MAX_FACES_PER_PRIORITY;
+					dynBase = 11 * facesPerPriority;
 					dynDist = eq11;
 				}
 
@@ -169,7 +181,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 			visibleFaces.put(
 				orderedFaces,
-				pri * MAX_FACES_PER_PRIORITY,
+				pri * facesPerPriority,
 				numOfPriority[pri]
 			);
 		}
@@ -177,10 +189,10 @@ public final class FacePrioritySorter implements AutoCloseable {
 		while (currFaceDistance != -1000) {
 			visibleFaces.put(orderedFaces[dynBase + drawnFaces++]);
 
-			if (drawnFaces == numDynFaces && dynBase == 10 * MAX_FACES_PER_PRIORITY) {
+			if (drawnFaces == numDynFaces && dynBase == 10 * facesPerPriority) {
 				drawnFaces = 0;
 				numDynFaces = numOfPriority[11];
-				dynBase = 11 * MAX_FACES_PER_PRIORITY;
+				dynBase = 11 * facesPerPriority;
 				dynDist = eq11;
 			}
 
@@ -199,55 +211,74 @@ public final class FacePrioritySorter implements AutoCloseable {
 			return;
 
 		final int faceCount = m.packedFaces.length;
+		ensureCapacity(diameter, faceCount);
+
+		final int[] packedFaces = m.packedFaces;
+		final int[] sortedFaces = m.sortedFaces;
+		final int[] zsortHead = this.zsortHead;
+		final int[] zsortTail = this.zsortTail;
+		final int[] zsortNext = this.zsortNext;
 
 		Arrays.fill(zsortHead, 0, diameter, -1);
 		Arrays.fill(zsortTail, 0, diameter, -1);
 
 		int minFz = diameter, maxFz = 0;
 		for (int i = 0; i < faceCount; ++i) {
-			final int packed = m.packedFaces[i];
-			final int x = packed >> 21;
-			final int y = (packed << 11) >> 22;
-			final int z = (packed << 21) >> 21;
+			final int packed = packedFaces[i];
+			final short x = (short) (packed >> 21);
+			final short y = (short) ((packed << 11) >> 22);
+			final short z = (short) ((packed << 21) >> 21);
 
-			int fz = ((z * yawCos - x * yawSin) >> 16);
+			// We do rotations with 16 bits of extra precision, which we discard post-rotation.
+			// Very little of this can actually be pre-computed without discarding that precision.
+			int fz = (z * yawCos - x * yawSin) >> 16;
 			fz = ((y * pitchSin + fz * pitchCos) >> 16) + radius;
 
-			if (zsortTail[fz] == -1) {
-				zsortHead[fz] = zsortTail[fz] = i;
-				zsortNext[i] = -1;
-
+			final int tailFaceIdx = zsortTail[fz];
+			if (tailFaceIdx == -1) {
+				zsortHead[fz] = i;
+				zsortTail[fz] = i;
 				minFz = min(minFz, fz);
 				maxFz = max(maxFz, fz);
 			} else {
-				int lastFace = zsortTail[fz];
-				zsortNext[lastFace] = i;
-				zsortNext[i] = -1;
+				zsortNext[tailFaceIdx] = i;
 				zsortTail[fz] = i;
 			}
+
+			zsortNext[i] = -1;
 		}
 
 		final int start = m.startpos / (VERT_SIZE >> 2);
 		for (int i = maxFz; i >= minFz; --i) {
 			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
-				if (m.sortedFacesLen >= m.sortedFaces.length)
-					break;
-
 				if (f >= faceCount)
 					continue;
 
 				final int sortedOffset = m.sortedFacesLen;
 				final int faceStart = f * 3 + start;
-				m.sortedFaces[sortedOffset] = faceStart;
-				m.sortedFaces[sortedOffset + 1] = faceStart + 1;
-				m.sortedFaces[sortedOffset + 2] = faceStart + 2;
+				sortedFaces[sortedOffset] = faceStart;
+				sortedFaces[sortedOffset + 1] = faceStart + 1;
+				sortedFaces[sortedOffset + 2] = faceStart + 2;
 				m.sortedFacesLen += 3;
+
+				if (m.sortedFacesLen >= sortedFaces.length)
+					return;
 			}
 		}
 	}
 
 	@Override
 	public void close() {
+		PooledArrayType.CHAR.release(orderedFaces);
+		PooledArrayType.INT.release(zsortHead);
+		PooledArrayType.INT.release(zsortTail);
+		PooledArrayType.INT.release(zsortNext);
+
+		orderedFaces = null;
+		zsortHead = null;
+		zsortTail = null;
+		zsortNext = null;
+
 		POOL.recycle(this);
 	}
 }

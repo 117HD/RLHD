@@ -78,7 +78,8 @@ public class Material {
 
 	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 	public static final Material NONE = new Material().name("NONE");
-	public static final Material[] REQUIRED_MATERIALS = { NONE };
+	public static final Material UNLIT = new Material().name("UNLIT").parent(NONE).unlit(true);
+	public static final Material[] REQUIRED_MATERIALS = { NONE, UNLIT };
 
 	public static int getTextureLayer(@Nullable Material material) {
 		return material == null ? -1 : material.textureLayer;

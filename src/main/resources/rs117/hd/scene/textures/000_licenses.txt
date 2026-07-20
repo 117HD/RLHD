@@ -107,13 +107,11 @@ LEAF_VEINS texture from TextureCan. All textures on this site are licensed as CC
 CARPET and CARPET_N textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Fabric030
 
-MUD_1 and MUD_1_N textures are a composite of textures from CC0-Textures. All textures on this site are licensed as CC0.
--- https://cc0-textures.com/t/th-brown-mud-02
--- https://cc0-textures.com/t/th-brown-mud-03
-
 GROUND_WEB_# and variants made by SirFancyBacon for the purpose of this project and are licensed as CC0
 
 LEAVES_1 and LEAVES_1_N are a modification of textures from CC0-Textures. All textures on this site are licensed as CC0.
 https://cc0-textures.com/t/cc0t-scattered-leaves-001
 
-LEAF_A was created by Jin-Jiyunsun, and is licensed as CC0.
+LEAF_A & LEAF_A_2 were created by Jin-Jiyunsun, and are licensed as CC0.
+
+LEAVES_SIDE_ALT is derived from intellectual property owned by Jagex Ltd. and is used in accordance with their Fan Content Policy.

@@ -11,6 +11,7 @@ import rs117.hd.config.SeasonalTheme;
 @Singleton
 public class HDVariables implements VariableSupplier {
 	public static final String VAR_SEASONAL_THEME = "season";
+	public static final String VAR_SEASONAL_FOLIAGE = "seasonalFoliage";
 	public static final String VAR_MODEL_TEXTURES = "modelTextures";
 	public static final String VAR_GROUND_TEXTURES = "groundTextures";
 	public static final String VAR_GROUND_BLENDING = "blending";
@@ -34,6 +35,8 @@ public class HDVariables implements VariableSupplier {
 		switch (name) {
 			case VAR_SEASONAL_THEME:
 				return plugin.configSeasonalTheme.ordinal();
+			case VAR_SEASONAL_FOLIAGE:
+				return plugin.configSeasonalFoliage;
 			case VAR_MODEL_TEXTURES:
 				return plugin.configModelTextures;
 			case VAR_GROUND_TEXTURES:
