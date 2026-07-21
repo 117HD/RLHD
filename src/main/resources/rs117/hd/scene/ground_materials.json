@@ -479,18 +479,6 @@
     ]
   },
   {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHT",
-    "materials": [
-      "WINTER_JAGGED_STONE_TILE_LIGHT"
-    ]
-  },
-  {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHT_2",
-    "materials": [
-      "WINTER_JAGGED_STONE_TILE_LIGHTER"
-    ]
-  },
-  {
     "name": "ROCKY_CAVE_FLOOR",
     "materials": [
       "GRUNGE_2",
@@ -601,6 +589,15 @@
       "GRASS_2",
       "DIRT_2",
       "GRASS_3"
+    ]
+  },
+  {
+    "name": "GRASSY_SAND",
+    "materials": [
+      "GRASS_1",
+      "SAND_1",
+      "SAND_2",
+      "SAND_3"
     ]
   },
   {

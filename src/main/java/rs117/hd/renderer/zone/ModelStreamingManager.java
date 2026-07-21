@@ -19,6 +19,7 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
@@ -144,6 +145,21 @@ public class ModelStreamingManager {
 		return count;
 	}
 
+	private boolean isAlphaModel(Model m) {
+		if (m.getTransparency() != 0 || m.getFaceTransparencies() != null)
+			return true;
+
+		final short[] faceTextures = m.getFaceTextures();
+		if (faceTextures != null) {
+			int faceCount = m.getFaceCount();
+			for (int f = 0; f < faceCount; f++)
+				if (Material.hasVanillaTransparency(faceTextures[f]))
+					return true;
+		}
+
+		return false;
+	}
+
 	public void drawTemp(
 		int renderThreadId,
 		Projection projection,
@@ -228,7 +244,7 @@ public class ModelStreamingManager {
 		streamingContext.renderableCount++;
 
 		final boolean hasAlpha =
-			(m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency) &&
+			(modelOverride.mightHaveTransparency || isAlphaModel(m)) &&
 			(!sceneManager.isRoot(ctx) || zone.inSceneFrustum);
 		final Zone.AlphaModel alphaModel = hasAlpha ?
 			zone.requestTempAlphaModel(
@@ -334,6 +350,7 @@ public class ModelStreamingManager {
 		boolean isPlayer = renderable instanceof Player;
 		final int renderMode = renderable.getRenderMode();
 		boolean shouldSort =
+			m.getTransparency() != 0 ||
 			m.getFaceTransparencies() != null ||
 			modelOverride.mightHaveTransparency ||
 			renderable instanceof Player ||
@@ -392,6 +409,7 @@ public class ModelStreamingManager {
 			if (visibleFaces.length > 0) {
 				final int alphaFaceCount = alphaModel != null ? sceneUploader.tempModelAlphaFaces : 0;
 				final int opaqueFaceCount = visibleFaces.length - alphaFaceCount;
+				assert opaqueFaceCount >= 0 && alphaFaceCount >= 0 : "Invalid face counts: " + opaqueFaceCount + ", " + alphaFaceCount;
 
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal

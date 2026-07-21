@@ -599,6 +599,9 @@ public class Zone implements Destructible {
 			if (faceOverride.hide)
 				continue;
 
+			if (faceOverride.modifiesAlpha)
+				transparency = 255 - faceOverride.modifyAlpha(255 - transparency);
+
 			boolean hasAlpha = material.hasTransparency || transparency != 0;
 			if (!hasAlpha)
 				continue;
@@ -716,7 +719,7 @@ public class Zone implements Destructible {
 		int zz,
 		int level,
 		WorldViewContext ctx,
-		boolean isShadowPass,
+		boolean depthOnly,
 		boolean includeRoof
 	) {
 		if (alphaModels.isEmpty())
@@ -733,9 +736,7 @@ public class Zone implements Destructible {
 
 		drawIdx = 0;
 
-		cmd.DepthMask(false);
-
-		if (!isShadowPass)
+		if (!depthOnly)
 			sortedAlphaFacesUpload.waitForCompletion();
 
 		int eboAlphaStart = eboAlphaOffset = ZoneRenderer.eboAlphaWriter.getWrittenInts();
@@ -752,7 +753,7 @@ public class Zone implements Destructible {
 			if (m.isTemp()) {
 				// these are already sorted and so just requires a glMultiDrawArrays() from the active vao
 				drawMode = TEMP;
-			} else if (isShadowPass || m.asyncSortIdx < 0) {
+			} else if (depthOnly || m.asyncSortIdx < 0) {
 				drawMode = STATIC_UNSORTED;
 			}
 
@@ -798,8 +799,6 @@ public class Zone implements Destructible {
 		}
 
 		flush(cmd);
-
-		cmd.DepthMask(true);
 	}
 
 	private void flush(CommandBuffer cmd) {

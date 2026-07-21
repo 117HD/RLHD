@@ -480,6 +480,8 @@ public class ProceduralGenerator {
 	}
 
 	final class MainTileOverridesGenerator {
+		private static final int SCENE_EDGE_PADDING = 1;
+
 		private final TileOverride[] overrides = new TileOverride[TILE_OVERRIDE_COUNT];
 		private final int[] worldPos = new int[3];
 		private final int[] ids = new int[2];
@@ -515,8 +517,8 @@ public class ProceduralGenerator {
 						final int oY = y + dY;
 						final boolean canReuseTile =
 							canReuseScene &&
-							oX >= 0 && oX < sceneContext.sizeX &&
-							oY >= 0 && oY < sceneContext.sizeZ &&
+							oX >= SCENE_EDGE_PADDING && oX < sceneContext.sizeX - SCENE_EDGE_PADDING &&
+							oY >= SCENE_EDGE_PADDING && oY < sceneContext.sizeZ - SCENE_EDGE_PADDING &&
 							prevXTiles[oY] != null;
 
 						int tileZ = tile.getRenderLevel();
