@@ -185,7 +185,7 @@
     "groundMaterial": "WINTER_JAGGED_STONE_TILE",
     "maxLightness": 42,
     "replacements": {
-      "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND": "!blending"
+      "WINTER_EAST_ARDOUGNE_BRIDGE_NO_BLEND": "!blendingColors"
     }
   },
   {
@@ -386,7 +386,7 @@
     "minLightness": 15,
     "maxLightness": 15,
     "replacements": {
-      "DRAYNOR_PATH_BLENDING_FIX_NO_BLENDING": "!blending"
+      "DRAYNOR_PATH_BLENDING_FIX_NO_BLENDING": "!blendingColors"
     }
   },
   {
@@ -418,7 +418,7 @@
     ],
     "groundMaterial": "GRAVEL",
     "replacements": {
-      "DRAYNOR_NEDS_PATH_FIX": "blending"
+      "DRAYNOR_NEDS_PATH_FIX": "blendingColors"
     }
   },
   {
@@ -429,7 +429,7 @@
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
-      "DRAYNOR_BANK_ENTRANCE_PATH": "blending",
+      "DRAYNOR_BANK_ENTRANCE_PATH": "blendingColors",
       "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
@@ -454,7 +454,7 @@
     ],
     "groundMaterial": "GRAVEL",
     "replacements": {
-      "DRAYNOR_BANK_PATH_FIX_10_DARK": "blending"
+      "DRAYNOR_BANK_PATH_FIX_10_DARK": "blendingColors"
     }
   },
   {
@@ -478,7 +478,7 @@
     ],
     "groundMaterial": "GRAVEL",
     "replacements": {
-      "DRAYNOR_BANK_PATH_FIX_10_LIGHT": "blending"
+      "DRAYNOR_BANK_PATH_FIX_10_LIGHT": "blendingColors"
     }
   },
   {
@@ -507,7 +507,7 @@
     "groundMaterial": "BRICK_PATHS",
     "shiftSaturation": -1,
     "replacements": {
-      "WINTER_GRASS": "blending"
+      "WINTER_GRASS": "blendingColors"
     }
   },
   {
@@ -521,7 +521,7 @@
     "blended": false,
     "replacements": {
       "WIZARDS_TOWER_PATH_BLEND_FIX_WINTER": "season == SeasonalTheme.WINTER",
-      "WIZARDS_TOWER_PATH_BLEND_FIX": "blending"
+      "WIZARDS_TOWER_PATH_BLEND_FIX": "blendingColors"
     }
   },
   {
@@ -717,7 +717,7 @@
     "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
     "replacements": {
       "NONE": "!textures",
-      "LUMBRIDGE_CASTLE_FLOORS_NO_BLENDING": "!blending"
+      "LUMBRIDGE_CASTLE_FLOORS_NO_BLENDING": "!blendingColors"
     }
   },
   {
@@ -747,7 +747,7 @@
     "uvScale": 0.75,
     "blended": false,
     "replacements": {
-      "LUMBRIDGE_PATHS": "blending",
+      "LUMBRIDGE_PATHS": "blendingColors",
       "NONE": "!textures"
     }
   },
@@ -836,7 +836,7 @@
     "blendedAsOpposite": false,
     "replacements": {
       "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
-      "LUMBRIDGE_TOWERS_EXTERIOR": "!blending",
+      "LUMBRIDGE_TOWERS_EXTERIOR": "!blendingColors",
       "NONE": "!textures"
     }
   },
@@ -907,7 +907,7 @@
     "maxLightness": 18,
     "replacements": {
       "NONE": "!textures",
-      "LUMBRIDGE_VARROCK_BAND_BLEND_FIX_NOBLENDING": "!blending"
+      "LUMBRIDGE_VARROCK_BAND_BLEND_FIX_NOBLENDING": "!blendingColors"
     }
   },
   {
@@ -1195,7 +1195,7 @@
     "shiftLightness": 15,
     "blended": false,
     "replacements": {
-      "WINTER_GRASS": "blending"
+      "WINTER_GRASS": "blendingColors"
     }
   },
   {
@@ -1209,7 +1209,7 @@
     "replacements": {
       "NONE": "!textures",
       "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER": "season == SeasonalTheme.WINTER",
-      "EAST_ARDOUGNE_PATH_BLENDING_FIX": "blending",
+      "EAST_ARDOUGNE_PATH_BLENDING_FIX": "blendingColors",
       "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_TEXTURE_BLENDING_ONLY": "blendingTexturesOnly"
     }
   },
@@ -1225,7 +1225,7 @@
     "replacements": {
       "NONE": "!textures",
       "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER": "season == SeasonalTheme.WINTER",
-      "EAST_ARDOUGNE_PATH_BLENDING_FIX": "blending"
+      "EAST_ARDOUGNE_PATH_BLENDING_FIX": "blendingColors"
     }
   },
   {
@@ -1255,7 +1255,7 @@
     "underlayIds": [ 59 ],
     "groundMaterial": "SNOW_2",
     "replacements": {
-      "ASGARNIA_ICE_DUNGEON Snow Tiles Fix UNBLEND": "!blending"
+      "ASGARNIA_ICE_DUNGEON Snow Tiles Fix UNBLEND": "!blendingColors"
     },
     "shiftLightness": 27
   },
@@ -1336,7 +1336,7 @@
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
       "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
-      "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blending"
+      "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blendingColors"
     },
     "blended": false,
     "minLightness": 29,
@@ -1537,7 +1537,7 @@
     "blended": false,
     "shiftLightness": 6,
     "replacements": {
-      "DEFAULT_DIRT": "!blending"
+      "DEFAULT_DIRT": "!blendingColors"
     }
   },
   {
@@ -1550,7 +1550,7 @@
     "blended": false,
     "shiftLightness": 7,
     "replacements": {
-      "DEFAULT_DIRT": "!blending"
+      "DEFAULT_DIRT": "!blendingColors"
     }
   },
   {
@@ -3348,7 +3348,7 @@
     "blendedAsOpposite": true,
     "uvScale": 1.25011,
     "replacements": {
-      "SEERS_ELEMENTAL_WORKSHOP_HOUSE_171": "!blending"
+      "SEERS_ELEMENTAL_WORKSHOP_HOUSE_171": "!blendingColors"
     }
   },
   {
@@ -3726,7 +3726,7 @@
     "shiftLightness": 6,
     "replacements": {
       "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
-      "EAST_ARDOUGNE_CASTLE_PATH_FIX_BLENDING": "blending"
+      "EAST_ARDOUGNE_CASTLE_PATH_FIX_BLENDING": "blendingColors"
     }
   },
   {
@@ -4493,7 +4493,7 @@
     "shiftLightness": 3,
     "minLightness": 12,
     "replacements": {
-      "DARKMEYER_PATH_UPPER_NO_BLENDING": "!blending"
+      "DARKMEYER_PATH_UPPER_NO_BLENDING": "!blendingColors"
     }
   },
   {
@@ -4845,7 +4845,7 @@
     "maxSaturation": 2,
     "blended": false,
     "replacements": {
-      "TIRANNWN_PATHS": "blending",
+      "TIRANNWN_PATHS": "blendingColors",
       "NONE": "!textures"
     }
   },
@@ -5446,7 +5446,7 @@
     "shiftSaturation": 3,
     "shiftLightness": -20,
     "replacements": {
-      "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_BLENDING": "!blending"
+      "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_BLENDING": "!blendingColors"
     }
   },
   {
@@ -5467,7 +5467,7 @@
     ],
     "groundMaterial": "SAND",
     "replacements": {
-      "TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX": "blending"
+      "TEMPLE_OF_THE_EYE_PATH_BLENDING_FIX": "blendingColors"
     }
   },
   {
@@ -5626,7 +5626,7 @@
     "uvScale": 1.5,
     "maxLightness": 16,
     "replacements": {
-      "Mount Karuulm - Lava Pool Fix - 5 - Blending": "blending",
+      "Mount Karuulm - Lava Pool Fix - 5 - Blending": "blendingColors",
       "NONE": "!textures"
     }
   },
@@ -5660,7 +5660,7 @@
     "groundMaterial": "ROCK_6",
     "uvScale": 1.5,
     "replacements": {
-      "Mount Karuulm - Lava Pool Fix - 6 - Blending": "blending",
+      "Mount Karuulm - Lava Pool Fix - 6 - Blending": "blendingColors",
       "NONE": "!textures"
     }
   },
@@ -5711,7 +5711,7 @@
     "groundMaterial": "ROCK_6",
     "uvScale": 1.5,
     "replacements": {
-      "Mount Karuulm - Lava Pool Fix - 8 - Blending": "blending"
+      "Mount Karuulm - Lava Pool Fix - 8 - Blending": "blendingColors"
     }
   },
   {
@@ -5988,7 +5988,7 @@
     "maxLightness": 13,
     "shiftLightness": -1,
     "replacements": {
-      "WILDY_POH_DIRT_BLENDING": "blending"
+      "WILDY_POH_DIRT_BLENDING": "blendingColors"
     }
   },
   {
@@ -6433,7 +6433,7 @@
       132
     ],
     "replacements": {
-      "TOA_AMASCUT_FLOOR_SAND_BLEND": "blending"
+      "TOA_AMASCUT_FLOOR_SAND_BLEND": "blendingColors"
     }
   },
   {
@@ -7048,7 +7048,7 @@
     "shiftHue": 5,
     "maxHue": 38,
     "replacements": {
-      "Amoxliatl Snow Main No Blending": "!blending"
+      "Amoxliatl Snow Main No Blending": "!blendingColors"
     }
   },
   {
@@ -7196,7 +7196,7 @@
     "maxLightness": 98,
     "replacements": {
       "Proudspire Cliff": "l < 3",
-      "Proudspire Snow No Blending": "!blending"
+      "Proudspire Snow No Blending": "!blendingColors"
     }
   },
   {
@@ -7265,7 +7265,7 @@
     "underlayIds": [ 58, 63, 94, 173 ],
     "groundMaterial": "DIRTY_SNOW",
     "replacements": {
-      "Hueycoatl Snow Fix - No Blending": "!blending"
+      "Hueycoatl Snow Fix - No Blending": "!blendingColors"
     },
     "shiftLightness": 25
   },
@@ -7297,7 +7297,7 @@
     "maxLightness": 93,
     "replacements": {
       "SEASONAL_GRASS": "l < 15 || s > 0",
-      "Ralos Rise Snow No Blending" : "!blending"
+      "Ralos Rise Snow No Blending": "!blendingColors"
     }
   },
   {
@@ -7669,7 +7669,7 @@
     "blendedAsOpposite": true,
     "shiftLightness": 9,
     "replacements": {
-      "MASTERING_MIXOLOGY_OVERLAY_NO_BLENDING": "!blending"
+      "MASTERING_MIXOLOGY_OVERLAY_NO_BLENDING": "!blendingColors"
     }
   },
   {
@@ -7767,7 +7767,7 @@
     "blended": false,
     "uvOrientation": 128,
     "replacements": {
-      "Tal Teklan Stone Brick Path - No blend": "!blending"
+      "Tal Teklan Stone Brick Path - No blend": "!blendingColors"
     }
   },
   {
@@ -8103,7 +8103,7 @@
     "name": "EDGEVILLE_PATH_OVERLAY_48",
     "area": "EDGEVILLE_PATH_OVERLAY",
     "replacements": {
-      "EDGEVILLE_PATH_OVERLAY_48_CUSTOM_PATH": "blending",
+      "EDGEVILLE_PATH_OVERLAY_48_CUSTOM_PATH": "blendingColors",
       "WINTER_GRASS": "season == SeasonalTheme.WINTER",
       "DEFAULT_GRASS": true
     }
@@ -8860,7 +8860,7 @@
     ],
     "groundMaterial": "PLAIN_DIRT",
     "replacements": {
-      "COMPLEX_TILES_KARAMJA": "blending"
+      "COMPLEX_TILES_KARAMJA": "blendingColors"
     }
   },
   {
@@ -8978,7 +8978,7 @@
     ],
     "groundMaterial": "SNOW_1",
     "replacements": {
-      "GOD_WARS_DUNGEON_SNOW_NO_BLENDING": "!blending"
+      "GOD_WARS_DUNGEON_SNOW_NO_BLENDING": "!blendingColors"
     }
   },
   {
@@ -9031,7 +9031,7 @@
     "maxLightness": 3,
     "shiftLightness": 1,
     "replacements": {
-      "TZHAAR_NO_BLENDING": "!blending"
+      "TZHAAR_NO_BLENDING": "!blendingColors"
     }
   },
   {
@@ -9162,7 +9162,7 @@
     ],
     "groundMaterial": "SNOW_1",
     "replacements": {
-      "Island of Stone Complex Tiles Unblend": "!blending",
+      "Island of Stone Complex Tiles Unblend": "!blendingColors",
       "SEASONAL_DIRT": "h == 7 && s >= 1 && l <= 71",
       "SEASONAL_ROCKY_GROUND": "h < 13 && s == 0 && l <= 40",
       "WINTER_DIRT": true
@@ -9201,10 +9201,10 @@
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
       "WINTER_DIRT": "season == SeasonalTheme.WINTER",
-      "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_OUTER": "h == 7 && blending",
+      "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_OUTER": "h == 7 && blendingColors",
       "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING_OUTER": "h == 7",
-      "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_INNER": "h == 6 && l < 45 && blending",
-      "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING": "!blending"
+      "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_INNER": "h == 6 && l < 45 && blendingColors",
+      "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING": "!blendingColors"
     },
     "shiftLightness": 16
   },
@@ -9430,7 +9430,7 @@
     "underlayIds": [ 58, 59, 60 ],
     "groundMaterial": "SNOW_2",
     "replacements": {
-      "ICEBERG_UNBLEND": "!blending"
+      "ICEBERG_UNBLEND": "!blendingColors"
     },
     "shiftLightness": 35
   },
@@ -9919,7 +9919,7 @@
     "uvOrientation": 90,
     "shiftLightness": 7,
     "replacements": {
-      "DEFAULT_PACKED_EARTH": "h < 8 || !blending",
+      "DEFAULT_PACKED_EARTH": "h < 8 || !blendingColors",
       "NONE": "!textures"
     }
   },
@@ -9940,7 +9940,7 @@
     "uvOrientation": 32,
     "shiftLightness": 7,
     "replacements": {
-      "DEFAULT_PACKED_EARTH": "h < 8 || !blending",
+      "DEFAULT_PACKED_EARTH": "h < 8 || !blendingColors",
       "NONE": "!textures"
     }
   },
@@ -9965,7 +9965,7 @@
     "groundMaterial": "GRASS_1",
     "maxLightness": 15,
     "replacements": {
-      "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3_BLENDING": "blending"
+      "MORYTANIA_SPIDER_CAVES_ENTRANCE_FIX_3_BLENDING": "blendingColors"
     }
   },
   {
@@ -10168,7 +10168,7 @@
     ],
     "groundMaterial": "TEMPLE_OF_THE_EYE_FLOOR",
     "replacements": {
-      "TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX": "blending"
+      "TEMPLE_OF_THE_EYE_ROCK_SHADE_FIX": "blendingColors"
     }
   },
   {
@@ -10529,7 +10529,7 @@
     "shiftLightness": -1,
     "uvScale": 0.7,
     "replacements": {
-      "Barbarian Assault Lighten Dirt No Blending": "!blending"
+      "Barbarian Assault Lighten Dirt No Blending": "!blendingColors"
     }
   },
   {
@@ -10738,7 +10738,7 @@
     "maxLightness": 105,
     "replacements": {
       "NONE": "!textures",
-      "GRIMSTONE_NO_BLENDING": "!blending"
+      "GRIMSTONE_NO_BLENDING": "!blendingColors"
     }
   },
   {
@@ -10828,7 +10828,7 @@
     "shiftLightness": 10,
     "maxLightness": 100,
     "replacements": {
-      "Ungael Snow Blending": "blending",
+      "Ungael Snow Blending": "blendingColors",
       "Ungael No Textures": "!textures"
     }
   },
@@ -10839,7 +10839,7 @@
     "groundMaterial": "VARIED_DIRT",
     "shiftLightness": 0,
     "replacements": {
-      "Ungael Shore Blending": "blending",
+      "Ungael Shore Blending": "blendingColors",
       "Ungael No Textures": "!textures"
     }
   },
@@ -10873,7 +10873,7 @@
     "shiftLightness": -5,
     "minLightness": 15,
     "replacements": {
-      "Ungael Cliffs Blending": "blending",
+      "Ungael Cliffs Blending": "blendingColors",
       "Ungael No Textures": "!textures"
     }
   },
@@ -11066,7 +11066,7 @@
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
       "SEASONAL_SNOW": "season == SeasonalTheme.WINTER",
-      "UNDERLAY_SNOW_NO_BLENDING": "!blending"
+      "UNDERLAY_SNOW_NO_BLENDING": "!blendingColors"
     }
   },
   {
@@ -11232,7 +11232,7 @@
       144
     ],
     "replacements": {
-      "SEASONAL_GRUNGE": "blending && (s == 0 || h <= 10 && s < 2)",
+      "SEASONAL_GRUNGE": "blendingColors && (s == 0 || h <= 10 && s < 2)",
       "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
       "SEASONAL_GRASS": [
         "h >= 11 && s == 1",
