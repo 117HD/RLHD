@@ -14,9 +14,10 @@ public class HDVariables implements VariableSupplier {
 	public static final String VAR_SEASONAL_FOLIAGE = "seasonalFoliage";
 	public static final String VAR_MODEL_TEXTURES = "modelTextures";
 	public static final String VAR_GROUND_TEXTURES = "groundTextures";
-	public static final String VAR_GROUND_BLENDING = "blending";
 	public static final String VAR_GROUND_BLENDING_COLORS = "blendingColors";
 	public static final String VAR_GROUND_BLENDING_TEXTURES = "blendingTextures";
+	public static final String VAR_GROUND_BLENDING = "blending";
+	public static final String VAR_GROUND_BLENDING_BOTH = "blendingBoth";
 	public static final String VAR_GROUND_BLENDING_COLORS_ONLY = "blendingColorsOnly";
 	public static final String VAR_GROUND_BLENDING_TEXTURES_ONLY = "blendingTexturesOnly";
 	public static final String VAR_HD_INFERNAL_TEXTURE = "hdInfernalCape";
@@ -43,12 +44,14 @@ public class HDVariables implements VariableSupplier {
 				return plugin.configModelTextures;
 			case VAR_GROUND_TEXTURES:
 				return plugin.configGroundTextures;
-			case VAR_GROUND_BLENDING:
-				return plugin.configGroundBlendingColors || plugin.configGroundBlendingTextures;
 			case VAR_GROUND_BLENDING_COLORS:
 				return plugin.configGroundBlendingColors;
 			case VAR_GROUND_BLENDING_TEXTURES:
 				return plugin.configGroundBlendingTextures;
+			case VAR_GROUND_BLENDING:
+				return plugin.configGroundBlendingColors || plugin.configGroundBlendingTextures;
+			case VAR_GROUND_BLENDING_BOTH:
+				return plugin.configGroundBlendingColors && plugin.configGroundBlendingTextures;
 			case VAR_GROUND_BLENDING_COLORS_ONLY:
 				return plugin.configGroundBlendingColors && !plugin.configGroundBlendingTextures;
 			case VAR_GROUND_BLENDING_TEXTURES_ONLY:
