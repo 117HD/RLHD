@@ -36,12 +36,16 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.CpuUsageLimit;
+import rs117.hd.config.DayLength;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultBoolean;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.GroundBlending;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.MoonBehavior;
+import rs117.hd.config.MoonPhase;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -421,14 +425,16 @@ public interface HdPluginConfig extends Config
 		name = "Shadow filtering",
 		description =
 			"Filtering technique used when smoothing the edges of shadows.<br>" +
-			"'Smooth' smooths the shadow pixels evenly (PCF 3x3).<br>" +
-			"'Dithered' smooths out pixelation using dithering.<br>" +
+			"'Smooth Low' smooths the shadow pixels evenly (PCF 2x2).<br>" +
+			"'Smooth High' smooths the shadow pixels evenly (PCF 3x3).<br>" +
+			"'Dithered Low' smooths out pixelation using dithering.<br>" +
+			"'Dithered High' smooths out pixelation using dithering (PCF 2x2).<br>" +
 			"'Pixelated' retains slightly pixelated shadow edges.",
 		position = 3,
 		section = shadowSettings
 	)
 	default ShadowFiltering shadowFiltering() {
-		return ShadowFiltering.SMOOTH;
+		return ShadowFiltering.SMOOTH_HIGH;
 	}
 
 	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
@@ -467,6 +473,18 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean expandShadowDraw() {
 		return false;
+	}
+
+	String KEY_TERRAIN_SHADOWS = "experimentalTerrainShadows";
+	@ConfigItem(
+		keyName = KEY_TERRAIN_SHADOWS,
+		name = "Terrain Shadows",
+		description = "Allow terrain to cast shadows on other terrain. May cause visual artifacts on slopes.",
+		position = 7,
+		section = shadowSettings
+	)
+	default boolean terrainShadows() {
+		return true;
 	}
 
 
@@ -584,12 +602,195 @@ public interface HdPluginConfig extends Config
 	}
 
 
+	/*====== Day & night cycle settings ======*/
+
+	@ConfigSection(
+		name = "Day & night cycle",
+		description = "Dynamic day and night cycle settings",
+		position = 3,
+		closedByDefault = true
+	)
+	String daylightCycleSettings = "daylightCycleSettings";
+
+	String KEY_ENABLE_DAYLIGHT_CYCLE = "enableDaylightCycle";
+	@ConfigItem(
+		keyName = KEY_ENABLE_DAYLIGHT_CYCLE,
+		name = "Enable day & night cycle",
+		description = "Enables the dynamic day & night cycle with realistic sun positioning and brightness changes",
+		position = 0,
+		section = daylightCycleSettings
+	)
+	default boolean enableDaylightCycle() {
+		return true;
+	}
+
+	String KEY_DAYLIGHT_CYCLE = "daylightCycle";
+	@ConfigItem(
+		keyName = KEY_DAYLIGHT_CYCLE,
+		name = "Cycle mode",
+		description =
+			"Controls the day & night cycle behavior.<br>" +
+			"• Dynamic = Full day & night cycling<br>" +
+			"• Real Time = Sun and moon follow your computer's local clock<br>" +
+			"• Synced Days = A full day every real hour, synced to UTC so all players see the same sky<br>" +
+			"• Fixed Dawn = Sun locked at dawn<br>" +
+			"• Fixed Midday = Sun locked at noon<br>" +
+			"• Fixed Sunset = Sun locked at sunset<br>" +
+			"• Fixed Night = Permanent night with the moon locked in place<br>" +
+			"• Always Night = Permanent night, moon still cycles",
+		position = 1,
+		section = daylightCycleSettings
+	)
+	default DaylightCycle daylightCycle() {
+		return DaylightCycle.DYNAMIC;
+	}
+
+	String KEY_CYCLE_DURATION = "cycleDurationMinutes";
+	@Range(min = 1, max = 720)
+	@Units(Units.MINUTES)
+	@ConfigItem(
+		keyName = KEY_CYCLE_DURATION,
+		name = "Cycle duration",
+		description =
+			"How long a complete day & night cycle should take in real-time minutes.<br>" +
+			"• 1 minute = Very fast cycle for testing<br>" +
+			"• 12 minutes = Quick atmospheric changes<br>" +
+			"• 30 minutes = Default cycle<br>" +
+			"• 60 minutes = Slow hourly cycle<br>" +
+			"• 180+ minutes = Very slow, immersive cycle",
+		position = 2,
+		section = daylightCycleSettings
+	)
+	default int cycleDurationMinutes() {
+		return 30;
+	}
+
+	String KEY_DAY_LENGTH = "dayLength";
+	@ConfigItem(
+		keyName = KEY_DAY_LENGTH,
+		name = "Day length",
+		description =
+			"Adjusts how the cycle time is split between day and night, without changing the total cycle duration.<br>" +
+			"• Standard = Natural daylight balance<br>" +
+			"• Longer Days = Sun stays up longer; nights pass quickly<br>" +
+			"• Longer Nights = Nights last longer; days pass quickly",
+		position = 3,
+		section = daylightCycleSettings
+	)
+	default DayLength dayLength() {
+		return DayLength.STANDARD;
+	}
+
+	String KEY_MINIMUM_BRIGHTNESS = "minimumBrightness";
+	@Range(min = 10, max = 200)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_MINIMUM_BRIGHTNESS,
+		name = "Minimum brightness",
+		description =
+			"The minimum brightness level during nighttime.<br>" +
+			"• 10% = Very dark nights<br>" +
+			"• 25% = Dark but playable<br>" +
+			"• 35% = Dark but comfortable<br>" +
+			"• 50% = Balanced darkness<br>" +
+			"• 70% = Default bright nights (minimal difference from day)<br>" +
+			"• 100% = No brightness change at night",
+		position = 4,
+		section = daylightCycleSettings
+	)
+	default int minimumBrightness() {
+		return 70;
+	}
+
+	String KEY_ENABLE_STAR_MAP = "enableStarMap";
+	@ConfigItem(
+		keyName = KEY_ENABLE_STAR_MAP,
+		name = "Stars",
+		description = "Show the star map texture in the night sky. When disabled, the night sky uses only the gradient skybox.",
+		position = 5,
+		section = daylightCycleSettings
+	)
+	default boolean enableStarMap() {
+		return true;
+	}
+
+	String KEY_ENABLE_NEBULAS = "enableNebulas";
+	@ConfigItem(
+		keyName = KEY_ENABLE_NEBULAS,
+		name = "Nebulas",
+		description = "Show procedural nebula clouds in the night sky. When disabled, the night sky shows only stars and the gradient skybox.",
+		position = 6,
+		section = daylightCycleSettings
+	)
+	default boolean enableNebulas() {
+		return true;
+	}
+
+	String KEY_ENABLE_MOON = "enableMoon";
+	@ConfigItem(
+		keyName = KEY_ENABLE_MOON,
+		name = "Moon",
+		description = "Show the moon in the night sky.",
+		position = 7,
+		section = daylightCycleSettings
+	)
+	default boolean enableMoon() {
+		return true;
+	}
+
+	String KEY_MOON_BEHAVIOR = "moonBehavior";
+	@ConfigItem(
+		keyName = KEY_MOON_BEHAVIOR,
+		name = "Moon behavior",
+		description =
+			"How the moon moves across the sky.<br>" +
+			"Realistic = Astronomical moon with realistic phases and independent orbit<br>" +
+			"Night Synced = Moon always rises when sun sets and sets when sun rises (always full)",
+		position = 8,
+		section = daylightCycleSettings
+	)
+	default MoonBehavior moonBehavior() {
+		return MoonBehavior.NIGHT_SYNCED;
+	}
+
+	String KEY_MOON_PHASE = "moonPhase";
+	@ConfigItem(
+		keyName = KEY_MOON_PHASE,
+		name = "Moon phase",
+		description =
+			"Locks the moon at a fixed phase.<br>" +
+			"Dynamic = Phase changes naturally over time<br>" +
+			"Full Moon / Gibbous / Half Moon / Crescent / New Moon = Locked at that phase",
+		position = 9,
+		section = daylightCycleSettings
+	)
+	default MoonPhase moonPhase() {
+		return MoonPhase.FULL_MOON;
+	}
+
+	String KEY_HIDE_VANILLA_SKYBOXES = "hideVanillaSkyboxes";
+	@ConfigItem(
+		keyName = KEY_HIDE_VANILLA_SKYBOXES,
+		name = "Override Vanilla Skyboxes",
+		description =
+			"Allows areas that opt in to hide the game's built-in skybox models (such as the one added for Blood " +
+			"Moon Rises) so the day & night cycle's own sky is shown in their place.<br>" +
+			"When enabled, vanilla skyboxes are hidden only in areas configured to hide them.<br>" +
+			"When disabled, vanilla skyboxes are always shown, even in those areas.",
+		position = 10,
+		section = daylightCycleSettings
+	)
+	default boolean hideVanillaSkyboxes() {
+		return true;
+	}
+
+
 	/*====== Environment settings ======*/
 
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 3,
+		position = 4,
 		closedByDefault = true
 	)
 	String environmentSettings = "environmentSettings";
@@ -821,7 +1022,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -975,7 +1176,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
@@ -1128,7 +1329,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
-		position = 6,
+		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";

@@ -94,6 +94,11 @@
           "type": "number"
         }
       },
+      "followDayNight": {
+        "type": "boolean",
+        "default": false,
+        "description": "When true, uses the outdoor sky horizon color for this light and scales strength with time of day while the daylight cycle is enabled, including in dungeons (e.g. tunnel exits). The configured color sets peak midday brightness."
+      },
       "type": {
         "type": "string",
         "description": "Specify the animation to apply to the light. Defaults to STATIC.",
@@ -150,6 +155,31 @@
       "waitForAnimation": {
         "type": "boolean",
         "description": "Whether the light should spawn only when an animation starts playing. Only works for `GraphicsObject`s and `Projectile`s. Defaults to false."
+      },
+      "nightMultiplier": {
+        "type": "number",
+        "default": 1,
+        "minimum": 0,
+        "description": "Peak-darkness strength target when the day & night cycle is active in overworld areas. 1 = default, 0.5 = half default brightness, 0 = off. Values above 1 boost brightness at night. Ignored outside overworld."
+      },
+      "timeOfDay": {
+        "type": "string",
+        "enum": [ "DAY", "DAWN", "DUSK", "TWILIGHT", "NIGHT", "DEEP_NIGHT" ],
+        "description": "Cycle phase when this light starts turning on (e.g. DUSK at sunset, NIGHT mid-evening). Overworld only."
+      },
+      "timeOfDayOff": {
+        "type": "string",
+        "enum": [ "DAY", "DAWN", "DUSK", "TWILIGHT", "NIGHT", "DEEP_NIGHT" ],
+        "description": "Optional cycle phase when this light starts turning off at dawn. Omitted = mirror timeOfDay. Overworld only."
+      },
+      "staggered": {
+        "type": "boolean",
+        "description": "When true, each instance turns on and off at a different time within the timeOfDay / timeOfDayOff phases based on its world position. Requires timeOfDay. Overworld only. Defaults to false."
+      },
+      "dayNightOnly": {
+        "type": "boolean",
+        "default": false,
+        "description": "When true, the light is disabled while the day & night cycle is turned off in plugin settings. timeOfDay scheduling only applies in overworld; elsewhere the light behaves as static."
       },
       "areas": {
         "type": "array",

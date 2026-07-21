@@ -6,8 +6,12 @@ import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.ExpressionParser;
+import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.GsonUtils.DegreesToRadians;
 import rs117.hd.utils.HDUtils;
 
@@ -43,6 +47,22 @@ public class Environment {
 	public boolean allowRoofShadows = true;
 	public boolean lightningEffects = false;
 	public boolean instantTransition = false;
+	// When true, the game's built-in skybox models (e.g. the one added for Blood Moon
+	// Rises) are hidden in this area so the day & night cycle's own sky is shown instead.
+	// This only takes effect while the "Override Vanilla Skyboxes" config toggle is on
+	// (its default); turning that toggle off forces vanilla skyboxes back on everywhere,
+	// including areas that set this flag.
+	public boolean hideVanillaSkyboxes = false;
+	@Nullable
+	@JsonAdapter(ExpressionParser.PredicateAdapter.class)
+	public ExpressionPredicate varbitCondition;
+	@Nullable
+	@JsonAdapter(ExpressionParser.PredicateAdapter.class)
+	public ExpressionPredicate varpCondition;
+	// When set, forces the day & night cycle mode for this environment, overriding
+	// the player's config setting. Null = use the configured mode.
+	@Nullable
+	public DaylightCycle cycleMode = null;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] ambientColor = rgb("#ffffff");
 	public float ambientStrength = 1;
@@ -59,8 +79,39 @@ public class Environment {
 	public float[] underglowColor = rgb("#000000");
 	public float underglowStrength = 0;
 	@Nullable
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] moonColor;
+	// Color of the light the moon casts on the scene (moonlight). When unset,
+	// falls back to moonColor so the cast light matches the moon disk (current
+	// behavior). Set this to give moonlight a different tint than the visible moon.
+	@Nullable
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] moonLightColor;
+	// Color the night sky (zenith/horizon) is tinted toward as the moon rises.
+	// When unset, falls back to moonColor so the sky color matches the moon disk
+	// (current behavior). Set this to color the night sky independently of the moon.
+	@Nullable
+	@JsonAdapter(SrgbToLinearAdapter.class)
+	public float[] nightSkyColor;
+	// How strongly nightSkyColor tints the night sky. 1 (default) preserves the
+	// original subtle tint; higher values push the sky harder toward nightSkyColor for
+	// areas where the default is too weak to read.
+	public float nightSkyColorStrength = 1;
+	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
+	// When set, and the active day & night cycle is a fixed mode (FIXED_DAWN,
+	// FIXED_MIDDAY, FIXED_SUNSET, FIXED_NIGHT, ALWAYS_NIGHT), these lock the
+	// sun/moon disk and their shadow directions to a fixed point in the sky,
+	// overriding the astronomically-derived angles. {azimuth, altitude} in
+	// degrees (converted to radians), matching the convention used by
+	// AtmosphereUtils.getSunAngles()/getMoonPosition(). Null = astronomical.
+	@Nullable
+	@JsonAdapter(DegreesToRadians.class)
+	public float[] fixedSunAngles;
+	@Nullable
+	@JsonAdapter(DegreesToRadians.class)
+	public float[] fixedMoonAngles;
 	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] fogColor;
@@ -73,6 +124,40 @@ public class Environment {
 	public float windSpeed = 15.0f;
 	public float windStrength = 0.0f;
 	public float windCeiling = 1280.0f;
+	public float starVisibility = 1;
+	public float moonVisibility = 1;
+	// Aurora visibility multiplier for this area, controllable independently of
+	// starVisibility. Auroras still only appear on the randomly-selected aurora
+	// nights and fade with the night; this just scales how visible they are when they
+	// do. When left unset (sentinel -1), it falls back to starVisibility — the
+	// original behavior, where hiding stars also hid auroras. Set it explicitly to
+	// decouple: e.g. 0 hides auroras while keeping stars, 1 shows full auroras even
+	// where stars are dimmed. Resolved to a concrete value in normalize().
+	public float auroraVisibility = -1;
+	// Moon size multiplier for this area. Scales the moon disk AND its glow and the
+	// star-occlusion mask around it, together. 1 (default) = normal size; >1 larger,
+	// <1 smaller.
+	public float moonSizeMult = 1;
+	public float sunStrength = 1;
+	// How strongly the procedural day & night sunrise/sunset is allowed to paint this
+	// area's sky, in [0, 1]. 1 = full procedural sunrise/sunset (default). Lower
+	// values hold the sky at the area's own regional (fogColor) color through the
+	// twilight window instead, and fade the procedural sun glow. Use this for areas
+	// with a vivid intended sky (e.g. Tolna's blood-red #290000) that shouldn't turn
+	// orange/blue at sunrise/sunset. Independent of sunStrength; only affects the
+	// sky gradient + sun glow, not daytime or nighttime colors.
+	public float sunriseSunsetStrength = 1;
+	// Sun altitude (degrees) at which this area's own sky color has FULLY taken over
+	// from the procedural sunrise/sunset gradient as the sun climbs. Lower values pull
+	// the area color in earlier in the morning (and hold it later in the evening),
+	// compressing the procedural twilight window; higher values let the procedural
+	// gradient persist further up. 0 means the area color takes over immediately at
+	// the horizon (no procedural daytime gradient at all). Governs the daytime
+	// regional blend for ALL areas, independent of sunriseSunsetStrength. Default 40
+	// preserves prior behavior.
+	public float skyColorTakeoverAngle = 40;
+	public float sunlightStrength = 1;
+	public float minBrightnessBoost = 0;
 
 	public Environment normalize() {
 		if (area != Area.ALL && area != Area.NONE) {
@@ -89,12 +174,36 @@ public class Environment {
 
 		if (sunAngles != null)
 			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
+		if (fixedSunAngles != null)
+			fixedSunAngles = HDUtils.ensureArrayLength(fixedSunAngles, 2);
+		if (fixedMoonAngles != null)
+			fixedMoonAngles = HDUtils.ensureArrayLength(fixedMoonAngles, 2);
+
+		// Default moon color to slightly cool white (~8000K)
+		if (moonColor == null)
+			moonColor = ColorUtils.colorTemperatureToLinearRgb(8000);
+
+		// When no distinct moonlight color is given, the cast light matches the
+		// moon disk (moonColor) — preserving the original single-color behavior.
+		if (moonLightColor == null)
+			moonLightColor = moonColor;
+
+		// When no distinct night-sky color is given, the sky matches the moon
+		// disk (moonColor) — preserving the original single-color behavior.
+		if (nightSkyColor == null)
+			nightSkyColor = moonColor;
 
 		// Base water caustics on directional lighting by default
 		if (waterCausticsColor == null)
 			waterCausticsColor = directionalColor;
 		if (waterCausticsStrength == -1)
 			waterCausticsStrength = directionalStrength;
+
+		// When aurora visibility isn't specified, fall back to star visibility so
+		// hiding stars also hides auroras (the original coupled behavior). An explicit
+		// value decouples the two.
+		if (auroraVisibility == -1)
+			auroraVisibility = starVisibility;
 		return this;
 	}
 

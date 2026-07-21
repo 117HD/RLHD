@@ -47,6 +47,39 @@
         "type": "boolean",
         "description": "Whether transitions to and from this area should always be instant."
       },
+      "hideVanillaSkyboxes": {
+        "type": "boolean",
+        "description": "Whether to hide the game's built-in skybox models (e.g. the one added for Blood Moon Rises) in this area so the day & night cycle's own sky is shown instead. Only takes effect while the 'Override Vanilla Skyboxes' config toggle is on (its default); turning that toggle off forces vanilla skyboxes back on everywhere, including areas that set this flag. Defaults to false."
+      },
+      "varbitCondition": {
+        "description": "Optional expression that must evaluate to true for this environment to apply, in addition to the area check. Variables are varbit gameval names. Numbers are truthy when nonzero, so bare names like CUTSCENE_STATUS work in &&/||/!. Same operators as material/tile override conditions. Example: \"CUTSCENE_STATUS && 0 < MYQ6 && MYQ6 < 170\". An array of expressions is OR'd together.",
+        "oneOf": [
+          { "type": "boolean" },
+          { "type": "string" },
+          {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1
+          }
+        ]
+      },
+      "varpCondition": {
+        "description": "Optional expression like varbitCondition, but variables resolve to varp gamevals. Both varbitCondition and varpCondition must pass when set.",
+        "oneOf": [
+          { "type": "boolean" },
+          { "type": "string" },
+          {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1
+          }
+        ]
+      },
+      "cycleMode": {
+        "type": "string",
+        "description": "Forces the day & night cycle mode for this environment, overriding the player's config setting.",
+        "enum": [ "DYNAMIC", "FIXED_DAWN", "FIXED_MIDDAY", "FIXED_SUNSET", "FIXED_NIGHT", "ALWAYS_NIGHT" ]
+      },
       "ambientColor": {
         "type": [ "string", "array" ],
         "description": "Ambient light color in sRGB, specified as a hex color code or an array in the range 0-255. Accepts decimals.",
@@ -113,6 +146,41 @@
         "type": "number",
         "description": "Underglow strength multiplier. Acts as light emanating from the ground."
       },
+      "moonColor": {
+        "type": [ "string", "array" ],
+        "description": "Moon color in sRGB, specified as a hex color code or an array in the range 0-255. Controls the visible moon disk and its glow, and (unless moonLightColor is set) the light it casts. Defaults to a cool silver (~8000K).",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "moonLightColor": {
+        "type": [ "string", "array" ],
+        "description": "Color of the light the moon casts on the scene, in sRGB, as a hex color code or an array in the range 0-255. Lets moonlight be tinted differently than the visible moon disk. When omitted, falls back to moonColor.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "nightSkyColor": {
+        "type": [ "string", "array" ],
+        "description": "Color the night sky (zenith and horizon) is tinted toward as the moon rises, in sRGB, as a hex color code or an array in the range 0-255. Lets the night sky color be set independently of the moon disk. When omitted, falls back to moonColor.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "nightSkyColorStrength": {
+        "type": "number",
+        "description": "How strongly nightSkyColor tints the night sky. 1 (default) preserves the original subtle tint; higher values push the sky harder toward nightSkyColor for areas where the default is too weak to read. The resulting blend is clamped so large values can't overshoot past the night-sky color.",
+        "minimum": 0
+      },
       "sunAngles": {
         "type": "array",
         "description": "The sun's altitude and azimuth specified in degrees in the horizontal coordinate system. Altitude is from the ground up, azimuth is clockwise from north.",
@@ -120,6 +188,38 @@
           {
             "type": "number",
             "minimum": 0,
+            "maximum": 90
+          },
+          {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 360
+          }
+        ]
+      },
+      "fixedSunAngles": {
+        "type": "array",
+        "description": "Locks the sun disk and its shadow direction to a fixed altitude and azimuth (degrees) while a fixed cycle mode (FIXED_DAWN/FIXED_MIDDAY/FIXED_SUNSET/FIXED_NIGHT/ALWAYS_NIGHT) is active, overriding the astronomically-derived position. Altitude is from the ground up (negative places the sun below the horizon), azimuth is clockwise from north. Ignored in DYNAMIC mode.",
+        "items": [
+          {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 360
+          }
+        ]
+      },
+      "fixedMoonAngles": {
+        "type": "array",
+        "description": "Locks the moon disk and its shadow direction to a fixed altitude and azimuth (degrees) while a fixed cycle mode is active, overriding the default fixed-night moon position. Altitude is from the ground up, azimuth is clockwise from north. Ignored in DYNAMIC mode.",
+        "items": [
+          {
+            "type": "number",
+            "minimum": -90,
             "maximum": 90
           },
           {
@@ -170,6 +270,29 @@
       "windCeiling": {
         "type": "number",
         "description": "The height where the `windStrength` will be reached. The closer objects are to this height, the stronger the wind will be. Defaults to 1280 (10 tiles in height)."
+      },
+      "sunriseSunsetStrength": {
+        "type": "number",
+        "description": "How strongly the procedural day & night sunrise/sunset is allowed to paint this area's sky (0 to 1). 1 = full procedural sunrise/sunset (default). Lower values hold the sky at the area's own regional (fogColor) color through the twilight window and fade the procedural sun glow, so a vividly-colored area (e.g. a blood-red sky) doesn't turn orange/blue at sunrise/sunset. Independent of sunStrength; affects only the sky gradient and sun glow, not daytime or nighttime colors.",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "skyColorTakeoverAngle": {
+        "type": "number",
+        "description": "Sun altitude in degrees at which this area's own sky color (fogColor) has fully taken over from the procedural sunrise/sunset gradient as the sun climbs. Lower values pull the area color in earlier in the morning (and hold it later in the evening), compressing the procedural twilight; higher values let the procedural gradient persist further up the sky. 0 means the area color takes over immediately at the horizon (no procedural sunrise/sunset gradient during the day). Applies to all areas regardless of sunriseSunsetStrength. Defaults to 40.",
+        "minimum": 0,
+        "maximum": 90
+      },
+      "auroraVisibility": {
+        "type": "number",
+        "description": "Aurora visibility multiplier for this area (0 to 1), controllable independently of starVisibility. Auroras still only appear on the randomly-selected aurora nights and fade with the night; this scales how visible they are when they do. When omitted it falls back to starVisibility (the original behavior, where hiding stars also hides auroras). Set it explicitly to decouple: 0 hides auroras while keeping stars, 1 shows full auroras even where stars are dimmed.",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "moonSizeMult": {
+        "type": "number",
+        "description": "Moon size multiplier for this area. Scales the moon disk together with its glow and the star-occlusion mask around it. 1 (default) is the normal size; values above 1 make the moon larger, below 1 smaller.",
+        "minimum": 0
       }
     }
   }

@@ -24,8 +24,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <uniforms/global.glsl>
+#include <utils/constants.glsl>
 
-#define TILE_SIZE 128
 #define FOG_SCENE_EDGE_MIN ((    - expandedMapLoadingChunks * 8 + 1) * TILE_SIZE)
 #define FOG_SCENE_EDGE_MAX ((104 + expandedMapLoadingChunks * 8 - 1) * TILE_SIZE)
 #define FOG_CORNER_ROUNDING 1.5

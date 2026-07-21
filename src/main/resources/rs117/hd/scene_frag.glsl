@@ -41,6 +41,9 @@
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
+#if TERRAIN_SHADOWS
+uniform sampler2DShadow terrainShadowMap;
+#endif
 uniform usampler2DArray tiledLightingArray;
 
 // general HD settings
@@ -81,6 +84,8 @@ vec2 worldUvs(float scale) {
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
+#include <utils/starfield.glsl>
+#include <utils/sky.glsl>
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -425,6 +430,35 @@ void main() {
         float lightningDotNormals = downDotNormals;
         vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
 
+       // fake/simple Subsurface scattering
+       float subsurface = getMaterialSubsurface(material1);
+
+       vec3 transmissionOut = vec3(0.0);
+       if (subsurface > 0.0) {
+           float backLightDotNormals = max(dot(-normals, lightDir), 0.0);
+           vec3 backLightOut = backLightDotNormals * lightColor;
+
+           float subsurfaceGlow = getMaterialSubsurfaceGlow(material1);
+
+           float transmissionFocus = 0.0;
+           if (subsurfaceGlow > 1.0) {
+               float viewTowardLight = max(dot(-viewDir, lightDir), 0.0);
+               // Sharpen into a small hotspot rather than a broad highlight.
+               // pow(x, 8) folded via repeated squaring.
+               float t2 = viewTowardLight * viewTowardLight;
+               float t4 = t2 * t2;
+               transmissionFocus = t4 * t4;
+           }
+
+           const float SUBSURFACE_BASE_FRACTION = 0.35;
+           transmissionOut += backLightOut * (subsurface * SUBSURFACE_BASE_FRACTION + transmissionFocus * subsurfaceGlow);
+
+           vec3 backPointLightsOut = vec3(0);
+           vec3 backPointLightsSpecularOut = vec3(0); // Ignored — specular doesn't make sense for backside lighting
+           calculateLighting(IN.position, -normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, backPointLightsOut, backPointLightsSpecularOut);
+
+           transmissionOut += backPointLightsOut * subsurface;
+       }
 
         // underglow
         vec3 underglowOut = underglowColor * max(normals.y, 0) * underglowStrength;
@@ -440,7 +474,7 @@ void main() {
 
         // apply lighting
         vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
-        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
+        underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut + transmissionOut;
 
         #if DISPLAY_LIGHTING
             FragColor = vec4(compositeLight, 1.0);
@@ -529,7 +563,42 @@ void main() {
             outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
         }
 
-        outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+        if (skyGradientEnabled == 1) {
+            // Default to the fragment's own color so the mix below is a no-op
+            // when there's no fog. The full sky-gradient reconstruction is only
+            // needed where fog actually blends geometry toward the sky, so it's
+            // gated on combinedFog to skip the gradient/glow chain on the
+            // unfogged majority of scene pixels.
+            vec3 skyColorAtFragment = outputColor.rgb;
+
+            if (combinedFog > 1e-4) {
+                // Compute the sky gradient color at this fragment's view direction
+                vec3 fogViewDir = normalize(IN.position - cameraPos);
+                SkyGradient sky = computeSkyGradient(fogViewDir);
+                skyColorAtFragment = sky.color;
+
+                // Night sky blend: darken fog toward skyZenithColor, which is what
+                // the sky converges to at the horizon at night (stars are faded out
+                // near the horizon in sky_frag.glsl)
+                float nightSkyBlend = (1.0 - sky.nightFade) * starVisibility;
+                if (nightSkyBlend > 0.001) {
+                    skyColorAtFragment = mix(skyColorAtFragment, skyZenithColor, nightSkyBlend);
+                }
+
+                // Shared horizon haze + atmospheric scattering
+                skyColorAtFragment = applySkyHaze(skyColorAtFragment, sky.upAmount, sky.sunSideBlend, sky.zenithBlend);
+            }
+
+            outputColor.rgb = mix(outputColor.rgb, skyColorAtFragment, combinedFog);
+
+            // Dithering to reduce color banding. Kept OUTSIDE the fog gate above:
+            // this is the scene's only anti-banding noise and is independent of fog,
+            // so it must run on every fragment regardless of combinedFog.
+            float dither = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453123) - 0.5;
+            outputColor.rgb += dither / 255.0;
+        } else {
+            outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+        }
     }
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));

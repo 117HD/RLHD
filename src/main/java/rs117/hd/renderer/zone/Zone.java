@@ -63,10 +63,12 @@ public class Zone implements Destructible {
 	public static final int METADATA_SIZE = 12;
 
 	public static int LEVEL_COUNT = MAX_Z;
+	public static final int LEVEL_TERRAIN = LEVEL_COUNT++;
 	public static final int LEVEL_WATER_SURFACE = LEVEL_COUNT++;
 	public static final int LEVEL_GAP_FILLER = LEVEL_COUNT++;
 
 	public int glVao;
+	int modelCount;
 	int bufLen;
 	int dist;
 
@@ -385,7 +387,7 @@ public class Zone implements Destructible {
 	void renderOpaqueLevel(CommandBuffer cmd, int level) {
 		drawIdx = 0;
 
-		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
+		pushRange(level > 0 ? this.levelOffsets[level - 1] : 0, this.levelOffsets[level]);
 
 		if (drawIdx == 0)
 			return;
@@ -403,7 +405,7 @@ public class Zone implements Destructible {
 			drawEnd[drawIdx - 1] = end;
 		} else if (drawIdx >= NUM_DRAW_RANGES) {
 			log.debug("draw ranges exhausted");
-		} else {
+		} else if(end > start){
 			drawOff[drawIdx] = start;
 			drawEnd[drawIdx] = end;
 			drawIdx++;

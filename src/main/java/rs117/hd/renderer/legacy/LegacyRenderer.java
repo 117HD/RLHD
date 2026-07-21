@@ -702,6 +702,7 @@ public class LegacyRenderer implements Renderer {
 				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
 				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
 				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+				plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 				plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 				plugin.uboGlobal.upload();
 			}
@@ -1002,6 +1003,7 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 			plugin.uboGlobal.fogDepth.set(fogDepth);
 			plugin.uboGlobal.fogColor.set(fogColor);
+			plugin.uboGlobal.skyGradientEnabled.set(0);
 
 			plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 			plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
@@ -1131,6 +1133,7 @@ public class LegacyRenderer implements Renderer {
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			}
 
+			plugin.uboGlobal.orthographicProjection.set(plugin.orthographicProjection ? 1 : 0);
 			plugin.uboGlobal.upload();
 			sceneProgram.use();
 

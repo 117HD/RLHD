@@ -17966,436 +17966,133 @@
     "type": "STATIC"
   },
   {
-    "description": "ver sinhaza",
-    "worldX": 3656,
-    "worldY": 3227,
-    "plane": 0,
-    "height": 580,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3661,
-    "worldY": 3225,
-    "plane": 0,
-    "height": 580,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3664,
-    "worldY": 3225,
-    "plane": 0,
-    "height": 580,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3660,
-    "worldY": 3234,
-    "plane": 0,
-    "height": 580,
-    "alignment": "SOUTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3665,
-    "worldY": 3234,
-    "plane": 0,
-    "height": 580,
-    "alignment": "SOUTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3664,
-    "worldY": 3213,
-    "plane": 0,
-    "height": 580,
-    "alignment": "SOUTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3661,
-    "worldY": 3213,
-    "plane": 0,
-    "height": 580,
-    "alignment": "SOUTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3669,
-    "worldY": 3211,
-    "plane": 0,
-    "height": 580,
-    "alignment": "WEST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3665,
-    "worldY": 3204,
-    "plane": 0,
-    "height": 580,
-    "alignment": "NORTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3660,
-    "worldY": 3204,
-    "plane": 0,
-    "height": 580,
-    "alignment": "NORTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3685,
-    "worldY": 3207,
-    "plane": 0,
-    "height": 580,
-    "alignment": "WEST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3678,
-    "worldY": 3215,
-    "plane": 0,
-    "height": 580,
-    "alignment": "WEST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3678,
-    "worldY": 3223,
-    "plane": 0,
-    "height": 580,
-    "alignment": "WEST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3684,
-    "worldY": 3231,
-    "plane": 0,
-    "height": 580,
-    "alignment": "EAST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3668,
-    "worldY": 3227,
-    "plane": 0,
-    "height": 580,
-    "alignment": "EAST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3656,
-    "worldY": 3211,
-    "plane": 0,
-    "height": 580,
-    "alignment": "EAST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3679,
-    "worldY": 3219,
-    "plane": 0,
-    "height": 920,
-    "alignment": "EAST",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3687,
-    "worldY": 3222,
-    "plane": 0,
-    "height": 920,
-    "alignment": "SOUTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3687,
-    "worldY": 3216,
-    "plane": 0,
-    "height": 920,
-    "alignment": "NORTH",
-    "radius": 300,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
-    "worldX": 3662,
-    "worldY": 3226,
-    "plane": 0,
-    "height": 500,
-    "alignment": "EAST",
-    "radius": 500,
-    "strength": 12.5,
-    "color": [
-      238.4492,
-      132.10184,
-      0
-    ],
-    "type": "PULSE",
-    "duration": 3200,
-    "range": 5
-  },
-  {
-    "description": "ver sinhaza",
+    "description": "Ver Sinhaza - Vent",
+    "offset": [ 0, 570, -50 ],
     "worldX": 3644,
     "worldY": 3213,
-    "plane": 0,
-    "height": 540,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
+    "radius": 150,
+    "strength": 40,
     "color": [
-      238.4492,
-      132.10184,
-      0
+      252,
+      118,
+      3
     ],
     "type": "PULSE",
     "duration": 3200,
+    "visibleFromOtherPlanes": true,
     "range": 5
   },
   {
-    "description": "ver sinhaza",
-    "worldX": 3640,
-    "worldY": 3203,
-    "plane": 0,
-    "height": 540,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
+    "description": "ToB Party Board North",
+    "offset": [ 150, 150, 0 ],
+    "radius": 170,
+    "strength": 20,
     "color": [
-      238.4492,
-      132.10184,
+      255,
+      0,
       0
     ],
     "type": "PULSE",
     "duration": 3200,
-    "range": 5
+    "visibleFromOtherPlanes": true,
+    "range": 5,
+    "objectIds": [
+      "TOB_SURFACE_NOTICE_BOARD"
+    ]
   },
   {
-    "description": "ver sinhaza",
-    "worldX": 3644,
-    "worldY": 3225,
-    "plane": 0,
-    "height": 540,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
+    "description": "ToB Party Board South",
+    "offset": [ -150, 150, 0 ],
+    "radius": 170,
+    "strength": 20,
     "color": [
-      238.4492,
-      132.10184,
+      255,
+      0,
       0
     ],
     "type": "PULSE",
     "duration": 3200,
-    "range": 5
+    "visibleFromOtherPlanes": true,
+    "range": 5,
+    "objectIds": [
+      "TOB_SURFACE_NOTICE_BOARD"
+    ]
   },
   {
-    "description": "ver sinhaza",
-    "worldX": 3640,
-    "worldY": 3235,
-    "plane": 0,
-    "height": 540,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 12.5,
+    "description": "Ver Sinhaza - Windows",
+    "offset": [ 0, 220, 100 ],
+    "radius": 400,
+    "strength": 20,
     "color": [
-      238.4492,
-      132.10184,
+      255,
+      50,
       0
     ],
     "type": "PULSE",
     "duration": 3200,
-    "range": 5
+    "visibleFromOtherPlanes": true,
+    "range": 5,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
+      "MYQ4_WINDOW"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Door",
+    "offset": [ -65, 140, 0 ],
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      255,
+      50,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "visibleFromOtherPlanes": true,
+    "range": 5,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR"
+    ]
+  },
+  {
+    "description": "Ver  - Windows - North / East",
+    "areas": [ "VER_SINHAZA_BRIGHTEN_WINDOWS_DOORS" ],
+    "offset": [ 0, 220, 100 ],
+    "radius": 200,
+    "strength": 20,
+    "color": [
+      255,
+      50,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "visibleFromOtherPlanes": true,
+    "range": 5,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
+      "MYQ4_WINDOW"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Door - North / East",
+    "areas": [ "VER_SINHAZA_BRIGHTEN_WINDOWS_DOORS" ],
+    "offset": [ -65, 140, 0 ],
+    "radius": 200,
+    "strength": 30,
+    "color": [
+      255,
+      50,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "visibleFromOtherPlanes": true,
+    "range": 5,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_BALCONY_DOOR"
+    ]
   },
   {
     "description": "Lithkren basement sunlight",
@@ -21533,6 +21230,7 @@
     "alignment": "CENTER",
     "radius": 500,
     "strength": 9,
+    "nightMultiplier": 1.35,
     "color": [
       252,
       148,
@@ -21761,7 +21459,8 @@
       "VM_BASEMENT_WALL_FIRST_FLOOR_LAMP",
       "SLAYER_TORCH",
       "MISTMYST_CANDLE_LIT",
-      "GOLEM_TORCH"
+      "GOLEM_TORCH",
+      "FAI_FALADOR_TORCH"
     ]
   },
   {
@@ -21777,13 +21476,95 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "dayNightOnly": true,
     "objectIds": [
-      "FAI_VARROCK_POSH_CANDLESTICK"
+      "FAI_VARROCK_POSH_CANDLESTICK",
+      "FAI_VARROCK_TWO_CANDLES"
+    ]
+  },
+  {
+    "description": "Varrock Rune Shop Sign",
+    "offset": [ 0, 185, 0 ],
+    "radius": 215,
+    "strength": 8,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 3,
+    "nightMultiplier": 1.6,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHOP_SIGN"
+    ]
+  },
+  {
+    "description": "Varrock Rune Shop Sign Sparkle 1",
+    "offset": [ -30, 135, 0 ],
+    "radius": 40,
+    "strength": 12,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 60,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "dayNightOnly": true,
+    "nightMultiplier": 1.4,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHOP_SIGN"
+    ]
+  },
+  {
+    "description": "Varrock Rune Shop Sign Sparkle 2",
+    "offset": [ -30, 53, 0 ],
+    "radius": 30,
+    "strength": 7,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "dayNightOnly": true,
+    "nightMultiplier": 1.4,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHOP_SIGN"
+    ]
+  },
+  {
+    "description": "Varrock Rune Shop Sign Sparkle 3",
+    "offset": [ -30, 87, 0 ],
+    "radius": 30,
+    "strength": 12,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 60,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "dayNightOnly": true,
+    "nightMultiplier": 1.4,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHOP_SIGN"
     ]
   },
   {
     "description": "Varrock Lantern",
-    "offset": [ -10, 155, 0 ],
+    "offset": [ 0, 155, 0 ],
     "radius": 220,
     "strength": 8.5,
     "color": [
@@ -21794,8 +21575,76 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "dayNightOnly": true,
+    "nightMultiplier": 1.5,
     "objectIds": [
       "FAI_VARROCK_OILLAMP"
+    ]
+  },
+  {
+    "description": "Varrock Lantern 2",
+    "offset": [ -20, 185, 0 ],
+    "radius": 220,
+    "strength": 8.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "dayNightOnly": true,
+    "nightMultiplier": 1.5,
+    "objectIds": [
+      "FAI_VARROCK_SWING_LANTERN_UNLIT"
+    ]
+  },
+  {
+    "description": "Varrock Castle Candelabra",
+    "height": 175,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "timeOfDay": "DUSK",
+    "dayNightOnly": true,
+    "staggered": true,
+    "objectIds": [
+      "GOLDCANDLES",
+      "CANDLES"
+    ]
+  },
+  {
+    "description": "Camelot Lantern",
+    "offset": [ -17, 205, 0 ],
+    "radius": 220,
+    "strength": 8.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "timeOfDay": "DUSK",
+    "staggered": true,
+    "dayNightOnly": true,
+    "nightMultiplier": 1.5,
+    "objectIds": [
+      "LANTERN_OFF"
     ]
   },
   {
@@ -22065,6 +21914,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
+    "nightMultiplier": 1.5,
     "range": 20,
     "objectIds": [
       "DRAYNOR_OUTSIDE_LAMP"
@@ -22089,6 +21939,116 @@
       "SHAYZIEN_LANTERN01_LIT_SWAYR",
       "SHAYZIEN_LANTERN01_LIT_SWAYL",
       "SHAYZIEN_LANTERN01_LIT_IDLE01"
+    ]
+  },
+  {
+    "description": "Shayzien Church Brazier",
+    "height": 130,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "SHAYZIEN_CHURCH_BRAZIER"
+    ]
+  },
+  {
+    "description": "Shayzien Church Candle Stand 1",
+    "offset": [ 35, 165, 42 ],
+    "alignment": "CENTER",
+    "radius": 90,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "BRAIN_MON_CANDLE_TABLE"
+    ]
+  },
+  {
+    "description": "Shayzien Church Candle Stand 2",
+    "offset": [ -35, 170, 43 ],
+    "alignment": "CENTER",
+    "radius": 90,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "BRAIN_MON_CANDLE_TABLE"
+    ]
+  },
+  {
+    "description": "Shayzien Church Candle Stand 3",
+    "offset": [ 0, 140, -10 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "BRAIN_MON_CANDLE_TABLE"
+    ]
+  },
+  {
+    "description": "Shayzien Church Altar 1",
+    "offset": [ 93, 195, -60 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "timeOfDay": "DAWN",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "SHAYZIEN_CHURCH_ALTAR"
+    ]
+  },
+  {
+    "description": "Shayzien Church Altar 2",
+    "offset": [ -93, 195, -60 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "timeOfDay": "DAWN",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "SHAYZIEN_CHURCH_ALTAR"
     ]
   },
   {
@@ -22372,13 +22332,8 @@
       "DWARF_KELDAGRIM_BIG_FIREPLACE",
       "TWOCATS_FIREPLACE_LIT",
       "TWOCATS_FIREPLACE_GOT_WOOD",
-      "MYQ3_GHETTO_FIREPLACE_BOTTOM",
-      "MYQ3_GHETTO_FIREPLACE_MIDDLE",
-      "MYQ3_GHETTO_FIREPLACE_TOP",
-      "MYQ3_GHETTO_FIREPLACE_TOP_NOOFFSET",
       "FENK_FIREPLACE",
       "QIP_DIGSITE_FIREPLACE",
-      "MYQ3_FIREPLACE_LOOSE_TILE",
       "MISTMYST_FIREPLACE_UNLIT",
       "MISTMYST_FIREPLACE_REVEALED",
       "MISTMYST_FIREPLACE_LIT",
@@ -22435,6 +22390,23 @@
     "range": 20,
     "objectIds": [
       "FIREPLACE"
+    ]
+  },
+  {
+    "description": "Falador Party Room Fireplace",
+    "offset": [ 0, 90, 0 ],
+    "radius": 270,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_FIREPLACE"
     ]
   },
   {
@@ -23930,6 +23902,7 @@
     "alignment": "CENTER",
     "radius": 475,
     "strength": 25,
+    "nightMultiplier": 1.15,
     "color": [
       255,
       200,
@@ -23946,6 +23919,7 @@
     "alignment": "CENTER",
     "radius": 700,
     "strength": 7.5,
+    "nightMultiplier": 2,
     "color": [
       93,
       0,
@@ -24026,6 +24000,7 @@
     "alignment": "CENTER",
     "radius": 235,
     "strength": 3.5,
+    "nightMultiplier": 2,
     "color": [
       255,
       0,
@@ -24062,6 +24037,7 @@
     "alignment": "CENTER",
     "radius": 235,
     "strength": 3.5,
+    "nightMultiplier": 2,
     "color": [
       255,
       179,
@@ -24098,6 +24074,7 @@
     "alignment": "CENTER",
     "radius": 235,
     "strength": 3.5,
+    "nightMultiplier": 2,
     "color": [
       31,
       225,
@@ -24134,6 +24111,7 @@
     "alignment": "CENTER",
     "radius": 225,
     "strength": 2.5,
+    "nightMultiplier": 2,
     "color": [
       255,
       0,
@@ -24191,6 +24169,7 @@
     "alignment": "CENTER",
     "radius": 225,
     "strength": 13.5,
+    "nightMultiplier": 1.5,
     "color": [
       252,
       148,
@@ -24205,7 +24184,7 @@
   },
   {
     "description": "POH_FIERY_ORNATE_REJUVENATION_POOL_RIM",
-    "height": 160,
+    "height": 180,
     "alignment": "CENTER",
     "radius": 75,
     "strength": 200,
@@ -24266,6 +24245,7 @@
     "alignment": "CENTER",
     "radius": 250,
     "strength": 15,
+    "nightMultiplier": 1.15,
     "color": [
       253.63197,
       182.39111,
@@ -24284,6 +24264,7 @@
     "alignment": "CENTER",
     "radius": 275,
     "strength": 20,
+    "nightMultiplier": 1.15,
     "color": [
       253.63197,
       182.39111,
@@ -24339,6 +24320,7 @@
     "offset": [ 0, 75, 0 ],
     "radius": 200,
     "strength": 15,
+    "nightMultiplier": 1.35,
     "color": [
       255,
       0,
@@ -25332,22 +25314,24 @@
     "description": "ELVEN_LAMP",
     "height": 160,
     "alignment": "CENTER",
-    "radius": 350,
-    "strength": 10,
+    "radius": 300,
+    "strength": 6,
+    "visibleFromOtherPlanes": true,
+    "nightMultiplier": 2.4,
     "color": [
       255,
       255,
       255
     ],
-    "type": "PULSE",
-    "duration": 2000,
-    "range": 7,
+    "type": "FLICKER",
+    "range": 10,
     "objectIds": [
       "SOTE_HUNTING_LAMP_OP",
       "SOTE_HUNTING_LAMP_NOOP",
       "REGICIDE_CRYSTAL_LAMP",
       "REGICIDE_CRYSTAL_LAMP_BLOCKWALK_ONLY",
-      "ELF_VILLAGE_RAIL_LAMP"
+      "ELF_VILLAGE_RAIL_LAMP",
+      "PRIF_CRYSTAL_LAMP"
     ]
   },
   {
@@ -27450,13 +27434,13 @@
   },
   {
     "description": "TUNNEL_EXIT",
-    "height": 50,
-    "alignment": "FRONT",
-    "radius": 800,
-    "strength": 12.5,
+    "offset": [ 0, 70, -80 ],
+    "radius": 450,
+    "strength": 10,
+    "followDayNight": true,
     "color": [
-      150,
-      220,
+      255,
+      255,
       255
     ],
     "type": "STATIC",
@@ -28827,7 +28811,7 @@
       255
     ],
     "type": "PULSE",
-    "duration": 500,
+    "duration": 1500,
     "range": 20,
     "objectIds": [
       "NZONE_LOBBY_WALLBLOCK"
@@ -28837,15 +28821,16 @@
     "description": "MAGIC_GUILD_ORBS",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 350,
-    "strength": 20,
+    "radius": 375,
+    "strength": 15,
     "color": [
       255,
       255,
       255
     ],
     "type": "PULSE",
-    "duration": 800,
+    "duration": 1200,
+    "nightMultiplier": 1.5,
     "range": 5,
     "objectIds": [
       "RUNETEMPLE_STANDINGSTONE_GLOW"
@@ -29122,9 +29107,52 @@
     ],
     "type": "STATIC",
     "duration": 0,
+    "nightMultiplier": 1.5,
     "range": 20,
+    "visibleFromOtherPlanes": true,
     "objectIds": [
       "LANTERN"
+    ]
+  },
+  {
+    "description": "Lantern with Glass - Ardougne Spotlight",
+    "offset": [ 20, 110, 0 ],
+    "areas": [ "EAST_ARDOUGNE_LANTERNS" ],
+    "radius": 450,
+    "strength": 7.5,
+    "timeOfDay": "DAWN",
+    "staggered": true,
+    "color": [
+      255,
+      180,
+      103
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "nightMultiplier": 1.5,
+    "range": 20,
+    "visibleFromOtherPlanes": true,
+    "objectIds": [
+      "LANTERN"
+    ]
+  },
+  {
+    "description": "Round Lantern with Flame",
+    "offset": [ -5, 220, 0 ],
+    "radius": 350,
+    "strength": 7.5,
+    "color": [
+      255,
+      180,
+      103
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "nightMultiplier": 1.5,
+    "range": 20,
+    "visibleFromOtherPlanes": true,
+    "objectIds": [
+      "LANTERN_GLOWS"
     ]
   },
   {
@@ -36919,6 +36947,25 @@
     ]
   },
   {
+    "description": "MM2_REMATCH_BRAZIER",
+    "height": 115,
+    "alignment": "CENTER",
+    "radius": 270,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MM2_POSTQUEST_BRAZIER_LIT"
+    ],
+    "visibleFromOtherPlanes": true
+  },
+  {
     "description": "LITHKREN_LAVA_1",
     "worldX": 3531,
     "worldY": 4013,
@@ -38952,8 +38999,8 @@
   {
     "description": "GNOME_LAMP",
     "offset": [ -60, 120, 0 ],
-    "radius": 400,
-    "strength": 7,
+    "radius": 550,
+    "strength": 2,
     "color": [
       255,
       255,
@@ -38961,8 +39008,10 @@
     ],
     "type": "FLICKER",
     "duration": 600,
+    "nightMultiplier": 2.5,
     "range": 10,
     "objectIds": [
+      "GNOME_LAMP",
       "GNOME_LAMP2"
     ]
   },
@@ -38999,6 +39048,24 @@
     "range": 60,
     "objectIds": [
       "FAIRY_SPARKLE"
+    ]
+  },
+  {
+    "description": "Will o' the Wisp",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 160,
+    "strength": 6.25,
+    "color": [
+      255,
+      255,
+      195
+    ],
+    "type": "PULSE",
+    "duration": 1250,
+    "range": 20,
+    "npcIds": [
+      "WILLOTHEWISP"
     ]
   },
   {
@@ -39226,6 +39293,7 @@
     "alignment": "CENTER",
     "radius": 330,
     "strength": 5,
+    "nightMultiplier": 2,
     "color": [
       252,
       168,
@@ -39251,6 +39319,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
+    "nightMultiplier": 1.25,
     "range": 24,
     "objectIds": [
       "FAI_FALADOR_LANTERN"
@@ -39773,6 +39842,24 @@
     ]
   },
   {
+    "description": "POTTERY_OVEN_GLOW_BRICKS",
+    "offset": [ 70, 165, 0 ],
+    "radius": 300,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "POTTERYOVEN",
+      "VIKING_POTTERYOVEN"
+    ]
+  },
+  {
     "description": "Mysterious Figure's Hideout - Purple Magic Attack - Projectile",
     "radius": 275,
     "strength": 10,
@@ -39914,7 +40001,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "MAGICTRAINING_CANDLE_STAND"
+      "MAGICTRAINING_CANDLE_STAND",
+      "BRAIN_MON_CANDLES"
     ]
   },
   {
@@ -40492,12 +40580,13 @@
   },
   {
     "description": "FIRE_OF_DEHUMIDIFICATION",
-    "height": 300,
-    "radius": 750,
-    "strength": 4,
+    "height": 270,
+    "radius": 600,
+    "strength": 15,
     "color": [ 219, 252, 3 ],
     "type": "FLICKER",
     "range": 10,
+    "nightMultiplier": 2,
     "objectIds": [
       "MY2ARM_FIRE_DEHUMIDIFICATION"
     ]
@@ -42350,10 +42439,22 @@
     ]
   },
   {
-    "description": "Red Chinchompa Hunting Grounds Exit",
+    "description": "Red Chinchompa Hunting Grounds Exit Main",
     "offset": [ 6, 40, 36 ],
     "radius": 350,
-    "strength": 35,
+    "strength": 15,
+    "color": "#ffffff",
+    "type": "FLICKER",
+    "range": 13,
+    "objectIds": [
+      "CHINCHOMPA_JUNGLE_CAVE_EXIT"
+    ]
+  },
+  {
+    "description": "Red Chinchompa Hunting Grounds Exit Top",
+    "offset": [ 6, 220, -100 ],
+    "radius": 300,
+    "strength": 20,
     "color": "#ffffff",
     "type": "FLICKER",
     "range": 13,
@@ -42435,6 +42536,8 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "timeOfDay": "DUSK",
+    "dayNightOnly": true,
     "objectIds": [
       "FAI_VARROCK_PRETTY_OILLAMP"
     ]
@@ -47718,7 +47821,45 @@
     ]
   },
   {
-    "description": "Varrock - Great Conch - Metal cooking  Range",
+    "description": "Varrock - Great Conch - Metal cooking Range 1",
+    "height": 100,
+    "offset": [ 46, -50, -68 ],
+    "radius": 200,
+    "strength": 3,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "FAI_VARROCK_RANGE",
+      "KR_SIN_RANGE"
+    ]
+  },
+  {
+    "description": "Varrock - Great Conch - Metal cooking Range 2",
+    "height": 100,
+    "offset": [ 46, -50, -94 ],
+    "radius": 200,
+    "strength": 3,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "FAI_VARROCK_RANGE",
+      "KR_SIN_RANGE"
+    ]
+  },
+  {
+    "description": "Varrock - Great Conch - Metal cooking Range 3",
     "height": 100,
     "offset": [ 20, 0, 64 ],
     "radius": 200,
@@ -47734,6 +47875,57 @@
     "objectIds": [
       "FAI_VARROCK_RANGE",
       "KR_SIN_RANGE"
+    ]
+  },
+  {
+    "description": "Varrock Castle Ovens 1",
+    "offset": [ 35, 25, 0 ],
+    "radius": 200,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_POSH_STOVE"
+    ]
+  },
+  {
+    "description": "Varrock Castle Ovens 3",
+    "offset": [ 35, 100, 0 ],
+    "radius": 85,
+    "strength": 15,
+    "color": [
+      255,
+      110,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_POSH_STOVE"
+    ]
+  },
+  {
+    "description": "Varrock Castle Ovens 4",
+    "offset": [ -10, 125, -80 ],
+    "radius": 75,
+    "strength": 7,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_POSH_STOVE"
     ]
   },
   {
@@ -48465,6 +48657,42 @@
     ]
   },
   {
+    "description": "RIMMINGTON_RANGE_1",
+    "offset": [ 0, 95, -45 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 5,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "RIMMINGTON_POOR_RANGE"
+    ]
+  },
+  {
+    "description": "RIMMINGTON_RANGE_2",
+    "offset": [ 65, 50, 48 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 3,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "RIMMINGTON_POOR_RANGE"
+    ]
+  },
+  {
     "description": "GRIMSTONE_EXIT_LIGHT_SMALL",
     "offset": [ -75, 85, -10 ],
     "radius": 120,
@@ -48915,6 +49143,7 @@
     "radius": 300,
     "strength": 17,
     "fadeOutDuration": 200,
+    "nightMultiplier": 2.5,
     "color": [
       252,
       148,
@@ -49431,6 +49660,341 @@
     "fadeOutDuration": 200,
     "projectileIds": [
       "SNAKEBOSS_FIREBALL"
+    ]
+  },
+  {
+    "description": "Magic Tree Top",
+    "offset": [ 10, 600, -10 ],
+    "radius": 300,
+    "strength": 2,
+    "nightMultiplier": 2,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 19,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree North",
+    "offset": [ 120, 480, -10 ],
+    "radius": 250,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 17,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree South",
+    "offset": [ -170, 500, -10 ],
+    "radius": 250,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 15,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree West",
+    "offset": [ 10, 500, 170 ],
+    "radius": 250,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree East",
+    "offset": [ 10, 500, -170 ],
+    "radius": 250,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Under North",
+    "offset": [ 160, 280, -20 ],
+    "radius": 280,
+    "strength": 7,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Under South",
+    "offset": [ -160, 260, -10 ],
+    "radius": 320,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 35,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Under South East",
+    "offset": [ -90, 270, -120 ],
+    "radius": 150,
+    "strength": 3,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 35,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Under West",
+    "offset": [ 10, 280, 140 ],
+    "radius": 250,
+    "strength": 2,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Under North West",
+    "offset": [ 100, 300, 100 ],
+    "radius": 150,
+    "strength": 2,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Under South West",
+    "offset": [ -100, 300, 100 ],
+    "radius": 150,
+    "strength": 2,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Under East",
+    "offset": [ 50, 290, -150 ],
+    "radius": 250,
+    "strength": 2,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Magic Tree Main",
+    "offset": [ 10, 150, -10 ],
+    "radius": 300,
+    "strength": 7,
+    "fadeInDuration": 200,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MAGIC_TREE_FULLYGROWN_2",
+      "MAGICTREE"
+    ]
+  },
+  {
+    "description": "Feldip Airstrip Red",
+    "offset": [ 10, 160, 10 ],
+    "radius": 370,
+    "strength": 25,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 10,
+    "objectIds": [
+      "FAVOUR_LANDING_LIGHT_REDTOPAZ"
+    ]
+  },
+  {
+    "description": "Feldip Airstrip White",
+    "offset": [ 10, 160, 10 ],
+    "radius": 310,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 5,
+    "objectIds": [
+      "FAVOUR_LANDING_LIGHT_OPAL"
+    ]
+  },
+  {
+    "description": "Feldip Airstrip Blue",
+    "offset": [ 10, 160, 10 ],
+    "radius": 360,
+    "strength": 100,
+    "nightMultiplier": 1.5,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 10,
+    "objectIds": [
+      "FAVOUR_LANDING_LIGHT_SAPPHIRE"
+    ]
+  },
+  {
+    "description": "Feldip Airstrip Green",
+    "offset": [ 10, 160, 10 ],
+    "radius": 320,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 5,
+    "objectIds": [
+      "FAVOUR_LANDING_LIGHT_JADE"
+    ]
+  },
+  {
+    "description": "Green Camp Fire",
+    "height": 175,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 15,
+    "color": [
+      70,
+      242,
+      31
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SHIPWRECK_COVE_STRANGE_CAMPFIRE"
     ]
   },
   {

@@ -19,6 +19,7 @@ public class LightDefinition {
 	public float strength = 5;
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
 	public float[] color;
+	public boolean followDayNight;
 	public LightType type = LightType.STATIC;
 	public float duration;
 	public float range;
@@ -32,6 +33,13 @@ public class LightDefinition {
 	public boolean ignoreActorHiding;
 	public int renderableIndex = -1;
 	public boolean waitForAnimation;
+	public float nightMultiplier = 1;
+	@JsonAdapter(LightTimeOfDay.Adapter.class)
+	public LightTimeOfDay timeOfDay;
+	@JsonAdapter(LightTimeOfDay.Adapter.class)
+	public LightTimeOfDay timeOfDayOff;
+	public boolean staggered;
+	public boolean dayNightOnly;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] areas = {};
