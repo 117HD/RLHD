@@ -18,6 +18,9 @@ import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
 import static rs117.hd.renderer.zone.Zone.METADATA_SIZE;
+import static rs117.hd.renderer.zone.Zone.MODEL_DATA_INTS;
+import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
+import static rs117.hd.renderer.zone.Zone.VERT_SIZE_INTS;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
@@ -28,14 +31,6 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 @Slf4j
 public class DynamicModelVAO implements Destructible {
 	public static final int INITIAL_SIZE = (int) (8 * MiB);
-
-	// Temp vertex format
-	// pos short vec3(x, y, z)
-	// uvw short vec3(u, v, w)
-	// normal/modelIdx short vec4(nx, ny, nz, modelIdx)
-	// texturedFaceIdx int
-	public static final int VERT_SIZE = 28;
-	static final int VERT_SIZE_INTS = VERT_SIZE / 4;
 
 	@Getter
 	private int vao;
@@ -241,7 +236,7 @@ public class DynamicModelVAO implements Destructible {
 			view = new View();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
 		view.tboF = tboFWriter.reserve(faceCount * 4);
-		view.tboM = tboMWriter.reserve(Zone.MODEL_DATA_SIZE / Integer.BYTES);
+		view.tboM = tboMWriter.reserve(MODEL_DATA_INTS);
 		view.vao = vao;
 		view.tboFId = tboF.getTexId();
 		view.tboMId = tboM.getTexId();

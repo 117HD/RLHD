@@ -52,22 +52,26 @@ public class Zone implements Destructible {
 	// normal/modelIdx short vec4(nx, ny, nz, modelIdx)
 	// texturedFaceIdx int
 	public static final int VERT_SIZE = 28;
+	public static final int VERT_SIZE_INTS = VERT_SIZE / Integer.BYTES;
 
 	// alphaBiasHsl ivec3
 	// materialData ivec3
 	// terrainData ivec3
 	public static final int TEXTURE_SIZE = 36;
+	public static final int TEXTURE_INTS = TEXTURE_SIZE / Integer.BYTES;
 
 	// position vec3
 	// height float
 	// fade float
 	public static final int MODEL_DATA_SIZE = 28;
+	public static final int MODEL_DATA_INTS = MODEL_DATA_SIZE / Integer.BYTES;
 
 	// Metadata format
 	// worldViewIndex int int
 	// sceneOffset int vec2(x, y)
 	// fade float float
 	public static final int METADATA_SIZE = 16;
+	public static final int METADATA_INTS = METADATA_SIZE / Integer.BYTES;
 
 	public static int LEVEL_COUNT = MAX_Z;
 	public static final int LEVEL_WATER_SURFACE = LEVEL_COUNT++;
@@ -855,7 +859,7 @@ public class Zone implements Destructible {
 			}
 			alphaFaceCount = 0;
 		} else if (drawIdx != 0) {
-			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : DynamicModelVAO.VERT_SIZE);
+			convertForDraw(VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboF, TEXTURE_UNIT_TEXTURED_FACES);
 			cmd.BindTextureUnit(GL_TEXTURE_BUFFER, lastTboM, TEXTURE_UNIT_MODEL_DATA);
