@@ -1321,8 +1321,8 @@
   {
     "description": "Spirit trees - Small",
     "baseMaterial": "BARK",
-    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "windDisplacementModifier": -3,
+    "windDisplacementMode": "VERTEX",
+    "windDisplacementModifier": -1,
     "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "SPIRIT_TREE_SEEDLING",
@@ -1344,7 +1344,16 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": true
+    "retainVanillaUvs": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "retainVanillaUvs": true
+      }
+    ]
   },
   {
     "description": "Spirit trees - Big",
@@ -14193,168 +14202,89 @@
     ]
   },
   {
-    "description": "Wooden Door 1 - Fake Plank",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "description": "Training Dummy - Ardougne Combat Camp",
+    "baseMaterial": "BURLAP",
+    "windDisplacementMode": "OBJECT",
+    "invertDisplacementStrength": true,
+    "windDisplacementModifier": -2,
     "objectIds": [
-      "MCANNONDOOR",
-      "MCANNONDOOR1",
-      "MERLINWORKSHOP",
-      "FIGHTARENA_DOOR1",
-      "FIGHTARENA_DOOR2",
-      "IKOV_FIREWARRIORDOOR",
-      "IKOV_SHINYKEYDOOR",
-      "IKOV_LUCIENDOOR",
-      "POORDOOR",
-      "POORDOOR_M",
-      "POORDOOROPEN",
-      "POORDOOROPEN_M",
-      "INACTIVEPOORDOOR",
-      "MAGICGUILD_DOOR_L",
-      "MAGICGUILD_DOOR_R",
-      "LOCKEDDOOR1",
-      "MEMBERDOOR",
-      "POORDOOROPEN_PERM",
-      "MOURNERSTEWDOORUP",
-      "MOURNERSTEWDOORUPOPEN",
-      "MOURNERSTEWDOOR",
-      "MOURNERSTEWDOOROPEN",
-      "BIOHAZARDDUMMY",
-      "ELENADOOR2",
-      "WYDINDOOR",
-      "KHAZARD_STRONGHOLD_DOOR",
-      "BKFORTRESSDOOR1",
-      "BKFORTRESSDOOR2",
-      "BKFORTRESSDOOR3",
-      "INACBKFORTRESSDOOR",
-      "FAMCREST_DOORH2",
-      "FAMCREST_DOORH2I2",
-      "FAMCREST_DOORG2H1",
-      "FAMCREST_DOORI2H1",
-      "FAMCREST_DOORH2G1",
-      "ELENAGATESHUT",
-      "ELENAGATEOPEN",
-      "BRAVEKDOORSHUT",
-      "BRAVEKDOOROPEN",
-      "REHNISONDOORSHUT",
-      "BRAVEKDOORSHUT",
-      "BRAVEKDOOROPEN",
-      "PETE_TREASUREDOOR",
-      "PETE_SIDEDOOR",
-      "GRUBORDOOR",
-      "GARVDOOR",
-      "HEROKITCHENDOOR",
-      "WITCHSHEDDOOR",
-      "CAVEWITCH_DOOR",
-      "WITCHDOOR",
-      "DEATH_SHERPA_DOOR",
-      "DEATH_SHERPA_BACKDOOR",
-      "CASTLEWARS_SARADOMIN_SIDEDOOR",
-      "CASTLEWARS_SARADOMIN_SIDEDOOR_OPEN",
-      "CASTLEWARS_ZAMORAK_SIDEDOOR",
-      "CASTLEWARS_ZAMORAK_SIDEDOOR_OPEN",
-      "HAUNTEDMINE_BOSS_DOOR",
-      "ROGUESDEN_DOOR_TO_PUB",
-      "ROGUESDEN_DOOR_TO_PUB_OPEN",
-      "MOURNER_HIDEOUT_DOOR1",
-      "MOURNER_HIDEOUT_DOOR2",
-      "MOURNER_HIDEOUT_DOOR4",
-      "MOURNER_HIDEOUT_DOOR1_OPEN",
-      "MOURNER_HIDEOUT_DOOR2_OPEN",
-      "MOURNER_HIDEOUT_DOOR4_OPEN",
-      "MOURNING_POORDOOR",
-      "MOURNING_POORDOOROPEN",
-      "NEWBIE_DOOR1",
-      "NEWBIE_DOOR2",
-      "NEWBIE_DOOR3",
-      "NEWBIE_DOOR4",
-      "NEWBIE_DOOR6",
-      "NEWBIE_DOOR7",
-      "NEWBIE_DOOR8",
-      "NEWBIE_DOOR9",
-      "FAI_VARROCK_COOK_GUILD_DOOR",
-      "MAKINGHISTORY_DOOR",
-      "MAKINGHISTORY_DOOR_OPEN",
-      "DRAYNOR_BASEMENT_DOOR_OPEN",
-      "PICKLOCK1",
-      "PICKLOCK2",
-      "PICKLOCK4",
-      "PICKLOCK6",
-      "TOOLLOCK3",
-      "TOOLLOCK5",
-      "FAI_VARROCK_DOOR_OPEN",
-      "FAI_VARROCK_DOOR",
-      "FAI_VARROCK_DOOR_OPEN_TALLER",
-      "FAI_VARROCK_DOOR_TALLER",
-      "FAI_VARROCK_BANK_LOCKED_DOOR",
-      "HUNDRED_LUMBRIDGE_DOUBLEDOORL",
-      "HUNDRED_LUMBRIDGE_DOUBLEDOORR",
-      "QIP_SHEEP_SHEARER_POORDOOR",
-      "QIP_SHEEP_SHEARER_POORDOOROPEN",
-      "POORDOOR_DOUBLE_INNER",
-      "OPENPOORDOOR_DOUBLE_INNER",
-      "POORDOOR_DOUBLER_INNER",
-      "OPENPOORDOOR_DOUBLER_INNER",
-      "WILD_DOOR",
-      "WILD_DOOR_OPEN",
-      "DTTD_HAM_DOOR",
-      "SLICE_OUTPOST_POORDOOR",
-      "SLICE_OUTPOST_OPENPOORDOOR",
-      "SLICE_DOOR",
-      "SLICE_OPENDOOR",
-      "BLACKARMDOOR_OPEN",
-      "FAI_WIZTOWER_POOR_DOOR",
-      "FAI_WIZTOWER_POOR_DOOR_OPEN",
-      "FAI_FALADOR_POOR_DOOR",
-      "FAI_FALADOR_POOR_DOOR_OPEN",
-      "FAI_FALADOR_POOR_DOOR_CLOSED_M",
-      "FAI_FALADOR_POOR_DOOR_OPEN_M",
-      "FAI_FALADOR_POOR_DOOR_RR",
-      "FAI_FALADOR_POOR_DOOR_OPEN_TALLER",
-      "FAI_FALADOR_POOR_DOOR_TALLER",
-      "FAI_FALADOR_POOR_CASTLE_DOOR",
-      "FAI_FALADOR_POOR_CASTLE_DOOR_OPEN",
-      "FAI_FALADOR_POOR_DOOR_NOOP",
-      "CANAFIS_DOOR_OPEN",
-      "CANAFIS_DOOR_OFFSET",
-      "CANAFIS_BANK_DOOR",
-      "CANAFIS_DOOR_GROUND_OPEN",
-      "CANAFIS_DOOR_GROUND",
-      "CHEFDOOR",
-      "QIP_OBS_RECEPTION_DOOR_OPEN",
-      "QIP_OBS_RECEPTION_DOOR",
-      "QIP_COOK_DOOR",
-      "KR_SIN_POORDOOR",
-      "KR_SIN_POORDOOROPEN",
-      "KR_POORDOOR",
-      "KR_POORDOOROPEN",
-      "BR_DOOR_LOCKED",
-      "BR_DOOR_FORFEIT",
-      "TUT2_SURVIVAL_ENTRY",
-      "TUT2_NAV_ENTRY",
-      "MGUILD_DOOR",
-      "MGUILD_DOOR_INNER1",
-      "MGUILD_DOOR_INNER2",
-      "POORDOOR_VIS",
-      "POORDOOR_OPEN_VIS",
-      "POORDOOR_NOOP",
-      "PLAGUEELENADOORSHUT_VIS",
-      "PLAGUEELENADOOROPEN_VIS",
-      "TUT2_NAV_EXIT",
-      "TUT2_QUEST_ENTRY",
-      "TUT2_BANK_EXIT",
-      "CON_CONTRACT_ARDY_WEST_DOOR_LOCKED",
-      "FAI_FALADOR_POOR_DOOR_INACTIVE",
-      "CANAFIS_DOOR_GROUND_NOOP",
-      "FAI_FALADOR_POOR_DOOR_FLIP",
-      "FAI_FALADOR_POOR_DOOR_OPEN_FLIP",
-      "FIGHTARENA_DOOR2_ESCAPE",
-      "DOTI_INTERROGATION_DOOR",
-      "LUC2_MOV_DOOR_CLOSED",
-      "LUC2_MOV_DOOR_OPEN"
+      "BIOHAZARDDUMMY"
     ],
     "uvType": "BOX",
-    "flatNormals": true,
-    "uvScale": 0.65
+    "uvScale": 0.35,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "h == 5 && s == 7 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": -2,
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 10,
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -2
+      }
+    ]
+  },
+  {
+    "description": "Training Dummy - Varrock - Indoors No Wind",
+    "baseMaterial": "BURLAP",
+    "objectIds": [
+      "FAI_VARROCK_SWORD_DUMMY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "h == 5 && s == 7 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": -2,
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 10
+      }
+    ]
+  },
+  {
+    "description": "Training Dummy - Varrock - Outdoors with Wind",
+    "areas": [ "VARROCK_CASTLE_OUTDOOR_DUMMIES" ],
+    "baseMaterial": "BURLAP",
+    "windDisplacementMode": "OBJECT",
+    "invertDisplacementStrength": true,
+    "windDisplacementModifier": -3,
+    "objectIds": [
+      "FAI_VARROCK_SWORD_DUMMY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "h == 5 && s == 7 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": -2,
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 10
+      }
+    ]
   },
   {
     "description": "Wooden Door 1 - Fake Plank - Light",
@@ -20761,12 +20691,24 @@
     "uvScale": 0.8
   },
   {
-    "description": "Gnome - Wooden - Hammock - Textured",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.8,
+    "description": "Hammock",
+    "windDisplacementMode": "OBJECT",
+    "shiftLightness": -25,
+    "invertDisplacementStrength": true,
+    "flatNormals": true,
+    "windDisplacementModifier": -2,
+    "castShadows": false,
     "objectIds": [
       "HAMMOCK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -21820,7 +21762,8 @@
   {
     "description": "Kharidian Saguaro Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "VERTEX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -3,
     "objectIds": [
       "CACTUS2"
     ]
@@ -21830,7 +21773,8 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "uvType": "BOX",
     "uvScale": 0.8,
-    "windDisplacementMode": "VERTEX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -3,
     "objectIds": [
       "CACTUS4"
     ]
@@ -21848,7 +21792,8 @@
   {
     "description": "Kharidian Komodo Cactus",
     "baseMaterial": "PLANT_GRUNGE_2",
-    "windDisplacementMode": "VERTEX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -3,
     "objectIds": [
       "CACTUS",
       "DESERT_CACTUS_FULL",
@@ -21858,7 +21803,8 @@
   {
     "description": "Kharidian Sophmena Cactus",
     "baseMaterial": "PLANT_GRUNGE_2",
-    "windDisplacementMode": "VERTEX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -3,
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -22109,8 +22055,10 @@
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
         "uvScale": 0.2,
+        "undoVanillaShading": false,
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-        "windDisplacementModifier": -2
+        "windDisplacementModifier": -2,
+        "shiftLightness": 1
       }
     ]
   },
@@ -33868,7 +33816,8 @@
     "description": "Objects - Bush - Dead",
     "baseMaterial": "BARK",
     "uvScale": 0.4,
-    "windDisplacementMode": "VERTEX",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "LEAFLESSBUSH",
       "LEAFLESSBUSH2",
@@ -46600,6 +46549,12 @@
     "baseMaterial": "CARPET_LIGHT",
     "uvType": "MODEL_XY",
     "uvScale": 0.2,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "invertDisplacementStrength": true,
+    "undoVanillaShading": false,
+    "upwardsNormals": true,
+    "windDisplacementModifier": -2,
+    "shiftLightness": -2,
     "objectIds": [
       "STANDARD_BLUE3"
     ],
@@ -46609,8 +46564,218 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.2,
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "invertDisplacementStrength": true,
+        "undoVanillaShading": false,
+        "upwardsNormals": true,
+        "windDisplacementModifier": -2,
+        "depthBias": 100
       }
     ]
+  },
+  {
+    "description": "Ardougne Combat Training Camp - Standards - Static",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "invertDisplacementStrength": true,
+    "undoVanillaShading": false,
+    "upwardsNormals": true,
+    "windDisplacementModifier": -2,
+    "objectIds": [
+      "STANDARD_BLUE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.2,
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "invertDisplacementStrength": true,
+        "undoVanillaShading": false,
+        "upwardsNormals": true,
+        "windDisplacementModifier": -2,
+        "maxLightness": 65,
+        "depthBias": 100
+      }
+    ]
+  },
+  {
+    "description": "Wooden Door 1 - Fake Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "MCANNONDOOR",
+      "MCANNONDOOR1",
+      "MERLINWORKSHOP",
+      "FIGHTARENA_DOOR1",
+      "FIGHTARENA_DOOR2",
+      "IKOV_FIREWARRIORDOOR",
+      "IKOV_SHINYKEYDOOR",
+      "IKOV_LUCIENDOOR",
+      "POORDOOR",
+      "POORDOOR_M",
+      "POORDOOROPEN",
+      "POORDOOROPEN_M",
+      "INACTIVEPOORDOOR",
+      "MAGICGUILD_DOOR_L",
+      "MAGICGUILD_DOOR_R",
+      "LOCKEDDOOR1",
+      "MEMBERDOOR",
+      "POORDOOROPEN_PERM",
+      "MOURNERSTEWDOORUP",
+      "MOURNERSTEWDOORUPOPEN",
+      "MOURNERSTEWDOOR",
+      "MOURNERSTEWDOOROPEN",
+      "ELENADOOR2",
+      "WYDINDOOR",
+      "KHAZARD_STRONGHOLD_DOOR",
+      "BKFORTRESSDOOR1",
+      "BKFORTRESSDOOR2",
+      "BKFORTRESSDOOR3",
+      "INACBKFORTRESSDOOR",
+      "FAMCREST_DOORH2",
+      "FAMCREST_DOORH2I2",
+      "FAMCREST_DOORG2H1",
+      "FAMCREST_DOORI2H1",
+      "FAMCREST_DOORH2G1",
+      "ELENAGATESHUT",
+      "ELENAGATEOPEN",
+      "BRAVEKDOORSHUT",
+      "BRAVEKDOOROPEN",
+      "REHNISONDOORSHUT",
+      "BRAVEKDOORSHUT",
+      "BRAVEKDOOROPEN",
+      "PETE_TREASUREDOOR",
+      "PETE_SIDEDOOR",
+      "GRUBORDOOR",
+      "GARVDOOR",
+      "HEROKITCHENDOOR",
+      "WITCHSHEDDOOR",
+      "CAVEWITCH_DOOR",
+      "WITCHDOOR",
+      "DEATH_SHERPA_DOOR",
+      "DEATH_SHERPA_BACKDOOR",
+      "CASTLEWARS_SARADOMIN_SIDEDOOR",
+      "CASTLEWARS_SARADOMIN_SIDEDOOR_OPEN",
+      "CASTLEWARS_ZAMORAK_SIDEDOOR",
+      "CASTLEWARS_ZAMORAK_SIDEDOOR_OPEN",
+      "HAUNTEDMINE_BOSS_DOOR",
+      "ROGUESDEN_DOOR_TO_PUB",
+      "ROGUESDEN_DOOR_TO_PUB_OPEN",
+      "MOURNER_HIDEOUT_DOOR1",
+      "MOURNER_HIDEOUT_DOOR2",
+      "MOURNER_HIDEOUT_DOOR4",
+      "MOURNER_HIDEOUT_DOOR1_OPEN",
+      "MOURNER_HIDEOUT_DOOR2_OPEN",
+      "MOURNER_HIDEOUT_DOOR4_OPEN",
+      "MOURNING_POORDOOR",
+      "MOURNING_POORDOOROPEN",
+      "NEWBIE_DOOR1",
+      "NEWBIE_DOOR2",
+      "NEWBIE_DOOR3",
+      "NEWBIE_DOOR4",
+      "NEWBIE_DOOR6",
+      "NEWBIE_DOOR7",
+      "NEWBIE_DOOR8",
+      "NEWBIE_DOOR9",
+      "FAI_VARROCK_COOK_GUILD_DOOR",
+      "MAKINGHISTORY_DOOR",
+      "MAKINGHISTORY_DOOR_OPEN",
+      "DRAYNOR_BASEMENT_DOOR_OPEN",
+      "PICKLOCK1",
+      "PICKLOCK2",
+      "PICKLOCK4",
+      "PICKLOCK6",
+      "TOOLLOCK3",
+      "TOOLLOCK5",
+      "FAI_VARROCK_DOOR_OPEN",
+      "FAI_VARROCK_DOOR",
+      "FAI_VARROCK_DOOR_OPEN_TALLER",
+      "FAI_VARROCK_DOOR_TALLER",
+      "FAI_VARROCK_BANK_LOCKED_DOOR",
+      "HUNDRED_LUMBRIDGE_DOUBLEDOORL",
+      "HUNDRED_LUMBRIDGE_DOUBLEDOORR",
+      "QIP_SHEEP_SHEARER_POORDOOR",
+      "QIP_SHEEP_SHEARER_POORDOOROPEN",
+      "POORDOOR_DOUBLE_INNER",
+      "OPENPOORDOOR_DOUBLE_INNER",
+      "POORDOOR_DOUBLER_INNER",
+      "OPENPOORDOOR_DOUBLER_INNER",
+      "WILD_DOOR",
+      "WILD_DOOR_OPEN",
+      "DTTD_HAM_DOOR",
+      "SLICE_OUTPOST_POORDOOR",
+      "SLICE_OUTPOST_OPENPOORDOOR",
+      "SLICE_DOOR",
+      "SLICE_OPENDOOR",
+      "BLACKARMDOOR_OPEN",
+      "FAI_WIZTOWER_POOR_DOOR",
+      "FAI_WIZTOWER_POOR_DOOR_OPEN",
+      "FAI_FALADOR_POOR_DOOR",
+      "FAI_FALADOR_POOR_DOOR_OPEN",
+      "FAI_FALADOR_POOR_DOOR_CLOSED_M",
+      "FAI_FALADOR_POOR_DOOR_OPEN_M",
+      "FAI_FALADOR_POOR_DOOR_RR",
+      "FAI_FALADOR_POOR_DOOR_OPEN_TALLER",
+      "FAI_FALADOR_POOR_DOOR_TALLER",
+      "FAI_FALADOR_POOR_CASTLE_DOOR",
+      "FAI_FALADOR_POOR_CASTLE_DOOR_OPEN",
+      "FAI_FALADOR_POOR_DOOR_NOOP",
+      "CANAFIS_DOOR_OPEN",
+      "CANAFIS_DOOR_OFFSET",
+      "CANAFIS_BANK_DOOR",
+      "CANAFIS_DOOR_GROUND_OPEN",
+      "CANAFIS_DOOR_GROUND",
+      "CHEFDOOR",
+      "QIP_OBS_RECEPTION_DOOR_OPEN",
+      "QIP_OBS_RECEPTION_DOOR",
+      "QIP_COOK_DOOR",
+      "KR_SIN_POORDOOR",
+      "KR_SIN_POORDOOROPEN",
+      "KR_POORDOOR",
+      "KR_POORDOOROPEN",
+      "BR_DOOR_LOCKED",
+      "BR_DOOR_FORFEIT",
+      "TUT2_SURVIVAL_ENTRY",
+      "TUT2_NAV_ENTRY",
+      "MGUILD_DOOR",
+      "MGUILD_DOOR_INNER1",
+      "MGUILD_DOOR_INNER2",
+      "POORDOOR_VIS",
+      "POORDOOR_OPEN_VIS",
+      "POORDOOR_NOOP",
+      "PLAGUEELENADOORSHUT_VIS",
+      "PLAGUEELENADOOROPEN_VIS",
+      "TUT2_NAV_EXIT",
+      "TUT2_QUEST_ENTRY",
+      "TUT2_BANK_EXIT",
+      "CON_CONTRACT_ARDY_WEST_DOOR_LOCKED",
+      "FAI_FALADOR_POOR_DOOR_INACTIVE",
+      "CANAFIS_DOOR_GROUND_NOOP",
+      "FAI_FALADOR_POOR_DOOR_FLIP",
+      "FAI_FALADOR_POOR_DOOR_OPEN_FLIP",
+      "FIGHTARENA_DOOR2_ESCAPE",
+      "DOTI_INTERROGATION_DOOR",
+      "LUC2_MOV_DOOR_CLOSED",
+      "LUC2_MOV_DOOR_OPEN"
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.65
   },
   {
     "description": "Lumbridge Castle - Standards - Animated",
@@ -62129,39 +62294,6 @@
     ]
   },
   {
-    "description": "Decoration - Wall - Saradomin wall flag",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvOrientation": 512,
-    "objectIds": [
-      "FAI_VARROCK_WALLHANGING_SARODOMIN_STAR"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Gold fabric",
-        "colors": "s == 7",
-        "baseMaterial": "CARPET_DARK",
-        "uvType": "MODEL_YZ",
-        "upwardsNormals": true
-      },
-      {
-        "description": "White fabric",
-        "colors": "h > 10",
-        "baseMaterial": "CARPET_DARK",
-        "uvOrientation": 280,
-        "uvType": "MODEL_YZ",
-        "upwardsNormals": true
-      },
-      {
-        "description": "Star",
-        "colors": "s == 0",
-        "baseMaterial": "CARPET_DARK",
-        "uvType": "MODEL_YZ",
-        "upwardsNormals": true
-      }
-    ]
-  },
-  {
     "description": "Varrock - Vault - Golden Bars - Stacked",
     "baseMaterial": "METALLIC_1_GLOSS",
     "uvType": "BOX",
@@ -64968,30 +65100,37 @@
     "uvType": "BOX",
     "uvOrientationX": 512,
     "objectIds": [
-      "FAI_VARROCK_PALACE_WALLHANGING"
+      "FAI_VARROCK_PALACE_WALLHANGING",
+      "FAI_VARROCK_WALLHANGING_SARODOMIN_STAR"
     ],
     "colorOverrides": [
       {
         "description": "Yellow fabric",
         "colors": "s == 7",
-        "baseMaterial": "CARPET_DARK",
+        "baseMaterial": "CARPET",
         "uvType": "MODEL_YZ",
-        "upwardsNormals": true
+        "shiftLightness": 8,
+        "minLightness": 13,
+        "upwardsNormals": true,
+        "undoVanillaShading": false
       },
       {
         "description": "Black fabric",
-        "colors": "s == 0",
-        "baseMaterial": "CARPET_DARK",
+        "colors": "h ==0 && s == 0",
+        "baseMaterial": "CARPET",
         "uvType": "MODEL_YZ",
-        "upwardsNormals": true
+        "depthBias": 100,
+        "upwardsNormals": true,
+        "undoVanillaShading": false
       },
       {
         "description": "White fabric",
         "colors": "h == 42",
-        "baseMaterial": "CARPET_DARK",
-        "uvOrientation": 280,
+        "baseMaterial": "CARPET",
         "uvType": "MODEL_YZ",
-        "upwardsNormals": true
+        "minLightness": 30,
+        "upwardsNormals": true,
+        "undoVanillaShading": false
       }
     ]
   },
@@ -65008,39 +65147,44 @@
       {
         "description": "Yellow fabric",
         "colors": "s == 7",
-        "baseMaterial": "CARPET_DARK",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_YZ",
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "invertDisplacementStrength": true,
-        "windDisplacementModifier": -1,
-        "uvType": "MODEL_YZ",
-        "upwardsNormals": true
+        "windDisplacementModifier": 2,
+        "shiftLightness": 8,
+        "minLightness": 13,
+        "upwardsNormals": true,
+        "undoVanillaShading": false
       },
       {
         "description": "Black fabric",
-        "colors": "s == 0",
-        "baseMaterial": "CARPET_DARK",
+        "colors": "h ==0 && s == 0",
+        "baseMaterial": "CARPET",
         "uvType": "MODEL_YZ",
-        "depthBias": 50,
+        "depthBias": 100,
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "invertDisplacementStrength": true,
-        "windDisplacementModifier": -1,
-        "upwardsNormals": true
+        "windDisplacementModifier": 2,
+        "upwardsNormals": true,
+        "undoVanillaShading": false
       },
       {
         "description": "White fabric",
         "colors": "h == 42",
-        "baseMaterial": "CARPET_DARK",
-        "uvOrientation": 280,
+        "baseMaterial": "CARPET",
         "uvType": "MODEL_YZ",
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "invertDisplacementStrength": true,
-        "windDisplacementModifier": -1,
-        "upwardsNormals": true
+        "windDisplacementModifier": 2,
+        "minLightness": 30,
+        "upwardsNormals": true,
+        "undoVanillaShading": false
       }
     ]
   },
   {
-    "description": "Varrock - Decoration - Varrock Castle Standing flag",
+    "description": "Varrock - Decoration - Varrock Castle Standing Flag",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
@@ -65054,27 +65198,61 @@
         "uvType": "MODEL_XY",
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "invertDisplacementStrength": true,
-        "windDisplacementModifier": 2
+        "minLightness": 13
       },
       {
         "description": "Black fabric",
-        "colors": "s == 0",
+        "colors": "h ==0 && s == 0",
         "baseMaterial": "CARPET",
         "uvType": "MODEL_XY",
-        "depthBias": 50,
+        "depthBias": 100,
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
-        "invertDisplacementStrength": true,
-        "windDisplacementModifier": 2
+        "invertDisplacementStrength": true
       },
       {
         "description": "White fabric",
         "colors": "h == 42",
         "baseMaterial": "CARPET",
-        "uvOrientation": 280,
         "uvType": "MODEL_XY",
         "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "invertDisplacementStrength": true,
-        "windDisplacementModifier": 2
+        "shiftLightness": -15,
+        "minLightness": 30
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Decoration - Varrock Old Standing Flag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "STANDARD1_VARROCK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Yellow fabric",
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XY",
+        "depthBias": 100,
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "invertDisplacementStrength": true,
+        "upwardsNormals": true,
+        "undoVanillaShading": false,
+        "windDisplacementModifier": -2,
+        "shiftLightness": -4
+      },
+      {
+        "description": "Black fabric",
+        "colors": "h == 19",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XY",
+        "upwardsNormals": true,
+        "undoVanillaShading": false,
+        "shiftLightness": -2,
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -2
       }
     ]
   },
@@ -69806,14 +69984,53 @@
   },
   {
     "description": "Gnome Stronghold - Cloth - Wooden - Standards",
-    "baseMaterial": "CARPET_DARK",
+    "baseMaterial": "CARPET",
+    "shiftLightness": -2,
     "uvType": "MODEL_XY",
     "uvScale": 0.5,
+    "undoVanillaShading": false,
     "upwardsNormals": true,
     "terrainVertexSnap": true,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "invertDisplacementStrength": true,
+    "windDisplacementModifier": -1,
     "objectIds": [
       "GNOMESTANDARD2",
       "GNOMESTANDARD1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 16 && l == 51 || h == 16 && l == 2" ],
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.5,
+        "upwardsNormals": true,
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "invertDisplacementStrength": true,
+        "depthBias": 100,
+        "windDisplacementModifier": -1
+      }
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Cloth - Wooden - Standards - No Wind",
+    "areas": [ "TREE_GNOME_STRONGHOLD_BANNERS_NO_WIND" ],
+    "baseMaterial": "CARPET",
+    "shiftLightness": -2,
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "undoVanillaShading": false,
+    "upwardsNormals": true,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "GNOMESTANDARD2"
     ],
     "colorOverrides": [
       {
@@ -86769,9 +86986,17 @@
     ]
   },
   {
-    "description": "Hot Air Balloon - Disable Detail Culling",
+    "description": "Hot Air Balloon Basket - Disable Detail Culling",
     "objectIds": [
-      "ZEP_BASKET",
+      "ZEP_BASKET"
+    ],
+    "disableDetailCulling": true
+  },
+  {
+    "description": "Hot Air Balloon - Disable Detail Culling & Add Wind Dispacement",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -1,
+    "objectIds": [
       "ZEP_BALLOON"
     ],
     "disableDetailCulling": true
