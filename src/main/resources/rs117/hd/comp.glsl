@@ -45,6 +45,8 @@ layout(local_size_x = THREAD_COUNT) in;
 #include <comp_sorting_utils.glsl>
 #include <priority_render.glsl>
 
+#include <utils/wind_character_displacement.glsl>
+
 void main() {
     uint groupId = gl_WorkGroupID.x;
     uint localId = gl_LocalInvocationID.x * FACES_PER_THREAD;
@@ -61,21 +63,11 @@ void main() {
         }
     }
 
-    ObjectWindSample windSample;
-    #if WIND_DISPLACEMENT
-    {
-        float modelNoise = noise((vec2(minfo.x, minfo.z) + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
-        float angle = modelNoise * (PI / 2.0);
-        float c = cos(angle);
-        float s = sin(angle);
-        float y = minfo.y >> 16;
-        float height = minfo.y & 0xffff;
-
-        windSample.direction = normalize(vec3(windDirectionX * c + windDirectionZ * s, 0.0, -windDirectionX * s + windDirectionZ * c));
-        windSample.heightBasedStrength = saturate((abs(y) + height) / windCeiling) * windStrength;
-        windSample.displacement = windSample.direction.xyz * (windSample.heightBasedStrength * modelNoise);
-    }
-    #endif
+    // after:
+    ObjectWindSample windSample = computeWindSample(
+        vec3(minfo.x, float(minfo.y >> 16), minfo.z),
+        minfo.y & 0xffff
+    );
 
     // Ensure all invocations have their shared variables initialized
     barrier();

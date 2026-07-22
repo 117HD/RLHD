@@ -221,6 +221,34 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			owner.dataFloat.position(offset).put(x).put(y).put(z).put(w);
 			owner.markWaterLine(position, type.size);
 		}
+
+		public final void set(int[] data, int offset, int length) {
+			if (isUninitialized())
+				return;
+
+			if(type.elementCount != length) {
+				log("Float setter was provided with incorrect number of elements: " + length + " != " + type.elementCount);
+				return;
+			}
+
+			owner.dataInt.position(this.offset);
+			owner.dataInt.put(data, offset, length);
+			owner.markWaterLine(position, type.size);
+		}
+
+		public final void set(float[] data, int offset, int length) {
+			if (isUninitialized())
+				return;
+
+			if(type.elementCount != length) {
+				log("Float setter was provided with incorrect number of elements: " + length + " != " + type.elementCount);
+				return;
+			}
+
+			owner.dataFloat.position(this.offset);
+			owner.dataFloat.put(data, offset, length);
+			owner.markWaterLine(position, type.size);
+		}
 	}
 
 	public interface CreateStructProperty<T extends StructProperty> {

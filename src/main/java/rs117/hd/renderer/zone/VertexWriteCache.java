@@ -49,7 +49,35 @@ public final class VertexWriteCache {
 			stagingBuffer = PooledArrayType.INT.ensureCapacity(stagingBuffer, min(stagingBuffer.length * 2, maxCapacity));
 	}
 
-	public int putFace(
+	public int findStaticFace(
+		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
+		int materialDataA, int materialDataB, int materialDataC,
+		int terrainDataA, int terrainDataB, int terrainDataC
+	) {
+		final int[] stagingBuffer = this.stagingBuffer;
+		final int stagingPosition = this.stagingPosition;
+
+		for (int i = 0; i < stagingPosition; i += 9) {
+			if (stagingBuffer[i] == alphaBiasHslA
+			    && stagingBuffer[i + 1] == alphaBiasHslB
+			    && stagingBuffer[i + 2] == alphaBiasHslC
+
+			    && stagingBuffer[i + 3] == materialDataA
+			    && stagingBuffer[i + 4] == materialDataB
+			    && stagingBuffer[i + 5] == materialDataC
+
+			    && stagingBuffer[i + 6] == terrainDataA
+			    && stagingBuffer[i + 7] == terrainDataB
+			    && stagingBuffer[i + 8] == terrainDataC) {
+				final int textureFaceIdx = outputBuffer.position() + i;
+				return textureFaceIdx << 1;
+			}
+		}
+
+		return -1;
+	}
+
+	public int putStaticFace(
 		int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC,
 		int materialDataA, int materialDataB, int materialDataC,
 		int terrainDataA, int terrainDataB, int terrainDataC
@@ -57,7 +85,7 @@ public final class VertexWriteCache {
 		if (stagingPosition + 9 > stagingBuffer.length)
 			flushAndGrow();
 
-		final int textureFaceIdx = (outputBuffer.position() + stagingPosition) / 3;
+		final int textureFaceIdx = outputBuffer.position() + stagingPosition;
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
@@ -75,38 +103,49 @@ public final class VertexWriteCache {
 
 		this.stagingPosition += 9;
 
-		return textureFaceIdx;
+		return textureFaceIdx << 1;
 	}
 
-	public void putDynamicVertex(
-		int x, int y, int z,
-		float u, float v, float w,
-		int nx, int ny, int nz,
-		int textureFaceIdx
-	) {
-		if (stagingPosition + 8 > stagingBuffer.length)
+	public int findModelFace(int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC, int materialData) {
+		final int[] stagingBuffer = this.stagingBuffer;
+		final int stagingPosition = this.stagingPosition;
+
+		for (int i = 0; i < stagingPosition; i += 4) {
+			if (stagingBuffer[i] == alphaBiasHslA
+			    && stagingBuffer[i + 1] == alphaBiasHslB
+			    && stagingBuffer[i + 2] == alphaBiasHslC
+			    && stagingBuffer[i + 3] == materialData) {
+				final int textureFaceIdx = outputBuffer.position() + i;
+				return 1 | textureFaceIdx << 1;
+			}
+		}
+
+		return -1;
+	}
+
+	public int putModelFace(int alphaBiasHslA, int alphaBiasHslB, int alphaBiasHslC, int materialData) {
+		if (stagingPosition + 4 > stagingBuffer.length)
 			flushAndGrow();
+
+		final int textureFaceIdx = outputBuffer.position() + stagingPosition;
 
 		final int[] stagingBuffer = this.stagingBuffer;
 		final int stagingPosition = this.stagingPosition;
 
-		stagingBuffer[stagingPosition] = x;
-		stagingBuffer[stagingPosition + 1] = y;
-		stagingBuffer[stagingPosition + 2] = z;
-		stagingBuffer[stagingPosition + 3] = float16(v) << 16 | float16(u);
-		stagingBuffer[stagingPosition + 4] = float16(w);
-		stagingBuffer[stagingPosition + 5] = (ny & 0xFFFF) << 16 | nx & 0xFFFF;
-		stagingBuffer[stagingPosition + 6] = nz & 0xFFFF;
-		stagingBuffer[stagingPosition + 7] = textureFaceIdx;
+		stagingBuffer[stagingPosition] = alphaBiasHslA;
+		stagingBuffer[stagingPosition + 1] = alphaBiasHslB;
+		stagingBuffer[stagingPosition + 2] = alphaBiasHslC;
+		stagingBuffer[stagingPosition + 3] = materialData;
 
-		this.stagingPosition += 8;
+		this.stagingPosition += 4;
+		return 1 | textureFaceIdx << 1;
 	}
 
-	public void putStaticVertex(
+	public void putVertex(
 		int x, int y, int z,
 		float u, float v, float w,
 		int nx, int ny, int nz,
-		int textureFaceIdx
+		int textureFaceIdx, int modelIdx
 	) {
 		if (stagingPosition + 7 > stagingBuffer.length)
 			flushAndGrow();
@@ -120,7 +159,7 @@ public final class VertexWriteCache {
 		stagingBuffer[stagingPosition + 3] = float16(w);
 		// Unnormalized normals, assumed to be within short max
 		stagingBuffer[stagingPosition + 4] = (ny & 0xFFFF) << 16 | nx & 0xFFFF;
-		stagingBuffer[stagingPosition + 5] = nz & 0xFFFF;
+		stagingBuffer[stagingPosition + 5] = (modelIdx & 0xFFFF) << 16 | nz & 0xFFFF;
 		stagingBuffer[stagingPosition + 6] = textureFaceIdx;
 
 		this.stagingPosition += 7;

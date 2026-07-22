@@ -477,6 +477,20 @@
     ]
   },
   {
+    "name": "VARROCK_CASTLE_OUTDOOR_BANNERS",
+    "aabbs": [
+      [ 3202, 3462, 3202, 3464 ],
+      [ 3223, 3461 ],
+      [ 3208, 3470 ]
+    ]
+  },
+  {
+    "name": "VARROCK_CASTLE_OUTDOOR_DUMMIES",
+    "aabbs": [
+      [ 3209, 3489, 3217, 3492 ]
+    ]
+  },
+  {
     "name": "VARROCK_CASTLE_DIRT_PATH_FIXES_1",
     "aabbs": [
       [ 3198, 3499, 3198, 3500 ],
@@ -4576,6 +4590,12 @@
       [ 2377, 3458, 2377, 3460 ],
       [ 2376, 3458, 2376, 3459 ],
       [ 2375, 3458, 2375, 3458 ]
+    ]
+  },
+  {
+    "name": "TREE_GNOME_STRONGHOLD_BANNERS_NO_WIND",
+    "aabbs": [
+      [ 2465, 3498, 2467, 3498 ]
     ]
   },
   {

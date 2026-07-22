@@ -795,12 +795,22 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_DITHER_FADING = "ditherFading";
+	@ConfigItem(
+		keyName = KEY_DITHER_FADING,
+		name = "Dither Fading",
+		description = "Whether to dither fade near plane geometry that would normally clip.",
+		position = 15,
+		section = environmentSettings
+	)
+	default boolean ditherFading() { return true; }
+
 	String KEY_HIDE_VANILLA_WATER_EFFECTS = "hideVanillaWaterEffects";
 	@ConfigItem(
 		keyName = KEY_HIDE_VANILLA_WATER_EFFECTS,
 		name = "Hide vanilla water ripples",
 		description = "Hide vanilla ripples found around objects floating in the water.",
-		position = 15,
+		position = 16,
 		section = environmentSettings
 	)
 	default boolean hideVanillaWaterEffects() { return true; }
@@ -810,7 +820,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_POH_THEME_ENVIRONMENTS,
 		name = "Player-owned house themes",
 		description = "Change the environmental lighting based on the POH style.",
-		position = 16,
+		position = 17,
 		section = environmentSettings
 	)
 	default boolean pohThemeEnvironments() { return true; }

@@ -48,7 +48,6 @@ import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
@@ -61,6 +60,7 @@ import static org.lwjgl.opencl.KHRGLSharing.CL_WGL_HDC_KHR;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memASCII;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
+import static rs117.hd.scene.DisplacementManager.MAX_CHARACTER_POSITION_COUNT;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -324,7 +324,7 @@ public class OpenCLManager {
 				.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
 				.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
 				.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
-				.define("MAX_CHARACTER_POSITION_COUNT", UBOCompute.MAX_CHARACTER_POSITION_COUNT)
+				.define("MAX_CHARACTER_POSITION_COUNT", MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
 			passthroughProgram = compileProgram(stack, "comp_unordered.cl", includes);
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);

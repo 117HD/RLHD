@@ -36,12 +36,11 @@ import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
+import rs117.hd.utils.jobs.Job;
 
 import static net.runelite.api.Constants.*;
-import static net.runelite.api.Perspective.SCENE_SIZE;
+import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.HdPlugin.checkGLErrors;
-import static rs117.hd.renderer.zone.WorldViewContext.DYNAMIC_MODEL_VAO_POOL;
-import static rs117.hd.renderer.zone.WorldViewContext.DYNAMIC_MODEL_VAO_STAGING_POOL;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -101,6 +100,7 @@ public class SceneManager {
 	private ZoneSceneContext nextSceneContext;
 	private Zone[][] nextZones;
 	private final List<SortedZone> sortedZones = new ArrayList<>();
+	private final Job[] roundRobinDependencies = new Job[PROCESSOR_COUNT];
 	private boolean reloadRequested;
 
 	public boolean isZoneStreamingEnabled() {
@@ -122,7 +122,7 @@ public class SceneManager {
 	public boolean isRoot(WorldViewContext context) { return root == context; }
 
 	public WorldViewContext getContext(Scene scene) {
-		return getContext(scene.getWorldViewId());
+		return scene != null ? getContext(scene.getWorldViewId()) : null;
 	}
 
 	public WorldViewContext getContext(WorldView wv) {
@@ -152,9 +152,6 @@ public class SceneManager {
 				subs[i].free();
 			subs[i] = null;
 		}
-
-		DYNAMIC_MODEL_VAO_STAGING_POOL.destroy();
-		DYNAMIC_MODEL_VAO_POOL.destroy();
 
 		Zone.freeZones(nextZones);
 		nextZones = null;
@@ -598,17 +595,26 @@ public class SceneManager {
 				}
 			}
 
-			long timeMs = System.currentTimeMillis();
+			int robinIdx = 0;
+			int robinSize = (int) max(1, PROCESSOR_COUNT * config.cpuUsageLimit().threadRatio * 0.5f);
+			Arrays.fill(roundRobinDependencies, 0, robinSize, generateSceneDataTask);
+
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = injector.getInstance(Zone.class);
 				newZone.dirty = sorted.zone.dirty;
 				if (staggerLoad) {
+					if(!sorted.zone.cull)
+						newZone.fadingAlpha = saturate(sorted.dist / 15.0f) * 3.0f; // Fade in new chunks that are appearing out of the fog
+
 					// Reuse the old zone while uploading a correct one
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
-						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z);
-					sorted.zone.uploadJob.revealAfterTimestampMs =
-						timeMs + ceil(clamp(sorted.dist / 15.0f, 0.25f, 1.5f) * 1000.0f);
+						.build(ctx, nextSceneContext, newZone, false, sorted.x, sorted.z)
+						.queue(ctx.streamingGroup, roundRobinDependencies[robinIdx]);
+
+					// Round Robin the streaming in zones to avoid saturating the Job queue
+					roundRobinDependencies[robinIdx] = sorted.zone.uploadJob;
+					robinIdx = (robinIdx + 1) % robinSize;
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
@@ -617,6 +623,7 @@ public class SceneManager {
 				}
 				sorted.free();
 			}
+			Arrays.fill(roundRobinDependencies, 0, robinSize, null);
 			sortedZones.clear();
 
 			root.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
@@ -730,8 +737,6 @@ public class SceneManager {
 		nextSceneContext = null;
 
 		if (isFirst) {
-			root.initBuffers();
-
 			// Load all pre-existing sub scenes on the first scene load
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 				WorldView sub = subEntity.getWorldView();
@@ -779,6 +784,7 @@ public class SceneManager {
 					.build(ctx, sceneContext, ctx.zones[x][z], true, x, z)
 					.queue(ctx.sceneLoadGroup);
 
+		ctx.buildBoatDisplacement();
 		ctx.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 	}
 
@@ -788,7 +794,6 @@ public class SceneManager {
 			return;
 
 		Stopwatch sw = Stopwatch.createStarted();
-		ctx.initBuffers();
 		ctx.sceneLoadGroup.complete();
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);

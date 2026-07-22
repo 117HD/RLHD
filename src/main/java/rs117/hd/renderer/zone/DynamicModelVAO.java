@@ -1,10 +1,11 @@
 package rs117.hd.renderer.zone;
 
+import java.nio.IntBuffer;
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import javax.annotation.Nonnull;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.system.MemoryStack;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.Destructible;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -14,9 +15,13 @@ import rs117.hd.utils.buffer.GLTextureBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
-import static rs117.hd.HdPlugin.NVIDIA_GPU;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.SUPPORTS_STORAGE_BUFFERS;
+import static rs117.hd.renderer.zone.Zone.METADATA_SIZE;
+import static rs117.hd.renderer.zone.Zone.MODEL_DATA_INTS;
+import static rs117.hd.renderer.zone.Zone.VERT_SIZE;
+import static rs117.hd.renderer.zone.Zone.VERT_SIZE_INTS;
+import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_MODEL_DATA;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.buffer.GLBuffer.STORAGE_IMMUTABLE;
@@ -27,94 +32,89 @@ import static rs117.hd.utils.buffer.GLBuffer.STORAGE_WRITE;
 public class DynamicModelVAO implements Destructible {
 	public static final int INITIAL_SIZE = (int) (8 * MiB);
 
-	// Temp vertex format
-	// pos float vec3(x, y, z)
-	// uvw short vec3(u, v, w)
-	// normal short vec3(nx, ny, nz)
-	static final int VERT_SIZE = 32;
-	static final int VERT_SIZE_INTS = VERT_SIZE / 4;
-
-	// Metadata format
-	// worldViewIndex int
-	// dummy sceneOffset ivec2 for macOS workaround
-	static final int METADATA_SIZE = 12;
-
 	@Getter
 	private int vao;
 
 	private final GLBuffer vboRender;
 	private final GLBuffer vboStaging;
-	private final GLTextureBuffer tbo;
+	private final GLBuffer stubMetadata;
+	private final GLTextureBuffer tboF;
+	private final GLTextureBuffer tboM;
 
 	private final ArrayDeque<View> usedViews = new ArrayDeque<>();
 	private final ArrayDeque<View> freeViews = new ArrayDeque<>();
 
 	private final GLMappedBufferIntWriter vboWriter;
-	private final GLMappedBufferIntWriter tboWriter;
+	private final GLMappedBufferIntWriter tboFWriter;
+	private final GLMappedBufferIntWriter tboMWriter;
 
 	private boolean isMapped = false;
+
 	private int[] drawOffsets = new int[16];
 	private int[] drawCounts = new int[16];
-	private int writtenRangeCount;
-	private int drawRangeCount;
 
-	private long[] srcCopyOffsets = new long[16];
-	private long[] dstCopyOffsets = new long[16];
-	private long[] copyNumBytes = new long[16];
+	private int[] packedOffsets = new int[16];
+	private int[] mergedOffsets = new int[16];
+	private int[] mergedCounts = new int[16];
+
+	private long[] pendingCopySrcOffsets = new long[16];
+	private long[] pendingCopyDstOffsets = new long[16];
+	private long[] pendingCopyNumBytes = new long[16];
+	private int pendingCopyCount;
+	private int nextPackedOffset;
+
+	private int allocatedDrawCount;
+	private int writtenRangeCount;
 
 	DynamicModelVAO(String name, boolean useStagingBuffer) {
 		if (useStagingBuffer && SUPPORTS_STORAGE_BUFFERS) {
-			this.vboRender = new GLBuffer("VAO::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
+			this.vboRender = new GLBuffer("DynamicModel::VBO::" + name, GL_ARRAY_BUFFER, GL_STATIC_DRAW, 0);
 			this.vboStaging = new GLBuffer(
-				"VAO::VBO_STAGING::" + name,
+				"DynamicModel::VBO_STAGING::" + name,
 				GL_ARRAY_BUFFER,
 				GL_STREAM_DRAW,
 				STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE
 			);
 		} else {
 			this.vboRender = this.vboStaging = new GLBuffer(
-				"VAO::VBO::" + name,
+				"DynamicModel::VBO::" + name,
 				GL_ARRAY_BUFFER,
 				GL_STREAM_DRAW,
 				STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE
 			);
 		}
+		this.stubMetadata = new GLBuffer("DynamicModel::Metadata", GL_ARRAY_BUFFER, GL_STATIC_DRAW);
 		this.vboWriter = new GLMappedBufferIntWriter(this.vboStaging);
 
-		this.tbo = new GLTextureBuffer("VAO::TBO::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
-		this.tboWriter = new GLMappedBufferIntWriter(this.tbo);
+		this.tboF = new GLTextureBuffer("DynamicModel::TexturedFaces::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
+		this.tboM = new GLTextureBuffer("DynamicModel::ModelData::" + name, GL_STREAM_DRAW, STORAGE_PERSISTENT | STORAGE_IMMUTABLE | STORAGE_WRITE);
+		this.tboFWriter = new GLMappedBufferIntWriter(this.tboF);
+		this.tboMWriter = new GLMappedBufferIntWriter(this.tboM);
+
+		Arrays.fill(packedOffsets, -1);
 	}
 
 	public boolean hasStagingBuffer() { return vboRender != vboStaging; }
 
 	void initialize() {
 		vao = glGenVertexArrays();
-		tbo.initialize(INITIAL_SIZE);
+		tboF.initialize(INITIAL_SIZE);
+		tboM.initialize(INITIAL_SIZE);
 		vboRender.initialize(INITIAL_SIZE);
 		if (vboRender != vboStaging)
 			vboStaging.initialize(INITIAL_SIZE);
 
-		bindRenderVAO();
-	}
-
-	public void bindMetadataVAO(@Nonnull GLBuffer vboMetadata) {
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.id);
-
-		// WorldView index (not ID)
-		glEnableVertexAttribArray(6);
-		glVertexAttribDivisor(6, 1);
-		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
-
-		if (!NVIDIA_GPU) {
-			// Workaround for incorrect implementations of disabled vertex attribs, particularly on macOS
-			glEnableVertexAttribArray(7);
-			glVertexAttribDivisor(7, 1);
-			glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
+		// Build Stub Metadata
+		stubMetadata.initialize(METADATA_SIZE);
+		try (MemoryStack stack = MemoryStack.stackPush()) {
+			int intsCount = METADATA_SIZE / Integer.BYTES;
+			IntBuffer buf = stack.mallocInt(intsCount);
+			for(int i = 0; i < intsCount; i++)
+				buf.put(0);
+			stubMetadata.upload(buf);
 		}
 
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+		bindRenderVAO();
 	}
 
 	void bindRenderVAO() {
@@ -123,66 +123,63 @@ public class DynamicModelVAO implements Destructible {
 
 		// Position
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, VERT_SIZE, 0);
+		glVertexAttribPointer(0, 3, GL_HALF_FLOAT, false, VERT_SIZE, 0);
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(1, 4, GL_HALF_FLOAT, false, VERT_SIZE, 8);
 
 		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 20);
+		glVertexAttribPointer(2, 4, GL_SHORT, false, VERT_SIZE, 16);
 
 		// TextureFaceIdx
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 28);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+
+		glBindBuffer(GL_ARRAY_BUFFER, stubMetadata.id);
+
+		// WorldView index (not ID)
+		glEnableVertexAttribArray(6);
+		glVertexAttribDivisor(6, 1);
+		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
+
+		// Scene offset
+		glEnableVertexAttribArray(7);
+		glVertexAttribDivisor(7, 1);
+		glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
+
+		// Scene offset
+		glEnableVertexAttribArray(8);
+		glVertexAttribDivisor(8, 1);
+		glVertexAttribPointer(8, 1, GL_FLOAT, false, METADATA_SIZE, 12);
+
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 	}
 
 	void map() {
+		if(!vboRender.isStorageBuffer())
+			vboRender.orphan();
+
 		vboWriter.map(false);
-		tboWriter.map(false);
+		tboFWriter.map(false);
+		tboMWriter.map(false);
 
 		reset();
 		isMapped = true;
 	}
 
-	synchronized void unmap(boolean coalesce) {
+	synchronized void unmap() {
 		final int renderVBOId = vboRender.id;
-		long vboWrittenBytes = vboWriter.flush();
-		tboWriter.flush();
+		vboWriter.flush();
+		tboFWriter.flush();
+		tboMWriter.flush();
 
-		if (drawRangeCount > 0) {
-			mergeRanges();
-
-			if (hasStagingBuffer()) {
-				vboRender.orphan();
-				if (drawRangeCount > 1 && coalesce) {
-					if (srcCopyOffsets.length < drawRangeCount) {
-						srcCopyOffsets = new long[drawRangeCount];
-						dstCopyOffsets = new long[drawRangeCount];
-						copyNumBytes = new long[drawRangeCount];
-					}
-
-					long dstOffset = 0;
-					for (int i = 0; i < drawRangeCount; i++) {
-						srcCopyOffsets[i] = drawOffsets[i] * (long) VERT_SIZE;
-						dstCopyOffsets[i] = dstOffset;
-						copyNumBytes[i] = drawCounts[i] * (long) VERT_SIZE;
-						dstOffset += copyNumBytes[i];
-					}
-					vboStaging.copyMultiTo(vboRender, srcCopyOffsets, dstCopyOffsets, copyNumBytes, drawRangeCount);
-
-					drawOffsets[0] = 0;
-					drawCounts[0] = (int) (dstOffset / VERT_SIZE);
-					drawRangeCount = 1;
-				} else {
-					vboStaging.copyTo(vboRender, 0, 0, vboWrittenBytes);
-				}
-			}
-		}
+		if (pendingCopyCount > 0)
+			vboStaging.copyMultiTo(vboRender, pendingCopySrcOffsets, pendingCopyDstOffsets, pendingCopyNumBytes, pendingCopyCount);
+		pendingCopyCount = 0;
 
 		if (renderVBOId != vboRender.id)
 			bindRenderVAO();
@@ -192,10 +189,12 @@ public class DynamicModelVAO implements Destructible {
 	@Override
 	public void destroy() {
 		vboWriter.destroy();
-		tboWriter.destroy();
+		tboFWriter.destroy();
+		tboMWriter.destroy();
 		vboRender.destroy();
 		vboStaging.destroy();
-		tbo.destroy();
+		tboF.destroy();
+		tboM.destroy();
 
 		if (vao != 0)
 			glDeleteVertexArrays(vao);
@@ -203,11 +202,16 @@ public class DynamicModelVAO implements Destructible {
 	}
 
 	synchronized int obtainDrawIndex() {
-		int drawIndex = drawRangeCount++;
-		if (drawRangeCount >= drawOffsets.length) {
-			int oldLength = drawOffsets.length;
+		final int drawIndex = allocatedDrawCount++;
+		if (allocatedDrawCount >= drawOffsets.length) {
+			final int oldLength = drawOffsets.length;
+			final int oldPackedLength = packedOffsets.length;
+
 			drawOffsets = Arrays.copyOf(drawOffsets, oldLength * 2);
 			drawCounts = Arrays.copyOf(drawCounts, oldLength * 2);
+			packedOffsets = Arrays.copyOf(packedOffsets, oldLength * 2);
+
+			Arrays.fill(packedOffsets, oldPackedLength, packedOffsets.length, -1);
 		}
 		return drawIndex;
 	}
@@ -220,7 +224,7 @@ public class DynamicModelVAO implements Destructible {
 		if (drawIdx == -1)
 			drawIdx = obtainDrawIndex();
 
-		assert drawIdx >= 0 && drawIdx < drawRangeCount : "drawIdx " + drawIdx + " out of bounds from 0 to " + drawRangeCount;
+		assert drawIdx >= 0 && drawIdx < allocatedDrawCount : "drawIdx " + drawIdx + " out of bounds from 0 to " + allocatedDrawCount;
 		assert drawOffsets[drawIdx] == 0 && drawCounts[drawIdx] == 0 : String.format(
 			"Provided draw index is already in use: %d %d %d",
 			drawIdx, drawOffsets[drawIdx], drawCounts[drawIdx]
@@ -231,9 +235,11 @@ public class DynamicModelVAO implements Destructible {
 		if (view == null)
 			view = new View();
 		view.vbo = vboWriter.reserve(faceCount * 3 * VERT_SIZE_INTS);
-		view.tbo = tboWriter.reserve(faceCount * 9);
+		view.tboF = tboFWriter.reserve(faceCount * 4);
+		view.tboM = tboMWriter.reserve(MODEL_DATA_INTS);
 		view.vao = vao;
-		view.tboTexId = tbo.getTexId();
+		view.tboFId = tboF.getTexId();
+		view.tboMId = tboM.getTexId();
 		view.drawIdx = drawIdx;
 
 		return view;
@@ -252,47 +258,102 @@ public class DynamicModelVAO implements Destructible {
 
 		// Clear ReservedViews before returning to pool
 		view.vbo = null;
-		view.tbo = null;
+		view.tboF = null;
+		view.tboM = null;
 
 		usedViews.add(view);
 	}
 
-	void mergeRanges() {
-		drawRangeCount = 0;
-		for (int i = 0; i < writtenRangeCount; i++) {
-			if (drawCounts[i] <= 0)
-				continue;
+	private void addPendingCopy(int srcOffsetInts, int dstOffsetInts, int countInts) {
+		long srcBytes = srcOffsetInts * (long) VERT_SIZE;
+		long dstBytes = dstOffsetInts * (long) VERT_SIZE;
+		long numBytes = countInts * (long) VERT_SIZE;
 
-			if (drawRangeCount > 0 && drawOffsets[drawRangeCount - 1] + drawCounts[drawRangeCount - 1] == drawOffsets[i]) {
-				drawCounts[drawRangeCount - 1] += drawCounts[i];
-			} else {
-				if (drawRangeCount != i) {
-					drawOffsets[drawRangeCount] = drawOffsets[i];
-					drawCounts[drawRangeCount] = drawCounts[i];
-				}
-				drawRangeCount++;
+		if (pendingCopyCount > 0) {
+			int last = pendingCopyCount - 1;
+			if (
+				pendingCopySrcOffsets[last] + pendingCopyNumBytes[last] == srcBytes &&
+				pendingCopyDstOffsets[last] + pendingCopyNumBytes[last] == dstBytes
+			) {
+				pendingCopyNumBytes[last] += numBytes;
+				return;
 			}
 		}
+
+		if (pendingCopyCount >= pendingCopySrcOffsets.length) {
+			pendingCopySrcOffsets = Arrays.copyOf(pendingCopySrcOffsets, pendingCopySrcOffsets.length * 2);
+			pendingCopyDstOffsets = Arrays.copyOf(pendingCopyDstOffsets, pendingCopyDstOffsets.length * 2);
+			pendingCopyNumBytes = Arrays.copyOf(pendingCopyNumBytes, pendingCopyNumBytes.length * 2);
+		}
+
+		pendingCopySrcOffsets[pendingCopyCount] = srcBytes;
+		pendingCopyDstOffsets[pendingCopyCount] = dstBytes;
+		pendingCopyNumBytes[pendingCopyCount] = numBytes;
+		pendingCopyCount++;
 	}
 
-	void draw(CommandBuffer cmd) {
-		if (drawRangeCount <= 0)
+	private int mergeRanges(int fromDrawIdx, int toDrawIdx) {
+		int count = 0;
+		int maxCount = toDrawIdx - fromDrawIdx;
+		if (mergedOffsets.length < maxCount) {
+			mergedOffsets = Arrays.copyOf(mergedOffsets, maxCount);
+			mergedCounts = Arrays.copyOf(mergedCounts, maxCount);
+		}
+
+		final boolean staging = hasStagingBuffer();
+		final int[] mOffsets = mergedOffsets;
+		final int[] mCounts = mergedCounts;
+
+		for (int i = fromDrawIdx; i < toDrawIdx; i++) {
+			int c = drawCounts[i];
+			if (c <= 0)
+				continue;
+
+			int offset;
+			if (staging) {
+				int packed = packedOffsets[i];
+				if (packed == -1) {
+					packed = nextPackedOffset;
+					nextPackedOffset += c;
+					addPendingCopy(drawOffsets[i], packed, c);
+					packedOffsets[i] = packed;
+				}
+				offset = packed;
+			} else {
+				offset = drawOffsets[i];
+			}
+
+			if (count > 0 && mOffsets[count - 1] + mCounts[count - 1] == offset) {
+				mCounts[count - 1] += c;
+			} else {
+				mOffsets[count] = offset;
+				mCounts[count] = c;
+				count++;
+			}
+		}
+		return count;
+	}
+
+	void draw(CommandBuffer cmd, int fromDrawIdx, int toDrawIdx) {
+		int rangeCount = mergeRanges(fromDrawIdx, toDrawIdx);
+		if (rangeCount <= 0)
 			return;
 
 		cmd.BindVertexArray(vao);
-		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tbo.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
+		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboF.getTexId(), TEXTURE_UNIT_TEXTURED_FACES);
+		cmd.BindTextureUnit(GL_TEXTURE_BUFFER, tboM.getTexId(), TEXTURE_UNIT_MODEL_DATA);
 
-		if (drawRangeCount == 1) {
+		if (rangeCount == 1) {
 			if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
-				cmd.DrawArraysIndirect(GL_TRIANGLES, drawOffsets[0], drawCounts[0], ZoneRenderer.indirectDrawCmdsStaging);
+				cmd.DrawArraysIndirect(GL_TRIANGLES, mergedOffsets[0], mergedCounts[0], ZoneRenderer.indirectDrawCmdsStaging);
 			} else {
-				cmd.DrawArrays(GL_TRIANGLES, drawOffsets[0], drawCounts[0]);
+				cmd.DrawArrays(GL_TRIANGLES, mergedOffsets[0], mergedCounts[0]);
 			}
 		} else {
 			if (GL_CAPS.OpenGL43 && SUPPORTS_INDIRECT_DRAW) {
-				cmd.MultiDrawArraysIndirect(GL_TRIANGLES, drawOffsets, drawCounts, drawRangeCount, ZoneRenderer.indirectDrawCmdsStaging);
+				cmd.MultiDrawArraysIndirect(GL_TRIANGLES, mergedOffsets, mergedCounts, rangeCount, ZoneRenderer.indirectDrawCmdsStaging);
 			} else {
-				cmd.MultiDrawArrays(GL_TRIANGLES, drawOffsets, drawCounts, drawRangeCount);
+				cmd.MultiDrawArrays(GL_TRIANGLES, mergedOffsets, mergedCounts, rangeCount);
 			}
 		}
 	}
@@ -300,16 +361,24 @@ public class DynamicModelVAO implements Destructible {
 	void reset() {
 		Arrays.fill(drawOffsets, 0, writtenRangeCount, 0);
 		Arrays.fill(drawCounts, 0, writtenRangeCount, 0);
-		drawRangeCount = 0;
+		Arrays.fill(packedOffsets, 0, writtenRangeCount, -1);
+		allocatedDrawCount = 0;
+		writtenRangeCount = 0;
+		nextPackedOffset = 0;
+		pendingCopyCount = 0;
 		freeViews.addAll(usedViews);
 		usedViews.clear();
 	}
 
 	public final class View {
 		public ReservedView vbo;
-		public ReservedView tbo;
+		public ReservedView tboF;
+		public ReservedView tboM;
 		public int vao;
-		public int tboTexId;
+		public int tboFId;
+		public int tboMId;
+
+		@Getter
 		private int drawIdx;
 
 		public int getStartOffset() {

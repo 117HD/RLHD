@@ -1,8 +1,8 @@
 package rs117.hd.renderer.zone;
 
 import com.google.inject.Injector;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -10,38 +10,28 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.geometry.*;
+import net.runelite.api.model.*;
 import net.runelite.client.callback.ClientThread;
-import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
+import rs117.hd.scene.DisplacementManager;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.DestructibleHandler;
-import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.collections.ConcurrentPool;
+import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.JobGroup;
 
-import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.renderer.zone.DynamicModelVAO.METADATA_SIZE;
+import static net.runelite.api.Constants.*;
+import static rs117.hd.renderer.zone.FrameContext.VAO_COUNT;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
-import static rs117.hd.renderer.zone.ZoneRenderer.FRAMES_IN_FLIGHT;
+import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.collections.Util.quickSort;
 
 @Slf4j
 public class WorldViewContext {
-	public static final int VAO_OPAQUE = 0;
-	public static final int VAO_ALPHA = 1;
-	public static final int VAO_PLAYER = 2;
-	public static final int VAO_SHADOW = 3;
-	public static final int VAO_PRESCENE = 4;
-	public static final int VAO_COUNT = 5;
-
-	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_STAGING_POOL =
-		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO::Staging", true));
-	public static final ConcurrentPool<DynamicModelVAO> DYNAMIC_MODEL_VAO_POOL =
-		new ConcurrentPool<>(() -> new DynamicModelVAO("DynamicModelVAO", false));
-
 	@Inject
 	private Injector injector;
 
@@ -54,14 +44,22 @@ public class WorldViewContext {
 	@Inject
 	private SceneManager sceneManager;
 
+	@Inject
+	private ZoneRenderer zoneRenderer;
+
+	@Inject
+	private DisplacementManager displacementManager;
+
 	final int worldViewId;
 	final int sizeX, sizeZ;
 	@Nullable
 	WorldViewStruct uboWorldViewStruct;
-	ZoneSceneContext sceneContext;
+	public ZoneSceneContext sceneContext;
 	Zone[][] zones;
-	GLBuffer vboM;
 	boolean isLoading = true;
+
+	boolean isBoat = false;
+	SimplePolygon boatDisplacementOctagon;
 
 	int minLevel, level, maxLevel;
 	Set<Integer> hideRoofIds;
@@ -69,9 +67,10 @@ public class WorldViewContext {
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
 
+	private final int[] dynamicDrawRanges = new int[VAO_COUNT * 2];
+
 	CommandBuffer vaoSceneCmd;
 	CommandBuffer vaoDirectionalCmd;
-	final DynamicModelVAO[][] dynamicModelVaos = new DynamicModelVAO[FRAMES_IN_FLIGHT][VAO_COUNT];
 
 	public long loadTime;
 	public long uploadTime;
@@ -106,62 +105,6 @@ public class WorldViewContext {
 				zones[x][z] = injector.getInstance(Zone.class);
 	}
 
-	void initBuffers() {
-		if (vboM != null)
-			return;
-
-		vboM = new GLBuffer("WorldViewMetadata", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, 0);
-		vboM.initialize(METADATA_SIZE);
-		try (MemoryStack stack = MemoryStack.stackPush()) {
-			IntBuffer buf = stack.mallocInt(3);
-			buf.put(uboWorldViewStruct == null ? 0 : uboWorldViewStruct.worldViewIdx + 1);
-			buf.put(0).put(0);
-			buf.flip();
-			vboM.upload(buf);
-		}
-
-		long start = System.nanoTime();
-		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean needsStaging = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
-			final var POOL = needsStaging ? DYNAMIC_MODEL_VAO_STAGING_POOL : DYNAMIC_MODEL_VAO_POOL;
-			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
-				DynamicModelVAO dynamicModelVao = dynamicModelVaos[k][i] = POOL.acquire();
-				if (dynamicModelVao.getVao() == 0)
-					dynamicModelVao.initialize();
-				dynamicModelVao.bindMetadataVAO(vboM);
-			}
-		}
-		log.trace("WorldViewContext - WorldViewId: {} initBuffers took {}ms", worldViewId, (System.nanoTime() - start) / 1000000);
-	}
-
-	void map() {
-		for (int i = 0; i < VAO_COUNT; i++)
-			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].map();
-	}
-
-	DynamicModelVAO.View beginDraw(int type, int faces) {
-		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(faces);
-	}
-
-	DynamicModelVAO.View beginDraw(int type, int playerDrawIndex, int faces) {
-		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].beginDraw(playerDrawIndex, faces);
-	}
-
-	int obtainDrawIndex(int type) {
-		return dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].obtainDrawIndex();
-	}
-
-	void drawAll(int type, CommandBuffer cmd) {
-		dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][type].draw(cmd);
-	}
-
-	void unmap() {
-		for (int i = 0; i < VAO_COUNT; i++) {
-			final boolean shouldCoalesce = i == VAO_OPAQUE || i == VAO_PLAYER || i == VAO_SHADOW;
-			dynamicModelVaos[plugin.frame % FRAMES_IN_FLIGHT][i].unmap(shouldCoalesce);
-		}
-	}
-
 	void sortStaticAlphaModels(Camera camera) {
 		alphaZones.clear();
 
@@ -188,20 +131,40 @@ public class WorldViewContext {
 		}
 	}
 
+	void resetDrawRanges() {
+		for (int i = 0; i < VAO_COUNT; i++)
+			dynamicDrawRanges[i * 2] = dynamicDrawRanges[i * 2 + 1] = 0;
+	}
+
+	synchronized void trackDrawRange(DynamicModelVAO.View view, int type) {
+		dynamicDrawRanges[type * 2] = min(dynamicDrawRanges[type * 2], view.getDrawIdx());
+		dynamicDrawRanges[type * 2 + 1] = max(dynamicDrawRanges[type * 2 + 1], view.getDrawIdx() + 1);
+	}
+
+	DynamicModelVAO.View beginDraw(int type, int faces) {
+		FrameContext ctx = zoneRenderer.frameContext();
+		DynamicModelVAO.View view = ctx.dynamicModelVaos[type].beginDraw(faces);
+		trackDrawRange(view, type);
+		return view;
+	}
+
+	DynamicModelVAO.View beginDraw(int type, int playerDrawIndex, int faces) {
+		FrameContext ctx = zoneRenderer.frameContext();
+		DynamicModelVAO.View view = ctx.dynamicModelVaos[type].beginDraw(playerDrawIndex, faces);
+		trackDrawRange(view, type);
+		return view;
+	}
+
+	void drawAll(int type, CommandBuffer cmd) {
+		FrameContext ctx = zoneRenderer.frameContext();
+		ctx.dynamicModelVaos[type].draw(cmd, dynamicDrawRanges[type * 2], dynamicDrawRanges[type * 2 + 1]);
+	}
+
 	void handleZoneSwap(int zx, int zz, boolean queue) {
 		Zone curZone = zones[zx][zz];
 		ZoneUploadJob uploadTask = curZone.uploadJob;
 		if (uploadTask == null)
 			return;
-
-		if (!uploadTask.isQueued()) {
-			if (queue && uploadTask.revealAfterTimestampMs < System.currentTimeMillis()) {
-				log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
-				uploadTask.revealAfterTimestampMs = 0;
-				uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
-			}
-			return;
-		}
 
 		if (uploadTask.isDone()) {
 			curZone.uploadJob = null;
@@ -242,9 +205,18 @@ public class WorldViewContext {
 	}
 
 	void processZoneSwaps() {
-		for (int x = 0; x < sizeX; x++)
-			for (int z = 0; z < sizeZ; z++)
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
 				handleZoneSwap(x, z, true);
+
+				final Zone zone = zones[x][z];
+				if(zone.fadingAlpha <= 0)
+					continue;
+
+				zone.fadingAlpha = max(0.0f, zone.fadingAlpha - plugin.deltaTime);
+				zone.setMetadata(this, sceneContext, x, z);
+			}
+		}
 	}
 
 	void processZoneRebuilds() {
@@ -281,24 +253,9 @@ public class WorldViewContext {
 			uboWorldViewStruct.free();
 		uboWorldViewStruct = null;
 
-		for (int i = 0; i < VAO_COUNT; i++) {
-			for (int k = 0; k < FRAMES_IN_FLIGHT; k++) {
-				if (dynamicModelVaos[k][i] == null)
-					continue;
-				final var POOL = dynamicModelVaos[k][i].hasStagingBuffer() ?
-					DYNAMIC_MODEL_VAO_STAGING_POOL :
-					DYNAMIC_MODEL_VAO_POOL;
-				POOL.recycle(dynamicModelVaos[k][i]);
-			}
-		}
-
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
 				zones[x][z].destroy();
-
-		if (vboM != null)
-			vboM.destroy();
-		vboM = null;
 
 		isLoading = true;
 	}
@@ -312,7 +269,6 @@ public class WorldViewContext {
 
 	void invalidateZone(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
-		long revealAfterTimestampMs = 0;
 		if (curZone.uploadJob != null) {
 			Zone pendingZone = curZone.uploadJob.zone;
 			log.trace(
@@ -323,7 +279,6 @@ public class WorldViewContext {
 				zz,
 				pendingZone.hashCode()
 			);
-			revealAfterTimestampMs = curZone.uploadJob.revealAfterTimestampMs;
 			curZone.uploadJob.cancel();
 			curZone.uploadJob.release();
 
@@ -335,10 +290,87 @@ public class WorldViewContext {
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, false, zx, zz);
-		curZone.uploadJob.revealAfterTimestampMs = revealAfterTimestampMs;
+		curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
+	}
 
-		// Queue right away, so we can wait for it while in the POH in order to hide building mode placeholders
-		if (sceneContext.isInHouse || revealAfterTimestampMs <= 0)
-			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
+	void buildBoatDisplacement() {
+		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+		for (int z = 0; z < MAX_Z; z++) {
+			for (int x = 0; x < sceneContext.sizeX; x++) {
+				for (int y = 0; y < sceneContext.sizeZ; y++) {
+					final Tile tile = tiles[z][x][y];
+					if (tile == null)
+						continue;
+
+					GameObject[] gameObjects = tile.getGameObjects();
+					for (int g = 0; g < gameObjects.length; g++) {
+						GameObject gameObject = gameObjects[g];
+						if(gameObject == null)
+							continue;
+
+						Renderable renderable = gameObject.getRenderable();
+						if(renderable == null)
+							continue;
+
+						if(displacementManager.boatIds.contains(gameObject.getId())) {
+							Model model = null;
+							if(renderable instanceof Model) {
+								model = (Model) renderable;
+							} else if(renderable instanceof DynamicObject) {
+								model = ((DynamicObject) renderable).getModelZbuf();
+							}
+
+							final int centerX = gameObject.getX();
+							final int centerY = gameObject.getZ();
+							final int centerZ = gameObject.getY();
+
+							if ( model != null) {
+								// find all verticies that are under
+								int[] xs = PooledArrayType.INT.borrow(model.getVerticesCount());
+								int[] ys = PooledArrayType.INT.borrow(model.getVerticesCount());
+								int underwaterCount = 0;
+								try {
+									final float[] xVertices = model.getVerticesX();
+									final float[] yVertices = model.getVerticesY();
+									final float[] zVertices = model.getVerticesZ();
+
+									model.calculateBoundsCylinder();
+
+									final int vertexCount = model.getVerticesCount();
+									final AABB modelAABB = model.getAABB(0);
+
+									final int waterLine = modelAABB.getCenterY() + (int)(modelAABB.getExtremeY() * 0.5f);
+
+									for (int i = 0; i < vertexCount; i++) {
+										final float posY = centerY + yVertices[i];
+										if (posY > waterLine) {
+											xs[underwaterCount] = centerX + (int) xVertices[i];
+											ys[underwaterCount] = centerZ + (int) zVertices[i];
+											underwaterCount++;
+										}
+									}
+
+									if(underwaterCount > 0) {
+										// Fill the rest of the array with the last vertex
+										Arrays.fill(xs, underwaterCount, xs.length, xs[underwaterCount - 1]);
+										Arrays.fill(ys, underwaterCount, ys.length, ys[underwaterCount - 1]);
+
+										// Build Convex Hull around all verticies which are below the water plane
+										// Then Reduce the convex hull down to just 8 points
+										boatDisplacementOctagon = Jarvis.convexHull(xs, ys);
+										boatDisplacementOctagon = HDUtils.reducePolygon(boatDisplacementOctagon, 8);
+										isBoat = true;
+									}
+								} finally {
+									PooledArrayType.INT.release(xs);
+									PooledArrayType.INT.release(ys);
+								}
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

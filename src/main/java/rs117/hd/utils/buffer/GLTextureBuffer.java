@@ -1,12 +1,19 @@
 package rs117.hd.utils.buffer;
 
 import lombok.Getter;
+import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.GL_CAPS;
 
 public class GLTextureBuffer extends GLBuffer {
+
+	public static boolean isRGBASupported() { return HdPlugin.GL_CAPS.GL_ARB_texture_buffer_object; }
+
 	@Getter
 	private int texId;
+
+	private final int internalFormat;
 
 	public GLTextureBuffer(String name, int usage) {
 		this(name, usage, 0);
@@ -14,41 +21,41 @@ public class GLTextureBuffer extends GLBuffer {
 
 	public GLTextureBuffer(String name, int usage, int storageFlags) {
 		super(name, GL_TEXTURE_BUFFER, usage, storageFlags);
+
+		internalFormat = isRGBASupported() ? GL_RGBA32I : GL_RGB32I;
 	}
 
 	@Override
 	public GLTextureBuffer initialize(long initialCapacity) {
 		super.initialize(initialCapacity);
 
-		// Create texture
 		texId = glGenTextures();
 		glBindTexture(target, texId);
-
-		// RGB32 signed integer texture buffer
-		glTexBuffer(target, GL_RGB32I, id);
-
+		glTexBuffer(target, internalFormat, id);
 		glBindTexture(target, 0);
+
 		return this;
 	}
 
 	@Override
 	public boolean ensureCapacity(long byteOffset, long numBytes) {
 		int oldId = id;
-		boolean resized = super.ensureCapacity(byteOffset, numBytes);
+		final boolean resized = super.ensureCapacity(byteOffset, numBytes);
+
 		if (oldId != id) {
 			glBindTexture(target, texId);
-			glTexBuffer(target, GL_RGB32I, id);
+			glTexBuffer(target, internalFormat, id);
 			glBindTexture(target, 0);
 		}
+
 		return resized;
 	}
 
 	@Override
 	public void destroy() {
-		if (texId != 0) {
+		if (texId != 0)
 			glDeleteTextures(texId);
-			texId = 0;
-		}
+		texId = 0;
 
 		super.destroy();
 	}

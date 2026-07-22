@@ -112,6 +112,66 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     }
 #endif
 
+// 2x2 Bayer via bit permutation
+// Generates ordered dithering Bayer matrix without a lookup table
+float bayer2x2(vec2 pixelCoord) {
+    uvec2 p = uvec2(pixelCoord) & 1u;
+    uint v =
+        ((p.x & 1u) << 1u) |
+        ((p.y & 1u) << 0u);
+
+    return (float(v) + 0.5) * (1.0 / 4.0);
+}
+
+// 4x4 Bayer via bit permutation
+// Generates ordered dithering Bayer matrix without a lookup table
+float bayer4x4(vec2 pixelCoord) {
+    uvec2 p = uvec2(pixelCoord) & 3u;
+    uint v =
+        ((p.x & 1u) << 3u) |
+        ((p.y & 1u) << 2u) |
+        ((p.x & 2u) << 0u) |
+        ((p.y & 2u) >> 1u);
+
+    return (float(v) + 0.5) * (1.0 / 16.0);
+}
+
+// 8x8 Bayer via bit permutation
+// Generates ordered dithering Bayer matrix without a lookup table
+float bayer8x8(vec2 pixelCoord) {
+   uvec2 p = uvec2(pixelCoord) & 7u;
+   uint v =
+       ((p.x & 1u) << 5u) |
+       ((p.y & 1u) << 4u) |
+       ((p.x & 2u) << 2u) |
+       ((p.y & 2u) << 1u) |
+       ((p.x & 4u) >> 1u) |
+       ((p.y & 4u) >> 2u);
+
+   return (float(v) + 0.5) * (1.0 / 64.0);
+}
+
+// Based on https://www.shadertoy.com/view/4t2cRt (merger doctrine)
+// Returns a dither value (0.0 or 1.0) based on coords & opacity
+bool orderedDither4x4(vec2 pixelCoord, float opacity, float scaleFactor) {
+    float threshold = bayer4x4(pixelCoord / scaleFactor);
+    return threshold < clamp(opacity, 0.0, 1.0);
+}
+
+bool orderedDither2x2(vec2 pixelCoord, float opacity, float scaleFactor) {
+    float threshold = bayer2x2(pixelCoord / scaleFactor);
+    return threshold < clamp(opacity, 0.0, 1.0);
+}
+
+bool orderedDither8x8(vec2 pixelCoord, float opacity, float scaleFactor) {
+    float threshold = bayer8x8(pixelCoord / scaleFactor);
+    return threshold < clamp(opacity, 0.0, 1.0);
+}
+
+float interleavedGradientNoise(vec2 p) {
+    return fract(52.9829189 * fract(dot(p, vec2(0.06711056, 0.00583715))));
+}
+
 // 2D Random
 float hash(in vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
@@ -189,6 +249,10 @@ vec4 saturate(vec4 value) {
     return clamp(value, vec4(0.0), vec4(1.0));
 }
 
+float cross2D(vec2 a, vec2 b) {
+    return a.x * b.y - a.y * b.x;
+}
+
 #define POISSON_DISK_LENGTH 16
 vec2 getPoissonDisk(int idx) {
     switch(idx) {
@@ -209,4 +273,58 @@ vec2 getPoissonDisk(int idx) {
         case 14: return vec2( 0.19984126,   0.78641367);
         default: return vec2( 0.14383161,  -0.14100790);
     }
+}
+
+bool contains(vec3 p, vec3 min, vec3 max) {
+    return all(greaterThanEqual(p, min)) &&
+           all(lessThanEqual(p, max));
+}
+
+bool insideQuad(vec2 p, vec2 a, vec2 b, vec2 c, vec2 d) {
+    return cross2D(b - a, p - a) >= 0.0 &&
+           cross2D(c - b, p - b) >= 0.0 &&
+           cross2D(d - c, p - c) >= 0.0 &&
+           cross2D(a - d, p - d) >= 0.0;
+}
+
+float unpackFloat16(int val) {
+    uint h = uint(val) & 0xFFFFu;
+
+    uint sign     = (h & 0x8000u) << 16u;      // move sign into bit 31
+    uint exponent = (h >> 10u) & 0x1Fu;        // 5 bits
+    uint mantissa = h & 0x3FFu;                // 10 bits
+
+    uint f; // resulting float32 bit pattern
+
+    if (exponent == 0u) {
+        if (mantissa == 0u) {
+            f = sign; // signed zero
+        } else {
+            // Subnormal half -> normalize into a normal float32
+            exponent = 1u;
+            while ((mantissa & 0x400u) == 0u) {
+                mantissa <<= 1u;
+                exponent -= 1u;
+            }
+            mantissa &= 0x3FFu; // drop the now-implicit leading bit
+            uint exp32 = exponent - 15u + 127u;
+            f = sign | (exp32 << 23u) | (mantissa << 13u);
+        }
+    } else if (exponent == 0x1Fu) {
+        // Inf / NaN
+        f = sign | 0x7F800000u | (mantissa << 13u);
+    } else {
+        // Normalized value
+        uint exp32 = exponent - 15u + 127u;
+        f = sign | (exp32 << 23u) | (mantissa << 13u);
+    }
+
+    return uintBitsToFloat(f);
+}
+
+vec2 unpackFloat2x16(int v) {
+    uint bits = uint(v);
+    uint lo = bits & 0xFFFFu;         // x half, low 16 bits
+    uint hi = (bits >> 16u) & 0xFFFFu; // z half, high 16 bits
+    return vec2(unpackFloat16(int(lo)), unpackFloat16(int(hi)));
 }

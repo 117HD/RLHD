@@ -30,10 +30,10 @@ import rs117.hd.utils.collections.PrimitiveCharArray;
 import static net.runelite.api.Perspective.*;
 import static net.runelite.api.hooks.DrawCallbacks.*;
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_ALPHA;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.renderer.zone.FrameContext.VAO_ALPHA;
+import static rs117.hd.renderer.zone.FrameContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.FrameContext.VAO_PLAYER;
+import static rs117.hd.renderer.zone.FrameContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -184,7 +184,7 @@ public class ModelStreamingManager {
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
-		if (!zone.initialized)
+		if (!zone.initialized || zone.fadingAlpha > 1.0f)
 			return;
 
 		final StreamingContext streamingContext = context(renderThreadId);
@@ -193,18 +193,36 @@ public class ModelStreamingManager {
 			ctx.uboWorldViewStruct.project(objectWorldPos);
 
 		final int uuid;
+		final float modelFade;
 		if (r instanceof DynamicObject) {
 			int id = tileObject.getId();
 			int impostorId = root.sceneContext.animatedDynamicObjectImpostors.getOrDefault(id, id);
 			uuid = ModelHash.packUuid(ModelHash.getType(tileObject.getHash()), impostorId);
 
 			// Cull dynamic models based on detail draw distance
-			float squaredDistance = renderer.sceneCamera.squaredDistanceTo(objectWorldPos[0], objectWorldPos[1], objectWorldPos[2]);
-			int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
-			if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles && modelOverrideManager.allowDetailCulling(uuid))
-				return;
+			if(modelOverrideManager.allowDetailCulling(uuid)) {
+				final int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
+				final float squaredDistance = renderer.sceneCamera.squaredDistanceTo(
+					objectWorldPos[0],
+					objectWorldPos[1],
+					objectWorldPos[2]
+				);
+				final float detailDrawDistanceTilesSquared = detailDrawDistanceTiles * detailDrawDistanceTiles;
+				if (squaredDistance > detailDrawDistanceTilesSquared)
+					return;
+
+				// Fade dynamic models that are close to the detail draw distance so that they don't pop in/out
+				final float fadeRange = 8.0f * LOCAL_TILE_SIZE;
+				final float fadeEndSq = detailDrawDistanceTiles * detailDrawDistanceTiles;
+				final float fadeStart = max(0.0f, detailDrawDistanceTiles - fadeRange);
+				final float fadeStartSq = fadeStart * fadeStart;
+				modelFade = saturate((squaredDistance - fadeStartSq) / (fadeEndSq - fadeStartSq));
+			} else {
+				modelFade = 0;
+			}
 		} else {
 			uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
+			modelFade = 0;
 		}
 
 		// Hide everything outside the current area if area hiding is enabled
@@ -255,7 +273,7 @@ public class ModelStreamingManager {
 				z & 1023
 			) : null;
 
-		final int drawIndex = renderThreadId != -1 ? -1 : ctx.obtainDrawIndex(r instanceof Player ? VAO_PLAYER : VAO_OPAQUE);
+		final int drawIndex = renderThreadId != -1 ? -1 : renderer.frameContext().obtainDrawIndex(r instanceof Player ? VAO_PLAYER : VAO_OPAQUE);
 		final boolean isModelPartiallyVisible = sceneManager.isRoot(ctx) && modelClassification == 0;
 		final AsyncCachedModel asyncModelCache = obtainAvailableAsyncCachedModel(m);
 		if (asyncModelCache != null) {
@@ -271,6 +289,7 @@ public class ModelStreamingManager {
 				alphaModel,
 				isModelPartiallyVisible,
 				drawIndex,
+				modelFade,
 				orient,
 				x, y, z,
 				this::uploadTempModelAsync
@@ -290,6 +309,7 @@ public class ModelStreamingManager {
 			isModelPartiallyVisible,
 			-1,
 			drawIndex,
+			modelFade,
 			orient,
 			x, y, z
 		);
@@ -306,6 +326,7 @@ public class ModelStreamingManager {
 		Zone.AlphaModel alphaModel,
 		boolean isModelPartiallyVisible,
 		int drawIndex,
+		float modelFade,
 		int orientation,
 		int x, int y, int z
 	) {
@@ -322,6 +343,7 @@ public class ModelStreamingManager {
 			isModelPartiallyVisible,
 			-1,
 			drawIndex,
+			modelFade,
 			orientation,
 			x, y, z
 		);
@@ -340,6 +362,7 @@ public class ModelStreamingManager {
 		boolean isModelPartiallyVisible,
 		int vaoType,
 		int drawIndex,
+		float modelFade,
 		int orient,
 		float x, float y, float z
 	) {
@@ -393,12 +416,16 @@ public class ModelStreamingManager {
 				(!sceneManager.isRoot(ctx) || zone != null && zone.inShadowFrustum)
 			) {
 				final DynamicModelVAO.View shadowView = ctx.beginDraw(VAO_SHADOW, culledFaces.length);
+				final int shadowModelIdx = SceneUploader.writeDynamicModelData(shadowView.tboM, x, y, z, modelFade, m, modelOverride, ctx, zone);
 				sceneUploader.uploadTempModel(
 					culledFaces,
 					m,
 					modelOverride,
+					x, y, z,
 					preOrientation,
 					orient,
+					shadowModelIdx,
+					shadowModelIdx,
 					true,
 					shadowView,
 					shadowView
@@ -419,12 +446,18 @@ public class ModelStreamingManager {
 				final DynamicModelVAO.View opaqueView = ctx.beginDraw(vaoType, drawIndex, opaqueFaceCount);
 				final DynamicModelVAO.View alphaView = alphaFaceCount > 0 ? ctx.beginDraw(VAO_ALPHA, alphaFaceCount) : opaqueView;
 
+				final int opaqueModelIdx = SceneUploader.writeDynamicModelData(opaqueView.tboM, x, y, z, modelFade, m, modelOverride, ctx, zone);
+				final int alphaModelIdx = alphaFaceCount > 0 ? SceneUploader.writeDynamicModelData(alphaView.tboM, x, y, z, modelFade, m, modelOverride, ctx, zone) : opaqueModelIdx;
+
 				sceneUploader.uploadTempModel(
 					visibleFaces,
 					m,
 					modelOverride,
+					x, y, z,
 					preOrientation,
 					orient,
+					opaqueModelIdx,
+					alphaModelIdx,
 					isSquashed,
 					opaqueView,
 					alphaView
@@ -460,7 +493,8 @@ public class ModelStreamingManager {
 		while (!pending.isEmpty()) {
 			pendingModel = pending.get(idx);
 
-			if (pendingModel.isQueued() && pendingModel.canStart() && pendingModel.processModel()) {
+			if (pendingModel.isQueued() && pendingModel.canStart()) {
+				pendingModel.waitForCompletion(); // Await will pick up work items to process synchronously if it hasn't already started
 				pending.remove(idx);
 				hasStolen = true;
 			}

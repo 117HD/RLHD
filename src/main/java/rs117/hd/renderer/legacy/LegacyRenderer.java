@@ -42,6 +42,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.DisplacementManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
@@ -125,6 +126,9 @@ public class LegacyRenderer implements Renderer {
 	private NpcDisplacementCache npcDisplacementCache;
 
 	@Inject
+	private DisplacementManager displacementManager;
+
+	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
@@ -138,6 +142,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private JobSystem jobSystem;
+
+	@Inject
+	private UBOCompute uboCompute;
 
 	private final ComputeMode computeMode = HdPlugin.APPLE ? ComputeMode.OPENCL : ComputeMode.OPENGL;
 	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
@@ -176,8 +183,6 @@ public class LegacyRenderer implements Renderer {
 	private LegacySceneContext sceneContext;
 	private LegacySceneContext nextSceneContext;
 	private int gameTicksUntilSceneReload;
-
-	private UBOCompute uboCompute;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -432,7 +437,6 @@ public class LegacyRenderer implements Renderer {
 		hRenderBufferNormals = new SharedGLBuffer("Render Normals", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
 		hModelPassthroughBuffer = new SharedGLBuffer("Model Passthrough", GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
-		uboCompute = new UBOCompute();
 		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 
 		modelPassthroughBuffer = new GpuIntBuffer();
@@ -450,7 +454,6 @@ public class LegacyRenderer implements Renderer {
 
 	private void destroyBuffers() {
 		uboCompute.destroy();
-		uboCompute = null;
 
 		hStagingBufferVertices.destroy();
 		hStagingBufferUvs.destroy();
@@ -645,13 +648,7 @@ public class LegacyRenderer implements Renderer {
 				uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
 				uboCompute.windOffset.set(plugin.windOffset);
 
-				if (plugin.configCharacterDisplacement && localPlayer != null) {
-					// The local player needs to be added first for distance culling
-					var lp = localPlayer.getLocalLocation();
-					Model playerModel = localPlayer.getModel();
-					if (playerModel != null)
-						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
-				}
+				displacementManager.addLocalPlayer();
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
 				int viewportWidth = (int) (plugin.sceneViewport[2] / plugin.sceneViewportScale[0]);
@@ -1744,29 +1741,7 @@ public class LegacyRenderer implements Renderer {
 			if (eightIntWrite[0] != -1)
 				plugin.drawnDynamicRenderableCount = plugin.drawnDynamicRenderableCount + 1;
 
-			if (plugin.configCharacterDisplacement && renderable instanceof Actor) {
-				if (plugin.enableDetailedTimers)
-					frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
-				if (renderable instanceof NPC) {
-					var npc = (NPC) renderable;
-					var entry = npcDisplacementCache.get(npc);
-					if (entry.canDisplace) {
-						int displacementRadius = entry.idleRadius;
-						if (displacementRadius == -1) {
-							displacementRadius = modelRadius; // Fallback to model radius since we don't know the idle radius yet
-							if (npc.getIdlePoseAnimation() == npc.getPoseAnimation() && npc.getAnimation() == -1) {
-								displacementRadius *= 2; // Double the idle radius, so that it fits most other animations
-								entry.idleRadius = displacementRadius;
-							}
-						}
-						uboCompute.addCharacterPosition(x, z, displacementRadius);
-					}
-				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
-					uboCompute.addCharacterPosition(x, z, (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
-				}
-				if (plugin.enableDetailedTimers)
-					frameTimer.end(Timer.CHARACTER_DISPLACEMENT);
-			}
+			displacementManager.addCharacterPosition(scene, x, z, renderable, model);
 		}
 
 		if (plugin.enableDetailedTimers)

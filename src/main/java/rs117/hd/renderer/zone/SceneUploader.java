@@ -24,6 +24,7 @@
  */
 package rs117.hd.renderer.zone;
 
+import java.nio.IntBuffer;
 import java.util.Arrays;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -46,6 +47,7 @@ import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
+import rs117.hd.utils.buffer.GLMappedBufferIntWriter;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
@@ -134,7 +136,8 @@ public class SceneUploader implements AutoCloseable {
 	private final int[] modelNormals = new int[9];
 	private final short[][] tileNormals = new short[4][3];
 
-	private int[] modelVertices;
+	private int[] intModelVertices;
+	private float[] floatModelVertices;
 	public int tempModelAlphaFaces = 0;
 
 	private final PooledObjectArray<ModelOverride> faceOverrides = new PooledObjectArray<>();
@@ -147,6 +150,7 @@ public class SceneUploader implements AutoCloseable {
 	private final GpuIntBuffer zoneVboO = new GpuIntBuffer(false);
 	private final GpuIntBuffer zoneVboA = new GpuIntBuffer(false);
 	private final GpuIntBuffer zoneTboF = new GpuIntBuffer(false);
+	private final GpuIntBuffer zoneTboM = new GpuIntBuffer(false);
 
 	// Lazily initialized staging buffers
 	public VertexWriteCache.Collection writeCache;
@@ -170,16 +174,23 @@ public class SceneUploader implements AutoCloseable {
 		currentScene = null;
 		onBeforeProcessTile = null;
 
-		PooledArrayType.INT.release(modelVertices);
-		modelVertices = null;
+		PooledArrayType.INT.release(intModelVertices);
+		PooledArrayType.FLOAT.release(floatModelVertices);
+
+		intModelVertices = null;
+		floatModelVertices = null;
 
 		faceOverrides.release();
 		faceMaterials.release();
 		faceUVTypes.release();
 	}
 
-	private void ensureVerticesAllocated(int vertexCount) {
-		modelVertices = PooledArrayType.INT.ensureCapacity(modelVertices, vertexCount * 3);
+	private void ensureVerticesAllocated(boolean allocateInts, boolean allocateFloats, int vertexCount) {
+		if(allocateInts)
+			intModelVertices = PooledArrayType.INT.ensureCapacity(intModelVertices, vertexCount * 3);
+
+		if(allocateFloats)
+			floatModelVertices = PooledArrayType.FLOAT.ensureCapacity(floatModelVertices, vertexCount * 3);
 	}
 
 	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) throws InterruptedException {
@@ -215,6 +226,7 @@ public class SceneUploader implements AutoCloseable {
 		var vb = zone.vboO != null ? zoneVboO.setBuffer(zone.vboO.mapped()) : null;
 		var ab = zone.vboA != null ? zoneVboA.setBuffer(zone.vboA.mapped()) : null;
 		var fb = zone.tboF != null ? zoneTboF.setBuffer(zone.tboF.mapped()) : null;
+		var md = zone.tboM != null ? zoneTboM.setBuffer(zone.tboM.mapped()) : null;
 		assert zone.tboF != null;
 
 		roofIds.length = 0;
@@ -239,13 +251,13 @@ public class SceneUploader implements AutoCloseable {
 			this.level = z;
 
 			if (z == 0) {
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, vb, ab, fb);
-				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, false, vb, ab, fb, md);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 0, true, vb, ab, fb, md);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, vb, ab, fb, md);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, vb, ab, fb, md);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, vb, ab, fb, md);
 			} else {
-				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, vb, ab, fb);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, vb, ab, fb, md);
 			}
 
 			if (vb != null)
@@ -273,7 +285,8 @@ public class SceneUploader implements AutoCloseable {
 		boolean visbelow,
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
-		GpuIntBuffer fb
+		GpuIntBuffer fb,
+		GpuIntBuffer md
 	) throws InterruptedException {
 		int ridx = 0;
 
@@ -282,7 +295,7 @@ public class SceneUploader implements AutoCloseable {
 			final int id = roofIds.array[i];
 			int pos = vb != null ? vb.position() : 0;
 
-			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, vb, ab, fb);
+			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, vb, ab, fb, md);
 
 			int endpos = vb != null ? vb.position() : 0;
 
@@ -295,7 +308,7 @@ public class SceneUploader implements AutoCloseable {
 		}
 
 		// upload everything else
-		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, vb, ab, fb);
+		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, vb, ab, fb, md);
 	}
 
 	private void uploadZoneLevelRoof(
@@ -308,7 +321,8 @@ public class SceneUploader implements AutoCloseable {
 		boolean visbelow,
 		GpuIntBuffer vb,
 		GpuIntBuffer ab,
-		GpuIntBuffer fb
+		GpuIntBuffer fb,
+		GpuIntBuffer md
 	) throws InterruptedException {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
@@ -342,7 +356,7 @@ public class SceneUploader implements AutoCloseable {
 						this.rid = rid;
 						if (onBeforeProcessTile != null)
 							onBeforeProcessTile.invoke(t, false);
-						uploadZoneTile(ctx, zone, t, false, false, vb, ab, fb);
+						uploadZoneTile(ctx, zone, t, false, false, vb, ab, fb, md);
 					}
 				}
 			}
@@ -372,7 +386,7 @@ public class SceneUploader implements AutoCloseable {
 					if (onBeforeProcessTile != null)
 						onBeforeProcessTile.invoke(t, false);
 
-					uploadZoneTile(ctx, zone, t, false, true, vb, null, fb);
+						uploadZoneTile(ctx, zone, t, false, true, vb, null, fb, null);
 				}
 			}
 		}
@@ -491,7 +505,8 @@ public class SceneUploader implements AutoCloseable {
 		boolean onlyWaterSurface,
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer,
-		GpuIntBuffer textureBuffer
+		GpuIntBuffer textureBuffer,
+		GpuIntBuffer modelBuffer
 	) {
 		var tilePoint = t.getSceneLocation();
 		int tileExX = tilePoint.getX() + ctx.sceneOffset;
@@ -523,11 +538,11 @@ public class SceneUploader implements AutoCloseable {
 			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer, textureBuffer);
 
 		if (!onlyWaterSurface)
-			uploadZoneTileRenderables(ctx, zone, t, tileExX, tileExY, tileZ, vertexBuffer, alphaBuffer, textureBuffer);
+			uploadZoneTileRenderables(ctx, zone, t, tileExX, tileExY, tileZ, vertexBuffer, alphaBuffer, textureBuffer, modelBuffer);
 
 		Tile bridge = t.getBridge();
 		if (bridge != null)
-			uploadZoneTile(ctx, zone, bridge, true, onlyWaterSurface, vertexBuffer, alphaBuffer, textureBuffer);
+			uploadZoneTile(ctx, zone, bridge, true, onlyWaterSurface, vertexBuffer, alphaBuffer, textureBuffer, modelBuffer);
 	}
 
 	private void uploadZoneTileRenderables(
@@ -537,7 +552,8 @@ public class SceneUploader implements AutoCloseable {
 		int tileExX, int tileExY, int tileZ,
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer,
-		GpuIntBuffer textureBuffer
+		GpuIntBuffer textureBuffer,
+		GpuIntBuffer modelBuffer
 	) {
 		WallObject wallObject = t.getWallObject();
 		if (wallObject != null && renderCallbackManager.drawObject(ctx.scene, wallObject)) {
@@ -562,7 +578,8 @@ public class SceneUploader implements AutoCloseable {
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
-				textureBuffer
+				textureBuffer,
+				modelBuffer
 			);
 
 			Renderable renderable2 = wallObject.getRenderable2();
@@ -585,7 +602,8 @@ public class SceneUploader implements AutoCloseable {
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
-				textureBuffer
+				textureBuffer,
+				modelBuffer
 			);
 		}
 
@@ -613,7 +631,8 @@ public class SceneUploader implements AutoCloseable {
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
-				textureBuffer
+				textureBuffer,
+				modelBuffer
 			);
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
@@ -636,7 +655,8 @@ public class SceneUploader implements AutoCloseable {
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
-				textureBuffer
+				textureBuffer,
+				modelBuffer
 			);
 		}
 
@@ -659,7 +679,8 @@ public class SceneUploader implements AutoCloseable {
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
-				textureBuffer
+				textureBuffer,
+				modelBuffer
 			);
 		}
 
@@ -694,7 +715,8 @@ public class SceneUploader implements AutoCloseable {
 				tileExX, tileExY, tileZ,
 				vertexBuffer,
 				alphaBuffer,
-				textureBuffer
+				textureBuffer,
+				modelBuffer
 			);
 		}
 	}
@@ -721,6 +743,7 @@ public class SceneUploader implements AutoCloseable {
 		z.sizeF += faceCount;
 		if (transparencies != null || faceTextures != null || modelTransparency != 0 || mightHaveTransparency)
 			z.sizeA += faceCount;
+		z.sizeM++;
 	}
 
 	private void uploadZoneRenderable(
@@ -742,7 +765,8 @@ public class SceneUploader implements AutoCloseable {
 		int tileExX, int tileExY, int tileZ,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer,
-		GpuIntBuffer textureBuffer
+		GpuIntBuffer textureBuffer,
+		GpuIntBuffer modelBuffer
 	) {
 		Model model;
 		if (r instanceof Model) {
@@ -771,13 +795,14 @@ public class SceneUploader implements AutoCloseable {
 		int alphaStart = alphaBuffer != null ? alphaBuffer.position() : 0;
 		try {
 			uploadStaticModel(
-				ctx, tile, model, modelOverride, uuid,
+				ctx, tile, model, modelOverride, zone, uuid,
 				preOrientation, orient,
 				x - basex, y, z - basez,
 				tileExX, tileExY, tileZ,
 				opaqueBuffer,
 				alphaBuffer,
-				textureBuffer
+				textureBuffer,
+				modelBuffer
 			);
 		} catch (Throwable ex) {
 			try (var gamevals = gamevalManager.obtainHandle()) {
@@ -814,6 +839,7 @@ public class SceneUploader implements AutoCloseable {
 					materialManager,
 					zone.glVaoA,
 					zone.tboF.getTexId(),
+					zone.tboM.getTexId(),
 					model, modelOverride, alphaStart, alphaEnd,
 					x - basex, y, z - basez,
 					lx, lz, ux, uz,
@@ -1052,58 +1078,66 @@ public class SceneUploader implements AutoCloseable {
 		final var vb = writeCache.getVertexBuffer();
 		final var tb = writeCache.getTextureBuffer();
 
-		int texturedFaceIdx = tb.putFace(
+		int texturedFaceIdx = tb.putStaticFace(
 			neColor, nwColor, seColor,
 			neMaterialData, nwMaterialData, seMaterialData,
 			neTerrainData, nwTerrainData, seTerrainData
 		);
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx2, neHeight, lz2,
 			uvx, uvy, 0,
 			neNormals[0], neNormals[1], neNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, 0
 		);
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, 0
 		);
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, 0
 		);
 
-		texturedFaceIdx = tb.putFace(
+		texturedFaceIdx = tb.findStaticFace(
 			swColor, seColor, nwColor,
 			swMaterialData, seMaterialData, nwMaterialData,
 			swTerrainData, seTerrainData, nwTerrainData
 		);
 
-		vb.putStaticVertex(
+		if(texturedFaceIdx == -1) {
+			texturedFaceIdx = tb.putStaticFace(
+				swColor, seColor, nwColor,
+				swMaterialData, seMaterialData, nwMaterialData,
+				swTerrainData, seTerrainData, nwTerrainData
+			);
+		}
+
+		vb.putVertex(
 			lx0, swHeight, lz0,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
 			swNormals[0], swNormals[1], swNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, 0
 		);
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, 0
 		);
 
-		vb.putStaticVertex(
+		vb.putVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, 0
 		);
 
 		writeCache.release();
@@ -1374,34 +1408,80 @@ public class SceneUploader implements AutoCloseable {
 			final VertexWriteCache vb = writeCache.getVertexBuffer();
 			final VertexWriteCache tb = writeCache.getTextureBuffer();
 
-			int texturedFaceIdx = tb.putFace(
+			int texturedFaceIdx = tb.findStaticFace(
 				colorA, colorB, colorC,
 				materialDataA, materialDataB, materialDataC,
 				terrainDataA, terrainDataB, terrainDataC
 			);
 
-			vb.putStaticVertex(
+			if(texturedFaceIdx == -1) {
+				texturedFaceIdx = tb.putStaticFace(
+					colorA, colorB, colorC,
+					materialDataA, materialDataB, materialDataC,
+					terrainDataA, terrainDataB, terrainDataC
+				);
+			}
+
+			vb.putVertex(
 				lx0, ly0, lz0,
 				uvAx, uvAy, 0,
 				normalsA[0], normalsA[1], normalsA[2],
-				texturedFaceIdx
+				texturedFaceIdx, 0
 			);
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				lx1, ly1, lz1,
 				uvBx, uvBy, 0,
 				normalsB[0], normalsB[1], normalsB[2],
-				texturedFaceIdx
+				texturedFaceIdx, 0
 			);
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				lx2, ly2, lz2,
 				uvCx, uvCy, 0,
 				normalsC[0], normalsC[1], normalsC[2],
-				texturedFaceIdx
+				texturedFaceIdx, 0
 			);
 		}
 		writeCache.release();
+	}
+
+	private static void writeModelData(IntBuffer modelBuffer, float x, float y, float z, float fade, Model model, ModelOverride override, WorldViewContext viewCtx, Zone zone) {
+		// Model Data Struct:
+		// int WorldViewIdx
+		// int Flags
+		// vec3 Position
+		// int Height
+		// float Fade
+
+		modelBuffer
+			.put(viewCtx != null && viewCtx.uboWorldViewStruct != null ? viewCtx.uboWorldViewStruct.worldViewIdx + 1 : 0)
+			.put(viewCtx != null ? 0 : 1)
+			.put(Float.floatToIntBits(x))
+			.put(Float.floatToIntBits(y))
+			.put(Float.floatToIntBits(z))
+			.put(model.getModelHeight())
+			.put(Float.floatToIntBits(viewCtx != null ? saturate(max(zone.fadingAlpha, fade)) : -1.0f));
+	}
+
+	public static int writeStaticModelData(IntBuffer modelBuffer, int x, int y, int z, Model model, ModelOverride override, Zone zone) {
+		final int modelDataSizeInts = Zone.MODEL_DATA_SIZE / Integer.BYTES;
+		final int modelIdx = modelBuffer.position() / modelDataSizeInts;
+
+		writeModelData(modelBuffer, x, y, z, 0.0f, model, override, null, zone);
+
+		assert modelBuffer.position() % modelDataSizeInts == 0;
+		return modelIdx + 1;
+	}
+
+	public static int writeDynamicModelData(GLMappedBufferIntWriter.ReservedView view, float x, float y, float z, float fade, Model model, ModelOverride override, WorldViewContext viewCtx, Zone zone) {
+		final int modelDataSizeInts = Zone.MODEL_DATA_SIZE / Integer.BYTES;
+		final int modelIdx = view.getBufferOffsetInts() / modelDataSizeInts;
+
+		writeModelData(view.getBuffer(), x, y, z, fade, model, override, viewCtx, zone);
+
+		assert view.getBufferOffsetInts() % modelDataSizeInts == 0;
+		return modelIdx + 1;
 	}
 
 	// scene upload
@@ -1410,13 +1490,15 @@ public class SceneUploader implements AutoCloseable {
 		Tile tile,
 		Model model,
 		ModelOverride modelOverride,
+		Zone zone,
 		int uuid,
 		int preOrientation, int orientation,
 		int x, int y, int z,
 		int tileExX, int tileExY, int tileZ,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer,
-		GpuIntBuffer textureBuffer
+		GpuIntBuffer textureBuffer,
+		GpuIntBuffer modelBuffer
 	) {
 		if (writeCache == null)
 			writeCache = new VertexWriteCache.Collection();
@@ -1459,7 +1541,7 @@ public class SceneUploader implements AutoCloseable {
 			orientCos = COSINE[orientation];
 		}
 
-		ensureVerticesAllocated(vertexCount);
+		ensureVerticesAllocated(true, false, vertexCount);
 
 		for (int v = 0, vertexOffset = 0; v < vertexCount; ++v) {
 			int vx = (int) vertexX[v];
@@ -1494,9 +1576,9 @@ public class SceneUploader implements AutoCloseable {
 				vy = (int) mix(h, vy, blend);
 			}
 
-			modelVertices[vertexOffset++] = vx;
-			modelVertices[vertexOffset++] = vy;
-			modelVertices[vertexOffset++] = vz;
+			intModelVertices[vertexOffset++] = vx;
+			intModelVertices[vertexOffset++] = vy;
+			intModelVertices[vertexOffset++] = vz;
 		}
 
 		boolean isVanillaTextured = faceTextures != null;
@@ -1506,6 +1588,15 @@ public class SceneUploader implements AutoCloseable {
 
 		final Material baseMaterial = modelOverride.baseMaterial;
 		final Material textureMaterial = modelOverride.textureMaterial;
+
+		int modelX = x, modelZ = z;
+		if(modelOverride.positionTileSnapping > 0) {
+			float snapping = modelOverride.positionTileSnapping * LOCAL_HALF_TILE_SIZE;
+			modelX = (int)(floor(modelX / snapping) * snapping);
+			modelZ = (int)(floor(modelZ / snapping) * snapping);
+		}
+
+		final int modelIdx = writeStaticModelData(modelBuffer.getBuffer(), modelX, y, modelZ, model, modelOverride, zone);
 
 		int len = 0;
 		for (int face = 0; face < faceCount; ++face) {
@@ -1563,19 +1654,19 @@ public class SceneUploader implements AutoCloseable {
 			final int triangleC = indices3[face];
 
 			int vertexOffset = triangleA * 3;
-			final int vx1 = modelVertices[vertexOffset];
-			final int vy1 = modelVertices[vertexOffset + 1];
-			final int vz1 = modelVertices[vertexOffset + 2];
+			final int vx1 = intModelVertices[vertexOffset];
+			final int vy1 = intModelVertices[vertexOffset + 1];
+			final int vz1 = intModelVertices[vertexOffset + 2];
 
 			vertexOffset = triangleB * 3;
-			final int vx2 = modelVertices[vertexOffset];
-			final int vy2 = modelVertices[vertexOffset + 1];
-			final int vz2 = modelVertices[vertexOffset + 2];
+			final int vx2 = intModelVertices[vertexOffset];
+			final int vy2 = intModelVertices[vertexOffset + 1];
+			final int vz2 = intModelVertices[vertexOffset + 2];
 
 			vertexOffset = triangleC * 3;
-			final int vx3 = modelVertices[vertexOffset];
-			final int vy3 = modelVertices[vertexOffset + 1];
-			final int vz3 = modelVertices[vertexOffset + 2];
+			final int vx3 = intModelVertices[vertexOffset];
+			final int vy3 = intModelVertices[vertexOffset + 1];
+			final int vz3 = intModelVertices[vertexOffset + 2];
 
 			boolean keepShading = isTextured;
 			if (isTextured) {
@@ -1740,31 +1831,30 @@ public class SceneUploader implements AutoCloseable {
 			color2 |= packedAlphaBiasHsl;
 			color3 |= packedAlphaBiasHsl;
 
-			final int texturedFaceIdx = tb.putFace(
-				color1, color2, color3,
-				materialData, materialData, materialData,
-				0, 0, 0
-			);
+			// Check if we can reuse an existing model face to dedup the amount of faces written
+			int texturedFaceIdx = tb.findModelFace(color1, color2, color3, materialData);
+			if(texturedFaceIdx == -1)
+				texturedFaceIdx = tb.putModelFace(color1, color2, color3, materialData);
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				vx1, vy1, vz1,
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				modelNormals[0], modelNormals[1], modelNormals[2],
-				texturedFaceIdx
+				texturedFaceIdx, modelIdx
 			);
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				vx2, vy2, vz2,
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				modelNormals[3], modelNormals[4], modelNormals[5],
-				texturedFaceIdx
+				texturedFaceIdx, modelIdx
 			);
 
-			vb.putStaticVertex(
+			vb.putVertex(
 				vx3, vy3, vz3,
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				modelNormals[6], modelNormals[7], modelNormals[8],
-				texturedFaceIdx
+				texturedFaceIdx, modelIdx
 			);
 			len += 3;
 		}
@@ -1807,7 +1897,7 @@ public class SceneUploader implements AutoCloseable {
 			orientCosf = COSINE[orientation] / 65536f;
 		}
 
-		ensureVerticesAllocated(vertexCount);
+		ensureVerticesAllocated(true, true, vertexCount);
 
 		boolean shouldSort = true;
 		boolean allVertsVisible = true;
@@ -1846,15 +1936,18 @@ public class SceneUploader implements AutoCloseable {
 					visibility[v] = allVertsVisible = false;
 			}
 
-			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexX);
+			floatModelVertices[vertexOffset] = vertexX;
+			intModelVertices[vertexOffset] = float16(vertexX - x);
 			modelProjected[vertexOffset] = pX / pZ;
 			vertexOffset++;
 
-			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexY);
+			floatModelVertices[vertexOffset] = vertexY;
+			intModelVertices[vertexOffset] = float16(vertexY - y);
 			modelProjected[vertexOffset] = pY / pZ;
 			vertexOffset++;
 
-			modelVertices[vertexOffset] = Float.floatToRawIntBits(vertexZ);
+			floatModelVertices[vertexOffset] = vertexZ;
+			intModelVertices[vertexOffset] = float16(vertexZ - z);
 			modelProjected[vertexOffset] = pZ;
 			vertexOffset++;
 
@@ -2014,8 +2107,11 @@ public class SceneUploader implements AutoCloseable {
 		PrimitiveCharArray faces,
 		Model model,
 		ModelOverride modelOverride,
+		float x, float y, float z,
 		int preOrientation,
 		int orientation,
+		int opaqueModelIdx,
+		int alphaModelIdx,
 		boolean isShadow,
 		DynamicModelVAO.View opaqueView,
 		DynamicModelVAO.View alphaView
@@ -2025,8 +2121,8 @@ public class SceneUploader implements AutoCloseable {
 		writeCache.setOutputBuffers(
 			opaqueView.vbo.getBuffer(),
 			alphaView.vbo.getBuffer(),
-			opaqueView.tbo.getBuffer(),
-			alphaView.tbo.getBuffer()
+			opaqueView.tboF.getBuffer(),
+			alphaView.tboF.getBuffer()
 		);
 
 		final int[] indices1 = model.getFaceIndices1();
@@ -2141,11 +2237,11 @@ public class SceneUploader implements AutoCloseable {
 				}
 
 				if (shouldCalculateFaceNormal) {
-					calculateFaceNormalInt(
+					calculateFaceNormal(
 						faceNormals,
-						modelVertices[vertexOffsetA], modelVertices[vertexOffsetA + 1], modelVertices[vertexOffsetA + 2],
-						modelVertices[vertexOffsetB], modelVertices[vertexOffsetB + 1], modelVertices[vertexOffsetB + 2],
-						modelVertices[vertexOffsetC], modelVertices[vertexOffsetC + 1], modelVertices[vertexOffsetC + 2]
+						floatModelVertices[vertexOffsetA], floatModelVertices[vertexOffsetA + 1], floatModelVertices[vertexOffsetA + 2],
+						floatModelVertices[vertexOffsetB], floatModelVertices[vertexOffsetB + 1], floatModelVertices[vertexOffsetB + 2],
+						floatModelVertices[vertexOffsetC], floatModelVertices[vertexOffsetC + 1], floatModelVertices[vertexOffsetC + 2]
 					);
 				}
 
@@ -2181,29 +2277,28 @@ public class SceneUploader implements AutoCloseable {
 			final VertexWriteCache vb = writeCache.getVertexBuffer(hasAlpha);
 			final VertexWriteCache tb = writeCache.getTextureBuffer(hasAlpha);
 
-			final int texturedFaceIdx = tb.putFace(
-				color1, color2, color3,
-				materialData, materialData, materialData,
-				0, 0, 0
-			);
+			final int modelIdx = hasAlpha ? alphaModelIdx : opaqueModelIdx;
+			final int texturedFaceIdx = tb.putModelFace(color1, color2, color3, materialData);
 
-			vb.putDynamicVertex(
-				modelVertices[vertexOffsetA], modelVertices[vertexOffsetA + 1], modelVertices[vertexOffsetA + 2],
+			vb.putVertex(
+				intModelVertices[vertexOffsetA], intModelVertices[vertexOffsetA + 1], intModelVertices[vertexOffsetA + 2],
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				faceNormals[0], faceNormals[1], faceNormals[2],
-				texturedFaceIdx
+				texturedFaceIdx, modelIdx
 			);
-			vb.putDynamicVertex(
-				modelVertices[vertexOffsetB], modelVertices[vertexOffsetB + 1], modelVertices[vertexOffsetB + 2],
+
+			vb.putVertex(
+				intModelVertices[vertexOffsetB], intModelVertices[vertexOffsetB + 1], intModelVertices[vertexOffsetB + 2],
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				faceNormals[3], faceNormals[4], faceNormals[5],
-				texturedFaceIdx
+				texturedFaceIdx, modelIdx
 			);
-			vb.putDynamicVertex(
-				modelVertices[vertexOffsetC], modelVertices[vertexOffsetC + 1], modelVertices[vertexOffsetC + 2],
+
+			vb.putVertex(
+				intModelVertices[vertexOffsetC], intModelVertices[vertexOffsetC + 1], intModelVertices[vertexOffsetC + 2],
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				faceNormals[6], faceNormals[7], faceNormals[8],
-				texturedFaceIdx
+				texturedFaceIdx, modelIdx
 			);
 		}
 
@@ -2396,14 +2491,14 @@ public class SceneUploader implements AutoCloseable {
 	) {
 		final var vb = writeCache.getVertexBuffer();
 		final var tb = writeCache.getTextureBuffer();
-		int faceIdx = tb.putFace(
+		int faceIdx = tb.putStaticFace(
 			colorA, colorB, colorC,
 			packedMaterial, packedMaterial, packedMaterial,
 			terrainData, terrainData, terrainData
 		);
-		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx);
-		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx);
-		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx);
+		vb.putVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx, 0);
+		vb.putVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx, 0);
+		vb.putVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, 0);
 	}
 
 	public static void calculateFaceNormalInt(

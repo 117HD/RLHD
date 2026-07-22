@@ -47,11 +47,13 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.uniforms.UBODisplacement;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.scene.DisplacementManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -63,6 +65,7 @@ import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
+import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -80,10 +83,10 @@ import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_PLAYER;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_PRESCENE;
-import static rs117.hd.renderer.zone.WorldViewContext.VAO_SHADOW;
+import static rs117.hd.renderer.zone.FrameContext.VAO_OPAQUE;
+import static rs117.hd.renderer.zone.FrameContext.VAO_PLAYER;
+import static rs117.hd.renderer.zone.FrameContext.VAO_PRESCENE;
+import static rs117.hd.renderer.zone.FrameContext.VAO_SHADOW;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -93,9 +96,11 @@ public class ZoneRenderer implements Renderer {
 
 	private static int TEXTURE_UNIT_COUNT = HdPlugin.TEXTURE_UNIT_COUNT;
 	public static final int TEXTURE_UNIT_TEXTURED_FACES = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_MODEL_DATA = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_DISPLACEMENT = UNIFORM_BLOCK_COUNT++;
 
 	@Inject
 	private Injector injector;
@@ -128,6 +133,12 @@ public class ZoneRenderer implements Renderer {
 	private ModelStreamingManager modelStreamingManager;
 
 	@Inject
+	private DisplacementManager displacementManager;
+
+	@Inject
+	private NpcDisplacementCache npcDisplacementCache;
+
+	@Inject
 	private FrameTimer frameTimer;
 
 	@Inject
@@ -144,6 +155,11 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
+
+	@Inject
+	private UBODisplacement uboDisplacement;
+
+	public final FrameContext[] frameContexts = new FrameContext[FRAMES_IN_FLIGHT];
 
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
@@ -165,6 +181,10 @@ public class ZoneRenderer implements Renderer {
 	private boolean shouldRenderScene;
 	private boolean shouldClearShadowFbo;
 	private boolean shouldDrawRoofShadows;
+
+	public FrameContext frameContext() {
+		return frameContexts[plugin.frame % FRAMES_IN_FLIGHT];
+	}
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -195,6 +215,7 @@ public class ZoneRenderer implements Renderer {
 
 		jobSystem.startUp(config.cpuUsageLimit());
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
+		uboDisplacement.initialize(UNIFORM_BLOCK_DISPLACEMENT);
 		sceneManager.initialize(uboWorldViews);
 		modelStreamingManager.initialize();
 
@@ -211,6 +232,7 @@ public class ZoneRenderer implements Renderer {
 		modelStreamingManager.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
+		uboDisplacement.destroy();
 
 		if (SceneUploader.POOL != null)
 			SceneUploader.POOL.destroy();
@@ -230,7 +252,8 @@ public class ZoneRenderer implements Renderer {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
 			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS))
-			.addUniformBuffer(uboWorldViews);
+			.addUniformBuffer(uboWorldViews)
+			.addUniformBuffer(uboDisplacement);
 	}
 
 	@Override
@@ -254,9 +277,20 @@ public class ZoneRenderer implements Renderer {
 
 		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
 		indirectDrawCmdsStaging = new GpuIntBuffer();
+
+		for(int i = 0; i < FRAMES_IN_FLIGHT; i++) {
+			frameContexts[i] = new FrameContext();
+			frameContexts[i].initBuffers();
+		}
 	}
 
 	private void destroyBuffers() {
+		for(int i = 0; i < FRAMES_IN_FLIGHT; i++) {
+			if(frameContexts[i] != null)
+				frameContexts[i].destroy();
+			frameContexts[i] = null;
+		}
+
 		if (eboAlpha != null)
 			eboAlpha.destroy();
 		eboAlpha = null;
@@ -305,12 +339,19 @@ public class ZoneRenderer implements Renderer {
 			ctx.hideRoofIds = hideRoofIds;
 			ctx.vaoSceneCmd.reset();
 			ctx.vaoDirectionalCmd.reset();
+			ctx.resetDrawRanges();
 
-			if (ctx.uboWorldViewStruct != null)
+			if (ctx.uboWorldViewStruct != null) {
 				ctx.uboWorldViewStruct.update();
 
-			if (scene.getWorldViewId() == WorldView.TOPLEVEL)
+				if(ctx.isBoat)
+					displacementManager.addBoat(ctx.uboWorldViewStruct, ctx.boatDisplacementOctagon);
+			}
+
+			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
+				frameContext().map();
 				preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
+			}
 
 			ctx.completeInvalidation();
 
@@ -320,8 +361,6 @@ public class ZoneRenderer implements Renderer {
 					ctx.zones[zx][zz].multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
 
 			ctx.sortStaticAlphaModels(sceneCamera);
-
-			ctx.map();
 
 			if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 				Model skybox = scene.getSkybox();
@@ -337,8 +376,9 @@ public class ZoneRenderer implements Renderer {
 						null,
 						null,
 						true,
-						VAO_PRESCENE,
+						VAO_OPAQUE,
 						-1,
+						0,
 						0,
 						cameraX, cameraY, cameraZ
 					);
@@ -360,7 +400,6 @@ public class ZoneRenderer implements Renderer {
 		Scene scene,
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw
 	) {
-		jobSystem.processPendingClientCallbacks();
 
 		scene.setDrawDistance(plugin.getDrawDistance());
 
@@ -636,6 +675,14 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
+		displacementManager.addLocalPlayer();
+
+		uboDisplacement.windDirectionX.set(cos(environmentManager.currentWindAngle));
+		uboDisplacement.windDirectionZ.set(sin(environmentManager.currentWindAngle));
+		uboDisplacement.windStrength.set(environmentManager.currentWindStrength);
+		uboDisplacement.windCeiling.set(environmentManager.currentWindCeiling);
+		uboDisplacement.windOffset.set(plugin.windOffset);
+
 		if (plugin.configColorFilter != ColorFilter.NONE) {
 			plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
 			plugin.uboGlobal.colorFilterPrevious.set(plugin.configColorFilterPrevious.ordinal());
@@ -664,8 +711,6 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		try {
-			jobSystem.processPendingClientCallbacks();
-
 			WorldViewContext ctx = sceneManager.getContext(scene);
 			if (ctx == null || !sceneManager.isRoot(ctx) && ctx.isLoading)
 				return;
@@ -702,6 +747,8 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 		shouldRenderScene = true;
+
+		uboDisplacement.upload();
 
 		// TODO: Add proper support for stat tracking to the FrameTimer or elsewhere
 		plugin.drawnDynamicRenderableCount += modelStreamingManager.getDrawnDynamicRenderableCount();
@@ -1024,14 +1071,6 @@ public class ZoneRenderer implements Renderer {
 				case DrawCallbacks.PASS_ALPHA:
 					modelStreamingManager.ensureAsyncUploadsComplete(null);
 
-					if (sceneManager.isRoot(ctx))
-						frameTimer.begin(Timer.UNMAP_ROOT_CTX);
-
-					ctx.unmap();
-
-					if (sceneManager.isRoot(ctx))
-						frameTimer.end(Timer.UNMAP_ROOT_CTX);
-
 					// Draw opaque
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoSceneCmd);
 					ctx.drawAll(VAO_OPAQUE, ctx.vaoDirectionalCmd);
@@ -1049,6 +1088,12 @@ public class ZoneRenderer implements Renderer {
 					ctx.vaoSceneCmd.ColorMask(false, false, false, false);
 					ctx.drawAll(VAO_PLAYER, ctx.vaoSceneCmd);
 					ctx.vaoSceneCmd.ColorMask(true, true, true, true);
+
+					if(sceneManager.isRoot(ctx)) {
+						frameTimer.begin(Timer.FRAME_CONTEXT_UNMAP);
+						frameContext().unmap();
+						frameTimer.end(Timer.FRAME_CONTEXT_UNMAP);
+					}
 
 					for (int zx = 0; zx < ctx.sizeX; ++zx)
 						for (int zz = 0; zz < ctx.sizeZ; ++zz)
@@ -1083,6 +1128,8 @@ public class ZoneRenderer implements Renderer {
 		final long start = System.nanoTime();
 		try {
 			modelStreamingManager.drawTemp(renderThreadId, projection, scene, tileObject, r, m, orient, x, y, z);
+
+			displacementManager.addCharacterPosition(scene, x, z, r, m);
 		} catch (Exception ex) {
 			log.error("Error in drawDynamic:", ex);
 		} finally {
@@ -1098,6 +1145,8 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.begin(Timer.DRAW_TEMP);
 		try {
 			modelStreamingManager.drawTemp(-1, worldProjection, scene, gameObject, gameObject.getRenderable(), m, orientation, x, y, z);
+
+			displacementManager.addCharacterPosition(scene, x, z, gameObject.getRenderable(), m);
 		} catch (Exception ex) {
 			log.error("Error in drawTemp:", ex);
 		} finally {
@@ -1169,8 +1218,6 @@ public class ZoneRenderer implements Renderer {
 
 			plugin.drawUi(overlayColor);
 			frameTimer.end(Timer.DRAW_SUBMIT);
-
-			jobSystem.processPendingClientCallbacks();
 
 			frameTimer.end(Timer.DRAW_FRAME);
 			frameTimer.end(Timer.RENDER_FRAME);
@@ -1267,6 +1314,7 @@ public class ZoneRenderer implements Renderer {
 	public void swapScene(Scene scene) {
 		try {
 			sceneManager.swapScene(scene);
+			npcDisplacementCache.clear();
 		} catch (Throwable ex) {
 			log.error("Error during swapScene:", ex);
 			plugin.stopPlugin();

@@ -89,7 +89,6 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
-import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOUI;
@@ -103,6 +102,7 @@ import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.DisplacementManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.GamevalManager;
@@ -129,6 +129,7 @@ import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
 import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.buffer.GLTextureBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.PooledArrayType;
 import rs117.hd.utils.jobs.GenericJob;
@@ -137,6 +138,8 @@ import rs117.hd.utils.jobs.JobSystem;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.scene.DisplacementManager.MAX_BOAT_COUNT;
+import static rs117.hd.scene.DisplacementManager.MAX_CHARACTER_POSITION_COUNT;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 import static rs117.hd.utils.buffer.GLBuffer.DEBUG_MAC_OS;
@@ -322,6 +325,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	public HDVariables vars;
+
+	@Inject
+	private DisplacementManager displacementManager;
 
 	public Renderer renderer;
 
@@ -722,6 +728,7 @@ public class HdPlugin extends Plugin {
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
 				npcDisplacementCache.initialize();
+				displacementManager.initialize();
 
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
@@ -907,8 +914,10 @@ public class HdPlugin extends Plugin {
 		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER)
+			.define("TEXEL_SIZE", GLTextureBuffer.isRGBASupported() ? 4 : 3)
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
+			.define("DITHER_FADE", config.ditherFading())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
@@ -931,7 +940,8 @@ public class HdPlugin extends Plugin {
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
 			.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", WIND_DISPLACEMENT_NOISE_RESOLUTION)
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
-			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
+			.define("MAX_CHARACTER_POSITION_COUNT", max(1, MAX_CHARACTER_POSITION_COUNT))
+			.define("MAX_BOAT_COUNT", max(1, MAX_BOAT_COUNT))
 			.define("WIREFRAME", config.wireframe())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
@@ -1825,6 +1835,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_DITHER_FADING:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
