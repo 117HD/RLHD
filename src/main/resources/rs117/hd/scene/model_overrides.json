@@ -1424,6 +1424,8 @@
     "description": "Gnome Stronghold Tree Leaves - Top",
     "baseMaterial": "BARK",
     "textureMaterial": "LEAVES_TOP_ALT",
+    "windDisplacementMode": "VERTEX",
+    "positionTileSnapping": 25,
     "objectIds": [
       "TKCANOPYMIDDLE",
       "TKCANOPYMIDDLE2"
@@ -1436,6 +1438,8 @@
     "description": "Gnome Stronghold Tree Leaves - Side",
     "baseMaterial": "BARK",
     "textureMaterial": "LEAVES_SIDE_ALT",
+    "windDisplacementMode": "VERTEX",
+    "positionTileSnapping": 25,
     "objectIds": [
       "TKCANOPYCORNER2",
       "TKCANOPYFILLER2",
