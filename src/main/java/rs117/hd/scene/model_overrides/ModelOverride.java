@@ -119,7 +119,6 @@ public class ModelOverride
 	public transient boolean isGenerated;
 	public transient Map<AABB, ModelOverride> areaOverrides;
 	public transient AhslPredicate ahslCondition;
-	public transient boolean hasTransparency;
 	public transient boolean mightHaveTransparency;
 	public transient boolean mightBeDoubleSided;
 	public transient boolean modifiesVanillaTexture;
@@ -212,16 +211,16 @@ public class ModelOverride
 		if (hideInAreas == null)
 			hideInAreas = new AABB[0];
 
-		doubleSidedFaces = mightBeDoubleSided =
-			doubleSidedFaces ||
-			baseMaterial.doubleSidedFaces ||
-			textureMaterial.doubleSidedFaces;
-
-		hasTransparency = mightHaveTransparency =
+		mightHaveTransparency =
 			baseMaterial.hasTransparency ||
 			textureMaterial.hasTransparency ||
 			modifiesAlpha && minAlpha < 255 ||
 			tzHaarRecolorType != TzHaarRecolorType.NONE;
+
+		mightBeDoubleSided =
+			doubleSidedFaces ||
+			baseMaterial.doubleSidedFaces ||
+			textureMaterial.doubleSidedFaces;
 
 		hide |= hideAsWaterEffect && plugin.configHideVanillaWaterEffects;
 
@@ -348,7 +347,6 @@ public class ModelOverride
 			isGenerated,
 			areaOverrides,
 			ahslCondition,
-			hasTransparency,
 			mightHaveTransparency,
 			mightBeDoubleSided,
 			modifiesVanillaTexture,

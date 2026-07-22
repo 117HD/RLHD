@@ -403,7 +403,7 @@ public class SceneUploader implements AutoCloseable {
 			} else {
 				z.onlyWater = false;
 
-				if(override.doubleSidedFaces)
+				if (override.doubleSidedFaces)
 					z.sizeO += 2;
 			}
 		}
@@ -438,7 +438,7 @@ public class SceneUploader implements AutoCloseable {
 			} else {
 				z.onlyWater = false;
 
-				if(overlayOverride.doubleSidedFaces || underlayOverride.doubleSidedFaces)
+				if (overlayOverride.doubleSidedFaces || underlayOverride.doubleSidedFaces)
 					z.sizeO += len;
 			}
 		}
@@ -722,16 +722,19 @@ public class SceneUploader implements AutoCloseable {
 
 		int faceCount = m.getFaceCount();
 		byte[] transparencies = m.getFaceTransparencies();
-		short[] faceTextures = m.getFaceTextures();
+		boolean isVanillaTextured = m.getFaceTextures() != null;
 		byte modelTransparency = m.getTransparency();
+
 		z.sizeF += faceCount;
 
-		mightBeDoubleSided |= m.getFaceTextures() != null;
-		if(mightBeDoubleSided)
-			faceCount *= 2; // sizeF remains the same, since the double sided faces will reuse the textureFaceIdx
+		mightBeDoubleSided |= isVanillaTextured;
+		if (mightBeDoubleSided)
+			faceCount *= 2; // sizeF remains the same, since the double-sided faces will reuse the textureFaceIdx
 
 		z.sizeO += faceCount;
-		if (transparencies != null || faceTextures != null || modelTransparency != 0 || mightHaveTransparency)
+
+		mightHaveTransparency |= transparencies != null || isVanillaTextured || modelTransparency != 0;
+		if (mightHaveTransparency)
 			z.sizeA += faceCount;
 	}
 
@@ -1091,7 +1094,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx
 		);
 
-		if(override.doubleSidedFaces) {
+		if (override.doubleSidedFaces) {
 			vb.putStaticVertex(
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
@@ -1141,7 +1144,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx
 		);
 
-		if(override.doubleSidedFaces) {
+		if (override.doubleSidedFaces) {
 			vb.putStaticVertex(
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
@@ -1460,7 +1463,7 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx
 			);
 
-			if(override.doubleSidedFaces) {
+			if (override.doubleSidedFaces) {
 				vb.putStaticVertex(
 					lx2, ly2, lz2,
 					uvCx, uvCy, 0,
@@ -1849,7 +1852,7 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx
 			);
 
-			if(faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
+			if (faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
 				vb.putStaticVertex(
 					vx3, vy3, vz3,
 					faceUVs[8], faceUVs[9], faceUVs[10],

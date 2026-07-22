@@ -51,7 +51,7 @@
       },
       "doubleSidedFaces": {
         "type": "boolean",
-        "description": "Whether the faces should be double sided. Defaults to false."
+        "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
       },
       "forced": {
         "type": "boolean",

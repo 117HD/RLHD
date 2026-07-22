@@ -211,8 +211,8 @@ public final class FacePrioritySorter implements AutoCloseable {
 			return;
 
 		final int start = m.startpos / (VERT_SIZE >> 2);
-		final int faceCount = m.packedFaces.length + m.doubleSidedCount;
-		ensureCapacity(diameter, faceCount);
+		final int maxFaceCount = m.packedFaces.length + m.doubleSidedCount;
+		ensureCapacity(diameter, maxFaceCount);
 
 		final int[] packedFaces = m.packedFaces;
 		final int[] doubleSidedBitSet = m.doubleSidedBitSet;
@@ -251,7 +251,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 			}
 			zsortNext[f] = -1;
 
-			// Backfaces are not sorted, so we skip over them if this face is marked as double sided
+			// Backfaces are not sorted, so we skip over them if this face is marked as double-sided
 			if (doubleSidedBitSet != null) {
 				if ((i & 31) == 0)
 					backfaceWord = doubleSidedBitSet[i >> 5];
@@ -268,7 +268,7 @@ public final class FacePrioritySorter implements AutoCloseable {
 
 		for (int i = maxFz; i >= minFz; --i) {
 			for (int f = zsortHead[i]; f != -1; f = zsortNext[f]) {
-				if (f >= faceCount)
+				if (f >= maxFaceCount)
 					continue;
 
 				final int faceStart = f * 3 + start;

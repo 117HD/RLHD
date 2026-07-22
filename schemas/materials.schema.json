@@ -56,7 +56,7 @@
       },
       "doubleSidedFaces": {
         "type": "boolean",
-        "description": "If specified, will make models that use this material render both sides of faces, Defaults to false."
+        "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
       },
       "overrideBaseColor": {
         "type": "boolean",

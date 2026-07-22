@@ -677,10 +677,10 @@ public class Zone implements Destructible {
 				m.packedFaces = null;
 				m.doubleSidedBitSet = null;
 				ALPHA_MODEL_POOL.recycle(m);
-			} {
-				if(m.tempSortedFaces != null)
-					PooledArrayType.INT.release(m.tempSortedFaces);
 			}
+
+			if (m.tempSortedFaces != null)
+				PooledArrayType.INT.release(m.tempSortedFaces);
 			m.tempSortedFaces = null;
 		}
 	}
