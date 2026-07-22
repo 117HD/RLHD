@@ -933,16 +933,19 @@ public class SceneUploader implements AutoCloseable {
 				swMaterial = seMaterial = neMaterial = nwMaterial = material;
 			}
 
-			boolean useBlendedMaterialAndColor =
+			boolean allowBlending =
 				plugin.configGroundBlending &&
 				textureId == -1 &&
 				!proceduralGenerator.useDefaultColor(tile, override);
+			boolean blendColors = plugin.configGroundBlendingColors && allowBlending;
+			boolean blendTextures = plugin.configGroundBlendingTextures && allowBlending;
+
 			GroundMaterial groundMaterial = null;
 			if (override != TileOverride.NONE) {
 				groundMaterial = override.groundMaterial;
 				uvOrientation = override.uvOrientation;
 				uvScale = override.uvScale;
-				if (!useBlendedMaterialAndColor) {
+				if (!blendColors) {
 					swColor = override.modifyColor(swColor);
 					seColor = override.modifyColor(seColor);
 					nwColor = override.modifyColor(nwColor);
@@ -953,24 +956,25 @@ public class SceneUploader implements AutoCloseable {
 				groundMaterial = override.groundMaterial;
 			}
 
-			if (useBlendedMaterialAndColor) {
-				// get the vertices' colors and textures from hashmaps
+			if (blendColors) {
 				swColor = ctx.vertexTerrainColor.getOrDefault(swVertexKey, swColor);
 				seColor = ctx.vertexTerrainColor.getOrDefault(seVertexKey, seColor);
 				neColor = ctx.vertexTerrainColor.getOrDefault(neVertexKey, neColor);
 				nwColor = ctx.vertexTerrainColor.getOrDefault(nwVertexKey, nwColor);
+			}
 
-				if (plugin.configGroundTextures) {
+			if (plugin.configGroundTextures) {
+				if (blendTextures) {
 					swMaterial = ctx.vertexTerrainTexture.getOrDefault(swVertexKey, swMaterial);
 					seMaterial = ctx.vertexTerrainTexture.getOrDefault(seVertexKey, seMaterial);
 					neMaterial = ctx.vertexTerrainTexture.getOrDefault(neVertexKey, neMaterial);
 					nwMaterial = ctx.vertexTerrainTexture.getOrDefault(nwVertexKey, nwMaterial);
+				} else if (groundMaterial != null) {
+					swMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1], worldPos[2]);
+					seMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1], worldPos[2]);
+					nwMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1] + 1, worldPos[2]);
+					neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 				}
-			} else if (plugin.configGroundTextures && groundMaterial != null) {
-				swMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1], worldPos[2]);
-				seMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1], worldPos[2]);
-				nwMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1] + 1, worldPos[2]);
-				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
 			if (ctx.isVertexOverlay(neVertexKey) && ctx.isVertexUnderlay(neVertexKey))
@@ -1232,15 +1236,18 @@ public class SceneUploader implements AutoCloseable {
 
 				GroundMaterial groundMaterial = null;
 
-				boolean useBlendedMaterialAndColor =
+				boolean allowBlending =
 					plugin.configGroundBlending &&
 					textureId == -1 &&
 					!(isOverlay && proceduralGenerator.useDefaultColor(tile, override));
+				boolean blendColors = plugin.configGroundBlendingColors && allowBlending;
+				boolean blendTextures = plugin.configGroundBlendingTextures && allowBlending;
+
 				if (override != TileOverride.NONE) {
 					groundMaterial = override.groundMaterial;
 					uvOrientation = override.uvOrientation;
 					uvScale = override.uvScale;
-					if (!useBlendedMaterialAndColor) {
+					if (!blendColors) {
 						colorA = override.modifyColor(colorA);
 						colorB = override.modifyColor(colorB);
 						colorC = override.modifyColor(colorC);
@@ -1250,33 +1257,34 @@ public class SceneUploader implements AutoCloseable {
 					groundMaterial = override.groundMaterial;
 				}
 
-				if (useBlendedMaterialAndColor) {
-					// get the vertices' colors and textures from hashmaps
+				if (blendColors) {
 					colorA = ctx.vertexTerrainColor.getOrDefault(vertexKeyA, colorA);
 					colorB = ctx.vertexTerrainColor.getOrDefault(vertexKeyB, colorB);
 					colorC = ctx.vertexTerrainColor.getOrDefault(vertexKeyC, colorC);
+				}
 
-					if (plugin.configGroundTextures) {
+				if (plugin.configGroundTextures) {
+					if (blendTextures) {
 						materialA = ctx.vertexTerrainTexture.getOrDefault(vertexKeyA, materialA);
 						materialB = ctx.vertexTerrainTexture.getOrDefault(vertexKeyB, materialB);
 						materialC = ctx.vertexTerrainTexture.getOrDefault(vertexKeyC, materialC);
+					} else if (groundMaterial != null) {
+						materialA = groundMaterial.getRandomMaterial(
+							worldPos[0] + (vertices[0][0] >> LOCAL_COORD_BITS),
+							worldPos[1] + (vertices[0][1] >> LOCAL_COORD_BITS),
+							worldPos[2]
+						);
+						materialB = groundMaterial.getRandomMaterial(
+							worldPos[0] + (vertices[1][0] >> LOCAL_COORD_BITS),
+							worldPos[1] + (vertices[1][1] >> LOCAL_COORD_BITS),
+							worldPos[2]
+						);
+						materialC = groundMaterial.getRandomMaterial(
+							worldPos[0] + (vertices[2][0] >> LOCAL_COORD_BITS),
+							worldPos[1] + (vertices[2][1] >> LOCAL_COORD_BITS),
+							worldPos[2]
+						);
 					}
-				} else if (plugin.configGroundTextures && groundMaterial != null) {
-					materialA = groundMaterial.getRandomMaterial(
-						worldPos[0] + (vertices[0][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[0][2] >> LOCAL_COORD_BITS),
-						worldPos[2]
-					);
-					materialB = groundMaterial.getRandomMaterial(
-						worldPos[0] + (vertices[1][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[1][2] >> LOCAL_COORD_BITS),
-						worldPos[2]
-					);
-					materialC = groundMaterial.getRandomMaterial(
-						worldPos[0] + (vertices[2][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[2][2] >> LOCAL_COORD_BITS),
-						worldPos[2]
-					);
 				}
 			} else if (onlyWaterSurface) {
 				// set colors for the shoreline to create a foam effect in the water shader
@@ -1519,6 +1527,9 @@ public class SceneUploader implements AutoCloseable {
 			ModelOverride faceOverride = modelOverride;
 
 			int transparency = readFaceTransparency(modelTransparency, transparencies, face);
+			if (transparency == 255)
+				continue;
+
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			boolean isTextured = textureId != -1;
 			if (isTextured) {
@@ -2604,11 +2615,17 @@ public class SceneUploader implements AutoCloseable {
 		if (modelTransparency == -1)
 			return 255;
 
-		int t = modelTransparency & 255;
 		int faceTransparency = transparencies != null ? transparencies[f] & 0xFF : 0;
-		if (t > 0 && faceTransparency < 253) {
-			int a = (253 - faceTransparency) * t >> 8;
+		if (faceTransparency >= 253) {
+			// 253 & 254 are special faces like clickboxes which we don't want to render,
+			// so force them to be 255 so that they are completely skipped
+			return 255;
+		}
+
+		if (modelTransparency != 0) {
 			assert (faceTransparency & 255) == faceTransparency;
+			int t = modelTransparency & 255;
+			int a = (253 - faceTransparency) * t >> 8;
 			return faceTransparency + a;
 		}
 

@@ -387,9 +387,16 @@
     "materials": [
       "SAND_4",
       "GRAVEL_LIGHT",
+      "SAND_4_MIRRORED",
+      "SAND_5"
+    ]
+  },
+  {
+    "name": "BEACH_SAND_PLAIN",
+    "materials": [
       "DIRT_1",
-      "SAND_4",
-      "DIRT_1"
+      "GRAVEL_LIGHT",
+      "SAND_5"
     ]
   },
   {
@@ -483,18 +490,6 @@
     ]
   },
   {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHT",
-    "materials": [
-      "WINTER_JAGGED_STONE_TILE_LIGHT"
-    ]
-  },
-  {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHT_2",
-    "materials": [
-      "WINTER_JAGGED_STONE_TILE_LIGHTER"
-    ]
-  },
-  {
     "name": "ROCKY_CAVE_FLOOR",
     "materials": [
       "GRUNGE_2",
@@ -536,7 +531,7 @@
       "GRUNGE_1",
       "DIRT_1",
       "DIRT_2",
-      "DIRT_1"
+      "SAND_5"
     ]
   },
   {
@@ -605,6 +600,15 @@
       "GRASS_2",
       "DIRT_2",
       "GRASS_3"
+    ]
+  },
+  {
+    "name": "GRASSY_SAND",
+    "materials": [
+      "GRASS_1",
+      "SAND_1",
+      "SAND_2",
+      "SAND_3"
     ]
   },
   {
