@@ -97,7 +97,7 @@ public final class VertexWriteCache {
 		stagingBuffer[stagingPosition + 4] = float16(w);
 		stagingBuffer[stagingPosition + 5] = (ny & 0xFFFF) << 16 | nx & 0xFFFF;
 		stagingBuffer[stagingPosition + 6] = nz & 0xFFFF;
-		stagingBuffer[stagingPosition + 7] = textureFaceIdx;
+		stagingBuffer[stagingPosition + 7] = textureFaceIdx << 1;
 
 		this.stagingPosition += 8;
 	}
@@ -107,6 +107,15 @@ public final class VertexWriteCache {
 		float u, float v, float w,
 		int nx, int ny, int nz,
 		int textureFaceIdx
+	) {
+		putStaticVertex(x, y, z, u, v, w, nx, ny, nz, textureFaceIdx, true);
+	}
+
+	public void putStaticVertex(
+		int x, int y, int z,
+		float u, float v, float w,
+		int nx, int ny, int nz,
+		int textureFaceIdx, boolean isClockwise
 	) {
 		if (stagingPosition + 7 > stagingBuffer.length)
 			flushAndGrow();
@@ -121,7 +130,7 @@ public final class VertexWriteCache {
 		// Unnormalized normals, assumed to be within short max
 		stagingBuffer[stagingPosition + 4] = (ny & 0xFFFF) << 16 | nx & 0xFFFF;
 		stagingBuffer[stagingPosition + 5] = nz & 0xFFFF;
-		stagingBuffer[stagingPosition + 6] = textureFaceIdx;
+		stagingBuffer[stagingPosition + 6] = textureFaceIdx << 1 | (isClockwise ? 0 : 1);
 
 		this.stagingPosition += 7;
 	}

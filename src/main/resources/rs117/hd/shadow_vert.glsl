@@ -51,10 +51,18 @@ layout (location = 0) in vec3 vPosition;
     #endif
 
     void main() {
+        int faceIdx = vTextureFaceIdx >> 1;
+        bool isReverseWinding = (vTextureFaceIdx & 1) == 1;
+
         int vertex = gl_VertexID % 3;
-        int alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
-        int materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
-        int terrainData = texelFetch(textureFaces, vTextureFaceIdx + 2)[vertex];
+        bool isProvoking = vertex == 2;
+
+        if(isReverseWinding)
+            vertex = 2 - vertex;
+
+        int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
+        int materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
+        int terrainData = texelFetch(textureFaces, faceIdx + 2)[vertex];
 
         int waterTypeIndex = terrainData >> 3 & 0xFF;
         float opacity = 1 - (alphaBiasHsl >> 24 & 0xFF) / float(0xFF);

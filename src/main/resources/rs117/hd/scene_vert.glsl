@@ -67,15 +67,21 @@ layout (location = 0) in vec3 vPosition;
     } OUT;
 
     void main() {
+        int faceIdx = vTextureFaceIdx >> 1;
+        bool isReverseWinding = (vTextureFaceIdx & 1) == 1;
+
         int vertex = gl_VertexID % 3;
         bool isProvoking = vertex == 2;
+
+        if(isReverseWinding)
+            vertex = 2 - vertex;
+
         int materialData = 0;
         int alphaBiasHsl = 0;
-
         if (isProvoking) {
             // Only the Provoking vertex needs to fetch the face data
-            fAlphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx).xyz;
-            fMaterialData = texelFetch(textureFaces, vTextureFaceIdx + 1).xyz;
+            fAlphaBiasHsl = texelFetch(textureFaces, faceIdx).xyz;
+            fMaterialData = texelFetch(textureFaces, faceIdx + 1).xyz;
             fWorldViewId = vWorldViewId;
             alphaBiasHsl = fAlphaBiasHsl[vertex];
             materialData = fMaterialData[vertex];
@@ -84,10 +90,10 @@ layout (location = 0) in vec3 vPosition;
             fAlphaBiasHsl = ivec3(0);
             fMaterialData = ivec3(0);
             fWorldViewId  = 0;
-            alphaBiasHsl = texelFetch(textureFaces, vTextureFaceIdx)[vertex];
-            materialData = texelFetch(textureFaces, vTextureFaceIdx + 1)[vertex];
+            alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];
+            materialData = texelFetch(textureFaces, faceIdx + 1)[vertex];
         }
-        fTerrainData = texelFetch(textureFaces, vTextureFaceIdx + 2).xyz;
+        fTerrainData = texelFetch(textureFaces, faceIdx + 2).xyz;
 
         vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
         vec3 worldNormal = vNormal.xyz;
