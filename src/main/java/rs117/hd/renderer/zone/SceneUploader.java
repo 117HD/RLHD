@@ -1589,15 +1589,14 @@ public class SceneUploader implements AutoCloseable {
 		final Material baseMaterial = modelOverride.baseMaterial;
 		final Material textureMaterial = modelOverride.textureMaterial;
 
-		int modelX = x, modelY = y, modelZ = z;
+		int modelX = x, modelZ = z;
 		if(modelOverride.positionTileSnapping > 0) {
 			float snapping = modelOverride.positionTileSnapping * LOCAL_HALF_TILE_SIZE;
 			modelX = (int)(floor(modelX / snapping) * snapping);
-			modelY = (int)(floor(modelY / snapping) * snapping);
 			modelZ = (int)(floor(modelZ / snapping) * snapping);
 		}
 
-		final int modelIdx = writeStaticModelData(modelBuffer.getBuffer(), modelX, modelY, modelZ, model, modelOverride, zone);
+		final int modelIdx = writeStaticModelData(modelBuffer.getBuffer(), modelX, y, modelZ, model, modelOverride, zone);
 
 		int len = 0;
 		for (int face = 0; face < faceCount; ++face) {
