@@ -406,6 +406,9 @@ public class SceneUploader implements AutoCloseable {
 				if (override.doubleSidedFaces)
 					z.sizeO += 2;
 			}
+
+			if(tileZ != 0)
+				z.sizeO += 2;
 		}
 
 		SceneTileModel model = t.getSceneTileModel();
@@ -413,6 +416,9 @@ public class SceneUploader implements AutoCloseable {
 			int len = model.getFaceX().length;
 			z.sizeO += len;
 			z.sizeF += len;
+
+			if(tileZ != 0)
+				z.sizeO += len;
 
 			var overlayOverride = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_OVERLAY);
 			var underlayOverride = ctx.getTileOverride(tileZ, tileExX, tileExY, TILE_OVERRIDE_UNDERLAY);
@@ -1094,7 +1100,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx
 		);
 
-		if (override.doubleSidedFaces) {
+		if (override.doubleSidedFaces || tileZ != 0) {
 			vb.putStaticVertex(
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
@@ -1144,7 +1150,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx
 		);
 
-		if (override.doubleSidedFaces) {
+		if (override.doubleSidedFaces || tileZ != 0) {
 			vb.putStaticVertex(
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
@@ -1463,7 +1469,7 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx
 			);
 
-			if (override.doubleSidedFaces) {
+			if (override.doubleSidedFaces || tileZ != 0) {
 				vb.putStaticVertex(
 					lx2, ly2, lz2,
 					uvCx, uvCy, 0,
