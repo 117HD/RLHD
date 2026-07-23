@@ -392,7 +392,8 @@ public class ZoneRenderer implements Renderer {
 		if (starProgram.isValid() && starField.getVaoStars() != 0) {
 			skyboxCmd.SetShader(starProgram);
 			skyboxCmd.Enable(GL_PROGRAM_POINT_SIZE);
-			skyboxCmd.Enable(GL_POINT_SPRITE);
+			if (!HdPlugin.GL_CAPS.forwardCompatible)
+				skyboxCmd.Enable(GL_POINT_SPRITE);
 			skyboxCmd.Enable(GL_BLEND);
 			skyboxCmd.BlendFunc(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
 
@@ -401,7 +402,8 @@ public class ZoneRenderer implements Renderer {
 
 			skyboxCmd.BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 			skyboxCmd.Disable(GL_BLEND);
-			skyboxCmd.Disable(GL_POINT_SPRITE);
+			if (!HdPlugin.GL_CAPS.forwardCompatible)
+				skyboxCmd.Disable(GL_POINT_SPRITE);
 			skyboxCmd.Disable(GL_PROGRAM_POINT_SIZE);
 		}
 
