@@ -24,9 +24,11 @@
  */
 #version 330
 
-#include UI_SCALING_MODE
+#extension GL_ARB_gpu_shader5 : enable
 
 #include <uniforms/ui.glsl>
+#include <utils/constants.glsl>
+#include <utils/fxaa.glsl>
 
 layout (location = 0) in vec2 vPos;
 layout (location = 1) in vec2 vUv;
@@ -39,9 +41,19 @@ layout (location = 1) in vec2 vUv;
 
 out vec2 fUv;
 
+#if FXAA_ENABLED
+    out FXAACoords sceneFxaaCoords;
+#endif
+
+
 void main() {
     gl_Position = vec4(vPos, 0, 1);
     fUv = vec2(vUv.x, 1.0 - vUv.y);
+
+     #if FXAA_ENABLED
+        vec2 sceneFragCoord = (vec2(fUv.x, 1.0 - fUv.y) * vec2(targetDimensions)) - sceneViewport.xy;
+        sceneFxaaCoords = fxaa_coords(sceneFragCoord, sceneViewport.zw);
+    #endif
 
     #if UI_SCALING_MODE == UI_SCALING_MODE_XBR
         xbrTable = xbr_vert(fUv, sourceDimensions);
