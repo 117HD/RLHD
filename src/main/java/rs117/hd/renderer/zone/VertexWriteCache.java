@@ -106,15 +106,6 @@ public final class VertexWriteCache {
 		int x, int y, int z,
 		float u, float v, float w,
 		int nx, int ny, int nz,
-		int textureFaceIdx
-	) {
-		putStaticVertex(x, y, z, u, v, w, nx, ny, nz, textureFaceIdx, true);
-	}
-
-	public void putStaticVertex(
-		int x, int y, int z,
-		float u, float v, float w,
-		int nx, int ny, int nz,
 		int textureFaceIdx, boolean isClockwise
 	) {
 		if (stagingPosition + 7 > stagingBuffer.length)
