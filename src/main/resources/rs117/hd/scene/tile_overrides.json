@@ -11009,6 +11009,177 @@
     "blended": false
   },
   {
+    "name": "Drakan Lab Floor",
+    "area": "DRAKAN_LAB",
+    "underlayIds": [
+      27
+    ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "Castle Drakan Interior Floors",
+    "area": "CASTLE_DRAKAN_INTERIOR",
+    "uvOrientation": 512,
+    "underlayIds": [
+      72,
+      190,
+      241
+    ],
+    "groundMaterial": "DARKMEYER_BRICK_PATH"
+  },
+  {
+    "name": "Castle Drakan Interior Floors - Dust overlay",
+    "area": "CASTLE_DRAKAN_INTERIOR",
+    "uvOrientation": 512,
+    "overlayIds": [
+      228
+    ],
+    "groundMaterial": "DIRT_1"
+  },
+  {
+    "name": "Castle Drakan Interior Floors - Vampyrium",
+    "area": "CASTLE_DRAKAN_INTERIOR_VAMPYRIUM",
+    "uvOrientation": 512,
+    "underlayIds": [
+      72,
+      190,
+      241
+    ],
+    "groundMaterial": "DARKMEYER_BRICK_PATH_DIRTY"
+  },
+  {
+    "name": "Castle Drakan Interior Floors-  Vampyrium - Dust overlay",
+    "area": "CASTLE_DRAKAN_INTERIOR_VAMPYRIUM",
+    "uvOrientation": 512,
+    "overlayIds": [
+      228
+    ],
+    "groundMaterial": "DIRT_1"
+  },
+  {
+    "name": "Vampyrium - Cave Floor",
+    "area": "VAMPYRIUM_CAVES",
+    "uvOrientation": 512,
+    "underlayIds": [
+      242
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Vampyrium - Blood - Shore Fix",
+    "area": "VAMPYRIUM_SHORE_BLOOD_FIX",
+    "underlayIds": [
+      238
+    ],
+    "overlayIds": [
+      636
+    ],
+    "groundMaterial": "DIRT",
+    "minLightness": 6
+  },
+  {
+    "name": "Vampyrium - Dirt",
+    "area": "VAMPYRIUM",
+    "uvOrientation": 512,
+    "shiftLightness": 1,
+    "underlayIds": [
+      92,
+      237,
+      235,
+      234,
+      236,
+      238,
+      239,
+      240,
+      241
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Vampyrium - Dirt Overlay",
+    "area": "VAMPYRIUM",
+    "uvOrientation": -128,
+    "shiftLightness": 1,
+    "overlayIds": [
+      427,
+      629,
+      634
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Vampyrium - Gravel paths",
+    "area": "VAMPYRIUM",
+    "uvOrientation": 127,
+    "uvScale": 1.2,
+    "shiftLightness": 7,
+    "overlayIds": [
+      278
+    ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "Vampyrium - Blood - Cave Fix",
+    "area": "VAMPYRIUM_CAVE_BLOOD_FIX",
+    "overlayIds": [
+      636
+    ],
+    "heightOffset": -200
+  },
+  {
+    "name": "Vampyrium - Blood",
+    "area": "VAMPYRIUM",
+    "overlayIds": [
+      636
+    ],
+    "waterType": "BLOOD_DARK"
+  },
+  {
+    "name": "Vampyrium - Blood- Instance",
+    "area": "VAMPYRIUM_FOREST_INSTANCE",
+    "overlayIds": [
+      636
+    ],
+    "waterType": "BLOOD_DARK"
+  },
+  {
+    "name": "Vampyrium - Sugadinti Hideout - underlay",
+    "area": "VAMPYRIUM_SUGADINTI_HIDEOUT",
+    "uvScale": 2,
+    "shiftLightness": 5,
+    "blended": false,
+    "underlayIds": [
+      5,
+      6,
+      234,
+      241,
+      242
+    ],
+    "groundMaterial": "WORN_TILES"
+  },
+  {
+    "name": "Vampyrium - Sugadinti Hideout - overlay",
+    "area": "VAMPYRIUM_SUGADINTI_HIDEOUT",
+    "uvOrientation": 256,
+    "uvScale": 1.5,
+    "shiftLightness": 2,
+    "overlayIds": [
+      634
+    ],
+    "groundMaterial": "DIRTY_SMOOTH_STONE"
+  },
+  {
+    "name": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
+    "area": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
+    "uvScale": 1.5,
+    "underlayIds": [
+      145,
+      190,
+      196
+    ],
+    "groundMaterial": "DIRTY_MARBLE_GLOSS"
+  },
+  {
     "name": "KRAKEN_COVE_HIDE_WATER_EDGE",
     "area": "KRAKEN_COVE_HIDE_WATER_EDGE",
     "overlayIds": [ 7 ],

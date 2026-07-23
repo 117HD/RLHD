@@ -352,6 +352,17 @@
     ]
   },
   {
+    "name": "DARKMEYER_BRICK_PATH_DIRTY",
+    "materials": [
+      "DARKMEYER_BRICK_PATH",
+      "DIRT_1",
+      "DARKMEYER_BRICK_PATH",
+      "DIRT_2",
+      "DARKMEYER_BRICK_PATH",
+      "DARKMEYER_BRICK_PATH"
+    ]
+  },
+  {
     "name": "DARKMEYER_BRICK_PATH_BLEND",
     "materials": [
       "DARKMEYER_BRICK_PATH_BLEND"
@@ -575,7 +586,7 @@
     "name": "PACKED_EARTH",
     "materials": [
       "DIRT_1",
-      "GRAVEL",
+      "GRAVEL_LIGHT",
       "DIRT_1",
       "DIRT_1",
       "DIRT_2"
@@ -688,6 +699,13 @@
     "name": "SMOOTH_STONE",
     "materials": [
       "SMOOTH_STONE"
+    ]
+  },
+  {
+    "name": "DIRTY_SMOOTH_STONE",
+    "materials": [
+      "SMOOTH_STONE",
+      "DIRT_1"
     ]
   }
 ]

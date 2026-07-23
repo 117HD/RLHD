@@ -3016,6 +3016,53 @@
     ]
   },
   {
+    "description": "Short grass which shouldn't cast shadows - Vampyrium - Short",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "BOX",
+    "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "shiftSaturation": 1,
+    "shiftLightness": 5,
+    "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
+    "objectIds": [
+      "GRASS_VAMPYRIUM01_CORNER01",
+      "GRASS_VAMPYRIUM01_CENTRE01",
+      "GRASS_VAMPYRIUM01_EDGE01",
+      "GRASS_VAMPYRIUM01_SHORT03",
+      "GRASS_VAMPYRIUM01_SHORT02",
+      "GRASS_VAMPYRIUM01_SHORT01",
+      "GRASS_VAMPYRIUM01_SHORT05",
+      "GRASS_VAMPYRIUM01_SHORT06",
+      "GRASS_VAMPYRIUM01_SHORT04",
+      "GRASS_VAMPYRIUM01_DEFAULT01",
+      "GRASS_VAMPYRIUM01_DEFAULT02",
+      "GRASS_VAMPYRIUM01_DEFAULT03",
+      "GRASS_VAMPYRIUM01_DEFAULT04"
+    ]
+  },
+  {
+    "description": "Short grass which shouldn't cast shadows - Vampyrium - Tall",
+    "baseMaterial": "GRASS_BLADE",
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "shiftSaturation": 1,
+    "shiftLightness": 5,
+    "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
+    "objectIds": [
+      "GRASS_VAMPYRIUM01_TALL01",
+      "GRASS_VAMPYRIUM01_TALL02",
+      "GRASS_VAMPYRIUM01_TALL03",
+      "GRASS_VAMPYRIUM01_TALL02",
+      "GRASS_VAMPYRIUM01_TALL04",
+      "GRASS_VAMPYRIUM01_TALL05",
+      "GRASS_VAMPYRIUM01_TALL06"
+    ]
+  },
+  {
     "description": "Fremmenik Isles, Lighten Grass",
     "areas": [ "FREMENNIK_ISLES" ],
     "baseMaterial": "GRAY_90",
@@ -8281,6 +8328,16 @@
   {
     "description": "ROCK_CAVE_ENTRANCES",
     "baseMaterial": "ROCK_2",
+    "shiftLightness": 3,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
     "objectIds": [
       "FOSSIL_WYVERN_CAVE_ENTRANCE",
       "TZHAAR_KARAMJADUNGEON_WALL_ENTRANCE",
@@ -8288,10 +8345,10 @@
       "TOG_CAVE_DOWN",
       "WILD_CAVE_ENTRANCE_MID",
       "WILDERNESS_GWD_ENTRANCE",
-      "TROLL_STRONGHOLD_DOOR"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5
+      "TROLL_STRONGHOLD_DOOR",
+      "SOTFA_CAVE_ENTRANCE_OP",
+      "SOTFA_CAVE_ENTRANCE_ESCAPE"
+    ]
   },
   {
     "description": "SMOKEDEVIL_CAVE_ENTRANCE",
@@ -8692,6 +8749,25 @@
     ],
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX"
+  },
+  {
+    "description": "Dirt Cave Wall - Ivandis Tomb Exit",
+    "baseMaterial": "GRUNGE_1",
+    "shiftLightness": -1,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_IVANDIS_TOMB_TUNNEL_BLOCKED_INVESTIGATE",
+      "MYQ6_IVANDIS_TOMB_TUNNEL_BLOCKED_MINE",
+      "MYQ6_IVANDIS_TOMB_TUNNEL_UNBLOCKED",
+      "BURGH_IVANDIS_TOMB_EXIT"
+    ]
   },
   {
     "description": "Obors lair exit",
@@ -9318,7 +9394,6 @@
       "ROUTE_CAVEWALLTUNNEL",
       "MDAUGHTER_CAVEEXIT",
       "DWARF_CAVEWALL_TUNNEL",
-      "BURGH_IVANDIS_TOMB_ENTRANCE",
       "HELLHOUND_CAVE_ENTRANCE_A_01",
       "HELLHOUND_CAVE_ENTRANCE_B_02",
       "HELLHOUND_CAVE_ENTRANCE_C_03",
@@ -9330,7 +9405,17 @@
     "uvScale": 0.5
   },
   {
-    "description": "Grunge Caves",
+    "description": "Grunge Caves - Lighten",
+    "baseMaterial": "GRUNGE_1",
+    "uvOrientation": 512,
+    "shiftLightness": 2,
+    "objectIds": [
+      "BURGH_IVANDIS_TOMB_ENTRANCE"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Grunge Caves - Entrance/Exit",
     "baseMaterial": "GRUNGE_1",
     "terrainVertexSnap": true,
     "objectIds": [
@@ -12148,7 +12233,8 @@
       "SUNBLEAK_CAVE_ROCKS_2",
       "SUNBLEAK_CAVE_ROCKS_2X2_1",
       "SUNBLEAK_CAVE_ROCKS_2X2_2",
-      "SUNBLEAK_CAVE_ROCKS_2X2_3"
+      "SUNBLEAK_CAVE_ROCKS_2X2_3",
+      "ROUTE_STALAGMITE_SMALL"
     ],
     "uvType": "BOX",
     "uvOrientation": 256
@@ -13860,7 +13946,11 @@
   },
   {
     "description": "Anvil",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "flatNormals": true,
+    "shiftLightness": 8,
     "objectIds": [
       "DORICS_ANVIL",
       "ANVIL",
@@ -13870,11 +13960,9 @@
       "LOVAKENGJ_ANVIL",
       "DARKM_ANVIL",
       "DS2_GUILD_BLACKSMITH_ANVIL",
-      "DORGESH_BLACKSMITH_ANVIL"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "flatNormals": true
+      "DORGESH_BLACKSMITH_ANVIL",
+      "SANGVESTI_ANVIL"
+    ]
   },
   {
     "description": "Anvil 2",
@@ -15653,16 +15741,21 @@
   {
     "description": "Ground Decoration - Dirt Clump - Tiny - Uncolored",
     "baseMaterial": "DIRT_2",
+    "uvType": "WORLD_XZ",
+    "uvScale": 0.65,
+    "castShadows": false,
     "objectIds": [
       "VIKING_DUGUPSOIL_BROWN_2",
       "FAVOUR_DUGUPSOIL_2",
       "EYEGLO_DUGUPSOIL_2",
       "DUGUPSOIL2_BROWNMUD",
-      "PEST_OUTPOST_SOIL_2"
-    ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 0.65,
-    "castShadows": false
+      "PEST_OUTPOST_SOIL_2",
+      "VAMPYRIUM01_MAGGOT01_DUGUPSOIL01",
+      "VAMPYRIUM01_MAGGOT01_DUGUPSOIL02",
+      "VAMPYRIUM01_DUGUPSOIL02",
+      "VAMPYRIUM01_SANGVESTI01_DUGUPSOIL02",
+      "VAMPYRIUM01_DUGUPSOIL05"
+    ]
   },
   {
     "description": "Ground Decoration - Dirt Clump - Tiny - Colored",
@@ -15683,6 +15776,8 @@
   {
     "description": "Ground Decoration - Dirt Clump - Small - Uncolored",
     "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.65,
     "objectIds": [
       "DUGUPSOIL3_UPASS",
       "DUGUPSOIL3_LIGHT",
@@ -15712,10 +15807,14 @@
       "QUETZACALLI_DUGUPSOIL02",
       "QUETZACALLI_DUGUPSOIL03",
       "PEST_OUTPOST_SOIL_1",
-      "PEST_OUTPOST_SOIL_3"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.65
+      "PEST_OUTPOST_SOIL_3",
+      "VAMPYRIUM01_DUGUPSOIL01",
+      "VAMPYRIUM01_DUGUPSOIL03",
+      "VAMPYRIUM01_SANGVESTI01_DUGUPSOIL01",
+      "VAMPYRIUM01_SANGVESTI01_DUGUPSOIL03",
+      "VAMPYRIUM01_DUGUPSOIL06",
+      "VAMPYRIUM01_DUGUPSOIL04"
+    ]
   },
   {
     "description": "Ground Decoration - Dirt Clump - Small - Colored",
@@ -15790,7 +15889,8 @@
       "LAGUNA_DUGUPSOIL03_SAND01",
       "CLIMBINGCAVEROCKS1",
       "GREAT_CONCH_CLIFF_SHORTCUT_SOUTHEAST_BOTTOM",
-      "GREAT_CONCH_CLIFF_SHORTCUT_SOUTHEAST_TOP"
+      "GREAT_CONCH_CLIFF_SHORTCUT_SOUTHEAST_TOP",
+      "VOROS_ROCKSLIDE03"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -15960,11 +16060,6 @@
       "WILD6_DUGUPSOIL_1",
       "WILD6_DUGUPSOIL_3",
       "DUGUPSOIL1_MACROMAZE",
-      "AREA_SANGUINE_MINE_DUGUPSOIL_01",
-      "AREA_SANGUINE_MINE_DUGUPSOIL_02",
-      "AREA_SANGUINE_MINE_DUGUPSOIL_05",
-      "AREA_SANGUINE_MINE_DUGUPSOIL_06",
-      "AREA_SANGUINE_MINE_DUGUPSOIL_07",
       "CONTACT_DUGUPSOIL_1",
       "CONTACT_DUGUPSOIL_3",
       "BIM_RUINS_DUGUPSOIL2"
@@ -16034,7 +16129,15 @@
       "CIVITAS_DUGUPSOIL04",
       "CIVITAS_DUGUPSOIL06",
       "ALDARIN_DUGUPSOIL04",
-      "ALDARIN_DUGUPSOIL06"
+      "ALDARIN_DUGUPSOIL06",
+      "VAMPYRIUM01_MAGGOT01_DUGUPSOIL03",
+      "AREA_SANGUINE_MINE_DUGUPSOIL_01",
+      "AREA_SANGUINE_MINE_DUGUPSOIL_02",
+      "AREA_SANGUINE_MINE_DUGUPSOIL_03",
+      "AREA_SANGUINE_MINE_DUGUPSOIL_04",
+      "AREA_SANGUINE_MINE_DUGUPSOIL_05",
+      "AREA_SANGUINE_MINE_DUGUPSOIL_06",
+      "AREA_SANGUINE_MINE_DUGUPSOIL_07"
     ],
     "uvType": "BOX",
     "uvScale": 0.45
@@ -16609,9 +16712,10 @@
   },
   {
     "description": "Objects - Wooden - Barrel with Metal Band",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientation": 100,
     "uvType": "BOX",
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": [ "h == 5 && s < 2", "h == 42" ],
@@ -16621,6 +16725,7 @@
     "objectIds": [
       "AGGIE_COURTYARD_BARREL",
       "BURGH_BARREL",
+      "BURGH_BARREL_TAP",
       "CANAFIS_BARREL_TAP",
       "KR_BARREL",
       "LUNAR_PIRATE_BARREL_CLOSED",
@@ -16992,6 +17097,7 @@
   {
     "description": "Objects - Stone - Stalagmite",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
     "objectIds": [
       "HORROR_STALAGMITE_TWIN_GREY",
       "HORROR_STALAGMITE_SMALL_GREY",
@@ -16999,8 +17105,6 @@
       "FENK_STAGAMITE_SMALL",
       "LOTR_MINE_STALAGTITE_01",
       "LOTR_MINE_STALAGTITE_02",
-      "AREA_SANGUINE_MINE_STALAGTITE_01",
-      "AREA_SANGUINE_MINE_STALAGTITE_02",
       "STALAGMITE_ROCK01_DEFAULT01",
       "STALAGMITE_ROCK01_DEFAULT02",
       "STALAGMITE_ROCK01_TOP01",
@@ -17013,7 +17117,20 @@
       "STALAGMITE_ROCK01_DEFAULT02_DARK02",
       "EYEGLO_MINE_STALAGTITE_01",
       "EYEGLO_MINE_STALAGTITE_02",
-      "EYEGLO_MINE_STALAGTITE_FALLOFF"
+      "EYEGLO_MINE_STALAGTITE_FALLOFF",
+      "CAVEKIT_SOTFA_STALAGMITES01",
+      "CAVEKIT_SOTFA_STALAGMITES_TWIN",
+      "CAVEKIT_SOTFA_STALAGMITES_LARGE",
+      "CAVEKIT_SOTFA_STALAGMITES_LARGE_BIG"
+    ]
+  },
+  {
+    "description": "Objects - Stone - Stalagmite - Darken",
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": -5,
+    "objectIds": [
+      "AREA_SANGUINE_MINE_STALAGTITE_01",
+      "AREA_SANGUINE_MINE_STALAGTITE_02"
     ],
     "uvType": "BOX"
   },
@@ -17157,7 +17274,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Mort'ton Shade Catacombs - Meiyerditch Labs - Walls - Stone",
+    "description": "Mort'ton Shade Catacombs - Meiyerditch Labs - Walls - Stone - Needs proper UV",
     "baseMaterial": "STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -17560,10 +17677,15 @@
       "AHOY_OLDFENCING_4",
       "AHOY_OLDFENCING_4_MIRROR",
       "AHOY_OLDFENCING_5",
-      "AHOY_OLDFENCING_6"
+      "AHOY_OLDFENCING_6",
+      "MYQ3_OLDFENCING_CLIMB",
+      "MYQ6_BROKEN_FENCE_VIS",
+      "MYQ6_BROKEN_FENCE_VIS_M",
+      "MYQ6_BROKEN_FENCE_VIS_OP",
+      "MYQ6_BROKEN_FENCE_VIS_OP_M"
     ],
     "uvType": "BOX",
-    "uvScale": 0.78
+    "uvScale": 0.6
   },
   {
     "description": "Morytania - Walls - Triple Slat Fence Gate",
@@ -17709,11 +17831,11 @@
     "uvScale": 0.56
   },
   {
-    "description": "Morytania - Wall  - Stone - Stone Brick Wall - Burgh De Rott",
+    "description": "Morytania - Wall - Stone - Stone Brick Wall - Burgh De Rott",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.44,
+    "uvOrientation": 256,
+    "uvScale": 0.66,
     "objectIds": [
       "BURGH_INN_CLIMB_OVER",
       "BURGH_STONE",
@@ -17733,6 +17855,28 @@
       "BURGH_STONE_CRUMBLY_HALF_LEFT_LEV2",
       "BURGH_STONE_LEV2",
       "BURGH_STONE_WALL_BROKEN"
+    ]
+  },
+  {
+    "description": "Morytania - Burgh De Rott - Blood Moon Rises Trapdoor",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.66,
+    "objectIds": [
+      "MYQ6_OLD_LAB_ENTRY_VIS_NOOP",
+      "MYQ6_OLD_LAB_ENTRY_VIS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvOrientation": 404,
+        "uvScale": 0.4,
+        "shiftLightness": 6
+      }
     ]
   },
   {
@@ -17782,10 +17926,11 @@
       {
         "description": "Metal",
         "colors": "h == 21 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT",
+        "baseMaterial": "METALLIC_1",
         "uvType": "BOX",
         "uvOrientation": 404,
-        "uvScale": 0.8
+        "uvScale": 0.4,
+        "shiftLightness": 6
       }
     ],
     "objectIds": [
@@ -18012,7 +18157,8 @@
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_EDITABLE",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_REGULAR",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_MAHOGANY",
-      "AIDE_TABLE_SMALL"
+      "AIDE_TABLE_SMALL",
+      "MYQ6_VANESCULA_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -26116,10 +26262,10 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 5",
+        "colors": "h == 0 || h == 5",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
-        "uvScale": 0.6,
+        "uvScale": 0.3,
         "uvOrientation": 89
       }
     ]
@@ -27418,7 +27564,127 @@
       "AREA_SANGUINE_MINE_WALL_END_02",
       "AREA_SANGUINE_MINE_WALL_END_NO_MAP",
       "AREA_SANGUINE_MINE_WALL_FOR_MINING",
-      "AREA_SANGUINE_MINE_WALL_TOP"
+      "AREA_SANGUINE_MINE_WALL_TOP",
+      "DAEYALT_MINE_CAVETOP_EDGE_STRAIGHT",
+      "DAEYALT_MINE_CAVETOP_EDGE_INSIDE_CORNER",
+      "DAEYALT_MINE_CAVETOP_EDGE_OUTSIDE_CORNER"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Rock - Mine Walls with hole",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Edges/hole",
+        "colors": "h == 0",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_IVANDIS_TOMB_TUNNEL_OUT"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Rock - Mine Walls with wooden supports",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Supports",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "DAEYALT_MINE_WALL_SUPPORT_RIGHT",
+      "DAEYALT_MINE_WALL_SUPPORT_MID",
+      "DAEYALT_MINE_WALL_SUPPORT_LEFT"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Rock - Mine Walls with lamps",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Lamp frame",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 189
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_LIGHT"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_MINE_CART_TUNNEL"
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Ground walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.85,
+    "objectIds": [
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_1",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_2",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_3",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_4",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_5",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_6",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_7",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_8",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_9",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_10",
+      "AREA_SANGUINE_MINE_CLIFF_EDGE_11"
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Rock with pickaxe and shovel in it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "ROCK_5",
+        "uvType": "BOX",
+        "uvOrientation": 240,
+        "uvScale": 1.1
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ],
+    "objectIds": [
+      "DAEYALT_STONE_PICKAXE_AND_SPADE"
     ]
   },
   {
@@ -27530,7 +27796,8 @@
       "AREA_SANGUINE_MINECART_EMPTY",
       "AREA_SANGUINE_MINECART_LOAD1",
       "AREA_SANGUINE_MINECART_LOAD2",
-      "AREA_SANGUINE_MINECART_LOAD3"
+      "AREA_SANGUINE_MINECART_LOAD3",
+      "DAEYALT_MINE_CART_NOOP"
     ],
     "colorOverrides": [
       {
@@ -28649,17 +28916,20 @@
       },
       {
         "colors": "s == 2",
-        "baseMaterial": "CARPET_LIGHT",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "MODEL_XZ",
-        "uvScale": 0.5
+        "uvScale": 0.5,
+        "shiftLightness": 4,
+        "uvOrientation": 512
       }
     ]
   },
   {
     "description": "Darkmeyer Range",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
     "uvScale": 0.2,
+    "shiftLightness": 6,
     "objectIds": [
       "DARKM_RICH_RANGE",
       "DARKM_MIDDLE_RANGE",
@@ -31941,13 +32211,18 @@
     "description": "Hide fake brick tiles to replace them with tile overrides",
     "objectIds": [
       "TILEKIT_BRICK01_DEFAULT01",
-      "TILEKIT_BRICK01_DEFAULT02"
+      "TILEKIT_BRICK01_DEFAULT02",
+      "TILEKIT_DRAKAN_BRICK01_DEFAULT01",
+      "TILEKIT_DRAKAN_BRICK01_DEFAULT02",
+      "TILEKIT_DRAKAN_BRICK01_DEFAULT03"
     ],
     "baseMaterial": "LASSAR_UNDERCITY_TILES",
     "hideInAreas": [
       "LASSAR_UNDERCITY",
       "VARLAMORE_TEMPLE_CRYPT",
-      "CAM_TORUM"
+      "CAM_TORUM",
+      "CASTLE_DRAKAN_INTERIOR",
+      "CASTLE_DRAKAN_INTERIOR_VAMPYRIUM"
     ]
   },
   {
@@ -35361,7 +35636,10 @@
       "LARGEBONE_BURNT",
       "ANIMALSKULL_BURNT",
       "CARCASS_BURNT",
-      "SW_BONES_LARGE_RIBCAGE"
+      "SW_BONES_LARGE_RIBCAGE",
+      "GHORROCK_BONES03",
+      "ARAXXOR_BONES01",
+      "ARAXXOR_BONES02"
     ]
   },
   {
@@ -46082,7 +46360,12 @@
       "BOOKCASE",
       "SPOOKYBOOKSHELVES",
       "HORROR_BOOKCASE",
-      "TWOCATS_BOOKCASE"
+      "TWOCATS_BOOKCASE",
+      "MYQ6_BOOKCASE_PATERDOMUS_1",
+      "MYQ6_BOOKCASE_PATERDOMUS_2",
+      "MYQ6_BOOKCASE_PATERDOMUS_3",
+      "MYQ6_BOOKCASE_PATERDOMUS_4",
+      "MYQ6_BOOKCASE_PATERDOMUS_5"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -55119,9 +55402,10 @@
   },
   {
     "description": "Ground decoration blood",
-    "baseMaterial": "GRUNGE_3_SHINY",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
     "uvScale": 0.5,
     "uvType": "MODEL_XZ",
+    "shiftLightness": 3,
     "objectIds": [
       "BLOODSPLATTER3",
       "DEATH_TROLLBLOODSPLAT1",
@@ -55136,7 +55420,10 @@
       "ARENA_BLOODSPLAT01_LARGE01",
       "ARENA_BLOODSPLAT01_LARGE02",
       "ARENA_BLOODSPLAT01_SMALL01",
-      "ARENA_BLOODSPLAT01_SMALL02"
+      "ARENA_BLOODSPLAT01_SMALL02",
+      "BLOODSPLATTER1_LIGHT",
+      "BLOODSPLATTER2_LIGHT",
+      "BLOODSPLATTER3_LIGHT"
     ]
   },
   {
@@ -57875,14 +58162,24 @@
     ]
   },
   {
-    "description": "Paterdomus Temple basement wall tops",
+    "description": "Paterdomus Temple basement wall tops lvl1",
     "baseMaterial": "DIRT_1",
     "uvType": "MODEL_XZ",
     "uvScale": 1.15,
     "uvOrientation": 42,
     "objectIds": [
-      "UNDERGROUND_WALL_TOPLVL2",
       "UNDERGROUND_WALL_TOPLVL1"
+    ]
+  },
+  {
+    "description": "Paterdomus Temple basement wall tops lvl2, Bias slightly to avoid flickering",
+    "baseMaterial": "DIRT_1",
+    "uvType": "MODEL_XZ",
+    "uvScale": 1.15,
+    "depthBias": 1,
+    "uvOrientation": 42,
+    "objectIds": [
+      "UNDERGROUND_WALL_TOPLVL2"
     ]
   },
   {
@@ -60371,14 +60668,21 @@
   },
   {
     "description": "Morytania ground webs",
-    "baseMaterial": "GROUND_WEB_2_LIGHT",
+    "baseMaterial": "GROUND_WEB_2",
+    "shiftLightness": 15,
     "objectIds": [
       "CAVEKIT_WEB01_FLOOR01",
       "CAVEKIT_WEB01_FLOOR02",
       "CAVEKIT_WEB01_FLOOR03",
       "CAVEKIT_WEB01_FLOOR04",
       "CAVEKIT_WEB01_FLOOR05",
-      "CAVEKIT_WEB01_FLOOR06"
+      "CAVEKIT_WEB01_FLOOR06",
+      "SOTFA_WEB01_FLOOR01",
+      "SOTFA_WEB01_FLOOR02",
+      "SOTFA_WEB01_FLOOR03",
+      "SOTFA_WEB01_FLOOR04",
+      "SOTFA_WEB01_FLOOR05",
+      "SOTFA_WEB01_FLOOR06"
     ]
   },
   {
@@ -60810,12 +61114,35 @@
       "TOB_DUNGEON_VERZIK_THRONE_RIGHT_SIDE_BACK",
       "TOB_DUNGEON_VERZIK_THRONE_LEFT_SIDE_BACK",
       "TOB_DUNGEON_VERZIK_THRONE_WALL_CORNER",
-      "TOB_DUNGEON_VERZIK_ENTRANCE_DOOR",
       "TOB_DUNGEON_VERZIK_THRONE_SIDE_BLOCKER",
       "TOB_DUNGEON_VERZIK_THRONE_SIDE_BLOCKER_END_RIGHT",
       "TOB_DUNGEON_VERZIK_THRONE_SIDE_BLOCKER_END_LEFT"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Verzik Wall with Door",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "objectIds": [
+      "TOB_DUNGEON_VERZIK_ENTRANCE_DOOR",
+      "MYQ6_THEATRE_DOOR_CLOSED",
+      "MYQ6_THEATRE_DOOR_OPEN",
+      "MYQ6_THEATRE_DOOR_ESCAPE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 42 || h == 7",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 3
+      }
+    ]
   },
   {
     "description": "Theatre of Blood - Stone - Pillar - GAMEVAL MISSING",
@@ -63622,12 +63949,13 @@
     "uvScale": 0.6,
     "uvOrientationY": 512,
     "objectIds": [
-      "DRESSER"
+      "DRESSER",
+      "DRAKAN01_VANITY_DEFAULT01"
     ],
     "colorOverrides": [
       {
         "description": "GLASS",
-        "colors": "h == 35 && s == 0",
+        "colors": "h == 35 && s == 0 || h == 55 && l == 83",
         "baseMaterial": "BLANK_GLOSS",
         "uvType": "BOX"
       }
@@ -64860,7 +65188,7 @@
     ]
   },
   {
-    "description": "Varrock library - Arceuus - book and papers on floor",
+    "description": "Various -  book and papers on floor",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -64870,7 +65198,11 @@
       "FAI_VARROCK_PAGES2",
       "FAI_VARROCK_LIBRARY_PAGES2",
       "ARCHEEUS_HOUSE_BOOKS",
-      "ARCHEEUS_HOUSE_BOOKS_02"
+      "ARCHEEUS_HOUSE_BOOKS_02",
+      "DRAKAN_PAGES1",
+      "DRAKAN_PAGES2",
+      "BURGH_PAGES1",
+      "BURGH_PAGES2"
     ]
   },
   {
@@ -68705,7 +69037,8 @@
     "uvScale": 0.4,
     "objectIds": [
       "ALDARIN_MIRROR_DEFAULT01",
-      "FAI_VARROCK_POSH_MIRROR"
+      "FAI_VARROCK_POSH_MIRROR",
+      "DRAKAN01_MIRROR_DEFAULT01"
     ],
     "colorOverrides": [
       {
@@ -69782,7 +70115,19 @@
     "baseMaterial": "BLANK_GLOSS",
     "uvType": "MODEL_YZ",
     "objectIds": [
-      "TEMPLE_WINDOW"
+      "TEMPLE_WINDOW",
+      "MYQ6_WINDOW_ERYSAIL_ACTIVE",
+      "MYQ6_WINDOW_ERYSAIL_INACTIVE",
+      "MYQ6_WINDOW_FRIAR_ACTIVE",
+      "MYQ6_WINDOW_FRIAR_INACTIVE",
+      "MYQ6_WINDOW_DERYGULL_ACTIVE",
+      "MYQ6_WINDOW_DERYGULL_INACTIVE",
+      "MYQ6_WINDOW_IRIANDUL_ACTIVE",
+      "MYQ6_WINDOW_IRIANDUL_INACTIVE",
+      "MYQ6_WINDOW_SARL_ACTIVE",
+      "MYQ6_WINDOW_SARL_INACTIVE",
+      "MYQ6_WINDOW_ESSIANDAR_ACTIVE",
+      "MYQ6_WINDOW_ESSIANDAR_INACTIVE"
     ],
     "colorOverrides": [
       {
@@ -92975,6 +93320,5993 @@
       "EARTHWAVE_TRAVEL",
       "EARTHBLAST_TRAVEL",
       "EARTHBOLT_TRAVEL"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Myreque Hideout - Shrine of the fallen",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Candle",
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Candle Flame",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "GRAY_150",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 168
+      },
+      {
+        "colors": [ "h == 5 && s > 1", "h == 4 && s == 6" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 128
+      },
+      {
+        "colors": "h == 4 && s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 400,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
+      "MYQ6_HIDEOUT_SHRINE_VIS"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Glass - Table with glasses",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Glasses",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3",
+        "depthBias": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_VELIAF_DRINK_TABLE_GLASSES"
+    ]
+  },
+  {
+    "description": "Slepe - Metallic - Church bell tower",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Bell",
+        "colors": [ "h == 15", "h == 16" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      },
+      {
+        "description": "Bricks",
+        "colors": "h == 21",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 768
+      },
+      {
+        "description": "Rope",
+        "colors": [ "h == 10" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SLP_CHURCH_BELLTOWER"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Coat rack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.41111,
+    "objectIds": [
+      "SLP_CHURCH_COAT_RACK"
+    ]
+  },
+  {
+    "description": "Slepe - Vampyre corpse",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": [ "h == 0 && s == 7" ],
+        "baseMaterial": "GRUNGE_3_SHINY"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_CORPSE_VAMPYRE_JUVENILE01",
+      "MYQ6_CORPSE_VAMPYRE_JUVINATE02",
+      "MYQ6_CORPSE_VAMPYRE_JUVINATE03",
+      "MYQ6_CORPSE_VAMPYRE_JUVINATE04",
+      "MYQ6_CORPSE_VAMPYRE_JUVINATE05",
+      "MYQ6_CORPSE_VAMPYRE_VYREWATCH01",
+      "MYQ6_CORPSE_VAMPYRE_VYREWATCH02",
+      "MYQ6_CORPSE_VAMPYRE_VYREWATCH03",
+      "MYQ6_CORPSE_VAMPYRE_VYREWATCH04",
+      "MYQ6_CORPSE_VAMPYRE_VYREWATCH05"
+    ]
+  },
+  {
+    "description": "Paterdomus - Bloodmoon Rises Plinths",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Plinth",
+        "colors": [ "h == 42" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Plack",
+        "colors": [ "h == 8 && s == 7" ],
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_PLINTH_EMPTY",
+      "MYQ6_PLINTH_BOOK_FRIAR",
+      "MYQ6_PLINTH_BOOK_ERYSAIL",
+      "MYQ6_PLINTH_BOOK_DERYGULL",
+      "MYQ6_PLINTH_BOOK_IRIANDUL",
+      "MYQ6_PLINTH_BOOK_SARL",
+      "MYQ6_PLINTH_BOOK_ESSIANDAR"
+    ]
+  },
+  {
+    "description": "Ivandis Coffin",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.41111,
+    "objectIds": [
+      "BURGH_ANCIENT_COFFIN"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Cages",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 192,
+    "objectIds": [
+      "HAVEN_TOWER_BASEMENT_CAGE_TALL",
+      "HAVEN_TOWER_BASEMENT_CAGE_SMALL"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Restraints",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 96,
+    "objectIds": [
+      "HAVEN_TOWER_BASEMENT_TABLE_RESTRAINT"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Pipes",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "PIPES_DRAKAN01_LAB01",
+      "PIPES_DRAKAN02_LAB01",
+      "PIPES_DRAKAN03_LAB0",
+      "PIPES_DRAKAN03_LAB0_OFFSET",
+      "PIPES_DRAKAN01_WALLPIPES01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Booth",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "BOOTH_DRAKAN01_LAB01",
+      "BOOTH_DRAKAN01_LAB01_2X2_OFFSET",
+      "BOOTH_DRAKAN01_LAB01_SHATTERED01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Walls with wooden supports - Needs proper UV",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Supports",
+        "colors": [ "s == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Hole",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "PURE_BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_WALL_CAVE_SUPPORT_MID",
+      "MYQ6_WALL_CAVE_SUPPORT_RIGHT",
+      "MYQ6_WALL_CAVE_SUPPORT_LEFT",
+      "MYQ6_VAMPYRIFICATION_LAB_CASTLE_EXIT_NOOP",
+      "MYQ6_VAMPYRIFICATION_LAB_CASTLE_EXIT_OP",
+      "MYQ6_VAMPYRIFICATION_LAB_EXIT",
+      "MYQ6_OLD_LAB_EXIT"
+    ]
+  },
+  {
+    "description": "Vampyre Lab Walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ6_WALL_CAVE",
+      "MYQ6_WALL_JOIN_R",
+      "MYQ6_WALL_JOIN_L"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Bowls of Blood",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Bowl",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "BOWL_DRAKAN01_BLOOD01",
+      "BOWL_DRAKAN01_BLOOD02",
+      "BOWL_DRAKAN01_BLOOD03"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Metal pan of Blood",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Bowl",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "BOWL_DRAKAN01_TORTURE01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Distiller and barrel",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Stand",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Barrel",
+        "colors": [ "h == 0 && s > 0" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Cork",
+        "colors": [ "h == 7" ],
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.23
+      }
+    ],
+    "objectIds": [
+      "VIALS_DRAKAN01_DISTILATION01",
+      "VIALS_DRAKAN01_DISTILATION04"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Distiller blue",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Stand",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "VIALS_DRAKAN01_DISTILATION02"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Giant vial with multi colored liquids and candles",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Stand",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Candle",
+        "colors": [ "h == 0 && s == 5" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "VIALS_DRAKAN01_TUBE01_RESIZED01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - barrel with metal bands",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Bands",
+        "colors": [ "h == 42" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "LASSAR_LAB_BARREL01"
+    ]
+  },
+  {
+    "description": "Sangvesti - Crate with spikes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 5,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "CRATE_SANGVESTI01_DEFAULT01",
+      "CRATE_SANGVESTI01_STACKED01",
+      "CASTLE_DRAKAN_SEARCHABLE_CRATE",
+      "CASTLE_DRAKAN_TINDERBOX_CRATE",
+      "CRATE_SANGVESTI01_EMPTY01_SMALL01"
+    ]
+  },
+  {
+    "description": "Sangvesti - Crate with Sickles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Sickles",
+        "colors": [ "s == 0 && l > 3" ],
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 8
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_SICKLE_CRATE"
+    ]
+  },
+  {
+    "description": "Sangvesti - Crate with Blisterwood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Blisterwood",
+        "colors": [ "s == 0 && l > 3" ],
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "undoVanillaShading": false,
+        "uvScale": 0.5,
+        "shiftLightness": 25
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_BLISTERWOOD_CRATE"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Shelves with vials",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Shelves",
+        "colors": [ "h == 0 && s > 0" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "CABINET_DRAKAN01_LAB01",
+      "CASTLE_DRAKAN_LAB_SHELVES"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Stone table with equipment",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Stand",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Table",
+        "colors": [ "h == 0 && s == 2" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 172
+      }
+    ],
+    "objectIds": [
+      "TABLE_DRAKAN01_LAB01",
+      "TABLE_DRAKAN01_LAB01_2X2",
+      "CASTLE_DRAKAN_LAB_REFINER",
+      "CASTLE_DRAKAN_LAB_ANALYSER"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Stone table with equipment",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": [ "h == 3" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Stand",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Table",
+        "colors": [ "h == 0 && s == 2" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 172
+      }
+    ],
+    "objectIds": [
+      "TABLE_DRAKAN01_MORTUARY01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Metal table with equipment",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Tool handles",
+        "colors": [ "h == 5", "h == 7" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "TABLE_DRAKAN01_TOOLS01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Bookstand with Book",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "BOOK_DRAKAN01_BOOKSTAND01"
+    ]
+  },
+  {
+    "description": "Vampyre Blood Candles",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "CANDLES_DRAKAN01_CORNER01",
+      "CANDLES_DRAKAN01_SIDE01",
+      "CANDLES_DRAKAN01_MANY01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Strange Device with Blood Candles",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Device",
+        "colors": [ "h == 0 && s == 0", "h == 7" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      },
+      {
+        "description": "Blood",
+        "colors": [ "h == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT"
+      },
+      {
+        "description": "Skulls",
+        "colors": [ "h == 5" ],
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -186
+      }
+    ],
+    "objectIds": [
+      "ALTAR_DRAKAN01_LAB01"
+    ]
+  },
+  {
+    "description": "Vampyre Lab - Blood Candles",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.8,
+    "uvOrientation": 303,
+    "objectIds": [
+      "GLYPH_DRAKAN01_LAB01_FLOOR"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement Walls - Stone - Wooden",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Supports",
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Blood",
+        "colors": [ "h == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_SERVANT01_A_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_B_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_C_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_D_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_A_TYPE8A_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_A_TYPE8B_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT01_A_TYPE8C_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_A_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_B_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_C_DARKMEYER",
+      "WALLKIT_DRAKAN01_SERVANT_INTERNAL01_D_DARKMEYER",
+      "MYQ6_CASTLE_DRAKAN_EXIT_TO_LAB"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement top",
+    "baseMaterial": "BLACK",
+    "objectIds": [
+      "WALLKIT_DRAKAN01_WALLTOP01"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement - Wooden - Chest with gem",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Gem",
+        "colors": [ "h == 7" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "CHEST_SANGVESTI01_DEFAULT01_DARKMEYER",
+      "CHEST_SANGVESTI01_DEFAULT01_2X2_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden Racks with weapons",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Webs",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Metal",
+        "colors": [ "a == 255 && h == 0" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": -256,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "ARMOURY_DRAKAN01_RACK01_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK02_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK03_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK01_1X3_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK02_1X3_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK03_1X3_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK01_2X2_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK02_2X2_DARKMEYER",
+      "ARMOURY_DRAKAN01_RACK03_2X2_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Vampyrium - Wooden Racks with weapons",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Webs",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Metal",
+        "colors": [ "a == 255 && h == 0 && s == 0" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": -256,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "ARMOURY_DRAKAN01_RACK01_2X2",
+      "ARMOURY_DRAKAN01_RACK02_2X2",
+      "ARMOURY_DRAKAN01_RACK03_2X2",
+      "ARMOURY_DRAKAN01_RACK01_1X3",
+      "ARMOURY_DRAKAN01_RACK02_1X3",
+      "CASTLE_DRAKAN_ARMOURY_WEAPON_CASE"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement Wall shield - Wooden - Painted",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ARMOURY_WALL_DRAKAN01_SHIELD01_N",
+      "ARMOURY_WALL_DRAKAN01_SHIELD01_S",
+      "CASTLE_DRAKAN_LOWERNIEL_SHIELD"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement Wall spear - Wooden - Metallic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": -256,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "ARMOURY_WALL_DRAKAN01_SPEAR02_E",
+      "ARMOURY_WALL_DRAKAN01_SPEAR01_E"
+    ]
+  },
+  {
+    "description": "Vampyrium - Wooden - Metallic - Leaning weapons",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": -256,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": [ "h == 0 && s == 3" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.61111,
+        "uvOrientation": -64,
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "WEAPONS_SANGVESTI01_LEANING01",
+      "WEAPONS_SANGVESTI01_LEANING01_OFFSET_X",
+      "MYQ6_WEAPONS01_CAVE_LEANING01",
+      "MYQ6_WEAPONS01_CAVE_LEANING02"
+    ]
+  },
+  {
+    "description": "Drakan Lab torches - Animated - Dynamic",
+    "baseMaterial": "GRAY_80",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "TORCH_DAEYALT_LAB01",
+      "TORCH_DAEYALT_LAB01_NE",
+      "TORCH_DAEYALT_LAB01_NW",
+      "TORCH_DAEYALT_LAB01_E",
+      "TORCH_DAEYALT_LAB01_S",
+      "TORCH_DAEYALT_LAB01_SW"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement torches - Animated - Dynamic",
+    "baseMaterial": "GRAY_80",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "TORCH_DRAKAN01_DARKMEYER",
+      "TORCH_DRAKAN01_W_DARKMEYER",
+      "TORCH_DRAKAN01_E_DARKMEYER",
+      "TORCH_DRAKAN01_S_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement - Prison bars",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": -142,
+    "shiftLightness": 7,
+    "objectIds": [
+      "WALLKIT_DRAKAN01_PRISON01",
+      "WALLKIT_DRAKAN01_PRISON01_DOOR_L",
+      "WALLKIT_DRAKAN01_PRISON01_DOOR_L_OPEN",
+      "WALLKIT_DRAKAN01_PRISON01_END01",
+      "WALLKIT_DRAKAN01_PRISON01_END02"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement - Metallic bowl",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 313,
+    "shiftLightness": 7,
+    "objectIds": [
+      "AREA_SANGUINE_GHETTO_TRAY2"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement - Metal beds",
+    "baseMaterial": "GRAY_80",
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 142,
+        "shiftLightness": 7
+      },
+      {
+        "colors": "h < 8 && s > 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_BED01",
+      "MYQ6_BED01_OFFSET",
+      "MYQ6_BED02"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement - Sleeping bag",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "shiftLightness": 3,
+    "objectIds": [
+      "MYQ6_BED03_2X2"
+    ]
+  },
+  {
+    "description": "Castle Drakan Basement - Wooden - Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Bat wings",
+        "colors": [ "h == 7" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_NORTH",
+      "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_SOUTH",
+      "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_NORTH_TOP",
+      "MYQ6_CASTLE_DRAKAN_DUNGEON_STAIRS_SOUTH_TOP"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden - Stairs with carpet",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Carpet",
+        "colors": [ "s == 4", " s == 7" ],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Blackness",
+        "colors": [ "h == 0 && s == 0" ],
+        "baseMaterial": "GRAY_70"
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_STAIRS_UP_NOOP_DARKMEYER",
+      "CASTLE_DRAKAN_STAIRS_UP",
+      "CASTLE_DRAKAN_STAIRS_UP_NORUG",
+      "CASTLE_DRAKAN_STAIRS_DOWN_3X5",
+      "CASTLE_DRAKAN_STAIRS_DOWN"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden - Railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Bat wings",
+        "colors": [ "s == 4" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN04_DEFAULT01_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden - Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Wood panels",
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Grunge",
+        "colors": [ "h == 4" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_DEFAULT01_DARKMEYER",
+      "WALLKIT_DRAKAN01_DAMAGED01_DARKMEYER",
+      "WALLKIT_DRAKAN01_DAMAGED03_DARKMEYER",
+      "WALLKIT_DRAKAN01_DAMAGED03_M_DARKMEYER",
+      "WALLKIT_DRAKAN01_UPPER01_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden - Wall with windows",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Wood panels",
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Glass",
+        "colors": [ "h == 0 && s >= 6" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_WINDOW01_DARKMEYER",
+      "WALLKIT_DRAKAN01_WINDOW02_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden - Metallic - Wall with door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": [ "h == 0", "s >= 7" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": -187,
+        "shiftLightness": 7
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_MORY_DOOR_NOOP",
+      "CASTLE_DRAKAN_MORY_DOOR_M_NOOP",
+      "MYQ6_CASTLE_DRAKAN_DOORS_NOOP"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Pillars and statues with cobwebs",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Webs",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "PILLAR_DRAKAN02_DEFAULT01_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT07_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT03_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT01_M_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT05_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT01_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT07_M_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT06_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT05_M_DARKMEYER",
+      "STATUE_DRAKAN01_DEFAULT01_M",
+      "STATUE_DRAKAN01_DEFAULT05_M",
+      "STATUE_DRAKAN01_DEFAULT07_M",
+      "STATUE_DRAKAN01_DEFAULT05_2X2",
+      "STATUE_DRAKAN01_DEFAULT07_2X2",
+      "STATUE_DRAKAN01_DEFAULT04_2X2",
+      "STATUE_DRAKAN01_DEFAULT03_2X2",
+      "STATUE_DRAKAN01_DEFAULT01_2X2"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Candelabra",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "metal",
+        "colors": [ "s >= 2" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": -256,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "CANDELABRA_SANGVESTI01_DEFAULT01",
+      "CANDELABRA_SANGVESTI01_DEFAULT02",
+      "CASTLE_DRAKAN_LOWERNIEL_CANDLESTICK"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wall crest",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 404,
+    "shiftLightness": 7,
+    "objectIds": [
+      "CREST_DARKMEYER01_DEFAULT01_OFFSET01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Shrine - DYNAMIC - ANIMATED",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "shiftLightness": -4,
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -256
+      }
+    ],
+    "objectIds": [
+      "MYQ6_CASTLE_DRAKAN_SHRINE",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_OP",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_NOOP"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Blood portal - DYNAMIC - ANIMATED",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "shiftLightness": 2,
+    "objectIds": [
+      "MYQ6_VAMPYRIUM_PORTAL_VIS",
+      "MYQ6_VAMPYRIUM_RETURN_PORTAL",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_A",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_B",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_C",
+      "CASTLE_DRAKAN_TELEPORTER_ACTIVE_D",
+      "MYQ6_HIDEOUT_PORTAL"
+    ]
+  },
+  {
+    "description": "Castle Drakan Vampyrium - Wooden - Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Wood panels",
+        "colors": [ "s == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Grunge",
+        "colors": [ "h == 4" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_C_MIRROR",
+      "WALLKIT_DRAKAN01_NOBLE01",
+      "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_A_MIRROR",
+      "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_A",
+      "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_B",
+      "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_C",
+      "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_B_MIRROR",
+      "WALLKIT_DRAKAN01_NOBLE02",
+      "CASTLE_DRAKAN_WALL_CRACKED",
+      "CASTLE_DRAKAN_WALL_DESTROYED",
+      "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_B_NO_BLOCKRANGE",
+      "WALLKIT_DRAKAN01_NOBLE01_DAMAGED_C_MIRROR_NO_BLOCKRANGE",
+      "CASTLE_DRAKAN_LIBRARY_PASSAGE_OPEN",
+      "CASTLE_DRAKAN_LIBRARY_PASSAGE",
+      "CASTLE_DRAKAN_LIBRARY_PASSAGE_HIDDEN",
+      "CASTLE_DRAKAN_LIBRARY_PASSAGE_INACTIVE",
+      "CASTLE_DRAKAN_DRAYNOR_PASSAGE",
+      "WALLKIT_DRAKAN01_SERVANT01_NO_BLOCKRANGE"
+    ]
+  },
+  {
+    "description": "Castle Drakan Vampyrium - Wooden - Walls with windows",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Wood panels",
+        "colors": [ "s == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Grunge",
+        "colors": [ "h == 4" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_NOBLE01_WINDOW01",
+      "WALLKIT_DRAKAN01_NOBLE01_WINDOW01_MIRROR",
+      "WALLKIT_DRAKAN01_WINDOW02"
+    ]
+  },
+  {
+    "description": "Castle Drakan Vampyrium - cobwebs",
+    "baseMaterial": "GROUND_WEB_2",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "objectIds": [
+      "MYQ6_SPIDERWEB02",
+      "MYQ6_SPIDERWEB02_A",
+      "MYQ6_SPIDERWEB02_B",
+      "MYQ6_SPIDERWEB02_C",
+      "MYQ6_SPIDERWEB02_D"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden - Metallic - Wall with door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
+        "description": "Metal",
+        "colors": [ "h == 0 && s == 0", "s == 4" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": -187
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_DOOR",
+      "CASTLE_DRAKAN_DOOR_M",
+      "CASTLE_DRAKAN_DOOR_ALT",
+      "CASTLE_DRAKAN_DOOR_ALT_M",
+      "CASTLE_DRAKAN_ROOF_DOOR",
+      "CASTLE_DRAKAN_ROOF_DOOR_M",
+      "CASTLE_DRAKAN_DOOR_TO_OUTSIDE",
+      "CASTLE_DRAKAN_LOWERNIEL_LIBRARY_DOOR"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden - Metallic - Castle exit open",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
+        "description": "Outside",
+        "colors": [ "h == 0 && s == 7" ],
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "description": "Metal",
+        "colors": [ "h == 0 && s == 0", "s == 4" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": -187
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_DOOR_TO_OUTSIDE_OPEN",
+      "CASTLE_DRAKAN_DOOR_TO_OUTSIDE_OPEN_NOOP"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden - Metallic - Golden door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": [ "h == 6" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": -187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_GILDED_LIBRARY_DOOR",
+      "CASTLE_DRAKAN_GILDED_LIBRARY_DOOR_M"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden - Metallic - Wall with door and window",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
+        "description": "Metal",
+        "colors": [ "h == 0 && s == 0", "s == 4" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": -187
+      },
+      {
+        "description": "Metal",
+        "colors": [ "h == 0 && s >= 5" ],
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": -187
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_DOOR_MOON_GIBBOUS",
+      "CASTLE_DRAKAN_DOOR_MOON_GIBBOUS_M",
+      "CASTLE_DRAKAN_DOOR_MOON_HALF",
+      "CASTLE_DRAKAN_DOOR_MOON_HALF_M",
+      "CASTLE_DRAKAN_DOOR_MOON_FULL",
+      "CASTLE_DRAKAN_DOOR_MOON_FULL_M",
+      "CASTLE_DRAKAN_DOOR_MOON_NEW",
+      "CASTLE_DRAKAN_DOOR_MOON_NEW_M",
+      "CASTLE_DRAKAN_DOOR_MOON_CRESCENT",
+      "CASTLE_DRAKAN_DOOR_MOON_CRESCENT_M"
+    ]
+  },
+  {
+    "description": "Vampyre Bloodsack with blood",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": [ "h == 0 && s == 7" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": -187
+      }
+    ],
+    "objectIds": [
+      "SACK_DRAKAN01_BLOOD01",
+      "SACK_DRAKAN01_BLOOD02",
+      "SACK_DRAKAN01_BLOOD03"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Pillars",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "PILLAR_DRAKAN02_DEFAULT01",
+      "PILLAR_DRAKAN02_DEFAULT02",
+      "PILLAR_DRAKAN02_BROKEN01",
+      "ARCHWAY_SANGVESTI01_LEFT01",
+      "ARCHWAY_SANGVESTI01_RIGHT01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium statues",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Fangs",
+        "colors": "a == 255 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 8
+      },
+      {
+        "description": "Eyes",
+        "colors": "s == 5",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 8
+      }
+    ],
+    "objectIds": [
+      "STATUE_DRAKAN01_DEFAULT01",
+      "STATUE_DRAKAN01_DEFAULT02",
+      "STATUE_DRAKAN01_DEFAULT03",
+      "STATUE_DRAKAN01_DEFAULT04",
+      "STATUE_DRAKAN01_DEFAULT05",
+      "STATUE_DRAKAN01_DEFAULT06",
+      "STATUE_DRAKAN01_DEFAULT07"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Pillars and statues without cobwebs",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Fangs",
+        "colors": "a == 255 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 8
+      },
+      {
+        "description": "Eyes",
+        "colors": "s == 5",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 8
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_TELEPORTER_STATUE_A",
+      "CASTLE_DRAKAN_TELEPORTER_STATUE_B",
+      "CASTLE_DRAKAN_TELEPORTER_STATUE_C",
+      "CASTLE_DRAKAN_TELEPORTER_STATUE_D",
+      "STATUE_SANGVESTI_TALLBAT01_DEFAULT01",
+      "STATUE_SANGVESTI01_DRAKAN01",
+      "STATUE_SANGVESTI01_JOVKAI01",
+      "STATUE_SANGVESTI01_MYRMEL01",
+      "STATUE_SANGVESTI01_SHADUM01",
+      "STATUE_SANGVESTI01_VITUR01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Pillars and statues armed - DYNAMIC",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Metal",
+        "colors": "a == 255 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 303,
+        "shiftLightness": 7
+      },
+      {
+        "description": "Wood",
+        "colors": "s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 187,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_STATUE_UNARMED",
+      "CASTLE_DRAKAN_STATUE_SWORD",
+      "CASTLE_DRAKAN_STATUE_SPEAR",
+      "CASTLE_DRAKAN_STATUE_MACE",
+      "CASTLE_DRAKAN_STATUE_BATTLEAXE"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium tables with cobwebs",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "DRAKAN_TABLE01_NOBLE01",
+      "DRAKAN_TABLE01_NOBLE01_ODD"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium clocks",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s > 5",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 187,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_CLOCK_BIG_HAND",
+      "CASTLE_DRAKAN_CLOCK_SMALL_HAND",
+      "CASTLE_DRAKAN_CLOCK_BOTH_HANDS",
+      "CASTLE_DRAKAN_CLOCK_BOTH_HANDS_NOOP"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium fireplace",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Candle",
+        "colors": "s == 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "description": "Logs",
+        "colors": "s == 0",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 187
+      },
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_DINING_ROOM_FIREPLACE",
+      "CASTLE_DRAKAN_VANESCULA_FIREPLACE",
+      "CASTLE_DRAKAN_RANIS_FIREPLACE",
+      "CASTLE_DRAKAN_FIREPLACE",
+      "CASTLE_DRAKAN_PARLOUR_FIREPLACE_EMPTY",
+      "CASTLE_DRAKAN_PARLOUR_FIREPLACE_CREST",
+      "CASTLE_DRAKAN_LOWERNIEL_FIREPLACE_UNLIT",
+      "CASTLE_DRAKAN_LOWERNIEL_FIREPLACE_LIT"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium - Drakan Crest",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": -86,
+    "shiftLightness": 7,
+    "objectIds": [
+      "CASTLE_DRAKAN_PARLOUR_CREST_FILLED"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium book case with books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255 && s == 0",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "a == 255 && h == 0 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Wood - Smaller",
+        "colors": "a == 255 && h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvOrientationZ": 512,
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_BOOKCASE01",
+      "CASTLE_DRAKAN_BOOKCASE02",
+      "DRAKAN01_SHELVES01",
+      "DRAKAN01_SHELVES01_2X2",
+      "CASTLE_DRAKAN_SEARCHABLE_BOOKCASE_4",
+      "CASTLE_DRAKAN_SEARCHABLE_BOOKCASE_3",
+      "CASTLE_DRAKAN_GILDED_BOOKCASE_MISSING_BOOK",
+      "CASTLE_DRAKAN_BOOKCASE01_SECRET01",
+      "CASTLE_DRAKAN_GILDED_BOOKCASE_ALL_BOOKS",
+      "CASTLE_DRAKAN_GILDED_BOOKCASE_ALL_BOOKS_ORDERED",
+      "CASTLE_DRAKAN_BOOKCASE01_SECRET02",
+      "CASTLE_DRAKAN_BOOKCASE01_SECRET03"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Wall map",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": [ "h == 5", " h == 6" ],
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_DINING_ROOM_MAP"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium chairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Carpet",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Legs",
+        "colors": "s == 5",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "CHAIR_SANGVESTI01_DEFAULT01",
+      "CHAIR_SANGVESTI01_BROKEN01",
+      "CHAIR_SANGVESTI01_BROKEN02",
+      "CHAIR_SANGVESTI01_BROKEN02_2X2",
+      "CHAIR_SANGVESTI_INTERACTABLE_1",
+      "CHAIR_SANGVESTI_INTERACTABLE_2",
+      "CHAIR_SANGVESTI_INTERACTABLE_3",
+      "CHAIR_SANGVESTI_INTERACTABLE_4",
+      "CHAIR_SANGVESTI_INTERACTABLE_5"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium chairs On side",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Carpet",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "CHAIR_SANGVESTI01_DEFAULT02"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium table with bowl",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255 && s == 0",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "a == 255 && h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Carpet",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Skull",
+        "colors": "a == 255 && h == 5",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "DRAKAN_TABLE01_DINNING01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Throne",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Carpet",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_THRONE"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Throne Carpet",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "shiftLightness": 3,
+    "uvScale": 0.6,
+    "objectIds": [
+      "DRAKAN01_RUG_3X6",
+      "DRAKAN01_RUG_CENTRAL"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Skull banner",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 404,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Skull",
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "BONE",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": -1
+      }
+    ],
+    "objectIds": [
+      "BANNER_SANGVESTI02_DRAKAN01",
+      "CASTLE_DRAKAN_LOWERNIEL_BANNER_N",
+      "CASTLE_DRAKAN_LOWERNIEL_BANNER_S",
+      "CASTLE_DRAKAN_LOWERNIEL_BANNER_W",
+      "MYQ6_BANNER01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Bust levers",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Bust",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_BUST01_LEVER_HIDDEN",
+      "CASTLE_DRAKAN_BUST02_LEVER_HIDDEN",
+      "CASTLE_DRAKAN_BUST03_LEVER_HIDDEN",
+      "CASTLE_DRAKAN_BUST04_LEVER_HIDDEN",
+      "CASTLE_DRAKAN_BUST01_LEVER_DOWN",
+      "CASTLE_DRAKAN_BUST02_LEVER_DOWN",
+      "CASTLE_DRAKAN_BUST03_LEVER_DOWN",
+      "CASTLE_DRAKAN_BUST04_LEVER_DOWN",
+      "CASTLE_DRAKAN_BUST01_LEVER_UP",
+      "CASTLE_DRAKAN_BUST02_LEVER_UP",
+      "CASTLE_DRAKAN_BUST03_LEVER_UP",
+      "CASTLE_DRAKAN_BUST04_LEVER_UP"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium shelves with bottles",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255 && h == 5",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "a == 255 && h == 0 && s >= 2 && s <= 3",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_SEARCHABLE_SHELVES",
+      "CASTLE_DRAKAN_CHAPEL_SHELVES"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium fancy chair",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "a == 255 && h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "DRAKAN01_CHAIR01",
+      "DRAKAN01_CHAIR02"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Game tables",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "a == 255 && h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "DRAKAN01_TABLE_GAME01",
+      "DRAKAN01_TABLE_GAME02"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium floor trap",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 6,
+    "objectIds": [
+      "CASTLE_DRAKAN_FLOORTRAP"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Barrel",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s <= 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.31111,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "BARREL_SANGVESTI01_DEFAULT01",
+      "BARREL_SANGVESTI01_OPEN01",
+      "BARREL_SANGVESTI01_OPEN02"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Barrel with staves - Needs UV",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s <= 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.31111,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "MYQ6_BARREL01_STAFFS01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Barrel - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s <= 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.31111,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "SANGVESTI_PUB_BARREL_EMPTY_A",
+      "SANGVESTI_PUB_BARREL_EMPTY_B"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Barrel Full - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 37",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Metal",
+        "colors": "s <= 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.31111,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "SANGVESTI_PUB_BARREL_FULL_B"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Brick and wooden post wall",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
+        "description": "Wood",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_SERVANT01_A",
+      "WALLKIT_DRAKAN01_SERVANT01_B",
+      "WALLKIT_DRAKAN01_SERVANT01_C",
+      "WALLKIT_DRAKAN01_SERVANT01_D"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Brick and wooden post wall with window",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      },
+      {
+        "description": "Wood",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Glass",
+        "colors": "s >= 6",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_DRAKAN01_SERVANT01_WINDOW01",
+      "WALLKIT_DRAKAN01_SERVANT01_WINDOW01_MIRROR"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Spiral Stairs",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_SPIRAL_STAIRS_UP",
+      "CASTLE_DRAKAN_SPIRAL_STAIRS_DOWN",
+      "MYQ6_SUGADINTI_HIDEOUT_STAIRS",
+      "MYQ6_SUGADINTI_HIDEOUT_STAIRS_M",
+      "MYQ6_SUGADINTI_HIDEOUT_STAIRS_DOWN",
+      "MYQ6_SUGADINTI_HIDEOUT_STAIRS_DOWN_M"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium table - Clothes shop",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "description": "Cloth",
+        "colors": "h > 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 313
+      },
+      {
+        "description": "Wood grain",
+        "colors": "s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 313,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "TABLE_SANGVESTI01_CLOTHESSHOP01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium table with cloth",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 313
+      },
+      {
+        "description": "Wood grain",
+        "colors": "s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 313,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "TABLE_SANGVESTI01_BROKEN04",
+      "TABLE_SANGVESTI01_DEFAULT04"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Display Case - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "shiftLightness": 3,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "s == 5",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 313,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "DISPLAY_CASE_SANGVESTI01_DEFAULT01",
+      "DISPLAY_CASE_SANGVESTI01_DEFAULT01_OFFSET_N"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Gallery Display Case - DYNAMIC",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "s == 5",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 313,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s <= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512,
+        "shiftLightness": 3,
+        "flatNormals": true
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_EMPTY",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_HOURGLASS",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_KNIFE",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_SKULL",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_HOURGLASS_KNIFE",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_KNIFE_SKULL",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_HOURGLASS_KNIFE",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_HOURGLASS_SKULL",
+      "CASTLE_DRAKAN_GALLERY_DISPLAY_CASE_FULL"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "shiftLightness": 4,
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 5",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 313,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "CHEST_SANGVESTI01_DEFAULT01",
+      "CHEST_SANGVESTI01_DEFAULT01_2X2",
+      "CHEST_SANGVESTI01_DEFAULT01_OFFSET_N",
+      "CASTLE_DRAKAN_GALLERY_CHEST",
+      "CASTLE_DRAKAN_KITCHEN_CHEST",
+      "CASTLE_DRAKAN_ARMOURY_CHEST",
+      "CASTLE_DRAKAN_DEPOSIT_CHEST",
+      "CASTLE_DRAKAN_LOWERNIEL_CHEST",
+      "SANGVESTI_CHAPEL_CHEST",
+      "SANGVESTI_CHAPEL_CHEST_OPEN",
+      "MYQ6_SUGADINTI_HIDEOUT_TABLET_CHEST",
+      "MYQ6_SUGADINTI_HIDEOUT_DIAMOND_CHEST"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Wall plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 4,
+    "objectIds": [
+      "MYQ6_PLANKS01A",
+      "MYQ6_PLANKS02A",
+      "MYQ6_PLANKS03_A",
+      "MYQ6_PLANKS02B",
+      "MYQ6_PLANKS01C"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Railing",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "WALLKIT_DRAKAN04_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Red shelf with clutter",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 5
+      },
+      {
+        "description": "Bone",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": -5
+      },
+      {
+        "description": "Frame",
+        "colors": "h == 0 && s != 2 && s > 1",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 313,
+        "shiftLightness": 5
+      },
+      {
+        "description": "Blue Books",
+        "colors": "h > 38",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ],
+    "objectIds": [
+      "CABINET_SANGVESTI01_CONTENTS01",
+      "CABINET_SANGVESTI01_CONTENTS02",
+      "CABINET_SANGVESTI01_CONTENTS03",
+      "CABINET_SANGVESTI01_BROKEN02",
+      "SANGVESTI_BOOKSHELF_1",
+      "SANGVESTI_BOOKSHELF_2",
+      "SANGVESTI_PANTRY",
+      "CABINET_SANGVESTI01_BROKEN01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium tables",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Frame",
+        "colors": "s >= 4",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 313,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "TABLE_SANGVESTI01_DEFAULT01",
+      "TABLE_SANGVESTI01_CONTENTS01_2X2",
+      "TABLE_SANGVESTI01_CONTENTS02",
+      "TABLE_SANGVESTI01_CONTENTS03_OFFSET",
+      "TABLE_SANGVESTI01_CONTENTS03_2X2",
+      "TABLE_SANGVESTI01_CONTENTS03",
+      "TABLE_SANGVESTI01_BROKEN01"
+
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Leaver with brown handle",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 9,
+    "objectIds": [
+      "CASTLE_DRAKAN_TELEPORT_LEVER_UP_N",
+      "CASTLE_DRAKAN_TELEPORT_LEVER_DOWN_N",
+      "CASTLE_DRAKAN_TELEPORT_LEVER_UP_E",
+      "CASTLE_DRAKAN_TELEPORT_LEVER_DOWN_E",
+      "CASTLE_DRAKAN_TELEPORT_LEVER_UP_W",
+      "CASTLE_DRAKAN_TELEPORT_LEVER_DOWN_W"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Emblem holder - DYNAMIC",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Cobwebs",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_EMBLEM_HOLDER_EMPTY",
+      "CASTLE_DRAKAN_EMBLEM_HOLDER_FILLED"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium wooden shelf with clutter",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "DRAKAN01_SHELVES02",
+      "DRAKAN01_SHELVES03"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium - Coffin",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+    "shiftLightness": 7,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "COFFIN_DRAKAN01_VANESCULA01",
+      "COFFIN_DRAKAN01_DRAYNOR01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "TABLE_SANGVESTI01_DEFAULT03"
+    ]
+  },
+  {
+    "description": "Vampyrium Trees",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "objectIds": [
+      "DARKWOOD_TREE_DEFAULT02",
+      "DARKWOOD_TREE_DEFAULT01",
+      "DARKWOOD_TREE_DEFAULT04_2X4",
+      "DARKWOOD_TREE_DEFAULT05",
+      "DARKWOOD_TREE_DEFAULT03",
+      "DARKWOOD_TREE_DEFAULT04",
+      "DARKWOOD_TREE_TRUNK02",
+      "DARKWOOD_TREE_TRUNK02_2X2",
+      "DARKWOOD_TREE_DEFAULT06",
+      "SOTFA_FOREST_DENSE_TREE",
+      "SOTFA_FOREST_DENSE_TREE02",
+      "SOTFA_FOREST_DENSE_TREE03",
+      "SOTFA_FOREST_DENSE_TREE_CHOPPED",
+      "SOTFA_FOREST_DENSE_TREE_CHOPPED02",
+      "SOTFA_FOREST_DENSE_TREE_CHOPPED03",
+      "SOTFA_FOREST_DENSE_TREE_STUMP",
+      "SOTFA_FOREST_DENSE_TREE_STUMP02",
+      "SOTFA_FOREST_DENSE_TREE_STUMP03",
+      "DARKWOOD_TREE_TRUNK01_FALLEN01",
+      "SOTFA_FOREST_TREE_STUMP02",
+      "DARKWOOD_TREE_SAPLING02",
+      "DARKWOOD_TREE_SAPLING04",
+      "DARKWOOD_TREE_STUMP_NOAXE01",
+      "SOTFA_FOREST_ROPESWING_TREE_BODY",
+      "SOTFA_FOREST_ROPESWING_TREE_NOROPE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 5,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Tree Stump with Axe",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "objectIds": [
+      "DARKWOOD_TREE_STUMP_AXE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 0 && s == 7",
+        "baseMaterial": "METALLIC_1",
+        "shiftLightness": 15,
+        "undoVanillaShading": false
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3,
+        "undoVanillaShading": false,
+        "shiftLightness": 5
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Tall Vines",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "shiftLightness": 2,
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "objectIds": [
+      "PLANT_VAMPYRIUM_SWAMP01_INACTIVE",
+      "PLANT_VAMPYRIUM_SWAMP01",
+      "PLANT_VAMPYRIUM_SWAMP02",
+      "PLANT_VAMPYRIUM_SWAMP03",
+      "PLANT_VAMPYRIUM_BULLRUSH01",
+      "PLANT_VAMPYRIUM_BULLRUSH01_INACTIVE",
+      "PLANT_VAMPYRIUM_SWAMP04"
+    ]
+  },
+  {
+    "description": "Vampyrium - Lilypad",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "shiftLightness": 1,
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "objectIds": [
+      "PLANT_VAMPYRIUM_LILYPAD01",
+      "PLANT_VAMPYRIUM_LILYPAD02",
+      "PLANT_VAMPYRIUM_LILYPAD03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Snake rope",
+        "colors": "s == 7",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "shiftLightness": 8
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees - Snake rope",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "objectIds": [
+      "SOTFA_FOREST_ROPESWING_TREE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Snake rope",
+        "colors": "s >= 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 6
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees with webs",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "objectIds": [
+      "DARKWOOD_TREE_DEFAULT01_WEB01",
+      "DARKWOOD_TREE_DEFAULT02_WEB01",
+      "DARKWOOD_TREE_DEFAULT03_WEB01",
+      "DARKWOOD_TREE_DEFAULT04_WEB01",
+      "DARKWOOD_TREE_DEFAULT05_WEB01",
+      "DARKWOOD_TREE_DARK02_WEB01",
+      "DARKWOOD_TREE_DARK05_WEB01",
+      "DARKWOOD_TREE_DARK01_WEB01",
+      "DARKWOOD_TREE_DARK03_WEB01",
+      "DARKWOOD_TREE_DARK04_WEB01",
+      "DARKWOOD_TREE_DEFAULT04_WEB01_2X4",
+      "DARKWOOD_TREE_DEFAULT05_WEB01_3X3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_3",
+        "uvType": "BOX",
+        "uvOrientation": 404
+      },
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 5,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Spikey Tree",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "npcIds": [
+      "SOTFA_FOREST_NASTY_TREE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 1,
+        "shiftLightness": 3,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees - Dark",
+    "shiftLightness": -20,
+    "objectIds": [
+      "DARKWOOD_TREE_DARK01",
+      "DARKWOOD_TREE_DARK02",
+      "DARKWOOD_TREE_DARK03",
+      "DARKWOOD_TREE_DARK04",
+      "DARKWOOD_TREE_DARK05"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 60 || s < 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "undoVanillaShading": false,
+        "uvScale": 0.7,
+        "shiftLightness": 3,
+        "shiftSaturation": -1
+      },
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 5,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees - Dark - Fix",
+    "areas": [ "VAMPYRIUM_FOREST_CLEARING_TREE_FIX" ],
+    "shiftLightness": -25,
+    "objectIds": [
+      "DARKWOOD_TREE_DEFAULT03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "s == 0 && l == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "undoVanillaShading": false,
+        "uvScale": 0.7,
+        "shiftLightness": 5,
+        "shiftSaturation": -1
+      },
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 5,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees - Dark - Fix",
+    "areas": [ "VAMPYRIUM_MAGGOT_KING_TREE_FIX" ],
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "objectIds": [
+      "DARKWOOD_TREE_TRUNK02_DARK01"
+    ]
+  },
+  {
+    "description": "Vampyrium Trees - Darker",
+    "shiftLightness": -40,
+    "objectIds": [
+      "DARKWOOD_TREE_DARKER01",
+      "DARKWOOD_TREE_DARKER02",
+      "DARKWOOD_TREE_DARKER03",
+      "DARKWOOD_TREE_DARKER04",
+      "DARKWOOD_TREE_DARKER05"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 60 || s < 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "undoVanillaShading": false,
+        "uvScale": 0.7,
+        "shiftLightness": 7,
+        "shiftSaturation": -1
+      },
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 5,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees - Black",
+    "shiftLightness": -55,
+    "objectIds": [
+      "DARKWOOD_TREE_BLACK01",
+      "DARKWOOD_TREE_BLACK02",
+      "DARKWOOD_TREE_BLACK03",
+      "DARKWOOD_TREE_BLACK04",
+      "DARKWOOD_TREE_BLACK05"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 60 || s < 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "undoVanillaShading": false,
+        "uvScale": 0.7,
+        "shiftLightness": -4,
+        "shiftSaturation": -1
+      },
+      {
+        "description": "Grass",
+        "colors": "s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 3,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Trees Doorway",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "objectIds": [
+      "DARKWOOD_TREE_DOORWAY01",
+      "DARKWOOD_TREE_DOORWAY01_NOOP_4X3",
+      "DARKWOOD_TREE_DOORWAY01_NOOP",
+      "DARKWOOD_TREE_DOORWAY01_ESCAPE",
+      "DARKWOOD_TREE_DOORWAY01_4X3",
+      "DARKWOOD_TREE_DOORWAY01_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Shadow",
+        "colors": "a < 255 || h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium Rocks",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 6,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "ROCKS_VOROS02_LARGE01",
+      "ROCKS_VOROS02_CHUNK01",
+      "ROCKS_VOROS04_CHUNK01",
+      "ROCKS_VOROS03_CHUNK01",
+      "ROCKS_VOROS01_CHUNK01",
+      "ROCKS_VOROS01_LARGE01",
+      "ROCKS_VOROS02_DEFAULT01",
+      "ROCKS_VOROS01_LARGE01_3X3",
+      "VOROS_ROCKSLIDE01",
+      "VOROS_ROCKSLIDE02",
+      "VOROS_ROCKSLIDE04",
+      "ROCKS_VOROS02_LARGE01_3X3",
+      "ROCKS_VOROS01_DEFAULT01",
+      "VAMPYRIUM_STEPPING_STONE_NOCLEARED",
+      "VAMPYRIUM_STEPPING_STONE_HASCLEARED"
+    ]
+  },
+  {
+    "description": "Vampyrium Cave Entrance",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 6,
+    "undoVanillaShading": false,
+    "objectIds": [
+      "VOROS_CAVE01_MOUNTAIN01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Stone only",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "undoVanillaShading": false,
+    "uvOrientation": 256,
+    "objectIds": [
+      "BRIDGEKIT_SANGVESTI01_SIDE01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Roof",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.75,
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2 && l < 14",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 6,
+        "uvOrientationX": 512
+      },
+      {
+        "description": "Red accents",
+        "colors": "h == 0 && s >= 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "BRIDGEKIT_SANGVESTI01_ROOF01",
+      "ROOFKIT_SANGVESTI02_BROKEN01",
+      "ROOFKIT_SANGVESTI02_DEFAULT01",
+      "ROOFKIT_SANGVESTI02_WINDOW01",
+      "ROOFKIT_SANGVESTI02_BROKEN02",
+      "ROOFKIT_SANGVESTI02_BROKEN03",
+      "ROOFKIT_SANGVESTI02_DEFAULT02",
+      "ROOFKIT_SANGVESTI01_DEFAULT01",
+      "ROOFKIT_SANGVESTI01_DEFAULT02",
+      "ROOFKIT_SANGVESTI01_DEFAULT03",
+      "ROOFKIT_SANGVESTI01_BROKEN01",
+      "ROOFKIT_SANGVESTI01_BROKEN02",
+      "ROOFKIT_SANGVESTI01_BROKEN03",
+      "BRIDGEKIT_SANGVESTI01_ROOF02",
+      "BRIDGEKIT_SANGVESTI01_BOTTOM01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Roof Facade - Needs UV",
+    "baseMaterial": "STONE_NORMALED",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2 && l < 14",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 6,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Window",
+        "colors": "h == 0 && s >= 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512,
+        "shiftLightness": 1
+      }
+    ],
+    "objectIds": [
+      "ROOFKIT_SANGVESTI02_FACADE01_5X1"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_SANGVESTI01_CORNER01_BROKEN01_M",
+      "WALLKIT_SANGVESTI01_DEFAULT02",
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN01",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN02_M",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN03",
+      "WALLKIT_SANGVESTI01_RUBBLE01",
+      "WALLKIT_SANGVESTI01_DEFAULT01",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN01_M",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN01",
+      "WALLKIT_SANGVESTI01_CORNER01_BROKEN01",
+      "WALLKIT_SANGVESTI01_JUNCTION01",
+      "WALLKIT_SANGVESTI01_JUNCTION01_M",
+      "WALLKIT_SANGVESTI01_INTERIOR01",
+      "WALLKIT_SANGVESTI01_INTERIOR02",
+      "WALLKIT_SANGVESTI01_INTERIOR01_DOORWAY01",
+      "WALLKIT_SANGVESTI01_FENCE01",
+      "WALLKIT_SANGVESTI01_FENCE01_BROKEN01",
+      "WALLKIT_SANGVESTI01_FENCE01_BROKEN01_M",
+      "WALLKIT_SANGVESTI01_FENCE01_BROKEN02",
+      "WALLKIT_SANGVESTI01_FENCE01_BROKEN02_M",
+      "WALLKIT_SANGVESTI01_FENCE01_BROKEN03",
+      "WALLKIT_SANGVESTI01_FENCE01_BROKEN03_M",
+      "WALLKIT_SANGVESTI01_FENCE01_RUBBLE01",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN02",
+      "SANGVESTI_SHED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2 && l < 14",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 6,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Bridge",
+    "baseMaterial": "STONE_NORMALED",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.8,
+    "shiftLightness": 7,
+    "colorOverrides": [
+      {
+        "description": "Path",
+        "colors": "h == 5 && s >= 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 2,
+        "uvOrientation": 256,
+        "shiftLightness": 3
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "shiftLightness": 4,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s == 5 || s == 7",
+        "baseMaterial": "GRASS_BLADE",
+        "shiftSaturation": 2,
+        "shiftLightness": 1,
+        "uvType": "BOX",
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "undoVanillaShading": false,
+        "shiftSaturation": -1,
+        "shiftLightness": 2,
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "VAMPYRIUM_JOVKAI01_BRIDGE01",
+      "VAMPYRIUM_JOVKAI01_BRIDGE02",
+      "VAMPYRIUM_JOVKAI01_BRIDGE03",
+      "VAMPYRIUM_JOVKAI01_BRIDGE04",
+      "VAMPYRIUM_JOVKAI01_BRIDGE05",
+      "VAMPYRIUM_JOVKAI01_BRIDGE06",
+      "VAMPYRIUM_JOVKAI01_BRIDGE01_FENCE06_STAIRS01",
+      "VAMPYRIUM_JOVKAI01_BRIDGE01_FENCE06_STAIRS01_MIRROR"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - alt",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 1,
+    "objectIds": [
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN01_M",
+      "WALLKIT_SANGVESTI01_CORNER01",
+      "WALLKIT_SANGVESTI01_WINDOW01",
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN03",
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN03_M",
+      "WALLKIT_SANGVESTI01_FRAME01",
+      "WALLKIT_SANGVESTI01_DEFAULT01_BROKEN03_M",
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN02",
+      "WALLKIT_SANGVESTI01_DEFAULT01_RUBBLE01",
+      "WALLKIT_SANGVESTI01_WINDOW01_RUBBLE01",
+      "WALLKIT_SANGVESTI01_WINDOW01_BROKEN02_M"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 6,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Bank - Window with Bars",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 404,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "shiftLightness": 1
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 6,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_SANGVESTI01_WINDOW02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Bridge",
+    "baseMaterial": "STONE_NORMALED",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 1,
+    "objectIds": [
+      "BRIDGEKIT_SANGVESTI01_SIDE02",
+      "BRIDGEKIT_SANGVESTI01_CHAINS02",
+      "BRIDGEKIT_SANGVESTI01_STAKES01",
+      "BRIDGEKIT_SANGVESTI01_STAKES02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "undoVanillaShading": false,
+        "shiftLightness": 7
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "shiftLightness": 2
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Bridge Floor",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 4,
+    "objectIds": [
+      "BRIDGEKIT_SANGVESTI01_FLOOR01",
+      "BRIDGEKIT_SANGVESTI01_FLOOR02",
+      "BRIDGEKIT_SANGVESTI01_FLOOR03",
+      "BRIDGEKIT_SANGVESTI01_FLOOR04_M",
+      "BRIDGEKIT_SANGVESTI01_FLOOR04"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Bridge Arch",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 6,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "BRIDGEKIT_SANGVESTI01_ARCH01",
+      "BRIDGEKIT_SANGVESTI01_ARCH02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Stone only rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 1,
+    "objectIds": [
+      "WALLKIT_SANGVESTI01_RUBBLE03",
+      "WALLKIT_SANGVESTI01_RUBBLE04",
+      "WALLKIT_SANGVESTI01_RUBBLE05",
+      "WALLKIT_SANGVESTI01_RUBBLE06"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings Second floor walls with fake windows - Needs proper UV",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 1,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2 && l < 15",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 6,
+        "uvOrientation": 313
+      },
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Fake window shadow",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "NONE",
+        "shiftLightness": -4,
+        "flatNormals": true
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_SANGVESTI02_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings - Door",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "shiftLightness": 6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SANGVESTI_GENERAL_STORE_DOOR"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium - Paintings",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "CASTLE_DRAKAN_GALLERY_PLAQUE",
+      "PAINTING_DRAKAN01",
+      "PAINTING_DRAKAN02",
+      "PAINTING_DRAKAN03",
+      "PAINTING_DRAKAN04",
+      "PAINTING_DRAKAN05",
+      "CASTLE_DRAKAN_GALLERY_PAINTING_LOWERNIEL",
+      "CASTLE_DRAKAN_GALLERY_PAINTING_VANESCULA",
+      "CASTLE_DRAKAN_GALLERY_PAINTING_ARAMINDUS",
+      "CASTLE_DRAKAN_GALLERY_PAINTING_DRAYNOR",
+      "CASTLE_DRAKAN_GALLERY_PAINTING_RANIS"
+    ]
+  },
+  {
+    "description": "Vampyrium - Blood cabinet with bowl of blood and scrolls",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Bowl",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Scroll",
+        "colors": [ "h == 37" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Blood",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CABINET_DRAKAN01_DEFAULT01",
+      "CASTLE_DRAKAN_LARDER_CABINET"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Large Table",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Bones",
+        "colors": "h == 3",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Wood",
+        "colors": "s == 4 || s == 1 || s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "TABLE_SANGVESTI01_DEFAULT02_5X2"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "MYQ6_STOOL01"
+    ],
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.80,
+    "shiftLightness": 4
+  },
+  {
+    "description": "Vampyrium - Creature hanging over a bowl of blood",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Bowl",
+        "colors": [ "a < 255" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Body",
+        "colors": [ "h >= 1" ],
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "description": "Blood",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CORPSE_DRAKAN01_STYMPHIKE01",
+      "CORPSE_DRAKAN01_STYMPHIKE02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Venator on a slab",
+    "baseMaterial": "GRAY_90",
+    "colorOverrides": [
+      {
+        "description": "Slab",
+        "colors": [ "h == 0 && s == 2" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Blood",
+        "colors": [ "s == 6" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512,
+        "shiftLightness": 9
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_KITCHEN_VENATOR_CLOSED",
+      "CASTLE_DRAKAN_KITCHEN_VENATOR_OPENED"
+    ]
+  },
+  {
+    "description": "Vampyrium - Castle Drakan - Kitchen Sink",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Grunge",
+        "colors": [ "h >= 5" ],
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Blood",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_KITCHEN_SINK_FULL",
+      "CASTLE_DRAKAN_KITCHEN_SINK_EMPTY",
+      "CASTLE_DRAKAN_LARDER_SINK_UNPLUGGED",
+      "CASTLE_DRAKAN_LARDER_SINK_PLUGGED",
+      "CASTLE_DRAKAN_LARDER_SINK_COLLAPSED",
+      "CASTLE_DRAKAN_LAB_BASIN"
+    ]
+  },
+  {
+    "description": "Vampyrium - Castle Drakan - Chapen Basin - DYNAMIC",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Grunge",
+        "colors": [ "h >= 5" ],
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Blood",
+        "colors": [ "s == 7" ],
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_CHAPEL_BLOOD_BASIN",
+      "CASTLE_DRAKAN_CHAPEL_SMOKE_BASIN",
+      "CASTLE_DRAKAN_CHAPEL_ICE_BASIN",
+      "CASTLE_DRAKAN_CHAPEL_SHADOW_BASIN"
+    ]
+  },
+  {
+    "description": "Vampyrium - Castle Drakan - Metal Grate",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 8,
+    "objectIds": [
+      "LASSAR_CHURCH_GRATE01_CORNER01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Venator head trophy",
+    "baseMaterial": "GRAY_90",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": [ "h == 0 && s == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Gems",
+        "colors": [ "s == 5" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_VENATOR_HEAD_NO_EYES",
+      "CASTLE_DRAKAN_VENATOR_HEAD_ONE_EYE",
+      "CASTLE_DRAKAN_VENATOR_HEAD_BOTH_EYES"
+    ]
+  },
+  {
+    "description": "Blood Candle on Candelabra",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "CANDELABRA_DRAKAN01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Vampyrium Castle Chapel Altar",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Stone",
+        "colors": [ "h == 0 && s <= 2 && s >= 1" ],
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 128
+      },
+      {
+        "description": "Metal",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 7
+      },
+      {
+        "description": "Cloth",
+        "colors": [ "h == 39" ],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_CHAPEL_ALTAR",
+      "ALTAR_DRAKAN01_CHAPEL01_USABLE"
+    ]
+  },
+  {
+    "description": "Vampyrium Castle white coffins and dirt",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 404,
+        "shiftLightness": 8
+      },
+      {
+        "description": "Wood",
+        "colors": [ "s == 0" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Metal",
+        "colors": [ "h == 0 && s == 4" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "COFFIN_SANGVESTI01_BROKEN01",
+      "COFFIN_SANGVESTI01_OPEN01"
+    ]
+  },
+  {
+    "description": "Vampyrium Castle Drakans coffin - Needs UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "s == 3",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 404,
+        "shiftLightness": 8
+      },
+      {
+        "description": "Metal",
+        "colors": [ "h == 7 && s == 7" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "COFFIN_DRAKAN01_LOWERNIEL01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Wooden - Metallic - Solid wooden door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
+        "description": "Metal",
+        "colors": [ "s == 4" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": -187,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_DOOR_SOLID",
+      "CASTLE_DRAKAN_DOOR_SOLID_M"
+    ]
+  },
+  {
+    "description": "Vampyrium - Blood stockpile",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 147,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Guage",
+        "colors": [ "s > 0" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CASTLE_DRAKAN_BLOOD_STOCKPILE",
+      "CASTLE_DRAKAN_BLOOD_STOCKPILE_BROKEN"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Drawbridge Mechanism",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 1,
+    "colorOverrides": [
+      {
+        "description": "Chains",
+        "colors": "s == 4",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 7
+      },
+      {
+        "description": "Chains",
+        "colors": "s == 2 || s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SANGVESTI_DRAWBRIDGE_MECHANISM_BROKEN"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti House Door with symbols",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 187,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Planks",
+        "colors": "h == 0 && s > 0 && s < 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "SANGVESTI_DOOR_L_NOOP",
+      "SANGVESTI_DOOR_BROKEN_L_NOOP",
+      "SANGVESTI_CLOTHES_SHOP_DOOR_CHAINED",
+      "SANGVESTI_CLOTHES_SHOP_DOOR_UNCHAINED",
+      "SANGVESTI_BASIC_HOUSE_2_DOOR",
+      "SANGVESTI_BASIC_HOUSE_3_DOOR",
+      "SANGVESTI_FANCY_HOUSE_1_DOOR",
+      "SANGVESTI_FANCY_HOUSE_1_BACK_DOOR",
+      "SANGVESTI_FANCY_HOUSE_3_DOOR",
+      "SANGVESTI_FANCY_HOUSE_3_BACK_DOOR",
+      "SANGVESTI_MYRMEL_MANOR_DOOR",
+      "SANGVESTI_MYRMEL_MANOR_BACK_DOOR",
+      "SANGVESTI_DOOR_L_NOOP_MYRMEL",
+      "SANGVESTI_SHADUM_MANOR_DOOR",
+      "SANGVESTI_SHADUM_MANOR_DOOR_M",
+      "SANGVESTI_VITUR_MANOR_DOOR",
+      "SANGVESTI_VITUR_MANOR_DOOR_M",
+      "SANGVESTI_DOOR_L_NOOP_VITUR",
+      "SANGVESTI_DOOR_R_NOOP_VITUR",
+      "SANGVESTI_CHAPEL_BACK_DOOR_1",
+      "SANGVESTI_CHAPEL_BACK_DOOR_2",
+      "SANGVESTI_CLOTHES_SHOP_BACK_DOOR",
+      "SANGVESTI_PUB_BACK_DOOR",
+      "SANGVESTI_FANCY_HOUSE_2_BACK_DOOR",
+      "SANGVESTI_FANCY_HOUSE_2_DOOR",
+      "SANGVESTI_BANK_DOOR",
+      "SANGVESTI_BLACKSMITH_DOOR"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti House Roof Stone",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "ROOFKIT_SANGVESTI03_BROKEN01",
+      "ROOFKIT_SANGVESTI03_BROKEN02",
+      "ROOFKIT_SANGVESTI03_BROKEN03",
+      "ROOFKIT_SANGVESTI03_BROKEN04",
+      "ROOFKIT_SANGVESTI03_BROKEN05",
+      "ROOFKIT_SANGVESTI03_BROKEN06"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti House Roof fences on stone",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "uvScale": 0.66,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Fence",
+        "colors": "s == 6",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 187,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_SANGVESTI02_FENCE01",
+      "WALLKIT_SANGVESTI02_FENCE01_BROKEN01",
+      "WALLKIT_SANGVESTI02_FENCE01_BROKEN02",
+      "WALLKIT_SANGVESTI02_FENCE02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Stone Steps",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": -256,
+    "objectIds": [
+      "STEPS_SANGVESTI01_DEFAULT01",
+      "STEPS_SANGVESTI01_BROKEN01",
+      "STEPS_SANGVESTI01_BROKEN02"
+    ]
+  },
+  {
+    "description": "Vampyrium Ruined blue curtains",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationX": 512,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Carpet",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "CURTAIN_SANGVESTI01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Drakan Statue",
+    "baseMaterial": "SMOOTH_STONE",
+    "undoVanillaShading": false,
+    "shiftLightness": 3,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "STATUES_SANGVESTI01_DRAKAN01_AGILITY01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass 1",
+        "colors": "s == 5 && l > 15",
+        "baseMaterial": "NONE",
+        "maxLightness": 6
+      },
+      {
+        "description": "Grass 2",
+        "colors": "h == 2",
+        "baseMaterial": "NONE",
+        "maxLightness": 15
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Wall Stakes",
+    "baseMaterial": "BARK",
+    "undoVanillaShading": false,
+    "shiftLightness": 8,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FENCE_SANGVESTI01_STAKES01",
+      "FENCE_SANGVESTI01_STAKES02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": 8
+      }
+    ]
+  },
+  {
+    "description": "Vampyrium - Darken Blood Waterfall Foam SLightly",
+    "baseMaterial": "NONE",
+    "shiftLightness": -7,
+    "objectIds": [
+      "VOROS_WATERFALL01_FOAM01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Cloth banner",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+    "colorOverrides": [
+      {
+        "description": "Wood grain",
+        "colors": "s == 5",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "BANNER_SANGVESTI01_DRAKAN01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium Crank",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": -89,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Wood grain",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "SANGVESTI_BANK_CRANK_BASE",
+      "SANGVESTI_FANCY_HOUSE_CRANK_BASE"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti Buildings",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "h == 0 && s == 5",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 313,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "WHEELBARROW_SANGVESTI01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Clothes models",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": -89,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Wood grain",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "DISPLAY_SANGVESTI01_CLOTHESMODEL01",
+      "DISPLAY_SANGVESTI02_CLOTHESMODEL01",
+      "DISPLAY_SANGVESTI03_CLOTHESMODEL01",
+      "DISPLAY_SANGVESTI04_CLOTHESMODEL01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium - Hide stand",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": -89,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "description": "Wood grain",
+        "colors": [ "h == 0", "h == 62" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "DISPLAY_SANGVESTI_STAND01_HIDE01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium - Fur stand",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "description": "Wood grain",
+        "colors": [ "h == 0", "h == 62" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "DISPLAY_SANGVESTI_STAND01_FUR01"
+    ]
+  },
+  {
+    "description": "Castle Drakan - Vampyrium - Well - Vampyrium Grass",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "shiftLightness": 1,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s >= 5 && s <=7",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftLightness": 2,
+        "castShadows": false,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Logs",
+        "colors": "h >= 19",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "WELL_DRAKAN01_RUINED01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Drum",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 313
+      },
+      {
+        "description": "Wood grain",
+        "colors": "s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 313,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "DRUM_SANGVESTI01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Kiln - Needs UV",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "KILN_SANGVESTI01_CONTENTS01",
+      "KILN_SANGVESTI01_CONTENTS02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Workbench- Needs UV",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "description": "Handles",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "TABLE_SANGVESTI01_WORKBENCH01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti wood shelf",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4111,
+        "shiftLightness": 6,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "SHELF_SANGVESTI01_EMPTY01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Silver Leafy plant with red stalk",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 404,
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "undoVanillaShading": false,
+        "uvScale": 0.25,
+        "shiftLightness": 20,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "PLANT_VAMPYRIUM_PLANT01",
+      "PLANT_VAMPYRIUM_PLANT02",
+      "PLANT_VAMPYRIUM_PLANT05"
+    ]
+  },
+  {
+    "description": "Vampyrium - Silver Leafy plant with red stalk - Potted",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "undoVanillaShading": false,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "LEAF_VEINS",
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 6,
+        "uvOrientationX": 512
+      },
+      {
+        "description": "Stalk",
+        "colors": [ "h == 0 && s == 6", "h == 0 && s == 7" ],
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 42,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 2 && s == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_PLANT_POTTED03"
+    ]
+  },
+  {
+    "description": "Vampyrium - Silver Leafy plant with white stalk",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "shiftLightness": 19,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 5,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "PLANT_VAMPYRIUM_PLANT03"
+    ]
+  },
+  {
+    "description": "Vampyrium - Silver Leafy plant with white stalk",
+    "baseMaterial": "DIRT_1",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 0 && s == 6",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.075,
+        "shiftLightness": 2,
+        "uvOrientationX": 512,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Trunk",
+        "colors": "h == 0 && s == 0 || h == 42",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "undoVanillaShading": false,
+        "uvScale": 0.35,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_VINES_OP",
+      "MYQ6_SUGADINTI_HIDEOUT_VINES",
+      "MYQ6_SUGADINTI_HIDEOUT_VINES_NOOP"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bell flower",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "shiftLightness": -2,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": "h == 48",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 18,
+        "uvOrientationX": 512
+      }
+    ],
+    "objectIds": [
+      "PLANT_VAMPYRIUM_PLANT06"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bell flower - Potted",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "undoVanillaShading": false,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Stalk",
+        "colors": [ "h == 0 && s == 6", "h == 0 && s == 7" ],
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 42,
+        "shiftLightness": 5,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Stalk",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "undoVanillaShading": false,
+        "shiftLightness": 6
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 37 && s == 2 && l < 14",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_PLANT_POTTED01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Purple grass and webbed plant",
+    "baseMaterial": "LEAF_VEINS",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "shiftLightness": 10,
+    "objectIds": [
+      "PLANT_VAMPYRIUM_PLANT04",
+      "SOTFA_SHRUB"
+    ]
+  },
+  {
+    "description": "Vampyrium - Purple plant - Potted",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 404,
+    "undoVanillaShading": false,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "colors": [ "h == 47", "h == 52" ],
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "shiftLightness": 6,
+        "uvOrientationX": 512
+      },
+      {
+        "description": "Stalk",
+        "colors": "h == 61",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 42,
+        "undoVanillaShading": false,
+        "shiftLightness": 6
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 2 && s == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_PLANT_POTTED02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bank - Metal bars",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 404,
+    "shiftLightness": 6,
+    "objectIds": [
+      "WALLKIT_DRAKAN01_PRISON01_BANK01",
+      "SANGVESTI_INTERIOR_BANK_DOOR",
+      "SANGVESTI_INTERIOR_BANK_DOOR_NOOP"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bank - Bank booths",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 404,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Symbol",
+        "colors": "s >= 2",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 42,
+        "shiftLightness": 7
+      }
+    ],
+    "objectIds": [
+      "BOOTH_SANGVESTI01_BANK01",
+      "BOOTH_SANGVESTI02_BANK01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bank and Chapel Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 1",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 4
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 404,
+        "shiftLightness": 6
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 6",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "SANGVESTI_BANK_TRAPDOOR_CLOSED",
+      "SANGVESTI_BANK_TRAPDOOR_OPEN",
+      "SANGVESTI_CHAPEL_TRAPDOOR"
+    ]
+  },
+  {
+    "description": "Vampyrium - Bank - Pollbooth - DYNAMIC - ANIMATED",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 8
+      },
+      {
+        "description": "BLOOD",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 404,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "BOOTH_SANGVESTI01_POLL01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Corpse on a spike",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 222,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "description": "Skewer",
+        "colors": "h >= 58 && s == 0",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 10
+      }
+    ],
+    "objectIds": [
+      "CORPSE_DRAKAN01_SKEWER01",
+      "CORPSE_DRAKAN01_SKEWER02",
+      "CORPSE_DRAKAN01_SKEWER03"
+    ]
+  },
+  {
+    "description": "Vampyrium - Tree arch with skull",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Skewer",
+        "colors": "h == 5 || h == 7",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "ARCHWAY_DRAKAN01_RUINED01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Tree pillar in dirt",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "PILLAR_DRAKAN01_RUINED01",
+      "PILLAR_DRAKAN01_RUINED02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Broken fences",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "objectIds": [
+      "FENCE_DRAKAN01_RUINED01",
+      "FENCE_DRAKAN01_RUINED02",
+      "FENCE_DRAKAN01_RUINED03",
+      "FENCE_DRAKAN01_RUINED04",
+      "FENCE_DRAKAN01_RUINED05"
+    ]
+  },
+  {
+    "description": "Vampyrium - Broken shelter",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 10,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s >= 5 && s <=7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 3,
+        "castShadows": false,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Red covering",
+        "colors": "h == 1 && s >= 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "SHELTER_DRAKAN01_RUINED01",
+      "SHELTER_DRAKAN01_RUINED02",
+      "SHELTER_DRAKAN01_RUINED03",
+      "SHELTER_DRAKAN01_RUINED04",
+      "SHELTER_DRAKAN01_RUINED05"
+    ]
+  },
+  {
+    "description": "Vampyrium - Broken shelter",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 6,
+    "undoVanillaShading": false,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s >= 5 && s <= 7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftLightness": 1,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      },
+      {
+        "description": "Red covering",
+        "colors": "h == 1 && s >= 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SOTFA_FOREST_RESUPPLY_SHELTER"
+    ]
+  },
+  {
+    "description": "Vampyrium - Campfire",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 1,
+    "colorOverrides": [
+      {
+        "description": "Ash",
+        "colors": "h == 60 && s == 0",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SOTFA_FOREST_CAMPFIRE02",
+      "SOTFA_FOREST_CAMPFIRE02_OFFSET"
+    ]
+  },
+  {
+    "description": "Vampyrium - Broken shelter sack",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "undoVanillaShading": false,
+    "shiftLightness": 12,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s >= 5 && s <=7",
+        "baseMaterial": "GRASS_BLADE",
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 7,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      }
+    ],
+    "objectIds": [
+      "SOTFA_FOREST_ABANDONED_SACK"
+    ]
+  },
+  {
+    "description": "Vampyrium - Thornes - Vampyrium Grass",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "shiftLightness": 5,
+    "uvOrientation": 186,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s >= 5 && s <=7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 7,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 2",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "description": "Branch",
+        "colors": "h == 0",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.34,
+        "shiftLightness": 5
+      }
+    ],
+    "objectIds": [
+      "PLANT_VAMPYRIUM_THORNS01",
+      "PLANT_VAMPYRIUM_THORNS01_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS02",
+      "PLANT_VAMPYRIUM_THORNS02_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS03_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS03",
+      "PLANT_VAMPYRIUM_THORNS04_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS04",
+      "PLANT_VAMPYRIUM_THORNS05",
+      "PLANT_VAMPYRIUM_THORNS05_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS06",
+      "PLANT_VAMPYRIUM_THORNS06_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS07",
+      "PLANT_VAMPYRIUM_THORNS07_DARKER01",
+      "PLANT_VAMPYRIUM_THORNS08A",
+      "PLANT_VAMPYRIUM_THORNS08B"
+    ]
+  },
+  {
+    "description": "Vampyrium - Thrones",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "shiftLightness": 3,
+    "uvOrientation": 186,
+    "objectIds": [
+      "SOTFA_FOREST_CORPSE01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sleeping Bag",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "shiftLightness": 8,
+    "uvOrientation": 186,
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "SOTFA_FOREST_SLEEPING_BAG"
+    ]
+  },
+  {
+    "description": "Vampyrium - Signpost",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "shiftLightness": 5,
+    "uvOrientation": 186,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": -4,
+        "castShadows": false
+      },
+      {
+        "description": "Grain",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SOTFA_FOREST_SIGNPOST"
+    ]
+  },
+  {
+    "description": "Vampyrium - Cave walls",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "shiftLightness": 5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": -4,
+        "castShadows": false
+      },
+      {
+        "description": "Wall edge",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_WALL_CAVE_MID",
+      "MYQ6_WALL_CAVE02",
+      "SOTFA_CAVE_EXIT_NOOP",
+      "SOTFA_CAVE_EXIT_OP"
+    ]
+  },
+  {
+    "description": "Vampyrium - Cave walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "shiftLightness": 2,
+    "objectIds": [
+      "SOTFA_CAVE_PAINTING01",
+      "SOTFA_CAVE_PAINTING02",
+      "SOTFA_CAVE_PAINTING03"
+    ]
+  },
+  {
+    "description": "Vamprium - Webbed up cave",
+    "baseMaterial": "ROCK_2",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_3",
+        "uvType": "BOX",
+        "uvOrientation": 404
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "SOTFA_NYLOCAS_CAVE_ENTRY"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Bottom trim",
+        "colors": "s == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 1 && l < 6",
+        "baseMaterial": "GRAVEL",
+        "shiftLightness": 3,
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_JOVKAI01_INTERIOR01",
+      "WALLKIT_JOVKAI01_INTERIOR02",
+      "WALLKIT_JOVKAI01_JUNCTION01",
+      "WALLKIT_JOVKAI01_WALL01",
+      "WALLKIT_JOVKAI01_WALL02",
+      "WALLKIT_JOVKAI01_DOOR01_R",
+      "WALLKIT_JOVKAI01_DOOR01_L",
+      "WALLKIT_JOVKAI01_DOOR01_MIDDLE",
+      "WALLKIT_JOVKAI01_WINDOW02",
+      "WALLKIT_JOVKAI01_JUNCTION02",
+      "WALLKIT_JOVKAI01_JUNCTION03",
+      "WALLKIT_JOVKAI01_JUNCTION04",
+      "WALLKIT_JOVKAI01_INTERIOR01_DOORWAY01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Windows - DYNAMIC",
+    "baseMaterial": "STONE_NORMALED",
+    "shiftLightness": 2,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Bottom trim",
+        "colors": "s == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 1 && l < 6",
+        "baseMaterial": "GRAVEL",
+        "shiftLightness": 3,
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -256
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_WINDOW",
+      "MYQ6_ENTRY_HALL_WINDOW_DAMAGED",
+      "MYQ6_ENTRY_HALL_WINDOW_DAMAGED_INACTIVE"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Supports",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Bottom trim",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 2,
+        "flatNormals": true
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_JOVKAI01_PILLAR01",
+      "MYQ6_ENTRY_HALL_PILLAR_DAMAGED_INACTIVE"
+
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Supports - DYNAMIC",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Bottom trim",
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "shiftLightness": 2,
+        "flatNormals": true
+      },
+      {
+        "description": "Shadow",
+        "colors": "h == 0 && s == 0 && l < 3",
+        "baseMaterial": "BLACK"
+      },
+      {
+        "description": "Grass",
+        "colors": "h == 0 && s >= 5 && s <=7",
+        "baseMaterial": "GRASS_BLADE",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "shiftSaturation": 2,
+        "shiftLightness": 8,
+        "castShadows": false,
+        "inheritTileColorType": "UNDERLAY"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_PILLAR",
+      "MYQ6_ENTRY_HALL_PILLAR_DAMAGED"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Floor rubble",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "shiftLightness": 2,
+    "objectIds": [
+      "WALLKIT_JOVKAI01_RUBBLE01_A",
+      "WALLKIT_JOVKAI01_RUBBLE01_B",
+      "WALLKIT_JOVKAI01_RUBBLE01_C",
+      "WALLKIT_JOVKAI01_RUBBLE02",
+      "WALLKIT_JOVKAI01_RUBBLE01_TILE01",
+      "WALLKIT_JOVKAI01_RUBBLE02_TILE01",
+      "WALLKIT_JOVKAI01_RUBBLE03_TILE01",
+      "WALLKIT_JOVKAI01_RUBBLE04_TILE01",
+      "WALLKIT_JOVKAI01_RUBBLE06_TILE01_END",
+      "VAMPYRIUM_JOVKAI01_RUBBLE01",
+      "VAMPYRIUM_JOVKAI01_RUBBLE02",
+      "VAMPYRIUM_JOVKAI01_RUBBLE03A",
+      "VAMPYRIUM_JOVKAI01_RUBBLE04A"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Table with mould and silver chain - Needs UV",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -256,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "description": "Table contents",
+        "colors": "s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "undoVanillaShading": false,
+        "uvType": "MODEL_XZ",
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_WORKBENCH"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideou Planters",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": -187,
+    "undoVanillaShading": false,
+    "shiftLightness": 2,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "shiftLightness": 4
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "undoVanillaShading": false,
+        "uvScale": 0.8,
+        "shiftLightness": 9
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 2 && s == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "MYQ6_PLANT_PLANTER01",
+      "MYQ6_PLANT_PLANTER03"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Hideout Planter - DYNAMIC - ANIMATED",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": -187,
+    "undoVanillaShading": false,
+    "colorOverrides": [
+      {
+        "description": "BLOOD",
+        "colors": "h == 0 && l < 4",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "shiftLightness": 7,
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "description": "BLOOD",
+        "colors": "a < 255",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "hideAsWaterEffect": true
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "MYQ6_PLANT_PLANTER02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sink - DYNAMIC",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "shiftLightness": 6,
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 32",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_KITCHEN01_SINK01"
+    ]
+  },
+  {
+    "description": "Vampyrium Tables with body parts",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 6
+      },
+      {
+        "colors": "h == 1 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5,
+        "shiftLightness": 4,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_PREP_TABLE"
+    ]
+  },
+  {
+    "description": "Vampyrium Tables with supplies",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Metal",
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 6
+      },
+      {
+        "colors": "h == 1 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5,
+        "shiftLightness": 4,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_SUPPLY_TABLE"
+    ]
+  },
+  {
+    "description": "Vampyrium - Wooden shelves with various objects",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Metal",
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 6
+      },
+      {
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "shiftLightness": 4,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 0 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_SHELVES",
+      "MYQ6_SUGADINTI_HIDEOUT_SHELVES_NOOP"
+    ]
+  },
+  {
+    "description": "Vampyrium - Metal shelves with beakers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Metal",
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 6
+      },
+      {
+        "colors": [ "h == 0 && s == 1" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "shiftLightness": 4
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_CUPBOARD"
+    ]
+  },
+  {
+    "description": "Vampyrium - Fur rack",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "shiftLightness": 4,
+    "colorOverrides": [
+      {
+        "description": "Fur",
+        "colors": "h == 39",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "shiftLightness": 2
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "MYQ6_SUGADINTI_RACK01_FUR01",
+      "MYQ6_SUGADINTI_RACK01_FUR02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Wall cracks",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.4,
+    "uvOrientation": 222,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": -188,
+        "shiftLightness": 2
+      }
+    ],
+    "objectIds": [
+      "MYQ6_WALL01_CRACKS01A",
+      "MYQ6_WALL01_CRACKS02A",
+      "MYQ6_WALL01_CRACKS02B",
+      "MYQ6_WALL01_CRACKS03B"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Carpet",
+    "baseMaterial": "CARPET",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientation": 222,
+    "shiftLightness": 8,
+    "objectIds": [
+      "MYQ6_CARPET_MIDDLE",
+      "MYQ6_CARPET_CORNER",
+      "MYQ6_CARPET_END",
+      "MYQ6_CARPET_CORNER_ALT",
+      "MYQ6_CARPET_SIDE",
+      "MYQ6_CARPET_SIDE_ALT"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sugadinti Throne",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "shiftLightness": 5,
+    "colorOverrides": [
+      {
+        "description": "Cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "MYQ6_THRONE01"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti - Crumbling stone arch",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "shiftLightness": 3,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "VAMPYRIUM_JOVKAI01_ARCH01",
+      "VAMPYRIUM_JOVKAI01_ARCH02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Sangvesti - Castle Hideout - Needs UV",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "uvOrientation": 256,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Spike",
+        "colors": "h == 0 && s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftSaturation": -1,
+        "uvType": "BOX",
+        "uvScale": 0.45,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Fake shadow",
+        "colors": "h == 0 && s == 0 && l <= 3",
+        "baseMaterial": "BLACK",
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "VAMPYRIUM_JOVKAI01_FACADE01",
+      "VAMPYRIUM_JOVKAI01_FACADE02",
+      "VAMPYRIUM_JOVKAI01_FACADE03",
+      "VAMPYRIUM_JOVKAI01_WATCHTOWER01",
+      "VAMPYRIUM_JOVKAI01_WATCHTOWER02"
+    ]
+  },
+  {
+    "description": "Vampyrium - Portal glyph - Needs emissive",
+    "baseMaterial": "GRUNGE_3_GLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "shiftLightness": 5,
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_PORTAL_GLYPH_APPEARING",
+      "MYQ6_ENTRY_HALL_PORTAL_GLYPH"
+    ]
+  },
+  {
+    "description": "Sangvesti - Crates with Hammers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Handle",
+        "colors": "s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512,
+        "shiftLightness": 3
+      },
+      {
+        "description": "Metal",
+        "colors": "s == 0 && l >= 3",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "shiftLightness": 3
+      },
+      {
+        "description": "Fake shadow",
+        "colors": [ "s == 0 && l < 3" ],
+        "baseMaterial": "BLACK",
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_HAMMER_CRATE"
+    ]
+  },
+  {
+    "description": "Sangvesti - Crates with Potions",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "shiftLightness": 3
+      },
+      {
+        "description": "Cork",
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": 1
+      },
+      {
+        "description": "Fake shadow",
+        "colors": "s == 0 && l < 3",
+        "baseMaterial": "BLACK",
+        "shiftLightness": 3
+      }
+    ],
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_POTION_CRATE"
+    ]
+  },
+  {
+    "description": "Sangvesti - Bank Chest Build Spot",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "shiftLightness": 3,
+    "shiftSaturation": -1,
+    "objectIds": [
+      "AMENITY_BANKCHEST_SANGVESTI_UNBUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 0 && s == 1 && a == 255",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "shiftLightness": 3
+      },
+      {
+        "colors": "s == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "shiftLightness": 8,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "Sangvesti - Bank Chest Built",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "shiftLightness": 5,
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 313,
+        "shiftLightness": 6
+      }
+    ],
+    "objectIds": [
+      "AMENITY_BANKCHEST_SANGVESTI_BUILT"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises Barricade",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "shiftLightness": 3,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_BARRICADE_ESCAPE"
+    ]
+  },
+  {
+    "description": "Sangvesti - Jovkai hideout door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "shiftLightness": 3,
+    "objectIds": [
+      "MYQ6_SUGADINTI_HIDEOUT_EXIT",
+      "MYQ6_SUGADINTI_HIDEOUT_EXIT_NOOP",
+      "MYQ6_SUGADINTI_HIDEOUT_EXIT_OPEN_NOOP",
+      "MYQ6_SUGADINTI_HIDEOUT_ENTRY",
+      "MYQ6_SUGADINTI_HIDEOUT_ENTRY_NOOP",
+      "MYQ6_SUGADINTI_HIDEOUT_ENTRY_ESCAPE"
+    ]
+  },
+  {
+    "description": "Jovkai hideout Torches - Animated - Dynamic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "shiftLightness": -1,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "shiftLightness": 3
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "shiftLightness": 10
+      }
+    ],
+    "objectIds": [
+      "MYQ6_TORCH01_A",
+      "MYQ6_TORCH01_B",
+      "MYQ6_TORCH01_C",
+      "MYQ6_TORCH01_D"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Maiden Carpet Fix",
+    "colorOverrides": [
+      {
+        "colors": "h == 56",
+        "baseMaterial": "CARPET",
+        "shiftLightness": 1,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "MYQ6_MAIDEN_POOL_WELL_01",
+      "MYQ6_MAIDEN_POOL_WELL_02",
+      "MYQ6_MAIDEN_POOL_WELL_03",
+      "MYQ6_MAIDEN_POOL_WELL_04"
+    ]
+  },
+  {
+    "description": "Maggot King Floor",
+    "uvType": "BOX",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "objectIds": [
+      "FLOORKIT_MAGGOT01_MIDDLE01",
+      "FLOORKIT_MAGGOT01_EGGS02",
+      "FLOORKIT_MAGGOT01_EGGS01",
+      "FLOORKIT_MAGGOT01_HOLE01_2X2",
+      "FLOORKIT_MAGGOT01_HOLE03",
+      "FLOORKIT_MAGGOT02_HALF01",
+      "FLOORKIT_MAGGOT02_MIDDLE01",
+      "FLOORKIT_MAGGOT01_END01",
+      "FLOORKIT_MAGGOT03_CORNER01_M",
+      "FLOORKIT_MAGGOT03_CORNER01",
+      "FLOORKIT_MAGGOT03_DEFAULT03",
+      "FLOORKIT_MAGGOT03_HALF01",
+      "FLOORKIT_MAGGOT03_DEFAULT01",
+      "FLOORKIT_MAGGOT01_HALF01",
+      "FLOORKIT_MAGGOT03_DEFAULT02",
+      "FLOORKIT_MAGGOT01_HALF01_M",
+      "FLOORKIT_MAGGOT01_HOLE02",
+      "FLOORKIT_MAGGOT01_CORNER01_5X3",
+      "FLOORKIT_MAGGOT01_CORNER02_5X3",
+      "FLOORKIT_MAGGOT01_MIDDLE01_5X3",
+      "FLOORKIT_MAGGOT01_15X2"
+    ]
+  },
+  {
+    "description": "Maggot King Detritus",
+    "uvType": "BOX",
+    "baseMaterial": "GRUNGE_3",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "CORPSE_MAGGOT_DETRITUS01",
+      "CORPSE_MAGGOT_DETRITUS02",
+      "CORPSE_MAGGOT_DETRITUS03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s == 7",
+        "baseMaterial": "ABYSSAL",
+        "undoVanillaShading": false,
+        "shiftLightness": -1,
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Maggot King Bones",
+    "uvType": "BOX",
+    "baseMaterial": "BONE",
+    "undoVanillaShading": false,
+    "shiftLightness": 3,
+    "uvScale": 0.5,
+    "objectIds": [
+      "CORPSE_MAGGOT_DETRITUS04",
+      "CORPSE_MAGGOT_DETRITUS05"
+    ]
+  },
+  {
+    "description": "Maggot King Bone Wall",
+    "uvType": "BOX",
+    "baseMaterial": "BONE",
+    "undoVanillaShading": false,
+    "uvScale": 0.5,
+    "shiftLightness": 6,
+    "objectIds": [
+      "CORPSE_MAGGOT_BONES01",
+      "CORPSE_MAGGOT_BONES02",
+      "CORPSE_MAGGOT_BONES03",
+      "CORPSE_MAGGOT_BONES04",
+      "CORPSE_MAGGOT_BONES04_M"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 4",
+        "baseMaterial": "DIRT_1",
+        "shiftLightness": 6,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Maggot King Corpse Pile",
+    "uvType": "BOX",
+    "undoVanillaShading": false,
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "CORPSE_MAGGOT_PILE01",
+      "CORPSE_MAGGOT_PILE02",
+      "CORPSE_MAGGOT_PILE03",
+      "CORPSE_MAGGOT_PILE03_M"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s > 5",
+        "baseMaterial": "ABYSSAL_2",
+        "shiftLightness": 4,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 5 && s == 5",
+        "baseMaterial": "DIRT_1",
+        "shiftLightness": 6,
+        "undoVanillaShading": false,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "BONE",
+        "shiftLightness": 4,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
     ]
   }
 ]
