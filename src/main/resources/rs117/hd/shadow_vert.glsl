@@ -51,13 +51,11 @@ layout (location = 0) in vec3 vPosition;
     #endif
 
     void main() {
-        int faceIdx = vTextureFaceIdx >> 1;
-        bool isReverseWinding = (vTextureFaceIdx & 1) == 1;
-
         int vertex = gl_VertexID % 3;
-        bool isProvoking = vertex == 2;
 
-        if(isReverseWinding)
+        int faceIdx = vTextureFaceIdx & 0x7FFFFFFF;
+        bool windingReversed = vTextureFaceIdx < 0;
+        if (windingReversed)
             vertex = 2 - vertex;
 
         int alphaBiasHsl = texelFetch(textureFaces, faceIdx)[vertex];

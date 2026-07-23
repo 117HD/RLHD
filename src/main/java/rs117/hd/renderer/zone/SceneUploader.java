@@ -1077,21 +1077,21 @@ public class SceneUploader implements AutoCloseable {
 			lx2, neHeight, lz2,
 			uvx, uvy, 0,
 			neNormals[0], neNormals[1], neNormals[2],
-			texturedFaceIdx, true
+			texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
-			texturedFaceIdx, true
+			texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
-			texturedFaceIdx, true
+			texturedFaceIdx, false
 		);
 
 		if (tileZ != 0 || override.doubleSidedFaces) {
@@ -1099,21 +1099,21 @@ public class SceneUploader implements AutoCloseable {
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
 				-seNormals[0], -seNormals[1], -seNormals[2],
-				texturedFaceIdx, false
+				texturedFaceIdx, true
 			);
 
 			vb.putStaticVertex(
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
 				-nwNormals[0], -nwNormals[1], -nwNormals[2],
-				texturedFaceIdx, false
+				texturedFaceIdx, true
 			);
 
 			vb.putStaticVertex(
 				lx2, neHeight, lz2,
 				uvx, uvy, 0,
 				-neNormals[0], -neNormals[1], -neNormals[2],
-				texturedFaceIdx, false
+				texturedFaceIdx, true
 			);
 		}
 
@@ -1127,21 +1127,21 @@ public class SceneUploader implements AutoCloseable {
 			lx0, swHeight, lz0,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
 			swNormals[0], swNormals[1], swNormals[2],
-			texturedFaceIdx, true
+			texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
-			texturedFaceIdx, true
+			texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
-			texturedFaceIdx, true
+			texturedFaceIdx, false
 		);
 
 		if (tileZ != 0 || override.doubleSidedFaces) {
@@ -1149,21 +1149,21 @@ public class SceneUploader implements AutoCloseable {
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
 				-nwNormals[0], -nwNormals[1], -nwNormals[2],
-				texturedFaceIdx, false
+				texturedFaceIdx, true
 			);
 
 			vb.putStaticVertex(
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
 				-seNormals[0], -seNormals[1], -seNormals[2],
-				texturedFaceIdx, false
+				texturedFaceIdx, true
 			);
 
 			vb.putStaticVertex(
 				lx0, swHeight, lz0,
 				uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
 				-swNormals[0], -swNormals[1], -swNormals[2],
-				texturedFaceIdx, false
+				texturedFaceIdx, true
 			);
 		}
 
@@ -1446,21 +1446,21 @@ public class SceneUploader implements AutoCloseable {
 				lx0, ly0, lz0,
 				uvAx, uvAy, 0,
 				normalsA[0], normalsA[1], normalsA[2],
-				texturedFaceIdx, true
+				texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				lx1, ly1, lz1,
 				uvBx, uvBy, 0,
 				normalsB[0], normalsB[1], normalsB[2],
-				texturedFaceIdx, true
+				texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				lx2, ly2, lz2,
 				uvCx, uvCy, 0,
 				normalsC[0], normalsC[1], normalsC[2],
-				texturedFaceIdx, true
+				texturedFaceIdx, false
 			);
 
 			if (tileZ != 0 || override.doubleSidedFaces) {
@@ -1468,21 +1468,21 @@ public class SceneUploader implements AutoCloseable {
 					lx2, ly2, lz2,
 					uvCx, uvCy, 0,
 					-normalsC[0], -normalsC[1], -normalsC[2],
-					texturedFaceIdx, false
+					texturedFaceIdx, true
 				);
 
 				vb.putStaticVertex(
 					lx1, ly1, lz1,
 					uvBx, uvBy, 0,
 					-normalsB[0], -normalsB[1], -normalsB[2],
-					texturedFaceIdx, false
+					texturedFaceIdx, true
 				);
 
 				vb.putStaticVertex(
 					lx0, ly0, lz0,
 					uvAx, uvAy, 0,
 					-normalsA[0], -normalsA[1], -normalsA[2],
-					texturedFaceIdx, false
+					texturedFaceIdx, true
 				);
 			}
 		}
@@ -1835,21 +1835,21 @@ public class SceneUploader implements AutoCloseable {
 				vx1, vy1, vz1,
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				modelNormals[0], modelNormals[1], modelNormals[2],
-				texturedFaceIdx, true
+				texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				vx2, vy2, vz2,
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				modelNormals[3], modelNormals[4], modelNormals[5],
-				texturedFaceIdx, true
+				texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				vx3, vy3, vz3,
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				modelNormals[6], modelNormals[7], modelNormals[8],
-				texturedFaceIdx, true
+				texturedFaceIdx, false
 			);
 
 			if (faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
@@ -1857,21 +1857,21 @@ public class SceneUploader implements AutoCloseable {
 					vx3, vy3, vz3,
 					faceUVs[8], faceUVs[9], faceUVs[10],
 					-modelNormals[6], -modelNormals[7], -modelNormals[8],
-					texturedFaceIdx, false
+					texturedFaceIdx, true
 				);
 
 				vb.putStaticVertex(
 					vx2, vy2, vz2,
 					faceUVs[4], faceUVs[5], faceUVs[6],
 					-modelNormals[3], -modelNormals[4], -modelNormals[5],
-					texturedFaceIdx, false
+					texturedFaceIdx, true
 				);
 
 				vb.putStaticVertex(
 					vx1, vy1, vz1,
 					faceUVs[0], faceUVs[1], faceUVs[2],
 					-modelNormals[0], -modelNormals[1], -modelNormals[2],
-					texturedFaceIdx, false
+					texturedFaceIdx, true
 				);
 			}
 			len += 3;
@@ -2509,9 +2509,9 @@ public class SceneUploader implements AutoCloseable {
 			packedMaterial, packedMaterial, packedMaterial,
 			terrainData, terrainData, terrainData
 		);
-		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx, true);
-		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx, true);
-		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, true);
+		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx, false);
+		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx, false);
+		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, false);
 	}
 
 	public static void calculateFaceNormalInt(
