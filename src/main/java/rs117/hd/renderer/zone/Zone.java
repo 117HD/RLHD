@@ -27,6 +27,7 @@ import rs117.hd.utils.buffer.GLTextureBuffer;
 import rs117.hd.utils.collections.ConcurrentPool;
 import rs117.hd.utils.collections.Int2IntHashMap;
 import rs117.hd.utils.collections.IntHashSet;
+import rs117.hd.utils.collections.PooledArrayType;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -426,11 +427,13 @@ public class Zone implements Destructible {
 		// only set for static geometry as they require sorting
 		int radius;
 		int[] packedFaces;
-		int[] sortedFaces;
-		int sortedFacesLen;
+		int[] doubleSidedBitSet;
+		char doubleSidedCount;
 
 		int dist;
 		int asyncSortIdx = -1;
+		int sortedFacesLen;
+		int[] tempSortedFaces;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
@@ -445,7 +448,7 @@ public class Zone implements Destructible {
 		}
 
 		boolean isTemp() {
-			return packedFaces == null || sortedFaces == null;
+			return packedFaces == null;
 		}
 
 		int calculateDepth(int cx, int cy, int cz, int zx, int zz) {
@@ -557,9 +560,16 @@ public class Zone implements Destructible {
 			shift++;
 		}
 
-		int[] packedFaces = m.packedFaces = new int[(endpos - startpos) / ((3 * VERT_SIZE) >> 2)];
+		final int bucketCapacity = ceil(faceCount / 32.0f);
+
+		final int[] packedFaces = PooledArrayType.INT.borrow(faceCount);
+		final int[] doubleSidedBitSet = PooledArrayType.INT.borrow(bucketCapacity);
+
+		Arrays.fill(doubleSidedBitSet, 0, bucketCapacity, 0);
+
 		int radius = 0;
 		char bufferIdx = 0;
+		char doubleSidedCount = 0;
 		for (int f = 0; f < faceCount; ++f) {
 			if (color3[f] == -2)
 				continue;
@@ -606,26 +616,36 @@ public class Zone implements Destructible {
 			if (!hasAlpha)
 				continue;
 
-			int fx = (((int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]) / 3) - cx) >> shift;
-			int fy = (((int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]) / 3) - cy) >> shift;
-			int fz = (((int) (vertexZ[indices1[f]] + vertexZ[indices2[f]] + vertexZ[indices3[f]]) / 3) - cz) >> shift;
+			final int fx = (((int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]) / 3) - cx) >> shift;
+			final int fy = (((int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]) / 3) - cy) >> shift;
+			final int fz = (((int) (vertexZ[indices1[f]] + vertexZ[indices2[f]] + vertexZ[indices3[f]]) / 3) - cz) >> shift;
 
 			radius = Math.max(radius, fx * fx + fy * fy + fz * fz);
-
 			packedFaces[bufferIdx] = ((fx & ((1 << 11) - 1)) << 21)
-									 | ((fy & ((1 << 10) - 1)) << 11)
-									 | (fz & ((1 << 11) - 1));
+			                         | ((fy & ((1 << 10) - 1)) << 11)
+			                         | (fz & ((1 << 11) - 1));
+
+			if (faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
+				doubleSidedBitSet[bufferIdx >> 5] |= 1 << (bufferIdx & 31);
+				doubleSidedCount++;
+			}
+
 			bufferIdx++;
 		}
-
-		m.radius = 2 + (int) Math.sqrt(radius);
-		m.sortedFaces = new int[bufferIdx * 3];
 
 		assert packedFaces.length > 0;
 		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
 		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
+		m.radius = 2 + (int) Math.sqrt(radius);
+		m.packedFaces = Arrays.copyOf(packedFaces, bufferIdx);
+		m.doubleSidedBitSet = doubleSidedCount > 0 ? Arrays.copyOf(doubleSidedBitSet, ceil(bufferIdx / 32.0f)) : null;
+		m.doubleSidedCount = doubleSidedCount;
+
 		alphaModels.add(m);
+
+		PooledArrayType.INT.release(packedFaces);
+		PooledArrayType.INT.release(doubleSidedBitSet);
 	}
 
 	synchronized AlphaModel requestTempAlphaModel(ModelOverride modelOverride, int level, int x, int y, int z) {
@@ -649,14 +669,19 @@ public class Zone implements Destructible {
 
 		for (int i = alphaModels.size() - 1; i >= 0; --i) {
 			AlphaModel m = alphaModels.get(i);
+			m.asyncSortIdx = -1;
+			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
+
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
 				alphaModels.remove(i);
 				m.packedFaces = null;
-				m.sortedFaces = null;
+				m.doubleSidedBitSet = null;
 				ALPHA_MODEL_POOL.recycle(m);
 			}
-			m.asyncSortIdx = -1;
-			m.flags &= ~(AlphaModel.SKIP | AlphaModel.SORT_COMPLETED);
+
+			if (m.tempSortedFaces != null)
+				PooledArrayType.INT.release(m.tempSortedFaces);
+			m.tempSortedFaces = null;
 		}
 	}
 
@@ -708,6 +733,7 @@ public class Zone implements Destructible {
 				continue;
 
 			m.dist = dist;
+			m.tempSortedFaces = PooledArrayType.INT.borrow((m.packedFaces.length + m.doubleSidedCount) * 3);
 			alphaSortingJob.addAlphaModel(m);
 		}
 		alphaSortingJob.queue(camera);
@@ -783,7 +809,7 @@ public class Zone implements Destructible {
 					alphaSortingJob.waitForCompletion(10);
 			}
 
-			if (m.sortedFaces == null || m.sortedFacesLen <= 0)
+			if (m.tempSortedFaces == null || m.sortedFacesLen <= 0)
 				continue;
 
 			sortedAlphaFacesUpload.alphaModels.add(m);
@@ -899,9 +925,11 @@ public class Zone implements Destructible {
 				m2.zofz = (byte) (closestZoneZ - zz);
 
 				m2.packedFaces = m.packedFaces;
+				m2.doubleSidedBitSet = m.doubleSidedBitSet;
 				m2.radius = m.radius;
+				m2.doubleSidedCount = m.doubleSidedCount;
 				m2.asyncSortIdx = m.asyncSortIdx;
-				m2.sortedFaces = m.sortedFaces;
+				m2.tempSortedFaces = m.tempSortedFaces;
 				m2.sortedFacesLen = m.sortedFacesLen;
 
 				m2.flags = AlphaModel.TEMP;

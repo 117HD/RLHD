@@ -2250,6 +2250,7 @@
       8
     ],
     "groundMaterial": "GRAVEL",
+    "doubleSidedFaces": true,
     "replacements": {
       "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
@@ -5431,6 +5432,17 @@
     "area": "HUNTER_GUILD",
     "overlayIds": [ 181 ],
     "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "GOTR_PORTAL_BACKFILLING_FIX",
+    "area": "GOTR_PORTAL_BACKFILLING_FIX",
+    "doubleSidedFaces": true,
+    "groundMaterial": "PURE_BLACK",
+    "blended": false,
+    "maxLightness": 0,
+    "underlayIds": [
+      72
+    ]
   },
   {
     "name": "TEMPLE_OF_THE_EYE_ABYSSAL_FLOOR",

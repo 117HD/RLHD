@@ -1227,6 +1227,14 @@
     ]
   },
   {
+    "description": "Wooden Roofs",
+    "doubleSidedFaces": true,
+    "objectIds": [
+      "ROOF_WOODEN",
+      "OLDROOF_WOODEN"
+    ]
+  },
+  {
     "description": "Ardougne Log Balance",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -1240,6 +1248,7 @@
   {
     "description": "Ardougne Agility Balance Plank",
     "baseMaterial": "WOOD_GRAIN_3",
+    "doubleSidedFaces": true,
     "objectIds": [
       "ROOFTOPS_ARDY_PLANK_MIDDLE",
       "ROOFTOPS_ARDY_PLANK"
@@ -1406,6 +1415,7 @@
   {
     "description": "Gnome Stronghold Tree Leaves - Top",
     "baseMaterial": "BARK",
+    "doubleSidedFaces": true,
     "textureMaterial": "LEAVES_TOP_ALT",
     "objectIds": [
       "TKCANOPYMIDDLE",
@@ -1418,6 +1428,7 @@
   {
     "description": "Gnome Stronghold Tree Leaves - Side",
     "baseMaterial": "BARK",
+    "doubleSidedFaces": true,
     "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "TKCANOPYCORNER2",
@@ -4329,6 +4340,15 @@
     ]
   },
   {
+    "description": "Varrok Roofs - DoubleSided",
+    "doubleSidedFaces": true,
+    "objectIds": [
+      "FAI_VARROCK_ROOFKIT_SLATE",
+      "FAI_VARROCK_ROOFKIT_SLATE_RAISED",
+      "FAI_VARROCK_ROOFKIT_SLATE_CUT_CORNER"
+    ]
+  },
+  {
     "description": "VARROCK_FOUNTAIN_FLOOR",
     "baseMaterial": "STONE",
     "objectIds": [
@@ -4478,6 +4498,7 @@
     "baseMaterial": "MARBLE_2",
     "uvType": "BOX",
     "flatNormals": true,
+    "doubleSidedFaces": true,
     "objectIds": [
       "EXCHANGE_LOWER_CENTRE_PILLAR",
       "EXCHANGE_UPPER_CENTRAL_PILLAR",
@@ -4911,6 +4932,13 @@
         "flatNormals": true,
         "castShadows": false
       }
+    ]
+  },
+  {
+    "description": "Rupunzula Tower Roof",
+    "doubleSidedFaces": true,
+    "objectIds": [
+      "GRIM_WATCHTOWER_ROOF"
     ]
   },
   {
@@ -11705,6 +11733,7 @@
       "FAI_VARROCK_RUGCORNER",
       "FAI_VARROCK_RUGSIDE",
       "FAI_VARROCK_RUGMIDDLE",
+      "FAI_VARROCK_RUGCORNER_INSIDE",
       "FAI_VARROCK_POSH_RUG_CORNER",
       "FAI_VARROCK_POSH_RUG_SIDE",
       "FAI_VARROCK_POSH_RUG_MIDDLE",
@@ -29043,9 +29072,7 @@
     ],
     "objectIds": [
       "PLANT1",
-      "PLANT2",
       "PLANT3",
-      "PLANT4",
       "AHOY_PLANT_1_INACTIVE",
       "AHOY_PLANT_1",
       "AHOY_PLANT_2",
@@ -29061,6 +29088,25 @@
       "DOV_HUNTING_PLANT_INITIAL",
       "PLANT_TROPICAL_01",
       "IG_PLANT_FLAT"
+    ]
+  },
+  {
+    "description": "Generic - Plant - Leafy Shrub - DoubleSided",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "MODEL_XZ",
+        "windDisplacementMode": "VERTEX",
+        "doubleSidedFaces": true
+      }
+    ],
+    "objectIds": [
+      "PLANT2",
+      "PLANT4"
     ]
   },
   {
@@ -42354,6 +42400,7 @@
   {
     "description": "Acacia Tree",
     "baseMaterial": "LIGHT_BARK_STONEPINE",
+    "doubleSidedFaces": true,
     "objectIds": [
       "AVIUM_ACACIA_1",
       "AVIUM_ACACIA_CANOPY_1"
@@ -42364,6 +42411,7 @@
   {
     "description": "Stonepine Tree",
     "baseMaterial": "LIGHT_BARK_STONEPINE",
+    "doubleSidedFaces": true,
     "objectIds": [
       "ROR_TEMPLE_TREE01_CANOPY01",
       "ROR_TEMPLE_TREE01_TRUNK01",
@@ -64371,12 +64419,14 @@
     "baseMaterial": "HD_HAY_BRIGHT",
     "uvType": "BOX",
     "uvOrientation": 512,
+    "doubleSidedFaces": true,
     "uvScale": 0.7,
     "objectIds": [
       "FAI_VARROCK_ROOF_THATCHED_WINDOW_RIGHT",
       "FAI_VARROCK_ROOF_THATCHED_WINDOW_LEFT",
       "FAI_VARROCK_ROOF_THATCHED_WINDOW",
       "FAI_VARROCK_ROOF_THATCHED",
+      "FAI_VARROCK_ROOF_THATCHED_OUTSIDE",
       "FAI_VARROCK_ROOF_THATCHED_SHORT",
       "FAI_VARROCK_ROOF_THATCHED_SHORT_MIRROR",
       "FAI_VARROCK_ROOF_THATCHED_3H",
@@ -64433,6 +64483,7 @@
     "baseMaterial": "HD_HAY",
     "uvType": "BOX",
     "uvScale": 0.7,
+    "doubleSidedFaces": true,
     "objectIds": [
       "FAI_VARROCK_MILLROOFRIGHT",
       "FAI_VARROCK_MILLROOFLEFT"
@@ -79685,6 +79736,7 @@
   {
     "description": "The Pandemonium - Palm Tree",
     "baseMaterial": "LEAF_VEINS_PALM_LIGHT",
+    "doubleSidedFaces": true,
     "uvType": "BOX",
     "uvScale": 0.25,
     "objectIds": [
