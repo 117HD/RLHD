@@ -29,6 +29,58 @@
 #include <utils/lights.glsl>
 #include <utils/misc.glsl>
 
+// pcg2d, from Jarzynski & Olano 2020: https://jcgt.org/published/0009/03/02/
+vec2 hash22(vec2 p) {
+    uvec2 v = uvec2(ivec2(floor(p)));
+    v = v * 1664525u + 1013904223u;
+    v.x += v.y * 1664525u; v.y += v.x * 1664525u;
+    v ^= v >> 16u;
+    v.x += v.y * 1664525u; v.y += v.x * 1664525u;
+    v ^= v >> 16u;
+    return vec2(v) * (1.0 / float(0xffffffffu));
+}
+
+// Triangle-grid stochastic detiling, Heitz & Neyret 2018:
+// https://eheitzresearch.wordpress.com/722-2/
+//
+// anchorUv must be stable across animationFrame wraps (unscrolled world UV)
+// so scroll wraps don't jump cell coords; lookupUv carries scroll + flow.
+vec3 sampleNormalDetiled(int layer, vec2 anchorUv, vec2 lookupUv) {
+    const mat2 gridToSkewed = mat2(1.0, 0.0, -0.57735, 1.15470);
+    vec2 skewed = gridToSkewed * anchorUv * 3.4641016; // 2*sqrt(3)
+    vec2 base = floor(skewed);
+    vec2 f = skewed - base;
+    float fz = 1.0 - f.x - f.y;
+
+    vec2 v1, v2, v3;
+    vec3 w;
+    if (fz > 0.0) {
+        v1 = base;
+        v2 = base + vec2(0, 1);
+        v3 = base + vec2(1, 0);
+        w = vec3(fz, f.y, f.x);
+    } else {
+        v1 = base + vec2(1, 1);
+        v2 = base + vec2(1, 0);
+        v3 = base + vec2(0, 1);
+        w = vec3(-fz, 1.0 - f.y, 1.0 - f.x);
+    }
+
+    vec2 uv1 = lookupUv + hash22(v1);
+    vec2 uv2 = lookupUv + hash22(v2);
+    vec2 uv3 = lookupUv + hash22(v3);
+    vec2 dx = dFdx(lookupUv), dy = dFdy(lookupUv);
+
+    vec3 s1 = textureGrad(textureArray, vec3(uv1, layer), dx, dy).xyz;
+    vec3 s2 = textureGrad(textureArray, vec3(uv2, layer), dx, dy).xyz;
+    vec3 s3 = textureGrad(textureArray, vec3(uv3, layer), dx, dy).xyz;
+    vec3 blended = linearToSrgb(s1 * w.x + s2 * w.y + s3 * w.z);
+    // Heitz/Neyret variance rescale, skipping T/T⁻¹ since tangent-space
+    // normal maps sit near a known analytical mean.
+    const vec3 flatMean = vec3(0.5, 0.5, 1.0);
+    return flatMean + (blended - flatMean) / length(w);
+}
+
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
@@ -45,8 +97,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     uv3 += uvFlow * flowMapStrength;
 
     // get diffuse textures
-    vec3 n1 = linearToSrgb(texture(textureArray, vec3(uv1, waterType.normalMap)).xyz);
-    vec3 n2 = linearToSrgb(texture(textureArray, vec3(uv2, waterType.normalMap)).xyz);
+    vec3 n1 = sampleNormalDetiled(waterType.normalMap, worldUvs(3).yx, uv1);
+    vec3 n2 = sampleNormalDetiled(waterType.normalMap, worldUvs(3), uv2);
     float foamMask = texture(textureArray, vec3(uv3, MAT_WATER_FOAM.colorMap)).r;
 
     // normals
