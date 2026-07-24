@@ -24,7 +24,6 @@
  */
 package rs117.hd.renderer.zone;
 
-import java.util.Arrays;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -1899,11 +1898,8 @@ public class SceneUploader implements AutoCloseable {
 		final float[] verticesY = model.getVerticesY();
 		final float[] verticesZ = model.getVerticesZ();
 
-		final boolean[] visibility = PooledArrayType.BOOL.borrow(vertexCount);
+		final boolean[] visibility = isModelPartiallyVisible ? PooledArrayType.BOOL.borrow(vertexCount) : null;
 		final float[] modelProjected = PooledArrayType.FLOAT.borrow(vertexCount * 3);
-
-		if (isModelPartiallyVisible)
-			Arrays.fill(visibility, 0, vertexCount, true);
 
 		// Identity orient, will result in no rotation
 		float orientSinf = 0;
@@ -2066,7 +2062,7 @@ public class SceneUploader implements AutoCloseable {
 			int offsetB = indices2[f];
 			int offsetC = indices3[f];
 
-			if (!allVertsVisible && !visibility[offsetA] && !visibility[offsetB] && !visibility[offsetC]) {
+			if (isModelPartiallyVisible && !allVertsVisible && !visibility[offsetA] && !visibility[offsetB] && !visibility[offsetC]) {
 				// TODO: If a triangle is large enough to encompass the entire screen, this will need an additional plane test
 				culledFaces.put(f);
 				continue;
