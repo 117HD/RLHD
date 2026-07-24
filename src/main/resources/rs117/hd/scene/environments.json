@@ -599,6 +599,7 @@
     "fogDepth": 70
   },
   {
+    "description": "Environment for the cutscene in the middle of the The Blood Moon Rises",
     "area": "BMR_MORYTANIA_MOON_CUTSCENE",
     "instantTransition": true,
     "varbitCondition": "CUTSCENE_STATUS && MYQ6 !=0 && MYQ6 < 178",
@@ -623,6 +624,7 @@
     "moonSizeMult": 3.05
   },
   {
+    "description": "Environment for the cutscene at the end of the The Blood Moon Rises",
     "area": "BMR_MORYTANIA_DAWN_CUTSCENE",
     "instantTransition": true,
     "varbitCondition": "CUTSCENE_STATUS && MYQ6 !=0 && MYQ6 < 178",
@@ -644,6 +646,31 @@
     "auroraVisibility": 0
   },
   {
+    "description": "With blood moon and fixed night, for the portion of the quest immediately after returning from Vampyrium to the overworld. Must remain above the default Morytania environment",
+    "area": "MORYTANIA",
+    "instantTransition": true,
+    "varbitCondition": "MYQ6 >=128 && MYQ6 < 178",
+    "fogDepth": 20,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "fogColor": "#4B1715",
+    "groundFogStart": -150,
+    "groundFogEnd": -350,
+    "groundFogOpacity": 0.7,
+    "starVisibility": 0.8,
+    "minBrightnessBoost": 2,
+    "nightSkyColor": "#FF0000",
+    "moonColor": "#ED3D3D",
+    "moonLightColor": "#ED8B8B",
+    "cycleMode": "FIXED_NIGHT",
+    "fixedMoonAngles": [ 22.6, 89.75 ],
+    "auroraVisibility": 0,
+    "nightSkyColorStrength": 2.5,
+    "moonSizeMult": 3.05
+  },
+  {
+    "description": "Default Morytania Environment",
     "area": "MORYTANIA",
     "ambientColor": "#5a8cc0",
     "ambientStrength": 1.5,
@@ -2411,6 +2438,7 @@
     "waterCausticsStrength": 0
   },
   {
+    "description": "Environment for the final battle during The Blood Moon Rises",
     "area": "VAMPYRIUM_CASTLE_DRAKAN_ROOF",
     "hideVanillaSkyboxes": true,
     "fogDepth": 10,
