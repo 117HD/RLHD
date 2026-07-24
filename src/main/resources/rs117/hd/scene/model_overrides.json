@@ -22838,6 +22838,7 @@
         "windDisplacementModifier": -3,
         "baseMaterial": "LEAF_VEINS",
         "uvType": "MODEL_XZ",
+        "doubleSidedFaces": true,
         "uvScale": 0.25
       }
     ]
@@ -22856,6 +22857,7 @@
   {
     "description": "Jungle Tree Small",
     "baseMaterial": "LEAF_VEINS",
+    "doubleSidedFaces": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "windDisplacementModifier": -3,
     "objectIds": [
@@ -22887,6 +22889,7 @@
     "description": "Jungle Tree Small with Oranges - Should copy Jungle Tree",
     "baseMaterial": "LEAF_VEINS",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "doubleSidedFaces": true,
     "windDisplacementModifier": -3,
     "objectIds": [
       "AVIUM_TREE_ORANGE",
@@ -42400,7 +42403,6 @@
   {
     "description": "Acacia Tree",
     "baseMaterial": "LIGHT_BARK_STONEPINE",
-    "doubleSidedFaces": true,
     "objectIds": [
       "AVIUM_ACACIA_1",
       "AVIUM_ACACIA_CANOPY_1"
@@ -42411,7 +42413,6 @@
   {
     "description": "Stonepine Tree",
     "baseMaterial": "LIGHT_BARK_STONEPINE",
-    "doubleSidedFaces": true,
     "objectIds": [
       "ROR_TEMPLE_TREE01_CANOPY01",
       "ROR_TEMPLE_TREE01_TRUNK01",
@@ -42508,6 +42509,8 @@
   {
     "description": "Varlamore Awnings Small Red",
     "baseMaterial": "CARPET",
+    "doubleSidedFaces": true,
+    "depthBias": 1,
     "objectIds": [
       "TENT_BAZAAR01_COVER01"
     ],
@@ -54315,6 +54318,7 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "flatNormals": true,
+    "doubleSidedFaces": true,
     "objectIds": [
       "FLOORKIT_WOODEN01_DEFAULT01",
       "FLOORKIT_WOODEN01_DEFAULT02",
@@ -64440,6 +64444,7 @@
         "description": "Ropes",
         "baseMaterial": "ROPE",
         "colors": "s > 2",
+        "doubleSidedFaces": true,
         "uvType": "BOX",
         "uvScale": 0.55
       }
