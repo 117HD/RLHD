@@ -977,20 +977,29 @@ public class ZoneRenderer implements Renderer {
 				}
 
 				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-					// Write color without depth writes
-					sceneCmd.DepthMask(false);
-					sceneCmd.ColorMask(true, true, true, true);
+					if(renderWater) {
+						// Water is currently drawn with depth writing & testing enabled, as such alpha models and the water plane
+						// can fight depending on the draw order, to avoid alpha models causing water to fail depth testing we disable
+						// depth writing for this zone
+						sceneCmd.DepthMask(false);
+						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+						sceneCmd.DepthMask(true);
+					} else {
+						// Write color without depth writes
+						sceneCmd.DepthMask(false);
+						sceneCmd.ColorMask(true, true, true, true);
 
-					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
+						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
 
-					// Write depth without color
-					sceneCmd.DepthMask(true);
-					sceneCmd.ColorMask(false, false, false, false);
+						// Write depth without color
+						sceneCmd.DepthMask(true);
+						sceneCmd.ColorMask(false, false, false, false);
 
-					z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
+						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
 
-					// Restore color writes
-					sceneCmd.ColorMask(true, true, true, true);
+						// Restore color writes
+						sceneCmd.ColorMask(true, true, true, true);
+					}
 				}
 			}
 			frameTimer.end(Timer.DRAW_ZONE_ALPHA);
