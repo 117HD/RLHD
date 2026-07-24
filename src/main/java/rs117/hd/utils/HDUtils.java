@@ -57,6 +57,8 @@ public final class HDUtils {
 
 	public static final int EXTENDED_SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
 
+	private static final int[] ROTATE_TYPE_INDICES = { 6, 7, 8, 9, 13, 14, 19 };
+
 	public static int tileVertexHash(int[] vertex) {
 		// Tile X and Z coordinates are always multiples of 32, so 10 bits is sufficient for 184 tiles.
 		// The tile height does not strictly fit in 12 bits, so we allow collisions beyond 4096 units.
@@ -175,6 +177,44 @@ public final class HDUtils {
 				orientation += 256;
 		}
 		return orientation % 2048;
+	}
+
+	public static boolean shouldRotateType(int config) {
+		int type = config & 0x3F;
+		for (int rotateType : ROTATE_TYPE_INDICES) {
+			if (type == rotateType)
+				return true;
+		}
+		return false;
+	}
+
+	public static int getOrientationFromConfig(int config) {
+		int orientation = 1024;
+		if (shouldRotateType(config))
+			orientation += 256;
+		switch (config >>> 6 & 3) {
+			case 1:
+				orientation += 512;
+				break;
+			case 2:
+				orientation += 1024;
+				break;
+			case 3:
+				orientation += 1536;
+				break;
+		}
+		return orientation % 2048;
+	}
+
+	public static void applyRotationToOffset(int orientation, int[] offset) {
+		final int offsetOrientSin = SINE[mod(orientation, 2048)];
+		final int offsetOrientCos = COSINE[mod(orientation, 2048)];
+
+		final int offsetXTemp = offset[0];
+		final int offsetZTemp = offset[2];
+
+		offset[0] = offsetZTemp * offsetOrientSin + offsetXTemp * offsetOrientCos >> 16;
+		offset[2] = offsetZTemp * offsetOrientCos - offsetXTemp * offsetOrientSin >> 16;
 	}
 
 	/**
