@@ -42,6 +42,7 @@ import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.GroundBlending;
 import rs117.hd.config.InfernalCape;
+import rs117.hd.config.Presets;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -54,6 +55,7 @@ import rs117.hd.config.ShadowResolution;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.utils.GraphicsPresets;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
@@ -64,6 +66,14 @@ import static rs117.hd.utils.MathUtils.*;
 public interface HdPluginConfig extends Config
 {
 	String CONFIG_GROUP = "hd";
+
+	String KEY_GRAPHICS_PRESET = "graphicsPreset";
+	@ConfigItem(
+		keyName = KEY_GRAPHICS_PRESET,
+		name = "Graphics Preset",
+		description = ""
+	)
+	default GraphicsPresets.QualityLevel graphicsPreset() { return GraphicsPresets.QualityLevel.HIGH; }
 
 	/*====== General settings ======*/
 
@@ -87,6 +97,7 @@ public interface HdPluginConfig extends Config
 		position = 1,
 		section = generalSettings
 	)
+	@Presets(ints = {50, 100, 125, 184})
 	default int drawDistance() {
 		return 50;
 	}
@@ -105,8 +116,9 @@ public interface HdPluginConfig extends Config
 		position = 2,
 		section = generalSettings
 	)
+	@Presets(ints = {25, 50, 75, 100})
 	default int detailDrawDistance() {
-		return 70;
+		return 75;
 	}
 
 	String KEY_EXPANDED_MAP_LOADING_CHUNKS = "expandedMapLoadingChunks";
@@ -149,6 +161,7 @@ public interface HdPluginConfig extends Config
 		position = 5,
 		section = generalSettings
 	)
+	@Presets(enums = {"DISABLED", "MSAA_2", "MSAA_4", "MSAA_16"})
 	default AntiAliasingMode antiAliasingMode()
 	{
 		return AntiAliasingMode.MSAA_8;
@@ -213,6 +226,7 @@ public interface HdPluginConfig extends Config
 		position = 9,
 		section = generalSettings
 	)
+	@Presets(ints = {1, 4, 8, 16})
 	default int anisotropicFilteringLevel()
 	{
 		return 16;
@@ -397,6 +411,7 @@ public interface HdPluginConfig extends Config
 		position = 1,
 		section = shadowSettings
 	)
+	@Presets(enums = {"FAST", "FAST", "DETAILED", "DETAILED"})
 	default ShadowMode shadowMode() {
 		return ShadowMode.DETAILED;
 	}
@@ -411,6 +426,7 @@ public interface HdPluginConfig extends Config
 		position = 2,
 		section = shadowSettings
 	)
+	@Presets(enums = {"RES_1024", "RES_2048", "RES_4096", "RES_8192"})
 	default ShadowResolution shadowResolution() {
 		return ShadowResolution.RES_8192;
 	}
@@ -439,6 +455,7 @@ public interface HdPluginConfig extends Config
 		position = 4,
 		section = shadowSettings
 	)
+	@Presets(bools = {false, false, true, true})
 	default boolean shadowTransparency() {
 		return true;
 	}
@@ -465,6 +482,7 @@ public interface HdPluginConfig extends Config
 		position = 6,
 		section = shadowSettings
 	)
+	@Presets(bools = {false, true, true, true})
 	default boolean expandShadowDraw() {
 		return false;
 	}
@@ -490,6 +508,7 @@ public interface HdPluginConfig extends Config
 		position = 0,
 		section = lightingSettings
 	)
+	@Presets(enums = {"NONE", "FEW", "MANY", "MANY"})
 	default DynamicLights dynamicLights() {
 		return DynamicLights.SOME;
 	}
@@ -516,6 +535,7 @@ public interface HdPluginConfig extends Config
 		position = 2,
 		section = lightingSettings
 	)
+	@Presets(bools = {false, true, true, true})
 	default boolean projectileLights() {
 		return true;
 	}
@@ -528,6 +548,7 @@ public interface HdPluginConfig extends Config
 		position = 3,
 		section = lightingSettings
 	)
+	@Presets(bools = {false, true, true, true})
 	default boolean npcLights() {
 		return true;
 	}
@@ -567,6 +588,7 @@ public interface HdPluginConfig extends Config
 		position = 12,
 		section = lightingSettings
 	)
+	@Presets(bools = {false, true, true, true})
 	default boolean normalMapping() {
 		return true;
 	}
@@ -579,6 +601,7 @@ public interface HdPluginConfig extends Config
 		position = 13,
 		section = lightingSettings
 	)
+	@Presets(bools = {false, false, true, true})
 	default boolean parallaxOcclusionMapping() {
 		return true;
 	}
@@ -735,6 +758,7 @@ public interface HdPluginConfig extends Config
 		position = 10,
 		section = environmentSettings
 	)
+	@Presets(enums = {"RES_128", "RES_256", "RES_256", "RES_256"})
 	default TextureResolution textureResolution()
 	{
 		return TextureResolution.RES_256;
@@ -766,6 +790,7 @@ public interface HdPluginConfig extends Config
 		position = 12,
 		section = environmentSettings
 	)
+	@Presets(bools = {false, true, true, true})
 	default boolean underwaterCaustics()
 	{
 		return true;
@@ -779,6 +804,7 @@ public interface HdPluginConfig extends Config
 		position = 13,
 		section = environmentSettings
 	)
+	@Presets(bools = {false, false, true, true})
 	default boolean windDisplacement() {
 		return true;
 	}
@@ -791,6 +817,7 @@ public interface HdPluginConfig extends Config
 		position = 14,
 		section = environmentSettings
 	)
+	@Presets(bools = {false, false, true, true})
 	default boolean characterDisplacement() {
 		return true;
 	}
@@ -1259,4 +1286,5 @@ public interface HdPluginConfig extends Config
 	default int getPluginUpdateMessage() {
 		return 0;
 	}
+
 }
