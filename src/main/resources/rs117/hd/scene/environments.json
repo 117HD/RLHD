@@ -2470,7 +2470,7 @@
     "sunStrength": 0.01,
     "sunlightStrength": 2,
     "starVisibility": 0.8,
-    "minBrightnessBoost": 0.5,
+    "minBrightnessBoost": 1.5,
     "nightSkyColor": "#FF0000",
     "sunriseSunsetStrength": 0.2,
     "auroraVisibility": 0
