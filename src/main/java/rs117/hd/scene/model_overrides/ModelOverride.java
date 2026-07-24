@@ -3,13 +3,17 @@ package rs117.hd.scene.model_overrides;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.annotations.JsonAdapter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +38,21 @@ import static rs117.hd.utils.MathUtils.*;
 @AllArgsConstructor
 public class ModelOverride
 {
+	private static final ThreadLocal<AHSLSupplier> LOCAL_AHSLSupplier = ThreadLocal.withInitial(AHSLSupplier::new);
+
 	public static final ModelOverride NONE = new ModelOverride(true);
 	public static final ModelOverride UNLIT = new ModelOverride(true).baseMaterial(Material.UNLIT).undoVanillaShading(false);
 
 	private static final Set<Integer> EMPTY = new HashSet<>();
+
+	private static final Comparator<WeightedPredicate> WEIGHTED_PREDICATE_COMPARATOR = Comparator.comparingInt((val) -> val.weight);
+	private static final List<WeightedPredicate> PREDICATES = new ArrayList<>();
+
+	@RequiredArgsConstructor
+	private static class WeightedPredicate {
+		public final AhslPredicate condition;
+		public final int weight;
+	}
 
 	public String description = "UNKNOWN";
 
@@ -123,12 +138,9 @@ public class ModelOverride
 	public transient boolean mightBeDoubleSided;
 	public transient boolean modifiesVanillaTexture;
 
-	// Transient not volatile, since access order can be random as it'll mean we'll just fall back to the full lookup
-	private transient long cachedColorOverrideAhsl = -1;
-
 	@FunctionalInterface
 	public interface AhslPredicate {
-		boolean test(int ahsl);
+		boolean test(AHSLSupplier vars);
 	}
 
 	public void normalize(HdPlugin plugin) {
@@ -349,9 +361,7 @@ public class ModelOverride
 			ahslCondition,
 			mightHaveTransparency,
 			mightBeDoubleSided,
-			modifiesVanillaTexture,
-			// Runtime caching fields
-			-1
+			modifiesVanillaTexture
 		);
 	}
 
@@ -372,8 +382,7 @@ public class ModelOverride
 			arr.add(element);
 		}
 
-		AhslPredicate combinedPredicate = null;
-
+		PREDICATES.clear();
 		for (var el : arr) {
 			if (el.isJsonNull())
 				continue;
@@ -382,21 +391,21 @@ public class ModelOverride
 				continue;
 			}
 
-			AhslPredicate condition;
+			AhslPredicate condition = null;
+			int weight = 1;
 			var prim = el.getAsJsonPrimitive();
 			if (prim.isBoolean()) {
-				boolean bool = prim.getAsBoolean();
-				condition = ahsl -> bool;
+				if(prim.getAsBoolean())
+					condition = ahsl -> true;
 			} else if (prim.isNumber()) {
 				try {
-					int targetHsl = prim.getAsInt();
-					condition = ahsl -> (ahsl & 0xFFFF) == targetHsl;
+					condition = new HSLComparison(prim.getAsInt());
 				} catch (Exception ex) {
 					log.warn("Expected integer, but got {} in override '{}'", el, description);
 					continue;
 				}
 			} else if (prim.isString()) {
-				var expr = asExpression(parseExpression(prim.getAsString()));
+				final var expr = asExpression(parseExpression(prim.getAsString()));
 
 				if (Props.DEVELOPMENT) {
 					// Ensure all variables are defined
@@ -407,43 +416,39 @@ public class ModelOverride
 								"Expression '" + prim.getAsString() + "' contains unknown variable '" + variable + "'");
 				}
 
-				var predicate = expr.toPredicate();
-				condition = ahsl -> predicate.test(key -> {
-					switch (key) {
-						case "a":
-							return ahsl >>> 16 & 0xFF;
-						case "h":
-							return ahsl >>> 10 & 0x3F;
-						case "s":
-							return ahsl >>> 7 & 0x7;
-						case "l":
-							return ahsl & 0x7F;
-						case "ahsl":
-							return ahsl;
-						case "hsl":
-							return ahsl & 0xFFFF;
-						default:
-							assert false : "Unexpected variable: " + key;
-							return 0;
-					}
-				});
+				final var predicate = expr.toPredicate();
+				condition = predicate::test;
+				weight = expr.variables.size();
 			} else {
 				log.warn("Skipping unexpected HSL condition primitive '{}' in override '{}'", el, description);
 				continue;
 			}
 
-			if (combinedPredicate == null) {
-				combinedPredicate = condition;
-			} else {
-				var prev = combinedPredicate;
-				combinedPredicate = ahsl -> prev.test(ahsl) || condition.test(ahsl);
-			}
+			if(condition != null)
+				PREDICATES.add(new WeightedPredicate(condition, weight));
 		}
 
-		if (combinedPredicate == null)
+		if (PREDICATES.isEmpty())
 			return ahsl -> false;
 
-		return combinedPredicate;
+		final int conditionCount = PREDICATES.size();
+		if(conditionCount == 1)
+			return PREDICATES.get(0).condition;
+
+		// Sort based on weight to push cheaper conditions first
+		PREDICATES.sort(WEIGHTED_PREDICATE_COMPARATOR);
+
+		final AhslPredicate[] conditions = new AhslPredicate[conditionCount];
+		for(int i = 0; i < conditionCount; i++)
+			conditions[i] = PREDICATES.get(i).condition;
+
+		return ahsl -> {
+			for (int i = 0; i < conditionCount; i++) {
+				if (conditions[i].test(ahsl))
+					return true;
+			}
+			return false;
+		};
 	}
 
 	public void computeModelUvw(float[] out, int i, float x, float y, float z, int orientation) {
@@ -734,23 +739,20 @@ public class ModelOverride
 
 	@Nullable
 	public final ModelOverride testColorOverrides(int ahsl) {
-		ModelOverride override = null;
-		final long packedAhl = cachedColorOverrideAhsl;
-		if (packedAhl != -1 && ahsl == (int) packedAhl)
-			override = colorOverrides[(int) (packedAhl >> 32)];
+		if(colorOverrides.length == 0)
+			return null;
 
-		if (override == null) {
-			final int len = colorOverrides.length;
-			for (int i = 0; i < len; ++i) {
-				final var inner = colorOverrides[i];
-				if (inner.ahslCondition.test(ahsl)) {
-					cachedColorOverrideAhsl = ahsl | (long) i << 32;
-					override = inner;
-					break;
-				}
-			}
+		return testColorOverrides(LOCAL_AHSLSupplier.get().ahsl(ahsl));
+	}
+
+	@Nullable
+	public final ModelOverride testColorOverrides(AHSLSupplier vars) {
+		final int len = colorOverrides.length;
+		for (int i = 0; i < len; ++i) {
+			final var override = colorOverrides[i];
+			if (override.ahslCondition.test(vars))
+				return override;
 		}
-
-		return override;
+		return null;
 	}
 }

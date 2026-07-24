@@ -13,40 +13,53 @@ import static rs117.hd.utils.ExpressionParser.parsePredicate;
 public class ExpressionParserTest {
 	@Test
 	public void testExpressionParser() {
-		VariableSupplier vars = name -> {
-			switch (name) {
-				case "h":
-					return 5;
-				case "s":
-					return 10;
-				case "l":
-					return 5;
-				case "blending":
-					return true;
-				case "textures":
-					return false;
+		final VariableSupplier vars = new VariableSupplier() {
+			@Override
+			public Object get(String name) { return null; }
+
+			@Override
+			public int getInt(String name) {
+				switch (name) {
+					case "h":
+						return 5;
+					case "s":
+						return 10;
+					case "l":
+						return 5;
+				}
+				throw new UnsupportedOperationException(name + " is not an int var");
 			}
-			return null;
+
+			@Override
+			public boolean getBoolean(String name) {
+				switch (name) {
+					case "blending":
+						return true;
+					case "textures":
+						return false;
+				}
+				throw new UnsupportedOperationException(name + " is not an boolean var");
+			}
 		};
 
-		Assert.assertEquals(5.f, parseExpression("5"));
-		Assert.assertEquals(-5.f, parseExpression("-5"));
+		Assert.assertEquals(5, parseExpression("5"));
+		Assert.assertEquals(-5, parseExpression("-5"));
 		Assert.assertEquals(-2.5f, parseExpression("-2.5"));
 		Assert.assertEquals(-.5f, parseExpression("-0.5"));
 		Assert.assertEquals(-.5f, parseExpression("-.5"));
 		Assert.assertEquals(.5f, parseExpression(".5"));
 		Assert.assertEquals(.5f, parseExpression("+.5"));
 		Assert.assertEquals(.5f, parseExpression("++ +.5"));
-		Assert.assertEquals(1f, parseExpression("--1"));
+		Assert.assertEquals(1, parseExpression("--1"));
 		Assert.assertEquals(.5f, parseExpression("+-++-.5"));
-		Assert.assertEquals(17.f, parseFunction("5 + 12").apply(null));
-		Assert.assertEquals(16.f, parseExpression("8 / 2 * (2 + 2)"));
-		Assert.assertEquals(32.f, parseExpression("2 * 8 / 2 * (2 + 2)"));
-		Assert.assertEquals(3.f, parseExpression("2 * 3 / 2"));
-		Assert.assertEquals(0.f, parseExpression("2 * 8 - 4 * 4"));
-		Assert.assertEquals(29.f, parseExpression("2 + 3 * (8 + 5 / 5)"));
-		Assert.assertEquals(40.f, parseExpression("(8 - 1 + 3) * 6 - ((3 + 7) * 2)"));
-		Assert.assertEquals(21.f, parseExpression("(1 + 2) * (3 + 4)"));
+		Assert.assertEquals(17, parseFunction("5 + 12").apply(null));
+		Assert.assertEquals(16, parseExpression("8 / 2 * (2 + 2)"));
+		Assert.assertEquals(32, parseExpression("2 * 8 / 2 * (2 + 2)"));
+		Assert.assertEquals(3, parseExpression("2 * 3 / 2"));
+		Assert.assertEquals(0, parseExpression("2 * 8 - 4 * 4"));
+		Assert.assertEquals(29, parseExpression("2 + 3 * (8 + 5 / 5)"));
+		Assert.assertEquals(40, parseExpression("(8 - 1 + 3) * 6 - ((3 + 7) * 2)"));
+		Assert.assertEquals(21, parseExpression("(1 + 2) * (3 + 4)"));
 		Assert.assertFalse(parsePredicate("!( blending )").test(vars));
 		Assert.assertEquals(false, parseExpression("!true"));
 		Assert.assertEquals(true, parseExpression("SUMMER == 1", name -> SeasonalTheme.valueOf(name).ordinal()));
