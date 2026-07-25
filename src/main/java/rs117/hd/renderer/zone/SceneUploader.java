@@ -413,6 +413,9 @@ public class SceneUploader implements AutoCloseable {
 				z.sizeF += 2;
 			} else {
 				z.onlyWater = false;
+
+				if (tileZ != 0 || override.doubleSidedFaces)
+					z.sizeO += 2;
 			}
 		}
 
@@ -445,6 +448,9 @@ public class SceneUploader implements AutoCloseable {
 				z.sizeF += len;
 			} else {
 				z.onlyWater = false;
+
+				if (tileZ != 0 || overlayOverride.doubleSidedFaces || underlayOverride.doubleSidedFaces)
+					z.sizeO += len;
 			}
 		}
 
@@ -714,6 +720,7 @@ public class SceneUploader implements AutoCloseable {
 
 	private void estimateRenderableSize(Zone z, Renderable r, ModelOverride modelOverride) {
 		boolean mightHaveTransparency = modelOverride.mightHaveTransparency;
+		boolean mightBeDoubleSided = modelOverride.mightBeDoubleSided;
 		Model m = null;
 		if (r instanceof Model) {
 			m = (Model) r;
@@ -728,11 +735,19 @@ public class SceneUploader implements AutoCloseable {
 
 		int faceCount = m.getFaceCount();
 		byte[] transparencies = m.getFaceTransparencies();
-		short[] faceTextures = m.getFaceTextures();
+		boolean isVanillaTextured = m.getFaceTextures() != null;
 		byte modelTransparency = m.getTransparency();
-		z.sizeO += faceCount;
+
 		z.sizeF += faceCount;
-		if (transparencies != null || faceTextures != null || modelTransparency != 0 || mightHaveTransparency)
+
+		mightBeDoubleSided |= isVanillaTextured;
+		if (mightBeDoubleSided)
+			faceCount *= 2; // sizeF remains the same, since the double-sided faces will reuse the textureFaceIdx
+
+		z.sizeO += faceCount;
+
+		mightHaveTransparency |= transparencies != null || isVanillaTextured || modelTransparency != 0;
+		if (mightHaveTransparency)
 			z.sizeA += faceCount;
 		z.modelCount++;
 	}
@@ -947,16 +962,19 @@ public class SceneUploader implements AutoCloseable {
 				swMaterial = seMaterial = neMaterial = nwMaterial = material;
 			}
 
-			boolean useBlendedMaterialAndColor =
+			boolean allowBlending =
 				plugin.configGroundBlending &&
 				textureId == -1 &&
 				!proceduralGenerator.useDefaultColor(tile, override);
+			boolean blendColors = plugin.configGroundBlendingColors && allowBlending;
+			boolean blendTextures = plugin.configGroundBlendingTextures && allowBlending;
+
 			GroundMaterial groundMaterial = null;
 			if (override != TileOverride.NONE) {
 				groundMaterial = override.groundMaterial;
 				uvOrientation = override.uvOrientation;
 				uvScale = override.uvScale;
-				if (!useBlendedMaterialAndColor) {
+				if (!blendColors) {
 					swColor = override.modifyColor(swColor);
 					seColor = override.modifyColor(seColor);
 					nwColor = override.modifyColor(nwColor);
@@ -967,24 +985,25 @@ public class SceneUploader implements AutoCloseable {
 				groundMaterial = override.groundMaterial;
 			}
 
-			if (useBlendedMaterialAndColor) {
-				// get the vertices' colors and textures from hashmaps
+			if (blendColors) {
 				swColor = ctx.vertexTerrainColor.getOrDefault(swVertexKey, swColor);
 				seColor = ctx.vertexTerrainColor.getOrDefault(seVertexKey, seColor);
 				neColor = ctx.vertexTerrainColor.getOrDefault(neVertexKey, neColor);
 				nwColor = ctx.vertexTerrainColor.getOrDefault(nwVertexKey, nwColor);
+			}
 
-				if (plugin.configGroundTextures) {
+			if (plugin.configGroundTextures) {
+				if (blendTextures) {
 					swMaterial = ctx.vertexTerrainTexture.getOrDefault(swVertexKey, swMaterial);
 					seMaterial = ctx.vertexTerrainTexture.getOrDefault(seVertexKey, seMaterial);
 					neMaterial = ctx.vertexTerrainTexture.getOrDefault(neVertexKey, neMaterial);
 					nwMaterial = ctx.vertexTerrainTexture.getOrDefault(nwVertexKey, nwMaterial);
+				} else if (groundMaterial != null) {
+					swMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1], worldPos[2]);
+					seMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1], worldPos[2]);
+					nwMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1] + 1, worldPos[2]);
+					neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 				}
-			} else if (plugin.configGroundTextures && groundMaterial != null) {
-				swMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1], worldPos[2]);
-				seMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1], worldPos[2]);
-				nwMaterial = groundMaterial.getRandomMaterial(worldPos[0], worldPos[1] + 1, worldPos[2]);
-				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
 			if (ctx.isVertexOverlay(neVertexKey) && ctx.isVertexUnderlay(neVertexKey))
@@ -1072,22 +1091,45 @@ public class SceneUploader implements AutoCloseable {
 			lx2, neHeight, lz2,
 			uvx, uvy, 0,
 			neNormals[0], neNormals[1], neNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, false
 		);
+
+		if (tileZ != 0 || override.doubleSidedFaces) {
+			vb.putStaticVertex(
+				lx1, seHeight, lz1,
+				uvx + uvsin, uvy - uvcos, 0,
+				-seNormals[0], -seNormals[1], -seNormals[2],
+				texturedFaceIdx, true
+			);
+
+			vb.putStaticVertex(
+				lx3, nwHeight, lz3,
+				uvx - uvcos, uvy - uvsin, 0,
+				-nwNormals[0], -nwNormals[1], -nwNormals[2],
+				texturedFaceIdx, true
+			);
+
+			vb.putStaticVertex(
+				lx2, neHeight, lz2,
+				uvx, uvy, 0,
+				-neNormals[0], -neNormals[1], -neNormals[2],
+				texturedFaceIdx, true
+			);
+		}
 
 		texturedFaceIdx = tb.putFace(
 			swColor, seColor, nwColor,
@@ -1099,22 +1141,46 @@ public class SceneUploader implements AutoCloseable {
 			lx0, swHeight, lz0,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
 			swNormals[0], swNormals[1], swNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx1, seHeight, lz1,
 			uvx + uvsin, uvy - uvcos, 0,
 			seNormals[0], seNormals[1], seNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, false
 		);
 
 		vb.putStaticVertex(
 			lx3, nwHeight, lz3,
 			uvx - uvcos, uvy - uvsin, 0,
 			nwNormals[0], nwNormals[1], nwNormals[2],
-			texturedFaceIdx
+			texturedFaceIdx, false
 		);
+
+		if (tileZ != 0 || override.doubleSidedFaces) {
+			vb.putStaticVertex(
+				lx3, nwHeight, lz3,
+				uvx - uvcos, uvy - uvsin, 0,
+				-nwNormals[0], -nwNormals[1], -nwNormals[2],
+				texturedFaceIdx, true
+			);
+
+			vb.putStaticVertex(
+				lx1, seHeight, lz1,
+				uvx + uvsin, uvy - uvcos, 0,
+				-seNormals[0], -seNormals[1], -seNormals[2],
+				texturedFaceIdx, true
+			);
+
+			vb.putStaticVertex(
+				lx0, swHeight, lz0,
+				uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0,
+				-swNormals[0], -swNormals[1], -swNormals[2],
+				texturedFaceIdx, true
+			);
+		}
+
 
 		writeCache.release();
 	}
@@ -1246,15 +1312,18 @@ public class SceneUploader implements AutoCloseable {
 
 				GroundMaterial groundMaterial = null;
 
-				boolean useBlendedMaterialAndColor =
+				boolean allowBlending =
 					plugin.configGroundBlending &&
 					textureId == -1 &&
 					!(isOverlay && proceduralGenerator.useDefaultColor(tile, override));
+				boolean blendColors = plugin.configGroundBlendingColors && allowBlending;
+				boolean blendTextures = plugin.configGroundBlendingTextures && allowBlending;
+
 				if (override != TileOverride.NONE) {
 					groundMaterial = override.groundMaterial;
 					uvOrientation = override.uvOrientation;
 					uvScale = override.uvScale;
-					if (!useBlendedMaterialAndColor) {
+					if (!blendColors) {
 						colorA = override.modifyColor(colorA);
 						colorB = override.modifyColor(colorB);
 						colorC = override.modifyColor(colorC);
@@ -1264,33 +1333,34 @@ public class SceneUploader implements AutoCloseable {
 					groundMaterial = override.groundMaterial;
 				}
 
-				if (useBlendedMaterialAndColor) {
-					// get the vertices' colors and textures from hashmaps
+				if (blendColors) {
 					colorA = ctx.vertexTerrainColor.getOrDefault(vertexKeyA, colorA);
 					colorB = ctx.vertexTerrainColor.getOrDefault(vertexKeyB, colorB);
 					colorC = ctx.vertexTerrainColor.getOrDefault(vertexKeyC, colorC);
+				}
 
-					if (plugin.configGroundTextures) {
+				if (plugin.configGroundTextures) {
+					if (blendTextures) {
 						materialA = ctx.vertexTerrainTexture.getOrDefault(vertexKeyA, materialA);
 						materialB = ctx.vertexTerrainTexture.getOrDefault(vertexKeyB, materialB);
 						materialC = ctx.vertexTerrainTexture.getOrDefault(vertexKeyC, materialC);
+					} else if (groundMaterial != null) {
+						materialA = groundMaterial.getRandomMaterial(
+							worldPos[0] + (vertices[0][0] >> LOCAL_COORD_BITS),
+							worldPos[1] + (vertices[0][1] >> LOCAL_COORD_BITS),
+							worldPos[2]
+						);
+						materialB = groundMaterial.getRandomMaterial(
+							worldPos[0] + (vertices[1][0] >> LOCAL_COORD_BITS),
+							worldPos[1] + (vertices[1][1] >> LOCAL_COORD_BITS),
+							worldPos[2]
+						);
+						materialC = groundMaterial.getRandomMaterial(
+							worldPos[0] + (vertices[2][0] >> LOCAL_COORD_BITS),
+							worldPos[1] + (vertices[2][1] >> LOCAL_COORD_BITS),
+							worldPos[2]
+						);
 					}
-				} else if (plugin.configGroundTextures && groundMaterial != null) {
-					materialA = groundMaterial.getRandomMaterial(
-						worldPos[0] + (vertices[0][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[0][2] >> LOCAL_COORD_BITS),
-						worldPos[2]
-					);
-					materialB = groundMaterial.getRandomMaterial(
-						worldPos[0] + (vertices[1][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[1][2] >> LOCAL_COORD_BITS),
-						worldPos[2]
-					);
-					materialC = groundMaterial.getRandomMaterial(
-						worldPos[0] + (vertices[2][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (vertices[2][2] >> LOCAL_COORD_BITS),
-						worldPos[2]
-					);
 				}
 			} else if (onlyWaterSurface) {
 				// set colors for the shoreline to create a foam effect in the water shader
@@ -1390,22 +1460,45 @@ public class SceneUploader implements AutoCloseable {
 				lx0, ly0, lz0,
 				uvAx, uvAy, 0,
 				normalsA[0], normalsA[1], normalsA[2],
-				texturedFaceIdx
+				texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				lx1, ly1, lz1,
 				uvBx, uvBy, 0,
 				normalsB[0], normalsB[1], normalsB[2],
-				texturedFaceIdx
+				texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				lx2, ly2, lz2,
 				uvCx, uvCy, 0,
 				normalsC[0], normalsC[1], normalsC[2],
-				texturedFaceIdx
+				texturedFaceIdx, false
 			);
+
+			if (tileZ != 0 || override.doubleSidedFaces) {
+				vb.putStaticVertex(
+					lx2, ly2, lz2,
+					uvCx, uvCy, 0,
+					-normalsC[0], -normalsC[1], -normalsC[2],
+					texturedFaceIdx, true
+				);
+
+				vb.putStaticVertex(
+					lx1, ly1, lz1,
+					uvBx, uvBy, 0,
+					-normalsB[0], -normalsB[1], -normalsB[2],
+					texturedFaceIdx, true
+				);
+
+				vb.putStaticVertex(
+					lx0, ly0, lz0,
+					uvAx, uvAy, 0,
+					-normalsA[0], -normalsA[1], -normalsA[2],
+					texturedFaceIdx, true
+				);
+			}
 		}
 		writeCache.release();
 	}
@@ -1756,22 +1849,45 @@ public class SceneUploader implements AutoCloseable {
 				vx1, vy1, vz1,
 				faceUVs[0], faceUVs[1], faceUVs[2],
 				modelNormals[0], modelNormals[1], modelNormals[2],
-				texturedFaceIdx
+				texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				vx2, vy2, vz2,
 				faceUVs[4], faceUVs[5], faceUVs[6],
 				modelNormals[3], modelNormals[4], modelNormals[5],
-				texturedFaceIdx
+				texturedFaceIdx, false
 			);
 
 			vb.putStaticVertex(
 				vx3, vy3, vz3,
 				faceUVs[8], faceUVs[9], faceUVs[10],
 				modelNormals[6], modelNormals[7], modelNormals[8],
-				texturedFaceIdx
+				texturedFaceIdx, false
 			);
+
+			if (faceOverride.doubleSidedFaces || material.doubleSidedFaces) {
+				vb.putStaticVertex(
+					vx3, vy3, vz3,
+					faceUVs[8], faceUVs[9], faceUVs[10],
+					-modelNormals[6], -modelNormals[7], -modelNormals[8],
+					texturedFaceIdx, true
+				);
+
+				vb.putStaticVertex(
+					vx2, vy2, vz2,
+					faceUVs[4], faceUVs[5], faceUVs[6],
+					-modelNormals[3], -modelNormals[4], -modelNormals[5],
+					texturedFaceIdx, true
+				);
+
+				vb.putStaticVertex(
+					vx1, vy1, vz1,
+					faceUVs[0], faceUVs[1], faceUVs[2],
+					-modelNormals[0], -modelNormals[1], -modelNormals[2],
+					texturedFaceIdx, true
+				);
+			}
 			len += 3;
 		}
 		writeCache.release();
@@ -2407,9 +2523,9 @@ public class SceneUploader implements AutoCloseable {
 			packedMaterial, packedMaterial, packedMaterial,
 			terrainData, terrainData, terrainData
 		);
-		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx);
-		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx);
-		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx);
+		vb.putStaticVertex(x0, y0, z0, u0, v0, 0, 0, -1, 0, faceIdx, false);
+		vb.putStaticVertex(x1, y1, z1, u1, v1, 0, 0, -1, 0, faceIdx, false);
+		vb.putStaticVertex(x2, y2, z2, u2, v2, 0, 0, -1, 0, faceIdx, false);
 	}
 
 	public static void calculateFaceNormalInt(
