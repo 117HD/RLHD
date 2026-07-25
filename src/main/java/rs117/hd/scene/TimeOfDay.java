@@ -173,6 +173,9 @@ public class TimeOfDay {
 	@Getter
 	private final double[] currentLatLong = { 0, 0 };
 
+	@Getter
+	private Instant currentInstant;
+
 	/**
 	 * Set the per-environment fixed sun/moon angle overrides for this frame.
 	 *
@@ -397,10 +400,9 @@ public class TimeOfDay {
 			double[] sun = getFixedModeSunAngles();
 			return isNight(sun) ? getFixedNightMoonAngles() : sun;
 		}
-		Instant modifiedDate = getModifiedDate();
-		double[] angles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
+		double[] angles = AtmosphereUtils.getSunAngles(currentInstant.toEpochMilli(), currentLatLong);
 		return isNight(angles) ?
-			AtmosphereUtils.getMoonPosition(modifiedDate.toEpochMilli(), currentLatLong) :
+			AtmosphereUtils.getMoonPosition(currentInstant.toEpochMilli(), currentLatLong) :
 			angles;
 	}
 
@@ -410,8 +412,7 @@ public class TimeOfDay {
 		// factors) reads this, so they all use the fixed position automatically.
 		if (isFixedMode())
 			return getFixedModeSunAngles();
-		Instant modifiedDate = getModifiedDate();
-		return AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
+		return AtmosphereUtils.getSunAngles(currentInstant.toEpochMilli(), currentLatLong);
 	}
 
 	public float[] getLightColor() {
@@ -813,8 +814,7 @@ public class TimeOfDay {
 			return anglesToSkyDirection(fixed[0], fixed[1]);
 		}
 
-		Instant modifiedDate = getModifiedDate();
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(currentInstant.toEpochMilli(), currentLatLong);
 
 		// sunAngles[0] = azimuth, sunAngles[1] = altitude
 		// The renderers use: pitch = altitude, yaw = PI - azimuth
@@ -989,9 +989,6 @@ public class TimeOfDay {
 	 * only happens when the moon can't be seen.
 	 */
 	public double[] getNightSyncedMoonAngles() {
-		// Call getModifiedDate to keep accumulatedCycleTime/completedCycles updated
-		getModifiedDate();
-
 		// March 20, 2025 00:00 UTC (spring equinox)
 		final long equinoxEpochMs = 1742428800000L;
 		final long dayMs = 24L * 60 * 60 * 1000;
@@ -1119,9 +1116,9 @@ public class TimeOfDay {
 		return (currentTimeMillis % SYNCED_DAYS_PERIOD_MS) / (double) SYNCED_DAYS_PERIOD_MS;
 	}
 
-	public Instant getModifiedDate() {
+	public void update() {
 		long currentTimeMillis = System.currentTimeMillis();
-		Instant currentInstant = Instant.ofEpochMilli(currentTimeMillis);
+		currentInstant = Instant.ofEpochMilli(currentTimeMillis);
 
 		// Initialize on first call
 		if (lastUpdateTime == 0) {
@@ -1158,7 +1155,8 @@ public class TimeOfDay {
 		if (currentCycleMode == DaylightCycle.REAL_TIME) {
 			double localHour = getLocalHourOfDay();
 			Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS);
-			return startOfDay.plusMillis((long) (localHour * 60 * 60 * 1000));
+			currentInstant = startOfDay.plusMillis((long) (localHour * 60 * 60 * 1000));
+			return;
 		}
 
 		// Synced Days mode: a full day & night every real UTC hour, phase-locked to the
@@ -1172,7 +1170,8 @@ public class TimeOfDay {
 			// phase progresses; this is also identical for all users.
 			long syncedDay = currentTimeMillis / SYNCED_DAYS_PERIOD_MS;
 			Instant startOfDay = Instant.EPOCH.plus(syncedDay, ChronoUnit.DAYS);
-			return startOfDay.plusMillis((long) (mappedHour * 60 * 60 * 1000));
+			currentInstant = startOfDay.plusMillis((long) (mappedHour * 60 * 60 * 1000));
+			return;
 		}
 
 		// For non-dynamic modes, return a fixed date at the appropriate time of day.
@@ -1204,7 +1203,8 @@ public class TimeOfDay {
 					fixedHour = 12.0;
 					break;
 			}
-			return baseDay.plusMillis((long) (fixedHour * 60 * 60 * 1000));
+			currentInstant = baseDay.plusMillis((long) (fixedHour * 60 * 60 * 1000));
+			return;
 		}
 
 		// Warp the linear cycle clock so day & night occupy the configured share
@@ -1219,7 +1219,7 @@ public class TimeOfDay {
 		Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS)
 			.plus(completedCycles, ChronoUnit.DAYS);
 		long mappedMillis = (long) (mappedHour * 60 * 60 * 1000);
-		return startOfDay.plusMillis(mappedMillis);
+		currentInstant = startOfDay.plusMillis(mappedMillis);
 	}
 
 	/**
@@ -1230,9 +1230,6 @@ public class TimeOfDay {
 	 * without discrete jumps at cycle boundaries.
 	 */
 	public Instant getMoonDate() {
-		// Ensure getModifiedDate has been called to update accumulatedCycleTime/completedCycles
-		getModifiedDate();
-
 		Instant currentInstant = Instant.ofEpochMilli(System.currentTimeMillis());
 		Instant startOfDay = currentInstant.truncatedTo(ChronoUnit.DAYS);
 
@@ -1312,8 +1309,7 @@ public class TimeOfDay {
 				break;
 		}
 
-		Instant modifiedDate = getModifiedDate();
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), currentLatLong);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(currentInstant.toEpochMilli(), currentLatLong);
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 
 		if (sunAltitudeDegrees >= 5)

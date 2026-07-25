@@ -598,6 +598,10 @@ public class ZoneRenderer implements Renderer {
 			sceneCamera.getFrustumPlanes(plugin.cameraFrustum);
 
 			try {
+				frameTimer.begin(Timer.UPDATE_TIME_OF_DAY);
+				timeOfDay.update();
+				frameTimer.end(Timer.UPDATE_TIME_OF_DAY);
+
 				frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
 				environmentManager.update(ctx.sceneContext);
 				frameTimer.end(Timer.UPDATE_ENVIRONMENT);
