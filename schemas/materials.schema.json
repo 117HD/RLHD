@@ -105,7 +105,7 @@
       },
       "hexTilingMode": {
         "type": "string",
-        "description": "",
+        "description": "Controls the Mode used to generate the base Hex UV:\n * Offset: Translate & Scales the Hex UV\n * Offset & Mirror: Flips U And/Or V components\n * Offset & Rotation: Applies a Discrete rotation to the UV",
         "enum": [
           "OFFSET",
           "OFFSET_WITH_MIRROR",
