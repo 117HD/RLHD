@@ -89,8 +89,8 @@ HexData buildHexData(vec2 uv, inout HexShared hexShared, float scale, float blen
 
     ensureHexShared(hexShared);
 
-    h.dPdx = hexShared.dPdx * scale;
-    h.dPdy = hexShared.dPdy * scale;
+    h.dPdx = hexShared.dPdx;
+    h.dPdy = hexShared.dPdy;
 
     vec2 skew = hexShared.skewBase * scale;
     vec2 base = floor(skew);
@@ -104,13 +104,9 @@ HexData buildHexData(vec2 uv, inout HexShared hexShared, float scale, float blen
     temp *= s2;
 
     // Triangle vertices
-    vec2 v1 = base + vec2(s, s);
-    vec2 v2 = base + vec2(s, 1.0 - s);
-    vec2 v3 = base + vec2(1.0 - s, s);
-
-    h.vertex[0] = v1;
-    h.vertex[1] = v2;
-    h.vertex[2] = v3;
+    h.vertex[0] = base + vec2(s, s);
+    h.vertex[1] = base + vec2(s, 1.0 - s);
+    h.vertex[2] = base + vec2(1.0 - s, s);
 
     // Barycentric weights
     vec3 w = vec3(-temp.z, s - temp.y, s - temp.x);
@@ -124,9 +120,9 @@ HexData buildHexData(vec2 uv, inout HexShared hexShared, float scale, float blen
     h.weights = w * invSum;
 
     // UVs
-    h.uv[0] = makeUV(uv, v1, mode);
-    h.uv[1] = makeUV(uv, v2, mode);
-    h.uv[2] = makeUV(uv, v3, mode);
+    h.uv[0] = makeUV(uv, h.vertex[0], mode);
+    h.uv[1] = makeUV(uv, h.vertex[1], mode);
+    h.uv[2] = makeUV(uv, h.vertex[2], mode);
 
     float maxW = max(max(h.weights.x, h.weights.y), h.weights.z);
     if (maxW > HEX_DOMINANT) {

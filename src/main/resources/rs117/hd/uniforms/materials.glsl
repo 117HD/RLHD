@@ -44,3 +44,7 @@ bool getMaterialHasTransparency(const Material material) {
 int getMaterialHexTilingMode(const Material material) {
     return (material.flags >> 3) & 0x3;
 }
+
+bool isHexSamplingSame(const Material materialA, const Material materialB) {
+    return materialA.hexTilingScale == materialB.hexTilingScale &&  materialA.hexTilingBlend == materialB.hexTilingBlend && getMaterialHexTilingMode(materialA) == getMaterialHexTilingMode(materialB);
+}

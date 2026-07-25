@@ -89,9 +89,13 @@ void main() {
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
 
-    Material material1 = getMaterial(fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-    Material material2 = getMaterial(fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
-    Material material3 = getMaterial(fMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    int materialIdx1 = fMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK;
+    int materialIdx2 = fMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK;
+    int materialIdx3 = fMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK;
+
+    Material material1 = getMaterial(materialIdx1);
+    Material material2 = getMaterial(materialIdx2);
+    Material material3 = getMaterial(materialIdx3);
 
     // Water data
     bool isTerrain = (fTerrainData[0] & 1) != 0; // 1 = 0b1
@@ -208,14 +212,21 @@ void main() {
 
         // Build HexData, if Terrain use world space XZ otherwise UVs
         HexShared hexShared = initHexShared(IN.position.xz / TILE_SIZE);
-
         HexData hex1 = buildHexData(uv1, hexShared, material1.hexTilingScale, material1.hexTilingBlend, getMaterialHexTilingMode(material1));
-        HexData hex2 = buildHexData(uv2, hexShared, material2.hexTilingScale, material2.hexTilingBlend, getMaterialHexTilingMode(material2));
-        HexData hex3 = buildHexData(uv3, hexShared, material3.hexTilingScale, material3.hexTilingBlend, getMaterialHexTilingMode(material3));
+
+        HexData hex2 = hex1;
+        if(materialIdx1 != materialIdx2 && (uv1 != uv2 || !isHexSamplingSame(material1, material2)))
+            hex2 = buildHexData(uv2, hexShared, material2.hexTilingScale, material2.hexTilingBlend, getMaterialHexTilingMode(material2));
+
+        HexData hex3 = hex1;
+        if(materialIdx1 != materialIdx3 && (uv1 != uv3 || !isHexSamplingSame(material1, material3)))
+            hex3 = buildHexData(uv3, hexShared, material3.hexTilingScale, material3.hexTilingBlend, getMaterialHexTilingMode(material3));
 
         #if DISPLAY_HEX
+        if(hexShared.valid) {
             FragColor = vec4(debugHex(hex1) * IN.texBlend.x + debugHex(hex2) * IN.texBlend.y + debugHex(hex3) * IN.texBlend.z, 1.0);
             if (DISPLAY_HEX == 1) return; // Redundant, for syntax highlighting in IntelliJ
+        }
         #endif
 
         vec3 hsl1 = unpackRawHsl(fAlphaBiasHsl[0]);
