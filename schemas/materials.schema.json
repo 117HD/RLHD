@@ -97,7 +97,7 @@
       },
       "hexTilingScale": {
         "type": "number",
-        "description": "The scale of the hexagonal tiling pattern. Defaults to 0.0, i.e. no tiling."
+        "description": "The scale of the hexagonal tiling pattern. Defaults to 0.0 which disables hex tiling, anything greater enables it."
       },
       "hexTilingBlend": {
         "type": "number",
