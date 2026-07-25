@@ -172,6 +172,9 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private JobSystem jobSystem;
 
+	@Inject
+	private UBOWorldViews uboWorldViews;
+
 	// Baked nebula cubemap. The nebula is a static function of view direction, so
 	// we evaluate its multi-octave fBm once into this cubemap and sample it each
 	// frame instead of recomputing per pixel.
@@ -180,8 +183,7 @@ public class ZoneRenderer implements Renderer {
 	private int fboNebulaBake = 0;
 	private boolean nebulaBaked = false;
 
-	@Inject
-	private UBOWorldViews uboWorldViews;
+	private static final float DIRECTIONAL_ANGLE_UPDATE_THRESHOLD = (float) Math.toRadians(0.2);
 
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
@@ -676,8 +678,17 @@ public class ZoneRenderer implements Renderer {
 				}
 			}
 
-			directionalCamera.setPitch(directionalPitch);
-			directionalCamera.setYaw(PI - directionalYaw);
+			// Clamp Updates to the Directional Cameras rotation until a substantial amount of movement has occurred
+			// This eliminated shadow jitter from occurring since we're not introducing micro precision differences into the shadow map
+			// due to slight changes to the view matrix
+			final float previousPitch = directionalCamera.getPitch();
+			final float previousRawYaw = PI - directionalCamera.getYaw();
+			if (angleDiff(directionalPitch, previousPitch) >= DIRECTIONAL_ANGLE_UPDATE_THRESHOLD ||
+				angleDiff(directionalYaw, previousRawYaw) >= DIRECTIONAL_ANGLE_UPDATE_THRESHOLD) {
+				directionalCamera.setPitch(directionalPitch);
+				directionalCamera.setYaw(PI - directionalYaw);
+			}
+
 			boolean hasDirectionalCameraChanged = directionalCamera.isViewDirty() || directionalCamera.isProjDirty();
 
 			if (plugin.configShadowsEnabled &&
