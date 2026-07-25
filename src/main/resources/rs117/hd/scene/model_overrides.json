@@ -94306,6 +94306,7 @@
         "description": "Wood panels",
         "colors": [ "h == 5" ],
         "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
         "uvType": "BOX",
         "uvScale": 0.8
       },
@@ -94371,6 +94372,11 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
+        "description": "Black",
+        "colors": [ "s == 0 && l <= 2" ],
+        "baseMaterial": "BLACK"
+      },
+      {
         "description": "Metal",
         "colors": [ "h == 0", "s >= 7" ],
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
@@ -94378,17 +94384,13 @@
         "uvScale": 0.25,
         "uvOrientation": -187,
         "shiftLightness": 7
-      },
-      {
-        "description": "Black",
-        "colors": [ "s == 0 && l <= 2" ],
-        "baseMaterial": "BLACK"
       }
     ],
     "objectIds": [
       "CASTLE_DRAKAN_MORY_DOOR_NOOP",
       "CASTLE_DRAKAN_MORY_DOOR_M_NOOP",
-      "MYQ6_CASTLE_DRAKAN_DOORS_NOOP"
+      "MYQ6_CASTLE_DRAKAN_DOORS_NOOP",
+      "MYQ6_CASTLE_DRAKAN_DOORS_OP"
     ]
   },
   {

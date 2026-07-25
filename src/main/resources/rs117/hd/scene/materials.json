@@ -2253,8 +2253,21 @@
     "textureScale": [ 1, 1, 0.6 ]
   },
   {
+    "name": "CASTLE_DRAKEN_BRICK_FLOOR",
+    "parent": "MARBLE_1",
+    "normalMap": "LASSAR_UNDERCITY_TILE_N",
+    "displacementMap": "LASSAR_UNDERCITY_TILE_D",
+    "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
+    "displacementScale": 0.025,
+    "textureScale": [
+      1,
+      1,
+      0.75
+    ]
+  },
+  {
     "name": "DARKMEYER_BRICK_PATH",
-    "parent": "MARBLE_2",
+    "parent": "MARBLE_1",
     "normalMap": "LASSAR_UNDERCITY_TILE_N",
     "displacementMap": "LASSAR_UNDERCITY_TILE_D",
     "ambientOcclusionMap": "CAM_TORUM_TILE_AO",

@@ -4497,9 +4497,10 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "DARKMEYER_BRICK_PATH_BLEND",
+    "groundMaterial": "GRAVEL",
     "shiftLightness": 3,
     "minLightness": 12,
+    "uvOrientation": 128,
     "replacements": {
       "DARKMEYER_PATH_UPPER_NO_BLENDING": "!blendingColors"
     }
@@ -4510,9 +4511,9 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "DARKMEYER_BRICK_PATH",
+    "groundMaterial": "GRAVEL",
     "shiftLightness": 3,
-    "uvScale": 0.760009,
+    "uvOrientation": 128,
     "minLightness": 12,
     "blended": false
   },
@@ -4522,8 +4523,9 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "BRICK_PATHS",
-    "minLightness": 8
+    "groundMaterial": "GRAVEL",
+    "minLightness": 8,
+    "uvOrientation": 128
   },
   {
     "name": "DARKMEYER_PATH_LOWER",
@@ -11008,12 +11010,15 @@
     "name": "Castle Drakan Interior Floors",
     "area": "CASTLE_DRAKAN_INTERIOR",
     "uvOrientation": 512,
+    "shiftLightness": 1,
+    "maxLightness": 15,
+    "minLightness": 8,
     "underlayIds": [
       72,
       190,
       241
     ],
-    "groundMaterial": "DARKMEYER_BRICK_PATH"
+    "groundMaterial": "CASTLE_DRAKEN_BRICK_FLOOR_DIRTY"
   },
   {
     "name": "Castle Drakan Interior Floors - Dust overlay",
@@ -11033,7 +11038,7 @@
       190,
       241
     ],
-    "groundMaterial": "DARKMEYER_BRICK_PATH_DIRTY"
+    "groundMaterial": "CASTLE_DRAKEN_BRICK_FLOOR_DIRTY"
   },
   {
     "name": "Castle Drakan Interior Floors-  Vampyrium - Dust overlay",
