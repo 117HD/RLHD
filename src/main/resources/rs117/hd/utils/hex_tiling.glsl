@@ -55,20 +55,16 @@ vec2 makeUV(vec2 uv, vec2 vertexPos, int mode) {
     vec4 h = hash24(vertexPos);
     vec2 p = uv;
 
-    if(mode == HEX_UV_OFFSET_WITH_ROTATE) {
-         p -= 0.5;
+    if (mode == HEX_UV_OFFSET_WITH_ROTATE) {
+        p -= 0.5;
 
         // Discreate Rotation
-        float angle = h.x * 6.28318530718;
-        float s = sin(angle);
-        float c = cos(angle);
-        p = vec2(
-            c * p.x - s * p.y,
-            s * p.x + c * p.y
-        );
+        vec2 dir = normalize(h.xy * 2.0 - 1.0);
+        p = vec2(dir.x * p.x - dir.y * p.y,
+                 dir.y * p.x + dir.x * p.y);
 
         p += 0.5;
-    } else if(mode == HEX_UV_OFFSET_WITH_MIRROR) {
+    } else if (mode == HEX_UV_OFFSET_WITH_MIRROR) {
         // Flip along U/W
         vec2 flipMask = step(0.5, h.xy) * 2.0 - 1.0;
         p *= flipMask;
@@ -88,7 +84,6 @@ HexData buildHexData(vec2 uv, inout HexShared hexShared, float scale, float blen
     h.enabled = true;
 
     ensureHexShared(hexShared);
-
     h.dPdx = hexShared.dPdx;
     h.dPdy = hexShared.dPdy;
 
@@ -131,7 +126,8 @@ HexData buildHexData(vec2 uv, inout HexShared hexShared, float scale, float blen
             ? (h.weights.x > h.weights.z ? 0 : 2)
             : (h.weights.y > h.weights.z ? 1 : 2);
     } else {
-        h.dominantIdx = -1; // no dominant vertex
+        // No dominat vertex so along the edge of the hex
+        h.dominantIdx = -1;
     }
 
     return h;
@@ -157,7 +153,7 @@ vec3 sampleHexRGB(sampler2D tex, HexData h) {
 
 vec4 sampleHex(sampler2DArray tex, vec3 uvw, HexData h) {
     if (!h.enabled)
-    return texture(tex, uvw);
+        return texture(tex, uvw);
 
     if (h.dominantIdx >= 0)
         return textureGrad(tex, vec3(h.uv[h.dominantIdx], uvw.z), h.dPdx, h.dPdy);

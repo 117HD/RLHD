@@ -33,6 +33,7 @@
 #define DISPLAY_LIGHTING 0
 #define DISPLAY_HEX 0
 
+
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
@@ -83,6 +84,7 @@ vec2 worldUvs(float scale) {
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
 #include <utils/hex_tiling.glsl>
+#include <utils/layered_sample.glsl>
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -261,9 +263,14 @@ void main() {
         #endif
 
         // get diffuse textures
-        vec4 texColor1 = colorMap1 == -1 ? vec4(1) : sampleHex(textureArray, vec3(uv1, colorMap1), hex1);
-        vec4 texColor2 = colorMap2 == -1 ? vec4(1) : sampleHex(textureArray, vec3(uv2, colorMap2), hex2);
-        vec4 texColor3 = colorMap3 == -1 ? vec4(1) : sampleHex(textureArray, vec3(uv3, colorMap3), hex3);
+        vec4 texColor1, texColor2, texColor3;
+        LAYERED_SAMPLE(texColor1, texColor2, texColor3,
+            colorMap1, colorMap2, colorMap3,
+            uv1, uv2, uv3,
+            hex1, hex2, hex3,
+            vec4(1)
+        );
+
         texColor1.rgb *= material1.brightness;
         texColor2.rgb *= material2.brightness;
         texColor3.rgb *= material3.brightness;
@@ -342,9 +349,8 @@ void main() {
         if ((fMaterialData[0] >> MATERIAL_FLAG_UPWARDS_NORMALS & 1) == 1) {
             normals = vec3(0, -1, 0);
         } else {
-            vec3 n1 = sampleNormalMap(material1, uv1, TBN);
-            vec3 n2 = sampleNormalMap(material2, uv2, TBN);
-            vec3 n3 = sampleNormalMap(material3, uv3, TBN);
+            vec3 n1, n2, n3;
+            LAYERED_SAMPLE_NORMAL(n1, n2, n3, uv1, uv2, uv3);
             normals = normalize(n1 * IN.texBlend.x + n2 * IN.texBlend.y + n3 * IN.texBlend.z);
         }
 
@@ -370,11 +376,14 @@ void main() {
         // specular
         vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
         vec3 vSpecularStrength = vec3(material1.specularStrength, material2.specularStrength, material3.specularStrength);
-        vSpecularStrength *= vec3(
-            material1.roughnessMap == -1 ? 1 : linearToSrgb(sampleHex(textureArray, vec3(uv1, material1.roughnessMap), hex1).r),
-            material2.roughnessMap == -1 ? 1 : linearToSrgb(sampleHex(textureArray, vec3(uv2, material2.roughnessMap), hex2).r),
-            material3.roughnessMap == -1 ? 1 : linearToSrgb(sampleHex(textureArray, vec3(uv3, material3.roughnessMap), hex3).r)
+        float rough1, rough2, rough3;
+        LAYERED_SAMPLE_SCALAR(rough1, rough2, rough3,
+            material1.roughnessMap, material2.roughnessMap, material3.roughnessMap,
+            uv1, uv2, uv3,
+            hex1, hex2, hex3, 1.0,
+            linearToSrgb
         );
+        vSpecularStrength *= vec3(rough1, rough2, rough3);
 
         // apply specular highlights to anything semi-transparent
         // this isn't always desirable but adds subtle light reflections to windows, etc.
@@ -395,10 +404,11 @@ void main() {
         // ambient light
         vec3 ambientLightOut = ambientColor * ambientStrength;
 
-        float aoFactor =
-            IN.texBlend.x * (material1.ambientOcclusionMap == -1 ? 1 : sampleHex(textureArray, vec3(uv1, material1.ambientOcclusionMap), hex1).r) +
-            IN.texBlend.y * (material2.ambientOcclusionMap == -1 ? 1 : sampleHex(textureArray, vec3(uv2, material2.ambientOcclusionMap), hex2).r) +
-            IN.texBlend.z * (material3.ambientOcclusionMap == -1 ? 1 : sampleHex(textureArray, vec3(uv3, material3.ambientOcclusionMap), hex3).r);
+        float ao1, ao2, ao3;
+        LAYERED_SAMPLE_SCALAR(ao1, ao2, ao3,
+            material1.ambientOcclusionMap, material2.ambientOcclusionMap, material3.ambientOcclusionMap,
+            uv1, uv2, uv3, hex1, hex2, hex3, 1.0, IDENTITY);
+        float aoFactor = IN.texBlend.x * ao1 + IN.texBlend.y * ao2 + IN.texBlend.z * ao3;
         ambientLightOut *= aoFactor;
 
         // directional light
