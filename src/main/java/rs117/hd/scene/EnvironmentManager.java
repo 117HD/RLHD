@@ -578,8 +578,8 @@ public class EnvironmentManager {
 	public void updateTargetSkyColor() {
 		Environment env = getCurrentEnvironment();
 
-		if (env.fogColor == null || env.allowSkyOverride && config.overrideSky()) {
-			DefaultSkyColor sky = config.defaultSkyColor();
+		if (env.fogColor == null || env.allowSkyOverride && plugin.configOverrideSky) {
+			DefaultSkyColor sky = plugin.configDefaultSkyColor;
 			targetFogColor = sky.getRgb(client);
 			if (sky == DefaultSkyColor.OSRS)
 				sky = DefaultSkyColor.DEFAULT;

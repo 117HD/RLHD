@@ -78,6 +78,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.GroundBlending;
 import rs117.hd.config.SeasonalHemisphere;
@@ -430,8 +431,11 @@ public class HdPlugin extends Plugin {
 	public boolean configHideVanillaWaterEffects;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
+	public boolean configOverrideSky;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
+	public int configMinimumBrightness;
+	public DefaultSkyColor configDefaultSkyColor;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -1714,6 +1718,7 @@ public class HdPlugin extends Plugin {
 
 	private void updateCachedConfigs() {
 		configExpandedMapLoadingChunks = config.expandedMapLoadingChunks();
+		configMinimumBrightness = config.minimumBrightness();
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configShadowTransparency = config.shadowTransparency();
@@ -1733,9 +1738,11 @@ public class HdPlugin extends Plugin {
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
+		configDefaultSkyColor = config.defaultSkyColor();
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
+		configOverrideSky = config.overrideSky();
 		configDetailDrawDistance = config.detailDrawDistance();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();

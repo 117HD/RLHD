@@ -712,7 +712,7 @@ public class LightManager {
 
 		EnvironmentManager.OutdoorSkySample sky = environmentManager.sampleOutdoorSky(
 			getLightWorldPos(sceneContext, light),
-			config.minimumBrightness()
+			plugin.configMinimumBrightness
 		);
 
 		float defLuma = dot(light.def.color, SKY_LUMA_WEIGHTS);

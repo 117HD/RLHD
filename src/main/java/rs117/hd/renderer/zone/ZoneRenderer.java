@@ -701,8 +701,10 @@ public class ZoneRenderer implements Renderer {
 					.build(sceneCamera, drawDistance * LOCAL_TILE_SIZE, shadowDrawDistance);
 
 				final float[] sceneCenter = new float[3];
-				for (float[] corner : volumeCorners)
+				for (int i = 0; i < volumeCorners.length; i++) {
+					final float[] corner = volumeCorners[i];
 					add(sceneCenter, sceneCenter, corner);
+				}
 				divide(sceneCenter, sceneCenter, (float) volumeCorners.length);
 
 				// Reset position before transforming points
@@ -712,7 +714,8 @@ public class ZoneRenderer implements Renderer {
 				float minY = Float.POSITIVE_INFINITY, maxY = Float.NEGATIVE_INFINITY;
 				float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
 				float radius = 0f;
-				for (float[] corner : volumeCorners) {
+				for (int i = 0; i < volumeCorners.length; i++) {
+					final float[] corner = volumeCorners[i];
 					radius = max(radius, distance(sceneCenter, corner));
 
 					directionalCamera.transformPoint(corner, corner);
@@ -832,12 +835,11 @@ public class ZoneRenderer implements Renderer {
 			timeOfDay.setCycleMode(daylightCycle);
 			timeOfDay.setDayLength(config.dayLength());
 			timeOfDay.setMoonPhase(config.moonPhase());
-			int minimumBrightness = config.minimumBrightness();
 
 			directionalColor = timeOfDay.getRegionalDirectionalLight(environmentManager.currentDirectionalColor);
 			ambientColor = timeOfDay.getRegionalAmbientLight(environmentManager.currentAmbientColor);
 
-			float brightnessMultiplier = timeOfDay.getDynamicBrightnessMultiplier(minimumBrightness);
+			float brightnessMultiplier = timeOfDay.getDynamicBrightnessMultiplier(plugin.configMinimumBrightness);
 			directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier * environmentManager.currentSunlightStrength;
 			// When Day & night is active, ignore the environment's ambientStrength
 			// (e.g. WINTER=3.5, AUTUMN=0.3) so the cycle's brightness multiplier
@@ -982,7 +984,7 @@ public class ZoneRenderer implements Renderer {
 			// Scale minBrightnessBoost down as moon directional light increases,
 			// so the boost only raises minimum brightness without stacking with moonlight
 			float boostScale = 1.0f - shadowVisibility;
-			float boostedFloor = (minimumBrightness / 100.0f) * (1 + environmentManager.currentMinBrightnessBoost * boostScale);
+			float boostedFloor = (plugin.configMinimumBrightness / 100.0f) * (1 + environmentManager.currentMinBrightnessBoost * boostScale);
 			ambientStrength = Math.max(ambientStrength, boostedFloor);
 
 			// Fold a fraction of the unshadowed directional light into ambient to
