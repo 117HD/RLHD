@@ -207,9 +207,11 @@ void main() {
         #endif
 
         // Build HexData, if Terrain use world space XZ otherwise UVs
-        HexData hex1 = buildHexData(uv1, IN.position / TILE_SIZE, material1.hexTilingScale, material1.hexTilingBlend, getMaterialHexTilingMode(material1));
-        HexData hex2 = buildHexData(uv2, IN.position / TILE_SIZE, material2.hexTilingScale, material2.hexTilingBlend, getMaterialHexTilingMode(material2));
-        HexData hex3 = buildHexData(uv3, IN.position / TILE_SIZE, material3.hexTilingScale, material3.hexTilingBlend, getMaterialHexTilingMode(material3));
+        HexShared hexShared = initHexShared(IN.position.xz / TILE_SIZE);
+
+        HexData hex1 = buildHexData(uv1, hexShared, material1.hexTilingScale, material1.hexTilingBlend, getMaterialHexTilingMode(material1));
+        HexData hex2 = buildHexData(uv2, hexShared, material2.hexTilingScale, material2.hexTilingBlend, getMaterialHexTilingMode(material2));
+        HexData hex3 = buildHexData(uv3, hexShared, material3.hexTilingScale, material3.hexTilingBlend, getMaterialHexTilingMode(material3));
 
         #if DISPLAY_HEX
             FragColor = vec4(debugHex(hex1) * IN.texBlend.x + debugHex(hex2) * IN.texBlend.y + debugHex(hex3) * IN.texBlend.z, 1.0);

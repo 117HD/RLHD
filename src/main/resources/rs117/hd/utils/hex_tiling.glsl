@@ -10,6 +10,14 @@
 #define HEX_EPS 0.001
 #define HEX_DOMINANT 0.95
 
+struct HexShared {
+    vec2 fragXZ;
+    vec2 skewBase; // fragXZ * HEX_MATRIX
+    vec2 dPdx;     // dFdx(fragXZ)
+    vec2 dPdy;     // dFdy(fragXZ)
+    bool valid;
+};
+
 struct HexData {
     vec3 weights;       // Barycentric weights for triangle interpolation
     vec2 uv[3];         // Perturbed UV coordinates for each vertex
@@ -25,6 +33,22 @@ const mat2 HEX_MATRIX = mat2(
     1.7320508, -1.0,
     0.0,        2.0
 );
+
+HexShared initHexShared(vec2 fragXZ) {
+    HexShared s;
+    s.fragXZ = fragXZ;
+    s.valid  = false;
+    // skewBase/dPdx/dPdy intentionally left uninitialized until needed
+    return s;
+}
+
+void ensureHexShared(inout HexShared s) {
+    if (s.valid) return;
+    s.skewBase = s.fragXZ * HEX_MATRIX;
+    s.dPdx     = dFdx(s.fragXZ);
+    s.dPdy     = dFdy(s.fragXZ);
+    s.valid    = true;
+}
 
 // Perturb UV coordinates for a hex vertex to create variation
 vec2 makeUV(vec2 uv, vec2 vertexPos, int mode) {
@@ -55,7 +79,7 @@ vec2 makeUV(vec2 uv, vec2 vertexPos, int mode) {
     return p * scaleJitter + h.w;
 }
 
-HexData buildHexData(vec2 uv, vec3 fragPos, float scale, float blend, int mode) {
+HexData buildHexData(vec2 uv, inout HexShared hexShared, float scale, float blend, int mode) {
     HexData h;
     if (scale <= 0.0) {
         h.enabled = false;
@@ -63,11 +87,12 @@ HexData buildHexData(vec2 uv, vec3 fragPos, float scale, float blend, int mode) 
     }
     h.enabled = true;
 
-    // Derivatives (shared across samples)
-    h.dPdx = dFdx(fragPos.xz);
-    h.dPdy = dFdy(fragPos.xz);
+    ensureHexShared(hexShared);
 
-    vec2 skew = fragPos.xz * scale * HEX_MATRIX;
+    h.dPdx = hexShared.dPdx * scale;
+    h.dPdy = hexShared.dPdy * scale;
+
+    vec2 skew = hexShared.skewBase * scale;
     vec2 base = floor(skew);
     vec2 f = fract(skew);
 
