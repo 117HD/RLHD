@@ -28591,9 +28591,22 @@
   },
   {
     "description": "Darkmeyer - Arboretum Blood Fountain",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "shiftLightness": -2,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.75,
     "objectIds": [
-      "DARKM_FOUNTAIN"
+      "DARKM_FOUNTAIN",
+      "FOUNTAIN_SANGVESTI01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s <= 3",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "shiftLightness": -3,
+        "uvScale": 0.8
+      }
     ]
   },
   {
@@ -94489,6 +94502,7 @@
   {
     "description": "Castle Drakan - Blood portal - DYNAMIC - ANIMATED",
     "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "uvType": "MODEL_XY",
     "shiftLightness": 2,
     "objectIds": [
       "MYQ6_VAMPYRIUM_PORTAL_VIS",
@@ -94498,6 +94512,15 @@
       "CASTLE_DRAKAN_TELEPORTER_ACTIVE_C",
       "CASTLE_DRAKAN_TELEPORTER_ACTIVE_D",
       "MYQ6_HIDEOUT_PORTAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "shiftLightness": 2,
+        "uvScale": 0.5
+      }
     ]
   },
   {
