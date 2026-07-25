@@ -430,6 +430,7 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public boolean configOverrideSky;
+	public boolean configEnableDayNightCycle;
 	public int configDetailDrawDistance;
 	public int configExpandedMapLoadingChunks;
 	public int configMinimumBrightness;
@@ -1741,6 +1742,7 @@ public class HdPlugin extends Plugin {
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configOverrideSky = config.overrideSky();
+		configEnableDayNightCycle = config.enableDaylightCycle();
 		configDetailDrawDistance = config.detailDrawDistance();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();

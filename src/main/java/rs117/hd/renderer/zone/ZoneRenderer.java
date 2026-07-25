@@ -622,7 +622,7 @@ public class ZoneRenderer implements Renderer {
 			// Use Day & night-Cycle sun/moon angles if enabled
 			float directionalPitch = environmentManager.currentSunAngles[0];
 			float directionalYaw = environmentManager.currentSunAngles[1];
-			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+			if (environmentManager.isOverworld() && plugin.configEnableDayNightCycle) {
 				// The environment may force a specific cycle mode, overriding the config.
 				DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 				DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
@@ -830,7 +830,7 @@ public class ZoneRenderer implements Renderer {
 		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		float[] waterColor = environmentManager.currentWaterColor;
 
-		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+		if (environmentManager.isOverworld() && plugin.configEnableDayNightCycle) {
 			skyGradientEnabled = true;
 
 			// The environment may force a specific cycle mode, overriding the config.

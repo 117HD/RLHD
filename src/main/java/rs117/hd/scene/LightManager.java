@@ -211,7 +211,7 @@ public class LightManager {
 		float nightLightFactor = 1f;
 		boolean overworldDayNightActive = false;
 		boolean nightFactorRising = true;
-		if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+		if (environmentManager.isOverworld() && plugin.configEnableDayNightCycle) {
 			overworldDayNightActive = true;
 			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
@@ -224,7 +224,7 @@ public class LightManager {
 			previousNightLightFactor = -1f;
 		}
 
-		if (config.enableDaylightCycle()) {
+		if (plugin.configEnableDayNightCycle) {
 			DaylightCycle forcedMode = environmentManager.getForcedCycleMode();
 			DaylightCycle daylightCycle = forcedMode != null ? forcedMode : config.daylightCycle();
 			timeOfDay.setCycleMode(daylightCycle);
@@ -496,7 +496,7 @@ public class LightManager {
 				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
 			// dayNightOnly lights require the cycle setting; outside overworld they behave as static lights
-			if (light.visible && light.def.dayNightOnly && !config.enableDaylightCycle())
+			if (light.visible && light.def.dayNightOnly && !plugin.configEnableDayNightCycle)
 				light.visible = false;
 
 			if (light.visible) {
@@ -707,7 +707,7 @@ public class LightManager {
 	private void applyTimeOfDayColor(SceneContext sceneContext, Light light) {
 		System.arraycopy(light.def.color, 0, light.color, 0, 3);
 
-		if (!light.def.followDayNight || !config.enableDaylightCycle())
+		if (!light.def.followDayNight || !plugin.configEnableDayNightCycle)
 			return;
 
 		EnvironmentManager.OutdoorSkySample sky = environmentManager.sampleOutdoorSky(
