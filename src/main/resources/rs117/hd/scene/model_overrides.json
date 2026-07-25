@@ -99281,5 +99281,30 @@
         "uvScale": 0.3
       }
     ]
+  },
+  {
+    "description": "Maggot King Debris Shadows",
+    "areas": [ "MAGGOT_KING_ARENA" ],
+    "baseMaterial": "GRAY_05",
+    "hideVanillaShadows": true,
+    "retainVanillaShadowsInPvm": true,
+    "hideHdShadowsInPvm": true,
+    "depthBias": 50,
+    "graphicsObjectIds": [
+      "GARGBOSS_DEBRIS_SHADOW_90_DARK",
+      "GARGBOSS_DEBRIS_SHADOW_60_DARK",
+      "GARGBOSS_DEBRIS_SHADOW_120"
+    ]
+  },
+  {
+    "description": "Maggot King Floor Debris",
+    "baseMaterial": "ABYSSAL_2",
+    "shiftLightness": 2,
+    "undoVanillaShading": false,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "MAGGOT_KING_BLOOD"
+    ]
   }
 ]
