@@ -33,7 +33,6 @@
 #define DISPLAY_LIGHTING 0
 #define DISPLAY_HEX 0
 
-
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
@@ -213,16 +212,18 @@ void main() {
         #endif
 
         // Build HexData, if Terrain use world space XZ otherwise UVs
+        float hexFadeMultiplier = distance(IN.position, cameraPos) < (TILE_SIZE * 40) ? 1.0 : 0.0;
+
         HexShared hexShared = initHexShared(IN.position.xz / TILE_SIZE);
-        HexData hex1 = buildHexData(uv1, hexShared, material1.hexTilingScale, material1.hexTilingBlend, getMaterialHexTilingMode(material1));
+        HexData hex1 = buildHexData(uv1, hexShared, material1.hexTilingScale * hexFadeMultiplier, material1.hexTilingBlend, getMaterialHexTilingMode(material1));
 
         HexData hex2 = hex1;
         if(materialIdx1 != materialIdx2 && (uv1 != uv2 || !isHexSamplingSame(material1, material2)))
-            hex2 = buildHexData(uv2, hexShared, material2.hexTilingScale, material2.hexTilingBlend, getMaterialHexTilingMode(material2));
+            hex2 = buildHexData(uv2, hexShared, material2.hexTilingScale * hexFadeMultiplier, material2.hexTilingBlend, getMaterialHexTilingMode(material2));
 
         HexData hex3 = hex1;
         if(materialIdx1 != materialIdx3 && (uv1 != uv3 || !isHexSamplingSame(material1, material3)))
-            hex3 = buildHexData(uv3, hexShared, material3.hexTilingScale, material3.hexTilingBlend, getMaterialHexTilingMode(material3));
+            hex3 = buildHexData(uv3, hexShared, material3.hexTilingScale * hexFadeMultiplier, material3.hexTilingBlend, getMaterialHexTilingMode(material3));
 
         #if DISPLAY_HEX
         if(hexShared.valid) {
