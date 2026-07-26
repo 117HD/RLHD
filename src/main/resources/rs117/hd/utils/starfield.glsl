@@ -199,11 +199,13 @@ vec3 proceduralNebula(vec3 dir) {
     );
     vec3 wdir = dir + (warp - 0.5) * 0.9;
 
+    float clusterBias = nebulaClusterInfluence(dir);
+
     // Broad cloud regions (a few across the sky) built from multi-octave fBm
     // rather than a single low-frequency lookup, so edges are soft and varied.
     // Also runs for every sky pixel, so kept to 3 octaves.
     float region = sf_fbm(wdir * 2.5 + vec3(50.0), 3);
-    region = smoothstep(0.45, 0.78, region);
+    region = smoothstep(0.45, 0.78, (region + clusterBias) * 0.45);
 
     // Most of the sky has no nebula (region == 0). The remaining detail/wisp/
     // color fBm lookups would just be multiplied by zero there, so bail out
@@ -222,6 +224,7 @@ vec3 proceduralNebula(vec3 dir) {
     // texture. Bias toward region*wisps so the cloud reads as continuous gas
     // rather than scattered specks.
     float nebulaIntensity = region * (0.55 + 0.45 * wisps) * (0.6 + 0.4 * detail) * 1.9;
+    nebulaIntensity *= (1.0 + clusterBias * 1.2);
 
     // Two-tone nebula color: teal dominant with subtle purple variation
     vec3 tealColor = vec3(0.008, 0.025, 0.035);

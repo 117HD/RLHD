@@ -93,6 +93,7 @@ import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.opengl.uniforms.UBOLights;
+import rs117.hd.opengl.uniforms.UBOSkybox;
 import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
@@ -113,6 +114,7 @@ import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.StarField;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
@@ -181,6 +183,7 @@ public class HdPlugin extends Plugin {
 
 	public static int UNIFORM_BLOCK_COUNT = 0;
 	public static final int UNIFORM_BLOCK_GLOBAL = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_SKYBOX = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_MATERIALS = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_WATER_TYPES = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_LIGHTS = UNIFORM_BLOCK_COUNT++;
@@ -396,6 +399,7 @@ public class HdPlugin extends Plugin {
 	public int texTiledLighting;
 
 	public UBOGlobal uboGlobal;
+	public UBOSkybox uboSkybox;
 	public UBOUI uboUI;
 	public UBOLights uboLights;
 	public UBOLights uboLightsCulling;
@@ -970,7 +974,9 @@ public class HdPlugin extends Plugin {
 			)
 			.addInclude("MATERIAL_GETTER", () -> generateGetter("Material", MaterialManager.MATERIALS.length))
 			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", waterTypeManager.uboWaterTypes.getCount()))
+			.define("NEBULA_CLUSTER_COUNT", StarField.CLUSTER_COUNT)
 			.addUniformBuffer(uboGlobal)
+			.addUniformBuffer(uboSkybox)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboLightsCulling)
 			.addUniformBuffer(uboUI)
@@ -1151,6 +1157,10 @@ public class HdPlugin extends Plugin {
 		uboGlobal = new UBOGlobal();
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 
+		uboSkybox = new UBOSkybox();
+		uboSkybox.initialize(UNIFORM_BLOCK_SKYBOX);
+		uboSkybox.reset();
+
 		uboUI = new UBOUI();
 		uboUI.initialize(UNIFORM_BLOCK_UI);
 
@@ -1165,6 +1175,10 @@ public class HdPlugin extends Plugin {
 		if (uboGlobal != null)
 			uboGlobal.destroy();
 		uboGlobal = null;
+
+		if(uboSkybox != null)
+			uboSkybox.destroy();
+		uboSkybox = null;
 
 		if (uboUI != null)
 			uboUI.destroy();

@@ -1,9 +1,10 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <uniforms/skybox.glsl>
 #include <utils/color_blindness.glsl>
 
-in vec3 vColor;
+in vec4 vColor;
 in float vBrightness;
 
 out vec4 FragColor;
@@ -32,8 +33,8 @@ void main() {
     // do NOT gamma-correct here (that would crush these small values to nothing).
     // A brightness boost compensates for energy spread across the sprite vs. the
     // old crisp ~1px analytic star.
-    vec3 starColor = colorBlindnessCompensation(vColor) * vBrightness * falloff * 4.0;
+    vec3 starColor = colorBlindnessCompensation(vColor.rgb) * vBrightness * falloff * 4.0;
 
     // Additive blending (GL_ONE, GL_ONE); alpha carries falloff for AA at edges.
-    FragColor = vec4(starColor, falloff);
+    FragColor = vec4(starColor * vColor.a, falloff);
 }

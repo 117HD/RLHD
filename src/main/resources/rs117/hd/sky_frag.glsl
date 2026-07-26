@@ -1,6 +1,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <uniforms/skybox.glsl>
 #include <utils/color_blindness.glsl>
 #include <utils/misc.glsl>
 #include <utils/starfield.glsl>

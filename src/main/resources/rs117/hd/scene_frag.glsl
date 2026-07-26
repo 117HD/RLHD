@@ -33,6 +33,7 @@
 #define DISPLAY_LIGHTING 0
 
 #include <uniforms/global.glsl>
+#include <uniforms/skybox.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>

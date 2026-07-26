@@ -6,16 +6,17 @@
 // (once per star) rather than per pixel.
 
 #include <uniforms/global.glsl>
+#include <uniforms/skybox.glsl>
 
 layout(location = 0) in vec3 aStarDir;     // field-space unit direction
 layout(location = 1) in float aStarSize;   // relative size
 layout(location = 2) in float aStarBright; // base brightness
-layout(location = 3) in vec3 aStarColor;   // tint
+layout(location = 3) in vec4 aStarColor;   // tint
 layout(location = 4) in float aStarSpeed;  // rotation speed multiplier (parallax)
 
 uniform vec2 viewportSize;
 
-out vec3 vColor;
+out vec4 vColor;
 out float vBrightness;
 
 const float SKY_HORIZON_OFFSET = 0.087;

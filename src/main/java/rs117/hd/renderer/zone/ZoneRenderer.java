@@ -55,6 +55,7 @@ import rs117.hd.opengl.shader.SkyShaderProgram;
 import rs117.hd.opengl.shader.StarShaderProgram;
 import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
+import rs117.hd.opengl.uniforms.UBOSkybox;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -89,7 +90,6 @@ import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.renderer.zone.WorldViewContext.VAO_OPAQUE;
@@ -158,7 +158,7 @@ public class ZoneRenderer implements Renderer {
 	private SkyShaderProgram skyProgram;
 
 	@Inject
-	private NebulaBakeShaderProgram nebulaBakeProgram;
+	public NebulaBakeShaderProgram nebulaBakeProgram;
 
 	@Inject
 	private StarShaderProgram starProgram;
@@ -174,14 +174,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private UBOWorldViews uboWorldViews;
-
-	// Baked nebula cubemap. The nebula is a static function of view direction, so
-	// we evaluate its multi-octave fBm once into this cubemap and sample it each
-	// frame instead of recomputing per pixel.
-	private static final int NEBULA_CUBEMAP_RESOLUTION = 256;
-	private int texNebulaCubemap = 0;
-	private int fboNebulaBake = 0;
-	private boolean nebulaBaked = false;
 
 	private static final float DIRECTIONAL_ANGLE_UPDATE_THRESHOLD = (float) Math.toRadians(0.2);
 
@@ -247,6 +239,9 @@ public class ZoneRenderer implements Renderer {
 		sceneManager.initialize(uboWorldViews);
 		modelStreamingManager.initialize();
 
+		starField.initialize();
+		skyboxCmd.reset();
+
 		// Force updates that only run when the cameras change
 		sceneCamera.setDirty();
 		directionalCamera.setDirty();
@@ -292,9 +287,7 @@ public class ZoneRenderer implements Renderer {
 		nebulaBakeProgram.compile(includes);
 		starProgram.compile(includes);
 
-		// Bake the nebula cubemap once. Its content is a pure function of view
-		// direction (no config/time dependence), so it survives shader recompiles.
-		bakeNebulaCubemap();
+		starField.resetStarfield();
 	}
 
 	@Override
@@ -306,75 +299,6 @@ public class ZoneRenderer implements Renderer {
 		skyProgram.destroy();
 		nebulaBakeProgram.destroy();
 		starProgram.destroy();
-	}
-
-	// Standard OpenGL cubemap face orientation: {forward, right, up} per face,
-	// where dir = normalize(forward + u*right + v*up) for u,v in [-1, 1].
-	private static final float[][][] NEBULA_CUBE_FACES = {
-		{ { 1, 0, 0 }, { 0, 0, -1 }, { 0, -1, 0 } }, // +X
-		{ { -1, 0, 0 }, { 0, 0, 1 }, { 0, -1, 0 } }, // -X
-		{ { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0, 1 } },   // +Y
-		{ { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } }, // -Y
-		{ { 0, 0, 1 }, { 1, 0, 0 }, { 0, -1, 0 } },  // +Z
-		{ { 0, 0, -1 }, { -1, 0, 0 }, { 0, -1, 0 } } // -Z
-	};
-
-	private void bakeNebulaCubemap() {
-		if (nebulaBaked || !nebulaBakeProgram.isValid())
-			return;
-
-		// Create the cubemap texture (RGBA16F to preserve the nebula's small HDR values).
-		if (texNebulaCubemap == 0) {
-			texNebulaCubemap = glGenTextures();
-			glActiveTexture(TEXTURE_UNIT_NEBULA);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, texNebulaCubemap);
-			for (int face = 0; face < 6; face++) {
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA16F,
-					NEBULA_CUBEMAP_RESOLUTION, NEBULA_CUBEMAP_RESOLUTION, 0, GL_RGBA, GL_FLOAT, 0);
-			}
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		}
-
-		if (fboNebulaBake == 0)
-			fboNebulaBake = glGenFramebuffers();
-
-		// Save state we touch so we don't disturb whatever the caller had bound.
-		int prevFbo = glGetInteger(GL_FRAMEBUFFER_BINDING);
-		int[] prevViewport = new int[4];
-		glGetIntegerv(GL_VIEWPORT, prevViewport);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fboNebulaBake);
-		glViewport(0, 0, NEBULA_CUBEMAP_RESOLUTION, NEBULA_CUBEMAP_RESOLUTION);
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_BLEND);
-		glDisable(GL_CULL_FACE);
-
-		nebulaBakeProgram.use();
-		glBindVertexArray(plugin.vaoTri);
-
-		for (int face = 0; face < 6; face++) {
-			float[][] basis = NEBULA_CUBE_FACES[face];
-			nebulaBakeProgram.uniFaceForward.set(basis[0][0], basis[0][1], basis[0][2]);
-			nebulaBakeProgram.uniFaceRight.set(basis[1][0], basis[1][1], basis[1][2]);
-			nebulaBakeProgram.uniFaceUp.set(basis[2][0], basis[2][1], basis[2][2]);
-
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-				GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, texNebulaCubemap, 0);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
-		}
-
-		// Restore previous state. The bake used raw GL calls (FBO, viewport, depth/
-		// blend/cull, VAO) that bypass renderState, so invalidate its whole cache to
-		// force a clean re-apply on the next frame.
-		glBindFramebuffer(GL_FRAMEBUFFER, prevFbo);
-		glViewport(prevViewport[0], prevViewport[1], prevViewport[2], prevViewport[3]);
-		renderState.reset();
-
-		nebulaBaked = true;
 	}
 
 	private void buildSkyboxCmd() {
@@ -421,9 +345,6 @@ public class ZoneRenderer implements Renderer {
 
 		indirectDrawCmds = new GLBuffer("indirectDrawCmds", GL_DRAW_INDIRECT_BUFFER, GL_STREAM_DRAW).initialize(MiB);
 		indirectDrawCmdsStaging = new GpuIntBuffer();
-
-		starField.initialize();
-		skyboxCmd.reset();
 	}
 
 	private void destroyBuffers() {
@@ -443,16 +364,6 @@ public class ZoneRenderer implements Renderer {
 			indirectDrawCmdsStaging.destroy();
 		indirectDrawCmdsStaging = null;
 
-		if (fboNebulaBake != 0) {
-			glDeleteFramebuffers(fboNebulaBake);
-			fboNebulaBake = 0;
-		}
-		if (texNebulaCubemap != 0) {
-			glDeleteTextures(texNebulaCubemap);
-			texNebulaCubemap = 0;
-		}
-		nebulaBaked = false;
-
 		starField.destroy();
 	}
 
@@ -460,6 +371,9 @@ public class ZoneRenderer implements Renderer {
 	public void processConfigChanges(Set<String> keys) {
 		if (keys.contains(KEY_ASYNC_MODEL_PROCESSING))
 			modelStreamingManager.reinitialize();
+
+		if(keys.contains(KEY_ENABLE_NEBULAS))
+			starField.resetStarfield();
 	}
 
 	@Override
@@ -864,11 +778,11 @@ public class ZoneRenderer implements Renderer {
 			calculatedFogColorSrgb = fogColor;
 			float[] sunDirForSky = timeOfDay.getSunDirectionForSky();
 
-			plugin.uboGlobal.skyGradientEnabled.set(1);
-			plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
-			plugin.uboGlobal.skyHorizonColor.set(skyGradientColors[1]);
-			plugin.uboGlobal.skySunColor.set(skyGradientColors[2]);
-			plugin.uboGlobal.skySunDir.set(sunDirForSky);
+			plugin.uboSkybox.skyGradientEnabled.set(1);
+			plugin.uboSkybox.skyZenithColor.set(skyGradientColors[0]);
+			plugin.uboSkybox.skyHorizonColor.set(skyGradientColors[1]);
+			plugin.uboSkybox.skySunColor.set(skyGradientColors[2]);
+			plugin.uboSkybox.skySunDir.set(sunDirForSky);
 
 			// Set moon uniforms
 			float[] moonDir = timeOfDay.getMoonDirectionForSky();
@@ -878,23 +792,23 @@ public class ZoneRenderer implements Renderer {
 			// specifies a distinct moonLightColor. Drives the light on geometry, not
 			// the visible moon disk (which stays moonColor below).
 			float[] moonLightColor = environmentManager.currentMoonLightColor;
-			plugin.uboGlobal.skyMoonDir.set(moonDir);
-			plugin.uboGlobal.skyMoonColor.set(moonColor);
-			plugin.uboGlobal.skyMoonIllumination.set(moonIllumination);
-			plugin.uboGlobal.starVisibility.set(config.enableStarMap() ? environmentManager.currentStarVisibility : 0f);
-			plugin.uboGlobal.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
+			plugin.uboSkybox.skyMoonDir.set(moonDir);
+			plugin.uboSkybox.skyMoonColor.set(moonColor);
+			plugin.uboSkybox.skyMoonIllumination.set(moonIllumination);
+			plugin.uboSkybox.starVisibility.set(config.enableStarMap() ? environmentManager.currentStarVisibility : 0f);
+			plugin.uboSkybox.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
 			boolean hideMoon = daylightCycle == DaylightCycle.FIXED_DAWN
 				|| daylightCycle == DaylightCycle.FIXED_MIDDAY
 				|| daylightCycle == DaylightCycle.FIXED_SUNSET;
-			plugin.uboGlobal.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
-			plugin.uboGlobal.moonSizeMult.set(environmentManager.currentMoonSizeMult);
+			plugin.uboSkybox.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
+			plugin.uboSkybox.moonSizeMult.set(environmentManager.currentMoonSizeMult);
 			// Auroras appear on nights the per-night random roll selects. In modes
 			// with a day & night arc the roll switches during daytime so it's invisible
 			// behind nightSkyBlend; in always-night modes getAuroraStrength() applies a
 			// time-of-cycle envelope so they come and go instead of blazing all cycle.
 			// The per-environment auroraVisibility scales how visible they are when
 			// they do appear (independent of starVisibility).
-			plugin.uboGlobal.auroraVisibility.set(timeOfDay.getAuroraStrength() * environmentManager.currentAuroraVisibility);
+			plugin.uboSkybox.auroraVisibility.set(timeOfDay.getAuroraStrength() * environmentManager.currentAuroraVisibility);
 
 			// Calculate shadow visibility based on sun and moon altitude
 			double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
@@ -980,8 +894,8 @@ public class ZoneRenderer implements Renderer {
 					skyGradientColors[0][i] = skyGradientColors[0][i] * (1 - skyTint) + nightSkyColor[i] * skyTint;
 					skyGradientColors[1][i] = skyGradientColors[1][i] * (1 - skyTint) + nightSkyColor[i] * skyTint;
 				}
-				plugin.uboGlobal.skyZenithColor.set(skyGradientColors[0]);
-				plugin.uboGlobal.skyHorizonColor.set(skyGradientColors[1]);
+				plugin.uboSkybox.skyZenithColor.set(skyGradientColors[0]);
+				plugin.uboSkybox.skyHorizonColor.set(skyGradientColors[1]);
 				fogColor = skyGradientColors[1];
 			}
 
@@ -1000,19 +914,13 @@ public class ZoneRenderer implements Renderer {
 			float skyFill = 1.0f - smoothstep(0.0f, 45.0f, (float) sunAltitudeDegrees);
 			add(ambientColor, ambientColor, multiply(directionalColor, (1 - shadowVisibility) * skyFill));
 			directionalStrength *= shadowVisibility;
-		} else {
+		} else if(skyGradientEnabled) {
 			// Reset stored fog color when daylight cycle is disabled
 			calculatedFogColorSrgb = null;
 			skyGradientEnabled = false;
-			plugin.uboGlobal.skyGradientEnabled.set(0);
-			plugin.uboGlobal.skyMoonDir.set(new float[]{ 0, 0, 0 });
-			plugin.uboGlobal.skyMoonColor.set(new float[]{ 0, 0, 0 });
-			plugin.uboGlobal.skyMoonIllumination.set(0.0f);
-			plugin.uboGlobal.starVisibility.set(1.0f);
-			plugin.uboGlobal.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
-			plugin.uboGlobal.auroraVisibility.set(0f);
-			plugin.uboGlobal.moonSizeMult.set(1.0f);
+			plugin.uboSkybox.reset();
 		}
+		plugin.uboSkybox.upload();
 
 		// Hide the game's built-in skybox models when requested, so the day & night
 		// cycle's own sky renders in their place. Hiding requires BOTH the per-area
@@ -1303,10 +1211,8 @@ public class ZoneRenderer implements Renderer {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
 
-			// Bind the baked nebula cubemap so the sky shader can sample it
-			// instead of recomputing the nebula's fBm per pixel.
-			glActiveTexture(TEXTURE_UNIT_NEBULA);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, texNebulaCubemap);
+			if(starField.generateStarField())
+				skyboxCmd.reset();
 
 			buildSkyboxCmd();
 		} else {

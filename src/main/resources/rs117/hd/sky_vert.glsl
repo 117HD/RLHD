@@ -1,6 +1,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <uniforms/skybox.glsl>
 
 out vec2 fScreenPos;
 
