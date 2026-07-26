@@ -55,6 +55,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public Property pointLightsCount = addProperty(PropertyType.Int, "pointLightsCount");
 
+	public Property viewportSize = addProperty(PropertyType.IVec4, "viewportSize");
 	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");
 	public Property viewMatrix = addProperty(PropertyType.Mat4, "viewMatrix");
 	public Property projectionMatrix = addProperty(PropertyType.Mat4, "projectionMatrix");

@@ -698,6 +698,7 @@ public class LegacyRenderer implements Renderer {
 					}
 				}
 
+				plugin.uboGlobal.viewportSize.set(plugin.sceneViewport);
 				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
 				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
 				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);

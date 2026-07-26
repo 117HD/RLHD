@@ -687,6 +687,7 @@ public class ZoneRenderer implements Renderer {
 				environmentManager.allowRoofShadows();
 
 			plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
+			plugin.uboGlobal.viewportSize.set(plugin.sceneViewport);
 			plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
 			plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
 			plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);

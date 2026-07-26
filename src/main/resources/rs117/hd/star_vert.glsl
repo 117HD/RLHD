@@ -14,8 +14,6 @@ layout(location = 2) in float aStarBright; // base brightness
 layout(location = 3) in vec4 aStarColor;   // tint
 layout(location = 4) in float aStarSpeed;  // rotation speed multiplier (parallax)
 
-uniform vec2 viewportSize;
-
 out vec4 vColor;
 out float vBrightness;
 
@@ -128,6 +126,7 @@ void main() {
     // spreads across enough pixels for its smooth falloff to redistribute energy
     // under motion instead of toggling it. The maximum keeps the brightest stars
     // from reading as blobs.
-    float sizePixels = aStarSize * viewportSize.y * 0.003 * (0.9 + 0.15 * vBrightness);
-    gl_PointSize = visibility > 0.001 ? clamp(sizePixels, 2, 3.5) : 0.0;
+    float renderScale = float(sceneResolution.y) / viewportSize.w;
+    float sizePixels = aStarSize * viewportSize.w * 0.003 * (0.9 + 0.15 * vBrightness);
+    gl_PointSize = visibility > 0.001 ? clamp(sizePixels * renderScale, 2.0, 3.5) : 0.0;
 }
