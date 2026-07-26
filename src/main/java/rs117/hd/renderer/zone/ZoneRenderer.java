@@ -1192,8 +1192,6 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void scenePass() {
-		sceneProgram.use();
-
 		frameTimer.begin(Timer.DRAW_SCENE);
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.msaaSamples > 1) {
@@ -1218,6 +1216,9 @@ public class ZoneRenderer implements Renderer {
 				skyboxCmd.reset();
 
 			buildSkyboxCmd();
+
+			if (skyGradientEnabled && !shouldRenderRSSkybox && plugin.orthographicProjection && skyProgram.isValid())
+				skyboxCmd.execute(renderState);
 		} else {
 			// Use Day & night Cycle fog color if available, otherwise use environment manager's fog color
 			float[] fogColor = { 0, 0, 0 };
@@ -1244,6 +1245,8 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+
+		sceneProgram.use();
 
 		if (!gapFillerCmd.isEmpty()) {
 			renderState.depthMask.set(false);
@@ -1462,7 +1465,7 @@ public class ZoneRenderer implements Renderer {
 
 					sceneCmd.ExecuteSubCommandBuffer(ctx.vaoSceneCmd);
 
-					if (sceneManager.isRoot(ctx) && skyGradientEnabled && !shouldRenderRSSkybox && skyProgram.isValid()) {
+					if (skyGradientEnabled && !shouldRenderRSSkybox && !plugin.orthographicProjection && sceneManager.isRoot(ctx) && skyProgram.isValid()) {
 						// Draw Skybox after drawing Top Level Scene Opaque
 						sceneCmd.ExecuteSubCommandBuffer(skyboxCmd);
 						sceneCmd.SetShader(sceneProgram);
