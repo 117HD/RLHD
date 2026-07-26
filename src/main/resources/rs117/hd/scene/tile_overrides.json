@@ -502,7 +502,7 @@
   },
   {
     "name": "WIZARDS_TOWER_PATH_BLEND_FIX",
-    "groundMaterial": "HD_LAVA",
+    "groundMaterial": "OVERWORLD_GRASS_1",
     "minHue": 10,
     "maxHue": 10,
     "minSaturation": 5,
