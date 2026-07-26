@@ -6,6 +6,7 @@ import java.lang.management.OperatingSystemMXBean;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -194,6 +195,11 @@ public class FrameTimer {
 	public void add(Timer timer, long nanos) {
 		if (isActive)
 			timings[timer.ordinal()] += nanos;
+	}
+
+	public void add(Timer timer, long duration, TimeUnit unit) {
+		if (isActive)
+			timings[timer.ordinal()] += TimeUnit.NANOSECONDS.convert(duration, unit);
 	}
 
 	public void endFrameAndReset() {

@@ -187,6 +187,11 @@ public class EnvironmentManager {
 			List<Environment> allEnvironments = new ArrayList<>(Arrays.asList(ENVIRONMENTS_PATH.loadJson(plugin.getGson(), Environment[].class)));
 			mergeEnvironmentsFromResourcePacks(allEnvironments);
 
+				if (!config.pohThemeEnvironments())
+					environments = Arrays.stream(environments)
+						.filter(env -> !env.isPohTheme)
+						.toArray(Environment[]::new);
+
 			environments = allEnvironments.toArray(new Environment[0]);
 			log.debug("Loaded {} environments ({} from default, {} from resource packs)",
 				environments.length, defaultEnvironments.length, environments.length - defaultEnvironments.length);
@@ -574,5 +579,8 @@ public class EnvironmentManager {
 		load(false);
 	}
 
+	public boolean allowRoofShadows() {
+		return currentEnvironment.allowRoofShadows;
+	}
 
 }

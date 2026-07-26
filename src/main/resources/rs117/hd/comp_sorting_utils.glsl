@@ -99,22 +99,6 @@ bool face_visible(vec3 vA, vec3 vB, vec3 vC, vec3 position) {
   return (sA.x - sB.x) * (sC.y - sB.y) - (sC.x - sB.x) * (sA.y - sB.y) > 0;
 }
 
-float saturate(float value) {
-    return clamp(value, 0.0, 1.0);
-}
-
-vec2 saturate(vec2 value) {
-    return clamp(value, vec2(0.0), vec2(1.0));
-}
-
-vec3 saturate(vec3 value) {
-    return clamp(value, vec3(0.0), vec3(1.0));
-}
-
-vec4 saturate(vec4 value) {
-    return clamp(value, vec4(0.0), vec4(1.0));
-}
-
 // Rotation matrix around the X axis.
 mat3 rotateX(float theta) {
     float c = cos(theta);
@@ -146,58 +130,4 @@ mat3 rotateZ(float theta) {
         vec3(s, c, 0),
         vec3(0, 0, 1)
     );
-}
-
-// 2D Random
-float hash(in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
-}
-
-// 2D Noise based on Morgan McGuire @morgan3d, under the BSD license
-// https://www.shadertoy.com/view/4dS3Wd
-float noise(in vec2 st) {
-    vec2 i = floor(st);
-    vec2 f = fract(st);
-
-    // Four corners in 2D of a tile
-    float a = hash(i);
-    float b = hash(i + vec2(1.0, 0.0));
-    float c = hash(i + vec2(0.0, 1.0));
-    float d = hash(i + vec2(1.0, 1.0));
-
-    // Smooth Interpolation
-
-    // Cubic Hermine Curve.  Same as SmoothStep()
-    vec2 u = f*f*(3.0-2.0*f);
-    // u = smoothstep(0.,1.,f);
-
-    // Mix 4 coorners percentages
-    return mix(a, b, u.x) +
-        (c - a)* u.y * (1.0 - u.x) +
-        (d - b) * u.x * u.y;
-}
-
-vec3 snap(vec3 position, float gridSpacing) {
-    position /= gridSpacing;
-    position = round(position);
-    position *= gridSpacing;
-    return position;
-}
-
-vec2 snap(vec2 position, float gridSpacing) {
-    return snap(vec3(position.x, 0.0, position.y), gridSpacing).xz;
-}
-
-float smooth_step(float edge0, float edge1, float x) {
-    float p = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
-    float v = p * p * (3.0 - 2.0 * p); // smoothstep formula
-    return v;
-}
-
-vec3 safe_normalize(vec3 v) {
-    vec3 r = normalize(v);
-    r.x = isnan(r.x) ? 0.0 : r.x;
-    r.y = isnan(r.y) ? 0.0 : r.y;
-    r.z = isnan(r.z) ? 0.0 : r.z;
-    return r;
 }

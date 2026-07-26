@@ -111,7 +111,11 @@
       },
       "hide": {
         "type": "boolean",
-        "description": "Whether any model this override applies to should be hidden. Defaults to false."
+        "description": "Whether models this override applies to should be hidden. Defaults to false."
+      },
+      "disableDetailCulling": {
+        "type": "boolean",
+        "description": "Whether the model should render regardless of the detail distance setting. Defaults to false."
       },
       "retainVanillaUvs": {
         "type": "boolean",
@@ -149,6 +153,10 @@
         "type": "boolean",
         "description": "Whether the model receive shadows cast by other objects. Defaults to true."
       },
+      "doubleSidedFaces": {
+        "type": "boolean",
+        "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
+      },
       "terrainVertexSnap": {
         "type": "boolean",
         "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
@@ -160,6 +168,10 @@
       "undoVanillaShading": {
         "type": "boolean",
         "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
+      },
+      "hideAsWaterEffect": {
+        "type": "boolean",
+        "description": "Whether the model should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
       },
       "shadowOpacityThreshold": {
         "type": "number",
@@ -209,6 +221,70 @@
       "disablePrioritySorting": {
         "type": "boolean",
         "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
+      },
+      "setHue": {
+        "type": "integer",
+        "description": "Force a specific hue."
+      },
+      "shiftHue": {
+        "type": "integer",
+        "description": "Add or subtract from hue within the range defined by minHue and maxHue. Defaults to 0."
+      },
+      "minHue": {
+        "type": "integer",
+        "description": "Vertex colors with a lower hue value will be clamped to the specified min hue. Defaults to 0."
+      },
+      "maxHue": {
+        "type": "integer",
+        "description": "Vertex colors with a higher hue value will be clamped to the specified max hue. Defaults to 63."
+      },
+      "setSaturation": {
+        "type": "integer",
+        "description": "Force a specific saturation."
+      },
+      "shiftSaturation": {
+        "type": "integer",
+        "description": "Add or subtract from saturation within the range defined by minSaturation and maxSaturation. Defaults to 0."
+      },
+      "minSaturation": {
+        "type": "integer",
+        "description": "Vertex colors with a lower saturation value will be clamped to the specified min saturation. Defaults to 0."
+      },
+      "maxSaturation": {
+        "type": "integer",
+        "description": "Vertex colors with a higher saturation value will be clamped to the specified max saturation. Defaults to 7."
+      },
+      "setLightness": {
+        "type": "integer",
+        "description": "Force a specific lightness."
+      },
+      "shiftLightness": {
+        "type": "integer",
+        "description": "Add or subtract from lightness within the range defined by minLightness and maxLightness. Defaults to 0."
+      },
+      "minLightness": {
+        "type": "integer",
+        "description": "Vertex colors with a lower lightness value will be clamped to the specified min lightness. Defaults to 0."
+      },
+      "maxLightness": {
+        "type": "integer",
+        "description": "Vertex colors with a higher lightness value will be clamped to the specified max lightness. Defaults to 127."
+      },
+      "setAlpha": {
+        "type": "integer",
+        "description": "Force a specific alpha value, where 0 is fully transparent, 255 is fully opaque."
+      },
+      "shiftAlpha": {
+        "type": "integer",
+        "description": "Add or subtract from alpha value within the range defined by minAlpha and maxAlpha. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
+      },
+      "minAlpha": {
+        "type": "integer",
+        "description": "Vertex colors with a lower alpha value value will be clamped to the specified min alpha value. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
+      },
+      "maxAlpha": {
+        "type": "integer",
+        "description": "Vertex colors with a higher alpha value value will be clamped to the specified max alpha value. Defaults to 255, where 0 is fully transparent, 255 is fully opaque."
       },
       "materialOverrides": {
         "type": "object",
@@ -267,6 +343,10 @@
               "type": "integer",
               "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
             },
+            "hide": {
+              "type": "boolean",
+              "description": "Whether faces this override applies to should be hidden. Defaults to false."
+            },
             "retainVanillaUvs": {
               "type": "boolean",
               "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
@@ -287,6 +367,10 @@
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
             },
+            "doubleSidedFaces": {
+              "type": "boolean",
+              "description": "Whether triangles should be visible when viewed from either side. Defaults to false."
+            },
             "terrainVertexSnap": {
               "type": "boolean",
               "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
@@ -298,6 +382,10 @@
             "undoVanillaShading": {
               "type": "boolean",
               "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
+            },
+            "hideAsWaterEffect": {
+              "type": "boolean",
+              "description": "Whether the faces should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
             },
             "shadowOpacityThreshold": {
               "type": "number",
@@ -330,6 +418,70 @@
             "disablePrioritySorting": {
               "type": "boolean",
               "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
+            },
+            "setHue": {
+              "type": "integer",
+              "description": "Force a specific hue."
+            },
+            "shiftHue": {
+              "type": "integer",
+              "description": "Add or subtract from hue within the range defined by minHue and maxHue. Defaults to 0."
+            },
+            "minHue": {
+              "type": "integer",
+              "description": "Vertex colors with a lower hue value will be clamped to the specified min hue. Defaults to 0."
+            },
+            "maxHue": {
+              "type": "integer",
+              "description": "Vertex colors with a higher hue value will be clamped to the specified max hue. Defaults to 63."
+            },
+            "setSaturation": {
+              "type": "integer",
+              "description": "Force a specific saturation."
+            },
+            "shiftSaturation": {
+              "type": "integer",
+              "description": "Add or subtract from saturation within the range defined by minSaturation and maxSaturation. Defaults to 0."
+            },
+            "minSaturation": {
+              "type": "integer",
+              "description": "Vertex colors with a lower saturation value will be clamped to the specified min saturation. Defaults to 0."
+            },
+            "maxSaturation": {
+              "type": "integer",
+              "description": "Vertex colors with a higher saturation value will be clamped to the specified max saturation. Defaults to 7."
+            },
+            "setLightness": {
+              "type": "integer",
+              "description": "Force a specific lightness."
+            },
+            "shiftLightness": {
+              "type": "integer",
+              "description": "Add or subtract from lightness within the range defined by minLightness and maxLightness. Defaults to 0."
+            },
+            "minLightness": {
+              "type": "integer",
+              "description": "Vertex colors with a lower lightness value will be clamped to the specified min lightness. Defaults to 0."
+            },
+            "maxLightness": {
+              "type": "integer",
+              "description": "Vertex colors with a higher lightness value will be clamped to the specified max lightness. Defaults to 127."
+            },
+            "setAlpha": {
+              "type": "integer",
+              "description": "Force a specific alpha value, where 0 is fully transparent, 255 is fully opaque."
+            },
+            "shiftAlpha": {
+              "type": "integer",
+              "description": "Add or subtract from alpha value within the range defined by minAlpha and maxAlpha. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
+            },
+            "minAlpha": {
+              "type": "integer",
+              "description": "Vertex colors with a lower alpha value value will be clamped to the specified min alpha value. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
+            },
+            "maxAlpha": {
+              "type": "integer",
+              "description": "Vertex colors with a higher alpha value value will be clamped to the specified max alpha value. Defaults to 255, where 0 is fully transparent, 255 is fully opaque."
             }
           }
         }
@@ -398,6 +550,10 @@
               "type": "integer",
               "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
             },
+            "hide": {
+              "type": "boolean",
+              "description": "Whether faces this override applies to should be hidden. Defaults to false."
+            },
             "retainVanillaUvs": {
               "type": "boolean",
               "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
@@ -418,6 +574,10 @@
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
             },
+            "doubleSidedFaces": {
+              "type": "boolean",
+              "description": "Whether triangles should be visible when viewed from either side. Defaults to false.2"
+            },
             "terrainVertexSnap": {
               "type": "boolean",
               "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
@@ -429,6 +589,10 @@
             "undoVanillaShading": {
               "type": "boolean",
               "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
+            },
+            "hideAsWaterEffect": {
+              "type": "boolean",
+              "description": "Whether the faces should be hidden when \"Hide vanilla water ripples\" is enabled. Defaults to false."
             },
             "shadowOpacityThreshold": {
               "type": "number",
@@ -461,6 +625,70 @@
             "disablePrioritySorting": {
               "type": "boolean",
               "description": "Disable priority sorting, instead sorting solely based on distance. Useful for new models where Jagex provide incorrect priorities."
+            },
+            "setHue": {
+              "type": "integer",
+              "description": "Force a specific hue."
+            },
+            "shiftHue": {
+              "type": "integer",
+              "description": "Add or subtract from hue within the range defined by minHue and maxHue. Defaults to 0."
+            },
+            "minHue": {
+              "type": "integer",
+              "description": "Vertex colors with a lower hue value will be clamped to the specified min hue. Defaults to 0."
+            },
+            "maxHue": {
+              "type": "integer",
+              "description": "Vertex colors with a higher hue value will be clamped to the specified max hue. Defaults to 63."
+            },
+            "setSaturation": {
+              "type": "integer",
+              "description": "Force a specific saturation."
+            },
+            "shiftSaturation": {
+              "type": "integer",
+              "description": "Add or subtract from saturation within the range defined by minSaturation and maxSaturation. Defaults to 0."
+            },
+            "minSaturation": {
+              "type": "integer",
+              "description": "Vertex colors with a lower saturation value will be clamped to the specified min saturation. Defaults to 0."
+            },
+            "maxSaturation": {
+              "type": "integer",
+              "description": "Vertex colors with a higher saturation value will be clamped to the specified max saturation. Defaults to 7."
+            },
+            "setLightness": {
+              "type": "integer",
+              "description": "Force a specific lightness."
+            },
+            "shiftLightness": {
+              "type": "integer",
+              "description": "Add or subtract from lightness within the range defined by minLightness and maxLightness. Defaults to 0."
+            },
+            "minLightness": {
+              "type": "integer",
+              "description": "Vertex colors with a lower lightness value will be clamped to the specified min lightness. Defaults to 0."
+            },
+            "maxLightness": {
+              "type": "integer",
+              "description": "Vertex colors with a higher lightness value will be clamped to the specified max lightness. Defaults to 127."
+            },
+            "setAlpha": {
+              "type": "integer",
+              "description": "Force a specific alpha value, where 0 is fully transparent, 255 is fully opaque."
+            },
+            "shiftAlpha": {
+              "type": "integer",
+              "description": "Add or subtract from alpha value within the range defined by minAlpha and maxAlpha. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
+            },
+            "minAlpha": {
+              "type": "integer",
+              "description": "Vertex colors with a lower alpha value value will be clamped to the specified min alpha value. Defaults to 0, where 0 is fully transparent, 255 is fully opaque."
+            },
+            "maxAlpha": {
+              "type": "integer",
+              "description": "Vertex colors with a higher alpha value value will be clamped to the specified max alpha value. Defaults to 255, where 0 is fully transparent, 255 is fully opaque."
             }
           }
         }

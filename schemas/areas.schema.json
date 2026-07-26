@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "environments.schema.json",
-  "title": "Environments",
+  "$id": "areas.schema.json",
+  "title": "Areas",
   "type": "array",
   "items": {
     "type": "object",
@@ -11,6 +11,10 @@
       "name": {
         "type": "string",
         "description": "Identifier for the area which may be used in code."
+      },
+      "description": {
+        "type": "string",
+        "description": "Optional description of what this applies to or is used for."
       },
       "hideOtherAreas": {
         "type": "boolean",

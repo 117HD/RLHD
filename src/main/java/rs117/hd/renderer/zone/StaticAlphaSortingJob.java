@@ -10,7 +10,7 @@ import rs117.hd.utils.Camera;
 import rs117.hd.utils.jobs.Job;
 
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.utils.HDUtils.ceilPow2;
+import static rs117.hd.utils.MathUtils.*;
 
 @RequiredArgsConstructor
 public final class StaticAlphaSortingJob extends Job {
@@ -44,11 +44,11 @@ public final class StaticAlphaSortingJob extends Job {
 		if (frameTimer == null)
 			frameTimer = getInjector().getInstance(FrameTimer.class);
 		yaw = camera.getFixedYaw();
-		yawSin = SINE[yaw];
-		yawCos = COSINE[yaw];
+		yawSin = SINE14[yaw];
+		yawCos = COSINE14[yaw];
 		pitch = camera.getFixedPitch();
-		pitchSin = SINE[pitch];
-		pitchCos = COSINE[pitch];
+		pitchSin = SINE14[pitch];
+		pitchCos = COSINE14[pitch];
 		queue();
 	}
 

@@ -31,7 +31,7 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 		@Getter
 		private boolean squashed;
 
-		private final float[] currentProjection = new float[16];
+		private final float[] currentProjection = Mat4.zero();
 		private final int[] currentTint = new int[4];
 		private final int[] newTint = new int[4];
 

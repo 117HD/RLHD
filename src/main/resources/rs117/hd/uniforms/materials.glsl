@@ -9,6 +9,7 @@ struct Material {
     int roughnessMap;
     int ambientOcclusionMap;
     int flowMap;
+    int shadowAlphaMap;
     int flags; // overrideBaseColor << 2 | unlit << 1 | hasTransparency
     float brightness;
     float displacementScale;
