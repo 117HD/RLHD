@@ -1078,6 +1078,11 @@ public class SceneUploader implements AutoCloseable {
 		uvx = fract(uvx * uvcos - uvy * uvsin);
 		uvy = fract(tmp * uvsin + uvy * uvcos);
 
+		final boolean isTouchingWater = ctx.isVertexWater(swVertexKey) ||
+										ctx.isVertexWater(seVertexKey) ||
+										ctx.isVertexWater(nwVertexKey) ||
+										ctx.isVertexWater(neVertexKey);
+
 		final var vb = writeCache.getVertexBuffer();
 		final var tb = writeCache.getTextureBuffer();
 
@@ -1108,7 +1113,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx, false
 		);
 
-		if (tileZ != 0 || override.doubleSidedFaces) {
+		if ((!isTouchingWater && tileZ != 0) || override.doubleSidedFaces) {
 			vb.putStaticVertex(
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
@@ -1158,7 +1163,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx, false
 		);
 
-		if (tileZ != 0 || override.doubleSidedFaces) {
+		if ((!isTouchingWater && tileZ != 0) || override.doubleSidedFaces) {
 			vb.putStaticVertex(
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
@@ -1477,7 +1482,8 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx, false
 			);
 
-			if (tileZ != 0 || override.doubleSidedFaces) {
+			final boolean isTouchingWater = ctx.isVertexWater(vertexKeyA) || ctx.isVertexWater(vertexKeyB) || ctx.isVertexWater(vertexKeyC);
+			if ((!isTouchingWater && tileZ != 0) || override.doubleSidedFaces) {
 				vb.putStaticVertex(
 					lx2, ly2, lz2,
 					uvCx, uvCy, 0,
