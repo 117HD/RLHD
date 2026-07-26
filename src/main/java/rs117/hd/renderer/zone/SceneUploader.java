@@ -898,6 +898,7 @@ public class SceneUploader implements AutoCloseable {
 
 		ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
 
+		final boolean isTileVisBelow = (settings[tileZ][tileExX][tileExY] & TILE_FLAG_VIS_BELOW) != 0;
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];
 		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
 		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
@@ -1078,11 +1079,6 @@ public class SceneUploader implements AutoCloseable {
 		uvx = fract(uvx * uvcos - uvy * uvsin);
 		uvy = fract(tmp * uvsin + uvy * uvcos);
 
-		final boolean isTouchingWater = ctx.isVertexWater(swVertexKey) ||
-										ctx.isVertexWater(seVertexKey) ||
-										ctx.isVertexWater(nwVertexKey) ||
-										ctx.isVertexWater(neVertexKey);
-
 		final var vb = writeCache.getVertexBuffer();
 		final var tb = writeCache.getTextureBuffer();
 
@@ -1113,7 +1109,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx, false
 		);
 
-		if ((!isTouchingWater && tileZ != 0) || override.doubleSidedFaces) {
+		if ((!isTileVisBelow && tileZ != 0) || override.doubleSidedFaces) {
 			vb.putStaticVertex(
 				lx1, seHeight, lz1,
 				uvx + uvsin, uvy - uvcos, 0,
@@ -1163,7 +1159,7 @@ public class SceneUploader implements AutoCloseable {
 			texturedFaceIdx, false
 		);
 
-		if ((!isTouchingWater && tileZ != 0) || override.doubleSidedFaces) {
+		if ((!isTileVisBelow && tileZ != 0) || override.doubleSidedFaces) {
 			vb.putStaticVertex(
 				lx3, nwHeight, lz3,
 				uvx - uvcos, uvy - uvsin, 0,
@@ -1225,6 +1221,7 @@ public class SceneUploader implements AutoCloseable {
 
 		ctx.filledTiles[tileExX][tileExY] |= (byte) (1 << tileZ);
 
+		final boolean isTileVisBelow = (settings[tileZ][tileExX][tileExY] & TILE_FLAG_VIS_BELOW) != 0;
 		final int[] faceX = model.getFaceX();
 		final int[] faceY = model.getFaceY();
 		final int[] faceZ = model.getFaceZ();
@@ -1482,8 +1479,7 @@ public class SceneUploader implements AutoCloseable {
 				texturedFaceIdx, false
 			);
 
-			final boolean isTouchingWater = ctx.isVertexWater(vertexKeyA) || ctx.isVertexWater(vertexKeyB) || ctx.isVertexWater(vertexKeyC);
-			if ((!isTouchingWater && tileZ != 0) || override.doubleSidedFaces) {
+			if ((!isTileVisBelow && tileZ != 0) || override.doubleSidedFaces) {
 				vb.putStaticVertex(
 					lx2, ly2, lz2,
 					uvCx, uvCy, 0,
