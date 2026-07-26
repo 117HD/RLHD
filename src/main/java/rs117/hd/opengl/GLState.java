@@ -91,6 +91,32 @@ public abstract class GLState {
 		protected abstract void applyValue(T value);
 	}
 
+	public abstract static class FloatArray extends GLState {
+		@Getter
+		private final float[] value;
+		protected final float[] appliedValue;
+
+		protected FloatArray(int size) {
+			value = new float[size];
+			appliedValue = new float[size];
+		}
+
+		public final void set(float... v) {
+			hasValue = true;
+			System.arraycopy(v, 0, value, 0, v.length);
+		}
+
+		@Override
+		protected void internalApply() {
+			if (!hasApplied || !Arrays.equals(value, appliedValue)) {
+				applyValues(value);
+				System.arraycopy(value, 0, appliedValue, 0, value.length);
+			}
+		}
+
+		protected abstract void applyValues(float[] values);
+	}
+
 	public abstract static class IntArray extends GLState {
 		@Getter
 		private final int[] value;

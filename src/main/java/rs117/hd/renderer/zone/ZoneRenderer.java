@@ -55,7 +55,6 @@ import rs117.hd.opengl.shader.SkyShaderProgram;
 import rs117.hd.opengl.shader.StarShaderProgram;
 import rs117.hd.opengl.shader.TerrainShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
-import rs117.hd.opengl.uniforms.UBOSkybox;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -1156,7 +1155,10 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_DEPTH_TEST);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.depthFunc.set(plugin.configShadowTransparency ? GL_LEQUAL : GL_LESS);
+		renderState.enable.set(GL_POLYGON_OFFSET_FILL);
+		renderState.polygonOffset.set(0.5f, 1.0f);
 		renderState.ido.set(indirectDrawCmds.id);
+
 		directionalCmd.execute(renderState);
 
 		frameTimer.end(Timer.RENDER_SHADOWS);
@@ -1184,6 +1186,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.cullFace.set(GL_BACK);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.disable.set(GL_POLYGON_OFFSET_FILL);
 
 		shouldClearShadowFbo = true;
 	}
