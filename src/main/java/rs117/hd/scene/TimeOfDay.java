@@ -15,7 +15,9 @@ import rs117.hd.config.MoonPhase;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.utils.AtmosphereUtils;
 
+import static rs117.hd.utils.ColorUtils.linearToSrgb;
 import static rs117.hd.utils.ColorUtils.rgb;
+import static rs117.hd.utils.ColorUtils.srgbToLinear;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
@@ -130,6 +132,13 @@ public class TimeOfDay {
 	// irrelevant since it isn't rendered — only its negative altitude matters for
 	// night detection and shadow fade).
 	private static final double[] FIXED_NIGHT_SUN  = { Math.toRadians(81.1), Math.toRadians(-88.0) };
+
+	// Latitudes used for the seasonal-hemisphere-based sun/moon arc: New York City
+	// (northern) and Rio de Janeiro (southern). Only latitude affects the sun's
+	// altitude/seasonal arc; longitude is left at 0 since the cycle drives its own
+	// time-of-day rather than a real clock/timezone.
+	private static final double[] NORTHERN_LAT_LONG = { 40.7128, 0.0 };  // New York City
+	private static final double[] SOUTHERN_LAT_LONG = { -22.9068, 0.0 }; // Rio de Janeiro
 
 	// Per-environment fixed-angle overrides {azimuth, altitude} in radians, or
 	// null to use astronomical/default angles. Set once per frame by the renderer
@@ -319,13 +328,6 @@ public class TimeOfDay {
 		currentCycleDuration = cycleDuration;
 	}
 
-	// Latitudes used for the seasonal-hemisphere-based sun/moon arc: New York City
-	// (northern) and Rio de Janeiro (southern). Only latitude affects the sun's
-	// altitude/seasonal arc; longitude is left at 0 since the cycle drives its own
-	// time-of-day rather than a real clock/timezone.
-	private static final double[] NORTHERN_LAT_LONG = { 40.7128, 0.0 };  // New York City
-	private static final double[] SOUTHERN_LAT_LONG = { -22.9068, 0.0 }; // Rio de Janeiro
-
 	/**
 	 * Set the observer latitude for this frame from the player's seasonal hemisphere:
 	 * northern -> New York City, southern -> Rio de Janeiro. Call before any other
@@ -356,9 +358,7 @@ public class TimeOfDay {
 		currentMoonPhase = moonPhase;
 	}
 
-	public void setMoonBehavior(MoonBehavior moonBehavior) {
-		currentMoonBehavior = moonBehavior;
-	}
+	public void setMoonBehavior(MoonBehavior moonBehavior) { currentMoonBehavior = moonBehavior; }
 
 	/**
 	 * Warp a linear cycle position (0..1) so day and night occupy a different
@@ -507,16 +507,15 @@ public class TimeOfDay {
 		// Get the enhanced color for current sun altitude (returns sRGB values)
 		float[] enhancedColorSrgb = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, ENHANCED_SKY_KEYFRAMES);
 		// Convert to linear for blending
-		float[] enhancedColor = rs117.hd.utils.ColorUtils.srgbToLinear(enhancedColorSrgb);
+		float[] enhancedColor = srgbToLinear(enhancedColorSrgb);
 
 		// Apply sunStrength: suppress procedural sunset colors for dark environments
 		// For positive altitudes, keep full suppression — the regional blend will take over.
 		// For negative altitudes, fade suppression out by -25° where night colors dominate.
 		if (sunStrength < 1.0f && regionalFogColor != null) {
-			float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
-			float[] nightSkyLin = rs117.hd.utils.ColorUtils.srgbToLinear(
-				new float[] { 5f / 255f, 7f / 255f, 15f / 255f }
-			);
+			float[] regionalLin = srgbToLinear(regionalFogColor);
+			float[] nightSkyLin = srgbToLinear(
+				5f / 255f, 7f / 255f, 15f / 255f);
 
 			float suppressionWindow;
 			if (sunAltitudeDegrees >= 0) {
@@ -541,13 +540,11 @@ public class TimeOfDay {
 					nightMix = nm * nm * (3.0f - 2.0f * nm);
 				}
 				float[] blendTarget = new float[3];
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < 3; i++)
 					blendTarget[i] = regionalLin[i] * (1 - nightMix) + nightSkyLin[i] * nightMix;
-				}
 
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < 3; i++)
 					enhancedColor[i] = enhancedColor[i] * (1 - suppression) + blendTarget[i] * suppression;
-				}
 			}
 		}
 
@@ -563,19 +560,16 @@ public class TimeOfDay {
 		}
 
 		// Convert regional fog color from sRGB to linear RGB for proper blending
-		float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
+		float[] regionalLinear = srgbToLinear(regionalFogColor);
 
 		// Use the regional color directly without desaturation to preserve vivid colors
-		float[] desaturatedRegional = regionalLinear;
-
 		// Blend between enhanced color and desaturated regional color (in linear space)
 		float[] resultLinear = new float[3];
-		for (int i = 0; i < 3; i++) {
-			resultLinear[i] = enhancedColor[i] * (1 - blendFactor) + desaturatedRegional[i] * blendFactor;
-		}
+		for (int i = 0; i < 3; i++)
+			resultLinear[i] = enhancedColor[i] * (1 - blendFactor) + regionalLinear[i] * blendFactor;
 
 		// Convert back to sRGB for return
-		return rs117.hd.utils.ColorUtils.linearToSrgb(resultLinear);
+		return linearToSrgb(resultLinear);
 	}
 
 	/**
@@ -620,10 +614,9 @@ public class TimeOfDay {
 		// For positive altitudes, keep full suppression — the regional blend will take over.
 		// For negative altitudes, fade suppression out by -25° where night colors dominate.
 		if (sunStrength < 1.0f && regionalFogColor != null) {
-			float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
-			float[] nightSkyLin = rs117.hd.utils.ColorUtils.srgbToLinear(
-				new float[] { 5f / 255f, 7f / 255f, 15f / 255f }
-			);
+			float[] regionalLin = srgbToLinear(regionalFogColor);
+			float[] nightSkyLin = srgbToLinear(
+				5f / 255f, 7f / 255f, 15f / 255f);
 
 			float suppressionWindow;
 			if (sunAltitudeDegrees >= 0) {
@@ -649,18 +642,16 @@ public class TimeOfDay {
 					nightMix = nm * nm * (3.0f - 2.0f * nm);
 				}
 				float[] blendTarget = new float[3];
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < 3; i++)
 					blendTarget[i] = regionalLin[i] * (1 - nightMix) + nightSkyLin[i] * nightMix;
-				}
 
 				for (int i = 0; i < 3; i++) {
 					zenithColor[i] = zenithColor[i] * (1 - suppression) + blendTarget[i] * suppression;
 					horizonColor[i] = horizonColor[i] * (1 - suppression) + blendTarget[i] * suppression;
 				}
 				// Suppress sun glow toward zero (it's additive)
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < 3; i++)
 					sunGlowColor[i] = sunGlowColor[i] * (1 - suppression);
-				}
 			}
 		}
 
@@ -704,7 +695,7 @@ public class TimeOfDay {
 
 			float sunsetSuppression = (1.0f - sunriseSunsetStrength) * sunsetWindow;
 			if (sunsetSuppression > 0.0f) {
-				float[] regionalLin = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
+				float[] regionalLin = srgbToLinear(regionalFogColor);
 
 				// Hold the horizon/zenith at the area's regional color.
 				for (int i = 0; i < 3; i++) {
@@ -713,9 +704,8 @@ public class TimeOfDay {
 				}
 				// Fade the procedural sun glow (additive orange/red halo) toward zero so
 				// it doesn't fight the regional color the sky is being held at.
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < 3; i++)
 					sunGlowColor[i] = sunGlowColor[i] * (1 - sunsetSuppression);
-				}
 			}
 		}
 
@@ -735,17 +725,15 @@ public class TimeOfDay {
 		// Blend with regional fog color if we have regional influence
 		if (blendFactor > 0.0f && regionalFogColor != null) {
 			// Convert regional fog color to linear for blending
-			float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
+			float[] regionalLinear = srgbToLinear(regionalFogColor);
 
 			// Blend zenith color with regional color (same intensity as horizon for uniformity)
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 3; i++)
 				zenithColor[i] = zenithColor[i] * (1 - blendFactor) + regionalLinear[i] * blendFactor;
-			}
 
 			// Blend horizon color with regional color
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 3; i++)
 				horizonColor[i] = horizonColor[i] * (1 - blendFactor) + regionalLinear[i] * blendFactor;
-			}
 		}
 
 		// Nighttime: blend both zenith and horizon toward flat night sky color
@@ -768,9 +756,8 @@ public class TimeOfDay {
 			// and the procedural starfield take over — including in reduced
 			// sunriseSunsetStrength areas, where the regional hold only spans the
 			// visible sunrise/sunset (above) and must not persist into deep night.
-			float[] nightSkyLinear = rs117.hd.utils.ColorUtils.srgbToLinear(
-				new float[] { 5f / 255f, 7f / 255f, 15f / 255f }
-			);
+			float[] nightSkyLinear = srgbToLinear(
+				5f / 255f, 7f / 255f, 15f / 255f);
 
 			for (int i = 0; i < 3; i++) {
 				zenithColor[i] = zenithColor[i] * (1 - nightBlendFactor) + nightSkyLinear[i] * nightBlendFactor;
@@ -781,9 +768,9 @@ public class TimeOfDay {
 		}
 
 		// Convert from linear RGB (what interpolateSrgb returns) back to sRGB for the shader
-		zenithColor = rs117.hd.utils.ColorUtils.linearToSrgb(zenithColor);
-		horizonColor = rs117.hd.utils.ColorUtils.linearToSrgb(horizonColor);
-		sunGlowColor = rs117.hd.utils.ColorUtils.linearToSrgb(sunGlowColor);
+		zenithColor = linearToSrgb(zenithColor);
+		horizonColor = linearToSrgb(horizonColor);
+		sunGlowColor = linearToSrgb(sunGlowColor);
 
 		return new float[][] { zenithColor, horizonColor, sunGlowColor };
 	}
@@ -797,7 +784,7 @@ public class TimeOfDay {
 			return regionalFogColor;
 
 		float[] horizonLinear = AtmosphereUtils.interpolateSrgb(90f, HORIZON_KEYFRAMES);
-		return rs117.hd.utils.ColorUtils.linearToSrgb(horizonLinear);
+		return linearToSrgb(horizonLinear);
 	}
 
 	/**
