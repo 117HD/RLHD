@@ -917,7 +917,7 @@ public class TimeOfDay {
 		// Continuous simulated-day time, with the integer boundary shifted to
 		// midday (cycle pos 0.35) so a night and its index never straddle a flip.
 		double continuousTime = completedCycles + accumulatedCycleTime;
-		long nightIndex = (long) Math.floor(continuousTime - 0.35);
+		int nightIndex = max(1, (int)Math.floor(continuousTime - 0.35) + 1);
 
 		// Cheap integer hash (splitmix64-style finalizer) -> uniform 53-bit mantissa.
 		long h = nightIndex * 0x9E3779B97F4A7C15L;
