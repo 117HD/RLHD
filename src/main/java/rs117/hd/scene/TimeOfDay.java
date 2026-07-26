@@ -177,6 +177,7 @@ public class TimeOfDay {
 	@Getter
 	private MoonBehavior currentMoonBehavior = MoonBehavior.NIGHT_SYNCED;
 
+	@Getter
 	private float currentCycleDuration = 700;
 
 	@Getter

@@ -174,7 +174,7 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
-	private static final float DIRECTIONAL_ANGLE_UPDATE_THRESHOLD = (float) Math.toRadians(0.2);
+	private static final float DIRECTIONAL_ANGLE_UPDATE_THRESHOLD = (float) Math.toRadians(0.25);
 
 	public final Camera sceneCamera = new Camera().setReverseZ(true);
 	public final Camera directionalCamera = new Camera().setOrthographic(true);
@@ -600,8 +600,9 @@ public class ZoneRenderer implements Renderer {
 			// due to slight changes to the view matrix
 			final float previousPitch = directionalCamera.getPitch();
 			final float previousRawYaw = PI - directionalCamera.getYaw();
-			if (angleDiff(directionalPitch, previousPitch) >= DIRECTIONAL_ANGLE_UPDATE_THRESHOLD ||
-				angleDiff(directionalYaw, previousRawYaw) >= DIRECTIONAL_ANGLE_UPDATE_THRESHOLD) {
+			final float updateThreshold = DIRECTIONAL_ANGLE_UPDATE_THRESHOLD * saturate(timeOfDay.getCurrentCycleDuration() / 300.0f);
+			if (angleDiff(directionalPitch, previousPitch) >= updateThreshold ||
+				angleDiff(directionalYaw, previousRawYaw) >= updateThreshold) {
 				directionalCamera.setPitch(directionalPitch);
 				directionalCamera.setYaw(PI - directionalYaw);
 			}
