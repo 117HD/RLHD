@@ -11071,6 +11071,23 @@
     "minLightness": 6
   },
   {
+    "name": "Maggot King Arena - Dirt",
+    "area": "MAGGOT_KING_ARENA",
+    "shiftLightness": 4,
+    "underlayIds": [
+      92,
+      237,
+      235,
+      234,
+      236,
+      238,
+      239,
+      240,
+      241
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
     "name": "Vampyrium - Dirt",
     "area": "VAMPYRIUM",
     "uvOrientation": 512,
@@ -11128,7 +11145,7 @@
     "waterType": "BLOOD_DARK"
   },
   {
-    "name": "Vampyrium - Blood- Instance",
+    "name": "Vampyrium - Blood - Instance",
     "area": "VAMPYRIUM_FOREST_INSTANCE",
     "overlayIds": [
       636

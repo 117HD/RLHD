@@ -28596,8 +28596,7 @@
     "uvType": "MODEL_XZ",
     "uvScale": 0.75,
     "objectIds": [
-      "DARKM_FOUNTAIN",
-      "FOUNTAIN_SANGVESTI01_DEFAULT01"
+      "DARKM_FOUNTAIN"
     ],
     "colorOverrides": [
       {
@@ -28605,6 +28604,26 @@
         "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
         "shiftLightness": -3,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Sangvesti - Blood Fountain",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "undoVanillaShading": false,
+    "shiftLightness": -2,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FOUNTAIN_SANGVESTI01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s <= 3",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "shiftLightness": 5,
         "uvScale": 0.8
       }
     ]
@@ -97805,6 +97824,7 @@
   {
     "description": "Vampyrium - Bell flower",
     "baseMaterial": "PLANT_GRUNGE_2",
+    "undoVanillaShading": false,
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 404,
@@ -97817,6 +97837,7 @@
         "uvType": "BOX",
         "uvScale": 0.25,
         "shiftLightness": 18,
+        "undoVanillaShading": false,
         "uvOrientationX": 512
       }
     ],
@@ -99285,7 +99306,7 @@
   {
     "description": "Maggot King Debris Shadows",
     "areas": [ "MAGGOT_KING_ARENA" ],
-    "baseMaterial": "GRAY_05",
+    "baseMaterial": "GRAY_25",
     "hideVanillaShadows": true,
     "retainVanillaShadowsInPvm": true,
     "hideHdShadowsInPvm": true,
@@ -99298,11 +99319,14 @@
   },
   {
     "description": "Maggot King Floor Debris",
-    "baseMaterial": "ABYSSAL_2",
+    "baseMaterial": "GRUNGE_3",
     "shiftLightness": 2,
+    "shiftSaturation": -1,
     "undoVanillaShading": false,
     "uvType": "BOX",
     "uvScale": 0.5,
+    "maxLightness": 25,
+    "minLightness": 11,
     "objectIds": [
       "MAGGOT_KING_BLOOD"
     ]
