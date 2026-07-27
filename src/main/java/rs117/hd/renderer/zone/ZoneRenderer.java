@@ -1134,6 +1134,14 @@ public class ZoneRenderer implements Renderer {
 				scenePass();
 			}
 
+			// Clear the default framebuffer before drawing anything.
+			// On macOS, rlawt may hand back a dirty back buffer, which would otherwise
+			// show through regions the scene blit and opaque UI don't cover
+			// (e.g. fixed-mode margins). See #1124
+			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+			glClearColor(0, 0, 0, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+
 			if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
 				if (plugin.fboSceneResolve != 0) {
@@ -1161,10 +1169,6 @@ public class ZoneRenderer implements Renderer {
 					GL_COLOR_BUFFER_BIT,
 					config.sceneScalingMode().glFilter
 				);
-			} else {
-				glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-				glClearColor(0, 0, 0, 1);
-				glClear(GL_COLOR_BUFFER_BIT);
 			}
 
 			plugin.drawUi(overlayColor);
