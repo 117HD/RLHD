@@ -126,7 +126,20 @@ void main() {
     // spreads across enough pixels for its smooth falloff to redistribute energy
     // under motion instead of toggling it. The maximum keeps the brightest stars
     // from reading as blobs.
-    float renderScale = float(sceneResolution.y) / viewportSize.w;
-    float sizePixels = aStarSize * viewportSize.w * 0.003 * (0.9 + 0.15 * vBrightness);
-    gl_PointSize = visibility > 0.001 ? clamp(sizePixels * renderScale, 2.0, 3.5) : 0.0;
+    //
+    // Both the size and that clamp are meant in on-screen pixels. The scene FBO
+    // may render below window resolution and get upscaled, so clamp in screen
+    // space first, convert to FBO pixels, and re-apply the floor there (a
+    // sub-pixel sprite still can't hold a stable profile). When that floor
+    // inflates a star's on-screen footprint, dim it by the squared size ratio -
+    // the same light spread over more screen area - so reduced render scales
+    // show faint soft dots instead of full-brightness blobs. At 100% render
+    // scale this reduces exactly to a plain clamp to [2, 3.5].
+    float viewportHeight = max(float(viewportSize.w), 1.0);
+    float screenSize = clamp(aStarSize * viewportHeight * 0.003 * (0.9 + 0.15 * vBrightness), 2.0, 3.5);
+    float renderScale = float(sceneResolution.y) / viewportHeight;
+    float sizePixels = max(screenSize * renderScale, 2.0);
+    float actualScreenSize = sizePixels / max(renderScale, 1e-6);
+    vBrightness *= min(1.0, (screenSize / actualScreenSize) * (screenSize / actualScreenSize));
+    gl_PointSize = visibility > 0.001 ? sizePixels : 0.0;
 }

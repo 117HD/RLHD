@@ -184,6 +184,10 @@ public class ZoneRenderer implements Renderer {
 	private float[] calculatedFogColorSrgb = null;
 	// Day & night Cycle - sky gradient enabled flag
 	private boolean skyGradientEnabled = false;
+	// The final directional light strength uploaded to uboGlobal.lightStrength each frame.
+	// Written in preSceneDrawTopLevel before zone command recording and the shadow pass,
+	// so both can skip work when the effective strength is zero (e.g. moonless nights).
+	private float effectiveDirectionalStrength;
 
 	public final RenderState renderState = new RenderState();
 	public final CommandBuffer sceneCmd = new CommandBuffer("Scene");
@@ -992,6 +996,7 @@ public class ZoneRenderer implements Renderer {
 		}
 		plugin.uboGlobal.ambientStrength.set(ambientStrength);
 		plugin.uboGlobal.ambientColor.set(ambientColor);
+		effectiveDirectionalStrength = directionalStrength;
 		plugin.uboGlobal.lightStrength.set(directionalStrength);
 		plugin.uboGlobal.lightColor.set(directionalColor);
 
@@ -1128,7 +1133,7 @@ public class ZoneRenderer implements Renderer {
 		final boolean shouldRenderShadows =
 			plugin.configShadowsEnabled &&
 			plugin.fboShadowMap != 0 &&
-			environmentManager.currentDirectionalStrength > 0;
+			effectiveDirectionalStrength > 0;
 
 		if (shouldRenderShadows || shouldClearShadowFbo) {
 			if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
@@ -1226,7 +1231,6 @@ public class ZoneRenderer implements Renderer {
 			float[] fogColor = { 0, 0, 0 };
 			if (!shouldRenderRSSkybox) {
 				fogColor = calculatedFogColorSrgb != null ? calculatedFogColorSrgb : ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-				pow(fogColor, fogColor, plugin.getGammaCorrection());
 			}
 
 			float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
@@ -1367,13 +1371,13 @@ public class ZoneRenderer implements Renderer {
 			}
 
 			final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-			if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+			if (effectiveDirectionalStrength > 0 && !isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 				if(!z.onlyWater || z.modelCount > 0) {
 					directionalCmd.SetShader(fastShadowProgram);
 					z.renderOpaque(directionalCmd, ctx, shouldDrawRoofShadows);
 				}
 
-				if (plugin.configTerrainShadows) {
+				if (plugin.configTerrainShadows && plugin.fboTerrainShadowMap != 0) {
 					z.renderOpaqueLevel(terrainShadowCmd, Zone.LEVEL_TERRAIN);
 				}
 			}
@@ -1417,7 +1421,7 @@ public class ZoneRenderer implements Renderer {
 					z.alphaSort(zx - offset, zz - offset, sceneCamera);
 
 				final boolean isSquashed = ctx.uboWorldViewStruct != null && ctx.uboWorldViewStruct.isSquashed();
-				if (!isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
+				if (effectiveDirectionalStrength > 0 && !isSquashed && (!sceneManager.isRoot(ctx) || z.inShadowFrustum)) {
 					directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
 					z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, true, shouldDrawRoofShadows);
 				}

@@ -47,6 +47,7 @@ import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -105,6 +106,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private EnvironmentManager environmentManager;
+
+	@Inject
+	private TimeOfDay timeOfDay;
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
@@ -683,6 +687,13 @@ public class LegacyRenderer implements Renderer {
 				plugin.invViewProjMatrix = Mat4.inverse(plugin.viewProjMatrix);
 
 				if (sceneContext.scene == scene) {
+					// Advance the time-of-day clock and refresh the per-frame astronomy
+					// snapshot before the first TimeOfDay usage of the frame. The
+					// EnvironmentManager/LightManager updates below read its getters, which
+					// dereference the instant pinned here, so this renderer has to drive
+					// update() the same way ZoneRenderer does.
+					timeOfDay.update();
+
 					try {
 						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
 						environmentManager.update(sceneContext);

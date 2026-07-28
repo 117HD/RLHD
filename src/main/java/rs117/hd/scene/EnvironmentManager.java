@@ -242,6 +242,13 @@ public class EnvironmentManager {
 	@Nonnull
 	private Environment currentEnvironment = Environment.NONE;
 
+	// Per-frame cache for sampleOutdoorSky: every followDayNight light under the same
+	// resolved environment yields the same sample within a frame
+	private OutdoorSkySample cachedSkySample;
+	private Environment cachedSkySampleEnvironment;
+	private int cachedSkySampleMinBrightness;
+	private int cachedSkySampleFrame = -1;
+
 	public void startUp() {
 		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> {
 			try (var ignored = gamevalManager.obtainHandle()) {
@@ -301,6 +308,9 @@ public class EnvironmentManager {
 	public void reset() {
 		currentEnvironment = Environment.NONE;
 		forceNextTransition = false;
+		cachedSkySample = null;
+		cachedSkySampleEnvironment = null;
+		cachedSkySampleFrame = -1;
 	}
 
 	public void reload() {
@@ -803,6 +813,13 @@ public class EnvironmentManager {
 	public OutdoorSkySample sampleOutdoorSky(int[] worldPos, int minimumBrightness) {
 		Environment env = getEnvironmentAt(getOutdoorWorldPos(worldPos), true);
 
+		// The sky color stack below only depends on the resolved environment, the current
+		// frame's time-of-day state and the minimum brightness, so reuse the sample for
+		// every light that resolves to the same environment within a frame
+		int frame = plugin.frame;
+		if (env == cachedSkySampleEnvironment && frame == cachedSkySampleFrame && minimumBrightness == cachedSkySampleMinBrightness)
+			return cachedSkySample;
+
 		float[] regionalFogSrgb = resolveOutdoorRegionalFogSrgb(env);
 
 		float[][] skyGradientColors = timeOfDay.getSkyGradientColors(
@@ -817,7 +834,12 @@ public class EnvironmentManager {
 		);
 		float brightnessMultiplier = timeOfDay.getDynamicBrightnessMultiplier(minimumBrightness);
 
-		return new OutdoorSkySample(horizonLinear, noonHorizonLinear, brightnessMultiplier);
+		OutdoorSkySample sample = new OutdoorSkySample(horizonLinear, noonHorizonLinear, brightnessMultiplier);
+		cachedSkySample = sample;
+		cachedSkySampleEnvironment = env;
+		cachedSkySampleFrame = frame;
+		cachedSkySampleMinBrightness = minimumBrightness;
+		return sample;
 	}
 
 	/**

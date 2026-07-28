@@ -52,6 +52,46 @@ public class AtmosphereUtils
 		J1970 = 2440588,
 		J2000 = 2451545;
 
+	// Sun altitude in degrees mapped to color temperature in kelvin
+	private static final float[][] ALTITUDE_TEMPERATURE_RANGE = {
+		{ 3, 2500 },
+		{ 5, 2600 },
+		{ 10, 3000 },
+		{ 15, 3300 },
+		{ 20, 3600 },
+		{ 30, 4000 },
+		{ 40, 4300 },
+		{ 50, 4750 },
+		{ 60, 5250 },
+		{ 70, 5500 },
+		{ 80, 5750 },
+		{ 90, 6000 }
+	};
+
+	// degrees above horizon, pre-linearized RGB
+	private static final float[][] AMBIENT_COLOR_RANGE = {
+		linearRow(-5, 113, 140, 180),
+		linearRow(25, 192, 185, 255),
+		linearRow(40, 185, 214, 255),
+	};
+
+	// degrees above horizon, pre-linearized RGB
+	private static final float[][] SKY_COLOR_RANGE = {
+		linearRow(-10, 10, 10, 14),
+		linearRow(25, 153, 153, 201),
+		linearRow(40, 185, 214, 255),
+	};
+
+	/**
+	 * Builds a keyframe row of { altitude, linearR, linearG, linearB }, converting sRGB to
+	 * linear once at class-init via the exact same chain interpolateSrgb uses per call
+	 * (ColorUtils.rgb(Color) == srgbToLinear(srgb(color))).
+	 */
+	private static float[] linearRow(float altitude, int r, int g, int b) {
+		float[] lin = rgb(new Color(r, g, b));
+		return new float[] { altitude, lin[0], lin[1], lin[2] };
+	}
+
 	/**
 	 * Calculate angles for the sun's position in the sky at a given time and location.
 	 *
@@ -91,21 +131,7 @@ public class AtmosphereUtils
 		);
 
 		if (!timeOfDay.isNight(angles)) {
-			float[][] altitudeTemperatureRange = {
-				{ 3, 2500 },
-				{ 5, 2600 },
-				{ 10, 3000 },
-				{ 15, 3300 },
-				{ 20, 3600 },
-				{ 30, 4000 },
-				{ 40, 4300 },
-				{ 50, 4750 },
-				{ 60, 5250 },
-				{ 70, 5500 },
-				{ 80, 5750 },
-				{ 90, 6000 }
-			};
-			float temperature = interpolate((float) Math.toDegrees(angles[1]), altitudeTemperatureRange);
+			float temperature = interpolate((float) Math.toDegrees(angles[1]), ALTITUDE_TEMPERATURE_RANGE);
 			float strength = (float) sin(angles[1]);
 			strength *= strength;
 			strength *= 3;
@@ -123,13 +149,7 @@ public class AtmosphereUtils
 
 	/** Ambient color from pre-computed sun {azimuth, altitude}. See getDirectionalLightForAngles. */
 	public static float[] getAmbientColorForAngles(double[] angles) {
-		// degrees above horizon 0-90, sRGB from 0-255
-		Object[][] altitudeColorRange = {
-			{ -5, new Color(113, 140, 180) },
-			{ 25, new Color(192, 185, 255) },
-			{ 40, new Color(185, 214, 255) },
-		};
-		return interpolateSrgb((float) Math.toDegrees(angles[1]), altitudeColorRange);
+		return interpolateLinear((float) Math.toDegrees(angles[1]), AMBIENT_COLOR_RANGE);
 	}
 
 	public static float[] getSkyColor(long millis, double[] latLong) {
@@ -138,20 +158,14 @@ public class AtmosphereUtils
 
 	/** Sky color from pre-computed sun {azimuth, altitude}. See getDirectionalLightForAngles. */
 	public static float[] getSkyColorForAngles(double[] angles) {
-		// degrees above horizon 0-90, sRGB from 0-255
-		Object[][] altitudeColorRange = {
-			{ -10, new Color(10, 10, 14) },
-			{ 25, new Color(153, 153, 201) },
-			{ 40, new Color(185, 214, 255) },
-		};
-		var rgb = interpolateSrgb((float) Math.toDegrees(angles[1]), altitudeColorRange);
+		var rgb = interpolateLinear((float) Math.toDegrees(angles[1]), SKY_COLOR_RANGE);
 		return ColorUtils.linearToSrgb(rgb);
 	}
 
 	public static float interpolate(float x, float[][] keyframesDegreesValue) {
 		int end = keyframesDegreesValue.length - 1;
 		int i = 0;
-		while (i < end && x < keyframesDegreesValue[i][0])
+		while (i < end && x > keyframesDegreesValue[i + 1][0])
 			i++;
 
 		if (i == end)
@@ -189,6 +203,37 @@ public class AtmosphereUtils
 
 		float t = clamp((x - x1) / (x2 - x1), 0, 1);
 		return mix(rgb((Color) from[1]), rgb((Color) to[1]), t);
+	}
+
+	/**
+	 * Interpolates between pre-linearized color keyframes of { altitude, linearR, linearG, linearB }.
+	 * Same interpolation math as interpolateSrgb, minus the per-call sRGB-to-linear conversions.
+	 * Always returns a fresh array, never a reference into the keyframe table.
+	 *
+	 * @param x                      interpolation value
+	 * @param keyframesDegreesLinear values
+	 * @return interpolated linear RGB
+	 */
+	public static float[] interpolateLinear(float x, float[][] keyframesDegreesLinear) {
+		int end = keyframesDegreesLinear.length - 1;
+		int i = 0;
+		while (i < end && x > keyframesDegreesLinear[i + 1][0])
+			i++;
+
+		var from = keyframesDegreesLinear[i];
+		if (i == end)
+			return new float[] { from[1], from[2], from[3] };
+
+		var to = keyframesDegreesLinear[i + 1];
+		var x1 = from[0];
+		var x2 = to[0];
+
+		float t = clamp((x - x1) / (x2 - x1), 0, 1);
+		return new float[] {
+			mix(from[1], to[1], t),
+			mix(from[2], to[2], t),
+			mix(from[3], to[3], t),
+		};
 	}
 
 	/**
