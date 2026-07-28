@@ -62,16 +62,15 @@ public class WorldViewContext {
 	@Nullable
 	public float[] projection;
 
-	final int worldViewId;
-	final int sizeX, sizeZ;
+	public final int worldViewId;
+	public final int sizeX, sizeZ;
 	@Nullable
 	WorldViewStruct uboWorldViewStruct;
-
 	private final float[] lastProjection = Mat4.zero();
 	private final int[] lastOrigin = new int[3];
 	private int lastOrientation;
 
-	Zone[][] zones;
+	public Zone[][] zones;
 	GLBuffer vboM;
 
 	int minLevel, level, maxLevel;
@@ -80,8 +79,8 @@ public class WorldViewContext {
 	private final Comparator<Zone> alphaSortComparator = Comparator.comparingInt((Zone z) -> z.dist).reversed();
 	private final List<Zone> alphaZones = new ArrayList<>();
 
-	CommandBuffer vaoSceneCmd;
-	CommandBuffer vaoDirectionalCmd;
+	public CommandBuffer vaoSceneCmd;
+	public CommandBuffer vaoDirectionalCmd;
 	final DynamicModelVAO[][] dynamicModelVaos = new DynamicModelVAO[FRAMES_IN_FLIGHT][VAO_COUNT];
 
 	public long loadTime;
