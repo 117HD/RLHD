@@ -3685,7 +3685,21 @@
       10
     ],
     "groundMaterial": "BRICK_PATHS",
-    "shiftLightness": 4
+    "shiftLightness": 4,
+    "replacements": {
+      "NONE": "!textures",
+      "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE_TEXTURES_BLENDING_ONLY": "!blendingColors"
+    }
+  },
+  {
+    "name": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE_TEXTURES_BLENDING_ONLY",
+    "area": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "shiftLightness": 4,
+    "blended": false
   },
   {
     "name": "EAST_ARDOUGNE_NORTH_BANK_11",
