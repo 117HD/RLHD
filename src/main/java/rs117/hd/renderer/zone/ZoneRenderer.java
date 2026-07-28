@@ -547,7 +547,7 @@ public class ZoneRenderer implements Renderer {
 				timeOfDay.setDayLength(config.dayLength());
 				timeOfDay.setMoonPhase(config.moonPhase());
 				timeOfDay.setMoonBehavior(config.moonBehavior());
-				timeOfDay.setCycleDurationMinutes(config.cycleDurationMinutes());
+				timeOfDay.setCycleDurationMinutes((float) config.cycleDurationMinutes());
 				timeOfDay.setSeasonalHemisphere(config.seasonalHemisphere());
 				timeOfDay.setFixedAngleOverrides(
 					environmentManager.getForcedFixedSunAngles(),
@@ -1230,8 +1230,8 @@ public class ZoneRenderer implements Renderer {
 
 			buildSkyboxCmd();
 
-			if (skyGradientEnabled && !shouldRenderRSSkybox && plugin.orthographicProjection && skyProgram.isValid())
-				skyboxCmd.execute(renderState);
+//			if (skyGradientEnabled && !shouldRenderRSSkybox && plugin.orthographicProjection && skyProgram.isValid())
+//				skyboxCmd.execute(renderState);
 		} else {
 			// Use Day & night Cycle fog color if available, otherwise use environment manager's fog color
 			float[] fogColor = { 0, 0, 0 };

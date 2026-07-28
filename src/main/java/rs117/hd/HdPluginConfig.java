@@ -661,7 +661,7 @@ public interface HdPluginConfig extends Config
 		position = 2,
 		section = daylightCycleSettings
 	)
-	default int cycleDurationMinutes() {
+	default double cycleDurationMinutes() {
 		return 30;
 	}
 
