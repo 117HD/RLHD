@@ -568,15 +568,21 @@ public class ZoneRenderer implements Renderer {
 				if (timeOfDay.hasFixedSunOverride()) {
 					// A fixed-mode sun override locks the sun disk; cast shadows from
 					// the same point so the sun disk and its shadows stay aligned.
+					// getFixedSunAngles() returns {azimuth, altitude}, so [1] is the
+					// pitch and [0] the yaw. The +PI the other branches apply is already
+					// baked into the stored azimuth by setFixedAngleOverrides.
 					double[] fixedSun = timeOfDay.getFixedSunAngles();
-					directionalPitch = (float) fixedSun[0];
-					directionalYaw = (float) fixedSun[1];
+					directionalPitch = (float) fixedSun[1];
+					directionalYaw = (float) fixedSun[0];
 				} else if (daylightCycle == DaylightCycle.FIXED_NIGHT || timeOfDay.hasFixedMoonOverride()) {
 					// Shadows must be cast from the same fixed point as the rendered
 					// moon disk, otherwise they drift while the moon stays put.
+					// +PI as above: the shared shadow line is PI - directionalYaw, so the
+					// azimuth needs the same half turn the disk's anglesToSkyDirection
+					// applies, otherwise shadows point toward the moon instead of away.
 					double[] moonAnglesD = timeOfDay.getFixedNightMoonAngles();
 					directionalPitch = (float) moonAnglesD[1];
-					directionalYaw = (float) moonAnglesD[0];
+					directionalYaw = (float) (moonAnglesD[0] + PI);
 				} else if (sunAltDeg < 2.0) {
 					// Below +2° sun shadows are faded out, switch to moon direction
 					// early so the shadow map is already oriented when moon shadows

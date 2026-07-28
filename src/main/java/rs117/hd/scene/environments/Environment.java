@@ -103,9 +103,12 @@ public class Environment {
 	// When set, and the active day & night cycle is a fixed mode (FIXED_DAWN,
 	// FIXED_MIDDAY, FIXED_SUNSET, FIXED_NIGHT, ALWAYS_NIGHT), these lock the
 	// sun/moon disk and their shadow directions to a fixed point in the sky,
-	// overriding the astronomically-derived angles. {azimuth, altitude} in
-	// degrees (converted to radians), matching the convention used by
-	// AtmosphereUtils.getSunAngles()/getMoonPosition(). Null = astronomical.
+	// overriding the astronomically-derived angles. {altitude, azimuth} in
+	// degrees (converted to radians), same order as sunAngles above and as the
+	// environments schema. Null = astronomical.
+	// NOTE: this is the opposite order from AtmosphereUtils.getSunAngles()/
+	// getMoonPosition(), which return {azimuth, altitude}. TimeOfDay
+	// .setFixedAngleOverrides() swaps these into that convention on ingest.
 	@Nullable
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] fixedSunAngles;
