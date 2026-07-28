@@ -340,12 +340,13 @@
     "blended": false
   },
   {
-    "name": "YANILLE_WATCHTOWER_ARCHWAY__BLENDING_FIX_1",
+    "name": "YANILLE_WATCHTOWER_ARCHWAY_BLENDING_FIX_1",
     "area": "YANILLE_WATCHTOWER_BOTTOM_DOORWAY",
     "overlayIds": [
       3
     ],
-    "groundMaterial": "WORN_TILES"
+    "groundMaterial": "WORN_TILES",
+    "blended": false
   },
   {
     "name": "YANILLE_WATCHTOWER_ARCHWAY_BLENDING_FIX_2",
@@ -353,7 +354,8 @@
     "overlayIds": [
       4
     ],
-    "groundMaterial": "WORN_TILES"
+    "groundMaterial": "WORN_TILES",
+    "blended": false
   },
   {
     "name": "DRAYNOR_WOM_FRONT_FIX_0",
@@ -4137,8 +4139,10 @@
       2,
       3
     ],
-    "groundMaterial": "MARBLE_1_GLOSS",
-    "blended": false
+    "groundMaterial": "WORN_TILES",
+    "blended": false,
+    "maxLightness": 34,
+    "shiftLightness": 4
   },
   {
     "name": "DRAYNOR_AGGIES_HOUSE",
