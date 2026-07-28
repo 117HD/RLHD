@@ -755,7 +755,7 @@
     "minSaturation": 0,
     "maxSaturation": 1,
     "shiftLightness": 7,
-    "uvScale": 0.75,
+    "uvScale": 0.9,
     "blended": false,
     "replacements": {
       "LUMBRIDGE_PATHS": "blendingColors",
@@ -774,7 +774,7 @@
     "minSaturation": 0,
     "maxSaturation": 1,
     "shiftLightness": 7,
-    "uvScale": 0.75,
+    "uvScale": 0.9,
     "replacements": {
       "NONE": "!textures",
       "LUM_BRIDGE_10_TEXTURE_BLENDING_ONLY": "blendingTexturesOnly"
@@ -792,6 +792,7 @@
     "minSaturation": 0,
     "maxSaturation": 1,
     "shiftLightness": 7,
+    "uvScale": 0.9,
     "blended": false,
     "replacements": {
       "NONE": "!textures"
