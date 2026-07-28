@@ -1347,12 +1347,13 @@
       "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blendingColors"
     },
     "blended": false,
-    "minLightness": 29,
-    "maxLightness": 30
+    "minLightness": 30,
+    "maxLightness": 31
   },
   {
     "name": "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND",
     "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "blended": false,
     "description": "For when ground blending is DISABLED",
     "groundMaterial": "VARROCK_PATHS"
   },
