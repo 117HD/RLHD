@@ -3689,11 +3689,11 @@
     "shiftLightness": 4,
     "replacements": {
       "NONE": "!textures",
-      "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE_TEXTURES_BLENDING_ONLY": "!blendingColors"
+      "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE_TEXTURE_BLENDING_ONLY": "!blendingColors"
     }
   },
   {
-    "name": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE_TEXTURES_BLENDING_ONLY",
+    "name": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE_TEXTURE_BLENDING_ONLY",
     "area": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE",
     "overlayIds": [
       10
@@ -4239,7 +4239,7 @@
   },
   {
     "name": "DRAYNOR_MANOR_TILE_SMALL",
-    "area": "DRAYNOR_MANOR_INTERIOR",
+    "area": "DRAYNOR_MANOR_TILED_ROOMS",
     "overlayIds": [
       11
     ],
@@ -4272,7 +4272,28 @@
     "maxHue": 0,
     "minLightness": 12,
     "maxLightness": 14,
-    "uvOrientation": 488,
+    "overlayIds": [
+      2,
+      11,
+      90,
+      117,
+      120,
+      127,
+      132
+    ],
+    "replacements": {
+      "DRAYNOR_MANOR_ENTRANCE_PATH_TEXTURE_BLENDING_ONLY": "!blendingColors"
+    }
+  },
+  {
+    "name": "DRAYNOR_MANOR_ENTRANCE_PATH_TEXTURE_BLENDING_ONLY",
+    "area": "DRAYNOR_MANOR",
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "minLightness": 12,
+    "maxLightness": 14,
+    "blended": false,
     "overlayIds": [
       2,
       11,
