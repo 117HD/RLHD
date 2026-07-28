@@ -19,6 +19,10 @@ void calculateLight(
         float attenuation = 1 - sqrt(distanceSquared / radiusSquared);
         attenuation *= attenuation;
 
+#if POSITIONAL_SHADOWS
+        attenuation *= sampleShadow(position, light.position.xyz, normals, light.packedShadowData, radiusSquared);
+#endif
+
         vec3 pointLightColor = light.color.rgb * attenuation;
         vec3 pointLightDir = normalize(lightToFrag);
 

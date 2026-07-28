@@ -593,6 +593,19 @@ public final class MathUtils {
 		return 1L << (64 - Long.numberOfLeadingZeros(x - 1));
 	}
 
+	public static int quantizePow2(float size, int min, int max) {
+		int lower = min;
+		while (lower < max && (lower << 1) <= size)
+			lower <<= 1;
+
+		if (lower < max) {
+			final int upper = lower << 1;
+			if (upper - size < size - lower)
+				return upper;
+		}
+		return lower;
+	}
+
 	public static int round(float v) {
 		return Math.round(v);
 	}

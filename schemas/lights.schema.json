@@ -127,6 +127,11 @@
         "type": "number",
         "description": "The time in milliseconds between the light despawning and the light beginning to fade out."
       },
+      "shadowMode": {
+        "type": "string",
+        "description": "Controls what; if any, shows are drawn for this light. Defaults to Static\n * DISABLED: No Shadows\n * STATIC: Scene Geom Shadows Only\n DYNAMIC: Scene + Dynamic/Player Shadows",
+        "enum": [ "DISABLED", "STATIC", "DYNAMIC"  ]
+      },
       "fixedDespawnTime": {
         "type": "boolean",
         "description": "If enabled, the light will have faded out completely after spawnDelay + despawnDelay milliseconds."

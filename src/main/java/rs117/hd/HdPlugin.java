@@ -171,6 +171,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_POSITIONAL_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -407,6 +408,7 @@ public class HdPlugin extends Plugin {
 	public boolean configModelBatching;
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
+	public boolean configPositionalShadows;
 	public boolean configRoofShadows;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
@@ -1646,6 +1648,7 @@ public class HdPlugin extends Plugin {
 		configExpandedMapLoadingChunks = config.expandedMapLoadingChunks();
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
+		configPositionalShadows = config.positionalShadows();
 		configRoofShadows = config.roofShadows();
 		configGroundTextures = config.groundTextures();
 		var groundBlending = config.groundBlending();
@@ -1825,6 +1828,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_SHADOW_FILTERING:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_SHADOW_POSITIONAL:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

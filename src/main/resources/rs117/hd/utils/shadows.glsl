@@ -149,3 +149,111 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
 #else
 #define sampleShadowMap(fragPos, distortion, lightDotNormals) 0
 #endif
+
+#if POSITIONAL_SHADOWS
+uniform sampler2DArrayShadow shadowCubemapArray;
+
+const float SHADOW_NEAR_PLANE = 10.0;
+
+const float SHADOW_ATLAS_SIZE = 4096.0;
+const int SHADOW_ATLAS_MIN_SIZE_EXP = 5;
+const int SHADOW_ATLAS_TIER_BITS = 3;
+const int SHADOW_ATLAS_GRID_BITS = 7;
+
+const float NORMAL_BIAS_TEXELS = 10.0;
+
+const vec3 SHADOW_FACE_DIR[6] = vec3[](
+	vec3( 1,  0,  0), vec3(-1,  0,  0),
+	vec3( 0,  1,  0), vec3( 0, -1,  0),
+	vec3( 0,  0,  1), vec3( 0,  0, -1)
+);
+const vec3 SHADOW_FACE_UP[6] = vec3[](
+	vec3(0, -1,  0), vec3(0, -1,  0),
+	vec3(0,  0,  1), vec3(0,  0, -1),
+	vec3(0, -1,  0), vec3(0, -1,  0)
+);
+
+float shadowDistanceToDepth(float dist, float near, float far) {
+	float a = (1.0 + near / far) / (near / far - 1.0);
+	float b = a * near - near;
+	float ndcZ = -a + b / dist;
+	return ndcZ * 0.5 + 0.5;
+}
+
+int shadowSelectFace(vec3 dir) {
+	vec3 a = abs(dir);
+	if (a.x >= a.y && a.x >= a.z)
+		return dir.x > 0.0 ? 0 : 1;
+	if (a.y >= a.z)
+		return dir.y > 0.0 ? 2 : 3;
+	return dir.z > 0.0 ? 4 : 5;
+}
+
+bool unpackShadowAtlasRect(int packedShadowData, out vec2 originPx, out float sizePx) {
+	if (packedShadowData < 0)
+		return false;
+
+	uint p = uint(packedShadowData);
+	uint tierMask = (1u << SHADOW_ATLAS_TIER_BITS) - 1u;
+	uint gridMask = (1u << SHADOW_ATLAS_GRID_BITS) - 1u;
+
+	uint tier  = p & tierMask;
+	uint gridX = (p >> SHADOW_ATLAS_TIER_BITS) & gridMask;
+	uint gridY = (p >> (SHADOW_ATLAS_TIER_BITS + SHADOW_ATLAS_GRID_BITS)) & gridMask;
+
+	int exponent = int(tier) + SHADOW_ATLAS_MIN_SIZE_EXP;
+	sizePx = float(1 << exponent);
+	originPx = vec2(gridX, gridY) * sizePx;
+	return true;
+}
+
+vec3 shadowAtlasUV(vec3 dirFromLight, vec2 originPx, float sizePx, out int faceOut) {
+	faceOut = shadowSelectFace(dirFromLight);
+
+	vec3 forward = SHADOW_FACE_DIR[faceOut];
+	vec3 up = SHADOW_FACE_UP[faceOut];
+	vec3 right = normalize(cross(forward, up));
+	vec3 trueUp = cross(right, forward);
+
+	float forwardDist = dot(dirFromLight, forward);
+	float u =  dot(dirFromLight, right)  / forwardDist;
+	float v = dot(dirFromLight, trueUp) / forwardDist;
+
+	vec2 faceUV = vec2(u, v) * 0.5 + 0.5;
+	vec2 atlasUV = (originPx + faceUV * sizePx) / SHADOW_ATLAS_SIZE;
+
+	return vec3(atlasUV, forwardDist);
+}
+
+float sampleShadow(vec3 fragPos, vec3 lightPos, vec3 normal, int packedShadowData, float lightRadiusSq) {
+	vec2 originPx;
+	float sizePx;
+	if (!unpackShadowAtlasRect(packedShadowData, originPx, sizePx))
+		return 1.0; // no shadow data for this light this frame -> fully lit
+
+	vec3 toFrag = fragPos - lightPos;
+	float dist = length(toFrag);
+	vec3 dirNorm = toFrag / dist;
+
+	float NdotL = clamp(dot(normal, -dirNorm), 0.0, 1.0);
+	float slopeScale = 1.0 - NdotL;
+
+	float texelWorldSize = (2.0 * dist) / sizePx;
+	float normalOffset = texelWorldSize * NORMAL_BIAS_TEXELS * slopeScale;
+
+	vec3 biasedFragPos = fragPos + normal * normalOffset;
+	vec3 biasedDir = biasedFragPos - lightPos;
+
+	int face;
+	vec3 uvAndDist = shadowAtlasUV(biasedDir, originPx, sizePx, face);
+	vec2 atlasUV = uvAndDist.xy;
+	float forwardDist = uvAndDist.z;
+
+	float compareDepth = shadowDistanceToDepth(forwardDist, SHADOW_NEAR_PLANE, sqrt(lightRadiusSq));
+
+	return texture(shadowCubemapArray, vec4(atlasUV, float(face), compareDepth));
+}
+
+#else
+#define sampleShadow(fragPos, lightPos, normal, packedShadowData, lightRadiusSq) 1.0
+#endif
