@@ -241,7 +241,8 @@
   {
     "name": "SEWER_ENTRANCE_FIXES",
     "area": "SEWER_ENTRANCE_FIXES",
-    "heightOffset": -150
+    "heightOffset": -150,
+    "blended": false
   },
   {
     "area": "Black Knights Fort - Entrance Tile Fix",
