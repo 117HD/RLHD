@@ -5,6 +5,8 @@ import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_NEBULA_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TERRAIN_SHADOW_MAP;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_POSITIONAL_SHADOW_MAP;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
 import static rs117.hd.renderer.zone.ZoneRenderer.TEXTURE_UNIT_TEXTURED_FACES;
 
@@ -12,6 +14,7 @@ public class SceneShaderProgram extends ShaderProgram {
 	protected final UniformTexture uniTextureArray = addUniformTexture("textureArray");
 	protected final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
 	protected final UniformTexture uniTerrainShadowMap = addUniformTexture("terrainShadowMap");
+	protected final UniformTexture uniPositionalShadowMap = addUniformTexture("shadowCubemapArray");
 	protected final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
 	protected final UniformTexture uniTextureFaces = addUniformTexture("textureFaces");
 	protected final UniformTexture uniNebulaMap = addUniformTexture("nebulaMap");
@@ -30,6 +33,7 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTextureArray.set(TEXTURE_UNIT_GAME);
 		uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP);
 		uniTerrainShadowMap.set(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
+		uniPositionalShadowMap.set(TEXTURE_UNIT_POSITIONAL_SHADOW_MAP);
 		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 		uniTextureFaces.set(TEXTURE_UNIT_TEXTURED_FACES);
 		uniNebulaMap.set(TEXTURE_UNIT_NEBULA_MAP);

@@ -20369,6 +20369,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "shadowMode": "STATIC",
     "objectIds": [
       "TORCH",
       "TORCH_GRUBBY",
@@ -20479,6 +20480,7 @@
     "offset": [ 0, 155, 0 ],
     "radius": 220,
     "strength": 8.5,
+    "shadowMode": "STATIC",
     "color": [
       252,
       148,
@@ -20523,6 +20525,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "schedule": "NIGHT",
@@ -20686,6 +20689,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -21115,6 +21119,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [
@@ -22149,6 +22154,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "shadowMode": "STATIC",
     "objectIds": [
       "FAI_VARROCK_SMITHY_HEARTH"
     ]
@@ -27914,6 +27920,8 @@
       103
     ],
     "type": "STATIC",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 31,
     "duration": 0,
     "nightMultiplier": 1.55,
     "range": 20,
@@ -39138,6 +39146,8 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
+    "shadowNearPlane": 113,
     "duration": 0,
     "range": 10,
     "objectIds": [
@@ -50184,6 +50194,7 @@
       3
     ],
     "type": "FLICKER",
+    "shadowMode": "STATIC",
     "duration": 0,
     "range": 20,
     "objectIds": [

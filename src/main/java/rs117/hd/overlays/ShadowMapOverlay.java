@@ -7,11 +7,16 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.event.MouseWheelEvent;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.input.MouseWheelListener;
+import rs117.hd.HdPlugin;
 import rs117.hd.utils.HDUtils;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static org.lwjgl.opengl.GL43C.GL_DEBUG_SOURCE_API;
+import static org.lwjgl.opengl.GL43C.glDebugMessageControl;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_POSITIONAL_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TERRAIN_SHADOW_MAP;
 
@@ -21,7 +26,8 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 	static class Shader extends ShaderOverlay.Shader {
 		private final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
 		private final UniformTexture uniTerrainShadowMap = addUniformTexture("terrainShadowMap");
-		private final UniformBool uniShowTerrainShadowMap = addUniformBool("showTerrainShadowMap");
+		private final UniformTexture uniPositionalShadowMap = addUniformTexture("shadowCubemapArray");
+		private final Uniform1i uniMode = addUniform1i("mode");
 
 		public Shader() {
 			super(t -> t.add(GL_FRAGMENT_SHADER, "overlays/shadow_map_frag.glsl"));
@@ -31,13 +37,22 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 		protected void initialize() {
 			uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP);
 			uniTerrainShadowMap.set(TEXTURE_UNIT_TERRAIN_SHADOW_MAP);
+			uniPositionalShadowMap.set(TEXTURE_UNIT_POSITIONAL_SHADOW_MAP);
 		}
 	}
 
 	@Inject
 	private MouseManager mouseManager;
 
-	private boolean showTerrainShadowMap;
+	@Inject
+	private ClientThread clientThread;
+
+	private static final int MODE_MAIN_SHADOW_MAP = 0;
+	private static final int MODE_TERRAIN_SHADOW_MAP = 1;
+	private static final int MODE_POSITIONAL_SHADOW_MAP = 2;
+	private static final int MODE_COUNT = 8;
+
+	private int mode;
 
 	@Override
 	public void setActive(boolean active) {
@@ -48,6 +63,12 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 		} else {
 			mouseManager.unregisterMouseWheelListener(this);
 		}
+
+		// Sampling the depth texture with a non-shadow sampler is undefined behavior, so hide the resulting warning
+		if (HdPlugin.GL_CAPS != null && HdPlugin.GL_CAPS.glDebugMessageControl != 0) {
+			clientThread.invoke(() -> glDebugMessageControl(
+				GL_DEBUG_SOURCE_API, GL_DONT_CARE, GL_DONT_CARE, 0x20096, !active));
+		}
 	}
 
 	@Override
@@ -55,7 +76,7 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 		var b = getBounds();
 		if (b != null && b.contains(e.getPoint())) {
 			e.consume();
-			showTerrainShadowMap = !showTerrainShadowMap;
+			mode = (mode + 1) % MODE_COUNT;
 		}
 
 		return e;
@@ -63,7 +84,7 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 
 	@Override
 	protected void updateUniforms() {
-		shader.uniShowTerrainShadowMap.set(showTerrainShadowMap);
+		shader.uniMode.set(mode);
 	}
 
 	@Override
@@ -71,11 +92,22 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> imp
 		Dimension dim = super.render(g);
 		if (!isHidden()) {
 			g.setColor(Color.YELLOW);
+
+			final String modeString;
+			switch (mode) {
+				case MODE_MAIN_SHADOW_MAP:
+					modeString = "Main shadow map";
+					break;
+				case MODE_TERRAIN_SHADOW_MAP:
+					modeString = "Terrain shadow map";
+					break;
+				default:
+					modeString = "Positional shadow map " + (mode - MODE_POSITIONAL_SHADOW_MAP);
+			};
+
 			HDUtils.drawStringCentered(
 				g,
-				showTerrainShadowMap ?
-					"Terrain shadow map" :
-					"Main shadow map",
+				modeString,
 				dim.width / 2.0f,
 				dim.height + 10
 			);

@@ -15,6 +15,7 @@ public final class Camera implements Projection {
 	private static final int INV_VIEW_PROJ_MATRIX_DIRTY = 1 << 3;
 	private static final int FRUSTUM_PLANES_DIRTY = 1 << 4;
 	private static final int FRUSTUM_CORNERS_DIRTY = 1 << 5;
+	private static final int BASIS_DIRTY = 1 << 6;
 
 	private static final int VIEW_PROJ_CHANGED =
 		VIEW_PROJ_MATRIX_DIRTY | INV_VIEW_PROJ_MATRIX_DIRTY | FRUSTUM_PLANES_DIRTY | FRUSTUM_CORNERS_DIRTY;
@@ -33,6 +34,14 @@ public final class Camera implements Projection {
 	private final float[] position = new float[3];
 	private final float[] orientation = new float[2];
 	private final int[] fixedOrientation = new int[2]; // TODO: Is there a reliable way to go from orientation -> Fixed?
+
+	// Explicit look-direction state (alternative to yaw/pitch orientation).
+	// When useExplicitBasis is true, the view rotation is derived from
+	// lookDir/lookUp via Mat4.lookAtRotation() instead of orientation[].
+	private boolean useExplicitBasis = false;
+	private final float[] lookDir = new float[3];
+	private final float[] lookUp = new float[3];
+	private float[] explicitBasis;
 
 	private volatile int dirtyFlags = PROJ_CHANGED | VIEW_CHANGED;
 
@@ -249,11 +258,12 @@ public final class Camera implements Projection {
 	}
 
 	public Camera setYaw(float yaw) {
-		if (orientation[0] != yaw) {
-			synchronized (this) {
-				orientation[0] = yaw;
+		synchronized (this) {
+			boolean changed = orientation[0] != yaw || useExplicitBasis;
+			orientation[0] = yaw;
+			useExplicitBasis = false;
+			if (changed)
 				dirtyFlags |= VIEW_CHANGED;
-			}
 		}
 		return this;
 	}
@@ -270,11 +280,12 @@ public final class Camera implements Projection {
 	public int getFixedYaw() { return fixedOrientation[0]; }
 
 	public Camera setPitch(float pitch) {
-		if (orientation[1] != pitch) {
-			synchronized (this) {
-				orientation[1] = pitch;
+		synchronized (this) {
+			boolean changed = orientation[1] != pitch || useExplicitBasis;
+			orientation[1] = pitch;
+			useExplicitBasis = false;
+			if (changed)
 				dirtyFlags |= VIEW_CHANGED;
-			}
 		}
 		return this;
 	}
@@ -299,14 +310,68 @@ public final class Camera implements Projection {
 	}
 
 	public Camera setOrientation(float[] newOrientation) {
-		if (orientation[0] != newOrientation[0] || orientation[1] != newOrientation[1]) {
-			synchronized (this) {
-				orientation[0] = newOrientation[0];
-				orientation[1] = newOrientation[1];
+		synchronized (this) {
+			boolean changed = orientation[0] != newOrientation[0]
+			                  || orientation[1] != newOrientation[1]
+			                  || useExplicitBasis;
+			orientation[0] = newOrientation[0];
+			orientation[1] = newOrientation[1];
+			useExplicitBasis = false;
+			if (changed)
+				dirtyFlags |= VIEW_CHANGED;
+		}
+		return this;
+	}
+
+	public Camera setLookDirection(float[] dir, float[] up) {
+		synchronized (this) {
+			useExplicitBasis = true;
+			copyTo(lookDir, dir);
+			copyTo(lookUp, up);
+			dirtyFlags |= BASIS_DIRTY | VIEW_CHANGED;
+		}
+		return this;
+	}
+
+	public Camera setLookDirection(float dirX, float dirY, float dirZ, float upX, float upY, float upZ) {
+		synchronized (this) {
+			useExplicitBasis = true;
+			lookDir[0] = dirX;
+			lookDir[1] = dirY;
+			lookDir[2] = dirZ;
+			lookUp[0] = upX;
+			lookUp[1] = upY;
+			lookUp[2] = upZ;
+			dirtyFlags |= BASIS_DIRTY | VIEW_CHANGED;
+		}
+		return this;
+	}
+
+	public Camera lookAt(float dirX, float dirY, float dirZ, float upX, float upY, float upZ) {
+		return setLookDirection(dirX, dirY, dirZ, upX, upY, upZ);
+	}
+
+	public Camera lookAtPoint(float targetX, float targetY, float targetZ, float upX, float upY, float upZ) {
+		return setLookDirection(
+			targetX - position[0],
+			targetY - position[1],
+			targetZ - position[2],
+			upX, upY, upZ
+		);
+	}
+
+	public Camera clearLookDirection() {
+		synchronized (this) {
+			if (useExplicitBasis) {
+				useExplicitBasis = false;
 				dirtyFlags |= VIEW_CHANGED;
 			}
 		}
 		return this;
+	}
+
+	public boolean isUsingExplicitBasis() {
+		return useExplicitBasis;
 	}
 
 	public float[] getForwardDirection(float[] out) {
@@ -319,6 +384,22 @@ public final class Camera implements Projection {
 
 	public float[] getForwardDirection() { return getForwardDirection(new float[3]); }
 
+	private void calculateBasis() {
+		if (!useExplicitBasis || (dirtyFlags & BASIS_DIRTY) == 0)
+			return;
+
+		synchronized (this) {
+			if (!useExplicitBasis || (dirtyFlags & BASIS_DIRTY) == 0)
+				return;
+
+			explicitBasis = Mat4.lookAtRotation(
+				lookDir[0], lookDir[1], lookDir[2],
+				lookUp[0], lookUp[1], lookUp[2]
+			);
+			dirtyFlags &= ~BASIS_DIRTY;
+		}
+	}
+
 	private void calculateViewMatrix() {
 		if ((dirtyFlags & VIEW_MATRIX_DIRTY) == 0)
 			return;
@@ -327,8 +408,15 @@ public final class Camera implements Projection {
 			if ((dirtyFlags & VIEW_MATRIX_DIRTY) == 0)
 				return;
 
-			var view = Mat4.rotateX(orientation[1]);
-			Mat4.mul(view, Mat4.rotateY(orientation[0]));
+			float[] view;
+			if (useExplicitBasis) {
+				calculateBasis();
+				view = copy(explicitBasis);
+			} else {
+				view = Mat4.rotateX(orientation[1]);
+				Mat4.mul(view, Mat4.rotateY(orientation[0]));
+			}
+
 			if (position[0] != 0 || position[1] != 0 || position[2] != 0) {
 				Mat4.mul(
 					view,
@@ -571,6 +659,10 @@ public final class Camera implements Projection {
 		copyTo(orientation, other.orientation);
 		copyTo(fixedOrientation, other.fixedOrientation);
 
-		dirtyFlags = PROJ_CHANGED | VIEW_CHANGED;
+		useExplicitBasis = other.useExplicitBasis;
+		copyTo(lookDir, other.lookDir);
+		copyTo(lookUp, other.lookUp);
+
+		dirtyFlags = PROJ_CHANGED | VIEW_CHANGED | BASIS_DIRTY;
 	}
 }
