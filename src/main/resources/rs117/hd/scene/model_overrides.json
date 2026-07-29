@@ -29377,6 +29377,7 @@
       "PIRATETREASURE_PICNICBENCH"
     ],
     "flatNormals": true,
+    "terrainVertexSnap": true,
     "uvType": "BOX",
     "uvOrientationY": 512
   },
@@ -44751,7 +44752,7 @@
       "FUR_D",
       "VIKING_FUR"
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
