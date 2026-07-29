@@ -40,9 +40,9 @@ layout (location = 0) in vec3 vPosition;
     layout (location = 6) in int vWorldViewId;
     layout (location = 7) in ivec2 vSceneBase;
 
+#if !TERRAIN_ONLY_PASS
     uniform isamplerBuffer textureFaces;
 
-#if !TERRAIN_ONLY_PASS
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         out vec4 fUvw;
         flat out int fMaterialData;
