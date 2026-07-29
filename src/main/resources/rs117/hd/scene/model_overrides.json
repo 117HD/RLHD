@@ -11742,7 +11742,8 @@
       "KR_TABLE_SMALL",
       "KR_ROUNDTABLE",
       "KR_SEERS_TABLE2",
-      "KR_SEERS_TABLE3"
+      "KR_SEERS_TABLE3",
+      "KR_SIN_ROUNDTABLE_RESIZE"
     ],
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -13019,6 +13020,7 @@
       "SHAYZIEN_BENCH01"
     ],
     "uvType": "BOX",
+    "uvScale": 0.75,
     "uvOrientation": 512
   },
   {
@@ -13906,7 +13908,7 @@
       "SLP_DUNGEON_DOOR_2"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.25,
     "uvOrientation": 512
   },
   {
@@ -13980,7 +13982,8 @@
     "uvScale": 0.45,
     "objectIds": [
       "FAI_VARROCK_FOUNTAIN_SPLASH",
-      "ATES_FOUNTAIN"
+      "ATES_FOUNTAIN",
+      "MURDERFOUNTAIN"
     ],
     "colorOverrides": [
       {
@@ -14192,11 +14195,19 @@
     ]
   },
   {
-    "description": "Sinclair Mansion - Marble Stairs",
-    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "description": "Sinclair Mansion - Stone Stairs",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
     "objectIds": [
       "MURDER_QIP_SPIRALSTAIRS",
       "MURDER_QIP_SPIRALSTAIRSTOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN",
+        "uvScale": 0.5
+      }
     ]
   },
   {
@@ -14678,7 +14689,7 @@
     "colorOverrides": [
       {
         "description": "Golden Handles",
-        "colors": "h == 6 && s == 7",
+        "colors": "h == 6 && s > 5 && s < 8",
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.2,
@@ -15834,6 +15845,30 @@
     "objectIds": [
       "FAI_VARROCK_DRAINS1",
       "FAI_VARROCK_DRAINS2"
+    ]
+  },
+  {
+    "description": "Sinclair Mansion Drain",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "MURDERDRAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "shiftLightness": -20
+      }
     ]
   },
   {
@@ -17037,6 +17072,36 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "ELID_WALLSHIELD"
+    ]
+  },
+  {
+    "description": "Sinclair Mansion - Decoration - Metallic - Sword and Shield",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "shiftLightness": -3,
+    "objectIds": [
+      "MURDERSIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l == 95",
+        "baseMaterial": "NONE",
+        "depthBias": 190
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "NONE",
+        "depthBias": 200
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "NONE",
+        "depthBias": 180
+      },
+      {
+        "colors": "h > 4",
+        "baseMaterial": "NONE",
+        "depthBias": 255
+      }
     ]
   },
   {
@@ -20624,10 +20689,21 @@
       "PENG_ARDOUGNE_ZOO",
       "PENG_ARDOUGNE_ZOO_SHORT",
       "PENG_ARDOUGNE_ZOO_SHORT_L",
-      "PENG_ARDOUGNE_ZOO_SHORT_R"
+      "PENG_ARDOUGNE_ZOO_SHORT_R",
+      "PENG_ARDOUGNE_ZOO_BLOCKRANGE"
     ],
-    "uvType": "GEOMETRY",
-    "flatNormals": true
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
@@ -20653,7 +20729,6 @@
       "CRUMBLYWALLLOW",
       "CRUMBLYWALLLOW2"
     ],
-    "receiveShadows": false,
     "terrainVertexSnap": true
   },
   {
@@ -20714,6 +20789,17 @@
       "TIMBERDEFENCE_EDGEL_NEW",
       "TIMBERDEFENCE_EDGER_NEW",
       "TIMBERDEFENCE_NEW"
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Gate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.3,
+    "objectIds": [
+      "PORTCULLIS_2R",
+      "PORTCULLIS_2L"
     ]
   },
   {
@@ -27237,6 +27323,15 @@
     "objectIds": [ "QIP_OBS_SPIDERWEBS" ]
   },
   {
+    "description": "Floor Decoration Webbing",
+    "baseMaterial": "GROUND_WEB_1",
+    "shiftLightness": 27,
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "depthBias": 1,
+    "objectIds": [ "MURDERWEB" ]
+  },
+  {
     "description": "Slepe - Marble - Sanctuary Tiles",
     "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "uvType": "BOX",
@@ -29392,7 +29487,8 @@
       "MURDER_QIP_GARDEN_HEDGE",
       "HEDGE_ALDARIN01_END01",
       "HEDGE_ALDARIN01_CORNER01",
-      "HEDGE_ALDARIN01_MIDDLE01"
+      "HEDGE_ALDARIN01_MIDDLE01",
+      "MURDER_QIP_GARDEN_HEDGE_END"
     ],
     "colorOverrides": [
       {
@@ -29400,8 +29496,9 @@
         "baseMaterial": "LEAF_VEINS",
         "colors": "h >= 11",
         "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 89
+        "uvScale": 0.15,
+        "uvOrientation": 89,
+        "shiftLightness": 1
       }
     ]
   },
@@ -29683,6 +29780,7 @@
       "PIRATETREASURE_PICNICBENCH"
     ],
     "flatNormals": true,
+    "terrainVertexSnap": true,
     "uvType": "BOX",
     "uvOrientationY": 512
   },
@@ -33185,8 +33283,7 @@
     "uvScale": 0.65
   },
   {
-    "description": "Metallic - Wooden - Concrete - Table with books weights and scales- Textured",
-    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "description": "Metallic - Wooden - Concrete - Table with books weights and scales - Textured",
     "textureMaterial": "HD_CONCRETE",
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -33201,12 +33298,20 @@
     ],
     "colorOverrides": [
       {
-        "description": "Metal",
+        "description": "Wood",
         "colors": "h == 5 || h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.65
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.2
       },
       {
         "description": "Paper",
@@ -33300,10 +33405,9 @@
   {
     "description": "Objects - Concrete - Deposit Box",
     "textureMaterial": "HD_CONCRETE",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "retainVanillaUvs": false,
-    "uvScale": 0.4,
+    "uvScale": 0.6,
     "objectIds": [
       "BANK_DEPOSIT_BOX"
     ],
@@ -33315,6 +33419,15 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 512
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.2,
+        "shiftLightness": 4
       }
     ]
   },
@@ -34436,7 +34549,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "NONE",
+        "flatNormals": true
       }
     ]
   },
@@ -35379,7 +35493,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Food Trouph",
+    "description": "Food Trough",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "EADGAR_KITCHEN_FOODTROUGH",
@@ -45051,7 +45165,7 @@
       "FUR_D",
       "VIKING_FUR"
     ],
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.4
   },
   {
@@ -46691,7 +46805,8 @@
     "objectIds": [
       "FOODTROUGH",
       "FOODTROUGH4",
-      "FAI_VARROCK_FOODTROUGH"
+      "FAI_VARROCK_FOODTROUGH",
+      "MURDER_QIP_FOODTROUGH"
     ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -46832,7 +46947,8 @@
       "LUNAR_MOONCLAN_SHELF_SPOONS",
       "FARM_COOKINGSHELF",
       "FARM_COOKINGUTENSILS",
-      "CONTACT_COOKINGSHELF"
+      "CONTACT_COOKINGSHELF",
+      "KR_SIN_COOKINGSHELF"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -46842,7 +46958,9 @@
       {
         "description": "Metal",
         "colors": "h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "undoVanillaShading": false,
+        "shiftLightness": 5
       }
     ]
   },
@@ -47064,7 +47182,8 @@
       "FAI_VARROCK_SHELF_EMPTY_LOW",
       "QIP_SHEEP_SHEARER_COOKINGSHELFEMPTY",
       "FAIRY_EMPTY_SHELF",
-      "CONTACT_COOKINGSHELFEMPTY"
+      "CONTACT_COOKINGSHELFEMPTY",
+      "KR_SIN_COOKINGSHELFEMPTY"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -47705,7 +47824,8 @@
     "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT_DULL",
     "objectIds": [
       "MACRO_INACTIVE_BEEHIVE",
-      "MERLIN_BEEHIVE"
+      "MERLIN_BEEHIVE",
+      "MURDERHIVE"
     ],
     "uvType": "BOX",
     "upwardsNormals": false,
@@ -47745,7 +47865,22 @@
       "KR_SEERS_VILLAGE_DRAWERS1",
       "AKD_HUGHES_DRAWERS_1_NOOP",
       "FAI_FALADOR_DRAWERS",
-      "SLUG2_DRAWERS"
+      "SLUG2_DRAWERS",
+      "KR_SIN_DRAWERS1",
+      "KR_SIN_DRAWERS1OPEN",
+      "KR_SIN_DRAWERS2",
+      "KR_SIN_DRAWERS2OPEN",
+      "KR_SIN_DRAWERS3",
+      "KR_SIN_DRAWERS3OPEN",
+      "KR_SIN_DRAWERS_NO_OP",
+      "KR_SIN_DRAWERS_LEFT",
+      "KR_SIN_DRAWERS_LEFT_OPEN",
+      "KR_SIN_DRAWERS_RIGHT",
+      "KR_SIN_DRAWERS_RIGHT_OPEN",
+      "KR_SIN_DRAWERS_UP",
+      "KR_SIN_DRAWERS_UP_OPEN",
+      "KR_SIN_DRAWERS_DOWN",
+      "KR_SIN_DRAWERS_DOWN_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -47870,7 +48005,7 @@
         "colors": "h == 5 && s < 2 || h == 0 && s == 0",
         "uvType": "BOX",
         "baseMaterial": "METALLIC_1_LIGHT",
-        "uvScale": 0.5
+        "uvScale": 0.2
       }
     ],
     "objectIds": [
@@ -47926,7 +48061,14 @@
       "BARREL_EMPTY",
       "BARREL_TAP",
       "MYQ3_LAB_BARREL",
-      "SLUG2_BARREL_RODS_ACTIVE"
+      "SLUG2_BARREL_RODS_ACTIVE",
+      "KR_SIN_BARREL",
+      "MURDERBARRELA",
+      "MURDERBARRELB",
+      "MURDERBARRELC",
+      "MURDERBARRELD",
+      "MURDERBARRELE",
+      "MURDERBARRELF"
     ]
   },
   {
@@ -49144,7 +49286,8 @@
       "KEBOS_SHACK_BED",
       "FAI_VARROCK_SINGLE_BED_DIRTY",
       "HOS_BED_01",
-      "NORMAL_BED"
+      "NORMAL_BED",
+      "MURDER_QIP_BED"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -49263,7 +49406,7 @@
     "description": "Sink with textured water and wood paneling - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.25,
     "objectIds": [
       "SINK",
       "SINK2",
@@ -49272,7 +49415,8 @@
       "QIP_COOK_SINK",
       "RIMMINGTON_SINK",
       "AIDE_SINK",
-      "MORTTON_SINK"
+      "MORTTON_SINK",
+      "KR_SIN_SINK2"
     ],
     "colorOverrides": [
       {
@@ -49851,6 +49995,23 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512
+  },
+  {
+    "description": "Compost pile with Wooden Trim",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      "MURDERCOMPOST"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Gnome stronghold door - textured",
@@ -51460,6 +51621,31 @@
     ]
   },
   {
+    "description": "Cupboard with glass panels and Gold Dishes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "KR_SIN_CABINET",
+      "KR_SIN_CABINET2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 7",
+        "minLightness": 20,
+        "maxLightness": 25,
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_55"
+      }
+    ]
+  },
+  {
     "description": "Varrock - Posh Cupboard with glass panels and silver dishes and golden trim",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -52032,6 +52218,33 @@
         "description": "Light brown books",
         "colors": "h == 7 && s == 3",
         "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Sinclair Manor - Bookcase",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "KR_SIN_BOOKCASE2A",
+      "KR_SIN_BOOKCASE2B",
+      "KR_SIN_BOOKCASE2C",
+      "KR_SIN_BOOKCASE2D",
+      "KR_SIN_BOOKCASE1C",
+      "KR_SIN_BOOKCASE1B",
+      "KR_SIN_BOOKCASE3A",
+      "KR_SIN_BOOKCASE3B",
+      "KR_SIN_BOOKCASE4A",
+      "KR_SIN_BOOKCASE4B"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Green books",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "shiftLightness": 2,
         "uvType": "BOX"
       }
     ]
@@ -64843,7 +65056,7 @@
     ]
   },
   {
-    "description": "Barrel with metal bands filled with flower",
+    "description": "Barrel with metal bands filled with flour",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -64852,16 +65065,19 @@
         "colors": "h == 5 && s < 2",
         "uvType": "BOX",
         "baseMaterial": "METALLIC_1_LIGHT",
-        "uvScale": 0.5
+        "uvScale": 0.25
       },
       {
         "colors": "h == 12 && s == 0",
         "uvType": "BOX",
-        "baseMaterial": "DIRT_1",
-        "uvScale": 0.5
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.2
       }
     ],
-    "objectIds": [ "GA_FLOURBARREL" ]
+    "objectIds": [
+      "GA_FLOURBARREL",
+      "FLOURBARREL"
+    ]
   },
   {
     "description": "Kebos Farm - Walls",
@@ -69780,7 +69996,8 @@
     "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
-      "DAIRY_CHURN"
+      "DAIRY_CHURN",
+      "KR_SIN_DAIRY_CHURN"
     ],
     "colorOverrides": [
       {
@@ -72963,7 +73180,8 @@
     "uvScale": 0.5,
     "objectIds": [
       "GRANDFATHERCLOCK",
-      "FAI_VARROCK_POSH_GRANDFATHER_CLOCK"
+      "FAI_VARROCK_POSH_GRANDFATHER_CLOCK",
+      "KR_SIN_GRANDFATHERCLOCK"
     ],
     "colorOverrides": [
       {
