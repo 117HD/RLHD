@@ -1,5 +1,11 @@
 [
   {
+    "name": "TEST_1",
+    "area": "TEST_1",
+    "waterType": "WATER",
+    "forced": true
+  },
+  {
     "name": "DEFAULT_GRASS",
     "groundMaterial": "OVERWORLD_GRASS_1",
     "maxLightness": 55
@@ -11020,6 +11026,18 @@
     "area": "KRAKEN_COVE_WALL_FIX",
     "underlayIds": [ 53, 54 ],
     "waterType": "SWAMP_WATER"
+  },
+  {
+    "name": "WYRMSCRAIG_CLIFFS",
+    "area": "WYRMSCRAIG",
+    "overlayIds": [ 643 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "WYRMSCRAIG_PATHS",
+    "area": "WYRMSCRAIG",
+    "overlayIds": [ 187 ],
+    "groundMaterial": "PLAIN_DIRT"
   },
   {
     "name": "TAG - Areas - END"

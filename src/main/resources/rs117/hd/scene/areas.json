@@ -12067,6 +12067,10 @@
     "regions": [ 14379 ]
   },
   {
+    "name": "WYRMSCRAIG",
+    "regionBoxes": [ [ 10019, 10274 ] ]
+  },
+  {
     "name": "SEWER_ENTRANCE_FIXES",
     "aabbs": [
       [ 2632, 3294 ],
@@ -12286,7 +12290,8 @@
       "VATRACHOS_ISLAND",
       "VOID_KNIGHTS_OUTPOST",
       "Varlamore - Tlati Rainforest",
-      "WINTUMBER_ISLAND"
+      "WINTUMBER_ISLAND",
+      "WYRMSCRAIG"
     ]
   },
   {
