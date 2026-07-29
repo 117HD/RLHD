@@ -1227,6 +1227,14 @@
     ]
   },
   {
+    "description": "Wooden Roofs",
+    "doubleSidedFaces": true,
+    "objectIds": [
+      "ROOF_WOODEN",
+      "OLDROOF_WOODEN"
+    ]
+  },
+  {
     "description": "Ardougne Log Balance",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -1240,6 +1248,7 @@
   {
     "description": "Ardougne Agility Balance Plank",
     "baseMaterial": "WOOD_GRAIN_3",
+    "doubleSidedFaces": true,
     "objectIds": [
       "ROOFTOPS_ARDY_PLANK_MIDDLE",
       "ROOFTOPS_ARDY_PLANK"
@@ -1406,6 +1415,7 @@
   {
     "description": "Gnome Stronghold Tree Leaves - Top",
     "baseMaterial": "BARK",
+    "doubleSidedFaces": true,
     "textureMaterial": "LEAVES_TOP_ALT",
     "objectIds": [
       "TKCANOPYMIDDLE",
@@ -1418,6 +1428,7 @@
   {
     "description": "Gnome Stronghold Tree Leaves - Side",
     "baseMaterial": "BARK",
+    "doubleSidedFaces": true,
     "textureMaterial": "LEAVES_SIDE_ALT",
     "objectIds": [
       "TKCANOPYCORNER2",
@@ -4319,8 +4330,115 @@
     "uvScale": 0.75
   },
   {
-    "description": "LUMBRIDGE_CASTLE_WALLS",
+    "description": "Lumbridge - Building Walls with roofs",
+    "areas": [ "LUMBRIDGE" ],
+    "flatNormals": true,
     "objectIds": [
+      "ROOF_REDSLATE",
+      "ROOFWALLFILLER",
+      "ROOF_DOUBLELENGTH",
+      "ROOFEDGE_DOUBLELENGTH_R",
+      "ROOFEDGE_DOUBLELENGTH_RR",
+      "ROOFEDGE_DOUBLELENGTH_L",
+      "ROOFEDGE_DOUBLELENGTH_LL",
+      "ROOFEDGE_AL",
+      "ROOFEDGE_ALL",
+      "ROOFEDGE_TIP",
+      "ROOF_THATCHED"
+    ],
+    "materialOverrides": {
+      "HD_BRICK": {
+        "textureMaterial": "HD_BRICK"
+      }
+    }
+  },
+  {
+    "description": "Lumbridge - Building Walls",
+    "areas": [ "LUMBRIDGE" ],
+    "textureMaterial": "HD_BRICK",
+    "flatNormals": true,
+    "objectIds": [
+      "BRICKWALL",
+      "ROOFWALLFILLER_CHURCH",
+      "BRICKWALL_CHURCH_FRAME",
+      "BRICKWALL_RIVEREDGE",
+      "BRICKWALLSKEW"
+    ]
+  },
+  {
+    "description": "Lumbridge - Castle Walls",
+    "areas": [ "LUMBRIDGE" ],
+    "textureMaterial": "HD_BRICK",
+    "flatNormals": true,
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "PORTCULLIS_2R",
+      "PORTCULLIS_2L"
+    ]
+  },
+  {
+    "description": "Lumbridge - Castle Walls",
+    "areas": [ "LUMBRIDGE" ],
+    "textureMaterial": "HD_BRICK",
+    "flatNormals": true,
+    "objectIds": [
+      "CROSS_CASTLEEDGE",
+      "CASTLEWALL",
+      "BIGSTONE_CASTLEWALL",
+      "CASTLEBATTLEMENTS",
+      "CASTLECRUMBLY_L",
+      "CASTLECRUMBLY_R"
+    ]
+  },
+  {
+    "description": "Edgeville - Roof with Walls",
+    "areas": [ "EDGEVILLE" ],
+    "flatNormals": true,
+    "materialOverrides": {
+      "HD_BRICK": {
+        "textureMaterial": "HD_BRICK"
+      }
+    },
+    "objectIds": [
+      "ROOFWALLFILLER",
+      "ROOF_WOODEN"
+    ]
+  },
+  {
+    "description": "Edgeville - Walls",
+    "areas": [ "EDGEVILLE" ],
+    "flatNormals": true,
+    "textureMaterial": "HD_BRICK",
+    "objectIds": [
+      "CASTLEBATTLEMENTS",
+      "BRICKWALL"
+    ]
+  },
+  {
+    "description": "Edgeville Monastary - Walls",
+    "areas": [ "EDGEVILLE_MONASTERY" ],
+    "textureMaterial": "HD_BRICK",
+    "baseMaterial": "WATTLE_1",
+    "flatNormals": true,
+    "objectIds": [
+      "PAINTEDBRICKWALL_1",
+      "PAINTEDBRICKWALL_2"
+    ]
+  },
+  {
+    "description": "Burthorpe - Warriors Guild - Walls",
+    "flatNormals": true,
+    "objectIds": [
+      "WARGUILD_WINDOW",
+      "WARGUILD_WALL"
+    ]
+  },
+  {
+    "description": "Generic - Stone Brick Walls with Bricks Texture - Textured",
+    "objectIds": [
+      "CROSS_CASTLEEDGE",
       "CASTLEWALL",
       "BIGSTONE_CASTLEWALL",
       "CASTLEBATTLEMENTS",
@@ -4367,12 +4485,12 @@
     ]
   },
   {
-    "description": "LUMBRIDGE_CASTLE_WALL_CROSS_TOPS",
-    "baseMaterial": "METALLIC_1_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.2,
+    "description": "Varrok Roofs - DoubleSided",
+    "doubleSidedFaces": true,
     "objectIds": [
-      "CROSS_CASTLEEDGE"
+      "FAI_VARROCK_ROOFKIT_SLATE",
+      "FAI_VARROCK_ROOFKIT_SLATE_RAISED",
+      "FAI_VARROCK_ROOFKIT_SLATE_CUT_CORNER"
     ]
   },
   {
@@ -4525,6 +4643,7 @@
     "baseMaterial": "MARBLE_2",
     "uvType": "BOX",
     "flatNormals": true,
+    "doubleSidedFaces": true,
     "objectIds": [
       "EXCHANGE_LOWER_CENTRE_PILLAR",
       "EXCHANGE_UPPER_CENTRAL_PILLAR",
@@ -4958,6 +5077,13 @@
         "flatNormals": true,
         "castShadows": false
       }
+    ]
+  },
+  {
+    "description": "Rupunzula Tower Roof",
+    "doubleSidedFaces": true,
+    "objectIds": [
+      "GRIM_WATCHTOWER_ROOF"
     ]
   },
   {
@@ -11790,6 +11916,7 @@
       "FAI_VARROCK_RUGCORNER",
       "FAI_VARROCK_RUGSIDE",
       "FAI_VARROCK_RUGMIDDLE",
+      "FAI_VARROCK_RUGCORNER_INSIDE",
       "FAI_VARROCK_POSH_RUG_CORNER",
       "FAI_VARROCK_POSH_RUG_SIDE",
       "FAI_VARROCK_POSH_RUG_MIDDLE",
@@ -22955,6 +23082,7 @@
         "windDisplacementModifier": -3,
         "baseMaterial": "LEAF_VEINS",
         "uvType": "MODEL_XZ",
+        "doubleSidedFaces": true,
         "uvScale": 0.25
       }
     ]
@@ -22973,6 +23101,7 @@
   {
     "description": "Jungle Tree Small",
     "baseMaterial": "LEAF_VEINS",
+    "doubleSidedFaces": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "windDisplacementModifier": -3,
     "objectIds": [
@@ -23004,6 +23133,7 @@
     "description": "Jungle Tree Small with Oranges - Should copy Jungle Tree",
     "baseMaterial": "LEAF_VEINS",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "doubleSidedFaces": true,
     "windDisplacementModifier": -3,
     "objectIds": [
       "AVIUM_TREE_ORANGE",
@@ -29345,9 +29475,7 @@
     ],
     "objectIds": [
       "PLANT1",
-      "PLANT2",
       "PLANT3",
-      "PLANT4",
       "AHOY_PLANT_1_INACTIVE",
       "AHOY_PLANT_1",
       "AHOY_PLANT_2",
@@ -29363,6 +29491,25 @@
       "DOV_HUNTING_PLANT_INITIAL",
       "PLANT_TROPICAL_01",
       "IG_PLANT_FLAT"
+    ]
+  },
+  {
+    "description": "Generic - Plant - Leafy Shrub - DoubleSided",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "MODEL_XZ",
+        "windDisplacementMode": "VERTEX",
+        "doubleSidedFaces": true
+      }
+    ],
+    "objectIds": [
+      "PLANT2",
+      "PLANT4"
     ]
   },
   {
@@ -33223,6 +33370,7 @@
     "description": "Objects - Textured Rock - Mossy Rock - Medium",
     "baseMaterial": "GRASS_3",
     "textureMaterial": "HD_CONCRETE",
+    "terrainVertexSnap": true,
     "objectIds": [
       "MOSS_COVERED_ROCK_1",
       "MOSS_COVERED_ROCK_2"
@@ -42771,6 +42919,8 @@
   {
     "description": "Varlamore Awnings Small Red",
     "baseMaterial": "CARPET",
+    "doubleSidedFaces": true,
+    "depthBias": 1,
     "objectIds": [
       "TENT_BAZAAR01_COVER01"
     ],
@@ -49692,6 +49842,8 @@
   {
     "description": "Compost pile with bricks - textured",
     "baseMaterial": "GRUNGE_1",
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.025,
     "objectIds": [
       "COMPOST"
     ],
@@ -54585,6 +54737,7 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "flatNormals": true,
+    "doubleSidedFaces": true,
     "objectIds": [
       "FLOORKIT_WOODEN01_DEFAULT01",
       "FLOORKIT_WOODEN01_DEFAULT02",
@@ -64738,12 +64891,14 @@
     "baseMaterial": "HD_HAY_BRIGHT",
     "uvType": "BOX",
     "uvOrientation": 512,
+    "doubleSidedFaces": true,
     "uvScale": 0.7,
     "objectIds": [
       "FAI_VARROCK_ROOF_THATCHED_WINDOW_RIGHT",
       "FAI_VARROCK_ROOF_THATCHED_WINDOW_LEFT",
       "FAI_VARROCK_ROOF_THATCHED_WINDOW",
       "FAI_VARROCK_ROOF_THATCHED",
+      "FAI_VARROCK_ROOF_THATCHED_OUTSIDE",
       "FAI_VARROCK_ROOF_THATCHED_SHORT",
       "FAI_VARROCK_ROOF_THATCHED_SHORT_MIRROR",
       "FAI_VARROCK_ROOF_THATCHED_3H",
@@ -64757,6 +64912,7 @@
         "description": "Ropes",
         "baseMaterial": "ROPE",
         "colors": "s > 2",
+        "doubleSidedFaces": true,
         "uvType": "BOX",
         "uvScale": 0.55
       }
@@ -64800,6 +64956,7 @@
     "baseMaterial": "HD_HAY",
     "uvType": "BOX",
     "uvScale": 0.7,
+    "doubleSidedFaces": true,
     "objectIds": [
       "FAI_VARROCK_MILLROOFRIGHT",
       "FAI_VARROCK_MILLROOFLEFT"
@@ -80075,6 +80232,7 @@
   {
     "description": "The Pandemonium - Palm Tree",
     "baseMaterial": "LEAF_VEINS_PALM_LIGHT",
+    "doubleSidedFaces": true,
     "uvType": "BOX",
     "uvScale": 0.25,
     "objectIds": [

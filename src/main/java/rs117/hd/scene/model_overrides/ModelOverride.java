@@ -75,6 +75,7 @@ public class ModelOverride
 	public boolean castShadows = true;
 	public boolean receiveShadows = true;
 	public boolean terrainVertexSnap = false;
+	public boolean doubleSidedFaces = false;
 	public boolean undoVanillaShading = true;
 	private boolean hideAsWaterEffect = false;
 	public float terrainVertexSnapThreshold = 0.125f;
@@ -118,8 +119,8 @@ public class ModelOverride
 	public transient boolean isGenerated;
 	public transient Map<AABB, ModelOverride> areaOverrides;
 	public transient AhslPredicate ahslCondition;
-	public transient boolean hasTransparency;
 	public transient boolean mightHaveTransparency;
+	public transient boolean mightBeDoubleSided;
 	public transient boolean modifiesVanillaTexture;
 
 	// Transient not volatile, since access order can be random as it'll mean we'll just fall back to the full lookup
@@ -210,11 +211,16 @@ public class ModelOverride
 		if (hideInAreas == null)
 			hideInAreas = new AABB[0];
 
-		hasTransparency = mightHaveTransparency =
+		mightHaveTransparency =
 			baseMaterial.hasTransparency ||
 			textureMaterial.hasTransparency ||
 			modifiesAlpha && minAlpha < 255 ||
 			tzHaarRecolorType != TzHaarRecolorType.NONE;
+
+		mightBeDoubleSided =
+			doubleSidedFaces ||
+			baseMaterial.doubleSidedFaces ||
+			textureMaterial.doubleSidedFaces;
 
 		hide |= hideAsWaterEffect && plugin.configHideVanillaWaterEffects;
 
@@ -226,6 +232,7 @@ public class ModelOverride
 				if (disableTextures && override.modifiesVanillaTexture)
 					continue;
 				mightHaveTransparency |= override.mightHaveTransparency;
+				mightBeDoubleSided |= override.mightBeDoubleSided;
 				normalized.put(entry.getKey(), override);
 			}
 			if (normalized.isEmpty())
@@ -237,6 +244,7 @@ public class ModelOverride
 			for (var override : colorOverrides) {
 				override.normalize(plugin);
 				mightHaveTransparency |= override.mightHaveTransparency;
+				mightBeDoubleSided |= override.mightBeDoubleSided;
 				override.ahslCondition = parseAhslConditions(override.colors);
 			}
 		}
@@ -301,6 +309,7 @@ public class ModelOverride
 			castShadows,
 			receiveShadows,
 			terrainVertexSnap,
+			doubleSidedFaces,
 			undoVanillaShading,
 			hideAsWaterEffect,
 			terrainVertexSnapThreshold,
@@ -338,8 +347,8 @@ public class ModelOverride
 			isGenerated,
 			areaOverrides,
 			ahslCondition,
-			hasTransparency,
 			mightHaveTransparency,
+			mightBeDoubleSided,
 			modifiesVanillaTexture,
 			// Runtime caching fields
 			-1
