@@ -184,9 +184,9 @@
   },
   {
     "area": "STRONGHOLD_OF_SECURITY_DEATH",
-    "ambientColor": "#542d22",
+    "ambientColor": "#844A5E",
     "ambientStrength": 1.5,
-    "directionalStrength": 1,
+    "directionalStrength": 0.75,
     "sunAngles": [
       80,
       190
@@ -2186,6 +2186,32 @@
     "windSpeed": 15,
     "windStrength": 50,
     "waterCausticsStrength": 0
+  },
+  {
+    "area": "VAMPYRIUM",
+    "fogColor": "#330D0D",
+    "fogDepth": 15,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "waterCausticsStrength": 0
+  },
+  {
+    "area": "VAMPYRIUM_FOREST_INSTANCE",
+    "fogColor": "#330D0D",
+    "fogDepth": 40,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50,
+    "waterCausticsStrength": 0
+  },
+  {
+    "area": "MAGGOT_KING_ARENA",
+    "fogColor": "#160404",
+    "fogDepth": 50,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50
   },
   {
     "area": "PLAYER_OWNED_HOUSE_WILDY",

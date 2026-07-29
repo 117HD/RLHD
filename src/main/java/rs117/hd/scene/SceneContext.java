@@ -79,9 +79,7 @@ public class SceneContext {
 	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;
 		this.scene = scene;
-		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
-//		this.sizeX = SCENE_SIZE + expandedMapLoadingChunks * CHUNK_SIZE;
-//		this.sizeZ = SCENE_SIZE + expandedMapLoadingChunks * CHUNK_SIZE;
+		this.expandedMapLoadingChunks = scene.isInstance() ? 0 : expandedMapLoadingChunks;
 		sizeX = sizeZ = EXTENDED_SCENE_SIZE;
 		sceneOffset = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
 		sceneBase = findSceneBase();

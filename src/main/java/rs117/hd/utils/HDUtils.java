@@ -167,7 +167,10 @@ public final class HDUtils {
 		int orientation = getModelPreOrientation(config);
 		var objectType = ObjectType.fromConfig(config);
 		switch (objectType) {
+			// Diagonal models have an extra 45 degree rotation
+			case WallDecorDiagonalOffset:
 			case WallDecorDiagonalNoOffset:
+			case WallDecorDiagonalBoth:
 			case CentrepieceDiagonal:
 				orientation += 256;
 		}

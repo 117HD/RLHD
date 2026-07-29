@@ -358,6 +358,18 @@
     ]
   },
   {
+    "name": "CASTLE_DRAKEN_BRICK_FLOOR_DIRTY",
+    "materials": [
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "DIRT_1",
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "DIRT_2",
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "BLANK_SEMIGLOSS",
     "materials": [
       "BLANK_SEMIGLOSS"
@@ -376,9 +388,16 @@
     "materials": [
       "SAND_4",
       "GRAVEL_LIGHT",
+      "SAND_4_MIRRORED",
+      "SAND_5"
+    ]
+  },
+  {
+    "name": "BEACH_SAND_PLAIN",
+    "materials": [
       "DIRT_1",
-      "SAND_4",
-      "DIRT_1"
+      "GRAVEL_LIGHT",
+      "SAND_5"
     ]
   },
   {
@@ -472,18 +491,6 @@
     ]
   },
   {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHT",
-    "materials": [
-      "WINTER_JAGGED_STONE_TILE_LIGHT"
-    ]
-  },
-  {
-    "name": "WINTER_JAGGED_STONE_TILE_LIGHT_2",
-    "materials": [
-      "WINTER_JAGGED_STONE_TILE_LIGHTER"
-    ]
-  },
-  {
     "name": "ROCKY_CAVE_FLOOR",
     "materials": [
       "GRUNGE_2",
@@ -525,7 +532,7 @@
       "GRUNGE_1",
       "DIRT_1",
       "DIRT_2",
-      "DIRT_1"
+      "SAND_5"
     ]
   },
   {
@@ -580,7 +587,7 @@
     "name": "PACKED_EARTH",
     "materials": [
       "DIRT_1",
-      "GRAVEL",
+      "GRAVEL_LIGHT",
       "DIRT_1",
       "DIRT_1",
       "DIRT_2"
@@ -594,6 +601,15 @@
       "GRASS_2",
       "DIRT_2",
       "GRASS_3"
+    ]
+  },
+  {
+    "name": "GRASSY_SAND",
+    "materials": [
+      "GRASS_1",
+      "SAND_1",
+      "SAND_2",
+      "SAND_3"
     ]
   },
   {
@@ -684,6 +700,13 @@
     "name": "SMOOTH_STONE",
     "materials": [
       "SMOOTH_STONE"
+    ]
+  },
+  {
+    "name": "DIRTY_SMOOTH_STONE",
+    "materials": [
+      "SMOOTH_STONE",
+      "DIRT_1"
     ]
   }
 ]

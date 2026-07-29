@@ -64,6 +64,7 @@ public final class AsyncCachedModel extends Job implements Model {
 	private int verticesCount;
 	private int faceCount;
 
+	private byte transparency;
 	private byte overrideAmount;
 	private byte overrideHue;
 	private byte overrideSaturation;
@@ -253,6 +254,7 @@ public final class AsyncCachedModel extends Job implements Model {
 		useBoundingBox = model.useBoundingBox();
 		hash = model.getHash();
 
+		transparency = model.getTransparency();
 		overrideAmount = model.getOverrideAmount();
 		overrideHue = model.getOverrideHue();
 		overrideSaturation = model.getOverrideSaturation();
