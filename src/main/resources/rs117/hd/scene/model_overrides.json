@@ -93321,5 +93321,17 @@
         "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
+  },
+  {
+    "description": "Wyrmscraig - Sunstone Dust",
+    "baseMaterial": "SMOOTH_STONE",
+    "minLightness": 10,
+    "maxLightness": 40,
+    "objectIds": [
+      "FFG_DUST_VIS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "castShadows": false
   }
 ]
