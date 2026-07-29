@@ -4038,8 +4038,9 @@
   },
   {
     "name": "CASTLE_DRAKAN_INTERIOR_VAMPYRIUM",
-    "regions": [ 9331, 9587, 9843, 10099, 10355 ],
-    "hideOtherAreas": true
+    "regionBoxes": [
+      [ 9331, 10355 ]
+    ]
   },
   {
     "name": "PORT_PHASMATYS",
@@ -12233,7 +12234,7 @@
   {
     "name": "PATERDOMUS_MAUSOLEUM",
     "aabbs": [
-      [ 3392, 9871, 3455, 9917 ]
+      [ 3394, 9871, 3451, 9917 ]
     ],
     "hideOtherAreas": true
   },
@@ -12271,8 +12272,11 @@
   },
   {
     "name": "VAMPYRIUM_FOREST_INSTANCE",
-    "regions": [ 11383, 11642, 11899, 12155, 11643 ],
-    "regionBoxes": [ [ 11641, 12151 ] ],
+    "regions": [ 11383, 11642 ],
+    "regionBoxes": [
+      [ 11641, 12150 ],
+      [ 11643, 12155 ]
+    ],
     "aabbs": [
       [ 2944, 7808, 2975, 7839 ],
       [ 2944, 7840, 2983, 7871 ],
@@ -12298,11 +12302,13 @@
   },
   {
     "name": "MAGGOT_KING_ARENA",
-    "regionBoxes": [ [ 11645 ] ]
+    "regions": [ 11645 ]
   },
   {
     "name": "VAMPYRIUM",
-    "regionBoxes": [ [ 9597, 11128 ] ],
+    "regionBoxes": [
+      [ 9597, 11128 ]
+    ],
     "areas": [
       "VAMPYRIUM_FOREST_INSTANCE"
     ]
