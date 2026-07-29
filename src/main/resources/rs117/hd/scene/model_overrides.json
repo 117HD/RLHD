@@ -44735,8 +44735,8 @@
       "FUR_D",
       "VIKING_FUR"
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.6
   },
   {
     "description": "Obelisk of Earth",
@@ -57195,7 +57195,7 @@
         "baseMaterial": "FUR",
         "colors": "h == 7 && s == 7",
         "uvType": "BOX",
-        "uvScale": 0.55,
+        "uvScale": 0.45,
         "shiftLightness": 1
       },
       {

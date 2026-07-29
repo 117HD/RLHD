@@ -2012,8 +2012,11 @@
     "brightness": 1.1
   },
   {
+    "name": "FUR_N"
+  },
+  {
     "name": "FUR",
-    "normalMap": "NONE",
+    "normalMap": "FUR_N",
     "specularStrength": 0.25,
     "specularGloss": 30.0
   },
