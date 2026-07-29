@@ -978,24 +978,25 @@ public class ZoneRenderer implements Renderer {
 				}
 
 				if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-					if(renderWater) {
-						// Water is currently drawn with depth writing & testing enabled, as such alpha models and the water plane
-						// can fight depending on the draw order, to avoid alpha models causing water to fail depth testing we disable
-						// depth writing for this zone
+					if (renderWater) {
+						// Water is currently drawn with depth writes & depth testing enabled, and as such, alpha models and the water plane
+						// can Z-fight depending on draw order. To avoid alpha models above water causing the water surface to fail its
+						// depth test, we disable depth writes for alpha models and rely on correct back to front ordering of the zones
 						sceneCmd.DepthMask(false);
 						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
 						sceneCmd.DepthMask(true);
 					} else {
+						// Draw alpha models in two passes, first blending colors correctly, then writing depth for subsequent opaque models
+						// to test against. This is necessary because opaque models on higher planes can be drawn later
+
 						// Write color without depth writes
 						sceneCmd.DepthMask(false);
 						sceneCmd.ColorMask(true, true, true, true);
-
 						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, false, false);
 
 						// Write depth without color
 						sceneCmd.DepthMask(true);
 						sceneCmd.ColorMask(false, false, false, false);
-
 						z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, true, false);
 
 						// Restore color writes
