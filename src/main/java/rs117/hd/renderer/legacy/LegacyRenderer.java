@@ -39,6 +39,7 @@ import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.AreaManager;
@@ -135,6 +136,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Inject
 	private ShadowShaderProgram.Legacy shadowProgram;
+
+	@Inject
+	private TiledLightingOverlay tiledLightingOverlay;
 
 	@Inject
 	private JobSystem jobSystem;
@@ -1209,42 +1213,14 @@ public class LegacyRenderer implements Renderer {
 
 			frameTimer.end(Timer.RENDER_SCENE);
 
+			tiledLightingOverlay.render();
+
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_MULTISAMPLE);
 			glDisable(GL_DEPTH_TEST);
 			glDepthMask(true);
 			glUseProgram(0);
-
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
-			if (plugin.fboSceneResolve != 0) {
-				// Blit from the scene FBO to the multisample resolve FBO
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneResolve);
-				glBlitFramebuffer(
-					0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-					0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-					GL_COLOR_BUFFER_BIT, GL_NEAREST
-				);
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneResolve);
-			}
-
-			// Blit from the resolved FBO to the default FBO
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-			glBlitFramebuffer(
-				0,
-				0,
-				plugin.sceneResolution[0],
-				plugin.sceneResolution[1],
-				plugin.sceneViewport[0],
-				plugin.sceneViewport[1],
-				plugin.sceneViewport[0] + plugin.sceneViewport[2],
-				plugin.sceneViewport[1] + plugin.sceneViewport[3],
-				GL_COLOR_BUFFER_BIT,
-				config.sceneScalingMode().glFilter
-			);
-		} else {
-			glClearColor(0, 0, 0, 1f);
-			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
 		plugin.drawUi(overlayColor);

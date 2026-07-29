@@ -189,6 +189,17 @@ vec4 saturate(vec4 value) {
     return clamp(value, vec4(0.0), vec4(1.0));
 }
 
+bool contains(vec2 value, vec2 min, vec2 max) {
+    return value.x >= min.x && value.x < max.x &&
+           value.y >= min.y && value.y < max.y;
+}
+
+bool contains(vec3 value, vec3 min, vec3 max) {
+    return value.x >= min.x && value.x < max.x &&
+           value.y >= min.y && value.y < max.y &&
+           value.z >= min.z && value.z < max.z;
+}
+
 #define POISSON_DISK_LENGTH 16
 vec2 getPoissonDisk(int idx) {
     switch(idx) {

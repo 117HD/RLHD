@@ -24,15 +24,19 @@
  */
 #version 330
 
+#extension GL_ARB_gpu_shader5 : enable
+
 #include <uniforms/global.glsl>
 #include <uniforms/ui.glsl>
 
+uniform sampler2D sceneTexture;
 uniform sampler2D uiTexture;
 
 #include <scaling/bicubic.glsl>
 #include <utils/constants.glsl>
 #include <utils/color_blindness.glsl>
 #include <utils/misc.glsl>
+#include <utils/fxaa.glsl>
 
 #if UI_SCALING_MODE == UI_SCALING_MODE_XBR
     #include <scaling/xbr_lv2_frag.glsl>
@@ -44,6 +48,10 @@ uniform sampler2D uiTexture;
 
 in vec2 fUv;
 
+#if FXAA_ENABLED
+    in FXAACoords sceneFxaaCoords;
+#endif
+
 out vec4 FragColor;
 
 vec4 alphaBlend(vec4 src, vec4 dst) {
@@ -54,23 +62,37 @@ vec4 alphaBlend(vec4 src, vec4 dst) {
 }
 
 void main() {
-    vec4 c;
+    vec4 uiColor;
     #if UI_SCALING_MODE == UI_SCALING_MODE_MITCHELL || UI_SCALING_MODE == UI_SCALING_MODE_CATROM
-        c = textureCubic(uiTexture, fUv);
+        uiColor = textureCubic(uiTexture, fUv);
     #elif UI_SCALING_MODE == UI_SCALING_MODE_XBR
-        c = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
+        uiColor = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
     #elif UI_SCALING_MODE == UI_SCALING_MODE_HYBRID
-        c = textureHybrid(uiTexture, fUv);
-    #else // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
-        c = texture(uiTexture, fUv);
+        uiColor = textureHybrid(uiTexture, fUv);
+    #else
+        uiColor = texture(uiTexture, fUv);
     #endif
 
-    c = alphaBlend(c, alphaOverlay);
-    c.rgb = colorBlindnessCompensation(c.rgb);
+    vec2 scenePixel = vec2(fUv.x, 1.0 - fUv.y) * vec2(targetDimensions);
+    vec3 sceneColor = vec3(0.0);
+    if (contains(scenePixel, sceneViewport.xy, sceneViewport.xy + sceneViewport.zw)) {
+        #if FXAA_ENABLED
+            vec2 sceneFragCoord = scenePixel - sceneViewport.xy;
+            sceneColor = fxaa(sceneTexture, sceneFragCoord, sceneViewport.zw, sceneFxaaCoords).rgb;
+        #else
+            vec2 sceneUV = saturate((scenePixel - sceneViewport.xy) / sceneViewport.zw);
+            sceneColor = texture(sceneTexture, sceneUV).rgb;
+        #endif
+    }
+
+    uiColor = alphaBlend(uiColor, alphaOverlay);
+    uiColor.rgb = colorBlindnessCompensation(uiColor.rgb);
+
+    vec3 outputColor = mix(sceneColor, uiColor.rgb, uiColor.a);
 
     #if WINDOWS_HDR_CORRECTION
-        c.rgb = windowsHdrCorrection(c.rgb);
+        outputColor = windowsHdrCorrection(outputColor);
     #endif
 
-    FragColor = c;
+    FragColor = vec4(outputColor, 1.0);
 }

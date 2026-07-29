@@ -32,10 +32,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
-import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
@@ -50,6 +48,7 @@ import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.EnvironmentManager;
@@ -140,6 +139,9 @@ public class ZoneRenderer implements Renderer {
 	private ShadowShaderProgram.Detailed detailedShadowProgram;
 
 	@Inject
+	private TiledLightingOverlay tiledLightingOverlay;
+
+	@Inject
 	private JobSystem jobSystem;
 
 	@Inject
@@ -160,7 +162,6 @@ public class ZoneRenderer implements Renderer {
 	public static GLBuffer.EBO eboAlpha;
 	public static GLMappedBufferIntWriter eboAlphaWriter;
 
-	private boolean sceneFboValid;
 	private boolean shouldRenderSkybox;
 	private boolean shouldRenderScene;
 	private boolean shouldClearShadowFbo;
@@ -684,8 +685,6 @@ public class ZoneRenderer implements Renderer {
 		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
 
-		sceneFboValid = true;
-
 		// Upload world views before rendering
 		uboWorldViews.upload();
 
@@ -1132,39 +1131,8 @@ public class ZoneRenderer implements Renderer {
 				tiledLightingPass();
 				directionalShadowPass();
 				scenePass();
-			}
 
-			if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
-				if (plugin.fboSceneResolve != 0) {
-					// Blit from the scene FBO to the multisample resolve FBO
-					glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneResolve);
-					glBlitFramebuffer(
-						0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-						0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
-						GL_COLOR_BUFFER_BIT, GL_NEAREST
-					);
-					glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneResolve);
-				}
-
-				// Blit from the resolved FBO to the default FBO
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-				glBlitFramebuffer(
-					0,
-					0,
-					plugin.sceneResolution[0],
-					plugin.sceneResolution[1],
-					plugin.sceneViewport[0],
-					plugin.sceneViewport[1],
-					plugin.sceneViewport[0] + plugin.sceneViewport[2],
-					plugin.sceneViewport[1] + plugin.sceneViewport[3],
-					GL_COLOR_BUFFER_BIT,
-					config.sceneScalingMode().glFilter
-				);
-			} else {
-				glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-				glClearColor(0, 0, 0, 1);
-				glClear(GL_COLOR_BUFFER_BIT);
+				tiledLightingOverlay.render();
 			}
 
 			plugin.drawUi(overlayColor);
@@ -1199,16 +1167,6 @@ public class ZoneRenderer implements Renderer {
 		} catch (Throwable ex) {
 			log.error("Error in draw({}):", overlayColor, ex);
 			plugin.requestPluginStop();
-		}
-	}
-
-	@Subscribe
-	public void onGameStateChanged(GameStateChanged gameStateChanged) {
-		GameState state = gameStateChanged.getGameState();
-		if (state.getState() < GameState.LOADING.getState()) {
-			// this is to avoid scene fbo blit when going from <loading to >=loading,
-			// but keep it when doing >loading to loading
-			sceneFboValid = false;
 		}
 	}
 

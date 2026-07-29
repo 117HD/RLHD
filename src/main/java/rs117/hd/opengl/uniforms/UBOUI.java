@@ -9,6 +9,7 @@ public class UBOUI extends UniformBuffer<GLBuffer> {
 		super(GL_DYNAMIC_DRAW);
 	}
 
+	public Property sceneViewport = addProperty(PropertyType.IVec4, "sceneViewport");
 	public Property sourceDimensions = addProperty(PropertyType.IVec2, "sourceDimensions");
 	public Property targetDimensions = addProperty(PropertyType.IVec2, "targetDimensions");
 	public Property alphaOverlay = addProperty(PropertyType.FVec4, "alphaOverlay");
