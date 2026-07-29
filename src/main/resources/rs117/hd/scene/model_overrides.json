@@ -93299,9 +93299,35 @@
       {
         "colors": "h == 10",
         "baseMaterial": "METALLIC_1",
-        "shiftLightness": 10,
+        "shiftLightness": 12,
+        "undoVanillaShading": false,
         "uvType": "BOX",
         "uvScale": 0.15
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN",
+    "undoVanillaShading": false,
+    "objectIds": [
+      "WYRMSCRAIG_BANK_CHEST_BUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1",
+        "undoVanillaShading": false,
+        "shiftLightness": 12,
+        "uvType": "BOX",
+        "uvScale": 0.15
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "shiftLightness": 10,
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   },
