@@ -34845,7 +34845,6 @@
       "SOS_WAR_RAIL_5"
     ],
     "uvType": "BOX",
-    "uvType": "BOX",
     "uvScale": 0.5,
     "flatNormals": true
   },
@@ -34882,6 +34881,7 @@
     "colorOverrides": [
       {
         "colors": "s == 7",
+        "baseMaterial": "NONE",
         "shiftLightness": 30
       }
     ]
@@ -35085,6 +35085,7 @@
       },
       {
         "colors": "h == 17",
+        "baseMaterial": "NONE",
         "shiftLightness": 20
       }
     ]
