@@ -20445,10 +20445,21 @@
       "PENG_ARDOUGNE_ZOO",
       "PENG_ARDOUGNE_ZOO_SHORT",
       "PENG_ARDOUGNE_ZOO_SHORT_L",
-      "PENG_ARDOUGNE_ZOO_SHORT_R"
+      "PENG_ARDOUGNE_ZOO_SHORT_R",
+      "PENG_ARDOUGNE_ZOO_BLOCKRANGE"
     ],
-    "uvType": "GEOMETRY",
-    "flatNormals": true
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Ardougne - Walls - Stone - Zoo Ferret Fence",
@@ -20534,6 +20545,17 @@
       "TIMBERDEFENCE_EDGEL_NEW",
       "TIMBERDEFENCE_EDGER_NEW",
       "TIMBERDEFENCE_NEW"
+    ]
+  },
+  {
+    "description": "Objects - Ardougne Castle - Gate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.3,
+    "objectIds": [
+      "PORTCULLIS_2R",
+      "PORTCULLIS_2L"
     ]
   },
   {
@@ -32851,8 +32873,7 @@
     "uvScale": 0.65
   },
   {
-    "description": "Metallic - Wooden - Concrete - Table with books weights and scales- Textured",
-    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "description": "Metallic - Wooden - Concrete - Table with books weights and scales - Textured",
     "textureMaterial": "HD_CONCRETE",
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -32867,12 +32888,20 @@
     ],
     "colorOverrides": [
       {
-        "description": "Metal",
+        "description": "Wood",
         "colors": "h == 5 || h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.65
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.2
       },
       {
         "description": "Paper",
@@ -32966,10 +32995,9 @@
   {
     "description": "Objects - Concrete - Deposit Box",
     "textureMaterial": "HD_CONCRETE",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "retainVanillaUvs": false,
-    "uvScale": 0.4,
+    "uvScale": 0.6,
     "objectIds": [
       "BANK_DEPOSIT_BOX"
     ],
@@ -32981,6 +33009,15 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 512
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.2,
+        "shiftLightness": 4
       }
     ]
   },
