@@ -18915,7 +18915,10 @@
       "TOA_ZEBAK_ROCKS04_NOBLOCKRANGE",
       "TOA_ZEBAK_ROCKS05_NOBLOCKRANGE",
       "MDAUGHTER_ROCKSLIDE",
-      "FFG_NOTEBOOK_ROCK"
+      "FFG_NOTEBOOK_ROCK",
+      "WYRMSCRAIG_CLIFF_SHORTCUT_BLOCKAGE_VIS",
+      "WYRMSCRAIG_CLIFF_SHORTCUT_TOP_VIS",
+      "WYRMSCRAIG_CLIFF_SHORTCUT_BOTTOM"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -43833,7 +43836,8 @@
       "SKEWSTEPS_STONE_IMCANDO01_DARK01",
       "ROR_TEMPLE_TALL_BLUE_ARCH01_DARK02",
       "ROR_TEMPLE_TALL_BLUE_DARK01",
-      "DEEPFIN_CAVE_SHORTCUT"
+      "DEEPFIN_CAVE_SHORTCUT",
+      "WYRMSCRAIG_CAVE_SHORTCUT"
     ],
     "uvType": "BOX",
     "uvScale": 0.86
@@ -93175,11 +93179,9 @@
     "description": "Wyrmscraig - Cave Entrance",
     "baseMaterial": "ROCK_6",
     "uvType": "BOX",
-    "textureMaterial": "WATER_FLAT_FLOW",
     "uvScale": 0.8,
     "objectIds": [
-      "WYRMSCRAIG_CAVE_WATERFALL",
-      "WYRMSCRAIG_CAVE_ENTRANCE_SAILABLE"
+      "WYRMSCRAIG_CAVE_WATERFALL"
     ]
   },
   {
@@ -93190,7 +93192,6 @@
     "retainVanillaUvs": false,
     "uvScale": 1.5,
     "objectIds": [
-      "WYRMSCRAIG_CAVE_WATERFALL",
       "WYRMSCRAIG_CAVE_ENTRANCE_SAILABLE"
     ],
     "colorOverrides": [
@@ -93204,6 +93205,56 @@
         "baseMaterial": "GRUNGE_2",
         "uvType": "BOX",
         "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Large Cave Exit",
+    "uvType": "BOX",
+    "textureMaterial": "WATER_FLAT_FLOW_2",
+    "shiftLightness": -50,
+    "shiftHue": 40,
+    "retainVanillaUvs": false,
+    "uvScale": 1.5,
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT_SAILABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "hide": true
+      },
+      {
+        "colors": "h == 39",
+        "baseMaterial": "NONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_6",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "ROCK_6",
+        "shiftLightness": -3,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Wyrmscraig - Dungeon Exit",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": "l > 20",
+        "baseMaterial": "NONE"
       }
     ]
   },

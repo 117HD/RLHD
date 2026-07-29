@@ -11048,6 +11048,14 @@
     "blended": false
   },
   {
+    "name": "WYRMSCRAIG_DUNGEON_WATER",
+    "area": "WYRMSCRAIG_DUNGEON",
+    "overlayIds": [ 454, 456 ],
+    "waterType": "CAVE_WATER_MURKY",
+    "shiftLightness": 6,
+    "blended": false
+  },
+  {
     "name": "TAG - Areas - END"
   },
   {

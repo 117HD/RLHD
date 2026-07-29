@@ -12071,6 +12071,11 @@
     "regionBoxes": [ [ 10019, 10274 ] ]
   },
   {
+    "name": "WYRMSCRAIG_DUNGEON",
+    "regionBoxes": [ [ 10375, 10374 ] ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "SEWER_ENTRANCE_FIXES",
     "aabbs": [
       [ 2632, 3294 ],

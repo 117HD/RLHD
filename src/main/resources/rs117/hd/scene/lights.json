@@ -44245,7 +44245,8 @@
     "type": "STATIC",
     "objectIds": [
       "HG_CAVE_EXIT",
-      "CAVEKIT_ROCK01_ENTRANCE02"
+      "CAVEKIT_ROCK01_ENTRANCE02",
+      "WYRMSCRAIG_CAVE_EXIT"
     ]
   },
   {
@@ -44265,7 +44266,7 @@
     ]
   },
   {
-    "description": "Wold Den Cave Exit",
+    "description": "Wolf Den Cave Exit",
     "offset": [ -100, 100, 0 ],
     "alignment": "CENTER",
     "radius": 700,
@@ -49445,6 +49446,38 @@
     ],
     "objectIds": [
       "SAILING_CHARTING_GENERIC_LARGE_LIGHT"
+    ]
+  },
+  {
+    "description": "Wyrmscraig Dungeon Exit - Far",
+    "offset": [ 0, 200, 200 ],
+    "alignment": "CENTER",
+    "radius": 1500,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT_SAILABLE"
+    ]
+  },
+  {
+    "description": "Wyrmscraig Dungeon Exit - Near",
+    "offset": [ 0, 250, 500 ],
+    "alignment": "CENTER",
+    "radius": 750,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_CAVE_EXIT_SAILABLE"
     ]
   }
 ]
