@@ -710,12 +710,14 @@
     "name": "LEAFY_ACACIA01",
     "vanillaTextureIndex": 123,
     "hasTransparency": true,
+    "doubleSidedFaces": true,
     "shadowAlphaMap": "LEAF_A_2"
   },
   {
     "name": "LEAFY_STONEPINE01",
     "vanillaTextureIndex": 124,
     "hasTransparency": true,
+    "doubleSidedFaces": true,
     "shadowAlphaMap": "LEAF_A_2"
   },
   {
@@ -977,66 +979,126 @@
   {
     "name": "LEAFY_JATOBA",
     "vanillaTextureIndex": 189,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_JATOBA_TILED",
     "vanillaTextureIndex": 190,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_JATOBA_DISEASED",
     "vanillaTextureIndex": 191,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_JATOBA_DISEASED_TILED",
     "vanillaTextureIndex": 192,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_CAMPHOR",
     "vanillaTextureIndex": 193,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_CAMPHOR_TILED",
     "vanillaTextureIndex": 194,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_CAMPHOR_DISEASED",
     "vanillaTextureIndex": 195,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_CAMPHOR_DISEASED_TILED",
     "vanillaTextureIndex": 196,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_IRONWOOD",
     "vanillaTextureIndex": 197,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_IRONWOOD_TILED",
     "vanillaTextureIndex": 198,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_IRONWOOD_DISEASED",
     "vanillaTextureIndex": 199,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "LEAFY_IRONWOOD_DISEASED_TILED",
     "vanillaTextureIndex": 200,
-    "hasTransparency": true
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "TEXTURE_THATCHED02",
     "vanillaTextureIndex": 201
+  },
+  {
+    "name": "LEAFY_ROSEWOOD",
+    "vanillaTextureIndex": 202,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
+  },
+  {
+    "name": "LEAFY_ROSEWOOD_TILED",
+    "vanillaTextureIndex": 203,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
+  },
+  {
+    "name": "LEAFY_ROSEWOOD_DISEASED",
+    "vanillaTextureIndex": 204,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
+  },
+  {
+    "name": "LEAFY_ROSEWOOD_DISEASED_TILED",
+    "vanillaTextureIndex": 205,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
+  },
+  {
+    "name": "HD_WATER_NORMAL",
+    "vanillaTextureIndex": 206
+  },
+  {
+    "name": "HD_WATER_CAUSTIC",
+    "vanillaTextureIndex": 207
+  },
+  {
+    "name": "WATER_OUT_OF_BOUNDS",
+    "vanillaTextureIndex": 208
+  },
+  {
+    "name": "LEAFYTREE_DARKWOOD",
+    "vanillaTextureIndex": 209,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
+  },
+  {
+    "name": "LEAFYTREE_DARKWOOD_TILED",
+    "vanillaTextureIndex": 210,
+    "hasTransparency": true,
+    "doubleSidedFaces": true
   },
   {
     "name": "WHITE",
