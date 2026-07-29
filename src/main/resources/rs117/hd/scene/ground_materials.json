@@ -358,6 +358,18 @@
     ]
   },
   {
+    "name": "CASTLE_DRAKEN_BRICK_FLOOR_DIRTY",
+    "materials": [
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "DIRT_1",
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "DIRT_2",
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "CASTLE_DRAKEN_BRICK_FLOOR",
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "BLANK_SEMIGLOSS",
     "materials": [
       "BLANK_SEMIGLOSS"
@@ -575,7 +587,7 @@
     "name": "PACKED_EARTH",
     "materials": [
       "DIRT_1",
-      "GRAVEL",
+      "GRAVEL_LIGHT",
       "DIRT_1",
       "DIRT_1",
       "DIRT_2"
@@ -688,6 +700,13 @@
     "name": "SMOOTH_STONE",
     "materials": [
       "SMOOTH_STONE"
+    ]
+  },
+  {
+    "name": "DIRTY_SMOOTH_STONE",
+    "materials": [
+      "SMOOTH_STONE",
+      "DIRT_1"
     ]
   }
 ]

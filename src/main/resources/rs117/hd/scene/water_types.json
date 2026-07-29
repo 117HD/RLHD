@@ -103,6 +103,16 @@
     "duration": 2.0
   },
   {
+    "name": "BLOOD_DARK",
+    "normalStrength": 0.05,
+    "baseOpacity": 0.85,
+    "fresnelAmount": 0.0,
+    "surfaceColor": "#1E0000",
+    "foamColor": "#753f2d",
+    "depthColor": "#321a16",
+    "duration": 2.0
+  },
+  {
     "name": "BLOOD_FLAT",
     "normalStrength": 0.05,
     "baseOpacity": 0.85,

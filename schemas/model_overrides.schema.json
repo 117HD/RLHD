@@ -391,6 +391,11 @@
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
             },
+            "inheritTileColorType": {
+              "type": "string",
+              "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
+              "enum": [ "NONE", "OVERLAY", "UNDERLAY" ]
+            },
             "windDisplacementMode": {
               "type": "string",
               "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
@@ -597,6 +602,11 @@
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            },
+            "inheritTileColorType": {
+              "type": "string",
+              "description": "Whether to inherit color from the overlay or underlay of the tile beneath. Defaults to NONE.",
+              "enum": [ "NONE", "OVERLAY", "UNDERLAY" ]
             },
             "windDisplacementMode": {
               "type": "string",

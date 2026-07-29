@@ -408,7 +408,7 @@ public class SceneManager {
 								int oldIdx = nextRoofChanges.find(prevRoofId);
 								if (oldIdx != -1) {
 									if (nextRoofChanges.getValue(oldIdx) != newRoofId)
-										log.debug(
+										log.trace(
 											"Roof change mismatch: {} -> {} vs {}",
 											prevRoofId,
 											newRoofId,
