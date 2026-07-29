@@ -28155,7 +28155,8 @@
     "objectIds": [
       "DARKM_ALTAR_CANDLES_01",
       "DARKM_ALTAR_CANDLES_02",
-      "DARKM_ALTAR_CANDLES_03"
+      "DARKM_ALTAR_CANDLES_03",
+      "DARKM_ALTAR_CANDLES_04"
     ]
   },
   {
@@ -28172,7 +28173,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "DARKM_ALTAR"
+      "DARKM_ALTAR",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_OP"
     ]
   },
   {
@@ -28189,7 +28191,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      "DARKM_ALTAR"
+      "DARKM_ALTAR",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_OP"
     ]
   },
   {
@@ -49445,6 +49448,339 @@
     ],
     "objectIds": [
       "SAILING_CHARTING_GENERIC_LARGE_LIGHT"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Myreque Hideout - Shrine Candles 1",
+    "offset": [ 50, 140, -40 ],
+    "radius": 135,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
+      "MYQ6_HIDEOUT_SHRINE_VIS"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Myreque Hideout - Shrine Candles 2",
+    "offset": [ -40, 140, -40 ],
+    "radius": 135,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
+      "MYQ6_HIDEOUT_SHRINE_VIS"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Myreque Hideout - Shrine Candles 3",
+    "offset": [ 50, 140, 40 ],
+    "radius": 110,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
+      "MYQ6_HIDEOUT_SHRINE_VIS"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Myreque Hideout - Shrine Candles 4",
+    "offset": [ -40, 140, 40 ],
+    "radius": 110,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "MYQ6_HIDEOUT_SHRINE_VIS_NOOP",
+      "MYQ6_HIDEOUT_SHRINE_VIS"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Cart Tunnel Lantern - Left",
+    "offset": [ -25, 152, 117 ],
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_MINE_CART_TUNNEL"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Cart Tunnel Lantern - Right",
+    "offset": [ -25, 152, -130 ],
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_MINE_CART_TUNNEL"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyre Lab Wall Torch",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TORCH_DAEYALT_LAB01",
+      "TORCH_DAEYALT_LAB01_NE",
+      "TORCH_DAEYALT_LAB01_NW",
+      "TORCH_DAEYALT_LAB01_E",
+      "TORCH_DAEYALT_LAB01_S",
+      "TORCH_DAEYALT_LAB01_SW"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Castle Basement wall torch",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TORCH_DRAKAN01_DARKMEYER",
+      "TORCH_DRAKAN01_W_DARKMEYER",
+      "TORCH_DRAKAN01_E_DARKMEYER",
+      "TORCH_DRAKAN01_S_DARKMEYER"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Castle ground floor wall torch",
+    "offset": [ -9.0, 305.0, 0.0 ],
+    "radius": 160,
+    "strength": 10,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TORCH_DRAKAN01_N",
+      "TORCH_DRAKAN01_E",
+      "TORCH_DRAKAN01_S",
+      "TORCH_DRAKAN01_W",
+      "TORCH_DRAKAN01_SW"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Shrine 1",
+    "offset": [ -170.0, 225.0, -3.0 ],
+    "radius": 180,
+    "strength": 12,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_CASTLE_DRAKAN_SHRINE",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_NOOP"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Shrine 2",
+    "offset": [ 170.0, 225.0, -3.0 ],
+    "radius": 180,
+    "strength": 12,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_CASTLE_DRAKAN_SHRINE",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_NOOP"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Shrine 3",
+    "offset": [ 0.0, 225.0, 100.0 ],
+    "radius": 180,
+    "strength": 12,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_CASTLE_DRAKAN_SHRINE",
+      "MYQ6_CASTLE_DRAKAN_SHRINE_NOOP"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Castle Drakan Lit Fireplace",
+    "offset": [ 0, 55, -55 ],
+    "radius": 600,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "CASTLE_DRAKAN_LOWERNIEL_FIREPLACE_LIT",
+      "CASTLE_DRAKAN_FIRE"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyrium - Sugadinti Hideout Torches",
+    "offset": [ -50.0, 298.0, 0.0 ],
+    "radius": 250,
+    "strength": 7.5,
+    "color": [
+      70,
+      60,
+      225
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_TORCH01_A",
+      "MYQ6_TORCH01_B",
+      "MYQ6_TORCH01_C",
+      "MYQ6_TORCH01_D"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyrium - Sugadinti Hideout - Crucible Fire",
+    "offset": [ -0.0, 7.0, 0.0 ],
+    "radius": 400,
+    "strength": 18.5,
+    "color": [
+      70,
+      60,
+      225
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_FIRE01_CRUCIBLE01"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyrium - Portal Glyph",
+    "offset": [ -0.0, 50.0, 0.0 ],
+    "radius": 600,
+    "strength": 12.5,
+    "color": [
+      154,
+      46,
+      144
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_PORTAL_GLYPH_APPEARING",
+      "MYQ6_ENTRY_HALL_PORTAL_GLYPH"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyrium - Defence Door 1",
+    "offset": [ -75.0, 128.0, -96.0 ],
+    "radius": 600,
+    "strength": 12.5,
+    "color": [
+      0,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_DEFENCE_DOOR"
+    ]
+  },
+  {
+    "description": "Blood Moon Rises - Vampyrium - Defence Door 1",
+    "offset": [ -75.0, 128.0, 96.0 ],
+    "radius": 600,
+    "strength": 12.5,
+    "color": [
+      0,
+      252,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "MYQ6_ENTRY_HALL_DEFENCE_DOOR"
     ]
   }
 ]
