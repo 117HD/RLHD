@@ -44723,7 +44723,7 @@
   },
   {
     "description": "Bear Rugs",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "FUR",
     "objectIds": [
       "FUR1",
       "FUR2",
@@ -57192,10 +57192,11 @@
     ],
     "colorOverrides": [
       {
-        "baseMaterial": "GRUNGE_2",
+        "baseMaterial": "FUR",
         "colors": "h == 7 && s == 7",
         "uvType": "BOX",
-        "uvScale": 0.45
+        "uvScale": 0.55,
+        "shiftLightness": 1
       },
       {
         "colors": "h == 14 || h == 51 || h == 57 || h == 0 && s == 3 || h == 9 && s == 2",

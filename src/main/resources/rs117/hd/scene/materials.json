@@ -2012,6 +2012,12 @@
     "brightness": 1.1
   },
   {
+    "name": "FUR",
+    "normalMap": "NONE",
+    "specularStrength": 0.25,
+    "specularGloss": 30.0
+  },
+  {
     "name": "FALADOR_PATH_BRICK_N"
   },
   {

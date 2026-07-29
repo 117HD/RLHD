@@ -108,6 +108,9 @@ https://cc0-textures.com/t/cc0t-scattered-leaves-001
 
 LEAF_A & LEAF_A_2 were created by Jin-Jiyunsun, and are licensed as CC0.
 
+FUR from TextureCan. All textures on this site are licensed as CC0.
+-- https://www.texturecan.com/details/266/
+
 ---
 
 The following assets are derivative works based on intellectual property owned by Jagex Ltd.
