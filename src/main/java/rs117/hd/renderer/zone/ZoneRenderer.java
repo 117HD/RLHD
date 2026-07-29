@@ -75,6 +75,7 @@ import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
+import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
@@ -1134,14 +1135,6 @@ public class ZoneRenderer implements Renderer {
 				scenePass();
 			}
 
-			// Clear the default framebuffer before drawing anything.
-			// On macOS, rlawt may hand back a dirty back buffer, which would otherwise
-			// show through regions the scene blit and opaque UI don't cover
-			// (e.g. fixed-mode margins). See #1124
-			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
-			glClearColor(0, 0, 0, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
-
 			if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
 				if (plugin.fboSceneResolve != 0) {
@@ -1157,6 +1150,15 @@ public class ZoneRenderer implements Renderer {
 
 				// Blit from the resolved FBO to the default FBO
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+
+				if (APPLE && !client.isResized()) {
+					// On macOS, we need to ensure that the alpha channel is opaque to prevent whatever
+					// is beneath from leaking through. In fixed mode, the MSAA resolve alone is not
+					// sufficient, since the viewport only covers part of the screen.
+					glClearColor(0, 0, 0, 1);
+					glClear(GL_COLOR_BUFFER_BIT);
+				}
+
 				glBlitFramebuffer(
 					0,
 					0,
@@ -1169,6 +1171,10 @@ public class ZoneRenderer implements Renderer {
 					GL_COLOR_BUFFER_BIT,
 					config.sceneScalingMode().glFilter
 				);
+			} else {
+				glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+				glClearColor(0, 0, 0, 1);
+				glClear(GL_COLOR_BUFFER_BIT);
 			}
 
 			plugin.drawUi(overlayColor);
