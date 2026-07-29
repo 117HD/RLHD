@@ -11040,6 +11040,14 @@
     "groundMaterial": "PLAIN_DIRT"
   },
   {
+    "name": "WYRMSCRAIG_WOODEN_FLOORS",
+    "area": "WYRMSCRAIG",
+    "overlayIds": [ 186 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "shiftLightness": 6,
+    "blended": false
+  },
+  {
     "name": "TAG - Areas - END"
   },
   {
