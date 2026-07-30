@@ -38,6 +38,7 @@
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
+#include GAP_FILLER
 #include MATERIAL_CONSTANTS
 
 uniform sampler2DArray textureArray;
@@ -89,6 +90,13 @@ vec2 worldUvs(float scale) {
 #include <utils/sky.glsl>
 
 void main() {
+    #if GAP_FILLER
+        // Write the smallest depth which won't round to zero for DEPTH_COMPONENT_32F
+        gl_FragDepth = 1.17549435e-38;
+        FragColor = vec4(0, 0, 0, 1);
+        return;
+    #endif
+
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
