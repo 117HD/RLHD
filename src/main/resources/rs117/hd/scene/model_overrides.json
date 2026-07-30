@@ -93410,5 +93410,29 @@
     "uvType": "BOX",
     "uvScale": 0.3,
     "castShadows": false
+  },
+  {
+    "description": "Wyrmscraig - Golem Crafting",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GOLEM_STATION_EMPTY",
+      "GOLEM_STATION_BASE",
+      "GOLEM_STATION_SHAPED_1",
+      "GOLEM_STATION_SHAPED_2",
+      "GOLEM_STATION_SHAPED_3",
+      "GOLEM_STATION_SHAPED_4",
+      "GOLEM_RUBBLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 7 || h == 7 || h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.2
+      }
+    ]
   }
 ]
