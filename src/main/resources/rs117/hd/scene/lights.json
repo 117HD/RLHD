@@ -21533,6 +21533,7 @@
     "alignment": "CENTER",
     "radius": 500,
     "strength": 9,
+    "shadowNearPlane": 85.0,
     "color": [
       252,
       148,
