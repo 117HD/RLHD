@@ -13869,7 +13869,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "GRAY_90",
+        "baseMaterial": "GRAY_125",
         "receiveShadows": false,
         "upwardsNormals": true
       },
@@ -14755,7 +14755,7 @@
   },
   {
     "description": "Static Lantern - Brighten Glass and Texture Metal",
-    "baseMaterial": "GRAY_125",
+    "baseMaterial": "GRAY_200",
     "objectIds": [
       "LANTERN"
     ],

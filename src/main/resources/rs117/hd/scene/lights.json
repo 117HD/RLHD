@@ -21438,8 +21438,8 @@
   },
   {
     "description": "WALL_TORCH_MID",
-    "offset": [ 0, 185, 0 ],
-    "radius": 250,
+    "offset": [ -20, 205, 0 ],
+    "radius": 235,
     "strength": 7.5,
     "color": [
       252,
