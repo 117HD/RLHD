@@ -2265,11 +2265,11 @@
     "groundFogOpacity": 0.225,
     "windSpeed": 17.5,
     "windStrength": 60,
-    "sunStrength": 0.6,
-    "sunlightStrength": 0.4,
+    "sunStrength": 0.5,
+    "sunlightStrength": 0.55,
     "minBrightnessBoost": 0.3,
-    "starVisibility": 0.7,
-    "moonVisibility": 0.7
+    "starVisibility": 0.5,
+    "moonVisibility": 1
   },
   {
     "key": "OVERWORLD",
