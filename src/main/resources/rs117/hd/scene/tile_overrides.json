@@ -241,7 +241,8 @@
   {
     "name": "SEWER_ENTRANCE_FIXES",
     "area": "SEWER_ENTRANCE_FIXES",
-    "heightOffset": -150
+    "heightOffset": -150,
+    "blended": false
   },
   {
     "area": "Black Knights Fort - Entrance Tile Fix",
@@ -340,12 +341,13 @@
     "blended": false
   },
   {
-    "name": "YANILLE_WATCHTOWER_ARCHWAY__BLENDING_FIX_1",
+    "name": "YANILLE_WATCHTOWER_ARCHWAY_BLENDING_FIX_1",
     "area": "YANILLE_WATCHTOWER_BOTTOM_DOORWAY",
     "overlayIds": [
       3
     ],
-    "groundMaterial": "WORN_TILES"
+    "groundMaterial": "WORN_TILES",
+    "blended": false
   },
   {
     "name": "YANILLE_WATCHTOWER_ARCHWAY_BLENDING_FIX_2",
@@ -353,7 +355,8 @@
     "overlayIds": [
       4
     ],
-    "groundMaterial": "WORN_TILES"
+    "groundMaterial": "WORN_TILES",
+    "blended": false
   },
   {
     "name": "DRAYNOR_WOM_FRONT_FIX_0",
@@ -752,7 +755,7 @@
     "minSaturation": 0,
     "maxSaturation": 1,
     "shiftLightness": 7,
-    "uvScale": 0.75,
+    "uvScale": 0.9,
     "blended": false,
     "replacements": {
       "LUMBRIDGE_PATHS": "blendingColors",
@@ -771,7 +774,7 @@
     "minSaturation": 0,
     "maxSaturation": 1,
     "shiftLightness": 7,
-    "uvScale": 0.75,
+    "uvScale": 0.9,
     "replacements": {
       "NONE": "!textures",
       "LUM_BRIDGE_10_TEXTURE_BLENDING_ONLY": "blendingTexturesOnly"
@@ -789,6 +792,7 @@
     "minSaturation": 0,
     "maxSaturation": 1,
     "shiftLightness": 7,
+    "uvScale": 0.9,
     "blended": false,
     "replacements": {
       "NONE": "!textures"
@@ -1347,12 +1351,13 @@
       "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blendingColors"
     },
     "blended": false,
-    "minLightness": 29,
-    "maxLightness": 30
+    "minLightness": 30,
+    "maxLightness": 31
   },
   {
     "name": "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND",
     "area": "EDGEVILLE_BANK_WINDOW_FIX",
+    "blended": false,
     "description": "For when ground blending is DISABLED",
     "groundMaterial": "VARROCK_PATHS"
   },
@@ -3681,7 +3686,21 @@
       10
     ],
     "groundMaterial": "BRICK_PATHS",
-    "shiftLightness": 4
+    "shiftLightness": 4,
+    "replacements": {
+      "NONE": "!textures",
+      "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE_TEXTURE_BLENDING_ONLY": "!blendingColors"
+    }
+  },
+  {
+    "name": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE_TEXTURE_BLENDING_ONLY",
+    "area": "EAST_ARDOUGNE_COBBLE_DOCK_HOUSE",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "shiftLightness": 4,
+    "blended": false
   },
   {
     "name": "EAST_ARDOUGNE_NORTH_BANK_11",
@@ -4136,8 +4155,10 @@
       2,
       3
     ],
-    "groundMaterial": "MARBLE_1_GLOSS",
-    "blended": false
+    "groundMaterial": "WORN_TILES",
+    "blended": false,
+    "maxLightness": 34,
+    "shiftLightness": 4
   },
   {
     "name": "DRAYNOR_AGGIES_HOUSE",
@@ -4218,7 +4239,7 @@
   },
   {
     "name": "DRAYNOR_MANOR_TILE_SMALL",
-    "area": "DRAYNOR_MANOR_INTERIOR",
+    "area": "DRAYNOR_MANOR_TILED_ROOMS",
     "overlayIds": [
       11
     ],
@@ -4251,7 +4272,28 @@
     "maxHue": 0,
     "minLightness": 12,
     "maxLightness": 14,
-    "uvOrientation": 488,
+    "overlayIds": [
+      2,
+      11,
+      90,
+      117,
+      120,
+      127,
+      132
+    ],
+    "replacements": {
+      "DRAYNOR_MANOR_ENTRANCE_PATH_TEXTURE_BLENDING_ONLY": "!blendingColors"
+    }
+  },
+  {
+    "name": "DRAYNOR_MANOR_ENTRANCE_PATH_TEXTURE_BLENDING_ONLY",
+    "area": "DRAYNOR_MANOR",
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "minLightness": 12,
+    "maxLightness": 14,
+    "blended": false,
     "overlayIds": [
       2,
       11,
