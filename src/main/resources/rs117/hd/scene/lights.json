@@ -50352,9 +50352,9 @@
     "offset": [ 0, 125, 0 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "timeOfDay": "DUSK",
-    "radius": 275,
-    "strength": 8,
+    "nightMultiplier": 2.5,
+    "radius": 200,
+    "strength": 4,
     "color": [
       255,
       240,
@@ -50371,9 +50371,9 @@
     "offset": [ -75, 175, 145 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "timeOfDay": "DUSK",
+    "nightMultiplier": 2.5,
     "radius": 350,
-    "strength": 10,
+    "strength": 4.5,
     "color": [
       255,
       240,
@@ -50389,9 +50389,9 @@
     "offset": [ 35, 150, -175 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "timeOfDay": "DUSK",
-    "radius": 235,
-    "strength": 10,
+    "nightMultiplier": 2.5,
+    "radius": 225,
+    "strength": 4,
     "color": [
       255,
       240,
@@ -50407,9 +50407,9 @@
     "offset": [ 190, 105, -15 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "timeOfDay": "DUSK",
+    "nightMultiplier": 1.5,
     "radius": 225,
-    "strength": 10,
+    "strength": 4,
     "color": [
       255,
       240,
@@ -50425,9 +50425,9 @@
     "offset": [ 160, 450, 75 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "timeOfDay": "DUSK",
-    "radius": 250,
-    "strength": 10,
+    "nightMultiplier": 2.5,
+    "radius": 225,
+    "strength": 4,
     "color": [
       255,
       240,
@@ -50440,12 +50440,30 @@
   },
   {
     "description": "Sunstone Rocks Large 5",
-    "offset": [ -50, 450, 45 ],
+    "offset": [ -20, 400, -8 ],
     "alignment": "CENTER",
     "dayNightOnly": true,
-    "timeOfDay": "DUSK",
-    "radius": 250,
-    "strength": 10,
+    "nightMultiplier": 2.5,
+    "radius": 175,
+    "strength": 4,
+    "color": [
+      255,
+      240,
+      45
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_SUNSTONE01"
+    ]
+  },
+  {
+    "description": "Sunstone Rocks Large 6",
+    "offset": [ 100, 435, 45 ],
+    "alignment": "CENTER",
+    "dayNightOnly": true,
+    "nightMultiplier": 2.5,
+    "radius": 100,
+    "strength": 4,
     "color": [
       255,
       240,
