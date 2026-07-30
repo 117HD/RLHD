@@ -548,7 +548,7 @@ public class ZoneRenderer implements Renderer {
 				timeOfDay.setDayLength(config.dayLength());
 				timeOfDay.setMoonPhase(config.moonPhase());
 				timeOfDay.setMoonBehavior(config.moonBehavior());
-				timeOfDay.setCycleDurationMinutes((float) config.cycleDurationMinutes());
+				timeOfDay.setCycleDurationMinutes(config.cycleDurationMinutes());
 				timeOfDay.setSeasonalHemisphere(config.seasonalHemisphere());
 				timeOfDay.setFixedAngleOverrides(
 					environmentManager.getForcedFixedSunAngles(),
