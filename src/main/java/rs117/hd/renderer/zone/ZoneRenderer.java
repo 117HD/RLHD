@@ -83,7 +83,6 @@ import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
-import static org.lwjgl.opengl.GL20.GL_POINT_SPRITE;
 import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.APPLE;
@@ -322,8 +321,6 @@ public class ZoneRenderer implements Renderer {
 		if (starProgram.isValid() && starField.getVaoStars() != 0) {
 			skyboxCmd.SetShader(starProgram);
 			skyboxCmd.Enable(GL_PROGRAM_POINT_SIZE);
-			if (!HdPlugin.GL_CAPS.forwardCompatible)
-				skyboxCmd.Enable(GL_POINT_SPRITE);
 			skyboxCmd.Enable(GL_BLEND);
 			skyboxCmd.BlendFunc(GL_ONE, GL_ONE, GL_ONE, GL_ONE);
 
@@ -332,8 +329,6 @@ public class ZoneRenderer implements Renderer {
 
 			skyboxCmd.BlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 			skyboxCmd.Disable(GL_BLEND);
-			if (!HdPlugin.GL_CAPS.forwardCompatible)
-				skyboxCmd.Disable(GL_POINT_SPRITE);
 			skyboxCmd.Disable(GL_PROGRAM_POINT_SIZE);
 		}
 
