@@ -50346,5 +50346,114 @@
     "objectIds": [
       "MYQ6_ENTRY_HALL_DEFENCE_DOOR"
     ]
+  },
+  {
+    "description": "Sunstone Rocks Small",
+    "offset": [ 0, 125, 0 ],
+    "alignment": "CENTER",
+    "dayNightOnly": true,
+    "timeOfDay": "DUSK",
+    "radius": 275,
+    "strength": 8,
+    "color": [
+      255,
+      240,
+      45
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SUNSTONEROCK1",
+      "SUNSTONEROCK2"
+    ]
+  },
+  {
+    "description": "Sunstone Rocks Large 1",
+    "offset": [ -75, 175, 145 ],
+    "alignment": "CENTER",
+    "dayNightOnly": true,
+    "timeOfDay": "DUSK",
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      255,
+      240,
+      45
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_SUNSTONE01"
+    ]
+  },
+  {
+    "description": "Sunstone Rocks Large 2",
+    "offset": [ 35, 150, -175 ],
+    "alignment": "CENTER",
+    "dayNightOnly": true,
+    "timeOfDay": "DUSK",
+    "radius": 235,
+    "strength": 10,
+    "color": [
+      255,
+      240,
+      45
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_SUNSTONE01"
+    ]
+  },
+  {
+    "description": "Sunstone Rocks Large 3",
+    "offset": [ 190, 105, -15 ],
+    "alignment": "CENTER",
+    "dayNightOnly": true,
+    "timeOfDay": "DUSK",
+    "radius": 225,
+    "strength": 10,
+    "color": [
+      255,
+      240,
+      45
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_SUNSTONE01"
+    ]
+  },
+  {
+    "description": "Sunstone Rocks Large 4",
+    "offset": [ 160, 450, 75 ],
+    "alignment": "CENTER",
+    "dayNightOnly": true,
+    "timeOfDay": "DUSK",
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      255,
+      240,
+      45
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_SUNSTONE01"
+    ]
+  },
+  {
+    "description": "Sunstone Rocks Large 5",
+    "offset": [ -50, 450, 45 ],
+    "alignment": "CENTER",
+    "dayNightOnly": true,
+    "timeOfDay": "DUSK",
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      255,
+      240,
+      45
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "WYRMSCRAIG_SUNSTONE01"
+    ]
   }
 ]
