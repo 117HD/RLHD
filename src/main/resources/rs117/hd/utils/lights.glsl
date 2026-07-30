@@ -14,13 +14,14 @@ void calculateLight(
     PointLight light = PointLightArray[lightIdx];
     vec3 lightToFrag = light.position.xyz - position;
     float distanceSquared = dot(lightToFrag, lightToFrag);
-    float radiusSquared = light.position.w;
-    if (distanceSquared <= radiusSquared) {
-        float attenuation = 1 - sqrt(distanceSquared / radiusSquared);
+    float radius = getLightRadius(light);
+    float radiusSq = radius * radius;
+    if (distanceSquared <= radiusSq) {
+        float attenuation = 1 - sqrt(distanceSquared / radiusSq);
         attenuation *= attenuation;
 
 #if POSITIONAL_SHADOWS
-        attenuation *= sampleShadow(position, light.position.xyz, normals, light.packedShadowData, radiusSquared);
+        attenuation *= sampleShadow(position, light.position.xyz, normals, light.packedShadowData, radius, getLightNearPlane(light));
 #endif
 
         vec3 pointLightColor = light.color.rgb * attenuation;

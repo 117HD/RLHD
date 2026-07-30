@@ -17,6 +17,7 @@ public class LightDefinition {
 	public float[] offset = new float[3];
 	public int height;
 	public int radius = 300;
+	public float shadowNearPlane = 10.0f;
 	public float strength = 5;
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
 	public float[] color;

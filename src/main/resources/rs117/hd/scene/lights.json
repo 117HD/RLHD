@@ -29118,6 +29118,7 @@
     "offset": [ -5, 210, 0 ],
     "radius": 450,
     "strength": 7.5,
+    "shadowNearPlane": 35.0,
     "color": [
       255,
       180,

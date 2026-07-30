@@ -545,14 +545,13 @@ public class ZoneRenderer implements Renderer {
 					lightPosition[0] = light.pos[0] + plugin.cameraShift[0];
 					lightPosition[1] = light.pos[1];
 					lightPosition[2] = light.pos[2] + plugin.cameraShift[1];
-					lightPosition[3] = lightRadiusSq;
 
 					lightColor[0] = light.color[0] * light.strength;
 					lightColor[1] = light.color[1] * light.strength;
 					lightColor[2] = light.color[2] * light.strength;
 
 					final int packedShadowData = light.shadowData != null ? light.shadowData.pack() : -1;
-					plugin.uboLights.setLight(i, lightPosition, lightColor, packedShadowData);
+					plugin.uboLights.setLight(i, lightPosition, lightColor, light.radius, light.shadowNearPlane, packedShadowData);
 
 					if (plugin.configTiledLighting) {
 						// Pre-calculate the view space position of the light, to save having to do the multiplication in the culling shader

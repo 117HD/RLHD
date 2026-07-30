@@ -61,7 +61,7 @@ void main() {
         for (uint lightIdx = 0u; lightIdx < uint(pointLightsCount); lightIdx++) {
             PointLight light = PointLightArray[lightIdx];
             vec3 lightWorldPos = light.position.xyz;
-            float lightRadiusSq = light.position.w;
+            float lightRadiusSq = getLightRadiusSq(light);
             vec3 cameraToLight = lightWorldPos - cameraPos;
 
             // Calculate the distance from the camera to the point closest to the light along the view ray

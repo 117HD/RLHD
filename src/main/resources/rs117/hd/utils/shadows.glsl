@@ -225,7 +225,7 @@ vec3 shadowAtlasUV(vec3 dirFromLight, vec2 originPx, float sizePx, out int faceO
 	return vec3(atlasUV, forwardDist);
 }
 
-float sampleShadow(vec3 fragPos, vec3 lightPos, vec3 normal, int packedShadowData, float lightRadiusSq) {
+float sampleShadow(vec3 fragPos, vec3 lightPos, vec3 normal, int packedShadowData, float lightRadius, float lightNearPlane) {
 	vec2 originPx;
 	float sizePx;
 	if (!unpackShadowAtlasRect(packedShadowData, originPx, sizePx))
@@ -249,11 +249,11 @@ float sampleShadow(vec3 fragPos, vec3 lightPos, vec3 normal, int packedShadowDat
 	vec2 atlasUV = uvAndDist.xy;
 	float forwardDist = uvAndDist.z;
 
-	float compareDepth = shadowDistanceToDepth(forwardDist, SHADOW_NEAR_PLANE, sqrt(lightRadiusSq));
+	float compareDepth = shadowDistanceToDepth(forwardDist, lightNearPlane, lightRadius);
 
 	return texture(shadowCubemapArray, vec4(atlasUV, float(face), compareDepth));
 }
 
 #else
-#define sampleShadow(fragPos, lightPos, normal, packedShadowData, lightRadiusSq) 1.0
+#define sampleShadow(fragPos, lightPos, normal, packedShadowData, lightRadius, lightNearPlane) 1.0
 #endif

@@ -74,8 +74,6 @@ public class ShadowManager implements LightManager.Listener {
 	private static final int MAX_FACE_RESOLUTION = 512;
 	private static final int MIN_FACE_RESOLUTION = 32;
 
-	private static final float SHADOW_NEAR_PLANE = 10.0f;
-
 	private static final float ATLAS_FILL_TARGET = 0.85f;
 	private static final float CULL_THRESHOLD_PIXELS = MIN_FACE_RESOLUTION * 0.5f;
 
@@ -207,7 +205,7 @@ public class ShadowManager implements LightManager.Listener {
 			if (light.visible && visibleIndices.length < MAX_LIGHTS) {
 				visibleIndices.put(i);
 
-				computeShadowProjection(light.shadowData.lightProjection, SHADOW_NEAR_PLANE, light.radius);
+				computeShadowProjection(light.shadowData.lightProjection, light.shadowNearPlane, light.radius);
 			}
 		}
 
@@ -285,7 +283,7 @@ public class ShadowManager implements LightManager.Listener {
 				light.pos[2] + plugin.cameraShift[1]
 		);
 
-		if (distance <= SHADOW_NEAR_PLANE)
+		if (distance <= light.shadowNearPlane)
 			return MAX_FACE_RESOLUTION;
 
 		final float tanHalfFovY = sceneCamera.getViewportHeight() / sceneCamera.getZoom() / 2f;

@@ -16,6 +16,7 @@ public class Light
 
 	public float radius;
 	public float strength;
+	public float shadowNearPlane;
 	/**
 	 * Linear color space RGBA in the range [0, 1]
 	 */
@@ -78,6 +79,7 @@ public class Light
 		color = def.color;
 		radius = def.radius;
 		strength = def.strength;
+		shadowNearPlane = def.shadowNearPlane;
 		alignment = def.alignment;
 		plane = def.plane;
 		shadowMode = def.shadowMode;
