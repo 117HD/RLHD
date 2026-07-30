@@ -635,7 +635,8 @@ public interface HdPluginConfig extends Config
 			"• Synced Days = A full day every real hour, synced to UTC so all players see the same sky<br>" +
 			"• Fixed Dawn = Sun locked at dawn<br>" +
 			"• Fixed Midday = Sun locked at noon<br>" +
-			"• Fixed Sunset = Sun locked at sunset<br>" +
+			"• Fixed Sunset = Sun locked on the horizon at sunset<br>" +
+			"• Fixed Twilight = Sun locked just below the horizon after sunset<br>" +
 			"• Fixed Night = Permanent night with the moon locked in place<br>" +
 			"• Always Night = Permanent night, moon still cycles",
 		position = 1,

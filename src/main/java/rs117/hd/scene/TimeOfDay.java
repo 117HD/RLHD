@@ -131,7 +131,14 @@ public class TimeOfDay {
 	// (= 235° - 180°) makes the cycle-on shadow yaw -az equal the cycle-off yaw PI - 235°,
 	// so the light/shadow direction is identical between Fixed Midday and cycle-off.
 	private static final double[] FIXED_MIDDAY_SUN = { Math.toRadians(55.0), Math.toRadians(52.0) };
-	private static final double[] FIXED_SUNSET_SUN = { Math.toRadians(90.0), Math.toRadians(-2.5) };
+	// Fixed Sunset: sun on the horizon in the west. Authored in the environment-file
+	// convention as fixedSunAngles [ 0, 272 ] (altitude 0°, azimuth 272°); since these
+	// built-in constants skip the +180° that setFixedAngleOverrides applies, the azimuth
+	// is stored pre-rotated as 272 + 180 = 452 ≡ 92°.
+	private static final double[] FIXED_SUNSET_SUN = { Math.toRadians(92.0), Math.toRadians(0.0) };
+	// Fixed Twilight: sun just below the horizon — the position Fixed Sunset used before
+	// Fixed Sunset was moved onto the horizon proper.
+	private static final double[] FIXED_TWILIGHT_SUN = { Math.toRadians(90.0), Math.toRadians(-2.5) };
 	// FIXED_NIGHT / ALWAYS_NIGHT: sun well below the horizon (its exact azimuth is
 	// irrelevant since it isn't rendered — only its negative altitude matters for
 	// night detection and shadow fade).
@@ -259,6 +266,7 @@ public class TimeOfDay {
 			case FIXED_DAWN:
 			case FIXED_MIDDAY:
 			case FIXED_SUNSET:
+			case FIXED_TWILIGHT:
 			case FIXED_NIGHT:
 			case ALWAYS_NIGHT:
 				return true;
@@ -281,6 +289,7 @@ public class TimeOfDay {
 			case FIXED_DAWN:   return FIXED_DAWN_SUN.clone();
 			case FIXED_MIDDAY: return FIXED_MIDDAY_SUN.clone();
 			case FIXED_SUNSET: return FIXED_SUNSET_SUN.clone();
+			case FIXED_TWILIGHT: return FIXED_TWILIGHT_SUN.clone();
 			case FIXED_NIGHT:
 			case ALWAYS_NIGHT:
 			default:           return FIXED_NIGHT_SUN.clone();
@@ -1261,7 +1270,10 @@ public class TimeOfDay {
 					fixedHour = 14;  // Mid-afternoon — sun high but not at its peak
 					break;
 				case FIXED_SUNSET:
-					fixedHour = 18.3; // 5:30 PM — sun near horizon at equinox latitude
+					fixedHour = 18.1; // Sun right on the horizon at equinox latitude
+					break;
+				case FIXED_TWILIGHT:
+					fixedHour = 18.3; // 5:30 PM — sun just below the horizon
 					break;
 				case FIXED_NIGHT:
 				case ALWAYS_NIGHT:
@@ -1369,6 +1381,7 @@ public class TimeOfDay {
 			case FIXED_DAWN:
 			case FIXED_MIDDAY:
 			case FIXED_SUNSET:
+			case FIXED_TWILIGHT:
 				return 0f;
 			case FIXED_NIGHT:
 			case ALWAYS_NIGHT:

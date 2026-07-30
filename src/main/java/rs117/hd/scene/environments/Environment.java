@@ -101,7 +101,7 @@ public class Environment {
 	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
 	// When set, and the active day & night cycle is a fixed mode (FIXED_DAWN,
-	// FIXED_MIDDAY, FIXED_SUNSET, FIXED_NIGHT, ALWAYS_NIGHT), these lock the
+	// FIXED_MIDDAY, FIXED_SUNSET, FIXED_TWILIGHT, FIXED_NIGHT, ALWAYS_NIGHT), these lock the
 	// sun/moon disk and their shadow directions to a fixed point in the sky,
 	// overriding the astronomically-derived angles. {altitude, azimuth} in
 	// degrees (converted to radians), same order as sunAngles above and as the

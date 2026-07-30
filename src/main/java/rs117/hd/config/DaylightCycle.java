@@ -11,6 +11,7 @@ public enum DaylightCycle
 	FIXED_DAWN("Fixed Dawn"),
 	FIXED_MIDDAY("Fixed Midday"),
 	FIXED_SUNSET("Fixed Sunset"),
+	FIXED_TWILIGHT("Fixed Twilight"),
 	FIXED_NIGHT("Fixed Night"),
 	ALWAYS_NIGHT("Always Night"),
 	;

@@ -78,7 +78,7 @@
       "cycleMode": {
         "type": "string",
         "description": "Forces the day & night cycle mode for this environment, overriding the player's config setting.",
-        "enum": [ "DYNAMIC", "FIXED_DAWN", "FIXED_MIDDAY", "FIXED_SUNSET", "FIXED_NIGHT", "ALWAYS_NIGHT" ]
+        "enum": [ "DYNAMIC", "FIXED_DAWN", "FIXED_MIDDAY", "FIXED_SUNSET", "FIXED_TWILIGHT", "FIXED_NIGHT", "ALWAYS_NIGHT" ]
       },
       "ambientColor": {
         "type": [ "string", "array" ],
@@ -199,7 +199,7 @@
       },
       "fixedSunAngles": {
         "type": "array",
-        "description": "Locks the sun disk and its shadow direction to a fixed altitude and azimuth (degrees) while a fixed cycle mode (FIXED_DAWN/FIXED_MIDDAY/FIXED_SUNSET/FIXED_NIGHT/ALWAYS_NIGHT) is active, overriding the astronomically-derived position. Altitude is from the ground up (negative places the sun below the horizon), azimuth is clockwise from north. Ignored in DYNAMIC mode.",
+        "description": "Locks the sun disk and its shadow direction to a fixed altitude and azimuth (degrees) while a fixed cycle mode (FIXED_DAWN/FIXED_MIDDAY/FIXED_SUNSET/FIXED_TWILIGHT/FIXED_NIGHT/ALWAYS_NIGHT) is active, overriding the astronomically-derived position. Altitude is from the ground up (negative places the sun below the horizon), azimuth is clockwise from north. Ignored in DYNAMIC mode.",
         "items": [
           {
             "type": "number",

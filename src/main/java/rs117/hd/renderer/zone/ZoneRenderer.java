@@ -811,7 +811,8 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboSkybox.nebulaVisibility.set(config.enableNebulas() ? 1f : 0f);
 			boolean hideMoon = daylightCycle == DaylightCycle.FIXED_DAWN
 				|| daylightCycle == DaylightCycle.FIXED_MIDDAY
-				|| daylightCycle == DaylightCycle.FIXED_SUNSET;
+				|| daylightCycle == DaylightCycle.FIXED_SUNSET
+				|| daylightCycle == DaylightCycle.FIXED_TWILIGHT;
 			plugin.uboSkybox.moonVisibility.set(!hideMoon && config.enableMoon() ? environmentManager.currentMoonVisibility : 0f);
 			plugin.uboSkybox.moonSizeMult.set(environmentManager.currentMoonSizeMult);
 			// Auroras appear on nights the per-night random roll selects. In modes
